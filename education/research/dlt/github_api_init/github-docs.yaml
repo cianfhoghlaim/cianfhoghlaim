@@ -1,0 +1,277 @@
+# Source Metadata
+source_name: github
+version: 1.8.30
+authentication_required: true
+api_types_available:
+  - REST
+
+# Client / Connection Config
+client:
+  base_url: https://api.github.com
+  auth:
+    type: apikey
+    location: header
+    header_name: Authorization
+  headers:
+    Accept: application/vnd.github.v3+json
+  paginator:
+    type: page
+    page_size_param: per_page
+    default_page_size: 30
+
+# Resources (per endpoint/object)
+resources:
+  - name: assignees
+    endpoint:
+      path: /repos/{owner}/{repo}/assignees
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: branches
+    endpoint:
+      path: /repos/{owner}/{repo}/branches
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: collaborator
+    endpoint:
+      path: /repos/{owner}/{repo}/collaborators
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: issue_labels
+    endpoint:
+      path: /repos/{owner}/{repo}/labels
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: organizations
+    endpoint:
+      path: /user/orgs
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: pull_request_commits
+    endpoint:
+      path: /repos/{owner}/{repo}/pulls/{pull_number}/commits
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: tags
+    endpoint:
+      path: /repos/{owner}/{repo}/tags
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: teams
+    endpoint:
+      path: /orgs/{org}/teams
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: users
+    endpoint:
+      path: /users
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: comments
+    endpoint:
+      path: /repos/{owner}/{repo}/issues/comments
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: commit_comment_reactions
+    endpoint:
+      path: /repos/{owner}/{repo}/comments/{comment_id}/reactions
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: commit_comments
+    endpoint:
+      path: /repos/{owner}/{repo}/commits/{commit_sha}/comments
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: commits
+    endpoint:
+      path: /repos/{owner}/{repo}/commits
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: deployments
+    endpoint:
+      path: /repos/{owner}/{repo}/deployments
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: events
+    endpoint:
+      path: /repos/{owner}/{repo}/events
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: issue_comment_reactions
+    endpoint:
+      path: /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: issue_events
+    endpoint:
+      path: /repos/{owner}/{repo}/issues/events
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: issue_milestones
+    endpoint:
+      path: /repos/{owner}/{repo}/milestones
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: issue_reactions
+    endpoint:
+      path: /repos/{owner}/{repo}/issues/{issue_number}/reactions
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: issues
+    endpoint:
+      path: /repos/{owner}/{repo}/issues
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: project_cards
+    endpoint:
+      path: /projects/{project_id}/cards
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: project_columns
+    endpoint:
+      path: /projects/{project_id}/columns
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: projects
+    endpoint:
+      path: /repos/{owner}/{repo}/projects
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: pull_request_comment_reactions
+    endpoint:
+      path: /repos/{owner}/{repo}/pulls/{pull_number}/comments/{comment_id}/reactions
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: pull_request_stats
+    endpoint:
+      path: /repos/{owner}/{repo}/pulls/{pull_number}/stats
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: pull_requests
+    endpoint:
+      path: /repos/{owner}/{repo}/pulls
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: releases
+    endpoint:
+      path: /repos/{owner}/{repo}/releases
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: repositories
+    endpoint:
+      path: /users/{username}/repos
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: review_comments
+    endpoint:
+      path: /repos/{owner}/{repo}/pulls/{pull_number}/comments
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: reviews
+    endpoint:
+      path: /repos/{owner}/{repo}/pulls/{pull_number}/reviews
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: stargazers
+    endpoint:
+      path: /repos/{owner}/{repo}/stargazers
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: workflow_jobs
+    endpoint:
+      path: /repos/{owner}/{repo}/actions/runs/{run_id}/jobs
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: workflow_runs
+    endpoint:
+      path: /repos/{owner}/{repo}/actions/runs
+      method: GET
+      data_selector: 
+      params: {}
+
+  - name: workflows
+    endpoint:
+      path: /repos/{owner}/{repo}/actions/workflows
+      method: GET
+      data_selector: 
+      params: {}
+
+# Auth Details from Docs (for validation or onboarding)
+auth_info:
+  mentioned_objects:
+    - PersonalAccessToken
+    - OAuthApp
+
+# Known Quirks or Risks, Caveats
+notes:
+  - Requires a personal access token with at least the `repo` scope.
+  - Rate limits apply based on the type of authentication used.
+
+# Troubleshooting & Error Patterns
+errors:
+  - REQUEST_LIMIT_EXCEEDED: Throttle API calls or reduce frequency
+  - 401 Unauthorized: Recheck OAuth scopes or token expiration
+  - 404 Not Found: Validate repository or organization names

@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "type": "completion",
+  "description": "git仓库提交记录分析",
+  "execution_settings": {
+    "default": {
+      "max_tokens": 2048,
+      "temperature": 0.3
+    }
+  },
+  "input_variables": [
+    {
+      "name": "readme",
+      "description": "仓库README文档",
+      "required": true
+    },
+    {
+      "name": "owner",
+      "description": "仓库所有者",
+      "required": true
+    },
+    {
+      "name": "name",
+      "description": "仓库名称",
+      "required": true
+    }
+  ]
+}

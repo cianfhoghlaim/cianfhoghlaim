@@ -1,0 +1,61 @@
+# =============================================================================
+# OIDEACHAIS API - Docker Ignore
+# =============================================================================
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+.eggs/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*
+compose*
+
+# Local data (mount as volumes instead)
+storage/data/*.duckdb
+storage/data/*.lance/
+
+# Testing
+tests/
+.coverage
+htmlcov/
+
+# Documentation
+*.md
+docs/
+
+# Dagster local
+.dagster/
+.tmp_dagster_home_*/
+
+# Apps (built separately)
+apps/
+
+# Development files
+.env*
+!.env.example
+*.log
+
+# Claude/IDE files
+.claude/

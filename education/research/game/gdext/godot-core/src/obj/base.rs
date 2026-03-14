@@ -1,0 +1,346 @@
+/*
+ * Copyright (c) godot-rust; Bromeon and contributors.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
+#[cfg(safeguards_balanced)]
+use std::cell::Cell;
+use std::cell::RefCell;
+use std::collections::hash_map::Entry;
+use std::collections::HashMap;
+use std::fmt::{Debug, Display, Formatter, Result as FmtResult};
+use std::mem::ManuallyDrop;
+#[cfg(safeguards_balanced)]
+use std::rc::Rc;
+
+use crate::builtin::Callable;
+use crate::obj::{bounds, Gd, GodotClass, InstanceId, PassiveGd};
+use crate::{classes, sys};
+
+thread_local! {
+    /// Extra strong references for each instance ID, needed for [`Base::to_init_gd()`].
+    ///
+    /// At the moment, all Godot objects must be accessed from the main thread, because their deferred destruction (`Drop`) runs on the
+    /// main thread, too. This may be relaxed in the future, and a `sys::Global` could be used instead of a `thread_local!`.
+    static PENDING_STRONG_REFS: RefCell<HashMap<InstanceId, Gd<classes::RefCounted>>> = RefCell::new(HashMap::new());
+}
+
+/// Represents the initialization state of a `Base<T>` object.
+#[cfg(safeguards_balanced)] // TODO(v0.5 or v0.6): relax to strict state, once people are used to checks.
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+enum InitState {
+    /// Object is being constructed (inside `I*::init()` or `Gd::from_init_fn()`).
+    ObjectConstructing,
+    /// Object construction is complete.
+    ObjectInitialized,
+    /// `ScriptInstance` context - always considered initialized (bypasses lifecycle checks).
+    Script,
+}
+
+#[cfg(safeguards_balanced)]
+macro_rules! base_from_obj {
+    ($obj:expr, $state:expr) => {
+        Base::from_obj($obj, $state)
+    };
+}
+
+#[cfg(not(safeguards_balanced))]
+macro_rules! base_from_obj {
+    ($obj:expr, $state:expr) => {
+        Base::from_obj($obj)
+    };
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------
+
+/// Restricted version of `Gd`, to hold the base instance inside a user's `GodotClass`.
+///
+/// Behaves similarly to [`Gd`][crate::obj::Gd], but is more constrained. Cannot be constructed by the user.
+pub struct Base<T: GodotClass> {
+    // Like `Gd`, it's theoretically possible that Base is destroyed while there are still other Gd pointers to the underlying object. This is
+    // safe, may however lead to unintended behavior. The base_test.rs file checks some of these scenarios.
+
+    // Internal smart pointer is never dropped. It thus acts like a weak pointer and is needed to break reference cycles between Gd<T>
+    // and the user instance owned by InstanceStorage.
+    //
+    // There is no data apart from the opaque bytes, so no memory or resources to deallocate.
+    // When triggered by Godot/GDScript, the destruction order is as follows:
+    // 1.    Most-derived Godot class (C++)
+    //      ...
+    // 2.  RefCounted (C++)
+    // 3. Object (C++) -- this triggers InstanceStorage destruction
+    // 4.   Base<T>
+    // 5.  User struct (GodotClass implementation)
+    // 6. InstanceStorage
+    //
+    // When triggered by Rust (Gd::drop on last strong ref), it's as follows:
+    // 1.   Gd<T>  -- triggers InstanceStorage destruction
+    // 2.
+    obj: ManuallyDrop<Gd<T>>,
+
+    /// Tracks the initialization state of this `Base<T>` in Debug mode.
+    ///
+    /// Rc allows to "copy-construct" the base from an existing one, while still affecting the user-instance through the original `Base<T>`.
+    #[cfg(safeguards_balanced)]
+    init_state: Rc<Cell<InitState>>,
+}
+
+impl<T: GodotClass> Base<T> {
+    /// "Copy constructor": allows to share a `Base<T>` weak pointer.
+    ///
+    /// The return value is a weak pointer, so it will not keep the instance alive.
+    ///
+    /// # Safety
+    /// `base` must be alive at the time of invocation, i.e. user `init()` (which could technically destroy it) must not have run yet.
+    /// If `base` is destroyed while the returned `Base<T>` is in use, that constitutes a logic error, not a safety issue.
+    pub(crate) unsafe fn from_base(base: &Base<T>) -> Base<T> {
+        sys::balanced_assert!(
+            base.obj.is_instance_valid(),
+            "Cannot construct Base; was object freed during initialization?"
+        );
+
+        let obj = Gd::from_obj_sys_weak(base.obj.obj_sys());
+
+        Self {
+            obj: ManuallyDrop::new(obj),
+            #[cfg(safeguards_balanced)]
+            init_state: Rc::clone(&base.init_state),
+        }
+    }
+
+    /// Create base from existing object (used in script instances).
+    ///
+    /// The return value is a weak pointer, so it will not keep the instance alive.
+    ///
+    /// # Safety
+    /// `gd` must be alive at the time of invocation. If it is destroyed while the returned `Base<T>` is in use, that constitutes a logic
+    /// error, not a safety issue.
+    pub(crate) unsafe fn from_script_gd(gd: &Gd<T>) -> Self {
+        sys::balanced_assert!(gd.is_instance_valid());
+
+        let obj = Gd::from_obj_sys_weak(gd.obj_sys());
+        base_from_obj!(obj, InitState::Script)
+    }
+
+    /// Create new base from raw Godot object.
+    ///
+    /// The return value is a weak pointer, so it will not keep the instance alive.
+    ///
+    /// # Safety
+    /// `base_ptr` must point to a valid, live object at the time of invocation. If it is destroyed while the returned `Base<T>` is in use,
+    /// that constitutes a logic error, not a safety issue.
+    pub(crate) unsafe fn from_sys(base_ptr: sys::GDExtensionObjectPtr) -> Self {
+        sys::balanced_assert!(!base_ptr.is_null(), "instance base is null pointer");
+
+        // Initialize only as weak pointer (don't increment reference count).
+        let obj = Gd::from_obj_sys_weak(base_ptr);
+
+        // This obj does not contribute to the strong count, otherwise we create a reference cycle:
+        // 1. RefCounted (dropped in GDScript)
+        // 2. holds user T (via extension instance and storage)
+        // 3. holds Base<T> RefCounted (last ref, dropped in T destructor, but T is never destroyed because this ref keeps storage alive)
+        // Note that if late-init never happened on self, we have the same behavior (still a raw pointer instead of weak Gd)
+        base_from_obj!(obj, InitState::ObjectConstructing)
+    }
+
+    #[cfg(safeguards_balanced)]
+    fn from_obj(obj: Gd<T>, init_state: InitState) -> Self {
+        Self {
+            obj: ManuallyDrop::new(obj),
+            init_state: Rc::new(Cell::new(init_state)),
+        }
+    }
+
+    #[cfg(not(safeguards_balanced))]
+    fn from_obj(obj: Gd<T>) -> Self {
+        Self {
+            obj: ManuallyDrop::new(obj),
+        }
+    }
+
+    /// Returns a [`Gd`] referencing the base object, for exclusive use during object initialization and `NOTIFICATION_POSTINITIALIZE`.
+    ///
+    /// Can be used during an initialization function [`I*::init()`][crate::classes::IObject::init] or [`Gd::from_init_fn()`], or [`POSTINITIALIZE`][crate::classes::notify::ObjectNotification::POSTINITIALIZE].
+    ///
+    /// The base pointer is only pointing to a base object; you cannot yet downcast it to the object being constructed.
+    /// The instance ID is the same as the one the in-construction object will have.
+    ///
+    /// # Lifecycle for ref-counted classes
+    /// If `T: Inherits<RefCounted>`, then the ref-counted object is not yet fully-initialized at the time of the `init` function and [`POSTINITIALIZE`][crate::classes::notify::ObjectNotification::POSTINITIALIZE] running.
+    /// Accessing the base object without further measures would be dangerous. Here, godot-rust employs a workaround: the `Base` object (which
+    /// holds a weak pointer to the actual instance) is temporarily upgraded to a strong pointer, preventing use-after-free.
+    ///
+    /// This additional reference is automatically dropped at an implementation-defined point in time (which may change, and technically delay
+    /// destruction of your object as soon as you use `Base::to_init_gd()`). Right now, this refcount-decrement is deferred to the next frame.
+    ///
+    /// For now, ref-counted bases can only use `to_init_gd()` on the main thread.
+    ///
+    /// # Panics (Debug)
+    /// If called outside an initialization function, or for ref-counted objects on a non-main thread.
+    pub fn to_init_gd(&self) -> Gd<T> {
+        sys::balanced_assert!(
+            self.is_initializing(),
+            "Base::to_init_gd() can only be called during object initialization, inside I*::init() or Gd::from_init_fn()"
+        );
+
+        // For manually-managed objects, regular clone is fine.
+        // Only static type matters, because this happens immediately after initialization, so T is both static and dynamic type.
+        if !<T::Memory as bounds::Memory>::IS_REF_COUNTED {
+            return Gd::clone(&self.obj);
+        }
+
+        sys::balanced_assert!(
+            sys::is_main_thread(),
+            "Base::to_init_gd() can only be called on the main thread for ref-counted objects (for now)"
+        );
+
+        // First time handing out a Gd<T>, we need to take measures to temporarily upgrade the Base's weak pointer to a strong one.
+        // During the initialization phase (derived object being constructed), increment refcount by 1.
+        let instance_id = self.obj.instance_id();
+        PENDING_STRONG_REFS.with(|refs| {
+            let mut pending_refs = refs.borrow_mut();
+            if let Entry::Vacant(e) = pending_refs.entry(instance_id) {
+                let strong_ref: Gd<T> = unsafe { Gd::from_obj_sys(self.obj.obj_sys()) };
+
+                // We know that T: Inherits<RefCounted> due to check above, but don't it as a static bound for Gd::upcast().
+                // Thus fall back to low-level FFI cast on RawGd.
+                let strong_ref_raw = strong_ref.raw;
+                let raw = strong_ref_raw
+                    .ffi_cast::<classes::RefCounted>()
+                    .expect("Base must be RefCounted")
+                    .into_dest(strong_ref_raw);
+
+                e.insert(Gd { raw });
+            }
+        });
+
+        let name = format!("Base<{}> deferred unref", T::class_id());
+        let callable = Callable::from_once_fn(name, move |_args| {
+            Self::drop_strong_ref(instance_id);
+        });
+
+        // Use Callable::call_deferred() instead of Gd::apply_deferred(). The latter implicitly borrows &mut self,
+        // causing a "destroyed while bind was active" panic.
+        callable.call_deferred(&[]);
+
+        (*self.obj).clone()
+    }
+
+    /// Drops any extra strong references, possibly causing object destruction.
+    fn drop_strong_ref(instance_id: InstanceId) {
+        PENDING_STRONG_REFS.with(|refs| {
+            let mut pending_refs = refs.borrow_mut();
+            let strong_ref = pending_refs.remove(&instance_id);
+            sys::strict_assert!(
+                strong_ref.is_some(),
+                "Base unexpectedly had its strong ref rug-pulled"
+            );
+
+            // Editor creates instances of given class for various purposes (getting class docs, default values...)
+            // and frees them instantly before our callable can be executed.
+            // Perform "weak" drop instead of "strong" one iff our instance is no longer valid.
+            if !instance_id.lookup_validity() {
+                strong_ref.unwrap().drop_weak();
+            }
+
+            // Triggers RawGd::drop() -> dec-ref -> possibly object destruction.
+        });
+    }
+
+    /// Finalizes the initialization of this `Base<T>` and returns whether
+    pub(crate) fn mark_initialized(&mut self) {
+        #[cfg(safeguards_balanced)]
+        {
+            assert_eq!(
+                self.init_state.get(),
+                InitState::ObjectConstructing,
+                "Base<T> is already initialized, or holds a script instance"
+            );
+
+            self.init_state.set(InitState::ObjectInitialized);
+        }
+
+        // May return whether there is a "surplus" strong ref in the future, as self.extra_strong_ref.borrow().is_some().
+    }
+
+    /// Returns a [`Gd`] referencing the base object, for use in script contexts only.
+    #[doc(hidden)]
+    pub fn __script_gd(&self) -> Gd<T> {
+        // Used internally by `SiMut::base()` and `SiMut::base_mut()` for script re-entrancy.
+        // Could maybe add debug validation to ensure script context in the future.
+        (*self.obj).clone()
+    }
+
+    // Currently only used in outbound virtual calls (for scripts); search for: base_field(self).obj_sys().
+    #[doc(hidden)]
+    pub fn obj_sys(&self) -> sys::GDExtensionObjectPtr {
+        self.obj.obj_sys()
+    }
+
+    // Internal use only, do not make public.
+    #[cfg(feature = "debug-log")]
+    pub(crate) fn debug_instance_id(&self) -> crate::obj::InstanceId {
+        self.obj.instance_id()
+    }
+
+    /// Returns a passive reference to the base object, for use in script contexts only.
+    pub(crate) fn to_script_passive(&self) -> PassiveGd<T> {
+        #[cfg(safeguards_balanced)]
+        assert_eq!(
+            self.init_state.get(),
+            InitState::Script,
+            "to_script_passive() can only be called on script-context Base objects"
+        );
+
+        // SAFETY: the object remains valid for script contexts as per the assertion above.
+        unsafe { PassiveGd::from_strong_ref(&self.obj) }
+    }
+
+    /// Returns `true` if this `Base<T>` is currently in the initializing state.
+    #[cfg(safeguards_balanced)]
+    fn is_initializing(&self) -> bool {
+        self.init_state.get() == InitState::ObjectConstructing
+    }
+
+    /// Returns a [`Gd`] referencing the base object, assuming the derived object is fully constructed.
+    #[doc(hidden)]
+    pub fn __constructed_gd(&self) -> Gd<T> {
+        sys::balanced_assert!(
+            !self.is_initializing(),
+            "WithBaseField::to_gd(), base(), base_mut() can only be called on fully-constructed objects, after I*::init() or Gd::from_init_fn()"
+        );
+
+        (*self.obj).clone()
+    }
+
+    /// Returns a [`PassiveGd`] referencing the base object, assuming the derived object is fully constructed.
+    ///
+    /// Unlike [`Self::__constructed_gd()`], this does not increment the reference count for ref-counted `T`s.
+    /// The returned weak reference is safe to use only as long as the associated instance remains alive.
+    ///
+    /// # Safety
+    /// Caller must ensure that the underlying object remains valid for the entire lifetime of the returned `PassiveGd`.
+    pub(crate) unsafe fn constructed_passive(&self) -> PassiveGd<T> {
+        sys::balanced_assert!(
+            !self.is_initializing(),
+            "WithBaseField::base(), base_mut() can only be called on fully-constructed objects, after I*::init() or Gd::from_init_fn()"
+        );
+
+        // SAFETY: object pointer is valid and remains valid as long as self is alive (per safety precondition of this fn).
+        unsafe { PassiveGd::from_obj_sys(self.obj.obj_sys()) }
+    }
+}
+
+impl<T: GodotClass> Debug for Base<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        classes::debug_string(&self.obj, f, "Base")
+    }
+}
+
+impl<T: GodotClass> Display for Base<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        classes::display_string(&self.obj, f)
+    }
+}

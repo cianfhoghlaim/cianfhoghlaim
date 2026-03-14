@@ -1,0 +1,294 @@
+# =============================================================================
+# PANGOLIN CORE STACK
+# =============================================================================
+# Identity-aware tunneled reverse proxy with WireGuard tunnels.
+#
+# USAGE:
+#   Development:  docker compose up -d
+#   Production:   docker compose -f compose.yaml -f sidecar.yaml up -d
+#
+# COMPONENTS:
+#   - Pangolin: Identity-aware proxy with org/site/resource management
+#   - Gerbil: WireGuard tunnel controller
+#   - Traefik: Reverse proxy with dynamic configuration
+#   - Middleware Manager: Traefik middleware UI
+#   - Pocket ID: Passkey-based OIDC provider
+#   - TinyAuth: Lightweight forward authentication
+#   - PostgreSQL: Production database
+# =============================================================================
+
+name: pangolin
+
+services:
+  # ---------------------------------------------------------------------------
+  # POSTGRESQL - Production Database
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:17
+    container_name: pangolin-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-pangolin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devpassword}
+      POSTGRES_DB: ${POSTGRES_DB:-pangolin}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-pangolin}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pangolin
+
+  # ---------------------------------------------------------------------------
+  # PANGOLIN - Identity-Aware Tunneled Reverse Proxy
+  # ---------------------------------------------------------------------------
+  pangolin:
+    image: fosrl/pangolin:postgresql-latest
+    container_name: pangolin
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SERVER_SECRET: ${SERVER_SECRET:-devserversecret}
+    volumes:
+      - ./config:/app/config
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/v1/"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+    networks:
+      - pangolin
+
+  # ---------------------------------------------------------------------------
+  # GERBIL - WireGuard Tunnel Controller
+  # ---------------------------------------------------------------------------
+  gerbil:
+    image: fosrl/gerbil:latest
+    container_name: gerbil
+    restart: unless-stopped
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    command:
+      - --reachableAt=http://gerbil:3004
+      - --generateAndSaveKeyTo=/var/config/key
+      - --remoteConfig=http://pangolin:3001/api/v1/gerbil/get-config
+      - --reportBandwidthTo=http://pangolin:3001/api/v1/gerbil/receive-bandwidth
+    volumes:
+      - ./config/:/var/config
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    ports:
+      - "${GERBIL_WG_PORT:-51820}:51820/udp"
+      - "${GERBIL_HTTPS_PORT:-443}:443"
+      - "${GERBIL_HTTP_PORT:-80}:80"
+      # Internal auth port for OLM/Newt (bypasses Cloudflare)
+      - "${GERBIL_INTERNAL_PORT:-8443}:8443"
+    networks:
+      - pangolin
+
+  # ---------------------------------------------------------------------------
+  # TRAEFIK - Reverse Proxy with Dynamic Configuration
+  # ---------------------------------------------------------------------------
+  traefik:
+    image: traefik:v3.4.0
+    container_name: traefik
+    restart: unless-stopped
+    network_mode: service:gerbil
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    command:
+      - --configFile=/etc/traefik/traefik_config.yml
+    volumes:
+      - ./config/traefik:/etc/traefik:ro
+      - ./config/letsencrypt:/letsencrypt
+      - ./config/traefik/rules:/rules:ro
+      - ./config/traefik/logs:/var/log/traefik
+
+  # ---------------------------------------------------------------------------
+  # MIDDLEWARE MANAGER - Traefik Middleware UI
+  # ---------------------------------------------------------------------------
+  middleware-manager:
+    image: hhftechnology/middleware-manager:latest
+    # NOTE: Removed platform constraint - ARM64 images available on Docker Hub
+    # Explicit entrypoint to workaround ARM64 exec format error (Docker layer issue)
+    entrypoint: ["/lib/ld-musl-aarch64.so.1", "/app/middleware-manager"]
+    container_name: middleware-manager
+    restart: unless-stopped
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    environment:
+      PANGOLIN_API_URL: http://pangolin:3001/api/v1
+      TRAEFIK_CONF_DIR: /conf
+      DB_PATH: /data/middleware.db
+      PORT: ${MIDDLEWARE_MANAGER_PORT:-3456}
+    volumes:
+      - ./data/middleware-manager:/data
+      - ./config/traefik/rules:/conf
+      - ./config/middleware-manager/templates.yaml:/app/config/templates.yaml:ro
+    networks:
+      - pangolin
+
+  # ---------------------------------------------------------------------------
+  # POCKET ID - Passkey-Based OIDC Provider
+  # ---------------------------------------------------------------------------
+  pocket-id:
+    image: ghcr.io/pocket-id/pocket-id:latest
+    container_name: pocket-id
+    restart: unless-stopped
+    # NOTE: Pocket ID is local to Pangolin stack, uses static Traefik routing in dynamic_config.yml
+    # Do NOT use Docker labels here - they create Newt tunnel routes that conflict with local routing
+    environment:
+      APP_URL: ${POCKET_ID_URL:-https://auth.cianfhoghlaim.ie}
+      TRUST_PROXY: "true"
+      PUID: 1000
+      PGID: 1000
+    volumes:
+      - pocket-id-data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1411/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - pangolin
+
+  # ---------------------------------------------------------------------------
+  # TINYAUTH - Lightweight Forward Authentication (v4)
+  # ---------------------------------------------------------------------------
+  tinyauth:
+    image: ghcr.io/steveiliop56/tinyauth:v4
+    container_name: tinyauth
+    restart: unless-stopped
+    environment:
+      PORT: 10000
+      ADDRESS: 0.0.0.0
+      APP_URL: ${TINYAUTH_URL:-https://tinyauth.cianfhoghlaim.ie}
+      USERS_FILE: /app/config/users
+      SECURE_COOKIE: "true"
+      SESSION_EXPIRY: ${SESSION_EXPIRY:-86400}
+      LOGIN_TIMEOUT: ${LOGIN_TIMEOUT:-300}
+      LOGIN_MAX_RETRIES: ${LOGIN_MAX_RETRIES:-5}
+      DATABASE_PATH: /data/tinyauth.db
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      DISABLE_ANALYTICS: "true"
+      # PocketID OAuth Integration
+      PROVIDERS_POCKETID_CLIENT_ID: ${POCKETID_CLIENT_ID:-}
+      PROVIDERS_POCKETID_CLIENT_SECRET: ${POCKETID_CLIENT_SECRET:-}
+      PROVIDERS_POCKETID_AUTH_URL: https://auth.cianfhoghlaim.ie/authorize
+      PROVIDERS_POCKETID_TOKEN_URL: https://auth.cianfhoghlaim.ie/api/oidc/token
+      PROVIDERS_POCKETID_USER_INFO_URL: https://auth.cianfhoghlaim.ie/api/oidc/userinfo
+      PROVIDERS_POCKETID_REDIRECT_URL: https://tinyauth.cianfhoghlaim.ie/api/oauth/callback/pocketid
+      PROVIDERS_POCKETID_SCOPES: openid email profile groups
+      PROVIDERS_POCKETID_NAME: Pocket ID
+    volumes:
+      - tinyauth-data:/data
+      - ./config/tinyauth:/app/config:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:10000/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - pangolin
+
+  # ---------------------------------------------------------------------------
+  # LOG DASHBOARD - Traefik Access Log Visualization
+  # ---------------------------------------------------------------------------
+  log-dashboard-backend:
+    image: hhftechnology/traefik-log-dashboard-backend:latest
+    container_name: log-dashboard-backend
+    restart: unless-stopped
+    environment:
+      GOGC: "50"
+      GOMEMLIMIT: "500MiB"
+      LOG_LEVEL: "info"
+      ACCESS_LOG_PATH: "/logs/access.log"
+      HIDE_UNKNOWN_SERVICES: "true"
+      HIDE_PRIVATE_IPS: "false"
+      OTLP_GRPC_PORT: "4317"
+      OTLP_HTTP_PORT: "4318"
+    volumes:
+      - ./config/traefik/logs:/logs:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      pangolin:
+        aliases:
+          - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+  log-dashboard-frontend:
+    image: hhftechnology/traefik-log-dashboard-frontend:latest
+    container_name: log-dashboard-frontend
+    restart: unless-stopped
+    environment:
+      BACKEND_URL: "http://log-dashboard-backend:8080"
+    depends_on:
+      - log-dashboard-backend
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - pangolin
+
+  # ---------------------------------------------------------------------------
+  # CROWDSEC - Intrusion Detection and Prevention
+  # ---------------------------------------------------------------------------
+  crowdsec:
+    image: crowdsecurity/crowdsec:latest
+    container_name: crowdsec
+    restart: unless-stopped
+    environment:
+      COLLECTIONS: "crowdsecurity/traefik crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules"
+      BOUNCER_KEY_traefik: ${CROWDSEC_BOUNCER_KEY:-}
+      TZ: "Europe/Dublin"
+    volumes:
+      - ./config/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml:ro
+      - ./config/traefik/logs:/var/log/traefik:ro
+      - crowdsec-config:/etc/crowdsec
+      - crowdsec-data:/var/lib/crowdsec/data
+    healthcheck:
+      test: ["CMD", "cscli", "version"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - pangolin
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+
+volumes:
+  postgres-data:
+  pocket-id-data:
+  tinyauth-data:
+  crowdsec-config:
+  crowdsec-data:
+
+networks:
+  pangolin:
+    driver: bridge

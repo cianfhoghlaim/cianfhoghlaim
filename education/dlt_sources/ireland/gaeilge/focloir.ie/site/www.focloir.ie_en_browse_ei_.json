@@ -1,0 +1,21 @@
+{
+  "markdown": "## Browse entries from New English-Irish Gaelic Dictionary\n\n- [0-9](https://www.focloir.ie/en/browse/ei/0-9)\n- [a](https://www.focloir.ie/en/browse/ei/a)\n- [b](https://www.focloir.ie/en/browse/ei/b)\n- [c](https://www.focloir.ie/en/browse/ei/c)\n- [d](https://www.focloir.ie/en/browse/ei/d)\n- [e](https://www.focloir.ie/en/browse/ei/e)\n- [f](https://www.focloir.ie/en/browse/ei/f)\n- [g](https://www.focloir.ie/en/browse/ei/g)\n- [h](https://www.focloir.ie/en/browse/ei/h)\n- [i](https://www.focloir.ie/en/browse/ei/i)\n- [j](https://www.focloir.ie/en/browse/ei/j)\n- [k](https://www.focloir.ie/en/browse/ei/k)\n- [l](https://www.focloir.ie/en/browse/ei/l)\n- [m](https://www.focloir.ie/en/browse/ei/m)\n- [n](https://www.focloir.ie/en/browse/ei/n)\n- [o](https://www.focloir.ie/en/browse/ei/o)\n- [p](https://www.focloir.ie/en/browse/ei/p)\n- [q](https://www.focloir.ie/en/browse/ei/q)\n- [r](https://www.focloir.ie/en/browse/ei/r)\n- [s](https://www.focloir.ie/en/browse/ei/s)\n- [t](https://www.focloir.ie/en/browse/ei/t)\n- [u](https://www.focloir.ie/en/browse/ei/u)\n- [v](https://www.focloir.ie/en/browse/ei/v)\n- [w](https://www.focloir.ie/en/browse/ei/w)\n- [x](https://www.focloir.ie/en/browse/ei/x)\n- [y](https://www.focloir.ie/en/browse/ei/y)\n- [z](https://www.focloir.ie/en/browse/ei/z)",
+  "metadata": {
+    "title": "Browse English-Irish from Foras na Gaeilge",
+    "language": "en",
+    "viewport": "width=device-width, initial-scale=1",
+    "description": "Browse English-Irish from Foras na Gaeilge",
+    "favicon": "https://www.focloir.ie/favicon.ico",
+    "scrapeId": "019b0e62-f171-7769-9624-556fdaaa8cbf",
+    "sourceURL": "https://www.focloir.ie/en/browse/ei/",
+    "url": "https://www.focloir.ie/en/browse/ei/",
+    "statusCode": 200,
+    "contentType": "text/html; charset=utf-8",
+    "timezone": "America/New_York",
+    "proxyUsed": "basic",
+    "cacheState": "miss",
+    "indexId": "3dbdacc8-f10c-4472-9b47-6ea47b39ba1b",
+    "creditsUsed": 1
+  },
+  "warning": "This scrape job was throttled at your current concurrency limit. If you'd like to scrape faster, you can upgrade your plan."
+}

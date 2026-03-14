@@ -1,0 +1,93 @@
+# =============================================================================
+# DUCKLAKE HETZNER - DuckLake CDC Integration
+# =============================================================================
+# DuckLake integration for Change Data Capture and time-travel queries.
+# Provides PostgreSQL-to-Iceberg replication with zero-copy registration.
+# =============================================================================
+
+[[stack]]
+name = "ducklake-hetzner"
+description = "DuckLake CDC integration on Hetzner for time-travel analytics"
+tags = ["host:cax41-hetzner", "tier:lakehouse", "type:cdc", "environment:production", "component:ducklake"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/storage/ducklake"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+# DuckLake Configuration
+DUCKLAKE_POSTGRES_HOST=postgres:5432
+DUCKLAKE_POSTGRES_USER=lakekeeper
+DUCKLAKE_POSTGRES_PASSWORD=[[LAKEKEEPER_DB_PASSWORD]]
+DUCKLAKE_POSTGRES_DBNAME=lakekeeper_hetzner
+DUCKLAKE_WAREHOUSE=hetzner_production
+
+# Iceberg Catalog
+ICEBERG_REST_ENDPOINT=http://lakekeeper-hetzner:8181
+
+# S3 Storage (Garage)
+AWS_ENDPOINT_URL=http://garage:3900
+AWS_ACCESS_KEY_ID=[[GARAGE_ACCESS_KEY_ID]]
+AWS_SECRET_ACCESS_KEY=[[GARAGE_SECRET_ACCESS_KEY]]
+AWS_REGION=garage
+
+# CDC Configuration
+DUCKLAKE_CDC_ENABLED=true
+DUCKLAKE_CDC_SLOT_NAME=ducklake_cdc
+DUCKLAKE_SNAPSHOT_ISOLATION=true
+"""
+
+# Stack dependencies
+[[stack.depends_on]]
+name = "lakekeeper-hetzner"
+condition = "service_healthy"
+
+[[stack.depends_on]]
+name = "postgres"
+condition = "service_healthy"
+
+# CDC procedures
+[[stack.procedures]]
+name = "ducklake-init-cdc"
+description = "Initialize DuckLake CDC on PostgreSQL"
+type = "shell"
+command = """
+# Create CDC slot and publications
+docker exec ducklake-hetzner duckdb :memory: -c \"
+INSTALL ducklake;
+LOAD ducklake;
+ATTACH 'ducklake:postgres:dbname=lakekeeper_hetzner host=postgres user=lakekeeper password=[[LAKEKEEPER_DB_PASSWORD]]' AS prod;
+CALL ducklake_init_cdc('prod');
+\"
+echo "DuckLake CDC initialized"
+"""
+
+[[stack.procedures]]
+name = "ducklake-snapshot"
+description = "Create time-travel snapshot"
+type = "shell"
+command = """
+SNAPSHOT_NAME="${SNAPSHOT_NAME:-BEFORE_CHANGES_$(date +%s)}"
+docker exec ducklake-hetzner duckdb :memory: -c \"
+INSTALL ducklake;
+LOAD ducklake;
+ATTACH 'ducklake:postgres:dbname=lakekeeper_hetzner host=postgres user=lakekeeper password=[[LAKEKEEPER_DB_PASSWORD]]' AS prod;
+CREATE SNAPSHOT prod $SNAPSHOT_NAME;
+\"
+echo "Snapshot created: $SNAPSHOT_NAME"
+"""
+
+[[stack.procedures]]
+name = "ducklake-time-travel"
+description = "Query data at specific point in time"
+type = "shell"
+command = """
+TIMESTAMP="${TIMESTAMP:-$(date -d '1 hour ago' +%s)}"
+docker exec ducklake-hetzner duckdb :memory: -c \"
+INSTALL ducklake;
+LOAD ducklake;
+ATTACH 'ducklake:postgres:dbname=lakekeeper_hetzner host=postgres user=lakekeeper password=[[LAKEKEEPER_DB_PASSWORD]]' AS prod;
+USE prod;
+SELECT * FROM iceberg_tables AT (TIMESTAMP => '$TIMESTAMP');
+\"
+"""

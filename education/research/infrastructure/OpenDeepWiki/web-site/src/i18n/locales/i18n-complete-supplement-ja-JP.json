@@ -1,0 +1,325 @@
+{
+  "admin": {
+    "dashboard": {
+      "fetchFailed": "ダッシュボードデータの取得に失敗しました",
+      "lastUpdated": "最終更新",
+      "autoRefresh": "自動更新",
+      "refresh": "更新",
+      "monthlyNew": "今月の新規",
+      "comparedToLastMonth": "先月比",
+      "todayActive": "本日アクティブ",
+      "weekActive": "今週アクティブ",
+      "monthlyActiveUsers": "今月のアクティブユーザー",
+      "userActivityStats": "ユーザーアクティビティ統計",
+      "recentUsers": "最近登録されたユーザー",
+      "recentRepositories": "最近作成されたリポジトリ",
+      "recentErrorLogs": "最近のエラーログ",
+      "documentCount": "ドキュメント数",
+      "quickActions": "クイックアクション",
+      "quickActionsDescription": "よく使用する管理操作",
+      "stats": {
+        "total_repos": "リポジトリ総数",
+        "total_documents": "ドキュメント総数",
+        "online_users": "オンラインユーザー"
+      },
+      "noDescription": "説明なし",
+      "unknown": "不明",
+      "increaseRate": "成長率"
+    },
+    "users": {
+      "userList": "ユーザー一覧",
+      "totalUsers": "合計 {{total}} ユーザー",
+      "filterByRole": "ロールでフィルター",
+      "allRoles": "すべてのロール",
+      "cancelSelection": "選択をキャンセル",
+      "selectAll": "すべて選択",
+      "selectUser": "ユーザー {{name}} を選択",
+      "openMenu": "メニューを開く",
+      "actionsMenu": "アクション",
+      "resetPassword": "パスワードをリセット",
+      "batchDeleteSelected": "選択したものを削除 ({{count}})",
+      "previous": "前へ",
+      "next": "次へ",
+      "pageInfo": "{{current}} / {{total}} ページ",
+      "errors": {
+        "loadFailed": "読み込みに失敗しました",
+        "loadFailedDescription": "ユーザー一覧を読み込めません",
+        "unknown": "不明"
+      },
+      "messages": {
+        "confirmDelete": "このユーザーを削除してもよろしいですか？",
+        "deleteSuccess": "削除成功",
+        "deleteSuccessDescription": "ユーザーが削除されました",
+        "deleteFailed": "削除失敗",
+        "deleteFailedDescription": "ユーザーを削除できません",
+        "pleaseSelectUsers": "削除するユーザーを選択してください"
+      }
+    },
+    "repositories": {
+      "batchActions": "一括操作",
+      "repositoryList": "リポジトリ一覧",
+      "totalRepositories": "合計 {{total}} リポジトリ",
+      "filterStatus": "ステータスでフィルター",
+      "allStatus": "すべてのステータス",
+      "statisticsInfo": "統計情報",
+      "tokenIn": "入力トークン",
+      "tokenOut": "出力トークン",
+      "totalToken": "合計トークン",
+      "openMenu": "メニューを開く",
+      "viewRepository": "リポジトリを表示",
+      "editInfo": "情報を編集",
+      "manageContent": "コンテンツを管理",
+      "reprocessRepository": "リポジトリを再処理",
+      "exportMarkdown": "Markdownをエクスポート",
+      "deleteRepository": "リポジトリを削除",
+      "previous": "前へ",
+      "next": "次へ",
+      "pageInfo": "{{current}} / {{total}} ページ",
+      "stats": {
+        "totalRepositories": "リポジトリ総数",
+        "totalRepositoriesDescription": "すべてのリポジトリ",
+        "completedRepositories": "完了",
+        "completedRepositoriesDescription": "分析完了",
+        "processingRepositories": "処理中",
+        "processingRepositoriesDescription": "分析中",
+        "pendingRepositories": "保留中",
+        "pendingRepositoriesDescription": "分析待ち"
+      },
+      "statusLabels": {
+        "pending": "保留中",
+        "processing": "処理中",
+        "completed": "完了",
+        "failed": "失敗"
+      },
+      "errors": {
+        "loadFailed": "読み込みに失敗しました",
+        "loadFailedDescription": "リポジトリ一覧を読み込めません"
+      },
+      "messages": {
+        "deleteSuccess": "削除成功",
+        "deleteSuccessDescription": "リポジトリ \"{{name}}\" が削除されました",
+        "deleteFailed": "削除失敗",
+        "deleteFailedDescription": "リポジトリを削除できません",
+        "refreshSuccess": "更新成功",
+        "refreshSuccessDescription": "リポジトリ \"{{name}}\" の再処理が開始されました",
+        "refreshFailed": "更新失敗",
+        "refreshFailedDescription": "リポジトリを更新できません",
+        "updateSuccess": "リポジトリ情報が正常に更新されました",
+        "updateFailed": "更新失敗",
+        "updateFailedDescription": "リポジトリ情報の更新中にエラーが発生しました"
+      },
+      "deleteDialog": {
+        "title": "リポジトリ削除の確認",
+        "description": "リポジトリ \"{{name}}\" を削除してもよろしいですか？",
+        "warning": "この操作は元に戻せず、リポジトリとすべてのドキュメントデータが削除されます。",
+        "cancel": "キャンセル",
+        "confirmDelete": "削除を確認"
+      },
+      "editDialog": {
+        "title": "リポジトリ情報の編集",
+        "description": "{{organizationName}}/{{name}} の情報を編集",
+        "repositoryDescription": "リポジトリの説明",
+        "descriptionPlaceholder": "リポジトリの説明を入力...",
+        "isRecommended": "おすすめリポジトリ",
+        "customPrompt": "カスタムプロンプト（オプション）",
+        "promptPlaceholder": "カスタムプロンプトを入力...",
+        "cancel": "キャンセル",
+        "saving": "保存中...",
+        "saveChanges": "変更を保存"
+      },
+      "detail": {
+        "loadRepositoryDataFailed": "リポジトリデータの読み込みに失敗しました",
+        "fileSaveSuccess": "ファイルが正常に保存されました",
+        "fileSaveFailed": "ファイルの保存に失敗しました",
+        "repositoryRefreshSuccess": "リポジトリが正常に更新されました",
+        "repositoryRefreshFailed": "リポジトリの更新に失敗しました",
+        "repositoryDeleteSuccess": "リポジトリが正常に削除されました",
+        "repositoryDeleteFailed": "リポジトリの削除に失敗しました",
+        "syncTaskStarted": "同期タスクが開始されました",
+        "syncStartFailed": "同期の開始に失敗しました",
+        "exportSuccess": "エクスポート成功",
+        "exportFailed": "エクスポート失敗",
+        "repositoryNotFound": "リポジトリが見つかりません",
+        "returnToRepositoryList": "リポジトリ一覧に戻る",
+        "refreshing": "更新中...",
+        "refresh": "更新",
+        "export": "エクスポート",
+        "edit": "編集",
+        "delete": "削除",
+        "confirmDeleteRepository": "リポジトリ削除の確認",
+        "deleteRepositoryWarning": "この操作により、リポジトリとすべてのデータが完全に削除されます。この操作は元に戻せません。",
+        "cancel": "キャンセル",
+        "confirmDelete": "削除を確認",
+        "documents": "ドキュメント管理",
+        "sync": "同期管理",
+        "quality": "品質評価",
+        "searchDocuments": "ドキュメントを検索...",
+        "noDocuments": "ドキュメントディレクトリがありません",
+        "selectDocument": "ドキュメントを選択",
+        "selectDocumentDescription": "左側のディレクトリからドキュメントを選択して、その内容を表示または編集します",
+        "completed": "完了",
+        "aiGenerate": "AI生成",
+        "save": "保存",
+        "saving": "保存中...",
+        "lastModified": "最終更新日",
+        "loadingEditor": "エディターを読み込み中...",
+        "fileContent": "ファイル内容...",
+        "documentContent": "ドキュメント内容...",
+        "documentSaveSuccess": "ドキュメントが正常に保存されました",
+        "syncManagement": "同期管理",
+        "syncManagementDescription": "リポジトリの同期設定と履歴を管理",
+        "manualSync": "手動同期",
+        "manualSyncRepository": "リポジトリを手動同期",
+        "syncDescription": "ソースリポジトリから最新のファイルを取得し、ドキュメントを再生成します。",
+        "startSync": "同期を開始",
+        "lastSyncTime": "最終同期時刻",
+        "neverSynced": "同期されていません",
+        "syncStatus": "同期ステータス",
+        "autoSync": "自動同期",
+        "updating": "更新中...",
+        "enabled": "有効",
+        "disabled": "無効",
+        "syncHistory": "同期履歴",
+        "syncSuccess": "同期成功",
+        "syncFailed": "同期失敗",
+        "syncing": "同期中",
+        "manual": "手動",
+        "auto": "自動",
+        "startTime": "開始",
+        "endTime": "終了",
+        "filesChanged": "ファイル",
+        "filesAdded": "追加",
+        "filesUpdated": "更新",
+        "filesDeleted": "削除",
+        "noSyncHistory": "同期履歴がありません",
+        "permissionManagement": "権限管理",
+        "permissionManagementDescription": "このリポジトリへのユーザーとロールのアクセスを管理",
+        "permissionDevelopment": "権限管理機能は開発中です...",
+        "configManagement": "設定管理",
+        "configManagementDescription": "リポジトリのさまざまな設定オプションを管理",
+        "configDevelopment": "設定管理機能は開発中です...",
+        "taskManagement": "タスク管理",
+        "taskManagementDescription": "リポジトリ関連の処理タスクを表示および管理",
+        "taskDevelopment": "タスク管理機能は開発中です...",
+        "editRepositoryInfo": "リポジトリ情報の編集",
+        "editRepositoryDescription": "リポジトリの基本情報と同期設定を変更",
+        "repositoryName": "リポジトリ名",
+        "repositoryNamePlaceholder": "リポジトリ名を入力",
+        "repositoryDescription": "リポジトリの説明",
+        "repositoryDescriptionPlaceholder": "リポジトリの説明を入力",
+        "enableAutoSync": "自動同期",
+        "enableAutoSyncDescription": "有効にすると、システムが自動的にリポジトリの更新を同期します",
+        "aiGenerateDialog": {
+          "title": "AIスマート生成ドキュメント内容",
+          "description": "現在選択されているドキュメントディレクトリの内容を生成します。カスタムプロンプトを入力してAI生成をガイドするか、空のままデフォルトのプロンプトを使用できます。",
+          "promptLabel": "プロンプト（オプション）",
+          "promptPlaceholder": "例：コード例とアーキテクチャの説明を含む詳細な技術ドキュメントを生成してください...",
+          "promptHint": "ヒント：空のままにすると、システムのデフォルトプロンプトまたは以前に保存したプロンプトが使用されます",
+          "targetDocument": "対象ドキュメント：",
+          "currentPrompt": "現在のプロンプト：",
+          "cancel": "キャンセル",
+          "generating": "生成中...",
+          "startGenerate": "生成を開始"
+        },
+        "wikiGeneration": "Wiki生成"
+      }
+    },
+    "roles": {
+      "errors": {
+        "loadFailed": "読み込みに失敗しました",
+        "loadFailedDescription": "ロール一覧を読み込めません"
+      },
+      "status": {
+        "enabled": "有効",
+        "disabled": "無効"
+      },
+      "type": {
+        "system": "システムロール",
+        "custom": "カスタムロール"
+      },
+      "messages": {
+        "confirmDelete": "ロール \"{{name}}\" を削除してもよろしいですか？",
+        "deleteSuccess": "削除成功",
+        "deleteSuccessDescription": "ロールが削除されました",
+        "deleteFailed": "削除失敗",
+        "deleteFailedDescription": "ロールを削除できません",
+        "statusUpdateSuccess": "ステータス更新成功",
+        "statusUpdateDescription": "ロールが{{status}}されました",
+        "statusEnabled": "有効化",
+        "statusDisabled": "無効化",
+        "statusUpdateFailed": "ステータス更新失敗",
+        "statusUpdateFailedDescription": "ロールのステータスを更新できません"
+      },
+      "stats": {
+        "totalRoles": "ロール総数",
+        "totalRolesDescription": "システムロールとカスタムロールを含む",
+        "activeRoles": "アクティブロール",
+        "activeRolesDescription": "現在有効なロール",
+        "assignedUsers": "割り当てられたユーザー数",
+        "assignedUsersDescription": "ロールが割り当てられたユーザーの総数"
+      },
+      "list": {
+        "title": "ロール一覧",
+        "totalCount": "合計 {{total}} ロール"
+      },
+      "filters": {
+        "allStatus": "すべてのステータス"
+      },
+      "table": {
+        "noDescription": "説明なし",
+        "openMenu": "メニューを開く",
+        "actionsMenu": "アクション"
+      },
+      "actions": {
+        "viewMembers": "メンバーを表示",
+        "copyRole": "ロールをコピー",
+        "disable": "無効化",
+        "enable": "有効化"
+      },
+      "pagination": {
+        "previous": "前へ",
+        "pageInfo": "{{current}} / {{total}} ページ",
+        "next": "次へ"
+      }
+    },
+    "tokens": {
+      "labels": {
+        "inputTokens": "入力トークン",
+        "outputTokens": "出力トークン",
+        "totalTokens": "合計トークン"
+      },
+      "stats": {
+        "percentageOfTotal": "全体の{{percentage}}%",
+        "comparedToYesterday": "昨日比{{sign}}{{value}}%"
+      },
+      "chart": {
+        "title": "トークン使用傾向",
+        "description": "異なる期間のトークン使用状況を表示",
+        "timeRange": {
+          "7d": "過去7日間",
+          "30d": "過去30日間",
+          "90d": "過去90日間"
+        },
+        "chartType": {
+          "area": "エリアチャート",
+          "line": "折れ線グラフ",
+          "bar": "棒グラフ"
+        },
+        "export": "エクスポート",
+        "noData": "データなし",
+        "noDataDescription": "アクティビティがある場合、トークン使用データが表示されます"
+      },
+      "operationDistribution": {
+        "title": "操作タイプ分布",
+        "description": "操作タイプ別のトークン使用状況",
+        "noData": "操作データなし",
+        "unknown": "不明"
+      },
+      "topRepositories": {
+        "title": "トップリポジトリ",
+        "description": "トークン使用量が最も多いリポジトリ",
+        "noData": "リポジトリデータなし"
+      }
+    }
+  }
+}

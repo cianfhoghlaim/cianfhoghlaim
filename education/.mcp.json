@@ -1,0 +1,176 @@
+{
+  "mcpServers": {
+    "browserbase": {
+      "command": "npx",
+      "args": ["@browserbasehq/mcp-server-browserbase"],
+      "env": {
+        "BROWSERBASE_API_KEY": "${BROWSERBASE_API_KEY}",
+        "BROWSERBASE_PROJECT_ID": "${BROWSERBASE_PROJECT_ID}"
+      }
+    },
+    "firecrawl-mcp": {
+      "command": "npx",
+      "args": ["-y", "firecrawl-mcp"],
+      "env": {
+        "FIRECRAWL_API_KEY": "${FIRECRAWL_API_KEY}"
+      }
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest"]
+    },
+    "zai-mcp-server": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@z_ai/mcp-server"],
+      "env": {
+        "Z_AI_API_KEY": "${Z_AI_API_KEY}",
+        "Z_AI_MODE": "ZAI"
+      }
+    },
+    "web-search-prime": {
+      "type": "sse",
+      "url": "https://api.z.ai/api/mcp/web_search_prime/mcp",
+      "headers": {
+        "Authorization": "Bearer ${Z_AI_API_KEY}"
+      }
+    },
+    "web-reader": {
+      "type": "sse",
+      "url": "https://api.z.ai/api/mcp/web_reader/mcp",
+      "headers": {
+        "Authorization": "Bearer ${Z_AI_API_KEY}"
+      }
+    },
+    "huggingface": {
+      "type": "sse",
+      "url": "https://huggingface.co/mcp",
+      "headers": {
+        "Authorization": "Bearer ${HUGGINGFACE_TOKEN}"
+      }
+    },
+    "docker-mcp": {
+      "command": "npx",
+      "args": ["-y", "docker-mcp"]
+    },
+    "qdrant": {
+      "command": "uvx",
+      "args": ["mcp-server-qdrant"],
+      "env": {
+        "QDRANT_URL": "http://qdrant.cianfhoghlaim.ie",
+        "COLLECTION_NAME": "memories"
+      }
+    },
+    "beads": {
+      "command": "uvx",
+      "args": ["beads-mcp"]
+    },
+    "langfuse-mcp": {
+      "command": "uvx",
+      "args": ["langfuse-mcp"],
+      "env": {
+        "LANGFUSE_HOST": "http://localhost:3333",
+        "LANGFUSE_PUBLIC_KEY": "${LANGFUSE_PUBLIC_KEY}",
+        "LANGFUSE_SECRET_KEY": "${LANGFUSE_SECRET_KEY}"
+      }
+    },
+    "zread": {
+      "type": "sse",
+      "url": "https://api.z.ai/api/mcp/zread/mcp",
+      "headers": {
+        "Authorization": "Bearer ${Z_AI_API_KEY}"
+      }
+    }
+  },
+  "_disabled": {
+    "_comment": "Servers below are disabled - uncomment when services are available",
+    "github": {
+      "type": "sse",
+      "url": "https://api.githubcopilot.com/mcp/"
+    },
+    "memgraph": {
+      "command": "uvx",
+      "args": ["mcp-memgraph"],
+      "env": {
+        "MEMGRAPH_HOST": "memgraph.cianfhoghlaim.ie",
+        "MEMGRAPH_PORT": "7687"
+      }
+    },
+    "cognee-mcp": {
+      "type": "sse",
+      "url": "http://cognee-mcp.cianfhoghlaim.ie/mcp"
+    },
+    "dagster-mcp": {
+      "command": "uvx",
+      "args": ["mcp-server-dagster"],
+      "env": {
+        "DAGSTER_HOME": "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais"
+      }
+    },
+    "dlt-workspace": {
+      "command": "uvx",
+      "args": ["dlt", "workspace", "mcp"],
+      "env": {
+        "DLT_PROJECT_DIR": "/Users/cliste/dev/cianfhoghlaim/sruth"
+      }
+    },
+    "chunkhound": {
+      "command": "uv",
+      "args": ["run", "chunkhound", "mcp", "stdio"],
+      "env": {
+        "CHUNKHOUND_CONFIG": "/Users/cliste/dev/cianfhoghlaim/.chunkhound.json"
+      }
+    },
+    "letta": {
+      "command": "uvx",
+      "args": ["letta-mcp"],
+      "env": {
+        "LETTA_BASE_URL": "https://api.letta.ai/v1",
+        "LETTA_API_KEY": "${LETTA_API_KEY}"
+      }
+    },
+    "pydantic-gateway": {
+      "type": "sse",
+      "url": "https://gateway.pydantic.dev/proxy/mcp",
+      "headers": {
+        "Authorization": "Bearer ${PYDANTIC_AI_GATEWAY_API_KEY}"
+      }
+    },
+    "logfire": {
+      "type": "sse",
+      "url": "https://logfire.pydantic.dev/mcp",
+      "headers": {
+        "Authorization": "Bearer ${LOGFIRE_TOKEN}"
+      }
+    },
+    "duckdb-mcp": {
+      "command": "uvx",
+      "args": ["mcp-server-duckdb"],
+      "env": {
+        "DUCKDB_PATH": "/Users/cliste/dev/cianfhoghlaim/.duckdb/oideachais.duckdb"
+      }
+    },
+    "forgejo-mcp": {
+      "command": "npx",
+      "args": ["-y", "gitea-mcp"],
+      "env": {
+        "GITEA_URL": "https://git.cianfhoghlaim.ie",
+        "GITEA_TOKEN": "${FORGEJO_TOKEN}"
+      }
+    },
+    "searxng-mcp": {
+      "command": "uvx",
+      "args": ["searxng-mcp"],
+      "env": {
+        "SEARXNG_URL": "https://search.cianfhoghlaim.ie"
+      }
+    },
+    "zsearch": {
+      "type": "sse",
+      "url": "https://api.z.ai/api/mcp/search/mcp",
+      "headers": {
+        "Authorization": "Bearer ${Z_AI_API_KEY}"
+      }
+    }
+  }
+}

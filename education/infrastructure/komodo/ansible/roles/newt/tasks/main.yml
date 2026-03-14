@@ -1,0 +1,83 @@
+---
+# =============================================================================
+# NEWT ROLE - Main Tasks
+# =============================================================================
+# Deploys Pangolin Newt tunnel agent alongside Locket and Periphery
+# =============================================================================
+
+- name: Create site directory structure
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  loop:
+    - "{{ newt_base_dir }}"
+    - "{{ newt_secrets_dir }}"
+    - "{{ newt_templates_dir }}"
+
+- name: Create /etc/connect directory for OP token
+  ansible.builtin.file:
+    path: /etc/connect
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+
+- name: Deploy Locket secret templates
+  ansible.builtin.template:
+    src: locket-templates.j2
+    dest: "{{ newt_templates_dir }}/secrets.env"
+    owner: root
+    group: root
+    mode: "0600"
+
+- name: Deploy docker-compose.yaml
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ newt_base_dir }}/docker-compose.yaml"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart site services
+
+- name: Create Docker network
+  community.docker.docker_network:
+    name: "{{ docker_network_name }}"
+    state: present
+
+- name: Pull Docker images
+  ansible.builtin.shell: |
+    cd {{ newt_base_dir }}
+    docker compose pull
+  changed_when: false
+
+- name: Start site services
+  ansible.builtin.shell: |
+    cd {{ newt_base_dir }}
+    docker compose up -d
+  register: compose_up
+  changed_when: "'Started' in compose_up.stdout or 'Created' in compose_up.stdout"
+
+- name: Wait for Locket to be healthy
+  ansible.builtin.shell: |
+    timeout 60 bash -c 'until docker inspect --format="{{.State.Health.Status}}" {{ inventory_hostname }}-locket 2>/dev/null | grep -q healthy; do sleep 2; done'
+  changed_when: false
+  when: not ansible_check_mode
+
+- name: Verify Newt is running
+  ansible.builtin.shell: |
+    docker ps --filter "name={{ inventory_hostname }}-newt" --format "{{ '{{' }}.Status{{ '}}' }}"
+  register: newt_status
+  changed_when: false
+  failed_when: "'Up' not in newt_status.stdout"
+  when: not ansible_check_mode
+
+- name: Verify Periphery is running
+  ansible.builtin.shell: |
+    docker ps --filter "name={{ inventory_hostname }}-periphery" --format "{{ '{{' }}.Status{{ '}}' }}"
+  register: periphery_status
+  changed_when: false
+  failed_when: "'Up' not in periphery_status.stdout"
+  when: not ansible_check_mode

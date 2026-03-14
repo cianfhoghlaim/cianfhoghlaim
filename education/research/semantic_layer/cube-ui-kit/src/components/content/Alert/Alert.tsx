@@ -1,0 +1,55 @@
+import { ForwardedRef, forwardRef } from 'react';
+
+import THEMES from '../../../data/themes';
+import { tasty } from '../../../tasty';
+
+import { CubeAlertProps } from './types';
+import { useAlert } from './use-alert';
+
+const AlertElement = tasty({
+  name: 'Alert',
+  role: 'alert',
+  qa: 'Alert',
+  styles: {
+    display: 'block',
+    flow: 'column',
+    radius: {
+      '': '1cr',
+      'shape=sharp': '0',
+    },
+    padding: '1.5x',
+    preset: 't3',
+    color: {
+      '': '#dark-02',
+      'type=disabled': THEMES.disabled.color,
+    },
+    fill: {
+      '': '#clear',
+      ...Object.keys(THEMES).reduce((map, type) => {
+        map[`type=${type}`] = THEMES[type].fill;
+
+        return map;
+      }, {}),
+    },
+    border: {
+      '': '#clear',
+      ...Object.keys(THEMES).reduce((map, type) => {
+        map[`type=${type}`] = THEMES[type].border;
+
+        return map;
+      }, {}),
+      'shape=sharp': '0',
+    },
+  },
+});
+
+export const Alert = forwardRef(function Alert(
+  props: CubeAlertProps,
+  ref: ForwardedRef<HTMLDivElement>,
+) {
+  const { styles, mods, filteredProps } = useAlert(props);
+
+  return (
+    <AlertElement {...filteredProps} ref={ref} mods={mods} styles={styles} />
+  );
+});

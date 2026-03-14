@@ -1,0 +1,291 @@
+# =============================================================================
+# CIANFHOGHLAIM - Unified Local Development Stack
+# =============================================================================
+# Run all services for local development with a single command.
+#
+# USAGE:
+#   docker compose up -d                  # Start all services
+#   docker compose up dagster lakehouse   # Start only Dagster + Lakehouse
+#   docker compose --profile ui up -d     # Include UI dev servers
+#
+# PROFILES:
+#   - default: Dagster + Lakehouse (Garage + PostgreSQL + Lakekeeper)
+#   - ui:      Add UI development servers
+#   - full:    All services including observability
+#
+# PORTS:
+#   - 3024: Turborepo Microfrontends Proxy
+#   - 3335: Dagster UI
+#   - 3900: Garage S3 API
+#   - 5433: PostgreSQL (DuckLake catalog)
+#   - 8181: Lakekeeper Iceberg Catalog
+# =============================================================================
+
+name: cianfhoghlaim-dev
+
+services:
+  # ---------------------------------------------------------------------------
+  # DAGSTER - Pipeline Orchestration
+  # ---------------------------------------------------------------------------
+  dagster:
+    build:
+      context: .
+      dockerfile: Dockerfile.dagster
+    container_name: dev-dagster
+    restart: unless-stopped
+    ports:
+      - "${DAGSTER_PORT:-3335}:3000"
+    environment:
+      DAGSTER_HOME: /opt/dagster/home
+      # DuckLake Configuration
+      USE_DUCKLAKE: "true"
+      DUCKLAKE_POSTGRES_HOST: postgres
+      DUCKLAKE_POSTGRES_PORT: "5432"
+      DUCKLAKE_POSTGRES_USER: lakekeeper
+      DUCKLAKE_POSTGRES_PASSWORD: devpassword
+      # Garage S3 Configuration
+      AWS_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:-lakehouse}
+      AWS_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:-devpassword}
+      AWS_ENDPOINT_URL: http://garage:3900
+      AWS_REGION: garage
+    volumes:
+      - ./sruth:/app/sruth:ro
+      - ./workspace.yaml:/app/workspace.yaml:ro
+      - dagster-storage:/opt/dagster/storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+      garage:
+        condition: service_healthy
+    networks:
+      - dev-network
+
+  # ---------------------------------------------------------------------------
+  # LAKEHOUSE - S3 + PostgreSQL Catalog
+  # ---------------------------------------------------------------------------
+  garage:
+    image: dxflrs/garage:v1.0.1
+    container_name: dev-garage
+    restart: unless-stopped
+    ports:
+      - "${GARAGE_S3_PORT:-3900}:3900"
+      - "${GARAGE_ADMIN_PORT:-3904}:3904"
+    environment:
+      RUST_LOG: garage=info
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:-460274064622cf44cd2c2ebb80eedf9b4eb64730abb6d78eda44ab9cb5bb7da3}
+      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN:-devtoken}
+    volumes:
+      - ./bonneagar/storage/lakehouse/garage.toml:/etc/garage.toml:ro
+      - garage-meta:/var/lib/garage/meta
+      - garage-data:/var/lib/garage/data
+    command: ["/garage", "-c", "/etc/garage.toml", "server"]
+    healthcheck:
+      test: ["CMD", "/garage", "-c", "/etc/garage.toml", "node", "id"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - dev-network
+
+  garage-init:
+    image: curlimages/curl:latest
+    container_name: dev-garage-init
+    depends_on:
+      garage:
+        condition: service_healthy
+    environment:
+      GARAGE_ADMIN_TOKEN: devtoken
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        ADMIN_URL="http://garage:3904"
+        AUTH="Authorization: Bearer devtoken"
+
+        echo "Waiting for Garage admin API..."
+        sleep 3
+
+        NODE_ID=$$(curl -sf "$${ADMIN_URL}/v1/status" -H "$${AUTH}" | grep -o '"node":"[^"]*"' | cut -d'"' -f4)
+        echo "Node ID: $$NODE_ID"
+
+        LAYOUT_VERSION=$$(curl -sf "$${ADMIN_URL}/v1/layout" -H "$${AUTH}" | grep -o '"version":[0-9]*' | head -1 | cut -d':' -f2)
+
+        if [ "$$LAYOUT_VERSION" = "0" ]; then
+          echo "Configuring node layout..."
+          curl -sf -X POST "$${ADMIN_URL}/v1/layout" \
+            -H "$${AUTH}" -H "Content-Type: application/json" \
+            -d "[{\"id\": \"$$NODE_ID\", \"zone\": \"dc1\", \"capacity\": 100000000000, \"tags\": []}]" || true
+          curl -sf -X POST "$${ADMIN_URL}/v1/layout/apply" \
+            -H "$${AUTH}" -H "Content-Type: application/json" \
+            -d '{"version": 1}' || true
+          sleep 2
+        fi
+
+        echo "Creating access key..."
+        curl -sf -X POST "$${ADMIN_URL}/v1/key" \
+          -H "$${AUTH}" -H "Content-Type: application/json" \
+          -d '{"name": "lakehouse"}' 2>/dev/null || true
+
+        for bucket in iceberg lance ducklake; do
+          curl -sf -X POST "$${ADMIN_URL}/v1/bucket" \
+            -H "$${AUTH}" -H "Content-Type: application/json" \
+            -d "{\"globalAlias\": \"$$bucket\"}" || true
+        done
+
+        ACCESS_KEY_ID=$$(curl -sf "$${ADMIN_URL}/v1/key?search=lakehouse" -H "$${AUTH}" | grep -o '"accessKeyId":"[^"]*"' | head -1 | cut -d'"' -f4)
+
+        for bucket in iceberg lance ducklake; do
+          BUCKET_ID=$$(curl -sf "$${ADMIN_URL}/v1/bucket?globalAlias=$$bucket" -H "$${AUTH}" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
+          if [ -n "$$BUCKET_ID" ] && [ -n "$$ACCESS_KEY_ID" ]; then
+            curl -sf -X POST "$${ADMIN_URL}/v1/bucket/allow" \
+              -H "$${AUTH}" -H "Content-Type: application/json" \
+              -d "{\"bucketId\": \"$$BUCKET_ID\", \"accessKeyId\": \"$$ACCESS_KEY_ID\", \"permissions\": {\"read\": true, \"write\": true, \"owner\": true}}" || true
+          fi
+        done
+        echo "Garage initialization complete!"
+    restart: "no"
+    networks:
+      - dev-network
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: dev-postgres
+    restart: unless-stopped
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    environment:
+      POSTGRES_USER: lakekeeper
+      POSTGRES_PASSWORD: devpassword
+      POSTGRES_DB: lakekeeper
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./bonneagar/storage/lakehouse/init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lakekeeper"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    networks:
+      - dev-network
+
+  lakekeeper:
+    image: quay.io/lakekeeper/catalog:latest
+    container_name: dev-lakekeeper
+    restart: unless-stopped
+    ports:
+      - "${LAKEKEEPER_PORT:-8181}:8181"
+    environment:
+      LAKEKEEPER__PG_DATABASE_URL_READ: postgresql://lakekeeper:devpassword@postgres:5432/lakekeeper
+      LAKEKEEPER__PG_DATABASE_URL_WRITE: postgresql://lakekeeper:devpassword@postgres:5432/lakekeeper
+      LAKEKEEPER__PG_ENCRYPTION_KEY: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+      LAKEKEEPER__LISTEN_PORT: "8181"
+      LAKEKEEPER__BASE_URI: http://localhost:8181
+      LAKEKEEPER__SERVE_SWAGGER_UI: "true"
+      RUST_LOG: info
+    command: ["serve"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      garage:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/home/nonroot/lakekeeper", "healthcheck"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - dev-network
+
+  # ---------------------------------------------------------------------------
+  # UI DEVELOPMENT SERVERS (profile: ui)
+  # ---------------------------------------------------------------------------
+  portal:
+    profiles: ["ui", "full"]
+    build:
+      context: ./sruth/aleyum/portal
+      dockerfile: Dockerfile.dev
+    container_name: dev-portal
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./sruth/aleyum/portal/src:/app/src
+    networks:
+      - dev-network
+
+  oideachais-ui:
+    profiles: ["ui", "full"]
+    build:
+      context: ./sruth/oideachais/apps/web
+      dockerfile: Dockerfile.dev
+    container_name: dev-oideachais-ui
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./sruth/oideachais/apps/web/src:/app/src
+    networks:
+      - dev-network
+
+  crypteolas-ui:
+    profiles: ["ui", "full"]
+    build:
+      context: ./sruth/crypteolas/ui
+      dockerfile: Dockerfile.dev
+    container_name: dev-crypteolas-ui
+    ports:
+      - "3101:3101"
+    volumes:
+      - ./sruth/crypteolas/ui/src:/app/src
+    networks:
+      - dev-network
+
+  tuath-ui:
+    profiles: ["ui", "full"]
+    build:
+      context: ./sruth/tuath/ui
+      dockerfile: Dockerfile.dev
+    container_name: dev-tuath-ui
+    ports:
+      - "3102:3102"
+    volumes:
+      - ./sruth/tuath/ui/src:/app/src
+    networks:
+      - dev-network
+
+  # ---------------------------------------------------------------------------
+  # OBSERVABILITY (profile: full)
+  # ---------------------------------------------------------------------------
+  langfuse:
+    profiles: ["full"]
+    image: langfuse/langfuse:latest
+    container_name: dev-langfuse
+    ports:
+      - "${LANGFUSE_PORT:-3004}:3000"
+    environment:
+      DATABASE_URL: postgresql://lakekeeper:devpassword@postgres:5432/langfuse
+      NEXTAUTH_URL: http://localhost:3004
+      NEXTAUTH_SECRET: devsecret
+      SALT: devsalt
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - dev-network
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  dagster-storage:
+  garage-meta:
+  garage-data:
+  postgres-data:
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  dev-network:
+    driver: bridge

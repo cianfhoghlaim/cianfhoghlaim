@@ -1,0 +1,58 @@
+[package]
+name = "godot-ffi"
+version = "0.4.4"
+edition = "2021"
+rust-version = "1.87"
+license = "MPL-2.0"
+keywords = ["gamedev", "godot", "engine", "ffi"]
+categories = ["game-engines", "graphics"]
+description = "Internal crate used by godot-rust"
+repository = "https://github.com/godot-rust/gdext"
+homepage = "https://godot-rust.github.io"
+
+[features]
+codegen-rustfmt = ["godot-codegen/codegen-rustfmt"]
+codegen-lazy-fptrs = ["godot-codegen/codegen-lazy-fptrs"]
+experimental-godot-api = ["godot-codegen/experimental-godot-api"]
+experimental-threads = ["godot-codegen/experimental-threads"]
+experimental-wasm-nothreads = ["godot-bindings/experimental-wasm-nothreads"]
+debug-log = []
+
+api-custom = ["godot-bindings/api-custom"]
+api-custom-json = ["godot-bindings/api-custom-json"]
+# [version-sync] [[
+#  [line] api-$kebabVersion = ["godot-bindings/api-$kebabVersion"]
+api-4-2 = ["godot-bindings/api-4-2"]
+api-4-2-1 = ["godot-bindings/api-4-2-1"]
+api-4-2-2 = ["godot-bindings/api-4-2-2"]
+api-4-3 = ["godot-bindings/api-4-3"]
+api-4-4 = ["godot-bindings/api-4-4"]
+api-4-5 = ["godot-bindings/api-4-5"]
+# ]]
+
+# Safeguard levels (see godot/lib.rs for detailed documentation).
+safeguards-dev-balanced = ["godot-bindings/safeguards-dev-balanced"]
+safeguards-release-disengaged = ["godot-bindings/safeguards-release-disengaged"]
+
+[dependencies]
+
+[target.'cfg(target_os = "linux")'.dependencies]
+libc = { workspace = true }
+
+[target.'cfg(target_family = "wasm")'.dependencies]
+# Only needed for WASM identifier generation.
+godot-macros = { path = "../godot-macros", version = "=0.4.4", features = ["experimental-wasm"] }
+
+[build-dependencies]
+godot-bindings = { path = "../godot-bindings", version = "=0.4.4" }
+godot-codegen = { path = "../godot-codegen", version = "=0.4.4" }
+
+# https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+features = ["experimental-godot-api"]
+rustdoc-args = ["--cfg", "published_docs"]
+rustc-args = ["--cfg", "published_docs"]
+
+# Currently causes "unused manifest key" warnings. Maybe re-enable in the future, to make `published_docs` known.
+#[lints.rust]
+#unexpected_cfgs = { level = "warn", check-cfg = ['cfg(published_docs)'] }

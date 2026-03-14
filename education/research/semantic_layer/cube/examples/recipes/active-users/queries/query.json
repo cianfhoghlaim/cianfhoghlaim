@@ -1,0 +1,17 @@
+{
+  "measures": [
+    "ActiveUsers.monthlyActiveUsers",
+    "ActiveUsers.weeklyActiveUsers",
+    "ActiveUsers.dailyActiveUsers",
+    "ActiveUsers.wauToMau"
+  ],
+  "timeDimensions": [
+    {
+      "dimension": "ActiveUsers.createdAt",
+      "dateRange": [
+        "2020-01-01",
+        "2020-12-31"
+      ]
+    }
+  ]
+}

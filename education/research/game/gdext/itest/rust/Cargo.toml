@@ -1,0 +1,37 @@
+[package]
+name = "itest"
+version = "0.0.0"
+edition = "2021"
+rust-version = "1.87"
+license = "MPL-2.0"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[features]
+# Default feature MUST be empty for workflow reasons, even if it differs from the default feature set in upstream `godot` crate.
+default = []
+codegen-full = ["godot/__codegen-full"]
+codegen-full-experimental = ["codegen-full", "godot/experimental-godot-api"]
+experimental-threads = ["godot/experimental-threads"]
+register-docs = ["godot/register-docs"]
+serde = ["dep:serde", "dep:serde_json", "godot/serde"]
+
+# Do not add features here that are 1:1 forwarded to the `godot` crate, unless they are needed by itest itself.
+# Instead, compile itest with `--features godot/my-feature`.
+
+[dependencies]
+godot = { path = "../../godot", default-features = false, features = ["__trace"] }
+serde = { workspace = true, optional = true }
+serde_json = { workspace = true, optional = true }
+pin-project-lite = { workspace = true }
+
+[build-dependencies]
+godot-bindings = { path = "../../godot-bindings" } # emit_godot_version_cfg
+godot-codegen = { path = "../../godot-codegen" } # IS_CODEGEN_FULL
+repo-tweak = { path = "../repo-tweak" }
+
+# Minimum versions compatible with -Zminimal-versions
+proc-macro2 = { workspace = true }
+quote = { workspace = true }

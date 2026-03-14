@@ -1,0 +1,9 @@
+# Pangolin auto-discovery labels for Qdrant
+# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
+services:
+  qdrant:
+    labels:
+      - "pangolin.resource.name=Qdrant"
+      - "pangolin.resource.domain=qdrant.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://qdrant:6333"
+      - "pangolin.resource.middlewares=tinyauth"

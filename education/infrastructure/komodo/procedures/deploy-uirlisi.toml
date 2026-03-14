@@ -1,0 +1,66 @@
+# =============================================================================
+# DEPLOY UIRLÍSÍ PROCEDURE
+# =============================================================================
+# Orchestrates deployment of uirlisí (tools/utilities) stacks.
+# Primarily deployed to bunchloch (MacBook development machine).
+# =============================================================================
+
+[[procedure]]
+name = "deploy-uirlisi"
+description = "Deploy uirlisí tools and utilities"
+
+# Stage 1: Deploy core dev-tools
+[[procedure.config.stages]]
+name = "devtools-core"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "glance" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "chartdb" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "excalidraw" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "pastemax" } }
+
+# Stage 2: Deploy search and AI tools
+[[procedure.config.stages]]
+name = "devtools-ai"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "perplexica" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "searxng" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "pipecat" } }
+
+# Stage 3: Deploy productivity tools
+[[procedure.config.stages]]
+name = "devtools-productivity"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "letterfeed" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "changedetection" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "storybook" } }
+
+# Stage 4: Deploy infrastructure tools
+[[procedure.config.stages]]
+name = "devtools-infrastructure"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "restate" } }
+
+# Stage 5: Deploy scraping tools
+[[procedure.config.stages]]
+name = "scraping"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "skyvern" } }

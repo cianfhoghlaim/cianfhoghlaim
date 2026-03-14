@@ -1,0 +1,63 @@
+---
+# =============================================================================
+# SITE INFRASTRUCTURE PLAYBOOK
+# =============================================================================
+# Deploys site infrastructure (Newt + Locket + Periphery) to managed hosts
+#
+# USAGE:
+#   Deploy to all sites:
+#     ansible-playbook playbooks/site.yml
+#
+#   Deploy to specific host:
+#     ansible-playbook playbooks/site.yml -l cax41-hetzner
+#
+#   Deploy to MacBook:
+#     ansible-playbook playbooks/site.yml -l bunchloch
+#
+# PREREQUISITES:
+#   1. 1Password Connect running on OCI (132.145.27.89:8080)
+#   2. Newt credentials created in Pangolin UI
+#   3. Credentials stored in 1Password (vault: dev-baile):
+#      - <hostname>-newt: id, secret
+#   4. OP Connect token at /etc/connect/token on target hosts
+# =============================================================================
+
+- name: Deploy Site Infrastructure
+  hosts: periphery
+  become: true
+
+  pre_tasks:
+    - name: Verify Docker is installed
+      ansible.builtin.command: docker --version
+      changed_when: false
+      register: docker_version
+
+    - name: Display Docker version
+      ansible.builtin.debug:
+        msg: "Docker version: {{ docker_version.stdout }}"
+
+  roles:
+    - role: newt
+      tags:
+        - newt
+        - site
+
+  post_tasks:
+    - name: Show deployment summary
+      ansible.builtin.debug:
+        msg: |
+          Site Infrastructure Deployed Successfully!
+
+          Host: {{ inventory_hostname }}
+          Pangolin Endpoint: {{ pangolin_endpoint }}
+          Komodo Core: {{ periphery_core_address }}
+
+          Services:
+            - Locket (secrets): {{ inventory_hostname }}-locket
+            - Newt (tunnel): {{ inventory_hostname }}-newt
+            - Periphery (agent): {{ inventory_hostname }}-periphery
+
+          Next Steps:
+            1. Verify Newt connection in Pangolin UI
+            2. Verify Periphery connection in Komodo UI
+            3. Deploy storage stacks via Komodo

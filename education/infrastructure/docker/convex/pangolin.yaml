@@ -1,0 +1,9 @@
+# Pangolin auto-discovery labels for Convex
+# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
+services:
+  dashboard:
+    labels:
+      - "pangolin.resource.name=Convex"
+      - "pangolin.resource.domain=convex.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://convex-dashboard:6791"
+      - "pangolin.resource.middlewares=tinyauth"

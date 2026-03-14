@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+pydantic
+torch
+torchvision
+pillow
+numpy
+transformers==4.57.3
+opencv-python
+scipy
+trimesh
+pygltflib
+git+https://github.com/autonomousvision/mip-splatting.git#subdirectory=submodules/diff-gaussian-rasterization

@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": [
+    "js",
+    "test",
+    "benchmarks"
+  ],
+  "exclude": [
+    "test/snapshotResolver.js"
+  ],
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": ".",
+    "baseUrl": ".",
+    "allowJs": true,
+  }
+}

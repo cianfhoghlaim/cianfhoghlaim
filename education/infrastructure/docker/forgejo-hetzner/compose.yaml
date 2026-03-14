@@ -1,0 +1,60 @@
+# =============================================================================
+# FORGEJO HETZNER - Backup Forgejo Instance
+# =============================================================================
+# Standby/backup Forgejo instance on Hetzner.
+# Can be promoted to primary if OCI instance fails.
+# =============================================================================
+
+name: forgejo-hetzner
+
+services:
+  # ---------------------------------------------------------------------------
+  # FORGEJO - Git Server (Backup Instance)
+  # ---------------------------------------------------------------------------
+  forgejo:
+    image: code.forgejo.org/forgejo/forgejo:9.0.3
+    container_name: forgejo-hetzner
+    restart: unless-stopped
+    ports:
+      - "${FORGEJO_HTTP_PORT:-3000}:3000"
+      - "${FORGEJO_SSH_PORT:-2222}:2222"
+    environment:
+      # Server configuration
+      FORGEJO_DOMAIN: ${FORGEJO_DOMAIN:-git-hetzner.cianfhoghlaim.ie}
+      FORGEJO_ROOT_URL: ${FORGEJO_ROOT_URL:-https://git-hetzner.cianfhoghlaim.ie}
+      FORGEJO_HTTP_PORT: 3000
+      FORGEJO_SSH_PORT: 2222
+      FORGEJO_SSH_LISTEN_PORT: 2222
+      # Database
+      FORGEJO_DB_TYPE: postgres
+      FORGEJO_DB_HOST: ${FORGEJO_DB_HOST:-postgres:5432}
+      FORGEJO_DB_USER: ${FORGEJO_DB_USER:-forgejo}
+      FORGEJO_DB_PASSWORD: ${FORGEJO_DB_PASSWORD}
+      FORGEJO_DB_NAME: ${FORGEJO_DB_NAME:-forgejo_hetzner}
+      # Features
+      FORGEJO_DISABLE_REGISTRATION: "true"
+      FORGEJO_REQUIRE_SIGNIN: "true"
+      FORGEJO_ACTIONS_ENABLED: "false"
+      # Backup mode configuration
+      FORGEJO_BACKUP_MODE: "true"
+      FORGEJO_PRIMARY_INSTANCE: ${FORGEJO_PRIMARY_INSTANCE:-https://git.cianfhoghlaim.ie}
+    volumes:
+      - forgejo-hetzner-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:3000/api/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - forgejo
+      - pangolin
+
+volumes:
+  forgejo-hetzner-data:
+
+networks:
+  forgejo:
+    driver: bridge
+  pangolin:
+    external: true

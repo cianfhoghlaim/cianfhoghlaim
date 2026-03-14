@@ -1,0 +1,88 @@
+# =============================================================================
+# CROSS-CELTIC COMPARISON
+# =============================================================================
+cross_celtic_comparisons:
+  description: "Cognates and translations across Celtic languages"
+
+  greetings:
+    - concept: "hello/good day"
+      irish: "Dia duit"
+      scottish_gaelic: "Halò / Latha math"
+      welsh: "Helo / Shwmae"
+      breton: "Demat"
+      cornish: "Dydh da"
+      manx: "Moghrey mie"
+
+  basic_vocabulary:
+    - concept: "house"
+      irish: "teach"
+      scottish_gaelic: "taigh"
+      welsh: "tŷ"
+      breton: "ti"
+      cornish: "chi"
+      manx: "thie"
+
+    - concept: "water"
+      irish: "uisce"
+      scottish_gaelic: "uisge"
+      welsh: "dŵr"
+      breton: "dour"
+      cornish: "dowr"
+      manx: "ushtey"
+
+    - concept: "mountain"
+      irish: "sliabh"
+      scottish_gaelic: "sliabh / beinn"
+      welsh: "mynydd"
+      breton: "menez"
+      cornish: "menydh"
+      manx: "slieau"
+
+    - concept: "language"
+      irish: "teanga"
+      scottish_gaelic: "cànan / teanga"
+      welsh: "iaith"
+      breton: "yezh"
+      cornish: "yeth"
+      manx: "çhengey"
+
+  numbers_1_to_5:
+    - number: 1
+      irish: "aon"
+      scottish_gaelic: "aon"
+      welsh: "un"
+      breton: "unan"
+      cornish: "onan"
+      manx: "nane"
+
+    - number: 2
+      irish: "dó"
+      scottish_gaelic: "dhà"
+      welsh: "dau/dwy"
+      breton: "daou/div"
+      cornish: "dew/diw"
+      manx: "jees"
+
+    - number: 3
+      irish: "trí"
+      scottish_gaelic: "trì"
+      welsh: "tri/tair"
+      breton: "tri/teir"
+      cornish: "tri/teyr"
+      manx: "tree"
+
+    - number: 4
+      irish: "ceathair"
+      scottish_gaelic: "ceithir"
+      welsh: "pedwar/pedair"
+      breton: "pevar/peder"
+      cornish: "peswar/peder"
+      manx: "kiare"
+
+    - number: 5
+      irish: "cúig"
+      scottish_gaelic: "còig"
+      welsh: "pump"
+      breton: "pemp"
+      cornish: "pymp"
+      manx: "queig"

@@ -1,0 +1,61 @@
+{
+  "scrape_success": {
+    "success": true,
+    "html": "<!DOCTYPE html><html><head><title>Test</title></head><body><p>Content</p></body></html>",
+    "cleaned_html": "<body><p>Content</p></body>",
+    "markdown": "# Test\n\nContent",
+    "extracted_content": "Content",
+    "metadata": {
+      "title": "Test",
+      "links": {
+        "internal": 5,
+        "external": 2
+      },
+      "images": 3,
+      "status_code": 200
+    },
+    "screenshot": null
+  },
+  "scrape_with_screenshot": {
+    "success": true,
+    "html": "<!DOCTYPE html><html><body><p>Content</p></body></html>",
+    "cleaned_html": "<body><p>Content</p></body>",
+    "markdown": "Content",
+    "extracted_content": "Content",
+    "metadata": {
+      "title": "Test Page",
+      "status_code": 200
+    },
+    "screenshot": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+  },
+  "extraction_success": {
+    "success": true,
+    "extracted_data": {
+      "products": [
+        {"name": "Product A", "price": 19.99, "available": true},
+        {"name": "Product B", "price": 29.99, "available": false}
+      ],
+      "pagination": {
+        "current_page": 1,
+        "total_pages": 5
+      }
+    }
+  },
+  "scrape_error": {
+    "success": false,
+    "error": "Failed to load page",
+    "error_code": "NAVIGATION_FAILED"
+  },
+  "timeout_error": {
+    "success": false,
+    "error": "Page load timeout exceeded",
+    "error_code": "TIMEOUT"
+  },
+  "health_check": {
+    "status": "healthy",
+    "version": "0.4.0",
+    "uptime": 3600,
+    "active_sessions": 2,
+    "max_sessions": 10
+  }
+}

@@ -1,0 +1,325 @@
+{
+  "admin": {
+    "dashboard": {
+      "fetchFailed": "대시보드 데이터 가져오기 실패",
+      "lastUpdated": "마지막 업데이트",
+      "autoRefresh": "자동 새로고침",
+      "refresh": "새로고침",
+      "monthlyNew": "이번 달 신규",
+      "comparedToLastMonth": "지난달 대비",
+      "todayActive": "오늘 활성",
+      "weekActive": "이번 주 활성",
+      "monthlyActiveUsers": "이번 달 활성 사용자",
+      "userActivityStats": "사용자 활동 통계",
+      "recentUsers": "최근 등록된 사용자",
+      "recentRepositories": "최근 생성된 저장소",
+      "recentErrorLogs": "최근 오류 로그",
+      "documentCount": "문서 수",
+      "quickActions": "빠른 작업",
+      "quickActionsDescription": "자주 사용하는 관리 작업",
+      "stats": {
+        "total_repos": "총 저장소 수",
+        "total_documents": "총 문서 수",
+        "online_users": "온라인 사용자"
+      },
+      "noDescription": "설명 없음",
+      "unknown": "알 수 없음",
+      "increaseRate": "증가율"
+    },
+    "users": {
+      "userList": "사용자 목록",
+      "totalUsers": "총 {{total}}명의 사용자",
+      "filterByRole": "역할별 필터",
+      "allRoles": "모든 역할",
+      "cancelSelection": "선택 취소",
+      "selectAll": "모두 선택",
+      "selectUser": "사용자 {{name}} 선택",
+      "openMenu": "메뉴 열기",
+      "actionsMenu": "작업",
+      "resetPassword": "비밀번호 재설정",
+      "batchDeleteSelected": "선택한 항목 삭제 ({{count}})",
+      "previous": "이전",
+      "next": "다음",
+      "pageInfo": "{{current}} / {{total}} 페이지",
+      "errors": {
+        "loadFailed": "로드 실패",
+        "loadFailedDescription": "사용자 목록을 로드할 수 없습니다",
+        "unknown": "알 수 없음"
+      },
+      "messages": {
+        "confirmDelete": "이 사용자를 삭제하시겠습니까?",
+        "deleteSuccess": "삭제 성공",
+        "deleteSuccessDescription": "사용자가 삭제되었습니다",
+        "deleteFailed": "삭제 실패",
+        "deleteFailedDescription": "사용자를 삭제할 수 없습니다",
+        "pleaseSelectUsers": "삭제할 사용자를 선택하세요"
+      }
+    },
+    "repositories": {
+      "batchActions": "일괄 작업",
+      "repositoryList": "저장소 목록",
+      "totalRepositories": "총 {{total}}개의 저장소",
+      "filterStatus": "상태별 필터",
+      "allStatus": "모든 상태",
+      "statisticsInfo": "통계 정보",
+      "tokenIn": "입력 토큰",
+      "tokenOut": "출력 토큰",
+      "totalToken": "총 토큰",
+      "openMenu": "메뉴 열기",
+      "viewRepository": "저장소 보기",
+      "editInfo": "정보 편집",
+      "manageContent": "콘텐츠 관리",
+      "reprocessRepository": "저장소 재처리",
+      "exportMarkdown": "Markdown 내보내기",
+      "deleteRepository": "저장소 삭제",
+      "previous": "이전",
+      "next": "다음",
+      "pageInfo": "{{current}} / {{total}} 페이지",
+      "stats": {
+        "totalRepositories": "총 저장소 수",
+        "totalRepositoriesDescription": "모든 저장소",
+        "completedRepositories": "완료됨",
+        "completedRepositoriesDescription": "분석 완료",
+        "processingRepositories": "처리 중",
+        "processingRepositoriesDescription": "분석 중",
+        "pendingRepositories": "대기 중",
+        "pendingRepositoriesDescription": "분석 대기 중"
+      },
+      "statusLabels": {
+        "pending": "대기 중",
+        "processing": "처리 중",
+        "completed": "완료됨",
+        "failed": "실패"
+      },
+      "errors": {
+        "loadFailed": "로드 실패",
+        "loadFailedDescription": "저장소 목록을 로드할 수 없습니다"
+      },
+      "messages": {
+        "deleteSuccess": "삭제 성공",
+        "deleteSuccessDescription": "저장소 \"{{name}}\"이(가) 삭제되었습니다",
+        "deleteFailed": "삭제 실패",
+        "deleteFailedDescription": "저장소를 삭제할 수 없습니다",
+        "refreshSuccess": "새로고침 성공",
+        "refreshSuccessDescription": "저장소 \"{{name}}\"의 재처리가 시작되었습니다",
+        "refreshFailed": "새로고침 실패",
+        "refreshFailedDescription": "저장소를 새로고침할 수 없습니다",
+        "updateSuccess": "저장소 정보가 성공적으로 업데이트되었습니다",
+        "updateFailed": "업데이트 실패",
+        "updateFailedDescription": "저장소 정보를 업데이트하는 중 오류가 발생했습니다"
+      },
+      "deleteDialog": {
+        "title": "저장소 삭제 확인",
+        "description": "저장소 \"{{name}}\"을(를) 삭제하시겠습니까?",
+        "warning": "이 작업은 되돌릴 수 없으며 저장소와 모든 문서 데이터가 삭제됩니다.",
+        "cancel": "취소",
+        "confirmDelete": "삭제 확인"
+      },
+      "editDialog": {
+        "title": "저장소 정보 편집",
+        "description": "{{organizationName}}/{{name}} 정보 편집",
+        "repositoryDescription": "저장소 설명",
+        "descriptionPlaceholder": "저장소 설명을 입력하세요...",
+        "isRecommended": "추천 저장소",
+        "customPrompt": "사용자 정의 프롬프트 (선택사항)",
+        "promptPlaceholder": "사용자 정의 프롬프트를 입력하세요...",
+        "cancel": "취소",
+        "saving": "저장 중...",
+        "saveChanges": "변경사항 저장"
+      },
+      "detail": {
+        "loadRepositoryDataFailed": "저장소 데이터 로드 실패",
+        "fileSaveSuccess": "파일이 성공적으로 저장되었습니다",
+        "fileSaveFailed": "파일 저장 실패",
+        "repositoryRefreshSuccess": "저장소가 성공적으로 새로고침되었습니다",
+        "repositoryRefreshFailed": "저장소 새로고침 실패",
+        "repositoryDeleteSuccess": "저장소가 성공적으로 삭제되었습니다",
+        "repositoryDeleteFailed": "저장소 삭제 실패",
+        "syncTaskStarted": "동기화 작업이 시작되었습니다",
+        "syncStartFailed": "동기화 시작 실패",
+        "exportSuccess": "내보내기 성공",
+        "exportFailed": "내보내기 실패",
+        "repositoryNotFound": "저장소를 찾을 수 없습니다",
+        "returnToRepositoryList": "저장소 목록으로 돌아가기",
+        "refreshing": "새로고침 중...",
+        "refresh": "새로고침",
+        "export": "내보내기",
+        "edit": "편집",
+        "delete": "삭제",
+        "confirmDeleteRepository": "저장소 삭제 확인",
+        "deleteRepositoryWarning": "이 작업은 저장소와 모든 데이터를 영구적으로 삭제합니다. 이 작업은 취소할 수 없습니다.",
+        "cancel": "취소",
+        "confirmDelete": "삭제 확인",
+        "documents": "문서 관리",
+        "sync": "동기화 관리",
+        "quality": "품질 평가",
+        "searchDocuments": "문서 검색...",
+        "noDocuments": "문서 디렉토리가 없습니다",
+        "selectDocument": "문서 선택",
+        "selectDocumentDescription": "왼쪽 디렉토리에서 문서를 선택하여 내용을 보거나 편집하세요",
+        "completed": "완료됨",
+        "aiGenerate": "AI 생성",
+        "save": "저장",
+        "saving": "저장 중...",
+        "lastModified": "마지막 수정",
+        "loadingEditor": "편집기 로드 중...",
+        "fileContent": "파일 내용...",
+        "documentContent": "문서 내용...",
+        "documentSaveSuccess": "문서가 성공적으로 저장되었습니다",
+        "syncManagement": "동기화 관리",
+        "syncManagementDescription": "저장소의 동기화 설정 및 기록 관리",
+        "manualSync": "수동 동기화",
+        "manualSyncRepository": "저장소 수동 동기화",
+        "syncDescription": "소스 저장소에서 최신 파일을 가져와 문서를 재생성합니다.",
+        "startSync": "동기화 시작",
+        "lastSyncTime": "마지막 동기화 시간",
+        "neverSynced": "동기화된 적 없음",
+        "syncStatus": "동기화 상태",
+        "autoSync": "자동 동기화",
+        "updating": "업데이트 중...",
+        "enabled": "활성화됨",
+        "disabled": "비활성화됨",
+        "syncHistory": "동기화 기록",
+        "syncSuccess": "동기화 성공",
+        "syncFailed": "동기화 실패",
+        "syncing": "동기화 중",
+        "manual": "수동",
+        "auto": "자동",
+        "startTime": "시작",
+        "endTime": "종료",
+        "filesChanged": "파일",
+        "filesAdded": "추가됨",
+        "filesUpdated": "업데이트됨",
+        "filesDeleted": "삭제됨",
+        "noSyncHistory": "동기화 기록이 없습니다",
+        "permissionManagement": "권한 관리",
+        "permissionManagementDescription": "이 저장소에 대한 사용자 및 역할 액세스 관리",
+        "permissionDevelopment": "권한 관리 기능은 개발 중입니다...",
+        "configManagement": "구성 관리",
+        "configManagementDescription": "저장소의 다양한 구성 옵션 관리",
+        "configDevelopment": "구성 관리 기능은 개발 중입니다...",
+        "taskManagement": "작업 관리",
+        "taskManagementDescription": "저장소 관련 처리 작업 보기 및 관리",
+        "taskDevelopment": "작업 관리 기능은 개발 중입니다...",
+        "editRepositoryInfo": "저장소 정보 편집",
+        "editRepositoryDescription": "저장소의 기본 정보 및 동기화 설정 수정",
+        "repositoryName": "저장소 이름",
+        "repositoryNamePlaceholder": "저장소 이름 입력",
+        "repositoryDescription": "저장소 설명",
+        "repositoryDescriptionPlaceholder": "저장소 설명 입력",
+        "enableAutoSync": "자동 동기화",
+        "enableAutoSyncDescription": "활성화하면 시스템이 자동으로 저장소 업데이트를 동기화합니다",
+        "aiGenerateDialog": {
+          "title": "AI 스마트 문서 내용 생성",
+          "description": "현재 선택한 문서 디렉토리의 내용을 생성합니다. 사용자 정의 프롬프트를 입력하여 AI 생성을 안내하거나 비워두면 기본 프롬프트를 사용합니다.",
+          "promptLabel": "프롬프트 (선택사항)",
+          "promptPlaceholder": "예: 코드 예제와 아키텍처 설명이 포함된 자세한 기술 문서를 생성해주세요...",
+          "promptHint": "힌트: 비워두면 시스템 기본 프롬프트 또는 이전에 저장한 프롬프트를 사용합니다",
+          "targetDocument": "대상 문서:",
+          "currentPrompt": "현재 프롬프트:",
+          "cancel": "취소",
+          "generating": "생성 중...",
+          "startGenerate": "생성 시작"
+        },
+        "wikiGeneration": "위키 생성"
+      }
+    },
+    "roles": {
+      "errors": {
+        "loadFailed": "로드 실패",
+        "loadFailedDescription": "역할 목록을 로드할 수 없습니다"
+      },
+      "status": {
+        "enabled": "활성화됨",
+        "disabled": "비활성화됨"
+      },
+      "type": {
+        "system": "시스템 역할",
+        "custom": "사용자 정의 역할"
+      },
+      "messages": {
+        "confirmDelete": "역할 \"{{name}}\"을(를) 삭제하시겠습니까?",
+        "deleteSuccess": "삭제 성공",
+        "deleteSuccessDescription": "역할이 삭제되었습니다",
+        "deleteFailed": "삭제 실패",
+        "deleteFailedDescription": "역할을 삭제할 수 없습니다",
+        "statusUpdateSuccess": "상태 업데이트 성공",
+        "statusUpdateDescription": "역할이 {{status}}되었습니다",
+        "statusEnabled": "활성화",
+        "statusDisabled": "비활성화",
+        "statusUpdateFailed": "상태 업데이트 실패",
+        "statusUpdateFailedDescription": "역할 상태를 업데이트할 수 없습니다"
+      },
+      "stats": {
+        "totalRoles": "총 역할 수",
+        "totalRolesDescription": "시스템 역할 및 사용자 정의 역할 포함",
+        "activeRoles": "활성 역할",
+        "activeRolesDescription": "현재 활성화된 역할",
+        "assignedUsers": "할당된 사용자 수",
+        "assignedUsersDescription": "역할이 할당된 총 사용자 수"
+      },
+      "list": {
+        "title": "역할 목록",
+        "totalCount": "총 {{total}}개의 역할"
+      },
+      "filters": {
+        "allStatus": "모든 상태"
+      },
+      "table": {
+        "noDescription": "설명 없음",
+        "openMenu": "메뉴 열기",
+        "actionsMenu": "작업"
+      },
+      "actions": {
+        "viewMembers": "멤버 보기",
+        "copyRole": "역할 복사",
+        "disable": "비활성화",
+        "enable": "활성화"
+      },
+      "pagination": {
+        "previous": "이전",
+        "pageInfo": "{{current}} / {{total}} 페이지",
+        "next": "다음"
+      }
+    },
+    "tokens": {
+      "labels": {
+        "inputTokens": "입력 토큰",
+        "outputTokens": "출력 토큰",
+        "totalTokens": "총 토큰"
+      },
+      "stats": {
+        "percentageOfTotal": "전체의 {{percentage}}%",
+        "comparedToYesterday": "어제 대비 {{sign}}{{value}}%"
+      },
+      "chart": {
+        "title": "토큰 사용 추세",
+        "description": "다양한 기간의 토큰 사용 현황 보기",
+        "timeRange": {
+          "7d": "최근 7일",
+          "30d": "최근 30일",
+          "90d": "최근 90일"
+        },
+        "chartType": {
+          "area": "영역 차트",
+          "line": "선형 차트",
+          "bar": "막대 차트"
+        },
+        "export": "내보내기",
+        "noData": "데이터 없음",
+        "noDataDescription": "활동이 있으면 토큰 사용 데이터가 표시됩니다"
+      },
+      "operationDistribution": {
+        "title": "작업 유형 분포",
+        "description": "작업 유형별 토큰 사용량",
+        "noData": "작업 데이터 없음",
+        "unknown": "알 수 없음"
+      },
+      "topRepositories": {
+        "title": "상위 저장소",
+        "description": "토큰 사용량이 가장 많은 저장소",
+        "noData": "저장소 데이터 없음"
+      }
+    }
+  }
+}

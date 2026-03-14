@@ -1,0 +1,24 @@
+{
+  "cli": {
+    "version": ">= 5.4.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "channel": "development"
+    },
+    "preview": {
+      "distribution": "internal",
+      "channel": "preview"
+    },
+    "production": {
+      "autoIncrement": true,
+      "channel": "prod-0.0.3"
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

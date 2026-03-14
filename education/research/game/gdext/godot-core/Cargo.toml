@@ -1,0 +1,70 @@
+[package]
+name = "godot-core"
+version = "0.4.4"
+edition = "2021"
+rust-version = "1.87"
+license = "MPL-2.0"
+keywords = ["gamedev", "godot", "engine", "2d", "3d"] # possibly: "ffi"
+categories = ["game-engines", "graphics"]
+description = "Internal crate used by godot-rust"
+repository = "https://github.com/godot-rust/gdext"
+homepage = "https://godot-rust.github.io"
+
+[features]
+default = []
+register-docs = []
+codegen-rustfmt = ["godot-ffi/codegen-rustfmt", "godot-codegen/codegen-rustfmt"]
+codegen-full = ["godot-codegen/codegen-full"]
+codegen-lazy-fptrs = [
+    "godot-ffi/codegen-lazy-fptrs",
+    "godot-codegen/codegen-lazy-fptrs",
+]
+double-precision = ["godot-codegen/double-precision"]
+experimental-godot-api = ["godot-codegen/experimental-godot-api"]
+experimental-threads = ["godot-ffi/experimental-threads", "godot-codegen/experimental-threads"]
+experimental-wasm-nothreads = ["godot-ffi/experimental-wasm-nothreads"]
+debug-log = ["godot-ffi/debug-log"]
+trace = []
+
+api-custom = ["godot-ffi/api-custom", "godot-codegen/api-custom"]
+api-custom-json = ["godot-codegen/api-custom-json"]
+# [version-sync] [[
+#  [line] api-$kebabVersion = ["godot-ffi/api-$kebabVersion"]
+api-4-2 = ["godot-ffi/api-4-2"]
+api-4-2-1 = ["godot-ffi/api-4-2-1"]
+api-4-2-2 = ["godot-ffi/api-4-2-2"]
+api-4-3 = ["godot-ffi/api-4-3"]
+api-4-4 = ["godot-ffi/api-4-4"]
+api-4-5 = ["godot-ffi/api-4-5"]
+# ]]
+
+# Safeguard levels (see godot/lib.rs for detailed documentation).
+safeguards-dev-balanced = ["godot-ffi/safeguards-dev-balanced"]
+safeguards-release-disengaged = ["godot-ffi/safeguards-release-disengaged"]
+
+[dependencies]
+godot-ffi = { path = "../godot-ffi", version = "=0.4.4" }
+
+# See https://docs.rs/glam/latest/glam/index.html#feature-gates
+glam = { workspace = true }
+serde = { workspace = true, optional = true }
+godot-cell = { path = "../godot-cell", version = "=0.4.4" }
+
+[build-dependencies]
+godot-bindings = { path = "../godot-bindings", version = "=0.4.4" }
+godot-codegen = { path = "../godot-codegen", version = "=0.4.4" }
+
+# Reverse dev dependencies so doctests can use `godot::` prefix.
+[dev-dependencies]
+godot = { path = "../godot", default-features = false }
+serde_json = { workspace = true }
+
+# https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+features = ["experimental-godot-api"]
+rustdoc-args = ["--cfg", "published_docs"]
+rustc-args = ["--cfg", "published_docs"]
+
+# Currently causes "unused manifest key" warnings. Maybe re-enable in the future, to make `published_docs` known.
+#[lints.rust]
+#unexpected_cfgs = { level = "warn", check-cfg = ['cfg(published_docs)'] }

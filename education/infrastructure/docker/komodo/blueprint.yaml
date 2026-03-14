@@ -1,0 +1,16 @@
+# =============================================================================
+# KOMODO CORE - Pangolin Blueprint
+# =============================================================================
+# Routing configuration for Pangolin Integration API
+# NOTE: No auth section - Komodo handles its own local authentication
+
+public-resources:
+  komodo:
+    name: "Komodo Dashboard"
+    full-domain: "komodo.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "komodo-core"
+        method: "http"
+        port: 9120

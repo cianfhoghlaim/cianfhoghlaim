@@ -1,0 +1,46 @@
+{
+  "name": "@cubejs-client/ngx",
+  "version": "1.5.14",
+  "author": "Cube Dev, Inc.",
+  "engines": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cube-js/cube.git",
+    "directory": "packages/cubejs-client-ngx"
+  },
+  "description": "Cube.js client for Angular",
+  "publishConfig": {
+    "access": "public"
+  },
+  "lerna": {
+    "command": {
+      "publish": {
+        "directory": "dist"
+      }
+    }
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "ng build",
+    "ng:watch": "ng build --watch --configuration development",
+    "dev": "yarn build && yalc publish --push"
+  },
+  "dependencies": {
+    "fast-deep-equal": "^3.1.3",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^18.2.16",
+    "@angular/cli": "^18.2.16",
+    "@angular/compiler": "^18.2.13",
+    "@angular/compiler-cli": "^18.2.13",
+    "@angular/core": "^18.2.13",
+    "ng-packagr": "^18.2.1",
+    "rxjs": "~7.5.0",
+    "typescript": "~5.4.5"
+  },
+  "peerDependencies": {
+    "@cubejs-client/core": ">=0.28.1",
+    "rxjs": ">=6.6.0"
+  }
+}

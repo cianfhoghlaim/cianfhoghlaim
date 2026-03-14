@@ -1,0 +1,57 @@
+# =============================================================================
+# LAKEKEEPER HETZNER - Standalone Iceberg Catalog
+# =============================================================================
+# Lakekeeper instance for Hetzner production workloads.
+# Uses local PostgreSQL for catalog metadata.
+# Connects to remote Garage S3 on OCI for storage backend.
+# =============================================================================
+
+name: lakekeeper-hetzner
+
+services:
+  # ---------------------------------------------------------------------------
+  # LAKEKEEPER - Iceberg REST Catalog (Hetzner)
+  # ---------------------------------------------------------------------------
+  lakekeeper:
+    image: quay.io/lakekeeper/catalog:latest
+    container_name: lakekeeper-hetzner
+    restart: unless-stopped
+    command: ["serve"]
+    ports:
+      - "${LAKEKEEPER_PORT:-8181}:8181"
+      - "${LAKEKEEPER_METRICS_PORT:-9100}:9000"
+    environment:
+      # Database connection (shared PostgreSQL on Hetzner)
+      LAKEKEEPER__PG_DATABASE_URL_READ: postgresql://${LAKEKEEPER_DB_USER:-lakekeeper}:${LAKEKEEPER_DB_PASSWORD}@postgres:5432/lakekeeper_hetzner
+      LAKEKEEPER__PG_DATABASE_URL_WRITE: postgresql://${LAKEKEEPER_DB_USER:-lakekeeper}:${LAKEKEEPER_DB_PASSWORD}@postgres:5432/lakekeeper_hetzner
+      LAKEKEEPER__PG_ENCRYPTION_KEY: ${LAKEKEEPER_ENCRYPTION_KEY}
+      LAKEKEEPER__PG_SSL_MODE: require
+      # Server configuration
+      LAKEKEEPER__LISTEN_PORT: "8181"
+      LAKEKEEPER__BASE_URI: ${LAKEKEEPER_BASE_URI:-https://lakekeeper-hetzner.cianfhoghlaim.ie}
+      LAKEKEEPER__SERVE_SWAGGER_UI: "true"
+      # Storage profile for remote Garage S3
+      LAKEKEEPER__S3__ENDPOINT: https://s3.cianfhoghlaim.ie
+      LAKEKEEPER__S3__ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID}
+      LAKEKEEPER__S3__SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY}
+      LAKEKEEPER__S3__REGION: garage
+      LAKEKEEPER__S3__PATH_STYLE_ACCESS: "true"
+      RUST_LOG: ${RUST_LOG:-info}
+    healthcheck:
+      test: ["CMD", "/home/nonroot/lakekeeper", "healthcheck"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - lakehouse
+      - pangolin
+
+volumes:
+  lakekeeper-hetzner-data:
+
+networks:
+  lakehouse:
+    driver: bridge
+  pangolin:
+    external: true

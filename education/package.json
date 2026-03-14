@@ -1,0 +1,71 @@
+{
+  "name": "cianfhoghlaim",
+  "private": true,
+  "description": "Celtic language AI learning platform - Data pipelines, ML models, Infrastructure",
+  "workspaces": [
+    "sruth/shared-ui",
+    "sruth/*/ui",
+    "sruth/aleyum/portal",
+    "sruth/oideachais/apps/web",
+    "bonneagar/dagger",
+    "bonneagar/pulumi/*"
+  ],
+  "dependencies": {
+    "@1password/sdk": "^0.3.1",
+    "@1password/connect": "^1.4.2",
+    "@anthropic-ai/claude-code": "^2.0.74",
+    "@convex-dev/better-auth": "^0.9.7",
+    "@convex-dev/react-query": "^0.1.0",
+    "@fission-ai/openspec": "^0.16.0",
+    "@google/gemini-cli": "^0.18.4",
+    "@openai/codex": "^0.63.0",
+    "@pulumi/cloudflare": "^6.11.0",
+    "@pulumi/oci": "^3.12.0",
+    "@tanstack/ai": "^0.1.0",
+    "@tanstack/ai-openai": "^0.1.0",
+    "@tanstack/ai-react": "^0.1.0",
+    "@tanstack/react-router": "^1.139.10",
+    "@tanstack/react-start": "^1.141.8",
+    "@xyflow/react": "^12.9.3",
+    "better-auth": "^1.4.3",
+    "convex": "^1.29.3",
+    "dotenv": "^17.2.0",
+    "hono": "^4.10.7",
+    "ink": "^6.5.1",
+    "komodo_client": "^1.18.4",
+    "repomix": "^1.9.2",
+    "vite": "^7.2.4"
+  },
+  "devDependencies": {
+    "@docusaurus/core": "^3.6.0",
+    "@docusaurus/preset-classic": "^3.6.0",
+    "@types/node": "^22.0.0",
+    "eslint": "^9.0.0",
+    "prettier": "^3.4.0",
+    "turbo": "^2.7.2",
+    "typescript": "^5.6.0"
+  },
+  "scripts": {
+    "dev:oideachas": "bun --cwd sruth/oideachas/ui run dev",
+    "dev:codeolas": "bun --cwd sruth/códeolas/web run dev",
+    "dev:scoil": "bun --cwd sruth/scoil/web run dev",
+    "dev:gaois": "bun --cwd sruth/gaois/web run dev",
+    "dev:tuath": "bun --cwd sruth/tuath/web run dev",
+    "dev:tionscnamh": "bun --cwd sruth/tionscnamh/web run dev",
+    "build": "bun run --filter '*' build",
+    "typecheck": "bunx tsc --noEmit",
+    "lint": "bunx eslint .",
+    "format": "bunx prettier --write .",
+    "docs:dev": "bun --cwd docs-site run start",
+    "docs:build": "bun --cwd docs-site run build",
+    "docs:serve": "bun --cwd docs-site run serve",
+    "dagster:oideachas": "cd sruth/oideachas && uv run dagster dev",
+    "dagster:tuath": "cd sruth/tuath && uv run dagster dev",
+    "dagger:ci": "cd bonneagar/dagger && dagger call ci --source ../..",
+    "dagger:test": "cd bonneagar/dagger && dagger call test-all --source ../.."
+  },
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "packageManager": "bun@1.3.0"
+}

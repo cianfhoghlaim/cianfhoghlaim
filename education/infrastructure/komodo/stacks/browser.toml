@@ -1,0 +1,27 @@
+# =============================================================================
+# BROWSER AUTOMATION STACK
+# =============================================================================
+# Multi-backend browser automation with intelligent routing
+# Self-hosted services: Skyvern, Stagehand, Crawl4AI, CDP
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# BROWSER - Main API Service (Hunter-Gatherer-Operator Pattern)
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "browser"
+description = "Browser automation API with circuit breaker fallback"
+tags = ["host:cax41-hetzner", "tier:automation", "type:browser"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/storage/browser"
+file_paths = ["compose.yaml", "pangolin.yaml", "secrets.env"]
+environment = """
+BROWSER_API_PORT=8000
+STAGEHAND_PORT=3100
+SKYVERN_API_PORT=8000
+SKYVERN_UI_PORT=8080
+CRAWL4AI_PORT=11235
+CDP_GRID_PORT=4444
+"""

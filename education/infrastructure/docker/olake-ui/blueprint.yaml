@@ -1,0 +1,18 @@
+# =============================================================================
+# OLAKE-UI - Pangolin Blueprint
+# =============================================================================
+
+public-resources:
+  olake-ui:
+    name: "OLake UI"
+    full-domain: "olake.cianfhoghlaim.ie"
+    protocol: "http"
+    auth:
+      sso-enabled: true
+      sso-roles:
+        - Member
+    targets:
+      - site: "cax41-hetzner"
+        hostname: "olake-ui"
+        method: "http"
+        port: 8000

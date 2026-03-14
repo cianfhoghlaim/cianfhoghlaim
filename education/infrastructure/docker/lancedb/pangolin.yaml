@@ -1,0 +1,9 @@
+# Pangolin auto-discovery labels for LanceDB
+# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
+services:
+  lancedb:
+    labels:
+      - "pangolin.resource.name=LanceDB"
+      - "pangolin.resource.domain=lancedb.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://lancedb:8080"
+      - "pangolin.resource.middlewares=tinyauth"

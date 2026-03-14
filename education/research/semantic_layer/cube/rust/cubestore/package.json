@@ -1,0 +1,58 @@
+{
+  "name": "@cubejs-backend/cubestore",
+  "version": "1.5.14",
+  "description": "Cube.js pre-aggregation storage layer.",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
+  "engines": {
+    "node": "^12.0.0 || ^14.0.0 || >=16.0.0"
+  },
+  "bin": {
+    "cubestore-dev": "bin/cubestore-dev"
+  },
+  "scripts": {
+    "build": "rm -rf dist && npm run tsc",
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "lint": "eslint js-wrapper/* --ext .ts,.js",
+    "lint:fix": "eslint --fix js-wrapper/* --ext .ts,js",
+    "unit": "jest",
+    "unit:debug": "jest --runInBand",
+    "postinstall": "node bin/post-install"
+  },
+  "files": [
+    "dist/src",
+    "bin"
+  ],
+  "author": "Cube Dev, Inc.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cube-js/cube.git",
+    "directory": "rust/cubestore"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@cubejs-backend/linter": "1.5.14",
+    "@types/jest": "^27",
+    "@types/node": "^18",
+    "jest": "^27",
+    "typescript": "~5.2.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@cubejs-backend/shared": "1.5.14",
+    "@octokit/core": "^3.2.5",
+    "source-map-support": "^0.5.19"
+  },
+  "eslintConfig": {
+    "extends": "../../packages/cubejs-linter"
+  },
+  "jest": {
+    "testMatch": [
+      "<rootDir>/dist/test/*.(test|spec).(js)"
+    ],
+    "testEnvironment": "node"
+  }
+}

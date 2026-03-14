@@ -1,0 +1,16 @@
+---
+# =============================================================================
+# KOMODO PERIPHERY ROLE - Handlers
+# =============================================================================
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+  listen: "Reload systemd"
+
+- name: Restart periphery
+  ansible.builtin.systemd:
+    name: periphery
+    state: restarted
+  listen: "Restart periphery"
+  when: periphery_service_state == 'started'

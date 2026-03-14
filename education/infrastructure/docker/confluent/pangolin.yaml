@@ -1,0 +1,9 @@
+# Pangolin auto-discovery labels for Confluent Kafka UI
+# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
+services:
+  kafka-ui:
+    labels:
+      - "pangolin.resource.name=Kafka UI"
+      - "pangolin.resource.domain=kafka.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://kafka-ui:8080"
+      - "pangolin.resource.middlewares=tinyauth"

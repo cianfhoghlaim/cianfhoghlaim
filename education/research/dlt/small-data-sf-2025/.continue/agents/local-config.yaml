@@ -1,0 +1,9 @@
+name: Local
+version: 1.0.0
+schema: v1
+
+models:
+  - name: GPT-5
+    provider: openai
+    model: gpt-5
+    apiKey: YOUR-API-KEY

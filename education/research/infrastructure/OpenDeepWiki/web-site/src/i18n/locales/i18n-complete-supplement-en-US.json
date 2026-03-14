@@ -1,0 +1,325 @@
+{
+  "admin": {
+    "dashboard": {
+      "fetchFailed": "Failed to fetch dashboard data",
+      "lastUpdated": "Last Updated",
+      "autoRefresh": "Auto Refresh",
+      "refresh": "Refresh",
+      "monthlyNew": "Monthly New",
+      "comparedToLastMonth": "Compared to last month",
+      "todayActive": "Today Active",
+      "weekActive": "Week Active",
+      "monthlyActiveUsers": "Monthly Active Users",
+      "userActivityStats": "User Activity Statistics",
+      "recentUsers": "Recently Registered Users",
+      "recentRepositories": "Recently Created Repositories",
+      "recentErrorLogs": "Recent Error Logs",
+      "documentCount": "Documents",
+      "quickActions": "Quick Actions",
+      "quickActionsDescription": "Frequently used management operations",
+      "stats": {
+        "total_repos": "Total Repositories",
+        "total_documents": "Total Documents",
+        "online_users": "Online Users"
+      },
+      "noDescription": "No description",
+      "unknown": "Unknown",
+      "increaseRate": "Growth Rate"
+    },
+    "users": {
+      "userList": "User List",
+      "totalUsers": "Total {{total}} users",
+      "filterByRole": "Filter by Role",
+      "allRoles": "All Roles",
+      "cancelSelection": "Cancel Selection",
+      "selectAll": "Select All",
+      "selectUser": "Select user {{name}}",
+      "openMenu": "Open Menu",
+      "actionsMenu": "Actions",
+      "resetPassword": "Reset Password",
+      "batchDeleteSelected": "Delete Selected ({{count}})",
+      "previous": "Previous",
+      "next": "Next",
+      "pageInfo": "Page {{current}} of {{total}}",
+      "errors": {
+        "loadFailed": "Load Failed",
+        "loadFailedDescription": "Unable to load user list",
+        "unknown": "Unknown"
+      },
+      "messages": {
+        "confirmDelete": "Are you sure you want to delete this user?",
+        "deleteSuccess": "Delete Successful",
+        "deleteSuccessDescription": "User has been deleted",
+        "deleteFailed": "Delete Failed",
+        "deleteFailedDescription": "Unable to delete user",
+        "pleaseSelectUsers": "Please select users to delete"
+      }
+    },
+    "repositories": {
+      "batchActions": "Batch Actions",
+      "repositoryList": "Repository List",
+      "totalRepositories": "Total {{total}} repositories",
+      "filterStatus": "Filter Status",
+      "allStatus": "All Status",
+      "statisticsInfo": "Statistics",
+      "tokenIn": "Input Tokens",
+      "tokenOut": "Output Tokens",
+      "totalToken": "Total Tokens",
+      "openMenu": "Open Menu",
+      "viewRepository": "View Repository",
+      "editInfo": "Edit Information",
+      "manageContent": "Manage Content",
+      "reprocessRepository": "Reprocess Repository",
+      "exportMarkdown": "Export Markdown",
+      "deleteRepository": "Delete Repository",
+      "previous": "Previous",
+      "next": "Next",
+      "pageInfo": "Page {{current}} of {{total}}",
+      "stats": {
+        "totalRepositories": "Total Repositories",
+        "totalRepositoriesDescription": "All repositories",
+        "completedRepositories": "Completed",
+        "completedRepositoriesDescription": "Analysis completed",
+        "processingRepositories": "Processing",
+        "processingRepositoriesDescription": "Currently analyzing",
+        "pendingRepositories": "Pending",
+        "pendingRepositoriesDescription": "Waiting for analysis"
+      },
+      "statusLabels": {
+        "pending": "Pending",
+        "processing": "Processing",
+        "completed": "Completed",
+        "failed": "Failed"
+      },
+      "errors": {
+        "loadFailed": "Load Failed",
+        "loadFailedDescription": "Unable to load repository list"
+      },
+      "messages": {
+        "deleteSuccess": "Delete Successful",
+        "deleteSuccessDescription": "Repository \"{{name}}\" has been deleted",
+        "deleteFailed": "Delete Failed",
+        "deleteFailedDescription": "Unable to delete repository",
+        "refreshSuccess": "Refresh Successful",
+        "refreshSuccessDescription": "Repository \"{{name}}\" has started reprocessing",
+        "refreshFailed": "Refresh Failed",
+        "refreshFailedDescription": "Unable to refresh repository",
+        "updateSuccess": "Repository information updated successfully",
+        "updateFailed": "Update Failed",
+        "updateFailedDescription": "An error occurred while updating repository information"
+      },
+      "deleteDialog": {
+        "title": "Confirm Delete Repository",
+        "description": "Are you sure you want to delete repository \"{{name}}\"?",
+        "warning": "This action is irreversible and will delete the repository and all its document data.",
+        "cancel": "Cancel",
+        "confirmDelete": "Confirm Delete"
+      },
+      "editDialog": {
+        "title": "Edit Repository Information",
+        "description": "Edit {{organizationName}}/{{name}} information",
+        "repositoryDescription": "Repository Description",
+        "descriptionPlaceholder": "Enter repository description...",
+        "isRecommended": "Recommended Repository",
+        "customPrompt": "Custom Prompt (Optional)",
+        "promptPlaceholder": "Enter custom prompt...",
+        "cancel": "Cancel",
+        "saving": "Saving...",
+        "saveChanges": "Save Changes"
+      },
+      "detail": {
+        "loadRepositoryDataFailed": "Failed to load repository data",
+        "fileSaveSuccess": "File saved successfully",
+        "fileSaveFailed": "Failed to save file",
+        "repositoryRefreshSuccess": "Repository refreshed successfully",
+        "repositoryRefreshFailed": "Failed to refresh repository",
+        "repositoryDeleteSuccess": "Repository deleted successfully",
+        "repositoryDeleteFailed": "Failed to delete repository",
+        "syncTaskStarted": "Sync task started",
+        "syncStartFailed": "Failed to start sync",
+        "exportSuccess": "Export successful",
+        "exportFailed": "Export failed",
+        "repositoryNotFound": "Repository not found",
+        "returnToRepositoryList": "Return to repository list",
+        "refreshing": "Refreshing...",
+        "refresh": "Refresh",
+        "export": "Export",
+        "edit": "Edit",
+        "delete": "Delete",
+        "confirmDeleteRepository": "Confirm Delete Repository",
+        "deleteRepositoryWarning": "This action will permanently delete the repository and all its data. This operation cannot be undone.",
+        "cancel": "Cancel",
+        "confirmDelete": "Confirm Delete",
+        "documents": "Document Management",
+        "sync": "Sync Management",
+        "quality": "Quality Assessment",
+        "searchDocuments": "Search documents...",
+        "noDocuments": "No document directory",
+        "selectDocument": "Select a document",
+        "selectDocumentDescription": "Select a document from the left directory to view or edit its content",
+        "completed": "Completed",
+        "aiGenerate": "AI Generate",
+        "save": "Save",
+        "saving": "Saving...",
+        "lastModified": "Last Modified",
+        "loadingEditor": "Loading editor...",
+        "fileContent": "File content...",
+        "documentContent": "Document content...",
+        "documentSaveSuccess": "Document saved successfully",
+        "syncManagement": "Sync Management",
+        "syncManagementDescription": "Manage repository synchronization settings and history",
+        "manualSync": "Manual Sync",
+        "manualSyncRepository": "Manual Sync Repository",
+        "syncDescription": "This will pull the latest files from the source repository and regenerate documents.",
+        "startSync": "Start Sync",
+        "lastSyncTime": "Last Sync Time",
+        "neverSynced": "Never synced",
+        "syncStatus": "Sync Status",
+        "autoSync": "Auto Sync",
+        "updating": "Updating...",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "syncHistory": "Sync History",
+        "syncSuccess": "Sync successful",
+        "syncFailed": "Sync failed",
+        "syncing": "Syncing",
+        "manual": "Manual",
+        "auto": "Auto",
+        "startTime": "Start",
+        "endTime": "End",
+        "filesChanged": "files",
+        "filesAdded": "Added",
+        "filesUpdated": "Updated",
+        "filesDeleted": "Deleted",
+        "noSyncHistory": "No sync history",
+        "permissionManagement": "Permission Management",
+        "permissionManagementDescription": "Manage user and role access to this repository",
+        "permissionDevelopment": "Permission management feature under development...",
+        "configManagement": "Configuration Management",
+        "configManagementDescription": "Manage various configuration options for the repository",
+        "configDevelopment": "Configuration management feature under development...",
+        "taskManagement": "Task Management",
+        "taskManagementDescription": "View and manage repository-related processing tasks",
+        "taskDevelopment": "Task management feature under development...",
+        "editRepositoryInfo": "Edit Repository Information",
+        "editRepositoryDescription": "Modify repository basic information and sync settings",
+        "repositoryName": "Repository Name",
+        "repositoryNamePlaceholder": "Enter repository name",
+        "repositoryDescription": "Repository Description",
+        "repositoryDescriptionPlaceholder": "Enter repository description",
+        "enableAutoSync": "Auto Sync",
+        "enableAutoSyncDescription": "System will automatically sync repository updates when enabled",
+        "aiGenerateDialog": {
+          "title": "AI Smart Generate Document Content",
+          "description": "Generate content for the currently selected document directory. You can enter custom prompts to guide AI generation, or leave empty to use default prompts.",
+          "promptLabel": "Prompt (Optional)",
+          "promptPlaceholder": "e.g.: Please generate detailed technical documentation, including code examples and architecture explanations...",
+          "promptHint": "Tip: Leave empty to use system default prompt or previously saved prompt",
+          "targetDocument": "Target Document:",
+          "currentPrompt": "Current Prompt:",
+          "cancel": "Cancel",
+          "generating": "Generating...",
+          "startGenerate": "Start Generate"
+        },
+        "wikiGeneration": "Wiki Generation"
+      }
+    },
+    "roles": {
+      "errors": {
+        "loadFailed": "Load Failed",
+        "loadFailedDescription": "Unable to load role list"
+      },
+      "status": {
+        "enabled": "Enabled",
+        "disabled": "Disabled"
+      },
+      "type": {
+        "system": "System Role",
+        "custom": "Custom Role"
+      },
+      "messages": {
+        "confirmDelete": "Are you sure you want to delete role \"{{name}}\"?",
+        "deleteSuccess": "Delete Successful",
+        "deleteSuccessDescription": "Role has been deleted",
+        "deleteFailed": "Delete Failed",
+        "deleteFailedDescription": "Unable to delete role",
+        "statusUpdateSuccess": "Status Update Successful",
+        "statusUpdateDescription": "Role has been {{status}}",
+        "statusEnabled": "enabled",
+        "statusDisabled": "disabled",
+        "statusUpdateFailed": "Status Update Failed",
+        "statusUpdateFailedDescription": "Unable to update role status"
+      },
+      "stats": {
+        "totalRoles": "Total Roles",
+        "totalRolesDescription": "Including system and custom roles",
+        "activeRoles": "Active Roles",
+        "activeRolesDescription": "Currently enabled roles",
+        "assignedUsers": "Assigned Users",
+        "assignedUsersDescription": "Total users with role assignments"
+      },
+      "list": {
+        "title": "Role List",
+        "totalCount": "Total {{total}} roles"
+      },
+      "filters": {
+        "allStatus": "All Status"
+      },
+      "table": {
+        "noDescription": "No description",
+        "openMenu": "Open Menu",
+        "actionsMenu": "Actions"
+      },
+      "actions": {
+        "viewMembers": "View Members",
+        "copyRole": "Copy Role",
+        "disable": "Disable",
+        "enable": "Enable"
+      },
+      "pagination": {
+        "previous": "Previous",
+        "pageInfo": "Page {{current}} of {{total}}",
+        "next": "Next"
+      }
+    },
+    "tokens": {
+      "labels": {
+        "inputTokens": "Input Tokens",
+        "outputTokens": "Output Tokens",
+        "totalTokens": "Total Tokens"
+      },
+      "stats": {
+        "percentageOfTotal": "{{percentage}}% of total",
+        "comparedToYesterday": "{{sign}}{{value}}% compared to yesterday"
+      },
+      "chart": {
+        "title": "Token Usage Trends",
+        "description": "View token usage across different time periods",
+        "timeRange": {
+          "7d": "Last 7 Days",
+          "30d": "Last 30 Days",
+          "90d": "Last 90 Days"
+        },
+        "chartType": {
+          "area": "Area Chart",
+          "line": "Line Chart",
+          "bar": "Bar Chart"
+        },
+        "export": "Export",
+        "noData": "No Data",
+        "noDataDescription": "Token usage data will be displayed when there is activity"
+      },
+      "operationDistribution": {
+        "title": "Operation Type Distribution",
+        "description": "Token usage by operation type",
+        "noData": "No operation data",
+        "unknown": "Unknown"
+      },
+      "topRepositories": {
+        "title": "Top Repositories",
+        "description": "Repositories with highest token usage",
+        "noData": "No repository data"
+      }
+    }
+  }
+}
