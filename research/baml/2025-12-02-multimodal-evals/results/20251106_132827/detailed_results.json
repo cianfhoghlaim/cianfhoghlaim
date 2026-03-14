@@ -1,0 +1,1483 @@
+[
+  {
+    "receipt_id": "train_000",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_000.png",
+    "extraction_successful": true,
+    "extraction_error": null,
+    "overall_passed": false,
+    "pass_rate": 0.6666666666666666,
+    "evaluations": [
+      {
+        "check_name": "sum_validation",
+        "passed": false,
+        "message": "Calculated total: 1564600.00 (transactions: 1319000.00 + service: 100950.00 + tax: 144695.00 + rounding: -45.00), Grand total: 1591600.00 (difference: 27000.00)",
+        "expected_value": 1591600.0,
+        "actual_value": 1564600.0
+      },
+      {
+        "check_name": "positive_values",
+        "passed": true,
+        "message": "All values are positive",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "subtotal_consistency",
+        "passed": false,
+        "message": "Transaction sum: 1319000.00, Subtotal: 1346000.00 (difference: 27000.00)",
+        "expected_value": 1346000.0,
+        "actual_value": 1319000.0
+      },
+      {
+        "check_name": "unit_price_accuracy",
+        "passed": true,
+        "message": "All unit price calculations are correct",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "grand_total_calculation",
+        "passed": true,
+        "message": "Calculated: 1591600.00 (subtotal: 1346000.0 + service: 100950.0 + tax: 144695.0 + rounding: -45.0), Grand total: 1591600.00",
+        "expected_value": 1591600.0,
+        "actual_value": 1591600.0
+      },
+      {
+        "check_name": "data_completeness",
+        "passed": true,
+        "message": "All required fields present",
+        "expected_value": null,
+        "actual_value": null
+      }
+    ],
+    "extracted_data": {
+      "transactions": [
+        {
+          "item_name": "Nasi Campur Bali",
+          "quantity": 1,
+          "unit_price": 75000.0,
+          "total_price": 75000.0
+        },
+        {
+          "item_name": "Bbk Bengil Nasi",
+          "quantity": 1,
+          "unit_price": 135000.0,
+          "total_price": 135000.0
+        },
+        {
+          "item_name": "MilkShake Starwb",
+          "quantity": 1,
+          "unit_price": 37000.0,
+          "total_price": 37000.0
+        },
+        {
+          "item_name": "Ice Lemon Tea",
+          "quantity": 1,
+          "unit_price": 24000.0,
+          "total_price": 24000.0
+        },
+        {
+          "item_name": "Nasi Ayam Dewata",
+          "quantity": 1,
+          "unit_price": 70000.0,
+          "total_price": 70000.0
+        },
+        {
+          "item_name": "Free Ice Tea",
+          "quantity": 3,
+          "unit_price": 0.0,
+          "total_price": 0.0
+        },
+        {
+          "item_name": "Organic Green Sa",
+          "quantity": 1,
+          "unit_price": 65000.0,
+          "total_price": 65000.0
+        },
+        {
+          "item_name": "Ice Tea",
+          "quantity": 1,
+          "unit_price": 18000.0,
+          "total_price": 18000.0
+        },
+        {
+          "item_name": "Ice Orange",
+          "quantity": 1,
+          "unit_price": 22000.0,
+          "total_price": 22000.0
+        },
+        {
+          "item_name": "Ayam Suir Bali",
+          "quantity": 1,
+          "unit_price": 55000.0,
+          "total_price": 55000.0
+        },
+        {
+          "item_name": "Tahu Goreng",
+          "quantity": 1,
+          "unit_price": 36000.0,
+          "total_price": 36000.0
+        },
+        {
+          "item_name": "Tempe Goreng",
+          "quantity": 2,
+          "unit_price": 18000.0,
+          "total_price": 36000.0
+        },
+        {
+          "item_name": "Tahu Telor Asin",
+          "quantity": 1,
+          "unit_price": 40000.0,
+          "total_price": 40000.0
+        },
+        {
+          "item_name": "Nasi Goreng Samb",
+          "quantity": 1,
+          "unit_price": 70000.0,
+          "total_price": 70000.0
+        },
+        {
+          "item_name": "Bbk Panggang Sam",
+          "quantity": 3,
+          "unit_price": 122000.0,
+          "total_price": 366000.0
+        },
+        {
+          "item_name": "Ayam Sambal Hije",
+          "quantity": 1,
+          "unit_price": 92000.0,
+          "total_price": 92000.0
+        },
+        {
+          "item_name": "Hot Tea",
+          "quantity": 2,
+          "unit_price": 22000.0,
+          "total_price": 44000.0
+        },
+        {
+          "item_name": "Ice Kopi",
+          "quantity": 1,
+          "unit_price": 32000.0,
+          "total_price": 32000.0
+        },
+        {
+          "item_name": "Tahu Telor Asin",
+          "quantity": 1,
+          "unit_price": 40000.0,
+          "total_price": 40000.0
+        },
+        {
+          "item_name": "Free Ice Tea",
+          "quantity": 1,
+          "unit_price": 0.0,
+          "total_price": 0.0
+        },
+        {
+          "item_name": "Bebek Street",
+          "quantity": 1,
+          "unit_price": 44000.0,
+          "total_price": 44000.0
+        },
+        {
+          "item_name": "Ice Tea Tawar",
+          "quantity": 1,
+          "unit_price": 18000.0,
+          "total_price": 18000.0
+        }
+      ],
+      "subtotal": 1346000.0,
+      "service_charge": 100950.0,
+      "tax": 144695.0,
+      "rounding": -45.0,
+      "grand_total": 1591600.0
+    }
+  },
+  {
+    "receipt_id": "train_001",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_001.png",
+    "extraction_successful": true,
+    "extraction_error": null,
+    "overall_passed": true,
+    "pass_rate": 1.0,
+    "evaluations": [
+      {
+        "check_name": "sum_validation",
+        "passed": true,
+        "message": "Calculated total: 580965.00 (transactions: 503000.00 + service: 25150.00 + tax: 52815.00), Grand total: 580965.00",
+        "expected_value": 580965.0,
+        "actual_value": 580965.0
+      },
+      {
+        "check_name": "positive_values",
+        "passed": true,
+        "message": "All values are positive",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "subtotal_consistency",
+        "passed": true,
+        "message": "Transaction sum: 503000.00, Subtotal: 503000.00",
+        "expected_value": 503000.0,
+        "actual_value": 503000.0
+      },
+      {
+        "check_name": "unit_price_accuracy",
+        "passed": true,
+        "message": "All unit price calculations are correct",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "grand_total_calculation",
+        "passed": true,
+        "message": "Calculated: 580965.00 (subtotal: 503000.0 + service: 25150.0 + tax: 52815.0), Grand total: 580965.00",
+        "expected_value": 580965.0,
+        "actual_value": 580965.0
+      },
+      {
+        "check_name": "data_completeness",
+        "passed": true,
+        "message": "All required fields present",
+        "expected_value": null,
+        "actual_value": null
+      }
+    ],
+    "extracted_data": {
+      "transactions": [
+        {
+          "item_name": "SPGTHY BOLOGNASE",
+          "quantity": 1,
+          "unit_price": 58000.0,
+          "total_price": 58000.0
+        },
+        {
+          "item_name": "PEPPER AUS WELL DONE",
+          "quantity": 1,
+          "unit_price": 165000.0,
+          "total_price": 165000.0
+        },
+        {
+          "item_name": "WAGYU RIBEYE MEDIUM WELL",
+          "quantity": 1,
+          "unit_price": 195000.0,
+          "total_price": 195000.0
+        },
+        {
+          "item_name": "ICED LEMON TEA",
+          "quantity": 1,
+          "unit_price": 22000.0,
+          "total_price": 22000.0
+        },
+        {
+          "item_name": "FUSION TEA LYCHE",
+          "quantity": 1,
+          "unit_price": 28000.0,
+          "total_price": 28000.0
+        },
+        {
+          "item_name": "NUTTELA BROWNIES",
+          "quantity": 1,
+          "unit_price": 35000.0,
+          "total_price": 35000.0
+        }
+      ],
+      "subtotal": 503000.0,
+      "service_charge": 25150.0,
+      "tax": 52815.0,
+      "rounding": null,
+      "grand_total": 580965.0
+    }
+  },
+  {
+    "receipt_id": "train_002",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_002.png",
+    "extraction_successful": true,
+    "extraction_error": null,
+    "overall_passed": true,
+    "pass_rate": 1.0,
+    "evaluations": [
+      {
+        "check_name": "sum_validation",
+        "passed": true,
+        "message": "Calculated total: 334000.00 (transactions: 334000.00), Grand total: 334000.00",
+        "expected_value": 334000.0,
+        "actual_value": 334000.0
+      },
+      {
+        "check_name": "positive_values",
+        "passed": true,
+        "message": "All values are positive",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "subtotal_consistency",
+        "passed": true,
+        "message": "Transaction sum: 334000.00, Subtotal: 334000.00",
+        "expected_value": 334000.0,
+        "actual_value": 334000.0
+      },
+      {
+        "check_name": "unit_price_accuracy",
+        "passed": true,
+        "message": "All unit price calculations are correct",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "grand_total_calculation",
+        "passed": true,
+        "message": "Calculated: 334000.00 (subtotal: 334000.0), Grand total: 334000.00",
+        "expected_value": 334000.0,
+        "actual_value": 334000.0
+      },
+      {
+        "check_name": "data_completeness",
+        "passed": true,
+        "message": "All required fields present",
+        "expected_value": null,
+        "actual_value": null
+      }
+    ],
+    "extracted_data": {
+      "transactions": [
+        {
+          "item_name": "HAKAU UDANG",
+          "quantity": 4,
+          "unit_price": 23000.0,
+          "total_price": 92000.0
+        },
+        {
+          "item_name": "SIAO MAI BABI",
+          "quantity": 4,
+          "unit_price": 20000.0,
+          "total_price": 80000.0
+        },
+        {
+          "item_name": "CEKER AYAM",
+          "quantity": 3,
+          "unit_price": 20000.0,
+          "total_price": 60000.0
+        },
+        {
+          "item_name": "BAKPAO BKR C CRISPY",
+          "quantity": 2,
+          "unit_price": 21000.0,
+          "total_price": 42000.0
+        },
+        {
+          "item_name": "TAHU GORENG CRISPY",
+          "quantity": 3,
+          "unit_price": 20000.0,
+          "total_price": 60000.0
+        }
+      ],
+      "subtotal": 334000.0,
+      "service_charge": null,
+      "tax": null,
+      "rounding": null,
+      "grand_total": 334000.0
+    }
+  },
+  {
+    "receipt_id": "train_003",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_003.png",
+    "extraction_successful": true,
+    "extraction_error": null,
+    "overall_passed": false,
+    "pass_rate": 0.6666666666666666,
+    "evaluations": [
+      {
+        "check_name": "sum_validation",
+        "passed": false,
+        "message": "Calculated total: 321016.00 (transactions: 259000.00 + service: 9600.00 + tax: 52416.00), Grand total: 302016.00 (difference: 19000.00)",
+        "expected_value": 302016.0,
+        "actual_value": 321016.0
+      },
+      {
+        "check_name": "positive_values",
+        "passed": true,
+        "message": "All values are positive",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "subtotal_consistency",
+        "passed": true,
+        "message": "Transaction sum: 259000.00, Subtotal: 259000.00",
+        "expected_value": 259000.0,
+        "actual_value": 259000.0
+      },
+      {
+        "check_name": "unit_price_accuracy",
+        "passed": true,
+        "message": "All unit price calculations are correct",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "grand_total_calculation",
+        "passed": false,
+        "message": "Calculated: 321016.00 (subtotal: 259000.0 + service: 9600.0 + tax: 52416.0), Grand total: 302016.00 (difference: 19000.00)",
+        "expected_value": 302016.0,
+        "actual_value": 321016.0
+      },
+      {
+        "check_name": "data_completeness",
+        "passed": true,
+        "message": "All required fields present",
+        "expected_value": null,
+        "actual_value": null
+      }
+    ],
+    "extracted_data": {
+      "transactions": [
+        {
+          "item_name": "Bintang Bremer",
+          "quantity": 1,
+          "unit_price": 59000.0,
+          "total_price": 59000.0
+        },
+        {
+          "item_name": "Chicken H-H",
+          "quantity": 1,
+          "unit_price": 190000.0,
+          "total_price": 190000.0
+        },
+        {
+          "item_name": "Ades",
+          "quantity": 1,
+          "unit_price": 10000.0,
+          "total_price": 10000.0
+        }
+      ],
+      "subtotal": 259000.0,
+      "service_charge": 9600.0,
+      "tax": 52416.0,
+      "rounding": null,
+      "grand_total": 302016.0
+    }
+  },
+  {
+    "receipt_id": "train_004",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_004.png",
+    "extraction_successful": true,
+    "extraction_error": null,
+    "overall_passed": true,
+    "pass_rate": 1.0,
+    "evaluations": [
+      {
+        "check_name": "sum_validation",
+        "passed": true,
+        "message": "Calculated total: 48.00 (transactions: 43.64 + tax: 4.36), Grand total: 48.00",
+        "expected_value": 48.0,
+        "actual_value": 48.0
+      },
+      {
+        "check_name": "positive_values",
+        "passed": true,
+        "message": "All values are positive",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "subtotal_consistency",
+        "passed": true,
+        "message": "Transaction sum: 43.64, Subtotal: 43.64",
+        "expected_value": 43.636,
+        "actual_value": 43.636
+      },
+      {
+        "check_name": "unit_price_accuracy",
+        "passed": true,
+        "message": "All unit price calculations are correct",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "grand_total_calculation",
+        "passed": true,
+        "message": "Calculated: 48.00 (subtotal: 43.636 + tax: 4.364), Grand total: 48.00",
+        "expected_value": 48.0,
+        "actual_value": 48.0
+      },
+      {
+        "check_name": "data_completeness",
+        "passed": true,
+        "message": "All required fields present",
+        "expected_value": null,
+        "actual_value": null
+      }
+    ],
+    "extracted_data": {
+      "transactions": [
+        {
+          "item_name": "BASO BIHUN",
+          "quantity": 1,
+          "unit_price": 43.636,
+          "total_price": 43.636
+        }
+      ],
+      "subtotal": 43.636,
+      "service_charge": null,
+      "tax": 4.364,
+      "rounding": null,
+      "grand_total": 48.0
+    }
+  },
+  {
+    "receipt_id": "train_005",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_005.png",
+    "extraction_successful": false,
+    "extraction_error": "BamlClientHttpError(client_name=CustomSonnet4, message=Request failed with status code: 400 Bad Request. {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"messages.0.content.1.image.source.base64: image exceeds 5 MB maximum: 5974808 bytes > 5242880 bytes\"},\"request_id\":\"req_011CUsBmi3LaJ4j1AMCqLaS3\"}, status_code=400, detailed_message=LLM client \"CustomSonnet4\" failed with status code: Unspecified error code: 400\nMessage: Request failed with status code: 400 Bad Request. {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"messages.0.content.1.image.source.base64: image exceeds 5 MB maximum: 5974808 bytes > 5242880 bytes\"},\"request_id\":\"req_011CUsBmi3LaJ4j1AMCqLaS3\"})",
+    "overall_passed": false,
+    "pass_rate": 0.0,
+    "evaluations": []
+  },
+  {
+    "receipt_id": "train_006",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_006.png",
+    "extraction_successful": true,
+    "extraction_error": null,
+    "overall_passed": false,
+    "pass_rate": 0.6666666666666666,
+    "evaluations": [
+      {
+        "check_name": "sum_validation",
+        "passed": false,
+        "message": "Calculated total: 61799.00 (transactions: 56181.00 + tax: 5618.00), Grand total: 62000.00 (difference: 201.00)",
+        "expected_value": 62000.0,
+        "actual_value": 61799.0
+      },
+      {
+        "check_name": "positive_values",
+        "passed": true,
+        "message": "All values are positive",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "subtotal_consistency",
+        "passed": true,
+        "message": "Transaction sum: 56181.00, Subtotal: 56181.00",
+        "expected_value": 56181.0,
+        "actual_value": 56181.0
+      },
+      {
+        "check_name": "unit_price_accuracy",
+        "passed": true,
+        "message": "All unit price calculations are correct",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "grand_total_calculation",
+        "passed": false,
+        "message": "Calculated: 61799.00 (subtotal: 56181.0 + tax: 5618.0), Grand total: 62000.00 (difference: 201.00)",
+        "expected_value": 62000.0,
+        "actual_value": 61799.0
+      },
+      {
+        "check_name": "data_completeness",
+        "passed": true,
+        "message": "All required fields present",
+        "expected_value": null,
+        "actual_value": null
+      }
+    ],
+    "extracted_data": {
+      "transactions": [
+        {
+          "item_name": "BASO TAHU",
+          "quantity": 1,
+          "unit_price": 43181.0,
+          "total_price": 43181.0
+        },
+        {
+          "item_name": "ES JERUK",
+          "quantity": 1,
+          "unit_price": 13000.0,
+          "total_price": 13000.0
+        }
+      ],
+      "subtotal": 56181.0,
+      "service_charge": null,
+      "tax": 5618.0,
+      "rounding": null,
+      "grand_total": 62000.0
+    }
+  },
+  {
+    "receipt_id": "train_007",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_007.png",
+    "extraction_successful": true,
+    "extraction_error": null,
+    "overall_passed": true,
+    "pass_rate": 1.0,
+    "evaluations": [
+      {
+        "check_name": "sum_validation",
+        "passed": true,
+        "message": "Calculated total: 36300.00 (transactions: 33000.00 + tax: 3300.00), Grand total: 36300.00",
+        "expected_value": 36300.0,
+        "actual_value": 36300.0
+      },
+      {
+        "check_name": "positive_values",
+        "passed": true,
+        "message": "All values are positive",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "subtotal_consistency",
+        "passed": true,
+        "message": "Transaction sum: 33000.00, Subtotal: 33000.00",
+        "expected_value": 33000.0,
+        "actual_value": 33000.0
+      },
+      {
+        "check_name": "unit_price_accuracy",
+        "passed": true,
+        "message": "All unit price calculations are correct",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "grand_total_calculation",
+        "passed": true,
+        "message": "Calculated: 36300.00 (subtotal: 33000.0 + tax: 3300.0), Grand total: 36300.00",
+        "expected_value": 36300.0,
+        "actual_value": 36300.0
+      },
+      {
+        "check_name": "data_completeness",
+        "passed": true,
+        "message": "All required fields present",
+        "expected_value": null,
+        "actual_value": null
+      }
+    ],
+    "extracted_data": {
+      "transactions": [
+        {
+          "item_name": "PKT AYAM",
+          "quantity": 1,
+          "unit_price": 33000.0,
+          "total_price": 33000.0
+        }
+      ],
+      "subtotal": 33000.0,
+      "service_charge": null,
+      "tax": 3300.0,
+      "rounding": null,
+      "grand_total": 36300.0
+    }
+  },
+  {
+    "receipt_id": "train_008",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_008.png",
+    "extraction_successful": true,
+    "extraction_error": null,
+    "overall_passed": true,
+    "pass_rate": 1.0,
+    "evaluations": [
+      {
+        "check_name": "sum_validation",
+        "passed": true,
+        "message": "Calculated total: 36000.00 (transactions: 36000.00), Grand total: 36000.00",
+        "expected_value": 36000.0,
+        "actual_value": 36000.0
+      },
+      {
+        "check_name": "positive_values",
+        "passed": true,
+        "message": "All values are positive",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "subtotal_consistency",
+        "passed": true,
+        "message": "No subtotal present, check skipped",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "unit_price_accuracy",
+        "passed": true,
+        "message": "All unit price calculations are correct",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "grand_total_calculation",
+        "passed": true,
+        "message": "Calculated: 36000.00 (transaction sum: 36000.0), Grand total: 36000.00",
+        "expected_value": 36000.0,
+        "actual_value": 36000.0
+      },
+      {
+        "check_name": "data_completeness",
+        "passed": true,
+        "message": "All required fields present",
+        "expected_value": null,
+        "actual_value": null
+      }
+    ],
+    "extracted_data": {
+      "transactions": [
+        {
+          "item_name": "Kimchi p",
+          "quantity": 1,
+          "unit_price": 36000.0,
+          "total_price": 36000.0
+        },
+        {
+          "item_name": "Fre ice grentea",
+          "quantity": 1,
+          "unit_price": 0.0,
+          "total_price": 0.0
+        }
+      ],
+      "subtotal": null,
+      "service_charge": null,
+      "tax": null,
+      "rounding": null,
+      "grand_total": 36000.0
+    }
+  },
+  {
+    "receipt_id": "train_009",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_009.png",
+    "extraction_successful": true,
+    "extraction_error": null,
+    "overall_passed": true,
+    "pass_rate": 1.0,
+    "evaluations": [
+      {
+        "check_name": "sum_validation",
+        "passed": true,
+        "message": "Calculated total: 40.00 (transactions: 40.00), Grand total: 40.00",
+        "expected_value": 40.0,
+        "actual_value": 40.0
+      },
+      {
+        "check_name": "positive_values",
+        "passed": true,
+        "message": "All values are positive",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "subtotal_consistency",
+        "passed": true,
+        "message": "Transaction sum: 40.00, Subtotal: 40.00",
+        "expected_value": 40.0,
+        "actual_value": 40.0
+      },
+      {
+        "check_name": "unit_price_accuracy",
+        "passed": true,
+        "message": "All unit price calculations are correct",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "grand_total_calculation",
+        "passed": true,
+        "message": "Calculated: 40.00 (subtotal: 40.0), Grand total: 40.00",
+        "expected_value": 40.0,
+        "actual_value": 40.0
+      },
+      {
+        "check_name": "data_completeness",
+        "passed": true,
+        "message": "All required fields present",
+        "expected_value": null,
+        "actual_value": null
+      }
+    ],
+    "extracted_data": {
+      "transactions": [
+        {
+          "item_name": "THAI ICED TEA",
+          "quantity": 2,
+          "unit_price": 20.0,
+          "total_price": 40.0
+        }
+      ],
+      "subtotal": 40.0,
+      "service_charge": null,
+      "tax": null,
+      "rounding": null,
+      "grand_total": 40.0
+    }
+  },
+  {
+    "receipt_id": "train_010",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_010.png",
+    "extraction_successful": true,
+    "extraction_error": null,
+    "overall_passed": true,
+    "pass_rate": 1.0,
+    "evaluations": [
+      {
+        "check_name": "sum_validation",
+        "passed": true,
+        "message": "Calculated total: 25000.00 (transactions: 25000.00), Grand total: 25000.00",
+        "expected_value": 25000.0,
+        "actual_value": 25000.0
+      },
+      {
+        "check_name": "positive_values",
+        "passed": true,
+        "message": "All values are positive",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "subtotal_consistency",
+        "passed": true,
+        "message": "Transaction sum: 25000.00, Subtotal: 25000.00",
+        "expected_value": 25000.0,
+        "actual_value": 25000.0
+      },
+      {
+        "check_name": "unit_price_accuracy",
+        "passed": true,
+        "message": "All unit price calculations are correct",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "grand_total_calculation",
+        "passed": true,
+        "message": "Calculated: 25000.00 (subtotal: 25000.0), Grand total: 25000.00",
+        "expected_value": 25000.0,
+        "actual_value": 25000.0
+      },
+      {
+        "check_name": "data_completeness",
+        "passed": true,
+        "message": "All required fields present",
+        "expected_value": null,
+        "actual_value": null
+      }
+    ],
+    "extracted_data": {
+      "transactions": [
+        {
+          "item_name": "Flat White Coffee Hot",
+          "quantity": 1,
+          "unit_price": 25000.0,
+          "total_price": 25000.0
+        }
+      ],
+      "subtotal": 25000.0,
+      "service_charge": null,
+      "tax": null,
+      "rounding": null,
+      "grand_total": 25000.0
+    }
+  },
+  {
+    "receipt_id": "train_011",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_011.png",
+    "extraction_successful": true,
+    "extraction_error": null,
+    "overall_passed": false,
+    "pass_rate": 0.5,
+    "evaluations": [
+      {
+        "check_name": "sum_validation",
+        "passed": false,
+        "message": "Calculated total: 216373.00 (transactions: 182500.00 + service: 10930.00 + tax: 22943.00), Grand total: 250107.00 (difference: 33734.00)",
+        "expected_value": 250107.0,
+        "actual_value": 216373.0
+      },
+      {
+        "check_name": "positive_values",
+        "passed": true,
+        "message": "All values are positive",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "subtotal_consistency",
+        "passed": false,
+        "message": "Transaction sum: 182500.00, Subtotal: 218500.00 (difference: 36000.00)",
+        "expected_value": 218500.0,
+        "actual_value": 182500.0
+      },
+      {
+        "check_name": "unit_price_accuracy",
+        "passed": true,
+        "message": "All unit price calculations are correct",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "grand_total_calculation",
+        "passed": false,
+        "message": "Calculated: 252373.00 (subtotal: 218500.0 + service: 10930.0 + tax: 22943.0), Grand total: 250107.00 (difference: 2266.00)",
+        "expected_value": 250107.0,
+        "actual_value": 252373.0
+      },
+      {
+        "check_name": "data_completeness",
+        "passed": true,
+        "message": "All required fields present",
+        "expected_value": null,
+        "actual_value": null
+      }
+    ],
+    "extracted_data": {
+      "transactions": [
+        {
+          "item_name": "Ayam Bakar",
+          "quantity": 2,
+          "unit_price": 17500.0,
+          "total_price": 35000.0
+        },
+        {
+          "item_name": "Nasi Putih",
+          "quantity": 2,
+          "unit_price": 14000.0,
+          "total_price": 28000.0
+        },
+        {
+          "item_name": "Milo Bakar/Goreng",
+          "quantity": 1,
+          "unit_price": 27500.0,
+          "total_price": 27500.0
+        },
+        {
+          "item_name": "Sop Durame",
+          "quantity": 1,
+          "unit_price": 67000.0,
+          "total_price": 67000.0
+        },
+        {
+          "item_name": "Teh Poci",
+          "quantity": 1,
+          "unit_price": 25000.0,
+          "total_price": 25000.0
+        }
+      ],
+      "subtotal": 218500.0,
+      "service_charge": 10930.0,
+      "tax": 22943.0,
+      "rounding": null,
+      "grand_total": 250107.0
+    }
+  },
+  {
+    "receipt_id": "train_012",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_012.png",
+    "extraction_successful": true,
+    "extraction_error": null,
+    "overall_passed": true,
+    "pass_rate": 1.0,
+    "evaluations": [
+      {
+        "check_name": "sum_validation",
+        "passed": true,
+        "message": "Calculated total: 96000.00 (transactions: 87275.00 + tax: 8728.00 + rounding: -3.00), Grand total: 96000.00",
+        "expected_value": 96000.0,
+        "actual_value": 96000.0
+      },
+      {
+        "check_name": "positive_values",
+        "passed": true,
+        "message": "All values are positive",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "subtotal_consistency",
+        "passed": true,
+        "message": "Transaction sum: 87275.00, Subtotal: 87275.00",
+        "expected_value": 87275.0,
+        "actual_value": 87275.0
+      },
+      {
+        "check_name": "unit_price_accuracy",
+        "passed": true,
+        "message": "All unit price calculations are correct",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "grand_total_calculation",
+        "passed": true,
+        "message": "Calculated: 96000.00 (subtotal: 87275.0 + tax: 8728.0 + rounding: -3.0), Grand total: 96000.00",
+        "expected_value": 96000.0,
+        "actual_value": 96000.0
+      },
+      {
+        "check_name": "data_completeness",
+        "passed": true,
+        "message": "All required fields present",
+        "expected_value": null,
+        "actual_value": null
+      }
+    ],
+    "extracted_data": {
+      "transactions": [
+        {
+          "item_name": "NASI + AYAM KATSU TER...",
+          "quantity": 1,
+          "unit_price": 31819.0,
+          "total_price": 31819.0
+        },
+        {
+          "item_name": "TEH PANAS",
+          "quantity": 1,
+          "unit_price": 5455.0,
+          "total_price": 5455.0
+        },
+        {
+          "item_name": "ES TEH MANIS",
+          "quantity": 1,
+          "unit_price": 7273.0,
+          "total_price": 7273.0
+        },
+        {
+          "item_name": "CH CORDON BLEU NASI",
+          "quantity": 1,
+          "unit_price": 42728.0,
+          "total_price": 42728.0
+        }
+      ],
+      "subtotal": 87275.0,
+      "service_charge": null,
+      "tax": 8728.0,
+      "rounding": -3.0,
+      "grand_total": 96000.0
+    }
+  },
+  {
+    "receipt_id": "train_013",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_013.png",
+    "extraction_successful": false,
+    "extraction_error": "BamlClientHttpError(client_name=CustomSonnet4, message=Request failed with status code: 400 Bad Request. {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"messages.0.content.1.image.source.base64: image exceeds 5 MB maximum: 6383716 bytes > 5242880 bytes\"},\"request_id\":\"req_011CUsBpZPmagrwDtr6oqqMy\"}, status_code=400, detailed_message=LLM client \"CustomSonnet4\" failed with status code: Unspecified error code: 400\nMessage: Request failed with status code: 400 Bad Request. {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"messages.0.content.1.image.source.base64: image exceeds 5 MB maximum: 6383716 bytes > 5242880 bytes\"},\"request_id\":\"req_011CUsBpZPmagrwDtr6oqqMy\"})",
+    "overall_passed": false,
+    "pass_rate": 0.0,
+    "evaluations": []
+  },
+  {
+    "receipt_id": "train_014",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_014.png",
+    "extraction_successful": true,
+    "extraction_error": null,
+    "overall_passed": true,
+    "pass_rate": 1.0,
+    "evaluations": [
+      {
+        "check_name": "sum_validation",
+        "passed": true,
+        "message": "Calculated total: 25.00 (transactions: 25.00), Grand total: 25.00",
+        "expected_value": 25.0,
+        "actual_value": 25.0
+      },
+      {
+        "check_name": "positive_values",
+        "passed": true,
+        "message": "All values are positive",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "subtotal_consistency",
+        "passed": true,
+        "message": "No subtotal present, check skipped",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "unit_price_accuracy",
+        "passed": true,
+        "message": "All unit price calculations are correct",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "grand_total_calculation",
+        "passed": true,
+        "message": "Calculated: 25.00 (transaction sum: 25.0), Grand total: 25.00",
+        "expected_value": 25.0,
+        "actual_value": 25.0
+      },
+      {
+        "check_name": "data_completeness",
+        "passed": true,
+        "message": "All required fields present",
+        "expected_value": null,
+        "actual_value": null
+      }
+    ],
+    "extracted_data": {
+      "transactions": [
+        {
+          "item_name": "Maple glazed",
+          "quantity": 1,
+          "unit_price": 25.0,
+          "total_price": 25.0
+        },
+        {
+          "item_name": "Plastic Bag Small",
+          "quantity": 1,
+          "unit_price": 0.0,
+          "total_price": 0.0
+        }
+      ],
+      "subtotal": null,
+      "service_charge": null,
+      "tax": null,
+      "rounding": null,
+      "grand_total": 25.0
+    }
+  },
+  {
+    "receipt_id": "train_015",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_015.png",
+    "extraction_successful": false,
+    "extraction_error": "BamlClientHttpError(client_name=CustomSonnet4, message=Request failed with status code: 400 Bad Request. {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"messages.0.content.1.image.source.base64: image exceeds 5 MB maximum: 6422408 bytes > 5242880 bytes\"},\"request_id\":\"req_011CUsBpw51GAvrXvbxb2FpK\"}, status_code=400, detailed_message=LLM client \"CustomSonnet4\" failed with status code: Unspecified error code: 400\nMessage: Request failed with status code: 400 Bad Request. {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"messages.0.content.1.image.source.base64: image exceeds 5 MB maximum: 6422408 bytes > 5242880 bytes\"},\"request_id\":\"req_011CUsBpw51GAvrXvbxb2FpK\"})",
+    "overall_passed": false,
+    "pass_rate": 0.0,
+    "evaluations": []
+  },
+  {
+    "receipt_id": "train_016",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_016.png",
+    "extraction_successful": true,
+    "extraction_error": null,
+    "overall_passed": true,
+    "pass_rate": 1.0,
+    "evaluations": [
+      {
+        "check_name": "sum_validation",
+        "passed": true,
+        "message": "Calculated total: 30000.00 (transactions: 30000.00), Grand total: 30000.00",
+        "expected_value": 30000.0,
+        "actual_value": 30000.0
+      },
+      {
+        "check_name": "positive_values",
+        "passed": true,
+        "message": "All values are positive",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "subtotal_consistency",
+        "passed": true,
+        "message": "Transaction sum: 30000.00, Subtotal: 30000.00",
+        "expected_value": 30000.0,
+        "actual_value": 30000.0
+      },
+      {
+        "check_name": "unit_price_accuracy",
+        "passed": true,
+        "message": "All unit price calculations are correct",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "grand_total_calculation",
+        "passed": true,
+        "message": "Calculated: 30000.00 (subtotal: 30000.0), Grand total: 30000.00",
+        "expected_value": 30000.0,
+        "actual_value": 30000.0
+      },
+      {
+        "check_name": "data_completeness",
+        "passed": true,
+        "message": "All required fields present",
+        "expected_value": null,
+        "actual_value": null
+      }
+    ],
+    "extracted_data": {
+      "transactions": [
+        {
+          "item_name": "TICKET CP",
+          "quantity": 1,
+          "unit_price": 30000.0,
+          "total_price": 30000.0
+        }
+      ],
+      "subtotal": 30000.0,
+      "service_charge": null,
+      "tax": null,
+      "rounding": null,
+      "grand_total": 30000.0
+    }
+  },
+  {
+    "receipt_id": "train_017",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_017.png",
+    "extraction_successful": true,
+    "extraction_error": null,
+    "overall_passed": true,
+    "pass_rate": 1.0,
+    "evaluations": [
+      {
+        "check_name": "sum_validation",
+        "passed": true,
+        "message": "Calculated total: 24500.00 (transactions: 24500.00), Grand total: 24500.00",
+        "expected_value": 24500.0,
+        "actual_value": 24500.0
+      },
+      {
+        "check_name": "positive_values",
+        "passed": true,
+        "message": "All values are positive",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "subtotal_consistency",
+        "passed": true,
+        "message": "Transaction sum: 24500.00, Subtotal: 24500.00",
+        "expected_value": 24500.0,
+        "actual_value": 24500.0
+      },
+      {
+        "check_name": "unit_price_accuracy",
+        "passed": true,
+        "message": "All unit price calculations are correct",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "grand_total_calculation",
+        "passed": true,
+        "message": "Calculated: 24500.00 (subtotal: 24500.0), Grand total: 24500.00",
+        "expected_value": 24500.0,
+        "actual_value": 24500.0
+      },
+      {
+        "check_name": "data_completeness",
+        "passed": true,
+        "message": "All required fields present",
+        "expected_value": null,
+        "actual_value": null
+      }
+    ],
+    "extracted_data": {
+      "transactions": [
+        {
+          "item_name": "COKLAT BAR",
+          "quantity": 1,
+          "unit_price": 8000.0,
+          "total_price": 8000.0
+        },
+        {
+          "item_name": "CREPES TUNA",
+          "quantity": 1,
+          "unit_price": 9000.0,
+          "total_price": 9000.0
+        },
+        {
+          "item_name": "SISTR PANDAN",
+          "quantity": 1,
+          "unit_price": 7500.0,
+          "total_price": 7500.0
+        }
+      ],
+      "subtotal": 24500.0,
+      "service_charge": null,
+      "tax": null,
+      "rounding": null,
+      "grand_total": 24500.0
+    }
+  },
+  {
+    "receipt_id": "train_018",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_018.png",
+    "extraction_successful": true,
+    "extraction_error": null,
+    "overall_passed": true,
+    "pass_rate": 1.0,
+    "evaluations": [
+      {
+        "check_name": "sum_validation",
+        "passed": true,
+        "message": "Calculated total: 27500.00 (transactions: 25000.00 + tax: 2500.00), Grand total: 27500.00",
+        "expected_value": 27500.0,
+        "actual_value": 27500.0
+      },
+      {
+        "check_name": "positive_values",
+        "passed": true,
+        "message": "All values are positive",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "subtotal_consistency",
+        "passed": true,
+        "message": "Transaction sum: 25000.00, Subtotal: 25000.00",
+        "expected_value": 25000.0,
+        "actual_value": 25000.0
+      },
+      {
+        "check_name": "unit_price_accuracy",
+        "passed": true,
+        "message": "All unit price calculations are correct",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "grand_total_calculation",
+        "passed": true,
+        "message": "Calculated: 27500.00 (subtotal: 25000.0 + tax: 2500.0), Grand total: 27500.00",
+        "expected_value": 27500.0,
+        "actual_value": 27500.0
+      },
+      {
+        "check_name": "data_completeness",
+        "passed": true,
+        "message": "All required fields present",
+        "expected_value": null,
+        "actual_value": null
+      }
+    ],
+    "extracted_data": {
+      "transactions": [
+        {
+          "item_name": "KING DEAL FISH",
+          "quantity": 1,
+          "unit_price": 25000.0,
+          "total_price": 25000.0
+        }
+      ],
+      "subtotal": 25000.0,
+      "service_charge": null,
+      "tax": 2500.0,
+      "rounding": null,
+      "grand_total": 27500.0
+    }
+  },
+  {
+    "receipt_id": "train_019",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_019.png",
+    "extraction_successful": true,
+    "extraction_error": null,
+    "overall_passed": false,
+    "pass_rate": 0.6666666666666666,
+    "evaluations": [
+      {
+        "check_name": "sum_validation",
+        "passed": false,
+        "message": "Calculated total: 1563858.00 (transactions: 1341000.00 + service: 80500.00 + tax: 142358.00), Grand total: 1565858.00 (difference: 2000.00)",
+        "expected_value": 1565858.0,
+        "actual_value": 1563858.0
+      },
+      {
+        "check_name": "positive_values",
+        "passed": true,
+        "message": "All values are positive",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "subtotal_consistency",
+        "passed": false,
+        "message": "Transaction sum: 1341000.00, Subtotal: 1343000.00 (difference: 2000.00)",
+        "expected_value": 1343000.0,
+        "actual_value": 1341000.0
+      },
+      {
+        "check_name": "unit_price_accuracy",
+        "passed": true,
+        "message": "All unit price calculations are correct",
+        "expected_value": null,
+        "actual_value": null
+      },
+      {
+        "check_name": "grand_total_calculation",
+        "passed": true,
+        "message": "Calculated: 1565858.00 (subtotal: 1343000.0 + service: 80500.0 + tax: 142358.0), Grand total: 1565858.00",
+        "expected_value": 1565858.0,
+        "actual_value": 1565858.0
+      },
+      {
+        "check_name": "data_completeness",
+        "passed": true,
+        "message": "All required fields present",
+        "expected_value": null,
+        "actual_value": null
+      }
+    ],
+    "extracted_data": {
+      "transactions": [
+        {
+          "item_name": "UDANG RE",
+          "quantity": 2,
+          "unit_price": 216000.0,
+          "total_price": 432000.0
+        },
+        {
+          "item_name": "AYM GR JUN NJAN",
+          "quantity": 1,
+          "unit_price": 108000.0,
+          "total_price": 108000.0
+        },
+        {
+          "item_name": "SAPO TH SEAFOOD",
+          "quantity": 1,
+          "unit_price": 172000.0,
+          "total_price": 172000.0
+        },
+        {
+          "item_name": "POGAI 3",
+          "quantity": 2,
+          "unit_price": 111000.0,
+          "total_price": 222000.0
+        },
+        {
+          "item_name": "GURAME FILLET M ASAM MANIS",
+          "quantity": 1,
+          "unit_price": 163000.0,
+          "total_price": 163000.0
+        },
+        {
+          "item_name": "BIHUN GORENG JJ",
+          "quantity": 1,
+          "unit_price": 114000.0,
+          "total_price": 114000.0
+        },
+        {
+          "item_name": "ICED TEA",
+          "quantity": 5,
+          "unit_price": 12000.0,
+          "total_price": 60000.0
+        },
+        {
+          "item_name": "NASI PUTIH",
+          "quantity": 7,
+          "unit_price": 10000.0,
+          "total_price": 70000.0
+        }
+      ],
+      "subtotal": 1343000.0,
+      "service_charge": 80500.0,
+      "tax": 142358.0,
+      "rounding": null,
+      "grand_total": 1565858.0
+    }
+  },
+  {
+    "receipt_id": "train_020",
+    "image_path": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/training_wheels/train_020.png",
+    "extraction_successful": false,
+    "extraction_error": "BamlClientHttpError(client_name=CustomSonnet4, message=Request failed with status code: 400 Bad Request. {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"messages.0.content.1.image.source.base64: image exceeds 5 MB maximum: 7526588 bytes > 5242880 bytes\"},\"request_id\":\"req_011CUsBrnfYBmUGNZMWNSM7L\"}, status_code=400, detailed_message=LLM client \"CustomSonnet4\" failed with status code: Unspecified error code: 400\nMessage: Request failed with status code: 400 Bad Request. {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"messages.0.content.1.image.source.base64: image exceeds 5 MB maximum: 7526588 bytes > 5242880 bytes\"},\"request_id\":\"req_011CUsBrnfYBmUGNZMWNSM7L\"})",
+    "overall_passed": false,
+    "pass_rate": 0.0,
+    "evaluations": []
+  }
+]

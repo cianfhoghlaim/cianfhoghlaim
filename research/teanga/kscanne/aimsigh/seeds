@@ -1,0 +1,41 @@
+#!/bin/bash
+#  Now deal with listserv archives; monthly indices are already in DEANTA
+#  so can't seed with the two top-level URLs, need to seed with each
+#  monthly separately
+TEMPFILE=`mktemp`
+MONTHLY=`mktemp`
+
+wget --no-check-certificate -O "${TEMPFILE}" 'https://listserv.heanet.ie/cgi-bin/wa?A0=seanchas-l&T=0'
+cat "${TEMPFILE}" | get_refs.pl 'https://listserv.heanet.ie/cgi-bin/wa?A0=seanchas-l&T=0' > ${MONTHLY}
+rm -f "${TEMPFILE}"
+
+wget --no-check-certificate -O "${TEMPFILE}" 'https://listserv.heanet.ie/cgi-bin/wa?A0=gaelic-l&T=0'
+cat "${TEMPFILE}" | get_refs.pl 'https://listserv.heanet.ie/cgi-bin/wa?A0=gaelic-l&T=0' >> ${MONTHLY}
+rm -f "${TEMPFILE}"
+
+wget --no-check-certificate -O "${TEMPFILE}" 'https://listserv.heanet.ie/cgi-bin/wa?A0=gaeilge-a&T=0'
+cat "${TEMPFILE}" | get_refs.pl 'https://listserv.heanet.ie/cgi-bin/wa?A0=gaelic-l&T=0' >> ${MONTHLY}
+rm -f "${TEMPFILE}"
+
+cat $MONTHLY | egrep 'cgi-bin/wa\?A1=ind' |
+while read url
+do
+	seed "$url"
+done
+rm -f "${TEMPFILE}" "${MONTHLY}"
+#seed 'http://www.scoilgaeilge.org/liosta/viewforum.php?f=2'
+#seed 'http://www.scoilgaeilge.org/liosta/viewforum.php?f=2&start=50'
+#seed 'http://www.scoilgaeilge.org/liosta/viewforum.php?f=2&start=100'
+perl -e 'for (1..40) {my $i=$_*30; print "http://groups.yahoo.com/group/eolas-ibi/messages/$i\n";}' |
+while read x
+do
+	seed "$x"
+done
+perl -e 'for (0..3) {my $i=1+$_*30; print "http://uk.groups.yahoo.com/group/buach/messages/$i\n";}' |
+while read x
+do
+	seed "$x"
+done
+echo "DON'T FORGET TO COMMENT OUT THE HTTPS LISTSERV LINE IN PILLAGED"
+echo "THEN RECOMMENT IT AFTER STARTING TOGAIL"
+exit 0

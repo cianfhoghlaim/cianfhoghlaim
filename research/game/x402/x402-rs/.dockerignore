@@ -1,0 +1,5 @@
+target/
+.git/
+*.rs.bk
+*.log
+.env

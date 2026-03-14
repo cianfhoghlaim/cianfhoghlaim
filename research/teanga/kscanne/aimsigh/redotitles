@@ -1,0 +1,13 @@
+#!/bin/bash
+#  Used just once (hopefully) after a bug in fixtitles borked all
+#  of the "title" fields in sonrai
+find sonrai -name '*.dat' | xargs egrep -l '^format: html$' | sed 's/^sonrai\///' | sed 's/\.dat//' |
+while read x
+do
+	HTMLFILE=`echo $x | sed 's/.*/taisce\/&.html/'`
+	SONRAI=`echo $x | sed 's/.*/sonrai\/&.dat/'`
+	TEIDEAL=`cat $HTMLFILE | get_title.pl | de-entify | sed 's@/@\\\\\\/@g' | sed 's@&@\\\\\&@g'`
+	echo "html=$HTMLFILE, t=$TEIDEAL"
+	echo "setting in $SONRAI..."
+	sed -i "/^title:.*$/s/.*/title: $TEIDEAL/" $SONRAI
+done

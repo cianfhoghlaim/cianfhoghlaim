@@ -1,0 +1,961 @@
+# Translation of Facebook into unsupported languages
+# Copyright (C) 2012 Kevin P. Scannell
+msgid ""
+msgstr ""
+"Project-Id-Version: gm-facebook\n"
+"Report-Msgid-Bugs-To: <kscanne@gmail.com>\n"
+"POT-Creation-Date: 2013-07-19 15:06:49-0500\n"
+"PO-Revision-Date: 2012-07-28 12:28:12-0500\n"
+"Last-Translator: Kevin Scannell\n"
+"Language-Team: Norwegian (bokmaal)\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#. Lines like this one beginning with "#." are comments; no need to translate!
+#. The first six words to translate are used in a number of different messages,
+#. always as the final word of the message in English; for example:
+#. John Doe likes Jane Doe's X.
+#. John Doe shared Jane Doe's X.
+#. John Doe shared her/his own X.
+#. John Doe and Jane Doe shared Kevin Scannell's X.
+#. John Doe was tagged in Jane Doe's X.
+#. John Doe was tagged in a X.
+#. John Doe commented on a X.
+#. John Doe and Jane Doe commented on a X.
+#. John Doe commented on her/his own X.
+#. John Doe commented on your X.
+#. John Doe likes a X.
+#. If the translations of link, photo, etc. take different forms depending
+#. on the above contexts, this can be arranged, just ask Kevin for help
+#. Always a link. Used in longer sentences as above.
+msgid "life event"
+msgstr "livshendelse"
+
+#. Always a link. Used in longer sentences as above.
+msgid "link"
+msgstr "lenke"
+
+#. Always a link. Used in longer sentences as above.
+msgid "photo"
+msgstr "bilde"
+
+#. Always a link. Used in longer sentences as above.
+msgid "post"
+msgstr "innlegg"
+
+#. Always a link. Used in longer sentences as above.
+msgid "status"
+msgstr "status"
+
+#. Always a link. Used in longer sentences as above.
+msgid "status update"
+msgstr "statusoppdatering"
+
+#. %a stands for something like "4 others"
+msgid "You and %a like this."
+msgstr "Du og %a liker dette."
+
+#. %a1 is a person's name, %a2 stands for something like "4 others"
+msgid "You, %a1 and %a2 like this."
+msgstr "Du, %a1 og %a2 liker dette."
+
+#. %a1 and %a2 are names, while %a3 is something like "5 others"
+msgid "%a1, %a2 and %a3 like this."
+msgstr "%a1, %a2 og %a3 liker dette."
+
+#. %a is a person's name; %d stands for a number, no need to translate it
+msgid "%a added a new photo."
+msgid_plural "%a added %d new photos."
+msgstr[0] "%a har lagt til et nytt bilde."
+msgstr[1] "%a har lagt til %d nye bilder."
+
+#. %a1 is a person's name; %d stands for a number, no need to translate it
+msgid "%a1 added 1 new photo to the album %a2."
+msgid_plural "%a1 added %d new photos to the album %a2."
+msgstr[0] "%a1 har lagt til et nytt bilde i albumet %a2."
+msgstr[1] "%a1 har lagt til %d nye bilder i albumet %a2."
+
+#. %a1 is a person, %a2 is something like "4 other people"
+#. This is to let you know about birthdays in right-hand column on home page
+msgid "%a1 and %a2"
+msgstr "%a1 og %a2"
+
+#. Both %a1 and %a2 are names of people
+msgid "%a1 and %a2 are now friends."
+msgstr "%a1 og %a2 er nå venner."
+
+#. %a1 and %a3 are names of people; %a2 is something like "5 other friends"
+msgid "%a1 and %a2 are now friends with %a3."
+msgstr "%a1 og %a2 er nå venner med %a3."
+
+#. %a1 and %a2 are people, and %a3 is "link", "photo", "status", etc.
+msgid "%a1 and %a2 commented on a %a3."
+msgstr "%a1 og %a2 kommenterte e[nt] %a3."
+
+#. %a1 is a name, %a2 is a name or else something like "6 others"
+#. %a3 is the name of a page like "Rage Against the Machine"
+msgid "%a1 and %a2 like %a3."
+msgstr "%a1 og %a2 liker %a3."
+
+#. %a1 is a name, %a2 is a name or else something like "6 others"
+msgid "%a1 and %a2 like this."
+msgstr "%a1 og %a2 liker dette."
+
+#. %a1 and %a2 as above, and %a3 is something like (always?) "a link"
+msgid "%a1 and %a2 shared %a3."
+msgstr "%a1 og %a2 delte %a3."
+
+#. %a1 and %a2 as above, %a3 is a name, %a4 is "link", "photo", "status", etc.
+msgid "%a1 and %a2 shared %a3's %a4."
+msgstr "%a1 og %a2 delte %a3 si[nt]t? %a4."
+
+#. %a1, %a2, and %a3 are names of people
+msgid "%a1 and %a2 were tagged in %a3's photos."
+msgstr ""
+
+#. Link at bottom of home page (under "More") to info about Facebook
+msgid "About"
+msgstr "Om"
+
+msgid "about an hour ago"
+msgstr "for ca. en time siden"
+
+msgid "about a minute ago"
+msgstr "for ca. ett minutt siden"
+
+msgid "Account Settings"
+msgstr "Kontoinnstillinger"
+
+# was "%a oppdaterte sitt profilbilde."
+#. %a is someone's name (female)
+msgid "%a changed her profile picture."
+msgstr "%a har byttet profilbilde."
+
+# was "%a oppdaterte sitt profilbilde."
+#. %a is someone's name (male)
+msgid "%a changed his profile picture."
+msgstr "%a har byttet profilbilde."
+
+#. %a1 is a person's name, %a2 is "link", "post", "status", or "photo"
+msgid "%a1 commented on a %a2."
+msgstr "%a1 kommenterte e[nt] %a2."
+
+#. %a1 is a person's name, %a2 is "link", "post", "status", or "photo"
+msgid "%a1 commented on her own %a2."
+msgstr "%a1 kommenterte si[nt]t? ege[nt] %a2."
+
+#. %a1 is a person's name, %a2 is "link", "post", "status", or "photo"
+msgid "%a1 commented on his own %a2."
+msgstr "%a1 kommenterte si[nt]t? ege[nt] %a2."
+
+#. %a1 is a person's name, %a2 is "link", "post", "status", or "photo"
+msgid "%a1 commented on your %a2."
+msgstr "%a1 kommenterte di[nt]t? %a2."
+
+msgid "Activity Log"
+msgstr "Aktivitetslogg"
+
+msgid "Add Friend"
+msgstr "Legg til som venn"
+
+#. Under INTERESTS in left-hand navigation on home page
+msgid "Add Interests..."
+msgstr "Legg til interesser ..."
+
+# was "Last opp bilde/video"
+#. Appears at top of home timeline, with "Update Status", "Ask Question"
+msgid "Add Photos/Video"
+msgstr ""
+
+#. Link at bottom of home page (under "More") to info about Facebook ads
+msgid "Advertising"
+msgstr "Annonsering"
+
+#. Time stamp on a post. You might also translate as "Just now"
+msgid "a few seconds ago"
+msgstr "for noen sekunder siden"
+
+#. %a1 is a person's name, %a2 is a place
+msgid "%a1 is at %a2."
+msgstr "%a1 er på %a2."
+
+#. %a1 and %a2 are names of people; %a3 is either another person or
+#. else something like "8 other people"
+msgid "%a1 is now friends with %a2 and %a3."
+msgstr "%a1 er nå venn med %a2 og %a3."
+
+#. For example, "John Doe likes Linux."; often under Sponsored Ads
+msgid "%a1 likes %a2."
+msgstr "%a1 liker %a2."
+
+#. %a1 is a person's name, %a2 is "link", "photo", "post", or "status"
+msgid "%a1 likes a %a2."
+msgstr "%a1 liker e[nt] %a2."
+
+#. %a1 and %a2 are people, %a3 is "link", "photo", "post", or "status"
+msgid "%a1 likes %a2's %a3."
+msgstr "%a1 liker %a2 si[nt]t? %a3."
+
+#. %a1 is a person, %a2 is the name of a page, and %a3 is either the
+#. name of another page or something like "4 other pages"
+msgid "%a1 likes %a2 and %a3."
+msgstr "%a1 liker %a2 og %a3."
+
+#. %a stands for a person's name
+msgid "%a likes this."
+msgstr "%a liker dette."
+
+#. %a stands for something like "3 people"
+msgid "%a like this."
+msgstr "%a liker dette."
+
+#. Always a link. Used in longer sentences like "John Doe shared a link"
+msgid "a link"
+msgstr "en lenke"
+
+#. Heading above the apps you use, in left-hand navigation on home page
+msgid "APPS"
+msgstr "APPLIKASJONER"
+
+#. One of the entries in the APPS list for some users
+msgid "Apps and Games"
+msgstr "Applikasjonssenter"
+
+#. Format. %A = day of the week ("Saturday") and %s = the time ("3:15am")
+msgid "%A at %s"
+msgstr "%A kl. %s"
+
+#. %a1 is a person's name, %a2 is something like (always?) "a link"
+msgid "%a1 shared %a2."
+msgstr "%a1 delte %a2."
+
+#. %a1 and %a2 are names of people, %a3 is "link", "photo", "post", or "status"
+msgid "%a1 shared %a2's %a3."
+msgstr "%a1 delte %a2 si[nt]t? %a3."
+
+#. %a1 is a person, %a2 is "link", "photo", "post", or "status"
+msgid "%a1 shared her own %a2."
+msgstr "%a1 delte si[nt]t? ege[nt] %a2."
+
+#. %a1 is a person, %a2 is "link", "photo", "post", or "status"
+msgid "%a1 shared his own %a2."
+msgstr "%a1 delte si[nt]t? ege[nt] %a2."
+
+#. Appears at top of home timeline, with "Update Status", "Add Photos/Video"
+msgid "Ask Question"
+msgstr "Still spørsmål"
+
+# English as of Sept. 2012
+#. %a1 is a person, %a2 is always "Instagram" I think
+msgid "%a1 took a photo with %a2."
+msgstr "%a1 took a photo with %a2."
+
+#. %a1 is a person, %a2 is a place: "John Doe was tagged at Wilson Farm."
+msgid "%a1 was tagged at %a2."
+msgstr "%a1 ble tagget på %a2."
+
+#. %a1 and %a2 are names of people, %a3 is "link", "photo", "post", or "status"
+msgid "%a1 was tagged in %a2's %a3."
+msgstr "%a1 ble tagget i %a2 si[nt]t? %a3."
+
+#. %a1 is a person, %a2 is "photo" or "life event" (others?)
+msgid "%a1 was tagged in a %a2."
+msgstr "%a1 ble tagget i e[nt] %a2."
+
+#. %a1 and %a2 are names of people
+msgid "%a1 was tagged in %a2's photos."
+msgstr "%a1 ble tagget i bildene til %a2."
+
+#. %a is someone's name (female)
+msgid "%a updated her cover photo."
+msgstr "%a oppdaterte forsidebildet sitt."
+
+#. %a is someone's name (male)
+msgid "%a updated his cover photo."
+msgstr "%a oppdaterte forsidebildet sitt."
+
+#. Format. %B = name of the month ("February"), and %d = day of the month ("20")
+msgid "%B %d"
+msgstr "%d. %B"
+
+#. Format. %B and %d as above, %s = string representing the time ("3:15am")
+msgid "%B %d at %s"
+msgstr "%d. %B kl. %s"
+
+#. Format. %B and %d as above, %Y = four digit year ("2012")
+msgid "%B %d, %Y"
+msgstr "%d. %B %Y"
+
+#. Format. %B, %d, and %Y as above, %s = string representing the time ("3:15am")
+msgid "%B %d, %Y at %s"
+msgstr "%d. %B %Y kl. %s"
+
+msgid "Born"
+msgstr "Født"
+
+#. Appears below shared items, indicating the original author/creator
+msgid "By:"
+msgstr "via"
+
+#. Button label
+msgid "Cancel"
+msgstr "Avbryt"
+
+#. Link at bottom of home page (under "More") to info about jobs at Facebook
+msgid "Careers"
+msgstr "Jobber"
+
+#. Link that allows you to change the big photo at the top of your timeline
+msgid "Change Cover"
+msgstr "Endre forsidebilde"
+
+#. Label on tab for chatting with friends
+#. "Off" means you're not currently logged into the chat system
+msgid "Chat (Off)"
+msgstr "Chat (frakoblet)"
+
+msgid "Close"
+msgstr "Lukk"
+
+#. A link that takes you to a list of your closest friends on Facebook
+msgid "Close Friends"
+msgstr "Nære venner"
+
+#. Verb. A link under a post that allows you to comment on the post.
+msgid "Comment"
+msgstr "Kommenter"
+
+#. Link at the bottom of home page to a help page explaining what cookies are
+msgid "Cookies"
+msgstr "Informasjonskapsler"
+
+#. Button label; confirm a friend request
+msgid "Confirm"
+msgstr "Bekreft"
+
+msgid "Create an Ad"
+msgstr "Opprett en annonse"
+
+#. Link at bottom of home page (under "More")
+msgid "Create a Page"
+msgstr "Opprett en side"
+
+# space before ellipsis sic
+#. Appears as last item under "GROUPS" in left-hand navigation
+msgid "Create Group..."
+msgstr "Opprett en gruppe ..."
+
+#. Button label at top of Groups page (click "MORE" next to "GROUPS")
+msgid "Create Group"
+msgstr "Opprett ny gruppe"
+
+#. Link at bottom of home page (under "More") to info for software developers
+msgid "Developers"
+msgstr "Utviklere"
+
+#. %d stands for a number, no need to translate it
+#. The singular "1 hour ago" is never used as far as I can tell
+msgid "1 hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "1 hour ago"
+msgstr[1] "for %d timer siden"
+
+#. %d stands for a number, no need to translate it
+#. The singular "1 minute ago" is never used as far as I can tell
+msgid "1 minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "1 minute ago"
+msgstr[1] "for %d minutter siden"
+
+#. %d stands for a number, no need to translate it
+msgid "1 mutual friend"
+msgid_plural "%d mutual friends"
+msgstr[0] "1 felles venn"
+msgstr[1] "%d felles venner"
+
+#. %d stands for a number, no need to translate it
+msgid "1 NEW STORY"
+msgid_plural "%d NEW STORIES"
+msgstr[0] ""
+msgstr[1] "%d NY INNLEGG"
+
+#. %d stands for a number, no need to translate it; "%d other people"
+#. The singular "1 other" is never used as far as I can tell
+#. Always a link. Used in sentences like the following:
+#. "John Doe and 7 others like this."
+#. "John Doe, Jane Doe, and 7 others like this."
+#. "You and 7 others like this."
+#. "You, John Doe and 7 others like this."
+msgid "1 other"
+msgid_plural "%d others"
+msgstr[0] "1 other"
+msgstr[1] "%d andre"
+
+#. Always a link. "John Doe and 7 other friends are now friends with Kevin."
+#. The singular "1 other friend" is never used as far as I can tell
+msgid "1 other friend"
+msgid_plural "%d other friends"
+msgstr[0] "1 other friend"
+msgstr[1] "%d andre venner"
+
+#. Always a link. "John Doe likes GaelSpell and 3 other pages"
+#. The singular "1 other page" is never used as far as I can tell
+msgid "1 other page"
+msgid_plural "%d other pages"
+msgstr[0] "1 other page"
+msgstr[1] "%d sider til"
+
+#. Always a link. "John Doe is now friends with Jane Doe and 3 other people."
+#. The singular "1 other person" is never used as far as I can tell
+msgid "1 other person"
+msgid_plural "%d other people"
+msgstr[0] "1 other person"
+msgstr[1] "%d andre personer"
+
+#. %d stands for a number; used in sentences like "%d people like this."
+#. The singular "1 person" is never used as far as I can tell
+msgid "1 person"
+msgid_plural "%d people"
+msgstr[0] "1 person"
+msgstr[1] "%d personer"
+
+#. %d stands for a number, no need to translate it
+#. The singular "1 second ago" is never used as far as I can tell
+msgid "1 second ago"
+msgid_plural "%d seconds ago"
+msgstr[0] "1 second ago"
+msgstr[1] "for %d sekunder siden"
+
+#. %d stands for a number, no need to translate it
+#. This means a post has been shared %d times
+msgid "1 share"
+msgid_plural "%d shares"
+msgstr[0] "1 deling"
+msgstr[1] "%d delinger"
+
+#. Appears at the bottom of your home time line, opposite "More Stories"
+#. Allows you to hide certain stories from your home page
+msgid "Edit Options"
+msgstr "Endre alternativer"
+
+#. Attached to each post on your personal timeline
+msgid "Edit or Remove"
+msgstr "Rediger eller fjern"
+
+#. Link that lets you change your language settings
+#. Please translate to the name of your language, written in the language itself
+msgid "English (US)"
+msgstr "Norsk (bokmål)"
+
+#. In the "New Message" dialog
+msgid "Enter a friend's name or email address"
+msgstr "Skriv inn navnet eller e-postadressen til en venn"
+
+#. A link to a list of events that you've been invited to
+msgid "Events"
+msgstr "Arrangementer"
+
+#. A link that shows you a list of your relatives on Facebook
+msgid "Family"
+msgstr "Familie"
+
+#. In left-hand column on home page, above links to "News Feed", "Messages", etc
+msgid "FAVORITES"
+msgstr "FAVORITTER"
+
+#. Link to a page that allows you to search your address books for FB friends
+#. Appears in the "Friend Requests" dialog and when you click the "Friends" link
+msgid "Find Friends"
+msgstr "Finn venner"
+
+msgid "Find More Pages"
+msgstr "Finn flere sider"
+
+#. Appears next to "Like" and "Comment" on each post in a group
+msgid "Follow Post"
+msgstr "Følg innlegget"
+
+#. In search box that lets you search for friends that are available to chat
+msgid "Friends on Chat"
+msgstr "Venner på chat"
+
+#. People who have asked to be your friend on Facebook; top left of screen
+msgid "Friend Requests"
+msgstr "Venneforespørsler"
+
+#. A link that takes you to a list of all your Facebook friends
+msgid "Friends"
+msgstr "Venner"
+
+#. Heading above your lists of friends ("Work", "Family", etc.)
+msgid "FRIENDS"
+msgstr "VENNER"
+
+#. A couple places on user home page
+msgid "Groups"
+msgstr ""
+
+#. Heading above the groups you're in, left-hand navigation on home page
+msgid "GROUPS"
+msgstr "GRUPPER"
+
+#. Link at bottom of home page ("More"); also in dropdown menu next to "Home"
+msgid "Help"
+msgstr "Hjelp"
+
+#. Link that takes you to your home timeline; always visible at top-right
+msgid "Home"
+msgstr "Hjem"
+
+#. Main prompt when you enter in a new status update
+msgid "How are you doing, %s?"
+msgstr ""
+
+#. Main prompt when you enter in a new status update
+msgid "How are you feeling, %s?"
+msgstr ""
+
+#. Main prompt when you enter in a new status update
+#, fuzzy
+msgid "How's it going, %s?"
+msgstr "Hva tenker du på?"
+
+#. In left-hand column on home page
+msgid "INTERESTS"
+msgstr "INTERESSER"
+
+msgid "Life Event"
+msgstr "Livshendelse"
+
+#. Verb. A link that allows you to "like" a post or a comment; "I like this"
+msgid "Like"
+msgstr "Liker"
+
+#. Plural noun. Link that shows you a list of music, books, etc. you like on FB
+#. Appears at the top of your profile, after Friends, Photos, Map, ...
+msgid "Likes"
+msgstr "Liker"
+
+#. Appears as link to right of "RECENT POST" on home page
+msgid "Like Page"
+msgstr "Lik side"
+
+msgid "Like This Page"
+msgstr "Lik denne siden"
+
+msgid "Links"
+msgstr "Lenker"
+
+#. Was the heading above your lists of friends ("Work", "Family", etc.)
+msgid "LISTS"
+msgstr "Lister"
+
+msgid "Log Out"
+msgstr "Logg ut"
+
+#. Link to a map of the places someone has been
+msgid "Map"
+msgstr "Kart"
+
+#. Button near top of a user's profile page (but not your own!)
+msgid "Message"
+msgstr "Send melding"
+
+#. In the "New Message" dialog
+msgid "Message:"
+msgstr "Send melding:"
+
+msgid "Messages"
+msgstr "Meldinger"
+
+#. Photographs uploaded from someone's mobile device
+msgid "Mobile Uploads"
+msgstr "Mobilopplastninger"
+
+#. Link in bottom navigation. Click it to see additional links: Careers, etc.
+msgid "More"
+msgstr "Mer"
+
+#. In left-hand navigation to the right of GROUPS, APPS when you mouse over
+msgid "MORE"
+msgstr "MER"
+
+#. Appears at the bottom of your home time line; click to load more posts
+msgid "More Stories"
+msgstr "Vis alle hendelser"
+
+#. Under "Sort" on the home page, can sort by "Top Stories" or "Most Recent"
+msgid "Most Recent"
+msgstr "Siste nytt"
+
+#. Appears in left-hand navigation for some users
+msgid "Music"
+msgstr "Musikk"
+
+#. Not sure now where this appears, a figment?
+msgid "New Group..."
+msgstr ""
+
+msgid "New Message"
+msgstr "Ny melding"
+
+#. Appears in left-hand navigation of home page
+msgid "News Feed"
+msgstr "Nyhetsoppdatering"
+
+#. In "Friend Requests" drop down
+#, fuzzy
+msgid "No new requests"
+msgstr "Venneforespørsler"
+
+msgid "Notes"
+msgstr "Notater"
+
+msgid "Notifications"
+msgstr "Varsler"
+
+#. Button label; postpone confirmation of a friend request
+msgid "Not Now"
+msgstr "Ikke nå"
+
+#. A link that takes you to the latest posts on your timeline
+msgid "Now"
+msgstr "Nå"
+
+#. Heading above the list of your FB pages (now "PAGES AND ADS"?)
+msgid "PAGES"
+msgstr "SIDER"
+
+#. Heading above the list of your FB pages; left-hand navigation on home page
+msgid "PAGES AND ADS"
+msgstr "SIDER OG ANNONSER"
+
+msgid "People who like this"
+msgstr "Personer som liker dette"
+
+msgid "People You May Know"
+msgstr "Personer du kanskje kjenner"
+
+#. Appears on profile above the "What's on your mind?" prompt, after "Status"
+msgid "Photo"
+msgstr "Bilde"
+
+#. Link to a user's photos, at top of profile, between "Friends" and "Map"
+msgid "Photos"
+msgstr "Bilder"
+
+#. Link that allows you to "check in" somewhere
+#. Appears on profile above "What's on your mind?", after "Status" and "Photo"
+msgid "Place"
+msgstr "Sted"
+
+#. Appears, e.g., on your Timeline, showing places you visited during the year
+msgid "Places"
+msgstr "Steder"
+
+#. Appears in left-hand navigation for some users, under "APPS"
+msgid "Pokes"
+msgstr "Poker"
+
+#. Link at the bottom of home page to Facebook's privacy policy
+msgid "Privacy"
+msgstr "Personvern"
+
+msgid "Privacy Settings"
+msgstr "Personverninnstillinger"
+
+#, fuzzy
+msgid "Privacy Shortcuts"
+msgstr "Personverninnstillinger"
+
+#. Appears when you mouse over your name in the top navigation
+msgid "Profile"
+msgstr "Profil"
+
+#. Appears under APPS for some users in left-hand navigation
+msgid "Questions"
+msgstr "Spørsmål"
+
+#. Box near the top of your personal timeline showing your recent actions on FB
+#. Now defunct, I think - replaced by "Activity" and "Recent" on a line below
+msgid "Recent Activity"
+msgstr "Aktiviteter"
+
+#. Appears next to some posts on home page
+msgid "RECENT POST"
+msgstr "NYLIGE INNLEGG"
+
+#. Appears in right-hand navigation (sometimes); pages that Facebook things you'll like
+msgid "Recommended Pages"
+msgstr "Anbefalte sider"
+
+#. When you share a link in a comment, use this to remove the preview image
+msgid "Remove Preview"
+msgstr "Fjern forhåndsvisning"
+
+#. Option on every post on your personal timeline (now defunct? see "Highlight")
+msgid "Resize"
+msgstr "Fremhevet"
+
+# sic, Sept. 2012, with space before ellipsis
+#. Prompt when you comment on a post (was "Write a comment..."); %s = your name
+msgid "%s, add a comment..."
+msgstr "Skriv en kommentar ..."
+
+#. Text that used to appear in the search box at the top of the page
+msgid "Search"
+msgstr "Søk"
+
+#. Text that appears in the search box at the top of the page
+msgid "Search for people, places and things"
+msgstr "Søk etter personer, steder og ting"
+
+#. Link in right-hand column near "Recommended Pages" and "People You May Know"
+#. Also under Friend Requests, Messages, Notifications drop downs
+msgid "See All"
+msgstr "Vis alle"
+
+#. Now just "See All"?
+msgid "See All Friend Requests"
+msgstr "Vis alle"
+
+#. Now just "See All"?
+msgid "See All Messages"
+msgstr "Vis alle"
+
+#. Now just "See All"?
+msgid "See All Notifications"
+msgstr "Vis alle"
+
+#. A link that shows interactions and photos involving two Facebook friends
+#. One place it appears is in the "gear" menu on a friend's profile
+msgid "See Friendship"
+msgstr "Se vennskap"
+
+#. See more of a post that was truncated because it was very long
+msgid "See More"
+msgstr "Vis flere"
+
+#. Under "Privacy Shortcuts" menu
+#, fuzzy
+msgid "See More Settings"
+msgstr "Vis flere"
+
+# Maybe doesn't exist in nb?
+#. Link that appears under a post in another language; click it to translate
+msgid "See Translation"
+msgstr ""
+
+#. Label on button in "New Message" dialog to send the message
+msgid "Send"
+msgstr "Send"
+
+#. Link that opens the "New Message" dialog
+msgid "Send a New Message"
+msgstr "Send en ny melding"
+
+#. Appears in "Friend Requests" and "Notifications" drop down menu
+#, fuzzy
+msgid "Settings"
+msgstr "Kontoinnstillinger"
+
+#. Verb. A link that allows you to share (usually someone else's) post with your friends
+msgid "Share"
+msgstr "Del"
+
+#. A link that allows you to sort posts by "most recent" or "top stories"
+msgid "SORT"
+msgstr "SORTER"
+
+#. Appears above paid advertisements
+msgid "Sponsored"
+msgstr "Sponset"
+
+# sic
+#. This is a Facebook "status update", not a relationship status
+#. Appears on profile above the "What's on your mind?" prompt
+msgid "Status"
+msgstr "Status"
+
+#. With "Like Page" and "Find More Pages" when someone likes a page
+msgid "Subscribe to Page"
+msgstr "Abonner"
+
+#. Top of profile, after Friends, Photos, Map, ...
+msgid "Subscriptions"
+msgstr "Abonnementer"
+
+#. Right-hand navigation, similar to "People you may know"
+#. Get it by clicking "GROUPS" in left-hand navigation on Home Page
+msgid "Suggested Groups"
+msgstr "Foreslåtte grupper"
+
+msgid "Tag Friends"
+msgstr "Tag venner"
+
+#. Link at the bottom of home page to Facebook's "Terms of Service"
+msgid "Terms"
+msgstr "Betingelser"
+
+#. Real time news feed in the right-hand column
+#. "Nuacht Bheo" = "Live News" in Irish; "Instant Information" in Spanish
+msgid "Ticker"
+msgstr "ticker"
+
+#. Appears as a link when you scroll down on your profile, next to "Now"
+msgid "Timeline"
+msgstr "Tidslinje"
+
+#. %T is a timestamp ("11 hours ago"), %a is a location ("Dublin, Ireland")
+msgid "%T near %a"
+msgstr "%T i nærheten av %a"
+
+#. Specifies recipient when you send a private message
+msgid "To:"
+msgstr "Til:"
+
+#. Under "Sort" on the home page, can sort by "Top Stories" or "Most Recent"
+msgid "Top Stories"
+msgstr "Topphendelser"
+
+#. See "Follow Post"
+msgid "Unfollow Post"
+msgstr "Ikke følg innlegget lenger"
+
+#. Verb. See "Like"
+msgid "Unlike"
+msgstr "Liker ikke"
+
+#. Label on a button that allows you to edit your personal information
+msgid "Update Info"
+msgstr "Oppdater informasjon"
+
+#. This is a Facebook "status update", not a relationship status
+#. Appears at top of home timeline, with "Ask Question", "Add Photo/Video"
+msgid "Update Status"
+msgstr "Status"
+
+msgid "Use Facebook as:"
+msgstr "Bruk Facebook som:"
+
+#. %d stands for a number, no need to translate it
+#. The singular "View 1 comment" is never used as far as I can tell
+msgid "View 1 comment"
+msgid_plural "View all %d comments"
+msgstr[0] "View 1 comment"
+msgstr[1] "Vis alle %d kommentarene"
+
+msgid "Wall Photos"
+msgstr "Veggbilder"
+
+#. Appears in left-hand navigation for new users
+msgid "Welcome"
+msgstr "Velkommen"
+
+#. Main prompt when you enter in a new status update
+#, fuzzy
+msgid "What's going on, %s?"
+msgstr "Hva tenker du på?"
+
+#. Main prompt when you enter in a new status update
+#, fuzzy
+msgid "What's happening, %s?"
+msgstr "Hva tenker du på?"
+
+#. Main prompt when you enter in a new status update
+msgid "What's on your mind?"
+msgstr "Hva tenker du på?"
+
+#. Prompt when you comment on a post (replaced by "X, add a comment..."?)
+msgid "Write a comment..."
+msgstr "Skriv en kommentar..."
+
+#. Appears next to a post or comment as a timestamp
+msgid "Yesterday"
+msgstr "i går"
+
+#. Appears next to a post or comment as a timestamp; %s is the time of day
+msgid "Yesterday at %s"
+msgstr "i går kl. %s"
+
+msgid "You like this."
+msgstr "Du liker dette."
+
+#. Month Name
+msgid "January"
+msgstr "januar"
+
+#. Month Name
+msgid "February"
+msgstr "februar"
+
+#. Month Name
+msgid "March"
+msgstr "mars"
+
+#. Month Name
+msgid "April"
+msgstr "april"
+
+#. Month Name
+msgid "May"
+msgstr "mai"
+
+#. Month Name
+msgid "June"
+msgstr "juni"
+
+#. Month Name
+msgid "July"
+msgstr "juli"
+
+#. Month Name
+msgid "August"
+msgstr "august"
+
+#. Month Name
+msgid "September"
+msgstr "september"
+
+#. Month Name
+msgid "October"
+msgstr "oktober"
+
+#. Month Name
+msgid "November"
+msgstr "november"
+
+#. Month Name
+msgid "December"
+msgstr "desember"
+
+#. Day of the Week
+msgid "Monday"
+msgstr "mandag"
+
+#. Day of the Week
+msgid "Tuesday"
+msgstr "tirsdag"
+
+#. Day of the Week
+msgid "Wednesday"
+msgstr "onsdag"
+
+#. Day of the Week
+msgid "Thursday"
+msgstr "torsdag"
+
+#. Day of the Week
+msgid "Friday"
+msgstr "fredag"
+
+#. Day of the Week
+msgid "Saturday"
+msgstr "lørdag"
+
+#. Day of the Week
+msgid "Sunday"
+msgstr "søndag"

@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PcGts xmlns="http://schema.primaresearch.org/PAGE/gts/pagecontent/2019-07-15" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schema.primaresearch.org/PAGE/gts/pagecontent/2019-07-15 http://schema.primaresearch.org/PAGE/gts/pagecontent/2019-07-15/pagecontent.xsd">
+  <Metadata>
+    <Creator>escriptorium</Creator>
+    <Created>2022-01-01T00:00:00+00:00</Created>
+    <LastChange>2022-01-01T00:00:00+00:00</LastChange>
+  </Metadata>
+  <Page imageFilename="default2.png" imageWidth="747" imageHeight="212">
+    <TextRegion id="eSc_textblock_11" custom="structure {type:title;}">
+      <Coords points="190,25 510,65"/>
+      <TextLine id="eSc_line_11">
+        <Coords points="200,30 500,30 500,60 200,60"/>
+        <Baseline points="200,45 500,45"/>
+        <TextEquiv>
+          <Unicode>Another simple test for eScriptorium</Unicode>
+        </TextEquiv>
+        <Word id="word_0">
+          <Coords points="200,45 200,60 500,45 500,60 208,45 208,60 508,45 508,60 217,45 217,60 517,45 517,60 225,45 225,60 525,45 525,60 233,45 233,60 533,45 533,60 242,45 242,60 542,45 542,60 250,45 250,60 550,45 550,60"/>
+          <Glyph id="char_0">
+            <Coords points="200,45 200,60 500,45 500,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>A</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_1">
+            <Coords points="208,45 208,60 508,45 508,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>n</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_2">
+            <Coords points="217,45 217,60 517,45 517,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>o</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_3">
+            <Coords points="225,45 225,60 525,45 525,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>t</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_4">
+            <Coords points="233,45 233,60 533,45 533,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>h</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_5">
+            <Coords points="242,45 242,60 542,45 542,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>e</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_6">
+            <Coords points="250,45 250,60 550,45 550,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>r</Unicode>
+            </TextEquiv>
+          </Glyph>
+        </Word>
+        <Word id="word_2">
+          <Coords points="266,45 266,60 566,45 566,60 275,45 275,60 575,45 575,60 283,45 283,60 583,45 583,60 291,45 291,60 591,45 591,60 300,45 300,60 600,45 600,60 308,45 308,60 608,45 608,60"/>
+          <Glyph id="char_0">
+            <Coords points="266,45 266,60 566,45 566,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>s</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_1">
+            <Coords points="275,45 275,60 575,45 575,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>i</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_2">
+            <Coords points="283,45 283,60 583,45 583,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>m</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_3">
+            <Coords points="291,45 291,60 591,45 591,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>p</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_4">
+            <Coords points="300,45 300,60 600,45 600,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>l</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_5">
+            <Coords points="308,45 308,60 608,45 608,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>e</Unicode>
+            </TextEquiv>
+          </Glyph>
+        </Word>
+        <Word id="word_4">
+          <Coords points="324,45 324,60 624,45 624,60 333,45 333,60 633,45 633,60 341,45 341,60 641,45 641,60 349,45 349,60 649,45 649,60"/>
+          <Glyph id="char_0">
+            <Coords points="324,45 324,60 624,45 624,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>t</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_1">
+            <Coords points="333,45 333,60 633,45 633,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>e</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_2">
+            <Coords points="341,45 341,60 641,45 641,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>s</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_3">
+            <Coords points="349,45 349,60 649,45 649,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>t</Unicode>
+            </TextEquiv>
+          </Glyph>
+        </Word>
+        <Word id="word_6">
+          <Coords points="366,45 366,60 666,45 666,60 374,45 374,60 674,45 674,60 383,45 383,60 683,45 683,60"/>
+          <Glyph id="char_0">
+            <Coords points="366,45 366,60 666,45 666,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>f</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_1">
+            <Coords points="374,45 374,60 674,45 674,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>o</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_2">
+            <Coords points="383,45 383,60 683,45 683,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>r</Unicode>
+            </TextEquiv>
+          </Glyph>
+        </Word>
+        <Word id="word_8">
+          <Coords points="399,45 399,60 699,45 699,60 408,45 408,60 708,45 708,60 416,45 416,60 716,45 716,60 424,45 424,60 724,45 724,60 432,45 432,60 732,45 732,60 441,45 441,60 741,45 741,60 449,45 449,60 749,45 749,60 457,45 457,60 757,45 757,60 466,45 466,60 766,45 766,60 474,45 474,60 774,45 774,60 482,45 482,60 782,45 782,60 490,45 490,60 790,45 790,60"/>
+          <Glyph id="char_0">
+            <Coords points="399,45 399,60 699,45 699,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>e</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_1">
+            <Coords points="408,45 408,60 708,45 708,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>S</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_2">
+            <Coords points="416,45 416,60 716,45 716,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>c</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_3">
+            <Coords points="424,45 424,60 724,45 724,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>r</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_4">
+            <Coords points="432,45 432,60 732,45 732,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>i</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_5">
+            <Coords points="441,45 441,60 741,45 741,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>p</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_6">
+            <Coords points="449,45 449,60 749,45 749,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>t</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_7">
+            <Coords points="457,45 457,60 757,45 757,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>o</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_8">
+            <Coords points="466,45 466,60 766,45 766,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>r</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_9">
+            <Coords points="474,45 474,60 774,45 774,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>i</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_10">
+            <Coords points="482,45 482,60 782,45 782,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>u</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_11">
+            <Coords points="490,45 490,60 790,45 790,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>m</Unicode>
+            </TextEquiv>
+          </Glyph>
+        </Word>
+      </TextLine>
+    </TextRegion>
+    <TextRegion id="eSc_textblock_12" custom="structure {type:body;}">
+      <Coords points="90,125 560,215"/>
+      <TextLine id="eSc_line_12">
+        <Coords points="100,130 550,130 550,150 100,150"/>
+        <Baseline points="100,140 550,140"/>
+        <TextEquiv>
+          <Unicode>More text to be exported during a document_export Celery task.</Unicode>
+        </TextEquiv>
+      </TextLine>
+      <TextLine id="eSc_line_13">
+        <Coords points="100,160 550,160 550,180 100,180"/>
+        <Baseline points="100,170 550,170"/>
+        <TextEquiv>
+          <Unicode>More text to be exported during a document_export Celery task.</Unicode>
+        </TextEquiv>
+      </TextLine>
+      <TextLine id="eSc_line_14">
+        <Coords points="100,190 550,190 550,210 100,210"/>
+        <Baseline points="100,200 550,200"/>
+        <TextEquiv>
+          <Unicode>More text to be exported during a document_export Celery task.</Unicode>
+        </TextEquiv>
+      </TextLine>
+    </TextRegion>
+    <TextRegion id="eSc_textblock_13" custom="structure {type:signature;}">
+      <Coords points="390,245 610,275"/>
+      <TextLine id="eSc_line_15">
+        <Coords points="400,250 600,250 600,270 400,270"/>
+        <Baseline points="400,260 600,260"/>
+        <TextEquiv>
+          <Unicode>Another beautiful signature</Unicode>
+        </TextEquiv>
+      </TextLine>
+    </TextRegion>
+  </Page>
+</PcGts>

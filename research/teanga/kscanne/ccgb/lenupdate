@@ -1,0 +1,57 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use utf8;
+
+binmode STDIN, ":utf8";
+binmode STDOUT, ":utf8";
+binmode STDERR, ":utf8";
+
+if (@ARGV == 0) {
+	die "Usage: $0 FILESINDIOLAIMCOMP\n";
+}
+
+my $LENDIR="/home/kps/gaeilge/diolaim/complen";
+my $BDCHARS="A-Za-zÁÉÍÓÚáéíóú";
+my $INTCHARS="'-";
+
+
+open (STOP, "<:utf8", "stoplist") or die "Can't open file: $!\n";
+my %stopwords;
+
+while (<STOP>) {
+	chomp;
+	$stopwords{$_}++;
+}
+close STOP;
+
+while ($ARGV = shift @ARGV) {
+	my $realname = $ARGV;
+	$realname =~ s/^.*\/([^\/]+)$/$1/;
+	my @stat1 = stat("$LENDIR/$realname");
+	my @stat2 = stat($ARGV);
+	if (!defined($stat1[9]) or $stat2[9] > $stat1[9]) {
+		print "Updating $realname...\n";
+		open (INP, "<:utf8", $ARGV) or die "Can't open file: $!\n";
+		open (OP, ">:utf8", "$LENDIR/$realname") or die "Can't open file: $!\n";
+		while (<INP>) {
+			(my $num, my $line) = /^([^ ]+) (.*)/;
+			$num =~ s/:$//;
+			$line =~ s/([$BDCHARS][$BDCHARS$INTCHARS]*)/<c>$1<\/c>/g;
+			$line =~ s/([$INTCHARS]+)<\/c>/<\/c>$1/g;
+			my $count = 0;
+			while ($line =~ m/<c>([^<]+)<\/c>/g) {
+				my $token = $1;	
+				$token =~ tr/A-ZÁÉÍÓÚ/a-záéíóú/;
+#				print "L=$num,TOKEN=\"$token\"\n";
+				$count++ if (!exists($stopwords{$token}) && length($token) > 1);
+			}
+			print OP "$num $count\n";
+		}
+		close INP;
+		close OP;
+	}
+}
+
+exit 0;

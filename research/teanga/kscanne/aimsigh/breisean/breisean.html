@@ -1,0 +1,37 @@
+<html>
+<head>
+<title>Install aimsigh plugin</title>
+</head>
+<body>
+<script
+  type="text/javascript">
+<!--
+function errorMsg()
+{
+  alert("Netscape 6 or Mozilla is needed to install a sherlock plugin");
+}
+function addEngine(name,ext,cat,type)
+{
+  if ((typeof window.sidebar == "object") && (typeof
+  window.sidebar.addSearchEngine == "function"))
+  {
+    //cat="Web";
+    //cat=prompt('In what category should this engine be installed?','Web')
+    window.sidebar.addSearchEngine(
+      "http://borel.slu.edu/aimsigh/plugin/"+name+".src",
+      "http://borel.slu.edu/aimsigh/plugin/"+name+"."+ext,
+      name,
+      cat );
+  }
+  else
+  {
+    errorMsg();
+  }
+}
+//-->
+</script>
+
+<a href="javascript:addEngine('aimsigh','png','Web',0)">Install aimsigh.com</a>
+
+</body>
+</html>

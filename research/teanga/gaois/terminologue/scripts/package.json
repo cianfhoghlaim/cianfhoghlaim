@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "better-sqlite3": "^9.6.0",
+    "mssql": "^10.0.4",
+    "xml-formatter": "^3.6.3"
+  }
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>Screenful Editor</title>
+		<script type="text/javascript">var rootPath="/../../";</script>
+		<script type="text/javascript">var uilang="<%=uilang%>";</script>
+		<script type="text/javascript" src="../../libs/jquery.js"></script>
+		<link type="text/css" rel="stylesheet" href="../../libs/screenful/screenful-theme-green.css" />
+    <link type="text/css" rel="stylesheet" href="../../libs/screenful/screenful.css" />
+		<script type="text/javascript" src="../../libs/screenful/screenful.js"></script>
+		<script type="text/javascript" src="../../libs/screenful/screenful-loc-<%-uilang%>.js"></script>
+		<script type="text/javascript" src="../../localizer/<%-uilang%>.js"></script>
+		<script type="text/javascript" src="../../libs/js.cookie.js"></script>
+
+		<script type="text/javascript" src="../../libs/screenful/screenful-editor.js"></script>
+		<link type="text/css" rel="stylesheet" href="../../libs/screenful/screenful-editor.css" />
+		<script type="text/javascript">
+		Screenful.Editor.readUrl="./read.json";
+		</script>
+
+		<link type="text/css" rel="stylesheet" href="../../widgets/pretty-large.css" />
+		<style>
+		div.prettyEntry div.extranets {display: none;}
+		div.prettyEntry div.binDateStamp {display: none;}
+		div.prettyEntry div.prettyXrefs div.title .link {display: none;}
+		</style>
+		<script type="text/javascript" src="../../widgets/pretty-large.js"></script>
+		<script type="text/javascript">
+		Screenful.Editor.viewer=function(div, entry){
+			$(div).html( PrettyLarge.entry(JSON.parse(entry.content)) );
+			//$(div).html(entry.id);
+		};
+		</script>
+
+		<script type="text/javascript" src="../../views/termbase-edit/fy-entry.js"></script>
+
+		<script type="text/javascript">
+		var termbaseConfigs=window.parent.termbaseConfigs;
+		var termbaseMetadata=window.parent.termbaseMetadata;
+		</script>
+
+		<script type="text/javascript">
+		Screenful.Editor.allowCommenting=true;
+		Screenful.Editor.openCommenting=true;
+		</script>
+		<script type="text/javascript" src="../../libs/screenful/autosize.js"></script>
+		<script type="text/javascript" src="../../libs/screenful/screenful-commenting.js"></script>
+		<link type="text/css" rel="stylesheet" href="../../libs/screenful/screenful-commenting.css" />
+		<script type="text/javascript">
+		//Screenful.Commenting.peekUrl="./commentPeek.json";
+		Screenful.Commenting.userID="<%-user.email%>";
+		Screenful.Commenting.listUrl="./commentList.json";
+		Screenful.Commenting.saveUrl="./commentSave.json";
+		Screenful.Commenting.deleteUrl="./commentDelete.json";
+		Screenful.Commenting.getExtranetTitle=function(xnetID){
+			var xnet=Spec.getExtranet(xnetID);
+			var ret=Spec.title(xnet.title, uilang);
+			return ret;
+		};
+		Screenful.Commenting.allowTags=true;
+		Screenful.Commenting.tags=[]; termbaseMetadata.tag.map(tag => {
+			Screenful.Commenting.tags.push({id: tag.id, title: tag.title});
+		});
+		</script>
+
+		<script type="text/javascript" src="../../libs/screenful/screenful-uilang.js"></script>
+		<link type="text/css" rel="stylesheet" href="../../libs/screenful/screenful-uilang.css" />
+		<script type="text/javascript">
+		Screenful.Uilang.url="../../uilang?lang=$",
+		Screenful.Uilang.languages=<%-JSON.stringify(uilangs)%>;
+		Screenful.Uilang.current="<%-uilang%>";
+		</script>
+
+		<link type="text/css" rel="stylesheet" href="../../furniture/ui.css" />
+
+	</head>
+	<body>
+	</body>
+</html>

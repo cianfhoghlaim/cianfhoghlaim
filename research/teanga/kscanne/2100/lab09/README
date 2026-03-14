@@ -1,0 +1,26 @@
+
+(1) The abstract parent classes GTNode and GenTree are
+defined in ../shaffer/gentree.h.  Implement concrete children
+of these classes using the "dynamic linked list of children" approach
+described in section 6.3.3 and illustrated in Figure 6.13 on p. 217.
+
+Notes:
+   * recall that this approach doesn't use a global array of node pointers
+     in the GenTree class; you need to store a list of pointers at each
+     node, not array indices
+   * Be sure to test your code, for instance by getting it to
+     work with the (slightly modified) main() program
+     in../shaffer/genmain.cpp.
+   * I want you to define your classes as children of GTNode and GenTree;
+     don't simply recycle the names of the abstract parent classes as
+     was done in genmain.cpp.
+
+
+(2) (a) Templatize the class ParPtrTree in ../shaffer/uf.h so that
+        objects of any type E can be stored in the tree.  You'll probably
+        want to define a templatized ParPtrNode class that stores an
+        instance of type E along with the integer index of its parent
+        (or "ROOT").  Then, ParPtrTree can store an AList of ParPtrNode's
+        in place of "array".
+
+    (b) Use this to solve Project 6.5 on p.226-227.

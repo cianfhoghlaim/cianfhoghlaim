@@ -1,0 +1,56 @@
+{% load export_tags %}
+          <TextLine ID="{{ line.external_id }}"
+                    {% if line.typology %}TAGREFS="LT{{line.typology.id}}"{% endif %}
+                    {% if line.baseline %}BASELINE="{% alto_points line.baseline %}" {% endif %}
+                    HPOS="{{ line.box.0 }}"
+                    VPOS="{{ line.box.1 }}"
+                    WIDTH="{{ line.width }}"
+                    HEIGHT="{{ line.height }}">
+            {% if line.mask %}<Shape><Polygon POINTS="{% alto_points line.mask %}"/></Shape>{% endif %}
+
+            {% if line.transcription.0.graphs and include_characters %}
+
+            {% for segment in line.transcription.0.graphs|group_by_word %}
+            {% if segment|is_whitespace %}
+            <SP ID="segment_{{ forloop.counter0 }}"
+                HPOS="{{ segment.box.0 }}"
+                VPOS="{{ segment.box.1 }}"
+                WIDTH="{{ segment.width }}"
+                HEIGHT="{{ segment.height }}"/>
+            {% else %}
+            <String ID="segment_{{ forloop.counter0 }}"
+                    CONTENT="{{ segment.content }}"
+                    HPOS="{{ segment.box.0 }}"
+                    VPOS="{{ segment.box.1 }}"
+                    WIDTH="{{ segment.width }}"
+                    HEIGHT="{{ segment.height }}"
+                    WC="{{ segment.confidence|floatformat:4 }}">
+              {% if segment.boundary %}
+              <Shape>
+                <Polygon POINTS="{{ segment.polygon|join:' ' }}"/>
+              </Shape>
+              {% endif %}
+              {% for char in segment.graphs %}
+              <Glyph ID="char_{{ forloop.counter0 }}"
+                     CONTENT="{{ char.c }}"
+                     HPOS="{{ char.box.0 }}"
+                     VPOS="{{ char.box.1 }}"
+                     WIDTH="{{ char.box.2|subtract:char.box.0 }}"
+                     HEIGHT="{{ char.box.3|subtract:char.box.1 }}"
+                     GC="{{ char.confidence|floatformat:4 }}">
+                {% if char.poly %}<Shape><Polygon POINTS="{% alto_points char.poly %}"/></Shape>{% endif %}
+              </Glyph>
+              {% endfor %}
+            </String>
+            {% endif %}
+            {% endfor %}
+
+            {% else %}
+            <String CONTENT="{{ line.transcription.0.content }}"
+                    HPOS="{{ line.box.0 }}"
+                    VPOS="{{ line.box.1 }}"
+                    WIDTH="{{ line.width }}"
+                    HEIGHT="{{ line.height }}"
+                    {% if line.transcription.0.avg_confidence %}WC="{{ line.transcription.0.avg_confidence }}"{% endif %}></String>
+            {% endif %}
+          </TextLine>

@@ -1,0 +1,10 @@
+[runtime]
+log_level = "INFO"
+
+[normalize]
+# Auto-normalize nested JSON from GitHub API
+loader_file_format = "parquet"
+
+[schema]
+# Schema evolution settings
+evolution_mode = "evolve"

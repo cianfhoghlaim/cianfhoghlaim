@@ -1,0 +1,49 @@
+body {
+	color: black;
+	background-color: white;
+}
+hr {
+	color: blue;
+	background-color: blue;
+	height: 2px;
+}
+h1 {
+	font-weight: 300;
+	font-size: 1.2em;
+}
+.navigation {
+	font-weight: 500;
+	font-size: 1.2em;
+	line-height: 175%;
+}
+.content {
+	float: right;
+	width: 75%;
+}
+img.nasctha {
+	border-style:none;
+	border-width:0px;
+}
+.anbheag {
+	font-size: 0.7em;
+}
+.beag {
+	font-size: 0.9em;
+}
+.uainebeag {
+	font-size: 0.9em;
+	color: #008000;
+}
+.mor {
+	font-size: 1.2em;
+}
+.laraithe {
+	text-align: center;
+}
+.bloclaraithe {
+	margin-left: auto;
+	margin-right: auto;
+}
+.cle {
+	text-align: left;
+}

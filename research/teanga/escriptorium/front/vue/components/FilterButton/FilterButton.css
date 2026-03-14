@@ -1,0 +1,74 @@
+.escr-filter-button,
+.escr-filter-button .escr-button {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+.escr-filter-button .escr-button {
+    color: var(--text1);
+    background-color: var(--background2);
+    margin-right: 4px;
+    font-size: 12px;
+    min-height: 36px;
+}
+.escr-filter-button .escr-button svg {
+    fill: var(--text1);
+}
+.escr-filter-button--active .escr-button svg {
+    fill: var(--primary);
+}
+.escr-filter-button .escr-button:hover {
+    background-color: var(--background2-dark);
+}
+.escr-filter-button .escr-button:active {
+    background-color: var(--background2-darker);
+}
+.escr-filter-button .escr-button:focus {
+    box-shadow: 0 0 0 0.2rem var(--background2-focus);
+}
+.escr-filter-button .escr-button .label {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+.escr-filter-button .escr-button .count {
+    display: block;
+    padding: 1px 1px 0 0;
+    color: var(--button-text);
+    background-color: var(--primary);
+    margin-left: 4px;
+    font-size: 12px;
+    width: 19px;
+    height: 19px;
+    border-radius: 10px;
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+.escr-filter-button .escr-button:disabled {
+    color: var(--text3);
+    cursor: default;
+    pointer-events: none;
+}
+.escr-filter-button .escr-button:disabled .count {
+    color: var(--text3);
+    background-color: var(--background);
+}
+.escr-filter-button .escr-button:disabled svg {
+    fill: var(--text3);
+}
+.escr-filter-button .escr-clear-filter-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    width: 18px;
+    padding: 4px;
+}
+.escr-filter-button .escr-clear-filter-button:disabled {
+    cursor: default;
+}
+.escr-filter-button .escr-clear-filter-button svg {
+    fill: var(--text1);
+    transition: fill 0.15s ease-in-out;
+}
+.escr-filter-button .escr-clear-filter-button:disabled svg {
+    fill: var(--text3);
+}

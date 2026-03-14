@@ -1,0 +1,290 @@
+#!/bin/bash
+
+fix_la()
+{
+echo "Fixing Lá titles"
+cd /usr/local/share/crubadan/ga
+ugrep 'www\.nuacht\.com/story/[?]' | sed 's/:.*//' |
+while read x
+do
+	TAISCE=`echo $x | sed 's/sonrai/taisce/' | sed 's/\.dat/.html/'`
+	TEIDEAL=`cat $TAISCE | tr -d '\015' | egrep -m 1 '<b>' | sed 's/^[^<>]*>//' | sed 's/<[^>]*>//g' | sed 's/ *$//' | sed 's/^ *//' | sed 's@/@\\/@g'`
+	sed -i "/^title: /s/.*/title: Alt i <i>Lá<\/i>: $TEIDEAL/" $x
+done
+}
+
+slaiseanna()
+{
+echo "Fixing slaiseanna when sure"
+find . -name '*.dat' | xargs egrep '^title:.*[aeiouAEIOU]/' | egrep '\[Aireacha\]' | sed 's/:.*//' | xargs sed -i 's/a\//á/g; s/e\//é/g; s/i\//í/g; s/o\//ó/g; s/u\//ú/g; s/A\//Á/g; s/E\//É/g; s/I\//Í/g; s/O\//Ó/g; s/U\//Ú/g'
+}
+
+irish_times()
+{
+echo "Fixing Irish Times titles"
+find . -name '*.dat' | xargs egrep -l '^url: http://www.ireland.com/gaeilge/teangabeo/[012][0-9]{3}' |
+while read cand
+do
+	DT=`egrep '^url: ' $cand | sed 's/teangabeo\/0/teangabeo\/1999\/0/' | sed 's/teangabeo\/\(1[012]\)/teangabeo\/1999\/\1/' | sed 's/^url: http:..www.ireland.com.gaeilge.teangabeo.//' | sed 's/\//-/' | sed 's/\/.*//'`
+	YEAR=`echo $DT | sed 's/-.*//'`
+	MONTH=`echo $DT | sed 's/.*-\(..\).*/\1/'`
+	DAY=`echo $DT | sed 's/.*-..//'`
+	M="Eanáir"
+	if [ $MONTH = "02" ]; then M="Feabhra"; fi
+	if [ $MONTH = "03" ]; then M="Márta"; fi
+	if [ $MONTH = "04" ]; then M="Aibreán"; fi
+	if [ $MONTH = "05" ]; then M="Bealtaine"; fi
+	if [ $MONTH = "06" ]; then M="Meitheamh"; fi
+	if [ $MONTH = "07" ]; then M="Iúil"; fi
+	if [ $MONTH = "08" ]; then M="Lúnasa"; fi
+	if [ $MONTH = "09" ]; then M="Meán Fómhair"; fi
+	if [ $MONTH = "10" ]; then M="Deireadh Fómhair"; fi
+	if [ $MONTH = "11" ]; then M="Samhain"; fi
+	if [ $MONTH = "12" ]; then M="Nollaig"; fi
+	ANSWER="title: An Teanga Bheo - $DAY $M $YEAR"
+	CURRENT=`egrep '^title: ' $cand`
+	if [ "$ANSWER" != "$CURRENT" ]
+	then
+		sed -i "/^title: /s/.*/$ANSWER/" $cand
+	fi
+done
+}
+
+
+aprn_fixer()
+{
+echo "Fixing APRN titles"
+find . -name '*.dat' | xargs egrep -l '^url: http://(republican-news.org|www.irlnet.com/aprn)/archive/[0-9]{4}/' |
+while read cand
+do
+	DT=`egrep '^url: ' $cand | sed 's/^url: http:..\(republican-news.org\|www.irlnet.com.aprn\).archive.//' | sed 's/\//-/' | sed 's/\/.*//'`
+	YEAR=`echo $DT | sed 's/-.*//'`
+	MONTH=`echo $DT | sed 's/.*-\([^0-9]*\).*/\1/'`
+	DAY=`echo $DT | sed 's/.*-[^0-9]*//'`
+	M="Eanáir"
+	if [ $MONTH = "February" ]; then M="Feabhra"; fi
+	if [ $MONTH = "March" ]; then M="Márta"; fi
+	if [ $MONTH = "April" ]; then M="Aibreán"; fi
+	if [ $MONTH = "May" ]; then M="Bealtaine"; fi
+	if [ $MONTH = "June" ]; then M="Meitheamh"; fi
+	if [ $MONTH = "July" ]; then M="Iúil"; fi
+	if [ $MONTH = "August" ]; then M="Lúnasa"; fi
+	if [ $MONTH = "September" ]; then M="Meán Fómhair"; fi
+	if [ $MONTH = "October" ]; then M="Deireadh Fómhair"; fi
+	if [ $MONTH = "November" ]; then M="Samhain"; fi
+	if [ $MONTH = "December" ]; then M="Nollaig"; fi
+	sed -i "/^title: AN PHOB/s/.*/title: An Phoblacht - $DAY $M $YEAR/" $cand
+done
+}
+
+nics_fixer()
+{
+echo "Fixing NICS titles"
+find . -name '*.dat' | xargs egrep -l '^url: http://www.nics.gov.uk/press/(edu|hss)/' |
+while read cand
+do
+	DT=`egrep '^url: ' $cand | sed 's/^url: http:..www.nics.gov.uk.press.....//' | sed 's/^\([0-9]*\).*/\1/'`
+	FLAV=`egrep '^url: ' $cand | sed 's/^url: http:..www.nics.gov.uk.press.....[^-]*-//' | sed 's/\..*//'`
+	YEAR=`echo $DT | sed 's/^\(..\).*/20\1/'`
+	MONTH=`echo $DT | sed 's/^..\(..\).*/\1/'`
+	DAY=`echo $DT | sed 's/^....//'`
+	M="Eanáir"
+	if [ $MONTH = "02" ]; then M="Feabhra"; fi
+	if [ $MONTH = "03" ]; then M="Márta"; fi
+	if [ $MONTH = "04" ]; then M="Aibreán"; fi
+	if [ $MONTH = "05" ]; then M="Bealtaine"; fi
+	if [ $MONTH = "06" ]; then M="Meitheamh"; fi
+	if [ $MONTH = "07" ]; then M="Iúil"; fi
+	if [ $MONTH = "08" ]; then M="Lúnasa"; fi
+	if [ $MONTH = "09" ]; then M="Meán Fómhair"; fi
+	if [ $MONTH = "10" ]; then M="Deireadh Fómhair"; fi
+	if [ $MONTH = "11" ]; then M="Samhain"; fi
+	if [ $MONTH = "12" ]; then M="Nollaig"; fi
+	if [ "$FLAV" = "hss" ]
+	then
+		sed -i "/^title: *[0-9]*[a-z]*-hss/s/.*/title: Preasráiteas $DAY $M $YEAR - Roinn Sláinte, Seirbhísí Sóisialta agus Sábháilteachta Poiblí/" $cand
+	fi
+	if [ "$FLAV" = "edu" ]
+	then
+		sed -i "/^title: *[0-9]*[a-z]*-edu/s/.*/title: Preasráiteas $DAY $M $YEAR - An Roinn Oideachais/" $cand
+	fi
+done
+}
+
+fix_blank_titles()
+{
+TMPCHOMHAD=`mktemp`
+echo "Fixing blank titles..."
+find . -name '*.dat' | xargs grep -l "^title: [ ]*$" > $TMPCHOMHAD
+if [ -s $TMPCHOMHAD ]
+then
+	cat $TMPCHOMHAD | xargs sed -i "/^title: /s/.*/title: Gan teideal/"
+	echo "Applied change to " `cat $TMPCHOMHAD | wc -l` " lines"
+else
+	echo "Change not applied; no examples found..."
+fi
+rm -f $TMPCHOMHAD
+}
+
+# two args; first is regex to replace (BRE!), second is replacement
+fixone()
+{
+TMPCHOMHAD=`mktemp`
+echo "Fixing \"$1\"..."
+find . -name '*.dat' | xargs grep -l "^title: .*$1" > $TMPCHOMHAD
+if [ -s $TMPCHOMHAD ]
+then
+	cat $TMPCHOMHAD | xargs sed -i "/^title: /s/$1/$2/"
+	echo "Applied change to " `cat $TMPCHOMHAD | wc -l` " lines"
+else
+	echo "Change not applied; no examples found..."
+fi
+rm -f $TMPCHOMHAD
+}
+
+
+fix_la
+cd /usr/local/share/crubadan/ga/sonrai
+fixone 'Order of Business\.' 'Ord Gnó.'
+fixone 'Munster Women Writers Project' 'Tionscnamh Scríbhneoirí Ban na Mumhan'
+fixone 'National Council for Curriculum and Assessment . An ' 'An '
+fixone 'Learning Irish Gaelic: Lesson ' 'Foghlaim na Gaeilge: Ceacht '
+fixone '[0-9][0-9][0-9][0-9][0-9][0-9][a-z]*-hss \([^ ]\)' '\1'
+fixone '[0-9][0-9][0-9][0-9][0-9][0-9][a-z]*-edu \([^ ]\)' '\1'
+nics_fixer
+#  currently safe since only fixes [Aireacha] titles
+#   Others are rare enough to fix manually - see MAINT
+slaiseanna
+irish_times
+aprn_fixer
+fix_blank_titles
+fixone 'West Belfast Tourism' 'Fáilte Feirste Thiar'
+fixone 'SourceForge.net CVS Repository - markup' 'Stór sonraí CVS ag SourceForge.net - marcáil'
+# lowercase "teideal" matches what's in togail, swishy.pl
+fixone 'Untitled Document$' 'Gan teideal'
+fixone '[Uu]ntitled *$' 'Gan teideal'
+# embedded nbsp
+fixone 'Better Regulation.-' 'Rialáil Níos Fearr -'
+fixone 'NA GAEIL . THE GAELIC PEOPLE ' 'NA GAEIL '
+# sic - tobar.ie
+fixone 'mhúinteoiri' 'mhúinteoirí'
+# sic
+fixone 'Colaiste na bhFiann' 'Coláiste na bhFiann'
+fixone 'Better Government -' 'Rialtas Níos Fearr -'
+fixone 'Welcome to the Railway Procurement Agency' 'An Ghníomhaireacht Um Fháil Iarnród'
+# sic
+fixone 'Sonrai an Ghrupa' 'Sonraí an Ghrúpa'
+# sic!
+fixone 'Arts Council.An Chomhaile Ealaíon' 'An Chomhairle Ealaíon'
+fixone 'Árainn Mhór Bulletin Board ::' 'Clár Fógraí Árann Mhóir ::'
+fixone '  [*]* TITLE [*]*' 'Feidhmeannas an Tuaiscirt - Preasráiteas'
+fixone ' - Wikipedia$' ' - Vicipéid'
+fixone ' - Wikiquote$' ' - Vicísliocht'
+fixone ' - Wikibooks$' ' - Vicíleabhair'
+fixone ' - Wiktionary$' ' - Vicífhoclóir'
+fixone 'About RTÉ' 'Maidir le RTÉ'
+fixone 'The National Action Plan Against Racism' 'An Plean Gníomhaíochta Náisiúnta in Aghaidh Ciníochais'
+fixone 'Department of Health, Social Services and Public Safety' 'Roinn Sláinte, Seirbhísí Sóisialta agus Sábháilteachta Poiblí'
+fixone 'Message from the President of Ireland' 'Teachtaireacht ón Uachtarán'
+fixone 'Primary Curriculum Support Programme' 'Clár Tacaíochta don Churaclam Bunscoile'
+fixone 'Leaving Certificate Vocational Programme' 'Gairmchlár na hArdteistiméireachta'
+fixone 'Irish Cervical Screening Programme' 'Clár na hÉireann um Scagadh Ceirbheacsach'
+fixone 'CLÁR Programme, County Kerry' 'CLÁR (Ceantair Laga Árd-Riachtanais), Contae Chiarraí'
+fixone 'Cork City Council > Our Services: Corporate Affairs' 'Comhairle Cathrach Chorcaí > Seirbhísí: Cúrsaí Gnó'
+fixone 'Arts Council Ireland News, Information' 'An Chomhairle Ealaíon: Nuacht, Eolas'
+fixone 'Seanad Debates ' 'Díospóireachtaí Seanaid '
+fixone 'Dáil Debates ' 'Díospóireachtaí Dála '
+fixone 'Seanad Debate ' 'Díospóireacht Seanaid '
+fixone 'Dáil Debate ' 'Díospóireacht Dála '
+fixone 'Higher Education Authority . An tÚ' 'An tÚ'
+# RISKY
+#fixone 'Press Releases' 'Preaseisiúintí'
+fixone ' - Information By Topic' ' Eolas De Réir Ábhair'
+fixone 'National Roads Authority \?:' 'An tÚdarás um Bóithre Náisiúnta:'
+fixone 'Article from An Ch' 'Alt ón Ch'
+fixone '  Oral Answers' '  Freagraí ó bhéal'
+fixone ' - Volume ' ' - Imleabhar '
+fixone '\([^a-zA-Z]\) Annual Report' '\1 Tuarascáil Bhliantúil'
+fixone 'Public Jobs -' 'Seirbhís Um Cheapacháin Phoiblí -'
+fixone 'Royal Irish Academy' 'Acadamh Ríoga na hÉireann'
+#  RISKY - tgrep manually first and fix ones like "Order Publications", etc.
+#fixone 'Publications' 'Foilseacháin'
+fixone 'State Examination Commission' 'Coimisiún na Scrúduithe Stáit'
+fixone 'Department of the Taoiseach - Roinn an Taoisigh' 'Roinn an Taoisigh'
+fixone 'Department of the Taoiseach - ' 'Roinn an Taoisigh - '
+fixone 'Irish Patents Office' 'Oifig na bPaitinní'
+fixone 'Irish language residence' 'Aonad na Gaeilge'
+fixone 'NUI Galway,' 'Ollscoil na hÉireann Gaillimh,'
+fixone 'Galway County Library Text Only' 'Leabharlann Chontae na Gaillimhe'
+fixone 'Galway County Library' 'Leabharlann Chontae na Gaillimhe'
+fixone 'Selected instruments taken from the Treaties' 'Cnuasach na gConarthaí'
+fixone 'Consolidated versions' 'Leaganacha comhdhlúite'
+fixone 'Web Links' 'Naisc Ghréasáin'
+fixone 'Foras na Gaeilge - Eolaire - Business' 'Foras na Gaeilge - Eolaire - Gnó'
+fixone 'Heritage Ireland - ' 'Oidhreacht na hÉireann - '
+fixone 'Department of Community, Rural and Gaeltacht Affairs' 'An Roinn Gnóthaí Pobail, Tuaithe agus Gaeltachta'
+fixone 'Fáilte go Cló Iar-Chonnachta .CIC..  - Welcome to Cló Iar-Chonnachta .CIC.' 'Fáilte go Cló Iar-Chonnachta (CIC)'
+fixone 'TG4 - Irish language television channel - Teilifis Gaeilge' 'TG4 - Teilifís Ghaeilge'
+fixone 'Department of Education . Science -' 'An Roinn Oideachais Agus Eolaíochta -'
+fixone ' Department of Education \([0-9]\)' ' An Roinn Oideachais - \1'
+fixone '2003 Special Olympics' 'Cluichí Oilimpeacha Speisialta 2003'
+fixone 'Ombudsman.s Annual Report' 'Tuarascáil Bhliantúil an Ombudsman'
+fixone 'FÁS Annual Report . Financial Statements' 'FÁS: Tuarascáil Bhliantúil agus Ráitis Airgeadais'
+fixone 'Ceisteanna--Questions' 'Ceisteanna'
+fixone 'January,\? \([0-9][0-9][0-9][0-9]\)' 'Eanáir \1'
+fixone 'February,\? \([0-9][0-9][0-9][0-9]\)' 'Feabhra \1'
+fixone 'March,\? \([0-9][0-9][0-9][0-9]\)' 'Márta \1'
+fixone 'April,\? \([0-9][0-9][0-9][0-9]\)' 'Aibreán \1'
+fixone 'May,\? \([0-9][0-9][0-9][0-9]\)' 'Bealtaine \1'
+fixone 'June,\? \([0-9][0-9][0-9][0-9]\)' 'Meitheamh \1'
+fixone 'July,\? \([0-9][0-9][0-9][0-9]\)' 'Iúil \1'
+fixone 'August,\? \([0-9][0-9][0-9][0-9]\)' 'Lúnasa \1'
+fixone 'September,\? \([0-9][0-9][0-9][0-9]\)' 'Meán Fómhair \1'
+fixone 'October,\? \([0-9][0-9][0-9][0-9]\)' 'Deireadh Fómhair \1'
+fixone 'November,\? \([0-9][0-9][0-9][0-9]\)' 'Samhain \1'
+fixone 'December,\? \([0-9][0-9][0-9][0-9]\)' 'Nollaig \1'
+fixone 'AN PHOBLACHT.REPUBLICAN NEWS' 'AN PHOBLACHT'
+fixone 'Health Service Executive  ' 'Feidhmeannacht na Seirbhíse Sláinte: '
+fixone 'Foras na Gaeilge - Directory' 'Foras na Gaeilge - Eolaire'
+fixone 'Event details$' 'Sonraí imeachta'
+fixone 'Peoples Republic Of Cork Forums' 'Daonphoblacht Chorcaí'
+fixone 'Yahoo! Groups ' 'Grúpaí Yahoo! '
+fixone 'Welcome to Scoilnet' 'Fáilte go Scoilnet'
+fixone 'Microsoft Word - \([^ ]\)' '\1'
+fixone 'Microsoft Download Center' 'Lárionad Íosluchtaithe'
+fixone 'eolas-ibi Messages : Message \([0-9]*\) of ' 'Teachtaireachtaí eolas-ibi : Teachtaireacht \1 as '
+fixone 'Arts Council Ireland News - Press Releases' 'An Chomhairle Ealaíon - Preasráitis'
+fixone 'Office of the Ombudsman' 'Oifig an Ombudsman'
+fixone 'Office of the Information Commissioner' 'Oifig an Choimisinéara Faisnéise'
+fixone 'SEANCHAS-L Archives ' 'Cartlann SEANCHAS-L '
+fixone 'GAELIC-L Archives ' 'Cartlann GAELIC-L '
+fixone 'GAEILGE-A Archives ' 'Cartlann GAEILGE-A '
+fixone 'January \([0-9][0-9][0-9][0-9]\)' 'Eanáir \1'
+fixone 'February \([0-9][0-9][0-9][0-9]\)' 'Feabhra \1'
+fixone 'March \([0-9][0-9][0-9][0-9]\)' 'Márta \1'
+fixone 'April \([0-9][0-9][0-9][0-9]\)' 'Aibreán \1'
+fixone 'May \([0-9][0-9][0-9][0-9]\)' 'Bealtaine \1'
+fixone 'June \([0-9][0-9][0-9][0-9]\)' 'Meitheamh \1'
+fixone 'July \([0-9][0-9][0-9][0-9]\)' 'Iúil \1'
+fixone 'August \([0-9][0-9][0-9][0-9]\)' 'Lúnasa \1'
+fixone 'September \([0-9][0-9][0-9][0-9]\)' 'Meán Fómhair \1'
+fixone 'October \([0-9][0-9][0-9][0-9]\)' 'Deireadh Fómhair \1'
+fixone 'November \([0-9][0-9][0-9][0-9]\)' 'Samhain \1'
+fixone 'December \([0-9][0-9][0-9][0-9]\)' 'Nollaig \1'
+fixone 'Irish dictionary online, Irish gaelic.*' 'Foclóir Béarla-Gaeilge ar líne'
+fixone 'BBC - Northern Ireland - Irish -' 'BBC - Tuaisceart Éireann - An Ghaeilge -'
+fixone 'BBC - Northern Ireland - Irish Language -' 'BBC - Tuaisceart Éireann - An Ghaeilge -'
+fixone 'BBC - Northern Ireland - Irish Music' 'BBC - Tuaisceart Éireann - Ceol Éireannach'
+fixone ':: View topic ' ':: Topaic '
+fixone 'The Daltaí Boards' 'Cláriomrá Daltaí na Gaeilge'
+fixone 'The Pensions Board' 'An Bord Pinsean'
+fixone 'The Dormant Accounts Fund Disbursements Board' 'An Bord Eisíocaíochtaí Chiste na gCuntas Díomhaoin'
+fixone 'Government of Ireland - Department of Finance' 'Rialtas na hÉireann - An Roinn Airgeadais'
+fixone 'Department of Foreign Affairs - Government of Ireland' 'An Roinn Gnóthaí Eachtracha - Rialtas na hÉireann'
+fixone 'European Constitution - Preamble - Department of Foreign Affairs - Ireland' 'Bunreacht na hEorpa - Brollach - An Roinn Gnóthaí Eachtracha - Rialtas na hÉireann'
+fixone 'Planet Of The Blogs - Irish blogs aggregator' 'Pláinéad na mBlaganna - Comhbhailitheoir Blaganna Éireannach'
+fixone 'National Development Plan' 'Plean Forbartha Náisiúnta'
+fixone 'Irish Blogs and Bloggers' 'Blaganna agus Blagadóirí Éireannacha'
+fixone 'National Framework of Qualifications' 'Údarás Náisiúnta Cáilíochtaí na hÉireann'
+fixone "A Policy Framework For The Irish Museum Sector" "Creat Polasaí d'Earnáil Mhúsaeim na hÉireann -"
+fixone ' - Written Answers\.' ' - Freagraí Scríofa.'

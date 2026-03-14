@@ -1,0 +1,34 @@
+﻿{
+  "QueryLogger": {
+    "ApplicationName": "RecordsApp",
+    "IsEnabled": false,
+    "AnonymizeIPAddress": "None",
+    "AlertInterval": 60000,
+    "Store": {
+      "ConnectionString": "Server=localhost;Database=recordsappdb;Trusted_Connection=True;",
+      "MaxQueueRetryInterval": 30000,
+      "MaxQueueSize": 1000,
+      "TableName": "SearchStats"
+    },
+    "Email": {
+      "ToAddress": "me@test.ie",
+      "FromAddress": "test@test.ie",
+      "FromDisplayName": "RecordsApp — QueryLogger",
+      "SMTPHost": "smtp.myhost.net",
+      "SMTPPort": 587,
+      "SMTPUserName": "MY_USERNAME",
+      "SMTPPassword": "MY_PASSWORD",
+      "SMTPEnableSSL": true
+    },
+    "ExcludedIPAddresses": [
+      {
+        "name": "Bingbot",
+        "ipAddress": "40.77.167.0"
+      },
+      {
+        "name": "Bingbot",
+        "ipAddress": "207.46.13.0"
+      }
+    ]
+  }
+}

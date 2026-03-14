@@ -1,0 +1,30 @@
+# Dependency directories
+node_modules/
+
+# Built outputs
+/dist
+/dist-ssr
+/build
+/.cache
+/.vite
+.turbo
+storybook-static/
+.cache/
+.tanstack/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.development
+.env.test
+.env.production
+
+# OS specific
+.Thumbs.db
+.directory
+*~
+.DS_Store
+.zed

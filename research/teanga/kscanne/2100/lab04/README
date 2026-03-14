@@ -1,0 +1,55 @@
+
+In last week's lab we used a stack to check a string
+of open- and close- parentheses to see if it was
+balanced.  That was a very simple example of what's
+called "stack parsing"; basically the idea is that you
+use the stack to "remember" the work that you still need
+to do to parse or validate the input string.  
+
+This week we'll take this idea one step further, and 
+write a validator for the much more complex language
+of parenthesized arithmetic expressions; e.g.
+
+43
+(5+3)
+(9*(2+3))
+((11+3)*(4+3))
+...
+
+Formally speaking, we say that a string of symbols
+is *valid* if either
+(1) it represents a positive whole number (like "43" or "1")
+or 
+(2) it is of the form "(E1+E2)" or "(E1*E2)", where both
+E1 and E2 are valid strings of symbols.
+
+Note that the definition is recursive.
+
+Here's an algorithm for checking to see if a given string is valid:
+
+Create an empty stack of char's.
+Push the char 'E' onto the stack.
+Set a counter i = 0; this is the index of the first
+character in the input string.
+
+while (i < length of the input string) {
+   Let c be the character in the input string at index i.
+   Let s be the character on top of the stack (without popping it yet;
+     if the stack is empty, return false)
+   If c == ')' and s == ')', pop off the ')' and increment i.
+   If c == '(' and s == '(', pop off the '(' and increment i.
+   If c == '*' or '+' and s == 'O', pop off the 'O', increment i.
+   If c is a digit and s == 'E', pop off the 'E' and 
+       increment i until it's not pointing at a digit
+   if c == '(' and s == 'E', pop off the 'E', then
+       push on ')', then 'E', then 'O', then 'E', then '('.
+   In any other case, return false since the string is invalid!
+}
+If the stack is empty, return true, else return false.
+
+Exercises:
+(a) Implement the above algorithm, and test it thoroughly on a
+set of valid and invalid input strings.
+
+(b) [Challenge] Modify the algorithm to return the 
+integer value of the evaluated expression.

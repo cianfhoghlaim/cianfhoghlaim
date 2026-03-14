@@ -1,0 +1,29 @@
+{% load export_tags %}
+      <TextLine id="{{ line.external_id }}" {% if line.typology %}custom="structure {type:{{line.typology.name}};}"{% endif %}>
+        {% if line.mask %}<Coords points="{% pagexml_points line.mask %}"/>{% endif %}
+        {% if line.baseline %}<Baseline points="{% pagexml_points line.baseline %}"/>{% endif %}
+        <TextEquiv{% if line.transcription.0.avg_confidence %} conf="{{ line.transcription.0.avg_confidence }}"{% endif %}>
+          <Unicode>{{ line.transcription.0.content|default_if_none:"" }}</Unicode>
+        </TextEquiv>
+
+        {% if line.transcription.0.graphs and include_characters %}
+
+        {% for segment in line.transcription.0.graphs|group_by_word %}
+        {% if not segment|is_whitespace %}
+        <Word id="word_{{ forloop.counter0 }}">
+          <Coords points="{% pagexml_points segment.polygon %}"/>
+          {% for char in segment.graphs %}
+          <Glyph id="char_{{ forloop.counter0 }}">
+            <Coords points="{% pagexml_points char.poly %}"/>
+            <TextEquiv conf="{{ char.confidence|floatformat:4 }}">
+              <Unicode>{{ char.c }}</Unicode>
+            </TextEquiv>
+          </Glyph>
+          {% endfor %}
+        </Word>
+        {% endif %}
+        {% endfor %}
+
+        {% endif %}
+
+      </TextLine>

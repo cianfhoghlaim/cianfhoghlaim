@@ -1,0 +1,17 @@
+#!/bin/bash
+if [ $# -ne 1 ]
+then
+	echo "Usage: dockill DOCID"
+	exit 1
+fi
+SNAP="/snapshot/aimsigh"
+CRUB="/usr/local/share/crubadan/ga"
+if echo "${1}" | egrep '^[0-9]+$' > /dev/null
+then
+	rm -f ${CRUB}/sonrai/$1.dat ${CRUB}/taisce/$1.* ${CRUB}/ciu/$1.txt $SNAP/ABAIRT/$1.txt $SNAP/ABAIRT-CH/$1.txt $SNAP/FREQ/$1.txt $SNAP/NNN/$1.txt $SNAP/NNY/$1.txt $SNAP/YNN/$1.txt $SNAP/YNY/$1.txt $SNAP/YYN/$1.txt $SNAP/YYY/$1.txt $SNAP/TFIDF/$1.txt
+	sed -i "/^$1$/d" ${CRUB}/ANCIU
+else
+	echo "Usage: dockill DOCID"
+	exit 1
+fi
+exit 0

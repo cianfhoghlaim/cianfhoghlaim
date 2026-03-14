@@ -1,0 +1,21 @@
+[#original-paper]
+= Original paper
+
+The original PyLaia model was presented in the paper entitled: https://ieeexplore.ieee.org/document/8269951[_Are Multidimensional Recurrent Layers Really Necessary for Handwritten Text Recognition?_ from Joan Puigcerver, published in the 14th IAPR International Conference on Document Analysis and Recognition (ICDAR 2017)].
+
+The full text is available on this http://www.jpuigcerver.net/pubs/jpuigcerver_icdar2017.pdf[page].
+
+Recommended citation:
+
+[,bibtex]
+----
+@INPROCEEDINGS{PyLaia,
+  author={Puigcerver, Joan},
+  booktitle={2017 14th IAPR International Conference on Document Analysis and Recognition (ICDAR)},
+  title={Are Multidimensional Recurrent Layers Really Necessary for Handwritten Text Recognition?},
+  year={2017},
+  volume={01},
+  number={},
+  pages={67-72},
+  doi={10.1109/ICDAR.2017.20}}
+----

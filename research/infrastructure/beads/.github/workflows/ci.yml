@@ -1,0 +1,167 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Fast check to ensure all version files are in sync
+  check-version-consistency:
+    name: Check version consistency
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check all versions match
+        run: ./scripts/check-versions.sh
+
+  # Fast check to catch accidental .beads/issues.jsonl changes from contributors
+  check-no-beads-changes:
+    name: Check for .beads changes
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Check for .beads/issues.jsonl changes
+        run: |
+          if git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -q "^\.beads/issues\.jsonl$"; then
+            echo "❌ This PR includes changes to .beads/issues.jsonl"
+            echo ""
+            echo "This file is the project's issue database and should not be modified in PRs."
+            echo ""
+            echo "To fix, run:"
+            echo "  git checkout origin/main -- .beads/issues.jsonl"
+            echo "  git commit --amend"
+            echo "  git push --force"
+            echo ""
+            exit 1
+          fi
+          echo "✅ No .beads/issues.jsonl changes detected"
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "CI Bot"
+          git config --global user.email "ci@beads.test"
+
+      - name: Build
+        run: go build -v ./cmd/bd
+
+      - name: Test
+        run: go test -v -race -short -coverprofile=coverage.out ./...
+
+      - name: Check coverage threshold
+        run: |
+          COVERAGE=$(go tool cover -func=coverage.out | grep total | awk '{print $3}' | sed 's/%//')
+          MIN_COVERAGE=45
+          WARN_COVERAGE=55
+          echo "Coverage: $COVERAGE%"
+          if (( $(echo "$COVERAGE < $MIN_COVERAGE" | bc -l) )); then
+            echo "❌ Coverage is below ${MIN_COVERAGE}% threshold"
+            exit 1
+          elif (( $(echo "$COVERAGE < $WARN_COVERAGE" | bc -l) )); then
+            echo "⚠️  Coverage is below ${WARN_COVERAGE}% (warning threshold)"
+          else
+            echo "✅ Coverage meets threshold"
+          fi
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        if: success()
+        with:
+          file: ./coverage.out
+          fail_ci_if_error: false
+
+  # Windows smoke tests only - full test suite times out (see bd-bmev)
+  # Linux runs comprehensive tests; Windows just verifies binary works
+  test-windows:
+    name: Test (Windows - smoke)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "CI Bot"
+          git config --global user.email "ci@beads.test"
+
+      - name: Build
+        run: go build -v -o bd.exe ./cmd/bd
+
+      - name: Smoke test - version
+        run: ./bd.exe version
+
+      - name: Smoke test - init and CRUD
+        run: |
+          ./bd.exe init --quiet --prefix smoke
+          $output = ./bd.exe create --title "Windows smoke test" --type task
+          $id = ($output | Select-String -Pattern "smoke-\w+").Matches.Value
+          echo "Created issue: $id"
+          ./bd.exe list
+          ./bd.exe show $id
+          ./bd.exe update $id --status in_progress
+          ./bd.exe close $id
+          echo "All smoke tests passed!"
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: latest
+          args: --timeout=5m
+  test-nix:
+    name: Test Nix Flake
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: cachix/install-nix-action@v31
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+      - name: Run bd help via Nix
+        run: |
+          export BEADS_DB="$PWD/.ci-beads/beads.db"
+          mkdir -p "$(dirname "$BEADS_DB")"
+          rm -rf .beads
+          nix run .#default -- --db "$BEADS_DB" init --quiet --prefix ci
+          nix run .#default -- --db "$BEADS_DB" > help.txt
+      - name: Verify help text
+        run: |
+          FIRST_LINE=$(head -n 1 help.txt)
+          EXPECTED="Issues chained together like beads. A lightweight issue tracker with first-class dependency support."
+          if [ "$FIRST_LINE" != "$EXPECTED" ]; then
+            echo "❌ First line of help.txt doesn't match expected output"
+            echo "Expected: $EXPECTED"
+            echo "Got: $FIRST_LINE"
+            exit 1
+          fi
+          echo "✅ Help text first line is correct"

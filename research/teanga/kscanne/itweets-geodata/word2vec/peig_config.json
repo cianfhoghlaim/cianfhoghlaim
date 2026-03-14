@@ -1,0 +1,13 @@
+{
+  "embeddings": [
+    {
+      "tensorName": "Ainmneacha úsáideora Twitter",
+      "tensorShape": [
+        1189,
+        200
+      ],
+      "tensorPath": "https://raw.githubusercontent.com/kscanne/itweets-geodata/master/word2vec/peig-veicteoiri.tsv",
+      "metadataPath": "https://raw.githubusercontent.com/kscanne/itweets-geodata/master/word2vec/peig-focla.tsv"
+    }
+  ]
+}

@@ -1,0 +1,978 @@
+# Translation of Facebook into unsupported languages
+# Copyright (C) 2012 Kevin P. Scannell
+# plural forms confirmed by Peter (only animate nouns mark plural in fact)
+msgid ""
+msgstr ""
+"Project-Id-Version: gm-facebook\n"
+"Report-Msgid-Bugs-To: <kscanne@gmail.com>\n"
+"POT-Creation-Date: 2013-07-19 15:06:48-0500\n"
+"PO-Revision-Date: 2012-02-21 17:25:20-06:00\n"
+"Last-Translator: Robert Henderson\n"
+"Language-Team: Kaqchikel\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#. Lines like this one beginning with "#." are comments; no need to translate!
+#. The first six words to translate are used in a number of different messages,
+#. always as the final word of the message in English; for example:
+#. John Doe likes Jane Doe's X.
+#. John Doe shared Jane Doe's X.
+#. John Doe shared her/his own X.
+#. John Doe and Jane Doe shared Kevin Scannell's X.
+#. John Doe was tagged in Jane Doe's X.
+#. John Doe was tagged in a X.
+#. John Doe commented on a X.
+#. John Doe and Jane Doe commented on a X.
+#. John Doe commented on her/his own X.
+#. John Doe commented on your X.
+#. John Doe likes a X.
+#. If the translations of link, photo, etc. take different forms depending
+#. on the above contexts, this can be arranged, just ask Kevin for help
+#. Always a link. Used in longer sentences as above.
+msgid "life event"
+msgstr "Nima'q taq b'anob'äl pa k'aslem"
+
+#. Always a link. Used in longer sentences as above.
+msgid "link"
+msgstr "q'axal"
+
+#. Always a link. Used in longer sentences as above.
+msgid "photo"
+msgstr "wachib'äl"
+
+#. Always a link. Used in longer sentences as above.
+msgid "post"
+msgstr "chi rij"
+
+#. Always a link. Used in longer sentences as above.
+msgid "status"
+msgstr "rub'eyal"
+
+#. Always a link. Used in longer sentences as above.
+msgid "status update"
+msgstr "k'ak'a rub'eyal"
+
+#. %a stands for something like "4 others"
+msgid "You and %a like this."
+msgstr "Rat chuqa' %a jeb'ël nikitz'ët re re'."
+
+#. %a1 is a person's name, %a2 stands for something like "4 others"
+msgid "You, %a1 and %a2 like this."
+msgstr "Rat, %a1, chuqa' %a2 jeb'ël nikitz'ët re re'."
+
+#. %a1 and %a2 are names, while %a3 is something like "5 others"
+msgid "%a1, %a2 and %a3 like this."
+msgstr "%a1,%a2 chuqa' %a3 jeb'ël nikitz'ët re re'"
+
+#. %a is a person's name; %d stands for a number, no need to translate it
+msgid "%a added a new photo."
+msgid_plural "%a added %d new photos."
+msgstr[0] ""
+msgstr[1] ""
+
+#. %a1 is a person's name; %d stands for a number, no need to translate it
+msgid "%a1 added 1 new photo to the album %a2."
+msgid_plural "%a1 added %d new photos to the album %a2."
+msgstr[0] ""
+msgstr[1] ""
+
+#. %a1 is a person, %a2 is something like "4 other people"
+#. This is to let you know about birthdays in right-hand column on home page
+#, fuzzy
+msgid "%a1 and %a2"
+msgstr "%a1 xujäch %a2."
+
+#. Both %a1 and %a2 are names of people
+msgid "%a1 and %a2 are now friends."
+msgstr "Wakamin %a1 rachib'il %a2."
+
+#. %a1 and %a3 are names of people; %a2 is something like "5 other friends"
+msgid "%a1 and %a2 are now friends with %a3."
+msgstr "Wakamin %a1, %a2 rachib'il %a3."
+
+#. %a1 and %a2 are people, and %a3 is "link", "photo", "status", etc.
+msgid "%a1 and %a2 commented on a %a3."
+msgstr "%a1, %a2 xetzijon pa ruwi' %a3."
+
+#. %a1 is a name, %a2 is a name or else something like "6 others"
+#. %a3 is the name of a page like "Rage Against the Machine"
+msgid "%a1 and %a2 like %a3."
+msgstr "%a1 chuqa' %a2 jeb'ël nikitz'ët %a3."
+
+#. %a1 is a name, %a2 is a name or else something like "6 others"
+msgid "%a1 and %a2 like this."
+msgstr "%a1 chuqa' %a2 jeb'ël nikitz'ët re re'."
+
+#. %a1 and %a2 as above, and %a3 is something like (always?) "a link"
+msgid "%a1 and %a2 shared %a3."
+msgstr "%a1 chuqa' %a2 xkijäch %a3."
+
+#. %a1 and %a2 as above, %a3 is a name, %a4 is "link", "photo", "status", etc.
+msgid "%a1 and %a2 shared %a3's %a4."
+msgstr "%a1 chuqa' %a2 xkijäch ru%a3 %a4."
+
+#. %a1, %a2, and %a3 are names of people
+#, fuzzy
+msgid "%a1 and %a2 were tagged in %a3's photos."
+msgstr "%a1 xok pa retal ruwachib'äl %a2."
+
+# also user information: Información
+#. Link at bottom of home page (under "More") to info about Facebook
+msgid "About"
+msgstr "Chi rij"
+
+msgid "about an hour ago"
+msgstr "jun ramaj ik'owinäq"
+
+msgid "about a minute ago"
+msgstr "jun ch'uti ramaj ik'owinäq"
+
+msgid "Account Settings"
+msgstr "Runuk'ulem jun okib'äl"
+
+# Same for his/her in Spanish, so same here
+#. %a is someone's name (female)
+msgid "%a changed her profile picture."
+msgstr ""
+
+# Same for his/her in Spanish, so same here
+#. %a is someone's name (male)
+msgid "%a changed his profile picture."
+msgstr ""
+
+#. %a1 is a person's name, %a2 is "link", "post", "status", or "photo"
+msgid "%a1 commented on a %a2."
+msgstr ""
+
+# Spanish doesn't distinguish his/her, so we can't either
+#. %a1 is a person's name, %a2 is "link", "post", "status", or "photo"
+msgid "%a1 commented on her own %a2."
+msgstr ""
+
+# Spanish doesn't distinguish his/her, so we can't either
+#. %a1 is a person's name, %a2 is "link", "post", "status", or "photo"
+msgid "%a1 commented on his own %a2."
+msgstr ""
+
+#. %a1 is a person's name, %a2 is "link", "post", "status", or "photo"
+msgid "%a1 commented on your %a2."
+msgstr ""
+
+msgid "Activity Log"
+msgstr "Registro de actividad"
+
+msgid "Add Friend"
+msgstr "ruyakik kikin wachib'il"
+
+#. Under INTERESTS in left-hand navigation on home page
+msgid "Add Interests..."
+msgstr ""
+
+#. Appears at top of home timeline, with "Update Status", "Ask Question"
+msgid "Add Photos/Video"
+msgstr "wachib'äl/silon wachib'äl"
+
+#. Link at bottom of home page (under "More") to info about Facebook ads
+msgid "Advertising"
+msgstr "Tzijol"
+
+#. Time stamp on a post. You might also translate as "Just now"
+msgid "a few seconds ago"
+msgstr "Ka'i' oxi' ch'utaq ramaj ik'owinäq"
+
+#. %a1 is a person's name, %a2 is a place
+msgid "%a1 is at %a2."
+msgstr "%a1 k'o pa %a2."
+
+#. %a1 and %a2 are names of people; %a3 is either another person or
+#. else something like "8 other people"
+msgid "%a1 is now friends with %a2 and %a3."
+msgstr "Wakamin %a1 kachib'il %a2 chuqa' %a3."
+
+#. For example, "John Doe likes Linux."; often under Sponsored Ads
+msgid "%a1 likes %a2."
+msgstr "%a1 niqa chi ruwäch %a2."
+
+#. %a1 is a person's name, %a2 is "link", "photo", "post", or "status"
+msgid "%a1 likes a %a2."
+msgstr "%a1 niqa chi ruwäch %a2."
+
+#. %a1 and %a2 are people, %a3 is "link", "photo", "post", or "status"
+msgid "%a1 likes %a2's %a3."
+msgstr "%a1 niqa chi ruwäch ru%a3 %a2."
+
+#. %a1 is a person, %a2 is the name of a page, and %a3 is either the
+#. name of another page or something like "4 other pages"
+msgid "%a1 likes %a2 and %a3."
+msgstr "%a1 niqa chi ruwäch %a2, chuqa' %a3."
+
+#. %a stands for a person's name
+msgid "%a likes this."
+msgstr "%a jeb'ël nutz'ët re re'"
+
+#. %a stands for something like "3 people"
+msgid "%a like this."
+msgstr "%a jeb'ël nikitz'ët re re'"
+
+#. Always a link. Used in longer sentences like "John Doe shared a link"
+msgid "a link"
+msgstr "un q'axel"
+
+#. Heading above the apps you use, in left-hand navigation on home page
+msgid "APPS"
+msgstr "SAMAJIB'ÄL"
+
+#. One of the entries in the APPS list for some users
+msgid "Apps and Games"
+msgstr "Taq samajib'äl chuqa' taq etz'anem"
+
+#. Format. %A = day of the week ("Saturday") and %s = the time ("3:15am")
+msgid "%A at %s"
+msgstr "Ri %A pa %s"
+
+#. %a1 is a person's name, %a2 is something like (always?) "a link"
+msgid "%a1 shared %a2."
+msgstr "%a1 xujäch %a2."
+
+#. %a1 and %a2 are names of people, %a3 is "link", "photo", "post", or "status"
+msgid "%a1 shared %a2's %a3."
+msgstr "%a1 xujäch ru%a3, %a2."
+
+# Spanish doesn't distinguish his/her, so we can't either
+#. %a1 is a person, %a2 is "link", "photo", "post", or "status"
+msgid "%a1 shared her own %a2."
+msgstr "%a1 xujäch ru%a2."
+
+# Spanish doesn't distinguish his/her, so we can't either
+#. %a1 is a person, %a2 is "link", "photo", "post", or "status"
+msgid "%a1 shared his own %a2."
+msgstr "%a1 xujäch ru%a2."
+
+#. Appears at top of home timeline, with "Update Status", "Add Photos/Video"
+msgid "Ask Question"
+msgstr "K'utunïk"
+
+#. %a1 is a person, %a2 is always "Instagram" I think
+#, fuzzy
+msgid "%a1 took a photo with %a2."
+msgstr "%a1 k'o pa %a2."
+
+#. %a1 is a person, %a2 is a place: "John Doe was tagged at Wilson Farm."
+#, fuzzy
+msgid "%a1 was tagged at %a2."
+msgstr "%a1 xok pa retal retal %a2."
+
+#. %a1 and %a2 are names of people, %a3 is "link", "photo", "post", or "status"
+msgid "%a1 was tagged in %a2's %a3."
+msgstr "%a1 xok pa retal ru%a3 %a2."
+
+#. %a1 is a person, %a2 is "photo" or "life event" (others?)
+msgid "%a1 was tagged in a %a2."
+msgstr "%a1 xok pa retal retal %a2."
+
+#. %a1 and %a2 are names of people
+msgid "%a1 was tagged in %a2's photos."
+msgstr "%a1 xok pa retal ruwachib'äl %a2."
+
+# Same for his/her in Spanish, so same here
+#. %a is someone's name (female)
+msgid "%a updated her cover photo."
+msgstr "%a xujäl ruwachb'äl."
+
+# Same for his/her in Spanish, so same here
+#. %a is someone's name (male)
+msgid "%a updated his cover photo."
+msgstr "%a xujäl ruwachb'äl."
+
+#. Format. %B = name of the month ("February"), and %d = day of the month ("20")
+msgid "%B %d"
+msgstr "%d richin %B"
+
+#. Format. %B and %d as above, %s = string representing the time ("3:15am")
+msgid "%B %d at %s"
+msgstr "%d richin %B pa (taq) %s"
+
+#. Format. %B and %d as above, %Y = four digit year ("2012")
+msgid "%B %d, %Y"
+msgstr "%d richin %B richin %Y"
+
+#. Format. %B, %d, and %Y as above, %s = string representing the time ("3:15am")
+msgid "%B %d, %Y at %s"
+msgstr "%d richin %B richin %Y pa (taq) %s"
+
+msgid "Born"
+msgstr "Xaläx"
+
+#. Appears below shared items, indicating the original author/creator
+msgid "By:"
+msgstr "Richin:"
+
+#. Button label
+msgid "Cancel"
+msgstr "Ruq'atik"
+
+#. Link at bottom of home page (under "More") to info about jobs at Facebook
+msgid "Careers"
+msgstr "Samaj"
+
+#. Link that allows you to change the big photo at the top of your timeline
+msgid "Change Cover"
+msgstr "Rujalik rutzub'al"
+
+#. Label on tab for chatting with friends
+#. "Off" means you're not currently logged into the chat system
+msgid "Chat (Off)"
+msgstr "Tz'ib'anem (chupül)"
+
+msgid "Close"
+msgstr "Rutz'apixik"
+
+#. A link that takes you to a list of your closest friends on Facebook
+msgid "Close Friends"
+msgstr "Utziläj taq achib'il"
+
+#. Verb. A link under a post that allows you to comment on the post.
+msgid "Comment"
+msgstr "Ka'i' oxi' tzij"
+
+#. Link at the bottom of home page to a help page explaining what cookies are
+msgid "Cookies"
+msgstr "Ch'utin nuksamaj"
+
+#. Button label; confirm a friend request
+msgid "Confirm"
+msgstr "Jikib'axïk"
+
+msgid "Create an Ad"
+msgstr "Rutz'ukik jun tzijol"
+
+#. Link at bottom of home page (under "More")
+msgid "Create a Page"
+msgstr "Rutz'ukik jun ruxaq"
+
+#. Appears as last item under "GROUPS" in left-hand navigation
+msgid "Create Group..."
+msgstr "Rutz'ukik jun molaj..."
+
+#. Button label at top of Groups page (click "MORE" next to "GROUPS")
+msgid "Create Group"
+msgstr "Rutz'ukik jun molaj"
+
+#. Link at bottom of home page (under "More") to info for software developers
+msgid "Developers"
+msgstr "Nuk'unela'"
+
+#. %d stands for a number, no need to translate it
+#. The singular "1 hour ago" is never used as far as I can tell
+msgid "1 hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "jun ramaj ik'owinäq"
+msgstr[1] "%d taq ramaj ik'owinäq"
+
+#. %d stands for a number, no need to translate it
+#. The singular "1 minute ago" is never used as far as I can tell
+msgid "1 minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "jun ch'uti ramaj ik'owinäq"
+msgstr[1] "%d ch'utaq ramaj ik'owinäq"
+
+#. %d stands for a number, no need to translate it
+msgid "1 mutual friend"
+msgid_plural "%d mutual friends"
+msgstr[0] "re 1 re' qachib'il"
+msgstr[1] "%d qachib'il"
+
+#. %d stands for a number, no need to translate it
+msgid "1 NEW STORY"
+msgid_plural "%d NEW STORIES"
+msgstr[0] "1 k'ak'a' rutzijol"
+msgstr[1] "k'ak'a' taq rutzijol"
+
+# Spanish has same translation for this and "%d other people"
+# So we should too... it used to be:
+# msgstr[0] "jun chïk"
+# msgstr[1] "%d chïk"
+#. %d stands for a number, no need to translate it; "%d other people"
+#. The singular "1 other" is never used as far as I can tell
+#. Always a link. Used in sentences like the following:
+#. "John Doe and 7 others like this."
+#. "John Doe, Jane Doe, and 7 others like this."
+#. "You and 7 others like this."
+#. "You, John Doe and 7 others like this."
+msgid "1 other"
+msgid_plural "%d others"
+msgstr[0] "jun chïk winäq"
+msgstr[1] "%d chïk winäq"
+
+#. Always a link. "John Doe and 7 other friends are now friends with Kevin."
+#. The singular "1 other friend" is never used as far as I can tell
+msgid "1 other friend"
+msgid_plural "%d other friends"
+msgstr[0] "jun chïk rachib'il."
+msgstr[1] "%d chïk rachib'ila'"
+
+#. Always a link. "John Doe likes GaelSpell and 3 other pages"
+#. The singular "1 other page" is never used as far as I can tell
+msgid "1 other page"
+msgid_plural "%d other pages"
+msgstr[0] "jun chïk ruxaq wuj"
+msgstr[1] "%d chïk ruxaq wuj"
+
+#. Always a link. "John Doe is now friends with Jane Doe and 3 other people."
+#. The singular "1 other person" is never used as far as I can tell
+msgid "1 other person"
+msgid_plural "%d other people"
+msgstr[0] "jun chïk winäq"
+msgstr[1] "%d chïk winäq"
+
+#. %d stands for a number; used in sentences like "%d people like this."
+#. The singular "1 person" is never used as far as I can tell
+msgid "1 person"
+msgid_plural "%d people"
+msgstr[0] ""
+msgstr[1] "%d winäq"
+
+#. %d stands for a number, no need to translate it
+#. The singular "1 second ago" is never used as far as I can tell
+msgid "1 second ago"
+msgid_plural "%d seconds ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#. %d stands for a number, no need to translate it
+#. This means a post has been shared %d times
+msgid "1 share"
+msgid_plural "%d shares"
+msgstr[0] "1 jumul jacho'n"
+msgstr[1] "%d mul jacho'n"
+
+#. Appears at the bottom of your home time line, opposite "More Stories"
+#. Allows you to hide certain stories from your home page
+msgid "Edit Options"
+msgstr "K'exoj taq b'eyal"
+
+#. Attached to each post on your personal timeline
+msgid "Edit or Remove"
+msgstr "K'exoj o relesaxik"
+
+#. Link that lets you change your language settings
+#. Please translate to the name of your language, written in the language itself
+msgid "English (US)"
+msgstr "Kaxlan tzij"
+
+#. In the "New Message" dialog
+msgid "Enter a friend's name or email address"
+msgstr "Tatz'ib'aj rub'i' o rutaqoya'l jun awachib'il"
+
+#. A link to a list of events that you've been invited to
+msgid "Events"
+msgstr "Taq molojri'ïl"
+
+#. A link that shows you a list of your relatives on Facebook
+msgid "Family"
+msgstr "Ach'alalri'ïl"
+
+#. In left-hand column on home page, above links to "News Feed", "Messages", etc
+msgid "FAVORITES"
+msgstr "TAQ JEB'ËL"
+
+#. Link to a page that allows you to search your address books for FB friends
+#. Appears in the "Friend Requests" dialog and when you click the "Friends" link
+msgid "Find Friends"
+msgstr "Kikanoxik achib'il"
+
+msgid "Find More Pages"
+msgstr ""
+
+#. Appears next to "Like" and "Comment" on each post in a group
+msgid "Follow Post"
+msgstr ""
+
+#. In search box that lets you search for friends that are available to chat
+msgid "Friends on Chat"
+msgstr "Taq achib'il pa ya'l tzijonem"
+
+#. People who have asked to be your friend on Facebook; top left of screen
+msgid "Friend Requests"
+msgstr "Taqoj richin ajowab'äl"
+
+#. A link that takes you to a list of all your Facebook friends
+msgid "Friends"
+msgstr "Taq achib'il"
+
+#. Heading above your lists of friends ("Work", "Family", etc.)
+msgid "FRIENDS"
+msgstr "TAQ ACHIB'IL"
+
+#. A couple places on user home page
+msgid "Groups"
+msgstr ""
+
+#. Heading above the groups you're in, left-hand navigation on home page
+msgid "GROUPS"
+msgstr "TAQ MOLAJ"
+
+#. Link at bottom of home page ("More"); also in dropdown menu next to "Home"
+msgid "Help"
+msgstr "To'ïk"
+
+#. Link that takes you to your home timeline; always visible at top-right
+msgid "Home"
+msgstr "Rutikirib'al"
+
+#. Main prompt when you enter in a new status update
+msgid "How are you doing, %s?"
+msgstr ""
+
+#. Main prompt when you enter in a new status update
+msgid "How are you feeling, %s?"
+msgstr ""
+
+#. Main prompt when you enter in a new status update
+#, fuzzy
+msgid "How's it going, %s?"
+msgstr "¿Achike tajin nana'ojij?"
+
+#. In left-hand column on home page
+msgid "INTERESTS"
+msgstr ""
+
+msgid "Life Event"
+msgstr "Nima'q taq nimaq'ij"
+
+#. Verb. A link that allows you to "like" a post or a comment; "I like this"
+msgid "Like"
+msgstr "Jeb'ël"
+
+# Must be same as translation of "Like" because of Spanish default
+#. Plural noun. Link that shows you a list of music, books, etc. you like on FB
+#. Appears at the top of your profile, after Friends, Photos, Map, ...
+msgid "Likes"
+msgstr "Jeb'ël"
+
+# translation must be the same as for "Like This Page" b/c of Spanish
+# Was: msgstr "Ruxaq richin jeb'elïk"
+#. Appears as link to right of "RECENT POST" on home page
+msgid "Like Page"
+msgstr "Jeb'ël re ruxaq re'"
+
+# translation must be the same as for "Like Page" b/c of Spanish
+msgid "Like This Page"
+msgstr "Jeb'ël re ruxaq re'"
+
+msgid "Links"
+msgstr "Taq q'axal"
+
+#. Was the heading above your lists of friends ("Work", "Family", etc.)
+msgid "LISTS"
+msgstr "TAQ CHOLAJ"
+
+msgid "Log Out"
+msgstr "Elem"
+
+#. Link to a map of the places someone has been
+msgid "Map"
+msgstr "Ruwäch setul"
+
+#. Button near top of a user's profile page (but not your own!)
+msgid "Message"
+msgstr "Taqo'n"
+
+#. In the "New Message" dialog
+msgid "Message:"
+msgstr "Taqo'n:"
+
+msgid "Messages"
+msgstr "Taq taqo'n"
+
+#. Photographs uploaded from someone's mobile device
+msgid "Mobile Uploads"
+msgstr "Q'axäy pan oyonib'äl"
+
+#. Link in bottom navigation. Click it to see additional links: Careers, etc.
+msgid "More"
+msgstr "Ch'aqa' chik"
+
+#. In left-hand navigation to the right of GROUPS, APPS when you mouse over
+msgid "MORE"
+msgstr "CH'AQA' CHIK"
+
+#. Appears at the bottom of your home time line; click to load more posts
+msgid "More Stories"
+msgstr "Ch'aqa' chik taq b'anob'äl"
+
+#. Under "Sort" on the home page, can sort by "Top Stories" or "Most Recent"
+msgid "Most Recent"
+msgstr "re re' k'ak'a'"
+
+#. Appears in left-hand navigation for some users
+msgid "Music"
+msgstr ""
+
+#. Not sure now where this appears, a figment?
+msgid "New Group..."
+msgstr "k'ak'a' molaj"
+
+msgid "New Message"
+msgstr "Jun chik taqo'n"
+
+#. Appears in left-hand navigation of home page
+msgid "News Feed"
+msgstr "Taq rutzijol"
+
+#. In "Friend Requests" drop down
+#, fuzzy
+msgid "No new requests"
+msgstr "Taqoj richin ajowab'äl"
+
+msgid "Notes"
+msgstr ""
+
+msgid "Notifications"
+msgstr "Taq tz'iba'nem"
+
+#. Button label; postpone confirmation of a friend request
+msgid "Not Now"
+msgstr "Wakami manäq"
+
+#. A link that takes you to the latest posts on your timeline
+msgid "Now"
+msgstr "Wakami"
+
+#. Heading above the list of your FB pages (now "PAGES AND ADS"?)
+msgid "PAGES"
+msgstr "TAQ RUXAQ"
+
+#. Heading above the list of your FB pages; left-hand navigation on home page
+msgid "PAGES AND ADS"
+msgstr ""
+
+msgid "People who like this"
+msgstr "Winäq ri ütz nikitz'ët"
+
+msgid "People You May Know"
+msgstr "Winäq rik'in jub'a' awetaman kiwäch"
+
+#. Appears on profile above the "What's on your mind?" prompt, after "Status"
+msgid "Photo"
+msgstr "Wachib'äl"
+
+#. Link to a user's photos, at top of profile, between "Friends" and "Map"
+msgid "Photos"
+msgstr "Taq wachib'äl"
+
+# Link that allows you to "check in" somewhere
+#. Link that allows you to "check in" somewhere
+#. Appears on profile above "What's on your mind?", after "Status" and "Photo"
+msgid "Place"
+msgstr "K'ojlib'äl"
+
+#. Appears, e.g., on your Timeline, showing places you visited during the year
+msgid "Places"
+msgstr "Taq k'ojlib'äl"
+
+#. Appears in left-hand navigation for some users, under "APPS"
+msgid "Pokes"
+msgstr "Chapïk"
+
+#. Link at the bottom of home page to Facebook's privacy policy
+msgid "Privacy"
+msgstr "Rajawalil"
+
+msgid "Privacy Settings"
+msgstr "Runuk'ulem ri rajawalil"
+
+#, fuzzy
+msgid "Privacy Shortcuts"
+msgstr "Runuk'ulem ri rajawalil"
+
+#. Appears when you mouse over your name in the top navigation
+msgid "Profile"
+msgstr "b'anikil"
+
+#. Appears under APPS for some users in left-hand navigation
+msgid "Questions"
+msgstr "K'utunïk"
+
+#. Box near the top of your personal timeline showing your recent actions on FB
+#. Now defunct, I think - replaced by "Activity" and "Recent" on a line below
+msgid "Recent Activity"
+msgstr "K'ak'a' samaj"
+
+#. Appears next to some posts on home page
+msgid "RECENT POST"
+msgstr ""
+
+#. Appears in right-hand navigation (sometimes); pages that Facebook things you'll like
+msgid "Recommended Pages"
+msgstr "Peyon taq ruxaq"
+
+#. When you share a link in a comment, use this to remove the preview image
+msgid "Remove Preview"
+msgstr "Relesaxik nab'ey tz'etb'äl"
+
+#. Option on every post on your personal timeline (now defunct? see "Highlight")
+msgid "Resize"
+msgstr "Ruk'exik runimilem"
+
+#. Prompt when you comment on a post (was "Write a comment..."); %s = your name
+msgid "%s, add a comment..."
+msgstr "%s, tatz'ib'aj jun ka'i' oxi' taq tzij..."
+
+#. Text that used to appear in the search box at the top of the page
+msgid "Search"
+msgstr "Kanoxïk"
+
+#. Text that appears in the search box at the top of the page
+msgid "Search for people, places and things"
+msgstr ""
+
+#. Link in right-hand column near "Recommended Pages" and "People You May Know"
+#. Also under Friend Requests, Messages, Notifications drop downs
+msgid "See All"
+msgstr "Rutz'etik ronojel"
+
+#. Now just "See All"?
+msgid "See All Friend Requests"
+msgstr "Taqoj richin ajowab'äl"
+
+#. Now just "See All"?
+msgid "See All Messages"
+msgstr "Rutz'etik ronojel taq taqo'n"
+
+#. Now just "See All"?
+msgid "See All Notifications"
+msgstr "Rutz'etik ronojel ri taq tz'ib'anem"
+
+#. A link that shows interactions and photos involving two Facebook friends
+#. One place it appears is in the "gear" menu on a friend's profile
+msgid "See Friendship"
+msgstr "Natz'ët iwachib'ilanïk"
+
+#. See more of a post that was truncated because it was very long
+msgid "See More"
+msgstr "Rutz'etik ch'aqa' chik"
+
+#. Under "Privacy Shortcuts" menu
+#, fuzzy
+msgid "See More Settings"
+msgstr "Rutz'etik ch'aqa' chik"
+
+#. Link that appears under a post in another language; click it to translate
+msgid "See Translation"
+msgstr "Rutz'etik tzalq'omanïk"
+
+#. Label on button in "New Message" dialog to send the message
+msgid "Send"
+msgstr "Rutaqik"
+
+#. Link that opens the "New Message" dialog
+msgid "Send a New Message"
+msgstr "Rutaqik jun k'ak'a' taqo'n"
+
+#. Appears in "Friend Requests" and "Notifications" drop down menu
+#, fuzzy
+msgid "Settings"
+msgstr "Runuk'ulem jun okib'äl"
+
+#. Verb. A link that allows you to share (usually someone else's) post with your friends
+msgid "Share"
+msgstr "Q'axaxïk"
+
+#. A link that allows you to sort posts by "most recent" or "top stories"
+msgid "SORT"
+msgstr "RUCHOLANIK"
+
+#. Appears above paid advertisements
+msgid "Sponsored"
+msgstr "Taq tzijol"
+
+#. This is a Facebook "status update", not a relationship status
+#. Appears on profile above the "What's on your mind?" prompt
+msgid "Status"
+msgstr "Rub'eyal"
+
+#. With "Like Page" and "Find More Pages" when someone likes a page
+#, fuzzy
+msgid "Subscribe to Page"
+msgstr "Tz'ib'an taq b'i'aj"
+
+#. Top of profile, after Friends, Photos, Map, ...
+msgid "Subscriptions"
+msgstr "Tz'ib'an taq b'i'aj"
+
+#. Right-hand navigation, similar to "People you may know"
+#. Get it by clicking "GROUPS" in left-hand navigation on Home Page
+msgid "Suggested Groups"
+msgstr ""
+
+msgid "Tag Friends"
+msgstr "Rub'i' pa taq achib'il"
+
+#. Link at the bottom of home page to Facebook's "Terms of Service"
+msgid "Terms"
+msgstr "Taq chilab'exïk"
+
+#. Real time news feed in the right-hand column
+#. "Nuacht Bheo" = "Live News" in Irish; "Instant Information" in Spanish
+msgid "Ticker"
+msgstr "Aninäq rutzijol"
+
+#. Appears as a link when you scroll down on your profile, next to "Now"
+msgid "Timeline"
+msgstr "K'aslemal"
+
+#. %T is a timestamp ("11 hours ago"), %a is a location ("Dublin, Ireland")
+msgid "%T near %a"
+msgstr "%T naqaj %a"
+
+#. Specifies recipient when you send a private message
+msgid "To:"
+msgstr "Chi re:"
+
+#. Under "Sort" on the home page, can sort by "Top Stories" or "Most Recent"
+msgid "Top Stories"
+msgstr "Yalan nik'atzin b'anob'äl"
+
+#. See "Follow Post"
+msgid "Unfollow Post"
+msgstr ""
+
+#. Verb. See "Like"
+msgid "Unlike"
+msgstr "Man ütz ta"
+
+#. Label on a button that allows you to edit your personal information
+msgid "Update Info"
+msgstr "Rutz'aqatisaxik rutzijol"
+
+# Must be same as translation of "Update Status" because of Spanish
+#. This is a Facebook "status update", not a relationship status
+#. Appears at top of home timeline, with "Ask Question", "Add Photo/Video"
+msgid "Update Status"
+msgstr "Rub'eyal"
+
+msgid "Use Facebook as:"
+msgstr ""
+
+#. %d stands for a number, no need to translate it
+#. The singular "View 1 comment" is never used as far as I can tell
+msgid "View 1 comment"
+msgid_plural "View all %d comments"
+msgstr[0] ""
+msgstr[1] "Rutz'etik %d ka'i' oxi' taq tzij"
+
+msgid "Wall Photos"
+msgstr "Wachib'äl pa xaqwachib'äl"
+
+#. Appears in left-hand navigation for new users
+msgid "Welcome"
+msgstr ""
+
+#. Main prompt when you enter in a new status update
+#, fuzzy
+msgid "What's going on, %s?"
+msgstr "¿Achike tajin nana'ojij?"
+
+#. Main prompt when you enter in a new status update
+#, fuzzy
+msgid "What's happening, %s?"
+msgstr "¿Achike tajin nana'ojij?"
+
+#. Main prompt when you enter in a new status update
+msgid "What's on your mind?"
+msgstr "¿Achike tajin nana'ojij?"
+
+#. Prompt when you comment on a post (replaced by "X, add a comment..."?)
+msgid "Write a comment..."
+msgstr "Tatz'ib'aj jun ka'i' oxi' taq tzij..."
+
+#. Appears next to a post or comment as a timestamp
+msgid "Yesterday"
+msgstr "Iwir"
+
+#. Appears next to a post or comment as a timestamp; %s is the time of day
+msgid "Yesterday at %s"
+msgstr "Iwir pa %s "
+
+msgid "You like this."
+msgstr "Jeb'ël natz'ët re re'."
+
+#. Month Name
+msgid "January"
+msgstr "nab'ey ik'"
+
+#. Month Name
+msgid "February"
+msgstr "ruka'n ik'"
+
+#. Month Name
+msgid "March"
+msgstr "rox ik'"
+
+#. Month Name
+msgid "April"
+msgstr "rukaj ik'"
+
+#. Month Name
+msgid "May"
+msgstr "ro' ik'"
+
+#. Month Name
+msgid "June"
+msgstr "ruwaq ik'"
+
+#. Month Name
+msgid "July"
+msgstr "ruwuq ik'"
+
+#. Month Name
+msgid "August"
+msgstr "ruwaqxaq ik'"
+
+#. Month Name
+msgid "September"
+msgstr "rub'elej ik'"
+
+#. Month Name
+msgid "October"
+msgstr "rulaj ik'"
+
+#. Month Name
+msgid "November"
+msgstr "rujulaj ik'"
+
+#. Month Name
+msgid "December"
+msgstr "rukab'laj ik'"
+
+#. Day of the Week
+msgid "Monday"
+msgstr "luq'ij"
+
+#. Day of the Week
+msgid "Tuesday"
+msgstr "maq'ij"
+
+#. Day of the Week
+msgid "Wednesday"
+msgstr "miq'ij"
+
+#. Day of the Week
+msgid "Thursday"
+msgstr "juq'ij"
+
+#. Day of the Week
+msgid "Friday"
+msgstr "wiq'ij"
+
+#. Day of the Week
+msgid "Saturday"
+msgstr "saq'ij"
+
+#. Day of the Week
+msgid "Sunday"
+msgstr "toq'ij"

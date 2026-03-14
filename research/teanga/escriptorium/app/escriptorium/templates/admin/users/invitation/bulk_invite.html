@@ -1,0 +1,75 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+  <div id="content-main">
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+
+      <div class="module">
+        <fieldset class="module aligned">
+          {{ form.non_field_errors }}
+
+
+          <div class="form-row" style="display: flex; align-items: center; margin-bottom: 20px;">
+            <div style="flex: 1; margin-right: -12%;"><label>{{ form.file.label_tag }}</label></div>
+            <div style="flex: 2;">{{ form.file }}</div>
+          </div>
+          <div class="help-text" style="margin-left: 25%;">
+            {% if form.file.help_text %}
+              <p>{{ form.file.help_text }}</p>
+            {% endif %}
+          </div>
+          <hr>
+
+
+          <div class="form-row" style="text-align: center; margin-bottom: 20px;">
+            <p>{% trans "OR" %}</p>
+          </div>
+          <hr>
+
+
+          <div class="form-row" style="display: flex; align-items: center; margin-bottom: 20px;">
+            <div style="flex: 1; margin-right: -12%;"><label>{{ form.emails.label_tag }}</label></div>
+            <div style="flex: 2;">{{ form.emails }}</div>
+          </div>
+          <div class="help-text" style="margin-left: 25%;">
+            {% if form.emails.help_text %}
+              <p>{{ form.emails.help_text }}</p>
+            {% endif %}
+          </div>
+          <hr>
+
+
+          <div class="form-row" style="display: flex; align-items: center; margin-bottom: 20px;">
+            <div style="flex: 1; margin-right: -12%;"><label>{{ form.group.label_tag }}</label></div>
+            <div style="flex: 2;">{{ form.group }}</div>
+          </div>
+          <div class="help-text" style="margin-left: 25%;">
+            {% if form.group.help_text %}
+              <p>{{ form.group.help_text }}</p>
+            {% endif %}
+          </div>
+          <hr>
+
+
+          <div class="form-row" style="display: flex; align-items: center; margin-bottom: 20px;">
+            <div style="flex: 1; margin-right: -12%;"><label>{{ form.expiry_date.label_tag }}</label></div>
+            <div style="flex: 2;">{{ form.expiry_date }}</div>
+          </div>
+          <div class="help-text" style="margin-left: 25%;">
+            {% if form.expiry_date.help_text %}
+              <p>{{ form.expiry_date.help_text }}</p>
+            {% endif %}
+          </div>
+
+        </fieldset>
+      </div>
+
+
+      <div class="submit-row">
+        <input type="submit" value="{% trans 'Send Invitations' %}" class="default btn btn-primary">
+      </div>
+    </form>
+  </div>
+{% endblock %}

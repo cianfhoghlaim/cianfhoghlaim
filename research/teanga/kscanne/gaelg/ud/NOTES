@@ -1,0 +1,244 @@
+ta/va used as a copula?  Sentences aa_003, aa_005, aa_037 (tok 22), aa_039 "ta shen", aa_044 "dy ve nearey foshlit" = "chun bheith (i do) náire oscailte"?, aa_057 (similar to aa_005 in structure, but without explicit copula "is é sin a bhí..."), aa_064 (cre ta my hie = cad é mo theach/theaghlach), aa_075 (similar to aa_057), aa_077 "ta'n doonaght", aa_081 (a bit like aa_064, "quoi vees ny cosneyderyn" = "cé a bheidh na buaiteoirí", which in true Irish would be "ina mbuaiteoirí" or "cé iad na buaiteoirí"), aa_089 "dy beigns y mooadys kiart" (if I had been the right size... Ir. has "an mhéid cheart *ionam*"), aa_164 "dy row eh eairkag", aa_180 (cre ta'n Courey == cad é an comhartha), aa_234 "Is é a chleachtadh..."?
+More: alice_11, alice_28
+
+reported speech; ccomp vs. parataxis (e.g. aa_022 since speech verb comes first and b/c of quotes/colon), or reversed parataxis (e.g. aa_001 because speech verb is in the middle).  List of speech verbs for grepping later: ghra,gra,graite,denee,dooyrt,dreggyr,yllagh(aa_051),(f)o(c)kley (magh),jir,niarragh,as(rarely, like Irish arsa, see aa_047),geamagh(aa_206)
+
+==========
+Notes on individual sentences
+==========
+
+aa_023
+Searching "named" + PROPN in English shows most of the PROPN's get xcomp pointing back to "named"; see e.g. "I have a parakeet named Cookie", Cookie is xcomp of "named", or "A hottie named Joby".  Some are "obj" though....
+enmysit; (see also aa_092, aa_116)  enmyssit
+
+aa_041
+chur sarey (see Ir. ordú chun seilbh d'fháil; xcomp of "ordú")
+
+aa_043
+and its responsibility ná ...   See Irish 1867 "an rud a chuir ionadh is alltacht orm ná"
+
+aa_053
+de ve + ADJ ADJ; both get xcomp:pred, see Ir. treebank "réabtha dóite"
+
+aa_060
+er y fa...  following clause is "acl"; this is a classic "content clause" since it modifies the noun "fa", similar to clauses following "the fact that", "the idea that.." etc. but not an acl:relcl since there's no omitted role in the clause for "fa"
+
+and the tricky "gyn y skeeal çheet..."  without the story becoming...
+The trick here is that "gyn" connects to "çheet", not "y skeeal";
+was hard to find an analogue in EN; but see 
+answers-20111108111010AASEk0S_ans-0013 
+"...(worried) about the snake burning itself"
+about correctly modifies burning, etc.
+
+aa_066
+"marish ny braghtyn" as part of the subject is treated as an nmod in EN; see
+"The test, along with an information form, is available at"
+
+aa_067
+ny shlee na...
+Following English here since Irish seems wrong (CCONJ?)
+"ná" is surely an ADP here, but English uses "fixed" to link to the preceding
+comparative adjective.
+
+aa_068
+"shey meeilaghyn my yiass"; see English "one mile west of you";
+west is an advmod modifying "one mile", same analysis in Irish
+"timpeall ceithre mhíle siar ón mbaile."  (and the "ón mbaile" an nmod too)
+cf aa_251
+
+aa_069
+"mongey" here could be either obj (regular noun) or xcomp (verbal noun);
+corpus is split between cases where it's unambiguously one or the other!
+
+aa_071  similar issue with "reill" to mongey, and here I think
+one of the two is more vn-like than the other (b/c of the
+"un vlein jeig" as an nmod)
+
+aa_073
+c'raad va...  (Ir. cad é an áit a bhfuil... nó cén áit a bhfuil)
+See Ir. examples like "chuig an áit a bhfuil Teach an Phosta...";
+acl:relcl with "Teach an Phosta" as the subject
+
+aa_076
+This is Psalms 136:16. The subject (Dia?) is omitted here and in most
+of the verses going back to 136:4; think of there being an "a" before them;
+"(Dia) a rinne a phobal féin a threorú tríd an bhfásach..."
+
+aa_077
+Could read this as "ach (is) ar an seachtú lá atá an Domhnach"
+but looking at GA/EN, the "ta'n doonaght" is a parenthetical identifying
+the seventh day...
+
+aa_081 Good example (I think) of a big appos NP.... sort of "resumptive" pronoun subject in the main clause.. but maybe it's just parataxis?  cf. aa_103
+
+aa_086 I think this is an example (as noted in the docs for "conj") where the annotation scheme doesn't capture the full coordinated structure; simplified example in English equivalent to it:
+"I played with Kevin on Tuesday and with Maddy on Wednesday"
+the four PPs are all obl of the verb; no way to represent that the 
+first two and second two "go together".
+
+aa_104; not sure about tag on token 18 "ta"...
+not finding any parallel examples in en or ga...  
+"more than is needed/necessary"; the construction in Ir is usually
+"níos mó ná mar atá..." but those have the atá as advcl pointing 
+too far back IMO....
+
+aa_106  as/agus as a SCONJ; "agus iad ag iompar..."
+See https://universaldependencies.org/ga/dep/mark.html for what Irish does;
+as is a SCONJ+mark, points to following pronoun, and that pronoun is the
+head (probably pointing to some higher clause as an advcl), and the VN
+is xcomp of the PRON. See also aa_146, aa_161, aa_251
+Colin Batchelor's paper discusses this as cosubordination
+and handles differently with the second pronoun connected
+back to the first with special "conj:cosub" subtag
+https://www.aclweb.org/anthology/W19-6902.pdf
+
+
+aa_106 and aa_110 are first examples of "raad" as an ADV, which 
+I've tagged just like English "where"  (the place *where* he ate...)
+verb (ate) is acl:relcl point back to the noun (place)
+See also alice_21, with same bigram  boayl + raad which is common 
+enough in Manx (Bible included), but wouldn't be phrased this way in Irish
+which usually has "áit a raibh..."
+
+aa_113  "by what power I do..." is tricky, hard to find parallel examples
+cf Eng.  You do not understand with whom you are dealing.
+since "by what power..." is the object of "I will tell" which is why
+"with whom you are dealing" gets ccomp, I think....
+
+aa_118  "X a dhéanamh sásta"; adj get xcomp, cf. English 
+"we're making the ocean pretty unhappy"
+
+aa_122
+strange transitive use of the verb tar/haink!
+
+aa_123  note handling of stiagh_ayns as a unit; otherwise they
+are both independent modifiers of the verb which doesn't really work
+
+aa_130  ó X go Y handled differently in different places in Irish;
+sometimes the Y is nmod of the X, other times both are co-equal obliques
+of some higher verb; generally the latter in English treebanks although
+I see some phrases of the first time, "from time to time", maybe
+based on the idiomatic nature they should be bound together?
+
+Also, really unsure of the tag on token 21 (va) in "by vessey foast ny va ry heet" == "ba mheasa fós a raibh le teacht"; the PRON "a" not there in the Manx; in Irish I'd make that the nsubj of the copula and the verb as an acl of that, I guess?!
+
+aa_135  sweet long distance dependency  from token 2 to its xcomp at 23
+
+aa_137  crazy sentence with no main verb;  NP, ADVCL, CCOMP;
+comes down to how to handle token 3 and token 19; one is root, other is ????
+Not unhappy with current analysis; basically no main verb,
+the ADVCL in the middle is clearly that and can be ignored, rest of the
+sentence paraphrases in English as one big NP:
+"These things that I'm after telling you so that you're able to 
+remember that I told you them", which is weirdly vacuous, too.
+
+aa_140
+main clause starting at 12 (bee) doesn't have a predicate; should
+I change token 3 to xcomp:pred?  cf the Irish with similar word order,
+but notice they graft the bit about pillars to the main clause with le!
+
+aa_166 (see also aa_256 and in fact aa_001!!!)
+"cha nee" is a negative copula, but UD doesn't allow any
+words to modify a copula (so "cha" can't point to "nee" as a mark).
+There's only one example of a similar modifier of the copula in the 
+Irish treebank (because in virtually every case the negative particle
+combines with the copula into one word); "dá mba mise" in sentence 
+432, and there Teresa has the "dá" pointing to the subject
+(same as where the cop points). Not sure if that's a hack but it at
+least avoids the warning. 
+See also alice_31.
+
+aa_174; copula word order is opposite of Irish;
+cre ny lhottyn ad shoh = cad na créachta iad seo
+where we'd expect   cad iad na créachta seo
+
+aa_175  gaase ro shenn, like aa_118, adj gets xcomp
+
+aa_199  "NOUN mooie er close y scoill" 
+Treat "mooie er" like "NOUN out of NOUN" in English,
+so mooie points to close as "case", and "er" points back to mooie as fixed
+
+aa_218
+ny s'gilley na sniaghtey;
+English corpus handles "more ADJ than NOUN" as I did here, 
+"na sniaghtey" being a normal PP, with the noun pointing back to ADJ
+as obl.  ny and s' are particles; I used fixed in this unusual 
+case that the s' is separated by apost
+
+aa_220
+Usage of "feme" as a verbal noun. Usage examples stick closely with 
+Irish idioms where "gá" would work as a translate;
+ta feme rish X
+tá feme echey er X  (ir. would have le here too, but whatevs)
+This sentence uses is more like "ag teastáil"; at first I thought it 
+might be an error by a modern writer but now I see examples like
+this in the Bible:
+nagh vel mee feme nhee erbee
+dy row ad feme cooney 'sy whaiyll
+dy vel shiu feme dy chooilley nhee 
+...
+So I'm treating this and all similar usages as xcomp and the ones 
+closer to Irish as normal NOUN (nsubj)
+
+aa_251
+ina luí 45km taobh thuaidh ó
+See eg. English "500 islands lying 1,000 kilometers east of Sri Lanka"
+A bit different since "east" is an ADV in English treebank, but I've
+followed the general approach making distance "1000 km" is an obl
+modifying "east" (basically, you could leave it out and it's still fine).
+And for me, since "çheu hwoaie" is an NP and not an ADV, it's an obl
+modifying "ny lhie".  cf. aa_068
+
+
+aa_254 (see also aa_268 where it's X, Contae na hIarmhí)
+Coontae Shliggee, Nerin...   English corpus uses appos for the
+state in "City, State" pairs, see "Cambridge, Massachusetts" e.g.
+
+The (Baarle: Garavogue River) is tricky too... .fortunately there are
+other WP-looking examples in English treebank, search e.g.
+"(French: I'ile Papillon)"
+
+aa_256 see aa_166 re: "dy nee"
+
+aa_274  First real hard ellipsis case, requiring orphan deprel
+if I'm reading the spec correctly.
+
+ab_000  trooid y vyghin er ny hoilshaghey diuish;
+no clear parallel in Irish; best are examples like
+"trí NOUN a chur ..."  Irish treebank has trí as ADP/case of the NOUN,
+NOUN as the obj of chur, and chur as an advcl of the higher clause
+
+ab_002; note jeianagh advmod of Romanagh and not amod of noun; that 
+seems to be a common mistake in English treebank:
+genuine borderline cases
+early classical N
+so-called predatory journals
+
+ab_004;  mixed handling of month/day/year in English treebank;
+I've followed Irish and just made it flat; the "(Nalbin)" is 
+treated as an appos following sentid=email-enronsent16_01-0044 in 
+English treebank
+
+ab_011 lit. translation not grammatical in Irish;
+I'm treating "rere y sorçh..." as the predicate which sounds weird
+
+alice_15
+"slooyn"; this is a pun from an earlier sentence in Alice (in English)...
+“That’s the reason they’re called lessons,” the Gryphon remarked:
+“because they lessen from day to day.”
+Trying to translate the pun here; ga/gd don't even try!
+
+alice_39
+She == Is é here!  Split?  Irish has one "'Sé seo", but there they
+can treat "seo" as the root
+
+alice_41
+"Shegin"; decompose to "she egin"?
+
+alice_52
+First "orphan"; analysing this as an ellipsis of "va"
+before "e roihaghyn"
+https://universaldependencies.org/u/dep/orphan.html
+
+Also first "goll rish" or "gollrish" as preposition;
+prefer treating this with "fixed" so the two will be the same

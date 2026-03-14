@@ -1,0 +1,45 @@
+# Beads Configuration for Cianfhoghlaim
+# https://github.com/beads-ai/beads
+
+# Issue ID prefix (e.g., cf-a1b2c3)
+prefix: "cf"
+
+# Auto-sync with git
+auto_sync: true
+sync_interval: 30
+
+# Import settings
+import:
+  orphan_handling: "allow"
+
+# Agent settings
+agent:
+  name: "claude"
+
+# OpenSpec integration
+openspec:
+  enabled: true
+  specs_path: "openspec/specs"
+  auto_link: true
+
+# Capability areas for issue categorization
+capabilities:
+  # Education Platform
+  - curriculum-ingestion
+  - bilingual-content
+  - knowledge-graph
+  - semantic-search
+  - assessment-extraction
+  - oideachais-pipeline
+  # Dagger Modules
+  - dagger-ci
+  - dagger-gitops
+  - dagger-forgejo
+  - dagger-komodo
+  - dagger-cloudflare
+  - dagger-blockchain
+  # Developer Tooling
+  - beads-issue-tracking
+  - chunkhound-code-search
+  # Infrastructure
+  - infrastructure-stacks

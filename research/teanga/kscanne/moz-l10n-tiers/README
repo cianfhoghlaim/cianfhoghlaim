@@ -1,0 +1,16 @@
+This repo creates a "pseudo-locale" for Mozilla products in order to
+show the priority level of different strings for localization.
+
+After cloning this repo, do this once:
+$ make clone
+
+And then after each rapid release cycle:
+$ make tiers-update.txt
+
+If diff looks ok:
+$ mv tiers-update.txt tiers.txt
+
+To iterate, make tweaks to tiers.txt, then:
+$ make
+
+And then do a build of the updated pseudo-locale and test.

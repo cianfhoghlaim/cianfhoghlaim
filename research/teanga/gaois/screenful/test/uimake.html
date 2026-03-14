@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>Screenful Make</title>
+		<script type="text/javascript" src="../../jquery.js"></script>
+		<!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> -->
+
+		<link type="text/css" rel="stylesheet" href="../screenful-theme-green.css" />
+
+    <link type="text/css" rel="stylesheet" href="../screenful.css" />
+		<link type="text/css" rel="stylesheet" href="../screenful-make.css" />
+		<script type="text/javascript" src="../screenful.js"></script>
+		<script type="text/javascript" src="../screenful-make.js"></script>
+		<script type="text/javascript" src="../screenful-loc-en.js"></script>
+
+		<script type="text/javascript">
+		Screenful.Make.prefix="http://test.lexonomy.eu/";
+		Screenful.Make.suggested="crf4krcmds";
+		Screenful.Make.makeUrl="apimake.json";
+		Screenful.Make.templates=[
+			{value: "blank", caption: "(none)"},
+			{value: "smd", caption: "Simple Monolingual Dictionary"},
+			{value: "sbd", caption: "Simple Bilingual Dictionary"},
+		];
+		Screenful.Make.titleHint="Enter a human-readable title such as \"My Esperanto Dictionary\". You will be able to change this later.";
+		Screenful.Make.urlHint="This will be your dictionary's address on the web. You will not be able to change this later.";
+		Screenful.Make.templateHint="You can choose a template here to start you off. Each template comes with a few sample entries. You will be able to change or delete those and to customize the template.";
+		Screenful.Make.finishedMessage="Your dictionary is ready.";
+		</script>
+
+		<!--app-specific styles go here:-->
+		<style>
+		#header { background-color: rgb(253, 255, 218); padding: 20px; border-bottom: 1px solid #a5a818; }
+		#footer { background-color: rgb(76, 158, 217); padding: 10px; }
+		</style>
+	</head>
+	<body>
+		<div id="header">I am a header.</div>
+		<div id="footer">I am a footer.</div>
+	</body>
+</html>
