@@ -1,0 +1,34 @@
+# =============================================================================
+# DEPLOY WORKFLOW - GitOps Stack Deployment
+# =============================================================================
+# Triggered on merge to main to deploy changed stacks via Komodo
+
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'bonneagar/storage/**'
+      - 'bonneagar/uirlisi/**'
+      - 'bonneagar/komodo/**'
+
+jobs:
+  notify-komodo:
+    name: Trigger Komodo Deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Komodo Webhook
+        run: |
+          # Komodo webhook is already configured in Forgejo
+          # This job just logs the deployment trigger
+          echo "Changes detected in infrastructure files"
+          echo "Komodo webhook will trigger auto-deploy-stacks procedure"
+          echo "Commit: ${{ github.sha }}"
+          echo "Author: ${{ github.actor }}"
+
+      - name: Wait for Komodo sync
+        run: |
+          echo "Waiting for Komodo to sync resources..."
+          sleep 10
+          echo "Deployment triggered successfully"

@@ -1,0 +1,159 @@
+# =============================================================================
+# GITHUB MIRROR WORKFLOW - Sync flows to GitHub repositories
+# =============================================================================
+# Mirrors select flows to GitHub using git subtree split
+# - oideachais -> github.com/cianfhoghlaim/oideachais
+# - crypteolas -> github.com/cianfhoghlaim/crypteolas
+# - aleyum -> github.com/yedya/aleyum
+
+name: GitHub Mirror
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sruth/oideachais/**'
+      - 'sruth/crypteolas/**'
+      - 'sruth/aleyum/**'
+
+jobs:
+  detect-changes:
+    name: Detect Changed Flows
+    runs-on: ubuntu-latest
+    outputs:
+      oideachais: ${{ steps.changes.outputs.oideachais }}
+      crypteolas: ${{ steps.changes.outputs.crypteolas }}
+      aleyum: ${{ steps.changes.outputs.aleyum }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect changes
+        id: changes
+        run: |
+          # Check which flows have changes
+          if git diff --name-only HEAD~1 | grep -q '^sruth/oideachais/'; then
+            echo "oideachais=true" >> $GITHUB_OUTPUT
+          else
+            echo "oideachais=false" >> $GITHUB_OUTPUT
+          fi
+
+          if git diff --name-only HEAD~1 | grep -q '^sruth/crypteolas/'; then
+            echo "crypteolas=true" >> $GITHUB_OUTPUT
+          else
+            echo "crypteolas=false" >> $GITHUB_OUTPUT
+          fi
+
+          if git diff --name-only HEAD~1 | grep -q '^sruth/aleyum/'; then
+            echo "aleyum=true" >> $GITHUB_OUTPUT
+          else
+            echo "aleyum=false" >> $GITHUB_OUTPUT
+          fi
+
+  mirror-oideachais:
+    name: Mirror oideachais to GitHub
+    needs: detect-changes
+    if: needs.detect-changes.outputs.oideachais == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "Forgejo Actions Bot"
+          git config user.email "actions@cianfhoghlaim.ie"
+
+      - name: Split and push to GitHub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_MIRROR_TOKEN }}
+        run: |
+          echo "Splitting subtree for sruth/oideachais..."
+          git subtree split --prefix=sruth/oideachais -b oideachais-split
+
+          echo "Pushing to github.com/cianfhoghlaim/oideachais..."
+          git push --force \
+            "https://github-bot:${GITHUB_TOKEN}@github.com/cianfhoghlaim/oideachais.git" \
+            oideachais-split:main
+
+          echo "Mirror sync complete for oideachais!"
+
+  mirror-crypteolas:
+    name: Mirror crypteolas to GitHub
+    needs: detect-changes
+    if: needs.detect-changes.outputs.crypteolas == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "Forgejo Actions Bot"
+          git config user.email "actions@cianfhoghlaim.ie"
+
+      - name: Split and push to GitHub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_MIRROR_TOKEN }}
+        run: |
+          echo "Splitting subtree for sruth/crypteolas..."
+          git subtree split --prefix=sruth/crypteolas -b crypteolas-split
+
+          echo "Pushing to github.com/cianfhoghlaim/crypteolas..."
+          git push --force \
+            "https://github-bot:${GITHUB_TOKEN}@github.com/cianfhoghlaim/crypteolas.git" \
+            crypteolas-split:main
+
+          echo "Mirror sync complete for crypteolas!"
+
+  mirror-aleyum:
+    name: Mirror aleyum to GitHub (yedya org)
+    needs: detect-changes
+    if: needs.detect-changes.outputs.aleyum == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "Forgejo Actions Bot"
+          git config user.email "actions@cianfhoghlaim.ie"
+
+      - name: Split and push to GitHub
+        env:
+          YEDYA_GITHUB_TOKEN: ${{ secrets.YEDYA_GITHUB_TOKEN }}
+        run: |
+          echo "Splitting subtree for sruth/aleyum..."
+          git subtree split --prefix=sruth/aleyum -b aleyum-split
+
+          echo "Pushing to github.com/yedya/aleyum..."
+          git push --force \
+            "https://yedya-bot:${YEDYA_GITHUB_TOKEN}@github.com/yedya/aleyum.git" \
+            aleyum-split:main
+
+          echo "Mirror sync complete for aleyum!"
+
+  notify-success:
+    name: Notify Success
+    needs: [mirror-oideachais, mirror-crypteolas, mirror-aleyum]
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Summary
+        run: |
+          echo "## GitHub Mirror Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Flow | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| oideachais | ${{ needs.mirror-oideachais.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| crypteolas | ${{ needs.mirror-crypteolas.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| aleyum | ${{ needs.mirror-aleyum.result }} |" >> $GITHUB_STEP_SUMMARY

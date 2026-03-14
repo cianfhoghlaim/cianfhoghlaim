@@ -1,0 +1,55 @@
+# =============================================================================
+# CROSS-ORG SYNC WORKFLOW - Sync aleyum to yedya organization
+# =============================================================================
+# Syncs the sruth/aleyum flow to yedya/aleyum repository on Forgejo
+# Uses git subtree to extract and push the flow
+
+name: Cross-Org Sync
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sruth/aleyum/**'
+
+env:
+  YEDYA_REPO: git.cianfhoghlaim.ie/yedya/aleyum.git
+
+jobs:
+  sync-aleyum:
+    name: Sync to yedya/aleyum
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "Forgejo Actions Bot"
+          git config user.email "actions@cianfhoghlaim.ie"
+
+      - name: Extract and push subtree
+        env:
+          YEDYA_TOKEN: ${{ secrets.YEDYA_FORGEJO_TOKEN }}
+        run: |
+          echo "Splitting subtree for sruth/aleyum..."
+
+          # Split the subtree (creates a temporary branch with just the subtree history)
+          git subtree split --prefix=sruth/aleyum -b aleyum-split
+
+          echo "Pushing to yedya/aleyum..."
+
+          # Push to yedya organization repository
+          git push --force \
+            "https://forgejo-bot:${YEDYA_TOKEN}@${YEDYA_REPO}" \
+            aleyum-split:main
+
+          echo "Sync complete!"
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::error::Failed to sync aleyum to yedya organization"
+          echo "Check that YEDYA_FORGEJO_TOKEN is set and has write access to yedya/aleyum"
