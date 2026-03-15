@@ -63,7 +63,7 @@ services:
   # ---------------------------------------------------------------------------
   frontend:
     build:
-      context: ./apps/web
+      context: ./web
       dockerfile: Dockerfile
     container_name: oideachais-frontend
     restart: unless-stopped

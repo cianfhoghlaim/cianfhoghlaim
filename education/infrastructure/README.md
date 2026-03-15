@@ -142,6 +142,21 @@ locket exec --provider op-connect \
   -- docker compose -f stacks/langfuse/compose.yaml up -d
 ```
 
+### Local 1Password CLI (op run) Mode
+
+For local development without 1Password Connect, you can use the 1Password CLI (`op run`) to inject secrets directly from your vault without relying on `.env` files.
+
+**Use when:**
+- Running locally on your machine
+- You have the 1Password Desktop App and CLI (`op`) installed
+- You want to avoid creating `.env` files with sensitive data
+
+```bash
+# 1. Start your local 1Password app and unlock it
+# 2. Run your stack using op run with a secrets template
+op run --env-file=stacks/langfuse/secrets.env -- docker compose -f stacks/langfuse/compose.yaml up -d
+```
+
 ### Sidecar Mode
 
 Runs Locket as a container that writes secrets to a shared tmpfs volume.

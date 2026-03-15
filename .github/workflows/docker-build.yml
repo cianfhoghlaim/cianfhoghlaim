@@ -1,0 +1,50 @@
+name: Docker Build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'education/**/Dockerfile'
+      - 'education/docker-compose.yaml'
+      - 'education/compose.yaml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'education/**/Dockerfile'
+      - 'education/docker-compose.yaml'
+      - 'education/compose.yaml'
+
+jobs:
+  build-images:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Validate Compose File
+        working-directory: education
+        run: |
+          if [ -f "docker-compose.yaml" ]; then
+            docker compose -f docker-compose.yaml config --quiet
+          elif [ -f "compose.yaml" ]; then
+            docker compose -f compose.yaml config --quiet
+          fi
+
+      - name: Build Web
+        working-directory: education
+        run: |
+          if [ -d "web" ] && [ -f "web/Dockerfile" ]; then
+            docker build -t education-web:latest web/
+          fi
+
+      - name: Build API/Dagster
+        working-directory: education
+        run: |
+          if [ -d "api" ] && [ -f "api/Dockerfile" ]; then
+            docker build -t education-api:latest api/
+          elif [ -f "Dockerfile" ]; then
+            docker build -t education-dagster:latest .
+          fi

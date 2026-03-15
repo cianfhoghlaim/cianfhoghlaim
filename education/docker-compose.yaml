@@ -49,7 +49,7 @@ services:
       AWS_ENDPOINT_URL: http://garage:3900
       AWS_REGION: garage
     volumes:
-      - ./sruth:/app/sruth:ro
+      - .:/app:ro
       - ./workspace.yaml:/app/workspace.yaml:ro
       - dagster-storage:/opt/dagster/storage
     depends_on:
@@ -75,7 +75,7 @@ services:
       GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:-460274064622cf44cd2c2ebb80eedf9b4eb64730abb6d78eda44ab9cb5bb7da3}
       GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN:-devtoken}
     volumes:
-      - ./bonneagar/storage/lakehouse/garage.toml:/etc/garage.toml:ro
+      - ./infrastructure/docker/lakehouse/garage.toml:/etc/garage.toml:ro
       - garage-meta:/var/lib/garage/meta
       - garage-data:/var/lib/garage/data
     command: ["/garage", "-c", "/etc/garage.toml", "server"]
@@ -161,7 +161,7 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      - ./bonneagar/storage/lakehouse/init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./infrastructure/docker/lakehouse/init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U lakekeeper"]
       interval: 3s
@@ -202,55 +202,29 @@ services:
   # ---------------------------------------------------------------------------
   # UI DEVELOPMENT SERVERS (profile: ui)
   # ---------------------------------------------------------------------------
-  portal:
+  web:
     profiles: ["ui", "full"]
     build:
-      context: ./sruth/aleyum/portal
-      dockerfile: Dockerfile.dev
-    container_name: dev-portal
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: dev-web
     ports:
       - "3000:3000"
     volumes:
-      - ./sruth/aleyum/portal/src:/app/src
+      - ./web/src:/app/src
     networks:
       - dev-network
 
-  oideachais-ui:
+  marimo:
     profiles: ["ui", "full"]
     build:
-      context: ./sruth/oideachais/apps/web
-      dockerfile: Dockerfile.dev
-    container_name: dev-oideachais-ui
+      context: ./marimo
+      dockerfile: Dockerfile
+    container_name: dev-marimo
     ports:
-      - "3100:3100"
+      - "2718:2718"
     volumes:
-      - ./sruth/oideachais/apps/web/src:/app/src
-    networks:
-      - dev-network
-
-  crypteolas-ui:
-    profiles: ["ui", "full"]
-    build:
-      context: ./sruth/crypteolas/ui
-      dockerfile: Dockerfile.dev
-    container_name: dev-crypteolas-ui
-    ports:
-      - "3101:3101"
-    volumes:
-      - ./sruth/crypteolas/ui/src:/app/src
-    networks:
-      - dev-network
-
-  tuath-ui:
-    profiles: ["ui", "full"]
-    build:
-      context: ./sruth/tuath/ui
-      dockerfile: Dockerfile.dev
-    container_name: dev-tuath-ui
-    ports:
-      - "3102:3102"
-    volumes:
-      - ./sruth/tuath/ui/src:/app/src
+      - ./marimo:/app/marimo
     networks:
       - dev-network
 
