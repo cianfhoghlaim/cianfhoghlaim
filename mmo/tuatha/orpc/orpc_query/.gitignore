@@ -1,0 +1,6 @@
+node_modules
+.turbo
+.alchemy
+.env
+.idea
+dist

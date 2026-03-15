@@ -1,0 +1,181 @@
+tanstack-unified/
+│
+├── Configuration Files
+│   ├── package.json                 # Dependencies & scripts
+│   ├── tsconfig.json                # TypeScript configuration
+│   ├── vite.config.ts               # Vite + TanStack Router plugin
+│   ├── app.config.ts                # TanStack Start configuration
+│   ├── drizzle.config.ts            # Drizzle ORM configuration
+│   ├── docker-compose.yaml          # PostgreSQL container
+│   ├── .env.example                 # Environment variables template
+│   └── .gitignore                   # Git ignore rules
+│
+├── Documentation
+│   ├── README.md                    # Complete setup & usage guide
+│   ├── QUICKSTART.md                # 5-minute setup guide
+│   ├── PROJECT_SUMMARY.md           # Technical overview & patterns
+│   └── FILE_TREE.txt                # This file
+│
+├── public/                          # Static assets (empty for now)
+│
+└── src/
+    │
+    ├── routes/                      # File-based routing
+    │   ├── __root.tsx               # Root layout with HTML structure
+    │   ├── index.tsx                # Home page (/) - public
+    │   ├── dashboard.tsx            # Dashboard (/dashboard) - protected
+    │   └── api/
+    │       └── auth/
+    │           └── $.ts             # Better Auth API catch-all
+    │
+    ├── components/
+    │   ├── Header.tsx               # Navigation header with auth state
+    │   └── ui/
+    │       └── button.tsx           # Reusable button component (shadcn)
+    │
+    ├── lib/                         # Library code & utilities
+    │   ├── auth.ts                  # Server-side Better Auth config
+    │   ├── auth-client.ts           # Client-side auth hooks
+    │   ├── auth-middleware.ts       # TanStack middleware for auth
+    │   ├── auth-server-fn.ts        # Server functions (getUserId, getUser)
+    │   └── utils.ts                 # Utility functions (cn)
+    │
+    ├── db/
+    │   └── schema.ts                # Drizzle database schema
+    │
+    └── styles/
+        └── global.css               # Tailwind v4 + design tokens
+
+
+FILES BY CATEGORY
+=================
+
+ROUTING (4 files)
+-----------------
+src/routes/__root.tsx          - Root layout wrapper for all pages
+src/routes/index.tsx           - Home page with sign-in
+src/routes/dashboard.tsx       - Protected dashboard page
+src/routes/api.auth.$.ts       - Better Auth API endpoints
+
+AUTHENTICATION (4 files)
+------------------------
+src/lib/auth.ts                - Server config with providers
+src/lib/auth-client.ts         - Client hooks (useSession, signIn, etc.)
+src/lib/auth-middleware.ts     - Middleware for protected routes
+src/lib/auth-server-fn.ts      - Server functions for auth
+
+UI COMPONENTS (2 files)
+-----------------------
+src/components/Header.tsx      - Navigation header
+src/components/ui/button.tsx   - Reusable button component
+
+DATABASE (1 file)
+-----------------
+src/db/schema.ts               - Drizzle schema (users, sessions, etc.)
+
+UTILITIES (1 file)
+------------------
+src/lib/utils.ts               - Helper functions (cn)
+
+STYLES (1 file)
+---------------
+src/styles/global.css          - Tailwind + design system
+
+CONFIGURATION (7 files)
+-----------------------
+package.json                   - Dependencies & scripts
+tsconfig.json                  - TypeScript config
+vite.config.ts                 - Vite + plugins
+app.config.ts                  - TanStack Start config
+drizzle.config.ts              - Drizzle Kit config
+docker-compose.yaml            - PostgreSQL container
+.env.example                   - Environment template
+
+DOCUMENTATION (4 files)
+-----------------------
+README.md                      - Full documentation
+QUICKSTART.md                  - Quick setup guide
+PROJECT_SUMMARY.md             - Technical details
+FILE_TREE.txt                  - This file
+
+
+TOTAL FILE COUNT
+================
+Routes:          4
+Auth:            4
+Components:      2
+Database:        1
+Utilities:       1
+Styles:          1
+Config:          7
+Documentation:   4
+----------------
+Total:          24 files
+
+
+KEY DIRECTORIES EXPLAINED
+=========================
+
+src/routes/
+  - File-based routing powered by TanStack Router
+  - Files become routes automatically
+  - __root.tsx is the wrapper for all routes
+  - Nested folders create nested routes
+  - $ in filename = catch-all route
+
+src/components/
+  - Reusable React components
+  - ui/ folder follows shadcn/ui pattern
+  - Each component exports variants and types
+
+src/lib/
+  - Shared utilities and configurations
+  - auth*.ts files handle authentication
+  - utils.ts for helper functions
+
+src/db/
+  - Database schemas and migrations
+  - Uses Drizzle ORM for type safety
+
+src/styles/
+  - Global CSS and design system
+  - Tailwind v4 with @theme directive
+
+
+GENERATED AT RUNTIME
+====================
+These files will be created when you run 'pnpm dev':
+
+node_modules/              - Dependencies
+.output/                   - Production build
+.vinxi/                    - TanStack Start cache
+.vite/                     - Vite cache
+src/routeTree.gen.ts       - Generated route tree
+drizzle/                   - Database migrations (after db:push)
+
+
+IMPORTANT FILES TO KNOW
+=======================
+
+For Authentication:
+  - src/lib/auth-client.ts        (useSession, signIn, signOut)
+  - src/lib/auth.ts               (server config)
+  - src/routes/api.auth.$.ts      (API endpoints)
+
+For Routing:
+  - src/routes/__root.tsx         (layout wrapper)
+  - Any file in src/routes/       (becomes a route)
+
+For Database:
+  - src/db/schema.ts              (add tables here)
+  - drizzle.config.ts             (connection config)
+
+For UI:
+  - src/components/ui/button.tsx  (component pattern)
+  - src/lib/utils.ts              (cn helper)
+  - src/styles/global.css         (design tokens)
+
+For Configuration:
+  - .env                          (environment variables)
+  - app.config.ts                 (TanStack Start)
+  - vite.config.ts                (Vite plugins)

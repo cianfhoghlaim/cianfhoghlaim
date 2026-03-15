@@ -1,0 +1,38 @@
+{
+  "name": "@coding-agent-monorepo/agent",
+  "version": "1.0.0",
+  "description": "Agent NodeJS TypeScript project",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx --watch src/index.ts",
+    "start": "node dist/index.js",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:ui": "vitest --ui",
+    "lint": "eslint src/**/*.ts",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^2.0.30",
+    "@coding-agent-monorepo/pubsub": "workspace:*",
+    "@coding-agent-monorepo/types": "workspace:*",
+    "@restatedev/restate-sdk": "workspace:*",
+    "@restatedev/restate-sdk-zod": "workspace:*",
+    "ai": "^5.0.44",
+    "modal": "^0.3.19",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0"
+  }
+}

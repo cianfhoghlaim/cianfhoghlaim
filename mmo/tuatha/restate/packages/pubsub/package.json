@@ -1,0 +1,33 @@
+{
+  "name": "@coding-agent-monorepo/pubsub",
+  "version": "1.0.0",
+  "description": "PubSub server for Coding Agent",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx --watch src/server.ts",
+    "start": "node dist/server.js",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:ui": "vitest --ui",
+    "lint": "eslint src/**/*.ts",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@coding-agent-monorepo/types": "workspace:*",
+    "@hono/node-server": "^1.18.2",
+    "@hono/node-ws": "^1.2.0",
+    "hono": "^4.9.0",
+    "superjson": "^2.2.2",
+    "testcontainers": "^11.5.1",
+    "ws": "^8.18.3"
+  }
+}
