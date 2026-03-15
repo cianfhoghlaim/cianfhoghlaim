@@ -32,10 +32,11 @@ services:
       # Database paths (inside container)
       DUCKDB_PATH: /app/storage/data/celtic_education.duckdb
       LANCEDB_PATH: /app/storage/data/curriculum_vectors.lance
-      # LLM Configuration
-      LLM_API_KEY: ${LLM_API_KEY:-}
-      LLM_PROVIDER: ${LLM_PROVIDER:-anthropic}
-      LLM_MODEL: ${LLM_MODEL:-claude-sonnet-4-20250514}
+      # LLM Configuration (Routed through LiteLLM Gateway)
+      LLM_API_KEY: ${LITELLM_MASTER_KEY:-sk-1234}
+      LLM_PROVIDER: ${LLM_PROVIDER:-litellm}
+      LLM_BASE_URL: ${LLM_BASE_URL:-http://litellm:4000}
+      LLM_MODEL: ${LLM_MODEL:-gemini/gemini-1.5-flash}
       # Observability (optional)
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
@@ -82,6 +83,30 @@ services:
     depends_on:
       api:
         condition: service_healthy
+    networks:
+      - oideachais
+
+  # ---------------------------------------------------------------------------
+  # AI GATEWAY - LiteLLM (Vertex AI/Gemini & Open Models Routing)
+  # ---------------------------------------------------------------------------
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: oideachais-litellm
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      # Master key to access the gateway
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-1234}
+      # Google Cloud / Vertex AI Settings
+      VERTEX_PROJECT: ${VERTEX_PROJECT:-my-gcp-project}
+      VERTEX_LOCATION: ${VERTEX_LOCATION:-us-central1}
+      # Path to GCP service account key for Vertex AI access
+      GOOGLE_APPLICATION_CREDENTIALS: /app/key.json
+    volumes:
+      - ./infrastructure/litellm/config.yaml:/app/config.yaml:ro
+      - ${GCP_CREDENTIALS_PATH:-./secrets/gcp-key.json}:/app/key.json:ro
+    command: [ "--config", "/app/config.yaml", "--port", "4000" ]
     networks:
       - oideachais
 

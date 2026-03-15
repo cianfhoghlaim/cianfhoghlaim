@@ -37,17 +37,17 @@ services:
       - "${DAGSTER_PORT:-3335}:3000"
     environment:
       DAGSTER_HOME: /opt/dagster/home
-      # DuckLake Configuration
+      # DuckLake & R2 Configuration (Production/Staging Storage Sink)
       USE_DUCKLAKE: "true"
       DUCKLAKE_POSTGRES_HOST: postgres
       DUCKLAKE_POSTGRES_PORT: "5432"
       DUCKLAKE_POSTGRES_USER: lakekeeper
       DUCKLAKE_POSTGRES_PASSWORD: devpassword
-      # Garage S3 Configuration
-      AWS_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:-lakehouse}
-      AWS_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:-devpassword}
-      AWS_ENDPOINT_URL: http://garage:3900
-      AWS_REGION: garage
+      # External S3 Compatible Storage (Cloudflare R2 mapped structure)
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-lakehouse}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-devpassword}
+      AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-http://garage:3900}
+      AWS_REGION: ${AWS_REGION:-auto}
     volumes:
       - .:/app:ro
       - ./workspace.yaml:/app/workspace.yaml:ro
