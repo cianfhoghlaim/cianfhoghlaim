@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["esnext"],
+    "types": ["@cloudflare/workers-types"],
+    "allowSyntheticDefaultImports": true,
+    "composite": true
+    },
+  "include": ["**/*.ts", "../auth.ts"]
+  }
