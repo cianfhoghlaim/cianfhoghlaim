@@ -1,0 +1,62 @@
+[project]
+name = "github-intelligence"
+version = "0.1.0"
+description = "Unified GitHub data intelligence platform with DLT, CocoIndex, Cognee, and Marimo"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    # Core DLT stack
+    "dlt[lancedb,duckdb]>=1.18.2",
+    "dlthub>=0.18.0",
+
+    # Semantic indexing
+    "cocoindex>=0.3.9",
+    "sentence-transformers",
+    "lancedb>=0.6.0",
+
+    # Knowledge graphs
+    "cognee",
+    "neo4j",  # Memgraph uses the same Bolt driver
+
+    # Interactive analysis
+    "marimo>=0.17.2",
+    "ibis-framework[duckdb]>=11.0.0",
+
+    # Utilities
+    "python-dotenv",
+    "requests",
+    "pyarrow",
+    "pendulum",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+    "mypy",
+]
+scraping = [
+    "crawl4ai",
+    "firecrawl-py",
+]
+dagster = [
+    "dagster>=1.7.0",
+    "dagster-webserver>=1.7.0",
+    "dagster-embedded-elt>=0.22.0",
+]
+graphiti = [
+    "graphiti-core>=0.3.0",
+    "falkordb>=1.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]

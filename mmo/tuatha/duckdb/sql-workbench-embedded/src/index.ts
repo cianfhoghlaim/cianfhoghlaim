@@ -1,0 +1,162 @@
+/**
+ * SQL Workbench Embedded
+ * Main entry point
+ */
+
+import { Embedded } from './embedded';
+import { SQLWorkbenchConfig } from './types';
+import { injectStyles } from './styles';
+import { duckDBManager } from './duckdb-manager';
+import { getGlobalConfig, setGlobalConfig } from './config-store';
+
+// Track all embedded instances
+const embedInstances = new WeakMap<HTMLElement, Embedded>();
+const allEmbeds: Embedded[] = [];
+
+/**
+ * Set global configuration
+ */
+function config(options: Partial<SQLWorkbenchConfig>): void {
+  const current = getGlobalConfig();
+  setGlobalConfig({ ...current, ...options });
+}
+
+/**
+ * Get current global configuration
+ */
+function getConfig(): Required<SQLWorkbenchConfig> {
+  return { ...getGlobalConfig() };
+}
+
+/**
+ * Initialize embeds automatically
+ */
+function init(): void {
+  if (typeof document === 'undefined') {
+    console.warn('SQLWorkbench: document is not available, skipping initialization');
+    return;
+  }
+
+  // Inject styles
+  injectStyles();
+
+  // Find all matching elements
+  const globalConfig = getGlobalConfig();
+  const elements = document.querySelectorAll<HTMLElement>(globalConfig.selector);
+
+  elements.forEach((element) => {
+    // Skip if already initialized
+    if (embedInstances.has(element)) {
+      return;
+    }
+
+    // Pass full globalConfig - Embedded constructor handles theme priority
+    // Priority: data-theme attribute > globalConfig.theme > DEFAULT_CONFIG.theme
+    const embed = new Embedded(element, globalConfig);
+    const container = embed.getContainer();
+
+    if (container) {
+      embedInstances.set(container, embed);
+      allEmbeds.push(embed);
+    }
+  });
+
+  // Set up MutationObserver for automatic cleanup
+  setupMutationObserver();
+}
+
+/**
+ * Setup MutationObserver to detect removed embeds
+ */
+function setupMutationObserver(): void {
+  if (typeof window === 'undefined' || !window.MutationObserver) {
+    return;
+  }
+
+  const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      if (mutation.type === 'childList' && mutation.removedNodes.length > 0) {
+        mutation.removedNodes.forEach((node) => {
+          if (node instanceof HTMLElement) {
+            const embed = embedInstances.get(node);
+            if (embed && !embed.isDestroyed()) {
+              embed.destroy();
+              const index = allEmbeds.indexOf(embed);
+              if (index > -1) {
+                allEmbeds.splice(index, 1);
+              }
+            }
+          }
+        });
+      }
+    }
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+}
+
+/**
+ * Destroy all embeds and cleanup
+ */
+function destroy(): void {
+  // Destroy all embed instances
+  allEmbeds.forEach((embed) => {
+    if (!embed.isDestroyed()) {
+      embed.destroy();
+    }
+  });
+
+  allEmbeds.length = 0;
+
+  // Close DuckDB connection
+  duckDBManager.close().catch((error) => {
+    console.error('Failed to close DuckDB connection:', error);
+  });
+}
+
+/**
+ * Auto-initialize on DOMContentLoaded if configured
+ * Note: This runs at module load time, so users should call config() BEFORE importing
+ * Or set autoInit: false and call init() manually
+ */
+if (typeof document !== 'undefined') {
+  // Delay the check until after user code has a chance to run config()
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      if (getGlobalConfig().autoInit) {
+        init();
+      }
+    });
+  } else {
+    // DOM already loaded, use setTimeout to let user config() run first
+    setTimeout(() => {
+      if (getGlobalConfig().autoInit) {
+        init();
+      }
+    }, 0);
+  }
+}
+
+// Export public API
+export const SQLWorkbench = {
+  Embedded,
+  init,
+  destroy,
+  config,
+  getConfig,
+};
+
+// Attach to window for UMD builds
+if (typeof window !== 'undefined') {
+  (window as unknown as { SQLWorkbench: typeof SQLWorkbench }).SQLWorkbench = SQLWorkbench;
+}
+
+// Default export
+export default SQLWorkbench;
+
+// Named exports for tree-shaking
+export { Embedded };
+export type { SQLWorkbenchConfig, EmbeddedOptions, QueryResult } from './types';

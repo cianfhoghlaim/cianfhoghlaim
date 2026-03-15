@@ -1,0 +1,24 @@
+{
+	"name": "hn-summary",
+	"type": "module",
+	"scripts": {
+		"dev": "wrangler dev",
+		"deploy": "wrangler deploy --minify",
+		"cf-typegen": "wrangler types --env-interface CloudflareBindings",
+		"lint": "biome check",
+		"lint:fix": "pnpm lint --write"
+	},
+	"dependencies": {
+		"@extractus/feed-extractor": "^7.1.6",
+		"@mozilla/readability": "^0.6.0",
+		"dompurify": "^3.2.6",
+		"hono": "^4.9.4",
+		"linkedom": "^0.18.12"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.2.2",
+		"@types/node": "^24.3.0",
+		"wrangler": "^4.4.0"
+	},
+	"license": "MIT"
+}

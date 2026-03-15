@@ -1,0 +1,163 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.17.7"
+  },
+  "cells": [
+    {
+      "id": "PKri",
+      "code_hash": "74abf5dfc998bffa34fa5ed9f69e8925",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"d1-api-use-case\">D1 API use case</h1>\n<span class=\"paragraph\">In this notebook, we will show a simple use case involving interactions with D1 associated to a\nCloudflare account. This will involve the following:<br></span>\n<span class=\"paragraph\">1. listing existing D1 datasets;<br></span>\n<span class=\"paragraph\">2. simple query fetching rows from a D1 dataset table;<br></span>\n<span class=\"paragraph\">all using the Cloudflare API.</span>\n<span class=\"paragraph\"><strong>Prerequisites:</strong><br></span>\n<span class=\"paragraph\">- API token (see <a href=\"https://developers.cloudflare.com/fundamentals/api/get-started/create-token/\" rel=\"noopener\" target=\"_blank\">here</a>\nfor info on how to create one) with <strong>D1 read</strong> permission;<br></span>\n<span class=\"paragraph\">- at least one D1 dataset with a table.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "d1891dac497223a4d916d675398e37ab",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"list-available-d1-datasets\">List available D1 datasets</h2>\n<span class=\"paragraph\">By performing a GET request (with no payload) to the <code>/accounts/{account_id}/d1/database</code>\n<a href=\"https://developers.cloudflare.com/api/resources/d1/subresources/database/methods/list/\" rel=\"noopener\" target=\"_blank\">endpoint</a>\nwe can get the names, unique Ids as well as other info of all D1 datasets associated with a Cloudflare account.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "c81282a82384af46731b34f7729507b6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><div class=\"admonition\">\n<span class=\"paragraph\">The same endpoint can also be used for creating a new D1 dataset. This can be done by performing a POST\nrequest with the name of the dataset as the payload.</span>\n</div></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "7cb5dfa8687bc9a562ba594f9b770fa8",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"performing-queries\">Performing queries</h2>\n<span class=\"paragraph\">Queries to D1 databases using the API are made using POST requests to\n<code>/accounts/{account_id}/d1/database/{database_id}/query</code>\n<a href=\"https://developers.cloudflare.com/api/resources/d1/subresources/database/methods/query/\" rel=\"noopener\" target=\"_blank\">endpoint</a>.\nThe query (as well as optional query parameters) must be added as payload.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "7f857795ed39bacfcc42ec383c58d7fc",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><div class=\"admonition\">\n<p class=\"admonition-title\">Setting up D1 datasets</span>\n<span class=\"paragraph\">While not shown in this notebook, SQL tables can be created and populated on the API side by running queries\nwith <code>CREATE TABLE</code> and <code>INSERT INTO</code> respectively. Both of these will require tokens with <code>write</code>\npermissions, however, and represent a more manual approach to populating SQL tables. The alternative would be\nto import an already existing database into D1.</span>\n<span class=\"paragraph\">More information on how to import (and export) data from D1 datasets can be found in\n<a href=\"https://developers.cloudflare.com/d1/best-practices/import-export-data/\" rel=\"noopener\" target=\"_blank\">this dev page</a>.</span>\n</div>\n<span class=\"paragraph\">Queries vary from table to table, so we will perform a simple fetch of the first 10 lines of a given table.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hbol",
+      "code_hash": "a9a004c0c8dbc4177ca7bdd497720c64",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "137070cd4a4afe902ef974f2c18a6b42",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "85cd926545764a4f6e4f4ef88501761b",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "e751a3b415765789a3d9d1a3616ead65",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "c1b7b1d18b5ff786fb8c4d2ef4e0138a",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "877e4e9e8ac0b935d5d0718255f2a1e8",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "d8d44004097b952753193dcb6b3ff062",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "4b6ee42cba8973ca3c96a068a61cbf93",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "0310ea64e4145045f962e3761b35c7f5",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "iLit",
+      "code_hash": "b2a5a9b8bba8b620b9eedcfd12661a2b",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "ZHCJ",
+      "code_hash": "b712224453ac44829f8b1e1793acb3af",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "ROlb",
+      "code_hash": "ce88f660dde15539f55bc0dfd72dff5c",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "qnkX",
+      "code_hash": "0d56c1562d0e846826abab5b84365aab",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "TqIu",
+      "code_hash": "4b314a72a9b066db5bf550f18962b1ad",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Vxnm",
+      "code_hash": "404e8f0a3bd4629f27da994e50b40266",
+      "outputs": [],
+      "console": []
+    }
+  ]
+}
