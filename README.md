@@ -18,9 +18,11 @@ Version 1 serves as the foundational architecture. Once this English-language fo
 
 The domain cianfhoghlaim.ie is a deliberate linguistic play on words that highlights the mechanics of the Irish language, while pointing to the broader Celtic linguistic traditions this repository aims to protect.
 
-# Cian: The author's name, which also serves as the Irish prefix for "distance," "remote," or "long-enduring."
-
-# Foghlaim: The Irish word for "learning."
+    Cian: The author's name.
+    
+    Cian- as a prefix also serves as the Irish prefix for "distance," "remote," or "long-enduring."
+  
+    Foghlaim: The Irish word for "learning."
 
 The Linguistic Shift (Séimhiú): When forming a compound word in Irish, the second word undergoes a grammatical mutation. Foghlaim becomes fhoghlaim. In Irish, the "fh" combination is entirely silent. Therefore, Cianfhoghlaim (translating literally to "distance learning" or "remote learning") is phonetically pronounced KEE-an-oh-lim. The 'f' echoes silently.
 
