@@ -1,8 +1,20 @@
-# Kings College Galway - Unified Celtic Education Platform
+# Kings' College Galway - Unified Celtic Education Platform
 
 A unified data platform and research repository for education, beginning with a focus on English-language curriculums and evolving into a comprehensive ecosystem for Celtic language educational nations (Ireland, Scotland, Wales, Isle of Man, Cornwall, Brittany).
 
-This repository is currently focused on **Version 1**, which explicitly prioritizes the English language education systems of the Republic of Ireland and England**, specifically focusing on:
+## 🗣️ A Note on the Name: Cianfhoghlaim & Celtic Linguistic Roots
+
+The domain cianfhoghlaim.ie is a deliberate linguistic play on words that highlights the mechanics of the Irish language, while pointing to the broader Celtic linguistic traditions this repository aims to protect.
+
+    Cian: The author's name, which also serves as the Irish prefix for "distance," "remote," or "long-enduring."
+
+    Foghlaim: The Irish word for "learning."
+
+The Linguistic Shift (Séimhiú): When forming a compound word in Irish, the second word undergoes a grammatical mutation. Foghlaim becomes fhoghlaim. In Irish, the "fh" combination is entirely silent. Therefore, Cianfhoghlaim (translating literally to "distance learning" or "remote learning") is phonetically pronounced KEE-an-oh-lim. The 'f' echoes silently.
+
+The Goidelic & Brythonic Connection: This type of initial consonant mutation is not just an Irish phenomenon; it is a defining characteristic of the entire Insular Celtic language family. It bridges the Goidelic branch (Irish, Scottish Gaelic, Manx) with the Brythonic branch (Welsh, Cornish, Breton). Understanding these shared phonetic and grammatical shifts is crucial for the future goal of this platform: building a unified educational and digital ecosystem that scales across all Celtic nations.
+
+**Version 1 explicitly prioritizes the English language education systems of the Republic of Ireland and England**, specifically focusing on:
 *   **A-Level**
 *   **GCSE**
 *   **Junior Cycle**
@@ -13,20 +25,6 @@ To build a multi-modal **live input Gemini API homework helper, syllabus helper,
 
 ### Future Celtic Integration
 Version 1 serves as the foundational architecture. Once this English-language foundation (web scraping, indexing syllabus/exams, identifying parallels) is established, **later versions will translate and expand this unified data platform to Celtic language educational nations** (Ireland, Scotland, Isle of Man, Cornwall, Brittany, etc.). This digital sanctuary will ensure the inter-generational transmission of Goidelic and Brythonic languages and protect against monolingual algorithmic manipulations.
-
-## 🗣️ A Note on the Name: Cianfhoghlaim & Celtic Linguistic Roots
-
-The domain cianfhoghlaim.ie is a deliberate linguistic play on words that highlights the mechanics of the Irish language, while pointing to the broader Celtic linguistic traditions this repository aims to protect.
-
-    Cian: The author's name.
-    
-    Cian- as a prefix also serves as the Irish prefix for "distance," "remote," or "long-enduring."
-  
-    Foghlaim: The Irish word for "learning."
-
-The Linguistic Shift (Séimhiú): When forming a compound word in Irish, the second word undergoes a grammatical mutation. Foghlaim becomes fhoghlaim. In Irish, the "fh" combination is entirely silent. Therefore, Cianfhoghlaim (translating literally to "distance learning" or "remote learning") is phonetically pronounced KEE-an-oh-lim. The 'f' echoes silently.
-
-The Goidelic & Brythonic Connection: This type of initial consonant mutation is not just an Irish phenomenon; it is a defining characteristic of the entire Insular Celtic language family. It bridges the Goidelic branch (Irish, Scottish Gaelic, Manx) with the Brythonic branch (Welsh, Cornish, Breton). Understanding these shared phonetic and grammatical shifts is crucial for the future goal of this platform: building a unified educational and digital ecosystem that scales across all Celtic nations.
 
 ---
 
@@ -43,7 +41,7 @@ This platform is developed by:
 *   Cleared background checks
 *   Right to restore PGCE progress
 
-While the platform embraces the structural reference of "King's College Galway" for its academic rigor, it centers the author's actual validated credentials in the fields of Computer Science, Mathematics, and Gaeilge.
+While the platform embraces the structural reference of "Kings' College Galway" for its academic rigor, it centers the author's actual validated credentials in the fields of Computer Science, Mathematics, and Gaeilge.
 
 ---
 
@@ -109,4 +107,12 @@ The materials contained herein are either:
 These resources and codebase must **not** be used by anyone who promotes, supports, or is affiliated with groups that engage in terroristic activities, glorify violence, or endanger children. Usage is strictly prohibited for groups or individuals promoting paramilitary imagery, drug culture, or terroristic rhetoric.
 
 ---
-*Generated for Kings College Galway.*
+*Generated for Kings' College Galway by me, Cian Lyons (Mac Liatháin) working with Google's Gemini and Z.ai's GLM and appropriate MCP servers of free and open source software development companies.*
+
+## Previous Aims
+ 🚀 Version 1 Pivot: Gemini Live Agent Hackathon Submission
+
+This repository is currently focused on **Version 1**, which is being actively developed as a submission for the **Gemini Live Agent Hackathon** (Deadline: March 16th at 5 PM PT / Midnight GMT). See the `hackathon/` directory for more context.
+
+Update 16th March 1pm: due to issues of internet, API requirements, and limited funds I will not be able to submit but will still continue and see another hackathon next week 😎
+
