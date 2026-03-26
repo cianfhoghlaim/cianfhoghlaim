@@ -29,21 +29,21 @@
       }
     },
     "web-search-prime": {
-      "type": "http",
+      "type": "sse",
       "url": "https://api.z.ai/api/mcp/web_search_prime/mcp",
       "headers": {
         "Authorization": "Bearer ${Z_AI_API_KEY}"
       }
     },
     "web-reader": {
-      "type": "http",
+      "type": "sse",
       "url": "https://api.z.ai/api/mcp/web_reader/mcp",
       "headers": {
         "Authorization": "Bearer ${Z_AI_API_KEY}"
       }
     },
     "huggingface": {
-      "type": "http",
+      "type": "sse",
       "url": "https://huggingface.co/mcp",
       "headers": {
         "Authorization": "Bearer ${HUGGINGFACE_TOKEN}"
@@ -75,7 +75,7 @@
       }
     },
     "zread": {
-      "type": "http",
+      "type": "sse",
       "url": "https://api.z.ai/api/mcp/zread/mcp",
       "headers": {
         "Authorization": "Bearer ${Z_AI_API_KEY}"
@@ -85,7 +85,7 @@
   "_disabled": {
     "_comment": "Servers below are disabled - uncomment when services are available",
     "github": {
-      "type": "http",
+      "type": "sse",
       "url": "https://api.githubcopilot.com/mcp/"
     },
     "memgraph": {
@@ -97,7 +97,7 @@
       }
     },
     "cognee-mcp": {
-      "type": "http",
+      "type": "sse",
       "url": "http://cognee-mcp.cianfhoghlaim.ie/mcp"
     },
     "dagster-mcp": {
@@ -130,14 +130,14 @@
       }
     },
     "pydantic-gateway": {
-      "type": "http",
+      "type": "sse",
       "url": "https://gateway.pydantic.dev/proxy/mcp",
       "headers": {
         "Authorization": "Bearer ${PYDANTIC_AI_GATEWAY_API_KEY}"
       }
     },
     "logfire": {
-      "type": "http",
+      "type": "sse",
       "url": "https://logfire.pydantic.dev/mcp",
       "headers": {
         "Authorization": "Bearer ${LOGFIRE_TOKEN}"
@@ -166,7 +166,7 @@
       }
     },
     "zsearch": {
-      "type": "http",
+      "type": "sse",
       "url": "https://api.z.ai/api/mcp/search/mcp",
       "headers": {
         "Authorization": "Bearer ${Z_AI_API_KEY}"

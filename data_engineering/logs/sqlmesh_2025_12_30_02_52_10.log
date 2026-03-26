@@ -1,0 +1,2 @@
+2025-12-30 02:52:10,937 - MainThread - sqlmesh.core.console - WARNING - `physical_schema_override` is deprecated. Please use `physical_schema_mapping` instead. (console.py:2335)
+2025-12-30 02:52:10,939 - MainThread - root - INFO - Shutting down the event dispatcher (dispatcher.py:159)

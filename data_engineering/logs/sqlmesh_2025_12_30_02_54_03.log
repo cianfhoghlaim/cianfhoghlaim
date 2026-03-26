@@ -1,0 +1,94 @@
+2025-12-30 02:54:03,774 - MainThread - sqlmesh.core.config.connection - INFO - Creating new DuckDB adapter for data files: {'../storage/data/celtic_education.duckdb'} (connection.py:496)
+2025-12-30 02:54:03,819 - MainThread - sqlmesh.core.config.connection - INFO - Using existing DuckDB adapter due to overlapping data file: ../storage/data/celtic_education.duckdb (connection.py:486)
+2025-12-30 02:54:04,582 - MainThread - sqlmesh.core.plan.evaluator - INFO - Evaluating plan stage CreateSnapshotRecordsStage (evaluator.py:123)
+2025-12-30 02:54:04,589 - MainThread - sqlmesh.core.plan.evaluator - INFO - Evaluating plan stage PhysicalLayerSchemaCreationStage (evaluator.py:123)
+2025-12-30 02:54:04,590 - MainThread - sqlmesh.core.snapshot.evaluator - INFO - Creating schema 'celtic_education.int' (evaluator.py:1449)
+2025-12-30 02:54:04,590 - MainThread - sqlmesh.core.engine_adapter.base - INFO - Executing SQL: /* SQLMESH_PLAN: b1d428f246b54ef5a05fd14cf7047692 */ CREATE SCHEMA IF NOT EXISTS "celtic_education"."int" (base.py:2626)
+2025-12-30 02:54:04,590 - MainThread - sqlmesh.core.snapshot.evaluator - INFO - Creating schema 'celtic_education.marts' (evaluator.py:1449)
+2025-12-30 02:54:04,590 - MainThread - sqlmesh.core.engine_adapter.base - INFO - Executing SQL: /* SQLMESH_PLAN: b1d428f246b54ef5a05fd14cf7047692 */ CREATE SCHEMA IF NOT EXISTS "celtic_education"."marts" (base.py:2626)
+2025-12-30 02:54:04,590 - MainThread - sqlmesh.core.snapshot.evaluator - INFO - Creating schema 'celtic_education.stg' (evaluator.py:1449)
+2025-12-30 02:54:04,590 - MainThread - sqlmesh.core.engine_adapter.base - INFO - Executing SQL: /* SQLMESH_PLAN: b1d428f246b54ef5a05fd14cf7047692 */ CREATE SCHEMA IF NOT EXISTS "celtic_education"."stg" (base.py:2626)
+2025-12-30 02:54:04,590 - MainThread - sqlmesh.core.plan.evaluator - INFO - Evaluating plan stage BackfillStage (evaluator.py:123)
+2025-12-30 02:54:04,591 - MainThread - sqlmesh.core.snapshot.evaluator - INFO - Listing data objects in schema celtic_education.marts (evaluator.py:1616)
+2025-12-30 02:54:04,591 - MainThread - sqlmesh.core.engine_adapter.base - INFO - Executing SQL: /* SQLMESH_PLAN: b1d428f246b54ef5a05fd14cf7047692 */ SELECT CURRENT_CATALOG() (base.py:2626)
+2025-12-30 02:54:04,591 - MainThread - sqlmesh.core.engine_adapter.base - INFO - Executing SQL: /* SQLMESH_PLAN: b1d428f246b54ef5a05fd14cf7047692 */ SELECT CURRENT_CATALOG() (base.py:2626)
+2025-12-30 02:54:04,592 - MainThread - sqlmesh.core.engine_adapter.base - INFO - Executing SQL: /* SQLMESH_PLAN: b1d428f246b54ef5a05fd14cf7047692 */ SELECT table_name AS name, table_schema AS schema, CASE table_type WHEN 'BASE TABLE' THEN 'table' WHEN 'VIEW' THEN 'view' WHEN 'LOCAL TEMPORARY' THEN 'table' END AS type FROM system.information_schema.tables WHERE (table_catalog = 'celtic_education' AND table_schema = 'marts') AND table_name IN ('marts__fact_learning_outcome__1779200712', 'marts__agg_comparison_metrics__1276735421') (base.py:2626)
+2025-12-30 02:54:04,596 - MainThread - sqlmesh.core.snapshot.evaluator - INFO - Evaluating snapshot SnapshotId<"celtic_education"."marts"."fact_learning_outcome": 1379929468> (evaluator.py:711)
+2025-12-30 02:54:04,596 - MainThread - sqlmesh.core.snapshot.evaluator - INFO - Inserting data for snapshot SnapshotId<"celtic_education"."marts"."fact_learning_outcome": 1379929468> (evaluator.py:952)
+2025-12-30 02:54:04,602 - MainThread - sqlmesh.core.snapshot.evaluator - INFO - Inserting batch (2024-01-01 00:00:00, 2025-12-30 00:00:00) into celtic_education.marts.marts__fact_learning_outcome__1779200712' (evaluator.py:984)
+2025-12-30 02:54:04,602 - MainThread - sqlmesh.core.engine_adapter.base - INFO - Executing SQL: /* SQLMESH_PLAN: b1d428f246b54ef5a05fd14cf7047692 */ DESCRIBE "celtic_education"."marts"."marts__fact_learning_outcome__1779200712" (base.py:2626)
+2025-12-30 02:54:04,603 - MainThread - sqlmesh.core.engine_adapter.base - INFO - Executing SQL: /* SQLMESH_PLAN: b1d428f246b54ef5a05fd14cf7047692 */ SELECT CURRENT_CATALOG() (base.py:2626)
+2025-12-30 02:54:04,603 - MainThread - sqlmesh.core.engine_adapter.base - INFO - Executing SQL: /* SQLMESH_PLAN: b1d428f246b54ef5a05fd14cf7047692 */ SELECT type FROM DUCKDB_DATABASES() WHERE database_name = 'celtic_education' (base.py:2626)
+2025-12-30 02:54:04,604 - MainThread - sqlmesh.core.engine_adapter.base - INFO - Executing SQL: /* SQLMESH_PLAN: b1d428f246b54ef5a05fd14cf7047692 */ CREATE OR REPLACE TABLE "celtic_education"."marts"."marts__fact_learning_outcome__1779200712" AS SELECT "u"."outcome_id" AS "outcome_id", "n"."nation_id" AS "nation_id", "s"."subject_id" AS "subject_id", "l"."mapping_id" AS "level_id", "lang"."language_id" AS "language_id", "u"."source_url" AS "source_url", "u"."title" AS "title", "u"."content" AS "content", "u"."source" AS "source", "u"."resource_type" AS "resource_type", "u"."curriculum_level" AS "curriculum_level", "u"."is_celtic_medium" AS "is_celtic_medium", "u"."indexed_at" AS "indexed_at", "u"."content_hash" AS "content_hash", "u"."embedding_text" AS "embedding_text", "u"."_loaded_at" AS "_loaded_at" FROM "celtic_education"."int"."int__int_unified_outcomes__2913785065" AS "u" LEFT JOIN "celtic_education"."marts"."marts__dim_nation__1252507750" AS "n" ON "n"."nation_code" = "u"."nation" LEFT JOIN "celtic_education"."marts"."marts__dim_subject__3767518357" AS "s" ON "s"."subject_code" = "u"."subject" LEFT JOIN "celtic_education"."marts"."marts__dim_level__1002076427" AS "l" ON "l"."level_code" = "u"."curriculum_level" AND "l"."nation" = "u"."nation" LEFT JOIN "celtic_education"."marts"."marts__dim_language__4066560437" AS "lang" ON "lang"."language_code" = "u"."language" (base.py:2626)
+2025-12-30 02:54:04,607 - MainThread - sqlmesh.core.engine_adapter.base - INFO - Executing SQL: /* SQLMESH_PLAN: b1d428f246b54ef5a05fd14cf7047692 */ COMMENT ON TABLE "celtic_education"."marts"."marts__fact_learning_outcome__1779200712" IS 'Fact table for learning outcomes across all nations' (base.py:2626)
+2025-12-30 02:54:04,608 - MainThread - sqlmesh.core.state_sync.db.facade - INFO - Adding interval (2024-01-01 00:00:00, 2025-12-30 00:00:00) for snapshot SnapshotId<"celtic_education"."marts"."fact_learning_outcome": 1379929468> (facade.py:637)
+2025-12-30 02:54:04,608 - MainThread - sqlmesh.core.state_sync.db.interval - INFO - Pushing intervals for snapshot SnapshotId<"celtic_education"."marts"."fact_learning_outcome": 1379929468> (interval.py:215)
+2025-12-30 02:54:04,611 - MainThread - sqlmesh.core.snapshot.evaluator - INFO - Evaluating snapshot SnapshotId<"celtic_education"."marts"."agg_comparison_metrics": 3562002790> (evaluator.py:711)
+2025-12-30 02:54:04,611 - MainThread - sqlmesh.core.snapshot.evaluator - INFO - Inserting data for snapshot SnapshotId<"celtic_education"."marts"."agg_comparison_metrics": 3562002790> (evaluator.py:952)
+2025-12-30 02:54:04,616 - MainThread - sqlmesh.core.snapshot.evaluator - INFO - Inserting batch (2024-01-01 00:00:00, 2025-12-30 00:00:00) into celtic_education.marts.marts__agg_comparison_metrics__1276735421' (evaluator.py:984)
+2025-12-30 02:54:04,616 - MainThread - sqlmesh.core.engine_adapter.base - INFO - Executing SQL: /* SQLMESH_PLAN: b1d428f246b54ef5a05fd14cf7047692 */ DESCRIBE "celtic_education"."marts"."marts__agg_comparison_metrics__1276735421" (base.py:2626)
+2025-12-30 02:54:04,616 - MainThread - sqlmesh.core.engine_adapter.base - INFO - Executing SQL: /* SQLMESH_PLAN: b1d428f246b54ef5a05fd14cf7047692 */ SELECT CURRENT_CATALOG() (base.py:2626)
+2025-12-30 02:54:04,617 - MainThread - sqlmesh.core.engine_adapter.base - INFO - Executing SQL: /* SQLMESH_PLAN: b1d428f246b54ef5a05fd14cf7047692 */ SELECT type FROM DUCKDB_DATABASES() WHERE database_name = 'celtic_education' (base.py:2626)
+2025-12-30 02:54:04,617 - MainThread - sqlmesh.core.engine_adapter.base - INFO - Executing SQL: /* SQLMESH_PLAN: b1d428f246b54ef5a05fd14cf7047692 */ CREATE OR REPLACE TABLE "celtic_education"."marts"."marts__agg_comparison_metrics__1276735421" AS WITH "nation_counts" AS (SELECT "nation", COUNT(*) AS "total_outcomes", COUNT(CASE WHEN "is_celtic_medium" THEN 1 END) AS "celtic_medium_outcomes", COUNT(DISTINCT "subject") AS "unique_subjects", COUNT(DISTINCT "curriculum_level") AS "unique_levels" FROM "celtic_education"."marts"."marts__fact_learning_outcome__1779200712" AS "fact_learning_outcome" GROUP BY "nation"), "subject_coverage" AS (SELECT "nation", "subject_id", COUNT(*) AS "outcome_count" FROM "celtic_education"."marts"."marts__fact_learning_outcome__1779200712" AS "fact_learning_outcome" WHERE NOT "subject_id" IS NULL GROUP BY "nation", "subject_id"), "level_distribution" AS (SELECT "nation", "curriculum_level", COUNT(*) AS "outcome_count" FROM "celtic_education"."marts"."marts__fact_learning_outcome__1779200712" AS "fact_learning_outcome" GROUP BY "nation", "curriculum_level") SELECT "nc"."nation" AS "nation", "nc"."total_outcomes" AS "total_outcomes", "nc"."celtic_medium_outcomes" AS "celtic_medium_outcomes", "nc"."unique_subjects" AS "unique_subjects", "nc"."unique_levels" AS "unique_levels", ROUND("nc"."celtic_medium_outcomes" * 100.0 / NULLIF("nc"."total_outcomes", 0), 2) AS "celtic_medium_percentage", CURRENT_TIMESTAMP AS "computed_at" FROM "nation_counts" AS "nc" ORDER BY "nc"."nation" (base.py:2626)
+2025-12-30 02:54:04,619 - MainThread - sqlmesh.core.scheduler - INFO - Execution failed for node EvaluateNode(snapshot_name='"celtic_education"."marts"."agg_comparison_metrics"', interval=(1704067200000, 1767052800000), batch_index=0) (scheduler.py:618)
+Traceback (most recent call last):
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/utils/concurrency.py", line 234, in sequential_apply_to_dag
+    fn(node)
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/scheduler.py", line 554, in run_node
+    audit_results = self.evaluate(
+                    ^^^^^^^^^^^^^^
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/scheduler.py", line 229, in evaluate
+    wap_id = self.snapshot_evaluator.evaluate(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/snapshot/evaluator.py", line 186, in evaluate
+    result = self._evaluate_snapshot(
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/snapshot/evaluator.py", line 821, in _evaluate_snapshot
+    self._render_and_insert_snapshot(
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/snapshot/evaluator.py", line 1041, in _render_and_insert_snapshot
+    apply(query_or_df, index)
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/snapshot/evaluator.py", line 990, in apply
+    evaluation_strategy.insert(
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/snapshot/evaluator.py", line 2418, in insert
+    self._replace_query_for_model(model, table_name, query_or_df, render_kwargs, **kwargs)
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/snapshot/evaluator.py", line 2155, in _replace_query_for_model
+    self.adapter.replace_query(
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/engine_adapter/shared.py", line 318, in internal_wrapper
+    return func(*list_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/engine_adapter/base.py", line 524, in replace_query
+    return self._create_table_from_source_queries(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/engine_adapter/base.py", line 934, in _create_table_from_source_queries
+    self._create_table(
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/engine_adapter/duckdb.py", line 188, in _create_table
+    super()._create_table(
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/engine_adapter/base.py", line 977, in _create_table
+    self.execute(
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/engine_adapter/base.py", line 2603, in execute
+    self._execute(sql, track_rows_processed, **kwargs)
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/engine_adapter/base.py", line 2635, in _execute
+    self.cursor.execute(sql, **kwargs)
+_duckdb.BinderException: Binder Error: Referenced column "nation" not found in FROM clause!
+Candidate bindings: "nation_id", "content", "content_hash", "title"
+
+LINE 1: ...g_outcome__1779200712" AS "fact_learning_outcome" GROUP BY "nation"), "subject_coverage" AS (SELECT "nation", "subject_id...
+                                                                      ^
+
+The above exception was the direct cause of the following exception:
+
+sqlmesh.utils.concurrency.NodeExecutionFailedError: Execution failed for node EvaluateNode(snapshot_name='"celtic_education"."marts"."agg_comparison_metrics"', interval=(1704067200000, 1767052800000), batch_index=0)
+2025-12-30 02:54:04,624 - MainThread - sqlmesh.core.context - INFO - Plan application failed. (context.py:1797)
+Traceback (most recent call last):
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/context.py", line 1789, in apply
+    self._apply(plan, circuit_breaker)
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/context.py", line 2582, in _apply
+    self._scheduler.create_plan_evaluator(self).evaluate(
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/plan/evaluator.py", line 105, in evaluate
+    self._evaluate_stages(plan_stages, plan)
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/plan/evaluator.py", line 125, in _evaluate_stages
+    handler(stage, plan)
+  File "/Users/cliste/dev/cianfhoghlaim/sruth/oideachais/.venv/lib/python3.12/site-packages/sqlmesh/core/plan/evaluator.py", line 264, in visit_backfill_stage
+    raise PlanError("Plan application failed.")
+sqlmesh.utils.errors.PlanError: Plan application failed.
+2025-12-30 02:54:04,634 - MainThread - root - INFO - Shutting down the event dispatcher (dispatcher.py:159)

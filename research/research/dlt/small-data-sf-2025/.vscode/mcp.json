@@ -1,0 +1,13 @@
+{
+  "servers": {
+    "dlt": {
+      "command": "uv",
+      "args": [
+        "run",
+        "python",
+        "-m",
+        "dlt_mcp"
+      ]
+    }
+  }
+}
