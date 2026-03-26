@@ -1,0 +1,249 @@
+{VERSION 6 0 "IBM INTEL NT" "6.0" }
+{USTYLETAB {CSTYLE "Maple Input" -1 0 "Courier" 0 1 255 0 0 1 0 1 0 0 
+1 0 0 0 0 1 }{CSTYLE "2D Math" -1 2 "Times" 0 1 0 0 0 0 0 0 2 0 0 0 0 
+0 0 1 }{CSTYLE "Hyperlink" -1 17 "" 0 1 0 128 128 1 0 0 1 0 0 0 0 0 0 
+1 }{CSTYLE "2D Output" 2 20 "" 0 1 0 0 255 1 0 0 0 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 256 "" 0 1 0 0 0 0 0 0 2 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+257 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 258 "" 0 1 0 0 
+0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 259 "" 0 1 0 0 0 0 0 1 0 0 0 0 
+0 0 0 1 }{CSTYLE "" -1 260 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 261 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+262 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 263 "" 1 16 0 0 
+0 0 0 0 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 264 "" 0 1 0 0 0 0 0 1 0 0 0 0 
+0 0 0 1 }{CSTYLE "" -1 265 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 266 "" 1 18 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+267 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 268 "" 0 1 0 0 
+0 0 0 0 2 0 0 0 0 0 0 0 }{CSTYLE "" -1 269 "" 1 16 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 }{CSTYLE "" -1 270 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 271 "" 1 16 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }{CSTYLE "" -1 
+272 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 273 "" 0 1 0 0 
+0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 275 "" 0 1 0 0 0 0 0 0 1 0 0 0 
+0 0 0 0 }{PSTYLE "Normal" -1 0 1 {CSTYLE "" -1 -1 "Times" 1 14 0 0 0 
+1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Maple Out
+put" -1 11 1 {CSTYLE "" -1 -1 "Times" 1 14 0 0 0 1 2 2 2 2 2 2 1 1 1 
+1 }3 3 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "R3 Font 0" -1 256 1 {CSTYLE "
+" -1 -1 "Helvetica" 1 12 128 0 128 1 2 1 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 
+1 0 1 0 2 2 0 1 }{PSTYLE "R3 Font 2" -1 257 1 {CSTYLE "" -1 -1 "Courie
+r" 1 11 0 128 128 1 2 1 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 258 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 1 2 
+2 2 2 1 1 1 1 }3 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 259 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 260 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 1 1 2 2 2 1 1 1 1 }3 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 261 1 {CSTYLE "" -1 -1 "Times" 1 14 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 262 1 
+{CSTYLE "" -1 -1 "Times" 1 18 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }3 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 263 1 {CSTYLE "" -1 -1 "Times" 
+1 14 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }3 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 264 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 1 1 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 265 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }3 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "" 259 266 1 {CSTYLE "" -1 -1 "" 0 1 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 }3 0 0 -1 -1 -1 0 0 0 0 0 0 -1 0 }{PSTYLE "" 
+259 267 1 {CSTYLE "" -1 -1 "" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }3 0 0 
+-1 -1 -1 0 0 0 0 0 0 -1 0 }}
+{SECT 0 {EXCHG {PARA 263 "" 0 "" {TEXT -1 0 "" }{TEXT 264 1 "\n" }
+{TEXT 266 21 "MAPLE NOTES for MA321" }{TEXT 267 1 " " }}{PARA 262 "" 
+0 "" {TEXT 265 55 "School of Mathematics, Statistics & Applied Mathema
+tics" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 261 "" 0 "" {TEXT 263 
+58 "Please proceed by entering return at each > prompt symbol." }}}
+{EXCHG {PARA 258 "" 0 "" {TEXT -1 0 "" }}{PARA 258 "" 0 "" {TEXT -1 1 
+"5" }{TEXT 256 44 ". Sequences, Sets and Lists, Linear Algebra " }}
+{PARA 259 "" 0 "" {TEXT -1 0 "" }}{PARA 259 "" 0 "" {TEXT -1 37 "The f
+ollowing topics are described: \n" }}{PARA 259 "" 0 "" {HYPERLNK 17 "E
+xpression sequences" 1 "" "expseq" }{TEXT -1 2 " ," }}{PARA 259 "" 0 "
+" {HYPERLNK 17 "seq " 1 "" "seq" }{TEXT -1 2 ",\n" }{HYPERLNK 17 "sets
+ and lists" 1 "" "sets" }{TEXT -1 2 " ," }}{PARA 259 "" 0 "" 
+{HYPERLNK 17 "intersect, union, minus" 1 "" "inter" }{TEXT -1 4 " ,  \+
+" }}{PARA 259 "" 0 "" {HYPERLNK 17 "subsop" 1 "" "subsop" }{TEXT -1 1 
+" " }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}}{EXCHG {PARA 264 "" 0 "" {TEXT 
+-1 0 "" }}{PARA 260 "" 0 "expseq" {TEXT 268 30 "Expression Sequences i
+n Maple " }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 259 "" 0 "" {TEXT 
+-1 292 "An expression sequence is an ordered collection of Maple expre
+ssions separated by commas. We have already seen a number of examples \+
+of such a structure as the argument of various commands such as solve \+
+and diff. Furthermore, the output of some commands is also always an e
+xpression sequence.\n" }}}{EXCHG {PARA 259 "" 0 "" {TEXT -1 10 "\nExam
+ples:" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 259 "> " 0 "" {MPLTEXT 
+1 0 8 "restart:" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 6 "a,b,c;" }
+}{PARA 11 "" 1 "" {XPPMATH 20 "6%%\"aG%\"bG%\"cG" }}}{EXCHG {PARA 259 
+"> " 0 "" {MPLTEXT 1 0 8 "seq1:=%;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#
+>%%seq1G6%%\"aG%\"bG%\"cG" }}}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 
+13 "seq1:=seq1,d;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%%seq1G6&%\"aG%
+\"bG%\"cG%\"dG" }}}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 15 "seq2:=s
+in(3*x);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%%seq2G-%$sinG6#,$*&\"\"$
+\"\"\"%\"xGF+F+" }}}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 15 "seq2:=
+seq2,x,x;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%%seq2G6%-%$sinG6#,$*&\"
+\"$\"\"\"%\"xGF,F,F-F-" }}}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 11 
+"diff(seq2);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#,$*&\"\"*\"\"\"-%$sinG
+6#,$*&\"\"$F&%\"xGF&F&F&!\"\"" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 
+0 16 "seq3:=seq1,seq2;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%%seq3G6)%
+\"aG%\"bG%\"cG%\"dG-%$sinG6#,$*&\"\"$\"\"\"%\"xGF0F0F1F1" }}}{EXCHG 
+{PARA 259 "" 0 "" {TEXT -1 0 "" }}{PARA 259 "" 0 "" {TEXT 257 27 "seq \+
+- generating a sequence" }{TEXT -1 108 ":  A sequence f(m),f(m+1),...f
+(n) indexed by an integer i ranging from m=low to n=high can be genera
+ted by :" }}{PARA 259 "" 0 "" {TEXT -1 0 "" }}{PARA 259 "" 0 "" {TEXT 
+-1 25 "> seq(f(i), i=low..high);" }}{PARA 259 "" 0 "" {TEXT -1 0 "" }}
+{PARA 259 "" 0 "" {TEXT -1 9 "Example:\n" }}{PARA 259 "> " 0 "" 
+{MPLTEXT 1 0 20 "seq(i^2-1,i = 3..7);" }}{PARA 11 "" 1 "" {XPPMATH 20 
+"6'\"\")\"#:\"#C\"#N\"#[" }}}{EXCHG {PARA 259 "" 0 "" {TEXT -1 0 "" }}
+{PARA 265 "" 0 "sets" {TEXT 258 14 "Sets and Lists" }{TEXT -1 1 " " }}
+{PARA 259 "" 0 "" {TEXT -1 0 "" }}{PARA 259 "" 0 "" {TEXT -1 85 "A use
+ful way of collecting together Maple expressions is provided by sets a
+nd lists. " }}{PARA 259 "" 0 "" {TEXT -1 0 "" }}{PARA 259 "" 0 "" 
+{TEXT 259 4 "Sets" }{TEXT -1 266 ": A set is any expression sequence s
+urrounded by braces \{\}. There is no significance to the order in whi
+ch elements appear in a set. Furthermore, any element may only appear \+
+once. We have previously seen sets used as arguments and outputs of va
+rious Maple functions." }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}}{EXCHG 
+{PARA 259 "" 0 "" {TEXT 275 0 "" }{TEXT 260 14 "Set operations" }
+{TEXT -1 59 ": The following mathematical set operations are available
+ :" }}{PARA 259 "" 0 "" {TEXT -1 0 "" }}{PARA 259 "" 0 "" {TEXT -1 12 
+"> A union B;" }}{PARA 259 "" 0 "" {TEXT -1 16 "> A intersect B;" }}
+{PARA 259 "" 0 "" {TEXT -1 12 "> A minus B;" }}{PARA 259 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 259 "" 0 "" {TEXT -1 70 "being the union, inters
+ection and set difference of two sets A and B. " }}{PARA 259 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 259 "" 0 "" {TEXT -1 11 "Examples :\n" }}{PARA 
+259 "> " 0 "" {MPLTEXT 1 0 18 "A:=\{1,2,5,7,2,3\}; " }}{PARA 11 "" 1 "
+" {XPPMATH 20 "6#>%\"AG<'\"\"\"\"\"#\"\"$\"\"&\"\"(" }}}{EXCHG {PARA 
+259 "> " 0 "" {MPLTEXT 1 0 14 "B:=\{-3,2,4,7\};" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#>%\"BG<&!\"$\"\"#\"\"%\"\"(" }}}{EXCHG {PARA 259 "> " 
+0 "" {MPLTEXT 1 0 13 "NullSet:=\{ \};" }}{PARA 11 "" 1 "" {XPPMATH 20 
+"6#>%(NullSetG<\"" }}}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 10 "A un
+ion B;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#<)!\"$\"\"\"\"\"#\"\"$\"\"%
+\"\"&\"\"(" }}}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 16 "A union Nul
+lSet;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#<'\"\"\"\"\"#\"\"$\"\"&\"\"(
+" }}}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 14 "A intersect B;" }}
+{PARA 11 "" 1 "" {XPPMATH 20 "6#<$\"\"#\"\"(" }}}{EXCHG {PARA 259 "> \+
+" 0 "" {MPLTEXT 1 0 10 "A minus B;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#
+<%\"\"\"\"\"$\"\"&" }}}{EXCHG {PARA 259 "" 0 "" {TEXT -1 0 "" }}{PARA 
+265 "" 0 "" {TEXT 261 5 "Lists" }{TEXT -1 1 " " }}{PARA 259 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 259 "" 0 "" {TEXT -1 186 "A list is any expressi
+on sequence surrounded by square brackets [ ]. The order in which elem
+ents appear is significant for a list and the same element may appear \+
+more than once. Example:" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 259 
+"> " 0 "" {MPLTEXT 1 0 18 "C:=[1,2,5,7,2,1]; " }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#>%\"CG7(\"\"\"\"\"#\"\"&\"\"(F'F&" }}}{EXCHG {PARA 259 
+"" 0 "" {TEXT -1 0 "" }}{PARA 259 "" 0 "" {TEXT -1 89 "The number of e
+lements of a list or set can be found by using the nops command. Examp
+les:" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 259 "> " 0 "" {MPLTEXT 
+1 0 16 "nops(A);nops(C);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#\"\"&" }}
+{PARA 11 "" 1 "" {XPPMATH 20 "6#\"\"'" }}}{EXCHG {PARA 259 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 259 "" 0 "" {TEXT -1 76 "The elements of a list \+
+or set can be found using square brackets as follows:" }}{PARA 0 "" 0 
+"" {TEXT -1 0 "" }}{PARA 259 "> " 0 "" {MPLTEXT 1 0 18 "A[5];C[1..4];C
+[3];" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#\"\"(" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#7&\"\"\"\"\"#\"\"&\"\"(" }}{PARA 11 "" 1 "" {XPPMATH 
+20 "6#\"\"&" }}}{EXCHG {PARA 259 "" 0 "" {TEXT -1 0 "" }}{PARA 259 "" 
+0 "" {TEXT 262 27 "Manipulating lists and sets" }{TEXT -1 118 ": There
+ are no list operations analogous to the set operations above. However
+, we can convert a sequence into a set. \n" }}}{EXCHG {PARA 259 "> " 
+0 "" {MPLTEXT 1 0 15 "convert(C,set);" }}{PARA 11 "" 1 "" {XPPMATH 20 
+"6#<&\"\"\"\"\"#\"\"&\"\"(" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}
+{PARA 0 "" 0 "" {TEXT -1 0 "" }{TEXT 269 70 "We can concatenate (join)
+ two sequences into a single list as follows:" }}{PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 34 "list1:=[3
+,4,6,1];list2:=[a,b,c,d];" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%&list1G
+7&\"\"$\"\"%\"\"'\"\"\"" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%&list2G7&
+%\"aG%\"bG%\"cG%\"dG" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 
+0 "" 0 "" {TEXT -1 0 "" }}}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 77 
+"seq_list1:=op(list1);seq_list2:=op(list2); # op converts a list to a \+
+sequence" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%*seq_list1G6&\"\"$\"\"%
+\"\"'\"\"\"" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%*seq_list2G6&%\"aG%\"
+bG%\"cG%\"dG" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 36 "joined_list
+s:=[seq_list1,seq_list2];" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%-joined
+_listsG7*\"\"$\"\"%\"\"'\"\"\"%\"aG%\"bG%\"cG%\"dG" }}}{EXCHG {PARA 
+259 "" 0 "" {TEXT -1 0 "" }}{PARA 259 "" 0 "" {TEXT -1 189 "We can sub
+stitute elements of sets and lists using the subsop command. An exampl
+e suffices to show how this is done: to replace the fourth element of \+
+the list C by x*z, we use the command:\n" }}{PARA 259 "> " 0 "" 
+{MPLTEXT 1 0 2 "C;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#7(\"\"\"\"\"#\"
+\"&\"\"(F%F$" }}}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 16 "subsop(4=
+x*z,C);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#7(\"\"\"\"\"#\"\"&*&%\"xGF$
+%\"zGF$F%F$" }}}{EXCHG {PARA 259 "" 0 "" {TEXT -1 0 "" }}{PARA 265 "" 
+0 "array" {TEXT 270 6 "Arrays" }{TEXT -1 1 " " }}{PARA 259 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 259 "" 0 "" {TEXT -1 145 "Like conventional prog
+ramming languages, MAPLE has a data structure for one-, two-, or multi
+-dimensional arrays.  An array is defined as follows:" }}{PARA 259 "" 
+0 "" {TEXT -1 0 "" }}{PARA 259 "" 0 "" {TEXT -1 35 "> arrayname:=array
+(index range(s));" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 259 "" 0 "
+" {TEXT -1 134 "where the array elements are not yet assigned.  As an \+
+example, the following command creates an array with two rows and thre
+e columns:" }}}{EXCHG {PARA 259 "" 0 "" {TEXT -1 0 "" }}{PARA 259 "> \+
+" 0 "" {MPLTEXT 1 0 20 "a:=array(1..2,1..3);" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#>%\"aG-%&arrayG6%;\"\"\"\"\"#;F)\"\"$7\"" }}}{EXCHG 
+{PARA 259 "> " 0 "" {MPLTEXT 1 0 9 "print(a);" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#K%'matrixG6#7$7%&%\"aG6$\"\"\"F+&F)6$F+\"\"#&F)6$F+\"\"
+$7%&F)6$F.F+&F)6$F.F.&F)6$F.F1Q(pprint06\"" }}}{EXCHG {PARA 259 "" 0 "
+" {TEXT -1 53 "The array elements can then be individually assigned." 
+}}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 259 "> " 0 "" {MPLTEXT 1 0 33 
+"a[1,1]:=2;a[2,3]:=6;a[1,3]:=-7.5;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#
+>&%\"aG6$\"\"\"F'\"\"#" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>&%\"aG6$\"
+\"#\"\"$\"\"'" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>&%\"aG6$\"\"\"\"\"$$
+!#v!\"\"" }}}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 9 "print(a);" }}
+{PARA 11 "" 1 "" {XPPMATH 20 "6#K%'matrixG6#7$7%\"\"#&%\"aG6$\"\"\"F($
+!#v!\"\"7%&F*6$F(F,&F*6$F(F(\"\"'Q(pprint06\"" }}}{EXCHG {PARA 0 "" 0 
+"" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }{TEXT 271 121 "Alter
+natively, one can both specify the dimensions of an array and its elem
+ents by using a command of the following kind:" }}{PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 31 "b:=array(
+[[1,4],[2,-3],[6,8]]);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%\"bGK%'mat
+rixG6#7%7$\"\"\"\"\"%7$\"\"#!\"$7$\"\"'\"\")Q(pprint06\"" }}}{EXCHG 
+{PARA 259 "" 0 "" {TEXT -1 0 "" }}{PARA 266 "" 0 "evalm" {TEXT 272 14 
+"Linear Algebra" }{TEXT -1 1 " " }}{PARA 259 "" 0 "" {TEXT -1 0 "" }}
+{PARA 259 "" 0 "" {TEXT -1 103 "Matrix and vector manipulations are st
+raightforward with Maple. The following operations are available:" }}}
+{EXCHG {PARA 259 "" 0 "" {TEXT -1 28 "matrix addition            +" }}
+{PARA 259 "" 0 "" {TEXT -1 31 "matrix multiplication    &*    " }}
+{PARA 259 "" 0 "" {TEXT -1 33 "matrix inverse              ^(-1)" }}
+{PARA 259 "" 0 "" {TEXT -1 29 "matrix power               ^n" }}{PARA 
+259 "" 0 "" {TEXT -1 27 "scalar multiplication     *" }}{PARA 259 "" 
+0 "" {TEXT -1 32 "identity matrix             &*()" }}}{EXCHG {PARA 
+259 "" 0 "" {TEXT -1 0 "" }}{PARA 259 "" 0 "" {TEXT -1 212 "Note that \+
+the symbol &* is used for matrix multiplication as opposed to ordinary
+ scalar multiplication *. To evaluate the resulting matrices found und
+er these operations, the command evalm must be used. Examples:" }}
+{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 259 "> " 0 "" {MPLTEXT 1 0 48 "r
+estart:A:=array([[1,0,-1],[0,1,3],[-1,3,-2]]); " }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#>%\"AGK%'matrixG6#7%7%\"\"\"\"\"!!\"\"7%F+F*\"\"$7%F,F.
+!\"#Q(pprint06\"" }}}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 19 "v:=ar
+ray([1,-2,0]);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%\"vGK%'vectorG6#7%
+\"\"\"!\"#\"\"!Q(pprint06\"" }}}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 
+0 5 "A&*v;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#-%#&*G6$%\"AG%\"vG" }}}
+{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 9 "evalm(%);" }}{PARA 11 "" 1 
+"" {XPPMATH 20 "6#K%'vectorG6#7%\"\"\"!\"#!\"(Q(pprint06\"" }}}{EXCHG 
+{PARA 259 "> " 0 "" {MPLTEXT 1 0 7 "A^(-1);" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#*&\"\"\"F$%\"AG!\"\"" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 20 "A_inverse:=evalm(%);" }}{PARA 11 "" 1 "" {XPPMATH 20 
+"6#>%*A_inverseGK%'matrixG6#7%7%#\"#6\"#7#\"\"\"\"\"%#!\"\"F,7%F-F-F-7
+%F0F-F0Q(pprint06\"" }}}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 20 "ev
+alm(A_inverse&*A);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#K%'matrixG6#7%7%
+\"\"\"\"\"!F)7%F)F(F)7%F)F)F(Q(pprint06\"" }}}{EXCHG {PARA 259 "> " 0 
+"" {MPLTEXT 1 0 4 "k*v;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#*&%\"kG\"\"
+\"%\"vGF%" }}}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 9 "evalm(%);" }}
+{PARA 11 "" 1 "" {XPPMATH 20 "6#K%'vectorG6#7%%\"kG,$*&\"\"#\"\"\"F'F+
+!\"\"\"\"!Q(pprint06\"" }}}{EXCHG {PARA 259 "" 0 "" {TEXT -1 0 "" }}
+{PARA 267 "" 0 "linalg" {TEXT 273 14 "linalg Package" }{TEXT -1 1 " " 
+}}{PARA 259 "" 0 "" {TEXT -1 0 "" }}{PARA 259 "" 0 "" {TEXT -1 120 "Ma
+ny other linear algebra features such as transpose, determinants, eige
+nvalues etc. can be found in the linalg package." }}{PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 259 "> " 0 "" {MPLTEXT 1 0 13 "with(linalg);" }}
+}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 9 "print(A);" }}{PARA 11 "" 
+1 "" {XPPMATH 20 "6#K%'matrixG6#7%7%\"\"\"\"\"!!\"\"7%F)F(\"\"$7%F*F,!
+\"#Q(pprint06\"" }}}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 7 "det(A);
+" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#!#7" }}}{EXCHG {PARA 259 "> " 0 "
+" {MPLTEXT 1 0 13 "eigenvals(A);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6%\"
+\"\"\"\"$!\"%" }}}{EXCHG {PARA 259 "> " 0 "" {MPLTEXT 1 0 14 "eigenvec
+ts(A);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6%7%\"\"\"F$<#K%'vectorG6#7%\"
+\"$F$\"\"!Q(pprint06\"7%F*F$<#KF'6#7%F$!\"$!\"#Q(pprint1F-7%!\"%F$<#KF
+'6#7%F$F3\"\"&Q(pprint2F-" }}}{EXCHG {PARA 259 "" 0 "" {TEXT -1 0 "" }
+}{PARA 259 "" 0 "" {TEXT -1 225 "The output is an expression sequence \+
+of lists with three elements. The first element is the eigenvalue, the
+ second is the multiplicity of eigenvectors with that eigenvalue and t
+he third is a set containing the eigenvector(s)." }}{PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 259 "> " 0 "" {MPLTEXT 1 0 13 "transpose(A);" }}
+{PARA 11 "" 1 "" {XPPMATH 20 "6#K%'matrixG6#7%7%\"\"\"\"\"!!\"\"7%F)F(
+\"\"$7%F*F,!\"#Q(pprint06\"" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+11 "inverse(A);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#K%'matrixG6#7%7%#\"
+#6\"#7#\"\"\"\"\"%#!\"\"F*7%F+F+F+7%F.F+F.Q(pprint06\"" }}}}{MARK "55 \+
+3 0" 0 }{VIEWOPTS 1 1 0 1 1 1803 1 1 1 1 }{PAGENUMBERS 0 1 2 33 1 1 }

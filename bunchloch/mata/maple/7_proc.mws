@@ -1,0 +1,275 @@
+{VERSION 6 0 "IBM INTEL NT" "6.0" }
+{USTYLETAB {CSTYLE "Maple Input" -1 0 "Courier" 0 1 255 0 0 1 0 1 0 0 
+1 0 0 0 0 1 }{CSTYLE "2D Math" -1 2 "Times" 0 1 0 0 0 0 0 0 2 0 0 0 0 
+0 0 1 }{CSTYLE "Hyperlink" -1 17 "" 0 1 0 128 128 1 0 0 1 0 0 0 0 0 0 
+1 }{CSTYLE "2D Output" 2 20 "" 0 1 0 0 255 1 0 0 0 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 256 "" 0 1 0 0 0 0 0 0 2 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+257 "" 0 1 0 0 0 0 0 0 2 0 0 0 0 0 0 1 }{CSTYLE "" -1 258 "" 0 1 0 0 
+0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 259 "" 0 1 0 0 0 0 0 1 0 0 0 0 
+0 0 0 1 }{CSTYLE "" -1 260 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 261 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+262 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 263 "" 0 1 0 0 
+0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 264 "" 0 1 0 0 0 0 0 1 0 0 0 0 
+0 0 0 1 }{CSTYLE "" -1 265 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 266 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+269 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 270 "" 0 1 0 0 
+0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 271 "" 1 18 0 0 0 0 0 0 0 0 0 
+0 0 0 0 1 }{CSTYLE "" -1 273 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 275 "" 1 18 0 0 0 0 0 0 0 0 0 0 0 0 0 1 }{PSTYLE "Normal
+" -1 0 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 
+1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Warning" -1 7 1 {CSTYLE "" -1 -1 "
+Courier" 1 10 0 0 255 1 2 2 2 2 2 1 1 1 3 1 }1 1 0 0 0 0 1 0 1 0 2 2 
+0 1 }{PSTYLE "Error" -1 8 1 {CSTYLE "" -1 -1 "Courier" 1 10 255 0 255 
+1 2 2 2 2 2 1 1 1 3 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Maple Out
+put" -1 11 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 
+1 }3 3 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "R3 Font 0" -1 256 1 {CSTYLE "
+" -1 -1 "Helvetica" 1 12 0 0 0 1 2 1 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 
+1 0 2 2 0 1 }{PSTYLE "R3 Font 2" -1 257 1 {CSTYLE "" -1 -1 "Courier" 
+1 11 0 0 0 1 2 1 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 258 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 1 2 
+2 2 2 1 1 1 1 }3 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 259 1 
+{CSTYLE "" -1 -1 "Times" 1 18 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }3 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 260 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }3 1 0 0 0 0 1 0 1 0 2 2 0 1 }}
+{SECT 0 {EXCHG {PARA 259 "" 0 "" {TEXT -1 0 "" }}{PARA 259 "" 0 "" 
+{TEXT 258 22 "MAPLE NOTES for MA321 " }}{PARA 259 "" 0 "" {TEXT 273 
+55 "School of Mathematics, Statistics & Applied Mathematics" }}{PARA 
+0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 
+0 "" {TEXT -1 58 "Please proceed by entering return at each > prompt s
+ymbol." }}}{PARA 258 "" 0 "" {TEXT -1 0 "" }}{PARA 258 "" 0 "" {TEXT 
+256 3 "7. " }{TEXT -1 19 "Procedures in MAPLE" }{TEXT 257 1 " " }}
+{PARA 0 "" 0 "" {TEXT -1 0 "" }}{EXCHG {PARA 0 "" 0 "" {TEXT -1 65 "Ba
+sic and advanced aspects of procedures are discussed including:" }}
+{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {HYPERLNK 17 "proc..en
+d proc " 1 "" "proc" }{TEXT -1 3 " , " }}{PARA 0 "" 0 "" {HYPERLNK 17 
+"RETURN" 1 "" "return" }{TEXT -1 2 " ," }}{PARA 0 "" 0 "" {HYPERLNK 
+17 "local and global variables" 1 "" "local" }{TEXT -1 3 " , " }}
+{PARA 0 "" 0 "" {HYPERLNK 17 "ERROR" 1 "" "error" }{TEXT -1 3 " , " }}
+{PARA 0 "" 0 "" {HYPERLNK 17 "type declarations " 1 "" "type" }{TEXT 
+-1 2 ", " }}{PARA 0 "" 0 "" {HYPERLNK 17 "option remember" 1 "" "rem" 
+}{TEXT -1 4 " , \n" }{HYPERLNK 17 "Summary on procedures" 1 "" "summar
+y" }{TEXT -1 2 " ," }}{PARA 0 "" 0 "" {HYPERLNK 17 "comments in a proc
+edure" 1 "" "comments" }{TEXT 275 1 " " }{TEXT -1 1 "," }}{PARA 0 "" 
+0 "" {HYPERLNK 17 "nargs" 1 "" "nargs" }{TEXT 271 2 " ," }}}{EXCHG 
+{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 260 "" 0 "" {TEXT 259 19 "Proced
+ures in Maple" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" 
+{TEXT 260 19 "proc .. end proc:  " }{TEXT -1 202 "A procedure is the m
+ost general way that a function of many parameters can be defined in M
+aple. These parameters may describe any Maple expression, function or \+
+other procedure. The most basic syntax is:" }}{PARA 0 "" 0 "" {TEXT 
+-1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 17 "> proc( par_seq )" }}{PARA 0 "
+" 0 "" {TEXT -1 16 "        stat_seq" }}{PARA 0 "" 0 "" {TEXT -1 12 " \+
+  end proc;" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 162 "where  par_seq is
+ a sequence of parameters on which the procedure depends and stat_seq \+
+is a sequence of statements which is executed when the procedure is ca
+lled." }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 84 "
+Example: The following simple procedure finds x^2+y^2  for the given p
+arameters x,y." }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 44 "SumSquares:=proc(x,y)\n   x^2+y^2;\nend proc;\n" }}
+{PARA 11 "" 1 "" {XPPMATH 20 "6#>%+SumSquaresGf*6$%\"xG%\"yG6\"F)F),&*
+$)9$\"\"#\"\"\"F/*$)9%F.F/F/F)F)F)" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 16 "SumSquares(1,2);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#
+\"\"&" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 17 "SumSquares(a,2);\n
+" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#,&*$)%\"aG\"\"#\"\"\"F(\"\"%F(" }}
+}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "return" {TEXT 
+261 6 "RETURN" }{TEXT -1 229 ":  In the last example the result x^2+y^
+2 was automatically returned. In general, the last value computed is r
+eturned unless there is an explicit RETURN(par_seq) statement where pa
+r_seq is a sequence of parameters to be returned." }}{PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 101 "Example: The following p
+rocedure, Member, tests a given parameter x for membership of a given \+
+list a:" }}{PARA 0 "" 0 "" {TEXT -1 1 " " }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 130 "Member:=proc(x,a)\n    for v in a do\n        if v=x
+ then\n           RETURN(true);\n        end if;\n    end do;\n    fal
+se;\nend proc; " }}{PARA 7 "" 1 "" {TEXT -1 64 "Warning, `v` is implic
+itly declared local to procedure `Member`\n" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#>%'MemberGf*6$%\"xG%\"aG6#%\"vG6\"F+C$?&8$9%%%trueG@$/F
+.9$-%'RETURNG6#F0%&falseGF+F+F+" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 
+48 "\nNotice the warning about the local variable v.\n" }}{PARA 0 "> \+
+" 0 "" {MPLTEXT 1 0 26 "L:=[4,sin(y),Pi/3.0,-3.2];" }}{PARA 11 "" 1 "
+" {XPPMATH 20 "6#>%\"LG7&\"\"%-%$sinG6#%\"yG,$*&$\"+LLLLL!#5\"\"\"%#Pi
+GF0F0$!#K!\"\"" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 28 "Member(Pi
+/3,L); Member(4,L);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#%&falseG" }}
+{PARA 11 "" 1 "" {XPPMATH 20 "6#%%trueG" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 2 "v;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#%\"vG" }}}
+{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "local" {TEXT 262 
+13 "local, global" }{TEXT -1 635 ": In the last example, a new paramet
+er v was introduced which was assigned within the do loop to the vario
+us values of the given input list. However, on leaving the procedure, \+
+v reverted to an unassigned variable. We may explicitly declare a new \+
+parameter within a procedure to be local so that it is unassigned on l
+eaving the procedure. An undeclared parameter appearing within a proce
+dure is local by default and a warning message to that effect is print
+ed when the procedure is first defined as in the example above. If the
+ parameter assignment is to be preserved on leaving the procedure then
+ the parameter is assigned as global.  " }}{PARA 0 "" 0 "" {TEXT -1 0 
+"" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 106 "Local and global parameter \+
+declarations must take place immediately after the first line of the p
+rocedure:" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 
+15 "> proc(par_seq)" }}{PARA 0 "" 0 "" {TEXT -1 22 "        local loc_
+seq;" }}{PARA 0 "" 0 "" {TEXT -1 24 "        global glob_seq;" }}
+{PARA 0 "" 0 "" {TEXT -1 12 "           ." }}{PARA 0 "" 0 "" {TEXT -1 
+12 "           ." }}{PARA 0 "" 0 "" {TEXT -1 12 "   end proc;" }}
+{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 9 "Example: \+
+" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 141 "Member:=proc(x,a)\n    local v;\n    for v in a do\n
+        if v=x then\n           RETURN(true)\n        end if;\n    end
+ do;\n    false;\nend proc;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%'Memb
+erGf*6$%\"xG%\"aG6#%\"vG6\"F+C$?&8$9%%%trueG@$/F.9$-%'RETURNG6#F0%&fal
+seGF+F+F+" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 14 "Member(3,L);v;
+" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#%&falseG" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#%\"vG" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 
+0 "" 0 "error" {TEXT 263 6 "ERROR:" }{TEXT -1 51 " Error message print
+ing in procedures. The command " }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}
+{PARA 0 "" 0 "" {TEXT -1 20 "ERROR(error message)" }}{PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 73 "which causes the procedur
+e to terminate and the error message is printed." }}{PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 82 "Example: Test the second \+
+argument of procedure Member to ensure that it is a list!" }}{PARA 0 "
+" 0 "" {TEXT -1 0 "" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 230 "Mem
+ber:=proc(x,a)\n    local v;\n    if not type(a,list) then\n       ERR
+OR(\"The 2nd argument is not a list!\")\n    end if;\n    for v in a d
+o\n       if v = x then\n          RETURN(true)\n       end if;\n    e
+nd do;\n    false;\nend proc:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 
+1 0 33 "Member(4,\{4,sin(y),Pi/3.0,-3.2\});" }}{PARA 8 "" 1 "" {TEXT 
+-1 51 "Error, (in Member) The 2nd argument is not a list!\n" }}}
+{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "type" {TEXT 264 
+13 "Type Checking" }{TEXT -1 197 ":  An automatic checking of the type
+ of any parameter inputted into a procedure can be defined. This is an
+alogous to (but not exactly the same as) type declarations in  FORTRAN
+ or C. The syntax is " }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 
+"" {TEXT -1 11 "name:: type" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 
+0 "" 0 "" {TEXT -1 69 "for any parameter name in the procedure paramet
+er sequence (procseq)." }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 
+0 "" {TEXT -1 76 "Example: Instead of the explicit if statement above \+
+in Member, define it by:" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 148 "Member:=proc(x,a::list)\n    local
+ v;\n    for v in a do\n        if v=x then\n           RETURN(true)\n
+        end if;\n    end do;\n    false;\nend proc:\n" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 18 "Member(4,\{4,5,3\});" }}{PARA 8 "" 
+1 "" {TEXT -1 101 "Error, invalid input: Member expects its 2nd argume
+nt, a, to be of type list, but received \{3, 4, 5\}\n" }}}{EXCHG 
+{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "rem" {TEXT 265 15 "optio
+n remember" }{TEXT -1 468 ":  There are a number of options that can b
+e chosen in a procedure (see ?options for a full description). One of \+
+the most useful options is remember.  This option ensures that any pre
+viously computed or defined values of the given procedure are stored i
+n a table for the current session. Then Maple looks up the table befor
+e computing the procedure for the given parameter values. This option \+
+is particularly useful for expensive computations or recurrence relati
+ons. " }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" 
+{TEXT -1 136 "Example: Compute the Fibonacci sequence given by F(0)=0,
+ F(1)=1 and  F(n)=F(n-1)+F(n-2). This can be computed directly by the \+
+procedure:" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 121 "F:=proc(n)\n    if (n=0) then\n       0;\n    elif (
+n=1) then\n       1;\n    else\n       F(n-1)+F(n-2);\n    end if;\nen
+d proc;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%\"FGf*6#%\"nG6\"F(F(@'/9$
+\"\"!F,/F+\"\"\"F.,&-F$6#,&F+F.F.!\"\"F.-F$6#,&F+F.\"\"#F3F.F(F(F(" }}
+}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 146 "
+Notice that Maple will allow nested procedures where a procedure calls
+ itself provided the nesting terminates after a finite number of such \+
+calls!" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "> " 0 "" {MPLTEXT 
+1 0 17 "F(5),F(10),F(15);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6%\"\"&\"#b
+\"$5'" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" 
+{TEXT -1 319 "However this method for calculating Fibonaaci terms is v
+ery inefficient since we are repeatedly computing the same terms over \+
+again. You would not be able to compute F(100) by this method which wo
+uld involve more that 10^20 additions! We may use the option remember \+
+to store previously computed or defined values of F.\n" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 145 "Fib:= proc(n) \n   option remember
+;\n   if (n=0) then\n      0;\n   elif (n=1) then\n      1;\n   else  \+
+ \n      Fib(n-1)+Fib(n-2);\n   end if;\nend proc;" }}{PARA 11 "" 1 "
+" {XPPMATH 20 "6#>%$FibGf*6#%\"nG6\"6#%)rememberGF(@'/9$\"\"!F./F-\"\"
+\"F0,&-F$6#,&F-F0F0!\"\"F0-F$6#,&F-F0\"\"#F5F0F(F(F(" }}}{EXCHG {PARA 
+0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 108 "With the remem
+ber option selected we can now define Fib(0) and Fib(1) as required an
+d then evaluate Fib(n).\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 8 
+"Fib(20);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#\"%ln" }}}{EXCHG {PARA 0 
+"> " 0 "" {MPLTEXT 1 0 9 "Fib(100);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6
+#\"6v]\">Ez\"[[Aa$" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 
+"" 0 "summary" {TEXT 266 7 "Summary" }{TEXT -1 73 ": The most general \+
+syntax for a procedure called procname is of the form:" }}{PARA 0 "" 
+0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 28 "> procname:= proc( p
+ar_seq )" }}{PARA 0 "" 0 "" {TEXT -1 17 "   local loc_seq;" }}{PARA 0 
+"" 0 "" {TEXT -1 19 "   global glob_seq;" }}{PARA 0 "" 0 "" {TEXT -1 
+20 "   options opt_seq ;" }}{PARA 0 "" 0 "" {TEXT -1 11 "   stat_seq" 
+}}{PARA 0 "" 0 "" {TEXT -1 12 "   end proc;" }}{PARA 0 "" 0 "" {TEXT 
+-1 0 "" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 107 "par_seq is a sequence \+
+of symbols separated by commas giving the parameters on which the proc
+edure depends. " }}{PARA 0 "" 0 "" {TEXT -1 76 "Type declarations of t
+he form name::type  may be made within this sequence. " }}{PARA 0 "" 
+0 "" {TEXT -1 96 "The local and global variables loc_seq and glob_seq \+
+appear next followed by any options chosen. " }}{PARA 0 "" 0 "" {TEXT 
+-1 93 "Then stat_seq follows being a sequence of ordinary Maple statem
+ents separated by semicolons. " }}{PARA 0 "" 0 "" {TEXT -1 61 "Finally
+ the procedure terminates with the end proc statement." }}{PARA 0 "" 
+0 "" {TEXT -1 0 "" }}}{EXCHG {PARA 0 "" 0 "comments" {TEXT 269 23 "Com
+ments in Procedures:" }{TEXT -1 53 "  A user comment can be introduced
+ after a # symbol. " }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "
+" {TEXT -1 9 "Example:\n" }}{PARA 0 "> " 0 "" {MPLTEXT 1 0 92 "Addnos:
+=proc(x,y)\n    #This program adds two numbers\n    x+y; #This is the \+
+answer\nend proc:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 12 "Addn
+os(4,6);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#\"#5" }}}{EXCHG {PARA 0 "
+" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "nargs" {TEXT 270 56 "nargs parame
+ter - Optional Arguments in Maple Procedures" }{TEXT -1 238 ": We have
+ previously seen a number of Maple functions or procedures with option
+al arguments e.g. plot, series, solve ,... One way to achieve this is \+
+to use the nargs parameter which counts the number of arguments suppli
+ed to a procedure. " }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "
+" {TEXT -1 124 "As an example, consider the degree function which comp
+utes the degree of any polynomial expression in one or more variables:
+" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "> " 0 "" {MPLTEXT 1 0 25 
+"x:='x': p:=x^4-5*x^2+x-1;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%\"pG,*
+*$)%\"xG\"\"%\"\"\"F**&\"\"&F*)F(\"\"#F*!\"\"F(F*F*F/" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 10 "degree(p);" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#\"\"%" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 31 "q:=
+4*x^3*y^2-6*x*y^2+x^2+2*x*y;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%\"qG
+,**(\"\"%\"\"\")%\"xG\"\"$F()%\"yG\"\"#F(F(*(\"\"'F(F*F(F,F(!\"\"*$)F*
+F.F(F(*(F.F(F*F(F-F(F(" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 10 "d
+egree(q);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#\"\"&" }}}{EXCHG {PARA 0 
+"> " 0 "" {MPLTEXT 1 0 12 "degree(q,x);" }}{PARA 11 "" 1 "" {XPPMATH 
+20 "6#\"\"$" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 12 "degree(q,y);
+" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#\"\"#" }}}{EXCHG {PARA 0 "> " 0 "
+" {MPLTEXT 1 0 16 "degree(q,\{x,y\});" }}{PARA 11 "" 1 "" {XPPMATH 20 
+"6#\"\"&" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" 
+{TEXT -1 208 "These last few examples illustrate the optional second a
+rgument which allows us to determine the degree of a particular variab
+le or set of variables. Type ?degree to find out the full nature of th
+is command.\n" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 376 "The following p
+rocedure illustrates the way in which optional arguments can be introd
+uced with a user defined procedure called DEGREE which has a second op
+tional argument which can be absent, a variable name or a set of such \+
+names. This procedure computes the degree of any polynomial expression
+ and illustrates a variety of Maple commands and structures that we ha
+ve studied." }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 1553 "\nDEGREE:=
+proc(A::algebraic,x::\{name,set(name)\})\n#\n# A is the algebraic expr
+ession\n# x is a variable name or set of such names\n#\n    local s,t;
+\n# nargs is a Maple variable which counts \n# the no of arguments of \+
+the procedure\n#\n    if nargs = 1 then # no optional argument given \+
+\n#\n#\n# indets is a Maple function giving the \n# set of unknown var
+iables on which its \n# argument depends\n#\n        s:=indets(A); # s
+ is the set of unknowns of A\n        if not type(s,set(name)) then \n
+           ERROR(`input not polynomial`);\n        end if;\n        DE
+GREE(A,s); # call procedure with 2nd arg s\n    elif type(A, constant)
+ then \n        0\n    elif type(A,name) then # A a single unknown var
+iable\n        if type(x,name) then # x a single unknown variable\n   \+
+         if A=x then \n                1 \n            else \n        \+
+        0 \n            end if; # A=x exactly\n        else \n        \+
+    if member(A,x) then 1 else 0 end if;\n        end if;\n    elif ty
+pe(A,`+`) then  \n# A is a sum of terms and find max degree term\n# A \+
+is a sum of terms and find max degree term\n        max(seq(DEGREE(t,x
+),t=A));\n# this is the max of seq indexed by operands of A\n    elif \+
+type(A,`*`) then  \n# A is a product of terms whose degrees are added
+\n        max(seq(DEGREE(t,x),t=A));\n        s:=0;\n# this is the max
+ of seq indexed by operands of A\n        for t in A do\n            s
+:=s+DEGREE(t,x);\n        end do;\n        s;\n    elif type(A, algebr
+aic^integer) then\n        DEGREE(op(1,A),x)*op(2,A);\n    else \n    \+
+    ERROR(`cannot compute degree`);\n    end if;\nend proc:\n" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 10 "DEGREE(p);" }}{PARA 11 "" 1 
+"" {XPPMATH 20 "6#\"\"%" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 16 "
+DEGREE(q,\{x,y\});" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#\"\"&" }}}
+{EXCHG {PARA 0 "" 0 "" {TEXT -1 74 "\nThe procedure also computed the \+
+degree of integer powers of polynomials.\n" }}{PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 14 "DEGREE(q^3,x);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#\"
+\"*" }}}}{MARK "3 0" 0 }{VIEWOPTS 1 1 0 1 1 1803 1 1 1 1 }
+{PAGENUMBERS 0 1 2 33 1 1 }
