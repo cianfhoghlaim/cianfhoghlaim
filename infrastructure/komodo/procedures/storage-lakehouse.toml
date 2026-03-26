@@ -1,0 +1,218 @@
+# =============================================================================
+# LAKEHOUSE STORAGE STACKS
+# =============================================================================
+# Unified data lakehouse with Garage S3 + Lakekeeper Iceberg + Lance Namespace
+# Deploys a complete data platform for vector/tabular analytics
+#
+# DEPENDENCY CHAIN:
+#   garage → lakekeeper → lance-namespace
+#   Each service depends on the previous one being healthy
+#
+# PROCEDURES:
+#   - lakehouse-migrate: Run Lakekeeper database migrations
+#   - lakehouse-health: Deep health check for all lakehouse services
+#   - lakehouse-snapshot: Create time-travel snapshot before mutations
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# LAKEHOUSE - Full Unified Stack (MacBook)
+# -----------------------------------------------------------------------------
+# Includes:
+# - Garage S3 (local object storage with iceberg/lance/ducklake buckets)
+# - Lakekeeper (Iceberg REST catalog)
+# - Lance Namespace Sidecar (Lance table registration)
+# - Garage-init (bucket bootstrapper)
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "lakehouse"
+description = "Unified lakehouse with Garage + Lakekeeper + Lance Namespace"
+tags = ["host:bunchloch", "tier:lakehouse", "type:data-platform", "component:storage"]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/storage/lakehouse"
+file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
+environment = """
+# Lakekeeper Iceberg REST Catalog
+LAKEKEEPER_PORT=8181
+LAKEKEEPER_METRICS_PORT=9000
+# Lance Namespace Sidecar
+LANCE_API_PORT=8182
+# Garage S3-compatible storage
+GARAGE_RPC_PORT=3901
+GARAGE_S3_API_PORT=3900
+GARAGE_K2V_API_PORT=3902
+GARAGE_WEB_PORT=3903
+GARAGE_ADMIN_PORT=3904
+"""
+
+# Stack dependencies (startup order)
+[[stack.depends_on]]
+name = "garage"
+condition = "service_healthy"
+
+[[stack.depends_on]]
+name = "lakekeeper"
+condition = "service_started"
+
+[[stack.depends_on]]
+name = "lance-namespace"
+condition = "service_started"
+
+# Health check procedure
+[[stack.procedures]]
+name = "lakehouse-health"
+description = "Deep health check for all lakehouse services (Garage, Lakekeeper, Lance, PostgreSQL)"
+type = "shell"
+command = """
+# Use the lakehouse-health.sh action
+bash /path/to/komodo/actions/lakehouse-health.sh --verbose
+
+# Expected output: JSON with health status of all components
+# {"checks":[...],"overall":"healthy|unhealthy"}
+"""
+
+# Migration procedure
+[[stack.procedures]]
+name = "lakehouse-migrate"
+description = "Run Lakekeeper database migrations"
+type = "shell"
+command = """
+# Run Lakekeeper migrations
+docker exec lakehouse-lakekeeper /app/lakekeeper migrate
+
+# Verify migration success
+docker exec lakehouse-lakekeeper /app/lakekeeper migrate --check
+"""
+
+# Snapshot procedure
+[[stack.procedures]]
+name = "lakehouse-snapshot"
+description = "Create time-travel snapshot before mutations"
+type = "shell"
+command = """
+# Create DuckLake snapshot for all tables
+docker exec lakehouse-lakekeeper duckdb :memory: -c \"
+INSTALL ducklake;
+LOAD ducklake;
+ATTACH 'ducklake:postgres:dbname=lakekeeper host=postgres' AS prod;
+CREATE SNAPSHOT prod BEFORE_MIGRATION_$(date +%s);
+\"
+"""
+
+# Register data procedure
+[[stack.procedures]]
+name = "lakehouse-register-data"
+description = "Register existing S3/Iceberg files with DuckLake (zero-copy)"
+type = "shell"
+command = """
+# Usage: komodo-cli execute lakehouse-register-data --param TABLE_NAME=my_table --param S3_PATTERN=s3://iceberg/my_table/*
+
+TABLE_NAME="${TABLE_NAME:-my_table}"
+S3_PATTERN="${S3_PATTERN:-s3://**/*.parquet}"
+
+docker exec lakehouse-lakekeeper duckdb :memory: -c \"
+INSTALL ducklake;
+LOAD ducklake;
+ATTACH 'ducklake:postgres:dbname=lakekeeper host=postgres' AS prod;
+CALL ducklake_add_data_files('prod', '$TABLE_NAME', '$S3_PATTERN');
+SELECT 'Registered $TABLE_NAME with zero-copy' AS status;
+\"
+"""
+
+# -----------------------------------------------------------------------------
+# LAKEHOUSE-HETZNER - Production Deployment (Hetzner)
+# -----------------------------------------------------------------------------
+# For production workloads on always-on Hetzner CAX41
+# Uses same config but deployed to Hetzner instead of MacBook
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "lakehouse-hetzner"
+description = "Production lakehouse on Hetzner CAX41"
+tags = ["host:cax41-hetzner", "tier:lakehouse", "type:data-platform", "environment:production", "component:storage"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/storage/lakehouse"
+file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
+environment = """
+LAKEKEEPER_PORT=8181
+LAKEKEEPER_METRICS_PORT=9000
+LANCE_API_PORT=8182
+GARAGE_RPC_PORT=3901
+GARAGE_S3_API_PORT=3900
+GARAGE_K2V_API_PORT=3902
+GARAGE_WEB_PORT=3903
+GARAGE_ADMIN_PORT=3904
+"""
+
+# Stack dependencies (same as MacBook)
+[[stack.depends_on]]
+name = "garage"
+condition = "service_healthy"
+
+[[stack.depends_on]]
+name = "lakekeeper"
+condition = "service_started"
+
+[[stack.depends_on]]
+name = "lance-namespace"
+condition = "service_started"
+
+# Health check procedure (inherited from lakehouse)
+[[stack.procedures]]
+name = "lakehouse-health"
+description = "Deep health check for all lakehouse services (Garage, Lakekeeper, Lance, PostgreSQL)"
+type = "shell"
+command = """
+# Use the lakehouse-health.sh action
+bash /path/to/komodo/actions/lakehouse-health.sh --verbose
+"""
+
+# Migration procedure (inherited from lakehouse)
+[[stack.procedures]]
+name = "lakehouse-migrate"
+description = "Run Lakekeeper database migrations"
+type = "shell"
+command = """
+# Run Lakekeeper migrations
+docker exec lakehouse-hetzner-lakekeeper /app/lakekeeper migrate
+
+# Verify migration success
+docker exec lakehouse-hetzner-lakekeeper /app/lakekeeper migrate --check
+"""
+
+# Snapshot procedure (inherited from lakehouse)
+[[stack.procedures]]
+name = "lakehouse-snapshot"
+description = "Create time-travel snapshot before mutations"
+type = "shell"
+command = """
+# Create DuckLake snapshot for all tables
+docker exec lakehouse-hetzner-lakekeeper duckdb :memory: -c \"
+INSTALL ducklake;
+LOAD ducklake;
+ATTACH 'ducklake:postgres:dbname=lakekeeper host=postgres' AS prod;
+CREATE SNAPSHOT prod BEFORE_MIGRATION_$(date +%s);
+\"
+"""
+
+# Register data procedure (inherited from lakehouse)
+[[stack.procedures]]
+name = "lakehouse-register-data"
+description = "Register existing S3/Iceberg files with DuckLake (zero-copy)"
+type = "shell"
+command = """
+# Usage: komodo-cli execute lakehouse-register-data --param TABLE_NAME=my_table --param S3_PATTERN=s3://iceberg/my_table/*
+
+TABLE_NAME="${TABLE_NAME:-my_table}"
+S3_PATTERN="${S3_PATTERN:-s3://**/*.parquet}"
+
+docker exec lakehouse-hetzner-lakekeeper duckdb :memory: -c \"
+INSTALL ducklake;
+LOAD ducklake;
+ATTACH 'ducklake:postgres:dbname=lakekeeper host=postgres' AS prod;
+CALL ducklake_add_data_files('prod', '$TABLE_NAME', '$S3_PATTERN');
+SELECT 'Registered $TABLE_NAME with zero-copy' AS status;
+\"
+"""

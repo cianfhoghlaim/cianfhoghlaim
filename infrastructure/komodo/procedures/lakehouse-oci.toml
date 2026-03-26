@@ -1,0 +1,92 @@
+# =============================================================================
+# LAKEHOUSE OCI - Production Lakehouse on Oracle Cloud
+# =============================================================================
+# High-availability lakehouse for control plane data:
+# - Garage S3 (centralized object storage)
+# - Lakekeeper (Iceberg REST catalog)
+# - Lance Namespace (Lance table registration)
+# - PostgreSQL (catalog metadata)
+#
+# This is the PRIMARY lakehouse instance for all control plane data.
+# Replica of Hetzner lakehouse for multi-region redundancy.
+# =============================================================================
+
+[[stack]]
+name = "lakehouse-oci"
+description = "Production lakehouse on Oracle Cloud with Garage + Lakekeeper + Lance"
+tags = ["host:arm1-oci", "tier:lakehouse", "type:data-platform", "environment:production", "component:storage"]
+
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/storage/lakehouse"
+file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
+environment = """
+# Lakekeeper Iceberg REST Catalog
+LAKEKEEPER_PORT=8181
+LAKEKEEPER_METRICS_PORT=9000
+LAKEKEEPER_BASE_URI=https://lakekeeper.cianfhoghlaim.ie
+# Lance Namespace Sidecar
+LANCE_API_PORT=8182
+# Garage S3-compatible storage (shared with garage stack)
+GARAGE_RPC_PORT=3901
+GARAGE_S3_API_PORT=3900
+GARAGE_K2V_API_PORT=3902
+GARAGE_WEB_PORT=3903
+GARAGE_ADMIN_PORT=3904
+# Production mode
+PLANETSCALE_DATABASE_URL=postgresql://lakekeeper:[[LAKEKEEPER_DB_PASSWORD]]@postgres:5432/lakekeeper
+LAKEKEEPER_ENCRYPTION_KEY=[[LAKEKEEPER_ENCRYPTION_KEY]]
+LAKEKEEPER_SSL_MODE=require
+"""
+
+# Stack dependencies (startup order)
+[[stack.depends_on]]
+name = "garage"
+condition = "service_healthy"
+
+[[stack.depends_on]]
+name = "postgres"
+condition = "service_healthy"
+
+[[stack.depends_on]]
+name = "lakekeeper"
+condition = "service_started"
+
+[[stack.depends_on]]
+name = "lance-namespace"
+condition = "service_started"
+
+# Health check procedure
+[[stack.procedures]]
+name = "lakehouse-oci-health"
+description = "Deep health check for OCI lakehouse services"
+type = "shell"
+command = """
+docker exec lakehouse-oci-lakekeeper /home/nonroot/lakekeeper healthcheck
+docker exec lakehouse-oci-postgres pg_isready -U lakekeeper
+curl -sf http://localhost:3900/ || echo "Garage S3 API check failed"
+"""
+
+# Migration procedure
+[[stack.procedures]]
+name = "lakehouse-oci-migrate"
+description = "Run Lakekeeper database migrations"
+type = "shell"
+command = """
+docker exec lakehouse-oci-lakekeeper /home/nonroot/lakekeeper migrate
+docker exec lakehouse-oci-lakekeeper /home/nonroot/lakekeeper migrate --check
+"""
+
+# Backup procedure
+[[stack.procedures]]
+name = "lakehouse-oci-backup"
+description = "Backup lakehouse data to Garage S3"
+type = "shell"
+command = """
+# Create timestamped backup
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+docker exec lakehouse-oci-postgres pg_dump -U lakekeeper lakekeeper | gzip > /tmp/lakehouse_backup_${TIMESTAMP}.sql.gz
+# Upload to Garage backup bucket
+mc cp /tmp/lakehouse_backup_${TIMESTAMP}.sql.gz garage/backups/
+echo "Backup completed: lakehouse_backup_${TIMESTAMP}.sql.gz"
+"""

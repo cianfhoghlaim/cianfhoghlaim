@@ -1,0 +1,74 @@
+# =============================================================================
+# NEWT Hetzner - Locket Sidecar Configuration
+# =============================================================================
+# Adds Locket sidecar for 1Password-based secret injection.
+#
+# USAGE:
+#   docker compose -f compose.yaml -f sidecar.yaml up -d
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # LOCKET - Secrets Management Sidecar
+  # ---------------------------------------------------------------------------
+  locket:
+    image: ghcr.io/bpbradley/locket:connect
+    container_name: newt-hetzner-locket
+    user: "65532:65532"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    environment:
+      OP_CONNECT_HOST: ${OP_CONNECT_HOST:-http://132.145.27.89:8080}
+    command:
+      - "--provider=op-connect"
+      - "--connect.host=${OP_CONNECT_HOST:-http://132.145.27.89:8080}"
+      - "--connect.token-file=/run/secrets/op_token"
+      - "--map=/templates:/run/secrets/locket"
+      - "--mode=${LOCKET_MODE:-watch}"
+    secrets:
+      - op_token
+    volumes:
+      - ./secrets.env:/templates/secrets.env:ro
+      - newt-hetzner-secrets:/run/secrets/locket
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    healthcheck:
+      test: ["CMD", "/locket", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - pangolin
+
+  # ---------------------------------------------------------------------------
+  # NEWT - Override to use Locket secrets
+  # ---------------------------------------------------------------------------
+  newt:
+    depends_on:
+      locket:
+        condition: service_healthy
+    environment:
+      PANGOLIN_ENDPOINT: ${PANGOLIN_ENDPOINT:-https://pangolin.cianfhoghlaim.ie}
+      NEWT_ID_FILE: /run/secrets/locket/newt_id
+      NEWT_SECRET_FILE: /run/secrets/locket/newt_secret
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      DOCKER_SOCKET: /var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - newt-hetzner-secrets:/run/secrets/locket:ro
+
+secrets:
+  op_token:
+    file: ${OP_CONNECT_TOKEN_FILE:-/etc/connect/token}
+
+volumes:
+  newt-hetzner-secrets:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=700

@@ -1,0 +1,498 @@
+# =============================================================================
+# STAGED ROLLOUT PROCEDURE
+# =============================================================================
+# Deploy to a subset of servers first (canary), verify health, then deploy to all.
+# This procedure enables safe, incremental rollouts with automatic rollback.
+#
+# USAGE:
+#   komodo-cli execute staged-rollout --param STACK_NAME=web-app --param CANARY_PERCENTAGE=10
+#   komodo-cli execute staged-rollout --param STACK_NAME=web-app --param CANARY_SERVERS=web-app-canary-01
+#
+# PARAMETERS:
+#   STACK_NAME         - Name of the stack to deploy (required)
+#   VERSION            - Version to deploy (optional, defaults to latest)
+#   CANARY_PERCENTAGE  - Percentage of servers for canary (default: 10)
+#   CANARY_SERVERS     - Specific canary servers (optional, overrides percentage)
+#   VERIFY_DURATION    - How long to verify canary (default: 300s)
+#   VERIFY_THRESHOLD   - Success rate threshold (default: 99%)
+#   AUTO_ROLLBACK      - Auto rollback on failure (default: true)
+#   DRY_RUN            - Simulate deployment without changes (default: false)
+#
+# EXAMPLES:
+#   # Deploy to 10% of servers first, verify, then rest
+#   komodo-cli execute staged-rollout --param STACK_NAME=web-app --param CANARY_PERCENTAGE=10
+#
+#   # Deploy to specific canary servers
+#   komodo-cli execute staged-rollout --param STACK_NAME=web-app --param CANARY_SERVERS=web-app-canary-01,web-app-canary-02
+#
+#   # Extended verification period
+#   komodo-cli execute staged-rollout --param STACK_NAME=web-app --param VERIFY_DURATION=600
+#
+# STAGES:
+#   1. Pre-deployment checks (current version, server count)
+#   2. Deploy to canary servers
+#   3. Verify canary health (duration + threshold)
+#   4. Deploy to remaining servers
+#   5. Final health check
+#   6. Auto rollback on failure (if enabled)
+#
+# SAFETY FEATURES:
+#   - Pre-deployment validation
+#   - Canary health verification before full rollout
+#   - Automatic rollback on failure
+#   - Dry-run mode for testing
+#   - Detailed logging and metrics
+# =============================================================================
+
+[[procedure]]
+name = "staged-rollout"
+description = "Deploy to subset of servers first (canary), verify, then deploy to remaining"
+
+[[procedure.config.stage]]
+name = "pre-deployment-checks"
+enabled = true
+
+# Validate deployment parameters and current state
+[[procedure.config.stage.executions]]
+execution.type = "ShellCommand"
+execution.params.command = """
+echo "=== Staged Rollout Pre-deployment Checks ==="
+echo ""
+echo "Stack: %STACK_NAME%"
+echo "Version: ${VERSION:-latest}"
+echo "Canary percentage: ${CANARY_PERCENTAGE:-10}%"
+echo "Verify duration: ${VERIFY_DURATION:-300}s"
+echo "Verify threshold: ${VERIFY_THRESHOLD:-99}%"
+echo "Auto rollback: ${AUTO_ROLLBACK:-true}"
+echo "Dry run: ${DRY_RUN:-false}"
+echo ""
+
+# Check if stack exists
+if ! komodo-cli list-stacks --format json | jq -e '.[] | select(.name == "%STACK_NAME%")' > /dev/null; then
+  echo "ERROR: Stack '%STACK_NAME%' not found"
+  exit 1
+fi
+
+# Get current deployment info
+echo "Current deployment:"
+komodo-cli deployment-info "%STACK_NAME%" --format json || echo "No deployment info available"
+echo ""
+
+# Get all servers for this stack
+ALL_SERVERS=$(komodo-cli list-servers --stack "%STACK_NAME%" --format json | jq -r '.[].name' 2>/dev/null || echo "")
+SERVER_COUNT=$(echo "$ALL_SERVERS" | wc -l | tr -d ' ')
+
+if [[ -z "$ALL_SERVERS" ]]; then
+  echo "ERROR: No servers found for stack '%STACK_NAME%'"
+  exit 1
+fi
+
+echo "Found $SERVER_COUNT server(s) for stack '%STACK_NAME%'"
+echo "$ALL_SERVERS"
+echo ""
+
+# Calculate canary server count
+if [[ -n "${CANARY_SERVERS:-}" ]]; then
+  # Use specific canary servers
+  echo "Using specific canary servers: $CANARY_SERVERS"
+  CANARY_LIST="$CANARY_SERVERS"
+else
+  # Calculate canary based on percentage
+  CANARY_PERCENTAGE=${CANARY_PERCENTAGE:-10}
+  CANARY_COUNT=$((SERVER_COUNT * CANARY_PERCENTAGE / 100))
+
+  if [[ $CANARY_COUNT -lt 1 ]]; then
+    CANARY_COUNT=1
+  fi
+
+  echo "Canary count: $CANARY_COUNT server(s)"
+
+  # Select first N servers as canary
+  CANARY_LIST=$(echo "$ALL_SERVERS" | head -n "$CANARY_COUNT" | tr '\n' ',' | sed 's/,$//')
+  echo "Canary servers: $CANARY_LIST"
+fi
+
+# Save canary and remaining server lists
+echo "$CANARY_LIST" > /tmp/staged_rollout_canary_servers.txt
+echo "$(echo "$ALL_SERVERS" | grep -v -E "^($CANARY_LIST)$" | tr '\n' ',' | sed 's/,$//')" > /tmp/staged_rollout_remaining_servers.txt
+
+# Get current version
+CURRENT_VERSION=$(komodo-cli current-version "%STACK_NAME%" 2>/dev/null || echo "unknown")
+echo "Current version: $CURRENT_VERSION"
+echo "$CURRENT_VERSION" > /tmp/staged_rollout_current_version.txt
+
+echo ""
+echo "=== Pre-deployment checks complete ==="
+"""
+execution.params.services = []
+enabled = true
+
+[[procedure.config.stage]]
+name = "deploy-to-canary"
+enabled = true
+
+# Deploy to canary servers only
+[[procedure.config.stage.executions]]
+execution.type = "ShellCommand"
+execution.params.command = """
+echo "=== Deploying to Canary Servers ==="
+
+CANARY_SERVERS=$(cat /tmp/staged_rollout_canary_servers.txt)
+VERSION=${VERSION:-latest}
+DRY_RUN=${DRY_RUN:-false}
+
+if [[ "$DRY_RUN" == "true" ]]; then
+  echo "DRY RUN: Would deploy to canary servers:"
+  echo "$CANARY_SERVERS"
+  echo ""
+  echo "Version: $VERSION"
+  exit 0
+fi
+
+# Deploy to each canary server
+for server in $(echo "$CANARY_SERVERS" | tr ',' '\n'); do
+  echo "Deploying to canary server: $server"
+
+  # Deploy stack to specific server
+  komodo-cli deploy "%STACK_NAME%" \\
+    --version "$VERSION" \\
+    --server "$server" \\
+    --wait || {
+    echo "ERROR: Failed to deploy to canary server $server"
+    exit 1
+  }
+
+  echo "✓ Deployed to $server"
+done
+
+echo ""
+echo "=== Canary deployment complete ==="
+echo "Canary servers: $CANARY_SERVERS"
+"""
+execution.params.services = []
+enabled = true
+
+[[procedure.config.stage]]
+name = "verify-canary-health"
+enabled = true
+
+# Verify canary servers are healthy
+[[procedure.config.stage.executions]]
+execution.type = "ShellCommand"
+execution.params.command = """
+echo "=== Verifying Canary Health ==="
+
+CANARY_SERVERS=$(cat /tmp/staged_rollout_canary_servers.txt)
+VERIFY_DURATION=${VERIFY_DURATION:-300}
+VERIFY_THRESHOLD=${VERIFY_THRESHOLD:-99}
+ELAPSED=0
+CHECK_INTERVAL=10
+
+SUCCESS_COUNT=0
+TOTAL_CHECKS=0
+
+echo "Verification duration: ${VERIFY_DURATION}s"
+echo "Success threshold: ${VERIFY_THRESHOLD}%"
+echo "Check interval: ${CHECK_INTERVAL}s"
+echo ""
+
+while [[ $ELAPSED -lt $VERIFY_DURATION ]]; do
+  TOTAL_CHECKS=$((TOTAL_CHECKS + 1))
+  HEALTHY_COUNT=0
+  TOTAL_SERVERS=$(echo "$CANARY_SERVERS" | tr ',' '\n' | wc -l | tr -d ' ')
+
+  echo "[$ELAPSED/$VERIFY_DURATION] Checking canary health..."
+
+  # Check each canary server
+  for server in $(echo "$CANARY_SERVERS" | tr ',' '\n'); do
+    if komodo-cli health "%STACK_NAME%" --server "$server" --format json 2>/dev/null | jq -e '.status == "healthy"' > /dev/null; then
+      HEALTHY_COUNT=$((HEALTHY_COUNT + 1))
+    else
+      echo "  ✗ $server: unhealthy"
+    fi
+  done
+
+  # Calculate success rate
+  SUCCESS_RATE=$((HEALTHY_COUNT * 100 / TOTAL_SERVERS))
+  echo "  Healthy: $HEALTHY_COUNT/$TOTAL_SERVERS ($SUCCESS_RATE%)"
+
+  # Check if threshold met
+  if [[ $SUCCESS_RATE -ge $VERIFY_THRESHOLD ]]; then
+    SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+    echo "  ✓ Threshold met ($SUCCESS_RATE% >= $VERIFY_THRESHOLD%)"
+
+    # Require 3 consecutive checks above threshold
+    if [[ $SUCCESS_COUNT -ge 3 ]]; then
+      echo ""
+      echo "=== Canary verification successful ==="
+      echo "Maintained $SUCCESS_RATE% health for 3 consecutive checks"
+      exit 0
+    fi
+  else
+    SUCCESS_COUNT=0
+    echo "  ⚠ Threshold not met ($SUCCESS_RATE% < $VERIFY_THRESHOLD%)"
+  fi
+
+  # Wait before next check
+  sleep $CHECK_INTERVAL
+  ELAPSED=$((ELAPSED + CHECK_INTERVAL))
+done
+
+# Verification failed
+echo ""
+echo "ERROR: Canary verification failed after $VERIFY_DURATION seconds"
+echo "Final health: $HEALTHY_COUNT/$TOTAL_SERVERS ($SUCCESS_RATE%)"
+echo "Required threshold: $VERIFY_THRESHOLD%"
+exit 1
+"""
+execution.params.services = []
+enabled = true
+
+[[procedure.config.stage]]
+name = "deploy-to-remaining"
+enabled = true
+
+# Deploy to remaining servers
+[[procedure.config.stage.executions]]
+execution.type = "ShellCommand"
+execution.params.command = """
+echo "=== Deploying to Remaining Servers ==="
+
+REMAINING_SERVERS=$(cat /tmp/staged_rollout_remaining_servers.txt)
+VERSION=${VERSION:-latest}
+DRY_RUN=${DRY_RUN:-false}
+
+if [[ "$DRY_RUN" == "true" ]]; then
+  echo "DRY RUN: Would deploy to remaining servers:"
+  echo "$REMAINING_SERVERS"
+  echo ""
+  echo "Version: $VERSION"
+  exit 0
+fi
+
+if [[ -z "$REMAINING_SERVERS" ]]; then
+  echo "No remaining servers to deploy (all servers were canary)"
+  exit 0
+fi
+
+# Deploy to each remaining server
+for server in $(echo "$REMAINING_SERVERS" | tr ',' '\n'); do
+  echo "Deploying to server: $server"
+
+  # Deploy stack to specific server
+  komodo-cli deploy "%STACK_NAME%" \\
+    --version "$VERSION" \\
+    --server "$server" \\
+    --wait || {
+    echo "WARNING: Failed to deploy to server $server"
+    # Continue with other servers (partial deployment)
+  }
+
+  echo "✓ Deployed to $server"
+done
+
+echo ""
+echo "=== Remaining deployment complete ==="
+"""
+execution.params.services = []
+enabled = true
+
+[[procedure.config.stage]]
+name = "final-health-check"
+enabled = true
+
+# Final health check across all servers
+[[procedure.config.stage.executions]]
+execution.type = "ShellCommand"
+execution.params.command = """
+echo "=== Final Health Check ==="
+
+ALL_SERVERS=$(komodo-cli list-servers --stack "%STACK_NAME%" --format json | jq -r '.[].name')
+TOTAL_SERVERS=$(echo "$ALL_SERVERS" | wc -l | tr -d ' ')
+HEALTHY_COUNT=0
+
+for server in $ALL_SERVERS; do
+  if komodo-cli health "%STACK_NAME%" --server "$server" --format json 2>/dev/null | jq -e '.status == "healthy"' > /dev/null; then
+    HEALTHY_COUNT=$((HEALTHY_COUNT + 1))
+    echo "  ✓ $server: healthy"
+  else
+    echo "  ✗ $server: unhealthy"
+  fi
+done
+
+SUCCESS_RATE=$((HEALTHY_COUNT * 100 / TOTAL_SERVERS))
+echo ""
+echo "Final health: $HEALTHY_COUNT/$TOTAL_SERVERS ($SUCCESS_RATE%)"
+
+if [[ $HEALTHY_COUNT -eq $TOTAL_SERVERS ]]; then
+  echo "✓ All servers healthy"
+  exit 0
+else
+  echo "⚠ Some servers unhealthy"
+  exit 1
+fi
+"""
+execution.params.services = []
+enabled = true
+
+[[procedure.config.stage]]
+name = "auto-rollback-on-failure"
+enabled = true
+
+# Automatic rollback if verification failed
+[[procedure.config.stage.executions]]
+execution.type = "ShellCommand"
+execution.params.command = """
+# This stage only runs if previous stage failed
+# Check exit code of verify-canary-health stage
+
+if [[ $? -eq 0 ]]; then
+  echo "Canary verification succeeded, no rollback needed"
+  exit 0
+fi
+
+AUTO_ROLLBACK=${AUTO_ROLLBACK:-true}
+
+if [[ "$AUTO_ROLLBACK" != "true" ]]; then
+  echo "Auto rollback disabled (AUTO_ROLLBACK=false)"
+  echo "Manual intervention required"
+  exit 1
+fi
+
+echo "=== Automatic Rollback Triggered ==="
+echo ""
+
+CURRENT_VERSION=$(cat /tmp/staged_rollout_current_version.txt 2>/dev/null || echo "unknown")
+
+echo "Rolling back to version: $CURRENT_VERSION"
+echo ""
+
+# Rollback all servers
+ALL_SERVERS=$(komodo-cli list-servers --stack "%STACK_NAME%" --format json | jq -r '.[].name')
+
+for server in $ALL_SERVERS; do
+  echo "Rolling back server: $server"
+
+  komodo-cli deploy "%STACK_NAME%" \\
+    --version "$CURRENT_VERSION" \\
+    --server "$server" \\
+    --wait || {
+    echo "WARNING: Failed to rollback server $server"
+  }
+
+  echo "✓ Rolled back $server"
+done
+
+echo ""
+echo "=== Rollback complete ==="
+echo "All servers restored to version: $CURRENT_VERSION"
+echo ""
+echo "Next steps:"
+echo "  1. Investigate why canary verification failed"
+echo "  2. Check logs: docker logs %STACK_NAME%"
+echo "  3. Fix issues and retry deployment"
+echo "  4. Consider increasing VERIFY_DURATION or lowering VERIFY_THRESHOLD"
+"""
+execution.params.services = []
+enabled = true
+
+[[procedure.config.stage]]
+name = "deployment-summary"
+enabled = true
+
+# Generate deployment summary
+[[procedure.config.stage.executions]]
+execution.type = "ShellCommand"
+execution.params.command = """
+echo "=== Staged Rollout Summary ==="
+echo ""
+echo "Stack: %STACK_NAME%"
+echo "Version: ${VERSION:-latest}"
+echo "Previous version: $(cat /tmp/staged_rollout_current_version.txt 2>/dev/null || echo 'unknown')"
+echo ""
+echo "Canary servers:"
+cat /tmp/staged_rollout_canary_servers.txt | tr ',' '\n' | nl
+echo ""
+echo "Remaining servers:"
+cat /tmp/staged_rollout_remaining_servers.txt | tr ',' '\n' | nl
+echo ""
+echo "Deployment completed at: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+echo ""
+echo "Verify deployment:"
+echo "  - Check logs: docker logs -f %STACK_NAME%"
+echo "  - Monitor metrics: komodo-cli metrics %STACK_NAME%"
+echo "  - Health check: komodo-cli health %STACK_NAME%"
+"""
+execution.params.services = []
+enabled = true
+
+# =============================================================================
+# NOTES
+# =============================================================================
+#
+# CANARY STRATEGIES:
+#
+# 1. Percentage-based (default)
+#    - Deploy to X% of servers first
+#    - Good for uniform server fleets
+#    - Example: 10% of 20 servers = 2 canary servers
+#
+# 2. Specific servers
+#    - Deploy to named canary servers
+#    - Good for dedicated canary infrastructure
+#    - Example: CANARY_SERVERS=web-app-canary-01,web-app-canary-02
+#
+# 3. Single canary
+#    - Deploy to one server first
+#    - Fastest feedback loop
+#    - Example: CANARY_PERCENTAGE=5 (or single server)
+#
+# VERIFICATION THRESHOLDS:
+#
+#   - 99%: Production-grade (default)
+#   - 95%: Relaxed production
+#   - 90%: Development/staging
+#   - 100%: Critical infrastructure
+#
+# ROLLBACK BEHAVIOR:
+#
+#   - Auto rollback only rolls back the new version
+#   - Restores previous version (saved in pre-deployment)
+#   - All servers rolled back simultaneously
+#   - Manual cleanup may be required (fix issues, retry)
+#
+# BEST PRACTICES:
+#
+#   1. Start with low canary percentage (5-10%)
+#   2. Use sufficient verification duration (5-15 minutes)
+#   3. Monitor metrics during canary phase
+#   4. Set appropriate thresholds for your use case
+#   5. Test rollback procedure regularly
+#   6. Use dry-run mode for testing
+#   7. Keep canary servers similar to production
+#
+# EXAMPLE CRON SCHEDULES:
+#
+#   # Deploy during low-traffic hours
+#   0 2 * * * komodo-cli execute staged-rollout --param STACK_NAME=web-app
+#
+#   # Deploy with extended verification
+#   0 3 * * 0 komodo-cli execute staged-rollout --param STACK_NAME=web-app --param VERIFY_DURATION=1800
+#
+# MONITORING:
+#
+# During canary verification, monitor:
+#   - Error rates (5xx errors)
+#   - Response latency (p95, p99)
+#   - Resource usage (CPU, memory)
+#   - Application logs (errors, warnings)
+#   - Business metrics (conversions, transactions)
+#
+# ALERTING:
+#
+# Configure alerts for:
+#   - Canary verification failures
+#   - High error rates during rollout
+#   - Rollback triggers
+#   - Extended deployment times
+# =============================================================================

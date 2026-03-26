@@ -1,8 +1,0 @@
-# Binaries
-gin-server
-main
-
-# Environment files
-.env
-.env.local
-

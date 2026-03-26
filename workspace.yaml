@@ -1,0 +1,28 @@
+# Dagster workspace configuration
+# Traditional approach - more flexible with existing structures
+# Run: dagster dev -w workspace.yaml
+
+load_from:
+  # Celtic Education Platform
+  - python_module:
+      module_name: dagster_defs.definitions
+      location_name: oideachais
+      working_directory: sruth/oideachais
+
+  # GitHub Intelligence + DeFi Analytics
+  - python_module:
+      module_name: dagster_assets.definitions
+      location_name: crypteolas
+      working_directory: sruth/crypteolas
+
+  # Aleyum Portfolio
+  - python_module:
+      module_name: dagster_assets.definitions
+      location_name: aleyum
+      working_directory: sruth/aleyum
+
+  # Celtic Educational MMO - Mythology, Curriculum, Game Content
+  - python_module:
+      module_name: dagster_assets.definitions
+      location_name: tuath
+      working_directory: sruth/tuath

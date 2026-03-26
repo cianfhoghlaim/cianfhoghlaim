@@ -1,0 +1,22 @@
+# =============================================================================
+# ALEYUM MUSIC STACK
+# =============================================================================
+# Music intelligence pipeline with Dagster orchestration
+# =============================================================================
+
+[[stack]]
+name = "aleyum-music"
+description = "Music discovery pipeline with Spotify/SoundCloud ingestion and embeddings"
+tags = ["host:bunchloch", "tier:pipelines", "type:music", "domain:music.aleyum.com"]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/sruth/aleyum"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+ALEYUM_DOMAIN=music.aleyum.com
+ALEYUM_NAME=Aleyum Music
+DAGSTER_PORT=3106
+REDIS_PORT=6381
+TZ=Europe/Dublin
+"""

@@ -1,0 +1,466 @@
+# =============================================================================
+# AGGREGATE HEALTH CHECK PROCEDURE
+# =============================================================================
+# Check health of all stacks and generate a comprehensive report.
+# This procedure aggregates health status across all deployed stacks.
+#
+# USAGE:
+#   komodo-cli execute health-check
+#   komodo-cli execute health-check --param STACK_NAME=lakehouse
+#   komodo-cli execute health-check --param OUTPUT_FORMAT=json
+#   komodo-cli execute health-check --param ALERT_ON_FAILURE=true
+#
+# PARAMETERS:
+#   STACK_NAME         - Check specific stack only (optional, default: all)
+#   OUTPUT_FORMAT      - Output format: text, json, markdown (default: text)
+#   TIMEOUT            - Health check timeout per stack (default: 60s)
+#   ALERT_ON_FAILURE   - Send alert on unhealthy stacks (default: false)
+#   INCLUDE_METRICS    - Include performance metrics (default: false)
+#   DETAILED_ERRORS    - Show detailed error information (default: false)
+#
+# EXAMPLES:
+#   # Check all stacks (text output)
+#   komodo-cli execute health-check
+#
+#   # Check specific stack with JSON output
+#   komodo-cli execute health-check --param STACK_NAME=lakehouse --param OUTPUT_FORMAT=json
+#
+#   # Check all stacks with metrics and alert on failure
+#   komodo-cli execute health-check --param INCLUDE_METRICS=true --param ALERT_ON_FAILURE=true
+#
+# OUTPUT:
+#   - Overall health status (healthy/unhealthy/degraded)
+#   - Per-stack health details
+#   - Service-level health checks (containers, endpoints, databases)
+#   - Optional: Performance metrics, error details
+# =============================================================================
+
+[[procedure]]
+name = "health-check"
+description = "Check health of all stacks and generate report"
+
+[[procedure.config.stage]]
+name = "initialize-health-check"
+enabled = true
+
+# Set up health check environment and logging
+[[procedure.config.stage.executions]]
+execution.type = "ShellCommand"
+execution.params.command = """
+echo "=== Komodo Aggregate Health Check ==="
+echo "Started at: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+echo "Timeout: ${TIMEOUT:-60}s per stack"
+echo "Output format: ${OUTPUT_FORMAT:-text}"
+echo ""
+
+# Create output directory
+mkdir -p /tmp/komodo_health_checks
+TIMESTAMP=$(date +%s)
+REPORT_FILE="/tmp/komodo_health_checks/report_${TIMESTAMP}.txt"
+JSON_FILE="/tmp/komodo_health_checks/report_${TIMESTAMP}.json"
+
+echo "Report files:"
+echo "  Text: $REPORT_FILE"
+echo "  JSON: $JSON_FILE"
+echo ""
+"""
+execution.params.services = []
+enabled = true
+
+[[procedure.config.stage]]
+name = "get-stacks-to-check"
+enabled = true
+
+# Get list of stacks to check (either specific stack or all)
+[[procedure.config.stage.executions]]
+execution.type = "ShellCommand"
+execution.params.command = """
+# Determine which stacks to check
+if [[ -n "%STACK_NAME%" ]]; then
+  # Check specific stack
+  echo "Checking single stack: %STACK_NAME%"
+  komodo-cli list-stacks --format json | jq -r '.[] | select(.name == "%STACK_NAME%") | .name' > /tmp/stacks_to_check.txt
+else
+  # Check all stacks
+  echo "Checking all deployed stacks..."
+  komodo-cli list-stacks --format json | jq -r '.[].name' > /tmp/stacks_to_check.txt
+fi
+
+STACK_COUNT=$(wc -l < /tmp/stacks_to_check.txt)
+echo "Found $STACK_COUNT stack(s) to check"
+echo ""
+"""
+execution.params.services = []
+enabled = true
+
+[[procedure.config.stage]]
+name = "check-stack-health"
+enabled = true
+
+# Iterate through stacks and check health
+[[procedure.config.stage.executions]]
+execution.type = "ShellCommand"
+execution.params.command = """
+echo "=== Checking Stack Health ==="
+
+TIMEOUT=${TIMEOUT:-60}
+INCLUDE_METRICS=${INCLUDE_METRICS:-false}
+DETAILED_ERRORS=${DETAILED_ERRORS:-false}
+
+# Initialize JSON array
+echo '{"checks":[' > "$JSON_FILE"
+FIRST=true
+
+# Read stacks and check health
+while IFS= read -r stack_name; do
+  [[ -z "$stack_name" ]] && continue
+
+  echo ""
+  echo "--- Stack: $stack_name ---"
+
+  # Add comma separator for JSON
+  if [[ "$FIRST" == "false" ]]; then
+    echo ',' >> "$JSON_FILE"
+  fi
+  FIRST=false
+
+  # Start JSON object for this stack
+  {
+    echo '{'
+    echo "\"stack_name\":\"$stack_name\","
+    echo "\"timestamp\":\"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\","
+
+    # Check stack deployment status
+    if deployment_info=$(komodo-cli deployment-info "$stack_name" --format json 2>/dev/null); then
+      status=$(echo "$deployment_info" | jq -r '.status // "unknown"')
+      version=$(echo "$deployment_info" | jq -r '.version // "unknown"')
+      echo "\"status\":\"$status\","
+      echo "\"version\":\"$version\","
+    else
+      echo "\"status\":\"not_deployed\","
+      echo "\"version\":\"unknown\","
+    fi
+
+    # Run health check with timeout
+    if health_output=$(timeout $TIMEOUT komodo-cli health "$stack_name" --format json 2>&1); then
+      # Health check succeeded
+      if echo "$health_output" | jq -e '.status == "healthy"' > /dev/null 2>&1; then
+        echo "\"health\":\"healthy\","
+        echo "\"message\":\"All services responding\","
+      else
+        echo "\"health\":\"unhealthy\","
+        echo "\"message\":\"Health check failed\","
+      fi
+
+      # Include health check details
+      echo "\"health_check\":$health_output,"
+    else
+      # Health check failed (timeout or error)
+      echo "\"health\":\"unknown\","
+      echo "\"message\":\"Health check timed out or failed\","
+      echo "\"health_check\":null,"
+    fi
+
+    # Check container status (if stack has containers)
+    if docker ps --format '{{.Names}}' | grep -q "^${stack_name}"; then
+      container_count=$(docker ps --format '{{.Names}}' | grep "^${stack_name}" | wc -l | tr -d ' ')
+      running_containers=$(docker ps --filter "name=${stack_name}" --format '{{.Names}}' | wc -l | tr -d ' ')
+      echo "\"container_count\":$container_count,"
+      echo "\"running_containers\":$running_containers,"
+    else
+      echo "\"container_count\":0,"
+      echo "\"running_containers\":0,"
+    fi
+
+    # Optional: Include performance metrics
+    if [[ "$INCLUDE_METRICS" == "true" ]]; then
+      # Get CPU/memory usage for stack containers
+      if metrics=$(docker stats --no-stream --format "table {{.Container}}\t{{.CPUPerc}}\t{{.MemUsage}}" | grep "$stack_name" 2>/dev/null); then
+        echo "\"metrics\":$(echo "$metrics" | jq -R -s -c 'split("\n") | map(select(length > 0))'),"
+      else
+        echo "\"metrics\":null,"
+      fi
+    else
+      echo "\"metrics\":null,"
+    fi
+
+    # Optional: Detailed errors
+    if [[ "$DETAILED_ERRORS" == "true" ]] && [[ "$health_output" ]] && ! echo "$health_output" | jq -e '.status == "healthy"' > /dev/null 2>&1; then
+      # Get recent logs for unhealthy stack
+      if logs=$(docker logs --tail 50 "${stack_name}" 2>&1); then
+        echo "\"recent_logs\":$(echo "$logs" | jq -R -s -c '[:500]'),"  # Limit to 500 chars
+      fi
+    else
+      echo "\"recent_logs\":null,"
+    fi
+
+    # End JSON object
+    echo '"timestamp":"'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'"'
+    echo -n '}'
+  } >> "$JSON_FILE"
+
+  # Text output
+  if health_status=$(echo "$health_output" 2>/dev/null | jq -r '.status // "unknown"'); then
+    if [[ "$health_status" == "healthy" ]]; then
+      echo "✓ Status: HEALTHY"
+    else
+      echo "✗ Status: $health_status"
+    fi
+  else
+    echo "? Status: Unknown (health check failed)"
+  fi
+
+done < /tmp/stacks_to_check.txt
+
+# Close JSON array
+echo ']}' >> "$JSON_FILE"
+
+echo ""
+echo "=== Health Check Complete ==="
+"""
+execution.params.services = []
+enabled = true
+
+[[procedure.config.stage]]
+name = "generate-report"
+enabled = true
+
+# Generate human-readable report
+[[procedure.config.stage.executions]]
+execution.type = "ShellCommand"
+execution.params.command = """
+echo "=== Generating Health Report ==="
+echo ""
+
+OUTPUT_FORMAT=${OUTPUT_FORMAT:-text}
+
+case "$OUTPUT_FORMAT" in
+  json)
+    # Output raw JSON
+    cat "$JSON_FILE"
+    ;;
+
+  markdown)
+    # Generate Markdown report
+    echo "# Komodo Health Check Report"
+    echo ""
+    echo "**Generated:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+    echo ""
+    echo "## Summary"
+    echo ""
+
+    # Calculate statistics
+    TOTAL=$(jq -r '.checks | length' "$JSON_FILE")
+    HEALTHY=$(jq -r '.checks | map(select(.health == "healthy")) | length' "$JSON_FILE")
+    UNHEALTHY=$(jq -r '.checks | map(select(.health == "unhealthy")) | length' "$JSON_FILE")
+    UNKNOWN=$(jq -r '.checks | map(select(.health == "unknown" or .health == null)) | length' "$JSON_FILE")
+
+    echo "- **Total Stacks:** $TOTAL"
+    echo "- **Healthy:** $HEALTHY"
+    echo "- **Unhealthy:** $UNHEALTHY"
+    echo "- **Unknown:** $UNKNOWN"
+    echo ""
+
+    # Determine overall status
+    if [[ $UNHEALTHY -eq 0 ]] && [[ $UNKNOWN -eq 0 ]]; then
+      echo "## Overall Status: ✅ HEALTHY"
+    elif [[ $UNHEALTHY -gt 0 ]]; then
+      echo "## Overall Status: ❌ UNHEALTHY"
+    else
+      echo "## Overall Status: ⚠️ DEGRADED"
+    fi
+    echo ""
+
+    # Detailed stack status
+    echo "## Stack Details"
+    echo ""
+
+    jq -r '.checks[] | "### \(.stack_name)\n\n- **Status:** \(.status // "unknown")\n- **Health:** \(.health // "unknown")\n- **Version:** \(.version // "unknown")\n- **Containers:** \(.running_containers // 0)/\(.container_count // 0)\n\n"' "$JSON_FILE"
+
+    # Unhealthy stacks section
+    UNHEALTHY_STACKS=$(jq -r '.checks | map(select(.health != "healthy")) | .[].stack_name' "$JSON_FILE")
+    if [[ -n "$UNHEALTHY_STACKS" ]]; then
+      echo ""
+      echo "## Unhealthy Stacks"
+      echo ""
+      echo "The following stacks require attention:"
+      echo ""
+      jq -r '.checks | map(select(.health != "healthy")) | .[] | "- **\(.stack_name):** \(.message // "No message")"' "$JSON_FILE"
+      echo ""
+    fi
+    ;;
+
+  text|*)
+    # Generate text report (default)
+    {
+      echo "=================================="
+      echo "  KOMODO HEALTH CHECK REPORT"
+      echo "=================================="
+      echo ""
+      echo "Generated: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+      echo ""
+
+      # Calculate statistics
+      TOTAL=$(jq -r '.checks | length' "$JSON_FILE")
+      HEALTHY=$(jq -r '.checks | map(select(.health == "healthy")) | length' "$JSON_FILE")
+      UNHEALTHY=$(jq -r '.checks | map(select(.health == "unhealthy")) | length' "$JSON_FILE")
+      UNKNOWN=$(jq -r '.checks | map(select(.health == "unknown" or .health == null)) | length' "$JSON_FILE")
+
+      echo "SUMMARY"
+      echo "-------"
+      echo "  Total Stacks:     $TOTAL"
+      echo "  Healthy:          $HEALTHY"
+      echo "  Unhealthy:        $UNHEALTHY"
+      echo "  Unknown:          $UNKNOWN"
+      echo ""
+
+      # Overall status
+      if [[ $UNHEALTHY -eq 0 ]] && [[ $UNKNOWN -eq 0 ]]; then
+        echo "  Overall Status:    ✓ HEALTHY"
+      elif [[ $UNHEALTHY -gt 0 ]]; then
+        echo "  Overall Status:    ✗ UNHEALTHY"
+      else
+        echo "  Overall Status:    ⚠ DEGRADED"
+      fi
+      echo ""
+
+      # Detailed stack list
+      echo ""
+      echo "STACK DETAILS"
+      echo "-------------"
+
+      jq -r '.checks[] | '
+        '"\(.stack_name)\n"
+        "  Status:    \(.status // "unknown")\n"
+        "  Health:    \(.health // "unknown")\n"
+        "  Version:   \(.version // "unknown")\n"
+        "  Containers: \(.running_containers // 0)/\(.container_count // 0)\n"
+        ""' "$JSON_FILE"
+
+      # Unhealthy stacks
+      UNHEALTHY_COUNT=$(jq -r '.checks | map(select(.health != "healthy")) | length' "$JSON_FILE")
+      if [[ $UNHEALTHY_COUNT -gt 0 ]]; then
+        echo ""
+        echo "UNHEALTHY STACKS"
+        echo "----------------"
+        jq -r '.checks | map(select(.health != "healthy")) | .[] | "\(.stack_name): \(.message // "No message")\n"' "$JSON_FILE"
+      fi
+
+      echo ""
+      echo "=================================="
+    } | tee "$REPORT_FILE"
+    ;;
+esac
+
+echo ""
+echo "Report saved to: $REPORT_FILE"
+echo "JSON saved to: $JSON_FILE"
+"""
+execution.params.services = []
+enabled = true
+
+[[procedure.config.stage]]
+name = "optional-alerting"
+enabled = true
+
+# Send alerts if unhealthy stacks detected
+[[procedure.config.stage.executions]]
+execution.type = "ShellCommand"
+execution.params.command = """
+if [[ "%ALERT_ON_FAILURE%" == "true" ]]; then
+  echo "=== Checking for Alert Conditions ==="
+
+  UNHEALTHY_COUNT=$(jq -r '.checks | map(select(.health != "healthy")) | length' "$JSON_FILE")
+
+  if [[ $UNHEALTHY_COUNT -gt 0 ]]; then
+    echo "Found $UNHEALTHY_COUNT unhealthy stack(s), sending alert..."
+
+    # Get list of unhealthy stacks
+    UNHEALTHY_STACKS=$(jq -r '.checks | map(select(.health != "healthy")) | .[].stack_name' "$JSON_FILE" | tr '\n' ',' | sed 's/,$//')
+
+    # Build alert message
+    ALERT_MESSAGE="Komodo Health Check Alert: $UNHEALTHY_COUNT unhealthy stack(s)"
+    ALERT_MESSAGE="$ALERT_MESSAGE\\nStacks: $UNHEALTHY_STACKS"
+    ALERT_MESSAGE="$ALERT_MESSAGE\\nTimestamp: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+    ALERT_MESSAGE="$ALERT_MESSAGE\\nReport: $REPORT_FILE"
+
+    # Send alert (configure your alerting mechanism here)
+    # Examples:
+    #   - Slack webhook: curl -X POST $SLACK_WEBHOOK -d "{\"text\":\"$ALERT_MESSAGE\"}"
+    #   - Email: sendmail user@example.com
+    #   - PagerDuty: curl -X POST $PAGERDUTY_API
+    #   - Custom: Your alerting script
+
+    echo "ALERT: $ALERT_MESSAGE"
+    echo "Note: Configure alerting endpoint in procedure configuration"
+  else
+    echo "No unhealthy stacks detected, skipping alert"
+  fi
+else
+  echo "Alerting disabled (set ALERT_ON_FAILURE=true to enable)"
+fi
+"""
+execution.params.services = []
+enabled = true
+
+# =============================================================================
+# NOTES
+# =============================================================================
+#
+# HEALTH CHECK STRATEGIES:
+#
+# 1. Container Health (Basic)
+#    - Check if containers are running
+#    - Verify restart counts
+#    - Check resource usage
+#
+# 2. Endpoint Health (HTTP/TCP)
+#    - HTTP health endpoints (/health, /healthz)
+#    - TCP port connectivity
+#    - DNS resolution
+#
+# 3. Application Health (Deep)
+#    - Database connectivity
+#    - Dependency health checks
+#    - Business logic validation
+#
+# 4. Stack-Level Health (Aggregate)
+#    - All services healthy
+#    - Dependencies available
+#    - Metrics within thresholds
+#
+# ALERTING INTEGRATIONS:
+#
+# Configure your preferred alerting channel in the optional-alerting stage:
+#
+#   - Slack: Webhook URL in SLACK_WEBHOOK env var
+#   - Email: SMTP configuration in mailx/sendmail
+#   - PagerDuty: API key in PAGERDUTY_API env var
+#   - Discord: Webhook URL in DISCORD_WEBHOOK env var
+#   - Custom: Your alerting script
+#
+# CRON SCHEDULING:
+#
+# Schedule regular health checks via cron:
+#
+#   # Every 5 minutes
+#   */5 * * * * komodo-cli execute health-check
+#
+#   # Hourly with alerting
+#   0 * * * * komodo-cli execute health-check --param ALERT_ON_FAILURE=true
+#
+#   # Daily full report with metrics
+#   0 0 * * * komodo-cli execute health-check --param INCLUDE_METRICS=true --param OUTPUT_FORMAT=markdown
+#
+# TROUBLESHOOTING:
+#
+# Error: "Health check timed out"
+#   -> Stack is not responding within TIMEOUT seconds
+#   -> Increase TIMEOUT parameter
+#   -> Check stack logs: docker logs <stack_name>
+#
+# Error: "Unknown status"
+#   -> Health check endpoint not configured
+#   -> Stack does not support health checks
+#   -> Manual intervention required
+# =============================================================================

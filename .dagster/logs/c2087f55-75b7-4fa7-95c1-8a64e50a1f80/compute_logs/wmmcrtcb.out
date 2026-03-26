@@ -1,0 +1,3 @@
+2026-01-04 14:27:44 [info     ] scraping_url                   language=ga site=curriculumonline url=https://www.curriculumonline.ie/ga-ie/junior-cycle/short-courses/artistic-performance/
+2026-01-04 14:27:44 [info     ] crawl_started                  base_url=https://www.curriculumonline.ie/ga-ie/junior-cycle/short-courses/artistic-performance/ include_paths=[] max_pages=50 source=curriculumonline
+2026-01-04 14:27:57 [info     ] crawl_completed                page_count=11 source=curriculumonline

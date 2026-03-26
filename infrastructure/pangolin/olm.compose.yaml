@@ -1,0 +1,34 @@
+# =============================================================================
+# OLM - OpenLiteSpeed Tunnel Agent
+# =============================================================================
+# Alternative tunnel agent for Pangolin using OpenLiteSpeed.
+#
+# USAGE:
+#   Development:  docker compose -f olm.compose.yaml up -d
+#   Production:   docker compose -f olm.compose.yaml -f olm.sidecar.yaml up -d
+#
+# PREREQUISITES:
+#   - Pangolin running and accessible
+#   - OLM site created in Pangolin UI
+#   - Credentials stored in 1Password (vault: dev-baile)
+# =============================================================================
+
+name: olm
+
+services:
+  olm:
+    image: fosrl/olm:latest
+    container_name: olm
+    restart: unless-stopped
+    environment:
+      PANGOLIN_ENDPOINT: ${PANGOLIN_ENDPOINT:-https://pangolin.cianfhoghlaim.ie}
+      OLM_ID: ${OLM_ID:-}
+      OLM_SECRET: ${OLM_SECRET:-}
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    labels:
+      - "komodo.skip=true"
+    network_mode: host

@@ -1,0 +1,41 @@
+---
+# =============================================================================
+# LOCKET ROLE - 1Password Connect Configuration
+# =============================================================================
+
+- name: Create locket configuration directory
+  ansible.builtin.file:
+    path: "{{ locket_op_token_dir }}"
+    state: directory
+    owner: "{{ locket_cli_plugin_user }}"
+    group: "{{ locket_cli_plugin_group }}"
+    mode: "{{ locket_dir_mode }}"
+
+- name: Deploy 1Password Connect token
+  ansible.builtin.copy:
+    content: "{{ locket_op_connect_token }}"
+    dest: "{{ locket_op_token_file }}"
+    owner: "{{ locket_cli_plugin_user }}"
+    group: "{{ locket_cli_plugin_group }}"
+    mode: "{{ locket_secret_file_mode }}"
+  when: locket_op_connect_token is defined and locket_op_connect_token | length > 0
+  no_log: true
+
+- name: Verify 1Password Connect is reachable
+  ansible.builtin.uri:
+    url: "{{ locket_op_connect_host }}/heartbeat"
+    method: GET
+    status_code: [200, 503]  # 503 is returned when Connect is starting up
+    timeout: 10
+  register: op_connect_health
+  failed_when: false
+  when: locket_op_connect_host | length > 0
+
+- name: Display 1Password Connect status
+  ansible.builtin.debug:
+    msg: >-
+      1Password Connect at {{ locket_op_connect_host }}:
+      {{ 'reachable' if op_connect_health.status == 200 else 'unreachable or starting' }}
+  when:
+    - locket_op_connect_host | length > 0
+    - op_connect_health is defined

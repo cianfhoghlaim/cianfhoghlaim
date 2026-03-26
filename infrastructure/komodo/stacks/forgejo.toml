@@ -1,0 +1,33 @@
+# =============================================================================
+# FORGEJO - Self-hosted Git with Package Registry
+# =============================================================================
+# Git server deployed on Oracle Cloud Free Tier (arm1-oci)
+# Accessible at git.cianfhoghlaim.ie
+# =============================================================================
+
+[[stack]]
+name = "forgejo"
+description = "Self-hosted Git server with PyPI/Container registry"
+tags = ["host:arm1-oci", "tier:devtools", "type:git", "domain:git.cianfhoghlaim.ie"]
+
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/storage/forgejo"
+file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
+environment = """
+# Server configuration
+FORGEJO_DOMAIN=git.cianfhoghlaim.ie
+FORGEJO_ROOT_URL=https://git.cianfhoghlaim.ie
+FORGEJO_HTTP_PORT=3000
+FORGEJO_SSH_PORT=2222
+# Database
+FORGEJO_DB_USER=forgejo
+FORGEJO_DB_NAME=forgejo
+# Features
+FORGEJO_DISABLE_REGISTRATION=false
+FORGEJO_REQUIRE_SIGNIN=false
+FORGEJO_ACTIONS_ENABLED=true
+# Locket secrets management
+OP_CONNECT_HOST=http://132.145.27.89:8080
+LOCKET_MODE=watch
+"""

@@ -1,0 +1,224 @@
+# =============================================================================
+# BROWSER - Development Stack (Minimal)
+# =============================================================================
+# Core services for SEC exam scraping without CAPTCHA solver.
+# examinations.ie does not use Cloudflare Turnstile.
+# =============================================================================
+
+name: browser
+
+x-browser-env: &browser-env
+  BROWSER_CDP_URL: ws://browser-grid:9222
+  BROWSER_SKYVERN_API_URL: http://skyvern:8000/api/v1
+  BROWSER_CRAWL4AI_URL: http://crawl4ai:11235
+  BROWSER_STAGEHAND_URL: http://stagehand-local:3100
+
+x-llm-env: &llm-env
+  OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+  ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+  ZAI_API_KEY: ${ZAI_API_KEY:-}
+  GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+  LLM_PROVIDER: ${LLM_PROVIDER:-anthropic}
+
+services:
+  # ===========================================================================
+  # BROWSER GRID - Patchright Stealth Chromium
+  # ===========================================================================
+  browser-grid:
+    build:
+      context: ./browser-grid
+      dockerfile: Dockerfile
+    container_name: browser-grid
+    restart: unless-stopped
+    shm_size: '2gb'
+    cap_add:
+      - SYS_ADMIN
+    init: true
+    expose:
+      - "9222"
+    environment:
+      DISPLAY: ":99"
+      CHROME_FLAGS: "--disable-gpu --no-sandbox --disable-dev-shm-usage"
+    volumes:
+      - /dev/shm:/dev/shm
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:9222/json/version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - browser-net
+
+  # ===========================================================================
+  # SKYVERN DATABASE
+  # ===========================================================================
+  skyvern-db:
+    image: postgres:16-alpine
+    container_name: browser-skyvern-db
+    restart: always
+    volumes:
+      - skyvern-postgres:/var/lib/postgresql/data
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_USER: skyvern
+      POSTGRES_PASSWORD: ${SKYVERN_DB_PASSWORD:-skyvern}
+      POSTGRES_DB: skyvern
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skyvern"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - browser-net
+
+  # ===========================================================================
+  # SKYVERN - Hunter Agent (Vision-based navigation)
+  # ===========================================================================
+  skyvern:
+    image: public.ecr.aws/skyvern/skyvern:latest
+    container_name: browser-skyvern
+    restart: on-failure
+    ports:
+      - "${SKYVERN_PORT:-8001}:8000"
+    environment:
+      <<: *llm-env
+      DATABASE_STRING: postgresql+psycopg://skyvern:${SKYVERN_DB_PASSWORD:-skyvern}@skyvern-db:5432/skyvern
+      BROWSER_TYPE: cdp-connect
+      BROWSER_REMOTE_DEBUGGING_URL: ws://browser-grid:9222/
+      ENABLE_OPENAI: ${ENABLE_OPENAI:-true}
+      ENABLE_ANTHROPIC: ${ENABLE_ANTHROPIC:-false}
+      ENABLE_CODE_BLOCK: "true"
+    volumes:
+      - skyvern-artifacts:/data/artifacts
+      - skyvern-videos:/data/videos
+    depends_on:
+      skyvern-db:
+        condition: service_healthy
+      browser-grid:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - browser-net
+
+  # ===========================================================================
+  # CRAWL4AI - Gatherer Agent (High-throughput extraction)
+  # ===========================================================================
+  crawl4ai:
+    image: unclecode/crawl4ai:latest
+    container_name: browser-crawl4ai
+    restart: unless-stopped
+    expose:
+      - "11235"
+    environment:
+      <<: *llm-env
+      MAX_CONCURRENT_TASKS: ${MAX_CONCURRENT_TASKS:-4}
+      CDP_URL: ws://browser-grid:9222
+    volumes:
+      - /dev/shm:/dev/shm
+      - crawl4ai-downloads:/downloads
+    depends_on:
+      - browser-grid
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:11235/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - browser-net
+
+  # ===========================================================================
+  # STAGEHAND LOCAL - Operator Agent (AI-powered interactions)
+  # ===========================================================================
+  stagehand-local:
+    build:
+      context: ./stagehand-server
+      dockerfile: Dockerfile
+    container_name: browser-stagehand
+    restart: unless-stopped
+    ports:
+      - "${STAGEHAND_PORT:-3100}:3100"
+    environment:
+      PORT: "3100"
+      HEADLESS: "${STAGEHAND_HEADLESS:-true}"
+      MAX_SESSIONS: "${STAGEHAND_MAX_SESSIONS:-10}"
+      SESSION_TTL_MS: "${STAGEHAND_SESSION_TTL:-300000}"
+      DEFAULT_MODEL: "${STAGEHAND_MODEL:-glm-4.6}"
+      VISION_MODEL: "${STAGEHAND_VISION_MODEL:-glm-4.6v}"
+      AGENT_MODEL: "${STAGEHAND_AGENT_MODEL:-google/gemini-3-flash-preview}"
+      <<: *llm-env
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - seccomp:unconfined
+    shm_size: '2gb'
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:3100/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    networks:
+      - browser-net
+
+  # ===========================================================================
+  # GARAGE - S3-compatible storage for artifacts
+  # ===========================================================================
+  garage:
+    image: dxflrs/garage:v1.0.1
+    container_name: browser-garage
+    restart: unless-stopped
+    ports:
+      - "${GARAGE_S3_PORT:-3900}:3900"
+      - "${GARAGE_WEB_PORT:-3902}:3902"
+    expose:
+      - "3901"
+    environment:
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:-devsecret0000000000000000000000000000000000000000000000000000000}
+      GARAGE_RPC_BIND_ADDR: "[::]:3901"
+      GARAGE_S3_API_BIND_ADDR: "[::]:3900"
+      GARAGE_S3_REGION: garage
+      GARAGE_ADMIN_API_BIND_ADDR: "[::]:3903"
+      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN:-devtoken}
+    volumes:
+      - garage-data:/var/lib/garage/data
+      - garage-meta:/var/lib/garage/meta
+    healthcheck:
+      test: ["CMD", "/garage", "-c", "/etc/garage.toml", "node", "id"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - browser-net
+
+volumes:
+  browser-data:
+  browser-screenshots:
+  skyvern-postgres:
+  skyvern-artifacts:
+  skyvern-videos:
+  crawl4ai-downloads:
+  garage-data:
+  garage-meta:
+
+networks:
+  browser-net:
+    driver: bridge

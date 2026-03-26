@@ -1,0 +1,58 @@
+# =============================================================================
+# LANCE HETZNER - Lance Namespace Sidecar
+# =============================================================================
+# Lance table registration sidecar for production ML/AI workloads.
+# Registers LanceDB tables in Lakekeeper Iceberg catalog.
+# =============================================================================
+
+name: lance-hetzner
+
+services:
+  # ---------------------------------------------------------------------------
+  # LANCE-NAMESPACE - Iceberg Adapter for Lance Tables
+  # ---------------------------------------------------------------------------
+  lance-namespace:
+    build:
+      context: ../lakehouse/lance-sidecar
+      dockerfile: Dockerfile
+    image: lance-namespace-hetzner:latest
+    container_name: lance-hetzner
+    restart: unless-stopped
+    ports:
+      - "${LANCE_NAMESPACE_PORT:-8182}:8182"
+    environment:
+      # Lakekeeper connection (local)
+      ICEBERG_ENDPOINT: http://lakekeeper-hetzner:8181
+      ICEBERG_WAREHOUSE: ${ICEBERG_WAREHOUSE:-hetzner_production}
+      ICEBERG_PREFIX: "hetzner/"
+      ICEBERG_AUTH_TOKEN: ${LANCE_ICEBERG_AUTH_TOKEN:-}
+      # Lance storage (local filesystem for performance)
+      LANCE_ROOT: /data/lance/
+      # Timeouts
+      ICEBERG_CONNECT_TIMEOUT_MILLIS: "10000"
+      ICEBERG_READ_TIMEOUT_MILLIS: "30000"
+      ICEBERG_MAX_RETRIES: "3"
+      # Server configuration
+      SIDECAR_HOST: "0.0.0.0"
+      SIDECAR_PORT: "8182"
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      - lance-hetzner-data:/data/lance
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8182/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - lakehouse
+      - pangolin
+
+volumes:
+  lance-hetzner-data:
+
+networks:
+  lakehouse:
+    driver: bridge
+  pangolin:
+    external: true

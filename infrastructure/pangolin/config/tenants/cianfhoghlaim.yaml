@@ -1,0 +1,163 @@
+# Cianfhoghlaim - Celtic Education Charity
+# Multi-tenant configuration for cianfhoghlaim.ie
+
+tenant:
+  id: "cianfhoghlaim"
+  name: "Cianfhoghlaim"
+  displayName: "Cianfhoghlaim - Foghlaim Domhain"
+  domains:
+    - "cianfhoghlaim.ie"
+    - "www.cianfhoghlaim.ie"
+    - "localhost:3000"  # Development
+  type: "education"
+  description: "Celtic language education platform with AI-powered tools"
+  tagline: "Deep Learning for Celtic Languages"
+
+owner:
+  name: "Cian Mac Liosta"
+  title: "Founder"
+  email: "cian@cianfhoghlaim.ie"
+  github: "cianmcl"
+  linkedin: "cianmcliosta"
+
+theme:
+  primaryColor: "#1e40af"      # Celtic blue
+  secondaryColor: "#059669"    # Celtic green
+  accentColor: "#d97706"       # Celtic gold
+  backgroundColor: "#0f172a"   # Dark slate
+  foregroundColor: "#f8fafc"   # Light text
+  logo: "/assets/cianfhoghlaim/logo.svg"
+  favicon: "/assets/cianfhoghlaim/favicon.svg"
+  fontFamily: "Inter, system-ui, sans-serif"
+  fontHeading: "Playfair Display, serif"
+  borderRadius: "0.5rem"
+  assets:
+    style: "celtic"
+    patterns:
+      - "knotwork"
+      - "spiral"
+      - "triskele"
+      - "illuminated"
+
+routes:
+  enabled:
+    - path: "/"
+      component: "home"
+      title: "Home"
+    - path: "/curriculum"
+      component: "curriculum"
+      title: "Curriculum"
+    - path: "/translation"
+      component: "translation"
+      title: "Translation"
+    - path: "/chat"
+      component: "chat"
+      title: "AI Chat"
+    - path: "/resources"
+      component: "resources"
+      title: "Resources"
+    - path: "/about"
+      component: "about"
+      title: "About"
+  disabled:
+    - "/music"
+    - "/projects"
+    - "/game"
+    - "/portfolio"
+
+features:
+  curriculumBrowser: true
+  translationTool: true
+  aiChat: true
+  resourceLibrary: true
+  vocabularyTracker: true
+  examPrep: true
+  musicPlayer: false
+  portfolioMode: false
+  gameShowcase: false
+
+navigation:
+  primary:
+    - label: "Curriculum"
+      path: "/curriculum"
+      icon: "book"
+    - label: "Translation"
+      path: "/translation"
+      icon: "languages"
+    - label: "AI Chat"
+      path: "/chat"
+      icon: "message-circle"
+    - label: "Resources"
+      path: "/resources"
+      icon: "folder"
+  footer:
+    - label: "About"
+      path: "/about"
+    - label: "Privacy"
+      path: "/privacy"
+    - label: "Terms"
+      path: "/terms"
+
+languages:
+  primary: "ga"  # Irish
+  supported:
+    - code: "ga"
+      name: "Gaeilge"
+      nativeName: "Irish"
+    - code: "en"
+      name: "English"
+      nativeName: "English"
+    - code: "cy"
+      name: "Cymraeg"
+      nativeName: "Welsh"
+    - code: "gd"
+      name: "Gàidhlig"
+      nativeName: "Scottish Gaelic"
+    - code: "gv"
+      name: "Gaelg"
+      nativeName: "Manx"
+
+dataSources:
+  yaml:
+    - path: "config/content/cianfhoghlaim"
+      type: "profile"
+  database:
+    - type: "postgresql"
+      name: "curriculum"
+      tables:
+        - "subjects"
+        - "topics"
+        - "learning_outcomes"
+  external:
+    - source: "ncca"
+      pipeline: "cianfhoghlaim.curriculum"
+      schedule: "daily"
+    - source: "sec"
+      pipeline: "cianfhoghlaim.exams"
+      schedule: "weekly"
+    - source: "github"
+      pipeline: "cianfhoghlaim.github_profile"
+      schedule: "hourly"
+
+storage:
+  duckdbPath: "./storage/data/tenants/cianfhoghlaim/main.duckdb"
+  lancedbPath: "./storage/data/tenants/cianfhoghlaim/lancedb"
+  assetsPath: "./storage/assets/cianfhoghlaim"
+
+analytics:
+  enabled: true
+  provider: "plausible"
+  siteId: "cianfhoghlaim.ie"
+
+seo:
+  title: "Cianfhoghlaim - Celtic Language Education"
+  description: "AI-powered platform for learning Irish, Welsh, Scottish Gaelic, and Manx"
+  keywords:
+    - "Irish language"
+    - "Gaeilge"
+    - "Celtic languages"
+    - "language learning"
+    - "curriculum"
+    - "education"
+  ogImage: "/assets/cianfhoghlaim/og-image.png"
+  twitterHandle: "@cianfhoghlaim"

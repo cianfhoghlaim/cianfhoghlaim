@@ -1,0 +1,24 @@
+# =============================================================================
+# SUNSHINE STACK
+# =============================================================================
+# Self-hosted game streaming server compatible with Moonlight clients
+# =============================================================================
+
+[[stack]]
+name = "sunshine"
+description = "Game streaming server for Moonlight clients"
+tags = ["host:bunchloch", "tier:media", "type:gaming", "domain:sunshine.aleyum.com"]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/sunshine"
+file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
+environment = """
+SUNSHINE_DOMAIN=sunshine.aleyum.com
+SUNSHINE_NAME=Sunshine Game Streaming
+TZ=Europe/Dublin
+PUID=1000
+PGID=1000
+OP_CONNECT_HOST=${OP_CONNECT_HOST}
+LOCKET_MODE=watch
+"""

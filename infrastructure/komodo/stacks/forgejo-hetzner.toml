@@ -1,0 +1,43 @@
+# =============================================================================
+# FORGEJO HETZNER - Backup Forgejo Instance
+# =============================================================================
+# Standby/backup Forgejo instance on Hetzner
+# Can be promoted to primary if OCI instance fails
+# =============================================================================
+
+[[stack]]
+name = "forgejo-hetzner"
+description = "Forgejo backup instance on Hetzner"
+tags = ["host:cax41-hetzner", "tier:devtools", "type:git", "environment:backup"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/storage/forgejo-hetzner"
+file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
+environment = """
+# Server configuration (different domain for backup)
+FORGEJO_DOMAIN=git-hetzner.cianfhoghlaim.ie
+FORGEJO_ROOT_URL=https://git-hetzner.cianfhoghlaim.ie
+FORGEJO_HTTP_PORT=3000
+FORGEJO_SSH_PORT=2222
+# Database (shared PostgreSQL on Hetzner)
+FORGEJO_DB_TYPE=postgres
+FORGEJO_DB_HOST=postgres:5432
+FORGEJO_DB_USER=forgejo
+FORGEJO_DB_NAME=forgejo_hetzner
+# Features (read-only mode unless promoted)
+FORGEJO_DISABLE_REGISTRATION=true
+FORGEJO_REQUIRE_SIGNIN=true
+FORGEJO_ACTIONS_ENABLED=false
+# Backup mode
+FORGEJO_BACKUP_MODE=true
+FORGEJO_PRIMARY_INSTANCE=https://git.cianfhoghlaim.ie
+# Locket secrets management
+OP_CONNECT_HOST=http://132.145.27.89:8080
+LOCKET_MODE=watch
+"""
+
+# Stack dependencies
+[[stack.depends_on]]
+name = "postgres"
+condition = "service_healthy"

@@ -1,0 +1,11 @@
+# Dagster dg workspace configuration
+# Loads all sruth/* data pipeline projects in a unified UI
+# Run `dg dev` from repository root to start all code locations
+
+directory_type = "workspace"
+
+[workspace]
+
+# Celtic Education Platform - Irish curriculum, Celtic languages, British Isles education
+[[workspace.projects]]
+path = "flows/education"

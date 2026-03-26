@@ -1,10 +1,118 @@
-[runtime]
-log_level = "INFO"
+# DLT Configuration for Celtic Education Platform
+# Reference: https://dlthub.com/docs/reference/performance
+
+# ============================================================================
+# Extract Phase Configuration
+# ============================================================================
+# Controls parallel extraction of resources
+# Each worker handles one resource concurrently
+
+[extract]
+# Number of parallel extraction workers (default: 5)
+# Increase for I/O-bound sources (API calls, web scraping)
+# Decrease for CPU-bound sources or rate-limited APIs
+workers = 5
+
+# Maximum items to process in parallel per resource
+# Higher values = more memory usage but faster extraction
+max_parallel_items = 20
+
+# ============================================================================
+# Normalize Phase Configuration
+# ============================================================================
+# Controls parallel normalization (schema inference, data transformation)
 
 [normalize]
-# Auto-normalize nested JSON from GitHub API
-loader_file_format = "parquet"
+# Number of parallel normalization workers (default: 2)
+# This phase is CPU-intensive, limit based on available cores
+workers = 3
 
-[schema]
-# Schema evolution settings
-evolution_mode = "evolve"
+# ============================================================================
+# Load Phase Configuration
+# ============================================================================
+# Controls parallel loading to destination
+
+[load]
+# Number of parallel load workers (default: 20)
+# DuckDB is single-threaded, so this mainly affects batching
+# For LanceDB/other destinations, increase for better throughput
+workers = 10
+
+# ============================================================================
+# Runtime Configuration
+# ============================================================================
+
+[runtime]
+# Enable detailed logging for debugging performance issues
+log_level = "INFO"
+
+# Pipeline trace logging (set to DEBUG for performance analysis)
+# trace_level = "DEBUG"
+
+# ============================================================================
+# DuckDB Destination Configuration (Fallback)
+# ============================================================================
+
+[destination.duckdb]
+# DuckDB-specific settings
+# Note: DuckDB is single-threaded for writes
+# Use when DuckLake/lakehouse infrastructure is not running
+# Set USE_DUCKLAKE=false to use this destination
+
+# Connection pool settings (not applicable for file-based DuckDB)
+# pool_size = 1
+
+# ============================================================================
+# DuckLake Destination Configuration (Primary)
+# ============================================================================
+# DuckLake provides lakehouse capabilities with time-travel, ACID transactions
+# Switch between local/production via DLT_ENVIRONMENT env var
+
+[destination.ducklake]
+# Local development (default when DLT_ENVIRONMENT=local or unset)
+# Uses Garage S3 for data + PostgreSQL for metadata
+# Requires: docker compose up -d in bonneagar/storage/lakehouse/
+#
+# Production (when DLT_ENVIRONMENT=production)
+# Uses Cloudflare R2 for data + PlanetScale for metadata
+# Requires: R2_BUCKET, PLANETSCALE_CONNECTION_STRING env vars
+
+# Staging directory for temporary files during loads
+# staging_dir = "s3://ducklake/staging/"
+
+# Maximum concurrent loads (default: 5)
+# max_parallel_loads = 5
+
+# ============================================================================
+# Source-Specific Configuration
+# ============================================================================
+
+# Firecrawl source - respect rate limits
+[sources.firecrawl]
+# API rate limiting (requests per second)
+# rate_limit = 3
+
+# Browserbase source - browser automation
+[sources.browserbase]
+# Concurrent browser sessions
+# max_sessions = 2
+
+# ============================================================================
+# Performance Tips
+# ============================================================================
+# 1. Yield batches, not rows: 100x performance improvement
+#    - BAD:  yield from get_rows(10000)
+#    - GOOD: while batch := list(islice(rows, 1000)): yield batch
+#
+# 2. Use parallelized=True on resources for thread-safe extraction
+#    @dlt.resource(parallelized=True)
+#
+# 3. Never run pipelines with identical names simultaneously
+#    - Use unique names: f"curriculum_{cycle}_{subject}"
+#
+# 4. For DuckDB destination, workers settings mainly affect batching
+#    - Actual writes are single-threaded
+#
+# 5. For parallel subject processing, create separate Dagster assets
+#    - Each asset has unique pipeline name
+#    - Dagster parallelizes independent assets automatically

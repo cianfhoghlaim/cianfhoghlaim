@@ -1,6 +1,0 @@
-pnpm-lock.yaml
-.astro
-proxy/proxy.bundled.cjs
-iframe-worker/worker.bundled.mjs
-
-convex/_generated

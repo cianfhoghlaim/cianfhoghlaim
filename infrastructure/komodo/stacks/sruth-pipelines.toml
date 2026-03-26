@@ -1,0 +1,176 @@
+# =============================================================================
+# SRUTH DATA PIPELINES
+# =============================================================================
+# All sruth/ data pipelines for Cianfhoghlaim platform.
+#
+# Pipelines:
+# - oideachais: Celtic education curriculum processing
+# - crypteolas: Crypto/DeFi data analysis
+# - tuath: Gaming and mythology content
+# - códeolas: Code intelligence and search
+# - browser: Web scraping infrastructure
+# - taighde: Research and knowledge synthesis
+# - aleyum: Music discovery and curation
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# OIDEACHAIS - Celtic Education Platform
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "sruth-oideachais"
+description = "Pan-Celtic curriculum search and AG-UI streaming API"
+tags = ["host:hetzner-databases", "tier:production", "type:education", "pipeline:sruth"]
+
+[stack.config]
+server_id = "hetzner-databases"
+run_directory = "/etc/komodo/sruth/oideachais"
+file_paths = ["compose.yaml"]
+environment = """
+API_PORT=8000
+FRONTEND_PORT=3000
+ENVIRONMENT=production
+LLM_PROVIDER=anthropic
+"""
+
+# -----------------------------------------------------------------------------
+# CRYPTEOLAS - Crypto/DeFi Intelligence
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "sruth-crypteolas"
+description = "DeFi protocol analysis and knowledge graph"
+tags = ["host:hetzner-devtools", "tier:production", "type:crypto", "pipeline:sruth"]
+
+[stack.config]
+server_id = "hetzner-devtools"
+run_directory = "/etc/komodo/sruth/crypteolas"
+file_paths = ["docker-compose.yaml"]
+environment = """
+API_PORT=8001
+UI_PORT=3001
+DAGSTER_PORT=3002
+MEMGRAPH_PORT=7688
+ENVIRONMENT=production
+"""
+
+# -----------------------------------------------------------------------------
+# TUATH - Gaming & Mythology
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "sruth-tuath"
+description = "Irish mythology and educational game content"
+tags = ["host:oci-devtools", "tier:production", "type:gaming", "pipeline:sruth"]
+
+[stack.config]
+server_id = "oci-devtools"
+run_directory = "/etc/komodo/sruth/tuath"
+file_paths = ["docker-compose.yaml"]
+environment = """
+API_PORT=8006
+SPACETIMEDB_PORT=3030
+FALKORDB_PORT=6379
+ENVIRONMENT=production
+"""
+
+# -----------------------------------------------------------------------------
+# CÓDEOLAS - Code Intelligence
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "sruth-codeolas"
+description = "Semantic code search and multi-hop research"
+tags = ["host:hetzner-devtools", "tier:production", "type:code", "pipeline:sruth"]
+
+[stack.config]
+server_id = "hetzner-devtools"
+run_directory = "/etc/komodo/sruth/codeolas"
+file_paths = ["compose.yaml"]
+environment = """
+API_PORT=8002
+DAGSTER_PORT=3102
+TREE_SITTER_LANGUAGES=python,typescript,javascript,go,rust
+ENVIRONMENT=production
+"""
+
+# -----------------------------------------------------------------------------
+# BROWSER - Web Scraping Infrastructure (Patchright Stack)
+# -----------------------------------------------------------------------------
+# Hunter-Gatherer-Operator architecture:
+#   - Skyvern (Hunter): Vision-based semantic navigation
+#   - Crawl4AI (Gatherer): High-throughput bulk extraction
+#   - Stagehand (Operator): AI-powered precision interactions
+# All services share Patchright stealth browser grid for anti-bot evasion.
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "sruth-browser"
+description = "Unified browser automation with Patchright stealth grid"
+tags = ["host:cax41-hetzner", "tier:production", "type:browser-automation", "pipeline:sruth"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/sruth/browser"
+file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
+environment = """
+# Service Ports
+API_PORT=8003
+STAGEHAND_PORT=3100
+SKYVERN_PORT=8001
+SKYVERN_UI_PORT=8080
+GARAGE_S3_PORT=3900
+GARAGE_WEB_PORT=3902
+
+# Browser Configuration
+DEFAULT_BACKEND=crawl4ai
+FALLBACK_STRATEGY=cost
+LLM_PROVIDER=anthropic
+
+# Stagehand Models
+STAGEHAND_MODEL=glm-4.6
+STAGEHAND_VISION_MODEL=glm-4.6v
+STAGEHAND_AGENT_MODEL=google/gemini-3-flash-preview
+STAGEHAND_HEADLESS=true
+STAGEHAND_MAX_SESSIONS=10
+
+# Environment
+ENVIRONMENT=production
+LOG_LEVEL=INFO
+"""
+
+# -----------------------------------------------------------------------------
+# TAIGHDE - Research Intelligence
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "sruth-taighde"
+description = "Academic research ingestion and knowledge synthesis"
+tags = ["host:hetzner-databases", "tier:production", "type:research", "pipeline:sruth"]
+
+[stack.config]
+server_id = "hetzner-databases"
+run_directory = "/etc/komodo/sruth/taighde"
+file_paths = ["compose.yaml"]
+environment = """
+API_PORT=8004
+DAGSTER_PORT=3105
+MEMGRAPH_BOLT_PORT=7689
+MEMGRAPH_LAB_PORT=3104
+PDF_OCR_ENABLED=true
+ENVIRONMENT=production
+"""
+
+# -----------------------------------------------------------------------------
+# ALEYUM - Music Discovery
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "sruth-aleyum"
+description = "Music discovery and Celtic music curation"
+tags = ["host:macbook-media", "tier:development", "type:music", "pipeline:sruth"]
+
+[stack.config]
+server_id = "macbook-media"
+run_directory = "/etc/komodo/sruth/aleyum"
+file_paths = ["compose.yaml"]
+environment = """
+API_PORT=8005
+FRONTEND_PORT=3005
+DAGSTER_PORT=3106
+REDIS_PORT=6381
+ENVIRONMENT=development
+"""

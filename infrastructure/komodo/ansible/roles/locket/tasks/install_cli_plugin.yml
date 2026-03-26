@@ -1,0 +1,33 @@
+---
+# =============================================================================
+# LOCKET ROLE - Docker CLI Plugin Installation
+# =============================================================================
+
+- name: Create Docker CLI plugins directory
+  ansible.builtin.file:
+    path: "{{ locket_cli_plugin_home }}/.docker/cli-plugins"
+    state: directory
+    owner: "{{ locket_cli_plugin_user }}"
+    group: "{{ locket_cli_plugin_group }}"
+    mode: "0755"
+
+- name: Symlink locket as Docker CLI plugin
+  ansible.builtin.file:
+    src: "{{ locket_binary_path }}"
+    dest: "{{ locket_cli_plugin_home }}/.docker/cli-plugins/docker-locket"
+    state: link
+    owner: "{{ locket_cli_plugin_user }}"
+    group: "{{ locket_cli_plugin_group }}"
+
+- name: Verify Docker CLI plugin installation
+  ansible.builtin.command: docker locket --version
+  register: docker_locket_check
+  changed_when: false
+  failed_when: false
+  become: true
+  become_user: "{{ locket_cli_plugin_user }}"
+
+- name: Display CLI plugin status
+  ansible.builtin.debug:
+    msg: "Docker CLI plugin installed: {{ docker_locket_check.stdout | default('verification skipped') }}"
+  when: docker_locket_check.rc == 0

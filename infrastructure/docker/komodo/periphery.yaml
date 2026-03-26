@@ -1,0 +1,33 @@
+# =============================================================================
+# KOMODO PERIPHERY - Co-located Deployment Overlay
+# =============================================================================
+# Use this overlay to deploy Periphery alongside Core on the same server
+# Include with: docker compose -f compose.yaml -f sidecar.yaml -f periphery.yaml up -d
+
+services:
+  periphery:
+    image: ghcr.io/moghtech/komodo-periphery:${KOMODO_IMAGE_TAG:-2-dev}
+    container_name: komodo-periphery
+    init: true
+    restart: unless-stopped
+    depends_on:
+      core:
+        condition: service_healthy
+    environment:
+      KOMODO_PASSKEY: ${KOMODO_PASSKEY:-}
+    volumes:
+      # Core / Periphery communication keys
+      - komodo-keys:/config/keys
+      # External docker socket
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Process visibility
+      - /proc:/proc
+      # Periphery agent root directory (must match inside/outside container)
+      - ${PERIPHERY_ROOT:-/etc/komodo}:${PERIPHERY_ROOT:-/etc/komodo}
+    networks:
+      - komodo
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G

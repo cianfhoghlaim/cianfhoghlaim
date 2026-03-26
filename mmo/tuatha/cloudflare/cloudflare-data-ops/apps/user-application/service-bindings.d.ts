@@ -1,1 +1,0 @@
-interface ServiceBindings extends Env {}

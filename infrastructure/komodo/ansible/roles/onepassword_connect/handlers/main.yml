@@ -1,0 +1,9 @@
+---
+# =============================================================================
+# 1PASSWORD CONNECT ROLE - HANDLERS
+# =============================================================================
+
+- name: Restart 1Password Connect
+  community.docker.docker_compose_v2:
+    project_src: "{{ op_connect_base_dir }}"
+    state: restarted

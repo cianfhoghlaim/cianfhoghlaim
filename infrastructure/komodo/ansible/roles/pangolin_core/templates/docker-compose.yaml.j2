@@ -1,0 +1,253 @@
+---
+# =============================================================================
+# PANGOLIN CORE STACK - Docker Compose
+# =============================================================================
+# Deployed by Ansible pangolin_core role
+# Domain: {{ pangolin_domain }}
+# =============================================================================
+
+services:
+
+  # ===========================================================================
+  # LOCKET - Secrets Management Sidecar
+  # ===========================================================================
+  locket:
+    image: {{ locket_image }}
+    platform: linux/amd64
+    container_name: pangolin-locket
+    user: "65532:65532"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    environment:
+      # Connect to 1Password Connect via shared infrastructure network
+      OP_CONNECT_HOST: http://op-connect-api:8080
+      OP_CONNECT_TOKEN_FILE: /connect/token
+    command:
+      - "--provider=op-connect"
+      - "--mode=watch"
+      - "--map=/templates:/run/secrets/locket"
+    volumes:
+      - ./config/secrets/templates:/templates:ro
+      - secrets-store:/run/secrets/locket
+      - ./config/secrets/op_token:/connect/token:ro
+    networks:
+      - default
+      - infrastructure
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/locket", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    labels:
+      - "komodo.skip=true"
+
+  # ===========================================================================
+  # POSTGRESQL - Production Database
+  # ===========================================================================
+  postgres:
+    image: {{ postgres_image }}
+    container_name: pangolin-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: pangolin
+      POSTGRES_PASSWORD: {{ pangolin_postgres_password }}
+      POSTGRES_DB: pangolin
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pangolin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - "komodo.skip=true"
+
+  # ===========================================================================
+  # PANGOLIN - Identity-Aware Tunneled Reverse Proxy
+  # ===========================================================================
+  pangolin:
+    image: {{ pangolin_image }}
+    container_name: pangolin
+    restart: unless-stopped
+    depends_on:
+      locket:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./config:/app/config
+      - secrets-store:/run/secrets/locket:ro
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        export SERVER_SECRET=$$(cat /run/secrets/locket/server_secret)
+        npm run start
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/v1/"]
+      interval: "3s"
+      timeout: "3s"
+      retries: 15
+    labels:
+      - "komodo.skip=true"
+
+  # ===========================================================================
+  # GERBIL - WireGuard Tunnel Controller
+  # ===========================================================================
+  gerbil:
+    image: {{ gerbil_image }}
+    container_name: gerbil
+    restart: unless-stopped
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    command:
+      - --reachableAt=http://gerbil:3003
+      - --generateAndSaveKeyTo=/var/config/key
+      - --remoteConfig=http://pangolin:3001/api/v1/gerbil/get-config
+      - --reportBandwidthTo=http://pangolin:3001/api/v1/gerbil/receive-bandwidth
+    volumes:
+      - ./config/:/var/config
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    ports:
+      - {{ pangolin_wireguard_port }}:51820/udp
+      - {{ pangolin_https_port }}:443
+      - {{ pangolin_http_port }}:80
+    labels:
+      - "komodo.skip=true"
+
+  # ===========================================================================
+  # TRAEFIK - Reverse Proxy with Dynamic Configuration
+  # ===========================================================================
+  traefik:
+    image: {{ traefik_image }}
+    container_name: traefik
+    restart: unless-stopped
+    network_mode: service:gerbil
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    command:
+      - --configFile=/etc/traefik/traefik_config.yml
+    volumes:
+      - ./config/traefik:/etc/traefik:ro
+      - ./config/letsencrypt:/letsencrypt
+      - ./config/traefik/rules:/rules:ro
+      - ./config/traefik/logs:/var/log/traefik
+    labels:
+      - "komodo.skip=true"
+
+  # ===========================================================================
+  # MIDDLEWARE MANAGER - Traefik Middleware UI
+  # ===========================================================================
+  middleware-manager:
+    image: {{ middleware_manager_image }}
+    platform: linux/amd64
+    container_name: middleware-manager
+    restart: unless-stopped
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    environment:
+      PANGOLIN_API_URL: http://pangolin:3001/api/v1
+      TRAEFIK_CONF_DIR: /conf
+      DB_PATH: /data/middleware.db
+      PORT: 3456
+    volumes:
+      - ./data/middleware-manager:/data
+      - ./config/traefik/rules:/conf
+      - ./config/middleware-manager/templates.yaml:/app/config/templates.yaml:ro
+    ports:
+      - "{{ pangolin_middleware_port }}:3456"
+    labels:
+      - "komodo.skip=true"
+
+  # ===========================================================================
+  # POCKET ID - Passkey-Based OIDC Provider
+  # ===========================================================================
+  pocket-id:
+    image: {{ pocket_id_image }}
+    container_name: pocket-id
+    restart: unless-stopped
+    depends_on:
+      locket:
+        condition: service_healthy
+    environment:
+      APP_URL: {{ pangolin_auth_url }}
+      TRUST_PROXY: "true"
+      PUID: 1000
+      PGID: 1000
+    volumes:
+      - pocket-id-data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1411/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "komodo.skip=true"
+
+  # ===========================================================================
+  # TINYAUTH - Lightweight Forward Authentication (v4)
+  # ===========================================================================
+  tinyauth:
+    image: {{ tinyauth_image }}
+    container_name: tinyauth
+    restart: unless-stopped
+    depends_on:
+      locket:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      ADDRESS: 0.0.0.0
+      APP_URL: {{ pangolin_tinyauth_url }}
+      USERS_FILE: /app/config/users
+      SECURE_COOKIE: "true"
+      SESSION_EXPIRY: 86400
+      LOGIN_TIMEOUT: 300
+      LOGIN_MAX_RETRIES: 5
+      DATABASE_PATH: /data/tinyauth.db
+      LOG_LEVEL: info
+      DISABLE_ANALYTICS: "true"
+    volumes:
+      - tinyauth-data:/data
+      - ./config/tinyauth:/app/config:ro
+    healthcheck:
+      test: ["CMD", "./tinyauth", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "komodo.skip=true"
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  postgres-data:
+  secrets-store:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=700
+  pocket-id-data:
+  tinyauth-data:
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  default:
+    driver: bridge
+    name: pangolin
+  # Shared network with 1Password Connect
+  infrastructure:
+    external: true

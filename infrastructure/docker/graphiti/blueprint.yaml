@@ -1,0 +1,32 @@
+# =============================================================================
+# GRAPHITI - Pangolin Blueprint
+# =============================================================================
+
+public-resources:
+  graphiti-mcp:
+    name: "Graphiti MCP"
+    full-domain: "graphiti.cianfhoghlaim.ie"
+    protocol: "http"
+    auth:
+      sso-enabled: true
+      sso-roles:
+        - Member
+    targets:
+      - site: "cax41-hetzner"
+        hostname: "graphiti-mcp"
+        method: "http"
+        port: 8000
+
+  graphiti-api:
+    name: "Graphiti API"
+    full-domain: "graphiti-api.cianfhoghlaim.ie"
+    protocol: "http"
+    auth:
+      sso-enabled: true
+      sso-roles:
+        - Member
+    targets:
+      - site: "cax41-hetzner"
+        hostname: "graphiti-api"
+        method: "http"
+        port: 8000

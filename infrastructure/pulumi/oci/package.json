@@ -1,0 +1,29 @@
+{
+  "name": "oci-infrastructure",
+  "main": "index.ts",
+  "scripts": {
+    "up": "npx ts-node deploy.ts up",
+    "deploy": "npx ts-node deploy.ts deploy",
+    "destroy": "npx ts-node deploy.ts destroy",
+    "preview": "npx ts-node deploy.ts preview",
+    "refresh": "npx ts-node deploy.ts refresh",
+    "outputs": "npx ts-node deploy.ts outputs",
+    "setup": "npx ts-node setup.ts",
+    "setup:cloudflare": "npx ts-node setup.ts save-cloudflare",
+    "setup:server": "npx ts-node setup.ts save-server",
+    "setup:dns": "npx ts-node setup.ts update-dns",
+    "setup:show": "npx ts-node setup.ts show"
+  },
+  "devDependencies": {
+    "@types/node": "^18",
+    "ts-node": "^10",
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@1password/connect": "^1.4.2",
+    "@pulumi/cloudflare": "^6.11.0",
+    "@pulumi/command": "^1.1.3",
+    "@pulumi/oci": "^2",
+    "@pulumi/pulumi": "^3"
+  }
+}
