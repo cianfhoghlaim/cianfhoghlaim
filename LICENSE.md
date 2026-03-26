@@ -10,9 +10,11 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
    - Kneecap
    - Not My King
    - Radical republicanism
+   - Radical Islam, Radical Judaism, Radical Christainity, Radical Antything
    - Elon Musk / Andrew Tate / Red Pill 'white power' and 'male power' movements
    - Jordan Peterson and promoters of manipulative psychology
    - Members of LGBT+ groups that promote Bisexual Erasure or Radical (not trauma-informed) Transgenderism 
+   - Rules-of-the-road breakers
    - éirigí.org
    - communism.ie
    - republic.org.uk
