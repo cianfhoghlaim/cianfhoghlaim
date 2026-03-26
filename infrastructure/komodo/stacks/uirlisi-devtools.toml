@@ -1,0 +1,193 @@
+# =============================================================================
+# UIRLÍSÍ DEV-TOOLS STACKS
+# =============================================================================
+# Development tools deployed across sites.
+# These use ${DOMAIN} and ${SITE_ID} environment variable substitution.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# GLANCE - Dashboard
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "glance-bunchloch"
+description = "Personal dashboard with customizable widgets"
+tags = ["host:bunchloch", "tier:devtools"]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/glance"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+# -----------------------------------------------------------------------------
+# STORYBOOK - UI Component Library
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "storybook-bunchloch"
+description = "UI component documentation and testing"
+tags = ["host:bunchloch", "tier:devtools"]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/storybook"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+# -----------------------------------------------------------------------------
+# CHARTDB - Database Schema Designer
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "chartdb-bunchloch"
+description = "Visual database schema designer"
+tags = ["host:bunchloch", "tier:devtools"]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/chartdb"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+# -----------------------------------------------------------------------------
+# EXCALIDRAW - Whiteboard
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "excalidraw"
+description = "Virtual whiteboard for sketching diagrams"
+tags = ["host:bunchloch", "tier:devtools"]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/excalidraw"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+# -----------------------------------------------------------------------------
+# PERPLEXICA - AI Search
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "perplexica-bunchloch"
+description = "AI-powered search engine"
+tags = ["host:bunchloch", "tier:ai"]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/perplexica"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+# -----------------------------------------------------------------------------
+# SEARXNG - Privacy Search
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "searxng-bunchloch"
+description = "Privacy-respecting metasearch engine"
+tags = ["host:bunchloch", "tier:search"]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/searxng"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+# -----------------------------------------------------------------------------
+# CHANGEDETECTION - Web Monitor
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "changedetection"
+description = "Website change detection and alerts"
+tags = ["host:bunchloch", "tier:monitoring"]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/changedetection"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+# -----------------------------------------------------------------------------
+# RESTATE - Durable Execution
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "restate-bunchloch"
+description = "Durable execution platform for distributed apps"
+tags = ["host:bunchloch", "tier:infrastructure"]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/restate"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+# -----------------------------------------------------------------------------
+# LETTERFEED - RSS Reader
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "letterfeed-bunchloch"
+description = "Self-hosted RSS/Atom feed reader"
+tags = ["host:bunchloch", "tier:productivity"]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/letterfeed"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+# -----------------------------------------------------------------------------
+# PASTEMAX - Paste Service
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "pastemax"
+description = "Self-hosted paste/snippet service"
+tags = ["host:bunchloch", "tier:devtools"]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/pastemax"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+# -----------------------------------------------------------------------------
+# PIPECAT - Voice Agent
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "pipecat"
+description = "Voice agent framework"
+tags = ["host:bunchloch", "tier:ai"]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/pipecat"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""

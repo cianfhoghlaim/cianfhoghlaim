@@ -434,7 +434,7 @@ def main():
     parser = argparse.ArgumentParser(
         description='Convert PDF or Markdown files to Instagram-ready images'
     )
-    parser.add_argument('input', help='Input file or directory')
+    parser.add_argument('inputs', nargs='+', help='Input file(s) or directory')
     parser.add_argument('--output', '-o', default='./instagram_output',
                         help='Output directory (default: ./instagram_output)')
     parser.add_argument('--dir', '-d', action='store_true',
@@ -444,33 +444,33 @@ def main():
 
     args = parser.parse_args()
 
-    input_path = Path(args.input)
     output_dir = Path(args.output)
-
-    if not input_path.exists():
-        print(f"Error: Input path does not exist: {input_path}")
-        sys.exit(1)
-
     all_converted = []
 
-    if args.dir or input_path.is_dir():
-        # Process directory
-        for file_path in input_path.glob('*'):
-            if file_path.suffix.lower() == '.pdf':
-                all_converted.extend(convert_pdf_to_instagram(file_path, output_dir, args.dpi))
-            elif file_path.suffix.lower() in ('.md', '.markdown'):
-                all_converted.extend(convert_markdown_to_instagram(file_path, output_dir))
+    for input_str in args.inputs:
+        input_path = Path(input_str)
 
-    elif input_path.suffix.lower() == '.pdf':
-        all_converted.extend(convert_pdf_to_instagram(input_path, output_dir, args.dpi))
+        if not input_path.exists():
+            print(f"Error: Input path does not exist: {input_path}")
+            continue
 
-    elif input_path.suffix.lower() in ('.md', '.markdown'):
-        all_converted.extend(convert_markdown_to_instagram(input_path, output_dir))
+        if args.dir or input_path.is_dir():
+            # Process directory
+            for file_path in input_path.glob('*'):
+                if file_path.suffix.lower() == '.pdf':
+                    all_converted.extend(convert_pdf_to_instagram(file_path, output_dir, args.dpi))
+                elif file_path.suffix.lower() in ('.md', '.markdown'):
+                    all_converted.extend(convert_markdown_to_instagram(file_path, output_dir))
 
-    else:
-        print(f"Error: Unsupported file type: {input_path.suffix}")
-        print("Supported types: .pdf, .md, .markdown")
-        sys.exit(1)
+        elif input_path.suffix.lower() == '.pdf':
+            all_converted.extend(convert_pdf_to_instagram(input_path, output_dir, args.dpi))
+
+        elif input_path.suffix.lower() in ('.md', '.markdown'):
+            all_converted.extend(convert_markdown_to_instagram(input_path, output_dir))
+
+        else:
+            print(f"Error: Unsupported file type: {input_path.suffix}")
+            print("Supported types: .pdf, .md, .markdown")
 
     print(f"\nComplete! {len(all_converted)} images saved to {output_dir}")
 

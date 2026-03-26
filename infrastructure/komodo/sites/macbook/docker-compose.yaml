@@ -1,0 +1,150 @@
+# =============================================================================
+# MACBOOK M4 MAX - Site Infrastructure
+# =============================================================================
+# Runs on MacBook for development and heavy analytics workloads
+# Includes: Komodo Periphery + Pangolin Newt + Locket
+# =============================================================================
+#
+# DEPLOYMENT:
+#   1. Ensure 1Password desktop app is running with CLI integration
+#   2. Create secrets in 1Password (vault: dev-baile):
+#      - macbook-newt-id: Newt ID from Pangolin
+#      - macbook-newt-secret: Newt secret from Pangolin
+#   3. Run: docker compose up -d
+# =============================================================================
+
+name: macbook-site
+
+services:
+  # ---------------------------------------------------------------------------
+  # LOCKET - Secrets Management Sidecar
+  # ---------------------------------------------------------------------------
+  locket:
+    image: ghcr.io/bpbradley/locket:connect
+    platform: linux/amd64
+    container_name: macbook-locket
+    user: "65532:65532"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    environment:
+      # Connect to 1Password Connect on OCI
+      OP_CONNECT_HOST: ${OP_CONNECT_HOST:-http://132.145.27.89:8080}
+      OP_CONNECT_TOKEN_FILE: /run/secrets/op_token
+    secrets:
+      - op_token
+    command:
+      - "--provider=op-connect"
+      - "--mode=watch"
+      - "--map=/templates:/run/secrets/locket"
+    volumes:
+      - ./secrets/templates:/templates:ro
+      - secrets-store:/run/secrets/locket
+    healthcheck:
+      test: ["CMD", "/locket", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+  # ---------------------------------------------------------------------------
+  # NEWT - Pangolin Tunnel Agent
+  # ---------------------------------------------------------------------------
+  newt:
+    image: fosrl/newt:latest
+    container_name: macbook-newt
+    restart: unless-stopped
+    # Skip Locket dependency - inject secrets directly via env vars
+    # depends_on:
+    #   locket:
+    #     condition: service_healthy
+    environment:
+      PANGOLIN_ENDPOINT: ${PANGOLIN_ENDPOINT:-https://pangolin.cianfhoghlaim.ie}
+      NEWT_ID: ${NEWT_ID}
+      NEWT_SECRET: ${NEWT_SECRET}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      DOCKER_SOCKET: /var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - pangolin
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    labels:
+      - "komodo.skip=true"
+
+  # ---------------------------------------------------------------------------
+  # PERIPHERY - Komodo Agent
+  # ---------------------------------------------------------------------------
+  periphery:
+    image: ghcr.io/moghtech/komodo-periphery:2-dev
+    container_name: macbook-periphery
+    init: true
+    restart: unless-stopped
+    environment:
+      PERIPHERY_CORE_ADDRESS: ${PERIPHERY_CORE_ADDRESS:-wss://komodo.cianfhoghlaim.ie}
+      PERIPHERY_CONNECT_AS: bunchloch
+      PERIPHERY_ONBOARDING_KEY: ${PERIPHERY_ONBOARDING_KEY:-O_zezroMFAHFBNk5RkbB3OX3wZvwDK_O}
+      PERIPHERY_PASSKEYS: ${PERIPHERY_PASSKEYS:-feidhm_ama_is_ea_an_saol}
+      PERIPHERY_ROOT_DIRECTORY: /etc/komodo
+      PERIPHERY_DISABLE_TERMINALS: "false"
+      PERIPHERY_DISABLE_CONTAINER_EXEC: "false"
+      PERIPHERY_INCLUDE_DISK_MOUNTS: /etc/hostname
+    volumes:
+      - periphery-keys:/config/keys
+      - /var/run/docker.sock:/var/run/docker.sock
+      # macOS doesn't have /proc - use alternative
+      - /etc/komodo:/etc/komodo
+    networks:
+      - pangolin
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    labels:
+      - "komodo.skip=true"
+
+  # ---------------------------------------------------------------------------
+  # BESZEL AGENT - Monitoring
+  # ---------------------------------------------------------------------------
+  beszel-agent:
+    image: henrygd/beszel-agent:latest
+    container_name: macbook-beszel-agent
+    restart: unless-stopped
+    environment:
+      KEY: ${BESZEL_KEY:-}
+      PORT: "45876"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "45876:45876"
+    labels:
+      - "komodo.skip=true"
+
+# =============================================================================
+# SECRETS
+# =============================================================================
+secrets:
+  op_token:
+    file: ${OP_TOKEN_FILE:-~/.config/op/connect-token}
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  secrets-store:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=700
+  periphery-keys:
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  pangolin:
+    driver: bridge

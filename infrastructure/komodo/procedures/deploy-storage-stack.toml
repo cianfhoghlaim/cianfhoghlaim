@@ -1,0 +1,58 @@
+[[procedure]]
+name = "deploy-storage-stack"
+description = "Deploy complete storage stack across all hosts"
+
+[[procedure.config.stage]]
+name = "control-plane"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "garage", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "beszel", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "dozzle", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "hetzner-databases"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "qdrant", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "falkordb", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "lancedb", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "lakefs", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "lakekeeper", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "hetzner-apps"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "graphiti", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "olake-ui", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "nimtable", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "mathesar", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "macbook-analytics"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "memgraph", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "mlflow", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "langfuse", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "convex", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "macbook-apps"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "cognee", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "scraping", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "sync-blueprints"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "sync-blueprint", execution.params.services = [], enabled = true }
+]

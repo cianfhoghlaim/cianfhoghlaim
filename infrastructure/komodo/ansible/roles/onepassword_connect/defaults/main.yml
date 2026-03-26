@@ -1,0 +1,55 @@
+---
+# =============================================================================
+# 1PASSWORD CONNECT ROLE - DEFAULT VARIABLES
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# INSTALLATION
+# -----------------------------------------------------------------------------
+
+# Base directory for 1Password Connect on remote
+op_connect_base_dir: /opt/onepassword
+
+# Docker images
+op_connect_api_image: "1password/connect-api:latest"
+op_connect_sync_image: "1password/connect-sync:latest"
+
+# -----------------------------------------------------------------------------
+# CREDENTIALS
+# -----------------------------------------------------------------------------
+
+# Path to 1password-credentials.json on the CONTROL machine
+# This file is downloaded from 1Password when creating a Connect server
+# REQUIRED - must be set in inventory or playbook
+op_credentials_src: ""
+
+# Path to 1Password Connect token file on the CONTROL machine
+# This token is used by Locket and other services to authenticate
+# REQUIRED - must be set in inventory or playbook
+op_token_src: ""
+
+# -----------------------------------------------------------------------------
+# NETWORK
+# -----------------------------------------------------------------------------
+
+# Port for Connect API (secrets retrieval)
+op_connect_api_port: 8080
+
+# Port for Connect Sync (internal synchronization)
+op_connect_sync_port: 8081
+
+# Bind address (0.0.0.0 to allow external access, 127.0.0.1 for local only)
+op_connect_bind_address: "127.0.0.1"
+
+# -----------------------------------------------------------------------------
+# HEALTH CHECK
+# -----------------------------------------------------------------------------
+
+# Wait for Connect to be healthy before completing
+op_connect_wait_healthy: true
+
+# Timeout for health check (seconds)
+op_connect_health_timeout: 60
+
+# Health check interval (seconds)
+op_connect_health_interval: 5

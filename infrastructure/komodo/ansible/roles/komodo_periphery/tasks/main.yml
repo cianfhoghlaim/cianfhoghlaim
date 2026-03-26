@@ -1,0 +1,69 @@
+---
+# =============================================================================
+# KOMODO PERIPHERY ROLE - Main Tasks
+# =============================================================================
+
+- name: Gather package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: Include installation tasks
+  ansible.builtin.include_tasks: "install_{{ periphery_install_method }}.yml"
+
+- name: Create Periphery configuration directory
+  ansible.builtin.file:
+    path: "{{ periphery_config_dir }}"
+    state: directory
+    owner: "{{ periphery_user }}"
+    group: "{{ periphery_group }}"
+    mode: "0755"
+
+- name: Create Periphery data directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ periphery_user }}"
+    group: "{{ periphery_group }}"
+    mode: "0755"
+  loop:
+    - "{{ periphery_data_dir }}/repos"
+    - "{{ periphery_data_dir }}/stacks"
+    - "{{ periphery_data_dir }}/ssl"
+
+- name: Generate Periphery configuration
+  ansible.builtin.template:
+    src: periphery.config.toml.j2
+    dest: "{{ periphery_config_dir }}/periphery.config.toml"
+    owner: "{{ periphery_user }}"
+    group: "{{ periphery_group }}"
+    mode: "0600"
+  notify: Restart periphery
+
+- name: Deploy systemd service unit
+  ansible.builtin.template:
+    src: periphery.service.j2
+    dest: /etc/systemd/system/periphery.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart periphery
+
+- name: Enable and start Periphery service
+  ansible.builtin.systemd:
+    name: periphery
+    enabled: "{{ periphery_service_enabled }}"
+    state: "{{ periphery_service_state }}"
+    daemon_reload: true
+  when: periphery_install_method == 'binary'
+
+- name: Wait for Periphery to be ready
+  ansible.builtin.wait_for:
+    port: "{{ periphery_port }}"
+    host: "127.0.0.1"
+    delay: 5
+    timeout: 60
+  when:
+    - periphery_service_state == 'started'
+    - periphery_mode == 'inbound' or periphery_ssl_enabled

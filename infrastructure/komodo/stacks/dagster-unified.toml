@@ -1,0 +1,88 @@
+# =============================================================================
+# DAGSTER UNIFIED - All Sruth Pipelines in One Instance
+# =============================================================================
+# Consolidated Dagster deployment running all data pipelines:
+# - oideachais: Celtic education curriculum
+# - crypteolas: DeFi/crypto analytics
+# - aleyum: Music discovery
+# - tuath: Gaming & mythology content
+#
+# Uses workspace.yaml to load all code locations in a single webserver
+# Connects to shared lakehouse (Garage S3 + Lakekeeper) for data storage
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# DAGSTER-UNIFIED - Production (Hetzner CAX41)
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "dagster-unified"
+description = "All sruth pipelines in unified Dagster instance"
+tags = ["host:cax41-hetzner", "tier:production", "type:orchestration", "pipeline:sruth"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/dagster"
+file_paths = ["compose.yaml", "pangolin.yaml", "secrets.env"]
+environment = """
+# Dagster Configuration
+DAGSTER_PORT=3335
+DAGSTER_HOME=/opt/dagster/home
+
+# DuckLake (Lakehouse) Configuration
+USE_DUCKLAKE=true
+DUCKLAKE_POSTGRES_HOST=lakehouse-postgres
+DUCKLAKE_POSTGRES_PORT=5432
+DUCKLAKE_POSTGRES_USER=lakekeeper
+DLT_ENVIRONMENT=production
+
+# Garage S3 Configuration
+AWS_ENDPOINT_URL=http://lakehouse-garage:3900
+AWS_REGION=garage
+
+# Code Locations
+OIDEACHAIS_ENABLED=true
+CRYPTEOLAS_ENABLED=true
+ALEYUM_ENABLED=true
+TUATH_ENABLED=true
+
+# Resource Limits
+DAGSTER_MAX_CONCURRENT_RUNS=4
+DAGSTER_DAEMON_HEARTBEAT_TOLERANCE=60
+"""
+
+# -----------------------------------------------------------------------------
+# DAGSTER-DEV - Development (MacBook)
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "dagster-dev"
+description = "Local development Dagster with all pipelines"
+tags = ["host:bunchloch", "tier:development", "type:orchestration", "pipeline:sruth"]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/dagster"
+file_paths = ["compose.yaml"]
+environment = """
+DAGSTER_PORT=3335
+DAGSTER_HOME=/opt/dagster/home
+
+# Local DuckLake
+USE_DUCKLAKE=true
+DUCKLAKE_POSTGRES_HOST=localhost
+DUCKLAKE_POSTGRES_PORT=5433
+DUCKLAKE_POSTGRES_USER=lakekeeper
+DUCKLAKE_POSTGRES_PASSWORD=devpassword
+DLT_ENVIRONMENT=local
+
+# Local Garage S3
+AWS_ENDPOINT_URL=http://localhost:3900
+AWS_REGION=garage
+AWS_ACCESS_KEY_ID=lakehouse
+AWS_SECRET_ACCESS_KEY=devpassword
+
+# All locations enabled
+OIDEACHAIS_ENABLED=true
+CRYPTEOLAS_ENABLED=true
+ALEYUM_ENABLED=true
+TUATH_ENABLED=true
+"""

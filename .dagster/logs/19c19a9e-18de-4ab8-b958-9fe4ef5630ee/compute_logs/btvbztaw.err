@@ -1,0 +1,21 @@
+2026-01-04 14:30:34 +0000 - dagster - DEBUG - __ASSET_JOB - 19c19a9e-18de-4ab8-b958-9fe4ef5630ee - 25941 - LOGS_CAPTURED - Started capturing logs in process (pid: 25941).
+2026-01-04 14:30:34 +0000 - dagster - DEBUG - __ASSET_JOB - 19c19a9e-18de-4ab8-b958-9fe4ef5630ee - 25941 - ireland__curriculum__short_courses - STEP_RESTARTED - Started re-execution (attempt # 3) of step "ireland__curriculum__short_courses".
+2026-01-04 14:30:34 +0000 - dagster - INFO - __ASSET_JOB - 19c19a9e-18de-4ab8-b958-9fe4ef5630ee - ireland__curriculum__short_courses - Ingesting short course: coding/ga
+2026-01-04 14:30:34 +0000 - dagster - INFO - __ASSET_JOB - 19c19a9e-18de-4ab8-b958-9fe4ef5630ee - ireland__curriculum__short_courses -   curriculumonline/ga: https://www.curriculumonline.ie/ga-ie/junior-cycle/short-courses/coding/
+2026-01-04 14:30:48 +0000 - dagster - INFO - __ASSET_JOB - 19c19a9e-18de-4ab8-b958-9fe4ef5630ee - ireland__curriculum__short_courses - Scraped 10 pages for short course coding
+2026-01-04 14:30:48,265|[INFO]|25941|6148042752|dlt|signals.py|intercepted_signals:155|Running in daemon thread, signals not enabled
+2026-01-04 14:30:48,266|[INFO]|25941|6148042752|dlt|pool_runner.py|create_pool:171|Created process pool with 3 workers
+2026-01-04 14:30:48,266|[INFO]|25941|6148042752|dlt|normalize.py|run:310|Running file normalizing
+2026-01-04 14:30:48,266|[INFO]|25941|6148042752|dlt|normalize.py|run:313|Found 0 load packages
+2026-01-04 14:30:48,266|[INFO]|25941|6148042752|dlt|pool_runner.py|run_pool:217|Closing processing pool
+2026-01-04 14:30:48,266|[INFO]|25941|6148042752|dlt|pool_runner.py|run_pool:220|Processing pool closed
+2026-01-04 14:30:48,276|[INFO]|25941|6148042752|dlt|signals.py|intercepted_signals:155|Running in daemon thread, signals not enabled
+2026-01-04 14:30:48,276|[INFO]|25941|6148042752|dlt|pool_runner.py|create_pool:171|Created thread pool with 10 workers
+2026-01-04 14:30:48,276|[INFO]|25941|6148042752|dlt|load.py|run:671|Running file loading
+2026-01-04 14:30:48,276|[INFO]|25941|6148042752|dlt|load.py|run:674|Found 0 load packages
+2026-01-04 14:30:48,276|[INFO]|25941|6148042752|dlt|pool_runner.py|run_pool:217|Closing processing pool
+2026-01-04 14:30:48,276|[INFO]|25941|6148042752|dlt|pool_runner.py|run_pool:220|Processing pool closed
+2026-01-04 14:30:48 +0000 - dagster - INFO - __ASSET_JOB - 19c19a9e-18de-4ab8-b958-9fe4ef5630ee - ireland__curriculum__short_courses - Loaded 0 rows for short course coding/ga
+2026-01-04 14:30:48 +0000 - dagster - DEBUG - __ASSET_JOB - 19c19a9e-18de-4ab8-b958-9fe4ef5630ee - 25941 - ireland__curriculum__short_courses - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
+2026-01-04 14:30:48 +0000 - dagster - DEBUG - __ASSET_JOB - 19c19a9e-18de-4ab8-b958-9fe4ef5630ee - 25941 - ireland__curriculum__short_courses - ASSET_MATERIALIZATION - Materialized value ireland curriculum short_courses.
+2026-01-04 14:30:48 +0000 - dagster - DEBUG - __ASSET_JOB - 19c19a9e-18de-4ab8-b958-9fe4ef5630ee - 25941 - ireland__curriculum__short_courses - STEP_SUCCESS - Finished execution of step "ireland__curriculum__short_courses" in 13.52s.

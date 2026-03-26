@@ -1,0 +1,41 @@
+# =============================================================================
+# CONVEX - Pangolin Blueprint
+# =============================================================================
+# Note: Backend API is not SSO-protected for programmatic access.
+# Dashboard is SSO-protected.
+# =============================================================================
+
+public-resources:
+  convex-backend:
+    name: "Convex Backend API"
+    full-domain: "convex-api.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "bunchloch"
+        hostname: "convex-backend"
+        method: "http"
+        port: 3210
+
+  convex-site:
+    name: "Convex Site"
+    full-domain: "convex-site.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "bunchloch"
+        hostname: "convex-backend"
+        method: "http"
+        port: 3211
+
+  convex-dashboard:
+    name: "Convex Dashboard"
+    full-domain: "convex.cianfhoghlaim.ie"
+    protocol: "http"
+    auth:
+      sso-enabled: true
+      sso-roles:
+        - Member
+    targets:
+      - site: "bunchloch"
+        hostname: "convex-dashboard"
+        method: "http"
+        port: 6791

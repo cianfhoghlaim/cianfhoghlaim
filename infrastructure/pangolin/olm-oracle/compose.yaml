@@ -1,0 +1,34 @@
+# =============================================================================
+# OLM - Pangolin Tunnel Client for Oracle (arm1-oci)
+# =============================================================================
+# Provides TCP tunnel access for SSH and database connections.
+#
+# USAGE:
+#   Development:  docker compose -f compose.yaml up -d
+#   Production:   docker compose -f compose.yaml -f sidecar.yaml up -d
+#
+# PREREQUISITES:
+#   - Pangolin running and accessible
+#   - OLM site "arm1-oci-olm" created in Pangolin UI
+#   - Credentials stored in 1Password (vault: dev-baile, item: arm1-oci-olm)
+# =============================================================================
+
+name: olm-oracle
+
+services:
+  olm:
+    image: fosrl/olm:latest
+    container_name: olm-oracle
+    restart: unless-stopped
+    environment:
+      PANGOLIN_ENDPOINT: ${PANGOLIN_ENDPOINT:-https://pangolin.cianfhoghlaim.ie}
+      OLM_ID: ${OLM_ID:-}
+      OLM_SECRET: ${OLM_SECRET:-}
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    labels:
+      - "komodo.skip=true"
+    network_mode: host

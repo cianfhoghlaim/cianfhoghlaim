@@ -1,0 +1,23 @@
+# =============================================================================
+# PINCHFLAT STACK
+# =============================================================================
+# YouTube media manager and downloader
+# =============================================================================
+
+[[stack]]
+name = "pinchflat"
+description = "YouTube media manager and downloader"
+tags = ["host:bunchloch", "tier:media", "type:video", "domain:pinchflat.aleyum.com"]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/pinchflat"
+file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
+environment = """
+PINCHFLAT_DOMAIN=pinchflat.aleyum.com
+PINCHFLAT_NAME=Pinchflat
+PINCHFLAT_PORT=8945
+TZ=Europe/Dublin
+OP_CONNECT_HOST=${OP_CONNECT_HOST}
+LOCKET_MODE=watch
+"""

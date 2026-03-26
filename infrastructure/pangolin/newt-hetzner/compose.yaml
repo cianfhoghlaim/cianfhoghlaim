@@ -1,0 +1,42 @@
+# =============================================================================
+# NEWT - Pangolin Tunnel Agent for Hetzner (cax41-hetzner)
+# =============================================================================
+# Connects Hetzner services to Pangolin via WireGuard tunnel.
+#
+# USAGE:
+#   Development:  docker compose -f compose.yaml up -d
+#   Production:   docker compose -f compose.yaml -f sidecar.yaml up -d
+#
+# PREREQUISITES:
+#   - Pangolin running and accessible
+#   - Newt site "cax41-hetzner" created in Pangolin UI
+#   - Credentials stored in 1Password (vault: dev-baile, item: cax41-hetzner-newt)
+# =============================================================================
+
+name: newt-hetzner
+
+services:
+  newt:
+    image: fosrl/newt:latest
+    container_name: newt-hetzner
+    restart: unless-stopped
+    environment:
+      # Use internal port to bypass Cloudflare Bot Fight Mode
+      PANGOLIN_ENDPOINT: ${PANGOLIN_ENDPOINT:-http://132.145.27.89:8443}
+      NEWT_ID: ${NEWT_ID:-}
+      NEWT_SECRET: ${NEWT_SECRET:-}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      DOCKER_SOCKET: /var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - "komodo.skip=true"
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks:
+      - pangolin
+
+networks:
+  pangolin:
+    name: pangolin
+    external: true

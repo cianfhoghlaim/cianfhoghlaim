@@ -1,0 +1,72 @@
+# =============================================================================
+# DUCKLAKE HETZNER - DuckLake CDC Integration
+# =============================================================================
+# DuckLake integration for Change Data Capture and time-travel queries.
+# Provides PostgreSQL-to-Iceberg replication with zero-copy registration.
+# =============================================================================
+
+name: ducklake-hetzner
+
+services:
+  # ---------------------------------------------------------------------------
+  # DUCKLAKE - DuckDB with DuckLake Extension
+  # ---------------------------------------------------------------------------
+  ducklake:
+    image: duckdb/duckdb-latest:latest
+    container_name: ducklake-hetzner
+    restart: unless-stopped
+    ports:
+      - "${DUCKLAKE_PORT:-8123}:8123"
+    environment:
+      # PostgreSQL connection (for CDC)
+      DUCKLAKE_POSTGRES_HOST: ${DUCKLAKE_POSTGRES_HOST:-postgres}
+      DUCKLAKE_POSTGRES_PORT: ${DUCKLAKE_POSTGRES_PORT:-5432}
+      DUCKLAKE_POSTGRES_USER: ${DUCKLAKE_POSTGRES_USER:-lakekeeper}
+      DUCKLAKE_POSTGRES_PASSWORD: ${DUCKLAKE_POSTGRES_PASSWORD}
+      DUCKLAKE_POSTGRES_DBNAME: ${DUCKLAKE_POSTGRES_DBNAME:-lakekeeper_hetzner}
+      # Iceberg catalog
+      DUCKLAKE_ICEBERG_ENDPOINT: ${DUCKLAKE_ICEBERG_ENDPOINT:-http://lakekeeper-hetzner:8181}
+      DUCKLAKE_ICEBERG_WAREHOUSE: ${DUCKLAKE_ICEBERG_WAREHOUSE:-hetzner_production}
+      # S3 storage
+      AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-http://garage:3900}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION:-garage}
+      # CDC configuration
+      DUCKLAKE_CDC_ENABLED: "true"
+      DUCKLAKE_CDC_SLOT_NAME: ducklake_cdc
+    volumes:
+      - ducklake-hetzner-data:/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: >
+      duckdb :memory: -cmd "
+      INSTALL ducklake;
+      LOAD ducklake;
+      ATTACH 'ducklake:postgres:dbname=${DUCKLAKE_POSTGRES_DBNAME:-lakekeeper_hetzner} host=${DUCKLAKE_POSTGRES_HOST:-postgres} user=${DUCKLAKE_POSTGRES_USER:-lakekeeper} password=${DUCKLAKE_POSTGRES_PASSWORD}' AS prod;
+      "
+    networks:
+      - lakehouse
+
+  # ---------------------------------------------------------------------------
+  # DUCKLAKE UI - Optional web interface
+  # ---------------------------------------------------------------------------
+  ducklake-ui:
+    image: nginx:alpine
+    container_name: ducklake-hetzner-ui
+    restart: unless-stopped
+    ports:
+      - "${DUCKLAKE_UI_PORT:-8080}:80"
+    volumes:
+      - ./ui.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - lakehouse
+      - pangolin
+
+volumes:
+  ducklake-hetzner-data:
+
+networks:
+  lakehouse:
+    driver: bridge
+  pangolin:
+    external: true

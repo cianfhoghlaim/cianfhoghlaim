@@ -1,0 +1,69 @@
+# =============================================================================
+# LAKEHOUSE GARAGE - Enhanced S3-Compatible Storage Configuration
+# =============================================================================
+# Virtual-host style addressing for Lance/Iceberg compatibility.
+# This enables bucket-specific subdomains: iceberg.s3.lakehouse.cianfhoghlaim.ie
+#
+# USAGE:
+#   Garage reads this config from /etc/garage.toml in the container.
+#   Environment variable substitution happens at runtime.
+# =============================================================================
+
+metadata_dir = "/var/lib/garage/meta"
+data_dir = "/var/lib/garage/data"
+db_engine = "lmdb"
+
+# Single-node replication for development/small deployments
+# For production clusters, set to "2" or "3" with multiple nodes
+replication_mode = "1"
+
+# Compression level (1 = fastest, 9 = best compression)
+compression_level = 1
+
+# =============================================================================
+# RPC Configuration
+# =============================================================================
+# NOTE: RPC secret must be 32 bytes (64 hex chars) with high entropy
+# Generate with: openssl rand -hex 32
+# For production, use Locket secret injection with envsubst
+rpc_bind_addr = "[::]:3901"
+rpc_public_addr = "127.0.0.1:3901"
+rpc_secret = "b8c5f946dad482bb911d534aa99b1c03598de04e526212d33fc8084eca4c79d3"
+
+# =============================================================================
+# S3 API - Virtual-Host Style (Critical for Lance)
+# =============================================================================
+# Virtual-host addressing allows:
+#   - iceberg.s3.lakehouse.cianfhoghlaim.ie/path/to/file
+#   - lance.s3.lakehouse.cianfhoghlaim.ie/path/to/file
+#   - ducklake.s3.lakehouse.cianfhoghlaim.ie/path/to/file
+#
+# This is REQUIRED for Lance namespace iceberg.py compatibility.
+# =============================================================================
+[s3_api]
+s3_region = "garage"
+api_bind_addr = "[::]:3900"
+root_domain = ".s3.lakehouse.cianfhoghlaim.ie"
+
+# =============================================================================
+# Web/Static Site Hosting
+# =============================================================================
+[s3_web]
+bind_addr = "[::]:3903"
+root_domain = ".web.lakehouse.cianfhoghlaim.ie"
+index = "index.html"
+
+# =============================================================================
+# Key-Value API (K2V)
+# =============================================================================
+[k2v_api]
+api_bind_addr = "[::]:3902"
+
+# =============================================================================
+# Admin API
+# =============================================================================
+# NOTE: For production, use Locket secret injection with envsubst
+[admin]
+api_bind_addr = "[::]:3904"
+admin_token = "dev-admin-token-change-in-production"
+metrics_token = "dev-metrics-token-change-in-production"

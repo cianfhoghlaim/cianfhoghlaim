@@ -1,0 +1,3 @@
+2026-01-04 14:47:43 [info     ] scraping_url                   language=ga site=curriculumonline url=https://www.curriculumonline.ie/ga-ie/junior-cycle/short-courses/physical-education-sc/
+2026-01-04 14:47:43 [info     ] crawl_started                  base_url=https://www.curriculumonline.ie/ga-ie/junior-cycle/short-courses/physical-education-sc/ include_paths=[] max_pages=50 source=curriculumonline
+2026-01-04 14:47:57 [info     ] crawl_completed                page_count=1 source=curriculumonline

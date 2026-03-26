@@ -1,0 +1,41 @@
+# =============================================================================
+# Komodo Stack Blueprint: Newt Hetzner
+# =============================================================================
+# Deploys the Newt tunnel agent on cax41-hetzner server.
+#
+# PREREQUISITES:
+#   1. Create Newt site "cax41-hetzner" in Pangolin UI
+#   2. Store credentials in 1Password (dev-baile/cax41-hetzner-newt)
+#   3. Ensure pangolin network exists on target server
+# =============================================================================
+
+[[stack]]
+name = "newt-hetzner"
+description = "Pangolin Newt tunnel agent for Hetzner server"
+tags = ["pangolin", "tunnel", "hetzner"]
+server = "cax41-hetzner"
+run_directory = "/etc/komodo/pangolin/newt-hetzner"
+
+# Git repo sync config
+git_provider = "git.cianfhoghlaim.ie"
+git_account = "cliste"
+repo = "bonneagar"
+branch = "main"
+commit = "latest"
+repo_path = "pangolin/newt-hetzner"
+
+# Run with sidecar for Locket secrets
+file_paths = ["compose.yaml", "sidecar.yaml"]
+compose_project_name = "newt-hetzner"
+
+# Environment overrides
+[stack.environment]
+OP_CONNECT_HOST = "http://132.145.27.89:8080"
+OP_CONNECT_TOKEN_FILE = "/etc/connect/token"
+LOCKET_MODE = "watch"
+LOG_LEVEL = "INFO"
+
+# Resource labels
+[stack.labels]
+"pangolin.managed" = "true"
+"server.location" = "hetzner-fsn1"

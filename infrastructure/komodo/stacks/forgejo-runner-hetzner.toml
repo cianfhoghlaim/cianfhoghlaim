@@ -1,0 +1,25 @@
+# =============================================================================
+# FORGEJO RUNNER HETZNER - CI/CD Runner on Hetzner
+# =============================================================================
+# Additional CI/CD runner for distributed workload
+# Auto-scales with Hetzner capacity
+# =============================================================================
+
+[[stack]]
+name = "forgejo-runner-hetzner"
+description = "Forgejo Actions CI/CD runner on Hetzner with Docker-in-Docker"
+tags = ["host:cax41-hetzner", "tier:devtools", "type:cicd"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/storage/forgejo-runner-hetzner"
+file_paths = ["compose.yaml", "sidecar.yaml"]
+environment = """
+# Runner configuration
+FORGEJO_RUNNER_NAME=hetzner-runner
+FORGEJO_RUNNER_LABELS=ubuntu-latest:docker://ghcr.io/catthehacker/ubuntu:runner-latest,hetzner-arm:docker://ghcr.io/catthehacker/ubuntu:arm64-latest
+FORGEJO_URL=https://git.cianfhoghlaim.ie
+# Locket secrets management
+OP_CONNECT_HOST=http://132.145.27.89:8080
+LOCKET_MODE=watch
+"""

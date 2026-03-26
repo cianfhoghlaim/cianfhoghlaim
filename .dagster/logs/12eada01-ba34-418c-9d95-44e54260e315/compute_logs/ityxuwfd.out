@@ -1,0 +1,2 @@
+2026-01-04 14:05:27 [info     ] scraping_url                   language=en site=curriculumonline url=https://www.curriculumonline.ie/junior-cycle/short-courses/coding/
+2026-01-04 14:05:27 [warning  ] firecrawl_not_installed        source=curriculumonline

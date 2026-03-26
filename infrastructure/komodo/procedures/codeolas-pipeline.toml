@@ -1,0 +1,53 @@
+# =============================================================================
+# CÓDEOLAS PIPELINE STACK
+# =============================================================================
+# Code intelligence pipeline with semantic search and multi-hop research.
+# Domain: crypteolas.ie (code.crypteolas.ie)
+# Server: hetzner-devtools
+# =============================================================================
+
+[[stack]]
+name = "codeolas-pipeline"
+description = "Code intelligence pipeline with semantic search"
+tags = ["host:hetzner-devtools", "tier:production", "type:code", "domain:code.crypteolas.ie", "pipeline:sruth"]
+
+[stack.config]
+server_id = "hetzner-devtools"
+run_directory = "/etc/komodo/sruth/codeolas"
+file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
+environment = """
+# Service Configuration
+CODEOLAS_DOMAIN=code.crypteolas.ie
+CODEOLAS_NAME=Codeolas
+ENVIRONMENT=production
+
+# API Ports
+API_PORT=8002
+DAGSTER_PORT=3102
+
+# LLM Configuration
+LLM_PROVIDER=anthropic
+LLM_MODEL=claude-sonnet-4-20250514
+LLM_API_KEY=${LLM_API_KEY:-}
+
+# Storage
+DUCKDB_PATH=/app/storage/data/codeolas.duckdb
+LANCEDB_PATH=/app/storage/data/code_vectors.lance
+CHUNKHOUND_INDEX_PATH=/app/storage/chunkhound
+
+# Tree-sitter Languages
+TREE_SITTER_LANGUAGES=python,typescript,javascript,go,rust
+
+# Observability
+LANGFUSE_HOST=https://langfuse.cianfhoghlaim.ie
+LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-}
+LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-}
+DD_SERVICE=codeolas-api
+DD_ENV=production
+DD_SITE=crypteolas.ie
+DD_APM_ENABLED=true
+
+# 1Password Connect
+OP_CONNECT_HOST=${OP_CONNECT_HOST:-http://132.145.27.89:8080}
+LOCKET_MODE=watch
+"""

@@ -1,0 +1,261 @@
+# Cianfhoghlaim Monorepo - Tool Management & Tasks
+# https://mise.jdx.dev/
+
+[tools]
+# Core tools
+python = "3.12.10"
+uv = "latest"
+bun = "latest"
+dagger = "latest"
+
+# Cloud & Infrastructure
+gh = "latest"
+cloudflared = "latest"
+gcloud = "latest"
+oci = "latest"
+pulumi = "latest"
+op = "latest"
+
+# Data tools
+duckdb = "latest"
+sops = "latest"
+
+# Package managers
+pnpm = "latest"
+aqua = "latest"
+zoxide = "latest"
+
+[settings]
+experimental = true
+
+[env]
+_.python.venv = { path = ".venv" }
+MISE_ENV_FILE = ".env"
+_.file = '.env'
+PYTHONPATH = "."
+
+# =============================================================================
+# Hooks - Automatic 1Password Secret Injection
+# =============================================================================
+# Uses 1Password CLI to inject secrets on directory entry.
+# Secrets are cached to .env and only refreshed when .env.op changes.
+#
+# Requirements:
+#   - 1Password CLI (op) installed and authenticated
+#   - .env.op template file with op:// references
+# =============================================================================
+
+[hooks.enter]
+shell = "bash"
+script = """
+source "{{ config_root }}/scripts/op-inject.sh"
+"""
+
+[hooks.leave]
+shell = "bash"
+script = """
+source "{{ config_root }}/scripts/op-inject.sh" unset
+"""
+
+# =============================================================================
+# Python Tasks
+# =============================================================================
+
+[tasks.sync]
+description = "Sync all Python workspace packages"
+run = "uv sync --all-packages"
+
+[tasks.test]
+description = "Run pytest on all Python packages"
+run = "uv run pytest"
+
+[tasks.lint]
+description = "Lint all Python code with ruff"
+run = "uv run ruff check ."
+
+[tasks.format]
+description = "Format all Python code with ruff"
+run = "uv run ruff format ."
+
+[tasks."py:typecheck"]
+description = "Type check Python code with pyright"
+run = "uv run pyright"
+
+# =============================================================================
+# TypeScript Tasks
+# =============================================================================
+
+[tasks."ts:install"]
+description = "Install all TypeScript dependencies"
+run = "bun install"
+
+[tasks."ts:build"]
+description = "Build all TypeScript packages"
+run = "bun run build"
+
+[tasks."ts:typecheck"]
+description = "Type check TypeScript code"
+run = "bun run typecheck"
+
+[tasks."ts:lint"]
+description = "Lint TypeScript code"
+run = "bun run lint"
+
+# =============================================================================
+# Rust Tasks
+# =============================================================================
+
+[tasks."rs:build"]
+description = "Build Locket (Rust)"
+run = "cd bonneagar/locket && cargo build"
+
+[tasks."rs:test"]
+description = "Test Locket (Rust)"
+run = "cd bonneagar/locket && cargo test"
+
+[tasks."rs:clippy"]
+description = "Run clippy on Locket"
+run = "cd bonneagar/locket && cargo clippy"
+
+# =============================================================================
+# Dagster Tasks
+# =============================================================================
+
+[tasks."dagster:oideachas"]
+description = "Run Dagster for oideachas pipeline"
+run = "cd sruth/oideachas && uv run dagster dev"
+
+[tasks."dagster:tuath"]
+description = "Run Dagster for tuath pipeline"
+run = "cd sruth/tuath && uv run dagster dev"
+
+[tasks."dagster:teanga"]
+description = "Run Dagster for teanga pipeline"
+run = "cd sruth/teanga && uv run dagster dev"
+
+# =============================================================================
+# Dagger CI/CD Tasks
+# =============================================================================
+
+[tasks."dagger:ci"]
+description = "Run full CI pipeline with Dagger"
+run = "cd bonneagar/dagger && dagger call ci --source ../.."
+
+[tasks."dagger:test-python"]
+description = "Run Python tests with Dagger"
+run = "cd bonneagar/dagger && dagger call test-python --source ../.."
+
+[tasks."dagger:test-typescript"]
+description = "Run TypeScript tests with Dagger"
+run = "cd bonneagar/dagger && dagger call test-typescript --source ../.."
+
+[tasks."dagger:deploy-cloudflare"]
+description = "Deploy docs to Cloudflare Pages"
+run = "cd bonneagar/dagger && dagger call deploy-cloudflare --source ../.."
+
+# =============================================================================
+# Documentation Tasks
+# =============================================================================
+
+[tasks."docs:dev"]
+description = "Start Docusaurus dev server"
+run = "bun --cwd docs-site run start"
+
+[tasks."docs:build"]
+description = "Build Docusaurus site"
+run = "bun --cwd docs-site run build"
+
+[tasks."docs:serve"]
+description = "Serve built Docusaurus site"
+run = "bun --cwd docs-site run serve"
+
+# =============================================================================
+# Infrastructure Tasks
+# =============================================================================
+
+[tasks."stack:up"]
+description = "Start a Docker stack"
+run = "cd bonneagar && ./scripts/stack.sh ${1} up -d"
+
+[tasks."stack:down"]
+description = "Stop a Docker stack"
+run = "cd bonneagar && ./scripts/stack.sh ${1} down"
+
+[tasks."stack:logs"]
+description = "View Docker stack logs"
+run = "cd bonneagar && ./scripts/stack.sh ${1} logs -f"
+
+[tasks."pulumi:up"]
+description = "Deploy with Pulumi"
+run = "cd bonneagar/pulumi/${1} && pulumi up"
+
+[tasks."pulumi:preview"]
+description = "Preview Pulumi changes"
+run = "cd bonneagar/pulumi/${1} && pulumi preview"
+
+# =============================================================================
+# Utility Tasks
+# =============================================================================
+
+[tasks.doctor]
+description = "Check all tool versions"
+run = """
+echo '=== Tool Versions ==='
+echo 'Python:' && python --version
+echo 'uv:' && uv --version
+echo 'Bun:' && bun --version
+echo 'Dagger:' && dagger version
+echo 'Rust:' && rustc --version
+echo 'DuckDB:' && duckdb --version
+echo ''
+echo '=== Workspace Status ==='
+echo 'Python packages:' && uv pip list --format=freeze | wc -l
+echo 'Node modules:' && find node_modules -maxdepth 1 -type d 2>/dev/null | wc -l
+"""
+
+[tasks.clean]
+description = "Clean build artifacts"
+run = """
+rm -rf .venv __pycache__ .pytest_cache .ruff_cache
+rm -rf node_modules .turbo
+find . -type d -name '__pycache__' -exec rm -rf {} + 2>/dev/null || true
+find . -type d -name '.pytest_cache' -exec rm -rf {} + 2>/dev/null || true
+"""
+
+[tasks.reset]
+description = "Full reset - clean and reinstall"
+depends = ["clean"]
+run = """
+uv sync --all-packages
+bun install
+"""
+
+[tasks."index:chunkhound"]
+description = "Index codebase with ChunkHound"
+run = "uvx --from chunkhound chunkhound index --path ."
+
+[tasks."search:chunkhound"]
+description = "Search codebase with ChunkHound"
+run = "uvx --from chunkhound chunkhound search '${1}'"
+
+# =============================================================================
+# Secret-Wrapped Tasks (uses op run for 1Password injection)
+# =============================================================================
+# These tasks wrap commands with `op run` to inject secrets at runtime.
+# Secrets are only available during command execution (process-scoped).
+#
+# Usage:
+#   mise run claude              # Launch Claude Code with MCP secrets
+#   mise run op:run -- pytest    # Run any command with secrets
+# =============================================================================
+
+[tasks.claude]
+description = "Launch Claude Code with 1Password secrets injected"
+# Note: mise tasks don't allocate a TTY, so run directly instead:
+#   op run --env-file=.env.local -- claude
+run = "op run --env-file=.env.local -- claude"
+alias = "c"  # Short alias for convenience
+
+[tasks."op:run"]
+description = "Run any command with 1Password secrets injected"
+run = 'op run --env-file=.env.local -- "$@"'

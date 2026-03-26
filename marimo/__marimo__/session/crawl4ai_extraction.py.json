@@ -1,0 +1,586 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.17.7"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "bf62d217cbb11cb435a709b97ad20165",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"crawl4ai-web-scraping-content-extraction\">Crawl4AI: Web Scraping &amp; Content Extraction</h1>\n<span class=\"paragraph\">This notebook demonstrates Crawl4AI's capabilities:</span>\n<ol>\n<li><strong>Async Web Crawling</strong> - High-performance concurrent crawling</li>\n<li><strong>LLM Extraction</strong> - Structured data extraction with schemas</li>\n<li><strong>Multi-Config Crawling</strong> - URL pattern matching for different strategies</li>\n<li><strong>Adaptive Crawling</strong> - Statistical &amp; embedding-based relevance scoring</li>\n<li><strong>Docker Integration</strong> - Webhook-based async processing</li>\n</ol>\n<blockquote>\n<span class=\"paragraph\">Based on patterns from <code>/data/examples/crawl4ai/</code></span>\n</blockquote></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "7adc6169f2e125132dc39fbfb6c3fa77",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre style='font-size: 12px'>True</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "874a971f42202867e509bd97a39ac9ad",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"1-basic-async-crawling\">1. Basic Async Crawling</h2>\n<span class=\"paragraph\">Crawl4AI provides an async-first API for high-performance web scraping.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "6767306b97547dc6a535fd5fefb4375c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='bkHC-0' random-id='77905bcd-f7f7-d5e5-203f-05366ed0cf87'><marimo-text data-initial-value='&quot;https://docs.anthropic.com/en/docs/about-claude/models&quot;' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;URL to Crawl&lt;/span&gt;&lt;/span&gt;&quot;' data-placeholder='&quot;Enter URL to crawl...&quot;' data-kind='&quot;text&quot;' data-full-width='false' data-disabled='false' data-debounce='true'></marimo-text></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "60562641a906e6b3e780da6bffd9e848",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "f4db12d9b7e69da61a4231ea1ef2944b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='PKri-0' random-id='3f88727e-c184-7345-f452-5086a6074b08'><marimo-button data-initial-value='0' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Crawl URL&lt;/span&gt;&lt;/span&gt;&quot;' data-kind='&quot;neutral&quot;' data-disabled='false' data-full-width='false'></marimo-button></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "79294fc192cde8dea64106e91500b969",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "[INIT].... \u2192 Crawl4AI 0.7.6 \n",
+          "mimetype": "text/plain"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "[FETCH]... \u2193 https://ncca.ie                                                                                      | \u2713 | \u23f1: 0.68s \n[SCRAPE].. \u25c6 https://ncca.ie                                                                                      | \u2713 | \u23f1: 0.00s \n[COMPLETE] \u25cf https://ncca.ie                                                                                      | \u2713 | \u23f1: 0.68s \n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "zjxv",
+      "code_hash": "de8549c2b0751af5a2726c01853f8ac5",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre style='font-size: 12px'>&#x27;# ncca.ie\\nVerifying you are human. This may take a few seconds.\\nncca.ie needs to review the security of your connection before proceeding.\\nVerification successful\\nWaiting for ncca.ie to respond...\\nRay ID: `9a6e057cab98951b`\\nPerformance &amp; security by [Cloudflare](https://www.cloudflare.com?utm_source=challenge&amp;utm_campaign=m)\\n&#x27;</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "a7d3afaed0c98bf17c89b3002c7ed63e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "43d62750f076cf48a98111544ff205d0",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"2-llm-based-structured-extraction\">2. LLM-Based Structured Extraction</h2>\n<span class=\"paragraph\">Extract structured data using Pydantic schemas and LLM processing.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "af72e2009339afb6513f65f86ede5cf5",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "e94fbaecbdf765ddf19d148604ff3b6b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "ab0cc9f3aa83c9680b50f16601ab8baa",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: row;justify-content: space-between;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><marimo-ui-element object-id='emfo-0' random-id='ac864e35-d385-6725-b5ac-d5069dbaa944'><marimo-dropdown data-initial-value='[&quot;openai/gpt-4o-mini&quot;]' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;LLM Provider&lt;/span&gt;&lt;/span&gt;&quot;' data-options='[&quot;openai/gpt-4o-mini&quot;,&quot;openai/gpt-4o&quot;,&quot;ollama/llama3.2&quot;]' data-allow-select-none='false' data-searchable='false' data-full-width='false'></marimo-dropdown></marimo-ui-element><marimo-ui-element object-id='emfo-1' random-id='976771c8-5d55-8af2-9822-564aa226a4ad'><marimo-text data-initial-value='&quot;&quot;' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;API Key&lt;/span&gt;&lt;/span&gt;&quot;' data-placeholder='&quot;Your API key&quot;' data-kind='&quot;password&quot;' data-full-width='false' data-disabled='false' data-debounce='true'></marimo-text></marimo-ui-element></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "3adb589a85bc931b7859328002422016",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><marimo-ui-element object-id='Hstk-0' random-id='ac1e7629-6694-3a3c-e0ca-5a17b8e6a600'><marimo-text data-initial-value='&quot;https://openai.com/api/pricing/&quot;' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;URL for Extraction&lt;/span&gt;&lt;/span&gt;&quot;' data-placeholder='&quot;Enter URL...&quot;' data-kind='&quot;text&quot;' data-full-width='false' data-disabled='false' data-debounce='true'></marimo-text></marimo-ui-element><marimo-ui-element object-id='Hstk-1' random-id='34a67363-301e-31df-c212-521ad64ab390'><marimo-text-area data-initial-value='&quot;Extract all AI model pricing information including model names, input costs, and output costs.&quot;' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Extraction Instruction&lt;/span&gt;&lt;/span&gt;&quot;' data-placeholder='&quot;&quot;' data-disabled='false' data-debounce='true' data-full-width='false'></marimo-text-area></marimo-ui-element></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "a8273a16aad2f3a5cf0116c7ebcf10ea",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='nWHF-0' random-id='aa220063-2be5-0aa0-5bcd-d6e1466512f1'><marimo-button data-initial-value='0' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Run LLM Extraction&lt;/span&gt;&lt;/span&gt;&quot;' data-kind='&quot;neutral&quot;' data-disabled='false' data-full-width='false'></marimo-button></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "iLit",
+      "code_hash": "ccaa47bae67f50acd4d91fd3277aaca6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZHCJ",
+      "code_hash": "d775f695629b67a2d6cbd75c56207f7e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"3-multi-config-url-matching\">3. Multi-Config URL Matching</h2>\n<span class=\"paragraph\">Apply different scraping strategies based on URL patterns.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ROlb",
+      "code_hash": "ff21dac310c819601e4e1159b45681eb",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><div class=\"language-python codehilite\"><pre><span></span><code><span class=\"kn\">from</span><span class=\"w\"> </span><span class=\"nn\">crawl4ai</span><span class=\"w\"> </span><span class=\"kn\">import</span> <span class=\"n\">CrawlerRunConfig</span><span class=\"p\">,</span> <span class=\"n\">MatchMode</span>\n<span class=\"kn\">from</span><span class=\"w\"> </span><span class=\"nn\">crawl4ai.content_filter_strategy</span><span class=\"w\"> </span><span class=\"kn\">import</span> <span class=\"n\">PruningContentFilter</span>\n<span class=\"kn\">from</span><span class=\"w\"> </span><span class=\"nn\">crawl4ai.markdown_generation_strategy</span><span class=\"w\"> </span><span class=\"kn\">import</span> <span class=\"n\">DefaultMarkdownGenerator</span>\n\n<span class=\"n\">configs</span> <span class=\"o\">=</span> <span class=\"p\">[</span>\n    <span class=\"c1\"># PDF documents - special handling</span>\n    <span class=\"n\">CrawlerRunConfig</span><span class=\"p\">(</span>\n        <span class=\"n\">url_matcher</span><span class=\"o\">=</span><span class=\"s2\">&quot;*.pdf&quot;</span><span class=\"p\">,</span>\n        <span class=\"n\">scraping_strategy</span><span class=\"o\">=</span><span class=\"n\">PDFContentScrapingStrategy</span><span class=\"p\">()</span>\n    <span class=\"p\">),</span>\n\n    <span class=\"c1\"># Blog/article pages - content filtering</span>\n    <span class=\"n\">CrawlerRunConfig</span><span class=\"p\">(</span>\n        <span class=\"n\">url_matcher</span><span class=\"o\">=</span><span class=\"p\">[</span><span class=\"s2\">&quot;*/blog/*&quot;</span><span class=\"p\">,</span> <span class=\"s2\">&quot;*/article/*&quot;</span><span class=\"p\">,</span> <span class=\"s2\">&quot;*/news/*&quot;</span><span class=\"p\">],</span>\n        <span class=\"n\">markdown_generator</span><span class=\"o\">=</span><span class=\"n\">DefaultMarkdownGenerator</span><span class=\"p\">(</span>\n            <span class=\"n\">content_filter</span><span class=\"o\">=</span><span class=\"n\">PruningContentFilter</span><span class=\"p\">(</span><span class=\"n\">threshold</span><span class=\"o\">=</span><span class=\"mf\">0.48</span><span class=\"p\">)</span>\n        <span class=\"p\">)</span>\n    <span class=\"p\">),</span>\n\n    <span class=\"c1\"># Dynamic pages requiring JavaScript</span>\n    <span class=\"n\">CrawlerRunConfig</span><span class=\"p\">(</span>\n        <span class=\"n\">url_matcher</span><span class=\"o\">=</span><span class=\"k\">lambda</span> <span class=\"n\">url</span><span class=\"p\">:</span> <span class=\"s1\">&#39;github.com&#39;</span> <span class=\"ow\">in</span> <span class=\"n\">url</span><span class=\"p\">,</span>\n        <span class=\"n\">js_code</span><span class=\"o\">=</span><span class=\"s2\">&quot;window.scrollTo(0, document.body.scrollHeight);&quot;</span><span class=\"p\">,</span>\n        <span class=\"n\">wait_for</span><span class=\"o\">=</span><span class=\"s2\">&quot;css:.repository-content&quot;</span>\n    <span class=\"p\">),</span>\n\n    <span class=\"c1\"># API endpoints - JSON handling</span>\n    <span class=\"n\">CrawlerRunConfig</span><span class=\"p\">(</span>\n        <span class=\"n\">url_matcher</span><span class=\"o\">=</span><span class=\"p\">[</span>\n            <span class=\"s2\">&quot;*.json&quot;</span><span class=\"p\">,</span>\n            <span class=\"k\">lambda</span> <span class=\"n\">url</span><span class=\"p\">:</span> <span class=\"s1\">&#39;api&#39;</span> <span class=\"ow\">in</span> <span class=\"n\">url</span> <span class=\"ow\">or</span> <span class=\"s1\">&#39;httpbin.org&#39;</span> <span class=\"ow\">in</span> <span class=\"n\">url</span>\n        <span class=\"p\">],</span>\n        <span class=\"n\">match_mode</span><span class=\"o\">=</span><span class=\"n\">MatchMode</span><span class=\"o\">.</span><span class=\"n\">OR</span><span class=\"p\">,</span>\n    <span class=\"p\">),</span>\n\n    <span class=\"c1\"># Complex matcher with AND logic</span>\n    <span class=\"n\">CrawlerRunConfig</span><span class=\"p\">(</span>\n        <span class=\"n\">url_matcher</span><span class=\"o\">=</span><span class=\"p\">[</span>\n            <span class=\"k\">lambda</span> <span class=\"n\">url</span><span class=\"p\">:</span> <span class=\"n\">url</span><span class=\"o\">.</span><span class=\"n\">startswith</span><span class=\"p\">(</span><span class=\"s1\">&#39;https://&#39;</span><span class=\"p\">),</span>\n            <span class=\"s2\">&quot;*.org/*&quot;</span><span class=\"p\">,</span>\n            <span class=\"k\">lambda</span> <span class=\"n\">url</span><span class=\"p\">:</span> <span class=\"nb\">any</span><span class=\"p\">(</span><span class=\"n\">doc</span> <span class=\"ow\">in</span> <span class=\"n\">url</span> <span class=\"k\">for</span> <span class=\"n\">doc</span> <span class=\"ow\">in</span> <span class=\"p\">[</span><span class=\"s1\">&#39;docs&#39;</span><span class=\"p\">,</span> <span class=\"s1\">&#39;documentation&#39;</span><span class=\"p\">]),</span>\n            <span class=\"k\">lambda</span> <span class=\"n\">url</span><span class=\"p\">:</span> <span class=\"ow\">not</span> <span class=\"n\">url</span><span class=\"o\">.</span><span class=\"n\">endswith</span><span class=\"p\">((</span><span class=\"s1\">&#39;.pdf&#39;</span><span class=\"p\">,</span> <span class=\"s1\">&#39;.json&#39;</span><span class=\"p\">))</span>\n        <span class=\"p\">],</span>\n        <span class=\"n\">match_mode</span><span class=\"o\">=</span><span class=\"n\">MatchMode</span><span class=\"o\">.</span><span class=\"n\">AND</span><span class=\"p\">,</span>\n    <span class=\"p\">),</span>\n<span class=\"p\">]</span>\n\n<span class=\"c1\"># Crawl multiple URLs with automatic config matching</span>\n<span class=\"n\">results</span> <span class=\"o\">=</span> <span class=\"k\">await</span> <span class=\"n\">crawler</span><span class=\"o\">.</span><span class=\"n\">arun_many</span><span class=\"p\">(</span><span class=\"n\">urls</span><span class=\"o\">=</span><span class=\"n\">urls</span><span class=\"p\">,</span> <span class=\"n\">config</span><span class=\"o\">=</span><span class=\"n\">configs</span><span class=\"p\">)</span>\n</code></pre></div></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "qnkX",
+      "code_hash": "40eb4d9028bedfe9f75bdc37edae5442",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"4-adaptive-crawling-strategies\">4. Adaptive Crawling Strategies</h2>\n<span class=\"paragraph\">Crawl4AI supports two adaptive strategies for relevance-based crawling:</span>\n<ul>\n<li><strong>Statistical Strategy</strong>: Fast, keyword-based scoring</li>\n<li><strong>Embedding Strategy</strong>: Semantic similarity using embeddings</li>\n</ul></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "TqIu",
+      "code_hash": "351a7b50893d0a69175d199487211aea",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><div class=\"language-python codehilite\"><pre><span></span><code><span class=\"kn\">from</span><span class=\"w\"> </span><span class=\"nn\">crawl4ai</span><span class=\"w\"> </span><span class=\"kn\">import</span> <span class=\"n\">AdaptiveCrawler</span><span class=\"p\">,</span> <span class=\"n\">AdaptiveConfig</span><span class=\"p\">,</span> <span class=\"n\">LLMConfig</span>\n\n<span class=\"c1\"># Statistical Strategy (fast, keyword-based)</span>\n<span class=\"n\">config_statistical</span> <span class=\"o\">=</span> <span class=\"n\">AdaptiveConfig</span><span class=\"p\">(</span>\n    <span class=\"n\">strategy</span><span class=\"o\">=</span><span class=\"s2\">&quot;statistical&quot;</span><span class=\"p\">,</span>\n    <span class=\"n\">max_pages</span><span class=\"o\">=</span><span class=\"mi\">10</span><span class=\"p\">,</span>\n    <span class=\"n\">top_k_links</span><span class=\"o\">=</span><span class=\"mi\">3</span><span class=\"p\">,</span>\n    <span class=\"n\">min_gain_threshold</span><span class=\"o\">=</span><span class=\"mf\">0.05</span><span class=\"p\">,</span>\n<span class=\"p\">)</span>\n\n<span class=\"c1\"># Embedding Strategy (semantic understanding)</span>\n<span class=\"n\">config_embedding</span> <span class=\"o\">=</span> <span class=\"n\">AdaptiveConfig</span><span class=\"p\">(</span>\n    <span class=\"n\">strategy</span><span class=\"o\">=</span><span class=\"s2\">&quot;embedding&quot;</span><span class=\"p\">,</span>\n    <span class=\"n\">max_pages</span><span class=\"o\">=</span><span class=\"mi\">10</span><span class=\"p\">,</span>\n    <span class=\"n\">embedding_llm_config</span><span class=\"o\">=</span><span class=\"n\">LLMConfig</span><span class=\"p\">(</span>\n        <span class=\"n\">provider</span><span class=\"o\">=</span><span class=\"s1\">&#39;openai/text-embedding-3-small&#39;</span><span class=\"p\">,</span>\n        <span class=\"n\">api_token</span><span class=\"o\">=</span><span class=\"n\">os</span><span class=\"o\">.</span><span class=\"n\">getenv</span><span class=\"p\">(</span><span class=\"s1\">&#39;OPENAI_API_KEY&#39;</span><span class=\"p\">)</span>\n    <span class=\"p\">),</span>\n    <span class=\"n\">embedding_k_exp</span><span class=\"o\">=</span><span class=\"mf\">4.0</span><span class=\"p\">,</span>\n    <span class=\"n\">n_query_variations</span><span class=\"o\">=</span><span class=\"mi\">12</span>\n<span class=\"p\">)</span>\n\n<span class=\"k\">async</span> <span class=\"k\">with</span> <span class=\"n\">AsyncWebCrawler</span><span class=\"p\">(</span><span class=\"n\">verbose</span><span class=\"o\">=</span><span class=\"kc\">False</span><span class=\"p\">)</span> <span class=\"k\">as</span> <span class=\"n\">crawler</span><span class=\"p\">:</span>\n    <span class=\"n\">adaptive</span> <span class=\"o\">=</span> <span class=\"n\">AdaptiveCrawler</span><span class=\"p\">(</span><span class=\"n\">crawler</span><span class=\"p\">,</span> <span class=\"n\">config_embedding</span><span class=\"p\">)</span>\n\n    <span class=\"n\">result</span> <span class=\"o\">=</span> <span class=\"k\">await</span> <span class=\"n\">adaptive</span><span class=\"o\">.</span><span class=\"n\">digest</span><span class=\"p\">(</span>\n        <span class=\"n\">start_url</span><span class=\"o\">=</span><span class=\"s2\">&quot;https://docs.python.org/3/library/asyncio.html&quot;</span><span class=\"p\">,</span>\n        <span class=\"n\">query</span><span class=\"o\">=</span><span class=\"s2\">&quot;async await context managers coroutines&quot;</span>\n    <span class=\"p\">)</span>\n\n    <span class=\"c1\"># Get most relevant pages</span>\n    <span class=\"n\">relevant_pages</span> <span class=\"o\">=</span> <span class=\"n\">adaptive</span><span class=\"o\">.</span><span class=\"n\">get_relevant_content</span><span class=\"p\">(</span><span class=\"n\">top_k</span><span class=\"o\">=</span><span class=\"mi\">5</span><span class=\"p\">)</span>\n\n    <span class=\"k\">for</span> <span class=\"n\">page</span> <span class=\"ow\">in</span> <span class=\"n\">relevant_pages</span><span class=\"p\">:</span>\n        <span class=\"nb\">print</span><span class=\"p\">(</span><span class=\"sa\">f</span><span class=\"s2\">&quot;URL: </span><span class=\"si\">{</span><span class=\"n\">page</span><span class=\"p\">[</span><span class=\"s1\">&#39;url&#39;</span><span class=\"p\">]</span><span class=\"si\">}</span><span class=\"s2\">&quot;</span><span class=\"p\">)</span>\n        <span class=\"nb\">print</span><span class=\"p\">(</span><span class=\"sa\">f</span><span class=\"s2\">&quot;Relevance Score: </span><span class=\"si\">{</span><span class=\"n\">page</span><span class=\"p\">[</span><span class=\"s1\">&#39;score&#39;</span><span class=\"p\">]</span><span class=\"si\">:</span><span class=\"s2\">.2%</span><span class=\"si\">}</span><span class=\"s2\">&quot;</span><span class=\"p\">)</span>\n        <span class=\"nb\">print</span><span class=\"p\">(</span><span class=\"sa\">f</span><span class=\"s2\">&quot;Content Preview: </span><span class=\"si\">{</span><span class=\"n\">page</span><span class=\"p\">[</span><span class=\"s1\">&#39;content&#39;</span><span class=\"p\">][:</span><span class=\"mi\">200</span><span class=\"p\">]</span><span class=\"si\">}</span><span class=\"s2\">&quot;</span><span class=\"p\">)</span>\n</code></pre></div></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Vxnm",
+      "code_hash": "d562ff885cdc90166a0a0c06528caf40",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"5-javascript-execution\">5. JavaScript Execution</h2>\n<span class=\"paragraph\">Handle dynamic pages by executing JavaScript before content extraction.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "DnEU",
+      "code_hash": "5ab52c1412bee321d2af7487d20e4c25",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><marimo-ui-element object-id='DnEU-0' random-id='4ee9b6dd-098f-41d4-7a7a-934af13cc092'><marimo-text data-initial-value='&quot;https://news.ycombinator.com&quot;' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;URL with JavaScript&lt;/span&gt;&lt;/span&gt;&quot;' data-placeholder='&quot;&quot;' data-kind='&quot;text&quot;' data-full-width='false' data-disabled='false' data-debounce='true'></marimo-text></marimo-ui-element><marimo-ui-element object-id='DnEU-1' random-id='ef66fe38-ff14-5954-e212-91a6afd75ccc'><marimo-text-area data-initial-value='&quot;window.scrollTo(0, document.body.scrollHeight);&#92;nawait new Promise(r =&gt; setTimeout(r, 1000));&#92;nwindow.scrollTo(0, 0);&quot;' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;JavaScript to Execute&lt;/span&gt;&lt;/span&gt;&quot;' data-placeholder='&quot;&quot;' data-disabled='false' data-debounce='true' data-full-width='false'></marimo-text-area></marimo-ui-element></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ulZA",
+      "code_hash": "b7a7f5aec0fc2cbdbec21cd47f178328",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='ulZA-0' random-id='494b6744-d854-1a7e-1e43-8e782158e85d'><marimo-button data-initial-value='0' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Crawl with JavaScript&lt;/span&gt;&lt;/span&gt;&quot;' data-kind='&quot;neutral&quot;' data-disabled='false' data-full-width='false'></marimo-button></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ecfG",
+      "code_hash": "ab18f3634dc3a810e71d6e1d77c4f494",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Pvdt",
+      "code_hash": "adb12c856768b064bb086813a4e41d6f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"6-docker-integration-with-hooks\">6. Docker Integration with Hooks</h2>\n<span class=\"paragraph\">Crawl4AI can run in Docker with customizable hooks at various stages.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZBYS",
+      "code_hash": "04ff44853490bd5b7b6526882e68134c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"hook-system-architecture\">Hook System Architecture</h3>\n<span class=\"paragraph\">8 hook points are available:</span>\n<ol>\n<li><code>on_browser_created</code> - Browser instance ready</li>\n<li><code>on_page_context_created</code> - Block resources, set viewport</li>\n<li><code>on_user_agent_updated</code> - User agent changes</li>\n<li><code>before_goto</code> - Add headers, authentication</li>\n<li><code>after_goto</code> - Page loaded</li>\n<li><code>on_execution_started</code> - JS execution starting</li>\n<li><code>before_retrieve_html</code> - Scroll, interact with page</li>\n<li><code>before_return_html</code> - Final processing, collect metrics</li>\n</ol>\n<div class=\"language-python codehilite\"><pre><span></span><code><span class=\"c1\"># Performance optimization hook</span>\n<span class=\"k\">async</span> <span class=\"k\">def</span><span class=\"w\"> </span><span class=\"nf\">performance_hook</span><span class=\"p\">(</span><span class=\"n\">page</span><span class=\"p\">,</span> <span class=\"n\">context</span><span class=\"p\">,</span> <span class=\"o\">**</span><span class=\"n\">kwargs</span><span class=\"p\">):</span>\n    <span class=\"c1\"># Block heavy resources</span>\n    <span class=\"k\">await</span> <span class=\"n\">context</span><span class=\"o\">.</span><span class=\"n\">route</span><span class=\"p\">(</span>\n        <span class=\"s2\">&quot;**/*.{png,jpg,jpeg,gif,webp,svg,ico}&quot;</span><span class=\"p\">,</span>\n        <span class=\"k\">lambda</span> <span class=\"n\">route</span><span class=\"p\">:</span> <span class=\"n\">route</span><span class=\"o\">.</span><span class=\"n\">abort</span><span class=\"p\">()</span>\n    <span class=\"p\">)</span>\n    <span class=\"k\">await</span> <span class=\"n\">context</span><span class=\"o\">.</span><span class=\"n\">route</span><span class=\"p\">(</span><span class=\"s2\">&quot;**/analytics/*&quot;</span><span class=\"p\">,</span> <span class=\"k\">lambda</span> <span class=\"n\">route</span><span class=\"p\">:</span> <span class=\"n\">route</span><span class=\"o\">.</span><span class=\"n\">abort</span><span class=\"p\">())</span>\n    <span class=\"k\">await</span> <span class=\"n\">context</span><span class=\"o\">.</span><span class=\"n\">route</span><span class=\"p\">(</span><span class=\"s2\">&quot;**/ads/*&quot;</span><span class=\"p\">,</span> <span class=\"k\">lambda</span> <span class=\"n\">route</span><span class=\"p\">:</span> <span class=\"n\">route</span><span class=\"o\">.</span><span class=\"n\">abort</span><span class=\"p\">())</span>\n    <span class=\"k\">return</span> <span class=\"n\">page</span>\n\n<span class=\"c1\"># Authentication headers hook</span>\n<span class=\"k\">async</span> <span class=\"k\">def</span><span class=\"w\"> </span><span class=\"nf\">auth_hook</span><span class=\"p\">(</span><span class=\"n\">page</span><span class=\"p\">,</span> <span class=\"n\">context</span><span class=\"p\">,</span> <span class=\"n\">url</span><span class=\"p\">,</span> <span class=\"o\">**</span><span class=\"n\">kwargs</span><span class=\"p\">):</span>\n    <span class=\"k\">await</span> <span class=\"n\">page</span><span class=\"o\">.</span><span class=\"n\">set_extra_http_headers</span><span class=\"p\">({</span>\n        <span class=\"s1\">&#39;X-API-Key&#39;</span><span class=\"p\">:</span> <span class=\"s1\">&#39;your-api-key&#39;</span><span class=\"p\">,</span>\n        <span class=\"s1\">&#39;Accept-Language&#39;</span><span class=\"p\">:</span> <span class=\"s1\">&#39;en-US,en;q=0.9&#39;</span><span class=\"p\">,</span>\n    <span class=\"p\">})</span>\n    <span class=\"k\">return</span> <span class=\"n\">page</span>\n\n<span class=\"c1\"># Page analytics hook</span>\n<span class=\"k\">async</span> <span class=\"k\">def</span><span class=\"w\"> </span><span class=\"nf\">analytics_hook</span><span class=\"p\">(</span><span class=\"n\">page</span><span class=\"p\">,</span> <span class=\"n\">context</span><span class=\"p\">,</span> <span class=\"o\">**</span><span class=\"n\">kwargs</span><span class=\"p\">):</span>\n    <span class=\"n\">metrics</span> <span class=\"o\">=</span> <span class=\"k\">await</span> <span class=\"n\">page</span><span class=\"o\">.</span><span class=\"n\">evaluate</span><span class=\"p\">(</span><span class=\"s1\">&#39;&#39;&#39;</span>\n<span class=\"s1\">        () =&gt; ({</span>\n<span class=\"s1\">            title: document.title,</span>\n<span class=\"s1\">            images: document.images.length,</span>\n<span class=\"s1\">            links: document.links.length,</span>\n<span class=\"s1\">            scripts: document.scripts.length,</span>\n<span class=\"s1\">        })</span>\n<span class=\"s1\">    &#39;&#39;&#39;</span><span class=\"p\">)</span>\n    <span class=\"nb\">print</span><span class=\"p\">(</span><span class=\"sa\">f</span><span class=\"s2\">&quot;Page metrics: </span><span class=\"si\">{</span><span class=\"n\">metrics</span><span class=\"si\">}</span><span class=\"s2\">&quot;</span><span class=\"p\">)</span>\n    <span class=\"k\">return</span> <span class=\"n\">page</span>\n\n<span class=\"c1\"># Use with Docker client</span>\n<span class=\"kn\">from</span><span class=\"w\"> </span><span class=\"nn\">crawl4ai.docker_client</span><span class=\"w\"> </span><span class=\"kn\">import</span> <span class=\"n\">Crawl4aiDockerClient</span>\n\n<span class=\"k\">async</span> <span class=\"k\">with</span> <span class=\"n\">Crawl4aiDockerClient</span><span class=\"p\">(</span><span class=\"n\">base_url</span><span class=\"o\">=</span><span class=\"s2\">&quot;http://localhost:8000&quot;</span><span class=\"p\">)</span> <span class=\"k\">as</span> <span class=\"n\">client</span><span class=\"p\">:</span>\n    <span class=\"n\">results</span> <span class=\"o\">=</span> <span class=\"k\">await</span> <span class=\"n\">client</span><span class=\"o\">.</span><span class=\"n\">crawl</span><span class=\"p\">(</span>\n        <span class=\"n\">urls</span><span class=\"o\">=</span><span class=\"p\">[</span><span class=\"s2\">&quot;https://example.com&quot;</span><span class=\"p\">],</span>\n        <span class=\"n\">hooks</span><span class=\"o\">=</span><span class=\"p\">{</span>\n            <span class=\"s2\">&quot;on_page_context_created&quot;</span><span class=\"p\">:</span> <span class=\"n\">performance_hook</span><span class=\"p\">,</span>\n            <span class=\"s2\">&quot;before_goto&quot;</span><span class=\"p\">:</span> <span class=\"n\">auth_hook</span><span class=\"p\">,</span>\n            <span class=\"s2\">&quot;before_return_html&quot;</span><span class=\"p\">:</span> <span class=\"n\">analytics_hook</span><span class=\"p\">,</span>\n        <span class=\"p\">},</span>\n        <span class=\"n\">hooks_timeout</span><span class=\"o\">=</span><span class=\"mi\">30</span>\n    <span class=\"p\">)</span>\n</code></pre></div></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "aLJB",
+      "code_hash": "b7e5f8df29d926aa9be935eb485334a7",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"7-webhook-based-async-processing\">7. Webhook-Based Async Processing</h2>\n<span class=\"paragraph\">For long-running crawl jobs, use webhooks to receive completion notifications.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nHfw",
+      "code_hash": "71b74f88cf2cb98370a97ac87f8f1667",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><div class=\"language-python codehilite\"><pre><span></span><code><span class=\"kn\">import</span><span class=\"w\"> </span><span class=\"nn\">requests</span>\n\n<span class=\"n\">CRAWL4AI_BASE_URL</span> <span class=\"o\">=</span> <span class=\"s2\">&quot;http://localhost:8000&quot;</span>\n\n<span class=\"c1\"># Submit crawl job with webhook</span>\n<span class=\"k\">def</span><span class=\"w\"> </span><span class=\"nf\">submit_crawl_job</span><span class=\"p\">(</span><span class=\"n\">urls</span><span class=\"p\">,</span> <span class=\"n\">webhook_url</span><span class=\"p\">,</span> <span class=\"n\">include_data</span><span class=\"o\">=</span><span class=\"kc\">False</span><span class=\"p\">):</span>\n    <span class=\"n\">payload</span> <span class=\"o\">=</span> <span class=\"p\">{</span>\n        <span class=\"s2\">&quot;urls&quot;</span><span class=\"p\">:</span> <span class=\"n\">urls</span><span class=\"p\">,</span>\n        <span class=\"s2\">&quot;browser_config&quot;</span><span class=\"p\">:</span> <span class=\"p\">{</span><span class=\"s2\">&quot;headless&quot;</span><span class=\"p\">:</span> <span class=\"kc\">True</span><span class=\"p\">},</span>\n        <span class=\"s2\">&quot;crawler_config&quot;</span><span class=\"p\">:</span> <span class=\"p\">{</span><span class=\"s2\">&quot;cache_mode&quot;</span><span class=\"p\">:</span> <span class=\"s2\">&quot;bypass&quot;</span><span class=\"p\">},</span>\n        <span class=\"s2\">&quot;webhook_config&quot;</span><span class=\"p\">:</span> <span class=\"p\">{</span>\n            <span class=\"s2\">&quot;webhook_url&quot;</span><span class=\"p\">:</span> <span class=\"n\">webhook_url</span><span class=\"p\">,</span>\n            <span class=\"s2\">&quot;webhook_data_in_payload&quot;</span><span class=\"p\">:</span> <span class=\"n\">include_data</span><span class=\"p\">,</span>\n            <span class=\"c1\"># Optional authentication</span>\n            <span class=\"c1\"># &quot;webhook_headers&quot;: {&quot;X-Webhook-Secret&quot;: &quot;your-secret&quot;}</span>\n        <span class=\"p\">}</span>\n    <span class=\"p\">}</span>\n\n    <span class=\"n\">response</span> <span class=\"o\">=</span> <span class=\"n\">requests</span><span class=\"o\">.</span><span class=\"n\">post</span><span class=\"p\">(</span>\n        <span class=\"sa\">f</span><span class=\"s2\">&quot;</span><span class=\"si\">{</span><span class=\"n\">CRAWL4AI_BASE_URL</span><span class=\"si\">}</span><span class=\"s2\">/crawl/job&quot;</span><span class=\"p\">,</span>\n        <span class=\"n\">json</span><span class=\"o\">=</span><span class=\"n\">payload</span>\n    <span class=\"p\">)</span>\n\n    <span class=\"k\">if</span> <span class=\"n\">response</span><span class=\"o\">.</span><span class=\"n\">ok</span><span class=\"p\">:</span>\n        <span class=\"k\">return</span> <span class=\"n\">response</span><span class=\"o\">.</span><span class=\"n\">json</span><span class=\"p\">()[</span><span class=\"s1\">&#39;task_id&#39;</span><span class=\"p\">]</span>\n    <span class=\"k\">return</span> <span class=\"kc\">None</span>\n\n<span class=\"c1\"># Flask webhook handler</span>\n<span class=\"kn\">from</span><span class=\"w\"> </span><span class=\"nn\">flask</span><span class=\"w\"> </span><span class=\"kn\">import</span> <span class=\"n\">Flask</span><span class=\"p\">,</span> <span class=\"n\">request</span><span class=\"p\">,</span> <span class=\"n\">jsonify</span>\n\n<span class=\"n\">app</span> <span class=\"o\">=</span> <span class=\"n\">Flask</span><span class=\"p\">(</span><span class=\"vm\">__name__</span><span class=\"p\">)</span>\n\n<span class=\"nd\">@app</span><span class=\"o\">.</span><span class=\"n\">route</span><span class=\"p\">(</span><span class=\"s1\">&#39;/webhooks/crawl-complete&#39;</span><span class=\"p\">,</span> <span class=\"n\">methods</span><span class=\"o\">=</span><span class=\"p\">[</span><span class=\"s1\">&#39;POST&#39;</span><span class=\"p\">])</span>\n<span class=\"k\">def</span><span class=\"w\"> </span><span class=\"nf\">handle_webhook</span><span class=\"p\">():</span>\n    <span class=\"n\">payload</span> <span class=\"o\">=</span> <span class=\"n\">request</span><span class=\"o\">.</span><span class=\"n\">json</span>\n    <span class=\"n\">task_id</span> <span class=\"o\">=</span> <span class=\"n\">payload</span><span class=\"p\">[</span><span class=\"s1\">&#39;task_id&#39;</span><span class=\"p\">]</span>\n    <span class=\"n\">status</span> <span class=\"o\">=</span> <span class=\"n\">payload</span><span class=\"p\">[</span><span class=\"s1\">&#39;status&#39;</span><span class=\"p\">]</span>\n\n    <span class=\"k\">if</span> <span class=\"n\">status</span> <span class=\"o\">==</span> <span class=\"s1\">&#39;completed&#39;</span><span class=\"p\">:</span>\n        <span class=\"k\">if</span> <span class=\"s1\">&#39;data&#39;</span> <span class=\"ow\">in</span> <span class=\"n\">payload</span><span class=\"p\">:</span>\n            <span class=\"c1\"># Process inline results</span>\n            <span class=\"k\">for</span> <span class=\"n\">result</span> <span class=\"ow\">in</span> <span class=\"n\">payload</span><span class=\"p\">[</span><span class=\"s1\">&#39;data&#39;</span><span class=\"p\">]</span><span class=\"o\">.</span><span class=\"n\">get</span><span class=\"p\">(</span><span class=\"s1\">&#39;results&#39;</span><span class=\"p\">,</span> <span class=\"p\">[]):</span>\n                <span class=\"nb\">print</span><span class=\"p\">(</span><span class=\"sa\">f</span><span class=\"s2\">&quot;Crawled: </span><span class=\"si\">{</span><span class=\"n\">result</span><span class=\"o\">.</span><span class=\"n\">get</span><span class=\"p\">(</span><span class=\"s1\">&#39;url&#39;</span><span class=\"p\">)</span><span class=\"si\">}</span><span class=\"s2\">&quot;</span><span class=\"p\">)</span>\n        <span class=\"k\">else</span><span class=\"p\">:</span>\n            <span class=\"c1\"># Fetch results from API</span>\n            <span class=\"n\">results</span> <span class=\"o\">=</span> <span class=\"n\">requests</span><span class=\"o\">.</span><span class=\"n\">get</span><span class=\"p\">(</span>\n                <span class=\"sa\">f</span><span class=\"s2\">&quot;</span><span class=\"si\">{</span><span class=\"n\">CRAWL4AI_BASE_URL</span><span class=\"si\">}</span><span class=\"s2\">/crawl/job/</span><span class=\"si\">{</span><span class=\"n\">task_id</span><span class=\"si\">}</span><span class=\"s2\">&quot;</span>\n            <span class=\"p\">)</span><span class=\"o\">.</span><span class=\"n\">json</span><span class=\"p\">()</span>\n\n    <span class=\"k\">return</span> <span class=\"n\">jsonify</span><span class=\"p\">({</span><span class=\"s2\">&quot;status&quot;</span><span class=\"p\">:</span> <span class=\"s2\">&quot;received&quot;</span><span class=\"p\">}),</span> <span class=\"mi\">200</span>\n</code></pre></div></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "xXTn",
+      "code_hash": "2a215ae574278e3dfc682109617cd212",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"8-table-extraction-data-analysis\">8. Table Extraction &amp; Data Analysis</h2>\n<span class=\"paragraph\">Extract tables from web pages for data analysis.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "AjVT",
+      "code_hash": "2eaa2e4529788d0efe4135bd5bcd5636",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='AjVT-0' random-id='3835d6b8-73de-8566-d3df-365cb03a5eff'><marimo-text data-initial-value='&quot;https://en.wikipedia.org/wiki/List_of_largest_technology_companies_by_revenue&quot;' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;URL with Tables&lt;/span&gt;&lt;/span&gt;&quot;' data-placeholder='&quot;&quot;' data-kind='&quot;text&quot;' data-full-width='false' data-disabled='false' data-debounce='true'></marimo-text></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "pHFh",
+      "code_hash": "44ce00a80e5181e5059b0b11694dd7cd",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='pHFh-0' random-id='21157436-0bf3-5176-ce08-0921f3e15a8f'><marimo-button data-initial-value='0' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Extract Tables&lt;/span&gt;&lt;/span&gt;&quot;' data-kind='&quot;neutral&quot;' data-disabled='false' data-full-width='false'></marimo-button></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "NCOB",
+      "code_hash": "6d7eb6d91713f113655cc3ba6c293724",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "aqbW",
+      "code_hash": "8dfdf0da1ab5e9b6408b940bbac4f009",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "TRpd",
+      "code_hash": "a7cace25764c082b7489c5aed37456df",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"key-patterns-summary\">Key Patterns Summary</h2>\n<h3 id=\"basic-crawling\">Basic Crawling</h3>\n<div class=\"language-python codehilite\"><pre><span></span><code><span class=\"k\">async</span> <span class=\"k\">with</span> <span class=\"n\">AsyncWebCrawler</span><span class=\"p\">()</span> <span class=\"k\">as</span> <span class=\"n\">crawler</span><span class=\"p\">:</span>\n    <span class=\"n\">result</span> <span class=\"o\">=</span> <span class=\"k\">await</span> <span class=\"n\">crawler</span><span class=\"o\">.</span><span class=\"n\">arun</span><span class=\"p\">(</span><span class=\"n\">url</span><span class=\"o\">=</span><span class=\"s2\">&quot;https://example.com&quot;</span><span class=\"p\">)</span>\n    <span class=\"n\">markdown</span> <span class=\"o\">=</span> <span class=\"n\">result</span><span class=\"o\">.</span><span class=\"n\">markdown</span>\n    <span class=\"n\">links</span> <span class=\"o\">=</span> <span class=\"n\">result</span><span class=\"o\">.</span><span class=\"n\">links</span>\n</code></pre></div>\n<h3 id=\"llm-extraction\">LLM Extraction</h3>\n<div class=\"language-python codehilite\"><pre><span></span><code><span class=\"n\">config</span> <span class=\"o\">=</span> <span class=\"n\">CrawlerRunConfig</span><span class=\"p\">(</span>\n    <span class=\"n\">extraction_strategy</span><span class=\"o\">=</span><span class=\"n\">LLMExtractionStrategy</span><span class=\"p\">(</span>\n        <span class=\"n\">llm_config</span><span class=\"o\">=</span><span class=\"n\">LLMConfig</span><span class=\"p\">(</span><span class=\"n\">provider</span><span class=\"o\">=</span><span class=\"s2\">&quot;openai/gpt-4o&quot;</span><span class=\"p\">),</span>\n        <span class=\"n\">schema</span><span class=\"o\">=</span><span class=\"n\">MyPydanticModel</span><span class=\"o\">.</span><span class=\"n\">model_json_schema</span><span class=\"p\">(),</span>\n        <span class=\"n\">instruction</span><span class=\"o\">=</span><span class=\"s2\">&quot;Extract specific data...&quot;</span>\n    <span class=\"p\">)</span>\n<span class=\"p\">)</span>\n</code></pre></div>\n<h3 id=\"multi-url-crawling\">Multi-URL Crawling</h3>\n<div class=\"language-python codehilite\"><pre><span></span><code><span class=\"n\">results</span> <span class=\"o\">=</span> <span class=\"k\">await</span> <span class=\"n\">crawler</span><span class=\"o\">.</span><span class=\"n\">arun_many</span><span class=\"p\">(</span>\n    <span class=\"n\">urls</span><span class=\"o\">=</span><span class=\"n\">url_list</span><span class=\"p\">,</span>\n    <span class=\"n\">config</span><span class=\"o\">=</span><span class=\"n\">configs</span>  <span class=\"c1\"># List of configs for pattern matching</span>\n<span class=\"p\">)</span>\n</code></pre></div>\n<h3 id=\"adaptive-crawling\">Adaptive Crawling</h3>\n<div class=\"language-python codehilite\"><pre><span></span><code><span class=\"n\">adaptive</span> <span class=\"o\">=</span> <span class=\"n\">AdaptiveCrawler</span><span class=\"p\">(</span><span class=\"n\">crawler</span><span class=\"p\">,</span> <span class=\"n\">AdaptiveConfig</span><span class=\"p\">(</span>\n    <span class=\"n\">strategy</span><span class=\"o\">=</span><span class=\"s2\">&quot;embedding&quot;</span><span class=\"p\">,</span>\n    <span class=\"n\">max_pages</span><span class=\"o\">=</span><span class=\"mi\">10</span>\n<span class=\"p\">))</span>\n<span class=\"n\">result</span> <span class=\"o\">=</span> <span class=\"k\">await</span> <span class=\"n\">adaptive</span><span class=\"o\">.</span><span class=\"n\">digest</span><span class=\"p\">(</span><span class=\"n\">start_url</span><span class=\"p\">,</span> <span class=\"n\">query</span><span class=\"p\">)</span>\n<span class=\"n\">relevant</span> <span class=\"o\">=</span> <span class=\"n\">adaptive</span><span class=\"o\">.</span><span class=\"n\">get_relevant_content</span><span class=\"p\">(</span><span class=\"n\">top_k</span><span class=\"o\">=</span><span class=\"mi\">5</span><span class=\"p\">)</span>\n</code></pre></div>\n<h3 id=\"docker-client\">Docker Client</h3>\n<div class=\"language-python codehilite\"><pre><span></span><code><span class=\"k\">async</span> <span class=\"k\">with</span> <span class=\"n\">Crawl4aiDockerClient</span><span class=\"p\">(</span><span class=\"n\">base_url</span><span class=\"o\">=</span><span class=\"n\">DOCKER_URL</span><span class=\"p\">)</span> <span class=\"k\">as</span> <span class=\"n\">client</span><span class=\"p\">:</span>\n    <span class=\"n\">results</span> <span class=\"o\">=</span> <span class=\"k\">await</span> <span class=\"n\">client</span><span class=\"o\">.</span><span class=\"n\">crawl</span><span class=\"p\">(</span>\n        <span class=\"n\">urls</span><span class=\"o\">=</span><span class=\"p\">[</span><span class=\"s2\">&quot;https://example.com&quot;</span><span class=\"p\">],</span>\n        <span class=\"n\">hooks</span><span class=\"o\">=</span><span class=\"p\">{</span><span class=\"s2\">&quot;before_goto&quot;</span><span class=\"p\">:</span> <span class=\"n\">my_hook</span><span class=\"p\">}</span>\n    <span class=\"p\">)</span>\n</code></pre></div></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "sdOm",
+      "code_hash": null,
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Jaol",
+      "code_hash": null,
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "zQiK",
+      "code_hash": null,
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ylTV",
+      "code_hash": null,
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZuBk",
+      "code_hash": null,
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BMoP",
+      "code_hash": null,
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "oOSF",
+      "code_hash": null,
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "naYX",
+      "code_hash": null,
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "awsU",
+      "code_hash": null,
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "NswL",
+      "code_hash": null,
+      "outputs": [],
+      "console": []
+    }
+  ]
+}
