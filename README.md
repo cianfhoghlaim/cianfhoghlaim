@@ -29,11 +29,11 @@ While this platform embraces the structural and historical reference of "Kings' 
 This repository acts as the central orchestrator for scraping, structuring, embedding, and visualizing educational ecosystems. To encourage academic collaboration while protecting high-value AI routing, the project utilizes an "Open Core" separation strategy:
 
 ### 1. Foundation Tier (Open Contribution)
-*   **Data Engineering (`data_engineering/`):** Core ELT pipelines (Dagster + DLT) for curriculum ingestion. 
 *   **Research (`bunchloch/`):** Curated legacy documents and foundational linguistic resources.
 *(Note: foundational data extraction scripts may be subject to permissive upstream licenses like Apache 2.0 to encourage academic contribution).*
 
 ### 2. Operational Intelligence Tier (Proprietary/BSL Restricted)
+*   **Data Engineering (`data_engineering/`):** Core ELT pipelines (Dagster + DLT) for curriculum ingestion. 
 *   **Machine Learning (`machine_learning/`):** Local model registries (Gemma, Qwen, Celtic LLMs).
 *   **Agent Development Kit (`adk/`):** Multi-agent system orchestration powered by MCP.
 *   **Interactive Frontends (`web/`):** React applications and agentic UIs.
@@ -50,3 +50,7 @@ By downloading, copying, or utilizing this codebase, you agree to the following 
 1.  **Geographic Restrictions:** Production deployment is legally restricted to the Republic of Ireland, the United Kingdom, the European Union, the Commonwealth of Nations, and Ukraine.
 2.  **Non-Commercial Use Only:** The software is provided exclusively for non-profit, cultural preservation, and academic research. Commercial monetization—including for-profit AI training, DeFi analytics, and ed-tech SaaS platforms—is strictly prohibited.
 3.  **Acceptable Use:** Usage by entities affiliated with sanctioned organizations, paramilitary groups, or those in violation of international human rights conventions is fundamentally banned and will result in immediate technological and legal revocation of access.
+## Recent Restructuring (March 2026)
+- **Crypteolas Merged**: The former `tuatha/crypteolas_1` and `tuatha/crypteolas_2` have been merged into a single top-level `crypteolas/` directory.
+- **Gemini Archives Organized**: `bunchloch/gemini/` has been categorized into discrete topics (`medical_and_trauma`, `legal_and_compliance`, `tech_and_architecture`, `politics_and_society`, `history_and_culture`, `education`) for easier retrieval.
+- **Agentic Git Sync**: A new `travel_changes_to_remote.py` script modeled after the `adk/` architecture has been added to chunk, stage, and commit pushes sequentially, protecting against timeouts on low-bandwidth connections.
