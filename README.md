@@ -28,11 +28,9 @@ While this platform embraces the structural and historical reference of "Kings' 
 
 This repository acts as the central orchestrator for scraping, structuring, embedding, and visualizing educational ecosystems. To encourage academic collaboration while protecting high-value AI routing, the project utilizes an "Open Core" separation strategy:
 
-### 1. Foundation Tier (Open Contribution)
-*   **Research (`bunchloch/`):** Curated legacy documents and foundational linguistic resources.
-*(Note: foundational data extraction scripts may be subject to permissive upstream licenses like Apache 2.0 to encourage academic contribution).*
 
-### 2. Operational Intelligence Tier (Proprietary/BSL Restricted)
+### Operational Intelligence Tier (Proprietary/BSL Restricted)
+*   **Research (`bunchloch/`):** Curated legacy documents and foundational linguistic resources.
 *   **Data Engineering (`data_engineering/`):** Core ELT pipelines (Dagster + DLT) for curriculum ingestion. 
 *   **Machine Learning (`machine_learning/`):** Local model registries (Gemma, Qwen, Celtic LLMs).
 *   **Agent Development Kit (`adk/`):** Multi-agent system orchestration powered by MCP.
@@ -47,7 +45,7 @@ This repository acts as the central orchestrator for scraping, structuring, embe
 This repository operates under a highly restrictive **Business Source License (BSL) 1.1**. 
 
 By downloading, copying, or utilizing this codebase, you agree to the following core tenets (see `LICENSE.md` for full legal terms):
-1.  **Geographic Restrictions:** Production deployment is legally restricted to the Republic of Ireland, the United Kingdom, the European Union, the Commonwealth of Nations, and Ukraine.
+1.  **Geographic Restrictions:** Production deployment is legally restricted to Ireland, Northern Ireland, the Republic of Ireland, the United Kingdom of Great Britain and Northern Ireland, the European Union (except Hungary and Serbia), the British Isles, The Commonwealth of Nations, and those in the United States of America aligned with Apple and the Duke and Duchess of Sussex, Taiwan, Tibet, Nepal, South Korea, Japan, China.
 2.  **Non-Commercial Use Only:** The software is provided exclusively for non-profit, cultural preservation, and academic research. Commercial monetization—including for-profit AI training, DeFi analytics, and ed-tech SaaS platforms—is strictly prohibited.
 3.  **Acceptable Use:** Usage by entities affiliated with sanctioned organizations, paramilitary groups, or those in violation of international human rights conventions is fundamentally banned and will result in immediate technological and legal revocation of access.
 ## Recent Restructuring (March 2026)
