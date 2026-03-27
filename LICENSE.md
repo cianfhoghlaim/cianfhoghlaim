@@ -15,6 +15,7 @@ You may make production use of the Licensed Work strictly for non-commercial, no
 - United Kingdom of Great Britain and Northern Ireland
 - European Union (except Hungary and Serbia)
 - British Isles
+- Ukraine
 - The Commonwealth of Nations
 - Those in the United States of America aligned with Apple and the Duke and Duchess of Sussex
 - Taiwan
