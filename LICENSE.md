@@ -1,59 +1,49 @@
-# Business Source License with Geographic and Moral Restrictions
+# Business Source License 1.1
 
-Copyright (c) [2026] [Cian Lyons (Cian Mac Liatháin) / Cianfhoghlaim]
+License text copyright (c) 2017 MariaDB Corporation Ab, All Rights Reserved.
+"Business Source License" is a trademark of MariaDB Corporation Ab.
 
-This Business Source License ("BSL") is a customized version that incorporates strict geographic, moral, and non-profit usage restrictions.
+**Licensor:** Cian Pierce Lyons (Irish Passport Name: Cian Mac Liatháin)
 
-## 1. Licensor's Grant of Use
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to use, copy, modify, and merge the Software, subject to the following strict conditions:
+**Licensed Work:** The Oideachais/Cianfhoghlaim Ecosystem (encompassing all orchestration logic, machine learning pipelines, the Agent Development Kit, blockchain analytics agents, and interactive gamification clients contained within this repository).
 
-## 2. Permitted Geographic Regions
-The Software, including its source code, compiled binaries, and associated data, may ONLY be used, hosted, deployed, or distributed within the jurisdictions of:
+**Additional Use Grant:**
+You may make production use of the Licensed Work strictly for non-commercial, non-profit, cultural preservation, and academic research purposes, provided such use occurs entirely within the legal jurisdictions of 
+- Ireland
+- Northern Ireland
+- Republic of Ireland
+- United Kingdom of Great Britain and Northern Ireland
+- European Union (except Hungary and Serbia)
+- British Isles
 - The Commonwealth of Nations
-- The United Kingdom of Great Britain and Northern Ireland
-- Ukraine
-- The European Union
-- United States of America
-- China
+- Those in the United States of America aligned with Apple and the Duke and Duchess of Sussex
+- Taiwan
 - Tibet
 - Nepal
-- Japan
 - South Korea
-- Taiwan
+- Japan
+- China 
 
-Any use, deployment, hosting, or distribution outside these specified regions is strictly prohibited.
+You may not deploy, host, copy, or integrate the Licensed Work, or any derivative thereof, for commercial monetization, competitive intelligence services, or for-profit enterprise infrastructure. This prohibition explicitly extends to the commercial training of large language models, the operation of for-profit decentralized finance (DeFi) analytics, the commercial deployment of geospatial multi-agent systems, and the monetization of gamified interactive environments. 
 
-## 3. NON-PROFIT USE ONLY
-The Software and associated research may only be used for non-profit, educational, or personal research purposes. Any commercial use, monetization, or use by for-profit entities is strictly prohibited.
+Furthermore, any usage of this software by entities affiliated with sanctioned organizations, paramilitary groups, or entities in violation of international human rights conventions is fundamentally excluded from this grant.
 
-## 4. NON-AFFILIATION AND RESTRICTION OF USE (Moral License)
-The Software and associated assignments and research may NOT be used by, distributed by, or affiliated in any way with the following specific organizations, domains, or ideological movements:
-   - Kneecap
-   - Not My King
-   - Radical republicanism
-   - Radical Islam, Radical Judaism, Radical Christianity, Radical Anything
-   - Elon Musk / Andrew Tate / Red Pill 'white power' and 'male power' movements
-   - Jordan Peterson and promoters of manipulative psychology
-   - Members of LGBT+ groups that promote Bisexual Erasure or Radical (not trauma-informed) Transgenderism 
-   - Rules-of-the-road breakers
-   - éirigí.org
-   - communism.ie
-   - republic.org.uk
-   - lasairdhearg.org
-   - [Bad Whatsapp Group Members][Pending agentic insertion from research]
-   - [Bad Discord Server Members][Pending agentic insertion from research]
+**Change Date:** Four (4) years from the date the specific version of the Licensed Work is published.
 
-## 5. NOT TO PLACE AT DISADVANTAGE
-Those making use of my educational assignments should make reference to their original source where applicable, and if possible to also make an effort to inform student group-chats or other group environments of their existence to ensure that others in the associated modules are informed also so as to ensure that nobody is left at a disadvantage. This is not as relevant to those in Junior Cycle, Leaving Cycle, GCSE or A-Level - more important for those in tertiary-level education.
+**Change License:** GNU Affero General Public License (AGPL) v3.0.
 
-## 6. Termination
-Any use of the Software by individuals or groups representing, endorsing, or affiliated with the above entities, or any use outside the permitted geographic regions, automatically terminates this license and all rights granted herein.
+---
 
-## DISCLAIMER
-DIRECTIVE (EU) 2019/1024 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL is followed where applicable.
+## Terms
 
-Cianfhoghlaim data is made available subject to the adherence to the above moral usage and geographic policy.
+The Licensor hereby grants you the right to copy, modify, create derivative works, redistribute, and make non-production use of the Licensed Work. The Licensor may make an Additional Use Grant, above, permitting limited production use.
 
-If you use Cianfhoghlaim software, you should acknowledge the source where appropriate and the assumed usage policy where relevant to this and provide and feel free to use in a independent, moral, educational, non-commercial way. 
+Effective on the Change Date, or the fourth anniversary of the first publicly available distribution of a specific version of the Licensed Work under this License, whichever comes first, the Licensor hereby grants you the right to use, copy, modify, and redistribute the Licensed Work under the Change License.
 
-If you use Cianfhoghlaim data, we would love to hear from you with information about how you are benefitting from it, but this is not a requirement.
+---
+
+## Governing Law & Jurisdiction
+
+This License, and any contractual or non-contractual obligations arising out of or in connection with it, shall be governed by and construed in accordance with the laws of the **Republic of Ireland**. 
+
+The Licensee irrevocably submits to the exclusive jurisdiction of the courts of the Republic of Ireland for the determination of any dispute. Notwithstanding the foregoing, the Licensor (Cian Pierce Lyons) retains the absolute right to bring proceedings against the Licensee for breach of these terms in the courts of **England and Wales**, or any other court of competent jurisdiction globally, to seek injunctive relief, damages, or the enforcement of intellectual property rights.
