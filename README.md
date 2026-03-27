@@ -1,162 +1,52 @@
-# Kings' College Galway - Unified Celtic Education Platform
+# Oideachais (Kings' College Galway) by Cianfhoghlaim - Unified Celtic Education Platform
 
-*v0.5 Many useful aspects but not up-and-running yet*
+*v0.5 A unified data platform and research repository for education and cultural preservation.*
 
-A unified data platform and research repository for education, beginning with a focus on English-language curriculums and evolving into a comprehensive ecosystem for Celtic language educational nations (Ireland, Scotland, Wales, Isle of Man, Cornwall, Brittany).
+Oideachais is an advanced, AI-driven educational data platform designed to standardize curriculums across the British Isles. Beginning with a focus on English-language curriculums (GCSE, A-Level, Junior Cycle, Leaving Certificate), the platform's ultimate mission is to evolve into a comprehensive digital sanctuary for Celtic language educational nations (Ireland, Scotland, Wales, Isle of Man, Cornwall, Brittany).
 
 ## 🗣️ A Note on the Name: Cianfhoghlaim & Celtic Linguistic Roots
 
-The domain cianfhoghlaim.ie is a deliberate linguistic play on words that highlights the mechanics of the Irish language, while pointing to the broader Celtic linguistic traditions this repository aims to protect.
+The domain `cianfhoghlaim.ie` is a deliberate linguistic play on words that highlights the mechanics of the Irish language while pointing to the broader Celtic linguistic traditions this repository aims to protect:
+*   **Cian:** The author's name, which also serves as the Irish prefix for "distance," "remote," or "long-enduring."
+*   **Foghlaim:** The Irish word for "learning."
 
-    Cian: The author's name, which also serves as the Irish prefix for "distance," "remote," or "long-enduring."
-
-    Foghlaim: The Irish word for "learning."
-
-The Linguistic Shift (Séimhiú): When forming a compound word in Irish, the second word undergoes a grammatical mutation. Foghlaim becomes fhoghlaim. In Irish, the "fh" combination is entirely silent. Therefore, Cianfhoghlaim (translating literally to "distance learning" or "remote learning") is phonetically pronounced KEE-an-oh-lim. The 'f' echoes silently.
-
-The Goidelic & Brythonic Connection: This type of initial consonant mutation is not just an Irish phenomenon; it is a defining characteristic of the entire Insular Celtic language family. It bridges the Goidelic branch (Irish, Scottish Gaelic, Manx) with the Brythonic branch (Welsh, Cornish, Breton). Understanding these shared phonetic and grammatical shifts is crucial for the future goal of this platform: building a unified educational and digital ecosystem that scales across all Celtic nations.
-
-**Version 1 explicitly prioritizes the English language education systems of the Republic of Ireland and England**, specifically focusing on:
-*   **A-Level**
-*   **GCSE**
-*   **Junior Cycle**
-*   **Leaving Certificate**
-
-### The V1 Goal
-To build a multi-modal **live input Gemini API homework helper, syllabus helper, curriculum helper, and exam paper helper** for all current curriculum subjects. This AI agent utilizes extensive data orchestration to ingest curriculums, syllabi, and past exam papers, providing real-time, context-aware assistance to students and educators.
-
-### Future Celtic Integration
-Version 1 serves as the foundational architecture. Once this English-language foundation (web scraping, indexing syllabus/exams, identifying parallels) is established, **later versions will translate and expand this unified data platform to Celtic language educational nations** (Ireland, Scotland, Isle of Man, Cornwall, Brittany, etc.). This digital sanctuary will ensure the inter-generational transmission of Goidelic and Brythonic languages and protect against monolingual algorithmic manipulations.
+This digital sanctuary will ensure the inter-generational transmission of Goidelic and Brythonic languages and protect our shared cultural heritage against monolingual algorithmic manipulations.
 
 ---
 
-## 👨‍🏫 Author & Credentials
+## 👨‍🏫 Author, Paternity & Legal Disclaimers
 
-This platform is developed by:
-*   **English Legal Name:** Cian Pierce Lyons
-*   **Irish Passport Name:** Cian Mac Liatháin
-*   **Domains:** [cianfhoghlaim.ie](https://cianfhoghlaim.ie) and [cianlyons.co.uk](https://cianlyons.co.uk)
+**Author Identity & Moral Rights:**
+This platform is developed entirely by **Cian Pierce Lyons** (Irish Passport Name: **Cian Mac Liatháin**). The author explicitly asserts their moral right of paternity under the Copyright and Related Rights Act 2000 (Ireland) and the Copyright, Designs and Patents Act 1988 (UK) to be permanently identified as the creator of this work.
 
-**Verified Experience & Credentials (see `cian/` directory):**
-*   BA in Mathematics & Education
-*   Official teaching registration
-*   Cleared background checks
-*   Right to restore PGCE progress
-
-While the platform embraces the structural reference of "Kings' College Galway" for its academic rigor, it centers the author's actual validated credentials in the fields of Computer Science, Mathematics, and Gaeilge.
+**Institutional Nomenclature Disclaimer:**
+While this platform embraces the structural and historical reference of "Kings' College Galway" to reflect its academic rigor, "Kings' College Galway" operates exclusively as an artistic and thematic project identifier. It does not represent an accredited, regulated, or statutorily recognized degree-awarding higher education institution in any jurisdiction.
 
 ---
 
-## 🏗️ Core Architecture & Repository Structure
+## 🏗️ Core Architecture & "Open Core" Structure
 
-The project is divided into the following core domains:
+This repository acts as the central orchestrator for scraping, structuring, embedding, and visualizing educational ecosystems. To encourage academic collaboration while protecting high-value AI routing, the project utilizes an "Open Core" separation strategy:
 
-| Component | Directory | Description |
-|-----------|-----------|-------------|
-| **Data Orchestration** | `education/` | Data pipelines (Dagster + DLT + CocoIndex) for Irish and UK curriculum ingestion, geospatial data, and semantic indexing. |
-| **Machine Learning** | `machine_learning/` | ML model registry and training notebooks (70+ models including OCR, Vision, Retrieval, and Celtic LLMs). |
-| **Infrastructure** | `infrastructure/` | Modular Docker stacks (19+ services), CI/CD, and platform routing. |
-| **Specifications** | `openspec/` | Formal specifications for capabilities (e.g., curriculum ingestion, bilingual content). |
-| **Language Resources**| `irish_english/` | Curated documents, books, and language learning resources for Celtic studies. |
-| **Research** | `gemini/`, `research/` | Deep-dive research documents, legal investigations, and AI analyses. |
-| **Author Data** | `cian/` | Verified credentials, background checks, and professional documentation. |
-| **Hackathon** | `hackathon/` | Context and assets for the Gemini Live Agent Hackathon. |
+### 1. Foundation Tier (Open Contribution)
+*   **Data Engineering (`data_engineering/`):** Core ELT pipelines (Dagster + DLT) for curriculum ingestion. 
+*   **Research (`bunchloch/`):** Curated legacy documents and foundational linguistic resources.
+*(Note: foundational data extraction scripts may be subject to permissive upstream licenses like Apache 2.0 to encourage academic contribution).*
 
-## ⚙️ Technical Platform (Oideachais)
-
-The education platform merges multiple pipelines into a single observable system:
-*   **Data Assets**: 37+ Dagster assets across domains (Ireland, UK, Celtic, Geospatial).
-*   **Vector Search & LLM Extraction**: LanceDB semantic search with type-safe BAML schemas.
-*   **AI Agents**: Multi-agent system powered by the Gemini Live API with domain routing (Curriculum, Exams, Homework, Statistics).
-*   **Observability**: Complete integration with Datadog APM, MLflow, Langfuse, Ragas, and Confluent Kafka.
-*   **Storage Ecosystem**: DuckDB (Analytics), LanceDB (Vector Embeddings), Memgraph (Knowledge Graph).
-
-### Quick Start
-
-**1. Install Dependencies**
-```bash
-uv sync --all-packages
-```
-
-**2. Start Infrastructure**
-```bash
-cd infrastructure
-./scripts/stack.sh memgraph up -d
-./scripts/stack.sh lancedb up -d
-```
-
-**3. Run Education Pipeline**
-```bash
-cd education
-dagster dev
-```
+### 2. Operational Intelligence Tier (Proprietary/BSL Restricted)
+*   **Machine Learning (`machine_learning/`):** Local model registries (Gemma, Qwen, Celtic LLMs).
+*   **Agent Development Kit (`adk/`):** Multi-agent system orchestration powered by MCP.
+*   **Interactive Frontends (`web/`):** React applications and agentic UIs.
+*   **Blockchain & Gamification (`crypteolas/`, `tuatha/`):** DeFi analytics and immersive game clients.
+*(Note: These complex orchestration layers are fiercely protected against commercialization under our Business Source License).*
 
 ---
 
-## 📜 Usage Policies & Moral Licensing
+## 📜 Usage Policies & Licensing
 
-This repository operates under a **Creative Commons Non-Profit License** and a strict **Moral Usage License** designed to ensure the ethical use of digital resources. 
+This repository operates under a highly restrictive **Business Source License (BSL) 1.1**. 
 
-**1. Educational Purpose Only:**
-All resources in this repository are provided exclusively for **research, education, and cultural preservation**. They are intended to facilitate inter-generational language transmission and defend the shared culture of the United Isles.
-
-**2. Copyright Statement:**
-The materials contained herein are either:
-*   **Personal / Academic Work**: Created during academic studies and affiliated educational institutions.
-*   **Orphan Works / Educational Fair Dealing**: Digitized for preservation under statutory exceptions permitting the use of such works for instruction, examination, and archival format-shifting.
-
-**3. Prohibited Usage (Moral License):**
-These resources and codebase must **not** be used by anyone who promotes, supports, or is affiliated with groups that engage in terroristic activities, glorify violence, or endanger children. Usage is strictly prohibited for groups or individuals promoting paramilitary imagery, drug culture, or terroristic rhetoric.
-
----
-*Developed alongside the forefront of opensourece Agentic AI on behalf of my Kings' College Galway and Cianfhoghlaim Educational Projects by me, Cian Lyons (Mac Liatháin)*
-
-# Oideachais: Cross-Border Celtic Education Platform
-
-Oideachais is an advanced, AI-driven educational data platform standardizing curriculums across the British Isles. It fundamentally aligns the English (GCSE, A-Level) and Irish (Junior Cycle, Senior Cycle) educational frameworks through unified, semantically-searchable vectors.
-
-This repository serves as the central orchestrator for scraping, structuring, embedding, and visualizing the educational ecosystems.
-
----
-
-## 🏗️ Architecture & Core Components
-
-Oideachais relies on a robust open-source stack spanning data engineering, machine learning, and reactive frontends. 
-
-### 1. Data Engineering & ELT (`dlt_sources` & `dagster_defs`)
-The project extracts raw educational data using **dlt (data load tool)**, orchestrated seamlessly by **Dagster**.
-*   **English Standardization:** Dagster targets gov.uk, AQA, Edexcel, and OCR, parsing Key Stages 1-5 into a rigid `CrossNationCurriculumSpec` using BAML.
-*   **Irish Standardization:** Highly concurrent `dlt` pipelines scrape curriculumonline.ie, ncca.ie, and examinations.ie, normalizing data into the `CurriculumDocument` Pydantic schema.
-*   **The Power of `dlt`:** `dlt` acts as the vital bridge, converting scraped Firecrawl data into strictly typed DuckDB tables through its declarative Python pipelines.
-
-### 2. Infrastructure & Storage (`infrastructure/docker`)
-The backend is a unified "Lakehouse" architecture optimized for sovereign, zero-egress data processing.
-*   **DuckLake & Lakekeeper:** DuckDB serves as the core federated query engine, routing through DuckLake on PlanetScale for SQL catalog management, and Lakekeeper for standard Iceberg cataloging.
-*   **LanceDB:** We register Lance namespaces natively to manage our dense vector embeddings (BGE-M3) for semantic cross-curriculum search.
-*   **Garage & R2:** Garage S3 on Hetzner provides cheap local storage for intermediate computation, while Cloudflare R2 provides the global distribution tier.
-
-### 3. Machine Learning & Agents (`machine_learning` & `adk`)
-AI agents sit natively within the pipeline to structure unstructured PDFs and provide dynamic user interaction.
-*   **OCR & Vision:** We utilize top-tier models like `Qwen2.5-VL-7B` and `olmOCR-2-7B` to safely parse complex Irish language elements (fadas) and math equations from raw Exam Papers.
-*   **AI Routing:** A `litellm` router dynamically shifts workloads between local models (`UCCIX-Llama2-13B-Instruct` for Gaelic), Anthropic, and Gemini (leveraging our hackathon deployments).
-*   **ADK & MCP:** Our Agent Development Kit coordinates dynamic tasks via Model Context Protocol (MCP) servers like `chunkhound` (semantic search) and `zai-mcp-server` (visual diagram reasoning). BAML enforces strict schema conformity across all generative outputs.
-
-### 4. Interactive Frontends (`web` & `marimo`)
-The data is visualized through a dual-frontend approach.
-*   **TypeScript Web App:** A TanStack Router React application, heavily relying on Convex for real-time reactivity and CopilotKit for an "Agentic GUI" (`agui`).
-*   **Marimo Notebooks:** A suite of reactive Python notebooks used for curriculum network analysis, grade forecasting, and direct, interactive SQL querying of our DuckDB and LanceDB catalogs.
-
----
-
-## 🚀 Deployment & CI/CD
-
-We have completely deprecated legacy Forgejo pipelines in favor of native **GitHub Actions**.
-*   `docker-build.yml`: Automates the containerization of the web, API, and Dagster nodes.
-*   `dagster-ci.yml`: Performs rigorous validation, Ruff linting, and MyPy checking.
-*   **Komodo & Pangolin:** Our self-hosted deployment relies on Komodo to coordinate the Docker Compose stacks, exposed securely via Pangolin tunnels to Hetzner.
-
-### Local Setup
-Ensure your `1Password` CLI is authenticated to inject secrets natively:
-```bash
-op run --env-file .env.local -- docker compose up -d
-dagster dev
+By downloading, copying, or utilizing this codebase, you agree to the following core tenets (see `LICENSE.md` for full legal terms):
+1.  **Geographic Restrictions:** Production deployment is legally restricted to the Republic of Ireland, the United Kingdom, the European Union, the Commonwealth of Nations, and Ukraine.
+2.  **Non-Commercial Use Only:** The software is provided exclusively for non-profit, cultural preservation, and academic research. Commercial monetization—including for-profit AI training, DeFi analytics, and ed-tech SaaS platforms—is strictly prohibited.
+3.  **Acceptable Use:** Usage by entities affiliated with sanctioned organizations, paramilitary groups, or those in violation of international human rights conventions is fundamentally banned and will result in immediate technological and legal revocation of access.
