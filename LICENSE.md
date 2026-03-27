@@ -13,6 +13,13 @@ The Software, including its source code, compiled binaries, and associated data,
 - The United Kingdom of Great Britain and Northern Ireland
 - Ukraine
 - The European Union
+- United States of America
+- China
+- Tibet
+- Nepal
+- Japan
+- South Korea
+- Taiwan
 
 Any use, deployment, hosting, or distribution outside these specified regions is strictly prohibited.
 
