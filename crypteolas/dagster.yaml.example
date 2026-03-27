@@ -1,0 +1,76 @@
+# Dagster Configuration for Crypteolas with LakeKeeper
+#
+# Copy this file to dagster.yaml and configure for your environment
+#
+# Location: sruth/crypteolas/dagster.yaml
+
+# =============================================================================
+# LakeKeeper Configuration
+# =============================================================================
+# LakeKeeper resource configuration for Lance REST catalog
+#
+# Environment variables (recommended):
+#   LAKEKEEPER_URL: LakeKeeper server URL
+#   LAKEKEEPER_WAREHOUSE: Warehouse name
+#   LAKEKEEPER_NAMESPACE: Default namespace
+#   LAKEKEEPER_API_KEY: Optional API key
+#
+# PostgreSQL backend (production):
+#   PLANETSCALE_HOST: PostgreSQL host
+#   PLANETSCALE_PORT: PostgreSQL port
+#   PLANETSCALE_DATABASE: Database name
+#   PLANETSCALE_USERNAME: Username
+#   PLANETSCALE_PASSWORD: Password
+
+resources:
+  lakekeeper:
+    config:
+      # LakeKeeper server configuration
+      url:
+        env: LAKEKEEPER_URL
+      warehouse:
+        env: LAKEKEEPER_WAREHOUSE
+      default_namespace:
+        env: LAKEKEEPER_NAMESPACE
+
+      # Optional authentication
+      api_key:
+        env: LAKEKEEPER_API_KEY
+
+      # PostgreSQL backend (production)
+      postgres_host:
+        env: PLANETSCALE_HOST
+      postgres_port:
+        env: PLANETSCALE_PORT
+      postgres_database:
+        env: PLANETSCALE_DATABASE
+      postgres_username:
+        env: PLANETSCALE_USERNAME
+      postgres_password:
+        env: PLANETSCALE_PASSWORD
+
+      # Retry configuration
+      max_retries: 3
+      retry_delay: 1.0
+
+# =============================================================================
+# Storage Configuration
+# =============================================================================
+storage:
+  # File storage for Dagster logs and intermediate data
+  filesystem:
+
+# =============================================================================
+# Compute Logs
+# =============================================================================
+compute_logs:
+  module: dagster.core.storage.compute_log_manager
+  class: ComputeLogManager
+  config:
+    base_dir: /tmp/dagster_compute_logs
+
+# =============================================================================
+# Telemetry (optional)
+# =============================================================================
+telemetry:
+  enabled: false

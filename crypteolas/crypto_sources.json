@@ -1,0 +1,647 @@
+{
+  "version": "2.0",
+  "generated_at": "2025-12-11",
+  "description": "Registry of sources to index metrics and documents for Ethena, Aave, Ethereum yield and related components (funding, staking, Pendle, events). Includes knowledge graph schema definitions for entity extraction and relationship mapping. Respect each site's ToS and robots.txt.",
+  "global_schema": {
+    "fields_common": [
+      "timestamp",
+      "source",
+      "category",
+      "chain",
+      "protocol",
+      "asset",
+      "metric",
+      "value",
+      "units",
+      "notes"
+    ],
+    "primary_keys": ["timestamp", "source", "protocol", "asset", "metric"],
+    "quality_fields": ["confidence", "provenance_url"],
+    "derived_metrics_examples": [
+      "net_carry_spread = sUSDe_APY - Aave_borrow_APR(stablecoin)",
+      "fixed_vs_float_spread = Pendle_PT_implied_APY - sUSDe_APY",
+      "peg_deviation = abs(USDe_price - 1.00)",
+      "utilization_pct = totalBorrowed / totalSupply"
+    ]
+  },
+  "knowledge_graph_schema": {
+    "description": "Entity and relationship definitions for building crypto knowledge graphs with Graphiti (temporal) and Cognee (static)",
+    "entity_types": {
+      "Token": {
+        "properties": {
+          "symbol": {"type": "string", "required": true},
+          "name": {"type": "string", "required": true},
+          "contract_address": {"type": "string"},
+          "blockchain": {"type": "enum", "values": ["Ethereum", "Solana", "Polygon", "Arbitrum", "Base", "Bitcoin"]},
+          "decimals": {"type": "integer"},
+          "total_supply": {"type": "decimal"},
+          "token_type": {"type": "enum", "values": ["native", "erc20", "stablecoin", "governance", "wrapped", "lp_token"]}
+        },
+        "temporal_properties": ["price_usd", "market_cap", "holder_count", "daily_volume"],
+        "source_mapping": ["coingecko_*", "defillama_*"]
+      },
+      "Protocol": {
+        "properties": {
+          "name": {"type": "string", "required": true},
+          "category": {"type": "enum", "values": ["defi", "lending", "dex", "derivatives", "stablecoin", "bridge", "oracle"]},
+          "chains": {"type": "array", "items": "Blockchain"},
+          "governance_token": {"type": "reference", "to": "Token"},
+          "website": {"type": "url"},
+          "documentation_url": {"type": "url"}
+        },
+        "temporal_properties": ["tvl_usd", "daily_active_users", "daily_transactions", "revenue_24h"],
+        "source_mapping": ["defillama_protocol_*", "*_subgraph"]
+      },
+      "Exchange": {
+        "properties": {
+          "name": {"type": "string", "required": true},
+          "type": {"type": "enum", "values": ["cex", "dex", "aggregator"]},
+          "chains": {"type": "array", "items": "Blockchain"}
+        },
+        "temporal_properties": ["daily_volume_usd", "open_interest_usd", "listed_pairs"],
+        "source_mapping": ["binance_*", "bybit_*", "okx_*"]
+      },
+      "LiquidityPool": {
+        "properties": {
+          "address": {"type": "string", "required": true},
+          "protocol": {"type": "reference", "to": "Protocol"},
+          "tokens": {"type": "array", "items": "Token"},
+          "fee_tier": {"type": "decimal"},
+          "pool_type": {"type": "enum", "values": ["constant_product", "stable", "concentrated", "weighted"]}
+        },
+        "temporal_properties": ["tvl_usd", "volume_24h", "fees_24h", "apy"],
+        "source_mapping": ["aave_v3_*_subgraph", "pendle_*_subgraph", "defillama_yields_*"]
+      },
+      "Document": {
+        "properties": {
+          "title": {"type": "string", "required": true},
+          "doc_type": {"type": "enum", "values": ["whitepaper", "audit", "research", "governance_proposal", "risk_report"]},
+          "url": {"type": "url"},
+          "published_date": {"type": "datetime"},
+          "protocol": {"type": "reference", "to": "Protocol"}
+        },
+        "content_fields": ["sections", "extracted_entities", "risk_factors"],
+        "source_mapping": ["*_pdf", "*_docs_*"]
+      },
+      "Risk": {
+        "properties": {
+          "category": {"type": "enum", "values": ["smart_contract", "market", "regulatory", "custody", "oracle", "governance", "economic"]},
+          "severity": {"type": "enum", "values": ["critical", "high", "medium", "low"]},
+          "title": {"type": "string", "required": true},
+          "description": {"type": "string"},
+          "mitigation": {"type": "string"}
+        },
+        "source_mapping": ["*_audit*", "*_risk*", "chaoslabs_*"]
+      },
+      "MarketEvent": {
+        "properties": {
+          "event_type": {"type": "enum", "values": ["depeg", "exploit", "governance", "listing", "delisting", "regulatory"]},
+          "title": {"type": "string", "required": true},
+          "description": {"type": "string"},
+          "impact": {"type": "string"},
+          "affected_protocols": {"type": "array", "items": "Protocol"}
+        },
+        "temporal": true,
+        "source_mapping": ["*_event_*", "coindesk_*", "bloomberg_*"]
+      }
+    },
+    "relationship_types": {
+      "DEPLOYED_ON": {
+        "from": "Token",
+        "to": "Blockchain",
+        "properties": ["deploy_block", "deploy_tx", "deploy_date"]
+      },
+      "TRADES_ON": {
+        "from": "Token",
+        "to": "Exchange",
+        "properties": ["listing_date", "trading_pair", "volume_24h"]
+      },
+      "GOVERNANCE_FOR": {
+        "from": "Token",
+        "to": "Protocol",
+        "properties": ["voting_power_formula"]
+      },
+      "WRAPPED_AS": {
+        "from": "Token",
+        "to": "Token",
+        "properties": ["wrapper_contract", "bridge_protocol"]
+      },
+      "IN_POOL": {
+        "from": "Token",
+        "to": "LiquidityPool",
+        "properties": ["weight", "reserve_amount"]
+      },
+      "HOSTED_ON": {
+        "from": "LiquidityPool",
+        "to": "Exchange",
+        "properties": []
+      },
+      "INTEGRATES": {
+        "from": "Protocol",
+        "to": "Protocol",
+        "properties": ["integration_type", "dependency_level"]
+      },
+      "AUDITED_BY": {
+        "from": "Protocol",
+        "to": "Document",
+        "properties": ["audit_date", "scope"]
+      },
+      "DESCRIBES": {
+        "from": "Document",
+        "to": "Protocol",
+        "properties": ["coverage_depth"]
+      },
+      "IDENTIFIES_RISK": {
+        "from": "Document",
+        "to": "Risk",
+        "properties": ["finding_id", "page"]
+      },
+      "AFFECTS": {
+        "from": "MarketEvent",
+        "to": "Protocol",
+        "properties": ["impact_severity", "duration"]
+      },
+      "HAS_TVL": {
+        "from": "Protocol",
+        "to": "TVLSnapshot",
+        "properties": [],
+        "temporal": true
+      }
+    },
+    "graph_backends": {
+      "temporal_memory": {
+        "engine": "FalkorDB",
+        "port": 6379,
+        "purpose": "Agent memory, real-time events, session context",
+        "integration": "Graphiti"
+      },
+      "static_knowledge": {
+        "engine": "Memgraph",
+        "port": 7687,
+        "purpose": "Protocol knowledge, document insights, MAGE algorithms",
+        "integration": "Cognee"
+      },
+      "vector_store": {
+        "engine": "LanceDB",
+        "port": 8080,
+        "purpose": "Semantic embeddings for hybrid search",
+        "integration": "Cognee"
+      }
+    }
+  },
+  "source_to_entity_mapping": {
+    "coingecko_*": ["Token"],
+    "defillama_protocol_*": ["Protocol"],
+    "defillama_yields_*": ["LiquidityPool"],
+    "defillama_stablecoin_*": ["Token"],
+    "binance_*": ["Exchange", "Token"],
+    "bybit_*": ["Exchange"],
+    "okx_*": ["Exchange"],
+    "aave_v3_*_subgraph": ["Protocol", "LiquidityPool"],
+    "pendle_*_subgraph": ["Protocol", "LiquidityPool"],
+    "*_pdf": ["Document"],
+    "*_audit*": ["Document", "Risk"],
+    "coindesk_*": ["MarketEvent"],
+    "bloomberg_*": ["MarketEvent"]
+  },
+  "sources": [
+    {
+      "id": "coingecko_usde_price",
+      "name": "CoinGecko — USDe price history",
+      "category": ["price", "peg", "usde"],
+      "resource_type": "api",
+      "url": "https://api.coingecko.com/api/v3/coins/ethena-usde/market_chart",
+      "access": {
+        "method": "GET",
+        "params": {"vs_currency": "usd", "days": "max"},
+        "rate_limit_notes": "Free tier; aggregate rate limits apply."
+      },
+      "parser": {
+        "format": "json",
+        "json_paths": {"prices": "$.prices[*]"},
+        "transform": [
+          {"op": "explode", "field": "prices", "to": "rows"},
+          {"op": "map", "from": "rows", "to_fields": {"timestamp": "[0]", "value": "[1]"}},
+          {"op": "to_datetime", "field": "timestamp", "unit": "ms"},
+          {"op": "set", "fields": {"metric": "price", "asset": "USDe", "protocol": "Ethena", "units": "USD"}}
+        ]
+      },
+      "fields_emitted": ["timestamp", "source", "protocol", "asset", "metric", "value", "units"],
+      "cadence": {"backfill": "once", "incremental": "5m"},
+      "primary_keys": ["timestamp", "asset", "metric", "source"]
+    },
+    {
+      "id": "coingecko_susde_price",
+      "name": "CoinGecko — sUSDe price history",
+      "category": ["price", "yield", "susde"],
+      "resource_type": "api",
+      "url": "https://api.coingecko.com/api/v3/coins/ethena-staked-usde/market_chart",
+      "access": {"method": "GET", "params": {"vs_currency": "usd", "days": "max"}},
+      "parser": {
+        "format": "json",
+        "json_paths": {"prices": "$.prices[*]"},
+        "transform": [
+          {"op": "explode", "field": "prices", "to": "rows"},
+          {"op": "map", "from": "rows", "to_fields": {"timestamp": "[0]", "value": "[1]"}},
+          {"op": "to_datetime", "field": "timestamp", "unit": "ms"},
+          {"op": "set", "fields": {"metric": "price", "asset": "sUSDe", "protocol": "Ethena", "units": "USD"}}
+        ]
+      },
+      "fields_emitted": ["timestamp", "source", "protocol", "asset", "metric", "value", "units"],
+      "cadence": {"backfill": "once", "incremental": "5m"},
+      "primary_keys": ["timestamp", "asset", "metric", "source"]
+    },
+    {
+      "id": "defillama_stablecoin_usde_supply",
+      "name": "DeFiLlama — USDe supply & chain breakdown",
+      "category": ["supply", "stablecoins", "usde"],
+      "resource_type": "api",
+      "url": "https://stablecoins.llama.fi/stablecoin/USDe",
+      "access": {"method": "GET", "params": {"includeChains": "true"}},
+      "parser": {
+        "format": "json",
+        "json_paths": {
+          "supply": "$.peggedSeries.usd_mcap[*]",
+          "by_chain": "$.chainCirculating.peggedUSD[*]"
+        },
+        "transform": [
+          {"op": "explode", "field": "supply", "to": "rows"},
+          {"op": "map", "from": "rows", "to_fields": {"timestamp": "$.date", "value": "$.total"}},
+          {"op": "to_datetime", "field": "timestamp", "unit": "s"},
+          {"op": "set", "fields": {"metric": "circulating_supply_usd", "asset": "USDe", "protocol": "Ethena", "units": "USD"}}
+        ]
+      },
+      "fields_emitted": ["timestamp", "protocol", "asset", "metric", "value", "units"],
+      "cadence": {"backfill": "once", "incremental": "1d"},
+      "primary_keys": ["timestamp", "asset", "metric", "source"]
+    },
+    {
+      "id": "defillama_protocol_ethena_tvl",
+      "name": "DeFiLlama — Ethena protocol TVL",
+      "category": ["tvl", "ethena"],
+      "resource_type": "api",
+      "url": "https://api.llama.fi/protocol/ethena",
+      "access": {"method": "GET"},
+      "parser": {
+        "format": "json",
+        "json_paths": {"series": "$.tvl[*]"},
+        "transform": [
+          {"op": "explode", "field": "series", "to": "rows"},
+          {"op": "map", "from": "rows", "to_fields": {"timestamp": "$.date", "value": "$.totalLiquidityUSD"}},
+          {"op": "to_datetime", "field": "timestamp", "unit": "s"},
+          {"op": "set", "fields": {"metric": "TVL", "protocol": "Ethena", "units": "USD"}}
+        ]
+      },
+      "fields_emitted": ["timestamp", "protocol", "metric", "value", "units"],
+      "cadence": {"backfill": "once", "incremental": "1d"},
+      "primary_keys": ["timestamp", "protocol", "metric", "source"]
+    },
+    {
+      "id": "defillama_yields_susde",
+      "name": "DeFiLlama Yields — sUSDe pool",
+      "category": ["yield", "susde"],
+      "resource_type": "api",
+      "url": "https://yields.llama.fi/chart/66985a81-9c51-46ca-9977-42b4fe7bc6df",
+      "access": {"method": "GET"},
+      "parser": {
+        "format": "json",
+        "json_paths": {"points": "$.data[*]"},
+        "transform": [
+          {"op": "explode", "field": "points", "to": "rows"},
+          {"op": "map", "from": "rows", "to_fields": {"timestamp": "$.timestamp", "value": "$.apy"}},
+          {"op": "to_datetime", "field": "timestamp", "unit": "s"},
+          {"op": "set", "fields": {"metric": "sUSDe_APY", "asset": "sUSDe", "protocol": "Ethena", "units": "percent"}}
+        ]
+      },
+      "fields_emitted": ["timestamp", "asset", "metric", "value", "units"],
+      "cadence": {"backfill": "once", "incremental": "30m"},
+      "primary_keys": ["timestamp", "asset", "metric", "source"]
+    },
+    {
+      "id": "ethena_market_data_app",
+      "name": "Ethena App — Market Data (sUSDe APY, funding stats)",
+      "category": ["yield", "funding", "tvl", "ethena"],
+      "resource_type": "html",
+      "url": "https://app.ethena.fi/market-data",
+      "access": {"method": "GET"},
+      "parser": {
+        "format": "html",
+        "selectors_notes": "Look for embedded JSON in <script> tags or data attributes; fallback to visible text nodes for APY, 30d avg, TVL.",
+        "fields_map_examples": [
+          {"field": "sUSDe_APY", "selector": "text match 'APY' near 'sUSDe'"},
+          {"field": "funding_avg", "selector": "text match 'Funding' 'avg'"},
+          {"field": "tvl", "selector": "text match 'TVL' or 'Total Value Locked'"}
+        ]
+      },
+      "fields_emitted": ["timestamp", "metric", "value", "units", "notes"],
+      "cadence": {"backfill": "n/a", "incremental": "10m"},
+      "primary_keys": ["timestamp", "metric", "source"]
+    },
+    {
+      "id": "ethena_docs_reserve_fund_pdf",
+      "name": "Ethena Docs — Reserve Fund (Insurance Fund analysis PDF)",
+      "category": ["risk_docs", "ethena"],
+      "resource_type": "pdf",
+      "url": "https://docs.ethena.fi/ (Reserve Fund page; contains Insurance Fund PDF link)",
+      "access": {"method": "GET"},
+      "parser": {
+        "format": "pdf_text",
+        "extraction_goals": [
+          "assumptions",
+          "stress scenarios",
+          "sizing rationale",
+          "liquidity waterfalls"
+        ],
+        "discovery": {"anchor_pattern": "a[href$='.pdf'][*~='Insurance' i]"}
+      },
+      "fields_emitted": ["doc_title", "section", "text", "page", "provenance_url"],
+      "cadence": {"backfill": "once", "incremental": "monitor weekly for updates"},
+      "primary_keys": ["doc_title", "page", "section", "provenance_url"]
+    },
+    {
+      "id": "ethena_audits_pdf_index",
+      "name": "Ethena Docs — Audits (Zellic & others, PDFs)",
+      "category": ["audit_docs", "ethena"],
+      "resource_type": "pdf",
+      "url": "https://docs.ethena.fi/security/audits",
+      "access": {"method": "GET"},
+      "parser": {
+        "format": "pdf_text",
+        "discovery": {"anchor_pattern": "a[href$='.pdf']"},
+        "extraction_goals": ["audit scope", "critical findings", "remediations"]
+      },
+      "fields_emitted": ["doc_title", "section", "text", "page", "provenance_url"],
+      "cadence": {"backfill": "once", "incremental": "on change"},
+      "primary_keys": ["doc_title", "page", "provenance_url"]
+    },
+    {
+      "id": "binance_futures_funding_rate_eth",
+      "name": "Binance USDⓈ‑M Futures — ETH funding history",
+      "category": ["funding", "derivatives"],
+      "resource_type": "api",
+      "url": "https://fapi.binance.com/fapi/v1/fundingRate",
+      "access": {"method": "GET", "params": {"symbol": "ETHUSDT", "limit": "1000"}},
+      "parser": {
+        "format": "json",
+        "json_paths": {"rows": "$[*]"},
+        "transform": [
+          {"op": "explode", "field": "rows", "to": "r"},
+          {"op": "map", "from": "r", "to_fields": {"timestamp": "$.fundingTime", "value": "$.fundingRate"}},
+          {"op": "to_datetime", "field": "timestamp", "unit": "ms"},
+          {"op": "to_number", "field": "value"},
+          {"op": "set", "fields": {"metric": "funding_rate_8h", "asset": "ETH-PERP", "exchange": "Binance", "units": "decimal"}}
+        ]
+      },
+      "fields_emitted": ["timestamp", "asset", "metric", "value", "units", "exchange"],
+      "cadence": {"backfill": "multi-day until complete", "incremental": "8h"},
+      "primary_keys": ["timestamp", "exchange", "asset", "metric"]
+    },
+    {
+      "id": "binance_futures_funding_info_eth",
+      "name": "Binance USDⓈ‑M Futures — ETH funding caps & info",
+      "category": ["funding_meta"],
+      "resource_type": "api",
+      "url": "https://fapi.binance.com/fapi/v1/fundingInfo",
+      "access": {"method": "GET", "params": {"symbol": "ETHUSDT"}},
+      "parser": {"format": "json", "json_paths": {"cap": "$.capRate", "floor": "$.floorRate", "next": "$.nextFundingTime"}},
+      "fields_emitted": ["timestamp", "metric", "value", "units", "exchange"],
+      "cadence": {"backfill": "n/a", "incremental": "8h"},
+      "primary_keys": ["timestamp", "metric", "exchange"]
+    },
+    {
+      "id": "bybit_history_fund_rate_eth",
+      "name": "Bybit — historical funding (ETHUSDT)",
+      "category": ["funding"],
+      "resource_type": "api",
+      "url": "https://api.bybit.com/v5/market/history-fund-rate",
+      "access": {"method": "GET", "params": {"category": "linear", "symbol": "ETHUSDT"}},
+      "parser": {"format": "json", "json_paths": {"rows": "$.result.list[*]"}},
+      "fields_emitted": ["timestamp", "metric", "value", "units", "exchange", "asset"],
+      "cadence": {"backfill": "multi-day", "incremental": "8h"},
+      "primary_keys": ["timestamp", "exchange", "asset", "metric"]
+    },
+    {
+      "id": "okx_funding_rate_history_eth",
+      "name": "OKX — historical funding (ETH perp)",
+      "category": ["funding"],
+      "resource_type": "api",
+      "url": "https://www.okx.com/api/v5/public/funding-rate-history",
+      "access": {"method": "GET", "params": {"instId": "ETH-USDT-SWAP", "limit": "100"}},
+      "parser": {"format": "json", "json_paths": {"rows": "$.data[*]"}},
+      "fields_emitted": ["timestamp", "metric", "value", "units", "exchange", "asset"],
+      "cadence": {"backfill": "multi-day", "incremental": "8h"},
+      "primary_keys": ["timestamp", "exchange", "asset", "metric"]
+    },
+    {
+      "id": "beaconchain_eth_network_apr",
+      "name": "Beaconcha.in — Ethereum staking APR",
+      "category": ["staking", "eth_apr"],
+      "resource_type": "api",
+      "url": "https://beaconcha.in/api/v1/ethstore/metrics (see docs)",
+      "access": {"method": "GET", "notes": "Use official API docs to select current APR endpoint; epoch-level updates."},
+      "parser": {"format": "json", "json_paths": {"apr": "$..apr"}},
+      "fields_emitted": ["timestamp", "metric", "value", "units"],
+      "cadence": {"backfill": "once", "incremental": "1d"},
+      "primary_keys": ["timestamp", "metric", "source"]
+    },
+    {
+      "id": "aave_v3_mainnet_subgraph",
+      "name": "Aave v3 — mainnet subgraph (reserves & rates)",
+      "category": ["aave", "rates", "utilization"],
+      "resource_type": "graphql",
+      "url": "The Graph (discover current deployment via explorer: 'Aave v3 mainnet')",
+      "access": {
+        "method": "POST",
+        "query_template": "reserves{ symbol liquidityRate variableBorrowRate totalATokenSupply totalCurrentVariableDebt }",
+        "notes": "Store subgraph deployment ID and refresh periodically."
+      },
+      "parser": {
+        "format": "graphql_json",
+        "transform": [
+          {"op": "map_fields", "mapping": {
+            "supplyAPR": "liquidityRate/1e27",
+            "borrowAPR": "variableBorrowRate/1e27",
+            "totalSupply": "totalATokenSupply",
+            "totalBorrow": "totalCurrentVariableDebt"
+          }},
+          {"op": "calc", "field": "utilization_pct", "expr": "totalBorrow/totalSupply"},
+          {"op": "emit_multi", "metrics": ["supplyAPR","borrowAPR","utilization_pct"], "units": {"supplyAPR":"decimal","borrowAPR":"decimal","utilization_pct":"ratio"}}
+        ]
+      },
+      "fields_emitted": ["timestamp", "asset", "metric", "value", "units", "protocol", "chain"],
+      "cadence": {"backfill": "query historical snapshots if available", "incremental": "5m"},
+      "primary_keys": ["timestamp", "asset", "metric", "protocol", "chain"]
+    },
+    {
+      "id": "aavescan_rates_history",
+      "name": "Aavescan — live & historical lending rates",
+      "category": ["aave", "rates_history"],
+      "resource_type": "html",
+      "url": "https://aavescan.com/",
+      "access": {"method": "GET"},
+      "parser": {
+        "format": "html",
+        "selectors_notes": "Per-market pages expose time-series charts; scrape table/graph JSON if embedded."
+      },
+      "fields_emitted": ["timestamp", "asset", "metric", "value", "units", "protocol", "chain"],
+      "cadence": {"backfill": "multi-day crawl by asset", "incremental": "30m"},
+      "primary_keys": ["timestamp", "asset", "metric", "protocol", "chain", "source"]
+    },
+    {
+      "id": "defillama_aave_usdc_v3_yield",
+      "name": "DeFiLlama — Aave v3 USDC (Ethereum) supply APY",
+      "category": ["aave", "rates"],
+      "resource_type": "api",
+      "url": "https://yields.llama.fi/pool/aa70268e-4b52-42bf-a116-608b370f9501",
+      "access": {"method": "GET"},
+      "parser": {
+        "format": "json",
+        "json_paths": {"apy": "$.apy", "apyPct1D": "$.apyPct1D", "apyPct30D": "$.apyPct30D"}
+      },
+      "fields_emitted": ["timestamp", "asset", "metric", "value", "units", "protocol", "chain"],
+      "cadence": {"backfill": "n/a", "incremental": "30m"},
+      "primary_keys": ["timestamp", "asset", "metric", "protocol", "chain", "source"]
+    },
+    {
+      "id": "pendle_mainnet_subgraph",
+      "name": "Pendle — PT/YT markets subgraph (mainnet)",
+      "category": ["pendle", "fixed_yield", "floating_yield"],
+      "resource_type": "graphql",
+      "url": "The Graph (Pendle mainnet subgraph; discover via explorer/docs)",
+      "access": {
+        "method": "POST",
+        "query_template": "markets{ id maturity underlying{ symbol } pt{ price } }",
+        "notes": "Compute PT implied fixed APY = (redeemValue/ptPrice - 1) / time_to_maturity."
+      },
+      "parser": {
+        "format": "graphql_json",
+        "transform": [
+          {"op": "calc", "field": "implied_fixed_apy", "expr": "(1/pt_price - 1)/(days_to_maturity/365)"},
+          {"op": "set", "fields": {"metric": "PT_implied_APY", "units": "percent"}}
+        ]
+      },
+      "fields_emitted": ["timestamp", "asset", "metric", "value", "units", "protocol", "maturity"],
+      "cadence": {"backfill": "available history", "incremental": "30m"},
+      "primary_keys": ["timestamp", "asset", "maturity", "metric", "protocol"]
+    },
+    {
+      "id": "pendle_docs_api",
+      "name": "Pendle — Docs & API specification",
+      "category": ["docs", "api_meta"],
+      "resource_type": "html",
+      "url": "https://docs.pendle.finance/",
+      "access": {"method": "GET"},
+      "parser": {"format": "html", "selectors_notes": "Index endpoints & rate limits for backend API"},
+      "fields_emitted": ["doc_title", "section", "text", "provenance_url"],
+      "cadence": {"backfill": "once", "incremental": "monthly"}
+    },
+    {
+      "id": "pendle_v2_whitepaper_pdf",
+      "name": "Pendle v2 AMM Whitepaper (PDF)",
+      "category": ["whitepaper", "pendle"],
+      "resource_type": "pdf",
+      "url": "Pendle v2 whitepaper PDF (official repo/documentation link)",
+      "access": {"method": "GET"},
+      "parser": {
+        "format": "pdf_text",
+        "extraction_goals": ["amm_math", "pricing", "pt_yt_definitions", "rate_sensitivity"]
+      },
+      "fields_emitted": ["doc_title", "section", "text", "page", "provenance_url"],
+      "cadence": {"backfill": "once", "incremental": "on change"}
+    },
+    {
+      "id": "chaoslabs_aave_emode_risk_pdf",
+      "name": "Chaos Labs — Aave e-Mode & risk parameters (PDF)",
+      "category": ["risk_docs", "aave"],
+      "resource_type": "pdf",
+      "url": "Chaos Labs Aave risk parameter PDF(s) (linked from Aave risk docs/Chaos website)",
+      "access": {"method": "GET"},
+      "parser": {
+        "format": "pdf_text",
+        "extraction_goals": ["LTV", "liq_threshold", "emode_params", "rate_model_kinks"]
+      },
+      "fields_emitted": ["doc_title", "section", "text", "page", "provenance_url"],
+      "cadence": {"backfill": "once"}
+    },
+    {
+      "id": "coindesk_event_susde_loops",
+      "name": "CoinDesk — sUSDe loop trade risk coverage (event tagging)",
+      "category": ["news_events", "ethena"],
+      "resource_type": "html",
+      "url": "https://www.coindesk.com/markets/2025/10/29/recent-bitcoin-crash-has-put-usd1b-in-susde-loop-trades-at-risk-research-firm-says/",
+      "access": {"method": "GET"},
+      "parser": {
+        "format": "html",
+        "selectors_notes": "Extract headline, author, published_at, key figures; tag as event_type='peg_or_spread_risk'."
+      },
+      "fields_emitted": ["published_at", "headline", "summary", "url", "event_type"],
+      "cadence": {"backfill": "once", "incremental": "on demand"}
+    },
+    {
+      "id": "bloomberg_event_usde_depeg",
+      "name": "Bloomberg — USDe brief depeg coverage (event tagging)",
+      "category": ["news_events", "ethena"],
+      "resource_type": "html",
+      "url": "https://www.bloomberg.com/news/articles/2025-10-11/third-largest-stablecoin-briefly-loses-dollar-peg-in-crypto-rout",
+      "access": {"method": "GET"},
+      "parser": {"format": "html", "selectors_notes": "Extract min peg tick, time window, exchanges mentioned."},
+      "fields_emitted": ["published_at", "headline", "summary", "url", "event_type"],
+      "cadence": {"backfill": "once", "incremental": "on demand"}
+    },
+    {
+      "id": "21shares_pendle_onepager_pdf",
+      "name": "21Shares — Pendle one‑pager (PDF)",
+      "category": ["research_docs", "pendle"],
+      "resource_type": "pdf",
+      "url": "21Shares research page (Pendle one‑pager PDF link)",
+      "access": {"method": "GET"},
+      "parser": {"format": "pdf_text", "extraction_goals": ["product_overview", "risk", "use_cases"]},
+      "fields_emitted": ["doc_title", "section", "text", "page", "provenance_url"],
+      "cadence": {"backfill": "once"}
+    },
+    {
+      "id": "crypto_com_ird_pendle_pdf",
+      "name": "Crypto.com Research — Interest Rate Derivatives & Pendle (PDF)",
+      "category": ["research_docs", "pendle"],
+      "resource_type": "pdf",
+      "url": "Crypto.com research page (IRD x Pendle PDF link)",
+      "access": {"method": "GET"},
+      "parser": {"format": "pdf_text", "extraction_goals": ["ird_background", "pendle_context", "comparisons"]},
+      "fields_emitted": ["doc_title", "section", "text", "page", "provenance_url"],
+      "cadence": {"backfill": "once"}
+    },
+    {
+      "id": "coingecko_eth_price",
+      "name": "CoinGecko — ETH price history",
+      "category": ["context_prices", "eth"],
+      "resource_type": "api",
+      "url": "https://api.coingecko.com/api/v3/coins/ethereum/market_chart",
+      "access": {"method": "GET", "params": {"vs_currency": "usd", "days": "max"}},
+      "parser": {"format": "json", "json_paths": {"prices": "$.prices[*]"}},
+      "fields_emitted": ["timestamp", "asset", "metric", "value", "units"],
+      "cadence": {"backfill": "once", "incremental": "5m"},
+      "primary_keys": ["timestamp", "asset", "metric", "source"]
+    },
+    {
+      "id": "aave_risk_params_docs",
+      "name": "Aave docs — risk parameters & address book",
+      "category": ["config", "aave"],
+      "resource_type": "html",
+      "url": "https://docs.aave.com/ (risk parameters / addresses)",
+      "access": {"method": "GET"},
+      "parser": {
+        "format": "html",
+        "selectors_notes": "Extract LTV, liquidation_threshold, eMode class for stables; capture as static config with version."
+      },
+      "fields_emitted": ["asset", "ltv", "liq_threshold", "emode", "chain", "version", "provenance_url"],
+      "cadence": {"backfill": "once", "incremental": "on governance update"}
+    }
+  ],
+  "compliance_notes": [
+    "Honor robots.txt and ToS for every site.",
+    "Prefer official APIs (CoinGecko, DeFiLlama, exchanges, Beaconcha.in, Aave subgraph) over HTML scraping.",
+    "Throttle HTML scrapes (Aavescan/news) and cache responses.",
+    "For The Graph, record deployment IDs and re‑resolve periodically.",
+    "Normalize timestamps to UTC and units (APR in decimal)."
+  ]
+}
