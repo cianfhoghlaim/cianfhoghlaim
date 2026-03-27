@@ -1,0 +1,170 @@
+{
+  "repositories": {
+    "dlt-hub": {
+      "owner": "dlt-hub",
+      "repo": "dlt",
+      "git_ref": "devel",
+      "modes": {
+        "api": true,
+        "code": true,
+        "crawl": true,
+        "files": false
+      },
+      "api_config": {
+        "resources": ["issues", "pull_requests", "commits", "workflow_runs"],
+        "incremental": {
+          "cursor_path": "updated_at",
+          "days_back": 30
+        }
+      },
+      "code_config": {
+        "included_patterns": ["*.py", "*.md", "*.mdx"],
+        "excluded_patterns": ["**/.*", "**/node_modules", "**/__pycache__"],
+        "chunk_size": 1000,
+        "chunk_overlap": 300
+      },
+      "crawl_config": {
+        "docs_url": "https://dlthub.com/docs",
+        "provider": "firecrawl",
+        "crawl_depth": 3,
+        "max_pages": 100
+      }
+    },
+    "cocoindex": {
+      "owner": "cocoindex-io",
+      "repo": "cocoindex",
+      "git_ref": "main",
+      "modes": {
+        "api": true,
+        "code": true,
+        "crawl": false,
+        "files": false
+      },
+      "api_config": {
+        "resources": ["issues", "pull_requests"],
+        "incremental": {
+          "cursor_path": "updated_at",
+          "days_back": 30
+        }
+      },
+      "code_config": {
+        "included_patterns": ["*.py", "*.rs", "*.md", "*.mdx"],
+        "excluded_patterns": ["**/.*", "**/target", "**/node_modules"]
+      }
+    },
+    "cognee": {
+      "owner": "cognee-ai",
+      "repo": "cognee",
+      "git_ref": "main",
+      "modes": {
+        "api": true,
+        "code": true,
+        "crawl": false,
+        "files": false
+      },
+      "api_config": {
+        "resources": ["issues"],
+        "incremental": {
+          "cursor_path": "updated_at",
+          "days_back": 30
+        }
+      },
+      "code_config": {
+        "included_patterns": ["*.py", "*.md"],
+        "excluded_patterns": ["**/.*", "**/__pycache__"]
+      }
+    },
+    "ibis": {
+      "owner": "ibis-project",
+      "repo": "ibis",
+      "git_ref": "main",
+      "modes": {
+        "api": true,
+        "code": true,
+        "crawl": true,
+        "files": false
+      },
+      "api_config": {
+        "resources": ["issues", "pull_requests"],
+        "incremental": {
+          "cursor_path": "updated_at",
+          "days_back": 30
+        }
+      },
+      "code_config": {
+        "included_patterns": ["*.py", "*.md"],
+        "excluded_patterns": ["**/.*", "**/__pycache__"]
+      },
+      "crawl_config": {
+        "docs_url": "https://ibis-project.org/docs",
+        "provider": "firecrawl",
+        "crawl_depth": 2,
+        "max_pages": 50
+      }
+    },
+    "marimo": {
+      "owner": "marimo-team",
+      "repo": "marimo",
+      "git_ref": "main",
+      "modes": {
+        "api": true,
+        "code": true,
+        "crawl": true,
+        "files": false
+      },
+      "api_config": {
+        "resources": ["issues", "pull_requests"],
+        "incremental": {
+          "cursor_path": "updated_at",
+          "days_back": 30
+        }
+      },
+      "code_config": {
+        "included_patterns": ["*.py", "*.md"],
+        "excluded_patterns": ["**/.*", "**/node_modules"]
+      },
+      "crawl_config": {
+        "docs_url": "https://docs.marimo.io",
+        "provider": "firecrawl",
+        "crawl_depth": 2,
+        "max_pages": 50
+      }
+    }
+  },
+  "defaults": {
+    "chunk_size": 1000,
+    "min_chunk_size": 300,
+    "chunk_overlap": 300,
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "days_back": 30
+  },
+  "destination": {
+    "mode": "local",
+    "local": {
+      "type": "duckdb",
+      "path": "./data/github_intelligence.duckdb"
+    },
+    "production": {
+      "type": "ducklake",
+      "metadata_backend": "postgres",
+      "storage_backend": "s3"
+    }
+  },
+  "databases": {
+    "duckdb": {
+      "path": "./data/github_intelligence.duckdb"
+    },
+    "lancedb": {
+      "uri": "./data/github_intelligence.lancedb"
+    },
+    "memgraph": {
+      "uri": "bolt://localhost:7687",
+      "user": "",
+      "password": ""
+    },
+    "falkordb": {
+      "host": "localhost",
+      "port": 6379
+    }
+  }
+}
