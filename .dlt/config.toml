@@ -116,3 +116,14 @@ log_level = "INFO"
 # 5. For parallel subject processing, create separate Dagster assets
 #    - Each asset has unique pipeline name
 #    - Dagster parallelizes independent assets automatically
+
+[runtime]
+log_level = "INFO"
+
+[normalize]
+# Auto-normalize nested JSON from GitHub API
+loader_file_format = "parquet"
+
+[schema]
+# Schema evolution settings
+evolution_mode = "evolve"
