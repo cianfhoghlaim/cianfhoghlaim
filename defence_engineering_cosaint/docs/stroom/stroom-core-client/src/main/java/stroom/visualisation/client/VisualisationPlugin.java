@@ -1,0 +1,124 @@
+/*
+ * Copyright 2016-2025 Crown Copyright
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package stroom.visualisation.client;
+
+import stroom.core.client.ContentManager;
+import stroom.dispatch.client.RestErrorHandler;
+import stroom.dispatch.client.RestFactory;
+import stroom.docref.DocRef;
+import stroom.docstore.shared.DocRefUtil;
+import stroom.document.client.DocumentPlugin;
+import stroom.document.client.DocumentPluginEventManager;
+import stroom.entity.client.presenter.DocPresenter;
+import stroom.security.client.api.ClientSecurityContext;
+import stroom.task.client.TaskMonitorFactory;
+import stroom.visualisation.client.presenter.VisualisationPresenter;
+import stroom.visualisation.shared.VisualisationDoc;
+import stroom.visualisation.shared.VisualisationResource;
+
+import com.google.gwt.core.client.GWT;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.web.bindery.event.shared.EventBus;
+
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import javax.inject.Singleton;
+
+@Singleton
+public class VisualisationPlugin extends DocumentPlugin<VisualisationDoc> {
+
+    private static final VisualisationResource VISUALISATION_RESOURCE = GWT.create(VisualisationResource.class);
+
+    private final Provider<VisualisationPresenter> editorProvider;
+    private final RestFactory restFactory;
+
+    @Inject
+    public VisualisationPlugin(final EventBus eventBus,
+                               final Provider<VisualisationPresenter> editorProvider,
+                               final RestFactory restFactory,
+                               final ContentManager contentManager,
+                               final DocumentPluginEventManager entityPluginEventManager,
+                               final ClientSecurityContext securityContext) {
+        super(eventBus, contentManager, entityPluginEventManager, securityContext);
+        this.editorProvider = editorProvider;
+        this.restFactory = restFactory;
+    }
+
+    @Override
+    protected DocPresenter<?, ?> createEditor() {
+        return editorProvider.get();
+    }
+
+    @Override
+    public void load(final DocRef docRef,
+                     final Consumer<VisualisationDoc> resultConsumer,
+                     final RestErrorHandler errorHandler,
+                     final TaskMonitorFactory taskMonitorFactory) {
+        restFactory
+                .create(VISUALISATION_RESOURCE)
+                .method(res -> res.fetch(docRef.getUuid()))
+                .onSuccess(resultConsumer)
+                .onFailure(errorHandler)
+                .taskMonitorFactory(taskMonitorFactory)
+                .exec();
+    }
+
+    /**
+     * Should not be called - only exists for back compatibility.
+     */
+    @Override
+    public void save(final DocRef docRef,
+                     final VisualisationDoc document,
+                     final Consumer<VisualisationDoc> resultConsumer,
+                     final RestErrorHandler errorHandler,
+                     final TaskMonitorFactory taskMonitorFactory) {
+        throw new IllegalStateException("Old save method called in VisualisationPlugin");
+    }
+
+    @Override
+    public void save(final DocRef docRef,
+                     final VisualisationDoc document,
+                     final BiConsumer<VisualisationDoc, Consumer<VisualisationDoc>> postSaveCallback,
+                     final Consumer<VisualisationDoc> resultConsumer,
+                     final RestErrorHandler errorHandler,
+                     final TaskMonitorFactory taskMonitorFactory) {
+
+        // Sanity check before everything goes async
+        Objects.requireNonNull(postSaveCallback);
+        Objects.requireNonNull(resultConsumer);
+
+        restFactory
+                .create(VISUALISATION_RESOURCE)
+                .method(res -> res.update(document.getUuid(), document))
+                .onSuccess(doc -> postSaveCallback.accept(doc, resultConsumer))
+                .onFailure(errorHandler)
+                .taskMonitorFactory(taskMonitorFactory)
+                .exec();
+    }
+
+    @Override
+    public String getType() {
+        return VisualisationDoc.TYPE;
+    }
+
+    @Override
+    protected DocRef getDocRef(final VisualisationDoc document) {
+        return DocRefUtil.create(document);
+    }
+}

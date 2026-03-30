@@ -1,0 +1,15 @@
+import {
+  Meta,
+  Stories,
+  Markdown
+} from "@storybook/addon-docs/blocks";
+import readme from "../../../web-components/src/components/ic-popover-menu/readme.md";
+import menuItemReadme from "../../../web-components/src/components/ic-menu-item/readme.md";
+import menuGroupReadme from "../../../web-components/src/components/ic-menu-group/readme.md";
+import * as IcPopoverMenuStories from './ic-popover-menu.stories';
+
+<Meta of={IcPopoverMenuStories} />
+
+<Markdown>{readme + menuItemReadme + menuGroupReadme}</Markdown>
+
+<Stories />

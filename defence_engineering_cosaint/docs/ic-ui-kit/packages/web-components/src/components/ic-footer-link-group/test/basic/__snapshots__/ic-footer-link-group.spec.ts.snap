@@ -1,0 +1,142 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ic-footer-link-group should render small: footer-link-group-small 1`] = `
+<ic-footer breakpoint="extra large" class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-small ic-footer-ungrouped">
+  <template shadowrootmode="open">
+    <footer>
+      <div class="footer-compliance">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-compliance-inner">
+            <div class="footer-copyright">
+              <ic-typography variant="label-uppercase">
+                © Crown Copyright
+              </ic-typography>
+            </div>
+          </div>
+        </ic-section-container>
+      </div>
+    </footer>
+  </template>
+  <ic-footer-link-group class="footer-link-group footer-link-group-light footer-link-group-small" label="Link group" role="listitem" small="true">
+    <template shadowrootmode="open">
+      <ic-section-container fullheight="" tabindex="0">
+        <div class="footer-link-group-header">
+          <div class="footer-link-label">
+            <ic-typography variant="label">
+              Link group
+            </ic-typography>
+          </div>
+          <svg aria-hidden="true" class="footer-link-group-toggle" height="1em" preserveAspectRatio="xMidYMid meet" role="img" viewBox="0 0 1200 1200" width="1em" xmlns="http://www.w3.org/2000/svg">
+            <g transform="translate(0 1200) scale(1 -1)">
+              <path d="M600.002 210.605L421.285 389.336L0 810.559l178.721 178.836l421.281-421.341l421.281 421.341L1200 810.559L778.733 389.336L600.002 210.605z" fill="currentColor"></path>
+            </g>
+          </svg>
+        </div>
+      </ic-section-container>
+    </template>
+    <ic-footer-link class="footer-link footer-link-light footer-link-ungrouped-small" href="/" role="listitem">
+      <template shadowrootmode="open">
+        <ic-link class="footer-link" href="/">
+          <slot></slot>
+        </ic-link>
+      </template>
+      Link
+    </ic-footer-link>
+  </ic-footer-link-group>
+</ic-footer>
+`;
+
+exports[`ic-footer-link-group should render with links: footer-link-group-with-links 1`] = `
+<ic-footer-link-group class="footer-link-group footer-link-group-light footer-link-group-sparse" label="Link group" role="listitem">
+  <template shadowrootmode="open">
+    <div class="footer-link-label">
+      <ic-typography variant="subtitle-small">
+        Link group
+      </ic-typography>
+    </div>
+    <div class="footer-link-group-links" role="list">
+      <slot></slot>
+    </div>
+  </template>
+  <ic-footer-link class="footer-link footer-link-light footer-link-ungrouped-sparse" href="/" role="listitem">
+    <template shadowrootmode="open">
+      <ic-link class="footer-link" href="/">
+        <slot></slot>
+      </ic-link>
+    </template>
+    Link
+  </ic-footer-link>
+</ic-footer-link-group>
+`;
+
+exports[`ic-footer-link-group should render within footer: footer-link-group-in-footer 1`] = `
+<ic-footer class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-sparse ic-footer-ungrouped">
+  <template shadowrootmode="open">
+    <footer>
+      <div class="footer-compliance">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-compliance-inner">
+            <div class="footer-copyright">
+              <ic-typography variant="label-uppercase">
+                © Crown Copyright
+              </ic-typography>
+            </div>
+          </div>
+        </ic-section-container>
+      </div>
+    </footer>
+  </template>
+  <ic-footer-link-group class="footer-link-group footer-link-group-light footer-link-group-sparse" label="Link group" role="listitem">
+    <template shadowrootmode="open">
+      <div class="footer-link-label">
+        <ic-typography variant="subtitle-small">
+          Link group
+        </ic-typography>
+      </div>
+      <div class="footer-link-group-links" role="list">
+        <slot></slot>
+      </div>
+    </template>
+    <ic-footer-link class="footer-link footer-link-light footer-link-ungrouped-sparse" href="/" role="listitem">
+      <template shadowrootmode="open">
+        <ic-link class="footer-link" href="/">
+          <slot></slot>
+        </ic-link>
+      </template>
+      Link
+    </ic-footer-link>
+  </ic-footer-link-group>
+  <ic-footer class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-sparse ic-footer-ungrouped">
+    <template shadowrootmode="open">
+      <footer>
+        <div class="footer-compliance">
+          <ic-section-container aligned="left" fullheight="">
+            <div class="footer-compliance-inner">
+              <div class="footer-copyright">
+                <ic-typography variant="label-uppercase">
+                  © Crown Copyright
+                </ic-typography>
+              </div>
+            </div>
+          </ic-section-container>
+        </div>
+      </footer>
+    </template>
+  </ic-footer>
+</ic-footer>
+`;
+
+exports[`ic-footer-link-group should render: footer-link-group 1`] = `
+<ic-footer-link-group class="footer-link-group footer-link-group-light footer-link-group-sparse" label="Link group" role="listitem">
+  <template shadowrootmode="open">
+    <div class="footer-link-label">
+      <ic-typography variant="subtitle-small">
+        Link group
+      </ic-typography>
+    </div>
+    <div class="footer-link-group-links" role="list">
+      <slot></slot>
+    </div>
+  </template>
+</ic-footer-link-group>
+`;

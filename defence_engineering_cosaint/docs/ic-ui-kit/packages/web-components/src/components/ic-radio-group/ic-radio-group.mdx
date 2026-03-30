@@ -1,0 +1,10 @@
+import { Meta, Stories, Markdown } from "@storybook/addon-docs/blocks";
+import readme from "./readme.md";
+import radioOptionReadme from "../ic-radio-option/readme.md";
+import * as IcRadioGroupStories from "./ic-radio-group.stories";
+
+<Meta of={IcRadioGroupStories} />
+
+<Markdown>{readme + radioOptionReadme}</Markdown>
+
+<Stories />

@@ -1,0 +1,10 @@
+import { Meta, Stories, Markdown } from "@storybook/addon-docs/blocks";
+import readme from "../../../web-components/src/components/ic-toggle-button/readme.md";
+import toggleButtonGroupReadme from "../../../web-components/src/components/ic-toggle-button-group/readme.md";
+import * as IcToggleButtonStories from './ic-toggle-button.stories';
+
+<Meta of={IcToggleButtonStories} />
+
+<Markdown>{readme + toggleButtonGroupReadme}</Markdown>
+
+<Stories />

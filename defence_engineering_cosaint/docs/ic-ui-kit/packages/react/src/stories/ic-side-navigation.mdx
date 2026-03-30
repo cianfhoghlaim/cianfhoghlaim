@@ -1,0 +1,11 @@
+import { Meta, Stories, Markdown } from "@storybook/addon-docs/blocks";
+import readme from "../../../web-components/src/components/ic-side-navigation/readme.md";
+import NavigationItem from "../../../web-components/src/components/ic-navigation-item/readme.md";
+import NavigationGroup from "../../../web-components/src/components/ic-navigation-group/readme.md";
+import * as IcSideNavigationStories from './ic-side-navigation.stories';
+
+<Meta of={IcSideNavigationStories} />
+
+<Markdown>{readme + NavigationItem + NavigationGroup}</Markdown>
+
+<Stories />

@@ -1,0 +1,16 @@
+import {
+  Meta,
+  Stories,
+  Markdown
+} from "@storybook/addon-docs/blocks";
+import TabContextReadme from "../../../web-components/src/components/ic-tab-context/readme.md";
+import TabReadme from "../../../web-components/src/components/ic-tab/readme.md";
+import TabGroupReadme from "../../../web-components/src/components/ic-tab-group/readme.md";
+import TabPanelReadme from "../../../web-components/src/components/ic-tab-panel/readme.md";
+import * as IcTabsStories from './ic-tabs.stories';
+
+<Meta of={IcTabsStories} />
+
+<Markdown>{TabContextReadme + TabGroupReadme + TabPanelReadme + TabReadme}</Markdown>
+
+<Stories />
