@@ -1,0 +1,23 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`routes > review > getReviewRoles > audit > expected call 1`] = `
+[
+  {
+    "name": "Reviewer",
+    "shortName": "reviewer",
+    "systemRole": "Contributor",
+  },
+]
+`;
+
+exports[`routes > review > getReviewRoles > returns review roles 1`] = `
+{
+  "reviewRoles": [
+    {
+      "name": "Reviewer",
+      "shortName": "reviewer",
+      "systemRole": "Contributor",
+    },
+  ],
+}
+`;

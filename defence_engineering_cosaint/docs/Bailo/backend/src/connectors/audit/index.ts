@@ -1,0 +1,40 @@
+import config from '../../utils/config.js'
+import { ConfigurationError } from '../../utils/error.js'
+import { BaseAuditConnector } from './Base.js'
+import { SillyAuditConnector } from './silly.js'
+import { StdoutAuditConnector } from './stdout.js'
+import { StroomAuditConnector } from './stroom.js'
+
+export const AuditKind = {
+  Silly: 'silly',
+  Stdout: 'stdout',
+  Stroom: 'stroom',
+} as const
+export type AuditKindKeys = (typeof AuditKind)[keyof typeof AuditKind]
+
+let auditConnector: undefined | BaseAuditConnector = undefined
+export function getAuditConnector(cache = true) {
+  if (auditConnector && cache) {
+    return auditConnector
+  }
+
+  switch (config.connectors.audit.kind) {
+    case AuditKind.Silly:
+      auditConnector = new SillyAuditConnector()
+      break
+    case AuditKind.Stdout:
+      auditConnector = new StdoutAuditConnector()
+      break
+    case AuditKind.Stroom:
+      auditConnector = new StroomAuditConnector()
+      break
+    default:
+      throw ConfigurationError(`'${config.connectors.audit.kind}' is not a valid audit kind.`, {
+        validKinds: Object.values(AuditKind),
+      })
+  }
+
+  return auditConnector
+}
+
+export default getAuditConnector()

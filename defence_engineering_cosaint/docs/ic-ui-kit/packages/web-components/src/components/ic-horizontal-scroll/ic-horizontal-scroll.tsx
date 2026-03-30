@@ -1,0 +1,302 @@
+import {
+  Component,
+  Element,
+  h,
+  Host,
+  State,
+  Method,
+  Prop,
+} from "@stencil/core";
+
+import LeftArrow from "./assets/left-arrow.svg";
+import RightArrow from "./assets/right-arrow.svg";
+import { getSlotElements } from "../../utils/helpers";
+
+import { checkResizeObserver, elementOverflowsX } from "../../utils/helpers";
+import {
+  IcBrandForeground,
+  IcBrandForegroundEnum,
+  IcThemeMode,
+} from "../../utils/types";
+
+const SCROLL_DELAY_MS = 200;
+
+@Component({
+  tag: "ic-horizontal-scroll",
+  styleUrl: "./ic-horizontal-scroll.css",
+  shadow: true,
+})
+export class HorizontalScroll {
+  private buttonStateSet: boolean = false;
+  private isScrolling: number;
+  private itemOffsets: number[];
+  private items: HTMLElement[];
+  private itemsContainerEl: HTMLElement;
+  private resizeObserver: ResizeObserver;
+  private scrollDelay: number;
+
+  @Element() el: HTMLIcHorizontalScrollElement;
+
+  @State() firstItemVisible: boolean = true;
+  @State() itemOverflow: boolean = false;
+  @State() lastItemVisible: boolean = false;
+
+  /**
+   * The appearance of the horizontal scroll, e.g. dark, light or the default.
+   */
+  @Prop() appearance?: IcBrandForeground = "default";
+
+  /** @internal Determines whether black variant of the tabs should be displayed. */
+  @Prop() monochrome?: boolean = false;
+
+  /**
+   * @internal  Sets the theme color to the dark or light theme color. "inherit" will set the color based on the system settings or ic-theme component.
+   */
+  @Prop() theme?: IcThemeMode = "inherit";
+
+  /**
+   * @internal The name of the event that triggers focus handler logic.
+   */
+  @Prop() focusTrigger?: string = "focus";
+
+  componentWillLoad(): void {
+    this.itemsContainerEl = this.el.children[0] as HTMLElement;
+    this.itemsContainerEl.addEventListener("scroll", this.scrollHandler);
+    this.items = getSlotElements(this.itemsContainerEl) as HTMLElement[];
+    this.items.forEach((item) => {
+      if (item.addEventListener) {
+        item.addEventListener(
+          this.focusTrigger as keyof HTMLElementEventMap,
+          this.focusHandler
+        );
+      }
+    });
+  }
+
+  componentDidLoad(): void {
+    let runningTotal = 0;
+    this.itemOffsets = this.items.map((item) => {
+      runningTotal += item.offsetWidth;
+      return runningTotal;
+    });
+
+    checkResizeObserver(this.runResizeObserver);
+
+    // Add event listener to scroll containers as mouse events are not fired on disabled elements (ic-button's <button>)
+    // 'mouseleave' needed in case the user moves their mouse while holding the arrow buttons
+    // - 'mouseup' otherwise not detected and scrolling not stopped
+    const scrollArrows = Array.from(
+      this.el.shadowRoot?.querySelectorAll("div") || []
+    ) as HTMLElement[];
+    ["mouseup", "mouseleave"].forEach((event) => {
+      scrollArrows.forEach((arrow) =>
+        arrow.addEventListener(event, this.arrowMouseUpHandler)
+      );
+    });
+  }
+
+  disconnectedCallback(): void {
+    if (this.resizeObserver !== undefined) {
+      this.resizeObserver.disconnect();
+    }
+
+    const scrollArrows = Array.from(
+      this.el.shadowRoot?.querySelectorAll("div") || []
+    ) as HTMLElement[];
+    ["mouseup", "mouseleave"].forEach((event) => {
+      scrollArrows.forEach((arrow) =>
+        arrow.removeEventListener(event, this.arrowMouseUpHandler)
+      );
+    });
+
+    this.items?.forEach((item) => {
+      if (item.removeEventListener) {
+        item.removeEventListener(
+          this.focusTrigger as keyof HTMLElementEventMap,
+          this.focusHandler
+        );
+      }
+    });
+
+    this.itemsContainerEl?.removeEventListener("scroll", this.scrollHandler);
+  }
+
+  /**
+   * @internal if side scrolling enabled, scrolls the specified item into view.
+   */
+  @Method()
+  async scrollItemIntoView(itemPosition: number): Promise<void> {
+    this.firstItemVisible = itemPosition <= 0;
+    const newScrollPos =
+      itemPosition <= 0 ? 0 : this.itemOffsets[itemPosition - 1];
+    this.lastItemVisible =
+      this.itemsContainerEl.offsetWidth + newScrollPos >=
+      this.itemsContainerEl.scrollWidth;
+    this.buttonStateSet = true;
+    this.itemsContainerEl.scrollLeft = newScrollPos;
+  }
+
+  private focusHandler = (event: Event) => {
+    this.itemFocusHandler(
+      Array.from(this.items).indexOf(event.target as HTMLElement)
+    );
+  };
+
+  private itemFocusHandler(itemPosition: number): void {
+    if (this.itemOverflow) {
+      this.scrollItemIntoView(itemPosition);
+    }
+  }
+
+  private resizeObserverCallback = () => {
+    if (this.el.clientWidth >= this.itemsContainerEl.scrollWidth) {
+      this.itemOverflow = false;
+    } else {
+      this.itemOverflow = elementOverflowsX(this.itemsContainerEl);
+    }
+
+    if (this.itemOverflow) {
+      this.lastItemVisible =
+        this.itemsContainerEl.offsetWidth + this.itemsContainerEl.scrollLeft >=
+        this.itemsContainerEl.scrollWidth;
+    }
+  };
+
+  private runResizeObserver = () => {
+    this.resizeObserver = new ResizeObserver(() => {
+      this.resizeObserverCallback();
+    });
+    this.resizeObserver.observe(this.itemsContainerEl);
+  };
+
+  private scrollLeft = () => {
+    this.scrollItemIntoView(this.getCurrentLeftItem() - 1);
+  };
+
+  private scrollRight = () => {
+    this.scrollItemIntoView(this.getCurrentLeftItem() + 1);
+  };
+
+  private longScrollRight = () => {
+    this.scrollRight();
+    this.scrollDelay = window.setTimeout(this.longScrollRight, SCROLL_DELAY_MS);
+  };
+
+  private longScrollLeft = () => {
+    this.scrollLeft();
+    this.scrollDelay = window.setTimeout(this.longScrollLeft, SCROLL_DELAY_MS);
+  };
+
+  private leftArrowMouseDownHandler = (e: MouseEvent) => {
+    e.preventDefault();
+    this.scrollDelay = window.setTimeout(this.longScrollLeft, SCROLL_DELAY_MS);
+  };
+
+  private rightArrowMouseDownHandler = (e: MouseEvent) => {
+    e.preventDefault();
+    this.scrollDelay = window.setTimeout(this.longScrollRight, SCROLL_DELAY_MS);
+  };
+
+  private arrowMouseUpHandler = () => {
+    window.clearTimeout(this.scrollDelay);
+  };
+
+  private getCurrentLeftItem = (): number => {
+    const index = this.itemOffsets.findIndex(
+      (el) => el > Math.round(this.itemsContainerEl.scrollLeft)
+    );
+    return index < 0 ? 0 : index;
+  };
+
+  private scrollHandler = () => {
+    window.clearTimeout(this.isScrolling);
+    // Set a timeout to run after scrolling ends
+    this.isScrolling = window.setTimeout(this.scrollStopped, 50);
+  };
+
+  private scrollStopped = () => {
+    // If scrollItemIntoView has been called, the button states will already be set
+    // Can't just handle it here as it causes strange jumping behaviour in positioning
+    const scrollLeft = Math.round(this.itemsContainerEl.scrollLeft);
+    if (this.buttonStateSet === false) {
+      this.firstItemVisible = scrollLeft === 0;
+      this.lastItemVisible =
+        this.itemsContainerEl.offsetWidth + scrollLeft >=
+        this.itemsContainerEl.scrollWidth;
+    }
+    this.buttonStateSet = false;
+  };
+
+  render() {
+    const { firstItemVisible, lastItemVisible, itemOverflow } = this;
+
+    return (
+      <Host
+        class={{
+          ["ic-horizontal-scroll-visible"]: itemOverflow,
+          ["ic-horizontal-scroll-dark"]:
+            this.appearance === IcBrandForegroundEnum.Dark,
+          ["ic-horizontal-scroll-light"]:
+            this.appearance === IcBrandForegroundEnum.Light,
+          [`ic-theme-${this.theme}`]: this.theme !== "inherit",
+        }}
+      >
+        <div
+          aria-hidden="true"
+          class={{
+            ["scroll-container-left"]: true,
+            ["hidden"]: !itemOverflow,
+            ["disabled"]: firstItemVisible,
+          }}
+          role="tab"
+        >
+          <ic-button
+            class="scroll-arrow"
+            variant="icon-tertiary"
+            aria-label="Scroll left"
+            theme={
+              this.theme === "light" || this.theme === "inherit"
+                ? "dark"
+                : "light"
+            }
+            monochrome={this.monochrome}
+            innerHTML={LeftArrow}
+            disabled={firstItemVisible}
+            tabindex="-1"
+            onClick={this.scrollLeft}
+            onMouseDown={this.leftArrowMouseDownHandler}
+          ></ic-button>
+          <span class="scroll-splitter-left"></span>
+        </div>
+        <slot></slot>
+        <div
+          aria-hidden="true"
+          class={{
+            ["scroll-container-right"]: true,
+            ["hidden"]: !itemOverflow,
+            ["disabled"]: lastItemVisible,
+          }}
+          role="tab"
+        >
+          <span class="scroll-splitter-right"></span>
+          <ic-button
+            class="scroll-arrow"
+            variant="icon-tertiary"
+            aria-label="Scroll right"
+            theme={
+              this.theme === "light" || this.theme === "inherit"
+                ? "dark"
+                : "light"
+            }
+            monochrome={this.monochrome}
+            innerHTML={RightArrow}
+            disabled={lastItemVisible}
+            tabindex="-1"
+            onClick={this.scrollRight}
+            onMouseDown={this.rightArrowMouseDownHandler}
+          ></ic-button>
+        </div>
+      </Host>
+    );
+  }
+}

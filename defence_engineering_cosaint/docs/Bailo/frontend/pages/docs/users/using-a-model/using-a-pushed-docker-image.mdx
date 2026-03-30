@@ -1,0 +1,43 @@
+import DocsWrapper from 'src/docs/DocsWrapper'
+import Image from 'next/legacy/image'
+
+import pushingAnImage from '../../../../public/docs/Pushing-an-image.png'
+import registryTab from '../../../../public/docs/Registry-tab.png'
+import selectingAnImage from '../../../../public/docs/Selecting-an-image.png'
+import ModelReleaseImageList from '../../../../public/docs/Model-release-images.png'
+
+# Model Images
+
+## Pushing a Docker image
+
+Docker images can be pushed to the Bailo registry and associated with a specific model. These images can later be used
+in model releases.
+
+<Image alt='model registry tab with push image button circled' src={registryTab} />
+
+The process is:
+
+- Create a token in the UI to obtain Docker credentials
+- Run `docker login <registryAddress> -u <accessKey>`
+  - When prompted for a password, use the `secretKey`
+- Tag the image: `docker tag <image> <registryAddress>/<modelId>/<imageName>:<tag>`
+- Push the image: `docker push <registryAddress>/<modelId>/<imageName>:<tag>`
+
+## Using a image in a release
+
+After pushing an image, it becomes selectable when drafting a release. Choose the image from the dropdown in the release
+creation form.
+
+<Image alt='image dropdown displaying model-assigned images for use in a release' src={selectingAnImage} />
+
+## Accessing an image
+
+Images attached to a release are listed in the **Releases** tab.
+
+<Image alt='release in releases tab with attached docker images' src={ModelReleaseImageList} />
+
+You can pull an image using:
+
+`docker pull <imagePath>`
+
+export default ({ children }) => <DocsWrapper>{children}</DocsWrapper>

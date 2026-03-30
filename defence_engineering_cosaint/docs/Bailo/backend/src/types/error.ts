@@ -1,0 +1,49 @@
+import pino from 'pino'
+
+import { GenericError, InternalError } from '../utils/error.js'
+
+export interface BailoError extends Error {
+  // Inherited from 'Error'
+  // name: string
+  // message: string
+
+  // An HTTP response code that represents the error
+  name: string
+  message: string
+  code: number
+  status: number
+
+  // This data is logged publicly to the frontend
+  context?: {
+    documentationUrl?: string
+
+    // Items in internal are not displayed to the user and may include sensitive information
+    internal?: unknown
+
+    [key: string]: unknown
+  }
+
+  // A custom logger may be provided, otherwise a default is used
+  logger?: pino.Logger
+}
+
+export function isBailoError(err: unknown): err is BailoError {
+  if (typeof err !== 'object' || err === null) {
+    return false
+  }
+
+  if (err instanceof Error && err.name === 'Bailo Error') {
+    return true
+  }
+
+  return false
+}
+
+export function toBailoError(err: unknown, context?: BailoError['context'], code: number = 500): BailoError {
+  if (isBailoError(err)) {
+    return err
+  } else if (Error.isError(err)) {
+    return InternalError(err.message, { ...context, err })
+  }
+  return GenericError(code, String(err), { ...context, cause: err })
+}

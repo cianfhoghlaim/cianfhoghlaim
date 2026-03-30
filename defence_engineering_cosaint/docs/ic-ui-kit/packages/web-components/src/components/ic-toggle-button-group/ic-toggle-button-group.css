@@ -1,0 +1,96 @@
+@import "../../global/normalize.css";
+
+/* PARENT HOST */
+
+:root {
+  display: block;
+}
+
+:host {
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  min-width: min-content;
+  border: var(--ic-border-width) solid var(--ic-toggle-button-unselected-border);
+  border-radius: var(--ic-border-radius);
+}
+
+:host(.ic-toggle-button-group-full-width) {
+  width: 100%;
+  max-width: 100%;
+}
+
+:host(.ic-toggle-button-group-loading) {
+  min-width: max-content;
+}
+
+:host(:focus) {
+  box-shadow: var(--ic-border-focus);
+  border-radius: var(--ic-border-radius);
+  transition: var(--ic-transition-duration-fast);
+  outline: none;
+}
+
+/* CHILDREN SLOTTED */
+
+::slotted(ic-toggle-button) {
+  flex-grow: 1;
+  width: min-content;
+
+  --toggle-button-border: none !important;
+  --toggle-button-border-hover: none !important;
+  --toggle-button-border-active: none !important;
+}
+
+::slotted(ic-toggle-button:not(:last-of-type)) {
+  border-right: var(--ic-border-width) solid
+    var(--ic-toggle-button-unselected-border);
+}
+
+/* DISABLED */
+:host(.ic-toggle-button-group-disabled) {
+  border: var(--ic-space-1px) dashed
+    var(--ic-toggle-button-unselected-border-disabled);
+  pointer-events: none;
+}
+
+:host(.ic-toggle-button-group-disabled)
+  ::slotted(ic-toggle-button:not(:last-of-type)) {
+  border-right: var(--ic-space-1px) dashed
+    var(--ic-toggle-button-unselected-border-disabled);
+}
+
+:host(.ic-toggle-button-group-monochrome) {
+  border: var(--ic-border-width) solid
+    var(--ic-toggle-button-unselected-border-monochrome);
+}
+
+:host(.ic-toggle-button-group-monochrome)
+  ::slotted(ic-toggle-button:not(:last-of-type)) {
+  border-right: var(--ic-border-width) solid
+    var(--ic-toggle-button-unselected-border-monochrome);
+}
+
+:host(.ic-toggle-button-group-disabled.ic-toggle-button-group-monochrome) {
+  border: var(--ic-border-width) dashed
+    var(--ic-toggle-button-unselected-border-disabled-monochrome);
+}
+
+:host(.ic-toggle-button-group-disabled.ic-toggle-button-group-monochrome)
+  ::slotted(ic-toggle-button:not(:last-of-type)) {
+  border-right: var(--ic-border-width) solid
+    var(--ic-toggle-button-unselected-border-disabled-monochrome);
+}
+
+:host(.ic-toggle-button-group-hide-outline) {
+  --ic-toggle-button-unselected-border: transparent;
+  --ic-toggle-button-unselected-border-disabled: transparent;
+  --ic-toggle-button-unselected-border-monochrome: transparent;
+  --ic-toggle-button-unselected-border-disabled-monochrome: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host(:focus) {
+    transition: none;
+  }
+}

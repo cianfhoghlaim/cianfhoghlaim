@@ -1,0 +1,36 @@
+import { NextFunction, Request, Response } from 'express'
+
+import log from '../../services/log.js'
+import { getTokenFromAuthHeader as getTokenFromAuthHeaderService } from '../../services/token.js'
+import { Unauthorized } from '../../utils/error.js'
+
+export async function getTokenFromAuthHeader(req: Request, _res: Response, next: NextFunction) {
+  // This function will fail if the 'authorization' header is provided but invalid.
+  const authorization = req.get('authorization')
+
+  if (!authorization) {
+    return next()
+  }
+
+  try {
+    const token = await getTokenFromAuthHeaderService(authorization)
+    req.user = { dn: token.user, token }
+  } catch (error) {
+    throw Unauthorized('Failed to get token from auth header', { error, url: req.url })
+  }
+
+  return next()
+}
+
+export function checkAuthentication(req, res, next) {
+  if (!req.user) {
+    throw Unauthorized('No valid authentication provided.')
+  }
+  log.trace(
+    {
+      user: req.user,
+    },
+    'User successfully authorized.',
+  )
+  return next()
+}

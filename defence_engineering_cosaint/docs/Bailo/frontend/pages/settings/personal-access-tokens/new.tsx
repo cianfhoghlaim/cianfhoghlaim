@@ -1,0 +1,323 @@
+import { ArrowBack } from '@mui/icons-material'
+import {
+  Autocomplete,
+  AutocompleteChangeDetails,
+  AutocompleteChangeReason,
+  AutocompleteRenderGetTagProps,
+  Button,
+  Checkbox,
+  Chip,
+  Container,
+  FormControl,
+  FormControlLabel,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material'
+import { useTheme } from '@mui/material/styles'
+import { EntrySearchResult, useListEntries } from 'actions/entry'
+import { postUserToken, useGetUserTokenList } from 'actions/user'
+import { ChangeEvent, SyntheticEvent, useCallback, useMemo, useState } from 'react'
+import Loading from 'src/common/Loading'
+import Title from 'src/common/Title'
+import Link from 'src/Link'
+import MessageAlert from 'src/MessageAlert'
+import TokenDialog from 'src/settings/authentication/TokenDialog'
+import { TokenActionKind, TokenInterface, TokenScope } from 'types/types'
+import { getErrorMessage } from 'utils/fetcher'
+import { plural } from 'utils/stringUtils'
+
+export default function NewToken() {
+  const { entries, isEntriesLoading, isEntriesError } = useListEntries(
+    undefined,
+    [],
+    '',
+    [],
+    [],
+    [],
+    [],
+    '',
+    false,
+    '',
+    true,
+  )
+  const { tokenActions, isTokenActionsLoading, isTokenActionsError } = useGetUserTokenList()
+
+  const actionOptions = useMemo(() => tokenActions.map((tokenAction) => tokenAction.id), [tokenActions])
+
+  const isWriteAction = (action: string) => {
+    return Object.values(TokenWriteAction).includes(action)
+  }
+
+  const theme = useTheme()
+  const [description, setDescription] = useState('')
+  const [isAllEntries, setIsAllEntries] = useState(true)
+  const [selectedEntries, setSelectedEntries] = useState<EntrySearchResult[]>([])
+  const [isAllActions, setIsAllActions] = useState(false)
+  const [selectedActions, setSelectedActions] = useState<string[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [token, setToken] = useState<TokenInterface | undefined>()
+
+  const isGenerateButtonDisabled = useMemo(
+    () => !description || !(isAllEntries || selectedEntries.length) || !selectedActions.length,
+    [description, isAllEntries, selectedEntries.length, selectedActions.length],
+  )
+
+  const entriesAutocompletePlaceholder = useMemo(() => {
+    if (isAllEntries) {
+      return 'All entries selected'
+    }
+    if (selectedEntries.length) {
+      return ''
+    }
+    return 'Select entries'
+  }, [isAllEntries, selectedEntries.length])
+
+  const [TokenReadAction, TokenWriteAction] = useMemo(
+    () =>
+      actionOptions.reduce<Record<string, string>[]>(
+        ([readActions, writeActions], action) => {
+          let groupedActions = [readActions, writeActions]
+          const [name, kind] = action.split(':')
+
+          if (kind === TokenActionKind.READ) {
+            groupedActions = [{ ...readActions, [name]: action }, writeActions]
+          }
+          if (kind === TokenActionKind.WRITE) {
+            groupedActions = [readActions, { ...writeActions, [name]: action }]
+          }
+
+          return groupedActions
+        },
+        [{}, {}],
+      ),
+    [actionOptions],
+  )
+
+  const getActionName = (action: string) => {
+    const [name, _kind] = action.split(':')
+    return name
+  }
+
+  const renderActionTags = useCallback(
+    (value: string[], getTagProps: AutocompleteRenderGetTagProps) =>
+      value.map((option, index) => {
+        const isReadAction = (action: string) => {
+          return Object.values(TokenReadAction).includes(action)
+        }
+
+        const actionName = getActionName(option)
+        const isRequired = isReadAction(option) && selectedActions.includes(TokenWriteAction[actionName])
+
+        // overrideProps is used to disable delete functionality for model:read and any selected
+        // read actions with a corresponding selected write action
+        const overrideProps = {
+          ...(isRequired && {
+            onDelete: undefined,
+          }),
+        }
+
+        return (
+          <Chip
+            label={isRequired ? `${option} (required)` : option}
+            size='small'
+            {...getTagProps({ index })}
+            {...overrideProps}
+            key={option}
+          />
+        )
+      }),
+    [selectedActions, TokenWriteAction, TokenReadAction],
+  )
+
+  const handleDescriptionChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(event.target.value)
+  }
+
+  const handleAllEntriesChange = (_event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    setIsAllEntries(checked)
+    setSelectedEntries([])
+  }
+
+  const handleSelectedEntriesChange = (_event: SyntheticEvent<Element, Event>, value: EntrySearchResult[]) => {
+    setSelectedEntries(value)
+  }
+
+  const handleAllActionsChange = (_event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    setIsAllActions(checked)
+    setSelectedActions(checked ? actionOptions : [])
+  }
+
+  const handleSelectedActionsChange = (
+    _event: SyntheticEvent<Element, Event>,
+    value: string[],
+    reason: AutocompleteChangeReason,
+    details?: AutocompleteChangeDetails<string>,
+  ) => {
+    if (reason === 'clear') {
+      setIsAllActions(false)
+      setSelectedActions([])
+      return
+    }
+
+    const updatedValue = [...value]
+
+    // If the selected option is a write action, ensure the corresponding
+    // read action is also selected
+    if (reason === 'selectOption' && details && isWriteAction(details.option)) {
+      const actionName = getActionName(details.option)
+      if (!updatedValue.includes(TokenReadAction[actionName])) {
+        updatedValue.push(TokenReadAction[actionName])
+      }
+    }
+
+    setIsAllActions(updatedValue.length === actionOptions.length)
+    setSelectedActions(updatedValue)
+  }
+
+  const handleSubmit = async () => {
+    setIsLoading(true)
+    const scope = isAllEntries ? TokenScope.All : TokenScope.Models
+    const entryIds = selectedEntries.map((entry) => entry.id)
+    const response = await postUserToken(description, scope, entryIds, selectedActions)
+
+    if (!response.ok) {
+      setErrorMessage(await getErrorMessage(response))
+    } else {
+      const { token } = await response.json()
+      setToken(token)
+    }
+
+    setIsLoading(false)
+  }
+
+  if (isTokenActionsError) {
+    return <MessageAlert message={isTokenActionsError.info.message}></MessageAlert>
+  }
+
+  if (isTokenActionsLoading) {
+    return <Loading />
+  }
+
+  return (
+    <>
+      <Title text='Personal Access Token' />
+      <Container maxWidth='md'>
+        <Paper sx={{ my: 4, p: 4 }}>
+          <Stack spacing={2}>
+            <div>
+              <Link href={'/settings?tab=authentication'}>
+                <Button startIcon={<ArrowBack />}>Back to settings</Button>
+              </Link>
+            </div>
+            <Stack spacing={2}>
+              <Stack>
+                <Typography fontWeight='bold'>
+                  Description <span style={{ color: theme.palette.error.main }}>*</span>
+                </Typography>
+                <TextField
+                  required
+                  multiline
+                  size='small'
+                  value={description}
+                  maxRows={8}
+                  onChange={handleDescriptionChange}
+                  slotProps={{
+                    htmlInput: { 'data-test': 'tokenDescriptionTextField' },
+                  }}
+                />
+              </Stack>
+              <Stack>
+                <Typography fontWeight='bold'>
+                  Entries <span style={{ color: theme.palette.error.main }}>*</span>
+                </Typography>
+                <Stack direction='row' alignItems='start' justifyContent='center' spacing={2}>
+                  <FormControl>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name='All'
+                          checked={isAllEntries}
+                          disabled={isEntriesLoading}
+                          onChange={handleAllEntriesChange}
+                          data-test='allEntriesCheckbox'
+                        />
+                      }
+                      label='All'
+                    />
+                  </FormControl>
+                  <Autocomplete
+                    multiple
+                    fullWidth
+                    value={selectedEntries}
+                    loading={isEntriesLoading}
+                    disabled={isAllEntries}
+                    limitTags={5}
+                    getLimitTagsText={(more) => `+${plural(more, 'entry')}`}
+                    options={entries}
+                    getOptionLabel={(option) => option.name}
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                    onChange={handleSelectedEntriesChange}
+                    renderInput={(params) => (
+                      <TextField {...params} required size='small' placeholder={entriesAutocompletePlaceholder} />
+                    )}
+                    slotProps={{
+                      chip: { size: 'small' },
+                    }}
+                  />
+                </Stack>
+              </Stack>
+              <Stack>
+                <Typography fontWeight='bold'>
+                  Permissions <span style={{ color: theme.palette.error.main }}>*</span>
+                </Typography>
+                <Stack direction='row' alignItems='start' justifyContent='center' spacing={2}>
+                  <FormControl>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name='All'
+                          checked={isAllActions}
+                          onChange={handleAllActionsChange}
+                          data-test='allActionsCheckbox'
+                        />
+                      }
+                      label='All'
+                    />
+                  </FormControl>
+                  <Autocomplete
+                    multiple
+                    fullWidth
+                    value={selectedActions}
+                    options={actionOptions}
+                    limitTags={3}
+                    disableClearable={selectedActions.length === 1}
+                    getLimitTagsText={(more) => `+${plural(more, 'action')}`}
+                    onChange={handleSelectedActionsChange}
+                    renderInput={(params) => <TextField {...params} required size='small' />}
+                    renderTags={renderActionTags}
+                  />
+                </Stack>
+              </Stack>
+              <Stack alignItems='flex-end'>
+                <Button
+                  variant='contained'
+                  loading={isLoading}
+                  disabled={isGenerateButtonDisabled}
+                  onClick={handleSubmit}
+                  data-test='generatePersonalAccessTokenButton'
+                >
+                  Generate token
+                </Button>
+                <MessageAlert message={isEntriesError?.info.message || errorMessage} severity='error' />
+              </Stack>
+            </Stack>
+          </Stack>
+        </Paper>
+      </Container>
+      {token && <TokenDialog token={token} />}
+    </>
+  )
+}

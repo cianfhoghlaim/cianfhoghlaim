@@ -1,0 +1,387 @@
+@import "../../global/normalize.css";
+
+/* VARIABLES FOR IC-TOGGLE-BUTTON-GROUP */
+:host {
+  --toggle-button-border: var(--ic-toggle-button-unselected-border);
+  --toggle-button-text-colour: var(--ic-toggle-button-unselected-text);
+  --toggle-button-border-hover: var(--ic-toggle-button-unselected-border-hover);
+  --toggle-button-text-colour-hover: var(
+    --ic-toggle-button-unselected-text-hover
+  );
+  --toggle-button-border-active: var(
+    --ic-toggle-button-unselected-border-pressed
+  );
+  --toggle-button-text-colour-active: var(
+    --ic-toggle-button-unselected-text-pressed
+  );
+}
+
+:host(:not(.expand-toggle-group-child)) {
+  display: inline-block;
+  border-radius: var(--ic-border-radius);
+  border: var(--ic-border-width) solid var(--toggle-button-border);
+}
+
+:host(.ic-toggle-button-full-width:not(.expand-toggle-group-child)) {
+  width: 100%;
+}
+
+:host(.ic-toggle-button-checked) {
+  --toggle-button-border: var(--ic-toggle-button-selected-border);
+  --toggle-button-text-colour: var(--ic-toggle-button-selected-text);
+  --toggle-button-border-hover: var(--ic-toggle-button-selected-border-hover);
+  --toggle-button-text-colour-hover: var(--ic-toggle-button-selected-text);
+  --toggle-button-border-active: var(
+    --ic-toggle-button-selected-border-pressed
+  );
+  --toggle-button-text-colour-active: var(--ic-toggle-button-selected-text);
+}
+
+:host(.ic-toggle-button-monochrome) {
+  --toggle-button-border: var(--ic-toggle-button-unselected-border-monochrome);
+  --toggle-button-text-colour: var(
+    --ic-toggle-button-unselected-text-monochrome
+  );
+  --toggle-button-border-hover: var(
+    --ic-toggle-button-unselected-border-hover-monochrome
+  );
+  --toggle-button-text-colour-hover: var(
+    --ic-toggle-button-unselected-text-monochrome
+  );
+  --toggle-button-border-active: var(
+    --ic-toggle-button-unselected-border-pressed-monochrome
+  );
+  --toggle-button-text-colour-active: var(
+    --ic-toggle-button-unselected-text-monochrome
+  );
+}
+
+:host(.ic-toggle-button-monochrome.ic-toggle-button-checked) {
+  --toggle-button-border: var(--ic-toggle-button-selected-border-monochrome);
+  --toggle-button-text-colour: var(--ic-toggle-button-selected-text-monochrome);
+  --toggle-button-border-hover: var(
+    --ic-toggle-button-selected-border-hover-monochrome
+  );
+  --toggle-button-text-colour-hover: var(
+    --ic-toggle-button-selected-text-monochrome
+  );
+  --toggle-button-border-active: var(
+    --ic-toggle-button-selected-border-pressed-monochrome
+  );
+  --toggle-button-text-colour-active: var(
+    --ic-toggle-button-selected-text-monochrome
+  );
+}
+
+:host(.ic-toggle-button-disabled) {
+  --toggle-button-border: var(--ic-toggle-button-unselected-border-disabled);
+  --toggle-button-text-colour: var(--ic-toggle-button-unselected-text-disabled);
+}
+
+:host(.ic-toggle-button-disabled.ic-toggle-button-monochrome) {
+  --toggle-button-border: var(
+    --ic-toggle-button-unselected-border-disabled-monochrome
+  );
+  --toggle-button-text-colour: var(
+    --ic-toggle-button-unselected-text-disabled-monochrome
+  );
+}
+
+:host(.ic-toggle-button-disabled.ic-toggle-button-checked) {
+  --toggle-button-border: var(--ic-toggle-button-selected-border-disabled);
+  --toggle-button-text-colour: var(--ic-toggle-button-selected-text-disabled);
+}
+
+:host(.ic-toggle-button-disabled.ic-toggle-button-checked.ic-toggle-button-monochrome) {
+  --toggle-button-border: var(
+    --ic-toggle-button-selected-border-disabled-monochrome
+  );
+  --toggle-button-text-colour: var(
+    --ic-toggle-button-selected-text-disabled-monochrome
+  );
+}
+
+:host(.expand-toggle-group-child) ::part(button) {
+  width: 100%;
+}
+
+:host(.expand-toggle-group-child:not(.ic-toggle-button-loading))
+  ::part(button) {
+  min-height: inherit;
+  height: auto;
+}
+
+:host ic-button {
+  --icon-width: var(--ic-space-lg);
+  --icon-height: var(--ic-space-lg);
+}
+
+:host(.expand-toggle-group-child) ic-button {
+  min-width: 100%;
+  min-height: 100%;
+  height: 100%;
+}
+
+:host(.expand-toggle-group-child) ::part(button):focus,
+:host(.expand-toggle-group-child.ic-toggle-button-checked)
+  ::part(button):focus {
+  box-shadow: inset 0 0 0 var(--ic-space-xxxs) var(--ic-action-default),
+    var(--ic-border-focus);
+}
+
+:host(.expand-toggle-group-child.ic-toggle-button-light) ::part(button):focus,
+:host(.expand-toggle-group-child.ic-toggle-button-dark) ::part(button):focus {
+  box-shadow: inset 0 0 0 var(--ic-space-xxxs) var(--ic-action-monochrome-dark),
+    var(--ic-border-focus);
+}
+
+:host(:focus) {
+  z-index: 1;
+}
+
+:host ::part(button) {
+  border: none;
+  color: var(--toggle-button-text-colour);
+}
+
+:host ::part(button):hover {
+  color: var(--toggle-button-text-colour-hover);
+  background-color: var(--ic-toggle-button-unselected-background-hover);
+}
+
+:host ::part(button):active {
+  color: var(--toggle-button-text-colour-active);
+  background-color: var(--ic-toggle-button-unselected-background-pressed);
+}
+
+:host ::part(button):focus {
+  border: var(--ic-border-width) solid var(--toggle-button-border);
+}
+
+:host ::part(button):hover:focus {
+  border: var(--ic-border-width) solid var(--toggle-button-border-hover);
+}
+
+:host ::part(button):active:focus {
+  border: var(--ic-border-width) solid var(--toggle-button-border-active);
+}
+
+:host(.ic-toggle-button-disabled) ::part(button) {
+  color: var(--toggle-button-text-colour);
+}
+
+:host(:not(.expand-toggle-group-child)):has(ic-button:hover) {
+  border: var(--ic-border-width) solid var(--toggle-button-border-hover);
+}
+
+:host(:not(.expand-toggle-group-child)):has(ic-button:active) {
+  border: var(--ic-border-width) solid var(--toggle-button-border-active);
+}
+
+:host(:not(.expand-toggle-group-child).ic-toggle-button-disabled) {
+  border: var(--ic-border-width) dashed var(--toggle-button-border);
+}
+
+:host(.ic-toggle-button-checked) ::part(button) {
+  background-color: var(--ic-toggle-button-selected-background);
+  box-shadow: inset 0 0 0 var(--ic-space-xxxs)
+    var(--ic-toggle-button-selected-text);
+}
+
+:host(.ic-toggle-button-checked) ::part(button):focus {
+  box-shadow: inset 0 0 0 var(--ic-space-xxxs)
+      var(--ic-toggle-button-selected-border-focus),
+    var(--ic-border-focus);
+}
+
+:host(.ic-toggle-button-checked) ::part(button):hover {
+  background-color: var(--ic-toggle-button-selected-background-hover);
+}
+
+:host(.ic-toggle-button-checked) ::part(button):active,
+:host(.ic-toggle-button-icon.ic-toggle-button-checked) ::part(button):active {
+  background-color: var(--ic-toggle-button-selected-background-pressed);
+}
+
+:host(.ic-toggle-button-monochrome) ::part(button):hover {
+  background-color: var(
+    --ic-toggle-button-unselected-background-hover-monochrome
+  );
+}
+
+:host(.ic-toggle-button-monochrome) ::part(button):active {
+  background-color: var(
+    --ic-toggle-button-unselected-background-pressed-monochrome
+  );
+}
+
+:host(.ic-toggle-button-monochrome.ic-toggle-button-checked) ::part(button) {
+  background-color: var(--ic-toggle-button-selected-background-monochrome);
+}
+
+:host(.ic-toggle-button-monochrome.ic-toggle-button-checked)
+  ::part(button):hover {
+  background-color: var(
+    --ic-toggle-button-selected-background-hover-monochrome
+  );
+}
+
+:host(.ic-toggle-button-monochrome.ic-toggle-button-checked)
+  ::part(button):active,
+:host(.ic-toggle-button-icon.ic-toggle-button-monochrome.ic-toggle-button-checked)
+  ::part(button):active {
+  background-color: var(
+    --ic-toggle-button-selected-background-pressed-monochrome
+  );
+}
+
+:host(.ic-toggle-button-monochrome.ic-toggle-button-checked)
+  ::part(button):focus {
+  box-shadow: inset 0 0 0 var(--ic-space-xxxs)
+      var(--ic-toggle-button-selected-text),
+    var(--ic-border-focus);
+}
+
+:host(.ic-toggle-button-disabled.ic-toggle-button-checked) ::part(button),
+:host(.ic-toggle-button-icon.ic-toggle-button-disabled.ic-toggle-button-checked)
+  ::part(button) {
+  background-color: transparent;
+}
+
+:host(.ic-toggle-button-disabled.ic-toggle-button-checked) ::part(button),
+:host(.ic-toggle-button-icon.ic-toggle-button-disabled.ic-toggle-button-checked)
+  ::part(button)::before {
+  background-image: radial-gradient(
+    var(--ic-toggle-button-selected-background-disabled) 95%,
+    white 20%
+  );
+  background-repeat: no-repeat;
+}
+
+:host(.ic-toggle-button-disabled.ic-toggle-button-checked.ic-toggle-button-monochrome)
+  ::part(button),
+:host(.ic-toggle-button-icon.ic-toggle-button-disabled.ic-toggle-button-checked.ic-toggle-button-monochrome)
+  ::part(button)::before {
+  background-image: radial-gradient(
+    var(--ic-toggle-button-selected-background-disabled-monochrome) 95%,
+    white 20%
+  );
+  background-repeat: no-repeat;
+}
+
+:host(.ic-toggle-button-icon) ::part(button) {
+  height: calc(var(--ic-space-xl) + var(--ic-space-xs));
+  width: calc(var(--ic-space-xl) + var(--ic-space-xs));
+}
+
+:host(.ic-toggle-button-icon) ::part(button):active {
+  background-color: var(--ic-action-default-bg-pressed);
+}
+
+:host(.ic-toggle-button-icon.ic-toggle-button-dark) ::part(button):active {
+  background-color: var(--ic-action-dark-bg-pressed);
+}
+
+:host(.ic-toggle-button-icon.ic-toggle-button-light) ::part(button):active {
+  background-color: var(--ic-action-light-bg-pressed);
+}
+
+:host(.ic-toggle-button-icon.ic-toggle-button-small) ::part(button) {
+  height: var(--ic-space-xl);
+  width: var(--ic-space-xl);
+}
+
+:host(.ic-toggle-button-icon.ic-toggle-button-large) ::part(button) {
+  height: var(--ic-space-xxl);
+  width: var(--ic-space-xxl);
+}
+
+:host(.ic-toggle-button-checked.ic-toggle-button-loading) ::part(button) {
+  --loading-button-background: var(
+    --ic-toggle-button-selected-background-pressed
+  );
+
+  background-color: var(--ic-toggle-button-selected-background-pressed);
+}
+
+:host(.ic-toggle-button-loading) ::part(button) {
+  --loading-button-background: var(
+    --ic-toggle-button-unselected-background-pressed
+  );
+
+  background-color: var(--ic-toggle-button-unselected-background-pressed);
+}
+
+:host(.ic-toggle-button-checked.ic-toggle-button-loading)
+  ::part(ic-loading-container) {
+  --inner-color: var(--ic-toggle-button-loading-bar);
+}
+
+:host(.ic-toggle-button-loading) ::part(ic-loading-container) {
+  --inner-color: var(--ic-toggle-button-selected-loading-bar);
+}
+
+:host(.ic-toggle-button-checked.ic-toggle-button-loading.ic-toggle-button-monochrome)
+  ::part(button) {
+  --loading-button-background: var(
+    --ic-toggle-button-selected-background-pressed-monochrome
+  );
+
+  background-color: var(
+    --ic-toggle-button-selected-background-pressed-monochrome
+  );
+}
+
+:host(.ic-toggle-button-loading.ic-toggle-button-monochrome) ::part(button) {
+  --loading-button-background: var(
+    --ic-toggle-button-unselected-background-pressed-monochrome
+  );
+
+  background-color: var(
+    --ic-toggle-button-unselected-background-pressed-monochrome
+  );
+}
+
+:host(.ic-toggle-button-hide-outline) {
+  --toggle-button-border: transparent !important;
+  --toggle-button-border-hover: transparent !important;
+  --toggle-button-border-active: transparent !important;
+}
+
+:host(.ic-toggle-button-hide-outline) ::part(button):focus {
+  border: none;
+}
+
+:host(.expand-toggle-group-child.ic-toggle-button-hide-outline)
+  ::part(button):focus,
+:host(.expand-toggle-group-child.ic-toggle-button-hide-outline.ic-toggle-button-checked)
+  ::part(button):focus {
+  box-shadow: var(--ic-border-focus);
+}
+
+@media (forced-colors: active) {
+  :host(.ic-toggle-button-checked) ::part(button),
+  :host(.ic-toggle-button-checked) ::part(button):hover {
+    background-color: Highlight;
+  }
+
+  :host(.ic-toggle-button-checked.ic-toggle-button-light) ::part(button),
+  :host(.ic-toggle-button-checked.ic-toggle-button-light) ::part(button):hover {
+    background-color: Highlight;
+  }
+
+  :host(.ic-toggle-button-checked.ic-toggle-button-dark) ::part(button),
+  :host(.ic-toggle-button-checked.ic-toggle-button-dark) ::part(button):hover {
+    background-color: Highlight;
+  }
+
+  :host(.ic-toggle-button-checked.ic-toggle-button-disabled) ::part(button) {
+    background-color: GrayText;
+  }
+
+  :host(.ic-toggle-button-checked.ic-toggle-button-loading) ::part(button),
+  :host(.ic-toggle-button-checked.ic-toggle-button-loading)
+    ::part(button):hover {
+    --loading-button-background: Highlight;
+  }
+}

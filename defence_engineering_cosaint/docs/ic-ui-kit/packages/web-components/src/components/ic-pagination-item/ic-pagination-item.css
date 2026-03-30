@@ -1,0 +1,187 @@
+@import "../../global/normalize.css";
+
+a {
+  text-align: center;
+}
+
+.item-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(var(--ic-space-xl) + var(--ic-space-sm));
+  height: var(--ic-space-xl);
+  margin: var(--ic-space-xxs) var(--ic-space-xxxs);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+button {
+  background: none;
+  border: none;
+  outline: inherit;
+  position: relative;
+}
+
+.ellipsis {
+  pointer-events: none;
+
+  --ic-typography-color: var(--ic-pagination-ellipsis);
+}
+
+.monochrome .ellipsis {
+  --ic-typography-color: var(--ic-pagination-ellipsis-monochrome);
+}
+
+.item-container:focus {
+  box-shadow: var(--ic-border-focus);
+  outline: var(--ic-hc-focus-outline);
+  border-radius: var(--ic-border-radius);
+  transition: var(--ic-easing-transition-fast);
+}
+
+.page {
+  --ic-typography-color: var(--ic-pagination-page-number);
+}
+
+.monochrome .page {
+  --ic-typography-color: var(--ic-pagination-page-number-monochrome);
+}
+
+.simple-current {
+  min-width: calc(var(--ic-space-xxl) + var(--ic-space-md));
+  height: var(--ic-space-lg);
+  cursor: default;
+}
+
+/** DEFAULT STATES **/
+.item-container.page:hover:not(.selected):not(:focus) {
+  border-radius: var(--ic-border-radius);
+  background-color: var(--ic-pagination-hover);
+}
+
+.item-container.page:active:not(.selected):not(:focus) {
+  background-color: var(--ic-pagination-pressed);
+}
+
+.monochrome .item-container.page:hover:not(.selected):not(:focus) {
+  background-color: var(--ic-pagination-hover-monochrome);
+}
+
+.monochrome .item-container.page:active:not(.selected):not(:focus) {
+  background-color: var(--ic-pagination-pressed-monochrome);
+}
+
+.selected {
+  pointer-events: none;
+  outline: none;
+}
+
+.selected::after {
+  content: "";
+  height: var(--ic-space-xxs);
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  background-color: var(--ic-pagination-selected-banner);
+}
+
+.monochrome .selected::after {
+  background-color: var(--ic-pagination-selected-banner-monochrome);
+}
+
+.page-selected {
+  --ic-typography-color: var(--ic-pagination-text);
+}
+
+/** LIGHT STATES **/
+.item-container.page.light:hover:not(.selected):not(:focus) {
+  background-color: var(--ic-action-light-bg-hover);
+}
+
+.item-container.page.light:active:not(.selected):not(:focus) {
+  background-color: var(--ic-action-light-bg-pressed);
+}
+
+ic-typography.light,
+ic-typography.page-selected.light {
+  --ic-typography-color: var(--ic-architectural-white);
+}
+
+.selected.light::after {
+  content: "";
+  height: var(--ic-space-xxs);
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  background-color: var(--ic-action-monochrome);
+}
+
+/** DARK STATES **/
+.item-container.page.dark:hover:not(.selected):not(:focus) {
+  background-color: var(--ic-action-dark-bg-hover);
+}
+
+.item-container.page.dark:active:not(.selected):not(:focus) {
+  background-color: var(--ic-action-dark-bg-pressed);
+}
+
+ic-typography.dark {
+  --ic-typography-color: var(--ic-color-text-primary);
+}
+
+.selected.dark::after {
+  content: "";
+  height: var(--ic-space-xxs);
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  background-color: var(--ic-action-monochrome-dark);
+}
+
+.disabled {
+  --ic-typography-color: var(--ic-pagination-text-disabled);
+
+  pointer-events: none;
+  cursor: none;
+  user-select: none;
+}
+
+.disabled.page ic-typography {
+  --ic-typography-color: var(--ic-pagination-page-number-disabled);
+}
+
+.disabled.ellipsis {
+  --ic-typography-color: var(--ic-pagination-ellipsis-disabled);
+}
+
+.monochrome .disabled.page {
+  --ic-typography-color: var(--ic-pagination-page-number-monochrome-disabled);
+}
+
+.monochrome .disabled.ellipsis {
+  --ic-typography-color: var(--ic-pagination-ellipsis-monochrome-disabled);
+}
+
+@media (forced-colors: active) {
+  .selected::after {
+    background-color: Highlight;
+  }
+
+  .selected.light::after {
+    background-color: Highlight;
+  }
+
+  .selected.dark::after {
+    background-color: Highlight;
+  }
+
+  .disabled {
+    --ic-typography-color: GrayText;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item-container:focus {
+    transition: none;
+  }
+}

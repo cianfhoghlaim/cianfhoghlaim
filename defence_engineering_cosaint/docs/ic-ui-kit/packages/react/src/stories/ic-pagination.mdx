@@ -1,0 +1,14 @@
+import {
+  Meta,
+  Stories,
+  Markdown
+} from "@storybook/addon-docs/blocks";
+import * as IcPaginationStories from './ic-pagination.stories';
+
+import readme from "../../../web-components/src/components/ic-pagination/readme.md";
+
+<Meta of={IcPaginationStories} />
+
+<Markdown>{readme}</Markdown>
+
+<Stories />

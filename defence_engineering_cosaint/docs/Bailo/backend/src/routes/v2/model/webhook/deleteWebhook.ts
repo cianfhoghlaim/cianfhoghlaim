@@ -1,0 +1,51 @@
+import { Request, Response } from 'express'
+
+import { z } from '../../../../lib/zod.js'
+import { registerPath } from '../../../../services/specification.js'
+import { removeWebhook } from '../../../../services/webhook.js'
+import { parse } from '../../../../utils/validate.js'
+
+export const deleteWebhookSchema = z.object({
+  params: z.object({
+    modelId: z.string(),
+    webhookId: z.string(),
+  }),
+})
+
+registerPath({
+  method: 'delete',
+  path: '/api/v2/model/{modelId}/webhook/{webhookId}',
+  tags: ['webhook'],
+  description: 'Delete a file from a model.',
+  schema: deleteWebhookSchema,
+  responses: {
+    200: {
+      description: 'A message confirming the removal of the webhook.',
+      content: {
+        'application/json': {
+          schema: z.object({
+            message: z.string().openapi({ example: 'Successfully removed webhook' }),
+          }),
+        },
+      },
+    },
+  },
+})
+
+interface DeleteWebhookResponse {
+  message: string
+}
+
+export const deleteWebhook = [
+  async (req: Request, res: Response<DeleteWebhookResponse>): Promise<void> => {
+    const {
+      params: { modelId, webhookId },
+    } = parse(req, deleteWebhookSchema)
+
+    await removeWebhook(req.user, modelId, webhookId)
+
+    res.json({
+      message: 'Successfully removed file.',
+    })
+  },
+]

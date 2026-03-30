@@ -1,0 +1,28 @@
+/*
+ * Copyright 2016-2025 Crown Copyright
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package stroom.util.shared;
+
+/**
+ * Marker interface for config classes used by Stroom Proxy.
+ * Helps with ensuring all config classes are bound.
+ * Used to distinguish between config classes that are used by stroom.
+ * Config classes can implement {@link IsStroomConfig} and {@link IsProxyConfig} if
+ * they are shared.
+ */
+public interface IsProxyConfig extends HasPropertyPath {
+
+}

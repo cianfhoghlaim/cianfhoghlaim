@@ -1,0 +1,325 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`clients > registry > deleteManifest > success 1`] = `
+[
+  [
+    "https://localhost:5000/v2/modelId/image/manifests/tag",
+    {
+      "dispatcher": "mock agent",
+      "headers": {
+        "Accept": "application/vnd.docker.distribution.manifest.v2+json,application/vnd.oci.image.manifest.v1+json",
+        "Authorization": "Bearer token",
+      },
+      "method": "DELETE",
+      "signal": {
+        "aborted": false,
+        "onabort": null,
+      },
+    },
+  ],
+]
+`;
+
+exports[`clients > registry > doesLayerExist > success false 1`] = `
+[
+  [
+    "https://localhost:5000/v2/modelId/image/blobs/digest",
+    {
+      "dispatcher": "mock agent",
+      "headers": {
+        "Authorization": "Bearer token",
+      },
+      "method": "HEAD",
+      "signal": {
+        "aborted": true,
+        "onabort": null,
+      },
+    },
+  ],
+]
+`;
+
+exports[`clients > registry > doesLayerExist > success true 1`] = `
+[
+  [
+    "https://localhost:5000/v2/modelId/image/blobs/digest",
+    {
+      "dispatcher": "mock agent",
+      "headers": {
+        "Authorization": "Bearer token",
+      },
+      "method": "HEAD",
+      "signal": {
+        "aborted": false,
+        "onabort": null,
+      },
+    },
+  ],
+]
+`;
+
+exports[`clients > registry > getApiVersion > bad version 1`] = `
+[
+  [
+    "https://localhost:5000/v2/",
+    {
+      "dispatcher": "mock agent",
+      "headers": {
+        "Authorization": "Bearer token",
+      },
+      "signal": {
+        "aborted": true,
+        "onabort": null,
+      },
+    },
+  ],
+]
+`;
+
+exports[`clients > registry > getApiVersion > success 1`] = `
+[
+  [
+    "https://localhost:5000/v2/",
+    {
+      "dispatcher": "mock agent",
+      "headers": {
+        "Authorization": "Bearer token",
+      },
+      "signal": {
+        "aborted": false,
+        "onabort": null,
+      },
+    },
+  ],
+]
+`;
+
+exports[`clients > registry > getImageTagManifest > success Docker spec 1`] = `
+[
+  [
+    "https://localhost:5000/v2/modelId/image/manifests/tag1",
+    {
+      "dispatcher": "mock agent",
+      "headers": {
+        "Accept": "application/vnd.docker.distribution.manifest.v2+json,application/vnd.oci.image.manifest.v1+json",
+        "Authorization": "Bearer token",
+      },
+      "signal": {
+        "aborted": false,
+        "onabort": null,
+      },
+    },
+  ],
+]
+`;
+
+exports[`clients > registry > getImageTagManifest > success OCI spec 1`] = `
+[
+  [
+    "https://localhost:5000/v2/modelId/image/manifests/tag1",
+    {
+      "dispatcher": "mock agent",
+      "headers": {
+        "Accept": "application/vnd.docker.distribution.manifest.v2+json,application/vnd.oci.image.manifest.v1+json",
+        "Authorization": "Bearer token",
+      },
+      "signal": {
+        "aborted": false,
+        "onabort": null,
+      },
+    },
+  ],
+]
+`;
+
+exports[`clients > registry > getImageTagManifest > success OCI spec 2`] = `
+[
+  [
+    "https://localhost:5000/v2/modelId/image/manifests/tag1",
+    {
+      "dispatcher": "mock agent",
+      "headers": {
+        "Accept": "application/vnd.docker.distribution.manifest.v2+json,application/vnd.oci.image.manifest.v1+json",
+        "Authorization": "Bearer token",
+      },
+      "signal": {
+        "aborted": false,
+        "onabort": null,
+      },
+    },
+  ],
+]
+`;
+
+exports[`clients > registry > getRegistryLayerStream > success 1`] = `
+[
+  [
+    "https://localhost:5000/v2/modelId/image/blobs/sha256:digest1",
+    {
+      "dispatcher": "mock agent",
+      "headers": {
+        "Accept": "application/vnd.docker.distribution.manifest.v2+json,application/vnd.oci.image.manifest.v1+json",
+        "Authorization": "Bearer token",
+      },
+      "signal": {
+        "aborted": false,
+        "onabort": null,
+      },
+    },
+  ],
+]
+`;
+
+exports[`clients > registry > initialiseUpload > success 1`] = `
+[
+  [
+    "https://localhost:5000/v2/modelId/image/blobs/uploads/",
+    {
+      "dispatcher": "mock agent",
+      "headers": {
+        "Authorization": "Bearer token",
+      },
+      "method": "POST",
+      "signal": {
+        "aborted": false,
+        "onabort": null,
+      },
+    },
+  ],
+]
+`;
+
+exports[`clients > registry > listImageTags > success 1`] = `
+[
+  [
+    "https://localhost:5000/v2/modelId/image/tags/list",
+    {
+      "dispatcher": "mock agent",
+      "headers": {
+        "Authorization": "Bearer token",
+      },
+      "signal": {
+        "aborted": false,
+        "onabort": null,
+      },
+    },
+  ],
+]
+`;
+
+exports[`clients > registry > listImageTags > success multiple pages 1`] = `
+[
+  [
+    "https://localhost:5000/v2/modelId/image/tags/list",
+    {
+      "dispatcher": "mock agent",
+      "headers": {
+        "Authorization": "Bearer token",
+      },
+      "signal": {
+        "aborted": false,
+        "onabort": null,
+      },
+    },
+  ],
+  [
+    "https://localhost:5000/http://example.com/v2/_catalog?n=20&last=b",
+    {
+      "dispatcher": "mock agent",
+      "headers": {
+        "Authorization": "Bearer token",
+      },
+      "signal": {
+        "aborted": false,
+        "onabort": null,
+      },
+    },
+  ],
+]
+`;
+
+exports[`clients > registry > listModelRepos > only returns model repos 1`] = `
+[
+  [
+    "https://localhost:5000/v2/_catalog?n=100",
+    {
+      "dispatcher": "mock agent",
+      "headers": {
+        "Authorization": "Bearer token",
+      },
+      "signal": {
+        "aborted": false,
+        "onabort": null,
+      },
+    },
+  ],
+]
+`;
+
+exports[`clients > registry > mountBlob > success 1`] = `
+[
+  [
+    "https://localhost:5000/v2/modelId/image/blobs/uploads/?from=modelId/image&mount=blob",
+    {
+      "dispatcher": "mock agent",
+      "headers": {
+        "Authorization": "Bearer token",
+        "Content-Length": "0",
+      },
+      "method": "POST",
+      "signal": {
+        "aborted": false,
+        "onabort": null,
+      },
+    },
+  ],
+]
+`;
+
+exports[`clients > registry > putManifest > success 1`] = `
+[
+  [
+    "https://localhost:5000/v2/modelId/image/manifests/tag",
+    {
+      "body": null,
+      "dispatcher": "mock agent",
+      "headers": {
+        "Authorization": "Bearer token",
+        "Content-Type": "",
+        "name": "modelId/image",
+        "reference": "tag",
+      },
+      "method": "PUT",
+      "signal": {
+        "aborted": false,
+        "onabort": null,
+      },
+    },
+  ],
+]
+`;
+
+exports[`clients > registry > uploadLayerMonolithic > success 1`] = `
+[
+  [
+    "https://localhost:5000/v2/url&digest=digest",
+    {
+      "body": [MockFunction],
+      "dispatcher": "mock agent",
+      "duplex": "half",
+      "headers": {
+        "Authorization": "Bearer token",
+        "content-length": "size",
+        "content-type": "application/octet-stream",
+      },
+      "method": "PUT",
+      "redirect": "error",
+      "signal": {
+        "aborted": false,
+        "onabort": null,
+      },
+      "window": null,
+    },
+  ],
+]
+`;
