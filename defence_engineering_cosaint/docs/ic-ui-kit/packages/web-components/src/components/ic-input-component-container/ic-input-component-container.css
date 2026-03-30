@@ -1,0 +1,219 @@
+ic-input-component-container {
+  /**
+   * @prop --border-color: Border colour of the input component container
+   * @prop --border-color-hover: Border colour of the input component container on hover
+   * @prop --border-color-pressed: Border colour of the input component container when pressed
+   * @prop --border-color-disabled: Border colour of the input component container when disabled
+   * @prop --border-color-error: Border colour of the error variant for input component container
+   * @prop --border-color-error-hover: Border colour of the error hover variant for input component container
+   * @prop --border-color-error-pressed: Border colour of the error pressed variant for input component container
+   * @prop --border-color-warning: Border colour of the warning variant for input component container
+   * @prop --border-color-warning-hover: Border colour of the warning hover variant for input component container
+   * @prop --border-color-warning-pressed: Border colour of the warning pressed variant for input component container
+   * @prop --border-color-success: Border colour of the success variant for input component container
+   * @prop --border-color-success-hover: Border colour of the success hover variant for input component container
+   * @prop --border-color-success-pressed: Border colour of the success pressed variant for input component container
+   */
+
+  display: flex;
+  border: var(--ic-border-width) solid
+    var(--border-color, var(--ic-architectural-400));
+  border-radius: var(--ic-border-radius);
+  transition: var(--ic-easing-transition-slow);
+  height: 2.5rem;
+  min-height: 2.5rem;
+  width: var(--input-width, 20rem);
+  padding: var(--ic-space-1px);
+  background-color: var(--input-bg-color, var(--ic-color-background-primary));
+  box-sizing: border-box;
+  fill: var(--ic-architectural-400);
+  outline: none;
+}
+
+ic-input-component-container.ic-input-component-container-full-width {
+  width: 100%;
+  max-width: none;
+}
+
+ic-input-component-container.ic-input-component-container-disabled,
+ic-input-component-container.ic-input-component-container-disabled:hover {
+  border: var(--ic-border-width) dashed
+    var(--border-color-disabled, var(--ic-color-border-neutral-disabled));
+}
+
+ic-input-component-container.ic-input-component-container-readonly,
+ic-input-component-container.ic-input-component-container-small.ic-input-component-container-readonly,
+ic-input-component-container.ic-input-component-container-large.ic-input-component-container-readonly {
+  height: auto;
+  background: transparent;
+}
+
+ic-input-component-container.ic-input-component-container-readonly,
+ic-input-component-container.ic-input-component-container-readonly:hover {
+  border: none;
+  padding: 0;
+}
+
+ic-input-component-container.ic-input-component-container-error {
+  border: var(--ic-space-xxxs) solid
+    var(--border-color-error, var(--ic-color-border-error));
+  padding: 0;
+}
+
+ic-input-component-container.ic-input-component-container-error:hover {
+  border: var(--ic-space-xxxs) solid
+    var(--border-color-error-hover, var(--ic-color-border-error-hover));
+}
+
+ic-input-component-container.ic-input-component-container-error:focus-within {
+  border: var(--ic-space-xxxs) solid
+    var(--border-color-error-pressed, var(--ic-color-border-error-pressed));
+}
+
+ic-input-component-container.ic-input-component-container-warning {
+  border: var(--ic-space-xxxs) solid
+    var(--border-color-warning, var(--ic-color-border-warning));
+  padding: 0;
+}
+
+ic-input-component-container.ic-input-component-container-warning:hover {
+  border: var(--ic-space-xxxs) solid
+    var(--border-color-warning-hover, var(--ic-color-border-warning-hover));
+}
+
+ic-input-component-container.ic-input-component-container-warning:focus-within {
+  border: var(--ic-space-xxxs) solid
+    var(--border-color-warning-pressed, var(--ic-color-border-warning-pressed));
+}
+
+ic-input-component-container.ic-input-component-container-success {
+  border: var(--ic-space-xxxs) solid
+    var(--border-color-success, var(--ic-color-border-success));
+  padding: 0;
+}
+
+ic-input-component-container.ic-input-component-container-success:hover {
+  border: var(--ic-space-xxxs) solid
+    var(--border-color-success-hover, var(--ic-color-border-success-hover));
+}
+
+ic-input-component-container.ic-input-component-container-success:focus-within {
+  border: var(--ic-space-xxxs) solid
+    var(--border-color-success-pressed, var(--ic-color-border-success-pressed));
+}
+
+ic-input-component-container.ic-input-component-container-small {
+  height: var(--ic-space-xl);
+  min-height: var(--ic-space-xl);
+}
+
+ic-input-component-container.ic-input-component-container-large {
+  height: var(--ic-space-xxl);
+  min-height: var(--ic-space-xxl);
+}
+
+ic-input-component-container.ic-input-component-container-multiline {
+  height: auto;
+}
+
+ic-input-component-container .icon-container {
+  margin-top: var(--ic-space-xxs);
+  margin-left: 0.438rem;
+  display: flex;
+  align-items: center;
+}
+
+ic-input-component-container.ic-input-component-container-multiline
+  .icon-container,
+ic-input-component-container.ic-input-component-container-multiline.ic-input-component-container-small
+  .icon-container {
+  margin-top: 0.375rem;
+  display: block;
+}
+
+ic-input-component-container.ic-input-component-container-readonly
+  .icon-container {
+  margin-left: -0.313rem;
+}
+
+ic-input-component-container.ic-input-component-container-disabled
+  ::placeholder {
+  display: none;
+}
+
+ic-input-component-container .inline-success {
+  margin: var(--ic-space-xs) 0.375rem;
+  display: flex;
+  align-items: center;
+}
+
+ic-input-component-container .inline-success > svg {
+  fill: var(--ic-input-component-container-success-icon-inline-color);
+  height: 1.25rem;
+  width: 1.25rem;
+}
+
+ic-input-component-container:hover {
+  border: var(--ic-input-component-container-hover-border);
+  border-color: var(--border-color-hover, var(--ic-color-border-neutral-hover));
+  color: var(--ic-action-monochrome-hover-dark);
+}
+
+ic-input-component-container:focus {
+  border: var(--ic-border-pressed);
+  border-color: var(
+    --border-color-pressed,
+    var(--ic-color-border-neutral-pressed)
+  );
+}
+
+.focus-indicator {
+  display: flex;
+  width: 100%;
+  margin: -0.125rem;
+  padding: 0.125rem;
+  border-radius: var(--ic-border-radius);
+  transition: var(--ic-easing-transition-fast);
+}
+
+.focus-indicator:focus-within,
+.focus-indicator-enabled {
+  box-shadow: var(--ic-border-focus);
+}
+
+.focus-indicator.ic-input-component-container-dark:focus-within {
+  box-shadow: var(--ic-border-focus);
+}
+
+@media (forced-colors: active) {
+  /* Styles here only apply to Forced Colors Mode */
+  ic-input-component-container,
+  .focus-indicator {
+    transition: none;
+  }
+
+  ic-input-component-container:focus-within {
+    border: var(--ic-border-width) solid Highlight;
+    outline: 0.125rem solid Highlight;
+  }
+
+  ic-input-component-container.ic-input-component-container-disabled,
+  ic-input-component-container.ic-input-component-container-disabled:hover {
+    border: var(--ic-border-width) dashed GrayText;
+  }
+}
+
+/* Breakpoint value chosen as it's a small amount bigger than the input's default width */
+@media screen AND (max-width: 22rem) {
+  ic-input-component-container {
+    max-width: var(--input-width, 20rem);
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ic-input-component-container,
+  .focus-indicator {
+    transition: none;
+  }
+}

@@ -1,0 +1,389 @@
+import { describe, expect, test, vi } from 'vitest'
+
+import { Decision, ReactionKind } from '../../src/models/Response.js'
+import {
+  checkAccessRequestsApproved,
+  findResponseById,
+  getResponsesByParentIds,
+  respondToReview,
+  updateResponse,
+  updateResponseReaction,
+} from '../../src/services/response.js'
+import { ReviewKind } from '../../src/types/enums.js'
+import { getTypedModelMock } from '../testUtils/setupMongooseModelMocks.js'
+import { testAccessRequestReview, testReleaseReview } from '../testUtils/testModels.js'
+
+vi.mock('../../src/connectors/authorisation/index.js')
+vi.mock('../../src/connectors/authentication/index.js', async () => ({
+  default: {
+    getEntities: vi.fn(function () {
+      return ['user:test']
+    }),
+  },
+}))
+
+const ResponseModelMock = getTypedModelMock('ResponseModel')
+
+const smtpMock = vi.hoisted(() => ({
+  notifyReviewResponseForAccess: vi.fn(function () {
+    return Promise.resolve()
+  }),
+  notifyReviewResponseForRelease: vi.fn(function () {
+    return Promise.resolve()
+  }),
+  requestReviewForRelease: vi.fn(function () {
+    return Promise.resolve()
+  }),
+  requestReviewForAccessRequest: vi.fn(function () {
+    return Promise.resolve()
+  }),
+}))
+vi.mock('../../src/services/smtp/smtp.js', async () => smtpMock)
+
+const reviewMock = vi.hoisted(() => ({
+  findReviewsForAccessRequests: vi.fn(function () {
+    return [testReleaseReview]
+  }),
+  findReviewForResponse: vi.fn(function () {
+    return testReleaseReview
+  }),
+}))
+vi.mock('../../src/services/review.js', async () => reviewMock)
+
+const accessRequestServiceMock = vi.hoisted(() => ({
+  getAccessRequestById: vi.fn(),
+}))
+vi.mock('../../src/services/accessRequest.js', async () => accessRequestServiceMock)
+
+const releaseServiceMock = vi.hoisted(() => ({
+  getReleaseBySemver: vi.fn(),
+}))
+vi.mock('../../src/services/release.js', async () => releaseServiceMock)
+
+const logMock = vi.hoisted(() => ({
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
+}))
+vi.mock('../../src/services/log.js', async () => ({
+  default: logMock,
+}))
+const arrayUtilMock = vi.hoisted(() => ({
+  asyncFilter: vi.fn(),
+}))
+vi.mock('../../src/utils/array.js', async () => arrayUtilMock)
+const entityUtilMock = vi.hoisted(() => ({
+  toEntity: vi.fn(),
+}))
+vi.mock('../../src/utils/entity.js', () => entityUtilMock)
+
+const mockWebhookService = vi.hoisted(() => {
+  return {
+    sendWebhooks: vi.fn(),
+  }
+})
+vi.mock('../../src/services/webhook.js', () => mockWebhookService)
+
+describe('services > response', () => {
+  const user: any = { dn: 'test' }
+
+  test('findResponseById > success', async () => {
+    const mockResponse = { _id: 'response' }
+
+    ResponseModelMock.findOne.mockResolvedValueOnce(mockResponse)
+
+    expect(await findResponseById('test')).toBe(mockResponse)
+  })
+  test('findResponseById > response not found', async () => {
+    ResponseModelMock.findOne.mockResolvedValueOnce(undefined)
+
+    await expect(findResponseById('test')).rejects.toThrowError('The requested response was not found.')
+  })
+
+  test('getResponsesByParentIds > success', async () => {
+    const mockResponses = [{ _id: 'response' }]
+
+    ResponseModelMock.find.mockResolvedValueOnce(mockResponses)
+
+    expect(await getResponsesByParentIds(['test'])).toBe(mockResponses)
+  })
+  test('getResponsesByParentIds > response not found', async () => {
+    ResponseModelMock.find.mockResolvedValueOnce(undefined)
+
+    await expect(getResponsesByParentIds(['test'])).rejects.toThrowError('The requested response was not found.')
+  })
+
+  test('updateResponse > success', async () => {
+    const date = new Date(1970, 0, 1, 0)
+    vi.setSystemTime(date)
+
+    const mockResponse = { _id: 'response', entity: 'user:user', comment: 'test', save: vi.fn() }
+    const mockUpdatedResponse = { ...mockResponse, comment: 'updated', commentEditedAt: date.toISOString() }
+
+    ResponseModelMock.findOne.mockResolvedValueOnce(mockResponse)
+    entityUtilMock.toEntity.mockReturnValueOnce('user:user')
+
+    const updatedResponse = await updateResponse({} as any, 'test', 'updated')
+
+    expect(updatedResponse).toEqual(mockUpdatedResponse)
+    expect(mockResponse.save).toBeCalled()
+  })
+  test('updateResponse > response not found', async () => {
+    ResponseModelMock.findOne.mockResolvedValueOnce(undefined)
+
+    await expect(updateResponse({} as any, 'test', 'updated')).rejects.toThrowError(
+      'The requested response was not found.',
+    )
+  })
+  test('updateResponse > invalid user', async () => {
+    const mockResponse = { _id: 'response', entity: 'user:user', comment: 'test', save: vi.fn() }
+
+    ResponseModelMock.findOne.mockResolvedValueOnce(mockResponse)
+
+    await expect(updateResponse({} as any, 'test', 'updated')).rejects.toThrowError(
+      'Only the original author can update a comment or review response.',
+    )
+  })
+
+  test('updateResponseReaction > should add reaction when no reactions of the same kind exist', async () => {
+    const mockResponse = { _id: 'response', reactions: [], save: vi.fn() }
+    const mockUpdatedResponse = {
+      ...mockResponse,
+      reactions: [
+        {
+          kind: ReactionKind.LIKE,
+          users: ['user'],
+        },
+      ],
+    }
+
+    ResponseModelMock.findOne.mockResolvedValueOnce(mockResponse)
+
+    expect(await updateResponseReaction({ dn: 'user' } as any, 'test', ReactionKind.LIKE)).toEqual(mockUpdatedResponse)
+    expect(mockResponse.save).toBeCalled()
+  })
+  test('updateResponseReaction > should remove user from reaction users array when a reaction of the same kind exists and user is present in users array', async () => {
+    const mockResponse = {
+      _id: 'response',
+      reactions: [
+        {
+          kind: ReactionKind.LIKE,
+          users: ['user'],
+        },
+      ],
+      save: vi.fn(),
+    }
+    const mockUpdatedResponse = {
+      ...mockResponse,
+      reactions: [
+        {
+          kind: ReactionKind.LIKE,
+          users: [],
+        },
+      ],
+    }
+
+    ResponseModelMock.findOne.mockResolvedValueOnce(mockResponse)
+
+    expect(await updateResponseReaction({ dn: 'user' } as any, 'test', ReactionKind.LIKE)).toEqual(mockUpdatedResponse)
+    expect(mockResponse.save).toBeCalled()
+  })
+  test(`updateResponseReaction > should add user to reaction users array when a reaction of the same kind exists and user is not present in users array`, async () => {
+    const mockResponse = {
+      _id: 'response',
+      reactions: [
+        {
+          kind: ReactionKind.LIKE,
+          users: [],
+        },
+      ],
+      save: vi.fn(),
+    }
+    const mockUpdatedResponse = {
+      ...mockResponse,
+      reactions: [
+        {
+          kind: ReactionKind.LIKE,
+          users: ['user'],
+        },
+      ],
+    }
+
+    ResponseModelMock.findOne.mockResolvedValueOnce(mockResponse)
+
+    expect(await updateResponseReaction({ dn: 'user' } as any, 'test', ReactionKind.LIKE)).toEqual(mockUpdatedResponse)
+    expect(mockResponse.save).toBeCalled()
+  })
+  test('updateResponseReaction > response not found', async () => {
+    ResponseModelMock.findOne.mockResolvedValueOnce(undefined)
+
+    await expect(updateResponseReaction({} as any, 'test', ReactionKind.LIKE)).rejects.toThrowError(
+      'The requested response was not found.',
+    )
+  })
+
+  test('respondToReview > release successful', async () => {
+    await respondToReview(
+      user,
+      'modelId',
+      'msro',
+      {
+        decision: Decision.RequestChanges,
+        comment: 'Do better!',
+      },
+      ReviewKind.Release,
+      'semver',
+    )
+
+    expect(ResponseModelMock.save).toHaveBeenCalledOnce()
+    expect(smtpMock.notifyReviewResponseForRelease).toHaveBeenCalledOnce()
+    expect(releaseServiceMock.getReleaseBySemver).toHaveBeenCalledOnce()
+    expect(mockWebhookService.sendWebhooks).toHaveBeenCalledOnce()
+  })
+
+  test('respondToReview > access request successful', async () => {
+    reviewMock.findReviewForResponse.mockReturnValueOnce(testAccessRequestReview as any)
+    await respondToReview(
+      user,
+      'modelId',
+      'msro',
+      {
+        decision: Decision.RequestChanges,
+        comment: 'Do better!',
+      },
+      ReviewKind.Access,
+      'accessRequestId',
+    )
+
+    expect(ResponseModelMock.save).toHaveBeenCalledOnce()
+    expect(smtpMock.notifyReviewResponseForAccess).toHaveBeenCalledOnce()
+    expect(accessRequestServiceMock.getAccessRequestById).toHaveBeenCalledOnce()
+    expect(mockWebhookService.sendWebhooks).toHaveBeenCalledOnce()
+  })
+
+  test('respondToReview > unable to send notification due to missing access request ID', async () => {
+    reviewMock.findReviewForResponse.mockReturnValueOnce({ kind: 'access' } as any)
+    await respondToReview(
+      user,
+      'modelId',
+      'msro',
+      {
+        decision: Decision.RequestChanges,
+        comment: 'Do better!',
+      },
+      ReviewKind.Access,
+      'accessRequestId',
+    )
+
+    expect(logMock.error).toHaveBeenCalledWith(
+      { review: { kind: 'access' } },
+      'Unable to send notification for review response. Cannot find access request ID.',
+    )
+  })
+
+  test('respondToReview > log when failed to send access request response notification', async () => {
+    reviewMock.findReviewForResponse.mockReturnValueOnce(testAccessRequestReview as any)
+    smtpMock.notifyReviewResponseForAccess.mockRejectedValueOnce('failed to send')
+    await respondToReview(
+      user,
+      'modelId',
+      'msro',
+      {
+        decision: Decision.RequestChanges,
+        comment: 'Do better!',
+      },
+      ReviewKind.Access,
+      'accessRequestId',
+    )
+    // Allow for completion of asynchronous content
+    await new Promise((r) => setTimeout(r))
+
+    expect(ResponseModelMock.save).toHaveBeenCalledOnce()
+    expect(accessRequestServiceMock.getAccessRequestById).toHaveBeenCalledOnce()
+    expect(mockWebhookService.sendWebhooks).toHaveBeenCalledOnce()
+    expect(logMock.warn).toHaveBeenCalledOnce()
+  })
+
+  test('respondToReview > log when failed to send release response notification', async () => {
+    smtpMock.notifyReviewResponseForRelease.mockRejectedValueOnce('failed to send')
+    await respondToReview(
+      user,
+      'modelId',
+      'msro',
+      {
+        decision: Decision.RequestChanges,
+        comment: 'Do better!',
+      },
+      ReviewKind.Release,
+      'semver',
+    )
+    // Allow for completion of asynchronous content
+    await new Promise((r) => setTimeout(r))
+
+    expect(ResponseModelMock.save).toHaveBeenCalledOnce()
+    expect(smtpMock.notifyReviewResponseForRelease).toHaveBeenCalledOnce()
+    expect(releaseServiceMock.getReleaseBySemver).toHaveBeenCalledOnce()
+    expect(mockWebhookService.sendWebhooks).toHaveBeenCalledOnce()
+    expect(logMock.warn).toHaveBeenCalledOnce()
+  })
+
+  test('respondToReview > missing semver', async () => {
+    reviewMock.findReviewForResponse.mockReturnValueOnce({ kind: 'release' } as any)
+    await respondToReview(
+      user,
+      'modelId',
+      'msro',
+      {
+        decision: Decision.RequestChanges,
+        comment: 'Do better!',
+      },
+      ReviewKind.Release,
+      'semver',
+    )
+
+    expect(logMock.error).toHaveBeenCalledWith(
+      {
+        review: { kind: 'release' },
+      },
+      'Unable to send notification for review response. Cannot find semver.',
+    )
+  })
+
+  test('respondToReview > no reviews found', async () => {
+    reviewMock.findReviewForResponse.mockRejectedValueOnce('Unable to find Review to respond to')
+
+    const result = respondToReview(
+      user,
+      'modelId',
+      'msro',
+      {
+        decision: Decision.RequestChanges,
+        comment: 'Do better!',
+      },
+      ReviewKind.Release,
+      'semver',
+    )
+
+    await expect(result).rejects.toThrowError(`Unable to find Review to respond to`)
+    expect(ResponseModelMock.save).not.toBeCalled()
+  })
+
+  test('checkAccessRequestsApproved > approved access request exists', async () => {
+    reviewMock.findReviewsForAccessRequests.mockReturnValueOnce([{ role: 'msro' }, { role: 'random' }] as any)
+    ResponseModelMock.find.mockReturnValueOnce(['approved'])
+
+    const result = await checkAccessRequestsApproved(['access-1', 'access-2'])
+
+    expect(result).toBe(true)
+    expect(reviewMock.findReviewsForAccessRequests.mock.calls).toMatchSnapshot()
+  })
+
+  test('checkAccessRequestsApproved > no approved access requests with a required role', async () => {
+    reviewMock.findReviewsForAccessRequests.mockReturnValueOnce([{ role: 'random' }] as any)
+
+    const result = await checkAccessRequestsApproved(['access-1', 'access-2'])
+
+    expect(result).toBe(false)
+    expect(reviewMock.findReviewsForAccessRequests.mock.calls).toMatchSnapshot()
+  })
+})

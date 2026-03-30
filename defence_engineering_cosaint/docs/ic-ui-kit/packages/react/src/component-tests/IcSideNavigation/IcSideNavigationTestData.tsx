@@ -1,0 +1,749 @@
+/* eslint-disable @typescript-eslint/no-namespace */
+import React, { ReactElement, useEffect, useState } from "react";
+import {
+  IcButton,
+  IcNavigationGroup,
+  IcNavigationItem,
+  IcSideNavigation,
+  IcBadge,
+  IcSectionContainer,
+  IcDivider,
+} from "../../components";
+import { SlottedSVG } from "../..";
+import { MemoryRouter, NavLink, Route, Routes } from "react-router-dom";
+import { EQUAL } from "../utils/constants";
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      /**
+       * Check the width of an `ic-side-navigation` element in the open and closed states
+       * @param {boolean} open whether the side nav is expected to be open or closed
+       */
+      checkSideNavSize: typeof checkSideNavSize;
+    }
+  }
+}
+
+export const checkSideNavSize = (open: boolean): void => {
+  cy.get("ic-side-navigation")
+    .invoke("width")
+    .should(EQUAL, open ? 320 : 56);
+};
+
+const ReusableSlottedIcon = (): ReactElement => (
+  <SlottedSVG
+    slot="icon"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M12 6.19L17 10.69V18.5H15V12.5H9V18.5H7V10.69L12 6.19ZM12 3.5L2 12.5H5V20.5H11V14.5H13V20.5H19V12.5H22L12 3.5Z"
+      fill="currentColor"
+    />
+  </SlottedSVG>
+);
+
+const AppIcon = (): ReactElement => (
+  <SlottedSVG
+    slot="app-icon"
+    xmlns="http://www.w3.org/2000/svg"
+    height="24px"
+    viewBox="0 0 24 24"
+    width="24px"
+    fill="#000000"
+  >
+    <path d="M0 0h24v24H0V0z" fill="none" />
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5.5-2.5l7.51-3.49L17.5 6.5 9.99 9.99 6.5 17.5zm5.5-6.6c.61 0 1.1.49 1.1 1.1s-.49 1.1-1.1 1.1-1.1-.49-1.1-1.1.49-1.1 1.1-1.1z" />
+  </SlottedSVG>
+);
+
+const SideNavChildren = ({ showDivider = false }): ReactElement => (
+  <>
+    <AppIcon />
+    <IcNavigationItem slot="primary-navigation" href="/" label="Home">
+      <ReusableSlottedIcon />
+    </IcNavigationItem>
+    {showDivider && <IcDivider slot="primary-navigation" />}
+    <IcNavigationItem
+      slot="primary-navigation"
+      href="/"
+      label="This is a very very very very very long label"
+    >
+      <ReusableSlottedIcon />
+    </IcNavigationItem>
+    <IcNavigationItem slot="secondary-navigation" href="/" label="a11y">
+      <SlottedSVG
+        slot="icon"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9H15V22H13V16H11V22H9V9H3V7H21V9Z"
+          fill="currentColor"
+        />
+      </SlottedSVG>
+    </IcNavigationItem>
+  </>
+);
+
+export const BasicSideNav = (): ReactElement => (
+  <IcSideNavigation
+    appTitle="ApplicationName"
+    shortAppTitle="ACME"
+    version="v0.0.0"
+    status="alpha"
+    disableAutoParentStyling
+  >
+    <SideNavChildren />
+  </IcSideNavigation>
+);
+
+export const ExpandedSideNav = (): ReactElement => (
+  <IcSideNavigation
+    appTitle="ApplicationName"
+    version="v0.0.0"
+    status="alpha"
+    expanded
+  >
+    <SideNavChildren />
+  </IcSideNavigation>
+);
+
+export const DynamicExpandedSideNav = (): ReactElement => {
+  const [expanded, setExpanded] = useState(true);
+  const expandedClickHandler = () => {
+    setExpanded(true);
+  };
+  const collapsedButtonClickHandler = () => {
+    setExpanded(false);
+  };
+  return (
+    <div style={{ display: "flex", height: "100%" }}>
+      <IcSideNavigation
+        appTitle="ACME"
+        version="v0.0.0"
+        status="BETA"
+        expanded={expanded}
+        disableAutoParentStyling
+      >
+        <SlottedSVG
+          slot="app-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          height="24px"
+          viewBox="0 0 24 24"
+          width="24px"
+          fill="#000000"
+        >
+          <path d="M0 0h24v24H0V0z" fill="none" />
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5.5-2.5l7.51-3.49L17.5 6.5 9.99 9.99 6.5 17.5zm5.5-6.6c.61 0 1.1.49 1.1 1.1s-.49 1.1-1.1 1.1-1.1-.49-1.1-1.1.49-1.1 1.1-1.1z" />
+        </SlottedSVG>
+        <IcNavigationItem
+          slot="primary-navigation"
+          href="/"
+          label="Home"
+          selected
+        >
+          <SlottedSVG
+            slot="icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 6.19L17 10.69V18.5H15V12.5H9V18.5H7V10.69L12 6.19ZM12 3.5L2 12.5H5V20.5H11V14.5H13V20.5H19V12.5H22L12 3.5Z"
+              fill="currentColor"
+            />
+          </SlottedSVG>
+        </IcNavigationItem>
+        <IcNavigationItem slot="secondary-navigation" href="/" label="Settings">
+          <SlottedSVG
+            slot="icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 6.19L17 10.69V18.5H15V12.5H9V18.5H7V10.69L12 6.19ZM12 3.5L2 12.5H5V20.5H11V14.5H13V20.5H19V12.5H22L12 3.5Z"
+              fill="currentColor"
+            />
+          </SlottedSVG>
+        </IcNavigationItem>
+      </IcSideNavigation>
+      <main style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+        <IcButton
+          id="expand-btn"
+          variant="primary"
+          onClick={expandedClickHandler}
+        >
+          Expand
+        </IcButton>
+        <IcButton
+          id="collapse-btn"
+          variant="primary"
+          onClick={collapsedButtonClickHandler}
+        >
+          Collapse
+        </IcButton>
+      </main>
+    </div>
+  );
+};
+
+export const SlottedNavItemsDynamicExpandedSideNav = (): ReactElement => {
+  const [expanded, setExpanded] = useState(true);
+  const expandedClickHandler = () => {
+    setExpanded(true);
+  };
+  const collapsedButtonClickHandler = () => {
+    setExpanded(false);
+  };
+  return (
+    <div style={{ display: "flex", height: "100%" }}>
+      <IcSideNavigation
+        appTitle="ApplicationName"
+        version="v0.0.0"
+        status="alpha"
+        expanded={expanded}
+        disableAutoParentStyling
+      >
+        <SlottedNavItemsChildren />
+      </IcSideNavigation>
+      <main style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+        <IcButton
+          id="expand-btn"
+          variant="primary"
+          onClick={expandedClickHandler}
+        >
+          Expand
+        </IcButton>
+        <IcButton
+          id="collapse-btn"
+          variant="primary"
+          onClick={collapsedButtonClickHandler}
+        >
+          Collapse
+        </IcButton>
+      </main>
+    </div>
+  );
+};
+
+export const GroupedSideNav = (): ReactElement => (
+  <IcSideNavigation
+    appTitle="ApplicationName"
+    shortAppTitle="ACME"
+    version="v0.0.0"
+    status="alpha"
+    disableAutoParentStyling
+  >
+    <SideNavChildren />
+    <IcNavigationGroup
+      slot="primary-navigation"
+      label="Second navigation group"
+      expandable
+    >
+      <IcNavigationItem label="Different navigation" href="/">
+        <SlottedSVG
+          slot="icon"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M23 8C23 9.1 22.1 10 21 10C20.82 10 20.65 9.98 20.49 9.93L16.93 13.48C16.98 13.64 17 13.82 17 14C17 15.1 16.1 16 15 16C13.9 16 13 15.1 13 14C13 13.82 13.02 13.64 13.07 13.48L10.52 10.93C10.36 10.98 10.18 11 10 11C9.82 11 9.64 10.98 9.48 10.93L4.93 15.49C4.98 15.65 5 15.82 5 16C5 17.1 4.1 18 3 18C1.9 18 1 17.1 1 16C1 14.9 1.9 14 3 14C3.18 14 3.35 14.02 3.51 14.07L8.07 9.52C8.02 9.36 8 9.18 8 9C8 7.9 8.9 7 10 7C11.1 7 12 7.9 12 9C12 9.18 11.98 9.36 11.93 9.52L14.48 12.07C14.64 12.02 14.82 12 15 12C15.18 12 15.36 12.02 15.52 12.07L19.07 8.51C19.02 8.35 19 8.18 19 8C19 6.9 19.9 6 21 6C22.1 6 23 6.9 23 8Z"
+            fill="currentColor"
+          />
+        </SlottedSVG>
+      </IcNavigationItem>
+    </IcNavigationGroup>
+  </IcSideNavigation>
+);
+
+export const StaticSideNav = (): ReactElement => (
+  <IcSideNavigation
+    appTitle="ApplicationName"
+    version="v0.0.0"
+    status="alpha"
+    expanded
+    static
+    disableAutoParentStyling
+  >
+    <SideNavChildren />
+  </IcSideNavigation>
+);
+
+const SlottedNavItemsChildren = (): ReactElement => (
+  <>
+    <AppIcon />
+    <IcNavigationItem slot="primary-navigation">
+      <a
+        slot="navigation-item"
+        className="active"
+        href="/child-item-2"
+        aria-label="Daily Tippers"
+      >
+        <ReusableSlottedIcon />
+        Daily Tippers
+      </a>
+    </IcNavigationItem>
+    <IcNavigationGroup
+      slot="primary-navigation"
+      label="Second navigation group"
+      expandable
+    >
+      <IcNavigationItem>
+        <a
+          slot="navigation-item"
+          href="/child-item-2"
+          aria-label="Daily Tippers"
+        >
+          <ReusableSlottedIcon />
+          <IcBadge label="1" slot="badge" variant="light" />
+          Daily Tippers
+        </a>
+      </IcNavigationItem>
+    </IcNavigationGroup>
+    <IcNavigationItem slot="secondary-navigation">
+      <a slot="navigation-item" href="/bar" aria-label="bar">
+        <ReusableSlottedIcon />
+        bar
+      </a>
+    </IcNavigationItem>
+  </>
+);
+
+export const SlottedItemsExpandedSideNav = (): ReactElement => (
+  <IcSideNavigation
+    appTitle="ApplicationName"
+    version="v0.0.0"
+    status="alpha"
+    expanded
+    disableAutoParentStyling
+  >
+    <SlottedNavItemsChildren />
+  </IcSideNavigation>
+);
+
+export const SlottedAppTitleSideNav = (): ReactElement => (
+  <IcSideNavigation version="v0.0.0" status="alpha" disableAutoParentStyling>
+    <a href="/" slot="app-title">
+      Application Name
+    </a>
+    <SlottedNavItemsChildren />
+  </IcSideNavigation>
+);
+
+export const SlottedDividerSideNav = (): ReactElement => (
+  <IcSideNavigation
+    appTitle="ApplicationName"
+    shortAppTitle="ACME"
+    version="v0.0.0"
+    status="alpha"
+    disableAutoParentStyling
+  >
+    <SideNavChildren showDivider />
+  </IcSideNavigation>
+);
+
+export const LongPropsSideNav = (): ReactElement => (
+  <IcSideNavigation
+    appTitle="ApplicationName"
+    shortAppTitle="ACME"
+    version="v0.0.0-alpha-beta-gamma-delta-release.01"
+    status="Alpha-BETA-GAMMA-DELTA"
+    disableAutoParentStyling
+  >
+    <SideNavChildren />
+  </IcSideNavigation>
+);
+
+export const DisableTopBarBehaviourSideNav = (): ReactElement => (
+  <IcSideNavigation
+    appTitle="ACME"
+    version="v0.0.0"
+    status="BETA"
+    disableAutoParentStyling
+    disableTopBarBehaviour
+  >
+    <IcNavigationItem slot="primary-navigation" href="/" label="Home" selected>
+      <IcBadge label="1" slot="badge" variant="light" />
+      <ReusableSlottedIcon />
+    </IcNavigationItem>
+    <IcNavigationGroup
+      slot="primary-navigation"
+      label="Navigation Group"
+      expandable
+    >
+      <IcNavigationItem href="/" label="Item 1">
+        <ReusableSlottedIcon />
+      </IcNavigationItem>
+    </IcNavigationGroup>
+    <IcNavigationItem slot="secondary-navigation" href="/" label="Settings">
+      <ReusableSlottedIcon />
+    </IcNavigationItem>
+  </IcSideNavigation>
+);
+
+export const CloseOnNavItemClickSideNav = (): ReactElement => (
+  <IcSideNavigation
+    appTitle="ACME"
+    version="v0.0.0"
+    status="BETA"
+    closeOnNavItemClick
+    expanded
+  >
+    <IcNavigationItem slot="primary-navigation" label="Home" selected href="#">
+      <IcBadge label="1" slot="badge" variant="light" />
+      <ReusableSlottedIcon />
+    </IcNavigationItem>
+    <IcNavigationItem slot="primary-navigation">
+      <a slot="navigation-item" href="#">
+        <ReusableSlottedIcon />
+        Daily Tippers
+      </a>
+    </IcNavigationItem>
+    <IcNavigationGroup
+      slot="primary-navigation"
+      label="Navigation Group"
+      expandable
+    >
+      <IcNavigationItem label="Item 1" href="#">
+        <ReusableSlottedIcon />
+      </IcNavigationItem>
+    </IcNavigationGroup>
+    <IcNavigationItem slot="secondary-navigation" label="Settings" href="#">
+      <ReusableSlottedIcon />
+    </IcNavigationItem>
+  </IcSideNavigation>
+);
+
+export const ReactRouterSideNav = () => {
+  return (
+    <MemoryRouter initialEntries={["/"]}>
+      <div style={{ display: "flex" }}>
+        <IcSideNavigation
+          version="v0.0.7"
+          status="Alpha"
+          appTitle="ACME coffee shop"
+          collapsedIconLabels
+        >
+          <NavLink to="/" slot="app-title">
+            ACME coffee shop
+          </NavLink>
+          <SlottedSVG
+            slot="app-icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 6.19L17 10.69V18.5H15V12.5H9V18.5H7V10.69L12 6.19ZM12 3.5L2 12.5H5V20.5H11V14.5H13V20.5H19V12.5H22L12 3.5Z"
+              fill="currentColor"
+            />
+          </SlottedSVG>
+          <IcNavigationGroup
+            slot="primary-navigation"
+            label="Test with lots of text so this label goes over multiple lines"
+            expandable
+          >
+            <IcNavigationItem>
+              <NavLink to="/" slot="navigation-item">
+                <SlottedSVG
+                  slot="icon"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 6.19L17 10.69V18.5H15V12.5H9V18.5H7V10.69L12 6.19ZM12 3.5L2 12.5H5V20.5H11V14.5H13V20.5H19V12.5H22L12 3.5Z"
+                    fill="currentColor"
+                  />
+                </SlottedSVG>
+                Home is where the heart is
+              </NavLink>
+            </IcNavigationItem>
+            <IcNavigationItem>
+              <NavLink to="/search" slot="navigation-item">
+                <SlottedSVG
+                  slot="icon"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 6.19L17 10.69V18.5H15V12.5H9V18.5H7V10.69L12 6.19ZM12 3.5L2 12.5H5V20.5H11V14.5H13V20.5H19V12.5H22L12 3.5Z"
+                    fill="currentColor"
+                  />
+                </SlottedSVG>
+                Search
+              </NavLink>
+            </IcNavigationItem>
+            <IcNavigationItem>
+              <NavLink to="/drinks" slot="navigation-item">
+                <SlottedSVG
+                  slot="icon"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 6.19L17 10.69V18.5H15V12.5H9V18.5H7V10.69L12 6.19ZM12 3.5L2 12.5H5V20.5H11V14.5H13V20.5H19V12.5H22L12 3.5Z"
+                    fill="currentColor"
+                  />
+                </SlottedSVG>
+                Drinks
+              </NavLink>
+            </IcNavigationItem>
+            <IcNavigationItem>
+              <NavLink to="/coffee-maker" slot="navigation-item">
+                <SlottedSVG
+                  slot="icon"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 6.19L17 10.69V18.5H15V12.5H9V18.5H7V10.69L12 6.19ZM12 3.5L2 12.5H5V20.5H11V14.5H13V20.5H19V12.5H22L12 3.5Z"
+                    fill="currentColor"
+                  />
+                </SlottedSVG>
+                Equipment
+              </NavLink>
+            </IcNavigationItem>
+          </IcNavigationGroup>
+          <IcNavigationItem>
+            <NavLink to="/drinks" slot="navigation-item">
+              <SlottedSVG
+                slot="icon"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 6.19L17 10.69V18.5H15V12.5H9V18.5H7V10.69L12 6.19ZM12 3.5L2 12.5H5V20.5H11V14.5H13V20.5H19V12.5H22L12 3.5Z"
+                  fill="currentColor"
+                />
+              </SlottedSVG>
+              Drinks
+            </NavLink>
+          </IcNavigationItem>
+        </IcSideNavigation>
+        <main>
+          <IcSectionContainer>
+            <Routes>
+              <Route path="/" element={<p>This is the Home page</p>} />
+              <Route path="/search" element={<p>Search</p>} />
+              <Route path="/drinks" element={<p>Drinks</p>} />
+              <Route path="/coffee-maker" element={<p>Coffee Maker</p>} />
+              <Route path="/settings" element={<p>Settings</p>} />
+            </Routes>
+          </IcSectionContainer>
+        </main>
+      </div>
+    </MemoryRouter>
+  );
+};
+
+export const MultiLevelSideNav = () => {
+  const [primaryNavItems, setPrimaryNavItems] = useState(
+    <FirstLevelPrimaryNavItems />
+  );
+  const [secondaryNavItems, setSecondaryNavItems] = useState(null);
+
+  useEffect(() => {
+    if (!secondaryNavItems) {
+      setSecondaryNavItems(
+        <FirstLevelSecondaryNavItems
+          setPrimaryNavItems={setPrimaryNavItems}
+          setSecondaryNavItems={setSecondaryNavItems}
+        />
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setPrimaryNavItems, setSecondaryNavItems]);
+
+  return (
+    <MemoryRouter initialEntries={["/"]}>
+      <IcSideNavigation
+        version="v0.0.7"
+        status="Alpha"
+        appTitle="ACME coffee shop"
+      >
+        {primaryNavItems}
+        {secondaryNavItems}
+      </IcSideNavigation>
+    </MemoryRouter>
+  );
+};
+export const FirstLevelPrimaryNavItems = () => {
+  return (
+    <>
+      <IcNavigationItem slot="primary-navigation" href="/" label="Home">
+        <ReusableSlottedIcon />
+      </IcNavigationItem>
+      <IcDivider slot="primary-navigation" />
+      <IcNavigationItem slot="primary-navigation">
+        <NavLink to="/drinks" slot="navigation-item">
+          <SlottedSVG
+            slot="icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 6.19L17 10.69V18.5H15V12.5H9V18.5H7V10.69L12 6.19ZM12 3.5L2 12.5H5V20.5H11V14.5H13V20.5H19V12.5H22L12 3.5Z"
+              fill="currentColor"
+            />
+          </SlottedSVG>
+          Drinks
+        </NavLink>
+      </IcNavigationItem>
+    </>
+  );
+};
+
+export const FirstLevelSecondaryNavItems = (props: {
+  setPrimaryNavItems?: any;
+  setSecondaryNavItems?: any;
+}) => {
+  const { setPrimaryNavItems, setSecondaryNavItems } = props;
+
+  const changeNavHandler = () => {
+    setPrimaryNavItems(
+      <SecondLevelPrimaryNavItems
+        setPrimaryNavItems={setPrimaryNavItems}
+        setSecondaryNavItems={setSecondaryNavItems}
+      />
+    );
+    setSecondaryNavItems(<SecondLevelSecondaryNavItems />);
+  };
+
+  return (
+    <>
+      <IcNavigationItem
+        slot="secondary-navigation"
+        href="/settings"
+        label="Settings"
+      >
+        <ReusableSlottedIcon />
+      </IcNavigationItem>
+      <IcNavigationItem
+        slot="secondary-navigation"
+        label="Change nav"
+        onClick={changeNavHandler}
+      >
+        <SlottedSVG
+          slot="icon"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+        >
+          <path d="M21,9L17,5V8H10V10H17V13M7,11L3,15L7,19V16H14V14H7V11Z" />
+        </SlottedSVG>
+      </IcNavigationItem>
+    </>
+  );
+};
+
+export const SecondLevelPrimaryNavItems = (props: {
+  setPrimaryNavItems: any;
+  setSecondaryNavItems: any;
+}) => {
+  const { setPrimaryNavItems, setSecondaryNavItems } = props;
+
+  const changeNavHandler = () => {
+    setPrimaryNavItems(<FirstLevelPrimaryNavItems />);
+    setSecondaryNavItems(<FirstLevelSecondaryNavItems />);
+  };
+  return (
+    <>
+      <BackButton onClick={changeNavHandler} />
+      <IcNavigationItem slot="primary-navigation">
+        <NavLink to="/drinks/coffee" slot="navigation-item">
+          <ReusableSlottedIcon />
+          Coffee
+        </NavLink>
+      </IcNavigationItem>
+      <IcNavigationItem
+        slot="primary-navigation"
+        href="/drinks/tea"
+        label="Tea"
+      >
+        <ReusableSlottedIcon />
+      </IcNavigationItem>
+      <IcNavigationItem
+        slot="primary-navigation"
+        href="/drinks/water"
+        label="Water"
+      >
+        <ReusableSlottedIcon />
+      </IcNavigationItem>
+    </>
+  );
+};
+
+export const SecondLevelSecondaryNavItems = () => {
+  return (
+    <>
+      <IcNavigationItem
+        slot="secondary-navigation"
+        href="/settings"
+        label="Settings"
+      >
+        <NavLink to="/settings" slot="navigation-item">
+          Settings
+        </NavLink>
+        <ReusableSlottedIcon />
+      </IcNavigationItem>
+      <IcDivider slot="secondary-navigation" />
+      <IcNavigationItem
+        slot="secondary-navigation"
+        href="/account"
+        label="Account"
+      >
+        <ReusableSlottedIcon />
+      </IcNavigationItem>
+    </>
+  );
+};
+
+const BackButton = (props: { onClick: () => void }) => {
+  const { onClick } = props;
+  return (
+    <>
+      <IcNavigationItem onClick={onClick} slot="primary-navigation">
+        <NavLink to="/" viewTransition>
+          <ReusableSlottedIcon />
+          Back to Home
+        </NavLink>
+      </IcNavigationItem>
+      <IcDivider slot="primary-navigation" />
+    </>
+  );
+};

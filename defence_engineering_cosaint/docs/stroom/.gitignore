@@ -1,0 +1,64 @@
+.temp
+.DS_Store
+**/target/
+**/out/
+**/build/
+**/bin/
+*.swp
+node_modules
+_book
+.gradle/
+.project
+.classpath
+classes/
+generated/
+libs/
+jars/
+bin/
+embedmysql/
+.settings/
+hs_err_pid*.log
+stroom-util-build.properties
+
+stroom-core/src/test/resources/transientContentPacks/
+
+# Cached content store GIT repos
+content-cache/
+
+local.yml*
+local2.yml*
+local3.yml*
+proxy-local.yml*
+proxy-remote.yml*
+!local.yml.sh
+
+# IntelliJ
+# Here we ignore everything and create exceptions for what we want to share.
+*/out/
+*.iml
+.idea/*
+!.idea/codeStyles
+!.idea/copyright
+!.idea/inspectionProfiles
+!.idea/runConfigurations
+!.idea/icon.png
+!.idea/checkstyle-idea.xml
+# END OF IntelliJ
+
+#Gradle stuff (from https://github.com/github/gitignore/blob/master/Gradle.gitignore)
+.gradle
+/build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Cache of project
+.gradletasknamecache
+
+# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
+# gradle/wrapper/gradle-wrapper.properties
+
+#END OF Gradle stuff

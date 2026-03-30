@@ -1,0 +1,40 @@
+# Docker artefacts
+Dockerfile
+.dockerignore
+
+# Git artefacts
+.git
+.gitignore
+
+# Dependency directories
+node_modules/
+
+# Test artefacts
+.pytest_cache
+
+# Byte-compiled / optimized / DLL files
+**/__pycache__/
+**/*.py[cod]
+**$py.class
+
+backend/.git
+backend/coverage
+backend/dist
+backend/node_modules
+backend/docs/backenddocsvenv
+backend/docs/_build
+backend/docs/python-docs
+backend/test
+
+frontend/.git
+frontend/.next
+frontend/.swc
+frontend/.turbo
+frontend/cache
+frontend/coverage
+frontend/cypress/screenshots/
+frontend/cypress/downloads/
+frontend/node_modules
+frontend/test
+
+README.md

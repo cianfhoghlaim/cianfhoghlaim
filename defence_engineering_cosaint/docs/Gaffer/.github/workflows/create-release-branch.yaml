@@ -1,0 +1,54 @@
+name: Create Release Branch
+
+on:
+  milestone:
+    types:
+    - closed
+
+env:
+  artifactId: gaffer2
+  MAVEN_OPTS: -Dmaven.wagon.http.retryHandler.count=3 -Dmaven.wagon.httpconnectionManager.ttlSeconds=25
+
+jobs:
+  create-release-branch:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout develop
+      uses: actions/checkout@v4
+      with:
+        ref: develop
+        token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+        fetch-depth: 0
+
+    - name: Set version from milestone
+      run: echo "RELEASE_VERSION=$(echo ${{ github.event.milestone.title }})" >> $GITHUB_ENV
+
+    - name: Set release branch
+      run: echo "BRANCH_NAME=$(echo release/"${{ env.RELEASE_VERSION }}" )" >> $GITHUB_ENV
+
+    - name: Set up Github credentials
+      run: |
+        git config user.name github-actions[bot]
+        git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+
+    - name: Update versions
+      run: |
+        mvn versions:set-property -Dproperty=revision -DnewVersion=${RELEASE_VERSION} -DgenerateBackupPoms=false
+
+    - name: Push to release branch
+      run: |
+        git checkout -b $BRANCH_NAME
+        git commit -a -m "prepare release $artifactId-$RELEASE_VERSION"
+        git push --set-upstream origin $BRANCH_NAME
+
+    - name: Tag release branch
+      run: |
+        git tag gaffer2-$RELEASE_VERSION
+        git push origin --tags
+
+    - name: Create PR to master
+      run: |
+        gh pr create -B master -H $BRANCH_NAME --title 'Merge release into master branch' --body 'Created by GH Action'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

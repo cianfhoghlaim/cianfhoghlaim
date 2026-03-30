@@ -1,0 +1,764 @@
+/*
+ * Copyright 2016-2025 Crown Copyright
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+buildscript {
+    ext.jooqVer = '3.20.1'
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+
+//        // A fork of https://github.com/wfhartford/gradle-dependency-analyze that works with Java 10
+//        classpath 'stroom:gradle-dependency-analyze:v2.2.6'
+
+        // The following are required to put JAXB on the Gradle classpath for the purpose of JOOQ code generation in J9+.
+        // Later versions of the JOOQ Gradle plugin should make this unnecessary.
+        // Using beta versions of jaxb libs as they resolve the split pkg problem between jaxb-core and jaxb-runtime
+        //classpath 'javax.activation:activation:1.1.1'
+        //classpath 'javax.xml.bind:jaxb-api:2.3.1'
+        //classpath 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
+
+        // Needed for parsing local.yml to get the jdbcUrl
+        classpath 'org.yaml:snakeyaml:2.6'
+    }
+    // This was borrowed from
+    // https://github.com/etiennestuder/gradle-jooq-plugin/blob/main/example/specify_jooq_config_xml_schema_version/build.gradle
+    // and ensures we are only using one jooq ver throughout
+    configurations['classpath'].resolutionStrategy.eachDependency {
+        if (requested.group.startsWith('org.jooq') && requested.name.startsWith('jooq')) {
+            // set jOOQ version used at configuration time to enforce a specific jOOQ config XML schema version
+            useVersion jooqVer
+        }
+    }
+}
+
+plugins {
+    alias libs.plugins.java.library
+
+    // Plugin for downloading content from the 'net
+    alias libs.plugins.download apply false
+
+    // Plugin for producing a tree of task dependencies, run task 'taskTree'
+    alias libs.plugins.task.tree apply true
+
+    alias libs.plugins.shadow apply false
+
+    alias libs.plugins.jooq apply false
+
+    alias libs.plugins.flyway apply false
+}
+
+apply plugin: 'de.undercouch.download'
+
+ext.javaLanguageVersion = 25
+
+// Adoptium also covers Temurin
+ext.javaVendor = JvmVendorSpec.ADOPTIUM
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(javaLanguageVersion)
+        vendor = javaVendor
+    }
+}
+
+//if the project has a value for the passed property (i.e from the cmd line via -PpropName=xxx)
+//use that, else use a default value
+ext.getPropertyOrDefault = { propName, defaultValue ->
+    def val
+    if (project.hasProperty(propName)
+            && project.getProperty(propName) != "unspecified"
+            && project.getProperty(propName) != "") {
+        val = project.getProperty(propName)
+        logger.info("Using property [$propName] with value [$val]")
+    } else {
+        val = defaultValue
+        logger.info("Property [$propName] has no value, using default value [$val]")
+    }
+    return val
+}
+
+// Try to determine the jdbc url from local.yml so that when using
+// Jooq code generator with a locally named database (from SetupDevEnv),
+// Jooq will point to the correct DB.
+def localYamlFile = new File("${rootDir}/local.yml")
+//println "YAML file: ${localYamlFile}"
+ext.dbSchema = 'stroom'
+ext.jdbcUrl = 'jdbc:mysql://localhost:3307/stroom?useUnicode=yes&characterEncoding=UTF-8'
+if (localYamlFile.exists()) {
+    def localYaml = new org.yaml.snakeyaml.Yaml().load(localYamlFile.newInputStream())
+    String yamlVal = localYaml?.appConfig?.commonDbDetails?.connection?.jdbcDriverUrl
+    //println "yamlVal: ${yamlVal}"
+    if (yamlVal != null) {
+        // Strip all the param substitution stuff
+        yamlVal = yamlVal.replaceAll('^\\$\\{STROOM_JDBC_DRIVER_URL:-', '')
+                .replaceAll('\\}$', '')
+        ext.jdbcUrl = yamlVal
+        // Extract the schema name from the url
+        ext.dbSchema = (yamlVal =~ /jdbc:mysql:\/\/[^:]+:[0-9]+\/([^?]+)\?.*/)[0][1]
+        println "Using jdbc url [${jdbcUrl}] and dbSchema [${dbSchema}] from local.yml"
+    }
+}
+
+// Convert the abs root project dir into a string that can be used as a dir
+// to allow us to have a dir for multiple repo instances that don't conflict
+// e.g. 'home+dev+git_work+gchq+stroom'
+ext.rootProjectAbsPathStr = project.rootProject.rootDir
+        .toPath()
+        .toAbsolutePath()
+        .toString()
+        .replaceAll("^/", "")
+        .replaceAll("/", "+")
+
+ext.gwtCompilerProps = [
+        mainClass: 'stroom.gwt.GwtCompilerWrapper',
+        minHeap  : getPropertyOrDefault('gwtCompilerMinHeap', '50M'),
+        maxHeap  : getPropertyOrDefault('gwtCompilerMaxHeap', '4G'),
+        workers  : getPropertyOrDefault('gwtCompilerWorkers', '5')
+]
+
+//version numbers for libs that share version numbers, e.g. dropwizard-*, or for github repo release versions
+ext.versions = [
+        //----------Stroom-----------------
+        stroom: getPropertyOrDefault('version', 'SNAPSHOT').replaceFirst(/^v/, ""),
+]
+
+// Defines the content packs that will be downloaded/copied for SetupSampleData,
+// docker builds and zip distributions
+def contentPackDefinitionFile = "content-packs.json"
+ext.contentPackDefinitionFile = contentPackDefinitionFile
+
+// Directory potentially shared with other stroom version builds to hold the immutable downloaded
+// content pack zips. Packs will be downloaded to here if they don't exist or copied if they do.
+def contentPackDownloadDir = "${System.properties['user.home']}/.stroom/contentPackDownload"
+ext.contentPackDownloadDir = contentPackDownloadDir
+
+//defines a list of gradle projects that we will publish with maven
+def projectsToBePublished = subprojects.findAll { project ->
+    project.path in [
+            // TODO add in query and expression so others can use them
+            //':stroom-util',
+            //':stroom-util-shared',
+    ]
+}
+
+//list to hold details of any failed test classes
+def failedTestReportFiles = []
+
+//Configuration applicable to all projects
+allprojects {
+    // Make doclint be quiet - we don't care about JavaDoc warnings.
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+        options.addBooleanOption('html5', true)
+    }
+}
+
+// Variable to capture the version of slf4j defined in the dropwizard-dependencies, so
+// we can use it to set the version of slf4j when we do a dependency
+// substitution with log4j
+def dropwizardBomSlf4jVersion = null
+
+//Configuration applicable to all sub projects
+subprojects {
+    //println "Configuring subproject ${project.name}"
+
+    apply plugin: 'java-library'
+    apply plugin: 'checkstyle'
+    apply plugin: 'idea'
+//    apply plugin: "org.javamodularity.moduleplugin"
+//    apply plugin: 'org.kordamp.gradle.jdeps'
+//    apply plugin: 'ca.cutterslade.analyze'
+//    apply plugin: 'nebula.lint'
+//
+//    gradleLint {
+//        rules +=  'unused-dependency'
+////        rules +=  'all-dependency'
+//    }
+
+    // This bit makes all sub projects have access to the BOMs for the dependency versions
+    // Don't add them for the lucene shaded jar
+    if (project.name != "lucene553-shaded") {
+        dependencies {
+            implementation platform(libs.dropwizard.dependencies)
+            implementation platform(libs.dropwizard.bom)
+            implementation platform(libs.aws.bom)
+
+            testImplementation platform(libs.junit.bom)
+        }
+    }
+
+    //println project.getConfigurations().getByName("implementation").getAllDependencies()
+
+    configurations {
+
+        // ensure deps don't bring any logging implementations with them as this will
+        // conflict with logback. Also replace any log4j deps with log4j-over-slf4j
+        // so dependency jars work with slf4j
+        all {
+            // dropwizard-dependencies comes with junit 4 which we don't want
+            exclude group: "junit", module: "junit"
+            exclude group: "org.slf4j", module: "slf4j-log4j12"
+            exclude group: "log4j", module: "log4j"
+            exclude group: "commons-logging", module: "commons-logging"
+//            exclude group: "javax.validation", module: "validation-api"
+
+            resolutionStrategy {
+                // A very hacky way of finding out what version of slf4j is in the dropwizard BOM
+                // TODO make it less hacky
+                if (dropwizardBomSlf4jVersion == null) {
+                    eachDependency { DependencyResolveDetails details ->
+                        if (dropwizardBomSlf4jVersion == null) {
+                            if (details.requested.group == 'org.slf4j' && details.requested.name == "log4j-over-slf4j") {
+                                //if (details.requested.group == 'org.slf4j') {
+                                dropwizardBomSlf4jVersion = details.getTarget().getVersion()
+                                logger.info("Slf4j version = $dropwizardBomSlf4jVersion ${details.requested}")
+                            }
+                        }
+                    }
+                }
+
+                dependencySubstitution {
+                    //println "Slf4j version = $dropwizardBomSlf4jVersion"
+                    //substitute module('aopalliance:aopalliance') using module("org.glassfish.hk2.external:aopalliance-repackaged:3.0.5")
+                    //substitute module('com.fasterxml.jackson.datatype:jackson-datatype-joda') using module("com.fasterxml.jackson.datatype:jackson-datatype-joda:2.13.1")
+                    //substitute module("com.fasterxml.jackson.core:jackson-databind") using module('com.fasterxml.jackson.core:jackson-databind:2.10.5.1') withoutClassifier()
+                    substitute module('com.google.code.findbugs:jsr305') using module("javax.annotation:javax.annotation-api:1.3.2")
+//                    substitute module("io.dropwizard:dropwizard-core") using files("libs/dropwizard-core-2.0.28.jar")
+                    //substitute module('javax.inject:javax.inject') using module('org.glassfish.hk2.external:jakarta.inject:2.6.1')
+                    //substitute module('javax.inject:javax.inject') using module('org.glassfish.hk2.external:jakarta.inject:2.6.1')
+                    //substitute module('javax.activation:javax.activation-api') using module('jakarta.activation:jakarta.activation-api:1.2.2')
+                    //substitute module('jakarta.activation:jakarta.activation-api') using module('javax.activation:javax.activation-api:1.2.0')
+                    //substitute module('javax.activation:activation') using module('javax.activation:javax.activation-api:1.2.0')
+                    //substitute module('log4j:log4j') using module("org.slf4j:log4j-over-slf4j:1.7.25")
+                    substitute module('log4j:log4j') using module("org.slf4j:log4j-over-slf4j:$dropwizardBomSlf4jVersion")
+                    substitute module('commons-io:commons-io') using module("${libs.commons.io.get().toString()}")
+
+                    // These three are a fudge. We should get it from the dropwiz bom but dropwizard-jersey pulls in 2.33 and metrics-jersey pulls in 2.35. IJ seems to get confused and put both on the classpath. See dependencySubstitution below.
+                    //substitute module('org.glassfish.jersey.core:jersey-common') using module("org.glassfish.jersey.core:jersey-common:$versions.jersey")
+                    //substitute module('org.glassfish.jersey.core:jersey-server') using module("org.glassfish.jersey.core:jersey-server:$versions.jersey")
+                    //substitute module('org.glassfish.jersey.core:jersey-client') using module("org.glassfish.jersey.core:jersey-client:$versions.jersey")
+                }
+
+                // Stop stroom libs from dragging in a different version of dropwizard
+                // Currently commented out in the hope the dropwiz BOM will solve things
+                //eachDependency { DependencyResolveDetails details ->
+                //if (details.requested.group == 'io.dropwizard') {
+                //details.useVersion versions.dropwizard
+                //}
+                //if (details.requested.group == 'io.dropwizard.metrics') {
+                //details.useVersion versions.dropwizard_metrics
+                //}
+                //}
+            }
+        }
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    test {
+        useJUnitPlatform()
+
+        // set heap size for the test JVM(s)
+//        minHeapSize = "128m"
+//        maxHeapSize = "8G"
+
+        // Run test classes in N different JVMs
+        // The internet seems to suggest the divide by 2, not sure why, maybe
+        // not to exhaust all cores. Removing it doesn't seem to speed it up.
+        maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+        // maxParallelForks = Runtime.runtime.availableProcessors() ?: 1
+
+        beforeSuite { descriptor ->
+            if (descriptor?.className?.trim())
+                println "Executing test class ${descriptor.className}"
+        }
+
+        beforeTest { descriptor ->
+            if (descriptor.className == "stroom.search.impl.TestSearchResultCreation") {
+                println "  Executing test ${descriptor.className}.${descriptor.name}"
+            }
+        }
+
+        // Report duration of tests that take over 1s
+        afterTest { descriptor, result ->
+            def durationSecs = (result.endTime - result.startTime) / 1000
+            if (durationSecs > 1) {
+                println "  Test ${descriptor.className}.${descriptor.name}, took longer than 1s, result: ${result.resultType}, duration: ${durationSecs}s"
+            }
+        }
+
+        reports.html.outputLocation = file("${reporting.baseDirectory.getAsFile().get()}/${name}")
+
+        afterSuite { descriptor, result ->
+            if (descriptor != null
+                    && descriptor.className != null
+                    && result.resultType.toString() == "FAILURE") {
+
+                // test class failed so add its project info and test report file to a global list for
+                // processing at the end of the build
+                def reportFileName = "${reports.junitXml.outputLocation}/TEST-${descriptor.className}.xml"
+                def reportFile = file(reportFileName)
+                def pair = new Tuple2("${project.name} ${descriptor.name}", reportFile)
+                failedTestReportFiles.add(pair)
+            }
+        }
+
+        // Use full logging for test exceptions so we can see where the failure occurred
+        testLogging {
+            events "failed"
+            exceptionFormat = 'full'
+            showStackTraces = true
+        }
+    }
+
+    clean {
+        // clear out the 'out' dirs used by intelliJ
+        delete "out"
+    }
+
+    tasks.register('allDeps', DependencyReportTask) {}
+    tasks.register('allDepInsight', DependencyInsightReportTask) {}
+
+//    // These lines pull the integration test task into our build process.
+//    tasks.check.dependsOn integrationTest
+//    tasks.integrationTest.mustRunAfter test
+
+    afterEvaluate {
+//        repositories {
+//        }
+//
+//        compileJava {
+//            inputs.property("moduleName", moduleName)
+//            doFirst {
+//                options.compilerArgs = [
+//                        '--module-path', classpath.asPath,
+//                ]
+//                classpath = files()
+//            }
+//        }
+//
+//        compileTestJava {
+//            inputs.property("moduleName", moduleName)
+//            doFirst {
+//                options.compilerArgs = [
+//                        '--module-path', classpath.asPath,
+////                        '--add-modules', 'junit',
+////                        '--add-reads', "$moduleName=junit",
+//                        '--patch-module', "$moduleName=" + files(sourceSets.test.java.srcDirs).asPath,
+//                ]
+//                classpath = files()
+//            }
+//        }
+//
+//        compileTestJava {
+//            inputs.property("moduleName", moduleName)
+//            doFirst {
+//                options.compilerArgs = [
+//                        '--module-path', classpath.asPath,
+////                        '--add-modules', 'ALL-MODULE-PATH',
+//                        '--add-modules', 'org.junit.jupiter.api',  // junit5 automatic module specific
+//                        '--add-modules', 'java.xml.bind', // jaxb specific
+//                        '--add-reads', "$moduleName=org.junit.jupiter.api", // allow junit to read your module
+////                        '--add-modules', 'joda.time',
+////                        '--add-reads', "$moduleName=joda.time",
+////                        '--add-reads', "$moduleName=junit",
+////                        '--add-opens', 'java.base/java.nio=ALL-UNNAMED',
+////                        '--add-opens', 'java.base/sun.nio.ch=ALL-UNNAMED',
+//                        '--patch-module', "$moduleName=" + files(sourceSets.test.java.srcDirs).asPath, // add test source files to your module
+//
+//                ]
+//                classpath = files()
+//            }
+//        }
+
+
+        test {
+//            modularity.inferModulePath = false
+////            inputs.property("moduleName", moduleName)
+            doFirst {
+                // We have to alter the existing jvm args rather than set them so that we don't lose debug args added by
+                // IJ Idea.
+                def jvmArgsCopy = []
+                for (arg in jvmArgs) {
+                    jvmArgsCopy.add(arg)
+                }
+                jvmArgsCopy.add("--add-opens")
+                jvmArgsCopy.add("java.base/java.nio=ALL-UNNAMED")
+                jvmArgsCopy.add("--add-opens")
+                jvmArgsCopy.add("java.base/sun.nio.ch=ALL-UNNAMED")
+                jvmArgs = jvmArgsCopy
+
+//                jvmArgs = [
+//////                        '--module-path', classpath.asPath,
+//////                        '--add-modules', 'ALL-MODULE-PATH',
+//////                        '--add-modules', 'org.junit.jupiter.api',  // junit5 automatic module specific
+//////                        '--add-modules', 'java.xml.bind', // jaxb specific
+//////                        '--add-modules', 'org.jvnet.staxex',
+//////                        '--add-modules', 'org.joda.time', // joda time specific
+//////                        '--add-reads', "$moduleName=org.junit.jupiter.api", // allow junit to read your module
+//////                        '--add-modules', 'joda.time',
+//////                        '--add-modules', 'java.activation',
+//////                        '--add-reads', "$moduleName=junit",
+//                        '--add-opens', 'java.base/java.nio=ALL-UNNAMED', // needed for LMDB
+//                        '--add-opens', 'java.base/sun.nio.ch=ALL-UNNAMED',  // needed for LMDB
+//////                        '--patch-module', "dropwizard.core=" + libs.dropwizard_core ,
+//////                        '--patch-module', "dropwizard.validation=" + libs.dropwizard_validation ,
+////                        //'--patch-module', "java.xml=javax.xml.bind:jsr173_api:1.0" ,
+//////                        '--patch-module', "java.activation=" + libs.jakarta_activation ,
+//////                        '--patch-module', "java.annotation=" + libs.jakarta_annotation_api ,
+//////                        '--patch-module', "$moduleName=" + files(sourceSets.test.java.classesDirectory).asPath,
+//////                        '--patch-module', "$moduleName=" + libs.dropwizard_validation,
+//////                        '-verbose', '',
+////                        '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005', '',
+////                        '-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005', '',
+//                ]
+            }
+        }
+//
+//        java {
+//            modularity.inferModulePath = false
+//        }
+//
+//        tasks.named('compileJava') {
+//            modularity.inferModulePath = false
+//        }
+//
+//        tasks.named('compileTestJava') {
+//            modularity.inferModulePath = false
+//        }
+
+        javadoc {
+            options.addStringOption('-module-path', classpath.asPath)
+            options.addStringOption('Xdoclint:all,-missing', '-html5')
+        }
+
+        jar {
+            inputs.property("moduleName", moduleName)
+            manifest {
+                attributes(
+                        "Automatic-Module-Name": moduleName,
+                )
+            }
+        }
+
+//        jdepsReport {
+//            multiRelease = '15'
+//        }
+    }
+
+
+    //task analyzeJavaLibraryDependencies(type: ca.cutterslade.gradle.analyze.AnalyzeDependenciesTask) {
+//    classesDirs = sourceSets.main.output.classesDirs
+//    require = [
+//            project.configurations.runtimeClasspath
+//    ]
+//    allowedToDeclare = [
+//            project.configurations.permitUnusedDeclared
+//    ]
+//    justWarn = true
+//}
+//task analyzeJavaLibraryTestDependencies(type: ca.cutterslade.gradle.analyze.AnalyzeDependenciesTask) {
+//    classesDirs = sourceSets.test.output.classesDirs
+//    require = [
+//            project.configurations.testRuntimeClasspath
+//    ]
+//    allowedToDeclare = [
+//            project.configurations.permitTestUnusedDeclared
+//    ]
+//    allowedToUse = [
+//            project.configurations.runtimeClasspath
+//    ]
+//    justWarn = true
+//}
+//tasks.build.dependsOn analyzeJavaLibraryDependencies
+//tasks.build.dependsOn analyzeJavaLibraryTestDependencies
+//
+//    analyzeClassesDependencies {
+//        justWarn = true
+//    }
+//
+//    analyzeTestClassesDependencies {
+//        justWarn = true
+//    }
+
+    // Check style plugin configuration
+    // config files in config/checkstyle
+
+    checkstyle {
+        ignoreFailures = false
+        showViolations = true
+
+        // TODO Uplifting this to 13.0.0 caused a lot of checkstyle violations.
+        //   A lot were switch statement lambda indent violations which do not agree with our auto formatter
+        //   Also, 10.4 can't cope with statements
+        toolVersion = "10.4"
+        //toolVersion = "13.0.0"
+    }
+
+    // These work in tandem with the suppression.xml
+    tasks.withType(Checkstyle).tap {
+        configureEach {
+            include("**/stroom/**/*.java")
+            exclude("**/db/jooq/**/*.java")
+        }
+    }
+}
+
+// configures only those projects in publishedProjectsPaths
+configure(projectsToBePublished) {
+    println "Configuring ${project.name} for publishing"
+
+    apply plugin: 'maven-publish'
+
+    group = 'stroom'
+    version = versions.stroom
+
+    tasks.register('sourcesJar', Jar) {
+        dependsOn classes
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    tasks.register('javadocJar', Jar) {
+        dependsOn javadoc
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
+
+    def pomConfig = {
+        licenses {
+            license {
+                name "The Apache Software License, Version 2.0"
+                url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                distribution "repo"
+            }
+        }
+        scm {
+            url "https://github.com/stroom/stroom"
+        }
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                artifact sourcesJar
+                artifact javadocJar
+                pom.withXml {
+                    def root = asNode()
+                    root.appendNode('name', project.name)
+                    root.children().last() + pomConfig
+                }
+            }
+        }
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+}
+
+////configuration specific to projects that expose their test jars for other projects to use
+//configure(projectsWithSharedTestJars) {
+//
+//    println "Configuring ${project.path} to expose its test jars"
+//
+//    configurations {
+//        testArtifacts
+//    }
+//
+//    task testJar(type: Jar) {
+//        baseName = "${project.name}-test"
+//        from sourceSets.test.output
+//    }
+//
+//    artifacts {
+//        testArtifacts testJar
+//    }
+//
+//    task packageTests(type: Jar) {
+//        from sourceSets.test.output
+//        classifier = 'tests'
+//    }
+//
+//    artifacts.archives packageTests
+//}
+
+//task clearContentPackDownloadDir(type: Delete) {
+//doLast {
+//println "Clearing ${contentPackDownloadDir}"
+//def downloadDir = Paths.get(contentPackDownloadDir)
+//if (Files.exists(downloadDir)) {
+//// Cleans out any zip files in the contentPackDownloadDir
+//delete fileTree(downloadDir) {
+//include '**/*.zip'
+//}
+//}
+//}
+//}
+
+//task clearContentPackImportDir(type: Delete) {
+//doLast {
+//println "Clearing ${contentPackImportDir}"
+//def importDir = Paths.get(contentPackImportDir)
+//if (Files.exists(importDir)) {
+//// Cleans out any zip files in the contentPackImportDir
+//delete fileTree(importDir) {
+//include '**/*.zip'
+//}
+//}
+//}
+//}
+
+//task downloadStroomContent() {
+//dependsOn ':stroom-app:downloadStroomContentApp'
+//}
+
+//task downloadStroomContent() {
+//    doLast {
+//        println "Downloading content packs to ${contentPackDownloadDir}"
+//        def downloadDir = Paths.get(contentPackDownloadDir)
+//        def importDir = Paths.get(contentPackImportDir)
+//
+//        Files.createDirectories(downloadDir)
+//        Files.createDirectories(importDir)
+//
+//        def downloadPack = { url ->
+//            String filename = Paths.get(new URI(url).getPath()).getFileName().toString()
+//            def downloadFile = downloadDir.resolve(filename)
+//            def importFile = importDir.resolve(filename)
+//            if (Files.exists(downloadFile)) {
+//                println "${url} has already been downloaded"
+//            } else {
+//                println "Downloading ${url} into ${contentPackDownloadDir}"
+//                download {
+//                    src url
+//                    dest downloadDir.toFile()
+//                    overwrite true
+//                }
+//            }
+//
+//            if (!Files.exists(importFile)) {
+//                copy {
+//                    println "Copying from ${downloadFile} to ${importFile}"
+//                    from downloadFile.toFile()
+//                    into contentPackImportDir
+//                }
+//            }
+//        }
+//
+//        // Download each content pack to the contentPackImportDir ready for stroom to import on startup
+//        for (pack in contentPacks) {
+//            def packName = pack.key
+//            def packVer = pack.value
+//            def packUrl = "${contentReleasesUrl}${packName}-${packVer}/${packName}-${packVer}.zip"
+//
+//            downloadPack packUrl
+//
+//        }
+//        // Now get the visualisations pack from a different repo
+//        downloadPack visualisationsContentPackUrl
+//    }
+//}
+
+tasks.register('setupSampleData') {
+//    dependsOn downloadStroomContent
+    dependsOn ':stroom-app:setupSampleDataApplication'
+}
+
+gradle.buildFinished {
+    //if any of the tests failed dump the junit xml to the console
+    if (getPropertyOrDefault('dumpFailedTestXml', 'false') == 'true' && failedTestReportFiles.size() > 0) {
+        println "Build has ${failedTestReportFiles.size()} failed test classes, dumping JUnit xml output"
+        failedTestReportFiles.each { pair ->
+            def info = pair.first
+            def reportFile = pair.second
+
+            if (reportFile.exists()) {
+                println "-----Failed test class ${info} ------------------"
+                def lines = reportFile.readLines()
+                lines.each { String line ->
+                    println "${line}"
+                }
+                println "-----End of test class ${info} ------------------"
+            } else {
+                println "File ${reportFile.toString()}"
+            }
+        }
+    }
+}
+
+tasks.register('dependenciesPng') {
+    def reportsDir = new File("build/reports")
+    def compileDepsDot = file("$reportsDir/compileDeps.dot")
+    inputs.files subprojects.configurations.implementation
+    outputs.files compileDepsDot
+    doFirst {
+        if (!reportsDir.exists()) reportsDir.mkdirs()
+    }
+    doLast {
+        def dotGraph = "digraph compile{" + System.getProperty("line.separator")
+        Set deps = [] as Set
+        subprojects.each { subproject ->
+            subproject.configurations.compile.dependencies.each { dependency ->
+                if (dependency instanceof ProjectDependency) {
+                    String dep = "\"$subproject.name\" -> \"$dependency.name\";"
+                    if (deps.add(dep)) { // if was not there before - avoid duplicates
+                        dotGraph += dep + System.getProperty("line.separator")
+                    }
+                }
+            }
+        }
+        dotGraph += "}"
+        compileDepsDot.write(dotGraph)
+    }
+}
+
+//task clean() {
+////dependsOn clearContentPackImportDir
+//dependsOn clearContentPackDownloadDir
+//}
+
+//import com.vanniktech.dependency.graph.generator.DependencyGraphGeneratorPlugin
+//import com.vanniktech.dependency.graph.generator.DependencyGraphGeneratorExtension.Generator
+//import guru.nidi.graphviz.attribute.Color
+//import guru.nidi.graphviz.attribute.Style
+//
+//plugins.apply(DependencyGraphGeneratorPlugin)
+//
+//def stroomGenerator = new Generator(
+//        "stroomLibraries", // Suffix for our Gradle task.
+//        { dependency -> dependency.getModuleGroup().startsWith("stroom") }, // Only want stroom.
+//        { dependency -> false }, // Include transitive dependencies.
+//        { node, dependency -> node.add(Style.FILLED, Color.rgb("#ff6f00")) }, // Give them some stroom color.
+//)
+//
+//dependencyGraphGenerator {
+//    generators = [ stroomGenerator ]
+//}

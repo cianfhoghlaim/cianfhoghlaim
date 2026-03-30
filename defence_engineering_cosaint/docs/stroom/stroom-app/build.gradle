@@ -1,0 +1,897 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath libs.mysql.connector.java
+    }
+}
+
+plugins {
+    alias libs.plugins.swagger.gradle.plugin
+    id "java"
+}
+
+configurations {
+    swaggerBuild
+}
+
+ext.moduleName = 'stroom.app'
+
+/*
+ * Copyright 2016-2025 Crown Copyright
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+//def uiDir = project.file('src/main/resources/ui')
+//def swaggerDir = "${uiDir}/noauth/swagger"
+//def restResourceClassNames = []
+//def jarName = 'stroom-app.jar'
+def fatJarName = 'stroom-app-all.jar'
+def sendToStroomScriptVersion = 'send-to-stroom-v3.4.0'
+def releaseBuildDir = "${projectDir}/build/release"
+def stroomZipDistContentPacksDir = "${releaseBuildDir}/content_packs"
+def stroomDockerBuildDir = "${projectDir}/docker/build"
+def stroomDockerContentPacksDir = "${stroomDockerBuildDir}/content_packs"
+
+apply plugin: 'application'
+apply plugin: 'com.gradleup.shadow'
+apply plugin: "io.swagger.core.v3.swagger-gradle-plugin"
+
+application {
+    mainClass = 'stroom.app.App'
+}
+
+dependencies {
+    implementation project(':stroom-activity:stroom-activity-api')
+    implementation project(':stroom-activity:stroom-activity-impl')
+    implementation project(':stroom-activity:stroom-activity-impl-db')
+    implementation project(':stroom-activity:stroom-activity-impl-db-jooq')
+    implementation project(':stroom-analytics:stroom-analytics-api')
+    implementation project(':stroom-analytics:stroom-analytics-impl')
+    implementation project(':stroom-analytics:stroom-analytics-impl-db')
+    implementation project(':stroom-analytics:stroom-analytics-impl-db-jooq')
+    implementation project(':stroom-analytics:stroom-analytics-rule-impl')
+    implementation project(':stroom-annotation:stroom-annotation-impl')
+    implementation project(':stroom-annotation:stroom-annotation-impl-db')
+    implementation project(':stroom-annotation:stroom-annotation-impl-db-jooq')
+    implementation project(':stroom-annotation:stroom-annotation-pipeline')
+    implementation project(':stroom-contentstore:stroom-contentstore-impl')
+    implementation project(':stroom-aws:stroom-aws-s3-impl')
+    implementation project(':stroom-bytebuffer')
+    implementation project(':stroom-cache:stroom-cache-api')
+    implementation project(':stroom-cache:stroom-cache-impl')
+    implementation project(':stroom-cache:stroom-cache-service-impl')
+    implementation project(':stroom-cluster:stroom-cluster-api')
+    implementation project(':stroom-cluster:stroom-cluster-impl')
+    implementation project(':stroom-cluster:stroom-cluster-lock-api')
+    implementation project(':stroom-cluster:stroom-cluster-lock-impl-db')
+    implementation project(':stroom-cluster:stroom-cluster-lock-impl-db-jooq')
+    implementation project(':stroom-cluster:stroom-cluster-task-api')
+    implementation project(':stroom-cluster:stroom-cluster-task-impl')
+    implementation project(':stroom-config:stroom-config-app')
+    implementation project(':stroom-config:stroom-config-common')
+    implementation project(':stroom-config:stroom-config-global-impl')
+    implementation project(':stroom-config:stroom-config-global-impl-db')
+    implementation project(':stroom-config:stroom-config-global-impl-db-jooq')
+    implementation project(':stroom-core')
+    implementation project(':stroom-core-shared')
+    implementation project(':stroom-credentials:stroom-credentials-api')
+    implementation project(':stroom-credentials:stroom-credentials-impl')
+    implementation project(':stroom-credentials:stroom-credentials-impl-db')
+    implementation project(':stroom-credentials:stroom-credentials-impl-db-jooq')
+    implementation project(':stroom-dashboard:stroom-dashboard-impl')
+    implementation project(':stroom-dashboard:stroom-dashboard-impl-db')
+    implementation project(':stroom-dashboard:stroom-dashboard-impl-db-jooq')
+    implementation project(':stroom-dashboard:stroom-storedquery-api')
+    implementation project(':stroom-dashboard:stroom-storedquery-impl')
+    implementation project(':stroom-dashboard:stroom-storedquery-impl-db')
+    implementation project(':stroom-dashboard:stroom-storedquery-impl-db-jooq')
+    implementation project(':stroom-data:stroom-data-retention-api')
+    implementation project(':stroom-data:stroom-data-retention-impl')
+    implementation project(':stroom-data:stroom-data-store-api')
+    implementation project(':stroom-data:stroom-data-store-impl')
+    implementation project(':stroom-data:stroom-data-store-impl-fs')
+    implementation project(':stroom-data:stroom-data-store-impl-fs-db')
+    implementation project(':stroom-data:stroom-data-store-impl-fs-db-jooq')
+    implementation project(':stroom-data:stroom-data-store-util')
+    implementation project(':stroom-data:stroom-data-zip')
+    implementation project(':stroom-db-util')
+    implementation project(':stroom-dictionary:stroom-dictionary-api')
+    implementation project(':stroom-dictionary:stroom-dictionary-impl')
+    implementation project(':stroom-docref')
+    implementation project(':stroom-docstore:stroom-docstore-api')
+    implementation project(':stroom-docstore:stroom-docstore-impl')
+    implementation project(':stroom-docstore:stroom-docstore-impl-db')
+    implementation project(':stroom-docstore:stroom-docstore-impl-fs')
+    implementation project(':stroom-docstore:stroom-docstore-impl-memory')
+    implementation project(':stroom-documentation:stroom-documentation-impl')
+    implementation project(':stroom-dropwizard-common')
+//    implementation project(':stroom-elastic:stroom-elastic-impl')
+//    implementation project(':stroom-elastic:stroom-elastic-impl-http')
+    implementation project(':stroom-event-logging:stroom-event-logging-api')
+    implementation project(':stroom-event-logging:stroom-event-logging-impl')
+    implementation project(':stroom-event-logging-rs:stroom-event-logging-rs-api')
+    implementation project(':stroom-event-logging-rs:stroom-event-logging-rs-impl')
+    implementation project(':stroom-explorer:stroom-collection-api')
+    implementation project(':stroom-explorer:stroom-docrefinfo-api')
+    implementation project(':stroom-explorer:stroom-explorer-api')
+    implementation project(':stroom-explorer:stroom-explorer-impl')
+    implementation project(':stroom-explorer:stroom-explorer-impl-db')
+    implementation project(':stroom-explorer:stroom-explorer-impl-db-jooq')
+    implementation project(':stroom-feed:stroom-feed-api')
+    implementation project(':stroom-feed:stroom-feed-impl')
+    implementation project(':stroom-gitrepo:stroom-gitrepo-api')
+    implementation project(':stroom-gitrepo:stroom-gitrepo-impl')
+    implementation project(':stroom-gitrepo:stroom-gitrepo-impl-db')
+    implementation project(':stroom-gitrepo:stroom-gitrepo-impl-db-jooq')
+    implementation project(':stroom-importexport:stroom-importexport-api')
+    implementation project(':stroom-importexport:stroom-importexport-impl')
+    implementation project(':stroom-index:stroom-index-api')
+    implementation project(':stroom-index:stroom-index-impl')
+    implementation project(':stroom-index:stroom-index-lucene553')
+    implementation project(':stroom-index:stroom-index-lucene')
+    implementation project(':stroom-index:stroom-index-impl-db')
+    implementation project(':stroom-index:stroom-index-impl-db-jooq')
+    implementation project(':stroom-job:stroom-job-api')
+    implementation project(':stroom-job:stroom-job-impl')
+    implementation project(':stroom-job:stroom-job-impl-db')
+    implementation project(':stroom-job:stroom-job-impl-db-jooq')
+    implementation project(':stroom-kafka:stroom-kafka-api')
+    implementation project(':stroom-kafka:stroom-kafka-impl')
+    implementation project(':stroom-langchain:stroom-langchain-api')
+    implementation project(':stroom-langchain:stroom-langchain-impl')
+    implementation project(':stroom-lifecycle:stroom-lifecycle-api')
+    implementation project(':stroom-lifecycle:stroom-lifecycle-impl')
+    implementation project(':stroom-lmdb')
+    implementation project(':stroom-meta:stroom-meta-api')
+    implementation project(':stroom-meta:stroom-meta-impl')
+    implementation project(':stroom-meta:stroom-meta-impl-db')
+    implementation project(':stroom-meta:stroom-meta-impl-db-jooq')
+    implementation project(':stroom-meta:stroom-meta-statistics-api')
+    implementation project(':stroom-meta:stroom-meta-statistics-impl')
+    implementation project(':stroom-node:stroom-node-api')
+    implementation project(':stroom-node:stroom-node-impl')
+    implementation project(':stroom-node:stroom-node-impl-db')
+    implementation project(':stroom-node:stroom-node-impl-db-jooq')
+    implementation project(':stroom-pathways:stroom-pathways-impl')
+    implementation project(':stroom-pipeline')
+    implementation project(':stroom-planb:stroom-planb-impl')
+    implementation project(':stroom-processor:stroom-processor-api')
+    implementation project(':stroom-processor:stroom-processor-impl')
+    implementation project(':stroom-processor:stroom-processor-impl-db')
+    implementation project(':stroom-processor:stroom-processor-impl-db-jooq')
+    implementation project(':stroom-query:stroom-query-language')
+    implementation project(':stroom-query:stroom-query-api')
+    implementation project(':stroom-query:stroom-query-common')
+    implementation project(':stroom-query:stroom-query-impl')
+    implementation project(':stroom-receive:stroom-receive-common')
+    implementation project(':stroom-receive:stroom-receive-rules-impl')
+    implementation project(':stroom-resource:stroom-resource-api')
+    implementation project(':stroom-resource:stroom-resource-impl')
+    implementation project(':stroom-search:stroom-expression-matcher')
+    implementation project(':stroom-search:stroom-search-elastic')
+    implementation project(':stroom-search:stroom-search-extraction')
+    implementation project(':stroom-search:stroom-search-impl')
+    implementation project(':stroom-search:stroom-search-solr')
+    implementation project(':stroom-search:stroom-searchable-api')
+    implementation project(':stroom-search:stroom-searchable-impl')
+    implementation project(':stroom-security:stroom-security-api')
+    implementation project(':stroom-security:stroom-security-common-impl')
+    implementation project(':stroom-security:stroom-security-identity')
+    implementation project(':stroom-security:stroom-security-identity-db')
+    implementation project(':stroom-security:stroom-security-identity-db-jooq')
+    implementation project(':stroom-security:stroom-security-impl')
+    implementation project(':stroom-security:stroom-security-impl-db')
+    implementation project(':stroom-security:stroom-security-impl-db-jooq')
+    implementation project(':stroom-security:stroom-security-openid-api')
+    implementation project(':stroom-statistics:stroom-statistics-api')
+    implementation project(':stroom-statistics:stroom-statistics-impl')
+    implementation project(':stroom-statistics:stroom-statistics-impl-sql')
+    implementation project(':stroom-suggestions:stroom-suggestions-api')
+    implementation project(':stroom-suggestions:stroom-suggestions-impl')
+    implementation project(':stroom-task:stroom-task-api')
+    implementation project(':stroom-task:stroom-task-impl')
+    implementation project(':stroom-task:stroom-task-mock')
+    implementation project(':stroom-util')
+    implementation project(':stroom-util-shared')
+    implementation project(':stroom-view:stroom-view-impl')
+    implementation project(':stroom-view:stroom-view-api')
+
+    implementation libs.commons.compress
+    implementation libs.dropwizard.assets
+    implementation libs.dropwizard.client
+    implementation libs.dropwizard.configuration
+    implementation libs.dropwizard.core
+    implementation libs.dropwizard.jersey
+    implementation libs.dropwizard.jetty
+    implementation libs.dropwizard.lifecycle
+    implementation libs.dropwizard.metrics.annotation
+    implementation libs.dropwizard.metrics.core
+    implementation libs.dropwizard.metrics.healthchecks
+    implementation libs.dropwizard.servlets
+    implementation libs.dropwizard.validation
+    //implementation libs.dropwizard.websockets
+    implementation libs.eventLogging
+    implementation libs.flyway.core
+    implementation libs.flyway.mysql
+    implementation libs.guava
+    implementation libs.guice
+    implementation libs.jakarta.servlet.api
+    implementation libs.jakarta.validation.api
+    implementation libs.jakarta.inject
+    implementation libs.jcommander
+    implementation libs.jersey.common
+    implementation libs.jetty.server
+    implementation libs.jetty.servlet
+    implementation libs.jetty.servlets
+    implementation libs.jgit
+    implementation libs.jooq
+    implementation libs.jose4j
+    implementation libs.logback.classic
+    implementation libs.mysql.connector.java
+    implementation libs.restygwt
+    implementation libs.slf4j.api
+    implementation libs.ws.rs.api
+
+    runtimeOnly libs.jakarta.el
+
+    // Use default DB config.
+    testImplementation project(':stroom-activity:stroom-activity-api')
+    testImplementation project(':stroom-activity:stroom-activity-mock')
+    testImplementation project(':stroom-analytics:stroom-analytics-mock')
+    testImplementation project(':stroom-cluster:stroom-cluster-lock-mock')
+    testImplementation project(':stroom-config:stroom-config-app')
+    testImplementation project(':stroom-config:stroom-config-global-impl')
+    testImplementation project(':stroom-core')
+    testImplementation project(':stroom-core-shared')
+    testImplementation project(':stroom-credentials:stroom-credentials-impl-db')
+    testImplementation project(':stroom-dashboard:stroom-dashboard-impl')
+    testImplementation project(':stroom-data:stroom-data-store-api')
+    testImplementation project(':stroom-data:stroom-data-store-impl-fs')
+    testImplementation project(':stroom-data:stroom-data-store-mock')
+    testImplementation project(':stroom-dictionary:stroom-dictionary-mock')
+    testImplementation project(':stroom-docstore:stroom-docstore-api')
+    testImplementation project(':stroom-docstore:stroom-docstore-impl')
+    testImplementation project(':stroom-docstore:stroom-docstore-impl-memory')
+    testImplementation project(':stroom-event-logging:stroom-event-logging-api')
+    testImplementation project(':stroom-event-logging:stroom-event-logging-impl')
+    testImplementation project(':stroom-event-logging:stroom-event-logging-mock')
+    testImplementation project(':stroom-explorer:stroom-collection-mock')
+    testImplementation project(':stroom-explorer:stroom-docrefinfo-mock')
+    testImplementation project(':stroom-explorer:stroom-explorer-api')
+    testImplementation project(':stroom-explorer:stroom-explorer-impl')
+    testImplementation project(':stroom-explorer:stroom-explorer-impl-db')
+    testImplementation project(':stroom-gitrepo:stroom-gitrepo-impl')
+    testImplementation project(':stroom-gitrepo:stroom-gitrepo-impl-db')
+    testImplementation project(':stroom-gitrepo:stroom-gitrepo-mock')
+    testImplementation project(':stroom-headless')
+    testImplementation project(':stroom-importexport:stroom-importexport-api')
+    testImplementation project(':stroom-index:stroom-index-mock')
+    testImplementation project(':stroom-langchain:stroom-langchain-mock')
+    testImplementation project(':stroom-meta:stroom-meta-api')
+    testImplementation project(':stroom-meta:stroom-meta-mock')
+    testImplementation project(':stroom-node:stroom-node-mock')
+    testImplementation project(':stroom-pipeline')
+    testImplementation project(':stroom-processor:stroom-processor-mock')
+    testImplementation project(':stroom-receive:stroom-receive-rules-impl')
+    testImplementation project(':stroom-security:stroom-security-identity')
+    testImplementation project(':stroom-security:stroom-security-api')
+    testImplementation project(':stroom-security:stroom-security-impl')
+    testImplementation project(':stroom-security:stroom-security-mock')
+    testImplementation project(':stroom-security:stroom-security-user-api')
+    testImplementation project(':stroom-statistics:stroom-statistics-api')
+    testImplementation project(':stroom-statistics:stroom-statistics-impl')
+    testImplementation project(':stroom-statistics:stroom-statistics-impl-sql')
+    testImplementation project(':stroom-statistics:stroom-statistics-mock')
+    testImplementation project(':stroom-task:stroom-task-api')
+    testImplementation project(':stroom-test-common')
+    testImplementation project(':stroom-util')
+    testImplementation project(':stroom-util-shared')
+
+    testImplementation libs.commons.io
+    testImplementation libs.classgraph
+    testImplementation libs.data.faker
+    testImplementation libs.guice
+    testImplementation libs.guice.extension
+    testImplementation libs.guice.grapher
+    testImplementation libs.hikari
+    testImplementation libs.jinjava
+    testImplementation libs.langchain4j
+    testImplementation libs.lmdbjava
+    testImplementation libs.saxon.he
+    testImplementation libs.slf4j.api
+    testImplementation libs.swagger.annotations
+    testImplementation libs.vavr
+
+    testImplementation libs.dropwizard.client
+    testImplementation libs.dropwizard.testing
+
+    testImplementation libs.bundles.common.test.implementation
+    testRuntimeOnly libs.bundles.common.test.runtime
+
+    // These are for the gradle swagger plugin to ensure it is using the jakarta variants rather than the javax ones
+    swaggerBuild platform(libs.dropwizard.dependencies) // So swaggerBuild can see the dep versions
+    swaggerBuild libs.jakarta.servlet.api
+    swaggerBuild libs.swagger.annotations
+    swaggerBuild libs.swagger.core
+    swaggerBuild libs.swagger.jaxrs
+    swaggerBuild libs.ws.rs.api
+}
+
+jar {
+    manifest {
+        attributes(
+                "Implementation-Title": "Stroom",
+                "Implementation-Version": versions.stroom,
+                "Main-Class": "stroom.app.App"
+        )
+    }
+//    archiveFileName jarName
+    exclude '**/gwt-unitCache'
+}
+
+//// We often run out of memory when running the UI builds in parallel so create tasks that will build them one after another.
+//task buildUiPart2(dependsOn: ":stroom-app-gwt:gwtCompile") {}
+//task buildUiPart3(dependsOn: ":stroom-dashboard-gwt:gwtCompile") {}
+//buildUiPart2.mustRunAfter  ":stroom-app-gwt:jar"
+//buildUiPart3.mustRunAfter  ":stroom-dashboard-gwt:jar"
+//buildUiPart2.mustRunAfter buildUiPart1
+//buildUiPart3.mustRunAfter buildUiPart2
+//
+// Make sure GWT compilation doesn't run before tests.
+//tasks.getByPath(':stroom-app-gwt:gwtClean').mustRunAfter test
+//tasks.getByPath(':stroom-dashboard-gwt:gwtClean').mustRunAfter test
+
+// Display info to confirm what we are compiling with
+compileJava {
+    doLast {
+        def compiler = javaToolchains.compilerFor {
+            languageVersion = JavaLanguageVersion.of(javaLanguageVersion)
+            vendor = javaVendor
+        }
+        def compilerMeta = compiler.get().metadata
+        println """
+            |=============================================================
+            |Compiling with:
+            |  Vendor:  ${compilerMeta.vendor} (${javaVendor})
+            |  Version: ${compilerMeta.javaRuntimeVersion}
+            |  Path:    ${compilerMeta.installationPath}
+            |=============================================================""".stripMargin()
+    }
+}
+
+shadowJar {
+    // We want to run the tests before we build the fat jar.
+    dependsOn test
+    // We want to compile all GWT and React content before we build the fat jar.
+    dependsOn ":stroom-app-gwt:gwtCompile"
+//    dependsOn ":stroom-dashboard-gwt:gwtCompile"
+    // The jar needs to include the swagger.(json|yaml) files that swagger gen produces
+    dependsOn resolve
+
+    // Allows us to build fat jars with lots of files
+    zip64 = true
+
+    // Ensure we include the GWT and Rest generated resources.
+    from './src/main/resources'
+
+    // A transformer to merges files in META-INF/services
+    mergeServiceFiles()
+    // Without INCLUDE, it drops any duplicates
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
+    archiveFileName = fatJarName
+    exclude '**/gwt-unitCache'
+}
+
+run {
+    //Ensure we have the latest kafka plugin jar available for runtime
+    args 'server', '../local.yml'
+}
+
+runShadow {
+    //Ensure we have the latest kafka plugin jar available for runtime
+    args 'server', '../local.yml'
+}
+
+// Run the DB migrations then exit
+tasks.register('migrate', JavaExec) {
+    dependsOn ':stroom-config:stroom-config-app:compileJava'
+
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = application.mainClass.get()
+    args 'migrate', '../local.yml'
+}
+
+
+clean {
+    delete stroomDockerBuildDir
+    delete releaseBuildDir
+}
+
+// Generate the config.yml files for the zip and docker distributions
+tasks.register('generateConfigFiles', JavaExec) {
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = "stroom.dist.GenerateDistributionConfig"
+}
+
+tasks.register('downloadStroomContentForDocker', JavaExec) {
+    println "Downloading/copying content packs to ${stroomDockerContentPacksDir}"
+
+    dependsOn this: compileJava
+    dependsOn this: compileTestJava
+    // We need to set the working directory as the stroom root
+    workingDir '../'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'stroom.test.DownloadStroomContentApp'
+
+    args = [contentPackDefinitionFile, contentPackDownloadDir, stroomDockerContentPacksDir]
+}
+
+tasks.register('downloadStroomContentForZipDist', JavaExec) {
+    println "Downloading/copying content packs to ${stroomZipDistContentPacksDir}"
+
+    dependsOn this: compileJava
+    dependsOn this: compileTestJava
+    // We need to set the working directory as the stroom root
+    workingDir '../'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'stroom.test.DownloadStroomContentApp'
+
+    args = [contentPackDefinitionFile, contentPackDownloadDir, stroomZipDistContentPacksDir]
+}
+
+// Copy all the files needed by the stroom docker build into stroom-app/docker/build
+tasks.register('copyFilesForStroomDockerBuild') {
+    dependsOn shadowJar
+    //dependsOn parent.downloadStroomContent
+    dependsOn generateConfigFiles
+    dependsOn downloadStroomContentForDocker
+
+    doFirst {
+
+        // Copy the stroom app fat jar
+        copy {
+            from layout.buildDirectory.dir("libs/${fatJarName}")
+            into stroomDockerBuildDir
+        }
+
+        // The config.yml will be put in place by generateConfigFiles
+
+        //Copy the downloaded content packs
+        //copy {
+        //from "${contentPackDownloadDir}"
+        //into stroomDockerContentPacksDir
+        //}
+    }
+}
+
+//// Generate the swagger spec files from the resource classes
+//// For configuration see https://github.com/gigaSproule/swagger-gradle-plugin
+////
+//// If you see big stack traces like:
+////   could not create Dir using jarFile from url file:/home/dev/git_work/stroom/stroom-task/stroom-task-api/build/libs/stroom-task-api-v9.9.9.jar. skipping.
+////   java.lang.NullPointerException
+////   could not create Vfs.Dir from url. ignoring the exception and continuing
+////   org.reflections.ReflectionsException: Could not open url connection
+//// it may be caused by running a versioned build (-Pversion=v9.9.9) and then a non-versioned
+//// or vice versa.  The gradle daemon seems to hold references to jars from previous builds
+//// somewhere so swagger then looks for classes that don't exist. You can either do
+//// ./gradlew --stop to stop the daemon or run a build with --no-daemon
+//swagger {
+//    apiSource {
+//        springmvc = false
+//        outputFormats = ['json', 'yaml']
+//        // See prepareSwaggerClasses task
+//        locations = restResourceClassNames
+//        schemes = ['https']
+//        basePath = '/api'
+//        info {
+//            title = 'Stroom API'
+//            version = 'v1/v2'
+//            description = 'Various APIs for interacting with Stroom and its data'
+//            contact {
+//                name = 'Stroom'
+//                url = 'https://github.com/gchq/stroom'
+//            }
+//            license {
+//                url = 'http://www.apache.org/licenses/LICENSE-2.0.html'
+//                name = 'Apache 2.0'
+//            }
+//        }
+//        // Define the security definitions that are available
+//        securityDefinition {
+//            // `name` can be used refer to this security schemes from elsewhere
+//            name = 'ApiKeyAuth'
+//            type = 'apiKey'
+//            // The location of the API key. Valid values are "query" or "header".
+//            keyLocation = 'header'
+//            // The name of the header
+//            keyName = 'Authorization'
+//        }
+//        // Defing the named security definition to use for the whole API
+//        security = [[ApiKeyAuth: []]]
+//        swaggerDirectory = "${swaggerDir}"
+//    }
+//}
+
+resolve {
+    outputFileName = 'stroom'
+    outputFormat = 'JSONANDYAML'
+    prettyPrint = 'TRUE'
+    sortOutput = 'TRUE'
+    openApiFile = file('openapi.yaml')
+    // As we are pulling in the whole classpath, that includes stroom-app and all the dropwiz
+    // deps which includes logback-classic.  In the absence of a logback.xml logback will output
+    // DEBUG which makes for a LOT of output. Thus provide it with a logback.xml to use
+    // so we have control.
+    classpath = configurations.runtimeClasspath + files("../config/swagger-plugin")
+
+    // We need to use specific deps for the plugin itself so it knows how to handle jakarta annos
+    buildClasspath = configurations.swaggerBuild
+
+    resourcePackages = ['stroom']
+    outputDir = file('src/main/resources/ui/noauth/swagger')
+}
+
+//// A task to fix the classpath for running the swagger plugin and
+//// to scan the classpath to find all the REST resource classes to pass to
+//// the plugin to generate documentation for.
+//// It is a chicken/egg problem as we can't really use the stroom-app jar as
+//// that is where we need to put the generated swagger.json file. Thus
+//// abuse the build classpath so we can see all the sub projects.
+//task prepareSwaggerClasses {
+//    doLast {
+//        // Get all jars from the compile classpath
+//        def urls = project.configurations.compileClasspath.resolve()
+//                .collect {
+//                    it.toURI().toURL()
+//                }
+//
+//        // Add each one to the gradle build script classpath
+//        // so the swagger plugin can see them all.
+//        // https://github.com/gigaSproule/swagger-gradle-plugin/issues/158#issuecomment-585823379
+//        urls.each {
+//            //println "classpath url ${it}"
+//            buildscript.classLoader.addURL it
+//        }
+//
+//        // Now filter down to just our stroom jars
+//        def stroomUrls = urls
+//                .findAll {
+//                    // We need the version in there as jars are versioned
+//                    // when we set an explicit build version
+//                    boolean isStroomJar = it.toString() =~ /.*stroom[a-z-]+(-${versions.stroom})?.jar$/
+//                    //if (isStroomJar) {
+//                    //println it.toString()
+//                    //}
+//                    return isStroomJar
+//                }
+//                .findAll {
+//                    // ensure it exists - it should really
+//                    Files.isRegularFile(Paths.get(it.toURI()))
+//                }
+//                .sort {
+//                    it.toString()
+//                }
+//                .unique();
+//
+//        // Scan all the stroom pkgs in the stroom jars
+//        // Filter should be redundant if we only look in stroom jars, but what the heck
+//        ConfigurationBuilder configBuilder = new ConfigurationBuilder()
+//                .filterInputsBy(new FilterBuilder().includePackage("stroom"))
+//                .setUrls(stroomUrls)
+//                .setScanners(
+//                        new TypeAnnotationsScanner(),
+//                        new SubTypesScanner()
+//                );
+//
+//        // Find all the @Api classes
+//        Reflections reflections = new Reflections(configBuilder);
+//        Set<Class<?>> restClasses = reflections
+//                .getTypesAnnotatedWith(io.swagger.annotations.Api.class)
+//
+//        logger.info("Adding API classes to Swagger spec")
+//
+//        // Add them to a list for swagger to scan over
+//        restClasses
+//                .sort { it.name }
+//                .each {
+//                    restResourceClassNames.add(it.name)
+//                    logger.info it.name
+//                }
+//        print "Using swagger directory ${swaggerDir}"
+//    }
+//}
+//generateSwaggerDocumentation.dependsOn prepareSwaggerClasses
+
+tasks.register('copyJar', Copy) {
+    dependsOn shadowJar
+    from shadowJar.outputs.files
+    into "${releaseBuildDir}/bin"
+}
+
+tasks.register('copyCommonSupportingFiles', Copy) {
+    from '../dist'
+    into releaseBuildDir
+}
+
+tasks.register('copySupportingFiles', Copy) {
+    dependsOn copyCommonSupportingFiles
+
+    from 'src/main/resources/banner.txt'
+    from 'src/dist'
+    from('..') {
+        include 'scripts/**'
+    }
+    into releaseBuildDir
+
+    doLast {
+        providers.exec {
+            // Move the banner.txt into bin where it is expected
+            commandLine 'mv', "${releaseBuildDir}/banner.txt", "${releaseBuildDir}/bin/banner.txt"
+        }.result.get()
+        // This is a sym-link so it seems to go into the zip with +x perms
+        // which we don't want
+        //providers.exec {
+        //  commandLine 'chmod', '644', "${releaseBuildDir}/config/config.yml"
+        //}.result.get()
+    }
+}
+
+tasks.register('downloadSend', Download) {
+    dependsOn copySupportingFiles
+    src "https://github.com/gchq/stroom-clients/releases/download/${sendToStroomScriptVersion}/send_to_stroom.sh"
+    dest "${releaseBuildDir}/bin/"
+
+    // Github rate limits unless you authenticate so use the special
+    // auto generated workflow GITHUB_TOKEN
+    def token = System.getenv('GITHUB_TOKEN')
+    if (token != null && !token.isEmpty()) {
+        // Don't log the actual token obvs
+        println "Adding auth token for ${src}"
+        header 'Authorization', "Bearer $token"
+    }
+}
+
+tasks.register('downloadSendArgs', Download) {
+    dependsOn copySupportingFiles
+    src "https://github.com/gchq/stroom-clients/releases/download/${sendToStroomScriptVersion}/send_to_stroom_args.sh"
+    dest "${releaseBuildDir}/bin/"
+
+    // Github rate limits unless you authenticate so use the special
+    // auto generated workflow GITHUB_TOKEN
+    def token = System.getenv('GITHUB_TOKEN')
+    if (token != null && !token.isEmpty()) {
+        // Don't log the actual token obvs
+        println "Adding auth token for ${src}"
+        header 'Authorization', "Bearer $token"
+    }
+}
+
+tasks.register('makeSendExecutable') {
+    dependsOn downloadSend
+    doLast {
+        providers.exec {
+            // The args script is sourced so doesn't need execute perms
+            commandLine 'chmod', '+x', "${releaseBuildDir}/bin/send_to_stroom.sh"
+        }.result.get()
+    }
+}
+
+//task copyContentPackToDistribution(type: Copy) {
+//from contentPackDownloadDir
+//into "${releaseBuildDir}/contentPacks"
+//}
+
+// Build the release distribution zip for stroom
+tasks.register('buildDistribution', Zip) {
+
+    // See https://docs.gradle.org/9.0.0/release-notes.html#archive-tasks-produce-reproducible-archives-by-default
+    // Use file timestamps from the file system, else they will all be 1 Feb 1980
+    preserveFileTimestamps = true
+    // Use permissions from the file system, else files will all be -rw-r--r--
+    useFileSystemPermissions()
+
+    // run all the tasks that produce content for the zip
+    dependsOn copyJar
+    dependsOn copySupportingFiles
+    dependsOn downloadSend
+    dependsOn downloadSendArgs
+    dependsOn makeSendExecutable
+    dependsOn downloadStroomContentForZipDist
+    dependsOn generateConfigFiles
+    dependsOn ':stroom-config:stroom-config-app:generateConfigDefaultsYamlFile'
+
+    from releaseBuildDir
+}
+
+// Ensure that the test task for this project runs after all other test tasks as
+// this project has all the lengthy int tests so we want it to fail fast
+def thisProject = project
+rootProject.subprojects { subProj ->
+    //println "subProj ${subProj.name} project ${thisProject.name}"
+    if (subProj.name != thisProject.name) {
+        subProj.tasks.withType(Test).tap {
+            configureEach { otherTestTask ->
+                //println "subProj ${subProj}, task ${it.name} thisProject.tasks.test ${thisProject.tasks.test}"
+                thisProject.tasks.test.mustRunAfter otherTestTask.path
+                thisProject.tasks.jar.mustRunAfter otherTestTask.path
+                thisProject.tasks.shadowJar.mustRunAfter otherTestTask.path
+            }
+        }
+    }
+}
+
+//// Ensure all projects have built their jars so swagger can see them
+//tasks.prepareSwaggerClasses.dependsOn rootProject.getTasksByName('jar', true)
+
+//tasks.build.dependsOn resolve
+//tasks.build.dependsOn copyFilesForStroomDockerBuild
+//tasks.build.dependsOn buildDistribution
+
+// The gradle application plugin enables the distribution plugin
+// which creates .zip/tar archives by default, as does the shadow plugin
+// We have our own buildDistribution task so disable the standard ones to avoid confusion
+distZip.enabled = false
+distTar.enabled = false
+shadowDistZip.enabled = false
+shadowDistTar.enabled = false
+
+//commented out in case we decide to use this plugin
+//honker {
+//// Your project license
+//license 'Apache 2'
+
+//// Your project information, used to generate NOTICE files
+//projectName 'Stroom'
+//projectTimespan '2016-2017'
+//projectOrganization 'GCHQ'
+
+//// For dependencies that contains no licensing information (pom, manifest etc..)
+//// you can define your licensing strategy, for example:
+////licenseOverride { candidate ->
+////if( candidate.group == 'something' && candidate.module == 'whatever' ) {
+////candidate.license = 'BSD 3-Clause'
+////}
+////}
+//}
+
+tasks.register('setupSampleDataApplication', JavaExec) {
+    dependsOn this: compileJava
+    dependsOn this: compileTestJava
+    // We need to set the working directory as the stroom root otherwise
+    // setupSampleData won't find 'samples' directories in other modules.
+    workingDir '../'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'stroom.test.SetupSampleData'
+
+    args = ['local.yml']
+}
+
+// Make sure GWT compilation doesn't run before processResources.
+tasks.getByPath(':stroom-app-gwt:gwtClean').mustRunAfter processResources
+//tasks.getByPath(':stroom-dashboard-gwt:gwtClean').mustRunAfter processResources
+
+// We often run out of memory when running the UI builds in parallel so create tasks that will build them one after another.
+//tasks.getByPath(':stroom-dashboard-gwt:gwtCompile').mustRunAfter ':stroom-app-gwt:gwtCompile'
+
+// Make the build command create the full distribution
+tasks.build.dependsOn resolve
+tasks.build.dependsOn copyFilesForStroomDockerBuild
+tasks.build.dependsOn shadowJar
+tasks.build.dependsOn buildDistribution
+
+tasks.register('Stroom Node 1 (GWT Super Dev)', JavaExec) {
+    doFirst {
+        // We have to alter the existing jvm args rather than set them so that we don't lose debug args added by
+        // IJ Idea.
+        def jvmArgsCopy = []
+        for (arg in jvmArgs) {
+            jvmArgsCopy.add(arg)
+        }
+        //    -DgwtSuperDevMode=true
+        //    -Xmx4g
+        //    -Devent.logging.validate=true
+        //    --add-opens java.base/java.nio=ALL-UNNAMED
+        //    --add-opens java.base/sun.nio.ch=ALL-UNNAMED
+        //    --add-opens java.base/java.lang=ALL-UNNAMED
+        jvmArgsCopy.add("-DgwtSuperDevMode=true")
+        jvmArgsCopy.add("-Xmx4g")
+        jvmArgsCopy.add("-Devent.logging.validate=true")
+        jvmArgsCopy.add("--add-opens")
+        jvmArgsCopy.add("java.base/java.nio=ALL-UNNAMED")
+        jvmArgsCopy.add("--add-opens")
+        jvmArgsCopy.add("java.base/sun.nio.ch=ALL-UNNAMED")
+        jvmArgsCopy.add("--add-opens")
+        jvmArgsCopy.add("java.base/java.lang=ALL-UNNAMED")
+        jvmArgs = jvmArgsCopy
+    }
+
+    group = 'application'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'stroom.app.App'
+    workingDir = '../'
+    args = ['server', 'local.yml']
+}
+
+tasks.register('Stroom Node 2 (GWT Super Dev)', JavaExec) {
+    doFirst {
+        // We have to alter the existing jvm args rather than set them so that we don't lose debug args added by
+        // IJ Idea.
+        def jvmArgsCopy = []
+        for (arg in jvmArgs) {
+            jvmArgsCopy.add(arg)
+        }
+        //    -DgwtSuperDevMode=true
+        //    -Xmx4g
+        //    -Devent.logging.validate=true
+        //    --add-opens java.base/java.nio=ALL-UNNAMED
+        //    --add-opens java.base/sun.nio.ch=ALL-UNNAMED
+        //    --add-opens java.base/java.lang=ALL-UNNAMED
+        jvmArgsCopy.add("-DgwtSuperDevMode=true")
+        jvmArgsCopy.add("-Xmx4g")
+        jvmArgsCopy.add("-Devent.logging.validate=true")
+        jvmArgsCopy.add("--add-opens")
+        jvmArgsCopy.add("java.base/java.nio=ALL-UNNAMED")
+        jvmArgsCopy.add("--add-opens")
+        jvmArgsCopy.add("java.base/sun.nio.ch=ALL-UNNAMED")
+        jvmArgsCopy.add("--add-opens")
+        jvmArgsCopy.add("java.base/java.lang=ALL-UNNAMED")
+        jvmArgs = jvmArgsCopy
+    }
+
+    group = 'application'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'stroom.app.App'
+    workingDir = '../'
+    args = ['server', 'local2.yml']
+}
+
+tasks.register('Stroom Node 3 (GWT Super Dev)', JavaExec) {
+    doFirst {
+        // We have to alter the existing jvm args rather than set them so that we don't lose debug args added by
+        // IJ Idea.
+        def jvmArgsCopy = []
+        for (arg in jvmArgs) {
+            jvmArgsCopy.add(arg)
+        }
+        //    -DgwtSuperDevMode=true
+        //    -Xmx4g
+        //    -Devent.logging.validate=true
+        //    --add-opens java.base/java.nio=ALL-UNNAMED
+        //    --add-opens java.base/sun.nio.ch=ALL-UNNAMED
+        //    --add-opens java.base/java.lang=ALL-UNNAMED
+        jvmArgsCopy.add("-DgwtSuperDevMode=true")
+        jvmArgsCopy.add("-Xmx4g")
+        jvmArgsCopy.add("-Devent.logging.validate=true")
+        jvmArgsCopy.add("--add-opens")
+        jvmArgsCopy.add("java.base/java.nio=ALL-UNNAMED")
+        jvmArgsCopy.add("--add-opens")
+        jvmArgsCopy.add("java.base/sun.nio.ch=ALL-UNNAMED")
+        jvmArgsCopy.add("--add-opens")
+        jvmArgsCopy.add("java.base/java.lang=ALL-UNNAMED")
+        jvmArgs = jvmArgsCopy
+    }
+
+    group = 'application'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'stroom.app.App'
+    workingDir = '../'
+    args = ['server', 'local3.yml']
+}
+
+// vim: set tabstop=4 shiftwidth=4 expandtab:

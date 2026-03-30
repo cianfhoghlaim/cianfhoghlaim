@@ -1,0 +1,46 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`connectors > authentication > silly > authenticationMiddleware 1`] = `
+[
+  {
+    "middleware": [
+      [Function],
+    ],
+    "path": "/api/v2",
+  },
+  {
+    "middleware": [
+      "Token Middleware",
+    ],
+    "path": "/api/v2/token",
+  },
+  {
+    "middleware": [
+      "Token Middleware",
+      "Authentication Check Middleware",
+    ],
+    "path": "/api/v2",
+  },
+]
+`;
+
+exports[`connectors > authentication > silly > queryEntities 1`] = `
+[
+  {
+    "id": "user",
+    "kind": "user",
+  },
+  {
+    "id": "user2",
+    "kind": "user",
+  },
+  {
+    "id": "group1",
+    "kind": "group",
+  },
+  {
+    "id": "group2",
+    "kind": "group",
+  },
+]
+`;

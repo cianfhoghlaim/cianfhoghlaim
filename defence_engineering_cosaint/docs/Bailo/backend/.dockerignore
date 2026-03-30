@@ -1,0 +1,42 @@
+# Docker artefacts
+Dockerfile
+.dockerignore
+
+# Git artefacts
+.git
+.gitignore
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+
+# Dependency directories
+node_modules/
+
+# build / generate output
+dist
+docs/_build
+docs/python-docs
+
+# Python venv
+docs/backenddocsvenv
+
+# Byte-compiled / optimized / DLL files
+**/__pycache__/
+**/*.py[cod]
+**$py.class
+
+# Tests
+test
+
+# Extras
+README.md

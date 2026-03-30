@@ -1,0 +1,64 @@
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SCHEMA" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%m;%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="stroom" level="info" />
+    <logger name="stroom.headless" level="debug" />
+    <logger name="stroom.query.impl" level="debug" />
+    <logger name="stroom.proxy" level="info" />
+
+<!--    <logger name="stroom.resource.impl.UserResourceStoreImpl" level="debug" />-->
+
+    <logger name="stroom.db.util.SlowQueryExecuteListener" level="debug" />
+    <logger name="stroom.test.common.util.test.ContentPackZipDownloader" level="debug" />
+
+<!--    <logger name="stroom.db.util.DataSourceProxy" level="trace" />-->
+
+
+<!--    <logger name="stroom.pipeline.state.LocationHolder" level="INFO" />-->
+
+    <logger name="stroom.statistics.internal.DoNothingInternalStatisticsReceiver" level="ERROR" />
+    <logger name="stroom.processor.impl" level="INFO" />
+    <logger name="stroom.processor.impl.ProcessorTaskManagerImpl" level="INFO" />
+    <logger name="stroom.processor.impl.db.ProcessorTaskDaoImpl" level="INFO" />
+
+<!--    <logger name="stroom.pipeline.refdata" level="DEBUG" />-->
+
+
+<!--    <logger name="stroom.data.store.impl.fs.PhysicalDeleteExecutor" level="DEBUG" />-->
+<!--    <logger name="stroom.data.store.impl.fs.FsFileDeleter" level="DEBUG" />-->
+
+    <logger name="stroom.pipeline.errorhandler.ErrorReceiverProxy" level="DEBUG" />
+
+
+
+<!--    <logger name="stroom.statistics.impl.sql.SQLStatisticValueBatchSaveService" level="DEBUG" />-->
+<!--    <logger name="stroom.statistics.impl.sql.SQLStatisticAggregationManager" level="DEBUG" />-->
+<!--    <logger name="stroom.statistics.impl.sql.SQLStatisticAggregationTransactionHelper" level="DEBUG" />-->
+
+    <logger name="stroom.statistics" level="info" />
+
+
+    <logger name="stroom.pipeline.writer.FileAppender" level="trace" />
+
+    <logger name="org.flywaydb" level="error" />
+
+    <root level="error">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>
