@@ -1,0 +1,16 @@
+defaults: &defaults
+  retries: 3
+  timeout: 30s
+  circuitBreaker:
+    maxFailures: 5
+
+services:
+  api:
+    <<: *defaults
+    endpoint: /api
+    auth:
+      type: bearer
+  worker:
+    <<: *defaults
+    queue: jobs
+    visibilityTimeout: 120s

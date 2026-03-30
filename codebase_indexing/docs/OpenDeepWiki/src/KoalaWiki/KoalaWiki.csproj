@@ -1,0 +1,130 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <UserSecretsId>0f84b266-a3fb-491a-be8f-4df656fb6fcd</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FastService" />
+        <PackageReference Include="FastService.Analyzers" />
+        <PackageReference Include="LibGit2Sharp" />
+        <PackageReference Include="Mapster.DependencyInjection" />
+        <PackageReference Include="Mem0.NET" />
+        <PackageReference Include="Microsoft.Agents.AI" />
+        <PackageReference Include="Microsoft.Agents.AI.AzureAI" />
+        <PackageReference Include="Microsoft.Agents.AI.OpenAI" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
+        <PackageReference Include="Microsoft.SemanticKernel" />
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" />
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" />
+        <PackageReference Include="ModelContextProtocol.AspNetCore" />
+        <PackageReference Include="ModelContextProtocol.Core" />
+        <PackageReference Include="ModelContextProtocolServer.Sse" />
+        <PackageReference Include="Newtonsoft.Json" />
+        <PackageReference Include="Octokit" />
+        <PackageReference Include="Polly" />
+        <PackageReference Include="Scalar.AspNetCore" />
+        <PackageReference Include="Serilog" />
+        <PackageReference Include="Serilog.AspNetCore" />
+        <PackageReference Include="Serilog.Extensions.Logging" />
+        <PackageReference Include="Serilog.Sinks.Console" />
+        <PackageReference Include="Serilog.Sinks.File" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="SharpToken" />
+        <PackageReference Include="xunit" />
+        <PackageReference Include="xunit.runner.visualstudio" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="plugins\CodeAnalysis\GenerateReadme\config.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Update="plugins\CodeAnalysis\CommitAnalyze\config.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Update="plugins\CodeAnalysis\GenerateDescription\config.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Update="plugins\CodeAnalysis\FunctionPrompt\config.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+      <Content Update="wwwroot\**">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="plugins\CodeAnalysis\GenerateReadme\skprompt.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="plugins\CodeAnalysis\CommitAnalyze\skprompt.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="plugins\CodeAnalysis\GenerateDescription\skprompt.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="plugins\CodeAnalysis\FunctionPrompt\skprompt.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Prompts\Warehouse\*.md">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Prompts\Chat\*.md">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Prompts\Mem0\DocsSystem.md">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Prompts\Mem0\CodeSystem.md">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\KoalaWiki.Domains\KoalaWiki.Domains.csproj" />
+      <ProjectReference Include="..\..\Provider\KoalaWiki.Provider.PostgreSQL\KoalaWiki.Provider.PostgreSQL.csproj" />
+      <ProjectReference Include="..\..\Provider\KoalaWiki.Provider.Sqlite\KoalaWiki.Provider.Sqlite.csproj" />
+      <ProjectReference Include="..\..\Provider\KoalaWiki.Provider.SqlServer\KoalaWiki.Provider.SqlServer.csproj" />
+      <ProjectReference Include="..\..\Provider\KoalaWiki.Provider.MySQL\KoalaWiki.Provider.MySQL.csproj" />
+      <ProjectReference Include="..\KoalaWiki.ServiceDefaults\KoalaWiki.ServiceDefaults.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="KoalaWarehouse\GenerateThinkCatalogue\GenerateThinkCatalogueService.Prompt.cs">
+        <DependentUpon>GenerateThinkCatalogueService.cs</DependentUpon>
+      </Compile>
+      <Compile Update="KoalaWarehouse\DocumentPending\DocumentPendingService.Prompt.cs">
+        <DependentUpon>DocumentPendingService.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="plugins\CodeAnalysis\GenerateDescription\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.SemanticKernel.Abstractions">
+        <HintPath>bin\Debug\net9.0\Microsoft.SemanticKernel.Abstractions.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>

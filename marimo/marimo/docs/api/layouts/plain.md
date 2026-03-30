@@ -1,3 +1,0 @@
-# Plain
-
-::: marimo.plain

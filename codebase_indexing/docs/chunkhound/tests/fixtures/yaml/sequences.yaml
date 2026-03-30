@@ -1,0 +1,14 @@
+pipelines:
+  - stage: build
+    steps:
+      - name: install dependencies
+        run: npm install
+      - name: run tests
+        run: npm test
+  - stage: deploy
+    environment: production
+    steps:
+      - name: docker login
+        run: echo $TOKEN | docker login --username user --password-stdin
+      - name: docker push
+        run: docker push example/app:latest
