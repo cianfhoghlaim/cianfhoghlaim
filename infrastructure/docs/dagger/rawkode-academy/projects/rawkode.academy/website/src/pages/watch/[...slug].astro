@@ -1,0 +1,299 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import Breadcrumb from "@/components/breadcrumb/Breadcrumb.astro";
+import VideoMetadata from "@/components/html/video-metadata.astro";
+import VideoPlayer from "@/components/video/player.vue";
+import VideoReactions from "@/components/video/VideoReactions.astro";
+import VideoContentTabs from "@/components/video/video-content-tabs.vue";
+import VideoCast from "@/components/video/VideoCast.astro";
+import TechnologyVideoSection from "@/components/video/TechnologyVideoSection.astro";
+import NewsletterCTA from "@/components/newsletter/NewsletterCTA.astro";
+import Page from "@/wrappers/page.astro";
+import { Marked } from "marked";
+import { resolveTechnologyIconUrl } from "@/utils/resolve-technology-icon";
+import { normalizeTechnologyReferences } from "@/utils/normalize-technology-refs";
+import { getVideosForTechnology } from "@/utils/get-videos-for-technology";
+
+export const prerender = false;
+
+// Get the slug from URL params
+const { slug } = Astro.params;
+
+// First, try to get video from the collection (build-time data)
+const videos = await getCollection("videos");
+let video: (typeof videos)[0] | undefined = videos.find(
+	(v) => v.data.slug === slug,
+);
+
+// Handle 404 case if still not found
+if (!video) {
+	return Astro.redirect("/404");
+}
+
+// Set cache headers for ISR
+// Individual video pages can cache longer since they change less frequently
+// Client cache: 10 minutes, Edge cache: 2 hours, Serve stale for 48 hours
+Astro.response.headers.set(
+	"Cache-Control",
+	"public, max-age=600, s-maxage=7200, stale-while-revalidate=172800",
+);
+Astro.response.headers.set("CDN-Cache-Control", "public, max-age=7200");
+
+// Add cache tags for targeted invalidation
+// Use video-specific tag to purge individual videos
+Astro.response.headers.set(
+	"Cache-Tag",
+	`video-${video.data.slug}, videos-page, video-detail`,
+);
+
+// Add build timestamp for debugging
+Astro.response.headers.set("X-Build-Time", new Date().toISOString());
+
+// Configure Marked to handle single newlines as breaks
+const marked = new Marked({
+	breaks: true,
+	gfm: true,
+});
+// Convert literal \n escape sequences to actual newlines before processing
+const processedDescription = video.data.description.replace(/\\n/g, "\n");
+const renderedDescriptionHtml = marked.parse(processedDescription);
+
+// Fetch chapters for key moments (clips) JSON-LD
+type Chapter = { startTime: number; title: string };
+let clips: Array<{ name: string; startOffset: number; endOffset?: number }> =
+	[];
+const durationSec: number | null =
+	typeof video.data.duration === "number" ? video.data.duration : null;
+
+const chapterSource: Chapter[] = Array.isArray(video.data.chapters)
+	? (video.data.chapters as Chapter[]).map((c) => ({
+			title: c.title,
+			startTime: Math.max(0, Math.floor(c?.startTime ?? 0)),
+		}))
+	: [];
+
+if (chapterSource.length > 0) {
+	chapterSource.sort((a, b) => a.startTime - b.startTime);
+	clips = chapterSource.map((c, i) => {
+		const next = chapterSource[i + 1];
+		return {
+			name: c.title,
+			startOffset: c.startTime,
+			...(next ? { endOffset: next.startTime } : {}),
+		};
+	});
+}
+
+// Format date to readable format
+const formatDate = (date: Date | string) => {
+	const d = typeof date === "string" ? new Date(date) : date;
+	return d.toLocaleDateString("en-US", {
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+	});
+};
+
+// Resolve referenced show and technologies
+const showRef = video.data.show;
+const showId =
+	typeof showRef === "string"
+		? showRef
+		: showRef && typeof showRef === "object" && "id" in showRef
+			? (showRef as { id: string }).id
+			: null;
+const showEntry = showId ? await getEntry("shows", showId) : null;
+
+// Normalize technology references (handles both string IDs and Astro reference objects)
+const normalizedTechIds = normalizeTechnologyReferences(video.data.technologies);
+const techEntries = (
+	await Promise.all(
+		normalizedTechIds.map(async (id) => {
+			try {
+				return await getEntry("technologies", id);
+			} catch {
+				return null;
+			}
+		}),
+	)
+).filter((t): t is NonNullable<typeof t> => Boolean(t));
+
+// Fetch videos for each technology (excluding current video)
+const videosPerTechnology = await Promise.all(
+	techEntries.map(async (tech) => {
+		const techId = tech.id.replace(/\/index$/, "");
+		const allVideos = await getVideosForTechnology(techId);
+		const filteredVideos = allVideos
+			.filter((v) => v.slug !== slug)
+			.slice(0, 3);
+		return {
+			technology: tech,
+			videos: filteredVideos,
+			totalVideos: allVideos.filter((v) => v.slug !== slug).length,
+		};
+	}),
+);
+
+const technologiesWithVideos = videosPerTechnology.filter(
+	(t) => t.videos.length > 0,
+);
+
+const hostEntries = showEntry && Array.isArray(showEntry.data.hosts)
+	? (
+			await Promise.all(
+				(showEntry.data.hosts).map(async (hostRef) => {
+					try {
+						return await getEntry("people", hostRef.id);
+					} catch {
+						return null;
+					}
+				}),
+			)
+		).filter((h): h is NonNullable<typeof h> => Boolean(h))
+	: [];
+
+const guestEntries = Array.isArray(video.data.guests)
+	? (
+			await Promise.all(
+				video.data.guests.map(async (guestRef) => {
+					try {
+						return await getEntry("people", guestRef.id);
+					} catch {
+						return null;
+					}
+				}),
+			)
+		).filter((g): g is NonNullable<typeof g> => Boolean(g))
+	: [];
+
+const breadcrumbElements = showEntry
+	? [
+			{ title: "Home", link: "/" },
+			{ title: "Videos", link: "/watch" },
+			{ title: showEntry.data.name, link: `/shows/${showEntry.id}` },
+			{ title: video.data.title, link: `/watch/${video.data.slug}` },
+		]
+	: [
+			{ title: "Home", link: "/" },
+			{ title: "Videos", link: "/watch" },
+			{ title: video.data.title, link: `/watch/${video.data.slug}` },
+		];
+
+const thumbnailUrl = `https://content.rawkode.academy/videos/${video.data.id}/thumbnail.jpg`;
+const streamUrl = `https://content.rawkode.academy/videos/${video.data.id}/stream.m3u8`;
+---
+
+<Page
+	title={video.data.title}
+	description={video.data.description}
+	useImageDirectly={true}
+	image={{ image: new URL(thumbnailUrl) }}
+>
+	<VideoMetadata
+		slot="extra-head"
+		title={video.data.title}
+		description={video.data.description}
+		thumbnailUrl={thumbnailUrl}
+		publishedAt={(video.data.publishedAt instanceof Date ? video.data.publishedAt.toISOString() : String(video.data.publishedAt))}
+		duration={durationSec ?? 0}
+		streamUrl={streamUrl}
+		clips={clips}
+	/>
+	<div class="min-h-screen">
+		<div class="container-content content-px py-4 sm:py-6 lg:py-8">
+			{/* Breadcrumb */}
+			<div class="section-mb">
+				<Breadcrumb elements={breadcrumbElements} />
+			</div>
+
+			{/* Hero Section with Title */}
+			<div class="section-mb">
+				<h1 class="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-primary-content mb-2 sm:mb-3 tracking-tight">{video.data.title}</h1>
+				<div class="flex flex-wrap items-center card-gap text-sm text-muted">
+					<time datetime={video.data.publishedAt instanceof Date ? video.data.publishedAt.toISOString() : String(video.data.publishedAt)} class="flex items-center gap-1.5 sm:gap-2">
+						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+						</svg>
+						{formatDate(video.data.publishedAt)}
+					</time>
+					<span class="opacity-50">•</span>
+					<span>{Math.floor((durationSec ?? 0) / 60)} min watch</span>
+				</div>
+			</div>
+
+			{/* Main Content */}
+			<div class="section-gap">
+				{/* Video Player */}
+				<div class="relative w-full aspect-video rounded-xl overflow-hidden card-shadow-elevated">
+					<VideoPlayer
+						client:only="vue"
+						video={video.data.id}
+						thumbnailUrl={thumbnailUrl}
+					/>
+				</div>
+
+				{/* Video Controls & Social Features */}
+				<VideoReactions
+					server:defer
+					videoId={video.data.slug}
+				/>
+
+				{/* Technologies Section */}
+				{techEntries.length > 0 && (
+					<div>
+						<h3 class="text-base font-medium text-secondary-content mb-3">Technologies featured in this video</h3>
+						<div class="flex flex-wrap gap-2">
+							{techEntries.map((tech) => (
+								<a
+									Astro.key={tech.id}
+									href={`/technology/${tech.id.replace(/\/index$/, '')}`}
+									class="glass-interactive inline-flex items-center gap-2 px-3 py-2 group"
+								>
+									<div class="w-5 h-5 sm:w-6 sm:h-6 relative overflow-hidden rounded">
+										<img
+											src={resolveTechnologyIconUrl(tech.id, tech.data.logos) || '/apple-touch-icon.png'}
+											alt={tech.data.name}
+											class="w-full h-full object-contain"
+											onerror="this.onerror=null; this.src='/apple-touch-icon.png'"
+										/>
+									</div>
+									<span class="text-sm font-medium text-secondary-content group-hover:text-primary-content transition-colors">
+										{tech.data.name}
+									</span>
+									<svg class="w-4 h-4 text-muted group-hover:text-secondary-content transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+									</svg>
+								</a>
+							))}
+						</div>
+					</div>
+				)}
+
+				{/* Cast & Speakers */}
+				<VideoCast hosts={hostEntries} guests={guestEntries} />
+
+				{/* Newsletter Signup - High Value Placement */}
+				<NewsletterCTA class="!my-0" />
+
+				{/* Tabbed Content: Description & Transcript */}
+				<VideoContentTabs
+					client:idle
+					descriptionHtml={renderedDescriptionHtml}
+					videoId={video.data.id}
+				/>
+
+				{/* More Videos by Technology */}
+				{technologiesWithVideos.map(({ technology, videos, totalVideos }) => (
+					<TechnologyVideoSection
+						technology={technology}
+						videos={videos}
+						totalVideos={totalVideos}
+					/>
+				))}
+			</div>
+
+		</div>
+	</div>
+</Page>
+
+<!-- Prose styles are defined in the global design system -->

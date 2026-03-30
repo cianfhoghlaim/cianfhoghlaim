@@ -1,0 +1,24 @@
+export {
+  OhMyOpenCodeConfigSchema,
+  AgentOverrideConfigSchema,
+  AgentOverridesSchema,
+  McpNameSchema,
+  AgentNameSchema,
+  HookNameSchema,
+  BuiltinCommandNameSchema,
+  SisyphusAgentConfigSchema,
+  ExperimentalConfigSchema,
+} from "./schema"
+
+export type {
+  OhMyOpenCodeConfig,
+  AgentOverrideConfig,
+  AgentOverrides,
+  McpName,
+  AgentName,
+  HookName,
+  BuiltinCommandName,
+  SisyphusAgentConfig,
+  ExperimentalConfig,
+  DynamicContextPruningConfig,
+} from "./schema"
