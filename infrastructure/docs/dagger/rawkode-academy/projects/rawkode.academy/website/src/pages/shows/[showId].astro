@@ -1,0 +1,181 @@
+---
+export const prerender = false;
+
+import { getCollection, getEntries } from "astro:content";
+import { getPublishedVideos } from "@/lib/content";
+import Breadcrumb from "@/components/breadcrumb/Breadcrumb.astro";
+import VideoMetadata from "@/components/html/video-metadata.astro";
+import VideoFeed from "@/components/video/video-feed.astro";
+import SubscribeLinks from "@/components/show/SubscribeLinks.vue";
+import NewsletterCTA from "@/components/newsletter/NewsletterCTA.astro";
+import Page from "@/wrappers/page.astro";
+import { Image } from "astro:assets";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("shows");
+const { showId } = Astro.params;
+
+if (!showId) {
+	logger.error("Missing showId parameter for show page");
+	return new Response(null, { status: 404 });
+}
+
+const shows = await getCollection("shows");
+const showEntry = shows.find((s) => s.data.id === showId);
+
+if (!showEntry) {
+	return new Response(null, { status: 404 });
+}
+
+// Get published videos only (filters out future-dated for scheduled publishing)
+const videos = await getPublishedVideos();
+
+const getShowId = (value: unknown): string | null => {
+	if (!value) return null;
+	if (typeof value === "string") return value;
+	if (typeof value === "object" && value !== null && "id" in value) {
+		const id = (value as { id?: unknown }).id;
+		return typeof id === "string" ? id : null;
+	}
+	return null;
+};
+
+const videosForShow = videos.filter(
+	(video) => getShowId(video.data.show) === showEntry.data.id,
+);
+
+const hostEntries = await getEntries(showEntry.data.hosts);
+const hostNames = hostEntries
+	.map((host) => String(host.data.name).trim())
+	.filter((name) => name.length > 0);
+
+const feedVideos = videosForShow
+	.map((video) => ({
+		id: video.data.id,
+		title: video.data.title,
+		thumbnailUrl: `https://content.rawkode.academy/videos/${video.data.id}/thumbnail.jpg`,
+		streamUrl: `https://content.rawkode.academy/videos/${video.data.id}/stream.m3u8`,
+		duration: typeof video.data.duration === "number" ? video.data.duration : 0,
+		slug: video.data.slug,
+		publishedAt:
+			video.data.publishedAt instanceof Date
+				? video.data.publishedAt.toISOString()
+				: String(video.data.publishedAt),
+	}))
+	.sort(
+		(a, b) =>
+			new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+	);
+
+Astro.response.headers.set(
+	"Cache-Control",
+	"public, max-age=600, s-maxage=7200, stale-while-revalidate=172800",
+);
+Astro.response.headers.set("CDN-Cache-Control", "public, max-age=7200");
+Astro.response.headers.set(
+	"Cache-Tag",
+	`show-${showEntry.data.id}, shows-page, show-detail`,
+);
+Astro.response.headers.set("X-Build-Time", new Date().toISOString());
+
+const showDescription =
+	showEntry.data.description?.trim() || "Episode guide coming soon.";
+
+const breadcrumbElements = [
+	{ title: "Home", link: "/" },
+	{ title: "Shows", link: "/shows" },
+	{ title: showEntry.data.name, link: `/shows/${showEntry.data.id}` },
+];
+
+const pageTitle = `${showEntry.data.name} Episodes`;
+---
+
+<Page title={pageTitle} description={showDescription}>
+        <VideoMetadata
+                slot="extra-head"
+                title={pageTitle}
+                description={showDescription}
+                isVideoList={true}
+        />
+
+        <section class="bg-gray-50 py-12 dark:bg-gray-950">
+                <div class="mx-auto flex max-w-7xl flex-col gap-8 px-4 sm:px-6 lg:px-8">
+                        <div>
+                                <Breadcrumb elements={breadcrumbElements} />
+                        </div>
+
+                        <header class="flex flex-col md:flex-row gap-8 md:items-start">
+                                {showEntry.data.cover && (
+                                        <div class="flex-shrink-0 w-full md:w-1/3 max-w-xs rounded-2xl overflow-hidden shadow-lg bg-gray-100 dark:bg-gray-800">
+                                                <Image
+                                                        src={showEntry.data.cover.image}
+                                                        alt={showEntry.data.cover.alt}
+                                                        class="w-full h-auto object-cover"
+                                                />
+                                        </div>
+                                )}
+
+                                <div class="flex-1 space-y-4">
+                                        <p class="text-sm font-semibold uppercase tracking-wide text-primary dark:text-primary-300">
+                                                Show
+                                        </p>
+                                        <h1 class="text-4xl font-bold tracking-tight text-primary-content sm:text-5xl">
+                                                {showEntry.data.name}
+                                        </h1>
+                                        {hostNames.length > 0 && (
+                                                <div class="flex flex-wrap gap-2">
+                                                        {hostNames.map((host) => (
+                                                                <span class="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary dark:bg-primary/20 dark:text-primary-200">
+                                                                        {host}
+                                                                </span>
+                                                        ))}
+                                                </div>
+                                        )}
+                                        <p class="text-lg text-muted">{showDescription}</p>
+
+                                        <SubscribeLinks links={showEntry.data.subscribeLinks} client:load />
+                                </div>
+                        </header>
+
+                        <NewsletterCTA
+                                audience={`show:${showEntry.data.id}`}
+                                badge="Get notified of new episodes"
+                                headline={`Subscribe to ${showEntry.data.name}`}
+                                subtitle="Be the first to know when new episodes drop."
+                        />
+
+                        <div>
+                                {feedVideos.length > 0 ? (
+                                        <VideoFeed
+                                                title="Episodes"
+                                                description="Watch the latest episodes from this show."
+                                                videos={feedVideos}
+                                        />
+                                ) : (
+                                        <div class="mx-auto max-w-2xl rounded-2xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-12 text-center shadow-sm dark:border-gray-800 dark:from-gray-900/40 dark:to-gray-900/20">
+                                                <svg
+                                                        class="mx-auto h-16 w-16 text-gray-300 dark:text-gray-600"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
+                                                        aria-hidden="true"
+                                                >
+                                                        <path
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                stroke-width="1.5"
+                                                                d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"
+                                                        />
+                                                </svg>
+                                                <p class="mt-4 text-lg font-medium text-secondary-content">
+                                                        No episodes yet
+                                                </p>
+                                                <p class="mt-2 text-sm text-muted">
+                                                        Episodes for this show are coming soon. Check back later!
+                                                </p>
+                                        </div>
+                                )}
+                        </div>
+                </div>
+        </section>
+</Page>

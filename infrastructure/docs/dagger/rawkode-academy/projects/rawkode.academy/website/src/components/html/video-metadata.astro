@@ -1,0 +1,145 @@
+---
+interface Props {
+	title: string;
+	description: string;
+	thumbnailUrl?: string;
+	publishedAt?: string;
+	duration?: number;
+	streamUrl?: string;
+	embedUrl?: string; // Only when a true embeddable player URL (e.g., YouTube/Vimeo)
+	isVideoList?: boolean;
+	clips?: Array<{ name: string; startOffset: number; endOffset?: number }>;
+}
+
+const {
+	title,
+	description,
+	thumbnailUrl,
+	publishedAt,
+	duration,
+	streamUrl,
+	embedUrl,
+	isVideoList = false,
+	clips = [],
+} = Astro.props;
+
+// Format duration from seconds to ISO 8601
+function formatDuration(seconds: number): string {
+	const hours = Math.floor(seconds / 3600);
+	const minutes = Math.floor((seconds % 3600) / 60);
+	const remainingSeconds = Math.floor(seconds % 60);
+
+	let result = "PT";
+	if (hours > 0) {
+		result += `${hours}H`;
+	}
+	if (minutes > 0) {
+		result += `${minutes}M`;
+	}
+	if (remainingSeconds > 0 || (hours === 0 && minutes === 0)) {
+		result += `${remainingSeconds}S`;
+	}
+	return result;
+}
+
+const formattedDuration = formatDuration(duration ?? 0);
+
+// Generate structured data
+// Compute a safe embedUrl: only use if explicitly provided or clearly an embed player URL
+const computedEmbedUrl = (() => {
+	if (embedUrl) return embedUrl;
+	if (!streamUrl) return undefined;
+	const s = String(streamUrl).toLowerCase();
+	if (
+		s.includes("youtube.com/embed/") ||
+		s.includes("youtu.be/") ||
+		s.includes("player.vimeo.com/")
+	) {
+		return streamUrl;
+	}
+	return undefined; // Avoid using HLS/MP4 as embedUrl
+})();
+
+const structuredData = isVideoList
+	? {
+			"@context": "https://schema.org",
+			"@type": "ItemList",
+			name: title,
+			description: description,
+			url: Astro.url.href,
+		}
+	: {
+			"@context": "https://schema.org",
+			"@type": "VideoObject",
+			name: title,
+			description: description,
+			thumbnailUrl: thumbnailUrl,
+			uploadDate: publishedAt,
+			duration: formattedDuration,
+			contentUrl: streamUrl,
+			...(computedEmbedUrl ? { embedUrl: computedEmbedUrl } : {}),
+			url: Astro.url.href,
+			potentialAction: {
+				"@type": "SeekToAction",
+				target: `${Astro.url.origin}${Astro.url.pathname}?t={seek_to_second_number}`,
+				"startOffset-input": "required name=seek_to_second_number",
+			},
+			// Additional required/recommended properties for Google Video Search
+			publisher: {
+				"@type": "Organization",
+				name: "Rawkode Academy",
+				logo: {
+					"@type": "ImageObject",
+					url: "https://rawkode.academy/android-chrome-512x512.png",
+					width: 512,
+					height: 512,
+				},
+			},
+			creator: {
+				"@type": "Person",
+				name: "David McKay",
+				url: "https://rawkode.academy",
+			},
+			expires: null, // Videos don't expire
+			hasPart: clips?.length
+				? clips.map((c) => ({
+						"@type": "Clip",
+						name: c.name,
+						startOffset: c.startOffset,
+						...(typeof c.endOffset === "number"
+							? { endOffset: c.endOffset }
+							: {}),
+					}))
+				: undefined,
+			isAccessibleForFree: true,
+			isLiveBroadcast: false,
+			isFamilyFriendly: true,
+			inLanguage: "en-US",
+			// Video quality information
+			videoFrameSize: "1920x1080",
+			videoQuality: "HD",
+		};
+---
+
+<!-- Preload video thumbnail to improve LCP on detail pages -->
+{!isVideoList && thumbnailUrl && (
+  <link rel="preload" as="image" href={thumbnailUrl} fetchpriority="high" />
+)}
+
+<!-- Video-specific meta tags -->
+<meta property="og:type" content={isVideoList ? "website" : "video.other"} />
+{!isVideoList && streamUrl && <meta property="og:video" content={streamUrl} />}
+{!isVideoList && streamUrl && <meta property="og:video:url" content={streamUrl} />}
+{!isVideoList && streamUrl && streamUrl.endsWith(".m3u8") && <meta property="og:video:type" content="application/x-mpegURL" />}
+{!isVideoList && thumbnailUrl && <meta property="og:video:thumbnail" content={thumbnailUrl} />}
+{!isVideoList && duration && <meta property="og:video:duration" content={String(Math.floor(duration))} />}
+{!isVideoList && publishedAt && <meta property="og:video:release_date" content={publishedAt} />}
+
+<!-- Additional SEO meta tags -->
+<meta name="twitter:card" content={thumbnailUrl ? "summary_large_image" : "summary"} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+{thumbnailUrl && <meta name="twitter:image" content={thumbnailUrl} />}
+
+<!-- Structured Data -->
+<script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />

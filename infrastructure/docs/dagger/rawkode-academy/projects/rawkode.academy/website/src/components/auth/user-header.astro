@@ -1,0 +1,10 @@
+---
+import ProfileButton from "./profile.vue";
+import LoginButton from "./sign-in-button.astro";
+
+export const prerender = false;
+
+const user = Astro.locals.user;
+---
+
+{user ? <ProfileButton client:only="vue" user={user} /> : <LoginButton />}

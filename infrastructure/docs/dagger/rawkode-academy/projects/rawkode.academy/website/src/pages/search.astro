@@ -1,0 +1,73 @@
+---
+import { getCollection } from "astro:content";
+import VideoFeed from "@/components/video/video-feed.astro";
+import Page from "@/wrappers/page.astro";
+import { captureServerEvent, getDistinctId } from "@/server/analytics";
+
+const searchQuery = (Astro.url.searchParams.get("q") || "").trim();
+const normalizedQuery = searchQuery.toLowerCase();
+
+const results = normalizedQuery
+	? await getCollection("videos", ({ data }) => {
+			const haystack = `${data.title} ${data.description ?? ""}`.toLowerCase();
+			return haystack.includes(normalizedQuery);
+		})
+	: [];
+
+// Track search event if there's a query
+if (normalizedQuery) {
+	const runtime = Astro.locals.runtime;
+	const analytics = runtime?.env?.ANALYTICS as Fetcher | undefined;
+	await captureServerEvent(
+		{
+			event: "search_performed",
+			properties: {
+				query: searchQuery,
+				results_count: results.length,
+				search_type: "video",
+			},
+			distinctId: getDistinctId(Astro),
+		},
+		analytics,
+	);
+}
+
+const feedVideos = results
+	.sort(
+		(a, b) =>
+			new Date(b.data.publishedAt).getTime() -
+			new Date(a.data.publishedAt).getTime(),
+	)
+	.slice(0, 24)
+	.map((video) => ({
+		id: video.data.id,
+		title: video.data.title,
+		description: video.data.description,
+		slug: video.data.slug,
+		thumbnailUrl: `https://content.rawkode.academy/videos/${video.data.id}/thumbnail.jpg`,
+		streamUrl: `https://content.rawkode.academy/videos/${video.data.id}/stream.m3u8`,
+		duration: typeof video.data.duration === "number" ? video.data.duration : 0,
+		publishedAt:
+			video.data.publishedAt instanceof Date
+				? video.data.publishedAt.toISOString()
+				: String(video.data.publishedAt),
+	}));
+---
+
+<Page title={searchQuery ? `${searchQuery} Search Results` : "Search"}>
+	{searchQuery.length === 0 ? (
+		<p class="text-center text-gray-500 dark:text-gray-400 py-16">
+			Enter a search term to find videos.
+		</p>
+	) : feedVideos.length === 0 ? (
+		<p class="text-center text-gray-500 dark:text-gray-400 py-16">
+			No videos matched "{searchQuery}".
+		</p>
+	) : (
+		<VideoFeed
+			title={`Search Results for "${searchQuery}"`}
+			description="Videos matching your search"
+			videos={feedVideos}
+		/>
+	)}
+</Page>

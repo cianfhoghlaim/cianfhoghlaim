@@ -1,0 +1,197 @@
+---
+import { GRAPHQL_ENDPOINT } from "astro:env/server";
+
+interface Props {
+	videoId: string;
+}
+
+const { videoId } = Astro.props;
+
+const DEFAULT_REACTIONS = [
+	{ emoji: "👍", label: "Like" },
+	{ emoji: "👏", label: "Applause" },
+	{ emoji: "🚀", label: "Rocket" },
+	{ emoji: "💡", label: "Insightful" },
+];
+
+const EXTRA_EMOJIS = [
+	"😊",
+	"😍",
+	"🤔",
+	"😎",
+	"🙌",
+	"💯",
+	"🎉",
+	"💪",
+	"🤯",
+	"🤩",
+	"😂",
+	"🤝",
+	"👀",
+	"🧠",
+];
+
+// Fetch current reaction counts
+let reactionCounts: Record<string, number> = {};
+try {
+	const response = await fetch(GRAPHQL_ENDPOINT, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({
+			query: `query($videoId: String!) {
+				videoByID(id: $videoId) {
+					emojiReactions { emoji count }
+				}
+			}`,
+			variables: { videoId },
+		}),
+	});
+
+	if (response.ok) {
+		const result = (await response.json()) as {
+			data?: {
+				videoByID?: {
+					emojiReactions?: Array<{ emoji: string; count: number }>;
+				};
+			};
+		};
+		result.data?.videoByID?.emojiReactions?.forEach(({ emoji, count }) => {
+			reactionCounts[emoji] = count;
+		});
+	}
+} catch (error) {
+	console.error("Failed to fetch reactions:", error);
+}
+const isAuthenticated = !!Astro.locals.user;
+---
+
+<div
+	class="glass-card-shimmer p-3 sm:p-4"
+	data-video-id={videoId}
+	data-authenticated={isAuthenticated}
+>
+	<div class="flex items-center gap-1.5 sm:gap-2 flex-wrap relative z-10">
+		{
+			DEFAULT_REACTIONS.map((reaction) => (
+				<button
+					class="reaction-btn glass-interactive flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 focus:outline-none focus:ring-2 focus:ring-primary/50"
+					data-emoji={reaction.emoji}
+					aria-label={`${reaction.label} reaction`}
+				>
+					<span class="text-base sm:text-xl">{reaction.emoji}</span>
+					<span class="count text-xs sm:text-sm font-medium text-secondary-content">{reactionCounts[reaction.emoji] || 0}</span>
+				</button>
+			))
+		}
+		<button class="add-emoji reaction-btn glass-interactive flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 border-2 !border-dashed !border-gray-300/60 dark:!border-gray-600/60" aria-label="Add custom emoji"
+			>+</button
+		>
+	</div>
+
+	<div class="emoji-picker hidden mt-3 p-2 sm:p-3 glass-card grid grid-cols-5 sm:grid-cols-7 gap-1 relative z-10">
+		{
+			EXTRA_EMOJIS.map((emoji) => (
+				<button class="emoji-option glass-interactive p-1.5 sm:p-2 text-lg sm:text-2xl cursor-pointer" data-emoji={emoji}>
+					{emoji}
+				</button>
+			))
+		}
+	</div>
+</div>
+
+<style>
+	@reference "../../styles/global.css";
+
+	.reaction-btn.active {
+		@apply ring-2 ring-primary/70 bg-primary/30 dark:bg-primary/20;
+	}
+</style>
+
+<script>
+	import { actions } from "astro:actions";
+
+	const container = document.querySelector("[data-video-id]") as HTMLElement;
+	const videoId = container?.dataset.videoId || "";
+	const emojiPicker = container?.querySelector(".emoji-picker") as HTMLElement;
+	const addEmojiBtn = container?.querySelector(
+		".add-emoji",
+	) as HTMLButtonElement;
+
+	// Handle reactions
+	async function handleReaction(emoji: string) {
+		const button = container?.querySelector(
+			`[data-emoji="${emoji}"]`,
+		) as HTMLButtonElement;
+		if (!button) return;
+
+		const countEl = button.querySelector(".count") as HTMLElement;
+		const currentCount = parseInt(countEl.textContent || "0");
+
+		// Get current video timestamp
+		let contentTimestamp = 0;
+		const mediaPlayer = document.querySelector("media-player");
+		if (mediaPlayer) {
+			const video = mediaPlayer.querySelector("video");
+			if (video && video.currentTime) {
+				contentTimestamp = Math.floor(video.currentTime);
+			}
+		}
+
+		// Optimistic update
+		countEl.textContent = String(currentCount + 1);
+		button.classList.add("active");
+
+		try {
+			const { error } = await actions.addReaction({
+				contentId: videoId,
+				emoji,
+				contentTimestamp,
+			});
+
+			if (error) {
+				// Revert on error
+				countEl.textContent = String(currentCount);
+				button.classList.remove("active");
+
+				// Handle authentication errors
+				if (error.code === "UNAUTHORIZED") {
+					window.location.href = "/sign-in";
+				}
+			}
+		} catch {
+			// Revert on error
+			countEl.textContent = String(currentCount);
+			button.classList.remove("active");
+		}
+	}
+
+	// Set up reaction buttons
+	container?.querySelectorAll(".reaction-btn[data-emoji]").forEach((btn) => {
+		btn.addEventListener("click", (e) => {
+			const emoji = (e.currentTarget as HTMLElement).dataset.emoji;
+			if (emoji) handleReaction(emoji);
+		});
+	});
+
+	// Set up emoji picker
+	addEmojiBtn?.addEventListener("click", () => {
+		emojiPicker.hidden = !emojiPicker.hidden;
+	});
+
+	emojiPicker?.querySelectorAll(".emoji-option").forEach((btn) => {
+		btn.addEventListener("click", (e) => {
+			const emoji = (e.currentTarget as HTMLElement).dataset.emoji;
+			if (emoji) {
+				handleReaction(emoji);
+				emojiPicker.hidden = true;
+			}
+		});
+	});
+
+	// Close emoji picker on outside click
+	document.addEventListener("click", (e) => {
+		if (!container?.contains(e.target as Node)) {
+			emojiPicker.hidden = true;
+		}
+	});
+</script>

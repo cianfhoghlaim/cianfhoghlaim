@@ -1,0 +1,61 @@
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+
+	"github.com/steveyegge/beads/internal/autoimport"
+)
+
+// ensureDatabaseFresh checks if the database is in sync with JSONL before read operations.
+// If JSONL is newer than database, refuses to operate with an error message.
+// This prevents users from making decisions based on stale/incomplete data.
+//
+// NOTE: Callers must check if daemonClient != nil and skip calling this function
+// when running in daemon mode (daemon auto-imports on staleness).
+//
+// Implements bd-2q6d: All read operations should validate database freshness.
+// Implements bd-c4rq: Daemon check moved to call sites to avoid function call overhead.
+func ensureDatabaseFresh(ctx context.Context) error {
+	if allowStale {
+		fmt.Fprintf(os.Stderr, "⚠️  Staleness check skipped (--allow-stale), data may be out of sync\n")
+		return nil
+	}
+
+	// Skip check if no storage available (shouldn't happen in practice)
+	if store == nil {
+		return nil
+	}
+
+	// Check if database is stale
+	isStale, err := autoimport.CheckStaleness(ctx, store, dbPath)
+	if err != nil {
+		// If we can't determine staleness, allow operation to proceed
+		// (better to show potentially stale data than block user)
+		fmt.Fprintf(os.Stderr, "Warning: Could not verify database freshness: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Proceeding anyway. Data may be stale.\n\n")
+		return nil
+	}
+
+	if !isStale {
+		// Database is fresh, proceed
+		return nil
+	}
+
+	// Database is stale - refuse to operate
+	return fmt.Errorf(
+		"Database out of sync with JSONL. Run 'bd sync --import-only' to fix.\n\n"+
+			"The JSONL file has been updated (e.g., after 'git pull') but the database\n"+
+			"hasn't been imported yet. This would cause you to see stale/incomplete data.\n\n"+
+			"To fix:\n"+
+			"  bd sync --import-only            # Import JSONL updates to database\n"+
+			"  bd import -i .beads/issues.jsonl  # Alternative: specify file explicitly\n\n"+
+			"If in a sandboxed environment (e.g., Codex) where daemon can't be stopped:\n"+
+			"  bd --sandbox ready               # Use direct mode (no daemon)\n"+
+			"  bd ready --allow-stale           # Skip staleness check (use with caution)\n\n"+
+			"Or use daemon mode (auto-imports on every operation):\n"+
+			"  bd daemon start\n"+
+			"  bd <command>     # Will auto-import before executing",
+	)
+}
