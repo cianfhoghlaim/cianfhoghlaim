@@ -1,0 +1,31 @@
+LANG all
+s/ej/ei/
+s/eי/ei/
+# Below can also be: ʾ
+s/א/ˀ/
+# Below can also be: ʿ
+s/ע/ˁ/
+s/ב/b/
+s/ג/g/
+s/ד/d/
+s/ה/h/
+s/ו/w/
+s/ז/z/
+s/ח/ḥ/
+s/ט/ṭ/
+s/י/y/
+s/כ/k/
+s/ל/l/
+s/מ/m/
+s/נ/n/
+s/ס/s/
+s/פ/p/
+s/צ/c/
+s/ק/q/
+s/ר/r/
+s/ש/š/
+s/ת/t/
+s/ג/ǧ/
+s/ז/ž/
+s/צ/č/
+s/שׂ/ś/

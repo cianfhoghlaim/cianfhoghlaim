@@ -1,0 +1,115 @@
+
+=========
+Gephi Lab
+=========
+
+Gephi is a program for visualizing graphs.  It also includes 
+implementations of some of the graph algorithms we've discussed
+in class, like PageRank and the HITS (hub/authority) algorithm
+for discovering the most "important" nodes in a directed graph.
+
+In this lab we'll use it to create some visualizations of
+social networks. It used to be relatively easy to download
+a graph of your Facebook friends and all friendships between
+them, but this is now much trickier.  So instead, I've
+produced a few social graphs from Twitter that you'll
+find in this directory.
+
+br.gdf: Vertices are Twitter users with > 15 tweets in Breton
+gd.gdf: Vertices are Twitter users with > 50 tweets in Scottish Gaelic
+gv.gdf: Vertices are Twitter users with > 5 tweets in Manx Gaelic
+ha.gdf: Vertices are Twitter users with > 100 tweets in Hausa
+ht.gdf: Vertices are Twitter users with > 2000 tweets in Haitian Creole
+
+In each case, there is a directed edge from one user to another when
+the first mentions the second in a tweet.
+
+These are simple text files.  Open one of them in your favorite text
+editor and have a look around.  The beginning of the file contains
+one row per vertex (userID, username, number of followers/followings).
+Further down in the file there is one row per edge, containing
+just the userIDs of the two endpoints.
+
+After starting Gephi, you can open one of these graph
+files via the menu item File > Open...
+
+In some of these graphs, there are vertices that aren't connected
+to the others by an edge.  To start, it's a good idea to filter
+these out; in the right-hand pane, there's a tab that says "Filters" -
+click that.  Then open the "Topology" folder, and double-click
+"Giant Component". Then click the Filter button at the bottom 
+of the pane.  You'll see the statistics at the top change, showing
+the number of vertices that were removed.
+
+Next, we can compute some of the useful graph statistics that we
+learned about in lecture.  Click the "Statistics" tab to the
+right of "Filters".  You'll see "PageRank" as one of the
+available algorithms; click the "Run" button next to that.
+This will pop up a window with a report on the distribution
+of PageRank values, which you can glance at and then dismiss.
+Later on, we'll use the PageRank values to display "important"
+nodes more prominently.
+
+Next, find the "Modularity" algorithm, just above PageRank, and
+click the "Run" button next to it.  This groups the vertices
+into some number of "subcommunities" - roughly speaking, there are
+more edges between vertices in the same subcommunity than there
+are between vertices in different subcommunities.  If you did
+this with the graph of your Facebook friends, you'd probably 
+get subcommunities corresponding to high school friends,
+college friends, maybe friends related to different hobbies
+or interests you have, and so on.  Again, you'll get a popup
+window with some statistics about the number of subcommunities
+and the number of vertices in each; give it a glance and then dismiss it.
+
+Now let's make the picture look nicer.  We'll use the options
+in the "Appearance" pane on the left-hand side of the Gephi 
+window.  You'll see a tab for "Nodes", click that, and then
+click the "palette" icon next to it.  Then click "Attribute"
+under that, and select "Modularity Class" from the drop-down
+menu.  This automatically chooses colors for each of the
+subcommunities; you're welcome to change the default colors by
+clicking on the color and choosing a nicer one from the palette.
+When you're happy with the colors, click "Apply".
+
+By default the vertices are laid out randomly in the Gephi 
+window.  Fortunately, Gephi has a number of algorithms that
+can lay out the vertices in more sensible ways.  These are 
+available in the "Layout" pane, beneath the Appearance
+pane on the left-hand side of the Gephi window.
+Start by choosing "Force Atlas" from the drop-down menu.
+Then click "Run" and watch the vertices move to more "natural"
+positions!  Subcommunities should end up near each other
+for the most part.  You'll need to click "Stop" when the 
+image stabilizes.  Force Atlas 2 and Fruchterman-Reingold
+are interesting as well.
+
+Now let's add the Twitter usernames to the image. For this,
+you need to click the "T" icon at the very bottom of the screen.
+The font is likely much too big by default; you can shrink the
+text a bit by choosing a smaller font (by clicking the name of
+the font at the bottom of the window). You can also fine-tune
+the font size with the slider to the right.
+
+Before tweaking this too much, we'd like to give extra
+prominence to the nodes that have high page rank.
+To do this, click the "tT" icon in the Appearance pane,
+then click "Attribute". Select "PageRank" from the dropdown
+menu, with Min size = 1, and Max size = 5.  Then click "Apply".
+
+There are a couple more things you can do to make the image
+as nice as possible.  First, you can increase the size 
+of the whole graph by choosing "Expansion" from the drop-down
+menu under "Layout" and clicking "Run".  It's sometimes
+helpful to do this after doing Force Atlas.
+
+Next, if the usernames overlap one another, you can choose
+"Label Adjust" from the same drop-down, and then click "Run".
+This algorithm will move the vertices around to try and 
+ensure that the labels overlap as little as possible.
+
+When you're happy with how the graph looks, you can export a
+high-quality image by clicking "Preview" at the very top of the
+Gephi window.  You'll see a number of Settings that you can
+choose from in the left-hand pane (including some nice "presets"
+from the drop-down menu).

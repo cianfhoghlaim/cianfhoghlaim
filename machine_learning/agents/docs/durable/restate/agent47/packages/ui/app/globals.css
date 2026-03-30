@@ -1,0 +1,443 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.439 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Markdown Styles */
+.markdown {
+  @apply text-sm leading-relaxed;
+}
+
+.markdown h1 {
+  @apply text-2xl font-bold mt-6 mb-4 text-foreground;
+}
+
+.markdown h2 {
+  @apply text-xl font-semibold mt-5 mb-3 text-foreground;
+}
+
+.markdown h3 {
+  @apply text-lg font-medium mt-4 mb-2 text-foreground;
+}
+
+.markdown h4 {
+  @apply text-base font-medium mt-3 mb-2 text-foreground;
+}
+
+.markdown h5 {
+  @apply text-sm font-medium mt-2 mb-1 text-foreground;
+}
+
+.markdown h6 {
+  @apply text-xs font-medium mt-2 mb-1 text-foreground;
+}
+
+.markdown p {
+  @apply mb-3 text-muted-foreground;
+}
+
+.markdown ul {
+  @apply mb-3 ml-6 list-disc text-muted-foreground;
+}
+
+.markdown ol {
+  @apply mb-3 ml-6 list-decimal text-muted-foreground;
+}
+
+.markdown li {
+  @apply mb-1;
+}
+
+.markdown blockquote {
+  @apply border-l-4 border-border pl-4 py-2 my-4 bg-muted/30 italic text-muted-foreground;
+}
+
+.markdown code {
+  @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono text-foreground;
+}
+
+.markdown pre {
+  @apply bg-muted p-4 rounded-lg overflow-x-auto my-4 border border-border;
+}
+
+.markdown pre code {
+  @apply bg-transparent p-0 text-sm;
+}
+
+.markdown a {
+  @apply text-primary hover:underline;
+}
+
+.markdown strong {
+  @apply font-semibold text-foreground;
+}
+
+.markdown em {
+  @apply italic;
+}
+
+.markdown hr {
+  @apply border-border my-6;
+}
+
+.markdown table {
+  @apply w-full border-collapse border border-border my-4;
+}
+
+.markdown th {
+  @apply border border-border px-3 py-2 text-left font-medium bg-muted/30;
+}
+
+.markdown td {
+  @apply border border-border px-3 py-2;
+}
+
+.markdown img {
+  @apply max-w-full h-auto rounded-lg my-4;
+}
+
+.markdown .task-list-item {
+  @apply list-none;
+}
+
+.markdown .task-list-item input[type="checkbox"] {
+  @apply mr-2;
+}
+
+/* Inline code styling */
+.markdown :not(pre) > code {
+  @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono text-foreground;
+}
+
+/* Code block styling */
+.markdown pre {
+  @apply bg-muted border border-border;
+}
+
+/* Link hover effects */
+.markdown a:hover {
+  @apply text-primary/80;
+}
+
+/* List spacing */
+.markdown ul ul,
+.markdown ol ol,
+.markdown ul ol,
+.markdown ol ul {
+  @apply mt-2;
+}
+
+/* Blockquote citation */
+.markdown blockquote cite {
+  @apply text-xs text-muted-foreground block mt-2;
+}
+
+/* Table responsive behavior */
+.markdown .table-container {
+  @apply overflow-x-auto;
+}
+
+/* Syntax highlighting support */
+.markdown .hljs {
+  @apply bg-transparent;
+}
+
+/* Enhanced code block styling */
+.markdown pre {
+  @apply bg-muted/80 backdrop-blur-sm;
+}
+
+/* Inline code with better contrast */
+.markdown :not(pre) > code {
+  @apply bg-muted/60 text-foreground font-medium;
+}
+
+/* Better list markers */
+.markdown ul > li::marker {
+  @apply text-primary;
+}
+
+.markdown ol > li::marker {
+  @apply text-primary font-medium;
+}
+
+/* Enhanced blockquotes */
+.markdown blockquote {
+  @apply bg-muted/20 border-l-4 border-primary/30;
+}
+
+/* Better table styling */
+.markdown table {
+  @apply bg-card rounded-lg overflow-hidden shadow-sm;
+}
+
+.markdown th {
+  @apply bg-muted/50 font-semibold;
+}
+
+/* Code block language indicator */
+.markdown pre::before {
+  content: attr(data-language);
+  @apply block text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wider;
+}
+
+/* Responsive images */
+.markdown img {
+  @apply shadow-sm hover:shadow-md transition-shadow duration-200;
+}
+
+/* Better spacing for nested elements */
+.markdown > * + * {
+  @apply mt-4;
+}
+
+.markdown > *:first-child {
+  @apply mt-0;
+}
+
+/* GitHub Flavored Markdown specific styles */
+.markdown .task-list-item {
+  @apply list-none;
+}
+
+.markdown .task-list-item input[type="checkbox"] {
+  @apply mr-2 accent-primary;
+}
+
+.markdown .task-list-item input[type="checkbox"]:checked + span {
+  @apply line-through text-muted-foreground;
+}
+
+/* Strikethrough text */
+.markdown del {
+  @apply line-through text-muted-foreground;
+}
+
+/* Better table styling for GFM */
+.markdown table {
+  @apply bg-card rounded-lg overflow-hidden shadow-sm border-collapse;
+}
+
+.markdown th {
+  @apply bg-muted/50 font-semibold text-left p-3 border-b border-border;
+}
+
+.markdown td {
+  @apply p-3 border-b border-border/50;
+}
+
+.markdown tr:hover {
+  @apply bg-muted/20;
+}
+
+/* Code fence with language indicator */
+.markdown pre[data-language]::before {
+  content: attr(data-language);
+  @apply block text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wider bg-muted/50 px-2 py-1 rounded-t-md -mt-4 -mx-4 w-fit;
+}
+
+/* Inline code improvements */
+.markdown :not(pre) > code {
+  @apply bg-muted/60 text-foreground font-medium px-1.5 py-0.5 rounded text-sm;
+}
+
+/* Link improvements */
+.markdown a {
+  @apply text-primary hover:text-primary/80 underline-offset-2;
+}
+
+/* Blockquote improvements */
+.markdown blockquote {
+  @apply bg-muted/20 border-l-4 border-primary/30 pl-4 py-2 my-4 italic text-muted-foreground;
+}
+
+/* List improvements */
+.markdown ul > li::marker {
+  @apply text-primary;
+}
+
+.markdown ol > li::marker {
+  @apply text-primary font-medium;
+}
+
+/* Horizontal rule improvements */
+.markdown hr {
+  @apply border-border/50 my-6;
+}
+
+/* Final markdown improvements */
+.markdown {
+  @apply text-sm leading-relaxed max-w-none;
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
+  @apply scroll-m-20;
+}
+
+.markdown h1:first-child,
+.markdown h2:first-child,
+.markdown h3:first-child,
+.markdown h4:first-child,
+.markdown h5:first-child,
+.markdown h6:first-child {
+  @apply mt-0;
+}
+
+/* Better spacing for paragraphs */
+.markdown p:last-child {
+  @apply mb-0;
+}
+
+/* Improved list spacing */
+.markdown ul:last-child,
+.markdown ol:last-child {
+  @apply mb-0;
+}
+
+/* Better code block margins */
+.markdown pre:last-child {
+  @apply mb-0;
+}
+
+/* Responsive improvements */
+@media (max-width: 640px) {
+  .markdown {
+    @apply text-xs;
+  }
+  
+  .markdown h1 {
+    @apply text-xl;
+  }
+  
+  .markdown h2 {
+    @apply text-lg;
+  }
+  
+  .markdown h3 {
+    @apply text-base;
+  }
+}

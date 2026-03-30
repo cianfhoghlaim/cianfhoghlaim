@@ -1,0 +1,10 @@
+Dear {% if recipient_first_name %}{{recipient_first_name}} {{recipient_last_name}}{% else %}{{ recipient_email }}{% endif %},
+
+{{sender|title}} is inviting you to join {% if team %}his/her team {{team}} on {% endif %}eScriptorium!
+All you need to do is click on the link below:
+{{accept_link}}
+{% if expiry_date %}
+Please note that this account will expire on {{ expiry_date|date }}.
+{% endif %}
+
+Sincerely, the eScriptorium team.

@@ -1,0 +1,15 @@
+;; Object queue/
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "queue/"
+  :tables (list 
+   (semanticdb-table "MessageQueue.java"
+    :major-mode 'jde-mode
+    :tags '(("MessageQueue" type (:typemodifiers ("public") :members (("MessageQueue" function (:constructor-flag t :typemodifiers ("public") :arguments (("capacity" variable (:type "int") (reparse-symbol formal_parameters) [272 284]))) (reparse-symbol class_member_declaration) [252 390]) ("remove" function (:typemodifiers ("public") :type "Message") (reparse-symbol class_member_declaration) [540 687]) ("add" function (:typemodifiers ("public") :arguments (("aMessage" variable (:type "Message") (reparse-symbol formal_parameters) [841 857])) :type "void") (reparse-symbol class_member_declaration) [825 964]) ("size" function (:typemodifiers ("public") :type "int") (reparse-symbol class_member_declaration) [1098 1148]) ("isFull" function (:typemodifiers ("public") :type "boolean") (reparse-symbol class_member_declaration) [1251 1325]) ("peek" function (:typemodifiers ("public") :type "Message") (reparse-symbol class_member_declaration) [1469 1532]) ("elements" variable (:typemodifiers ("private") :type "Message[]") (reparse-symbol class_member_declaration) [1538 1565]) ("head" variable (:typemodifiers ("private") :type "int") (reparse-symbol class_member_declaration) [1570 1587]) ("tail" variable (:typemodifiers ("private") :type "int") (reparse-symbol class_member_declaration) [1592 1609]) ("count" variable (:typemodifiers ("private") :type "int") (reparse-symbol class_member_declaration) [1614 1632])) :type "class") nil [69 1635]))
+    :file "MessageQueue.java"
+    :pointmax 1636
+    )
+   )
+  :file "semantic.cache"
+  :semantic-tag-version "2.0beta3"
+  :semanticdb-version "2.0beta3"
+  )

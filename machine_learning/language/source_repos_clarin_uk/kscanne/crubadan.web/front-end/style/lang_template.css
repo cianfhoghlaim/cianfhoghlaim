@@ -1,0 +1,9 @@
+body {
+    font-family: sans-serif;
+}
+
+h1.ws_title {
+  font-size: 1.35em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}

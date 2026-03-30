@@ -1,0 +1,146 @@
+tá mé.
+tá tú.
+tá sé.
+tá sí.
+tá muid.
+táimid.
+tá sinn.
+tá sibh.
+tá siad.
+níl mé.
+nílim.
+an bhfuil tú?
+nach bhfuil tú?
+bím.
+bíonn tú.
+beidh mé.
+ní bheidh mé.
+an mbeidh tú?
+nach mbeidh tú?
+bhí mé.
+ní raibh mé.
+an raibh tú?
+nach raibh tú?
+bheinn.
+bheadh tú.
+tá mé ag ól.
+ólaim.
+tá mé ag dul.
+téim.
+Ar thit sé?
+Chuala mé gur thit sé.
+Níor thit sé.
+Dúirt sé nár thit sé.
+ainm baiste.
+ainm bréige.
+ainm dílis.
+airgead beo.
+airgead láimhe.
+Albain Nua.
+am saor.
+an Fhrainc.
+ansiúd agus anseo.
+Béal Feirste.
+bean uasal.
+blas géar.
+Breatain Mhór.
+caol na coise.
+céim ar chéim.
+cóta mór.
+Dé Céadaoin.
+Dé Domhnaigh.
+Dé hAoine.
+deireadh geimhridh.
+deireadh samhraidh.
+Dé Luain.
+Dé Máirt.
+Dé Sathairn.
+duine saor.
+duine uasal.
+Dún Éideann.
+éan dearg.
+feamainn dhearg.
+féar tirim.
+fiabhras ballach.
+fiabhras breac.
+fiabhras buí.
+fiabhras dearg.
+fiabhras dubh.
+gan ainm.
+gan amhras.
+gan chiall.
+gan smál.
+gan stad.
+lá breá éigin.
+laethanta saora.
+lámh láidir.
+lá saor.
+is léim ard é.
+ligean amach.
+Loch Dearg.
+lon dubh.
+long fhada.
+luath nó mall.
+lus an easpaig.
+lus buí Bealtaine.
+lus mór.
+maide briste.
+Máirt Inide.
+mar shampla.
+meán lae.
+Oileán na Cásca.
+Parlaimint na hEorpa.
+préachán dubh.
+Ríocht Aontaithe.
+rud éigin.
+seol mór.
+slán leat.
+slán libh.
+slán sábháilte.
+sochar imeallach.
+solas an lae.
+súil dhubh.
+Talamh an Éisc.
+taobh amuigh.
+taobh istigh.
+tit amach.
+tosach Earraigh.
+uile go léir.
+uisce coisricthe.
+Léigh mé é i leabhar éigin.
+airgead tirim.
+arán donn.
+ar mhodh eile.
+baile mór.
+beag bídeach.
+bunachar sonraí.
+bunachair shonraí.
+caith amach.
+claíomh mór.
+cogadh cathartha.
+cú allta.
+cuir amach.
+cuir bac ar.
+cuir brat ar.
+déan suas.
+déan suirí.
+droim ar ais.
+An raibh bó agaibh?
+# Créad fá a bhfaiceann an bhean mhór an cáithnín atá i súil do dhearbhráthar?
+# :Carson a tha a' bhean mhòr a' faicinn an smùirnein a tha ('an)? sùil do bhràthar?
+# Tá an crann seo beo ach tá an ceann sin marbh.
+# Tha a' chraobh seo beò ach tha an té sin marbh.
+# Mura bhfuil an eochar seo ag oibriú, bain triail as an ceann eile.
+# Mura bheil an iuchair seo ag obair, feuch an té eile.
+# Mura bhfuil an teach seo mór go leor duit, ceannaigh ceann eile.
+# Mura bheil an taigh seo mór go leòr dhut, ceannaich fear eile.
+# Bionn sé ag dúnadh an tsiopa ag dúnadh an lae.
+# Bidh e a' dùnadh na bùtha aig dùnadh an latha.
+# Béidh sé ag súil go mbeidh sí ann.
+# Bidh e an dòchas gum bi i ann.
+# Chonaic mé duine éigin ar an bhóthar uair éigin roimh meán lae.
+# Chunnaic mi cuideigin air an rathad uaireigin ro'n mheadhan latha.
+# Caithfidh go bhfuil rud éigin ag duine éigin in áit éigin anseo.
+# Feumaidh gu bheil rudeigin aig cuideigin an áiteigin an-seo.
+# Rugadh sé áit éigin san Oileán Scitheánach.
+# Rugadh e am badeigin san Eilean Sgitheanach.

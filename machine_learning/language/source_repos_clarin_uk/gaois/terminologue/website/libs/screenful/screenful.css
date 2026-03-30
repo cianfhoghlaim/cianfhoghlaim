@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&display=swap');
+body {font-family: sans-serif; background-color: #ffffff; margin: 0; padding: 0; overflow: auto; line-height: 1.3em; font-size: 1rem;}
+html[lang="ar"] body {font-family: 'Almarai', sans-serif;}
+:focus {outline: 2px dotted #e39797 !important; outline-offset: 2px;}
+
+#header { position: absolute; top: 0px; left: 0px; right: 0px; z-index: 2; }
+#envelope { position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px;}
+#envelope.scrollable {overflow-y: auto;}
+#statusbar { position: absolute; bottom: 0px; left: 0px; right: 0px; padding: 5px 15px; background-color: #dddddd; color: #666666; font-size: 0.9em; height: 1.3em; overflow: hidden; box-shadow: 0px -2px 2px #999999; z-index: 5;}
+#footer { position: absolute; bottom: 0px; left: 0px; right: 0px; }
+#curtain { position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; background-color: #333333; opacity: 0.5; z-index: 5;}
+
+.xonomy {background-color: transparent !important;}
+
+#envelope button {font: inherit; border-width: 0px; cursor: pointer; border-radius: 4px; background-color: #ffffff; box-shadow: 0px 0px 2px #666666; color: var(--link); padding: 5px 10px; margin: 10px 5px; min-height: 1.3em; display: inline-block; vertical-align: middle;}
+#envelope button:hover { background-color: #f7f9ea;}
+#envelope button.pressed { box-shadow: inset 0px 0px 2px #666666; background-color: #e9e9e9;}
+[dir="ltr"] #envelope button.iconYes {padding-left: 35px; background-position: left+10px center; background-repeat: no-repeat;}
+[dir="rtl"] #envelope button.iconYes {padding-right: 35px; background-position: right+10px center; background-repeat: no-repeat;}
+[dir="ltr"] #envelope button.iconOnly {background-position: left+10px center; background-repeat: no-repeat; width: 35px;}
+[dir="rtl"] #envelope button.iconOnly {background-position: right+10px center; background-repeat: no-repeat; width: 35px;}
+#envelope button.noborder { box-shadow: 0px 0px 0px transparent; }
+[dir="ltr"] #envelope button.mergeLeft { margin-left: -42px; }
+[dir="rtl"] #envelope button.mergeLeft { margin-right: -42px; }
+#envelope button.disabled { color: #999999; cursor: not-allowed; }
+
+#envelope button span.bubble {display: none;}
+#envelope button.hasData {position: relative;}
+[dir="ltr"] #envelope button.hasData span.bubble {font-size: 0.75em; display: block; position: absolute; top: -10px; left: -10px; background-color: #dd0000; color: #ffffff; padding: 1px 8px; border-radius: 20px;}
+[dir="rtl"] #envelope button.hasData span.bubble {font-size: 0.75em; display: block; position: absolute; top: -10px; right: -10px; background-color: #dd0000; color: #ffffff; padding: 1px 8px; border-radius: 20px;}
+
+#statusbar span.wait { background-image: url(loader.gif); display: inline-block; width: 30px; height: 10px; background-repeat: no-repeat; background-position: left center; margin-inline-end: 1em;}
+#statusbar span.warn { background-image: url(exclamation.png); display: inline-block; width: 16px; height: 10px; background-repeat: no-repeat; background-position: left center; margin-inline-end: 0.75em;}
+
+.wyc { display: inline-block; background-image: url(loader.gif); background-position: center center; background-repeat: no-repeat; width: 30px; height: 10px; }
+
+span.smallscreen {display: none;}
+@media (max-width: 1000px){
+  .bigscreen {display: none !important;}
+  span.smallscreen {display: inline;}
+
+  [dir="ltr"] #envelope button.iconYes {background-position: left+10px center; width: 35px; overflow-x: hidden; padding-left: 0px;}
+  [dir="rtl"] #envelope button.iconYes {background-position: right+10px center; width: 35px; overflow-x: hidden; padding-right: 0px;}
+  #envelope button.iconYes > span {visibility: hidden;}
+}

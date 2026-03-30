@@ -1,0 +1,126 @@
+\documentclass[8pt,twocolumn,openany]{extbook}
+\usepackage{fancyhdr}
+\usepackage{amssymb}
+\usepackage[Conny]{fncychap}
+\ChTitleAsIs{\huge\sc\centering}
+\ChTitleVar{\huge\sc\centering}
+\usepackage{fix2col}
+\usepackage{bookman}  % OK
+\usepackage[american,irish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{manfnt}  % for \dbend
+%\usepackage[top=1in, bottom=0.75in, left=0.6in, right=0.6in]{geometry}
+\usepackage[paperwidth=6in, paperheight=9in, top=1in, bottom=0.75in, left=0.6in, right=0.6in]{geometry}
+\usepackage[pdftex,
+            linkcolor=black,
+            urlcolor=black,
+            colorlinks=true,
+            breaklinks=true,
+%           bookmarks=true,
+%           pdfpagelayout=OneColumn,
+%           pdfstartview=FitH,
+%           pdfview=FitH,
+            pdftitle={gv2ga},
+            pdfauthor={Kevin Scannell}]{hyperref}
+\setlength{\headheight}{14pt}
+\setlength{\headsep}{0.2in}
+\setlength{\parindent}{1pc}
+\setlength{\columnsep}{0.2in}
+\pagestyle{fancy}
+
+\newlength{\drop}
+\newcommand*{\titleM}{\begingroup
+\drop = 0.08\textheight
+\centering
+\vspace*{\drop}
+{\Huge\bfseries Focl\'oir Manainnis-Gaeilge}\\[\baselineskip]
+{\large\scshape Caoimh\'{\i}n \'O Scanaill}\par
+\vfill
+{\large\scshape Cadhan Aonair}\\[\baselineskip]
+{\large\scshape Saint Louis}\par
+\vspace*{2\drop}
+\endgroup}
+
+
+\begin{document}
+\begin{frontmatter}
+\pagestyle{empty}
+\onecolumn
+\titleM
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                   Coipcheart                                            %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+%\chapter*{C\'oipcheart} 
+%\addcontentsline{toc}{chapter}{C\'oipcheart}
+
+{\centering
+\copyright \hspace{0.5ex} 2016 Kevin Scannell\\[\baselineskip]
+An Chéad Chló 2016\\[\baselineskip]
+ISBN 978-0-9975665-1-2\\[\baselineskip]
+}
+\vfill
+\noindent
+Tá lánchead ag aon duine an leabhar seo a chóipeáil, a athrú, nó a athfhoilsiú
+de réir théarmaí an Creative Commons Attribution-ShareAlike 4.0 International
+License; tuilleadh eolais ó 
+\texttt{https://creativecommons.org/licenses/by-sa/4.0/}.\\[\baselineskip]
+\noindent
+Arna fhoilsiú ag Cadhan Aonair, Saint Louis, Missouri, Stáit Aontaithe Mheiriceá.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                   Giorruchain                                           %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\newpage
+\chapter*{Giorr\'uch\'ain} 
+%\addcontentsline{toc}{chapter}{Giorr\'uch\'ain}
+\thispagestyle{empty}
+\begin{tabbing}
+\hspace*{12ex}\=\hspace{12ex}\=\kill
+\> {\it aid} \> aidiacht \\
+\> {\it af} \> ainmfhocal \\
+\> {\it bain} \> ainmfhocal baininscneach \\
+\> {\it br} \> briathar \\
+\> {\it cop} \> copail \\
+\> {\it db} \> dobhriathar \\
+\> {\it fir} \> ainmfhocal firinscneach \\
+\> {\it for} \> forainm \\
+\> {\it réamh} \> réamhfhocal \\
+\> {\it sealbh} \> aidiacht shealbhach \\
+\> {\it uaill} \> uaillbhreas \\
+\> $\bigstar$ \> sa míle focal is coitianta ach gan a bheith soiléir \\
+\> \textdagger \> neamhchoitianta: sampla ar bith i gcorpas mór Manainnise \\
+\> \textdbend \> cara bréagach: cosúil le focal Gaeilge ach le brí dhifriúil \\
+\end{tabbing}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                   Usaid                                                 %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\chapter*{{\'U}s\'aid} 
+%\addcontentsline{toc}{chapter}{\'Us\'aid}
+
+\newpage
+\thispagestyle{empty}
+
+%\endinput
+% \tableofcontents
+\end{frontmatter}
+
+\begin{mainmatter}
+\twocolumn
+\selectlanguage{irish}
+\lhead{\large\bf \rightmark}
+\rhead{\large\bf \leftmark}
+\input sonrai.tex
+\appendix
+\lhead{}
+\rhead{}
+\end{mainmatter}
+
+\end{document}

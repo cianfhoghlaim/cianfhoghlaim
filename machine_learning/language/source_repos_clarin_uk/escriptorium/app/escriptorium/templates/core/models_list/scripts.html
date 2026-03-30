@@ -1,0 +1,10 @@
+<script>
+'use strict';
+$(document).ready(function() {
+  // join the ws room
+  {% if document.pk %}
+  joinDocumentRoom('{{document.pk}}');
+  {% endif %}
+  bootModels();
+});
+</script>

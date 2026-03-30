@@ -1,0 +1,6 @@
+<V p="y" t="ord">bí</V>
+<A pl="n" gnt="n">sin</A>
+<A pl="n" gnt="n">seo</A>
+<A pl="n" gnt="n">eile</A>
+<A pl="n" gnt="n">sé</A>
+<A pl="n" gnt="n">gach</A>

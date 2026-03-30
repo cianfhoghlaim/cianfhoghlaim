@@ -1,0 +1,145 @@
+
+(1) In this exercise, we'll explore the following question: 
+"What is the probability of the word 'the' in English?"
+
+In the last lecture, I talked about some basic concepts from
+probability theory, including some examples where I computed the
+probability P(E) of an event E:
+
+P(E) = (# of successes) / (total number of events)
+
+and the idea of a conditional probability
+
+P(E|F) = probability of E, assuming F
+
+For the next couple of weeks, we'll be looking at machine
+learning in the context of text classification problems,
+and it will be helpful in doing this to look at languages in
+a "probabilistic" way.  By this, I mean that you can view any
+text as a sequence of "events", one for each word
+of the text, a bit like rolling a die over and over.
+But in this case, instead of a six-sided die, there are thousands
+of possible words that can appear. And unlike a (fair) die, where
+all six sides have equal probabilities, some words are much more
+probable than others in any human language.
+
+Now you probably know that the word "the" is (far and away) the
+most common word in English.  But what does that mean?
+What is "English", exactly? The set of all texts that have ever been 
+written in English?  The set of all things anyone has ever spoken
+in English?  The (infinite) set of all sentences that a speaker
+might ever utter?  And how about different time periods, e.g. Chaucer:
+"And that was seyd in forme and reverence,
+And short and quyk, and ful of hy sentence;
+Sownynge in moral vertu was his speche,
+And gladly wolde he lerne, and gladly teche."
+
+Or Scots English, e.g. Robert Burns:
+"Ye Pow'rs wha mak mankind your care,
+And dish them out their bill o’ fare,
+Auld Scotland wants nae skinking ware
+       That jaups in luggies;
+But, if ye wish her gratefu’ prayer,
+       Gie her a Haggis!"
+
+Anyway, the point is that this is tricky business.  The only 
+reasonable thing we can do in practice is attempt to *estimate*
+the probability P(the) by collecting as much text as possible,
+and counting the number of times "the" appears:
+
+P(the) ≈ (# of times "the" appears) / (total number of words in the text)
+
+For this exercise, you should start by collecting as much text in English as
+possible.  You can do this however you want, and can use any kind of text 
+you can find... books, news articles, blog posts, Wikipedia articles, 
+whatever (this is part of the fun and the challenge... how much text
+can you assemble in, say, 15 minutes?)
+
+I've copied the "wordcounts.py" script from lab01 into this directory,
+so that if you've saved (hopefully a lot of) text in a file
+named "English.txt", then you can compute word frequencies as follows:
+
+$ cat English.txt | python wordcounts.py | more 
+
+(remember that "more" slows down the output; space bar to page down,
+and "q" to quit)
+
+You can get the total number of words (approximately) by using:
+
+$ cat English.txt | wc -w
+
+Use this to *estimate* the probabilities
+P(the), P(of), P(and), P(he), P(she), P(I), P(you), P(is), P(was), P(syzygy)
+
+and enter them into one row of the Google Docs spreadsheet I shared
+with you before class.
+
+Check out the results from other groups, too.
+We'll analyze these results on Monday!
+
+
+(2) Classifying English dialects
+
+A basic example of a text classification problem is language or
+dialect identification.  In this exercise we'll lay the groundwork
+for a classifier that distinguishes varieties of English.
+
+One thing we'd like to figure out is the extent to which 
+individual words can be used as features for text classification.
+
+To this end, I've placed frequency lists for 16 varieties of English
+in this directory.  These were generated using texts I collected from
+various top-level domains on the web; e.g. the frequencies
+in en-IE.txt are from texts gathered from the .ie domain (Ireland).
+This isn't a 100% guarantee that the texts represent "English as
+spoken in Ireland", but it's a decent approximation for our
+purposes.
+
+Can you find examples of words that are strongly characteristic 
+of one dialect or another?  If we think of the words as "features"
+in the decision tree sense, then this is very much like finding the
+best features to "split on".  For starters, you can do this by browsing the
+frequency lists to look for candidates, or by using your intuition or
+knowledge of the different countries to come up with possible examples.
+
+You can test your intuitions with the Python program english.py 
+in this directory.  If you run it unmodified:
+
+$ python english.py
+
+it will show the conditional probabilities of "the", "of", and "and"
+in each dialect, and will show the entropy of the dialect labels,
+given the word.  Since there are 16 dialects (labels), the maximum
+entropy is log_2(16) = 4.0. You'll see the entropies for these three
+words are very close to 4.0, which is to say they give us virtually no
+information about which dialect we're looking at (no surprise).
+
+Anyway, simply change those words to the ones you'd like to test and rerun.
+What's the lowest entropy you can achieve?
+
+(3) Probability of a sentence
+
+What is the probability of the *sentence*
+
+S = "Soccer is my favourite sport"
+
+in, say, the en-US dialect?   How about in the other dialects?
+It's very hard to give a good answer to this that makes both mathematical
+and linguistic sense, so we won't bother trying that and we'll do something
+very naive that will be still be useful. Namely, we'll assume that each
+word of the sentence is *independent*, like independent rolls of a
+six-sided die; therefore:
+
+
+P(S|en-US) = P(Soccer|en-US) * P(is|en-US) * P(my|en-US) *
+             P(favourite|en-US) * P(sport|en-US)
+
+You can get these probabilities for each dialect by running the
+english.py program as in the previous exercise. Then just multiply
+them together by hand, with a calculator, or by pasting into a spreadsheet.
+But the nicest thing of all, if you'd like to test your Python skills,
+would be to try adding a few lines to english.py to loop over the
+dialects and compute the probability for each one.  Your call.
+
+For which dialect is the probability the highest?  Would you agree
+this is the most likely dialect classification for this sentence?

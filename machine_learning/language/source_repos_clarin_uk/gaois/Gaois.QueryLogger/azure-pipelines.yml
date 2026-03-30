@@ -1,0 +1,58 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VSBuild@1
+  inputs:
+    solution: './src/Gaois.QueryLogger/Gaois.QueryLogger.csproj'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: VSBuild@1
+  inputs:
+    solution: './tests/Gaois.QueryLogger.Tests/Gaois.QueryLogger.Tests.csproj'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: VSTest@2
+  inputs:
+    testAssemblyVer2: |
+     **\$(BuildConfiguration)\*Tests*.dll
+     **\$(BuildConfiguration)\*test*.dll
+     **\$(BuildConfiguration)\**\*test*.dll
+     !**\*Microsoft.VisualStudio.TestPlatform*
+     !**\obj\**
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- script: dotnet restore
+  displayName: 'dotnet restore'
+
+- script: dotnet build ./src/Gaois.QueryLogger.Common/Gaois.QueryLogger.Common.csproj --configuration $(buildConfiguration) --framework netstandard2.0
+  displayName: 'dotnet build $(buildConfiguration)'
+
+- script: dotnet build ./src/Gaois.QueryLogger.AspNetCore/Gaois.QueryLogger.AspNetCore.csproj --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet test $(buildConfiguration)'
+  inputs:
+    command: test
+    projects: './tests/Gaois.QueryLogger.Tests.AspNetCore/Gaois.QueryLogger.Tests.AspNetCore.csproj'
+    arguments: '--configuration $(buildConfiguration)'

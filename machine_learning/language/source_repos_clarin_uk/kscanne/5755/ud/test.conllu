@@ -1,0 +1,21 @@
+# text = Book the flight through Houston
+1	Book	book	VERB	_	_	0	root	_	_
+2	the	the	DET	_	_	3	det	_	_
+3	flight	flight	NOUN	_	_	1	obj	_	_
+4	through	through	ADP	_	_	5	case	_	_
+5	Houston	Houston	PROPN	_	_	3	nmod	_	_
+
+# sent_id = GUM_interview_herrick-62
+1	As	as	ADP	_	_	3	case	_	_
+2	a	a	DET	_	_	3	det	_	_
+3	result	result	NOUN	_	_	6	obl	_	_
+4	,	,	PUNCT	_	_	3	punct	_	_
+5	we	we	PRON	_	_	6	nsubj	_	_
+6	made	make	VERB	_	_	0	root	_	_
+7	some	some	DET	_	_	8	det	_	_
+8	mistakes	mistake	NOUN	_	_	6	obj	_	_
+9	along	along	ADP	_	_	11	case	_	_
+10	the	the	DET	_	_	11	det	_	_
+11	path	path	NOUN	_	_	6	obl	_	_
+12	.	.	PUNCT	_	_	6	punct	_	_
+

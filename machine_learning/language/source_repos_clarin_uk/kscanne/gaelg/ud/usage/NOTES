@@ -1,0 +1,43 @@
+All cases where a word is both a headword and an alt spelling 
+of a different headword....
+
+Default is to treat it as the headword.
+In the four (0,N) cases (lhieggey,lhoo,pobbyl,shiauill),
+added lines to conllu2json.pl to always make them the alt.
+
+The other cases I've changed the lemma in the .conllu file
+which is a bit of a hack; should revert those if ever used
+for training... (that said, just 11 fake lemmas...)
+
+boaddagh1_nm	0	0	boiddagh_nm	(1,0)
+boggey1_nm	0	1	boggaghey_nm	(7,1)   <<< 1
+builley1_nm	0	0	bwoalley_nm	(36,1)    <<< 1
+calloo1_nm	0	0	colloo_nm	(1,0)
+daah1_v	daahghey_nm	0	0	(0,0)
+daahit1_a	0	0	daahjit_a	(1,4)     <<< 4
+feiy2_nm	0	feiyghyn	faih_nm	(3,0)
+feiy_n	0	1	feie_n	(3,3)              <<< 3
+fynneig1_nf	0	0	fynnag_nf	(0,0)
+geill1_nm	0	0	geyll_nm	(14,1)     <<< 1
+greesagh1_nm	0	1	greesaghey_nm	(0,0)
+lhieggey1_nm	0	1	lhieggal_n	(0,18)
+lhieu1_pronm	lhieuish	0	lhiu_pronm
+lhoo1_nm	0	lhooghyn	loo_nm	(0,1)
+loamrey1_nm	0	1	lommyrt_nm	(1,0)
+nastey1_nm	0	0	naishtey_nm	(1,0)
+oltooan1_nm	0	0	oltooaney_nm	(2,0)
+paggad1_nm	0	0	paggaid_nm	(1,0)
+pleatagh1_a	0	0	pleateilagh_a	(0,0)
+pobbyl1_nm	0	0	pobble_nm	(0,4)
+raantagh1_nm	0	0	raane_nm	(0,0)
+shelloodagh1_a	0	0	shellooagh_a	(0,0)
+shiauill1_v	shiaulley_nm	0	shiaull_v	(0,5)
+streeu1_nf	0	0	stroo_nm	(6,1)          <<< 1
+tarr1_nm	0	1	terr_nm	(0,0)
+troagyrey3_nm	0	1	troagyraght_nf	(0,0)
+trooar1_nm	0	0	troor_nm	(0,0)
+tunneyder1_nm	0	0	thiollane_nm	(0,0)
+walkal1_n	0	0	walkey_nm	(4,0)
+
+
+glenney->glonney

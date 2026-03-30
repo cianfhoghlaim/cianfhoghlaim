@@ -1,0 +1,22 @@
+# This file contains the grammatical rules checked by An Gramadóir.
+# Copyright (C) 2004 Kevin P. Scannell <kscanne@gmail.com>
+#                    
+#
+# This is free software; see the file COPYING for copying conditions.  There is
+# NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+# Users can add to this list by following the syntax described
+# on the web page  http://borel.slu.edu/gramadoir/
+# Please send me any useful additional rules for inclusion in
+# future releases <kscanne@gmail.com>
+#
+#. This is a sentence with with a repeated word.
+#. ... that that nation might live (CEART).
+that that:OK
+#. Fern couldn't eat until her pig had had a drink of milk (CEART).
+had had:OK
+#. Thiz izn't speled righte.
+<X>ANYTHING</X>:ANAITHNID
+<F>ANYTHING</F>:NEAMHCHOIT
+[Aa] INITIALVOWEL:BACHOIR{an}
+[Aa] YOO:OK

@@ -1,0 +1,181 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />		<script type="text/javascript">var uilang="<%=uilang%>";</script>
+
+		<title>Screenful Editor</title>
+		<script type="text/javascript">var uilang="<%=uilang%>";</script>
+		<script type="text/javascript">var rootPath="/../../";</script>
+		<script type="text/javascript" src="../../libs/jquery.js"></script>
+		<link type="text/css" rel="stylesheet" href="../../libs/screenful/screenful-theme-green.css" />
+    <link type="text/css" rel="stylesheet" href="../../libs/screenful/screenful.css" />
+		<script type="text/javascript" src="../../libs/screenful/screenful.js"></script>
+		<script type="text/javascript" src="../../libs/screenful/screenful-loc-<%-uilang%>.js"></script>
+		<script type="text/javascript" src="../../localizer/<%-uilang%>.js"></script>
+		<script type="text/javascript" src="../../libs/js.cookie.js"></script>
+
+		<script type="text/javascript" src="../../libs/screenful/screenful-editor.js"></script>
+		<link type="text/css" rel="stylesheet" href="../../libs/screenful/screenful-editor.css" />
+		<script type="text/javascript">
+		Screenful.Editor.readUrl="./read.json";
+		<%if(user.level>1){%>Screenful.Editor.updateUrl="./update.json";<%}%>
+		<%if(user.level>2){%>Screenful.Editor.createUrl="./create.json";<%}%>
+		<%if(user.level>2){%>Screenful.Editor.deleteUrl="./delete.json";<%}%>
+		</script>
+
+		<link type="text/css" rel="stylesheet" href="../../widgets/pretty-large.css" />
+		<script type="text/javascript" src="../../widgets/pretty-large.js"></script>
+		<script type="text/javascript">
+		Screenful.Editor.viewer=function(div, entry){
+			$(div).html( PrettyLarge.entry(JSON.parse(entry.content)) );
+			//$(div).html(entry.id);
+		};
+		</script>
+
+		<script type="text/javascript">
+		var user=<%-JSON.stringify(user)%>;
+		var triggers=<%-JSON.stringify(termbaseConfigs.triggers)%>;
+		var todNextAvailableDate="<%-todNextAvailableDate%>";
+		function todNextAvailableDateIncrement(){
+			var date=new Date(todNextAvailableDate);
+			date.setDate(date.getDate()+1);
+			todNextAvailableDate=date.toISOString().split('T')[0];
+		}
+		</script>
+		<link type="text/css" rel="stylesheet" href="../../libs/fy/fy.css" />
+		<script type="text/javascript" src="../../libs/fy/fy.js"></script>
+		<script type="text/javascript" src="../../views/termbase-edit/fy-entry.js"></script>
+		<script type="text/javascript">
+		<%if(user.level>1){%>
+			Screenful.Editor.editor=function(div, entry, uneditable){
+				if(!entry) {
+					var json={
+						"cStatus": "0",
+					  "pStatus": "1",
+					  "dateStamp": (new Date()).toISOString().split('T')[0],
+					  "domains": [],
+					  "desigs": [],
+					  "intros": {},
+					  "definitions": [],
+					  "examples": [],
+					  "collections": [],
+					  "extranets": [],
+						"xrefs": [],
+					};
+					entry={content: JSON.stringify(json)};
+				}
+				Fy.render($(div), JSON.parse(entry.content), Spec, uneditable);
+				// $(div).html("<textarea style='padding: 10px; box-sizing: border-box; width: 100%; height: 400px; resize: vertical; border: 0px; box-shadow: inset 0px 0px 5px #999999; color: var(--link); border-radius: 4px; margin-top: 10px; font-size: 0.9rem;'></textarea>");
+				// $(div).find("textarea").focus().val(JSON.stringify(JSON.parse(entry.content), null, "  "));
+			};
+		<%}%>
+		Screenful.Editor.harvester=function(div){
+			var ret=Fy.harvest($(div));
+			return JSON.stringify(ret, null, "  ");
+			//return $(div).find("textarea").val();
+		};
+		</script>
+
+		<%if(user.isAdmin){%>
+			<script type="text/javascript">
+				Screenful.Editor.allowSourceCode=true;
+				Screenful.Editor.formatSourceCode=function(str){
+					return Screenful.formatJson(str);
+				};
+				Screenful.Editor.validateSourceCode=function(str){
+					return Screenful.isWellFormedJson(str);
+				};
+				Screenful.Editor.cleanupSourceCode=function(str){
+					return str;
+				};
+			</script>
+		<%}%>
+
+		<%if(user.level>2){%>
+			<link type="text/css" rel="stylesheet" href="../../libs/screenful/screenful-history.css" />
+			<script type="text/javascript" src="../../libs/screenful/screenful-history.js"></script>
+			<script type="text/javascript">
+			Screenful.History.historyUrl="./history.json";
+			Screenful.History.isDeletion=function(revision){
+				return revision.action=="delete" || revision.action=="purge";
+			};
+			Screenful.History.getRevisionID=function(revision){
+				return revision.revision_id;
+			};
+			Screenful.History.printAction=function(revision){
+				var content="";
+				//actions: delete | create | update | purge
+				//historiography: {apikey: apikey} | {uploadStart: uploadStart, filename: filename}
+				content+="<div style='white-space: nowrap'>";
+					if(revision.action=="create") content+=`<b>${L("Created")}</b>`;
+					else if(revision.action=="update") content+=`<b>${L("Changed")}</b>`;
+					else if(revision.action=="delete") content+=`<b>${L("Deleted")}</b>`;
+					else if(revision.action=="purge") content+=`<b>${L("Bulk-deleted")}</b>`;
+					if(revision.historiography.uploadStart) content+=` ${L("while uploading")}`;
+				content+="</div>";
+				if(revision.email) content+=`<div style='white-space: nowrap'><b>${L("By")}:</b> ${revision.email}</div>`;
+				content+=`<div style='white-space: nowrap'><b>${L("When")}:</b> ${revision.when}</div>`;
+				if(revision.historiography.diff){
+					revision.historiography.diff.map(change => {
+						content+=`<div style='margin-top: 3px; color: #999999; padding-left: 20px; position: relative;'>`;
+						content+=`<div style='position: absolute; top: 0px; left: 0px;'>■</div>`;
+						content+=`<div style='font-weight: bold;'>${change.desc}</div>`;
+						if(change.oldVal) content+=`<div style='text-decoration: line-through'>${change.oldVal}</div>`;
+						if(change.newVal) content+=`<div style=''>${change.newVal}</div>`;
+						content+=`</div>`;
+					});
+				}
+				return content;
+				//return revision.action+", "+revision.email+", "+revision.when+", "+JSON.stringify(revision.historiography, null, "<br/>");
+			};
+			Screenful.History.fakeEntry=function(revision){
+				if(revision.content) return {id: revision.entry_id, content: revision.content};
+				else return null;
+			};
+			</script>
+		<%}%>
+
+		<script type="text/javascript">
+		var termbaseConfigs=window.parent.termbaseConfigs;
+		var termbaseMetadata=window.parent.termbaseMetadata;
+		</script>
+
+		<script type="text/javascript">
+		Screenful.Editor.allowCommenting=true;
+		Screenful.Editor.openCommenting=false;
+		</script>
+		<script type="text/javascript" src="../../libs/screenful/autosize.js"></script>
+		<script type="text/javascript" src="../../libs/screenful/screenful-commenting.js"></script>
+		<link type="text/css" rel="stylesheet" href="../../libs/screenful/screenful-commenting.css" />
+		<script type="text/javascript">
+		Screenful.Commenting.peekUrl="./commentPeek.json";
+		Screenful.Commenting.userID="<%-user.email%>";
+		Screenful.Commenting.listUrl="./commentList.json";
+		Screenful.Commenting.saveUrl="./commentSave.json";
+		Screenful.Commenting.deleteUrl="./commentDelete.json";
+		Screenful.Commenting.getExtranetTitle=function(xnetID){
+			var xnet=Spec.getExtranet(xnetID);
+			var ret=Spec.title(xnet.title, uilang);
+			return ret;
+		};
+		if(termbaseMetadata.tag.length>0) Screenful.Commenting.allowTags=true;
+		Screenful.Commenting.tags=[]; termbaseMetadata.tag.map(tag => {
+			Screenful.Commenting.tags.push({id: tag.id, title: tag.title});
+		});
+		</script>
+
+    <script type="text/javascript" src="../../libs/screenful/screenful-uilang.js"></script>
+		<link type="text/css" rel="stylesheet" href="../../libs/screenful/screenful-uilang.css" />
+		<script type="text/javascript">
+		Screenful.Uilang.url="../../uilang?lang=$",
+		Screenful.Uilang.languages=<%-JSON.stringify(uilangs)%>;
+		Screenful.Uilang.current="<%-uilang%>";
+		</script>
+
+		<link type="text/css" rel="stylesheet" href="../../furniture/ui.css" />
+	</head>
+	<body>
+	</body>
+</html>

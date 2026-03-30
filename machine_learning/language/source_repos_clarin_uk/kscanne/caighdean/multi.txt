@@ -1,0 +1,3074 @@
+'d_eile cad eile
+'d_é cad é
+'dh_eadh dhea
+'ionns'_air ionsair
+'ionns'_air ionsar
+'ionns'_ar ionsar
+'is_a'd a fhios agat
+'is_a'm a fhios agam
+'is_a'm-sa a fhios agamsa
+'is_ag a fhios ag
+'is_agam a fhios agam
+'is_agat a fhios agat
+'is_agat-sa a fhios agatsa
+'is_agatsa a fhios agatsa
+'is_aici a fhios aici
+'mo_bhrian_óg i mo bhrín óg
+'má_gcuairt máguaird
+'n_a ina
+'na_dheabhaig ina dhiaidh
+'na_dhígh_sin ina dhiaidh sin
+'nina_dhia'dh_san ina dhiaidh sin
+'nn_a ina
+'nn_bhur in bhur
+'nn_bhúr in bhur
+'nn_gach i ngach
+'nn_ár inár
+'o_chlog a chlog
+'o_chola a chodladh
+'o_ló de lá
+'on_daighe don daighe
+'s_a_chionn os a chionn
+'san_mbioth ar bith
+'sé_r'd is éard
+Abu_Dhabi Abú Daibí
+Aifric_Theas Afraic Theas
+Aifric_Thiar Afraic Thiar
+Aifric_Thoir Afraic Thoir
+Aifric_Thuaidh Afraic Thuaidh
+Angla_Éireannach Angla-Éireannach
+Angla_Éireannacha Angla-Éireannacha
+Angla_Éireannaigh Angla-Éireannaigh
+Arsia_Mons Arsia Mons
+Astra_Zeneca AstraZeneca
+Aula_Maxima Aula Maxima
+Auld_Lang_Syne Auld Lang Syne
+Baile_Phib Baile Phib
+Baile_Ruistín Baile Ristín
+Barak_Obama Barack Obama
+Barr_na_Cuille Barr na Cúile
+Barr_na_Cúille Barr na Cúile
+Bhaile_Phib Bhaile Phib
+Bhuiríos_Ó_Luigheach Bhuiríos Ó Luigheach
+Bhun_Chranncha Bhun Cranncha
+Blu_Ray Blu Ray
+Blá_Cliath Baile Átha Cliath
+Boko_Haram Boko Haram
+Bons_Secours Bons Secours
+Botany_Bay Botany Bay
+Bric_na_Buaire Bric na Buaire
+British_Airways British Airways
+Buiríos_Ó_Luigheach Buiríos Ó Luigheach
+Bun_Chranncha Bun Cranncha
+Cambridge_Analytica Cambridge Analytica
+Ceann_tSáile Cionn tSáile
+Cearnóg_Muirfean Cearnóg Mhuirfean
+Champs_Elysees Champs-Élysées
+Champs_Elysées Champs-Élysées
+Champs_Élysees Champs-Élysées
+Champs_Élysées Champs-Élysées
+Che_Guevara Che Guevara
+Cheann_tSáile Chionn tSáile
+Chill_Aithnín Chill Aithnín
+Chill_Díoma Chill Díoma
+Chill_Uird Chill Uird
+Chinua_Achebe Chinua Achebe
+Chionn_tSáile Chionn tSáile
+Chnoc_Mordán Chnoc Mordáin
+Choláiste_Oiriall Choláiste Oiriall
+Cill_Aithnín Cill Aithnín
+Cill_Díoma Cill Díoma
+Cill_Mac_Ciarainn Cill Mhic Iarainn
+Cill_Uird Cill Uird
+Cill_mac_Ciarainn Cill Mhic Iarainn
+Cill_tSeadhna Cill tSéadhna
+Cionn_tSáile Cionn tSáile
+Cnoc_Mordán Cnoc Mordáin
+Coca_Cola Coca Cola
+Coláiste_Oiriall Coláiste Oiriall
+Corto_Maltese Corto Maltese
+Dalai_Lama Dalaí Láma
+Dalaí_Láma Dalaí Láma
+Dalen_Éireann Dalen Éireann
+De_Bhet De Wet
+Dhurlas_Éile Dhurlas Éile
+Dhún_Gheanainn Dhún Geanainn
+Diairmín_riabhach Diarmaidín riabhach
+Dolar_Durbha Dolar Durbha
+Don_Iuan Don Juan
+Durlas_Éile Durlas Éile
+Dún_Gheanainn Dún Geanainn
+Eadain_na_dTorc Éadan na dTorc
+Eid_Mubarak Eid Mubarak
+Eisgir_riadha Eiscir Riada
+El_Camino El Camino
+El_Dorado El Dorado
+El_Greco El Greco
+El_Pais El País
+El_Paso El Paso
+El_País El País
+Falun_Gong Falun Gong
+Fear_Monach Fear Manach
+Fhear_Monach Fhear Manach
+Flann_Sionna Flann Sionna
+Fraggle_Rock Fraggle Rock
+Gaelscoil_Ultain Gaelscoil Ultain
+Gaoth_Bearra Gaoth Beara
+Ghaelscoil_Ultain Ghaelscoil Ultain
+Ghaoth_Bearra Ghaoth Beara
+Gleann_Bhearacháin Gleann Bearcháin
+Glenanne_Gang Glenanne Gang
+Grand_Prix Grand Prix
+Guardia_Civil Guardia Civil
+Gugalaí_Gug Gugalaí Gug
+Hakuna_Matata Hakuna Matata
+Helen_na_Gréige Héilin na Gréige
+Ho_Chi_Minh Ho Chi Minh
+Hong_Kong Hong Cong
+Hóm_Rúil Hóm Rúil
+Inis_Bhearacháin Inis Bearachain
+Inis_Cóirthe Inis Córthaidh
+Inis_Óirr Inis Oírr
+Inse_Seithleann Inis Shealtainn
+Iúdás_Macabéus Iúdás Macabaech
+Iúlius_Caesar Iúil Caesar
+Junk_Kouture Junk Kouture
+Kama_Sutra Kama Sutra
+King_Kong King Cong
+Ku_Klux_Klan Ku Klux Klan
+La_Bombonera La Bombonera
+La_Liga La Liga
+La_Paz La Paz
+Leith_Triúigh Leitriúigh
+Lios_Caragáin Lios Carragáin
+Loch_Deán Loch Deán
+Loch_an_lúir Loch an Iúir
+Loch_gCarman Loch Garman
+Lá_Sain Lá San
+Lá_Shain Lá San
+Mac_Furra Mac Furra
+Mac_Lochlann Mac Lochlainn
+Mac_Piaras Mac Piarais
+Madame_Lazare Madame Lazare
+Maigh_Cuillin Maigh Cuilinn
+Mardi_Gras Mardi Gras
+Mau_Mau Mau Mau
+Meirí_Bál Meirí Bál
+Melas_Chasma Melas Chasma
+Mhic_Furra Mhic Furra
+Mhic_Íre Mhic Íre
+Miami_Showband Miami Showband
+Mic_Eanda Mogeanna
+Mortal_Kombat Mortal Kombat
+Muir_chlúmhach Máirín an chlúimh
+Máire_chlúmhach Máirín an chlúimh
+Móglaí_Bap Móglaí Bap
+Naomh_Aban Naomh Abán
+Naomh_Naille Naomh Náille
+Ner_Cis Néar Cís
+Nic_an_Aillí Nic an Ailí
+Norn_Iron Norn Iron
+Nostra_Aetate Nostra Aetate
+Nua_Eabhrac Nua-Eabhrac
+Nua_Eabhroc Nua-Eabhrac
+Nuadh_Eabhrac Nua-Eabhrac
+Nuadh_Eabhroc Nua-Eabhrac
+Ní_Mhic Nic
+Onomasticon_Goedelicum Onomasticon Goedelicum
+Oran_Mor Órán Mór
+Oran_Mór Órán Mór
+Orán_Mor Órán Mór
+Orán_Mór Órán Mór
+Pan_Am Pan Am
+Pan_Cheilteach Pan-Cheilteach
+Peter_Pan Peter Pan
+Phan_Ceilteach Phan-Cheilteach
+Phan_Cheilteach Phan-Cheilteach
+Radisson_Blu Radisson Blu
+Randa_Dal Randa Dal
+Reics_Carló Réics Carló
+Rióna_Ní_Fhrighil Rióna Ní Fhrighil
+Ros_Comain Ros Comáin
+Ros_Guill Ros Goill
+Ráth_Déamain Ráth Deamáin
+Sagrada_Familia Sagrada Família
+Sagrada_Família Sagrada Família
+San_Iuan San Juan
+Sancta_Maria Sancta Maria
+Sao_Paulo São Paulo
+Shabhal_Mòr Shabhal Mòr
+Shalbatana_Vallis Shalbatana Vallis
+Sinn_Féineach Sinn Féineach
+Spion_Cop Spion Kop
+Sri_Lanka Srí Lanca
+Sráid_Muirfean Sráid Mhuirfean
+Sráid_Muirfeann Sráid Mhuirfean
+Sráid_Talbóid Sráid Thalbóid
+Studia_Hibernica Studia Hibernica
+Suu_Kyi Suu Kyi
+Taj_Mahal Taj Mahal
+Teach_Sagard Teach Sagard
+Theach_Sagard Theach Sagard
+Tik_Tok TikTok
+Tora_Bora Tora Bora
+Ua_bhFailghe Uíbh Fhailí
+Ua_bhFáilí Uíbh Fhailí
+Uibh_Failghe Uíbh Fhailí
+Umhach_na_Rón Uaich na Rón
+Uí_Chonnachán Uí Chonnacháin
+Uí_Failghe Uíbh Fhailí
+Uí_bhFíodhcháin Uí Fhiacháin
+West_Brom West Brom
+Yom_Kippur Yom Kippur
+a'_feachainn ag féachaint
+a_Macedónia sa Mhacadóin
+a_Niarúsalém in Iarúsailéim
+a_Nisrael in Iosrael
+a_Nísrael in Iosrael
+a_Samária sa tSamáir
+a_b'ead ab ea
+a_b'eadh ab ea
+a_b'fhearr ab fhearr
+a_b'fheárr ab fhearr
+a_b'fhéidir ab fhéidir
+a_bainm ab ainm
+a_bfheárr ab fhearr
+a_bhfad i bhfad
+a_bhfadh i bhfad
+a_bhfasta i bhfostú
+a_bhfolach i bhfolach
+a_bhfollach i bhfolach
+a_bpairt i bpáirt
+a_cCallain i gCallainn
+a_capella a capella
+a_choidhche choíche
+a_choíche choíche
+a_chára a chara
+a_céad-luaidhtear céadluaite
+a_d'_iaraidh ag iarraidh
+a_d'fhásann a fhásann
+a_d'iaraidh ag iarraidh
+a_dTir-Chonall i dTír Chonaill
+a_dh'amharc ag amharc
+a_dh'fhacsaint a fheiceáil
+a_dh'fhanan a fhanann
+a_dh'fhéadfaidh a fhéadfaidh
+a_dh'iaraidh ag iarraidh
+a_dh'iarraidh ag iarraidh
+a_dh'imirt ag imirt
+a_dh'imtheacht ag imeacht
+a_dh'innse ag insint
+a_dh'innsint ag insint
+a_dh'ithe ag ithe
+a_dh'obair ag obair
+a_dh'áirneál a airneán
+a_dh'éirghe ag éirí
+a_dh'éisteacht ag éisteacht
+a_dh'éisteann a éisteann
+a_dh'ól ag ól
+a_dteannt' i dteannta
+a_dteannta i dteannta
+a_dtháinig ar tháinig
+a_dtuaidh aduaidh
+a_dtug ar thug
+a_dtáinig ar tháinig
+a_dtáinigh ar tháinig
+a_dtánag ar tháinig mé
+a_dtángas ar tháinig mé
+a_fhiora a fheara
+a_fágfaí a d'fhágfaí
+a_féadfaí a d'fhéadfaí
+a_gCoigibh i gCúige
+a_gceill i gcéill
+a_gcéill i gcéill
+a_gcómhnúidhe i gcónaí
+a_ghainfhios i ngan fhios
+a_ghanfhios i ngan fhios
+a_laihir i láthair
+a_los as los
+a_lám a lán
+a_lós as los
+a_maigh amuigh
+a_mhaisce ambaiste
+a_mhaisge ambaiste
+a_muich amuigh
+a_muigh amuigh
+a_n'aon in aon
+a_n-' ina
+a_n-Albainn in Albain
+a_n-Eirinn in Éirinn
+a_n-achan i ngach aon
+a_n-aimhdheoin in ainneoin
+a_n-allód anallód
+a_n-allóid anallód
+a_n-aoinfheacht in éineacht
+a_n-aonacht in éineacht
+a_n-diu inniu
+a_n-diú inniu
+a_n-eadh an ea
+a_n-oir anoir
+a_n-éagmhuis in éagmais
+a_n-éinfheacht in éineacht
+a_nEirinn in Éirinn
+a_nIarusalém in Iarúsailéim
+a_nIósa in Íosa
+a_naimsir in aimsir
+a_nainffios i ngan fhios
+a_naoinfheacht in éineacht
+a_naois in aois
+a_ndiu inniu
+a_neabhra in Eabhrais
+a_nfairge an fharraige
+a_ngrádh i ngrá
+a_nis anois
+a_noiread an oiread
+a_néinfheacht in éineacht
+a_raer aréir
+a_stuigh istigh
+a_stóin is dóigh
+a_taoi'n atá
+a_thaoi'n atá
+a_ttarla ar tharla
+a_ttárla ar tharla
+a_uasaigh a uasail
+a_wil a bhfuil
+ab_bu_búna ababúna
+ach_go_bé ach ab é
+ad'_fhochair-se i d'fhochairse
+ad_ainmsi i d'ainmse
+ad_fhochairsi i d'fhochairse
+ad_hoc ad hoc
+ad_hominem ad hominem
+ad_infinitum ad infinitum
+ad_litem ad litem
+ad_valorem ad valorem
+ag_brionglóidigh ag brionglóideach
+ag_béicigh ag béicíl
+ag_feachainn ag féachaint
+ag_fiuchaidh ag fiuchadh
+ag_iarraid ag iarraidh
+ag_iarraigh ag iarraidh
+ag_léimeadh ag léim
+ag_léimnigh ag léimneach
+ag_n'athair ag a athair
+ag_pioca ag piocadh
+ag_scríobhadh ag scríobh
+age_sna ag na
+agus_'bhí agus a bhí
+agus_'tá agus atá
+aigem_athair ag m'athair
+air_bioth ar bith
+air_bit ar bith
+air_d-tus ar dtús
+air_dtuis ar dtús
+air_dtus ar dtús
+air_hson ar son
+air_n-a_bharach arna mhárach
+air_na_bharach arna mhárach
+airgidín_luachra airgead luachra
+alma_mater alma mater
+am'_aghaidh-se i m'aghaidhse
+am'_fhocair i m'fhochair
+am'_fhocair-se i m'fhochairse
+am'_fhochair-se i m'fhochairse
+am_aghaidh i m'aghaidh
+am_aghaidh-se i m'aghaidhse
+am_ainmsi i m'ainmse
+am_baice ambaiste
+am_fhocair i m'fhochair
+am_fhochair-se i m'fhochairse
+am_fhochairsi i m'fhochairse
+an_Arabia an Araib
+an_allod anallód
+an_allóid anallód
+an_chead an chéad
+an_chnáimh na cnáimhe
+an_daigh don daighe
+an_dtalamh an talamh
+an_dtaobh an taobh
+an_dteach an teach
+an_dteanga an teanga
+an_dteilifís an teilifís
+an_dteine an tine
+an_dteist an teist
+an_dtigh an teach
+an_dtine an tine
+an_dtobar an tobar
+an_dtraein an traein
+an_dtrá an trá
+an_dtráigh an trá
+an_dtug ar thug
+an_dtugabhar ar thug sibh
+an_dturas an turas
+an_dtáinig ar tháinig
+an_dtáinigh ar tháinig
+an_dtángas ar tháinig mé
+an_dtír an tír
+an_fhaid an fad
+an_fhaid an fhaid
+an_folca_te an folca té
+an_folca_té an folca té
+an_gcuala ar chuala
+an_gcualaís ar chuala tú
+an_n-eadh an ea
+an_n-éinfheacht in éineacht
+an_ndomhan an domhan
+an_ndoras an doras
+an_ndorus an doras
+an_nduine an duine
+an_neithe-se an ní seo
+an_ngeobhadh an bhfaigheadh
+an_ngeobhaidh an bhfaighidh
+an_róighteach anróiteach
+an_slighe an tslí
+an_slí an tslí
+an_slíghe an tslí
+an_t-aicme an aicme
+an_t-ath-uair in athuair
+an_t-í an té
+an_tolc an t-olc
+an_wil an bhfuil
+ana_bheag an-bheag
+ana_bhuidheach an-bhuíoch
+ana_dhaingean an-daingean
+ana_dheacair an-deacair
+ana_dhian an-dian
+ana_dhoimhinn an-domhain
+ana_dhúil an-dúil
+ana_fhada an-fhada
+ana_láidir an-láidir
+ana_mhaith an-mhaith
+ana_mhór an-mhór
+ana_naomhtha an-naofa
+ana_shaidhbhir an-saibhir
+ancien_régime ancien régime
+aniar_dtuaidh aniar aduaidh
+ann_allóid anallód
+ann_so anseo
+ans_an sa
+ans_an san
+ans_gach i ngach
+ans_na sna
+ansa_nfairge san fharraige
+anuair_do nuair a
+aon_úna aon ionadh
+aos_án aosán
+aqua_regia aqua regia
+ar'_bh' arbh
+ar_'bith ar bith
+ar_a_bhárach arna mhárach
+ar_a_thrasna ar a thrasna
+ar_a_threasna ar a thrasna
+ar_aist ar ais
+ar_bal ar ball
+ar_bh' arbh
+ar_bh'eadh arbh ea
+ar_bhfada arbh fhada
+ar_bhfearrde arbh fhearrde
+ar_bhfeidir arbh fhéidir
+ar_bhfhagháil iar bhfáil
+ar_bhfhéidir arbh fhéidir
+ar_bhféidir arbh fhéidir
+ar_bhit ar bith
+ar_bhudh arbh
+ar_bis ar bís
+ar_bit ar bith
+ar_bithe ar bith
+ar_báll ar ball
+ar_cheana archeana
+ar_d-tus ar dtús
+ar_dhein a ndearna
+ar_dhein an ndearna
+ar_dheineadar a ndearnadar
+ar_dheineadar an ndearnadar
+ar_dheineas a ndearna mé
+ar_dheineas an ndearna mé
+ar_dheinis a ndearna tú
+ar_dheinis an ndearna tú
+ar_dhinis a ndearna tú
+ar_dhinis an ndearna tú
+ar_dtuis ar dtús
+ar_dtúis ar dtús
+ar_fad' ar fad'
+ar_fadh ar feadh
+ar_feag ar feadh
+ar_fféidir arbh fhéidir
+ar_fhaid ar fad
+ar_fhaid ar fhad
+ar_fheag ar feadh
+ar_fhis ris
+ar_fhéid ar fhéad
+ar_fiuchaidh ar fiuchadh
+ar_fuaid ar fud
+ar_fád ar fad
+ar_féin air féin
+ar_inn_ar_eatha ar inn ar ea
+ar_isi ar sise
+ar_leath-taoibh ar leataobh
+ar_lós ar los
+ar_mhuirc_mhairc ar mhuin mhairc
+ar_n'a arna
+ar_n-a arna
+ar_n-a_bháireach arna mhárach
+ar_n-a_bhárach arna mhárach
+ar_n-a_bárach arna mhárach
+ar_n-a_mháireach arna mhárach
+ar_n-a_márach arna mhárach
+ar_n-a_n-oirthear anóirthear
+ar_n-a_n-órtha anóirthear
+ar_n-a_n-órthar anóirthear
+ar_na_bhárac arna mhárach
+ar_na_bhárach arna mhárach
+ar_na_mbarach arna mhárach
+ar_na_mbárach arna mhárach
+ar_na_mháireach arna mhárach
+ar_na_mhárach arna mhárach
+ar_ndóchair ar ndóigh
+ar_ndóighe ar ndóigh
+ar_ndóthair ar ndóigh
+ar_ndú ar ndóigh
+ar_neoin ar ndóigh
+ar_rinnis an ndearna tú
+ar_seachran ar seachrán
+ar_stéill ar steallaí
+ar_thob ar hob
+ar_ttúis ar dtús
+ar_tús ar dtús
+ar_uain_ar_éigean ar inn ar éigean
+ar_uainibh ar uainibh
+ar_Éirínn ar Éirinn
+ar_éigin ar éigean
+ar_éis tar éis
+ars'_eisean ar seisean
+ars'_ise ar sise
+ars'_isi ar sise
+ars_eisean ar seisean
+ars_ise ar sise
+arsa'_n arsan
+as_Samaria as an tSamáir
+as_Samária as an tSamáir
+as_a_chomhair os a chomhair
+as_a_comhair os a comhair
+as_cionn os cionn
+as_comhair os comhair
+as_do_chomhair os do chomhair
+as_mo_chomhair os mo chomhair
+at'_aigne i d'aigne
+at'_amadán i d'amadán
+at'_aonar i d'aonar
+at'_fhochair i d'fhochair
+at'_fhochair-se i d'fhochairse
+at_bith ar bith
+at_fad ar fad
+at_fáil ar fáil
+ath_déanamh athdhéanamh
+ath_scrúdú athscrúdú
+athair_críona athair críonna
+atá'n_tu atá tú
+atá'n_tú atá tú
+atái_gceist atá i gceist
+ba_cuma ba chuma
+ba_h-é ba é
+ba_hé ba é
+ba_mho ba mhó
+bail_is_críoch bailchríoch
+balbhán_béice bolgán béice
+barra_taoide barr taoide
+beo_beathigh beo beathach
+bharra_taoide bharr taoide
+bhear_na_bhaoil bhearna bhaoil
+bhratach_Bhríde bhrat Bhríde
+bhratóg_Bhríde bhrat Bhríde
+bhriolla_bhrealla bhrille bhreaille
+bhriolla_bhreolla brille bhreaille
+bhí_'is bhí a fhios
+bhí_sé_air_aige bhí sé ar eire aige
+bliadha_nó bliain ó
+bobha_baistí bogha báistí
+bobha_báistí bogha báistí
+bodaire_gaoithe bod gaoithe
+bogha_eara bogha gearr
+bona_fides bona fides
+bouquet_garni bouquet garni
+bratach_Bhríde brat Bhríde
+bratóg_Bhríde brat Bhríde
+briolla_bhrealla brille bhreaille
+brios_bruar brioscbhruar
+brios_brún brioscbhruar
+bros_brún brioscbhruar
+bualadh_bós bualadh bos
+bud_mhaith ba mhaith
+bud_mhian ba mhian
+bud_é ba é
+budh_mho ba mhó
+budh_thuaidh ó thuaidh
+budh_thuaith ó thuaidh
+bun_os_toll bunoscionn
+bun_ós_cionn bunoscionn
+béarla_eagair béarlagair
+bóín_Dia bóín Dé
+c'ar_bh'as cárbh as
+ca'_'n-a_thaobh cad ina thaobh
+ca'_'na_thaobh cad ina thaobh
+ca'_n-a_thaobh cad ina thaobh
+ca'_na_thaobh cad ina thaobh
+ca_h-as cá as
+ca_has cá as
+ca_mhead cá mhéad
+ca_náit cén áit
+cad_'tá cad atá
+cad_cuige cad chuige
+caid_é cad é
+caid_é_r'd céard
+caidé_tá cad é atá
+cait_bhrád gaid bhrád
+cam_céacht camchéachta
+caras_Críost cara as Críost
+carr_mogail carrmhogal
+carte_blanche carte blanche
+ce_mhead cé mhéad
+ceananta_céanna ceannann céanna
+ceann_scribe ceann scríbe
+ceann_urraidh ceann urra
+cein_fath cén fáth
+cha_n-eadh ní hea
+chad_chuige cad chuige
+chait_bhrád ghaid bhrád
+chan_eil níl
+chan_fhuil níl
+chan_fhuilim nílim
+chan_n-eadh ní hea
+char_bhfada charbh fhada
+char_bhé charbh é
+charas_Críost chara as Críost
+cheann_scribe cheann scríbe
+chimh_maith chomh maith
+chlach_loinge chabhlach loinge
+cho_luath_ás chomh luath agus a
+chomh_fada's chomh fada is
+chomh_thuigh chomh tiubh
+chrot_aonair chruth daonna
+chrot_daona chruth daonna
+chur_chuigí chuir chuige
+cia'r_ba cérbh
+cia'r_bh' cérbh
+cia'r_bh'e cérbh é
+cia'r_bh'iad cérbh iad
+cia'r_bh'é cérbh é
+cia'r_bh'í cérbh í
+cia'r_bhé cérbh é
+cia_'rbh cérbh
+cia_'rbh' cérbh
+cia_an cén
+cia_h-as cá as
+cia_has cá as
+cia_r'_bh'iad cérbh iad
+cia_r'_bh'é cérbh é
+cia_r'_bh'í cérbh í
+ciar_dubh ciardhubh
+cib_air_bith cibé ar bith
+cibé_haca cibé acu
+cinn_fhearainn cinnfhearann
+cié_aca cé acu
+cliobar_hob cliobach
+cliobaram_hob cliobach
+cluan_mara cuán mara
+comh_thuigh chomh tiubh
+conas_'tá conas atá
+conus_'tá conas atá
+cread_faith créad fá
+cread_fár cén fáth ar
+creagán_streille clogán streille
+crot_aonair cruth daonna
+crot_daona cruth daonna
+cráin_mhíolach grathain mhíolach
+crème_fraiche crème fraiche
+créad_faith créad fá
+créad_fár cén fáth ar
+créd_fath cén fáth
+créd_fá cén fáth
+cuid_do_na cuid de na
+cur_chuigí cuir chuige
+cá'r_bh'as cárbh as
+cá_'l cá bhfuil
+cá_bith cibé
+cá_dtáim cá bhfuilim
+cá_fhios cá bhfios
+cá_h-as cá as
+cá_has cá as
+cá_mhead cá mhéad
+cá_ngeobhad cá bhfaighidh mé
+cá_ngeobhadh cá bhfaigheadh
+cá_ngeobhadh-sa cá bhfaigheadhsa
+cá_ngeobhaidh cá bhfaighidh
+cá_ngeobhaimís cá bhfaighimis
+cá_ngeobhainn cá bhfaighinn
+cá_ngeobham cá bhfaighimid
+cá_ngeobhfar cá bhfaighfear
+cá_náit cén áit
+cá_ro cá raibh
+cár_bh cárbh
+cár_bh' cárbh
+cár_bhfearra cárbh fhearr
+cé'r_b'as cérb as
+cé'r_bh cérbh
+cé's_móite cé is moite
+cé_'n cén
+cé_'r_bh' cérbh
+cé_'r_bh'e cérbh é
+cé_'r_bh'é cérbh é
+cé_'r_bh'í cérbh í
+cé_'rbh' cérbh
+cé_'tá cé atá
+cé_ar_bith cibé
+cé_bith cibé
+cé_is_moite cé is moite
+cé_is_móite cé is moite
+cé_mhead cé mhéad
+cé_r'_bh' cérbh
+cé_r'_bh'iad cérbh iad
+cé_r'_bh'é cérbh é
+cé_r'_bh'í cérbh í
+cé_r'd céard
+cé_rud céard
+cé_rud_tá céard atá
+céad_éaga céadéaga
+céard_bhí céard a bhí
+céard_tá céard atá
+cén_fhaid cén fad
+cér_bh cérbh
+cér_bh' cérbh
+cídh_bé cibé
+cídh_go cé go
+cídh_gur cé gur
+cídh_nach cé nach
+cíle_má_guairle gírle guairle
+cóid_i_bhfaid cóideabhaid
+cóir_amáireach cóir máireach
+cúl_fathaigh cál faiche
+cúl_fáich cál faiche
+d'_fhan_siad d'fhanadar
+d'aon_uaim d'aon oghaim
+d'aon_úim d'aon oghaim
+d'ar'_bh'ainm darbh ainm
+d'ar_bh'ainm darbh ainm
+d'ear_is_barr d'fharasbarr
+d'á_mbí dá mbíonn
+d'á_ríribh dáiríre
+d'ár'_bh'ainm darbh ainm
+d'ár_bh'ainm darbh ainm
+d'ár_bhainm darbh ainm
+d'ár_ndóigh ar ndóigh
+d'é_do é a
+dTeach_Sagard dTeach Sagard
+d_fhás d'fhás
+da_mhead dá mhéad
+da_ríribh dáiríre
+dall_an_phúicín dalladh púicín
+dall_na_mullóg dallamullóg
+dalladh_mullóg dallamullóg
+dar_an_leabhra dar an leabhar
+dar_bainm darb ainm
+dar_bh'ainm darbh ainm
+dar_bhainm darbh ainm
+dar_gcionn dár gcionn
+dar_ndoith ar ndóigh
+dar_ndóigh ar ndóigh
+dar_ndóith ar ndóigh
+dar_neoin ar ndóigh
+dar_nóin ar ndóigh
+dar_éis tar éis
+darab_tosach dar tosach
+de_'n den
+de_Blaghad de Blaghd
+de_Bruin de Bruin
+de_Buis de Buis
+de_Maupassant de Maupassant
+de_Varad de Varad
+de_aghaidheannaí d'aghaidheanna
+de_fhaill d'fhaill
+de_fhear d'fhear
+de_fheirg d'fhearg
+de_fheóíl d'fheoil
+de_fhionnadh d'fhionnadh
+de_fhoclaí d'fhocail
+de_fhonn d'fhonn
+de_fhuacht d'fhuacht
+de_ghorta_gharta de dhoirte dhairte
+de_ghurta_gharta de dhoirte dhairte
+de_jure de jure
+de_lis de lis
+de_n-a dá
+de_níon d'iníon
+de_oidhche d'oíche
+de_sna de na
+dem'_aois de m'aois
+deus_ex_machina deus ex machina
+dh'á_ríribh dáiríre
+dhalladh_mullóg dhallamullóg
+dhar_gcionn dár gcionn
+dhar_liom dar liom
+dhar_ndóigh ar ndóigh
+dhar_ndóighe ar ndóigh
+dheagh_Ghaedheal dhea-Ghael
+dheagh_bhéasaibh dhea-bhéasa
+dheagh_chomhdhála dhea-chomhdhála
+dheagh_chómharsanacht dhea-chomharsanacht
+dheagh_dhaoine dhea-dhaoine
+dheagh_dhuine dhea-dhuine
+dheagh_mhéinne dhea-mhéine
+dheagh_sgriobhadoir dhea-scríbhneoir
+dheagh_shampla dhea-shampla
+dhorta_dharta dhoirte dhairte
+dhroch_aicme dhrochaicme
+dhroch_aigeanta dhrochaigeanta
+dhroch_aigne dhrochaigne
+dhroch_ainim dhrochainm
+dhroch_amhrais dhrochamhrais
+dhroch_amhras dhrochamhras
+dhroch_bheart dhrochbheart
+dhroch_bhéas dhrochbhéas
+dhroch_chómhairle dhroch-chomhairle
+dhroch_chómhluadar dhroch-chomhluadar
+dhroch_dhaoine dhrochdhaoine
+dhroch_dhuine dhrochdhuine
+dhroch_fhuadar dhrochfhuadar
+dhroch_ghnímh dhrochghnímh
+dhroch_ghníomh dhrochghníomh
+dhroch_ghníomhartha dhrochghníomhartha
+dhroch_iontaoibh dhrochiontaoibh
+dhroch_mheas dhrochmheas
+dhroch_mhian dhrochmhian
+dhroch_mhúineadh dhrochmhúineadh
+dhroch_mhúinte dhrochmhúinte
+dhroch_neithe dhrochnithe
+dhroch_nídh dhrochní
+dhroch_obair dhrochobair
+dhroch_shampla dhrochshampla
+dhroch_shaoghal dhrochshaol
+dhroch_smuíneamh dhrochsmaoineamh
+dhroch_smuínte dhrochsmaointe
+dhroch_íde dhrochíde
+dhroch_úsáid dhrochúsáid
+dhroch_úsáide dhrochúsáide
+dhá_'réag dháréag
+dhá_fhichid daichead
+dhá_nó'r_trí dhá nó trí
+dhá_réag dháréag
+dhá_ríre dáiríre
+dhá_ríribh dáiríre
+dhó_nó'r_trí dhá nó trí
+dhúra_dara dhiúra deabhra
+dhúra_dara dhiúra dheabhra
+dhúra_dhara dhiúra dheabhra
+dia_domhnac Dé Domhnaigh
+dia_domnach Dé Domhnaigh
+dia_satarn Dé Sathairn
+ding_dang ding deang
+divide_et_impera divide et impera
+dlú_na_fáilte dú na fáilte
+do'n_leith_istigh laistigh
+do's_na de na
+do's_na do na
+do_'n don
+do_Dhamascus don Damaisc
+do_Iordan den Iordáin
+do_Iordan don Iordáin
+do_adhlaiceadar d'adhlacadar
+do_b'_fh'rist' b'fhurasta
+do_b'ea ab ea
+do_b'eadh ab ea
+do_b'fhada b'fhada
+do_b'éigean b'éigean
+do_bfhearra b'fhearr
+do_bhain a bhain
+do_bhain bhain
+do_bhaineas bhain mé
+do_bheadh a bheadh
+do_bheadh bheadh
+do_bhiadh a bhíodh
+do_bhiadh bhíodh
+do_bhiadh do bhia
+do_bhriogh de bhrí
+do_bhris a bhris
+do_bhris bhris
+do_bhríg de bhrí
+do_bhrígh de bhrí
+do_bhrúig bhrúigh
+do_bhuail a bhuail
+do_bhuail bhuail
+do_bhuaileas bhuail mé
+do_bhuineas bhain mé
+do_bhí a bhí
+do_bhí bhí
+do_bhíobhar bhí sibh
+do_bhíodar bhíodar
+do_bhíodh a bhíodh
+do_bhíodh bhíodh
+do_bhíos bhí mé
+do_bhís-se a bhí tusa
+do_bhís-se bhí tusa
+do_budh ba
+do_bádhfaí bháfaí
+do_cailleadh cailleadh
+do_chailleas chaill mé
+do_chaith a chaith
+do_chaith chaith
+do_chaitheas chaith mé
+do_chathas chaith mé
+do_cheap a cheap
+do_cheap cheap
+do_cheapas cheap mé
+do_chidh a fheiceann
+do_chidh feiceann
+do_chidhid chonaiceadar
+do_chonac a chonaic
+do_chonac chonaic
+do_chonaic a chonaic
+do_chonaic chonaic
+do_chonnaic a chonaic
+do_chonnaic chonaic
+do_chonnairc a chonaic
+do_chonnairc chonaic
+do_chonnarc a chonaic
+do_chonnarc chonaic
+do_chose a chosc
+do_chreidte dochreidte
+do_chromas chrom mé
+do_chréidte dochreidte
+do_chuadhas chuaigh mé
+do_chuaidh a chuaigh
+do_chuaidh chuaigh
+do_chualai' chuala
+do_chualas chuala mé
+do_chuas chuaigh mé
+do_chuir a chuir
+do_chuir chuir
+do_chuireadar chuireadar
+do_chuireas chuir mé
+do_chum chum
+do_chum chun
+do_chéill de chiall
+do_chéill do chiall
+do_chí a fheiceann
+do_chí feiceann
+do_chídh a fheiceann
+do_chídh feiceann
+do_chídís d'fheicidís
+do_chífeá d'fheicfeá
+do_chífinn d'fheicfinn
+do_chífá d'fheicfeá
+do_chínn d'fheicinn
+do_chíodh d'fheiceadh
+do_chítí d'fheictí
+do_connaich chonaic
+do_cuireadh cuireadh
+do_deineadar rinneadar
+do_deineadh a rinneadh
+do_deineadh rinneadh
+do_deunfadh a dhéanfadh
+do_deunfadh dhéanfadh
+do_dhein a rinne
+do_dhein rinne
+do_dheineadar a rinneadar
+do_dheineadar rinneadar
+do_dheineamair a rinneamar
+do_dheineamair rinneamar
+do_dheineas a rinne mé
+do_dheineas rinne mé
+do_dheinis a rinne tú
+do_dheinis rinne tú
+do_dhruid dhruid
+do_dhéanaid a dhéanann siad
+do_dhéanaid déanann siad
+do_dhéin a rinne
+do_dhéin rinne
+do_dhéineas a rinne mé
+do_dhéineas rinne mé
+do_dhúnas a dhún mé
+do_dhúnas dhún mé
+do_do_réir do do réir
+do_dtáini' gur tháinig
+do_déineadh rinneadh
+do_eug d'éag
+do_fhir d'fhir
+do_fhiáfruigheadar d'fhiafraíodar
+do_fhosadar d'fhosaíodar
+do_fhreagairsiod d'fhreagair siad
+do_fhreagoir d'fhreagair
+do_fhreagradarsan d'fhreagraíodar
+do_fhuirigh d'fhuirigh
+do_fhás a d'fhás
+do_fhás d'fhás
+do_frith fuarthas
+do_fríth fuarthas
+do_fuair a fuair
+do_fuair fuair
+do_fuaireas fuair mé
+do_fuaras fuair mé
+do_fágfaí d'fhágfaí
+do_fágfí d'fhágfaí
+do_féadfaidhe d'fhéadfaí
+do_féadfaí d'fhéadfaí
+do_féin dó féin
+do_gairfidhe a ghairfí
+do_gairmthí a ghairtí
+do_gearrfadh ghearrfadh
+do_ghabh a ghabh
+do_ghabh ghabh
+do_ghabhas ghabh mé
+do_ghearras ghearr mé
+do_ghlac a ghlac
+do_ghlac ghlac
+do_ghlacas ghlac mé
+do_ghlaodhas ghlaoigh mé
+do_ghlaos ghlaoigh mé
+do_ghluáis ghluais
+do_ghnidh a dhéanann
+do_h-ínseadh insíodh
+do_hadhlaiceadh adhlacadh
+do_hadhnaiceadh a adhlacadh
+do_hairgthí d'argtaí
+do_hathnuaidheadh athnuadh
+do_hithtí d'ití
+do_horduighthí d'ordaítí
+do_htugan a thugann
+do_hug a thug
+do_hug thug
+do_imdhigh d'imigh
+do_labhair a labhair
+do_labhair labhair
+do_labhras labhair mé
+do_leag leag
+do_leanas lean mé
+do_lingdís lingidís
+do_luigheas luigh mé
+do_léigheas léigh mé
+do_ló de ló
+do_marbhad a maraíodh
+do_marbhad maraíodh
+do_mhair a mhair
+do_mhair mhair
+do_mharbhsad a mharaíodar
+do_mharbhsad mharaíodar
+do_mhoidh mhaidhm
+do_mhol a mhol
+do_mhol mhol
+do_n don
+do_n-a dá
+do_nighean d'iníon
+do_níon d'iníon
+do_phós a phós
+do_phós phós
+do_pósach pósadh
+do_raghfá rachfá
+do_rannsad a roinneadar
+do_righneadh a rinneadh
+do_righneadh rinneadh
+do_rin a rinne
+do_rin rinne
+do_rin' a rinne
+do_rin' rinne
+do_rineadar rinneadar
+do_rinne a rinne
+do_rinne rinne
+do_rinneadar rinneadar
+do_rinneadh a rinneadh
+do_rinneadh rinneadh
+do_rinneas rinne mé
+do_ritheas rith mé
+do_riug a rug
+do_riug rug
+do_roinn roinn
+do_ronnadh roinneadh
+do_rug a rug
+do_rug rug
+do_ráidh a dúirt
+do_ráidh dúirt
+do_réir de réir
+do_scréachas scréach mé
+do_scríobh a scríobh
+do_scríobh scríobh
+do_sgaoil a scaoil
+do_sgaoil scaoil
+do_sgríobhas scríobh mé
+do_shuidheas shuigh mé
+do_shádhas sháigh mé
+do_shén shéan
+do_shíleas shíl mé
+do_smuáin smaoinigh
+do_sna do na
+do_thairrngirsiod thairngríodar
+do_thaithn a thaitin
+do_thaithn thaitin
+do_tharaig a tharraing
+do_tharaig tharraing
+do_tharaing a tharraing
+do_tharaing tharraing
+do_tharla a tharla
+do_tharla tharla
+do_tharraing a tharraing
+do_tharraing tharraing
+do_theip a theip
+do_theip theip
+do_thochasuíos thochais mé
+do_thosnuigh thosaigh
+do_thréoruigh threoraigh
+do_thug a thug
+do_thug thug
+do_thugas thug mé
+do_thuig a thuig
+do_thuig thuig
+do_thuigeas thuig mé
+do_thuit a thit
+do_thuit thit
+do_thuiteas thit mé
+do_tháinig a tháinig
+do_tháinig tháinig
+do_thárla a tharla
+do_thárla tharla
+do_thóg a thóg
+do_thóg thóg
+do_thógas thóg mé
+do_éalodar a d'éalaigh
+do_éalodar a d'éalaíodar
+dob'_eadh ab ea
+dob'_eadh ba ea
+dob'_fhada ab fhada
+dob'_fhada b'fhada
+dob'_fhearr ab fhearr
+dob'_fhearr b'fhearr
+dob'_fhéidir ab fhéidir
+dob'_fhéidir b'fhéidir
+dob'_é ba é
+dob'_éidir b'fhéidir
+dob'_éigean b'éigean
+dob_fhearr ab fhearr
+dob_fhearr b'fhearr
+dob_éidir b'fhéidir
+dobh'_fhiú ab fhiú
+dobh'_éigin b'éigin
+dobh_fhearr ab fhearr
+dobh_fheárr ab fhearr
+dobh_fhiú ab fhiú
+dobh_fhéidir b'fhéidir
+dom'_athair do m'athair
+dom_ainmsi do m'ainmse
+dom_mharbhad do mo mharú
+don_Phersia don Pheirs
+don_dtráigh don trá
+don_leith_istigh laistigh
+dot'_ainm do d'ainm
+dot'_athair do d'athair
+dot'_onóir do d'onóir
+droc_aimsear drochaimsir
+droc_aimsir drochaimsir
+droc_aimsire drochaimsire
+droc_rud drochrud
+droc_saogal drochshaol
+droc_shaoghail drochshaoil
+droc_uair drochuair
+droch_aicme drochaicme
+droch_aigeanta drochaigeanta
+droch_aigne drochaigne
+droch_ainim drochainm
+droch_amhrais drochamhrais
+droch_amhras drochamhras
+droch_bheart drochbheart
+droch_bhéas drochbhéas
+droch_chómhairle droch-chomhairle
+droch_chómhluadar droch-chomhluadar
+droch_dhaoine drochdhaoine
+droch_dhuine drochdhuine
+droch_fhuadar drochfhuadar
+droch_ghnímh drochghnímh
+droch_ghníomh drochghníomh
+droch_ghníomhartha drochghníomhartha
+droch_iontaoibh drochiontaoibh
+droch_mheas drochmheas
+droch_mhian drochmhian
+droch_mhúineadh drochmhúineadh
+droch_mhúinte drochmhúinte
+droch_neithe drochnithe
+droch_nídh drochní
+droch_obair drochobair
+droch_shampla drochshampla
+droch_shaoghal drochshaol
+droch_smuíneamh drochsmaoineamh
+droch_smuínte drochsmaointe
+droch_íde drochíde
+droch_úsáid drochúsáid
+droch_úsáide drochúsáide
+droma_daraí dromadaraí
+dtine_aoil dtiníl
+dtúilín_tseabhrach gcúilín seamhrach
+dubhairt_sé_dábhairt_sé dúirse dáirse
+dubhán_ealla damhán alla
+dá_'réag dáréag
+dá_dtarla dár tharla
+dá_dtugtí dá dtabharfaí
+dá_fhaid dá fhad
+dá_fhichead daichead
+dá_fhichid daichead
+dá_fhichit daichead
+dá_mbeidh' dá mbeadh
+dá_mbíodh dá mbeadh
+dá_mhead dá mhéad
+dá_mhéid dá mhéad
+dá_ngeobhadh dá bhfaigheadh
+dá_ngeobhainn-se dá bhfaighinnse
+dá_ngeobhainnse dá bhfaighinnse
+dá_ngeobhtá go bhfaighfeá
+dá_réag dáréag
+dá_ríre dáiríre
+dá_ríribh dáiríre
+dá_ttarla dár tharla
+dá_ttárla dár tharla
+dáirt_sé dúirse
+dár_bainm darb ainm
+dár_bhainm darbh ainm
+déjà_vu déjà vu
+dígh_céille díth céille
+dó_déag dó dhéag
+dóire_bunsen dóire Bunsen
+dúirtsé_dáirtsé dúirse dáirse
+dúra_dara diúra deabhra
+ear_is_barr farasbarr
+en_masse en masse
+en_route en route
+en_suite en suite
+er_fheag ar feadh
+et_cetera et cetera
+ex_gratia ex gratia
+ex_voto ex voto
+fa_dheoigh faoi dheoidh
+fa_dheóigh faoi dheoidh
+fa_dtear faoi deara
+fa_gcuairt máguaird
+fa_gcuáirt máguaird
+fa_n-a faoina
+fad'_ó fada ó
+fad'_ó fadó
+fadúda_an fá dtaobh den
+fait_accompli fait accompli
+faoi_'n faoin
+faoi_dheoigh faoi dheoidh
+faoi_do_réir faoi do réir
+faoi_n'ar faoinár
+faoi_n'asgaill faoina ascaill
+faoi_n'ár faoinár
+faoi_n-a faoina
+faoi_ndeara faoi deara
+faoi_seach_is faoi seach is
+faoi_sheán faoi shéan
+faoin_dtráth faoin tráth
+faoí_n'ar faoinár
+feibh_mar faoi mar
+feng_shui feng shui
+fheile_bríde fhéile Bríde
+fhéile_bríde fhéile Bríde
+fior_bhron fíorbhrón
+fo_dhein faoi dhéin
+folcánta_falcánta folcanta falcanta
+froma_ar_aghaig cruthúnas díreach
+froma_ar_gcúlaibh cruthúnas indíreach
+fríd_a trína
+fríd_a' tríd an
+fríd_ár trínár
+fuarlach_croí fuadach croí
+fuis_fais faoiste fáiste
+fuisteo_faisteo faoiste fáiste
+fuithilí_faithilí fuile faile
+fultham_faltham fuile faile
+fut_fat futa fata
+futha_fatha futa fata
+fá_chionn faoi cheann
+fá_dear faoi deara
+fá_dhein faoi dhéin
+fá_dheoigh faoi dheoidh
+fá_dheóigh faoi dheoidh
+fá_dtear faoi deara
+fá_gcuairt máguaird
+fá_gcuáirt máguaird
+fá_lán-tsiubhal faoi lán seoil
+fá_n'ar faoinár
+fá_n'asgaill faoina ascaill
+fá_n-a faoina
+fá_ndeara faoi deara
+fá_ndearr faoi deara
+fá_ndeár faoi deara
+fá_ndeára faoi deara
+fán_am faoin am
+fáscadh_aníos úscadh aníos
+fásga_a_níos úscadh aníos
+fé_dhein faoi dhéin
+fé_dheoigh faoi dheoidh
+fé_lán-tsiubhal faoi lán seoil
+fé_n-' faoina
+fé_n-a faoina
+fé_ndear faoi deara
+fé_ndeara faoi deara
+fé_ndearr faoi deara
+fé_ndeár faoi deara
+fé_ndeára faoi deara
+fé_seach_is faoi seach is
+fé_sna faoi na
+fébh_mar faoi mar
+fén_dtráigh faoin trá
+fén_dtráth faoin tráth
+fúiste_fáiste faoiste fáiste
+g'aon_nduine d'aon duine
+gCeann_tSáile gCionn tSáile
+gCeanntar_gCumhang gCeantar Cúng
+gCill_Aithnín gCill Aithnín
+gCill_Díoma gCill Díoma
+gCill_Uird gCill Uird
+gCionn_tSáile gCionn tSáile
+ga_has cad as
+gach_le_Domhnach gach re Domhnach
+gach_le_lá gach re lá
+gach_n'aon gach aon
+gach_re gach re
+galar_dóghach galar dubhach
+gan_chrí gan chríoch
+gaoirle_guairle gírle guairle
+gceann_scribe gceann scríbe
+gcruadh_chás gcruachás
+ge_dtí go dtí
+ge_go cé go
+ge_gur cé gur
+gearg_ghoirt gearr goirt
+gearg_goirt gearr goirt
+gearr_ghoirt gearr goirt
+gearra_goirt gearr goirt
+gearra_goirt gearraí goirt
+ghiorr'_anála ghiorranáil
+ghnigh_mé déanaim
+ghnídheadh_siad dhéanaidís
+gib_geab giob geab
+gidh_bé cibé
+gile_guaire gírle guairle
+giorr_análach gearranálach
+go_Damascus go dtí an Damaisc
+go_Iordan go dtí an Iordáin
+go_Macedónia go dtí an Mhacadóin
+go_Samaria go dtí an tSamáir
+go_Samária go dtí an tSamáir
+go_bráth go brách
+go_cé cad é
+go_cé'n cad é an
+go_cé_Dhoire go cé Dhoire
+go_cé_Ros go cé Ros
+go_céard céard
+go_d'eile cad eile
+go_deoigh go deo
+go_deóigh go deo
+go_dteacha go ndeachaigh
+go_dtháinig gur tháinig
+go_dtin go dtí
+go_dtug gur thug
+go_dtáini' gur tháinig
+go_dtáinic gur tháinig
+go_dtáinich gur tháinig
+go_dtáinig gur tháinig
+go_dtáinigh gur tháinig
+go_dtánag gur tháinig mé
+go_dtángas gur tháinig mé
+go_dtínár go dtí ár
+go_dé'n cad é an
+go_dí go dtí
+go_foil go fóill
+go_fuarc go feirc
+go_fuirc go feirc
+go_gcuala gur chuala
+go_gcualaidh gur chuala
+go_gheobhaidh go bhfaighidh
+go_h-Arabia go dtí an Araib
+go_haichearra go haicearrach
+go_hÉire go hÉirinn
+go_háiridhe go háirithe
+go_héascadh go héasca
+go_léireach go léir
+go_m'fhéidir go mb'fhéidir
+go_m-beannuighidh go mbeannaí
+go_mb'éigean gurbh éigean
+go_mb'éigin gurbh éigean
+go_mbeannaighidh go mbeannaí
+go_mbeannuighidh go mbeannaí
+go_mbfhearr gurbh fhearr
+go_mbféidir go mb'fhéidir
+go_mbia go mbeidh
+go_mbádar go raibh siad
+go_moc go moch
+go_máire go maire
+go_méadaighidh go méadaí
+go_méaduighidh go méadaí
+go_n-a gona
+go_n-éirighidh go n-éirí
+go_ndéana go ndéana
+go_ndéineadh go ndearnadh
+go_ndéinidh go ndéana
+go_neartuighidh go neartaí
+go_ngeobhadh go bhfaigheadh
+go_ngeobhaidh go bhfaighidh
+go_ngeobhainn go bhfaighinn
+go_ngeobhair go bhfaighidh tú
+go_ngeobhamaois go bhfaighimis
+go_ngeobhamuid go bhfaighimid
+go_ngeobhfad go bhfaighidh mé
+go_ngeobhfar go bhfaighfear
+go_ngeobhfaí go bhfaighfí
+go_ngeobhthaide go bhfaighfí
+go_ngeobhthaidhe go bhfaighfí
+go_ngeobhthí go bhfaighfí
+go_rinne go ndearna
+go_rinneabhair go ndearna sibh
+go_rinneadh go ndearnadh
+go_ro go raibh
+go_stí go dtí
+go_ttarla gur tharla
+go_ttug gur thug
+go_ttárla gur tharla
+go_té'n cén
+go_wil go bhfuil
+god'_fhéachaint do d'fhéachaint
+god_fhéachaint do d'fhéachaint
+gom_fheara go mb'fhearr
+gom_fheár go mb'fhearr
+gom_fhéidir go mb'fhéidir
+gor_bhfada gurbh fhada
+gos_ard os ard
+gos_íseal os íseal
+greadaigh_leat gread leat
+greadaigh_libh gread libh
+gráin_mhíolach grathain mhíolach
+gur_ab gurb
+gur_b'i gurb i
+gur_b'é gurb é
+gur_bh gurbh
+gur_bh' gurbh
+gur_bh'air gurbh air
+gur_bh'amhlaig gurbh amhlaidh
+gur_bh'eisean gurbh eisean
+gur_bh'fhearr gurbh fhearr
+gur_bh'fhiú gurbh fhiú
+gur_bh'fhéidir gurbh fhéidir
+gur_bh'iad gurbh iad
+gur_bh'urus gurbh fhurasta
+gur_bh'é gurbh é
+gur_bhadh gurbh
+gur_bhfada gurbh fhada
+gur_bhfeairrde gurbh fhearrde
+gur_bhfearr gurbh fhearr
+gur_bhfearra gurbh fhearr
+gur_bhfearrde gurbh fhearrde
+gur_bhféidir gurbh fhéidir
+gur_bhudh gurbh
+gur_bhé gurbh é
+gur_cómha gur comhionann
+gur_deineadh go ndearnadh
+gur_dh'imi' gur imigh
+gur_dhein go ndearna
+gur_dheineadar go ndearnadar
+gur_dheineas go ndearna mé
+gur_dheinis go ndearna tú
+gur_dhineas go ndearna mé
+gur_dhinis go ndearna tú
+gur_dhubhairt go ndúirt
+gur_dhéineamair go ndearnamar
+gur_dhúbhairt go ndúirt
+gur_dubhairt go ndúirt
+gur_déineadh go ndearnadh
+gur_dúirt go ndúirt
+gur_fféidir gurbh fhéidir
+gur_frith go bhfuarthas
+gur_fríth go bhfuarthas
+gur_hadhnaiceadh gur adhlacadh
+gur_mdhó gur iomaí
+gur_rinne go ndearna
+gur_rinneadh go ndearnadh
+gur_rinnis go ndearna tú
+gurb_shin gur sin
+gá_dtáim cá bhfuilim
+gá_hacú cé acu
+gírle_má_guairle gírle guairle
+gód_i_bhfad cóideabhaid
+h-an_aosta han-aosta
+h-an_bhocht han-bhocht
+h-an_bhuidheach han-bhuíoch
+h-an_bocht han-bhocht
+h-an_chliste han-chliste
+h-an_chruaidh han-chrua
+h-an_deas han-deas
+h-an_deireannach han-deireanach
+h-an_dheas han-deas
+h-an_dona han-dona
+h-an_fhluich han-fhliuch
+h-an_flúirseach han-fhlúirseach
+h-an_luath han-luath
+h-an_maith han-mhaith
+h-an_mhaith han-mhaith
+h-an_mhinic han-mhinic
+h-an_mhór han-mhór
+h-an_olc han-olc
+h-an_soiléir han-soiléir
+h-an_tapaidh han-tapa
+h-an_tobann han-tobann
+h-an_trom han-trom
+h-an_árd han-ard
+h-ana_mhaith han-mhaith
+h-ana_mhór han-mhór
+h-aon_úna haon ionadh
+had_dad háidí
+han_deas han-deas
+han_dheas han-deas
+han_dona han-dona
+han_luath han-luath
+han_maith han-mhaith
+han_mhaith han-mhaith
+han_mhinic han-mhinic
+han_minic han-mhinic
+haute_couture haute couture
+haute_cuisine haute cuisine
+heó_láir lárphointe
+hiarraigh_ruadha ioraí rua
+hob_ná_héib hob ná hé
+hoibín_hos hoibín host
+huga_leat chugat leat
+hugaí_libh chugaibh libh
+hulam_halam holam halam
+hullach_hallach hulach halach
+hulm_halm holam halam
+hurla_harla hurlamaboc
+hurlama_giúrlama hurlamaboc
+hurta_harta húirte háirte
+hólam_tró holam halam
+i's_a' sa
+i's_an sa
+i's_na sna
+i_Samaria sa tSamáir
+i_Samaría sa tSamáir
+i_Samária sa tSamáir
+i_Samáría sa tSamáir
+i_Serbhia sa tSeirbia
+i_bPersia sa Pheirs
+i_bfad i bhfad
+i_bfadh i bhfad
+i_bfus abhus
+i_bhad i bhfad
+i_bhfach i bhfách
+i_bhfadh i bhfad
+i_bhfaid i bhfad
+i_bhfos abhus
+i_bhfoscailt in oscailt
+i_bhfus abhus
+i_bhfád i bhfad
+i_bhfáir i bhfáth ar
+i_bhfáth_le i bhfách le
+i_bpé i pé
+i_do_cheap i do cheap
+i_dteannta_chéile i dteannta a chéile
+i_gainfhios i ngan fhios
+i_gan_fhios i ngan fhios
+i_gan_fios i ngan fhios
+i_ganfhios i ngan fhios
+i_gceill i gcéill
+i_gcionn i gceann
+i_gclí i gclí
+i_gcoinnibh i gcoinne
+i_gcoitianta i gcoitinne
+i_gcóir i gcomhair
+i_gcóir i gcóir
+i_geist i gceist
+i_ghainfhios i ngan fhios
+i_ghanfhios i ngan fhios
+i_leataoibh i leataobh
+i_leath-taoibh i leataobh
+i_mBrazil sa Bhrasaíl
+i_maille maille
+i_mbarach amárach
+i_mbáireach amárach
+i_mbárach amárach
+i_mbáraigh amárach
+i_meac i measc
+i_mudha amú
+i_n in
+i_n' ina
+i_n'-aigne ina aigne
+i_n'-am ina am
+i_n'-ionad ina ionad
+i_n'Uachtarán ina Uachtarán
+i_n'achrann ina achrann
+i_n'aghaidh ina aghaidh
+i_n'aice ina aice
+i_n'aigne ina aigne
+i_n'aigneadh ina aigne
+i_n'aimsir ina aimsir
+i_n'ainim ina ainm
+i_n'ainm ina ainm
+i_n'am in am
+i_n'amadán ina amadán
+i_n'amhras in amhras
+i_n'aon in aon
+i_n'aonar ina aonar
+i_n'ar inár
+i_n'arraicis in araicis
+i_n'athair ina athair
+i_n'easbog ina easpag
+i_n'fhear ina fhear
+i_n'fhochair ina fhochair
+i_n'fhotharaigh ina fhothrach
+i_n'fhuairthnín ina fhuairnín
+i_n'fhéachaint ina fhéachaint
+i_n'inead in ionad
+i_n'inntinn ina intinn
+i_n'intinn ina intinn
+i_n'iomláine ina iomláine
+i_n'ionad ina ionad
+i_n'oídhche ina oíche
+i_n'uachtarán ina uachtarán
+i_n'ualach ina ualach
+i_n'ucht ina ucht
+i_n'unúmha ina ionú
+i_n'Áirdrígh ina Ardrí
+i_n'Árdshagart ina Ardsagart
+i_n'áirdrígh ina ardrí
+i_n'áit in áit
+i_n'árdshagart ina ardsagart
+i_n'éadan in éadan
+i_n'éaghmuis ina éagmais
+i_n'ídhbirt ina íobairt
+i_n'óige ina óige
+i_n-' ina
+i_n-Acaill in Acaill
+i_n-Achadh in Achadh
+i_n-Achaia san Acháia
+i_n-Achaill in Achaill
+i_n-Aillinn in Aillinn
+i_n-Aird in Ard
+i_n-Airgeadros in Airgeadros
+i_n-Albain in Albain
+i_n-Albainar in Albain ar
+i_n-Albainn in Albain
+i_n-Albhain in Albain
+i_n-Antioch in Aintíoc
+i_n-Aonach in Aonach
+i_n-Arabia san Araib
+i_n-Ard in Ard
+i_n-Asia san Áise
+i_n-Eachdhruim in Eachroim
+i_n-Eachdruim in Eachroim
+i_n-Eamhain in Eamhain
+i_n-Eatharlaigh in Eatharlach
+i_n-Eirinn in Éirinn
+i_n-Eoghanacht in Eoghanacht
+i_n-Iarthar in Iarthar
+i_n-Ierúsalem in Iarúsailéim
+i_n-Inis in Inis
+i_n-Innbhear in Inbhear
+i_n-Iorras in Iorras
+i_n-Iorrus in Iorras
+i_n-Israél in Iosrael
+i_n-Oileach in Oileach
+i_n-Oiléan in Oileán
+i_n-Oirghiallaibh in Oirialla
+i_n-Osraidhe in Osraí
+i_n-Osruighe in Osraí
+i_n-Osruighibh in Osraí
+i_n-Oxford in Oxford
+i_n-Uibh in Uíbh
+i_n-Uisneach in Uisneach
+i_n-Ulltachaibh in Ultaigh
+i_n-Ulltaibh in Ultaibh
+i_n-Ultaibh in Ultaibh
+i_n-Umhach_na_Rón in Uaich na Rón
+i_n-Ur-Mhúmhain in Urmhumhain
+i_n-Urmhumhain in Urmhumhain
+i_n-Uíbh in Uíbh
+i_n-a ina
+i_n-a'r' inar
+i_n-a_b'fhéidir inarbh fhéidir
+i_n-abhainn in abhainn
+i_n-achan i ngach aon
+i_n-achrann in achrann
+i_n-adhbhadhaibh in adhbha
+i_n-agaidh in aghaidh
+i_n-agha'n in aghaidh an
+i_n-aghaid in aghaidh
+i_n-aghaidh in aghaidh
+i_n-aibíd in aibíd
+i_n-aice in aice
+i_n-aiche in aice
+i_n-aigne in aigne
+i_n-aimhdheoin in ainneoin
+i_n-aimhdheóin in ainneoin
+i_n-aimhreas in amhras
+i_n-aimhréidh in aimhréidh
+i_n-aimsir in aimsir
+i_n-ainbhfios in ainbhios
+i_n-aindeoin in ainneoin
+i_n-aindeóin in ainneoin
+i_n-ainim in ainm
+i_n-ainm in ainm
+i_n-airdcheannas in airdcheannas
+i_n-airde in airde
+i_n-airdríghe in ardrí
+i_n-airm in arm
+i_n-aisce in aisce
+i_n-aiscidh in aisce
+i_n-aisge in aisce
+i_n-aistear in aistear
+i_n-aithne in aithne
+i_n-algébar in ailgéabar
+i_n-allod anallód
+i_n-allód anallód
+i_n-allóid anallód
+i_n-alt in alt
+i_n-am in am
+i_n-amanna in amanna
+i_n-amhras in amhras
+i_n-amsir in aimsir
+i_n-an in ann
+i_n-an' in ann
+i_n-anmannaibh in ainmneacha
+i_n-ann in ann
+i_n-annálaibh in annála
+i_n-ao' in aon
+i_n-ao'-chor in aon chor
+i_n-ao'chor in aon chor
+i_n-aochor in aon chor
+i_n-aoin in aon
+i_n-aoin-tigheas in aontíos
+i_n-aoineacht in éineacht
+i_n-aoinfheacht in éineacht
+i_n-aoinne in aon duine
+i_n-aoinnídh in aon ní
+i_n-aointeach in aon teach
+i_n-aois in aois
+i_n-aon in aon
+i_n-aon-chairt in aon chairt
+i_n-aon-chor in aon chor
+i_n-aonacht in éineacht
+i_n-aonbhall in aon bhall
+i_n-aonbhliadhain in aon bhliain
+i_n-aoncheangal in aon cheangal
+i_n-aonchor in aon chor
+i_n-aondtigh in éindí
+i_n-aonfeacht in éineacht
+i_n-aonfheacht in éineacht
+i_n-aonló in aon lá
+i_n-aonmhí in aon mhí
+i_n-aonoidhche in aon oíche
+i_n-aontsuim in aon suim
+i_n-aontumha in aontumha
+i_n-aonuaigh in aon uaigh
+i_n-aonuair in aon uair
+i_n-aos in aois
+i_n-ar inar
+i_n-ar' inar
+i_n-ardfhlaitheas in ardfhlaitheas
+i_n-arm in arm
+i_n-arár inár
+i_n-ascaill in ascaill
+i_n-ath-uair in athuair
+i_n-aénacht in éineacht
+i_n-diu inniu
+i_n-eachtaibh in achtanna
+i_n-eagar in eagar
+i_n-eagna in eagna
+i_n-earaid in earráid
+i_n-earr in earr
+i_n-earraid in earráid
+i_n-easaonta in easaontas
+i_n-easnamh in easnamh
+i_n-easumhla in easumhlaíocht
+i_n-eathar in eathar
+i_n-eiliotrom in eileatram
+i_n-eineach in oineach
+i_n-eineaclainn in eineachlann
+i_n-eolus in eolas
+i_n-iarthar in iarthar
+i_n-ileán in oileán
+i_n-imchian in imigéin
+i_n-imchéin in imigéin
+i_n-imeal in imeall
+i_n-imeall in imeall
+i_n-imigéin in imigéin
+i_n-imreasain in imreas
+i_n-imreasan in imreas
+i_n-inead in ionad
+i_n-inghin in iníon
+i_n-inis in inis
+i_n-innimh in inmhe
+i_n-innmhe in inmhe
+i_n-intinn in intinn
+i_n-iomad in iomad
+i_n-iommbualadh in imbhualadh
+i_n-ionad in ionad
+i_n-ionadh in ionad
+i_n-ionadhaibh in ionaid
+i_n-ionanas in ionannas
+i_n-iongantas in iontas
+i_n-iongnais in íonais
+i_n-iorghail in iorghal
+i_n-iúil in iúl
+i_n-iúl in iúl
+i_n-obair in obair
+i_n-oifig in oifig
+i_n-oiléan in oileán
+i_n-oirchill in oirchill
+i_n-oireachtas in oireachtas
+i_n-oirthear in oirthear
+i_n-olcas in olcas
+i_n-ollamhnacht in ollúnacht
+i_n-ollan in olann
+i_n-onóir in onóir
+i_n-ord in ord
+i_n-ordughadh in ordú
+i_n-orláimh in urlámh
+i_n-uachdar in uachtar
+i_n-uachtar in uachtar
+i_n-uaighneas in uaigneas
+i_n-uaigneas in uaigneas
+i_n-uair in uair
+i_n-uathadh in uathadh
+i_n-ucht in ucht
+i_n-uile in uile
+i_n-uimhir in uimhir
+i_n-uisce in uisce
+i_n-uisge in uisce
+i_n-umhail in iúl
+i_n-Áird in Aird
+i_n-Árainn in Árainn
+i_n-Árd in Ard
+i_n-Áth in Áth
+i_n-Éilibh in Éilí
+i_n-Éireann in Éirinn
+i_n-Éireannchaibh in Éireannaigh
+i_n-Éireinn in Éirinn
+i_n-Éirinn in Éirinn
+i_n-áineas in áineas
+i_n-áirc in áirc
+i_n-áirde in airde
+i_n-áirithe in áirithint
+i_n-áit in áit
+i_n-áiteacha in áiteanna
+i_n-áiteachaibh in áiteanna
+i_n-áiteannaibh in áiteanna
+i_n-áitibh in áiteanna
+i_n-ám in am
+i_n-ár inár
+i_n-ár' inar
+i_n-árd in ard
+i_n-árd-réim in ardréim
+i_n-árdfhlaitheas in ardfhlaitheas
+i_n-árus in áras
+i_n-éa'-chor in aon chor
+i_n-éadach in éadach
+i_n-éadaighibh in éadaigh
+i_n-éadan in éadan
+i_n-éadán in éadan
+i_n-éag in éag
+i_n-éagmais in éagmais
+i_n-éagmhuis in éagmais
+i_n-éalódh in éalú
+i_n-éan-bhall in aon bhall
+i_n-éan-chor in aon chor
+i_n-éan-áit in aon áit
+i_n-éanchor in aon chor
+i_n-éifeacht in éifeacht
+i_n-éin-teangain in aon teanga
+i_n-éindigh in éindí
+i_n-éineacht in éineacht
+i_n-éinfheacht in éineacht
+i_n-éinní in aon ní
+i_n-éiric in éiric
+i_n-éis in éis
+i_n-éitheach in éitheach
+i_n-íoc in íoc
+i_n-íochtar in íochtar
+i_n-óir in ór
+i_n-órdú in ordú
+i_n-úil in iúl
+i_n-úir in úir
+i_n-úmhail in iúl
+i_n-úrthosach in urthosach
+i_n-úsáid in úsáid
+i_nAcaill in Acaill
+i_nAontrum in Aontroim
+i_nApollo in Apalló
+i_nDamascus sa Damaisc
+i_nEachdhruim in Eachroim
+i_nEirinn in Éirinn
+i_nGaililí sa Ghailíl
+i_nIarthar in Iarthar
+i_nUachtar in Uachtar
+i_nUibh_Failghe in Uíbh Fhailí
+i_na ina
+i_naice in aice
+i_nalt in alt
+i_naoinfheacht in éineacht
+i_naois in aois
+i_naonar in aonar
+i_nbhar in bhur
+i_nbúr in bhur
+i_ndan i ndán
+i_ndan in ann
+i_ndhiaidh i ndiaidh
+i_ndhá in dhá
+i_ndiu inniu
+i_ndiú inniu
+i_ndá in dhá
+i_ndá_ríre i ndáiríre
+i_ndá_ríribh i ndáiríre
+i_ndáiríribh i ndáiríre
+i_ndáríribh i ndáiríre
+i_ndóthair ar ndóigh
+i_ngainfhios i ngan fhios
+i_ngan-'is i ngan fhios
+i_ngan_'is i ngan fhios
+i_ngan_fios i ngan fhios
+i_nganfhios i ngan fhios
+i_ngioll i ngeall
+i_ngár i ngar
+i_nÉirinn in Éirinn
+i_nÉrinn in Éirinn
+i_náirde in airde
+i_néadan in éadan
+i_néinfheacht in éineacht
+i_reachtaibh i riocht
+i_san sa
+i_san san
+i_san_mbioth ar bith
+i_sna sna
+iar_dtain iardain
+iar_n-a arna
+id'_fhochair-se i d'fhochairse
+id_aghaidh-se i d'aghaidhse
+id_aigne i d'aigne
+id_anam i d'anam
+id_aonar i d'aonar
+id_intinn i d'intinn
+id_óinseach i d'óinseach
+id_óinsig i d'óinseach
+id_óinsigh i d'óinseach
+idée_fixe idée fixe
+im'_aghaidh-se i m'aghaidhse
+im'_aigne i m'aigne
+im'_fhochair-se i m'fhochairse
+im_aghaidh i m'aghaidh
+im_aice i m'aice
+im_aigne i m'aigne
+im_aonar i m'aonar
+im_bhéal i mo bhéal
+im_cheann i mo cheann
+im_chluasa i mo chluasa
+im_chodladh i mo chodladh
+im_choinne i mo choinne
+im_choinnibh i mo choinne
+im_chroidhe i mo chroí
+im_chroí i mo chroí
+im_chómhnuidhe i mo chónaí
+im_chónaí i mo chónaí
+im_dhiaidh i mo dhiaidh
+im_fhochair i m'fhochair
+im_ghoile i mo ghoile
+im_intinn i m'intinn
+im_leith i mo leith
+im_láimh i mo láimh
+im_phóca i mo phóca
+im_shaol i mo shaol
+im_sheasamh i mo sheasamh
+im_sheilbh i mo sheilbh
+im_shuidhe i mo shuí
+im_shuí i mo shuí
+im_shúilibh i mo shúile
+im_thaobh i mo thaobh
+im_thimcheall i mo thimpeall
+im_threo i mo threo
+im_threó i mo threo
+im_thuairim i mo thuairim
+im_thuairimse i mo thuairimse
+im_thímcheall i mo thimpeall
+im_óige i m'óige
+in_Arabia san Araib
+in_Iúil in Iúil
+in_a ina
+in_aiche in aice
+in_aimhréidhtigh in aimhréidh
+in_allod anallód
+in_allód anallód
+in_ar' inar
+in_dá in dhá
+in_gach i ngach
+in_imchian in imigéin
+in_imchiana in imigéin
+in_imchéin in imigéin
+in_iúil in iúl
+in_n-éinfheacht in éineacht
+in_sna sna
+in_Éirínn in Éirinn
+in_áiríre i ndáiríre
+in_ár in ár
+in_ár inár
+in_éis tar éis
+ins_an sa
+ins_an san
+ins_gach i ngach
+ins_na sna
+iona_fhocair ina fhochair
+ionn_a ina
+ionn_a_nam ina n-am
+ionnas_go ionas go
+ionnas_gur ionas gur
+ionnas_gurab ionas gurb
+ionnas_nach ionas nach
+ionnas_nách ionas nach
+ionnas_nár ionas nár
+is_cómha is comhionann
+is_deirní is deireanaí
+is_féid is féidir
+is_mdhó is iomaí
+is_nea-chómha is neamhionann
+is_neachómha is neamhionann
+is_soth is oth
+is_é_r'd is éard
+is_éidir is féidir
+ist'_oidhche istoíche
+ist_lá sa lá
+ist_ló sa lá
+ist_oidche istoíche
+ist_oidhche istoíche
+ist_oích' istoíche
+ist_oíche istoíche
+ist_oídhche istoíche
+it'_aghaidh-se i d'aghaidhse
+it'_aigne i d'aigne
+it'_aonar i d'aonar
+it'_fhear i d'fhear
+it'_fhochair i d'fhochair
+it'_inntinn i d'intinn
+it_fhochairsi i d'fhochairse
+la'r_n-a lá arna
+la'r_na lá arna
+la_'l lá fhéile
+le'm_anam le m'anam
+le'm_eolas le m'eolas
+le'm_fhiacla le m'fhiacla
+le'm_iníon le m'iníon
+le'n_a lena
+le'n_bhur le bhur
+le_Damascus leis an Damaisc
+le_Serbhia leis an tSeirbia
+le_a lena
+le_aon le haon
+le_ar' lenar
+le_cheile le chéile
+le_cheíle le chéile
+le_chur le cur
+le_dhul le dul
+le_feirg le fearg
+le_fhagháil le fáil
+le_fheiceáil le feiceáil
+le_ghabhail le gabháil
+le_ghabháil le gabháil
+le_ghol le gol
+le_gréin le gréin
+le_haigh le haghaidh
+le_haigh' le haghaidh
+le_iad le hiad
+le_lin le linn
+le_mbiadh lena mbeadh
+le_n' lena
+le_n'a lena
+le_n'aghaidh lena aghaidh
+le_n'ais lena ais
+le_n'anam lena anam
+le_n'athair lena athair
+le_n'innsint lena insint
+le_n'ithe lena ithe
+le_n'ucht lena ucht
+le_n'ár lenár
+le_n'íoc lena íoc
+le_n'ól lena ól
+le_n-' lena
+le_n-a lena
+le_n-a_lin lena linn
+le_n-ar' lenar
+le_na lena
+le_nbúr le bhur
+le_thabhairt le tabhairt
+le_theacht le teacht
+le_theinidh le tine
+leath_chois leathchois
+leath_shúil leathshúil
+leathánach_uisce leathánach uisce
+led_ainmsi le d'ainmse
+leis_fin leis sin
+leith_istigh laistigh
+lem'_aghaidh-se le m'aghaidhse
+lem'_ais le m'ais
+lem_ais le m'ais
+lem_aisse le m'ais-se
+les_an leis an
+les_gach le gach
+lia_bró liabró
+liath_uisce leith uisce
+lis_pendens lis pendens
+liútar_léatar liútar éatar
+lo'r_n-a_mháireach lá arna mhárach
+loch_léin loch bhléine
+luchd_bratha lucht braite
+luighe_gaidhte luí gaidhte
+luí_gaidhte luí gaidhte
+lá'r_n'a lá arna
+lá'r_na_bhárac lá arna mhárach
+lá_'l lá fhéile
+láirín_ó_lúra láirín ó lúra
+lár_'na_bhárac lá arna mhárach
+lár_na_bhárac lá arna mhárach
+lár_na_mháireach lá arna mhárach
+lé_n'aghaidh lena aghaidh
+lúirín_ó_lára lúirín ó lára
+m'athair_críona m'athair críonna
+mBaile_Phib mBaile Phib
+mBuiríos_Ó_Luigheach mBuiríos Ó Luigheach
+mBun_Chranncha mBun Cranncha
+mac_a_samhail macasamhail
+mac_airmis mac imrisc
+mac_alla macalla
+mac_an_aba mac an daba
+mac_imreasain imreasc
+mac_imreasan imreasc
+mac_imris imreasc
+mac_samhla macasamhail
+madar_ealla madra alla
+madra_lathaí maidrín lathaí
+mar'dh_eadh mar dhea
+mar_'bhí mar a bhí
+mar_'dheadh mar dhea
+mar_'tá mar atá
+mar_a_gciana mar an gcéanna
+mar_dh'eadh mar dhea
+mar_dheadh mar dhea
+mar_dheall mar gheall
+mar_ghioll mar gheall
+mara_bé murab é
+mb'_fhiú mb'fhiú
+mb'_fhéidir mb'fhéidir
+mb'_áil mb'áil
+mb'_éigean mb'éigean
+mbarra_taoide mbarr taoide
+mbudh_éidir mb'fhéidir
+mea_culpa mea culpa
+meacan_comparaidh meacan compair
+meacan_cúmfaire meacan compair
+meann_gabhair meannán aeir
+mhac_alla mhacalla
+mhac_an_aba mhac an daba
+mhac_imreasain imreasc
+mhac_imreasan imreasc
+mhac_imris imreasc
+mhac_samhla mhacasamhail
+mhadra_lathaí mhaidrín lathaí
+mialtóg_leathair ialtóg leathair
+mil_mhear moing mhear
+min_rabh mionrabh
+mo_bhrian_óg mo bhrín óg
+mo_chean mochean
+mo_chrí mo chroí
+mo_chéill mo chiall
+mo_fhile m'fhile
+mo_fhreagradh mo fhreagra
+mo_leán mo léan
+mo_níon m'iníon
+muga_maga mugadh magadh
+muid_inne muidne
+muid_sinne muidne
+mun_ba murar
+muna_bheath mura mbeadh
+munga_manga mugadh magadh
+mur_b'é murab é
+mura_bé murab é
+mura_wil mura bhfuil
+my_faith my faith
+má_'s más
+má_'tá má tá
+má_gcuairt máguaird
+má_is más
+má_sea más ea
+má_seadh más ea
+más_nea-chómha más neamhionann
+míoltóg_leathair ialtóg leathair
+mól_an_óige mol an óige
+n'ár_ndiaidh inár ndiaidh
+n-ár_ndhiaidh inár ndiaidh
+nDurlas_Éile nDurlas Éile
+nDún_Gheanainn nDún Geanainn
+nGaoth_Bearra nGaoth Beara
+nUdarás_nAitiúil nÚdarás Áitiúil
+na_Boers na Bóraigh
+na_Breataine-na_hÉireann na Breataine-na hÉireann
+na_Breatan na Breataine
+na_Persia na Peirse
+na_Samaria na Samáire
+na_bach ná bac
+na_brach' na braiche
+na_bracha na braiche
+na_báirce an bháirc
+na_con an chú
+na_cuntúrach an chuntair
+na_cún an chú
+na_cúramaí na cúraimí
+na_fallaí na ballaí
+na_feuchfadh nach bhféachfadh
+na_fflaithios na flaithis
+na_féachfadh nach bhféachfadh
+na_féadfadh nach bhféadfadh
+na_h-Arabia na hAraibe
+na_haigéine an aigéin
+na_hallach an halla
+na_háine an chiorcail
+na_mBoers na mBórach
+na_ndhiaidh ina dhiaidh
+na_neithe-se na nithe seo
+na_seo ná seo
+na_sin ná sin
+na_sinsire an tsinsir
+na_tógfadh nach dtógfadh
+nach_biadh nach mbeadh
+nach_bíodh nach mbíodh
+nach_caithfeadh nach gcaithfeadh
+nach_casfadh nach gcasfadh
+nach_clisfeadh nach gclisfeadh
+nach_creidtí nach gcreideann sibh
+nach_creidtí nach gcreidtí
+nach_deunfadh nach ndéanfadh
+nach_deurna nach ndearna
+nach_dteacha nach ndeachaigh
+nach_dtháinig nár tháinig
+nach_dtáinig nár tháinig
+nach_dtáinigh nár tháinig
+nach_déanfá nach ndéanfá
+nach_faghainn nach bhfaighinn
+nach_fanfadh nach bhfanfadh
+nach_feacamair nach bhfacamar
+nach_feachainn nach bhféachfainn
+nach_fillfeadh nach bhfillfeadh
+nach_fuil nach bhfuil
+nach_fuil nach fuil
+nach_féadfadh nach bhféadfadh
+nach_féadfaidhe nach bhféadfaí
+nach_gcuala nár chuala
+nach_gcualaidh nár chuala
+nach_géillfeadh nach ngéillfeadh
+nach_ngeobhadh nach bhfaigheadh
+nach_ngeobhaidh nach bhfaighidh
+nach_rinne nach ndearna
+nach_ro nach raibh
+nach_tréigfeadh nach dtréigfeadh
+nach_ttarla nár tharla
+nach_ttárla nár tharla
+nach_tógfadh nach dtógfadh
+nach_wil nach bhfuil
+nachar_bh'fheas nárbh fhios
+nachar_bh'fhiu nárbh fhiú
+nachar_bh'fhiú nárbh fhiú
+nar_bhfeidir nárbh fhéidir
+nar_bhfhéidir nárbh fhéidir
+nar_bhféidir nárbh fhéidir
+nar_vfeidir nárbh fhéidir
+ndil_chuimhne ndilchuimhne
+ndil_cuimhne ndilchuimhne
+ndroch_aicme drochaicme
+ndroch_aigeanta ndrochaigeanta
+ndroch_aigne ndrochaigne
+ndroch_ainim ndrochainm
+ndroch_amhrais ndrochamhrais
+ndroch_amhras ndrochamhras
+ndroch_bheart ndrochbheart
+ndroch_bhéas ndrochbhéas
+ndroch_chómhairle ndroch-chomhairle
+ndroch_chómhluadar ndroch-chomhluadar
+ndroch_dhaoine ndrochdhaoine
+ndroch_dhuine ndrochdhuine
+ndroch_fhuadar ndrochfhuadar
+ndroch_ghnímh ndrochghnímh
+ndroch_ghníomh ndrochghníomh
+ndroch_ghníomhartha ndrochghníomhartha
+ndroch_iontaoibh ndrochiontaoibh
+ndroch_mheas ndrochmheas
+ndroch_mhian ndrochmhian
+ndroch_mhúineadh ndrochmhúineadh
+ndroch_mhúinte ndrochmhúinte
+ndroch_neithe ndrochnithe
+ndroch_nídh ndrochní
+ndroch_obair ndrochobair
+ndroch_shampla ndrochshampla
+ndroch_shaoghal ndrochshaol
+ndroch_smuíneamh ndrochsmaoineamh
+ndroch_smuínte ndrochsmaointe
+ndroch_íde ndrochíde
+ndroch_úsáid ndrochúsáid
+ndroch_úsáide ndrochúsáide
+ndíl_chuimhne ndilchuimhne
+ndíl_cuimhne ndilchuimhne
+ndúra_dara ndiúra deabhra
+neach_cé_acu neachtar acu
+ni_deurna ní dhearna
+nior_bhfada níorbh fhada
+nior_bhfeidir níorbh fhéidir
+nior_bhféidir níorbh fhéidir
+nior_vfeidir níorbh fhéidir
+niúide_neáide niúdar neádar
+niúidí_neáidí niúdar neádar
+noc_a a
+noc_atá atá
+noc_do a
+noc_dobhí a bhí
+noch_a a
+noch_atá atá
+noch_do a
+noch_dobhí a bhí
+nochar_bhféidir nárbh fhéidir
+non_grata non grata
+nua_aoiseach nua-aoiseach
+nÚdarás_nÁitiúil nÚdarás Áitiúil
+ná'r_bh'fhéidir nárbh fhéidir
+ná_bacfadh nach mbacfadh
+ná_bacfaidís nach mbacfaidís
+ná_bacfá nach mbacfá
+ná_bach ná bac
+ná_baileófá nach mbaileofá
+ná_bainfadh nach mbainfeadh
+ná_bainfeadh nach mbainfeadh
+ná_bainfeá nach mbainfeá
+ná_bainfidís nach mbainfidís
+ná_beadh nach mbeadh
+ná_beannófá nach mbeannófá
+ná_bearrfadh nach mbearrfadh
+ná_beathóch nach mbeathódh
+ná_beidh nach mbeidh
+ná_beidhfeá nach mbeifeá
+ná_beidhfá nach mbeifeá
+ná_beifá nach mbeifeá
+ná_beárrfadh nach mbearrfadh
+ná_blaisfeadh nach mblaisfeadh
+ná_blaisfinn nach mblaisfinn
+ná_bodharfadh nach mbodhródh
+ná_bogfadh nach mbogfadh
+ná_bogfainn nach mbogfainn
+ná_braithfeadh nach mbraithfeadh
+ná_braithfeá nach mbraithfeá
+ná_braithfinn nach mbraithfinn
+ná_brathfadh nach mbraithfeadh
+ná_brathfá nach mbraithfeá
+ná_brisfeadh nach mbrisfeadh
+ná_brisfidís nach mbrisfidís
+ná_brisfinn nach mbrisfinn
+ná_broicfeadh nach mbroicfeadh
+ná_bronnfadh nach mbronnfadh
+ná_bronnfá nach mbronnfá
+ná_brostófá nach mbrostófá
+ná_brúfainn nach mbrúfainn
+ná_buafadh nach mbuafadh
+ná_buaidhfadh nach mbuafadh
+ná_buaidhfeadh nach mbuafadh
+ná_buaidhfinn nach mbuafainn
+ná_buailfadh nach mbuailfeadh
+ná_buailfeadh nach mbuailfeadh
+ná_buailfeá nach mbuailfeá
+ná_buailfinn nach mbuailfinn
+ná_bádhfadh nach mbáfadh
+ná_bádhfaidís nach mbáfaidís
+ná_báidhfeadh nach mbáfadh
+ná_báthfadh nach mbáfadh
+ná_béach nach mbeadh
+ná_béadh nach mbeadh
+ná_béarfaidís nach mbéarfaidís
+ná_béarfainn nach mbéarfainn
+ná_béarfá nach mbéarfá
+ná_bíon nach mbíonn
+ná_bíonn nach mbíonn
+ná_caillfeadh nach gcaillfeadh
+ná_caillfinn nach gcaillfinn
+ná_caithfeadh nach gcaithfeadh
+ná_caithfeá nach gcaithfeá
+ná_caithfidís nach gcaithfidís
+ná_camfadh nach gcamfadh
+ná_canfadh nach gcanfadh
+ná_caochfadh nach gcaochfadh
+ná_caoinfadh nach gcaoinfeadh
+ná_caoinfeadh nach gcaoinfeadh
+ná_caoinfinn nach gcaoinfinn
+ná_casfadh nach gcasfadh
+ná_casfainn nach gcasfainn
+ná_casfaí nach gcasfaí
+ná_casfá nach gcasfá
+ná_ceadófá nach gceadófá
+ná_ceannófá nach gceannófá
+ná_ceapfadh nach gceapfadh
+ná_ceapfaidís nach gceapfaidís
+ná_ceapfainn nach gceapfainn
+ná_ceilfeadh nach gceilfeadh
+ná_cimeádfadh nach gcoimeádfadh
+ná_claoidhfeadh nach gcloífeadh
+ná_claonfadh nach gclaonfadh
+ná_cleachtfadh nach gcleachtfadh
+ná_clisfeadh nach gclisfeadh
+ná_clisfeá nach gclisfeá
+ná_clisfinn nach gclisfinn
+ná_cloisfeadh nach gcloisfeadh
+ná_cloisfeá nach gcloisfeá
+ná_cloisfidís nach gcloisfidís
+ná_cloisfinn nach gcloisfinn
+ná_cnagfadh nach gcnagfadh
+ná_coimeádfadh nach gcoimeádfadh
+ná_coimeádfá nach gcoimeádfá
+ná_coirfeadh nach gcoirfeadh
+ná_coisgfadh nach gcoiscfeadh
+ná_corrófá nach gcorrófá
+ná_cosnófá nach gcosnófá
+ná_crapfadh nach gcrapfadh
+ná_creachfadh nach gcreachfadh
+ná_creidfeadh nach gcreidfeadh
+ná_crithfeadh nach gcrithfeadh
+ná_crochfadh nach gcrochfadh
+ná_cromfadh nach gcromfadh
+ná_crothfainn nach gcroithfinn
+ná_crúdhfadh nach gcrúfadh
+ná_cuimhneófá nach gcuimhneofá
+ná_cuirfeá nach gcuirfeá
+ná_cuirfinn nach gcuirfinn
+ná_cuirfá nach gcuirfeá
+ná_cumfadh nach gcumfadh
+ná_curfadh nach gcuirfeadh
+ná_cífeadh nach bhfeicfeadh
+ná_cífeá nach bhfeicfeá
+ná_cíorfadh nach gcíorfadh
+ná_cóimhlíonfadh nach gcomhlíonfadh
+ná_cóimhlíonfá nach gcomhlíonfá
+ná_cómhlíonfadh nach gcomhlíonfadh
+ná_cúbfadh nach gcúbfadh
+ná_dairfeadh nach ndoirfeadh
+ná_dallfadh nach ndallfadh
+ná_dearmhadfadh nach ndearmadfadh
+ná_dearmhadfainn nach ndearmadfainn
+ná_dearmhadfá nach ndearmadfá
+ná_deinfinn nach ndéanfainn
+ná_deunfadh nach ndéanfadh
+ná_deunfaidís nach ndéanfaidís
+ná_deunfainn nach ndéanfainn
+ná_deunfá nach ndéanfá
+ná_doirfeadh nach ndoirfeadh
+ná_dreófadh nach ndreofadh
+ná_druidfadh nach ndruidfeadh
+ná_druidfeadh nach ndruidfeadh
+ná_druidfidís nach ndruidfidís
+ná_déanfadh nach ndéanfadh
+ná_déanfaidís nach ndéanfaidís
+ná_déanfaimis nach ndéanfaimis
+ná_déanfaimís nach ndéanfaimis
+ná_déanfainn nach ndéanfainn
+ná_déanfinn nach ndéanfainn
+ná_déanfá nach ndéanfá
+ná_díolfadh nach ndíolfadh
+ná_díolfá nach ndíolfá
+ná_dóghfadh nach ndófadh
+ná_dúnfadh nach ndúnfadh
+ná_facathas nach bhfacthas
+ná_faghainn nach bhfaighinn
+ná_faicfeadh nach bhfeicfeadh
+ná_faighfeá nach bhfaighfeá
+ná_faighfá nach bhfaighfeá
+ná_faighinn nach bhfaighinn
+ná_faighinnse nach bhfaighinnse
+ná_fanfadh nach bhfanfadh
+ná_fanfaidís nach bhfanfaidís
+ná_feaca nach bhfaca
+ná_feaca-sa nach bhfaca mé
+ná_feacamair nach bhfacamar
+ná_feacaís nach bhfaca tú
+ná_feachainn nach bhféachfainn
+ná_feacthas nach bhfacthas
+ná_feadfadh nach bhfeadfadh
+ná_feadfaidís nach bhfeadfaidís
+ná_feadfainn nach bhféadfainn
+ná_feiceann nach bhfeiceann
+ná_feicfá nach bhfeicfeá
+ná_feuchfadh nach bhféachfadh
+ná_feuchfá nach bhféachfá
+ná_feudfadh nach bhféadfadh
+ná_feudfaidís nach bhféadfaidís
+ná_feudfainn nach bhféadfainn
+ná_feudfá nach bhféadfá
+ná_fiafrófá nach bhfiafrófá
+ná_fiarfadh nach bhfiarfadh
+ná_fillfeadh nach bhfillfeadh
+ná_fillfeá nach bhfillfeá
+ná_fillfinn nach bhfillfinn
+ná_foghlumófá nach bhfoghlaimeofá
+ná_freagrófá nach bhfreagrófá
+ná_friothálfadh nach bhfriothálfadh
+ná_fuair nach bhfuair
+ná_fuarfadh nach bhfuaródh
+ná_fuighbheadh nach bhfaigheadh
+ná_fuighdís nach bhfaighidís
+ná_fuighfá nach bhfaighfeá
+ná_fuil nach bhfuil
+ná_fuileam nach bhfuilimid
+ná_fuileann nach bhfuil
+ná_fuilid nach bhfuil siad
+ná_fuilim nach bhfuilim
+ná_fuilimid nach bhfuilimid
+ná_fuilimíd nach bhfuilimid
+ná_fuilir nach bhfuil tú
+ná_fuilmíd nach bhfuilimid
+ná_fuiltear nach bhfuiltear
+ná_fulaingfeadh nach bhfulaingeodh
+ná_fágfadh nach bhfágfadh
+ná_fágfaí nach bhfágfaí
+ná_fágfá nach bhfágfá
+ná_fágfí nach bhfágfaí
+ná_fásfadh nach bhfásfadh
+ná_féachfadh nach bhféachfadh
+ná_féachfá nach bhféachfá
+ná_féadan nach bhféadann
+ná_féadfadh nach bhféadfadh
+ná_féadfaidhe nach bhféadfaí
+ná_féadfaidís nach bhféadfaidís
+ná_féadfaimís nach bhféadfaimis
+ná_féadfainn nach bhféadfainn
+ná_féadfaí nach bhféadfaí
+ná_féadfá nach bhféadfá
+ná_féadfí nach bhféadfaí
+ná_féadhfadh nach bhféadfadh
+ná_féatadh nach bhféadfadh
+ná_féudfá nach bhféadfá
+ná_fóirfeadh nach bhfóirfeadh
+ná_geallfadh nach ngeallfadh
+ná_gearrfadh nach ngearrfadh
+ná_gearrfaidís nach ngearrfaidís
+ná_gearánfadh nach ngearánfadh
+ná_geinfinn nach nginfinn
+ná_geárrfadh nach ngearrfadh
+ná_geóbhfá nach ngeofá
+ná_glacfadh nach nglacfadh
+ná_glacfaidís nach nglacfaidís
+ná_glacfainn nach nglacfainn
+ná_glacfidís nach nglacfaidís
+ná_glacfá nach nglacfá
+ná_glanfadh nach nglanfadh
+ná_glanfaidís nach nglanfaidís
+ná_glanfá nach nglanfá
+ná_glaodhfadh nach nglaofadh
+ná_glaodhfá nach nglaofá
+ná_gluaisfeadh nach ngluaisfeadh
+ná_gluaisfeá nach ngluaisfeá
+ná_goidfeadh nach ngoidfeadh
+ná_goilfeadh nach ngoilfeadh
+ná_goillfeadh nach ngoillfeadh
+ná_goillfidís nach ngoillfidís
+ná_griogfaidís nach ngriogfaidís
+ná_guidhfinn nach nguífinn
+ná_gáirfadh nach ngáirfeadh
+ná_gáirfeá nach ngáirfeá
+ná_géillfadh nach ngéillfeadh
+ná_géillfeadh nach ngéillfeadh
+ná_géillfeá nach ngéillfeá
+ná_géillfinn nach ngéillfinn
+ná_h-aithnigheann nach n-aithníonn
+ná_h-oirean nach n-oireann
+ná_hachtófaí nach n-achtófaí
+ná_haithníonn nach n-aithníonn
+ná_himtheóchaidh nach n-imeoidh
+ná_hárduíonn nach n-ardaíonn
+ná_héireóchaidh nach n-éireoidh
+ná_híosfaidh nach n-íosfaidh
+ná_híosfá nach n-íosfá
+ná_hólfá nach n-ólfá
+ná_hórdófá nach n-ordófá
+ná_níghfeadh nach nífeadh
+ná_pleusgfadh nach bpléascfadh
+ná_priocfá nach bpriocfá
+ná_pógfainn nach bpógfainn
+ná_pósfadh nach bpósfadh
+ná_pósfaidís nach bpósfaidís
+ná_pósfá nach bpósfá
+ná_r' nár
+ná_raibh nach raibh
+ná_tabharfadh nach dtabharfadh
+ná_tabharfá nach dtabharfá
+ná_tachtfadh nach dtachtfadh
+ná_taisbeanfadh nach dtaispeánfadh
+ná_teasbáinfeadh nach dtaispeánfadh
+ná_teasbánfaidís nach dtaispeánfaidís
+ná_teibfeadh nach dteipfeadh
+ná_teichfadh nach dteithfeadh
+ná_teichfeadh nach dteithfeadh
+ná_teipfeadh nach dteipfeadh
+ná_teipfeá nach dteipfeá
+ná_teithfeadh nach dteithfeadh
+ná_tiocfadh nach dtiocfadh
+ná_tiocfaimis nach dtiocfaimis
+ná_tiocfaimís nach dtiocfaimis
+ná_titfeadh nach dtitfeadh
+ná_tiubharfá nach dtabharfá
+ná_tosnófá nach dtosófá
+ná_traochfadh nach dtraochfadh
+ná_triailfeá nach dtriailfeá
+ná_triallfadh nach dtriallfadh
+ná_troidfadh nach dtroidfeadh
+ná_troidfeadh nach dtroidfeadh
+ná_troidfidís nach dtroidfidís
+ná_troidfinn nach dtroidfinn
+ná_tráchtfaidís nach dtráchtfaidís
+ná_tráchtfainn nach dtráchtfainn
+ná_tréigfadh nach dtréigfeadh
+ná_tréigfeadh nach tréigfeadh
+ná_tréigfeá nach dtréigfeá
+ná_tréigfinn nach dtréigfinn
+ná_tuigfeadh nach dtuigfeadh
+ná_tuigfá nach dtuigfeá
+ná_tuillfeadh nach dtuillfeadh
+ná_tuitfeadh nach dtitfeadh
+ná_tuitfidís nach dtitfidís
+ná_tuitfinn nach dtitfinn
+ná_tásdálfadh nach dtástálfadh
+ná_téifeadh nach dtéifeadh
+ná_tógfadh nach dtógfadh
+ná_tógfaidís nach dtógfaidís
+ná_tógfainn nach dtógfainn
+nách_faghainn nach bhfaighinn
+nách_feacaís nach bhfaca tú
+nách_feachainn nach bhféachfainn
+nách_féadfadh nach bhféadfadh
+nách_féadfaidhe nach bhféadfaí
+nách_géillfeadh nach ngéillfeadh
+náchar_fféidir nárbh fhéidir
+nár_bh nárbh
+nár_bh' nárbh
+nár_bh'fheárr nárbh fhearr
+nár_bh'fholáir nárbh fholáir
+nár_bh'fhéidir nárbh fhéidir
+nár_bh'fhóghanta nárbh fhónta
+nár_bh'é nárbh é
+nár_bh'éigean nárbh éigean
+nár_bhfada nárbh fhada
+nár_bhfearr nárbh fhearr
+nár_bhfearra nárbh fhearr
+nár_bhfhios nárbh fhios
+nár_bhfhéidir nárbh fhéidir
+nár_bhfoláir nárbh fholáir
+nár_bhfuláir nárbh fholáir
+nár_bhfurast nárbh fhurasta
+nár_bhfurasta nárbh fhurasta
+nár_bhféidir nárbh fhéidir
+nár_bhudh nárbh
+nár_dhein nach ndearna
+nár_dheineabhair nach ndearna sibh
+nár_dheineadar nach ndearnadar
+nár_dheineas nach ndearna mé
+nár_dheinis nach ndearna tú
+nár_dhéana nár dhéana
+nár_dhéineamair nach ndearnamar
+nár_fféidir nárbh fhéidir
+nár_rinneadar nach ndearnadar
+nár_vhéidir nárbh fhéidir
+nárbh_éidir nárbh fhéidir
+ní_'l níl
+ní_'lim nílim
+ní_'lim-se nílimse
+ní_'mhó ní ba mhó
+ní_bhfuil níl
+ní_bhia ní bheidh
+ní_chuala níor chuala
+ní_chualaidh níor chuala
+ní_deurna ní dhearna
+ní_dheineadh ní dhearnadh
+ní_dhéineadh ní dhearnadh
+ní_feacthas ní fhacthas
+ní_fhuair ní bhfuair
+ní_fhuaireadar ní bhfuaireadar
+ní_fhuil níl
+ní_fhuilid níl siad
+ní_fhuilim nílim
+ní_fhuilim-se nílimse
+ní_fhuilimid nílimid
+ní_fhuilimse nílimse
+ní_fhuilimíd nílimid
+ní_fhuilir níl tú
+ní_fhuilmid nílimid
+ní_fhuiltear níltear
+ní_fuaireadar ní bhfuaireadar
+ní_fágfaí ní fhágfaí
+ní_féadfadh ní fhéadfadh
+ní_féadfaidhe ní fhéadfaí
+ní_féadfaí ní fhéadfaí
+ní_féid ní féidir
+ní_gheobhadh ní bhfaigheadh
+ní_gheobhaidh ní bhfaighidh
+ní_gheobhaidís ní bhfaighidís
+ní_gheobhainn ní bhfaighinn
+ní_gheobhair ní bhfaighidh tú
+ní_gheobhfad ní bhfaighidh mé
+ní_gheobhfaidhe ní bhfaighfí
+ní_gheobhfá ní bhfaighfeá
+ní_gheofá ní bhfaighfeá
+ní_h-as ní as
+ní_hamhain ní amháin
+ní_has ní as
+ní_héidir ní féidir
+ní_luar_le ní lú le
+ní_lughar_le ní lú le
+ní_rinne ní dhearna
+ní_rinneadh ní dhearnadh
+ní_rinneas ní dhearna mé
+ní_ro ní raibh
+ní_sa_mho níos mó
+níb'_aoirde ní b'airde
+níb'_aoírde ní b'airde
+níb'_fhaide ní b'fhaide
+níb'_fhearr ní b'fhearr
+níb'_fheárr ní b'fhearr
+níb'_fhiú ní b'fhiú
+níb'_óige ní b'óige
+níb_aclaí ní b'aclaí
+níb_airde ní b'airde
+níb_fearr ní b'fhearr
+níb_fhaide ní b'fhaide
+níb_fhairsinge ní b'fhairsinge
+níb_fhearr ní b'fhearr
+níb_fhuaire ní b'fhuaire
+níb_fhusa ní b'fhusa
+níb_oiriúnaí ní b'oiriúnaí
+níb_oscailte ní b'oscailte
+níb_éadroime ní b'éadroime
+níb_éasca ní b'éasca
+níb_éifeachtaí ní b'éifeachtaí
+níb_ísle ní b'ísle
+níb_óige ní b'óige
+níba_airde ní b'airde
+níba_fhaide ní b'fhaide
+níba_fhairsinge ní b'fhairsinge
+níba_fhearr ní b'fhearr
+níba_isle ní b'ísle
+níba_oiriúnaí ní b'oiriúnaí
+níba_éadroime ní b'éadroime
+níba_éasca ní b'éasca
+níba_éifeachtaí ní b'éifeachtaí
+níba_ísle ní b'ísle
+níba_óige ní b'óige
+nídh-sa-mhionca_ioná níos minice ná
+nídh_budh_mho ní ba mhó
+níl_'is níl a fhios
+níor_b'é níorbh é
+níor_b'í níorbh í
+níor_bfada níorbh fhada
+níor_bh níorbh
+níor_bh' níorbh
+níor_bh'air níorbh air
+níor_bh'fhada níorbh fhada
+níor_bh'fhearr níorbh fhearr
+níor_bh'fhiú níorbh fhiú
+níor_bh'fhéidir níorbh fhéidir
+níor_bh'fhóghanta níorbh fhónta
+níor_bh'iongantas níorbh iontas
+níor_bh'iongnadh níorbh ionadh
+níor_bh'é níorbh é
+níor_bhach níor bhac
+níor_bhfada níorbh fhada
+níor_bhfearr níorbh fhearr
+níor_bhfearra níorbh fhearr
+níor_bhfearrde níorbh fhearrde
+níor_bhfhada níorbh fhada
+níor_bhfhéidir níorbh fhéidir
+níor_bhfoláir níorbh fholáir
+níor_bhfuláir níorbh fholáir
+níor_bhfuras níorbh fhurasta
+níor_bhfurasta níorbh fhurasta
+níor_bhféidir níorbh fhéidir
+níor_deineadar ní dhearnadar
+níor_deineadh ní dhearnadh
+níor_dhein ní dhearna
+níor_dheineabhair ní dhearna sibh
+níor_dheineadar ní dhearnadar
+níor_dheineamair ní dhearnamar
+níor_dheineas ní dhearna mé
+níor_dheinis ní dhearna tú
+níor_dhéineamair ní dhearnamar
+níor_dhúbhairt ní dúirt
+níor_dhúirt ní dúirt
+níor_déineadh ní dhearnadh
+níor_dúirt ní dúirt
+níor_fféidir níorbh fhéidir
+níor_fhéid níor fhéad
+níor_frith ní bhfuarthas
+níor_fríth ní bhfuarthas
+níor_rinne ní dhearna
+níor_rinneadh ní dhearnadh
+níor_rinneamuir ní dhearnamar
+níos_deirní níos deireanaí
+nísa_mho níos mó
+nísa_mhó níos mó
+o_shion ó shin
+o_shóin ó shin
+of_faith of faith
+om_baice ambaiste
+om_baist ambaiste
+om_baiste ambaiste
+om_baite ambaiste
+om_bhriathar dar mo bhriathar
+om_briathar dar mo bhriathar
+om_briathar dom briathar
+os_ceann os cionn
+papier_maché papier maché
+pari_passu pari passu
+petit_bourgeois petit bourgeois
+pile_seam pléiseam
+placa_siolla placadh siollaí
+plogán_streille clogán streille
+plup_plap plob plab
+plé_ráca pléaráca
+plé_seam pléiseam
+puc_saor poc saor
+rae_roilleachán ré roithleagán
+rae_roilleacán ré roithleagán
+ragha_míd rachaimid
+re'_raile le chéile
+re_a lena
+re_n'ais lena ais
+re_n-a lena
+res_publica res publica
+riail-bhlianacht_cheannaigh blianacht cheannaigh chaighdeánach
+righ_Saxan rí Shasana
+rileo_ró roithleoró
+ris_a lena
+rite_reaite rite reaite
+ro_chan a chan
+rom_com rom com
+ros_samh ró samh
+ruadhán_alla damhán alla
+ruán_alla damhán alla
+rápal_húta raiple húta
+ré'_raile le chéile
+ré_chéile le chéile
+rém'_ais le m'ais
+rí_Saxan rí Shasana
+rí_sasanna rí Shasana
+rígh_Saxan rí Shasana
+ró_bheag róbheag
+ró_chruaidh róchrua
+ró_dheacair ródheacair
+ró_dhian ródhian
+ró_dhéanach ródhéanach
+ró_fhada rófhada
+ró_fhuiriste rófhurasta
+ró_ghearr róghearr
+ró_láidir róláidir
+ró_mhaith rómhaith
+ró_mhinic rómhinic
+ró_mhór rómhór
+ró_naomhtha rónaofa
+ró_olc ró-olc
+ró_throm róthrom
+ró_uasal ró-uasal
+ró_árd ró-ard
+ró_éascaidh ró-éasca
+rúille_búille ruaille buaille
+sa_Ghaililí sa Ghailíl
+sa_chéill sa chiall
+sa_n-Arabia san Araib
+sa_n-oídhche san oíche
+sa_naít san áit
+sa_nolc san olc
+sa_náit san áit
+sail_chuach sailchuach
+sail_chuaiche sailchuach
+san_allód anallód
+san_am_chéann san am céanna
+san_mbioth ar bith
+san_mblíadhuin sa bhliain
+san_náit san áit
+san_Ómaí san Ómaigh
+sar_ar sular
+scol_rámha ascaill rámha
+seach_is seachas
+seach_is_bheith seachas a bheith
+seacht_bhfearr seacht bhfearr
+sean_fhocail seanfhocail
+seitear_gáire seitgháire
+shlíabh_Hor shliabh Hor
+shugh_salmhain shú talún
+shul_'s_féidir sular féidir
+shul_'á sula
+shul_a sula
+shul_a_dtug sular thug
+shul_a_dtáinic sular tháinig
+shul_a_dtáinig sular tháinig
+shul_a_dtáinigh sular tháinig
+shul_a_gcuala sular chuala
+shul_ar sular
+shul_dar sular
+shul_dhá sula
+shul_dá sula
+shul_dá_mb'fhéidir sularbh féidir
+shul_dár sular
+shú_salúin shú talún
+slup_slap slupar slapar
+slíabh_Hor sliabh Hor
+smior_meanta smior mantach
+smior_smeanta smior mantach
+smior_smeantain smior mantach
+smug_róin smugairle róin
+sna_sala sna sála
+sna_salaí sna sála
+sna_sálaí sna sála
+snagaire_darach snag darach
+spid_neanta speig neanta
+spina_bifida spina bifida
+spride_fí spide fí
+spíor_spár spior spear
+steille_bheatha steillbheatha
+steille_bheathaidh steillbheatha
+steille_bheathaigh steillbheatha
+steilleadh_bheatha steillbheatha
+steilleadh_bheathaidh steillbheatha
+steilleadh_bheathaigh steillbheatha
+sugh_salmhain sú talún
+sul_'á sula
+sul_a sula
+sul_a_dtug sular thug
+sul_a_dtáinig sular tháinig
+sul_a_dtáinigh sular tháinig
+sul_a_dtánag sular tháinig mé
+sul_a_gcuala sular chuala
+sul_ar sular
+sul_dhar sular
+sul_do_bhí sula raibh
+sul_ma sula
+sul_mar sular
+sul_má sula
+sul_má sular
+sul_már sular
+sula_dtáinig sular tháinig
+sula_ngeobhaidh sula bhfaighidh
+sula_rinne sula ndearna
+sár_jab sárjab
+sár_jaib sárjab
+sé_r'd is éard
+sú_salúin sú talún
+t-Athair_Croidheach tAthair Croíoch
+t-ath_scrúdú t-athscrúdú
+tSráth_Bán Srath Bán
+tar_'éise tar éis
+tar_Iordan thar an Iordáin
+tar_a_éise tar éis
+tar_a_éisibh tar éis
+tar_cheann thar ceann
+tar_eis tar éis
+tear_and_'ounds tear and 'ounds
+thar'n_ais ar ais
+thar_leár thar lear
+thar_n-a arna
+thar_n-ais ar ais
+thar_éis tar éis
+thar_éise tar éis
+thine_aoil thiníl
+thriúcha_céad thríocha céad
+thrí'n_a trína
+thrí_n-a trína
+thuilleamh_buí thuilleamaí
+thuilleamh_mbuidhe thuilleamaí
+thár_leár thar lear
+thúilín_tseabhrach chúilín seamhrach
+tine_aoil tiníl
+tinn_t'fhiafraí_ort don d'fhiafraí ort
+tras_teorainn trasteorann
+tras_teorann trasteorann
+tras_tíre trastíre
+tre_n-ar' trínar
+tri_n'ár trínár
+triúcha_céad tríocha céad
+tré_Mhacedónia tríd an Macadóin
+tré_Shamaria tríd an tSamáir
+tré_san tríd an
+tré_sna trí na
+trí_chaogaid trí caogaid
+trí_haicmeadh trí aicme
+trí_n-a trína
+trí_sna trí na
+trí_treana trí treana
+tríd_na trí na
+tríos_na trí na
+trís_an tríd an
+trís_na trí na
+tsail_chuach tsailchuach
+tsail_chuaiche tsailchuach
+tuilleamh_buí tuilleamaí
+tuilleamh_mbuidhe tuilleamaí
+tá_'is tá a fhios
+táid_siad tá siad
+té_'bhí té a bhí
+té_'tá té atá
+túilín_tseabhrach cúilín seamhrach
+uair_a_choig uair a chloig
+ultra_vires ultra vires
+um_a_gcuairt máguaird
+um_an_oirthear amanathar
+um_an_oirthear_arís amainiris
+van_Maanen van Maanen
+vena_cava vena cava
+Áibh_Maria Áivé Máiria
+Ó_Cearbhall Ó Cearbhaill
+Ó_Coileán Ó Coileáin
+Ó_Conall Ó Conaill
+Ó_Connachán Ó Connacháin
+Ó_Domhnall Ó Domhnaill
+Ó_Droighneán Ó Droighneáin
+Ó_Dónall Ó Dónaill
+Ó_Loideán Ó Loideáin
+Ó_Muíneachán Ó Muíneacháin
+Ó_Mórán Ó Móráin
+Ó_Súilleabhán Ó Súilleabháin
+à_los as los
+ár_ndú ar ndóigh
+ás_tá agus atá
+é_r'd is éard
+ó'_n ón
+ó'n_a óna
+ó_'n-a óna
+ó_Ghaililí ón Ghailíl
+ó_Lebanon ón Liobáin
+ó_Mhacedónia ón Mhacadóin
+ó_Shamaria ón tSamáir
+ó_Shamária ón tSamáir
+ó_n ón
+ó_n'athair óna athair
+ó_n-a óna
+ó_nolc ón olc
+ó_shion ó shin
+ó_shóin ó shin
+ó_sna ó na
+ón_bPersia ón bPeirs
+ón_docks ón diucs
+ón_dtráigh ón trá
+óraing_útaing órang-útan
+ós_a_chionn os a chionn
+ós_a_chomhair os a chomhair
+ós_a_cionn os a cionn
+ós_a_comhair os a comhair
+ós_a_gcionn os a gcionn
+ós_a_gcomhair os a gcomhair
+ós_aird os ard
+ós_ard os ard
+ós_cionn os cionn
+ós_coinne os coinne
+ós_comhair os comhair
+ós_na ó na
+ós_árd os ard
+úna_air ionadh air
+úna_ar ionadh ar
+úna_er ionadh ar
+úna_ortha ionadh orthu
+úna_uirthi ionadh uirthi

@@ -1,0 +1,175 @@
+# .github/workflows/deploy-to-vm.yml
+name: Build and Deploy to VM
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master]
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  VM_NAME: cairo-app-vm
+  VM_ZONE: us-central1-a
+
+jobs:
+  deploy:
+    name: Build and Deploy to VM
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v2'
+      with:
+        credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v2'
+
+    - name: Create deployment package
+      run: |
+        # Create a deployment package WITHOUT .env file
+        # Note: --exclude options must come BEFORE the files to archive
+        tar -czf app-deployment.tar.gz \
+          --exclude=src/backend/embedding_cache \
+          --exclude=src/frontend/node_modules \
+          --exclude=src/backend/__pycache__ \
+          --exclude=.env \
+          --exclude=.env.local \
+          --exclude=.env.prod \
+          --exclude=.git \
+          --exclude=.github \
+          --exclude=*.log \
+          src/ \
+          docker-compose-prod.yml
+
+    - name: Copy files to VM
+      run: |
+        # Copy deployment package to VM
+        gcloud compute scp app-deployment.tar.gz $VM_NAME:/tmp/ --zone=$VM_ZONE
+        
+        # Create environment file from GitHub secrets (NOT from repo)
+        echo "Creating .env from GitHub secrets..."
+        cat > .env.prod << EOF
+        ELASTICSEARCH_HOST=${{ secrets.ELASTICSEARCH_HOST }}
+        ELASTICSEARCH_USERNAME=${{ secrets.ELASTICSEARCH_USERNAME }}
+        ELASTICSEARCH_PASSWORD=${{ secrets.ELASTICSEARCH_PASSWORD }}
+        GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}
+        ENVIRONMENT=production
+        ALLOWED_ORIGINS=*
+        EOF
+        
+        # Copy the secrets-based .env to VM
+        gcloud compute scp .env.prod $VM_NAME:/tmp/.env --zone=$VM_ZONE
+        
+        # Clean up local .env file immediately
+        rm .env.prod
+
+    - name: Deploy on VM
+      run: |
+        # Get VM IP for frontend configuration
+        VM_IP=$(gcloud compute instances describe $VM_NAME --zone=$VM_ZONE --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+        
+        gcloud compute ssh $VM_NAME --zone=$VM_ZONE --command="
+          # Stop existing containers gracefully
+          cd /app && docker-compose down || true
+          
+          # Backup current deployment if it exists
+          if [ -d '/app/src' ]; then
+            sudo mv /app/src /app/src.backup.\$(date +%Y%m%d_%H%M%S) || true
+          fi
+          
+          # Extract new deployment
+          cd /tmp
+          tar -xzf app-deployment.tar.gz
+          
+          # Move files to app directory
+          sudo mv src /app/
+          sudo mv docker-compose-prod.yml /app/docker-compose.yml
+          sudo mv .env /app/
+          
+          # Update frontend API URL in docker-compose
+          sudo sed -i 's|REACT_APP_API_URL=.*|REACT_APP_API_URL=http://$VM_IP:8000|' /app/docker-compose.yml
+          
+          # Create cache directories with proper permissions
+          sudo mkdir -p /app/cache/embedding_cache
+          sudo chmod 777 /app/cache/embedding_cache
+          sudo chown -R \$USER:\$USER /app/cache/embedding_cache
+          
+          # Create logs directory
+          mkdir -p /app/logs
+          
+          # Build images (this might take a few minutes)
+          cd /app
+          echo 'Building Docker images...'
+          sudo docker-compose build --no-cache
+          
+          # Start services
+          echo 'Starting services...'
+          sudo docker-compose up -d
+          
+          # Wait for services to start
+          echo 'Waiting for services to initialize...'
+          sleep 45
+          
+          # Check container status
+          echo 'Container status:'
+          sudo docker-compose ps
+          
+          # Check logs for any immediate errors
+          echo 'Recent backend logs:'
+          sudo docker-compose logs --tail=10 backend
+          
+          echo 'Recent frontend logs:'
+          sudo docker-compose logs --tail=10 frontend
+          
+          # Test services
+          echo 'Testing backend health...'
+          curl -f http://localhost:8000/health || echo 'Backend health check failed'
+          
+          echo 'Testing frontend...'
+          curl -f http://localhost:3000 || echo 'Frontend check failed'
+          
+          echo 'Deployment complete!'
+        "
+
+    - name: Verify deployment and provide access info
+      run: |
+        VM_IP=$(gcloud compute instances describe $VM_NAME --zone=$VM_ZONE --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+        
+        echo ""
+        echo "🚀 Deployment completed!"
+        echo ""
+        echo "Application URLs:"
+        echo "  Frontend: http://\$VM_IP:3000"
+        echo "  Backend API: http://\$VM_IP:8000"
+        echo "  API Docs: http://\$VM_IP:8000/docs"
+        echo "  Health Check: http://\$VM_IP:8000/health"
+        echo ""
+        echo "Management commands:"
+        echo "  SSH to VM: gcloud compute ssh $VM_NAME --zone=$VM_ZONE"
+        echo "  View status: gcloud compute ssh $VM_NAME --zone=$VM_ZONE --command='/app/scripts/status.sh'"
+        echo "  View logs: gcloud compute ssh $VM_NAME --zone=$VM_ZONE --command='cd /app && docker-compose logs'"
+        echo ""
+        
+        # Test external access
+        echo "Testing external access..."
+        sleep 10
+        
+        # Test backend
+        if curl -f http://\$VM_IP:8000/health; then
+          echo "✅ Backend is accessible externally"
+        else
+          echo "❌ Backend health check failed"
+        fi
+        
+        # Test frontend  
+        if curl -f -s -o /dev/null -w "%{http_code}" http://\$VM_IP:3000 | grep -q "200"; then
+          echo "✅ Frontend is accessible externally"
+        else
+          echo "❌ Frontend check failed"
+        fi

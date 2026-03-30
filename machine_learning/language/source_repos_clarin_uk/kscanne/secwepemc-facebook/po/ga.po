@@ -1,0 +1,1014 @@
+# Translation of Facebook into unsupported languages
+# Copyright (C) 2012 Kevin P. Scannell
+msgid ""
+msgstr ""
+"Project-Id-Version: gm-facebook\n"
+"Report-Msgid-Bugs-To: <kscanne@gmail.com>\n"
+"POT-Creation-Date: 2013-07-19 15:06:49-0500\n"
+"PO-Revision-Date: 2012-02-19 11:54:03-06:00\n"
+"Last-Translator: Kevin Scannell\n"
+"Language-Team: Irish\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n < 11 ? "
+"3 : 4\n"
+
+#. Lines like this one beginning with "#." are comments; no need to translate!
+#. The first six words to translate are used in a number of different messages,
+#. always as the final word of the message in English; for example:
+#. John Doe likes Jane Doe's X.
+#. John Doe shared Jane Doe's X.
+#. John Doe shared her/his own X.
+#. John Doe and Jane Doe shared Kevin Scannell's X.
+#. John Doe was tagged in Jane Doe's X.
+#. John Doe was tagged in a X.
+#. John Doe commented on a X.
+#. John Doe and Jane Doe commented on a X.
+#. John Doe commented on her/his own X.
+#. John Doe commented on your X.
+#. John Doe likes a X.
+#. If the translations of link, photo, etc. take different forms depending
+#. on the above contexts, this can be arranged, just ask Kevin for help
+#. Always a link. Used in longer sentences as above.
+msgid "life event"
+msgstr "cúrsa saoil"
+
+#. Always a link. Used in longer sentences as above.
+msgctxt "tagged in (%a.'s|a) %a"
+msgid "life event"
+msgstr "gcúrsa saoil"
+
+#. Always a link. Used in longer sentences as above.
+msgid "link"
+msgstr "nasc"
+
+#. Always a link. Used in longer sentences as above.
+msgid "photo"
+msgstr "grianghraf"
+
+#. Always a link. Used in longer sentences as above.
+msgctxt "commented on (a|his|your)"
+msgid "photo"
+msgstr "ghrianghraf"
+
+#. Always a link. Used in longer sentences as above.
+msgctxt "tagged in (%a.'s|a) %a"
+msgid "photo"
+msgstr "ngrianghraf"
+
+#. Always a link. Used in longer sentences as above.
+msgid "post"
+msgstr "postáil"
+
+#. Always a link. Used in longer sentences as above.
+msgctxt "commented on (a|his|your)"
+msgid "post"
+msgstr "phostáil"
+
+#. Always a link. Used in longer sentences as above.
+msgctxt "tagged in (%a.'s|a) %a"
+msgid "post"
+msgstr "bpostáil"
+
+#. Always a link. Used in longer sentences as above.
+msgid "status"
+msgstr "stádas"
+
+#. Always a link. Used in longer sentences as above.
+msgid "status update"
+msgstr "stádas"
+
+#. %a stands for something like "4 others"
+msgid "You and %a like this."
+msgstr "Is maith leatsa agus le %a é seo."
+
+#. %a1 is a person's name, %a2 stands for something like "4 others"
+msgid "You, %a1 and %a2 like this."
+msgstr "Is maith leat, le %a1 agus le %a2 é seo."
+
+#. %a1 and %a2 are names, while %a3 is something like "5 others"
+msgid "%a1, %a2 and %a3 like this."
+msgstr "Is maith le %a1, %a2 agus %a3 é seo."
+
+#. %a is a person's name; %d stands for a number, no need to translate it
+msgid "%a added a new photo."
+msgid_plural "%a added %d new photos."
+msgstr[0] "Chuir %a grianghraf nua leis."
+msgstr[1] "Chuir %a %d ghrianghraf nua leis."
+msgstr[2] "Chuir %a %d ghrianghraf nua leis."
+msgstr[3] "Chuir %a %d ngrianghraf nua leis."
+msgstr[4] "Chuir %a %d grianghraf nua leis."
+
+#. %a1 is a person's name; %d stands for a number, no need to translate it
+msgid "%a1 added 1 new photo to the album %a2."
+msgid_plural "%a1 added %d new photos to the album %a2."
+msgstr[0] "Chuir %a1 grianghraf nua le halbam %a2."
+msgstr[1] "Chuir %a1 %d ghrianghraf nua le halbam %a2."
+msgstr[2] "Chuir %a1 %d ghrianghraf nua le halbam %a2."
+msgstr[3] "Chuir %a1 %d ngrianghraf nua le halbam %a2."
+msgstr[4] "Chuir %a1 %d grianghraf nua le halbam %a2."
+
+#. %a1 is a person, %a2 is something like "4 other people"
+#. This is to let you know about birthdays in right-hand column on home page
+msgid "%a1 and %a2"
+msgstr "%a1 agus %a2"
+
+#. Both %a1 and %a2 are names of people
+msgid "%a1 and %a2 are now friends."
+msgstr "Is cairde iad %a1 agus %a2 anois."
+
+#. %a1 and %a3 are names of people; %a2 is something like "5 other friends"
+msgid "%a1 and %a2 are now friends with %a3."
+msgstr "Tá %a1 agus %a2 ina gcairde le %a3 anois."
+
+#. %a1 and %a2 are people, and %a3 is "link", "photo", "status", etc.
+msgid "%a1 and %a2 commented on a %a3."
+msgstr "Rinne %a1 agus %a2 trácht ar %a3."
+
+#. %a1 is a name, %a2 is a name or else something like "6 others"
+#. %a3 is the name of a page like "Rage Against the Machine"
+msgid "%a1 and %a2 like %a3."
+msgstr "Is maith le %a1 agus %a2 %a3."
+
+#. %a1 is a name, %a2 is a name or else something like "6 others"
+msgid "%a1 and %a2 like this."
+msgstr "Is maith le %a1 agus %a2 é seo."
+
+#. %a1 and %a2 as above, and %a3 is something like (always?) "a link"
+msgid "%a1 and %a2 shared %a3."
+msgstr "Chomhroinn %a1 agus %a2 %a3."
+
+#. %a1 and %a2 as above, %a3 is a name, %a4 is "link", "photo", "status", etc.
+msgid "%a1 and %a2 shared %a3's %a4."
+msgstr "Chomhroinn %a1 agus %a2 %a4 de chuid %a3."
+
+#. %a1, %a2, and %a3 are names of people
+msgid "%a1 and %a2 were tagged in %a3's photos."
+msgstr "Cuireadh clib ar %a1 agus %a2 i ngrianghraif de chuid %a3."
+
+#. Link at bottom of home page (under "More") to info about Facebook
+msgid "About"
+msgstr "Maidir Leis"
+
+msgid "about an hour ago"
+msgstr "timpeall is uair ó shin"
+
+msgid "about a minute ago"
+msgstr "timpeall is nóiméad ó shin"
+
+msgid "Account Settings"
+msgstr "Socruithe Cuntais"
+
+#. %a is someone's name (female)
+msgid "%a changed her profile picture."
+msgstr "D'athraigh %a a grianghraf próifíle."
+
+#. %a is someone's name (male)
+msgid "%a changed his profile picture."
+msgstr "D'athraigh %a a ghrianghraf próifíle."
+
+#. %a1 is a person's name, %a2 is "link", "post", "status", or "photo"
+msgid "%a1 commented on a %a2."
+msgstr "Rinne %a1 trácht ar %a2."
+
+#. %a1 is a person's name, %a2 is "link", "post", "status", or "photo"
+msgid "%a1 commented on her own %a2."
+msgstr "Rinne %a1 trácht ar %a2 dá cuid féin."
+
+#. %a1 is a person's name, %a2 is "link", "post", "status", or "photo"
+msgid "%a1 commented on his own %a2."
+msgstr "Rinne %a1 trácht ar %a2 dá chuid féin."
+
+#. %a1 is a person's name, %a2 is "link", "post", "status", or "photo"
+msgid "%a1 commented on your %a2."
+msgstr "Rinne %a1 trácht ar %a2 de do chuid."
+
+msgid "Activity Log"
+msgstr "Stair Gníomhaíochta"
+
+msgid "Add Friend"
+msgstr "Déan Cairdeas"
+
+#. Under INTERESTS in left-hand navigation on home page
+msgid "Add Interests..."
+msgstr "Cuir Suimeanna Leis..."
+
+#. Appears at top of home timeline, with "Update Status", "Ask Question"
+msgid "Add Photos/Video"
+msgstr "Cuir Grianghraf / Físeán Leis"
+
+#. Link at bottom of home page (under "More") to info about Facebook ads
+msgid "Advertising"
+msgstr "Fógraíocht"
+
+#. Time stamp on a post. You might also translate as "Just now"
+msgid "a few seconds ago"
+msgstr "cúpla soicind ó shin"
+
+#. %a1 is a person's name, %a2 is a place
+msgid "%a1 is at %a2."
+msgstr "Tá %a1 ag %a2."
+
+#. %a1 and %a2 are names of people; %a3 is either another person or
+#. else something like "8 other people"
+msgid "%a1 is now friends with %a2 and %a3."
+msgstr "Tá %a1 ina c(h)ara le %a2 agus %a3 anois."
+
+#. For example, "John Doe likes Linux."; often under Sponsored Ads
+msgid "%a1 likes %a2."
+msgstr "Is maith le %a1 %a2."
+
+#. %a1 is a person's name, %a2 is "link", "photo", "post", or "status"
+msgid "%a1 likes a %a2."
+msgstr "Is maith le %a1 %a2."
+
+#. %a1 and %a2 are people, %a3 is "link", "photo", "post", or "status"
+msgid "%a1 likes %a2's %a3."
+msgstr "Is maith le %a1 %a3 de chuid %a2."
+
+#. %a1 is a person, %a2 is the name of a page, and %a3 is either the
+#. name of another page or something like "4 other pages"
+msgid "%a1 likes %a2 and %a3."
+msgstr "Is maith le %a1 %a2 agus %a3."
+
+#. %a stands for a person's name
+msgid "%a likes this."
+msgstr "Is maith le %a é seo."
+
+#. %a stands for something like "3 people"
+msgid "%a like this."
+msgstr "Is maith le %a é seo."
+
+#. Always a link. Used in longer sentences like "John Doe shared a link"
+msgid "a link"
+msgstr "nasc"
+
+#. Heading above the apps you use, in left-hand navigation on home page
+msgid "APPS"
+msgstr "FEIDHMCHLÁIR"
+
+#. One of the entries in the APPS list for some users
+msgid "Apps and Games"
+msgstr "Feidhmchláir agus Cluichí"
+
+#. Format. %A = day of the week ("Saturday") and %s = the time ("3:15am")
+msgid "%A at %s"
+msgstr "%A ag %s"
+
+#. %a1 is a person's name, %a2 is something like (always?) "a link"
+msgid "%a1 shared %a2."
+msgstr "Chomhroinn %a1 %a2."
+
+#. %a1 and %a2 are names of people, %a3 is "link", "photo", "post", or "status"
+msgid "%a1 shared %a2's %a3."
+msgstr "Chomhroinn %a1 %a3 de chuid %a2."
+
+#. %a1 is a person, %a2 is "link", "photo", "post", or "status"
+msgid "%a1 shared her own %a2."
+msgstr "Chomhroinn %a1 %a2 dá cuid féin."
+
+#. %a1 is a person, %a2 is "link", "photo", "post", or "status"
+msgid "%a1 shared his own %a2."
+msgstr "Chomhroinn %a1 %a2 dá chuid féin."
+
+#. Appears at top of home timeline, with "Update Status", "Add Photos/Video"
+msgid "Ask Question"
+msgstr "Cuir Ceist"
+
+#. %a1 is a person, %a2 is always "Instagram" I think
+msgid "%a1 took a photo with %a2."
+msgstr "Ghlac %a1 grianghraf le %a2."
+
+#. %a1 is a person, %a2 is a place: "John Doe was tagged at Wilson Farm."
+msgid "%a1 was tagged at %a2."
+msgstr "Cuireadh clib ar %a1 ag %a2."
+
+#. %a1 and %a2 are names of people, %a3 is "link", "photo", "post", or "status"
+msgid "%a1 was tagged in %a2's %a3."
+msgstr "Cuireadh clib ar %a1 i %a3 de chuid %a2."
+
+#. %a1 is a person, %a2 is "photo" or "life event" (others?)
+msgid "%a1 was tagged in a %a2."
+msgstr "Cuireadh clib ar %a1 i %a2."
+
+#. %a1 and %a2 are names of people
+msgid "%a1 was tagged in %a2's photos."
+msgstr "Cuireadh clib ar %a1 i ngrianghraif de chuid %a2."
+
+#. %a is someone's name (female)
+msgid "%a updated her cover photo."
+msgstr "Nuashonraigh %a a grianghraf mór."
+
+#. %a is someone's name (male)
+msgid "%a updated his cover photo."
+msgstr "Nuashonraigh %a a ghrianghraf mór."
+
+#. Format. %B = name of the month ("February"), and %d = day of the month ("20")
+msgid "%B %d"
+msgstr "%d %B"
+
+#. Format. %B and %d as above, %s = string representing the time ("3:15am")
+msgid "%B %d at %s"
+msgstr "%d %B ag %s"
+
+#. Format. %B and %d as above, %Y = four digit year ("2012")
+msgid "%B %d, %Y"
+msgstr "%d %B %Y"
+
+#. Format. %B, %d, and %Y as above, %s = string representing the time ("3:15am")
+msgid "%B %d, %Y at %s"
+msgstr "%d %B %Y ag %s"
+
+msgid "Born"
+msgstr "Rugadh"
+
+#. Appears below shared items, indicating the original author/creator
+msgid "By:"
+msgstr "Le:"
+
+#. Button label
+msgid "Cancel"
+msgstr "Cealaigh"
+
+#. Link at bottom of home page (under "More") to info about jobs at Facebook
+msgid "Careers"
+msgstr "Gairmeacha"
+
+#. Link that allows you to change the big photo at the top of your timeline
+msgid "Change Cover"
+msgstr "Athraigh an Grianghraf Mór"
+
+#. Label on tab for chatting with friends
+#. "Off" means you're not currently logged into the chat system
+msgid "Chat (Off)"
+msgstr "Comhrá (As Líne)"
+
+msgid "Close"
+msgstr "Dún"
+
+#. A link that takes you to a list of your closest friends on Facebook
+msgid "Close Friends"
+msgstr "Dlúthchairde"
+
+#. Verb. A link under a post that allows you to comment on the post.
+msgid "Comment"
+msgstr "Déan Trácht"
+
+#. Link at the bottom of home page to a help page explaining what cookies are
+msgid "Cookies"
+msgstr "Fianáin"
+
+#. Button label; confirm a friend request
+msgid "Confirm"
+msgstr "Deimhnigh"
+
+msgid "Create an Ad"
+msgstr "Cruthaigh Fógra"
+
+#. Link at bottom of home page (under "More")
+msgid "Create a Page"
+msgstr "Cruthaigh Leathanach"
+
+#. Appears as last item under "GROUPS" in left-hand navigation
+msgid "Create Group..."
+msgstr "Cruthaigh Grúpa..."
+
+#. Button label at top of Groups page (click "MORE" next to "GROUPS")
+msgid "Create Group"
+msgstr "Cruthaigh Grúpa"
+
+#. Link at bottom of home page (under "More") to info for software developers
+msgid "Developers"
+msgstr "Forbróirí"
+
+#. %d stands for a number, no need to translate it
+#. The singular "1 hour ago" is never used as far as I can tell
+msgid "1 hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "Uair ó shin"
+msgstr[1] "%d uair ó shin"
+msgstr[2] "%d huaire ó shin"
+msgstr[3] "%d n-uaire ó shin"
+msgstr[4] "%d uair ó shin"
+
+#. %d stands for a number, no need to translate it
+#. The singular "1 minute ago" is never used as far as I can tell
+msgid "1 minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "Nóiméad ó shin"
+msgstr[1] "%d nóiméad ó shin"
+msgstr[2] "%d nóiméad ó shin"
+msgstr[3] "%d nóiméad ó shin"
+msgstr[4] "%d nóiméad ó shin"
+
+#. %d stands for a number, no need to translate it
+msgid "1 mutual friend"
+msgid_plural "%d mutual friends"
+msgstr[0] "Comhchara amháin"
+msgstr[1] "%d chomhchara"
+msgstr[2] "%d chomhchara"
+msgstr[3] "%d gcomhchara"
+msgstr[4] "%d comhchara"
+
+#. %d stands for a number, no need to translate it
+msgid "1 NEW STORY"
+msgid_plural "%d NEW STORIES"
+msgstr[0] "1 SCÉAL NUA"
+msgstr[1] "%d SCÉAL NUA"
+msgstr[2] "%d SCÉAL NUA"
+msgstr[3] "%d SCÉAL NUA"
+msgstr[4] "%d SCÉAL NUA"
+
+#. %d stands for a number, no need to translate it; "%d other people"
+#. The singular "1 other" is never used as far as I can tell
+#. Always a link. Used in sentences like the following:
+#. "John Doe and 7 others like this."
+#. "John Doe, Jane Doe, and 7 others like this."
+#. "You and 7 others like this."
+#. "You, John Doe and 7 others like this."
+msgid "1 other"
+msgid_plural "%d others"
+msgstr[0] "duine amháin eile"
+msgstr[1] "beirt eile"
+msgstr[2] "%d dhuine eile"
+msgstr[3] "%d nduine eile"
+msgstr[4] "%d duine eile"
+
+#. Always a link. "John Doe and 7 other friends are now friends with Kevin."
+#. The singular "1 other friend" is never used as far as I can tell
+msgid "1 other friend"
+msgid_plural "%d other friends"
+msgstr[0] "Cara amháin eile"
+msgstr[1] "%d chara eile"
+msgstr[2] "%d chara eile"
+msgstr[3] "%d gcara eile"
+msgstr[4] "%d cara eile"
+
+#. Always a link. "John Doe likes GaelSpell and 3 other pages"
+#. The singular "1 other page" is never used as far as I can tell
+msgid "1 other page"
+msgid_plural "%d other pages"
+msgstr[0] "leathanach amháin eile"
+msgstr[1] "%d leathanach eile"
+msgstr[2] "%d leathanach eile"
+msgstr[3] "%d leathanach eile"
+msgstr[4] "%d leathanach eile"
+
+#. Always a link. "John Doe is now friends with Jane Doe and 3 other people."
+#. The singular "1 other person" is never used as far as I can tell
+msgid "1 other person"
+msgid_plural "%d other people"
+msgstr[0] "duine amháin eile"
+msgstr[1] "beirt eile"
+msgstr[2] "%d dhuine eile"
+msgstr[3] "%d nduine eile"
+msgstr[4] "%d duine eile"
+
+#. %d stands for a number; used in sentences like "%d people like this."
+#. The singular "1 person" is never used as far as I can tell
+msgid "1 person"
+msgid_plural "%d people"
+msgstr[0] "duine amháin"
+msgstr[1] "beirt"
+msgstr[2] "%d dhuine"
+msgstr[3] "%d nduine"
+msgstr[4] "%d duine"
+
+#. %d stands for a number, no need to translate it
+#. The singular "1 second ago" is never used as far as I can tell
+msgid "1 second ago"
+msgid_plural "%d seconds ago"
+msgstr[0] "Soicind ó shin"
+msgstr[1] "%d shoicind ó shin"
+msgstr[2] "%d shoicind ó shin"
+msgstr[3] "%d soicind ó shin"
+msgstr[4] "%d soicind ó shin"
+
+#. %d stands for a number, no need to translate it
+#. This means a post has been shared %d times
+msgid "1 share"
+msgid_plural "%d shares"
+msgstr[0] "Comhroinnte uair amháin"
+msgstr[1] "Comhroinnte %d uair"
+msgstr[2] "Comhroinnte %d huaire"
+msgstr[3] "Comhroinnte %d n-uaire"
+msgstr[4] "Comhroinnte %d uair"
+
+#. Appears at the bottom of your home time line, opposite "More Stories"
+#. Allows you to hide certain stories from your home page
+msgid "Edit Options"
+msgstr "Cuir Roghanna in Eagar"
+
+#. Attached to each post on your personal timeline
+msgid "Edit or Remove"
+msgstr "Cuir in Eagar nó Bain"
+
+#. Link that lets you change your language settings
+#. Please translate to the name of your language, written in the language itself
+msgid "English (US)"
+msgstr "Gaeilge"
+
+#. In the "New Message" dialog
+msgid "Enter a friend's name or email address"
+msgstr "Cuir ainm nó seoladh ríomhphoist isteach"
+
+#. A link to a list of events that you've been invited to
+msgid "Events"
+msgstr "Imeachtaí"
+
+#. A link that shows you a list of your relatives on Facebook
+msgid "Family"
+msgstr "Muintir"
+
+#. In left-hand column on home page, above links to "News Feed", "Messages", etc
+msgid "FAVORITES"
+msgstr "CEANÁIN"
+
+#. Link to a page that allows you to search your address books for FB friends
+#. Appears in the "Friend Requests" dialog and when you click the "Friends" link
+msgid "Find Friends"
+msgstr "Aimsigh Cairde"
+
+msgid "Find More Pages"
+msgstr "Aimsigh Tuilleadh Leathanach"
+
+#. Appears next to "Like" and "Comment" on each post in a group
+msgid "Follow Post"
+msgstr "Lean é seo"
+
+#. In search box that lets you search for friends that are available to chat
+msgid "Friends on Chat"
+msgstr "Cairde Ar Líne"
+
+#. People who have asked to be your friend on Facebook; top left of screen
+msgid "Friend Requests"
+msgstr "Iarratais ar Chairdeas"
+
+#. A link that takes you to a list of all your Facebook friends
+msgid "Friends"
+msgstr "Cairde"
+
+#. Heading above your lists of friends ("Work", "Family", etc.)
+msgid "FRIENDS"
+msgstr "CAIRDE"
+
+#. A couple places on user home page
+msgid "Groups"
+msgstr ""
+
+#. Heading above the groups you're in, left-hand navigation on home page
+msgid "GROUPS"
+msgstr "GRÚPAÍ"
+
+#. Link at bottom of home page ("More"); also in dropdown menu next to "Home"
+msgid "Help"
+msgstr "Cabhair"
+
+#. Link that takes you to your home timeline; always visible at top-right
+msgid "Home"
+msgstr "Baile"
+
+#. Main prompt when you enter in a new status update
+msgid "How are you doing, %s?"
+msgstr "Conas atá tú, a %s?"
+
+#. Main prompt when you enter in a new status update
+msgid "How are you feeling, %s?"
+msgstr "Cén chaoi a n-airíonn tú, a %s?"
+
+#. Main prompt when you enter in a new status update
+msgid "How's it going, %s?"
+msgstr "Aon scéal, a %s?"
+
+#. In left-hand column on home page
+msgid "INTERESTS"
+msgstr "SUIMEANNA"
+
+msgid "Life Event"
+msgstr "Cúrsa Saoil"
+
+#. Verb. A link that allows you to "like" a post or a comment; "I like this"
+msgid "Like"
+msgstr "Is Maith Liom É"
+
+#. Plural noun. Link that shows you a list of music, books, etc. you like on FB
+#. Appears at the top of your profile, after Friends, Photos, Map, ...
+msgid "Likes"
+msgstr "Ceanáin"
+
+#. Appears as link to right of "RECENT POST" on home page
+msgid "Like Page"
+msgstr "Is Maith Liom an Leathanach Seo"
+
+msgid "Like This Page"
+msgstr "Is Maith Liom an Leathanach Seo"
+
+msgid "Links"
+msgstr "Naisc"
+
+#. Was the heading above your lists of friends ("Work", "Family", etc.)
+msgid "LISTS"
+msgstr "LIOSTAÍ"
+
+msgid "Log Out"
+msgstr "Logáil Amach"
+
+#. Link to a map of the places someone has been
+msgid "Map"
+msgstr "Léarscáil"
+
+#. Button near top of a user's profile page (but not your own!)
+msgid "Message"
+msgstr "Teachtaireacht"
+
+#. In the "New Message" dialog
+msgid "Message:"
+msgstr "Teachtaireacht:"
+
+msgid "Messages"
+msgstr "Teachtaireachtaí"
+
+#. Photographs uploaded from someone's mobile device
+msgid "Mobile Uploads"
+msgstr "Uasluchtuithe Soghluaiste"
+
+#. Link in bottom navigation. Click it to see additional links: Careers, etc.
+msgid "More"
+msgstr "Tuilleadh"
+
+#. In left-hand navigation to the right of GROUPS, APPS when you mouse over
+msgid "MORE"
+msgstr "TUILLEADH"
+
+#. Appears at the bottom of your home time line; click to load more posts
+msgid "More Stories"
+msgstr "Tuilleadh Scéalta"
+
+#. Under "Sort" on the home page, can sort by "Top Stories" or "Most Recent"
+msgid "Most Recent"
+msgstr "Is Déanaí"
+
+#. Appears in left-hand navigation for some users
+msgid "Music"
+msgstr "Ceol"
+
+#. Not sure now where this appears, a figment?
+msgid "New Group..."
+msgstr "Grúpa Nua..."
+
+msgid "New Message"
+msgstr "Teachtaireacht Nua"
+
+#. Appears in left-hand navigation of home page
+msgid "News Feed"
+msgstr "Fotha Nuachta"
+
+#. In "Friend Requests" drop down
+msgid "No new requests"
+msgstr "Gan iarratais nua"
+
+msgid "Notes"
+msgstr "Nótaí"
+
+msgid "Notifications"
+msgstr "Fógraí"
+
+#. Button label; postpone confirmation of a friend request
+msgid "Not Now"
+msgstr "Ar Ball"
+
+#. A link that takes you to the latest posts on your timeline
+msgid "Now"
+msgstr "Anois"
+
+#. Heading above the list of your FB pages (now "PAGES AND ADS"?)
+msgid "PAGES"
+msgstr "LEATHANAIGH"
+
+#. Heading above the list of your FB pages; left-hand navigation on home page
+msgid "PAGES AND ADS"
+msgstr "LEATHANAIGH AGUS FÓGRAÍ"
+
+msgid "People who like this"
+msgstr "Daoine ar maith leo é seo"
+
+msgid "People You May Know"
+msgstr "Aithne Agat Air/Uirthi?"
+
+#. Appears on profile above the "What's on your mind?" prompt, after "Status"
+msgid "Photo"
+msgstr "Grianghraf"
+
+#. Link to a user's photos, at top of profile, between "Friends" and "Map"
+msgid "Photos"
+msgstr "Grianghraif"
+
+#. Link that allows you to "check in" somewhere
+#. Appears on profile above "What's on your mind?", after "Status" and "Photo"
+msgid "Place"
+msgstr "Áit"
+
+#. Appears, e.g., on your Timeline, showing places you visited during the year
+msgid "Places"
+msgstr "Áiteanna"
+
+#. Appears in left-hand navigation for some users, under "APPS"
+msgid "Pokes"
+msgstr "Soncanna"
+
+#. Link at the bottom of home page to Facebook's privacy policy
+msgid "Privacy"
+msgstr "Príobháideacht"
+
+msgid "Privacy Settings"
+msgstr "Socruithe Príobháideachta"
+
+msgid "Privacy Shortcuts"
+msgstr "Aicearraí Príobháideachta"
+
+#. Appears when you mouse over your name in the top navigation
+msgid "Profile"
+msgstr "Beathaisnéisín"
+
+#. Appears under APPS for some users in left-hand navigation
+msgid "Questions"
+msgstr "Ceisteanna"
+
+#. Box near the top of your personal timeline showing your recent actions on FB
+#. Now defunct, I think - replaced by "Activity" and "Recent" on a line below
+msgid "Recent Activity"
+msgstr "Gníomhaíocht Is Déanaí"
+
+#. Appears next to some posts on home page
+msgid "RECENT POST"
+msgstr "POSTÁIL NUA"
+
+#. Appears in right-hand navigation (sometimes); pages that Facebook things you'll like
+msgid "Recommended Pages"
+msgstr "Leathanaigh Mholta"
+
+#. When you share a link in a comment, use this to remove the preview image
+msgid "Remove Preview"
+msgstr "Gan Réamhamharc"
+
+#. Option on every post on your personal timeline (now defunct? see "Highlight")
+msgid "Resize"
+msgstr "Athraigh Méid"
+
+#. Prompt when you comment on a post (was "Write a comment..."); %s = your name
+msgid "%s, add a comment..."
+msgstr "A %s, scríobh rud éigin..."
+
+#. Text that used to appear in the search box at the top of the page
+msgid "Search"
+msgstr "Cuardaigh"
+
+#. Text that appears in the search box at the top of the page
+msgid "Search for people, places and things"
+msgstr "Déan cuardach ar dhaoine, áiteanna agus rudaí"
+
+#. Link in right-hand column near "Recommended Pages" and "People You May Know"
+#. Also under Friend Requests, Messages, Notifications drop downs
+msgid "See All"
+msgstr "Gach Uile"
+
+#. Now just "See All"?
+msgid "See All Friend Requests"
+msgstr "Gach Iarratas ar Chairdeas"
+
+#. Now just "See All"?
+msgid "See All Messages"
+msgstr "Gach Teachtaireacht"
+
+#. Now just "See All"?
+msgid "See All Notifications"
+msgstr "Gach Fógra"
+
+#. A link that shows interactions and photos involving two Facebook friends
+#. One place it appears is in the "gear" menu on a friend's profile
+msgid "See Friendship"
+msgstr "Féach ar Chairdeas"
+
+#. See more of a post that was truncated because it was very long
+msgid "See More"
+msgstr "Tuilleadh"
+
+#. Under "Privacy Shortcuts" menu
+msgid "See More Settings"
+msgstr "Tuilleadh Socruithe"
+
+#. Link that appears under a post in another language; click it to translate
+msgid "See Translation"
+msgstr "Aistriúchán"
+
+#. Label on button in "New Message" dialog to send the message
+msgid "Send"
+msgstr "Seol"
+
+#. Link that opens the "New Message" dialog
+msgid "Send a New Message"
+msgstr "Seol Teachtaireacht Nua"
+
+#. Appears in "Friend Requests" and "Notifications" drop down menu
+msgid "Settings"
+msgstr "Socruithe"
+
+#. Verb. A link that allows you to share (usually someone else's) post with your friends
+msgid "Share"
+msgstr "Comhroinn"
+
+#. A link that allows you to sort posts by "most recent" or "top stories"
+msgid "SORT"
+msgstr "SÓRTÁIL"
+
+#. Appears above paid advertisements
+msgid "Sponsored"
+msgstr "Urraithe"
+
+#. This is a Facebook "status update", not a relationship status
+#. Appears on profile above the "What's on your mind?" prompt
+msgid "Status"
+msgstr "Stádas"
+
+#. With "Like Page" and "Find More Pages" when someone likes a page
+msgid "Subscribe to Page"
+msgstr "Liostáil leis an Leathanach Seo"
+
+#. Top of profile, after Friends, Photos, Map, ...
+msgid "Subscriptions"
+msgstr "Liostálacha"
+
+#. Right-hand navigation, similar to "People you may know"
+#. Get it by clicking "GROUPS" in left-hand navigation on Home Page
+msgid "Suggested Groups"
+msgstr "Grúpaí Molta"
+
+msgid "Tag Friends"
+msgstr "Cuir Clib ar Chairde"
+
+#. Link at the bottom of home page to Facebook's "Terms of Service"
+msgid "Terms"
+msgstr "Téarmaí"
+
+#. Real time news feed in the right-hand column
+#. "Nuacht Bheo" = "Live News" in Irish; "Instant Information" in Spanish
+msgid "Ticker"
+msgstr "Nuacht Bheo"
+
+#. Appears as a link when you scroll down on your profile, next to "Now"
+msgid "Timeline"
+msgstr "Amlíne"
+
+#. %T is a timestamp ("11 hours ago"), %a is a location ("Dublin, Ireland")
+msgid "%T near %a"
+msgstr "%T i ngar do %a"
+
+#. Specifies recipient when you send a private message
+msgid "To:"
+msgstr "Chuig:"
+
+#. Under "Sort" on the home page, can sort by "Top Stories" or "Most Recent"
+msgid "Top Stories"
+msgstr "Barrscéalta"
+
+#. See "Follow Post"
+msgid "Unfollow Post"
+msgstr "Ná lean é seo"
+
+#. Verb. See "Like"
+msgid "Unlike"
+msgstr "Ní Maith Liom É"
+
+#. Label on a button that allows you to edit your personal information
+msgid "Update Info"
+msgstr "Faisnéis Nua"
+
+#. This is a Facebook "status update", not a relationship status
+#. Appears at top of home timeline, with "Ask Question", "Add Photo/Video"
+msgid "Update Status"
+msgstr "Stádas Nua"
+
+msgid "Use Facebook as:"
+msgstr "Úsáid Facebook mar:"
+
+#. %d stands for a number, no need to translate it
+#. The singular "View 1 comment" is never used as far as I can tell
+msgid "View 1 comment"
+msgid_plural "View all %d comments"
+msgstr[0] "Féach ar nóta tráchta amháin"
+msgstr[1] "Féach ar an dá nóta tráchta"
+msgstr[2] "Féach ar na %d nóta tráchta"
+msgstr[3] "Féach ar na %d nóta tráchta"
+msgstr[4] "Féach ar na %d nóta tráchta"
+
+msgid "Wall Photos"
+msgstr "Grianghraif Bhalla"
+
+#. Appears in left-hand navigation for new users
+msgid "Welcome"
+msgstr "Fáilte"
+
+#. Main prompt when you enter in a new status update
+msgid "What's going on, %s?"
+msgstr "Céard atá ar siúl, a %s?"
+
+#. Main prompt when you enter in a new status update
+msgid "What's happening, %s?"
+msgstr "Aon scéal, a %s?"
+
+#. Main prompt when you enter in a new status update
+msgid "What's on your mind?"
+msgstr "Céard atá ar d'intinn?"
+
+#. Prompt when you comment on a post (replaced by "X, add a comment..."?)
+msgid "Write a comment..."
+msgstr "Scríobh rud éigin..."
+
+#. Appears next to a post or comment as a timestamp
+msgid "Yesterday"
+msgstr "Inné"
+
+#. Appears next to a post or comment as a timestamp; %s is the time of day
+msgid "Yesterday at %s"
+msgstr "Inné ag %s"
+
+msgid "You like this."
+msgstr "Is maith leat é seo."
+
+#. Month Name
+msgid "January"
+msgstr "Eanáir"
+
+#. Month Name
+msgid "February"
+msgstr "Feabhra"
+
+#. Month Name
+msgid "March"
+msgstr "Márta"
+
+#. Month Name
+msgid "April"
+msgstr "Aibreán"
+
+#. Month Name
+msgid "May"
+msgstr "Bealtaine"
+
+#. Month Name
+msgid "June"
+msgstr "Meitheamh"
+
+#. Month Name
+msgid "July"
+msgstr "Iúil"
+
+#. Month Name
+msgid "August"
+msgstr "Lúnasa"
+
+#. Month Name
+msgid "September"
+msgstr "Meán Fómhair"
+
+#. Month Name
+msgid "October"
+msgstr "Deireadh Fómhair"
+
+#. Month Name
+msgid "November"
+msgstr "Samhain"
+
+#. Month Name
+msgid "December"
+msgstr "Nollaig"
+
+#. Day of the Week
+msgid "Monday"
+msgstr "Dé Luain"
+
+#. Day of the Week
+msgid "Tuesday"
+msgstr "Dé Máirt"
+
+#. Day of the Week
+msgid "Wednesday"
+msgstr "Dé Céadaoin"
+
+#. Day of the Week
+msgid "Thursday"
+msgstr "Déardaoin"
+
+#. Day of the Week
+msgid "Friday"
+msgstr "Dé hAoine"
+
+#. Day of the Week
+msgid "Saturday"
+msgstr "Dé Sathairn"
+
+#. Day of the Week
+msgid "Sunday"
+msgstr "Dé Domhnaigh"
