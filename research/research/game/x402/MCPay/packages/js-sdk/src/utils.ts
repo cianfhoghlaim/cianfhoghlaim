@@ -1,1 +1,0 @@
-export { createSignerFromViemAccount } from './utils/signer.js';

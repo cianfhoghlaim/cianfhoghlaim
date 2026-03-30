@@ -1,6 +1,0 @@
-# Auto detect text files and perform LF normalization
-* text=auto
-
-# git-crypt
-**/secrets.nix filter=git-crypt diff=git-crypt
-secrets.nix filter=git-crypt diff=git-crypt

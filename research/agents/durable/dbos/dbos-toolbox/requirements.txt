@@ -1,2 +1,0 @@
-dbos[otel]==2.7.0
-fastapi[standard]

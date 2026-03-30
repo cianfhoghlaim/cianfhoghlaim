@@ -1,5 +1,0 @@
-deepgram-captions
-deepgram-sdk
-ffmpy
-marimo
-yt-dlp

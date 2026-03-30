@@ -1,8 +1,0 @@
-.DS_Store
-.env
-.env.local
-node_modules
-dist
-pnpm-lock.yaml
-bun.lock
-*.log

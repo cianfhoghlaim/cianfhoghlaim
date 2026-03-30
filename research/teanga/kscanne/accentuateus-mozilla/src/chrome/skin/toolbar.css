@@ -1,7 +1,0 @@
-#accentuateus-live-button {
-      list-style-image: url("chrome://accentuateus/skin/toolbar_large.png");
-}
-
-toolbar[iconsize="small"] #accentuateus-live-button {
-      list-style-image: url("chrome://accentuateus/skin/toolbar_small.png");
-}

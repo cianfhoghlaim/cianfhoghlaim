@@ -1,7 +1,0 @@
-{
-	"name": "star-catcher",
-	"type": "module",
-	"devDependencies": {
-		"wrangler": "^4.17.0"
-	}
-}

@@ -1,6 +1,0 @@
-#!/bin/sh
-
-PORT="8992"
-EXEC="crbackend-fcgi_"
-
-spawn-fcgi -a 127.0.0.1 -p $PORT -P "/var/run/crbackend/crbackend.pid" -f $EXEC || echo "Try running $EXEC and looking for error messages?"

@@ -1,3 +1,0 @@
-# Cell
-
-::: marimo.Cell

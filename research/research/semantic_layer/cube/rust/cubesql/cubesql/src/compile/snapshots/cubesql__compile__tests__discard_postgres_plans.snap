@@ -1,5 +1,0 @@
----
-source: cubesql/src/compile/mod.rs
-expression: "execute_query(\"DISCARD PLANS;\".to_string(),\n            DatabaseProtocol::PostgreSQL).await?"
----
-

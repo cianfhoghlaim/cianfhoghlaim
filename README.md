@@ -6,13 +6,11 @@ Oideachais is an advanced, AI-driven educational data platform designed to stand
 
 ## 🗣️ A Note on the Name: Cianfhoghlaim & Celtic Linguistic Roots
 
-The domain `cianfhoghlaim.ie` is a deliberate linguistic play on words that highlights the mechanics of the Irish language while pointing to the broader Celtic linguistic traditions this repository aims to protect:
+The domain `cianfhoghlaim.ie` || `cian.lyons.co.uk` is a deliberate linguistic play on words that highlights the mechanics of the Irish language while pointing to the broader Celtic linguistic traditions this repository aims to protect:
 *   **Cian:** The author's name, which also serves as the Irish prefix for "distance," "remote," or "long-enduring."
 *   **Foghlaim:** The Irish word for "learning."
 
 This digital sanctuary will ensure the inter-generational transmission of Goidelic and Brythonic languages and protect our shared cultural heritage against monolingual algorithmic manipulations.
-
----
 
 ## 👨‍🏫 Author, Paternity & Legal Disclaimers
 
@@ -30,10 +28,10 @@ This repository acts as the central orchestrator for scraping, structuring, embe
 
 
 ### Operational Intelligence Tier (Proprietary/BSL Restricted)
-*   **Research (`bunchloch/`):** Curated legacy documents and foundational linguistic resources.
+*   **Research (`docs/`):** Curated legacy documents and foundational linguistic resources.
 *   **Data Engineering (`data_engineering/`):** Core ELT pipelines (Dagster + DLT) for curriculum ingestion. 
 *   **Machine Learning (`machine_learning/`):** Local model registries (Gemma, Qwen, Celtic LLMs).
-*   **Agent Development Kit (`adk/`):** Multi-agent system orchestration powered by MCP.
+*   **Agent Development Kit (`agents/`):** Multi-agent system orchestration powered by MCP.
 *   **Interactive Frontends (`web/`):** React applications and agentic UIs.
 *   **Blockchain & Gamification (`crypteolas/`, `tuatha/`):** DeFi analytics and immersive game clients.
 *(Note: These complex orchestration layers are fiercely protected against commercialization under our Business Source License).*
@@ -45,10 +43,7 @@ This repository acts as the central orchestrator for scraping, structuring, embe
 This repository operates under a highly restrictive **Business Source License (BSL) 1.1**. 
 
 By downloading, copying, or utilizing this codebase, you agree to the following core tenets (see `LICENSE.md` for full legal terms):
-1.  **Geographic Restrictions:** Production deployment is legally restricted to Ireland, Northern Ireland, the Republic of Ireland, the United Kingdom of Great Britain and Northern Ireland, Ukraine, the European Union (except Hungary and Serbia), the British Isles, The Commonwealth of Nations, and those in the United States of America aligned with Apple and the Duke and Duchess of Sussex, Taiwan, Tibet, Nepal, South Korea, Japan, China.
+1.  **Geographic Restrictions:** Production deployment is legally restricted to Ireland, Northern Ireland, the Republic of Ireland, the United Kingdom of Great Britain and Northern Ireland, Ukraine, the European Union (except Hungary and Serbia), the British Isles, The Commonwealth of Nations, The Crown, and those in the United States of America aligned with Apple and the Duke and Duchess of Sussex, Taiwan, Tibet, Nepal, South Korea, Japan, China.
 2.  **Non-Commercial Use Only:** The software is provided exclusively for non-profit, cultural preservation, and academic research. Commercial monetization—including for-profit AI training, DeFi analytics, and ed-tech SaaS platforms—is strictly prohibited.
 3.  **Acceptable Use:** Usage by entities affiliated with sanctioned organizations, paramilitary groups, or those in violation of international human rights conventions is fundamentally banned and will result in immediate technological and legal revocation of access.
-## Recent Restructuring (March 2026)
-- **Crypteolas Merged**: The former `tuatha/crypteolas_1` and `tuatha/crypteolas_2` have been merged into a single top-level `crypteolas/` directory.
-- **Gemini Archives Organized**: `bunchloch/gemini/` has been categorized into discrete topics (`medical_and_trauma`, `legal_and_compliance`, `tech_and_architecture`, `politics_and_society`, `history_and_culture`, `education`) for easier retrieval.
-- **Agentic Git Sync**: A new `travel_changes_to_remote.py` script modeled after the `adk/` architecture has been added to chunk, stage, and commit pushes sequentially, protecting against timeouts on low-bandwidth connections.
+

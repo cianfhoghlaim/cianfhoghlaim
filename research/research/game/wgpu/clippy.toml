@@ -1,6 +1,0 @@
-# NOTE: Other global Clippy config is in top-level Cargo.toml.
-
-disallowed-types = [
-    { path = "std::collections::HashMap", reason = "use hashbrown::HashMap instead" },
-    { path = "std::collections::HashSet", reason = "use hashbrown::HashSet instead" },
-]

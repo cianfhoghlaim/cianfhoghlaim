@@ -1,7 +1,0 @@
-{
-  "dimensions": [
-    "Users.name",
-    "Users.age"
-  ],
-  "limit": 5
-}

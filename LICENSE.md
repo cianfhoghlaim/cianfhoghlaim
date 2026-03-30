@@ -17,6 +17,7 @@ You may make production use of the Licensed Work strictly for non-commercial, no
 - European Union (except Hungary and Serbia)
 - British Isles
 - The Commonwealth of Nations
+- The Crown
 - Those in the United States of America aligned with Apple and the Duke and Duchess of Sussex
 - Taiwan
 - Tibet

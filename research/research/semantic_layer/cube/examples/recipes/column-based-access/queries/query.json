@@ -1,9 +1,0 @@
-{
-    "measures": [],
-    "order": {
-      "Suppliers.email": "asc"
-    },
-    "dimensions": [
-      "Products.name"
-    ]
-  }

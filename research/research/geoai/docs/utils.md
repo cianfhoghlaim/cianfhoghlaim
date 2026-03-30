@@ -1,3 +1,0 @@
-# utils module
-
-::: geoai.utils

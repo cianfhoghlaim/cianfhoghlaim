@@ -11,22 +11,22 @@
 # PERFORMANCE:
 #   - Uses `op inject` for single API call (vs multiple `op read` calls)
 #   - Caches to .env file to avoid repeated API calls
-#   - Only regenerates if .env.op is newer than .env
+#   - Only regenerates if .op.env is newer than .env
 #
 # REQUIREMENTS:
 #   - 1Password CLI (op) installed and authenticated
-#   - .env.op template file with op:// references
+#   - .op.env template file with op:// references
 # =============================================================================
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-ENV_OP_FILE="$PROJECT_ROOT/.env.op"
+ENV_OP_FILE="$PROJECT_ROOT/.op.env"
 ENV_FILE="$PROJECT_ROOT/.env"
 LOCK_FILE="$PROJECT_ROOT/.env.lock"
 
-# List of env vars to unset (must match .env.op)
+# List of env vars to unset (must match .op.env)
 ENV_VARS=(
     "BROWSERBASE_API_KEY"
     "BROWSERBASE_PROJECT_ID"
@@ -66,7 +66,7 @@ inject_secrets() {
         return 0
     fi
 
-    # Check if .env.op template exists
+    # Check if .op.env template exists
     if [[ ! -f "$ENV_OP_FILE" ]]; then
         echo "[op-inject] Warning: $ENV_OP_FILE not found. Skipping." >&2
         return 0
