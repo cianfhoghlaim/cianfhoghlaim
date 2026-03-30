@@ -1,0 +1,278 @@
+# =============================================================================
+# TUATH - Development Environment
+# =============================================================================
+# Extends docker-compose.yaml for local community/gaming platform development.
+#
+# USAGE:
+#   Development:  docker compose -f docker-compose.yaml -f docker-compose.dev.yml up
+# =============================================================================
+#
+# This dev overlay adds:
+#   - Source code volume mounts for hot-reload
+#   - Development command overrides
+#   - Debug logging enabled
+#   - Resource limits removed
+#   - Connection to shared bonneagar infrastructure
+# =============================================================================
+
+services:
+  # =============================================================================
+  # API Server - Development Mode with Hot Reload
+  # =============================================================================
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+      target: builder  # Use builder stage for dev
+    volumes:
+      # Mount source code for hot-reload
+      - ./api:/app/api:ro
+      - ./storage:/app/storage
+      - ./baml_src:/app/baml_src:ro
+      - ./tests:/app/tests:ro
+      # Persist data locally
+      - ./storage/duckdb:/data/duckdb
+      - ./storage/lance:/data/lance
+      - ./storage/geoparquet:/data/geoparquet
+    environment:
+      ENVIRONMENT: development
+      LOG_LEVEL: DEBUG
+      # Storage paths
+      DUCKDB_PATH: /data/duckdb/tuath.duckdb
+      LANCEDB_URI: /data/lance
+      # SpacetimeDB (multiplayer state)
+      SPACETIMEDB_URL: ws://spacetimedb:3000
+      # Observability (connect to shared Langfuse)
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_HOST: http://langfuse:3000
+      # Cache
+      DRAGONFLY_URL: redis://dragonfly:6379
+      # LLM API Keys
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      # Payment integration
+      X402_PAYMENT_URL: ${X402_PAYMENT_URL:-}
+    command: ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    # Remove resource limits for dev
+    deploy:
+      resources: {}
+
+  # =============================================================================
+  # TanStack UI - Development Mode with Hot Reload
+  # =============================================================================
+  ui:
+    build:
+      context: ./ui
+      dockerfile: ../docker/Dockerfile.ui
+      target: builder  # Use builder stage for dev
+    volumes:
+      # Mount source code for hot-reload
+      - ./ui/src:/app/src:ro
+      - ./ui/public:/app/public:ro
+    environment:
+      NODE_ENV: development
+      VITE_API_URL: http://api:8000
+      VITE_COPILOTKIT_RUNTIME_URL: http://api:8000/copilotkit
+      VITE_GAME_URL: http://game:8080
+      VITE_MAPLIBRE_STYLE: ${MAPLIBRE_STYLE:-}
+      # Development settings
+      VITE_ENABLE_HOT_RELOAD: "true"
+    command: ["pnpm", "dev", "--host", "0.0.0.0"]
+    # Remove resource limits for dev
+    deploy:
+      resources: {}
+
+  # =============================================================================
+  # Babylon.js Game Client - Development Mode with Hot Reload
+  # =============================================================================
+  game:
+    build:
+      context: ./game/client
+      dockerfile: ../../docker/Dockerfile.game
+      target: builder  # Use builder stage for dev
+    volumes:
+      # Mount source code for hot-reload
+      - ./game/client/src:/app/src:ro
+      - ./game/client/public:/app/public:ro
+    environment:
+      NODE_ENV: development
+      VITE_SPACETIMEDB_URL: ws://spacetimedb:3000
+      VITE_API_URL: http://api:8000
+      # Development settings
+      VITE_ENABLE_DEBUG_TOOLS: "true"
+    command: ["pnpm", "dev", "--host", "0.0.0.0"]
+    # Remove resource limits for dev
+    deploy:
+      resources: {}
+
+  # =============================================================================
+  # SpacetimeDB - Development Mode
+  # =============================================================================
+  spacetimedb:
+    image: clockworklabs/spacetimedb:latest
+    ports:
+      # Expose externally for debugging
+      - "3011:3000"
+    volumes:
+      # Persist data locally
+      - ./storage/spacetimedb:/stdb
+      - ./game/spacetimedb:/app
+    environment:
+      SPACETIMEDB_LOG_LEVEL: debug
+      # Enable development features
+      SPACETIMEDB_ENABLE_AUTH: "false"
+
+  # =============================================================================
+  # Dagster Webserver - Development Mode
+  # =============================================================================
+  dagster-webserver:
+    image: dagster/dagster-webserver:1.9.0
+    volumes:
+      # Mount source code for hot-reload
+      - ./dagster_assets:/opt/dagster/app:ro
+      # Persist data locally
+      - ./storage/duckdb:/data/duckdb
+      - ./storage/lance:/data/lance
+      - ./dagster_home:/opt/dagster/dagster_home
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+      LOG_LEVEL: DEBUG
+      # Storage paths
+      DUCKDB_PATH: /data/duckdb/tuath.duckdb
+      LANCEDB_URI: /data/lance
+    # Remove resource limits for dev
+    deploy:
+      resources: {}
+
+  # =============================================================================
+  # Dagster Daemon - Development Mode
+  # =============================================================================
+  dagster-daemon:
+    image: dagster/dagster-daemon:1.9.0
+    volumes:
+      # Mount source code for hot-reload
+      - ./dagster_assets:/opt/dagster/app:ro
+      # Persist Dagster home locally
+      - ./dagster_home:/opt/dagster/dagster_home
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+      LOG_LEVEL: DEBUG
+    # Remove resource limits for dev
+    deploy:
+      resources: {}
+
+  # =============================================================================
+  # DragonflyDB - Development Mode
+  # =============================================================================
+  dragonfly:
+    ports:
+      # Expose externally for Redis Insight debugging
+      - "6381:6379"
+    environment:
+      # Enable verbose logging
+      DRAGONFLY_LOG_LEVEL: verbose
+
+  # =============================================================================
+  # Langfuse - Development Mode
+  # =============================================================================
+  langfuse:
+    ports:
+      - "3013:3000"
+    environment:
+      DATABASE_URL: postgresql://langfuse:langfuse@langfuse-db:5432/langfuse
+      NEXTAUTH_SECRET: ${LANGFUSE_NEXTAUTH_SECRET:-dev-secret-change-in-production}
+      NEXTAUTH_URL: http://localhost:3013
+      SALT: ${LANGFUSE_SALT:-dev-salt-change-in-production}
+      # Enable development features
+      LANGFUSE_ENABLE_DEBUG: "true"
+
+  # =============================================================================
+  # LanceDB Viewer - Development Tool
+  # =============================================================================
+  lance-viewer:
+    image: python:3.11-slim
+    ports:
+      - "8502:8501"
+    volumes:
+      - ./storage/lance:/data/lance
+    working_dir: /data
+    command: >
+      sh -c "pip install streamlit lancedb pyarrow &&
+             streamlit run /app/viewer.py --server.port 8501 --server.address 0.0.0.0"
+
+  # =============================================================================
+  # MapLibre Tile Server - Development Mode
+  # =============================================================================
+  tileserver:
+    image: maptiler/tileserver-gl:latest
+    ports:
+      - "8888:8080"
+    volumes:
+      - ./storage/mbtiles:/data
+    environment:
+      # Enable development features
+      DEBUG: "true"
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+# Connect to bonneagar shared infrastructure network for:
+#   - Langfuse (LLM observability at http://langfuse:3000)
+#   - Lakekeeper (Iceberg catalog)
+#   - Other sruth services
+# =============================================================================
+networks:
+  tuath-network:
+    driver: bridge
+  bonneagar-network:
+    external: true
+    name: bonneagar_default
+
+# =============================================================================
+# DEVELOPMENT NOTES
+# =============================================================================
+#
+# Shared Infrastructure (via bonneagar_default network):
+#   - Langfuse:         http://langfuse:3000 (LLM observability)
+#   - Lakekeeper:       http://lakekeeper:8181 (Iceberg REST catalog)
+#   - Other sruth APIs: See respective PORTS.md mappings
+#
+# To start shared services:
+#   cd bonneagar/storage/langfuse && docker compose up -d
+#   cd bonneagar/storage/lakekeeper && docker compose up -d
+#
+# Service Endpoints:
+#   - API:              localhost:8002
+#   - UI:               localhost:3010
+#   - Game:             localhost:8080
+#   - Dagster UI:       localhost:3012
+#   - SpacetimeDB:      localhost:3011
+#   - Langfuse:         localhost:3013
+#   - DragonflyDB:      localhost:6381
+#   - LanceDB Viewer:   localhost:8502
+#   - Tile Server:      localhost:8888
+#
+# Development Workflow:
+#   1. Start base services: docker compose -f docker-compose.yaml up -d
+#   2. Apply dev overrides: docker compose -f docker-compose.yaml -f docker-compose.dev.yml up -d
+#   3. Access API docs at http://localhost:8002/docs
+#   4. Access Dagster at http://localhost:3012
+#   5. Access game UI at http://localhost:3010
+#
+# Community/Gaming Features:
+#   - Multiplayer state sync via SpacetimeDB
+#   - Geospatial queries with DuckDB + GeoParquet
+#   - Vector search for user-generated content
+#   - Real-time events via DragonflyDB pub/sub
+#
+# SpacetimeDB Development:
+#   - Access console at http://localhost:3011
+#   - View database state and logs
+#   - Execute SpacetimeDB queries
+#
+# Map Development:
+#   - Add MBTiles files to ./storage/mbtiles/
+#   - Access tile server at http://localhost:8888
+#   - Configure MAPLIBRE_STYLE for custom map styles
+#

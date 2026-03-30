@@ -1,0 +1,20 @@
+[package]
+name = "celtic-shaders"
+description = "WebGPU/WGSL shaders for Celtic visual effects"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[lib]
+name = "celtic_shaders"
+
+[dependencies]
+wgpu = { workspace = true }
+bytemuck = { version = "1.14", features = ["derive"] }
+glam = { version = "0.29", features = ["bytemuck"] }
+serde = { workspace = true }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+pollster = "0.4"
