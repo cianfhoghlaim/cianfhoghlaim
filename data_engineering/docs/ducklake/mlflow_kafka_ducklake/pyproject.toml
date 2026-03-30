@@ -1,0 +1,82 @@
+# When adding/removing dependencies, first run:
+# export UV_FIND_LINKS="https://data.pyg.org/whl/torch-2.7.0+cu126.html"
+
+[project]
+name = "datalab"
+version = "1.1.0"
+description = "Tooling for a minimalist data lab running on top of DuckLake."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+  "aiokafka>=0.12.0",
+  "anyascii>=0.3.3",
+  "bidict>=0.23.1",
+  "boto3>=1.38.29",
+  "boto3-stubs[s3]>=1.38.29",
+  "click>=8.2.1",
+  "colorama>=0.4.6",
+  "dbt-core>=1.9.6",
+  "dbt-duckdb>=1.9.6",
+  "duckdb>=1.4.1",
+  "environs>=14.2.0",
+  "faker>=37.5.3",
+  "fastapi>=0.116.1",
+  "geopandas>=1.1.1",
+  "gitpython>=3.1.44",
+  "humanize>=4.12.3",
+  "inflection>=0.5.1",
+  "joblib>=1.5.1",
+  "jupyterlab>=4.4.5",
+  "kagglehub>=0.3.12",
+  "kuzu==0.11.0",
+  "langchain>=0.3.26",
+  "langchain-kuzu>=0.4.2",
+  "langchain-ollama>=0.3.3",
+  "loguru>=0.7.3",
+  "matplotlib>=3.10.3",
+  "minio>=7.2.15",
+  "mlflow>=3.2.0",
+  "more-itertools>=10.7.0",
+  "networkx>=3.5",
+  "ollama>=0.5.1",
+  "pandas>=2.3.0",
+  "pip>=25.2",
+  "platformdirs>=4.3.8",
+  "prompt-toolkit>=3.0.51",
+  "python-slugify>=8.0.4",
+  "requests-cache>=1.2.1",
+  "rust-just>=1.42.4",
+  "scikit-learn>=1.7.1",
+  "scipy>=1.16.1",
+  "sentence-transformers>=5.1.0",
+  "torch>=2.7.1",
+  "tqdm>=4.67.1",
+  "uvicorn>=0.35.0",
+  "xgboost==3.0.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1",
+    "python-semantic-release>=9.21.1",
+]
+
+[project.scripts]
+dlctl = "dlctl.cli:dlctl"
+
+[tool.uv]
+package = true
+
+[tool.pytest.ini_options]
+addopts = "--capture=no --maxfail=1 --disable-warnings"
+
+[tool.setuptools.packages.find]
+include = ["dlctl", "shared", "ingest", "transform", "export", "graph", "ml"]
+
+[tool.semantic_release]
+commit_parser = "conventional"
+version_toml = ["pyproject.toml:project.version"]
+allow_zero_version = true
+
+[tool.semantic_release.changelog.default_templates]
+changelog_file = "CHANGELOG.md"

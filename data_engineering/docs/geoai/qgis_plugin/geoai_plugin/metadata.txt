@@ -1,0 +1,58 @@
+[general]
+name=GeoAI
+qgisMinimumVersion=3.28
+description=GeoAI plugin for QGIS providing AI-powered geospatial analysis including Moondream vision-language model for image captioning, querying, object detection, and semantic segmentation model training and inference.
+version=0.3.0
+author=Qiusheng Wu
+email=giswqs@gmail.com
+
+about=This plugin provides AI-powered geospatial analysis tools:
+
+    Moondream Vision-Language Model:
+    - Caption: Generate descriptions of geospatial imagery
+    - Query: Ask questions about images using natural language
+    - Detect: Detect and locate objects with bounding boxes
+    - Point: Locate specific objects with point markers
+
+    Semantic Segmentation:
+    - Train custom segmentation models (U-Net, DeepLabV3+, FPN, etc.)
+    - Run inference on raster imagery
+    - Export results as vector or raster data
+
+    SamGeo segmentation:
+    - Segment objects using text prompts (e.g., "tree", "building", "road")
+    - Segment using point prompts (foreground/background) or box prompts drawn on the map
+    - Process multiple points interactively or from vector files/layers
+    - Save results as raster (GeoTIFF) or vector (GeoPackage, Shapefile) with optional regularization
+
+    Requires the geoai-py Python package and PyTorch with CUDA support for optimal performance.
+
+tracker=https://github.com/opengeos/geoai/issues
+repository=https://github.com/opengeos/geoai
+
+hasProcessingProvider=no
+
+tags=ai, deep learning, segmentation, object detection, moondream, vision language model, machine learning, remote sensing, geospatial
+
+homepage=https://opengeoai.org
+category=Analysis
+icon=icons/icon.png
+
+experimental=False
+deprecated=False
+
+changelog=
+    0.3.0
+        - Add smooth vector option to QGIS plugin
+        - Fix point segmentation bug
+    0.2.1
+        - Disable SamGeo 1 and 2 due to compatibility issues
+
+    0.2.0
+        - Fix geoai import name conflict issue
+        - Add support for SamGeo segmentation
+
+    0.1.0 - Initial release
+        - Moondream integration for image captioning, querying, detection, and pointing
+        - Semantic segmentation model training
+        - Semantic segmentation inference

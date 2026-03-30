@@ -1,0 +1,9 @@
+compiler: rillv1
+
+display_name: GitHub Analytics
+description: GitHub Analytics
+
+olap_connector: duckdb
+features:
+  chat_charts: true
+  dashboardChat: true

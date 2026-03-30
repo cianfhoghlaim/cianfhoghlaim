@@ -1,0 +1,32 @@
+albumentations
+buildingregulariser
+contextily
+datasets>=3.0
+ever-beta
+geopandas
+huggingface_hub
+jupyter-server-proxy
+leafmap>=0.57.1
+localtileserver
+mapclassify
+maplibre
+opencv-python-headless
+overturemaps
+planetary-computer
+psutil
+pyarrow
+pystac-client
+rasterio
+rioxarray
+scikit-image
+scikit-learn
+# segment-geospatial
+smoothify
+timm
+tokenizers>=0.22.1
+torch
+# torchange
+torchgeo
+torchinfo
+tqdm
+transformers>=4.57.1
