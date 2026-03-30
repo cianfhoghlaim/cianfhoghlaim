@@ -1,0 +1,48 @@
+@default:
+	just --list
+
+dev:
+	deno run dev
+
+format:
+	nixfmt .
+	deno fmt .
+
+build:
+	deno run --allow-all npm:astro check
+	deno run --allow-all npm:astro build
+
+test:
+	deno run test
+
+test-with-logs:
+	deno run --allow-all npm:vitest --reporter=default --no-file-parallelism --disable-console-intercept
+
+deploy:
+	#!/usr/bin/env bash
+	dagger call deploy --git-head $(git rev-parse --abbrev-ref HEAD) --cloudflare-api-token op://sa.rawkode.academy/cloudflare/password
+
+preview:
+	deno run --allow-all npm:astro preview
+
+	bun run graphql-codegen --config graphql-codegen.ts
+
+# Invalidate the videos-latest cache tag on Cloudflare
+invalidate-videos-cache:
+	#!/usr/bin/env bash
+	set -xe
+	curl -s -XPOST \
+		"https://api.cloudflare.com/client/v4/zones/789be9a4588576db675cc2053ea3a89d/purge_cache" \
+		-H "Authorization: Bearer $CLOUDFLARE_CACHE_BUSTER_TOKEN" \
+		-H "Content-Type: application/json" \
+		-d '{"tags": ["videos-latest"]}'
+
+# Generate SDL for the federated subgraph
+# Note: Supergraph composition is now handled by the API gateway workflow
+# See: .github/workflows/platform-api-gateway.yaml
+generate-subgraph-sdl:
+	#!/usr/bin/env bash
+	set -euo pipefail
+	bun run subgraph:sdl
+	echo "SDL generated at subgraph/schema.gql"
+

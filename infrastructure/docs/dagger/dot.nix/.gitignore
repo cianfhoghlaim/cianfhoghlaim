@@ -1,0 +1,5 @@
+.BAK/
+.chat
+.logs
+*.bak
+.claude/settings.local.json

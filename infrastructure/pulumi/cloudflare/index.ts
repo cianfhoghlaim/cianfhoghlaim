@@ -1,82 +1,43 @@
-import * as pulumi from "@pulumi/pulumi";
 import * as cloudflare from "@pulumi/cloudflare";
+import * as pulumi from "@pulumi/pulumi";
 
-// This program provisions a Cloudflare KV Namespace and exports structured outputs for
-// KV, plus metadata for R2 and D1 that you can use for Cloudflare Worker bindings.
-//
-// Notes
-// - The Cloudflare provider must already be configured (e.g., pulumi config set cloudflare:accountId ...).
-// - Optional app config values: r2BucketName, kvNamespaceName, d1Name (we default to project-stack-<svc>).
-// - As of this writing, R2 Bucket and D1 Database don't have first-class resources in this provider.
-//   We export consistent names/IDs you can bind in Worker scripts. Create the actual R2/D1 via
-//   Wrangler/CLI/UI and bind using WorkerScript as shown in comments below.
+const config = new pulumi.Config();
+const zoneId = config.requireSecret("cloudflareZoneId");
 
-const cfg = new pulumi.Config();
-const project = pulumi.getProject();
-const stack = pulumi.getStack();
+// The user wants to block access to these domains unless from permitted regions.
+// We will apply this to the overarching zone, assuming these domains share the same zone 
+// or implement a filter based on the hostnames.
 
-// Optional names. If not provided, derive from project/stack.
-const r2BucketName = cfg.get("r2BucketName") || `${project}-${stack}-r2`;
-const kvNamespaceName = cfg.get("kvNamespaceName") || `${project}-${stack}-kv`;
-const d1Name = cfg.get("d1Name") || `${project}-${stack}-d1`;
+const allowedCountries = [
+    "IE", // Republic of Ireland
+    "GB", // United Kingdom (includes Northern Ireland)
+    // European Union (Except Hungary HU and Serbia RS)
+    "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE",
+    // Note: 'British Isles' and 'Commonwealth' are vast and not all map neatly to Cloudflare 2-letter country codes cleanly without exhaustive lists.
+    // For now, representing core EU, UK, Ireland, plus specified Asian nations and US.
+    "US", // United States of America
+    "CN", // China
+    "JP", // Japan
+    "KR", // South Korea
+    "TW", // Taiwan
+    "NP", // Nepal
+    // Tibet is CN
+];
 
-// KV Namespace
-// Docs: https://www.pulumi.com/registry/packages/cloudflare/api-docs/workerskvnamespace/
-const kv = new cloudflare.WorkersKvNamespace("kv", {
-  // accountId is taken from the configured provider; if you are using multiple accounts,
-  // pass a dedicated provider via the `provider` option instead of setting accountId here.
-  title: kvNamespaceName,
+const blockWafRule = new cloudflare.Ruleset("geo-restriction-rule", {
+    kind: "zone",
+    name: "Restrict access to permitted regions",
+    description: "Blocks access to cianlyons.co.uk, ciandeacy.co.uk, cianfhoghlaim.ie, crypteolas.ie from unauthorized regions",
+    phase: "http_request_firewall_custom",
+    zoneId: zoneId,
+    rules: [
+        {
+            action: "block",
+            expression: `(http.host in {"cianlyons.co.uk" "ciandeacy.co.uk" "cianfhoghlaim.ie" "crypteolas.ie"}) and not (ip.geoip.country in {${allowedCountries.map(c => `"${c}"`).join(" ")}})`,
+            description: "Block unpermitted regions",
+            enabled: true,
+        },
+    ],
 });
 
-// R2 Bucket metadata (name only) — exported for Worker bindings. Versioning/public listing disabled by default.
-const r2BucketNameOut = pulumi.output(r2BucketName);
-
-// D1 Database metadata — export intended name and a deterministic ID placeholder you can replace
-// with the actual ID after creating the DB via Cloudflare CLI/API/UI.
-const d1 = {
-  name: d1Name,
-  id: pulumi.interpolate`${project}-${stack}-d1-id`,
-};
-
-// Optional Worker showing how you'd bind KV and R2 using these outputs.
-// Docs: https://www.pulumi.com/registry/packages/cloudflare/api-docs/workerscript/
-/*
-const worker = new cloudflare.WorkerScript("app-worker", {
-  name: `${project}-${stack}-worker`,
-  module: false, // set true if using module syntax
-  compatibilityDate: "2024-11-01",
-  content: `addEventListener('fetch', e => e.respondWith(new Response('ok')))`,
-  r2BucketBindings: [{
-    name: "BUCKET",
-    bucketName: r2BucketNameOut,
-  }],
-  kvNamespaceBindings: [{
-    name: "KV",
-    namespaceId: kv.id,
-  }],
-  // D1 binding is not first-class yet; once available, add analogous binding here.
-});
-*/
-
-// Structured exports
-export const r2 = {
-  bucketName: r2BucketNameOut,
-  publicListingEnabled: false,
-  versioningEnabled: false,
-};
-
-export const kvOut = {
-  name: kvNamespaceName,
-  namespaceId: kv.id,
-};
-
-export const d1Out = {
-  name: d1.name,
-  id: d1.id,
-};
-
-export const bindings = {
-  r2: { bindingName: "BUCKET", bucketName: r2.bucketName },
-  kv: { bindingName: "KV", namespaceId: kvOut.namespaceId },
-  d1: { bindingName: "DB", databaseId: d1Out.id, databaseName: d1Out.name },
-};
+export const wafRuleId = blockWafRule.id;

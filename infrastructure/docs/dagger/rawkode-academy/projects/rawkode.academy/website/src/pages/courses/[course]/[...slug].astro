@@ -1,0 +1,290 @@
+---
+import { getImage } from "astro:assets";
+import { type CollectionEntry, getCollection, render } from "astro:content";
+import { join, dirname } from "node:path";
+import Breadcrumb from "@/components/breadcrumb/Breadcrumb.astro";
+import CourseSignupForm from "@/components/courses/CourseSignupForm.astro";
+import ResourceList from "@/components/courses/ResourceList.vue";
+import VideoPlayer from "@/components/video/player.vue";
+import Page from "@/wrappers/page.astro";
+import { loadWebContainerFiles } from "@/utils/webcontainer-loader";
+import type { GetStaticPaths } from "astro";
+import { createLogger } from "@/lib/logger";
+
+export const prerender = true;
+
+const logger = createLogger("courses");
+
+type Props = {
+	module: CollectionEntry<"courseModules">;
+	course: CollectionEntry<"courses">;
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+	const courses = await getCollection("courses");
+	const modules = await getCollection("courseModules");
+
+	return modules.map((module) => {
+		const course = courses.find((c) => c.id === module.data.course.id);
+		if (!course) {
+			throw new Error(`Course not found for module: ${module.id}`);
+		}
+
+		return {
+			params: {
+				course: course.id,
+				slug: module.id,
+			},
+			props: {
+				module,
+				course,
+			},
+		};
+	});
+};
+
+const computeImageUrl = async (module: CollectionEntry<"courseModules">) => {
+	if (!module.data.cover) return null;
+	return (
+		await getImage({
+			src: module.data.cover.image,
+			format: "jpeg",
+		})
+	).src;
+};
+
+const { module, course } = Astro.props;
+
+// Prevent viewing draft modules
+if (module.data.draft) {
+	return Astro.redirect("/404");
+}
+
+const { Content } = await render(module);
+
+// Process resources to load WebContainer files
+// Process both course and module resources
+const allResources = [
+	...(course.data.resources || []),
+	...(module.data.resources || []),
+];
+
+const processedResources = await Promise.all(
+	allResources.map(async (resource) => {
+		if (
+			resource.type === "embed" &&
+			resource.embedConfig?.container === "webcontainer" &&
+			resource.embedConfig.import?.localDir
+		) {
+			// Get the module file path
+			const moduleFilePath = join(
+				process.cwd(),
+				"content",
+				"courses",
+				module.id + ".mdx",
+			);
+			const moduleDir = dirname(moduleFilePath);
+			const importPath = join(moduleDir, resource.embedConfig.import.localDir);
+
+			try {
+				const importedFiles = await loadWebContainerFiles(importPath);
+				return {
+					...resource,
+					embedConfig: {
+						...resource.embedConfig,
+						files: { ...importedFiles, ...(resource.embedConfig.files || {}) },
+					},
+				};
+			} catch (error) {
+				logger.error(`Failed to load files for ${resource.title}`, error);
+				return resource;
+			}
+		}
+		return resource;
+	}),
+);
+
+const imageUrl = await computeImageUrl(module);
+
+const breadcrumbElements = [
+	{ title: "Home", link: "/" },
+	{ title: "Courses", link: "/courses" },
+	{ title: course.data.title, link: `/courses/${course.id}` },
+	{
+		title: module.data.title,
+		link: `/courses/${course.id}/modules/${module.id}`,
+	},
+];
+
+// Get all course modules for navigation
+const allCourseModules = (await getCollection("courseModules"))
+	.filter((m) => m.data.course.id === course.id)
+	.filter((m) => !m.data.draft)
+	.sort((a, b) => a.data.order - b.data.order);
+
+const currentIndex = allCourseModules.findIndex((m) => m.id === module.id);
+const previousModule =
+	currentIndex > 0 ? allCourseModules[currentIndex - 1] : null;
+const nextModule =
+	currentIndex < allCourseModules.length - 1
+		? allCourseModules[currentIndex + 1]
+		: null;
+---
+
+<Page
+	title={`${module.data.title} - ${course.data.title}`}
+	description={module.data.description}
+	image={imageUrl ? { image: imageUrl.startsWith('http') ? new URL(imageUrl) : new URL(imageUrl, Astro.site || "https://rawkode.academy"), text: module.data.title, format: "png" as const } : undefined}
+>
+	<section id="article" class="pt-4 sm:pt-8">
+		<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+			<Breadcrumb elements={breadcrumbElements} />
+
+			<!-- Module Header -->
+			<div class="mb-8 bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+				<h1
+					class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4"
+				>
+					{module.data.title}
+				</h1>
+				<p class="text-lg text-gray-600 dark:text-gray-300 mb-4">
+					{module.data.description}
+				</p>
+				<div class="flex flex-wrap items-center gap-4 text-sm">
+					{module.data.duration && module.data.duration > 0 && (
+						<div class="flex items-center gap-2">
+							<svg
+								class="w-5 h-5 text-gray-500"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+							</svg>
+							<span class="text-gray-600 dark:text-gray-400">
+								{Math.floor(module.data.duration / 60) > 0 && `${Math.floor(module.data.duration / 60)}h `}
+								{module.data.duration % 60 > 0 && `${module.data.duration % 60}m`}
+							</span>
+						</div>
+					)}
+					{
+						module.data.difficulty && (
+							<div class="flex items-center gap-2">
+								<svg
+									class="w-5 h-5 text-gray-500"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+									/>
+								</svg>
+								<span class="text-gray-600 dark:text-gray-400 capitalize">
+									{module.data.difficulty}
+								</span>
+							</div>
+						)
+					}
+				</div>
+			</div>
+
+			<!-- Video Player (if video exists) -->
+			{
+				module.data.video && (
+					<div class="mb-8">
+						<VideoPlayer
+							video={module.data.video.id}
+							thumbnailUrl={module.data.video.thumbnailUrl || module.data.video.poster || ""}
+							client:load
+						/>
+					</div>
+				)
+			}
+
+			<!-- Course Content -->
+			<div
+				class="prose dark:prose-dark max-w-none prose-headings:scroll-mt-20"
+			>
+				<Content />
+			</div>
+
+			<!-- Resources Section -->
+			{
+				processedResources && processedResources.length > 0 && (
+					<div class="mt-12">
+						<ResourceList resources={processedResources} client:load />
+					</div>
+				)
+			}
+
+			<!-- Navigation -->
+			<div class="mt-12 flex justify-between items-center border-t pt-8">
+				{
+					previousModule && (
+						<a
+							href={`/courses/${course.id}/${previousModule.id}`}
+							class="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors"
+						>
+							<svg
+								class="w-5 h-5"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M15 19l-7-7 7-7"
+								/>
+							</svg>
+							<span>{previousModule.data.title}</span>
+						</a>
+					)
+				}
+				{
+					nextModule && (
+						<a
+							href={`/courses/${course.id}/${nextModule.id}`}
+							class="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors ml-auto"
+						>
+							<span>{nextModule.data.title}</span>
+							<svg
+								class="w-5 h-5"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M9 5l7 7-7 7"
+								/>
+							</svg>
+						</a>
+					)
+				}
+			</div>
+
+			<!-- Course Signup -->
+			{course.data.signupConfig && (
+				<div class="mt-12">
+					<CourseSignupForm
+						courseId={course.id}
+						courseTitle={course.data.title}
+						signupConfig={course.data.signupConfig}
+					/>
+				</div>
+			)}
+		</div>
+	</section>
+</Page>
