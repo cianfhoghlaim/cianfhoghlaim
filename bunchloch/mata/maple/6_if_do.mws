@@ -1,0 +1,489 @@
+{VERSION 6 0 "IBM INTEL NT" "6.0" }
+{USTYLETAB {CSTYLE "Maple Input" -1 0 "Courier" 0 1 255 0 0 1 0 1 0 0 
+1 0 0 0 0 1 }{CSTYLE "2D Math" -1 2 "Times" 0 1 0 0 0 0 0 0 2 0 0 0 0 
+0 0 1 }{CSTYLE "Hyperlink" -1 17 "" 0 1 0 128 128 1 0 0 1 0 0 0 0 0 0 
+1 }{CSTYLE "2D Output" 2 20 "" 0 1 0 0 255 1 0 0 0 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 256 "" 0 1 0 0 0 0 0 0 2 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+257 "" 0 1 0 0 0 0 0 0 2 0 0 0 0 0 0 1 }{CSTYLE "" -1 258 "" 0 1 0 0 
+0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 259 "" 0 1 0 0 0 0 0 1 0 0 0 0 
+0 0 0 1 }{CSTYLE "" -1 260 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 261 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+262 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 263 "" 0 1 0 0 
+0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 264 "" 0 1 0 0 0 0 0 1 0 0 0 0 
+0 0 0 1 }{CSTYLE "" -1 265 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 266 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+267 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 268 "" 1 16 0 0 
+0 0 0 0 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 269 "" 0 1 0 0 0 0 0 1 0 0 0 0 
+0 0 0 1 }{CSTYLE "" -1 270 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 271 "" 1 16 0 0 0 0 0 0 0 0 0 0 0 0 0 1 }{PSTYLE "Normal
+" -1 0 1 {CSTYLE "" -1 -1 "Times" 1 14 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 
+1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Maple Output" -1 11 1 {CSTYLE "" 
+-1 -1 "Times" 1 14 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }3 3 0 0 0 0 1 0 1 0 2 
+2 0 1 }{PSTYLE "Maple Plot" -1 13 1 {CSTYLE "" -1 -1 "Times" 1 14 0 0 
+0 1 2 2 2 2 2 2 1 1 1 1 }3 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "R3 Font
+ 0" -1 256 1 {CSTYLE "" -1 -1 "Helvetica" 1 12 0 0 0 1 2 1 2 2 2 2 1 
+1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "R3 Font 2" -1 257 1 
+{CSTYLE "" -1 -1 "Courier" 1 11 0 0 0 1 2 1 2 2 2 2 1 1 1 1 }1 1 0 0 
+0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 258 1 {CSTYLE "" -1 -1 "Times
+" 1 16 0 0 0 1 2 1 2 2 2 2 1 1 1 1 }3 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 259 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 261 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 262 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 263 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 264 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 265 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 266 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 267 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 268 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 269 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 270 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 271 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 273 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 274 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 275 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 276 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 277 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 279 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 280 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 282 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 283 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 287 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 288 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 289 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 291 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 293 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 294 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 295 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 297 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }3 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 299 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 300 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 301 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 302 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 303 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 304 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 305 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 307 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 308 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 309 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 310 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 311 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 312 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 313 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 314 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 315 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 316 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 317 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 318 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 319 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 320 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 321 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 322 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 323 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 324 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 325 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 326 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 327 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 328 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 329 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 330 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 331 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 332 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 333 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 334 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 335 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 336 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 337 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 338 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 339 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 340 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 341 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 342 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 343 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 344 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 345 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 346 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 347 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 348 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 349 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 350 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 351 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 352 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 353 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 354 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 355 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 356 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 357 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 358 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 359 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 360 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 361 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 362 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 363 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 364 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 365 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 366 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 367 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 368 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 369 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 370 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 371 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 372 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 373 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 374 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 375 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 376 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 377 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 378 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 379 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 380 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 381 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 382 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 383 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 384 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 385 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 386 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 387 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 388 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 389 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 390 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 391 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 392 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 393 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 394 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 395 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 396 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 397 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 398 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 399 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 400 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 401 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 402 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 403 1 {CSTYLE "" -1 -1 "Times" 1 18 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }3 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 405 1 
+{CSTYLE "" -1 -1 "Times" 1 14 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 407 1 {CSTYLE "" -1 -1 "Times" 
+1 18 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }3 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 408 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 409 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }3 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 410 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 411 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 412 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 413 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "Normal" -1 415 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 
+2 2 2 1 1 1 1 }3 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 416 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "" 368 417 1 {CSTYLE "" -1 -1 "" 0 1 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 }3 0 0 -1 -1 -1 0 0 0 0 0 0 -1 0 }}
+{SECT 0 {EXCHG {PARA 407 "" 0 "" {TEXT -1 0 "" }}{PARA 403 "" 0 "" 
+{TEXT 269 23 "MAPLE NOTES for MA321  " }}{PARA 403 "" 0 "" {TEXT 270 
+55 "School of Mathematics, Statistics & Applied Mathematics" }}{PARA 
+0 "" 0 "" {TEXT -1 0 "" }}{PARA 405 "" 0 "" {TEXT 271 58 "Please proce
+ed by entering return at each > prompt symbol." }}{PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}}{PARA 258 "" 0 "" {TEXT 256 3 "6. " }{TEXT -1 54 "Boo
+lean algebra, if and do control structures in Maple" }{TEXT 257 2 ". \+
+" }}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT 268 
+43 "The following Maple commands are discussed:" }}{PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 259 "" 0 "" {HYPERLNK 17 "and ,or, not" 1 "" "an
+d" }{TEXT -1 2 " ," }}{PARA 259 "" 0 "" {HYPERLNK 17 "evalb" 1 "" "eva
+lb" }{TEXT -1 3 " , " }}{PARA 259 "" 0 "" {HYPERLNK 17 "if-then-elif" 
+1 "" "if" }{TEXT -1 3 " , " }}{PARA 402 "" 0 "" {HYPERLNK 17 "while-do
+" 1 "" "while" }{TEXT -1 2 " ," }}{PARA 259 "" 0 "" {HYPERLNK 17 "for-
+do" 1 "" "do" }{TEXT -1 2 " ," }}{PARA 408 "" 0 "" {TEXT -1 1 " " }}}
+{EXCHG {PARA 409 "" 0 "" {TEXT -1 0 "" }{TEXT 258 26 "Boolean Constant
+s in Maple" }{TEXT -1 1 " " }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 
+261 "" 0 "" {TEXT -1 151 "MAPLE defines two Boolean logical constants:
+ true and false. These can be manipulated with standard logical Boolea
+n operations such as and, or and not:" }}{PARA 262 "" 0 "" {TEXT -1 0 
+"" }}{PARA 263 "" 0 "" {TEXT -1 10 "> a and b;" }}{PARA 264 "" 0 "" 
+{TEXT -1 9 "> a or b;" }}{PARA 265 "" 0 "" {TEXT -1 8 "> not a;" }}
+{PARA 266 "" 0 "" {TEXT -1 0 "" }}{PARA 267 "" 0 "" {TEXT -1 41 "where
+ a, b are elements of \{true, false\}." }}{PARA 268 "" 0 "" {TEXT -1 
+0 "" }}{PARA 269 "" 0 "" {TEXT -1 10 "Examples:\n" }}{PARA 270 "> " 0 
+"" {MPLTEXT 1 0 14 "true or false;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#
+%%trueG" }}}{EXCHG {PARA 271 "> " 0 "" {MPLTEXT 1 0 9 "not true;" }}
+{PARA 11 "" 1 "" {XPPMATH 20 "6#%&falseG" }}}{EXCHG {PARA 410 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 273 "" 0 "" {TEXT -1 160 "The logical constants \+
+appear as the results of Boolean operations and functions defined in M
+aple. Thus equality and inequality between quantities can be tested:" 
+}}{PARA 274 "" 0 "" {TEXT -1 0 "" }}{PARA 275 "" 0 "" {TEXT -1 10 "Exa
+mples:\n" }}{PARA 276 "> " 0 "" {MPLTEXT 1 0 5 "x:=2;" }}{PARA 11 "" 
+1 "" {XPPMATH 20 "6#>%\"xG\"\"#" }}}{EXCHG {PARA 277 "> " 0 "" 
+{MPLTEXT 1 0 12 "evalb(x>=3);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#%&fal
+seG" }}}{EXCHG {PARA 279 "" 0 "" {TEXT -1 36 "x is not greater than or
+ equal to 3." }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 279 "" 0 "evalb
+" {TEXT 259 5 "evalb" }{TEXT -1 79 ": The command evalb is Boolean eva
+luation whose result is always true or false." }}{PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 280 "> " 0 "" {MPLTEXT 1 0 14 "evalb(2*x<>6);" }
+}{PARA 11 "" 1 "" {XPPMATH 20 "6#%%trueG" }}}{EXCHG {PARA 282 "" 0 "" 
+{TEXT -1 52 "2*x is not equal to 6 and hence the result is true.\n" }}
+{PARA 283 "> " 0 "" {MPLTEXT 1 0 11 "evalb(x=2);" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#%%trueG" }}}{EXCHG {PARA 289 "> " 0 "" {MPLTEXT 1 0 15 
+"isprime(56731);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#%%trueG" }}}
+{EXCHG {PARA 411 "" 0 "" {TEXT -1 0 "" }}{PARA 291 "" 0 "" {TEXT -1 
+87 "Not that isprime is a Boolean Maple function that tests a given in
+teger for primality. " }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}}{EXCHG 
+{PARA 293 "" 0 "" {TEXT -1 74 "A Maple variable can also be assigned t
+he value true or false as required." }}{PARA 0 "" 0 "" {TEXT -1 0 "" }
+}{PARA 294 "> " 0 "" {MPLTEXT 1 0 26 "right:=true;wrong:=false; " }}
+{PARA 11 "" 1 "" {XPPMATH 20 "6#>%&rightG%%trueG" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#>%&wrongG%&falseG" }}}{EXCHG {PARA 295 "> " 0 "" 
+{MPLTEXT 1 0 10 "not right;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#%&false
+G" }}}{EXCHG {PARA 412 "" 0 "" {TEXT -1 0 "" }}{PARA 297 "" 0 "if" 
+{TEXT 260 24 "Maple Control Structures" }}{PARA 0 "" 0 "" {TEXT -1 0 "
+" }}{PARA 416 "" 0 "" {TEXT -1 92 "Maple contains the usual control st
+ructures including conditional if and do loop structures." }}}{EXCHG 
+{PARA 413 "" 0 "" {TEXT -1 0 "" }}{PARA 299 "" 0 "" {TEXT 261 12 "if-t
+hen-else" }{TEXT -1 66 ": Conditional execution.  The simplest form of
+ this structure is :" }}{PARA 300 "" 0 "" {TEXT -1 0 "" }}{PARA 301 "
+" 0 "" {TEXT -1 20 "> if condition then " }}{PARA 302 "" 0 "" {TEXT 
+-1 21 ">    statement seq_1;" }}{PARA 303 "" 0 "" {TEXT -1 6 "> else" 
+}}{PARA 304 "" 0 "" {TEXT -1 20 ">   statement seq_2;" }}{PARA 305 "" 
+0 "" {TEXT -1 20 ">  end if;  (or fi;)" }}{PARA 0 "" 0 "" {TEXT -1 0 "
+" }}}{EXCHG {PARA 307 "" 0 "" {TEXT -1 394 "Condition is a logical sta
+tement which is either true or false. The condition usually consists o
+f some combination of equalities or inequalities but other logical exp
+ressions are available as above. Statement seq_1 is executed if the co
+ndition is true whereas statement seq_2 is executed if the condition i
+s false. Note that the if structure must always end with the \"end if
+\" or \"fi\" statement." }}{PARA 308 "" 0 "" {TEXT -1 0 "" }}{PARA 
+309 "" 0 "" {TEXT -1 9 "Example:\n" }}{PARA 310 "> " 0 "" {MPLTEXT 1 
+0 13 "x:=234352341;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%\"xG\"*TBNM#
+" }}}{EXCHG {PARA 311 "> " 0 "" {MPLTEXT 1 0 132 "\nif isprime(x) then
+\n   print(`x is a prime number`);\nelse\n   print(`x is not prime`);
+\n   print(`x has factors `,ifactor(x));\nend if;" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#%/x~is~not~primeG" }}{PARA 11 "" 1 "" {XPPMATH 20 "6$%/
+x~has~factors~G*&)-%!G6#\"\"$\"\"#\"\"\"-F'6#\")\\\"Rg#F+" }}}{EXCHG 
+{PARA 318 "" 0 "" {TEXT -1 0 "" }}{PARA 318 "" 0 "" {TEXT -1 85 "ifact
+or is a Maple command that finds all of the integer factors of a given
+ integer.\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 0 "" }}}{EXCHG 
+{PARA 320 "" 0 "" {TEXT -1 0 "" }}{PARA 320 "" 0 "" {TEXT 262 17 "if -
+ elif - else." }{TEXT -1 84 " Maple also supports the elif command all
+owing k-1 conditions to be tested together:" }}{PARA 321 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 322 "" 0 "" {TEXT -1 22 "> if condition_1 then \+
+" }}{PARA 323 "" 0 "" {TEXT -1 20 ">   statement seq_1;" }}{PARA 324 "
+" 0 "" {TEXT -1 23 "> elif condition_2 then" }}{PARA 325 "" 0 "" 
+{TEXT -1 20 ">   statement seq_2;" }}{PARA 326 "" 0 "" {TEXT -1 12 "> \+
+         ." }}{PARA 327 "" 0 "" {TEXT -1 12 ">          ." }}{PARA 
+328 "" 0 "" {TEXT -1 6 "> else" }}{PARA 329 "" 0 "" {TEXT -1 20 ">   s
+tatement seq_k;" }}{PARA 330 "" 0 "" {TEXT -1 9 "> end if;" }}}{EXCHG 
+{PARA 333 "" 0 "" {TEXT -1 0 "" }}{PARA 415 "" 0 "" {TEXT 263 19 "Repe
+tition in Maple" }}{PARA 333 "" 0 "" {TEXT -1 0 "" }}{PARA 333 "" 0 "
+" {TEXT -1 36 "Maple supports two forms of do loop." }}{PARA 0 "" 0 "
+" {TEXT -1 0 "" }}{PARA 334 "" 0 "while" {TEXT 264 10 "while - do" }
+{TEXT -1 76 ":  Repetition while you wait for a condition to be satisf
+ied is obtained by:" }}{PARA 335 "" 0 "" {TEXT -1 0 "" }}{PARA 336 "" 
+0 "" {TEXT -1 20 "> while condition do" }}{PARA 337 "" 0 "" {TEXT -1 
+23 ">   statement sequence;" }}{PARA 338 "" 0 "" {TEXT -1 19 "> end do
+;  (or od;)" }}{PARA 339 "" 0 "" {TEXT -1 0 "" }}{PARA 340 "" 0 "" 
+{TEXT -1 154 "where the do loop continues executing provided the logic
+al condition is true. Notice that the do loop must terminate with the \+
+\"end do\" or \"od\"  statement." }}{PARA 341 "" 0 "" {TEXT -1 0 "" }}
+{PARA 342 "" 0 "" {TEXT -1 49 "Example: Find the first prime larger th
+an 10000.\n" }}{PARA 343 "> " 0 "" {MPLTEXT 1 0 11 "n := 10001;" }}
+{PARA 11 "" 1 "" {XPPMATH 20 "6#>%\"nG\"&,+\"" }}}{EXCHG {PARA 344 "> \+
+" 0 "" {MPLTEXT 1 0 45 "while  not  isprime(n)  do \nn:= n+2; \nend do
+;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%\"nG\"&.+\"" }}{PARA 11 "" 1 "
+" {XPPMATH 20 "6#>%\"nG\"&0+\"" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%\"
+nG\"&2+\"" }}}{EXCHG {PARA 346 "" 0 "" {TEXT -1 0 "" }}{PARA 346 "" 0 
+"" {TEXT -1 76 "The do loop terminates with the last value of n:=10007
+  which must be prime." }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}}{EXCHG 
+{PARA 348 "" 0 "do" {TEXT 265 9 "for - do:" }{TEXT -1 127 " Here the d
+o loop continues while an integer index i beginning with value start i
+s incremented by value change to value finish:" }}{PARA 349 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 350 "" 0 "" {TEXT -1 41 "> for i from start by c
+hange to finish do" }}{PARA 351 "" 0 "" {TEXT -1 23 ">   statement seq
+uence;" }}{PARA 352 "" 0 "" {TEXT -1 9 "> end do;" }}{PARA 353 "" 0 "
+" {TEXT -1 0 "" }}{PARA 354 "" 0 "" {TEXT -1 72 "If no change is speci
+fied then an increment of +1 is assumed by default." }}{PARA 355 "" 0 
+"" {TEXT -1 0 "" }}{PARA 356 "" 0 "" {TEXT -1 9 "Example:\n" }}{PARA 
+357 "> " 0 "" {MPLTEXT 1 0 57 "for i from 2 by 3 to 10 do\n  print(`in
+dex is`,i);\nend do;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6$%)index~isG\"
+\"#" }}{PARA 11 "" 1 "" {XPPMATH 20 "6$%)index~isG\"\"&" }}{PARA 11 "
+" 1 "" {XPPMATH 20 "6$%)index~isG\"\")" }}}{EXCHG {PARA 361 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 361 "" 0 "" {TEXT -1 82 "The index begins at 2 a
+nd increments by 3 until the finishing value 10 is exceeded" }}{PARA 
+362 "" 0 "" {TEXT -1 0 "" }}{PARA 363 "" 0 "" {TEXT -1 93 "The for and
+ while structures can be used together. Repeating the prime example ab
+ove we have:" }}{PARA 364 "" 0 "" {TEXT -1 0 "" }}{PARA 365 "> " 0 "" 
+{MPLTEXT 1 0 57 "for n from 10001 by 2 while not(isprime(n)) do  \nend
+ do;\n" }}}{EXCHG {PARA 366 "> " 0 "" {MPLTEXT 1 0 2 "n;" }}{PARA 11 "
+" 1 "" {XPPMATH 20 "6#\"&2+\"" }}}{EXCHG {PARA 368 "" 0 "" {TEXT -1 0 
+"" }}{PARA 417 "" 0 "op" {TEXT 266 28 "Do Loops Indexed by Operands" }
+}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 368 "" 0 "" {TEXT -1 92 "Do loo
+ps can also be defined where the index x runs over the operands of a g
+iven expression." }}{PARA 369 "" 0 "" {TEXT -1 0 "" }}{PARA 370 "" 0 "
+" {TEXT -1 24 "> for x in expression do" }}{PARA 371 "" 0 "" {TEXT -1 
+23 ">   statement sequence;" }}{PARA 372 "" 0 "" {TEXT -1 9 "> end do;
+" }}{PARA 373 "" 0 "" {TEXT -1 0 "" }}}{EXCHG {PARA 375 "" 0 "" {TEXT 
+-1 127 "The index runs over all the elements of op(expression), the op
+erands of the expression at the top level of the expression tree." }}
+{PARA 376 "" 0 "" {TEXT -1 0 "" }}{PARA 377 "" 0 "" {TEXT -1 83 "Examp
+le: For a given set, find a new set consisting of the squares of all e
+lements." }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 378 "> " 0 "" 
+{MPLTEXT 1 0 27 "Set:=\{log(4*u),2,-3,1/2,3\};" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#>%$SetG<'!\"$\"\"#\"\"$#\"\"\"F'-%#lnG6#,$*&\"\"%F*%\"u
+GF*F*" }}}{EXCHG {PARA 379 "> " 0 "" {MPLTEXT 1 0 11 "NewSet:=\{\};" }
+}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%'NewSetG<\"" }}}{EXCHG {PARA 380 ">
+ " 0 "" {MPLTEXT 1 0 53 "for x in Set do\n  NewSet:=NewSet union \{x^2
+\};\nend do;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%'NewSetG<#\"\"*" }}
+{PARA 11 "" 1 "" {XPPMATH 20 "6#>%'NewSetG<$\"\"%\"\"*" }}{PARA 11 "" 
+1 "" {XPPMATH 20 "6#>%'NewSetG<$\"\"%\"\"*" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#>%'NewSetG<%\"\"%\"\"*#\"\"\"F&" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#>%'NewSetG<&\"\"%\"\"*#\"\"\"F&*$)-%#lnG6#,$*&F&F)%\"uG
+F)F)\"\"#F)" }}}{EXCHG {PARA 383 "" 0 "" {TEXT -1 0 "" }}{PARA 383 "" 
+0 "" {TEXT 267 15 "Another Example" }{TEXT -1 219 ": Find the critical
+ points of a given function of one variable f(x)=x^4-3*x^2+1. We use t
+he operand do loop to extract the roots of df/dx=0 and then test the s
+ign of d^2f/dx^2 to to find the type of the critical point.\n" }}
+{PARA 384 "> " 0 "" {MPLTEXT 1 0 25 "restart:f:=x^4-3*x^3+x+1;" }}
+{PARA 11 "" 1 "" {XPPMATH 20 "6#>%\"fG,**$)%\"xG\"\"%\"\"\"F**&\"\"$F*
+)F(F,F*!\"\"F(F*F*F*" }}}{EXCHG {PARA 385 "> " 0 "" {MPLTEXT 1 0 31 "f
+x:=diff(f,x);fxx:=diff(f,x,x);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%#f
+xG,(*&\"\"%\"\"\")%\"xG\"\"$F(F(*&\"\"*F()F*\"\"#F(!\"\"F(F(" }}{PARA 
+11 "" 1 "" {XPPMATH 20 "6#>%$fxxG,&*&\"#7\"\"\")%\"xG\"\"#F(F(*&\"#=F(
+F*F(!\"\"" }}}{EXCHG {PARA 386 "> " 0 "" {MPLTEXT 1 0 23 "fsolve(fx,x,
+maxsols=3);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6%$!+JGcBJ!#5$\"+hr!4k$F%
+$\"+nbE)>#!\"*" }}}{EXCHG {PARA 387 "> " 0 "" {MPLTEXT 1 0 11 "crpts:=
+\{%\};" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%&crptsG<%$\"+nbE)>#!\"*$!+
+JGcBJ!#5$\"+hr!4k$F+" }}}{EXCHG {PARA 388 "" 0 "" {TEXT -1 96 "\nThese
+ are the critical points of f(x). Now test each in turn to find nature
+ of critical point:\n" }}{PARA 389 "> " 0 "" {MPLTEXT 1 0 17 "for p in
+ crpts do" }}{PARA 390 "> " 0 "" {MPLTEXT 1 0 23 "   fxxp:=subs(x=p,fx
+x);" }}{PARA 391 "> " 0 "" {MPLTEXT 1 0 17 "   if fxxp>0 then" }}
+{PARA 392 "> " 0 "" {MPLTEXT 1 0 53 "      print(p,`a local minimum wi
+th f=`,subs(x=p,f));" }}{PARA 393 "> " 0 "" {MPLTEXT 1 0 20 "   elif f
+xxp<0 then " }}{PARA 394 "> " 0 "" {MPLTEXT 1 0 53 "      print(p,`a l
+ocal maximum with f=`,subs(x=p,f));" }}{PARA 395 "> " 0 "" {MPLTEXT 1 
+0 7 "   else" }}{PARA 396 "> " 0 "" {MPLTEXT 1 0 49 "      print(p,`un
+kown type with f=`,subs(x=p,f));" }}{PARA 397 "> " 0 "" {MPLTEXT 1 0 
+10 "   end if:" }}{PARA 398 "> " 0 "" {MPLTEXT 1 0 7 "end do:" }}
+{PARA 11 "" 1 "" {XPPMATH 20 "6%$\"+nbE)>#!\"*%8a~local~minimum~with~f
+=G$!+LxU=`F%" }}{PARA 11 "" 1 "" {XPPMATH 20 "6%$!+JGcBJ!#5%8a~local~m
+inimum~with~f=G$\"+uS*e)yF%" }}{PARA 11 "" 1 "" {XPPMATH 20 "6%$\"+hr!
+4k$!#5%8a~local~maximum~with~f=G$\"+y&poB\"!\"*" }}}{EXCHG {PARA 399 "
+> " 0 "" {MPLTEXT 1 0 18 "plot(f,x=-1..2.5);" }}{PARA 13 "" 1 "" 
+{GLPLOT2D 496 496 496 {PLOTDATA 2 "6%-%'CURVESG6$7W7$$!\"\"\"\"!$\"\"%
+F*7$$!3Umm;/'*4P#*!#=$\"3-:DS/yuoJ!#<7$$!3UL$e*[SIt&)F0$\"3gT*4%y/PtDF
+37$$!3%pm;H_'zEyF0$\"3Kd!=i)G'4.#F37$$!3)om;/mS`2(F0$\"3![Ny'p[l0;F37$
+$!3]K$ekLcuK'F0$\"3Q\"3ZRhRvG\"F37$$!3>n;HK=2McF0$\"3y.z\"Q>wQ2\"F37$$
+!3e**\\iSB6;\\F0$\"3\\,Zz7%*QK#*F07$$!3%em\"H2wftTF0$\"3/M&f&pv!3J)F07
+$$!3,+]7GTYLMF0$\"3BuGRG')y>zF07$$!3KKL$3(e9sEF0$\"3W*fd0rT7&zF07$$!3-
+mmTNjd,?F0$\"3m=:7&4U]D)F07$$!3Y)***\\iQnY7F0$\"3E6MD<*oQ\"))F07$$!3u'
+****\\(or')[!#>$\"3X8U=#=')[^*F07$$\"3W2++D'Q!=CFho$\"3Ai_%RJQT-\"F37$
+$\"3aPL3FkX^!*Fho$\"3gXX/hpN)3\"F37$$\"3cnm;zJ#Rp\"F0$\"3-;rTVTjb6F37$
+$\"3Iomm;77iBF0$\"33x'*HThy*>\"F37$$\"3^+]P%Q%RRJF0$\"3B$\\s)4%H3B\"F3
+7$$\"3SmmmTGTFQF0$\"3&R\")H/`'*fB\"F37$$\"3'=+vV8yAe%F0$\"3&*>.)oKqO@
+\"F37$$\"3t-]7.%)3,`F0$\"3o>L&)pA<i6F37$$\"3[omT5:4^gF0$\"3)[ILP:&[u5F
+37$$\"3;o;a)[G)RnF0$\"3boqUnd_='*F07$$\"3-LLekVs#[(F0$\"3ODd939u[!)F07
+$$\"3!QL3FR%Qa#)F0$\"3:^P#3g.W-'F07$$\"3)4+Dcr;h#*)F0$\"3$=Kb(z6^QRF07
+$$\"3#[L$3Fgg^'*F0$\"3K*or8CanN\"F07$$\"3******\\Z26S5F3$!3#zWXm%[-_;F
+07$$\"3>+](=%[V86F3$!3y#[*psc;2\\F07$$\"3G+vVt'zV=\"F3$!3R:$\\h?C3K)F0
+7$$\"3#***\\78=:j7F3$!3ujxM3bLP7F37$$\"3Umm;%3KRL\"F3$!3BQ9oX')e?;F37$
+$\"3V++DJ^]49F3$!3\")*4lVr5V/#F37$$\"3=L3FWb)zZ\"F3$!3xDbp^'[fV#F37$$
+\"3]++vBF&Gb\"F3$!3w')\\PSC&f'GF37$$\"3emT50pHB;F3$!3#=3IT(HglKF37$$\"
+35+v=s8$pp\"F3$!3A.JG#>R/n$F37$$\"3umm\"H_A*o<F3$!3qibeP&H_/%F37$$\"3$
+)*\\Pfe!HW=F3$!3G,Kb*e(o0WF37$$\"3#RLL$))*yo\">F3$!3'3f*zrg+7ZF37$$\"3
+_L$eR666*>F3$!3cA\"=NxiG(\\F37$$\"3;nT5g&GZ1#F3$!3qi%3GTtw;&F37$$\"3-%
+3-Q&>b)4#F3$!3P]iD!o+DB&F37$$\"3Y++]Z`PK@F3$!3]%3BIO\"3!G&F37$$\"3!R$e
+kt29r@F3$!32hO3Gmw6`F37$$\"3\"pm\"z*>1*4AF3$!3#zQVmgqrJ&F37$$\"3?+D1f%
+yXC#F3$!35y%45k$4)H&F37$$\"3[LLL=2DzAF3$!3%3eI:9/\\D&F37$$\"3+<aQy&=iJ
+#F3$!3]85Sf;f!=&F37$$\"33+vVQk=`BF3$!3+bE^t:Fv]F37$$\"3I+DccB&RU#F3$!3
+[@e]A>9!y%F37$$\"3++++++++DF3$!3++++++]7VF3-%'COLOURG6&%$RGBG$\"#5F)$F
+*F*Fd\\l-%+AXESLABELSG6$Q\"x6\"Q!Fi\\l-%%VIEWG6$;F($\"#DF)%(DEFAULTG" 
+1 2 0 1 10 0 2 9 1 4 2 1.000000 45.000000 45.000000 0 0 "Curve 1" }}}}
+{EXCHG {PARA 400 "" 0 "" {TEXT -1 0 "" }}{PARA 400 "" 0 "" {TEXT -1 
+61 "Plotting the curve at the end checks that the result is true." }}
+{PARA 0 "" 0 "" {TEXT -1 0 "" }}}}{MARK "9 1 0" 0 }{VIEWOPTS 1 1 0 1 
+1 1803 1 1 1 1 }{PAGENUMBERS 0 1 2 33 1 1 }
