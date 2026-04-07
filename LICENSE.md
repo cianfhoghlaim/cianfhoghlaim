@@ -34,6 +34,8 @@ Furthermore, any usage of this software by entities affiliated with sanctioned o
 
 **Change License:** GNU Affero General Public License (AGPL) v3.0.
 
+**Scope of Change**: This Change License applies ONLY to files that explicitly include the "Subject to Change License" header. Any file lacking this header, or explicitly marked as "Permanently Restricted," will not transition and remains fully subject to the commercial and usage prohibitions detailed above indefinitely.
+
 ---
 
 ## Terms
