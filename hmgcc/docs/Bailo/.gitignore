@@ -1,0 +1,28 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+node_modules
+
+# misc
+.DS_Store
+husky-config.conf
+misc-items.txt
+
+# debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# certs
+!backend/certs
+backend/certs/*
+!backend/certs/san.cnf
+
+# helm
+infrastructure/helm/bailo/charts
+infrastructure/helm/bailo/local.yaml
+.aider*
+
+# MLFlow
+mlartifacts/
+mlruns/

@@ -1,0 +1,6 @@
+{
+  "watch": ["src", "config"],
+  "ignore": [".git"],
+  "exec": "tsx --no-warnings=ExperimentalWarning --inspect=0.0.0.0:9229 src/index.ts",
+  "ext": "js ts cjs"
+}

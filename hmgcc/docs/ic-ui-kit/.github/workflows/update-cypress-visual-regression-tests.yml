@@ -1,0 +1,87 @@
+name: Update Cypress visual regression test images
+permissions: read-all
+
+on: workflow_dispatch
+
+jobs:
+  check-updates:
+    name: "Check package updates"
+    runs-on: ubuntu-latest
+    outputs:
+      core: ${{ steps.filter.outputs.core }}
+      canary: ${{ steps.filter.outputs.canary }}
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 #v4.1.1
+      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 #v3.0.2
+        id: filter
+        with:
+          base: "develop"
+          filters: |
+            core:
+              - './packages/web-components/**'
+              - './packages/react/**'
+            canary:
+              - './packages/canary-web-components/**'
+              - './packages/canary-react/**'
+
+  ic-ui-kit-cypress-tests:
+    needs: [check-updates]
+    name: "Cypress tests"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 #v4.1.1
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 #4.0.2
+        with:
+          node-version: 20
+      - uses: browser-actions/setup-chrome@97349de5c98094d4fc9412f31c524d7697115ad8 #v1.5.0
+      - name: Install dependencies
+        run: |
+          google-chrome --version
+          npm ci
+          npm run bootstrap -- -- --ci
+
+      - name: Extract branch name
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+
+      - name: Build core components
+        if: ${{ needs.check-updates.outputs.canary == 'false' }}
+        run: |
+          npm run build
+
+      - name: Build all components
+        if: ${{ needs.check-updates.outputs.canary == 'true' }}
+        run: |
+          npm run build:all
+
+      - name: Core Cypress tests
+        if: ${{ needs.check-updates.outputs.core == 'true' }}
+        id: core_cypress_tests
+        run: |
+          npm run test-cypress:headless
+
+      - name: Canary Cypress tests
+        if: ${{ needs.check-updates.outputs.canary == 'true' }}
+        id: canary_cypress_tests
+        run: |
+          npm run test-cypress:canary:headless
+
+      - name: Checkout docs.json
+        if: always()
+        run: git checkout ./packages/docs/docs.json ./packages/canary-docs/docs.json
+
+      - uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 #v9.1.4
+        if: ${{ always() && steps.core_cypress_tests.outcome == 'success' }}
+        with:
+          commit: --no-verify
+          default_author: github_actions
+          message: "feat(react): update Cypress visual regression test baseline images"
+
+      - uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 #v9.1.4
+        if: ${{ always() && steps.canary_cypress_tests.outcome == 'success' }}
+        with:
+          commit: --no-verify
+          default_author: github_actions
+          message: "feat(canary-react): update Cypress visual regression test baseline images"

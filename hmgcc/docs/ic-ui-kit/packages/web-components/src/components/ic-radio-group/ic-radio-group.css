@@ -1,0 +1,69 @@
+@import "../../global/normalize.css";
+
+:host {
+  display: block;
+
+  --ic-input-label-text-color: var(--ic-radio-button-input-field-label);
+  --ic-input-label-helper-text-color: var(
+    --ic-radio-button-input-field-subtitle
+  );
+  --ic-input-validation-status-text-color: var(--ic-radio-button-state-text);
+  --ic-input-validation-error: var(--ic-radio-button-state-icon-error);
+}
+
+:host ic-input-label.error {
+  --ic-input-label-text-color: var(--ic-radio-button-input-field-label-error);
+}
+
+:host ic-input-label.disabled {
+  --ic-input-label-text-color: var(
+    --ic-radio-button-input-field-label-disabled
+  );
+  --ic-input-label-helper-text-color: var(
+    --ic-radio-button-input-field-subtitle-disabled
+  );
+}
+
+:host ic-input-validation.show-validation {
+  margin-top: var(--ic-space-sm);
+}
+
+:host(.ic-radio-group-small) ic-input-validation.show-validation {
+  margin-top: calc(var(--ic-space-sm) / 2);
+}
+
+:host ic-input-label:not(.with-helper) .ic-typography-label,
+:host ic-input-label .helpertext {
+  margin-bottom: var(--ic-space-sm);
+}
+
+:host(.ic-radio-group-small)
+  ic-input-label:not(.with-helper)
+  .ic-typography-label,
+:host(.ic-radio-group-small) ic-input-label .helpertext {
+  margin-bottom: calc(var(--ic-space-sm) / 2);
+}
+
+:host ic-input-label .helpertext {
+  display: block;
+}
+
+:host .radio-buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ic-space-xxs);
+}
+
+:host(.ic-radio-group-small) .radio-buttons-container {
+  gap: var(--ic-space-xxxs);
+}
+
+:host .radio-buttons-container.horizontal {
+  display: flex;
+  flex-direction: row;
+  gap: calc(var(--ic-space-xl) + var(--ic-space-xs));
+}
+
+:host(.ic-radio-group-small) .radio-buttons-container.horizontal {
+  gap: var(--ic-space-xl);
+}

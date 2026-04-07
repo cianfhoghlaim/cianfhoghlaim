@@ -1,0 +1,82 @@
+/**
+* @prop --tree-view-width: Width of the tree view
+*/
+
+:host {
+  display: block;
+  width: var(--tree-view-width, 100%);
+  background-color: var(--ic-tree-view-background);
+}
+
+:host .heading-area-container {
+  border-bottom: var(--ic-space-1px) solid var(--ic-tree-view-divider);
+  display: flex;
+  align-items: center;
+  min-height: calc(
+    var(--ic-space-xl) + var(--ic-space-xs) - var(--ic-space-1px)
+  );
+  padding: 0 var(--ic-space-xs);
+
+  --ic-typography-color: var(--ic-tree-view-text);
+}
+
+:host(.ic-tree-view-small) .heading-area-container {
+  min-height: calc(var(--ic-space-xl) - var(--ic-space-1px));
+}
+
+:host(.ic-tree-view-large) .heading-area-container {
+  min-height: calc(var(--ic-space-xxl) - var(--ic-space-1px));
+}
+
+:host(.ic-tree-view-truncate) .heading-area-container {
+  height: calc(var(--ic-space-xl) + var(--ic-space-xs) - var(--ic-space-1px));
+}
+
+:host(.ic-tree-view-truncate.ic-tree-view-small) .heading-area-container {
+  height: calc(var(--ic-space-xl) - var(--ic-space-1px));
+}
+
+:host(.ic-tree-view-truncate.ic-tree-view-large) .heading-area-container {
+  height: calc(var(--ic-space-xxl) - var(--ic-space-1px));
+}
+
+.icon-container {
+  width: var(--ic-space-lg);
+  min-width: var(--ic-space-lg);
+  height: var(--ic-space-lg);
+  margin: 0 var(--ic-space-xs) 0 0;
+}
+
+:host(.ic-tree-view-small) .icon-container {
+  margin: 0 var(--ic-space-xxs) 0 0;
+}
+
+.ic-text-overflow {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.ic-tooltip-overflow {
+  overflow: hidden;
+}
+
+/* Ensures truncation works - accounts for text width increase as component hydrates */
+.tree-view-header.with-padding {
+  padding-right: var(--ic-space-xs);
+}
+
+.tree-items-container-hidden {
+  visibility: hidden;
+}
+
+::slotted([slot="icon"]) {
+  fill: var(--ic-tree-view-icon);
+}
+
+/** High Contrast **/
+@media (forced-colors: active) {
+  ::slotted([slot="icon"]) {
+    fill: currentcolor;
+  }
+}

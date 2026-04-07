@@ -1,0 +1,312 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ic-hero component should render at size small: renders-small-variant 1`] = `
+<ic-hero class="ic-hero-content-aligned-left ic-hero-small" heading="Test title" size="small" subheading="Test text">
+  <template shadowrootmode="open">
+    <ic-section-container aligned="left" class="section-container" fullheight="">
+      <div class="left-container left-container-full-width">
+        <div class="heading">
+          <slot name="heading">
+            <ic-typography variant="h2">
+              <h2>
+                Test title
+              </h2>
+            </ic-typography>
+          </slot>
+        </div>
+        <div class="subheading">
+          <slot name="subheading">
+            <ic-typography variant="body">
+              Test text
+            </ic-typography>
+          </slot>
+        </div>
+        <div class="interaction-container">
+          <slot name="interaction"></slot>
+        </div>
+      </div>
+    </ic-section-container>
+  </template>
+</ic-hero>
+`;
+
+exports[`ic-hero component should render with a background image when given: renders-with-background-image 1`] = `
+<ic-hero background-image="test.png" class="has-background-image has-right-content ic-hero-content-aligned-left" heading="Test title" subheading="Test text" style="background-image: url(test.png); background-position: right -100px;">
+  <template shadowrootmode="open">
+    <ic-section-container aligned="left" class="section-container" fullheight="">
+      <div class="left-container left-container-full-width">
+        <div class="heading">
+          <slot name="heading">
+            <ic-typography class="heading-bottom-spacing" variant="h1">
+              <h2>
+                Test title
+              </h2>
+            </ic-typography>
+          </slot>
+        </div>
+        <div class="subheading">
+          <slot name="subheading">
+            <ic-typography variant="body">
+              Test text
+            </ic-typography>
+          </slot>
+        </div>
+        <div class="interaction-container">
+          <slot name="interaction"></slot>
+        </div>
+      </div>
+      <div class="right-container">
+        <slot name="secondary"></slot>
+      </div>
+    </ic-section-container>
+  </template>
+  <ic-card-vertical heading="Test card" slot="secondary"></ic-card-vertical>
+</ic-hero>
+`;
+
+exports[`ic-hero component should render with a secondary heading: renders-with-secondary-heading 1`] = `
+<ic-hero class="ic-hero-content-aligned-left secondary-heading" heading="Test title" secondary-heading="Test title" secondary-subheading="Test text" subheading="Test text">
+  <template shadowrootmode="open">
+    <ic-section-container aligned="left" class="section-container" fullheight="">
+      <div class="left-container">
+        <div class="heading">
+          <slot name="heading">
+            <ic-typography class="heading-bottom-spacing" variant="h1">
+              <h2>
+                Test title
+              </h2>
+            </ic-typography>
+          </slot>
+        </div>
+        <div class="subheading">
+          <slot name="subheading">
+            <ic-typography variant="body">
+              Test text
+            </ic-typography>
+          </slot>
+        </div>
+        <div class="interaction-container">
+          <slot name="interaction"></slot>
+        </div>
+      </div>
+      <div class="right-container">
+        <slot name="secondary">
+          <div class="secondary-container">
+            <div class="secondary-heading">
+              <ic-typography variant="h4">
+                <h3>
+                  Test title
+                </h3>
+              </ic-typography>
+            </div>
+            <div class="secondary-subheading">
+              <ic-typography variant="subtitle-small">
+                Test text
+              </ic-typography>
+            </div>
+          </div>
+        </slot>
+      </div>
+    </ic-section-container>
+  </template>
+</ic-hero>
+`;
+
+exports[`ic-hero component should render with interaction content: renders-with-interaction-content 1`] = `
+<ic-hero class="ic-hero-content-aligned-left" heading="Test title" subheading="Test text">
+  <template shadowrootmode="open">
+    <ic-section-container aligned="left" class="section-container" fullheight="">
+      <div class="left-container left-container-full-width">
+        <div class="heading">
+          <slot name="heading">
+            <ic-typography class="heading-bottom-spacing" variant="h1">
+              <h2>
+                Test title
+              </h2>
+            </ic-typography>
+          </slot>
+        </div>
+        <div class="subheading">
+          <slot name="subheading">
+            <ic-typography variant="body">
+              Test text
+            </ic-typography>
+          </slot>
+        </div>
+        <div class="interaction-container">
+          <slot name="interaction"></slot>
+        </div>
+      </div>
+    </ic-section-container>
+  </template>
+  <ic-button slot="interaction">
+    Button
+  </ic-button>
+</ic-hero>
+`;
+
+exports[`ic-hero component should render with secondary content: renders-with-secondary-content 1`] = `
+<ic-hero class="has-right-content ic-hero-content-aligned-left" heading="Test title" subheading="Test text">
+  <template shadowrootmode="open">
+    <ic-section-container aligned="left" class="section-container" fullheight="">
+      <div class="left-container left-container-full-width">
+        <div class="heading">
+          <slot name="heading">
+            <ic-typography class="heading-bottom-spacing" variant="h1">
+              <h2>
+                Test title
+              </h2>
+            </ic-typography>
+          </slot>
+        </div>
+        <div class="subheading">
+          <slot name="subheading">
+            <ic-typography variant="body">
+              Test text
+            </ic-typography>
+          </slot>
+        </div>
+        <div class="interaction-container">
+          <slot name="interaction"></slot>
+        </div>
+      </div>
+      <div class="right-container">
+        <slot name="secondary"></slot>
+      </div>
+    </ic-section-container>
+  </template>
+  <ic-card-vertical heading="Test card" slot="secondary"></ic-card-vertical>
+</ic-hero>
+`;
+
+exports[`ic-hero component should render: renders 1`] = `
+<ic-hero class="ic-hero-content-aligned-left" heading="Test title" subheading="Test text">
+  <template shadowrootmode="open">
+    <ic-section-container aligned="left" class="section-container" fullheight="">
+      <div class="left-container left-container-full-width">
+        <div class="heading">
+          <slot name="heading">
+            <ic-typography class="heading-bottom-spacing" variant="h1">
+              <h2>
+                Test title
+              </h2>
+            </ic-typography>
+          </slot>
+        </div>
+        <div class="subheading">
+          <slot name="subheading">
+            <ic-typography variant="body">
+              Test text
+            </ic-typography>
+          </slot>
+        </div>
+        <div class="interaction-container">
+          <slot name="interaction"></slot>
+        </div>
+      </div>
+    </ic-section-container>
+  </template>
+</ic-hero>
+`;
+
+exports[`ic-hero component should test rendering secondary slot after initial render 1`] = `
+<ic-hero class="has-right-content ic-hero-content-aligned-left" heading="Test title" subheading="Test text">
+  <template shadowrootmode="open">
+    <ic-section-container aligned="left" class="section-container" fullheight="">
+      <div class="left-container left-container-full-width">
+        <div class="heading">
+          <slot name="heading">
+            <ic-typography class="heading-bottom-spacing" variant="h1">
+              <h2>
+                Test title
+              </h2>
+            </ic-typography>
+          </slot>
+        </div>
+        <div class="subheading">
+          <slot name="subheading">
+            <ic-typography variant="body">
+              Test text
+            </ic-typography>
+          </slot>
+        </div>
+        <div class="interaction-container">
+          <slot name="interaction"></slot>
+        </div>
+      </div>
+      <div class="right-container">
+        <slot name="secondary"></slot>
+      </div>
+    </ic-section-container>
+  </template>
+  <svg slot="secondary"></svg>
+</ic-hero>
+`;
+
+exports[`ic-hero component should use not parallax on scroll when a background image is given, but parallax disabled: renders-with-parallax-on-scroll-disabled 1`] = `
+<ic-hero background-image="test.png" class="has-background-image has-right-content ic-hero-content-aligned-left" disable-background-parallax="" heading="Test title" subheading="Test text" style="background-image: url(test.png); background-position: right -100px;">
+  <template shadowrootmode="open">
+    <ic-section-container aligned="left" class="section-container" fullheight="">
+      <div class="left-container left-container-full-width">
+        <div class="heading">
+          <slot name="heading">
+            <ic-typography class="heading-bottom-spacing" variant="h1">
+              <h2>
+                Test title
+              </h2>
+            </ic-typography>
+          </slot>
+        </div>
+        <div class="subheading">
+          <slot name="subheading">
+            <ic-typography variant="body">
+              Test text
+            </ic-typography>
+          </slot>
+        </div>
+        <div class="interaction-container">
+          <slot name="interaction"></slot>
+        </div>
+      </div>
+      <div class="right-container">
+        <slot name="secondary"></slot>
+      </div>
+    </ic-section-container>
+  </template>
+  <ic-card-vertical heading="Test card" slot="secondary"></ic-card-vertical>
+</ic-hero>
+`;
+
+exports[`ic-hero component should use parallax on scroll when a background image is given: renders-with-parallax-on-scroll 1`] = `
+<ic-hero background-image="test.png" class="has-background-image has-right-content ic-hero-content-aligned-left" heading="Test title" subheading="Test text" style="background-image: url(test.png); background-position: right -80px;">
+  <template shadowrootmode="open">
+    <ic-section-container aligned="left" class="section-container" fullheight="">
+      <div class="left-container left-container-full-width">
+        <div class="heading">
+          <slot name="heading">
+            <ic-typography class="heading-bottom-spacing" variant="h1">
+              <h2>
+                Test title
+              </h2>
+            </ic-typography>
+          </slot>
+        </div>
+        <div class="subheading">
+          <slot name="subheading">
+            <ic-typography variant="body">
+              Test text
+            </ic-typography>
+          </slot>
+        </div>
+        <div class="interaction-container">
+          <slot name="interaction"></slot>
+        </div>
+      </div>
+      <div class="right-container">
+        <slot name="secondary"></slot>
+      </div>
+    </ic-section-container>
+  </template>
+  <ic-card-vertical heading="Test card" slot="secondary"></ic-card-vertical>
+</ic-hero>
+`;

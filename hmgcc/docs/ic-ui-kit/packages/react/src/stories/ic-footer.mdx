@@ -1,0 +1,11 @@
+import { Meta, Stories, Markdown } from "@storybook/addon-docs/blocks";
+import readme from "../../../web-components/src/components/ic-footer/readme.md";
+import footerLinkReadme from "../../../web-components/src/components/ic-footer-link/readme.md";
+import footerLinkGroupReadme from "../../../web-components/src/components/ic-footer-link-group/readme.md";
+import * as IcFooterStories from './ic-footer.stories';
+
+<Meta of={IcFooterStories} />
+
+<Markdown>{readme + footerLinkReadme + footerLinkGroupReadme}</Markdown>
+
+<Stories />

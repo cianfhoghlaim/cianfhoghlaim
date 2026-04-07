@@ -1,0 +1,64 @@
+import DocsWrapper from 'src/docs/DocsWrapper'
+import Box from '@mui/material/Box'
+import Image from 'next/legacy/image'
+
+import bailoSettingsAuth from 'public/docs/bailo_settings_authentication.png'
+import tokens from 'public/docs/bailo_tokens.png'
+
+# Programmatic Authentication with Bailo
+
+## Public Key Infrastructure (PKI)
+
+Bailo supports PKI‑based authentication. The Python client can sign requests using certificates.
+
+```python
+from bailo import PkiAgent, Client
+
+pki_agent = PkiAgent()
+
+Client(
+    "http://127.0.0.1:8080",
+    cert="path/to/cert.pem",
+    key="path/to/key.pem",
+    auth="path/to/certificate/authority/file.pem"
+)
+```
+
+## Token‑based authentication
+
+If you are not using PKI then Bailo allows the usage of access tokens to allow for fine-grained access. Tokens are used
+to grant access to models within Bailo to specific models and specific actions. These can be found in
+`Settings > Authentication`.
+
+<Box sx={{ maxWidth: '75%', margin: 'auto' }}>
+  <Image alt='Authentication tab listing personal access tokens and add token button' src={bailoSettingsAuth} />
+</Box>
+
+To create a new access token, press `Add token` and select the options from below.
+
+- `image:read` pull Docker images from Bailo
+- `file:read` download files from Bailo
+
+Copy and paste the `Access Key` and `Secret Key` and store these safely.
+
+<Box sx={{ maxWidth: '75%', margin: 'auto' }}>
+  <Image alt='popup confirming token creation' src={tokens} />
+</Box>
+
+### Using tokens with the Python client
+
+```python
+from bailo import TokenAgent, Client
+
+token_agent = TokenAgent(ACCESS_KEY, SECRET_KEY)
+
+Client("http://127.0.0.1:8080", agent=token_agent)
+```
+
+## Base Agent
+
+The full Python docs for the `Agent` class and subsequent child-classes is available
+[here](../../python/bailo.core.html#bailo.core.agent.Agent). It is possible to pass `kwargs` to the base `Agent` class
+such as `verify`.
+
+export default ({ children }) => <DocsWrapper>{children}</DocsWrapper>

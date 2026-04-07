@@ -1,0 +1,159 @@
+name: bailo
+
+configs:
+  mongod_conf:
+    file: infrastructure/mongodb/mongod_docker_compose.conf
+  mongod_keyfile:
+    content: abcdef1234567890
+
+services:
+  mongo:
+    image: mongodb/mongodb-community-server:8.2.6-ubi9
+    networks:
+      internal:
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=bailoadmin
+      - MONGODB_INITDB_ROOT_PASSWORD=bailoadmin
+      - MONGODB_INITDB_REPL_SET_HOST=mongo
+      - MONGODB_INITDB_DATABASE=bailo
+    volumes:
+      - mongoVolume:/data/db
+    configs:
+      - source: mongod_conf
+        target: /etc/mongod.conf
+      - source: mongod_keyfile
+        target: /etc/mongod.keyfile
+        mode: 0400
+        uid: '999'
+        gid: '999'
+    command:
+      - '-f'
+      - '/etc/mongod.conf'
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      start_period: 30s
+    ports:
+      - 27017:27017
+
+  minio:
+    image: bitnamilegacy/minio:2025.7.23
+    networks:
+      internal:
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minioVolume:/bitnami/minio
+
+  clamd:
+    image: clamav/clamav:1.4.3_base
+    networks:
+      internal:
+    healthcheck:
+      test: ['CMD-SHELL', "echo 'PING' | nc -w 5 localhost 3310"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  artefactscan:
+    networks:
+      internal:
+    image: bailo_artefactscan:${INSTANCE_NAME}
+    build:
+      context: ./lib/artefactscan_api
+    volumes:
+      - ./lib/artefactscan_api/bailo_artefactscan_api:/app/bailo_artefactscan_api
+      - ./backend/certs:/certs:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'curl --fail http://127.0.0.1:3311/info || exit 1']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  nginx:
+    image: nginxinc/nginx-unprivileged:1.28.0-alpine3.21-slim
+    networks:
+      default:
+      internal:
+    volumes:
+      - ./infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - ${EXTERNAL_PORT}:8080
+    depends_on:
+      - frontend
+      - backend
+
+  registry:
+    image: registry:3.0.0
+    networks:
+      internal:
+    environment:
+      REGISTRY_HTTP_TLS_CERTIFICATE: /certs/cert.pem
+      REGISTRY_HTTP_TLS_KEY: /certs/key.pem
+
+      REGISTRY_STORAGE_S3_ACCESSKEY: minioadmin
+      REGISTRY_STORAGE_S3_SECRETKEY: minioadmin
+
+      REGISTRY_AUTH: token
+      REGISTRY_AUTH_TOKEN_REALM: http://backend:3001/api/v1/registry_auth
+      REGISTRY_AUTH_TOKEN_SERVICE: RegistryAuth
+      REGISTRY_AUTH_TOKEN_ISSUER: RegistryIssuer
+      REGISTRY_AUTH_TOKEN_JWKS: /certs/jwks.json
+      REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: /certs/cert.pem
+    volumes:
+      - ./backend/config/registry.conf:/etc/distribution/config.yml
+      - ./backend/certs:/certs:ro
+    depends_on:
+      artefactscan:
+        condition: service_healthy
+
+  frontend:
+    networks:
+      internal:
+    image: bailo_frontend:${INSTANCE_NAME}
+    build:
+      context: ./frontend/
+    depends_on:
+      - backend
+
+  backend:
+    networks:
+      internal:
+    image: bailo_backend:${INSTANCE_NAME}
+    build:
+      context: ./backend/
+      additional_contexts:
+        python: ./lib/python
+    volumes:
+      - ./backend/certs:/certs:ro
+      - ./backend/certs:/usr/local/share/ca-certificates:ro
+      - ./backend/config:/app/config
+    depends_on:
+      clamd:
+        condition: service_healthy
+      registry:
+        condition: service_started
+      artefactscan:
+        condition: service_healthy
+      minio:
+        condition: service_started
+      mongo:
+        condition: service_started
+    security_opt:
+      - seccomp:unconfined
+      - apparmor:unconfined
+    environment:
+      - NODE_CONFIG_ENV=${INSTANCE_NAME}_docker_compose
+
+volumes:
+  minioVolume:
+    name: ${INSTANCE_NAME}_minioVolume
+  mongoVolume:
+    name: ${INSTANCE_NAME}_mongoVolume
+
+networks:
+  default:
+    name: ${INSTANCE_NAME}_default
+  internal:
+    name: ${INSTANCE_NAME}_internal

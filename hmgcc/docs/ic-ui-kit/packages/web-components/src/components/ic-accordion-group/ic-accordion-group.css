@@ -1,0 +1,30 @@
+@import "../../global/normalize.css";
+
+.label-container {
+  --ic-typography-color: var(--ic-accordion-group-title-text);
+
+  color: var(--ic-accordion-group-title-text);
+  padding: var(--ic-space-xs);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+:host(.ic-accordion-group-small) .label-container {
+  padding: var(--ic-space-xxs) var(--ic-space-xs);
+}
+
+:host(.ic-accordion-group-large) .label-container {
+  padding: var(--ic-space-sm) var(--ic-space-xs);
+}
+
+.sr-only {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: var(--ic-space-1px);
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: var(--ic-space-1px);
+}

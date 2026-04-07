@@ -1,0 +1,91 @@
+import { getReasonPhrase } from 'http-status-codes'
+import { redirectToLoginPage } from 'utils/loginUtils'
+
+export type ErrorInfo = Error & {
+  info: {
+    message: string
+    id?: string
+    documentationUrl?: string
+  }
+  status: number
+}
+
+type ErrorResponse = {
+  error: Error
+}
+
+export const fetcher = async <THead extends boolean>(
+  url: string,
+  head?: THead,
+): Promise<
+  THead extends true
+    ? {
+        headers: {
+          [k: string]: string
+        }
+      }
+    : any
+> => {
+  const res = await fetch(url, {
+    ...(head && { method: 'head' }),
+  })
+
+  if (!res.ok) {
+    await handleSWRError(res)
+  }
+
+  if (head) {
+    return { headers: Object.fromEntries(res.headers) }
+  } else {
+    return res.json()
+  }
+}
+
+export const getErrorMessage = async (res: Response) => {
+  const body = await res.json()
+
+  return getErrorMessageFromBody(body, res.status)
+}
+
+const handleSWRError = async (res: Response) => {
+  if (res.status === 401) {
+    redirectToLoginPage()
+  }
+
+  let error: ErrorInfo
+  try {
+    const body = await res.json()
+    error = {
+      ...new Error('An error occurred while fetching the data.'),
+      info: {
+        ...body,
+        message: getErrorMessageFromBody(body, res.status),
+      },
+      status: res.status,
+    }
+  } catch (_e) {
+    error = {
+      ...new Error('An error occurred while fetching the data.'),
+      info: {
+        message: res.statusText,
+      },
+      status: res.status,
+    }
+  }
+
+  throw error
+}
+
+const isErrorResponse = (value: unknown): value is ErrorResponse => {
+  return !!(value && (value as ErrorResponse).error && (value as ErrorResponse).error.message)
+}
+
+const getErrorMessageFromBody = (body: unknown, status: number) => {
+  const reasonPhrase = getReasonPhrase(status)
+  if (isErrorResponse(body)) {
+    return `${reasonPhrase}: ${body.error.message}`
+  }
+
+  // unable to identify error message, possibly a network failure
+  return 'Unknown error - Please contact Bailo support'
+}

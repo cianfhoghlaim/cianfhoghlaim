@@ -1,0 +1,48 @@
+import { Request, Response } from 'express'
+
+import { UserInformation } from '../../../connectors/authentication/constants.js'
+import authentication from '../../../connectors/authentication/index.js'
+import { z } from '../../../lib/zod.js'
+import { registerPath, UserInformationSchema } from '../../../services/specification.js'
+import { toEntity } from '../../../utils/entity.js'
+import { parse } from '../../../utils/validate.js'
+
+export const getEntityLookupSchema = z.object({
+  params: z.object({
+    dn: z.string(),
+  }),
+})
+
+registerPath({
+  method: 'get',
+  path: '/api/v2/entity/{dn}/lookup',
+  tags: ['user'],
+  description: 'Get information about an entity',
+  schema: getEntityLookupSchema,
+  responses: {
+    200: {
+      description: 'Information about the provided entity.',
+      content: {
+        'application/json': {
+          schema: z.object({ entity: UserInformationSchema }),
+        },
+      },
+    },
+  },
+})
+
+interface GetEntityLookup {
+  entity: UserInformation
+}
+
+export const getEntityLookup = [
+  async (req: Request, res: Response<GetEntityLookup>): Promise<void> => {
+    const {
+      params: { dn },
+    } = parse(req, getEntityLookupSchema)
+
+    const information = await authentication.getUserInformation(toEntity('user', dn))
+
+    res.json({ entity: information })
+  },
+]

@@ -1,0 +1,13 @@
+import {
+  Meta,
+  Stories,
+  Markdown
+} from "@storybook/addon-docs/blocks";
+import readme from "../../../web-components/src/components/ic-alert/readme.md";
+import * as IcAlertStories from './ic-alert.stories';
+
+<Meta of={IcAlertStories} />
+
+<Markdown>{readme}</Markdown>
+
+<Stories />

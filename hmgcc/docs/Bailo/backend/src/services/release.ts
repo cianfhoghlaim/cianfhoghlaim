@@ -1,0 +1,677 @@
+import { ClientSession } from 'mongoose'
+import semver from 'semver'
+import { Optional } from 'utility-types'
+
+import { ReleaseAction } from '../connectors/authorisation/actions.js'
+import authorisation from '../connectors/authorisation/index.js'
+import { FileWithScanResultsInterface } from '../models/File.js'
+import { EntryKind, ModelDoc, ModelInterface } from '../models/Model.js'
+import ReleaseModel, { ImageRefInterface, ReleaseDoc, ReleaseInterface, SemverObject } from '../models/Release.js'
+import ResponseModel, { ResponseKind } from '../models/Response.js'
+import Review, { ReviewDoc } from '../models/Review.js'
+import { UserInterface } from '../models/User.js'
+import { WebhookEvent } from '../models/Webhook.js'
+import { isBailoError } from '../types/error.js'
+import { findDuplicates } from '../utils/array.js'
+import { toEntity } from '../utils/entity.js'
+import { BadReq, Forbidden, InternalError, NotFound } from '../utils/error.js'
+import { isMongoServerError } from '../utils/mongo.js'
+import { arrayOfObjectsHasKeysOfType, hasKeysOfType } from '../utils/typeguards.js'
+import { getFileById, getFilesByIds } from './file.js'
+import log from './log.js'
+import { getModelById, getModelCardRevision } from './model.js'
+import { listModelImages } from './registry.js'
+import { removeResponsesByParentIds } from './response.js'
+import { createReleaseReviews, removeReleaseReviews } from './review.js'
+import { sendWebhooks } from './webhook.js'
+
+export function isReleaseDoc(data: unknown): data is ReleaseDoc {
+  return (
+    hasKeysOfType(data, {
+      _id: 'string',
+      modelId: 'string',
+      modelCardVersion: 'number',
+      semver: 'string',
+      notes: 'string',
+      minor: 'boolean',
+      draft: 'boolean',
+      fileIds: 'object',
+      images: 'object',
+      deleted: 'boolean',
+      createdBy: 'string',
+      createdAt: 'string',
+      updatedAt: 'string',
+    }) &&
+    Array.isArray(data['fileIds']) &&
+    data['fileIds'].every((fileId: unknown) => typeof fileId === 'string') &&
+    arrayOfObjectsHasKeysOfType(data['images'], { repository: 'string', name: 'string', tag: 'string', _id: 'string' })
+  )
+}
+
+export async function validateRelease(user: UserInterface, model: ModelDoc, release: ReleaseDoc) {
+  if (!semver.valid(release.semver)) {
+    throw BadReq(`The version '${release.semver}' is not a valid semver value.`)
+  }
+
+  if (release.images && release.images.length > 0) {
+    const registryImages = await listModelImages(user, release.modelId)
+
+    const initialValue: ImageRefInterface[] = []
+    const missingImages = release.images.reduce((acc, releaseImage) => {
+      if (
+        !registryImages.some(
+          (registryImage) =>
+            releaseImage.name === registryImage.name &&
+            releaseImage.repository === registryImage.repository &&
+            registryImage.tags.includes(releaseImage.tag),
+        )
+      ) {
+        acc.push(releaseImage)
+      }
+      return acc
+    }, initialValue)
+
+    if (missingImages.length > 0) {
+      throw BadReq('The following images do not exist in the registry.', {
+        missingImages,
+      })
+    }
+  }
+
+  if (release.fileIds) {
+    const fileNames: Array<string> = []
+
+    for (const fileId of release.fileIds) {
+      let file: FileWithScanResultsInterface | undefined
+      try {
+        file = await getFileById(user, fileId)
+      } catch (e) {
+        if (isBailoError(e) && e.code === 404) {
+          throw BadReq('Unable to create release as the file cannot be found.', {
+            fileId,
+            semver: release.semver,
+            modelId: release.modelId,
+          })
+        }
+        throw e
+      }
+      fileNames.push(file.name)
+
+      if (file.modelId !== model.id) {
+        throw BadReq(
+          `The file '${fileId}' comes from the model '${file.modelId}', but this release is being created for '${model.id}'`,
+          {
+            modelId: model.id,
+            fileId: fileId,
+            fileModelId: file.modelId,
+          },
+        )
+      }
+    }
+
+    const uniqueDuplicates = [...new Set(findDuplicates(fileNames))]
+    if (uniqueDuplicates.length) {
+      throw BadReq(
+        `Releases cannot have multiple files with the same name.  The duplicates in this file are: '${JSON.stringify(
+          uniqueDuplicates,
+        )}'`,
+        {
+          fileNames,
+          duplicates: uniqueDuplicates,
+        },
+      )
+    }
+  }
+}
+
+export type CreateReleaseParams = Optional<
+  Pick<
+    ReleaseInterface,
+    'modelId' | 'modelCardVersion' | 'semver' | 'notes' | 'minor' | 'draft' | 'fileIds' | 'images'
+  >,
+  'modelCardVersion'
+>
+export async function createRelease(user: UserInterface, releaseParams: CreateReleaseParams) {
+  const model = await getModelById(user, releaseParams.modelId)
+  if (EntryKind.MirroredModel === model.kind) {
+    throw BadReq(`Cannot create a release from a mirrored model.`)
+  }
+
+  if (releaseParams.modelCardVersion) {
+    // Ensure that the requested model card version exists.
+    await getModelCardRevision(user, releaseParams.modelId, releaseParams.modelCardVersion)
+  } else {
+    if (!model.card) {
+      throw BadReq('This model does not have a model card associated with it yet.', { modelId: model.id })
+    }
+
+    releaseParams.modelCardVersion = model.card?.version
+  }
+
+  const deletedRelease = await ReleaseModel.findOne({
+    modelId: releaseParams.modelId,
+    semver: releaseParams.semver,
+    deleted: true,
+  })
+  if (deletedRelease) {
+    throw BadReq(
+      'A release using this semver has been deleted. Please use a different semver or contact an admin to restore the deleted release.',
+    )
+  }
+
+  const release = new ReleaseModel({
+    createdBy: user.dn,
+    ...releaseParams,
+  })
+
+  await validateRelease(user, model, release)
+
+  const auth = await authorisation.release(user, model, ReleaseAction.Create, release)
+  if (!auth.success) {
+    throw Forbidden(auth.info, {
+      userDn: user.dn,
+      modelId: releaseParams.modelId,
+    })
+  }
+
+  try {
+    await release.save()
+  } catch (error) {
+    if (isMongoServerError(error) && error.code === 11000) {
+      throw BadReq('A release with this semver already exists for this model.', {
+        modelId: releaseParams.modelId,
+        semver: releaseParams.semver,
+      })
+    }
+
+    throw error
+  }
+
+  if (!release.minor) {
+    try {
+      await createReleaseReviews(model, release)
+    } catch (error) {
+      // Transactions here would solve this issue.
+      log.warn(error, 'Error when creating Release Review Requests. Approval cannot be given to this release')
+    }
+  }
+
+  sendWebhooks(
+    release.modelId,
+    WebhookEvent.CreateRelease,
+    `Release ${release.semver} has been created for model ${release.modelId}`,
+    { release },
+  )
+
+  return release
+}
+
+export type UpdateReleaseParams = Pick<ReleaseInterface, 'notes' | 'draft' | 'modelCardVersion' | 'fileIds' | 'images'>
+export async function updateRelease(user: UserInterface, modelId: string, semver: string, delta: UpdateReleaseParams) {
+  const model = await getModelById(user, modelId)
+  if (EntryKind.MirroredModel === model.kind) {
+    throw BadReq(`Cannot update a release on a mirrored model.`)
+  }
+  const release = await getReleaseBySemver(user, model, semver)
+
+  Object.assign(release, delta)
+  await validateRelease(user, model, release)
+
+  const auth = await authorisation.release(user, model, ReleaseAction.Update, release)
+  if (!auth.success) {
+    throw Forbidden(auth.info, {
+      userDn: user.dn,
+      modelId: modelId,
+    })
+  }
+  const semverObj = semverStringToObject(semver)
+  const updatedRelease = await ReleaseModel.findOneAndUpdate({ modelId, semver: semverObj }, { $set: release })
+
+  if (!updatedRelease) {
+    throw NotFound(`The requested release was not found.`, { modelId, semver })
+  }
+
+  sendWebhooks(
+    release.modelId,
+    WebhookEvent.UpdateRelease,
+    `ReleaseModel ${release.semver} has been updated for model ${release.modelId}`,
+    { release },
+  )
+
+  return updatedRelease
+}
+
+export async function newReleaseComment(user: UserInterface, modelId: string, semver: string, comment: string) {
+  const model = await getModelById(user, modelId)
+  if (EntryKind.MirroredModel === model.kind) {
+    throw BadReq(`Cannot create a new comment on a mirrored model.`)
+  }
+
+  const semverObj = semverStringToObject(semver)
+  const release = await ReleaseModel.findOne({ modelId, semver: semverObj })
+  if (!release) {
+    throw NotFound(`The requested release was not found.`, { modelId, semver })
+  }
+
+  // Store the response
+  const commentResponse = new ResponseModel({
+    entity: toEntity('user', user.dn),
+    kind: ResponseKind.Comment,
+    comment,
+    createdAt: new Date().toISOString(),
+    parentId: release._id,
+  })
+
+  const savedComment = await commentResponse.save()
+
+  if (!savedComment) {
+    throw InternalError('There was a problem saving this release comment')
+  }
+
+  return commentResponse
+}
+
+export async function getModelReleases(
+  user: UserInterface,
+  modelId: string,
+  querySemver?: string,
+): Promise<Array<ReleaseDoc & { model: ModelInterface; files: FileWithScanResultsInterface[] }>> {
+  const query = querySemver === undefined ? { modelId } : convertSemverQueryToMongoQuery(querySemver, modelId)
+  const results = await ReleaseModel.aggregate()
+    .match(query)
+    .sort({ updatedAt: -1 })
+    .lookup({ from: 'v2_models', localField: 'modelId', foreignField: 'id', as: 'model' })
+    .lookup({
+      from: 'v2_files',
+      as: 'files',
+      // Backwards compatibility for MongoDB <=4.4 "$lookup with 'pipeline' may not specify 'localField' or 'foreignField'".
+      // `let` & `pipeline[].$match.$expr` provide equivalent functionality to `localField: 'fileIds', foreignField: '_id',`
+      let: { fileIds: '$fileIds' },
+      pipeline: [
+        {
+          $match: {
+            $expr: { $in: ['$_id', { $ifNull: ['$$fileIds', []] }] },
+          },
+        },
+        { $addFields: { id: { $toString: '$_id' } } },
+        {
+          $lookup: {
+            from: 'v2_scans',
+            localField: 'id',
+            foreignField: 'fileId',
+            as: 'scanResults',
+          },
+        },
+      ],
+    })
+    .append({ $set: { model: { $arrayElemAt: ['$model', 0] } } })
+
+  const model = await getModelById(user, modelId)
+
+  const auths = await authorisation.releases(user, model, results, ReleaseAction.View)
+  return results.reduce<Array<ReleaseDoc & { model: ModelInterface; files: FileWithScanResultsInterface[] }>>(
+    (updatedResults, result, index) => {
+      if (auths[index].success) {
+        updatedResults.push({ ...result, semver: semverObjectToString(result.semver) })
+      }
+
+      return updatedResults
+    },
+    [],
+  )
+}
+
+export async function getReleasesForExport(user: UserInterface, modelId: string, semvers: string[]) {
+  const model = await getModelById(user, modelId)
+  const semverObjs = semvers.map((semver) => semverStringToObject(semver))
+  const releases = await ReleaseModel.find({
+    modelId,
+    semver: semverObjs,
+  })
+
+  const missing = semvers.filter((x) => !releases.some((release) => release.semver === x))
+  if (missing.length > 0) {
+    throw NotFound('The following releases were not found.', { modelId, releases: missing })
+  }
+
+  const authResponses = await authorisation.releases(user, model, releases, ReleaseAction.Export)
+  const failedReleases = releases.filter((_, i) => !authResponses[i].success)
+  if (failedReleases.length > 0) {
+    throw Forbidden('You do not have the necessary permissions to export these releases.', {
+      modelId,
+      releases: failedReleases.map((release) => release.semver),
+      user,
+    })
+  }
+
+  return releases
+}
+
+export function semverStringToObject(semver: string): SemverObject {
+  const vIdentifierIndex = semver.indexOf('v')
+  const trimmedSemver = vIdentifierIndex === -1 ? semver : semver.slice(vIdentifierIndex + 1)
+  const [version, metadata] = trimmedSemver.split('-')
+  const [major, minor, patch] = version.split('.')
+  const majorNum: number = Number(major)
+  const minorNum: number = Number(minor)
+  const patchNum: number = Number(patch)
+  return { major: majorNum, minor: minorNum, patch: patchNum, ...(metadata && { metadata }) }
+}
+
+export function semverObjectToString(semver: SemverObject): string {
+  if (!semver) {
+    return ''
+  }
+  let metadata: string
+  if (semver.metadata != undefined) {
+    metadata = `-${semver.metadata}`
+  } else {
+    metadata = ``
+  }
+  return `${semver.major}.${semver.minor}.${semver.patch}${metadata}`
+}
+
+export async function getReleaseBySemver(user: UserInterface, model: string | ModelDoc, semver: string) {
+  if (typeof model === 'string') {
+    model = await getModelById(user, model)
+  }
+  const semverObj = semverStringToObject(semver)
+  const release = await ReleaseModel.findOne({
+    modelId: model.id,
+    semver: semverObj,
+  })
+
+  if (!release) {
+    throw NotFound(`The requested release was not found.`, { modelId: model.id, semver })
+  }
+
+  const auth = await authorisation.release(user, model, ReleaseAction.View, release)
+  if (!auth.success) {
+    throw Forbidden(auth.info, { userDn: user.dn, release: release._id })
+  }
+
+  return release
+}
+
+function parseSemverQuery(querySemver: string) {
+  const semverRangeStandardised = semver.validRange(querySemver, { includePrerelease: false })
+
+  if (!semverRangeStandardised) {
+    throw BadReq('Semver range is invalid.', { semverQuery: querySemver })
+  }
+
+  const [expressionA, expressionB] = semverRangeStandardised.split(' ')
+
+  let lowerInclusivity: boolean = false
+  let upperInclusivity: boolean = false
+  let lowerSemverObj: SemverObject | undefined
+  let upperSemverObj: SemverObject | undefined
+
+  //LOWER SEMVER
+  if (expressionA.includes('>')) {
+    lowerInclusivity = expressionA.includes('>=')
+    lowerSemverObj = semverStringToObject(expressionA.replace(/[<>=]/g, ''))
+  } else {
+    //upper semver
+    upperInclusivity = expressionA.includes('<=')
+    upperSemverObj = semverStringToObject(expressionA.replace(/[<=]/g, ''))
+  }
+
+  if (expressionB) {
+    upperInclusivity = expressionB.includes('<=')
+    upperSemverObj = semverStringToObject(expressionB.replace(/[<=]/g, ''))
+  }
+
+  return { lowerSemverObj, upperSemverObj, lowerInclusivity, upperInclusivity }
+}
+
+interface QueryBoundInterface {
+  $or: (
+    | {
+        'semver.major':
+          | {
+              $lte: number
+            }
+          | {
+              $gte: number
+            }
+        'semver.minor':
+          | {
+              $lte: number
+            }
+          | { $gte: number }
+        'semver.patch':
+          | {
+              $gte: number
+            }
+          | { $gt: number }
+          | { $lte: number }
+          | { $lt: number }
+      }
+    | {
+        'semver.major':
+          | {
+              $gt: number
+            }
+          | { $lt: number }
+      }
+    | {
+        'semver.major':
+          | {
+              $gte: number
+            }
+          | { $lte: number }
+        'semver.minor':
+          | {
+              $gt: number
+            }
+          | { $lt: number }
+      }
+  )[]
+}
+
+function convertSemverQueryToMongoQuery(querySemver: string, modelID: string) {
+  const { lowerSemverObj, upperSemverObj, lowerInclusivity, upperInclusivity } = parseSemverQuery(querySemver)
+
+  const queryQueue: QueryBoundInterface[] = []
+
+  if (lowerSemverObj) {
+    const lowerQuery: QueryBoundInterface = {
+      $or: [
+        {
+          'semver.major': { $gte: lowerSemverObj.major },
+          'semver.minor': { $gte: lowerSemverObj.minor },
+          'semver.patch': lowerInclusivity ? { $gte: lowerSemverObj.patch } : { $gt: lowerSemverObj.patch },
+        },
+        {
+          'semver.major': { $gt: lowerSemverObj.major },
+        },
+        {
+          'semver.major': { $gte: lowerSemverObj.major },
+          'semver.minor': { $gt: lowerSemverObj.minor },
+        },
+      ],
+    }
+    queryQueue.push(lowerQuery)
+  }
+
+  if (upperSemverObj) {
+    const upperQuery: QueryBoundInterface = {
+      $or: [
+        {
+          'semver.major': { $lte: upperSemverObj.major },
+          'semver.minor': { $lte: upperSemverObj.minor },
+          'semver.patch': upperInclusivity ? { $lte: upperSemverObj.patch } : { $lt: upperSemverObj.patch },
+        },
+        {
+          'semver.major': { $lt: upperSemverObj.major },
+        },
+        {
+          'semver.major': { $lte: upperSemverObj.major },
+          'semver.minor': { $lt: upperSemverObj.minor },
+        },
+      ],
+    }
+    queryQueue.push(upperQuery)
+  }
+
+  const combinedQuery = {
+    modelId: modelID,
+    $and: queryQueue,
+  }
+
+  return combinedQuery
+}
+
+export async function deleteReleases(
+  user: UserInterface,
+  modelId: string,
+  semvers: string[],
+  deleteMirroredModel: boolean = false,
+  session?: ClientSession,
+) {
+  const model = await getModelById(user, modelId)
+  if (EntryKind.MirroredModel === model.kind && !deleteMirroredModel) {
+    throw BadReq('Cannot delete a release on a mirrored model.')
+  }
+  for (const semver of semvers) {
+    const release = await getReleaseBySemver(user, model, semver)
+
+    const auth = await authorisation.release(user, model, ReleaseAction.Delete, release)
+    if (!auth.success) {
+      throw Forbidden(auth.info, { userDn: user.dn, release: release._id })
+    }
+
+    const reviewsForRelease: ReviewDoc[] = await Review.find({
+      modelId,
+      semver,
+    })
+
+    await release.delete(session)
+    await removeReleaseReviews(modelId, semver, session)
+    await removeResponsesByParentIds(
+      [...reviewsForRelease.map((review) => review['_id']), release['_id']] as string[],
+      session,
+    )
+  }
+
+  return { modelId, semvers }
+}
+
+export async function deleteRelease(
+  user: UserInterface,
+  modelId: string,
+  semver: string,
+  deleteMirroredModel: boolean = false,
+  session?: ClientSession,
+) {
+  await deleteReleases(user, modelId, [semver], deleteMirroredModel, session)
+  return { modelId, semver }
+}
+
+export function getReleaseName(release: ReleaseDoc): string {
+  return `${release.modelId} - v${release.semver}`
+}
+
+export async function removeFileFromReleases(
+  user: UserInterface,
+  model: ModelDoc,
+  fileId: string,
+  deleteMirroredModel: boolean = false,
+  session?: ClientSession,
+) {
+  if (EntryKind.MirroredModel === model.kind && !deleteMirroredModel) {
+    throw BadReq(`Cannot remove a file from a mirrored model.`)
+  }
+
+  const query = {
+    modelId: model.id,
+    // Match documents where the element exists in the array
+    fileIds: fileId,
+  }
+  const releases = await ReleaseModel.find(query)
+
+  const responses = await authorisation.releases(user, model, releases, ReleaseAction.Update)
+  const failures = responses.filter((response) => !response.success)
+
+  if (failures.length) {
+    throw Forbidden(`You do not have permission to update these releases.`, {
+      releases: failures.map((failure) => failure.id),
+    })
+  }
+
+  const result = await ReleaseModel.updateMany(
+    query,
+    {
+      $pull: { fileIds: fileId },
+    },
+    session,
+  )
+
+  return { matchedCount: result.matchedCount, modifiedCount: result.modifiedCount }
+}
+
+export async function getFileByReleaseFileName(user: UserInterface, modelId: string, semver: string, fileName: string) {
+  const release = await getReleaseBySemver(user, modelId, semver)
+  const files = await getFilesByIds(user, modelId, release.fileIds)
+
+  const file = files.find((file) => file.name === fileName)
+
+  if (!file) {
+    throw NotFound(`The requested file name was not found on the release.`, { modelId, semver, fileName })
+  }
+
+  return file
+}
+
+export async function getAllFileIds(modelId: string, semvers: string[]): Promise<string[]> {
+  const semverObjs = semvers.map((semver) => semverStringToObject(semver))
+  const result = await ReleaseModel.aggregate()
+    .match({ modelId, semver: { $in: semverObjs } })
+    .unwind({ path: '$fileIds' })
+    .group({
+      _id: null,
+      fileIds: {
+        $addToSet: '$fileIds',
+      },
+    })
+  if (result.at(0)) {
+    return result.at(0).fileIds
+  }
+  return []
+}
+
+export async function saveImportedRelease(release: Omit<ReleaseDoc, '_id'>) {
+  const foundRelease = await ReleaseModel.findOneAndUpdate(
+    { modelId: release.modelId, semver: semverStringToObject(release.semver) },
+    release,
+    {
+      upsert: true,
+    },
+  )
+
+  if (!foundRelease) {
+    // This release did not already exist in Mongo, so it is a new release. Return it to be audited.
+    return release
+  }
+}
+
+export async function findAndDeleteImageFromReleases(
+  user: UserInterface,
+  modelId: string,
+  imageRef: ImageRefInterface,
+  session?: ClientSession,
+) {
+  // Handles auth
+  await getModelById(user, modelId)
+
+  await ReleaseModel.updateMany(
+    { modelId },
+    {
+      $pull: {
+        images: { ...imageRef },
+      },
+    },
+    { session },
+  )
+}
