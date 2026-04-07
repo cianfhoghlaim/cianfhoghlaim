@@ -1,0 +1,73 @@
+import { Save } from '@mui/icons-material'
+import { Button, Checkbox, Divider, FormControlLabel, Stack, Typography } from '@mui/material'
+import { patchEntry } from 'actions/entry'
+import { useState } from 'react'
+import useNotification from 'src/hooks/useNotification'
+import MessageAlert from 'src/MessageAlert'
+import { EntryInterface } from 'types/types'
+import { getErrorMessage } from 'utils/fetcher'
+
+type TemplateSettingsProps = {
+  model: EntryInterface
+}
+
+export default function TemplateSettings({ model }: TemplateSettingsProps) {
+  const [allowTemplating, setAllowTemplating] = useState(model.settings.allowTemplating)
+  const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const sendNotification = useNotification()
+
+  async function handleSave() {
+    setLoading(true)
+    const updatedModelSettings = {
+      settings: {
+        ungovernedAccess: model.settings.ungovernedAccess,
+        allowTemplating,
+      },
+    }
+
+    const response = await patchEntry(model.id, updatedModelSettings)
+
+    if (!response.ok) {
+      setErrorMessage(await getErrorMessage(response))
+    } else {
+      sendNotification({
+        variant: 'success',
+        msg: 'Template settings updated',
+        anchorOrigin: { horizontal: 'center', vertical: 'bottom' },
+      })
+    }
+    setLoading(false)
+  }
+
+  return (
+    <Stack spacing={2} sx={{ mt: 2 }}>
+      <Typography variant='h6' component='h2' color='primary'>
+        Manage templating
+      </Typography>
+      <Divider />
+      <FormControlLabel
+        label='Allow users to make a template'
+        control={
+          <Checkbox
+            onChange={(event) => setAllowTemplating(event.target.checked)}
+            checked={allowTemplating}
+            size='small'
+          />
+        }
+      />
+      <div>
+        <Button
+          variant='contained'
+          aria-label='Save model template settings'
+          onClick={handleSave}
+          loading={loading}
+          startIcon={<Save />}
+        >
+          Save
+        </Button>
+        <MessageAlert message={errorMessage} severity='error' />
+      </div>
+    </Stack>
+  )
+}

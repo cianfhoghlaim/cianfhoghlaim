@@ -1,0 +1,999 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ic-checkbox-group should not have a validation status if disabled: no-validation-status-if-disabled 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-disabled ic-checkbox-group-medium" disabled="" hide-label="" label="test label" name="test" validation-status="error" validation-text="error message">
+  <template shadowrootmode="open">
+    <span aria-hidden="true" class="screen-reader-only-text" id="screenReaderOnlyText">
+      test label invalid data
+    </span>
+    <fieldset aria-labelledby="screenReaderOnlyText test-validation-text" disabled="" id="test">
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" for="test" message="" status=""></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-disabled ic-checkbox-medium" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" disabled="" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should pass down disabled state to child checkboxes: renders-disabled-child 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-disabled ic-checkbox-group-medium" disabled="" label="test label" name="test">
+  <template shadowrootmode="open">
+    <fieldset aria-labelledby="" disabled="" id="test">
+      <legend>
+        <ic-input-label disabled="" helpertext="" label="test label">
+          <slot name="label" slot="label"></slot>
+          <slot name="helper-text" slot="helper-text"></slot>
+        </ic-input-label>
+      </legend>
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" for="test" message="" status=""></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-disabled ic-checkbox-medium" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" disabled="" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-disabled ic-checkbox-medium" label="test label" value="test2">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" disabled="" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test2">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should pass the size on the checkbox group to the child checkboxes when there's no size set on them individually 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-small" label="test label" name="test" size="small">
+  <template shadowrootmode="open">
+    <fieldset aria-labelledby="" id="test">
+      <legend>
+        <ic-input-label helpertext="" label="test label">
+          <slot name="label" slot="label"></slot>
+          <slot name="helper-text" slot="helper-text"></slot>
+        </ic-input-label>
+      </legend>
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" for="test" message="" status=""></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-small" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-small" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should prioritise the size on an individual checkbox over the size on the checkbox group 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-large" label="test label" name="test" size="large">
+  <template shadowrootmode="open">
+    <fieldset aria-labelledby="" id="test">
+      <legend>
+        <ic-input-label helpertext="" label="test label">
+          <slot name="label" slot="label"></slot>
+          <slot name="helper-text" slot="helper-text"></slot>
+        </ic-input-label>
+      </legend>
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" for="test" message="" status=""></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-large" id="large-checkbox" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-small" id="small-checkbox" label="test label" size="small" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should render an aria label when checkbox label hidden: renders-hidden-checkbox-label 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-medium" label="test label" name="test">
+  <template shadowrootmode="open">
+    <fieldset aria-labelledby="" id="test">
+      <legend>
+        <ic-input-label helpertext="" label="test label">
+          <slot name="label" slot="label"></slot>
+          <slot name="helper-text" slot="helper-text"></slot>
+        </ic-input-label>
+      </legend>
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" for="test" message="" status=""></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-medium" hide-label="" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input aria-label="test label" class="checkbox" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should render an aria label when group label hidden: renders-hidden-label 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-medium" hide-label="" label="test label" name="test">
+  <template shadowrootmode="open">
+    <span aria-hidden="true" class="screen-reader-only-text" id="screenReaderOnlyText">
+      test label
+    </span>
+    <fieldset aria-labelledby="screenReaderOnlyText" id="test">
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" for="test" message="" status=""></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-medium" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should render as helper text: renders-with-helpertext 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-medium" helper-text="helper test" label="test label" name="test">
+  <template shadowrootmode="open">
+    <fieldset aria-labelledby="test-helper-text" id="test">
+      <legend>
+        <ic-input-label helpertext="helper test" label="test label">
+          <slot name="label" slot="label"></slot>
+          <slot name="helper-text" slot="helper-text"></slot>
+        </ic-input-label>
+      </legend>
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" for="test" message="" status=""></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-medium" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should render as required: renders-required 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-medium" label="test label" name="test" required="">
+  <template shadowrootmode="open">
+    <span aria-hidden="true" class="screen-reader-only-text" id="screenReaderOnlyText">
+      test label required
+    </span>
+    <fieldset aria-labelledby="screenReaderOnlyText" id="test">
+      <legend>
+        <ic-input-label helpertext="" label="test label" required="">
+          <slot name="label" slot="label"></slot>
+          <slot name="helper-text" slot="helper-text"></slot>
+        </ic-input-label>
+      </legend>
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" for="test" message="" status=""></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-medium" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should render checked: renders-checked 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-medium" label="test label" name="test">
+  <template shadowrootmode="open">
+    <fieldset aria-labelledby="" id="test">
+      <legend>
+        <ic-input-label helpertext="" label="test label">
+          <slot name="label" slot="label"></slot>
+          <slot name="helper-text" slot="helper-text"></slot>
+        </ic-input-label>
+      </legend>
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" for="test" message="" status=""></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" checked="" class="ic-checkbox-medium" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <svg class="checkmark" clip-rule="evenodd" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <title>
+            checkmark icon
+          </title>
+          <path d="M21 6.285l-11.16 12.733-6.84-6.018 1.319-1.49 5.341 4.686 9.865-11.196 1.475 1.285z"></path>
+        </svg>
+        <input checked="" class="checkbox checked" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+    <input class="ic-input" name="test" type="hidden" value="test">
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should render in a disabled state: disabled-removed 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-medium" label="test label" name="test">
+  <template shadowrootmode="open">
+    <fieldset aria-labelledby="" id="test">
+      <legend>
+        <ic-input-label helpertext="" label="test label">
+          <slot name="label" slot="label"></slot>
+          <slot name="helper-text" slot="helper-text"></slot>
+        </ic-input-label>
+      </legend>
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" for="test" message="" status=""></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-medium" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should render in a disabled state: renders-disabled 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-medium" label="test label" name="test">
+  <template shadowrootmode="open">
+    <fieldset aria-labelledby="" id="test">
+      <legend>
+        <ic-input-label helpertext="" label="test label">
+          <slot name="label" slot="label"></slot>
+          <slot name="helper-text" slot="helper-text"></slot>
+        </ic-input-label>
+      </legend>
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" for="test" message="" status=""></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-disabled ic-checkbox-medium" disabled="" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" disabled="" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should render indeterminate: renders-indeterminate 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-medium" label="test label" name="test">
+  <template shadowrootmode="open">
+    <fieldset aria-labelledby="" id="test">
+      <legend>
+        <ic-input-label helpertext="" label="test label">
+          <slot name="label" slot="label"></slot>
+          <slot name="helper-text" slot="helper-text"></slot>
+        </ic-input-label>
+      </legend>
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" for="test" message="" status=""></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" checked="" class="ic-checkbox-medium" indeterminate="" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <div class="indeterminate-symbol"></div>
+        <input checked="" class="checkbox checked indeterminate" id="ic-checkbox-test-label-test-label" indeterminate="" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+    <input class="ic-input" name="test" type="hidden" value="test">
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should render with disabled static additional field: renders-with-disabled-additional-field 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-medium" hide-label="" label="test label" name="test" validation-status="error">
+  <template shadowrootmode="open">
+    <span aria-hidden="true" class="screen-reader-only-text" id="screenReaderOnlyText">
+      test label invalid data
+    </span>
+    <fieldset aria-labelledby="screenReaderOnlyText test-validation-text" id="test">
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" class="show-validation" for="test" message="" status="error"></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-medium" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+      <div class="dynamic-container">
+        <div class="dynamic-field-container">
+          <div class="additional-field-wrapper">
+            <slot name="additional-field"></slot>
+          </div>
+        </div>
+      </div>
+    </template>
+    <ic-text-field class="ic-text-field-disabled" disabled="true" label="Test label" placeholder="Placeholder" slot="additional-field" value="">
+      <template shadowrootmode="open">
+        <ic-input-container disabled="">
+          <ic-input-label disabled="" for="ic-text-field-input-2" helpertext="" label="Test label">
+            <slot name="helper-text" slot="helper-text"></slot>
+          </ic-input-label>
+          <ic-input-component-container disabled="" size="medium" validationstatus="">
+            <input aria-describedby="" aria-invalid="false" aria-label="Test label" autocapitalize="off" autocomplete="off" disabled="" id="ic-text-field-input-2" inputmode="text" name="ic-text-field-input-2" placeholder="Placeholder" type="text" value="">
+          </ic-input-component-container>
+          <ic-input-validation arialivemode="polite" for="ic-text-field-input-2" message="" status=""></ic-input-validation>
+        </ic-input-container>
+      </template>
+      <input class="ic-input" disabled="" name="ic-text-field-input-2" type="hidden" value="">
+    </ic-text-field>
+  </ic-checkbox>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-medium" label="test label" value="test2">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test2">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+      <div class="dynamic-container">
+        <div class="dynamic-field-container">
+          <div class="additional-field-wrapper">
+            <slot name="additional-field"></slot>
+          </div>
+        </div>
+      </div>
+    </template>
+    <div slot="additional-field">
+      <ic-text-field class="ic-text-field-disabled" disabled="true" label="Test label" placeholder="Placeholder" value="">
+        <template shadowrootmode="open">
+          <ic-input-container disabled="">
+            <ic-input-label disabled="" for="ic-text-field-input-3" helpertext="" label="Test label">
+              <slot name="helper-text" slot="helper-text"></slot>
+            </ic-input-label>
+            <ic-input-component-container disabled="" size="medium" validationstatus="">
+              <input aria-describedby="" aria-invalid="false" aria-label="Test label" autocapitalize="off" autocomplete="off" disabled="" id="ic-text-field-input-3" inputmode="text" name="ic-text-field-input-3" placeholder="Placeholder" type="text" value="">
+            </ic-input-component-container>
+            <ic-input-validation arialivemode="polite" for="ic-text-field-input-3" message="" status=""></ic-input-validation>
+          </ic-input-container>
+        </template>
+        <input class="ic-input" disabled="" name="ic-text-field-input-3" type="hidden" value="">
+      </ic-text-field>
+      <ic-text-field class="ic-text-field-disabled" disabled="true" label="Test label" placeholder="Placeholder" value="">
+        <template shadowrootmode="open">
+          <ic-input-container disabled="">
+            <ic-input-label disabled="" for="ic-text-field-input-4" helpertext="" label="Test label">
+              <slot name="helper-text" slot="helper-text"></slot>
+            </ic-input-label>
+            <ic-input-component-container disabled="" size="medium" validationstatus="">
+              <input aria-describedby="" aria-invalid="false" aria-label="Test label" autocapitalize="off" autocomplete="off" disabled="" id="ic-text-field-input-4" inputmode="text" name="ic-text-field-input-4" placeholder="Placeholder" type="text" value="">
+            </ic-input-component-container>
+            <ic-input-validation arialivemode="polite" for="ic-text-field-input-4" message="" status=""></ic-input-validation>
+          </ic-input-container>
+        </template>
+        <input class="ic-input" disabled="" name="ic-text-field-input-4" type="hidden" value="">
+      </ic-text-field>
+    </div>
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should render with dynamic additional field when checked: renders-with-dynamic-field-when-checked 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-medium" hide-label="" label="test label" name="test" validation-status="error">
+  <template shadowrootmode="open">
+    <span aria-hidden="true" class="screen-reader-only-text" id="screenReaderOnlyText">
+      test label invalid data
+    </span>
+    <fieldset aria-labelledby="screenReaderOnlyText test-validation-text" id="test">
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" class="show-validation" for="test" message="" status="error"></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="dynamic" checked="" class="ic-checkbox-medium" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <svg class="checkmark" clip-rule="evenodd" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <title>
+            checkmark icon
+          </title>
+          <path d="M21 6.285l-11.16 12.733-6.84-6.018 1.319-1.49 5.341 4.686 9.865-11.196 1.475 1.285z"></path>
+        </svg>
+        <input checked="" class="checkbox checked" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert">
+        This selection requires additional answers
+      </span>
+      <div class="dynamic-container" style="display: flex;">
+        <div class="branch-corner"></div>
+        <div class="dynamic-field-container">
+          <ic-typography variant="caption">
+            <p class="dynamic-text">
+              This selection requires additional answers
+            </p>
+          </ic-typography>
+          <div>
+            <slot name="additional-field"></slot>
+          </div>
+        </div>
+      </div>
+    </template>
+    <ic-text-field label="Test label" placeholder="Placeholder" slot="additional-field" value="">
+      <template shadowrootmode="open">
+        <ic-input-container>
+          <ic-input-label for="ic-text-field-input-1" helpertext="" label="Test label">
+            <slot name="helper-text" slot="helper-text"></slot>
+          </ic-input-label>
+          <ic-input-component-container size="medium" validationstatus="">
+            <input aria-describedby="" aria-invalid="false" aria-label="Test label" autocapitalize="off" autocomplete="off" id="ic-text-field-input-1" inputmode="text" name="ic-text-field-input-1" placeholder="Placeholder" type="text" value="">
+          </ic-input-component-container>
+          <ic-input-validation arialivemode="polite" for="ic-text-field-input-1" message="" status=""></ic-input-validation>
+        </ic-input-container>
+      </template>
+      <input class="ic-input" name="ic-text-field-input-1" type="hidden" value="">
+    </ic-text-field>
+    <input class="ic-input" name="test" type="hidden" value="test">
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should render with hidden dynamic additional field: renders-with-dynamic-field 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-medium" hide-label="" label="test label" name="test" validation-status="error">
+  <template shadowrootmode="open">
+    <span aria-hidden="true" class="screen-reader-only-text" id="screenReaderOnlyText">
+      test label invalid data
+    </span>
+    <fieldset aria-labelledby="screenReaderOnlyText test-validation-text" id="test">
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" class="show-validation" for="test" message="" status="error"></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="dynamic" class="ic-checkbox-medium" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+      <div class="dynamic-container" style="display: none;">
+        <div class="branch-corner"></div>
+        <div class="dynamic-field-container">
+          <ic-typography variant="caption">
+            <p class="dynamic-text"></p>
+          </ic-typography>
+          <div>
+            <slot name="additional-field"></slot>
+          </div>
+        </div>
+      </div>
+    </template>
+    <ic-text-field label="Test label" placeholder="Placeholder" slot="additional-field" value="">
+      <template shadowrootmode="open">
+        <ic-input-container>
+          <ic-input-label for="ic-text-field-input-0" helpertext="" label="Test label">
+            <slot name="helper-text" slot="helper-text"></slot>
+          </ic-input-label>
+          <ic-input-component-container size="medium" validationstatus="">
+            <input aria-describedby="" aria-invalid="false" aria-label="Test label" autocapitalize="off" autocomplete="off" id="ic-text-field-input-0" inputmode="text" name="ic-text-field-input-0" placeholder="Placeholder" type="text" value="">
+          </ic-input-component-container>
+          <ic-input-validation arialivemode="polite" for="ic-text-field-input-0" message="" status=""></ic-input-validation>
+        </ic-input-container>
+      </template>
+      <input class="ic-input" name="ic-text-field-input-0" type="hidden" value="">
+    </ic-text-field>
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should render with slotted checkbox label: renders-with-slotted-label 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-medium" label="test checkbox group">
+  <template shadowrootmode="open">
+    <fieldset aria-labelledby="">
+      <legend>
+        <ic-input-label helpertext="" label="test checkbox group">
+          <slot name="label" slot="label"></slot>
+          <slot name="helper-text" slot="helper-text"></slot>
+        </ic-input-label>
+      </legend>
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" message="" status=""></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-medium" label="Americano" value="valueName1">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" id="ic-checkbox-Americano-test-checkbox-group" role="checkbox" type="checkbox" value="valueName1">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-Americano-test-checkbox-group">
+            Americano
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-Americano-test-checkbox-group-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+  <ic-checkbox additional-field-display="static" checked="" class="ic-checkbox-medium" value="valueName2">
+    <template shadowrootmode="open">
+      <div class="container">
+        <svg class="checkmark" clip-rule="evenodd" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <title>
+            checkmark icon
+          </title>
+          <path d="M21 6.285l-11.16 12.733-6.84-6.018 1.319-1.49 5.341 4.686 9.865-11.196 1.475 1.285z"></path>
+        </svg>
+        <input aria-label="Coffee" checked="" class="checkbox checked" id="ic-checkbox-Coffee-test-checkbox-group" role="checkbox" type="checkbox" value="valueName2">
+        <slot name="label"></slot>
+      </div>
+      <span class="sr-only" id="ic-checkbox-Coffee-test-checkbox-group-additional-field-description" role="alert"></span>
+    </template>
+    <span for="ic-checkbox-Coffee-test-checkbox-group" slot="label">
+      Coffee
+      <ic-status-tag label="hot" status="warning"></ic-status-tag>
+    </span>
+  </ic-checkbox>
+  <ic-checkbox additional-field-display="static" checked="" class="ic-checkbox-medium" value="valueName3">
+    <template shadowrootmode="open">
+      <div class="container">
+        <svg class="checkmark" clip-rule="evenodd" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <title>
+            checkmark icon
+          </title>
+          <path d="M21 6.285l-11.16 12.733-6.84-6.018 1.319-1.49 5.341 4.686 9.865-11.196 1.475 1.285z"></path>
+        </svg>
+        <input aria-label="Slot Coffee" checked="" class="checkbox checked" id="ic-checkbox-Slot-Coffee-test-checkbox-group" role="checkbox" type="checkbox" value="valueName3">
+        <slot name="label"></slot>
+      </div>
+      <span class="sr-only" id="ic-checkbox-Slot-Coffee-test-checkbox-group-additional-field-description" role="alert"></span>
+    </template>
+    <span for="ic-checkbox-Slot-Coffee-test-checkbox-group" slot="label">
+      <b>
+        Slot Coffee
+      </b>
+    </span>
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should render with validation status: renders-with-validation 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-medium" hide-label="" label="test label" name="test" validation-status="error" validation-text="error message">
+  <template shadowrootmode="open">
+    <span aria-hidden="true" class="screen-reader-only-text" id="screenReaderOnlyText">
+      test label invalid data
+    </span>
+    <fieldset aria-labelledby="screenReaderOnlyText test-validation-text" id="test">
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" class="show-validation" for="test" message="error message" status="error"></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-medium" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should render with validation-aria-live: renders-with-validation-aria-live 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-medium" hide-label="" label="test label" name="test" validation-aria-live="assertive" validation-status="error" validation-text="error message">
+  <template shadowrootmode="open">
+    <span aria-hidden="true" class="screen-reader-only-text" id="screenReaderOnlyText">
+      test label invalid data
+    </span>
+    <fieldset aria-labelledby="screenReaderOnlyText test-validation-text" id="test">
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="assertive" class="show-validation" for="test" message="error message" status="error"></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-medium" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should render: renders 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-medium" label="test label" name="test">
+  <template shadowrootmode="open">
+    <fieldset aria-labelledby="" id="test">
+      <legend>
+        <ic-input-label helpertext="" label="test label">
+          <slot name="label" slot="label"></slot>
+          <slot name="helper-text" slot="helper-text"></slot>
+        </ic-input-label>
+      </legend>
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" for="test" message="" status=""></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-medium" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should set disabled attribute to false on static additional field when checked: renders-with-disabled-attribute-removed-from-field 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-medium" hide-label="" label="test label" name="test" validation-status="error">
+  <template shadowrootmode="open">
+    <span aria-hidden="true" class="screen-reader-only-text" id="screenReaderOnlyText">
+      test label invalid data
+    </span>
+    <fieldset aria-labelledby="screenReaderOnlyText test-validation-text" id="test">
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" class="show-validation" for="test" message="" status="error"></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" checked="" class="ic-checkbox-medium" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <svg class="checkmark" clip-rule="evenodd" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <title>
+            checkmark icon
+          </title>
+          <path d="M21 6.285l-11.16 12.733-6.84-6.018 1.319-1.49 5.341 4.686 9.865-11.196 1.475 1.285z"></path>
+        </svg>
+        <input checked="" class="checkbox checked" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+      <div class="dynamic-container">
+        <div class="dynamic-field-container">
+          <div class="additional-field-wrapper">
+            <slot name="additional-field"></slot>
+          </div>
+        </div>
+      </div>
+    </template>
+    <ic-text-field disabled="false" label="Test label" placeholder="Placeholder" slot="additional-field" value="">
+      <template shadowrootmode="open">
+        <ic-input-container>
+          <ic-input-label for="ic-text-field-input-5" helpertext="" label="Test label">
+            <slot name="helper-text" slot="helper-text"></slot>
+          </ic-input-label>
+          <ic-input-component-container size="medium" validationstatus="">
+            <input aria-describedby="" aria-invalid="false" aria-label="Test label" autocapitalize="off" autocomplete="off" id="ic-text-field-input-5" inputmode="text" name="ic-text-field-input-5" placeholder="Placeholder" type="text" value="">
+          </ic-input-component-container>
+          <ic-input-validation arialivemode="polite" for="ic-text-field-input-5" message="" status=""></ic-input-validation>
+        </ic-input-container>
+      </template>
+      <input class="ic-input" name="ic-text-field-input-5" type="hidden" value="">
+    </ic-text-field>
+    <input class="ic-input" name="test" type="hidden" value="test">
+  </ic-checkbox>
+  <ic-checkbox additional-field-display="static" checked="" class="ic-checkbox-medium" label="test label" value="test2">
+    <template shadowrootmode="open">
+      <div class="container">
+        <svg class="checkmark" clip-rule="evenodd" fill-rule="evenodd" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <title>
+            checkmark icon
+          </title>
+          <path d="M21 6.285l-11.16 12.733-6.84-6.018 1.319-1.49 5.341 4.686 9.865-11.196 1.475 1.285z"></path>
+        </svg>
+        <input checked="" class="checkbox checked" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test2">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+      <div class="dynamic-container">
+        <div class="dynamic-field-container">
+          <div class="additional-field-wrapper">
+            <slot name="additional-field"></slot>
+          </div>
+        </div>
+      </div>
+    </template>
+    <div slot="additional-field">
+      <ic-text-field disabled="false" label="Test label" placeholder="Placeholder" value="">
+        <template shadowrootmode="open">
+          <ic-input-container>
+            <ic-input-label for="ic-text-field-input-6" helpertext="" label="Test label">
+              <slot name="helper-text" slot="helper-text"></slot>
+            </ic-input-label>
+            <ic-input-component-container size="medium" validationstatus="">
+              <input aria-describedby="" aria-invalid="false" aria-label="Test label" autocapitalize="off" autocomplete="off" id="ic-text-field-input-6" inputmode="text" name="ic-text-field-input-6" placeholder="Placeholder" type="text" value="">
+            </ic-input-component-container>
+            <ic-input-validation arialivemode="polite" for="ic-text-field-input-6" message="" status=""></ic-input-validation>
+          </ic-input-container>
+        </template>
+        <input class="ic-input" name="ic-text-field-input-6" type="hidden" value="">
+      </ic-text-field>
+      <ic-text-field disabled="false" label="Test label" placeholder="Placeholder" value="">
+        <template shadowrootmode="open">
+          <ic-input-container>
+            <ic-input-label for="ic-text-field-input-7" helpertext="" label="Test label">
+              <slot name="helper-text" slot="helper-text"></slot>
+            </ic-input-label>
+            <ic-input-component-container size="medium" validationstatus="">
+              <input aria-describedby="" aria-invalid="false" aria-label="Test label" autocapitalize="off" autocomplete="off" id="ic-text-field-input-7" inputmode="text" name="ic-text-field-input-7" placeholder="Placeholder" type="text" value="">
+            </ic-input-component-container>
+            <ic-input-validation arialivemode="polite" for="ic-text-field-input-7" message="" status=""></ic-input-validation>
+          </ic-input-container>
+        </template>
+        <input class="ic-input" name="ic-text-field-input-7" type="hidden" value="">
+      </ic-text-field>
+    </div>
+    <input class="ic-input" name="test" type="hidden" value="test2">
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should test checkbox option as submit on form 1`] = `
+<ic-checkbox additional-field-display="static" form="new-form" id="ic-checkbox" label="IC Checkbox Test" selected="" value="test-value">
+  <template shadowrootmode="open">
+    <div class="container">
+      <input class="checkbox" form="new-form" id="ic-checkbox-IC-Checkbox-Test-undefined" role="checkbox" type="checkbox" value="test-value">
+      <ic-typography class="checkbox-label" variant="body">
+        <label htmlfor="ic-checkbox-IC-Checkbox-Test-undefined">
+          IC Checkbox Test
+        </label>
+      </ic-typography>
+    </div>
+    <span class="sr-only" id="ic-checkbox-IC-Checkbox-Test-undefined-additional-field-description" role="alert"></span>
+  </template>
+</ic-checkbox>
+`;
+
+exports[`ic-checkbox-group should test labelNameHandler 1`] = `
+<ic-checkbox-group class="ic-checkbox-group-medium" label="test label" name="test">
+  <template shadowrootmode="open">
+    <fieldset aria-labelledby="" id="test">
+      <legend>
+        <ic-input-label helpertext="" label="test label">
+          <slot name="label" slot="label"></slot>
+          <slot name="helper-text" slot="helper-text"></slot>
+        </ic-input-label>
+      </legend>
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" for="test" message="" status=""></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-medium" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" id="ic-checkbox-test-label-test-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-test-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-test-label-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+</ic-checkbox-group>
+`;
+
+exports[`ic-checkbox-group should test labelNameHandler 2`] = `
+<ic-checkbox-group class="ic-checkbox-group-medium" label="new label" name="test">
+  <template shadowrootmode="open">
+    <fieldset aria-labelledby="" id="test">
+      <legend>
+        <ic-input-label helpertext="" label="new label">
+          <slot name="label" slot="label"></slot>
+          <slot name="helper-text" slot="helper-text"></slot>
+        </ic-input-label>
+      </legend>
+      <div class="checkboxes-container">
+        <slot></slot>
+      </div>
+    </fieldset>
+    <ic-input-validation arialivemode="polite" for="test" message="" status=""></ic-input-validation>
+  </template>
+  <ic-checkbox additional-field-display="static" class="ic-checkbox-medium" label="test label" value="test">
+    <template shadowrootmode="open">
+      <div class="container">
+        <input class="checkbox" id="ic-checkbox-test-label-new-label" name="test" role="checkbox" type="checkbox" value="test">
+        <ic-typography class="checkbox-label" variant="body">
+          <label htmlfor="ic-checkbox-test-label-new-label">
+            test label
+          </label>
+        </ic-typography>
+      </div>
+      <span class="sr-only" id="ic-checkbox-test-label-new-label-additional-field-description" role="alert"></span>
+    </template>
+  </ic-checkbox>
+</ic-checkbox-group>
+`;

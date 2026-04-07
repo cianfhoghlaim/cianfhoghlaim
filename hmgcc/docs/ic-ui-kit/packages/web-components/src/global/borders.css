@@ -1,0 +1,37 @@
+/* BORDERS */
+:root {
+  /* BORDER VARIABLES */
+  --ic-border-radius: 2px;
+  --ic-border-radius-inset: 11px;
+  --ic-border-width: 0.0625rem;
+
+  /* BORDER STYLING */
+  --ic-border-disabled: var(--ic-space-1px) dashed
+    var(--ic-color-border-neutral-disabled);
+  --ic-border-light: var(--ic-space-1px) solid var(--ic-architectural-200);
+  --ic-border-default: var(--ic-space-1px) solid var(--ic-architectural-400);
+  --ic-border-hover: var(--ic-space-1px) solid var(--ic-architectural-500);
+  --ic-border-pressed-default: var(--ic-space-1px) solid
+    var(--ic-color-border-neutral-pressed-default);
+  --ic-border-pressed: var(--ic-space-1px) solid
+    var(--ic-color-border-neutral-pressed);
+
+  /* Focus borders */
+  --ic-border-focus-light: 0 0 0 2px var(--ic-architectural-white),
+    0 0 0 4px var(--ic-color-focus-inner), 0 0 0 8px var(--ic-color-focus-outer);
+  --ic-border-focus-dark: 0 0 0 2px var(--ic-architectural-black),
+    0 0 0 4px var(--ic-color-focus-inner), 0 0 0 8px var(--ic-color-focus-outer);
+  --ic-border-focus-inset-light: inset 0 0 0 4px var(--ic-color-focus-outer),
+    inset 0 0 0 6px var(--ic-color-focus-inner),
+    inset 0 0 0 8px var(--ic-architectural-white);
+  --ic-border-focus-inset-dark: inset 0 0 0 4px var(--ic-color-focus-outer),
+    inset 0 0 0 6px var(--ic-color-focus-inner),
+    inset 0 0 0 8px var(--ic-architectural-black);
+
+  /* High contrast */
+  --ic-border-hc: var(--ic-space-1px) solid transparent;
+
+  /* Keyline borders */
+  --ic-border-keyline-darken: 1px solid var(--ic-color-keyline-darken);
+  --ic-border-keyline-lighten: 1px solid var(--ic-color-keyline-lighten);
+}

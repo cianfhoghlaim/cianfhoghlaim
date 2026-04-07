@@ -1,0 +1,13 @@
+@import "../../global/normalize.css";
+
+:host(.ic-tab-panel-hidden) {
+  display: none;
+}
+
+:host(:not(.ic-tab-panel-hidden)) {
+  display: block;
+}
+
+:host {
+  color: var(--ic-color-text-primary);
+}

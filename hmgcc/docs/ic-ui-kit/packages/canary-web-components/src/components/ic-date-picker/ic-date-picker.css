@@ -1,0 +1,42 @@
+@import "../../global/normalize.css";
+
+/**
+* @prop --input-width: Width of the date input field
+  @prop --ic-z-index-date-picker: z-index of date picker.
+*/
+
+:host {
+  display: block;
+  position: relative;
+
+  --month-year-picker-button-width: 5rem;
+  --month-button-width: 5.5rem;
+  --input-field-width: var(--input-width, 19.125rem);
+  --ic-input-label-helpertext-padding: var(--ic-space-xxs);
+}
+
+:host(.ic-date-picker-large) {
+  --month-button-width: 6.3125rem;
+  --input-field-width: var(--input-width, 21.125rem);
+}
+
+:host(.ic-date-picker-small) {
+  --month-button-width: 6.25rem;
+  --input-field-width: var(--input-width, 17.125rem);
+}
+
+:host .date-input-container {
+  position: relative;
+}
+
+ic-date-input {
+  --input-width: var(--input-field-width);
+}
+
+ic-calendar {
+  --ic-z-index-calendar: var(--ic-z-index-date-picker);
+  --ic-calendar-bg: var(--ic-date-picker-calendar-bg);
+  --ic-calendar-border: var(--ic-date-picker-calendar-border);
+  --ic-calendar-elevation: var(--ic-date-picker-calendar-elevation);
+  --ic-calendar-label: var(--ic-date-picker-calendar-label);
+}

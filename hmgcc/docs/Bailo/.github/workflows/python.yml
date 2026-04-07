@@ -1,0 +1,88 @@
+name: Python Unit Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  python_static_checks:
+    runs-on: ubuntu-latest
+    outputs:
+      black: ${{ steps.black.outputs.status }}
+      pylint: ${{ steps.pylint.outputs.status }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-static-${{ hashFiles('lib/python/pyproject.toml') }}-python3.14
+          restore-keys: |
+            ${{ runner.os }}-pip-static-python3.14
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          cd lib/python
+          python -m pip install -e .[test]
+
+      # Black
+      - name: Check formatting
+        run: |
+          cd lib/python
+          black --check --verbose . || echo "black_check=false"
+        continue-on-error: true
+
+      # Pylint
+      - name: Check linting
+        run: |
+          cd lib/python
+          pylint src/bailo --verbose --exit-zero --fail-on=F,E || echo "pylint_error=false"
+        continue-on-error: true
+
+
+  python_test:
+    needs: python_static_checks
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-test-${{ matrix.python-version }}-${{ hashFiles('lib/python/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-test-${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          cd lib/python
+          python -m pip install -e .[test]
+
+      # Pytest
+      - name: Run basic testing
+        run: |
+          cd lib/python
+          python -m pytest
+        env:
+          PYTEST_RUN_PATH: "lib/python"

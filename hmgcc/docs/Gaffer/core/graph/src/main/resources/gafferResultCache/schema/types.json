@@ -1,0 +1,33 @@
+{
+  "types": {
+    "jobId": {
+      "class": "java.lang.String"
+    },
+    "exportKey": {
+      "class": "java.lang.String"
+    },
+    "true": {
+      "class": "java.lang.Boolean",
+      "validateFunctions": [
+        {
+          "class": "uk.gov.gchq.koryphe.impl.predicate.IsTrue"
+        }
+      ]
+    },
+    "timestamp": {
+      "class": "java.lang.Long"
+    },
+    "json": {
+      "class": "[B"
+    },
+    "string": {
+      "class": "java.lang.String"
+    },
+    "stringSet": {
+      "class": "java.util.TreeSet"
+    },
+    "visibility": {
+      "class": "java.lang.String"
+    }
+  }
+}

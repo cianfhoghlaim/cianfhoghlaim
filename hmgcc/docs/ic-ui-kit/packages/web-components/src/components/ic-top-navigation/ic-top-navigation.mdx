@@ -1,0 +1,17 @@
+import { Meta, Stories, Markdown } from "@storybook/addon-docs/blocks";
+import readme from "./readme.md";
+import navigationButtonReadme from "../ic-navigation-button/readme.md";
+import navigationItemReadme from "../ic-navigation-item/readme.md";
+import navigationGroupReadme from "../ic-navigation-group/readme.md";
+import * as IcTopNavigationStories from "./ic-top-navigation.stories";
+
+<Meta of={IcTopNavigationStories} />
+
+<Markdown>
+  {readme +
+    navigationItemReadme +
+    navigationGroupReadme +
+    navigationButtonReadme}
+</Markdown>
+
+<Stories />

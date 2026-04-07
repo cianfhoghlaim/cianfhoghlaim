@@ -1,0 +1,10 @@
+import { Meta, Stories, Markdown } from "@storybook/addon-docs/blocks";
+import readme from "./readme.md";
+import dataRowReadme from "../ic-data-row/readme.md";
+import * as IcDataListStories from "./ic-data-list.stories";
+
+<Meta of={IcDataListStories} />
+
+<Markdown>{readme + dataRowReadme}</Markdown>
+
+<Stories />

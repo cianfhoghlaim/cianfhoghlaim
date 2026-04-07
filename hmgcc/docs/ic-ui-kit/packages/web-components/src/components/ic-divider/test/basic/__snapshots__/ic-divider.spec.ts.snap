@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ic-divider correctly sets foregroundColor on brand change: brand-change-dark 1`] = `
+<ic-divider aria-hidden="true" class="ic-divider-horizontal ic-divider-solid ic-divider-thin ic-side-navigation-keyline ic-theme-light" role="listitem" slot="primary-navigation">
+  <!---->
+  <hr>
+</ic-divider>
+`;
+
+exports[`ic-divider correctly sets foregroundColor on brand change: brand-change-light 1`] = `
+<ic-divider aria-hidden="true" class="ic-divider-horizontal ic-divider-solid ic-divider-thin ic-side-navigation-keyline ic-theme-dark" role="listitem" slot="primary-navigation">
+  <!---->
+  <hr>
+</ic-divider>
+`;
+
+exports[`ic-divider should render 1`] = `
+<ic-divider class="ic-divider-horizontal ic-divider-solid ic-divider-thin">
+  <!---->
+  <hr>
+</ic-divider>
+`;
+
+exports[`ic-divider should render a label with the h4 typography variant when weight is set to very-thick and a label is provided 1`] = `
+<ic-divider aria-orientation="horizontal" class="ic-divider-horizontal ic-divider-label-center ic-divider-solid ic-divider-very-thick" label="Test label" role="separator" weight="very-thick">
+  <!---->
+  <ic-typography class="ic-divider-label ic-typography-h4">
+    <template shadowrootmode="open">
+      <slot></slot>
+    </template>
+    <p>
+      Test label
+    </p>
+  </ic-typography>
+</ic-divider>
+`;
+
+exports[`ic-divider should render a label with the label typography variant when weight is not set to thick or very-thick and a label is provided 1`] = `
+<ic-divider aria-orientation="horizontal" class="ic-divider-horizontal ic-divider-label-center ic-divider-medium ic-divider-solid" label="Test label" role="separator" weight="medium">
+  <!---->
+  <ic-typography class="ic-divider-label ic-typography-label">
+    <template shadowrootmode="open">
+      <slot></slot>
+    </template>
+    <p>
+      Test label
+    </p>
+  </ic-typography>
+</ic-divider>
+`;
+
+exports[`ic-divider should render a label with the subtitle-large typography variant when weight is set to thick and a label is provided 1`] = `
+<ic-divider aria-orientation="horizontal" class="ic-divider-horizontal ic-divider-label-center ic-divider-solid ic-divider-thick" label="Test label" role="separator" weight="thick">
+  <!---->
+  <ic-typography class="ic-divider-label ic-typography-subtitle-large">
+    <template shadowrootmode="open">
+      <slot></slot>
+    </template>
+    <p>
+      Test label
+    </p>
+  </ic-typography>
+</ic-divider>
+`;
+
+exports[`ic-divider should render with a slotted label 1`] = `
+<ic-divider aria-orientation="horizontal" class="ic-divider-horizontal ic-divider-label-left ic-divider-solid ic-divider-thin" label-placement="left" role="separator">
+  <!---->
+  <div class="ic-divider-label-container">
+    <ic-typography slot="label" variant="label">
+      <p style="width: max-content;">
+        Slotted label left
+      </p>
+    </ic-typography>
+  </div>
+</ic-divider>
+`;

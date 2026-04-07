@@ -1,0 +1,13 @@
+import {
+  Meta,
+  Stories,
+  Markdown
+} from "@storybook/addon-docs/blocks";
+import readme from "../../../web-components/src/components/ic-link/readme.md";
+import * as IcLinkStories from './ic-link.stories';
+
+<Meta of={IcLinkStories} />
+
+<Markdown>{readme}</Markdown>
+
+<Stories />

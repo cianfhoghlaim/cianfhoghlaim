@@ -1,0 +1,582 @@
+import { OpenApiGeneratorV3, OpenAPIRegistry, RouteConfig } from '@asteasolutions/zod-to-openapi'
+import type { AnyZodObject } from 'zod'
+
+import { ModelScanResponseSchema, TrivyScanResultResponseSchema } from '../clients/artefactScan.js'
+import { ArtefactScanState } from '../connectors/artefactScanning/Base.js'
+import { z } from '../lib/zod.js'
+import { SystemRoles } from '../models/Model.js'
+import { TransferStatus } from '../models/ModelTransfer.js'
+import { Decision, ResponseKind } from '../models/Response.js'
+import { ArtefactKind, SeverityLevel, SeverityLevelKeys } from '../models/Scan.js'
+import { TokenScope } from '../models/Token.js'
+import { SchemaKind } from '../types/enums.js'
+import { FederationState, MirrorKind } from '../types/types.js'
+import config from '../utils/config.js'
+
+export const registry = new OpenAPIRegistry()
+
+export type PathConfig = RouteConfig & { schema: AnyZodObject }
+export function registerPath(config: PathConfig) {
+  const routeConfig: RouteConfig = {
+    ...config,
+  }
+
+  if (config.schema) {
+    routeConfig.request = {
+      params: config.schema.shape.params,
+      query: config.schema.shape.query,
+    }
+
+    if (config.schema.shape.body) {
+      routeConfig.request.body = {
+        content: {
+          'application/json': {
+            schema: config.schema.shape.body,
+          },
+        },
+      }
+    }
+  }
+
+  delete (routeConfig as any).schema
+  registry.registerPath(routeConfig)
+}
+
+export const errorSchemaContent = {
+  'application/json': {
+    schema: z.object({
+      name: z.string().openapi({ example: 'Error' }),
+      message: z.string().openapi({ example: 'A human readable error message' }),
+      context: z.unknown().openapi({ example: { example: 'Contextual information about the request' } }),
+    }),
+  },
+}
+
+export const systemStatusSchema = z.object({
+  code: z.number().openapi({ example: 200 }),
+  ping: z.string().openapi({ example: 'pong' }),
+  federation: z.object({
+    id: z.string().openapi({ example: 'my-bailo' }),
+    state: z.nativeEnum(FederationState).openapi({ example: 'readOnly' }),
+  }),
+})
+
+export const modelTransferSchema = z.object({
+  _id: z.string().openapi({ example: '65df1a0e8c2b7c0012f0abcd' }),
+  modelId: z.string().openapi({ example: '65df1a0e8c2b7c0012f0abcd' }),
+  peerId: z.string().openapi({ example: '65df1a0e8c2b7c0012f0abcd' }),
+  status: z.nativeEnum(TransferStatus).openapi({ example: TransferStatus.InProgress }),
+  createdBy: z.string().openapi({ example: 'bob' }),
+  createdAt: z.string().openapi({ example: new Date().toISOString() }),
+  updatedAt: z.string().openapi({ example: new Date().toISOString() }),
+})
+
+export const remoteFederationConfigSchema = z.object({
+  state: z.nativeEnum(FederationState).openapi({ example: 'readOnly' }),
+  baseUrl: z.string().openapi({ example: 'https://example.com' }),
+  label: z.string().openapi({ example: 'My Bailo' }),
+})
+
+export const peerConfigStatusSchema = z.object({
+  config: remoteFederationConfigSchema,
+  status: systemStatusSchema,
+})
+
+export const peersConfigStatusSchema = z.object({
+  peers: z.record(z.string(), peerConfigStatusSchema),
+})
+
+export const modelCardInterfaceSchema = z.object({
+  schemaId: z.string().openapi({ example: 'minimal-general-v10-beta' }),
+  version: z.number().openapi({ example: 5 }),
+  createdBy: z.string().openapi({ example: 'user' }),
+  metadata: z.object({
+    overview: z.object({}),
+  }),
+})
+
+export const modelCardRevisionInterfaceSchema = z.object({
+  modelId: z.string().openapi({ example: 'yolo-v4-abcdef' }),
+  schemaId: z.string().openapi({ example: 'minimal-general-v10-beta' }),
+
+  version: z.number().openapi({ example: 5 }),
+  metadata: z.object({
+    overview: z.object({}),
+  }),
+
+  createdBy: z.string().openapi({ example: 'user' }),
+  createdAt: z.string().openapi({ example: new Date().toISOString() }),
+  updatedAt: z.string().openapi({ example: new Date().toISOString() }),
+})
+
+export const modelInterfaceSchema = z.object({
+  id: z.string().openapi({ example: 'yolo-v4-abcdef' }),
+
+  name: z.string().openapi({ example: 'Yolo v4' }),
+  kind: z.string().openapi({ example: 'model' }),
+  description: z.string().openapi({ example: 'You only look once' }),
+  organisation: z.string().openapi({ example: 'Acme Corp' }),
+  state: z.string().openapi({ example: 'development' }),
+  tags: z.array(z.string()).openapi({ example: ['tag', 'tagb'] }),
+  card: modelCardInterfaceSchema,
+
+  collaborators: z.array(
+    z.object({
+      entity: z.string().openapi({ example: 'user:user' }),
+      roles: z.array(z.string()).openapi({ example: ['owner', 'contributor'] }),
+    }),
+  ),
+
+  visibility: z.string().openapi({ example: 'public' }),
+  deleted: z.boolean().openapi({ example: false }),
+
+  createdAt: z.string().openapi({ example: new Date().toISOString() }),
+  updatedAt: z.string().openapi({ example: new Date().toISOString() }),
+})
+
+export const artefactScanningConnectorInfo = z.array(
+  z.object({
+    toolName: z.string().openapi({ example: 'Clam AV' }),
+    scannerVersion: z.string().optional().openapi({ example: '2.4.0' }),
+    artefactKind: z.nativeEnum(ArtefactKind).openapi({ example: 'file' }),
+  }),
+)
+
+export const scanInterfaceSchema = z.object({
+  artefactKind: z.nativeEnum(ArtefactKind).openapi({ example: 'file' }),
+  fileId: z.string().optional().openapi({ example: '507f1f77bcf86cd799439011' }),
+  layerDigest: z
+    .string()
+    .optional()
+    .openapi({ example: 'sha256:cbbf2f9a99b47fc460d422812b6a5adff7dfee951d8fa2e4a98caa0382cfbdbf' }),
+  toolName: z.string().openapi({ example: 'Clam AV' }),
+  scannerVersion: z.string().optional().openapi({ example: '1.4.2' }),
+  state: z.nativeEnum(ArtefactScanState).openapi({ example: 'complete' }),
+  summary: z
+    .array(
+      z.object({
+        severity: z
+          .enum(Object.values(SeverityLevel) as [SeverityLevelKeys, ...SeverityLevelKeys[]])
+          .openapi(SeverityLevel.HIGH),
+        vulnerabilityDescription: z
+          .string()
+          .openapi(
+            'CVE-2025-69419: openssl: OpenSSL: Arbitrary code execution due to out-of-bounds write in PKCS#12 processing',
+          ),
+      }),
+    )
+    .optional(),
+  additionalInfo: z.union([TrivyScanResultResponseSchema, ModelScanResponseSchema]).optional(),
+  lastRunAt: z.string().openapi({ example: new Date().toISOString() }),
+  _id: z.string().openapi({ example: '67cecbffd2a0951d1693b396' }),
+  id: z.string().openapi({ example: '67cecbffd2a0951d1693b396' }),
+})
+
+export const fileWithScanInterfaceSchema = z.object({
+  modelId: z.string().openapi({ example: 'yolo-v4-abcdef' }),
+
+  name: z.string().openapi({ example: 'yolo.tar.gz' }),
+  size: z.number().positive().openapi({ example: 1024 }),
+  mime: z.string().openapi({ example: 'application/tar' }),
+
+  path: z.string().openapi({ example: '/model/yolo-v4-abcdef/files/abcdef' }),
+
+  complete: z.boolean().openapi({ example: true }),
+
+  scanResults: z
+    .array(
+      scanInterfaceSchema.pick({
+        artefactKind: true,
+        fileId: true,
+        toolName: true,
+        scannerVersion: true,
+        state: true,
+        summary: true,
+        lastRunAt: true,
+        _id: true,
+        id: true,
+      }),
+    )
+    .optional(),
+
+  createdAt: z.string().openapi({ example: new Date().toISOString() }),
+  updatedAt: z.string().openapi({ example: new Date().toISOString() }),
+})
+
+export const SeverityCountsSchema = z.record(
+  z.enum(Object.values(SeverityLevel) as [SeverityLevelKeys, ...SeverityLevelKeys[]]).openapi(SeverityLevel.HIGH),
+  z.number().openapi('3'),
+)
+
+export const LayerScanSummary = scanInterfaceSchema
+  .pick({
+    toolName: true,
+    scannerVersion: true,
+    state: true,
+    summary: true,
+    lastRunAt: true,
+    layerDigest: true,
+  })
+  .extend({
+    layerDigest: z.string(),
+  })
+export const ScanSummarySchema = z.array(LayerScanSummary)
+
+export const imageWithScanResultsSchema = z.object({
+  repository: z.string().openapi({ example: 'yolo-v4-abcdef' }),
+  name: z.string().openapi({ example: 'yolo' }),
+  tags: z.array(z.string()).openapi({ example: ['v1-cpu', 'v2-gpu'] }),
+  scanSummaries: z.array(
+    z.object({
+      state: z.nativeEnum(ArtefactScanState),
+      severityCounts: z.object({
+        tag: z.string().openapi('v1-cpu'),
+        severity: SeverityCountsSchema,
+      }),
+      imageSize: z.number(),
+    }),
+  ),
+})
+
+export const imageTagWithScanResultsSchema = z.object({
+  state: z.nativeEnum(ArtefactScanState),
+  tag: z.string().openapi({ example: 'v1-cpu' }),
+  scanResults: z
+    .array(
+      scanInterfaceSchema.pick({
+        artefactKind: true,
+        fileId: true,
+        toolName: true,
+        scannerVersion: true,
+        state: true,
+        summary: true,
+        lastRunAt: true,
+        _id: true,
+        id: true,
+      }),
+    )
+    .optional(),
+  severityCounts: SeverityCountsSchema,
+  imageSize: z.number(),
+})
+
+export const releaseInterfaceSchema = z.object({
+  modelId: z.string().openapi({ example: 'yolo-v4-abcdef' }),
+  modelCardVersion: z.number().openapi({ example: 5 }),
+
+  semver: z.string().openapi({ example: 'v1.0.0' }),
+  notes: z.string().openapi({ example: 'An example release' }),
+
+  minor: z.boolean().openapi({ example: false }),
+  draft: z.boolean().openapi({ example: false }),
+
+  fileIds: z.array(z.string()).openapi({ example: ['507f1f77bcf86cd799439011'] }),
+  images: z.array(z.string()).openapi({ example: ['/yolo-v4-abcdef/example:v1.0.0'] }),
+
+  comments: z
+    .array(
+      z.object({
+        comment: z.string().openapi({ example: 'This a comment' }),
+        user: z.string().openapi({ example: 'User' }),
+        createdAt: z.string().openapi({ example: new Date().toISOString() }),
+      }),
+    )
+    .optional(),
+
+  deleted: z.boolean().openapi({ example: false }),
+
+  files: z.array(fileWithScanInterfaceSchema).optional(),
+
+  createdBy: z.string().openapi({ example: 'user' }),
+  createdAt: z.string().openapi({ example: new Date().toISOString() }),
+  updatedAt: z.string().openapi({ example: new Date().toISOString() }),
+})
+
+export const reviewInterfaceSchema = z.object({
+  semver: z.string().optional().openapi({ example: 'v1.0.0' }),
+  accessRequestId: z.string().optional().openapi({ example: undefined }),
+  modelId: z.string().openapi({ example: 'yolo-v4-abcdef' }),
+
+  kind: z.string().openapi({ example: 'release' }),
+  role: z.string().openapi({ example: 'mtr' }),
+
+  responses: z.array(z.string().optional()),
+
+  createdAt: z.string().openapi({ example: new Date().toISOString() }),
+  updatedAt: z.string().openapi({ example: new Date().toISOString() }),
+})
+
+export const responseInterfaceSchema = z.object({
+  user: z.string().optional().openapi({ example: 'Joe Bloggs' }),
+  kind: z.nativeEnum(ResponseKind).openapi({ example: ResponseKind.Comment }),
+  role: z.string().optional().openapi({ example: 'mtr' }),
+  decision: z.nativeEnum(Decision).optional().openapi({ example: Decision.Approve }),
+  comment: z.string().optional().openapi({ example: 'Looks good!' }),
+  commentEditedAt: z.string().optional().openapi({ example: new Date().toISOString() }),
+
+  createdAt: z.string().openapi({ example: new Date().toISOString() }),
+  updatedAt: z.string().openapi({ example: new Date().toISOString() }),
+})
+
+export const accessRequestInterfaceSchema = z.object({
+  id: z.string().openapi({ example: 'looking-at-pictures-zyxwvu' }),
+  modelId: z.string().openapi({ example: 'yolo-v4-abcdef' }),
+
+  schemaId: z.string().openapi({ example: 'minimal-access-request-v1' }),
+  metadata: z.object({
+    overview: z.object({
+      name: z.string().openapi({ example: 'Looking at Pictures' }),
+      entities: z.array(z.string()).openapi({ example: ['user:user', 'group:test'] }),
+
+      endDate: z.string().optional().openapi({ example: new Date().toISOString() }),
+    }),
+  }),
+
+  comments: z
+    .array(
+      z.object({
+        comment: z.string().openapi({ example: 'This a comment' }),
+        user: z.string().openapi({ example: 'User' }),
+        createdAt: z.string().openapi({ example: new Date().toISOString() }),
+      }),
+    )
+    .optional(),
+
+  deleted: z.boolean().openapi({ example: false }),
+
+  createdBy: z.string().openapi({ example: 'user' }),
+  createdAt: z.string().openapi({ example: new Date().toISOString() }),
+  updatedAt: z.string().openapi({ example: new Date().toISOString() }),
+})
+
+export const schemaInterfaceSchema = z.object({
+  id: z.string().openapi({ example: 'minimal-upload-v1' }),
+  name: z.string().openapi({ example: 'Minimal Upload Schema v1' }),
+  description: z.string().openapi({ example: 'A minimal upload schema' }),
+
+  active: z.boolean().openapi({ example: true }),
+  hidden: z.boolean().openapi({ example: false }),
+
+  kind: z.nativeEnum(SchemaKind).openapi({ example: 'model' }),
+  jsonSchema: z.object({}).openapi({ example: {} }),
+
+  createdAt: z.string().openapi({ example: new Date().toISOString() }),
+  updatedAt: z.string().openapi({ example: new Date().toISOString() }),
+})
+
+export const schemaMigrationInterfaceSchema = z.object({
+  name: z.string().openapi({ example: 'My Schema Migration' }),
+  description: z.string().openapi({ example: 'An example schema migration' }),
+  sourceSchema: z.string().openapi({ example: 'v1' }),
+  targetSchema: z.string().openapi({ example: 'v2' }),
+
+  questionMigrations: z.array(
+    z.object({
+      id: z.string(),
+      kind: z.string().openapi({ example: 'move' }),
+      sourcePath: z.string().openapi({ example: 'section1.question1' }),
+      targetPath: z.string().optional().openapi({ example: 'section2.question1' }),
+      propertyType: z.string().openapi({ example: 'string' }),
+    }),
+  ),
+
+  createdAt: z.string().openapi({ example: new Date().toISOString() }),
+  updatedAt: z.string().openapi({ example: new Date().toISOString() }),
+})
+
+export const inferenceInterfaceSchema = z.object({
+  modelId: z.string().openapi({ example: 'yolo-v4-abcdef' }),
+  image: z.string().openapi({ example: 'yolov4' }),
+  tag: z.string().openapi({ example: 'latest' }),
+
+  description: z.string().openapi({ example: 'A deployment for running Yolo V4 in Bailo' }),
+
+  settings: z.object({
+    processorType: z.string().openapi({ example: 'cpu' }),
+    memory: z.number().optional().openapi({ example: 4 }),
+    port: z.number().openapi({ example: 8080 }),
+  }),
+
+  createdAt: z.string().openapi({ example: new Date().toISOString() }),
+  updatedAt: z.string().openapi({ example: new Date().toISOString() }),
+})
+
+const mirrorMetadataBaseSchema = z.object({
+  schemaVersion: z.literal(1),
+  importKind: z.string(),
+  sourceModelId: z.string(),
+  mirroredModelId: z.string(),
+  exporter: z.string(),
+  exportId: z.string(),
+})
+export const mirrorMetadataSchema = z.union([
+  mirrorMetadataBaseSchema.extend({ importKind: z.literal(MirrorKind.Documents) }),
+  mirrorMetadataBaseSchema.extend({ importKind: z.literal(MirrorKind.File), filePath: z.string() }),
+  mirrorMetadataBaseSchema.extend({ importKind: z.literal(MirrorKind.Image), distributionPackageName: z.string() }),
+])
+
+export const permissionDetailSchema = z.discriminatedUnion('hasPermission', [
+  z.object({
+    hasPermission: z.literal(true),
+  }),
+  z.object({
+    hasPermission: z.literal(false),
+    info: z.string(),
+  }),
+])
+
+export const entryUserPermissionsSchema = z.object({
+  editEntry: permissionDetailSchema,
+  editEntryCard: permissionDetailSchema,
+
+  createRelease: permissionDetailSchema,
+  editRelease: permissionDetailSchema,
+  deleteRelease: permissionDetailSchema,
+
+  pushModelImage: permissionDetailSchema,
+
+  createInferenceService: permissionDetailSchema,
+  editInferenceService: permissionDetailSchema,
+  deleteInferenceService: permissionDetailSchema,
+
+  exportMirroredModel: permissionDetailSchema,
+})
+
+export const accessRequestUserPermissionsSchema = z.object({
+  editAccessRequest: permissionDetailSchema,
+  deleteAccessRequest: permissionDetailSchema,
+})
+
+export const userTokenSchema = z.object({
+  description: z.string().openapi({ example: 'user token' }),
+
+  scope: z.nativeEnum(TokenScope).openapi({ example: 'models' }),
+  modelIds: z.array(z.string()).openapi({ example: ['yozlo-v4-abcdef'] }),
+  actions: z.array(z.string()).openapi({ example: ['image:read', 'file:read'] }),
+
+  accessKey: z.string().openapi({ example: 'bailo-iot4hj3890tqaji' }),
+  secretKey: z.string().openapi({ example: '987895347u89fj389agre' }),
+
+  createdAt: z.string().openapi({ example: new Date().toISOString() }),
+  updatedAt: z.string().openapi({ example: new Date().toISOString() }),
+})
+
+export const userInterfaceSchema = z.object({
+  dn: z.string().openapi({ example: 'user' }),
+  isAdmin: z.boolean().openapi({ example: false }),
+
+  createdAt: z.string().openapi({ example: new Date().toISOString() }),
+  updatedAt: z.string().openapi({ example: new Date().toISOString() }),
+})
+
+export const webhookInterfaceSchema = z.object({
+  id: z.string().openapi({ example: 'webhook-zyxwvu' }),
+  modelId: z.string().openapi({ example: 'yolo-v4-abcdef' }),
+  name: z.string().openapi({ example: 'webhook' }),
+
+  uri: z.string().openapi({ example: 'http://host:8080/webhook' }),
+  token: z.string().openapi({ example: 'abcd' }),
+  insecureSSL: z.boolean().openapi({ example: false }),
+  events: z
+    .array(z.string())
+    .openapi({ example: ['createRelease', 'updateRelease', 'createReviewResponse', 'createAccessRequest'] }),
+  active: z.boolean().openapi({ example: true }),
+
+  deleted: z.boolean().openapi({ example: false }),
+
+  createdAt: z.string().openapi({ example: new Date().toISOString() }),
+  updatedAt: z.string().openapi({ example: new Date().toISOString() }),
+})
+
+export const UserInformationSchema = z.object({
+  email: z.string().optional().openapi({ example: 'user@example.com' }),
+  name: z.string().optional().openapi({ example: 'Joe Bloggs' }),
+  organisation: z.string().optional().openapi({ example: 'Acme Corp' }),
+})
+
+export const reviewRoleSchema = z.object({
+  name: z.string().openapi({ example: 'Reviewer' }),
+  shortName: z.string().openapi({ example: 'reviewer' }),
+  kind: z.string().openapi({ example: 'schema' }),
+  description: z.string().openapi({ example: 'This is an example review role' }),
+  defaultEntities: z.array(z.string()).openapi({ example: ['user:user'] }),
+  lockEntities: z.boolean().openapi({ example: false }),
+  systemRole: z.string().optional().openapi({ example: SystemRoles.Owner }),
+})
+
+export const generateSwaggerSpec = () => {
+  const generator = new OpenApiGeneratorV3(registry.definitions)
+  const tags = [
+    {
+      name: 'model',
+      description:
+        'A model object is the primary object within Bailo.  It contains the modelcard, settings and high level details about the model.',
+    },
+    {
+      name: 'access-request',
+      description:
+        'An access request is required when attempting to download files and images associated with a model.  It tracks users requests to use a model.',
+    },
+    {
+      name: 'file',
+      description:
+        'A file represents an object kept in our storage.  It contains metadata about the file, as well as where it is stored.  These are usually attached to releases.',
+    },
+    {
+      name: 'image',
+      description:
+        'Image endpoints usually interact with our Docker registry, which includes a variety of images related to models.  Similarly to files, these are usually found attached to releases.',
+    },
+    {
+      name: 'modelcard',
+      description:
+        'A modelcard stores information about how a model was created, how to use it and more.  The contents of a model card is configurable by using different schemas.',
+    },
+    {
+      name: 'release',
+      description:
+        'A release contains includes files and images, a specific version of a model card and approval information.  It should be used to track the versioning of a model.',
+    },
+    {
+      name: 'review',
+      description:
+        'The review endpoints allow users to approve or reject releases and access requests.  Multiple different groups can be setup to approve each request.',
+    },
+    {
+      name: 'schema',
+      description:
+        'Schemas are used to define what contents a model card should contain.  They follow the JsonSchema specification.',
+    },
+    {
+      name: 'token',
+      description:
+        'Tokens are used to grant access to models.  They give constrained permissions to Bailo, allowing fine-grained permissions for deployments.',
+    },
+    {
+      name: 'user',
+      description: 'A user represents an individual who has accessed this service.',
+    },
+    {
+      name: 'review role',
+      description:
+        'High-level roles that are dynamically created and allocated. Have system roles (and their respective permission) attributed.',
+    },
+  ]
+
+  if (config.ui.inference?.enabled) {
+    tags.push({
+      name: 'inference',
+      description:
+        'An inference service is used to run models within Bailo. Each contains settings for a specific configuration',
+    })
+  }
+
+  return generator.generateDocument({
+    openapi: '3.0.0',
+    info: {
+      version: '2.0.0',
+      title: 'Bailo API',
+    },
+    tags: tags,
+  })
+}

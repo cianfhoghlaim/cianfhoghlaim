@@ -1,0 +1,25 @@
+@import "../../global/normalize.css";
+
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+ic-typography {
+  --ic-typography-color: var(--ic-popover-parent-label);
+
+  margin: var(--ic-space-xs) var(--ic-space-xs) 0;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+hr {
+  display: flex;
+  align-self: stretch;
+  border: calc(var(--ic-space-xxxs) / 2) solid var(--ic-popover-border);
+  margin: var(--ic-space-xxs) 0 calc(var(--ic-space-sm) / 4);
+}

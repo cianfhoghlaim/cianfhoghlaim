@@ -1,0 +1,15 @@
+import Image from 'next/legacy/image'
+import Box from '@mui/material/Box'
+import bailoAccessRequest from 'public/docs/bailo_access_request.png'
+import DocsWrapper from 'src/docs/DocsWrapper'
+
+# Reviewing an Access Request
+
+Access requests appear in the **Access Request Reviews** tab on the **Review** page. The review process mirrors release
+reviews. Only the **Model Senior Responsible Officer** can approve access requests.
+
+<Box sx={{ maxWidth: '75%', margin: 'auto' }}>
+  <Image alt='open access requests reviews page with a unreviewed request' src={bailoAccessRequest} />
+</Box>
+
+export default ({ children }) => <DocsWrapper>{children}</DocsWrapper>

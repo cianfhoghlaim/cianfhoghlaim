@@ -1,0 +1,13 @@
+import {
+  Meta,
+  Stories,
+  Markdown
+} from "@storybook/addon-docs/blocks";
+import readme from "../../../web-components/src/components/ic-badge/readme.md";
+import * as IcBadgeStories from './ic-badge.stories';
+
+<Meta of={IcBadgeStories} />
+
+<Markdown>{readme}</Markdown>
+
+<Stories />

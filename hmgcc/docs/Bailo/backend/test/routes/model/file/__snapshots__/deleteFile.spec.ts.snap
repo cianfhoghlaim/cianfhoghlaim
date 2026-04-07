@@ -1,0 +1,15 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`routes > file > deleteFile > 200 > ok 1`] = `
+{
+  "message": "Successfully removed file.",
+}
+`;
+
+exports[`routes > file > deleteFile > audit > expected call 1`] = `
+{
+  "message": "Successfully removed release.",
+}
+`;
+
+exports[`routes > file > deleteFile > audit > expected call 2`] = `undefined`;

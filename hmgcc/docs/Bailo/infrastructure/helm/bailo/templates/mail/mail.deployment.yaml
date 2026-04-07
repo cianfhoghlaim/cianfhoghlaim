@@ -1,0 +1,28 @@
+{{- if .Values.mail.enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "bailo.fullname" . }}-mail
+  labels:
+    {{- include "bailo.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: mail
+  template:
+    metadata:
+      labels:
+        name: mail
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ include "bailo.fullname" . }}-mail
+        image: {{ .Values.mail.image }}
+{{- end }}

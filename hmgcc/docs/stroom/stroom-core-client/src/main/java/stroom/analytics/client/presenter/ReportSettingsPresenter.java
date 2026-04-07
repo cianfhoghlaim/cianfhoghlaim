@@ -1,0 +1,84 @@
+/*
+ * Copyright 2016-2025 Crown Copyright
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package stroom.analytics.client.presenter;
+
+import stroom.analytics.client.presenter.ReportSettingsPresenter.ReportSettingsView;
+import stroom.analytics.shared.ReportDoc;
+import stroom.analytics.shared.ReportSettings;
+import stroom.dashboard.shared.DownloadSearchResultFileType;
+import stroom.docref.DocRef;
+import stroom.document.client.event.ChangeUiHandlers;
+import stroom.entity.client.presenter.DocPresenter;
+import stroom.util.shared.NullSafe;
+
+import com.google.gwt.user.client.ui.Focus;
+import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.mvp.client.HasUiHandlers;
+import com.gwtplatform.mvp.client.View;
+
+public class ReportSettingsPresenter
+        extends DocPresenter<ReportSettingsView, ReportDoc> {
+
+    @Inject
+    public ReportSettingsPresenter(final EventBus eventBus, final ReportSettingsView view) {
+        super(eventBus, view);
+        view.setUiHandlers(this);
+    }
+
+    @Override
+    protected void onRead(final DocRef docRef,
+                          final ReportDoc document,
+                          final boolean readOnly) {
+        getView().setFileType(NullSafe.getOrElse(
+                document,
+                ReportDoc::getReportSettings,
+                ReportSettings::getFileType,
+                DownloadSearchResultFileType.EXCEL));
+        getView().setSendEmptyReports(NullSafe.getOrElse(
+                document,
+                ReportDoc::getReportSettings,
+                ReportSettings::isSendEmptyReports,
+                false));
+    }
+
+    @Override
+    protected ReportDoc onWrite(final ReportDoc document) {
+        final ReportSettings reportSettings = ReportSettings
+                .builder()
+                .fileType(getView().getFileType())
+                .sendEmptyReports(getView().isSendEmptyReports())
+                .build();
+        return document.copy()
+                .reportSettings(reportSettings)
+                .build();
+    }
+
+    // --------------------------------------------------------------------------------
+
+
+    public interface ReportSettingsView extends View, Focus, HasUiHandlers<ChangeUiHandlers> {
+
+        DownloadSearchResultFileType getFileType();
+
+        void setFileType(DownloadSearchResultFileType fileType);
+
+        boolean isSendEmptyReports();
+
+        void setSendEmptyReports(boolean sendEmptyReports);
+    }
+}

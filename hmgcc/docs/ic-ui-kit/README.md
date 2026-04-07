@@ -1,0 +1,176 @@
+<!-- markdownlint-disable-next-line -->
+<div align="center">
+<p align="center">
+  <img width="150px" src="/static/icds-logo.png" alt="Logo of the Intelligence Community Design System">
+</p>
+
+<h1 align="center">The UK Intelligence Community UI Kit</h1>
+
+[![OGL V3 License](https://img.shields.io/badge/license-OGLv3-blue.svg)](https://github.com/mi6/ic-design-system/tree/main/LICENSE)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mi6/ic-design-system/tree/main/LICENSE)
+
+</div>
+
+The [Intelligence Community Design System](https://design.sis.gov.uk) helps the United Kingdom's Intelligence Community (MI6, GCHQ, MI5, and HMGCC, our national security partner, along with additional partners) to quickly build powerful capabilities that are accessible and easy to use.
+
+This is a joint project led by [MI6](https://www.sis.gov.uk), working with [GCHQ](https://www.gchq.gov.uk), [MI5](https://www.mi5.gov.uk) and [HMGCC](https://www.hmgcc.gov.uk) (our national security partner).
+
+<!-- markdownlint-disable-next-line -->
+<p align="center">
+  <img src="/static/icds-orgs.png" alt="SIS (MI6), GCHQ and MI5 Logos">
+</p>
+
+This repository holds the UI Kit components. Find the guidance and content of [`design.sis.gov.uk`](https://design.sis.gov.uk) in the [IC Design System guidance site repository](https://github.com/mi6/ic-design-system).
+
+## Why we're doing this
+
+We build a lot of stuff that needs to be quick-to-build, usable and always accessible. We build using a lot of different tech, so creating something that can be consistently accessible and usable across different stacks is critical for us.
+
+The Design System is being used to build our powerful, flexible and complex capabilities that help keep the UK safe and prosperous.
+
+📖 [Read our story](https://design.sis.gov.uk/get-started/a-design-system) to learn more on why we've created our own design system.
+
+### Learning from the best
+
+We track many sources of accessibility expertise, as well as using our internal experts and communities. For example, many of our patterns and components are based on awesome work from the [Government Digital Service (GDS) Design System](https://design-system.service.gov.uk/). Where we can, we'll contribute back!
+
+If you think we could improve something, please do [raise an issue](https://github.com/mi6/ic-ui-kit/issues/new/choose).
+
+## Installing
+
+To install the components, no additional configuration is needed for internal systems. Choose a package depending on which framework you're building with:
+
+* Install the [web component package](packages/web-components/README.md) for use standalone, or with [Svelte](https://design.sis.gov.uk/get-started/install-components/svelte), [Vue](https://design.sis.gov.uk/get-started/install-components/vue) and other web component-compatible frameworks.
+* Install the [React component package](packages/react/README.md) for React-based projects.
+* Install the [NextJS component package](packages/nextjs/README.md) for NextJS projects.
+
+## Developing
+
+You can optionally install [nvm](https://github.com/nvm-sh/nvm) to use the correct node version. After installing nvm on your machine, install the suitable node version:
+
+```console
+nvm install
+```
+
+This is a monorepo using [`lerna`](https://github.com/lerna/lerna). To get started is simple:
+
+```console
+npm install
+npm run bootstrap
+npm run build
+```
+
+Storybook is used during development; this command will launch separate web components and React Storybooks.
+
+```console
+npm run storybook
+```
+
+## Local build and install
+
+Developers are able to build and install components locally, enabling effective testing of apps and IC UI kit components in a local environment.
+
+To get started make sure you are in the top-level directory of `ic-ui-kit` and run:
+
+```console
+./pack-all-tars.sh
+```
+
+This will build all the components, pack them up and log out the paths of archives of each package in the ui-kit.
+
+You can copy the paths output by that script into the `package.json` of your project, replacing the paths of `@ukic/docs`, `@ukic/fonts`, `@ukic/react` and `@ukic/web-components`, including the canary packages if appropriate. The script assumes that ic-ui-kit is in the same directory as your project, be aware you might need to replace `..` with the path on your system.
+
+For example:
+
+### [./package.json](https://github.com/mi6/ic-ui-kit/blob/main/package.json)
+
+```json
+"dependencies": {
+  "@ukic/canary-docs": "../ic-ui-kit/packages/canary-docs/ukic-canary-docs-3.0.0-canary.19.tgz",
+  "@ukic/canary-react": "../ic-ui-kit/packages/canary-react/ukic-canary-react-3.0.0-canary.25.tgz",
+  "@ukic/canary-web-components": "../ic-ui-kit/packages/canary-web-components/ukic-canary-web-components-3.0.0-canary.25.tgz",
+  // ...
+  "@ukic/docs": "../ic-ui-kit/packages/docs/ukic-docs-3.3.0.tgz",
+  "@ukic/fonts": "../ic-ui-kit/packages/fonts/ukic-fonts-3.2.2.tgz",
+  "@ukic/react": "../ic-ui-kit/packages/react/ukic-react-3.10.0.tgz",
+  "@ukic/web-components": "../ic-ui-kit/packages/web-components/ukic-web-components-3.10.0.tgz",
+}
+```
+
+Finally, install the dependencies in your project:
+
+```console
+npm install
+```
+
+## Faster development building with ic-design-system
+
+If you want to build the components in this repository and use them in [`ic-design-system`](https://github.com/mi6/ic-design-system), you can use `npm link`.
+This will speed up development because you do not have to generate a compressed npm package, but rather directly use the package after building it locally.
+
+> [!NOTE]
+> You will need to rebuild the package after every change
+
+First, build the monorepo packages in the top-level directory of `ic-ui-kit`:
+
+```console
+npm run build
+```
+
+For canary:
+
+```console
+npm run build:canary
+```
+
+To build everything:
+
+```console
+npm run build:all
+```
+
+Then, to use the package, make sure you are in the top-level directory of `ic-design-system`. You will need to link the generated build from `ic-ui-kit`, e.g.: 
+
+```console
+npm link ../path/to/ic-ui-kit/packages/react
+```
+
+For canary:
+
+```console
+npm link ../path/to/ic-ui-kit/packages/canary-react
+```
+
+> [!NOTE]
+> Now you can develop and debug faster with `ic-ui-kit` in `ic-design-system`.
+
+## Contributing
+
+We have a couple of resources to help you with contributing.
+
+- To find out more about the different types of contributions, the criteria, raising issues or our release roadmap, read [how to contribute to the Design System and UI Kit](https://design.sis.gov.uk/community/contribute).
+- Make sure to also read our [coding standards and technical instructions](CONTRIBUTING.md).
+- [IC Design System guidance site repository](https://github.com/mi6/ic-design-system) contains the code and content for the Design System guidance site.
+- [IC UI Kit repository](https://github.com/mi6/ic-ui-kit) contains the code and content for the web components.
+- Look for the label [`good first issue`](https://github.com/mi6/ic-ui-kit/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22).
+
+### Security
+
+If you've found a vulnerability, we want to know so that we can fix it. [Our security policy](SECURITY.md) tells you how to do this.
+
+## Questions about the departments
+
+The team is only able to talk about the projects we've put on GitHub 🕵️. We unfortunately can't talk about the work of our departments 😢.
+
+Visit our websites to learn more about:
+
+- The [Secret Intelligence Service (MI6)](https://www.sis.gov.uk).
+- The [Government Communications Headquarters (GCHQ)](https://www.gchq.gov.uk).
+- The [Security Service (MI5)](https://www.mi5.gov.uk).
+- [His Majesty's Government Communications Centre (HMGCC)](https://www.hmgcc.gov.uk) - our national security partner.
+
+## License
+
+Unless stated otherwise, the codebase is released under the [MIT License](https://opensource.org/licenses/MIT). This covers both the codebase and any sample code in the documentation. The documentation is and available under the terms of the [Open Government License v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
+
+© Crown copyright 2022-present
