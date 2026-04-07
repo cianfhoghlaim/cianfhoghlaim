@@ -1,0 +1,19 @@
+# Need glibc for plant_erd_linux_amd64
+FROM frolvlad/alpine-glibc:alpine-3.22_glibc-2.42@sha256:bb5dc38d97ced7d9c014dcada2545a343272e4f6a16addc8a2bcbfbed28d302b
+
+ARG DOCKER_HOST
+ENV DOCKER_HOST=$DOCKER_HOST
+ARG PLANT_ERD_VERSION=v0.4.4
+
+RUN apk add --no-cache \
+    bash \
+    curl \
+  && mkdir /builder \
+  && curl -Ls https://github.com/sue445/plant_erd/releases/download/$PLANT_ERD_VERSION/plant_erd_linux_amd64 -o /builder/plant_erd_linux_amd64 \
+  && chmod u+x /builder/plant_erd_linux_amd64 \
+  && alias ll='ls -l' \
+  && apk del curl
+
+CMD [ "bash", "-c", "./plant_erd_linux_amd64 mysql --host $DOCKER_HOST --port 3307 --database stroom --password my-secret-pw" ]
+
+WORKDIR /builder

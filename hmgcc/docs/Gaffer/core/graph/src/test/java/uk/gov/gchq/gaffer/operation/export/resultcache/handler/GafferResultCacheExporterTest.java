@@ -1,0 +1,208 @@
+/*
+ * Copyright 2017-2021 Crown Copyright
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package uk.gov.gchq.gaffer.operation.export.resultcache.handler;
+
+import com.google.common.collect.Lists;
+import org.assertj.core.api.InstanceOfAssertFactories;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import uk.gov.gchq.gaffer.commonutil.CollectionUtil;
+import uk.gov.gchq.gaffer.data.element.Edge;
+import uk.gov.gchq.gaffer.data.element.Element;
+import uk.gov.gchq.gaffer.exception.SerialisationException;
+import uk.gov.gchq.gaffer.graph.Graph;
+import uk.gov.gchq.gaffer.graph.GraphConfig;
+import uk.gov.gchq.gaffer.jsonserialisation.JSONSerialiser;
+import uk.gov.gchq.gaffer.operation.OperationChain;
+import uk.gov.gchq.gaffer.operation.OperationException;
+import uk.gov.gchq.gaffer.operation.export.resultcache.GafferResultCacheExporter;
+import uk.gov.gchq.gaffer.operation.impl.add.AddElements;
+import uk.gov.gchq.gaffer.store.Context;
+import uk.gov.gchq.gaffer.store.Store;
+import uk.gov.gchq.gaffer.store.StoreProperties;
+import uk.gov.gchq.gaffer.store.schema.Schema;
+import uk.gov.gchq.gaffer.user.User;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.TreeSet;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+
+@ExtendWith(MockitoExtension.class)
+public class GafferResultCacheExporterTest {
+
+    private final User user = new User.Builder()
+            .userId("user01")
+            .opAuths("1", "2", "3")
+            .build();
+    private final Context context = new Context(user);
+    private final String jobId = context.getJobId();
+    private final String key = "key";
+    private final String visibility = "visibility value";
+    private final TreeSet<String> requiredOpAuths = CollectionUtil.treeSet(new String[] {"1", "2"});
+    private final List<?> results = Arrays.asList(1, "2", null);
+    private final byte[][] serialisedResults = {serialise(1), serialise("2"), null};
+    private Graph resultCache;
+
+    @Mock
+    private Store store;
+
+    @BeforeEach
+    public void before() {
+        given(store.getSchema()).willReturn(new Schema());
+        given(store.getProperties()).willReturn(new StoreProperties());
+        resultCache = new Graph.Builder()
+                .config(new GraphConfig.Builder()
+                        .graphId("resultCacheGraph")
+                        .build())
+                .store(store)
+                .build();
+    }
+
+    @Test
+    public void shouldAddResults() throws OperationException, SerialisationException {
+        // Given
+        final GafferResultCacheExporter exporter = new GafferResultCacheExporter(context, jobId, resultCache, visibility, requiredOpAuths);
+
+        // When
+        exporter.add(key, results);
+
+        // Then
+        final ArgumentCaptor<OperationChain<?>> opChain = ArgumentCaptor.forClass(OperationChain.class);
+        verify(store).execute(opChain.capture(), Mockito.any(Context.class));
+        assertThat(opChain.getValue().getOperations()).hasSize(1);
+        final AddElements addElements = (AddElements) opChain.getValue().getOperations().get(0);
+        final List<Element> elements = Lists.newArrayList(addElements.getInput());
+        final Object timestamp = elements.get(0).getProperty("timestamp");
+        final List<Element> expectedElements = createCachedEdges(timestamp,
+                elements.get(0).getProperty("result"),
+                elements.get(1).getProperty("result"),
+                null);
+
+        assertThat(elements).isEqualTo(expectedElements);
+        for (int i = 0; i < elements.size(); i++) {
+            if (null == results.get(i)) {
+                assertThat(elements.get(i).getProperty("result")).isNull();
+            } else {
+                assertThat((byte[]) elements.get(i).getProperty("result"))
+                        .isEqualTo(JSONSerialiser.serialise(results.get(i)));
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void shouldAddNotErrorWhenAddingANullResult() throws OperationException {
+        // Given
+        final GafferResultCacheExporter exporter = new GafferResultCacheExporter(context, jobId, resultCache, visibility, requiredOpAuths);
+
+        // When
+        exporter.add(key, null);
+
+        // Then
+        verify(store, never()).execute(Mockito.any(OperationChain.class), Mockito.any(Context.class));
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Test
+    public void shouldGetResults() throws OperationException {
+        // Given
+        final ArgumentCaptor<OperationChain> opChain = ArgumentCaptor.forClass(OperationChain.class);
+        final long timestamp = System.currentTimeMillis();
+        final List<Element> cachedEdges = createCachedEdges(timestamp, (Object[]) serialisedResults);
+        given(store.execute(opChain.capture(), Mockito.any())).willReturn(cachedEdges);
+
+        final GafferResultCacheExporter exporter = new GafferResultCacheExporter(context, jobId, resultCache, visibility, requiredOpAuths);
+
+        // When
+        final Iterable<?> cachedResults = exporter.get(key);
+
+        // Then
+        assertThat(cachedResults).asInstanceOf(InstanceOfAssertFactories.iterable(Object.class)).containsAnyElementsOf(results);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Test
+    public void shouldGetEmptyResults() throws OperationException {
+        // Given
+        final ArgumentCaptor<OperationChain> opChain = ArgumentCaptor.forClass(OperationChain.class);
+        given(store.execute(opChain.capture(), Mockito.any(Context.class))).willReturn(null);
+
+        final GafferResultCacheExporter exporter = new GafferResultCacheExporter(context, jobId, resultCache, visibility, requiredOpAuths);
+
+        // When
+        final Iterable<?> cachedResults = exporter.get(key);
+
+        // Then
+        assertThat(cachedResults).isEmpty();
+    }
+
+    private List<Element> createCachedEdges(final Object timestamp, final Object... values) {
+        return Arrays.asList(
+                new Edge.Builder()
+                        .group("result")
+                        .source(jobId)
+                        .dest(key)
+                        .directed(true)
+                        .property("opAuths", requiredOpAuths)
+                        .property("timestamp", timestamp)
+                        .property("visibility", visibility)
+                        .property("resultClass", Integer.class.getName())
+                        .property("result", values[0])
+                        .build(),
+                new Edge.Builder()
+                        .group("result")
+                        .source(jobId)
+                        .dest(key)
+                        .directed(true)
+                        .property("opAuths", requiredOpAuths)
+                        .property("timestamp", timestamp)
+                        .property("visibility", visibility)
+                        .property("resultClass", String.class.getName())
+                        .property("result", values[1])
+                        .build(),
+                new Edge.Builder()
+                        .group("result")
+                        .source(jobId)
+                        .dest(key)
+                        .directed(true)
+                        .property("opAuths", requiredOpAuths)
+                        .property("timestamp", timestamp)
+                        .property("visibility", visibility)
+                        .property("resultClass", Object.class.getName())
+                        .property("result", values[2])
+                        .build());
+    }
+
+    private static byte[] serialise(final Object item) {
+        try {
+            return JSONSerialiser.serialise(item);
+        } catch (final SerialisationException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}

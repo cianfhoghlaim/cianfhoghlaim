@@ -1,0 +1,10 @@
+import { Meta, Stories, Markdown } from "@storybook/addon-docs/blocks";
+import readme from "../../../web-components/src/components/ic-toast/readme.md";
+import toastRegionReadme from "../../../web-components/src/components/ic-toast-region/readme.md";
+import * as IcToastStories from './ic-toast.stories';
+
+<Meta of={IcToastStories} />
+
+<Markdown>{readme + toastRegionReadme}</Markdown>
+
+<Stories />

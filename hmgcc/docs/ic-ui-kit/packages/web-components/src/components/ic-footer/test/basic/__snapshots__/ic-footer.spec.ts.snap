@@ -1,0 +1,520 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ic-footer should render 1`] = `
+<ic-footer class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-sparse ic-footer-ungrouped">
+  <template shadowrootmode="open">
+    <footer>
+      <div class="footer-compliance">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-compliance-inner">
+            <div class="footer-copyright">
+              <ic-typography variant="label-uppercase">
+                © Crown Copyright
+              </ic-typography>
+            </div>
+          </div>
+        </ic-section-container>
+      </div>
+    </footer>
+  </template>
+</ic-footer>
+`;
+
+exports[`ic-footer should render with a caption via the caption prop 1`] = `
+<ic-footer caption="Made by ICDS" class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-sparse ic-footer-ungrouped" description="This is a footer">
+  <template shadowrootmode="open">
+    <footer>
+      <div class="footer-description">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-description-inner">
+            <ic-typography variant="body">
+              <slot name="description">
+                This is a footer
+              </slot>
+            </ic-typography>
+          </div>
+        </ic-section-container>
+      </div>
+      <div class="footer-compliance">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-compliance-inner">
+            <div class="footer-caption">
+              <ic-typography variant="body">
+                <slot name="caption">
+                  Made by ICDS
+                </slot>
+              </ic-typography>
+            </div>
+            <div class="footer-copyright">
+              <ic-typography variant="label-uppercase">
+                © Crown Copyright
+              </ic-typography>
+            </div>
+          </div>
+        </ic-section-container>
+      </div>
+    </footer>
+  </template>
+</ic-footer>
+`;
+
+exports[`ic-footer should render with a caption via the caption slot 1`] = `
+<ic-footer class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-sparse ic-footer-ungrouped" description="This is a footer">
+  <template shadowrootmode="open">
+    <footer>
+      <div class="footer-description">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-description-inner">
+            <ic-typography variant="body">
+              <slot name="description">
+                This is a footer
+              </slot>
+            </ic-typography>
+          </div>
+        </ic-section-container>
+      </div>
+      <div class="footer-compliance">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-compliance-inner">
+            <div class="footer-caption">
+              <ic-typography variant="body">
+                <slot name="caption"></slot>
+              </ic-typography>
+            </div>
+            <div class="footer-copyright">
+              <ic-typography variant="label-uppercase">
+                © Crown Copyright
+              </ic-typography>
+            </div>
+          </div>
+        </ic-section-container>
+      </div>
+    </footer>
+  </template>
+  <ic-typography slot="caption">
+    Made by ICDS
+  </ic-typography>
+</ic-footer>
+`;
+
+exports[`ic-footer should render with a description via the description slot 1`] = `
+<ic-footer class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-sparse ic-footer-ungrouped">
+  <template shadowrootmode="open">
+    <footer>
+      <div class="footer-description">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-description-inner">
+            <ic-typography class="ic-typography-body">
+              <template shadowrootmode="open">
+                <slot></slot>
+              </template>
+              <slot name="description"></slot>
+            </ic-typography>
+          </div>
+        </ic-section-container>
+      </div>
+      <div class="footer-compliance">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-compliance-inner">
+            <div class="footer-copyright">
+              <ic-typography class="ic-typography-label-uppercase">
+                <template shadowrootmode="open">
+                  <slot></slot>
+                </template>
+                © Crown Copyright
+              </ic-typography>
+            </div>
+          </div>
+        </ic-section-container>
+      </div>
+    </footer>
+  </template>
+  <ic-typography class="ic-typography-body" slot="description">
+    <template shadowrootmode="open">
+      <slot></slot>
+    </template>
+    This is a footer
+  </ic-typography>
+</ic-footer>
+`;
+
+exports[`ic-footer should render with classification banner: footer-classification-banner 1`] = `
+<ic-footer class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-sparse ic-footer-ungrouped">
+  <template shadowrootmode="open">
+    <footer>
+      <div class="footer-compliance">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-compliance-inner">
+            <div class="classification-spacing footer-copyright">
+              <ic-typography variant="label-uppercase">
+                © Crown Copyright
+              </ic-typography>
+            </div>
+          </div>
+        </ic-section-container>
+      </div>
+    </footer>
+  </template>
+</ic-footer>
+`;
+
+exports[`ic-footer should render with custom copyright text when the copyright-text prop is set 1`] = `
+<ic-footer caption="Made by ICDS" class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-sparse ic-footer-ungrouped" copyright-text="© 2025 Coffeehouse Inc. All rights reserved." description="This is a footer">
+  <template shadowrootmode="open">
+    <footer>
+      <div class="footer-description">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-description-inner">
+            <ic-typography variant="body">
+              <slot name="description">
+                This is a footer
+              </slot>
+            </ic-typography>
+          </div>
+        </ic-section-container>
+      </div>
+      <div class="footer-compliance">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-compliance-inner">
+            <div class="footer-caption">
+              <ic-typography variant="body">
+                <slot name="caption">
+                  Made by ICDS
+                </slot>
+              </ic-typography>
+            </div>
+            <div class="footer-copyright">
+              <ic-typography variant="label-uppercase">
+                © 2025 Coffeehouse Inc. All rights reserved.
+              </ic-typography>
+            </div>
+          </div>
+        </ic-section-container>
+      </div>
+    </footer>
+  </template>
+</ic-footer>
+`;
+
+exports[`ic-footer should render with link groups 1`] = `
+<ic-footer caption="Made by ICDS" class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-sparse ic-footer-ungrouped" description="This is a footer">
+  <template shadowrootmode="open">
+    <footer>
+      <div class="footer-description">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-description-inner">
+            <ic-typography variant="body">
+              <slot name="description">
+                This is a footer
+              </slot>
+            </ic-typography>
+          </div>
+        </ic-section-container>
+      </div>
+      <div class="footer-links">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-links-inner" role="list">
+            <slot name="link"></slot>
+          </div>
+        </ic-section-container>
+      </div>
+      <div class="footer-compliance">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-compliance-inner">
+            <div class="footer-caption">
+              <ic-typography variant="body">
+                <slot name="caption">
+                  Made by ICDS
+                </slot>
+              </ic-typography>
+            </div>
+            <div class="footer-copyright">
+              <ic-typography variant="label-uppercase">
+                © Crown Copyright
+              </ic-typography>
+            </div>
+          </div>
+        </ic-section-container>
+      </div>
+    </footer>
+  </template>
+  <ic-footer-link-group label="Links" slot="link">
+    <ic-footer-link href="/">
+      Link
+    </ic-footer-link>
+    <ic-footer-link href="/">
+      Link
+    </ic-footer-link>
+  </ic-footer-link-group>
+</ic-footer>
+`;
+
+exports[`ic-footer should render with links 1`] = `
+<ic-footer caption="Made by ICDS" class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-sparse ic-footer-ungrouped" description="This is a footer">
+  <template shadowrootmode="open">
+    <footer>
+      <div class="footer-description">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-description-inner">
+            <ic-typography variant="body">
+              <slot name="description">
+                This is a footer
+              </slot>
+            </ic-typography>
+          </div>
+        </ic-section-container>
+      </div>
+      <div class="footer-links">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-links-inner" role="list">
+            <slot name="link"></slot>
+          </div>
+        </ic-section-container>
+      </div>
+      <div class="footer-compliance">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-compliance-inner">
+            <div class="footer-caption">
+              <ic-typography variant="body">
+                <slot name="caption">
+                  Made by ICDS
+                </slot>
+              </ic-typography>
+            </div>
+            <div class="footer-copyright">
+              <ic-typography variant="label-uppercase">
+                © Crown Copyright
+              </ic-typography>
+            </div>
+          </div>
+        </ic-section-container>
+      </div>
+    </footer>
+  </template>
+  <ic-footer-link href="/" slot="link">
+    Link
+  </ic-footer-link>
+  <ic-footer-link href="/" slot="link">
+    Link
+  </ic-footer-link>
+</ic-footer>
+`;
+
+exports[`ic-footer should render with the correct small breakpoint at extra large device size: footer-xl-breakpoint 1`] = `
+<ic-footer breakpoint="extra large" caption="caption" class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-small ic-footer-ungrouped" id="ic-footer">
+  <template shadowrootmode="open">
+    <footer>
+      <div class="footer-compliance">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-compliance-inner">
+            <div class="footer-caption">
+              <ic-typography variant="body">
+                <slot name="caption">
+                  caption
+                </slot>
+              </ic-typography>
+            </div>
+            <div class="footer-copyright">
+              <ic-typography variant="label-uppercase">
+                © Crown Copyright
+              </ic-typography>
+            </div>
+          </div>
+        </ic-section-container>
+      </div>
+    </footer>
+  </template>
+</ic-footer>
+`;
+
+exports[`ic-footer should render with the correct small breakpoint at extra small device size: footer-xs-breakpoint 1`] = `
+<ic-footer breakpoint="extra small" caption="caption" class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-sparse ic-footer-ungrouped" id="ic-footer">
+  <template shadowrootmode="open">
+    <footer>
+      <div class="footer-compliance">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-compliance-inner">
+            <div class="footer-caption">
+              <ic-typography variant="body">
+                <slot name="caption">
+                  caption
+                </slot>
+              </ic-typography>
+            </div>
+            <div class="footer-copyright">
+              <ic-typography variant="label-uppercase">
+                © Crown Copyright
+              </ic-typography>
+            </div>
+          </div>
+        </ic-section-container>
+      </div>
+    </footer>
+  </template>
+</ic-footer>
+`;
+
+exports[`ic-footer should render with the correct small breakpoint at large device size: footer-l-breakpoint 1`] = `
+<ic-footer breakpoint="large" caption="caption" class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-sparse ic-footer-ungrouped" id="ic-footer">
+  <template shadowrootmode="open">
+    <footer>
+      <div class="footer-compliance">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-compliance-inner">
+            <div class="footer-caption">
+              <ic-typography variant="body">
+                <slot name="caption">
+                  caption
+                </slot>
+              </ic-typography>
+            </div>
+            <div class="footer-copyright">
+              <ic-typography variant="label-uppercase">
+                © Crown Copyright
+              </ic-typography>
+            </div>
+          </div>
+        </ic-section-container>
+      </div>
+    </footer>
+  </template>
+</ic-footer>
+`;
+
+exports[`ic-footer should render with the correct small breakpoint at medium device size: footer-m-breakpoint 1`] = `
+<ic-footer breakpoint="medium" caption="caption" class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-sparse ic-footer-ungrouped" id="ic-footer">
+  <template shadowrootmode="open">
+    <footer>
+      <div class="footer-compliance">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-compliance-inner">
+            <div class="footer-caption">
+              <ic-typography variant="body">
+                <slot name="caption">
+                  caption
+                </slot>
+              </ic-typography>
+            </div>
+            <div class="footer-copyright">
+              <ic-typography variant="label-uppercase">
+                © Crown Copyright
+              </ic-typography>
+            </div>
+          </div>
+        </ic-section-container>
+      </div>
+    </footer>
+  </template>
+</ic-footer>
+`;
+
+exports[`ic-footer should render with the correct small breakpoint at small device size: footer-s-breakpoint 1`] = `
+<ic-footer breakpoint="small" caption="caption" class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-sparse ic-footer-ungrouped" id="ic-footer">
+  <template shadowrootmode="open">
+    <footer>
+      <div class="footer-compliance">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-compliance-inner">
+            <div class="footer-caption">
+              <ic-typography variant="body">
+                <slot name="caption">
+                  caption
+                </slot>
+              </ic-typography>
+            </div>
+            <div class="footer-copyright">
+              <ic-typography variant="label-uppercase">
+                © Crown Copyright
+              </ic-typography>
+            </div>
+          </div>
+        </ic-section-container>
+      </div>
+    </footer>
+  </template>
+</ic-footer>
+`;
+
+exports[`ic-footer should render without the compliance section when there is no logo, caption or copyright 1`] = `
+<ic-footer class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-sparse ic-footer-ungrouped" copyright="false" description="This is a footer">
+  <template shadowrootmode="open">
+    <footer>
+      <div class="footer-description">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-description-inner">
+            <ic-typography variant="body">
+              <slot name="description">
+                This is a footer
+              </slot>
+            </ic-typography>
+          </div>
+        </ic-section-container>
+      </div>
+    </footer>
+  </template>
+</ic-footer>
+`;
+
+exports[`ic-footer should render without the copyright text when the copyright prop is false 1`] = `
+<ic-footer class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-sparse ic-footer-ungrouped" copyright="false" description="This is a footer">
+  <template shadowrootmode="open">
+    <footer>
+      <div class="footer-description">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-description-inner">
+            <ic-typography variant="body">
+              <slot name="description">
+                This is a footer
+              </slot>
+            </ic-typography>
+          </div>
+        </ic-section-container>
+      </div>
+      <div class="footer-compliance">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-compliance-inner">
+            <div class="footer-caption">
+              <ic-typography variant="body">
+                <slot name="caption"></slot>
+              </ic-typography>
+            </div>
+          </div>
+        </ic-section-container>
+      </div>
+    </footer>
+  </template>
+  <ic-typography slot="caption">
+    Made by ICDS
+  </ic-typography>
+</ic-footer>
+`;
+
+exports[`ic-footer should test rendering slotted after initial render 1`] = `
+<ic-footer class="ic-footer ic-footer-foreground-light ic-footer-light ic-footer-sparse ic-footer-ungrouped">
+  <template shadowrootmode="open">
+    <footer>
+      <div class="footer-links">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-links-inner" role="list">
+            <slot name="link"></slot>
+          </div>
+        </ic-section-container>
+      </div>
+      <div class="footer-compliance">
+        <ic-section-container aligned="left" fullheight="">
+          <div class="footer-compliance-inner">
+            <div class="footer-copyright">
+              <ic-typography variant="label-uppercase">
+                © Crown Copyright
+              </ic-typography>
+            </div>
+          </div>
+        </ic-section-container>
+      </div>
+    </footer>
+  </template>
+  <ic-footer-link slot="link">
+    foo
+  </ic-footer-link>
+</ic-footer>
+`;

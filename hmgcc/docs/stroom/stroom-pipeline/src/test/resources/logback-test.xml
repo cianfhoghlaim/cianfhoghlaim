@@ -1,0 +1,33 @@
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="stroom" level="info" />
+    <logger name="stroom.pipeline" level="debug" />
+<!--    <logger name="stroom.pipeline.reader.ByteStreamDecoder" level="TRACE" />-->
+    <logger name="stroom.pipeline.refdata" level="info" />
+<!--    <logger name="stroom.pipeline.refdata.store.offheapstore.databases.TestRangeStoreDb" level="debug" />-->
+
+
+<!--    <logger name="stroom.lmdb.LmdbEnv" level="debug" />-->
+<!--    <logger name="stroom.pipeline.refdata.store.offheapstore.OffHeapRefDataLoader" level="debug" />-->
+<!--    <logger name="stroom.pipeline.refdata.store.offheapstore.OffHeapStagingStore" level="debug" />-->
+<!--    <logger name="stroom.pipeline.refdata.store.offheapstore.TestOffHeapStagingStore" level="debug" />-->
+<!--    <logger name="stroom.pipeline.refdata" level="trace" />-->
+<!--    <logger name="stroom.pipeline.refdata.ReferenceDataFilter" level="trace" />-->
+<!--    <logger name="stroom.pipeline.refdata.store.StagingValueOutputStream" level="trace" />-->
+<!--    <logger name="stroom.pipeline.refdata.store.offheapstore.RefDataOffHeapStore" level="debug" />-->
+<!--    <logger name="stroom.pipeline.refdata.store.offheapstore.databases.KeyValueStoreDb" level="trace" />-->
+<!--    <logger name="stroom.pipeline.refdata.store.offheapstore.databases.RangeStoreDb" level="trace" />-->
+
+    <root level="error">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>

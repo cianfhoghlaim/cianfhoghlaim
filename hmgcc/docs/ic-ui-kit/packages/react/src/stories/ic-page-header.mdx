@@ -1,0 +1,14 @@
+import {
+  Meta,
+  Stories,
+  Markdown
+} from "@storybook/addon-docs/blocks";
+import * as IcPageHeaderStories from './ic-page-header.stories';
+
+import readme from "../../../web-components/src/components/ic-page-header/readme.md";
+
+<Meta of={IcPageHeaderStories} />
+
+<Markdown>{readme}</Markdown>
+
+<Stories />

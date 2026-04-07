@@ -1,0 +1,278 @@
+@import "../../global/normalize.css";
+
+:host {
+  display: flex;
+}
+
+a {
+  text-decoration: none !important;
+  color: var(--ic-card-text-primary) !important;
+}
+
+a:visited {
+  color: var(--ic-card-link-action-dark) !important;
+}
+
+button {
+  border: none;
+  background-color: transparent;
+  outline: var(--ic-hc-focus-outline);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  border: var(--ic-space-1px) solid var(--ic-card-border-primary);
+  border-radius: var(--ic-border-radius);
+  box-sizing: border-box;
+  padding: var(--ic-space-md);
+  text-align: left;
+  color: var(--ic-card-text-primary);
+  transition: var(--ic-easing-transition-fast);
+  position: relative;
+  width: inherit;
+  min-width: fit-content;
+  height: fit-content;
+  min-height: 100%;
+
+  ::slotted(svg) {
+    fill: var(--ic-card-icon);
+  }
+
+  &.monochrome {
+    border: var(--ic-border-width) solid var(--ic-card-border-monochrome);
+  }
+
+  &.fullwidth {
+    width: 100%;
+  }
+
+  &.clickable {
+    &:hover {
+      background-color: var(--ic-card-background-hover);
+      border: var(--ic-space-1px) solid var(--ic-card-hover-border-color);
+      cursor: pointer;
+    }
+
+    &.focussed,
+    &:focus {
+      background-color: var(--ic-card-background-hover);
+      box-shadow: var(--ic-border-focus);
+      outline: var(--ic-hc-focus-outline);
+      border: var(--ic-space-1px) solid var(--ic-card-pressed-border-color);
+    }
+
+    &:active {
+      background-color: var(--ic-card-background-pressed);
+      box-shadow: var(--ic-border-focus);
+
+      .card-title {
+        text-decoration: none;
+      }
+    }
+
+    .card-title {
+      --ic-typography-color: var(--ic-card-clickable-text);
+
+      color: var(--ic-card-clickable-text);
+      text-decoration: underline;
+      text-decoration-thickness: var(--ic-space-1px);
+      margin-bottom: var(--ic-space-xxs);
+    }
+
+    .interaction-button,
+    .icon {
+      margin-bottom: var(--ic-space-xxs);
+    }
+  }
+
+  &.disabled {
+    border: var(--ic-space-1px) dashed var(--ic-card-disabled-border-color);
+
+    .card-message,
+    .subheading,
+    .card-title {
+      --ic-typography-color: var(--ic-card-disabled-text);
+    }
+
+    .card-title {
+      text-decoration: underline;
+      text-decoration-thickness: var(--ic-space-1px);
+      text-decoration-color: var(--ic-card-disabled-text);
+      color: var(--ic-card-disabled-text);
+    }
+
+    ::slotted(svg) {
+      fill: var(--ic-card-icon-disabled);
+    }
+  }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  padding-right: var(--ic-space-xs);
+}
+
+.card.clickable:hover .card-title,
+.card.clickable:focus .card-title,
+.card.clickable.focussed .card-title {
+  display: inline-block;
+  border-bottom: 0.25rem solid !important;
+  margin-bottom: 0 !important;
+  text-decoration: none;
+}
+
+@supports (text-underline-offset: 25%) {
+  .card.clickable:hover .card-title,
+  .card.clickable:focus .card-title,
+  .card.clickable.focussed .card-title {
+    text-decoration-line: underline;
+    text-decoration-thickness: 25%;
+    text-underline-offset: 25%;
+    border-bottom: 0 !important;
+    margin-bottom: 0.25rem !important;
+  }
+}
+
+.subheading {
+  margin-top: var(--ic-space-xxs);
+}
+
+.adornment {
+  margin-top: var(--ic-space-xxs);
+}
+
+.card-message {
+  margin-top: var(--ic-space-md);
+  align-items: left;
+}
+
+.interaction-button {
+  margin-left: auto;
+}
+
+.image-top {
+  margin-bottom: var(--ic-space-md);
+  display: flex;
+  justify-content: center;
+}
+
+.image-mid {
+  margin-top: var(--ic-space-md);
+  display: flex;
+  justify-content: center;
+}
+
+.interaction-area {
+  display: flex;
+  flex-grow: 1;
+  gap: var(--ic-space-md);
+  margin-top: var(--ic-space-md);
+  align-items: flex-end;
+}
+
+.interaction-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ic-space-sm);
+}
+
+.toggle-button {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: var(--ic-space-xs);
+  margin: var(--ic-space-1px) 0;
+  min-width: 0;
+  cursor: pointer;
+  transition: var(--ic-easing-transition-fast);
+  border-radius: var(--ic-border-radius);
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  border: none;
+  box-sizing: border-box;
+  white-space: nowrap;
+  vertical-align: middle;
+
+  &:hover {
+    background-color: var(--ic-card-background-hover);
+  }
+
+  &:focus {
+    box-shadow: var(--ic-border-focus);
+  }
+
+  &:active:not(:focus) {
+    background-color: var(--ic-card-background-pressed);
+  }
+
+  svg {
+    pointer-events: none;
+    width: 100% !important;
+    height: 100% !important;
+    fill: currentcolor !important;
+  }
+}
+
+#ic-tooltip-expand-button {
+  margin-left: auto;
+  position: relative;
+}
+
+.toggle-button-closed svg {
+  transform: rotate(90deg);
+}
+
+.toggle-button-expanded svg {
+  transform: rotate(-90deg);
+}
+
+.expanded-content {
+  margin-top: var(--ic-space-md);
+}
+
+/** High Contrast **/
+@media (forced-colors: active) {
+  .card {
+    ::slotted(svg) {
+      fill: currentcolor;
+    }
+
+    &.disabled {
+      border-color: GrayText !important;
+
+      ::slotted(svg) {
+        fill: GrayText !important;
+      }
+
+      .card-message,
+      .subheading,
+      .card-title {
+        color: GrayText;
+
+        --ic-typography-color: GrayText;
+      }
+    }
+  }
+
+  .toggle-button:focus,
+  .toggle-button:hover {
+    outline-color: Highlight;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .toggle-button {
+    transition: none;
+  }
+}

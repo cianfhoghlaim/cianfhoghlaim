@@ -1,0 +1,22 @@
+{
+  "name": "@ukic/docs",
+  "version": "3.4.12",
+  "description": "API documentation for @ukic components",
+  "bugs": {
+    "url": "https://github.com/mi6/ic-ui-kit",
+    "email": "icds@gchq.gov.uk"
+  },
+  "repository": {
+    "url": "https://github.com/mi6/ic-ui-kit",
+    "directory": "packages/docs"
+  },
+  "license": "MIT",
+  "author": "mi6",
+  "main": "docs.json",
+  "types": "docs.d.ts",
+  "files": [
+    "docs.json",
+    "docs.d.ts"
+  ],
+  "packageManager": "^npm@10.9.2"
+}

@@ -1,0 +1,10 @@
+import { Meta, Stories, Markdown } from "@storybook/addon-docs/blocks";
+import readme from "./readme.md";
+import stepReadme from "../ic-step/readme.md";
+import * as IcStepperStories from "./ic-stepper.stories";
+
+<Meta of={IcStepperStories} />
+
+<Markdown>{readme + stepReadme}</Markdown>
+
+<Stories />

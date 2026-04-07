@@ -1,0 +1,47 @@
+@import "../../global/normalize.css";
+
+/**
+ * @prop --data-row-label-width: Width of the label column in the data list.
+ */
+
+:host {
+  display: block;
+}
+
+.heading {
+  --ic-typography-color: var(--ic-data-list-text-heading);
+
+  color: var(--ic-data-list-text-heading);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ic-space-md);
+}
+
+:host(.ic-data-list-small) .rows {
+  gap: var(--ic-space-xs);
+}
+
+.divider {
+  margin-top: var(--ic-space-lg);
+  margin-bottom: var(--ic-space-md);
+  height: var(--ic-border-width);
+  background-color: var(--ic-data-list-keyline-heading);
+}
+
+.divider-no-heading {
+  margin-top: 0;
+}
+
+:host(.ic-data-list-small) .divider {
+  margin-top: var(--ic-space-sm);
+  margin-bottom: var(--ic-space-xs);
+}
+
+@media (forced-colors: active) {
+  .divider {
+    background-color: canvastext;
+  }
+}

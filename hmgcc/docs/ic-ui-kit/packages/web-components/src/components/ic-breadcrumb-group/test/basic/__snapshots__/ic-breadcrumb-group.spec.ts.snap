@@ -1,0 +1,434 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ic-breadcrumb-group should handle the hidden collapsed breadcrumbs: should handle the hidden collapsed breadcrumbs 1`] = `
+<ic-breadcrumb-group collapsed="true">
+  <template shadowrootmode="open">
+    <nav aria-label="breadcrumbs">
+      <ol>
+        <slot></slot>
+      </ol>
+    </nav>
+  </template>
+  <ic-breadcrumb href="/breadcrumb-1" page-title="Breadcrumb 1" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <ic-link class="breadcrumb-link" href="/breadcrumb-1" theme="inherit">
+          Breadcrumb 1
+        </ic-link>
+      </div>
+    </template>
+  </ic-breadcrumb>
+  <ic-breadcrumb href="/breadcrumb-2" page-title="Breadcrumb 2" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <ic-link class="breadcrumb-link" href="/breadcrumb-2" theme="inherit">
+          Breadcrumb 2
+        </ic-link>
+      </div>
+    </template>
+  </ic-breadcrumb>
+  <ic-breadcrumb aria-current="page" class="ic-breadcrumb-aria-current-page" current="true" href="/breadcrumb-3" page-title="Breadcrumb 3" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <span class="current-page-container">
+          Breadcrumb 3
+        </span>
+      </div>
+    </template>
+  </ic-breadcrumb>
+</ic-breadcrumb-group>
+`;
+
+exports[`ic-breadcrumb-group should only render one collapse button when window is resized 1`] = `
+<ic-breadcrumb-group back-breadcrumb-only="false" class="ic-breadcrumb-group-collapsed" collapsed="true">
+  <template shadowrootmode="open">
+    <nav aria-label="breadcrumbs">
+      <ol>
+        <slot></slot>
+      </ol>
+    </nav>
+  </template>
+  <ic-breadcrumb href="/breadcrumb-1" page-title="Breadcrumb 1" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <ic-link class="breadcrumb-link" href="/breadcrumb-1" theme="inherit">
+          Breadcrumb 1
+        </ic-link>
+      </div>
+    </template>
+  </ic-breadcrumb>
+  <ic-breadcrumb class="collapsed-breadcrumb-wrapper" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <div class="slotted-link-container">
+          <span class="link-wrapper">
+            <slot></slot>
+          </span>
+        </div>
+      </div>
+    </template>
+    <span class="hide" id="collapsed-button-described" tabindex="0">
+      Select to view collapsed breadcrumbs
+    </span>
+    <span class="hide" id="collapsed-button-label">
+      Collapsed breadcrumbs
+    </span>
+    <button aria-describedby="collapsed-button-described" aria-labelledby="collapsed-button-label" class="collapsed-breadcrumb" id="collapsed-ellipsis">
+      ...
+    </button>
+  </ic-breadcrumb>
+  <ic-breadcrumb class="hide" href="/breadcrumb-2" page-title="Breadcrumb 2" role="listitem" show-back-icon="false">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <ic-link class="breadcrumb-link" href="/breadcrumb-2" theme="inherit">
+          Breadcrumb 2
+        </ic-link>
+      </div>
+    </template>
+  </ic-breadcrumb>
+  <ic-breadcrumb aria-current="page" class="ic-breadcrumb-aria-current-page" current="true" href="/breadcrumb-3" page-title="Breadcrumb 3" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <span class="current-page-container">
+          Breadcrumb 3
+        </span>
+      </div>
+    </template>
+  </ic-breadcrumb>
+</ic-breadcrumb-group>
+`;
+
+exports[`ic-breadcrumb-group should render collapse on already small devices: should render collapse on already small devices 1`] = `
+<ic-breadcrumb-group class="ic-breadcrumb-group-collapsed" collapsed="true">
+  <template shadowrootmode="open">
+    <nav aria-label="breadcrumbs">
+      <ol>
+        <slot></slot>
+      </ol>
+    </nav>
+  </template>
+  <ic-breadcrumb aria-current="page" class="ic-breadcrumb-aria-current-page" current="true" href="/breadcrumb-1" page-title="Breadcrumb 1" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <span class="current-page-container">
+          Breadcrumb 1
+        </span>
+      </div>
+    </template>
+  </ic-breadcrumb>
+  <ic-breadcrumb href="/breadcrumb-2" page-title="Breadcrumb 2" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <ic-link class="breadcrumb-link" href="/breadcrumb-2" theme="inherit">
+          Breadcrumb 2
+        </ic-link>
+      </div>
+    </template>
+  </ic-breadcrumb>
+  <ic-breadcrumb class="ic-breadcrumb-back show" href="/breadcrumb-3" page-title="Breadcrumb 3" role="listitem" show-back-icon="true">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <span class="hide" id="breadcrumb-3-describedby">
+          Back to Breadcrumb 3
+        </span>
+        <ic-link aria-describedby="breadcrumb-3-describedby" class="breadcrumb-link" href="/breadcrumb-3" theme="inherit">
+          <div class="back-icon">
+            svg
+          </div>
+          Breadcrumb 3
+        </ic-link>
+      </div>
+    </template>
+  </ic-breadcrumb>
+  <ic-breadcrumb href="/breadcrumb-4" page-title="Breadcrumb 4" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <ic-link class="breadcrumb-link" href="/breadcrumb-4" theme="inherit">
+          Breadcrumb 4
+        </ic-link>
+      </div>
+    </template>
+  </ic-breadcrumb>
+</ic-breadcrumb-group>
+`;
+
+exports[`ic-breadcrumb-group should render current theme styling: should render current theme styling 1`] = `
+<ic-breadcrumb-group class="ic-theme-light" theme="light">
+  <template shadowrootmode="open">
+    <nav aria-label="breadcrumbs">
+      <ol>
+        <slot></slot>
+      </ol>
+    </nav>
+  </template>
+  <ic-breadcrumb class="ic-theme-light" href="/breadcrumb-1" page-title="Breadcrumb 1" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <ic-link class="breadcrumb-link" href="/breadcrumb-1" theme="light">
+          <slot name="icon"></slot>
+          Breadcrumb 1
+        </ic-link>
+      </div>
+    </template>
+    <svg fill="none" height="24" slot="icon" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 6.19L17 10.69V18.5H15V12.5H9V18.5H7V10.69L12 6.19ZM12 3.5L2 12.5H5V20.5H11V14.5H13V20.5H19V12.5H22L12 3.5Z" fill="currentColor"></path>
+    </svg>
+  </ic-breadcrumb>
+  <ic-breadcrumb aria-current="page" class="ic-breadcrumb-aria-current-page ic-theme-light" current="true" href="/" page-title="Breadcrumb 2" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <span class="current-page-container">
+          <slot name="icon"></slot>
+          Breadcrumb 2
+        </span>
+      </div>
+    </template>
+    <svg fill="none" height="24" slot="icon" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 6.19L17 10.69V18.5H15V12.5H9V18.5H7V10.69L12 6.19ZM12 3.5L2 12.5H5V20.5H11V14.5H13V20.5H19V12.5H22L12 3.5Z" fill="currentColor"></path>
+    </svg>
+  </ic-breadcrumb>
+</ic-breadcrumb-group>
+`;
+
+exports[`ic-breadcrumb-group should render styling from props: should render styling from props 1`] = `
+<ic-breadcrumb-group back-breadcrumb-only="true" class="ic-breadcrumb-group-back ic-breadcrumb-group-collapsed" collapsed="true">
+  <template shadowrootmode="open">
+    <nav aria-label="breadcrumbs">
+      <ol>
+        <slot></slot>
+      </ol>
+    </nav>
+  </template>
+</ic-breadcrumb-group>
+`;
+
+exports[`ic-breadcrumb-group should render with collapse button: should render with collapse button 1`] = `
+<ic-breadcrumb-group class="ic-breadcrumb-group-collapsed" collapsed="true">
+  <template shadowrootmode="open">
+    <nav aria-label="breadcrumbs">
+      <ol>
+        <slot></slot>
+      </ol>
+    </nav>
+  </template>
+  <ic-breadcrumb href="/breadcrumb-1" page-title="Breadcrumb 1" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <ic-link class="breadcrumb-link" href="/breadcrumb-1" theme="inherit">
+          Breadcrumb 1
+        </ic-link>
+      </div>
+    </template>
+  </ic-breadcrumb>
+  <ic-breadcrumb class="collapsed-breadcrumb-wrapper" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <div class="slotted-link-container">
+          <span class="link-wrapper">
+            <slot></slot>
+          </span>
+        </div>
+      </div>
+    </template>
+    <span class="hide" id="collapsed-button-described" tabindex="0">
+      Select to view collapsed breadcrumbs
+    </span>
+    <span class="hide" id="collapsed-button-label">
+      Collapsed breadcrumbs
+    </span>
+    <button aria-describedby="collapsed-button-described" aria-labelledby="collapsed-button-label" class="collapsed-breadcrumb" id="collapsed-ellipsis">
+      ...
+    </button>
+  </ic-breadcrumb>
+  <ic-breadcrumb class="hide" href="/breadcrumb-2" page-title="Breadcrumb 2" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <ic-link class="breadcrumb-link" href="/breadcrumb-2" theme="inherit">
+          Breadcrumb 2
+        </ic-link>
+      </div>
+    </template>
+  </ic-breadcrumb>
+  <ic-breadcrumb aria-current="page" class="ic-breadcrumb-aria-current-page" current="true" href="/breadcrumb-3" page-title="Breadcrumb 3" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <span class="current-page-container">
+          Breadcrumb 3
+        </span>
+      </div>
+    </template>
+  </ic-breadcrumb>
+</ic-breadcrumb-group>
+`;
+
+exports[`ic-breadcrumb-group should render with ic-breadcrumb: should render with ic-breadcrumb 1`] = `
+<ic-breadcrumb-group>
+  <template shadowrootmode="open">
+    <nav aria-label="breadcrumbs">
+      <ol>
+        <slot></slot>
+      </ol>
+    </nav>
+  </template>
+  <ic-breadcrumb role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <div class="slotted-link-container">
+          <span class="link-wrapper" tabindex="0">
+            <slot></slot>
+          </span>
+        </div>
+      </div>
+    </template>
+  </ic-breadcrumb>
+</ic-breadcrumb-group>
+`;
+
+exports[`ic-breadcrumb-group should render: should render 1`] = `
+<ic-breadcrumb-group>
+  <template shadowrootmode="open">
+    <nav aria-label="breadcrumbs">
+      <ol>
+        <slot></slot>
+      </ol>
+    </nav>
+  </template>
+</ic-breadcrumb-group>
+`;
+
+exports[`ic-breadcrumb-group should test collapsed behaviour on resize to small devices: should test collapsed behaviour on resize to small devices 1`] = `
+<ic-breadcrumb-group back-breadcrumb-only="true" class="ic-breadcrumb-group-collapsed" collapsed="true">
+  <template shadowrootmode="open">
+    <nav aria-label="breadcrumbs">
+      <ol>
+        <slot></slot>
+      </ol>
+    </nav>
+  </template>
+  <ic-breadcrumb aria-current="page" class="ic-breadcrumb-aria-current-page" current="true" href="/breadcrumb-1" page-title="Breadcrumb 1" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <span class="current-page-container">
+          Breadcrumb 1
+        </span>
+      </div>
+    </template>
+  </ic-breadcrumb>
+  <ic-breadcrumb class="collapsed-breadcrumb-wrapper" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <div class="slotted-link-container">
+          <span class="link-wrapper">
+            <slot></slot>
+          </span>
+        </div>
+      </div>
+    </template>
+    <span class="hide" id="collapsed-button-described" tabindex="0">
+      Select to view collapsed breadcrumbs
+    </span>
+    <span class="hide" id="collapsed-button-label">
+      Collapsed breadcrumbs
+    </span>
+    <button aria-describedby="collapsed-button-described" aria-labelledby="collapsed-button-label" class="collapsed-breadcrumb" id="collapsed-ellipsis">
+      ...
+    </button>
+  </ic-breadcrumb>
+  <ic-breadcrumb class="hide" href="/breadcrumb-2" page-title="Breadcrumb 2" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <ic-link class="breadcrumb-link" href="/breadcrumb-2" theme="inherit">
+          Breadcrumb 2
+        </ic-link>
+      </div>
+    </template>
+  </ic-breadcrumb>
+  <ic-breadcrumb class="show" href="/breadcrumb-3" page-title="Breadcrumb 3" role="listitem" show-back-icon="true">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <ic-link class="breadcrumb-link" href="/breadcrumb-3" theme="inherit">
+          Breadcrumb 3
+        </ic-link>
+      </div>
+    </template>
+  </ic-breadcrumb>
+  <ic-breadcrumb href="/breadcrumb-4" page-title="Breadcrumb 4" role="listitem">
+    <template shadowrootmode="open">
+      <div class="breadcrumb">
+        <span aria-hidden="true" class="chevron">
+          svg
+        </span>
+        <ic-link class="breadcrumb-link" href="/breadcrumb-4" theme="inherit">
+          Breadcrumb 4
+        </ic-link>
+      </div>
+    </template>
+  </ic-breadcrumb>
+</ic-breadcrumb-group>
+`;

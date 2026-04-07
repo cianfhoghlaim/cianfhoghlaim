@@ -1,0 +1,50 @@
+import { describe, expect, test, vi } from 'vitest'
+
+import { getAuditConnector } from '../../../src/connectors/audit/index.js'
+
+const configMock = vi.hoisted(() => ({
+  connectors: {
+    audit: {
+      kind: 'silly',
+    },
+  },
+  log: {
+    level: 'debug',
+  },
+  instrumentation: {
+    enabled: false,
+  },
+  stroom: {
+    interval: 1000 * 50,
+  },
+}))
+vi.mock('../../../src/utils/config.js', () => ({
+  __esModule: true,
+  default: configMock,
+}))
+
+describe('connectors > audit', () => {
+  test('silly', () => {
+    const connector = getAuditConnector(false)
+    expect(connector.constructor.name).toBe('SillyAuditConnector')
+  })
+
+  test('stdout', () => {
+    configMock.connectors.audit.kind = 'stdout'
+    const connector = getAuditConnector(false)
+    expect(connector.constructor.name).toBe('StdoutAuditConnector')
+  })
+
+  test('stroom', () => {
+    configMock.connectors.audit.kind = 'stroom'
+    const connector = getAuditConnector(false)
+    expect(connector.constructor.name).toBe('StroomAuditConnector')
+  })
+
+  test('invalid', () => {
+    const invalidConnector = 'invalid'
+    configMock.connectors.audit.kind = invalidConnector
+
+    expect(() => getAuditConnector(false)).toThrowError(`'${invalidConnector}' is not a valid audit kind.`)
+  })
+})

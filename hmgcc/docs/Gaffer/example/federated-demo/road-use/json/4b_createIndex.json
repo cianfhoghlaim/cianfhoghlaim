@@ -1,0 +1,29 @@
+{
+  "class": "uk.gov.gchq.gaffer.operation.OperationChain",
+  "operations": [
+    {
+      "class": "uk.gov.gchq.gaffer.federatedstore.operation.FederatedOperation",
+      "operation": {
+        "class": "uk.gov.gchq.gaffer.operation.OperationChain",
+        "operations": [
+          {
+            "class": "uk.gov.gchq.gaffer.operation.impl.get.GetAllElements",
+            "view": { "globalElements": [{ "groupBy": [] }] }
+          },
+          {
+            "class": "uk.gov.gchq.gaffer.operation.impl.generate.GenerateElements",
+            "elementGenerator": { "class": "IndexGenerator" }
+          }
+        ]
+      },
+      "graphIds": ["roadUse"]
+    },
+    {
+      "class": "uk.gov.gchq.gaffer.federatedstore.operation.FederatedOperation",
+      "operation": {
+        "class": "AddElements"
+      },
+      "graphIds": ["propertyIndex"]
+    }
+  ]
+}
