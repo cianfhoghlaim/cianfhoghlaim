@@ -14,7 +14,7 @@ You may make production use of the Licensed Work strictly for non-commercial, no
 - Republic of Ireland
 - United Kingdom of Great Britain and Northern Ireland
 - Ukraine
-- European Union (except Hungary and Serbia)
+- European Union
 - British Isles
 - The Commonwealth of Nations
 - The Crown
