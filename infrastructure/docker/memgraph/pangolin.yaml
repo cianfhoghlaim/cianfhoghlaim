@@ -1,9 +1,0 @@
-# Pangolin auto-discovery labels for Memgraph
-# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
-services:
-  memgraph-lab:
-    labels:
-      - "pangolin.resource.name=Memgraph Lab"
-      - "pangolin.resource.domain=memgraph.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://memgraph-lab:3000"
-      - "pangolin.resource.middlewares=tinyauth"
