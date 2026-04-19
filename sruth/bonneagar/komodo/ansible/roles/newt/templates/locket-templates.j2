@@ -1,0 +1,12 @@
+# =============================================================================
+# LOCKET SECRET TEMPLATES
+# =============================================================================
+# These templates are processed by Locket to inject secrets from 1Password
+# =============================================================================
+
+# Newt credentials (fetched from 1Password)
+NEWT_ID={{ newt_id_op_ref }}
+NEWT_SECRET={{ newt_secret_op_ref }}
+
+# Additional secrets can be added here
+# Example: DATABASE_PASSWORD=op://vault/item/field

@@ -1,0 +1,21 @@
+[package]
+name = "celtic-particle-system"
+description = "GPU-accelerated particle system for Celtic visual effects"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[lib]
+name = "celtic_particle_system"
+
+[dependencies]
+wgpu = { workspace = true }
+bytemuck = { version = "1.14", features = ["derive"] }
+glam = { version = "0.29", features = ["bytemuck"] }
+celtic-shaders = { path = "../celtic-shaders" }
+rand = "0.8"
+thiserror = { workspace = true }
+
+[dev-dependencies]
+pollster = "0.4"

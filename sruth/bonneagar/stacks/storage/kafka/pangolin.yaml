@@ -1,0 +1,33 @@
+# =============================================================================
+# KAFKA PANGOLIN TUNNEL CONFIGURATION
+# =============================================================================
+# Exposes Kafka services via Pangolin secure tunnel
+# =============================================================================
+
+http:
+  # Kafka UI - Web management interface
+  - name: kafka-ui
+    subdomain: kafka
+    target: kafka-ui
+    port: 8080
+    setHeaders:
+      X-Frame-Options: SAMEORIGIN
+
+  # Schema Registry API
+  - name: schema-registry
+    subdomain: schema-registry
+    target: schema-registry
+    port: 8081
+
+  # Kafka Connect REST API
+  - name: kafka-connect
+    subdomain: kafka-connect
+    target: kafka-connect
+    port: 8083
+
+tcp:
+  # Kafka broker external port (for remote producers/consumers)
+  - name: kafka-broker
+    port: 9094
+    target: kafka
+    targetPort: 9094

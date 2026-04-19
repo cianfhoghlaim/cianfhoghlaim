@@ -1,0 +1,10 @@
+public-resources:
+  lmnr:
+    name: "Lmnr"
+    full-domain: "lmnr.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "lmnr-main"
+        method: "http"
+        port: 8080

@@ -1,0 +1,38 @@
+# =============================================================================
+# LANGFUSE STACK
+# =============================================================================
+# LLM tracing and observability platform.
+# Domain: langfuse.cianfhoghlaim.ie
+# Server: cax41-hetzner
+# =============================================================================
+
+[[stack]]
+name = "langfuse"
+description = "LLM tracing and observability platform"
+tags = ["host:cax41-hetzner", "tier:observability", "type:llm", "domain:langfuse.cianfhoghlaim.ie"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/storage/langfuse"
+file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
+environment = """
+# Service Configuration
+LANGFUSE_DOMAIN=langfuse.cianfhoghlaim.ie
+LANGFUSE_NAME=Langfuse
+LANGFUSE_PORT=3000
+
+# Database (PostgreSQL)
+DATABASE_URL=postgresql://langfuse:${LANGFUSE_DB_PASSWORD:-langfuse}@postgres:5432/langfuse
+
+# NextAuth Configuration
+NEXTAUTH_SECRET=${LANGFUSE_NEXTAUTH_SECRET:-your-secret-here}
+NEXTAUTH_URL=https://langfuse.cianfhoghlaim.ie
+SALT=${LANGFUSE_SALT:-your-salt-here}
+
+# Environment
+ENVIRONMENT=production
+
+# 1Password Connect
+OP_CONNECT_HOST=${OP_CONNECT_HOST:-http://132.145.27.89:8080}
+LOCKET_MODE=watch
+"""

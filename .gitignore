@@ -231,3 +231,9 @@ bunchloch/mata/applied_statistics_2/st312_notes.pdf
 *.pdf
 *.pptx
 *.json
+
+# Massive Data Directories
+sruth/oideachais/pipelines/education/
+sruth/oideachais/pipelines/filesystem/
+sruth/web/dashboard/
+sruth/meaisínfhoghlaim/language/source_repos_clarin_uk/pylaia/

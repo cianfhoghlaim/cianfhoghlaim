@@ -1,0 +1,7 @@
+name: hetzner-infrastructure
+runtime: nodejs
+description: Hetzner CAX41 ARM server for storage stack workloads
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: typescript

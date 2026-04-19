@@ -1,0 +1,10 @@
+public-resources:
+  Perplexica:
+    name: "Perplexica"
+    full-domain: "Perplexica.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "Perplexica-main"
+        method: "http"
+        port: 8080

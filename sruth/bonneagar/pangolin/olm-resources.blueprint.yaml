@@ -1,0 +1,175 @@
+# =============================================================================
+# OLM TCP Resources Blueprint
+# =============================================================================
+# Defines TCP tunnel resources for SSH and database direct access.
+#
+# USAGE:
+#   Apply via Pangolin API:
+#   curl -X POST https://pangolin.cianfhoghlaim.ie/api/v1/integration/blueprint \
+#     -H "Authorization: Bearer $PANGOLIN_TOKEN" \
+#     -d @olm-resources.blueprint.yaml
+#
+# Or import via Pangolin UI:
+#   Settings -> Integration -> Import Blueprint
+#
+# PREREQUISITES:
+#   - OLM sites created: arm1-oci-olm, cax41-hetzner-olm
+#   - OLM agents deployed and connected
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# SSH Access Resources
+# -----------------------------------------------------------------------------
+# Access servers via SSH through Pangolin TCP tunnels
+# Usage: ssh -p <proxy-port> user@pangolin.cianfhoghlaim.ie
+
+public-resources:
+  # SSH to Oracle Cloud (arm1-oci)
+  ssh-oracle:
+    name: "SSH Oracle"
+    protocol: tcp
+    proxy-port: 22001
+    targets:
+      - site: arm1-oci-olm
+        hostname: 127.0.0.1
+        port: 22
+
+  # SSH to Hetzner (cax41-hetzner)
+  ssh-hetzner:
+    name: "SSH Hetzner"
+    protocol: tcp
+    proxy-port: 22002
+    targets:
+      - site: cax41-hetzner-olm
+        hostname: 127.0.0.1
+        port: 22
+
+# -----------------------------------------------------------------------------
+# Database Access Resources
+# -----------------------------------------------------------------------------
+# Direct database connections through TCP tunnels
+
+  # PostgreSQL - Pangolin DB (Oracle)
+  postgres-pangolin:
+    name: "PostgreSQL Pangolin"
+    protocol: tcp
+    proxy-port: 5432
+    targets:
+      - site: arm1-oci-olm
+        hostname: pangolin-postgres
+        port: 5432
+
+  # PostgreSQL - Langfuse DB (Hetzner)
+  postgres-langfuse:
+    name: "PostgreSQL Langfuse"
+    protocol: tcp
+    proxy-port: 5433
+    targets:
+      - site: cax41-hetzner-olm
+        hostname: langfuse-postgres
+        port: 5432
+
+  # PostgreSQL - MLflow DB (Hetzner)
+  postgres-mlflow:
+    name: "PostgreSQL MLflow"
+    protocol: tcp
+    proxy-port: 5434
+    targets:
+      - site: cax41-hetzner-olm
+        hostname: mlflow-postgres
+        port: 5432
+
+  # Memgraph Bolt Protocol (Hetzner)
+  memgraph-bolt:
+    name: "Memgraph Bolt"
+    protocol: tcp
+    proxy-port: 7687
+    targets:
+      - site: cax41-hetzner-olm
+        hostname: memgraph
+        port: 7687
+
+  # FalkorDB Redis Protocol (Hetzner)
+  falkordb-redis:
+    name: "FalkorDB Redis"
+    protocol: tcp
+    proxy-port: 6379
+    targets:
+      - site: cax41-hetzner-olm
+        hostname: falkordb
+        port: 6379
+
+  # Qdrant gRPC (Oracle)
+  qdrant-grpc:
+    name: "Qdrant gRPC"
+    protocol: tcp
+    proxy-port: 6334
+    targets:
+      - site: arm1-oci-olm
+        hostname: qdrant
+        port: 6334
+
+  # Qdrant HTTP API (Oracle)
+  qdrant-http:
+    name: "Qdrant HTTP"
+    protocol: tcp
+    proxy-port: 6333
+    targets:
+      - site: arm1-oci-olm
+        hostname: qdrant
+        port: 6333
+
+  # LanceDB API (Hetzner)
+  lancedb-api:
+    name: "LanceDB API"
+    protocol: tcp
+    proxy-port: 8085
+    targets:
+      - site: cax41-hetzner-olm
+        hostname: lancedb
+        port: 8080
+
+  # Graphiti API (Hetzner)
+  graphiti-api:
+    name: "Graphiti API"
+    protocol: tcp
+    proxy-port: 8086
+    targets:
+      - site: cax41-hetzner-olm
+        hostname: graphiti
+        port: 8000
+
+  # Cognee API (Hetzner)
+  cognee-api:
+    name: "Cognee API"
+    protocol: tcp
+    proxy-port: 8087
+    targets:
+      - site: cax41-hetzner-olm
+        hostname: cognee
+        port: 8000
+
+# -----------------------------------------------------------------------------
+# HTTP API Access Resources
+# -----------------------------------------------------------------------------
+# Direct HTTP access to services without SSO (internal/dev access)
+
+  # MLflow HTTP API (Hetzner)
+  mlflow-http:
+    name: "MLflow HTTP"
+    protocol: tcp
+    proxy-port: 5000
+    targets:
+      - site: cax41-hetzner-olm
+        hostname: mlflow-server
+        port: 5000
+
+  # Langfuse HTTP API (Hetzner)
+  langfuse-http:
+    name: "Langfuse HTTP"
+    protocol: tcp
+    proxy-port: 3000
+    targets:
+      - site: cax41-hetzner-olm
+        hostname: langfuse-web
+        port: 3000

@@ -1,0 +1,133 @@
+---
+# =============================================================================
+# KOMODO PERIPHERY ROLE - Default Variables
+# =============================================================================
+# https://github.com/moghtech/komodo
+#
+# This role installs and configures Komodo Periphery as a systemd service.
+# Periphery is the agent that runs on managed servers and communicates with
+# Komodo Core to execute container orchestration commands.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# VERSION & INSTALLATION
+# -----------------------------------------------------------------------------
+
+# Periphery version - should match Komodo Core version
+# Use "latest" or specific version like "2.0.0"
+periphery_version: "latest"
+
+# Installation method: binary (recommended) or docker
+periphery_install_method: binary
+
+# Architecture mapping for binary downloads
+# Note: v2.x releases use simple arch names (aarch64, x86_64)
+# v1.x releases used full target triples (aarch64-unknown-linux-musl, x86_64-unknown-linux-gnu)
+periphery_arch: "{{ 'aarch64' if ansible_architecture == 'aarch64' else 'x86_64' }}"
+
+# Download URL for binary installation
+periphery_download_url: "https://github.com/moghtech/komodo/releases/download/v{{ periphery_version }}/periphery-{{ periphery_arch }}"
+
+# -----------------------------------------------------------------------------
+# PATHS & DIRECTORIES
+# -----------------------------------------------------------------------------
+
+# Installation paths
+periphery_binary_path: /usr/local/bin/periphery
+periphery_config_dir: /etc/komodo
+periphery_data_dir: /etc/komodo
+
+# -----------------------------------------------------------------------------
+# USER & PERMISSIONS
+# -----------------------------------------------------------------------------
+
+# User/Group to run periphery as
+periphery_user: root
+periphery_group: root
+
+# User home directory (for Docker CLI plugins, etc.)
+periphery_user_home: "{{ '/root' if periphery_user == 'root' else '/home/' + periphery_user }}"
+
+# -----------------------------------------------------------------------------
+# CONNECTION MODE
+# -----------------------------------------------------------------------------
+
+# Connection mode: outbound (recommended) or inbound
+#   - outbound: Periphery connects TO Core (more secure, no exposed ports)
+#   - inbound: Core connects TO Periphery (requires exposed port 8120)
+periphery_mode: outbound
+
+# Core connection settings (for outbound mode)
+# Required for outbound mode - e.g., "wss://komodo.example.com"
+periphery_core_address: ""
+
+# -----------------------------------------------------------------------------
+# AUTHENTICATION
+# -----------------------------------------------------------------------------
+
+# Passkeys for authentication (must match Core's KOMODO_PASSKEY)
+# List of passkeys that can authenticate with this periphery
+periphery_passkeys: []
+
+# -----------------------------------------------------------------------------
+# SSL/TLS CONFIGURATION
+# -----------------------------------------------------------------------------
+
+periphery_ssl_enabled: true
+periphery_ssl_cert_path: ""  # Optional custom cert path
+periphery_ssl_key_path: ""   # Optional custom key path
+
+# -----------------------------------------------------------------------------
+# NETWORK SETTINGS
+# -----------------------------------------------------------------------------
+
+periphery_port: 8120
+periphery_bind_address: "0.0.0.0"
+
+# -----------------------------------------------------------------------------
+# FEATURES & CAPABILITIES
+# -----------------------------------------------------------------------------
+
+# Disable terminal access (for security)
+periphery_disable_terminals: false
+
+# Disk mount filtering for accurate disk size reporting
+periphery_include_disk_mounts: "/etc/hostname"
+periphery_exclude_disk_mounts: ""
+
+# Docker socket path (for container management)
+periphery_docker_socket: /var/run/docker.sock
+
+# -----------------------------------------------------------------------------
+# LOGGING
+# -----------------------------------------------------------------------------
+
+periphery_log_level: info
+periphery_logging_pretty: false
+
+# -----------------------------------------------------------------------------
+# RESOURCE LIMITS
+# -----------------------------------------------------------------------------
+
+periphery_stats_refresh_ms: 5000
+periphery_allowed_ips: []  # Empty = allow all
+
+# -----------------------------------------------------------------------------
+# SYSTEMD SERVICE
+# -----------------------------------------------------------------------------
+
+periphery_service_enabled: true
+periphery_service_state: started
+
+# -----------------------------------------------------------------------------
+# ENVIRONMENT VARIABLES
+# -----------------------------------------------------------------------------
+
+# Additional environment variables to set in systemd service
+# List of dicts with 'name' and 'value' keys
+periphery_agent_secrets: []
+# Example:
+#   - name: "KOMODO_UID"
+#     value: "1000"
+#   - name: "MY_SECRET"
+#     value: "{{ vault_my_secret }}"

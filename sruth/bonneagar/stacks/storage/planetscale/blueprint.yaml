@@ -1,0 +1,73 @@
+# =============================================================================
+# Komodo Blueprint - PlanetScale Managed PostgreSQL
+# =============================================================================
+
+name: planetscale
+description: Managed PostgreSQL for Langfuse, MLflow, and Cognee
+server_tags:
+  - database
+  - saas
+
+config:
+  type: saas
+  secrets_file: secrets.env
+  provider: planetscale
+  region: eu-west-3
+
+  # Pricing tier
+  plan: scaler
+  cost_monthly: $5
+
+databases:
+  - name: langfuse
+    description: LLM observability and cost tracking
+    storage_estimate: 2GB
+    tables:
+      - traces
+      - generations
+      - scores
+      - users
+      - projects
+    migration_source: bonneagar/storage/langfuse (PostgreSQL container)
+    migration_priority: high
+
+  - name: mlflow
+    description: ML experiment tracking and model registry
+    storage_estimate: 1GB
+    tables:
+      - experiments
+      - runs
+      - metrics
+      - params
+      - tags
+      - model_versions
+    migration_source: bonneagar/storage/mlflow (PostgreSQL container)
+    migration_priority: medium
+
+  - name: cognee
+    description: AI memory and knowledge graph metadata
+    storage_estimate: 1GB
+    tables:
+      - memories
+      - entities
+      - relationships
+      - embeddings_meta
+    migration_source: bonneagar/storage/cognee (PostgreSQL container)
+    migration_priority: medium
+
+features:
+  - branching: Create isolated branches for schema migrations
+  - connection_pooling: Built-in connection pooler (PgBouncer)
+  - auto_scaling: Automatic scale based on load
+  - point_in_time_recovery: Restore to any point in time
+  - insights: Query performance insights
+
+integrations:
+  - name: langfuse
+    connection_string: "postgresql://${PLANETSCALE_LANGFUSE_USERNAME}:${PLANETSCALE_LANGFUSE_PASSWORD}@${PLANETSCALE_HOST}:5432/${PLANETSCALE_LANGFUSE_DATABASE}?sslmode=require"
+
+  - name: mlflow
+    connection_string: "postgresql://${PLANETSCALE_MLFLOW_USERNAME}:${PLANETSCALE_MLFLOW_PASSWORD}@${PLANETSCALE_HOST}:5432/${PLANETSCALE_MLFLOW_DATABASE}?sslmode=require"
+
+  - name: cognee
+    connection_string: "postgresql://${PLANETSCALE_COGNEE_USERNAME}:${PLANETSCALE_COGNEE_PASSWORD}@${PLANETSCALE_HOST}:5432/${PLANETSCALE_COGNEE_DATABASE}?sslmode=require"

@@ -1,0 +1,101 @@
+# =============================================================================
+# DEPLOY CIANFHOGHLAIM PROCEDURE
+# =============================================================================
+# Deploys main Cianfhoghlaim platform services to cax41-hetzner and arm1-oci.
+# Domain: cianfhoghlaim.ie
+#
+# Services deployed:
+#   cax41-hetzner: MLflow, Langfuse, Dagster, databases, Browser, periphery
+#   arm1-oci: Komodo, Forgejo, Pangolin, observability, storage
+#
+# Usage:
+#   km run procedure deploy-cianfhoghlaim
+# =============================================================================
+
+[[procedure]]
+name = "deploy-cianfhoghlaim"
+description = "Deploy main Cianfhoghlaim platform to cianfhoghlaim.ie"
+
+# =============================================================================
+# STAGE 1: Control Plane (arm1-oci)
+# =============================================================================
+# Deploy core infrastructure first - Komodo, Forgejo, Pangolin tunnels
+# These services are dependencies for other stacks
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "control-plane-core"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "komodo" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "forgejo" } }
+
+# =============================================================================
+# STAGE 2: Pangolin Tunnels
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "pangolin-tunnels"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "newt-hetzner" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "olm-oracle" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "olm-hetzner" } }
+
+# =============================================================================
+# STAGE 3: Storage & Databases (arm1-oci)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "storage-databases"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "garage" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "qdrant" } }
+
+# =============================================================================
+# STAGE 4: Observability (arm1-oci)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "observability-hub"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "beszel" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "dozzle" } }
+
+# =============================================================================
+# STAGE 5: Production Pipelines (cax41-hetzner)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "production-pipelines"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "komodo-periphery-hetzner" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "sruth-browser" } }
+
+# =============================================================================
+# STAGE 6: Education Pipelines (hetzner-databases)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "education-pipelines"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "sruth-oideachais" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "sruth-taighde" } }

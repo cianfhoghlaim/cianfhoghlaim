@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.pastemax.name=Pastemax"
+      - "pangolin.public-resources.pastemax.full-domain=pastemax.cianfhoghlaim.ie"
+      - "pangolin.public-resources.pastemax.protocol=http"
+      - "pangolin.public-resources.pastemax.targets[0].method=http"
+      - "pangolin.public-resources.pastemax.targets[0].port=8080"

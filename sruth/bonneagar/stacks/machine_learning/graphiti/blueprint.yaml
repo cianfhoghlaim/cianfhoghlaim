@@ -1,0 +1,10 @@
+public-resources:
+  graphiti:
+    name: "Graphiti"
+    full-domain: "graphiti.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "graphiti-main"
+        method: "http"
+        port: 8080

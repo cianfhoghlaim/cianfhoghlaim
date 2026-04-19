@@ -1,0 +1,70 @@
+# =============================================================================
+# KOMODO CORE - Infrastructure Orchestration
+# =============================================================================
+# Komodo Core with FerretDB v2 (PostgreSQL-backed MongoDB API)
+# Deployed on Oracle Cloud Free Tier (arm1-oci)
+# Accessible at komodo.cianfhoghlaim.ie
+# =============================================================================
+
+[[stack]]
+name = "komodo"
+description = "Infrastructure orchestration with FerretDB v2"
+tags = ["host:arm1-oci", "tier:control-plane", "type:orchestration", "domain:komodo.cianfhoghlaim.ie"]
+
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/storage/komodo"
+file_paths = ["compose.yaml", "sidecar.yaml", "pangolin.yaml", "periphery.yaml"]
+environment = """
+# Host configuration
+KOMODO_HOST=https://komodo.cianfhoghlaim.ie
+KOMODO_PORT=9120
+KOMODO_IMAGE_TAG=2
+# Auth configuration
+KOMODO_LOCAL_AUTH=true
+KOMODO_OIDC_ENABLED=true
+# Backup configuration
+KOMODO_BACKUP_ENABLED=true
+KOMODO_BACKUP_SCHEDULE=0 2 * * *
+# Periphery configuration
+PERIPHERY_ROOT=/etc/komodo
+# Locket secrets management
+OP_CONNECT_HOST=http://132.145.27.89:8080
+LOCKET_MODE=watch
+"""
+
+# =============================================================================
+# KOMODO PERIPHERY - Standalone Agent
+# =============================================================================
+# Periphery agents for remote server management
+# =============================================================================
+
+[[stack]]
+name = "komodo-periphery-hetzner"
+description = "Komodo Periphery agent for Hetzner workloads"
+tags = ["host:cax41-hetzner", "tier:control-plane", "type:agent"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/storage/komodo-periphery"
+file_paths = ["compose.yaml", "sidecar.yaml"]
+environment = """
+PERIPHERY_ROOT=/etc/komodo
+OP_CONNECT_HOST=http://132.145.27.89:8080
+LOCKET_MODE=watch
+"""
+
+[[stack]]
+name = "komodo-periphery-macbook"
+description = "Komodo Periphery agent for MacBook dev"
+tags = ["host:bunchloch", "tier:control-plane", "type:agent"]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/storage/komodo-periphery"
+file_paths = ["compose.yaml", "sidecar.yaml"]
+environment = """
+PERIPHERY_ROOT=/etc/komodo
+OP_CONNECT_HOST=http://132.145.27.89:8080
+LOCKET_MODE=watch
+"""

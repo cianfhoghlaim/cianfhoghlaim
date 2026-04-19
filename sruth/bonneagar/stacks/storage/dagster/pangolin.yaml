@@ -1,0 +1,7 @@
+# Pangolin routing for Dagster unified
+sites:
+  - name: dagster
+    domain: dagster.cianfhoghlaim.ie
+    service: dagster:3000
+    tls: true
+    auth: tinyauth

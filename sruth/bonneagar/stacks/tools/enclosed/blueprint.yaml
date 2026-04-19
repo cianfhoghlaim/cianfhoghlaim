@@ -1,0 +1,10 @@
+public-resources:
+  enclosed:
+    name: "Enclosed"
+    full-domain: "enclosed.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "enclosed-main"
+        method: "http"
+        port: 8080

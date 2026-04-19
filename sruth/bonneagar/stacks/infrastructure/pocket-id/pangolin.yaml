@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.pocket-id.name=Pocket-id"
+      - "pangolin.public-resources.pocket-id.full-domain=pocket-id.cianfhoghlaim.ie"
+      - "pangolin.public-resources.pocket-id.protocol=http"
+      - "pangolin.public-resources.pocket-id.targets[0].method=http"
+      - "pangolin.public-resources.pocket-id.targets[0].port=8080"

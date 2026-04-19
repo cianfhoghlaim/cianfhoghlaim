@@ -1,0 +1,169 @@
+# =============================================================================
+# HETZNER DATABASE STACKS
+# =============================================================================
+# Database services deployed on Hetzner CAX41 (cax41-hetzner)
+# Production-ready databases that need reliable always-on hosting
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# MEMGRAPH - In-Memory Graph Database
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "memgraph"
+description = "In-memory graph database with MAGE algorithms"
+tags = ["host:cax41-hetzner", "tier:database", "type:graph"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/storage/memgraph"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+MEMGRAPH_BOLT_PORT=7687
+MEMGRAPH_HTTP_PORT=7444
+MEMGRAPH_LAB_PORT=3000
+MEMGRAPH_LOG_LEVEL=WARNING
+"""
+
+# -----------------------------------------------------------------------------
+# FALKORDB - Graph Database (Redis-based)
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "falkordb"
+description = "Redis-based graph database for Graphiti"
+tags = ["host:cax41-hetzner", "tier:database", "type:graph"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/storage/falkordb"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+FALKORDB_PORT=6379
+"""
+
+# -----------------------------------------------------------------------------
+# GRAPHITI - Knowledge Graph API
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "graphiti"
+description = "Knowledge graph with MCP server"
+tags = ["host:cax41-hetzner", "tier:application"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/storage/graphiti"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+GRAPHITI_API_PORT=8000
+GRAPHITI_MCP_PORT=8001
+"""
+
+# -----------------------------------------------------------------------------
+# LANCEDB - Serverless Vector Database
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "lancedb"
+description = "Serverless vector database with S3 support"
+tags = ["host:cax41-hetzner", "tier:database", "type:vector"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/storage/lancedb"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+LANCEDB_PORT=8080
+"""
+
+# -----------------------------------------------------------------------------
+# COGNEE - AI Memory & Knowledge Graph
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "cognee"
+description = "AI memory system with knowledge graphs"
+tags = ["host:cax41-hetzner", "tier:application", "type:ai"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/storage/cognee"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+COGNEE_PORT=8000
+COGNEE_MCP_PORT=8001
+"""
+
+# -----------------------------------------------------------------------------
+# MLFLOW - ML Experiment Tracking
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "mlflow"
+description = "ML experiment tracking and model registry"
+tags = ["host:cax41-hetzner", "tier:ml"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/storage/mlflow"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+MLFLOW_PORT=5000
+"""
+
+# -----------------------------------------------------------------------------
+# LANGFUSE - LLM Observability
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "langfuse"
+description = "LLM observability and analytics platform"
+tags = ["host:cax41-hetzner", "tier:observability", "type:llm"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/storage/langfuse"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+LANGFUSE_PORT=3000
+"""
+
+# -----------------------------------------------------------------------------
+# NIMTABLE - Iceberg Table UI
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "nimtable"
+description = "Apache Iceberg table management UI"
+tags = ["host:cax41-hetzner", "tier:lakehouse"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/storage/nimtable"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+
+# -----------------------------------------------------------------------------
+# MATHESAR - PostgreSQL UI
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "mathesar"
+description = "Spreadsheet interface for PostgreSQL"
+tags = ["host:cax41-hetzner", "tier:tools"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/storage/mathesar"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+
+# -----------------------------------------------------------------------------
+# KAFKA - Event Streaming Platform (Self-Hosted Production)
+# -----------------------------------------------------------------------------
+# Replaces Confluent Cloud after $400 credits exhausted
+# Kraft mode (no Zookeeper), Schema Registry, Connect, UI
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "kafka"
+description = "Self-hosted Kafka cluster for ML pipelines"
+tags = ["host:cax41-hetzner", "tier:streaming", "type:kafka"]
+
+[stack.config]
+server_id = "cax41-hetzner"
+run_directory = "/etc/komodo/storage/kafka"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+KAFKA_EXTERNAL_HOST=kafka.cianfhoghlaim.ie
+KAFKA_CLUSTER_ID=MkU3OEVBNTcwNTJENDM2Qk
+"""

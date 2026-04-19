@@ -1,0 +1,39 @@
+# =============================================================================
+# COGNEE - Pangolin Blueprint
+# =============================================================================
+# Defines public routing for Cognee via Pangolin/Newt.
+#
+# LOADING:
+#   Via Newt CLI:     newt --blueprint-file blueprint.yaml
+#   Via directory:    Place in /opt/newt/blueprints/
+#   Via sync script:  ./scripts/sync-blueprints.sh
+# =============================================================================
+
+public-resources:
+  cognee:
+    name: "Cognee"
+    full-domain: "cognee.cianfhoghlaim.ie"
+    protocol: "http"
+    auth:
+      sso-enabled: true
+      sso-roles:
+        - Member
+    targets:
+      - site: "cax41-hetzner"
+        hostname: "cognee"
+        method: "http"
+        port: 8000
+
+  cognee-mcp:
+    name: "Cognee MCP"
+    full-domain: "cognee-mcp.cianfhoghlaim.ie"
+    protocol: "http"
+    auth:
+      sso-enabled: true
+      sso-roles:
+        - Member
+    targets:
+      - site: "cax41-hetzner"
+        hostname: "cognee-mcp"
+        method: "http"
+        port: 8000

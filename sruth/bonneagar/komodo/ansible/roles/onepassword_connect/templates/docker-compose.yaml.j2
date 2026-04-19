@@ -1,0 +1,52 @@
+---
+# =============================================================================
+# 1PASSWORD CONNECT - Docker Compose
+# =============================================================================
+# Deployed by Ansible onepassword_connect role
+# =============================================================================
+
+services:
+  op-connect-api:
+    image: {{ op_connect_api_image }}
+    container_name: op-connect-api
+    restart: unless-stopped
+    ports:
+      - "{{ op_connect_bind_address }}:{{ op_connect_api_port }}:8080"
+    volumes:
+      - ./1password-credentials.json:/home/opuser/.op/1password-credentials.json:ro
+      - ./data:/home/opuser/.op/data
+    labels:
+      - "komodo.skip=true"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - infrastructure
+
+  op-connect-sync:
+    image: {{ op_connect_sync_image }}
+    container_name: op-connect-sync
+    restart: unless-stopped
+    ports:
+      - "{{ op_connect_bind_address }}:{{ op_connect_sync_port }}:8080"
+    volumes:
+      - ./1password-credentials.json:/home/opuser/.op/1password-credentials.json:ro
+      - ./data:/home/opuser/.op/data
+    labels:
+      - "komodo.skip=true"
+    networks:
+      - infrastructure
+
+volumes:
+  data:
+
+# =============================================================================
+# NETWORKS - Shared infrastructure network
+# =============================================================================
+networks:
+  infrastructure:
+    name: infrastructure
+    driver: bridge

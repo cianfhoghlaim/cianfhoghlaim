@@ -1,0 +1,59 @@
+# =============================================================================
+# DEPLOY HETZNER STACKS PROCEDURE
+# =============================================================================
+# Deploys all stacks assigned to Hetzner CAX41 server.
+# =============================================================================
+
+[[procedure]]
+name = "deploy-hetzner"
+description = "Deploy all stacks on Hetzner CAX41"
+
+# Stage 1: Graph Databases
+[[procedure.config.stages]]
+name = "databases"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "memgraph" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "falkordb" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "lancedb" } }
+
+# Stage 2: Knowledge Graphs
+[[procedure.config.stages]]
+name = "knowledge-graphs"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "graphiti" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "cognee" } }
+
+# Stage 3: ML/Observability
+[[procedure.config.stages]]
+name = "ml-observability"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "mlflow" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "langfuse" } }
+
+# Stage 4: Tools
+[[procedure.config.stages]]
+name = "tools"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "nimtable" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "mathesar" } }
+
+# Stage 5: Cleanup
+[[procedure.config.stages]]
+name = "cleanup"
+
+[[procedure.config.stages.executions]]
+execution = { type = "PruneContainers", params = { server = "cax41-hetzner" } }

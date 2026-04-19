@@ -1,0 +1,10 @@
+public-resources:
+  actual:
+    name: "Actual"
+    full-domain: "actual.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "actual-main"
+        method: "http"
+        port: 8080
