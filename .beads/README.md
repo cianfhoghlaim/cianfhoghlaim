@@ -70,6 +70,20 @@ bd init
 bd create "Try out Beads"
 ```
 
+## Using Beads with AI Agents (Gemini CLI, Copilot, Roo Code)
+
+Beads is designed to be the central nervous system for AI-assisted development in this repository.
+
+### For Gemini CLI & Roo Code
+1. **MCP & Tools Setup**: Ensure your agent has access to terminal execution. For Roo Code, verify `.roo/mcp.json` is active.
+2. **Task Discovery**: Begin sessions by running `bd list` or `bd ready` to find open issues.
+3. **Session Management**: Always run `bd update <id> --status in_progress` when starting a task.
+4. **Handoff Protocol**: Before concluding a session, you MUST follow the instructions in the `AGENTS.md` file located at the repository root. This includes running `bd sync` and pushing changes to ensure work isn't stranded locally.
+
+### For GitHub Copilot
+1. **Agent Skills Integration**: We leverage the Agent Skills standard (`.skills/`). You can instruct Copilot to "use the beads skill" or reference specific instructions in `.skills/` to teach Copilot how to interact with the `bd` CLI during a chat session.
+2. **Commit Generation**: Copilot can read the `.beads/issues.jsonl` file to understand the current context and generate highly accurate commit messages based on the active issue.
+
 ## Learn More
 
 - **Documentation**: [github.com/steveyegge/beads/docs](https://github.com/steveyegge/beads/tree/main/docs)
