@@ -29,20 +29,18 @@ services:
       PORT: "8000"
       ENVIRONMENT: ${ENVIRONMENT:-production}
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
-      # Database paths (inside container)
+      # Database paths (Unified on bunchloch NVMe)
       DUCKDB_PATH: /app/storage/data/celtic_education.duckdb
       LANCEDB_PATH: /app/storage/data/curriculum_vectors.lance
       # LLM Configuration (Routed through LiteLLM Gateway)
       LLM_API_KEY: ${LITELLM_MASTER_KEY:-sk-1234}
       LLM_PROVIDER: ${LLM_PROVIDER:-litellm}
       LLM_BASE_URL: ${LLM_BASE_URL:-http://litellm:4000}
-      LLM_MODEL: ${LLM_MODEL:-gemini/gemini-1.5-flash}
-      # Observability (optional)
+      LLM_MODEL: ${LLM_MODEL:-gemini/gemini-2.0-flash} # Updated to latest Gemini
+      # Observability
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
-      LANGFUSE_HOST: ${LANGFUSE_HOST:-}
-      DD_SERVICE: oideachais-api
-      DD_ENV: ${ENVIRONMENT:-production}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
     volumes:
       - oideachais-data:/app/storage/data
     healthcheck:
@@ -54,8 +52,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2'
-          memory: 4G
+          cpus: '4'
+          memory: 16G # Leverages 48GB MacBook RAM
     networks:
       - oideachais
 
@@ -73,7 +71,7 @@ services:
     environment:
       NODE_ENV: ${ENVIRONMENT:-production}
       VITE_API_URL: ${API_URL:-http://api:8000}
-      VITE_API_PUBLIC_URL: ${API_PUBLIC_URL:-http://localhost:8000}
+      VITE_API_PUBLIC_URL: ${API_PUBLIC_URL:-https://api.oideachais.cianfhoghlaim.ie}
     healthcheck:
       test: ["CMD", "curl", "-sf", "http://localhost:3000"]
       interval: 10s
@@ -87,7 +85,7 @@ services:
       - oideachais
 
   # ---------------------------------------------------------------------------
-  # AI GATEWAY - LiteLLM (Vertex AI/Gemini & Open Models Routing)
+  # AI GATEWAY - LiteLLM (Pangolin Converged)
   # ---------------------------------------------------------------------------
   litellm:
     image: ghcr.io/berriai/litellm:main-latest
@@ -96,19 +94,33 @@ services:
     ports:
       - "4000:4000"
     environment:
-      # Master key to access the gateway
       LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-1234}
-      # Google Cloud / Vertex AI Settings
-      VERTEX_PROJECT: ${VERTEX_PROJECT:-my-gcp-project}
+      VERTEX_PROJECT: ${VERTEX_PROJECT}
       VERTEX_LOCATION: ${VERTEX_LOCATION:-us-central1}
-      # Path to GCP service account key for Vertex AI access
       GOOGLE_APPLICATION_CREDENTIALS: /app/key.json
     volumes:
-      - ./infrastructure/litellm/config.yaml:/app/config.yaml:ro
+      - ./sruth/bonneagar/templates/litellm/config.yaml:/app/config.yaml:ro
       - ${GCP_CREDENTIALS_PATH:-./secrets/gcp-key.json}:/app/key.json:ro
     command: [ "--config", "/app/config.yaml", "--port", "4000" ]
     networks:
       - oideachais
+
+  # ---------------------------------------------------------------------------
+  # RESEARCH - Perplexica / Vane (Converged Search)
+  # ---------------------------------------------------------------------------
+  perplexica:
+    image: itisshams/perplexica:latest
+    container_name: oideachais-research
+    restart: unless-stopped
+    environment:
+      OPENAI_API_KEY: ${LITELLM_MASTER_KEY}
+      OPENAI_API_BASE: http://litellm:4000/v1
+    networks:
+      - oideachais
+    deploy:
+      resources:
+        limits:
+          memory: 4G
 
 # =============================================================================
 # VOLUMES
