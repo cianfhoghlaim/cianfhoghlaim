@@ -1,0 +1,15 @@
+#!/bin/bash
+
+cd /usr/local/share/crubadan/ga
+find sonrai -name '*.dat' | xargs egrep -l '^title: Gan teideal' | xargs egrep -l '^format: pdf$' |
+while read x
+do
+	TEXTFILE=`echo $x | sed 's/sonrai/ciu/; s/dat$/txt/'`
+	echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+	echo "Considering file $x; here's head of $TEXTFILE:"
+	echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+	head $TEXTFILE
+	echo
+	echo
+	echo
+done

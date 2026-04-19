@@ -1,0 +1,122 @@
+#!/bin/bash
+# called from ccweb (which is called from the corpas .cgi script)
+# also called from SC++ (see dentry.cxx)
+# also intended as something you could use from the command line too
+# Usage: qq --max=NUM [--html] [--mutate] SEARCHTERMS
+
+LIBEXECPATH=/usr/local/libexec
+MAXHITS=250
+MUTATER=cat
+
+# one argument is the regexp matching search terms to highlight
+xmltohtml()
+{
+sed -n '
+/^<tu>/{
+s/.*/<hr>/
+p
+}
+/^<prop.*document.>/{
+s/<prop[^>]*>\([^<]*\)<.*/<a href="\/corpas\/ll.html">\1<\/a>:/
+p
+}
+/^<prop.*line.>/{
+s/<prop[^>]*>\([^<]*\)<.*/\1<br><br>/
+p
+}
+/^<\/tuv/{
+N
+s/\n//
+s/<\/tuv><tuv.*>/<br><br>/ 
+s/<\/tuv><\/tu>/<br>/
+p
+}
+/^<seg>/{
+p
+}
+' |
+sed "
+/^<seg>/{
+s/\([^a-zA-ZáéíóúÁÉÍÓÚ]\)${1}\([^a-zA-ZáéíóúÁÉÍÓÚ]\)/\1<b class=\"gramadoir\">\2<\/b>\3/gI
+s/^<seg>//
+s/<\/seg>$//
+}
+"
+}
+
+versionout()
+{
+	echo "<p>"
+	echo "<a href="/corpas/">Corpas Comhthreomhar Gaeilge-Béarla</a>, leagan 0.01<br>"
+	echo "Copyright © 2004-2016 <a href=\"//borel.slu.edu/\">Kevin P. Scannell</a><br><br>"
+	echo "<i>"
+	echo "Is saorbhogearra an ríomhchlár seo; féach ar an bhunchód le haghaidh coinníollacha cóipeála.  Níl baránta AR BITH ann; go fiú níl baránta ann d'INDÍOLTACHT nó FEILIÚNACHT D'FHEIDHM AR LEITH, an oiread atá ceadaithe de réir dlí."
+	echo "</i></p>"
+}
+
+tmx()
+{
+${LIBEXECPATH}/mivec "${MAXHITS}" "${MUTATER}" "$@"
+}
+
+html()
+{
+echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\""
+echo "\"http://www.w3.org/TR/html4/strict.dtd\">"
+echo "<html lang=\"ga\">"
+echo "<head>"
+echo "<title>Corpas Comhthreomhar Gaeilge-B&eacute;arla: Tortha&iacute;</title>"
+echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"
+echo "<link rel=\"stylesheet\" href=\"//borel.slu.edu/kps.css\" type=\"text/css\">"
+echo "</head>"
+echo "<body>"
+versionout
+FILTERED=`for term in "$@"; do echo "$term"; done | ${MUTATER} | tr "\n" "_" | sed 's/_/\\\\\\|/g' | sed 's/^/\\\\\\(/; s/..$/\\\\\\)/'`
+${LIBEXECPATH}/mivec "${MAXHITS}" "${MUTATER}" "$@" | xmltohtml "${FILTERED}"
+echo "<hr>"
+echo "</body>"
+echo "</html>"
+}
+
+ACTION=tmx
+while [ ${1%%[^-]*} ]
+do
+	if echo "${1}" | grep "=" > /dev/null
+	then
+		JUSTOPT=`echo "${1}" | sed 's/=.*//'`
+		OPTARG=`echo "${1}" | sed 's/^[^=]*=//'`
+		case "${JUSTOPT}" in
+		"--max" )
+			MAXHITS="${OPTARG}"
+		;;
+		"--version" | "--html" | "--mutate" )
+			echo "Unnecessary argument: ${1}" >&2
+			exit 1
+		;;
+		* )
+			echo "Unrecognized option: ${1}" >&2
+			exit 1
+		;;
+		esac
+
+	else
+		case "${1}" in
+		"--html" )
+			ACTION=html
+		;;
+		"--mutate" )
+			MUTATER=/usr/local/bin/mutate
+		;;
+		"--version" )
+			versionout
+			exit 0
+		;;
+		* )
+			echo "Unrecognized option: ${1}" >&2
+			exit 1
+		;;
+		esac
+	fi
+	shift
+done
+${ACTION} "$@"

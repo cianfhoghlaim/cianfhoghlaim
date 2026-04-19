@@ -1,0 +1,1059 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="tasty/Documentation" />
+
+# Tasty Style Helper
+
+`tasty` is a powerful utility for creating styled React components with a declarative, design-system-integrated API. It combines the flexibility of CSS-in-JS with the consistency of a design system, enabling you to build maintainable, themeable components quickly.
+
+---
+
+## 🚀 Quick Start
+
+### Creating Your First Component
+
+```jsx
+import { tasty } from '@cube-dev/ui-kit';
+
+// Basic styled component
+const Card = tasty({
+  as: 'div',
+  styles: {
+    padding: '4x',
+    fill: '#white',
+    border: true,
+    radius: true,
+  },
+  styleProps: ['padding', 'fill'], // Expose styles as props
+});
+
+// Usage
+<Card>Hello World</Card>
+<Card padding="6x" fill="#gray.05">Custom Card</Card>
+```
+
+### Extending Existing Components
+
+> **✅ Best Practice:** Always prefer creating styled wrappers over using the `styles` prop directly.
+
+```jsx
+// ✅ Recommended
+const PrimaryButton = tasty(Button, {
+  styles: {
+    fill: '#purple',
+    color: '#white',
+    padding: '2x 4x',
+  },
+});
+
+// ❌ Avoid
+<Button styles={{ fill: '#purple' }}>Click me</Button>
+```
+
+### Essential Patterns
+
+```jsx
+// Responsive styling
+const ResponsiveBox = tasty({
+  styles: {
+    padding: ['4x', '2x', '1x'], // Large → Medium → Small screens
+  },
+});
+
+// State-based styling
+const InteractiveCard = tasty({
+  styles: {
+    fill: {
+      '': '#white',
+      'hovered': '#gray.05',
+      'pressed': '#gray.10',
+    },
+  },
+});
+
+// Using design tokens
+const TokenCard = tasty({
+  styles: {
+    fill: '#surface',      // Color token
+    color: '#text',        // Color token
+    padding: '2x',         // Custom unit (gap × 2)
+    radius: '1r',          // Custom unit (border-radius)
+    border: '1bw solid #border', // Border width token
+  },
+});
+```
+
+---
+
+## 📚 Dictionary
+
+Key concepts for working with Tasty:
+
+### Style Mapping
+
+Object where keys represent states and values are the styles to apply. Used for state-based styling without conditional logic.
+
+```jsx
+fill: { '': '#white', hovered: '#gray.05', 'theme=danger': '#red' }
+```
+
+### Sub-element
+
+Element styled using a capitalized key. Identified by `data-element` attribute. Capitalized words in selectors (`:has(Item)`, `> Body > Row`) transform to `[data-element="..."]`.
+
+**Important:** Combinators (`>`, `+`, `~`) must have spaces around them: `:has(Body > Row)` ✅, not `:has(Body>Row)` ❌. This is a design choice for parser performance.
+
+```jsx
+styles: { Title: { preset: 'h3' } }
+// Targets: <div data-element="Title">
+```
+
+### Custom Styles
+
+Tasty properties that enhance native CSS with design system integration: `fill` (background), `radius` (border-radius), `border`, `preset` (typography), `gap`.
+
+### Modifier
+
+State value via `mods` prop that generates `data-*` attributes for styling.
+
+```jsx
+mods={{ hovered: true, theme: 'danger' }}
+// → data-hovered="" data-theme="danger"
+```
+
+### Color Token
+
+Named color prefixed with `#` that maps to CSS custom properties. Supports opacity with `.N` suffix.
+
+```jsx
+fill: '#purple.5'  // → var(--purple-color) with 50% opacity
+```
+
+### Custom Unit
+
+Shorthand units referencing design system values: `x` (gap), `r` (radius), `bw` (border-width), `fs` (font-size), `sf` (stable grid fractions).
+
+### Responsive Array
+
+Array of values mapping to breakpoints (large to small). Configure with `<BreakpointsProvider>`.
+
+```jsx
+padding: ['4x', '2x', '1x']  // Large → Medium → Small
+```
+
+### Style Props
+
+Style properties exposed as direct props via `styleProps` config. Provides cleaner API than using `styles` prop.
+
+### Selector Affix (`$`)
+
+Property controlling combinator for sub-element selectors. Default: descendant (space).
+
+```jsx
+Row: { $: '>', padding: '1x' }  // Direct child selector
+```
+
+---
+
+## 🎯 Core Concepts
+
+### Component Creation
+
+Use `tasty()` to create styled components with three main approaches:
+
+```jsx
+// 1. Create new element
+const Box = tasty({
+  as: 'div',
+  styles: { /* styles */ },
+});
+
+// 2. Extend existing component
+const StyledButton = tasty(Button, {
+  styles: { /* additional styles */ },
+});
+
+// 3. Global selector styling
+const GlobalHeading = tasty('.heading', {
+  preset: 'h2',
+  color: '#primary',
+});
+```
+
+### Style Props - Direct Style Access
+
+Use `styleProps` to expose style properties as direct component props:
+
+```jsx
+const FlexibleBox = tasty({
+  as: 'div',
+  styles: {
+    display: 'flex',
+    padding: '2x',
+  },
+  styleProps: ['gap', 'align', 'placeContent', 'fill'],
+});
+
+// Usage - style properties become direct props
+<FlexibleBox
+  gap="2x"
+  align="center"
+  placeContent="space-between"
+  fill="#surface"
+>
+  Content
+</FlexibleBox>
+
+// Equivalent to using styles prop:
+<FlexibleBox styles={{
+  gap: '2x',
+  align: 'center',
+  placeContent: 'space-between',
+  fill: '#surface'
+}}>
+  Content
+</FlexibleBox>
+```
+
+**Benefits of `styleProps`:**
+- **Cleaner API** - No need for `styles` prop wrapper
+- **Better TypeScript support** - Props are properly typed
+- **Component-specific styling** - Expose only relevant properties
+- **Responsive support** - Works with arrays: `gap={['2x', '1x']}`
+- **State-based styling** - Works with objects: `fill={{ '': '#white', hovered: '#gray' }}`
+
+**Style Prop Priority:**
+```jsx
+// Direct props override styles prop
+<FlexibleBox
+  styles={{ gap: '1x' }}
+  gap="3x"  // This takes priority
+/>
+
+// Both direct props and styles can be used together
+<FlexibleBox
+  styles={{ padding: '2x', border: true }}
+  gap="2x"
+  align="center"
+/>
+```
+
+### Style System Overview
+
+Tasty enhances CSS with:
+- **Design tokens** - `#purple`, `#text`, `#border`
+- **Custom units** - `2x` (gap), `1r` (radius), `1bw` (border-width)
+- **Responsive arrays** - `['4x', '2x', '1x']`
+- **State objects** - `{ '': 'default', hovered: 'hover-state' }`
+- **Smart defaults** - `border: true` uses design system values
+
+### Color Tokens & Opacity
+
+```jsx
+// Color tokens with opacity
+color: '#purple',      // Full opacity
+color: '#purple.5',    // 50% opacity
+color: '#purple.05',   // 5% opacity
+
+// Color token fallback syntax (supports nesting)
+color: '(#primary, #secondary)',                    // Single fallback
+fill: '(#surface, (#fallback, #default))',          // Nested fallbacks
+'#theme-color': '(#brand, #purple)',                // In definitions
+
+// Color token definition syntax
+'#primary': 'rgb(255 120 45)',       // Define custom color variables
+'#brand': '#purple',                 // Reference existing color tokens
+'#accent': '#purple.5',              // With opacity
+'#custom': '#aaffbb',                // Hex colors
+'#theme': 'var(--purple-color)',     // CSS custom properties
+
+// Via custom property
+'$custom-color': 'rgb(255 128 0)',
+```
+
+### Custom Units Reference
+
+| Unit | Description | Example | CSS Output |
+|------|-------------|---------|------------|
+| `x` | Gap multiplier | `2x` | `calc(var(--gap) * 2)` |
+| `r` | Border radius | `1r` | `var(--radius)` |
+| `cr` | Card border radius | `1cr` | `var(--card-radius)` |
+| `bw` | Border width | `2bw` | `calc(var(--border-width) * 2)` |
+| `ow` | Outline width | `1ow` | `var(--outline-width)` |
+| `fs` | Font size | `1fs` | `var(--font-size)` |
+| `lh` | Line height | `1lh` | `var(--line-height)` |
+| `sf` | Stable fraction | `1sf` | `minmax(0, 1fr)` |
+
+> **💡 Grid Tip:** Use `sf` units in `gridColumns` for stable grid fractions that prevent layout collapse:
+> ```jsx
+> gridColumns="1sf 2sf 1sf"  // equivalent to "minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr)"
+> ```
+
+### Responsive Styling
+
+Configure breakpoints and use responsive arrays:
+
+```jsx
+// Configure breakpoints (optional)
+<BreakpointsProvider value={[1200, 640]}>
+  <App />
+</BreakpointsProvider>
+
+// Use responsive arrays
+<Block padding={["4x", "2x", "1x"]} />
+// Large screens (≥1200px): 4x
+// Medium screens (640px-1199px): 2x
+// Small screens (<640px): 1x
+```
+
+---
+
+## 📖 Style Properties Reference
+
+### Layout Properties
+
+#### `display` & `hide`
+```jsx
+display: 'flex',     // Standard CSS values
+display: 'grid',
+hide: true,          // Shortcut for display: none
+```
+
+#### `flow` - Layout Direction
+Unified control for flex and grid direction:
+```jsx
+// Flex containers (display: flex)
+flow: 'row',         // flex-flow: row
+flow: 'column wrap', // flex-flow: column wrap
+flow: 'row nowrap',  // flex-flow: row nowrap
+
+// Grid containers (display: grid)
+flow: 'column',      // grid-auto-flow: column
+flow: 'row dense',   // grid-auto-flow: row dense
+
+// Block layout: affects gap direction
+// Default: 'row' for flex, 'column' for block
+// Requires display prop for proper detection
+```
+
+#### `gap` - Element Spacing
+Works across all layout types:
+```jsx
+gap: '2x',           // Standard gap
+gap: '1x 2x',        // Row gap, column gap
+gap: true,           // Default: '1x'
+
+// Flex/Grid: Uses native CSS gap
+// Block: Emulates with margin on children
+// Wrap mode: Uses negative margins on container
+// Default value (true): '1x' → 'var(--gap)'
+// Direction depends on flow prop
+```
+
+#### `padding` & `margin` - Spacing
+Enhanced syntax with directional modifiers:
+```jsx
+padding: '2x',                    // All sides
+padding: '2x 1x',                 // Vertical, horizontal
+padding: '2x top',                // Top only
+padding: '1x left right',         // Left and right
+padding: true,                    // Default: '1x'
+padding: ['2x', '1x', '0.5x'],    // Responsive array (padding only)
+
+// Available modifiers: top, right, bottom, left
+// Default value (true): '1x' → 'var(--gap)'
+// Also supports: paddingBlock, paddingInline for logical properties
+```
+
+#### `width` & `height` - Dimensions
+```jsx
+width: '10x',                     // Fixed width
+width: '1x 10x',                  // min-width, max-width
+width: '1x 5x 10x',               // min, value, max
+width: 'min 2x',                  // min-width only ('var(--gap)' default)
+width: 'max 100%',                // max-width only ('100%' default)
+width: 'fixed 10x',               // Fixed size (all three equal: min, value, max)
+width: 'stretch',                 // Fill available space (browser-specific)
+
+// Default values:
+// - Default: 'auto'
+// - Min default: 'var(--gap)'
+// - Max default: '100%'
+// Intrinsic sizing: max-content, min-content, fit-content, stretch
+// Modifiers: min, max, fixed
+// ✅ Prefer unified syntax over separate maxWidth/minWidth properties
+```
+
+### Visual Properties
+
+#### `color` & `fill` - Colors
+```jsx
+color: '#text',                   // Text color token
+color: true,                      // Default: 'currentColor'
+fill: '#purple.10',               // Background with opacity
+fill: '#surface',                 // Background color token
+color: '(#primary, #dark)',       // Color with fallback
+fill: '(#surface, (#white, #default))', // Nested fallbacks
+color: {
+  '': '#dark',
+  hovered: '#purple',
+  disabled: '#gray',
+},
+
+// color default (true): 'currentColor'
+// Provides context variables: --current-color, --current-color-rgb
+// fill provides: --context-fill-color, --context-fill-color-rgb
+```
+
+#### `border` - Borders
+Enhanced border syntax with directional support:
+```jsx
+border: true,                     // Default: '1bw solid var(--border-color)'
+border: '2bw solid #purple',      // Custom width, style, color
+border: '1bw top',                // Top border only
+border: 'dashed #danger left right', // Left/right borders
+border: '#purple',                // Color only (uses defaults for width/style)
+
+// Default values:
+// - Width: '1bw' → 'var(--border-width)'
+// - Style: 'solid'
+// - Color: 'var(--border-color)'
+// Available styles: none, hidden, dotted, dashed, solid, double, groove, ridge, inset, outset
+// Available modifiers: top, right, bottom, left
+```
+
+#### `radius` - Border Radius
+Advanced radius with shapes and directions:
+```jsx
+radius: '2r',                     // Custom radius
+radius: true,                     // Default: '1r' → 'var(--radius)'
+radius: 'round',                  // Fully rounded (9999rem)
+radius: 'ellipse',                // Elliptical (50%)
+radius: 'leaf',                   // Asymmetric leaf shape
+radius: 'backleaf',               // Reverse leaf shape
+radius: '1r top',                 // Top corners only (top-left, top-right)
+
+// Default value (true): '1r' → 'var(--radius)'
+// Shape modifiers: round, ellipse, leaf, backleaf
+// Directional modifiers: top, right, bottom, left
+// Provides --context-radius CSS variable for child elements
+```
+
+### Typography Properties
+
+#### `preset` - Typography Presets
+Semantic typography shortcuts:
+```jsx
+preset: 'h1',                     // Heading 1
+preset: 't2',                     // Text style 2
+preset: 'p1',                     // Paragraph 1
+preset: 'h2 strong',              // Bold heading 2
+
+// Available presets:
+// Headings: h1, h2, h3, h4, h5, h6
+// Text: t1, t2, t2m, t3, t3m, t4, t4m
+// Paragraphs: p1, p2, p3, p4
+// Main text: m1, m2, m3
+// Captions: c1, c2, tag
+```
+
+#### `align`, `justify`, & `place` - Alignment
+Unified alignment control for flex and grid:
+```jsx
+align: 'center',                  // align-items & align-content: center
+justify: 'space-between',         // justify-items & justify-content: space-between
+place: 'center',                  // place-items & place-content: center
+
+// Sets both *-items and *-content properties
+// Works with flex and grid layouts
+// Standard CSS alignment values supported
+```
+
+#### `inset` - Positioning Offset
+Shorthand for positioning offsets:
+```jsx
+inset: '0',                       // All sides: 0
+inset: '2x top',                  // Top only: 2x
+inset: '1x left right',           // Left and right: 1x
+inset: true,                      // Default: 0
+
+// Available modifiers: top, right, bottom, left
+// Default value (true): 0
+```
+
+### Advanced Properties
+
+#### `transition` - Animations
+Semantic transition names:
+```jsx
+transition: 'fill 0.2s',          // Background transitions
+transition: 'fade 0.15s ease-in', // Mask transitions
+transition: 'theme 0.3s',         // All theme properties
+transition: 'border 0.2s, radius 0.3s', // Multiple properties
+
+// Available semantic names:
+// - fade: mask
+// - fill: background-color
+// - border: border, box-shadow
+// - radius: border-radius
+// - theme: color, background-color, box-shadow, border, border-radius, outline
+// - preset: font-size, line-height, letter-spacing, font-weight, font-style
+// - gap: gap, margin
+// - width/height: dimensions and constraints
+// Default timing: 'var(--transition)'
+```
+
+#### `scrollbar` - Scrollbar Styling
+```jsx
+scrollbar: true,                  // Default: 'thin' with system colors
+scrollbar: 'thin 10px #purple.40 #dark.04', // Size and colors
+scrollbar: 'none',                // Hidden scrollbar
+scrollbar: 'auto',                // Browser default width
+scrollbar: 'styled 12px #primary #surface', // Enhanced appearance
+
+// Available modifiers:
+// - thin, auto, none: scrollbar-width values
+// - stable, both-edges: scrollbar-gutter behavior
+// - always: force scrollbars to show (sets overflow: scroll)
+// - styled: enhanced appearance with transitions
+// Color order: thumb, track, corner (optional)
+// Default colors: var(--scrollbar-thumb-color), transparent
+```
+
+#### `fade` - Edge Fading
+Gradient masks for edge fading:
+```jsx
+fade: true,                       // All edges, default width
+fade: '2x left right',            // Left/right edges, 2x width
+fade: '1x top',                   // Top edge only
+fade: '3x 1x top bottom',         // Different widths per edge
+
+// Default width: 'var(--fade-width)'
+// Default edges: top, right, bottom, left (all)
+// Available modifiers: top, right, bottom, left
+// Uses CSS mask with linear gradients and mask-composite: intersect
+```
+
+---
+
+## 🔧 Advanced Features
+
+### Modifiers & State Binding
+
+Modifiers create `data-*` attributes for state-based styling:
+
+```jsx
+const Button = tasty({
+  styles: {
+    fill: {
+      '': '#blue',
+      hovered: '#blue.8',          // Custom boolean modifier
+      pressed: '#blue.6',          // Custom boolean modifier
+      'theme=danger': '#red',      // Value modifier
+      'size=large': '#blue.10',    // Value modifier
+      disabled: '#gray',           // Built-in state
+    },
+  },
+});
+
+// Usage with boolean mods
+<Button mods={{ hovered: true, pressed: false }} disabled>
+  Click me
+</Button>
+// Renders: <button data-hovered="" disabled>
+
+// Usage with value mods
+<Button mods={{ theme: 'danger', size: 'large' }}>
+  Delete
+</Button>
+// Renders: <button data-theme="danger" data-size="large">
+```
+
+#### Value Modifiers
+
+Modifiers now accept string values in addition to boolean:
+
+```jsx
+// Boolean mods
+mods={{ hovered: true }}         // → data-hovered=""
+mods={{ isSelected: true }}      // → data-selected="" (preserves 'is' via kebab-case)
+
+// String value mods
+mods={{ theme: 'danger' }}       // → data-theme="danger"
+mods={{ size: 'large' }}         // → data-size="large"
+mods={{ variant: 'primary' }}    // → data-variant="primary"
+
+// Number mods (converted to string)
+mods={{ level: 2 }}              // → data-level="2"
+
+// Empty string (explicit empty value)
+mods={{ label: '' }}             // → data-label=""
+
+// Mixed boolean and value mods
+mods={{ 
+  hovered: true, 
+  theme: 'danger',
+  size: 'large'
+}}
+// → data-hovered="" data-theme="danger" data-size="large"
+```
+
+#### Shorthand Syntax for Value Mods
+
+Use shorthand syntax in style definitions for value mods:
+
+```jsx
+const Button = tasty({
+  styles: {
+    fill: {
+      '': '#surface',
+      // Recommended shorthand (unquoted values)
+      'theme=danger': '#red',
+      'theme=warning': '#yellow',
+      'size=large': '#blue.10',
+      
+      // Also supported (quoted values)
+      'variant="primary"': '#purple',
+      "variant='secondary'": '#gray',
+      
+      // Full attribute selector (pass-through)
+      '[data-theme="danger"]': '#red',
+      
+      // Combining with boolean mods
+      'hovered & theme=danger': '#light-red',
+      'theme=danger & size=large': '#dark-red',
+    },
+  },
+});
+```
+
+### Complex State Logic
+
+Use logical operators for complex state combinations:
+
+```jsx
+color: {
+  '': '#default',
+  '!disabled & hovered': '#blue',     // NOT disabled AND hovered
+  'success | complete': '#green',     // success OR complete
+  'warning ^ error': '#yellow',       // warning XOR error (exclusive)
+  ':hover': '#purple',                // CSS pseudo-class
+  '[data-theme="dark"]': '#light',    // Data attribute
+}
+```
+
+#### Advanced Selector Examples
+
+```jsx
+// Using brackets for grouping complex logic
+color: {
+  '': '#default',
+  '(hovered | focused) & !disabled': '#blue',    // Grouped: (hovered OR focused) AND NOT disabled
+  '!(error | warning) & success': '#green',      // NOT (error OR warning) AND success
+  '(pressed & !disabled) | selected': '#purple', // (pressed AND NOT disabled) OR selected
+}
+
+// Other supported selectors
+fill: {
+  '': '#surface',
+  '.custom-class': '#highlight',           // CSS class selector
+  '[data-variant="primary"]': '#primary',  // Data attribute with value
+  '[data-loading]': '#gray',               // Data attribute (boolean)
+  disabled: '#disabled',                   // Built-in state
+  '[aria-selected="true"]': '#selected',   // ARIA attribute
+  ':focus-visible': '#focus',              // CSS pseudo-class
+}
+
+// Combining different selector types
+border: {
+  '': '1bw solid #border',
+  'hovered & .interactive': '2bw solid #purple',     // Custom mod AND CSS class
+  '[data-size="large"] & focused': '3bw solid #blue', // Data attribute AND custom mod
+  '!disabled & (:hover | :focus)': '1bw solid #active', // NOT disabled AND (hover OR focus)
+}
+```
+
+> **💡 Recommendations:**
+> - **Prefer `mods` prop** for custom states: `<Component mods={{ hovered: true }}>`
+> - **Prefer data attributes** for states with values: `<Component data-variant="primary">`
+> - **Reserve CSS selectors** for built-in states and external styling needs
+> - **Use brackets `()` for grouping** complex logical expressions
+
+> **⚠️ Important:** Place more specific rules last - they're checked in reverse order.
+
+### Sub-element Styling
+
+Style inner elements using `data-element` attributes:
+
+```jsx
+const Card = tasty({
+  styles: {
+    padding: '4x',
+
+    // Sub-element styles
+    Title: {                      // Styles data-element="Title"
+      preset: 'h3',
+      color: '#primary',
+    },
+    Content: {                    // Styles data-element="Content"
+      color: {
+        '': '#text',
+        '[data-variant="danger"]': '#danger',
+      },
+    },
+  },
+});
+
+// Usage
+<Card>
+  <div data-element="Title">Card Title</div>
+  <div data-element="Content">Card content</div>
+</Card>
+```
+
+#### Selector Affix (`$`)
+
+Control sub-element selector combinator using the `$` property:
+
+```jsx
+const Table = tasty({
+  styles: {
+    // Direct child selector
+    Row: {
+      $: '>',                     // .table > [data-element="Row"]
+      padding: '1x',
+    },
+    
+    // Chained selectors (auto-transforms capitalized words)
+    // ⚠️ Important: Spaces required around combinators for parsing
+    Cell: {
+      $: '> Body > Row >',        // ✅ Correct: spaces around > 
+                                  // ❌ Wrong: '>Body>Row>' (parser can't split)
+                                  // → .table > [data-element="Body"] > [data-element="Row"] > [data-element="Cell"]
+      border: '1bw solid #border',
+    },
+    
+    // Default: descendant selector (space)
+    Text: {
+      color: '#text',             // .table [data-element="Text"]
+    },
+  },
+});
+```
+
+> **⚠️ Space Requirements:** Combinators (`>`, `+`, `~`) in selector affixes **must have spaces** around them when used with capitalized element names. Use `$: '> Body > Row'` ✅, not `$: '>Body>Row'` ❌. This is a performance consideration—the parser uses simple whitespace splitting to identify element names.
+
+#### `:has()` Selector with Sub-elements
+
+Style components based on their children using the `:has()` pseudo-class:
+
+```jsx
+const List = tasty({
+  styles: {
+    border: {
+      '': 'none',
+      // ⚠️ Spaces required around combinators (>, +, ~)
+      ':has(Body > Row)': '1bw solid #border',  // ✅ Correct
+      // ':has(Body>Row)': ...                   // ❌ Wrong: parser can't split
+    },
+    
+    padding: {
+      '': '2x',
+      ':has(Item)': '4x',                       // Single element, no combinator
+      'hovered & :has(Item)': '6x',             // Combining with other modifiers
+    },
+  },
+});
+```
+
+> **⚠️ Space Requirements:** Combinators (`>`, `+`, `~`) **must have spaces** around them when used with capitalized element names. Use `:has(Body > Row)` ✅, not `:has(Body>Row)` ❌. This is a performance consideration—the parser uses whitespace splitting to identify element names. A console error will warn if spaces are missing.
+
+### Variants & Theming
+
+Create themed component variations:
+
+```jsx
+const Button = tasty({
+  styles: {
+    padding: '2x 4x',
+    border: true,
+  },
+  variants: {
+    default: {
+      fill: '#blue',
+      color: '#white',
+    },
+    danger: {
+      fill: '#red',
+      color: '#white',
+    },
+    outline: {
+      fill: 'transparent',
+      color: '#blue',
+      border: '1bw solid #blue',
+    },
+  },
+});
+
+// Usage
+<Button variant="danger">Delete</Button>
+<Button variant="outline">Cancel</Button>
+```
+
+### Custom Properties
+
+Define and use custom CSS properties:
+
+```jsx
+const Component = tasty({
+  styles: {
+    // Define custom properties
+    '$local-spacing': '2x',
+    '$theme-color': 'rgb(255 128 0)',
+
+    // Use custom properties
+    padding: '$local-spacing',
+    color: '$theme-color',
+    margin: '($custom-margin, 1x)', // With fallback
+  },
+});
+```
+
+### Custom Color Definitions
+
+Define custom color variables with enhanced syntax:
+
+```jsx
+const ThemedComponent = tasty({
+  styles: {
+    // Define custom color variables (maps to --name-color CSS properties)
+    '#primary': 'rgb(255 120 45)',       // Creates --primary-color
+    '#secondary': '#purple',             // Creates --secondary-color, references purple token
+    '#accent': '#purple.5',              // Creates --accent-color with 50% opacity
+    '#success': '#aaffbb',               // Creates --success-color from hex
+    '#brand': 'var(--purple-color)',     // Creates --brand-color from CSS variable
+    '#theme': '(#brand, #purple)',       // Creates --theme-color with fallback chain
+    
+    // Use the defined colors
+    fill: '#primary',                    // Uses var(--primary-color)
+    color: '#secondary',                 // Uses var(--secondary-color)  
+    border: '1bw solid #accent',         // Uses var(--accent-color)
+    
+    // Color definitions work with state styling
+    '#interactive': {
+      '': '#primary',
+      'hovered': '#primary.8',
+      'pressed': '#primary.6',
+    },
+  },
+});
+
+// Color variables are automatically scoped and provide RGB variants
+// Generates: --primary-color, --primary-color-rgb, etc.
+// Fallback chains maintain RGB variants: var(--brand-color-rgb, var(--purple-color-rgb))
+```
+
+## ✅ Best Practices & Anti-patterns
+
+### Do's ✅
+
+```jsx
+// ✅ Use styled wrappers instead of styles prop
+const StyledButton = tasty(Button, {
+  styles: { fill: '#purple' },
+  styleProps: ['fill', 'color'], // Expose common styles as props
+});
+
+// ✅ Use design tokens and custom units
+styles: {
+  color: '#text',
+  padding: '2x',
+  radius: '1r',
+}
+
+// ✅ Define custom color tokens with #name syntax
+styles: {
+  '#primary': 'rgb(255 120 45)',
+  '#accent': '#purple.5',
+  fill: '#primary',
+  border: '1bw solid #accent',
+}
+
+// ✅ Use semantic transition names
+transition: 'theme 0.3s'
+
+// ✅ Use sub-element styling for inner elements
+styles: {
+  Title: { preset: 'h3' },
+  Content: { color: '#text' },
+}
+
+// ✅ Use responsive arrays for breakpoints
+padding: ['4x', '2x', '1x']
+width: ['max 1200px', 'max 800px', 'max 100%']
+
+// ✅ Use modifiers for state-based styling
+styles: {
+  fill: {
+    '': '#white',
+    hovered: '#gray.05',
+  },
+}
+
+// ✅ Use simplified mods for built-in states (disabled, checked, selected)
+styles: {
+  color: {
+    '': '#dark',
+    disabled: '#gray',     // Preferred over '[disabled]'
+    checked: '#blue',      // Preferred over '[checked]'
+    selected: '#purple',   // Preferred over '[selected]'
+  },
+}
+
+// ✅ Use styleProps for component APIs
+const Container = tasty({
+  styles: { display: 'flex' },
+  styleProps: ['gap', 'padding', 'align', 'justify'],
+});
+// Enables: <Container gap="2x" align="center" />
+```
+
+### Don'ts ❌
+
+```jsx
+// ❌ Don't use styles prop directly
+<Button styles={{ fill: '#purple' }}>Click</Button>
+
+// ❌ Don't use raw CSS values when tokens exist
+styles: {
+  color: '#333333',        // Use '#text' instead
+  padding: '16px',         // Use '2x' instead
+  radius: '6px',     // Use 'radius: "1r"' instead
+}
+
+// ❌ Don't use CSS property names when Tasty alternatives exist
+styles: {
+  backgroundColor: '#blue',   // Use 'fill' instead
+  borderColor: '#purple',     // Use 'border' instead
+  borderWidth: '2px',         // Use 'border' instead
+  borderStyle: 'dashed',      // Use 'border' instead
+  borderRadius: '8px',        // Use 'radius' instead
+  maxWidth: '100%',           // Use 'width: "max 100%"' instead
+  minWidth: '200px',          // Use 'width: "min 200px"' instead
+  maxHeight: '500px',         // Use 'height: "max 500px"' instead
+  minHeight: '100px',         // Use 'height: "min 100px"' instead
+}
+
+// ❌ Don't use custom selectors unnecessarily
+styles: {
+  '& > div': { margin: '1x' },     // Use sub-elements instead
+  '&:hover': { color: '#blue' },   // Use modifiers instead
+}
+
+// ❌ Don't change styles prop at runtime (performance)
+const [dynamicStyles, setDynamicStyles] = useState({});
+<Component styles={dynamicStyles} /> // Use style prop for dynamic values
+```
+
+#### Tasty vs Native CSS Properties
+
+| ❌ Native CSS | ✅ Tasty Alternative | Benefits |
+|---------------|---------------------|----------|
+| `backgroundColor` | `fill` | Color tokens, context variables |
+| `borderColor`, `borderWidth`, `borderStyle` | `border` | Unified syntax, directional modifiers |
+| `borderRadius` | `radius` | Custom units, shape modifiers |
+| `maxWidth` | `width: "max 100%"` | Unified dimension control |
+| `minWidth` | `width: "min 200px"` | Consistent syntax |
+| `maxHeight` | `height: "max 500px"` | Dimension constraints |
+| `minHeight` | `height: "min 100px"` | Design system integration |
+
+```jsx
+// ✅ Recommended Tasty approach
+styles: {
+  fill: '#surface',
+  border: '1bw solid #border',
+  radius: '1r',
+  width: 'min 200px max 800px',
+  height: 'min 100px',
+}
+```
+
+### Performance Tips ⚡
+
+```jsx
+// ✅ Use native style prop for dynamic values
+<Component
+  style={{ '--side-padding': dynamicPadding }}
+  styles={{ padding: '1x $side-padding' }}
+/>
+
+// ✅ Avoid changing styles prop at runtime
+// ❌ Don't do this:
+<Component styles={isActive ? activeStyles : defaultStyles} />
+
+// ✅ Use modifiers instead:
+<Component mods={{ active: isActive }} />
+
+// ✅ Use variants for theme switching instead of dynamic styles
+<Component variant={isDark ? 'dark' : 'light'} />
+```
+
+### Common Patterns 🎨
+
+```jsx
+// Interactive card with hover states
+const InteractiveCard = tasty({
+  styles: {
+    padding: '4x',
+    fill: {
+      '': '#surface',
+      hovered: '#surface-hover',
+    },
+    border: '1bw solid #border',
+    radius: '2r',
+    transition: 'fill 0.2s',
+  },
+});
+
+// Responsive container
+const Container = tasty({
+  styles: {
+    padding: ['6x', '4x', '2x'],
+    width: ['max 1200px', 'max 800px', 'max 100%'],
+    margin: '0 auto',
+  },
+});
+
+// Button with variants
+const Button = tasty({
+  styles: {
+    padding: '2x 4x',
+    radius: '1r',
+    border: 'none',
+    preset: 't3',
+    transition: 'fill 0.2s',
+  },
+  variants: {
+    primary: { fill: '#primary', color: '#white' },
+    secondary: { fill: '#secondary', color: '#text' },
+    ghost: { fill: 'transparent', color: '#primary' },
+  },
+});
+```
+
+---
+
+## 🔗 Cross-References
+
+- **Getting Started**: See [Quick Start](#-quick-start) for basic usage patterns
+- **Layout**: See [Layout Properties](#layout-properties) for `flow`, `gap`, `padding`, `margin`
+- **Styling**: See [Visual Properties](#visual-properties) for `color`, `fill`, `border`, `radius`
+- **Typography**: See [Typography Properties](#typography-properties) for `preset` and text styling
+- **Interactivity**: See [Modifiers & State Binding](#modifiers--state-binding) for hover, focus, and custom states
+- **Theming**: See [Variants & Theming](#variants--theming) for component variations
+- **Performance**: See [Performance Tips](#performance-tips-) for optimization techniques
+- **Create Component Guide**: See [CreateComponent.docs.mdx](/docs/tasty-create-component--docs) for component creation patterns
+
+---
+
+> **Need Help?** This documentation covers the most important `tasty` features. For additional examples and component creation patterns, see the [Component Creation Guide](/docs/tasty-create-component--docs).

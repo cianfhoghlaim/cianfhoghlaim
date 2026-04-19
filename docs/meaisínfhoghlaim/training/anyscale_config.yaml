@@ -1,0 +1,158 @@
+# =============================================================================
+# Anyscale Configuration - Distributed Training ($100 credits)
+# =============================================================================
+# Ray-based distributed training for Irish language models.
+#
+# Usage:
+#   anyscale job submit -f anyscale_config.yaml
+#
+# Documentation: https://docs.anyscale.com
+# =============================================================================
+
+name: irish-llm-distributed-training
+
+# =============================================================================
+# Compute Configuration
+# =============================================================================
+compute_config:
+  cloud: aws
+  region: eu-west-1
+
+  # Head node (orchestration)
+  head_node_type:
+    name: head
+    instance_type: m5.2xlarge
+    resources:
+      CPU: 8
+
+  # Worker nodes (training)
+  worker_node_types:
+    - name: gpu-workers
+      instance_type: g5.2xlarge  # A10G GPU
+      min_workers: 2
+      max_workers: 4
+      resources:
+        CPU: 8
+        GPU: 1
+        accelerator_type:A10G: 1
+
+  # Auto-scaling
+  idle_timeout_minutes: 10
+
+# =============================================================================
+# Runtime Environment
+# =============================================================================
+runtime_env:
+  pip:
+    - torch>=2.1.0
+    - transformers>=4.36.0
+    - datasets>=2.16.0
+    - accelerate>=0.25.0
+    - deepspeed>=0.12.0
+    - ray[train]>=2.9.0
+    - unsloth @ git+https://github.com/unslothai/unsloth.git
+    - wandb>=0.16.0
+    - huggingface_hub>=0.20.0
+
+  env_vars:
+    HF_TOKEN: ${HF_TOKEN}
+    WANDB_API_KEY: ${WANDB_API_KEY}
+    RAY_memory_monitor_refresh_ms: "0"
+
+# =============================================================================
+# Training Job Configuration
+# =============================================================================
+entrypoint: python train_distributed.py
+
+# Job-specific configuration
+job_config:
+  # Model configuration
+  model:
+    name: unsloth/Llama-3.2-3B-Instruct
+    max_seq_length: 2048
+    load_in_4bit: true
+
+  # LoRA configuration
+  lora:
+    r: 16
+    alpha: 32
+    dropout: 0.05
+    target_modules:
+      - q_proj
+      - k_proj
+      - v_proj
+      - o_proj
+      - gate_proj
+      - up_proj
+      - down_proj
+
+  # Training configuration
+  training:
+    num_epochs: 3
+    batch_size_per_device: 4
+    gradient_accumulation_steps: 4
+    learning_rate: 2e-4
+    warmup_ratio: 0.03
+    lr_scheduler: cosine
+    fp16: true
+    deepspeed_stage: 2
+
+  # Dataset
+  dataset:
+    name: cianfhoghlaim/sec-exam-irish
+    split: train
+    text_field: text
+
+  # Output
+  output:
+    hub_model_id: cianfhoghlaim/irish-llama-distributed
+    save_steps: 100
+    checkpoint_dir: /mnt/cluster_storage/checkpoints
+
+# =============================================================================
+# Ray Train Configuration
+# =============================================================================
+ray_train:
+  scaling_config:
+    num_workers: 4
+    use_gpu: true
+    resources_per_worker:
+      CPU: 8
+      GPU: 1
+
+  # DeepSpeed ZeRO-2 for memory efficiency
+  deepspeed:
+    stage: 2
+    offload_optimizer: false
+    offload_param: false
+
+  # Checkpointing
+  checkpoint_config:
+    num_to_keep: 3
+    checkpoint_frequency: 100
+
+  # Failure handling
+  failure_config:
+    max_failures: 3
+
+# =============================================================================
+# Federated Learning Configuration (Future)
+# =============================================================================
+# For privacy-preserving training across schools
+federated:
+  enabled: false  # Enable when ready
+  framework: flower
+
+  # Client configuration
+  clients:
+    min_clients: 3
+    max_clients: 10
+
+  # Aggregation strategy
+  strategy: fedavg
+
+  # Privacy settings
+  privacy:
+    differential_privacy: true
+    epsilon: 1.0
+    delta: 1e-5

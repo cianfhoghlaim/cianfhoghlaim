@@ -1,0 +1,701 @@
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: charlifter-l10n\n"
+"Report-Msgid-Bugs-To: http://code.google.com/p/charlifter-l10n/issues\n"
+"POT-Creation-Date: 2010-08-14 12:05-0500\n"
+"PO-Revision-Date: 2013-04-29 09:33+0000\n"
+"Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
+"Language-Team: Irish (http://www.transifex.com/projects/p/charlifter-l10n/language/ga/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ga\n"
+"Plural-Forms: nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);\n"
+
+#. TRANSLATORS: This is a program for adding diacritics to texts
+#. automatically, for many different languages.  For example, if
+#. you input  "Pot sa mananc sticla si ea nu ma raneste" (Romanian),
+#. it outputs "Pot să mănânc sticlă și ea nu mă rănește".  We call
+#. this process "accentuating" the original text (this isn't the real
+#. meaning of "accentuate" in English - it's a pun).  This string is
+#. the menu command for accentuating a given text in the default language.
+#. You might translate it as "Restore (the) Text" or "Correct (the) Text".
+#. %1$S is the language name, %2$S is its code, e.g. "Accentuate Text: Spanish
+#. (es)"
+#: lift-citem-label
+msgid "Accentuate Text: %1$S (%2$S)"
+msgstr "Athchóirigh an Téacs: %1$S (%2$S)"
+
+#: lift-citem-label-accesskey
+msgid "A"
+msgstr "A"
+
+#. TRANSLATORS: Menu command for lifting a text, but where you are
+#. given a choice of languages for the input text.
+#: lift-cmenu-label
+msgid "Accentuate Text For..."
+msgstr "Athchóirigh an Téacs le haghaidh..."
+
+#. %1$S is the language name, %2$S is its code,
+#. e.g. "Accentuate Highlighted Text: Spanish (es)"
+#: lift-citem-selection-label
+msgid "Accentuate Selected Text: %1$S (%2$S)"
+msgstr "Athchóirigh an Téacs Roghnaithe: %1$S (%2$S)"
+
+#: lift-cmenu-selection-label
+msgid "Accentuate Selected Text For..."
+msgstr "Athchóirigh an Téacs Roghnaithe le haghaidh..."
+
+#: charlifter.citem.cancel.label
+msgid "Cancel"
+msgstr "Cealaigh"
+
+#: charlifter.citem.cancel.accesskey
+msgid "C"
+msgstr "C"
+
+#. TRANSLATORS: If the program restores a text incorrectly, users can correct
+#. the error, select the corrected text, and then choose this menu item
+#. to send the correction to our server.
+#: charlifter.citem.feedback.label
+msgid "Submit Selection As Feedback"
+msgstr "Seol an Téacs Roghnaithe Mar Aiseolas"
+
+#: charlifter.citem.feedback.accesskey
+msgid "F"
+msgstr "S"
+
+#. TRANSLATORS: "Accentuate.us" is the name of the program; no need to
+#. translate it.
+#: charlifter.about.menu.label
+msgid "About Accentuate.us"
+msgstr "Maidir le hAccentuate.us"
+
+#. TRANSLATORS: The variable %1$S is filled in with the name of the program
+#: about-accentuateus
+msgid ""
+"This add-on is an interface to the %1$S language service that allows you to "
+"type quickly and easily in more than 100 languages without extra keystrokes "
+"or a special keyboard."
+msgstr "Is éard atá sa bhreiseán seo ná comhéadan ar sheirbhís teanga %1$S a ligeann duit clóscríobh go sciobtha i níos mó ná 100 teanga, gan eochairbhuillí breise agus gan méarchlár speisialta."
+
+#: about-privacy
+msgid "Your privacy is our top priority!"
+msgstr "Is í do phríobháideacht an chloch is mó ar ár bpaidrín!"
+
+#. TRANSLATORS: The variable %1$S is filled with the add-on authors' names
+#: about-copyright
+msgid "Copyright (c) 2010 %1$S"
+msgstr "Copyright (c) 2010 %1$S"
+
+#. TRANSLATORS: %1$S is filled with the license name (GPLv3) and a link to the
+#. license text
+#: about-license
+msgid "Licensed under %1$S."
+msgstr "Ceadúnas: %1$S."
+
+#. TRANSLATORS: This text will be followed by a link to a web page for
+#. contributors
+#: about-contribute
+msgid "Be part of our community:"
+msgstr "Glac páirt inár gcomhphobal:"
+
+#. TRANSLATORS: "Accentuate.us" is the name of the program; no need to
+#. translate it.
+#: errors-title
+msgid "Accentuate.us: Error"
+msgstr "Accentuate.us: Earráid"
+
+#: errors-malfunction
+msgid "There is a problem with your installation.  Please try again later."
+msgstr "Tharla earráid leis an mbreiseán. Bain triail eile as ar ball."
+
+#: errors-communication
+msgid ""
+"The add-on was unable to connect with the server.  Please try again later."
+msgstr "Ní raibh an breiseán in ann dul i dteagmháil leis an bhfreastalaí.  Bain triail eile as ar ball."
+
+#. TRANSLATORS: "Accentuate.us" is the name of the program; no need to
+#. translate it.
+#: feedback-confirm-title
+msgid "Accentuate.us: Feedback"
+msgstr "Accentuate.us: Aiseolas"
+
+#: feedback-confirm
+msgid ""
+"Wait! Did you make sure to correct the text before submitting it as "
+"feedback?  You will only see this message once."
+msgstr "Fan ort go fóill!  Ba chóir duit ceartúchán a dhéanamh ar an téacs sula seolfaidh tú é mar aiseolas.  An bhfuil an téacs seo ceartaithe?  Ní fheicfidh tú an teachtaireacht seo ach uair amháin."
+
+#. TRANSLATORS: "Accentuate.us" is the name of the program; no need to
+#. translate it.
+#: feedback-success-title
+msgid "Accentuate.us: Feedback Submitted"
+msgstr "Accentuate.us: Aiseolas Seolta"
+
+#: feedback-success
+msgid ""
+"Thank you for be being part of the Accentuate.us community.  Our program "
+"learns from all text you submit as feedback, and over time this will help "
+"improve performance for your language."
+msgstr "Go raibh maith agat as páirt a ghlacadh sa chomhphobal Accentuate.us.  Foghlaimíonn ár ríomhchlár ón téacs go léir a sheolann tú chugainn mar aiseolas, agus le himeacht ama tiocfaidh feabhas ar na torthaí i do theanga."
+
+#: feedback-success-hide
+msgid "Never display this message again."
+msgstr "Ná taispeáin an teachtaireacht seo arís."
+
+#: feedback-fail
+msgid ""
+"Please resubmit the feedback once you have corrected the text. Thank you!"
+msgstr "Athsheol an t-aiseolas nuair a bheidh an téacs ceartaithe agat. Go raibh maith agat!"
+
+#. TRANSLATORS: This is given as an option in the list of languages, and if
+#. chosen, all special characters are removed from the text
+#. ("deaccentuation").
+#. 'ASCII' would be more precise than 'Plain Text' but we are trying to keep
+#. things non-technical.
+msgid "Plain Text"
+msgstr "Gnáth-Théacs"
+
+msgid ""
+"Error: Your version of the language list is newer than the one on the "
+"server."
+msgstr "Earráid: Tá an leagan den liosta teangacha atá agat níos nuaí ná an leagan ar an bhfreastalaí."
+
+msgid "No text to lift"
+msgstr "Níl aon téacs le hathchóiriú"
+
+msgid "No target language was specified"
+msgstr "Ní raibh sprioctheanga roghnaithe"
+
+msgid "The chosen language is not available"
+msgstr "Níl an teanga roghnaithe ar fáil"
+
+msgid "No feedback text was sent to the server"
+msgstr "Níor seoladh téacs aiseolais go dtí an freastalaí"
+
+msgid "The language of the feedback text was not specified"
+msgstr "Níor sonraíodh teanga an téacs aiseolais"
+
+msgid "Problem saving feedback text"
+msgstr "Tharla earráid agus téacs aiseolais á shábháil"
+
+msgid "Usage: %1$S -r -l XX [FILES-TO-RESTORE]"
+msgstr "Úsáid: %1$S -r -l XX [COMHAID-LE-hATHCHÓIRIÚ]"
+
+msgid "or     %1$S -r -l XX -i ASCII-TEXT"
+msgstr "nó     %1$S -r -l XX -i 'TÉACS-LE-hATHCHÓIRIÚ'"
+
+msgid "or     %1$S -f -l XX [CORRECT-FILES]"
+msgstr "nó     %1$S -f -l XX [COMHAID-CHEARTA]"
+
+msgid "or     %1$S --list (show all available languages)"
+msgstr "nó     %1$S --list (taispeáin na teangacha atá ar fáil)"
+
+msgid "or     %1$S --help (display this help)"
+msgstr "nó     %1$S --help (taispeáin an chabhair seo)"
+
+msgid "Long versions of the command-line switches are available also:"
+msgstr "Is féidir leaganacha fada de na roghanna ar líne na n-orduithe a úsáid freisin:"
+
+msgid "Didn't understand the response from the server"
+msgstr "Níor tuigeadh an freagra ón bhfreastalaí"
+
+msgid "You must specify exactly one of -f or -r."
+msgstr "Caithfidh tú ceann amháin de -f nó -r a roghnú."
+
+msgid "You must specify a language with -l or --lang."
+msgstr "Caithfidh tú teanga a shonrú le -l nó --lang."
+
+msgid "Option --input/-i may only be used with --restore/-r."
+msgstr "Níl --input/-i ceadaithe ach amháin in éineacht le --restore/-r."
+
+#. TRANSLATORS: All remaining strings are language names.
+#. ada
+msgid "Dangme"
+msgstr "Daingmis"
+
+#. af
+msgid "Afrikaans"
+msgstr "Afracáinis"
+
+#. ak
+msgid "Akan"
+msgstr "Acáinis"
+
+#. ay
+msgid "Aymara"
+msgstr "Aidhmiris"
+
+#. az
+msgid "Azerbaijani"
+msgstr "Asarbaiseáinis"
+
+#. bas
+msgid "Basaa"
+msgstr "Basáis"
+
+#. bci
+msgid "Baoulé"
+msgstr "Báúilis"
+
+#. bfa
+msgid "Bari"
+msgstr "Báiris"
+
+#. bin
+msgid "Edo"
+msgstr "Éadóis"
+
+#. bm
+msgid "Bambara"
+msgstr "Bambáiris"
+
+#. br
+msgid "Breton"
+msgstr "Briotáinis"
+
+#. bum
+msgid "Bulu"
+msgstr "Búlúis"
+
+#. byv
+msgid "Medumba"
+msgstr "Meadúimbis"
+
+#. ca
+msgid "Catalan"
+msgstr "Catalóinis"
+
+#. ch
+msgid "Chamorro"
+msgstr "Seamóróis"
+
+#. chr
+msgid "Cherokee"
+msgstr "Seiricis"
+
+#. cmn-Latn
+msgid "Mandarin Chinese (Pinyin)"
+msgstr "Mandairínis (Pinyin)"
+
+#. csb
+msgid "Kashubian"
+msgstr "Caisiúibis"
+
+#. cs
+msgid "Czech"
+msgstr "Seicis"
+
+#. cv
+msgid "Chuvash"
+msgstr "Suvaisis"
+
+#. cy
+msgid "Welsh"
+msgstr "Breatnais"
+
+#. da
+msgid "Danish"
+msgstr "Danmhairgis"
+
+#. de
+msgid "German"
+msgstr "Gearmáinis"
+
+#. dlc
+msgid "Elfdalian"
+msgstr "Eilfdeáilis"
+
+#. dua
+msgid "Duala"
+msgstr "Duailis"
+
+#. dyo
+msgid "Jola-Fogny"
+msgstr "Dióla-Fóinis"
+
+#. dyu
+msgid "Jula"
+msgstr "Diúilis"
+
+#. ee
+msgid "Ewe"
+msgstr "Éivéis"
+
+#. efi
+msgid "Efik"
+msgstr "Eificis"
+
+#. en
+msgid "English"
+msgstr "Béarla"
+
+#. eo
+msgid "Esperanto"
+msgstr "Esperanto"
+
+#. es
+msgid "Spanish"
+msgstr "Spáinnis"
+
+#. et
+msgid "Estonian"
+msgstr "Eastóinis"
+
+#. eu
+msgid "Basque"
+msgstr "Bascais"
+
+#. ff
+msgid "Fulah"
+msgstr "Fulfuildis"
+
+#. fi
+msgid "Finnish"
+msgstr "Fionlainnis"
+
+#. fo
+msgid "Faroese"
+msgstr "Faróis"
+
+#. fon
+msgid "Fon"
+msgstr "Fóinis"
+
+#. fr
+msgid "French"
+msgstr "Fraincis"
+
+#. fur
+msgid "Friulian"
+msgstr "Friúilis"
+
+#. fy
+msgid "Frisian"
+msgstr "Freaslainnis"
+
+#. gaa
+msgid "Ga"
+msgstr "Ga"
+
+#. ga
+msgid "Irish"
+msgstr "Gaeilge"
+
+#. gba
+msgid "Gbaya"
+msgstr "Gbaidhis"
+
+#. gd
+msgid "Scottish Gaelic"
+msgstr "Gaeilge na hAlban"
+
+#. gl
+msgid "Galician"
+msgstr "Gailísis"
+
+#. guw
+msgid "Gun-Gbe"
+msgstr "Gun-Gbéis"
+
+#. gv
+msgid "Manx Gaelic"
+msgstr "Manainnis"
+
+#. ha
+msgid "Hausa"
+msgstr "Hásais"
+
+#. haw
+msgid "Hawaiian"
+msgstr "Haváis"
+
+#. hr
+msgid "Croatian"
+msgstr "Cróitis"
+
+#. hsb
+msgid "Upper Sorbian"
+msgstr "Sorbais Uachtarach"
+
+#. ht
+msgid "Haitian Creole"
+msgstr "Criól Háítíoch"
+
+#. hu
+msgid "Hungarian"
+msgstr "Ungáiris"
+
+#. hz
+msgid "Herero"
+msgstr "Heiréiróis"
+
+#. ig
+msgid "Igbo"
+msgstr "Íogbóis"
+
+#. igl
+msgid "Igala"
+msgstr "Igáilis"
+
+#. is
+msgid "Icelandic"
+msgstr "Íoslainnis"
+
+#. it
+msgid "Italian"
+msgstr "Iodáilis"
+
+#. kam
+msgid "Kamba"
+msgstr "Cáimbis"
+
+#. kck
+msgid "Kalanga"
+msgstr "Caláingis"
+
+#. ki
+msgid "Gikuyu"
+msgstr "Ciocúis"
+
+#. kmb
+msgid "Kimbundu"
+msgstr "Cimbiúndúis"
+
+#. kqn
+msgid "Kaonde"
+msgstr "Cadhaindis"
+
+#. ku
+msgid "Kurdish"
+msgstr "Coirdis"
+
+#. lag
+msgid "Langi"
+msgstr "Laingis"
+
+#. ln
+msgid "Lingala"
+msgstr "Liongáilis"
+
+#. lol
+msgid "Mongo-Nkundu"
+msgstr "Mongó-Nkúindis"
+
+#. loz
+msgid "Lozi"
+msgstr "Lóisis"
+
+#. lt
+msgid "Lithuanian"
+msgstr "Liotuáinis"
+
+#. lua
+msgid "Luba-Kasai"
+msgstr "Lúba-Caisis"
+
+#. lu
+msgid "Luba-Katanga"
+msgstr "Lúba-Cataingis"
+
+#. lun
+msgid "Lunda"
+msgstr "Lúindis"
+
+#. lv
+msgid "Latvian"
+msgstr "Laitvis"
+
+#. mg
+msgid "Malagasy"
+msgstr "Malagáisis"
+
+#. mho
+msgid "Mashi"
+msgstr "Máisis"
+
+#. mi
+msgid "Maori"
+msgstr "Maorais"
+
+#. mos
+msgid "Mòoré"
+msgstr "Móiréis"
+
+#. mt
+msgid "Maltese"
+msgstr "Máltais"
+
+#. nb
+msgid "Norwegian Bokmål"
+msgstr "Ioruais Bokmål"
+
+#. nds
+msgid "Low Saxon"
+msgstr "Sacsainis Íochtarach"
+
+#. nl
+msgid "Dutch"
+msgstr "Ollainnis"
+
+#. nn
+msgid "Norwegian Nynorsk"
+msgstr "Ioruais Nynorsk"
+
+#. nso
+msgid "Northern Sotho"
+msgstr "Seipidis"
+
+#. ny
+msgid "Chichewa"
+msgstr "Siséivis"
+
+#. nyk
+msgid "Nyaneka"
+msgstr "Niáinéicis"
+
+#. pl
+msgid "Polish"
+msgstr "Polainnis"
+
+#. pt-BR
+msgid "Brazilian Portuguese"
+msgstr "Portaingéilis na Brasaíle"
+
+#. pt
+msgid "Portuguese"
+msgstr "Portaingéilis"
+
+#. qu
+msgid "Quechua"
+msgstr "Ceatsuais"
+
+#. ro
+msgid "Romanian"
+msgstr "Rómáinis"
+
+#. sba
+msgid "Ngambay"
+msgstr "Ngáimbis"
+
+#. sc
+msgid "Sardinian"
+msgstr "Sairdínis"
+
+#. seh
+msgid "Sena"
+msgstr "Séinis"
+
+#. se
+msgid "Northern Sámi"
+msgstr "Sáimis Thuaidh"
+
+#. sg
+msgid "Sango"
+msgstr "Sangóis"
+
+#. sk
+msgid "Slovak"
+msgstr "Slóvaicis"
+
+#. sl
+msgid "Slovenian"
+msgstr "Slóivéinis"
+
+#. sm
+msgid "Samoan"
+msgstr "Samóis"
+
+#. son
+msgid "Songhay"
+msgstr "Songais"
+
+#. sq
+msgid "Albanian"
+msgstr "Albáinis"
+
+#. sv
+msgid "Swedish"
+msgstr "Sualainnis"
+
+#. tet
+msgid "Tetun"
+msgstr "Teitinis"
+
+#. tiv
+msgid "Tiv"
+msgstr "Tibhis"
+
+#. tk
+msgid "Turkmen"
+msgstr "Tuircméinis"
+
+#. tn
+msgid "Tswana"
+msgstr "Suáinis"
+
+#. tr
+msgid "Turkish"
+msgstr "Tuircis"
+
+#. tum
+msgid "Tumbuka"
+msgstr "Tumbúicis"
+
+#. umb
+msgid "Umbundu"
+msgstr "Umbúindis"
+
+#. urh
+msgid "Urhobo"
+msgstr "Urhóibis"
+
+#. ve
+msgid "Venda"
+msgstr "Veindis"
+
+#. vi
+msgid "Vietnamese"
+msgstr "Vítneamais"
+
+#. vmw
+msgid "Makhuwa"
+msgstr "Machúivis"
+
+#. wa
+msgid "Walloon"
+msgstr "Vallúnais"
+
+#. wo
+msgid "Wolof"
+msgstr "Volaifis"
+
+#. yao
+msgid "Yao"
+msgstr "Yaois"
+
+#. yo
+msgid "Yoruba"
+msgstr "Iarúibis"
+
+#. znd
+msgid "Zande"
+msgstr "Záindéis"
+
+#~ msgid "Northern Saami"
+#~ msgstr "Northern Saami"
+
+#~ msgid "The language of the feedback text was not was specified"
+#~ msgstr "The language of the feedback text was not was specified"
+
+#~ msgid "Lift Text"
+#~ msgstr "Lift Text"
+
+#~ msgid "Lift Text for Language"
+#~ msgstr "Lift Text for Language"
+
+#~ msgid "Language not available"
+#~ msgstr "Language not available"

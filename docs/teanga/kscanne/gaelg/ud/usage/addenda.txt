@@ -1,0 +1,1202 @@
+<div text="Barking up the wrong tree."/>
+Diallait ar an gcapall contráilte.
+
+<div text="All such as are of my opinion."/>
+Gach duine a aontaíos liom.
+
+<div text="All at one go."/>
+D'aon iarraidh amháin.
+
+<div text="Cheerful fire."/>
+Tine spleodrach.
+
+<div text="Cheek by jowl."/>
+Taobh le chéile.
+
+<div text="Clear off!"/>
+Imigh leat!
+
+<div text="Chuck it!"/>
+Éirigh as!
+
+<div text="Birds of a feather flock together."/>
+Aithníonn ciaróg ciaróg eile.
+
+<div text="Brimful of health."/>
+Chomh folláin le breac.
+
+<div text="Booted and spurred."/>
+Faoi bhróga is faoi spoir.
+
+<div text="Bond goods."/>
+Earraí a chur i mbanna.
+
+<div text="Dressed with taste."/>
+Gléasta go slachtmhar.
+
+<div text="Down-draught carburettor."/>
+Carbradóir foshuiteach.
+
+<div text="Dun horse."/>
+Capall odhar.
+
+<div text="Don't force the engine."/>
+Ná cuir strus ar an inneall.
+
+<div text="Every little helps."/>
+Bailíonn brobh beart.
+
+<div text="Erratic life."/>
+Saol corrach.
+
+<div text="During the last few years."/>
+Le roinnt blianta anuas.
+
+<div text="Early vegetables."/>
+Glasraí luatha.
+
+<div text="Emerald Isle."/>
+Oileán Iathghlas Éireann.
+
+<div text="Either feast or famine."/>
+Gorta nó cóisir.
+
+<div text="Dapple-grey horse."/>
+Capall breac.
+
+<div text="Dead reckoning."/>
+Caochthuairim.
+
+<div text="Control yourself."/>
+Coinnigh guaim ort féin.
+
+<div text="Country folk."/>
+Muintir na tuaithe.
+
+<div text="Country without language country without name."/>
+Tír gan teanga, tír gan anam.
+
+<div text="Do it at once!"/>
+Déan ar an bpointe é!
+
+<div text="Don't be anxious."/>
+Ná bíodh imní ort.
+
+<div text="Did you recognize her?"/>
+Ar aithin tú í?
+
+<div text="Deserting one's post in domestic service."/>
+Dualgas a thréigean.
+
+<div text="Future tense."/>
+An aimsir fháistineach.
+
+<div text="Game of chance."/>
+Cluiche áidh.
+
+<div text="From head to foot."/>
+Ó bhonn go baithis.
+
+<div text="Go away!"/>
+Imigh leat!
+
+<div text="Go on."/>
+Imigh leat.
+
+<div text="Get along with you!"/>
+Imigh leat!
+
+<div text="Hop it!"/>
+Imigh leat!
+
+<div text="Beat it!"/>
+Imigh leat!
+
+<div text="Be off!"/>
+Imigh leat!
+
+<div text="Get it off by heart."/>
+Foghlaim de ghlanmheabhair é.
+
+<div text="Give him my respects."/>
+Tabhair mo bheannacht dó.
+
+<div text="Give her my condolences."/>
+Cuir mo chomhbhrón in iúl di.
+
+<div text="Foreign trade."/>
+Trádáil choigríoch.
+
+<div text="Extreme unction."/>
+An Ola Dhéanach.
+
+<div text="Eyes swimming with tears."/>
+Súile ina linnte deor.
+
+<div text="Far and wide."/>
+I gcéin is i gcóngar.
+
+<div text="False alarm."/>
+Rabhadh bréige.
+
+<div text="For the time being."/>
+I láthair na huaire.
+
+<div text="He cares for her."/>
+Tá a chroí istigh inti.
+
+<div text="He carried his point."/>
+Chuir sé a intinn féin ar an scéal i gcion.
+
+<div text="He chimed in."/>
+Chuir sé a ladar isteach.
+
+<div text="He caught the clap from her."/>
+Fuair sé an cleaip uaithi.
+
+<div text="He converted the try."/>
+Shlánaigh sé úd.
+
+<div text="He called me a liar."/>
+Thug sé bréagadóir orm.
+
+<div text="He fancies her."/>
+Tá dúil aige inti.
+
+<div text="He drinks like a fish."/>
+D'ólfadh sé Loch Éirne.
+
+<div text="He did well at his exam."/>
+D'éirigh leis go maith sa scrúdú.
+
+<div text="Guerrilla war."/>
+Treallchogaíocht.
+
+<div text="Hail Mary."/>
+'Sé do Bheatha, a Mhuire.
+
+<div text="Gregorian chant."/>
+Cantaireacht Ghreagórach.
+
+<div text="Hand to hand fighting."/>
+Cogadh ucht le hucht.
+
+<div text="Going in a quick pace."/>
+Dul agus siúl géar fúthu.
+
+<div text="Gooseberry bush."/>
+Tor spíonán.
+
+<div text="He apologised to me."/>
+Ghabh sé a leithscéal liom.
+
+<div text="Hawthorn hedge."/>
+Fál sceach.
+
+<div text="He befriended her."/>
+Rinne sé cairdeas léi.
+
+<div text="He attired himself."/>
+Ghléas sé é féin.
+
+<div text="He attended Mass."/>
+D'éist sé an tAifreann.
+
+<div text="He became a priest."/>
+Chuaigh sé le sagartacht.
+
+<div text="He beached the boat in Port Erin."/>
+Thug sé an bád i dtír i bPort Tiarna.
+
+<div text="Hang the fellow!"/>
+Drochrath air!
+
+<div text="Have you seen him?"/>
+An bhfaca tú é?
+
+<div text="He is anything but a singer."/>
+Cibé rud eile é ní amhránaí é.
+
+<div text="He is cut out for that work."/>
+Tá an obair sin ina láimh ó dhúchas.
+
+<div text="He is called Peter."/>
+Peadar atá air.
+
+<div text="He is a local preacher."/>
+Tá sé ina sheanmóirí Meitidisteach.
+
+<div text="He is a fluent speaker of Manx."/>
+Tá Manainnis líofa aige.
+
+<div text="He is a great admirer of your work."/>
+Tá meas mór aige ar do chuid oibre.
+
+<div text="He is admired by everybody."/>
+Tá meas ag gach uile dhuine air.
+
+<div text="He is always hard at it."/>
+Bíonn sé i gcónaí sáite ina chuid oibre.
+
+<div text="He is a poor carpenter."/>
+Is dona an saor é.
+
+<div text="He is in his eighties."/>
+Tá sé sna ceithre fichid.
+
+<div text="He is in the sixties."/>
+Tá na trí fichid scoite aige.
+
+<div text="He is on his pet subject again."/>
+Tá sé ar a sheanphort arís.
+
+<div text="He is fast asleep."/>
+Tá sé ina chnap codlata.
+
+<div text="He is fond of drink."/>
+Tá dúil aige san ól.
+
+<div text="He is dishonest."/>
+Tá sé mí-ionraic.
+
+<div text="He is doing a stretch."/>
+Tá sé i bpríosún.
+
+<div text="He is in stir."/>
+Tá sé i bpríosún.
+
+<div text="He is hard of hearing."/>
+Tá moill éisteachta air.
+
+<div text="He is gap-toothed."/>
+Tá sé mantach.
+
+<div text="He is getting on."/>
+Tá tonn mhaith aoise aige.
+
+<div text="He had sex with her."/>
+Bhuail sé craiceann léi.
+
+<div text="He had it all his own way."/>
+Bhí gach sórt ar a thoil aige.
+
+<div text="He got on in life."/>
+D'éirigh leis sa saol.
+
+<div text="He had a bad fall just before Christmas."/>
+Baineadh leagan trom as go díreach roimh an Nollaig.
+
+<div text="He has a bee in his bonnet."/>
+Tá rud éigin ag dó na geirbe aige.
+
+<div text="He gave his ankle a wrench."/>
+Bhain sé stangadh as a rúitín.
+
+<div text="He got his daughter off his hands."/>
+Tá a iníon curtha i gcrích aige.
+
+<div text="He got into bad company."/>
+Casadh i measc droch-chomrádaithe é.
+
+<div text="He generally comes on Mondays."/>
+Is é Dé Luain a thagann sé go hiondúil.
+
+<div text="He has prospered out there."/>
+D'éirigh go maith leis amuigh ansiúd.
+
+<div text="He is a chip off the old block."/>
+Slis den seanmhaide.
+
+<div text="He has a rod in pickle for you."/>
+Tá bior sa tine aige duit.
+
+<div text="He has his ups and downs."/>
+Bíonn sé thuas seal agus thíos seal.
+
+<div text="He has eyes in the back of his head."/>
+Tá súile i gcúl a chinn aige.
+
+<div text="He saw the fairies at the bridge."/>
+Chonaic sé na sióga ag an droichead.
+
+<div text="He saw stars."/>
+Tháinig léaspáin ar a shúile.
+
+<div text="He saw it through to the bitter end."/>
+D'fhulaing sé go bun an angair é.
+
+<div text="He sent the enemy flying."/>
+Chuir sé ruaig ar an namhaid.
+
+<div text="He pocketed his pride."/>
+Chuaigh sé ar an umhlaíocht.
+
+<div text="He puckered his brows."/>
+Chuir sé roic ina mhalaí.
+
+<div text="He puts me in mind of his father."/>
+Chuimhneoinn ar a athair leis.
+
+<div text="He put up a good fight."/>
+Sheas sé an fód go maith.
+
+<div text="He took him down a peg or two."/>
+Thug sé béim síos dó.
+
+<div text="He took fright."/>
+Tháinig eagla air.
+
+<div text="He took a pull at the pipe."/>
+Bhain sé tarraingt as an bpíopa.
+
+<div text="He took it in good part."/>
+Ghlac sé i bpáirt mhaitheasa é.
+
+<div text="He was above suspicion."/>
+Ní shamhlófá aon amhras leis.
+
+<div text="He turned somersault."/>
+Chuaigh sé tóin thar cheann.
+
+<div text="He wanted sex with her."/>
+Bhí sé ag iarraidh craiceann a bhualadh léi.
+
+<div text="He streaked off."/>
+D'imigh sé ar luas lasrach.
+
+<div text="He thought better of it."/>
+Rinne sé athchomhairle.
+
+<div text="He tendered his resignation."/>
+Thairg sé éirí as oifig.
+
+<div text="He thinks for himself."/>
+Tá meabhair dá chuid féin aige.
+
+<div text="He threw the door open."/>
+D'oscail sé an doras.
+
+<div text="He takes great pride in it."/>
+Bhí bród an domhain air as.
+
+<div text="He is playing truant."/>
+Tá sé ag múitseáil.
+
+<div text="He is tagging at my heels."/>
+Tá sé sna sála agam.
+
+<div text="He made love to her in the field."/>
+Bhuail sé craiceann léi sa pháirc.
+
+<div text="He made for me like a madman."/>
+Thug sé ruathar buile chugam.
+
+<div text="He lost countenance."/>
+Cuireadh dá threoir é.
+
+<div text="He lives next door."/>
+Is é an comharsa béal dorais agam.
+
+<div text="Heavenly body."/>
+Rinn neimhe.
+
+<div text="He's like a fish out of water."/>
+Tá sé mar a bheadh cág i measc péacóg.
+
+<div text="He's putting on weight."/>
+Tá sé ag titim chun meáchain.
+
+<div text="His appearance belies him."/>
+Tá sé féin agus a chosúlacht in aghaidh a chéile.
+
+<div text="He was set free."/>
+Scaoileadh saor leis.
+
+<div text="He was talking smut."/>
+Bhí sé ag graostacht.
+
+<div text="He was beaming with delight."/>
+Bhí loinnir ina aghaidh le lúcháir.
+
+<div text="He went dotty."/>
+Chuaigh sé as a chiall.
+
+<div text="I am perspiring."/>
+Tá mé ag cur allais.
+
+<div text="I am fed up of her."/>
+Tá mé bréan di.
+
+<div text="I am footsore."/>
+Tá mo chosa nimhneach.
+
+<div text="I can never look him in the face again."/>
+Ní ligfidh an náire dom féachaint idir an dá shúil air go deo arís.
+
+<div text="I am wide awake."/>
+Tá mé i mo lándúiseacht.
+
+<div text="I am well."/>
+Tá mé i mo shláinte.
+
+<div text="I am sweltering."/>
+Tá mé rósta ag an mbrothall.
+
+<div text="Hold your tongue!"/>
+Éist do bhéal!
+
+<div text="I am acquainted with her."/>
+Tá aithne agam uirthi.
+
+<div text="I am dieting."/>
+Tá mé ar aiste bia.
+
+<div text="I am badly in debt."/>
+Tá fiacha móra orm.
+
+<div text="How much does this weigh?"/>
+Cad é an meáchan atá ann seo?
+
+<div text="How near he was to death."/>
+Ba ghairid uaidh an bás.
+
+<div text="I admire that."/>
+Tá meas agam air sin.
+
+<div text="Hushed conversation."/>
+Comhrá i gcogar.
+
+<div text="How tall are you?"/>
+Cén airde thú?
+
+<div text="I haven't the nerve to do it."/>
+Ní bheadh sé d'éadan orm é a dhéanamh.
+
+<div text="I have toothache."/>
+Tá tinneas fiacaile orm.
+
+<div text="I have wind."/>
+Tá mé ag brúchtadh.
+
+<div text="I ran into debt."/>
+Thit mé i bhfiacha.
+
+<div text="I made amends with him."/>
+Rinne mé cúiteamh leis.
+
+<div text="I changed my mind."/>
+Tháinig mé ar mhalairt intinne.
+
+<div text="I departed from the island."/>
+D'imigh mé an t-oileán.
+
+<div text="I depend on myself these days."/>
+Tá mé seasamh ar mo bhoinn féin na laethanta seo.
+
+<div text="I could hardly stand."/>
+Ní raibh ann ach go dtiocfadh liom seasamh.
+
+<div text="I go in fear of my life."/>
+Tá eagla m'anama orm.
+
+<div text="I had a crawly feeling."/>
+Bhí drithlíní ag dul tríom.
+
+<div text="I had a presentiment of it."/>
+Bhí sé á thaibhsiú dhom.
+
+<div text="Ignorant person."/>
+Ainbhiosán.
+
+<div text="If you will only be patient."/>
+Dá mb'áil leat a bheith foighneach.
+
+<div text="In the distant future."/>
+Faoi cheann achair fhada.
+
+<div text="I was attracted to her."/>
+Bhí mé tógtha léi.
+
+<div text="I was frightened to death."/>
+Tá scanradh m'anama orm.
+
+<div text="I voted for him."/>
+Chaith mé vóta ar a shon.
+
+<div text="I warmed to him."/>
+Théigh mo chroí leis.
+
+<div text="I was never forgiven for that."/>
+Níor maitheadh é sin dom riamh.
+
+<div text="I split my sides laughing."/>
+Bhí mé in arraingeacha ag gáire.
+
+<div text="I took the notion."/>
+Tháinig sé de mhian orm.
+
+<div text="I took out insurance."/>
+Chuaigh mé faoi árachas in aghaidh.
+
+<div text="I took him aside."/>
+Thug mé ar fhód ar leith é.
+
+<div text="I'll see him off at the station."/>
+Cuirfidh mé slán leis ag an stáisiún.
+
+<div text="I'll race you to the house."/>
+Féachfaidh mé rás leat go dtí an teach.
+
+<div text="I'll have a warm before the fire."/>
+Déanfaidh mé mo ghoradh ag an tine.
+
+<div text="I'll handle that."/>
+Déanfaidh mé é sin.
+
+<div text="I went begging."/>
+Chuaigh mé ar an déirc.
+
+<div text="I will be esteemed."/>
+Beidh meas orm.
+
+<div text="I will remember it to my dying day."/>
+Cuimhneoidh mé é go lá mo bháis.
+
+<div text="I will turn you out of doors."/>
+Cuirfidh mé thú amach faoin aer.
+
+<div text="It is finished."/>
+Tá sé críochnaithe.
+
+<div text="It is finishing."/>
+Tá sé ag teacht chun críche.
+
+<div text="It is high tide."/>
+Tá iomlán rabharta ann.
+
+<div text="It is liable to tax."/>
+Tá sé inchurtha faoi cháin.
+
+<div text="It has rained a great deal."/>
+Is mór an lán uisce atá caite aige.
+
+<div text="It ill beseems him."/>
+Is olc an mhaise dó é.
+
+<div text="It is an investment."/>
+Is infheistíocht é.
+
+<div text="It is very heartening."/>
+Tugann sé misneach dom.
+
+<div text="It cut him to the quick."/>
+Chuaigh sé go croí ann.
+
+<div text="It came to naught."/>
+Níor tháinig a dhath as.
+
+<div text="It discouraged him."/>
+Chuir sé beaguchtach air.
+
+<div text="Is the tide full?"/>
+An bhfuil an taoide lán?
+
+<div text="Landing wheels."/>
+Rothaí tuirlingthe.
+
+<div text="Juvenile delinquent."/>
+Ógchiontóir.
+
+<div text="Keeping a close watch on it."/>
+Ag coinneáil súil ghéar air.
+
+<div text="Key that fits the lock."/>
+Eochair a oireann an glas.
+
+<div text="Let not any fruit grow on thee."/>
+Nár fhása aon toradh ortsa as seo amach go brách.
+
+<div text="Let's clinch it."/>
+Cuirimis an margadh i gcrích.
+
+<div text="Learn by heart."/>
+Cuir de ghlanmheabhair.
+
+<div text="Let him go free."/>
+Scaoil saor é.
+
+<div text="It went phut."/>
+Loiceadh air.
+
+<div text="It's up to you!"/>
+Is do rogha féin é!
+
+<div text="It's easy to talk!"/>
+Is furasta a bheith ag caint!
+
+<div text="Like father, like son."/>
+Ba dual athair dó.
+
+<div text="Move the bowels."/>
+An cholainn a oibriú.
+
+<div text="Long tailed titmouse."/>
+Meantán earrfhada.
+
+<div text="Low dress."/>
+Gúna bráidíseal.
+
+<div text="Loads of."/>
+Lán Éireann de.
+
+<div text="Little sup of rum."/>
+Bolgam beag rum.
+
+<div text="Make it your business to see to it."/>
+Tabhair do d'aire é a dhéanamh.
+
+<div text="Make and break."/>
+Iamh is oscailt.
+
+<div text="On the tips of the toes."/>
+Ar na barraicíní.
+
+<div text="On the Greek Calends."/>
+Go lá an tsligín.
+
+<div text="Optical square."/>
+Bacart optúil.
+
+<div text="New milk."/>
+Leamhnacht.
+
+<div text="Nuclear fission."/>
+Eamhnú núicléach.
+
+<div text="Pupil of the eye."/>
+Mac imrisc.
+
+<div text="Purl stitch."/>
+Lúb iompaithe.
+
+<div text="Put your thoughts into words."/>
+Cuir focail ar do chuid smaointe.
+
+<div text="Pride goes before a fall."/>
+Gabhann uabhar roimh thubaiste.
+
+<div text="Registered trademark."/>
+Trádmharc cláraithe.
+
+<div text="Rabbit warren."/>
+Coinicéar.
+
+<div text="Rat."/>
+Francach.
+
+<div text="Pile fabrics."/>
+Uigí caitíneacha.
+
+<div text="Peak load."/>
+Buaicualach.
+
+<div text="Peak hours."/>
+Buaicuaireanta.
+
+<div text="Possession is nine tenths of the law."/>
+Is í an tseilbh an dlí.
+
+<div text="Potatoes in their skin."/>
+Prátaí gan scamhadh.
+
+<div text="Poorly circumstanced."/>
+In anchaoi.
+
+<div text="Power of attorney."/>
+Cumhacht aturnae.
+
+<div text="Plain paper."/>
+Páipéar bán.
+
+<div text="She has borne many children."/>
+Rugadh mórán clainne di.
+
+<div text="She has neither chick nor child."/>
+Tá sí gan ua gan iarmhar.
+
+<div text="She had a blackout."/>
+Tháinig meirfean uirthi.
+
+<div text="She burst into tears."/>
+Bhris an gol uirthi.
+
+<div text="She turned on the waterworks."/>
+Bhris an gol uirthi.
+
+<div text="She melted into tears."/>
+Bhris an gol uirthi.
+
+<div text="She told me that outright."/>
+D'inis sí é sin dom plinc pleainc.
+
+<div text="She put a charm on me."/>
+Chuir sí ortha orm.
+
+<div text="She produced a son."/>
+Rugadh leanbh mic di.
+
+<div text="She is not a virgin."/>
+Ní maighdean í.
+
+<div text="She is pregnant."/>
+Tá sí torrach.
+
+<div text="She is menstruating."/>
+Tá sí ag míostrú.
+
+<div text="She is moping."/>
+Tá sí i ndroim dubhach.
+
+<div text="She is in the sulks."/>
+Tá sí stuacach.
+
+<div text="Ribbed stockings."/>
+Stocaí rigíneacha.
+
+<div text="Return match."/>
+Cluiche comhair.
+
+<div text="Say mass."/>
+Aifreann a léamh.
+
+<div text="Saturday night."/>
+Oíche Shathairn.
+
+<div text="Sea air."/>
+Aer na farraige.
+
+<div text="Seaside town."/>
+Baile cois farraige.
+
+<div text="Sprained joints."/>
+Ailt leonta.
+
+<div text="Spherical triangle."/>
+Triantán sféarúil.
+
+<div text="Sorely tried."/>
+Cuireadh féachaint chrua ar.
+
+<div text="Show him the way."/>
+Cuir ar a bhealach é.
+
+<div text="She went on dreadfully."/>
+Thóg sí an-racán.
+
+<div text="She weaned the child."/>
+Bhain sí an leanbh den chíoch.
+
+<div text="She was clinging to him."/>
+Bhí greim aici air.
+
+<div text="She was annoyed."/>
+Bhí sí míshásta.
+
+<div text="She's dead and buried."/>
+Tá sí faoin bhfód.
+
+<div text="She's at the end of her life."/>
+Tá sí in earr a saoil.
+
+<div text="She is moping."/>
+Tá sí faoi chian.
+
+<div text="She's down in the dumps."/>
+Tá sí faoi chian.
+
+<div text="Smokeless zone."/>
+Ceantar saor ó thoit.
+
+<div text="Simple fracture."/>
+Briseadh folaigh.
+
+<div text="Singer in embryo."/>
+Ábhar amhránaí.
+
+<div text="That will put the kibosh on it."/>
+Cuirfidh sé sin deireadh leis.
+
+<div text="That's neither here nor there."/>
+Ní bhaineann sé sin leis an scéal.
+
+<div text="That is where he was destined to die."/>
+Ansin a bhí fód a bháis.
+
+<div text="That man is my bugbear."/>
+Ní lú orm an donas ná an fear sin.
+
+<div text="That is out of the question."/>
+Tá sé sin as an áireamh ar fad.
+
+<div text="The bottom of the river."/>
+Leaba na habhann.
+
+<div text="Sun rays streaming from behind clouds."/>
+Gathanna na gréine.
+
+<div text="Summary jurisdiction."/>
+Dlínse achomair.
+
+<div text="That house is haunted."/>
+Tá taibhsí sa teach sin.
+
+<div text="That brought them to grief."/>
+Thug sé sin faoi mhéala iad.
+
+<div text="That book belongs to him."/>
+Is leis-sean an leabhar sin.
+
+<div text="The house was believed to be haunted."/>
+Bhí sé amuigh ar an teach go raibh taibhsí ann.
+
+<div text="The Justices of the Peace."/>
+Giúistísí Síochána.
+
+<div text="The gravel."/>
+Grean fuail.
+
+<div text="The Holy Innocents."/>
+Na Leanaí Neamhchiontacha.
+
+<div text="The heel of the foot."/>
+Sáil na coise.
+
+<div text="The liberal arts."/>
+Na saorealaíona.
+
+<div text="The little people."/>
+Na daoine maithe.
+
+<div text="The lesser of two evils."/>
+Rogha an dá dhíogha.
+
+<div text="The dog is making a friend of me."/>
+Tá an madra ag déanamh cairdis liom.
+
+<div text="The dog bit him."/>
+Bhain an madra greim as.
+
+<div text="The car ran into the wall."/>
+Ghread an gluaisteán in éadan an bhalla.
+
+<div text="The Continental Shelf."/>
+An Scairbh Ilchríochach.
+
+<div text="The galaxy."/>
+Bealach na Bó Finne.
+
+<div text="The established church."/>
+An Eaglais Bhunaithe.
+
+<div text="The storm calmed down."/>
+Thit an stoirm chun suaimhnis.
+
+<div text="The snow fell thick."/>
+Bhí sé ag plúchadh sneachta.
+
+<div text="The sole of my shoe."/>
+Bonn mo bhróige.
+
+<div text="The sea."/>
+An fharraige.
+
+<div text="The vault of heaven."/>
+Stua na spéire.
+
+<div text="The ticket is valid."/>
+Tá an ticéad bailí.
+
+<div text="The other day."/>
+An lá cheana.
+
+<div text="The other week."/>
+An tseachtain cheana.
+
+<div text="The Plough."/>
+An Camchéachta.
+
+<div text="The October Moon."/>
+Gealach Dheireadh Fómhair.
+
+<div text="The Pointers."/>
+Na Réaltaí Treoracha.
+
+<div text="The November Moon."/>
+Gealach na Samhna.
+
+<div text="The month of May."/>
+Mí na Bealtaine.
+
+<div text="The moon is at the full."/>
+Tá an ghealach lán.
+
+<div text="The moon is full tonight."/>
+Tá an ghealach lán anocht.
+
+<div text="The roads were not frequented."/>
+Ní raibh trácht mór ar na bóithre.
+
+<div text="The proceeded to blows."/>
+Chuaigh siad sna lámha le chéile.
+
+<div text="The Royal Navy."/>
+An Cabhlach Ríoga.
+
+<div text="The Revelation of St. John."/>
+An Taispeáint a Fuair Eoin.
+
+<div text="They came to blows."/>
+Chuaigh siad sna lámha le chéile.
+
+<div text="They are at his heels."/>
+Tá siad lena shála.
+
+<div text="They are cheek by jowl."/>
+Tá siad i mullach a chéile.
+
+<div text="They drew lots for it."/>
+Chuireadar ar crainn é.
+
+<div text="They fell out."/>
+D'éirigh eatarthu.
+
+<div text="They dressed."/>
+Ghléasadar iad féin.
+
+<div text="They gave him a humbling defeat."/>
+Bhuaileadar go dona é.
+
+<div text="They are as like as two peas."/>
+Tá siad mar a sceithfeadh fíogach fíogach eile.
+
+<div text="There's a nip in the air."/>
+Tá ruibh fhuar air.
+
+<div text="It's frosty today."/>
+Lá seaca atá ann inniu.
+
+<div text="There was never a better Manxman than him."/>
+Ní raibh Manannach níos fearr ná eisean ann riamh.
+
+<div text="To condole with."/>
+Comhbhrón a dhéanamh le.
+
+<div text="To be on the dole."/>
+Bheith ar an dól.
+
+<div text="To be in one's grave."/>
+Bheith san uaigh.
+
+<div text="To go to rack and ruin."/>
+Dul chun raice.
+
+<div text="To glower."/>
+Drochfhéachaint a thabhairt.
+
+<div text="This is a vicious circle."/>
+Seo ciorcal lochtach.
+
+<div text="They went out bodily."/>
+Chuadar amach in aon slua amháin.
+
+<div text="Ulcerated dermal necrosis."/>
+Neacróis dheirmeach othrasaithe.
+
+<div text="To pay by instalments."/>
+Íoc ina ghálaí.
+
+<div text="To resort to force."/>
+Dul i muinín na láimhe láidre.
+
+<div text="To print in italics."/>
+Cló in iodálaigh.
+
+<div text="In so far as I know."/>
+Chomh fada le m'eolas.
+
+<div text="To my knowledge."/>
+Chomh fada le m'eolas.
+
+<div text="To the best of my belief."/>
+Chomh fada le m'eolas.
+
+<div text="To the best of my knowledge."/>
+Chomh fada le m'eolas.
+
+<div text="To seal a bargain."/>
+Margadh a dhéanamh.
+
+<div text="To rub up his Manx."/>
+An mheirg a bhaint dá chuid Manainnise.
+
+<div text="To rise early."/>
+Éirí go moch.
+
+<div text="To square-up to."/>
+Gothaí troda a chur ort féin chuig.
+
+<div text="To sleep like a top."/>
+Codladh i do chnap sámh.
+
+<div text="To sleep like a log."/>
+Codladh i do chnap sámh.
+
+<div text="Wedding where the bride has no relatives."/>
+Bainis gan gaolta de chuid na brídí i láthair.
+
+<div text="Wedding where there are no relatives present."/>
+Bainis gan gaolta ar bith i láthair.
+
+<div text="We find the work very disheartening."/>
+Cuireann an obair lagmhisneach orainn.
+
+<div text="What he said gives one to understand that."/>
+Tuigtear as a chuid cainte go.
+
+<div text="What a funny idea."/>
+Nach greannmhar an smaoineamh é.
+
+<div text="Varicose veins."/>
+Féitheacha borrtha.
+
+<div text="Venereal disease."/>
+Galar véinéireach.
+
+<div text="Up the swans."/>
+Na healaí a locadh lena marcáil.
+
+<div text="We are living austerely."/>
+Tá saol gan só againn.
+
+<div text="We are all in the same boat."/>
+Is ionann cás don iomlán againn.
+
+<div text="Walking side by side."/>
+Siúl taobh le taobh.
+
+<div text="Voracious reader."/>
+Léitheoir cíocrach.
+
+<div text="Would you mind doing it."/>
+Ar mhiste leat é sin a dhéanamh.
+
+<div text="Yours truly."/>
+Mise, le meas.
+
+<div text="Yours sincerely."/>
+Mise, le meas.
+
+<div text="Yours faithfully."/>
+Mise, le meas.
+
+<div text="You must not go."/>
+Ní cóir duit dul.
+
+<div text="Whisky still."/>
+Stil uisce beatha.
+
+<div text="When it came to the point he wouldn't go."/>
+Nuair a tháinig sé go cnámh na huillinne, ní dheachaigh sé.
+
+<div text="When it comes to the crunch."/>
+Nuair a théann sé go cnámh na huillinne.
+
+<div text="With malice aforethought."/>
+Le mailís réamhcheaptha.
+
+<div text="With all due respect to you."/>
+I gcead duitse.
+
+<div text="Winding staircase."/>
+Staighre bíse.
+
+<div text="They're wrong in the head."/>
+Tá siad ar shiúl sa chloigeann.
+
+<div text="Have the kindness to get me an orange."/>
+Ar mhiste leat oráiste a thabhairt dom.
+
+<div text="Button your jacket."/>
+Dún cnaipí do sheaicéid.
+
+<div text="I think so."/>
+Is dóigh liom é.
+
+<div text="I beg your pardon."/>
+Gabhaim pardún agaibh.
+
+<div text="I am at your service."/>
+Mise, ag an láimh agaibh.
+
+<div text="There's not a breath of air."/>
+Níl aon smid gaoithe ann.
+
+<div text="He relies upon that."/>
+Tá sé ag brath air sin.
+
+<div text="A good name is better than riches."/>
+Is fearr clú ná conách.
+
+<div text="One good turn deserves another."/>
+Dlíonn comaoin cúiteamh.
+
+<div text="He was born with a silver spoon in his mouth."/>
+Bhí an mhaoin as broinn leis.
+
+<div text="Fine feathers make fine birds."/>
+Eochair uaisle éadach.
+
+<div text="Charity begins at home."/>
+Dá ghoireacht do dhuine a chóta is goire dó a léine.
+
+<div text="Make hay while the sun shines."/>
+Buail an t-iarann nuair atá sé te.
+
+<div text="Out of the frying pan into the fire."/>
+Ón tine chun na gríosaí.
+
+<div text="His bark is worse than his bite."/>
+Is troime a bhagairt ná a bhuille.
+
+<div text="One swallow does not make a summer."/>
+Ní scaoth breac.
+
+<div text="A stitch in time saves nine."/>
+Cuir snaidhm nó caillfidh tú dhá ghreim.
+
+<div text="Blood is thicker than water."/>
+Is fearr beagán den ghaol ná mórán den charthanas.
+
+<div text="Counting the chickens before the eggs are hatched."/>
+Bheith ag marú an fhia sula bhfeiceann tú é.
+
+<div text="Store is no sore."/>
+Ní hualach lón.
+
+<div text="Many a little makes a mickle."/>
+Bailíonn brobh beart.
+
+<div text="Pride will have a fall."/>
+Is iomaí fear maith a leag bualtrach.
+
+<div text="They are living a cat and dog life."/>
+Tugann siad íde na gcat is na madraí dá chéile.
+
+<div text="You've let the fire go out."/>
+Tá sibh tar éis an tine a ligean as.
+
+<div text="Land of milk and honey."/>
+Tír faoi mhil agus faoi bhláth.
+
+<div text="Tory party whip."/>
+Aoire pháirtí na dTóraithe.

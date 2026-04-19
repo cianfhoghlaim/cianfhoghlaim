@@ -1,0 +1,21 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls %}
+
+{% block object-tools %}
+  <div class="object-tools">
+    {% if has_add_permission %}
+      <ul class="object-tools">
+        <li>
+          <a href="{% url opts|admin_urlname:'add' %}" class="addlink">
+            {% trans 'Add invitation' %}
+          </a>
+        </li>
+        <li>
+          <a href="{{ bulk_invite_url }}" class="addlink">
+            {% trans 'Bulk Invite' %}
+          </a>
+        </li>
+      </ul>
+    {% endif %}
+  </div>
+{% endblock %}

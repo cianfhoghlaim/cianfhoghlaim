@@ -1,0 +1,33 @@
+# Astro
+.astro
+dist
+
+# Cloudflare
+.wrangler
+.dev.vars
+
+# Direnv
+.direnv
+
+# Devenv
+.devenv*
+
+# GraphQL Generated Client
+./src/gql
+
+# NodeJS
+node_modules
+
+# generated d2 diagrams
+public/d2/
+.cursor
+storybook-static/
+
+# Bun
+bun.lock
+
+# Generated TypeScript definitions
+worker-configuration.d.ts
+
+# Website subgraph SDL (generated)
+subgraph/schema.gql

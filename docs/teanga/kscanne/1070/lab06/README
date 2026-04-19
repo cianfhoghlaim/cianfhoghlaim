@@ -1,0 +1,122 @@
+
+In this lab we'll explore a couple of different datasets 
+using k-means clustering.
+
+We'll need the clusters.py script from last week's lab.
+The easiest thing to do will be to copy that file over
+to this directory:
+
+$ cp ../lab05/clusters.py .
+
+You can also copy the Senate voting dataset presented in
+class into this directory as well:
+
+$ cp ../lecture/senators.txt .
+
+We'll work on this lab using the Python interpreter:
+
+$ python
+
+
+Recall that the Python prompt looks like this: >>>
+
+
+First, import the k-means clustering code:
+>>> import clusters
+
+Then load the voting data:
+>>> senators,votes,data=clusters.readfile('senators.txt')
+
+To see the list of senators:
+>>> senators 
+['Alexander (R-TN)', 'Ayotte (R-NH)', 'Baldwin (D-WI)', ...
+
+How many senators in the dataset?
+>>> len(senators)
+
+(I kept only those senators with a complete voting record for the session).
+
+To run k-mean clustering with k=2:
+
+>>> kclust,totalerror=clusters.kcluster(data,k=2)
+
+The clusters are returned as lists kclust[0] and kclust[1]:
+
+>>> kclust[0]
+
+What you'll see are the *numerical indices* of the senators in this cluster.
+To see their names:
+
+>>> [senators[r] for r in kclust[0]] 
+
+and similarly for kclust[1]...
+
+Also note that I've arranged things so that the k-means algorithm
+also returns the "total error" of the clustering (the sum of
+the distances from each point to its cluster centroid).
+
+>>> print totalerror
+
+(1) Are there any surprises in the clusters you get for k=2?
+Note the two independent senators in particular. Check out their 
+Wikipedia pages and see if they are clustered in a reasonable way.
+
+(2) Recall that the algorithm depends on a random choice at the beginning.
+Do you get the same clusters every time you rerun?
+
+(3) Now try rerunning with k=3, k=4, ... Do you get completely new clusters,
+or do the clusters from k=2 "split" in some way?  Make note of the
+totalerror in each case.
+
+(4) Plot the totalerror as a function of k (including k=1).
+Is there an "elbow" where you'd expect one? 
+
+
+The second dataset consists of 1000 random recipes
+which we'd like to try clustering to see if the clusters
+correspond to different kinds of "cuisine", or perhaps
+different types of food (main courses, appetizers, desserts, etc.)
+
+Start by opening the dataset "recipes.txt" in your favorite text editor
+and have a look around.  Each row corresponds to a recipe.  The vectorization
+is very simple - it only takes into account which ingredients appear in
+a given recipe, independent of quantity, how they're prepared/combined, etc. 
+
+Each column corresponds to one of 500 common ingredients. 
+If a recipe contains an ingredient, there's a 1 at that position
+in the table, and a 0 otherwise.
+
+(5) Review the definition of the Manhattan distance and convince yourself
+that the Manhattan distance between two recipes simply counts the number
+of ingredients that are in one recipe but not the other.
+
+(6) [Open-Ended] This question is much like what you might do for
+a semester project if you decide on a clustering problem.
+
+Load the data:
+>>> recipes,ingredients,data=clusters.readfile('recipes.txt')
+
+Then try clustering with different values of k:
+
+>>> kclust,totalerror=clusters.kcluster(data,k=5)
+
+One difficulty with this dataset is that the recipes don't have
+human-readable names, only unique numerical identifiers.
+
+>>> from browser import get_ingredients
+
+To see the ingredients in the recipe at index 10:
+
+>>> get_ingredients(10,ingredients,data)
+
+To see all ingredients in all recipes in cluster kclust[0]:
+
+>>> [get_ingredients(r,ingredients,data) for r in kclust[0]]
+
+Can you assign reasonable labels to any of the clusters?
+
+Does the clusters seem to represent different cuisines
+or do the clusters represent something else entirely
+(e.g. desserts vs. main courses)?
+
+If you plot the total error as a function of k, do you see an "elbow"?

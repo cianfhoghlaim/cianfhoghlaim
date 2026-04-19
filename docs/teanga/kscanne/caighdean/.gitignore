@@ -1,0 +1,11 @@
+*.hash
+cga-output.txt
+eid-output.txt
+ngrams.txt
+nua-output*.txt
+post-surv.txt
+post-tokens.txt
+pre-surv.txt
+pre-tokens.txt
+tokenized-output*.txt
+unchanged.txt

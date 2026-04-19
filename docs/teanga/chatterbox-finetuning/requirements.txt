@@ -1,0 +1,14 @@
+peft==0.17.1
+torch==2.6.0
+torchaudio==2.6.0
+torchvision==0.21.0
+chatterbox-tts==0.1.2
+silero-vad==6.2.0
+librosa==0.11.0
+soundfile==0.13.1
+num2words
+ffmpeg-python
+tqdm
+pandas
+safetensors
+tensorboard

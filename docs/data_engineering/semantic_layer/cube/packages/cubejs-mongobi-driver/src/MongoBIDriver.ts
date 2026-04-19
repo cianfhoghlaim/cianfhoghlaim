@@ -1,0 +1,290 @@
+/**
+ * @copyright Cube Dev, Inc.
+ * @license Apache-2.0
+ * @fileoverview The `MongoBIDriver` and related types declaration.
+ */
+
+import {
+  getEnv,
+  assertDataSource,
+} from '@cubejs-backend/shared';
+import { createConnection, Connection, ConnectionOptions, RowDataPacket, Field } from 'mysql2';
+import genericPool, { Pool } from 'generic-pool';
+import { Readable } from 'stream';
+import {
+  BaseDriver,
+  DownloadQueryResultsOptions,
+  DownloadQueryResultsResult,
+  DriverInterface,
+  StreamOptions,
+} from '@cubejs-backend/base-driver';
+import { getNativeTypeName } from './MySQLType';
+
+export interface MongoBIDriverConfiguration extends ConnectionOptions {
+  storeTimezone?: string;
+}
+
+/**
+ * MongoBI driver class.
+ */
+export class MongoBIDriver extends BaseDriver implements DriverInterface {
+  /**
+   * Returns default concurrency value.
+   */
+  public static getDefaultConcurrency(): number {
+    return 2;
+  }
+
+  protected readonly config: MongoBIDriverConfiguration;
+
+  protected readonly pool: Pool<Connection>;
+
+  /**
+   * Class constructor.
+   */
+  public constructor(
+    config: MongoBIDriverConfiguration & {
+      /**
+       * Data source name.
+       */
+      dataSource?: string,
+
+      /**
+       * Max pool size value for the [cube]<-->[db] pool.
+       */
+      maxPoolSize?: number,
+
+      /**
+       * Time to wait for a response from a connection after validation
+       * request before determining it as not valid. Default - 10000 ms.
+       */
+      testConnectionTimeout?: number,
+    } = {}
+  ) {
+    super({
+      testConnectionTimeout: config.testConnectionTimeout,
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { dataSource: configDataSource, maxPoolSize, testConnectionTimeout, ...mongoBIDriverConfiguration } = config;
+    const dataSource = configDataSource || assertDataSource('default');
+
+    this.config = {
+      host: getEnv('dbHost', { dataSource }),
+      database: getEnv('dbName', { dataSource }),
+      port: getEnv('dbPort', { dataSource }),
+      user: getEnv('dbUser', { dataSource }),
+      password: getEnv('dbPass', { dataSource }),
+      // mysql2 uses own typings for ssl property, which is not correct
+      // Types of property 'pfx' are incompatible. Skipping validation with any cast
+      ssl: this.getSslOptions(dataSource) as any,
+      typeCast: (field: Field, next) => {
+        if (field.type === 'DATETIME') {
+          // Example value 1998-08-02 00:00:00
+          // Here we just omit Date parsing and avoiding Date.toString()
+          // done by driver. MongoBI original format is just fine.
+          return field.string();
+        }
+
+        return next();
+      },
+      // mysql2 v3.x uses this flag by default and sends some connection attributes like:
+      // version, app-name. But mongosql which is based on mysql 5.7 is not able to proceed them, resulting in:
+      // Error: recv handshake response error: invalid connection attribute at index 0: EOF
+      flags: ['-CONNECT_ATTRS'],
+      ...mongoBIDriverConfiguration
+    };
+    this.pool = genericPool.createPool({
+      create: async () => {
+        const conn: Connection = createConnection(this.config);
+
+        if (conn.on) {
+          conn.on('error', () => {
+            conn.destroy();
+          });
+        }
+
+        await conn.promise().connect();
+
+        return conn;
+      },
+      destroy: async (connection) => connection.promise().end(),
+      validate: async (connection) => {
+        try {
+          await connection.promise().query({
+            sql: 'SELECT 1',
+          });
+        } catch (e) {
+          this.databasePoolError(e);
+          return false;
+        }
+
+        return true;
+      }
+    }, {
+      min: 0,
+      max:
+        config.maxPoolSize ||
+        getEnv('dbMaxPoolSize', { dataSource }) ||
+        8,
+      evictionRunIntervalMillis: 10000,
+      softIdleTimeoutMillis: 30000,
+      idleTimeoutMillis: 30000,
+      testOnBorrow: true,
+      acquireTimeoutMillis: 20000
+    });
+  }
+
+  protected withConnection<T>(fn: (conn: Connection) => Promise<T>): Promise<T> {
+    const self = this;
+    const connectionPromise = this.pool.acquire();
+
+    let cancelled = false;
+    const cancelObj: any = {};
+    const promise: any = connectionPromise.then(conn => {
+      cancelObj.cancel = async () => {
+        cancelled = true;
+        await self.withConnection(async processConnection => {
+          const processRows: any = await processConnection.promise().query({
+            sql: 'SHOW PROCESSLIST'
+          });
+          await Promise.all(processRows.filter((row: any) => row.Time >= 599)
+            .map((row: any) => processConnection.promise().query({
+              sql: `KILL ${row.Id}`
+            })));
+        });
+      };
+      return fn(conn)
+        .then(res => this.pool.release(conn).then(() => {
+          if (cancelled) {
+            throw new Error('Query cancelled');
+          }
+          return res;
+        }))
+        .catch((err) => this.pool.release(conn).then(() => {
+          if (cancelled) {
+            throw new Error('Query cancelled');
+          }
+          throw err;
+        }));
+    });
+    promise.cancel = () => cancelObj.cancel();
+    return promise;
+  }
+
+  public async testConnection() {
+    // eslint-disable-next-line no-underscore-dangle
+    const conn: Connection = await (<any> this.pool)._factory.create();
+    try {
+      await conn.promise().query('SELECT 1', []);
+    } finally {
+      // eslint-disable-next-line no-underscore-dangle
+      await (<any> this.pool)._factory.destroy(conn);
+    }
+  }
+
+  public async query<R = unknown>(sql: string, values: unknown[]): Promise<R[]> {
+    return <any> this.withConnection(async (conn) => {
+      await this.prepareConnection(conn);
+
+      const [rows] = await conn.promise().query({
+        sql,
+        values,
+      });
+
+      return rows;
+    });
+  }
+
+  protected async prepareConnection(conn: Connection) {
+    await conn.promise().query({
+      sql: `SET time_zone = '${this.config.storeTimezone || '+00:00'}'`,
+      values: [],
+    });
+  }
+
+  public async stream(query: string, values: unknown[], options: StreamOptions): Promise<any> {
+    // eslint-disable-next-line no-underscore-dangle
+    const conn: Connection = await (<any> this.pool)._factory.create();
+
+    try {
+      await this.prepareConnection(conn);
+
+      const [rowStream, fields] = await (
+        new Promise<[Readable, any[]]>((resolve, reject) => {
+          const stream = conn.query(query, values).stream(options);
+
+          stream.on('fields', (f) => {
+            resolve([stream, f]);
+          });
+          stream.on('error', (e) => {
+            reject(e);
+          });
+        })
+      );
+
+      return {
+        rowStream,
+        types: fields.map((field: any) => ({
+          name: field.name,
+          type: this.toGenericType(getNativeTypeName(field.columnType)),
+        })),
+        release: async () => {
+          // eslint-disable-next-line no-underscore-dangle
+          await (<any> this.pool)._factory.destroy(conn);
+        }
+      };
+    } catch (e) {
+      // eslint-disable-next-line no-underscore-dangle
+      await (<any> this.pool)._factory.destroy(conn);
+
+      throw e;
+    }
+  }
+
+  public async downloadQueryResults(
+    query: string,
+    values: unknown[],
+    options: DownloadQueryResultsOptions
+  ): Promise<DownloadQueryResultsResult> {
+    if ((options || {}).streamImport) {
+      return this.stream(query, values, options);
+    }
+
+    return this.withConnection(async (conn) => {
+      await this.prepareConnection(conn);
+
+      const [rows, fields] = await conn.promise().query<RowDataPacket[]>(query, values);
+
+      return {
+        rows,
+        types: fields.map((field: any) => ({
+          name: field.name,
+          type: this.toGenericType(getNativeTypeName(field.columnType)),
+        })),
+      };
+    });
+  }
+
+  public async release() {
+    await this.pool.drain();
+    await this.pool.clear();
+  }
+
+  public informationSchemaQuery() {
+    if (this.config.database) {
+      return `${super.informationSchemaQuery()} AND columns.table_schema = '${this.config.database}'`;
+    } else {
+      return super.informationSchemaQuery();
+    }
+  }
+
+  public quoteIdentifier(identifier: string) {
+    return `\`${identifier}\``;
+  }
+
+  public readOnly() {
+    // Mongo BI doesn't support table creation
+    return true;
+  }
+}

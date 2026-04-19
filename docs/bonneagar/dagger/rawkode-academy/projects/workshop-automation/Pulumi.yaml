@@ -1,0 +1,4 @@
+name: rawkode-academy-workshop
+description: The Complete Guide to Kubernetes
+runtime: nodejs
+main: src

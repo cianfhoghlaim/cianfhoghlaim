@@ -1,0 +1,115 @@
+%\documentclass[8pt,twocolumn,openany]{extbook}
+\documentclass[10pt,twocolumn,openany]{book}
+\usepackage{fancyhdr}
+\usepackage{amssymb}
+\usepackage[Conny]{fncychap}
+\ChTitleAsIs{\huge\sc\centering}
+\ChTitleVar{\huge\sc\centering}
+\usepackage{fix2col}
+
+\usepackage{bookman}  % OK
+
+% next two assure correct Irish hyphenation
+\usepackage[american,irish]{babel}
+%\usepackage[american]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{manfnt}  % for \dbend
+\usepackage[pdftex,
+%			draft,
+            linkcolor=black,
+            urlcolor=blue,
+            citecolor=red,
+            colorlinks=true,
+            breaklinks=true,
+            bookmarks=true,
+            pdfpagelayout=OneColumn,
+            pdfstartview=FitH,
+            pdfview=FitH,
+            pdftitle={gv2ga},
+            pdfauthor={Kevin P. Scannell}]{hyperref}
+\setlength{\textheight}{8.675in}
+\setlength{\textwidth}{6.875in}
+\setlength{\columnsep}{0.3125in}
+\setlength{\topmargin}{0.0in}
+\setlength{\headheight}{0.1in}
+\setlength{\headsep}{0.2in}
+\setlength{\parindent}{1pc}
+\setlength{\oddsidemargin}{-.1875in}  % centered
+\setlength{\evensidemargin}{-.1875in}
+\pagestyle{fancy}
+
+\begin{document}
+\begin{frontmatter}
+\title{\Huge\bf Focl\'oir Manainnis-Gaeilge}
+\author{{\Large Kevin P. Scannell}}
+\date{\today}
+\maketitle
+\onecolumn
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                   Coipcheart                                            %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\chapter*{C\'oipcheart} 
+\addcontentsline{toc}{chapter}{C\'oipcheart}
+
+\vfill
+
+\copyright \hspace{0.6ex} 2016 Kevin P. Scannell
+
+\vspace{1ex}
+
+%Tá \textit{Foclóir G\`aidhlig-Gaeilge}
+Ceadúnaithe faoi 
+\href{http://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons Attribution-ShareAlike 4.0 International License}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                   Giorruchain                                           %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\chapter*{Giorr\'uch\'ain} 
+\addcontentsline{toc}{chapter}{Giorr\'uch\'ain}
+\begin{tabbing}
+\hspace*{20ex}\=\hspace{16ex}\=\kill
+\> {\it aid} \> aidiacht \\
+\> {\it af} \> ainmfhocal \\
+\> {\it bain} \> ainmfhocal baininscneach \\
+\> {\it br} \> briathar \\
+\> {\it cop} \> copail \\
+\> {\it db} \> dobhriathar \\
+\> {\it fir} \> ainmfhocal firinscneach \\
+\> {\it for} \> forainm \\
+\> {\it réamh} \> réamhfhocal \\
+\> {\it sealbh} \> aidiacht shealbhach \\
+\> {\it uaill} \> uaillbhreas \\
+\> $\bigstar$ \> sa míle focal is coitianta ach gan a bheith soiléir \\
+\> \textdagger \> neamhchoitianta: sampla ar bith i gcorpas mór Manainnise \\
+\> \textdbend \> cara bréagach: cosúil le focal Gaeilge ach le brí dhifriúil \\
+\end{tabbing}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                   Usaid                                                 %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\chapter*{{\'U}s\'aid} 
+%\addcontentsline{toc}{chapter}{\'Us\'aid}
+
+%\endinput
+% \tableofcontents
+\end{frontmatter}
+
+\begin{mainmatter}
+\twocolumn
+\selectlanguage{irish}
+\lhead{\large\bf \rightmark}
+\rhead{\large\bf \leftmark}
+\input sonrai.tex
+\appendix
+\lhead{}
+\rhead{}
+\end{mainmatter}
+
+\end{document}

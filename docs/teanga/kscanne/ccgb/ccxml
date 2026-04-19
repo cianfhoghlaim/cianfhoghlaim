@@ -1,0 +1,5 @@
+#!/bin/bash
+#    Used by RPC script - NOW DEFUNCT!
+#LATINONE=`echo "${1}" | iconv -f utf8 -t iso88591`
+#LC_ALL="ga_IE" /usr/local/bin/qq "${LATINONE}" | iconv -f iso88591 -t utf8
+#echo "${1}" | iconv -f utf8 -t iso88591 | /usr/local/bin/mt | iconv -f iso88591 -t utf8

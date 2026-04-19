@@ -1,0 +1,66 @@
+.escr-form-field {
+    display: block;
+}
+.escr-form-field span.escr-required,
+h3 span.escr-required {
+    color: var(--alert);
+    margin-left: 3px;
+}
+.escr-help-text {
+    font-weight: 400;
+    font-size: 12px;
+    font-family: 'Noto Sans';
+    font-style: normal;
+}
+.escr-field-errors {
+    list-style: none;
+    margin: 0.5rem 0 0;
+    padding: 0;
+}
+.escr-error-text {
+    color: var(--alert);
+}
+.escr-form-field .escr-field-label {
+    display: block;
+    font-weight: 600;
+}
+.escr-form-field.escr-checkbox-field {
+    display: flex;
+    flex-flow: column;
+}
+.escr-form-field.escr-checkbox-field label {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    margin-top: 8px;
+}
+.escr-form-field.escr-checkbox-field input {
+    margin-right: 12px;
+}
+.escr-form-field.escr-checkbox-field .escr-help-text {
+    display: block;
+    margin-top: 8px;
+}
+
+.escr-page input[type="file"] {
+    font: inherit;
+    background-color: var(--background);
+    width: 100%;
+    border-radius: 4px;
+    height: 38px;
+}
+.escr-page input[type="file"]::file-selector-button {
+    padding: 8px 16px;
+    height: 100%;
+    font: inherit;
+    border-radius: 4px 0 0 4px;
+    border: none;
+    background-color: var(--primary);
+    color: var(--button-text);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.escr-page input[type="file"].invalid {
+    outline: 1px solid var(--alert);
+}

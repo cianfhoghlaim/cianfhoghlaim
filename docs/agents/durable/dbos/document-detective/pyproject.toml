@@ -1,0 +1,27 @@
+[project]
+name = "document-detective"
+version = "0.1.0"
+
+dependencies = [
+    "dbos==2.2.0",
+    "fastapi[standard]>=0.120.0",
+    "llama-index==0.14.5",
+    "llama-index-vector-stores-postgres==0.7.1",
+]
+requires-python = ">=3.10"
+readme = "README.md"
+license = {text = "MIT"}
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+filter_files = true
+atomic = true
+
+[dependency-groups]
+dev = [
+    "black>=25.9.0",
+    "isort>=7.0.0",
+]

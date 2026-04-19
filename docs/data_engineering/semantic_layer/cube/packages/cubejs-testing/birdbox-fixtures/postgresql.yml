@@ -1,0 +1,53 @@
+version: "2.2"
+
+services:
+  cube:
+    container_name: birdbox-cube
+    image: ${BIRDBOX_CUBEJS_REGISTRY_PATH}cubejs/cube:${BIRDBOX_CUBEJS_VERSION:-latest}
+    environment:
+      CUBEJS_DB_TYPE: postgres
+      CUBEJS_DB_HOST: db
+      CUBEJS_DB_NAME: test
+      CUBEJS_DB_USER: test
+      CUBEJS_DB_PASS: test
+      CUBEJS_DEV_MODE: ${CUBEJS_DEV_MODE:-true}
+      CUBEJS_WEB_SOCKETS: "true"
+      CUBEJS_API_SECRET: mysupersecret
+      CUBEJS_CACHE_AND_QUEUE_DRIVER: memory
+      CUBEJS_SCHEMA_PATH: schema
+    depends_on:
+      - db
+    links:
+      - db
+    volumes:
+      - ./postgresql:/cube/conf
+      - ./postgresql/single/cube.js:/cube/conf/cube.js
+      - ./postgresql/schema/CAST.js:/cube/conf/schema/CAST.js
+      - ./postgresql/schema/Customers.js:/cube/conf/schema/Customers.js
+      - ./postgresql/schema/Customers.sql.js:/cube/conf/schema/Customers.sql.js
+      - ./postgresql/schema/ECommerce.js:/cube/conf/schema/ECommerce.js
+      - ./postgresql/schema/ECommerce.sql.js:/cube/conf/schema/ECommerce.sql.js
+      - ./postgresql/schema/Products.js:/cube/conf/schema/Products.js
+      - ./postgresql/schema/Products.sql.js:/cube/conf/schema/Products.sql.js
+    ports:
+      - "4000"
+    restart: always
+
+  db:
+    container_name: birdbox-db
+    image: hbontempo/postgres-hll:16-v2.18
+    environment:
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_USER=test
+      - POSTGRES_DB=test
+    ports:
+      - "5432"
+    restart: always
+    volumes:
+      - ./datasets:/data:ro
+      - ./postgresql/scripts:/scripts:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

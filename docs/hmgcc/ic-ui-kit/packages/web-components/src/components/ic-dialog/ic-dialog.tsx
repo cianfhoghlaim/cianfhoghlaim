@@ -1,0 +1,526 @@
+import {
+  Component,
+  Element,
+  Event,
+  EventEmitter,
+  Host,
+  Prop,
+  State,
+  Method,
+  Listen,
+  Watch,
+  h,
+  Fragment,
+} from "@stencil/core";
+import closeIcon from "../../assets/close-icon.svg";
+import {
+  isSlotUsed,
+  checkResizeObserver,
+  focusElement,
+  handleFocusTrapTabKeyPress,
+  onComponentRequiredPropUndefined,
+  refreshInteractiveElementsOnSlotChange,
+  slottedInteractiveElements,
+} from "../../utils/helpers";
+import { IcThemeMode } from "../../utils/types";
+
+/**
+ * @slot dialog-controls - Content will be place at the bottom of the dialog.
+ * @slot heading - Content will be placed at the top of the dialog.
+ * @slot label - Content will be placed above the dialog heading.
+ * @slot alert - Content will be placed at the top of the content area of the dialog.
+ */
+@Component({
+  tag: "ic-dialog",
+  styleUrl: "ic-dialog.css",
+  shadow: true,
+})
+export class Dialog {
+  private backdropEl?: HTMLDivElement;
+  private contentArea: HTMLSlotElement | null;
+  private contentAreaMutationObserver: MutationObserver | null = null;
+  private DATA_GETS_FOCUS: string = "data-gets-focus";
+  private DIALOG_CONTROLS: string = "dialog-controls";
+  private dialogEl?: HTMLDialogElement;
+  private dialogHeight: number = 0;
+  private focusAttemptCount = 0;
+  private focusedElementIndex = 0;
+  private interactiveElementList: HTMLElement[] = [];
+  private resizeObserver: ResizeObserver | null = null;
+  private resizeTimeout: number;
+  private sourceElement: HTMLElement;
+
+  @Element() el: HTMLIcDialogElement;
+
+  @State() dialogRendered: boolean = false;
+  @State() fadeIn: boolean = false;
+
+  /**
+   * If set to `false`, the dialog will not close when the backdrop is clicked.
+   */
+  @Prop() closeOnBackdropClick?: boolean = true;
+
+  /**
+   * If 'true', sets the 'primary' or rightmost button to the destructive variant. Stops initial focus being set on the 'primary' or rightmost default or slotted button.
+   */
+  @Prop() destructive?: boolean = false;
+
+  /**
+   * Sets the dismiss label tooltip and aria label.
+   */
+  @Prop() dismissLabel?: string = "Dismiss";
+
+  /**
+   * If set to `true`, the content area max height and overflow properties are removed allowing the dialog to stretch below the fold.
+   * This prop also prevents popover elements from being cut off within the content area.
+   */
+  @Prop() disableHeightConstraint?: boolean = false;
+
+  /**
+   * If set to `true`, the content area width property is removed, allowing content to take the full width of the dialog when using the large variant.
+   */
+  @Prop() disableWidthConstraint?: boolean = false;
+
+  /**
+   * If `true`, the close button will not be displayed.
+   */
+  @Prop() hideCloseButton?: boolean = false;
+
+  /**
+   * If set to `true`, default button controls will not be shown, but slotted dialog controls will still be displayed.
+   */
+  @Prop() hideDefaultControls: boolean = false;
+
+  /**
+   * Sets the heading for the dialog.
+   */
+  @Prop() heading?: string;
+
+  /**
+   * Sets the optional label for the dialog which appears above the heading.
+   */
+  @Prop() label?: string;
+
+  /**
+   * If `true`, the dialog will be displayed.
+   */
+  @Prop({ reflect: true, mutable: true }) open?: boolean = false;
+
+  @Watch("open")
+  watchOpenHandler(): void {
+    if (this.open) {
+      this.dialogOpened();
+    } else {
+      this.fadeIn = false;
+      if (this.resizeObserver !== null) {
+        this.resizeObserver.disconnect();
+      }
+      setTimeout(() => {
+        this.dialogRendered = false;
+        this.dialogEl?.close();
+        this.sourceElement?.focus();
+        this.dialogHeight = 0;
+        this.icDialogClosed.emit();
+      }, 80);
+    }
+  }
+
+  /**
+   * Sets the maximum and minimum height and width for the dialog.
+   */
+  @Prop() size?: "small" | "medium" | "large" = "small";
+
+  /**
+   * Sets the theme color to the dark or light theme color. "inherit" will set the color based on the system settings or ic-theme component.
+   */
+  @Prop() theme?: IcThemeMode = "inherit";
+
+  /**
+   * Cancellation event emitted when default 'Cancel' button clicked or 'cancelDialog' method is called.
+   */
+  @Event() icDialogCancelled: EventEmitter<void>;
+
+  /**
+   * Emitted when dialog has closed.
+   */
+  @Event() icDialogClosed: EventEmitter<void>;
+
+  /**
+   * Confirmation event emitted when default 'Confirm' primary button clicked or 'confirmDialog' method is called.
+   */
+  @Event() icDialogConfirmed: EventEmitter<void>;
+
+  /**
+   * Emitted when dialog has opened.
+   */
+  @Event() icDialogOpened: EventEmitter<void>;
+
+  disconnectedCallback(): void {
+    this.removeSlotChangeListener();
+  }
+
+  componentDidLoad(): void {
+    this.setContentAreaMutationObserver();
+
+    if (this.open) {
+      this.dialogOpened();
+    }
+
+    !isSlotUsed(this.el, "heading") &&
+      onComponentRequiredPropUndefined(
+        [{ prop: this.heading, propName: "heading" }],
+        "Dialog"
+      );
+  }
+
+  componentDidRender(): void {
+    document.body.style.overflow =
+      getComputedStyle(this.el).display !== "none" &&
+      this.disableHeightConstraint
+        ? "hidden"
+        : "auto";
+  }
+
+  @Listen("keydown", { target: "document" })
+  handleKeyboard(ev: KeyboardEvent): void {
+    if (this.dialogRendered) {
+      switch (ev.key) {
+        case "Tab": {
+          const tabKeyPressHandlerResult = handleFocusTrapTabKeyPress(
+            this.el,
+            this.focusAttemptCount,
+            this.focusedElementIndex,
+            this.interactiveElementList,
+            ev.shiftKey
+          );
+          this.focusAttemptCount =
+            tabKeyPressHandlerResult.newFocusAttemptCount;
+          this.focusedElementIndex =
+            tabKeyPressHandlerResult.newFocusedElementIndex;
+          if (tabKeyPressHandlerResult.preventDefault) {
+            ev.preventDefault();
+          }
+          break;
+        }
+        case "Escape":
+          if (!ev.repeat) {
+            this.open = false;
+          }
+          ev.stopImmediatePropagation();
+          break;
+      }
+    }
+  }
+
+  @Listen("click", {})
+  handleClick(ev: MouseEvent): void {
+    if (
+      this.dialogEl &&
+      this.closeOnBackdropClick &&
+      ev.composedPath().indexOf(this.dialogEl) <= 0
+    ) {
+      const { top, height, left, width } =
+        this.dialogEl.getBoundingClientRect();
+      const isInDialog =
+        top <= ev.clientY &&
+        ev.clientY <= top + height &&
+        left <= ev.clientX &&
+        ev.clientX <= left + width;
+      if (!isInDialog) {
+        this.open = false;
+      }
+    }
+  }
+
+  /**
+   * Cancels the dialog. Used by the default 'Cancel' button or can be called manually to trigger cancelling of dialog.
+   */
+  @Method()
+  async cancelDialog(): Promise<void> {
+    this.icDialogCancelled.emit();
+    this.open = false;
+  }
+
+  /**
+   * Confirms the dialog. Used by the default 'Confirm' button or can be called manually to trigger confirming of dialog.
+   */
+  @Method()
+  async confirmDialog(): Promise<void> {
+    this.icDialogConfirmed.emit();
+  }
+
+  private dialogOpened = () => {
+    this.dialogRendered = true;
+
+    if (this.disableHeightConstraint) {
+      this.dialogEl?.show();
+    } else {
+      this.dialogEl?.showModal();
+    }
+
+    setTimeout(() => {
+      this.fadeIn = true;
+
+      /**
+       * This is required to set scroll back to top if:
+       * - dialog content goes below the fold
+       * - is closed using cancel or confirm and reopened.
+       *
+       * Without this, the scroll bar will start from the dialog's last scroll-x coordinate.
+       */
+      if (
+        this.backdropEl &&
+        this.disableHeightConstraint &&
+        this.backdropEl.scrollTop !== 0
+      ) {
+        this.backdropEl.scrollTop = 0;
+      }
+    }, 10);
+
+    setTimeout(() => {
+      this.getInteractiveElements();
+      this.setInitialFocus();
+      checkResizeObserver(this.runResizeObserver);
+    }, 75);
+
+    setTimeout(() => {
+      this.icDialogOpened.emit();
+    }, 80);
+  };
+
+  private runResizeObserver = () => {
+    if (this.dialogEl) {
+      this.resizeObserver = new ResizeObserver(() => {
+        clearTimeout(this.resizeTimeout);
+        this.resizeTimeout = window.setTimeout(this.resizeObserverCallback, 80);
+      });
+      this.resizeObserver.observe(this.dialogEl);
+    }
+  };
+
+  private resizeObserverCallback = () => {
+    if (this.dialogEl && this.dialogEl.clientHeight !== this.dialogHeight) {
+      this.dialogHeight = this.dialogEl.clientHeight;
+    }
+  };
+
+  private removeSlotChangeListener = () => {
+    if (this.contentArea) {
+      this.contentArea.removeEventListener(
+        "slotchange",
+        this.getInteractiveElements
+      );
+
+      this.contentAreaMutationObserver?.disconnect();
+    }
+  };
+
+  private setContentAreaMutationObserver = () => {
+    const contentWrapper = this.el.shadowRoot?.querySelector(
+      "#dialog-content"
+    ) as HTMLElement;
+
+    if (contentWrapper) {
+      const { contentAreaSlot, contentAreaMutationObserver } =
+        refreshInteractiveElementsOnSlotChange(
+          contentWrapper || null,
+          this.getInteractiveElements
+        );
+
+      this.contentArea = contentAreaSlot;
+      this.contentAreaMutationObserver = contentAreaMutationObserver;
+    }
+  };
+
+  private setInitialFocus = () => {
+    this.sourceElement = document.activeElement as HTMLElement;
+
+    if (!this.interactiveElementList.length) {
+      // No interactive elements yet, retry shortly
+      setTimeout(() => {
+        this.getInteractiveElements();
+        if (this.interactiveElementList.length) {
+          this.setInitialFocus();
+        }
+      }, 10);
+      return;
+    }
+
+    this.focusedElementIndex = this.interactiveElementList.findIndex(
+      (element) => element.hasAttribute(this.DATA_GETS_FOCUS)
+    );
+
+    if (this.focusedElementIndex === -1) {
+      this.focusedElementIndex = 0;
+    }
+
+    if (this.interactiveElementList[this.focusedElementIndex]) {
+      const focusElementResult = focusElement(
+        this.focusAttemptCount,
+        this.focusedElementIndex,
+        this.interactiveElementList
+      );
+      if (focusElementResult) {
+        this.focusAttemptCount = focusElementResult.newFocusAttemptCount;
+        this.focusedElementIndex = focusElementResult.newFocusedElementIndex;
+      }
+    }
+  };
+
+  private closeIconClick = () => {
+    this.open = false;
+  };
+
+  private getInteractiveElements = () => {
+    this.interactiveElementList = Array.from(
+      this.el.shadowRoot?.querySelectorAll("ic-button") || []
+    );
+
+    const interactiveElements = slottedInteractiveElements(this.el);
+
+    if (interactiveElements.length > 0) {
+      if (interactiveElements[0].slot !== this.DIALOG_CONTROLS) {
+        interactiveElements[0].setAttribute(this.DATA_GETS_FOCUS, "");
+      } else if (!this.destructive) {
+        interactiveElements[interactiveElements.length - 1].setAttribute(
+          this.DATA_GETS_FOCUS,
+          ""
+        );
+      }
+    }
+
+    for (let i = 0; i < interactiveElements.length; i++) {
+      this.interactiveElementList.splice(
+        1 + i,
+        0,
+        interactiveElements[i] as HTMLElement
+      );
+    }
+  };
+
+  private renderDialog = () => {
+    const {
+      hideDefaultControls,
+      size,
+      heading,
+      label,
+      destructive,
+      dismissLabel,
+      hideCloseButton,
+      disableHeightConstraint,
+      disableWidthConstraint,
+      closeIconClick,
+      DIALOG_CONTROLS,
+    } = this;
+
+    const controlsSlotUsed = isSlotUsed(this.el, DIALOG_CONTROLS);
+
+    return (
+      <dialog
+        class={{
+          dialog: true,
+          [`${size}`]: true,
+          "disable-height-constraint": !!disableHeightConstraint,
+          "disable-width-constraint": !!disableWidthConstraint,
+        }}
+        aria-labelledby="dialog-label dialog-heading"
+        aria-describedby="dialog-alert dialog-content"
+        ref={(el) => (this.dialogEl = el)}
+      >
+        <div class="heading-area">
+          <div class="heading-content">
+            <div class="label">
+              <slot name="label">
+                <ic-typography variant="label" id="dialog-label">
+                  {label}
+                </ic-typography>
+              </slot>
+            </div>
+            <div class="heading">
+              <slot name="heading">
+                <ic-typography variant="h4" id="dialog-heading">
+                  {heading}
+                </ic-typography>
+              </slot>
+            </div>
+          </div>
+          {!hideCloseButton && (
+            <ic-button
+              class="close-icon"
+              variant="icon-tertiary"
+              innerHTML={closeIcon}
+              aria-label={dismissLabel}
+              onClick={closeIconClick}
+              data-gets-focus={
+                destructive || (hideDefaultControls && !controlsSlotUsed)
+                  ? ""
+                  : null
+              }
+            ></ic-button>
+          )}
+        </div>
+        <div class="content-area">
+          {isSlotUsed(this.el, "alert") && <slot name="alert" />}
+          <div id="dialog-content">
+            <slot />
+          </div>
+        </div>
+        {(controlsSlotUsed || !hideDefaultControls) && (
+          <div
+            class={{
+              [DIALOG_CONTROLS]: true,
+            }}
+          >
+            {controlsSlotUsed ? (
+              <slot name={DIALOG_CONTROLS} />
+            ) : (
+              <Fragment>
+                <ic-button
+                  variant="tertiary"
+                  onClick={() => this.cancelDialog()}
+                  class="dialog-control-button"
+                  data-gets-focus={null}
+                >
+                  Cancel
+                </ic-button>
+                <ic-button
+                  variant={destructive ? "destructive" : "primary"}
+                  onClick={() => this.confirmDialog()}
+                  class="dialog-control-button"
+                  data-gets-focus=""
+                >
+                  Confirm
+                </ic-button>
+              </Fragment>
+            )}
+          </div>
+        )}
+      </dialog>
+    );
+  };
+
+  render() {
+    const { dialogRendered, disableHeightConstraint, fadeIn, theme, size } =
+      this;
+
+    return (
+      <Host
+        class={{
+          "ic-dialog-hidden": !dialogRendered,
+          "ic-dialog-fade-in": fadeIn,
+          "disable-height-constraint": !!disableHeightConstraint,
+          [`ic-theme-${theme}`]: theme !== "inherit",
+          [`ic-dialog-size-${size}`]: size != undefined,
+        }}
+      >
+        {disableHeightConstraint ? (
+          <div class="backdrop" ref={(el) => (this.backdropEl = el)}>
+            {this.renderDialog()}
+          </div>
+        ) : (
+          this.renderDialog()
+        )}
+      </Host>
+    );
+  }
+}

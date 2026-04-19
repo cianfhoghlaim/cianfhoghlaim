@@ -1,0 +1,59 @@
+# BSL Agent Evaluation Questions
+# Focused set of 12 questions for regression testing
+# Each covers a distinct critical feature
+
+questions:
+  # Core functionality
+  - id: core_001
+    question: "Show flights per year based on arrival time"
+    features: [truncate, with_dimensions, time_dimension]
+
+  - id: core_002
+    question: "How many flights were there in 2003?"
+    features: [filter_timestamp, year_method]
+
+  - id: core_003
+    question: "Show flights from JFK or LAX with distance over 1000 miles"
+    features: [multiple_conditions, logical_operators, isin]
+
+  # Joins
+  - id: join_001
+    question: "Show the flight count by carrier name (not code)"
+    features: [join_carriers, access_joined_dimension]
+
+  - id: join_002
+    question: "What aircraft manufacturers have the most flights?"
+    features: [multi_level_join]
+
+  # Advanced analytics
+  - id: advanced_001
+    question: "What is each carrier's market share as a percentage of total flights?"
+    features: [percentage_of_total, all_method]
+
+  - id: advanced_002
+    question: "Calculate the running total of flights by departure date"
+    features: [window_functions, cumsum]
+
+  # Multi-hop reasoning
+  - id: multihop_001
+    question: "What percentage of flights from Texas airports are operated by Southwest (WN)?"
+    features: [join_airports, filter_by_state, percentage_calculation]
+
+  # Tool interaction & error handling
+  - id: tool_001
+    question: "What models are available and what fields does the flights model have?"
+    features: [list_models, get_model, sequential_tools]
+
+  - id: tool_002
+    question: "Show me flights grouped by a field that doesn't exist: foo_bar"
+    features: [error_handling, invalid_field, recovery]
+
+  # Output configuration
+  - id: output_001
+    question: "Give me just the raw data for top 5 carriers by flight count, no chart"
+    features: [get_chart_false, order_by, limit]
+
+  # Ambiguous query handling
+  - id: strategy_001
+    question: "Compare the busiest airports"
+    features: [ambiguous_query, top_n_selection]

@@ -1,0 +1,71 @@
+.escr-toast-group,
+#alerts-container {
+    display: flex;
+    flex-flow: column;
+    position: absolute;
+    left: 6rem;
+    bottom: 2rem;
+    width: auto;
+    right: auto;
+    top: auto;
+}
+.toast-group-enter, .toast-group-leave-to {
+    opacity: 0;
+}
+.escr-toast {
+    z-index: var(--toast-z);
+    background-color: var(--background2);
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 4rem;
+    box-shadow: 0px 4px 4px var(--drop-shadow);
+    border-radius: 5px;
+    padding: 0 0.5rem 0 1rem;
+    width: max-content;
+    max-width: 100%;
+    transition: opacity 0.5s;
+    gap: 0.5rem;
+}
+.escr-toast-group .escr-toast + .escr-toast {
+    margin-top: 1rem;
+}
+.escr-toast > span,
+.escr-toast > a {
+    font-weight: 600;
+}
+/* color variants */
+.escr-toast--alert {
+    background-color: var(--alert);
+    color: var(--toast-text);
+    box-shadow: 0px 4px 4px var(--alert-focus);
+}
+.escr-toast--alert a,
+.escr-toast--alert button,
+.escr-toast--alert a:hover,
+.escr-toast--alert button:hover,
+.escr-toast--alert a:active,
+.escr-toast--alert button:active {
+    color: var(--toast-text);
+    border-color: var(--toast-text);
+}
+.escr-toast--alert svg {
+    fill: var(--toast-text);
+}
+.escr-toast--success {
+    background-color: var(--primary);
+    color: var(--toast-text);
+    box-shadow: 0px 4px 4px var(--primary-focus);
+}
+.escr-toast--success svg {
+    fill: var(--toast-text);
+}
+.escr-toast--success a,
+.escr-toast--success button,
+.escr-toast--success a:hover,
+.escr-toast--success button:hover,
+.escr-toast--success a:active,
+.escr-toast--success button:active {
+    color: var(--toast-text);
+    border-color: var(--toast-text);
+}

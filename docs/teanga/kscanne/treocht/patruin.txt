@@ -1,0 +1,169 @@
+blog	[Bb]logs?	blag	m?[Bb]h?lag(anna|sa)?	blagálaí	m?[Bb]h?lagála(í|ithe)	blagáil	m?[Bb]h?lagá(il|la)	blagmhír	m?[Bb]h?lagmhír(e|eanna)?	blagadóireacht	m?[Bb]h?lagadóireachta?	blagadóir	m?[Bb]h?lagadó(irí?|ra)	blagchruinne	m?[Bb]h?lagchruinne	blagaisféar	m?[Bb]h?laga?i?sfé[ia]r
+agus	[Aa]gus	tá	[Tt]á	ní	[Nn]í	Gaeilge	n?[Gg]h?aeilge	maith	[Mm]h?aithe?	eile	[Ee]ile	féin	[Ff]h?éin	aon	[Aa]on	cur	g?[Cc]h?ur	déanamh	n?[Dd]h?éanamh	anois	[Aa]nois
+ciniciúil	[Cc]h?iniciú(il|la)	soiniciúil	[Ss]h?oiniciú(il|la)
+sparántacht	[Ss]parántacht(aí?)?	sparánacht	[Ss]paránacht(aí?)?
+caipitleach	[Cc]h?aipitleacha?	caipitlíoch	[Cc]h?aipitlíocha?
+oibreoir	h?[Oo]ibreo(irí?|ra)	oibritheoir	h?[Oo]ibritheo(irí?|ra)
+tiúnadh	d?[Tt]h?iúna(dh|igí|nn)	tiúnáil	d?[Tt]h?iúná[a-záéíóú]+
+gliogáil	n?[Gg]h?liogá[a-záéíóú]+	cliceáil	g?[Cc]h?liceá[a-záéíóú]+
+sceidealadh	[Ss]ceideal(ta|adh)	sceidealú	[Ss]ceideal(aithe|ú)
+nuálaíoch	[Nn]uálaíocha?	nuálach	[Nn]uálacha?
+soláthróir	t?[Ss]h?oláthró(irí?|ra)	soláthraí	t?[Ss]h?oláthra(í|ithe)
+Ioslám	h?Ioslám[a-záéíóú]+	Ioslam	h?Ioslam[a-záéíóú]+
+poblachtánach	b?[Pp]h?oblacht[aá]na(cha?i?s?|igh|ithe|[sí])	poblachtach	b?[Pp]h?oblachta(cha?i?s?|igh|ithe|s)
+iarbhunscoil	h?[Ii]ar[Bb]hunscoil(e|eanna)?	iar-bhunscoil	h?[Ii]ar-[Bb]hunscoil(e|eanna)?
+gnéasaíochas	n?[Gg]h?néasaíochai?s	gnéasachas	n?[Gg]h?néasachai?s
+féinphic	(bh)?[Ff]h?éin-?ph?ic([es]|eanna)	féinín	(bh)?[Ff]h?éiníní?	selfie	[Ss]elfies?
+robot-bot	([Rr]o)?[Bb]ots?	róbat-bota	([Rr]óbai?t|m?[Bb]h?otaí?)
+vlog	[Vv]logs?	vlag	[Vv]lag(anna|sa)?
+app	[Aa]pps?	aip	h?[Aa]ipp?-?(e|eannaí?)?
+genre	[Gg]enres?	seánra	t?[Ss]h?eánraí?
+yoga	[Yy]oga	ióga	[Ii]óga
+graffiti	[Gg]raffiti	graifítí	n?[Gg]h?raif[ií]tí
+topic	[Tt]opics?	topaic	d?[Tt]h?opaic[eí]?
+punk	[Pp]unks?	punc	b?[Pp]h?unc(aí|anna)?
+vodka	[Vv]odkas?	vodca	[Vv]odca
+sushi	[Ss]ushi	súisí	t?[Ss]h?úisí
+vegan	[Vv]egan[a-záéíóú]*	veigeán	[Vv]eigeái?n[a-záéíóú]*
+meme	[Mm]emes?	méim	[Mm]h?éim([eí]|eanna)?
+pizza	[Pp]izzas?	píotsa	b?[Pp]h?íotsaí?
+wiki	[Ww]ikis?	vicí	[Vv][íi]cí
+job	[Jj]obs?	jab	[Jj]ab(-?sa|annaí?)?
+gym	[Gg]yms?	giom	n?[Gg]h?iom(anna)?
+stuff	[Ss]tuff	stuif	[Ss]tuif[fe]?
+blitz	[Bb]litz	bliotsa	m?[Bb]h?liots(a|anna)?
+album	[Aa]lbums?	albam	h?[Aa]lbai?m(sa)?
+banjo	[Bb]anjos?	bainseó	m?[Bb]h?ainseó(nna)?
+hoody	[Hh]ood(y|ie)s?	húdaí	[Hh]úda(í|ithe)
+telly	[Tt]elly	teilí	d?[Tt]h?eil(í|ithe)
+fuck	[Ff]uck(er|ing?)?	foc	[Ff]h?oc(ai?[nr])?
+boss	[Bb]oss(es)?	bas	m?[Bb]h?as(anna)?
+joke	[Jj]okes?	jóc	[Jj]óc(sa|annaí?)?
+tattoo	[Tt]attoos?	tatú	d?[Tt]h?atú(a?nnaí?)?
+lad	[Ll]ads?	leaid	[Ll]eaid(s|e?annaí?)?
+pics-pix	[Pp]i(cs|x)	piceanna	b?[Pp]h?iceannaí?
+gigs	[Gg]igs	gigeanna	n?[Gg]h?igg?eannaí?
+reggae	[Rr]eggae	reigé	[Rr]eigé
+cliché	[Cc]lich[eé]s?	clísé	g?[Cc]h?l[ií]sé(anna)?
+hello	[Hh]ello+	haló	[Hh]aló	heileo	[Hh]eileo
+studio	[Ss]tudios?	stiúideo	[Ss]ti?úid[ei][óo](a?nna)?
+café	[Cc]af[eé]s?	caifé	g?[Cc]h?aifé(annaí?)?
+logo	[Ll]ogos?	lógó	[Ll]ógó(a?nnaí?)?
+tune	[Tt]unes?	tiúin	d?[Tt]h?iúin(e|eanna)?
+profile	[Pp]rofiles?	próifíl	b?[Pp]h?róifíl([eí]|eanna)?
+tally	[Tt]all(ys?|ies)	teailí	d?[Tt]h?eail(í|ithe)	tailí	d?[Tt]h?ail(í|ithe)	tallaí	d?[Tt]h?alla(í|ithe)
+curry	curr(ys?|ies)	curaí	g?[Cc]h?ura(í|ithe)
+taxi	[Tt]axis?	tacsaí	d?[Tt]h?acsa([ií]|ithe)
+jeans	[Jj]eans	jíons	[Jj]íonn?s
+episode	[Ee]pisodes?	eipeasóid	h?[Ee]ipeas[óo]i?d[eí]?
+piano	[Pp]ianos?	pianó	b?[Pp]h?ianó(nna)?
+disco	[Dd]iscos?	dioscó	n?[Dd]h?ioscó(a?nna)?
+champagne	[Cc]hampagnes?	seaimpéin	t?[Ss]h?eaimpéin[eí]?
+tsunami	[Tt]sunami	súnámaí	t?[Ss]h?ún[aá]ma(í|ithe)
+hipster	[Hh]ipsters?	hiopstar	[Hh]iopstai?r(acha|anna|a?í)?
+bingo	[Bb]ingo	biongó	m?[Bb]h?iong[oó]
+vinyl	[Vv]inyl	vinil	[Vv]inile?
+avatar	[Aa]vatars?	abhatár	h?[Aa]bhatái?r(anna)?
+tango	[Tt]ango	tangó	d?[Tt]h?angó
+marathon	[Mm]arathons?	maratón	[Mm]h?aratói?n
+spaghetti	[Ss]paghetti	spaigití	[Ss]paige?ití
+quinoa	[Qq]uinoa	cuineo	g?[Cc]h?uineo
+rave	[Rr]aves?	réabh	[Rr]éabh(anna)?
+kebab	[Kk]ebabs?	ceibeab	g?[Cc]h?eibeab(e?anna)?
+burger	[Bb]urgers?	burgar	m?[Bb]h?urgai?ra?í?
+cameo	[Cc]ameos?	caimeo	g?[Cc]h?aimeo(nna)?
+diaspora	[Dd]iasporas?	diaspóra	n?[Dd]h?iaspóra
+brunch	[Bb]runch(es)?	bróinse	m?[Bb]h?róinse
+visa	[Vv]isas?	víosa	[Vv]íosaí?
+hashtag	[Hh]ash-?tags?	haischlib	[Hh]aischli[bp](e|eanna)?
+opera	[Oo]peras?	ceoldráma	g?[Cc]h?eoldrámaí?
+jazz	[Jj]azz	snagcheol	t?[Ss]h?nagcheoi?l
+apartheid	[Aa]partheid	cinedheighilt	g?[Cc]h?inedheighi?lte?
+troika	[Tt]roika	triúracht	d?[Tt]h?riúrachta?
+AIDS	AIDS	SEIF	SEIF
+laptop	[Ll]aptops?	ríomhaire glúine	[Rr]íomhair[eí] [Gg]lúine
+spam	[Ss]pam	turscar	d?[Tt]h?urscai?r
+cocktail	[Cc]ocktails?	manglam	[Mm]h?anglai?m
+chipper	[Cc]hippers?	sceallaire	[Ss]ceallair[eí]	sceallóglann	[Ss]ceallógla(nna?|inne)
+celeb	[Cc]elebs?	ceiliúrán	g?[Cc]h?eiliúrái?n
+baseball	[Bb]aseball	daorchluiche	n?[Dd]h?aorchluiche
+flashmob	[Ff]lashmobs?	tobshlua	d?[Tt]h?obsh?lua(ite)?
+Brexit	[Bb]rexit	Sasamach	[Ss]asamach	Breatimeacht	m?[Bb]h?reatimeach?ta?	Bréalú	m?[Bb]h?réal(ú|aithe)
+dea-chleachtas	n?[Dd]h?ea-[Cc]hleachtai?s
+réadmhaoin	[Rr]éadmhaoine?
+cóitseáil	g?[Cc]h?óitseá(il|la)
+buscáil	m?[Bb]h?uscá(il|la)
+aiteach	h?[Aa]iteacha?
+trasinscneach	[Tt]h?ras-?inscn(igh|eacha?)
+gnéasaíoch	[Gg]h?néasaíocha?
+podchraoladh	b?[Pp]h?odchraol(adh|taí?)
+seinnliosta	t?[Ss]h?einnliosta?í?
+Leascheannasaí	[Ll]eas-?cheannasa(í|ithe)
+sárthaispeántas	t?[Ss]h?ár-?thaisp[eé][aá]ntai?s
+cáipéisíocht	g?[Cc]h?áipéisíochta?
+amharclannaíocht	h?[Aa]mharclannaíochta?
+badmantan	m?[Bb]h?admantai?n
+fadliosta	(bh)?[Ff]h?adliostaí?
+príomhscórálaí	b?[Pp]h?ríomhscórála(í|ithe)
+comhphlé	g?[Cc]h?omhphlé
+léamhthuiscint	[Ll]éamhthuisc(eana|intí?)
+cibearbhulaíocht	g?[Cc]h?ibearbhulaíochta?
+zón	[Zz]ói?n
+néalríomhaireacht	[Nn]éalríomhaireachta?
+sluafhoinsiú	t?[Ss]h?luafhoinsi(ú|the)
+idirchontae	[Ii]dirchontae
+craobhchomórtas	g?[Cc]h?raobhchom[óo]rtai?sí?
+tras-scríobh	d?[Tt]h?ras-[Ss]críobh
+fisiciúlacht	(bh)?[Ff]h?isiciúlachta?
+profáil	b?[Pp]h?rofá(il|la)
+Urdúis	h?Urdúise?
+réamhbhabhta	[Rr]éamhbhabhtaí?
+comhscór	g?[Cc]h?omhscói?r(anna)?
+focalbhách	[Ff]h?ocalbhá(igh|cha?)
+drochthionchar	n?[Dd]h?rochthionchai?r
+trolláil	d?[Tt]h?rollá(il|la)
+Ultais	h?Ultaise?
+príomhsprioc	b?[Pp]h?ríomhsprioc(anna)?
+gnáth-theanga	n?[Gg]h?náth-[Tt]heanga(n|cha)?
+puipéadóireacht	b?[Pp]h?uip[eé]adóireachta?
+nuacháilithe	[Nn]uacháilithe
+creachlathas	g?[Cc]h?reachlathai?s
+eintiteas	h?[Ee]intit(eas|is)
+diúltachas	n?[Dd]h?iúltachai?s
+leathmharatón	[Ll]eathmharat[oó]i?n
+feachtasaíocht	(bh)?[Ff]h?eachtasaíochta?
+dea-chaidreamh	n?[Dd]h?ea-[Cc]haidr(i|ea)mh
+ríomhaithne	[Rr]íomh-?aithne
+múrphictiúr	[Mm]h?úrphicti?úi?rí?
+físiúil	[Ff]h?ísiú(il|la)
+príomhchomórtas	b?[Pp]h?ríomh-?[Cc]homórtai?s
+comhréalta	g?[Cc]h?omhréaltaí?
+comhléiriú	g?[Cc]h?omhléiri(the|ú)
+ceanneagraíocht	g?[Cc]h?eanneagraíochta?í?
+tuarthéacs	d?[Tt]h?uarthéacs(anna)?
+uasdátú	h?[Uu]asdát([au]ithe|ú)
+carr	g?[c]h?arr(anna)?	gluaisteán	n?[g]h?luaisteái?n
+fón	(bh)[Ff]h?ói?n(anna|-?sa)?	teileafón	d?[Tt]h?eileaf[oó]i?n	guthán	n?[Gg]h?uthái?n
+héileacaptar	[Hh][eé]ileacaptai?r	ingearán	h?[Ii]ngearái?n	helicopter	[Hh]elicopters?
+surfáil	t?[Ss]h?urfá(il|la)	tonnmharcaíocht	d?[Tt]h?onn-?mharcaíochta?
+trendáil	d?[Tt]h?rea?ndá(il|la)	treochtáil	d?[Tt]h?reochtá(il|la)
+doiciméad	n?[Dd]h?oicimé[ai]d[eí]?	cáipéis	g?[Cc]h?áipéis[eí]?
+músaem	[Mm]h?úsae[iu]?m	iarsmalann	h?[Ii]arsmala(inne|nna?)
+tvuít	d?[Tt]h?vuíte?(á[a-záéíóú]+|annaí?)?	tuít	d?[Tt]h?uíte?(á[a-záéíóú]+|annaí?)?	giolc	n?[Gg]h?iolch?(tha|aí?|adh|anna|acha|aireachta?)?	tweet	d?[Tt]weet(e?[aá](il|la|ilte)|e?annaí?|aí)
+atvuít	[Aa](th-?)?th?vuíte?(á[a-záéíóú]+|annaí?)?	atuít	[Aa](th-?)?th?uíte?(á[a-záéíóú]+|annaí?)?	athghiolc	[Aa]th-?ghiolch?(tha|aí?|adh|anna|acha|aireachta?)?	atweet	[Aa](th-?)?th?weet(e?[aá](il|la|ilte)|e?annaí?|aí)?
+Ísiltíris	h?Ísiltírise?	Ollainnis	h?Ollainnise?
+áisitheoir	h?[Áá]isitheo(irí?|ra)	éascaitheoir	h?[Éé]ascaitheo(irí?|ra)
+leaindeáil	[Ll]eaindeá[a-záéíóú]+	leandáil	[Ll]eandá[a-záéíóú]+	landáil	[Ll]andá[a-záéíóú]+
+tríológ	d?[Tt]h?ríoló(ga?|ige?)	triológ	d?[Tt]h?rioló(ga?|ige?)
+gúgláil	n?[Gg]h?úglá(il|laí?|ilte)	googláil	n?[Gg]h?ooglá(il|laí?|ilte)
+téacsáil	d?[Tt]h?éacsá(il|laí|ilte)	textáil	d?[Tt]h?extá(il|laí|ilte)
+lántosach	[Ll]án-?th?osa(ch|igh)	lántosaí	[Ll]án-?th?osa(í|ithe)
+osréalach	h?[Oo]sréala(cha?|igh)	osréalaíoch	h?[Oo]sréalaíocha?
+taicticí	d?[Tt]h?aicticí?	teaicticí	d?[Tt]h?eaicticí?
+foirmeálta	[Ff]h?oirmeálta	foirmiúil	[Ff]h?oirmiú(il|la)
+neamhfhoirmeálta	[Nn]eamhfhoirmeálta	neamhfhoirmiúil	[Nn]eamhfhoirmiú(il|la)
+rithimiúil	[Rr]ithimiú(il|la)	rithimeach	[Rr]ithim(eacha?|igh)
+sillí	t?[Ss]h?ill(í|ithe)	cillí	g?[Cc]h?ill(í|ithe)	cilí	g?[Cc]h?il(í|ithe)
+comhoibríoch	[Cc]h?omhoibríocha?	comhoibritheach	[Cc]h?omhoibrith(igh|eacha?)
+agus	[Aa]gus	ní	[Nn]í	eile	[Ee]ile	aon	h?[Aa]on
+amp	&	et	[⁊7]

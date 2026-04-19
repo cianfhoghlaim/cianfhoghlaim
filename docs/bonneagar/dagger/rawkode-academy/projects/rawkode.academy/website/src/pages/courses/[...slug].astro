@@ -1,0 +1,184 @@
+---
+import { getImage } from "astro:assets";
+import {
+	type CollectionEntry,
+	getCollection,
+	getEntries,
+	render,
+} from "astro:content";
+import CourseModules from "@/components/courses/CourseModules.astro";
+import CourseSignupFormCompact from "@/components/courses/CourseSignupFormCompact.astro";
+import CourseDetailHero from "@/components/courses/CourseDetailHero.vue";
+import CourseJsonLd from "@/components/html/course-jsonld.astro";
+import Page from "@/wrappers/page.astro";
+import type { GetStaticPaths, GetStaticPathsResult } from "astro";
+
+export const prerender = true;
+
+type Props = {
+	course: CollectionEntry<"courses">;
+};
+
+const computeImageUrl = async (
+	course: CollectionEntry<"courses">,
+): Promise<URL | undefined> => {
+	if (course.data.cover) {
+		const image = await getImage({ src: course.data.cover.image });
+
+		return new URL(image.src, Astro.site);
+	}
+
+	return undefined;
+};
+
+export const getStaticPaths: GetStaticPaths =
+	async (): Promise<GetStaticPathsResult> => {
+		const courses = await getCollection("courses");
+
+		return courses.map((course: CollectionEntry<"courses">) => {
+			return {
+				params: {
+					slug: course.id,
+				},
+				props: {
+					course,
+				},
+			};
+		});
+	};
+
+const { course } = Astro.props;
+
+const { Content } = await render(course);
+const authors = await getEntries(course.data.authors);
+
+// Get all modules for this course
+const allCourseModules = (await getCollection("courseModules"))
+	.filter((module) => module.data.course.id === course.id)
+	.filter((module) => !module.data.draft)
+	.sort((a, b) => a.data.order - b.data.order);
+
+const totalModules = allCourseModules.length;
+const totalDuration = allCourseModules.reduce(
+	(acc, module) => acc + (module.data.duration || 0),
+	0,
+);
+
+// Format duration
+function formatDuration(minutes: number): string {
+	if (minutes === 0) return "Self-paced";
+	const hours = Math.floor(minutes / 60);
+	const mins = minutes % 60;
+	if (hours === 0) return `${mins}m`;
+	if (mins === 0) return `${hours}h`;
+	return `${hours}h ${mins}m`;
+}
+
+// Utility function to get difficulty variant
+
+const imageUrl = await computeImageUrl(course);
+
+// Format authors for the hero component
+const formattedAuthors = authors.map((author) => ({
+	name: author.data.name,
+	avatarUrl: author.data.avatarUrl,
+}));
+---
+
+<Page
+	title={course.data.title}
+	description={course.data.description}
+	image={imageUrl
+		? {
+				image: imageUrl,
+				text: course.data.title,
+				format: "png" as const,
+			}
+		: undefined}
+	publishedAt={course.data.publishedAt}
+	updatedAt={course.data.updatedAt}
+	authors={authors}
+>
+	{imageUrl && (
+		<CourseJsonLd
+			slot="extra-head"
+			course={course}
+			modules={allCourseModules}
+			authors={authors}
+		/>
+	)}
+	
+	<!-- Hero Section with Signup Form -->
+	<CourseDetailHero
+		title={course.data.title}
+		description={course.data.description}
+		moduleCount={totalModules}
+		totalDuration={formatDuration(totalDuration)}
+		difficulty={course.data.difficulty.charAt(0).toUpperCase() + course.data.difficulty.slice(1)}
+		authors={formattedAuthors}
+	>
+		<Fragment slot="signup-form">
+			{course.data.signupConfig && (
+				<CourseSignupFormCompact 
+					courseId={course.id}
+					courseTitle={course.data.title}
+					signupConfig={course.data.signupConfig}
+					isAlreadySubscribed={false}
+					server:defer 
+				/>
+			)}
+		</Fragment>
+	</CourseDetailHero>
+
+	<div class="bg-gray-100 dark:bg-gray-900">
+		<!-- Main Content -->
+		<div class="py-16 px-4 mx-auto max-w-screen-xl">
+			<!-- Course Overview Content -->
+			{Content && (
+				<div class="mb-16">
+					<h2 class="text-3xl font-bold text-primary-content mb-8">Course Overview</h2>
+					<article class="prose prose-lg dark:prose-invert max-w-none">
+						<Content />
+					</article>
+				</div>
+			)}
+
+			<!-- Course Modules -->
+			<div id="course-content" class="mb-16 scroll-mt-20">
+				<h2 class="text-3xl font-bold text-primary-content mb-8">Course Content</h2>
+				<CourseModules course={course} />
+			</div>
+
+			<!-- Resources -->
+			{course.data.resources && course.data.resources.length > 0 && (
+				<div class="mb-16">
+					<h2 class="text-3xl font-bold text-primary-content mb-8">Course Resources</h2>
+					<div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+						{course.data.resources.map((resource) => (
+							<div class="flex items-start gap-4 mb-4 last:mb-0">
+								<div class="flex-1">
+									<h3 class="font-semibold text-primary-content">{resource.title}</h3>
+									{resource.description && (
+										<p class="text-muted text-sm mt-1">{resource.description}</p>
+									)}
+								</div>
+								{resource.type === "url" && resource.url && (
+									<a
+										href={resource.url}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="text-primary hover:text-primary-dark transition-colors"
+									>
+										<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+										</svg>
+									</a>
+								)}
+							</div>
+						))}
+					</div>
+				</div>
+			)}
+		</div>
+	</div>
+</Page>

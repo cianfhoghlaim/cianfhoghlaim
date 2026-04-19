@@ -1,0 +1,15 @@
+/* page */
+.escr-page {
+    width: 100%;
+}
+
+/* no documents/projects to display message */
+.escr-page .escr-empty-msg {
+    text-align: center;
+    padding: 0 1rem 1rem;
+}
+
+/* load more */
+.escr-page .escr-load-more-btn {
+    margin: 1rem auto;
+}

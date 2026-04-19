@@ -1,0 +1,32 @@
+:host {
+  display: block;
+  margin-bottom: var(--ic-space-md);
+  border-bottom: var(--ic-space-1px) solid var(--ic-tab-bottom-border);
+}
+
+:host(.ic-tab-group-monochrome) {
+  border-bottom: var(--ic-space-1px) solid
+    var(--ic-tab-bottom-border-monochrome);
+}
+
+:host(.ic-tab-group-inline) {
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+.tabs-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.tabs-container::-webkit-scrollbar {
+  display: none;
+}
+
+:host ic-horizontal-scroll {
+  --splitter-color: var(--ic-tab-divider);
+}
+
+:host(.ic-tab-group-monochrome) ic-horizontal-scroll {
+  --splitter-color: var(--ic-tab-divider-monochrome);
+}

@@ -1,0 +1,329 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Language" content="en">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<h2>Introduction</h2>
+<h3><a href="index.html">Gaeilge</a></h3>
+<p>
+You'll find links to all of my Irish language projects
+on the site
+<a href="https://cadhan.com/">cadhan.com</a>.
+</p>
+<p>
+<b>Machine learning</b> plays an important role in most of my work,
+and I've tried to give a simple introduction to the subject
+in the activities below.
+No background in math or computer science is required, outside
+of a small amount of algebra in Activity 2.
+</p>
+
+<h2>Lab A: Neural Networks</h2>
+
+<p>
+Often in Computer Science we want to place objects into one of two
+categories; for example:
+</p>
+<ul>
+<li>labeling emails as “spam” or “not spam”</li>
+<li>marking a text (e.g. a product review on Amazon) as “satisfied” or “dissatisfied”</li>
+<li>recognizing texts written by a particular author (e.g. Shakespeare vs. anyone else)</li>
+</ul>
+
+<p>
+We can use <b>machine learning</b> to solve problems like these.
+First, we collect many examples from the two categories
+(with the correct categories having been marked by humans);
+these examples make up the <b>training data</b>.
+Then, we give the training data to the computer so
+that it can learn from them, and then, hopefully,
+place new examples into the correct categories
+(which is to say, <b>generalize</b> from the training data).
+</p>
+
+<p>
+A <b>neural network</b> is a mathematical framework
+that the computer uses to learn from data in this way.
+There are many other techniques in the field
+of machine learning, but neural networks are 
+by far the dominant approach in the present day.
+</p>
+
+<p>
+<b>Activity 1. Tensorflow Playground</b>.
+</p>
+<p>
+Spend 5-10 minutes playing with the
+<a target="_blank" href="https://playground.tensorflow.org/#activation=tanh&batchSize=10&dataset=gauss&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=15&networkShape=1&seed=0.84488&showTestData=false&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false&stepButton_hide=true&activation_hide=true&problem_hide=true&discretize_hide=true&batchSize_hide=true&percTrainData_hide=false&showTestData_hide=true">Tensorflow Playground</a>. We will return to it a bit later,
+but for now, observe the following:
+</p>
+<ul>
+<li>The playground shows a problem of the kind I described above, with 
+two categories; objects in the first category are colored
+<font color="#1D6DB4">blue</font> and objects in the second 
+category are colored <font color="#EE8A2E">orange</font>.</li>
+<li>Neural networks are built from <b>neurons</b>; these are based
+very roughly on the behavior of neurons in the brain, but in this context
+all you need to know is that they are <i>mathematical functions</i>:
+two (or more) numbers go in as inputs, and a single number
+comes out as output.</li>
+<li>When you first visit the playground there is only a single
+neuron in the network. We'll add more later!</li>
+<li>The categorization problem you see is quite easy!
+The blue and orange points are mostly separated from each other.</li>
+<li>Click the big ▶ button at the top of the screen. This starts the
+learning process.
+In this case, it very quickly finds a neuron that is able
+to distinguish the two categories. You will see the
+results of the learning process on the right.</li>
+<li>The “Test loss” tells us how good the resulting neural network is 
+at placing new (never-before-seen) examples into the correct categories
+(small test loss is better).</li>
+<li>You can get a new training data set by clicking the “Regenerate” button. The results will be slightly different each time — try it yourself!</li>
+</ul>
+
+<p>
+<b>Activity 2 (optional for those who don't like maths!).
+What's a neuron exactly and how does it learn?</b>
+</p>
+<p>(Pencil and paper only). Neurons are very simple!
+We'll focus on the case where the neuron takes just two numbers
+as input; call these x<sub>1</sub> and x<sub>2</sub>.
+In this case, the neuron is defined by <b>three</b> numbers (the <b>weights</b>); call these w<sub>1</sub>,w<sub>2</sub>, and w<sub>3</sub>.
+The neuron combines the weights with the input
+(x<sub>1</sub>,x<sub>2</sub>) as follows:
+</p>
+<p>
+A = x<sub>1</sub> w<sub>1</sub> + x<sub>2</sub> w<sub>2</sub> + w<sub>3</sub>
+</p>
+And now, the rule:
+<p>
+<b>If A≥0, output +1, and if A&lt;0, output -1.</b>
+</p>
+<p>
+That's it! For example, if the weights are (w<sub>1</sub>,w<sub>2</sub>,w<sub>3</sub>)=(2,2,-3),
+the neuron will output +1 exactly when:
+</p>
+<p>
+2x<sub>1</sub> + 2x<sub>2</sub> - 3 ≥ 0.
+</p>
+<p>
+In the (x<sub>1</sub>,x<sub>2</sub>) plane, these are the points <i>on or above</i> this line:
+</p>
+<img alt="léaráid 1" src="desmos.png" style="width:300px;height:300px;"/>
+
+<p>
+But how does the neuron <i>learn</i>?  Where do the weights come from?
+Let's say we have a problem with two categories (blue and orange)
+as above, and that we can use two numbers
+x<sub>1</sub> and x<sub>2</sub> to describe a given training example.
+We want to find weights so that the neuron will output 
++1 for the blue points and -1 for the orange points (if possible).
+We input a single training example into the neuron,
+let's say it's a blue (+1) example.
+If the neuron outputs +1, we're happy and we don't do anything.
+If it outputs -1, we tweak the weights a little bit
+to hopefully improve matters.
+The takeaway here is that the neuron isn't really
+“learning”; all we're doing is
+<b>searching for the optimal weights</b>, namely the ones
+that do the best job separating the blue and orange points.
+(The technical name for this search process is
+“stochastic gradient descent”).
+</p>
+
+<p>
+Questions:
+</p>
+<ol>
+<li>For which points (x<sub>1</sub>,x<sub>2</sub>) will the output of the neuron be +1 if (w<sub>1</sub>,w<sub>2</sub>,w<sub>3</sub>) = (2,2,-1)?</li>
+<li>What weights (w<sub>1</sub>,w<sub>2</sub>,w<sub>3</sub>) would you choose so that the output will be +1 on or above the line
+x<sub>2</sub> = x<sub>1</sub> + 1, and -1 below it?</li>
+<li>Is it possible to find weights (w<sub>1</sub>,w<sub>2</sub>,w<sub>3</sub>) so that the output is +1 at (x<sub>1</sub>,x<sub>2</sub>) = (0,1) and (1,0), but -1 at (0,0) and (1,1)?</li>
+</ol>
+
+<p>
+<b>Activity 3. Back to the playground!</b>
+</p>
+<p>
+Return now to the <a target="_blank" href="https://playground.tensorflow.org/#activation=tanh&batchSize=10&dataset=gauss&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=15&networkShape=1&seed=0.84488&showTestData=false&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false&stepButton_hide=true&activation_hide=true&problem_hide=true&discretize_hide=true&batchSize_hide=true&percTrainData_hide=false&showTestData_hide=true">Tensorflow Playground</a>, but this time choose the second dataset (on the left hand side, the one that looks like this: <img style='width:20px;height:20px;vertical-align:middle;' src='xor.png'/>).
+</p>
+
+<p>
+If you click the ▶ button now, it will not do such a great job 
+separating the blue and orange points.
+This happens because a single neuron can only separate
+the data with a straight line as we saw above
+in Activity 2.
+And the dataset here is more complicated — there is no
+single line so that all the blue points are on one side 
+and the orange on the other
+(this is also the answer to the third question above
+in Activity 2, by the way: it is <b>not</b> possible, for the same reason!).
+</p>
+
+<p>
+The solution is to use more than one neuron.
+Click the + button directly above the text 
+“1 neuron”,
+and then start the training process again.
+With two neurons, the network can output
++1 (or -1) in the region <i>between</i>
+two straight lines.
+That's progress, but it's still not ideal.
+</p>
+<p>
+To get even better results, we need to use more than
+one 
+<b>layer</b> of neurons, with the output from one layer
+being fed in as input to the next layer.
+(This is why this subject is sometimes called 
+<b>deep learning</b>, by the way;
+deep = more than one layer in the neural network).
+Click the + button at the top next to 
+“1 HIDDEN LAYER”
+to add another layer.
+Then click the + above the first layer so that you
+have 3 neurons in the first layer and two in the second
+layer, like this:
+</p>
+<img alt="léaráid 2" src="lionra.png" style="width:443px;height:333px;"/>
+<p>
+That's 15 weights total (why?). This many weights gives us a lot more freedom
+to find a more complicated function (one that separates
+the data effectively, we hope).
+Now click the ▶ button again. If you're lucky, you will 
+get a picture that resembles the training data;
+blue in two quadrants and orange in two quadrants.
+We'd like to achieve a “Test loss” around 0.070 (or smaller), 
+although the exact number will depend on your training/test data —
+each group will have different data.
+Click ↺ and then ▶ to restart the learning process; you're likely
+to get different results each time (this is the “stochastic”
+part of “stochastic gradient descent”).
+If you'd like, try using the  “Regularization” feature at
+the top of the screen (e.g.  L2 regularization with a rate of 0.003).
+This helps prevent “overfitting”, or tailoring the weights too
+closely to the training data so that the network doesn't generalize 
+well to unseen data; you should see a difference in the results, 
+especially when the data is noisy.
+</p>
+<p>
+Now try the other two datasets that are available.
+You can get good results on the first one
+(the two concentric circles)
+with the same network as above
+(two layers, five neurons total).
+But the second dataset (“the spiral”)
+is much more difficult!
+<b>Your Challenge: What is the smallest “Test loss” you can achieve 
+on the spiral dataset?</b>
+First, try this with just two layers. Then see what you can do
+with additional layers and/or neurons.
+Regularization will be much more important in this example;
+experiment with the regularization rate a bit.
+If the picture or the “Test loss”
+begin to jump around wildly, 
+it will probably help to decrease the Learning Rate or
+increase the Regularization Rate.
+</p>
+
+<hr>
+<h2>Lab B: Machine Translation</h2>
+<p>
+Automatic translation, or <b>machine translation</b>,
+is one of the oldest problems in Computer Science, going
+all the way back to the 1950s and the first generation of
+computers.
+In the old days, people tried to use dictionaries and 
+grammatical rules to translate by computer,
+but it proved very difficult to write comprehensive 
+sets of rules that handled all of the exceptions of
+natural languages.
+For the last twenty years or so,
+approaches based on machine learning have
+dominated in production systems like Google Translate.
+Of course Google Translate is far from perfect, but
+it is much better than the generation of systems that preceded it.
+</p>
+<p>
+Your challenge in this lab is to translate between two languages 
+without any prior knowledge of either language,
+based only on a small amount of “training data“,
+in exactly the way modern machine translation systems do.
+I will provide 12 sentences in the source language
+(“Arcturan”),
+and their translations into the target language (“Centauri”).
+There are also additional sentences just in Centauri,
+in case you're able to make use of those in your work.
+(This exercise is originally due to Prof. Kevin Knight).
+</p>
+<p>
+First, here are the bilingual sentence pairs (a = Arcturan, b = Centauri):
+</p>
+<p>
+1a. at-voon bichat dat.<br/>
+1b. ok-voon ororok sprok.<br/>
+2a. at-drubel at-voon pippat rrat dat.<br/>
+2b. ok-drubel ok-voon anok plok sprok.<br/>
+3a. totat dat arrat vat hilat.<br/>
+3b. erok sprok izok hihok ghirok.<br/>
+4a. at-voon krat pippat sat lat.<br/>
+4b. ok-voon anok drok brok jok.<br/>
+5a. totat jjat quat cat.<br/>
+5b. wiwok farok izok stok.<br/>
+6a. wat dat krat quat cat.<br/>
+6b. lalok sprok izok jok stok.<br/>
+7a. wat jjat bichat wat dat vat eneat.<br/>
+7b. lalok farok ororok lalok sprok izok enemok.<br/>
+8a. iat lat pippat rrat nnat.<br/>
+8b. lalok brok anok plok nok.<br/>
+9a. totat nnat quat oloat at-yurp.<br/>
+9b. wiwok nok izok kantok ok-yurp.<br/>
+10a. wat nnat gat mat bat hilat.<br/>
+10b. lalok mok nok yorok ghirok clok.<br/>
+11a. wat nnat arrat mat zanzanat.<br/>
+11b. lalok nok crrrok hihok yorok zanzanok.<br/>
+12a. wat nnat forat arrat vat gat.<br/>
+12b. lalok rarok nok izok hihok mok.<br/>
+</p>
+<p>
+And here is the monolingual Centauri text: 
+</p>
+<p>
+ok-drubel anok ghirok farok. wiwok rarok nok zerok ghirok enemok.
+ok-drubel ziplok stok vok erok enemok kantok ok-yurp zinok jok yorok clok.
+lalok clok izok vok ok-drubel. ok-voon ororok sprok. ok-drubel ok-voon
+anok plok sprok. erok sprok izok hihok ghirok. ok-voon anok drok brok
+jok. wiwok farok izok stok. lalok sprok izok jok stok. lalok brok
+anok plok nok. lalok farok ororok lalok sprok izok enemok. wiwok nok
+izok kantok ok-yurp. lalok mok nok yorok ghirok clok. lalok nok crrrok
+hihok yorok zanzanok. lalok rarok nok izok hihok mok.
+</p>
+<p>
+<b>The Challenge — translate these sentences from Arcturan to Centauri:</b>
+</p>
+<ol>
+<li>iat lat pippat eneat hilat oloat at-yurp.</li>
+<li>totat nnat forat arrat mat bat.</li>
+<li>wat dat quat cat uskrat at-drubel.</li>
+</ol>
+<p>
+Questions:
+</p>
+<ol>
+<li>Were you able to deduce a complete bilingual dictionary from the training data?</li>
+<li>Which words do you think have more than one translation?</li>
+<li>How do you think the monolingual target language text might be useful in translating?</li>
+<li>Did you try to align/link words in each sentence pair? (This is exactly what the computer tries to do in many machine translation systems: it uses links between words to help build the bilingual dictionary, <b>and</b> it uses the bilingual dictionary to create links! This is a kind of “chicken and egg” problem, and a simple example of a very important algorithm called <b>Expectation Maximization (EM)</b>.)</li>
+</ol>
+<p>
+This exercise was <b>much</b> simpler than a real bilingual training data. First, the sentences were all very short, and this makes it much easier to align words. Also, there were only a couple of words that were ambiguous (ones that had more than one possible translation). The real world is much more complicated! (Think of all of the Irish words that might translate the single English word “shot” for example). Finally, the number of words in each sentence pair was the same, with the
+lone exception of (11a/b); this rarely happens in the real world, and one must deal with many examples of words that don't align with anything at all in the other language!
+</p>
+<hr>
+</body>
+</html>

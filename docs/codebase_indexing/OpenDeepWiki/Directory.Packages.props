@@ -1,0 +1,123 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <TimeStamp>$([System.DateTime]::UtcNow.ToString("yyyyMMdd"))</TimeStamp>
+    <Version>0.9.7</Version>
+    <!-- 项目信息 -->
+    <Product>OpenDeepWiki</Product>
+    <Title>OpenDeepWiki - AI驱动的代码知识库</Title>
+    <Description>OpenDeepWiki是一个基于.NET 9和Semantic Kernel开发的AI驱动代码知识库项目。它能够将GitHub、GitLab、Gitee等代码仓库快速转换为智能知识库，支持多语言代码分析、文档生成、结构图创建和AI对话交互，帮助开发者更好地理解和利用代码库。</Description>
+    <Summary>AI驱动的代码知识库，支持多平台代码仓库分析和智能文档生成</Summary>
+    <!-- 组织信息 -->
+    <Company>AIDotNet</Company>
+    <Authors>AIDotNet Contributors</Authors>
+    <Copyright>Copyright © $(Company) $([System.DateTime]::Now.Year). All rights reserved.</Copyright>
+    <!-- 项目链接 -->
+    <PackageProjectUrl>https://github.com/AIDotNet/OpenDeepWiki</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/AIDotNet/OpenDeepWiki</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <!-- 项目标签 -->
+    <PackageTags>AI;CodeAnalysis;Documentation;SemanticKernel;Knowledge;Wiki;OpenSource;dotnet9;csharp</PackageTags>
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="AngleSharp" Version="1.3.1-beta.491" />
+    <PackageVersion Include="Anthropic.SDK" Version="5.8.0" />
+    <PackageVersion Include="Microsoft.Agents.AI" Version="1.0.0-preview.251125.1" />
+    <PackageVersion Include="Microsoft.Agents.AI.AzureAI" Version="1.0.0-preview.251125.1" />
+    <PackageVersion Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-preview.251125.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.AI.OpenAI" Version="9.9.0-preview.1.25458.4" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Abstractions" Version="1.65.0" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Core" Version="1.65.0" />
+    <PackageVersion Include="ModelContextProtocol.Core" Version="0.4.0-preview.3" />
+    <PackageVersion Include="ModelContextProtocolServer.Sse" Version="0.6.0" />
+    <PackageVersion Include="MySql.EntityFrameworkCore" Version="9.0.6" />
+    <PackageVersion Include="OpenAI" Version="2.4.0" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.9.0" />
+    <!-- Entity Framework Core -->
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Abstractions" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageVersion>
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageVersion>
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.6" />
+    <!-- 数据库提供程序 -->
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <!-- Microsoft Extensions -->
+    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.7" />
+    <!-- AI 和 机器学习 -->
+    <PackageVersion Include="Microsoft.SemanticKernel" Version="1.66.0" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="1.66.0" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.66.0" />
+    <PackageVersion Include="Lost.SemanticKernel.Connectors.Anthropic" Version="1.25.0-alpha3" />
+    <PackageVersion Include="Mem0.NET" Version="1.1.3" />
+    <!-- AWS SDK - 解决版本冲突 -->
+    <PackageVersion Include="AWSSDK.Core" Version="4.0.0.3" />
+    <PackageVersion Include="AWSSDK.S3" Version="4.0.0.3" />
+    <!-- 代码分析 -->
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
+    <!-- 版本控制 -->
+    <PackageVersion Include="LibGit2Sharp" Version="0.31.0" />
+    <PackageVersion Include="Octokit" Version="14.0.0" />
+    <!-- JSON 和 序列化 -->
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
+    <!-- 映射和对象转换 -->
+    <PackageVersion Include="Mapster.DependencyInjection" Version="1.0.3-pre02" />
+    <!-- 日志记录 -->
+    <PackageVersion Include="Serilog" Version="4.3.0" />
+    <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageVersion Include="Serilog.Extensions.Logging" Version="9.0.2" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0" />
+    <!-- 弹性和重试 -->
+    <PackageVersion Include="Polly" Version="8.6.4" />
+    <!-- 服务和分析 -->
+    <PackageVersion Include="FastService" Version="0.2.2" />
+    <PackageVersion Include="FastService.Analyzers" Version="0.2.2" />
+    <!-- 协议支持 -->
+    <PackageVersion Include="ModelContextProtocol.AspNetCore" Version="0.4.0-preview.3" />
+    <PackageVersion Include="SharpToken" Version="2.0.4" />
+    <!-- Thor 框架相关包 (来自子模块) -->
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.6.1" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="9.0.2" />
+    <PackageVersion Include="Sdcb.DashScope" Version="2.0.0" />
+    <PackageVersion Include="Google.Apis.Auth" Version="1.69.0" />
+    <PackageVersion Include="Azure.AI.OpenAI" Version="2.1.0" />
+    <PackageVersion Include="ERNIE-Bot.SDK" Version="0.14.4" />
+    <PackageVersion Include="TencentCloudSDK.Hunyuan" Version="3.0.1194" />
+    <PackageVersion Include="MessagePack" Version="3.1.3" />
+    <PackageVersion Include="StackExchange.Redis" Version="2.8.31" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.0.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.12.0" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.12.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.12.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.12.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.12.0" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.4.2" />
+    <PackageVersion Include="Aspire.Hosting.NodeJs" Version="9.4.2" />
+    <!-- 测试框架 -->
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageVersion Include="xunit" Version="2.9.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageVersion Include="YamlDotNet" Version="16.3.0" />
+  </ItemGroup>
+</Project>

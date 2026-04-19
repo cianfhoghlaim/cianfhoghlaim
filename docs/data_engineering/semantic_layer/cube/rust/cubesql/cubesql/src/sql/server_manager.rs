@@ -1,0 +1,119 @@
+use crate::{
+    compile::{DatabaseProtocol, DatabaseVariables, DatabaseVariablesToUpdate},
+    config::ConfigObj,
+    sql::{
+        compiler_cache::CompilerCache, database_variables::postgres_default_global_variables,
+        pg_auth_service::PostgresAuthService, SqlAuthService,
+    },
+    transport::TransportService,
+    CubeError,
+};
+use std::sync::{Arc, RwLock as RwLockSync, RwLockReadGuard, RwLockWriteGuard};
+
+#[derive(Debug)]
+pub struct ServerConfiguration {
+    /// Max number of prepared statements which can be allocated per connection
+    pub connection_max_prepared_statements: usize,
+    /// Max number of prepared statements which can be allocated per connection
+    pub connection_max_cursors: usize,
+    /// Max number of prepared statements which can be allocated per connection
+    pub connection_max_portals: usize,
+}
+
+impl Default for ServerConfiguration {
+    fn default() -> Self {
+        Self {
+            connection_max_prepared_statements: 128,
+            connection_max_portals: 64,
+            // by default cursor can be used only inside transaction
+            connection_max_cursors: 16,
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct ServerManager {
+    // References to shared things
+    pub auth: Arc<dyn SqlAuthService>,
+    pub transport: Arc<dyn TransportService>,
+    pub pg_auth: Arc<dyn PostgresAuthService>,
+    // Non references
+    pub configuration: ServerConfiguration,
+    pub nonce: Option<Vec<u8>>,
+    pub config_obj: Arc<dyn ConfigObj>,
+    pub compiler_cache: Arc<dyn CompilerCache>,
+    postgres_variables: RwLockSync<DatabaseVariables>,
+}
+
+crate::di_service!(ServerManager, []);
+
+impl ServerManager {
+    pub fn new(
+        auth: Arc<dyn SqlAuthService>,
+        transport: Arc<dyn TransportService>,
+        pg_auth: Arc<dyn PostgresAuthService>,
+        compiler_cache: Arc<dyn CompilerCache>,
+        nonce: Option<Vec<u8>>,
+        config_obj: Arc<dyn ConfigObj>,
+    ) -> Self {
+        Self {
+            auth,
+            transport,
+            pg_auth,
+            compiler_cache,
+            nonce,
+            config_obj,
+            configuration: ServerConfiguration::default(),
+            postgres_variables: RwLockSync::new(postgres_default_global_variables()),
+        }
+    }
+
+    pub fn read_variables(
+        &self,
+        protocol: DatabaseProtocol,
+    ) -> RwLockReadGuard<'_, DatabaseVariables> {
+        match protocol {
+            DatabaseProtocol::PostgreSQL => self
+                .postgres_variables
+                .read()
+                .expect("failed to unlock variables for reading"),
+            DatabaseProtocol::Extension(ext) => unimplemented!(
+                "read_variables is not implemented for custom protocol: {:?}",
+                ext
+            ),
+        }
+    }
+
+    fn write_variables(
+        &self,
+        protocol: DatabaseProtocol,
+    ) -> RwLockWriteGuard<'_, DatabaseVariables> {
+        match protocol {
+            DatabaseProtocol::PostgreSQL => self
+                .postgres_variables
+                .write()
+                .expect("failed to unlock variables for reading"),
+            DatabaseProtocol::Extension(ext) => unimplemented!(
+                "write_variables is not implemented for custom protocol: {:?}",
+                ext
+            ),
+        }
+    }
+
+    // TODO: Read without copy by holding acquired lock
+    pub fn all_variables(&self, protocol: DatabaseProtocol) -> DatabaseVariables {
+        self.read_variables(protocol).clone()
+    }
+
+    pub fn set_variables(&self, variables: DatabaseVariablesToUpdate, protocol: DatabaseProtocol) {
+        let mut current = self.write_variables(protocol.clone());
+
+        for new_var in variables.into_iter() {
+            if let Some(current_var_value) = current.get(&new_var.name) {
+                if !current_var_value.readonly {
+                    current.insert(new_var.name.clone(), new_var);
+                }
+            }
+        }
+    }
+}

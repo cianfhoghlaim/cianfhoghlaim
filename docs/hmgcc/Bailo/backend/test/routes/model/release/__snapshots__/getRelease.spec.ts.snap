@@ -1,0 +1,30 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`routes > release > getRelease > 200 > ok 1`] = `
+{
+  "release": {
+    "_id": "test",
+    "files": [],
+    "kind": "comment",
+  },
+}
+`;
+
+exports[`routes > release > getRelease > audit > expected call 1`] = `
+{
+  "_id": "test",
+  "toObject": [MockFunction] {
+    "calls": [
+      [],
+    ],
+    "results": [
+      {
+        "type": "return",
+        "value": {
+          "_id": "test",
+        },
+      },
+    ],
+  },
+}
+`;

@@ -1,0 +1,21 @@
+---
+kind: ConfigMap
+metadata:
+  name: example-config
+data:
+  DEBUG: "true"
+  TIMEOUT: "15"
+---
+kind: Deployment
+metadata:
+  name: example-api
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+        - name: api
+          image: example/api:1.2.3
+          envFrom:
+            - configMapRef:
+                name: example-config

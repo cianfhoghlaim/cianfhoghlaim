@@ -1,0 +1,13 @@
+import {
+  Meta,
+  Stories,
+  Markdown
+} from "@storybook/addon-docs/blocks";
+import readme from "../../../web-components/src/components/ic-accordion/readme.md";
+import * as IcAccordionStories from './ic-accordion.stories';
+
+<Meta of={IcAccordionStories} />
+
+<Markdown>{readme}</Markdown>
+
+<Stories />

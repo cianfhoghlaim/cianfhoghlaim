@@ -1,0 +1,228 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "bailo.fullname" . }}-backend
+  labels:
+    {{- include "bailo.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      name: backend
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        name: backend
+    spec:
+      {{- if .Values.backend.serviceAccount }}
+      serviceAccountName: {{ .Values.backend.serviceAccount }}
+      {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.backend.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ include "bailo.fullname" . }}-backend
+          securityContext:
+            {{- toYaml .Values.backend.securityContext | nindent 12 }}
+          image: "{{ .Values.image.backendRepository }}:{{ .Values.image.backendTag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "bailo.fullname" . }}-minio
+                  key: root-user
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "bailo.fullname" . }}-minio
+                  key: root-password
+            {{- if .Values.modelMirror.export.kmsSignature.enabled }}
+            - name: KMS_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "bailo.fullname" . }}-kms
+                  key: access
+            - name: KMS_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "bailo.fullname" . }}-kms
+                  key: secret
+            {{- end }}
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "bailo.fullname" . }}-mongodb
+                  key: mongodb-passwords
+            {{- if .Values.instrumentation.enabled }}
+            - name: OTEL_EXPORTER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "bailo.fullname" . }}-apm
+                  key: auth-token
+            {{- end }}
+            {{- if .Values.inference.enabled }}
+            - name: INFERENCING_WRITE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "bailo.fullname" . }}-inference
+                  key: auth-token
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.backendPort }}
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.service.backendPort }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.service.backendPort }}
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            {{- toYaml .Values.resourcesBackend | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /app/config/production.cjs
+              subPath: production.cjs
+            - name: config
+              mountPath: /app/config/custom-environment-variables.cjs
+              subPath: custom-environment-variables.cjs
+            - name: temp
+              mountPath: /tmp
+            - name: certs
+              mountPath: /app/certs/cert.pem
+              subPath: cert.pem
+            - name: certs
+              mountPath: /app/certs/key.pem
+              subPath: key.pem
+            - name: certs
+              mountPath: /usr/local/share/ca-certificates/cert.pem
+              subPath: cert.pem
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "bailo.fullname" . }}-config
+            items:
+              - key: production.cjs
+                path: production.cjs
+              - key: custom-environment-variables.cjs
+                path: custom-environment-variables.cjs
+        - name: certs
+          secret:
+            secretName: {{ include "bailo.fullname" . }}-certs
+            items:
+              - key: cert.pem
+                path: cert.pem
+              - key: key.pem
+                path: key.pem
+        - name: temp
+          emptyDir: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "bailo.fullname" . }}-frontend
+  labels:
+    {{- include "bailo.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      name: frontend
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        name: frontend
+    spec:
+      #serviceAccountName: {{ include "bailo.fullname" . }}-builder
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.frontend.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ include "bailo.fullname" . }}-frontend
+          securityContext:
+            {{- toYaml .Values.frontend.securityContext | nindent 12 }}
+          image: "{{ .Values.image.frontendRepository }}:{{ .Values.image.frontendTag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.instrumentation.enabled }}
+          env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "bailo.fullname" . }}-apm
+                  key: endpoint
+            - name: OTEL_EXPORTER_OTLP_HEADERS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "bailo.fullname" . }}-apm
+                  key: headers
+            - name: OTEL_LOG_LEVEL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "bailo.fullname" . }}-apm
+                  key: debug
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.frontendPort }}
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.service.frontendPort }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.service.frontendPort }}
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            {{- toYaml .Values.resourcesFrontend | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

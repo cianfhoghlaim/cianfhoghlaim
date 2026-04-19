@@ -1,0 +1,125 @@
+
+In this lab we'll apply the kNN idea to a numerical prediction
+problem, namely, the movie rating problem we looked at on the
+first day of class.
+
+For starters, copy the training data from lab00 into this directory:
+
+$ cp ../lab00/ratings-training.csv .
+
+Then open it in your favorite text editor to remind yourself
+of the contents: rows correspond to users, column correspond to
+movies, ratings are integers between 1 and 5.  A "-" means that
+the user did not rate that movie, and the "?" entries are the
+ones you're supposed to predict.
+
+Now look at the code in knnrec.py.
+
+You'll see that I've used cosine similarity as a distance
+measure, just like the recommendation engine code from Chapter 22
+that we looked at in lecture.  There is one subtlety here since
+we need to deal with missing data points; you'll see that I 
+simply omit those terms from the dot product when they occur.
+
+I've chosen a default of k=3 at the top of the program.
+Feel free to change that value and experiment!
+
+You can test this using the Python interpreter:
+
+$ python
+...
+>>> from knnrec import *
+
+To look at user #1's ratings:
+
+>>> users[1]
+
+What is the index of the missing rating?
+
+>>> users[1].index('?')
+
+What is the predicted rating from the weighted average 
+of the k nearest neighbors' ratings?  The first number
+should be the index of the user, and the second number is
+the index of the movie for which you want to predict their rating.
+
+>>> best_guess(1,4)
+
+I wrote a short function called "get_missing" which loops over
+each user, find the position of the '?', and makes the best guess
+for that user/movie.   You should look at the code, near the
+bottom of knnrec.py - hopefully it will make sense.
+
+Run it as follows:
+
+>>> get_missing()
+
+You might remember we evaluated our predictions for this problem
+by computing the total squared error from the actual ratings.
+Had you submitted the guesses output by the "get_missing" function,
+you would have won the competition!  The total squared error is
+just 34, which is pretty darn good.
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+Now the actual goal of this lab is to get you to deal with a "real"
+dataset, and all the pain that goes along with that.
+
+The website Movielens publishes datasets of movie ratings from 
+their users.  There's a massive dataset consisting of 
+24,000,000 ratings applied to 40,000 movies by 260,000 users
+that weighs in at 224MB zipped.  That's a bit much for our lab, 
+so we'll work with a smaller sample of 100,000 movie ratings
+applied to 9000 movies by 700 users. 
+See http://grouplens.org/datasets/movielens/ for more information.
+
+You can download this dataset using wget:
+
+$ wget http://files.grouplens.org/datasets/movielens/ml-latest-small.zip
+
+And unzip it into a new subdirectory "ml-latest-small":
+
+$ unzip ml-latest-small.zip
+
+The file we're interested in is ml-latest-small/ratings.csv.
+You can open that in a text editor and browse around; you'll see
+that fractional ratings are permitted, and that the final field
+is a time stamp that we don't really care about.
+
+Here's your challenge: can you write a Python program to read
+in this file, and output another CSV file which is in the same
+format as ratings-training.csv (in other words, one row per user
+consisting of that user's ratings for each movie, comma-separated)?
+
+This is a pretty common situation to find yourself in as a data
+science practitioner.  You have some nice piece of code from a
+library or something you've written yourself (knnrec.py in this
+case) that expects input in a particular format, but the dataset
+you have is in a completely different format.  Python is a good
+"Swiss army knife" for this sort of thing, but it takes some
+practice to become really good at it.
+
+I've created the skeleton of a program for doing this in 
+convert.py.  See if you can complete the program in order to
+generate a file movielens.csv in the correct format - you just
+need to find all of the ?'s in convert.py and substitute the
+correct values.  To keep the size of the data manageable, you'll want to
+restrict to, say, the first 500 movies (movieId between 0 and 499).
+
+When your program is done, you should be able to run it like this:
+
+$ python convert.py > movielens.csv
+
+Then modify knnrec.py so that it reads movielens.csv 
+instead of ratings-training.csv and you're off to the races!
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+The final thing to think about for this lab is *evaluation*. 
+Once you get the Movielens data to load, and you can make predictions
+for a user's ratings, how would you evaluate the accuracy 
+of your system?  Of course you'll need to make guesses for ratings
+which you already know.  But recall how important it is to separate
+your training data from your testing data... what steps should
+you take to ensure that you don't bias your test results when
+evaluating a recommendation system like this?

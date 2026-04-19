@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block head_title %}{% trans "Credits" %}{% endblock %}
+{% block nav-credits-class %}active{% endblock %}
+{% block bodyclass %}homepage{% endblock %}
+
+{% block body %}
+<div class="container-fluid px-0">
+  <div class="jumbotron text-center bg-light">
+    <h1 class="jumbotron-heading">{% trans "Credits" %}</h1>
+    <p class="lead text-muted">
+      {% trans "eScriptorium and kraken are Free and Open-Source Software developed by a team in the laboratoire AOROC (CNRS PSL, UMR 8546) at the École Pratique des Hautes Études – Université PSL." %}
+    </p>
+  </div>
+  <div class="container-fluid my-5 px-4">
+  {% if CUSTOM_CONTRIBUTORS %}
+    {% include "credits_list.html" %}
+  {% else %}
+    <div class="text-center py-3">
+      <p class="fst-italic text-muted">
+        {% trans "The credits list will be available here soon." %}
+      </p>
+    </div>
+  {% endif %}
+  </div>
+</div>
+{% endblock %}

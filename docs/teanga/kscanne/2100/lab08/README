@@ -1,0 +1,88 @@
+
+Shaffer has some code that will generate a Huffman tree
+and Huffman code using a character frequency list as input.
+The main program is contained in huffman.cpp and it depends
+on hufftree.h and huffnode.h.  To compile and run it:
+
+$ cd ../shaffer
+$ make huffman
+
+This generates an executable called "huffman"; to run it, you
+need to provide a file containing character frequencies.  There
+are some sample files included in the repository with
+extension .huff, for example alpha.huff.
+
+$ ./huffman alpha.huff
+
+Note that this program in fact defines a kind of command
+interface as well; you can insert "encode" and "decode"
+commands in a .huff file and the program will encode
+or decode the given strings after generating the Huffman encoding.
+See huffbook.huff, for example.
+
+(1) The program as given outputs the average code
+length of the Huffman code.  Modify it so that it also
+outputs the entropy of the letter distribution
+as defined in class.
+
+(2) I wrote a quick Perl script lettercounts.pl that you can use
+to generate character frequency tables in the correct format.
+Just collect a bunch of text in English or whatever language
+you're interested in and save it in a text file, say "big.txt".
+
+Then you can do this:
+
+$ cat big.txt | perl lettercounts.pl
+
+(or you can text on this README:
+$ cat README | perl letterscounts.pl
+)
+
+Or, to save the results in a .huff file:
+
+$ cat big.txt | perl lettercounts.pl > myfreq.huff
+
+I ran the text of some classic English-language books through
+the script and you'll find the results in the various *.huff
+files in this directory: Alice in Wonderland, Dubliners, 
+Emma, Frankenstein, Sherlock Holmes, Jane Eyre, Moby Dick,
+Pride and Prejudice, The Scarlet Letter, Tom Sawyer, and
+A Tale of Two Cities.
+
+If you're in the shaffer directory, you can compute the
+Huffman code for one of these files as follows:
+
+$ ./huffman ../lab08/mobydick.huff
+
+Do the same for all 11 books and compare the entropies and
+bits/symbol of the Huffman codes for each.  How much variance
+is there in the results?
+
+
+(3) The HuffTree, HuffNode, and CodeTable classes are nicely templated.
+In huffman.cpp, we store instances of type char at each node, 
+representing the letters A-Z.  This is limiting in a couple of
+ways; first, for some languages we might want to treat multiple
+characters as a single "letter" of the alphabet (e.g. Dutch "ij");
+second, as noted in class we get a better approximation of
+the entropy of a language (and better compression) by considering
+frequencies of strings of characters of some fixed length n
+(so-called "n-grams").
+
+Modify huffman.cpp so that it will work with strings in place
+of characters.   You'll want to read up a bit on the standard
+C++ string class if you haven't used it to this point; it
+will be much easier on you than using, say, character arrays
+to represent the strings.
+
+Your code should read in files similar to the *.huff files but
+with frequencies of n-grams.  You can use the Perl script
+trigramcounts.pl to generate frequency lists of 3-grams, much
+like the lettercounts.pl script above:
+
+$ cat README | perl trigramcounts.pl
+
+What entropy and bits/symbol values do you get for typical 
+English texts when using 3-grams?  Note that "symbols"
+here are 3-grams, so to get an actual bits/symbol value
+you can divide everything by 3.

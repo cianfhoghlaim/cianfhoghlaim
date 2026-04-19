@@ -1,0 +1,71 @@
+@import "../../global/normalize.css";
+
+:host {
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+nav {
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+ic-button {
+  cursor: pointer;
+}
+
+ic-button.next-previous {
+  --icon-width: var(--ic-space-xs);
+  --icon-height: calc(var(--ic-space-xs) + var(--ic-space-xxxs));
+
+  padding: 0 var(--ic-space-xxs) 0 var(--ic-space-xxxs);
+}
+
+ic-button.first-last {
+  --icon-width: calc(var(--ic-space-sm) + var(--ic-space-xxxs));
+  --icon-height: calc(var(--ic-space-xs) + var(--ic-space-xxxs));
+}
+
+ic-button.first-last::part(button),
+ic-button.next-previous::part(button) {
+  color: var(--ic-pagination-chevron);
+}
+
+:host(.ic-pagination-monochrome) ic-button.first-last::part(button),
+:host(.ic-pagination-monochrome) ic-button.next-previous::part(button) {
+  color: var(--ic-pagination-chevron-monochrome);
+}
+
+ic-button.ic-button-disabled.first-last::part(button),
+ic-button.ic-button-disabled.next-previous::part(button),
+:host(.ic-pagination-monochrome)
+  ic-button.ic-button-disabled.first-last::part(button),
+:host(.ic-pagination-monochrome)
+  ic-button.ic-button-disabled.next-previous::part(button) {
+  color: var(--ic-pagination-chevron-disabled);
+}
+
+.disabled {
+  color: var(--ic-color-text-disabled-mid);
+  pointer-events: none;
+  cursor: none;
+  user-select: none;
+}
+
+.hide-current-page {
+  display: none;
+}
+
+.sr-only {
+  position: absolute;
+  left: -9999px;
+}
+
+.sr-only:dir(rtl) {
+  right: -9999px;
+}

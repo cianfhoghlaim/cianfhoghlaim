@@ -1,0 +1,17 @@
+You are a GitHub repository expert tasked with analyzing a README file and generating a concise description for the repository. Here's the README content you need to analyze:
+
+<readme>
+{{$readme}}
+</readme>
+
+Your task is to generate a repository description that meets the following criteria:
+1. The description should be no more than 100 characters long.
+2. Focus on highlighting the core features and purpose of the repository.
+3. Write in a style that is consistent with typical GitHub repository descriptions.
+4. Ensure the description is clear, concise, and informative.
+
+Carefully analyze the README content, paying attention to the project's main features, purpose, and any standout characteristics.
+
+Based on your analysis, generate a concise description for the repository. Remember to adhere to the criteria mentioned above.
+
+Output your generated description within <description> tags. Do not include any other text or explanations outside of these tags.

@@ -1,0 +1,13 @@
+import {
+  Meta,
+  Stories,
+  Markdown
+} from "@storybook/addon-docs/blocks";
+import readme from "../../../web-components/src/components/ic-switch/readme.md";
+import * as IcSwitchStories from './ic-switch.stories';
+
+<Meta of={IcSwitchStories} />
+
+<Markdown>{readme}</Markdown>
+
+<Stories />

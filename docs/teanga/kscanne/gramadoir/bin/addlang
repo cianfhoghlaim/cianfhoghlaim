@@ -1,0 +1,90 @@
+#!/bin/bash
+#
+#  This is not for distribution.  I can set up these initial packages
+#   for potential authors.   In particular, this script relies on data
+#   contained in the appropriate Crubadan data files in /usr/local/share/...
+#
+#     Guaranteed to only (create and) write in a subdirectory  
+#
+#  version number can be independent of gramadoir-x.x (and of the 
+#  perl versions which are tied to these)
+
+if [ $# -ne 2 ]
+then
+	echo "Usage: addlang xx ENCODING"
+	exit
+fi
+GRAMDIR=${HOME}/gaeilge/gramadoir/gr
+TEMPLATE=${GRAMDIR}/xx
+TEANGA="${1}"
+UPPERTEANGA=`echo "${TEANGA}" | tr "[:lower:]" "[:upper:]"`
+VERSION="0.01"
+NATIVE="${2}"
+CRUBADAN="/usr/local/share/crubadan/${TEANGA}"
+THISYEAR=`date +%Y`
+if [ ! -e ${CRUBADAN} ]
+then
+	echo "Need to start crawler first for this language"
+	exit
+fi
+NAME_ENG=`egrep '^name_english ' ${CRUBADAN}/EOLAS | sed 's/^name_english  *//'`
+BDCHARS=`egrep '^boundary ' ${CRUBADAN}/EOLAS | sed 's/^boundary  *//' | iconv -f utf-8 -t ${NATIVE}`
+UPPERS="A-Z"  # need to do this manually; used to use caps.pl stuff which is now gone
+LOWERS="a-z"
+DIR="${TEANGA}" # gramadoir-${TEANGA}-${VERSION}"
+PERLDIR="${DIR}/Lingua-${UPPERTEANGA}-Gramadoir"
+if [ -e "${DIR}" ]
+then
+	echo "${DIR} already exists..."
+	exit
+fi
+mkdir ${DIR}
+
+echo "Computing good 3-grams from corpus..."
+togail "${TEANGA}" good 15 | sed 's/ *\([0-9]*\) \(.*\)/\2 \1/' | iconv -f utf-8 -t ${NATIVE} > ${DIR}/3grams-${TEANGA}.txt
+cp ${TEMPLATE}/aonchiall-xx.in ${DIR}/aonchiall-${TEANGA}.in
+(echo "ChangeLog Summary"; echo; echo "Version ${VERSION}"; echo "  * Initial Release") > ${DIR}/Changes
+cp ${TEMPLATE}/comhshuite-xx.in ${DIR}/comhshuite-${TEANGA}.in
+sed "
+s/\^NAME_ENG\^/${NAME_ENG}/
+s/\^TEANGA\^/${TEANGA}/
+s/\^UPPERTEANGA\^/${UPPERTEANGA}/
+s/\^VERSION\^/${VERSION}/
+s/\^NATIVE\^/${NATIVE}/
+s/\^BDCHARS\^/${BDCHARS}/
+s/\^UPPERS\^/${UPPERS}/
+s/\^LOWERS\^/${LOWERS}/
+" ${TEMPLATE}/configure > ${DIR}/configure
+chmod 755 ${DIR}/configure
+cp ${GRAMDIR}/COPYING ${DIR}/COPYING
+touch ${DIR}/earraidi-${TEANGA}.bs
+touch ${DIR}/eile-${TEANGA}.bs
+touch ${DIR}/triail.xml
+echo "Creating lexicon..."
+LC_ALL=C sort -u ${CRUBADAN}/GLAN | iconv -f utf-8 -t ${NATIVE} > ${DIR}/lexicon-${TEANGA}.txt
+ONELETTER=`LC_ALL=C egrep '^.$' ${DIR}/lexicon-${TEANGA}.txt | tr -d "\n"`
+sed "s/\[\.\]/[${ONELETTER}]/" ${TEMPLATE}/giorr-xx.pre > ${DIR}/giorr-${TEANGA}.pre
+cp ${TEMPLATE}/giorr-xx.txt ${DIR}/giorr-${TEANGA}.txt
+echo "Computing likely abbreviations..."
+togail "${TEANGA}" abbs | egrep ' (100|[789][0-9]) ' | sed 's/ \([0-9]*\) / # \1% /' | iconv -f utf-8 -t ${NATIVE} >> ${DIR}/giorr-${TEANGA}.txt
+counts.pl ${CRUBADAN}/FREQ ${CRUBADAN}/GLAN | LC_ALL=C sort -k1,1 | egrep -v ' 0$' > ${DIR}/freq-${TEANGA}.txt
+LC_ALL=C sed -i 's/.*/& 1/' ${DIR}/lexicon-${TEANGA}.txt
+cat ${DIR}/lexicon-${TEANGA}.txt | ./cabhair.pl -c --encoding=${NATIVE} > ${DIR}/lexicon-${TEANGA}.bs
+rm -f ${DIR}/lexicon-${TEANGA}.txt
+TEMPFILE=`mktemp`
+cat ${DIR}/freq-${TEANGA}.txt > ${TEMPFILE}
+mv -f ${TEMPFILE} ${DIR}/freq-${TEANGA}.txt
+sed "/CAPITAL/s/A-Z/${UPPERS}/" ${TEMPLATE}/macra-xx.meta.pl > ${DIR}/macra-${TEANGA}.meta.pl
+sed "s/A-Z/${UPPERS}/g" ${TEMPLATE}/morph-xx.txt > ${DIR}/morph-${TEANGA}.txt
+touch ${DIR}/nocombo-${TEANGA}.txt
+(echo "1 <U>"; echo "127 <F>") > ${DIR}/pos-${TEANGA}.txt
+sed "s/@TEANGA@/${TEANGA}/; s/@NAME_ENGLISH@/${NAME_ENG}/" ${TEMPLATE}/README-xx > ${DIR}/README
+cp ${TEMPLATE}/rialacha-xx.in ${DIR}/rialacha-${TEANGA}.in
+cp ${TEMPLATE}/token-xx.in ${DIR}/token-${TEANGA}.in
+cp ${TEMPLATE}/unigram-xx.pre ${DIR}/unigram-${TEANGA}.pre
+cp ${TEMPLATE}/unigram-xx.txt ${DIR}/unigram-${TEANGA}.txt
+sed -i "s/(C) 20.. /(C) ${THISYEAR} /" ${DIR}/*-${TEANGA}.in ${DIR}/macra-${TEANGA}.meta.pl
+sed -i "
+s/\^NAME_ENG\^/${NAME_ENG}/
+s/\^TEANGA\^/${TEANGA}/
+" ${DIR}/morph-${TEANGA}.txt

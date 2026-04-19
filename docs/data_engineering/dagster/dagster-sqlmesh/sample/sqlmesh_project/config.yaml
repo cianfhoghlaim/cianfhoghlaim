@@ -1,0 +1,17 @@
+gateways:
+  local:
+    connection:
+      type: duckdb
+      database: db.db
+  test:
+    connection:
+      type: duckdb
+      database: test.db
+
+default_gateway: local
+
+model_defaults:
+  dialect: duckdb
+
+variables:
+  enable_model_failure: False

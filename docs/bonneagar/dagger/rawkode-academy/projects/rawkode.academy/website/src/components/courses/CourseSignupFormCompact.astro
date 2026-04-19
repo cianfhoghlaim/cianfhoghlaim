@@ -1,0 +1,56 @@
+---
+import CourseSignupFormCompactVue from "./CourseSignupFormCompact.vue";
+import { isSubscribedToAudience } from "@/server/subscriptions";
+
+export const partial = true;
+
+type Props = {
+	courseId: string;
+	courseTitle: string;
+	signupConfig: {
+		audienceId: string;
+		sponsor?: string | undefined;
+		sponsorAudienceId?: string | undefined;
+		allowSponsorContact: boolean;
+	};
+	userEmail?: string | undefined;
+	isAlreadySubscribed?: boolean | undefined;
+	deferSubscriptionCheck?: boolean | undefined;
+};
+
+const {
+	courseId,
+	courseTitle,
+	signupConfig,
+	userEmail,
+	isAlreadySubscribed: propsIsAlreadySubscribed,
+	deferSubscriptionCheck = false,
+} = Astro.props;
+const user = Astro.locals?.user;
+
+const { audienceId, sponsor, sponsorAudienceId, allowSponsorContact } =
+	signupConfig;
+
+// If deferred, don't check on server - let client handle it
+// Short-circuit: if parent already determined user is subscribed, skip expensive checks
+let isAlreadySubscribed = propsIsAlreadySubscribed;
+
+if (!deferSubscriptionCheck && !isAlreadySubscribed) {
+	// Only perform subscription check if not deferred and not already known to be subscribed
+	isAlreadySubscribed = await isSubscribedToAudience(
+		audienceId,
+		user?.email,
+		Astro.session,
+	);
+}
+---
+
+<CourseSignupFormCompactVue
+	courseId={courseId}
+	courseTitle={courseTitle}
+	signupConfig={{ audienceId, allowSponsorContact, ...(sponsor && { sponsor }), ...(sponsorAudienceId && { sponsorAudienceId }) }}
+	userEmail={userEmail || user?.email}
+	isAlreadySubscribed={isAlreadySubscribed}
+	deferSubscriptionCheck={deferSubscriptionCheck}
+	client:load
+/>

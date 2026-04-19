@@ -1,0 +1,52 @@
+name: bailo-dev
+
+services:
+  webhook-tester:
+    networks:
+      default:
+      internal:
+    image: tarampampam/webhook-tester:2.2.6
+    command: serve --auto-create-sessions
+    ports:
+      - 8082:8080
+
+  mailcrab:
+    networks:
+      default:
+      internal:
+    ports:
+      - 1080:1080
+      - 1025:1025
+    image: marlonb/mailcrab:v1.6.5
+
+  backend:
+    ports:
+      - 9229:9229
+    volumes:
+      - ./backend/src:/app/src
+    build:
+      target: dev
+
+  frontend:
+    volumes:
+      - ./frontend:/app
+    build:
+      target: dev
+
+  artefactscan:
+    ports:
+      - 3311:3311
+    volumes:
+      - ./lib/artefactscan_api/bailo_artefactscan_api:/app/bailo_artefactscan_api
+    build:
+      target: dev
+
+  minio:
+    environment:
+      MINIO_BROWSER_REDIRECT_URL: http://localhost:8080/minio/ui/
+      MINIO_SERVER_URL: http://minio:9000
+      MINIO_SKIP_CLIENT: yes
+
+networks:
+  debug:
+    name: ${INSTANCE_NAME}_debug

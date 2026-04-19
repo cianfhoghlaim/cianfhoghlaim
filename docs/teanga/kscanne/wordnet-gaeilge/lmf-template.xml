@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE LexicalResource SYSTEM "WN-LMF.dtd">
+<LexicalResource xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <Lexicon id="lsg"
+           label="Líonra Séimeantach na Gaeilge"
+           confidenceScore="1.0"
+           language="ga" 
+           email="kscanne@gmail.com"
+           license="https://creativecommons.org/licenses/by-sa/4.0/"
+           version="1.1"
+           citation="Scannell, Kevin P. Líonra Séimeantach na Gaeilge. https://cadhan.com/lsg/, (2006)."
+           url="https://cadhan.com/lsg/"
+           dc:creator="Kevin P. Scannell"
+           dc:contributor="Jim O'Regan">
+    <!--       dc:contributor="Éilis Uí Mhuirneáin">  -->
+    <!-- iontrálacha anseo -->
+  </Lexicon>
+</LexicalResource>

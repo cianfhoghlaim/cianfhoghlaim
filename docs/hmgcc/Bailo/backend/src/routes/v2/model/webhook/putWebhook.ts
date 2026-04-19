@@ -1,0 +1,61 @@
+import { Request, Response } from 'express'
+
+import { z } from '../../../../lib/zod.js'
+import { WebhookEvent, WebhookInterface } from '../../../../models/Webhook.js'
+import { registerPath, webhookInterfaceSchema } from '../../../../services/specification.js'
+import { updateWebhook } from '../../../../services/webhook.js'
+import { parse } from '../../../../utils/validate.js'
+
+export const putWebhookSchema = z.object({
+  params: z.object({
+    modelId: z.string(),
+    webhookId: z.string(),
+  }),
+  body: z.object({
+    name: z.string(),
+
+    uri: z.string(),
+    token: z.string().optional(),
+    insecureSSL: z.boolean().optional().default(false),
+
+    events: z.array(z.nativeEnum(WebhookEvent)).optional(),
+    active: z.boolean().optional(),
+  }),
+})
+
+registerPath({
+  method: 'put',
+  path: '/api/v2/model/{modelId}/webhook/{webhookId}',
+  tags: ['webhook'],
+  description: 'Update a webhook instance.',
+  schema: putWebhookSchema,
+  responses: {
+    200: {
+      description: 'A Webhook instance.',
+      content: {
+        'application/json': {
+          schema: z.object({ webhook: webhookInterfaceSchema }),
+        },
+      },
+    },
+  },
+})
+
+interface PutWebhookResponse {
+  webhook: WebhookInterface
+}
+
+export const putWebhook = [
+  async (req: Request, res: Response<PutWebhookResponse>): Promise<void> => {
+    const {
+      params: { modelId, webhookId },
+      body,
+    } = parse(req, putWebhookSchema)
+
+    const webhook = await updateWebhook(req.user, webhookId, { modelId, ...body })
+
+    res.json({
+      webhook,
+    })
+  },
+]

@@ -1,0 +1,20 @@
+Found: 0.65423610046642   Just lowercasing of input+lookup of headwords in FP86
+Found: 0.667449768354141  Also lowercased all FP86 headwords!
+Found: 0.668557163816322  Add "chomh" to FP.txt
+Found: 0.728581751749466  Strip lenition
+Found: 0.739064469810961  Added is, ón, dóchas, ...
+Found: 0.767309310568119  Eclipsis, prefix t-, h, m', d', b', ...
+Found: 0.772859389745203  Add den, deal with Unicode aposts
+Found: 0.786162315193457  More manual additions to FP
+Found: 0.817873545139981  add suffixes -e -a -í
+Found: 0.820449826989619  More manual additions to FP
+Found: 0.822837370242214  de-eclipse before de-lenite b/c of bhf
+Found: 0.848631645171438  anna, t(h)a, slenderization
+Found: 0.860383768480654  more rules + manual additions
+Found: 0.843221096084532  include numbers in tokens
+Found: 0.93114975738045   numbers to IPA function + no URLs, etc.
+Found: 0.93398649232630   more number cleanup
+Found: 0.94378988557392   more rules + manual additions
+Found: 0.968887709379976  regular verb endings added
+Found: 0.977512868305087  more rules + manual additions
+Found: 0.984878229465691  more manual additions

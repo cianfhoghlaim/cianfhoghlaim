@@ -1,0 +1,36 @@
+import DocsWrapper from 'src/docs/DocsWrapper'
+
+# Python Client
+
+Bailo provides a Python client that wraps key API endpoints. The package is published on
+[PyPI](https://pypi.org/project/bailo/).
+
+**You can find the full Python documentation [here](../../python/index.html).**
+
+## Installation
+
+```bash
+pip install bailo
+```
+
+## Why use the Python Client?
+
+The Python client integrates cleanly with Python tooling and is ideal for:
+
+- Notebooks and experimentation
+- Automation and scripting
+- Integrating Bailo into ML workflows
+
+### Scripting and Automation
+
+This Python Client provides a better way to add additional Bailo functionality to projects.
+
+### Using Bailo with MLflow
+
+Optional extras are provided for integration with [MLflow](https://mlflow.org/docs/latest/ml/).
+
+```bash
+pip install bailo[mlflow]
+```
+
+export default ({ children }) => <DocsWrapper>{children}</DocsWrapper>
