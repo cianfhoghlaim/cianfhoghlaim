@@ -58,7 +58,7 @@ The project is organized into domain-specific 'streams' (**sruthanna**) within t
 | Stream | Domain | Key Technologies |
 | :--- | :--- | :--- |
 | `bonneagar/` | **Infrastructure** | Pangolin (Routing), Komodo (Deployment), Locket (Secrets) |
-| `oideachais/` | **Structured Output of British Isles Education System** | Pan-Celtic curriculum platform transforming official docs into interactive learning via AI |
+| `oideachais/` | **Structured Output of British Isles Education System** | British Isles curriculum platform transforming official syllabus, exam paper, and marking schemes into interactive learning via AI |
 | `meaisínfhoghlaim/` | **Intelligence** | Opensource Huggingface.co model finetuning and educational asset generation in English and minority languages. |
 | `códeolas/` | **Code Intel** | Beads, Chunkhound, MCP, Dagger |
 | `crypteolas/` | **Finance Intel** | Agent OS, Federated Learning, DLT, Crypto-payments |
