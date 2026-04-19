@@ -11,27 +11,53 @@
 
 public-resources:
   # ---------------------------------------------------------------------------
-  # API - FastAPI Backend
+  # API - FastAPI Backend (Hosted on MacBook)
   # ---------------------------------------------------------------------------
   oideachais-api:
     name: "Oideachais API"
     full-domain: "api.oideachais.cianfhoghlaim.ie"
     protocol: "http"
     targets:
-      - site: "cax41-hetzner"
+      - site: "bunchloch"
         hostname: "oideachais-api"
         method: "http"
         port: 8000
 
   # ---------------------------------------------------------------------------
-  # Frontend - Web Application
+  # Frontend - Web Application (Hosted on MacBook)
   # ---------------------------------------------------------------------------
   oideachais:
     name: "Oideachais"
     full-domain: "oideachais.cianfhoghlaim.ie"
     protocol: "http"
     targets:
-      - site: "cax41-hetzner"
+      - site: "bunchloch"
         hostname: "oideachais-frontend"
         method: "http"
         port: 3000
+
+  # ---------------------------------------------------------------------------
+  # Komodo Core (Hosted on OCI)
+  # ---------------------------------------------------------------------------
+  komodo:
+    name: "Komodo"
+    full-domain: "komodo.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "komodo-core"
+        method: "http"
+        port: 9120
+
+  # ---------------------------------------------------------------------------
+  # Pangolin UI (Hosted on OCI)
+  # ---------------------------------------------------------------------------
+  pangolin:
+    name: "Pangolin"
+    full-domain: "pangolin.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "pangolin-ui"
+        method: "http"
+        port: 8080
