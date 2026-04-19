@@ -1,3 +1,0 @@
-2026-01-04 14:37:11 [info     ] scraping_url                   language=en site=curriculumonline url=https://www.curriculumonline.ie/junior-cycle/short-courses/digital-media-literacy/
-2026-01-04 14:37:11 [info     ] crawl_started                  base_url=https://www.curriculumonline.ie/junior-cycle/short-courses/digital-media-literacy/ include_paths=[] max_pages=50 source=curriculumonline
-2026-01-04 14:37:24 [info     ] crawl_completed                page_count=10 source=curriculumonline
