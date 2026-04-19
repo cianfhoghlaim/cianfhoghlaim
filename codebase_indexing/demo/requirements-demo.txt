@@ -1,5 +1,0 @@
-# Demo requirements for crypteolas sruth
-# Minimal dependencies for running the demo script
-# Install with: pip install -r demo/requirements-demo.txt
-
-httpx>=0.25.0

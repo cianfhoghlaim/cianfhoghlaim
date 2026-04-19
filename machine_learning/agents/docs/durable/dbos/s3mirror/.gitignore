@@ -1,5 +1,0 @@
-__pycache__
-resource_provisioning/.terraform
-resource_provisioning/.terraform.lock.hcl
-.venv
-.dbos

@@ -1,9 +1,0 @@
-# Pangolin auto-discovery labels for MLflow
-# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
-services:
-  mlflow:
-    labels:
-      - "pangolin.resource.name=MLflow"
-      - "pangolin.resource.domain=mlflow.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://mlflow-server:5000"
-      - "pangolin.resource.middlewares=tinyauth"

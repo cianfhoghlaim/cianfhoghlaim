@@ -1,9 +1,0 @@
-config:
-  oci:configFileProfile: bunchloch
-  oci:auth: SecurityToken
-  oci:region: uk-london-1
-  oci-infrastructure:compartmentOcid: ocid1.tenancy.oc1..aaaaaaaazjzelgz2fwfqfjzjxwckslmhtq6yimvcz3oyzhonp2lisa2yfekq
-  oci-infrastructure:sshPublicKey: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA4w61PqN8wNnzVM97lBa7BM46IZdfjjtDm+Oc25mEoY cliste@Cians-MacBook-Pro-2.local
-  oci-infrastructure:cloudflareZoneId: 30d33f2b3f3c71c6d27c986f2e398618
-  oci-infrastructure:cloudflareDomain: cianfhoghlaim.ie
-encryptionsalt: v1:46w0X+lPtKg=:v1:3jY9NLAhidHx4Bwh:byMpteyc8CeEJrwczarYbHVeqCFW9g==

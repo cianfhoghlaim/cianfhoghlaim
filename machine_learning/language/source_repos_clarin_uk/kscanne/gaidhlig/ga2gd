@@ -1,2 +1,0 @@
-#!/bin/bash
-caighdean | stemmer -l | disambig.pl | aistrigh | gdfixer

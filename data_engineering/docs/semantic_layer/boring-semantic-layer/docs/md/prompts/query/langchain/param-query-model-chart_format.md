@@ -1,1 +1,0 @@
-Override chart output format: `json` (serializable spec), `static` (rendered to terminal), or `string` (ANSI string). Leave `null` to auto-select based on backend (json for altair/plotly, static for plotext).

@@ -1,3 +1,0 @@
-"""
-Crypteolas Demo Scripts.
-"""

@@ -1,9 +1,0 @@
-# Pangolin auto-discovery labels for FalkorDB
-# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
-services:
-  falkordb:
-    labels:
-      - "pangolin.resource.name=FalkorDB"
-      - "pangolin.resource.domain=falkordb.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://falkordb:3000"
-      - "pangolin.resource.middlewares=tinyauth"
