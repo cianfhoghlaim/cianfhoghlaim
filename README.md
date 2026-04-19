@@ -58,13 +58,13 @@ The project is organized into domain-specific 'streams' (**sruthanna**) within t
 | Stream | Domain | Key Technologies |
 | :--- | :--- | :--- |
 | `bonneagar/` | **Infrastructure** | Pangolin (Routing), Komodo (Deployment), Locket (Secrets) |
-| `oideachais/` | **Education** | FastAPI, TanStack, Dagster, DuckDB (The Core Platform) |
+| `oideachais/` | **Structured Output of British Isles Education System** | FastAPI, TanStack, Dagster, DuckDB (The Core Platform) |
 | `meaisínfhoghlaim/` | **Intelligence** | Cognee (GraphRAG), Langfuse, Crawl4AI, MLflow |
 | `códeolas/` | **Code Intel** | Beads, Chunkhound, MCP, Dagger |
-| `crypteolas/` | **Finance/Agents** | Agent OS, Federated Learning, DLT, Crypto-payments |
-| `tuatha/` | **Identity** | Pocket-ID, Forgejo (Community & Sovereignty) |
-| `web/` | **Interface** | React, TanStack Start, Agentic UIs |
-| `hmgcc/` | **Security** | Government-grade security standards and compliance |
+| `crypteolas/` | **Finance Intel** | Agent OS, Federated Learning, DLT, Crypto-payments |
+| `tuatha/` | **Educational MMO** | Pocket-ID, Forgejo (Community & Sovereignty) |
+| `web/` | **Frontend UI** | React, TanStack Start, Agentic UIs |
+| `hmgcc/` | **Co-Creation bid for His Majesty's Government Communication Center** | Government-grade security standards and compliance |
 
 ### 🛰️ Pangolin Convergence (Hybrid Strategy)
 
