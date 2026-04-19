@@ -10,6 +10,25 @@
 > 
 > This is made possible thanks to massive improvements in the development process brought about by breakthroughs in large language coding models assisting a lone developer. The primary AI agent toolchain driving this project includes **Gemini CLI**, **Roo Code**, **GitHub Copilot**, assorted **MCP (Model Context Protocol) servers**, and open-source **HuggingFace models**.
 
+### 📥 Downloading Specific Research Data (Sparse Checkout)
+
+This repository contains massive amounts of data, models, and PDFs. If you only want to download a specific directory, such as the University of Galway research archives, you can use Git's sparse-checkout feature to save time and disk space:
+
+```bash
+# 1. Clone the repository without downloading the files
+git clone --no-checkout https://github.com/cianfhoghlaim/kings_college_galway.git
+cd kings_college_galway
+
+# 2. Initialize sparse-checkout
+git sparse-checkout init --cone
+
+# 3. Specify the directory you want to download
+git sparse-checkout set bunchloch/university_of_galway
+
+# 4. Checkout the files
+git checkout main
+```
+
 Oideachais is an advanced, AI-driven educational data platform designed to standardize curriculums across the British Isles. Beginning with a focus on English-language curriculums (GCSE, A-Level, Junior Cycle, Leaving Certificate), the platform's ultimate mission is to evolve into a comprehensive digital sanctuary for Celtic language educational nations (Ireland, Scotland, Wales, Isle of Man, Cornwall, Brittany).
 
 ## 🗣️ A Note on the Name: Cianfhoghlaim & Celtic Linguistic Roots
