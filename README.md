@@ -49,19 +49,31 @@ While this platform embraces the structural and historical reference of "Kings' 
 
 ---
 
-## 🏗️ Core Architecture & "Open Core" Structure
+## 🏗️ Core Architecture: Sruthanna & Pangolin Convergence
 
-This repository acts as the central orchestrator for scraping, structuring, embedding, and visualizing educational ecosystems. To encourage academic collaboration while protecting high-value AI routing, the project utilizes an "Open Core" separation strategy:
+The project is organized into domain-specific 'streams' (**sruthanna**) within the `sruth/` directory. This architecture utilizes a **Convergence Model** that balances local high-performance compute with cloud-based orchestration.
 
+### 🌊 The Streams (Sruthanna)
 
-### Operational Intelligence Tier (Proprietary/BSL Restricted)
-*   **Research (`docs/`):** Curated legacy documents and foundational linguistic resources.
-*   **Data Engineering (`data_engineering/`):** Core ELT pipelines (Dagster + DLT) for curriculum ingestion. 
-*   **Machine Learning (`machine_learning/`):** Local model registries (Gemma, Qwen, Celtic LLMs).
-*   **Agent Development Kit (`agents/`):** Multi-agent system orchestration powered by MCP.
-*   **Interactive Frontends (`web/`):** React applications and agentic UIs.
-*   **Blockchain & Gamification (`crypteolas/`, `tuatha/`):** DeFi analytics and immersive game clients.
-*(Note: These complex orchestration layers are fiercely protected against commercialization under our Business Source License).*
+| Stream | Domain | Key Technologies |
+| :--- | :--- | :--- |
+| `bonneagar/` | **Infrastructure** | Pangolin (Routing), Komodo (Deployment), Locket (Secrets) |
+| `oideachais/` | **Education** | FastAPI, TanStack, Dagster, DuckDB (The Core Platform) |
+| `meaisínfhoghlaim/` | **Intelligence** | Cognee (GraphRAG), Langfuse, Crawl4AI, MLflow |
+| `códeolas/` | **Code Intel** | Beads, Chunkhound, MCP, Dagger |
+| `crypteolas/` | **Finance/Agents** | Agent OS, Federated Learning, DLT, Crypto-payments |
+| `tuatha/` | **Identity** | Pocket-ID, Forgejo (Community & Sovereignty) |
+| `web/` | **Interface** | React, TanStack Start, Agentic UIs |
+| `hmgcc/` | **Security** | Government-grade security standards and compliance |
+
+### 🛰️ Pangolin Convergence (Hybrid Strategy)
+
+To maximize performance while maintaining security, the architecture is split across two primary nodes:
+
+1.  **OCI (Control Plane - `arm1-oci`)**: Hosted on Oracle Cloud. Runs **Pangolin** for secure service discovery/routing, **Komodo Core** for orchestration, and core identity services.
+2.  **Local (Workload Host - `bunchloch`)**: Powered by a 48GB MacBook M4 Max. Hosts memory-intensive operations including **Vector/Graph DBs** (LanceDB, Cognee), **LLM Inference**, and heavy data analytics (**Dagster**, **LakeFS**).
+
+This hybrid approach ensures that sensitive data and heavy compute remain local ('Bunchloch'), while maintaining global accessibility and zero-trust security via the cloud control plane.
 
 ---
 
