@@ -1,9 +1,0 @@
----
-# =============================================================================
-# KOMODO CORE ROLE - HANDLERS
-# =============================================================================
-
-- name: Restart Komodo
-  community.docker.docker_compose_v2:
-    project_src: "{{ komodo_base_dir }}"
-    state: restarted

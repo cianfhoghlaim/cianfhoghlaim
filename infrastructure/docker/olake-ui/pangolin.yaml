@@ -1,9 +1,0 @@
-# Pangolin auto-discovery labels for OLake
-# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
-services:
-  olake-ui:
-    labels:
-      - "pangolin.resource.name=OLake"
-      - "pangolin.resource.domain=olake.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://olake-ui:8000"
-      - "pangolin.resource.middlewares=tinyauth"

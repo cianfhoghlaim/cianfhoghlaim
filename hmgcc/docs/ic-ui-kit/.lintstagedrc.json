@@ -1,8 +1,0 @@
-{
-  "*.{ts,tsx,json}": [
-    "eslint --fix --",
-    "prettier --config ./.prettierrc.json --write"
-  ],
-  "*.css": "stylelint --fix",
-  "*.{md,mdx}": "remark"
-}
