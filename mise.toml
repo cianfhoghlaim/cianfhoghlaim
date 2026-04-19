@@ -24,14 +24,15 @@ sops = "latest"
 pnpm = "latest"
 aqua = "latest"
 zoxide = "latest"
+opencode = "latest"
 
 [settings]
 experimental = true
 
 [env]
 _.python.venv = { path = ".venv" }
-MISE_ENV_FILE = ".env"
 _.file = '.env'
+MISE_ENV_FILE = ".env"
 PYTHONPATH = "."
 
 # =============================================================================
