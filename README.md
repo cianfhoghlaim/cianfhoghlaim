@@ -2,6 +2,14 @@
 
 *v0.5 A unified data platform and research repository for education and cultural preservation.*
 
+> ⚠️ **Project Status & Disclaimer**
+> 
+> This repository is a **work in progress**. It is being actively set up to automatically update as syllabus and exam papers change over time. The goal is to have a working prototype prior to this year's secondary school Leaving Certificate Computer Science exam, though this is not guaranteed.
+> 
+> Please note that folder structures, README files, packages used, and architectural decisions are all subject to change. This project is being developed publicly as an attempt to demonstrate how to coalesce various open-source repositories and documentation (as found in our `docs/` folder) into a workable, large-scale project.
+> 
+> This is made possible thanks to massive improvements in the development process brought about by breakthroughs in large language coding models assisting a lone developer. The primary AI agent toolchain driving this project includes **Gemini CLI**, **Roo Code**, **GitHub Copilot**, assorted **MCP (Model Context Protocol) servers**, and open-source **HuggingFace models**.
+
 Oideachais is an advanced, AI-driven educational data platform designed to standardize curriculums across the British Isles. Beginning with a focus on English-language curriculums (GCSE, A-Level, Junior Cycle, Leaving Certificate), the platform's ultimate mission is to evolve into a comprehensive digital sanctuary for Celtic language educational nations (Ireland, Scotland, Wales, Isle of Man, Cornwall, Brittany).
 
 ## 🗣️ A Note on the Name: Cianfhoghlaim & Celtic Linguistic Roots
