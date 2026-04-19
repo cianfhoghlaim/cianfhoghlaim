@@ -1,3 +1,0 @@
-2026-01-04 14:47:24 [info     ] scraping_url                   language=en site=curriculumonline url=https://www.curriculumonline.ie/junior-cycle/short-courses/philosophy/
-2026-01-04 14:47:24 [info     ] crawl_started                  base_url=https://www.curriculumonline.ie/junior-cycle/short-courses/philosophy/ include_paths=[] max_pages=50 source=curriculumonline
-2026-01-04 14:47:37 [info     ] crawl_completed                page_count=10 source=curriculumonline

@@ -1,3 +1,0 @@
-2026-01-04 14:30:54 [info     ] scraping_url                   language=en site=curriculumonline url=https://www.curriculumonline.ie/junior-cycle/short-courses/cspe/
-2026-01-04 14:30:54 [info     ] crawl_started                  base_url=https://www.curriculumonline.ie/junior-cycle/short-courses/cspe/ include_paths=[] max_pages=50 source=curriculumonline
-2026-01-04 14:31:08 [info     ] crawl_completed                page_count=18 source=curriculumonline
