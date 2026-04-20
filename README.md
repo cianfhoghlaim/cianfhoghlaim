@@ -90,6 +90,7 @@ To ensure transparency and verify the author's background, high-resolution scans
 ### 🏛️ Civic, Political & Family Heritage
 *   **[Fine Gael Party Membership](./cian_cv/fine_gael_member.pdf)**
 *   **[Liberal Democrats Membership](./cian_cv/libdems_membership.png)**
+*   **[Alliance Party Membership](./cian_cv/alliance_membership.pdf)**
 *   **[Eamon Deacy Memorial & Family Heritage](./cian_cv/uncle_eamonn_memorial_combined.pdf)**
 *   **[Royal Communication (Buckingham Palace)](./cian_cv/buckingham_letter.pdf)**
 *   **[Dual Citizenship Verification (ROI & UK)](./cian_cv/old_passports_dual_citizen_verification_roi_uk.pdf)**
