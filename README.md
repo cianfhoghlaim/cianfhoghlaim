@@ -83,7 +83,7 @@ To ensure transparency and verify the author's background, high-resolution scans
 *   **[Academic Parchment 1](./cian_cv/parcment_1.jpeg)** | **[Academic Parchment 2](./cian_cv/parchment_2.jpeg)**
 *   **[Leaving Certificate](./cian_cv/Leaving%20Certificate.pdf)** | **[Junior Certificate](./cian_cv/Junior%20Certificate.pdf)**
 *   **[Torthaí Ghaeilge (Irish Results)](./cian_cv/Tortha%C3%AD%20Ghaeilge%20%28dragged%29.pdf)**
-*   **[Coláiste na Coiribe](./cian_cv/col%C3%A1iste_na_coiribe.pdf)** | **[Scoil Iognáid](./cian_cv/scoil_iogna%C3%ADd.pdf)**
+*   **[Coláiste na Coiribe](./cian_cv/col%C3%A1iste_na_coiribe.pdf)** | **[Scoil Iognáid](./cian_cv/scoil_iogn%C3%A1id.pdf)**
 *   **[Apple Award](./cian_cv/Apple%20Award.pdf)** | **[Teaching Council Registration](./cian_cv/teaching_registration.pdf)**
 
 ### 🛡️ Cybersecurity & Trust
