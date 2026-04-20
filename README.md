@@ -10,6 +10,47 @@
 > 
 > This is made possible thanks to massive improvements in the development process brought about by breakthroughs in large language coding models assisting a lone developer. The primary AI agent toolchain driving this project includes **Gemini CLI**, **Roo Code**, **GitHub Copilot**, assorted **MCP (Model Context Protocol) servers**, and open-source **HuggingFace models**.
 
+Oideachais is an advanced, AI-driven educational data platform designed to standardize curriculums across the British Isles. Beginning with a focus on English-language curriculums (GCSE, A-Level, Junior Cycle, Leaving Certificate), the platform's ultimate mission is to evolve into a comprehensive digital sanctuary for Celtic language educational nations (Ireland, Scotland, Wales, Isle of Man, Cornwall, Brittany).
+
+## 🏗️ Core Architecture: Sruthanna
+
+The project is organized into domain-specific 'streams' (**sruthanna**) within the `sruth/` directory. This architecture utilizes a **Hybrid Strategy** that balances local high-performance compute with cloud-based orchestration.
+
+### 🌊 The Streams (Sruthanna)
+
+| Stream | Domain | Key Technologies & Architecture |
+| :--- | :--- | :--- |
+| `sruth/bonneagar/` | **Infrastructure (Taisce)** | **Modular Docker Stacks:** Manages 19+ services including PostgreSQL, Cognee (AI Memory), LakeFS (Versioning), and Langfuse (Observability). Utilizes **Locket** for 1Password secret injection and **Pangolin Blueprints** for declarative routing. |
+| `sruth/oideachais/` | **Education Platform** | **Full-Stack AI Education:** TanStack Start (Frontend), FastAPI (API), Dagster v1.13 (Orchestration), and DuckLake/LanceDB (Storage). Transforms curriculums into interactive learning outcomes via Gemini 2.0/Claude 3.7. |
+| `sruth/meaisínfhoghlaim/` | **Intelligence** | Opensource Huggingface.co model finetuning and educational asset generation in English and minority languages. |
+| `sruth/códeolas/` | **Code Intel** | **Beads & Chunkhound:** Deep codebase analysis and indexing via MCP (Model Context Protocol) servers. |
+| `sruth/crypteolas/` | **Finance Intel** | Agent OS, Federated Learning, DLT, Crypto-payments |
+| `sruth/tuatha/` | **Educational MMO** | Pocket-ID, Forgejo (Community & Sovereignty) |
+| `sruth/web/` | **Frontend UI** | Real-time, type-safe user interfaces and AI chat dashboards |
+| `sruth/hmgcc/` | **Security Standards** | **HMGCC Compliance:** Implementation of government-grade security standards (Bailo, CyberChef, Gaffer, Stroom). |
+
+---
+
+## 🏛️ Knowledge & Research Vaults
+
+Beyond the active code streams, this repository serves as a massive knowledge base for British Isles cultural and political research.
+
+### 📚 Documentation Index (`docs/`)
+The `docs/` folder contains comprehensive research and specifications across multiple domains:
+*   **`docs/agents/`:** Analysis of agentic frameworks (Agno, PydanticAI, Smolagents) and MCP server implementations.
+*   **`docs/teanga/`:** Resources for Irish language preservation, historical document analysis (Escriptorium), and TTS dataset generation.
+*   **`docs/hmgcc/`:** Security configurations and guidance for government-grade system deployments.
+*   **`docs/data_engineering/`:** Strategies for Lakehouse architectures using DuckDB, Iceberg, and LakeFS.
+*   **`docs/meaisínfhoghlaim/`:** Machine learning workflows, model evaluation, and fine-tuning patterns.
+
+### 🏛️ Political & Social Research (`bunchloch/gemini/`)
+A collection of over 100 deep-dive research documents (PDFs) generated during the project's development. Key areas include:
+*   **Identity & Diplomacy:** British Isles terminology, tech diplomacy strategy, and Commonwealth future-proofing.
+*   **Irish Political Landscape:** Detailed analysis of Sinn Féin, Fine Gael, and Varadkar-era controversies.
+*   **Legal & Medical Inquiries:** Jurisprudential analysis of dual citizenship, medical cannabis access, mental health law (Irish High Court/ECHR), and sodium valproate inquiries.
+*   **Royal & Heraldic Research:** Celtic naming parallels, claims to Irish kingship, and royal advocacy for safer digital futures.
+*   **Trauma & Recovery:** Neuro-scientific research into TBI, C-PTSD, and cognitive recovery through tACS and nutritional therapy.
+
 ### 📥 Downloading Specific Research Data (Sparse Checkout)
 
 This repository contains massive amounts of data, models, and PDFs. If you only want to download a specific directory, such as the University of Galway research archives, you can use Git's sparse-checkout feature to save time and disk space:
@@ -29,44 +70,18 @@ git sparse-checkout set bunchloch/university_of_galway
 git checkout main
 ```
 
-Oideachais is an advanced, AI-driven educational data platform designed to standardize curriculums across the British Isles. Beginning with a focus on English-language curriculums (GCSE, A-Level, Junior Cycle, Leaving Certificate), the platform's ultimate mission is to evolve into a comprehensive digital sanctuary for Celtic language educational nations (Ireland, Scotland, Wales, Isle of Man, Cornwall, Brittany).
+---
 
-## 🗣️ A Note on the Name: Cianfhoghlaim & Celtic Linguistic Roots
+## 🎓 Cian CV: Academic & Professional Credentials
 
-The domain `cianfhoghlaim.ie` || `cian.lyons.co.uk` is a deliberate linguistic play on words that highlights the mechanics of the Irish language while pointing to the broader Celtic linguistic traditions this repository aims to protect:
-*   **Cian:** The author's name, which also serves as the Irish prefix for "distance," "remote," or "long-enduring."
-*   **Foghlaim:** The Irish word for "learning."
-
-This digital sanctuary will ensure the inter-generational transmission of Goidelic and Brythonic languages and protect our shared cultural heritage against monolingual algorithmic manipulations.
-
-## 👨‍🏫 Author, Paternity & Legal Disclaimers
-
-**Author Identity & Moral Rights:**
-This platform is developed entirely by **Cian Pierce Lyons** (Irish Passport Name: **Cian Mac Liatháin**). The author explicitly asserts their moral right of paternity under the Copyright and Related Rights Act 2000 (Ireland) and the Copyright, Designs and Patents Act 1988 (UK) to be permanently identified as the creator of this work.
-
-**Institutional Nomenclature Disclaimer:**
-While this platform embraces the structural and historical reference of "Kings' College Galway" to reflect its academic rigor, "Kings' College Galway" operates exclusively as an artistic and thematic project identifier. It does not represent an accredited, regulated, or statutorily recognized degree-awarding higher education institution in any jurisdiction.
+To ensure transparency and verify the author's background, high-resolution scans of key credentials are provided within this repository:
+*   **[Academic Parchment 1](./cian_cv/parcment_1.jpeg)**
+*   **[Academic Parchment 2](./cian_cv/parchment_2.jpeg)**
+*   **[Liberal Democrats Membership](./cian_cv/libdems_membership.png)**
 
 ---
 
-## 🏗️ Core Architecture: Sruthanna & Pangolin Convergence
-
-The project is organized into domain-specific 'streams' (**sruthanna**) within the `sruth/` directory. This architecture utilizes a **Convergence Model** that balances local high-performance compute with cloud-based orchestration.
-
-### 🌊 The Streams (Sruthanna)
-
-| Stream | Domain | Key Technologies |
-| :--- | :--- | :--- |
-| `bonneagar/` | **Infrastructure** | Pangolin (Routing), Komodo (Deployment), Locket (Secrets) |
-| `oideachais/` | **Structured Output of British Isles Education System** | British Isles curriculum platform transforming official syllabus, exam paper, and marking schemes into interactive learning via AI |
-| `meaisínfhoghlaim/` | **Intelligence** | Opensource Huggingface.co model finetuning and educational asset generation in English and minority languages. |
-| `códeolas/` | **Code Intel** | Beads, Chunkhound, MCP, Dagger |
-| `crypteolas/` | **Finance Intel** | Agent OS, Federated Learning, DLT, Crypto-payments |
-| `tuatha/` | **Educational MMO** | Pocket-ID, Forgejo (Community & Sovereignty) |
-| `web/` | **Frontend UI** | Real-time, type-safe user interfaces and AI chat dashboards |
-| `hmgcc/` | **Co-Creation bid for His Majesty's Government Communication Center** | Government-grade security standards and compliance |
-
-### 🛰️ Pangolin Convergence (Hybrid Strategy)
+## 🛰️ Pangolin (Hybrid Strategy)
 
 To maximize performance while maintaining security, the architecture is split across two primary nodes:
 
@@ -77,12 +92,38 @@ This hybrid approach ensures that sensitive data and heavy compute remain local 
 
 ---
 
-## 📜 Usage Policies & Licensing
+## 📂 Directory Description: `/Users/cliste/dev/cianfhoghlaim/cian_cv`
 
+The `/Users/cliste/dev/cianfhoghlaim/cian_cv` directory contains the digital artifacts and verifiable proof of the author's academic and professional journey. It acts as a dedicated proof-of-paternity vault within the repository, housing high-resolution scans of degree parchments and civic memberships. This ensures that the project's lead developer is identifiable and their qualifications are transparently available to collaborators and stakeholders.
+
+---
+
+## 🗣️ A Note on the Name & Author
+
+**Cianfhoghlaim & Celtic Linguistic Roots:**
+The domain `cianfhoghlaim.ie` || `cian.lyons.co.uk` is a deliberate linguistic play on words that highlights the mechanics of the Irish language while pointing to the broader Celtic linguistic traditions this repository aims to protect:
+*   **Cian:** The author's name, which also serves as the Irish prefix for "distance," "remote," or "long-enduring."
+*   **Foghlaim:** The Irish word for "learning."
+
+This digital sanctuary will ensure the inter-generational transmission of Goidelic and Brythonic languages and protect our shared cultural heritage against monolingual algorithmic manipulations.
+
+**Author Identity:**
+This platform is developed entirely by **Cian Lyons-Deacy** (Irish Passport Name: **Cian Mac Liatháin Uí Dhéisigh**).
+
+---
+
+## ⚖️ Paternity & Usage Policy
+
+**Moral Rights & Paternity:**
+The author explicitly asserts their moral right of paternity under the Copyright and Related Rights Act 2000 (Ireland) and the Copyright, Designs and Patents Act 1988 (UK) to be permanently identified as the creator of this work.
+
+**Institutional Nomenclature Disclaimer:**
+While this platform embraces the structural and historical reference of "Kings' College Galway" to reflect its academic rigor, "Kings' College Galway" operates exclusively as an artistic and thematic project identifier. It does not represent an accredited, regulated, or statutorily recognized degree-awarding higher education institution in any jurisdiction.
+
+**Usage Policies & Licensing:**
 This repository operates under a highly restrictive **Business Source License (BSL) 1.1**. 
 
 By downloading, copying, or utilizing this codebase, you agree to the following core tenets (see `LICENSE.md` for full legal terms):
 1.  **Geographic Restrictions:** Production deployment is legally restricted to Ireland, Northern Ireland, the Republic of Ireland, the United Kingdom of Great Britain and Northern Ireland, Ukraine, the European Union, the British Isles, The Commonwealth of Nations, The Crown, and those in the United States of America aligned with Apple and the Duke and Duchess of Sussex, Taiwan, Tibet, Nepal, South Korea, Japan, China.
 2.  **Non-Commercial Use Only:** The software is provided exclusively for non-profit, cultural preservation, and academic research. Commercial monetization—including for-profit AI training, DeFi analytics, and ed-tech SaaS platforms—is strictly prohibited.
 3.  **Acceptable Use:** Usage by entities affiliated with sanctioned organizations, paramilitary groups, or those in violation of international human rights conventions is fundamentally banned and will result in immediate technological and legal revocation of access.
-
