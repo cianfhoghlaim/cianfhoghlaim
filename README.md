@@ -79,20 +79,20 @@ git checkout main
 To ensure transparency and verify the author's background, high-resolution scans of key credentials and professional references are provided below:
 
 ### 📜 Academic & Professional Records
-*   **[University Degree Transcript (BA & HDip)](./cian_cv/BA%20and%20HDip%20Transcript.pdf)** | **[Transcript of Results (Bilingual)](./cian_cv/Tras-Scri%CC%81bhinn%20Torthai%CC%81%20-%20Transcript%20of%20Results.pdf)**
+*   **[University Degree Transcript (BA & HDip)](./cian_cv/ba_and_hdip_transcript.pdf)** | **[Transcript of Results (Bilingual)](./cian_cv/tras_scribhinn_torthai_transcript_of_results.pdf)**
 *   **[Academic Parchment 1](./cian_cv/parcment_1.jpeg)** | **[Academic Parchment 2](./cian_cv/parchment_2.jpeg)**
-*   **[Leaving Certificate](./cian_cv/Leaving%20Certificate.pdf)** | **[Junior Certificate](./cian_cv/Junior%20Certificate.pdf)**
-*   **[Torthaí Ghaeilge (Irish Results)](./cian_cv/Tortha%C3%AD%20Ghaeilge%20%28dragged%29.pdf)**
-*   **[Coláiste na Coiribe](./cian_cv/col%C3%A1iste_na_coiribe.pdf)** | **[Scoil Iognáid](./cian_cv/scoil_iogn%C3%A1id.pdf)**
+*   **[Leaving Certificate](./cian_cv/leaving_certificate.pdf)** | **[Junior Certificate](./cian_cv/junior_certificate.pdf)**
+*   **[Torthaí Ghaeilge (Irish Results)](./cian_cv/torthai_ghaeilge.pdf)**
+*   **[Coláiste na Coiribe](./cian_cv/colaiste_na_coiribe.pdf)** | **[Scoil Iognáid](./cian_cv/scoil_iognaid.pdf)**
 *   **[Teaching Placement Reference](./cian_cv/placement_reference.pdf)** | **[Placement Feedback](./cian_cv/teaching_placement_feedback.pdf)**
 *   **[Part-Time Teaching Reference](./cian_cv/part_time_teaching_reference.pdf)** | **[BME Reference](./cian_cv/bme_reference.pdf)**
-*   **[Apple Award](./cian_cv/Apple%20Award.pdf)** | **[Teaching Council Registration](./cian_cv/teaching_registration.pdf)**
+*   **[Apple Award](./cian_cv/apple_award.pdf)** | **[Teaching Council Registration](./cian_cv/teaching_registration.pdf)**
 
 ### 🛡️ Cybersecurity & Trust
 *   **[Cybersecurity Professional Reference](./cian_cv/cybersecurity_reference.pdf)**
 *   **[Threat Message Documentation (Evidence)](./cian_cv/threat_message.jpeg)**
 *   **[Verified Lack of Criminality (Garda Vetting ROI)](./cian_cv/garda_vetting_roi.pdf)**
-*   **[Children First Certificate (Safeguarding)](./cian_cv/Children%20First%20Certificate.pdf)**
+*   **[Children First Certificate (Safeguarding)](./cian_cv/children_first_certificate.pdf)**
 *   **[Enhanced Disclosure (Northern Ireland)](./cian_cv/enhanced_cert_ni.pdf)** | **[Enhanced Disclosure (UCL/England)](./cian_cv/enhanced_cert_ucl.pdf)**
 
 ### 🏛️ Civic, Political & Family Heritage
