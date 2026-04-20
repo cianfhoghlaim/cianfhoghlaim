@@ -44,12 +44,14 @@ The `docs/` folder contains comprehensive research and specifications across mul
 *   **`docs/meaisínfhoghlaim/`:** Machine learning workflows, model evaluation, and fine-tuning patterns.
 
 ### 🏛️ Political & Social Research (`bunchloch/gemini/`)
-A collection of over 100 deep-dive research documents (PDFs) generated during the project's development. Key areas include:
-*   **Identity & Diplomacy:** British Isles terminology, tech diplomacy strategy, and Commonwealth future-proofing.
-*   **Irish Political Landscape:** Detailed analysis of Sinn Féin, Fine Gael, and Varadkar-era controversies.
+A massive collection of over 140 deep-dive research documents (PDFs) generated during the project's development. This "Gemini Vault" contains structured intelligence on:
+*   **Deacy Family & Galway Heritage:** Multi-dimensional analysis of the socio-economic, athletic, and genealogical topography of the Deacy family in Galway.
+*   **Identity, Diplomacy & Sovereignty:** British Isles terminology, tech diplomacy strategy, and research into claiming Rí na Gaillimhe and Irish kingship through dual blood lineage.
+*   **Irish Political Landscape:** Detailed analysis of Sinn Féin funding, Fine Gael coalition strategies, and Varadkar-era political controversies.
 *   **Legal & Medical Inquiries:** Jurisprudential analysis of dual citizenship, medical cannabis access, mental health law (Irish High Court/ECHR), and sodium valproate inquiries.
-*   **Royal & Heraldic Research:** Celtic naming parallels, claims to Irish kingship, and royal advocacy for safer digital futures.
-*   **Trauma & Recovery:** Neuro-scientific research into TBI, C-PTSD, and cognitive recovery through tACS and nutritional therapy.
+*   **Digital Audit & Recovery:** Comprehensive frameworks for the recovery of digital audit trails, biometric data, and multi-agency records following misclassified incidents.
+*   **Trauma & Recovery:** Neuro-scientific research into TBI, C-PTSD, and cognitive recovery through tACS, nutritional therapy (Keto/Beef), and milk/cannabinoid protocols.
+*   **Celtic Revitalization:** Digital revitalization strategies for Celtic languages (Goidelic and Brythonic) and protecting shared cultural heritage.
 
 ### 📥 Downloading Specific Research Data (Sparse Checkout)
 
