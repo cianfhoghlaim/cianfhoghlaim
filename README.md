@@ -44,7 +44,9 @@ The `docs/` folder contains comprehensive research and specifications across mul
 *   **`docs/meaisínfhoghlaim/`:** Machine learning workflows, model evaluation, and fine-tuning patterns.
 
 ### 🏛️ Political & Social Research (`bunchloch/gemini/`)
-A massive collection of over 140 deep-dive research documents (PDFs) generated during the project's development. This "Gemini Vault" is organized into thematic subdirectories for clarity:
+A massive collection of over 140 deep-dive research documents (PDFs) generated during the project's development. This "Gemini Vault" is organized into thematic subdirectories for clarity.
+
+**Note on Methodology**: These reports were generated using **Gemini Deep Research** with expert prompting. For detailed information on the generation process and official documentation links, see the [**Gemini Vault README**](./bunchloch/gemini/README.md).
 
 *   **`technology/`**: AI company analysis, Gemini/Google AI goals, Big Tech regulation, and cybersecurity job cycles.
 *   **`politics/`**: Brexit impact, Sinn Féin/Fine Gael coalition strategy, election research, and Irish economic future planning.
@@ -88,6 +90,7 @@ To ensure transparency and verify the author's background, high-resolution scans
 *   **[Part-Time Teaching Reference](./cian_cv/part_time_teaching_reference.pdf)** | **[BME Reference](./cian_cv/bme_reference.pdf)**
 *   **[Head of Counselling Reference](./cian_cv/head_of_counselling_reference.pdf)** | **[Apple Award](./cian_cv/apple_award.pdf)**
 *   **[Teaching Council Registration](./cian_cv/teaching_registration.pdf)**
+*   **[University of Galway Complaint (Covered Up)](./cian_cv/university_galway_complaint_covered_up.pdf)**
 
 ### 🛡️ Cybersecurity & Trust
 *   **[Cybersecurity Professional Reference](./cian_cv/cybersecurity_reference.pdf)**
