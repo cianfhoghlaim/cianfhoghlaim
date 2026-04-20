@@ -44,14 +44,14 @@ The `docs/` folder contains comprehensive research and specifications across mul
 *   **`docs/meaisínfhoghlaim/`:** Machine learning workflows, model evaluation, and fine-tuning patterns.
 
 ### 🏛️ Political & Social Research (`bunchloch/gemini/`)
-A massive collection of over 140 deep-dive research documents (PDFs) generated during the project's development. This "Gemini Vault" contains structured intelligence on:
-*   **Deacy Family & Galway Heritage:** Multi-dimensional analysis of the socio-economic, athletic, and genealogical topography of the Deacy family in Galway.
-*   **Identity, Diplomacy & Sovereignty:** British Isles terminology, tech diplomacy strategy, and research into claiming Rí na Gaillimhe and Irish kingship through dual blood lineage.
-*   **Irish Political Landscape:** Detailed analysis of Sinn Féin funding, Fine Gael coalition strategies, and Varadkar-era political controversies.
-*   **Legal & Medical Inquiries:** Jurisprudential analysis of dual citizenship, medical cannabis access, mental health law (Irish High Court/ECHR), and sodium valproate inquiries.
-*   **Digital Audit & Recovery:** Comprehensive frameworks for the recovery of digital audit trails, biometric data, and multi-agency records following misclassified incidents.
-*   **Trauma & Recovery:** Neuro-scientific research into TBI, C-PTSD, and cognitive recovery through tACS, nutritional therapy (Keto/Beef), and milk/cannabinoid protocols.
-*   **Celtic Revitalization:** Digital revitalization strategies for Celtic languages (Goidelic and Brythonic) and protecting shared cultural heritage.
+A massive collection of over 140 deep-dive research documents (PDFs) generated during the project's development. This "Gemini Vault" is organized into thematic subdirectories for clarity:
+
+*   **`technology/`**: AI company analysis, Gemini/Google AI goals, Big Tech regulation, and cybersecurity job cycles.
+*   **`politics/`**: Brexit impact, Sinn Féin/Fine Gael coalition strategy, election research, and Irish economic future planning.
+*   **`law/`**: Dual citizenship jurisprudence, court forms/procedures, medical malpractice strategies, and data access inquiries.
+*   **`medical/`**: TBI/C-PTSD recovery protocols, medical cannabis access, disability allowance assistance, and neuro-scientific trauma research.
+*   **`culture/`**: Celtic language revitalization, Deacy family genealogy, Irish kingship claims, and Royal family research.
+*   **`other/`**: Public service connectivity (Irish Rail), London borough cleanliness, and radicalization prevention strategies.
 
 ### 📥 Downloading Specific Research Data (Sparse Checkout)
 
