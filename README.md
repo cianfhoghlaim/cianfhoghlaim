@@ -72,12 +72,27 @@ git checkout main
 
 ---
 
-## 🎓 Cian CV: Academic & Professional Credentials
+## 🎓 Cian CV: Academic, Professional & Civic Credentials
 
-To ensure transparency and verify the author's background, high-resolution scans of key credentials are provided within this repository:
-*   **[Academic Parchment 1](./cian_cv/parcment_1.jpeg)**
-*   **[Academic Parchment 2](./cian_cv/parchment_2.jpeg)**
+To ensure transparency and verify the author's background, high-resolution scans of key credentials and professional references are provided below:
+
+### 📜 Academic & Professional Records
+*   **[University Degree Transcript (BA & HDip)](./cian_cv/BA%20and%20HDip%20Transcript.pdf)**
+*   **[Academic Parchment 1](./cian_cv/parcment_1.jpeg)** | **[Academic Parchment 2](./cian_cv/parchment_2.jpeg)**
+*   **[Leaving Certificate](./cian_cv/Leaving%20Certificate.pdf)** | **[Junior Certificate](./cian_cv/Junior%20Certificate.pdf)**
+*   **[Teaching Council Registration](./cian_cv/teaching_registration.pdf)**
+
+### 🛡️ Cybersecurity & Trust
+*   **[Cybersecurity Professional Reference](./cian_cv/cybersecurity_reference.pdf)**
+*   **[Verified Lack of Criminality (Garda Vetting ROI)](./cian_cv/garda_vetting_roi.pdf)**
+*   **[Enhanced Disclosure (Northern Ireland)](./cian_cv/enhanced_cert_ni.pdf)** | **[Enhanced Disclosure (UCL/England)](./cian_cv/enhanced_cert_ucl.pdf)**
+
+### 🏛️ Civic, Political & Family Heritage
+*   **[Fine Gael Party Membership](./cian_cv/fine_gael_member.pdf)**
 *   **[Liberal Democrats Membership](./cian_cv/libdems_membership.png)**
+*   **[Eamon Deacy Memorial & Family Heritage](./cian_cv/uncle_eamonn_memorial_combined.pdf)**
+*   **[Royal Communication (Buckingham Palace)](./cian_cv/buckingham_letter.pdf)**
+*   **[Dual Citizenship Verification (ROI & UK)](./cian_cv/old_passports_dual_citizen_verification_roi_uk.pdf)**
 
 ---
 
@@ -94,7 +109,7 @@ This hybrid approach ensures that sensitive data and heavy compute remain local 
 
 ## 📂 Directory Description: `/Users/cliste/dev/cianfhoghlaim/cian_cv`
 
-The `/Users/cliste/dev/cianfhoghlaim/cian_cv` directory contains the digital artifacts and verifiable proof of the author's academic and professional journey. It acts as a dedicated proof-of-paternity vault within the repository, housing high-resolution scans of degree parchments and civic memberships. This ensures that the project's lead developer is identifiable and their qualifications are transparently available to collaborators and stakeholders.
+The `/Users/cliste/dev/cianfhoghlaim/cian_cv` directory contains the digital artifacts and verifiable proof of the author's academic and professional journey. It acts as a dedicated proof-of-paternity vault within the repository, housing high-resolution scans of degree parchments, civic memberships, and security clearances. This ensures that the project's lead developer is identifiable and their qualifications are transparently available to collaborators and stakeholders.
 
 ---
 
