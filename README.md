@@ -82,11 +82,14 @@ To ensure transparency and verify the author's background, high-resolution scans
 *   **[University Degree Transcript (BA & HDip)](./cian_cv/BA%20and%20HDip%20Transcript.pdf)**
 *   **[Academic Parchment 1](./cian_cv/parcment_1.jpeg)** | **[Academic Parchment 2](./cian_cv/parchment_2.jpeg)**
 *   **[Leaving Certificate](./cian_cv/Leaving%20Certificate.pdf)** | **[Junior Certificate](./cian_cv/Junior%20Certificate.pdf)**
-*   **[Teaching Council Registration](./cian_cv/teaching_registration.pdf)**
+*   **[Torthaí Ghaeilge (Irish Results)](./cian_cv/Tortha%C3%AD%20Ghaeilge%20%28dragged%29.pdf)**
+*   **[Coláiste na Coiribe](./cian_cv/col%C3%A1iste_na_coiribe.pdf)** | **[Scoil Iognáid](./cian_cv/scoil_iogna%C3%ADd.pdf)**
+*   **[Apple Award](./cian_cv/Apple%20Award.pdf)** | **[Teaching Council Registration](./cian_cv/teaching_registration.pdf)**
 
 ### 🛡️ Cybersecurity & Trust
 *   **[Cybersecurity Professional Reference](./cian_cv/cybersecurity_reference.pdf)**
 *   **[Verified Lack of Criminality (Garda Vetting ROI)](./cian_cv/garda_vetting_roi.pdf)**
+*   **[Children First Certificate (Safeguarding)](./cian_cv/Children%20First%20Certificate.pdf)**
 *   **[Enhanced Disclosure (Northern Ireland)](./cian_cv/enhanced_cert_ni.pdf)** | **[Enhanced Disclosure (UCL/England)](./cian_cv/enhanced_cert_ucl.pdf)**
 
 ### 🏛️ Civic, Political & Family Heritage
