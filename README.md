@@ -6,7 +6,9 @@
 > 
 > This repository is a **work in progress**. It is being actively set up to automatically update as syllabus and exam papers change over time. The goal is to have a working prototype prior to this year's secondary school Leaving Certificate Computer Science exam, though this is not guaranteed.
 > 
-> Please note that folder structures, README files, packages used, and architectural decisions are all subject to change. This project is being developed publicly as an attempt to demonstrate how to coalesce various open-source repositories and documentation (as found in our `docs/` folder) into a workable, large-scale project.
+> Please note that folder structures, README files, packages used, and architectural decisions are all subject to change. Many aspects of the project were designed in line with previous hackathons; the use of specific software or packages is not an endorsement, and the rationale for these choices will be explained later.
+> 
+> This project is being developed publicly as an attempt to demonstrate how to coalesce various open-source repositories and documentation (as found in our `docs/` folder) into a workable, large-scale project.
 > 
 > This is made possible thanks to massive improvements in the development process brought about by breakthroughs in large language coding models assisting a lone developer. The primary AI agent toolchain driving this project includes **Gemini CLI**, **Roo Code**, **GitHub Copilot**, assorted **MCP (Model Context Protocol) servers**, and open-source **HuggingFace models**.
 
@@ -46,6 +48,40 @@ Oideachais is a pan-Celtic curriculum search, content management, and learning o
 | **Pipeline** | Dagster v1.13 ("Octopus's Garden") | Asset-based data orchestration. Manages data flow from raw PDF/HTML ingestion to final vector embeddings. Leverages AI skills, Partitioned Asset Checks, and Python 3.14 support. |
 | **Storage** | DuckDB (DuckLake v1.0) & LanceDB (v0.31.0) | DuckDB for fast local analytical processing; LanceDB for multi-modal vector storage with namespace-backed federated database support. Data persisted to Cloudflare R2 for durability. |
 
+```
+                    ┌─────────────────────────────────────────────────────────────┐
+                    │                    Celtic Education Platform                  │
+                    └─────────────────────────────────────────────────────────────┘
+                                              │
+         ┌────────────────────────────────────┼────────────────────────────────────┐
+         │                                    │                                    │
+         ▼                                    ▼                                    ▼
+┌─────────────────┐              ┌─────────────────────┐              ┌─────────────────┐
+│   DLT Sources   │              │   Dagster Assets    │              │   ADK Agents    │
+│                 │              │                     │              │                 │
+│ • Ireland (8)   │──────────────│ • ireland_education │──────────────│ • RootAgent     │
+│ • UK (12)       │              │ • uk_education      │              │ • Curriculum    │
+│ • Celtic (6)    │              │ • celtic_language   │              │ • Geospatial    │
+│ • Geospatial(4) │              │ • geospatial        │              │ • Translation   │
+└─────────────────┘              │ • embeddings        │              │ • Corpus        │
+                                 │ • evaluation        │              │ • Statistics    │
+                                 └─────────────────────┘              └─────────────────┘
+                                              │
+         ┌────────────────────────────────────┼────────────────────────────────────┐
+         │                                    │                                    │
+         ▼                                    ▼                                    ▼
+┌─────────────────┐              ┌─────────────────────┐              ┌─────────────────┐
+│    Storage      │              │   CocoIndex Flows   │              │  Observability  │
+│                 │              │                     │              │                 │
+│ • DuckDB        │◄─────────────│ • curriculum_embed  │─────────────►│ • Datadog APM   │
+│ • LanceDB       │              │ • translation       │              │ • Datadog LLMObs│
+│ • Memgraph      │              │ • geospatial_index  │              │ • MLflow        │
+└─────────────────┘              └─────────────────────┘              │ • Langfuse      │
+                                                                       │ • Ragas         │
+                                                                       │ • Kafka         │
+                                                                       └─────────────────┘
+```
+
 ### 🛠 Deployment Configuration
 
 - **Development**: Managed via `compose.dev.yaml` for local hot-reloading.
@@ -55,7 +91,7 @@ Oideachais is a pan-Celtic curriculum search, content management, and learning o
 
 ### 🇮🇪 Ireland Education Pipelines
 
-The `pipelines/ireland/` directory is the primary data ingestion layer for the Republic of Ireland's education system. It provides DLT (Data Load Tool) sources that crawl, extract, normalise, and deduplicate curriculum data from every major Irish education body.
+The `sruth/oideachais/dlt_sources/ireland/` directory is the primary data ingestion layer for the Republic of Ireland's education system. It provides a comprehensive suite of DLT (Data Load Tool) sources that crawl, extract, normalise, and deduplicate curriculum data from every major Irish education body.
 
 #### Data Sources
 
@@ -71,38 +107,38 @@ The `pipelines/ireland/` directory is the primary data ingestion layer for the R
 
 **Core Curriculum Ingestion:**
 
-- **[`curriculum_source.py`](sruth/oideachais/pipelines/ireland/curriculum_source.py)** — Unified entry point. Merges content from curriculumonline.ie, ncca.ie, and examinations.ie into a single, deduplicated data source organised by `(cycle, subject, language)`.
-- **[`curriculum_registry.py`](sruth/oideachais/pipelines/ireland/curriculum_registry.py)** — Subject taxonomy and URL resolution engine. Centralised registry of all Irish curriculum subjects, cycles, levels, and source-specific URL patterns.
-- **[`curriculum_document.py`](sruth/oideachais/pipelines/ireland/curriculum_document.py)** — Unified Pydantic model for all Irish curriculum documents. Defines `LearningOutcome`, `AssessmentInfo`, `ContentQuality`, `EducationLevel`, and `Language` enums.
+- **[`curriculum_source.py`](sruth/oideachais/dlt_sources/ireland/curriculum_source.py)** — Unified entry point. Merges content from curriculumonline.ie, ncca.ie, and examinations.ie into a single, deduplicated data source organised by `(cycle, subject, language)`.
+- **[`curriculum_registry.py`](sruth/oideachais/dlt_sources/ireland/curriculum_registry.py)** — Subject taxonomy and URL resolution engine. Centralised registry of all Irish curriculum subjects, cycles, levels, and source-specific URL patterns.
+- **[`curriculum_document.py`](sruth/oideachais/dlt_sources/ireland/curriculum_document.py)** — Unified Pydantic model for all Irish curriculum documents. Defines `LearningOutcome`, `AssessmentInfo`, `ContentQuality`, `EducationLevel`, and `Language` enums.
 
 **Per-Subject Sources (`subjects/`):**
 
-- **[`subjects/base.py`](sruth/oideachais/pipelines/ireland/subjects/base.py)** — Foundation for per-subject DLT resources. Handles URL resolution, Firecrawl crawling with rate limiting, PDF extraction, bilingual support, and content hashing.
-- **[`subjects/junior_cycle.py`](sruth/oideachais/pipelines/ireland/subjects/junior_cycle.py)** — Per-subject DLT resources for all 18 Junior Cycle subjects.
-- **[`subjects/senior_cycle.py`](sruth/oideachais/pipelines/ireland/subjects/senior_cycle.py)** — Per-subject DLT resources for all 34 Leaving Certificate subjects.
+- **[`subjects/base.py`](sruth/oideachais/dlt_sources/ireland/subjects/base.py)** — Foundation for per-subject DLT resources. Handles URL resolution, Firecrawl crawling with rate limiting, PDF extraction, bilingual support, and content hashing.
+- **[`subjects/junior_cycle.py`](sruth/oideachais/dlt_sources/ireland/subjects/junior_cycle.py)** — Per-subject DLT resources for all 18 Junior Cycle subjects.
+- **[`subjects/senior_cycle.py`](sruth/oideachais/dlt_sources/ireland/subjects/senior_cycle.py)** — Per-subject DLT resources for all 34 Leaving Certificate subjects.
 
 **Source Adapters & Normalisation:**
 
-- **[`source_adapters.py`](sruth/oideachais/pipelines/ireland/source_adapters.py)** — Normalises output from different curriculum sources into a consistent `NormalizedPage` format. Implements adapters for CurriculumOnline, NCCA, and Examinations.ie.
-- **[`content_deduplication.py`](sruth/oideachais/pipelines/ireland/content_deduplication.py)** — Cross-source content deduplication via content hashing with source provenance tracking and canonical URL resolution.
-- **[`education_sources.py`](sruth/oideachais/pipelines/ireland/education_sources.py)** — Configuration registry for all Irish education websites.
+- **[`source_adapters.py`](sruth/oideachais/dlt_sources/ireland/source_adapters.py)** — Normalises output from different curriculum sources into a consistent `NormalizedPage` format. Implements adapters for CurriculumOnline, NCCA, and Examinations.ie.
+- **[`content_deduplication.py`](sruth/oideachais/dlt_sources/ireland/content_deduplication.py)** — Cross-source content deduplication via content hashing with source provenance tracking and canonical URL resolution.
+- **[`education_sources.py`](sruth/oideachais/dlt_sources/ireland/education_sources.py)** — Configuration registry for all Irish education websites.
 
 **Examination Data:**
 
-- **[`exam_source.py`](sruth/oideachais/pipelines/ireland/exam_source.py)** — DLT source for examinations.ie. Crawls chief examiner reports (200+ PDFs), exam archives, marking schemes, and statistics.
-- **[`sec_aural_transcripts.py`](sruth/oideachais/pipelines/ireland/sec_aural_transcripts.py)** — Parses structured transcript data from SEC aural exam scripts with dialect tags (Connacht, Munster, Ulster).
-- **[`edcolearning.py`](sruth/oideachais/pipelines/ireland/edcolearning.py)** — Extracts Leaving Certificate exam audio resources from EdcoLearning.ie.
+- **[`exam_source.py`](sruth/oideachais/dlt_sources/ireland/exam_source.py)** — DLT source for examinations.ie. Crawls chief examiner reports (200+ PDFs), exam archives, marking schemes, and statistics.
+- **[`sec_aural_transcripts.py`](sruth/oideachais/dlt_sources/ireland/sec_aural_transcripts.py)** — Parses structured transcript data from SEC aural exam scripts with dialect tags (Connacht, Munster, Ulster).
+- **[`edcolearning.py`](sruth/oideachais/dlt_sources/ireland/edcolearning.py)** — Extracts Leaving Certificate exam audio resources from EdcoLearning.ie.
 
 **Intelligent Discovery:**
 
-- **[`agentic_discovery.py`](sruth/oideachais/pipelines/ireland/agentic_discovery.py)** — Uses Firecrawl agent for autonomous URL discovery and structured data extraction across Irish educational websites.
-- **[`json_seed.py`](sruth/oideachais/pipelines/ireland/json_seed.py)** — Loads pre-existing scraped JSON data as seed data for pipeline bootstrapping.
+- **[`agentic_discovery.py`](sruth/oideachais/dlt_sources/ireland/agentic_discovery.py)** — Uses Firecrawl agent for autonomous URL discovery and structured data extraction across Irish educational websites.
+- **[`json_seed.py`](sruth/oideachais/dlt_sources/ireland/json_seed.py)** — Loads pre-existing scraped JSON data as seed data for pipeline bootstrapping.
 
 **Statistical & Geospatial Data (`statistics/`):**
 
-- **[`statistics/cso_small_areas.py`](sruth/oideachais/pipelines/ireland/statistics/cso_small_areas.py)** — Small Area statistics from CSO PxStat API (18,641 areas, Census 2022).
-- **[`statistics/geohive.py`](sruth/oideachais/pipelines/ireland/statistics/geohive.py)** — Geospatial boundaries from GeoHive.ie (ArcGIS FeatureServer).
-- **[`statistics/met_office.py`](sruth/oideachais/pipelines/ireland/statistics/met_office.py)** — UK Met Office DataHub integration for cross-border environmental context.
+- **[`statistics/cso_small_areas.py`](sruth/oideachais/dlt_sources/ireland/statistics/cso_small_areas.py)** — Small Area statistics from CSO PxStat API (18,641 areas, Census 2022).
+- **[`statistics/geohive.py`](sruth/oideachais/dlt_sources/ireland/statistics/geohive.py)** — Geospatial boundaries from GeoHive.ie (ArcGIS FeatureServer).
+- **[`statistics/met_office.py`](sruth/oideachais/dlt_sources/ireland/statistics/met_office.py)** — UK Met Office DataHub integration for weather observations and climate data, supporting cross-border environmental context.
 
 #### Data Flow Architecture
 
@@ -157,7 +193,7 @@ All pipeline modules support **bilingual content extraction** (English and Irish
 
 ```python
 import dlt
-from sruth.oideachais.pipelines.ireland import curriculum_source
+from sruth.oideachais.dlt_sources.ireland import curriculum_source
 
 # Crawl Junior Cycle Mathematics (English)
 pipeline = dlt.pipeline(
@@ -180,7 +216,7 @@ pipeline.run(curriculum_source(
 ))
 
 # Per-subject sources for fine-grained control
-from sruth.oideachais.pipelines.ireland.subjects import (
+from sruth.oideachais.dlt_sources.ireland.subjects import (
     senior_cycle_source,
     junior_cycle_source,
 )
@@ -195,7 +231,7 @@ pipeline.run(junior_cycle_source(language="ga"))
 #### Pipeline Directory Structure
 
 ```
-pipelines/
+dlt_sources/
 ├── ireland/                        # 🇮🇪 Republic of Ireland
 │   ├── curriculum_source.py        # Unified curriculum DLT source
 │   ├── curriculum_registry.py      # Subject taxonomy & URL resolution
@@ -230,7 +266,7 @@ pipelines/
 
 ---
 
-## �️ Knowledge & Research Vaults
+## ️ Knowledge & Research Vaults
 
 Beyond the active code streams, this repository serves as a massive knowledge base for British Isles cultural and political research.
 
