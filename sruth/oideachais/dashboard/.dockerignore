@@ -1,0 +1,35 @@
+# Dependencies
+node_modules
+
+# Build output
+.output
+dist
+
+# Development
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Testing
+coverage
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Convex local
+.convex
