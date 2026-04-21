@@ -1,25 +1,6 @@
-# oideachais - Unified Celtic Education Platform
+# Oideachais — Celtic Education Platform
 
-A unified data platform for Celtic language education, covering 6 nations and 6 Celtic languages with comprehensive observability and AI agent capabilities.
-
-## Overview
-
-This project merges three sruth pipelines into a single, observable platform:
-- **oideachas**: Irish education curriculum (NCCA, SEC, curriculumonline.ie)
-- **teanga**: Celtic language processing (Irish, Welsh, Scottish Gaelic, Manx, Cornish, Breton)
-- **oideachas_oileáin**: British Isles education statistics (England, Scotland, Wales, NI)
-
-## Features
-
-| Category | Features |
-|----------|----------|
-| **Data Assets** | 37+ Dagster assets across 4 domains (Ireland, UK, Celtic, Geospatial) |
-| **Data Sources** | 30+ DLT sources for curriculum, statistics, and language data |
-| **Geospatial** | DuckDB Spatial with 60k+ statistical area boundaries |
-| **Vector Search** | LanceDB semantic search across curriculum content |
-| **LLM Extraction** | BAML schemas for type-safe structured outputs |
-| **AI Agents** | ADK-based multi-agent system with domain routing |
-| **Observability** | Full Datadog, MLflow, Langfuse, Ragas, Kafka integration |
+Oideachais is a pan-Celtic curriculum search, content management, and learning outcomes platform. It leverages AI to bridge the gap between official curriculum documents and interactive learning experiences.
 
 ## Architecture
 
@@ -57,460 +38,205 @@ This project merges three sruth pipelines into a single, observable platform:
                                                                       └─────────────────┘
 ```
 
-## Directory Structure
+## 🛠 Deployment Configuration
+
+- **Development**: Managed via `compose.dev.yaml` for local hot-reloading.
+- **Production**: Deployed as a **Komodo Stack** on the **MacBook M4 Max**.
+- **Secrets**: Injected via **Locket** sidecar, pulling from 1Password.
+- **Routing**: Securely exposed via **Pangolin** at `oideachais.cianfhoghlaim.ie`.
+
+---
+
+## 🇮🇪 Ireland Education Pipelines
+
+The `dlt_sources/ireland/` directory is the primary data ingestion layer for the Republic of Ireland's education system. It provides a comprehensive suite of DLT (Data Load Tool) sources that crawl, extract, normalise, and deduplicate curriculum data from every major Irish education body.
+
+### Data Sources
+
+The pipelines ingest data from five principal Irish education organisations, each serving a distinct role in the national education infrastructure:
+
+| Source | Organisation | URL | Description |
+| :--- | :--- | :--- | :--- |
+| **Curriculum Online** | NCCA | `curriculumonline.ie` | The official portal for all Irish curriculum documentation — from Aistear (Early Childhood, ages 1–6) through Primary (5–12), Junior Cycle (12–15), and Senior Cycle (16–18). Bilingual (English/Irish). |
+| **NCCA** | National Council for Curriculum and Assessment | `ncca.ie` | The statutory body responsible for curriculum development and assessment policy. Publishes specifications, guidelines, and consultation documents. |
+| **SEC** | State Examinations Commission | `examinations.ie` | Administers the Junior Certificate and Leaving Certificate examinations. Provides chief examiner reports, marking schemes, exam material archives, and statistics. |
+| **Oide** | Education Support Services | `oide.ie` | Delivers continuing professional development (CPD) for teachers. Contains subject-specific support materials and pedagogical resources. |
+| **Department of Education** | Gov.ie | `gov.ie/en/organisation/department-of-education/` | Government education policy, circulars, and official guidance documents. |
+
+### Pipeline Modules
+
+#### Core Curriculum Ingestion
+
+- **[`curriculum_source.py`](dlt_sources/ireland/curriculum_source.py)** — The unified entry point. Merges content from curriculumonline.ie, ncca.ie, and examinations.ie into a single, deduplicated data source organised by `(cycle, subject, language)`. Supports subject-centric crawling with cross-source content hashing and provenance tracking.
+
+- **[`curriculum_registry.py`](dlt_sources/ireland/curriculum_registry.py)** — Subject taxonomy and URL resolution engine. Reads from `curriculum_index.json` to provide a centralised registry of all Irish curriculum subjects, their associated cycles (Junior Cycle, Senior Cycle), levels (Foundation, Ordinary, Higher), and source-specific URL patterns. Generates crawl configurations for each subject.
+
+- **[`curriculum_document.py`](dlt_sources/ireland/curriculum_document.py)** — Unified Pydantic model for all Irish curriculum documents. Defines the core data schema including `LearningOutcome`, `AssessmentInfo`, `ContentQuality`, `EducationLevel`, and `Language` (en/ga/bilingual) enums. Handles NCCA specifications, SEC exam papers, Department circulars, and textbook content.
+
+#### Per-Subject Sources (`subjects/`)
+
+- **[`subjects/base.py`](dlt_sources/ireland/subjects/base.py)** — Foundation for per-subject DLT resources. Handles subject-specific URL resolution, Firecrawl crawling with rate limiting, PDF URL extraction from pages, bilingual support (EN/GA), and content hashing for deduplication.
+
+- **[`subjects/junior_cycle.py`](dlt_sources/ireland/subjects/junior_cycle.py)** — Per-subject DLT resources for all 18 Junior Cycle subjects (Applied Technology, Business Studies, Classics, Engineering, English, Gaeilge, Geography, Graphics, History, Home Economics, Mathematics, MFL, Music, Religious Education, Science, Visual Art, Wood Technology). Each subject yields pages and PDF URLs from curriculumonline.ie.
+
+- **[`subjects/senior_cycle.py`](dlt_sources/ireland/subjects/senior_cycle.py)** — Per-subject DLT resources for all 34 Leaving Certificate subjects (Accounting through Technology). Each subject yields pages and PDF URLs from curriculumonline.ie and ncca.ie.
+
+#### Source Adapters & Normalisation
+
+- **[`source_adapters.py`](dlt_sources/ireland/source_adapters.py)** — Normalises output from different curriculum sources into a consistent `NormalizedPage` format. Implements the `SourceAdapter` protocol with concrete adapters for CurriculumOnline, NCCA, and Examinations.ie. Handles source-specific URL patterns, bilingual content (English/Irish), and metadata extraction (cycle, subject) from URLs.
+
+- **[`content_deduplication.py`](dlt_sources/ireland/content_deduplication.py)** — Cross-source content deduplication via content hashing. Tracks source provenance (which source provided which content), resolves canonical URLs, and manages incremental state to avoid re-processing unchanged pages.
+
+- **[`education_sources.py`](dlt_sources/ireland/education_sources.py)** — Configuration registry for all Irish education websites, including their URLs, supported languages, education stages, and descriptions.
+
+#### Examination Data
+
+- **[`exam_source.py`](dlt_sources/ireland/exam_source.py)** — DLT source for examinations.ie. Crawls and extracts chief examiner reports (200+ PDFs), exam material archives, marking schemes, statistics, and circulars. Uses Firecrawl for web crawling with configurable content type filtering.
+
+- **[`sec_aural_transcripts.py`](dlt_sources/ireland/sec_aural_transcripts.py)** — Parses structured transcript data from SEC aural exam scripts. Supports Irish Leaving Certificate aural transcripts with dialect tags (Connacht, Munster, Ulster), French/German/Spanish listening comprehension, and Junior Cycle aural components. Aligns with Canuint word-level alignments for unified training. Uses PyMuPDF4LLM for PDF extraction and BAML for structured entity extraction.
+
+- **[`edcolearning.py`](dlt_sources/ireland/edcolearning.py)** — Extracts Leaving Certificate exam audio resources from EdcoLearning.ie. Handles session-based authentication, Azure Blob storage access, and audio metadata extraction (year, level, language, paper type) for Irish, French, German, and Spanish exams.
+
+#### Intelligent Discovery
+
+- **[`agentic_discovery.py`](dlt_sources/ireland/agentic_discovery.py)** — Uses the Firecrawl agent for autonomous URL discovery and structured data extraction across Irish educational websites. Supports natural language discovery prompts (e.g., "Find all 2024 exam papers for Irish"), schema-driven extraction, multi-site coordination, and PDF/document discovery.
+
+- **[`json_seed.py`](dlt_sources/ireland/json_seed.py)** — Loads pre-existing scraped JSON data (from ncca.ie, curriculumonline.ie, examinations.ie) as seed data for pipeline bootstrapping. Normalises disparate JSON structures into a consistent schema for augmentation via Firecrawl.
+
+#### Statistical & Geospatial Data (`statistics/`)
+
+The `statistics/` subdirectory provides DLT sources for Irish national statistics that contextualise education data:
+
+- **[`statistics/cso_small_areas.py`](dlt_sources/ireland/statistics/cso_small_areas.py)** — Fetches Small Area statistics from the CSO (Central Statistics Office) PxStat API. Ireland's 18,641 Small Areas are the most granular geographic unit for census data. Covers population, age groups, educational attainment, housing, employment, and Irish language speakers (Census 2022 tables).
+
+- **[`statistics/geohive.py`](dlt_sources/ireland/statistics/geohive.py)** — Fetches geospatial boundaries from GeoHive.ie (ArcGIS FeatureServer). Provides Small Area boundaries, county boundaries, and Electoral Division boundaries for spatial joins with census and education data.
+
+- **[`statistics/met_office.py`](dlt_sources/ireland/statistics/met_office.py)** — UK Met Office DataHub integration for weather observations and climate data, supporting cross-border environmental context for education research.
+
+### Data Flow Architecture
 
 ```
-sruth/oideachais/
-├── api/                  # FastAPI application with Datadog APM
-│   ├── main.py           # App with observability lifespan
-│   └── routes/           # API endpoints
-├── agents/               # ADK-based AI agents
-│   ├── adk/
-│   │   ├── root_agent.py # Orchestrator with query routing
-│   │   ├── curriculum_agent.py
-│   │   ├── geospatial_agent.py
-│   │   ├── translation_agent.py
-│   │   ├── corpus_agent.py
-│   │   └── statistics_agent.py
-│   └── tools/            # Agent tools for search/retrieval
-├── cocoindex_flows/      # Vector embedding pipelines
-│   ├── curriculum_embedding.py  # Batch embedding (100+ min)
-│   ├── curriculum_translation.py
-│   └── geospatial_indexing.py
-├── dagster_defs/         # Dagster asset orchestration
-│   ├── assets/
-│   │   ├── ie_education_assets.py
-│   │   ├── uk_education_assets.py
-│   │   ├── celtic_language_assets.py
-│   │   ├── geospatial_assets.py
-│   │   ├── embedding_assets.py
-│   │   └── search_assets.py
-│   ├── resources.py
-│   └── schedules.py
-├── dlt_sources/          # Data ingestion sources
-│   ├── ireland/          # NCCA, SEC, curriculumonline
-│   ├── uk/               # England, Scotland, Wales, NI
-│   ├── celtic/           # Language resources (Dúchas, Tearma)
-│   └── geospatial/       # Boundaries and locations
-├── kafka/                # Event streaming
-│   ├── producer.py       # Confluent Kafka producer
-│   ├── consumer.py       # Consumer with observability
-│   ├── topics.py         # 25+ topic configurations
-│   └── schema_registry.py # Avro schemas
-├── observability/        # Unified observability stack
-│   ├── __init__.py       # All exports
-│   ├── agent_tracing.py  # Datadog LLMObs decorators
-│   ├── mlflow_config.py  # MLflow experiments
-│   ├── langfuse_config.py # LLM cost tracking
-│   ├── ragas_evaluator.py # RAG quality evaluation
-│   └── fastapi_middleware.py # Datadog APM
-├── storage/              # Database configurations
-│   ├── duckdb.py         # Single-threaded executor
-│   └── lancedb.py        # Vector store
-└── alignment/            # Bilingual en/ga alignment
+┌──────────────────────────────────────────────────────────────────┐
+│                    Irish Education Data Sources                   │
+├──────────────┬──────────────┬──────────────┬─────────────────────┤
+│ curriculum   │ examinations │    ncca.ie   │    oide.ie          │
+│ online.ie    │     .ie      │              │                     │
+└──────┬───────┴──────┬───────┴──────┬───────┴──────────┬──────────┘
+       │              │              │                  │
+       ▼              ▼              ▼                  ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                    Source Adapters (Normalisation)                │
+│  CurriculumOnlineAdapter │ NCCAAdapter │ ExaminationsAdapter     │
+└──────────────────────┬───────────────────────────────────────────┘
+                       │  NormalizedPage
+                       ▼
+┌──────────────────────────────────────────────────────────────────┐
+│              Content Deduplication & Provenance                   │
+│         (content hashing, canonical URL resolution)              │
+└──────────────────────┬───────────────────────────────────────────┘
+                       │  Deduplicated pages
+                       ▼
+┌──────────────────────────────────────────────────────────────────┐
+│              Curriculum Registry (Subject Taxonomy)               │
+│    (cycle → subject → language → source URL resolution)          │
+└──────────────────────┬───────────────────────────────────────────┘
+                       │  Structured curriculum data
+                       ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                    DLT Pipeline → DuckDB / LanceDB                │
+│              (persisted to Cloudflare R2 via DuckLake)            │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
-## Quick Start
+### Education Levels Covered
 
-### 1. Install Dependencies
+The Ireland pipelines cover the full spectrum of the Irish education system:
 
-```bash
-# Clone and navigate
-cd sruth/oideachais
+| Level | Ages | Qualifications |
+| :--- | :--- | :--- |
+| **Aistear** (Early Childhood) | 1–6 | Early Childhood Curriculum Framework |
+| **Primary** | 5–12 | Primary School Curriculum (incl. redeveloped 2025 curriculum) |
+| **Junior Cycle** | 12–15 | Junior Certificate / Junior Cycle (Level 1 & 2 LPs, Short Courses) |
+| **Senior Cycle** | 16–18 | Leaving Certificate (Established, LCA, LCVP) |
+| **Further Education** | 18+ | FETAC / QQI levels |
 
-# Install with uv
-uv sync
+### Bilingual Support
 
-# Install with observability extras
-uv sync --extra observability
+All pipeline modules support **bilingual content extraction** (English and Irish/Gaeilge). The `curriculumonline.ie` and `ncca.ie` sources maintain parallel content trees accessible via language prefixes (e.g., `/ga-ie/`). Source adapters handle language-specific URL routing and normalise both language variants into the unified schema.
 
-# Install with Kafka
-uv sync --extra kafka
-```
-
-### 2. Configure Environment
-
-```bash
-# Copy example environment
-cp .env.local.example .env.local
-
-# Edit with your credentials
-# Required: DATADOG, MLFLOW, LANGFUSE, KAFKA configs
-```
-
-### 3. Initialize Storage
-
-```bash
-# Create database schemas
-python -m storage.init_schemas
-
-# Initialize LanceDB tables
-python -m storage.init_lancedb
-```
-
-### 4. Start Services
-
-```bash
-# Start Dagster UI (asset orchestration)
-dagster dev -m dagster_defs.definitions
-
-# Start FastAPI (in another terminal)
-uvicorn api.main:app --reload
-
-# Start Kafka consumers (optional)
-python -m kafka.consumer
-```
-
-## Observability Stack
-
-### Datadog APM & LLMObs
-
-Full distributed tracing and LLM observability:
+### Quick Start
 
 ```python
-from observability import (
-    setup_datadog_apm,
-    trace_adk_agent,
-    GeminiLLMSpan,
-    annotate_span,
+import dlt
+from sruth.oideachais.dlt_sources.ireland import curriculum_source
+
+# Crawl Junior Cycle Mathematics (English)
+pipeline = dlt.pipeline(
+    pipeline_name="ireland_curriculum",
+    destination="duckdb",
+    dataset_name="ireland_education",
 )
 
-# Instrument FastAPI
-app = FastAPI()
-setup_datadog_apm(app)
-
-# Trace agents
-@trace_adk_agent("curriculum_search")
-async def search_curriculum(query: str):
-    with GeminiLLMSpan("gemini-2.0-flash", query) as span:
-        response = await llm.generate(query)
-        span.set_response(response, input_tokens=100, output_tokens=200)
-        return response
-
-# Annotate spans with metadata
-annotate_span(
-    input_data=query,
-    output_data=response,
-    metadata={"domain": "curriculum"},
-    metrics={"latency_ms": 150.0}
-)
-```
-
-### MLflow Experiment Tracking
-
-Track model experiments and metrics:
-
-```python
-from observability import mlflow_run, log_agent_metrics
-
-with mlflow_run("curriculum_embedding", tags={"nation": "ireland"}):
-    # Run embedding pipeline
-    result = flow.run()
-
-    # Log metrics
-    log_agent_metrics(
-        agent_name="embedding",
-        query="ireland_curriculum",
-        response_length=result["chunks"],
-        latency_ms=1500,
-        token_count=50000,
-    )
-```
-
-### Langfuse LLM Cost Tracking
-
-Track LLM costs and traces:
-
-```python
-from observability import langfuse_trace, create_generation
-
-with langfuse_trace("agent_query", user_id="user123") as trace:
-    response = await agent.process(query)
-
-    create_generation(
-        trace,
-        name="curriculum_search",
-        model="gemini-2.0-flash",
-        input_messages=[{"role": "user", "content": query}],
-        output=response.content,
-        usage={"prompt_tokens": 100, "completion_tokens": 200},
-    )
-```
-
-### Ragas RAG Evaluation
-
-Evaluate RAG quality:
-
-```python
-from observability import RagasEvaluator, EvaluationSample
-
-evaluator = RagasEvaluator()
-
-samples = [
-    EvaluationSample(
-        question="What are Junior Cycle learning outcomes?",
-        answer=generated_answer,
-        contexts=retrieved_contexts,
-        ground_truth="Expected answer",
-    )
-]
-
-results = await evaluator.evaluate(samples)
-# Returns: faithfulness, answer_relevancy, context_precision
-```
-
-### Confluent Kafka Streaming
-
-Stream events to Kafka:
-
-```python
-from kafka import get_producer, AGENT_QUERIES, AGENT_RESPONSES
-
-producer = get_producer()
-
-# Publish query event
-producer.produce(
-    AGENT_QUERIES.name,
-    key=session_id,
-    value={
-        "query_id": query_id,
-        "query": user_query,
-        "agent_name": "root_agent",
-    }
-)
-
-# Publish response event
-producer.produce(
-    AGENT_RESPONSES.name,
-    key=session_id,
-    value={
-        "response_id": response_id,
-        "content": response.content[:2000],
-        "latency_ms": latency,
-    }
-)
-producer.flush()
-```
-
-## Critical Constraints
-
-### DuckDB Single-Threaded Access
-
-DuckDB MUST use single-threaded access to prevent segfaults:
-
-```python
-from storage import SerialDatabaseExecutor
-
-executor = SerialDatabaseExecutor()
-result = await executor.execute(query)
-```
-
-### Embedding Batch Minimum
-
-Embeddings MUST be batched with minimum 100 per call:
-
-```python
-from cocoindex_flows import MIN_EMBEDDING_BATCH_SIZE, HNSW_DROP_THRESHOLD
-
-# MANDATORY: Batch minimum 100 (100x performance difference)
-# Unbatched 1000 texts: ~100s
-# Batched 1000 texts: ~1s
-
-config = EmbeddingConfig(
-    batch_size=100,  # MANDATORY minimum
-)
-```
-
-### HNSW Index Management
-
-Drop indexes before bulk inserts >50 rows:
-
-```python
-from cocoindex_flows import HNSW_DROP_THRESHOLD
-
-if row_count > HNSW_DROP_THRESHOLD:
-    # Drop index before insert
-    table.drop_index("vector_idx")
-
-    # Bulk insert
-    table.add(embeddings)
-
-    # Recreate index
-    table.create_index("vector_idx", index_type="IVF_HNSW")
-```
-
-## Kafka Topics
-
-| Topic | Purpose | Key |
-|-------|---------|-----|
-| `edu.curriculum.pages` | Curriculum page events | document_id |
-| `edu.curriculum.updates` | Curriculum update notifications | source |
-| `edu.exams.papers` | Exam paper events | exam_id |
-| `celtic.language.translations` | Translation events | source_lang |
-| `celtic.folklore.documents` | Folklore document events | collection |
-| `celtic.terminology.updates` | Terminology updates | term_id |
-| `geo.boundaries.updates` | Boundary data updates | nation |
-| `geo.schools.locations` | School location events | school_id |
-| `ai.embeddings.created` | Embedding creation events | table_name |
-| `ai.agent.queries` | Agent query events | session_id |
-| `ai.agent.responses` | Agent response events | session_id |
-| `eval.rag.scores` | RAG evaluation scores | evaluation_id |
-| `eval.agent.metrics` | Agent performance metrics | agent_name |
-
-## Environment Variables
-
-See `.env.local.example` for complete reference. Key variables:
-
-### Datadog
-```bash
-DD_API_KEY=your-api-key
-DD_SITE=datadoghq.eu
-DD_SERVICE=oideachais
-DD_LLMOBS_ENABLED=1
-DD_LLMOBS_ML_APP=celtic-education
-```
-
-### MLflow
-```bash
-MLFLOW_TRACKING_URI=http://localhost:5000
-MLFLOW_EXPERIMENT_NAME=oideachais
-```
-
-### Langfuse
-```bash
-LANGFUSE_HOST=https://cloud.langfuse.com
-LANGFUSE_PUBLIC_KEY=pk-...
-LANGFUSE_SECRET_KEY=sk-...
-```
-
-### Kafka
-```bash
-CONFLUENT_BOOTSTRAP_SERVERS=pkc-xxx.region.cloud:9092
-CONFLUENT_API_KEY=your-api-key
-CONFLUENT_API_SECRET=your-api-secret
-CONFLUENT_SCHEMA_REGISTRY_URL=https://psrc-xxx.region.cloud
-```
-
-### Google Cloud (ADK)
-```bash
-GOOGLE_CLOUD_PROJECT=your-project-id
-GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
-```
-
-## ADK Agents
-
-### Root Agent
-
-The root agent orchestrates queries to specialized domain agents:
-
-```python
-from agents import create_root_agent, AgentContext
-
-agent = create_root_agent()
-
-context = AgentContext(
-    query="What are the learning outcomes for Junior Cycle Irish?",
+# Ingest all Junior Cycle subjects from all sources
+pipeline.run(curriculum_source(
+    cycle="junior_cycle",
     language="en",
-    nation="ireland",
+))
+
+# Or target a specific subject
+pipeline.run(curriculum_source(
+    cycle="senior_cycle",
+    subject="mathematics",
+    language="en",
+))
+
+# Per-subject sources for fine-grained control
+from sruth.oideachais.dlt_sources.ireland.subjects import (
+    senior_cycle_source,
+    junior_cycle_source,
 )
 
-response = await agent.process(context)
-print(f"Domain: {response.domain}")  # curriculum
-print(f"Response: {response.content}")
-print(f"Sources: {len(response.sources)}")
+# All 34 Senior Cycle subjects
+pipeline.run(senior_cycle_source(language="en"))
+
+# All 18 Junior Cycle subjects
+pipeline.run(junior_cycle_source(language="ga"))
 ```
 
-### Domain Agents
+---
 
-| Agent | Domain | Capabilities |
-|-------|--------|--------------|
-| CurriculumAgent | curriculum | Search learning outcomes, subjects, exams |
-| GeospatialAgent | geospatial | Map queries, school locations, boundaries |
-| TranslationAgent | translation | Celtic language translation |
-| CorpusAgent | corpus | Folklore, stories, cultural content |
-| StatisticsAgent | statistics | Education statistics, comparisons |
+## 📂 Pipeline Directory Structure
 
-### Query Routing
-
-Queries are routed based on keywords and LLM classification:
-
-```python
-# Keyword routing (fast)
-"curriculum" -> CurriculumAgent
-"map", "location" -> GeospatialAgent
-"translate" -> TranslationAgent
-"folklore", "story" -> CorpusAgent
-"statistics", "compare" -> StatisticsAgent
-
-# LLM routing (fallback for ambiguous queries)
-Gemini 2.0 Flash classifies intent
 ```
-
-## Development
-
-### Running Tests
-
-```bash
-# Run all tests
-uv run pytest tests/
-
-# Run with coverage
-uv run pytest tests/ --cov=oideachais
-
-# Run specific test
-uv run pytest tests/test_agents.py -k "test_root_agent"
+dlt_sources/
+├── ireland/                        # 🇮🇪 Republic of Ireland
+│   ├── curriculum_source.py        # Unified curriculum DLT source
+│   ├── curriculum_registry.py      # Subject taxonomy & URL resolution
+│   ├── curriculum_document.py      # Pydantic document models
+│   ├── source_adapters.py          # Source normalisation adapters
+│   ├── content_deduplication.py    # Cross-source deduplication
+│   ├── education_sources.py        # Source site configurations
+│   ├── exam_source.py              # SEC examinations source
+│   ├── sec_aural_transcripts.py    # Aural transcript parsing
+│   ├── edcolearning.py             # EdcoLearning audio resources
+│   ├── agentic_discovery.py        # Firecrawl agent discovery
+│   ├── json_seed.py                # Seed data loader
+│   ├── subjects/                   # Per-subject DLT sources
+│   │   ├── base.py                 # Subject source foundation
+│   │   ├── junior_cycle.py         # 18 Junior Cycle subjects
+│   │   └── senior_cycle.py         # 34 Leaving Certificate subjects
+│   └── statistics/                 # Statistical & geospatial sources
+│       ├── cso_small_areas.py      # CSO census data
+│       ├── geohive.py              # GeoHive boundaries
+│       └── met_office.py           # Weather/climate data
+├── northern_ireland/               # Northern Ireland (UK)
+│   ├── ccea_curriculum.py          # CCEA curriculum
+│   ├── education_ni.py             # Education NI
+│   ├── etini.py                    # ETI NI inspections
+│   └── nisra.py                    # NISRA statistics
+├── great_britain/                  # England, Scotland, Wales
+│   ├── england/                    # National Curriculum, DfE, Ofsted
+│   ├── scotland/                   # CfE, SIMD, Insight
+│   └── wales/                      # Curriculum for Wales, Estyn
+└── crown_dependencies/             # Channel Islands, Isle of Man
 ```
-
-### Linting
-
-```bash
-# Run ruff
-uv run ruff check .
-
-# Auto-fix
-uv run ruff check --fix .
-```
-
-### Type Checking
-
-```bash
-uv run mypy oideachais/
-```
-
-## Deployment
-
-### Docker
-
-```bash
-# Build image
-docker build -t oideachais:latest .
-
-# Run with environment
-docker run -d \
-  --env-file .env.local \
-  -p 8000:8000 \
-  oideachais:latest
-```
-
-### Kubernetes
-
-See `bonneagar/oideachais/` for Kubernetes manifests.
-
-## Credits & Resources
-
-| Resource | Credits | Use For |
-|----------|---------|---------|
-| Modal | $280 | Serverless fine-tuning |
-| HuggingFace | Pro + $50 | Model hosting |
-| Google Cloud | £200 + $100 | Gemini API, compute |
-| Confluent | $400/mo | Kafka streaming |
-| Datadog | Trial | APM, LLMObs |
-
-## Related Documentation
-
-- [NCCA Curriculum](https://curriculumonline.ie)
-- [SEC Examinations](https://examinations.ie)
-- [Dúchas.ie Folklore](https://duchas.ie)
-- [Tearma.ie Terminology](https://tearma.ie)
-- [TanStack Start](https://tanstack.com/start)
-- [Google ADK](https://developers.google.com/agent-developer-kit)
