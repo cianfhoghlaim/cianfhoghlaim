@@ -15,10 +15,10 @@ These reports are the product of **informed and expert prompting** designed to l
 
 For more information on the capabilities and technology behind these files, refer to the following official Google documentation:
 
-*   **[Use Deep Research in Gemini Apps](https://support.google.com/gemini/answer/15685344)**: Primary user guide for the Deep Research feature.
-*   **[Gemini Deep Research Announcement](https://blog.google/products/gemini/google-gemini-deep-research-december-2024/)**: Overview of the agentic nature and browsing capabilities of the tool.
+*   **[Use Deep Research in Gemini Apps](https://support.google.com/gemini/answer/15719111)**: Primary user guide for the Deep Research feature.
+*   **[Gemini Deep Research Announcement](https://blog.google/products-and-platforms/products/gemini/google-gemini-deep-research/)**: Overview of the agentic nature and browsing capabilities of the tool.
 *   **[Gemini API - Deep Research Agent Guide](https://ai.google.dev/gemini-api/docs/deep-research)**: Technical documentation for developer-level agentic workflows.
-*   **[Upload & Analyze Files in Gemini](https://support.google.com/gemini/answer/14894700)**: Details on grounding research with user-provided PDFs and data.
+*   **[Upload & Analyze Files in Gemini](https://support.google.com/gemini/answer/14903178)**: Details on grounding research with user-provided PDFs and data.
 
 ---
 *Note: This archive serves as a repository for deep-dive investigations and policy syntheses conducted via advanced AI research agents.*
