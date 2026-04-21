@@ -88,12 +88,11 @@ To ensure transparency and verify the author's background, high-resolution scans
 *   **[Coláiste na Coiribe](./cian_cv/colaiste_na_coiribe.pdf)** | **[Scoil Iognáid](./cian_cv/scoil_iognaid.pdf)**
 *   **[Teaching Placement Reference](./cian_cv/placement_reference.pdf)** | **[Placement Feedback](./cian_cv/teaching_placement_feedback.pdf)**
 *   **[Part-Time Teaching Reference](./cian_cv/part_time_teaching_reference.pdf)** | **[BME Reference](./cian_cv/bme_reference.pdf)**
-*   **[Head of Counselling Reference](./cian_cv/head_of_counselling_reference.pdf)** | **[Apple Award](./cian_cv/apple_award.pdf)**
-*   **[Teaching Council Registration](./cian_cv/teaching_registration.pdf)**
-*   **[University of Galway Complaint (Covered Up)](./cian_cv/university_galway_complaint_covered_up.pdf)**
+*   **[Apple Award](./cian_cv/apple_award.pdf)** | **[Teaching Council Registration](./cian_cv/teaching_registration.pdf)**
 
 ### 🛡️ Cybersecurity & Trust
 *   **[Cybersecurity Professional Reference](./cian_cv/cybersecurity_reference.pdf)**
+*   **[University of Galway Complaint (Covered Up)](./cian_cv/university_galway_complaint_covered_up.pdf)**
 *   **[Threat Message Documentation (Evidence)](./cian_cv/threat_message.jpeg)**
 *   **[Verified Lack of Criminality (Garda Vetting ROI)](./cian_cv/garda_vetting_roi.pdf)**
 *   **[Children First Certificate (Safeguarding)](./cian_cv/children_first_certificate.pdf)**
@@ -102,6 +101,7 @@ To ensure transparency and verify the author's background, high-resolution scans
 ### 🏥 Medical & Trauma Verification
 *   **[C-PTSD Diagnosis (Chronic & Complex)](./cian_cv/chronic_complex_ptsd_diagnosis.pdf)**
 *   **[Generalized Anxiety Disorder (GAD) Diagnosis](./cian_cv/anxiety_disorder_diagnosis.pdf)**
+*   **[Head of Counselling Reference](./cian_cv/head_of_counselling_reference.pdf)**
 
 ### 🏛️ Civic, Political & Family Heritage
 *   **[Fine Gael Party Membership](./cian_cv/fine_gael_member.pdf)**
