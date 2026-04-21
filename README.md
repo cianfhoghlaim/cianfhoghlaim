@@ -22,7 +22,7 @@ The project is organized into domain-specific 'streams' (**sruthanna**) within t
 
 | Stream | Domain | Key Technologies & Architecture |
 | :--- | :--- | :--- |
-| `sruth/bonneagar/` | **Infrastructure (Taisce)** | **Modular Docker Stacks:** Manages 19+ services including PostgreSQL, Cognee (AI Memory), LakeFS (Versioning), and Langfuse (Observability). Utilizes **Locket** for 1Password secret injection and **Pangolin Blueprints** for declarative routing. |
+| `sruth/bonneagar/` | **Infrastructure (Taisce)** | **Multi-Cloud Zero-Trust Platform:** Pulumi IaC (Hetzner ARM + OCI ARM + Cloudflare WAF), Komodo GitOps orchestration (50+ services, 60+ procedures), Pangolin WireGuard networking (SSO, CrowdSec WAF, multi-tenant Traefik routing), Browser Automation (Hunter-Gatherer-Operator pattern), and ~45 modular Docker stacks. Secrets via 1Password Connect + Locket sidecars. |
 | `sruth/oideachais/` | **Education Platform** | **Full-Stack AI Education:** TanStack Start (Frontend), FastAPI (API), Dagster v1.13 (Orchestration), and DuckLake/LanceDB (Storage). Transforms curriculums into interactive learning outcomes via Gemini 2.0/Claude 3.7. |
 | `sruth/meaisínfhoghlaim/` | **Intelligence** | Opensource Huggingface.co model finetuning and educational asset generation in English and minority languages. |
 | `sruth/códeolas/` | **Code Intel** | **Beads & Chunkhound:** Deep codebase analysis and indexing via MCP (Model Context Protocol) servers. |
@@ -266,6 +266,190 @@ dlt_sources/
 
 ---
 
+## 🏗️ Bonneagar — Infrastructure & Platform Details
+
+> Full source: [`sruth/bonneagar/README.md`](sruth/bonneagar/README.md)
+
+Bonneagar (Irish: "infrastructure") is the backbone of the Cianfhoghlaim platform — a **multi-cloud, zero-trust infrastructure** that provisions, orchestrates, and secures 50+ containerised services across Oracle Cloud, Hetzner, and local ARM hardware. It combines declarative IaC (Pulumi), GitOps orchestration (Komodo), WireGuard tunneling (Pangolin), and a self-hosted browser automation stack to provide the foundation for all other sruthanna.
+
+### 🏗 Platform Architecture
+
+| Component | Technology | Role |
+| :--- | :--- | :--- |
+| **IaC** | Pulumi (TypeScript) | Provisions ARM servers on Hetzner Cloud and Oracle Cloud, Cloudflare DNS/WAF, and firewall rules. Includes Automation API for CI/CD deployment pipelines. |
+| **Orchestration** | Komodo | GitOps-managed container orchestration across 3 servers. 60+ declarative TOML procedures for multi-cloud deployments, canary rollouts, and automated rollbacks. |
+| **Zero-Trust Networking** | Pangolin + WireGuard | Identity-aware tunneled reverse proxy with SSO (Pocket ID + TinyAuth), CrowdSec WAF, Traefik v3 reverse proxy, and multi-tenant routing for `cianfhoghlaim.ie` and `aleyum.com`. |
+| **Browser Automation** | Patchright + Stagehand + Crawl4AI + Skyvern | Hunter-Gatherer-Operator pattern: Skyvern (vision-based Hunter), Crawl4AI (bulk Gatherer), Stagehand (precision Operator), all sharing a stealth Chromium grid. Exposes MCP, AG-UI, and TanStack AI protocols. |
+| **Secrets** | 1Password Connect + Locket | Zero-disk-secret deployment via Locket sidecar containers injecting tmpfs-backed secrets from 1Password Connect. |
+| **Observability** | Datadog APM + MLflow + Langfuse + Logfire | Three-tier: Datadog (full APM/metrics/logs), MLflow/Langfuse (ML/LLM-specific), Logfire (Python app tracing). |
+
+```
+                          ┌─────────────────────────────────────────────────────────────────┐
+                          │                    Bonneagar Infrastructure                      │
+                          └─────────────────────────────────────────────────────────────────┘
+                                                        │
+               ┌────────────────────────────────────────┼──────────────────────────────────────────┐
+               │                                        │                                          │
+               ▼                                        ▼                                          ▼
+ ┌─────────────────────────┐             ┌──────────────────────────┐              ┌──────────────────────────┐
+ │   Pulumi IaC            │             │   Komodo Orchestration   │              │   Pangolin Networking    │
+ │                         │             │                          │              │                          │
+ │ • Cloudflare WAF (31 🌍)│             │ • Core (OCI)             │              │ • WireGuard Tunnels      │
+ │ • Hetzner CAX41 (ARM)   │─────────────│ • Periphery (3 servers)  │──────────────│ • Traefik v3 Reverse Proxy│
+ │ • OCI Ampere A1 (ARM)   │             │ • 25 Stacks / 60+ Procs  │              │ • Pocket ID SSO          │
+ │ • Automation API deploy │             │ • Canary Deployments     │              │ • CrowdSec WAF           │
+ └─────────────────────────┘             │ • Staged Rollouts        │              │ • Multi-Tenant Routing   │
+                                         └──────────────────────────┘              │ • TinyAuth Forward Auth  │
+                                                                                    └──────────────────────────┘
+                                                        │
+               ┌────────────────────────────────────────┼──────────────────────────────────────────┐
+               │                                        │                                          │
+               ▼                                        ▼                                          ▼
+ ┌─────────────────────────┐             ┌──────────────────────────┐              ┌──────────────────────────┐
+ │   Browser Automation    │             │   ~45 Docker Stacks      │              │   Secrets & Observability│
+ │                         │             │                          │              │                          │
+ │ • Patchright Stealth    │             │ • Engineering (7)        │              │ • 1Password Connect      │
+ │ • Stagehand (Operator)  │─────────────│ • Infrastructure (3)     │──────────────│ • Locket Sidecars        │
+ │ • Crawl4AI (Gatherer)   │             │ • Machine Learning (5)   │              │ • Datadog APM + LLMObs   │
+ │ • Skyvern (Hunter)      │             │ • Storage (18)           │              │ • MLflow + Langfuse      │
+ │ • MCP / AG-UI / SSE     │             │ • Tools (9)              │              │ • Logfire + Ragas        │
+ └─────────────────────────┘             └──────────────────────────┘              └──────────────────────────┘
+```
+
+### 🖥️ Multi-Cloud Server Fleet
+
+| Server | Hardware | Location | Role | Key Services |
+| :--- | :--- | :--- | :--- | :--- |
+| **arm1-oci** | 4 ARM OCPUs, 24 GB RAM, 200 GB | Oracle Cloud London | Control Plane | Pangolin Core, Komodo Core, 1Password Connect, Garage S3, Forgejo, Qdrant |
+| **cax41-hetzner** | CAX41 ARM, 16 vCPU, 32 GB RAM | Hetzner Nuremberg | Primary Workloads | Memgraph, FalkorDB, MLflow, Langfuse, LanceDB, Cognee, Graphiti, Dagster, Browser Grid |
+| **bunchloch** | MacBook M4 Max, ~14 cores, 48 GB RAM | Local | Dev & Analytics | LakeFS, Lakekeeper, Convex, Crawl4AI, Media servers, Aleyum portal |
+
+### 🌐 Browser Automation (`browser/`)
+
+A self-hosted, multi-backend browser automation stack following the **Hunter-Gatherer-Operator** pattern:
+
+| Backend | Role | Cost |
+| :--- | :--- | :--- |
+| **Patchright** (stealth Chromium) | Shared browser grid with anti-detection | Free (self-hosted) |
+| **Crawl4AI** | High-throughput bulk extraction (Gatherer) | Free (self-hosted) |
+| **Skyvern** | Vision-based semantic navigation (Hunter) | Free (self-hosted) |
+| **Stagehand** | AI-powered precision interactions (Operator) | Free (self-hosted) |
+| **Browserbase** | Cloud browser fallback for anti-bot | Paid |
+| **Firecrawl** | Web scraping API with autonomous research | Paid |
+
+**Domain-Specific Scrapers:**
+
+| Scraper | Target | Extracts |
+| :--- | :--- | :--- |
+| [`duchas_scraper.py`](sruth/bonneagar/browser/sruth_browser/tools/duchas_scraper.py) | [duchas.ie](https://www.duchas.ie) | National Folklore Collection — 740K+ manuscript pages, images, transcriptions, metadata |
+| [`canuint_scraper.py`](sruth/bonneagar/browser/sruth_browser/tools/canuint_scraper.py) | [canuint.ie](https://www.canuint.ie) | Irish dialect audio recordings — Connacht, Munster, Ulster; TTS dataset export (LJSpeech format) |
+| [`examinations_scraper.py`](sruth/bonneagar/browser/sruth_browser/tools/examinations_scraper.py) | [examinations.ie](https://www.examinations.ie) | State Examination Commission — past papers (1999–2024), marking schemes, Chief Examiner Reports |
+
+**Multi-Protocol Server:** A single FastAPI server exposes three protocols simultaneously:
+- **MCP** (JSON-RPC) — Tool discovery/execution for AI agents
+- **AG-UI** (17-event SSE) — CopilotKit integration
+- **TanStack AI** (SSE) — Chat-based browser control
+
+### 🔄 Komodo Orchestration (`komodo/`)
+
+Declarative GitOps orchestration managing 25 stack definitions and 60+ automation procedures:
+
+**Key Procedures:**
+
+| Procedure | Purpose |
+| :--- | :--- |
+| [`deploy-cianfhoghlaim`](sruth/bonneagar/komodo/procedures/deploy-cianfhoghlaim.toml) | 6-stage full platform deployment across all servers |
+| [`deploy-multi-cloud`](sruth/bonneagar/komodo/procedures/deploy-multi-cloud.toml) | Dependency-ordered deployment: OCI → Hetzner → Local |
+| [`staged-rollout`](sruth/bonneagar/komodo/procedures/staged-rollout.toml) | Canary deployment with configurable % and auto-rollback |
+| [`rollback`](sruth/bonneagar/komodo/procedures/rollback.toml) | Safe rollback with pre-flight checks and optional snapshots |
+| [`health-check`](sruth/bonneagar/komodo/procedures/health-check.toml) | Aggregate health across all stacks with alerting |
+| [`init-site`](sruth/bonneagar/komodo/procedures/init-site.toml) | 5-stage new site bootstrap: validate → DNS → Pangolin → Ansible → verify |
+
+**Komodo-Managed Stacks:**
+
+| Stack Group | Services |
+| :--- | :--- |
+| **Sruth Pipelines** | Oideachais, Crypteolas, Tuath, Codeolas, Browser, Taighde |
+| **Dagster Unified** | Production Dagster (Hetzner) + Dev Dagster (MacBook) |
+| **Hetzner Databases** | Memgraph, FalkorDB, LanceDB, Cognee, Graphiti, MLflow, Langfuse, Kafka, Nimtable |
+| **OCI Control Plane** | Garage S3, Beszel, Dozzle, Qdrant, Forgejo + Runner |
+| **MacBook Analytics** | LakeFS, Lakekeeper, OLake-UI, Convex, Scraping stack |
+| **Pangolin Tunnels** | Newt (Hetzner), OLM (Oracle), OLM (Hetzner) |
+| **Observability** | Datadog APM + LLM Observability on all 3 servers |
+
+### 🛡️ Pangolin Zero-Trust Networking (`pangolin/`)
+
+An identity-aware tunneled reverse proxy providing zero-trust network access:
+
+```
+Internet → Cloudflare (DNS) → Gerbil (WireGuard, 132.145.27.89) → Traefik v3 → Services
+                                                                      ↓
+                                                            Pangolin API → Newt/OLM tunnel agents → Remote hosts
+```
+
+| Component | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Pangolin Core** | `fosrl/pangolin` | Identity-aware proxy with session management (30-day sessions) |
+| **Gerbil** | `fosrl/gerbil` | WireGuard tunnel controller (UDP 51820, TCP 80/443/8443) |
+| **Traefik v3** | `traefik:v3.4.0` | Reverse proxy with dynamic config, Let's Encrypt wildcard certs via Cloudflare DNS-01 |
+| **Pocket ID** | Passkey-based OIDC | SSO provider at `auth.cianfhoghlaim.ie` |
+| **TinyAuth v4** | Forward auth | OAuth integration with Pocket ID for resource protection |
+| **CrowdSec** | WAF + AppSec | Intrusion detection with virtual patching on port 7422 |
+| **Middleware Manager** | Traefik middleware UI | Predefined templates for auth, rate limiting, CORS, circuit breakers |
+
+**Multi-Tenant Routing:**
+
+| Tenant | Domain | Theme | Type |
+| :--- | :--- | :--- | :--- |
+| **Cianfhoghlaim** | `*.cianfhoghlaim.ie` | Celtic blue/green/gold, Inter + Playfair Display | Education Platform |
+| **Aleyum** | `*.aleyum.com` | Purple/amber/pink, Space Grotesk + Orbitron | Music & Game Dev Portfolio |
+
+**Agent-to-Agent (A2A) Resources:** Four AgentOS instances (Oideachais, Crypteolas, Browser, Aleyum) exposed via Pangolin with SSO protection, plus an internal A2A gateway for service mesh communication.
+
+### ⚡ Pulumi Infrastructure-as-Code (`pulumi/`)
+
+Three Pulumi projects (TypeScript) provisioning multi-cloud infrastructure:
+
+| Project | Cloud | Resources |
+| :--- | :--- | :--- |
+| [`cloudflare/`](sruth/bonneagar/pulumi/cloudflare/index.ts) | Cloudflare | WAF ruleset with geo-restriction (31 allowed countries) for 4 domains |
+| [`hetzner/`](sruth/bonneagar/pulumi/hetzner/index.ts) | Hetzner Cloud | CAX41 ARM server (16 vCPU, 32 GB, Nuremberg), SSH key, firewall (6 rules), Cloudflare DNS, cloud-init with Docker + sysctl tuning |
+| [`oci/`](sruth/bonneagar/pulumi/oci/index.ts) | Oracle Cloud | Ampere A1 ARM (4 OCPU, 24 GB, London), VCN/subnet/IGW/security lists, wildcard DNS, Automation API deploy pipeline |
+
+**Automation API ([`oci/deploy.ts`](sruth/bonneagar/pulumi/oci/deploy.ts)):** A 5-step CI/CD pipeline — `pulumi up` → wait for SSH → flush Oracle iptables → regenerate Ansible inventory → run Ansible playbook.
+
+### 📦 Infrastructure Stacks (`stacks/`)
+
+~45 modular Docker Compose stacks organised into 5 categories, each following the **Gold Standard** 5-file convention:
+
+```
+stacks/<category>/<stack>/
+├── compose.yaml      # Application services (healthchecks, named volumes, bridge networks)
+├── sidecar.yaml      # Locket sidecar for 1Password Connect secret injection (tmpfs, non-root)
+├── secrets.env       # Locket template with {{ op://dev-baile/... }} references
+├── pangolin.yaml     # Docker labels for Pangolin auto-discovery
+└── blueprint.yaml    # Pangolin routing rule (domain → site → hostname → port)
+```
+
+| Category | Count | Key Stacks |
+| :--- | :--- | :--- |
+| **Engineering** | 7 | Coder (VS Code), Crawl4AI (scraping), LiteLLM (AI gateway), MCPJungle (MCP management), Windmill (low-code pipelines) |
+| **Infrastructure** | 3 | Technitium DNS, Dozzle (log viewer), Pocket-ID (OIDC) |
+| **Machine Learning** | 5 | Cognee (GraphRAG), Graphiti (knowledge graphs), Langfuse v3 (LLM tracing), LMNR (LLM observability), OLake (DB→Iceberg replication) |
+| **Storage** | 18 | Garage (S3), Lakekeeper (Iceberg REST), LanceDB (vectors), Memgraph/FalkorDB (graphs), Qdrant (vector search), Kafka (streaming), Forgejo (Git/CI) |
+| **Tools** | 9 | Actual (finance), Blinko (notes), Linkwarden (bookmarks), Perplexica (AI search), Romm (game library) |
+
+### 🛠 Deployment Configuration
+
+- **Development**: Managed via `compose.dev.yaml` for local hot-reloading on MacBook M4 Max.
+- **Production**: Deployed as **Komodo Stacks** across OCI (control plane) and Hetzner (workloads).
+- **Secrets**: Injected via **Locket** sidecar, pulling from 1Password Connect at `arm1-oci:8080`.
+- **Routing**: Securely exposed via **Pangolin** at `*.cianfhoghlaim.ie` with CrowdSec WAF and TinyAuth SSO.
+- **DNS**: Cloudflare DNS with Let's Encrypt wildcard certificates via DNS-01 challenge.
+- **Monitoring**: Datadog APM agents on all servers; MLflow/Langfuse for ML/LLM observability.
+
+---
+
 ## ️ Knowledge & Research Vaults
 
 Beyond the active code streams, this repository serves as a massive knowledge base for British Isles cultural and political research.
@@ -350,12 +534,7 @@ To ensure transparency and verify the author's background, high-resolution scans
 
 ## 🛰️ Pangolin (Hybrid Strategy)
 
-To maximize performance while maintaining security, the architecture is split across two primary nodes:
-
-1.  **OCI (Control Plane - `arm1-oci`)**: Hosted on Oracle Cloud. Runs **Pangolin** for secure service discovery/routing, **Komodo Core** for orchestration, and core identity services.
-2.  **Local (Workload Host - `bunchloch`)**: Powered by a 48GB MacBook M4 Max. Hosts memory-intensive operations including **Vector/Graph DBs** (LanceDB, Cognee), **LLM Inference**, and heavy data analytics (**Dagster**, **LakeFS**).
-
-This hybrid approach ensures that sensitive data and heavy compute remain local ('Bunchloch'), while maintaining global accessibility and zero-trust security via the cloud control plane.
+> **See [Bonneagar — Infrastructure & Platform Details](#️-bonneagar--infrastructure--platform-details) for the full architecture.** The platform uses a two-tier Pangolin Convergence strategy: OCI (Control Plane) for availability, routing, and identity; and local MacBook M4 Max (Bunchloch) for high-performance compute, vector/graph databases, and heavy data analytics. All connectivity is secured via WireGuard tunnels with zero-trust authentication.
 
 ---
 
