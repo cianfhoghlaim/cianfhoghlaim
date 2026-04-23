@@ -5,7 +5,7 @@ description: Expert assistance for AI memory systems with Cognee. Use when users
 
 # Cognee - AI Memory Platform
 
-**Version:** 0.x | **Last Updated:** 2025-01
+**Version:** >=0.1.0 | **Last Updated:** 2025-04
 
 ## Overview
 
@@ -15,6 +15,9 @@ Cognee is an open-source AI memory platform that transforms data into persistent
 - **Semantic Search**: Vector + graph hybrid search
 - **Persistent Memory**: Long-term memory for AI agents
 - **Multi-Backend**: Support for various graph and vector databases
+- **Graph Traversal**: Navigate relationships for context-aware retrieval
+- **Temporal Tracking**: Track knowledge changes over time
+- **Multi-Modal**: Support text, images, and structured data
 
 **Documentation**: https://docs.cognee.ai
 

@@ -1,481 +1,199 @@
-# Taisce - Modular Docker Stacks
-
-Modular infrastructure stacks with separate compose, routing, and secrets configurations.
-
-## Architecture
-
-Each stack has four core files:
-
-```
-stacks/<name>/
-├── compose.yaml     # Docker Compose (standalone compatible)
-├── blueprint.yaml   # Pangolin routing (loaded by Newt)
-├── secrets.env      # Locket template (used by both exec and sidecar modes)
-└── sidecar.yaml     # Locket sidecar mode configuration
-```
-
-**Key Benefits:**
-- Compose files work standalone for development
-- Secrets managed separately via Locket (exec or sidecar mode)
-- Routing defined declaratively via Pangolin blueprints
-- Clear separation of concerns
-
-## Quick Start
-
-### Development (No Secrets)
-
-```bash
-# Copy example env file
-cp .env.local.example .env.local
-
-# Start a stack
-./scripts/stack.sh langfuse up -d
-
-# View logs
-./scripts/stack.sh langfuse logs -f
-
-# Stop
-./scripts/stack.sh langfuse down
-```
-
-### Production (With Locket)
-
-```bash
-# Ensure 1Password Connect token exists
-echo "your-token" > op_token
-
-# Start with Locket secret injection
-LOCKET_ENABLED=1 ./scripts/stack.sh langfuse up -d
-```
-
-## Available Stacks
-
-| Stack | Description | Port | Domain |
-|-------|-------------|------|--------|
-| autobase | PostgreSQL Cluster Automation | 8082 | autobase.cianfhoghlaim.ie |
-| beszel | Server Monitoring | 8090 | beszel.cianfhoghlaim.ie |
-| cognee | AI Memory/Knowledge Graph | 8001 | cognee.cianfhoghlaim.ie |
-| convex | Backend Platform | 3210 | convex.cianfhoghlaim.ie |
-| dozzle | Container Logs | 8080 | dozzle.cianfhoghlaim.ie |
-| dragonflydb | Redis Alternative | 6379 | (internal) |
-| falkordb | Redis-based Graph DB | 3000 | falkordb.cianfhoghlaim.ie |
-| garage | S3-Compatible Storage | 3900 | s3.cianfhoghlaim.ie |
-| graphiti | Knowledge Graph MCP | 8000 | graphiti.cianfhoghlaim.ie |
-| lakefs | Data Versioning | 8000 | lakefs.cianfhoghlaim.ie |
-| lakekeeper | Iceberg REST Catalog | 8181 | lakekeeper.cianfhoghlaim.ie |
-| lancedb | Vector Database | 8080 | lancedb.cianfhoghlaim.ie |
-| langfuse | LLM Observability | 3000 | langfuse.cianfhoghlaim.ie |
-| mathesar | PostgreSQL UI | 8000 | mathesar.cianfhoghlaim.ie |
-| memgraph | Graph Database | 3000 | memgraph.cianfhoghlaim.ie |
-| mlflow | ML Experiment Tracking | 5000 | mlflow.cianfhoghlaim.ie |
-| nimtable | Iceberg Table Manager | 3000 | nimtable.cianfhoghlaim.ie |
-| olake-ui | Database to Iceberg Replication | 8000 | olake.cianfhoghlaim.ie |
-| qdrant | Vector Search | 6333 | qdrant.cianfhoghlaim.ie |
-
-## Scripts
-
-### stack.sh - Stack Manager
-
-```bash
-# Usage
-./scripts/stack.sh <stack> <command> [args...]
-
-# Commands
-./scripts/stack.sh langfuse up -d      # Start detached
-./scripts/stack.sh langfuse down       # Stop
-./scripts/stack.sh langfuse logs -f    # Follow logs
-./scripts/stack.sh langfuse ps         # List containers
-./scripts/stack.sh langfuse restart    # Restart
-./scripts/stack.sh langfuse pull       # Update images
-
-# Production mode
-LOCKET_ENABLED=1 ./scripts/stack.sh langfuse up -d
-```
-
-### sync-blueprints.sh - Pangolin Blueprint Sync
-
-```bash
-# List available blueprints
-./scripts/sync-blueprints.sh --list
-
-# Preview combined blueprint
-./scripts/sync-blueprints.sh --dry-run
-
-# Sync all blueprints to Newt server
-./scripts/sync-blueprints.sh
-
-# Sync specific stacks only
-./scripts/sync-blueprints.sh langfuse cognee mlflow
-```
-
-## Deployment Modes
-
-| Mode | Compose | Secrets | Routing | Command |
-|------|---------|---------|---------|---------|
-| **Development** | compose.yaml | .env.local | localhost | `./scripts/stack.sh <stack> up` |
-| **Production (Exec)** | compose.yaml | secrets.env (Locket) | blueprint.yaml (Newt) | `LOCKET_ENABLED=1 ./scripts/stack.sh <stack> up` |
-| **Production (Sidecar)** | compose.yaml + sidecar.yaml | templates/ | blueprint.yaml (Newt) | `docker compose -f compose.yaml -f sidecar.yaml up` |
-| **Standalone** | compose.yaml | .env | Manual | `docker compose -f stacks/<stack>/compose.yaml up` |
-
-## Locket Modes
-
-Locket supports two modes for secret injection. Choose based on your application's needs:
-
-### Exec Mode (Default)
-
-Wraps `docker compose` and injects secrets as environment variables before containers start.
-
-**Use when:**
-- Application reads secrets from environment variables
-- Simple deployment with `LOCKET_ENABLED=1`
-- No need for hot-reloading secrets
-
-```bash
-# Via stack.sh wrapper
-LOCKET_ENABLED=1 ./scripts/stack.sh langfuse up -d
-
-# Or directly
-locket exec --provider op-connect \
-  --connect.host http://132.145.27.89:8080 \
-  --connect.token-file ./op_token \
-  --env-file stacks/langfuse/secrets.env \
-  -- docker compose -f stacks/langfuse/compose.yaml up -d
-```
-
-### Local 1Password CLI (op run) Mode
-
-For local development without 1Password Connect, you can use the 1Password CLI (`op run`) to inject secrets directly from your vault without relying on `.env` files.
-
-**Use when:**
-- Running locally on your machine
-- You have the 1Password Desktop App and CLI (`op`) installed
-- You want to avoid creating `.env` files with sensitive data
-
-```bash
-# 1. Start your local 1Password app and unlock it
-# 2. Run your stack using op run with a secrets template
-op run --env-file=stacks/langfuse/secrets.env -- docker compose -f stacks/langfuse/compose.yaml up -d
-```
-
-### Sidecar Mode
-
-Runs Locket as a container that writes secrets to a shared tmpfs volume.
-
-**Use when:**
-- Application reads secrets from files (`*_FILE` environment variables)
-- Need TLS certificates, SSH keys, or config files with embedded secrets
-- Want hot-reloading of secrets without container restart
-- Application supports dynamic config reloading (like Traefik)
-
-```bash
-# Start with sidecar
-cd stacks/langfuse
-docker compose -f compose.yaml -f sidecar.yaml up -d
-```
-
-**How it works:**
-1. Locket sidecar reads templates from `./templates/`
-2. Replaces `{{ op://vault/item/field }}` with actual secrets
-3. Writes resolved files to shared tmpfs volume `/run/secrets/locket`
-4. Application containers mount the volume read-only
-5. Secrets never touch disk (tmpfs is memory-backed)
-
-**Sidecar modes:**
-- `--mode=watch` - Watch templates and update on change (default)
-- `--mode=park` - Inject once, keep process alive for healthchecks
-- `--mode=one-shot` - Inject once and exit
-
-### Comparison
-
-| Feature | Exec Mode | Sidecar Mode |
-|---------|-----------|--------------|
-| Secret delivery | Environment variables | Files in tmpfs |
-| Hot-reload | No (restart required) | Yes (file watch) |
-| Setup complexity | Simple | Requires sidecar.yaml |
-| Best for | Most applications | File-based configs, certs |
-| Disk exposure | Never | Never (tmpfs) |
-
-## Configuration
-
-### Environment Variables
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `LOCKET_ENABLED` | Enable Locket secret injection | (empty) |
-| `OP_CONNECT_HOST` | 1Password Connect URL | http://132.145.27.89:8080 |
-| `OP_CONNECT_TOKEN_FILE` | Path to Connect token | ./op_token |
-| `TAISCE_DIR` | Base directory | (script parent) |
-
-### Development Secrets (.env.local)
-
-Copy the example file and customize:
-
-```bash
-cp .env.local.example .env.local
-```
-
-Default passwords are `devpassword` - never use in production.
-
-### Production Secrets (Locket)
-
-Secrets are stored in 1Password vault `taisce-secrets` with items per stack:
-- `langfuse-postgres`, `langfuse-clickhouse`, `langfuse-redis`, etc.
-- `cognee-postgres`, `cognee-memgraph`, `cognee-llm`
-- etc.
-
-Each `secrets.env` file uses Locket template syntax:
-```
-POSTGRES_PASSWORD={{ op://taisce-secrets/langfuse-postgres/password }}
-```
-
-## Pangolin Control Plane
-
-The Pangolin identity-aware proxy runs as the control plane at `pangolin/`.
-
-**Full documentation:** [PANGOLIN-SETUP.md](./PANGOLIN-SETUP.md)
-
-### Quick Reference
-
-| Service | URL | Purpose |
-|---------|-----|---------|
-| Pangolin Dashboard | pangolin.cianfhoghlaim.ie | Tunnel/resource management |
-| Pocket ID | auth.cianfhoghlaim.ie | Passkey-based OIDC |
-| TinyAuth | tinyauth.cianfhoghlaim.ie | Forward authentication |
-| Middleware Manager | middleware.cianfhoghlaim.ie | Traefik middleware UI |
-| Log Dashboard | logs.cianfhoghlaim.ie | Access log visualization |
-
-### Start Control Plane
-
-```bash
-# Development
-cd pangolin && docker compose up -d
-
-# Production (with secrets)
-cd pangolin && docker compose -f compose.yaml -f sidecar.yaml up -d
-```
-
-### Features
-
-- **TLS**: Wildcard certificates via Cloudflare DNS challenge
-- **Auth**: PocketID passkeys with TinyAuth forward auth
-- **Security**: HSTS, secure headers, TLS 1.2+, rate limiting
-- **Monitoring**: Log dashboard with OpenTelemetry tracing
-- **Protection**: CrowdSec intrusion detection/prevention
-
-## Pangolin Blueprints
-
-Blueprints define public routing via Pangolin/Newt:
-
-```yaml
-# stacks/langfuse/blueprint.yaml
-public-resources:
-  langfuse:
-    name: "Langfuse"
-    full-domain: "langfuse.cianfhoghlaim.ie"
-    protocol: "http"
-    targets:
-      - site: "arm1-oci"
-        hostname: "langfuse-web"
-        method: "http"
-        port: 3000
-```
-
-### Loading Blueprints
-
-1. **Sync to Newt** (recommended):
-   ```bash
-   ./scripts/sync-blueprints.sh
-   ```
-
-2. **Manual via Newt CLI**:
-   ```bash
-   newt --blueprint-file /path/to/blueprint.yaml
-   ```
-
-3. **Via Newt config directory**:
-   Place blueprint files in `/opt/newt/blueprints/`
-
-## Stack Profiles
-
-Some stacks have optional services via Docker Compose profiles:
-
-```bash
-# Cognee with MCP server
-docker compose -f stacks/cognee/compose.yaml --profile mcp up -d
-
-# Graphiti with REST API
-docker compose -f stacks/graphiti/compose.yaml --profile api up -d
-
-# Lakekeeper with Jupyter
-docker compose -f stacks/lakekeeper/compose.yaml --profile jupyter up -d
-
-# LanceDB with S3 mount
-docker compose -f stacks/lancedb/compose.yaml --profile s3 up -d
-
-# Beszel with local agent
-docker compose -f stacks/beszel/compose.yaml --profile agent up -d
-```
+# Bonneagar - Browser Automation & Infrastructure
+
+Bonneagar provides browser automation, agent orchestration, and infrastructure management for the Celtic Education Platform. This stream handles web scraping, MCP server implementations, and cloud infrastructure provisioning.
+
+## Tech Stack Overview
+
+### Core Python Packages
+| Package | Version | Purpose |
+|---------|---------|---------|
+| **httpx** | >=0.27.0 | Async HTTP client with HTTP/2 support |
+| **aiohttp** | >=3.9.0 | Async HTTP client/server framework |
+| **fastapi** | >=0.109.0 | Modern async web framework for APIs |
+| **uvicorn** | >=0.27.0 | ASGI server for FastAPI |
+| **pydantic** | >=2.5.0 | Data validation and settings management |
+
+### Agent Frameworks
+| Package | Version | Purpose |
+|---------|---------|---------|
+| **google-adk** | >=1.0.0 | Google's Agent Development Kit for multi-agent coordination |
+| **agno** | >=2.0.0 | Multi-agent orchestration with knowledge graphs and memory |
+| **mcp** | >=1.0.0 | Model Context Protocol for agent-tool integration |
+| **baml-py** | >=0.80.0 | Type-safe LLM function calling and schema generation |
+
+### Observability & Monitoring
+| Package | Version | Purpose |
+|---------|---------|---------|
+| **langfuse** | >=2.0.0 | LLM observability, tracing, and evaluation |
+| **logfire** | Latest | Structured logging with OpenTelemetry |
+| **mlflow** | >=2.18.0 | ML experiment tracking and model registry |
+| **ragas** | >=0.1.10 | RAG evaluation framework with trace-based metrics |
+| **datadog** | Latest | APM and infrastructure monitoring |
+
+### Infrastructure as Code
+| Package | Version | Purpose |
+|---------|---------|---------|
+| **@pulumi/hcloud** | Latest | Hetzner Cloud infrastructure provisioning |
+| **@pulumi/oci** | Latest | Oracle Cloud Infrastructure provisioning |
+| **@1password/connect** | Latest | 1Password Connect SDK for secrets management |
+
+### Browser Automation
+| Package | Version | Purpose |
+|---------|---------|---------|
+| **@browserbasehq/stagehand** | Latest | Browser automation with natural language actions |
+| **patchright** | Latest | Browser automation with patch-based control |
+| **playwright** | >=1.40.0 | Cross-browser automation and testing |
+
+## Key Features & Capabilities
+
+### Browser Automation
+- **Sruth Browser**: Custom MCP server for browser-based web scraping and interaction
+- **Firecrawl Integration**: Advanced web crawling with JavaScript rendering
+- **Natural Language Actions**: Use plain English to control browser interactions via Stagehand
+- **Multi-browser Support**: Chrome, Firefox, Safari via Playwright
+
+### Agent Orchestration
+- **Multi-Agent Coordination**: Sequential and parallel agent workflows via Google ADK and Agno
+- **Knowledge Graph Memory**: Persistent memory across agent sessions using Graphiti
+- **Tool Integration**: MCP protocol for seamless agent-tool communication
+- **Schema Generation**: Type-safe LLM function calling via BAML
+
+### Observability
+- **Full Tracing**: End-to-end tracing of all agent interactions via Langfuse
+- **Evaluation Framework**: RAG quality metrics via Ragas (faithfulness, answer relevance)
+- **ML Tracking**: Experiment tracking and model registry via MLflow
+- **Infrastructure Monitoring**: Datadog APM for performance insights
+
+### Infrastructure
+- **Multi-Cloud Support**: Hetzner Cloud and OCI provisioning via Pulumi
+- **Secrets Management**: 1Password Connect for secure secret injection
+- **Modular Stacks**: Docker Compose stacks for each service (see `stacks/` directory)
+- **Zero-Egress Design**: Federated lakehouse deployment with local processing
+
+## Latest Package Updates (April 2026)
+
+### Google ADK v1.0.0
+- Multi-agent coordination with hierarchical patterns
+- Google AI integration for enhanced reasoning
+- Scalable architecture for complex workflows
+
+### Agno v2.0.0
+- Knowledge graphs (v2.0+) for complex relationship tracking
+- Memory systems with temporal tracking
+- Knowledge bases for persistent storage
+
+### Langfuse v2.0.0
+- "Experiments as a First-Class Concept" for qualitative evaluation
+- Hosted MCP Server for native model context protocol support
+- Specialized Agent Observability UI
+
+### Ragas v0.1.10
+- Trace-based metrics for deeper insights
+- Faithfulness and answer relevance evaluation
+- Improved support for multi-modal RAG
 
 ## Directory Structure
 
 ```
-croí/taisce/
-├── .env.local.example      # Development secrets template
-├── .env.local              # Local development secrets (git-ignored)
-├── op_token                # 1Password Connect token (git-ignored)
-├── README.md               # This file
-├── config/                 # Shared config files (mounted by stacks)
-│   ├── garage.toml
-│   └── graphiti.config.yaml
-├── projects/               # Custom project directories
-│   ├── autobase/           # Autobase project
-│   ├── cognee/             # Cognee project files
-│   ├── ducklake/           # DuckLake project
-│   ├── motherduck-examples/ # MotherDuck examples
-│   ├── olake-data/         # OLake data files
-│   └── olake-ui/           # OLake UI project
-├── stacks/                 # 19 service stacks
+sruth/bonneagar/
+├── browser/              # Browser automation and MCP servers
+│   └── sruth_browser/   # Custom browser MCP server
+├── observability/        # Observability integrations
+├── pulumi/             # Infrastructure as code
+│   └── Provision Resources on Hetzner Cloud with Pulumi.md
+├── stacks/             # Docker Compose stacks
 │   ├── langfuse/
-│   │   ├── compose.yaml    # Docker Compose (standalone)
-│   │   ├── blueprint.yaml  # Pangolin routing
-│   │   ├── secrets.env     # Locket template (exec & sidecar)
-│   │   └── sidecar.yaml    # Locket sidecar mode
+│   ├── mlflow/
 │   ├── cognee/
-│   │   └── ...
-│   └── .../                # (17 stacks total)
-└── scripts/
-    ├── stack.sh            # Stack manager (exec mode)
-    └── sync-blueprints.sh  # Blueprint sync to Newt
+│   └── ... (19 stacks total)
+├── pangolin/           # Identity-aware proxy and routing
+├── komodo/             # Stack management
+├── scripts/            # Utility scripts
+├── templates/          # Stack templates
+├── AGENTS.md           # Agent documentation
+├── PANGOLIN-SETUP.md   # Pangolin setup guide
+└── README.md           # This file
 ```
 
-## Adding a New Stack
+## Quick Start
 
-1. Create the stack directory:
-   ```bash
-   mkdir -p stacks/mystack
-   ```
+### Browser Automation
 
-2. Create `compose.yaml` with `${VAR:-default}` pattern for all secrets:
-   ```yaml
-   name: mystack
-   services:
-     myapp:
-       image: myapp:latest
-       environment:
-         DB_PASSWORD: ${DB_PASSWORD:-devpassword}
-   ```
+```python
+from sruth.bonneagar.browser.sruth_browser import SruthBrowser
 
-3. Create `blueprint.yaml` for routing:
-   ```yaml
-   public-resources:
-     mystack:
-       name: "My Stack"
-       full-domain: "mystack.cianfhoghlaim.ie"
-       protocol: "http"
-       targets:
-         - site: "arm1-oci"
-           hostname: "myapp"
-           method: "http"
-           port: 8080
-   ```
+# Initialize browser
+browser = SruthBrowser()
 
-4. Create `secrets.env` for Locket exec mode:
-   ```
-   DB_PASSWORD={{ op://taisce-secrets/mystack/db_password }}
-   ```
+# Navigate and extract
+await browser.navigate("https://curriculumonline.ie")
+content = await browser.extract_content()
 
-5. Create `sidecar.yaml` for sidecar mode (uses same secrets.env):
-   ```yaml
-   services:
-     locket:
-       image: ghcr.io/bpbradley/locket:latest
-       user: "65532:65532"
-       command:
-         - "--provider=op-connect"
-         - "--connect.host=${OP_CONNECT_HOST:-http://132.145.27.89:8080}"
-         - "--connect.token-file=/run/secrets/op_token"
-         - "--map=/templates:/run/secrets/locket"
-       secrets:
-         - op_token
-       volumes:
-         - ./secrets.env:/templates/secrets.env:ro
-         - mystack-secrets:/run/secrets/locket
-       networks:
-         - mystack
+# Use natural language actions
+await browser.perform_action("Click on Junior Cycle Mathematics")
+```
 
-     myapp:
-       depends_on:
-         locket:
-           condition: service_healthy
-       volumes:
-         - mystack-secrets:/run/secrets/locket:ro
+### Agent Orchestration
 
-   secrets:
-     op_token:
-       file: ${OP_CONNECT_TOKEN_FILE:-../../op_token}
+```python
+from agno import Agent, AgentOrchestrator
 
-   volumes:
-     mystack-secrets:
-       driver: local
-       driver_opts:
-         type: tmpfs
-         device: tmpfs
-   ```
+# Create specialized agents
+researcher = Agent(name="researcher", role="Web research")
+analyzer = Agent(name="analyzer", role="Content analysis")
 
-6. Add defaults to `.env.local.example`:
-   ```
-   # MYSTACK
-   DB_PASSWORD=devpassword
-   ```
+# Orchestrate workflow
+orchestrator = AgentOrchestrator(
+    agents=[researcher, analyzer],
+    workflow="sequential"
+)
 
-7. Create 1Password items in `taisce-secrets` vault.
+result = await orchestrator.run("Research Irish curriculum updates")
+```
 
-8. Test:
-   ```bash
-   # Development
-   ./scripts/stack.sh mystack up -d
-   ./scripts/stack.sh mystack logs -f
-
-   # Production (exec mode)
-   LOCKET_ENABLED=1 ./scripts/stack.sh mystack up -d
-
-   # Production (sidecar mode)
-   cd stacks/mystack
-   docker compose -f compose.yaml -f sidecar.yaml up -d
-   ```
-
-## Troubleshooting
-
-### Stack won't start
+### Infrastructure Provisioning
 
 ```bash
-# Check compose file syntax
-docker compose -f stacks/<stack>/compose.yaml config
+# Provision Hetzner Cloud resources
+cd pulumi
+pulumi up
 
-# Check for missing env vars
-docker compose -f stacks/<stack>/compose.yaml config --quiet
+# Start a stack
+cd ../stacks/langfuse
+docker compose up -d
 ```
 
-### Locket errors
+## Related Documentation
 
-```bash
-# Test 1Password Connect
-curl http://132.145.27.89:8080/v1/vaults
+- [AGENTS.md](AGENTS.md) - Agent capabilities and patterns
+- [PANGOLIN-SETUP.md](PANGOLIN-SETUP.md) - Identity-aware proxy setup
+- [.skills/google-adk/SKILL.md](../../.skills/google-adk/SKILL.md) - Google ADK documentation
+- [.skills/agno/SKILL.md](../../.skills/agno/SKILL.md) - Agno framework documentation
+- [.skills/langfuse/SKILL.md](../../.skills/langfuse/SKILL.md) - Langfuse observability
+- [.skills/ragas/SKILL.md](../../.skills/ragas/SKILL.md) - RAG evaluation
 
-# Test secret resolution
-locket exec --provider op-connect \
-  --connect.host http://132.145.27.89:8080 \
-  --connect.token-file ./op_token \
-  --env-file stacks/langfuse/secrets.env \
-  -- env | grep -E '^(POSTGRES|REDIS|MINIO)'
-```
+## Deployment
 
-### Blueprint not loading
+- **Development**: Local Docker Compose stacks
+- **Production**: Komodo stacks on Hetzner Cloud and OCI
+- **Secrets**: 1Password Connect via Locket
+- **Routing**: Pangolin identity-aware proxy
 
-```bash
-# Validate YAML syntax
-yamllint stacks/<stack>/blueprint.yaml
+## Architecture
 
-# Check Newt logs
-ssh ubuntu@132.145.27.89 "cd /opt/newt && docker compose logs -f"
-```
+Bonneagar follows a modular architecture with clear separation of concerns:
+
+1. **Browser Layer**: Web scraping and automation via Playwright, Stagehand, and custom MCP servers
+2. **Agent Layer**: Multi-agent orchestration via Google ADK and Agno
+3. **Observability Layer**: Tracing, evaluation, and monitoring via Langfuse, Ragas, and MLflow
+4. **Infrastructure Layer**: Cloud provisioning via Pulumi and Docker Compose stacks
+5. **Security Layer**: Secrets management via 1Password Connect and identity-aware routing via Pangolin
+
+## Contributing
+
+When adding new packages or updating existing ones:
+
+1. Update the Tech Stack Overview table
+2. Add relevant skills documentation to `.skills/`
+3. Update AGENTS.md with new agent patterns
+4. Test with `docker compose` stacks before production deployment

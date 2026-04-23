@@ -2,6 +2,62 @@
 
 Oideachais is a pan-Celtic curriculum search, content management, and learning outcomes platform. It leverages AI to bridge the gap between official curriculum documents and interactive learning experiences.
 
+## Tech Stack Overview
+
+### Data Orchestration
+| Package | Version | Purpose |
+|---------|---------|---------|
+| **dagster** | >=1.9.0 | Data orchestration platform with asset-based pipelines |
+| **dlt** | >=1.4.0 | Data load tool for Pythonic pipelines with streaming support |
+| **duckdb** | >=1.1.0 | In-process analytical database for local data processing |
+| **lancedb** | >=0.15.0 | Vector database with HNSW indexing and MVCC safety |
+| **neo4j** | >=5.0.0 | Graph database for relationship modeling |
+
+### Machine Learning & Embeddings
+| Package | Version | Purpose |
+|---------|---------|---------|
+| **sentence-transformers** | >=3.0.0 | State-of-the-art sentence embeddings |
+| **transformers** | >=4.45.0 | Pre-trained models and tokenizers |
+| **torch** | >=2.4.0 | Deep learning framework with GPU acceleration |
+| **unsloth** | >=2024.12 | LLM fine-tuning with 2x faster training |
+
+### Frontend Framework
+| Package | Version | Purpose |
+|---------|---------|---------|
+| **React** | ^18.3.1/^19.0.0 | UI library for interactive interfaces |
+| **TypeScript** | ^5.0.0/^5.7.0 | Type-safe JavaScript development |
+| **Vite** | ^6.0.0 | Fast build tool and dev server |
+| **TanStack Router** | ^1.144.0 | Type-safe routing with data loading |
+| **CopilotKit** | >=0.1.0 | AI agent UI framework for React |
+| **Vinxi** | ^0.5.1 | Full-stack framework (Poimandres) |
+| **@tanstack/start** | ^1.94.0 | React framework with RSC and edge runtime |
+
+### Agent Frameworks
+| Package | Version | Purpose |
+|---------|---------|---------|
+| **google-adk** | >=0.1.0 | Google's Agent Development Kit for multi-agent coordination |
+| **agno** | >=2.0.0 | Multi-agent orchestration with knowledge graphs |
+| **litellm** | Latest | Unified interface for 100+ LLM providers |
+| **cocoindex** | >=0.1.0 | Indexing and search for unstructured data |
+
+### Memory & Knowledge Systems
+| Package | Version | Purpose |
+|---------|---------|---------|
+| **graphiti-core** | >=0.5.0 | Temporal knowledge graph with bi-temporal model |
+| **cognee** | >=0.1.0 | Graph-based knowledge management with temporal tracking |
+
+### Data Transformation
+| Package | Version | Purpose |
+|---------|---------|---------|
+| **sqlmesh[duckdb]** | >=0.228.1 | Data transformation framework with DuckDB integration |
+
+### Observability & Monitoring
+| Package | Version | Purpose |
+|---------|---------|---------|
+| **langfuse** | >=2.0.0 | LLM observability with tracing and evaluation |
+| **ragas** | >=0.1.10 | RAG evaluation with trace-based metrics |
+| **ddtrace** | >=2.15.0 | Datadog APM tracing |
+
 ## Architecture
 
 ```
@@ -12,30 +68,30 @@ Oideachais is a pan-Celtic curriculum search, content management, and learning o
          ┌────────────────────────────────────┼────────────────────────────────────┐
          │                                    │                                    │
          ▼                                    ▼                                    ▼
-┌─────────────────┐              ┌─────────────────────┐              ┌─────────────────┐
-│   DLT Sources   │              │   Dagster Assets    │              │   ADK Agents    │
-│                 │              │                     │              │                 │
-│ • Ireland (8)   │──────────────│ • ireland_education │──────────────│ • RootAgent     │
-│ • UK (12)       │              │ • uk_education      │              │ • Curriculum    │
-│ • Celtic (6)    │              │ • celtic_language   │              │ • Geospatial    │
-│ • Geospatial(4) │              │ • geospatial        │              │ • Translation   │
-└─────────────────┘              │ • embeddings        │              │ • Corpus        │
-                                 │ • evaluation        │              │ • Statistics    │
-                                 └─────────────────────┘              └─────────────────┘
-                                              │
+ ┌─────────────────┐              ┌─────────────────────┐              ┌─────────────────┐
+ │   DLT Sources   │              │   Dagster Assets    │              │   ADK Agents    │
+ │                 │              │                     │              │                 │
+ │ • Ireland (8)   │──────────────│ • ireland_education │──────────────│ • RootAgent     │
+ │ • UK (12)       │              │ • uk_education      │              │ • Curriculum    │
+ │ • Celtic (6)    │              │ • celtic_language   │              │ • Geospatial    │
+ │ • Geospatial(4) │              │ • geospatial        │              │ • Translation   │
+ └─────────────────┘              │ • embeddings        │              │ • Corpus        │
+                                  │ • evaluation        │              │ • Statistics    │
+                                  └─────────────────────┘              └─────────────────┘
+                                               │
          ┌────────────────────────────────────┼────────────────────────────────────┐
          │                                    │                                    │
          ▼                                    ▼                                    ▼
-┌─────────────────┐              ┌─────────────────────┐              ┌─────────────────┐
-│    Storage      │              │   CocoIndex Flows   │              │  Observability  │
-│                 │              │                     │              │                 │
-│ • DuckDB        │◄─────────────│ • curriculum_embed  │─────────────►│ • Datadog APM   │
-│ • LanceDB       │              │ • translation       │              │ • Datadog LLMObs│
-│ • Memgraph      │              │ • geospatial_index  │              │ • MLflow        │
-└─────────────────┘              └─────────────────────┘              │ • Langfuse      │
-                                                                      │ • Ragas         │
-                                                                      │ • Kafka         │
-                                                                      └─────────────────┘
+ ┌─────────────────┐              ┌─────────────────────┐              ┌─────────────────┐
+ │    Storage      │              │   CocoIndex Flows   │              │  Observability  │
+ │                 │              │                     │              │                 │
+ │ • DuckDB        │◄─────────────│ • curriculum_embed  │─────────────►│ • Datadog APM   │
+ │ • LanceDB       │              │ • translation       │              │ • Datadog LLMObs│
+ │ • Memgraph      │              │ • geospatial_index  │              │ • MLflow        │
+ └─────────────────┘              └─────────────────────┘              │ • Langfuse      │
+                                                                       │ • Ragas         │
+                                                                       │ • Kafka         │
+                                                                       └─────────────────┘
 ```
 
 ## 🛠 Deployment Configuration
@@ -99,7 +155,7 @@ The pipelines ingest data from five principal Irish education organisations, eac
 
 #### Intelligent Discovery
 
-- **[`agentic_discovery.py`](dlt_sources/ireland/agentic_discovery.py)** — Uses the Firecrawl agent for autonomous URL discovery and structured data extraction across Irish educational websites. Supports natural language discovery prompts (e.g., "Find all 2024 exam papers for Irish"), schema-driven extraction, multi-site coordination, and PDF/document discovery.
+- **[`agentic_discovery.py`](dlt_sources/ireland/agentic_discovery.py)** — Uses Firecrawl agent for autonomous URL discovery and structured data extraction across Irish educational websites. Supports natural language discovery prompts (e.g., "Find all 2024 exam papers for Irish"), schema-driven extraction, multi-site coordination, and PDF/document discovery.
 
 - **[`json_seed.py`](dlt_sources/ireland/json_seed.py)** — Loads pre-existing scraped JSON data (from ncca.ie, curriculumonline.ie, examinations.ie) as seed data for pipeline bootstrapping. Normalises disparate JSON structures into a consistent schema for augmentation via Firecrawl.
 
@@ -162,7 +218,7 @@ The Ireland pipelines cover the full spectrum of the Irish education system:
 
 ### Bilingual Support
 
-All pipeline modules support **bilingual content extraction** (English and Irish/Gaeilge). The `curriculumonline.ie` and `ncca.ie` sources maintain parallel content trees accessible via language prefixes (e.g., `/ga-ie/`). Source adapters handle language-specific URL routing and normalise both language variants into the unified schema.
+All pipeline modules support **bilingual content extraction** (English and Irish/Gaeilge). The `curriculumonline.ie` and `ncca.ie` sources maintain parallel content trees accessible via language prefixes (e.g., `/ga-ie/`). Source adapters handle language-specific URL routing and normalise both language variants into a unified schema.
 
 ### Quick Start
 
@@ -240,3 +296,98 @@ dlt_sources/
 │   └── wales/                      # Curriculum for Wales, Estyn
 └── crown_dependencies/             # Channel Islands, Isle of Man
 ```
+
+## Latest Package Updates (April 2026)
+
+### Dagster v1.9.0
+- Asset-based pipelines with observability
+- Partitioning support for time-series data
+- Improved sensor and schedule definitions
+
+### DLT v1.4.0
+- Streaming support for real-time data
+- Schema inference for automatic type detection
+- Improved incremental loading with cursors
+
+### LanceDB v0.15.0
+- HNSW indexing for faster vector search
+- MVCC safety for concurrent operations
+- Hybrid search combining semantic and keyword
+
+### Graphiti-Core v0.5.0
+- Bi-temporal model for temporal tracking
+- Episodic memory for contextual retrieval
+- Improved graph traversal algorithms
+
+### Cognee v0.1.0
+- Graph traversal for relationship queries
+- Temporal tracking for evolving data
+- Multi-modal support for text, images, audio
+
+### Unsloth 2024.12
+- Multi-lingual support for Celtic languages
+- Flash attention for 2x faster training
+- Improved memory efficiency
+
+### TanStack Start v1.94.0
+- React Server Components (RSC) support
+- Edge runtime for faster deployments
+- Streaming suspense for better UX
+
+### CopilotKit v0.1.0
+- Multi-agent support for complex workflows
+- State management for agent interactions
+- React components for consistent AI interfaces
+
+### Langfuse v2.0.0
+- "Experiments as a First-Class Concept" for qualitative evaluation
+- Hosted MCP Server for native model context protocol support
+- Specialized Agent Observability UI
+
+### Ragas v0.1.10
+- Trace-based metrics for deeper insights
+- Faithfulness and answer relevance evaluation
+- Support for multi-modal RAG
+
+## Related Documentation
+
+- [.skills/dagster/SKILL.md](../../.skills/dagster/SKILL.md) - Dagster orchestration
+- [.skills/dlt/SKILL.md](../../.skills/dlt/SKILL.md) - DLT data pipelines
+- [.skills/lancedb/SKILL.md](../../.skills/lancedb/SKILL.md) - LanceDB vector database
+- [.skills/graphiti-core/SKILL.md](../../.skills/graphiti-core/SKILL.md) - Temporal knowledge graphs
+- [.skills/cognee/SKILL.md](../../.skills/cognee/SKILL.md) - Graph-based knowledge management
+- [.skills/unsloth/SKILL.md](../../.skills/unsloth/SKILL.md) - LLM fine-tuning
+- [.skills/copilotkit/SKILL.md](../../.skills/copilotkit/SKILL.md) - AI agent UI framework
+- [.skills/vinxi/SKILL.md](../../.skills/vinxi/SKILL.md) - Full-stack framework
+- [.skills/tanstack-start/SKILL.md](../../.skills/tanstack-start/SKILL.md) - React framework with RSC
+- [.skills/langfuse/SKILL.md](../../.skills/langfuse/SKILL.md) - LLM observability
+- [.skills/ragas/SKILL.md](../../.skills/ragas/SKILL.md) - RAG evaluation
+
+## Deployment
+
+- **Development**: Local on MacBook M4 Max (48GB unified memory)
+- **Production**: Komodo stacks with zero-egress design
+- **Storage**: DuckDB (local) + LanceDB (vectors) + Neo4j (graphs)
+- **Observability**: Langfuse, MLflow, Datadog, Ragas
+- **Frontend**: React + TypeScript + Vite + TanStack Router + CopilotKit
+
+## Architecture
+
+Oideachais follows a layered architecture:
+
+1. **Data Layer**: DLT sources, Dagster assets, DuckDB storage
+2. **Processing Layer**: Embeddings, OCR, language processing, SQLMesh transformations
+3. **Memory Layer**: LanceDB (vectors), Graphiti (temporal graphs), Cognee (knowledge)
+4. **Agent Layer**: Google ADK and Agno for multi-agent orchestration
+5. **Frontend Layer**: React, TypeScript, Vite, TanStack Router, CopilotKit
+6. **Observability Layer**: Langfuse, Ragas, Datadog for monitoring
+
+## Contributing
+
+When adding new packages or updating existing ones:
+
+1. Update Tech Stack Overview table
+2. Add relevant skills documentation to `.skills/`
+3. Test with Dagster assets before production deployment
+4. Ensure observability integrations are configured
+5. Verify frontend components work with CopilotKit

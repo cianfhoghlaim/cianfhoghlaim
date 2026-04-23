@@ -5,7 +5,7 @@ description: Expert assistance for data orchestration with Dagster. Use when use
 
 # Dagster - Modern Data Orchestration
 
-**Version:** 1.12.x | **Last Updated:** 2025-01
+**Version:** >=1.9.0 | **Last Updated:** 2025-04
 
 ## Overview
 

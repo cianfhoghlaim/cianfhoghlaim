@@ -31,6 +31,101 @@ The project is organized into domain-specific 'streams' (**sruthanna**) within t
 | `sruth/web/` | **Frontend UI** | Real-time, type-safe user interfaces and AI chat dashboards |
 | `sruth/hmgcc/` | **Security Standards** | **HMGCC Compliance:** Implementation of government-grade security standards (Bailo, CyberChef, Gaffer, Stroom). |
 
+### 📦 Tech Stack Analysis by Directory
+
+Based on comprehensive package research across the three primary streams, here's the detailed tech stack breakdown:
+
+#### **sruth/bonneagar** — Browser Automation & Infrastructure
+
+| Category | Packages | Latest Versions & Key Features |
+| :--- | :--- | :--- |
+| **Core Backend** | httpx, aiohttp, fastapi, uvicorn, pydantic | FastAPI async backend with Pydantic v2 validation |
+| **Agent Frameworks** | google-adk, agno, mcp, baml-py | google-adk (>=0.1.0) multi-agent coordination; agno (>=2.0.0) knowledge graphs |
+| **Observability** | langfuse, logfire, mlflow, ragas, datadog | langfuse (>=2.0.0) prompt management & A/B testing; ragas (>=0.1.10) trace-based metrics |
+| **Infrastructure** | @pulumi/hcloud, @pulumi/oci, @1password/connect | Multi-cloud IaC with Hetzner & Oracle Cloud |
+| **Browser Automation** | @browserbasehq/stagehand, patchright, crawl4ai, skyvern | Stagehand (latest) AI-powered precision interactions; Patchright stealth Chromium |
+
+#### **sruth/meaisínfhoghlaim** — AI Agents & Data Engineering
+
+| Category | Packages | Latest Versions & Key Features |
+| :--- | :--- | :--- |
+| **Data Orchestration** | dagster, dlt, duckdb, lancedb, neo4j | dagster (>=1.9.0) asset-based pipelines; dlt (>=1.4.0) streaming support; lancedb (>=0.15.0) HNSW indexing & MVCC safety |
+| **ML/AI Core** | sentence-transformers, transformers, torch, accelerate | HuggingFace transformers with PyTorch backend |
+| **Agent Frameworks** | google-adk, agno, litellm, cocoindex | google-adk (>=0.1.0) multi-agent coordination; agno (>=2.0.0) knowledge graphs |
+| **Memory Systems** | cognee, graphiti-core | graphiti-core (>=0.5.0) temporal knowledge graphs; cognee (>=0.1.0) graph traversal & temporal tracking |
+| **Model Training** | unsloth, trl, datasets, mlflow, wandb | unsloth (>=2024.12) multilingual support & flash attention (2x faster) |
+| **Observability** | langfuse, ragas, ddtrace, opentelemetry | langfuse (>=2.0.0) prompt management; ragas (>=0.1.10) trace-based metrics |
+
+#### **sruth/oideachais** — Education Pipeline & Frontend
+
+| Category | Packages | Latest Versions & Key Features |
+| :--- | :--- | :--- |
+| **Data Orchestration** | dagster, dlt, duckdb, lancedb, neo4j | dagster (>=1.9.0) asset-based pipelines; dlt (>=1.4.0) streaming support; lancedb (>=0.15.0) HNSW indexing |
+| **ML/AI Core** | sentence-transformers, transformers, torch, unsloth | sentence-transformers for curriculum embeddings; unsloth (>=2024.12) multilingual support |
+| **Frontend Stack** | React, TypeScript, Vite, TanStack Router, CopilotKit, Vinxi | tanstack-start (^1.94.0) React Server Components; vinxi (^0.5.1) full-stack framework; copilotkit (>=0.1.0) AI agent UI |
+| **Agent Frameworks** | google-adk, agno, cocoindex, litellm | google-adk (>=0.1.0) multi-agent coordination; agno (>=2.0.0) knowledge graphs |
+| **Memory Systems** | cognee, graphiti-core | graphiti-core (>=0.5.0) temporal knowledge graphs; cognee (>=0.1.0) graph traversal |
+| **Data Transformation** | sqlmesh | sqlmesh (>=0.228.1) DuckDB integration & virtual data warehouse |
+| **Observability** | langfuse, ragas, ddtrace | langfuse (>=2.0.0) prompt management; ragas (>=0.1.10) trace-based metrics |
+
+### 🔑 Latest Package Updates & Key Features
+
+| Package | Version | Key Features |
+| :--- | :--- | :--- |
+| **google-adk** | >=0.1.0 | Multi-agent coordination with Google AI integration |
+| **agno** | >=2.0.0 | Knowledge graphs feature for complex relationship tracking |
+| **dagster** | >=1.9.0 | Asset-based pipelines with observability and partitioning |
+| **dlt** | >=1.4.0 | Streaming support for real-time data pipelines |
+| **lancedb** | >=0.15.0 | HNSW indexing, MVCC safety, hybrid search capabilities |
+| **langfuse** | >=2.0.0 | Prompt management, A/B testing, trace-based analytics |
+| **ragas** | >=0.1.10 | Trace-based metrics for RAG evaluation |
+| **unsloth** | >=2024.12 | Multilingual support, flash attention, 2x faster training |
+| **tanstack-start** | ^1.94.0 | React Server Components, edge runtime, streaming suspense |
+| **vinxi** | ^0.5.1 | Full-stack framework with Vite-based architecture |
+| **copilotkit** | >=0.1.0 | AI agent UI framework with React components |
+| **graphiti-core** | >=0.5.0 | Temporal knowledge graphs with bi-temporal model |
+| **cognee** | >=0.1.0 | Graph traversal, temporal tracking, multi-modal support |
+| **sqlmesh** | >=0.228.1 | DuckDB integration, virtual data warehouse, CI/CD |
+| **@browserbasehq/stagehand** | Latest | AI-powered precision browser interactions |
+| **patchright** | Latest | Stealth Chromium browser with anti-detection |
+
+### 🚀 Key Platform Capabilities
+
+**Multi-Agent Orchestration:**
+- **Google-ADK** enables coordinated multi-agent workflows with Google AI integration
+- **Agno** provides knowledge graph-based agent memory and reasoning
+- **MCP (Model Context Protocol)** for tool discovery and execution across agents
+
+**Advanced Data Pipelines:**
+- **Dagster** asset-based orchestration with partitioned asset checks
+- **DLT** streaming support for real-time data ingestion
+- **SQLMesh** virtual data warehouse with DuckDB integration
+
+**Memory & Knowledge Systems:**
+- **Graphiti-Core** temporal knowledge graphs with bi-temporal model for tracking curriculum changes over time
+- **Cognee** graph traversal with temporal tracking and multi-modal support
+- **LanceDB** HNSW indexing and MVCC safety for concurrent vector operations
+
+**Observability & Evaluation:**
+- **Langfuse** prompt management with A/B testing capabilities
+- **Ragas** trace-based metrics for RAG evaluation
+- **DDTrace** and OpenTelemetry for distributed tracing
+
+**Frontend Innovation:**
+- **TanStack Start** with React Server Components and edge runtime
+- **Vinxi** full-stack framework with Vite-based architecture
+- **CopilotKit** AI agent UI components for seamless AI integration
+
+**Browser Automation:**
+- **Stagehand** AI-powered precision browser interactions
+- **Patchright** stealth Chromium with anti-detection
+- **Hunter-Gatherer-Operator** pattern for scalable web scraping
+
+**Model Training:**
+- **Unsloth** multilingual support with flash attention (2x faster training)
+- **TRL** and datasets for efficient model fine-tuning
+- **MLflow** and WandB for experiment tracking
+
 ---
 
 ## 📚 Oideachais — Education Platform Details
@@ -196,6 +291,7 @@ import dlt
 from sruth.oideachais.dlt_sources.ireland import curriculum_source
 
 # Crawl Junior Cycle Mathematics (English)
+# DLT (>=1.4.0) provides streaming support for real-time data pipelines
 pipeline = dlt.pipeline(
     pipeline_name="ireland_curriculum",
     destination="duckdb",
@@ -227,6 +323,17 @@ pipeline.run(senior_cycle_source(language="en"))
 # All 18 Junior Cycle subjects
 pipeline.run(junior_cycle_source(language="ga"))
 ```
+
+**Package Versions Used:**
+- **dlt** (>=1.4.0) — Streaming support for real-time data pipelines
+- **Dagster** (>=1.9.0) — Asset-based pipelines with observability
+- **DuckDB** — Fast local analytical processing
+- **LanceDB** (>=0.15.0) — Multi-modal vector storage with HNSW indexing
+
+**For detailed implementation guides:**
+- See [`.skills/dlt/SKILL.md`](.skills/dlt/SKILL.md) for DLT pipeline patterns
+- See [`.skills/dagster/SKILL.md`](.skills/dagster/SKILL.md) for Dagster orchestration
+- See [`.skills/lancedb/SKILL.md`](.skills/lancedb/SKILL.md) for vector database integration
 
 #### Pipeline Directory Structure
 
@@ -276,12 +383,13 @@ Bonneagar (Irish: "infrastructure") is the backbone of the Cianfhoghlaim platfor
 
 | Component | Technology | Role |
 | :--- | :--- | :--- |
-| **IaC** | Pulumi (TypeScript) | Provisions ARM servers on Hetzner Cloud and Oracle Cloud, Cloudflare DNS/WAF, and firewall rules. Includes Automation API for CI/CD deployment pipelines. |
+| **IaC** | Pulumi (TypeScript), @pulumi/hcloud, @pulumi/oci | Provisions ARM servers on Hetzner Cloud and Oracle Cloud, Cloudflare DNS/WAF, and firewall rules. Includes Automation API for CI/CD deployment pipelines. |
 | **Orchestration** | Komodo | GitOps-managed container orchestration across 3 servers. 60+ declarative TOML procedures for multi-cloud deployments, canary rollouts, and automated rollbacks. |
 | **Zero-Trust Networking** | Pangolin + WireGuard | Identity-aware tunneled reverse proxy with SSO (Pocket ID + TinyAuth), CrowdSec WAF, Traefik v3 reverse proxy, and multi-tenant routing for `cianfhoghlaim.ie` and `aleyum.com`. |
-| **Browser Automation** | Patchright + Stagehand + Crawl4AI + Skyvern | Hunter-Gatherer-Operator pattern: Skyvern (vision-based Hunter), Crawl4AI (bulk Gatherer), Stagehand (precision Operator), all sharing a stealth Chromium grid. Exposes MCP, AG-UI, and TanStack AI protocols. |
+| **Browser Automation** | @browserbasehq/stagehand (latest), Patchright, Crawl4AI, Skyvern | Hunter-Gatherer-Operator pattern: Skyvern (vision-based Hunter), Crawl4AI (bulk Gatherer), Stagehand (AI-powered precision Operator), all sharing a stealth Chromium grid. Exposes MCP, AG-UI, and TanStack AI protocols. |
 | **Secrets** | 1Password Connect + Locket | Zero-disk-secret deployment via Locket sidecar containers injecting tmpfs-backed secrets from 1Password Connect. |
-| **Observability** | Datadog APM + MLflow + Langfuse + Logfire | Three-tier: Datadog (full APM/metrics/logs), MLflow/Langfuse (ML/LLM-specific), Logfire (Python app tracing). |
+| **Observability** | Datadog APM + MLflow + Langfuse (>=2.0.0) + Logfire + Ragas (>=0.1.10) | Three-tier: Datadog (full APM/metrics/logs), MLflow/Langfuse (ML/LLM-specific with prompt management & A/B testing), Logfire (Python app tracing), Ragas (trace-based metrics). |
+| **Agent Frameworks** | Google-ADK (>=0.1.0), Agno (>=2.0.0), MCP, BAML-py | Multi-agent coordination with Google AI integration; knowledge graphs for complex relationship tracking; Model Context Protocol for tool discovery. |
 
 ```
                           ┌─────────────────────────────────────────────────────────────────┐
@@ -455,12 +563,46 @@ stacks/<category>/<stack>/
 Beyond the active code streams, this repository serves as a massive knowledge base for British Isles cultural and political research.
 
 ### 📚 Documentation Index (`docs/`)
+
 The `docs/` folder contains comprehensive research and specifications across multiple domains:
 *   **`docs/agents/`:** Analysis of agentic frameworks (Agno, PydanticAI, Smolagents) and MCP server implementations.
 *   **`docs/teanga/`:** Resources for Irish language preservation, historical document analysis (Escriptorium), and TTS dataset generation.
 *   **`docs/hmgcc/`:** Security configurations and guidance for government-grade system deployments.
 *   **`docs/data_engineering/`:** Strategies for Lakehouse architectures using DuckDB, Iceberg, and LakeFS.
 *   **`docs/meaisínfhoghlaim/`:** Machine learning workflows, model evaluation, and fine-tuning patterns.
+
+### 🛠️ Skills Documentation (`.skills/`)
+
+The [`.skills/`](.skills/) folder contains detailed skill documentation for key technologies and frameworks used across the platform. Each skill provides comprehensive guides, best practices, and implementation patterns:
+
+**Agent Frameworks:**
+*   [**agno**](.skills/agno/SKILL.md) — Multi-agent orchestration with tool calling and knowledge graphs (v2.0+)
+*   [**google-adk**](.skills/google-adk/SKILL.md) — Google's Agent Development Kit for multi-agent coordination
+
+**Knowledge & Memory Systems:**
+*   [**graphiti-core**](.skills/graphiti-core/SKILL.md) — Temporal knowledge graph memory with bi-temporal model
+*   [**graphiti**](.skills/graphiti/SKILL.md) — Knowledge graph for agents with HNSW indexing (v0.5+)
+*   [**cognee**](.skills/cognee/SKILL.md) — Graph-based knowledge management with temporal tracking (v0.1+)
+*   [**lancedb**](.skills/lancedb/SKILL.md) — Vector database for RAG with HNSW indexing (v0.15+)
+
+**Data Pipelines & Orchestration:**
+*   [**dagster**](.skills/dagster/SKILL.md) — Data orchestration platform with asset-based pipelines (v1.9+)
+*   [**dlt**](.skills/dlt/SKILL.md) — Data load tool for pipelines with streaming support (v1.4+)
+*   [**sqlmesh**](.skills/sqlmesh/SKILL.md) — Data transformation framework with DuckDB integration
+
+**Observability & Evaluation:**
+*   [**langfuse**](.skills/langfuse/SKILL.md) — LLM observability platform with prompt management (v2.0+)
+*   [**ragas**](.skills/ragas/SKILL.md) — RAG evaluation framework with trace-based metrics (v0.1.10+)
+
+**UI & Agent Interaction:**
+*   [**copilotkit**](.skills/copilotkit/SKILL.md) — AI agent UI framework with React components
+*   [**vinxi**](.skills/vinxi/SKILL.md) — Full-stack framework (Poimandres) with Vite-based architecture
+*   [**tanstack-start**](.skills/tanstack-start/SKILL.md) — React framework with React Server Components (v1.94+)
+
+**Model Training & Fine-tuning:**
+*   [**unsloth**](.skills/unsloth/SKILL.md) — LLM fine-tuning with multilingual support (v2024.12+)
+
+For detailed implementation guides and best practices, refer to individual skill files in the [`.skills/`](.skills/) directory.
 
 ### 🏛️ Political & Social Research (`bunchloch/gemini/`)
 A massive collection of over 140 deep-dive research documents (PDFs) generated during the project's development. This "Gemini Vault" is organized into thematic subdirectories for clarity.
