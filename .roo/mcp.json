@@ -6,8 +6,8 @@
 "@browserbasehq/mcp"
 ],
 "env": {
-"BROWSERBASE_API_KEY": "bb_live_iAMYhs4vZHNvq1vs2y4Bq8rEpBc",
-"GEMINI_API_KEY": "AIzaSyChf7YteNGNFdvZaM8PIFl7Hjq_8pOZUM8"
+"BROWSERBASE_API_KEY": "bb_live_xZc-Ou1Tsd3ssjOUdN4JW6AoN54",
+"GEMINI_API_KEY": "AIzaSyAOA9cwYWkK-bguKbE4bi3IX0_vz0rGWe0"
 }
 },
 "firecrawl-mcp": {
@@ -17,7 +17,7 @@
 "firecrawl-mcp"
 ],
 "env": {
-"FIRECRAWL_API_KEY": "fc-a243c0bc7b5047658151a51c72515bf7"
+"FIRECRAWL_API_KEY": "fc-39c2cf17b1644184b87133695cd1104e"
 }
 },
 "chrome-devtools": {
@@ -26,6 +26,39 @@
 "-y",
 "chrome-devtools-mcp@latest"
 ]
-}
-}
+},
+"web-search-prime": {
+      "type": "streamable-http",
+      "url": "https://api.z.ai/api/mcp/web_search_prime/mcp",
+      "headers": {
+        "Authorization": "Bearer d19d86e34b8844b5b6d572382c86a6e9.Fy6P7IHQ712Y9D37"
+      }
+    },
+"zai-mcp-server": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@z_ai/mcp-server"
+      ],
+      "env": {
+        "Z_AI_API_KEY": "d19d86e34b8844b5b6d572382c86a6e9.Fy6P7IHQ712Y9D37",
+        "Z_AI_MODE": "ZAI"
+      }
+    },
+"web-reader": {
+      "type": "streamable-http",
+      "url": "https://api.z.ai/api/mcp/web_reader/mcp",
+      "headers": {
+        "Authorization": "Bearer d19d86e34b8844b5b6d572382c86a6e9.Fy6P7IHQ712Y9D37"
+      }
+    },
+    "zread": {
+      "type": "streamable-http",
+      "url": "https://api.z.ai/api/mcp/zread/mcp",
+      "headers": {
+        "Authorization": "Bearer d19d86e34b8844b5b6d572382c86a6e9.Fy6P7IHQ712Y9D37"
+      }
+    }
+  }
 }

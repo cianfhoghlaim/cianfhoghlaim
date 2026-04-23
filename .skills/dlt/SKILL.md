@@ -5,7 +5,7 @@ description: Expert assistance for building data pipelines with dlt (data load t
 
 # dlt - Data Load Tool
 
-**Version:** 1.x | **Last Updated:** 2025-01
+**Version:** >=1.4.0 | **Last Updated:** 2025-04
 
 ## Overview
 
@@ -16,6 +16,8 @@ dlt (data load tool) is a Python library for building production-ready data pipe
 - **Incremental Loading**: Built-in cursor-based incremental extraction
 - **Multiple Destinations**: DuckDB, BigQuery, Snowflake, Postgres, S3, and more
 - **Normalization**: Automatic flattening of nested JSON structures
+- **Pythonic Pipelines**: Clean, readable pipeline definitions
+- **Streaming Support**: Real-time data streaming capabilities
 
 **Documentation**: https://dlthub.com/docs
 

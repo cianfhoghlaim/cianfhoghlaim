@@ -5,7 +5,7 @@ description: Efficient LLM fine-tuning with 70% VRAM reduction and 2x speedup. E
 
 # Unsloth
 
-**Version:** 1.0 | **Last Updated:** 2025-12
+**Version:** >=2024.12 | **Last Updated:** 2025-04
 
 ## Overview
 
@@ -17,6 +17,8 @@ Unsloth enables efficient fine-tuning of large language models with dramatically
 | Speed | 2x faster training |
 | 4-bit Training | QLoRA with optimizations |
 | GGUF Export | Edge deployment ready |
+| Multilingual Support | Enhanced training for multilingual models |
+| Flash Attention | Optimized attention mechanism |
 
 ## When to Use This Skill
 

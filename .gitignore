@@ -225,6 +225,7 @@ bunchloch/irish/ga81010_isteach_agus_labhairt_c1/scr_d_cainte/cur_i_l_thair.pptx
 bunchloch/irish/found_in_downloads/bhar_breise_don_cheardlann.7z
 bunchloch/Stokes Workshop Game Physics.pptx
 bunchloch/mata/applied_statistics_2/st312_notes.pdf
+<<<<<<< Updated upstream
 
 # Exclude massive files
 *.7z
@@ -238,3 +239,5 @@ sruth/oideachais/pipelines/education/
 sruth/oideachais/pipelines/filesystem/
 sruth/web/dashboard/
 sruth/meaisínfhoghlaim/language/source_repos_clarin_uk/pylaia/
+=======
+>>>>>>> Stashed changes

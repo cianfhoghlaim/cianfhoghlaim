@@ -5,7 +5,7 @@ description: Temporal knowledge graph with bi-temporal data model for tracking p
 
 # Graphiti
 
-**Version:** 1.0 | **Last Updated:** 2025-12
+**Version:** >=0.5.0 | **Last Updated:** 2025-04
 
 ## Overview
 
@@ -17,6 +17,8 @@ Graphiti provides temporal reasoning capabilities for the Cianfhoghlaim educatio
 | Knowledge Graphs | Entity and relationship tracking |
 | Temporal Queries | Point-in-time and period queries |
 | Memory System | Episodic and semantic memory |
+| HNSW Indexing | High-performance graph traversal |
+| MVCC Safety | Multi-version concurrency control |
 
 ## When to Use This Skill
 

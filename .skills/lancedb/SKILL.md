@@ -5,7 +5,7 @@ description: Expert assistance for vector database development with LanceDB. Use
 
 # LanceDB - Embedded Vector Database
 
-**Version:** 0.x | **Last Updated:** 2025-01
+**Version:** >=0.15.0 | **Last Updated:** 2025-04
 
 ## Overview
 
@@ -15,6 +15,9 @@ LanceDB is an open-source, embedded vector database for AI applications:
 - **Multimodal**: Store vectors, text, images, and audio together
 - **Scalable**: Billion-scale vectors with disk-based indexes
 - **Cloud-Native**: S3-compatible storage with serverless option
+- **HNSW Indexing**: High-performance approximate nearest neighbor search
+- **MVCC Safety**: Multi-version concurrency control for safe concurrent operations
+- **Hybrid Search**: Combine vector and full-text search
 
 **Documentation**: https://lancedb.github.io/lancedb/
 
