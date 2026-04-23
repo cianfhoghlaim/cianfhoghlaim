@@ -5,7 +5,7 @@ description: Expert assistance for building full-stack React applications with T
 
 # TanStack Start - Full-Stack React Framework
 
-**Version:** 1.x | **Last Updated:** 2025-01
+**Version:** ^1.94.0 | **Last Updated:** 2025-04
 
 ## Overview
 
@@ -16,6 +16,9 @@ TanStack Start is a full-stack meta-framework built on React and TanStack Router
 - **SSR/Streaming**: Server-side rendering with streaming support
 - **Type Safety**: End-to-end TypeScript integration
 - **Integrations**: TanStack Query, Store, and ecosystem
+- **React Server Components**: Full RSC support for optimal performance
+- **Edge Runtime**: Deploy to edge platforms (Vercel, Cloudflare)
+- **Streaming Suspense**: Progressive UI rendering with Suspense boundaries
 
 **Documentation**: https://tanstack.com/start
 
