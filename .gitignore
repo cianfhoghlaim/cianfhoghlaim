@@ -207,37 +207,10 @@ Thumbs.db
 # Cloud credentials setup guide (contains secrets)
 bonneagar/CLOUD_CREDENTIALS_SETUP.md
 .DS_Store
-data_engineering/dlt_sources/ireland/site_scrape_samples/curriculumonline/www.curriculumonline.ie_getmedia_8829d120-49fd-4d00-80e1-afc41d31adad_STUDENT_02_High_res.pdf.json
-data_engineering/dlt_sources/ireland/site_scrape_samples/curriculumonline/www.curriculumonline.ie_getmedia_78131071-215c-43ba-83e1-beac297b7553_STUDENT_05_High_res.pdf.json
-data_engineering/dlt_sources/ireland/site_scrape_samples/curriculumonline/www.curriculumonline.ie_getmedia_b2fcdc3b-e434-458f-83c5-df48d7ff9406_CBA1_Mobile_EN.pdf.json
-data_engineering/dlt_sources/ireland/site_scrape_samples/curriculumonline/www.curriculumonline.ie_getmedia_9deb5946-818b-448b-bb54-b0da4fac3d3e_STUDENT_03_High_res.pdf.json
-data_engineering/dlt_sources/ireland/site_scrape_samples/curriculumonline/www.curriculumonline.ie_getmedia_91965290-794a-4e91-bdd1-8a37af524762_CBA1_Mobile_GA.pdf.json
-data_engineering/dlt_sources/ireland/site_scrape_samples/curriculumonline/www.curriculumonline.ie_getmedia_e2f9cb5c-f06b-49a3-b2aa-cc9997fdef1c_STUDENT_04_image_file.pdf.json
-data_engineering/dlt_sources/ireland/site_scrape_samples/curriculumonline/www.curriculumonline.ie_getmedia_6cdc289f-b6d1-4c7a-a42d-d56312e155f6_STUDENT_05_image_file.pdf.json
-data_engineering/dlt_sources/ireland/site_scrape_samples/curriculumonline/www.curriculumonline.ie_getmedia_175e5aeb-a604-42c5-83eb-847ce8da7a2e_STUDENT_04_High_res.pdf.json
-data_engineering/dlt_sources/ireland/site_scrape_samples/curriculumonline/www.curriculumonline.ie_getmedia_2803acd4-d010-452a-9169-70ec4b2ea5ce_STUDENT_02_image_file.pdf.json
-data_engineering/dlt_sources/ireland/site_scrape_samples/curriculumonline/www.curriculumonline.ie_getmedia_8bdcab45-cadb-4ff5-9ae8-28107f525b66_Christmas-Fair.pdf.json
-data_engineering/dlt_sources/ireland/site_scrape_samples/curriculumonline/www.curriculumonline.ie_getmedia_0d9dfacb-6cd2-4d12-aeae-276a5ab5b265_Seeds.pdf.json
-stedding/cian/leabharlann/fuaimeanna_na_gaeilge_complete.pdf
-stedding/IMG_0304.mov
-tuatha/sources/comics/Reading Orders/X-O Manowar (2012) _TPB 1 - Read X-O Manowar (2012) _TPB 1 comic online in high quality.pdf
-bunchloch/irish/ga81010_isteach_agus_labhairt_c1/scr_d_cainte/cur_i_l_thair.pptx
-bunchloch/irish/found_in_downloads/bhar_breise_don_cheardlann.7z
-bunchloch/Stokes Workshop Game Physics.pptx
-bunchloch/mata/applied_statistics_2/st312_notes.pdf
-<<<<<<< Updated upstream
 
-# Exclude massive files
-*.7z
-*.mov
-*.pdf
-*.pptx
-*.json
 
 # Massive Data Directories
 sruth/oideachais/pipelines/education/
 sruth/oideachais/pipelines/filesystem/
 sruth/web/dashboard/
 sruth/meaisínfhoghlaim/language/source_repos_clarin_uk/pylaia/
-=======
->>>>>>> Stashed changes
