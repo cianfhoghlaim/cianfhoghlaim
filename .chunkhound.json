@@ -1,8 +1,17 @@
 {
-  "embedding": {
-    "provider": "openai",
-    "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
-    "model": "gemini-embedding-2-preview",
-    "api_key": "dont_leak_key"
-  }
+    "database": {
+        "type": "duckdb",
+        "url": "./data/chunkhound.duckdb"
+    },
+    "embedding": {
+        "provider": "openai",
+        "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+        "model": "gemini-embedding-2-preview"
+    },
+    "llm": {
+        "provider": "openai",
+        "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+        "utility_model": "gemini-3.1-flash-lite",
+        "synthesis_model": "gemini-3.1-pro-preview"
+    }
 }
