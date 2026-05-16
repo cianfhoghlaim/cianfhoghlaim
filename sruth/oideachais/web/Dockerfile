@@ -5,18 +5,15 @@
 # Multi-stage build for production optimization.
 # =============================================================================
 
-FROM node:20-alpine AS builder
+FROM oven/bun:1-alpine AS builder
 
 WORKDIR /app
 
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
 # Copy dependency files first for layer caching
-COPY package.json pnpm-lock.yaml* ./
+COPY package.json bun.lock* ./
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN bun install
 
 # Copy source code
 COPY . .
@@ -29,7 +26,7 @@ ENV VITE_API_URL=$VITE_API_URL
 ENV VITE_API_PUBLIC_URL=$VITE_API_PUBLIC_URL
 
 # Build the application
-RUN pnpm build
+RUN bunx vite build
 
 # =============================================================================
 # PRODUCTION STAGE - Serve with lightweight server

@@ -146,7 +146,7 @@ build-backend = "hatchling.build"
 # UV Workspace Sources (local packages)
 # ============================================================================
 [tool.uv.sources]
-sruth-browser = { workspace = true }
+sruth-browser = { path = "./browser", editable = true }
 
 [tool.hatch.build.targets.wheel]
 packages = [
