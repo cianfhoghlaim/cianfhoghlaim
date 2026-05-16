@@ -133,7 +133,7 @@ def _(mo, selected_env):
         docker compose up -d
 
         # Run a curriculum asset
-        dagster dev -m sruth.oideachais
+        dagster dev -m oideachais
         # Then materialize ireland/curriculum/senior_cycle
         ```
 
@@ -277,10 +277,10 @@ def _(mo):
     2. **Run pipeline locally:**
        ```bash
        # Via Dagster
-       dagster dev -m sruth.oideachais
+       dagster dev -m oideachais
 
        # Or directly
-       DLT_ENVIRONMENT=local python -c "from sruth.oideachais.dlt_utils import create_pipeline; ..."
+       DLT_ENVIRONMENT=local python -c "from oideachais.dlt_utils import create_pipeline; ..."
        ```
 
     3. **Validate in this notebook:**

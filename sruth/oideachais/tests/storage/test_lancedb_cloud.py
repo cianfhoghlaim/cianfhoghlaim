@@ -224,7 +224,7 @@ class TestLanceDBClientResilience:
     @pytest.fixture
     def client(self, temp_dir: Path) -> Any:
         """Create a test LanceDB client."""
-        from sruth.oideachais.storage.lancedb_cloud import (
+        from oideachais.storage.lancedb_cloud import (
             LanceDBCloudClient,
             LanceDBCloudConfig,
             LanceDBEnvironment,
@@ -330,7 +330,7 @@ class TestEmbeddingBatch:
 
     def test_embedding_batch_len(self) -> None:
         """Test EmbeddingBatch length."""
-        from sruth.oideachais.storage.lancedb_cloud import EmbeddingBatch
+        from oideachais.storage.lancedb_cloud import EmbeddingBatch
 
         batch = EmbeddingBatch(
             vectors=[[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]],
@@ -342,7 +342,7 @@ class TestEmbeddingBatch:
 
     def test_embedding_batch_to_arrow(self) -> None:
         """Test EmbeddingBatch conversion to Arrow."""
-        from sruth.oideachais.storage.lancedb_cloud import EmbeddingBatch
+        from oideachais.storage.lancedb_cloud import EmbeddingBatch
 
         batch = EmbeddingBatch(
             vectors=[[0.1, 0.2], [0.3, 0.4]],
@@ -368,7 +368,7 @@ class TestLanceDBConfig:
 
     def test_config_defaults(self) -> None:
         """Test default configuration values."""
-        from sruth.oideachais.storage.lancedb_cloud import LanceDBCloudConfig
+        from oideachais.storage.lancedb_cloud import LanceDBCloudConfig
 
         config = LanceDBCloudConfig()
 
@@ -377,7 +377,7 @@ class TestLanceDBConfig:
 
     def test_is_cloud_configured_without_key(self) -> None:
         """Test cloud detection without API key."""
-        from sruth.oideachais.storage.lancedb_cloud import LanceDBCloudConfig
+        from oideachais.storage.lancedb_cloud import LanceDBCloudConfig
 
         config = LanceDBCloudConfig(api_key="", uri="db://test")
 
@@ -385,7 +385,7 @@ class TestLanceDBConfig:
 
     def test_is_cloud_configured_with_key(self) -> None:
         """Test cloud detection with API key."""
-        from sruth.oideachais.storage.lancedb_cloud import LanceDBCloudConfig
+        from oideachais.storage.lancedb_cloud import LanceDBCloudConfig
 
         config = LanceDBCloudConfig(api_key="test_key", uri="db://test")
 
@@ -393,7 +393,7 @@ class TestLanceDBConfig:
 
     def test_is_cloud_configured_local_uri(self) -> None:
         """Test cloud detection with local URI."""
-        from sruth.oideachais.storage.lancedb_cloud import LanceDBCloudConfig
+        from oideachais.storage.lancedb_cloud import LanceDBCloudConfig
 
         config = LanceDBCloudConfig(api_key="test_key", uri="/tmp/lancedb")
 

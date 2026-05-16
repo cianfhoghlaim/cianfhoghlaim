@@ -224,7 +224,7 @@ All pipeline modules support **bilingual content extraction** (English and Irish
 
 ```python
 import dlt
-from sruth.oideachais.dlt_sources.ireland import curriculum_source
+from oideachais.dlt_sources.ireland import curriculum_source
 
 # Crawl Junior Cycle Mathematics (English)
 pipeline = dlt.pipeline(
@@ -247,7 +247,7 @@ pipeline.run(curriculum_source(
 ))
 
 # Per-subject sources for fine-grained control
-from sruth.oideachais.dlt_sources.ireland.subjects import (
+from oideachais.dlt_sources.ireland.subjects import (
     senior_cycle_source,
     junior_cycle_source,
 )

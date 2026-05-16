@@ -13,7 +13,7 @@ Includes:
 - Irish-medium (Gaeilge) resources
 
 Usage:
-    from sruth.oideachais.dlt_sources.ireland.oide import (
+    from oideachais.dlt_sources.ireland.oide import (
         oide_source,
         oide_subject_source,
     )

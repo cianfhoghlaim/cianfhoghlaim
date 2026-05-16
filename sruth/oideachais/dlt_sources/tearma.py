@@ -8,7 +8,7 @@ API: https://www.tearma.ie/api/
 Download: https://www.tearma.ie/ioslodail/
 
 Usage:
-    from sruth.oideachais.dlt_sources.tearma import tearma_source
+    from oideachais.dlt_sources.tearma import tearma_source
 
     pipeline = dlt.pipeline(
         pipeline_name="tearma",
@@ -27,7 +27,7 @@ from pathlib import Path
 from typing import Any
 
 import dlt
-from sruth.oideachais.observability.logging import get_logger
+from oideachais.observability.logging import get_logger
 from sruth.shared.http import tearma_client
 
 logger = get_logger(__name__)

@@ -276,7 +276,7 @@ def __(
 
         # Try to import OCR modules
         try:
-            from sruth.oideachais.ocr import (
+            from oideachais.ocr import (
                 compare_ocr_models,
                 compare_vision_models,
             )
@@ -437,7 +437,7 @@ def __(mo, results, irish_mode):
 
         # Try to import Irish processing
         try:
-            from sruth.oideachais.ocr import (
+            from oideachais.ocr import (
                 detect_irish_content,
                 get_fada_accuracy,
                 get_irish_quality_score,

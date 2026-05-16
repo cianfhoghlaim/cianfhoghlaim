@@ -30,7 +30,7 @@ class TestFirecrawlSource:
 
     def test_scrape_page_no_api_key(self) -> None:
         """Test scrape_page returns client_unavailable when no API key."""
-        from sruth.oideachais.dlt_sources.common.firecrawl_source import scrape_page
+        from oideachais.dlt_sources.common.firecrawl_source import scrape_page
 
         with patch.dict(os.environ, {"FIRECRAWL_API_KEY": ""}, clear=False):
             result = scrape_page("https://example.com")
@@ -41,7 +41,7 @@ class TestFirecrawlSource:
 
     def test_scrape_page_with_mock_client(self) -> None:
         """Test scrape_page with mocked Firecrawl client."""
-        from sruth.oideachais.dlt_sources.common.firecrawl_source import scrape_page
+        from oideachais.dlt_sources.common.firecrawl_source import scrape_page
 
         mock_result = {
             "markdown": "# Test Content",
@@ -56,7 +56,7 @@ class TestFirecrawlSource:
         }
 
         with patch.dict(os.environ, {"FIRECRAWL_API_KEY": "test_key"}):
-            with patch("sruth.oideachais.dlt_sources.common.firecrawl_source.get_firecrawl_client") as mock_get:
+            with patch("oideachais.dlt_sources.common.firecrawl_source.get_firecrawl_client") as mock_get:
                 mock_client = MagicMock()
                 mock_client.scrape_url.return_value = mock_result
                 mock_get.return_value = mock_client
@@ -69,7 +69,7 @@ class TestFirecrawlSource:
 
     def test_crawl_website_no_api_key(self) -> None:
         """Test crawl_website returns client_unavailable when no API key."""
-        from sruth.oideachais.dlt_sources.common.firecrawl_source import crawl_website
+        from oideachais.dlt_sources.common.firecrawl_source import crawl_website
 
         with patch.dict(os.environ, {"FIRECRAWL_API_KEY": ""}, clear=False):
             results = list(crawl_website("https://example.com"))
@@ -79,7 +79,7 @@ class TestFirecrawlSource:
 
     def test_map_urls_no_api_key(self) -> None:
         """Test map_urls returns empty when no API key."""
-        from sruth.oideachais.dlt_sources.common.firecrawl_source import map_urls
+        from oideachais.dlt_sources.common.firecrawl_source import map_urls
 
         with patch.dict(os.environ, {"FIRECRAWL_API_KEY": ""}, clear=False):
             results = list(map_urls("https://example.com"))
@@ -97,7 +97,7 @@ class TestCrawlUtils:
 
     def test_url_matcher_include_patterns(self) -> None:
         """Test URL matching with include patterns."""
-        from sruth.oideachais.dlt_sources.crawl_utils import URLMatcher
+        from oideachais.dlt_sources.crawl_utils import URLMatcher
 
         matcher = URLMatcher(
             include_patterns=["https://curriculumonline.ie/Junior-Cycle/*"]
@@ -108,7 +108,7 @@ class TestCrawlUtils:
 
     def test_url_matcher_exclude_patterns(self) -> None:
         """Test URL matching with exclude patterns."""
-        from sruth.oideachais.dlt_sources.crawl_utils import URLMatcher
+        from oideachais.dlt_sources.crawl_utils import URLMatcher
 
         matcher = URLMatcher(
             exclude_patterns=["*.pdf", "*.zip"]
@@ -120,7 +120,7 @@ class TestCrawlUtils:
 
     def test_url_matcher_domain_filtering(self) -> None:
         """Test URL matching with domain filters."""
-        from sruth.oideachais.dlt_sources.crawl_utils import URLMatcher
+        from oideachais.dlt_sources.crawl_utils import URLMatcher
 
         matcher = URLMatcher(
             include_domains=["curriculumonline.ie", "ncca.ie"]
@@ -132,7 +132,7 @@ class TestCrawlUtils:
 
     def test_normalize_url(self) -> None:
         """Test URL normalization."""
-        from sruth.oideachais.dlt_sources.crawl_utils import normalize_url
+        from oideachais.dlt_sources.crawl_utils import normalize_url
 
         # Remove fragment
         assert "anchor" not in normalize_url("https://example.com/page#anchor")
@@ -145,7 +145,7 @@ class TestCrawlUtils:
 
     def test_extract_links(self) -> None:
         """Test link extraction from HTML."""
-        from sruth.oideachais.dlt_sources.crawl_utils import extract_links
+        from oideachais.dlt_sources.crawl_utils import extract_links
 
         html = """
         <html>
@@ -165,7 +165,7 @@ class TestCrawlUtils:
 
     def test_crawl_pattern_matching(self) -> None:
         """Test CrawlPattern URL matching."""
-        from sruth.oideachais.dlt_sources.crawl_utils import CrawlPattern, ExtractionStrategy
+        from oideachais.dlt_sources.crawl_utils import CrawlPattern, ExtractionStrategy
 
         pattern = CrawlPattern(
             url_pattern="https://curriculumonline.ie/*/specifications/*",
@@ -188,7 +188,7 @@ class TestDLTPipeline:
 
     def test_firecrawl_source_creation(self) -> None:
         """Test creating a Firecrawl DLT source."""
-        from sruth.oideachais.dlt_sources.common.firecrawl_source import create_firecrawl_source
+        from oideachais.dlt_sources.common.firecrawl_source import create_firecrawl_source
 
         source_factory = create_firecrawl_source(
             source_name="test_source",
@@ -279,7 +279,7 @@ class TestLanceDBClient:
     @pytest.fixture
     def lancedb_client(self, temp_dir: Path) -> Any:
         """Create a test LanceDB client with local storage."""
-        from sruth.oideachais.storage.lancedb_cloud import (
+        from oideachais.storage.lancedb_cloud import (
             LanceDBCloudClient,
             LanceDBCloudConfig,
             LanceDBEnvironment,
@@ -314,7 +314,7 @@ class TestLanceDBClient:
     @pytest.mark.asyncio
     async def test_add_and_search_embeddings(self, lancedb_client: Any) -> None:
         """Test adding and searching embeddings."""
-        from sruth.oideachais.storage.lancedb_cloud import EmbeddingBatch
+        from oideachais.storage.lancedb_cloud import EmbeddingBatch
 
         # Create batch with 3 embeddings
         batch = EmbeddingBatch(
@@ -368,7 +368,7 @@ class TestLocalDocumentsSource:
 
     def test_file_hash_computation(self, temp_dir: Path) -> None:
         """Test file hash computation for change detection."""
-        from sruth.oideachais.dlt_sources.ireland.local_documents import _compute_file_hash
+        from oideachais.dlt_sources.ireland.local_documents import _compute_file_hash
 
         # Create test file
         test_file = temp_dir / "test.txt"

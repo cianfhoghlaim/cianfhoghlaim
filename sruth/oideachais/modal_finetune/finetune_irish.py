@@ -9,7 +9,7 @@ Usage:
     modal deploy sruth/oideachais/modal/finetune_irish.py
 
     # Dagster orchestration (preferred)
-    dagster asset materialize -m sruth.oideachais.dagster_defs --select modal_irish_llm_finetune
+    dagster asset materialize -m oideachais.dagster_defs --select modal_irish_llm_finetune
 
 Cost estimate: ~$100 for 8 hours on A10G GPU
 

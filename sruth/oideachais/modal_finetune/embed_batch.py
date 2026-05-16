@@ -10,7 +10,7 @@ Usage:
     modal deploy sruth/oideachais/modal/embed_batch.py
 
     # Dagster orchestration (preferred)
-    dagster asset materialize -m sruth.oideachais.dagster_defs --select modal_curriculum_embeddings
+    dagster asset materialize -m oideachais.dagster_defs --select modal_curriculum_embeddings
 
 Cost estimate: ~$80 for processing 10M documents
 

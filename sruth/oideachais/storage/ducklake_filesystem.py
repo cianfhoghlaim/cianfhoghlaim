@@ -10,7 +10,7 @@ Provides OCR result storage with:
 Based on existing ducklake.py patterns for Celtic manuscript OCR.
 
 Usage:
-    from sruth.oideachais.storage.ducklake_filesystem import DuckLakeOCRStorage
+    from oideachais.storage.ducklake_filesystem import DuckLakeOCRStorage
 
     storage = DuckLakeOCRStorage()
     await storage.store_ocr_result(document_id, model_id, result)

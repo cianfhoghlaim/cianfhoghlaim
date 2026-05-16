@@ -8,7 +8,7 @@ Provides a centralized registry for:
 - Crawl configuration generation
 
 Usage:
-    from sruth.oideachais.dlt_sources.ireland.curriculum_registry import (
+    from oideachais.dlt_sources.ireland.curriculum_registry import (
         SubjectRegistry,
         URLResolver,
     )

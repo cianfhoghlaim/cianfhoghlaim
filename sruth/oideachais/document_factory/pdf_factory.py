@@ -66,23 +66,23 @@ class PDFConverter(DocumentConverter):
 # This allows lazy loading - modules aren't imported until needed
 CONVERTER_REGISTRY: dict[str, tuple[str, str]] = {
     "pymupdf4llm": (
-        "sruth.oideachais.document_factory.converters.pymupdf4llm_converter",
+        "oideachais.document_factory.converters.pymupdf4llm_converter",
         "PyMuPDF4LLMConverter",
     ),
     "marker": (
-        "sruth.oideachais.document_factory.converters.marker_converter",
+        "oideachais.document_factory.converters.marker_converter",
         "MarkerConverter",
     ),
     "docling": (
-        "sruth.oideachais.document_factory.converters.docling_converter",
+        "oideachais.document_factory.converters.docling_converter",
         "DoclingConverter",
     ),
     "deepseekocr": (
-        "sruth.oideachais.document_factory.converters.deepseekocr_converter",
+        "oideachais.document_factory.converters.deepseekocr_converter",
         "DeepSeekOCRConverter",
     ),
     "unstructured": (
-        "sruth.oideachais.document_factory.converters.unstructured_converter",
+        "oideachais.document_factory.converters.unstructured_converter",
         "UnstructuredConverter",
     ),
 }

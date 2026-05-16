@@ -6,19 +6,19 @@ Executes baseline and agentic RAG evaluations, tracking results in MLflow.
 
 Usage:
     # Run full evaluation suite
-    uv run python -m sruth.oideachais.evaluation.run_evaluation
+    uv run python -m oideachais.evaluation.run_evaluation
 
     # Run with specific options
-    uv run python -m sruth.oideachais.evaluation.run_evaluation \
+    uv run python -m oideachais.evaluation.run_evaluation \
         --dataset-size 100 \
         --include-irish \
         --compare
 
     # Run only baseline
-    uv run python -m sruth.oideachais.evaluation.run_evaluation --baseline-only
+    uv run python -m oideachais.evaluation.run_evaluation --baseline-only
 
     # Run only agentic
-    uv run python -m sruth.oideachais.evaluation.run_evaluation --agentic-only
+    uv run python -m oideachais.evaluation.run_evaluation --agentic-only
 
 Expected Results (from taighde/mlflow_ragas.md):
     - Baseline single-query RAG: ~65.2% accuracy
@@ -65,7 +65,7 @@ async def run_evaluation(
     Returns:
         Dictionary with evaluation results
     """
-    from sruth.oideachais.evaluation.ragas_pipeline import (
+    from oideachais.evaluation.ragas_pipeline import (
         compare_evaluation_runs,
         create_curriculum_eval_dataset,
         run_agentic_evaluation,
@@ -183,13 +183,13 @@ def main():
         epilog="""
 Examples:
     # Run full evaluation (baseline + agentic + comparison)
-    python -m sruth.oideachais.evaluation.run_evaluation
+    python -m oideachais.evaluation.run_evaluation
 
     # Quick test with fewer samples
-    python -m sruth.oideachais.evaluation.run_evaluation --dataset-size 20
+    python -m oideachais.evaluation.run_evaluation --dataset-size 20
 
     # Run only agentic evaluation
-    python -m sruth.oideachais.evaluation.run_evaluation --agentic-only
+    python -m oideachais.evaluation.run_evaluation --agentic-only
 
 Expected Results:
     Baseline accuracy:  ~65.2%

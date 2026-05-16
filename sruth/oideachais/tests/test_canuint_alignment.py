@@ -83,14 +83,14 @@ class TestCharacterInterpolation:
 
     def test_tokenize_irish_text_basic(self):
         """Test basic tokenization without digraph preservation."""
-        from sruth.oideachais.alignment.character_interpolator import tokenize_irish_text
+        from oideachais.alignment.character_interpolator import tokenize_irish_text
 
         result = tokenize_irish_text("bhí")
         assert result == ["b", "h", "í"]
 
     def test_tokenize_irish_text_with_digraphs(self):
         """Test tokenization preserving Irish digraphs."""
-        from sruth.oideachais.alignment.character_interpolator import tokenize_irish_text
+        from oideachais.alignment.character_interpolator import tokenize_irish_text
 
         result = tokenize_irish_text("bhí", preserve_digraphs=True)
         assert result == ["bh", "í"]
@@ -102,7 +102,7 @@ class TestCharacterInterpolation:
 
     def test_interpolate_timestamps(self):
         """Test timestamp interpolation."""
-        from sruth.oideachais.alignment.character_interpolator import (
+        from oideachais.alignment.character_interpolator import (
             interpolate_character_timestamps,
         )
 
@@ -123,7 +123,7 @@ class TestCharacterInterpolation:
 
     def test_create_character_alignment(self):
         """Test full character alignment creation."""
-        from sruth.oideachais.alignment.character_interpolator import (
+        from oideachais.alignment.character_interpolator import (
             create_character_alignment,
         )
 
@@ -145,7 +145,7 @@ class TestCharacterInterpolation:
 
     def test_elevenlabs_format_export(self):
         """Test ElevenLabs format export."""
-        from sruth.oideachais.alignment.character_interpolator import (
+        from oideachais.alignment.character_interpolator import (
             create_character_alignment,
         )
 
@@ -169,7 +169,7 @@ class TestIrishG2P:
 
     def test_rule_based_g2p_basic(self):
         """Test basic rule-based G2P."""
-        from sruth.oideachais.alignment.irish_g2p import rule_based_g2p
+        from oideachais.alignment.irish_g2p import rule_based_g2p
 
         phonemes = rule_based_g2p("bhí")
         assert len(phonemes) > 0
@@ -179,7 +179,7 @@ class TestIrishG2P:
 
     def test_rule_based_g2p_lenition(self):
         """Test lenited consonant handling."""
-        from sruth.oideachais.alignment.irish_g2p import rule_based_g2p
+        from oideachais.alignment.irish_g2p import rule_based_g2p
 
         # ch → x
         phonemes = rule_based_g2p("chuaigh")
@@ -191,7 +191,7 @@ class TestIrishG2P:
 
     def test_rule_based_g2p_vowels(self):
         """Test vowel handling including fadas."""
-        from sruth.oideachais.alignment.irish_g2p import rule_based_g2p
+        from oideachais.alignment.irish_g2p import rule_based_g2p
 
         # Long vowels
         phonemes = rule_based_g2p("á")
@@ -202,7 +202,7 @@ class TestIrishG2P:
 
     def test_dialect_variations(self):
         """Test dialect-specific phoneme mappings."""
-        from sruth.oideachais.alignment.irish_g2p import IrishDialect, rule_based_g2p
+        from oideachais.alignment.irish_g2p import IrishDialect, rule_based_g2p
 
         # Ulster uses /eː/ for "ao" instead of /iː/
         ulster_phonemes = rule_based_g2p("aon", dialect=IrishDialect.ULSTER)
@@ -210,7 +210,7 @@ class TestIrishG2P:
 
     def test_create_phoneme_alignment(self):
         """Test phoneme alignment creation."""
-        from sruth.oideachais.alignment.irish_g2p import (
+        from oideachais.alignment.irish_g2p import (
             create_phoneme_alignment,
         )
 
@@ -235,7 +235,7 @@ class TestCanuintExporter:
 
     def test_export_ljspeech(self):
         """Test LJSpeech format export."""
-        from sruth.oideachais.alignment.canuint_exporter import export_ljspeech
+        from oideachais.alignment.canuint_exporter import export_ljspeech
 
         with TemporaryDirectory() as tmpdir:
             output_path = Path(tmpdir) / "metadata.csv"
@@ -263,7 +263,7 @@ class TestCanuintExporter:
 
     def test_export_ctm(self):
         """Test CTM format export."""
-        from sruth.oideachais.alignment.canuint_exporter import export_ctm
+        from oideachais.alignment.canuint_exporter import export_ctm
 
         with TemporaryDirectory() as tmpdir:
             output_path = Path(tmpdir) / "alignments.ctm"
@@ -289,7 +289,7 @@ class TestCanuintExporter:
 
     def test_export_textgrid(self):
         """Test TextGrid format export."""
-        from sruth.oideachais.alignment.canuint_exporter import export_textgrid
+        from oideachais.alignment.canuint_exporter import export_textgrid
 
         with TemporaryDirectory() as tmpdir:
             output_dir = Path(tmpdir) / "textgrids"
@@ -308,7 +308,7 @@ class TestCanuintExporter:
 
     def test_export_huggingface_dataset(self):
         """Test HuggingFace dataset format export."""
-        from sruth.oideachais.alignment.canuint_exporter import export_huggingface_dataset
+        from oideachais.alignment.canuint_exporter import export_huggingface_dataset
 
         with TemporaryDirectory() as tmpdir:
             output_dir = Path(tmpdir) / "hf_dataset"
@@ -331,7 +331,7 @@ class TestCanuintValidator:
 
     def test_validate_duration_distribution(self):
         """Test duration distribution validation."""
-        from sruth.oideachais.quality.canuint_validator import validate_duration_distribution
+        from oideachais.quality.canuint_validator import validate_duration_distribution
 
         result = validate_duration_distribution(SAMPLE_WORD_ALIGNMENTS)
 
@@ -342,7 +342,7 @@ class TestCanuintValidator:
 
     def test_validate_alignment_consistency(self):
         """Test alignment consistency validation."""
-        from sruth.oideachais.quality.canuint_validator import validate_alignment_consistency
+        from oideachais.quality.canuint_validator import validate_alignment_consistency
 
         result = validate_alignment_consistency(SAMPLE_WORD_ALIGNMENTS)
 
@@ -351,7 +351,7 @@ class TestCanuintValidator:
 
     def test_validate_dialect_balance(self):
         """Test dialect balance validation."""
-        from sruth.oideachais.quality.canuint_validator import validate_dialect_balance
+        from oideachais.quality.canuint_validator import validate_dialect_balance
 
         result = validate_dialect_balance(SAMPLE_WORD_ALIGNMENTS)
 
@@ -363,7 +363,7 @@ class TestCanuintValidator:
 
     def test_validate_speaker_diversity(self):
         """Test speaker diversity validation."""
-        from sruth.oideachais.quality.canuint_validator import validate_speaker_diversity
+        from oideachais.quality.canuint_validator import validate_speaker_diversity
 
         result = validate_speaker_diversity(SAMPLE_WORD_ALIGNMENTS)
 
@@ -373,7 +373,7 @@ class TestCanuintValidator:
 
     def test_generate_splits(self):
         """Test train/val/test split generation."""
-        from sruth.oideachais.quality.canuint_validator import generate_splits
+        from oideachais.quality.canuint_validator import generate_splits
 
         splits = generate_splits(SAMPLE_WORD_ALIGNMENTS)
 
@@ -388,7 +388,7 @@ class TestCanuintValidator:
 
     def test_full_validation_report(self):
         """Test complete validation pipeline."""
-        from sruth.oideachais.quality.canuint_validator import validate_canuint_dataset
+        from oideachais.quality.canuint_validator import validate_canuint_dataset
 
         with TemporaryDirectory() as tmpdir:
             output_dir = Path(tmpdir)
@@ -412,10 +412,10 @@ class TestEndToEndPipeline:
 
     def test_character_and_phoneme_pipeline(self):
         """Test character + phoneme alignment generation."""
-        from sruth.oideachais.alignment.character_interpolator import (
+        from oideachais.alignment.character_interpolator import (
             batch_interpolate_alignments,
         )
-        from sruth.oideachais.alignment.irish_g2p import (
+        from oideachais.alignment.irish_g2p import (
             batch_convert_to_phonemes,
         )
 
@@ -432,12 +432,12 @@ class TestEndToEndPipeline:
 
     def test_export_and_validate_pipeline(self):
         """Test export followed by validation."""
-        from sruth.oideachais.alignment.canuint_exporter import export_all_formats
-        from sruth.oideachais.alignment.character_interpolator import (
+        from oideachais.alignment.canuint_exporter import export_all_formats
+        from oideachais.alignment.character_interpolator import (
             batch_interpolate_alignments,
         )
-        from sruth.oideachais.alignment.irish_g2p import batch_convert_to_phonemes
-        from sruth.oideachais.quality.canuint_validator import validate_canuint_dataset
+        from oideachais.alignment.irish_g2p import batch_convert_to_phonemes
+        from oideachais.quality.canuint_validator import validate_canuint_dataset
 
         with TemporaryDirectory() as tmpdir:
             output_dir = Path(tmpdir)

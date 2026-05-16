@@ -14,7 +14,7 @@ Includes:
 - Welsh-medium and bilingual resources
 
 Usage:
-    from sruth.oideachais.dlt_sources.uk.wales.curriculum_for_wales import (
+    from oideachais.dlt_sources.uk.wales.curriculum_for_wales import (
         curriculum_for_wales_source,
         wjec_qualifications_source,
     )

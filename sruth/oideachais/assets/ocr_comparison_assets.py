@@ -17,7 +17,7 @@ CRITICAL CONSTRAINTS (from CLAUDE.md):
     - DuckDB: Single-threaded only
 
 Usage:
-    dagster dev -m sruth.oideachais.dagster_defs
+    dagster dev -m oideachais.dagster_defs
 
     # Or materialize specific assets
     dagster asset materialize --select ocr/model_comparison

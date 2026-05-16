@@ -26,6 +26,7 @@ services:
     volumes:
       - .:/app
       - /app/.venv
+      - ./dagster.yaml:/opt/dagster/home/dagster.yaml:ro
       - dagster-storage:/opt/dagster/storage
     depends_on:
       postgres:

@@ -19,8 +19,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install uv for fast package management
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
-# Copy dependency files first for layer caching
-COPY pyproject.toml uv.lock* README.md* ./
+# Copy all files for dependency resolution (needed for local paths like ./browser)
+COPY . .
 
 # Create virtual environment and install dependencies
 RUN uv sync --frozen --no-dev --no-editable
@@ -37,6 +37,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
+# Create package structure for absolute oideachais imports
+RUN mkdir -p /opt/packages && ln -s /app /opt/packages/oideachais
+
 # Create non-root user for security
 RUN useradd --create-home --shell /bin/bash appuser
 
@@ -44,10 +47,7 @@ RUN useradd --create-home --shell /bin/bash appuser
 COPY --from=builder /app/.venv /app/.venv
 
 # Copy application code
-COPY --chown=appuser:appuser api/ ./api/
-COPY --chown=appuser:appuser storage/ ./storage/
-COPY --chown=appuser:appuser agents/ ./agents/
-COPY --chown=appuser:appuser baml_src/ ./baml_src/
+COPY --chown=appuser:appuser . .
 
 # Create data directories
 RUN mkdir -p /app/storage/data && chown -R appuser:appuser /app/storage
@@ -57,7 +57,8 @@ USER appuser
 
 # Set PATH to use virtual environment
 ENV PATH="/app/.venv/bin:$PATH"
-ENV PYTHONPATH="/app"
+# Set PYTHONPATH to include the packages directory and current app
+ENV PYTHONPATH="/opt/packages:/app"
 
 # Expose API port
 EXPOSE 8000

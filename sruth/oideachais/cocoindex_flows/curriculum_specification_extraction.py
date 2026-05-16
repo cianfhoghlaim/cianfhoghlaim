@@ -14,10 +14,10 @@ CRITICAL CONSTRAINTS:
 
 Usage:
     # Run extraction flow
-    python -m sruth.oideachais.cocoindex_flows.curriculum_specification_extraction
+    python -m oideachais.cocoindex_flows.curriculum_specification_extraction
 
     # Or import and run
-    from sruth.oideachais.cocoindex_flows.curriculum_specification_extraction import (
+    from oideachais.cocoindex_flows.curriculum_specification_extraction import (
         CurriculumSpecificationFlow,
     )
     flow = CurriculumSpecificationFlow()

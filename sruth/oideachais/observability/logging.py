@@ -5,7 +5,7 @@ Provides consistent, structured logging across all modules using structlog.
 Integrates with Dagster, Datadog, and other observability tools.
 
 Usage:
-    from sruth.oideachais.observability.logging import get_logger
+    from oideachais.observability.logging import get_logger
 
     logger = get_logger(__name__)
     logger.info("processing_started", source="ncca", batch_size=100)
@@ -18,7 +18,7 @@ import sys
 from typing import Any
 
 import structlog
-from sruth.oideachais.settings import settings
+from oideachais.settings import settings
 from structlog.types import Processor
 
 

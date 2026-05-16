@@ -17,7 +17,7 @@ from typing import Any
 import dlt
 import logfire
 
-logfire.configure()
+logfire.configure(send_to_logfire='if-token-present')
 basicConfig(handlers=[logfire.LogfireLoggingHandler()])
 
 logger = getLogger(__name__)

@@ -11,10 +11,10 @@ End-to-end pipeline for:
 Supports concurrent LanceDB Cloud + local lakehouse storage.
 
 Usage:
-    dagster dev -m sruth.oideachais.dagster_defs
+    dagster dev -m oideachais.dagster_defs
 
     # Materialize HTR pipeline
-    dagster job execute -m sruth.oideachais.dagster_defs -j htr_training_job
+    dagster job execute -m oideachais.dagster_defs -j htr_training_job
 """
 
 # Note: Removed future annotations for Dagster compatibility

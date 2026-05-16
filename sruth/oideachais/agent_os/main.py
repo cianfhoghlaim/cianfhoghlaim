@@ -9,10 +9,10 @@ It wraps the existing Agno education team in AgentOS for:
 
 Usage:
     # Development
-    python -m sruth.oideachais.agent_os.main
+    python -m oideachais.agent_os.main
 
     # Production (via uvicorn)
-    uvicorn sruth.oideachais.agent_os.main:app --host 0.0.0.0 --port 7772
+    uvicorn oideachais.agent_os.main:app --host 0.0.0.0 --port 7772
 """
 
 from __future__ import annotations
@@ -27,7 +27,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 from agno.os import AgentOS
 
 # Import existing education team and agents
-from sruth.oideachais.agents.agno.education_team import (
+from oideachais.agents.agno.education_team import (
     corpus_agent,
     curriculum_agent,
     education_team,
@@ -151,7 +151,7 @@ async def call_remote_agent(request: dict):
 if __name__ == "__main__":
     # Run with auto-reload for development
     agent_os.serve(
-        app="sruth.oideachais.agent_os.main:app",
+        app="oideachais.agent_os.main:app",
         host="0.0.0.0",
         port=7772,
         reload=True,

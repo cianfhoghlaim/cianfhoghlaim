@@ -18,7 +18,7 @@ from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
 
-from sruth.oideachais.observability.logging import get_logger
+from oideachais.observability.logging import get_logger
 
 logger = get_logger(__name__)
 

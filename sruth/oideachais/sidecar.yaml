@@ -12,7 +12,7 @@ services:
   # LOCKET - Secrets Management Sidecar
   # ---------------------------------------------------------------------------
   locket:
-    image: ghcr.io/bpbradley/locket:latest
+    image: ghcr.io/bpbradley/locket:infisical
     container_name: oideachais-locket
     restart: unless-stopped
     user: "65532:65532"
@@ -21,16 +21,14 @@ services:
     cap_drop:
       - ALL
     read_only: true
-    environment:
-      OP_CONNECT_HOST: ${OP_CONNECT_HOST:-http://132.145.27.89:8080}
     command:
-      - "--provider=op-connect"
-      - "--connect.host=${OP_CONNECT_HOST:-http://132.145.27.89:8080}"
-      - "--connect.token-file=/run/secrets/op_token"
+      - "--provider=infisical"
+      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:
-      - op_token
+      - infisical_secret
     volumes:
       - ./secrets.env:/templates/secrets.env:ro
       - oideachais-secrets:/run/secrets/locket
@@ -71,8 +69,8 @@ services:
 # SECRETS
 # =============================================================================
 secrets:
-  op_token:
-    file: ${OP_CONNECT_TOKEN_FILE:-../../op_token}
+  infisical_secret:
+    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
 
 # =============================================================================
 # VOLUMES

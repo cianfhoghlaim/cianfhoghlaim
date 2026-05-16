@@ -18,7 +18,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
 
-from sruth.oideachais.settings import settings
+from oideachais.settings import settings
 
 from ..core.utils import CircuitBreaker
 

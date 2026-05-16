@@ -15,7 +15,7 @@ Features:
 - Federated search across all backends
 
 Usage:
-    from sruth.oideachais.graph.research import ResearchGraph
+    from oideachais.graph.research import ResearchGraph
 
     graph = ResearchGraph()
     await graph.initialize()

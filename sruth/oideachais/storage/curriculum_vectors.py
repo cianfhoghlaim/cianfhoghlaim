@@ -9,7 +9,7 @@ Critical Constraints (from CLAUDE.md):
 - SINGLE-THREADED: Use SerialDatabaseExecutor within process
 
 Usage:
-    from sruth.oideachais.storage.curriculum_vectors import CurriculumVectorSearch
+    from oideachais.storage.curriculum_vectors import CurriculumVectorSearch
 
     search = CurriculumVectorSearch()
     await search.index_outcomes(outcomes)

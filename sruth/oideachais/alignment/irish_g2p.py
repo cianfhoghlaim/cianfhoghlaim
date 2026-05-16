@@ -25,7 +25,7 @@ from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 
-from sruth.oideachais.observability.logging import get_logger
+from oideachais.observability.logging import get_logger
 
 logger = get_logger(__name__)
 

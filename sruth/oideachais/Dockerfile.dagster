@@ -15,6 +15,9 @@ RUN pip install uv
 
 WORKDIR /app
 
+# Create package structure for absolute oideachais imports
+RUN mkdir -p /opt/packages && ln -s /app /opt/packages/oideachais
+
 # Copy workspace config
 COPY pyproject.toml uv.lock README.md* ./
 COPY workspace.yaml ./
@@ -28,6 +31,9 @@ RUN uv sync --frozen
 # Create dagster home
 ENV DAGSTER_HOME=/opt/dagster/home
 RUN mkdir -p $DAGSTER_HOME
+
+# Set PYTHONPATH to include the packages directory
+ENV PYTHONPATH="/opt/packages:/app"
 
 # Expose Dagster webserver port
 EXPOSE 3000

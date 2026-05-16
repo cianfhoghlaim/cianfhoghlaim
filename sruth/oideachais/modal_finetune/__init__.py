@@ -8,13 +8,13 @@ This module contains Modal functions for GPU-accelerated ML tasks:
 
 Usage:
     # Run fine-tuning
-    modal run sruth.oideachais.modal.finetune_irish
+    modal run oideachais.modal.finetune_irish
 
     # Run batch embeddings
-    modal run sruth.oideachais.modal.embed_batch
+    modal run oideachais.modal.embed_batch
 
     # Deploy as persistent service
-    modal deploy sruth.oideachais.modal.embed_batch
+    modal deploy oideachais.modal.embed_batch
 
 Requirements:
     - Modal account with GPU access

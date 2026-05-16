@@ -9,7 +9,7 @@ This file re-exports from core.storage for backward compatibility.
 import warnings
 
 warnings.warn(
-    "sruth.oideachais.storage.serial_executor is deprecated. "
+    "oideachais.storage.serial_executor is deprecated. "
     "Import from oideachais.core.storage instead.",
     DeprecationWarning,
     stacklevel=2,

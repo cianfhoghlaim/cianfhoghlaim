@@ -5,7 +5,7 @@ All configuration should be loaded from environment variables
 with sensible defaults. Use OIDEACHAIS_ prefix for all settings.
 
 Usage:
-    from sruth.oideachais.settings import settings
+    from oideachais.settings import settings
 
     # Access settings
     url = settings.curriculum_url

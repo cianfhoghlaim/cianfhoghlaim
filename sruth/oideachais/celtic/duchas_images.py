@@ -44,7 +44,7 @@ from xml.etree import ElementTree as ET
 import dlt
 from dlt.sources import DltResource
 from dlt.sources.incremental import Incremental
-from sruth.oideachais.observability.logging import get_logger
+from oideachais.observability.logging import get_logger
 from sruth.shared.http import doras_client, duchas_client
 
 logger = get_logger(__name__)

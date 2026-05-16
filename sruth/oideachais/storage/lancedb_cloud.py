@@ -11,7 +11,7 @@ Key differences from local/Iceberg integration:
 - Pay-per-query pricing after credits
 
 Usage:
-    from sruth.oideachais.storage.lancedb_cloud import LanceDBCloudClient
+    from oideachais.storage.lancedb_cloud import LanceDBCloudClient
 
     client = LanceDBCloudClient()
     await client.create_table("duchas_embeddings", schema)
