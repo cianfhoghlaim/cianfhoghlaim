@@ -1,0 +1,8 @@
+{
+  "embedding": {
+    "provider": "openai",
+    "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+    "model": "gemini-embedding-2-preview",
+    "api_key": "dont_leak_key"
+  }
+}
