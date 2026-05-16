@@ -8,4 +8,4 @@ directory_type = "workspace"
 
 # Celtic Education Platform - Irish curriculum, Celtic languages, British Isles education
 [[workspace.projects]]
-path = "flows/education"
+path = "sruth/oideachais"
