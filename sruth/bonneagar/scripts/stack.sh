@@ -131,21 +131,21 @@ run_with_locket() {
         return
     fi
 
-    if [ ! -f "$OP_CONNECT_TOKEN_FILE" ]; then
-        echo -e "${RED}Error: 1Password Connect token file not found: ${OP_CONNECT_TOKEN_FILE}${NC}"
-        echo "Create this file with your 1Password Connect token or set OP_CONNECT_TOKEN_FILE"
-        exit 1
-    fi
-
-    echo -e "${GREEN}Running with Locket (op-connect)...${NC}"
+    echo -e "${GREEN}Running with Locket (infisical)...${NC}"
     echo -e "Stack: ${BLUE}${STACK}${NC}"
     echo -e "Secrets: ${SECRETS_FILE}"
     echo ""
 
+    # Ensure INFISICAL_CLIENT_ID and INFISICAL_CLIENT_SECRET are set
+    if [ -z "$INFISICAL_CLIENT_ID" ] || [ -z "$INFISICAL_CLIENT_SECRET" ]; then
+        echo -e "${RED}Error: INFISICAL_CLIENT_ID and INFISICAL_CLIENT_SECRET must be set.${NC}"
+        exit 1
+    fi
+
     locket exec \
-        --provider op-connect \
-        --connect.host "$OP_CONNECT_HOST" \
-        --connect.token-file "$OP_CONNECT_TOKEN_FILE" \
+        --provider infisical \
+        --infisical-client-id "$INFISICAL_CLIENT_ID" \
+        --infisical-client-secret "$INFISICAL_CLIENT_SECRET" \
         --env-file "$SECRETS_FILE" \
         -- docker compose -f "$COMPOSE_FILE" "$COMMAND" "$@"
 }

@@ -3,16 +3,13 @@
 # DEPLOY INFRASTRUCTURE PLAYBOOK
 # =============================================================================
 # Deploys the complete infrastructure stack to a remote server:
-#   1. 1Password Connect (secrets backend)
-#   2. Pangolin Core (reverse proxy, tunneling, auth)
-#   3. Komodo Core (container orchestration)
+#   1. Pangolin Core (reverse proxy, tunneling, auth)
+#   2. Komodo Core (container orchestration)
 #
 # Usage:
 #   ansible-playbook playbooks/deploy-infrastructure.yml -l infrastructure
 #
 # Prerequisites:
-#   - 1Password credentials file on control machine
-#   - 1Password Connect token on control machine
 #   - Pangolin config directory on control machine
 #
 # =============================================================================
@@ -54,15 +51,7 @@
 
   roles:
     # -------------------------------------------------------------------------
-    # 1. 1PASSWORD CONNECT - Secrets Backend
-    # -------------------------------------------------------------------------
-    - role: onepassword_connect
-      tags:
-        - onepassword
-        - secrets
-
-    # -------------------------------------------------------------------------
-    # 2. PANGOLIN CORE - Reverse Proxy & Tunneling
+    # 1. PANGOLIN CORE - Reverse Proxy & Tunneling
     # -------------------------------------------------------------------------
     - role: pangolin_core
       tags:
@@ -71,7 +60,7 @@
       when: deploy_pangolin | default(true) | bool
 
     # -------------------------------------------------------------------------
-    # 3. KOMODO CORE - Container Orchestration
+    # 2. KOMODO CORE - Container Orchestration
     # -------------------------------------------------------------------------
     - role: komodo_core
       tags:
@@ -89,7 +78,6 @@
           Host: {{ inventory_hostname }}
 
           Services deployed:
-            - 1Password Connect: http://127.0.0.1:{{ op_connect_api_port | default(8080) }}
             - Pangolin Core: {{ pangolin_dashboard_url | default('https://pangolin.' + pangolin_domain | default('example.com')) }}
             - Komodo Core: {{ komodo_host | default('https://komodo.example.com') }}
 

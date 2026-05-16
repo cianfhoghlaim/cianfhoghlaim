@@ -3,8 +3,8 @@
  * Setup script for OCI Infrastructure deployment
  *
  * This script:
- * 1. Saves Cloudflare credentials to 1Password
- * 2. Saves OCI server info to 1Password
+ * 1. Saves Cloudflare credentials to Infisical
+ * 2. Saves OCI server info to Infisical
  * 3. Updates DNS records via Pulumi
  *
  * Usage:
@@ -13,107 +13,103 @@
  *   bun run setup.ts update-dns
  */
 
-import { OnePasswordConnect, ItemBuilder, FullItem } from "@1password/connect";
+import { InfisicalClient } from "@infisical/sdk";
 import * as path from "path";
 import * as fs from "fs";
 
 // Configuration
 const CONFIG = {
-    // 1Password Connect (local instance via Komodo)
-    opConnectHost: process.env.OP_CONNECT_HOST || "http://localhost:8080",
-    opConnectToken: process.env.OP_CONNECT_TOKEN || "",
-    opVault: process.env.OP_VAULT || "dev-baile",
-    // Item names
-    cloudflareItem: "cloudflare",
-    serverOciItem: "server-oci",
+    // Infisical
+    infisicalClientId: process.env.INFISICAL_CLIENT_ID || "",
+    infisicalClientSecret: process.env.INFISICAL_CLIENT_SECRET || "",
+    infisicalProjectId: process.env.INFISICAL_PROJECT_ID || "",
+    infisicalEnvironment: process.env.INFISICAL_ENVIRONMENT || "prod",
     // Cloudflare
     cloudflareDomain: "cianfhoghlaim.ie",
 };
 
-// Read 1Password token from local file if not in env
-function getOpToken(): string {
-    if (CONFIG.opConnectToken) return CONFIG.opConnectToken;
+// Read Infisical secret from local file if not in env
+function getInfisicalSecret(): string {
+    if (CONFIG.infisicalClientSecret) return CONFIG.infisicalClientSecret;
 
-    const tokenPath = path.join(__dirname, "..", "..", "pangolin", "pangolin-core", "config", "secrets", "op_token");
+    const tokenPath = path.join(__dirname, "..", "..", "pangolin", "pangolin-core", "config", "secrets", "infisical_secret");
     if (fs.existsSync(tokenPath)) {
         return fs.readFileSync(tokenPath, "utf-8").trim();
     }
-    throw new Error("OP_CONNECT_TOKEN not set and token file not found");
+    throw new Error("INFISICAL_CLIENT_SECRET not set and secret file not found");
 }
 
-async function getOpClient() {
-    const token = getOpToken();
-    return OnePasswordConnect({
-        serverURL: CONFIG.opConnectHost,
-        token,
-        keepAlive: false,
+let _client: InfisicalClient | null = null;
+function getInfisicalClient(): InfisicalClient {
+    if (_client) return _client;
+    const clientSecret = getInfisicalSecret();
+    _client = new InfisicalClient({
+        clientId: CONFIG.infisicalClientId,
+        clientSecret,
     });
+    return _client;
 }
 
 /**
- * Get vault ID from vault name
- */
-async function getVaultId(op: ReturnType<typeof OnePasswordConnect>, vaultName: string): Promise<string> {
-    const vaults = await op.listVaults();
-    const vault = vaults.find(v => v.name === vaultName);
-    if (!vault || !vault.id) {
-        throw new Error(`Vault "${vaultName}" not found. Available vaults: ${vaults.map(v => v.name).join(", ")}`);
-    }
-    return vault.id;
-}
-
-/**
- * Save Cloudflare credentials to 1Password
+ * Save Cloudflare credentials to Infisical
  */
 async function saveCloudflareCredentials(apiToken: string, zoneId: string): Promise<void> {
-    console.log("Saving Cloudflare credentials to 1Password...");
+    console.log("Saving Cloudflare credentials to Infisical...");
 
-    const op = await getOpClient();
-    const vaultId = await getVaultId(op, CONFIG.opVault);
+    const client = getInfisicalClient();
 
-    // Check if item exists
-    let existingItem: FullItem | null = null;
     try {
-        existingItem = await op.getItemByTitle(vaultId, CONFIG.cloudflareItem);
+        await client.createSecret({
+            secretName: "CLOUDFLARE_API_TOKEN",
+            secretValue: apiToken,
+            projectId: CONFIG.infisicalProjectId,
+            environment: CONFIG.infisicalEnvironment,
+            path: "/"
+        });
     } catch {
-        // Item doesn't exist
+        await client.updateSecret({
+            secretName: "CLOUDFLARE_API_TOKEN",
+            secretValue: apiToken,
+            projectId: CONFIG.infisicalProjectId,
+            environment: CONFIG.infisicalEnvironment,
+            path: "/"
+        });
     }
 
-    if (existingItem) {
-        // Update existing item
-        existingItem.fields = existingItem.fields?.map(field => {
-            if (field.label === "api_token") return { ...field, value: apiToken };
-            if (field.label === "zone_id") return { ...field, value: zoneId };
-            if (field.label === "domain") return { ...field, value: CONFIG.cloudflareDomain };
-            return field;
-        }) || [];
+    try {
+        await client.createSecret({
+            secretName: "CLOUDFLARE_ZONE_ID",
+            secretValue: zoneId,
+            projectId: CONFIG.infisicalProjectId,
+            environment: CONFIG.infisicalEnvironment,
+            path: "/"
+        });
+    } catch {
+        await client.updateSecret({
+            secretName: "CLOUDFLARE_ZONE_ID",
+            secretValue: zoneId,
+            projectId: CONFIG.infisicalProjectId,
+            environment: CONFIG.infisicalEnvironment,
+            path: "/"
+        });
+    }
 
-        // Add missing fields
-        const fieldLabels = existingItem.fields?.map(f => f.label) || [];
-        if (!fieldLabels.includes("api_token")) {
-            existingItem.fields = [...(existingItem.fields || []), { label: "api_token", value: apiToken }];
-        }
-        if (!fieldLabels.includes("zone_id")) {
-            existingItem.fields = [...(existingItem.fields || []), { label: "zone_id", value: zoneId }];
-        }
-        if (!fieldLabels.includes("domain")) {
-            existingItem.fields = [...(existingItem.fields || []), { label: "domain", value: CONFIG.cloudflareDomain }];
-        }
-
-        await op.updateItem(vaultId, existingItem);
-        console.log(`  Updated item "${CONFIG.cloudflareItem}" in vault "${CONFIG.opVault}"`);
-    } else {
-        // Create new item
-        const newItem = new ItemBuilder()
-            .setCategory("API_CREDENTIAL")
-            .setTitle(CONFIG.cloudflareItem)
-            .addField({ label: "api_token", value: apiToken, sectionName: "Credentials" })
-            .addField({ label: "zone_id", value: zoneId, sectionName: "Credentials" })
-            .addField({ label: "domain", value: CONFIG.cloudflareDomain, sectionName: "Credentials" })
-            .build();
-
-        await op.createItem(vaultId, newItem);
-        console.log(`  Created item "${CONFIG.cloudflareItem}" in vault "${CONFIG.opVault}"`);
+    try {
+        await client.createSecret({
+            secretName: "CLOUDFLARE_DOMAIN",
+            secretValue: CONFIG.cloudflareDomain,
+            projectId: CONFIG.infisicalProjectId,
+            environment: CONFIG.infisicalEnvironment,
+            path: "/"
+        });
+    } catch {
+        await client.updateSecret({
+            secretName: "CLOUDFLARE_DOMAIN",
+            secretValue: CONFIG.cloudflareDomain,
+            projectId: CONFIG.infisicalProjectId,
+            environment: CONFIG.infisicalEnvironment,
+            path: "/"
+        });
     }
 
     console.log("\nCloudflare credentials saved successfully!");
@@ -122,45 +118,37 @@ async function saveCloudflareCredentials(apiToken: string, zoneId: string): Prom
 }
 
 /**
- * Save server info to 1Password (matches servers.ts expectations)
+ * Save server info to Infisical
  */
 async function saveServerInfo(ip: string, user: string = "ubuntu"): Promise<void> {
-    console.log("Saving server info to 1Password...");
+    console.log("Saving server info to Infisical...");
 
-    const op = await getOpClient();
-    const vaultId = await getVaultId(op, CONFIG.opVault);
+    const client = getInfisicalClient();
 
-    // Check if item exists
-    let existingItem: FullItem | null = null;
-    try {
-        existingItem = await op.getItemByTitle(vaultId, CONFIG.serverOciItem);
-    } catch {
-        // Item doesn't exist
-    }
+    const secretsToSave = [
+        { name: "SERVER_PUBLIC_IP", value: ip },
+        { name: "SERVER_USER", value: user },
+        { name: "SERVER_HOSTNAME", value: "arm1.oci" }
+    ];
 
-    if (existingItem) {
-        // Update existing item
-        existingItem.fields = existingItem.fields?.map(field => {
-            if (field.label === "ip") return { ...field, value: ip };
-            if (field.label === "user") return { ...field, value: user };
-            if (field.label === "hostname") return { ...field, value: "arm1.oci" };
-            return field;
-        }) || [];
-
-        await op.updateItem(vaultId, existingItem);
-        console.log(`  Updated item "${CONFIG.serverOciItem}" in vault "${CONFIG.opVault}"`);
-    } else {
-        // Create new item
-        const newItem = new ItemBuilder()
-            .setCategory("SERVER")
-            .setTitle(CONFIG.serverOciItem)
-            .addField({ label: "ip", value: ip, sectionName: "Infrastructure" })
-            .addField({ label: "user", value: user, sectionName: "Infrastructure" })
-            .addField({ label: "hostname", value: "arm1.oci", sectionName: "Infrastructure" })
-            .build();
-
-        await op.createItem(vaultId, newItem);
-        console.log(`  Created item "${CONFIG.serverOciItem}" in vault "${CONFIG.opVault}"`);
+    for (const secret of secretsToSave) {
+        try {
+            await client.createSecret({
+                secretName: secret.name,
+                secretValue: secret.value,
+                projectId: CONFIG.infisicalProjectId,
+                environment: CONFIG.infisicalEnvironment,
+                path: "/"
+            });
+        } catch {
+            await client.updateSecret({
+                secretName: secret.name,
+                secretValue: secret.value,
+                projectId: CONFIG.infisicalProjectId,
+                environment: CONFIG.infisicalEnvironment,
+                path: "/"
+            });
+        }
     }
 
     console.log("\nServer info saved successfully!");
@@ -169,21 +157,30 @@ async function saveServerInfo(ip: string, user: string = "ubuntu"): Promise<void
 }
 
 /**
- * Get Cloudflare credentials from 1Password
+ * Get Cloudflare credentials from Infisical
  */
 async function getCloudflareCredentials(): Promise<{ apiToken: string; zoneId: string }> {
-    const op = await getOpClient();
-    const vaultId = await getVaultId(op, CONFIG.opVault);
-    const item = await op.getItemByTitle(vaultId, CONFIG.cloudflareItem);
-
-    const apiToken = item.fields?.find(f => f.label === "api_token")?.value;
-    const zoneId = item.fields?.find(f => f.label === "zone_id")?.value;
-
-    if (!apiToken || !zoneId) {
-        throw new Error("Cloudflare credentials not found in 1Password");
+    const client = getInfisicalClient();
+    
+    try {
+        const apiTokenSecret = await client.getSecret({
+            secretName: "CLOUDFLARE_API_TOKEN",
+            projectId: CONFIG.infisicalProjectId,
+            environment: CONFIG.infisicalEnvironment,
+            path: "/"
+        });
+        
+        const zoneIdSecret = await client.getSecret({
+            secretName: "CLOUDFLARE_ZONE_ID",
+            projectId: CONFIG.infisicalProjectId,
+            environment: CONFIG.infisicalEnvironment,
+            path: "/"
+        });
+        
+        return { apiToken: apiTokenSecret.secretValue, zoneId: zoneIdSecret.secretValue };
+    } catch (e) {
+        throw new Error("Cloudflare credentials not found in Infisical");
     }
-
-    return { apiToken, zoneId };
 }
 
 /**
@@ -192,7 +189,7 @@ async function getCloudflareCredentials(): Promise<{ apiToken: string; zoneId: s
 async function updateDns(): Promise<void> {
     console.log("Updating DNS records...");
 
-    // Get credentials from 1Password
+    // Get credentials from Infisical
     const { apiToken, zoneId } = await getCloudflareCredentials();
 
     // Set environment variables for Pulumi
@@ -216,25 +213,23 @@ async function updateDns(): Promise<void> {
 }
 
 /**
- * Show current configuration from 1Password
+ * Show current configuration from Infisical
  */
 async function showConfig(): Promise<void> {
-    console.log("Current configuration from 1Password:\n");
+    console.log("Current configuration from Infisical:\n");
 
-    const op = await getOpClient();
-    const vaultId = await getVaultId(op, CONFIG.opVault);
+    const client = getInfisicalClient();
 
     // Cloudflare
     try {
-        const cfItem = await op.getItemByTitle(vaultId, CONFIG.cloudflareItem);
+        const cfApi = await client.getSecret({ secretName: "CLOUDFLARE_API_TOKEN", projectId: CONFIG.infisicalProjectId, environment: CONFIG.infisicalEnvironment, path: "/" });
+        const cfZone = await client.getSecret({ secretName: "CLOUDFLARE_ZONE_ID", projectId: CONFIG.infisicalProjectId, environment: CONFIG.infisicalEnvironment, path: "/" });
+        const cfDomain = await client.getSecret({ secretName: "CLOUDFLARE_DOMAIN", projectId: CONFIG.infisicalProjectId, environment: CONFIG.infisicalEnvironment, path: "/" });
+        
         console.log("Cloudflare:");
-        cfItem.fields?.forEach(f => {
-            if (f.label === "api_token") {
-                console.log(`  ${f.label}: ${f.value?.slice(0, 10)}...`);
-            } else {
-                console.log(`  ${f.label}: ${f.value}`);
-            }
-        });
+        console.log(`  api_token: ${cfApi.secretValue.slice(0, 10)}...`);
+        console.log(`  zone_id: ${cfZone.secretValue}`);
+        console.log(`  domain: ${cfDomain.secretValue}`);
     } catch {
         console.log("Cloudflare: Not configured");
     }
@@ -243,11 +238,14 @@ async function showConfig(): Promise<void> {
 
     // Server
     try {
-        const serverItem = await op.getItemByTitle(vaultId, CONFIG.serverOciItem);
+        const serverIp = await client.getSecret({ secretName: "SERVER_PUBLIC_IP", projectId: CONFIG.infisicalProjectId, environment: CONFIG.infisicalEnvironment, path: "/" });
+        const serverUser = await client.getSecret({ secretName: "SERVER_USER", projectId: CONFIG.infisicalProjectId, environment: CONFIG.infisicalEnvironment, path: "/" });
+        const serverHost = await client.getSecret({ secretName: "SERVER_HOSTNAME", projectId: CONFIG.infisicalProjectId, environment: CONFIG.infisicalEnvironment, path: "/" });
+        
         console.log("Server (arm1.oci):");
-        serverItem.fields?.forEach(f => {
-            console.log(`  ${f.label}: ${f.value}`);
-        });
+        console.log(`  ip: ${serverIp.secretValue}`);
+        console.log(`  user: ${serverUser.secretValue}`);
+        console.log(`  hostname: ${serverHost.secretValue}`);
     } catch {
         console.log("Server: Not configured");
     }
@@ -305,9 +303,10 @@ async function main() {
             console.log("  update-dns                                           Update DNS using stored credentials");
             console.log("  show                                                 Show current configuration");
             console.log("\nEnvironment:");
-            console.log("  OP_CONNECT_HOST  - 1Password Connect URL (default: http://localhost:8080)");
-            console.log("  OP_CONNECT_TOKEN - 1Password Connect token (or reads from local file)");
-            console.log("  OP_VAULT         - 1Password vault name (default: dev-baile)");
+            console.log("  INFISICAL_CLIENT_ID     - Infisical Client ID");
+            console.log("  INFISICAL_CLIENT_SECRET - Infisical Client Secret (or reads from local file)");
+            console.log("  INFISICAL_PROJECT_ID    - Infisical Project ID");
+            console.log("  INFISICAL_ENVIRONMENT   - Infisical Environment (default: prod)");
             process.exit(1);
     }
 }

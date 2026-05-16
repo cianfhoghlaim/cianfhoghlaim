@@ -1,0 +1,15 @@
+services:
+  stirling-pdf:
+    image: stirlingtools/stirling-pdf:latest
+    container_name: stirling-pdf
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./stirling-data/tessdata:/usr/share/tessdata  # OCR language files
+      - ./stirling-data/configs:/configs               # Settings & database
+      - ./stirling-data/logs:/logs                     # Application logs
+      - ./stirling-data/pipeline:/pipeline             # Automation configs
+    environment:
+      - SECURITY_ENABLELOGIN=false    # Set true to enable user authentication
+      - LANGS=en_GB                   # Interface language
+    restart: unless-stopped

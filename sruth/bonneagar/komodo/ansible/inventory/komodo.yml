@@ -69,14 +69,10 @@ all:
     # LOCKET CONFIGURATION (Global)
     # -------------------------------------------------------------------------
     # Enable locket on all servers
-    locket_enabled: true
-    locket_provider: op-connect
 
     # 1Password Connect settings (running on arm1.oci - Oracle Cloud)
-    locket_op_connect_host: "http://132.145.27.89:8080"
 
     # 1Password Connect token - ENCRYPTED WITH VAULT
-    locket_op_connect_token: !vault |
       $ANSIBLE_VAULT;1.1;AES256
       5172c220ddfc0524c0030fc96250483803fa22a71216c1e813612cd76ad20749e78e8e6ed47150d1
       96ec21378621ff3f32190e4eb75cce82be5f733f3728bae0f70484ab8a7b42aa1895360fd66319e8
@@ -119,9 +115,7 @@ all:
             value: "{{ ansible_facts.getent_passwd[periphery_user | default('root')].2 | default('0') }}"
           # Locket environment (for services that need it)
           - name: "OP_CONNECT_HOST"
-            value: "{{ locket_op_connect_host }}"
           - name: "OP_CONNECT_TOKEN_FILE"
-            value: "{{ locket_op_token_file | default('/etc/locket/op_token') }}"
 
       children:
         # ---------------------------------------------------------------------
@@ -195,7 +189,6 @@ all:
         # Path to token file on CONTROL machine
         op_token_src: "/config/op_token"
         # Bind to all interfaces for access from Pangolin/Komodo/remote periphery
-        op_connect_bind_address: "0.0.0.0"
 
         # -----------------------------------------------------------------
         # PANGOLIN CORE CONFIGURATION
@@ -203,7 +196,6 @@ all:
         pangolin_domain: "cianfhoghlaim.ie"
         pangolin_op_token_src: "/config/op_token"
         pangolin_config_src: "/config/pangolin"
-        pangolin_op_connect_host: "http://127.0.0.1:8080"
 
         # -----------------------------------------------------------------
         # KOMODO CORE CONFIGURATION

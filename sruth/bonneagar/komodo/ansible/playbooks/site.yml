@@ -2,7 +2,7 @@
 # =============================================================================
 # SITE INFRASTRUCTURE PLAYBOOK
 # =============================================================================
-# Deploys site infrastructure (Newt + Locket + Periphery) to managed hosts
+# Deploys site infrastructure (Newt + Periphery) to managed hosts
 #
 # USAGE:
 #   Deploy to all sites:
@@ -15,11 +15,9 @@
 #     ansible-playbook playbooks/site.yml -l bunchloch
 #
 # PREREQUISITES:
-#   1. 1Password Connect running on OCI (132.145.27.89:8080)
+#   1. Infisical running
 #   2. Newt credentials created in Pangolin UI
-#   3. Credentials stored in 1Password (vault: dev-baile):
-#      - <hostname>-newt: id, secret
-#   4. OP Connect token at /etc/connect/token on target hosts
+#   3. Credentials stored in Infisical
 # =============================================================================
 
 - name: Deploy Site Infrastructure
@@ -53,7 +51,6 @@
           Komodo Core: {{ periphery_core_address }}
 
           Services:
-            - Locket (secrets): {{ inventory_hostname }}-locket
             - Newt (tunnel): {{ inventory_hostname }}-newt
             - Periphery (agent): {{ inventory_hostname }}-periphery
 

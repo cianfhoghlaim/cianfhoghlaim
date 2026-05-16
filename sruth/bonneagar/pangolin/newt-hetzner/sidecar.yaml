@@ -12,7 +12,7 @@ services:
   # LOCKET - Secrets Management Sidecar
   # ---------------------------------------------------------------------------
   locket:
-    image: ghcr.io/bpbradley/locket:connect
+    image: ghcr.io/bpbradley/locket:infisical
     container_name: newt-hetzner-locket
     user: "65532:65532"
     restart: unless-stopped
@@ -20,8 +20,6 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
-    environment:
-      OP_CONNECT_HOST: ${OP_CONNECT_HOST:-http://132.145.27.89:8080}
     command:
       - "--provider=op-connect"
       - "--connect.host=${OP_CONNECT_HOST:-http://132.145.27.89:8080}"
@@ -29,7 +27,7 @@ services:
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:
-      - op_token
+      - infisical_secret
     volumes:
       - ./secrets.env:/templates/secrets.env:ro
       - newt-hetzner-secrets:/run/secrets/locket
@@ -51,7 +49,6 @@ services:
     depends_on:
       locket:
         condition: service_healthy
-    environment:
       PANGOLIN_ENDPOINT: ${PANGOLIN_ENDPOINT:-https://pangolin.cianfhoghlaim.ie}
       NEWT_ID_FILE: /run/secrets/locket/newt_id
       NEWT_SECRET_FILE: /run/secrets/locket/newt_secret
@@ -62,8 +59,8 @@ services:
       - newt-hetzner-secrets:/run/secrets/locket:ro
 
 secrets:
-  op_token:
-    file: ${OP_CONNECT_TOKEN_FILE:-/etc/connect/token}
+  infisical_secret:
+    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
 
 volumes:
   newt-hetzner-secrets:

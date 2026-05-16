@@ -17,7 +17,7 @@ services:
   # LOCKET - Secrets Management Sidecar
   # ---------------------------------------------------------------------------
   locket:
-    image: ghcr.io/bpbradley/locket:connect
+    image: ghcr.io/bpbradley/locket:infisical
     platform: linux/amd64
     container_name: pangolin-locket
     user: "65532:65532"
@@ -26,8 +26,6 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
-    environment:
-      OP_CONNECT_HOST: ${OP_CONNECT_HOST:-http://132.145.27.89:8080}
     command:
       - "--provider=op-connect"
       - "--connect.host=${OP_CONNECT_HOST:-http://132.145.27.89:8080}"
@@ -35,7 +33,7 @@ services:
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:
-      - op_token
+      - infisical_secret
     volumes:
       - ./secrets.env:/templates/secrets.env:ro
       - pangolin-secrets:/run/secrets/locket
@@ -59,7 +57,6 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
-    environment:
       SERVER_SECRET: ""  # Clear default, use file
     entrypoint: ["/bin/sh", "-c"]
     command:
@@ -77,7 +74,6 @@ services:
     depends_on:
       locket:
         condition: service_healthy
-    environment:
       POSTGRES_USER: pangolin
       POSTGRES_PASSWORD_FILE: /run/secrets/locket/postgres_password
       POSTGRES_DB: pangolin
@@ -117,8 +113,8 @@ services:
       - pangolin-secrets:/run/secrets/locket:ro
 
 secrets:
-  op_token:
-    file: ${OP_CONNECT_TOKEN_FILE:-/etc/connect/token}
+  infisical_secret:
+    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
 
 volumes:
   pangolin-secrets:

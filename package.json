@@ -11,6 +11,7 @@
     "@convex-dev/react-query": "^0.1.0",
     "@fission-ai/openspec": "^0.16.0",
     "@google/gemini-cli": "^0.38.2",
+    "@infisical/sdk": "^5.0.2",
     "@openai/codex": "^0.63.0",
     "@pulumi/cloudflare": "^6.11.0",
     "@pulumi/oci": "^3.12.0",

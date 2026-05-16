@@ -1,5 +1,5 @@
 import { LocalWorkspace, LocalProgramArgs } from "@pulumi/pulumi/automation";
-import { OnePasswordConnect, ItemBuilder, OPConnect } from "@1password/connect";
+import { InfisicalClient } from "@infisical/sdk";
 import { execSync, exec } from "child_process";
 import * as path from "path";
 import * as fs from "fs";
@@ -14,14 +14,12 @@ const CONFIG = {
     // OCI authentication
     ociProfile: process.env.OCI_CLI_PROFILE || "bunchloch",
     ociConfigFile: process.env.OCI_CLI_CONFIG_FILE || path.join(process.env.HOME!, ".oci", "config"),
-    // 1Password Connect
-    opConnectHost: process.env.OP_CONNECT_HOST || "http://localhost:8080",
-    opConnectToken: process.env.OP_CONNECT_TOKEN || "",
-    opVault: process.env.OP_VAULT || "dev-baile",
-    // 1Password items
-    opServerItem: process.env.OP_SERVER_ITEM || "server-oci",
-    opCloudflareItem: process.env.OP_CLOUDFLARE_ITEM || "cloudflare",
-    // Cloudflare (can be loaded from 1Password)
+    // Infisical
+    infisicalClientId: process.env.INFISICAL_CLIENT_ID || "",
+    infisicalClientSecret: process.env.INFISICAL_CLIENT_SECRET || "",
+    infisicalProjectId: process.env.INFISICAL_PROJECT_ID || "",
+    infisicalEnvironment: process.env.INFISICAL_ENVIRONMENT || "prod",
+    // Cloudflare (can be loaded from Infisical)
     cloudflareZoneId: process.env.CLOUDFLARE_ZONE_ID || "",
     cloudflareApiToken: process.env.CLOUDFLARE_API_TOKEN || "",
     cloudflareDomain: process.env.CLOUDFLARE_DOMAIN || "cianfhoghlaim.ie",
@@ -31,38 +29,32 @@ const CONFIG = {
 };
 
 // =============================================================================
-// 1PASSWORD CONNECT HELPERS
+// INFISICAL HELPERS
 // =============================================================================
 
-function getOpToken(): string {
-    if (CONFIG.opConnectToken) return CONFIG.opConnectToken;
+function getInfisicalSecret(): string {
+    if (CONFIG.infisicalClientSecret) return CONFIG.infisicalClientSecret;
 
-    const tokenPath = path.join(__dirname, "..", "..", "pangolin", "pangolin-core", "config", "secrets", "op_token");
+    const tokenPath = path.join(__dirname, "..", "..", "pangolin", "pangolin-core", "config", "secrets", "infisical_secret");
     if (fs.existsSync(tokenPath)) {
         return fs.readFileSync(tokenPath, "utf-8").trim();
     }
-    throw new Error("OP_CONNECT_TOKEN not set and token file not found");
+    throw new Error("INFISICAL_CLIENT_SECRET not set and secret file not found");
 }
 
-function getOpClient(): OPConnect {
-    return OnePasswordConnect({
-        serverURL: CONFIG.opConnectHost,
-        token: getOpToken(),
-        keepAlive: false,
+let _client: InfisicalClient | null = null;
+function getInfisicalClient(): InfisicalClient {
+    if (_client) return _client;
+    const clientSecret = getInfisicalSecret();
+    _client = new InfisicalClient({
+        clientId: CONFIG.infisicalClientId,
+        clientSecret,
     });
-}
-
-async function getVaultId(op: OPConnect, vaultName: string): Promise<string> {
-    const vaults = await op.listVaults();
-    const vault = vaults.find(v => v.name === vaultName);
-    if (!vault || !vault.id) {
-        throw new Error(`Vault "${vaultName}" not found`);
-    }
-    return vault.id;
+    return _client;
 }
 
 /**
- * Load Cloudflare credentials from 1Password
+ * Load Cloudflare credentials from Infisical
  */
 async function loadCloudflareCredentials(): Promise<{ apiToken: string; zoneId: string } | null> {
     if (CONFIG.cloudflareApiToken && CONFIG.cloudflareZoneId) {
@@ -71,19 +63,19 @@ async function loadCloudflareCredentials(): Promise<{ apiToken: string; zoneId: 
     }
 
     try {
-        const op = getOpClient();
-        const vaultId = await getVaultId(op, CONFIG.opVault);
-        const item = await op.getItemByTitle(vaultId, CONFIG.opCloudflareItem);
+        const client = getInfisicalClient();
+        const apiTokenSecret = await client.getSecret({ secretName: "CLOUDFLARE_API_TOKEN", projectId: CONFIG.infisicalProjectId, environment: CONFIG.infisicalEnvironment, path: "/" });
+        const zoneIdSecret = await client.getSecret({ secretName: "CLOUDFLARE_ZONE_ID", projectId: CONFIG.infisicalProjectId, environment: CONFIG.infisicalEnvironment, path: "/" });
 
-        const apiToken = item.fields?.find(f => f.label === "api_token")?.value;
-        const zoneId = item.fields?.find(f => f.label === "zone_id")?.value;
+        const apiToken = apiTokenSecret.secretValue;
+        const zoneId = zoneIdSecret.secretValue;
 
         if (apiToken && zoneId) {
-            console.log(`Loaded Cloudflare credentials from 1Password (zone: ${zoneId})`);
+            console.log(`Loaded Cloudflare credentials from Infisical (zone: ${zoneId})`);
             return { apiToken, zoneId };
         }
     } catch (err) {
-        console.log("Cloudflare credentials not found in 1Password, DNS records will not be created");
+        console.log("Cloudflare credentials not found in Infisical, DNS records will not be created");
     }
 
     return null;
@@ -136,61 +128,47 @@ async function preview() {
     console.log(`Preview complete. Changes: ${JSON.stringify(result.changeSummary)}`);
 }
 
-async function saveToOnePassword(outputs: Record<string, { value: unknown }>) {
+async function saveToInfisical(outputs: Record<string, { value: unknown }>) {
     try {
-        const op = getOpClient();
-        const vaultId = await getVaultId(op, CONFIG.opVault);
+        const client = getInfisicalClient();
 
         const publicIp = outputs.publicIp?.value as string;
         const privateIp = outputs.privateIp?.value as string;
         const instanceOcid = outputs.instanceOcid?.value as string;
+        const serverUser = "ubuntu";
 
-        // Field names match servers.ts expectations:
-        // - ip: public IP address (servers.ts looks for "ip" or "address")
-        // - user: SSH username (servers.ts looks for "user" or "username")
-        // - hostname: optional hostname
-        const serverUser = "ubuntu"; // OCI Ubuntu images use this user
+        const secretsToSave = [
+            { name: "SERVER_PUBLIC_IP", value: publicIp },
+            { name: "SERVER_PRIVATE_IP", value: privateIp },
+            { name: "SERVER_USER", value: serverUser },
+            { name: "SERVER_INSTANCE_OCID", value: instanceOcid },
+            { name: "SERVER_REGION", value: CONFIG.region },
+            { name: "SERVER_HOSTNAME", value: "arm1.oci" }
+        ];
 
-        // Try to find existing item
-        let existingItem;
-        try {
-            existingItem = await op.getItemByTitle(vaultId, CONFIG.opServerItem);
-        } catch {
-            // Item doesn't exist, will create new
+        for (const secret of secretsToSave) {
+            if (!secret.value) continue;
+            try {
+                await client.createSecret({
+                    secretName: secret.name,
+                    secretValue: secret.value,
+                    projectId: CONFIG.infisicalProjectId,
+                    environment: CONFIG.infisicalEnvironment,
+                    path: "/"
+                });
+            } catch {
+                await client.updateSecret({
+                    secretName: secret.name,
+                    secretValue: secret.value,
+                    projectId: CONFIG.infisicalProjectId,
+                    environment: CONFIG.infisicalEnvironment,
+                    path: "/"
+                });
+            }
         }
-
-        if (existingItem) {
-            // Update existing item fields
-            existingItem.fields = existingItem.fields?.map(field => {
-                if (field.label === "ip") return { ...field, value: publicIp };
-                if (field.label === "private_ip") return { ...field, value: privateIp };
-                if (field.label === "user") return { ...field, value: serverUser };
-                if (field.label === "instance_ocid") return { ...field, value: instanceOcid };
-                if (field.label === "region") return { ...field, value: CONFIG.region };
-                if (field.label === "hostname") return { ...field, value: "arm1.oci" };
-                return field;
-            }) || [];
-
-            await op.updateItem(vaultId, existingItem);
-            console.log(`\n1Password: Updated item "${CONFIG.opServerItem}" in vault "${CONFIG.opVault}"`);
-        } else {
-            // Create new item with fields matching servers.ts expectations
-            const newItem = new ItemBuilder()
-                .setCategory("SERVER")
-                .setTitle(CONFIG.opServerItem)
-                .addField({ label: "ip", value: publicIp, sectionName: "Infrastructure" })
-                .addField({ label: "private_ip", value: privateIp, sectionName: "Infrastructure" })
-                .addField({ label: "user", value: serverUser, sectionName: "Infrastructure" })
-                .addField({ label: "hostname", value: "arm1.oci", sectionName: "Infrastructure" })
-                .addField({ label: "instance_ocid", value: instanceOcid, sectionName: "Infrastructure" })
-                .addField({ label: "region", value: CONFIG.region, sectionName: "Infrastructure" })
-                .build();
-
-            await op.createItem(vaultId, newItem);
-            console.log(`\n1Password: Created item "${CONFIG.opServerItem}" in vault "${CONFIG.opVault}"`);
-        }
+        console.log("\nInfisical: Saved outputs successfully");
     } catch (err) {
-        console.error("\n1Password: Failed to save outputs:", err);
+        console.error("\nInfisical: Failed to save outputs:", err);
     }
 }
 
@@ -199,10 +177,10 @@ async function saveToOnePassword(outputs: Record<string, { value: unknown }>) {
 // =============================================================================
 
 /**
- * Regenerate Ansible inventory from 1Password data using servers.ts
+ * Regenerate Ansible inventory from Infisical data using servers.ts
  */
 async function regenerateInventory(): Promise<void> {
-    console.log("\nRegenerating Ansible inventory from 1Password...");
+    console.log("\nRegenerating Ansible inventory from Infisical...");
     try {
         execSync("bun run servers.ts generate-inventory", {
             cwd: CONFIG.komodoDir,
@@ -287,8 +265,8 @@ async function up() {
         console.log(`  ${key}: ${value.value}`);
     }
 
-    // Save outputs to 1Password
-    await saveToOnePassword(result.outputs);
+    // Save outputs to Infisical
+    await saveToInfisical(result.outputs);
 
     return result.outputs;
 }
@@ -339,7 +317,7 @@ async function deploy() {
     console.log(`SSH: ssh -i ~/.ssh/ansible ubuntu@${publicIp}`);
     console.log(`Domain: https://*.${CONFIG.cloudflareDomain}`);
     console.log(`\nServices deployed:`);
-    console.log(`  - 1Password Connect: http://${publicIp}:8080`);
+    console.log(`  - Infisical: http://${publicIp}:8080`);
     console.log(`  - Pangolin: https://pangolin.${CONFIG.cloudflareDomain}`);
     console.log(`  - Komodo: https://komodo.${CONFIG.cloudflareDomain}`);
 }
@@ -398,11 +376,11 @@ if (!command || !commands[command]) {
     console.log("  CLOUDFLARE_API_TOKEN - Cloudflare API token");
     console.log("  CLOUDFLARE_ZONE_ID - Cloudflare zone ID for your domain");
     console.log("  CLOUDFLARE_DOMAIN - Domain name (default: cianfhoghlaim.ie)");
-    console.log("\n1Password Connect (optional - saves outputs to 1Password):");
-    console.log("  OP_CONNECT_HOST - 1Password Connect server URL");
-    console.log("  OP_CONNECT_TOKEN - 1Password Connect token");
-    console.log("  OP_VAULT - Vault name (default: dev-baile)");
-    console.log("  OP_SERVER_ITEM - Item name for server info (default: server-oci)");
+    console.log("\nInfisical (optional - saves outputs to Infisical):");
+    console.log("  INFISICAL_CLIENT_ID - Infisical Client ID");
+    console.log("  INFISICAL_CLIENT_SECRET - Infisical Client Secret");
+    console.log("  INFISICAL_PROJECT_ID - Infisical Project ID");
+    console.log("  INFISICAL_ENVIRONMENT - Environment (default: prod)");
     process.exit(1);
 }
 

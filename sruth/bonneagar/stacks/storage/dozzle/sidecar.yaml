@@ -12,8 +12,6 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
-    environment:
-      OP_CONNECT_HOST: ${OP_CONNECT_HOST:-http://132.145.27.89:8080}
     command:
       - "--provider=op-connect"
       - "--connect.host=${OP_CONNECT_HOST:-http://132.145.27.89:8080}"
@@ -21,7 +19,7 @@ services:
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:
-      - op_token
+      - infisical_secret
     volumes:
       - ./secrets.env:/templates/secrets.env:ro
       - dozzle-secrets:/run/secrets/locket
@@ -42,8 +40,8 @@ services:
       - dozzle-secrets:/run/secrets/locket:ro
 
 secrets:
-  op_token:
-    file: ${OP_CONNECT_TOKEN_FILE:-../../op_token}
+  infisical_secret:
+    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
 
 volumes:
   dozzle-secrets:

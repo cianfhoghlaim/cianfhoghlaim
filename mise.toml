@@ -35,28 +35,6 @@ _.file = '.env'
 MISE_ENV_FILE = ".env"
 PYTHONPATH = "."
 
-# =============================================================================
-# Hooks - Automatic 1Password Secret Injection
-# =============================================================================
-# Uses 1Password CLI to inject secrets on directory entry.
-# Secrets are cached to .env and only refreshed when .env.op changes.
-#
-# Requirements:
-#   - 1Password CLI (op) installed and authenticated
-#   - .env.op template file with op:// references
-# =============================================================================
-
-[hooks.enter]
-shell = "bash"
-script = """
-source "{{ config_root }}/scripts/op-inject.sh"
-"""
-
-[hooks.leave]
-shell = "bash"
-script = """
-source "{{ config_root }}/scripts/op-inject.sh" unset
-"""
 
 # =============================================================================
 # Python Tasks
@@ -238,25 +216,3 @@ run = "uvx --from chunkhound chunkhound index --path ."
 [tasks."search:chunkhound"]
 description = "Search codebase with ChunkHound"
 run = "uvx --from chunkhound chunkhound search '${1}'"
-
-# =============================================================================
-# Secret-Wrapped Tasks (uses op run for 1Password injection)
-# =============================================================================
-# These tasks wrap commands with `op run` to inject secrets at runtime.
-# Secrets are only available during command execution (process-scoped).
-#
-# Usage:
-#   mise run claude              # Launch Claude Code with MCP secrets
-#   mise run op:run -- pytest    # Run any command with secrets
-# =============================================================================
-
-[tasks.claude]
-description = "Launch Claude Code with 1Password secrets injected"
-# Note: mise tasks don't allocate a TTY, so run directly instead:
-#   op run --env-file=.env.local -- claude
-run = "op run --env-file=.env.local -- claude"
-alias = "c"  # Short alias for convenience
-
-[tasks."op:run"]
-description = "Run any command with 1Password secrets injected"
-run = 'op run --env-file=.env.local -- "$@"'
