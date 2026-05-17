@@ -1,8 +1,7 @@
-import { InfisicalClient } from "@infisical/sdk";
+import { InfisicalSDK } from "@infisical/sdk";
 import * as fs from "fs";
 import * as path from "path";
 
-// Define the core setup configuration
 const CONFIG = {
     infisicalClientId: process.env.INFISICAL_CLIENT_ID || "",
     infisicalClientSecret: process.env.INFISICAL_CLIENT_SECRET || "",
@@ -12,17 +11,27 @@ const CONFIG = {
 };
 
 async function main() {
-    if (!CONFIG.infisicalClientId || !CONFIG.infisicalClientSecret || !CONFIG.infisicalProjectId) {
-        console.error("Missing required Infisical environment variables.");
-        console.error("Please ensure INFISICAL_CLIENT_ID, INFISICAL_CLIENT_SECRET, and INFISICAL_PROJECT_ID are set.");
+    let missing = [];
+    if (!CONFIG.infisicalClientId) missing.push("INFISICAL_CLIENT_ID");
+    if (!CONFIG.infisicalClientSecret) missing.push("INFISICAL_CLIENT_SECRET");
+    if (!CONFIG.infisicalProjectId) missing.push("INFISICAL_PROJECT_ID");
+
+    if (missing.length > 0) {
+        console.error("Missing required Infisical environment variables:");
+        missing.forEach(m => console.error(`  - ${m}`));
+        console.error("\nPlease add them to your .env file.");
         process.exit(1);
     }
 
     console.log("Initializing Infisical Client...");
-    const client = new InfisicalClient({
-        clientId: CONFIG.infisicalClientId,
-        clientSecret: CONFIG.infisicalClientSecret,
+    const client = new InfisicalSDK({
         siteUrl: CONFIG.infisicalUrl
+    });
+
+    console.log("Authenticating...");
+    await client.auth().universalAuth.login({
+        clientId: CONFIG.infisicalClientId,
+        clientSecret: CONFIG.infisicalClientSecret
     });
 
     const pathsToCreate = ["/komodo", "/pangolin", "/infrastructure", "/oideachais"];
@@ -30,72 +39,84 @@ async function main() {
     console.log("Setting up folder structure...");
     for (const p of pathsToCreate) {
         try {
-            await client.createFolder({
+            await client.folders().create({
                 environment: CONFIG.infisicalEnvironment,
                 projectId: CONFIG.infisicalProjectId,
                 path: "/",
-                folderName: p.replace("/", "")
+                name: p.replace("/", "")
             });
             console.log(`  Created folder: ${p}`);
         } catch (e: any) {
-            if (e.message?.includes("already exists")) {
+            if (e.message?.includes("already exists") || e.message?.includes("Folder already exists")) {
                 console.log(`  Folder already exists: ${p}`);
             } else {
-                console.log(`  Ensured folder path: ${p}`);
+                console.log(`  Failed to create folder ${p}:`, e.message);
             }
         }
     }
 
-    // Load local secrets if available for seeding
-    const envLocalPath = path.join(__dirname, ".env.local");
+    const envLocalPath = path.join(process.cwd(), ".env");
     let secretsToSeed: Array<{name: string, value: string, path: string}> = [];
 
     if (fs.existsSync(envLocalPath)) {
-        console.log("Found .env.local, parsing secrets to seed...");
+        console.log(`Found .env at ${envLocalPath}, parsing secrets to seed...`);
         const envContent = fs.readFileSync(envLocalPath, "utf-8");
         envContent.split("\n").forEach(line => {
             if (line.trim() && !line.startsWith("#")) {
                 const [key, ...valParts] = line.split("=");
+                if (!valParts.length) return;
+                
                 const value = valParts.join("=").replace(/['"]/g, "");
                 
                 let targetPath = "/infrastructure";
                 if (key.startsWith("NEWT_") || key.startsWith("PANGOLIN_")) targetPath = "/pangolin";
                 if (key.startsWith("KOMODO_") || key.startsWith("PERIPHERY_")) targetPath = "/komodo";
+                if (key === "LOGFIRE_TOKEN" || key === "FIRECRAWL_API_KEY" || key.startsWith("LLM_") || key.startsWith("LANGFUSE_")) targetPath = "/oideachais";
 
-                secretsToSeed.push({ name: key, value, path: targetPath });
+                // Don't push infisical identity to the vault itself
+                if (!key.startsWith("INFISICAL_")) {
+                    secretsToSeed.push({ name: key, value, path: targetPath });
+                }
             }
         });
-    } else {
-        console.log("No .env.local found. Using default placeholder seeds.");
-        secretsToSeed = [
-            { name: "PERIPHERY_ONBOARDING_KEY", value: "change-me", path: "/komodo" },
-            { name: "NEWT_ID", value: "change-me", path: "/pangolin" },
-            { name: "NEWT_SECRET", value: "change-me", path: "/pangolin" },
-            { name: "PANGOLIN_API_KEY", value: "change-me", path: "/pangolin" },
-        ];
-        console.log("Hint: Create a .env.local file in scripts/ with KEY=VALUE to automatically seed them.");
     }
 
-    console.log("Seeding secrets into Vault...");
+    // Always ensure these basic ones exist even if not in .env
+    const defaults = [
+        { name: "PERIPHERY_ONBOARDING_KEY", value: "change-me", path: "/komodo" },
+        { name: "NEWT_ID", value: "change-me", path: "/pangolin" },
+        { name: "NEWT_SECRET", value: "change-me", path: "/pangolin" },
+        { name: "PANGOLIN_API_KEY", value: "change-me", path: "/pangolin" },
+    ];
+
+    for (const def of defaults) {
+        if (!secretsToSeed.find(s => s.name === def.name)) {
+            secretsToSeed.push(def);
+        }
+    }
+
+    console.log(`Seeding ${secretsToSeed.length} secrets into Vault...`);
     for (const secret of secretsToSeed) {
         try {
-            await client.createSecret({
-                secretName: secret.name,
-                secretValue: secret.value,
+            await client.secrets().createSecret(secret.name, {
                 projectId: CONFIG.infisicalProjectId,
                 environment: CONFIG.infisicalEnvironment,
-                path: secret.path
+                secretPath: secret.path,
+                secretValue: secret.value
             });
             console.log(`  Created: ${secret.path}/${secret.name}`);
         } catch (e: any) {
-            await client.updateSecret({
-                secretName: secret.name,
-                secretValue: secret.value,
-                projectId: CONFIG.infisicalProjectId,
-                environment: CONFIG.infisicalEnvironment,
-                path: secret.path
-            });
-            console.log(`  Updated: ${secret.path}/${secret.name}`);
+            try {
+                await client.secrets().updateSecret(secret.name, {
+                    projectId: CONFIG.infisicalProjectId,
+                    environment: CONFIG.infisicalEnvironment,
+                    secretPath: secret.path,
+                    secretValue: secret.value
+                });
+                console.log(`  Updated: ${secret.path}/${secret.name}`);
+            } catch (err: any) {
+                console.log(`  Failed to process ${secret.path}/${secret.name}:`, err.message);
+            }
         }
     }
 
