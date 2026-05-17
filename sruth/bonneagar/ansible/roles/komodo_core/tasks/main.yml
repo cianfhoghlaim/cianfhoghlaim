@@ -1,0 +1,111 @@
+---
+# =============================================================================
+# KOMODO CORE ROLE - MAIN TASKS
+# =============================================================================
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - komodo_host | length > 0
+    fail_msg: "komodo_host must be set"
+
+# -----------------------------------------------------------------------------
+# CREATE DIRECTORIES
+# -----------------------------------------------------------------------------
+
+- name: Create Komodo base directory
+  ansible.builtin.file:
+    path: "{{ komodo_base_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Create Komodo subdirectories
+  ansible.builtin.file:
+    path: "{{ komodo_base_dir }}/{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  loop:
+    - backups
+    - syncs
+
+- name: Create Periphery root directory
+  ansible.builtin.file:
+    path: "{{ komodo_periphery_root }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+# -----------------------------------------------------------------------------
+# DEPLOY CONFIGURATION FILES
+# -----------------------------------------------------------------------------
+
+- name: Deploy secrets.env (Infisical templates)
+  ansible.builtin.template:
+    src: secrets.env.j2
+    dest: "{{ komodo_base_dir }}/secrets.env"
+    owner: root
+    group: root
+    mode: "0600"
+
+- name: Deploy docker-compose.yaml
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ komodo_base_dir }}/docker-compose.yaml"
+    owner: root
+    group: root
+    mode: "0644"
+
+# -----------------------------------------------------------------------------
+# START STACK VIA LOCKET (Infisical)
+# -----------------------------------------------------------------------------
+
+- name: Pull Docker images
+  ansible.builtin.command: docker compose -f {{ komodo_base_dir }}/docker-compose.yaml pull
+  args:
+    chdir: "{{ komodo_base_dir }}"
+  changed_when: false
+
+- name: Start Komodo stack using Locket
+  ansible.builtin.shell: |
+    locket exec \
+      --provider infisical \
+      --infisical-client-id "$INFISICAL_CLIENT_ID" \
+      --infisical-client-secret "$INFISICAL_CLIENT_SECRET" \
+      --env-file {{ komodo_base_dir }}/secrets.env \
+      -- docker compose -f {{ komodo_base_dir }}/docker-compose.yaml up -d --remove-orphans
+  args:
+    chdir: "{{ komodo_base_dir }}"
+  environment:
+    INFISICAL_CLIENT_ID: "{{ infisical_client_id }}"
+    INFISICAL_CLIENT_SECRET: "file:{{ infisical_client_secret_file }}"
+  register: _komodo_compose
+
+- name: Display compose output
+  ansible.builtin.debug:
+    var: _komodo_compose.stdout_lines
+    verbosity: 1
+
+# -----------------------------------------------------------------------------
+# HEALTH CHECK
+# -----------------------------------------------------------------------------
+
+- name: Wait for Komodo Core to be healthy
+  ansible.builtin.uri:
+    url: "http://127.0.0.1:{{ komodo_core_port }}/"
+    method: GET
+    status_code: 200
+  register: _komodo_health
+  until: _komodo_health.status == 200
+  retries: "{{ (komodo_health_timeout / komodo_health_interval) | int }}"
+  delay: "{{ komodo_health_interval }}"
+  when: komodo_wait_healthy
+
+- name: Display Komodo health status
+  ansible.builtin.debug:
+    msg: "Komodo Core is healthy at {{ komodo_host }}"
+  when: komodo_wait_healthy

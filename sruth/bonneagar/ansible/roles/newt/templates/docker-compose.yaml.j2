@@ -12,7 +12,7 @@ services:
   # LOCKET - Secrets Management Sidecar
   # ---------------------------------------------------------------------------
   locket:
-    image: ghcr.io/bpbradley/locket:connect
+    image: ghcr.io/bpbradley/locket:infisical
     container_name: {{ inventory_hostname }}-locket
     user: "65532:65532"
     restart: unless-stopped
@@ -20,13 +20,12 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
-    environment:
-      OP_CONNECT_HOST: {{ op_connect_host }}
-      OP_CONNECT_TOKEN_FILE: /run/secrets/op_token
     secrets:
-      - op_token
+      - infisical_secret
     command:
-      - "--provider=op-connect"
+      - "--provider=infisical"
+      - "--infisical-client-id={{ infisical_client_id }}"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
       - "--mode=watch"
       - "--map=/templates:/run/secrets/locket"
     volumes:
@@ -63,6 +62,7 @@ services:
     labels:
       - "komodo.skip=true"
 
+{% if deploy_periphery | default(true) %}
   # ---------------------------------------------------------------------------
   # PERIPHERY - Komodo Agent
   # ---------------------------------------------------------------------------
@@ -74,6 +74,7 @@ services:
     environment:
       PERIPHERY_CORE_ADDRESS: {{ periphery_core_address }}
       PERIPHERY_CONNECT_AS: {{ periphery_connect_as }}
+      PERIPHERY_ONBOARDING_KEY: /run/secrets/locket/onboarding_key
       PERIPHERY_ROOT_DIRECTORY: /etc/komodo
       PERIPHERY_DISABLE_TERMINALS: "false"
       PERIPHERY_DISABLE_CONTAINER_EXEC: "false"
@@ -86,6 +87,7 @@ services:
       - {{ docker_network_name }}
     labels:
       - "komodo.skip=true"
+{% endif %}
 
 {% if beszel_enabled %}
   # ---------------------------------------------------------------------------
@@ -109,8 +111,8 @@ services:
 # SECRETS
 # =============================================================================
 secrets:
-  op_token:
-    file: {{ op_token_path }}
+  infisical_secret:
+    file: {{ infisical_secret_path }}
 
 # =============================================================================
 # VOLUMES

@@ -21,7 +21,7 @@
 # =============================================================================
 
 - name: Deploy Site Infrastructure
-  hosts: periphery
+  hosts: all
   become: true
 
   pre_tasks:
