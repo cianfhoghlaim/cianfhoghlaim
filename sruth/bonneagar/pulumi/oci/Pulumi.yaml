@@ -1,3 +1,6 @@
 name: oci-infrastructure
-runtime: nodejs
-description: Oracle Cloud ARM instance for Bunchloch infrastructure
+runtime:
+  name: nodejs
+  options:
+    packagemanager: bun
+description: "OCI Infrastructure deployment utilizing Pulumi ESC and Infisical"
