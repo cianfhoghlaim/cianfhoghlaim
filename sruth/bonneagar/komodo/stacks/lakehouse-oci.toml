@@ -8,7 +8,7 @@
 # - PostgreSQL (catalog metadata)
 #
 # This is the PRIMARY lakehouse instance for all control plane data.
-# Replica of Hetzner lakehouse for multi-region redundancy.
+# Replica of OCI lakehouse for multi-region redundancy.
 # =============================================================================
 
 [[stack]]

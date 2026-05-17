@@ -3,16 +3,16 @@
 # =============================================================================
 # AgentOS API for DeFi protocol analysis agents with x402 payments.
 # Domain: crypteolas.ie
-# Server: hetzner-devtools
+# Server: oci-devtools
 # =============================================================================
 
 [[stack]]
 name = "agentos-api"
 description = "AgentOS API for DeFi protocol analysis (port 7771)"
-tags = ["host:hetzner-devtools", "tier:production", "type:api", "domain:agentos.crypteolas.ie", "agent:multi-agent"]
+tags = ["host:oci-devtools", "tier:production", "type:api", "domain:agentos.crypteolas.ie", "agent:multi-agent"]
 
 [stack.config]
-server_id = "hetzner-devtools"
+server_id = "oci-devtools"
 run_directory = "/etc/komodo/sruth/crypteolas/agent_os"
 file_paths = ["docker-compose.yaml", "pangolin.yaml", "sidecar.yaml"]
 environment = """

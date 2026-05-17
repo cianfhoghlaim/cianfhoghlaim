@@ -6,6 +6,7 @@
 //
 // Usage:
 //   km run action deploy-komodo-fleet --limit=arm1-oci
+//   km run action deploy-komodo-fleet --limit=macbook
 // =============================================================================
 
 import { InfisicalClient } from "@infisical/sdk";
@@ -51,7 +52,7 @@ const coreResult = await komodo.execute("RunAction", {
     name: "run-ansible-playbook",
     args: {
         playbook: "komodo.yml",
-        limit,
+        limit: limit || "arm1-oci,macbook",
         tags,
         dryRun,
         extraVars: `periphery_onboarding_key=${peripheryKey}`
@@ -64,7 +65,7 @@ const peripheryResult = await komodo.execute("RunAction", {
     name: "run-ansible-playbook",
     args: {
         playbook: "periphery.yml",
-        limit,
+        limit: limit || "arm1-oci,macbook",
         tags,
         dryRun,
         extraVars: `periphery_onboarding_key=${peripheryKey}`

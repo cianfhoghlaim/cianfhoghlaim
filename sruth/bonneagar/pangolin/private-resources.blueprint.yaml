@@ -16,7 +16,7 @@
 # PREREQUISITES:
 #   - Pangolin client installed on your device
 #   - Connected to the organization via Pangolin client
-#   - Sites: cax41-hetzner, arm1-oci must exist
+#   - Sites: arm1-oci, arm1-oci must exist
 # =============================================================================
 
 private-resources:
@@ -27,7 +27,7 @@ private-resources:
     name: "MLflow Tracking Server"
     mode: host
     destination: mlflow-server
-    site: cax41-hetzner
+    site: arm1-oci
     alias: mlflow.cianfhoghlaim.ie
     users:
       - eolas@cianfhoghlaim.ie
@@ -38,7 +38,7 @@ private-resources:
     name: "Langfuse LLM Observability"
     mode: host
     destination: langfuse-web
-    site: cax41-hetzner
+    site: arm1-oci
     alias: langfuse.cianfhoghlaim.ie
     users:
       - eolas@cianfhoghlaim.ie
@@ -52,7 +52,7 @@ private-resources:
     name: "LanceDB Vector Database"
     mode: host
     destination: lancedb
-    site: cax41-hetzner
+    site: arm1-oci
     alias: lancedb.cianfhoghlaim.ie
     users:
       - eolas@cianfhoghlaim.ie
@@ -63,7 +63,7 @@ private-resources:
     name: "FalkorDB Graph Database"
     mode: host
     destination: falkordb
-    site: cax41-hetzner
+    site: arm1-oci
     alias: falkordb.cianfhoghlaim.ie
     users:
       - eolas@cianfhoghlaim.ie
@@ -85,7 +85,7 @@ private-resources:
     name: "Memgraph Graph Database"
     mode: host
     destination: memgraph
-    site: cax41-hetzner
+    site: arm1-oci
     alias: memgraph.cianfhoghlaim.ie
     users:
       - eolas@cianfhoghlaim.ie
@@ -99,7 +99,7 @@ private-resources:
     name: "Cognee AI Memory"
     mode: host
     destination: cognee
-    site: cax41-hetzner
+    site: arm1-oci
     alias: cognee.cianfhoghlaim.ie
     users:
       - eolas@cianfhoghlaim.ie
@@ -110,7 +110,7 @@ private-resources:
     name: "Graphiti Temporal Knowledge Graph"
     mode: host
     destination: graphiti
-    site: cax41-hetzner
+    site: arm1-oci
     alias: graphiti.cianfhoghlaim.ie
     users:
       - eolas@cianfhoghlaim.ie
@@ -149,7 +149,7 @@ private-resources:
     name: "PostgreSQL - Langfuse"
     mode: host
     destination: langfuse-postgres
-    site: cax41-hetzner
+    site: arm1-oci
     alias: langfuse-db.cianfhoghlaim.ie
     users:
       - eolas@cianfhoghlaim.ie
@@ -160,7 +160,7 @@ private-resources:
     name: "PostgreSQL - MLflow"
     mode: host
     destination: mlflow-postgres
-    site: cax41-hetzner
+    site: arm1-oci
     alias: mlflow-db.cianfhoghlaim.ie
     users:
       - eolas@cianfhoghlaim.ie

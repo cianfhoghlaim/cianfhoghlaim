@@ -9,7 +9,7 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# DATADOG - Hetzner CAX41 (Production Pipelines)
+# DATADOG - OCI CAX41 (Production Pipelines)
 # -----------------------------------------------------------------------------
 # Primary production pipeline monitoring
 # - Kafka broker monitoring
@@ -17,19 +17,19 @@
 # - ML training job metrics
 # -----------------------------------------------------------------------------
 [[stack]]
-name = "datadog-hetzner"
-description = "Datadog agent for Hetzner production pipelines"
-tags = ["host:cax41-hetzner", "tier:observability", "type:apm"]
+name = "datadog-oci"
+description = "Datadog agent for OCI production pipelines"
+tags = ["host:arm1-oci", "tier:observability", "type:apm"]
 
 [stack.config]
-server_id = "cax41-hetzner"
+server_id = "arm1-oci"
 run_directory = "/etc/komodo/storage/datadog"
 file_paths = ["compose.yaml"]
 environment = """
 DD_ENV=production
 DD_SERVICE=oideachas-pipeline
-DD_HOSTNAME=cax41-hetzner
-DD_TAGS=project:oideachas,pipeline:education,host:hetzner,tier:production
+DD_HOSTNAME=arm1-oci
+DD_TAGS=project:oideachas,pipeline:education,host:oci,tier:production
 DD_APM_ENABLED=true
 DD_LLMOBS_ENABLED=true
 DD_LLMOBS_ML_APP=education-ai-pipeline

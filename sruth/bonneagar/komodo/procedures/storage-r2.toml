@@ -6,7 +6,7 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# R2-MOUNTS - Hetzner Production
+# R2-MOUNTS - OCI Production
 # -----------------------------------------------------------------------------
 # 4 rclone FUSE containers mounting R2 buckets:
 # - curriculum-data: Raw curriculum documents (PDFs, images)
@@ -17,10 +17,10 @@
 [[stack]]
 name = "r2-mounts"
 description = "Cloudflare R2 FUSE mounts for curriculum data"
-tags = ["host:cax41-hetzner", "tier:storage", "type:object-storage", "provider:cloudflare"]
+tags = ["host:arm1-oci", "tier:storage", "type:object-storage", "provider:cloudflare"]
 
 [stack.config]
-server_id = "cax41-hetzner"
+server_id = "arm1-oci"
 run_directory = "/etc/komodo/storage/r2"
 file_paths = ["compose.yaml"]
 environment = """

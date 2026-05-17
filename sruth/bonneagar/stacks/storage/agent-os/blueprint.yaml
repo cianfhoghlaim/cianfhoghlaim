@@ -23,7 +23,7 @@ description: |
 # Stack configuration
 config:
   # Server to deploy on
-  server: cax41-hetzner
+  server: arm1-oci
 
   # Git repository for stack definition
   repo: cliste/bonneagar

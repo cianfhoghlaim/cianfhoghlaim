@@ -1,11 +1,11 @@
 # =============================================================================
 # DEPLOY CIANFHOGHLAIM PROCEDURE
 # =============================================================================
-# Deploys main Cianfhoghlaim platform services to cax41-hetzner and arm1-oci.
+# Deploys main Cianfhoghlaim platform services to arm1-oci and arm1-oci.
 # Domain: cianfhoghlaim.ie
 #
 # Services deployed:
-#   cax41-hetzner: MLflow, Langfuse, Dagster, databases, Browser, periphery
+#   arm1-oci: MLflow, Langfuse, Dagster, databases, Browser, periphery
 #   arm1-oci: Komodo, Forgejo, Pangolin, observability, storage
 #
 # Usage:
@@ -40,13 +40,13 @@ execution = { type = "DeployStack", params = { stack = "forgejo" } }
 name = "pangolin-tunnels"
 
 [[procedure.config.stages.executions]]
-execution = { type = "DeployStack", params = { stack = "newt-hetzner" } }
+execution = { type = "DeployStack", params = { stack = "newt-oci" } }
 
 [[procedure.config.stages.executions]]
 execution = { type = "DeployStack", params = { stack = "olm-oracle" } }
 
 [[procedure.config.stages.executions]]
-execution = { type = "DeployStack", params = { stack = "olm-hetzner" } }
+execution = { type = "DeployStack", params = { stack = "olm-oci" } }
 
 # =============================================================================
 # STAGE 3: Storage & Databases (arm1-oci)
@@ -75,20 +75,20 @@ execution = { type = "DeployStack", params = { stack = "beszel" } }
 execution = { type = "DeployStack", params = { stack = "dozzle" } }
 
 # =============================================================================
-# STAGE 5: Production Pipelines (cax41-hetzner)
+# STAGE 5: Production Pipelines (arm1-oci)
 # =============================================================================
 
 [[procedure.config.stages]]
 name = "production-pipelines"
 
 [[procedure.config.stages.executions]]
-execution = { type = "DeployStack", params = { stack = "komodo-periphery-hetzner" } }
+execution = { type = "DeployStack", params = { stack = "komodo-periphery-oci" } }
 
 [[procedure.config.stages.executions]]
 execution = { type = "DeployStack", params = { stack = "sruth-browser" } }
 
 # =============================================================================
-# STAGE 6: Education Pipelines (hetzner-databases)
+# STAGE 6: Education Pipelines (oci-databases)
 # =============================================================================
 
 [[procedure.config.stages]]

@@ -121,18 +121,18 @@ SELECT 'Registered $TABLE_NAME with zero-copy' AS status;
 """
 
 # -----------------------------------------------------------------------------
-# LAKEHOUSE-HETZNER - Production Deployment (Hetzner)
+# LAKEHOUSE-OCI - Production Deployment (OCI)
 # -----------------------------------------------------------------------------
-# For production workloads on always-on Hetzner CAX41
-# Uses same config but deployed to Hetzner instead of MacBook
+# For production workloads on always-on OCI CAX41
+# Uses same config but deployed to OCI instead of MacBook
 # -----------------------------------------------------------------------------
 [[stack]]
-name = "lakehouse-hetzner"
-description = "Production lakehouse on Hetzner CAX41"
-tags = ["host:cax41-hetzner", "tier:lakehouse", "type:data-platform", "environment:production", "component:storage"]
+name = "lakehouse-oci"
+description = "Production lakehouse on OCI CAX41"
+tags = ["host:arm1-oci", "tier:lakehouse", "type:data-platform", "environment:production", "component:storage"]
 
 [stack.config]
-server_id = "cax41-hetzner"
+server_id = "arm1-oci"
 run_directory = "/etc/komodo/storage/lakehouse"
 file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
 environment = """
@@ -176,10 +176,10 @@ description = "Run Lakekeeper database migrations"
 type = "shell"
 command = """
 # Run Lakekeeper migrations
-docker exec lakehouse-hetzner-lakekeeper /app/lakekeeper migrate
+docker exec lakehouse-oci-lakekeeper /app/lakekeeper migrate
 
 # Verify migration success
-docker exec lakehouse-hetzner-lakekeeper /app/lakekeeper migrate --check
+docker exec lakehouse-oci-lakekeeper /app/lakekeeper migrate --check
 """
 
 # Snapshot procedure (inherited from lakehouse)
@@ -189,7 +189,7 @@ description = "Create time-travel snapshot before mutations"
 type = "shell"
 command = """
 # Create DuckLake snapshot for all tables
-docker exec lakehouse-hetzner-lakekeeper duckdb :memory: -c \"
+docker exec lakehouse-oci-lakekeeper duckdb :memory: -c \"
 INSTALL ducklake;
 LOAD ducklake;
 ATTACH 'ducklake:postgres:dbname=lakekeeper host=postgres' AS prod;
@@ -208,7 +208,7 @@ command = """
 TABLE_NAME="${TABLE_NAME:-my_table}"
 S3_PATTERN="${S3_PATTERN:-s3://**/*.parquet}"
 
-docker exec lakehouse-hetzner-lakekeeper duckdb :memory: -c \"
+docker exec lakehouse-oci-lakekeeper duckdb :memory: -c \"
 INSTALL ducklake;
 LOAD ducklake;
 ATTACH 'ducklake:postgres:dbname=lakekeeper host=postgres' AS prod;

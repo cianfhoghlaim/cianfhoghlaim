@@ -2,7 +2,7 @@
 # PANGOLIN MULTI-CLOUD BLUEPRINT
 # =============================================================================
 # Declarative Pangolin resources for multi-cloud infrastructure routing.
-# Defines all exposed services across OCI, Hetzner, and local environments.
+# Defines all exposed services across OCI, OCI, and local environments.
 #
 # This blueprint is applied via Pangolin Integration API:
 #   curl -X POST https://pangolin.cianfhoghlaim.ie/api/v1/blueprints \\
@@ -24,9 +24,9 @@ sites:
       subnet: 10.100.10.0/24
       endpoint: https://pangolin.cianfhoghlaim.ie
 
-  # Hetzner Site (Newt tunnel)
-  - name: hetzner-prod
-    description: "Hetzner production site"
+  # OCI Site (Newt tunnel)
+  - name: oci-prod
+    description: "OCI production site"
     type: newt
     config:
       subnet: 10.100.20.0/24
@@ -53,9 +53,9 @@ public-resources:
       - rate-limit
       - security-headers
 
-  forgejo-hetzner:
-    name: "Forgejo Backup (Hetzner)"
-    full-domain: git-hetzner.cianfhoghlaim.ie
+  forgejo-oci:
+    name: "Forgejo Backup (OCI)"
+    full-domain: git-oci.cianfhoghlaim.ie
     targets:
       - port: 3000
         path: /
@@ -77,9 +77,9 @@ protected-resources:
       - tinyauth
       - rate-limit
 
-  lakekeeper-hetzner:
-    name: "Lakekeeper Iceberg Catalog (Hetzner)"
-    full-domain: lakekeeper-hetzner.cianfhoghlaim.ie
+  lakekeeper-oci:
+    name: "Lakekeeper Iceberg Catalog (OCI)"
+    full-domain: lakekeeper-oci.cianfhoghlaim.ie
     targets:
       - port: 8181
         path: /
@@ -132,48 +132,48 @@ private-resources:
     targets:
       - port: 6333
 
-  # Hetzner Databases
-  memgraph-hetzner:
+  # OCI Databases
+  memgraph-oci:
     name: "Memgraph Graph DB"
-    domain: memgraph-hetzner.internal
+    domain: memgraph-oci.internal
     targets:
       - port: 7687
 
-  falkordb-hetzner:
+  falkordb-oci:
     name: "FalkorDB Graph"
-    domain: falkordb-hetzner.internal
+    domain: falkordb-oci.internal
     targets:
       - port: 6379
 
-  lancedb-hetzner:
+  lancedb-oci:
     name: "LanceDB Vector DB"
-    domain: lancedb-hetzner.internal
+    domain: lancedb-oci.internal
     targets:
       - port: 8080
 
-  postgres-hetzner:
-    name: "PostgreSQL Hetzner"
-    domain: postgres-hetzner.internal
+  postgres-oci:
+    name: "PostgreSQL OCI"
+    domain: postgres-oci.internal
     targets:
       - port: 5432
 
   # Pipeline Orchestration
-  dagster-hetzner:
-    name: "Dagster (Hetzner)"
-    domain: dagster-hetzner.internal
+  dagster-oci:
+    name: "Dagster (OCI)"
+    domain: dagster-oci.internal
     targets:
       - port: 3335
 
   # ML Observability
-  langfuse-hetzner:
-    name: "Langfuse (Hetzner)"
-    domain: langfuse-hetzner.internal
+  langfuse-oci:
+    name: "Langfuse (OCI)"
+    domain: langfuse-oci.internal
     targets:
       - port: 3000
 
-  mlflow-hetzner:
-    name: "MLflow (Hetzner)"
-    domain: mlflow-hetzner.internal
+  mlflow-oci:
+    name: "MLflow (OCI)"
+    domain: mlflow-oci.internal
     targets:
       - port: 5000
 
@@ -187,9 +187,9 @@ olm-clients:
     allowed-ips:
       - 10.100.0.0/16  # Organization subnet
 
-  - name: hetzner-management
-    description: "Hetzner management access"
-    site: hetzner-prod
+  - name: oci-management
+    description: "OCI management access"
+    site: oci-prod
     allowed-ips:
       - 10.100.0.0/16
 
@@ -237,13 +237,13 @@ AllowedIPs = 10.100.10.0/24, 10.100.11.0/24
 # Persistent keepalive
 PersistentKeepalive = 25
 
-# Peer: Hetzner Production
-[Peer Hetzner]
-# Public key from Hetzner WireGuard
-PublicKey = [[HETZNER_WIREGUARD_PUBLIC_KEY]]
-# Hetzner endpoint
-Endpoint = [[HETZNER_IP]]:51820
-# Routes to Hetzner subnet
+# Peer: OCI Production
+[Peer OCI]
+# Public key from OCI WireGuard
+PublicKey = [[OCI_WIREGUARD_PUBLIC_KEY]]
+# OCI endpoint
+Endpoint = [[OCI_IP]]:51820
+# Routes to OCI subnet
 AllowedIPs = 10.100.20.0/24, 10.100.21.0/24
 PersistentKeepalive = 25
 

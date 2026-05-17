@@ -3,16 +3,16 @@
 # =============================================================================
 # TanStack UI for Crypteolas DeFi protocol analysis.
 # Domain: crypteolas.ie
-# Server: hetzner-devtools
+# Server: oci-devtools
 # =============================================================================
 
 [[stack]]
 name = "crypteolas-ui"
 description = "TanStack UI for Crypteolas DeFi analysis"
-tags = ["host:hetzner-devtools", "tier:production", "type:ui", "domain:crypteolas.ie", "framework:tanstack"]
+tags = ["host:oci-devtools", "tier:production", "type:ui", "domain:crypteolas.ie", "framework:tanstack"]
 
 [stack.config]
-server_id = "hetzner-devtools"
+server_id = "oci-devtools"
 run_directory = "/etc/komodo/sruth/crypteolas/ui"
 file_paths = ["docker-compose.yaml", "pangolin.yaml"]
 environment = """

@@ -31,10 +31,10 @@ passkey = "[[KOMODO_PASSKEY]]"
 ##
 
 [[server]]
-name = "cax41-hetzner"
-description = "Hetzner CAX41 ARM - Primary Workloads"
+name = "arm1-oci"
+description = "OCI CAX41 ARM - Primary Workloads"
 tags = [
-  "location:hetzner-fsn1",
+  "location:oci-fsn1",
   "role:workloads",
   "arch:arm64"
 ]
@@ -192,12 +192,12 @@ SITE_ID=bunchloch
 name = "cognee"
 description = "AI memory system with knowledge graphs"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:application",
   "type:ai"
 ]
 [stack.config]
-server = "cax41-hetzner"
+server = "arm1-oci"
 run_directory = "/etc/komodo/storage/cognee"
 file_paths = ["compose.yaml", "pangolin.yaml"]
 environment = """
@@ -225,22 +225,22 @@ CONVEX_PORT=3210
 ##
 
 [[stack]]
-name = "datadog-hetzner"
-description = "Datadog agent for Hetzner production pipelines"
+name = "datadog-oci"
+description = "Datadog agent for OCI production pipelines"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:observability",
   "type:apm"
 ]
 [stack.config]
-server = "cax41-hetzner"
+server = "arm1-oci"
 run_directory = "/etc/komodo/storage/datadog"
 file_paths = ["compose.yaml"]
 environment = """
 DD_ENV=production
 DD_SERVICE=oideachas-pipeline
-DD_HOSTNAME=cax41-hetzner
-DD_TAGS=project:oideachas,pipeline:education,host:hetzner,tier:production
+DD_HOSTNAME=arm1-oci
+DD_TAGS=project:oideachas,pipeline:education,host:oci,tier:production
 DD_APM_ENABLED=true
 DD_LLMOBS_ENABLED=true
 DD_LLMOBS_ML_APP=education-ai-pipeline
@@ -340,12 +340,12 @@ SITE_ID=bunchloch
 name = "falkordb"
 description = "Redis-based graph database for Graphiti"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:database",
   "type:graph"
 ]
 [stack.config]
-server = "cax41-hetzner"
+server = "arm1-oci"
 run_directory = "/etc/komodo/storage/falkordb"
 file_paths = ["compose.yaml", "pangolin.yaml"]
 environment = """
@@ -470,11 +470,11 @@ SITE_ID=bunchloch
 name = "graphiti"
 description = "Knowledge graph with MCP server"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:application"
 ]
 [stack.config]
-server = "cax41-hetzner"
+server = "arm1-oci"
 run_directory = "/etc/komodo/storage/graphiti"
 file_paths = ["compose.yaml", "pangolin.yaml"]
 environment = """
@@ -488,12 +488,12 @@ GRAPHITI_MCP_PORT=8001
 name = "kafka"
 description = "Self-hosted Kafka cluster for ML pipelines"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:streaming",
   "type:kafka"
 ]
 [stack.config]
-server = "cax41-hetzner"
+server = "arm1-oci"
 run_directory = "/etc/komodo/storage/kafka"
 file_paths = ["compose.yaml", "pangolin.yaml"]
 environment = """
@@ -577,15 +577,15 @@ LOCKET_MODE=watch
 ##
 
 [[stack]]
-name = "komodo-periphery-hetzner"
-description = "Komodo Periphery agent for Hetzner workloads"
+name = "komodo-periphery-oci"
+description = "Komodo Periphery agent for OCI workloads"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:control-plane",
   "type:agent"
 ]
 [stack.config]
-server = "cax41-hetzner"
+server = "arm1-oci"
 run_directory = "/etc/komodo/storage/komodo-periphery"
 file_paths = ["compose.yaml", "sidecar.yaml"]
 environment = """
@@ -666,16 +666,16 @@ GARAGE_ADMIN_PORT=3904
 ##
 
 [[stack]]
-name = "lakehouse-hetzner"
-description = "Production lakehouse on Hetzner CAX41"
+name = "lakehouse-oci"
+description = "Production lakehouse on OCI CAX41"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:lakehouse",
   "type:data-platform",
   "environment:production"
 ]
 [stack.config]
-server = "cax41-hetzner"
+server = "arm1-oci"
 run_directory = "/etc/komodo/storage/lakehouse"
 file_paths = [
   "compose.yaml",
@@ -722,12 +722,12 @@ LAKEKEEPER_METRICS_PORT=9000
 name = "lancedb"
 description = "Serverless vector database with S3 support"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:database",
   "type:vector"
 ]
 [stack.config]
-server = "cax41-hetzner"
+server = "arm1-oci"
 run_directory = "/etc/komodo/storage/lancedb"
 file_paths = ["compose.yaml", "pangolin.yaml"]
 environment = """
@@ -740,12 +740,12 @@ LANCEDB_PORT=8080
 name = "langfuse"
 description = "LLM observability and analytics platform"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:observability",
   "type:llm"
 ]
 [stack.config]
-server = "cax41-hetzner"
+server = "arm1-oci"
 run_directory = "/etc/komodo/storage/langfuse"
 file_paths = ["compose.yaml", "pangolin.yaml"]
 environment = """
@@ -790,11 +790,11 @@ SITE_ID=bunchloch
 name = "mathesar"
 description = "Spreadsheet interface for PostgreSQL"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:tools"
 ]
 [stack.config]
-server = "cax41-hetzner"
+server = "arm1-oci"
 run_directory = "/etc/komodo/storage/mathesar"
 file_paths = ["compose.yaml", "pangolin.yaml"]
 
@@ -804,12 +804,12 @@ file_paths = ["compose.yaml", "pangolin.yaml"]
 name = "memgraph"
 description = "In-memory graph database with MAGE algorithms"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:database",
   "type:graph"
 ]
 [stack.config]
-server = "cax41-hetzner"
+server = "arm1-oci"
 run_directory = "/etc/komodo/storage/memgraph"
 file_paths = ["compose.yaml", "pangolin.yaml"]
 environment = """
@@ -824,9 +824,9 @@ MEMGRAPH_LOG_LEVEL=WARNING
 [[stack]]
 name = "mlflow"
 description = "ML experiment tracking and model registry"
-tags = ["host:cax41-hetzner", "tier:ml"]
+tags = ["host:arm1-oci", "tier:ml"]
 [stack.config]
-server = "cax41-hetzner"
+server = "arm1-oci"
 run_directory = "/etc/komodo/storage/mlflow"
 file_paths = ["compose.yaml", "pangolin.yaml"]
 environment = """
@@ -839,11 +839,11 @@ MLFLOW_PORT=5000
 name = "nimtable"
 description = "Apache Iceberg table management UI"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:lakehouse"
 ]
 [stack.config]
-server = "cax41-hetzner"
+server = "arm1-oci"
 run_directory = "/etc/komodo/storage/nimtable"
 file_paths = ["compose.yaml", "pangolin.yaml"]
 
@@ -888,12 +888,12 @@ SITE_ID=bunchloch
 name = "perplexica"
 description = "AI-powered search engine with citations"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:devtools",
   "type:ai-search"
 ]
 [stack.config]
-server = "cax41-hetzner"
+server = "arm1-oci"
 run_directory = "/etc/komodo/uirlisi/perplexica"
 file_paths = ["perplexica.compose.yaml"]
 environment = """
@@ -956,13 +956,13 @@ QDRANT_LOG_LEVEL=INFO
 name = "r2-mounts"
 description = "Cloudflare R2 FUSE mounts for curriculum data"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:storage",
   "type:object-storage",
   "provider:cloudflare"
 ]
 [stack.config]
-server = "cax41-hetzner"
+server = "arm1-oci"
 run_directory = "/etc/komodo/storage/r2"
 file_paths = ["compose.yaml"]
 environment = """
@@ -1006,12 +1006,12 @@ R2_EXPORTS_CACHE=2G
 name = "restate"
 description = "Durable execution and workflow engine"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:devtools",
   "type:workflow"
 ]
 [stack.config]
-server = "cax41-hetzner"
+server = "arm1-oci"
 run_directory = "/etc/komodo/uirlisi/restate"
 file_paths = ["restate.compose.yaml"]
 environment = """
@@ -1135,12 +1135,12 @@ SITE_ID=bunchloch
 name = "storybook"
 description = "UI component development environment"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:devtools",
   "type:ui"
 ]
 [stack.config]
-server = "cax41-hetzner"
+server = "arm1-oci"
 run_directory = "/etc/komodo/uirlisi/storybook"
 file_paths = ["storybook.compose.yaml"]
 environment = """
@@ -1173,16 +1173,16 @@ SITE_ID=bunchloch
 # Pangolin tunnel agents for secure service exposure and direct access
 
 [[stack]]
-name = "newt-hetzner"
-description = "Pangolin Newt tunnel agent for Hetzner services"
+name = "newt-oci"
+description = "Pangolin Newt tunnel agent for OCI services"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:infrastructure",
   "type:tunnel"
 ]
 [stack.config]
-server = "cax41-hetzner"
-run_directory = "/etc/komodo/pangolin/newt-hetzner"
+server = "arm1-oci"
+run_directory = "/etc/komodo/pangolin/newt-oci"
 file_paths = ["compose.yaml", "sidecar.yaml"]
 environment = """
 PANGOLIN_ENDPOINT=https://pangolin.cianfhoghlaim.ie
@@ -1209,16 +1209,16 @@ PANGOLIN_ENDPOINT=https://pangolin.cianfhoghlaim.ie
 ##
 
 [[stack]]
-name = "olm-hetzner"
-description = "Pangolin OLM tunnel client for Hetzner direct access"
+name = "olm-oci"
+description = "Pangolin OLM tunnel client for OCI direct access"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:infrastructure",
   "type:tunnel"
 ]
 [stack.config]
-server = "cax41-hetzner"
-run_directory = "/etc/komodo/pangolin/olm-hetzner"
+server = "arm1-oci"
+run_directory = "/etc/komodo/pangolin/olm-oci"
 file_paths = ["compose.yaml", "sidecar.yaml"]
 environment = """
 PANGOLIN_ENDPOINT=https://pangolin.cianfhoghlaim.ie
@@ -1227,8 +1227,8 @@ PANGOLIN_ENDPOINT=https://pangolin.cianfhoghlaim.ie
 ##
 
 [[procedure]]
-name = "deploy-hetzner"
-description = "Deploy all stacks on Hetzner CAX41"
+name = "deploy-oci"
+description = "Deploy all stacks on OCI CAX41"
 
 [[procedure.config.stage]]
 name = "databases"
@@ -1267,7 +1267,7 @@ executions = [
 name = "cleanup"
 enabled = true
 executions = [
-  { execution.type = "PruneContainers", execution.params.server = "cax41-hetzner", enabled = true }
+  { execution.type = "PruneContainers", execution.params.server = "arm1-oci", enabled = true }
 ]
 
 ##
@@ -1372,7 +1372,7 @@ executions = [
 ]
 
 [[procedure.config.stage]]
-name = "hetzner-tools"
+name = "oci-tools"
 enabled = true
 executions = [
   { execution.type = "DeployStack", execution.params.stack = "perplexica", execution.params.services = [], enabled = true },
@@ -1414,7 +1414,7 @@ executions = [
 ]
 
 [[procedure.config.stage]]
-name = "hetzner-databases"
+name = "oci-databases"
 enabled = true
 executions = [
   { execution.type = "DeployStack", execution.params.stack = "qdrant", execution.params.services = [], enabled = true },
@@ -1425,7 +1425,7 @@ executions = [
 ]
 
 [[procedure.config.stage]]
-name = "hetzner-apps"
+name = "oci-apps"
 enabled = true
 executions = [
   { execution.type = "DeployStack", execution.params.stack = "graphiti", execution.params.services = [], enabled = true },
@@ -1599,7 +1599,7 @@ description = "Deploy Pangolin tunnel agents (Newt for service exposure, OLM for
 name = "newt-agents"
 enabled = true
 executions = [
-  { execution.type = "DeployStack", execution.params.stack = "newt-hetzner", execution.params.services = [], enabled = true }
+  { execution.type = "DeployStack", execution.params.stack = "newt-oci", execution.params.services = [], enabled = true }
 ]
 
 [[procedure.config.stage]]
@@ -1607,7 +1607,7 @@ name = "olm-agents"
 enabled = true
 executions = [
   { execution.type = "DeployStack", execution.params.stack = "olm-oracle", execution.params.services = [], enabled = true },
-  { execution.type = "DeployStack", execution.params.stack = "olm-hetzner", execution.params.services = [], enabled = true }
+  { execution.type = "DeployStack", execution.params.stack = "olm-oci", execution.params.services = [], enabled = true }
 ]
 
 ##
@@ -1623,7 +1623,7 @@ resource_path = [
   "bonneagar/komodo/procedures/auto-deploy-stacks.toml",
   "bonneagar/komodo/procedures/deploy-authenticated-stack.toml",
   "bonneagar/komodo/procedures/deploy-devtools.toml",
-  "bonneagar/komodo/procedures/deploy-hetzner.toml",
+  "bonneagar/komodo/procedures/deploy-oci.toml",
   "bonneagar/komodo/procedures/deploy-macbook.toml",
   "bonneagar/komodo/procedures/deploy-pangolin-full.toml",
   "bonneagar/komodo/procedures/deploy-periphery.toml",
@@ -1635,8 +1635,8 @@ resource_path = [
   "bonneagar/komodo/stacks/aleyum-portal.toml",
   "bonneagar/komodo/stacks/forgejo-runner.toml",
   "bonneagar/komodo/stacks/forgejo.toml",
-  "bonneagar/komodo/stacks/hetzner-databases.toml",
-  "bonneagar/komodo/stacks/hetzner-devtools.toml",
+  "bonneagar/komodo/stacks/oci-databases.toml",
+  "bonneagar/komodo/stacks/oci-devtools.toml",
   "bonneagar/komodo/stacks/komodo.toml",
   "bonneagar/komodo/stacks/macbook-analytics.toml",
   "bonneagar/komodo/stacks/macbook-media.toml",

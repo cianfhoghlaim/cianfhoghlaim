@@ -25,7 +25,7 @@ public-resources:
       sso-roles:
         - Member
     targets:
-      - site: "cax41-hetzner"
+      - site: "arm1-oci"
         hostname: "browser-api"
         method: "http"
         port: 8000
@@ -39,7 +39,7 @@ public-resources:
       sso-roles:
         - Member
     targets:
-      - site: "cax41-hetzner"
+      - site: "arm1-oci"
         hostname: "browser-stagehand"
         method: "http"
         port: 3100
@@ -53,7 +53,7 @@ public-resources:
       sso-roles:
         - Member
     targets:
-      - site: "cax41-hetzner"
+      - site: "arm1-oci"
         hostname: "browser-skyvern"
         method: "http"
         port: 8000
@@ -67,7 +67,7 @@ public-resources:
       sso-roles:
         - Member
     targets:
-      - site: "cax41-hetzner"
+      - site: "arm1-oci"
         hostname: "browser-skyvern-ui"
         method: "http"
         port: 8080

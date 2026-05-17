@@ -37,7 +37,7 @@ for (const server of servers) {
 
   // Determine user based on server name/region
   let user = "ubuntu";
-  if (server.name.includes("hetzner")) {
+  if (server.name.includes("oci")) {
     user = "root";
   } else if (server.name === "bunchloch") {
     user = "cliste";

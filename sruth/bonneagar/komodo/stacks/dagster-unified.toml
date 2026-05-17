@@ -12,15 +12,15 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# DAGSTER-UNIFIED - Production (Hetzner CAX41)
+# DAGSTER-UNIFIED - Production (OCI CAX41)
 # -----------------------------------------------------------------------------
 [[stack]]
 name = "dagster-unified"
 description = "All sruth pipelines in unified Dagster instance"
-tags = ["host:cax41-hetzner", "tier:production", "type:orchestration", "pipeline:sruth"]
+tags = ["host:arm1-oci", "tier:production", "type:orchestration", "pipeline:sruth"]
 
 [stack.config]
-server_id = "cax41-hetzner"
+server_id = "arm1-oci"
 run_directory = "/etc/komodo/dagster"
 file_paths = ["compose.yaml", "pangolin.yaml", "secrets.env"]
 environment = """

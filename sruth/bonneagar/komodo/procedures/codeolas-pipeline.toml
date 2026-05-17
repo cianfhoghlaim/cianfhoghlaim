@@ -3,16 +3,16 @@
 # =============================================================================
 # Code intelligence pipeline with semantic search and multi-hop research.
 # Domain: crypteolas.ie (code.crypteolas.ie)
-# Server: hetzner-devtools
+# Server: oci-devtools
 # =============================================================================
 
 [[stack]]
 name = "codeolas-pipeline"
 description = "Code intelligence pipeline with semantic search"
-tags = ["host:hetzner-devtools", "tier:production", "type:code", "domain:code.crypteolas.ie", "pipeline:sruth"]
+tags = ["host:oci-devtools", "tier:production", "type:code", "domain:code.crypteolas.ie", "pipeline:sruth"]
 
 [stack.config]
-server_id = "hetzner-devtools"
+server_id = "oci-devtools"
 run_directory = "/etc/komodo/sruth/codeolas"
 file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
 environment = """

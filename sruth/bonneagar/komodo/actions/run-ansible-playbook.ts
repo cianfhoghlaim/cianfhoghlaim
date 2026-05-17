@@ -7,7 +7,7 @@
 //
 // Usage:
 //   km run action run-ansible-playbook --playbook=periphery.yml
-//   km run action run-ansible-playbook --playbook=periphery.yml --limit=cax41-hetzner
+//   km run action run-ansible-playbook --playbook=periphery.yml --limit=arm1-oci
 //   km run action run-ansible-playbook --playbook=periphery.yml --dryRun=true
 //
 // Available playbooks:

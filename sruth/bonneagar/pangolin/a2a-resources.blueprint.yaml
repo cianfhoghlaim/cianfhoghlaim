@@ -14,7 +14,7 @@
 #     -d @a2a-resources.blueprint.yaml
 #
 # PREREQUISITES:
-#   - AgentOS containers deployed on cax41-hetzner
+#   - AgentOS containers deployed on arm1-oci
 #   - TinyAuth configured for SSO
 #   - Service tokens configured in each AgentOS
 # =============================================================================
@@ -35,7 +35,7 @@ public-resources:
       sso-roles:
         - Member
     targets:
-      - site: cax41-hetzner
+      - site: arm1-oci
         hostname: oideachais-agentos
         method: http
         port: 7772
@@ -56,7 +56,7 @@ public-resources:
       sso-roles:
         - Member
     targets:
-      - site: cax41-hetzner
+      - site: arm1-oci
         hostname: crypteolas-agentos
         method: http
         port: 7771
@@ -76,7 +76,7 @@ public-resources:
       sso-roles:
         - Member
     targets:
-      - site: cax41-hetzner
+      - site: arm1-oci
         hostname: browser-agentos
         method: http
         port: 7773
@@ -96,7 +96,7 @@ public-resources:
       sso-roles:
         - Member
     targets:
-      - site: cax41-hetzner
+      - site: arm1-oci
         hostname: aleyum-agentos
         method: http
         port: 7774
@@ -114,19 +114,19 @@ public-resources:
       sso-enabled: false
     targets:
       # Load balancer across all AgentOS instances
-      - site: cax41-hetzner
+      - site: arm1-oci
         hostname: oideachais-agentos
         method: http
         port: 7772
-      - site: cax41-hetzner
+      - site: arm1-oci
         hostname: crypteolas-agentos
         method: http
         port: 7771
-      - site: cax41-hetzner
+      - site: arm1-oci
         hostname: browser-agentos
         method: http
         port: 7773
-      - site: cax41-hetzner
+      - site: arm1-oci
         hostname: aleyum-agentos
         method: http
         port: 7774

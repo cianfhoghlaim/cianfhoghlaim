@@ -5,8 +5,8 @@
 # Domain: cianfhoghlaim.ie
 #
 # Services:
-#   MLflow: ML experiment tracking (cax41-hetzner)
-#   Langfuse: LLM tracing (cax41-hetzner)
+#   MLflow: ML experiment tracking (arm1-oci)
+#   Langfuse: LLM tracing (arm1-oci)
 #   Dozzle: Docker log viewer (arm1-oci)
 #   Beszel: Server monitoring (arm1-oci)
 #   Datadog: APM/metrics/logs agents (all servers)
@@ -36,7 +36,7 @@ execution = { type = "DeployStack", params = { stack = "dozzle" } }
 execution = { type = "DeployStack", params = { stack = "beszel" } }
 
 # =============================================================================
-# STAGE 2: ML Observability (cax41-hetzner)
+# STAGE 2: ML Observability (arm1-oci)
 # =============================================================================
 
 [[procedure.config.stages]]
@@ -59,7 +59,7 @@ execution = { type = "DeployStack", params = { stack = "langfuse" } }
 name = "datadog-agents"
 
 [[procedure.config.stages.executions]]
-execution = { type = "DeployStack", params = { stack = "datadog-hetzner" } }
+execution = { type = "DeployStack", params = { stack = "datadog-oci" } }
 
 [[procedure.config.stages.executions]]
 execution = { type = "DeployStack", params = { stack = "datadog-oracle" } }

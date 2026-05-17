@@ -9,7 +9,7 @@ description: Komodo Periphery agent for server management
 deployment:
   servers:
     - arm1-oci
-    - cax41-hetzner
+    - arm1-oci
     - bunchloch
   priority: 10  # Deploy before application stacks
 

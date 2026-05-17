@@ -6,7 +6,7 @@
 //
 // Usage:
 //   km run action setup-pangolin-site --server=arm1-oci --siteName=arm1-oci
-//   km run action setup-pangolin-site --server=cax41-hetzner --dryRun=true
+//   km run action setup-pangolin-site --server=arm1-oci --dryRun=true
 // =============================================================================
 
 const dryRun = ARGS.dryRun || false;

@@ -14,7 +14,7 @@ executions = [
 ]
 
 [[procedure.config.stage]]
-name = "hetzner-tools"
+name = "oci-tools"
 enabled = true
 executions = [
   { execution.type = "DeployStack", execution.params.stack = "perplexica", execution.params.services = [], enabled = true },

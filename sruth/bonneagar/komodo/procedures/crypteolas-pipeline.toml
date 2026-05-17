@@ -3,16 +3,16 @@
 # =============================================================================
 # DeFi protocol analysis pipeline with Dagster orchestration.
 # Domain: crypteolas.ie
-# Server: hetzner-devtools
+# Server: oci-devtools
 # =============================================================================
 
 [[stack]]
 name = "crypteolas-pipeline"
 description = "DeFi protocol analysis with Dagster orchestration"
-tags = ["host:hetzner-devtools", "tier:production", "type:crypto", "domain:crypteolas.ie", "pipeline:dagster"]
+tags = ["host:oci-devtools", "tier:production", "type:crypto", "domain:crypteolas.ie", "pipeline:dagster"]
 
 [stack.config]
-server_id = "hetzner-devtools"
+server_id = "oci-devtools"
 run_directory = "/etc/komodo/sruth/crypteolas"
 file_paths = ["docker-compose.yaml", "pangolin.yaml", "sidecar.yaml"]
 environment = """

@@ -12,7 +12,7 @@ executions = [
 ]
 
 [[procedure.config.stage]]
-name = "hetzner-databases"
+name = "oci-databases"
 enabled = true
 executions = [
   { execution.type = "DeployStack", execution.params.stack = "qdrant", execution.params.services = [], enabled = true },
@@ -23,7 +23,7 @@ executions = [
 ]
 
 [[procedure.config.stage]]
-name = "hetzner-apps"
+name = "oci-apps"
 enabled = true
 executions = [
   { execution.type = "DeployStack", execution.params.stack = "graphiti", execution.params.services = [], enabled = true },

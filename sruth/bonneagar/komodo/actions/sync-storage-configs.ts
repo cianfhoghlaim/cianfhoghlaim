@@ -6,7 +6,7 @@
 // =============================================================================
 
 const dryRun = ARGS.dryRun || false;
-const targetServer = ARGS.server || "all"; // "all", "hetzner", "macbook", "oci"
+const targetServer = ARGS.server || "all"; // "all", "oci", "macbook", "oci"
 
 interface CopyTask {
   server: string;
@@ -17,7 +17,7 @@ interface CopyTask {
 // Define which stacks go to which servers
 const serverStacks: Record<string, string[]> = {
   "arm1-oci": ["garage", "beszel", "dozzle", "qdrant"],
-  "cax41-hetzner": [
+  "arm1-oci": [
     "memgraph",
     "falkordb",
     "graphiti",

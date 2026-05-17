@@ -2,11 +2,11 @@
 # =============================================================================
 # STORAGE STACK DEPLOYMENT SCRIPT
 # =============================================================================
-# Deploys the distributed storage stack across OCI, Hetzner, and MacBook.
+# Deploys the distributed storage stack across OCI, OCI, and MacBook.
 #
 # Prerequisites:
 #   1. Pulumi CLI installed and configured
-#   2. Hetzner API token in HCLOUD_TOKEN
+#   2. OCI API token in HCLOUD_TOKEN
 #   3. Cloudflare API token in CLOUDFLARE_API_TOKEN
 #   4. 1Password Connect running on OCI (132.145.27.89:8080)
 #   5. SSH access to all servers
@@ -15,7 +15,7 @@
 #   ./deploy.sh [phase]
 #
 # Phases:
-#   hetzner   - Provision Hetzner CAX41 server only
+#   oci   - Provision OCI CAX41 server only
 #   sites     - Deploy Newt/Periphery on all sites
 #   stacks    - Deploy storage stacks via Komodo
 #   all       - Run all phases (default)
@@ -42,12 +42,12 @@ log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 PHASE="${1:-all}"
 
 # =============================================================================
-# PHASE 1: Provision Hetzner CAX41
+# PHASE 1: Provision OCI CAX41
 # =============================================================================
-deploy_hetzner() {
-    log_info "Phase 1: Provisioning Hetzner CAX41..."
+deploy_oci() {
+    log_info "Phase 1: Provisioning OCI CAX41..."
 
-    cd "$PULUMI_DIR/hetzner"
+    cd "$PULUMI_DIR/oci"
 
     # Install dependencies
     if [ ! -d "node_modules" ]; then
@@ -68,20 +68,20 @@ deploy_hetzner() {
     pulumi up --yes
 
     # Get outputs
-    HETZNER_IP=$(pulumi stack output publicIp)
-    log_success "Hetzner CAX41 provisioned at: $HETZNER_IP"
+    OCI_IP=$(pulumi stack output publicIp)
+    log_success "OCI CAX41 provisioned at: $OCI_IP"
 
     # Wait for SSH
     log_info "Waiting for SSH to become available..."
     for i in {1..30}; do
-        if ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@"$HETZNER_IP" "echo ok" 2>/dev/null; then
+        if ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@"$OCI_IP" "echo ok" 2>/dev/null; then
             log_success "SSH is ready"
             break
         fi
         sleep 10
     done
 
-    echo "$HETZNER_IP" > "$SCRIPT_DIR/.hetzner-ip"
+    echo "$OCI_IP" > "$SCRIPT_DIR/.oci-ip"
 }
 
 # =============================================================================
@@ -90,16 +90,16 @@ deploy_hetzner() {
 deploy_sites() {
     log_info "Phase 2: Deploying site infrastructure via Ansible..."
 
-    HETZNER_IP=$(cat "$SCRIPT_DIR/.hetzner-ip" 2>/dev/null || echo "")
+    OCI_IP=$(cat "$SCRIPT_DIR/.oci-ip" 2>/dev/null || echo "")
     ANSIBLE_DIR="$BONNEAGAR_DIR/ansible"
 
-    if [ -z "$HETZNER_IP" ]; then
-        log_error "Hetzner IP not found. Run 'deploy.sh hetzner' first."
+    if [ -z "$OCI_IP" ]; then
+        log_error "OCI IP not found. Run 'deploy.sh oci' first."
         exit 1
     fi
 
-    # Export Hetzner IP for Ansible inventory
-    export HETZNER_IP
+    # Export OCI IP for Ansible inventory
+    export OCI_IP
 
     # Check for OP Connect token
     if [ ! -f "$HOME/.config/op/connect-token" ]; then
@@ -107,20 +107,20 @@ deploy_sites() {
         log_warn "Ensure OP token is at /etc/connect/token on target hosts"
     fi
 
-    # Deploy to Hetzner via Ansible
-    log_info "Deploying site to Hetzner ($HETZNER_IP) via Ansible..."
+    # Deploy to OCI via Ansible
+    log_info "Deploying site to OCI ($OCI_IP) via Ansible..."
     cd "$ANSIBLE_DIR"
 
-    # First, copy OP token to Hetzner
-    ssh root@"$HETZNER_IP" "mkdir -p /etc/connect"
+    # First, copy OP token to OCI
+    ssh root@"$OCI_IP" "mkdir -p /etc/connect"
     if [ -f "$HOME/.config/op/connect-token" ]; then
-        scp "$HOME/.config/op/connect-token" root@"$HETZNER_IP":/etc/connect/token
+        scp "$HOME/.config/op/connect-token" root@"$OCI_IP":/etc/connect/token
     fi
 
-    # Run Ansible playbook for Hetzner
-    ansible-playbook -i inventory/komodo.yml playbooks/site.yml -l cax41-hetzner
+    # Run Ansible playbook for OCI
+    ansible-playbook -i inventory/komodo.yml playbooks/site.yml -l cax41-oci
 
-    log_success "Hetzner site deployed"
+    log_success "OCI site deployed"
 
     # Deploy to MacBook via Ansible
     log_info "Deploying site to MacBook (local) via Ansible..."
@@ -181,8 +181,8 @@ deploy_stacks() {
 # MAIN
 # =============================================================================
 case "$PHASE" in
-    hetzner)
-        deploy_hetzner
+    oci)
+        deploy_oci
         ;;
     sites)
         deploy_sites
@@ -191,12 +191,12 @@ case "$PHASE" in
         deploy_stacks
         ;;
     all)
-        deploy_hetzner
+        deploy_oci
         deploy_sites
         deploy_stacks
         ;;
     *)
-        echo "Usage: $0 [hetzner|sites|stacks|all]"
+        echo "Usage: $0 [oci|sites|stacks|all]"
         exit 1
         ;;
 esac
@@ -207,13 +207,13 @@ echo "Next steps:"
 echo "  1. Fresh Pangolin deployment (if password forgotten):"
 echo "     cd bonneagar/pangolin && docker compose down -v && docker compose up -d"
 echo "  2. Create Newt sites in Pangolin UI: https://pangolin.cianfhoghlaim.ie"
-echo "     - cax41-hetzner: Create site, save ID + Secret to 1Password"
+echo "     - cax41-oci: Create site, save ID + Secret to 1Password"
 echo "     - bunchloch: Create site, save ID + Secret to 1Password"
 echo "  3. Add Newt credentials to 1Password (vault: dev-baile):"
-echo "     - cax41-hetzner-newt: id, secret"
+echo "     - cax41-oci-newt: id, secret"
 echo "     - bunchloch-newt: id, secret"
 echo "  4. Verify servers appear in Komodo UI: https://komodo.cianfhoghlaim.ie"
 echo "  5. Deploy stacks via Komodo procedures:"
-echo "     - km run procedure deploy-hetzner"
+echo "     - km run procedure deploy-oci"
 echo "     - km run procedure deploy-macbook"
 echo ""

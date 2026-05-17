@@ -15,17 +15,17 @@
 # =============================================================================
 
 [[stack]]
-name = "newt-hetzner"
-description = "Pangolin Newt tunnel agent - exposes Hetzner services to Pangolin"
+name = "newt-oci"
+description = "Pangolin Newt tunnel agent - exposes OCI services to Pangolin"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:infrastructure",
   "type:tunnel",
   "tunnel:newt"
 ]
 [stack.config]
-server = "cax41-hetzner"
-run_directory = "/etc/komodo/pangolin/newt-hetzner"
+server = "arm1-oci"
+run_directory = "/etc/komodo/pangolin/newt-oci"
 file_paths = ["compose.yaml", "sidecar.yaml"]
 environment = """
 PANGOLIN_ENDPOINT=https://pangolin.cianfhoghlaim.ie
@@ -55,17 +55,17 @@ LOCKET_MODE=watch
 ##
 
 [[stack]]
-name = "olm-hetzner"
-description = "Pangolin OLM tunnel client - direct access to Hetzner services"
+name = "olm-oci"
+description = "Pangolin OLM tunnel client - direct access to OCI services"
 tags = [
-  "host:cax41-hetzner",
+  "host:arm1-oci",
   "tier:infrastructure",
   "type:tunnel",
   "tunnel:olm"
 ]
 [stack.config]
-server = "cax41-hetzner"
-run_directory = "/etc/komodo/pangolin/olm-hetzner"
+server = "arm1-oci"
+run_directory = "/etc/komodo/pangolin/olm-oci"
 file_paths = ["compose.yaml", "sidecar.yaml"]
 environment = """
 PANGOLIN_ENDPOINT=https://pangolin.cianfhoghlaim.ie
@@ -88,7 +88,7 @@ name = "newt-agents"
 description = "Deploy Newt agents for service exposure"
 enabled = true
 executions = [
-  { execution.type = "DeployStack", execution.params.stack = "newt-hetzner", execution.params.services = [], enabled = true }
+  { execution.type = "DeployStack", execution.params.stack = "newt-oci", execution.params.services = [], enabled = true }
 ]
 
 [[procedure.config.stage]]
@@ -97,7 +97,7 @@ description = "Deploy OLM agents for direct access"
 enabled = true
 executions = [
   { execution.type = "DeployStack", execution.params.stack = "olm-oracle", execution.params.services = [], enabled = true },
-  { execution.type = "DeployStack", execution.params.stack = "olm-hetzner", execution.params.services = [], enabled = true }
+  { execution.type = "DeployStack", execution.params.stack = "olm-oci", execution.params.services = [], enabled = true }
 ]
 
 [[procedure.config.stage]]

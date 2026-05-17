@@ -3,16 +3,16 @@
 # =============================================================================
 # LLM tracing and observability platform.
 # Domain: langfuse.cianfhoghlaim.ie
-# Server: cax41-hetzner
+# Server: arm1-oci
 # =============================================================================
 
 [[stack]]
 name = "langfuse"
 description = "LLM tracing and observability platform"
-tags = ["host:cax41-hetzner", "tier:observability", "type:llm", "domain:langfuse.cianfhoghlaim.ie"]
+tags = ["host:arm1-oci", "tier:observability", "type:llm", "domain:langfuse.cianfhoghlaim.ie"]
 
 [stack.config]
-server_id = "cax41-hetzner"
+server_id = "arm1-oci"
 run_directory = "/etc/komodo/storage/langfuse"
 file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
 environment = """
