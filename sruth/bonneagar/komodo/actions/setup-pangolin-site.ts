@@ -37,7 +37,20 @@ interface PangolinSite {
 }
 
 // Get Pangolin API key from Komodo variables
-const pangolinApiKey = await komodo.read("GetVariable", { name: "PANGOLIN_API_KEY" });
+import { InfisicalClient } from "@infisical/sdk";
+
+const client = new InfisicalClient({
+    clientId: process.env.INFISICAL_CLIENT_ID || "",
+    clientSecret: process.env.INFISICAL_CLIENT_SECRET || ""
+});
+
+const pangolinApiKeySecret = await client.getSecret({
+    secretName: "PANGOLIN_API_KEY",
+    projectId: process.env.INFISICAL_PROJECT_ID || "",
+    environment: process.env.INFISICAL_ENVIRONMENT || "prod",
+    path: "/pangolin"
+});
+const pangolinApiKey = { value: pangolinApiKeySecret.secretValue };
 
 if (!pangolinApiKey?.value) {
   return {
