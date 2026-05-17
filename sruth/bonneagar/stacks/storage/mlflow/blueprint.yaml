@@ -14,7 +14,7 @@ public-resources:
       sso-roles:
         - Member
     targets:
-      - site: "cax41-hetzner"
+      - site: "arm1-oci"
         hostname: "mlflow-server"
         method: "http"
         port: 5000

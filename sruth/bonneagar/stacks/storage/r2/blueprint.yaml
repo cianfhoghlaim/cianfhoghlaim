@@ -6,7 +6,7 @@ name: r2-storage
 description: Cloudflare R2 object storage with FUSE mounts for all pipelines
 server_tags:
   - storage
-  - cax41-hetzner
+  - arm1-oci
 
 config:
   compose_file: compose.yaml

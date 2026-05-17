@@ -12,7 +12,7 @@ public-resources:
       sso-roles:
         - Member
     targets:
-      - site: "cax41-hetzner"
+      - site: "arm1-oci"
         hostname: "graphiti-mcp"
         method: "http"
         port: 8000
@@ -26,7 +26,7 @@ public-resources:
       sso-roles:
         - Member
     targets:
-      - site: "cax41-hetzner"
+      - site: "arm1-oci"
         hostname: "graphiti-api"
         method: "http"
         port: 8000
