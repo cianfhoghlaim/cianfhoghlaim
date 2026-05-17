@@ -1,15 +1,4 @@
-// =============================================================================
-// DEPLOY KOMODO FLEET ACTION
-// =============================================================================
-// Orchestrates the deployment of Komodo Core and Periphery nodes using Ansible.
-// Pulls the required onboarding keys and variables from Infisical dynamically.
-//
-// Usage:
-//   km run action deploy-komodo-fleet --limit=arm1-oci
-//   km run action deploy-komodo-fleet --limit=macbook
-// =============================================================================
-
-import { InfisicalClient } from "@infisical/sdk";
+import { InfisicalSDK } from "@infisical/sdk";
 
 const limit = ARGS.limit || "";
 const dryRun = ARGS.dryRun || false;
@@ -20,6 +9,7 @@ const CONFIG = {
     infisicalClientSecret: process.env.INFISICAL_CLIENT_SECRET || "",
     infisicalProjectId: process.env.INFISICAL_PROJECT_ID || "",
     infisicalEnvironment: process.env.INFISICAL_ENVIRONMENT || "prod",
+    infisicalUrl: process.env.INFISICAL_URL || "http://localhost:8081"
 };
 
 console.log("=".repeat(60));
@@ -31,17 +21,19 @@ if (!CONFIG.infisicalClientId || !CONFIG.infisicalClientSecret) {
 }
 
 console.log("Authenticating with Infisical...");
-const client = new InfisicalClient({
+const client = new InfisicalSDK({ siteUrl: CONFIG.infisicalUrl });
+
+await client.auth().universalAuth.login({
     clientId: CONFIG.infisicalClientId,
-    clientSecret: CONFIG.infisicalClientSecret,
+    clientSecret: CONFIG.infisicalClientSecret
 });
 
 // Fetch critical secrets needed for Ansible context if needed
-const peripheryKeySecret = await client.getSecret({
+const peripheryKeySecret = await client.secrets().getSecret({
     secretName: "PERIPHERY_ONBOARDING_KEY",
     projectId: CONFIG.infisicalProjectId,
     environment: CONFIG.infisicalEnvironment,
-    path: "/komodo"
+    secretPath: "/komodo"
 });
 const peripheryKey = peripheryKeySecret.secretValue;
 console.log("Successfully retrieved PERIPHERY_ONBOARDING_KEY from Infisical vault.");
