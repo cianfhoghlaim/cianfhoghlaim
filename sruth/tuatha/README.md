@@ -31,6 +31,8 @@ In Irish mythology, the wind is a vehicle for spirits and the *Sídhe* (fairies)
 * **Strong Interpolation (Bicubic / Catmull-Rom):** To circumvent the visual jaggedness of low-res global gridded datasets, we execute highly optimized continuous flow fields using Fast Third-Order Texture Filtering across 4 bilinear taps, translating real atmospheric data into organic visual tendrils.
 * **Engine Agnostic Scaling:** Implementation is targeted to support Unreal Engine 5 (Niagara Custom HLSL), Unity 6 (VFX Graph), and Godot 4 (GLSL Compute Shaders with SSBOs).
 
+Inspiration for Anam particle effects: Sol in Jason Aaron and Rafa Sandoval's Absolute Superman comicbook series
+
 ---
 
 ## 🤖 Agent-Native Ecosystem & Generative UI
