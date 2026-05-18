@@ -6,22 +6,9 @@
 - name: Validate required variables
   ansible.builtin.assert:
     that:
-      - pangolin_op_token_src | length > 0
       - pangolin_config_src | length > 0
       - pangolin_domain | length > 0
-    fail_msg: "pangolin_op_token_src, pangolin_config_src, and pangolin_domain must be set"
-
-- name: Check OP token file exists on control machine
-  ansible.builtin.stat:
-    path: "{{ pangolin_op_token_src }}"
-  delegate_to: localhost
-  become: false
-  register: _pangolin_op_token_stat
-
-- name: Fail if OP token file not found
-  ansible.builtin.fail:
-    msg: "1Password token file not found: {{ pangolin_op_token_src }}"
-  when: not _pangolin_op_token_stat.stat.exists
+    fail_msg: "pangolin_config_src, and pangolin_domain must be set"
 
 - name: Check config directory exists on control machine
   ansible.builtin.stat:
@@ -138,16 +125,6 @@
     owner: root
     group: root
     mode: "0600"
-  notify: Restart Pangolin
-
-- name: Copy 1Password token for Locket
-  ansible.builtin.copy:
-    src: "{{ pangolin_op_token_src }}"
-    dest: "{{ pangolin_base_dir }}/config/secrets/op_token"
-    # Locket runs as user 65532:65532, needs to read the token
-    owner: "65532"
-    group: "65532"
-    mode: "0400"
   notify: Restart Pangolin
 
 # -----------------------------------------------------------------------------

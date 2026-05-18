@@ -38,16 +38,6 @@ pangolin_tinyauth_url: "https://tinyauth.{{ pangolin_domain }}"
 # CREDENTIALS / SECRETS
 # -----------------------------------------------------------------------------
 
-# Path to 1Password Connect token on CONTROL machine
-# REQUIRED - must be set in inventory or playbook
-pangolin_op_token_src: ""
-
-# 1Password Connect host (for Locket)
-pangolin_op_connect_host: "http://host.docker.internal:8080"
-
-# 1Password vault for secrets
-pangolin_op_vault: "dev-baile"
-
 # PostgreSQL password (will be generated if not set)
 pangolin_postgres_password: "pangolin"
 

@@ -17,17 +17,6 @@ newt_templates_dir: "{{ newt_secrets_dir }}/templates"
 # -----------------------------------------------------------------------------
 pangolin_endpoint: "https://pangolin.cianfhoghlaim.ie"
 
-# 1Password references for Newt credentials
-# These should be set per-host in inventory
-newt_id_op_ref: "op://dev-baile/{{ inventory_hostname }}-newt/id"
-newt_secret_op_ref: "op://dev-baile/{{ inventory_hostname }}-newt/secret"
-
-# -----------------------------------------------------------------------------
-# 1PASSWORD CONNECT
-# -----------------------------------------------------------------------------
-op_connect_host: "http://132.145.27.89:8080"
-op_token_path: "/etc/connect/token"
-
 # -----------------------------------------------------------------------------
 # KOMODO PERIPHERY
 # -----------------------------------------------------------------------------

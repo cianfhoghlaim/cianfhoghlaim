@@ -52,3 +52,4 @@ all:
           
           # Newt Pangolin Tunnel
           pangolin_endpoint: "wss://pangolin.cianfhoghlaim.ie"
+          infisical_secret_path: "/path/to/infisical_secret"

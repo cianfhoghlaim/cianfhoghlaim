@@ -35,34 +35,16 @@ komodo_title: "Komodo Server Management"
 komodo_timezone: "Europe/Dublin"
 
 # -----------------------------------------------------------------------------
-# 1PASSWORD CONFIGURATION
-# -----------------------------------------------------------------------------
-
-# 1Password vault for secrets
-komodo_op_vault: "dev-baile"
-
-# Item name in 1Password
-komodo_op_item: "komodo"
-
-# -----------------------------------------------------------------------------
 # DATABASE CREDENTIALS
 # -----------------------------------------------------------------------------
 
 # MongoDB credentials (stored in 1Password)
-# These use op:// references that get resolved by op inject
-komodo_database_username_ref: "op://{{ komodo_op_vault }}/{{ komodo_op_item }}/database_username"
-komodo_database_password_ref: "op://{{ komodo_op_vault }}/{{ komodo_op_item }}/database_password"
 
 # -----------------------------------------------------------------------------
 # AUTHENTICATION
 # -----------------------------------------------------------------------------
 
-# Core/Periphery passkey (stored in 1Password)
-komodo_passkey_ref: "op://{{ komodo_op_vault }}/{{ komodo_op_item }}/passkey"
 
-# Initial admin credentials (stored in 1Password)
-komodo_init_admin_username_ref: "op://{{ komodo_op_vault }}/{{ komodo_op_item }}/init_username"
-komodo_init_admin_password_ref: "op://{{ komodo_op_vault }}/{{ komodo_op_item }}/init_password"
 
 # Local auth enabled
 komodo_local_auth: true

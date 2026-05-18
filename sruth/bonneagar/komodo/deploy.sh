@@ -8,8 +8,7 @@
 #   1. Pulumi CLI installed and configured
 #   2. OCI API token in HCLOUD_TOKEN
 #   3. Cloudflare API token in CLOUDFLARE_API_TOKEN
-#   4. 1Password Connect running on OCI (132.145.27.89:8080)
-#   5. SSH access to all servers
+#   4. SSH access to all servers
 #
 # Usage:
 #   ./deploy.sh [phase]
@@ -103,7 +102,7 @@ deploy_sites() {
 
     # Check for OP Connect token
     if [ ! -f "$HOME/.config/op/connect-token" ]; then
-        log_warn "1Password Connect token not found at ~/.config/op/connect-token"
+        log_warn "Infisical Connect token not found at ~/.config/op/connect-token"
         log_warn "Ensure OP token is at /etc/connect/token on target hosts"
     fi
 
@@ -207,9 +206,9 @@ echo "Next steps:"
 echo "  1. Fresh Pangolin deployment (if password forgotten):"
 echo "     cd bonneagar/pangolin && docker compose down -v && docker compose up -d"
 echo "  2. Create Newt sites in Pangolin UI: https://pangolin.cianfhoghlaim.ie"
-echo "     - cax41-oci: Create site, save ID + Secret to 1Password"
-echo "     - bunchloch: Create site, save ID + Secret to 1Password"
-echo "  3. Add Newt credentials to 1Password (vault: dev-baile):"
+echo "     - cax41-oci: Create site, save ID + Secret to Infisical"
+echo "     - bunchloch: Create site, save ID + Secret to Infisical"
+echo "  3. Add Newt credentials to Infisical (environment: dev):"
 echo "     - cax41-oci-newt: id, secret"
 echo "     - bunchloch-newt: id, secret"
 echo "  4. Verify servers appear in Komodo UI: https://komodo.cianfhoghlaim.ie"

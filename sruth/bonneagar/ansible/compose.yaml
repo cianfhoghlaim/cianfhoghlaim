@@ -27,15 +27,12 @@ services:
       # -----------------------------------------------------------------------
       # 1PASSWORD CONNECT TOKEN (for vault decryption verification)
       # -----------------------------------------------------------------------
-      - ../op/connect_token:/etc/connect/token:ro
 
       # -----------------------------------------------------------------------
       # INFRASTRUCTURE DEPLOYMENT FILES
       # -----------------------------------------------------------------------
       # 1Password Connect credentials (for deploying Connect to remote)
-      - ../op/1password-credentials.json:/config/1password-credentials.json:ro
       # 1Password token (for Locket/Connect authentication)
-      - ../op/connect_token:/config/op_token:ro
       # Pangolin config directory (for pangolin_core role)
       - ../pangolin/config:/config/pangolin:ro
 
@@ -53,8 +50,6 @@ services:
       ANSIBLE_HOST_KEY_CHECKING: ${ANSIBLE_HOST_KEY_CHECKING:-false}
 
       # 1Password Connect (accessible via host.docker.internal)
-      OP_CONNECT_HOST: ${OP_CONNECT_HOST:-http://host.docker.internal:8080}
-      OP_CONNECT_TOKEN_FILE: /etc/connect/token
 
       # Vault password file (created at runtime or passed via env)
       ANSIBLE_VAULT_PASSWORD_FILE: /tmp/.vaultpass

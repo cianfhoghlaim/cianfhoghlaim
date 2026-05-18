@@ -20,7 +20,7 @@ services:
   # LOCKET - Secrets Management Sidecar
   # ---------------------------------------------------------------------------
   locket:
-    image: ghcr.io/bpbradley/locket:connect
+    image: ghcr.io/bpbradley/locket:infisical
     platform: linux/amd64
     container_name: macbook-locket
     user: "65532:65532"
@@ -31,12 +31,15 @@ services:
       - ALL
     environment:
       # Connect to 1Password Connect on OCI
-      OP_CONNECT_HOST: ${OP_CONNECT_HOST:-http://132.145.27.89:8080}
-      OP_CONNECT_TOKEN_FILE: /run/secrets/op_token
     secrets:
-      - op_token
+      - infisical_secret
     command:
-      - "--provider=op-connect"
+      - "--provider=infisical"
+      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-url=$${INFISICAL_URL:-http://host.docker.internal:8081}"
+      - "--infisical-default-environment=$${INFISICAL_ENVIRONMENT:-dev}"
+      - "--infisical-default-project-id=$${INFISICAL_PROJECT_ID:-project-id}
       - "--mode=watch"
       - "--map=/templates:/run/secrets/locket"
     volumes:
@@ -127,7 +130,7 @@ services:
 # SECRETS
 # =============================================================================
 secrets:
-  op_token:
+  infisical_secret:
     file: ${OP_TOKEN_FILE:-~/.config/op/connect-token}
 
 # =============================================================================

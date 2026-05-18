@@ -21,18 +21,17 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
-    environment:
-      # Connect to 1Password Connect via shared infrastructure network
-      OP_CONNECT_HOST: http://op-connect-api:8080
-      OP_CONNECT_TOKEN_FILE: /connect/token
+    secrets:
+      - infisical_secret
     command:
-      - "--provider=op-connect"
+      - "--provider=infisical"
+      - "--infisical-client-id={{ infisical_client_id }}"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
       - "--mode=watch"
       - "--map=/templates:/run/secrets/locket"
     volumes:
       - ./config/secrets/templates:/templates:ro
       - secrets-store:/run/secrets/locket
-      - ./config/secrets/op_token:/connect/token:ro
     networks:
       - default
       - infrastructure
@@ -82,6 +81,8 @@ services:
       - ./config:/app/config
       - secrets-store:/run/secrets/locket:ro
     entrypoint: ["/bin/sh", "-c"]
+    secrets:
+      - infisical_secret
     command:
       - |
         export SERVER_SECRET=$$(cat /run/secrets/locket/server_secret)
@@ -104,6 +105,8 @@ services:
     depends_on:
       pangolin:
         condition: service_healthy
+    secrets:
+      - infisical_secret
     command:
       - --reachableAt=http://gerbil:3003
       - --generateAndSaveKeyTo=/var/config/key
@@ -132,6 +135,8 @@ services:
     depends_on:
       pangolin:
         condition: service_healthy
+    secrets:
+      - infisical_secret
     command:
       - --configFile=/etc/traefik/traefik_config.yml
     volumes:
@@ -251,3 +256,7 @@ networks:
   # Shared network with 1Password Connect
   infrastructure:
     external: true
+
+secrets:
+  infisical_secret:
+    file: {{ infisical_secret_path }}
