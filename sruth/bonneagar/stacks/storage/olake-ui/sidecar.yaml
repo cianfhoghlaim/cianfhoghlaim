@@ -4,7 +4,7 @@
 
 services:
   locket:
-    image: ghcr.io/bpbradley/locket:latest
+    image: ghcr.io/bpbradley/locket:infisical
     container_name: olake-ui-locket
     restart: unless-stopped
     user: "65532:65532"
@@ -13,9 +13,13 @@ services:
     cap_drop:
       - ALL
     command:
-      - "--provider=op-connect"
-      - "--connect.host=${OP_CONNECT_HOST:-http://132.145.27.89:8080}"
-      - "--connect.token-file=/run/secrets/op_token"
+      - "--provider=infisical"
+      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-url=$${INFISICAL_URL:-http://host.docker.internal:8081}"
+      - "--infisical-default-environment=$${INFISICAL_ENVIRONMENT:-dev}"
+      - "--infisical-default-project-id=$${INFISICAL_PROJECT_ID:-project-id}
+      - "--connect.host=${
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:
