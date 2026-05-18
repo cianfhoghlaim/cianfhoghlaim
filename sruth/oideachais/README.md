@@ -2,6 +2,45 @@
 
 Oideachais is a pan-Celtic curriculum search, content management, and learning outcomes platform. It leverages AI to bridge the gap between official curriculum documents and interactive learning experiences.
 
+
+## Core Architecture Overview
+
+The platform is designed around a modular microservices and multi-agent architecture:
+
+- **Data Engineering Hub**: Automated extraction (Firecrawl), staging (DLT), orchestration (Dagster), and transformation (SQLMesh).
+- **Knowledge Graph & Memory**: Temporal memory tracking (Graphiti, Cognee) backed by relational and vector persistence (LanceDB, Neo4j).
+- **Agentic AI**: Multi-agent workflows orchestrated via Agno and Google ADK to process complex educational outcomes.
+- **Secure Infrastructure**: All runtime environments utilize dynamic ephemeral secret injection via a Locket Sidecar (connected to Infisical).
+
+## Running the Application Locally
+
+The project utilizes Docker Compose for local orchestration, using a sidecar pattern for secure secret management via Locket and Infisical.
+
+### Prerequisites
+Ensure your local `.env` has the necessary Infisical variables configured:
+```env
+INFISICAL_URL=http://<YOUR_LOCAL_IP>:8081  # Use your machine's physical IP address
+INFISICAL_CLIENT_ID=<your-client-id>
+```
+*Note: The actual client secret should be mounted via `/run/secrets/infisical_secret` as required by the locket container.*
+
+### Spinning up the Services
+To launch the core platform along with the secrets sidecar, run:
+
+```bash
+docker compose -f compose.yaml -f sidecar.yaml up -d
+```
+This overlays the `sidecar.yaml` onto `compose.yaml`, spinning up the Locket service to securely pass runtime configurations into the `api` and `frontend` services via tmpfs mounts.
+
+## Project Structure Highlights
+
+- `/dagster_assets` & `/dlt_sources`: Data pipeline definitions for extracting and orchestrating educational content.
+- `/agents` & `/agno`: Definitions and tools for autonomous multi-agent systems.
+- `/firecrawl_configs` & `/ocr`: Data ingestion tools for scraping and reading curriculum documents.
+- `/graph` & `/memory`: Temporal knowledge graph models and embeddings orchestration.
+- `/sqlmesh`: Virtual data warehouse transformation layers.
+- `/modal_finetune` & `/training`: Pipelines for localized fine-tuning using Unsloth.
+
 ## Tech Stack Overview
 
 ### Data Orchestration

@@ -23,8 +23,11 @@ services:
     read_only: true
     command:
       - "--provider=infisical"
-      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-client-id=${INFISICAL_CLIENT_ID}"
       - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-url=${INFISICAL_URL:-http://host.docker.internal:8081}"
+      - "--infisical-default-environment=${INFISICAL_ENVIRONMENT:-dev}"
+      - "--infisical-default-project-id=${INFISICAL_PROJECT_ID:-project-id}"
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:
@@ -33,7 +36,7 @@ services:
       - ./secrets.env:/templates/secrets.env:ro
       - oideachais-secrets:/run/secrets/locket
     healthcheck:
-      test: ["CMD", "/locket", "healthcheck"]
+      test: ["CMD", "locket", "healthcheck"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -70,7 +73,7 @@ services:
 # =============================================================================
 secrets:
   infisical_secret:
-    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+    file: ${INFISICAL_SECRET_FILE:-../../infisical_secret}
 
 # =============================================================================
 # VOLUMES
