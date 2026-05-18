@@ -222,21 +222,30 @@ def create_cycle_asset(cycle: str):
         registry = SubjectRegistry.from_default()
 
         # Build and log URLs
-        urls = build_subject_urls(cycle, subject, registry)
+        urls = build_subject_urls(cycle, subject, registry, language=language)
         for url_info in urls:
             context.log.info(f"  {url_info['site']}/{url_info['language']}: {url_info['url']}")
 
-        # Parallel scrape all 4 URLs
+        # Parallel scrape filtered URLs
         pages = list(parallel_scrape_subject(
             cycle=cycle,
             subject=subject,
             registry=registry,
-            max_workers=4,
+            language=language,
+            max_workers=2,
             max_pages_per_url=50,
             max_depth=3,
         ))
 
-        context.log.info(f"Scraped {len(pages)} pages from 4 URLs")
+        context.log.info(f"Scraped {len(pages)} pages from {len(urls)} URLs")
+
+        # Ensure we have valid pages before passing to DLT pipeline
+        valid_pages = [p for p in pages if p.get("status") not in ("error", "no_api_key", "firecrawl_not_installed")]
+        if not valid_pages:
+            raise RuntimeError(
+                f"Firecrawl failed to scrape any valid pages for {cycle}/{subject}/{language}. "
+                f"Check API limits or error logs. URLs attempted: {[u['url'] for u in urls]}"
+            )
 
         # Choose destination based on environment
         # Set USE_DUCKLAKE=false to use plain DuckDB (when lakehouse not running)

@@ -196,14 +196,17 @@ def build_subject_urls(
     cycle: str,
     subject: str,
     registry: SubjectRegistry | None = None,
+    language: str | None = None,
 ) -> list[dict[str, str]]:
     """
     Build all 4 URLs for a subject (2 sites × 2 languages).
+    Optionally filter by language.
 
     Args:
         cycle: Education cycle (junior_cycle, senior_cycle, etc.)
         subject: Subject slug (chemistry, mathematics, etc.)
         registry: Optional SubjectRegistry for subject name lookups
+        language: Optional language code ("en" or "ga") to filter results
 
     Returns:
         List of URL dicts with site, language, and URL
@@ -250,6 +253,9 @@ def build_subject_urls(
             "url": f"https://ncca.ie/ga/{cycle_ga}/forbairtí-curaclaim/{subject_ga}/",
         },
     ]
+
+    if language:
+        urls = [u for u in urls if u["language"] == language]
 
     return urls
 
@@ -307,24 +313,28 @@ def parallel_scrape_subject(
     cycle: str,
     subject: str,
     registry: SubjectRegistry | None = None,
-    max_workers: int = 4,
+    language: str | None = None,
+    max_workers: int = 2,
     max_pages_per_url: int = 50,
     max_depth: int = 3,
 ) -> Iterator[dict[str, Any]]:
     """
     Scrape all URLs for a subject in parallel.
 
-    Scrapes 4 URLs concurrently:
+    Scrapes URLs concurrently:
     - curriculumonline.ie (en)
     - curriculumonline.ie (ga)
     - ncca.ie (en)
     - ncca.ie (ga)
+    
+    If language is provided, only that language's URLs are scraped.
 
     Args:
         cycle: Education cycle
         subject: Subject slug
         registry: Optional SubjectRegistry
-        max_workers: Max concurrent scrapes (default 4)
+        language: Optional language code ("en" or "ga")
+        max_workers: Max concurrent scrapes (default 2 to prevent rate limits)
         max_pages_per_url: Max pages per URL
         max_depth: Max crawl depth
 
@@ -334,7 +344,7 @@ def parallel_scrape_subject(
     if registry is None:
         registry = SubjectRegistry.from_default()
 
-    urls = build_subject_urls(cycle, subject, registry)
+    urls = build_subject_urls(cycle, subject, registry, language=language)
 
     logger.info(
         "parallel_scrape_started",

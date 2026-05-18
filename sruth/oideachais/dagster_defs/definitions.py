@@ -25,9 +25,14 @@ from dotenv import load_dotenv
 
 # Load environment variables from .env file (lakehouse credentials)
 # This must happen before importing resources that use env vars
+_locket_env = Path("/run/secrets/locket/secrets.env")
 _env_file = Path(__file__).parent.parent / ".env"
+
+if _locket_env.exists():
+    load_dotenv(_locket_env)
+    
 if _env_file.exists():
-    load_dotenv(_env_file)
+    load_dotenv(_env_file, override=True)
 
 import dagster as dg
 

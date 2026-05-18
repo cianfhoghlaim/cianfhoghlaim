@@ -45,6 +45,19 @@ services:
       - oideachais
 
   # ---------------------------------------------------------------------------
+  # Override Dagster to depend on Locket and mount secrets
+  # ---------------------------------------------------------------------------
+  dagster:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - oideachais-secrets:/run/secrets/locket:ro
+    env_file:
+      - path: /run/secrets/locket/secrets.env
+        required: false
+
+  # ---------------------------------------------------------------------------
   # Override API to depend on Locket and mount secrets
   # ---------------------------------------------------------------------------
   api:

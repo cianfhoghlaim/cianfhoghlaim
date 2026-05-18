@@ -25,6 +25,7 @@ services:
       AWS_REGION: ${AWS_REGION:-auto}
     volumes:
       - .:/app
+      - ../../.env:/app/.env:ro
       - /app/.venv
       - ./dagster.yaml:/opt/dagster/home/dagster.yaml:ro
       - dagster-storage:/opt/dagster/storage
