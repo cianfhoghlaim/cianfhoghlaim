@@ -8,11 +8,11 @@ This plan outlines the systematic reintegration of the `education` workspace. Th
 - `docker-compose.yaml` references old directories like `./sruth/aleyum/portal`, `./sruth/oideachais/apps/web`, `./sruth/crypteolas/ui`.
 - `compose.yaml` references `./apps/web` instead of `./web`.
 - `pyproject.toml` references `sruth-browser` workspace but the directory is `browser`.
-- Unused/stub `.env` files with missing configurations for Komodo, Pangolin, and 1Password (Lock It).
+- Unused/stub `.env` files with missing configurations for Komodo, Pangolin, and Infisical + mise.
 
 **Action Plan:**
 - [ ] Update `docker-compose.yaml` and `compose.yaml` to point to the actual subdirectories (`web`, `browser`, `api`, `marimo`, etc.).
-- [ ] Standardize the `.env` template strategy (integrating 1Password CLI `op run` or `.op.env` workflows) for secrets management across sub-agents.
+- [ ] Standardize the `.env` template strategy (integrating Infisical CLI `infisical export` or `.infisical.env` workflows) for secrets management across sub-agents.
 - [ ] Align `pyproject.toml` and `workspace.yaml` (Dagster) to accurately map the internal module references.
 
 ## 2. Infrastructure Directory (Komodo, Pangolin, Docker)
@@ -23,7 +23,7 @@ This plan outlines the systematic reintegration of the `education` workspace. Th
 **Action Plan:**
 - [ ] Audit `education/infrastructure/` to extract existing Pangolin/Komodo compose templates.
 - [ ] Rebuild a unified `docker-compose.yaml` profile system (`dev`, `infra`, `ui`, `ml`) that correctly paths to current services.
-- [ ] Add 1Password CLI integration steps to the infrastructure README for local secret injection without `.env` file reliance.
+- [ ] Add Infisical CLI + mise integration steps to the infrastructure README for local secret injection without `.env` file reliance.
 
 ## 3. Browser, ADK, and Machine Learning
 **Current State:**
@@ -48,7 +48,7 @@ This plan outlines the systematic reintegration of the `education` workspace. Th
 ## 5. CI/CD & Parent Directories (.github, .dlt, .beads)
 **Current State:**
 - Pivot from Forgejo to GitHub flows requires discarding `.forgejo` context and fully embracing `.github/workflows`.
-- Hidden folders `.beads` and `.dlt` hold state that must be accounted for in the deployment cache.
+- Hidden folder `.dlt` holds state that must be accounted for in the deployment cache.
 
 **Action Plan:**
 - [x] Create robust GitHub Actions workflows for Docker image building, Dagster CI, and Web deployment.

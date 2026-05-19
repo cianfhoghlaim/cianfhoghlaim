@@ -9,7 +9,7 @@ This directory contains the core "streams" (sruthanna) of the Cianfhoghlaim proj
 | `bonneagar/` | Infrastructure & Deployment | Komodo, Pangolin, Locket, Docker |
 | `meaisínfhoghlaim/` | Machine Learning & AI | Langfuse, MLflow, Crawl4AI, Cognee |
 | `oideachais/` | Education Platform | FastAPI, TanStack, Dagster, DuckDB |
-| `códeolas/` | Codebase Intelligence | Beads, Chunkhound, Dagger |
+| `códeolas/` | Codebase Intelligence | Chunkhound, Dagger, MCP |
 | `tuatha/` | Community & Identity | Pocket-ID, Forgejo |
 | `web/` | Web Frontends | React, TanStack Start |
 
@@ -40,4 +40,4 @@ The project has transitioned from a distributed Hetzner/OCI model to a **Converg
 ### 💾 Storage & Data
 - **FerretDB v2**: Offers MongoDB compatibility on top of PostgreSQL, leveraging native vector search for RAG.
 - **LanceDB**: A high-performance vector database optimized for multi-modal data and large-scale embeddings.
-- **DuckLake**: Converged architecture using DuckDB for local analytics and S3 for scalable storage.
+- **DuckLake Data Pipeline**: Converged architecture using `dlt` (extraction) -> `dagster` (orchestration) -> `sqlmesh` (transformation) -> `duckdb`/`lancedb` (local analytics & S3 storage).
