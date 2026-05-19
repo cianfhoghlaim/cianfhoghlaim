@@ -73,7 +73,6 @@ The system SHALL provide...
 
 | Capability | Purpose |
 |------------|---------|
-| `beads-issue-tracking` | Distributed issue tracker for AI agents |
 | `chunkhound-code-search` | Semantic code search with MVCC |
 
 ### Infrastructure
@@ -87,4 +86,4 @@ The system SHALL provide...
 1. **NEVER skip validation** - Always run `openspec validate --strict`
 2. **ALWAYS include scenarios** - Every requirement needs at least one
 3. **Use correct headers** - `#### Scenario:` (4 hashtags)
-4. **Respect constraints** - Check `.claude/CONSTRAINTS.md`
+4. **Respect constraints** - Architecture standardizes on **Infisical**, **Dagster**, **DuckLake**, and **Model Context Protocol (MCP)** servers.

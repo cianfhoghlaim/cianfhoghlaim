@@ -1,16 +1,17 @@
 # Agent Instructions
 
-This project uses **bd** (beads) for issue tracking. Run `bd onboard` to get started.
+This project uses standard GitHub/Forgejo issues for task tracking. Please use `gh` or standard `git` workflows.
 
-## Quick Reference
+## Infrastructure & Secrets (Critical for Agents)
 
-```bash
-bd ready              # Find available work
-bd show <id>          # View issue details
-bd update <id> --status in_progress  # Claim work
-bd close <id>         # Complete work
-bd sync               # Sync with git
-```
+### Pangolin Convergence Architecture
+- **Control Plane (`arm1-oci`)**: Handles routing (Pangolin), identity (Pocket ID), and orchestration (Komodo).
+- **Workload Host (`bunchloch` - MacBook M4)**: Handles memory-intensive workloads (Vector DBs, Graph DBs, LLM Inference, local analytics).
+
+### Secrets Management (Infisical + mise)
+- Secrets are **automatically injected** via `mise` hooks when entering a directory.
+- `infisical export` resolves all secrets instantly into an ignored `.env` file from a `.infisical.env` template.
+- **DO NOT** attempt to manually manage, write, or look for `.env` files when configuring MCP servers or running tools. The environment is already hydrated.
 
 ## Agent Capabilities
 
@@ -156,7 +157,6 @@ langfuse.score(name="rag_evaluation", value=result)
 4. **PUSH TO REMOTE** - This is MANDATORY:
    ```bash
    git pull --rebase
-   bd sync
    git push
    git status  # MUST show "up to date with origin"
    ```

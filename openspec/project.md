@@ -32,7 +32,6 @@ Celtic language education platform with AI-powered tools for Irish curriculum pr
 
 | Capability | Description | Status |
 |------------|-------------|--------|
-| `beads-issue-tracking` | Distributed issue tracker for AI agents (`.beads/`) | Active |
 | `chunkhound-code-search` | Semantic code search with MVCC | Active |
 | `ai-agent-skills` | Portable instruction directories (`.skills/`) | Active |
 
@@ -41,7 +40,7 @@ Celtic language education platform with AI-powered tools for Irish curriculum pr
 The project embraces an AI-first development workflow utilizing **Gemini CLI**, **Roo Code**, and **GitHub Copilot**. 
 
 1. **Agent Skills (`.skills/`)**: We utilize the [Agent Skills standard](https://agentskills.io/). Specialized capabilities, workflows, and prompts must be documented as skills within the `.skills/` directory (e.g., `.skills/skill-creator/SKILL.md`). This ensures portability across all AI agents.
-2. **Issue Tracking (`.beads/`)**: All AI agents must use **Beads** (`bd` CLI) to track work, manage session handoffs, and sync status with `git`. Before starting work, agents should run `bd ready`, and upon completion, follow the `AGENTS.md` handoff protocol.
+2. **Issue Tracking**: All AI agents should use standard GitHub/Forgejo issues or standard project management. Follow the `AGENTS.md` handoff protocol upon session completion.
 3. **Model Context Protocol (MCP)**: Agents access local and remote capabilities (like `browserbase` and `firecrawl`) via the MCP servers defined in `.roo/mcp.json` and `.mcp.json`.
 
 ## Naming Conventions
