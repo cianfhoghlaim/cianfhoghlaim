@@ -31,8 +31,8 @@ conn = psycopg2.connect(
 # Set in secrets.env
 export PLANETSCALE_HOST="eu-west-3.pg.psdb.cloud"
 export PLANETSCALE_DATABASE="langfuse"
-export PLANETSCALE_USERNAME="{{ op://taisce-secrets/planetscale/username }}"
-export PLANETSCALE_PASSWORD="{{ op://taisce-secrets/planetscale/password }}"
+export PLANETSCALE_USERNAME="{{ infisical://taisce-secrets/planetscale/username }}"
+export PLANETSCALE_PASSWORD="{{ infisical://taisce-secrets/planetscale/password }}"
 ```
 
 ## Features

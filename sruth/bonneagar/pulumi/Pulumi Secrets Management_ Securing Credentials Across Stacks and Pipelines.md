@@ -72,7 +72,7 @@ On the CLI side, Pulumi redacts secret values in terminal output, replacing them
 
 ### Pulumi ESC: centralized environments
 
-Pulumi [ESC](https://www.pulumi.com/docs/esc/) (Environments, Secrets, and Configuration) is Pulumi's dedicated product for managing secrets and configuration at scale across stacks, teams, and tools. Rather than duplicating credentials across stack config files, ESC lets you define composable YAML environments that act as a single source of truth. Those environments can pull secrets dynamically from external stores like AWS Secrets Manager, Azure Key Vault, or 1Password through built-in providers, and can also issue short-lived cloud credentials via OIDC: eliminating the need for long-lived access keys entirely.
+Pulumi [ESC](https://www.pulumi.com/docs/esc/) (Environments, Secrets, and Configuration) is Pulumi's dedicated product for managing secrets and configuration at scale across stacks, teams, and tools. Rather than duplicating credentials across stack config files, ESC lets you define composable YAML environments that act as a single source of truth. Those environments can pull secrets dynamically from external stores like AWS Secrets Manager, Azure Key Vault, or Infisical through built-in providers, and can also issue short-lived cloud credentials via OIDC: eliminating the need for long-lived access keys entirely.
 
 ESC includes RBAC, environment versioning with taggable releases, and audit logging. It integrates directly with Pulumi IaC stacks via the `environment` block in your stack config file, but also works independently with any CLI tool or CI/CD pipeline via the `esc run` command.
 

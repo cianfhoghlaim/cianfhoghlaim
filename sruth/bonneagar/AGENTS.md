@@ -11,14 +11,14 @@ Bonneagar (Irish: "infrastructure") contains deployment configurations, infrastr
 | `storage/` | Database and storage stacks | Docker Compose |
 | `komodo/` | Container orchestration | Komodo |
 | `pangolin/` | VPN and network access | Pangolin/WireGuard |
-| `locket/` | Secret management | 1Password/Vault |
+| `locket/` | Secret management | Infisical/Vault |
 | `pulumi/` | Cloud infrastructure | Pulumi IaC |
 | `dagger/` | CI/CD pipelines | Dagger |
 | `ansible/` | Server configuration | Ansible |
 | `forgejo/` | Git hosting | Forgejo |
 | `api_specs/` | API specifications | OpenAPI |
 | `uirlisí/` | CLI tools | TypeScript/Bun |
-| `op/` | 1Password integration | 1Password CLI |
+| `op/` | Infisical integration | Infisical CLI |
 | `scripts/` | Utility scripts | Shell/TypeScript |
 
 ## Stack Categories
@@ -94,9 +94,9 @@ services:
 
 **NEVER commit secrets to git.** Use:
 
-1. **1Password CLI (`op/`):**
+1. **Infisical CLI (`op/`):**
    ```bash
-   op read "op://vault/item/field"
+   infisical secrets get "infisical://vault/item/field"
    ```
 
 2. **Environment files:**
@@ -307,4 +307,4 @@ cp data/*.duckdb backups/
 - **Pulumi Docs:** https://www.pulumi.com/docs
 - **Komodo Docs:** https://komo.do/docs
 - **Pangolin Docs:** https://pangolin.dev
-- **1Password CLI:** https://developer.1password.com/docs/cli
+- **Infisical CLI:** https://developer.infisical.com/docs/cli

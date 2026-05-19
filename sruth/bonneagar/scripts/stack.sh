@@ -19,13 +19,13 @@
 #
 #   # Or set permanently
 #   export LOCKET_ENABLED=1
-#   export OP_CONNECT_HOST=http://132.145.27.89:8080
+#   export INFISICAL_HOST=http://132.145.27.89:8080
 #   ./scripts/stack.sh langfuse up -d
 #
 # Environment Variables:
 #   LOCKET_ENABLED        - Set to 1 to enable Locket secret injection
-#   OP_CONNECT_HOST       - 1Password Connect URL (default: http://132.145.27.89:8080)
-#   OP_CONNECT_TOKEN_FILE - Path to token file (default: ./op_token)
+#   INFISICAL_HOST       - Infisical URL (default: http://132.145.27.89:8080)
+#   INFISICAL_TOKEN_FILE - Path to token file (default: ./infisical_secret)
 #   TAISCE_DIR            - Base directory (default: script directory parent)
 # =============================================================================
 
@@ -36,8 +36,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TAISCE_DIR="${TAISCE_DIR:-$(dirname "$SCRIPT_DIR")}"
 STACKS_DIR="${TAISCE_DIR}/stacks"
 
-OP_CONNECT_HOST="${OP_CONNECT_HOST:-http://132.145.27.89:8080}"
-OP_CONNECT_TOKEN_FILE="${OP_CONNECT_TOKEN_FILE:-${TAISCE_DIR}/op_token}"
+INFISICAL_HOST="${INFISICAL_HOST:-http://132.145.27.89:8080}"
+INFISICAL_TOKEN_FILE="${INFISICAL_TOKEN_FILE:-${TAISCE_DIR}/infisical_secret}"
 
 # Colors for output
 RED='\033[0;31m'

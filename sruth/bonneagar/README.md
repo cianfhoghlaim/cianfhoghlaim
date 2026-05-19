@@ -35,7 +35,7 @@ Bonneagar provides browser automation, agent orchestration, and infrastructure m
 |---------|---------|---------|
 | **@pulumi/hcloud** | Latest | Hetzner Cloud infrastructure provisioning |
 | **@pulumi/oci** | Latest | Oracle Cloud Infrastructure provisioning |
-| **@1password/connect** | Latest | 1Password Connect SDK for secrets management |
+| **@infisical/connect** | Latest | Infisical SDK for secrets management |
 
 ### Browser Automation
 | Package | Version | Purpose |
@@ -66,7 +66,7 @@ Bonneagar provides browser automation, agent orchestration, and infrastructure m
 
 ### Infrastructure
 - **Multi-Cloud Support**: Hetzner Cloud and OCI provisioning via Pulumi
-- **Secrets Management**: 1Password Connect for secure secret injection
+- **Secrets Management**: Infisical for secure secret injection
 - **Modular Stacks**: Docker Compose stacks for each service (see `stacks/` directory)
 - **Zero-Egress Design**: Federated lakehouse deployment with local processing
 
@@ -176,7 +176,7 @@ docker compose up -d
 
 - **Development**: Local Docker Compose stacks
 - **Production**: Komodo stacks on Hetzner Cloud and OCI
-- **Secrets**: 1Password Connect via Locket
+- **Secrets**: Infisical via Locket
 - **Routing**: Pangolin identity-aware proxy
 
 ## Architecture
@@ -187,7 +187,7 @@ Bonneagar follows a modular architecture with clear separation of concerns:
 2. **Agent Layer**: Multi-agent orchestration via Google ADK and Agno
 3. **Observability Layer**: Tracing, evaluation, and monitoring via Langfuse, Ragas, and MLflow
 4. **Infrastructure Layer**: Cloud provisioning via Pulumi and Docker Compose stacks
-5. **Security Layer**: Secrets management via 1Password Connect and identity-aware routing via Pangolin
+5. **Security Layer**: Secrets management via Infisical and identity-aware routing via Pangolin
 
 ## Contributing
 

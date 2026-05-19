@@ -109,7 +109,7 @@ async function getStack() {
     await stack.setConfig("compartmentOcid", { value: CONFIG.compartmentOcid });
     await stack.setConfig("sshPublicKey", { value: sshPublicKey });
 
-    // Load Cloudflare credentials from 1Password (if available)
+    // Load Cloudflare credentials from Infisical (if available)
     const cfCreds = await loadCloudflareCredentials();
     if (cfCreds) {
         // Set Cloudflare provider API token
@@ -194,7 +194,7 @@ async function regenerateInventory(): Promise<void> {
 }
 
 /**
- * Run Ansible playbook to deploy infrastructure (1Password Connect, Pangolin, Komodo)
+ * Run Ansible playbook to deploy infrastructure (Infisical, Pangolin, Komodo)
  */
 async function runAnsiblePlaybook(): Promise<void> {
     console.log("\nRunning Ansible playbook to deploy infrastructure...");

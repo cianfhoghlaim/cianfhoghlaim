@@ -6,8 +6,8 @@
 # =============================================================================
 #
 # DEPLOYMENT:
-#   1. Ensure 1Password desktop app is running with CLI integration
-#   2. Create secrets in 1Password (vault: dev-baile):
+#   1. Ensure Infisical desktop app is running with CLI integration
+#   2. Create secrets in Infisical (vault: dev-baile):
 #      - macbook-newt-id: Newt ID from Pangolin
 #      - macbook-newt-secret: Newt secret from Pangolin
 #   3. Run: docker compose up -d
@@ -30,7 +30,7 @@ services:
     cap_drop:
       - ALL
     environment:
-      # Connect to 1Password Connect on OCI
+      # Connect to Infisical on OCI
     secrets:
       - infisical_secret
     command:
@@ -131,7 +131,7 @@ services:
 # =============================================================================
 secrets:
   infisical_secret:
-    file: ${OP_TOKEN_FILE:-~/.config/op/connect-token}
+    file: ${INFISICAL_SECRET_FILE:-~/.config/op/connect-token}
 
 # =============================================================================
 # VOLUMES

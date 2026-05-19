@@ -9,7 +9,7 @@
 # OCI FREE TIER - Control Plane (arm1-oci)
 # -----------------------------------------------------------------------------
 # 4 ARM OCPUs, 24 GB RAM, 200 GB storage
-# Runs: Pangolin, Komodo, 1Password, Garage, Beszel, Dozzle, Qdrant, Pocket-ID
+# Runs: Pangolin, Komodo, Infisical, Garage, Beszel, Dozzle, Qdrant, Pocket-ID
 # -----------------------------------------------------------------------------
 [[server]]
 name = "arm1-oci"

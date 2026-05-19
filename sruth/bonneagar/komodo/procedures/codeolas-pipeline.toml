@@ -47,7 +47,7 @@ DD_ENV=production
 DD_SITE=crypteolas.ie
 DD_APM_ENABLED=true
 
-# 1Password Connect
-OP_CONNECT_HOST=${OP_CONNECT_HOST:-http://132.145.27.89:8080}
+# Infisical
+INFISICAL_HOST=${INFISICAL_HOST:-http://132.145.27.89:8080}
 LOCKET_MODE=watch
 """

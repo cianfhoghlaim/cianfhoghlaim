@@ -2,7 +2,7 @@
 # KAFKA CLUSTER - Self-Hosted Production Stack
 # =============================================================================
 # Apache Kafka + Kraft (no Zookeeper) + Schema Registry + Kafka UI
-# Production deployment for Hetzner CAX41 (cax41-hetzner)
+# Production deployment for Hetzner CAX41 (arm1-oci)
 #
 # This stack replaces Confluent Cloud ($400 credits) once exhausted.
 # Kraft mode eliminates Zookeeper dependency for simpler operations.

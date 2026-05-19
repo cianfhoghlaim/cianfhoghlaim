@@ -21,13 +21,13 @@
 // Stages:
 //   - pre-flight: Validate TinyAuth and PocketID health
 //   - create-oauth: Create OAuth client in PocketID
-//   - inject-secrets: Store credentials in 1Password
+//   - inject-secrets: Store credentials in Infisical
 //   - deploy-stack: Deploy via Komodo
 //   - verify-auth: Test authentication redirects
 //
 // Prerequisites:
 //   - Dagger CLI installed on target execution server
-//   - 1Password Connect available
+//   - Infisical available
 //   - PocketID admin token available
 //   - Komodo API credentials available
 // =============================================================================
@@ -70,8 +70,8 @@ const connectionArgs = [
   `--komodo-api-secret=env:KOMODO_API_SECRET`,
   `--pocket-id-url="https://auth.cianfhoghlaim.ie"`,
   `--pocket-id-token=env:POCKETID_TOKEN`,
-  `--op-connect-host="http://132.145.27.89:8080"`,
-  `--op-connect-token=env:OP_CONNECT_TOKEN`,
+  `--infisical-host="http://132.145.27.89:8080"`,
+  `--infisical-token=env:INFISICAL_TOKEN`,
 ].join(" ");
 
 cmd += ` ${connectionArgs}`;

@@ -385,7 +385,7 @@ FORGEJO_DISABLE_REGISTRATION=false
 FORGEJO_REQUIRE_SIGNIN=false
 FORGEJO_ACTIONS_ENABLED=true
 # Locket secrets management
-OP_CONNECT_HOST=http://132.145.27.89:8080
+INFISICAL_URL=http://132.145.27.89:8080
 LOCKET_MODE=watch
 """
 
@@ -409,7 +409,7 @@ FORGEJO_RUNNER_NAME=oci-runner
 FORGEJO_RUNNER_LABELS=ubuntu-latest:docker://ghcr.io/catthehacker/ubuntu:runner-latest
 FORGEJO_URL=https://git.cianfhoghlaim.ie
 # Locket secrets management
-OP_CONNECT_HOST=http://132.145.27.89:8080
+INFISICAL_URL=http://132.145.27.89:8080
 LOCKET_MODE=watch
 """
 
@@ -570,7 +570,7 @@ KOMODO_BACKUP_SCHEDULE=0 2 * * *
 # Periphery configuration
 PERIPHERY_ROOT=/etc/komodo
 # Locket secrets management
-OP_CONNECT_HOST=http://132.145.27.89:8080
+INFISICAL_URL=http://132.145.27.89:8080
 LOCKET_MODE=watch
 """
 
@@ -590,7 +590,7 @@ run_directory = "/etc/komodo/storage/komodo-periphery"
 file_paths = ["compose.yaml", "sidecar.yaml"]
 environment = """
 PERIPHERY_ROOT=/etc/komodo
-OP_CONNECT_HOST=http://132.145.27.89:8080
+INFISICAL_URL=http://132.145.27.89:8080
 LOCKET_MODE=watch
 """
 
@@ -610,7 +610,7 @@ run_directory = "/etc/komodo/storage/komodo-periphery"
 file_paths = ["compose.yaml", "sidecar.yaml"]
 environment = """
 PERIPHERY_ROOT=/etc/komodo
-OP_CONNECT_HOST=http://132.145.27.89:8080
+INFISICAL_URL=http://132.145.27.89:8080
 LOCKET_MODE=watch
 """
 

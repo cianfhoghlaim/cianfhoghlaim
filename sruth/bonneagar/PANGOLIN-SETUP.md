@@ -94,7 +94,7 @@ User Request → Traefik → TinyAuth (forwardAuth)
    - **Scopes**: openid, email, profile, groups
 5. Save and note the **Client ID** and **Client Secret**
 
-#### Step 2: Store Credentials in 1Password
+#### Step 2: Store Credentials in Infisical
 ```bash
 op item create --vault taisce-secrets --category login --title "pocketid-tinyauth" \
   "client_id=<client-id-from-pocketid>" \
@@ -127,7 +127,7 @@ my-protected-router:
 
 The setup uses Cloudflare DNS challenge for wildcard certificates covering `*.cianfhoghlaim.ie`.
 
-#### Required 1Password Item
+#### Required Infisical Item
 ```bash
 op item create --vault taisce-secrets --category "API Credential" --title "cloudflare" \
   "dns_api_token[password]=<your-cloudflare-dns-api-token>"
@@ -192,7 +192,7 @@ After first deployment:
 # Generate bouncer key
 docker exec crowdsec cscli bouncers add traefik-bouncer
 
-# Store in 1Password
+# Store in Infisical
 op item create --vault taisce-secrets --category login --title "crowdsec" \
   "bouncer_key[password]=<generated-key>"
 
@@ -306,7 +306,7 @@ docker exec traefik wget -q -O- http://pangolin:3001/api/v1/
 
 ## Secrets Reference
 
-| Secret | 1Password Path | Purpose |
+| Secret | Infisical Path | Purpose |
 |--------|----------------|---------|
 | `SERVER_SECRET` | `taisce-secrets/pangolin-core/server_secret` | Pangolin session encryption |
 | `POSTGRES_PASSWORD` | `taisce-secrets/pangolin-core/postgres_password` | Database authentication |

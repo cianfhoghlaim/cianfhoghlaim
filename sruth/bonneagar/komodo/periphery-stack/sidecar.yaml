@@ -1,7 +1,7 @@
 # =============================================================================
 # KOMODO PERIPHERY - Locket Sidecar Configuration
 # =============================================================================
-# Injects secrets from 1Password Connect into the environment
+# Injects secrets from Infisical into the environment
 
 services:
   locket:

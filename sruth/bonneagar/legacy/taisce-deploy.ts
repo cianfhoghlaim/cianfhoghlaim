@@ -1,5 +1,5 @@
 import { KomodoClient, Types } from "komodo_client";
-import { OnePasswordConnect, OPConnect, FullItem } from "@1password/connect";
+import { OnePasswordConnect, OPConnect, FullItem } from "@infisical/connect";
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
@@ -25,8 +25,8 @@ const CONFIG = {
     credentialItem: "komodo",
   },
   opConnect: {
-    host: process.env.OP_CONNECT_HOST || "http://132.145.27.89:8080",
-    tokenFile: process.env.OP_CONNECT_TOKEN_FILE || path.join(__dirname, "croí/op/connect_token"),
+    host: process.env.INFISICAL_HOST || "http://132.145.27.89:8080",
+    tokenFile: process.env.INFISICAL_TOKEN_FILE || path.join(__dirname, "croí/op/connect_token"),
   },
   taisce: {
     localDir: path.join(__dirname, "croí/taisce"),
@@ -35,20 +35,20 @@ const CONFIG = {
 };
 
 // =============================================================================
-// 1PASSWORD CONNECT CLIENT
+// INFISICAL CONNECT CLIENT
 // =============================================================================
 
 let opClient: OPConnect | null = null;
 
 function getOPConnectToken(): string {
-  if (process.env.OP_CONNECT_TOKEN) {
-    return process.env.OP_CONNECT_TOKEN;
+  if (process.env.INFISICAL_TOKEN) {
+    return process.env.INFISICAL_TOKEN;
   }
   try {
     return fs.readFileSync(CONFIG.opConnect.tokenFile, "utf-8").trim();
   } catch (err) {
     throw new Error(
-      `Could not read 1Password Connect token. Set OP_CONNECT_TOKEN env var or ensure ${CONFIG.opConnect.tokenFile} exists.`
+      `Could not read Infisical token. Set INFISICAL_TOKEN env var or ensure ${CONFIG.opConnect.tokenFile} exists.`
     );
   }
 }
@@ -84,7 +84,7 @@ async function getKomodoClient(): Promise<ReturnType<typeof KomodoClient>> {
   const password = getFieldValue(item, "password") || getFieldValue(item, "init_password");
 
   if (!username || !password) {
-    throw new Error("Could not retrieve Komodo credentials from 1Password");
+    throw new Error("Could not retrieve Komodo credentials from Infisical");
   }
 
   const loginResponse = await fetch(`${CONFIG.komodo.url}/auth/LoginLocalUser`, {
@@ -477,9 +477,9 @@ const commands: Record<string, (arg?: string) => Promise<void>> = {
     console.log("  help             Show this help message");
     console.log("\nEnvironment variables:");
     console.log("  KOMODO_HOST            Komodo URL (default: https://komodo.cianfhoghlaim.ie)");
-    console.log("  OP_CONNECT_HOST        1Password Connect URL (default: http://132.145.27.89:8080)");
-    console.log("  OP_CONNECT_TOKEN       1Password Connect token");
-    console.log("  OP_CONNECT_TOKEN_FILE  Path to token file (default: croí/op/connect_token)");
+    console.log("  INFISICAL_HOST        Infisical URL (default: http://132.145.27.89:8080)");
+    console.log("  INFISICAL_TOKEN       Infisical token");
+    console.log("  INFISICAL_TOKEN_FILE  Path to token file (default: croí/op/connect_token)");
   },
 };
 

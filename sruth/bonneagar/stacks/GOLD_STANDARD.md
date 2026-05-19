@@ -20,14 +20,14 @@ services:
     cap_drop:
       - ALL
     environment:
-      OP_CONNECT_HOST: ${OP_CONNECT_HOST:-http://132.145.27.89:8080}
+      INFISICAL_HOST: ${INFISICAL_HOST:-http://132.145.27.89:8080}
     command:
-      - "--connect-host=${OP_CONNECT_HOST:-http://132.145.27.89:8080}"
-      - "--connect-token=file:/run/secrets/op_token"
+      - "--connect-host=${INFISICAL_HOST:-http://132.145.27.89:8080}"
+      - "--connect-token=file:/run/secrets/infisical_secret"
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:
-      - op_token
+      - infisical_secret
     volumes:
       - ./secrets.env:/templates/secrets.env:ro
       - stack-secrets:/run/secrets/locket
@@ -51,8 +51,8 @@ services:
       - /run/secrets/locket/secrets.env
 
 secrets:
-  op_token:
-    file: ${OP_CONNECT_TOKEN_FILE:-../../op_token}
+  infisical_secret:
+    file: ${INFISICAL_TOKEN_FILE:-../../infisical_secret}
 
 volumes:
   stack-secrets:
@@ -64,10 +64,10 @@ volumes:
 ```
 
 ## 3. secrets.env
-Locket template file for 1Password Connect:
+Locket template file for Infisical:
 ```env
 # Example
-SERVICE_API_KEY={{ op://dev-baile/stack/api_key }}
+SERVICE_API_KEY={{ infisical://dev-baile/stack/api_key }}
 ```
 
 ## 4. pangolin.yaml

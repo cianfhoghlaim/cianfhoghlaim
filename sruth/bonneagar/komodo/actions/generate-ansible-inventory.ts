@@ -95,12 +95,12 @@ ${serverInfos
     periphery_core_address: "wss://komodo.cianfhoghlaim.ie"
     periphery_mode: outbound
     periphery_server_enabled: false
-    periphery_passkey_op_ref: "op://dev-baile/komodo/passkey"
+    periphery_passkey_op_ref: "infisical://dev-baile/komodo/passkey"
 
     # Locket configuration
     locket_enabled: true
-    locket_provider: op-connect
-    locket_op_connect_host: "http://132.145.27.89:8080"
+    locket_provider: infisical
+    locket_infisical_host: "http://132.145.27.89:8080"
 
   children:
     # All hosts with locket
@@ -114,8 +114,8 @@ ${allHosts.map((h) => `        ${h}:`).join("\n")}
         periphery_agent_secrets:
           - name: "PERIPHERY_PASSKEYS"
             value: "{{ periphery_passkey_op_ref }}"
-          - name: "OP_CONNECT_HOST"
-            value: "{{ locket_op_connect_host }}"
+          - name: "INFISICAL_HOST"
+            value: "{{ locket_infisical_host }}"
       hosts:
 ${peripheryHosts.map((h) => `        ${h}:`).join("\n")}
 

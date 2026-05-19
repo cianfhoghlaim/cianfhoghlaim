@@ -7,7 +7,7 @@
 #   komodo stack deploy agent-os
 #
 # PREREQUISITES:
-#   - Secrets configured in 1Password (dev-baile vault)
+#   - Secrets configured in Infisical (dev-baile vault)
 #   - Pangolin a2a-resources.blueprint.yaml applied
 # =============================================================================
 

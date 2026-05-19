@@ -10,7 +10,7 @@
 # PREREQUISITES:
 #   - Pangolin running and accessible
 #   - OLM site created in Pangolin UI
-#   - Credentials stored in 1Password (vault: dev-baile)
+#   - Credentials stored in Infisical (vault: dev-baile)
 # =============================================================================
 
 name: olm

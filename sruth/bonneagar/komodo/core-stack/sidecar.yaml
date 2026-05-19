@@ -1,7 +1,7 @@
 # =============================================================================
 # KOMODO CORE - Locket Sidecar Configuration
 # =============================================================================
-# Injects secrets from 1Password Connect into the environment
+# Injects secrets from Infisical into the environment
 
 services:
   locket:
@@ -15,12 +15,11 @@ services:
       - ALL
     command:
       - "--provider=infisical"
-      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-client-id=${INFISICAL_CLIENT_ID}"
       - "--infisical-client-secret=file:/run/secrets/infisical_secret"
-      - "--infisical-url=$${INFISICAL_URL:-http://host.docker.internal:8081}"
-      - "--infisical-default-environment=$${INFISICAL_ENVIRONMENT:-dev}"
-      - "--infisical-default-project-id=$${INFISICAL_PROJECT_ID:-project-id}
-      - "--connect.host=${
+      - "--infisical-url=${INFISICAL_URL:-http://host.docker.internal:8081}"
+      - "--infisical-default-environment=${INFISICAL_ENVIRONMENT:-dev}"
+      - "--infisical-default-project-id=${INFISICAL_PROJECT_ID:-project-id}"
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:
@@ -47,11 +46,12 @@ services:
     volumes:
       - komodo-secrets:/run/secrets/locket:ro
     env_file:
-      - /run/secrets/locket/secrets.env
+      - path: /run/secrets/locket/secrets.env
+        required: false
 
 secrets:
   infisical_secret:
-    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+    file: ${INFISICAL_SECRET_FILE:-../../infisical_secret}
 
 volumes:
   komodo-secrets:

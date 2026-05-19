@@ -1,24 +1,24 @@
-# Secrets Management with 1Password + mise
+# Secrets Management with Infisical + mise
 
 This document describes the automatic secret injection system for MCP servers and AI tools in the cianfhoghlaim monorepo.
 
 ## Overview
 
-The system uses **mise hooks** combined with **1Password CLI** to automatically inject secrets when entering the project directory. This enables seamless operation of MCP servers across Claude Code, Roo, and OpenCode without manual environment variable setup.
+The system uses **mise hooks** combined with **Infisical CLI** to automatically inject secrets when entering the project directory. This enables seamless operation of MCP servers across Claude Code, Roo, and OpenCode without manual environment variable setup.
 
 ## Architecture
 
 ```
                     ┌─────────────────┐
-                    │  1Password      │
+                    │  Infisical      │
                     │  (dev-baile     │
                     │   vault)        │
                     └────────┬────────┘
                              │
-                             │ op inject
+                             │ infisical export
                              ▼
 ┌─────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│  .env.op    │────▶│    .env         │────▶│  Environment    │
+│  .env.infisical    │────▶│    .env         │────▶│  Environment    │
 │  (template) │     │  (resolved,     │     │  Variables      │
 │             │     │   cached)       │     │                 │
 └─────────────┘     └─────────────────┘     └────────┬────────┘
@@ -40,18 +40,18 @@ The system uses **mise hooks** combined with **1Password CLI** to automatically 
 - **No manual steps**: Works transparently with mise hooks
 
 ### Performance Optimization
-- **Single API call**: Uses `op inject` to resolve all secrets at once (~1s)
-- **Smart caching**: Only re-injects when `.env.op` template changes
+- **Single API call**: Uses `infisical export` to resolve all secrets at once (~1s)
+- **Smart caching**: Only re-injects when `.env.infisical` template changes
 - **File locking**: Prevents race conditions in concurrent shells
 
 | Method | Time | API Calls |
 |--------|------|-----------|
-| Individual `op read` | ~12s | 12 |
-| `op inject` | ~1s | 1 |
+| Individual `infisical secrets get` | ~12s | 12 |
+| `infisical export` | ~1s | 1 |
 | Cached `.env` | <10ms | 0 |
 
 ### Graceful Fallback
-- Falls back to cached `.env` if 1Password CLI unavailable
+- Falls back to cached `.env` if Infisical CLI unavailable
 - Works offline after initial injection
 - Silent warnings (no shell spam)
 
@@ -59,16 +59,16 @@ The system uses **mise hooks** combined with **1Password CLI** to automatically 
 - `.env` file permissions set to `600` (owner-only)
 - Secrets never logged in plaintext
 - Automatic cleanup on directory exit
-- Template (`.env.op`) safe to commit; resolved (`.env`) gitignored
+- Template (`.env.infisical`) safe to commit; resolved (`.env`) gitignored
 
 ## Files
 
 | File | Purpose | Git Status |
 |------|---------|------------|
-| `.env.op` | 1Password template with `{{ op://... }}` references | Committed |
+| `.env.infisical` | Infisical template with `{{ infisical://... }}` references | Committed |
 | `.env` | Resolved secrets (auto-generated) | Ignored |
 | `.env.lock` | Lock file for concurrent access | Ignored |
-| `scripts/op-inject.sh` | Injection helper script | Committed |
+| `scripts/infisical-inject.sh` | Injection helper script | Committed |
 | `mise.toml` | Hooks configuration | Committed |
 
 ## Configuration
@@ -79,33 +79,33 @@ The system uses **mise hooks** combined with **1Password CLI** to automatically 
 [hooks.enter]
 shell = "bash"
 script = """
-source "{{ config_root }}/scripts/op-inject.sh"
+source "{{ config_root }}/scripts/infisical-inject.sh"
 """
 
 [hooks.leave]
 shell = "bash"
 script = """
-source "{{ config_root }}/scripts/op-inject.sh" unset
+source "{{ config_root }}/scripts/infisical-inject.sh" unset
 """
 ```
 
-### Template Syntax (.env.op)
+### Template Syntax (.env.infisical)
 
-Uses 1Password's template syntax:
+Uses Infisical's template syntax:
 ```bash
 # Static values (no injection needed)
-OP_CONNECT_HOST=http://132.145.27.89:8080
+INFISICAL_HOST=http://132.145.27.89:8080
 
-# 1Password references
-BROWSERBASE_API_KEY={{ op://dev-baile/browserbase/api_key }}
-BROWSERBASE_PROJECT_ID={{ op://dev-baile/browserbase/project_id }}
+# Infisical references
+BROWSERBASE_API_KEY={{ infisical://dev-baile/browserbase/api_key }}
+BROWSERBASE_PROJECT_ID={{ infisical://dev-baile/browserbase/project_id }}
 ```
 
-Reference format: `{{ op://vault/item/field }}`
+Reference format: `{{ infisical://vault/item/field }}`
 
 ## MCP Servers Configured
 
-| Server | Environment Variables | 1Password Item |
+| Server | Environment Variables | Infisical Item |
 |--------|----------------------|----------------|
 | Browserbase | `BROWSERBASE_API_KEY`, `BROWSERBASE_PROJECT_ID` | `browserbase` |
 | Firecrawl | `FIRECRAWL_API_KEY` | `firecrawl` |
@@ -117,20 +117,20 @@ Reference format: `{{ op://vault/item/field }}`
 | Langfuse | `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY` | `langfuse` |
 | Forgejo | `FORGEJO_TOKEN` | `forgejo` |
 | ChunkHound | `OPENAI_API_KEY` | `openai` |
-| 1Password Connect | `OP_CONNECT_TOKEN` | `op_connect_cianfhoghlaim` |
+| Infisical | `INFISICAL_TOKEN` | `infisical_cianfhoghlaim` |
 
 ## Usage
 
 ### Initial Setup
 
-1. **Install 1Password CLI** (already in mise.toml tools):
+1. **Install Infisical CLI** (already in mise.toml tools):
    ```bash
    mise install
    ```
 
-2. **Authenticate with 1Password**:
+2. **Authenticate with Infisical**:
    ```bash
-   eval $(op signin)
+   eval $(infisical login)
    ```
 
 3. **Enter the directory** (triggers automatic injection):
@@ -145,13 +145,13 @@ Reference format: `{{ op://vault/item/field }}`
 
 ### Force Re-injection
 
-If you update secrets in 1Password:
+If you update secrets in Infisical:
 ```bash
 # Touch the template to invalidate cache
-touch .env.op
+touch .env.infisical
 
 # Re-enter directory (or source manually)
-source scripts/op-inject.sh
+source scripts/infisical-inject.sh
 ```
 
 Or delete the cached file:
@@ -163,26 +163,26 @@ rm .env && cd .. && cd -
 
 For scripts or CI:
 ```bash
-op inject --in-file .env.op --out-file .env
+infisical export --in-file .env.infisical --out-file .env
 source .env
 ```
 
 ## Adding New Secrets
 
-1. **Create item in 1Password** (dev-baile vault):
+1. **Create item in Infisical** (dev-baile vault):
    ```bash
-   op item create --vault dev-baile \
+   infisical secrets set --vault dev-baile \
      --category "API Credential" \
      --title "new-service" \
      "api_key[password]=your-key-here"
    ```
 
-2. **Add to `.env.op` template**:
+2. **Add to `.env.infisical` template**:
    ```bash
-   NEW_SERVICE_API_KEY={{ op://dev-baile/new-service/api_key }}
+   NEW_SERVICE_API_KEY={{ infisical://dev-baile/new-service/api_key }}
    ```
 
-3. **Update `scripts/op-inject.sh`** (add to `ENV_VARS` array):
+3. **Update `scripts/infisical-inject.sh`** (add to `ENV_VARS` array):
    ```bash
    ENV_VARS=(
        ...
@@ -202,22 +202,22 @@ source .env
 
 ## Troubleshooting
 
-### "1Password CLI (op) not found"
+### "Infisical CLI (op) not found"
 - Ensure mise is activated: `eval "$(mise activate bash)"`
 - Install op: `mise install op`
 
 ### "authorization timeout"
-- Re-authenticate: `eval $(op signin)`
-- Check 1Password app is unlocked
+- Re-authenticate: `eval $(infisical login)`
+- Check Infisical app is unlocked
 
 ### "could not find item X in vault"
 - Create the missing item in dev-baile vault
-- Verify vault access: `op vault list`
+- Verify vault access: `infisical projects`
 
 ### Secrets not loading
 - Check mise hooks are enabled: `mise settings`
-- Verify hooks ran: check for `[op-inject]` messages
-- Force re-injection: `rm .env && source scripts/op-inject.sh`
+- Verify hooks ran: check for `[infisical-inject]` messages
+- Force re-injection: `rm .env && source scripts/infisical-inject.sh`
 
 ### Race condition / "Another injection in progress"
 - Wait a moment and re-enter directory
@@ -228,18 +228,18 @@ source .env
 | Approach | Pros | Cons |
 |----------|------|------|
 | **mise hooks** (current) | Automatic, cached, fast | Requires mise |
-| `op run` wrapper | Process-scoped | Slow (~1s per command) |
-| direnv + op | Standard tooling | Another tool to install |
+| `infisical run` wrapper | Process-scoped | Slow (~1s per command) |
+| direnv + infisical | Standard tooling | Another tool to install |
 | Shell profile sourcing | Always available | Security risk, slow startup |
 | Manual .env | Simple | Manual updates, insecure |
 
 ## Related Systems
 
 - **Locket**: Container-based secret injection for Docker services
-- **1Password Connect**: Server-side secret resolution for infrastructure
+- **Infisical**: Server-side secret resolution for infrastructure
 - **Pangolin**: Service mesh with SSO-protected secret access
 
 See also:
-- `bonneagar/uirlisí/op/` - 1Password Connect server setup
+- `bonneagar/uirlisí/op/` - Infisical server setup
 - `bonneagar/uirlisí/locket/` - Locket sidecar documentation
 - `meaisínfhoghlaim/models/secrets/` - LiteLLM secrets templates

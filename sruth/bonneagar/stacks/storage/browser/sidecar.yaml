@@ -1,7 +1,7 @@
 # =============================================================================
 # BROWSER STACK - Locket Sidecar Configuration
 # =============================================================================
-# Injects secrets from 1Password Connect into the environment
+# Injects secrets from Infisical into the environment
 # Extends compose.yaml with Locket for runtime secrets management
 #
 # Usage: docker compose -f compose.yaml -f sidecar.yaml up -d

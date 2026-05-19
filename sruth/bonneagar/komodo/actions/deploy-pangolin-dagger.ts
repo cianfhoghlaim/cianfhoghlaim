@@ -12,7 +12,7 @@
 //
 // Stages:
 //   0: initServer - Server initialization (Docker, directories)
-//   1: deployOpConnect - 1Password Connect deployment
+//   1: deployOpConnect - Infisical deployment
 //   2: deployPangolinCore - Pangolin core stack (9 services)
 //   3: setupPocketIdAdmin - PocketID admin setup (human-in-loop)
 //   4: createOAuthClient - OAuth client creation (browser automation)
@@ -24,8 +24,8 @@
 //
 // Prerequisites:
 //   - Dagger CLI installed on target execution server
-//   - SSH key available in 1Password
-//   - 1Password Connect credentials available
+//   - SSH key available in Infisical
+//   - Infisical credentials available
 // =============================================================================
 
 const dryRun = ARGS.dryRun || false;
@@ -77,7 +77,7 @@ if (verify) {
   // Full deployment
   cmd += ` pangolin-deployment ${baseArgs}`;
   cmd += ` --ssh-key=env:SSH_KEY`;
-  cmd += ` --op-connect-token=env:OP_CONNECT_TOKEN`;
+  cmd += ` --infisical-token=env:INFISICAL_TOKEN`;
   cmd += ` deploy-full`;
   cmd += ` --pangolin-dir=./pangolin`;
   cmd += ` --komodo-dir=./komodo`;

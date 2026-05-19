@@ -1,4 +1,4 @@
-import { OnePasswordConnect, OPConnect, FullItem } from "@1password/connect";
+import { OnePasswordConnect, OPConnect, FullItem } from "@infisical/connect";
 import * as dotenv from "dotenv";
 import * as path from "path";
 import * as fs from "fs";
@@ -11,10 +11,10 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, ".env") });
 
-const OP_CONNECT_HOST = process.env.OP_CONNECT_HOST || "http://localhost:8080";
-const OP_CONNECT_TOKEN_FILE = process.env.OP_CONNECT_TOKEN_FILE || "./croí/op/connect_token";
+const INFISICAL_HOST = process.env.INFISICAL_HOST || "http://localhost:8080";
+const INFISICAL_TOKEN_FILE = process.env.INFISICAL_TOKEN_FILE || "./croí/op/connect_token";
 
-// 1Password vault and item references
+// Infisical project and item references
 const OP_VAULT = "dev-baile";
 const OP_CLOUDFLARE_ITEM = "cloudflare";
 
@@ -27,7 +27,7 @@ interface DnsRecord {
   ttl?: number;
 }
 
-// Server IP definitions from 1Password
+// Server IP definitions from Infisical
 interface ServerIp {
   name: string;
   opItem: string;
@@ -49,18 +49,18 @@ const DNS_RECORDS: DnsRecord[] = [
 ];
 
 // =============================================================================
-// 1PASSWORD CONNECT CLIENT
+// INFISICAL CONNECT CLIENT
 // =============================================================================
 
 function getOPConnectToken(): string {
-  if (process.env.OP_CONNECT_TOKEN) {
-    return process.env.OP_CONNECT_TOKEN;
+  if (process.env.INFISICAL_TOKEN) {
+    return process.env.INFISICAL_TOKEN;
   }
   try {
-    return fs.readFileSync(OP_CONNECT_TOKEN_FILE, "utf-8").trim();
+    return fs.readFileSync(INFISICAL_TOKEN_FILE, "utf-8").trim();
   } catch (err) {
     throw new Error(
-      `Could not read 1Password Connect token. Set OP_CONNECT_TOKEN env var or ensure ${OP_CONNECT_TOKEN_FILE} exists.`
+      `Could not read Infisical token. Set INFISICAL_TOKEN env var or ensure ${INFISICAL_TOKEN_FILE} exists.`
     );
   }
 }
@@ -71,7 +71,7 @@ function getOPClient(): OPConnect {
   if (!opClient) {
     const token = getOPConnectToken();
     opClient = OnePasswordConnect({
-      serverURL: OP_CONNECT_HOST,
+      serverURL: INFISICAL_HOST,
       token,
     });
   }
@@ -105,7 +105,7 @@ async function getCloudflareCredentials(): Promise<CloudflareCredentials> {
   if (!apiToken || !zoneId) {
     const availableFields = item.fields?.map(f => f.label).join(", ") || "none";
     throw new Error(
-      `Missing required fields in 1Password item '${OP_CLOUDFLARE_ITEM}'. ` +
+      `Missing required fields in Infisical secret '${OP_CLOUDFLARE_ITEM}'. ` +
       `Found fields: ${availableFields}. ` +
       `Need: api_token (or token), zone_id`
     );
@@ -126,7 +126,7 @@ async function getServerIp(serverName: string): Promise<string> {
 
   const ip = getFieldValue(item, "ip") || getFieldValue(item, "address");
   if (!ip) {
-    throw new Error(`No IP found for server ${serverName} in 1Password item ${server.opItem}`);
+    throw new Error(`No IP found for server ${serverName} in Infisical secret ${server.opItem}`);
   }
 
   return ip;
@@ -238,12 +238,12 @@ async function syncDnsRecords(): Promise<void> {
   console.log("=== Syncing DNS Records to Cloudflare ===\n");
 
   // Get Cloudflare credentials
-  console.log("Fetching Cloudflare credentials from 1Password...");
+  console.log("Fetching Cloudflare credentials from Infisical...");
   const creds = await getCloudflareCredentials();
   console.log("  ✓ Credentials retrieved\n");
 
   // Resolve server IPs
-  console.log("Resolving server IPs from 1Password...");
+  console.log("Resolving server IPs from Infisical...");
   const serverIps: Record<string, string> = {};
   for (const server of SERVERS) {
     const ip = await getServerIp(server.name);
@@ -343,7 +343,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     console.log("Commands:");
     console.log("  sync       - Sync DNS records to Cloudflare (default)");
     console.log("  list       - List existing DNS records");
-    console.log("  check-ips  - Check server IPs from 1Password");
+    console.log("  check-ips  - Check server IPs from Infisical");
     console.log("  help       - Show this help message");
     process.exit(0);
   }

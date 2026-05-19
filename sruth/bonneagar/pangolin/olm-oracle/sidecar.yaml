@@ -1,7 +1,7 @@
 # =============================================================================
 # OLM Oracle - Locket Sidecar Configuration
 # =============================================================================
-# Adds Locket sidecar for 1Password-based secret injection.
+# Adds Locket sidecar for Infisical-based secret injection.
 #
 # USAGE:
 #   docker compose -f compose.yaml -f sidecar.yaml up -d

@@ -23,7 +23,7 @@ The production infrastructure layer containing deployment configurations, CI/CD 
 | `hf-model-ops/` | Hugging Face model operations and CI/CD |
 | `hophacks-spacetimedb-workshop/` | SpacetimeDB learning workshop |
 | `komodo/` | Server orchestration and container management |
-| `locket/` | Secrets injection from 1Password/Bitwarden |
+| `locket/` | Secrets injection from Infisical/Bitwarden |
 | `mlflow_kafka_ducklake/` | ML ops + data streaming (MLFlow + Kafka + DuckDB) |
 | `orchestration/` | Workflow orchestration tools |
 | `pangolin/` | VPN, reverse proxy, tunneling infrastructure |
@@ -33,7 +33,7 @@ The production infrastructure layer containing deployment configurations, CI/CD 
 | `spacetimedb-typescript-sdk/` | TypeScript SDK for SpacetimeDB |
 | `uv-dagger-dream/` | Python + Dagger integration |
 
-**Key Technologies:** Dagger, Komodo, Ansible, 1Password, Docker, SpacetimeDB, Pangolin
+**Key Technologies:** Dagger, Komodo, Ansible, Infisical, Docker, SpacetimeDB, Pangolin
 
 ---
 

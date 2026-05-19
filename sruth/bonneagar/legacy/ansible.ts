@@ -1,4 +1,4 @@
-import { OnePasswordConnect, OPConnect, FullItem, Item } from "@1password/connect";
+import { OnePasswordConnect, OPConnect, FullItem, Item } from "@infisical/connect";
 import { KomodoClient, Types } from "komodo_client";
 import * as crypto from "crypto";
 import * as fs from "fs";
@@ -12,9 +12,9 @@ import { execSync, spawn } from "child_process";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// 1Password configuration
-const OP_CONNECT_HOST = process.env.OP_CONNECT_HOST || "http://localhost:8080";
-const OP_CONNECT_TOKEN_FILE = process.env.OP_CONNECT_TOKEN_FILE || "/etc/connect/token";
+// Infisical configuration
+const INFISICAL_HOST = process.env.INFISICAL_HOST || "http://localhost:8080";
+const INFISICAL_TOKEN_FILE = process.env.INFISICAL_TOKEN_FILE || "/etc/connect/token";
 const OP_VAULT = process.env.OP_VAULT || "dev-baile";
 const OP_ANSIBLE_ITEM = "ansible-automation"; // Item name for ansible secrets
 
@@ -45,35 +45,35 @@ interface BootstrapOptions {
 }
 
 // =============================================================================
-// 1PASSWORD CONNECT CLIENT
+// INFISICAL CONNECT CLIENT
 // =============================================================================
 
 let opClient: OPConnect | null = null;
 
 /**
- * Read 1Password Connect token from file or environment
+ * Read Infisical token from file or environment
  */
 function getOPConnectToken(): string {
-  if (process.env.OP_CONNECT_TOKEN) {
-    return process.env.OP_CONNECT_TOKEN;
+  if (process.env.INFISICAL_TOKEN) {
+    return process.env.INFISICAL_TOKEN;
   }
   try {
-    return fs.readFileSync(OP_CONNECT_TOKEN_FILE, "utf-8").trim();
+    return fs.readFileSync(INFISICAL_TOKEN_FILE, "utf-8").trim();
   } catch (err) {
     throw new Error(
-      `Could not read 1Password Connect token. Set OP_CONNECT_TOKEN env var or ensure ${OP_CONNECT_TOKEN_FILE} exists.`
+      `Could not read Infisical token. Set INFISICAL_TOKEN env var or ensure ${INFISICAL_TOKEN_FILE} exists.`
     );
   }
 }
 
 /**
- * Initialize the 1Password Connect client
+ * Initialize the Infisical client
  */
 function getOPClient(): OPConnect {
   if (!opClient) {
     const token = getOPConnectToken();
     opClient = OnePasswordConnect({
-      serverURL: OP_CONNECT_HOST,
+      serverURL: INFISICAL_HOST,
       token,
     });
   }
@@ -81,7 +81,7 @@ function getOPClient(): OPConnect {
 }
 
 /**
- * Get a field value from a 1Password item
+ * Get a field value from a Infisical secret
  */
 function getFieldValue(item: FullItem, fieldLabel: string): string | undefined {
   const field = item.fields?.find(
@@ -103,7 +103,7 @@ async function getVaultId(): Promise<string> {
 }
 
 /**
- * Check if ansible-automation item exists in 1Password
+ * Check if ansible-automation item exists in Infisical
  */
 async function getAnsibleItem(): Promise<FullItem | null> {
   const op = getOPClient();
@@ -117,9 +117,9 @@ async function getAnsibleItem(): Promise<FullItem | null> {
 }
 
 /**
- * Create or update the ansible-automation item in 1Password
+ * Create or update the ansible-automation item in Infisical
  */
-async function storeSecretsIn1Password(secrets: AnsibleSecrets): Promise<void> {
+async function storeSecretsInInfisical(secrets: AnsibleSecrets): Promise<void> {
   const op = getOPClient();
   const vaultId = await getVaultId();
 
@@ -143,8 +143,8 @@ async function storeSecretsIn1Password(secrets: AnsibleSecrets): Promise<void> {
 
   if (secrets.opConnectToken) {
     fields.push({
-      id: "op_connect_token",
-      label: "op_connect_token",
+      id: "infisical_token",
+      label: "infisical_token",
       value: secrets.opConnectToken,
       type: "CONCEALED",
     });
@@ -153,13 +153,13 @@ async function storeSecretsIn1Password(secrets: AnsibleSecrets): Promise<void> {
   const existingItem = await getAnsibleItem();
 
   if (existingItem && existingItem.id) {
-    console.log(`  Updating existing '${OP_ANSIBLE_ITEM}' item in 1Password...`);
+    console.log(`  Updating existing '${OP_ANSIBLE_ITEM}' item in Infisical...`);
     await op.updateItem(vaultId, existingItem.id, {
       ...existingItem,
       fields,
     });
   } else {
-    console.log(`  Creating '${OP_ANSIBLE_ITEM}' item in 1Password...`);
+    console.log(`  Creating '${OP_ANSIBLE_ITEM}' item in Infisical...`);
     await op.createItem(vaultId, {
       title: OP_ANSIBLE_ITEM,
       category: "API_CREDENTIAL",
@@ -171,9 +171,9 @@ async function storeSecretsIn1Password(secrets: AnsibleSecrets): Promise<void> {
 }
 
 /**
- * Retrieve ansible secrets from 1Password
+ * Retrieve ansible secrets from Infisical
  */
-async function getSecretsFrom1Password(): Promise<AnsibleSecrets | null> {
+async function getSecretsFromInfisical(): Promise<AnsibleSecrets | null> {
   const item = await getAnsibleItem();
   if (!item) {
     return null;
@@ -187,7 +187,7 @@ async function getSecretsFrom1Password(): Promise<AnsibleSecrets | null> {
   return {
     vaultPassword,
     becomePass: getFieldValue(item, "become_pass"),
-    opConnectToken: getFieldValue(item, "op_connect_token"),
+    opConnectToken: getFieldValue(item, "infisical_token"),
   };
 }
 
@@ -213,7 +213,7 @@ function generatePassword(length: number = 64): string {
 // =============================================================================
 
 /**
- * Get Komodo credentials from 1Password
+ * Get Komodo credentials from Infisical
  */
 async function getKomodoCredentials(): Promise<{ username: string; password: string }> {
   const op = getOPClient();
@@ -224,7 +224,7 @@ async function getKomodoCredentials(): Promise<{ username: string; password: str
   const password = getFieldValue(item, "password") || getFieldValue(item, "init_password");
 
   if (!username || !password) {
-    throw new Error("Missing Komodo credentials in 1Password");
+    throw new Error("Missing Komodo credentials in Infisical");
   }
 
   return { username, password };
@@ -450,13 +450,13 @@ all:
     # -------------------------------------------------------------------------
     # Enable locket on all servers
     locket_enabled: true
-    locket_provider: op-connect
+    locket_provider: infisical
 
-    # 1Password Connect settings
-    locket_op_connect_host: "${opConnectHost}"
+    # Infisical settings
+    locket_infisical_host: "${opConnectHost}"
 
-    # 1Password Connect token - ENCRYPTED WITH VAULT
-    locket_op_connect_token: ${indentVault(encryptedOpToken, 6)}
+    # Infisical token - ENCRYPTED WITH VAULT
+    locket_infisical_token: ${indentVault(encryptedOpToken, 6)}
 
   # ---------------------------------------------------------------------------
   # HOST GROUPS
@@ -472,10 +472,10 @@ all:
           - name: "KOMODO_GID"
             value: "{{ ansible_facts.getent_passwd[periphery_user | default('root')].2 | default('0') }}"
           # Locket environment (for services that need it)
-          - name: "OP_CONNECT_HOST"
-            value: "{{ locket_op_connect_host }}"
-          - name: "OP_CONNECT_TOKEN_FILE"
-            value: "{{ locket_op_token_file | default('/etc/locket/op_token') }}"
+          - name: "INFISICAL_HOST"
+            value: "{{ locket_infisical_host }}"
+          - name: "INFISICAL_TOKEN_FILE"
+            value: "{{ locket_infisical_secret_file | default('/etc/locket/infisical_secret') }}"
 
       children:
         # ---------------------------------------------------------------------
@@ -518,7 +518,7 @@ all:
 /**
  * Full bootstrap workflow:
  * 1. Generate vault password
- * 2. Store secrets in 1Password
+ * 2. Store secrets in Infisical
  * 3. Set Komodo VAULT_PASS variable
  * 4. Generate encrypted inventory
  */
@@ -528,11 +528,11 @@ async function bootstrap(options: BootstrapOptions): Promise<void> {
   console.log("╚════════════════════════════════════════════════════════════╝\n");
 
   // Check if already bootstrapped
-  const existingSecrets = await getSecretsFrom1Password();
+  const existingSecrets = await getSecretsFromInfisical();
   if (existingSecrets && !options.force) {
     console.log("⚠️  Ansible automation is already bootstrapped!");
     console.log("   Use --force to regenerate the vault password and re-encrypt secrets.");
-    console.log("\n   Existing vault password found in 1Password.");
+    console.log("\n   Existing vault password found in Infisical.");
     console.log("   To use it, run: bun run ansible.ts sync");
     return;
   }
@@ -542,9 +542,9 @@ async function bootstrap(options: BootstrapOptions): Promise<void> {
   const vaultPassword = generatePassword(64);
   console.log("  ✓ Generated 64-character vault password\n");
 
-  // Step 2: Store in 1Password
-  console.log("Step 2: Storing secrets in 1Password...");
-  await storeSecretsIn1Password({
+  // Step 2: Store in Infisical
+  console.log("Step 2: Storing secrets in Infisical...");
+  await storeSecretsInInfisical({
     vaultPassword,
     becomePass: options.becomePass,
     opConnectToken: options.opConnectToken,
@@ -574,7 +574,7 @@ async function bootstrap(options: BootstrapOptions): Promise<void> {
   }
 
   const encryptedOpToken = encryptWithVaultPure(options.opConnectToken, vaultPassword);
-  console.log("  ✓ Encrypted locket_op_connect_token\n");
+  console.log("  ✓ Encrypted locket_infisical_token\n");
 
   // Step 5: Generate inventory
   console.log("Step 5: Generating inventory file...");
@@ -599,7 +599,7 @@ async function bootstrap(options: BootstrapOptions): Promise<void> {
   console.log("║                 BOOTSTRAP COMPLETE                         ║");
   console.log("╚════════════════════════════════════════════════════════════╝");
   console.log("\nSecrets stored in:");
-  console.log(`  • 1Password: ${OP_VAULT}/${OP_ANSIBLE_ITEM}`);
+  console.log(`  • Infisical: ${OP_VAULT}/${OP_ANSIBLE_ITEM}`);
   console.log(`  • Komodo:    Variable '${KOMODO_VAULT_PASS_VAR}'`);
   console.log(`  • Inventory: ${INVENTORY_PATH}`);
   console.log("\nNext steps:");
@@ -614,14 +614,14 @@ async function bootstrap(options: BootstrapOptions): Promise<void> {
 }
 
 /**
- * Sync: Pull vault password from 1Password and update local .env
+ * Sync: Pull vault password from Infisical and update local .env
  */
 async function sync(): Promise<void> {
-  console.log("Syncing vault password from 1Password...\n");
+  console.log("Syncing vault password from Infisical...\n");
 
-  const secrets = await getSecretsFrom1Password();
+  const secrets = await getSecretsFromInfisical();
   if (!secrets) {
-    console.error("❌ No ansible-automation item found in 1Password.");
+    console.error("❌ No ansible-automation item found in Infisical.");
     console.error("   Run 'bun run ansible.ts bootstrap' first.");
     process.exit(1);
   }
@@ -642,7 +642,7 @@ async function sync(): Promise<void> {
       envContent += `\nANSIBLE_VAULT_PASSWORD=${secrets.vaultPassword}\n`;
     }
   } else {
-    envContent = `# Ansible Vault Password (synced from 1Password)\nANSIBLE_VAULT_PASSWORD=${secrets.vaultPassword}\n`;
+    envContent = `# Ansible Vault Password (synced from Infisical)\nANSIBLE_VAULT_PASSWORD=${secrets.vaultPassword}\n`;
   }
 
   fs.writeFileSync(envPath, envContent, { mode: 0o600 });
@@ -658,28 +658,28 @@ async function sync(): Promise<void> {
 async function status(): Promise<void> {
   console.log("Checking ansible automation status...\n");
 
-  // Check 1Password
-  console.log("1Password Connect:");
+  // Check Infisical
+  console.log("Infisical:");
   try {
-    const response = await fetch(`${OP_CONNECT_HOST}/heartbeat`);
+    const response = await fetch(`${INFISICAL_HOST}/heartbeat`);
     if (response.ok) {
-      console.log(`  ✓ Connected to ${OP_CONNECT_HOST}`);
+      console.log(`  ✓ Connected to ${INFISICAL_HOST}`);
     } else {
-      console.log(`  ✗ 1Password Connect returned ${response.status}`);
+      console.log(`  ✗ Infisical returned ${response.status}`);
     }
   } catch (err) {
-    console.log(`  ✗ Cannot reach ${OP_CONNECT_HOST}`);
+    console.log(`  ✗ Cannot reach ${INFISICAL_HOST}`);
   }
 
   // Check ansible-automation item
-  console.log("\nAnsible Secrets (1Password):");
+  console.log("\nAnsible Secrets (Infisical):");
   try {
-    const secrets = await getSecretsFrom1Password();
+    const secrets = await getSecretsFromInfisical();
     if (secrets) {
       console.log(`  ✓ '${OP_ANSIBLE_ITEM}' item exists in '${OP_VAULT}' vault`);
       console.log(`    • vault_password: ${secrets.vaultPassword ? "✓ set" : "✗ missing"}`);
       console.log(`    • become_pass: ${secrets.becomePass ? "✓ set" : "✗ missing"}`);
-      console.log(`    • op_connect_token: ${secrets.opConnectToken ? "✓ set" : "✗ missing"}`);
+      console.log(`    • infisical_token: ${secrets.opConnectToken ? "✓ set" : "✗ missing"}`);
     } else {
       console.log(`  ✗ '${OP_ANSIBLE_ITEM}' item not found`);
       console.log("    Run 'bun run ansible.ts bootstrap' to create it");
@@ -726,7 +726,7 @@ async function test(): Promise<void> {
   console.log("Testing ansible connectivity...\n");
 
   // Ensure vault password is available
-  const secrets = await getSecretsFrom1Password();
+  const secrets = await getSecretsFromInfisical();
   if (!secrets) {
     console.error("❌ No vault password found. Run 'bun run ansible.ts bootstrap' first.");
     process.exit(1);
@@ -754,7 +754,7 @@ async function test(): Promise<void> {
 async function reencrypt(options: { becomePass?: string; opConnectToken?: string }): Promise<void> {
   console.log("Re-encrypting inventory secrets...\n");
 
-  const secrets = await getSecretsFrom1Password();
+  const secrets = await getSecretsFromInfisical();
   if (!secrets) {
     console.error("❌ No vault password found. Run 'bun run ansible.ts bootstrap' first.");
     process.exit(1);
@@ -764,18 +764,18 @@ async function reencrypt(options: { becomePass?: string; opConnectToken?: string
   const opConnectToken = options.opConnectToken || secrets.opConnectToken;
 
   if (!opConnectToken) {
-    console.error("❌ Missing op_connect_token. Provide --op-token or ensure it's in 1Password.");
+    console.error("❌ Missing infisical_token. Provide --op-token or ensure it's in Infisical.");
     process.exit(1);
   }
 
-  // Update 1Password with new values if provided
+  // Update Infisical with new values if provided
   if (options.becomePass || options.opConnectToken) {
-    await storeSecretsIn1Password({
+    await storeSecretsInInfisical({
       vaultPassword: secrets.vaultPassword,
       becomePass,
       opConnectToken,
     });
-    console.log("✓ Updated secrets in 1Password\n");
+    console.log("✓ Updated secrets in Infisical\n");
   }
 
   // Re-encrypt
@@ -810,38 +810,38 @@ Ansible Automation Bootstrap Script
 Usage: bun run ansible.ts <command> [options]
 
 Commands:
-  bootstrap    Generate vault password, store in 1Password/Komodo, create inventory
-  sync         Pull vault password from 1Password and update local .env
+  bootstrap    Generate vault password, store in Infisical/Komodo, create inventory
+  sync         Pull vault password from Infisical and update local .env
   status       Show current configuration status
   test         Test ansible connectivity to all hosts
   reencrypt    Re-encrypt inventory with updated secrets
   help         Show this help message
 
 Bootstrap Options:
-  --op-token <token>            1Password Connect token (required)
+  --op-token <token>            Infisical token (required)
   --become-pass <password>      Sudo password (optional - only if sudo requires password)
   --periphery-url <url>         Komodo Core WebSocket URL (default: wss://komodo.local)
-  --op-connect-host <url>       1Password Connect host (default: http://host.docker.internal:8080)
+  --infisical-host <url>       Infisical host (default: http://host.docker.internal:8080)
   --force                       Force regeneration even if already bootstrapped
 
 Re-encrypt Options:
-  --op-token <token>            New 1Password Connect token (optional, uses stored value)
+  --op-token <token>            New Infisical token (optional, uses stored value)
   --become-pass <password>      New sudo password (optional, uses stored value)
 
 Environment Variables:
-  OP_CONNECT_HOST               1Password Connect server URL
-  OP_CONNECT_TOKEN              1Password Connect access token
-  OP_CONNECT_TOKEN_FILE         Path to file containing 1Password Connect token
-  OP_VAULT                      1Password vault name (default: dev-baile)
+  INFISICAL_HOST               Infisical server URL
+  INFISICAL_TOKEN              Infisical access token
+  INFISICAL_TOKEN_FILE         Path to file containing Infisical token
+  OP_VAULT                      Infisical project name (default: dev-baile)
   KOMODO_HOST                   Komodo server URL
 
 Examples:
   # Initial bootstrap (passwordless sudo)
-  bun run ansible.ts bootstrap --op-token "your-op-connect-token"
+  bun run ansible.ts bootstrap --op-token "your-infisical-token"
 
   # Initial bootstrap (with sudo password)
   bun run ansible.ts bootstrap \\
-    --op-token "your-op-connect-token" \\
+    --op-token "your-infisical-token" \\
     --become-pass "your-sudo-password"
 
   # Sync vault password to local .env
@@ -853,7 +853,7 @@ Examples:
   # Test connectivity
   bun run ansible.ts test
 
-  # Update 1Password Connect token
+  # Update Infisical token
   bun run ansible.ts reencrypt --op-token "new-op-token"
 `);
 }
@@ -899,7 +899,7 @@ async function main(): Promise<void> {
           becomePass,
           opConnectToken: opToken,
           peripheryCoreAddress: options["periphery-url"] as string,
-          opConnectHost: options["op-connect-host"] as string,
+          opConnectHost: options["infisical-host"] as string,
           force: options["force"] === true,
         });
         break;
@@ -957,6 +957,6 @@ export {
   test,
   reencrypt,
   generatePassword,
-  getSecretsFrom1Password,
-  storeSecretsIn1Password,
+  getSecretsFromInfisical,
+  storeSecretsInInfisical,
 };

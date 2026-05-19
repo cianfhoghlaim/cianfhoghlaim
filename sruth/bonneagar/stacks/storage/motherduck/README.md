@@ -18,7 +18,7 @@ con = duckdb.connect('md:oideachas_education?motherduck_token=YOUR_TOKEN')
 
 ```bash
 # Set in .env or secrets
-export MOTHERDUCK_TOKEN="{{ op://taisce-secrets/motherduck/token }}"
+export MOTHERDUCK_TOKEN="{{ infisical://taisce-secrets/motherduck/token }}"
 ```
 
 ## Databases

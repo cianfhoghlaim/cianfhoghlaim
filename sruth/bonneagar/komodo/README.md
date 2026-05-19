@@ -15,7 +15,7 @@ This environment implements a decoupled control plane architecture using **Komod
 Secrets are managed via **Infisical** and injected using **Locket** (`ghcr.io/bpbradley/locket:infisical`). 
 Locket acts as a sidecar that mounts ephemeral memory (`tmpfs`) to provide runtime secrets strictly to the Docker containers without writing to disk. Development scripts wrap `docker compose` with `locket exec` for CLI injection.
 
-*No legacy passkeys or 1Password API tokens are stored in the git repository or host variables.*
+*No legacy passkeys or Infisical API tokens are stored in the git repository or host variables.*
 
 ## Requirements
 

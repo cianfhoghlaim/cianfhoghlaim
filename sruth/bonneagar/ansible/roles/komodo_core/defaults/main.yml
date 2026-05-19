@@ -38,7 +38,7 @@ komodo_timezone: "Europe/Dublin"
 # DATABASE CREDENTIALS
 # -----------------------------------------------------------------------------
 
-# MongoDB credentials (stored in 1Password)
+# MongoDB credentials (stored in Infisical)
 
 # -----------------------------------------------------------------------------
 # AUTHENTICATION

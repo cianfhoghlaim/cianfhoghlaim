@@ -1,15 +1,15 @@
 # =============================================================================
 # PANGOLIN - Locket Sidecar Configuration
 # =============================================================================
-# Adds Locket sidecar for 1Password-based secret injection.
+# Adds Locket sidecar for Infisical-based secret injection.
 #
 # USAGE:
 #   docker compose -f compose.yaml -f sidecar.yaml up -d
 #
 # PREREQUISITES:
-#   - 1Password Connect running (http://132.145.27.89:8080)
+#   - Infisical running (http://132.145.27.89:8080)
 #   - OP Connect token at /etc/connect/token or INFISICAL_SECRET_FILE
-#   - Secrets created in 1Password vault (taisce-secrets)
+#   - Secrets created in Infisical project (taisce-secrets)
 # =============================================================================
 
 services:

@@ -56,7 +56,7 @@ services:
 
 **Cons:**
 - Compose file heavily modified
-- Can't run stack without Locket/1Password
+- Can't run stack without Locket/Infisical
 - Every service needs volume mounts and depends_on
 
 ---
@@ -70,9 +70,9 @@ services:
 
 ```bash
 # With Locket (production)
-locket exec --provider op-connect \
+locket exec --provider infisical \
   --connect.host http://132.145.27.89:8080 \
-  --connect.token-file ./op_token \
+  --connect.token-file ./infisical_secret \
   --env-file ./templates/langfuse/secrets.env \
   -- docker compose -f langfuse.compose.yaml up -d
 
@@ -118,8 +118,8 @@ services:
     provider:
       type: locket
       options:
-        provider: op-connect
-        connect.host: ${OP_CONNECT_HOST}
+        provider: infisical
+        connect.host: ${INFISICAL_HOST}
         connect.token-file: /etc/locket/token
         env_file: ./templates/langfuse/secrets.env
 
@@ -165,9 +165,9 @@ services:
 
 ```env
 # templates/langfuse/secrets.env
-POSTGRES_USER={{ op://taisce-secrets/databases/langfuse-postgres/username }}
-POSTGRES_PASSWORD={{ op://taisce-secrets/databases/langfuse-postgres/password }}
-POSTGRES_DB={{ op://taisce-secrets/databases/langfuse-postgres/database }}
+POSTGRES_USER={{ infisical://taisce-secrets/databases/langfuse-postgres/username }}
+POSTGRES_PASSWORD={{ infisical://taisce-secrets/databases/langfuse-postgres/password }}
+POSTGRES_DB={{ infisical://taisce-secrets/databases/langfuse-postgres/database }}
 # ... other secrets
 ```
 
@@ -190,9 +190,9 @@ STACK=$1
 shift
 
 if [ -n "$LOCKET_ENABLED" ]; then
-  locket exec --provider op-connect \
-    --connect.host "${OP_CONNECT_HOST:-http://132.145.27.89:8080}" \
-    --connect.token-file "${OP_CONNECT_TOKEN_FILE:-./op_token}" \
+  locket exec --provider infisical \
+    --connect.host "${INFISICAL_HOST:-http://132.145.27.89:8080}" \
+    --connect.token-file "${INFISICAL_TOKEN_FILE:-./infisical_secret}" \
     --env-file "./templates/${STACK}/secrets.env" \
     -- docker compose -f "${STACK}.compose.yaml" "$@"
 else
@@ -258,7 +258,7 @@ bun run taisce-deploy.ts deploy langfuse
 4. **Update taisce-deploy.ts** to use exec mode via SSH
 
 **Benefits:**
-- Stacks work locally without 1Password
+- Stacks work locally without Infisical
 - Same compose files for dev and prod
 - Easier testing and debugging
 - Komodo can still deploy via SSH commands
@@ -283,7 +283,7 @@ services:
 
 ```env
 # templates/langfuse/secrets.env (unchanged)
-POSTGRES_USER={{ op://taisce-secrets/... }}
+POSTGRES_USER={{ infisical://taisce-secrets/... }}
 ```
 
 ### Step 3: Create local dev env
@@ -300,8 +300,8 @@ POSTGRES_PASSWORD=localdev
 # Via SSH to arm1.oci
 ssh ubuntu@132.145.27.89 << 'EOF'
 cd /opt/taisce
-locket exec --provider op-connect \
-  --connect.token-file /etc/locket/op_token \
+locket exec --provider infisical \
+  --connect.token-file /etc/locket/infisical_secret \
   --env-file ./templates/langfuse/secrets.env \
   -- docker compose -f langfuse.compose.yaml up -d
 EOF

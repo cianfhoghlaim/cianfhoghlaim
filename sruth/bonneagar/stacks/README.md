@@ -57,5 +57,5 @@ The project has transitioned to a **Two-Tier Architecture**:
 
 ## 🛡 Security & Secrets
 
-- **Secrets Management**: Handled by **Locket**, which injects secrets from 1Password at runtime.
+- **Secrets Management**: Handled by **Locket**, which injects secrets from Infisical at runtime.
 - **Connectivity**: All traffic is encrypted and routed via Pangolin tunnels, eliminating the need for open ports.

@@ -1,7 +1,7 @@
 # =============================================================================
 # NEWT - Locket Sidecar Configuration
 # =============================================================================
-# Adds Locket sidecar for 1Password-based secret injection.
+# Adds Locket sidecar for Infisical-based secret injection.
 #
 # USAGE:
 #   docker compose -f newt.compose.yaml -f newt.sidecar.yaml up -d

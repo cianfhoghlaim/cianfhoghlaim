@@ -10,8 +10,8 @@
 #
 # Prerequisites:
 #   1. Create Newt/OLM sites in Pangolin UI (Sites -> Create Site)
-#   2. Store credentials in 1Password (vault: dev-baile)
-#   3. Ensure Locket sidecar can reach 1Password Connect
+#   2. Store credentials in Infisical (vault: dev-baile)
+#   3. Ensure Locket sidecar can reach Infisical
 # =============================================================================
 
 [[stack]]

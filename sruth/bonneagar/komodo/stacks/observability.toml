@@ -41,7 +41,7 @@ DD_PROCESS_AGENT_ENABLED=true
 # DATADOG - Oracle ARM (Control Plane)
 # -----------------------------------------------------------------------------
 # Control plane and always-on service monitoring
-# - 1Password Connect health
+# - Infisical health
 # - Komodo orchestration
 # - Pangolin tunnel monitoring
 # -----------------------------------------------------------------------------

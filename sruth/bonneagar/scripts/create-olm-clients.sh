@@ -4,12 +4,12 @@
 # =============================================================================
 # Automates OLM client creation using:
 # - Pangolin Integration API for client creation
-# - 1Password Connect for credential storage
+# - Infisical for credential storage
 # - Komodo for stack deployment
 #
 # PREREQUISITES:
 #   1. Newt sites must exist (e.g., arm1-oci-newt, cax41-hetzner-newt)
-#   2. 1Password credentials configured
+#   2. Infisical credentials configured
 #   3. Komodo API access
 #
 # USAGE:
@@ -60,7 +60,7 @@ echo ""
 
 # Check for required tools
 if ! command -v op &> /dev/null; then
-  echo "Error: 1Password CLI (op) not found"
+  echo "Error: Infisical CLI (op) not found"
   exit 1
 fi
 
@@ -69,24 +69,24 @@ if ! command -v dagger &> /dev/null; then
   exit 1
 fi
 
-# Get secrets from 1Password
-echo "Fetching secrets from 1Password..."
-export PANGOLIN_TOKEN=$(op read "op://dev-baile/pangolin/api_token")
-export KOMODO_API_KEY=$(op read "op://dev-baile/komodo/api_key")
-export KOMODO_API_SECRET=$(op read "op://dev-baile/komodo/api_secret")
-export OP_CONNECT_TOKEN=$(op read "op://dev-baile/op_connect_cianfhoghlaim/credential")
+# Get secrets from Infisical
+echo "Fetching secrets from Infisical..."
+export PANGOLIN_TOKEN=$(infisical secrets get "infisical://dev-baile/pangolin/api_token")
+export KOMODO_API_KEY=$(infisical secrets get "infisical://dev-baile/komodo/api_key")
+export KOMODO_API_SECRET=$(infisical secrets get "infisical://dev-baile/komodo/api_secret")
+export INFISICAL_TOKEN=$(infisical secrets get "infisical://dev-baile/infisical_cianfhoghlaim/credential")
 
 # SSH key is needed for constructor but not used by createOLMClients
 # Use a dummy value since we're not doing SSH operations
 export SSH_KEY="unused"
 
 # Verify secrets were retrieved
-if [[ -z "$PANGOLIN_TOKEN" ]] || [[ -z "$KOMODO_API_KEY" ]] || [[ -z "$KOMODO_API_SECRET" ]] || [[ -z "$OP_CONNECT_TOKEN" ]]; then
-  echo "Error: Failed to retrieve secrets from 1Password"
+if [[ -z "$PANGOLIN_TOKEN" ]] || [[ -z "$KOMODO_API_KEY" ]] || [[ -z "$KOMODO_API_SECRET" ]] || [[ -z "$INFISICAL_TOKEN" ]]; then
+  echo "Error: Failed to retrieve secrets from Infisical"
   echo "Ensure the following items exist in vault 'dev-baile':"
   echo "  - pangolin (with api_token field)"
   echo "  - komodo (with api_key and api_secret fields)"
-  echo "  - op_connect_cianfhoghlaim (with credential field)"
+  echo "  - infisical_cianfhoghlaim (with credential field)"
   exit 1
 fi
 
@@ -97,14 +97,14 @@ echo ""
 echo "Creating OLM clients..."
 cd "$DAGGER_DIR"
 
-# Note: PangolinDeployment constructor requires ssh-key and op-connect-token
-# even though createOLMClients doesn't use SSH. The op-connect-token is used
-# for storing credentials in 1Password.
+# Note: PangolinDeployment constructor requires ssh-key and infisical-token
+# even though createOLMClients doesn't use SSH. The infisical-token is used
+# for storing credentials in Infisical.
 dagger call pangolin-deployment \
   --target-host "unused@localhost" \
   --domain "$DOMAIN" \
   --ssh-key env:SSH_KEY \
-  --op-connect-token env:OP_CONNECT_TOKEN \
+  --infisical-token env:INFISICAL_TOKEN \
   create-olm-clients \
     --pangolin-token env:PANGOLIN_TOKEN \
     --komodo-api-key env:KOMODO_API_KEY \

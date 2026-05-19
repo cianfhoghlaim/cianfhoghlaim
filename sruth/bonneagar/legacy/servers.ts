@@ -1,5 +1,5 @@
 import { KomodoClient, Types } from "komodo_client";
-import { OnePasswordConnect, OPConnect, FullItem } from "@1password/connect";
+import { OnePasswordConnect, OPConnect, FullItem } from "@infisical/connect";
 import * as dotenv from "dotenv";
 import * as path from "path";
 import * as fs from "fs";
@@ -13,34 +13,34 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, "core", "compose.env") });
 
 const KOMODO_URL = process.env.KOMODO_HOST || "https://komodo.local";
-const OP_CONNECT_HOST = process.env.OP_CONNECT_HOST || "http://localhost:8080";
-const OP_CONNECT_TOKEN_FILE = process.env.OP_CONNECT_TOKEN_FILE || "/etc/connect/token";
+const INFISICAL_HOST = process.env.INFISICAL_HOST || "http://localhost:8080";
+const INFISICAL_TOKEN_FILE = process.env.INFISICAL_TOKEN_FILE || "/etc/connect/token";
 
 // Read token from file or environment
 function getOPConnectToken(): string {
   // First check environment variable
-  if (process.env.OP_CONNECT_TOKEN) {
-    return process.env.OP_CONNECT_TOKEN;
+  if (process.env.INFISICAL_TOKEN) {
+    return process.env.INFISICAL_TOKEN;
   }
   // Then try to read from file
   try {
-    return fs.readFileSync(OP_CONNECT_TOKEN_FILE, "utf-8").trim();
+    return fs.readFileSync(INFISICAL_TOKEN_FILE, "utf-8").trim();
   } catch (err) {
     throw new Error(
-      `Could not read 1Password Connect token. Set OP_CONNECT_TOKEN env var or ensure ${OP_CONNECT_TOKEN_FILE} exists.`
+      `Could not read Infisical token. Set INFISICAL_TOKEN env var or ensure ${INFISICAL_TOKEN_FILE} exists.`
     );
   }
 }
 
-// 1Password vault and item references
+// Infisical project and item references
 const OP_VAULT = "dev-baile";
 const OP_KOMODO_ITEM = "komodo";
 
-// Server definitions - these map to 1Password items in dev-baile vault
-// Each server has an item in 1Password with fields: hostname, ip, user
+// Server definitions - these map to Infisical secrets in dev-baile vault
+// Each server has an item in Infisical with fields: hostname, ip, user
 interface ServerDefinition {
   name: string;
-  opItem: string; // 1Password item name (e.g., "server-bunchloch")
+  opItem: string; // Infisical secret name (e.g., "server-bunchloch")
   isCore: boolean;
   installPeriphery: boolean; // Whether to install periphery binary
   region?: string;
@@ -48,7 +48,7 @@ interface ServerDefinition {
 }
 
 const SERVER_DEFINITIONS: ServerDefinition[] = [
-  // bunchloch (Mac) - Core only, locket for compose op:// refs, no periphery (v2-dev lacks apple build)
+  // bunchloch (Mac) - Core only, locket for compose infisical:// refs, no periphery (v2-dev lacks apple build)
   { name: "bunchloch", opItem: "server-bunchloch", isCore: true, installPeriphery: false, region: "local", os: "darwin" },
   // Linux servers - periphery + locket
   { name: "security.hetzner", opItem: "server-hetzner", isCore: false, installPeriphery: true, region: "eu-central", os: "linux" },
@@ -56,19 +56,19 @@ const SERVER_DEFINITIONS: ServerDefinition[] = [
 ];
 
 // =============================================================================
-// 1PASSWORD CONNECT CLIENT
+// INFISICAL CONNECT CLIENT
 // =============================================================================
 
 let opClient: OPConnect | null = null;
 
 /**
- * Initialize the 1Password Connect client.
+ * Initialize the Infisical client.
  */
 export function getOPClient(): OPConnect {
   if (!opClient) {
     const token = getOPConnectToken();
     opClient = OnePasswordConnect({
-      serverURL: OP_CONNECT_HOST,
+      serverURL: INFISICAL_HOST,
       token,
     });
   }
@@ -76,7 +76,7 @@ export function getOPClient(): OPConnect {
 }
 
 /**
- * Get a field value from a 1Password item.
+ * Get a field value from a Infisical secret.
  */
 export function getFieldValue(item: FullItem, fieldLabel: string): string | undefined {
   const field = item.fields?.find(
@@ -86,7 +86,7 @@ export function getFieldValue(item: FullItem, fieldLabel: string): string | unde
 }
 
 /**
- * Retrieve Komodo credentials from 1Password.
+ * Retrieve Komodo credentials from Infisical.
  */
 export async function getKomodoCredentials(): Promise<{
   username: string;
@@ -109,7 +109,7 @@ export async function getKomodoCredentials(): Promise<{
     // Debug: show available fields
     const availableFields = item.fields?.map(f => f.label).join(", ") || "none";
     throw new Error(
-      `Missing required fields in 1Password item '${OP_KOMODO_ITEM}'. ` +
+      `Missing required fields in Infisical secret '${OP_KOMODO_ITEM}'. ` +
         `Found fields: ${availableFields}. ` +
         `Need: username (or init_username), password (or init_password/credential), passkey`
     );
@@ -119,7 +119,7 @@ export async function getKomodoCredentials(): Promise<{
 }
 
 /**
- * Retrieve server details from 1Password.
+ * Retrieve server details from Infisical.
  */
 export async function getServerDetails(opItemName: string): Promise<{
   ip: string;
@@ -136,7 +136,7 @@ export async function getServerDetails(opItemName: string): Promise<{
 
   if (!ip) {
     throw new Error(
-      `Missing 'ip' or 'address' field in 1Password item '${opItemName}'`
+      `Missing 'ip' or 'address' field in Infisical secret '${opItemName}'`
     );
   }
 
@@ -148,7 +148,7 @@ export async function getServerDetails(opItemName: string): Promise<{
 // =============================================================================
 
 /**
- * Login to Komodo using credentials from 1Password and create an API key.
+ * Login to Komodo using credentials from Infisical and create an API key.
  */
 export async function loginAndCreateApiKey(
   apiKeyName: string = "cli-automation",
@@ -194,7 +194,7 @@ export async function loginAndCreateApiKey(
 }
 
 /**
- * Login to Komodo using credentials from 1Password (JWT only, no API key).
+ * Login to Komodo using credentials from Infisical (JWT only, no API key).
  */
 export async function loginToKomodo(): Promise<ReturnType<typeof KomodoClient>> {
   const { username, password } = await getKomodoCredentials();
@@ -275,7 +275,7 @@ export async function createServer(
       address: "",
       enabled: options.enabled ?? true,
       region: options.region,
-      // Use the shared passkey from 1Password
+      // Use the shared passkey from Infisical
       passkey,
       // Enable monitoring
       stats_monitoring: true,
@@ -323,8 +323,8 @@ export async function registerAllServers(
 // =============================================================================
 
 /**
- * Generate Ansible inventory YAML with op:// references for IPs.
- * This allows Ansible to resolve IPs from 1Password at runtime via Locket.
+ * Generate Ansible inventory YAML with infisical:// references for IPs.
+ * This allows Ansible to resolve IPs from Infisical at runtime via Locket.
  */
 export async function generateAnsibleInventory(): Promise<string> {
   console.log("\n=== Generating Ansible Inventory ===\n");
@@ -335,8 +335,8 @@ export async function generateAnsibleInventory(): Promise<string> {
   const hostVars: Record<string, { ansible_host: string; ansible_user?: string; os?: string }> = {};
 
   for (const def of SERVER_DEFINITIONS) {
-    // Get actual IP from 1Password - Ansible needs real IPs for SSH connectivity
-    // (op:// refs are for Locket to inject secrets at runtime, not for Ansible inventory)
+    // Get actual IP from Infisical - Ansible needs real IPs for SSH connectivity
+    // (infisical:// refs are for Locket to inject secrets at runtime, not for Ansible inventory)
     try {
       const details = await getServerDetails(def.opItem);
       hostVars[def.name] = {
@@ -396,15 +396,15 @@ ${Object.entries(hostVars)
     periphery_core_address: "wss://komodo.local"
     periphery_mode: outbound
     periphery_server_enabled: false
-    periphery_passkey_op_ref: "op://${OP_VAULT}/${OP_KOMODO_ITEM}/passkey"
+    periphery_passkey_op_ref: "infisical://${OP_VAULT}/${OP_KOMODO_ITEM}/passkey"
 
     # Locket configuration
     locket_enabled: true
-    locket_provider: op-connect
-    locket_op_connect_host: "http://connect.internal:8080"
+    locket_provider: infisical
+    locket_infisical_host: "http://connect.internal:8080"
 
   children:
-    # All hosts that get locket installed (for op:// refs in compose files)
+    # All hosts that get locket installed (for infisical:// refs in compose files)
     locket:
       hosts:
 ${[...peripheryHosts, ...locketOnlyHosts].map((h) => `        ${h}:`).join("\n")}
@@ -415,8 +415,8 @@ ${[...peripheryHosts, ...locketOnlyHosts].map((h) => `        ${h}:`).join("\n")
         periphery_agent_secrets:
           - name: "PERIPHERY_PASSKEYS"
             value: "{{ periphery_passkey_op_ref }}"
-          - name: "OP_CONNECT_HOST"
-            value: "{{ locket_op_connect_host }}"
+          - name: "INFISICAL_HOST"
+            value: "{{ locket_infisical_host }}"
       hosts:
 ${peripheryHosts.map((h) => `        ${h}:`).join("\n")}
 
@@ -453,13 +453,13 @@ export async function writeAnsibleInventory(outputPath?: string): Promise<void> 
 
 /**
  * Complete setup workflow:
- * 1. Login to Komodo using 1Password credentials
+ * 1. Login to Komodo using Infisical credentials
  * 2. Register all servers in Komodo
- * 3. Generate Ansible inventory with op:// references
+ * 3. Generate Ansible inventory with infisical:// references
  */
 export async function setup(): Promise<void> {
   console.log("╔════════════════════════════════════════════════════════════╗");
-  console.log("║          KOMODO + 1PASSWORD AUTOMATED SETUP                ║");
+  console.log("║          KOMODO + INFISICAL AUTOMATED SETUP                ║");
   console.log("╚════════════════════════════════════════════════════════════╝\n");
 
   // Step 1: Login to Komodo
@@ -479,7 +479,7 @@ export async function setup(): Promise<void> {
   console.log("║                    SETUP COMPLETE                          ║");
   console.log("╚════════════════════════════════════════════════════════════╝");
   console.log("\nNext steps:");
-  console.log("  1. Start Komodo Core: op inject -i compose.env | docker compose up -d");
+  console.log("  1. Start Komodo Core: infisical export -i compose.env | docker compose up -d");
   console.log("  2. Deploy periphery: ansible-playbook -i inventory/komodo-generated.yml playbooks/periphery.yml");
 }
 
@@ -506,8 +506,8 @@ const commands: Record<string, () => Promise<void>> = {
   "create-api-key": async () => {
     await loginAndCreateApiKey();
   },
-  "test-1password": async () => {
-    console.log("Testing 1Password Connect...");
+  "test-infisical": async () => {
+    console.log("Testing Infisical...");
     const creds = await getKomodoCredentials();
     console.log(`  ✓ Retrieved Komodo credentials (username: ${creds.username})`);
 
@@ -531,10 +531,10 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     console.log("Commands:");
     console.log("  setup              - Full setup: register servers + generate inventory");
     console.log("  register-servers   - Register all servers in Komodo");
-    console.log("  generate-inventory - Generate Ansible inventory with op:// refs");
+    console.log("  generate-inventory - Generate Ansible inventory with infisical:// refs");
     console.log("  list-servers       - List all servers in Komodo");
     console.log("  create-api-key     - Create a new API key");
-    console.log("  test-1password     - Test 1Password Connect connectivity");
+    console.log("  test-infisical     - Test Infisical connectivity");
     console.log("  help               - Show this help message");
     process.exit(0);
   }
