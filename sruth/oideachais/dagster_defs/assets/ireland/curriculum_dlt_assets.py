@@ -282,7 +282,7 @@ def create_cycle_asset(cycle: str):
             generate_pages(),
             table_name="curriculum_pages",
             write_disposition="merge",
-            primary_key=["url"],  # Dedupe by URL
+            primary_key=["content_hash"],  # Dedupe by content_hash
         )
 
         # Calculate rows loaded
@@ -418,7 +418,7 @@ def create_short_course_asset():
             generate_pages(),
             table_name="curriculum_pages",
             write_disposition="merge",
-            primary_key=["url"],
+            primary_key=["content_hash"],
         )
 
         # Calculate rows loaded

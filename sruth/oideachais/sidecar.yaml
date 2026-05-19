@@ -1,16 +1,9 @@
 # =============================================================================
 # OIDEACHAIS - Locket Sidecar Configuration
 # =============================================================================
-# Extends compose.yaml with Locket for secrets management
-#
-# USAGE:
-#   docker compose -f compose.yaml -f sidecar.yaml up -d
-# =============================================================================
+# Injects secrets from Infisical into the environment
 
 services:
-  # ---------------------------------------------------------------------------
-  # LOCKET - Secrets Management Sidecar
-  # ---------------------------------------------------------------------------
   locket:
     image: ghcr.io/bpbradley/locket:infisical
     container_name: oideachais-locket
@@ -20,7 +13,6 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
-    read_only: true
     command:
       - "--provider=infisical"
       - "--infisical-client-id=${INFISICAL_CLIENT_ID}"
@@ -36,7 +28,7 @@ services:
       - ./secrets.env:/templates/secrets.env:ro
       - oideachais-secrets:/run/secrets/locket
     healthcheck:
-      test: ["CMD", "locket", "healthcheck"]
+      test: ["CMD", "/locket", "healthcheck"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -44,53 +36,24 @@ services:
     networks:
       - oideachais
 
-  # ---------------------------------------------------------------------------
-  # Override Dagster to depend on Locket and mount secrets
-  # ---------------------------------------------------------------------------
+  api:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - oideachais-secrets:/run/secrets/locket:ro
+
   dagster:
     depends_on:
       locket:
         condition: service_healthy
     volumes:
       - oideachais-secrets:/run/secrets/locket:ro
-    env_file:
-      - path: /run/secrets/locket/secrets.env
-        required: false
 
-  # ---------------------------------------------------------------------------
-  # Override API to depend on Locket and mount secrets
-  # ---------------------------------------------------------------------------
-  api:
-    depends_on:
-      locket:
-        condition: service_healthy
-    volumes:
-      - oideachais-data:/app/storage/data
-      - oideachais-secrets:/run/secrets/locket:ro
-    env_file:
-      - path: /run/secrets/locket/secrets.env
-        required: false
-
-  # ---------------------------------------------------------------------------
-  # Override Frontend to depend on Locket
-  # ---------------------------------------------------------------------------
-  frontend:
-    depends_on:
-      locket:
-        condition: service_healthy
-      api:
-        condition: service_healthy
-
-# =============================================================================
-# SECRETS
-# =============================================================================
 secrets:
   infisical_secret:
     file: ${INFISICAL_SECRET_FILE:-../../infisical_secret}
 
-# =============================================================================
-# VOLUMES
-# =============================================================================
 volumes:
   oideachais-secrets:
     driver: local

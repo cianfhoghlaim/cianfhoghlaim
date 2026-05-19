@@ -12,167 +12,30 @@ services:
     restart: unless-stopped
     ports:
       - "${DAGSTER_PORT:-3335}:3000"
+    env_file:
+      - path: /run/secrets/locket/secrets.env
+        required: false
     environment:
       DAGSTER_HOME: /opt/dagster/home
       USE_DUCKLAKE: "true"
-      DUCKLAKE_POSTGRES_HOST: postgres
+      DUCKLAKE_POSTGRES_HOST: lakehouse-postgres
       DUCKLAKE_POSTGRES_PORT: "5432"
       DUCKLAKE_POSTGRES_USER: lakekeeper
       DUCKLAKE_POSTGRES_PASSWORD: devpassword
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-lakehouse}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-devpassword}
-      AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-http://garage:3900}
+      AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-http://lakehouse-garage:3900}
       AWS_REGION: ${AWS_REGION:-auto}
     volumes:
       - .:/app
       - ../../.env:/app/.env:ro
+      - /run/secrets/locket/secrets.env:/app/secrets.env:ro
       - /app/.venv
       - ./dagster.yaml:/opt/dagster/home/dagster.yaml:ro
       - dagster-storage:/opt/dagster/storage
-    depends_on:
-      postgres:
-        condition: service_healthy
-      garage:
-        condition: service_healthy
     networks:
       - oideachais
-
-  # ---------------------------------------------------------------------------
-  # LAKEHOUSE - S3 + PostgreSQL Catalog
-  # ---------------------------------------------------------------------------
-  garage:
-    image: dxflrs/garage:v1.0.1
-    container_name: oideachais-garage
-    restart: unless-stopped
-    ports:
-      - "${GARAGE_S3_PORT:-3900}:3900"
-      - "${GARAGE_ADMIN_PORT:-3904}:3904"
-    environment:
-      RUST_LOG: garage=info
-      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:-460274064622cf44cd2c2ebb80eedf9b4eb64730abb6d78eda44ab9cb5bb7da3}
-      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN:-devtoken}
-    volumes:
-      - ../bonneagar/stacks/storage/lakehouse/garage.toml:/etc/garage.toml:ro
-      - garage-meta:/var/lib/garage/meta
-      - garage-data:/var/lib/garage/data
-    command: ["/garage", "-c", "/etc/garage.toml", "server"]
-    healthcheck:
-      test: ["CMD", "/garage", "-c", "/etc/garage.toml", "node", "id"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    networks:
-      - oideachais
-
-  garage-init:
-    image: curlimages/curl:latest
-    container_name: oideachais-garage-init
-    depends_on:
-      garage:
-        condition: service_healthy
-    environment:
-      GARAGE_ADMIN_TOKEN: devtoken
-    entrypoint: ["/bin/sh", "-c"]
-    command:
-      - |
-        set -e
-        ADMIN_URL="http://garage:3904"
-        AUTH="Authorization: Bearer devtoken"
-        echo "Waiting for Garage admin API..."
-        sleep 3
-        NODE_ID=$$(curl -sf "$${ADMIN_URL}/v1/status" -H "$${AUTH}" | grep -o '"node":"[^"]*"' | cut -d'"' -f4)
-        echo "Node ID: $$NODE_ID"
-        LAYOUT_VERSION=$$(curl -sf "$${ADMIN_URL}/v1/layout" -H "$${AUTH}" | grep -o '"version":[0-9]*' | head -1 | cut -d':' -f2)
-        if [ "$$LAYOUT_VERSION" = "0" ]; then
-          echo "Configuring node layout..."
-          curl -sf -X POST "$${ADMIN_URL}/v1/layout" -H "$${AUTH}" -H "Content-Type: application/json" -d "[{\"id\": \"$$NODE_ID\", \"zone\": \"dc1\", \"capacity\": 100000000000, \"tags\": []}]" || true
-          curl -sf -X POST "$${ADMIN_URL}/v1/layout/apply" -H "$${AUTH}" -H "Content-Type: application/json" -d '{"version": 1}' || true
-          sleep 2
-        fi
-        echo "Creating access key..."
-        curl -sf -X POST "$${ADMIN_URL}/v1/key" -H "$${AUTH}" -H "Content-Type: application/json" -d '{"name": "lakehouse"}' 2>/dev/null || true
-        for bucket in iceberg lance ducklake; do
-          curl -sf -X POST "$${ADMIN_URL}/v1/bucket" -H "$${AUTH}" -H "Content-Type: application/json" -d "{\"globalAlias\": \"$$bucket\"}" || true
-        done
-        ACCESS_KEY_ID=$$(curl -sf "$${ADMIN_URL}/v1/key?search=lakehouse" -H "$${AUTH}" | grep -o '"accessKeyId":"[^"]*"' | head -1 | cut -d'"' -f4)
-        for bucket in iceberg lance ducklake; do
-          BUCKET_ID=$$(curl -sf "$${ADMIN_URL}/v1/bucket?globalAlias=$$bucket" -H "$${AUTH}" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
-          if [ -n "$$BUCKET_ID" ] && [ -n "$$ACCESS_KEY_ID" ]; then
-            curl -sf -X POST "$${ADMIN_URL}/v1/bucket/allow" -H "$${AUTH}" -H "Content-Type: application/json" -d "{\"bucketId\": \"$$BUCKET_ID\", \"accessKeyId\": \"$$ACCESS_KEY_ID\", \"permissions\": {\"read\": true, \"write\": true, \"owner\": true}}" || true
-          fi
-        done
-        echo "Garage initialization complete!"
-    restart: "no"
-    networks:
-      - oideachais
-
-  postgres:
-    image: postgres:16-alpine
-    container_name: oideachais-postgres
-    restart: unless-stopped
-    ports:
-      - "${POSTGRES_PORT:-5433}:5432"
-    environment:
-      POSTGRES_USER: lakekeeper
-      POSTGRES_PASSWORD: devpassword
-      POSTGRES_DB: lakekeeper
-      PGDATA: /var/lib/postgresql/data/pgdata
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-      - ../bonneagar/stacks/storage/lakehouse/init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U lakekeeper"]
-      interval: 3s
-      timeout: 3s
-      retries: 10
-    networks:
-      - oideachais
-
-  lakekeeper-migrate:
-    image: quay.io/lakekeeper/catalog:latest
-    container_name: oideachais-lakekeeper-migrate
-    environment:
-      LAKEKEEPER__PG_DATABASE_URL_READ: postgresql://lakekeeper:devpassword@postgres:5432/lakekeeper
-      LAKEKEEPER__PG_DATABASE_URL_WRITE: postgresql://lakekeeper:devpassword@postgres:5432/lakekeeper
-      LAKEKEEPER__PG_ENCRYPTION_KEY: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
-    command: ["migrate"]
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - oideachais
-
-  lakekeeper:
-    image: quay.io/lakekeeper/catalog:latest
-    container_name: oideachais-lakekeeper
-    restart: unless-stopped
-    ports:
-      - "${LAKEKEEPER_PORT:-8181}:8181"
-    environment:
-      LAKEKEEPER__PG_DATABASE_URL_READ: postgresql://lakekeeper:devpassword@postgres:5432/lakekeeper
-      LAKEKEEPER__PG_DATABASE_URL_WRITE: postgresql://lakekeeper:devpassword@postgres:5432/lakekeeper
-      LAKEKEEPER__PG_ENCRYPTION_KEY: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
-      LAKEKEEPER__LISTEN_PORT: "8181"
-      LAKEKEEPER__BASE_URI: http://localhost:8181
-      LAKEKEEPER__SERVE_SWAGGER_UI: "true"
-      RUST_LOG: info
-    command: ["serve"]
-    depends_on:
-      postgres:
-        condition: service_healthy
-      garage:
-        condition: service_healthy
-      lakekeeper-migrate:
-        condition: service_completed_successfully
-    healthcheck:
-      test: ["CMD", "/home/nonroot/lakekeeper", "healthcheck"]
-      interval: 5s
-      timeout: 10s
-      retries: 3
-      start_period: 15s
-    networks:
-      - oideachais
+      - lakehouse
 
   # ---------------------------------------------------------------------------
   # API - FastAPI Backend with AG-UI Streaming
@@ -185,6 +48,9 @@ services:
     restart: unless-stopped
     ports:
       - "${API_PORT:-8000}:8000"
+    env_file:
+      - path: /run/secrets/locket/secrets.env
+        required: false
     environment:
       # Application
       HOST: "0.0.0.0"
@@ -193,7 +59,8 @@ services:
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
       # Database paths
       DUCKDB_PATH: /app/storage/data/celtic_education.duckdb
-      LANCEDB_PATH: /app/storage/data/curriculum_vectors.lance
+      LANCEDB_URI: rest://lakehouse-lance-namespace:8182
+      LANCEDB_API_KEY: ${LANCEDB_API_KEY:-devtoken}
       # LLM Configuration
       LLM_API_KEY: ${LITELLM_MASTER_KEY:-sk-1234}
       LLM_PROVIDER: ${LLM_PROVIDER:-litellm}
@@ -218,6 +85,7 @@ services:
           memory: 16G
     networks:
       - oideachais
+      - lakehouse
 
   # ---------------------------------------------------------------------------
   # FRONTEND - TanStack Start Web Application
@@ -247,6 +115,7 @@ services:
         condition: service_healthy
     networks:
       - oideachais
+      - lakehouse
 
   # ---------------------------------------------------------------------------
   # AI GATEWAY - LiteLLM
@@ -267,6 +136,7 @@ services:
     # command: [ "--port", "4000" ]
     networks:
       - oideachais
+      - lakehouse
 
   # ---------------------------------------------------------------------------
   # RESEARCH - Perplexica / Vane
@@ -290,9 +160,6 @@ services:
 # =============================================================================
 volumes:
   dagster-storage:
-  garage-meta:
-  garage-data:
-  postgres-data:
   oideachais-data:
 
 # =============================================================================
@@ -301,3 +168,5 @@ volumes:
 networks:
   oideachais:
     driver: bridge
+  lakehouse:
+    external: true
