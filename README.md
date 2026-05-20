@@ -4,7 +4,7 @@
 
 >  UPDATE: due to laptop logic board replacement costing weeks' of time, a working interactive agentic chat-with-the-syllabus-and-exam-papers capable of being selfhosted on a Macbook Air M1 or using Google Cloud Free Trial AI API credits or similar set to be released for 01/06/2026 to help crammers with their Leaving Certificate. Intermittent progress in the meantime should be helpful to augment study (like the bunchloch/ardteist directory) but this is not guaranteed.
 
-> Full disclosure of the Myth of Meritocracy Feat 2027: by next year's exam season, all tertiary level modules of the University of Galway will be added.
+> Full disclosure of the Myth of Meritocracy Feat 2027: by next year's exam season, all tertiary level modules of the University of Galway will be added. Any and all public information, including historic exam papers will be analysed and models trained upon to support students of all race, gender, disability and sociocultural history.
 
 > ⚠️ **Project Status & Disclaimer**
 > 
