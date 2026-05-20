@@ -4,6 +4,8 @@
 
 >  UPDATE: due to laptop logic board replacement costing weeks' of time, a working interactive agentic chat-with-the-syllabus-and-exam-papers capable of being selfhosted on a Macbook Air M1 or using Google Cloud Free Trial AI API credits or similar set to be released for 01/06/2026 to help crammers with their Leaving Certificate. Intermittent progress in the meantime should be helpful to augment study (like the bunchloch/ardteist directory) but this is not guaranteed.
 
+> Full disclosure: by next year's exam season, all tertiary level modules of the University of Galway will be added.
+
 > ⚠️ **Project Status & Disclaimer**
 > 
 > This repository is a **work in progress**. It is being actively set up to automatically update as syllabus and exam papers change over time. The goal is to have a working prototype prior to this year's secondary school Leaving Certificate Computer Science exam, though this is not guaranteed.
