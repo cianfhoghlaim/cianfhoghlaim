@@ -1,0 +1,219 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.17.7"
+  },
+  "cells": [
+    {
+      "id": "PKri",
+      "code_hash": "fef63c4139cfe45e98226edf189318ac",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"workers-use-case\">Workers use case</h1>\n<span class=\"paragraph\">In this notebook, we will show a simple use case involving workers.</span>\n<span class=\"paragraph\"><strong>Prerequisites:</strong><br></span>\n<span class=\"paragraph\">- API token (see <a href=\"https://developers.cloudflare.com/r2/api/s3/tokens/\" rel=\"noopener\" target=\"_blank\">here</a> for info on how\n to create one);<br></span>\n<span class=\"paragraph\">- at least one active worker.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "8e759ded24b1421fde1170a53ee0442f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"ranking-workers-by-multiple-metrics\">Ranking workers by multiple metrics</h2>\n<span class=\"paragraph\">Here, we will show the top workers by 4 metrics also available in dash: requests, errors,\ndisconnects and median CPU time.\nResults are returned on a hourly basis, so here is how these metrics are aggregated:<br></span>\n<span class=\"paragraph\">- requests are summed;<br></span>\n<span class=\"paragraph\">- dash combines both errors and disconnects, here we show them standalone, summed as well;<br></span>\n<span class=\"paragraph\">- cpu time is averaged out of all hourly 50th percentiles.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "76b8f9693723b8985da0d2c9773a7ae0",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Raw data (includes all entries from GraphQL results):</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "dfe174b2e6b86cf8b6af00671b8cdea8",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Now, what we are interested in is comparing side by side these top entries for each metric.</span>\n<span class=\"paragraph\"><span style=\"color: tomato\"><b>Warning:</b> both the start and end of the obtained timeseries may have\nsharp drops due to aggregations on incomplete periods of time.<span></span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "iLit",
+      "code_hash": "fdc18fa52eb0115c94ab271dfd5a3adb",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"workers-with-the-most-requests\">Workers with the most requests</h3></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "TqIu",
+      "code_hash": "a65f9e929274267d95196405fe71bbb1",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"workers-with-the-most-errors-and-disconnects\">Workers with the most errors and disconnects</h3>\n<span class=\"paragraph\">The bellow code fetches errors and disconnects for both the top workers with most errors,\nas well as the top workers with the most disconnects.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Pvdt",
+      "code_hash": "3f663e7fb52c8084e0bcca2637d607e5",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"workers-with-the-highest-average-cpu-times\">Workers with the highest average CPU times</h3>\n<span class=\"paragraph\">Note: This query only fetches the 50th quantile of CPU times, but other quantiles, such as <code>cpuTimeP90</code>,\n<code>cpuTimeP99</code> and <code>cpuTimeP999</code> can also be queried by adding these columns in the <code>quantiles {}</code> field.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hbol",
+      "code_hash": "a9a004c0c8dbc4177ca7bdd497720c64",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "137070cd4a4afe902ef974f2c18a6b42",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "85cd926545764a4f6e4f4ef88501761b",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "e751a3b415765789a3d9d1a3616ead65",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "ed16c37288a7c90a5dffa377ced5c35a",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "0d5bf2d36c037c43c1b0bc44901d252a",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "ef23ccf4bfcc45e60d82bec86090552f",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "1f907f86af99ab5255fc3b081c21772d",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "9f7b0a15e9adb3ba0dedd7411a05205b",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "58b3c13663252acaae3716d462c744da",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "ZHCJ",
+      "code_hash": "29ee360df23853c498cd2ca7a07292ae",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "ROlb",
+      "code_hash": "117eeb358d35135b64b22b356fac422f",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "qnkX",
+      "code_hash": "9816bf5dbae64f48b8741cbd108e4b78",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Vxnm",
+      "code_hash": "2120f14937b43440af601c24115ac6ac",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "DnEU",
+      "code_hash": "ae96dce33b10757e134a4f36ede5337c",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "ulZA",
+      "code_hash": "0d301cd868893966556fff02fff5379c",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "ecfG",
+      "code_hash": "f0339b53b53be04855c256298ee95d09",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "ZBYS",
+      "code_hash": "1a63ec91d4e1be61df3de960923d0340",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "aLJB",
+      "code_hash": "9dfc61bf3104b7c0176dc0898f355919",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "nHfw",
+      "code_hash": "b95caa16437a7609963ca286959e7953",
+      "outputs": [],
+      "console": []
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.17.7"
+  },
+  "cells": [
+    {
+      "id": "PKri",
+      "code_hash": "c1aee3ab1f48ec72b8dc7147c06d92f6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"workers-kv-analytics\">Workers KV analytics</h1>\n<span class=\"paragraph\">In this notebook, we will explore KV logs, where we will make use of the GraphQL API to obtain KV insights\nand rank entries by most requests, whether they are <code>read</code>, <code>write</code> and <code>list</code> requests.</span>\n<span class=\"paragraph\"><b style='color: tomato'>Warning:</b> by default this notebook will fetch at most 500 KV entries from a given\naccount, whilst other entries will be grouped into an \"Other\" entry. This number can be increased by\nincreasing the <code>_MAX_PAGE_REQUESTS</code> variable, which dictates how many hundreds of KV name - Id pairs\nare obtained from the API.</span>\n<span class=\"paragraph\"><strong>Prerequisites:</strong><br></span>\n<span class=\"paragraph\">- API token (see <a href=\"https://developers.cloudflare.com/fundamentals/api/get-started/create-token/\" rel=\"noopener\" target=\"_blank\">here</a>\nfor info on how to create one);<br></span>\n<span class=\"paragraph\">- At least one active KV.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "bdee8c60bd2ed7a45fd4bb9b41a96930",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"rank-of-kvs-with-most-requests\">Rank of KVs with most requests</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "2ebe467ef44baf42f4ba19f0f4268e98",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">It's important to note that the query itself may not return KVs that did not register any type of request\nduring our time interval.</span>\n<span class=\"paragraph\">The query returns the KV Ids. To make results more readable, we will also perform an API call to obtain the\nname:</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ROlb",
+      "code_hash": "0d6fccd0aef1cc2ff73494b6e1f05c7d",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"kv-request-usage-over-time\">KV request usage over time</h2>\n<span class=\"paragraph\">This trend does not concern the KVs themselves, merely their aggregated request counts over time.</span>\n<span class=\"paragraph\"><b style='color: tomato'>Warning:</b> Due to incomplete date aggregregations, the first and last dates on the\nfinal charts may present lower numbers.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hbol",
+      "code_hash": "a9a004c0c8dbc4177ca7bdd497720c64",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "137070cd4a4afe902ef974f2c18a6b42",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "85cd926545764a4f6e4f4ef88501761b",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "e751a3b415765789a3d9d1a3616ead65",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "288d7c477a32bc20250e8e62ff5ec9df",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "207be71612e90b854617c1d41148ecd9",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "a623053634d1046c7fafc91c4c8f7865",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "a916570f4ebbf930eca1068af16e6f21",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "b50d099d6d74d0bc313ea74a4eec07ec",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "d1365762402253c85325a50a890710bf",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "2de443bf88435db81b787c7f92e9c411",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "iLit",
+      "code_hash": "e9a9c9e808a552a69e3b4d06f3b99aa3",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "ZHCJ",
+      "code_hash": "ae29be80f5ce855759ba8dec1a942c2b",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "qnkX",
+      "code_hash": "fd995be38f1e576c0437db8e27961de4",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "TqIu",
+      "code_hash": "9b1759303d3fcd94f84e613a8c0a4a7e",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Vxnm",
+      "code_hash": "5c5fb89fa4327ef825781bb028fc0ac8",
+      "outputs": [],
+      "console": []
+    }
+  ]
+}

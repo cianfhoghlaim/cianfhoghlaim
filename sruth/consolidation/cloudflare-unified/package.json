@@ -1,0 +1,30 @@
+{
+  "name": "cloudflare-unified",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Unified Cloudflare Workers example with Hono, Better Auth, Drizzle ORM, and all Cloudflare services (D1, KV, R2, AI)",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "wrangler d1 migrations apply cloudflare-unified-db --local",
+    "db:migrate:prod": "wrangler d1 migrations apply cloudflare-unified-db",
+    "db:studio": "drizzle-kit studio",
+    "auth:generate": "pnpm dlx @better-auth/cli@latest generate --config ./src/lib/auth.ts --output ./src/db/schema.ts"
+  },
+  "dependencies": {
+    "better-auth": "^1.3.7",
+    "better-auth-cloudflare": "^0.2.8",
+    "drizzle-orm": "^0.44.5",
+    "hono": "^4.9.4",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250606.0",
+    "@types/node": "^22.17.2",
+    "drizzle-kit": "^0.31.4",
+    "wrangler": "^4.30.0"
+  },
+  "license": "MIT"
+}
