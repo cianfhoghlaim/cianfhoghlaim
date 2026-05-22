@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uuid_id" version="2.0">
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+        <dc:identifier opf:scheme="calibre" id="calibre_id">3</dc:identifier>
+        <dc:identifier opf:scheme="uuid" id="uuid_id">982cb73b-88b5-4254-9129-9f05a59e6be3</dc:identifier>
+        <dc:title>Psychiatric Drug Withdrawal: A Guide for Prescribers, Therapists, Patients and their Families</dc:title>
+        <dc:creator opf:file-as="Breggin, Peter R." opf:role="aut">Breggin, Peter R.</dc:creator>
+        <dc:contributor opf:file-as="calibre" opf:role="bkp">calibre (9.8.0) [https://calibre-ebook.com]</dc:contributor>
+        <dc:date>2012-07-19T06:00:00+00:00</dc:date>
+        <dc:publisher>Springer Publishing</dc:publisher>
+        <dc:identifier opf:scheme="ISBN">9780826108449</dc:identifier>
+        <dc:language>eng</dc:language>
+        <meta name="calibre:timestamp" content="2026-05-16T17:29:34.358098+00:00"/>
+        <meta name="calibre:title_sort" content="Psychiatric Drug Withdrawal: A Guide for Prescribers, Therapists, Patients and their Families"/>
+    </metadata>
+    <guide>
+        <reference type="cover" title="Cover" href="Psychiatric Drug Withdrawal_ A Guide for Prescribers, Therapists, Patients and their Families - Breggin, Peter R_.jpg"/>
+    </guide>
+</package>
