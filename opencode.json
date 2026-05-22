@@ -8,6 +8,9 @@
         "-y",
         "@browserbasehq/mcp"
       ],
+      "env": {
+        "BROWSERBASE_API_KEY": "bb_live_SjWIy63dVmsAyJj9fzQSwXC1H6c"
+      },
       "enabled": true
     },
     "firecrawl": {
@@ -17,6 +20,9 @@
         "-y",
         "firecrawl-mcp"
       ],
+      "env": {
+        "FIRECRAWL_API_KEY": "fc-159a71fbd84140bd9fb80784910a739c"
+      },
       "enabled": true
     },
     "motherduck": {
@@ -28,6 +34,9 @@
         "md:",
         "--read-write"
       ],
+      "env": {
+        "MOTHERDUCK_TOKEN": "infisical://dev-baile/motherduck/token"
+      },
       "enabled": true
     }
   }
