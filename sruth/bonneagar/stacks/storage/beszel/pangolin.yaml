@@ -1,9 +1,0 @@
-# Pangolin auto-discovery labels for Beszel
-# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
-services:
-  beszel-hub:
-    labels:
-      - "pangolin.resource.name=Beszel"
-      - "pangolin.resource.domain=beszel.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://beszel-hub:8090"
-      - "pangolin.resource.middlewares=tinyauth"

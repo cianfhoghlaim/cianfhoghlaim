@@ -1,5 +1,0 @@
-environment:
-  - infrastructure/oci
-config:
-  oci:region: uk-london-1
-  oci-infrastructure:serverName: arm1-oci

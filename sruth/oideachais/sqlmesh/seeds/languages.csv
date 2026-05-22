@@ -1,6 +1,0 @@
-language_id,language_code,language_name,language_name_native,is_celtic,nation_association,unicode_range
-1,en,English,English,false,all,Latin
-2,ga,Irish,Gaeilge,true,ireland,Latin Extended
-3,cy,Welsh,Cymraeg,true,wales,Latin Extended
-4,gd,Scottish Gaelic,Gàidhlig,true,scotland,Latin Extended
-5,gv,Manx,Gaelg,true,isle_of_man,Latin Extended
