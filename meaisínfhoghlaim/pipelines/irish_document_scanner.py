@@ -525,11 +525,19 @@ class IrishDocumentScanner:
             logger.warning(f"LanceDB storage failed: {e}")
 
     def _store_to_lakehouse(self, result: ScanResult):
-        """Store result to local lakehouse."""
+        """Store result to local lakehouse and MotherDuck via MCP."""
         try:
             import duckdb
-
-            conn = duckdb.connect("./lakehouse/documents.duckdb")
+            
+            # Use MCP or environment-injected MotherDuck token directly
+            motherduck_token = os.getenv("MOTHERDUCK_TOKEN")
+            
+            if motherduck_token:
+                logger.info("MOTHERDUCK_TOKEN detected. Connecting to MotherDuck cloud data warehouse.")
+                conn = duckdb.connect(f"md:?motherduck_token={motherduck_token}")
+            else:
+                logger.info("No MOTHERDUCK_TOKEN. Falling back to local DuckDB lakehouse.")
+                conn = duckdb.connect("./lakehouse/documents.duckdb")
 
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS scanned_documents (
