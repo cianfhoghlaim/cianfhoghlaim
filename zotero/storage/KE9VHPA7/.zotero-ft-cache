@@ -1,0 +1,105 @@
+Explainable AI for Irish grammatical error correction
+9 April 2024
+
+Grammatical error correction
+● Task takes a sentence as input, and outputs the sentence with errors corrected ● Easier problem: grammatical error detection ● Harder problem: Grammatical error detection/correction plus explanations ● Research is mostly on English; small datasets for maybe 20 languages total ● Exceptionally diﬃcult task: F-scores in 50’s/60’s near SOTA for English ● Irish is easier! My old (2003) rule-based system scores comparably
+
+Oﬃcial Standard(s)
+● First version published in 1958, revised in 2012 and then 2017 ● Widely adopted, though rarely 100% outside of the most formal writing ● Not fully aligned with existing grammars, textbooks, and dictionaries ● Rules leave quite a bit up to interpretation ● Very little fully-reliable training data available
+
+One problematic example (of dozens)
+● “saoirse cainte” or “saoirse chainte”? ● 177M word corpus: “saoirse cainte” 687 times and “saoirse chainte” 28 times ● Similarly, “saoirse creidimh” or “saoirse chreidimh”? ● Same corpus: 85 times vs. 26 times
+
+Unsupervised system (2019)
+● Focused on predicting correct initial mutations ● Formulate as tagging problem with 5 tags ● LSTM layer(s), BiLSTM at character level ● Unlimited training data ● Achieves much higher accuracy
+than all previous approaches ● Character-based component learns gender
+and other relevant features ● Word-based component learns sometimes subtle contextual clues
+
+Critique
+● Learns mutations as used by the language community, “errors” included ● Makes some inexplicable mistakes; diﬃcult to debug ● Easy things are easy for it; less eﬀective on the cases humans ﬁnd diﬃcult ● No explanations given
+
+How do we get the explanations back?
+● Want to keep it as a tagging problem but with an enhanced set of tags ● Augment each tag with a section of the oﬃcial standard that “explains” it ● Tá an bhean/S+10.2.1 ag canadh ● Tá an doineann/N+10.2.1.e1 ag maolú ● Just need to produce millions of training examples, somehow :/
+
+Universal Dependencies
+Figure 4 in Lynn, Teresa and Foster, Jennifer (2016) Universal dependencies for Irish. In: Second Celtic Language Technology Workshop. (CLTW 2016), 4 July 2016, Paris, France.
+
+CoNLL-U format (with features)
+
+# sent_id = 465
+
+# text = Bhí sí naoi mbliana agus leathchéad.
+
+1 Bhí
+
+bí
+
+VERB Form=Len|Mood=Ind|Tense=Past
+
+0
+
+2 sí
+
+sí
+
+PRON Gender=Fem|Number=Sing|Person=3
+
+1
+
+3 naoi
+
+naoi
+
+NUM
+
+NumType=Card
+
+4
+
+4 mbliana bliain
+
+NOUN Case=NomAcc|Form=Ecl|Gender=...
+
+1
+
+5 agus
+
+agus
+
+CCONJ _
+
+6
+
+6 leathchéad leathchéad NOUN Case=NomAcc|Gender=Masc|Number=Sing 4
+
+7.
+
+.
+
+PUNCT _
+
+1
+
+root nsubj nummod xcomp:pred cc conj punct
+
+Feature Prediction
+● I developed a suite a QA tools for checking the Irish treebank(s) in 2021 ● https://github.com/kscanne/grammatach ● Implements constraints on feature values based on dependency relations ● Refactored this code to parallel the rules in the standard to the extent possible
+
+An Caighdeán Leictreonach
+
+Applications
+● Improves the Irish treebank, thereby improving parsers/taggers trained on it ● Can be applied to output of these parsers/taggers to again resolve problems ● Allows corpus-based survey of adherence to standard, rule-by-rule ● Gives us a tool to generate synthetic training examples for our task
+
+Corpus-level survey of errors
+
+Synthetic training data
+● Produce dependency parses for sentences in a large corpus ● Ignore tokens with incorrect features according to QA scripts ● (Mix of incorrect parses and corpus examples not compliant with standard) ● Each remaining token is attached to one or more constraints ● Intentionally violate those constraints by changing the mutation and add tag:
+○ Correct sentence: Tá an bhean ag canadh ○ Constraint on “bhean” requires the S tag with reference 10.2.1 ○ Can violate this two ways: Tá an bean/S+10.2.1 ag canadh
+Tá an mbean/S+10.2.1 ag canadh
+
+Beneﬁts and future directions
+● Neatly handles the issue of non-standard texts in training ● Can oversample rare mutation contexts that the previous model failed on ● Works with any of the UD features (errors in agreement verb tense, etc.) ● Approach should apply neatly to the 4 other Celtic languages with treebanks
+
+Thank you! / Go raibh maith agaibh!
+● https://cadhan.com/ ● https://github.com/kscanne/
+

@@ -1,0 +1,139 @@
+IWSPA-AP 2018
+
+    Call for Participation
+    Corpus
+    Submission Instructions
+    Dates
+    IWSPA 2018 Workshop
+    Organizing Committee
+
+ReDAS Lab@UH
+
+First Security and Privacy Analytics Anti-Phishing Shared Task (IWSPA-AP 2018)
+
+Results will be presented at the IWSPA 2018 , a workshop co-located with
+the ACM CODASPY - Conference on Data and Applications Security and Privacy , Tempe, Arizona
+
+ 
+
+ 
+Call for Participation
+
+You are invited to participate in the IWSPA-AP Shared Task at IWSPA 2018. The shared task will be on Detection and Analysis of Email nature.
+
+The International Workshop on Security and Privacy Analytics (IWSPA) - Anti Phishing Shared Task will feature an exercise in the field of applied machine learning and text analysis in cyber security. The participants will be asked to build a classifier that will be able to detect phishing emails from spam and legitimate ones in an "unbalanced" dataset. In order to make the task relatable to a real world situation, the training and testing dataset will have realistic ratios of malicious and legitimate emails (not 50:50). A sample training data will be provided and the results will be evaluated on a testing dataset that will be posted a week before the results are due. We ask of the participants to send us their trained model and the results they achieved on the testing dataset. The participants are encouraged to use any data in their possession, in addition to the one provided, to train their model. The participants are also free to use any kind of feature engineering, and any type of classifiers. However keep in mind that the dataset is "Unbalanced".
+
+The proceedings will be published online in the CEUR publication service . This year also we will invite the authors of selected system papers at the Shared Task, to submit extended versions to a special issue of a journal (Details coming soon).
+Tasks
+
+The overall task description consists of the following:
+Use training dataset offered and/or any dataset available online.
+Analyze email content (Header, Body, URLs). The emails will be in .txt format.
+Preferably come up with new and interesting features and/or use existing ones in the literature.
+Build and train a machine learning model or use an already existing one.
+Finally report the results based on the evaluation metrics specified in what follows.
+
+A few probable SubTasks: We may post two types of training datasets -
+Emails with headers: For this type of dataset, the participants are free to use all the content available in an email to extract information.
+Emails with no headers: This task will only focus on the body of the emails. Participants may use any type of information extraction related to the body.
+
+Evaluation Metrics : The evaluation metrics expected are: Confusion Matrix (FP, FN, TP, TN), Accuracy, F-Score, Precision, Recall, Weighted average of recall and precision.
+Registration
+The registration link to EasyChair is HERE! . The deadline is January 23rd, 2018 January 28th, 2018 .
+
+While registering, the interested teams should put the name of the team as Title and a short description of their approach as Abstract on EasyChair.
+
+Organizations wishing to participate in the AP Shared Task track at IWSPA 2018 are invited to register on EasyChair. Participants are advised to register as soon as possible in order to receive timely access to evaluation resources, including development and testing data. Registration for the task does not commit you to participation - but is helpful to know for planning. All participants who submit system runs are welcome to present their system at the IWSPA 2018.
+
+Important!
+
+All the participants can present their submitted systems as a poster at IWSPA 2018 located in Tempe, AZ, on March 21st, 2018. The teams willing to participate in the Poster presentation Session should inform us before March 3rd, 2018.
+
+All interested participants must register for IWSPA through CODASPY Registration website.
+
+ 
+
+ 
+Corpus
+
+We have provided a few examples of the Legitimate and Phishing Emails:
+
+Legitimate Email Samples
+Phishing Email Samples
+
+We will post the details for the training corpus on February 1, 2018 (11:59 U.S.-CST). Stay tuned!
+
+ 
+
+ 
+Submission Instructions
+
+For your system submissions:
+
+We expect the predicted outputs on the test data as well as your best performing model.
+
+For the predicted output:
+
+The output needs to be a " _submission_ _ .txt" file with the name of the email file and your predicted label: 1 for legitimate email and 0 for phishing email.
+
+Your Group-ID should be either the name of your group or the initials of the last names of all the group members.
+
+There is no limit on the number of submissions for a particular task. Your submissions should be numbered sequentially.
+
+For example: If your team name is "BlueTeam" and you are submitting the predictions for the "No Headers" task - your submission file should be "TeamBlue_submission_noheaders_1.txt" and the file should have the following contents:
+
+1.txt 1
+
+2.txt 0
+
+...
+
+For the model submission:
+
+We expect you to submit your top performing model on the training data with clear instructions on how to run. This is required so that the results on the test data using that model can be reproduced. The output submission for the TOP model should be labeled with your Group-ID as well as "TOP" in the name.
+
+For example, For Team Blue, if "SVM" is the best performer for the "No Headers" subtask: The model submission will read - "TeamBlue_TOP_SVM_noheaders" and the output submission for this model will be "TeamBlue_submission_TOP_noheaders_1.txt" . When we run "TeamBlue_TOP_SVM_noheaders" model file on the test data we should get exactly the same results Team Blue has reported in "TeamBlue_submission_TOP_noheaders_1.txt" .
+
+ 
+
+ 
+Important Dates
+
+Please consult the IWSPA 2018 Workshop for official dates for the workshop.
+The important deadlines for the Shared Task:
+Event 	Date
+Registration Deadline 	January 28, 2018
+Training Data Release 	February 1, 2018 (11:59 U.S.-CST)
+Test Data Release 	February 28, 2018 March 1, 2018 (11:59 P.M. CST)
+Model + Results Submission 	March 3, 2018 March 6, 2018 (11:59 P.M. CST) (Hard Deadline)
+Start of Evaluation 	March 5, 2018
+End of Evaluation 	March 20, 2018
+
+ 
+
+ 
+
+ 
+
+ 
+IWSPA 2018
+
+http://capex.cs.uh.edu/?q=content/4th-international-workshop-security-and-privacy-analytics-2018
+
+This is the fourth workshop in the series of workshops on Security and Privacy Analytics. Increasingly, sophisticated techniques from machine learning, data mining, statistics and natural language processing are being applied to challenges in security and privacy fields. However, experts from these areas have had no medium in the past where they can meet and exchange ideas so that strong collaborations can emerge, and cross-fertilization of these areas can occur. Moreover, current courses and curricula in security do not sufficiently emphasize background in these areas and students in security and privacy are not emerging with deep knowledge of these topics. Hence, we propose to continue the workshop that we started in the year 2015 to address the research and development efforts in which analytical techniques from machine learning, data mining, natural language processing and statistics are applied to solve security and privacy challenges (“security and privacy analytics”). Submissions of papers related to methodology, design, techniques and new directions for security and privacy that make significant use of machine learning, data mining, statistics or natural language processing are welcome. Furthermore, submissions on educational topics and systems in the field of security analytics are also highly encouraged.
+
+ 
+
+ 
+Organising Committee
+Dr. Rakesh Verma, Professor, University of Houston
+Shahryar Baki, PhD candidate, University of Houston
+Avisha Das, PhD candidate, University of Houston
+Ayman Elassal, PhD candidate, University of Houston
+Luis Felipe Teixeira De Moraes, PhD candidate, University of Houston
+
+For any more information or issues, contact Ayman Elassal (elaassal.ayman@gmail.com) or Dr. Rakesh Verma (rmverma6@gmail.com)
+
+ 
+
+ 

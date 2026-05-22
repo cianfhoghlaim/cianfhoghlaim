@@ -1,0 +1,450 @@
+landscape logo [LFAI]
++
+Reset Filters
+Grouping
+Sort By
+Category
+Project
+License
+Organization
+Headquarters
+Company Type
+Industry
+Download as CSV
+Example filters
+Open source cards by age Apache-2.0 landscape Cards in categories Cards by stars Group by location Cards by MCap/Funding
+Kubecon + CloudNativeCon Europe 2020
+LF AI & Data Foundation Interactive Landscape
+The LF AI & Data Foundation landscape ( png , pdf ) is dynamically generated below. It is modeled after the CNCF landscape and based on the same open source code. Please open a pull request to correct any issues. Greyed logos are not open source. Last Updated: 2022-09-23T13:30:33.
+You are viewing 330 cards with a total of 2,752,872 stars, market cap of $14T and funding of $19.3B.
+Landscape
+Card Mode
+LF AI & Data Members
+Companies Hosting Projects
+100%
+Machine Learning
+Framework
+Accord.NET
+LightGBM
+Mahout
+ML.net
+Ray
+ZenML
+Platform
+Angel-ML
+Graduated
+ForestFlow
+Incubating
+Alink
+Apache SystemML
+AX
+Cortex
+H2o.ai
+Kubeflow
+Metaflow
+MLFlow
+PredictionIO
+Seldon
+Vowpal Wabbit
+Library
+1chipML
+Sandbox
+AutoGluon
+CatBoost
+Flashlight
+MediaPipe
+mlpack
+Nilearn
+OpenCV
+OpenNN
+PyCaret
+SciKit-learn
+Shogun
+Sonnet
+TransmogrifAI
+XGBoost
+xLearn
+Deep Learning
+Framework
+Apache SINGA
+Chainer
+CNTK
+Dynamic Neural Network Toolkit
+euler
+MindSpore
+MXNet
+ncnn
+PaddlePaddle
+Pythia
+PyTorch
+Tensorflow
+Platform
+TonY
+Incubating
+DeepDetect
+Determined AI
+Jina
+Onepanel
+Polyaxon
+X-DeepLearning
+Library
+BigDL
+Catalyst
+Eclipse Deeplearning4j
+fast.ai
+Keras
+Neural Network Libraries
+PyTorch Ignite
+PyTorch Lightning
+PyTorchVideo
+Tool
+BeyondML
+Sandbox
+BoTorch
+Neural Network Distiller
+Plaid ML
+PyTorch BigGraph
+PyTorch Geometric
+TVM
+Reinforcement Learning
+Reinforcement Learning
+Chainer RL
+Coach
+DeepMind Lab
+Dopamine
+Horizon
+OpenAI Gym
+PlaNet
+SEED RL
+Stable Baselines
+Programming
+Programming
+Pyro
+Graduated
+Kompute
+Incubating
+Dask
+Infer.net
+Julia
+MARS
+Numba
+NumPy
+Nyoka
+Pomegranete
+PyMC3
+Python
+RStudio IDE
+SciPy
+SKIP Language
+Stan
+Data
+Education
+DataPractices
+Incubating
+OpenDS4All
+Incubating
+Lineage
+OpenBytes
+Sandbox
+OpenDataology
+Sandbox
+OpenLineage
+Sandbox
+Relational DB
+CouchDB
+MySQL
+Postgres
+TiKV
+Store & Format
+Milvus
+Graduated
+JanusGraph
+Incubating
+Alluxio
+Apache Iceberg
+Apache ORC
+AresDB
+Arrow
+Avro
+Ceph
+Delta Lake
+Druid
+Hudi
+HugeGraph
+InfluxDB
+pandas
+Parquet
+Pilosa
+VEARCH
+Vespa
+Vineyard
+Versioning
+dotmesh
+DVC
+Quilt Data
+Operations
+Amundsen
+Incubating
+Datashim
+Incubating
+Marquez
+Incubating
+Apache Hive
+CKAN
+DataHub
+great_expectations
+snorkel
+whylogs
+Feature Engineering
+Feast
+Incubating
+Feathr
+Sandbox
+Featuretools
+OpenMLDB
+tsfresh
+Stream Processing
+NNStreamer
+Incubating
+Apache RocketMQ
+Beam
+Brooklin
+faust
+Flink
+Fluentd
+Kafka
+Logstash
+Pravega
+PREFECT
+Pulsar
+Samza
+uReplicator
+SQL Engine
+Apache Drill
+Hawq
+Presto
+SQLFlow
+Trino
+Visualization
+bokeh
+Carbon
+D3 (Data-Driven Documents)
+dash
+deck.gl
+ecco
+Facets
+Grafana
+Metabase
+Prometheus
+RCloud
+redash
+seaborn
+Superset
+TensorBoard
+Pipeline Management
+Artigraph
+Sandbox
+Analytics Zoo
+Apache Oozie
+DAGSTER
+PiFlow
+Tekton Pipelines
+TPOT
+Labeling & Annotation
+Computer Vision Annotation Tool (CVAT)
+doccano
+Label Studio
+Labelbox
+LabelImg
+Semantic Segmentation Editor
+Visual Object Tagging Tool (VoTT)
+Governance
+Egeria
+Graduated
+Community Data License Agreement (CDLA)
+Model
+Inference
+Adlik
+Incubating
+CausalML
+KFServing
+MNN
+TensorRT
+TensorRT Inference Server
+uTensor
+Federated Learning
+FATE
+Incubating
+Substra
+Incubating
+OpenFL
+PySyft
+TensorFlow Federated
+Training
+Horovod
+Graduated
+Ludwig
+Incubating
+Embedded Learning Library
+Petastorm
+TorchRec
+Parameter
+HyperOpt
+Katib
+talos
+Format & Interface
+ONNX
+Graduated
+Neuropod
+Marketplace
+Machine Learning eXchange
+Sandbox
+Acumos
+Archived
+Model Asset eXchange (MAX)
+Workflow
+Flyte
+Graduated
+Kedro
+Incubating
+Apache Airflow
+Apache Nifi
+Argo
+Azkaban
+BentoML
+Cadence
+Couler
+Cyclone
+d6tflow
+Kestra
+Luigi
+mleap
+Orchest
+Prefect
+TRAINS
+Volcano
+Benchmarking
+DAWNBench
+MLPerf
+Tool
+FlagAI
+Sandbox
+AIMET
+Clipper
+dlrm
+FLAML
+MMdnn
+Model Server for Apache MXNet
+ModelDB
+Neo-AI
+Netron
+ONNX Runtime
+Pipeline.ai
+studio.ml
+TensorFlow Model Analysis
+TorchServe
+Turi Create
+Trusted & Responsible AI
+Explainability
+AI Explainability 360 Toolkit
+Incubating
+ALIBI
+ELI5
+InterpretML
+LIME
+Lucid
+SHAP
+Skater
+TreeInterpreter
+Adversarial
+Adversarial Robustness Toolkit
+Graduated
+AdvBox
+Advertorch
+CleverHans
+Foolbox
+Bias & Fairness
+AI Fairness 360 Toolkit
+Incubating
+Aequitas
+Audit AI
+DeepLIFT
+Fainlearn
+Distributed Computing
+Computing & Management
+Elastic Deep Learning (EDL)
+Incubating
+SOAJS
+Incubating
+Apache Ambari
+Apache Bahir
+Apache Mesos
+Apache Ranger
+Apache Spark
+Apache Storm
+Generic Neural Elastic Search (GNES)
+genie
+GraphScope
+Kubernetes
+Nauta
+OpenShift
+Singularity
+Interface
+sparklyr
+Incubating
+Apache Toree
+Livy
+The LF AI & Data landscape explores open source projects in Artificial Intelligence and Data and their respective sub-domains.
+QR Code
+l.lfaidata.foundation
+Landscape Logo LF AI Logo
+Security & Privacy
+Security & Privacy
+Differential Privacy Library
+HE Lib
+SEAL
+TensorFlow Privacy
+TF Encrypted
+Natural Language Processing
+Natural Language Processing
+DELTA
+Incubating
+RosaeNLG
+Sandbox
+ALBERT
+AllenNLP
+Apache UIMA
+BERT
+CoreNLP
+DeepSpeech
+fastText
+Flair
+Gluon-NLP
+Kashgari
+LASER
+Lucene
+MindMeld
+NLP Architect
+OpenNLP
+ParlAI
+PyText
+RASA NLU
+spaCy
+Spark-NLP
+Transformers
+XLM
+YouTokenToMe
+Notebook Environment
+Notebook Environment
+Apache Zeppelin
+BeakerX
+Colaboratory
+Elyra
+IPython
+Jupyter Notebooks
+PixieDust
+Polynote
+rmarkdown
+Stencila
+Streamlit
+Crunchbase data is used under license from Crunchbase to CNCF. For more information, please see the  info.

@@ -1,0 +1,551 @@
+AI and Ethics (2022) 2:477–491 https://doi.org/10.1007/s43681-021-00095-8
+ORIGINAL RESEARCH
+
+Data minimization for GDPR compliance in machine learning models
+
+Abigail Goldsteen1 · Gilad Ezov1 · Ron Shmelkin1 · Micha Moffie1 · Ariel Farkash1
+
+Received: 27 June 2021 / Accepted: 2 September 2021 / Published online: 26 September 2021 © The Author(s), under exclusive licence to Springer Nature Switzerland AG 2021
+
+Abstract
+The EU General Data Protection Regulation (GDPR) and the California Privacy Rights Act (CPRA) mandate the principle of data minimization, which requires that only data necessary to fulfill a certain purpose be collected. However, it can often be difficult to determine the minimal amount of data required, especially in complex machine learning models such as deep neural networks. We present a first-of-a-kind method to reduce the amount of personal data needed to perform predictions with a machine learning model, by removing or generalizing some of the input features of the runtime data. Our method makes use of the knowledge encoded within the model to produce a generalization that has little to no impact on its accuracy, based on knowledge distillation approaches. We show that, in some cases, less data may be collected while preserving the exact same level of model accuracy as before, and if a small deviation in accuracy is allowed, even more generalizations of the input features may be performed. We also demonstrate that when collecting the features dynamically, the generalizations may be even further improved. This method enables organizations to truly minimize the amount of data collected, thus fulfilling the data minimization requirement set out in the regulations.
+Keywords  GDPR · CPRA · Compliance · Data minimization · Privacy · Machine learning · Neural networks · Knowledge distillation
+
+1 Introduction
+The European General Data Protection Regulation (GDPR)1 dictates that “Personal data shall be: adequate, relevant and limited to what is necessary in relation to the purposes for which they are processed”. This principle, known as data minimization, requires that organizations and governments collect only data that is needed to achieve the purpose at
+1  https://​ec.​europa.​eu/​info/​law/​law-​topic/​data-​prote​ction/​data-​prote​ ction-​eu_​en. * Abigail Goldsteen
+abigailt@il.ibm.com Gilad Ezov Gilad.Ezov@ibm.com Ron Shmelkin ronsh@il.ibm.com Micha Moffie moffie@il.ibm.com Ariel Farkash arielf@il.ibm.com
+1 IBM Research, Haifa, Israel
+
+hand. The California Privacy Rights Act (CPRA)2, that supersedes the California Consumer Privacy Act (CCPA) and will be fully operative in 2023, also includes the data minimization principle. Organizations are expected to be able to demonstrate that the data they collect is absolutely necessary, by showing concrete measures that were taken to minimize the amount of data used for a given purpose. Otherwise, they are at risk of violating privacy regulations, incurring large fines, and facing potential lawsuits.
+Advanced machine learning (ML) algorithms, such as neural networks, tend to consume large amounts of data to make a prediction or classification. Moreover, these “black box” models make it difficult to derive exactly which data influenced the decision. This type of algorithm is becoming prevalent in many business-related activities, including business intelligence, marketing, and sales. It is therefore increasingly difficult to show adherence to the data minimization principle.
+The recently published study of the European Parliamentary Research Service (EPRS) on the impact of the General Data Protection Regulation (GDPR) on artificial intelligence3 found that, although AI is not explicitly mentioned
+2  https://​www.​capri​vacy.​org/​annot​ated-​cpra-​text-​with-​ccpa-​chang​es/. 3  https://​www.​europ​arl.​europa.​eu/​RegDa​ta/​etudes/​STUD/​2020/​ 641530/​EPRS_​STU(2020)​641530_​EN.​pdf.
+
+1 3 Vol.:(0123456789)
+
+478
+
+AI and Ethics (2022) 2:477–491
+
+in the GPDR, many of its provisions are relevant to AI, specifically mentioning the principle of data minimization. The authors propose that minimization may require, in some contexts, reducing the ’personality’ of the available data, rather than the amount of such data. In other words, it may require reducing, through technical measures, the ease with which the data can be connected to individuals. The UK information commissioner’s office’s guidance on the AI auditing framework from 2021 [22] also found that the data minimization principle should be applied to ML both at the training and inference stages.
+A large amount of work is being done in the domain of privacy for ML, spanning differential privacy, encryption, and more. In this work, we focus on accomplishing the specific target set out by the regulation, namely reducing the amount of personal data collected to only the data that can be demonstrated as necessary for fulfilling a purpose. If the original purpose was to perform some analysis using an ML model, typically the model owner would not have any desire to reduce the accuracy of the model. Therefore, the goal of our method must be to retain, or get as close as possible to, the accuracy of the original model, while striving to reduce the amount of data collected.
+There may even be cases where all of the collected data is required to achieve the model’s original accuracy; but one is still required to demonstrate that this is the case. However, as we will show in the following sections, in most cases the collected data can be reduced; and in these cases, we demonstrate that individuals’ privacy is also improved. Moreover, reducing the amount of data collected by organizations can bring additional benefits such as storage reduction, cost reduction, and decreased liability.
+We propose a method for data minimization that can reduce the amount and granularity of input data used to perform predictions by machine learning models. It is important to note that we are only concerned with minimizing newly collected data for analysis (i.e., runtime data), not the data used to train the model. Our method does not require retraining the model, and does not even assume the availability of the original training data. It therefore provides a simple and practical solution for addressing data minimization in existing systems.
+The type of data minimization this paper targets is the reduction of the number and/or granularity of features collected for analysis. Features can either be completely suppressed (removed) or generalized. Generalization involves replacing a value with a less specific but semantically consistent value. For example, instead of an exact age, represented by the domain of integers between 0 and 120, a generalized age may consist of 10-year ranges.
+
+In our approach, generalizations are targeted at minimizing model accuracy loss, while incurring the largest possible data loss to increase privacy protection. This is done by taking into account knowledge of the ML algorithm and optimizing the generalizations to minimize their harmful effect on the accuracy of the model.
+The process we employ uses knowledge distillation, where we train a surrogate model to learn the decision boundaries of the target model in a way that helps guide the generalization procedure. We then employ an iterative process that continues to generalize features until it reaches an accuracy threshold, beyond which we are not willing to compromise for the goal of data minimization. Once the generalized feature set is determined, any new data collected for analysis can be generalized as it is being collected, before it is fed into the model, thus achieving data minimization.
+To the best of our knowledge, our contribution is a firstof-a-kind method for adhering to the data minimization principle for ML models. Our method enables minimizing the adverse effect of the minimization on the model’s accuracy, and does not require any changes to the original model. In addition, we propose an extension to this method that allows dynamic collection and minimization of data in a manner determined by the data subject, providing personalized data minimization.
+The remainder of the paper is organized as follows. We provide relevant background information in Sect. 2, present the data minimization procedure in Sect. 3, and offer an evaluation of our method in Sect. 4. A method for dynamic personalized data minimization is presented in Sect. 4.4. We discuss some design choices and alternatives in Sect. 5, present related work in Sect. 6, and conclude in Sect. 7.
+2  Background
+2.1  Data generalization
+The generalization techniques we employ are similar to those used to achieve k-anonymity on datasets [36]. It typically involves finding groups of similar records that can be generalized together to a single value. A generalization of a numeric attribute consists of a range of consecutive values, whereas the generalization of a categorical attribute consists of a sub-group of categories. See below an example, based on a numeric feature with domain [0.0, 4.0] and a categorical feature with possible values {“a”, “b”, “c”, “d”}. In this example there are two non-overlapping clusters, each with a specific generalization of those two features.
+
+1 3
+
+AI and Ethics (2022) 2:477–491
+
+479
+
+{ ”clusterA ”: { ”numericFeature ”: {” s t a r t ”: 0.0 , ”end ”: 1.2} , ” categoricalFeature ”: {” categories ”: [” a” , ”b” , ”d”]} }, ”clusterB ”: { ”numericFeature ”: {” s t a r t ”: 1.3 , ”end ”: 4.0} , ” categoricalFeature ”: {” categories ”: [” c ”]} }
+}
+
+A feature value is considered generalized if it includes more than one possible value in the original domain of the feature. For example, for the numerical feature ‘age’, if an original value could consist of the specific age 37 or 39, then the range 36–40 is a possible generalization for those values. It is less specific, as it includes five different values in the original domain. Similarly, if the categorical feature ‘marital status’ could originally contain any of the specific values ‘never married’, ‘married’ or ‘divorced’, a generalized value could consist of the group ‘never married OR divorced’, which includes two of the original values. This means that when divulging the generalized feature, the data subject gives less detailed information about their age or marital status.
+There are essentially two types of generalizations, global recoding and local recoding. Global recoding means that the ranges for each feature are determined once for the entire dataset, i.e., a particular detailed value must be mapped to the same generalized value in all records. In this case we “force” the same generalizations for the entire domain, which may result in smaller ranges. Local recoding allows the same detailed value to be mapped to different generalized values in different groups. Having different ranges for different areas in the domain usually enables broader generalizations.
+2.2  Information loss metrics
+Many metrics for measuring information loss have been developed. A recent 2018 survey [39] noted 78 distinct metrics, while grouping them into different categories and intended uses. The Classification Metric (CM) [21] is suitable when the purpose of the generalized data is to train a classifier. Each record is assigned a class label, and information loss is computed based on the adherence of a tuple to the majority class of its group. The Discernibility Metric (DM) [5] measures the cardinality of the equivalence class.
+The Generalized Loss Metric [21] and the similar Normalized Certainty Penalty (NCP) [16, 41] are considered more accurate. The latter has the advantage of being able to measure information loss across different datasets. For a
+
+numerical attribute A with domain D, NCP of a generalized range G is defined as:
+
+max(G) − min(G)
+
+NCPA num(G)
+
+=
+
+max(D)
+
+−
+
+. min(D)
+
+(1)
+
+Similarly, for categorical attributes:
+
+0
+
+no generalization
+
+NCPA cat(G) = |values(G)| otherwise
+
+,
+
+(2)
+
+|values(D)|
+
+where |values(G)| represents the number of distinct values in the generalization and |values(D)| represents the number of distinct values in the domain. The NCP score for all generalized attributes is computed using a weighted average:
+
+∑d
+
+NCP(t) = wi ⋅ NCPAi (t),
+
+(3)
+
+i=1
+
+where d is the number of features and t is a specific record. Finally, the Global Certainty Penalty (GCP) can be computed over all instances in a dataset by summing on all records in the dataset:
+
+∑n
+
+GCP = NCP(t),
+
+(4)
+
+t=1
+
+where n is the number of records in the dataset. For more details see [41]. We will use the notation NCP for both the record level score and the complete dataset score.
+
+2.3  Knowledge distillation
+Large-scale deep learning models have achieved overwhelming successes in a variety of applications, including computer vision, natural language processing and more. However, the huge computational complexity and massive storage requirements of these models make it a great challenge to deploy them in real-time applications, especially on devices with limited resources such as mobile devices and embedded systems. To enable more efficient deep models, model compression and acceleration techniques have been developed. One of those techniques is Knowledge Distillation (KD) [18] (also sometimes called model distillation), where the knowledge
+
+1 3
+
+480
+
+AI and Ethics (2022) 2:477–491
+
+from a larger deep neural network is distilled into a smaller network or model. The larger network is often referred to as the teacher and the smaller model as the student.
+This type of method was first introduced in 2006 by Bucilua et al. [7], and was later successfully used in the semisupervised setting, where the student model is trained on unlabeled data [38]. Hinton et al. [20] later coined the term ‘knowledge distillation’, describing a method to compress the knowledge of an ensemble into a single model. More recently, Unceta et al. [37] proposed a framework to copy the functionality of any classifier using no prior knowledge of its parameters or training data distribution.
+The main idea behind this concept is that the student model mimics the teacher model to obtain a competitive, or even superior, performance. Different methods may vary in their distillation algorithm and teacher-student architecture. These techniques were later extended to mutual learning, assistant teaching, lifelong learning and self-learning, as well as additional tasks such as data augmentation [25] and data privacy [29, 40].
+In this paper we use the concept of knowledge distillation to create a surrogate univariate decision tree model that enables to determine how the data can be generalized in a way that minimizes the harmful effect on the original model’s accuracy.
+3  Data minimization process
+The process starts with an existing machine learning model (called the target model), and a dataset consisting of records along with the target model’s predictions for them. The target model’s predictions are used as the labels for our learning process. We later refer to this labeled dataset as the training dataset, however it is important to note that it does not necessarily have to be the same dataset that was used to train the target model. The main reason for this decision is that the original labeled training data may no longer be available, whereas generating predictions for some (unlabeled) dataset given an existing model is simple. Moreover, the target model may have learned some very complex structures, but learning its “decision boundaries” might be easier. If the original training data is available, it can of course be used.
+Our goal is to use the model’s predictions to guide the creation of groups of similar records as a basis for the generalization process; in this way, we get a generalization that is tailored to the model. Throughout the remainder of the paper, we refer to these groups as clusters. Since there is an inherent trade-off between the level of generalization of the data and the resulting accuracy, the desired (target) accuracy must also be supplied. This may be equal to the target model’s accuracy, if no degradation is allowed, or a percentage of deviation from the original accuracy.
+
+This process is typically performed after applying “regular” feature selection that chooses the most influential features for the model. This process may use any known feature selection techniques, as would be normally applied for that type of model. Our method may also be applied without any prior feature selection for models in which it is not typically applied (such as neural networks).
+The result of the process is a generalization of the input features, as exemplified in Sect. 2.1. Some features may be completely suppressed, and others may be generalized. The process does not involve retraining the target model or making any changes to it; the generalizations are only applied to newly collected data for analysis. Thus, it is particularly suited for existing ML models.
+Our basic implementation yields a global recoding of the data. Later in this paper we discuss how other types of generalizations can be achieved.
+As presented in Sect. 2.2, there are several different quality metrics that can be used to measure the degree of generalization (or privacy) of a dataset. We chose to use the NCP metric ([16]) to measure the quality of the resulting generalization. This metric basically looks at the sizes of the generalized ranges relative to the original feature domain, averaging this score across all records in the dataset. Since our goal is to maximize privacy preservation within the given accuracy constraints, in our case high information loss (NCP) is a desired quality. We did not use weights for the different features; in Sect. 5, we elaborate on how different feature weights may be used.
+3.1  Generalizer training
+The complete minimization process is presented in Fig. 1. We start by training a generalizer model on the training dataset (labeled with the target model’s predictions), i.e., we train a model to predict the target model’s predictions. The goal of this model is to learn the “decision boundaries” of the target model, or distill its knowledge.
+We chose to use a univariate decision tree as the generalizer model, since the splits that the tree creates on each internal node can be used as a basis to determine the generalized ranges. We use the leaf nodes of the tree as our groups of similar inputs and create the generalizations based on the decisions on the tree path leading to each leaf (features that are not needed to arrive at a specific leaf may receive any value.) Note that a univariate decision tree will always create feature range boundaries that are straight lines, parallel to the axes. In Sect. 5, we discuss other generalizer models that can be used instead of a decision tree, especially for cases where a decision tree may not be powerful enough to account for the complexity of the target model.
+
+1 3
+
+AI and Ethics (2022) 2:477–491
+Fig. 1  Complete minimization process Fig. 2  Example decision tree
+
+481
+Since the goal is to find the best generalization without harming the model’s accuracy, we start by generating a decision tree with homogeneous leaves. Each leaf contains only inputs that generate the same prediction in the target model. We then derive the initial set of generalizations by combining all split values of each feature from the tree’s internal nodes. For example, for the tree depicted in Fig. 2, the Age feature would be divided into the following ranges: [< 25, 26 − 35, 36 − 70, > 70] and the Income feature to these ranges: [<20,000, 20,001–32,000, 320,001–40,000, >40,000].
+After the initial set of generalized features is obtained, we apply the generalizations to the test data (we explain how later in this section) and check the accuracy of the target model on it. We measure the relative accuracy, i.e., what percentage of the original predictions are retained when applying the model to the generalized data. Based on the relative accuracy measured, a decision is made on whether to continue the process or not. If the accuracy threshold is reached, the generalizations derived directly from the
+
+1 3
+
+482
+
+AI and Ethics (2022) 2:477–491
+
+generalizer model are used. If the accuracy is lower or higher than the desired threshold, we proceed to perform additional steps to improve either the accuracy or the generalization. At the end of each such iteration, the resulting accuracy is again measured by applying the current generalization to the test.
+If the achieved accuracy is higher than the threshold, we employ a step to improve the generalization. This is done by iteratively pruning the decision tree, i.e., going up from the leaves to higher nodes in the tree. Each such pruning effectively removes (at least) one split value for one of the features, combining two lower level ranges into a single range and reducing the overall number of ranges for that feature. In our implementation we did not use any sophisticated means to choose which nodes to prune. The algorithm simply goes up one level in the entire tree simultaneously. We continue to rise in the tree, one level at a time, until we reach the root node or until the accuracy threshold is met. Alternative pruning strategies are discussed in Sect. 5.3.
+If the achieved accuracy is lower than the threshold, we employ a step designed to improve the accuracy by removing features from the generalization. This means that instead of generalizing it, the feature will be left unchanged. For this step, we define an additional metric called ILAG, inspired by the score function from [15]. In their case, the authors’ goal was to maximize the information gain for each unit of anonymity loss. We adapted this to our setting, where we seek to maximize the information loss (NCP score) for each unit of accuracy gain. We define ILAG for a feature f as:
+
+ILAG(f ) =
+
+NCP(f ) , if AccuracyGain(f ) ≠ 0
+
+AccuracyGain(f )
+NCP(f ), otherwise
+
+. (5)
+
+This is the measure we seek to maximize in our algorithm. In each iteration, we choose the feature with the lowest ILAG score and remove it from the generalization. This step repeats until all features are removed or until the accuracy threshold is met.
+To check the target model’s accuracy on generalized data without making changes to the model, each test sample must be mapped to a concrete, representative point in the domain of the original features. The idea is to map all records belonging to the same cluster (leaf node) to the same representative value. We thus achieve generalization by mapping multiple different original values to the same concrete value. The choice of representatives may greatly affect the method’s performance. As the representative value, we chose to use an actual point closest to the median of the cluster, that the model classifies as the majority class for that cluster.
+The minimization process eventually yields a minimal dataset required to achieve the required level of accuracy. The output is a set of generalized feature ranges tailored to a specific ML model. This set of generalized features can be used whenever collecting new data for analysis. For more
+
+details on the data minimization algorithm, please refer to the code available on github.4
+3.2  Applying generalizations to newly collected data
+Once the generalized feature set is determined, there are several ways to collect new data for classification. The first option is to simply use the feature ranges computed as described in the previous section (by combining all split values in the tree for each feature). This results in a global recoding of the data, i.e., each feature has a predetermined set of ranges. This is especially useful when explicitly collecting data from users, as in a form. Using this approach, the user whose data is collected never actually divulges their exact data, only the relevant ranges.
+A second option is to employ a minimization procedure. This is a piece of code that maps original data points to generalized data points, depending on the cluster to which the data point belongs. This piece of code can run at the endpoint where data is collected and immediately generalize the raw data before sending it to analysis; for example, on a server or cloud. Such a minimization procedure can result in a local recoding of the data, thus potentially enabling better generalizations.
+The advantage of the first option is that the minimization is more transparent to users. At no point do they disclose their exact information, so they can be sure it is never used. However, the level of generalization achieved (for the same accuracy level) will be lower than when employing the second option.
+In Sect. 4.4 we present a third, more advanced approach that dynamically determines the ranges presented to the user.
+Note that the NCP scores presented in Sect. 4.2 were computed assuming the global recoding generated by the basic algorithm. Applying the minimization procedure or dynamic minimization would likely improve the information loss.
+4  Evaluation
+4.1  Methodology
+Our evaluation method consists of the following steps. First, we select a dataset and train one or more target models on it (first applying feature selection where relevant). We consider the resulting model and its accuracy as our baseline. We then perform the data minimization process described in Sect. 3 and apply the resulting generalizations to a validation set. Finally, we measure the accuracy of the target model on the
+4  https://​github.​com/​IBM/​ai-​priva​cy-​toolk​it.
+
+1 3
+
+AI and Ethics (2022) 2:477–491
+Table 1  Summary of datasets used for evaluation
+
+483
+
+Dataset
+
+Total rows Rows used Total attrs Attrs used Cat Label
+
+Adult
+
+48,842
+
+48,842
+
+14
+
+12
+
+Nursery
+
+12,960
+
+12,958
+
+8
+
+8
+
+GSS
+
+51,020
+
+24,455
+
+8
+
+8
+
+Loan
+
+421,095
+
+421,095
+
+144
+
+43
+
+7
+
+Income
+
+7
+
+Nursery
+
+6
+
+Marital happiness
+
+11
+
+Loan status
+
+generalized data. In addition, we compute the information loss achieved by the resulting generalization as a measure for how well the data was generalized: the higher the information loss, the better for our purpose.
+We evaluated our method using four openly available datasets: Two UCI datasets [11], the Adult dataset5, an excerpt of the 1994 U.S. Census database, which is widely used to evaluate anonymization and generalization techniques; and the Nursery dataset6, derived from a hierarchical decision model developed to rank applications for nursery schools in Slovenia, which was used by Bild et al. [6] to compare approaches for differentially private statistical classification. Additionally, we used the GSS marital happiness dataset, a subset of the GSS data created by Joseph Price to study various societal effects of pornography [10], used by Fredrikson et al. [13] to evaluate the effectiveness of a model inversion attack. To show that our approach works well for data with a larger number of attributes, we also used the Loan dataset, an excerpt of the Lending Club loan data7 from 2015.
+A summary of the characteristics of each dataset is presented in Table 1. For each dataset the table shows: the number of records in the downloaded data, the number of records actually used, the number of features in the downloaded data, the number of features used (before applying feature selection as part of the training process), the number of categorical features, and the label feature. Note that we removed records that did not have a value for the label feature (which was the case for almost half of the records in the GSS dataset) or whose label value was too scarce (the ’recommend’ label in the Nursery dataset). We also removed non-numeric features with too many distinct values (e.g., free-text), features with more than 50% missing data and features with too high a correlation with the label (such as ’settlement_amount’, ’settlement_date’, ’settlement_status’, etc. in the Loan dataset).
+For each dataset we trained three types of classifiers: Random Forest classifier (rf), Gradient Boosting classifier (gb), and Neural Network (nn). Each of these uses the default
+5  https://​archi​ve.​ics.​uci.​edu/​ml/​datas​ets/​adult. 6  https://​archi​ve.​ics.​uci.​edu/​ml/​datas​ets/​nurse​ry. 7  https://​www.​lendi​ngclub.​com/​info/​downl​oad-​data.​action.
+
+scikit-learn8 implementation with default parameters (i.e., random forest with 100 estimators, gini entropy and no max depth, gradient boosting classifier with 100 estimators and deviance loss, and MLP classifier with 1 hidden layer and 100 neurons, relu activation, adam optimizer and 0.001 learning rate). The classifiers’ baseline accuracy for each of the datasets is brought in Table 2.
+Each dataset was divided into four separate subsets, used to: (1) train the target model, (2) train our generalizer decision tree model, (3) optimize the resulting generalization (choosing what level in the tree and which features to use in the generalization), and (4) final validation. We used a separate dataset to train our generalizer decision tree model because we did not want to assume the availability of the original training set. Finally, validation was performed by measuring the relative accuracy of the classifier on the generalized data, i.e., what percentage of the original predictions are retained when applying it to the generalized data. More information about the experimental setup can be found in Appendix A.
+4.2  Results
+In this section, we present the results of applying our minimization process to the above-mentioned datasets and models. Each graph presents the relative accuracy on the generalized data as a function of the achieved NCP score. NCP values are between 0 and 1, and represent the degree of information loss: 0 signifying that no information was lost, i.e., preserving the original data, and 1 signifying that all information was lost, i.e., all samples were mapped to the same representative value. Accuracy was measured as a percentage relative to the accuracy of the baseline model. 100% signifies that all predictions made on the generalized
+
+Table 2  Initial accuracy of models used for evaluation
+
+Dataset
+
+Random forest
+
+XGBoost
+
+Neural Network
+
+Adult Nursery GSS Loan
+
+88.08 97.37 62.34 97.8
+
+85.61 97.84 68.11 92.91
+
+84.56 98.61 67.49 93.48
+
+8  https://​scikit-​learn.​org/​stable/.
+
+1 3
+
+484
+
+AI and Ethics (2022) 2:477–491
+
+(a)
+
+(b)
+
+Fig. 3  Results for different models and datasets: a Accuracy vs. NCP for different datasets using Neural Network model b Accuracy vs. NCP for different models on GSS data
+
+(a)
+
+(b)
+
+(c)
+
+Fig. 4  Results for nursery, adult and loan datasets
+
+data were identical to those made on the original data. The reason for using the target model’s accuracy as the baseline is that we do not aim to improve on the predictions of the target model, only to get as close to them as possible. In addition, true labels may not be available in all cases.
+Figure 3a presents a comparison of the results for the different datasets when using a neural network model. The remainder of the graphs show the results for a single dataset, comparing the different tested models. Figure 3b presents the results for the GSS dataset and Fig. 4 presents the results for the other datasets.
+The most interesting insight to take from these results is that, in almost all cases, it is possible to “lose” some information (i.e., generate an NCP score > 0 ) without losing any accuracy. This is represented by the horizontal section at the top of the graph, close to the 100% line. The
+
+longer this horizontal section, the more information can be lost. In case of the GSS dataset, an impressive 1/6–1/5 information loss can be achieved in all tested models. For the other datasets, this ranges between 0.05 and 0.1.
+Next we present a few examples of generalizations that were achieved. We show the generalizations both for the case of no accuracy loss at all, as well as the case where a 2% relative accuracy loss is acceptable. Table 3 presents the achieved generalizations for the GSS dataset, using a neural network model.
+Here we can see that, for the GSS data, even if no accuracy loss is allowed at all, there is still one feature that was identified as not needed and one that was generalized (from four possible categories to only two). If a mere 2% relative accuracy loss is allowed, three more features can be generalized, leaving only two features with their original values.
+
+1 3
+
+AI and Ethics (2022) 2:477–491
+Table 3  Example of generalizations for the GSS dataset
+
+485
+
+Feature
+Marital status Happiness Race Work status
+Age Children X rated NCP value
+
+2% Relative accuracy loss
+
+No accuracy loss
+
+Not needed [Pretty happy, Not too happy, Other], [Very happy] [Black, Other], [White] [Temp not working, Unemployed - laid off, School, Other], [Work-
+ing fulltime], [Keeping house], [Retired], [Working parttime] 54 ranges representing values 0–89 Not generalized Not generalized 0.189703
+
+Not needed Same as 2% Not generalized Not generalized
+Not generalized Not generalized Not generalized 0.174658
+
+4.2.1  Discussion of results
+Several aspects of these results are worth noting. First, even when reaching an NCP score of 1, where all features are generalized to the entire domain of the feature, we do not see a drop of the model accuracy below 33%, in some cases it even remains at 80%. This “null accuracy” represents the accuracy that can be achieved by always predicting the most frequent class. Similarly, we are always able to reach 100% relative accuracy. This is because, in the worst case, we revert back to the original data. But it is important to note that cases exists where we are able to reach 100% even with some generalization. This illustrates the capability of our approach to identify information that is not necessary and generalize it without impacting accuracy.
+Second, we can see that this method performs best for gradient boosting models and worst for random forest models in most of the tested datasets, regardless of the original accuracy of each model. We believe this is related to the size and complexity of the generated decision tree. Typically, the decision tree generated for the gradient boosting model is much smaller and has fewer branches compared to the other models. In general, any ML model that is too complex tends to overfit the training data and end up being less accurate. When concentrating on the most relevant area of up to 2% relative accuracy loss, all models perform similarly, resulting in close NCP values (for each given dataset).
+Third, there is also a noticeable difference between datasets, with the GSS dataset achieving the best results and the Loan dataset the worst results. One of the reasons that may lead to a higher NCP score could be the prevalence of categorical features, especially those with a small number of categories. Any generalization of such a feature will automatically have a significant effect on the overall NCP score. Numerical features have a higher degree of freedom, resulting in a larger number of ranges, thus yielding a lower NCP score. In addition, in the GSS dataset, one feature was discovered not to be needed at all, which also contributed to its higher NCP score. Looking at the resulting generalizations we observed that the datasets with better results usually have
+
+several generalized categorical features. In the Loan dataset, only numeric features were generalized, and those have a relatively large number of ranges. Other characteristics of the dataset that may come into play are the size of the dataset and the total number of features, the Loan dataset being the largest both in terms of records and number of features.
+The fourth aspect to notice is that in almost all datasets and models, there is a large initial dip in accuracy, that later becomes more moderate. This is because in the initial iterations of tree pruning, there is a relatively small to nonexistent increase in the NCP score. This can be explained by either: (1) pruning splits that are redundant, for example in cases where the same split on the same feature also appears in another branch or level of the tree, and thus has no effect on the resulting generalization; or (2) pruning nodes that affect a very small number of samples.
+Lastly, we observe that in the Loan dataset the accuracy goes up at some point while increasing the NCP score, before going back down. This may be an indication that in this dataset, for some features, generalizing the feature to a smaller domain actually has a positive effect on the model’s accuracy, as suggested by previous works on feature abstraction [2].
+4.3  Effect on disclosure risk
+Although our main goal is compliance with the data minimization principle, we decided to measure how the generalizations we produce affect the disclosure risk of the resulting dataset. Disclosure risk can be defined as the risk that an adversary can use the protected (generalized) dataset to derive confidential information on an individual from the original dataset. This risk would be relevant, for example, if an attacker were able to get hold of the generalized data stored within the organization. Disclosure risk can be divided into two types: identity disclosure, i.e., identifying a specific individual’s record in the data, and attribute disclosure, which means inferring sensitive (non-disclosed) information about an individual. Most of the literature deals with the former kind.
+
+1 3
+
+486
+
+AI and Ethics (2022) 2:477–491
+
+Several metrics for measuring disclosure risk have been proposed; we chose the one described in [42], with a small variation: instead of referring to a sub-set of quasi-identifiers, we use all available features; and since we do not have a specific value of k, we simply sum the probability of each record’s specific combination of feature values appearing in the dataset over all records in the dataset. We therefore used the following formula to calculate the risk of a dataset PT:
+
+∑
+
+1
+
+Risk = r∈PT freq(r) ,
+
+(6)
+
+#(r)
+
+where r denotes a single record and freq(r) denotes the frequency of the specific combination of feature values in r. This risk score takes values between 0 and 1, with 1 corresponding to the case where all records in the dataset are unique.
+We measured this risk for three datasets: the two generalized datasets corresponding to the results presented in Table 3, and the original GSS dataset. For the original GSS dataset, with no generalizations applied, there were 2085 distinct records out of 2446 total records in the validation set, corresponding to a risk score of 0.788. The generalized dataset corresponding to no accuracy loss contains 2054 distinct records and has a risk score of 0.771; only slightly lower than the original data. However, when looking at the dataset that was generated with 2% accuracy loss, the result is much more remarkable. It contains only 222 disctinct records and has a risk score of 0.047; a very significant reduction, of more than an order of magnitude, in the disclosure risk. This demonstrates that our method has value in protecting individuals’ privacy in addition to helping companies comply with regulations.
+
+4.4  Personalized data minimization
+
+In this section we introduce an additional approach to apply generalizations on newly collected data, namely dynamic generalization. Once the generalized feature set has been determined by the basic process (described in Sect. 3 and data is being collected from a certain user, the actual generalized value of a certain feature can be used to dynamically improve the generalizations for the remaining features. This is possible because a feature’s generalizations may have been restricted by domains that are no longer relevant.
+Let’s look at an example, presented in Fig. 5. In this example there are two features, age and gender, and four possible labels colored red, yellow, green, and blue. The generalizations produced by the non-dynamic procedure are depicted by the black lines. Without any prior information, the data subject would need to reveal his/her age in a fiveyear range and exact gender. However, if gender is collected first, the generalizations for age are improved from four to
+
+Fig. 5  Example data for dynamic generalization
+three ranges, and, in some cases, only a 10-years range is required. For example, a female user may reveal her age in the range of 20–30 years old. Alternatively, if we ask for age first, in some cases the gender may not be needed at all. For example, a 35–40 year old person would not be asked to reveal their gender, since it is not needed to determine their class (in this case blue).
+This approach can be carried out while collecting new data from a data subject, for example using a dynamic form. In the beginning, the user is presented with a form containing all required features alongside the proposed ranges or subsets of values for each. Each time the user chooses the appropriate generalized value for a feature, a process is triggered to calculate new, improved generalizations for the remaining features. Generalizations presented to the user are thus dynamically updated based on the user’s input for previous features.
+The order of filling in the feature values may be determined by the user. By first revealing the values of features the user finds less sensitive, the more sensitive features gradually become more generalized or even not required at all. In this manner, we achieve a truly personalized data minimization, allowing different users to reveal more or less about different aspects of their lives based on their own personal preference. Another alternative is to allow the organization collecting the data to decide the order of the features, for example based on cost.
+Note that in some cases, when applying dynamic generalization, it may be beneficial to avoid (or limit) regular feature selection before applying the generalization process. Feature selection that does not take into account the user’s (or organization’s) preferences regarding the choice and order of features may end up throwing out features that are not especially sensitive or problematic to collect, leaving the more sensitive or problematic features. It may therefore be preferable to let the user or organization choose from all available features, thus allowing them maximum flexibility.
+Table 4 shows the results of applying the dynamic process on the adult dataset using a Neural Network model (without
+
+1 3
+
+AI and Ethics (2022) 2:477–491
+
+487
+
+Table 4  Example of applying dynamic generalization on the adult dataset
+
+Feature
+
+Non-dynamic generaliza- Dynamic generalization tion
+
+Education years 14.5 < value ≤ 15.5
+
+Capital gain 3897.5 < value ≤ 4225.0
+
+Capital loss 836.0 < value ≤ 1457.0
+
+Hours per week 41.5 < value ≤ 44.5
+
+Marital status 6 categories
+
+Age
+
+50.5 < value ≤ 58.5
+
+Work class
+
+7 categories
+
+Occupation
+
+11 categories
+
+Relationship 3 categories
+
+Native country 8 categories
+
+Race
+
+Not needed
+
+Sex
+
+Not needed
+
+NCP value
+
+0.5
+
+Same as non-dynamic value ≤ 4533.0 value ≤ 1534.0 41.5 < value ≤ 49.0 Same as non-dynamic Not needed Not needed Not needed Not needed Not needed Not needed Not needed 0.7
+
+first applying feature selection). We simulated a user filling in values for the features one by one, in the following order: education years, capital gain, capital loss, work hours per week, and marital status. The process ended with a classification after revealing only these five features, instead of ten in the non-dynamic process. Moreover, generalizations for three of the features were dynamically improved, and the NCP score (for that single record) increased from 0.5 to 0.7. For categorical attributes, the number of categories grouped together in the generalization is displayed.
+Note that the NCP values presented in Table 4 were computed on a single record and not across a complete dataset. This is just an exemplary value and is not meant to represent the general case.
+5  Discussion
+In this section we discuss some design choices made in our solution, alternatives that were considered and possible optimizations for the future.
+5.1  Choice of privacy metric
+There are many different privacy metrics used for different purposes in the literature. We tried to choose a metric that was suitable for measuring the quality of a generalization. Since generalizations are typically employed in anonymization algorithms, we surveyed several metrics used in previous anonymization-related works and chose the NCP metric to measure the quality of generalizations.
+We also demonstrated in Sect. 4.3 that our proposed process can significantly improve the disclosure risk of the
+
+resulting data, thus providing improved privacy to the relevant individuals. It is worth noting that the NCP metric (and ILAG score) can easily be replaced with another privacy or information loss metric, while retaining the overall framework described in Sect. 3.
+NCP also has a weighted variant, presented in [41], which can be used to assign weights to the different features, thus increasing the effect of certain features over others in the quality measurement. This could be used to assign weights to features based on their sensitivity level and steer the generalization process towards results that prefer better generalizations of the more sensitive features.
+5.2  Alternative generalization models
+In this study we used a univariate decision tree as the generalization model. Decision trees inherently create a global recoding of the feature space, which can be very convenient for presenting ranges to users. However, it is reasonable to assume that some ML models will be difficult to mimic using a simple decision tree, especially in cases of highly complex, non-linear models, such as deep neural networks. It is therefore important to consider alternative generalization models. One such alternative could be based on clustering methods.
+5.3  Optimizing the tree pruning and feature removal processes
+In our implementation, we used the ILAG measure to decide which features to remove from the generalization for cases where the accuracy achieved is below the defined threshold. The phase where the tree is pruned to achieve better generalizations could also be improved by using more sophisticated means to decide which nodes to prune, either using standard tree pruning techniques [23] or using the ILAG measure to determine which leaves to prune.
+Other parameters that affect the building of the decision tree could also be explored, including the split criterion and splitting strategy employed, limiting the depth of the tree, the number of leaves or the number of samples in each leaf. These could all potentially be optimized to lead to better generalizations.
+The sensitivity level of each feature can also be considered when when selecting features for removal or tree nodes for pruning. To this aim, we could employ a weighted variant of NCP that takes this information into account while optimizing the generalization process. We could even combine the two directions, pruning and removing features from the generalization, optimizing on both simultaneously to yield better results. Other methods for increasing the accuracy can also be explored, such as splitting one or more ranges instead of completely removing a feature from the generalization.
+
+1 3
+
+488
+
+AI and Ethics (2022) 2:477–491
+
+5.4  Privacy‑guided building of decision trees
+In our implementation, we trained a regular decision tree, then applied privacy-related metrics (such as information loss) to the resulting tree to find good generalizations of the data. Clearly, the more splits a tree contains for a certain feature, the greater number of ranges it will have in the resulting generalization. Using the features’ sensitivity measure as additional input when constructing the tree, we might have ended up with a better generalization for the sensitive features. Replacing the Gini index or Information Gain metric used when deciding what split to create with a metric that takes into consideration the sensitivity level of features, such as the method described in [17], could result in such an improvement.
+5.5  Minimization of training data
+The approach outlined in this paper does not change the training data or the trained model, rather it only affects new data collected for analysis.
+If the target model is retrained some time after the generalization process was performed, it is recommended to retrain the generalizer as well and derive new generalizations that are best suited for the new model. It is of course possible to continue using the same generalizations, however the model’s accuracy may be somewhat affected.
+If the ML model needs to be retrained from time to time on fresh user data, it is also possible to use the collected and generalized data to retrain the model. In theory, since the generalizations were chosen such that the accuracy of the model is not degraded, using it for training should also not degrade the model’s accuracy too much, unless there is a significant drift in the data’s distribution. We leave validation of this approach to future work. If a significant data drift is however probable, we recommend starting the process from scratch, i.e., collecting the complete data for training a new model, and deriving new generalizations from that model.
+6  Related work
+A great body of prior work has focused on protecting the privacy of training sets used to train ML models. Several attacks were shown to be able to reveal either whether an individual was part of the training set (membership attacks) or infer certain possibly sensitive properties of the training data (attribute inference attacks) [14, 13, 32, 33]. Therefore, many methods have been proposed to anonymize or de-identify the training data, including tailored anonymization of training data [21, 26], adding noise or applying differential privacy to the training process [43, 1, 29], and many more. However, all of these techniques are aimed at protecting the
+
+training set and do not provide any protections for runtime data, i.e., newly collected data to which the model is applied.
+Another focus area has been performing training and/ or prediction on encrypted data [8, 44, 4, 19]. These approaches do not solve the issue of collecting less data to begin with. They simply offer better protection for the data that is already collected and stored.
+Other works have focused on feature selection and dimensionality reduction, also called feature extraction [27]. These are aimed at fulfilling the principle of parsimony by reducing the number of features used as input to the model. However, they do so mainly to improve the performance and memory footprint of the model, not with privacy in mind. These methods sometimes produce a reduced set of features, but they cannot reduce the granularity of the collected data. Embedding is another method to achieve dimensionality reduction for high-dimensional data, the most famous being LLE [31] and word2vec [28].
+Feature abstraction [2, 35] can also be used for the purpose of dimensionality reduction. These methods sometimes result in different abstraction levels of the original features. Until now, such techniques have been employed with the goal of improving model accuracy and not privacy. Feature discretization [12, 24] is concerned with the discretization of continuous features.
+More recently, the domain of knowledge distillation [18] has been established, that includes a set of techniques for compressing large, complex models to more compact, less resource-intensive models, that can run for example on devices with limited resources. Many of those techniques are based on teacher-student architectures, where a small student model learns from a larger teacher model.
+Techniques for increasing explainability of models by extracting comprehensible, symbolic representations from trained neural networks are also often based on inducing a decision tree that approximates the concept represented by the network [9]. Similarly, assessing the interpretability of ML models [34] may also involve creating explanatory (surrogate) models that are more interpretable than the target model and then measuring the fidelity between the explanatory model and the predictive model. Typically, decision trees are used as surrogate models in this context.
+Pratesi et al. [30] proposed a system enabling a privacyaware ecosystem for sharing personal data. It is based on assessing both the empirical privacy risk associated with users represented in the data, and the data quality guaranteed only with users not at risk. They enable the data provider to select a transformation that yields an adequate tradeoff between data quality and privacy risk. Bakker et al. [3] propose a framework for limiting the amount of data collected in a data acquisition scenario, by redistributing the budget across individuals in a way that ensures fairness of the resulting model.
+
+1 3
+
+AI and Ethics (2022) 2:477–491
+
+489
+
+Finally, the UK information commissioner’s office’s guidance on the AI auditing framework from 2021 [22] finds that the data minimization principle should be applied both at the training and inference stages, and suggests converting personal data into less ‘human readable’ formats, making inferences locally and privacy-preserving query approaches as possible solutions for inference time data minimization. However, none of these approaches consider that less information may be collected to begin with, while still enabling the model to make predictions with the same (or very close) level of accuracy.
+7  Conclusion and future work
+In this work we presented a novel method to perform data minimization for ML models in a manner that minimizes the effect on model accuracy. Our approach is complementary to standard feature selection and extraction techniques: in addition to suppressing certain features, it can lead to the generalization of other features, thus further reducing the amount and granularity of collected data. This both helps organizations to adhere to the data minimization principle, as well as reduce data collection, storage, and management costs.
+Data minimization also helps to prevent unfair data collection practices such as excessive collection or retention of data, as well as reduce the personal risk to data subjects in case of a data breach. Generalizing the input data to models could also potentially help prevent prediction bias or other forms of discrimination, leading to more fairness-aware or discrimination-aware data mining practices.
+Our method is generic and can be applied to any dataset and any ML model, although the experiments shown in this paper cover only classifiers. We have shown that our method was able to achieve good results—finding data to minimize without impacting accuracy—on different types of classification models. Evaluation on other types of models (e.g., regression, generation, etc.) is left for future work.
+The main limitation of this work is that there is no guarantee that any generalization can be performed without harming the model’s accuracy. There may indeed be cases where no possible generalizations are found. However, it is still important for compliance purposes to be able to demonstrate that such an analysis has been performed.
+Another shortcoming could be the simplicity of the surrogate model used, i.e., univariate decision trees. This may be too simplistic a model to be able to accurately depict the complex trends learned by a deep neural network. To solve this issue we propose to investigate the use of additional types of surrogate models, as discussed in Sect. 5.2.
+This is a very initial implementation of data minimization for ML, leaving many areas of possible improvement. These
+
+include for example further optimization of the tree pruning and feature removal processes (described in Sect. 5.3) as well as using the features’ sensitivity measure as additional input when constructing the generalization model (detailed in Sect. 5.4).
+Additional areas for future research may also include looking at other techniques from the domains of knowledge distillation and model explainability and interpretability for the purpose of data minimization. Another direction could be to look at techniques for generating adversarial examples as an alternative way to discover the decision boundaries of a model. This could be useful, for example, for extending this research into non-tabular data. Finally, data minimization for ML model training data may also be an interesting avenue of research.
+Appendix
+A Experimental setup
+A.1 Features
+List of features used in adult dataset: age, workclass, education-num, marital-status, occupation, relationship, race, sex, capital-gain, capital-loss, hours-per-week, native-country.
+List of features used in nursery dataset: parents, has_nurs, form, children, housing, finance, health, social.
+List of features used in GSS dataset: work_status, marital_status, children, age, gender, race, happiness, x_rated.
+List of features used in Loan dataset: loan_amount, funded_amount, investor_funds, term, interest_rate, installment, grade, sub_grade, emp_length, home_ownership, annual_income, verification_status, pymnt_plan, purpose, zip_code, dti, delinq_2yrs, inq_last_6mths, mths_since_ last_delinq, mths_since_last_record, open_acc, pub_rec, revol_bal, revol_util, total_acc, initial_list_status, out_ prncp, out_prncp_inv, total_rec_int, total_rec_late_fee, last_ pymnt_amnt, collections_12_mths_ex_med, policy_code, application_type, acc_now_delinq, chargeoff_within_12_ mths, delinq_amnt, tax_liens, hardship_flag, disbursement_ method, year, earliest_cr_year, region.
+A.2 Pre‑processing
+Pre-processing applied to adult dataset: the native-country feature was transformed to the following areas: Euro_1 (Italy, Holand-Netherlands, Germany, France), Euro_2 (Yugoslavia, South, Portugal, Poland, Hungary, Greece), SE_Asia (Vietnam, Thailand, Philippines, Laos, Cambodia), UnitedStates (United-States), LatinAmerica (Trinadad&Tobago, Puerto-Rico, Outlying-US(Guam-USVI-etc), Nicaragua, Mexico, Jamaica, Honduras, Haiti, Guatemala,
+
+1 3
+
+490
+
+AI and Ethics (2022) 2:477–491
+
+Dominican-Republic), China (Taiwan, Hong, China), BritishCommonwealth (Scotland, Ireland, India, England, Canada), SouthAmerica (Peru, El-Salvador, Ecuador, Columbia), Other (Japan, Iran, Cuba), Unknown (?).
+Pre-processing applied to loan dataset: the addr_state feature was transformed to the following regions: west (CA, OR, UT, WA, CO, NV, AK, MT, HI, WY, ID), south_west (AZ, TX, NM, OK), south_east (GA, NC, VA, FL, KY, SC, LA, AL, WV, DC, AR, DE, MS, TN), mid_west (IL, MO, MN, OH, WI, KS, MI, SD, IA, NE, IN, ND), north_east (CT, NY, PA, NJ, RI, MA, MD, VT, NH, ME). For the label column, the following loan_status values were considered a bad loan: Charged Off, Default, Does not meet the credit policy. Status: Charged Off, In Grace Period, Late (16–30 days), Late (31–120 days). The rest were considered good.
+Missing values were filled with 0 or ’NA’ according to the feature type (numeric or categorical) in all four datasets. All categorical features in all datasets were one-hot encoded.
+A.3 Dataset division
+Each dataset was divided into four subsets according to the following percentages: 40% for training the target model, 30% for training the generalizer model, 20% test data for optimizing the generalization and 10% for final validation.
+Declarations 
+Conflict of interest  The authors declare that they have no conflict of interest.
+References
+1. Abadi, M., Chu, A., Goodfellow, I., McMahan, H.B., Mironov, I., Talwar, K., Zhang, L.: Deep learning with differential privacy. In: Proceedings of the ACM SIGSAC Conference on Computer and Communications Security (CCS), Association for Computing Machinery, New York, NY, USA, pp. 308–318 (2016). https://d​ oi.​ org/​10.​1145/​29767​49.​29783​18
+2. Alkabawi, E.M., Hilal, A.R., Basir, O.A.: Feature abstraction for early detection of multi-type of dementia with sparse autoencoder. In: 2017 IEEE International Conference on Systems, Man, and Cybernetics (SMC), pp. 3471–3476 (2017). https://​doi.​ org/​10.​1109/​SMC.​2017.​81231​68
+3. Bakker, M.A., Riverón Valdés, H., Tu, D.P., Gummadi, K.P., Varshney, K.R., Weller, A., Pentland, A.: Fair enough: improving fairness in budget-constrained decision making using confidence thresholds. In: H. Espinoza, J. Hernández-Orallo, X.C. Chen, S.S. ÓhÉigeartaigh, X. Huang, M. Castillo-Effen, R. Mallah, J. McDermid (eds.) Proceedings of the Workshop on Artificial Intelligence Safety co-located with 34th AAAI Conference on Artificial Intelligence, CEUR Workshop Proceedings, vol. 2560, pp. 41–53. CEUR-WS.org, New York, NY, USA (2020). urn:nbn:de:0074-2560-0
+
+4. Barni, M., Orlandi, C., Piva, A.: A privacy-preserving protocol for neural-network-based computation. In: Proceedings of the 8th Workshop on Multimedia and Security. Association for Computing Machinery, New York, NY, USA, pp. 146–151 (2006). https://​ doi.​org/​10.​1145/​11613​66.​11613​93
+5. Bayardo, R.J., Agrawal, R.: Data privacy through optimal k-anonymization. In: 21st International Conference on Data Engineering (ICDE'05), pp. 217–228 (2005). https://​doi.​org/​10.​1109/​ ICDE.​2005.​42
+6. Bild, R., Kuhn, K.A., Prasser, F.: Safepub: a truthful data anonymization algorithm with strong privacy guarantees. Proc. Privacy Enhanc. Technol. 1, 67–87 (2018)
+7. Bucilua, C., Caruana, R., Niculescu-Mizil, A.: Model compression. In: Proceedings of the 12th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, KDD ’06, pp. 535–541. Association for Computing Machinery, New York, NY, USA (2006). https://​doi.​org/​10.​1145/​11504​02.​11504​ 64
+8. Chabanne, H., de Wargny, A., Milgram, J., Morel, C., Prouff, E.: Privacy-preserving classification on deep neural network. IACR Cryptology ePrint Archive 2017, 35 (2017)
+9. Craven, M.W., Shavlik, J.W.: Extracting tree-structured representations of trained networks. In: Proceedings of the 8th International Conference on Neural Information Processing Systems, NIPS’95, pp. 24–30. MIT Press, Cambridge, MA, USA (1995)
+10. Doran, K., Price, J.: Pornography and marriage. J. Fam. Econ. Issues 35, 489–498 (2014). https://​doi.​org/​10.​1007/​ s10834-​014-​9391-6
+11. Dua, D., Graff, C.: UCI machine learning repository (2017). http://​ archi​ve.​ics.​uci.​edu/​ml. Accessed 22 Sept 2021
+12. Ferreira, A., Figueiredo, M.: An unsupervised approach to feature discretization and selection. Pattern Recogn. 45(9), 3048–3060 (2011)
+13. Fredrikson, M., Jha, S., Ristenpart, T.: Model inversion attacks that exploit confidence information and basic countermeasures. In: Proceedings of the 22nd ACM SIGSAC Conference on Computer and Communications Security (CCS), pp. 1322–1333 (2015). https://​doi.​org/​10.​1145/​28101​03.​28136​77
+14. Fredrikson, M., Lantz, E., Jha, S., Lin, S., Page, D., Ristenpart, T.: Privacy in pharmacogenetics: an end-to-end case study of personalized warfarin dosing. In: Proceedings of the 23rd USENIX Conference on Security Symposium. USENIX Association, USA, pp. 17–32 (2014)
+15. Fung, B.C.M., Wang, K., Yu, P.S.: Top-down specialization for information and privacy preservation. In: 21st International Conference on Data Engineering (ICDE), pp. 205–216 (2005). https://​ doi.​org/​10.​1109/​ICDE.​2005.​143
+16. Ghinita, G., Karras, P., Kalnis, P., Mamoulis, N.: Fast data anonymization with low information loss. In: Proceedings of the 33rd International Conference on Very Large Data Bases. VLDB Endowment, Vienna, Austria, pp. 758–769 (2007)
+17. Goldsteen, A., Ezov, G., Farkash, A.: Reducing risk of model inversion using privacy-guided training (2020). arXiv:2​ 006.1​ 5877
+18. Gou, J., Yu, B., Maybank, S.J., Tao, D.: Knowledge distillation: a survey. Int. J. Comput. Vis. 129, 1789–1819 (2021)
+19. Hesamifard, E., Takabi, H., Ghasemi, M., Wright, R.N.: Privacypreserving machine learning as a service. Proc. Privacy Enhanc. Technol. 3, 123–142 (2018)
+20. Hinton, G., Vinyals, O., Dean, J.: Distilling the knowledge in a neural network. In: NIPS Deep Learning and Representation Learning Workshop (2014). arXiv:​1503.​02531
+21. Iyengar, V.S.: Transforming data to satisfy privacy constraints. In: Proceedings of the Eighth ACM SIGKDD International Conference on Knowledge Discovery and Data Mining. Association for Computing Machinery, New York, NY, USA, pp. 279–288 (2002). https://​doi.​org/​10.​1145/​775047.​775089
+
+1 3
+
+AI and Ethics (2022) 2:477–491
+
+491
+
+22. Kazim, E., Denny, D.M.T., Koshiyama, A.: AI auditing and impact assessment: according to the UK information commissioner’s office. AI and Ethics 1(3), 301–310 (2021). https://​doi.​ org/​10.​1007/​s43681-​021-​00039-2
+23. Kearns, M.J., Mansour, Y.: A fast, bottom-up decision tree pruning algorithm with near-optimal generalization. In: J.W. Shavlik (ed.) Proceedings of the Fifteenth International Conference on Machine Learning (ICML), pp. 269–277. Morgan Kaufmann Publishers Inc., San Francisco, CA, USA (1998)
+24. Kotsiantis, S., Kanellopoulos, D.: Discretization techniques: a recent survey. GESTS Int. Trans. Comput. Sci. Eng. 32, 47–58 (2005)
+25. Lee, H., Hwang, S.J., Shin, J.: Rethinking data augmentation: selfsupervision and selfdistillation (2019). arXiv:​1910.​05872
+26. LeFevre, K., DeWitt, D.J., Ramakrishnan, R.: Workload-aware anonymization techniques for large-scale datasets. ACM Trans. Database Syst. 33(3), 1–47 (2008)
+27. Ma, Z., Kargl, F., Weber, M.: Measuring long-term location privacy in vehicular communication systems. Comput. Commun. 33, 1414–1427 (2010)
+28. Mikolov, T., Sutskever, I., Chen, K., Corrado, G., Dean, J.: Distributed representations of words and phrases and their compositionality. In: C.J.C. Burges, L. Bottou, M. Welling, Z. Ghahramani, K.Q. Weinberger (eds.) Proceedings of the 26th International Conference on Neural Information Processing Systems (NIPS), vol. 2, pp. 3111–3119. Curran Associates Inc. (2013)
+29. Papernot, N., Abadi, M., Úlfarlfar Erlingsson, Goodfellow, I., Talwar, K.: Semi-supervised knowledge transfer for deep learning from private training data. In: Proceedings of the International Conference on Learning Representations (2017). arXiv:​1610.​ 05755
+30. Pratesi, F., Monreale, A., Trasarti, R., Giannotti, F., Pedreschi, D., Yanagihara, T.: Prudence: a system for assessing privacy risk vs utility in data sharing ecosystems. Trans. Data Privacy 11(2) (2018). http://​www.​tdp.​cat/​issue​s16/​tdp.​a284a​17.​pdf. Accessed 22 Sept 2021
+31. Roweis, S.T., Saul, L.K.: Nonlinear dimensionality reduction by locally linear embedding. Science 290(5500), 2323–2326 (2000)
+32. Salem, A., Y. Zhang, M.H., Berrang, P., Fritz, M., Backes, M.: Mlleaks: Model and data independent membership inference attacks and defenses on machine learning models. In: Proceedings of the 26th Annual Network and Distributed System Security Symposium (NDSS) (2019). https://​doi.​org/​10.​14722/​ndss.​2019.​23119
+33. Shokri, R., Stronati, M., Song, C., Shmatikov, V.: Membership inference attacks against machine learning models. In: 2017 IEEE
+
+Symposium on Security and Privacy (SP), pp. 3–18. San Jose, CA (2017). https://​doi.​org/​10.​1109/​SP.​2017.​41 34. Sokol, K., Flach, P.: Explainability fact sheets: a framework for systematic assessment of explainable approaches. In: Proceedings of the 2020 Conference on Fairness, Accountability, and Transparency, pp. 56–67. Association for Computing Machinery, New York, NY, USA (2020). https://d​ oi.o​ rg/1​ 0.1​ 145/3​ 35109​ 5.3​ 37287​ 0 35. Soleymani, S., Dabouei, A., Kazemi, H., Dawson, J., Nasrabadi, N.M.: Multi-level feature abstraction from convolutional neural networks for multimodal biometric identification. Int. Conf. Pattern Recogn. 346–-3476 (2018). https://​doi.​org/​10.​1109/​ICPR.​ 2018.​85450​61 36. Sweeney, L.: k-anonymity: a model for protecting privacy. Int. J. Uncertain. Fuzz. Knowl.-Based Syst. 10, 557–570 (2002) 37. Unceta, I., Nin, J., Pujol, O.: Copying machine learning classifiers. IEEE Access 8, 160268–160284 (2020). https://​doi.​org/​10.​1109/​ ACCESS.​2020.​30206​38 38. Urner, R., Shalev-Shwartz, S., Ben-David, S.: Access to unlabeled data can speed up prediction time. In: Proceedings of the 28th International Conference on Machine Learning, pp. 641– 648 (2011). https://​dl.​acm.​org/​doi/​10.​5555/​31044​82.​31045​63. Accessed 22 Sept 2021 39. Wagner, I., Eckhoff, D.: Technical privacy metrics: a systematic survey. ACM Comput. Surv. 51(3), 1–38 (2018) 40. Wang, J., Bao, W., Sun, L., Zhu, X., Cao, B., Philip, S.: Private model compression via knowledge distillation. In: Proceedings of the AAAI Conference on Artificial Intelligence, pp. 1190–1197 (2019). https://​doi.​org/​10.​1609/​aaai.​v33i01.​33011​190 41. Xu, J., Wang, W., Pei, J., Wang, X., Shi, B., Fu, A.: Utility-based anonymization using local recoding. In: Proceedings of the 12th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining. Association for Computing Machinery, New York, NY, USA, pp. 785–790 (2006). https://​doi.​org/​10.​1145/​ 11504​02.​11505​04 42. Xu, S., Ye, X.: Risk and Distortion Based K-Anonymity. Information Security Applications, pp. 345–358. Springer, Berlin (2007) 43. Zhang, T., He, Z., Lee, R.B.: Privacy-preserving machine learning through data obfuscation (2018). arxiv:​1807.​01860 44. Zhu, Q., Lv, X.: 2p-dnn : Privacy-preserving deep neural networks based on homomorphic cryptosystem (2018). arxiv:​1807.​08459
+Publisher's Note Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations.
+
+1 3
+

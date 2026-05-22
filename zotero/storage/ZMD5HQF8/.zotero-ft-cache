@@ -1,0 +1,639 @@
+URLTran: Improving Phishing URL Detection Using Transformers
+
+arXiv:2106.05256v3 [cs.CR] 27 Aug 2021
+
+Pranav Maneriker∗†
+maneriker.1@osu.edu The Ohio State University
+
+Jack W. Stokes†
+jstokes@microsoft.com Microsoft
+
+Edir Garcia Lazo
+edirga@microsoft.com Microsoft
+
+Diana Carutasu
+dicaruta@microsoft.com Microsoft
+
+Farid Tajaddodianfar‡
+f.tajad@gmail.com Amazon
+
+Arun Gururajan
+argurura@microsoft.com Microsoft
+
+ABSTRACT
+Browsers often include security features to detect phishing web pages. In the past, some browsers evaluated an unknown URL for inclusion in a list of known phishing pages. However, as the number of URLs and known phishing pages continued to increase at a rapid pace, browsers started to include one or more machine learning classifiers as part of their security services that aim to better protect end users from harm. While additional information could be used, browsers typically evaluate every unknown URL using some classifier in order to quickly detect these phishing pages. Early phishing detection used standard machine learning classifiers, but recent research has instead proposed the use of deep learning models for the phishing URL detection task. Concurrently, text embedding research using transformers has led to state-of-the-art results in many natural language processing tasks. In this work, we perform a comprehensive analysis of transformer models on the phishing URL detection task. We consider standard masked language model and additional domain-specific pre-training tasks, and compare these models to fine-tuned BERT and RoBERTa models. Combining the insights from these experiments, we propose URLTran which uses transformers to significantly improve the performance of phishing URL detection over a wide range of very low false positive rates (FPRs) compared to other deep learning-based methods. For example, URLTran yields a true positive rate (TPR) of 86.80% compared to 71.20% for the next best baseline at an FPR of 0.01%, resulting in a relative improvement of over 21.9%. Further, we consider some classical adversarial black-box phishing attacks such as those based on homoglyphs and compound word splits to improve the robustness of URLTran. We consider additional fine tuning with these adversarial samples and demonstrate that URLTran can maintain low FPRs under these scenarios.
+1 INTRODUCTION
+Phishing occurs when a malicious web page is created to mimic the legitimate login page used to access a popular online service for the purpose of harvesting the user’s credentials or a web page whose purpose is to input credit card or other payment information. Typical phishing targets include online banking services, web-based email portals, and social media web sites. Attackers use several different methods to direct the victim to the phishing site in order to
+∗Work done while the author was an intern at Microsoft Research. †Both authors contributed equally to this research. ‡Work done while the author was employed at Microsoft.
+
+launch the attack. In some cases, they may send the user a phishing email containing the URL (Uniform Resource Locator) of a phishing page. Attackers may also use search engine optimization techniques to rank phishing pages high in a search result query. Modern email platforms use various machine learning models to detect phishing web page attacks. In this work, we propose a new deep learning model that analyzes URLs and is based on transformers which have shown state-of-the-art performance in many important natural language processing tasks.
+In order to prevent users from inadvertently uploading personal information to the attackers, web browsers provide additional security services to identify and block or warn a user from visiting a known phishing page. For example, Google’s Chrome browser utilizes their Safe Browsing technology [12] and Microsoft’s Edge browser includes Windows Defender SmartScreen [24]. In a related attack which is also addressed by these services, malicious URLs may point to a web page hosted by a misconfigured or unpatched server with the goal of exploiting browser vulnerabilities in order to infect the user’s computer with malware (i.e., malicious software).
+Successful phishing web page detection includes a number of significant challenges. First, there is a huge class imbalance associated with this problem. The number of phishing pages on the internet is very small compared to the total number of web pages available to users. Second, phishing campaigns are often short-lived. In order to avoid detection, attackers may move the login page from one site to another multiple times per day. Third, phishing attacks continue to be a persistent problem. The number of known phishing sites continues to increase over time. Therefore, blocking phishing attacks only using a continuously growing list of known phishing sites often fails to protect users in practice.
+Popular web browsers may render hundreds of millions or even billions of web pages each day. In order to be effective, any phishing or malicious web page detection must be fast. For this reason, several researchers [3, 21, 37] have proposed detecting both phishing and malcious web pages based solely on analyzing the URL itself.
+With the proliferation and ease of access to phishing kits sold on the black market as well as the phishing as a service offerings, it has become easy for attackers with little expertise to deploy phishing sites and initiate such attacks. Consequently, phishing is currently on the rise and costing over $57 million from more than 114,000 victims in the US last year according to a recent FBI report [26]. The number of phishing attacks rose in Q3 of 2019 to a high level not seen since late 2016 [13]. As phishing is proving to be more and
+
+more fruitful, the attacks have become increasingly sophisticated. At the same time, the lifespan of phishing URLs has continued to drop dramatically – from 10+ hours to minutes [47].
+Given the significant repercussions of visting a phishing or malicious web page, the detection of these URLs has been an active area of research [32]. In some cases, researchers have proposed the use of classic natural language processing methods to detect malicious URLs [3]. Recently, others have begun to use deep learning models to detect these URLs. URLNet [21] is a deep convolutional neural network (CNN) and includes separate character and word-level models for the malicious URL detection task. The Texception [37] model, which is used to detect phishing URLs, extends some of the ideas in URLNet by including small kernels which can be deployed in a wide variety of configurations in terms of width, depth or both.
+Recently, semi-supervised machine learning methods have been used to create text embeddings that offer state-of-the-art results in many natural language processing tasks. The key idea in these approaches is the inclusion of a transformer model [39]. BERT [7, 31] utilizes transformers to offer significant improvements in several natural language processing (NLP) tasks. GPT [1], GPT-2 [29], and GPT-3 [5] have also followed a similar approach. The semantics and syntax of natural language are more complex than URLs, which must follow a strict syntax specification [2]. However, recent work using transformers has also demonstrated that these models can be applied to tasks involving data with more strict syntactic structures. These include tabular data [44], python source code [17] and SQL queries [40]. The success of these approaches further motivates us to apply transformers on URLs.
+In this paper, we compare two settings: 1) we pre-train and finetune an existing transformer architecture using only URL data, and 2) we fine-tune publicly available pre-trained transformer models. In the first approach, we apply the commonly used Cloze-style masked language modeling objective [38] on the BERT architecture. In the second approach, we fine-tune BERT [7] and RoBERTa [22] on the URL classification task. Each of these systems forms an example of a URLTran model. URLTran_BERT is the best performing model obtained from these approaches. Finally, we simulate two common black-box phishing attacks by perturbing URLs in our data using unicode-based homoglyph substitutions [41] and inserting ‘-’ characters between sub-words in a compound URL (e.g., ‘bankofamerica.com’ → ‘bank-of-america.com’), along with a perturbation scenario under which the parameters are reordered and the URL label remains unchanged to improve the robustness of URLTran.
+Results on a large corpus of phishing and benign URLs show that transformers are able to significantly outperform recent state-ofthe-art phishing URL detection models (URLNet, Texception) over a wide range of low false positive rates where such a phishing URL detector must operate. At a false positive rate of 0.01%, URLTran increases the true positive rate from 71.20% for the next best baseline (URLNet) to 86.80% (21.9% relative increase). Thus, browser safety services, such Google’s Safe Browsing and Microsoft’s SmartScreen, may potentially benefit using the proposed URLTran system for the detection of phishing web pages.
+This paper offers the following contributions:
+
+Maneriker et al.
+• Borrowing from recent advances in many natural language processing tasks, we propose the use of transformers to improve the detection of phishing URLs.
+• We build URLTran, a large-scale system with production data and labels and demonstrate that transformers do offer a significant performance improvement compared to previous recent deep learning solutions over a wide range of very low false positive rates.
+• We analyze the impact of various design choices in terms of hyperparameters, pre-training tasks, and tokenizers to contribute to an improved model.
+• We analyze the adversarially generated URLs from the system to understand the limitations of URLTran.
+2 PHISHING URL DATA
+The datasets used for training, validation and testing were collected from Microsoft’s Edge and Internet Explorer production browsing telemetry during the summer of 2019. The schema for all three datasets is similar and consists of the browsing URL and a boolean determination of whether the URL has been identified as phishing or benign.
+Six weeks of historical data were collected overall out of which four weeks of data were used for the training set, one week for the validation and one week for the test set.
+Due to the highly unbalanced nature of the datasets (roughly 1 in 50 thousand URLs is a phishing URL), down-sampling of the benign set was necessary and resulted in a ratio of 1:20 (phishing versus benign) for both the training and validation sets. The resulting datasets had the corresponding total sizes of 1,039,413 records for training and 259,854 thousand for validation. The test set used for evaluating the models consists of 1,784,155 records, of which 8,742 are phishing URLs and the remaining 1,775,413 are benign.
+The labels included in this study correspond to those used to train production classifiers. Phishing URLs are manually confirmed by analysts including those which have been reported as suspicious by end user feedback. Other manually confirmed URLs are also labeled as phishing when they are included and manually verified in known phishing URL lists including Phishtank. 1
+Benign URLs are those which correspond to web pages which are known to not be involved with a phishing attack. In this case, these sites have been manually verified by analysts using manual analysis. In other cases, benign URLs can be confirmed by thorough (i.e., production grade) off-line automated analysis which is not an option for real-time detection required by the browser. None of the benign URLs have been included in known phishing lists or have been reported as phishing pages by users and later verified by analysts. Although these last two criteria are not sufficient to add an unknown URL to the benign list. It is important to note that all URLs labeled as benign correspond to web pages that have been validated. They are not simply a collection of unknown URLs, i.e., ones which have not been previously detected as phishing sites.
+1The total of 73, 705 valid phishing URLs is significantly larger than the number of phishing URLs reported by Phishtank (http://phishtank.org/stats.php).
+
+URLTran: Improving Phishing URL Detection Using Transformers
+Score Fully Connected Layer
+
+Transformer Layer
+
+x L
+
+Token Encoding
+
+Token Enc
+P0 +
+W0
+
+Token Enc
+P1 +
+W1
+
+Token Enc
+... PTm +
+WTm
+
+Tokenize http://secure.bankofamerica.com/login/sign-in/singOnV2Screen.go
+Figure 1: URLTran phishing URL detection model.
+
+3 METHODOLOGY
+URLTran seeks to use recent advances in natural language processing to improve the task of detecting phishing URLs. Building URLTran employs a two-pronged approach towards adapting transformers for the task of phishing URL detection. First, state-of-the-art transformer models, BERT [7] and RoBERTa [22], are fine-tuned, starting from publicly available vocabularies and weights and across different hyperparameter settings and resulting in URLTran_BERT and URLTran_RoBERTa, respectively. Second, domain-specific vocabularies are built using different tokenization approaches, and a domain specific transformer (URLTran_CustVoc) is first pre-trained and then fine-tuned on the task.
+The general architecture of all the explored models takes a three stage approach for inference shown in Figure 1. It first uses a subword tokenizer to extract tokens from a URL. Next, a transformer model generates an embedding vector for the unknown URL. Finally, a classifier predicts a score indicating whether or not the unknown URL corresponds to a phishing web page.
+In the following sections, we first provide briefly summarize the transformer model architecture, followed by the training tasks used to train the model, and end with a description of the adversarial settings under which the best URLTran model is evaluated and then trained with adversarial examples to improve its robustness.
+3.1 Architecture
+We describe the tokenization schemes and overall architecture for classification in this section, skipping a detailed description of transformer models for brevity. Interested readers can review the transformer [39], BERT [7], or RoBERTa [22] papers for details of the internal structure of transformer layers.
+3.1.1 Tokenization. The raw input to the URLTran model is the URL, which can be viewed as a text sequence. The first step in the phishing URL detection task involves converting this input URL into a numerical vector which can be further processed by a classic machine learning or deep learning model.
+Previous URL detection models [3] extracted lexical features by first splitting the URL with a set of important delimiters (e.g., ‘=’, ‘/’, ‘?’, ‘.’, ‘ ’) and then creating a sparse binary features based on
+
+these tokens. Recent deep learning-based URL detection models [21, 37] instead include separate word-level and character-level CNNs where the character-level CNNs span different lengths of character subsequences.
+Instead of these approaches, we experiment with multiple subword tokenization schemes in URLTran. Subword models have seen increased adoption in different tasks in NLP, including machine translation [34], word analogy [4], and question answering [46]. While using full-length words reduces the input representation length (number of tokens) allowing more input to be processed by a fixed-length model, using a subword model can provide morphological insights to improve inference. For example, a full-length model would consider ‘bankofamerica’ and ‘bankofcanada’ as completely unrelated tokens, whereas a subword model can recognize the shared subword ‘bank’ to correlate URLs belonging to the two banks. Important character subsequences, including prefixes and suffixes can also provide relevant information while being more robust to polymorphic attacks.
+In particular, for URLTran_BERT and URLTran_RoBERTa, we use the existing word piece [7, 42] and Byte Pair Encoding (BPE) models [22, 29] , respectively. In addition to these, custom characterlevel and byte-level BPE vocabularies are created using the training URL data to have a domain specific vocabulary for URLTran_CustVoc with two different vocabulary sizes, 1K and 10K. The BPE models attempt to find a balance of using both character subsequences and full words.
+The BPE models first break the 𝑚𝑡ℎ URL, 𝑢𝑚, into a sequence of text tokens, TOK𝑚, where the individual tokens may represent entire words or subwords [33, 35, 42]. Following the notation in [7], the token sequence is formed as:
+
+TOK𝑚 = Tokenizer(𝑢𝑚)
+
+(1)
+
+where TOKm is of length 𝑇𝑚 positions and consists of individual tokens 𝑇𝑜𝑘𝑡 at each position index 𝑡. For example, the BERT wordpiece token sequence generated from the URL of a popular banking login page, 𝑢𝑚 = secure.bankofamerica.com/login/sign-in/signOnV2Screen.go is shown in Table 1. The wordpiece model includes special text tokens specified by (##) which build upon the previous token in the sequence. In the example in Table 1, ‘##of’ means that it occurs after a previous token (‘bank’), and it is distinguished from the more common, separate token ‘of’.
+3.1.2 Classifier. The final encoding produced by the transformer model can be used for a variety of downstream NLP tasks such as language understanding, language inference, and question answering, and text classification. We use the transformer embeddings for two tasks: pre-training masked language models, and fine-tuning for classification of phishing URLs. Both of these tasks require a final classification layer, which can be applied to multiple tokens for masked token prediction, and a pooled representation for classification. The transformer models that we train use a single, dense two-class classification layer, which is applied to a special pooled token (‘[CLS]’) for classification. A dense layer having vocab_size classes is used for predicting the masked token for the masked language modeling task during pre-training:
+
+Maneriker et al.
+
+URL (𝑢𝑚)
+
+secure.bankofamerica.com/login/sign-in/signOnV2Screen.go
+
+Token Sequence (TOKm) { ‘secure’, ‘.’, ‘bank’, ‘##of’, ‘##ame’, ‘##rica’, ‘.’, ‘com’, ‘/’, ‘log’, ‘##in’, ‘/’,
+
+‘sign’, ‘-’, ‘in’, ‘/’, ‘sign’, ‘##on’, ‘##v’, ‘##2’, ‘##screen’, ‘.’, ‘go’ }
+
+Table 1: Example of the wordpiece token sequence extraction from a popular banking web page.
+
+s𝑚 = Wx𝑚 + b.
+
+(2)
+
+In (2), W and b are the weight matrix and bias vector, respectively, for the final dense linear layer. sm is the score which predicts if the URL um corresponds to a phishing web page when performing classification and is the sequence of masked token probability score vectors when performing masked language modeling for input token xm.
+
+3.2 Training
+3.2.1 Masked Language Modeling (MLM). The MLM task is commonly used to perform pre-training for transformers. In this task, a random subset of tokens is replaced by a special ‘[MASK]’ token. The training objective for the task is the cross-entropy loss corresponding to predicting the correct tokens at masked positions. The intuition for using this task for URLs is that specific query parameters and paths are generally associated with non-phishing URLs and therefore predicting masked tokens would help to uncover these associations. Similar intuitions derived from the cloze task [38] motivate the usage of MLMs for pre-training natural language models. Following the MLM hyperparameter settings for BERT, 15% of the tokens were uniformly selected for masking, of which 80% are replaced, 10% were left unchanged, and 10% were replaced by a random vocabulary token at each iteration. Dynamic masking [22] was used, i.e., different tokens masked from the same sequence across iterations. The training subset of the full dataset was used for pre-training to prevent any data leakage.
+3.2.2 Fine Tuning. For URLTran_BERT and URLTran_RoBERTa, all of the initial parameters derived using a large, internal natural language corpus generated by their respective authors, were used. For URLTran_CustVoc, following the completion of the MLM pretraining step, the learned weights were used as initialization values.
+Next, URLTran’s model parameters were further improved using a second “fine-tuning” training process which depends upon the error signal from the URL classification task and gradients based on gradient descent using the Adam [18] optimizer with the crossentropy loss.
+
+3.3 Adversarial Attacks and Data Augmentation
+Phishing URL attacks can occur on short-lived domains and URLs which have small differences from existing, legitimate domains. We simulate two attack scenarios by constructing examples of such adversaries based on modifying benign URLs. Note that these generated domains do not actually exist in the pre-existing training and testing data, but are based upon frequently observed phishing attack patterns. We also utilize a reordering-based augmentation,
+
+which is used is used to generate benign perturbations for evaluating adversarial attacks.
+
+3.3.1 Homoglyph Attack. We generate domains that appear nearly identical to legitimate URLs by substituting characters with other unicode characters that are similar in appearance. This attack strategy is commonly referred to as a homoglyph attack [10, 43], and we implement this strategy using the python library homoglyphs2. In particular, given a URL, we first extract the domain. For a randomly selected character in the domain, we check for one unicode (utf8) Latin or Cyrillic character that is a homoglyph for it. We only perturb one character to minimize the probability that such a URL would we be identified as phishing by the user. We then replace the character by its homoglyph to construct a new URL. The URLs generated from this strategy are labeled as phishing.
+
+3.3.2 Compound Attack. An alternative way to construct new phishing URLs is by splitting domains into sub-words (restricted to English) and then concatenating the sub-words with an intermediate hyphen. For example, ‘bankofamerica.com’ → ‘bank-ofamerica.com’. To implement this, we leverage the enchant dictionary3. Consider a URL with domain 𝑑 having |𝑑 | = 𝑛 characters. Let D denote the enchant English dictionary. Let 𝐶 (𝑑, 𝑖, 𝑗) denote the function that returns True if 𝑑 [𝑖 . . . 𝑗] can be split into one or more parts, each of which is a word in the dictionary D. The compound word problem can be formulated recursively as
+
+True, 𝑑 [𝑖 . . . 𝑗] ∈ D
+
+
+
+𝐶
+
+(𝑑,
+
+𝑖,
+
+𝑗)
+
+=
+
+ True
+
+∃𝑘, 𝐶 (𝑑, 𝑖, 𝑘) and 𝐶 (𝑑, 𝑘 + 1, 𝑗)
+
+(3)
+
+False otherwise 
+
+Using this recursive definition, we implement a dynamic programming algorithm that can compute whether a domain can be split and the corresponding splits. These splits are then concatenated with hyphens between the discovered words. Note that the base case check 𝑑 [𝑖 . . . 𝑗] ∈ D is performed in a case insensitive manner to ensure that the dictionary checks do not miss proper nouns.
+
+3.3.3 Parameter Reordering. Data augmentation using invariants, contextual replacement, and reward-based learning [14, 20] has been used to improve classifiers in the text domain. These can be extended to augment data in the URL domain. As the query parameters of a URL are interpreted as a key-value dictionary, this augmentation incorporates permutation invariance. An example of a URL and permutation is provided in Figure 2. We use this approach to generate benign examples. Reordering the parameters still results in a valid URL, i.e., parameter reordering does not represent a phishing attack, and therefore we do not modify the URL’s label.
+
+2 https://pypi.org/project/homoglyphs/ 3 https://pypi.org/project/pyenchant/
+
+URLTran: Improving Phishing URL Detection Using Transformers
+secure.bankofamerica.com/activate.go?type=credit&channel=desktop
+secure.bankofamerica.com/activate.go?channel=desktop&type=credit
+Figure 2: An example of parameter reordering
+3.3.4 Adversarial Attack Data. The approach we use for generating data for an adversarial attack includes generating separate augmented training, validation and test datasets based on their original dataset [11]. For each URL processed in these datasets, we generate a random number. If it is less than 0.5, we augment the URL, or otherwise, we include it in its original form. For URLs which are to be augmented, we modify it using either a homoglyph attack, a compound attack or parameter reordering with equal probability. If a URL has been augmented, we also include the original URL in the augmented dataset.
+4 NUMERICAL EVALUATION
+In this section, we present the numerical evaluation of the different approaches presented in the previous sections. We then compare URLTran to several recently proposed baselines. We also report the the model’s training and inference times. Finally, we analyze the robustness of the model to generated phishing URLs. Setup. The hyperparameter settings for all models are provided in Appendix A. In our experiments, we set the hyperparameters for previously published models according to their settings in the original paper. For evaluating URLTran_CustVoc, we vary the number of layers between {3, 6, 12}, vary the number of tokens per input URL sequence between {128, 256}, and use both a byte-level and character-level BPE tokenizer with 1K- and 10K-sized vocabularies. We randomly pick 15 hyperparameter combinations among these settings and present the results for these. The Adam optimizer [19] is used in both pre-training and fine-tuning, with the triangular scheduler [36] used for fine-tuning.
+All training and inference experiments were conducted using PyTorch [9] version 1.2 with NVIDIA Cuda 10.0 and Python 3.6. The experiments were performed by extending the Hugging Face and Fairseq PyTorch implementations found on GitHub [16, 27]. The large class imbalance makes accuracy a poor metric of model performance. We evaluated all the models using the true positive rate (TPR) at low false positive rate (FPR) thresholds. We used the receiver operating characteristics (ROC) curve to compute this metric. Baselines.
+To evaluate the performance of our models, we compared them to two baseline URL detection models: URLNet and Texception. URLNet [21] is a CNN-based model which was recently proposed for the task of detecting URLs which identify malicious web sites. In our baseline, we have completely trained and tested the URLNet model for the detection of phishing URLs. Texception [37] is another deep learning URL detection model which has been proposed for the task of identifying phishing URLs. It is important to note that Tajaddodianfar et. al. [37] compared Texception to a Logistic Regression-based model and found that Texception offered better
+
+seq_len
+
+tokenizer
+
+0.998
+
+vocab_size
+
+layers
+
+AUROC
+
+0.996
+
+0.994
+
+0.992
+
+128 256 byte sent
+
+1000 10000
+
+123
+
+(a) Area under ROC vs hyperparameters
+
+seq_len
+
+tokenizer
+
+vocab_size
+
+layers
+
+0.800
+
+0.600
+
+TPR@0.01%
+
+0.400
+
+0.200
+
+0.000 128 256
+
+byte sent
+
+1000 10000
+
+123
+
+(b) TPR@FPR = 0.01% vs hyperparmeters
+
+Figure 3: Variance in quality of URLTran_CustVoc across different hyperparameter settings
+
+performance. Thus, we did not repeat that baseline experiment in this work. URLTran_CustVoc. Transformers typically require large amounts of pre-training data (e.g., BERT [7] used a corpus of ≈ 3.3 B tokens). However, this data is derived from text articles, which are structured differently from URLs. We also trained the URLTran_CustVoc model based soley on the URL data found in our datasets to compare the results of finetuning using standard BERT and RoBERTa pretrained models to models pretrained from the URL data. The difference in dataset size and data domain make it important to understand the impact of different hyperparameters used when training transformers from scratch. We compare runs across different hyperparameters on the basis of area under ROC (AUROC) and TPR@0.01% FPR. Figure 3 demonstrates that the training is not very sensitive to sequence length. Smaller byte-level vocabularies tend to be better overall, but at low FPR, the difference is not significant. Finally, we found that the 3 layer model generalized the best. We hypothesize that the better performance of the model with fewer layers is because of limited pre-training data and epochs. In the next few sections, we validate this hypothesis by evaluating finetune models that have have longer pre-training (URLTran_BERT, URLTran_RoBERTa) and that are tuned on a larger, adversarial dataset. Model Performance. We next analyze the performance of the best parameters of all the proposed transformer variants. To understand how these models compare at very low FPRs where detection
+
+Maneriker et al.
+
+100
+
+100
+
+75
+
+75
+
+True Positive Rate (%)
+
+True Positive Rate (%)
+
+50
+
+50
+
+25
+0 0
+
+Texception URLNet URLTran_BERT URLTran_CustVoc URLTran_RoBERTa
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1
+
+1.2
+
+1.4
+
+1.6
+
+1.8
+
+2
+
+False Positive Rate (%)
+
+Figure 4: Receiver operating characteristic curve indicating the performance of the URLTran and several baseline models zoomed into a maximum of 2% false positive rate.
+
+25
+0 0.001
+
+0.01
+
+0.1
+
+1
+
+False Positive Rate (%)
+
+AdvAttack AdvTraining URLTran_BERT
+10
+
+Figure 6: ROC curve for URLTran_BERT when under adversarial attack, and adversarial robustness after augmented training
+
+100
+
+75
+
+True Positive Rate (%)
+
+50
+
+25
+0 0.001
+
+0.01
+
+0.1
+
+1
+
+False Positive Rate (%)
+
+Texception URLNet URLTran_BERT URLTran_CustVoc URLTran_RoBERTa
+10
+
+Figure 5: Zoomed in receiver operating characteristic curve with a log x-axis.
+
+thresholds must be set to operate in a production environment, we first plot the ROC curves on a linear x-axis zoomed into a 2% maximum FPR in Figure 4. We also re-plot these ROC curves on a log x-axis in the semilog plot in Figure 5. These results indicate that all variants of URLTran offer a significantly better true positive rate over a wide range of extremely low FPRs. In particular, URLTran matches or exceeds the TPR of URLNet for the FPR range of 0.001% - 0.75%. The result is very important because phishing URL detection models must operate at very low FPRs (e.g., 0.01%) in order to minimize the number of times the security service predicts that a benign URL is a phishing site (i.e., a false positive). In practice, the browser manufacturer selects the desired FPR and tries to develop new models which can increase the TPR for the selected FPR value. Note that TPR@FPR is the standard metric commonly used both in production settings and in prior art such as Texception and URLNet.
+In addition to the ROC curve analysis, we also summarize a number of key performance metrics in Table 2. In the table, ‘F1’ is the F1 score, and ‘AUC’ is the area under the model’s ROC curve. The proposed URLTran model outperforms both Texception and
+
+URLNet for all of these metrics. In particular, we note that at an FPR of 0.01%, URLTran_BERT has a TPR of 86.80% compared to 71.20% for URLNet and 52.15% for Texception. Training and Inference Times. The total time required to train the best URLTran_BERT model was 4:57:11 on an NVIDIA V100. Inference required 0:10::44 to complete for an average of 0.36096 milliseconds per sample. Adversarial Evaluation. To understand URLTran’s robustness to adversarial attacks, we first compared the low FPR regions of the ROC curve of the unprotected model tested with the original test set to the test set which includes adversarial samples (AdvAttack) generated through the methods described in Section 3.3 (Figure 6). There is a significant drop in performance of URLTran_BERT when attacked with adversarial URLs. Next, we consider the scenario where attack strategies are incorporated into the training data (AdvTraining). On the addition of adversarial attack patterns to the training, the model is able to the adapt to novel attacks, and even outperform the unprotected version of URLTran. These results demonstrate that URLTran can adapt to novel attacks. Further, as new attack strategies are recognized (e.g., homoglyph), a robust version of URLTran can be trained to recognize similar patterns in unseen test data.
+
+URLTran: Improving Phishing URL Detection Using Transformers
+
+Model
+
+Accuracy (%) Precision (%) Recall (%) TPR@FPR=0.01% F1 AUC
+
+Texception URLNet
+URLTran_CustVoc URLTran_RoBERTa
+URLTran_BERT
+
+99.6594 99.4512 99.5983 99.6384 99.6721
+
+99.7562 99.7157 99.7615 99.7688 99.7845
+
+99.6594 99.4512 99.5983 99.6384 99.6721
+
+52.1505 71.1965 81.8577 82.0636 86.7994
+
+0.9969 0.9954 0.9965 0.9968 0.9971
+
+0.9977 0.9988 0.9992 0.9992 0.9993
+
+Table 2: Comparison of different performance metrics for URLTran and the two baseline models
+
+5 RELATED WORK
+The URLTran system is most closely related to phishing and malicious URL detection models which have been previously proposed in the literature. In this section, we describe related work for deep learning-base text embeddings in general. These models have been derived for various natural language processing tasks. We then review related work in phishing and malicious web page detection using the web page’s URL which builds upon the previous text embedding models proposed in the NLP domain. In particular, we focus on two recent, deep learning URL detection models, URLNet and Texception, which helped to inspire this work. Text Embeddings. Deep learning models for text embeddings have been an active area of research recently. One form of models called a character-level CNN learns a text embedding from individual characters, and these embeddings are then processed using a sequential CNN and one or more dense layers depending on the task. Recent examples of character-level CNNs include [6, 45]. In particular, Conneau et al. [6] investigated very deep architectures for the purpose of classifying natural language text. Typically, these models are trained in an end-to-end fashion instead of from manually engineered features.
+Transformers were introduced by Vaswani et al. [39] in the context of neural machine translation. A number of models used transformers for other natural language processing tasks including BERT [7, 31], GPT [1], GPT-2 [29], and GPT-3 [5]. RoBERTa [23] used careful optimization of the BERT parameters and training methodology to offer further improvements. Adversarial Attacks on Text. Adversarial example generation has been a focus of some recent work on understanding the robustness of various text classification tasks. The examples generated using these approaches aim to impose certain semantic constraints without modifying the label of the underlying text. White-box attacks (e.g., Hotflip [8]) require access to the internals of the classification model used, such as the gradient on specific examples. The attack framework proposed in our work is more in line with black-box attack frameworks such as DeepWordBug [10] and TextAttack [25] where the construction of adversarial data is motivated by a threat model but independent of the classifier used. We specialize this attack scheme for the URL context. URL-Based Phishing and Malicious Web Page Detection. Previous related work on the detection of phishing and malicious web pages based on the page’s URL has progressed in parallel. We next review some important systems in chronological order.
+Early phishing page detection based on URLs followed conventional deep learning approaches. A summary of these methods is included in [32]. Blum et al. [3] proposed using confidence weighted,
+
+online learning using a set of lexical features which are extracted from the URL. To extract these features, the URL is first split using the following delimiters: ‘?’, ‘=’, ‘/’, ‘.’, and ‘ ’. Next, individual features are set based on the path, domain, and protocol.
+Le et al. [21] proposed the URLNet model whose task is to detect URLs which are references to malicious web pages found on the Internet. URLNet processes a URL using a character-level Convolutional Neural Network (CNN) and a word-level CNN. For the character-level CNN, the URL is first tokenized by each of the characters.
+Inspired by the Xception deep object recognition model for images, Texception [37] also uses separate character-level and wordlevel CNNs like URLNet. However, Texception’s CNN kernels form different size text windows in both the character and word levels. Multiple Texception blocks and Adaptive Max Pooling layers can be combined in different model configurations in terms of both depth and width. In addition, Texception utilizes contextual word embeddings in the form of either FastText or Word2Vec to convert the URL into the input embedding vector.
+Another CNN-based phishing detection model was proposed by Yerima and Alzaylaee [43]. Using the page’s content, the authors create a 31-dimensional feature vector for each web page in their dataset and train a CNN based on this feature vector. URLTran differs from this work because it only processes the URL instead of extracting the page content which will be much slower for inference. Other work has proposed using LSTMs (i.e., recurrent sequential models) for phishing and malicious URL detection including [28, 30]. Processing LSTMs is expensive in terms of computation and memory for long URLs which makes them impractical for largescale production. In [15], Huang et al. also investigate using capsule networks for detecting phishing URLs.
+6 CONCLUSION
+We have proposed a new transformer-based system called URLTran whose goal is to predict the label of an unknown URL as either one which references a phishing or a benign web page. Transformers have demonstrated state-of-the-art performance in many natural language processing tasks, and this paper seeks to understand if these methods can also work well in the cybersecurity domain.
+In this work, we demonstrate that transformers which are finetuned using the standard BERT tasks also work remarkably well for the task of predicting phishing URLs. Instead of extracting lexical features or using CNNs kernels which span multiple characters and words, which are both common in previously proposed URL detection models, our system uses the BPE tokenizers for this task. Next, transformers convert the token sequence to an embedding
+
+vector which can then be used as input to a standard, dense linear
+layer. Results indicate that URLTran is able to significantly outper-
+form recent baselines, particularly over a wide range of very low
+false positive rates. We also demonstrate that transformers can be
+made robust to novel attacks under specific threat models when we
+adversarially augment the training data used for training them.
+REFERENCES
+[1] R Alec, N Karthik, S Tim, and S Ilya. 2018. Improving language understanding with unsupervised learning. Technical Report. Tech. Rep., Technical report, OpenAI.
+[2] Tim Berners-Lee, Roy T. Fielding, and Larry M Masinter. 2005. Uniform Resource Identifier (URI): Generic Syntax. RFC 3986. https://doi.org/10.17487/RFC3986
+[3] Aaron Blum, Brad Wardman, Thamar Solorio, and Gary Warner. 2010. Lexical feature based phishing URL detection using online learning. Proceedings of the Workshop on Artificial Intelligence and Security 1, 1 (2010), 1–37.
+[4] Piotr Bojanowski, Edouard Grave, Armand Joulin, and Tomas Mikolov. 2017. Enriching Word Vectors with Subword Information. Transactions of the Association for Computational Linguistics 5 (2017), 135–146. https://doi.org/10.1162/tacl_a_ 00051
+[5] Tom B Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared Kaplan, Prafulla Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell, et al. 2020. Language models are few-shot learners. arXiv preprint arXiv:2005.14165 (2020).
+[6] Alexis Conneau, Holger Schwenk, Yann Le Cun, and Loic Barrault. 2017. Very Deep Convolutional Networks for Text Classification. Technical Report. arXiv:1606.01781v2 https://arxiv.org/pdf/1606.01781.pdf
+[7] Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. 2019. BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. In Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers). 4171–4186.
+[8] Javid Ebrahimi, Anyi Rao, Daniel Lowd, and Dejing Dou. 2018. HotFlip: WhiteBox Adversarial Examples for Text Classification. In Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers). 31–36.
+[9] Facebook. [n.d.]. PyTorch - From Research to Production. https://pytorch.org/ [10] J. Gao, J. Lanchantin, M. L. Soffa, and Y. Qi. 2018. Black-Box Generation of
+Adversarial Text Sequences to Evade Deep Learning Classifiers. In 2018 IEEE Security and Privacy Workshops (SPW). 50–56. https://doi.org/10.1109/SPW.2018. 00016 [11] Ian J. Goodfellow, Jonathon Shlens, and Christian Szegedy. 2014. Explaining and Harnessing Adversarial Examples. (dec 2014). arXiv:1412.6572 http://arxiv.org/ abs/1412.6572 [12] Google. [n.d.]. Making the world’s information safely accessible. https:// safebrowsing.google.com/ [13] HelpNetSecurity. [n.d.]. Phishing attacks at highest level in three years. https: //www.helpnetsecurity.com/2019/11/07/phishing- attacks- levels- rise/ [14] Zhiting Hu, Bowen Tan, Russ R Salakhutdinov, Tom M Mitchell, and Eric P Xing. 2019. Learning data manipulation for augmentation and weighting. In Advances in Neural Information Processing Systems. 15764–15775. [15] Yongjie Huang, Jinghui Qin, and Wushao Wen. 2019. Phishing URL Detection Via Capsule-Based Neural Network. In 2019 IEEE 13th International Conference on Anti-counterfeiting, Security, and Identification (ASID). IEEE, 22–26. [16] HuggingFace. [n.d.]. Transformers - State-of-the-art Natural Language Processing for PyTorch and TensorFlow 2.0. https://github.com/huggingface/transformers [17] Aditya Kanade, Petros Maniatis, Gogul Balakrishnan, and Kensen Shi. 2020. Learning and Evaluating Contextual Embedding of Source Code. In International Conference on Machine Learning. [18] Diederik P Kingma and Jimmy Ba. 2014. Adam: A method for stochastic optimization. arXiv preprint arXiv:1412.6980 (2014). [19] Diederik P. Kingma and Jimmy Ba. 2015. Adam: A Method for Stochastic Optimization. In 3rd International Conference on Learning Representations, ICLR 2015, San Diego, CA, USA, May 7-9, 2015, Conference Track Proceedings, Yoshua Bengio and Yann LeCun (Eds.). http://arxiv.org/abs/1412.6980 [20] Sosuke Kobayashi. 2018. Contextual Augmentation: Data Augmentation by Words with Paradigmatic Relations. In Proceedings of the 2018 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 2 (Short Papers). 452–457. [21] Hung Le, Quang Pham, Doyen Sahoo, and Steven C H Hoi. 2018. URLNet: Learning a URL Representation with Deep Learning for Malicious URL Detection. Technical Report. arXiv:1802.03162v2 https://doi.org/10.475/123{_}4 [22] Yinhan Liu, Myle Ott, Naman Goyal, Jingfei Du, Mandar Joshi, Danqi Chen, Omer Levy, Mike Lewis, Luke Zettlemoyer, and Veselin Stoyanov. 2019. Roberta: A robustly optimized bert pretraining approach. arXiv preprint arXiv:1907.11692 (2019).
+
+Maneriker et al.
+
+[23] Yinhan Liu, Myle Ott, Naman Goyal, Jingfei Du, Mandar Joshi, Danqi Chen, Omer
+
+Levy, Mike Lewis, Luke Zettlemoyer, and Veselin Stoyanov. 2019. RoBERTa: A
+
+Robustly Optimized BERT Pretraining Approach. CoRR abs/1907.11692 (2019).
+
+arXiv:1907.11692 http://arxiv.org/abs/1907.11692
+
+[24] Microsoft. [n.d.]. Microsoft Defender SmartScreen.
+
+https://docs.
+
+microsoft.com/en- us/windows/security/threat- protection/microsoft- defender-
+
+smartscreen/microsoft- defender- smartscreen- overview
+
+[25] John Morris, Eli Lifland, Jin Yong Yoo, Jake Grigsby, Di Jin, and Yanjun Qi. 2020.
+
+TextAttack: A Framework for Adversarial Attacks, Data Augmentation, and
+
+Adversarial Training in NLP. In Proceedings of the 2020 Conference on Empirical
+
+Methods in Natural Language Processing: System Demonstrations. 119–126.
+
+[26] Federal Bureau of Investigation. [n.d.]. 2019 Internet Crime Report. https:
+
+//pdf.ic3.gov/2019_IC3Report.pdf
+
+[27] Myle Ott, Sergey Edunov, Alexei Baevski, Angela Fan, Sam Gross, Nathan Ng,
+
+David Grangier, and Michael Auli. 2019. fairseq: A Fast, Extensible Toolkit for
+
+Sequence Modeling. In Proceedings of NAACL-HLT 2019: Demonstrations.
+
+[28] Yongfang Peng, Shengwei Tian, Long Yu, Yalong Lv, and Ruijin Wang. 2019.
+
+A Joint Approach to Detect Malicious URL Based on Attention Mechanism.
+
+International Journal of Computational Intelligence and Applications 18, 03 (2019),
+
+1950021.
+
+[29] Alec Radford, Jeffrey Wu, Rewon Child, David Luan, Dario Amodei, and Ilya
+
+Sutskever. 2019. Language Models are Unsupervised Multitask Learners. Technical
+
+Report. Tech. Rep., Technical report, OpenAI. https://d4mucfpksywv.cloudfront.
+
+net/better- language- models/language- models.pdf
+
+[30] F. Ren, Z. Jiang, and J. Liu. 2019. A Bi-Directional LSTM Model with Attention
+
+for Malicious URL Detection. In 2019 IEEE 4th Advanced Information Technology,
+
+Electronic and Automation Control Conference (IAEAC), Vol. 1. 300–305.
+
+[31] Anna Rogers, Olga Kovaleva, and Anna Rumshisky. 2020. A primer in bertology:
+
+What we know about how bert works. arXiv preprint arXiv:2002.12327 (2020).
+
+[32] Doyen Sahoo, Chenghao Liu, and Steven C. H. Hoi. 2017. Malicious URL Detection
+
+using Machine Learning: A Survey. 1, 1 (2017), 1–37. arXiv:1701.07179 http:
+
+//arxiv.org/abs/1701.07179
+
+[33] Mike Schuster and Kaisuke Nakajima. 2012. Japanese and Korean voice search.
+
+IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)
+
+(2012), 5149–5152.
+
+[34] Rico Sennrich, Barry Haddow, and Alexandra Birch. 2016. Neural Machine
+
+Translation of Rare Words with Subword Units. In Proceedings of the 54th Annual
+
+Meeting of the Association for Computational Linguistics (Volume 1: Long Papers).
+
+1715–1725.
+
+[35] Rico Sennrich, Barry Haddow, and Alexandra Birch. 2016. Neural machine
+
+translation of rare words with subword units. Annual Meeting of the Association
+
+for Computational Linguistics (ACL) (2016), 1715–1725.
+
+[36] Leslie N Smith. 2017. Cyclical learning rates for training neural networks. In
+
+2017 IEEE Winter Conference on Applications of Computer Vision (WACV). IEEE,
+
+464–472.
+
+[37] Farid Tajaddodianfar, Jack W. Stokes, and Arun Gururajan. 2020. Texception: A
+
+Character/Word-Level Deep Learning Model for Phishing URL Detection. IEEE
+
+International Conference on Acoustics, Speech and Signal Processing (ICASSP) (2020),
+
+2857–2861.
+
+[38] Wilson L Taylor. 1953. “Cloze procedure”: A new tool for measuring readability.
+
+Journalism quarterly 30, 4 (1953), 415–433.
+
+[39] Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones,
+
+Aidan N Gomez, Łukasz Kaiser, and Illia Polosukhin. 2017. Attention is all
+
+you need. In Advances in neural information processing systems. 5998–6008.
+
+[40] Bailin Wang, Richard Shin, Xiaodong Liu, Oleksandr Polozov, and Matthew
+
+Richardson. 2020. RAT-SQL: Relation-Aware Schema Encoding and Linking for
+
+Text-to-SQL Parsers. In Proceedings of the 58th Annual Meeting of the Association
+
+for Computational Linguistics. Association for Computational Linguistics, Online,
+
+7567–7578. https://doi.org/10.18653/v1/2020.acl-main.677
+
+[41] Jonathan Woodbridge, Hyrum S Anderson, Anjum Ahuja, and Daniel Grant.
+
+2018. Detecting homoglyph attacks with a siamese neural network. In 2018 IEEE
+
+Security and Privacy Workshops (SPW). IEEE, 22–28.
+
+[42] Yonghui Wu, Mike Schuster, Zhifeng Chen, Quoc V. Le, Mohammad Norouzi,
+
+Wolfgang Macherey, Maxim Krikun, Yuan Cao, Qin Gao, Klaus Macherey, Jeff
+
+Klingner, Apurva Shah, Melvin Johnson, Xiaobing Liu, Lukasz Kaiser, Stephan
+
+Gouws, Yoshikiyo Kato, Taku Kudo, Hideto Kazawa, Keith Stevens, George Kurian,
+
+Nishant Patil, Wei Wang, Cliff Young, Jason Smith, Jason Riesa, Alex Rudnick,
+
+Oriol Vinyals, Gregory S. Corrado, Macduff Hughes, and Jeffrey Dean. 2016.
+
+Google’s Neural Machine Translation System: Bridging the Gap between Human
+
+and Machine Translation. ArXiv abs/1609.08144 (2016).
+
+[43] Suleiman Y Yerima and Mohammed K Alzaylaee. 2020. High Accuracy Phishing
+
+Detection Based on Convolutional Neural Networks. In 2020 3rd International
+
+Conference on Computer Applications & Information Security (ICCAIS). IEEE, 1–6.
+
+[44] Pengcheng Yin, Graham Neubig, Wen-tau Yih, and Sebastian Riedel. 2020.
+
+TaBERT: Pretraining for Joint Understanding of Textual and Tabular Data.
+
+In Proceedings of the 58th Annual Meeting of the Association for Computa-
+
+tional Linguistics. Association for Computational Linguistics, Online, 8413–8426.
+
+https://doi.org/10.18653/v1/2020.acl- main.745
+
+URLTran: Improving Phishing URL Detection Using Transformers
+[45] Xiang Zhang, Junbo Zhao, and Yann Lecun. 2015. Character-level Convolutional Networks for Text. (2015), 1–9. arXiv:arXiv:1502.01710
+[46] Zhuosheng Zhang, Hai Zhao, Kangwei Ling, Jiangtong Li, Zuchao Li, Shexia He, and Guohong Fu. 2019. Effective subword segmentation for text comprehension. IEEE/ACM Transactions on Audio, Speech, and Language Processing 27, 11 (2019), 1664–1674.
+[47] zvelo. [n.d.]. The Rise of Single-Use Phishing URLs and the Need for ZeroSecond Detection. https://zvelo.com/single-use-phishing-urls-need-zerosecond- detection/
+
+A HYPERPARAMETER SETTINGS
+For reproducibility, this appendix provides the hyperparameter settings for the three variants of the proposed URLTran model as well as those for two baseline models. Tables 3 and 4 list the hyperparameters for the URLNet and Texception models that we use as baselines in our study. The hyperparameter settings for the best performing URLTran_BERT model are provided in Table 5. In addition, the best hyperparameter settings for the URLTran_RoBERTa and URLTran_CustVoc are given in Tables 6 and 7, respectively.
+
+Parameter
+
+Value
+
+max_len_words max_len_chars max_len_subwords min_word_freq
+dev_pct delimit_mode
+emb_dim filter_sizes default_emb_mode nb_epochs train_batch_size train_l2_reg_lambda
+train_lr
+
+200 1000 20
+1 0.001
+1 32 [3,4,5,6] char + wordCNN 5 128 0.0 0.001
+
+Table 3: Hyperparameters used for URLNet.
+
+Parameter
+
+Value
+
+Characters Branch
+Words Branch
+FastText Model
+
+embedding dimension number of blocks block filters
+Adaptive MaxPool output maximum characters embedding dimension number of blocks block filters
+Adaptive MaxPool output maximum words
+minimum words to include vocabulary size window size n-grams
+embedding dimension epochs trained
+
+32 1 [2,3,4,5] 32,32 1000 32 1 [1,3,5] 32,16 50 50 120000 7 2-6 32 30
+
+Table 4: Hyperparameters used for Texception.
+
+Parameter
+
+Value
+
+attention probs dropout prob hidden act
+hidden dropout prob hidden size
+initializer range intermediate size layer norm eps max position embeddings num attention heads num hidden layers type vocab size
+vocab size bert model max seq length train batch size learning rate num train epochs
+
+0.1 gelu 0.1 768 0.02 3072 1e-12 512 12 12
+2 30522 bert-base-uncased 128
+32 2e-5 10
+
+Table 5: Hyperparameters used for training the proposed
+
+Huggingface-based URLTran_BERT model.
+
+Parameter
+
+Value
+
+Number of Layers Hidden size
+FFN inner hidden size Attention heads
+Attention head size Dropout
+Attention Dropout Warmup Steps
+Peak Learning Rate Batch Size Max Epochs
+Learning Rate Decay Adam 𝜖 Adam 𝛽1 Adam 𝛽2
+Gradient Clipping Tokens per sample
+
+12 768 3072 12 64 0.1 0.1 508 1e-4 2k 10 Linear 1e-6 0.9 0.98 0.0 256
+
+Table 6: Hyperparameters used for fine-tuning the proposed
+
+Fairseq-based URLTran_RoBERTa model.
+
+Maneriker et al.
+
+Parameter
+
+Value
+
+Number of Layers Hidden size
+FFN inner hidden size Attention heads
+Attention head size Dropout
+Attention Dropout Tokens per sample Peak Learning Rate
+Batch Size Tokenizer Type Weight Decay
+Max Epochs
+Learning Rate Decay
+LR Shrink Adam 𝜖 Adam 𝛽1 Adam 𝛽2 Gradient Clipping Learning Rate vocab size
+
+3 768 3072 12 64 0.1 0.1 128 1e-4 2k Byte BPE 0.01 30 reduce on plateau 0.5 1e-6 0.9 0.98 0.0 1e-4 10000
+
+Parameter
+Learning Rate Batch Size Max Epochs Learning Rate Decay
+Warmup ratio
+
+Value 1e-4 2k 10
+Linear
+0.06
+
+Table 7: Hyperparameters used for pre-training (left) and
+
+fine-tuning (right) the proposed URLTran_CustVoc model.
+

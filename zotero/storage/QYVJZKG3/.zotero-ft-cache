@@ -1,0 +1,47 @@
+Skip to main content
+PyPy/
+
+    Features
+    Download
+    Dev Docs
+    Blog
+    About
+
+PyPy
+
+A fast , compliant alternative implementation of Python
+Download PyPy
+
+What is PyPy ?
+
+Documentation (external link)
+PyPy logo
+
+On average, PyPy is 4.5 times faster than CPython
+PyPy vs. Python speed comparison graph"
+
+PyPy (with JIT) benchmark times normalized to CPython. Smaller is better. Based on the geometric average of all benchmarks
+
+ "... we are avid fans of PyPy and
+commensurately thankful for the great work by the PyPy team over the
+years. PyPy has enabled us to use Python for a larger part of our
+toolset than CPython alone would have supported, and its smooth
+integration with C/C++ through CFFI has helped us attain a better
+tradeoff between performance and programmer productivity in our
+projects"
+-- Vilhjálmur Þorsteinsson, founder and CEO of Miðeind, Feb 2022
+
+Advantages and distinct Features
+
+    Speed: thanks to its Just-in-Time compiler, Python programs often run faster on PyPy. (What is a JIT compiler?)
+
+    Memory usage: memory-hungry Python programs (several hundreds of MBs or more) might end up taking less space than they do in CPython.
+
+    Compatibility: PyPy is highly compatible with existing python code. It supports cffi , cppyy , and can run popular python libraries like twisted , and django . It can also run NumPy, Scikit-learn and more via a c-extension compatibility layer.
+
+    Stackless: PyPy comes by default with support for stackless mode , providing micro-threads for massive concurrency.
+
+    As well as other features .
+
+© 2022 The PyPy Team   Built with Nikola   Last built 2022-07-29T08:13
+RSS feed

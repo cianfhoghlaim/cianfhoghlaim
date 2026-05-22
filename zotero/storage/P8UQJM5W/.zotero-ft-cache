@@ -1,0 +1,752 @@
+Skip to main content
+Skip to article
+View PDF
+Download full issue
+Natural Language Processing Journal
+Volume 10, March 2025, 100124
+Evaluation of open and closed-source LLMs for low-resource language with zero-shot, few-shot, and chain-of-thought prompting
+Author links open overlay panel
+Zabir Al Nazi a
+,
+Md. Rajib Hossain b
+,
+Faisal Al Mamun c
+Show more
+Share
+Cite
+https://doi.org/10.1016/j.nlp.2024.100124
+Get rights and content
+Under a Creative Commons license
+Open access
+Abstract
+As the global deployment of Large Language Models (LLMs) increases, the demand for multilingual capabilities becomes more crucial. While many LLMs excel in real-time applications for high-resource languages, few are tailored specifically for low-resource languages. The limited availability of text corpora for low-resource languages, coupled with their minimal utilization during LLM training, hampers the models’ ability to perform effectively in real-time applications. Additionally, evaluations of LLMs are significantly less extensive for low-resource languages. This study offers a comprehensive evaluation of both open-source and closed-source multilingual LLMs focused on low-resource language like Bengali, a language that remains notably underrepresented in computational linguistics. Despite the limited number of pre-trained models exclusively on Bengali, we assess the performance of six prominent LLMs, i.e., three closed-source (GPT-3.5, GPT-4o, Gemini) and three open-source (Aya 101, BLOOM, LLaMA) across key natural language processing (NLP) tasks, including text classification, sentiment analysis, summarization, and question answering. These tasks were evaluated using three prompting techniques: Zero-Shot, Few-Shot, and Chain-of-Thought (CoT). This study found that the default hyperparameters of these pre-trained models, such as temperature, maximum token limit, and the number of few-shot examples, did not yield optimal outcomes and led to hallucination issues in many instances. To address these challenges, ablation studies were conducted on key hyperparameters, particularly temperature and the number of shots, to optimize Few-Shot learning and enhance model performance. The focus of this research is on understanding how these LLMs adapt to low-resource downstream tasks, emphasizing their linguistic flexibility and contextual understanding. Experimental results demonstrated that the closed-source GPT-4o model, utilizing Few-Shot learning and Chain-of-Thought prompting, achieved the highest performance across multiple tasks: an F1 score of 84.54% for text classification, 99.00% for sentiment analysis, a
+F1bert
+ score of 72.87% for summarization, and 58.22% for question answering. For transparency and reproducibility, all methodologies and code from this study are available on our GitHub repository: https://github.com/zabir-nabil/bangla-multilingual-llm-eval.
+Previous
+Next
+Keywords
+Large language modelsZero-shotFew-shotChain-of-thoughtGPT-4Llama 3Ablation studiesPromptingLLM reasoningLow-resourceBangla
+1. Introduction
+Large Language Models (LLMs) have made significant advancements in the field of natural language processing (NLP), particularly their practical implications. Prompting is a technique that involves providing a set of instructions, or even a single instruction, to LLMs to help them achieve the user’s goals and enhance their performance. When an LLM generates output without any prior examples or context, it is referred to as zero-shot prompting. In contrast, when the model is given some prior examples or context to guide its responses, it is known as few-shot prompting. Additionally, when a task is broken down into smaller, manageable sub-tasks, and the decisions and reasoning from these sub-tasks are combined to produce the final output, it is referred to as Chain-of-Thought prompting. LLMs are now capable of handling complex language tasks such as reasoning, summarization, translation, question answering, and classification more effectively by understanding the context of words and sentences, allowing them to generate natural and coherent text. They can produce detailed summaries, answer questions, and classify text with notable accuracy. While there are many pre-trained LLM models and prompting techniques available for high-resource languages, there is still a significant shortage for low-resource languages like Bengali. As a result, there is a wide-open opportunity for NLP researchers to explore the use of LLMs in low-resource languages, which serves as the primary motivation for conducting this research.
+Multilingual LLMs face a fundamental challenge known as the “Curse of Multilinguality”, which refers to the trade-off between supporting multiple languages and maintaining model performance. During the foundation model generation phase, adding more languages to a fixed-capacity model initially boosts performance for low-resource languages through positive transfer from high-resource languages. However, foundation models are still insufficient for low-resource languages. Beyond a certain point, adding more languages reduces performance for each, leading to a decline in overall accuracy. This limitation has motivated the development of different prompting techniques to evaluate the effectiveness of LLMs in Bengali. The key to the success of LLMs lies in their ability to learn from large corpora of text during the pre-training phase. By processing vast amounts of text data, they can seemingly understand patterns, grammar, and context within language. LLMs use the transformer architecture, which relies on self-attention mechanism. This self-attention allows the model to focus on different parts of a sentence to determine the relationship between words, even if they are far apart, leading to more coherent and accurate language understanding (Lin et al., 2022).
+However, most of the LLMs primarily focus on high-resource languages like English and Chinese, limiting their usability for low- resource languages such as Bengali. In contrast, multilingual LLMs are trained on extensive multilingual corpora, enabling them to effectively understand and manage multiple languages (Qin et al., 2024, Xu et al., 2024). This broad language coverage allows multilingual LLMs to handle diverse linguistic tasks more comprehensively. However, support for low-resource languages like Bengali remains limited. Bengali is the seventh most spoken language globally (Hossain et al., 2025) and the primary language of two regions: the Indian states of West Bengal and Tripura, as well as Bangladesh. Recently, numerous studies have been conducted using CNN, LSTM, and transformer-based language models for Bengali downstream tasks. However, limited research has been carried out on Bengali using LLMs. As a result, the performance of LLMs on various Bengali downstream tasks remains a critical area of study. To address this gap, this research employs ablation studies on key hyperparameter adaptations and evaluates the performance of three prompting techniques across six LLMs in four Bengali downstream tasks.
+Given the motivations and implications of LLMs for low-resource language like Bengali, this research aims to address the following research questions (RQs):
+•
+RQ1: How do prompting techniques (Zero-Shot, Few-Shot, and Chain-of-Thought) affect LLMs performance on low-resource downstream tasks like classification, summarization, and question answering?
+•
+RQ2: What are the strengths and weaknesses of open-source vs. closed-source LLMs in handling low-resource languages?
+•
+RQ3: How do variations in shot selection and temperature settings impact the performance and reliability of LLMs, particularly in low-resource languages?
+To address the research questions RQ1–RQ3, this study applied three prompting techniques (Zero-Shot, Few-Shot and Chain-of-Thought) across six LLMs (GPT-3.5, GPT-4, Gemini, Aya 101, BLOOM 7b1, and Llama3 8b) for Bengali four downstream tasks: (i) News classification, (ii) Sentiment analysis (Positive and Negative), (iii) Abstractive summarization, and (iv) Question answering. To the best of our knowledge, this is the first study to use LLMs for evaluating four distinct Bengali downstream task performances with three different prompting techniques.
+The answers to the research questions (ARQs) and the key contributions of this research are outlined below:
+•
+ARQ1: We developed a procedure to evaluate three prompting techniques across six LLMs for four low-resource NLP downstream tasks: news classification, sentiment analysis, summarization, and question answering. The effectiveness of these prompting strategies is detailed in Section 5.2 and summarized in Table 1, Table 2, Table 3, and Table 3.
+•
+ARQ2: We evaluated the performance of open-source and closed-source LLMs and summarized their outcomes. The performance summary and error analysis highlight the strengths and weaknesses of each model. Further details are provided in Section 5.2.5.
+•
+ARQ3: Employing ablation studies reveals that shot selection and temperature settings significantly impact the performance of LLMs in Bengali NLP tasks. Optimal performance was achieved with three-shot prompting, where the model benefits from contextual examples, while adding more few-shot examples introduced noise, degrading accuracy. Similarly, lower temperature values (0.0–0.2) produced focused and consistent outputs, whereas higher temperatures led to randomness and hallucinated responses resulting in reduced accuracy, with a steep decline from 94.87% at 0.1 to 10.90% at 2.0. Details in Section 5.2.6, Table 5, and Table 6.
+The structure of the article is as follows: Section 2 presents the related work, while Section 3 describes the four datasets along with their attributes. Section 4 outlines the methodology, and Section 5 covers the experimental setup, evaluation metrics, and result analysis. Section 6 provides insights and key findings, and finally, Section 7 summarizes the research and discusses future research directions.
+
+Table 1. Performance summary of news classification across six models and three prompting techniques. The maximum token length is set to 512 for GPT-3.5 and GPT-4o, while it is limited to 128 for the other models. Additionally, the top-p value is configured to 0.9. Bold values indicate the highest performance metrics and the lowest Log loss values.
+
+Model	Prompt	Accuracy	Precision	Recall	F1	AUC	Log loss
+GPT-3.5	0-shot	0.55	0.46	0.45	0.44	0.75	11.80
+3-shot	0.59	0.56	0.48	0.48	0.77	11.71
+CoT	0.14	0.36	0.11	0.15	0.56	7.58
+GPT-4o	0-shot	0.77	0.80	0.77	0.74	0.87	8.30
+3-shot	0.85	0.86	0.85	0.85	0.92	5.39
+CoT	0.74	0.82	0.74	0.73	0.85	9.32
+Gemini	0-shot	0.68	0.71	0.62	0.62	0.82	10.95
+3-shot	0.70	0.64	0.57	0.58	0.83	10.51
+CoT	0.57	0.61	0.47	0.49	0.76	14.06
+Aya 101	0-shot	0.58	0.71	0.48	0.53	0.78	4.06
+3-shot	0.73	0.72	0.60	0.62	0.86	4.58
+CoT	0.64	0.69	0.52	0.55	0.81	5.89
+BLOOM	0-shot	0.11	0.01	0.11	0.02	0.50	30.70
+3-shot	0.11	0.01	0.11	0.02	0.50	30.70
+CoT	0.11	0.01	0.11	0.02	0.50	30.70
+LLaMA	0-shot	0.46	0.54	0.41	0.42	0.70	19.44
+3-shot	0.47	0.57	0.42	0.44	0.70	19.22
+CoT	0.38	0.43	0.31	0.32	0.66	22.35
+2. Related work
+The evaluation of LLMs with various prompting techniques is an emerging and significant research area for both low-resource and high-resource languages. In this study, we assessed the performance of LLMs on Bengali tasks, including text classification (news and sentiment), summarization, and question answering, using three prompting techniques: Zero-Shot, Few-Shot, and Chain-of-Thought in six LLMs. The following subsection presents a summary of research related to these prompting techniques for both of low and high resource languages.
+2.1. Zero-Shot prompting
+Recently, Zero-Shot prompting in LLMs has gained significant attention from researchers due to its effectiveness in scenarios where task-specific models or knowledge are unavailable. The reasoning capabilities of Zero-Shot LLM models are evaluated in López Espejel et al. (2023), where the Zero-Shot performance of GPT-3.5, GPT-4, and BARD models is empirically assessed for the English language. Similarly, D’Asaro et al. (2024) developed a multimodal recommendation system for English using Zero-Shot prompting, combining image embeddings from CLIP and text embeddings from ALBEF.
+A low-resource Turkish text classification system was developed in Çelik and Dalyan (2023) using Zero-Shot prompting on ConvBERT, achieving a maximum accuracy of 79%. Barrena et al. (2021) introduced a cross-lingual named entity disambiguation system with XLM-R, targeting low-resource Spanish alongside high-resource English and Chinese. Kabir et al. (2024) empirically evaluated the performance of Zero-Shot LLMs on Bengali tasks, including summarization, question answering, and sentiment analysis. While Zero-Shot LLMs show reasonable accuracy for many high-resource languages, their performance on low-resource tasks remains suboptimal.
+2.2. Few-Shot prompting
+The remarkable success of generative pre-trained transformers (GPT) has brought Few-Shot prompting in LLMs into the spotlight, particularly for low-resource NLP tasks. Cheng et al. (2024) developed a Few-Shot LLM-based NER system that achieved an F1-score of 88.7% on the CoNLL dataset and 78.3% on the FewNERD dataset using the GPT-4 model. Similarly, Song et al. (2023) introduced a Few-Shot event classification system for two English datasets, i.e., FewEvent and RAMS. Mahfuz et al. (2024) evaluated the performance of open-weight and closed-source LLMs, such as LLaMA-3 and GPT-4, alongside fine-tuned encoder–decoder models on various Bengali NLP tasks, including translation, summarization, and question answering. The results indicate that while LLMs perform well in reasoning tasks, their effectiveness in Bengali script generation is inconsistent due to challenges such as inefficient tokenization, which leads to higher computational costs and degraded performance.
+A Few-Shot LLM-based system was developed for English text summarization, achieving a maximum R1 score of 0.3729, R2 score of 0.0992, and RL score of 0.2276 on the Yelp test set (Bražinskas et al., 2020). Similarly, Ram et al. (2021) introduced a Few-Shot LLM question-answering system, utilizing 100,000 annotated questions and 128 training examples as prior knowledge, achieving a maximum F1 score of 72.7% on the SQuAD dataset. Overall, Few-Shot prompting has proven to be more effective and yields better accuracy compared to Zero-Shot prompting.
+
+Table 2. Sentiment analysis performance summary across 6 models and 3 prompting techniques. The maximum token length is set to 512 for GPT-3.5 and GPT-4o, while it is limited to 128 for the other models. Additionally, the top-p value is configured to 0.9. Bold values indicate the highest performance metrics and the lowest Log loss values.
+
+Model	Prompt	Accuracy	Precision	Recall	F1	AUC	Log loss
+GPT-3.5	0-shot	0.37	0.35	0.36	0.35	0.37	22.87
+3-shot	0.93	0.97	0.88	0.92	0.93	2.54
+CoT	0.02	0.01	0.01	0.01	0.02	35.35
+GPT-4o	0-shot	0.96	0.99	0.92	0.95	0.95	1.62
+3-shot	0.97	0.99	0.96	0.97	0.97	0.92
+CoT	0.99	0.99	0.99	0.99	0.99	0.46
+Gemini	0-shot	0.91	0.97	0.84	0.90	0.91	3.23
+3-shot	0.87	0.98	0.75	0.85	0.87	4.62
+CoT	0.88	0.87	0.88	0.87	0.88	4.39
+Aya 101	0-shot	0.37	0.35	0.36	0.35	0.37	22.87
+3-shot	0.93	0.97	0.88	0.92	0.93	2.54
+CoT	0.02	0.01	0.01	0.01	0.02	35.35
+BLOOM	0-shot	0.48	0.48	1.00	0.65	0.50	18.72
+3-shot	0.48	0.48	1.00	0.65	0.50	18.72
+CoT	0.48	0.48	1.00	0.65	0.50	18.72
+LLaMA	0-shot	0.77	0.75	0.77	0.76	0.77	8.32
+3-shot	0.94	0.92	0.97	0.94	0.94	1.84
+CoT	0.71	0.63	0.96	0.76	0.72	10.40
+
+Table 3. Statistical summary of 6 LLMs models with 3 prompting for Bengali article summarization. The maximum token length is set to 512 for GPT-3.5 and GPT-4o, while it is limited to 128 for the other models. Additionally, the top-p value is configured to 0.9. Bold values indicate the highest performance metrics and the lowest Log loss values.
+
+Model	Prompt	F
+rouge−l
+	P
+rouge−l
+	R
+rouge−l
+	P
+bert
+	R
+bert
+	F1
+bert
+	BLEU
+GPT-3.5	0-shot	0.1109	0.1117	0.1200	0.7071	0.7089	0.7076	0.2800
+3-shot	0.1140	0.1049	0.1500	0.6922	0.7133	0.7019	0.2570
+CoT	0.1050	0.0836	0.1589	0.6261	0.6775	0.6504	0.1718
+GPT-4o	0-shot	0.1357	0.1161	0.1766	0.7025	0.7372	0.7190	0.3039
+3-shot	0.1483	0.1459	0.1603	0.7234	0.7347	0.7287	0.3387
+CoT	0.1405	0.1282	0.1662	0.7026	0.7295	0.7155	0.3121
+Gemini	0-shot	0.1098	0.0973	0.1346	0.7014	0.7233	0.7119	0.3141
+3-shot	0.1112	0.1018	0.1316	0.7033	0.7218	0.7121	0.3196
+CoT	0.1121	0.0976	0.1410	0.6990	0.7242	0.7110	0.3148
+Aya 101	0-shot	0.1109	0.1117	0.1200	0.7071	0.7089	0.7076	0.2800
+3-shot	0.1140	0.1049	0.1500	0.6922	0.7133	0.7019	0.2570
+CoT	0.1050	0.0836	0.1589	0.6261	0.6775	0.6504	0.1718
+BLOOM	0-shot	0.0534	0.0288	0.4376	0.6150	0.7384	0.6707	0.0354
+3-shot	0.0319	0.0166	0.4480	0.5651	0.6503	0.6046	0.0203
+CoT	0.0293	0.0152	0.4419	0.5551	0.6386	0.5938	0.0183
+LLaMA	0-shot	0.1150	0.1007	0.1542	0.6954	0.7228	0.7083	0.2663
+3-shot	0.1085	0.1113	0.1232	0.7031	0.7100	0.7059	0.2570
+CoT	0.0783	0.0655	0.1535	0.6416	0.6945	0.6659	0.1660
+
+Table 4. RQA evaluation results across models and prompting techniques.
+
+Model	Prompt	Dataset	Accuracy	Precision	Recall	F1 Score	AUC-ROC	Log loss
+GPT-3.5	0-shot	8th-Science	0.21	0.13	0.13	0.12	0.61	28.30
+3-shot	8th-Science	0.34	0.22	0.22	0.21	0.67	23.87
+CoT	8th-Science	0.30	0.19	0.19	0.19	0.65	25.29
+0-shot	12th-Math	0.22	0.07	0.06	0.06	0.63	28.26
+3-shot	12th-Math	0.28	0.12	0.12	0.11	0.62	26.06
+CoT	12th-Math	0.29	0.05	0.04	0.05	0.63	25.61
+0-shot	12th-Physics	0.23	0.14	0.14	0.13	0.64	27.71
+3-shot	12th-Physics	0.28	0.16	0.16	0.15	0.63	25.97
+CoT	12th-Physics	0.31	0.15	0.15	0.15	0.64	24.93
+GPT-4o	0-shot	8th-Science	0.69	0.53	0.53	0.53	0.84	11.22
+3-shot	8th-Science	0.73	0.58	0.57	0.58	0.86	9.64
+CoT	8th-Science	0.68	0.55	0.55	0.55	0.85	11.38
+0-shot	12th-Math	0.49	0.46	0.46	0.45	0.76	18.23
+3-shot	12th-Math	0.51	0.53	0.50	0.50	0.79	17.69
+CoT	12th-Math	0.45	0.32	0.30	0.30	0.72	19.65
+0-shot	12th-Physics	0.68	0.64	0.64	0.64	0.88	11.49
+3-shot	12th-Physics	0.70	0.67	0.67	0.67	0.89	10.91
+CoT	12th-Physics	0.67	0.65	0.64	0.64	0.89	11.83
+Gemini	0-shot	8th-Science	0.60	0.42	0.42	0.41	0.79	14.45
+3-shot	8th-Science	0.54	0.39	0.38	0.38	0.77	16.58
+CoT	8th-Science	0.50	0.36	0.35	0.35	0.75	17.93
+0-shot	12th-Math	0.52	0.34	0.32	0.32	0.73	17.22
+3-shot	12th-Math	0.48	0.42	0.36	0.37	0.72	18.59
+CoT	12th-Math	0.48	0.21	0.19	0.19	0.76	18.60
+0-shot	12th-Physics	0.58	0.43	0.44	0.43	0.79	16.26
+3-shot	12th-Physics	0.58	0.49	0.49	0.49	0.82	14.99
+CoT	12th-Physics	0.55	0.37	0.37	0.37	0.78	16.26
+Aya 101	0-shot	8th-Science	0.03	0.00	0.01	0.00	0.50	34.94
+3-shot	8th-Science	0.08	0.05	0.05	0.05	0.53	33.04
+CoT	8th-Science	0.10	0.06	0.06	0.06	0.54	32.41
+0-shot	12th-Math	0.19	0.05	0.05	0.02	0.50	29.22
+3-shot	12th-Math	0.22	0.13	0.15	0.12	0.57	28.03
+CoT	12th-Math	0.20	0.03	0.05	0.04	0.55	28.95
+0-shot	12th-Physics	0.13	0.00	0.01	0.00	0.50	31.28
+3-shot	12th-Physics	0.19	0.07	0.07	0.06	0.54	29.36
+CoT	12th-Physics	0.17	0.03	0.04	0.03	0.53	30.05
+BLOOM	0-shot	8th-Science	0.22	0.13	0.14	0.13	0.62	27.98
+3-shot	8th-Science	0.04	0.00	0.01	0.00	0.50	34.46
+0-shot	12th-Math	0.20	0.04	0.06	0.04	0.58	28.67
+3-shot	12th-Math	0.22	0.01	0.05	0.02	0.50	28.22
+0-shot	12th-Physics	0.20	0.09	0.10	0.09	0.59	28.98
+3-shot	12th-Physics	0.15	0.00	0.01	0.00	0.50	30.48
+LLaMA	0-shot	8th-Science	0.10	0.05	0.04	0.04	0.55	32.57
+3-shot	8th-Science	0.19	0.11	0.10	0.11	0.60	29.09
+0-shot	12th-Math	0.12	0.02	0.01	0.01	0.55	31.83
+3-shot	12th-Math	0.13	0.02	0.02	0.02	0.56	31.42
+0-shot	12th-Physics	0.13	0.06	0.06	0.06	0.58	31.42
+3-shot	12th-Physics	0.18	0.08	0.07	0.07	0.58	29.69
+
+Table 5. Impact of shot selection on LLaMa3 8B performance for sentiment analysis.
+
+Shots	Accuracy	Precision	Recall	F1 Score	AUC-ROC	Log loss
+Zero	77.00	75.00	77.00	76.00	77.00	8.32
+One	82.05	92.73	68.00	78.46	81.53	6.46
+Two	85.90	88.41	81.33	84.72	85.73	5.08
+Three	94.87	92.41	97.33	94.81	94.96	1.8484
+Four	65.38	67.80	53.33	59.70	64.94	12.47
+
+Table 6. Impact of temperature value on LLaMa3 8B performance for sentiment analysis.
+
+Temperature	Accuracy	Precision	Recall	F1 Score	AUC-ROC	Log loss
+0.0	93.59	91.14	96.00	93.51	93.68	2.3105
+0.1	94.87	92.41	97.33	94.81	94.96	1.8484
+0.2	94.87	92.41	97.33	94.81	94.96	1.8484
+0.92	94.23	92.31	96.00	94.12	94.30	2.0794
+1.28	91.67	90.79	92.00	91.39	91.68	3.0036
+1.64	68.59	67.57	66.67	67.11	68.52	11.3214
+2.0	10.90	11.90	13.33	12.58	10.099	32.1158
+2.3. Chain-of-Thought prompting
+Chain-of-Thought (CoT) prompting enhances the performance of LLMs by improving their reasoning capabilities, allowing them to solve complex tasks through step-by-step thinking (Wei et al., 2024). Kalyan (2024) provided a comprehensive review of GPT-3.5 and GPT-4 research, with a particular focus on recent advancements in CoT-based prompting. Additionally, Rasool et al. (2024) developed a question-answering system using CoT prompting and evaluated the performance of various LLMs. Their results show that the GPT-4 model achieved the highest accuracy of 37.39% on CogTale dataset. These studies demonstrate that CoT prompting can significantly enhance LLMs’ ability to handle tasks requiring multi-step reasoning, though the effectiveness may vary across models and tasks.
+Shi et al. (2022) introduced the Multilingual Grade School Math (MGSM) benchmark, featuring 250 math problems from the GSM8K dataset translated into ten diverse languages. Their findings highlight that large language models (LLMs), particularly when utilizing CoT prompting, exhibit strong multilingual reasoning abilities, including in underrepresented languages like Bengali and Swahili. The study further demonstrates that CoT prompting not only enhances performance in mathematical problem-solving but also improves LLMs’ reasoning capabilities in non-mathematical tasks, such as commonsense reasoning and word-in-context semantic judgment. Toraman (2024) developed a low-resource Turkish downstream open-source LLMs models adaption system. They employed intrinsic evaluation for word quality assessment, instruction fine-tuning, tasks specific fine-tuning and quantinual training. Sentiment analysis and reasoning tasks using LLMs with CoT-based prompting achieved state-of-the-art (SOTA) performance in Fei et al. (2023), with a maximum accuracy of 87.45% on the restaurant dataset and 85.16% on the laptop review dataset. Overall, CoT-based prompting not only enhances the reasoning capabilities of LLMs but also helps explain the causes of hallucinated outputs and provides guidance for mitigating such issues effectively.
+2.4. Differences from existing researches
+Most previous research has focused on high-resource languages, such as English, using Zero-Shot, Few-Shot, and CoT-based prompting for tasks like reasoning, recommendation systems, NER, question answering, and event classification (López Espejel et al., 2023, D’Asaro et al., 2024, Cheng et al., 2024, Song et al., 2023, Rasool et al., 2024). In contrast, limited research has explored low-resource languages, such as Turkish, Spanish, and Bengali, applying these prompting techniques for text classification, summarization, and question answering tasks (Çelik and Dalyan, 2023, Barrena et al., 2021, Kabir et al., 2024, Mahfuz et al., 2024). This research distinguishes itself from prior studies in the following ways:
+•
+This study is first to evaluate the effectiveness of Chain-of- Thought (CoT) prompting on Bengali language tasks, alongside Zero-Shot and Few-Shot techniques.
+•
+Focuses on multiple Bengali downstream tasks, including news classification, sentiment analysis, summarization, and question answering, offering comprehensive coverage.
+•
+Compares the performance of open-source models (e.g., BLOOM, LLaMA, Aya 101) with closed-source commercial models (e.g., GPT-4o, Gemini, GPT-3.5), highlighting their strengths and limitations for low-resource languages.
+•
+Presents empirical evidence demonstrating the performance differences between high-resource and low-resource languages, filling a crucial gap in the literature on multilingual LLMs.
+These contributions offer valuable insights into the effectiveness of advanced prompting methods, helping address challenges in Bengali NLP and bridging gaps in existing research.
+3. Datasets
+To evaluate the performance of prompting in LLM models for low-resource language, this study utilized four Bengali downstream task datasets: News Classification, Sentiment Analysis, Summarization, and Question Answering. Below is a summary of the key attributes for each dataset:
+•
+News Classification 
+dT1:
+–
+Dataset type: Multi-class Newspaper
+–
+Goal: Classify online News based on pre-defined category
+–
+Number of samples: 495
+–
+Number of class: 9
+–
+Max. words in a sample: 3289
+–
+Min. word in a sample: 17
+•
+Indic Sentiment Analysis 
+dT2:
+–
+Dataset type: User Review (positive/negative)
+–
+Goal: Classify sentiment based on user review
+–
+Number of samples: 156
+–
+Number of class: 2
+–
+Max. words in a sample: 58
+–
+Min. word in a sample: 3
+•
+Summarization (XL-Sum) 
+dT3:
+–
+Dataset type: BBC article-summary
+–
+Goal: Generate abstractive summary
+–
+Number of samples: 512
+–
+Max. words in an article: 980
+–
+Min. word in a sample: 68
+•
+Question Answering (BEnQA) 
+dT4:
+–
+Dataset type: School-level physics and Mathematics
+–
+Goal: Answering the question based on questions
+–
+Number of samples: 1652
+–
+Max. words in a question: 93
+–
+Min. word in a question: 7
+The Bangla Newspaper Dataset (
+dT1
+) contains over 400,000 Bengali news articles across 9 categories, providing a broad range of topics ideal for news classification tasks (Nazi, 2020). We used the test_2 split of this dataset to evaluate model performance on Bengali news categorization. The Indic Sentiment Analysis (
+dT2
+) dataset includes reviews labeled as positive, negative, or neutral, across multiple Indic languages. For our experiments, we selected the Bengali (bn) subset, enabling us to assess sentiment classification specifically for Bengali text.1
+The XL-Sum (
+dT3
+) is a large-scale multilingual summarization dataset containing 1.35 million article-summary pairs from the BBC across 45 languages, including Bengali. Known for its high-quality, abstractive summaries, the Bengali subset of XL-Sum was utilized with 512 samples to test the summarization capabilities of the models (Hasan et al., 2021). The BEnQA (
+dT4
+) is a new benchmark dataset for question answering and reasoning in Bengali and English, with 5000 questions covering science topics from middle to high school curricula. These questions span factual, application-based, and reasoning categories. We used subsets such as 8th_science, 12th_math_1, 12th_math_2, 12th_physics_1, and 12th_physics_2 to assess LLMs across different educational levels and subjects (Shafayat et al., 2024). Together, these datasets provide a well-rounded foundation for evaluating LLM performance on a variety of Bengali NLP tasks, including news categorization, sentiment analysis, summarization, and question answering. This comprehensive evaluation allows for an in-depth analysis of LLMs capabilities across different task types in Bengali.
+4. Methodology
+The primary focus of this study is to evaluate the effectiveness of various prompting techniques, i.e., Zero-Shot, Few-Shot, and Chain-of-Thought (CoT) in both closed and open-source LLMs for low-resource languages like Bengali. This evaluation is carried out across four downstream tasks using a Bengali dataset denoted as
+D=dT1,dT2,dT3,dT4
+, where
+dT1
+ represents the first task (Bengali text classification),
+dT2
+ covers the second task (Indic language sentiment analysis),
+dT3
+ pertains to multilingual summarization, and
+dT4
+ focuses on question answering. To evaluate these datasets, this study is structured into three key phases: foundation of LLMs, ablation studies, and the prompting process within the LLMs evaluation system. Each phase plays a crucial role in understanding and refining the performance of the models. The abstract view is presented in Fig. 1. The following subsections provide detailed descriptions of these components.
+Download: Download high-res image (382KB)
+Download: Download full-size image
+
+Fig. 1. Abstract process of prompting in LLMs for evaluation of low-resource multiple tasks: Classification (News & Sentiment), Summarization and Question Answering.
+
+4.1. Foundation of LLMs
+In this study, we utilized six LLM models, comprising three closed-source and three open-source versions. A brief description of each is provided below:
+Closed-source LLMs.
+These are proprietary models that are not publicly available for modification or fine-tuning. Access to these models is often limited through APIs, and their internal architectures remain undisclosed. In this research following three models are used:
+•
+GPT-3.5: Developed by OpenAI, GPT-3.5 is designed for generating natural language text and optimized for chat, making it more cost-effective than previous models. It provides a strong baseline with balanced performance across diverse NLP tasks. We used GPT 3.5 turbo in our experiments (Ye et al., 2023).
+•
+GPT-4 Omni (GPT-4o): GPT-4o extends GPT-4’s capabilities, handling text, audio, image, and video inputs with outputs in text, audio, and images. Known for quick response times and improved non-English language performance, it also offers advanced multimodal understanding, including built-in safety features.2 Gemini 1.5 Flash (Gemini): Developed by Google DeepMind, Gemini 1.5 Flash is a lightweight, cost-effective model optimized for speed and high-volume tasks, such as chat and long-context translation. It offers competitive pricing and high throughput, making it suitable for production environments and large-scale applications.3
+Open-source LLMs.
+These models are freely accessible, and researchers can modify, fine-tune, or deploy them for various tasks. Open-source LLMs encourage community-driven improvements and transparency in their development. In this research following three models are used:
+•
+Aya 101: Aya 101 is a massively multilingual model that supports 101 languages, trained on extensive datasets to maximize instruction-following capabilities. It provides strong performance on multilingual tasks, aiming to empower underrepresented languages in NLP (Üstün et al., 2024).
+•
+BLOOM 7b1 (BLOOM): An open-source model trained collaboratively by researchers worldwide, the model covers 46 languages and is designed to democratize LLM access. It offers competitive performance and is especially notable for its transparency and open-access ethos, making it a valuable resource for community-driven development (Scao et al., 2023). In our experiments, we used BLOOM 7b1 version.
+•
+LLaMA3 8B (LLaMA): Meta’s Llama3 8b is a foundation model known for its robust support for coding, multilinguality, and reasoning tasks. With capabilities extending to image, video, and speech processing, Llama3 delivers competitive results across modalities, but remains a work in progress with limited public release. Llama 3 8 billion model was used in our evaluation (Dubey et al., 2024).
+4.2. Ablation studies
+For this study, the ablation experiments were focused exclusively on Shot selection and temperature values for the LLaMA model. Due to time and cost constraints, the closed-source LLMs were excluded from this phase. The process followed a trial-and-error approach, where these parameters were adjusted iteratively to determine the optimal configuration for maximizing accuracy and stability.
+Experiments were conducted using various shot setups (e.g., Zero-Shot, Few-Shot) alongside temperature tuning to assess their impact on LLaMA’s performance, particularly for low-resource Bengali tasks. The insights gained from these studies allowed us to fine-tune the LLaMA model efficiently. The outcomes of the ablation studies are detailed in Section 5.2.6, and the optimal shot counts and temperature values derived were later applied across the other five LLMs to maintain consistency.
+4.3. Approaches of prompting in LLM-based evaluation: Prompting
+The Zero-Shot, Few-Shot, and Chain-of-Thought prompting in three open-source and three closed-source LLMs across multiple tasks, including classification, summarization, and questions answering.
+As shown in Fig. 1, we uses four datasets: online news classification (
+dT1
+), sentiment classification (
+dT2
+), summarization (
+dT3
+), and question answering (
+dT4
+), as described in Section 3. These datasets are used to evaluate the performance of six LLMs: GPT-3.5, GPT-4o, Gemini, Aya101, BLOOM7b1, and Llama3 8b. In the second phase, each prompt is used to evaluate these LLMs across the four tasks. The details of each prompt are outlined below.
+Zero-shot prompting: In this approach, the model is provided with a task without any prior examples or context. It generates a response based solely on the prompt, relying on its general knowledge to produce an answer. In this study, zero-shot prompting was employed for text classification (News and Sentiment) with an instruction prompts such as “Categorize the input text into the following predefined categories”. Similarly, zero-shot prompting was used for summarization and question answering tasks, utilizing the six foundation LLMs.
+Few-shot prompting (three-shot): For this method, the model is provided with three examples of the task before being asked to generate a response. This allows the model to infer the task requirements from the examples, potentially improving its accuracy by mimicking the demonstrated examples. We generally saw a lot of improvement in performance while using this strategy.
+Chain-of-thought prompting (CoT): In CoT prompting, the model is guided to generate a structured, step-by-step reasoning process before arriving at the final answer (Wei et al., 2022). This technique helps improve performance on tasks that require logical thinking by encouraging the model to explain its thought process. Below are task-specific steps used in CoT prompting:
+•
+News Classification:
+–
+Step 1: Understanding the main content of the article
+–
+Step 2: Identifying the main theme
+–
+Step 3: Matching with categories
+•
+Sentiment Analysis:
+–
+Step 1: Reading the review
+–
+Step 2: Identifying positive or negative words
+–
+Step 3: Determining the Sentiment
+•
+Summarization:
+–
+Step 1: Understanding the main content
+–
+Step 2: Identifying key information
+–
+Step 3: Writing the summary
+•
+Questions Answering:
+–
+Step 1: Understanding the question
+–
+Step 2: Reading the options
+–
+Step 3: Evaluating the options
+–
+Step 4: Selecting the correct answer
+This method aims to improve the model’s performance on tasks requiring logical reasoning or sequential thinking. However, our experiments revealed that longer prompt lengths in CoT prompting can sometimes lead to increased hallucination where the model generates irrelevant or incorrect outputs, i.e., negatively impacting overall performance. These prompting techniques were selected to evaluate how effectively models perform under different levels of guidance and task complexity.
+5. Experiments and results analysis
+This section first outlines the experimental setup and evaluation metrics, followed by a detailed presentation of the results and analysis.
+5.1. Experimental setup and evaluations measures
+To assess the performance of different prompting strategies in LLMs, this study utilized various platforms and resources, i.e., Gemini 1.5 Flash Model: Accessed via the Google Cloud Vertex AI Gemini API.4 GPT Models: GPT-4 Omni and GPT-3.5 were accessed through the OpenAI API.5 Llama Model: Deployed on an AWS g5.12xlarge virtual machine with 4 GPUs (96 GB GPU memory), 48 vCPUs, and 192 GB of RAM.6 utilizing the Aphrodite engine7 Aya and Bloom Models: Hosted on virtual machines with a single NVIDIA A100 SXM4 GPU (40 GB memory). This setup ensures a robust environment for benchmarking the impact of Zero-Shot, Few-Shot, and Chain-of-Thought prompting across various Bengali NLP tasks. The performance of LLM models under different prompting techniques was evaluated using Eqs. (1)–(12).
+(1)
+Accuracy=TP+TNTP+TN+FP+FN
+where
+TP
+ is True Positives,
+TN
+ is True Negatives,
+FP
+ is False Positives, and
+FN
+ is False Negatives.
+(2)
+Precision=TPTP+FP
+(3)
+Recall=TPTP+FN
+(4)
+F1 Score=2⋅Precision⋅RecallPrecision+Recall
+(5)
+Llog=−1N∑i=1Nyilog(pi)+(1−yi)log(1−pi)
+where
+N
+ is the number of samples,
+yi
+ is the true label (1 or 0), and
+pi
+ is the predicted probability of the positive class.
+For summarization tasks, we used the following metrics:
+(6)
+PROUGE-L=LCS(S,SR)len(S)
+(7)
+RROUGE-L=LCS(S,SR)len(R)
+(8)
+FROUGE-L=2⋅PROUGE-L⋅RROUGE-LPROUGE-L+RROUGE-L
+where
+LCS(S,SR)
+ is the Longest Common Subsequence between generated summary
+S
+ and reference summary
+SR
+.
+BERT Score: BERTScore evaluates sentence similarity by comparing contextual embeddings of tokens from a summary
+S
+ and a reference summary
+SR
+. Using pairwise cosine similarity, it calculates recall (R) and precision (P) by matching each token to the most similar token in the other sentence (Zhang et al., 2019). The F1 score is then computed as:
+(9)
+RBERT=1|SR|∑ri∈SRmaxsj∈Sri⊤sj
+(10)
+PBERT=1|S|∑sj∈Smaxri∈Rsj⊤ri
+(11)
+F1BERT=2PBERT⋅RBERTPBERT+RBERT
+These scores can be optionally weighted by inverse document frequency (idf) to give more importance to rare words, enhancing relevance in summary evaluation.
+BLEU: This measures n-gram overlap between generated and reference text:
+(12)
+BLEU=BP⋅exp∑n=1Nwnlogpn
+where
+BP
+ is the brevity penalty,
+wn
+ are weights for each n-gram precision
+pn
+, and
+N
+ is the maximum n-gram length. These metrics provide a comprehensive evaluation framework for different types of NLP tasks, allowing us to assess model performance across both classification and summarization contexts.
+5.2. Results analysis
+This section presents the performance of different prompting strategies in LLMs across four Bengali downstream tasks: text classification, sentiment analysis, abstractive summarization, and question answering. Each task and its associated results are detailed as follows:
+5.2.1. Performance on news classification
+dT1
+Table 1 presents a summary of the performance of Zero-Shot, Few-Shot, and Chain-of-Thought (CoT) prompting across six LLMs. The highest accuracy and F1 score of 85.00% were achieved by the GPT-4o model with 3-Shot prompting. In contrast, the lowest performance was observed with the BLOOM model, which achieved only 11.00% accuracy. Among the three prompting strategies, CoT-based prompting underperformed for Bengali news classification tasks. This decline in performance is primarily due to the model’s inability to fully capture the context and correctly identify the main theme of the news articles, which is crucial for accurate classification.
+In terms of error rates, the BLOOM model exhibited the highest logarithmic maximum loss of 30.70%, reflecting significant difficulty in this task. On the other hand, the Aya 101 model achieved the lowest loss value of 4.06%, indicating better alignment with the task requirements. Overall, the GPT-4o model outperformed the other LLMs, delivering the best performance in Bengali news classification. Its advanced architecture and improved handling of multilingual contexts contributed to its superior accuracy compared to both open and closed LLMs.
+5.2.2. Performance on indic sentiment analysis
+dT2
+Table 2 presents the sentiment analysis performance across various models. The GPT-4o model achieved the highest accuracy and F1 score of 99.00% using CoT-based prompting. In contrast, the GPT-3.5 and Aya 101 models showed the lowest performance, each with an accuracy of just 2.00%.
+From Table 2, the poor performance of GPT-3.5 and Aya 101 with CoT prompting can be attributed to their inability to incorporate the reasoning process effectively within the 256-token limit. This constraint impacted their ability to handle the reasoning required for accurate sentiment classification. In comparison, the GPT-4o model excelled with CoT-based prompting due to its enhanced reasoning capabilities, aligning well with the sentiment analysis task. This demonstrates the advantage of models with better reasoning frameworks for tasks that require contextual understanding and subtle sentiment differentiation.
+5.2.3. Performance on summarization (XL-Sum)
+dT3
+The performance of the three prompting strategies across the LLMs is summarized in Table 3. This table highlights how Zero-Shot, Few-Shot, and Chain-of-Thought (CoT) prompting impact the summarization outcomes. The highest performance for summarization was achieved with the 3-Shot prompting in the GPT-4o model, which yielded an
+F1bert
+ score of 72.87%, a BLEU score of 33.83%, and an
+Frouge−l
+ score of 14.83%. In contrast, the lowest performance was recorded with CoT-based prompting in the BLOOM model, where the 0-Shot setting resulted in a BLEU score of just 3.54%. These results indicate that GPT-4o excels with structured prompts, while BLOOM struggles with reasoning-heavy tasks when provided minimal guidance.
+5.2.4. Performance on question answering (BEnQA)
+dT4
+The question-answering performance is evaluated on the
+dT4
+ dataset, which consists of three categories of questions: 8th-Science, 12th-Math, and 12th-Physics. Table 4 summarizes the results of applying three different prompting techniques across six LLMs on this dataset.
+The maximum performance for the 8th-Science category was achieved with the GPT-4o model, reaching an accuracy of 73.00%, an F1 score of 58.00%, and a minimum Log Loss of 9.64 using 3-Shot prompting. For the 12th-Math category, the Gemini model recorded the highest accuracy at 52.00%, while the GPT-4o model achieved the highest F1 score of 50.00% using 3-Shot prompting. Similarly, the best results for the 12th-Physics category came from the GPT-4o model, with an accuracy of 70.00% and an F1 score of 68.00%, both using 3-Shot prompting.
+From Table 4, it is evident that the advanced reasoning capabilities of GPT-4o and Gemini models significantly enhance their ability to solve scientific and mathematical problems more accurately than other models. The 3-Shot prompting technique plays a crucial role by allowing these models to harness contextual understanding from examples, which proves advantageous for handling complex tasks. In contrast, other models faced challenges in achieving similar performance levels, likely due to constraints in token handling, weaker reasoning capabilities, or misalignment with the structure of the given problems.
+Download: Download high-res image (538KB)
+Download: Download full-size image
+
+Fig. 2. Best-performing Open-Source and Closed-Source F1-score for news and sentiment classification.
+
+5.2.5. Performance comparison between open-source and closed-source models
+Fig. 2, based on 2(a), presents the F1 scores for News classification tasks, showcasing the performance comparison between three Open-Source and three Closed-Source LLM models. This comparison highlights the varying capabilities of these models in handling low-resource Bengali text classification tasks. The Closed-Source GPT-4o model achieved the highest F1 score of 84.54%, while the Open-Source LLaMA model recorded the lowest at 22.20%. The lower performance of LLaMA can be attributed to tokenization issues and its suboptimal alignment with low-resource Bengali text classification tasks, highlighting the challenges faced by Open-Source models when handling specialized linguistic contexts.
+Similarly, Fig. 2, based on 2(b) presents the F1 scores for sentiment classification tasks across six LLM models. The GPT-4o model achieved the maximum F1 score of 99.00%, while the BLOOM model recorded the lowest at 65.00%. The superior performance of GPT-4o can be attributed to its extensive number of trainable hyperparameters and the inclusion of a larger amount of low-resource training data during the foundation model’s development. These factors enable GPT-4o to capture nuanced linguistic patterns, outperforming other models in handling sentiment classification tasks.
+The summarization performance of six LLM models is illustrated in Fig. 3, based on 3(a). The Closed-Source GPT-4o model achieved the highest
+F1bert
+ score of 72.87%, while the lowest score recorded was 67.07%. Notably, the performance gap between Open-Source and Closed-Source models is minimal for low-resource summarization tasks, indicating that Bengali article summarization aligns well with both model types. This suggests that Open-Source models can be competitive with proprietary models when handling low-resource languages like Bengali.
+In Fig. 3, based on 3(b), the F1 scores of six LLM models are presented for question-answering tasks. The Closed-Source GPT-4o model achieved the maximum F1 score of 58.22%, while the Open-Source LLaMA model recorded the lowest score of 6.58%. This reveals a substantial performance gap of 51.64% between Open-Source and Closed-Source models. The results highlight that GPT-4o demonstrates strong reasoning capabilities, making it more effective in handling low-resource settings. Additionally, the lower performance of Open-Source models suggests that they may struggle with semantic alignment and lack the depth of reasoning required for complex question-answering tasks. This gap emphasizes the importance of advanced proprietary models in addressing nuanced language understanding challenges.
+Download: Download high-res image (789KB)
+Download: Download full-size image
+
+Fig. 3. Best-performing Open-Source and Closed-Source F1-score for news and sentiment classification.
+
+5.2.6. Ablation studies
+In this research, we conducted two types of ablation studies: (i) Ablation for Shot selection, and (ii) Ablation for temperature. Due to the pricing constraints of Closed-Source models and limited time, these ablation experiments were carried out using the open-source LLaMa model, specifically the LLaMa3 8B variant focusing on sentiment analysis tasks. The following paragraphs present the impact of these ablation studies.
+(i) Ablation for shot selection.
+Table 5 summarizes the performance of the LLaMA3 8B model across four different shot selections for sentiment classification tasks. The results demonstrate that the model’s performance is significantly affected by the number of shots, especially for Bengali sentiment analysis. As the shot count increases from zero to three, the model shows gradual improvement, indicating that providing a few examples helps it acquire prior knowledge and contextual understanding. However, in the four-shot scenario, performance drops, likely due to the following factors:
+•
+Alignment and Quality of Examples: The downstream performance of LLMs in Few-Shot scenarios heavily depends on the quality and alignment of the provided examples. In the four-shot scenario, the selected examples may have introduced conflicting signals or lacked alignment with the task, leading to reduced performance.
+•
+Exceeding Maximum Token Length: Including four examples could have exceeded the model’s maximum token length due to the larger number of tokens. Truncation may have caused a loss of important contextual information, impairing the model’s ability to fully comprehend the task-specific input.
+•
+Out-of-Distribution Examples: The examples used in the four-shot scenario might not represent the broader task distribution, introducing out-of-distribution issues. This misalignment could create gaps in contextual understanding and negatively affect performance.
+This trend illustrates the importance of carefully curating few-shot examples to maximize performance, as more examples do not always lead to better outcomes, especially when the examples introduce noise or ambiguity.
+(ii) Ablation for temperature.
+The temperature parameter in LLMs significantly influences during the text generation. Higher temperature values allow for more diverse and creative outputs, introducing greater variability, while lower temperature values produce more focused and deterministic responses. Table 6 summarizes the impact of various temperature settings on the performance of the LLaMA3 8B model using three-shot prompting. Table 6 shows that lower temperature values (0.0–0.2) yield optimal results by producing focused and consistent outputs. In contrast, higher temperature values introduce excessive randomness, impairing the model’s predictive accuracy. As the temperature increases, the performance drops significantly, with accuracy plummeting from 94.87% at 0.1 to 10.90% at 2.
+5.3. Error analysis
+This section presents the qualitative error analysis for three prompting techniques, i.e., Zero-Shot, Few-Shot, and Chain-of-Thought (CoT) across different NLP tasks. Table 7, Table 8 illustrate both successful and failed predictions, providing insights into the strengths and limitations of each approach. In Table 7, the 0-Shot and CoT approaches often generated correct predictions, but the 3-shot method struggled by misidentifying sentiments, showing that even with examples, generalization is not always reliable. In the second example for news classification, the Zero-Shot method deviated from the predefined output format, including unnecessary details, which suggests that it lacks task-specific focus and struggles with structured outputs. The CoT-based prompting performed well in question answering by providing correct answers, but it often lacked detailed explanations, limiting its usefulness for tasks that require deeper reasoning and justifications.
+In Table 8, the 0-shot prompting was hallucinated responses, where the model generated incorrect predictions without proper grounding. The summarization task showed that 0-shot and 3-shot methods failed to capture both sides of conflicting information, summarizing only one aspect of the story. In contrast, the CoT approach provided a more neutral summary, effectively balancing the conflicting narratives
+
+Table 7. Summary of Zero-Shot, Few-Shot, and Chain-of-Thought prompting for successful and failed predictions in Bengali sentiment analysis, news classification, and question answering (QA) tasks.
+
+Overall, this error analysis highlights key limitations of LLMs. Zero-Shot prompting struggles with task-specific formatting and focus, Few-Shot is dependent on the clarity of examples, and CoT, despite its reasoning strength, lacks explanatory depth. These findings emphasize the importance of selecting and fine-tuning the appropriate prompting strategy based on the task to mitigate these limitations and improve model performance.
+
+Table 8. Summary of Zero-Shot, Few-Shot, and Chain-of-Thought prompting for successful and failed predictions in Bengali article summarization, and sentiment analysis tasks.
+
+6. Discussion
+This research evaluates Zero-Shot, Few-Shot, and Chain-of-Thought prompting across three closed-source LLMs and three open-source LLMs. The following sections highlight the key findings and limitations.
+•
+Few-Shot prompting in the closed-source GPT-4o model outperformed other models in news classification, summarization, and question answering tasks (i.e., Details in Table 1, Table 3, Table 4). In contrast, CoT prompting with GPT-4o yielded superior performance in sentiment analysis. Overall, GPT-4o surpassed the remaining five models. However, Zero-Shot and CoT prompting underperformed in certain cases due to a lack of prior knowledge and limited reasoning capabilities.
+•
+In terms of reasoning capability, the closed-source LLMs, i.e., GPT-3.5, GPT-4o, and Gemini outperformed all open-source models. This is evident in mathematical and physics-related question-answering tasks, as illustrated in Fig. 3 of 3(b).
+•
+The ablation studies reveal that low-resource NLP downstream tasks are highly dependent on temperature values and the optimal number of shots, as shown in Section 5.2.6, Table 5, Table 6. Higher temperatures increase the model’s randomness and hallucination rate, reducing output reliability. Additionally, the number of shots significantly influences the text generation process, as highlighted in Table 5.
+6.0.1. Limitations
+Although this study evaluated four Bengali downstream tasks using three prompting techniques across six LLM models and conducted ablation experiments, some limitations still remain.
+Monolingual: These experiments were conducted exclusively in Bengali, so the key findings are specific to the Bengali language.
+Generalization: The optimal temperature and number of shots for LLM models are highly dependent on the specific dataset and tasks, making the optimal values identified in this research not universally generalizable.
+Hallucination: During our experiments, we also tested other open-source large language models, including Mistral-Instruct-Bangla,8 Mistral-7B-v0.1,9 Mistral-7B-v0.3,10 (Jiang et al., 2023) Llama 2 7B Chat Touvron et al. (2023), etc. However, these models generated a high number of incorrect and hallucinated responses, making them unsuitable for our evaluation. Even with the chosen models, hallucination was a recurring issue, as they often deviated from a consistent response format. To address this, we applied heuristics, such as searching for correct answers within the string response, to evaluate the models effectively. Additionally, we faced some challenges with prompt length as Bangla language characters required more tokens per character for the models. This led to longer chain-of-thought prompts, which further increased hallucination and resulted in poorer performance for this prompting method. However, this study did not address or mitigate one of the most critical issues of LLMs, i.e., hallucination specifically for the low-resource Bengali language.
+Dataset Size: The datasets used in this research contain a limited number of samples due to GPU support constraints. Another challenge we faced was, the gemini model encountered issues with its safety filter, which blocked certain answers, preventing us from evaluating those specific samples.
+7. Conclusion and future works
+In this study, we evaluated six LLM models, i.e., GPT-3.5, GPT-4o, Aya 101, BLOOM, LLaMA, and Gemini using three prompting techniques: Zero-Shot, Few-Shot, and Chain-of-Thought. The evaluation focused on four low-resource Bengali downstream tasks: news classification, sentiment analysis, question answering, and summarization. Among the six models, three were open-source (LLaMA, Aya 101, and BLOOM), while the other three were closed-source (GPT-3.5, GPT-4o, and Gemini). The results indicate that GPT-4o performed the best overall, especially in tasks requiring a deep understanding of context and language nuances. However, open-source models like LLaMA also showed competitive performance on certain tasks, suggesting that open models can be effective for Bengali NLP, particularly when fine-tuned on complex and diverse Bengali datasets. We found that three-shot prompting generally produced better results than zero-shot, as it helped the models adapt more effectively to Bengali through examples. While Chain-of-Thought prompting was beneficial in some cases, it often led to reduced accuracy due to hallucination issues, especially with complex or longer prompts.
+Although this research is the first to use three prompting techniques on four Bengali datasets with six LLM models, future work will address the identified limitations by expanding the scope beyond Bengali to include other low-resource and high-resource languages, enabling cross-lingual comparisons and improved generalization. Adaptive strategies for dynamically selecting temperature values and shot numbers can improve performance across tasks and datasets. Addressing hallucination issues will require techniques such as fact-checking modules, reinforcement learning from human feedback (RLHF), and hybrid models that integrate knowledge graphs. To overcome dataset and computational constraints, larger datasets and collaborations with cloud providers or research institutions could be explored. Additionally, fine-tuning open-source models like LLaMA and BLOOM on high-quality Bengali datasets and domain-specific corpora can enhance their effectiveness, closing the performance gap with closed-source models and improving their applicability to low-resource NLP.
+CRediT authorship contribution statement
+Zabir Al Nazi: Writing – original draft, Software, Conceptualization. Md. Rajib Hossain: Writing – original draft, Supervision, Methodology, Conceptualization. Faisal Al Mamun: Software, Resources, Data curation.
+Declaration of competing interest
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+Data availability
+The datasets generated and analyzed during the current study are available from the corresponding author upon reasonable request.
+References
+Barrena et al., 2021
+A. Barrena, A. Soroa, E. Agirre
+Towards zero-shot cross-lingual named entity disambiguation
+Expert Syst. Appl., 184 (2021), Article 115542, 10.1016/j.eswa.2021.115542
+URL: https://www.sciencedirect.com/science/article/pii/S0957417421009490
+View PDF
+View articleView in ScopusGoogle Scholar
+Bražinskas et al., 2020
+A. Bražinskas, M. Lapata, I. Titov
+Few-shot learning for opinion summarization
+Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing, EMNLP, Association for Computational Linguistics, Online (2020), pp. 4119-4135, 10.18653/v1/2020.emnlp-main.337
+URL: https://aclanthology.org/2020.emnlp-main.337
+View at publisherView in ScopusGoogle Scholar
+Çelik and Dalyan, 2023
+E. Çelik, T. Dalyan
+Unified benchmark for zero-shot Turkish text classification
+Inf. Process. Manage., 60 (3) (2023), Article 103298, 10.1016/j.ipm.2023.103298
+URL: https://www.sciencedirect.com/science/article/pii/S0306457323000353
+View PDF
+View articleView in ScopusGoogle Scholar
+Cheng et al., 2024
+Q. Cheng, L. Chen, Z. Hu, J. Tang, Q. Xu, B. Ning
+A novel prompting method for few-shot NER via LLMs
+Nat. Lang. Process. J., 8 (2024), Article 100099, 10.1016/j.nlp.2024.100099
+URL: https://www.sciencedirect.com/science/article/pii/S2949719124000475
+View PDF
+View articleView in ScopusGoogle Scholar
+D’Asaro et al., 2024
+F. D’Asaro, S. De Luca, L. Bongiovanni, G. Rizzo, S. Papadopoulos, M. Schinas, C. Koutlis
+Zero-shot content-based crossmodal recommendation system
+Expert Syst. Appl., 258 (2024), Article 125108, 10.1016/j.eswa.2024.125108
+URL: https://www.sciencedirect.com/science/article/pii/S0957417424019754
+View PDF
+View articleView in ScopusGoogle Scholar
+Dubey et al., 2024
+A. Dubey, A. Jauhri, L. P, A. ey, A. Kadian, A. Al-Dahle, A. Letman, A. Mathur, A. Schelten, A. Yang, A. Fan, et al.
+The llama 3 herd of models
+(2024)
+arXiv preprint arXiv:2407.21783
+Google Scholar
+Fei et al., 2023
+H. Fei, B. Li, Q. Liu, L. Bing, F. Li, T.-S. Chua
+Reasoning implicit sentiment with chain-of-thought prompting
+Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers), Association for Computational Linguistics, Toronto, Canada (2023), pp. 1171-1182, 10.18653/v1/2023.acl-short.101
+URL: https://aclanthology.org/2023.acl-short.101
+View at publisherView in ScopusGoogle Scholar
+Hasan et al., 2021
+T. Hasan, A. Bhattacharjee, M.S. Islam, K. Mubasshir, Y.-F. Li, Y.-B. Kang, M.S. Rahman, R. Shahriyar
+XL-sum: Large-scale multilingual abstractive summarization for 44 languages
+Findings of the Association for Computational Linguistics: ACL-IJCNLP 2021, Association for Computational Linguistics, Online (2021), pp. 4693-4703
+URL: https://aclanthology.org/2021.findings-acl.413
+View at publisherCrossrefView in ScopusGoogle Scholar
+Hossain et al., 2025
+M.R. Hossain, M.M. Hoque, M.A.A. Dewan, E. Hoque, N. Siddique
+AuthorNet: Leveraging attention-based early fusion of transformers for low-resource authorship attribution
+Expert Syst. Appl., 262 (2025), Article 125643, 10.1016/j.eswa.2024.125643
+URL: https://www.sciencedirect.com/science/article/pii/S0957417424025107
+View PDF
+View articleView in ScopusGoogle Scholar
+Jiang et al., 2023
+A.Q. Jiang, A. Sablayrolles, A. Mensch, C. Bamford, D.S. Chaplot, D. de las Casas, F. Bressand, G. Lengyel, G. Lample, L. Saulnier, L.R. Lavaud, M.-A. Lachaux, P. Stock, T.L. Scao, T. Lavril, T. Wang, T. Lacroix, W.E. Sayed
+Mistral 7B
+(2023)
+arXiv:2310.06825
+Google Scholar
+Kabir et al., 2024
+M. Kabir, M.S. Islam, M.T.R. Laskar, M.T. Nayeem, M.S. Bari, E. Hoque
+BenLLM-eval: A comprehensive evaluation into the potentials and pitfalls of large language models on bengali NLP
+Proceedings of the 2024 Joint International Conference on Computational Linguistics, Language Resources and Evaluation, LREC-COLING 2024, ELRA and ICCL, Torino, Italia (2024), pp. 2238-2252
+URL: https://aclanthology.org/2024.lrec-main.201
+View in ScopusGoogle Scholar
+Kalyan, 2024
+K.S. Kalyan
+A survey of GPT-3 family large language models including ChatGPT and GPT-4
+Nat. Lang. Process. J., 6 (2024), Article 100048, 10.1016/j.nlp.2023.100048
+URL: https://www.sciencedirect.com/science/article/pii/S2949719123000456
+View PDF
+View articleGoogle Scholar
+Lin et al., 2022
+T. Lin, Y. Wang, X. Liu, X. Qiu
+A survey of transformers
+AI Open, 3 (2022), pp. 111-132
+View PDF
+View articleView in ScopusGoogle Scholar
+López Espejel et al., 2023
+J. López Espejel, E.H. Ettifouri, M.S. Yahaya Alassan, E.M. Chouham, W. Dahhane
+GPT-3.5, GPT-4, or BARD? Evaluating LLMs reasoning ability in zero-shot setting and performance boosting through prompts
+Nat. Lang. Process. J., 5 (2023), Article 100032, 10.1016/j.nlp.2023.100032
+URL: https://www.sciencedirect.com/science/article/pii/S2949719123000298
+View PDF
+View articleGoogle Scholar
+Mahfuz et al., 2024
+T. Mahfuz, S.K. Dey, R. Naswan, H. Adil, K.S. Sayeed, H.S. Shahgir
+Too late to train, too early to use? A study on necessity and viability of low-resource Bengali LLMs
+(2024)
+arXiv preprint arXiv:2407.00416
+Google Scholar
+Nazi, 2020
+Z.A. Nazi
+Bangla newspaper dataset
+(2020), 10.34740/KAGGLE/DSV/1576225
+URL: https://www.kaggle.com/dsv/1576225
+View at publisherGoogle Scholar
+Qin et al., 2024
+L. Qin, Q. Chen, Y. Zhou, Z. Chen, Y. Li, L. Liao, M. Li, W. Che, P. Yu
+Multilingual large language model: A survey of resources, taxonomy and frontiers
+(2024)
+arXiv, Article, arXiv preprint arXiv:2404.04925
+Google Scholar
+Ram et al., 2021
+O. Ram, Y. Kirstain, J. Berant, A. Globerson, O. Levy
+Few-shot question answering by pretraining span selection
+Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing (Volume 1: Long Papers), Association for Computational Linguistics, Online (2021), pp. 3066-3079, 10.18653/v1/2021.acl-long.239
+URL: https://aclanthology.org/2021.acl-long.239
+View at publisherView in ScopusGoogle Scholar
+Rasool et al., 2024
+Z. Rasool, S. Kurniawan, S. Balugo, S. Barnett, R. Vasa, C. Chesser, B.M. Hampstead, S. Belleville, K. Mouzakis, A. Bahar-Fuchs
+Evaluating LLMs on document-based QA: Exact answer selection and numerical extraction using CogTale dataset
+Nat. Lang. Process. J., 8 (2024), Article 100083, 10.1016/j.nlp.2024.100083
+URL: https://www.sciencedirect.com/science/article/pii/S2949719124000311
+View PDF
+View articleGoogle Scholar
+Scao et al., 2023
+T.L. Scao, A. Fan, C. Akiki, E. Pavlick, S. Ilić, D. Hesslow, R. Castagné, A.S. Luccioni, F. Yvon, M. Gallé, et al.
+Bloom: A 176b-parameter open-access multilingual language model
+(2023)
+Google Scholar
+Shafayat et al., 2024
+S. Shafayat, H.M.Q. Hasan, M.R.C. Mahim, R.A. Putri, J. Thorne, A. Oh
+BEnQA: A question answering and reasoning benchmark for Bengali and english
+(2024)
+arXiv:2403.10900
+Google Scholar
+Shi et al., 2022
+F. Shi, M. Suzgun, M. Freitag, X. Wang, S. Srivats, S. Vosoughi, H.W. Chung, Y. Tay, S. Ruder, D. Zhou, et al.
+Language models are multilingual chain-of-thought reasoners
+(2022)
+arXiv preprint arXiv:2210.03057
+Google Scholar
+Song et al., 2023
+C. Song, F. Cai, J. Zheng, X. Zhao, T. Shao
+Augprompt: Knowledgeable augmented-trigger prompt for few-shot event classification
+Inf. Process. Manage., 60 (4) (2023), Article 103153, 10.1016/j.ipm.2022.103153
+URL: https://www.sciencedirect.com/science/article/pii/S0306457322002540
+View PDF
+View articleView in ScopusGoogle Scholar
+Toraman, 2024
+C. Toraman
+Adapting open-source generative large language models for low-resource languages: A case study for Turkish
+Sälevä J., Owodunni A. (Eds.), Proceedings of the Fourth Workshop on Multilingual Representation Learning, MRL 2024, Association for Computational Linguistics, Miami, Florida, USA (2024), pp. 30-44, 10.18653/v1/2024.mrl-1.3
+View in ScopusGoogle Scholar
+Touvron et al., 2023
+H. Touvron, L. Martin, K. Stone, P. Albert, A. Almahairi, Y. Babaei, N. Bashlykov, S. Batra, P. Bhargava, S. Bhosale, D. Bikel, L. Blecher, C.C. Ferrer, M. Chen, G. Cucurull, D. Esiobu, J. Fernandes, J. Fu, W. Fu, B. Fuller, C. Gao, V. Goswami, N. Goyal, A. Hartshorn, S. Hosseini, R. Hou, H. Inan, M. Kardas, V. Kerkez, M. Khabsa, I. Kloumann, A. Korenev, P.S. Koura, M.-A. Lachaux, T. Lavril, J. Lee, D. Liskovich, Y. Lu, Y. Mao, X. Martinet, T. Mihaylov, P. Mishra, I. Molybog, Y. Nie, A. Poulton, J. Reizenstein, R. Rungta, K. Saladi, A. Schelten, R. Silva, E.M. Smith, R. Subramanian, X.E. Tan, B. Tang, R. Taylor, A. Williams, J.X. Kuan, P. Xu, Z. Yan, I. Zarov, Y. Zhang, A. Fan, M. Kambadur, S. Narang, A. Rodriguez, R. Stojnic, S. Edunov, T. Scialom
+Llama 2: Open foundation and fine-tuned chat models
+(2023)
+arXiv:2307.09288
+Google Scholar
+Üstün et al., 2024
+A. Üstün, V. Aryabumi, Z.-X. Yong, W.-Y. Ko, D. D’souza, G. Onilude, N. Bhandari, S. Singh, H.-L. Ooi, A. Kayid, F. Vargus, P. Blunsom, S. Longpre, N. Muennighoff, M. Fadaee, J. Kreutzer, S. Hooker
+Aya model: An instruction finetuned open-access multilingual language model
+(2024)
+arXiv preprint arXiv:2402.07827
+Google Scholar
+Wei et al., 2024
+J. Wei, X. Wang, D. Schuurmans, M. Bosma, B. Ichter, F. Xia, E.H. Chi, Q.V. Le, D. Zhou
+Chain-of-thought prompting elicits reasoning in large language models
+Proceedings of the 36th International Conference on Neural Information Processing Systems, NIPS ’22, Curran Associates Inc., Red Hook, NY, USA (2024)
+Google Scholar
+Wei et al., 2022
+J. Wei, X. Wang, D. Schuurmans, M. Bosma, F. Xia, E. Chi, Q.V. Le, D. Zhou, et al.
+Chain-of-thought prompting elicits reasoning in large language models
+Adv. Neural Inf. Process. Syst., 35 (2022), pp. 24824-24837
+Google Scholar
+Xu et al., 2024
+Y. Xu, L. Hu, J. Zhao, Z. Qiu, Y. Ye, H. Gu
+A survey on multilingual large language models: Corpora, alignment, and bias
+(2024)
+arXiv preprint arXiv:2404.00929
+Google Scholar
+Ye et al., 2023
+J. Ye, X. Chen, N. Xu, C. Zu, Z. Shao, S. Liu, Y. Cui, Z. Zhou, C. Gong, Y. Shen, et al.
+A comprehensive capability analysis of gpt-3 and gpt-3.5 series models
+(2023)
+arXiv preprint arXiv:2303.10420
+Google Scholar
+Zhang et al., 2019
+T. Zhang, V. Kishore, F. Wu, K.Q. Weinberger, Y. Artzi
+Bertscore: Evaluating text generation with bert
+(2019)
+arXiv preprint arXiv:1904.09675
+Google Scholar
+Cited by (0)
+1
+https://huggingface.co/datasets/mteb/IndicSentiment.
+2
+https://openai.com/index/hello-gpt-4o/.
+3
+https://developers.googleblog.com/en/gemini-15-flash.
+4
+cloud.google.com/vertex-ai/generative-ai/.
+5
+github.com/openai/openai-python.
+6
+aws.amazon.com/ec2/instance-types/g5/.
+7
+github.com/PygmalionAI/aphrodite-engine.
+8
+Mistral-Instruct-Bangla.
+9
+mistralai/Mistral-7B-Instruct-v0.1.
+10
+mistralai/Mistral-7B-Instruct-v0.3.
+© 2024 The Author(s). Published by Elsevier B.V.
+About ScienceDirect
+Remote access
+Advertise
+Contact and support
+Terms and conditions
+Privacy policy
+
+Cookies are used by this site.Cookie Settings
+
+All content on this site: Copyright © 2025 or its licensors and contributors. All rights are reserved, including those for text and data mining, AI training, and similar technologies. For all open access content, the relevant licensing terms apply.

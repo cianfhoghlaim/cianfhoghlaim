@@ -1,0 +1,468 @@
+SECURING DIGITAL ECONOMIES: DETECTION OF
+PHISHING ATTACKS USING MACHINE LEARNING
+APPROACHES
+Nimra Bari, Munam Ali Shah
+Department of Computer Science COMSATS University, Islamabad, Pakistan Nimrabari0@gmail.com, mshah@comsates.edu.pk
+
+Keywords: MACHINE LEARNING, PHISHING ATTACK, DEEP LEARNING, PHISHING DETECTION, ALGORITHM.
+
+Abstract
+
+Due to the wide use of web resources such as online banking, social networking, education, entertainment, downloading software, and a rise in the economy's digitalisation, the prevalence of online fraud is rising. Phishing is mostly a launch attack on the internet. Phishing is a criminal attack that obtains credential data such as bank information, username, password and credit card information, etc which can be used to damage a single victim or the entire organisation. Criminals always use disasters as an opportunity to take advantage of recessions, hurricanes, and difficult times. The latest example is the Covid-19 pandemic. The phishing attacks are growing rapidly in 2020, cyber attackers launched Covid-19 themed phishing attacks against healthcare facilities, the unemployed and workers. A lot of anti-phishing solutions are available heuristic detection, virtual similarity detection, black and whitelisting, and machine learning. This paper compares various research for each machine learning technique in terms of detecting phishing attacks and discusses the benefits and drawbacks of each methodology. In addition, this paper presents a detailed list of existing phishing attack threats as well as potential research directions in this sphere.
+
+1. Introduction
+The term "digital economy" refers to a broad variety of economic operations and commercial transactions that are carried out using information technology. Many businesses have turned to information technology to help them operate their operations more quickly, effectively and competitively. More people and businesses are joining this economy as a result of new technologies. Individuals are now a part of this economy since they are participating in tasks and purchases that they were previously unable to do. The use of personal and financial information on the web leads to criminal attacks [1]. However, cyber threats do exist in this economy, and they have been identified as one of the most significant challenges. It can be brought to a halt by a single cyberattack. There has been an increase in the number of cyber threats facing this economy in recent years. Some cyberattacks bring the digital economy to a halt and phishing is one of the most used attacks which is affecting the digital economy.
+
+as a real one and sends the link of the phishing website to the web users via email or by other communication platforms [3].
+Figure 1: Unique phishing website graph [4]
+
+Phishing attacks are grew rapidly in 2020 with cyber attackers launching Covid-19 themed phishing attacks. In the phishing attack, users enter sensitive credentials, such as password and credit card information, into a fake website which looks like a real one, which can be used to damage a single victim or entire organisation/business depending on the intention of the attacker and the type of data leaked. In 1996, the term “phishing” was first used by a group of hackers that accessed account information of America Online (AOL) by using AOL user passwords [2]. In the phishing attack, the attacker develops a webpage that looks the same
+
+In the fourth quarter of APWG (2019) the number of phishing sites detected is 162,155 [5]. The number of unique phishing websites attacks is 13,597 in October, to15,261 in November, to 12,260 in December. The number of unique phishing email attacks is 45,057 in October, to 42,424 in November, to 45,072 in December. The number of brands targeted by phishing attacks is 333 in October, to 325 in November, to 341 in December. The three most targeted fields are SaaS/webmail 30.80%, payment 19.80%, financial institutions 19.40%.
+
+1
+
+Authorized licensed use limited to: NATIONAL UNIVERSITY OF IRELAND GALWAY. Downloaded on September 17,2022 at 22:18:23 UTC from IEEE Xplore. Restrictions apply.
+
+In the phishing mechanism the attacker checks the legitimate site (1) and constructs the fake phishing site to look the same as the legitimate one (2) then the attacker sends the link of the phishing site to the victim user through email, chat or another connection method (3). When the user clicks on the link it forwards the user to the phishing website instead of a legitimate one (4). Users enter all credentials in the phishing site thinking that it is the legitimate one. Now attackers have all the personal information of the user (5) and they can use this users’ credentials on the legitimate site (6).
+
+system use a known phishing URLs database, thus newly launched phishing URLs cannot be detected. A more intelligent anti-phishing method is the machine learning approach. Machine learning (ML) algorithms detect hidden patterns in the dataset. In machine learning-based techniques a classification algorithm is trained using certain features that can distinguish a phishing website from a real one. These features are obtained from various sources such as website traffic, URL, search engines, and page source. The ML-based phishing detection depends on selected features.
+
+Various methods of detecting phishing attacks using machine learning approaches have been explored in this report. We provide a series of our findings on phishing detection using machine learning to allow for others to have a better understanding. The rest of this paper's contributions are: Section II reviews of the related work; targeted areas of phishing attacks are presented in Section III; current work and future challenges in section IV; and our conclusions are in Section V.
+
+2. Related work
+
+Figure 2: Phishing mechanism
+There are several types of phishing attacks [6] which depend on the targeted attacker. SMS phishing is also called smashing. Smashing is mostly done by two methods: first is sending SMS to victims pretending to be a trusted authority like a bank etc and collecting secret information. The second method is sending an SMS that has malware or a link to malware. Vishing is a type of phishing attack using voice calls. Email phishing is mostly used by the attacker due to its wide use and the unknown geographical location of the sender. Phishing is also launched by an attacker by creating a fake website which is the same as a real site. Malware is software that acts as if it is useful but it can harm a computer or collect credentials. Keyloggers record computer users' every key stack. In session hijacking the attacker makes the user create a session ie informs the user that his/her account is blocked, the user checks their login to the bank application then the session starts and the attacker uses the user’s session id or key to collect credentials. Web trojan is a pop-up over the screen. The user thinks that he/she is entering credentials on the website but they are entering it in the attacker pop-up window. Pharming installs a code on the victim's computer which generates traffic on a website without the victim's knowledge. Some phishing solutions are available. One is phishing prevention and the other is phishing detection [7]. Phishing prevention provides an extra security layer via twofactor authentications which works to confirm the identity of the user before giving access to an account on the website. Phishing detection is done by user awareness and software detection. Software detecting techniques are black and white listing, heuristic detection, visual similarity detection, and machine learning [4]. The most widely used anti-phishing solution is a blacklist system but the queries of the blacklist
+
+Phishing websites are distinguished from the legitimate website using features of the website URL. Some features according to Rishikesh Mahajan and Irfan Siddavatam [2] are the presence of IP address and @ symbol in URL, numbers of dots in Hostname, prefix/suffix in the domain, URL redirection, HTTPS in URL, Tiny URL, length of hostname, presence of sensitive words in URL, number of slashes in URL, presence of Unicode in URL, SSL certificate age, anchor URL, iframe, website ranking. In paper [3] a lot of machine learning classifiers are tested on a phishing detection dataset containing 5000 phishing web pages and legitimate web pages. In paper [4], they proposed a methodology that combines a robust classifier SVM algorithm and KNN algorithm that is effective for noisy data. The accuracy of this methodology is 90.04%. A hybrid ensemble feature selection (HEFS) is proposed in paper [5] for phishing website detection based on machine learning algorithms. A cumulative distribution gradient algorithm CDF-g is applied for the primary feature set. Then, the second feature set is extracted using the perturbation ensemble function. HEFS results in 94.6% accuracy to detect phishing attributes. The system presented in the system [6] was made twofold, at first random forest classifier applied and then obtained results integrated with the nearest neighbour algorithm. The accuracy of the RF_NN model is 93.41% on the available dataset. A stacking model proposed using URL and HTML features [7] for phishing webpages detection. LightGBM, XGradientBoost, and Gradient boosted decision trees combined to develop a stacking model. The system uses two datasets and 97.3% accuracy is provided. A comparison of the stacking model and supervised learning to detect phishing is done in this paper [8]. Diverse ML algorithms are analysed including (NN, RF, bagging, Naïve Bayes, k-nearest neighbour, and support vector machine,). Two stacking models are combined Stacking 1 (RF, NN, Bagging) and Stacking 2 (CNN, RF, Bagging) to improve the accuracy of classification. Stacking 1 achieved 97.4% accuracy. The
+
+2
+
+Authorized licensed use limited to: NATIONAL UNIVERSITY OF IRELAND GALWAY. Downloaded on September 17,2022 at 22:18:23 UTC from IEEE Xplore. Restrictions apply.
+
+paper [9] proposed a multilayer detection model named PhiDMA with a 92.72% accuracy rate. The system contains Five layers which are a lexical signature, layer white list layer, string matching model, URL feature layer, and accessibility comparison layer. This paper[10] proposed a phishing site detection system with the help classification learning system called XCS. XCS is an adaptive and online machine learning technique. In this paper, they collect 38 features from webpage source and URL then categories these features into four groups which are namely hyperlinked information, length, suspicious URL, and count. In another paper [12], an anti-phishing real-time system is implemented for the detection of phishing URLs. The proposed methodology uses seven classification algorithms K-star, decision tree, KNN (n = 3), AdaBoost, Naïve Bayes, RF, and SMO] and different NLP-based features. random forest algorithm used along with NLP-based features. This proposed system is 97.98% more accurate than previous work on a dataset that has 73,575 URLs constructed by the author. An application is implemented in this proposed model [13] in which a set of URLs can give as input and output the legitimacy of the URL. The technique is adaptive due to its fast response time and high accuracy of 98.25%. In this research [15] the dataset contains 48 features from 5000 legitimate and phishing methods that have had two phases. first employed Chi-Squared and IG feature selection methods. In the second phase, three classifiers were used for accuracy of phishing website detection such as NB, SVC, and KNN.
+Figure c shows a generic machine learning model.
+
+initiated by making a fake website that looks just like the real thing. Pharming places a piece of software on a user's machine that generates traffic for a website without their knowledge.
+
+Phishing
+
+Social Engenearing
+Techhnical Subtefuge
+
+SMS phishing Vishing
+Email Phishing Website Malware
+Key Loggers Session Hijacking
+Web Trojans Pharming
+
+Figure 4: Taxonomy diagram of phishing attacks
+Anti-phishing solutions include phishing prevention and detection. Phishing protection is provided by two-factor authentication, which verifies a user's identity before granting access to an account on a website. User knowledge and device identification are used to detect phishing. User awareness refers to educating users about URLs so that they can recognise phishing websites. Black and white listing, heuristic detection [13], visual similarity detection, and machine learning are examples of software detection techniques. The most commonly used anti-phishing approach is the blacklist method, but blacklist system queries use a database of documented phishing URLs, so newly launched phishing URLs are not detected. A machine learning solution to anti-phishing is more intelligent. Hidden patterns in datasets are detected by machine learning algorithms. A classification algorithm is trained using such features that can differentiate a phishing website from a legitimate one in machine learning-based techniques.
+
+Figure 3: Machine learning for phishing attack detection
+2.1. Phishing attacks and anti-phishing solutions:
+The type of phishing attack used is determined by the goal of the attacker [11]. Smashing, vishing, email phishing, and session hijacking are some of the most popular phishing attacks. There are two techniques for smashing. 1) sending a malware-infected SMS to a target while posing as a trusted authority (eg a bank) and collecting hidden information; and 2) sending a malware-infected SMS to a target while posing as a trusted authority (eg a bank). Vishing is a form of phishing attack that involves making a phone call. Email phishing [12] is the most common phishing attack since email is commonly used and does not reveal the sender's location. Another approach is that phishing attacks are
+3
+
+Anti-Phishing solution
+
+Phishing Prevention
+Phishing Detection
+
+User Awareness
+Software Detection
+
+Black/White Listing
+Hurestic Detection
+Visual Similarity Detection
+Machine Learning
+
+SVM KNN
+Neural Network
+Decission tree
+Adaboost Naive Baves
+
+K-star
+Random Forest
+J48
+
+TF-IDF
+
+Authorized licensed use limited to: NATIONAL UNIVERSITY OF IRELAND GALWAY. Downloaded on September 17,2022 at 22:18:23 UTC from IEEE Xplore. Restrictions apply.
+
+Figure 5: Taxonomy diagram of anti-phishing solutions
+2.2. Comparison of different mechanisms for detecting phishing attacks:
+Table 1: Comparison of different mechanisms for detecting phishing attacks
+
+CNN models to get the phishing URL detection with only 10 features and obtained a promising accuracy of 99.52%, 99.57%, and 99.43% of DNN, LSTM, and CNN, using the database contains 3526 cases of which 2119 are phishing sites collected by Phish Tank and 1407 official sites collected in the Alexa database.
+
+Ref Technique
+
+Accuracy
+
+No of No of Feature selection technique
+
+Websites features
+
+[2] Decision Tree, SVM, RF
+
+97.14%
+
+36,711
+
+30
+
+Python program
+
+[3] J48, Multilayer perceptron, RF
+
+98.11%
+
+10000
+
+48
+
+InfoGain and Relief
+
+[4] KNN, SVM
+
+90.04%
+
+1353
+
+9
+
+Not mentioned
+
+[5] CDF-g, HEFS, RF, SVM, 94.6%
+
+Not
+
+48
+
+GNU Wget 6 tool and Python
+
+perturbation ensemble function,
+
+mentioned
+
+script
+
+SVM, Naive Bayes, JRip, C4.5
+
+[6] RF, Nearest neighbour algorithm
+
+93.41%
+
+10,068
+
+30
+
+Not mentioned
+
+[7] LightGBM, XGradientBoost,
+
+97.3%
+
+49,947/ Not
+
+Not mentioned
+
+Gradient boosted
+
+53,103
+
+mentioned
+
+[15] K-star, Decision tree, KNN (n = 3), 97.98%
+
+73,575
+
+102
+
+CfsSubsetEval
+
+AdaBoost, Naïve Bayes, RF, SMO,
+
+NLP-based
+
+[8] Neural network (NN), RF, bagging, 97.4%
+
+11,055
+
+32
+
+IG, GR, Relief-F and, RFE
+
+Naïve Bayes, k-nearest neighbour,
+
+are
+
+Support vector machine
+
+[9] lexical signature, white list, string 92.72%
+
+1662
+
+Not
+
+Not mentioned
+
+matching mode
+
+mentioned
+
+[10] Learning algorithms, Adaboost, C4.5 98.39%
+
+8004
+
+38
+
+Not mentioned
+
+(decision tree), Start, SMO, Naïve
+
+Bayes Random forest.
+
+[16] RF classifier, TF-IDF algorithm
+
+98.25%
+
+126077 35dimenti CatchPhish, Python program
+
+on
+
+[17] Logistic Regression, Decision Tree 98%
+
+10000
+
+49
+
+ANOVA F-test
+
+Classifier, K Nearest Neighbour and
+
+Gaussian Naïve Bayes.
+
+[18] Long Short-term Memory, Deep DNN:99.52, 3526
+
+10
+
+Python
+
+language,
+
+Neural Network, and Convolution LSTM:99.57,
+
+BeautifulSoup and HTML
+
+Neural Network
+
+CNN:99.43,
+
+parser
+
+[19] LR, KNN, RF, SVM, Decision Tree 91.42%
+
+Not
+
+Not
+
+Not mentioned
+
+mentioned mentioned
+
+[20] Linear SVC, NB, and KNN
+
+SVC:83,
+
+10000
+
+48
+
+information gain and Chi-
+
+NB:91.8
+
+Squared
+
+Table 1 presents an overview of machine learning methods for detecting phishing websites. Some studies have highly effective results for phishing attack identification, as shown in the table. Comparison is based on the machine learning method, dataset, number of legitimate and phishing websites, number of extracted features, feature selection technique from the dataset, and the highest accuracy using the machine learning methods.
+To the best of our knowledge, the paper [18] has the best technique for detection of phishing attacks in all papers mentioned in the Table. The paper achieves the best accuracy based on the small dataset and low features for phishing URL detection. The author in [18] suggested the IG algorithm select the most effective features in obtaining a URL for phishing detection. They then used the DNN-, LSTM- and
+
+3. Targeted areas of phishing attacks
+Criminals always use disasters as an opportunity to take advantage of recessions, hurricanes and difficult times. The latest example is the Covid-19 pandemic. The phishing attacks are growing rapidly in 2020, cyber attackers launched Covid-19-themed phishing attacks against healthcare facilitie,s the unemployed and workers. Some targeted areas are
+3.1. Zoom users
+At the start of 2020, 1,054 attacks were reported against Zoom. Attackers use different methods for phishing attacks on Zoom, one is in which attackers emailed fake videoconferencing of Zoom meeting notifications, which took
+
+4
+
+Authorized licensed use limited to: NATIONAL UNIVERSITY OF IRELAND GALWAY. Downloaded on September 17,2022 at 22:18:23 UTC from IEEE Xplore. Restrictions apply.
+
+victims to pages made by the attackers, designed like Zoom, and gained account passwords and usernames from users. Other attackers offered an opportunity to users to download the Zoom application but malware.
+
+3.2. Business email attacks
+The attackers target companies and try to convince an employee to send money. Attackers send emails to the employees.
+
+3.3. Healthcare
+To go past security software that uses advanced AI and ML technologies to check malware, attackers are using text from Covid-19 news and events to enhance the spread of malware. So, we can say that Covid-19 fraud is a worldwide problem.
+
+Figure 8: Percentage of phishing attacks hosted in HTTPS
+For more secure communications HTTPS is used which encrypts the data between the browser and the website he/she is visiting. HTTPS is mostly used for sites which offer online sales and password-protected accounts. According to Q3 2020, 80% of phishing sites hosted on HTTPS have enabled SSL encryption and 40% of SSL certificates used are issued by that certificate authority that offers free certificates. And according to this graph, we can conclude that in 2021 more than 90% of phishing sites can be hosted by HTTPS.
+
+Figure 6: Phishing activity of 2020
+
+The phishing attacks are growing rapidly each month with almost 70% more phishing attacks reported in July 2020 from the previous month, according to the latest report. We can say that the unique phishing website in 2021 will be above 210,000, the unique phishing emails will be above 130,000 and the no of brand targeted will be above 600.
+
+Figure 9: Phishing attacks detected in Brazil[14]
+
+In August the 2020 number of unique phishing attack cases was 10,517 and the number of detecting phishing attacks was almost 5000 which halved the number of the phishing attacks. This means that the detection of phishing rate is 50% of the actual attacks, which needs to be more.
+
+4. Current work and future challenges
+
+Figure 7: phishing activity of 2020
+
+A phishing site attack is still regarded as an appealing method of persuading an inexperienced internet user to give the attackers his or her private confidential information. There are various measures available, but once a solution is suggested to counter these attacks, phishers consider the solution's vulnerabilities and continue their attacks. Several anti-phishing solutions have been proposed in the past. The majority of jobs, whether in government or industry, educational programmes, companies, and non-commercial activities have moved online.
+
+5
+
+Authorized licensed use limited to: NATIONAL UNIVERSITY OF IRELAND GALWAY. Downloaded on September 17,2022 at 22:18:23 UTC from IEEE Xplore. Restrictions apply.
+
+The traditional methods for detecting phishing attacks are ineffective, with only around 20% of phishing attacks being detected. Even on small datasets, machine learning methods produce better performance, but at a cost of scalability and time. Heuristic methods for detecting phishing have a high rate of false positives. To protect against phishing attacks, users must exercise caution. Apart from informing clients about secure surfing, user interface enhancements such as dynamic alerts and, as a result, the detection of suspicious emails, can be made. While IoT gadgets have access to classified resources, their features and security architectures are not yet mature, making them an extremely obvious target for attackers. More people are turning to the internet to complete their daily tasks. As a result, providing a robust phishing attack detection solution with improved response time and accuracy has become increasingly important. Researchers are paying more attention to this research domain due to a rise in the number of phishing attacks linked to Covid-19, as well as attacks on online communication tools.
+An all-encompassing phishing site attack detection solution could be built in the future to recognise and block malicious websites without the involvement of the user. If a website requests login details or confidential information, a system or smart web plug-in solution can verify the site's legitimacy and notify the owner (organisation, company, etc.) in advance. Checking the health of web pages while users are browsing has become a necessity, and scalable and reliable solutions are needed.
+5. Conclusion
+The growth of phishing attacks is huge due to the Covid-19 because everything is online and the detection of these attacks is very low. With the rise in the digital economy, the prevalence of online fraud is rising. This means that we must work more on the detection of phishing attacks. Machine learning is one of the good approaches for detecting phishing attacks. A lot of anti-phishing solutions are available: heuristic detection, virtual similarity detection, black and whitelisting, and machine learning. This paper compares various research for each machine learning technique in terms of detecting phishing attacks and discusses the benefits and drawbacks of each methodology. In addition, this paper presents a detailed list of existing phishing attack threats as well as potential research directions in this sphere. The DNN, LSTM, CNN, is the best technique for detection of phishing attacks which achieves the best accuracy on the base of the small dataset and low features for phishing URL detection.
+References
+[1] W. Ali, “Phishing Website Detection based on Supervised Machine Learning with Wrapper Features Selection,” Int. J. Adv. Comput. Sci. Appl., vol. 8, no. 9, 2017, doi: 10.14569/ijacsa.2017.080910. [2] R. Mahajan and I. Siddavatam, “Phishing Website Detection using Machine Learning Algorithms,” Int. J.
+
+Comput. Appl., vol. 181, no. 23, pp. 45–47, 2018, doi:
+
+10.5120/ijca2018918026.
+
+[3] M. Al-kasassbeh, “Phishing Detection Based on Machine
+
+Learning and Feature Selection Methods,” vol. 13, no. 12, pp.
+
+171–183.
+
+[4] A. Altaher, “Phishing Websites Classification using
+
+Hybrid SVM and KNN Approach,” Int. J. Adv. Comput. Sci.
+
+Appl., vol. 8, no. 6, pp. 90–95, 2017, doi:
+
+10.14569/ijacsa.2017.080611.
+
+[5] K. Leng, C. Lin, K. Wong, K. S. C. Yong, and W. King,
+
+“A new hybrid ensemble feature selection framework for
+
+machine learning-based phishing detection system,” Inf. Sci.
+
+(Ny)., vol. 484, pp. 153–166, 2019, doi:
+
+10.1016/j.ins.2019.01.064.
+
+[6] K. Nagaraj, B. Bhattacharjee, A. Sridhar, and G. S.
+
+Sharvani, “Detection of phishing websites using a novel
+
+twofold ensemble model,” J. Syst. Inf. Technol., vol. 20, no.
+
+3, pp. 321–357, 2018, doi: 10.1108/JSIT-09-2017-0074.
+
+[7] Y. Li, Z. Yang, X. Chen, H. Yuan, and W. Liu, “A
+
+stacking model using URL and HTML features for phishing
+
+webpage detection,” Futur. Gener. Comput. Syst., vol. 94, pp.
+
+27–39, 2019, doi: 10.1016/j.future.2018.11.004.
+
+[8] A. Zamir et al., “Phishing web site detection using diverse
+
+machine learning algorithms,” Electron. Libr., vol. 38, no. 1,
+
+pp. 65–80, 2020, doi: 10.1108/EL-05-2019-0118.
+
+[9] “11PhiDMA â€“A phishing detection model with multi-
+
+filter approach _ Elsevier Enhanced Reader.pdf.”.
+
+[10] M. M. Yadollahi, F. Shoeleh, E. Serkani, A. Madani,
+
+and H. Gharaee, “An Adaptive Machine Learning-Based
+
+Approach for Phishing Detection Using Hybrid Features,”
+
+2019 5th Int. Conf. Web Res. ICWR 2019, pp. 281–286,
+
+2019, doi: 10.1109/ICWR.2019.8765265.
+
+[11] D. Benedick, “Protecting Against Emi.,” Chilton’s I&CS
+
+(Instruments Control Syst., vol. 57, no. 10, pp. 57–62, 1984.
+
+[12] A. Almomani, B. B. Gupta, S. Atawneh, A. Meulenberg,
+
+and E. Almomani, “A survey of phishing email filtering
+
+techniques,” IEEE Commun. Surv. Tutorials, vol. 15, no. 4,
+
+pp.
+
+2070–2090,
+
+2013,
+
+doi:
+
+10.1109/SURV.2013.030713.00020.
+
+[13] A. Abuzuraiq, M. Alkasassbeh, and M. Almseidin,
+
+“Intelligent Methods for Accurately Detecting Phishing
+
+Websites,” 2020 11th Int. Conf. Inf. Commun. Syst. ICICS
+
+2020, no. Ii, pp. 85–90, 2020, doi:
+
+10.1109/ICICS49469.2020.239509.
+
+[14] A. A. Athulya and K. Praveen, “Towards the Detection
+
+of Phishing Attacks,” Proc. 4th Int. Conf. Trends Electron.
+
+Informatics, ICOEI 2020, no. Icoei, pp. 337–343, 2020, doi:
+
+10.1109/ICOEI48184.2020.9142967.
+
+[15] O. K. Sahingoz, E. Buber, O. Demir, and B. Diri,
+
+“Machine learning-based phishing detection from URLs,”
+
+Expert Syst. Appl., vol. 117, pp. 345–357, 2019, doi:
+
+10.1016/j.eswa.2018.09.029.
+
+[16] R. Srinivasa, R. Tatti, V. Alwyn, and R. Pais,
+
+“CatchPhish: detection of phishing websites by inspecting
+
+URLs,” J. Ambient Intell. Humaniz. Computer., no. 2018,
+
+2019, doi: 10.1007/s12652-019-01311-4.
+
+[17] O. A. Moruff, A. O. Maruf, and A. Tosho, “Performance
+
+Analysis of Selected Machine Learning Algorithms for the
+
+Classification of Phishing URLs Performance Analysis of
+
+6
+
+Authorized licensed use limited to: NATIONAL UNIVERSITY OF IRELAND GALWAY. Downloaded on September 17,2022 at 22:18:23 UTC from IEEE Xplore. Restrictions apply.
+
+Selected Machine Learning Algorithms for the Classification of Phishing URLs,” no. November, 2020. [18] M. Somesha, A. R. Pais, R. S. Rao, and V. S. Rathour, “Efficient deep learning techniques for the detection of phishing websites,” Sadhana - Acad. Proc. Eng. Sci., vol. 45, no. 1, 2020, doi: 10.1007/s12046-020-01392-4. [19] A. C. Journal, “Framework for Analysing Malicious URL Using ML Algorithms Page No: 1662,” vol. IX, no. 2231, pp. 1662–1667, 2020. [20] J. S. Tharani, “Understanding phishers’ strategies of mimicking uniform resource locators to leverage phishing attacks: A machine learning approach,” no. May, pp. 1–14, 2020, doi: 10.1002/spy2.120.
+7
+Authorized licensed use limited to: NATIONAL UNIVERSITY OF IRELAND GALWAY. Downloaded on September 17,2022 at 22:18:23 UTC from IEEE Xplore. Restrictions apply.
+

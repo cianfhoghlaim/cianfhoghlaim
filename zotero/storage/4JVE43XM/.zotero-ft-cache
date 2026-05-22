@@ -1,0 +1,814 @@
+Soft Computing (2020) 24:9625–9638 https://doi.org/10.1007/s00500-019-04473-7
+(0123456789().,-volV)(0123456789,-().volV)
+METHODOLOGIES AND APPLICATION
+
+Machine intelligence-based algorithms for spam filtering on document labeling
+Devottam Gaurav1 • Sanju Mishra Tiwari2 • Ayush Goyal3 • Niketa Gandhi4 • Ajith Abraham5
+Published online: 2 November 2019 Ó Springer-Verlag GmbH Germany, part of Springer Nature 2019
+Abstract The internet has provided numerous modes for secure data transmission from one end station to another, and email is one of those. The reason behind its popular usage is its cost-effectiveness and facility for fast communication. In the meantime, many undesirable emails are generated in a bulk format for a monetary beneﬁt called spam. Despite the fact that people have the ability to promptly recognize an email as spam, performing such task may waste time. To simplify the classiﬁcation task of a computer in an automated way, a machine learning method is used. Due to limited availability of datasets for email spam, constrained data and the text written in an informal way are the most feasible issues that forced the current algorithms to fail to meet the expectations during classiﬁcation. This paper proposed a novel, spam mail detection method based on the document labeling concept which classiﬁes the new ones into ham or spam. Moreover, algorithms like Naive Bayes, Decision Tree and Random Forest (RF) are used in the classiﬁcation process. Three datasets are used to evaluate how the proposed algorithm works. Experimental results illustrate that RF has higher accuracy when compared with other methods.
+Keywords Machine learning Á Spam detection Á Document labeling Á Feature selection
+
+1 Introduction
+Email system serves as one of the most powerful communication systems for transmitting the user’s information from one to another. It includes not only text but also images, ﬁles, etc. This platform helps the user in saving a huge amount of time and money in comparison with outdated techniques like telegrams, etc. Nowadays, approximately 281 billion emails are transmitted all over the world in our day-to-day life (https://cacm.acm.org/magazines/
+Communicated by V. Loia.
+& Sanju Mishra Tiwari tiwarisanju18@ieee.org
+Devottam Gaurav gauravpurusho@gmail.com
+Ayush Goyal ayush.goyal@tamuk.edu
+Niketa Gandhi niketa@gmail.com
+Ajith Abraham ajith.abraham@ieee.org
+1 Department of Computer Science and Engineering, Chandigarh University, Punjab, India
+
+2018/7/229047-youve-got-mail/fulltext?mobile=false). One of the threats to such kind of platform is spam, where thousands of unwanted and unintended emails are transmitted daily. Spams are nothing but unwanted and unintended emails that are transmitted to other users having no prior permission. It may exist in various ways like unwanted and unwarranted advertising of products or services. In recent years, there has been tremendous growth in the volume of spam. In a similar way, authorized, perfect and ﬂawless emails are called ham (Sharaff et al. 2016; Herrero et al. 2009).
+2 Ontology Engineering Group, Universidad Polytecnica de Madrid, Madrid, Spain
+3 Department of Electrical Engineering and Computer Science, Texas A&M University - Kingsville, Kingsville, TX, USA
+4 University of Mumbai, Mumbai, India
+5 Machine Intelligence Research Labs (MIR Labs), Auburn, WA 98071, USA
+
+123
+
+9626
+
+D. Gaurav et al.
+
+As per the study estimations, more than 70% of the emails are ﬂawed (Nizamani et al. 2013). These are done for monetary beneﬁt, advertisement, expanding the activity to malevolent sites, stacking contents, etc., by the spammers. This, in turn, leads the service provider to pay a huge amount of money. The cost may be assessed in terms of time spent by the user in going through these mails and removing it from the inboxes. These may also reduce the efﬁciency of the network with a way to harm the ham records, swamps the important data due to limited space, loss of network’s bandwidth, etc. Due to these, users are forced to buy some extra space for a particular time period.
+To overcome from this problem, a spam ﬁltering method is used for classifying the emails into ham/spam. This technique is mainly divided into two types: The ﬁrst one is knowledge engineering and machine learning method (Christina et al. 2010; Chebrolu et al. 2005; Gaurav et al. 2019). The ﬁrst one contains few predeﬁned protocols which are used for classifying the emails into ham/spam along with the address of a network, while the second one produces original data or resolves the issues by analyzing the data and to foresee future patterns. In other words, it produces models that can examine greater, progressively complex information and convey quicker, increasingly exact outcomes—even on an extremely vast scale. Thus, with the help of machine learning an unidentiﬁed threat in a superior way, after comparing the two methods, the latter one is much more efﬁcient than the former one because there is no involvement of rules in it. Hence, in this paper, a machine learning technique is used.
+
+The paper is organized with more details of the prior research work along with ﬁltering techniques listed in Sect. 2. Section 3 highlights the proposed work. The mining of many textual features that are carried out along with the result is shown in Sect. 4. Section 5 illustrates the comparisons carried out between different datasets. At last, the conclusion is provided in Sect. 6.
+2 Related works
+The problem of spam emails has become a major concern nowadays. Many efforts have been made by eminent researchers to make a classiﬁcation of emails into the spam/ham category along with their detection rate. They have carried out their tasks using machine learning. To solve these problems, the authors have also carried out the task of classiﬁcation with the help of a new spam ﬁltering technique with their rate of detection. Table 1 shows the relative work carried out by different eminent researchers along with the dataset used, methods carried out, extraction of features and results obtained. This literature part contains two parts: The ﬁrst part is related to the detection of spam emails, and the second part is related to the classiﬁcation of spam emails.
+Sarwat et al. (2014) have presented their work for the detection of fraudulent emails with the help of clusterbased classiﬁcation model (CCM). The size of the dataset used was 8000. This dataset was downloaded from the Nigeria Web site (Radev 2008). To carry out this classiﬁcation task, various classiﬁcation algorithms are used like
+
+Table 1 Comparative study
+
+Authors
+
+Dataset
+
+Methods
+
+Feature selection
+
+Results
+
+Sarwat et al. (2014), Radev 2008)
+Trivedi and Dey (2013)
+Bhat et al. (2014)
+Bassiouni et al. (2018)
+Youn and McLeod (2007)
+Merugu et al. (2019)
+
+8000 email
+Enron dataset
+Dataset taken are from FB
+Spambase UCI
+Size varies from 5000 to 10,000
+Dataset taken from UCI which is 5574
+
+NB, SVM, DT, CCM
+NB, Bayesian, bagging, boosting with resampling, AdaBoost
+NB, DT, k-NN, bagging and boosting.
+RF, ANN, logistic regression, SVM, random tree, k-NN, decision table, Bayes Net, NB, RBF
+SVM, NB, DT
+SVM, RF, k-NN and NB are used with weighting method
+
+TF-IDF
+Genetic search method, term documentary matrix
+Ensemble method ILFS
+TF-IDF
+TF-IDF
+
+Accuracy is 96%
+Accuracy for Bayesian classiﬁer is 92.99%
+DT has performed better than others
+RF works better than others with accuracy = 95.45%
+DT performs better than others
+NB outbursts well than others with an accuracy of 97.6%
+
+123
+
+Machine intelligence-based algorithms for spam ﬁltering on document labeling
+
+9627
+
+Naive Bayes (NB), Decision Tree (DT), Support Vector Machine (SVM) and CCM.
+In the stage of feature extraction, data were preprocessed; features were extracted by TF-IDF method and were shown in the vector form. These featured vectors were indicated with ham and spam. After the extraction of features, numerous tests were carried out with diverse sets of features and classiﬁcation methods. The accuracy achieved by the authors was 96%. Trivedi and Dey (2013) have carried out the process of detection for spam emails with the help of two probabilistic classiﬁers such as NB and Bayesian. In respect of these two, three boosting algorithms were used here like bagging, boosting with resampling and AdaBoost. The experiments were carried out with three types of Enron datasets (i.e., Enron 4, Enron 5 and Enron 6). The lengths of each dataset were 6000. After preprocessing data, 375 useful features were extracted with genetic search method and term documentary matrix over 1359 attributes. The accuracies are lying between 88.1 and 92.9% when a genetic search method was used and Bayesian performs better than NB. In a similar way, Bhat et al. (2014) have carried out the task for spam detection with bagging and boosting technique. The size of the datasets includes 63,891 Facebook users. After preprocessing of data, the features were extracted from an online social network with the help of an ensemble technique. Numerous classiﬁcation algorithms like NB, DT and k-NN (k-Nearest Neighbor) were used to observe their accuracies on WEKA tool. Finally, the conclusion is that DT outbursts better than others.
+Bassiouni et al. (2018) have performed an experiment on classifying the spam emails from the ham mails. The Spambase UCI dataset was used behind this purpose. The size of the dataset is 4601.
+After performing preprocessing of data, features were selected through Inﬁnite Latent Feature Selection (ILFS) with the help of 10 classiﬁers. The names of these classiﬁers are RF, ANN, logistic regression, SVM, random tree, k-NN, decision table, Bayes Net, NB and RBF. Their respective accuracies are 95.4, 92.4, 92.4, 91.8, 91.5, 90.7, 90.3, 89.8, 89.8 and 82.6. RF outbursts better than the other classiﬁers in terms of accuracy, i.e., 95.45%. Similarly, Youn and McLeod (2007) have performed the experiment on the classiﬁcation of spam emails with four different types of classiﬁers like neural network (NN), NB, SVM and J48. Various sizes of datasets were used for this experiment like 1000, 2000, 3000, 4000
+
+and 4500. After performing preprocessing on data, features were selected on the basis of the TF-IDF method. Finally, the conclusion was that J48 outbursts among all. Merugu et al. (2019) have presented the classiﬁcation task into spam and ham category on the basis of the weighting method. This method helps in easy classiﬁcation of new emails into ham/ spam based on the strength of words present in different categories.
+The dataset used was collected from the UCI machine learning repository having a size of 5574. When data were cleaned, features were extracted through the TF-IDF method. This feature extraction method also uses the BoW model. NB outbursts well in the presence of others like RF, SVM and k-NN with an accuracy rate of 97.6%.
+After observing from both the parts of related work, the conclusion is that spamming has become a serious issue in nowadays where efforts are being made in numerous ways using the different proposed methods of eminent researchers.
+2.1 Methods for spam filtration
+This section discusses the summary of different types of approaches used for ﬁltering the spam, for example, classifying the methods based on techniques and classifying the methods based on theoretical approaches, etc. The spam ﬁltering method tries to help in reducing or preventing the growth of a large number of unintended emails. These unintended emails are sometimes called as unsolicited commercial emails (UCE). These are needed to overcome the false effects of spam as:
+(i) Spam causes inconvenience and squanders clients’ an ideal opportunity to frequently check and erase this an extensive number of undesirable messages.
+(ii) Spam may contain unequivocal content or pernicious code which includes infections, rootkits, worms, Trojans or another sort of harming programming and so forth.
+(iii) Spam has moral issues like publicizing deceitful advertisements (for instance proﬁt speedy), violent content, (for example, obscene pictures and grown-up material) that are inconvenient to the youthful ages.
+(iv) When mailboxes are ﬂooded with spam emails, then, it may lead to loss of important documents, thereby server becomes overloaded, gets delayed server response and chomps more wastage of space.
+
+123
+
+9628
+
+D. Gaurav et al.
+
+Various spam ﬁltering methods are as follows: (i) Avoidance of distributed spammed email at the
+source Botnets are the major source for spreading of false information in the cyber area. In other words, when a group of machines are connected to the Internet, it becomes part of botnets. Thus, it becomes a major issue for those whose computers are hijacked. When a computer acts like a zombie, it is being controlled by the hacker. Numerous activities are performed by them like diffusion of obscene material or different non-attractive activities, leaving no follows on your PC, etc.
+All spammed emails are disseminated by zombie computers because 50% of the spam emails that are sent throughout the world are done by the zombie computers. The second way of distributing spam emails is done through the distributed denial of service attack (DDoS). It happens when a substantial number of Internet clients make concurrent solicitations to a site server, in order to counteract authentic clients to approach the site.
+The zombies send a staggering measure of pointless data to the site’s routers that they are not ready to process thus the network splits. To limit the distribution of spammed email in their source, email protocols are being developed continuously, email servers are jammed that creates spamming.
+(ii) Avoidance of Spammed email acceptance at the endpoint
+To stop false information coming at the endpoint, there are two ways: • Theoretical methods are further divided into three parts:
+traditional, based on learning and hybrid techniques. • Based on ﬁltering, it is divided into two parts: user and
+server sides, respectively.
+(a) Traditional techniques This technique uses the deﬁned data given by the professionals to carry out the classiﬁcation process. The stored data given by the professionals are called information-based data.
+It helps in reducing the substantial quantity of negative procedures when it is a slice of email ﬁltering method during classifying the data. This technique is further divided into different parts: • Technique used in analyzing the message Analyzing the
+time-honored emails is done on the account of ofﬁcial
+
+signature, same signatures are used as per the updations are done in the database, statistical techniques are used for accessing the data based on Naive Bayes theorem. These are done just for checking the signatures of spammed emails. • Detecting the distributed mass The purpose of using this technique is to notice the same kind of mail spreading to a large number of clients. The below ones are for this purpose:
+• Votes given by the clients (Razor/Pyzor) (http://razor. sourceforge.net/; https://sourceforge.net/p/pyzor/mail man/pyzor-announce/).
+• Analyzing the emails coming from some network (http://umanitoba.ca/computing/ist/email/exchange/ securityspamindex.html).
+• Generation of acknowledgment for trapping the spam (https://www.symantec.com/products/mail-securityexchange).
+For mass identiﬁcation of emails, the possibility of this technique is to use spam ﬁltration for verifying the determined email signature. For the strategies, in view of recognition of reiterations, two fundamental problems are noticed. One is an unwanted exempliﬁcation and the other one is a discovery of genuine mass mailing. The former implies that every spam email has inconsequential contrasts. Due to this, it is difﬁcult to gather unfaltering signs. To take care of this issue, the different relentless signs are utilized. For instance, in Yandex Mail System the strategy for shingles (http://company.yandex.ru/public/articles/anti spam.xml) is ﬁgured it out. • Detecting the sender as spammers These strategies
+depend on various blackhole arrangements of IP and addressed email. It is conceivable to use personal blackhole and white records or to utilize the service of RBL (real-time blackhole list) and DNSBL (DNS-based blackhole list) to verify the addresses. The merit in using this technique is that it helps in recognizing the spam at an early stage when the email is being received. The demerit is that the strategy used for adding and deleting the email address isn’t translucent. • Verifying the source mail address and the name of the domain This is one of the simple techniques of ﬁltering the irrelevant data, where DNS’s name is checked with the name of the sender’s domain. This method becomes useless when genuine addresses are utilized by spam
+
+123
+
+Machine intelligence-based algorithms for spam ﬁltering on document labeling
+
+9629
+
+ones. For this situation, it might be conﬁrmed with a probability of sending the message from the current IP address. Initially, the sender’s ID (http://www.micro soft.com/mscorp/safety/technologies/senderid/default. mspx) can be utilized where the sender’s email address is shielded from misrepresentation by methods for distributing the arrangement of space name used in DNS. Moreover, in SPF (Sender Policy Framework) (http://www.openspf.org/Introduction), DNS convention is utilized for conﬁrming the source’s email address. The guideline conveys that if the proprietor of the domain needs SPF conﬁrmation, then admittance of DNS to that domain may be added.
+All the above strategy discussed depends on a few information for analyzing the data gathered by specialists of outsider providers who suffer from certain demerits: • It is important to refresh the learning base routinely; • It totally depends on updating information gathered by
+providers; • The very low amount of security is guaranteed; • Totally dependent on the corresponding natural
+language; • Amount of detecting false data is very low. • Learning-based techniques To overcome the problem
+of spreading false information, ﬁltration is one of the solutions. It tends to work in an automated way of classifying the email into ham or spam. The existed proposed work shows an accuracy level of more than 91% (for instance, the assessment performed by Vidya Kumari and Kavitha (2019)). The algorithms used to ﬁlter the spam data from emails can be applied in various stages while transmitting the emails from one point to another, i.e., at routers, at the end server or at the end email box. When ﬁltration is done at the endpoint server or mailboxes, then, an only partial part of the problem is solved, i.e., it helps in reducing the wastage of time done by the clients in screening the spam emails but it doesn’t prevent from misusing the data. This happens because every one of the email is conveyed already to the destined server.
+These are further divided into three main categories: • Detection of Spammed Images Spamming in the image
+has been progressed toward becoming another sort of email spam. Spammers insert the message into the picture and then send a mail with that attachment.
+In this situation, traditional techniques become insufﬁcient. Filtration of an image proves to be an expensive and
+
+tedious work. Liu (Liu et al. 2010) carried out the process of ﬁltering the image in a three-layered architecture. Layer 1 contains Mail Header Classiﬁer; layer 2 contains the Image Header Classiﬁer and layer 3 contains the Visual Feature Classiﬁer. In layer 1, headers of emails are taken out ﬁrst from the received emails. After making an analysis, features related to headers are taken out with the help of feature mining unit. Filtration is further carried out on the obtained features with the help of Bayesian classiﬁer. If the result of Bayesian classiﬁer is more than the threshold (let say T1), then the method gives the end result else the end result is further utilized in the next layer. If the result of layer 1 is lesser than the threshold obtained in layer 2 (let say T2), then the result of layer 1 is ignored else the end result of layer 2 is considered as ﬁnal. If not, then the result of layer 2 is used in layer 3. • Detection of Bagged words This model is utilized in
+NLP (natural language processing) and also in data mining. Here, textual data are denoted in the form of collected words, but not in order, ordered words and more in improper grammar. To carry out the ﬁltration of spammed emails, two bagged words are taken. One pack is loaded up with spammed words that are there in unwanted emails, and the other pack is loaded up with authentic words that are there in ham mails. Considering email as a heap of words from one of these packs, Bayesian probabilities are utilized to decide to which pack this email has a place. • Detections of collaborative spams This process mainly relies upon client produced marked data. Clients give input by categorizing mails as spam or ham. These categories are then used for training the spam ﬁlters. In spite of the fact that the information provided by the clients is extremely less, they are collected together for making the training size very huge. As a result, there is a considerable deviation in the clients’ thoughts that which one belongs to spam or ham category. Therefore, spam ﬁlters when used on a worldwide classiﬁer will be problematic. On the other hand, it becomes very tough to train the individual classiﬁer with little information for all clients (Ahuja 2018)
+Attenberg et al. (2009) carried out the task of collaborative spams successfully with the help of hashing trick on a customized worldwide classiﬁer. The hashing trap maps every single individual classiﬁer into a solitary low-dimensional space, where training is done with a weight vector which catches the individual facets of every client.
+
+123
+
+9630
+
+D. Gaurav et al.
+
+Datasets
+
+SPMD
+
+Feature Subset Selection
+
+Accuracy
+
+Data used for Testing
+
+Data used for Training
+
+Feature Extraction
+
+Selected Feature Subsets
+
+Extract Test Features
+
+Extract Trained Features
+
+Make model for
+Classification
+Test model for Classification
+
+SPMD Constraints
+
+Fig. 1 Layout of proposed method
+
+(c) Hybrid-based techniques Yoon et al. (2010) have proposed a hybrid ﬁlter for classifying the text messages into spam or ham data. This is done with the help of content-based ﬁlter and challenge-response protocols. To carry out such a process, three types of regions are considered: normal, uncertain and spam. To classify the messages in normal and spam, challenge-response protocols are used for uncertain messages. To check whether the source is a single user or a device, a thought-provoking question is sent by the message center. Upon receiving the response from the destination, matching takes place between correct ones and response. If there is a match, then, it is a normal text, else it is a spam one. For classifying the uncertain texts, a thought-provoking question is sent by the source to the destination in the form of CAPTCHA. If it is a legal one, then the correct response is given otherwise not.
+
+3 Proposed work
+3.1 Layout of proposed work
+This section deals with the layout of the proposed work. To carry out the steps required in the algorithm further, ﬁve dif-
+
+ferent stages are needed. In the ﬁrst phase, the datum is collected from three different datasets like Enron dataset (http://nlp.cs. aueb.gr/software_and_datasets/Enron-Spam/index.html), Ling-Spam dataset (http://www.aueb.gr/users/ion/data/ling spam_public.tar.gz.2019) and PU dataset (http://www.aueb.gr/ users/ion/data/PU123ACorpora.tar.gz.2019). In the next phase, the cleaning of data is performed using preprocessing. After cleaning of data, a spam ﬁlter is made to remove the unrelated features. When ﬁltration is done, TF-IDF (Kim et al. 2019; Camastra et al. 2013) is used for extracting the features. After the extraction phase, features are selected with the help of different techniques like SelectKBest(), exhaustive feature search (EFS), etc. The purpose of feature selection technique is to select the most relevant one from the set of features on the basis of possibilities. In the end, three classiﬁers are used to classify the emails into ham/spam.
+They are Naive Bayes (NB), Decision Tree (DT) and Random Forest (RF) (Staiano et al. 2013). These classiﬁers work on only labeled instances and use unlabeled instances for testing purpose. If the possibility of any feature is soaring, then it is mapped in the labeled group along with the predicted label.
+These are continued till all the test instances are classiﬁed in one of the categories (spam or ham). The layout of the proposed methodology is shown in Fig. 1.
+3.2 Algorithm 1 (SPMD)
+Based on the gap identiﬁed in the literature, a new methodology is proposed based on the spam detection concept. The proposed method is named as spam mail detection (SPMD) method which is based on supervised learning (SL) approach. In the view of SL, it is expected that instances that belong to one label are created from one group and it also helps in providing an improved feature of labeled data from that of unlabeled instances. To carry out the process of spam ﬁltration, text/document is labeled. This is done for mining the texts in a proper way. This process is called as document labeling. In the existing spam ﬁltering methods, there is no automatic way available that can be utilized to allocate labels to an expansive number of texts and updating the model for classiﬁcation concurrently. So, it requires a huge amount of human work which consumes a lot of time. To automate this process, a label for a particular class is consequently decided when a new dataset is made. This is done with the help of machine learning techniques. The proposed Algorithm 1 is given:
+
+123
+
+Machine intelligence-based algorithms for spam ﬁltering on document labeling
+
+9631
+
+123
+
+9632
+
+D. Gaurav et al.
+
+Algorithm 1 Description Given dataset Dt ¼ fdt1; dt2; . . .; dtmg, where dtm is the mth document in Dt and L denotes the category set. The range of positional parameters i; j:k is 8i;j;k 2 1; 2; . . .; m where m is the length of the dataset Dt. When a new document arrives, it is ﬁrst broken down into tokens, where each token consists of the message in it and each message contains words in it. The tokens are represented by T, where T ¼ ft1; t2; . . .; tiÈg. Each dtm cÉontains a set of jth messages, where G ¼ g1; g2; . . .; gj which are further combined with its own label to form a proper structure. The main work of ML is to make a Boolean categorization function with a technique used for ﬁltration of spam in an automatic manner as: ;GðdtmÞ : Dt ! fTrue; Falseg. Each of the messages ðG 2 dtmÞ is assigned to anyone, instead of two. The messages G are referred to spam if ;GðdtmÞ has an indicator ls else it is a ham message. Each ham message is denoted as lh. With the help of prior representation, supervised ML algorithms take the following stages for ﬁltration of spam as given below:
+
+3.3 Data preprocessing
+
+The representations of the email’s contents are done with the help of featured vectors, i.e., message gj is in the category lk or not. When such vectors are united together for dataset collection, then these datasets are referred to as labeled datasets. Because of the huge number of email ﬁles, the subsequent datasets result in enormous and scanty structures. For these issues, some methods are used to reduce the dimensions of vectors before classifying it. To further reduce the dimensions in a better way, it can be also be done with the use of tokenization, stop word removal and lemmatization. After preprocessing of data, features are extracted by using the feature extraction method in the next stage.
+
+3.4 Feature extraction
+
+Feature extraction is an approach to choose a subset of
+
+unique features space. The quantity of feature that is in the
+
+space hampers the time used for computation as well as the
+
+accuracy of the classiﬁer. The main theme for doing this is
+
+to do searching for a viable number of featured subsets by
+
+assessing it with proper features along with training data.
+
+To carry out such process, a spam ﬁlter is constructed. The
+
+general representation of spam ﬁlter is shown in Eq. (1):
+
+&
+
+'
+
+;ðG; uÞ ¼
+
+ham if lh ¼ 1 spam if ls ¼ 0
+
+ð1Þ
+
+where u is the vectored constraints. The function ; is used to specify whether a given message G is ham or spam. The
+
+purpose of spam ﬁlter is to remove the irrelevant features
+
+from the labeled datasets. These labeled datasets are
+
+grouped together with a frequent term tfj and frequent
+
+document idfi to form a TF-IDF ðFÞ feature vector as in
+
+Eq. (4):
+
+Xm  N 
+
+tfj ¼
+j
+
+Z
+
+ð2Þ
+
+Xm
+
+   N
+
+idfi ¼ i log Y :
+
+ð3Þ
+
+Xm
+
+fji ¼ ðtfj Â idfiÞ
+
+ð4Þ
+
+ij
+
+where N is the amount of term that has appeared in the dataset, zÈis the total aÉmount of terms in the given dataset Dt, F ¼ f11; f12; ::; fji and Y is the amount of document that has occurred. Equations (2) and (3) show the computation done for tfj and idfi, respectively. In the next stage, the selections of features are done from the extracted features.
+
+3.5 Feature selection
+
+It is the way toward choosing a subset of important features, which helps in constructing the model. It also helps in picking features that provide a great or better exactness while requiring less information. This technique can be utilized to distinguish and to expel unneeded and repetitive qualities from information that don’t make any contribution to the model’s exactness, otherwise it may certainly decline the exactness of the model. To make the model work in an easier manner, a labeled feature matrix (in Fig. 2) is created. This is simply a cross-product of ðF Â LÞ along with their own categories L as:
+Each feature in the feature matrix consists of word and their labels for each and every data as given in Fig. 3.
+From the feature matrix, appropriate features are selected using the selection technique given in Table 2. Let ham cnt is the total number of ham labeled mails, spam cnt is the total number of spam labeled mails, T be
+
+Fig. 2 Labeled feature matrix
+
+Fig. 3 Feature data
+
+123
+
+Machine intelligence-based algorithms for spam ﬁltering on document labeling
+
+9633
+
+Table 2 Feature selection schemes
+Feature selection scheme
+Lack of selected features Information gain SelectKBest, Chi-square Exhaustive feature search EFS) Best ﬁrst search (BFS) GridSearchCV Sequential backward Selection (SBS) GreedyStepwise
+
+the total number of mails, w is the word, PðHÞ is the
+
+probability for ham feature and PðSÞ is the probability for
+
+spam feature. This is clearly shown in Eq. (5) and Eq. (6),
+
+respectively.
+
+ 
+
+ 
+
+PðHÞ ¼ ham cnt
+
+ð5Þ
+
+T
+
+PðSÞ ¼  spam cnt 
+
+ð6Þ
+
+T
+
+After this, a conditional probability is applied. This is done to know out of total (ham or spam) feature, how much is the actual (ham or spam) word? Ham dataðHÞ and word ðwÞ are two independent events. These are shown in Eqs. (7), (8), (9) and (10):
+
+PðH \ wÞ ¼ PðHÞ Â PðwÞ
+
+ð7Þ
+
+PðS \ wÞ ¼ PðSÞ Â PðwÞ
+
+ð8Þ
+
+PÀw=HÁ ¼ PðH \ wÞ=PðHÞ
+
+ð9Þ
+
+PÀw=SÁ ¼ PðS \ wÞ=PðSÞ
+
+ð10Þ
+
+Equations (11) and (12) are just used for summing the
+
+values ﬁnally.
+
+PðHÞ
+
+¼
+
+XÀPÀw=HÁ
+
+Â
+
+Á PðHÞ
+
+ð11Þ
+
+X
+
+PðSÞ ¼ ðÂPðSÞÞ
+
+ð12Þ
+
+When the probability is calculated for each ham and
+
+spam data, a comparison is done. To carry out the com-
+
+parison process, a score is computed. This is done for
+
+ranking the features in a way to select the best feature
+
+among all. The model is represented as from Eq. (13):
+
+&
+
+'
+
+;FðPðHÞ; PðSÞÞ ¼
+
+1 0
+
+if ðPðHÞ [ PðSÞÞ if ðPðSÞ [ PðHÞÞ
+
+ð13Þ
+
+If ðPðHÞ [ PðSÞÞ, then score is 1 otherwise score 0 is given. Higher the rank, higher will be the probability for selecting an optimal feature. Once a choice of selection is done, it greedily grabs the optimal feature from the trained features and removes the unrelated features. This feature
+
+selection strategy can be renamed as ‘‘Greedy Selection Strategy.’’ In this way, all relevant features are selected from the extracted features. The features that are selected from the training part are called as trained features and for testing part are called as test features.
+In this research, we are focused on novel feature selection methods. Principal component analysis (PCA) is a well-explored feature reduction method that uses an orthogonal transformation to convert a set of observations of possibly correlated variables into a set of values of linearly uncorrelated variables called principal components. Oliveira has illustrated the use of PCA on spam database (Oliveira 2019). Park and Klabjan (2018) also explored conventional and variants PCA on spam dataset. We have added a short discussion in Sect. 3.5. Our goal was to optimize the classiﬁcation results using feature selection methods, and the proposed ‘‘Greedy Selection Strategy’’ can carry out the training process in a faster way and yields better result.
+These selected/trained features are then converted into an understandable form for algorithms. Finally, an algorithm runs over the classiﬁers during classiﬁcation stage.
+
+3.6 During classification
+
+To carry out the process of classiﬁcation in an automated
+
+manner, a learning algorithm is built for the machine where
+
+it tries out to search for patterns from the data. This
+
+learning algorithm is called a model. For that a classiﬁer is
+
+constructed. The purpose of creating a classiﬁer is to
+
+classify the data to their respective labels or making the
+
+prediction for the data. These are done only when the set of
+
+algorithms A ¼ fa1; a2; . . .; amg are applied on it. The
+
+classiﬁer model is represented in Eq. (14) as:
+
+&
+
+'
+
+;ðAÞ ¼
+
+ham spam
+
+if ðPredh ¼ lhÞ if ðPreds ¼ lsÞ
+
+ð14Þ
+
+where Predh is the predicted label for ham data and Preds is
+
+the predicted label for spam data. After prediction, accu-
+
+racy for the classiﬁer is calculated based on the formula
+
+given in Eq. (15):
+
+ 
+
+ 
+
+Ac ¼
+
+Spc þ Hpc Tem
+
+ð15Þ
+
+where Ac is the entire number of spammed mails that classiﬁed correctly; Hpc is the entire number of hammed mails that classiﬁed correctly and Tem is the whole messages.
+
+123
+
+9634
+
+D. Gaurav et al.
+
+Table 3 Experimental results*
+
+Methods
+
+E
+
+LS
+
+PU
+
+NB
+
+DT
+
+RF
+
+NB
+
+DT
+
+RF
+
+NB
+
+DT
+
+RF
+
+Info gain SBS, Greedy SFS, GridSearch EFS, BFS SelectKBest WFS
+
+67.03 56.36 56.00 55.13 65.90 67.13
+
+84.27 83.88 84.49 85.54 83.84 81.98
+
+91.50 91.77 91.67 92.78 91.81 91.72
+
+77.41 82.28 82.79 83.29 78.57 79.03
+
+83.21 82.75 83.41 84.90 83.21 82.25
+
+91.30 91.40 91.93 92.97 92.97 92.56
+
+56.61 56.99 57.10 56.90 57.93 57.13
+
+77.32 76.57 76.47 76.24 76.85 76.29
+
+88.24 87.73 87.02 89.20 87.72 87.71
+
+E Enron dataset, LS Ling-Spam dataset, Info Gain information gain, SBS sequential backward selection, EFS exhaustive feature selection, SFS sequential forward selection, BFS best ﬁrst search, WFS wrapperbased feature selection
+
+4 Experimental results
+
+The experiments are carried out with the help of steps
+
+given in Algorithm 1. For carrying out the analyses as
+
+speciﬁed before, Pycharm software has been used. The data
+
+have been collected from three datasets, namely Enron
+
+dataset (http://nlp.cs.aueb.gr/software_and_datasets/Enron-
+
+Spam/index.html), Ling-Spam dataset (http://www.aueb.
+
+gr/users/ion/data/lingspam_public.tar.gz.2019) and PU
+
+dataset
+
+(http://www.aueb.gr/users/ion/data/PU123A
+
+Corpora.tar.gz.2019). For evaluating the experimental
+
+results, the datasets are divided in the ratio of 70:30 which
+
+means 70% of the data are contained in the training set and
+
+the remaining is contained in the test set.
+
+In this, the classiﬁers are trained on the given training
+
+set, making predictions on the test set, and at last the
+
+computation of accuracy is done. In the proposed method,
+
+it is shown that the accuracy for detection of spammed
+
+emails depends on the classiﬁer as well as on the strategies
+
+used for the selection of features. The selections of features
+
+are shown in Table 2.
+
+At ﬁrst, experiments are carried out without any strate-
+
+gies used for selection of features. This brought about
+
+generally poor results in terms of accuracy for three algo-
+
+rithms. The outcomes can be seen in Table 3. Furthermore,
+
+in the next stage, the experiments are carried out with
+
+strategies used for selection of features on every one of the
+
+classiﬁed algorithms. At last, the comparisons are done
+
+between with and without strategies used for selection of
+
+features. The outcome of accuracy outlined in Table 3
+
+illustrates about the highest values.
+
+The accuracy of the second highest data is depicted in
+
+Table 3 with italic fonts. There has been an increase in the
+
+accuracy of DT and NB from 76.24 to 85.54% and 55.13 to
+
+67.13%, respectively. Thus, on making the ﬁnal conclu-
+
+sion, RF shows the increased accuracy from 87.02 to
+
+92.97%. The impact of every one of the methods used for
+
+selection of features on every algorithm, i.e., DT, NB and
+
+RF, is portrayed in Fig. 4.
+
+Accuracy Comparison of Algorithms 100 80 60 40 20 0 NB RF DT NB RF
+
+Enron Ling-
+
+PU
+
+Spam
+
+InfoGain SBS, GreedyStepwise Search
+SFS, GridSearchCV EFS, Best First Search SelectKBest
+WFS
+
+Fig. 4 Comparative study of different machine learning algorithms. E Enron dataset, LS Ling-Spam dataset
+
+It can likewise be seen from the outcomes that, when the selection of features are done in a proper way, it hampers the NBs’ performance.
+RF is the best among the rest classiﬁers in the presence of with and without the strategies used for selection of features. From the outcomes, it tends to be seen that with the strategies used for selection of features such as sequential feature selector, GridSearchCV and exhaustive feature selector, best ﬁrst search has performed in a good manner in comparison with others—aside from the NB in the Enron dataset
+
+5 Comparative analysis
+In accessing the dataset required for carrying out the research works for a speciﬁc purpose, several challenges were faced. Among these, one of the challenges being faced is to carry out the classiﬁcation task of spam emails. This is likewise applied in the assessment of recently proposed spam ﬁltering techniques. It gives a simple way to access the datasets that are readily available. In this research, spam detection techniques have been proposed
+
+123
+
+Machine intelligence-based algorithms for spam ﬁltering on document labeling
+
+9635
+
+Table 4 Classiﬁcation results of three ML algorithms
+
+Recall
+
+Precision
+
+E
+
+LS
+
+PU
+
+E
+
+LS
+
+NB 64.34 85.14 56.12 DT 82.00 82.00 76.00 RF 85.00 87.00 78.00
+E Enron dataset, LS Ling-Spam dataset
+
+74.02 82.00 85.00
+
+90.97 82.00 87.00
+
+PU
+99.91 77.00 78.00
+
+F-Measure
+
+E
+
+LS
+
+68.84 82.00 85.00
+
+86.90 82.00 87.00
+
+PU
+72.68 76.00 78.00
+
+with the help of three datasets, namely Enron dataset (http://nlp.cs.aueb.gr/software_and_datasets/Enron-Spam/ index.html), Ling-Spam dataset (http://www.aueb.gr/users/ ion/data/lingspam_public.tar.gz.2019) and PU dataset (http://www.aueb.gr/users/ion/data/PU123ACorpora.tar.gz. 2019).
+The research work is further carried out with three different types of algorithms like NB, DT and RF with no feature selection strategy. These datasets are further split in the ratio of 70:30. For Ling-Spam dataset, RF got more than 90% of TPR (True Positive Rate), while DT got TPR nearly 90% except NB achieves the lowest TPR as nearly 85%. And for FPR (false positive rate), nearly about every algorithms have given a decent result, but RF achieves the lowest one, i.e., 37.06%.
+For Enron dataset, the three algorithms have given nearly about the similar outcome as RF got lower FPR as compared to the Enron dataset which is 13.10%. The accuracy achieved by RF got more than 92% as compared to Enron dataset.
+While comparing the three datasets, i.e., Enron dataset (http://nlp.cs.aueb.gr/software_and_datasets/Enron-Spam/ index.html), Ling-Spam dataset (http://www.aueb.gr/users/ ion/data/lingspam_public.tar.gz) and PU dataset (http:// www.aueb.gr/users/ion/data/PU123ACorpora.tar.gz), RF achieves the highest accuracy among all which is 92.56% in the Ling-Spam dataset except NB achieves the lowest one, i.e., 57.13% in PU dataset.
+The same result can be observed in the case of TPR where RF achieves the highest TPR among all which is 91.17% in Ling-Spam dataset, but NB got the lowest one which is 57.12% in PU dataset. Table 4 depicts the outcome used for comparison among three ML algorithms having all featured data along with the performance
+
+measures (precision, recall and F-measure) (Kumar et al. 2012; Gupta et al. 2013; Mishra et al. 2018) which are used for calculation between the three datasets.
+As from Table 4, the outcome used for classiﬁcation purpose among three ML algorithms with three datasets can be noted. After making an observation on the data listed in Table 4, the conclusion is that RF has the highest F-Measure than others. While comparing the datasets, we observed that there is a slight difference in F-Measure in Ling-Spam dataset which is still a satisfying performance but NB achieves a lower F-Measure of 72.68% in comparison with others which itself shows that NB does not know how to improve itself after the addition of the extracted word feature. Finally, from this, RF depicts the highest F-Measure of about 87% in Ling-Spam dataset.
+With having new detection features, the result of RF depicts the lowest FPR of around 13.95% in Enron dataset among others, but has a high F-Measure of around 86% both in Enron and in Ling-Spam datasets for the proposed detection features. These detection features have been carried out on all the datasets. The details are shown in Table 5. The detection rate (DR) seems to be higher than all other algorithms which are more than 92% in LingSpam dataset.
+5.1 Model optimization
+To judge the performance of the algorithm, the two important questions arises here are: (1) Are the features deﬁned in a well manner? (2) Do the amount of data required during the training phase are sufﬁcient? To answer such questions, the possible solution is to check the size of the dataset during training time. With the increase in the size of training data, it becomes very much complex for a
+
+Table 5 Outcome of new detection features
+
+FPR
+
+Detection rate
+
+E
+
+LS
+
+PU
+
+E
+
+LS
+
+NB 51.43 60.94 60.69 DT 14.54 45.89 29.54 RF 13.95 44.36 24.72
+E Enron dataset, LS Ling-Spam dataset
+
+55.13 84.54 92.78
+
+83.29 84.90 92.97
+
+PU
+56.90 76.24 89.20
+
+F-Measure
+
+E
+
+LS
+
+55.00 85.00 86.00
+
+76.00 85.00 86.00
+
+PU
+56.00 76.00 78.00
+
+123
+
+9636
+
+D. Gaurav et al.
+
+1 2
+
+1
+
+3
+
+1
+
+1
+
+2
+
+4
+
+3 2
+4 3
+TS
+
+2
+
+4
+
+3 4
+
+A
+
+B
+
+S() Avg
+
+Fig. 5 Four cross-fold validation techniques. A—trained features, B—test features, S()—selection() and TS—training set
+model to learn in a correct way and to represent/ﬁt each part of the training data. Moreover, it may be possible that some part of the training data may or may not ﬁt. This is due to the presence of some noise in the training data. As a result of this, the cross-validation score is reduced more effectively. As a result of this, the cross-validation score for the test part increases. This occurs due to an increase in the capacity of model for generalizing the data. But in the case of smaller training datasets, the model may overﬁt and performs ineffectively on the test set.
+This is because the ultimate aim of an algorithm is to make the model to perform better. However, there are some drawbacks of the proposed algorithm as: (1) It suffers from generalizing the result on the test part in a more accurate way. These occur because some amounts of noisiness are present in the test dataset. Due to this, there is a little error in the training part, but with a high error in the test part. (2) The performance of the proposed algorithm decreases slightly in order to ﬁt the whole dataset. These happen only when there is a lesser number of data that are used in training time. To solve such drawbacks of the proposed algorithm, a k-fold (k = 4) cross-validation technique is used. The validation technique (in Fig. 5) is used to assess the performance of the classiﬁcation algorithm among the datasets.
+The selection function which is used for selection of feature is based on the four cross-fold validation technique which is repeated as per accuracy of the classiﬁer. The heuristic function is used along with the selection function to improve the accuracy of classiﬁer while searching for
+
+relevant features from datasets. The number of validation turns that are required for smaller datasets is more than that of larger datasets because the smaller dataset requires a smaller amount of time during the learning phase.
+Despite having some drawbacks of the proposed algorithm, there are some advantages as: (1) It provides clear thought regarding the viable dimension of every classiﬁer for detecting the mail as ham or spam. (2) The accuracy level that can be accomplished by the proposed algorithm is higher than other algorithms. These can be clearly justiﬁed when the result of the detection rate (DR) is more than 92%.
+To optimize the model, a penalty is provided as supplementary to the selection function. The goal of this penalty is to simply help in breaking the ties of smaller subsets of features. The term ‘‘breaking the ties’’ means only picking smallest one from the two subsets of features. To achieve this goal, the penalty is made less than or equal to 0.1%. While optimizing the data, a lot of issues are faced but some of them are mentioned below: • To optimize the NP-hard problems, many algorithms
+are required to ﬁnd the hypothesis by doing approximations because they don’t have access to fundamental distributions. This kind of issue is very similar to bias variance tradeoff where accuracies are estimated by trading off the datum. • It is very difﬁcult to ﬁnd the relevant features from the subsets for NP-hard problems because classiﬁer’s accuracy may reduce leisurely when irrelevant features are taken during the learning process.
+Due to these issues, the process of selecting the relevant features is summarized by ﬁnding the optimal features. However, optimal features may or may not be unique because similar accuracies can be achieved by using two dissimilar feature sets.
+5.2 Calculating the complexity
+Time complexity is one of the most signiﬁcant criteria for calculating the effectiveness of an algorithm. To compute the complexity of the proposed algorithm, it is needed to ﬁnd out the number of calculation steps taken by the algorithm. The number of calculation steps may vary from the size of the dataset. Let the size of the dataset be n, and m be the number of relevant features. If the size of the dataset is very large, then a large amount of time is taken for computation and vice versa. To carry out such process, initially, a labeled feature matrix of ðn Â mÞ is created. To compute the time complexity of this labeled feature matrix, n may be approximately equal to m, i.e.,n ﬃ m. This tends to Oðn2Þ because the size of the dataset is very large initially. Some parts may contain noisy features and others
+
+123
+
+Machine intelligence-based algorithms for spam ﬁltering on document labeling
+
+9637
+
+may not. If training is done with this labeled feature matrix, then computation time will be very high, and hence, the performance of the proposed algorithm will decrease. To reduce the computation time or increase the performance of the proposed algorithm, relevant features are selected. In other words, noisy features are removed which may take constant time, i.e.,Oð1Þ. After removal of the noisy features, the dataset contains only ðn À 1Þ features. These feature sets are further divided into smaller subsets. This is done to make the training process easier. Hence, the time complexity remains at Oððn À 1ÞlognÞ ﬃ OðnlognÞ. From ðn À 1Þ digit, ð1Þ is neglected because digit ð1Þ is very small. Finally, time complexity can be evaluated in three cases: (a) The best case will occur when there are only relevant features in the dataset, then, it will take OðnlognÞ. (b) The worst case will occur when both relevant and noisy features are present in the dataset, then it will take Oðn2Þ. (c) For average case, the time complexity will be OðnlognÞ.
+Space complexity SðnÞ measures the quantity of memory required for storage purpose by the algorithm at any point. Space complexity is summation of total number of elements and stack space. Stack space is basically the amount of extra space taken by the algorithm, i.e.,
+SðnÞ ¼ Totalelements þ StackSpace
+Since there are only n number of elements, so it will take only OðnÞ. For stack space computation, it will take OðlognÞ.This is because division is being taken for making the training process to train the dataset easily. Hence, total SðnÞ is:
+SðnÞ ¼ OðnÞ þ OðlognÞ ﬃ OðnÞ
+6 Conclusions
+In the last decade, spam mail has become an increasing threat to mail communication. Thousands of undesirable email messages are generated in a bulk format by spammers. These, in turn, may often lead to a waste of time spent by users in searching and deleting the spam emails, loss of the user’s network bandwidth and an unnecessary increase in the trafﬁc volume, etc. Most spam email generally contains advertisements of products or services, which may be useless or unnecessary for the user. In this paper, a spam mail detection (SPMD) method is proposed to detect spam emails. Three algorithms are used for classiﬁcation purpose like Naive Bayes, Decision Tree and Random Forest. Among these classiﬁers, Random Forest was shown to achieve the highest accuracy of 92.97%.
+Funding This study was not funded by any grant.
+
+Compliance with ethical standards
+Conflict of Interest The authors have declare that they have no conflict of interest.
+Human animal rights No animals were involved. This article does not contain any studies with human participants or animals performed by any of the authors.
+Informed consent Informed consent was obtained from all individual participants included in the study.
+References
+Ahuja L (2018) Handling web spamming using logic approach. In: International conference on advances in computing and data sciences. Springer, Singapore, pp 380–387
+Attenberg J, Weinberger K, Dasgupta A, Smola A, Zinkevich M (2009) Collaborative email-spam ﬁltering with the hashing trick. In: Proceedings of the sixth conference on email and anti-spam
+Bassiouni M, Ali M, El-Dahshan EA (2018) Ham and spam e-mails classiﬁcation using machine learning techniques. J Appl Secur Res 13(3):315–331
+Bhat SY, Abulaish M, Mirza AA (2014) Spammer classiﬁcation using ensemble methods over structural social network features. In: Proceedings of the 2014 IEEE/WIC/ACM international joint conferences on web intelligence (WI) and intelligent agent technologies (IAT), vol 02. IEEE Computer Society
+Camastra F, Ciaramella A, Staiano A (2013) Machine learning and soft computing for ICT security: an overview of current trends. J Ambient Intell Humaniz Comput 4:235–247
+Chebrolu S, Abraham A, Thomas JP (2005) Feature deduction and ensemble design of intrusion detection systems. Comput Secur 24(4):295–307
+Christina V, Karpagavalli S, Suganya G (2010) A study on email spam ﬁltering techniques. Int J Comput Appl 12(1):0975–8887
+DCC Spam Control Delayed Your E-Mail. http://umanitoba.ca/ computing/ist/email/exchange/securityspamindex.html. Accessed 20 Dec 2018
+Gaurav D, Yadav JKPS, Kaliyar RK, Goyal A (2019) Detection of false positive situation in review mining. Soft Computing and signal processing. Springer, Singapore, pp 83–90
+Gupta S, Kumar P, Abraham A (2013) A proﬁle based network intrusion detection and prevention system for securing cloud environment. Int J Distrib Sensor Netw 9(3):364575
+Herrero A, Corchado E, Pellicer MA, Abraham A (2009) MOVIHIDS: a mobile-visualization hybrid intrusion detection system. Neurocomputing 72(13–15):2775–2784
+http://nlp.cs.aueb.gr/software_and_datasets/Enron-Spam/index.html. Accessed 31 Jan 2019
+http://www.aueb.gr/users/ion/data/lingspam_public.tar.gz. Accessed 05 Feb 2019
+http://www.aueb.gr/users/ion/data/PU123ACorpora.tar.gz. Accessed 10 Feb 2019
+https://cacm.acm.org/magazines/2018/7/229047-youve-got-mail/full text?mobile=false. Accessed 20 Feb 2019
+Staiano A, Di Taranto MD, Bloise E, Agostino MND, D’Angelo A, Marotta G, Gentile M, Jossa F, Iannuzzi A, Rubba P, Fortunato G (2013) Investigation of single nucleotide polymorphisms associated to familial combined hyperlipidemia with random forests. In: Neural nets and surroundings. Springer, Berlin, Heidelberg, pp 169–178
+
+123
+
+9638
+
+D. Gaurav et al.
+
+Kim D, Deokseong S, Suhyoun C, Pilsung K (2019) Multi-co-training for document classiﬁcation using various document representations: TF–IDF, LDA, and Doc2Vec. Inf Sci 477:15–19
+Kumar RK, Poonkuzhali G, Sudhakar P (2012) Comparative study on email spam classiﬁer using data mining techniques. In: Proceedings of the international multi-conference of engineers and computer scientists, vol 1, Hong Kong, pp 14–16
+Liu TJ, Tsao WL, Lee CL (2010) A high performance image-spam ﬁltering system. In: 2010 ninth international symposium on distributed computing and applications to business engineering and science (DCABES). IEEE, pp 445-449
+Merugu S, Reddy MCS, Goyal E, Piplani L (2019) Text message classiﬁcation using supervised machine learning algorithms. In: Kumar A, Mozar S (eds) ICCCE 2018. ICCCE 2018. Lecture Notes in Electrical Engineering, vol 500. Springer, Singapore, p 2019
+Microsoft Sender ID Framework. http://www.microsoft.com/mscorp/ safety/technologies/senderid/default.mspx. Accessed 14 Jan 2019
+Mishra S, Sagban R, Yakoob A, Gandhi N (2018) Swarm intelligence in anomaly detection systems: an overview. Int J Comput Appl 1–10. (2018)
+Nizamani S, Memon N, Wiil UK, Karampelas P (2013) Modeling suspicious email detection using enhanced feature selection. arXiv:1312.1971
+Oliveira JP (2019) Spam dataset analysis. https://rstudio-pubs-static. s3.amazonaws.com/65173_80cf15e9415c48 d5a60bc54b042fccfe.html. Accessed 08 Aug 2019
+Park YW, Klabjan D (2018) Three iteratively reweighted least squares algorithms for L1-norm principal component analysis. Knowl Inf Syst 54(3):541–565
+Pyzor’s homepage. https://sourceforge.net/p/pyzor/mailman/pyzorannounce/. Accessed 14 Dec 2018
+Radev D (2008) CLAIR collection of fraud email, ACL data and code repository. ADCR2008T001
+
+Razor’s homepage. http://razor.sourceforge.net/. Accessed on 05 Dec 2018
+Sarwat N, Menon N, Glasdam M, Nguyen DD (2014) Detection of fraudulent emails by employing advanced feature abundance. Egypt Inform J 15:169–174
+Sender Policy Framework. http://www.openspf.org/Introduction. Accessed 24 Jan 2019
+Sharaff A, Nagwani NK, Dhadse A (2016) Comparative study of classiﬁcation algorithms for spam email detection. In: Shetty N, Prasad N, Nalini N (eds) Emerging research in computing, information, communication and applications. Springer, New Delhi
+Symantec Brightmail Anti-Spam. https://www.symantec.com/pro ducts/mail-security-exchange. Accessed 23 Dec 2018
+Trivedi SK, Dey S (2013) Interplay between probabilistic classiﬁers and boosting algorithms for detecting complex unsolicited emails. J Adv Comput Netw 1(2):132–136
+Vidya Kumari KR, Kavitha CR (2019) Spam detection using machine learning in R. In: Smys S, Bestak R, Chen JZ, Kotuliak I (eds) International conference on computer networks and communication technologies. Lecture Notes on Data Engineering and Communications Technologies, vol 15. Springer, Singapore
+Yandex: Some Automatic Spam Detection Methods. http://company. yandex.ru/public/articles/antispam.xml. Accessed 03 Jan 2019
+Yoon JW, Hyoungshick K, Huh JH (2010) Hybrid spam ﬁltering for mobile communication. Comput Secur 29(4):446–459
+Youn S, McLeod D (2007) A comparative study for email classiﬁcation. In: Elleithy K (ed) Advances and Innovations in systems, computing sciences and software engineering. Springer, Dordrecht
+Publisher’s Note Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional afﬁliations.
+
+123
+
