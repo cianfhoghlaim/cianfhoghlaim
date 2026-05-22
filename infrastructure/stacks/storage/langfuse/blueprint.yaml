@@ -1,0 +1,25 @@
+# =============================================================================
+# LANGFUSE - Pangolin Blueprint
+# =============================================================================
+# Defines public routing for Langfuse via Pangolin/Newt.
+#
+# LOADING:
+#   Via Newt CLI:     newt --blueprint-file blueprint.yaml
+#   Via directory:    Place in /opt/newt/blueprints/
+#   Via sync script:  ./scripts/sync-blueprints.sh
+# =============================================================================
+
+public-resources:
+  langfuse:
+    name: "Langfuse"
+    full-domain: "langfuse.cianfhoghlaim.ie"
+    protocol: "http"
+    auth:
+      sso-enabled: true
+      sso-roles:
+        - Member
+    targets:
+      - site: "arm1-oci"
+        hostname: "langfuse-web"
+        method: "http"
+        port: 3000

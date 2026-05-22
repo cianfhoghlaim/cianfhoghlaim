@@ -1,0 +1,10 @@
+public-resources:
+  DnsServer:
+    name: "Dnsserver"
+    full-domain: "DnsServer.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "DnsServer-main"
+        method: "http"
+        port: 8080

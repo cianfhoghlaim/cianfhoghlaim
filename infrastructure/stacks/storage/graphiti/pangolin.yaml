@@ -1,0 +1,9 @@
+# Pangolin auto-discovery labels for Graphiti
+# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
+services:
+  graphiti-mcp:
+    labels:
+      - "pangolin.resource.name=Graphiti"
+      - "pangolin.resource.domain=graphiti.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://graphiti-mcp:8000"
+      - "pangolin.resource.middlewares=tinyauth"

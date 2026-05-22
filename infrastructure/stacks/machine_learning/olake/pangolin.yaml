@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.olake.name=Olake"
+      - "pangolin.public-resources.olake.full-domain=olake.cianfhoghlaim.ie"
+      - "pangolin.public-resources.olake.protocol=http"
+      - "pangolin.public-resources.olake.targets[0].method=http"
+      - "pangolin.public-resources.olake.targets[0].port=8080"

@@ -1,0 +1,10 @@
+public-resources:
+  MCPJungle:
+    name: "Mcpjungle"
+    full-domain: "MCPJungle.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "MCPJungle-main"
+        method: "http"
+        port: 8080

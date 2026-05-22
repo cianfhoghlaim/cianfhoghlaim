@@ -1,0 +1,10 @@
+public-resources:
+  crawl4ai:
+    name: "Crawl4ai"
+    full-domain: "crawl4ai.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "crawl4ai-main"
+        method: "http"
+        port: 8080

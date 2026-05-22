@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.cognee.name=Cognee"
+      - "pangolin.public-resources.cognee.full-domain=cognee.cianfhoghlaim.ie"
+      - "pangolin.public-resources.cognee.protocol=http"
+      - "pangolin.public-resources.cognee.targets[0].method=http"
+      - "pangolin.public-resources.cognee.targets[0].port=8080"

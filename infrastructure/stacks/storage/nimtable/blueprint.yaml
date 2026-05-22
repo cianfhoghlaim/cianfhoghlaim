@@ -1,0 +1,18 @@
+# =============================================================================
+# NIMTABLE - Pangolin Blueprint
+# =============================================================================
+
+public-resources:
+  nimtable:
+    name: "Nimtable"
+    full-domain: "nimtable.cianfhoghlaim.ie"
+    protocol: "http"
+    auth:
+      sso-enabled: true
+      sso-roles:
+        - Member
+    targets:
+      - site: "arm1-oci"
+        hostname: "nimtable"
+        method: "http"
+        port: 3000

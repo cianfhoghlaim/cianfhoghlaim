@@ -1,0 +1,10 @@
+public-resources:
+  pinchflat:
+    name: "Pinchflat"
+    full-domain: "pinchflat.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "pinchflat-main"
+        method: "http"
+        port: 8080

@@ -1,0 +1,10 @@
+public-resources:
+  pastemax:
+    name: "Pastemax"
+    full-domain: "pastemax.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "pastemax-main"
+        method: "http"
+        port: 8080

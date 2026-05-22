@@ -1,0 +1,1652 @@
+[[server]]
+name = "arm1-oci"
+description = "Oracle Cloud ARM - Control Plane"
+tags = [
+  "location:oracle-london",
+  "role:control-plane",
+  "arch:arm64"
+]
+[server.config]
+address = "https://132.145.27.89:8120"
+region = "uk-london-1"
+enabled = true
+passkey = "[[KOMODO_PASSKEY]]"
+
+##
+
+[[server]]
+name = "bunchloch"
+description = "MacBook M4 Max - Dev & Analytics"
+tags = [
+  "location:local",
+  "role:development",
+  "arch:arm64"
+]
+[server.config]
+address = "https://192.168.0.63:8120"
+region = "local"
+enabled = true
+passkey = "[[KOMODO_PASSKEY]]"
+
+##
+
+[[server]]
+name = "arm1-oci"
+description = "OCI CAX41 ARM - Primary Workloads"
+tags = [
+  "location:oci-fsn1",
+  "role:workloads",
+  "arch:arm64"
+]
+[server.config]
+region = "eu-central"
+enabled = true
+
+##
+
+[[stack]]
+name = "aleyum-portal"
+description = "Developer homelab portal with AG-UI agent chat, MCP tools browser, and Glance-style widgets"
+tags = [
+  "host:bunchloch",
+  "tier:devtools",
+  "type:portal",
+  "domain:aleyum.cianfhoghlaim.ie"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/sruth/aleyum/portal"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+PORTAL_PORT=3000
+"""
+
+##
+
+[[stack]]
+name = "audiobookshelf"
+description = "Self-hosted audiobook and podcast server"
+tags = [
+  "host:bunchloch",
+  "tier:media",
+  "type:audiobook"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/audiobookshelf"
+file_paths = ["audiobookshelf.compose.yaml"]
+environment = """
+AUDIOBOOKSHELF_PORT=13378
+"""
+
+##
+
+[[stack]]
+name = "backrest"
+description = "Restic backup management UI"
+tags = [
+  "host:arm1-oci",
+  "tier:devtools",
+  "type:backup"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/uirlisi/backrest"
+file_paths = ["backrest.compose.yaml"]
+environment = """
+BACKREST_PORT=9898
+"""
+
+##
+
+[[stack]]
+name = "beszel"
+description = "Lightweight server monitoring hub"
+tags = [
+  "host:arm1-oci",
+  "tier:monitoring"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/beszel"
+file_paths = ["compose.yaml"]
+environment = """
+BESZEL_PORT=8090
+"""
+
+##
+
+[[stack]]
+name = "calibre"
+description = "E-book library management"
+tags = [
+  "host:bunchloch",
+  "tier:media",
+  "type:ebook"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/calibre"
+file_paths = ["calibre.compose.yaml"]
+environment = """
+CALIBRE_PORT=8083
+"""
+
+##
+
+[[stack]]
+name = "changedetection"
+description = "Website change detection and alerts"
+tags = [
+  "host:bunchloch",
+  "tier:monitoring"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/changedetection"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+##
+
+[[stack]]
+name = "chartdb"
+description = "Database schema visualization tool"
+tags = [
+  "host:arm1-oci",
+  "tier:devtools",
+  "type:database"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/uirlisi/chartdb"
+file_paths = ["chartdb.compose.yaml"]
+environment = """
+CHARTDB_PORT=8081
+"""
+
+##
+
+[[stack]]
+name = "chartdb-bunchloch"
+description = "Visual database schema designer"
+tags = [
+  "host:bunchloch",
+  "tier:devtools"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/chartdb"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+##
+
+[[stack]]
+name = "cognee"
+description = "AI memory system with knowledge graphs"
+tags = [
+  "host:arm1-oci",
+  "tier:application",
+  "type:ai"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/cognee"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+COGNEE_PORT=8000
+COGNEE_MCP_PORT=8001
+"""
+
+##
+
+[[stack]]
+name = "convex"
+description = "Self-hosted real-time backend-as-a-service"
+tags = [
+  "host:bunchloch",
+  "tier:application"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/storage/convex"
+file_paths = ["compose.yaml"]
+environment = """
+CONVEX_PORT=3210
+"""
+
+##
+
+[[stack]]
+name = "datadog-oci"
+description = "Datadog agent for OCI production pipelines"
+tags = [
+  "host:arm1-oci",
+  "tier:observability",
+  "type:apm"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/datadog"
+file_paths = ["compose.yaml"]
+environment = """
+DD_ENV=production
+DD_SERVICE=oideachas-pipeline
+DD_HOSTNAME=arm1-oci
+DD_TAGS=project:oideachas,pipeline:education,host:oci,tier:production
+DD_APM_ENABLED=true
+DD_LLMOBS_ENABLED=true
+DD_LLMOBS_ML_APP=education-ai-pipeline
+DD_LOGS_ENABLED=true
+DD_PROCESS_AGENT_ENABLED=true
+"""
+
+##
+
+[[stack]]
+name = "datadog-macbook"
+description = "Datadog agent for MacBook development"
+tags = [
+  "host:bunchloch",
+  "tier:observability",
+  "type:apm"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/storage/datadog"
+file_paths = ["compose.yaml"]
+environment = """
+DD_ENV=development
+DD_SERVICE=oideachas-dev
+DD_HOSTNAME=bunchloch
+DD_TAGS=project:oideachas,pipeline:development,host:macbook,tier:development
+DD_APM_ENABLED=true
+DD_LLMOBS_ENABLED=true
+DD_LLMOBS_ML_APP=education-ai-dev
+DD_LOGS_ENABLED=true
+DD_PROCESS_AGENT_ENABLED=true
+"""
+
+##
+
+[[stack]]
+name = "datadog-oracle"
+description = "Datadog agent for Oracle control plane"
+tags = [
+  "host:arm1-oci",
+  "tier:observability",
+  "type:apm"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/datadog"
+file_paths = ["compose.yaml"]
+environment = """
+DD_ENV=production
+DD_SERVICE=control-plane
+DD_HOSTNAME=arm1-oci
+DD_TAGS=project:oideachas,pipeline:control-plane,host:oracle,tier:infrastructure
+DD_APM_ENABLED=true
+DD_LLMOBS_ENABLED=false
+DD_LOGS_ENABLED=true
+DD_PROCESS_AGENT_ENABLED=true
+"""
+
+##
+
+[[stack]]
+name = "dozzle"
+description = "Real-time Docker log viewer"
+tags = [
+  "host:arm1-oci",
+  "tier:monitoring"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/dozzle"
+file_paths = ["compose.yaml"]
+environment = """
+DOZZLE_PORT=8080
+"""
+
+##
+
+[[stack]]
+name = "excalidraw"
+description = "Virtual whiteboard for sketching diagrams"
+tags = [
+  "host:bunchloch",
+  "tier:devtools"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/excalidraw"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+##
+
+[[stack]]
+name = "falkordb"
+description = "Redis-based graph database for Graphiti"
+tags = [
+  "host:arm1-oci",
+  "tier:database",
+  "type:graph"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/falkordb"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+FALKORDB_PORT=6379
+"""
+
+##
+
+[[stack]]
+name = "forgejo"
+description = "Self-hosted Git server with PyPI/Container registry"
+tags = [
+  "host:arm1-oci",
+  "tier:devtools",
+  "type:git",
+  "domain:git.cianfhoghlaim.ie"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/forgejo"
+file_paths = [
+  "compose.yaml",
+  "pangolin.yaml",
+  "sidecar.yaml"
+]
+environment = """
+# Server configuration
+FORGEJO_DOMAIN=git.cianfhoghlaim.ie
+FORGEJO_ROOT_URL=https://git.cianfhoghlaim.ie
+FORGEJO_HTTP_PORT=3000
+FORGEJO_SSH_PORT=2222
+# Database
+FORGEJO_DB_USER=forgejo
+FORGEJO_DB_NAME=forgejo
+# Features
+FORGEJO_DISABLE_REGISTRATION=false
+FORGEJO_REQUIRE_SIGNIN=false
+FORGEJO_ACTIONS_ENABLED=true
+# Locket secrets management
+INFISICAL_URL=http://132.145.27.89:8080
+LOCKET_MODE=watch
+"""
+
+##
+
+[[stack]]
+name = "forgejo-runner"
+description = "Forgejo Actions CI/CD runner with Docker-in-Docker"
+tags = [
+  "host:arm1-oci",
+  "tier:devtools",
+  "type:cicd"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/forgejo-runner"
+file_paths = ["compose.yaml", "sidecar.yaml"]
+environment = """
+# Runner configuration
+FORGEJO_RUNNER_NAME=oci-runner
+FORGEJO_RUNNER_LABELS=ubuntu-latest:docker://ghcr.io/catthehacker/ubuntu:runner-latest
+FORGEJO_URL=https://git.cianfhoghlaim.ie
+# Locket secrets management
+INFISICAL_URL=http://132.145.27.89:8080
+LOCKET_MODE=watch
+"""
+
+##
+
+[[stack]]
+name = "garage"
+description = "S3-compatible object storage (control plane)"
+tags = ["host:arm1-oci", "tier:storage", "domain:garage.cianfhoghlaim.ie"]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/garage"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+GARAGE_RPC_PORT=3901
+GARAGE_S3_API_PORT=3900
+GARAGE_K2V_API_PORT=3902
+GARAGE_WEB_PORT=3903
+GARAGE_ADMIN_PORT=3904
+"""
+
+##
+
+[[stack]]
+name = "glance"
+description = "Self-hosted dashboard with feeds and widgets"
+tags = ["host:arm1-oci", "tier:devtools"]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/uirlisi/glance"
+file_paths = ["glance.compose.yaml"]
+environment = """
+GLANCE_PORT=8080
+TZ=Europe/Dublin
+"""
+
+##
+
+[[stack]]
+name = "glance-bunchloch"
+description = "Personal dashboard with customizable widgets"
+tags = [
+  "host:bunchloch",
+  "tier:devtools"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/glance"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+##
+
+[[stack]]
+name = "graphiti"
+description = "Knowledge graph with MCP server"
+tags = [
+  "host:arm1-oci",
+  "tier:application"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/graphiti"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+GRAPHITI_API_PORT=8000
+GRAPHITI_MCP_PORT=8001
+"""
+
+##
+
+[[stack]]
+name = "kafka"
+description = "Self-hosted Kafka cluster for ML pipelines"
+tags = [
+  "host:arm1-oci",
+  "tier:streaming",
+  "type:kafka"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/kafka"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+KAFKA_EXTERNAL_HOST=kafka.cianfhoghlaim.ie
+KAFKA_CLUSTER_ID=MkU3OEVBNTcwNTJENDM2Qk
+"""
+
+##
+
+[[stack]]
+name = "karakeep"
+description = "Personal knowledge management"
+tags = [
+  "host:bunchloch",
+  "tier:productivity"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/karakeep"
+file_paths = ["karakeep.compose.yaml"]
+environment = """
+KARAKEEP_PORT=3000
+"""
+
+##
+
+[[stack]]
+name = "kavita"
+description = "Self-hosted digital library for comics and manga"
+tags = [
+  "host:bunchloch",
+  "tier:media",
+  "type:comics"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/kavita"
+file_paths = ["kavita.compose.yaml"]
+environment = """
+KAVITA_PORT=5000
+"""
+
+##
+
+[[stack]]
+name = "komodo"
+description = "Infrastructure orchestration with FerretDB v2"
+tags = [
+  "host:arm1-oci",
+  "tier:control-plane",
+  "type:orchestration",
+  "domain:komodo.cianfhoghlaim.ie"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/komodo"
+file_paths = [
+  "compose.yaml",
+  "sidecar.yaml",
+  "pangolin.yaml",
+  "periphery.yaml"
+]
+environment = """
+# Host configuration
+KOMODO_HOST=https://komodo.cianfhoghlaim.ie
+KOMODO_PORT=9120
+KOMODO_IMAGE_TAG=2
+# Auth configuration
+KOMODO_LOCAL_AUTH=true
+KOMODO_OIDC_ENABLED=false
+# Backup configuration
+KOMODO_BACKUP_ENABLED=true
+KOMODO_BACKUP_SCHEDULE=0 2 * * *
+# Periphery configuration
+PERIPHERY_ROOT=/etc/komodo
+# Locket secrets management
+INFISICAL_URL=http://132.145.27.89:8080
+LOCKET_MODE=watch
+"""
+
+##
+
+[[stack]]
+name = "komodo-periphery-oci"
+description = "Komodo Periphery agent for OCI workloads"
+tags = [
+  "host:arm1-oci",
+  "tier:control-plane",
+  "type:agent"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/komodo-periphery"
+file_paths = ["compose.yaml", "sidecar.yaml"]
+environment = """
+PERIPHERY_ROOT=/etc/komodo
+INFISICAL_URL=http://132.145.27.89:8080
+LOCKET_MODE=watch
+"""
+
+##
+
+[[stack]]
+name = "komodo-periphery-macbook"
+description = "Komodo Periphery agent for MacBook dev"
+tags = [
+  "host:bunchloch",
+  "tier:control-plane",
+  "type:agent"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/storage/komodo-periphery"
+file_paths = ["compose.yaml", "sidecar.yaml"]
+environment = """
+PERIPHERY_ROOT=/etc/komodo
+INFISICAL_URL=http://132.145.27.89:8080
+LOCKET_MODE=watch
+"""
+
+##
+
+[[stack]]
+name = "lakefs"
+description = "Git-like versioning for data lakes"
+tags = [
+  "host:bunchloch",
+  "tier:lakehouse"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/storage/lakefs"
+file_paths = ["compose.yaml"]
+environment = """
+LAKEFS_PORT=8000
+"""
+
+##
+
+[[stack]]
+name = "lakehouse"
+description = "Unified lakehouse with Garage + Lakekeeper + Lance Namespace"
+tags = [
+  "host:bunchloch",
+  "tier:lakehouse",
+  "type:data-platform"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/storage/lakehouse"
+file_paths = [
+  "compose.yaml",
+  "pangolin.yaml",
+  "sidecar.yaml"
+]
+environment = """
+# Lakekeeper Iceberg REST Catalog
+LAKEKEEPER_PORT=8181
+LAKEKEEPER_METRICS_PORT=9000
+# Lance Namespace Sidecar
+LANCE_API_PORT=8182
+# Garage S3-compatible storage
+GARAGE_RPC_PORT=3901
+GARAGE_S3_API_PORT=3900
+GARAGE_K2V_API_PORT=3902
+GARAGE_WEB_PORT=3903
+GARAGE_ADMIN_PORT=3904
+"""
+
+##
+
+[[stack]]
+name = "lakehouse-oci"
+description = "Production lakehouse on OCI CAX41"
+tags = [
+  "host:arm1-oci",
+  "tier:lakehouse",
+  "type:data-platform",
+  "environment:production"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/lakehouse"
+file_paths = [
+  "compose.yaml",
+  "pangolin.yaml",
+  "sidecar.yaml"
+]
+environment = """
+LAKEKEEPER_PORT=8181
+LAKEKEEPER_METRICS_PORT=9000
+LANCE_API_PORT=8182
+GARAGE_RPC_PORT=3901
+GARAGE_S3_API_PORT=3900
+GARAGE_K2V_API_PORT=3902
+GARAGE_WEB_PORT=3903
+GARAGE_ADMIN_PORT=3904
+"""
+
+##
+
+[[stack]]
+name = "lakekeeper"
+description = "Apache Iceberg REST catalog"
+tags = [
+  "host:bunchloch",
+  "tier:lakehouse",
+  "type:iceberg-catalog"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/storage/lakekeeper"
+file_paths = [
+  "compose.yaml",
+  "pangolin.yaml",
+  "sidecar.yaml"
+]
+environment = """
+LAKEKEEPER_PORT=8181
+LAKEKEEPER_METRICS_PORT=9000
+"""
+
+##
+
+[[stack]]
+name = "lancedb"
+description = "Serverless vector database with S3 support"
+tags = [
+  "host:arm1-oci",
+  "tier:database",
+  "type:vector"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/lancedb"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+LANCEDB_PORT=8080
+"""
+
+##
+
+[[stack]]
+name = "langfuse"
+description = "LLM observability and analytics platform"
+tags = [
+  "host:arm1-oci",
+  "tier:observability",
+  "type:llm"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/langfuse"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+LANGFUSE_PORT=3000
+"""
+
+##
+
+[[stack]]
+name = "letterfeed"
+description = "Self-hosted RSS reader"
+tags = ["host:arm1-oci", "tier:devtools"]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/uirlisi/letterfeed"
+file_paths = ["letterfeed.compose.yaml"]
+environment = """
+LETTERFEED_PORT=8082
+"""
+
+##
+
+[[stack]]
+name = "letterfeed-bunchloch"
+description = "Self-hosted RSS/Atom feed reader"
+tags = [
+  "host:bunchloch",
+  "tier:productivity"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/letterfeed"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+##
+
+[[stack]]
+name = "mathesar"
+description = "Spreadsheet interface for PostgreSQL"
+tags = [
+  "host:arm1-oci",
+  "tier:tools"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/mathesar"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+
+##
+
+[[stack]]
+name = "memgraph"
+description = "In-memory graph database with MAGE algorithms"
+tags = [
+  "host:arm1-oci",
+  "tier:database",
+  "type:graph"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/memgraph"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+MEMGRAPH_BOLT_PORT=7687
+MEMGRAPH_HTTP_PORT=7444
+MEMGRAPH_LAB_PORT=3000
+MEMGRAPH_LOG_LEVEL=WARNING
+"""
+
+##
+
+[[stack]]
+name = "mlflow"
+description = "ML experiment tracking and model registry"
+tags = ["host:arm1-oci", "tier:ml"]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/mlflow"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+MLFLOW_PORT=5000
+"""
+
+##
+
+[[stack]]
+name = "nimtable"
+description = "Apache Iceberg table management UI"
+tags = [
+  "host:arm1-oci",
+  "tier:lakehouse"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/nimtable"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+
+##
+
+[[stack]]
+name = "olake-ui"
+description = "Database-to-Iceberg replication with Temporal"
+tags = [
+  "host:bunchloch",
+  "tier:lakehouse"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/storage/olake-ui"
+file_paths = ["compose.yaml"]
+environment = """
+OLAKE_UI_PORT=3000
+"""
+
+##
+
+[[stack]]
+name = "pastemax"
+description = "Self-hosted paste/snippet service"
+tags = [
+  "host:bunchloch",
+  "tier:devtools"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/pastemax"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+##
+
+[[stack]]
+name = "perplexica"
+description = "AI-powered search engine with citations"
+tags = [
+  "host:arm1-oci",
+  "tier:devtools",
+  "type:ai-search"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/uirlisi/perplexica"
+file_paths = ["perplexica.compose.yaml"]
+environment = """
+PERPLEXICA_PORT=3001
+"""
+
+##
+
+[[stack]]
+name = "perplexica-bunchloch"
+description = "AI-powered search engine"
+tags = ["host:bunchloch", "tier:ai"]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/perplexica"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+##
+
+[[stack]]
+name = "pipecat"
+description = "Voice agent framework"
+tags = ["host:bunchloch", "tier:ai"]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/pipecat"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+##
+
+[[stack]]
+name = "qdrant"
+description = "Vector similarity search engine for AI/ML"
+tags = [
+  "host:arm1-oci",
+  "tier:database",
+  "type:vector"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/qdrant"
+file_paths = ["compose.yaml"]
+environment = """
+QDRANT_HTTP_PORT=6333
+QDRANT_GRPC_PORT=6334
+QDRANT_LOG_LEVEL=INFO
+"""
+
+##
+
+[[stack]]
+name = "r2-mounts"
+description = "Cloudflare R2 FUSE mounts for curriculum data"
+tags = [
+  "host:arm1-oci",
+  "tier:storage",
+  "type:object-storage",
+  "provider:cloudflare"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/storage/r2"
+file_paths = ["compose.yaml"]
+environment = """
+# Mount base directory
+R2_MOUNT_BASE=/mnt/r2
+# VFS cache settings (per-bucket)
+R2_CURRICULUM_CACHE=2G
+R2_EMBEDDINGS_CACHE=5G
+R2_ICEBERG_CACHE=2G
+R2_EXPORTS_CACHE=1G
+"""
+
+##
+
+[[stack]]
+name = "r2-mounts-macbook"
+description = "Cloudflare R2 FUSE mounts for development"
+tags = [
+  "host:bunchloch",
+  "tier:storage",
+  "type:object-storage",
+  "provider:cloudflare",
+  "environment:development"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/storage/r2"
+file_paths = ["compose.yaml"]
+environment = """
+R2_MOUNT_BASE=/mnt/r2
+# Larger caches for development workloads
+R2_CURRICULUM_CACHE=5G
+R2_EMBEDDINGS_CACHE=10G
+R2_ICEBERG_CACHE=5G
+R2_EXPORTS_CACHE=2G
+"""
+
+##
+
+[[stack]]
+name = "restate"
+description = "Durable execution and workflow engine"
+tags = [
+  "host:arm1-oci",
+  "tier:devtools",
+  "type:workflow"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/uirlisi/restate"
+file_paths = ["restate.compose.yaml"]
+environment = """
+RESTATE_PORT=8080
+RESTATE_ADMIN_PORT=9070
+RESTATE_INGRESS_PORT=8081
+"""
+
+##
+
+[[stack]]
+name = "restate-bunchloch"
+description = "Durable execution platform for distributed apps"
+tags = [
+  "host:bunchloch",
+  "tier:infrastructure"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/restate"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+##
+
+[[stack]]
+name = "scraping"
+description = "Web scraping tools (Crawl4AI, Skyvern, etc.)"
+tags = [
+  "host:bunchloch",
+  "tier:devtools",
+  "type:scraping"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/scraping"
+file_paths = ["compose.yaml"]
+environment = """
+CRAWL4AI_PORT=11235
+SKYVERN_PORT=8000
+"""
+
+##
+
+[[stack]]
+name = "scraping-analytics"
+description = "Web scraping stack (Skyvern, Crawl4AI, Stagehand)"
+tags = [
+  "host:bunchloch",
+  "tier:scraping",
+  "resource:heavy"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/storage/scraping"
+file_paths = ["compose.yaml"]
+environment = """
+SKYVERN_PORT=8000
+SKYVERN_UI_PORT=8080
+CRAWL4AI_PORT=11235
+"""
+
+##
+
+[[stack]]
+name = "searxng"
+description = "Privacy-respecting metasearch engine"
+tags = [
+  "host:arm1-oci",
+  "tier:devtools",
+  "type:search"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/uirlisi/searxng"
+file_paths = ["searxng.compose.yaml"]
+environment = """
+SEARXNG_PORT=8888
+"""
+
+##
+
+[[stack]]
+name = "searxng-bunchloch"
+description = "Privacy-respecting metasearch engine"
+tags = ["host:bunchloch", "tier:search"]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/searxng"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+##
+
+[[stack]]
+name = "skyvern"
+description = "AI-powered browser automation"
+tags = [
+  "host:bunchloch",
+  "tier:scraping",
+  "type:automation"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/skyvern"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+##
+
+[[stack]]
+name = "storybook"
+description = "UI component development environment"
+tags = [
+  "host:arm1-oci",
+  "tier:devtools",
+  "type:ui"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/uirlisi/storybook"
+file_paths = ["storybook.compose.yaml"]
+environment = """
+STORYBOOK_PORT=6006
+"""
+
+##
+
+[[stack]]
+name = "storybook-bunchloch"
+description = "UI component documentation and testing"
+tags = [
+  "host:bunchloch",
+  "tier:devtools"
+]
+[stack.config]
+server = "bunchloch"
+run_directory = "/etc/komodo/uirlisi/storybook"
+file_paths = ["compose.yaml", "pangolin.yaml"]
+environment = """
+DOMAIN=cianfhoghlaim.ie
+SITE_ID=bunchloch
+"""
+
+##
+
+# =============================================================================
+# TUNNEL AGENTS
+# =============================================================================
+# Pangolin tunnel agents for secure service exposure and direct access
+
+[[stack]]
+name = "newt-oci"
+description = "Pangolin Newt tunnel agent for OCI services"
+tags = [
+  "host:arm1-oci",
+  "tier:infrastructure",
+  "type:tunnel"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/pangolin/newt-oci"
+file_paths = ["compose.yaml", "sidecar.yaml"]
+environment = """
+PANGOLIN_ENDPOINT=https://pangolin.cianfhoghlaim.ie
+"""
+
+##
+
+[[stack]]
+name = "olm-oracle"
+description = "Pangolin OLM tunnel client for Oracle Cloud direct access"
+tags = [
+  "host:arm1-oci",
+  "tier:infrastructure",
+  "type:tunnel"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/pangolin/olm-oracle"
+file_paths = ["compose.yaml", "sidecar.yaml"]
+environment = """
+PANGOLIN_ENDPOINT=https://pangolin.cianfhoghlaim.ie
+"""
+
+##
+
+[[stack]]
+name = "olm-oci"
+description = "Pangolin OLM tunnel client for OCI direct access"
+tags = [
+  "host:arm1-oci",
+  "tier:infrastructure",
+  "type:tunnel"
+]
+[stack.config]
+server = "arm1-oci"
+run_directory = "/etc/komodo/pangolin/olm-oci"
+file_paths = ["compose.yaml", "sidecar.yaml"]
+environment = """
+PANGOLIN_ENDPOINT=https://pangolin.cianfhoghlaim.ie
+"""
+
+##
+
+[[procedure]]
+name = "deploy-oci"
+description = "Deploy all stacks on OCI CAX41"
+
+[[procedure.config.stage]]
+name = "databases"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "memgraph", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "falkordb", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "lancedb", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "knowledge-graphs"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "graphiti", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "cognee", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "ml-observability"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "mlflow", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "langfuse", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "tools"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "nimtable", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "mathesar", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "cleanup"
+enabled = true
+executions = [
+  { execution.type = "PruneContainers", execution.params.server = "arm1-oci", enabled = true }
+]
+
+##
+
+[[procedure]]
+name = "deploy-macbook"
+description = "Deploy all stacks on MacBook M4 Max"
+
+[[procedure.config.stage]]
+name = "lakehouse"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "lakefs", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "lakekeeper", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "olake-ui", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "backend"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "convex", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "scraping"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "scraping", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "cleanup"
+enabled = true
+executions = [
+  { execution.type = "PruneContainers", execution.params.server = "bunchloch", enabled = true }
+]
+
+##
+
+[[procedure]]
+name = "deploy-uirlisi"
+description = "Deploy uirlisí tools and utilities"
+
+[[procedure.config.stage]]
+name = "devtools-core"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "glance", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "chartdb", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "excalidraw", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "pastemax", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "devtools-ai"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "perplexica", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "searxng", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "pipecat", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "devtools-productivity"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "letterfeed", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "changedetection", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "storybook", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "devtools-infrastructure"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "restate", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "scraping"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "skyvern", execution.params.services = [], enabled = true }
+]
+
+##
+
+[[procedure]]
+name = "deploy-devtools"
+description = "Deploy dev tools across all sites"
+
+[[procedure.config.stage]]
+name = "oci-tools"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "glance", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "backrest", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "chartdb", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "letterfeed", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "searxng", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "oci-tools"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "perplexica", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "restate", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "storybook", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "macbook-media"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "audiobookshelf", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "calibre", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "kavita", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "karakeep", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "scraping", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "validate"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "validate-deployments", execution.params.services = [], enabled = true }
+]
+
+##
+
+[[procedure]]
+name = "deploy-storage-stack"
+description = "Deploy complete storage stack across all hosts"
+
+[[procedure.config.stage]]
+name = "control-plane"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "garage", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "beszel", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "dozzle", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "oci-databases"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "qdrant", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "falkordb", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "lancedb", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "lakefs", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "lakekeeper", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "oci-apps"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "graphiti", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "olake-ui", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "nimtable", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "mathesar", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "macbook-analytics"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "memgraph", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "mlflow", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "langfuse", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "convex", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "macbook-apps"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "cognee", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "scraping", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "sync-blueprints"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "sync-blueprint", execution.params.services = [], enabled = true }
+]
+
+##
+
+[[procedure]]
+name = "deploy-pangolin-full"
+description = "Full Pangolin platform deployment via Dagger"
+
+[[procedure.config.stage]]
+name = "pre-flight"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "validate-deployments", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "dry-run"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "deploy-pangolin-dagger", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "deploy-core"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "deploy-pangolin-dagger", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "deploy-devops"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "deploy-pangolin-dagger", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "deploy-sites"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "deploy-pangolin-dagger", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "deploy-apps"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "deploy-pangolin-dagger", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "verify"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "deploy-pangolin-dagger", execution.params.services = [], enabled = true }
+]
+
+##
+
+[[procedure]]
+name = "init-site"
+description = "Initialize new site with Periphery + Newt"
+
+[[procedure.config.stage]]
+name = "validate"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "validate-deployments", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "sync-dns"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "sync-dns-records", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "setup-pangolin"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "setup-pangolin-site", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "generate-inventory"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "generate-ansible-inventory", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "validate-final"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "validate-deployments", execution.params.services = [], enabled = true }
+]
+
+##
+
+[[procedure]]
+name = "sync-infrastructure"
+description = "Pre-deploy: Sync DNS, configs, and credentials"
+
+[[procedure.config.stage]]
+name = "sync-dns"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "sync-dns-records", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "sync-configs"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "sync-storage-configs", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "generate-inventory"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "generate-ansible-inventory", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "validate"
+enabled = true
+executions = [
+  { execution.type = "RunAction", execution.params.action = "validate-deployments", execution.params.services = [], enabled = true }
+]
+
+##
+
+[[procedure]]
+name = "deploy-tunnels"
+description = "Deploy Pangolin tunnel agents (Newt for service exposure, OLM for direct access)"
+
+[[procedure.config.stage]]
+name = "newt-agents"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "newt-oci", execution.params.services = [], enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "olm-agents"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "olm-oracle", execution.params.services = [], enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "olm-oci", execution.params.services = [], enabled = true }
+]
+
+##
+
+[[resource_sync]]
+name = "storage-infrastructure"
+description = "Storage stack infrastructure as code"
+[resource_sync.config]
+git_provider = "git.cianfhoghlaim.ie"
+repo = "cliste/bonneagar"
+git_account = "cian"
+resource_path = [
+  "bonneagar/komodo/procedures/auto-deploy-stacks.toml",
+  "bonneagar/komodo/procedures/deploy-authenticated-stack.toml",
+  "bonneagar/komodo/procedures/deploy-devtools.toml",
+  "bonneagar/komodo/procedures/deploy-oci.toml",
+  "bonneagar/komodo/procedures/deploy-macbook.toml",
+  "bonneagar/komodo/procedures/deploy-pangolin-full.toml",
+  "bonneagar/komodo/procedures/deploy-periphery.toml",
+  "bonneagar/komodo/procedures/deploy-storage-stack.toml",
+  "bonneagar/komodo/procedures/deploy-uirlisi.toml",
+  "bonneagar/komodo/procedures/init-site.toml",
+  "bonneagar/komodo/procedures/sync-infrastructure.toml",
+  "bonneagar/komodo/servers/servers.toml",
+  "bonneagar/komodo/stacks/aleyum-portal.toml",
+  "bonneagar/komodo/stacks/forgejo-runner.toml",
+  "bonneagar/komodo/stacks/forgejo.toml",
+  "bonneagar/komodo/stacks/oci-databases.toml",
+  "bonneagar/komodo/stacks/oci-devtools.toml",
+  "bonneagar/komodo/stacks/komodo.toml",
+  "bonneagar/komodo/stacks/macbook-analytics.toml",
+  "bonneagar/komodo/stacks/macbook-media.toml",
+  "bonneagar/komodo/stacks/observability.toml",
+  "bonneagar/komodo/stacks/oci-control-plane.toml",
+  "bonneagar/komodo/stacks/oci-devtools.toml",
+  "bonneagar/komodo/stacks/pangolin-tunnels.toml",
+  "bonneagar/komodo/stacks/storage-lakehouse.toml",
+  "bonneagar/komodo/stacks/storage-r2.toml",
+  "bonneagar/komodo/stacks/uirlisi-devtools.toml",
+  "bonneagar/komodo/stacks/uirlisi-scraping.toml"
+]
+managed = true

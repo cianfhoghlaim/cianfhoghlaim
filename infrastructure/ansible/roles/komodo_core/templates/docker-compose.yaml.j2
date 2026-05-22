@@ -1,0 +1,97 @@
+---
+# =============================================================================
+# KOMODO STACK - Docker Compose
+# =============================================================================
+# Deployed by Ansible komodo_core role
+# Host: {{ komodo_host }}
+# =============================================================================
+
+services:
+  # ===========================================================================
+  # MONGODB - Komodo Database
+  # ===========================================================================
+  mongo:
+    image: {{ mongo_image }}
+    container_name: komodo-mongo
+    labels:
+      komodo.skip: # Prevent Komodo from stopping with StopAllContainers
+    command: --quiet --wiredTigerCacheSizeGB 0.25
+    restart: unless-stopped
+    env_file: ./secrets.env
+    volumes:
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
+
+  # ===========================================================================
+  # KOMODO CORE - Control Plane
+  # ===========================================================================
+  core:
+    image: ghcr.io/moghtech/komodo-core:{{ komodo_core_image_tag }}
+    container_name: komodo-core
+    init: true
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    ports:
+      - {{ komodo_core_port }}:9120
+    env_file: ./secrets.env
+    environment:
+      KOMODO_DATABASE_ADDRESS: mongo:27017
+    volumes:
+      # Core / Periphery communication keys
+      - keys:/config/keys
+      # Store dated backups
+      - ./backups:/backups
+      # Store sync files
+      - ./syncs:/syncs
+    networks:
+      - default
+      - pangolin
+    labels:
+      komodo.skip:
+      # Pangolin Blueprint labels (discovered by Newt)
+      pangolin.public-resources.komodo.name: "Komodo"
+      pangolin.public-resources.komodo.full-domain: "{{ komodo_domain }}"
+      pangolin.public-resources.komodo.protocol: "http"
+      pangolin.public-resources.komodo.targets[0].method: "http"
+      pangolin.public-resources.komodo.targets[0].port: "9120"
+
+  # ===========================================================================
+  # KOMODO PERIPHERY - Agent
+  # ===========================================================================
+  periphery:
+    image: ghcr.io/moghtech/komodo-periphery:{{ komodo_periphery_image_tag }}
+    container_name: komodo-periphery
+    init: true
+    restart: unless-stopped
+    depends_on:
+      - core
+    env_file: ./secrets.env
+    volumes:
+      # Core / Periphery communication keys
+      - keys:/config/keys
+      # Mount external docker socket
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Allow Periphery to see processes outside of container
+      - /proc:/proc
+      # Periphery root directory
+      - {{ komodo_periphery_root }}:{{ komodo_periphery_root }}
+    labels:
+      komodo.skip:
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  mongo-data:
+  mongo-config:
+  keys:
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  default:
+    driver: bridge
+  pangolin:
+    external: true

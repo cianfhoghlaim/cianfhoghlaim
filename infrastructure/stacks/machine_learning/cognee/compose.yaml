@@ -1,0 +1,111 @@
+services:
+  cognee:
+    container_name: cognee
+    networks:
+      - cognee-network
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./cognee:/app/cognee
+      - .env:/app/.env
+    environment:
+      - DEBUG=false # Change to true if debugging
+      - HOST=0.0.0.0
+      - ENVIRONMENT=local
+      - LOG_LEVEL=ERROR
+    extra_hosts:
+      # Allows the container to reach your local machine using "host.docker.internal" instead of "localhost"
+      - "host.docker.internal:host-gateway"
+    ports:
+      - 8000:8000
+      - 5678:5678 # Debugger port
+    deploy:
+      resources:
+        limits:
+          cpus: "4.0"
+          memory: 8GB
+
+  # NOTE: Frontend is a work in progress and supports minimum amount of features required to be functional.
+  # If you want to use Cognee with a UI environment you can integrate the Cognee MCP Server into Cursor / Claude Desktop / Visual Studio Code (through Cline/Roo)
+  frontend:
+    container_name: frontend
+    profiles:
+        - ui
+    build:
+      context: ./cognee-frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./cognee-frontend/src:/app/src
+      - ./cognee-frontend/public:/app/public
+    ports:
+      - 3000:3000
+      # - 9229:9229 # Debugging
+    networks:
+      - cognee-network
+
+  neo4j:
+    image: neo4j:latest
+    container_name: neo4j
+    profiles:
+      - neo4j
+    ports:
+      - 7474:7474
+      - 7687:7687
+    environment:
+      - NEO4J_AUTH=neo4j/pleaseletmein
+      - NEO4J_PLUGINS=["apoc", "graph-data-science"]
+    networks:
+      - cognee-network
+
+  falkordb:
+    image: falkordb/falkordb:edge
+    container_name: falkordb
+    profiles:
+      - falkordb
+    ports:
+      - 6379:6379
+      - 3001:3000
+    networks:
+      - cognee-network
+
+  chromadb:
+    image: chromadb/chroma:0.6.3
+    container_name: chromadb
+    profiles:
+      - chromadb
+    environment:
+      - IS_PERSISTENT=TRUE
+      - CHROMA_SERVER_AUTH_CREDENTIALS=${VECTOR_DB_KEY}
+      - CHROMA_SERVER_AUTH_CREDENTIALS_PROVIDER=chromadb.auth.token.TokenConfigServerAuthCredentialsProvider
+      - CHROMA_SERVER_AUTH_TOKEN_TRANSPORT_HEADER=AUTHORIZATION
+      - CHROMA_SERVER_AUTH_PROVIDER=chromadb.auth.token.TokenAuthServerProvider
+    volumes:
+      - .chromadb_data/:/chroma/chroma/
+    networks:
+      - cognee-network
+    ports:
+      - "3002:8000"
+
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: postgres
+    profiles:
+      - postgres
+    environment:
+      POSTGRES_USER: cognee
+      POSTGRES_PASSWORD: cognee
+      POSTGRES_DB: cognee_db
+      # - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - cognee-network
+
+networks:
+  cognee-network:
+    name: cognee-network
+
+volumes:
+  chromadb_data:
+  postgres_data:

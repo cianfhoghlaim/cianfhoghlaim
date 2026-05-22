@@ -1,0 +1,21 @@
+values:
+  infisical:
+    fn::open::infisical:
+      projectId: ${INFISICAL_PROJECT_ID}
+      clientId: ${INFISICAL_CLIENT_ID}
+      clientSecret: ${INFISICAL_CLIENT_SECRET}
+      environment: prod
+  
+  oci:
+    compartmentOcid: ${infisical.values.OCI_COMPARTMENT_OCID}
+    sshPublicKey: ${infisical.values.SSH_PUBLIC_KEY}
+    
+  cloudflare:
+    zoneId: ${infisical.values.CLOUDFLARE_ZONE_ID}
+    domain: ${infisical.values.CLOUDFLARE_DOMAIN}
+
+  pulumiConfig:
+    oci:compartmentOcid: ${oci.compartmentOcid}
+    oci-infrastructure:sshPublicKey: ${oci.sshPublicKey}
+    oci-infrastructure:cloudflareZoneId: ${cloudflare.zoneId}
+    oci-infrastructure:cloudflareDomain: ${cloudflare.domain}

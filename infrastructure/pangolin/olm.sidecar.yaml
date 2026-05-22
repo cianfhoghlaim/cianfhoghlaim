@@ -1,0 +1,71 @@
+# =============================================================================
+# OLM - Locket Sidecar Configuration
+# =============================================================================
+# Adds Locket sidecar for Infisical-based secret injection.
+#
+# USAGE:
+#   docker compose -f olm.compose.yaml -f olm.sidecar.yaml up -d
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # LOCKET - Secrets Management Sidecar
+  # ---------------------------------------------------------------------------
+  locket:
+    image: ghcr.io/bpbradley/locket:infisical
+    container_name: olm-locket
+    user: "65532:65532"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    command:
+      - "--provider=infisical"
+      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-url=$${INFISICAL_URL:-http://host.docker.internal:8081}"
+      - "--infisical-default-environment=$${INFISICAL_ENVIRONMENT:-dev}"
+      - "--infisical-default-project-id=$${INFISICAL_PROJECT_ID:-project-id}
+      - "--connect.host=${
+      - "--map=/templates:/run/secrets/locket"
+      - "--mode=${LOCKET_MODE:-watch}"
+    secrets:
+      - infisical_secret
+    volumes:
+      - ./olm.secrets.env:/templates/secrets.env:ro
+      - olm-secrets:/run/secrets/locket
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    healthcheck:
+      test: ["CMD", "/locket", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  # ---------------------------------------------------------------------------
+  # OLM - Override to use Locket secrets
+  # ---------------------------------------------------------------------------
+  olm:
+    depends_on:
+      locket:
+        condition: service_healthy
+      PANGOLIN_ENDPOINT: ${PANGOLIN_ENDPOINT:-https://pangolin.cianfhoghlaim.ie}
+      OLM_ID_FILE: /run/secrets/locket/olm_id
+      OLM_SECRET_FILE: /run/secrets/locket/olm_secret
+    volumes:
+      - olm-secrets:/run/secrets/locket:ro
+    network_mode: host
+
+secrets:
+  infisical_secret:
+    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+
+volumes:
+  olm-secrets:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=700

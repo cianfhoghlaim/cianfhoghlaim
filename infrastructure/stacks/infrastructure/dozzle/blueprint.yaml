@@ -1,0 +1,10 @@
+public-resources:
+  dozzle:
+    name: "Dozzle"
+    full-domain: "dozzle.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "dozzle-main"
+        method: "http"
+        port: 8080

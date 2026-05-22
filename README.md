@@ -4,7 +4,9 @@
 
 > **IMPORTANT: Google Cloud comes with free credits usable with Vertex AI that gives a Gemini API key usable within opencode and antigravity cli for toying with project for your own purposes, AI Studio by Google Cloud also provides a Gemini API key but NO LONGER utilises the free credits going straight to charging. Also GitHub Copilot has a diluted version of Gemini (100k context window vs 1 million) with free student pro membership**
 
-> **Optional Moral Obligation for Galwegians** I cannot proceed with my long-term improvements of the Education System without Fine Gael, Labour + Liberal Democrats and the Alliance Party. In exchange for my daily commitments to your future generations, please inform yourself of my political research in the political [research directory](bunchloch/gemini/politics/) and my affiliation [here](cian_cv/identity/) and Vote 1 Seán Kyne on 22/05/26 and Míde Nic Fhionnaioch in the next full election to replace Mairéad Farrell and I will run in future after 10-20 years in Galway West (Cian Mac an Déisigh (Uí Liatháin) Lyons-Deacy) and vote Social Democrats Declan Ennis in Dublin West - I need aa Fine Gael and Social Democrats coalition 2030 general election. with an informed opinion. This is important because of Sinn Féin corruption and their statistically informed plan of 'Tonn na Clé' related to data they gathered via their Abú database outlined in the politics directory linked above.
+> **Optional Moral Obligation for Galwegians** I cannot proceed with my long-term improvements of the Education System without Fine Gael, Labour + Liberal Democrats and the Alliance Party. In exchange for my daily commitments to your future generations, please inform yourself of my political research in the political [research directory](gemini_deep_research) and my affiliation [here](identity/) and Vote 1 Seán Kyne on 22/05/26 and Míde Nic Fhionnaioch in the next full election to replace Mairéad Farrell and I will run in future after 10-20 years in Galway West (Cian Mac an Déisigh (Uí Liatháin) Lyons-Deacy) and vote Social Democrats Declan Ennis in Dublin West - I need a Fine Gael and Social Democrats coalition 2030 general election for my longterm plans of free billions from 2060 Ireland Commonwealth membership as an independent republic.
+
+Looking into this optionality with an informed opinion of his is important because of Sinn Féin corruption and their statistically informed plan of 'Tonn na Clé' related to data they gathered via their Abú database outlined in the politics directory linked above.
 
 **Mandatory Moral Obligation for Galwegians** You can't use this repository or the sister repository on github.com/cianfhoghlaim/kings_college_galway if you are Pro Kneecap or Anti Keir Starmer himself, Rachel Reeves, Bridget Philipson, Ed Miliband, Ed Davey, Daisy Cooper and everyone of Great Britain, the United Kingdom of Great Britain and Northern Ireland, the Crown Dependencies, The British Isles, the Republic of Ireland, Ireland, Éire, the British Isles, Europe that was at and maximised the mutual and lateral benefit of the UK-Ireland Summit 2025 in Liverpool and 2026 in Cork.
 
@@ -32,20 +34,20 @@ The project is organized into domain-specific 'streams' (**sruthanna**) within t
 
 | Stream | Domain | Key Technologies & Architecture |
 | :--- | :--- | :--- |
-| `sruth/bonneagar/` | **Infrastructure (Taisce)** | **Multi-Cloud Zero-Trust Platform:** Pulumi IaC (Hetzner ARM + OCI ARM + Cloudflare WAF), Komodo GitOps orchestration (50+ services, 60+ procedures), Pangolin WireGuard networking (SSO, CrowdSec WAF, multi-tenant Traefik routing), Browser Automation (Hunter-Gatherer-Operator pattern), and ~45 modular Docker stacks. Secrets via 1Password Connect + Locket sidecars. |
-| `sruth/oideachais/` | **Education Platform** | **Full-Stack AI Education:** TanStack Start (Frontend), FastAPI (API), Dagster v1.13 (Orchestration), and DuckLake/LanceDB (Storage). Transforms curriculums into interactive learning outcomes via Gemini 2.0/Claude 3.7. |
-| `sruth/meaisínfhoghlaim/` | **Intelligence** | Opensource Huggingface.co model finetuning and educational asset generation in English and minority languages. |
-| `sruth/códeolas/` | **Code Intel** | **Beads & Chunkhound:** Deep codebase analysis and indexing via MCP (Model Context Protocol) servers. |
-| `sruth/crypteolas/` | **Finance Intel** | Agent OS, Federated Learning, DLT, Crypto-payments |
-| `sruth/tuatha/` | **Educational MMO** | Pocket-ID, Forgejo (Community & Sovereignty) |
-| `sruth/web/` | **Frontend UI** | Real-time, type-safe user interfaces and AI chat dashboards |
-| `sruth/hmgcc/` | **Security Standards** | **HMGCC Compliance:** Implementation of government-grade security standards (Bailo, CyberChef, Gaffer, Stroom). |
+| `infrastructure/` | **Infrastructure (Taisce)** | **Multi-Cloud Zero-Trust Platform:** Pulumi IaC (Hetzner ARM + OCI ARM + Cloudflare WAF), Komodo GitOps orchestration (50+ services, 60+ procedures), Pangolin WireGuard networking (SSO, CrowdSec WAF, multi-tenant Traefik routing), Browser Automation (Hunter-Gatherer-Operator pattern), and ~45 modular Docker stacks. Secrets via 1Password Connect + Locket sidecars. |
+| `oideachais/` | **Education Platform** | **Full-Stack AI Education:** TanStack Start (Frontend), FastAPI (API), Dagster v1.13 (Orchestration), and DuckLake/LanceDB (Storage). Transforms curriculums into interactive learning outcomes via Gemini 2.0/Claude 3.7. |
+| `meaisínfhoghlaim/` | **Intelligence** | Opensource Huggingface.co model finetuning and educational asset generation in English and minority languages. |
+| `códeolas/` | **Code Intel** | **Beads & Chunkhound:** Deep codebase analysis and indexing via MCP (Model Context Protocol) servers. |
+| `crypteolas/` | **Finance Intel** | Agent OS, Federated Learning, DLT, Crypto-payments |
+| `tuatha/` | **Educational MMO** | Pocket-ID, Forgejo (Community & Sovereignty) |
+| `web/` | **Frontend UI** | Real-time, type-safe user interfaces and AI chat dashboards |
+| `hmgcc/` | **Security Standards** | **HMGCC Compliance:** Implementation of government-grade security standards (Bailo, CyberChef, Gaffer, Stroom). |
 
 ### 📦 Tech Stack Analysis by Directory
 
 Based on comprehensive package research across the three primary streams, here's the detailed tech stack breakdown:
 
-#### **sruth/bonneagar** — Browser Automation & Infrastructure
+#### **infrastructure** — Browser Automation & Infrastructure
 
 | Category | Packages | Latest Versions & Key Features |
 | :--- | :--- | :--- |
@@ -55,7 +57,7 @@ Based on comprehensive package research across the three primary streams, here's
 | **Infrastructure** | @pulumi/hcloud, @pulumi/oci, @1password/connect | Multi-cloud IaC with Hetzner & Oracle Cloud |
 | **Browser Automation** | @browserbasehq/stagehand, patchright, crawl4ai, skyvern | Stagehand (latest) AI-powered precision interactions; Patchright stealth Chromium |
 
-#### **sruth/meaisínfhoghlaim** — AI Agents & Data Engineering
+#### **meaisínfhoghlaim** — AI Agents & Data Engineering
 
 | Category | Packages | Latest Versions & Key Features |
 | :--- | :--- | :--- |
@@ -66,7 +68,7 @@ Based on comprehensive package research across the three primary streams, here's
 | **Model Training** | unsloth, trl, datasets, mlflow, wandb | unsloth (>=2024.12) multilingual support & flash attention (2x faster) |
 | **Observability** | langfuse, ragas, ddtrace, opentelemetry | langfuse (>=2.0.0) prompt management; ragas (>=0.1.10) trace-based metrics |
 
-#### **sruth/oideachais** — Education Pipeline & Frontend
+#### **oideachais** — Education Pipeline & Frontend
 
 | Category | Packages | Latest Versions & Key Features |
 | :--- | :--- | :--- |
@@ -725,3 +727,24 @@ By downloading, copying, or utilizing this codebase, you agree to the following 
 1.  **Geographic Restrictions:** Production deployment is legally restricted to Ireland, Northern Ireland, the Republic of Ireland, the United Kingdom of Great Britain and Northern Ireland, Ukraine, the European Union, the British Isles, The Commonwealth of Nations, The Crown, and those in the United States of America aligned with Apple and the Duke and Duchess of Sussex, Taiwan, Tibet, Nepal, South Korea, Japan, China.
 2.  **Non-Commercial Use Only:** The software is provided exclusively for non-profit, cultural preservation, and academic research. Commercial monetization—including for-profit AI training, DeFi analytics, and ed-tech SaaS platforms—is strictly prohibited.
 3.  **Acceptable Use:** Usage by entities affiliated with sanctioned organizations, paramilitary groups, or those in violation of international human rights conventions is fundamentally banned and will result in immediate technological and legal revocation of access.
+
+
+## 🧠 Neuro-Symbolic Agentic Scraping Pipeline (Upcoming Integration)
+
+As part of the cross-stream alignment between `oideachais` and `meaisínfhoghlaim`, the ML intelligence stream is being upgraded to utilize our new stealth scraping architecture:
+
+*   **Browserbase MCP (Observation):** Utilizes `@browserbasehq/mcp-server-browserbase` to run serverless, anti-bot resilient headless browsers (via Stagehand) to capture high-fidelity DOM history and Base64 screenshots.
+*   **Llama-swap & Z.AI (Perception):** Vision Language Models (Qwen3-VL-30B, GLM-4.6V-Flash, Gemma-3-27B) hosted via `llama-swap` decode the visual streams for deep UI and OCR analysis without relying on brittle HTML parsing.
+*   **Cognee (Cognition):** Semantic extraction into deterministic, graph-based memories. 
+*   **Unified Lakehouse (Storage):** All extracted intelligence is routed natively to the `oideachais` unified Lakehouse stack over the Pangolin network.
+
+## 🔌 Core MCP Ecosystem
+
+Oideachais leverages a comprehensive suite of Model Context Protocol (MCP) servers to grant autonomous agents secure, standardized access to infrastructure and intelligence layers:
+
+*   **Infisical (`@infisical/mcp`):** Dynamic secret retrieval and management, enabling agents to securely authenticate across all core domains without hardcoded credentials.
+*   **Browserbase (`@browserbasehq/mcp-server-browserbase`):** Resilient, serverless browser automation and stealth scraping capabilities via Stagehand.
+*   **Firecrawl (`firecrawl-mcp`):** Deep web crawling, semantic mapping, and large-scale data extraction.
+*   **MotherDuck (`mcp-server-motherduck`):** Direct read/write analytical access to our centralized DuckDB cloud data warehouse.
+*   **Qdrant (`mcp-server-qdrant`):** High-performance vector embedding management for semantic search.
+*   **Memgraph (`mcp-memgraph`):** Performant knowledge graph interactions for complex relational queries.

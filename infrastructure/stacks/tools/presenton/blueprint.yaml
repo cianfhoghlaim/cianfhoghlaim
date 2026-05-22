@@ -1,0 +1,10 @@
+public-resources:
+  presenton:
+    name: "Presenton"
+    full-domain: "presenton.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "presenton-main"
+        method: "http"
+        port: 8080

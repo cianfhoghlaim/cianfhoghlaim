@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.coder.name=Coder"
+      - "pangolin.public-resources.coder.full-domain=coder.cianfhoghlaim.ie"
+      - "pangolin.public-resources.coder.protocol=http"
+      - "pangolin.public-resources.coder.targets[0].method=http"
+      - "pangolin.public-resources.coder.targets[0].port=8080"

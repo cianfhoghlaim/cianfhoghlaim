@@ -1,0 +1,45 @@
+---
+# =============================================================================
+# DEPLOY INFRASTRUCTURE PLAYBOOK
+# =============================================================================
+# Deploys the complete infrastructure stack:
+#   1. Pangolin Core (on Oracle Cloud)
+#   2. Komodo Core (on MacBook)
+#
+# Usage:
+#   ansible-playbook -i inventory/inventory.yml playbooks/deploy-infrastructure.yml
+# =============================================================================
+
+- name: Deploy Pangolin Core (Proxy & Tunneling)
+  hosts: periphery # Oracle Cloud
+  become: true
+  gather_facts: true
+  tags: [pangolin, proxy]
+  roles:
+    - role: pangolin_core
+
+- name: Deploy Komodo Core (Orchestration)
+  hosts: infrastructure # MacBook
+  become: true
+  gather_facts: true
+  tags: [komodo, orchestration]
+  roles:
+    - role: komodo_core
+
+- name: Display Deployment Summary
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - ansible.builtin.debug:
+        msg: |
+          =============================================================================
+          INFRASTRUCTURE DEPLOYMENT COMPLETE
+          =============================================================================
+          Komodo Core deployed to: bunchloch (MacBook)
+          Pangolin Core deployed to: arm1.oci (Oracle Cloud)
+
+          Next steps:
+            1. Ensure DNS points to Oracle Cloud for Pangolin.
+            2. Configure Pangolin Private Resource to expose Komodo WSS.
+            3. Run `site.yml` to deploy Periphery on Oracle Cloud.
+          =============================================================================

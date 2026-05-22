@@ -1,0 +1,391 @@
+import { $ } from "bun";
+import * as fs from "fs";
+import * as path from "path";
+import { fileURLToPath } from "url";
+
+// =============================================================================
+// CONFIGURATION
+// =============================================================================
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Pangolin API configuration
+const PANGOLIN_ENDPOINT = process.env.PANGOLIN_ENDPOINT || "https://pangolin.cianfhoghlaim.ie";
+const PANGOLIN_ORG_ID = process.env.PANGOLIN_ORG_ID || "cianfhoghlaim";
+
+// API key file path (create via Pangolin UI: Organization → API Keys)
+const API_KEY_FILE = process.env.PANGOLIN_API_KEY_FILE || path.join(__dirname, "croí/pangolin/api_key");
+
+// Remote server configuration
+const REMOTE_HOST = process.env.REMOTE_HOST || "132.145.27.89";
+const REMOTE_USER = process.env.REMOTE_USER || "ubuntu";
+const SSH_KEY = process.env.SSH_KEY || path.join(process.env.HOME || "", ".ssh/ansible");
+
+// Site configuration
+const SITE_NAME = process.env.SITE_NAME || "arm1-oci";
+
+// =============================================================================
+// HELPERS
+// =============================================================================
+
+function getApiKey(): string {
+  if (process.env.PANGOLIN_API_KEY) {
+    return process.env.PANGOLIN_API_KEY;
+  }
+  try {
+    return fs.readFileSync(API_KEY_FILE, "utf-8").trim();
+  } catch (err) {
+    throw new Error(
+      `Could not read Pangolin API key. Set PANGOLIN_API_KEY env var or create ${API_KEY_FILE}\n` +
+      `To create an API key, go to Pangolin UI → Organization → API Keys`
+    );
+  }
+}
+
+async function sshExec(command: string): Promise<string> {
+  const result = await $`ssh -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} ${command}`.quiet();
+  if (result.exitCode !== 0) {
+    throw new Error(`SSH command failed: ${result.stderr.toString()}`);
+  }
+  return result.stdout.toString();
+}
+
+async function apiRequest<T>(
+  method: string,
+  endpoint: string,
+  body?: object
+): Promise<T> {
+  const apiKey = getApiKey();
+
+  // Execute via SSH to Pangolin container (avoids certificate issues)
+  const curlCmd = body
+    ? `docker exec pangolin curl -s 'http://localhost:3003/v1${endpoint}' -X ${method} -H 'Authorization: Bearer ${apiKey}' -H 'Content-Type: application/json' -d '${JSON.stringify(body)}'`
+    : `docker exec pangolin curl -s 'http://localhost:3003/v1${endpoint}' -H 'Authorization: Bearer ${apiKey}'`;
+
+  const response = await sshExec(curlCmd);
+
+  try {
+    const data = JSON.parse(response);
+    if (data.error) {
+      throw new Error(data.message || "API request failed");
+    }
+    return data;
+  } catch (e) {
+    if (e instanceof SyntaxError) {
+      throw new Error(`Invalid API response: ${response}`);
+    }
+    throw e;
+  }
+}
+
+// =============================================================================
+// SITE MANAGEMENT
+// =============================================================================
+
+interface SiteDefaults {
+  data: {
+    exitNodeId: number;
+    subnet: string;
+    newtId: string;
+    newtSecret: string;
+  };
+}
+
+interface SiteResponse {
+  data: {
+    siteId: number;
+    name: string;
+    niceId: string;
+    type: string;
+    online: boolean;
+  };
+}
+
+interface SitesResponse {
+  data: {
+    sites: Array<{
+      siteId: number;
+      name: string;
+      niceId: string;
+      type: string;
+      online: boolean;
+    }>;
+  };
+}
+
+async function getSiteDefaults(): Promise<SiteDefaults["data"]> {
+  const response = await apiRequest<SiteDefaults>(
+    "GET",
+    `/org/${PANGOLIN_ORG_ID}/pick-site-defaults`
+  );
+  return response.data;
+}
+
+async function listSites(): Promise<SitesResponse["data"]["sites"]> {
+  const response = await apiRequest<SitesResponse>(
+    "GET",
+    `/org/${PANGOLIN_ORG_ID}/sites`
+  );
+  return response.data.sites;
+}
+
+async function createSite(
+  name: string,
+  defaults: SiteDefaults["data"]
+): Promise<SiteResponse["data"]> {
+  const response = await apiRequest<SiteResponse>(
+    "PUT",
+    `/org/${PANGOLIN_ORG_ID}/site`,
+    {
+      name,
+      type: "newt",
+      exitNodeId: defaults.exitNodeId,
+      subnet: defaults.subnet,
+      newtId: defaults.newtId,
+      secret: defaults.newtSecret,
+    }
+  );
+  return response.data;
+}
+
+// =============================================================================
+// NEWT DEPLOYMENT
+// =============================================================================
+
+async function deployNewt(newtId: string, newtSecret: string): Promise<void> {
+  console.log("  Writing Newt compose file...");
+
+  const composeContent = `---
+# =============================================================================
+# NEWT - Pangolin Site Connector
+# =============================================================================
+# Site: ${SITE_NAME}
+# Generated by pangolin-setup.ts
+
+services:
+  newt:
+    image: fosrl/newt:latest
+    container_name: newt
+    restart: unless-stopped
+    environment:
+      NEWT_ID: "${newtId}"
+      NEWT_SECRET: "${newtSecret}"
+      PANGOLIN_ENDPOINT: "${PANGOLIN_ENDPOINT}"
+      DOCKER_SOCKET: "/var/run/docker.sock"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - pangolin
+    cap_add:
+      - NET_ADMIN
+    labels:
+      komodo.skip: "true"
+
+networks:
+  pangolin:
+    external: true
+`;
+
+  await sshExec(`sudo mkdir -p /opt/newt`);
+  await sshExec(`sudo tee /opt/newt/docker-compose.yaml > /dev/null << 'NEWTEOF'
+${composeContent}
+NEWTEOF`);
+
+  console.log("  Starting Newt container...");
+  await sshExec(`cd /opt/newt && sudo docker compose up -d`);
+
+  // Wait for connection
+  console.log("  Waiting for Newt to connect...");
+  await Bun.sleep(10000);
+
+  const logs = await sshExec(`docker logs newt 2>&1 | tail -5`);
+  if (logs.includes("Tunnel connection to server established")) {
+    console.log("  ✓ Newt connected successfully");
+  } else {
+    console.log("  ⚠ Newt may still be connecting. Check logs with: docker logs newt");
+  }
+}
+
+// =============================================================================
+// RESOURCE DISCOVERY
+// =============================================================================
+
+interface ResourcesResponse {
+  data: {
+    resources: Array<{
+      resourceId: number;
+      name: string;
+      fullDomain: string;
+      enabled: boolean;
+    }>;
+  };
+}
+
+async function listResources(): Promise<ResourcesResponse["data"]["resources"]> {
+  const response = await apiRequest<ResourcesResponse>(
+    "GET",
+    `/org/${PANGOLIN_ORG_ID}/resources`
+  );
+  return response.data.resources;
+}
+
+// =============================================================================
+// MAIN FUNCTIONS
+// =============================================================================
+
+async function setup(): Promise<void> {
+  console.log("=== Pangolin Site & Newt Setup ===\n");
+
+  try {
+    // Check for existing sites
+    console.log("Checking for existing sites...");
+    const sites = await listSites();
+    const existingSite = sites.find(s => s.name === SITE_NAME);
+
+    let newtId: string;
+    let newtSecret: string;
+
+    if (existingSite) {
+      console.log(`  Site '${SITE_NAME}' already exists (ID: ${existingSite.siteId})`);
+      console.log("  To redeploy Newt, delete the site first or use existing credentials.");
+
+      // Get new defaults for credentials
+      console.log("\nGetting fresh Newt credentials...");
+      const defaults = await getSiteDefaults();
+      newtId = defaults.newtId;
+      newtSecret = defaults.newtSecret;
+
+      console.log(`  ⚠ Using new credentials - site may need recreation`);
+    } else {
+      // Get site defaults (includes Newt credentials)
+      console.log("Getting site defaults...");
+      const defaults = await getSiteDefaults();
+      newtId = defaults.newtId;
+      newtSecret = defaults.newtSecret;
+
+      console.log(`  Exit Node ID: ${defaults.exitNodeId}`);
+      console.log(`  Subnet: ${defaults.subnet}`);
+      console.log(`  Newt ID: ${newtId}`);
+
+      // Create site
+      console.log("\nCreating site...");
+      const site = await createSite(SITE_NAME, defaults);
+      console.log(`  ✓ Site created (ID: ${site.siteId})`);
+    }
+
+    // Deploy Newt
+    console.log("\nDeploying Newt...");
+    await deployNewt(newtId, newtSecret);
+
+    // Check discovered resources
+    console.log("\nChecking discovered resources...");
+    await Bun.sleep(5000);
+    const resources = await listResources();
+    console.log(`  Found ${resources.length} resources:`);
+    for (const r of resources) {
+      console.log(`    - ${r.name}: ${r.fullDomain}`);
+    }
+
+    console.log("\n=== Setup Complete ===");
+    console.log("\nNewt will automatically discover containers with pangolin.public-resources.* labels.");
+
+  } catch (err) {
+    console.error("\nError:", (err as Error).message);
+    process.exit(1);
+  }
+}
+
+async function status(): Promise<void> {
+  console.log("=== Pangolin Status ===\n");
+
+  try {
+    // Check sites
+    const sites = await listSites();
+    console.log(`Sites (${sites.length}):`);
+    for (const site of sites) {
+      const status = site.online ? "🟢 Online" : "🔴 Offline";
+      console.log(`  ${status} ${site.name} (${site.niceId})`);
+    }
+
+    // Check resources
+    const resources = await listResources();
+    console.log(`\nResources (${resources.length}):`);
+    for (const r of resources) {
+      const status = r.enabled ? "✓" : "✗";
+      console.log(`  ${status} ${r.name}: https://${r.fullDomain}`);
+    }
+
+    // Check Newt status
+    console.log("\nNewt status:");
+    try {
+      const logs = await sshExec(`docker logs newt 2>&1 | tail -3`);
+      console.log(logs.split("\n").map(l => `  ${l}`).join("\n"));
+    } catch {
+      console.log("  Newt not running");
+    }
+
+  } catch (err) {
+    console.error("Error:", (err as Error).message);
+  }
+}
+
+async function restart(): Promise<void> {
+  console.log("=== Restarting Newt ===\n");
+
+  try {
+    await sshExec(`cd /opt/newt && sudo docker compose restart`);
+    console.log("Newt restarted. Waiting for connection...");
+    await Bun.sleep(10000);
+
+    const logs = await sshExec(`docker logs newt 2>&1 | tail -5`);
+    console.log(logs);
+  } catch (err) {
+    console.error("Error:", (err as Error).message);
+  }
+}
+
+// =============================================================================
+// CLI
+// =============================================================================
+
+const commands: Record<string, () => Promise<void>> = {
+  setup,
+  status,
+  restart,
+};
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const command = process.argv[2] || "setup";
+
+  if (command === "help" || command === "--help") {
+    console.log("Pangolin Site & Newt Setup\n");
+    console.log("Usage: bun run pangolin-setup.ts <command>\n");
+    console.log("Commands:");
+    console.log("  setup    - Create site and deploy Newt (default)");
+    console.log("  status   - Check current status");
+    console.log("  restart  - Restart Newt");
+    console.log("  help     - Show this help message");
+    console.log("\nEnvironment variables:");
+    console.log("  PANGOLIN_API_KEY      - API key (or store in croí/pangolin/api_key)");
+    console.log("  PANGOLIN_ENDPOINT     - Pangolin URL (default: https://pangolin.cianfhoghlaim.ie)");
+    console.log("  PANGOLIN_ORG_ID       - Organization ID (default: cianfhoghlaim)");
+    console.log("  SITE_NAME             - Site name (default: arm1-oci)");
+    console.log("  REMOTE_HOST           - Remote server IP (default: 132.145.27.89)");
+    console.log("  SSH_KEY               - SSH key path (default: ~/.ssh/ansible)");
+    process.exit(0);
+  }
+
+  const fn = commands[command];
+  if (!fn) {
+    console.error(`Unknown command: ${command}`);
+    console.error("Run 'bun run pangolin-setup.ts help' for available commands");
+    process.exit(1);
+  }
+
+  fn()
+    .then(() => process.exit(0))
+    .catch((err) => {
+      console.error("Error:", err.message);
+      process.exit(1);
+    });
+}

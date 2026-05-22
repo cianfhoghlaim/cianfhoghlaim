@@ -1,0 +1,58 @@
+# =============================================================================
+# CRYPTEOLAS PIPELINE STACK
+# =============================================================================
+# DeFi protocol analysis pipeline with Dagster orchestration.
+# Domain: crypteolas.ie
+# Server: oci-devtools
+# =============================================================================
+
+[[stack]]
+name = "crypteolas-pipeline"
+description = "DeFi protocol analysis with Dagster orchestration"
+tags = ["host:oci-devtools", "tier:production", "type:crypto", "domain:crypteolas.ie", "pipeline:dagster"]
+
+[stack.config]
+server_id = "oci-devtools"
+run_directory = "/etc/komodo/sruth/crypteolas"
+file_paths = ["docker-compose.yaml", "pangolin.yaml", "sidecar.yaml"]
+environment = """
+# Service Configuration
+CRYPTOS_DOMAIN=crypteolas.ie
+CRYPTOS_NAME=Crypteolas
+ENVIRONMENT=production
+
+# API Ports
+API_PORT=8001
+UI_PORT=3001
+DAGSTER_PORT=3002
+MEMGRAPH_PORT=7688
+DRAGONFLY_PORT=6380
+LANGFUSE_PORT=3004
+
+# Observability
+LANGFUSE_HOST=https://langfuse.cianfhoghlaim.ie
+LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-}
+LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-}
+MLFLOW_TRACKING_URI=https://mlflow.cianfhoghlaim.ie
+DD_SERVICE=crypteolas-api
+DD_ENV=production
+DD_SITE=crypteolas.ie
+DD_APM_ENABLED=true
+DD_LLMOBS_ENABLED=true
+
+# Storage
+DUCKDB_PATH=/data/duckdb/crypteolas.duckdb
+LANCEDB_URI=/data/lance
+MEMGRAPH_URL=bolt://memgraph:7687
+GRAPHITI_URL=bolt://falkordb:6379
+DRAGONFLY_URL=redis://dragonfly:6379
+
+# LLM Configuration
+OPENAI_API_KEY=${OPENAI_API_KEY:-}
+ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+GITHUB_TOKEN=${GITHUB_TOKEN:-}
+
+# Infisical
+INFISICAL_HOST=${INFISICAL_HOST:-http://132.145.27.89:8080}
+LOCKET_MODE=watch
+"""

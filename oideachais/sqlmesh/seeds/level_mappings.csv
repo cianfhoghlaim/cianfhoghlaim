@@ -1,0 +1,30 @@
+mapping_id,nation,level_code,level_name,age_range_start,age_range_end,equivalent_ireland,equivalent_england,equivalent_scotland,equivalent_wales,equivalent_ni
+1,ireland,ie_primary,Primary,5,12,ie_primary,en_ks1_ks2,sc_early_first_second,wa_foundation_ps2,ni_foundation_ks1_ks2
+2,ireland,ie_junior_cycle,Junior Cycle,12,15,ie_junior_cycle,en_ks3_ks4,sc_third_fourth,wa_ps3_ps4,ni_ks3_ks4
+3,ireland,ie_transition_year,Transition Year,15,16,ie_transition_year,en_year11,sc_s4,wa_year11,ni_year12
+4,ireland,ie_senior_cycle,Senior Cycle / Leaving Cert,16,18,ie_senior_cycle,en_ks5,sc_higher_adv_higher,wa_post16,ni_post16
+5,england,en_eyfs,Early Years Foundation Stage,0,5,ie_early_childhood,en_eyfs,sc_early,wa_foundation,ni_foundation
+6,england,en_ks1,Key Stage 1,5,7,ie_primary,en_ks1,sc_first,wa_ps1,ni_ks1
+7,england,en_ks2,Key Stage 2,7,11,ie_primary,en_ks2,sc_second,wa_ps2,ni_ks2
+8,england,en_ks3,Key Stage 3,11,14,ie_junior_cycle,en_ks3,sc_third,wa_ps3,ni_ks3
+9,england,en_ks4,Key Stage 4 / GCSE,14,16,ie_junior_cycle,en_ks4,sc_national5,wa_gcse,ni_gcse
+10,england,en_ks5,Key Stage 5 / A-Level,16,18,ie_senior_cycle,en_ks5,sc_higher,wa_a_level,ni_a_level
+11,scotland,sc_early,Early Level,3,5,ie_early_childhood,en_eyfs,sc_early,wa_foundation,ni_foundation
+12,scotland,sc_first,First Level,5,8,ie_primary,en_ks1,sc_first,wa_ps1,ni_ks1
+13,scotland,sc_second,Second Level,8,11,ie_primary,en_ks2,sc_second,wa_ps2,ni_ks2
+14,scotland,sc_third,Third Level,11,14,ie_junior_cycle,en_ks3,sc_third,wa_ps3,ni_ks3
+15,scotland,sc_fourth,Fourth Level,14,15,ie_junior_cycle,en_ks4,sc_fourth,wa_gcse,ni_gcse
+16,scotland,sc_national5,National 5,15,16,ie_junior_cycle,en_gcse,sc_national5,wa_gcse,ni_gcse
+17,scotland,sc_higher,Higher,16,17,ie_senior_cycle,en_as_level,sc_higher,wa_as_level,ni_as_level
+18,scotland,sc_adv_higher,Advanced Higher,17,18,ie_senior_cycle,en_a_level,sc_adv_higher,wa_a_level,ni_a_level
+19,wales,wa_foundation,Foundation Phase,3,7,ie_primary,en_eyfs_ks1,sc_early_first,wa_foundation,ni_foundation_ks1
+20,wales,wa_ps2,Progression Step 2,7,11,ie_primary,en_ks2,sc_second,wa_ps2,ni_ks2
+21,wales,wa_ps3,Progression Step 3,11,14,ie_junior_cycle,en_ks3,sc_third,wa_ps3,ni_ks3
+22,wales,wa_ps4,Progression Step 4 / GCSE,14,16,ie_junior_cycle,en_ks4,sc_national5,wa_ps4,ni_ks4
+23,wales,wa_post16,Post-16 / A-Level,16,18,ie_senior_cycle,en_ks5,sc_higher,wa_post16,ni_post16
+24,northern_ireland,ni_foundation,Foundation Stage,4,6,ie_primary,en_reception,sc_early,wa_foundation,ni_foundation
+25,northern_ireland,ni_ks1,Key Stage 1,6,8,ie_primary,en_ks1,sc_first,wa_ps1,ni_ks1
+26,northern_ireland,ni_ks2,Key Stage 2,8,11,ie_primary,en_ks2,sc_second,wa_ps2,ni_ks2
+27,northern_ireland,ni_ks3,Key Stage 3,11,14,ie_junior_cycle,en_ks3,sc_third,wa_ps3,ni_ks3
+28,northern_ireland,ni_ks4,Key Stage 4 / GCSE,14,16,ie_junior_cycle,en_ks4,sc_national5,wa_gcse,ni_ks4
+29,northern_ireland,ni_post16,Post-16 / A-Level,16,18,ie_senior_cycle,en_ks5,sc_higher,wa_post16,ni_post16

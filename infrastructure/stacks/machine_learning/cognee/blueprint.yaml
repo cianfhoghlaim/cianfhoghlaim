@@ -1,0 +1,10 @@
+public-resources:
+  cognee:
+    name: "Cognee"
+    full-domain: "cognee.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "cognee-main"
+        method: "http"
+        port: 8080

@@ -1,0 +1,172 @@
+name: oideachais-dev
+
+services:
+  # ---------------------------------------------------------------------------
+  # DAGSTER - Pipeline Orchestration
+  # ---------------------------------------------------------------------------
+  dagster:
+    build:
+      context: .
+      dockerfile: Dockerfile.dagster
+    container_name: oideachais-dagster
+    restart: unless-stopped
+    ports:
+      - "${DAGSTER_PORT:-3335}:3000"
+    env_file:
+      - path: /run/secrets/locket/secrets.env
+        required: false
+    environment:
+      DAGSTER_HOME: /opt/dagster/home
+      USE_DUCKLAKE: "true"
+      DUCKLAKE_POSTGRES_HOST: lakehouse-postgres
+      DUCKLAKE_POSTGRES_PORT: "5432"
+      DUCKLAKE_POSTGRES_USER: lakekeeper
+      DUCKLAKE_POSTGRES_PASSWORD: devpassword
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-lakehouse}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-devpassword}
+      AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-http://lakehouse-garage:3900}
+      AWS_REGION: ${AWS_REGION:-auto}
+    volumes:
+      - .:/app
+      - ../../.env:/app/.env:ro
+      - /run/secrets/locket/secrets.env:/app/secrets.env:ro
+      - /app/.venv
+      - ./dagster.yaml:/opt/dagster/home/dagster.yaml:ro
+      - dagster-storage:/opt/dagster/storage
+    networks:
+      - oideachais
+      - lakehouse
+
+  # ---------------------------------------------------------------------------
+  # API - FastAPI Backend with AG-UI Streaming
+  # ---------------------------------------------------------------------------
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oideachais-api
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-8000}:8000"
+    env_file:
+      - path: /run/secrets/locket/secrets.env
+        required: false
+    environment:
+      # Application
+      HOST: "0.0.0.0"
+      PORT: "8000"
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # Database paths
+      DUCKDB_PATH: /app/storage/data/celtic_education.duckdb
+      LANCEDB_URI: rest://lakehouse-lance-namespace:8182
+      LANCEDB_API_KEY: ${LANCEDB_API_KEY:-devtoken}
+      # LLM Configuration
+      LLM_API_KEY: ${LITELLM_MASTER_KEY:-sk-1234}
+      LLM_PROVIDER: ${LLM_PROVIDER:-litellm}
+      LLM_BASE_URL: ${LLM_BASE_URL:-http://litellm:4000}
+      LLM_MODEL: ${LLM_MODEL:-gemini/gemini-2.0-flash}
+      # Observability
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
+    volumes:
+      - oideachais-data:/app/storage/data
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 16G
+    networks:
+      - oideachais
+      - lakehouse
+
+  # ---------------------------------------------------------------------------
+  # FRONTEND - TanStack Start Web Application
+  # ---------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: oideachais-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: ${ENVIRONMENT:-production}
+      VITE_API_URL: ${API_URL:-http://api:8000}
+      VITE_API_PUBLIC_URL: ${API_PUBLIC_URL:-http://localhost:8000}
+    volumes:
+      - ./web/src:/app/src
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - oideachais
+      - lakehouse
+
+  # ---------------------------------------------------------------------------
+  # AI GATEWAY - LiteLLM
+  # ---------------------------------------------------------------------------
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: oideachais-litellm
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-1234}
+      VERTEX_PROJECT: ${VERTEX_PROJECT:-}
+      VERTEX_LOCATION: ${VERTEX_LOCATION:-us-central1}
+      # GOOGLE_APPLICATION_CREDENTIALS: /app/key.json
+    # volumes:
+      # - ${GCP_CREDENTIALS_PATH:-./secrets/gcp-key.json}:/app/key.json:ro
+    # command: [ "--port", "4000" ]
+    networks:
+      - oideachais
+      - lakehouse
+
+  # ---------------------------------------------------------------------------
+  # RESEARCH - Perplexica / Vane
+  # ---------------------------------------------------------------------------
+  # perplexica:
+  #   image: itisshams/perplexica:latest
+  #   container_name: oideachais-research
+  #   restart: unless-stopped
+  #   environment:
+  #     OPENAI_API_KEY: ${LITELLM_MASTER_KEY:-sk-1234}
+  #     OPENAI_API_BASE: http://litellm:4000/v1
+  #   networks:
+  #     - oideachais
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 4G
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  dagster-storage:
+  oideachais-data:
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  oideachais:
+    driver: bridge
+  lakehouse:
+    external: true

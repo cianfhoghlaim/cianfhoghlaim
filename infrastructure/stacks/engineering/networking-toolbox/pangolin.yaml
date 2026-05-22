@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.networking-toolbox.name=Networking-toolbox"
+      - "pangolin.public-resources.networking-toolbox.full-domain=networking-toolbox.cianfhoghlaim.ie"
+      - "pangolin.public-resources.networking-toolbox.protocol=http"
+      - "pangolin.public-resources.networking-toolbox.targets[0].method=http"
+      - "pangolin.public-resources.networking-toolbox.targets[0].port=8080"

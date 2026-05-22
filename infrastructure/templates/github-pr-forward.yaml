@@ -1,0 +1,159 @@
+# =============================================================================
+# GITHUB PR FORWARD TEMPLATE
+# =============================================================================
+# Place this file in the GitHub mirror repository as .github/workflows/forward-pr.yaml
+#
+# This workflow forwards pull requests from GitHub to Forgejo, enabling
+# bidirectional sync for external contributions.
+#
+# Prerequisites:
+# 1. Set FORGEJO_TOKEN secret in GitHub repo settings
+# 2. Forgejo token needs write:repository permission
+# 3. Replace FLOW_NAME with the actual flow name (oideachais, crypteolas, aleyum)
+
+name: Forward PR to Forgejo
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+env:
+  FORGEJO_API: https://git.cianfhoghlaim.ie/api/v1
+  FORGEJO_REPO: cliste/bonneagar
+  # Set this to the flow name (oideachais, crypteolas, or aleyum)
+  FLOW_NAME: REPLACE_WITH_FLOW_NAME
+
+jobs:
+  forward-pr:
+    name: Forward PR to Forgejo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Get PR details
+        id: pr
+        run: |
+          echo "number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+          echo "title=${{ github.event.pull_request.title }}" >> $GITHUB_OUTPUT
+          echo "branch=${{ github.event.pull_request.head.ref }}" >> $GITHUB_OUTPUT
+          echo "author=${{ github.event.pull_request.user.login }}" >> $GITHUB_OUTPUT
+
+      - name: Configure git
+        run: |
+          git config user.name "GitHub PR Bot"
+          git config user.email "github-pr-bot@cianfhoghlaim.ie"
+
+      - name: Create branch on Forgejo
+        env:
+          FORGEJO_TOKEN: ${{ secrets.FORGEJO_TOKEN }}
+        run: |
+          BRANCH_NAME="github-pr-${{ env.FLOW_NAME }}-${{ steps.pr.outputs.number }}"
+
+          # Clone the Forgejo repo
+          git clone --depth=1 "https://github-pr-bot:${FORGEJO_TOKEN}@git.cianfhoghlaim.ie/${{ env.FORGEJO_REPO }}.git" forgejo-repo
+          cd forgejo-repo
+
+          # Create and checkout the branch
+          git checkout -b "${BRANCH_NAME}"
+
+          # Copy the PR changes to the correct path
+          rm -rf "sruth/${{ env.FLOW_NAME }}"
+          cp -r ../* "sruth/${{ env.FLOW_NAME }}/" 2>/dev/null || true
+          rm -rf "sruth/${{ env.FLOW_NAME }}/.git"
+          rm -rf "sruth/${{ env.FLOW_NAME }}/.github"
+          rm -f "sruth/${{ env.FLOW_NAME }}/forgejo-repo"
+
+          # Commit and push
+          git add "sruth/${{ env.FLOW_NAME }}/"
+          git commit -m "GitHub PR #${{ steps.pr.outputs.number }}: ${{ steps.pr.outputs.title }}
+
+          From: ${{ github.event.pull_request.html_url }}
+          Author: @${{ steps.pr.outputs.author }}"
+
+          git push -u origin "${BRANCH_NAME}" --force
+
+      - name: Create or update Forgejo PR
+        env:
+          FORGEJO_TOKEN: ${{ secrets.FORGEJO_TOKEN }}
+        run: |
+          BRANCH_NAME="github-pr-${{ env.FLOW_NAME }}-${{ steps.pr.outputs.number }}"
+
+          # Escape special characters in title and body
+          TITLE="[GitHub PR #${{ steps.pr.outputs.number }}] ${{ steps.pr.outputs.title }}"
+          BODY=$(cat << 'EOF'
+          ## Forwarded from GitHub
+
+          **Original PR:** ${{ github.event.pull_request.html_url }}
+          **Author:** @${{ steps.pr.outputs.author }}
+          **Flow:** sruth/${{ env.FLOW_NAME }}
+
+          ---
+
+          ${{ github.event.pull_request.body }}
+
+          ---
+
+          *This PR was automatically forwarded from GitHub. Please review and merge here on Forgejo.*
+          EOF
+          )
+
+          # Check if PR already exists
+          EXISTING_PR=$(curl -s \
+            -H "Authorization: token ${FORGEJO_TOKEN}" \
+            "${FORGEJO_API}/repos/${{ env.FORGEJO_REPO }}/pulls?state=open&head=${BRANCH_NAME}" | jq -r '.[0].number // empty')
+
+          if [ -n "$EXISTING_PR" ]; then
+            echo "PR already exists: #${EXISTING_PR}"
+            echo "Updated with latest changes from GitHub PR #${{ steps.pr.outputs.number }}"
+          else
+            # Create new PR
+            curl -sf -X POST \
+              -H "Authorization: token ${FORGEJO_TOKEN}" \
+              -H "Content-Type: application/json" \
+              "${FORGEJO_API}/repos/${{ env.FORGEJO_REPO }}/pulls" \
+              -d "$(jq -n \
+                --arg title "$TITLE" \
+                --arg body "$BODY" \
+                --arg head "$BRANCH_NAME" \
+                '{title: $title, body: $body, head: $head, base: "main"}')"
+
+            echo "Created new Forgejo PR for GitHub PR #${{ steps.pr.outputs.number }}"
+          fi
+
+      - name: Add comment to GitHub PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branchName = `github-pr-${{ env.FLOW_NAME }}-${{ github.event.pull_request.number }}`;
+            const forgejoUrl = `https://git.cianfhoghlaim.ie/${{ env.FORGEJO_REPO }}/pulls?q=${encodeURIComponent(branchName)}`;
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `This PR has been forwarded to Forgejo for review.
+
+              **Forgejo PR:** [View on Forgejo](${forgejoUrl})
+
+              Changes will be merged on Forgejo and synced back to this repository.`
+            });
+
+  notify-merge:
+    name: Notify on Merge
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Comment on merged PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `This PR was merged on GitHub. If changes were made on Forgejo, they will be synced back automatically.`
+            });

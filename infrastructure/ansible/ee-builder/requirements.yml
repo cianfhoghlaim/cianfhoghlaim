@@ -1,0 +1,28 @@
+---
+# =============================================================================
+# ANSIBLE REQUIREMENTS - Collections and Roles
+# =============================================================================
+# Dependencies for Komodo infrastructure management
+
+collections:
+  # Core Ansible utilities
+  - name: community.general
+    version: ">=9.0.0"
+
+  # Docker management
+  - name: community.docker
+    version: ">=3.0.0"
+
+  # POSIX utilities (authorized_key, sysctl, etc.)
+  - name: ansible.posix
+    version: ">=1.5.0"
+
+  # Crypto utilities (for cert management)
+  - name: community.crypto
+    version: ">=2.0.0"
+
+roles:
+  # Komodo deployment role (periphery, core, etc.)
+  - name: bpbradley.komodo
+    src: https://github.com/bpbradley/ansible-role-komodo
+    version: komodo_v2

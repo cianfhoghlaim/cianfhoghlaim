@@ -1,0 +1,129 @@
+# =============================================================================
+# PANGOLIN - Locket Sidecar Configuration
+# =============================================================================
+# Adds Locket sidecar for Infisical-based secret injection.
+#
+# USAGE:
+#   docker compose -f compose.yaml -f sidecar.yaml up -d
+#
+# PREREQUISITES:
+#   - Infisical running (http://132.145.27.89:8080)
+#   - OP Connect token at /etc/connect/token or INFISICAL_SECRET_FILE
+#   - Secrets created in Infisical project (taisce-secrets)
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # LOCKET - Secrets Management Sidecar
+  # ---------------------------------------------------------------------------
+  locket:
+    image: ghcr.io/bpbradley/locket:infisical
+    platform: linux/amd64
+    container_name: pangolin-locket
+    user: "65532:65532"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    command:
+      - "--provider=infisical"
+      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-url=$${INFISICAL_URL:-http://host.docker.internal:8081}"
+      - "--infisical-default-environment=$${INFISICAL_ENVIRONMENT:-dev}"
+      - "--infisical-default-project-id=$${INFISICAL_PROJECT_ID:-project-id}
+      - "--connect.host=${
+      - "--map=/templates:/run/secrets/locket"
+      - "--mode=${LOCKET_MODE:-watch}"
+    secrets:
+      - infisical_secret
+    volumes:
+      - ./secrets.env:/templates/secrets.env:ro
+      - pangolin-secrets:/run/secrets/locket
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    healthcheck:
+      test: ["CMD", "/locket", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - pangolin
+
+  # ---------------------------------------------------------------------------
+  # PANGOLIN - Override to use Locket secrets
+  # ---------------------------------------------------------------------------
+  pangolin:
+    depends_on:
+      locket:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      SERVER_SECRET: ""  # Clear default, use file
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        export SERVER_SECRET=$$(cat /run/secrets/locket/server_secret)
+        npm run start
+    volumes:
+      - ./config:/app/config
+      - pangolin-secrets:/run/secrets/locket:ro
+
+  # ---------------------------------------------------------------------------
+  # POSTGRES - Override to use Locket secrets
+  # ---------------------------------------------------------------------------
+  postgres:
+    depends_on:
+      locket:
+        condition: service_healthy
+      POSTGRES_USER: pangolin
+      POSTGRES_PASSWORD_FILE: /run/secrets/locket/postgres_password
+      POSTGRES_DB: pangolin
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - pangolin-secrets:/run/secrets/locket:ro
+
+  # ---------------------------------------------------------------------------
+  # TINYAUTH - Override to use Locket secrets for PocketID OAuth
+  # ---------------------------------------------------------------------------
+  tinyauth:
+    depends_on:
+      locket:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        export POCKETID_CLIENT_ID=$$(cat /run/secrets/locket/pocketid_client_id)
+        export POCKETID_CLIENT_SECRET=$$(cat /run/secrets/locket/pocketid_client_secret)
+        /app/tinyauth
+    volumes:
+      - pangolin-secrets:/run/secrets/locket:ro
+
+  # ---------------------------------------------------------------------------
+  # TRAEFIK - Override to use Locket secrets for Cloudflare DNS challenge
+  # ---------------------------------------------------------------------------
+  traefik:
+    depends_on:
+      locket:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        export CF_DNS_API_TOKEN=$$(cat /run/secrets/locket/cf_dns_api_token)
+        traefik --configFile=/etc/traefik/traefik_config.yml
+    volumes:
+      - pangolin-secrets:/run/secrets/locket:ro
+
+secrets:
+  infisical_secret:
+    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+
+volumes:
+  pangolin-secrets:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=700

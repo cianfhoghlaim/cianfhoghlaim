@@ -1,0 +1,17 @@
+# Pangolin auto-discovery labels for Garage S3 Storage
+# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
+# NOTE: Uses TinyAuth middleware - Garage has no built-in web auth
+services:
+  garage:
+    labels:
+      - "pangolin.resource.name=Garage S3"
+      - "pangolin.resource.domain=garage.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://garage:3904"
+      - "pangolin.resource.middlewares=tinyauth"
+    networks:
+      - pangolin
+
+networks:
+  pangolin:
+    name: pangolin
+    external: true

@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.pinchflat.name=Pinchflat"
+      - "pangolin.public-resources.pinchflat.full-domain=pinchflat.cianfhoghlaim.ie"
+      - "pangolin.public-resources.pinchflat.protocol=http"
+      - "pangolin.public-resources.pinchflat.targets[0].method=http"
+      - "pangolin.public-resources.pinchflat.targets[0].port=8080"

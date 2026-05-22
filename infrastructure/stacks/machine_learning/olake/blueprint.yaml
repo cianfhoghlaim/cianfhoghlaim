@@ -1,0 +1,10 @@
+public-resources:
+  olake:
+    name: "Olake"
+    full-domain: "olake.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "olake-main"
+        method: "http"
+        port: 8080

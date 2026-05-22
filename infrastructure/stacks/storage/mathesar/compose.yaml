@@ -1,0 +1,81 @@
+# =============================================================================
+# MATHESAR - Spreadsheet Interface for PostgreSQL
+# =============================================================================
+# Database UI that provides a spreadsheet-like interface for PostgreSQL.
+#
+# USAGE:
+#   Development:  docker compose --env-file ../../.env.local up -d
+#   Production:   locket exec --env-file secrets.env -- docker compose up -d
+#   Standalone:   docker compose up -d  (uses defaults)
+#
+# NOTE: Mathesar connects to an external PostgreSQL database. Configure the
+#       POSTGRES_* variables to point to your target database.
+# =============================================================================
+
+name: mathesar
+
+services:
+  # ---------------------------------------------------------------------------
+  # POSTGRESQL - Internal Django Database
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: mathesar-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${MATHESAR_DB_USER:-mathesar}
+      POSTGRES_PASSWORD: ${MATHESAR_DB_PASSWORD:-devpassword}
+      POSTGRES_DB: mathesar_django
+    volumes:
+      - mathesar-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${MATHESAR_DB_USER:-mathesar}"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    networks:
+      - mathesar
+
+  # ---------------------------------------------------------------------------
+  # MATHESAR - Database UI
+  # ---------------------------------------------------------------------------
+  mathesar:
+    image: mathesar/mathesar:${MATHESAR_VERSION:-0.2.2}
+    container_name: mathesar
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "${MATHESAR_PORT:-8000}:8000"
+    environment:
+      # Internal Django database
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: mathesar_django
+      POSTGRES_USER: ${MATHESAR_DB_USER:-mathesar}
+      POSTGRES_PASSWORD: ${MATHESAR_DB_PASSWORD:-devpassword}
+      # Django configuration
+      SECRET_KEY: ${MATHESAR_SECRET_KEY:-dev-django-secret-key-change-in-production}
+      DJANGO_SETTINGS_MODULE: config.settings.production
+      ALLOWED_HOSTS: ${MATHESAR_ALLOWED_HOSTS:-*}
+    volumes:
+      - mathesar-media:/home/mathesar/.media
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - mathesar
+
+volumes:
+  mathesar-postgres:
+  mathesar-media:
+
+networks:
+  mathesar:
+    driver: bridge

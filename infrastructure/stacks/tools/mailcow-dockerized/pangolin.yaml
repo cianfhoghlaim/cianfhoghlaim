@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.mailcow-dockerized.name=Mailcow-dockerized"
+      - "pangolin.public-resources.mailcow-dockerized.full-domain=mailcow-dockerized.cianfhoghlaim.ie"
+      - "pangolin.public-resources.mailcow-dockerized.protocol=http"
+      - "pangolin.public-resources.mailcow-dockerized.targets[0].method=http"
+      - "pangolin.public-resources.mailcow-dockerized.targets[0].port=8080"

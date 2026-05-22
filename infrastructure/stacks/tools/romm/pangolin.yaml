@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.romm.name=Romm"
+      - "pangolin.public-resources.romm.full-domain=romm.cianfhoghlaim.ie"
+      - "pangolin.public-resources.romm.protocol=http"
+      - "pangolin.public-resources.romm.targets[0].method=http"
+      - "pangolin.public-resources.romm.targets[0].port=8080"

@@ -1,0 +1,10 @@
+public-resources:
+  linkwarden:
+    name: "Linkwarden"
+    full-domain: "linkwarden.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "linkwarden-main"
+        method: "http"
+        port: 8080

@@ -1,0 +1,55 @@
+---
+# =============================================================================
+# CIANFHOGHLAIM INFRASTRUCTURE INVENTORY
+# =============================================================================
+# Architecture:
+#   - MacBook Pro (bunchloch): Komodo Core + Pangolin Site (Newt)
+#   - Oracle Cloud (arm1.oci): Pangolin Core + Komodo Periphery
+# =============================================================================
+
+all:
+  vars:
+    # Common SSH settings
+    ansible_ssh_private_key_file: ~/.ssh/id_ed25519
+    ansible_python_interpreter: /usr/bin/python3
+    
+    # Komodo Defaults
+    komodo_core_image_tag: "2"
+    komodo_periphery_image_tag: "2"
+
+  children:
+    # =========================================================================
+    # CONTROL PLANE (MacBook Pro)
+    # =========================================================================
+    infrastructure:
+      hosts:
+        bunchloch:
+          ansible_connection: local
+          ansible_host: localhost
+
+          komodo_host: "https://komodo.cianfhoghlaim.ie"
+          
+          # Infisical integration is done via Locket Sidecar
+          infisical_client_id: "{{ lookup('env', 'INFISICAL_CLIENT_ID') }}"
+          infisical_client_secret_file: "/path/to/infisical_secret"
+
+    # =========================================================================
+    # WORKLOADS (Oracle Cloud Free Tier)
+    # =========================================================================
+    periphery:
+      hosts:
+        arm1.oci:
+          ansible_host: 132.145.27.89
+          ansible_user: ubuntu
+
+          machine_type: oracle_arm
+          architecture: arm64
+          ram_gb: 2
+
+          # Komodo Periphery uses WSS outbound
+          periphery_core_address: "wss://komodo.cianfhoghlaim.ie:9120"
+          periphery_connect_as: "arm1-oci"
+          
+          # Newt Pangolin Tunnel
+          pangolin_endpoint: "wss://pangolin.cianfhoghlaim.ie"
+          infisical_secret_path: "/path/to/infisical_secret"

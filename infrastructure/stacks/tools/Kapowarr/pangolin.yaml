@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.Kapowarr.name=Kapowarr"
+      - "pangolin.public-resources.Kapowarr.full-domain=Kapowarr.cianfhoghlaim.ie"
+      - "pangolin.public-resources.Kapowarr.protocol=http"
+      - "pangolin.public-resources.Kapowarr.targets[0].method=http"
+      - "pangolin.public-resources.Kapowarr.targets[0].port=8080"

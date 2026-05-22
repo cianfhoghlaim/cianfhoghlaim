@@ -1,0 +1,10 @@
+public-resources:
+  changedetection:
+    name: "Changedetection"
+    full-domain: "changedetection.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "changedetection-main"
+        method: "http"
+        port: 8080

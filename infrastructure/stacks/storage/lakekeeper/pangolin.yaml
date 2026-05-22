@@ -1,0 +1,9 @@
+# Pangolin auto-discovery labels for Lakekeeper
+# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
+services:
+  lakekeeper:
+    labels:
+      - "pangolin.resource.name=Lakekeeper"
+      - "pangolin.resource.domain=lakekeeper.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://lakekeeper:8181"
+      - "pangolin.resource.middlewares=tinyauth"

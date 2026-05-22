@@ -1,0 +1,37 @@
+# =============================================================================
+# Komodo Blueprint - Cloudflare R2 Storage
+# =============================================================================
+
+name: r2-storage
+description: Cloudflare R2 object storage with FUSE mounts for all pipelines
+server_tags:
+  - storage
+  - arm1-oci
+
+config:
+  compose_file: compose.yaml
+  secrets_file: secrets.env
+
+  # Pre-flight: Create mount directories
+  pre_deploy:
+    - mkdir -p /mnt/r2/{curriculum,embeddings,iceberg,exports}
+
+  # Health checks
+  health_checks:
+    - name: curriculum-mount
+      command: ls /mnt/r2/curriculum
+    - name: embeddings-mount
+      command: ls /mnt/r2/embeddings
+    - name: iceberg-mount
+      command: ls /mnt/r2/iceberg
+    - name: exports-mount
+      command: ls /mnt/r2/exports
+
+dependencies:
+  - name: cloudflare-r2-buckets
+    description: Create R2 buckets via Cloudflare dashboard or API
+    buckets:
+      - curriculum-data
+      - embeddings
+      - iceberg
+      - exports
