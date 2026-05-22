@@ -1,0 +1,41 @@
+# =============================================================================
+# NEWT - Pangolin Tunnel Agent
+# =============================================================================
+# Connects local services to Pangolin via WireGuard tunnel.
+#
+# USAGE:
+#   Development:  docker compose -f newt.compose.yaml up -d
+#   Production:   docker compose -f newt.compose.yaml -f newt.sidecar.yaml up -d
+#
+# PREREQUISITES:
+#   - Pangolin running and accessible
+#   - Newt site created in Pangolin UI
+#   - Credentials stored in Infisical (vault: dev-baile)
+# =============================================================================
+
+name: newt
+
+services:
+  newt:
+    image: fosrl/newt:latest
+    container_name: newt
+    restart: unless-stopped
+    environment:
+      PANGOLIN_ENDPOINT: ${PANGOLIN_ENDPOINT:-https://pangolin.cianfhoghlaim.ie}
+      NEWT_ID: ${NEWT_ID:-}
+      NEWT_SECRET: ${NEWT_SECRET:-}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      DOCKER_SOCKET: /var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - "komodo.skip=true"
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks:
+      - pangolin
+
+networks:
+  pangolin:
+    name: pangolin
+    external: true

@@ -1,0 +1,44 @@
+# =============================================================================
+# KOMODO SERVERS - Multi-Host Infrastructure
+# =============================================================================
+# Defines all Periphery agents in the distributed storage stack.
+# Each server connects outbound to Komodo Core at komodo.cianfhoghlaim.ie
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# OCI FREE TIER - Control Plane (arm1-oci)
+# -----------------------------------------------------------------------------
+# 4 ARM OCPUs, 24 GB RAM, 200 GB storage
+# Runs: Pangolin, Komodo, Infisical, Garage, Beszel, Dozzle, Qdrant, Pocket-ID
+# -----------------------------------------------------------------------------
+[[server]]
+name = "arm1-oci"
+description = "Oracle Cloud ARM - Control Plane"
+tags = ["location:oracle-london", "role:control-plane", "arch:arm64"]
+
+[server.config]
+# Empty address = Periphery connects outbound to Core (recommended for cloud servers)
+address = ""
+region = "uk-london-1"
+enabled = true
+passkey = "[[KOMODO_PASSKEY]]"
+
+# -----------------------------------------------------------------------------
+# MACBOOK M4 MAX - Primary Workloads & Analytics (bunchloch)
+# -----------------------------------------------------------------------------
+# ~14 cores, 48 GB RAM, local NVMe
+# Runs: Memgraph, FalkorDB, Graphiti, LanceDB, Cognee, Langfuse, MLflow, 
+#       LakeFS, Lakekeeper, OLake-UI, Convex, Scraping Stack (Crawl4AI), 
+#       ML Inference, Perplexica/Vane
+# -----------------------------------------------------------------------------
+[[server]]
+name = "bunchloch"
+description = "MacBook M4 Max - Primary Workloads"
+tags = ["location:local", "role:primary-workloads", "arch:arm64"]
+
+[server.config]
+# Empty address = Periphery connects outbound to Core (recommended)
+address = ""
+region = "local"
+enabled = true
+passkey = "[[KOMODO_PASSKEY]]"

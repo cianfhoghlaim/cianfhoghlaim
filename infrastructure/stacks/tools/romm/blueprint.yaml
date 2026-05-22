@@ -1,0 +1,10 @@
+public-resources:
+  romm:
+    name: "Romm"
+    full-domain: "romm.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "romm-main"
+        method: "http"
+        port: 8080

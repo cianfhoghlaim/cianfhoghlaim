@@ -1,0 +1,10 @@
+public-resources:
+  rybbit:
+    name: "Rybbit"
+    full-domain: "rybbit.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "rybbit-main"
+        method: "http"
+        port: 8080

@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.langfuse.name=Langfuse"
+      - "pangolin.public-resources.langfuse.full-domain=langfuse.cianfhoghlaim.ie"
+      - "pangolin.public-resources.langfuse.protocol=http"
+      - "pangolin.public-resources.langfuse.targets[0].method=http"
+      - "pangolin.public-resources.langfuse.targets[0].port=8080"

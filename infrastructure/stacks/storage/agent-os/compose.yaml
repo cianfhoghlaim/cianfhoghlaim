@@ -1,0 +1,238 @@
+# =============================================================================
+# AGENT-OS - Production Runtime for AI Agents
+# =============================================================================
+# Multi-service deployment for Agno AgentOS instances.
+#
+# Services:
+#   - oideachais-agentos: Irish Education (port 7772)
+#   - crypteolas-agentos: DeFi Protocol Analysis (port 7771)
+#   - browser-agentos: Web Automation (port 7773)
+#   - aleyum-agentos: Deep Research (port 7774)
+#
+# USAGE:
+#   Development:  docker compose --env-file ../../.env.local up -d
+#   Production:   locket exec --env-file secrets.env -- docker compose up -d
+#
+# PREREQUISITES:
+#   - PostgreSQL for session storage (optional, falls back to SQLite)
+#   - OpenAI/Anthropic API keys
+#   - Langfuse for observability (optional)
+# =============================================================================
+
+name: agent-os
+
+services:
+  # ---------------------------------------------------------------------------
+  # OIDEACHAIS AGENTOS - Irish Education & Curriculum
+  # ---------------------------------------------------------------------------
+  oideachais-agentos:
+    build:
+      context: ../../../sruth/oideachais
+      dockerfile: agent_os/Dockerfile
+    container_name: oideachais-agentos
+    restart: unless-stopped
+    ports:
+      - "${OIDEACHAIS_PORT:-7772}:7777"
+    environment:
+      # Service Identity
+      AGENT_OS_SERVICE_NAME: oideachais
+      AGENT_OS_PORT: 7777
+
+      # AI Models
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      AGNO_DEFAULT_MODEL: ${AGNO_DEFAULT_MODEL:-gpt-4o}
+      AGNO_CLAUDE_MODEL: ${AGNO_CLAUDE_MODEL:-claude-sonnet-4-20250514}
+
+      # Database
+      AGENT_OS_DB_URL: ${OIDEACHAIS_DB_URL:-sqlite:///./storage/oideachais.db}
+
+      # A2A Cross-Flow Communication
+      AGENT_OS_SECRET_KEY: ${AGENT_OS_SECRET_KEY}
+      CRYPTEOLAS_AGENT_OS_URL: http://crypteolas-agentos:7777
+      BROWSER_AGENT_OS_URL: http://browser-agentos:7777
+      ALEYUM_AGENT_OS_URL: http://aleyum-agentos:7777
+
+      # Observability
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-https://langfuse.cianfhoghlaim.ie}
+      AGNO_DEBUG: ${AGNO_DEBUG:-false}
+    volumes:
+      - oideachais-storage:/app/storage
+    networks:
+      - agent-os
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7777/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ---------------------------------------------------------------------------
+  # CRYPTEOLAS AGENTOS - DeFi Protocol Analysis
+  # ---------------------------------------------------------------------------
+  crypteolas-agentos:
+    build:
+      context: ../../../sruth/crypteolas
+      dockerfile: agent_os/Dockerfile
+    container_name: crypteolas-agentos
+    restart: unless-stopped
+    ports:
+      - "${CRYPTEOLAS_PORT:-7771}:7777"
+    environment:
+      # Service Identity
+      AGENT_OS_SERVICE_NAME: crypteolas
+      AGENT_OS_PORT: 7777
+
+      # AI Models
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      AGNO_DEFAULT_MODEL: ${AGNO_DEFAULT_MODEL:-gpt-4o}
+      AGNO_CLAUDE_MODEL: ${AGNO_CLAUDE_MODEL:-claude-sonnet-4-20250514}
+
+      # Database
+      AGENT_OS_DB_URL: ${CRYPTEOLAS_DB_URL:-sqlite:///./storage/crypteolas.db}
+
+      # x402 Payment Configuration
+      X402_ENABLED: ${X402_ENABLED:-true}
+      X402_PAY_TO_ADDRESS: ${X402_PAY_TO_ADDRESS}
+      X402_NETWORK: ${X402_NETWORK:-base}
+      X402_SKIP_VERIFICATION: ${X402_SKIP_VERIFICATION:-false}
+
+      # A2A Cross-Flow Communication
+      AGENT_OS_SECRET_KEY: ${AGENT_OS_SECRET_KEY}
+      OIDEACHAIS_AGENT_OS_URL: http://oideachais-agentos:7777
+      BROWSER_AGENT_OS_URL: http://browser-agentos:7777
+      ALEYUM_AGENT_OS_URL: http://aleyum-agentos:7777
+
+      # Observability
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-https://langfuse.cianfhoghlaim.ie}
+      AGNO_DEBUG: ${AGNO_DEBUG:-false}
+    volumes:
+      - crypteolas-storage:/app/storage
+    networks:
+      - agent-os
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7777/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ---------------------------------------------------------------------------
+  # BROWSER AGENTOS - Web Automation Orchestration
+  # ---------------------------------------------------------------------------
+  browser-agentos:
+    build:
+      context: ../../../sruth/browser
+      dockerfile: agent_os/Dockerfile
+    container_name: browser-agentos
+    restart: unless-stopped
+    ports:
+      - "${BROWSER_PORT:-7773}:7777"
+    environment:
+      # Service Identity
+      AGENT_OS_SERVICE_NAME: browser
+      AGENT_OS_PORT: 7777
+
+      # AI Models
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      AGNO_DEFAULT_MODEL: ${AGNO_DEFAULT_MODEL:-gpt-4o}
+      AGNO_CLAUDE_MODEL: ${AGNO_CLAUDE_MODEL:-claude-sonnet-4-20250514}
+
+      # Database
+      AGENT_OS_DB_URL: ${BROWSER_DB_URL:-sqlite:///./storage/browser.db}
+
+      # Browser Backend Configuration
+      BROWSERBASE_API_KEY: ${BROWSERBASE_API_KEY:-}
+      BROWSERBASE_PROJECT_ID: ${BROWSERBASE_PROJECT_ID:-}
+      STAGEHAND_ENABLED: ${STAGEHAND_ENABLED:-true}
+      CRAWL4AI_ENABLED: ${CRAWL4AI_ENABLED:-true}
+      SKYVERN_API_URL: ${SKYVERN_API_URL:-}
+      SKYVERN_API_KEY: ${SKYVERN_API_KEY:-}
+
+      # A2A Cross-Flow Communication
+      AGENT_OS_SECRET_KEY: ${AGENT_OS_SECRET_KEY}
+      OIDEACHAIS_AGENT_OS_URL: http://oideachais-agentos:7777
+      CRYPTEOLAS_AGENT_OS_URL: http://crypteolas-agentos:7777
+      ALEYUM_AGENT_OS_URL: http://aleyum-agentos:7777
+
+      # Observability
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-https://langfuse.cianfhoghlaim.ie}
+      AGNO_DEBUG: ${AGNO_DEBUG:-false}
+    volumes:
+      - browser-storage:/app/storage
+    networks:
+      - agent-os
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7777/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ---------------------------------------------------------------------------
+  # ALEYUM AGENTOS - Deep Research & Discovery
+  # ---------------------------------------------------------------------------
+  aleyum-agentos:
+    build:
+      context: ../../../sruth/aleyum
+      dockerfile: agent_os/Dockerfile
+    container_name: aleyum-agentos
+    restart: unless-stopped
+    ports:
+      - "${ALEYUM_PORT:-7774}:7777"
+    environment:
+      # Service Identity
+      AGENT_OS_SERVICE_NAME: aleyum
+      AGENT_OS_PORT: 7777
+
+      # AI Models
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      AGNO_DEFAULT_MODEL: ${AGNO_DEFAULT_MODEL:-gpt-4o}
+      AGNO_CLAUDE_MODEL: ${AGNO_CLAUDE_MODEL:-claude-sonnet-4-20250514}
+
+      # Database
+      AGENT_OS_DB_URL: ${ALEYUM_DB_URL:-sqlite:///./storage/aleyum.db}
+
+      # A2A Cross-Flow Communication
+      AGENT_OS_SECRET_KEY: ${AGENT_OS_SECRET_KEY}
+      OIDEACHAIS_AGENT_OS_URL: http://oideachais-agentos:7777
+      CRYPTEOLAS_AGENT_OS_URL: http://crypteolas-agentos:7777
+      BROWSER_AGENT_OS_URL: http://browser-agentos:7777
+
+      # Observability
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-https://langfuse.cianfhoghlaim.ie}
+      AGNO_DEBUG: ${AGNO_DEBUG:-false}
+    volumes:
+      - aleyum-storage:/app/storage
+    networks:
+      - agent-os
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7777/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  agent-os:
+    name: agent-os
+    driver: bridge
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  oideachais-storage:
+  crypteolas-storage:
+  browser-storage:
+  aleyum-storage:

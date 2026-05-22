@@ -1,0 +1,383 @@
+# =============================================================================
+# BROWSER - Unified Web Automation Stack (Patchright)
+# =============================================================================
+# Multi-backend browser automation with Patchright stealth browser grid.
+#
+# Architecture: Hunter-Gatherer-Operator Pattern
+#   - Skyvern (Hunter): Vision-based semantic navigation
+#   - Crawl4AI (Gatherer): High-throughput bulk extraction
+#   - Stagehand (Operator): AI-powered precision interactions
+#
+# Anti-Bot Features:
+#   - Patchright stealth Chromium (shared browser-grid)
+#   - Turnstile CAPTCHA solver
+#   - Session persistence
+#   - Magic mode anti-detection
+#
+# USAGE:
+#   Development:  docker compose up -d
+#   Production:   docker compose -f compose.yaml -f pangolin.yaml up -d
+#   With secrets: locket exec --env-file secrets.env -- docker compose up -d
+# =============================================================================
+
+name: browser
+
+# =============================================================================
+# SHARED CONFIGURATION ANCHORS
+# =============================================================================
+
+x-browser-env: &browser-env
+  # Self-hosted backend URLs
+  BROWSER_CDP_URL: ws://browser-grid:9222
+  BROWSER_SKYVERN_API_URL: http://skyvern:8000/api/v1
+  BROWSER_CRAWL4AI_URL: http://crawl4ai:11235
+  BROWSER_STAGEHAND_URL: http://stagehand-local:3100
+  BROWSER_SOLVER_URL: http://solver-service:5000/turnstile
+  # Paid fallback (optional)
+  BROWSER_BROWSERBASE_API_KEY: ${BROWSERBASE_API_KEY:-}
+  BROWSER_BROWSERBASE_PROJECT_ID: ${BROWSERBASE_PROJECT_ID:-}
+  BROWSER_FIRECRAWL_API_KEY: ${FIRECRAWL_API_KEY:-}
+
+x-llm-env: &llm-env
+  OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+  ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+  ZAI_API_KEY: ${ZAI_API_KEY:-}
+  GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+  LLM_PROVIDER: ${LLM_PROVIDER:-anthropic}
+
+services:
+  # ===========================================================================
+  # BROWSER GRID - Patchright Stealth Chromium (Shared by all services)
+  # ===========================================================================
+  browser-grid:
+    build:
+      context: ./browser-grid
+      dockerfile: Dockerfile
+    container_name: browser-grid
+    restart: unless-stopped
+    shm_size: '2gb'
+    cap_add:
+      - SYS_ADMIN
+    init: true
+    expose:
+      - "9222"
+    environment:
+      DISPLAY: ":99"
+      CHROME_FLAGS: "--disable-gpu --no-sandbox --disable-dev-shm-usage"
+    volumes:
+      - /dev/shm:/dev/shm
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:9222/json/version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - browser-net
+
+  # ===========================================================================
+  # TURNSTILE SOLVER - Cloudflare CAPTCHA solving
+  # ===========================================================================
+  solver-service:
+    image: theyka/turnstile-solver:latest
+    container_name: browser-solver
+    restart: unless-stopped
+    environment:
+      BROWSER_TYPE: chromium
+      HEADLESS: "true"
+    expose:
+      - "5000"
+    shm_size: '1gb'
+    networks:
+      - browser-net
+
+  # ===========================================================================
+  # SKYVERN DATABASE - PostgreSQL for task persistence
+  # ===========================================================================
+  skyvern-db:
+    image: postgres:16-alpine
+    container_name: browser-skyvern-db
+    restart: always
+    volumes:
+      - skyvern-postgres:/var/lib/postgresql/data
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_USER: skyvern
+      POSTGRES_PASSWORD: ${SKYVERN_DB_PASSWORD:-skyvern}
+      POSTGRES_DB: skyvern
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skyvern"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - browser-net
+
+  # ===========================================================================
+  # SKYVERN - Hunter Agent (Vision-based navigation)
+  # ===========================================================================
+  skyvern:
+    image: public.ecr.aws/skyvern/skyvern:latest
+    container_name: browser-skyvern
+    restart: on-failure
+    ports:
+      - "${SKYVERN_PORT:-8001}:8000"
+    environment:
+      <<: *llm-env
+      DATABASE_STRING: postgresql+psycopg://skyvern:${SKYVERN_DB_PASSWORD:-skyvern}@skyvern-db:5432/skyvern
+      BROWSER_TYPE: cdp-connect
+      BROWSER_REMOTE_DEBUGGING_URL: ws://browser-grid:9222/
+      ENABLE_OPENAI: ${ENABLE_OPENAI:-true}
+      ENABLE_ANTHROPIC: ${ENABLE_ANTHROPIC:-false}
+      ENABLE_CODE_BLOCK: "true"
+    volumes:
+      - skyvern-artifacts:/data/artifacts
+      - skyvern-videos:/data/videos
+    depends_on:
+      skyvern-db:
+        condition: service_healthy
+      browser-grid:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - browser-net
+
+  # ===========================================================================
+  # SKYVERN UI - Visual task management
+  # ===========================================================================
+  skyvern-ui:
+    image: public.ecr.aws/skyvern/skyvern-ui:latest
+    container_name: browser-skyvern-ui
+    restart: on-failure
+    ports:
+      - "${SKYVERN_UI_PORT:-8080}:8080"
+    environment:
+      VITE_WSS_BASE_URL: ws://localhost:8001/api/v1
+      VITE_API_BASE_URL: http://localhost:8001/api/v1
+      VITE_ARTIFACT_API_BASE_URL: http://localhost:9090
+    volumes:
+      - skyvern-artifacts:/data/artifacts
+      - skyvern-videos:/data/videos
+    depends_on:
+      skyvern:
+        condition: service_healthy
+    networks:
+      - browser-net
+
+  # ===========================================================================
+  # CRAWL4AI - Gatherer Agent (High-throughput extraction)
+  # ===========================================================================
+  crawl4ai:
+    image: unclecode/crawl4ai:latest
+    container_name: browser-crawl4ai
+    restart: unless-stopped
+    expose:
+      - "11235"
+    environment:
+      <<: *llm-env
+      MAX_CONCURRENT_TASKS: ${MAX_CONCURRENT_TASKS:-4}
+      CDP_URL: ws://browser-grid:9222
+      SOLVER_API_URL: http://solver-service:5000/turnstile
+    volumes:
+      - /dev/shm:/dev/shm
+      - crawl4ai-downloads:/downloads
+    depends_on:
+      - browser-grid
+      - solver-service
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:11235/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - browser-net
+
+  # ===========================================================================
+  # STAGEHAND LOCAL - Operator Agent (AI-powered interactions)
+  # ===========================================================================
+  stagehand-local:
+    build:
+      context: ./stagehand-server
+      dockerfile: Dockerfile
+    container_name: browser-stagehand
+    restart: unless-stopped
+    ports:
+      - "${STAGEHAND_PORT:-3100}:3100"
+    environment:
+      PORT: "3100"
+      HEADLESS: "${STAGEHAND_HEADLESS:-true}"
+      MAX_SESSIONS: "${STAGEHAND_MAX_SESSIONS:-10}"
+      SESSION_TTL_MS: "${STAGEHAND_SESSION_TTL:-300000}"
+      # LLM Models
+      DEFAULT_MODEL: "${STAGEHAND_MODEL:-glm-4.6}"
+      VISION_MODEL: "${STAGEHAND_VISION_MODEL:-glm-4.6v}"
+      AGENT_MODEL: "${STAGEHAND_AGENT_MODEL:-google/gemini-3-flash-preview}"
+      # LLM API Keys
+      <<: *llm-env
+      # Browserbase fallback
+      BROWSERBASE_API_KEY: ${BROWSERBASE_API_KEY:-}
+      BROWSERBASE_PROJECT_ID: ${BROWSERBASE_PROJECT_ID:-}
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - seccomp:unconfined
+    shm_size: '2gb'
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:3100/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    networks:
+      - browser-net
+
+  # ===========================================================================
+  # API - FastAPI Backend (Unified browser automation API)
+  # ===========================================================================
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: browser-api
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-8003}:8000"
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "8000"
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # Storage
+      DUCKDB_PATH: /app/storage/data/browser.duckdb
+      LANCEDB_PATH: /app/storage/data/scraped_vectors.lance
+      # Browser backends
+      <<: [*browser-env, *llm-env]
+      DEFAULT_BACKEND: ${DEFAULT_BACKEND:-crawl4ai}
+      FALLBACK_STRATEGY: ${FALLBACK_STRATEGY:-cost}
+      # Observability
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      DD_SERVICE: browser-api
+      DD_ENV: ${ENVIRONMENT:-production}
+    volumes:
+      - browser-data:/app/storage/data
+      - browser-screenshots:/app/storage/screenshots
+    depends_on:
+      browser-grid:
+        condition: service_healthy
+      crawl4ai:
+        condition: service_healthy
+      stagehand-local:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    networks:
+      - browser-net
+
+  # ===========================================================================
+  # MCP SERVER - Model Context Protocol exposure
+  # ===========================================================================
+  mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcp
+    container_name: browser-mcp
+    restart: unless-stopped
+    environment:
+      MCP_TRANSPORT: stdio
+      <<: [*browser-env, *llm-env]
+      LANCEDB_PATH: /app/storage/data/scraped_vectors.lance
+    volumes:
+      - browser-data:/app/storage/data
+      - browser-screenshots:/app/storage/screenshots
+    networks:
+      - browser-net
+
+  # ===========================================================================
+  # GARAGE - S3-compatible screenshot/artifact storage
+  # ===========================================================================
+  garage:
+    image: dxflrs/garage:v1.0.1
+    container_name: browser-garage
+    restart: unless-stopped
+    ports:
+      - "${GARAGE_S3_PORT:-3900}:3900"
+      - "${GARAGE_WEB_PORT:-3902}:3902"
+    expose:
+      - "3901"  # RPC (internal only)
+    environment:
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:-}
+      GARAGE_RPC_BIND_ADDR: "[::]:3901"
+      GARAGE_S3_API_BIND_ADDR: "[::]:3900"
+      GARAGE_S3_REGION: garage
+      GARAGE_ADMIN_API_BIND_ADDR: "[::]:3903"
+      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN:-}
+    volumes:
+      - garage-data:/var/lib/garage/data
+      - garage-meta:/var/lib/garage/meta
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:3903/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - browser-net
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  # Browser data
+  browser-data:
+    driver: local
+  browser-screenshots:
+    driver: local
+  # Skyvern
+  skyvern-postgres:
+    driver: local
+  skyvern-artifacts:
+    driver: local
+  skyvern-videos:
+    driver: local
+  # Crawl4AI
+  crawl4ai-downloads:
+    driver: local
+  # Garage S3
+  garage-data:
+    driver: local
+  garage-meta:
+    driver: local
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  browser-net:
+    driver: bridge

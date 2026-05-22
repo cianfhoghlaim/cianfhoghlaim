@@ -1,0 +1,18 @@
+# =============================================================================
+# MEMGRAPH - Pangolin Blueprint
+# =============================================================================
+
+public-resources:
+  memgraph-lab:
+    name: "Memgraph Lab"
+    full-domain: "memgraph.cianfhoghlaim.ie"
+    protocol: "http"
+    auth:
+      sso-enabled: true
+      sso-roles:
+        - Member
+    targets:
+      - site: "arm1-oci"
+        hostname: "memgraph-lab"
+        method: "http"
+        port: 3000

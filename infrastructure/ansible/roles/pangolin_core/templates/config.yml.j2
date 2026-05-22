@@ -1,0 +1,132 @@
+# =============================================================================
+# PANGOLIN CONFIGURATION
+# =============================================================================
+# Deployed by Ansible pangolin_core role
+# Domain: {{ pangolin_domain }}
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Application Settings
+# -----------------------------------------------------------------------------
+app:
+  dashboard_url: {{ pangolin_dashboard_url }}
+  log_level: info
+  save_logs: true
+  log_failed_attempts: true
+  telemetry:
+    anonymous_usage: false
+  notifications:
+    product_updates: true
+    new_releases: true
+
+# -----------------------------------------------------------------------------
+# Server Configuration
+# -----------------------------------------------------------------------------
+server:
+  external_port: 3000
+  internal_port: 3001
+  next_port: 3002
+  integration_port: 3003
+  internal_hostname: pangolin
+  resource_access_token_param: p_token
+  resource_session_request_param: p_session_request
+  cors:
+    origins:
+      - "{{ pangolin_dashboard_url }}"
+      - "https://api.{{ pangolin_domain }}"
+      - "{{ pangolin_auth_url }}"
+    methods:
+      - "GET"
+      - "POST"
+      - "PUT"
+      - "DELETE"
+      - "PATCH"
+    credentials: true
+  dashboard_session_length_hours: 720
+  resource_session_length_hours: 720
+
+# -----------------------------------------------------------------------------
+# Domain Configuration
+# -----------------------------------------------------------------------------
+domains:
+  primary:
+    base_domain: {{ pangolin_domain }}
+    cert_resolver: letsencrypt
+    prefer_wildcard_cert: true
+
+# -----------------------------------------------------------------------------
+# Traefik Integration
+# -----------------------------------------------------------------------------
+traefik:
+  http_entrypoint: web
+  https_entrypoint: websecure
+  cert_resolver: letsencrypt
+  prefer_wildcard_cert: true
+  additional_middlewares:
+    - "secure-headers@file"
+  certificates_path: /var/certificates
+  monitor_interval: 5000
+  dynamic_cert_config_path: /var/dynamic/cert_config.yml
+  dynamic_router_config_path: /var/dynamic/router_config.yml
+  site_types:
+    - newt
+    - wireguard
+    - local
+  file_mode: false
+
+# -----------------------------------------------------------------------------
+# Gerbil Tunnel Controller
+# -----------------------------------------------------------------------------
+gerbil:
+  base_endpoint: pangolin.{{ pangolin_domain }}
+  start_port: {{ pangolin_wireguard_port }}
+  use_subdomain: false
+  subnet_group: 10.0.0.0/8
+  block_size: 24
+  site_block_size: 26
+
+# -----------------------------------------------------------------------------
+# Organization Settings
+# -----------------------------------------------------------------------------
+orgs:
+  block_size: 24
+  subnet_group: 100.90.128.0/24
+
+# -----------------------------------------------------------------------------
+# Rate Limiting
+# -----------------------------------------------------------------------------
+rate_limits:
+  global:
+    window_minutes: 1
+    max_requests: 100
+  auth:
+    window_minutes: 1
+    max_requests: 10
+
+# -----------------------------------------------------------------------------
+# Feature Flags
+# -----------------------------------------------------------------------------
+flags:
+  require_email_verification: false
+  disable_user_create_org: false
+  allow_raw_resources: true
+  enable_integration_api: true
+  disable_local_sites: false
+  disable_basic_wireguard_sites: false
+  disable_config_managed_domains: false
+
+# -----------------------------------------------------------------------------
+# PostgreSQL Database Configuration
+# -----------------------------------------------------------------------------
+postgres:
+  connection_string: postgresql://pangolin:{{ pangolin_postgres_password }}@postgres:5432/pangolin
+
+# -----------------------------------------------------------------------------
+# DNS Configuration
+# -----------------------------------------------------------------------------
+dns:
+  nameservers:
+    - ns1.pangolin.net
+    - ns2.pangolin.net
+    - ns3.pangolin.net
+  cname_extension: cname.pangolin.net

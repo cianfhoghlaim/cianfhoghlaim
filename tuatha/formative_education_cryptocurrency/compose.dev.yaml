@@ -1,0 +1,241 @@
+# =============================================================================
+# CRYPTEOLAS - Development Environment
+# =============================================================================
+# Extends docker-compose.yaml for local crypto/finance pipeline development.
+#
+# USAGE:
+#   Development:  docker compose -f docker-compose.yaml -f docker-compose.dev.yml up
+# =============================================================================
+#
+# This dev overlay adds:
+#   - Source code volume mounts for hot-reload
+#   - Development command overrides
+#   - Debug logging enabled
+#   - Resource limits removed
+#   - Connection to shared bonneagar infrastructure
+# =============================================================================
+
+services:
+  # =============================================================================
+  # API Server - Development Mode with Hot Reload
+  # =============================================================================
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+      target: builder  # Use builder stage for dev
+    volumes:
+      # Mount source code for hot-reload
+      - ./api:/app/api:ro
+      - ./storage:/app/storage
+      - ./baml_src:/app/baml_src:ro
+      - ./tests:/app/tests:ro
+      # Persist data locally
+      - ./storage/duckdb:/data/duckdb
+      - ./storage/lance:/data/lance
+    environment:
+      ENVIRONMENT: development
+      LOG_LEVEL: DEBUG
+      # Storage paths
+      DUCKDB_PATH: /data/duckdb/crypteolas.duckdb
+      LANCEDB_URI: /data/lance
+      # Graph databases (connect to shared infrastructure)
+      MEMGRAPH_URL: bolt://memgraph:7687
+      GRAPHITI_URL: bolt://falkordb:6379
+      # Observability (connect to shared Langfuse)
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_HOST: http://langfuse:3000
+      # Cache
+      DRAGONFLY_URL: redis://dragonfly:6379
+      # LLM API Keys
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+    command: ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    # Remove resource limits for dev
+    deploy:
+      resources: {}
+
+  # =============================================================================
+  # TanStack UI - Development Mode with Hot Reload
+  # =============================================================================
+  ui:
+    build:
+      context: ./ui
+      dockerfile: ../docker/Dockerfile.ui
+      target: builder  # Use builder stage for dev
+    volumes:
+      # Mount source code for hot-reload
+      - ./ui/src:/app/src:ro
+      - ./ui/public:/app/public:ro
+    environment:
+      NODE_ENV: development
+      VITE_API_URL: http://api:8000
+      VITE_COPILOTKIT_RUNTIME_URL: http://api:8000/copilotkit
+    command: ["pnpm", "dev", "--host", "0.0.0.0"]
+    # Remove resource limits for dev
+    deploy:
+      resources: {}
+
+  # =============================================================================
+  # Dagster Webserver - Development Mode
+  # =============================================================================
+  dagster-webserver:
+    image: dagster/dagster-webserver:1.9.0
+    volumes:
+      # Mount source code for hot-reload
+      - ./dagster_assets:/opt/dagster/app:ro
+      # Persist data locally
+      - ./storage/duckdb:/data/duckdb
+      - ./storage/lance:/data/lance
+      - ./dagster_home:/opt/dagster/dagster_home
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+      LOG_LEVEL: DEBUG
+      # Storage paths
+      DUCKDB_PATH: /data/duckdb/crypteolas.duckdb
+      LANCEDB_URI: /data/lance
+    # Remove resource limits for dev
+    deploy:
+      resources: {}
+
+  # =============================================================================
+  # Dagster Daemon - Development Mode
+  # =============================================================================
+  dagster-daemon:
+    image: dagster/dagster-daemon:1.9.0
+    volumes:
+      # Mount source code for hot-reload
+      - ./dagster_assets:/opt/dagster/app:ro
+      # Persist Dagster home locally
+      - ./dagster_home:/opt/dagster/dagster_home
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+      LOG_LEVEL: DEBUG
+    # Remove resource limits for dev
+    deploy:
+      resources: {}
+
+  # =============================================================================
+  # Memgraph - Development Mode
+  # =============================================================================
+  memgraph:
+    ports:
+      # Expose Bolt protocol externally for Neo4j Browser/Memgraph Lab
+      - "7688:7687"
+      - "7445:7444"
+    environment:
+      # Enable query logging
+      MEMGRAPH_LOG_LEVEL: DEBUG
+    volumes:
+      # Persist data locally
+      - ./storage/memgraph:/var/lib/memgraph
+      - ./storage/memgraph-log:/var/log/memgraph
+
+  # =============================================================================
+  # Memgraph Lab - Development UI
+  # =============================================================================
+  memgraph-lab:
+    environment:
+      QUICK_CONNECT_MG_HOST: memgraph
+      QUICK_CONNECT_MG_PORT: 7687
+      # Enable features
+      MG_LAB_FEATURE_PASSWORD: "false"
+
+  # =============================================================================
+  # DragonflyDB - Development Mode
+  # =============================================================================
+  dragonfly:
+    ports:
+      # Expose externally for Redis Insight debugging
+      - "6380:6379"
+    environment:
+      # Enable verbose logging
+      DRAGONFLY_LOG_LEVEL: verbose
+
+  # =============================================================================
+  # Langfuse - Development Mode
+  # =============================================================================
+  langfuse:
+    ports:
+      - "3004:3000"
+    environment:
+      DATABASE_URL: postgresql://langfuse:langfuse@langfuse-db:5432/langfuse
+      NEXTAUTH_SECRET: ${LANGFUSE_NEXTAUTH_SECRET:-dev-secret-change-in-production}
+      NEXTAUTH_URL: http://localhost:3004
+      SALT: ${LANGFUSE_SALT:-dev-salt-change-in-production}
+      # Enable development features
+      LANGFUSE_ENABLE_DEBUG: "true"
+
+  # =============================================================================
+  # LanceDB Viewer - Development Tool
+  # =============================================================================
+  lance-viewer:
+    image: python:3.11-slim
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./storage/lance:/data/lance
+    working_dir: /data
+    command: >
+      sh -c "pip install streamlit lancedb pyarrow &&
+             streamlit run /app/viewer.py --server.port 8501 --server.address 0.0.0.0"
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+# Connect to bonneagar shared infrastructure network for:
+#   - FalkorDB (temporal graph database at bolt://falkordb:6379)
+#   - Langfuse (LLM observability at http://langfuse:3000)
+#   - Lakekeeper (Iceberg catalog)
+# =============================================================================
+networks:
+  crypteolas-network:
+    driver: bridge
+  bonneagar-network:
+    external: true
+    name: bonneagar_default
+
+# =============================================================================
+# DEVELOPMENT NOTES
+# =============================================================================
+#
+# Shared Infrastructure (via bonneagar_default network):
+#   - FalkorDB:       bolt://falkordb:6379 (temporal graph+vector)
+#   - Langfuse:       http://langfuse:3000 (LLM observability)
+#   - Lakekeeper:     http://lakekeeper:8181 (Iceberg REST catalog)
+#   - Other sruth APIs: See respective PORTS.md mappings
+#
+# To start shared services:
+#   cd bonneagar/storage/falkordb && docker compose up -d
+#   cd bonneagar/storage/langfuse && docker compose up -d
+#
+# Service Endpoints:
+#   - API:              localhost:8001
+#   - UI:               localhost:3001
+#   - Dagster UI:       localhost:3002
+#   - Memgraph Lab:     localhost:3003
+#   - Langfuse:         localhost:3004
+#   - Memgraph Bolt:    localhost:7688
+#   - DragonflyDB:      localhost:6380
+#   - LanceDB Viewer:   localhost:8501
+#
+# Development Workflow:
+#   1. Start base services: docker compose -f docker-compose.yaml up -d
+#   2. Apply dev overrides: docker compose -f docker-compose.yaml -f docker-compose.dev.yml up -d
+#   3. Access API docs at http://localhost:8001/docs
+#   4. Access Dagster at http://localhost:3002
+#   5. Explore graph at http://localhost:3003 (Memgraph Lab)
+#
+# Crypto/Finance Features:
+#   - Real-time price data via DLT sources
+#   - FIBO ontology for financial knowledge graphs
+#   - Temporal reasoning with Graphiti
+#   - RAG retrieval for financial documents
+#
+# Graph Database Access:
+#   - Neo4j Browser: Connect to bolt://localhost:7688
+#   - Memgraph Lab: http://localhost:3003
+#   - Cypher queries for graph exploration
+#

@@ -1,0 +1,112 @@
+# =============================================================================
+# CONFLUENT CLOUD - Configuration and Local Development Setup
+# =============================================================================
+# This stack provides:
+# - Local Kafka for development/testing (optional)
+# - Schema Registry proxy (optional)
+# - Kafka Connect for sinks (optional)
+#
+# PRODUCTION: Uses Confluent Cloud (managed) - no local containers needed
+# DEVELOPMENT: Optionally run local Kafka for testing
+#
+# Trial code for Confluent Cloud: CONFLUENTDEV1
+# =============================================================================
+
+name: confluent
+
+# =============================================================================
+# LOCAL DEVELOPMENT SETUP (Optional)
+# =============================================================================
+# Uncomment the services below for local Kafka development.
+# For production, use Confluent Cloud directly.
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # Kafka UI (for local development and Confluent Cloud monitoring)
+  # ---------------------------------------------------------------------------
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    restart: unless-stopped
+    environment:
+      # Local Kafka cluster (when running locally)
+      # KAFKA_CLUSTERS_0_NAME: local
+      # KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+
+      # Confluent Cloud cluster
+      KAFKA_CLUSTERS_0_NAME: confluent-cloud
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: ${CONFLUENT_BOOTSTRAP_SERVERS}
+      KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL: SASL_SSL
+      KAFKA_CLUSTERS_0_PROPERTIES_SASL_MECHANISM: PLAIN
+      KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG: >-
+        org.apache.kafka.common.security.plain.PlainLoginModule required
+        username="${CONFLUENT_API_KEY}"
+        password="${CONFLUENT_API_SECRET}";
+
+      # Schema Registry
+      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: ${CONFLUENT_SCHEMA_REGISTRY_URL}
+      KAFKA_CLUSTERS_0_SCHEMAREGISTRYAUTH_USERNAME: ${CONFLUENT_SR_API_KEY}
+      KAFKA_CLUSTERS_0_SCHEMAREGISTRYAUTH_PASSWORD: ${CONFLUENT_SR_API_SECRET}
+    ports:
+      - "9080:8080"
+    networks:
+      - confluent-network
+      - default
+
+  # ---------------------------------------------------------------------------
+  # Local Kafka (optional - for offline development)
+  # ---------------------------------------------------------------------------
+  # Uncomment for local development without Confluent Cloud
+  # ---------------------------------------------------------------------------
+  # zookeeper:
+  #   image: confluentinc/cp-zookeeper:7.6.0
+  #   container_name: zookeeper
+  #   environment:
+  #     ZOOKEEPER_CLIENT_PORT: 2181
+  #     ZOOKEEPER_TICK_TIME: 2000
+  #   networks:
+  #     - confluent-network
+  #
+  # kafka:
+  #   image: confluentinc/cp-kafka:7.6.0
+  #   container_name: kafka
+  #   depends_on:
+  #     - zookeeper
+  #   environment:
+  #     KAFKA_BROKER_ID: 1
+  #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #     KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+  #     KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+  #     KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+  #     KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+  #     KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+  #   ports:
+  #     - "9092:9092"
+  #   networks:
+  #     - confluent-network
+  #
+  # schema-registry:
+  #   image: confluentinc/cp-schema-registry:7.6.0
+  #   container_name: schema-registry
+  #   depends_on:
+  #     - kafka
+  #   environment:
+  #     SCHEMA_REGISTRY_HOST_NAME: schema-registry
+  #     SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka:29092
+  #     SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+  #   ports:
+  #     - "8081:8081"
+  #   networks:
+  #     - confluent-network
+
+networks:
+  confluent-network:
+    name: confluent-network
+    driver: bridge
+  default:
+    external: true
+    name: pangolin-network

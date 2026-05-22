@@ -1,0 +1,10 @@
+public-resources:
+  coder:
+    name: "Coder"
+    full-domain: "coder.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "coder-main"
+        method: "http"
+        port: 8080

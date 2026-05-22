@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.presenton.name=Presenton"
+      - "pangolin.public-resources.presenton.full-domain=presenton.cianfhoghlaim.ie"
+      - "pangolin.public-resources.presenton.protocol=http"
+      - "pangolin.public-resources.presenton.targets[0].method=http"
+      - "pangolin.public-resources.presenton.targets[0].port=8080"

@@ -1,0 +1,29 @@
+services:
+  backend:
+    image: ghcr.io/leonmuscoden/letterfeed-backend:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - letterfeed_data:/data
+    networks:
+      - letterfeed_network
+
+  frontend:
+    image: ghcr.io/leonmuscoden/letterfeed-frontend:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - letterfeed_network
+
+volumes:
+  letterfeed_data:
+
+networks:
+  letterfeed_network:
+    driver: bridge

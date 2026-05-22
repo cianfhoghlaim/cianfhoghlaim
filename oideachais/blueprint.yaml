@@ -1,0 +1,37 @@
+# =============================================================================
+# OIDEACHAIS - Pangolin Blueprint
+# =============================================================================
+# Routes traffic to Celtic Education Platform via Pangolin/Newt
+# Domain: oideachais.cianfhoghlaim.ie
+#
+# Services:
+#   - API: FastAPI backend with AG-UI streaming
+#   - Frontend: TanStack Start web application
+# =============================================================================
+
+public-resources:
+  # ---------------------------------------------------------------------------
+  # API - FastAPI Backend
+  # ---------------------------------------------------------------------------
+  oideachais-api:
+    name: "Oideachais API"
+    full-domain: "api.oideachais.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "cax41-hetzner"
+        hostname: "oideachais-api"
+        method: "http"
+        port: 8000
+
+  # ---------------------------------------------------------------------------
+  # Frontend - Web Application
+  # ---------------------------------------------------------------------------
+  oideachais:
+    name: "Oideachais"
+    full-domain: "oideachais.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "cax41-hetzner"
+        hostname: "oideachais-frontend"
+        method: "http"
+        port: 3000

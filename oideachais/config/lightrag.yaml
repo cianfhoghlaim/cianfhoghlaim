@@ -1,0 +1,87 @@
+# LightRAG Configuration for Oideachais Curriculum Pipeline
+# Integrates with existing Memgraph and LanceDB infrastructure
+
+lightrag:
+  # Storage directory for LightRAG data
+  working_dir: ${OIDEACHAIS_DATA_DIR:-./storage/data}/lightrag
+
+  # Graph storage backend - reuse existing Memgraph
+  graph_storage: memgraph
+  memgraph:
+    uri: ${MEMGRAPH_URI:-bolt://localhost:7687}
+    username: ${MEMGRAPH_USER:-}
+    password: ${MEMGRAPH_PASSWORD:-}
+
+  # Vector storage backend - reuse existing LanceDB
+  vector_storage: lancedb
+  lancedb:
+    uri: ${LANCEDB_URI:-./storage/data/lancedb}
+
+  # LLM configuration via LiteLLM
+  llm:
+    provider: litellm
+    model: ${LLM_MODEL:-gpt-4o-mini}
+    temperature: 0.0
+    max_tokens: 4096
+    timeout: ${LLM_TIMEOUT:-120}
+
+  # Embedding configuration
+  embedding:
+    model: ${EMBEDDING_MODEL:-text-embedding-3-small}
+    batch_size: 100  # Per CLAUDE.md requirements
+
+  # Chunking configuration
+  chunking:
+    chunk_size: 1000
+    chunk_overlap: 100
+    # Use semantic chunking for curriculum content
+    semantic: true
+
+  # Entity extraction
+  entities:
+    types:
+      - Subject
+      - Strand
+      - StrandUnit
+      - LearningOutcome
+      - Skill
+      - Concept
+      - Topic
+      - Level
+      - ExamPaper
+      - MarkingScheme
+
+  # Query configuration
+  query:
+    default_mode: hybrid  # naive, local, global, hybrid
+    top_k: 10
+    cosine_threshold: 0.5
+    enable_reranking: true
+
+  # Citation tracking for academic integrity
+  citations:
+    enabled: true
+    include_source_ids: true
+    max_source_ids_per_entity: 5
+
+# Curriculum-specific settings
+curriculum:
+  # Subjects to index
+  subjects:
+    - Irish
+    - Mathematics
+    - English
+    - Science
+    - History
+    - Geography
+
+  # Education levels
+  levels:
+    - Junior Cycle
+    - Leaving Certificate
+    - Primary
+
+  # Languages
+  languages:
+    - en  # English
+    - ga  # Irish

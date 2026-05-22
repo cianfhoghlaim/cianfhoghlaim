@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.MCPJungle.name=Mcpjungle"
+      - "pangolin.public-resources.MCPJungle.full-domain=MCPJungle.cianfhoghlaim.ie"
+      - "pangolin.public-resources.MCPJungle.protocol=http"
+      - "pangolin.public-resources.MCPJungle.targets[0].method=http"
+      - "pangolin.public-resources.MCPJungle.targets[0].port=8080"

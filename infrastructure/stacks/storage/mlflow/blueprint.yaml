@@ -1,0 +1,20 @@
+# =============================================================================
+# MLFLOW - Pangolin Blueprint
+# =============================================================================
+# Defines public routing for MLflow via Pangolin/Newt.
+# =============================================================================
+
+public-resources:
+  mlflow:
+    name: "MLflow"
+    full-domain: "mlflow.cianfhoghlaim.ie"
+    protocol: "http"
+    auth:
+      sso-enabled: true
+      sso-roles:
+        - Member
+    targets:
+      - site: "arm1-oci"
+        hostname: "mlflow-server"
+        method: "http"
+        port: 5000

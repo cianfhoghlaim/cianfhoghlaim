@@ -1,0 +1,10 @@
+public-resources:
+  blinko:
+    name: "Blinko"
+    full-domain: "blinko.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "blinko-main"
+        method: "http"
+        port: 8080

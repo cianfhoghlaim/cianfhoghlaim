@@ -1,0 +1,38 @@
+# =============================================================================
+# LANGFUSE STACK
+# =============================================================================
+# LLM tracing and observability platform.
+# Domain: langfuse.cianfhoghlaim.ie
+# Server: arm1-oci
+# =============================================================================
+
+[[stack]]
+name = "langfuse"
+description = "LLM tracing and observability platform"
+tags = ["host:arm1-oci", "tier:observability", "type:llm", "domain:langfuse.cianfhoghlaim.ie"]
+
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/storage/langfuse"
+file_paths = ["compose.yaml", "pangolin.yaml", "sidecar.yaml"]
+environment = """
+# Service Configuration
+LANGFUSE_DOMAIN=langfuse.cianfhoghlaim.ie
+LANGFUSE_NAME=Langfuse
+LANGFUSE_PORT=3000
+
+# Database (PostgreSQL)
+DATABASE_URL=postgresql://langfuse:${LANGFUSE_DB_PASSWORD:-langfuse}@postgres:5432/langfuse
+
+# NextAuth Configuration
+NEXTAUTH_SECRET=${LANGFUSE_NEXTAUTH_SECRET:-your-secret-here}
+NEXTAUTH_URL=https://langfuse.cianfhoghlaim.ie
+SALT=${LANGFUSE_SALT:-your-salt-here}
+
+# Environment
+ENVIRONMENT=production
+
+# Infisical
+INFISICAL_HOST=${INFISICAL_HOST:-http://132.145.27.89:8080}
+LOCKET_MODE=watch
+"""

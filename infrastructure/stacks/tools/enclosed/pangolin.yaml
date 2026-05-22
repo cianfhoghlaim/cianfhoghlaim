@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.enclosed.name=Enclosed"
+      - "pangolin.public-resources.enclosed.full-domain=enclosed.cianfhoghlaim.ie"
+      - "pangolin.public-resources.enclosed.protocol=http"
+      - "pangolin.public-resources.enclosed.targets[0].method=http"
+      - "pangolin.public-resources.enclosed.targets[0].port=8080"

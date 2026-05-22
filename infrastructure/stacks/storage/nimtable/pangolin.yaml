@@ -1,0 +1,9 @@
+# Pangolin auto-discovery labels for Nimtable
+# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
+services:
+  nimtable:
+    labels:
+      - "pangolin.resource.name=Nimtable"
+      - "pangolin.resource.domain=nimtable.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://nimtable:3000"
+      - "pangolin.resource.middlewares=tinyauth"

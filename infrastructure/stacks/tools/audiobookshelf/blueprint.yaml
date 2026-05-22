@@ -1,0 +1,10 @@
+public-resources:
+  audiobookshelf:
+    name: "Audiobookshelf"
+    full-domain: "audiobookshelf.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "audiobookshelf-main"
+        method: "http"
+        port: 8080

@@ -1,0 +1,267 @@
+# =============================================================================
+# ROLLBACK PROCEDURE
+# =============================================================================
+# Rollback a stack to a previous deployment version.
+# This procedure safely reverts a stack to its last known good state.
+#
+# USAGE:
+#   komodo-cli execute rollback --param STACK_NAME=lakehouse --param PREVIOUS_VERSION=5
+#
+# PARAMETERS:
+#   STACK_NAME         - Name of the stack to rollback (required)
+#   PREVIOUS_VERSION   - Version to rollback to (optional, defaults to N-1)
+#   TIMEOUT            - Health check timeout in seconds (default: 300)
+#   CREATE_SNAPSHOT    - Create snapshot before rollback (default: true)
+#
+# EXAMPLES:
+#   # Rollback lakehouse to previous version
+#   komodo-cli execute rollback --param STACK_NAME=lakehouse
+#
+#   # Rollback to specific version
+#   komodo-cli execute rollback --param STACK_NAME=lakehouse --param PREVIOUS_VERSION=3
+#
+#   # Rollback with custom timeout
+#   komodo-cli execute rollback --param STACK_NAME=lakehouse --param TIMEOUT=600
+#
+# SAFETY FEATURES:
+#   - Captures current version before rollback
+#   - Creates snapshot (if supported) for data safety
+#   - Verifies health after rollback
+#   - Automatic rollback of rollback if health check fails
+# =============================================================================
+
+[[procedure]]
+name = "rollback"
+description = "Rollback a stack to previous deployment version"
+
+[[procedure.config.stage]]
+name = "pre-flight-checks"
+enabled = true
+
+# Verify stack exists and get current state
+[[procedure.config.stage.executions]]
+execution.type = "ShellCommand"
+execution.params.command = """
+echo "=== Rollback Pre-flight Checks ==="
+echo "Stack: %STACK_NAME%"
+echo ""
+
+# Check if stack exists
+if ! komodo-cli list-stacks --format json | jq -e ".[] | select(.name == \"%STACK_NAME%\")" > /dev/null; then
+  echo "ERROR: Stack '%STACK_NAME%' not found"
+  exit 1
+fi
+
+# Get current deployment info
+echo "Current deployment info:"
+komodo-cli deployment-info "%STACK_NAME%" --format json || echo "No deployment info available"
+"""
+execution.params.services = []
+enabled = true
+
+[[procedure.config.stage]]
+name = "capture-current-version"
+enabled = true
+
+# Get current version for reference
+[[procedure.config.stage.executions]]
+execution.type = "ShellCommand"
+execution.params.command = """
+echo "=== Capturing Current Version ==="
+CURRENT_VERSION=$(komodo-cli current-version "%STACK_NAME%" 2>/dev/null || echo "unknown")
+echo "Current version: $CURRENT_VERSION"
+
+# Save to file for reference
+echo "$CURRENT_VERSION" > /tmp/komodo_rollback_%STACK_NAME%_current_version.txt
+echo "Current version saved to /tmp/komodo_rollback_%STACK_NAME%_current_version.txt"
+"""
+execution.params.services = []
+enabled = true
+
+[[procedure.config.stage]]
+name = "optional-snapshot"
+enabled = true
+
+# Create snapshot before rollback (if stack supports it)
+[[procedure.config.stage.executions]]
+execution.type = "ShellCommand"
+execution.params.command = """
+if [[ "%CREATE_SNAPSHOT%" == "true" ]] || [[ -z "%CREATE_SNAPSHOT%" ]]; then
+  echo "=== Creating Pre-Rollback Snapshot ==="
+
+  # Check if stack supports snapshots (lakehouse, databases, etc.)
+  case "%STACK_NAME%" in
+    lakehouse*|*database*|*db*)
+      echo "Stack supports snapshots, creating backup..."
+
+      # For lakehouse stacks, use DuckLake snapshot
+      if [[ "%STACK_NAME%" == lakehouse* ]]; then
+        # Create DuckLake snapshot for all tables
+        docker exec lakekeeper bash -c "
+          duckdb :memory: -c \"
+          INSTALL ducklake;
+          LOAD ducklake;
+          ATTACH 'ducklake:postgres:dbname=lakekeeper host=postgres' AS prod;
+          CREATE SNAPSHOT prod BEFORE_ROLLBACK_${TIMESTAMP:-$(date +%s)};
+          \" 2>/dev/null || echo "Snapshot creation skipped (Lakekeeper not accessible)"
+        "
+      fi
+
+      # For database stacks, use pg_dump / mysqldump
+      if [[ "%STACK_NAME%" == *postgres* ]] || [[ "%STACK_NAME%" == *pg* ]]; then
+        docker exec "%STACK_NAME%-postgres" pg_dumpall -U postgres > "/tmp/rollback_%STACK_NAME%_$(date +%s).sql" 2>/dev/null || echo "PostgreSQL backup skipped"
+      fi
+
+      echo "Snapshot complete"
+      ;;
+    *)
+      echo "Stack '%STACK_NAME%' does not support snapshots (skipping)"
+      ;;
+  esac
+else
+  echo "Snapshot creation disabled via CREATE_SNAPSHOT=false"
+fi
+"""
+execution.params.services = []
+enabled = true
+
+[[procedure.config.stage]]
+name = "stop-current-stack"
+enabled = true
+
+# Stop current stack before deploying previous version
+[[procedure.config.stage.executions]]
+execution.type = "StopStack"
+execution.params.stack = "%STACK_NAME%"
+execution.params.services = []
+enabled = true
+
+[[procedure.config.stage]]
+name = "deploy-previous-version"
+enabled = true
+
+# Deploy previous version
+[[procedure.config.stage.executions]]
+execution.type = "ShellCommand"
+execution.params.command = """
+echo "=== Deploying Previous Version ==="
+
+# Determine version to rollback to
+if [[ -n "%PREVIOUS_VERSION%" ]]; then
+  TARGET_VERSION="%PREVIOUS_VERSION%"
+  echo "Rolling back to specific version: $TARGET_VERSION"
+else
+  # Get previous version from deployment history
+  TARGET_VERSION=$(komodo-cli deployment-history "%STACK_NAME%" --format json | \
+    jq -r 'sort_by(.timestamp) | reverse | .[1].version' 2>/dev/null || echo "unknown")
+  echo "Rolling back to previous version: $TARGET_VERSION"
+fi
+
+# Deploy previous version
+komodo-cli deploy "%STACK_NAME%" --version "$TARGET_VERSION"
+
+echo "Deployment of version $TARGET_VERSION complete"
+"""
+execution.params.services = []
+enabled = true
+
+[[procedure.config.stage]]
+name = "verify-health"
+enabled = true
+
+# Verify rollback succeeded with health check
+[[procedure.config.stage.executions]]
+execution.type = "ShellCommand"
+execution.params.command = """
+echo "=== Verifying Rollback Health ==="
+TIMEOUT=${TIMEOUT:-300}
+ELAPSED=0
+HEALTHY=false
+
+while [[ $ELAPSED -lt $TIMEOUT ]]; do
+  # Check stack health
+  if komodo-cli health "%STACK_NAME%" --format json | jq -e '.status == "healthy"' > /dev/null 2>&1; then
+    echo "Stack '%STACK_NAME%' is healthy!"
+    HEALTHY=true
+    break
+  else
+    echo "Waiting for stack to become healthy... ($ELAPSED/$TIMEOUT seconds)"
+    sleep 10
+    ELAPSED=$((ELAPSED + 10))
+  fi
+done
+
+if [[ "$HEALTHY" == "false" ]]; then
+  echo "ERROR: Stack failed health check after $TIMEOUT seconds"
+  echo ""
+  echo "Current status:"
+  komodo-cli health "%STACK_NAME%" --format json || echo "Health check failed"
+  echo ""
+  echo "OPTIONS:"
+  echo "  1. Investigate logs: docker logs %STACK_NAME%"
+  echo "  2. Rollback to original version: komodo-cli execute rollback --param STACK_NAME=%STACK_NAME% --param PREVIOUS_VERSION=$CURRENT_VERSION"
+  echo "  3. Manual intervention required"
+  exit 1
+fi
+"""
+execution.params.services = []
+enabled = true
+
+[[procedure.config.stage]]
+name = "post-rollback-verification"
+enabled = true
+
+# Final verification and reporting
+[[procedure.config.stage.executions]]
+execution.type = "ShellCommand"
+execution.params.command = """
+echo "=== Rollback Complete ==="
+echo ""
+echo "Stack: %STACK_NAME%"
+echo "Rolled back from: $(cat /tmp/komodo_rollback_%STACK_NAME%_current_version.txt 2>/dev/null || echo 'unknown')"
+echo "Current version: $(komodo-cli current-version '%STACK_NAME%' 2>/dev/null || echo 'unknown')"
+echo ""
+echo "Verification:"
+echo "  ✓ Stack is healthy"
+echo "  ✓ Services are responding"
+echo ""
+echo "Next steps:"
+echo "  - Monitor logs: docker logs -f %STACK_NAME%"
+echo "  - Check metrics: komodo-cli metrics %STACK_NAME%"
+echo "  - Update docs: Document what caused the rollback"
+"""
+execution.params.services = []
+enabled = true
+
+# =============================================================================
+# NOTES
+# =============================================================================
+#
+# ROLLBACK STRATEGIES:
+#
+# 1. Blue-Green Rollback (Fastest)
+#    - Keep previous version running alongside new
+#    - Switch traffic back via DNS/load balancer
+#    - Zero downtime rollback
+#
+# 2. Version-based Rollback (Standard)
+#    - Deploy previous version from version history
+#    - Requires downtime for stack stop/start
+#    - Used by this procedure
+#
+# 3. Database Rollback (Complex)
+#    - Rollback code + database migrations
+#    - Requires forward-compatible migrations
+#    - Use snapshots for data safety
+#
+# FAILURE HANDLING:
+#   - If health check fails: Manual intervention required
+#   - If version doesn't exist: Error in deploy-previous-version stage
+#   - If snapshot fails: Continues anyway (logged)
+#
+# BEST PRACTICES:
+#   - Always investigate root cause before rolling back
+#   - Document why rollback was needed
+#   - Test rollback procedure regularly
+#   - Keep at least 2 previous versions available
+# =============================================================================

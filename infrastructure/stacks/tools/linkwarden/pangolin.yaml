@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.linkwarden.name=Linkwarden"
+      - "pangolin.public-resources.linkwarden.full-domain=linkwarden.cianfhoghlaim.ie"
+      - "pangolin.public-resources.linkwarden.protocol=http"
+      - "pangolin.public-resources.linkwarden.targets[0].method=http"
+      - "pangolin.public-resources.linkwarden.targets[0].port=8080"

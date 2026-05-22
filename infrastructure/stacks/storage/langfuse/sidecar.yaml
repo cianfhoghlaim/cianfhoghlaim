@@ -1,0 +1,94 @@
+# =============================================================================
+# LANGFUSE - Locket Sidecar Configuration
+# =============================================================================
+# Use this when you need file-based secrets or hot-reloading.
+#
+# USAGE:
+#   docker compose -f compose.yaml -f sidecar.yaml up -d
+#
+# This adds the Locket sidecar and configures langfuse-web to wait for it.
+# Secrets are written to /run/secrets/locket as files.
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # LOCKET SIDECAR - Secret Injection
+  # ---------------------------------------------------------------------------
+  locket:
+    image: ghcr.io/bpbradley/locket:infisical
+    container_name: langfuse-locket
+    restart: unless-stopped
+    user: "65532:65532"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    command:
+      - "--provider=infisical"
+      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-url=$${INFISICAL_URL:-http://host.docker.internal:8081}"
+      - "--infisical-default-environment=$${INFISICAL_ENVIRONMENT:-dev}"
+      - "--infisical-default-project-id=$${INFISICAL_PROJECT_ID:-project-id}
+      - "--connect.host=${
+      - "--map=/templates:/run/secrets/locket"
+      - "--mode=${LOCKET_MODE:-watch}"
+    secrets:
+      - infisical_secret
+    volumes:
+      - ./secrets.env:/templates/secrets.env:ro
+      - langfuse-secrets:/run/secrets/locket
+    healthcheck:
+      test: ["CMD", "/locket", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - langfuse
+
+  # ---------------------------------------------------------------------------
+  # Override langfuse-web to depend on locket and use file-based secrets
+  # ---------------------------------------------------------------------------
+  langfuse-web:
+    depends_on:
+      locket:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    volumes:
+      - langfuse-secrets:/run/secrets/locket:ro
+      # Override with file-based secrets (if app supports _FILE vars)
+      # For Langfuse, we still use env vars but could use files for certs
+      NEXTAUTH_SECRET_FILE: /run/secrets/locket/nextauth_secret
+      ENCRYPTION_KEY_FILE: /run/secrets/locket/encryption_key
+
+  # ---------------------------------------------------------------------------
+  # Override langfuse-worker similarly
+  # ---------------------------------------------------------------------------
+  langfuse-worker:
+    depends_on:
+      locket:
+        condition: service_healthy
+      langfuse-web:
+        condition: service_healthy
+    volumes:
+      - langfuse-secrets:/run/secrets/locket:ro
+
+secrets:
+  infisical_secret:
+    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+
+volumes:
+  langfuse-secrets:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=700

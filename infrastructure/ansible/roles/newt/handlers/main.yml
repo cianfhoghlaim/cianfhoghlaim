@@ -1,0 +1,11 @@
+---
+# =============================================================================
+# NEWT ROLE - Handlers
+# =============================================================================
+
+- name: Restart site services
+  ansible.builtin.shell: |
+    cd {{ newt_base_dir }}
+    docker compose down
+    docker compose up -d
+  listen: Restart site services
