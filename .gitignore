@@ -5,6 +5,7 @@ oideachas/lesson_plans/teaching_practice_2/1_administration_management/school_po
 node_modules/
 instagram_output/
 stedding/
+.dlt
 
 .gemini
 .DS_Store
@@ -214,3 +215,4 @@ sruth/oideachais/pipelines/education/
 sruth/oideachais/pipelines/filesystem/
 sruth/web/dashboard/
 sruth/meaisínfhoghlaim/language/source_repos_clarin_uk/pylaia/
+opencode.json
