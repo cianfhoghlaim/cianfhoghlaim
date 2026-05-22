@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.LetterFeed.name=Letterfeed"
+      - "pangolin.public-resources.LetterFeed.full-domain=LetterFeed.cianfhoghlaim.ie"
+      - "pangolin.public-resources.LetterFeed.protocol=http"
+      - "pangolin.public-resources.LetterFeed.targets[0].method=http"
+      - "pangolin.public-resources.LetterFeed.targets[0].port=8080"

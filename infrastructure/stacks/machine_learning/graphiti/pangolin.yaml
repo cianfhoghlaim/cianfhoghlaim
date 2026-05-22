@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.graphiti.name=Graphiti"
+      - "pangolin.public-resources.graphiti.full-domain=graphiti.cianfhoghlaim.ie"
+      - "pangolin.public-resources.graphiti.protocol=http"
+      - "pangolin.public-resources.graphiti.targets[0].method=http"
+      - "pangolin.public-resources.graphiti.targets[0].port=8080"

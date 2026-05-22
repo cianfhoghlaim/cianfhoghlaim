@@ -1,0 +1,73 @@
+# =============================================================================
+# BROWSER STACK - Pangolin Blueprint
+# =============================================================================
+# Defines public routing for Browser automation services via Pangolin/Newt.
+#
+# Services exposed:
+#   - browser.cianfhoghlaim.ie     -> API (port 8000)
+#   - stagehand.cianfhoghlaim.ie   -> Stagehand (port 3100)
+#   - skyvern.cianfhoghlaim.ie     -> Skyvern API (port 8000)
+#   - skyvern-ui.cianfhoghlaim.ie  -> Skyvern UI (port 8080)
+#
+# LOADING:
+#   Via Newt CLI:     newt --blueprint-file blueprint.yaml
+#   Via directory:    Place in /opt/newt/blueprints/
+#   Via sync script:  ./scripts/sync-blueprints.sh
+# =============================================================================
+
+public-resources:
+  browser-api:
+    name: "Browser API"
+    full-domain: "browser.cianfhoghlaim.ie"
+    protocol: "http"
+    auth:
+      sso-enabled: true
+      sso-roles:
+        - Member
+    targets:
+      - site: "arm1-oci"
+        hostname: "browser-api"
+        method: "http"
+        port: 8000
+
+  stagehand:
+    name: "Stagehand"
+    full-domain: "stagehand.cianfhoghlaim.ie"
+    protocol: "http"
+    auth:
+      sso-enabled: true
+      sso-roles:
+        - Member
+    targets:
+      - site: "arm1-oci"
+        hostname: "browser-stagehand"
+        method: "http"
+        port: 3100
+
+  skyvern:
+    name: "Skyvern"
+    full-domain: "skyvern.cianfhoghlaim.ie"
+    protocol: "http"
+    auth:
+      sso-enabled: true
+      sso-roles:
+        - Member
+    targets:
+      - site: "arm1-oci"
+        hostname: "browser-skyvern"
+        method: "http"
+        port: 8000
+
+  skyvern-ui:
+    name: "Skyvern UI"
+    full-domain: "skyvern-ui.cianfhoghlaim.ie"
+    protocol: "http"
+    auth:
+      sso-enabled: true
+      sso-roles:
+        - Member
+    targets:
+      - site: "arm1-oci"
+        hostname: "browser-skyvern-ui"
+        method: "http"
+        port: 8080

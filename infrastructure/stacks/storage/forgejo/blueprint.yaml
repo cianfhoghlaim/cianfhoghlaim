@@ -1,0 +1,26 @@
+# =============================================================================
+# FORGEJO - Pangolin Blueprint
+# =============================================================================
+# Routes traffic to Forgejo git server via Pangolin/Newt
+# NOTE: No auth section - Forgejo handles its own authentication
+
+public-resources:
+  forgejo:
+    name: "Forgejo"
+    full-domain: "git.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "forgejo"
+        method: "http"
+        port: 3000
+
+  # SSH access for git operations (TCP - no auth, no method field)
+  forgejo-ssh:
+    name: "Forgejo SSH"
+    protocol: "tcp"
+    proxy-port: 2222
+    targets:
+      - site: "arm1-oci"
+        hostname: "forgejo"
+        port: 2222

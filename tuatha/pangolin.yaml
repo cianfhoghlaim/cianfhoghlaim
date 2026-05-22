@@ -1,0 +1,35 @@
+# Pangolin auto-discovery labels for Tuath
+# Include with: docker compose -f docker-compose.yaml -f pangolin.yaml up -d
+services:
+  # API server - protected with TinyAuth + rate limiting
+  api:
+    labels:
+      - "pangolin.resource.name=Tuath API"
+      - "pangolin.resource.domain=tuath-api.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://tuath-api:8000"
+      - "pangolin.resource.middlewares=tinyauth,rate-limit-api"
+
+  # Game UI - public access with rate limiting
+  game:
+    labels:
+      - "pangolin.public-resources.tuath-game.name=Tuath Game"
+      - "pangolin.public-resources.tuath-game.full-domain=tuath.cianfhoghlaim.ie"
+      - "pangolin.public-resources.tuath-game.protocol=http"
+      - "pangolin.public-resources.tuath-game.targets[0].method=http"
+      - "pangolin.public-resources.tuath-game.targets[0].port=8080"
+
+  # TanStack UI - protected with TinyAuth
+  ui:
+    labels:
+      - "pangolin.resource.name=Tuath UI"
+      - "pangolin.resource.domain=tuath-ui.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://tuath-ui:3000"
+      - "pangolin.resource.middlewares=tinyauth"
+
+  # Dagster webserver - protected with TinyAuth
+  dagster-webserver:
+    labels:
+      - "pangolin.resource.name=Tuath Dagster"
+      - "pangolin.resource.domain=tuath-dagster.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://tuath-dagster-webserver:3000"
+      - "pangolin.resource.middlewares=tinyauth"

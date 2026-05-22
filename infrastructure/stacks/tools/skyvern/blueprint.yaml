@@ -1,0 +1,10 @@
+public-resources:
+  skyvern:
+    name: "Skyvern"
+    full-domain: "skyvern.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "skyvern-main"
+        method: "http"
+        port: 8080

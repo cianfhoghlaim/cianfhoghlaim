@@ -1,0 +1,10 @@
+public-resources:
+  windmill:
+    name: "Windmill"
+    full-domain: "windmill.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "windmill-main"
+        method: "http"
+        port: 8080

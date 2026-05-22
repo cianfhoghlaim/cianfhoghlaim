@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.Perplexica.name=Perplexica"
+      - "pangolin.public-resources.Perplexica.full-domain=Perplexica.cianfhoghlaim.ie"
+      - "pangolin.public-resources.Perplexica.protocol=http"
+      - "pangolin.public-resources.Perplexica.targets[0].method=http"
+      - "pangolin.public-resources.Perplexica.targets[0].port=8080"

@@ -1,0 +1,37 @@
+# =============================================================================
+# DOZZLE - Real-time Docker Log Viewer
+# =============================================================================
+# Lightweight container log viewer with real-time streaming.
+#
+# USAGE:
+#   Development:  docker compose --env-file ../../.env.local up -d
+#   Production:   locket exec --env-file secrets.env -- docker compose up -d
+#   Standalone:   docker compose up -d  (uses defaults)
+# =============================================================================
+
+name: dozzle
+
+services:
+  # ---------------------------------------------------------------------------
+  # DOZZLE - Log Viewer
+  # ---------------------------------------------------------------------------
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    restart: unless-stopped
+    ports:
+      - "${DOZZLE_PORT:-8080}:8080"
+    environment:
+      DOZZLE_LEVEL: ${DOZZLE_LOG_LEVEL:-info}
+      DOZZLE_NO_ANALYTICS: "true"
+      # Optional authentication
+      # DOZZLE_USERNAME: ${DOZZLE_USERNAME:-}
+      # DOZZLE_PASSWORD: ${DOZZLE_PASSWORD:-}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - dozzle
+
+networks:
+  dozzle:
+    driver: bridge

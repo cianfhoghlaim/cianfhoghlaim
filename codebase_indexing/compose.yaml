@@ -1,0 +1,132 @@
+# =============================================================================
+# CÓDEOLAS - Code Intelligence Pipeline
+# =============================================================================
+# Semantic code search, multi-hop research, and code analysis agents.
+#
+# USAGE:
+#   Development:  docker compose up -d
+#   Production:   locket exec --env-file secrets.env -- docker compose up -d
+# =============================================================================
+
+name: codeolas
+
+services:
+  # ---------------------------------------------------------------------------
+  # API - FastAPI Backend with MCP Tools
+  # ---------------------------------------------------------------------------
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: codeolas-api
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-8002}:8000"
+    environment:
+      # Application
+      HOST: "0.0.0.0"
+      PORT: "8000"
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # Storage
+      DUCKDB_PATH: /app/storage/data/codeolas.duckdb
+      LANCEDB_PATH: /app/storage/data/code_vectors.lance
+      # Tree-sitter for parsing
+      TREE_SITTER_LANGUAGES: python,typescript,javascript,go,rust
+      # LLM Configuration
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_PROVIDER: ${LLM_PROVIDER:-anthropic}
+      LLM_MODEL: ${LLM_MODEL:-claude-sonnet-4-20250514}
+      # ChunkHound integration
+      CHUNKHOUND_INDEX_PATH: /app/storage/chunkhound
+      # Observability
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-}
+      DD_SERVICE: codeolas-api
+      DD_ENV: ${ENVIRONMENT:-production}
+    volumes:
+      - codeolas-data:/app/storage/data
+      - codeolas-chunkhound:/app/storage/chunkhound
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    networks:
+      - codeolas
+
+  # ---------------------------------------------------------------------------
+  # MCP Server - Code Analysis Tools
+  # ---------------------------------------------------------------------------
+  mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcp
+    container_name: codeolas-mcp
+    restart: unless-stopped
+    environment:
+      MCP_TRANSPORT: stdio
+      LANCEDB_PATH: /app/storage/data/code_vectors.lance
+      CHUNKHOUND_INDEX_PATH: /app/storage/chunkhound
+    volumes:
+      - codeolas-data:/app/storage/data
+      - codeolas-chunkhound:/app/storage/chunkhound
+    networks:
+      - codeolas
+
+  # ---------------------------------------------------------------------------
+  # Dagster - Pipeline Orchestration
+  # ---------------------------------------------------------------------------
+  dagster-webserver:
+    image: dagster/dagster-webserver:1.9.0
+    container_name: codeolas-dagster-web
+    ports:
+      - "${DAGSTER_PORT:-3102}:3000"
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+      DUCKDB_PATH: /data/codeolas.duckdb
+      LANCEDB_PATH: /data/code_vectors.lance
+    volumes:
+      - ./dagster_assets:/opt/dagster/app
+      - codeolas-data:/data
+      - dagster-storage:/opt/dagster/dagster_home
+    depends_on:
+      - dagster-daemon
+    networks:
+      - codeolas
+
+  dagster-daemon:
+    image: dagster/dagster-daemon:1.9.0
+    container_name: codeolas-dagster-daemon
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+    volumes:
+      - ./dagster_assets:/opt/dagster/app
+      - dagster-storage:/opt/dagster/dagster_home
+    networks:
+      - codeolas
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  codeolas-data:
+    driver: local
+  codeolas-chunkhound:
+    driver: local
+  dagster-storage:
+    driver: local
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  codeolas:
+    driver: bridge

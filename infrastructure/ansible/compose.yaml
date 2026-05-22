@@ -1,0 +1,100 @@
+---
+# =============================================================================
+# ANSIBLE AUTOMATION ENVIRONMENT
+# =============================================================================
+# Runs Ansible playbooks in a containerized execution environment.
+# See SETUP.md for complete setup instructions.
+# =============================================================================
+
+services:
+  ansible:
+    # Multi-arch image built from ee-builder/ (supports ARM64 + AMD64)
+    # Falls back to bpbradley's image if local image not available
+    image: ${ANSIBLE_EE_IMAGE:-ansible-komodo-ee:latest}
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      # -----------------------------------------------------------------------
+      # ANSIBLE FILES
+      # -----------------------------------------------------------------------
+      - .:/ansible
+
+      # -----------------------------------------------------------------------
+      # SSH KEY - Using dedicated ansible key
+      # -----------------------------------------------------------------------
+      - /Users/cliste/.ssh/ansible:/root/.ssh/id_ed25519:ro
+
+      # -----------------------------------------------------------------------
+      # INFISICAL CONNECT TOKEN (for vault decryption verification)
+      # -----------------------------------------------------------------------
+
+      # -----------------------------------------------------------------------
+      # INFRASTRUCTURE DEPLOYMENT FILES
+      # -----------------------------------------------------------------------
+      # Infisical credentials (for deploying Connect to remote)
+      # Infisical token (for Locket/Connect authentication)
+      # Pangolin config directory (for pangolin_core role)
+      - ../pangolin/config:/config/pangolin:ro
+
+    # Run as root to match the documented SSH key mount paths
+    user: root
+
+    environment:
+      # Set HOME for Ansible temp directories
+      HOME: /root
+
+      # Use our ansible.cfg
+      ANSIBLE_CONFIG: /ansible/ansible.cfg
+
+      # Disable host key checking for automation
+      ANSIBLE_HOST_KEY_CHECKING: ${ANSIBLE_HOST_KEY_CHECKING:-false}
+
+      # Infisical (accessible via host.docker.internal)
+
+      # Vault password file (created at runtime or passed via env)
+      ANSIBLE_VAULT_PASSWORD_FILE: /tmp/.vaultpass
+
+      # Vault password (from .env file, used by entrypoint to create password file)
+      ANSIBLE_VAULT_PASSWORD: ${ANSIBLE_VAULT_PASSWORD:-}
+
+    # Auto-create vault password file from ANSIBLE_VAULT_PASSWORD env var
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        if [ -n "$$ANSIBLE_VAULT_PASSWORD" ]; then
+          printf '%s' "$$ANSIBLE_VAULT_PASSWORD" > /tmp/.vaultpass
+          chmod 600 /tmp/.vaultpass
+        fi
+        exec "$$@"
+      - --
+    command: ["sleep", "3600"]
+    stdin_open: true
+    tty: true
+
+# =============================================================================
+# USAGE EXAMPLES
+# =============================================================================
+#
+# SETUP: Create .env file with your vault password:
+#   echo "ANSIBLE_VAULT_PASSWORD=your-vault-pass" > .env
+#
+# 1. Run playbook (simplest - uses .env automatically):
+#    docker compose run --rm ansible sleep infinity &
+#    # Then:
+#    docker compose exec ansible ansible-playbook \
+#      -i /ansible/inventory/komodo.yml \
+#      /ansible/playbooks/periphery.yml
+#
+# 2. One-liner with vault password:
+#    ANSIBLE_VAULT_PASSWORD=your-pass docker compose run --rm ansible \
+#      sh -c 'ansible-playbook -i /ansible/inventory/komodo.yml /ansible/playbooks/periphery.yml'
+#
+# 3. Interactive shell (vault password auto-loaded from .env):
+#    docker compose run --rm ansible sh
+#
+# 4. Dry run:
+#    docker compose run --rm ansible \
+#      sh -c 'ansible-playbook -i /ansible/inventory/komodo.yml /ansible/playbooks/periphery.yml --check --diff'
+#
+# =============================================================================

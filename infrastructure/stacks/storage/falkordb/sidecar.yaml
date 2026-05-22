@@ -1,0 +1,56 @@
+# =============================================================================
+# FALKORDB - Locket Sidecar Configuration
+# =============================================================================
+
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:infisical
+    container_name: falkordb-locket
+    restart: unless-stopped
+    user: "65532:65532"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    command:
+      - "--provider=infisical"
+      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-url=$${INFISICAL_URL:-http://host.docker.internal:8081}"
+      - "--infisical-default-environment=$${INFISICAL_ENVIRONMENT:-dev}"
+      - "--infisical-default-project-id=$${INFISICAL_PROJECT_ID:-project-id}
+      - "--connect.host=${
+      - "--map=/templates:/run/secrets/locket"
+      - "--mode=${LOCKET_MODE:-watch}"
+    secrets:
+      - infisical_secret
+    volumes:
+      - ./secrets.env:/templates/secrets.env:ro
+      - falkordb-secrets:/run/secrets/locket
+    healthcheck:
+      test: ["CMD", "/locket", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - falkordb
+
+  falkordb:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - falkordb-secrets:/run/secrets/locket:ro
+
+secrets:
+  infisical_secret:
+    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+
+volumes:
+  falkordb-secrets:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=700

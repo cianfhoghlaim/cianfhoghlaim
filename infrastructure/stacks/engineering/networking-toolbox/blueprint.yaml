@@ -1,0 +1,10 @@
+public-resources:
+  networking-toolbox:
+    name: "Networking-toolbox"
+    full-domain: "networking-toolbox.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "networking-toolbox-main"
+        method: "http"
+        port: 8080

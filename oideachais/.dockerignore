@@ -1,0 +1,12 @@
+.venv
+__pycache__
+*.pyc
+.git
+.dagster
+.dlt
+node_modules
+web/node_modules
+ui/node_modules
+*.sqlite
+data/
+storage/data/

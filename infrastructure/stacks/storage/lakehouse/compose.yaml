@@ -1,0 +1,308 @@
+# =============================================================================
+# LAKEHOUSE - Unified Data Lakehouse Stack
+# =============================================================================
+# Integrates Garage S3 + Lakekeeper Iceberg Catalog + Lance Namespace + DuckLake
+# Using PlanetScale PostgreSQL for catalog metadata.
+#
+# USAGE:
+#   Development:  docker compose --env-file ../../.env.local up -d
+#   Production:   locket exec --env-file secrets.env -- docker compose up -d
+#   Standalone:   docker compose up -d  (uses defaults)
+#
+# SERVICES:
+#   - garage:            S3-compatible storage with virtual-host DNS
+#   - garage-init:       Bucket initialization (iceberg, lance, ducklake)
+#   - lakekeeper-migrate: PlanetScale database migrations
+#   - lakekeeper:        Iceberg REST Catalog (port 8181)
+#   - lance-namespace:   Lance table registration sidecar (port 8182)
+# =============================================================================
+
+name: lakehouse
+
+services:
+  # ---------------------------------------------------------------------------
+  # GARAGE - Enhanced S3-Compatible Storage with Virtual-Host DNS
+  # ---------------------------------------------------------------------------
+  garage:
+    image: dxflrs/garage:v1.0.1
+    container_name: lakehouse-garage
+    restart: unless-stopped
+    ports:
+      - "${GARAGE_RPC_PORT:-3901}:3901"
+      - "${GARAGE_S3_API_PORT:-3900}:3900"
+      - "${GARAGE_K2V_API_PORT:-3902}:3902"
+      - "${GARAGE_WEB_PORT:-3903}:3903"
+      - "${GARAGE_ADMIN_PORT:-3904}:3904"
+    environment:
+      RUST_LOG: ${RUST_LOG:-garage=info}
+      RUST_BACKTRACE: ${RUST_BACKTRACE:-1}
+      # Secrets injected via Locket or env
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:-devsecret0000000000000000000000000000000000000000000000000000000}
+      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN:-devtoken}
+    volumes:
+      - ./garage.toml:/etc/garage.toml:ro
+      - lakehouse-garage-meta:/var/lib/garage/meta
+      - lakehouse-garage-data:/var/lib/garage/data
+    command: ["/garage", "-c", "/etc/garage.toml", "server"]
+    healthcheck:
+      # Garage distroless image has no curl - use /garage status instead
+      test: ["CMD", "/garage", "-c", "/etc/garage.toml", "node", "id"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    logging:
+      driver: local
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - lakehouse
+      - pangolin
+  # ---------------------------------------------------------------------------
+  # GARAGE INIT - Create Buckets for Lakehouse via Admin API
+  # ---------------------------------------------------------------------------
+  # Uses alpine with curl to initialize Garage via its HTTP Admin API
+  # Garage v1.x distroless image has no shell, so we use a separate container
+  # ---------------------------------------------------------------------------
+  garage-init:
+    image: curlimages/curl:latest
+    container_name: lakehouse-garage-init
+    depends_on:
+      garage:
+        condition: service_healthy
+    environment:
+      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN:-devtoken}
+      GARAGE_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:-lakehouse}
+      GARAGE_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:-devpassword}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        ADMIN_URL="http://garage:3904"
+        AUTH="Authorization: Bearer $${GARAGE_ADMIN_TOKEN}"
+
+        echo "Waiting for Garage admin API..."
+        sleep 3
+
+        echo "Checking node layout..."
+        # Get node ID
+        NODE_ID=$$(curl -sf "$${ADMIN_URL}/v1/status" -H "$${AUTH}" | grep -o '"node":"[^"]*"' | cut -d'"' -f4)
+        echo "Node ID: $$NODE_ID"
+
+        # Check if layout already configured
+        LAYOUT_VERSION=$$(curl -sf "$${ADMIN_URL}/v1/layout" -H "$${AUTH}" | grep -o '"version":[0-9]*' | head -1 | cut -d':' -f2)
+        echo "Current layout version: $$LAYOUT_VERSION"
+
+        if [ "$$LAYOUT_VERSION" = "0" ]; then
+          echo "Configuring node layout..."
+          # Stage layout change
+          curl -sf -X POST "$${ADMIN_URL}/v1/layout" \
+            -H "$${AUTH}" \
+            -H "Content-Type: application/json" \
+            -d "[{\"id\": \"$$NODE_ID\", \"zone\": \"dc1\", \"capacity\": 100000000000, \"tags\": []}]" || echo "Layout staging may have failed"
+
+          # Apply layout
+          curl -sf -X POST "$${ADMIN_URL}/v1/layout/apply" \
+            -H "$${AUTH}" \
+            -H "Content-Type: application/json" \
+            -d '{"version": 1}' || echo "Layout apply may have failed"
+
+          echo "Layout configured!"
+          sleep 2
+        else
+          echo "Layout already configured"
+        fi
+
+        echo "Creating access key..."
+        KEY_RESPONSE=$$(curl -sf -X POST "$${ADMIN_URL}/v1/key" \
+          -H "$${AUTH}" \
+          -H "Content-Type: application/json" \
+          -d '{"name": "lakehouse"}' 2>/dev/null || echo "exists")
+
+        if [ "$$KEY_RESPONSE" = "exists" ]; then
+          echo "Key may already exist, fetching..."
+          KEY_RESPONSE=$$(curl -sf "$${ADMIN_URL}/v1/key?search=lakehouse" -H "$${AUTH}")
+        fi
+
+        ACCESS_KEY_ID=$$(echo "$$KEY_RESPONSE" | grep -o '"accessKeyId":"[^"]*"' | head -1 | cut -d'"' -f4)
+        echo "Access Key ID: $$ACCESS_KEY_ID"
+
+        echo "Creating buckets..."
+        for bucket in iceberg lance ducklake; do
+          curl -sf -X POST "$${ADMIN_URL}/v1/bucket" \
+            -H "$${AUTH}" \
+            -H "Content-Type: application/json" \
+            -d "{\"globalAlias\": \"$$bucket\"}" \
+            || echo "Bucket $$bucket may already exist"
+        done
+
+        echo "Getting bucket IDs and granting permissions..."
+        for bucket in iceberg lance ducklake; do
+          BUCKET_RESPONSE=$$(curl -sf "$${ADMIN_URL}/v1/bucket?globalAlias=$$bucket" -H "$${AUTH}")
+          BUCKET_ID=$$(echo "$$BUCKET_RESPONSE" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
+          if [ -n "$$BUCKET_ID" ] && [ -n "$$ACCESS_KEY_ID" ]; then
+            curl -sf -X POST "$${ADMIN_URL}/v1/bucket/allow" \
+              -H "$${AUTH}" \
+              -H "Content-Type: application/json" \
+              -d "{\"bucketId\": \"$$BUCKET_ID\", \"accessKeyId\": \"$$ACCESS_KEY_ID\", \"permissions\": {\"read\": true, \"write\": true, \"owner\": true}}" \
+              || echo "Permission already set for $$bucket"
+            echo "Granted access to $$bucket"
+          fi
+        done
+
+        echo "Garage initialization complete!"
+    restart: "no"
+    networks:
+      - lakehouse
+
+  # ---------------------------------------------------------------------------
+  # POSTGRESQL - Local Database for Lakekeeper & Dagster (Development)
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: lakehouse-postgres
+    restart: unless-stopped
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    environment:
+      POSTGRES_USER: lakekeeper
+      POSTGRES_PASSWORD: devpassword
+      POSTGRES_DB: lakekeeper
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - lakehouse-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lakekeeper"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    networks:
+      - lakehouse
+
+  # ---------------------------------------------------------------------------
+  # LAKEKEEPER MIGRATE - Database Migrations
+  # ---------------------------------------------------------------------------
+  lakekeeper-migrate:
+    image: quay.io/lakekeeper/catalog:latest
+    container_name: lakehouse-lakekeeper-migrate
+    command: migrate
+    environment:
+      LAKEKEEPER__PG_DATABASE_URL_WRITE: ${PLANETSCALE_DATABASE_URL:-postgresql://lakekeeper:devpassword@postgres:5432/lakekeeper}
+      LAKEKEEPER__PG_ENCRYPTION_KEY: ${LAKEKEEPER_ENCRYPTION_KEY:-abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789}
+      LAKEKEEPER__PG_SSL_MODE: ${LAKEKEEPER_SSL_MODE:-prefer}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      garage:
+        condition: service_healthy
+      # Note: Removed garage-init dependency - service_completed_successfully
+      # condition is unreliable with remote Komodo deployments
+    restart: "no"
+    networks:
+      - lakehouse
+
+  # ---------------------------------------------------------------------------
+  # LAKEKEEPER - Iceberg REST Catalog
+  # ---------------------------------------------------------------------------
+  lakekeeper:
+    image: quay.io/lakekeeper/catalog:latest
+    container_name: lakehouse-lakekeeper
+    restart: unless-stopped
+    command: ["serve"]
+    ports:
+      - "${LAKEKEEPER_PORT:-8181}:8181"
+      - "${LAKEKEEPER_METRICS_PORT:-9100}:9000"
+    environment:
+      # PostgreSQL Connection (local dev or PlanetScale production)
+      LAKEKEEPER__PG_DATABASE_URL_READ: ${PLANETSCALE_DATABASE_URL:-postgresql://lakekeeper:devpassword@postgres:5432/lakekeeper}
+      LAKEKEEPER__PG_DATABASE_URL_WRITE: ${PLANETSCALE_DATABASE_URL:-postgresql://lakekeeper:devpassword@postgres:5432/lakekeeper}
+      LAKEKEEPER__PG_ENCRYPTION_KEY: ${LAKEKEEPER_ENCRYPTION_KEY:-abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789}
+      LAKEKEEPER__PG_SSL_MODE: ${LAKEKEEPER_SSL_MODE:-prefer}
+      # Server Configuration
+      LAKEKEEPER__LISTEN_PORT: "8181"
+      LAKEKEEPER__BASE_URI: ${LAKEKEEPER_BASE_URI:-http://lakekeeper.cianfhoghlaim.ie}
+      LAKEKEEPER__SERVE_SWAGGER_UI: "true"
+      # Logging
+      RUST_LOG: ${RUST_LOG:-info}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      garage:
+        condition: service_healthy
+      # Note: Removed lakekeeper-migrate dependency - service_completed_successfully
+      # condition is unreliable with remote Komodo deployments. Migrations run independently.
+    healthcheck:
+      test: ["CMD", "/home/nonroot/lakekeeper", "healthcheck"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - lakehouse
+      - pangolin
+  # ---------------------------------------------------------------------------
+  # LANCE-NAMESPACE - Iceberg Adapter Sidecar for Lance Tables
+  # ---------------------------------------------------------------------------
+  lance-namespace:
+    build:
+      context: ./lance-sidecar
+      dockerfile: Dockerfile
+    image: lakehouse-lance-namespace:latest
+    container_name: lakehouse-lance-namespace
+    restart: unless-stopped
+    ports:
+      - "${LANCE_NAMESPACE_PORT:-8182}:8182"
+    environment:
+      # Lakekeeper Connection (internal Docker network)
+      ICEBERG_ENDPOINT: http://lakekeeper:8181
+      ICEBERG_WAREHOUSE: ${ICEBERG_WAREHOUSE:-lakehouse}
+      ICEBERG_PREFIX: ""
+      ICEBERG_AUTH_TOKEN: ${LANCE_ICEBERG_AUTH_TOKEN:-}
+      # Lance Storage Root (Garage S3)
+      LANCE_ROOT: s3://lance/
+      # Garage S3 Credentials
+      AWS_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:-lakehouse}
+      AWS_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:-devpassword}
+      AWS_ENDPOINT_URL: http://garage:3900
+      AWS_REGION: garage
+      # Timeouts
+      ICEBERG_CONNECT_TIMEOUT_MILLIS: "10000"
+      ICEBERG_READ_TIMEOUT_MILLIS: "30000"
+      ICEBERG_MAX_RETRIES: "3"
+      # Server Configuration
+      SIDECAR_HOST: "0.0.0.0"
+      SIDECAR_PORT: "8182"
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    depends_on:
+      lakekeeper:
+        condition: service_healthy
+      garage:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8182/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - lakehouse
+      - pangolin
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  lakehouse-garage-meta:
+  lakehouse-garage-data:
+  lakehouse-postgres:
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  lakehouse:
+    driver: bridge
+  # Pangolin network for production ingress - external in production
+  # For local development, this will be created if it doesn't exist
+  pangolin:
+    driver: bridge

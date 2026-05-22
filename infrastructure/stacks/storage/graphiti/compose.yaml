@@ -1,0 +1,128 @@
+# =============================================================================
+# GRAPHITI - Knowledge Graph with MCP Server
+# =============================================================================
+# Graph-based knowledge management with FalkorDB backend.
+#
+# USAGE:
+#   Development:  docker compose --env-file ../../.env.local up -d
+#   Production:   locket exec --env-file secrets.env -- docker compose up -d
+#   Standalone:   docker compose up -d  (uses defaults)
+# =============================================================================
+
+name: graphiti
+
+services:
+  # ---------------------------------------------------------------------------
+  # FALKORDB - Redis-based Graph Database
+  # ---------------------------------------------------------------------------
+  falkordb:
+    image: falkordb/falkordb:latest
+    container_name: graphiti-falkordb
+    restart: unless-stopped
+    ports:
+      - "${FALKORDB_PORT:-6379}:6379"
+      - "${FALKORDB_UI_PORT:-3002}:3000"
+    environment:
+      # Note: FalkorDB doesn't use FALKORDB_PASSWORD env var for auth
+      # Use --requirepass in command if auth is needed
+      BROWSER: ${FALKORDB_BROWSER:-1}
+    volumes:
+      - graphiti-falkordb:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "6379", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - graphiti
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+
+  # ---------------------------------------------------------------------------
+  # GRAPHITI MCP - Model Context Protocol Server
+  # ---------------------------------------------------------------------------
+  graphiti-mcp:
+    image: zepai/knowledge-graph-mcp:standalone
+    container_name: graphiti-mcp
+    restart: unless-stopped
+    ports:
+      - "${GRAPHITI_MCP_PORT:-8000}:8000"
+    environment:
+      # LLM Configuration
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      # FalkorDB Configuration (no auth by default)
+      FALKORDB_URI: redis://falkordb:6379
+      FALKORDB_DATABASE: ${FALKORDB_DATABASE:-default_db}
+      # Application Configuration
+      GRAPHITI_GROUP_ID: ${GRAPHITI_GROUP_ID:-main}
+      SEMAPHORE_LIMIT: ${SEMAPHORE_LIMIT:-10}
+    volumes:
+      - graphiti-logs:/app/logs
+    depends_on:
+      falkordb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    command: ["uv", "run", "main.py"]
+    networks:
+      - graphiti
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+
+  # ---------------------------------------------------------------------------
+  # GRAPHITI API - REST API (Optional)
+  # ---------------------------------------------------------------------------
+  graphiti-api:
+    image: zepai/graphiti:latest
+    container_name: graphiti-api
+    restart: unless-stopped
+    profiles:
+      - api
+    ports:
+      - "${GRAPHITI_API_PORT:-8003}:8000"
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      FALKORDB_HOST: falkordb
+      FALKORDB_PORT: "6379"
+      FALKORDB_DATABASE: ${FALKORDB_DATABASE:-default_db}
+      GRAPHITI_BACKEND: falkordb
+      PORT: "8000"
+    depends_on:
+      falkordb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - graphiti
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+
+volumes:
+  graphiti-falkordb:
+  graphiti-logs:
+
+networks:
+  graphiti:
+    driver: bridge

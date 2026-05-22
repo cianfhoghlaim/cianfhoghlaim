@@ -1,0 +1,10 @@
+public-resources:
+  Kapowarr:
+    name: "Kapowarr"
+    full-domain: "Kapowarr.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "Kapowarr-main"
+        method: "http"
+        port: 8080

@@ -1,0 +1,106 @@
+# =============================================================================
+# LAKEHOUSE - Pangolin Blueprint
+# =============================================================================
+# Unified Data Lakehouse: Garage S3 + Lakekeeper + Lance + DuckLake
+#
+# Note: S3 API endpoints are not SSO-protected for programmatic access.
+# Admin UI is SSO-protected.
+#
+# DNS REQUIREMENTS:
+#   - s3.lakehouse.cianfhoghlaim.ie       -> Pangolin ingress
+#   - *.s3.lakehouse.cianfhoghlaim.ie     -> Pangolin ingress (wildcard)
+#   - lakekeeper.cianfhoghlaim.ie         -> Pangolin ingress
+#   - lance-api.cianfhoghlaim.ie          -> Pangolin ingress
+#   - lakehouse-admin.cianfhoghlaim.ie    -> Pangolin ingress
+# =============================================================================
+
+public-resources:
+  # ---------------------------------------------------------------------------
+  # Lakekeeper REST Catalog API
+  # ---------------------------------------------------------------------------
+  lakekeeper:
+    name: "Lakekeeper REST Catalog"
+    full-domain: "lakekeeper.cianfhoghlaim.ie"
+    protocol: "http"
+    auth:
+      sso-enabled: true
+      sso-roles:
+        - Member
+    targets:
+      - site: "bunchloch"
+        hostname: "lakehouse-lakekeeper"
+        method: "http"
+        port: 8181
+
+  # ---------------------------------------------------------------------------
+  # Lance Namespace Sidecar API
+  # ---------------------------------------------------------------------------
+  lance-api:
+    name: "Lance Namespace API"
+    full-domain: "lance-api.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "bunchloch"
+        hostname: "lakehouse-lance-namespace"
+        method: "http"
+        port: 8182
+
+  # ---------------------------------------------------------------------------
+  # Garage S3 API (Virtual-Host Style) - No SSO for programmatic access
+  # ---------------------------------------------------------------------------
+  lakehouse-s3:
+    name: "Lakehouse S3 API"
+    full-domain: "s3.lakehouse.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "bunchloch"
+        hostname: "lakehouse-garage"
+        method: "http"
+        port: 3900
+
+  lakehouse-s3-iceberg:
+    name: "Lakehouse Iceberg Bucket"
+    full-domain: "iceberg.s3.lakehouse.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "bunchloch"
+        hostname: "lakehouse-garage"
+        method: "http"
+        port: 3900
+
+  lakehouse-s3-lance:
+    name: "Lakehouse Lance Bucket"
+    full-domain: "lance.s3.lakehouse.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "bunchloch"
+        hostname: "lakehouse-garage"
+        method: "http"
+        port: 3900
+
+  lakehouse-s3-ducklake:
+    name: "Lakehouse DuckLake Bucket"
+    full-domain: "ducklake.s3.lakehouse.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "bunchloch"
+        hostname: "lakehouse-garage"
+        method: "http"
+        port: 3900
+
+  # ---------------------------------------------------------------------------
+  # Garage Web/Admin UI - SSO Protected
+  # ---------------------------------------------------------------------------
+  lakehouse-admin:
+    name: "Lakehouse Admin"
+    full-domain: "lakehouse-admin.cianfhoghlaim.ie"
+    protocol: "http"
+    auth:
+      sso-enabled: true
+      sso-roles:
+        - Member
+    targets:
+      - site: "bunchloch"
+        hostname: "lakehouse-garage"
+        method: "http"
+        port: 3903

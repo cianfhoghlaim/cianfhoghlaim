@@ -1,0 +1,133 @@
+# =============================================================================
+# {{ inventory_hostname | upper }} - Site Infrastructure
+# =============================================================================
+# Deployed by Ansible - Do not edit manually
+# Includes: Locket (secrets) + Newt (tunnel) + Periphery (komodo agent)
+# =============================================================================
+
+name: {{ inventory_hostname }}-site
+
+services:
+  # ---------------------------------------------------------------------------
+  # LOCKET - Secrets Management Sidecar
+  # ---------------------------------------------------------------------------
+  locket:
+    image: ghcr.io/bpbradley/locket:infisical
+    container_name: {{ inventory_hostname }}-locket
+    user: "65532:65532"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    secrets:
+      - infisical_secret
+    command:
+      - "--provider=infisical"
+      - "--infisical-client-id={{ infisical_client_id }}"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--mode=watch"
+      - "--map=/templates:/run/secrets/locket"
+    volumes:
+      - ./secrets/templates:/templates:ro
+      - secrets-store:/run/secrets/locket
+    healthcheck:
+      test: ["CMD", "/locket", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  # ---------------------------------------------------------------------------
+  # NEWT - Pangolin Tunnel Agent
+  # ---------------------------------------------------------------------------
+  newt:
+    image: fosrl/newt:latest
+    container_name: {{ inventory_hostname }}-newt
+    restart: unless-stopped
+    depends_on:
+      locket:
+        condition: service_healthy
+    environment:
+      PANGOLIN_ENDPOINT: {{ pangolin_endpoint }}
+      NEWT_ID_FILE: /run/secrets/locket/newt_id
+      NEWT_SECRET_FILE: /run/secrets/locket/newt_secret
+      LOG_LEVEL: {{ log_level }}
+      DOCKER_SOCKET: /var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - secrets-store:/run/secrets/locket:ro
+    networks:
+      - {{ docker_network_name }}
+    labels:
+      - "komodo.skip=true"
+
+{% if deploy_periphery | default(true) %}
+  # ---------------------------------------------------------------------------
+  # PERIPHERY - Komodo Agent
+  # ---------------------------------------------------------------------------
+  periphery:
+    image: {{ periphery_image }}
+    container_name: {{ inventory_hostname }}-periphery
+    init: true
+    restart: unless-stopped
+    environment:
+      PERIPHERY_CORE_ADDRESS: {{ periphery_core_address }}
+      PERIPHERY_CONNECT_AS: {{ periphery_connect_as }}
+      PERIPHERY_ONBOARDING_KEY: /run/secrets/locket/onboarding_key
+      PERIPHERY_ROOT_DIRECTORY: /etc/komodo
+      PERIPHERY_DISABLE_TERMINALS: "false"
+      PERIPHERY_DISABLE_CONTAINER_EXEC: "false"
+      PERIPHERY_INCLUDE_DISK_MOUNTS: /etc/hostname
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc:/proc
+      - /etc/komodo:/etc/komodo
+    networks:
+      - {{ docker_network_name }}
+    labels:
+      - "komodo.skip=true"
+{% endif %}
+
+{% if beszel_enabled %}
+  # ---------------------------------------------------------------------------
+  # BESZEL AGENT - Monitoring
+  # ---------------------------------------------------------------------------
+  beszel-agent:
+    image: henrygd/beszel-agent:latest
+    container_name: {{ inventory_hostname }}-beszel-agent
+    restart: unless-stopped
+    environment:
+      KEY: {{ beszel_key }}
+      PORT: "45876"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    network_mode: host
+    labels:
+      - "komodo.skip=true"
+{% endif %}
+
+# =============================================================================
+# SECRETS
+# =============================================================================
+secrets:
+  infisical_secret:
+    file: {{ infisical_secret_path }}
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  secrets-store:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=700
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  {{ docker_network_name }}:
+    driver: bridge

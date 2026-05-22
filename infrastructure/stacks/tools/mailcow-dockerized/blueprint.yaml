@@ -1,0 +1,10 @@
+public-resources:
+  mailcow-dockerized:
+    name: "Mailcow-dockerized"
+    full-domain: "mailcow-dockerized.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "mailcow-dockerized-main"
+        method: "http"
+        port: 8080

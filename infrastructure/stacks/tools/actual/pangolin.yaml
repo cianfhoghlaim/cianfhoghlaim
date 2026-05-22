@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.actual.name=Actual"
+      - "pangolin.public-resources.actual.full-domain=actual.cianfhoghlaim.ie"
+      - "pangolin.public-resources.actual.protocol=http"
+      - "pangolin.public-resources.actual.targets[0].method=http"
+      - "pangolin.public-resources.actual.targets[0].port=8080"

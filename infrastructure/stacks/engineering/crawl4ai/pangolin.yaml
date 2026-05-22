@@ -1,0 +1,8 @@
+services:
+  main-service:
+    labels:
+      - "pangolin.public-resources.crawl4ai.name=Crawl4ai"
+      - "pangolin.public-resources.crawl4ai.full-domain=crawl4ai.cianfhoghlaim.ie"
+      - "pangolin.public-resources.crawl4ai.protocol=http"
+      - "pangolin.public-resources.crawl4ai.targets[0].method=http"
+      - "pangolin.public-resources.crawl4ai.targets[0].port=8080"

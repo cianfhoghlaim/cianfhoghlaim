@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  meaisinfhoghlaim-locket:
+    image: infisical/machine-identity:latest
+    container_name: meaisinfhoghlaim-locket
+    environment:
+      - INFISICAL_UNIVERSAL_AUTH_CLIENT_ID=${INFISICAL_UNIVERSAL_AUTH_CLIENT_ID}
+      - INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET=${INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET}
+      - INFISICAL_PROJECT_ID=${INFISICAL_PROJECT_ID}
+      - INFISICAL_ENV=${INFISICAL_ENV:-dev}
+      - INFISICAL_PATH=/meaisinfhoghlaim
+    volumes:
+      - locket-secrets:/run/secrets/locket
+
+volumes:
+  locket-secrets:

@@ -1,0 +1,10 @@
+public-resources:
+  pocket-id:
+    name: "Pocket-id"
+    full-domain: "pocket-id.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "arm1-oci"
+        hostname: "pocket-id-main"
+        method: "http"
+        port: 8080
