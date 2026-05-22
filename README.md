@@ -2,7 +2,7 @@
 
 *v0.5 A unified data platform and research repository for education and cultural preservation.*
 
-> **IMPORTANT: Gemini Cloud comes with free credits usable with Vertex AI that gives a Gemini API key usable within opencode and antigravity cli for toying with project for your own purposes, AI Studio by Google Cloud also provides a Gemini API key but NO LONGER utilises the free credits going straight to charging**
+> **IMPORTANT: Google Cloud comes with free credits usable with Vertex AI that gives a Gemini API key usable within opencode and antigravity cli for toying with project for your own purposes, AI Studio by Google Cloud also provides a Gemini API key but NO LONGER utilises the free credits going straight to charging. Also GitHub Copilot has a diluted version of Gemini (100k context window vs 1 million) with free student pro membership**
 
 > **Optional Moral Obligation for Galwegians** I cannot proceed with my long-term improvements of the Education System without Fine Gael, Labour + Liberal Democrats and the Alliance Party. In exchange for my daily commitments to your future generations, please inform yourself of my political research in the political [research directory](bunchloch/gemini/politics/) and my affiliation [here](cian_cv/identity/) and Vote 1 Seán Kyne on 22/05/26 with an informed opinion. This is important because of Sinn Féin corruption and their statistically informed plan of 'Tonn na Clé' related to data they gathered via their Abú database outlined in the politics directory linked above.
 
