@@ -25,6 +25,21 @@
       },
       "enabled": true
     },
+    "infisical": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@infisical/mcp"
+      ],
+      "env": {
+        "INFISICAL_UNIVERSAL_AUTH_CLIENT_ID": "c56cbe28-88a4-4793-95a1-835d5164d8ad",
+        "INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET": "383b7d8e6a1c4c0cd7e5765f53c702f6e07c497a77363921bb2b206c8287b250",
+        "INFISICAL_HOST_URL": "http://132.145.27.89:8080",
+        "INFISICAL_PROJECT_ID": "d18560c0-75d5-436f-a411-0bb758567196"
+      },
+      "enabled": true
+    },
     "motherduck": {
       "type": "local",
       "command": [

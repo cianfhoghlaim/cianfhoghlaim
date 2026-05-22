@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "browserbase": {
+      "command": "npx",
+      "args": ["-y", "@browserbasehq/mcp-server-browserbase"]
+    },
+    "firecrawl": {
+      "command": "npx",
+      "args": ["-y", "firecrawl-mcp"]
+    },
+    "motherduck": {
+      "command": "uvx",
+      "args": ["mcp-server-motherduck", "--db-path", "md:", "--read-write"]
+    },
+    "qdrant": {
+      "command": "uvx",
+      "args": ["mcp-server-qdrant"]
+    },
+    "memgraph": {
+      "command": "uvx",
+      "args": ["mcp-memgraph"]
+    }
+  }
+}
