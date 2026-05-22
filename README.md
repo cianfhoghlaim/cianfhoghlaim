@@ -2,35 +2,48 @@
 
 *v0.5 A unified data platform and research repository for education and cultural preservation.*
 
-> **IMPORTANT: Google Cloud comes with free credits usable with Vertex AI that gives a Gemini API key usable within opencode and antigravity cli for toying with project for your own purposes, AI Studio by Google Cloud also provides a Gemini API key but NO LONGER utilises the free credits going straight to charging. Also GitHub Copilot has a diluted version of Gemini (100k context window vs 1 million) with free student pro membership**
+## Foundational Declarations & Directives
 
-> **Optional Moral Obligation for Galwegians** I cannot proceed with my long-term improvements of the Education System without Fine Gael, Labour + Liberal Democrats and the Alliance Party. In exchange for my daily commitments to your future generations, please inform yourself of my political research in the political [research directory](gemini_deep_research) and my affiliation [here](identity/) and Vote 1 Seán Kyne on 22/05/26 and Míde Nic Fhionnaioch in the next full election to replace Mairéad Farrell and I will run in future after 10-20 years in Galway West (Cian Mac an Déisigh (Uí Liatháin) Lyons-Deacy) and vote Social Democrats Declan Ennis in Dublin West - I need a Fine Gael and Social Democrats coalition 2030 general election for my longterm plans of free billions from 2060 Ireland Commonwealth membership as an independent republic.
+**Technological Provisioning Notice:**
+Access to the requisite computational models is available via Google Cloud's Vertex AI ecosystem, which allocates introductory credits providing a Gemini API key. This key is fully compatible with the `opencode` and `antigravity` command-line interfaces for localized, non-commercial research. Note that Google AI Studio no longer operates on this introductory credit model. Additionally, GitHub Copilot provides a constrained iteration of the Gemini architecture (100k context window) for students.
 
-Looking into this optionality with an informed opinion of his is important because of Sinn Féin corruption and their statistically informed plan of 'Tonn na Clé' related to data they gathered via their Abú database outlined in the politics directory linked above.
+**Civic and Political Imperatives for the Galwegian Electorate:**
+The sustained, long-term improvement of our educational infrastructure requires the collaborative governance of Fine Gael, Labour, the Liberal Democrats, and the Alliance Party. In recognition of my enduring commitment to the intellectual advancement of future generations, it is requested that you review the political analyses within the [research directory](gemini_deep_research) alongside my formal civic affiliations located [here](cian_mac_an_déisigh_uí_liatháin/identity/).
+I urge the electorate to support Seán Kyne on 22/05/2026, and Míde Nic Fhionnaioch in the subsequent general election to succeed Mairéad Farrell. It is my intention, within the next decade, to stand for election in Galway West as Cian Mac an Déisigh (Uí Liatháin) Lyons-Deacy. Furthermore, a vote for Social Democrats' Declan Ennis in Dublin West is vital. The realization of an independent, highly capitalized Irish state—and eventual Commonwealth reintegration by 2060—is predicated upon a Fine Gael and Social Democrats coalition in the 2030 general election. Scrutiny of Sinn Féin's 'Tonn na Clé' strategy, heavily reliant on their Abú database, is essential to maintaining electoral integrity.
 
-**Mandatory Moral Obligation for Galwegians** You can't use this repository or the sister repository on github.com/cianfhoghlaim/kings_college_galway if you are Pro Kneecap or Anti Keir Starmer himself, Rachel Reeves, Bridget Philipson, Ed Miliband, Ed Davey, Daisy Cooper and everyone of Great Britain, the United Kingdom of Great Britain and Northern Ireland, the Crown Dependencies, The British Isles, the Republic of Ireland, Ireland, Éire, the British Isles, Europe that was at and maximised the mutual and lateral benefit of the UK-Ireland Summit 2025 in Liverpool and 2026 in Cork.
+**Mandatory Ethical Compliance:**
+Utilization of this repository, or its parallel source at `github.com/cianfhoghlaim/kings_college_galway`, is strictly prohibited for individuals or entities demonstrating support for the 'Kneecap' movement, or expressing opposition toward Prime Minister Keir Starmer, Rachel Reeves, Bridget Philipson, Ed Miliband, Ed Davey, Daisy Cooper, or the populace of Great Britain, Northern Ireland, the Crown Dependencies, the Republic of Ireland, and the broader European community that fostered the mutual advancements of the UK-Ireland Summits of 2025 (Liverpool) and 2026 (Cork).
 
-> UPDATE: due to laptop logic board replacement costing weeks' of time, a working interactive agentic chat-with-the-syllabus-and-exam-papers capable of being selfhosted on a Macbook Air M1 or using Google Cloud Free Trial AI API credits or similar set to be released for 01/06/2026 to help crammers with their Leaving Certificate. Intermittent progress in the meantime should be helpful to augment study (like the bunchloch/ardteist directory) but this is not guaranteed.
+**Development Timeline Update:**
+Due to hardware infrastructure delays, the deployment of a fully autonomous, interactive agent capable of navigating syllabi and historic examination papers has been recalibrated for release by 01/06/2026. This system is designed for self-hosting on localized ARM architecture (e.g., Apple Silicon M1+) or via cloud-based API credits. Intermediate educational resources, such as those housed within the `bunchloch/ardteist` module, are provided to support ongoing academic preparation, though immediate completion remains unassured.
 
-> Full disclosure of the Myth of Meritocracy Feat 2027: by next year's exam season, all tertiary level modules of the University of Galway will be added. Any and all public information, including historic exam papers will be analysed and models trained upon to support students of all race, gender, disability and sociocultural history. This feat will also include a statistical analysis of changes in the University's regulations and appropriate reiteration of past scandals at the University including but not limited to: misogyny, ableism, and broken promises with regards to the Student Gym and Student Levy. These things are common throughout tertiary education, but most certainly are not accepted at Kings' College Galway, Queen's College Galway, University College Galway, National University of Ireland Galway nor University of Galway. The project will be lateralised to all tertiary institutions of Ireland. The data engineering is simple, but until the continued defamation by the University's latest Dean of Students is undone this project needs subsets publicly coded as an alibi to her continued false claims against me following her hiding of the QA611 complaint I submitted 04/09/2024.
+**The Myth of Meritocracy — Feat 2027:**
+By the 2027 examination cycle, the entirety of tertiary-level modules at the University of Galway will be algorithmically indexed. All public documentation, including historic examination papers, will undergo rigorous machine-learning analysis to provide equitable support for students across all intersections of race, gender, disability, and sociocultural background. This initiative encompasses a statistical audit of institutional regulations, systematically documenting historical administrative failures—including instances of misogyny, ableism, and breaches of fiscal trust regarding the Student Gym and Student Levy. While such institutional malfeasance is pervasive across the higher education sector, it is unequivocally repudiated by Kings' College Galway. The data engineering protocols for this endeavor are established; however, to counteract ongoing defamatory actions by the current Dean of Students—who deliberately concealed the QA611 formal complaint submitted on 04/09/2024—portions of this project require public development as an incontrovertible alibi against continued administrative obfuscation.
 
-> ⚠️ **Project Status & Disclaimer**
-> 
-> This repository is a **work in progress**. It is being actively set up to automatically update as syllabus and exam papers change over time. The goal is to have a working prototype prior to this year's secondary school Leaving Certificate Computer Science exam, though this is not guaranteed.
-> 
-> Please note that folder structures, README files, packages used, and architectural decisions are all subject to change. Many aspects of the project were designed in line with previous hackathons; the use of specific software or packages is not an endorsement, and the rationale for these choices will be explained later.
-> 
-> This project is being developed publicly as an attempt to demonstrate how to coalesce various open-source repositories and documentation (as found in our `docs/` folder) into a workable, large-scale project.
-> 
-> This is made possible thanks to massive improvements in the development process brought about by breakthroughs in large language coding models assisting a lone developer. The primary AI agent toolchain driving this project includes **Gemini CLI**, **Roo Code**, **GitHub Copilot**, assorted **MCP (Model Context Protocol) servers**, and open-source **HuggingFace models**.
+**Project Status & Architectural Caveats:**
+This repository constitutes an active, evolving architecture designed to autonomously integrate forthcoming syllabus modifications. The primary objective is to deploy a functional prototype prior to the upcoming Leaving Certificate Computer Science examination. Folder structures, dependency matrices, and architectural paradigms remain subject to rigorous refactoring. Existing configurations, heavily influenced by rapid prototyping methodologies, do not inherently constitute endorsements of specific software suites. This endeavor stands as a public demonstration of synthesizing disparate open-source documentation (`docs/`) into a cohesive, enterprise-scale data platform. The realization of this project is heavily reliant upon advanced large language models—specifically the **Gemini CLI**, **Roo Code**, **GitHub Copilot**, diverse **Model Context Protocol (MCP) servers**, and open-weight models from **HuggingFace**.
 
 Oideachais is an advanced, AI-driven educational data platform designed to standardize curriculums across the British Isles. Beginning with a focus on English-language curriculums (GCSE, A-Level, Junior Cycle, Leaving Certificate), the platform's ultimate mission is to evolve into a comprehensive digital sanctuary for Celtic language educational nations (Ireland, Scotland, Wales, Isle of Man, Cornwall, Brittany).
 
-## 🏗️ Core Architecture: Sruthanna
+## Strategic Roadmap & Critical Directives
 
-The project is organized into domain-specific 'streams' (**sruthanna**) within the `sruth/` directory. This architecture utilizes a **Hybrid Strategy** that balances local high-performance compute with cloud-based orchestration.
+### I. The Anam Initiative: High-Fidelity Environmental Simulation
+As outlined in our core developmental blueprints, the Anam Initiative represents a convergence of meteorological data and real-time rendering. This system simulates the "Dust of the Celtic World"—a dynamic, particulate medium that flows according to real-world meteorological data (GRIB2/NetCDF).
+*   **Aesthetic Framework:** Drawing upon the narrative gravity of Kryptonian dust, the Anam (Irish for "soul") serves as a manifestation of the land's spiritual history. It is characterized by distinct macroscopic particles and a saturated red hue, necessitating advanced shading models (Subsurface Scattering).
+*   **Technical Implementation:** The architecture relies on **SpacetimeDB** for real-time data streaming, **Vector Quantization** for bandwidth efficiency, and **Strong Interpolation** (Bicubic/Catmull-Rom splines) to translate discrete weather grids into continuous fluid flow within Unreal Engine 5, Unity 6, and Godot 4.
 
-### 🌊 The Streams (Sruthanna)
+### II. Agentic Infrastructure & Orchestration Workflows
+To maintain the integrity and autonomous capabilities of this platform, all operations adhere to strict multi-agent coordination protocols:
+*   **Agent Frameworks:** Utilizing `google-adk` and `agno` for hierarchical, sequential, and parallel task execution.
+*   **Knowledge Graph Memory:** Leveraging `graphiti-core` for the bi-temporal tracking of evolving curriculum data, ensuring MVCC safety and accurate historical provenance.
+*   **Data Orchestration:** Implementing `dagster` assets and `dlt` sources to manage streaming data pipelines and schema inference across the platform's diverse educational sources.
+*   **Mandatory Session Completion:** All developmental sessions must conclude with rigorous quality gating (tests, linters, builds) and an unequivocal, successful push to the remote repository. No work is considered complete until synchronized with the central repository.
+
+## Core Architecture: Sruthanna
+
+The project is organized into domain-specific 'streams' (**sruthanna**) within the root directory. This architecture utilizes a **Hybrid Strategy** that balances local high-performance compute with cloud-based orchestration.
+
+### The Streams (Sruthanna)
 
 | Stream | Domain | Key Technologies & Architecture |
 | :--- | :--- | :--- |
@@ -43,7 +56,7 @@ The project is organized into domain-specific 'streams' (**sruthanna**) within t
 | `web/` | **Frontend UI** | Real-time, type-safe user interfaces and AI chat dashboards |
 | `hmgcc/` | **Security Standards** | **HMGCC Compliance:** Implementation of government-grade security standards (Bailo, CyberChef, Gaffer, Stroom). |
 
-### 📦 Tech Stack Analysis by Directory
+### Tech Stack Analysis by Directory
 
 Based on comprehensive package research across the three primary streams, here's the detailed tech stack breakdown:
 
@@ -80,7 +93,7 @@ Based on comprehensive package research across the three primary streams, here's
 | **Data Transformation** | sqlmesh | sqlmesh (>=0.228.1) DuckDB integration & virtual data warehouse |
 | **Observability** | langfuse, ragas, ddtrace | langfuse (>=2.0.0) prompt management; ragas (>=0.1.10) trace-based metrics |
 
-### 🔑 Latest Package Updates & Key Features
+### Latest Package Updates & Key Features
 
 | Package | Version | Key Features |
 | :--- | :--- | :--- |
@@ -101,7 +114,7 @@ Based on comprehensive package research across the three primary streams, here's
 | **@browserbasehq/stagehand** | Latest | AI-powered precision browser interactions |
 | **patchright** | Latest | Stealth Chromium browser with anti-detection |
 
-### 🚀 Key Platform Capabilities
+### Key Platform Capabilities
 
 **Multi-Agent Orchestration:**
 - **Google-ADK** enables coordinated multi-agent workflows with Google AI integration
@@ -140,9 +153,9 @@ Based on comprehensive package research across the three primary streams, here's
 
 ---
 
-## 📚 Oideachais — Education Platform Details
+## Oideachais — Education Platform Details
 
-> Full source: [`sruth/oideachais/README.md`](sruth/oideachais/README.md)
+> Full source: [`oideachais/README.md`](oideachais/README.md)
 
 Oideachais is a pan-Celtic curriculum search, content management, and learning outcomes platform. It leverages AI to bridge the gap between official curriculum documents and interactive learning experiences.
 
@@ -189,16 +202,16 @@ Oideachais is a pan-Celtic curriculum search, content management, and learning o
                                                                        └─────────────────┘
 ```
 
-### 🛠 Deployment Configuration
+### Deployment Configuration
 
 - **Development**: Managed via `compose.dev.yaml` for local hot-reloading.
 - **Production**: Deployed as a **Komodo Stack** on the **MacBook M4 Max**.
 - **Secrets**: Injected via **Locket** sidecar, pulling from 1Password.
 - **Routing**: Securely exposed via **Pangolin** at `oideachais.cianfhoghlaim.ie`.
 
-### 🇮🇪 Ireland Education Pipelines
+### Ireland Education Pipelines
 
-The `sruth/oideachais/dlt_sources/ireland/` directory is the primary data ingestion layer for the Republic of Ireland's education system. It provides a comprehensive suite of DLT (Data Load Tool) sources that crawl, extract, normalise, and deduplicate curriculum data from every major Irish education body.
+The `oideachais/dlt_sources/ireland/` directory is the primary data ingestion layer for the Republic of Ireland's education system. It provides a comprehensive suite of DLT (Data Load Tool) sources that crawl, extract, normalise, and deduplicate curriculum data from every major Irish education body.
 
 #### Data Sources
 
@@ -214,38 +227,38 @@ The `sruth/oideachais/dlt_sources/ireland/` directory is the primary data ingest
 
 **Core Curriculum Ingestion:**
 
-- **[`curriculum_source.py`](sruth/oideachais/dlt_sources/ireland/curriculum_source.py)** — Unified entry point. Merges content from curriculumonline.ie, ncca.ie, and examinations.ie into a single, deduplicated data source organised by `(cycle, subject, language)`.
-- **[`curriculum_registry.py`](sruth/oideachais/dlt_sources/ireland/curriculum_registry.py)** — Subject taxonomy and URL resolution engine. Centralised registry of all Irish curriculum subjects, cycles, levels, and source-specific URL patterns.
-- **[`curriculum_document.py`](sruth/oideachais/dlt_sources/ireland/curriculum_document.py)** — Unified Pydantic model for all Irish curriculum documents. Defines `LearningOutcome`, `AssessmentInfo`, `ContentQuality`, `EducationLevel`, and `Language` enums.
+- **[`curriculum_source.py`](oideachais/dlt_sources/ireland/curriculum_source.py)** — Unified entry point. Merges content from curriculumonline.ie, ncca.ie, and examinations.ie into a single, deduplicated data source organised by `(cycle, subject, language)`.
+- **[`curriculum_registry.py`](oideachais/dlt_sources/ireland/curriculum_registry.py)** — Subject taxonomy and URL resolution engine. Centralised registry of all Irish curriculum subjects, cycles, levels, and source-specific URL patterns.
+- **[`curriculum_document.py`](oideachais/dlt_sources/ireland/curriculum_document.py)** — Unified Pydantic model for all Irish curriculum documents. Defines `LearningOutcome`, `AssessmentInfo`, `ContentQuality`, `EducationLevel`, and `Language` enums.
 
 **Per-Subject Sources (`subjects/`):**
 
-- **[`subjects/base.py`](sruth/oideachais/dlt_sources/ireland/subjects/base.py)** — Foundation for per-subject DLT resources. Handles URL resolution, Firecrawl crawling with rate limiting, PDF extraction, bilingual support, and content hashing.
-- **[`subjects/junior_cycle.py`](sruth/oideachais/dlt_sources/ireland/subjects/junior_cycle.py)** — Per-subject DLT resources for all 18 Junior Cycle subjects.
-- **[`subjects/senior_cycle.py`](sruth/oideachais/dlt_sources/ireland/subjects/senior_cycle.py)** — Per-subject DLT resources for all 34 Leaving Certificate subjects.
+- **[`subjects/base.py`](oideachais/dlt_sources/ireland/subjects/base.py)** — Foundation for per-subject DLT resources. Handles URL resolution, Firecrawl crawling with rate limiting, PDF extraction, bilingual support, and content hashing.
+- **[`subjects/junior_cycle.py`](oideachais/dlt_sources/ireland/subjects/junior_cycle.py)** — Per-subject DLT resources for all 18 Junior Cycle subjects.
+- **[`subjects/senior_cycle.py`](oideachais/dlt_sources/ireland/subjects/senior_cycle.py)** — Per-subject DLT resources for all 34 Leaving Certificate subjects.
 
 **Source Adapters & Normalisation:**
 
-- **[`source_adapters.py`](sruth/oideachais/dlt_sources/ireland/source_adapters.py)** — Normalises output from different curriculum sources into a consistent `NormalizedPage` format. Implements adapters for CurriculumOnline, NCCA, and Examinations.ie.
-- **[`content_deduplication.py`](sruth/oideachais/dlt_sources/ireland/content_deduplication.py)** — Cross-source content deduplication via content hashing with source provenance tracking and canonical URL resolution.
-- **[`education_sources.py`](sruth/oideachais/dlt_sources/ireland/education_sources.py)** — Configuration registry for all Irish education websites.
+- **[`source_adapters.py`](oideachais/dlt_sources/ireland/source_adapters.py)** — Normalises output from different curriculum sources into a consistent `NormalizedPage` format. Implements adapters for CurriculumOnline, NCCA, and Examinations.ie.
+- **[`content_deduplication.py`](oideachais/dlt_sources/ireland/content_deduplication.py)** — Cross-source content deduplication via content hashing with source provenance tracking and canonical URL resolution.
+- **[`education_sources.py`](oideachais/dlt_sources/ireland/education_sources.py)** — Configuration registry for all Irish education websites.
 
 **Examination Data:**
 
-- **[`exam_source.py`](sruth/oideachais/dlt_sources/ireland/exam_source.py)** — DLT source for examinations.ie. Crawls chief examiner reports (200+ PDFs), exam archives, marking schemes, and statistics.
-- **[`sec_aural_transcripts.py`](sruth/oideachais/dlt_sources/ireland/sec_aural_transcripts.py)** — Parses structured transcript data from SEC aural exam scripts with dialect tags (Connacht, Munster, Ulster).
-- **[`edcolearning.py`](sruth/oideachais/dlt_sources/ireland/edcolearning.py)** — Extracts Leaving Certificate exam audio resources from EdcoLearning.ie.
+- **[`exam_source.py`](oideachais/dlt_sources/ireland/exam_source.py)** — DLT source for examinations.ie. Crawls chief examiner reports (200+ PDFs), exam archives, marking schemes, and statistics.
+- **[`sec_aural_transcripts.py`](oideachais/dlt_sources/ireland/sec_aural_transcripts.py)** — Parses structured transcript data from SEC aural exam scripts with dialect tags (Connacht, Munster, Ulster).
+- **[`edcolearning.py`](oideachais/dlt_sources/ireland/edcolearning.py)** — Extracts Leaving Certificate exam audio resources from EdcoLearning.ie.
 
 **Intelligent Discovery:**
 
-- **[`agentic_discovery.py`](sruth/oideachais/dlt_sources/ireland/agentic_discovery.py)** — Uses Firecrawl agent for autonomous URL discovery and structured data extraction across Irish educational websites.
-- **[`json_seed.py`](sruth/oideachais/dlt_sources/ireland/json_seed.py)** — Loads pre-existing scraped JSON data as seed data for pipeline bootstrapping.
+- **[`agentic_discovery.py`](oideachais/dlt_sources/ireland/agentic_discovery.py)** — Uses Firecrawl agent for autonomous URL discovery and structured data extraction across Irish educational websites.
+- **[`json_seed.py`](oideachais/dlt_sources/ireland/json_seed.py)** — Loads pre-existing scraped JSON data as seed data for pipeline bootstrapping.
 
 **Statistical & Geospatial Data (`statistics/`):**
 
-- **[`statistics/cso_small_areas.py`](sruth/oideachais/dlt_sources/ireland/statistics/cso_small_areas.py)** — Small Area statistics from CSO PxStat API (18,641 areas, Census 2022).
-- **[`statistics/geohive.py`](sruth/oideachais/dlt_sources/ireland/statistics/geohive.py)** — Geospatial boundaries from GeoHive.ie (ArcGIS FeatureServer).
-- **[`statistics/met_office.py`](sruth/oideachais/dlt_sources/ireland/statistics/met_office.py)** — UK Met Office DataHub integration for weather observations and climate data, supporting cross-border environmental context.
+- **[`statistics/cso_small_areas.py`](oideachais/dlt_sources/ireland/statistics/cso_small_areas.py)** — Small Area statistics from CSO PxStat API (18,641 areas, Census 2022).
+- **[`statistics/geohive.py`](oideachais/dlt_sources/ireland/statistics/geohive.py)** — Geospatial boundaries from GeoHive.ie (ArcGIS FeatureServer).
+- **[`statistics/met_office.py`](oideachais/dlt_sources/ireland/statistics/met_office.py)** — UK Met Office DataHub integration for weather observations and climate data, supporting cross-border environmental context.
 
 #### Data Flow Architecture
 
@@ -351,7 +364,7 @@ pipeline.run(junior_cycle_source(language="ga"))
 
 ```
 dlt_sources/
-├── ireland/                        # 🇮🇪 Republic of Ireland
+├── ireland/                        # Republic of Ireland
 │   ├── curriculum_source.py        # Unified curriculum DLT source
 │   ├── curriculum_registry.py      # Subject taxonomy & URL resolution
 │   ├── curriculum_document.py      # Pydantic document models
@@ -385,9 +398,9 @@ dlt_sources/
 
 ---
 
-## 🏗️ Bonneagar — Infrastructure & Platform Details
+## Bonneagar — Infrastructure & Platform Details
 
-> Full source: [`sruth/bonneagar/README.md`](sruth/bonneagar/README.md)
+> Full source: [`infrastructure/README.md`](infrastructure/README.md)
 
 Bonneagar (Irish: "infrastructure") is the backbone of the Cianfhoghlaim platform — a **multi-cloud, zero-trust infrastructure** that provisions, orchestrates, and secures 50+ containerised services across Oracle Cloud, Hetzner, and local ARM hardware. It combines declarative IaC (Pulumi), GitOps orchestration (Komodo), WireGuard tunneling (Pangolin), and a self-hosted browser automation stack to provide the foundation for all other sruthanna.
 
@@ -414,7 +427,7 @@ Bonneagar (Irish: "infrastructure") is the backbone of the Cianfhoghlaim platfor
  ┌─────────────────────────┐             ┌──────────────────────────┐              ┌──────────────────────────┐
  │   Pulumi IaC            │             │   Komodo Orchestration   │              │   Pangolin Networking    │
  │                         │             │                          │              │                          │
- │ • Cloudflare WAF (31 🌍)│             │ • Core (OCI)             │              │ • WireGuard Tunnels      │
+ │ • Cloudflare WAF (31 )│             │ • Core (OCI)             │              │ • WireGuard Tunnels      │
  │ • Hetzner CAX41 (ARM)   │─────────────│ • Periphery (3 servers)  │──────────────│ • Traefik v3 Reverse Proxy│
  │ • OCI Ampere A1 (ARM)   │             │ • 25 Stacks / 60+ Procs  │              │ • Pocket ID SSO          │
  │ • Automation API deploy │             │ • Canary Deployments     │              │ • CrowdSec WAF           │
@@ -436,7 +449,7 @@ Bonneagar (Irish: "infrastructure") is the backbone of the Cianfhoghlaim platfor
  └─────────────────────────┘             └──────────────────────────┘              └──────────────────────────┘
 ```
 
-### 🖥️ Multi-Cloud Server Fleet
+### Multi-Cloud Server Fleet
 
 | Server | Hardware | Location | Role | Key Services |
 | :--- | :--- | :--- | :--- | :--- |
@@ -444,7 +457,7 @@ Bonneagar (Irish: "infrastructure") is the backbone of the Cianfhoghlaim platfor
 | **cax41-hetzner** | CAX41 ARM, 16 vCPU, 32 GB RAM | Hetzner Nuremberg | Primary Workloads | Memgraph, FalkorDB, MLflow, Langfuse, LanceDB, Cognee, Graphiti, Dagster, Browser Grid |
 | **bunchloch** | MacBook M4 Max, ~14 cores, 48 GB RAM | Local | Dev & Analytics | LakeFS, Lakekeeper, Convex, Crawl4AI, Media servers, Aleyum portal |
 
-### 🌐 Browser Automation (`browser/`)
+### Browser Automation (`browser/`)
 
 A self-hosted, multi-backend browser automation stack following the **Hunter-Gatherer-Operator** pattern:
 
@@ -461,16 +474,16 @@ A self-hosted, multi-backend browser automation stack following the **Hunter-Gat
 
 | Scraper | Target | Extracts |
 | :--- | :--- | :--- |
-| [`duchas_scraper.py`](sruth/bonneagar/browser/sruth_browser/tools/duchas_scraper.py) | [duchas.ie](https://www.duchas.ie) | National Folklore Collection — 740K+ manuscript pages, images, transcriptions, metadata |
-| [`canuint_scraper.py`](sruth/bonneagar/browser/sruth_browser/tools/canuint_scraper.py) | [canuint.ie](https://www.canuint.ie) | Irish dialect audio recordings — Connacht, Munster, Ulster; TTS dataset export (LJSpeech format) |
-| [`examinations_scraper.py`](sruth/bonneagar/browser/sruth_browser/tools/examinations_scraper.py) | [examinations.ie](https://www.examinations.ie) | State Examination Commission — past papers (1999–2024), marking schemes, Chief Examiner Reports |
+| [`duchas_scraper.py`](infrastructure/browser/browser/tools/duchas_scraper.py) | [duchas.ie](https://www.duchas.ie) | National Folklore Collection — 740K+ manuscript pages, images, transcriptions, metadata |
+| [`canuint_scraper.py`](infrastructure/browser/browser/tools/canuint_scraper.py) | [canuint.ie](https://www.canuint.ie) | Irish dialect audio recordings — Connacht, Munster, Ulster; TTS dataset export (LJSpeech format) |
+| [`examinations_scraper.py`](infrastructure/browser/browser/tools/examinations_scraper.py) | [examinations.ie](https://www.examinations.ie) | State Examination Commission — past papers (1999–2024), marking schemes, Chief Examiner Reports |
 
 **Multi-Protocol Server:** A single FastAPI server exposes three protocols simultaneously:
 - **MCP** (JSON-RPC) — Tool discovery/execution for AI agents
 - **AG-UI** (17-event SSE) — CopilotKit integration
 - **TanStack AI** (SSE) — Chat-based browser control
 
-### 🔄 Komodo Orchestration (`komodo/`)
+### Komodo Orchestration (`komodo/`)
 
 Declarative GitOps orchestration managing 25 stack definitions and 60+ automation procedures:
 
@@ -478,12 +491,12 @@ Declarative GitOps orchestration managing 25 stack definitions and 60+ automatio
 
 | Procedure | Purpose |
 | :--- | :--- |
-| [`deploy-cianfhoghlaim`](sruth/bonneagar/komodo/procedures/deploy-cianfhoghlaim.toml) | 6-stage full platform deployment across all servers |
-| [`deploy-multi-cloud`](sruth/bonneagar/komodo/procedures/deploy-multi-cloud.toml) | Dependency-ordered deployment: OCI → Hetzner → Local |
-| [`staged-rollout`](sruth/bonneagar/komodo/procedures/staged-rollout.toml) | Canary deployment with configurable % and auto-rollback |
-| [`rollback`](sruth/bonneagar/komodo/procedures/rollback.toml) | Safe rollback with pre-flight checks and optional snapshots |
-| [`health-check`](sruth/bonneagar/komodo/procedures/health-check.toml) | Aggregate health across all stacks with alerting |
-| [`init-site`](sruth/bonneagar/komodo/procedures/init-site.toml) | 5-stage new site bootstrap: validate → DNS → Pangolin → Ansible → verify |
+| [`deploy-cianfhoghlaim`](infrastructure/komodo/procedures/deploy-cianfhoghlaim.toml) | 6-stage full platform deployment across all servers |
+| [`deploy-multi-cloud`](infrastructure/komodo/procedures/deploy-multi-cloud.toml) | Dependency-ordered deployment: OCI → Hetzner → Local |
+| [`staged-rollout`](infrastructure/komodo/procedures/staged-rollout.toml) | Canary deployment with configurable % and auto-rollback |
+| [`rollback`](infrastructure/komodo/procedures/rollback.toml) | Safe rollback with pre-flight checks and optional snapshots |
+| [`health-check`](infrastructure/komodo/procedures/health-check.toml) | Aggregate health across all stacks with alerting |
+| [`init-site`](infrastructure/komodo/procedures/init-site.toml) | 5-stage new site bootstrap: validate → DNS → Pangolin → Ansible → verify |
 
 **Komodo-Managed Stacks:**
 
@@ -497,7 +510,7 @@ Declarative GitOps orchestration managing 25 stack definitions and 60+ automatio
 | **Pangolin Tunnels** | Newt (Hetzner), OLM (Oracle), OLM (Hetzner) |
 | **Observability** | Datadog APM + LLM Observability on all 3 servers |
 
-### 🛡️ Pangolin Zero-Trust Networking (`pangolin/`)
+### Pangolin Zero-Trust Networking (`pangolin/`)
 
 An identity-aware tunneled reverse proxy providing zero-trust network access:
 
@@ -526,19 +539,19 @@ Internet → Cloudflare (DNS) → Gerbil (WireGuard, 132.145.27.89) → Traefik 
 
 **Agent-to-Agent (A2A) Resources:** Four AgentOS instances (Oideachais, Crypteolas, Browser, Aleyum) exposed via Pangolin with SSO protection, plus an internal A2A gateway for service mesh communication.
 
-### ⚡ Pulumi Infrastructure-as-Code (`pulumi/`)
+### Pulumi Infrastructure-as-Code (`pulumi/`)
 
 Three Pulumi projects (TypeScript) provisioning multi-cloud infrastructure:
 
 | Project | Cloud | Resources |
 | :--- | :--- | :--- |
-| [`cloudflare/`](sruth/bonneagar/pulumi/cloudflare/index.ts) | Cloudflare | WAF ruleset with geo-restriction (31 allowed countries) for 4 domains |
-| [`hetzner/`](sruth/bonneagar/pulumi/hetzner/index.ts) | Hetzner Cloud | CAX41 ARM server (16 vCPU, 32 GB, Nuremberg), SSH key, firewall (6 rules), Cloudflare DNS, cloud-init with Docker + sysctl tuning |
-| [`oci/`](sruth/bonneagar/pulumi/oci/index.ts) | Oracle Cloud | Ampere A1 ARM (4 OCPU, 24 GB, London), VCN/subnet/IGW/security lists, wildcard DNS, Automation API deploy pipeline |
+| [`cloudflare/`](infrastructure/pulumi/cloudflare/index.ts) | Cloudflare | WAF ruleset with geo-restriction (31 allowed countries) for 4 domains |
+| [`hetzner/`](infrastructure/pulumi/hetzner/index.ts) | Hetzner Cloud | CAX41 ARM server (16 vCPU, 32 GB, Nuremberg), SSH key, firewall (6 rules), Cloudflare DNS, cloud-init with Docker + sysctl tuning |
+| [`oci/`](infrastructure/pulumi/oci/index.ts) | Oracle Cloud | Ampere A1 ARM (4 OCPU, 24 GB, London), VCN/subnet/IGW/security lists, wildcard DNS, Automation API deploy pipeline |
 
-**Automation API ([`oci/deploy.ts`](sruth/bonneagar/pulumi/oci/deploy.ts)):** A 5-step CI/CD pipeline — `pulumi up` → wait for SSH → flush Oracle iptables → regenerate Ansible inventory → run Ansible playbook.
+**Automation API ([`oci/deploy.ts`](infrastructure/pulumi/oci/deploy.ts)):** A 5-step CI/CD pipeline — `pulumi up` → wait for SSH → flush Oracle iptables → regenerate Ansible inventory → run Ansible playbook.
 
-### 📦 Infrastructure Stacks (`stacks/`)
+### Infrastructure Stacks (`stacks/`)
 
 ~45 modular Docker Compose stacks organised into 5 categories, each following the **Gold Standard** 5-file convention:
 
@@ -559,7 +572,7 @@ stacks/<category>/<stack>/
 | **Storage** | 18 | Garage (S3), Lakekeeper (Iceberg REST), LanceDB (vectors), Memgraph/FalkorDB (graphs), Qdrant (vector search), Kafka (streaming), Forgejo (Git/CI) |
 | **Tools** | 9 | Actual (finance), Blinko (notes), Linkwarden (bookmarks), Perplexica (AI search), Romm (game library) |
 
-### 🛠 Deployment Configuration
+### Deployment Configuration
 
 - **Development**: Managed via `compose.dev.yaml` for local hot-reloading on MacBook M4 Max.
 - **Production**: Deployed as **Komodo Stacks** across OCI (control plane) and Hetzner (workloads).
@@ -574,7 +587,7 @@ stacks/<category>/<stack>/
 
 Beyond the active code streams, this repository serves as a massive knowledge base for British Isles cultural and political research.
 
-### 📚 Documentation Index (`docs/`)
+### Documentation Index (`docs/`)
 
 The `docs/` folder contains comprehensive research and specifications across multiple domains:
 *   **`docs/agents/`:** Analysis of agentic frameworks (Agno, PydanticAI, Smolagents) and MCP server implementations.
@@ -583,7 +596,7 @@ The `docs/` folder contains comprehensive research and specifications across mul
 *   **`docs/data_engineering/`:** Strategies for Lakehouse architectures using DuckDB, Iceberg, and LakeFS.
 *   **`docs/meaisínfhoghlaim/`:** Machine learning workflows, model evaluation, and fine-tuning patterns.
 
-### 🛠️ Skills Documentation (`.skills/`)
+### Skills Documentation (`.skills/`)
 
 The [`.skills/`](.skills/) folder contains detailed skill documentation for key technologies and frameworks used across the platform. Each skill provides comprehensive guides, best practices, and implementation patterns:
 
@@ -616,10 +629,10 @@ The [`.skills/`](.skills/) folder contains detailed skill documentation for key 
 
 For detailed implementation guides and best practices, refer to individual skill files in the [`.skills/`](.skills/) directory.
 
-### 🏛️ Political & Social Research (`bunchloch/gemini/`)
+### 🏛️ Political & Social Research (`gemini_deep_research/`)
 A massive collection of over 140 deep-dive research documents (PDFs) generated during the project's development. This "Gemini Vault" is organized into thematic subdirectories for clarity.
 
-**Note on Methodology**: These reports were generated using **Gemini Deep Research** with expert prompting. For detailed information on the generation process and official documentation links, see the [**Gemini Vault README**](./bunchloch/gemini/README.md).
+**Note on Methodology**: These reports were generated using **Gemini Deep Research** with expert prompting. For detailed information on the generation process and official documentation links, see the [**Gemini Vault README**](./gemini_deep_research/README.md).
 
 *   **`technology/`**: AI company analysis, Gemini/Google AI goals, Big Tech regulation, and cybersecurity job cycles.
 *   **`politics/`**: Brexit impact, Sinn Féin/Fine Gael coalition strategy, election research, and Irish economic future planning.
@@ -654,35 +667,35 @@ git checkout main
 To ensure transparency and verify the author's background, high-resolution scans of key credentials and professional references are provided below:
 
 ### 📜 Academic & Professional Records
-*   **[University Degree Transcript (BA & HDip)](./cian_cv/ba_and_hdip_transcript.pdf)** | **[Transcript of Results (Bilingual)](./cian_cv/tras_scribhinn_torthai_transcript_of_results.pdf)**
-*   **[Academic Parchment 1](./cian_cv/parcment_1.jpeg)** | **[Academic Parchment 2](./cian_cv/parchment_2.jpeg)**
-*   **[Leaving Certificate](./cian_cv/leaving_certificate.pdf)** | **[Junior Certificate](./cian_cv/junior_certificate.pdf)**
-*   **[Torthaí Ghaeilge (Irish Results)](./cian_cv/torthai_ghaeilge.pdf)**
-*   **[Coláiste na Coiribe](./cian_cv/colaiste_na_coiribe.pdf)** | **[Scoil Iognáid](./cian_cv/scoil_iognaid.pdf)**
-*   **[Teaching Placement Reference](./cian_cv/placement_reference.pdf)** | **[Placement Feedback](./cian_cv/teaching_placement_feedback.pdf)**
-*   **[Part-Time Teaching Reference](./cian_cv/part_time_teaching_reference.pdf)** | **[BME Reference](./cian_cv/bme_reference.pdf)**
-*   **[Apple Award](./cian_cv/apple_award.pdf)** | **[Teaching Council Registration](./cian_cv/teaching_registration.pdf)**
+*   **[University Degree Transcript (BA & HDip)](./cian_mac_an_déisigh_uí_liatháin/ba_and_hdip_transcript.pdf)** | **[Transcript of Results (Bilingual)](./cian_mac_an_déisigh_uí_liatháin/tras_scribhinn_torthai_transcript_of_results.pdf)**
+*   **[Academic Parchment 1](./cian_mac_an_déisigh_uí_liatháin/bachelors_degree_parchment.jpeg)** | **[Academic Parchment 2](./cian_mac_an_déisigh_uí_liatháin/higher_diploma_parchment.jpeg)**
+*   **[Leaving Certificate](./cian_mac_an_déisigh_uí_liatháin/leaving_certificate.pdf)** | **[Junior Certificate](./cian_mac_an_déisigh_uí_liatháin/junior_certificate.pdf)**
+*   **[Torthaí Ghaeilge (Irish Results)](./cian_mac_an_déisigh_uí_liatháin/torthai_ghaeilge.pdf)**
+*   **[Coláiste na Coiribe](./cian_mac_an_déisigh_uí_liatháin/colaiste_na_coiribe.pdf)** | **[Scoil Iognáid](./cian_mac_an_déisigh_uí_liatháin/scoil_iognaid.pdf)**
+*   **[Teaching Placement Reference](./cian_mac_an_déisigh_uí_liatháin/gcc_placement_reference.pdf)** | **[Placement Feedback](./cian_mac_an_déisigh_uí_liatháin/teaching_placement_feedback.pdf)**
+*   **[Part-Time Teaching Reference](./cian_mac_an_déisigh_uí_liatháin/part_time_teaching_reference.pdf)** | **[BME Reference](./cian_mac_an_déisigh_uí_liatháin/bme_reference.pdf)**
+*   **[Apple Award](./cian_mac_an_déisigh_uí_liatháin/apple_award.pdf)** | **[Teaching Council Registration](./cian_mac_an_déisigh_uí_liatháin/teaching_registration.pdf)**
 
-### 🛡️ Cybersecurity & Trust
-*   **[Cybersecurity Professional Reference](./cian_cv/cybersecurity_reference.pdf)**
-*   **[University of Galway Complaint (Covered Up)](./cian_cv/university_galway_complaint_covered_up.pdf)**
-*   **[Threat Message Documentation (Evidence)](./cian_cv/threat_message.jpeg)**
-*   **[Verified Lack of Criminality (Garda Vetting ROI)](./cian_cv/garda_vetting_roi.pdf)**
-*   **[Children First Certificate (Safeguarding)](./cian_cv/children_first_certificate.pdf)**
-*   **[Enhanced Disclosure (Northern Ireland)](./cian_cv/enhanced_cert_ni.pdf)** | **[Enhanced Disclosure (UCL/England)](./cian_cv/enhanced_cert_ucl.pdf)**
+### Cybersecurity & Trust
+*   **[Cybersecurity Professional Reference](./cian_mac_an_déisigh_uí_liatháin/cybersecurity_reference.pdf)**
+*   **[University of Galway Complaint (Covered Up)](./cian_mac_an_déisigh_uí_liatháin/mgo_sean_o_gradaigh_educational_malpractice/dean_of_student_ciara_meehan_abuse_of_power/university_galway_complaint_covered_up.pdf)**
+*   **[Threat Message Documentation (Evidence)](./cian_mac_an_déisigh_uí_liatháin/vetting/psni_proof_belfast.jpeg)**
+*   **[Verified Lack of Criminality (Garda Vetting ROI)](./cian_mac_an_déisigh_uí_liatháin/vetting/garda_vetting_roi.pdf)**
+*   **[Children First Certificate (Safeguarding)](./cian_mac_an_déisigh_uí_liatháin/vetting/children_first_certificate.pdf)**
+*   **[Enhanced Disclosure (Northern Ireland)](./cian_mac_an_déisigh_uí_liatháin/vetting/enhanced_cert_ni.pdf)** | **[Enhanced Disclosure (UCL/England)](./cian_mac_an_déisigh_uí_liatháin/vetting/enhanced_cert_ucl.pdf)**
 
 ### 🏥 Medical & Trauma Verification
-*   **[C-PTSD Diagnosis (Chronic & Complex)](./cian_cv/chronic_complex_ptsd_diagnosis.pdf)**
-*   **[Generalized Anxiety Disorder (GAD) Diagnosis](./cian_cv/anxiety_disorder_diagnosis.pdf)**
-*   **[Head of Counselling Reference](./cian_cv/head_of_counselling_reference.pdf)**
+*   **[C-PTSD Diagnosis (Chronic & Complex)](./cian_mac_an_déisigh_uí_liatháin/identity/cptsd_combined.pdf)**
+*   **[Generalized Anxiety Disorder (GAD) Diagnosis](./cian_mac_an_déisigh_uí_liatháin/identity/cptsd_combined.pdf)**
+*   **[Head of Counselling Reference](./cian_mac_an_déisigh_uí_liatháin/identity/cptsd_combined.pdf)**
 
 ### 🏛️ Civic, Political & Family Heritage
-*   **[Fine Gael Party Membership](./cian_cv/fine_gael_member.pdf)**
-*   **[Liberal Democrats Membership](./cian_cv/libdems_membership.png)**
-*   **[Alliance Party Membership](./cian_cv/alliance_membership.pdf)**
-*   **[Eamon Deacy Memorial & Family Heritage](./cian_cv/uncle_eamonn_memorial_combined.pdf)**
-*   **[Royal Communication (Buckingham Palace)](./cian_cv/buckingham_letter.pdf)**
-*   **[Dual Citizenship Verification (ROI & UK)](./cian_cv/old_passports_dual_citizen_verification_roi_uk.pdf)**
+*   **[Fine Gael Party Membership](./cian_mac_an_déisigh_uí_liatháin/identity/fine_gael_member_latest.pdf)**
+*   **[Liberal Democrats Membership](./cian_mac_an_déisigh_uí_liatháin/identity/libdems_membership.png)**
+*   **[Alliance Party Membership](./cian_mac_an_déisigh_uí_liatháin/identity/alliance_membership.pdf)**
+*   **[Eamon Deacy Memorial & Family Heritage](./cian_mac_an_déisigh_uí_liatháin/deacy/uncle_eamonn_memorial_combined.pdf)**
+*   **[Royal Communication (Buckingham Palace)](./cian_mac_an_déisigh_uí_liatháin/buckingham_letter.pdf)**
+*   **[Dual Citizenship Verification (ROI & UK)](./cian_mac_an_déisigh_uí_liatháin/deacy/old_passports_dual_citizen_verification_roi_uk.pdf)**
 
 ---
 
@@ -692,13 +705,13 @@ To ensure transparency and verify the author's background, high-resolution scans
 
 ---
 
-## 📂 Directory Description: `/Users/cliste/dev/cianfhoghlaim/cian_cv`
+## Directory Description: `/Users/cianmacandeisigh/dev/kings_college_galway/cian_mac_an_déisigh_uí_liatháin`
 
-The `/Users/cliste/dev/cianfhoghlaim/cian_cv` directory contains the digital artifacts and verifiable proof of the author's academic and professional journey. It acts as a dedicated proof-of-paternity vault within the repository, housing high-resolution scans of degree parchments, civic memberships, and security clearances. This ensures that the project's lead developer is identifiable and their qualifications are transparently available to collaborators and stakeholders.
+The `/Users/cianmacandeisigh/dev/kings_college_galway/cian_mac_an_déisigh_uí_liatháin` directory contains the digital artifacts and verifiable proof of the author's academic and professional journey. It acts as a dedicated proof-of-paternity vault within the repository, housing high-resolution scans of degree parchments, civic memberships, and security clearances. This ensures that the project's lead developer is identifiable and their qualifications are transparently available to collaborators and stakeholders.
 
 ---
 
-## 🗣️ A Note on the Name & Author
+## A Note on the Name & Author
 
 **Cianfhoghlaim & Celtic Linguistic Roots:**
 The domain `cianfhoghlaim.ie` || `cian.lyons.co.uk` is a deliberate linguistic play on words that highlights the mechanics of the Irish language while pointing to the broader Celtic linguistic traditions this repository aims to protect:
@@ -712,7 +725,7 @@ This platform is developed entirely by **Cian Lyons-Deacy** (Irish Passport Name
 
 ---
 
-## ⚖️ Paternity & Usage Policy
+## Paternity & Usage Policy
 
 **Moral Rights & Paternity:**
 The author explicitly asserts their moral right of paternity under the Copyright and Related Rights Act 2000 (Ireland) and the Copyright, Designs and Patents Act 1988 (UK) to be permanently identified as the creator of this work.
@@ -729,7 +742,7 @@ By downloading, copying, or utilizing this codebase, you agree to the following 
 3.  **Acceptable Use:** Usage by entities affiliated with sanctioned organizations, paramilitary groups, or those in violation of international human rights conventions is fundamentally banned and will result in immediate technological and legal revocation of access.
 
 
-## 🧠 Neuro-Symbolic Agentic Scraping Pipeline (Upcoming Integration)
+## Neuro-Symbolic Agentic Scraping Pipeline (Upcoming Integration)
 
 As part of the cross-stream alignment between `oideachais` and `meaisínfhoghlaim`, the ML intelligence stream is being upgraded to utilize our new stealth scraping architecture:
 
@@ -738,7 +751,7 @@ As part of the cross-stream alignment between `oideachais` and `meaisínfhoghlai
 *   **Cognee (Cognition):** Semantic extraction into deterministic, graph-based memories. 
 *   **Unified Lakehouse (Storage):** All extracted intelligence is routed natively to the `oideachais` unified Lakehouse stack over the Pangolin network.
 
-## 🔌 Core MCP Ecosystem
+## Core MCP Ecosystem
 
 Oideachais leverages a comprehensive suite of Model Context Protocol (MCP) servers to grant autonomous agents secure, standardized access to infrastructure and intelligence layers:
 
