@@ -1,0 +1,390 @@
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:z="http://www.zotero.org/namespaces/export#"
+ xmlns:dcterms="http://purl.org/dc/terms/"
+ xmlns:bib="http://purl.org/net/biblio#"
+ xmlns:foaf="http://xmlns.com/foaf/0.1/"
+ xmlns:link="http://purl.org/rss/1.0/modules/link/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <bib:Article rdf:about="#item_102">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf>
+           <bib:Journal></bib:Journal>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Raghallaigh</foaf:surname>
+                        <foaf:givenName>Brian Ó</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Dowling</foaf:surname>
+                        <foaf:givenName>Meghan</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Scannell</foaf:surname>
+                        <foaf:givenName>Kevin</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_354"/>
+        <dc:title>Improving full-text search results on dúchas.ie using language technology</dc:title>
+        <dc:date>2019</dc:date>
+        <z:language>en</z:language>
+        <z:libraryCatalog>Zotero</z:libraryCatalog>
+        <bib:pages>7</bib:pages>
+    </bib:Article>
+    <z:Attachment rdf:about="#item_354">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/354/Raghallaigh et al. - 2019 - Improving full-text search results on dúchas.ie us.pdf"/>
+        <dc:title>Raghallaigh et al. - 2019 - Improving full-text search results on dúchas.ie us.pdf</dc:title>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <bib:Article rdf:about="#item_103">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf>
+           <bib:Journal></bib:Journal>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Dowling</foaf:surname>
+                        <foaf:givenName>Meghan</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Lynn</foaf:surname>
+                        <foaf:givenName>Teresa</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Way</foaf:surname>
+                        <foaf:givenName>Andy</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_355"/>
+        <dc:title>Leveraging backtranslation to improve machine translation for Gaelic languages</dc:title>
+        <dcterms:abstract>Irish and Scottish Gaelic are similar but distinct languages from the Celtic language family. Both languages are underresourced in terms of machine translation (MT), with Irish being the better resourced. In this paper, we show how backtranslation can be used to harness the resources of these similar low-resourced languages and build a Scottish-Gaelic to English MT system with little or no highquality bilingual data.</dcterms:abstract>
+        <dc:date>2019</dc:date>
+        <z:language>en</z:language>
+        <z:libraryCatalog>Zotero</z:libraryCatalog>
+        <bib:pages>5</bib:pages>
+    </bib:Article>
+    <z:Attachment rdf:about="#item_355">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/355/Dowling et al. - 2019 - Leveraging backtranslation to improve machine tran.pdf"/>
+        <dc:title>Dowling et al. - 2019 - Leveraging backtranslation to improve machine tran.pdf</dc:title>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <bib:Article rdf:about="#item_104">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf>
+           <bib:Journal></bib:Journal>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>McCrae</foaf:surname>
+                        <foaf:givenName>John P</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Doyle</foaf:surname>
+                        <foaf:givenName>Adrian</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_356"/>
+        <dc:title>Adapting Term Recognition to an Under-Resourced Language: the Case of Irish</dc:title>
+        <dcterms:abstract>Automatic Term Recognition (ATR) is an important method for the summarization and analysis of large corpora, and normally requires a signiﬁcant amount of linguistic input, in particular the use of part-ofspeech taggers. For an under-resourced language such as Irish, the resources necessary for this may be scarce or entirely absent. We evaluate two methods for the automatic extraction of terms, based on the small part-of-speech-tagged corpora that are available for Irish and on a large terminology list, and show that both methods can produce viable term extractors. We evaluate this with a newly constructed corpus that is the ﬁrst available corpus for term extraction in Irish. Our results shine some light on the challenge of adapting natural language processing systems to under-resourced scenarios.</dcterms:abstract>
+        <dc:date>2019</dc:date>
+        <z:language>en</z:language>
+        <z:libraryCatalog>Zotero</z:libraryCatalog>
+        <bib:pages>10</bib:pages>
+    </bib:Article>
+    <z:Attachment rdf:about="#item_356">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/356/McCrae and Doyle - 2019 - Adapting Term Recognition to an Under-Resourced La.pdf"/>
+        <dc:title>McCrae and Doyle - 2019 - Adapting Term Recognition to an Under-Resourced La.pdf</dc:title>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <bib:Article rdf:about="#item_105">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf>
+           <bib:Journal></bib:Journal>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Lynn</foaf:surname>
+                        <foaf:givenName>Teresa</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Scannell</foaf:surname>
+                        <foaf:givenName>Kevin</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_357"/>
+        <dc:title>Code-switching in Irish tweets: A preliminary analysis</dc:title>
+        <dcterms:abstract>As is the case with many languages, research into code-switching in Modern Irish has, until recently, mainly been focused on the spoken language. Online usergenerated content (UGC) is less restrictive than traditional written text, allowing for code-switching, and as such, provides a new platform for text-based research in this ﬁeld of study. This paper reports on the annotation of (English) code-switching in a corpus of 1496 Irish tweets and provides a computational analysis of the nature of code-switching amongst Irishspeaking Twitter users, with a view to providing a basis for future linguistic and socio-linguistic studies.</dcterms:abstract>
+        <dc:date>2019</dc:date>
+        <z:language>en</z:language>
+        <z:libraryCatalog>Zotero</z:libraryCatalog>
+        <bib:pages>9</bib:pages>
+    </bib:Article>
+    <z:Attachment rdf:about="#item_357">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/357/Lynn and Scannell - 2019 - Code-switching in Irish tweets A preliminary anal.pdf"/>
+        <dc:title>Lynn and Scannell - 2019 - Code-switching in Irish tweets A preliminary anal.pdf</dc:title>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <z:Attachment rdf:about="#item_106">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/106/W16-6508.pdf"/>
+        <dc:title>W16-6508.pdf</dc:title>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <z:Attachment rdf:about="#item_107">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/107/W14-46.pdf"/>
+        <dc:title>W14-46.pdf</dc:title>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <bib:Article rdf:about="#item_108">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf>
+           <bib:Journal></bib:Journal>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Fransen</foaf:surname>
+                        <foaf:givenName>Theodorus Leman Franciscus</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_358"/>
+        <dc:title>Past, present and future: Computational approaches to mapping historical Irish cognate verb forms</dc:title>
+        <z:language>en</z:language>
+        <z:libraryCatalog>Zotero</z:libraryCatalog>
+        <bib:pages>249</bib:pages>
+    </bib:Article>
+    <z:Attachment rdf:about="#item_358">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/358/Fransen - Past, present and future Computational approaches.pdf"/>
+        <dc:title>Fransen - Past, present and future Computational approaches.pdf</dc:title>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <bib:Article rdf:about="#item_109">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf>
+           <bib:Journal></bib:Journal>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Lyons</foaf:surname>
+                        <foaf:givenName>Cian</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_359"/>
+        <dc:title>https://cs.slu.edu/~scannell/pub/techspace/index.html</dc:title>
+        <z:language>ga</z:language>
+        <z:libraryCatalog>Zotero</z:libraryCatalog>
+        <bib:pages>6</bib:pages>
+    </bib:Article>
+    <z:Attachment rdf:about="#item_359">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/359/Lyons - httpscs.slu.edu~scannellpubtechspaceindex.h.pdf"/>
+        <dc:title>Lyons - httpscs.slu.edu~scannellpubtechspaceindex.h.pdf</dc:title>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <bib:Article rdf:about="#item_110">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf>
+           <bib:Journal></bib:Journal>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Scannell</foaf:surname>
+                        <foaf:givenName>Kevin P</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_360"/>
+        <dc:title>Neural Models for Predicting Celtic Mutations</dc:title>
+        <dcterms:abstract>The Celtic languages share a common linguistic phenomenon known as initial mutations; these consist of pronunciation and spelling changes that occur at the beginning of some words, triggered in certain semantic or syntactic contexts. Initial mutations occur quite frequently and all non-trivial NLP systems for the Celtic languages must learn to handle them properly. In this paper we describe and evaluate neural network models for predicting mutations in two of the six Celtic languages: Irish and Scottish Gaelic. We also discuss applications of these models to grammatical error detection and language modeling.</dcterms:abstract>
+        <z:language>en</z:language>
+        <z:libraryCatalog>Zotero</z:libraryCatalog>
+        <bib:pages>8</bib:pages>
+    </bib:Article>
+    <z:Attachment rdf:about="#item_360">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/360/Scannell - Neural Models for Predicting Celtic Mutations.pdf"/>
+        <dc:title>Scannell - Neural Models for Predicting Celtic Mutations.pdf</dc:title>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <bib:Article rdf:about="#item_111">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf>
+           <bib:Journal></bib:Journal>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Loingsigh</foaf:surname>
+                        <foaf:givenName>Katie Ní</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Raghallaigh</foaf:surname>
+                        <foaf:givenName>Brian Ó</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_361"/>
+        <dc:title>Starting from Scratch – The Creation of an Irish-language Idiom Database</dc:title>
+        <dcterms:abstract>This paper presents a database of Irish-language idioms along with a description of its internal schema. This is a dialect-specific synchronic study of idioms in the Irish of West Munster from the published work of Canon Peadar Ó Laoghaire (1839–1920). Firstly, a brief overview is given of previous research undertaken on Irish-language idioms in the area of phraseology. The database schema is outlined in the latter section of the paper. Each of the individual categories in which idioms are recorded, categorized, explained and cross-referenced in the database are described in detail. A selection of sample entries is provided in the Appendix to this paper. This research provides an innovative approach to the collection and categorization of Irish-language idioms and also a foundation for further analysis of idioms in other dialects and languages and for future studies in this area.</dcterms:abstract>
+        <z:language>en</z:language>
+        <z:libraryCatalog>Zotero</z:libraryCatalog>
+        <bib:pages>9</bib:pages>
+    </bib:Article>
+    <z:Attachment rdf:about="#item_361">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/361/Loingsigh and Raghallaigh - Starting from Scratch – The Creation of an Irish-l.pdf"/>
+        <dc:title>Loingsigh and Raghallaigh - Starting from Scratch – The Creation of an Irish-l.pdf</dc:title>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <bib:Article rdf:about="#item_112">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf>
+           <bib:Journal></bib:Journal>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Scannell</foaf:surname>
+                        <foaf:givenName>Kevin P</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_362"/>
+        <dc:title>Claonadh Inscne, Líonraí Néaracha, agus an Ghaeilge</dc:title>
+        <dc:date>2020</dc:date>
+        <z:language>ga</z:language>
+        <z:libraryCatalog>Zotero</z:libraryCatalog>
+        <bib:pages>12</bib:pages>
+    </bib:Article>
+    <z:Attachment rdf:about="#item_362">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/362/Scannell - 2020 - Claonadh Inscne, Líonraí Néaracha, agus an Ghaeilg.pdf"/>
+        <dc:title>Scannell - 2020 - Claonadh Inscne, Líonraí Néaracha, agus an Ghaeilg.pdf</dc:title>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <bib:Article rdf:about="#item_114">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf>
+           <bib:Journal></bib:Journal>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Scannell</foaf:surname>
+                        <foaf:givenName>Kevin P</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_365"/>
+        <dc:subject>_tablet</dc:subject>
+        <dc:title>Diachronic Parsing of Pre-Standard Irish</dc:title>
+        <dcterms:abstract>Irish underwent a major spelling standardization in the 1940’s and 1950’s, and as a result it can be challenging to apply language technologies designed for the modern language to older, “pre-standard” texts. Lemmatization, tagging, and parsing of these pre-standard texts play an important role in a number of applications, including the lexicographical work on Foclóir Stairiúil na Gaeilge, a historical dictionary of Irish covering the period from 1600 to the present. We have two main goals in this paper. First, we introduce a small benchmark corpus containing just over 3800 tokens, annotated according to the Universal Dependencies guidelines and covering a range of dialects and time periods since 1600. Second, we establish baselines for lemmatization, tagging, and dependency parsing on this corpus by experimenting with a variety of machine learning approaches.</dcterms:abstract>
+        <z:language>en</z:language>
+        <z:libraryCatalog>Zotero</z:libraryCatalog>
+        <bib:pages>7</bib:pages>
+    </bib:Article>
+    <z:Attachment rdf:about="#item_365">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/365/Scannell_Diachronic Parsing of Pre-Standard Irish.pdf"/>
+        <dc:subject>_tablet</dc:subject>
+        <dc:title>Scannell_Diachronic Parsing of Pre-Standard Irish.pdf</dc:title>
+        <link:type>application/pdf</link:type>
+        <dc:description>&lt;head&gt;&lt;/head&gt;&lt;body&gt;&lt;p id=&quot;zotfile-data&quot; style=&quot;color: #cccccc;&quot; title=&quot;{&amp;quot;lastmod&amp;quot;:1666843697000,&amp;quot;mode&amp;quot;:1,&amp;quot;location&amp;quot;:&amp;quot;[BaseFolder]/Scannell_Diachronic Parsing of Pre-Standard Irish.pdf&amp;quot;,&amp;quot;projectFolder&amp;quot;:&amp;quot;&amp;quot;}&quot;&gt;(hidden zotfile data)&lt;/p&gt;&lt;/body&gt;</dc:description>
+    </z:Attachment>
+    <bib:Article rdf:about="#item_115">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf>
+           <bib:Journal></bib:Journal>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Raghallaigh</foaf:surname>
+                        <foaf:givenName>Brian Ó</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Palandri</foaf:surname>
+                        <foaf:givenName>Andrea</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Cárthaigh</foaf:surname>
+                        <foaf:givenName>Críostóir Mac</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_364"/>
+        <dc:subject>_tablet</dc:subject>
+        <dc:title>Handwritten Text Recognition (HTR) for Irish-Language Folklore</dc:title>
+        <dcterms:abstract>In this paper we present our method for digitising a large collection of handwritten Irish-language texts as part of a project to mine information from a large corpus of Irish and Scottish Gaelic folktales. The handwritten texts form part of the Main Manuscript Collection of the National Folklore Collection of Ireland and contain handwritten transcriptions of oral folklore collected in Ireland in the 20th century. With the goal of creating a large text corpus of the Irish-language folktales contained within this collection, our method involves scanning the pages of the physical volumes and digitising the text on these pages using Transkribus, a platform for the recognition of historical documents. Given the nature of the collection, the approach we have taken involves the creation of individual text recognition models for multiple collectors’ hands. Doing it this way was motivated by the fact that a relatively small number of collectors contributed the bulk of the material, while the differences between each collector in terms of style, layout and orthography were difficult to reconcile within a single handwriting model. We present our preliminary results along with a discussion on the viability of using crowdsourced correction to improve our HTR models.</dcterms:abstract>
+        <z:language>en</z:language>
+        <z:libraryCatalog>Zotero</z:libraryCatalog>
+        <bib:pages>6</bib:pages>
+    </bib:Article>
+    <z:Attachment rdf:about="#item_364">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/364/Raghallaigh et al_Handwritten Text Recognition (HTR) for Irish-Language Folklore.pdf"/>
+        <dc:subject>_tablet</dc:subject>
+        <dc:title>Raghallaigh et al_Handwritten Text Recognition (HTR) for Irish-Language Folklore.pdf</dc:title>
+        <link:type>application/pdf</link:type>
+        <dc:description>&lt;head&gt;&lt;/head&gt;&lt;body&gt;&lt;p id=&quot;zotfile-data&quot; style=&quot;color: #cccccc;&quot; title=&quot;{&amp;quot;lastmod&amp;quot;:1666843697000,&amp;quot;mode&amp;quot;:1,&amp;quot;location&amp;quot;:&amp;quot;[BaseFolder]/Raghallaigh et al_Handwritten Text Recognition (HTR) for Irish-Language Folklore.pdf&amp;quot;,&amp;quot;projectFolder&amp;quot;:&amp;quot;&amp;quot;}&quot;&gt;(hidden zotfile data)&lt;/p&gt;&lt;/body&gt;</dc:description>
+    </z:Attachment>
+</rdf:RDF>
