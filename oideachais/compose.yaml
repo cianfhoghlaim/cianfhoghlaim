@@ -29,7 +29,6 @@ services:
     volumes:
       - .:/app
       - ../../.env:/app/.env:ro
-      - /run/secrets/locket/secrets.env:/app/secrets.env:ro
       - /app/.venv
       - ./dagster.yaml:/opt/dagster/home/dagster.yaml:ro
       - dagster-storage:/opt/dagster/storage
