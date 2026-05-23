@@ -214,6 +214,16 @@ bonneagar/CLOUD_CREDENTIALS_SETUP.md
 
 # Completely ignore all nested dataset contents
 
-# Ignore massive data directories entirely
-oideachais/datasets/
-oideachais/exam_scraper/
+# =============================================================================
+# GITHUB FILE SIZE LIMIT EXCLUSIONS (>100MB)
+# =============================================================================
+# The following specific files are excluded because they exceed GitHub's 100MB 
+# strict file size limit. We preserve the parent directories for dlt ingestion 
+# and orchestration, but these massive CSV/JSON/pack files must remain local or 
+# be synced via MotherDuck/Cloudflare R2 to prevent 'git push' timeouts.
+stedding/site_scrape_samples/curriculumonline/www.curriculumonline.ie_getmedia_175e5aeb-a604-42c5-83eb-847ce8da7a2e_STUDENT_04_High_res.pdf.json
+oideachais/data_platform/datasets/uk/ucas/eoc_provider_2023/*main scheme applications acceptances.csv
+oideachais/data_platform/datasets/uk/ucas/eoc_2023/*acceptance route.csv
+oideachais/data_platform/datasets/uk/dfe/key-stage-4-performance_2023-24/data/202324_subject_school_all_exam_entriesgrades_final.csv
+oideachais/data_platform/datasets/uk/dfe/a-level-and-other-16-to-18-results_2023-24/data/all_inst_data.csv
+hackathons/gsoc/beagle/docs.beagleboard.io/.git_disabled/objects/pack/*.pack
