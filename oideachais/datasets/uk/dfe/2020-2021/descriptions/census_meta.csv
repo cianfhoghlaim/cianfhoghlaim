@@ -1,0 +1,23 @@
+Field Number,Field Reference,Field Name,Values,Data Format,LA level field?,National level field?
+1,URN,School Unique Reference Number,999999,I6,No,No
+2,LA,LA number,999,I3,Yes,No
+3,ESTAB,ESTAB number,9999,I4,No,No
+4,SCHOOLTYPE,Type of school,String,,No,No
+5,NOR,Total number of pupils on roll,9999 or NA,,Yes,Yes
+6,NORG,Number of girls on roll,9999 or NA,,Yes,Yes
+7,NORB,Number of boys on roll,9999 or NA,,Yes,Yes
+8,PNORG,Percentage of girls on roll,99.9 or NA,,Yes,Yes
+9,PNORB,Percentage of boys on roll,99.9 or NA,,Yes,Yes
+10,TSENELSE,Number of SEN pupils with an EHC plan,9999 or NA,A4,Yes,Yes
+11,PSENELSE,Percentage of SEN pupils with an EHC plan,99.9 or NA,A4,Yes,Yes
+12,TSENELK,Number of eligible pupils with SEN support,9999 or NA,A4,Yes,Yes
+13,PSENELK,Percentage of eligible pupils with SEN support,99.9 or NA,A4,Yes,Yes
+14,NUMEAL,No.  pupils where English not first language,9999 or NA,A4,Yes,Yes
+15,NUMENGFL,No. pupils with English first language,9999 or NA,A4,Yes,Yes
+16,NUMUNCFL,No. pupils where first language is unclassified,9999 or NA,A4,Yes,Yes
+17,PNUMEAL,%  pupils where English not first language,99.9 or NA,A4,Yes,Yes
+18,PNUMENGFL,% pupils with English first language,99.9 or NA,A4,Yes,Yes
+19,PNUMUNCFL,% pupils where first language is unclassified,99.9 or NA,A4,Yes,Yes
+20,NUMFSM,No. pupils eligible for free school meals,9999 or NA,A4,Yes,Yes
+21,NUMFSMEVER,Number of pupils eligible for FSM at any time during the past 6 years,9999 or NA,A6,Yes,Yes
+22,PNUMFSMEVER,Percentage of pupils eligible for FSM at any time during the past 6 years,99.9 or NA,A4,Yes,Yes

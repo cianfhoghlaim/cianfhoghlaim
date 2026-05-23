@@ -1,0 +1,1317 @@
+Key stage 4 performance
+Academic year 2021/22
+
+Description
+
+---
+
+Coverage
+
+---
+
+File formats and conventions
+
+---
+
+Data files
+
+KS4 national data
+
+Filename: 2122_national_data_revised.csv
+Geographic levels: National
+Time period: 2009/10 to 2021/22
+Content summary: National level headline entry and attainment measures broken down by year, detailed school type, gender, prior attainment, school admission type and school religious denomination.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                          |  Variable description
+-------------------------------------  |  --------------------------------------------------------------------------------------------------------------------------------
+avg_att8                               |  Average Attainment 8 score of all pupils
+avg_att8_ebac                          |  Average Attainment 8 score of all pupils for Ebacc element
+avg_att8_eng                           |  Average Attainment 8 score of all pupils for English element
+avg_att8_mat                           |  Average Attainment 8 score of all pupils for mathematics element
+avg_att8_open                          |  Average Attainment 8 score of all pupils for open element
+avg_att8_open_g                        |  Average Attainment 8 score of all pupils for open element - GCSE only
+avg_att8_open_ng                       |  Average Attainment 8 score of all pupils for open element - non-GCSE only
+avg_ebac_fill                          |  Average number of Ebacc slots filled (per pupil)
+avg_ebaccaps                           |  Average EBacc APS score per pupil
+avg_ebptseng_ll                        |  Average point score of all pupils for Ebacc English pillar including English literature
+avg_ebptshum                           |  Average point score of all pupils for Ebacc humanities pillar
+avg_ebptslan                           |  Average point score of all pupils for Ebacc language pillar
+avg_ebptsmat                           |  Average point score of all pupils for Ebacc mathematics pillar
+avg_ebptssci                           |  Average point score of all pupils for Ebacc science pillar
+avg_open_fill                          |  Average number of open slots filled (per pupil)
+avg_p8ebac                             |  Average Progress 8 score of all pupils for Ebacc element
+avg_p8eng                              |  Average Progress 8 score of all pupils for English element
+avg_p8mat                              |  Average Progress 8 score of all pupils for mathematics element
+avg_p8open                             |  Average Progress 8 score of all pupils for open element
+avg_p8score                            |  Average Progress 8 score of all pupils
+characteristic_admission_type          |  Basis for admission into the school e.g. non-selective schools in other areas, selective schools
+characteristic_gender                  |  Gender
+characteristic_prior_attainment        |  Attainment level assigned to pupil based on their KS2 results
+characteristic_religious_denomination  |  Religious denomination of school
+p8ebac_CI_low                          |  Progress 8 lower 95% confidence interval for Ebacc element
+p8ebac_CI_upp                          |  Progress 8 upper 95% confidence interval for Ebacc element
+p8eng_CI_low                           |  Progress 8 lower 95% confidence interval for English element
+p8eng_CI_upp                           |  Progress 8 upper 95% confidence interval for English element
+p8mat_CI_low                           |  Progress 8 lower 95% confidence interval for mathematics element
+p8mat_CI_upp                           |  Progress 8 upper 95% confidence interval for mathematics element
+p8open_CI_low                          |  Progress 8 lower 95% confidence interval for open element
+p8open_CI_upp                          |  Progress 8 upper 95% confidence interval for open element
+p8score_CI_low                         |  Progress 8 lower 95% confidence interval
+p8score_CI_upp                         |  Progress 8 upper 95% confidence interval
+pt_anypass                             |  Percentage of pupils achieving any passes at GCSE or equivalent
+pt_ebac2sci_94                         |  Percentage of pupils achieving a pass in EBacc science pillar at grade 9-4
+pt_ebac2sci_95                         |  Percentage of pupils achieving a pass in EBacc science pillar at grade 9-5
+pt_ebac2sci_e                          |  Percentage of pupils entered for Ebacc science pillar
+pt_ebacc_94                            |  Percentage of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_95                            |  Percentage of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_e_ptq_ee                      |  Percentage of pupils entering the English Baccalaureate
+pt_ebaccsubjent_0                      |  Percentage of pupils entering 0 components of the English Baccalaureate
+pt_ebaccsubjent_1                      |  Percentage of pupils entering 1 components of the English Baccalaureate
+pt_ebaccsubjent_2                      |  Percentage of pupils entering 2 components of the English Baccalaureate
+pt_ebaccsubjent_3                      |  Percentage of pupils entering 3 components of the English Baccalaureate
+pt_ebaccsubjent_4                      |  Percentage of pupils entering 4 components of the English Baccalaureate
+pt_ebaceng_94                          |  Percentage of pupils achieving a standard pass in EBacc English pillar at grade 9-4
+pt_ebaceng_95                          |  Percentage of pupils achieving a strong pass in EBacc English pillar at grade 9-5
+pt_ebaceng_e                           |  Percentage of pupils entered for Ebacc English pillar
+pt_ebachum_94                          |  Percentage of pupils achieving a pass in EBacc humanities pillar at grade 9-4
+pt_ebachum_95                          |  Percentage of pupils achieving a pass in EBacc humanities pillar at grade 9-5
+pt_ebachum_e                           |  Percentage of pupils entered for Ebacc humanities pillar
+pt_ebaclan_94                          |  Percentage of pupils achieving a pass in EBacc language pillar at grade 9-4
+pt_ebaclan_95                          |  Percentage of pupils achieving a pass in EBacc language pillar at grade 9-5
+pt_ebaclan_e                           |  Percentage of pupils entered for Ebacc language pillar
+pt_ebacmat_94                          |  Percentage of pupils achieving a standard pass in EBacc mathematics pillar at grade 9-4
+pt_ebacmat_95                          |  Percentage of pupils achieving a strong pass in EBacc mathematics pillar at grade 9-5
+pt_ebacmat_e                           |  Percentage of pupils entered for Ebacc mathematics pillar
+pt_eballsci_ptq_ee                     |  Percentage of pupils entered for three of: biology, physics, chemistry, computer science GCSE
+pt_ent_comb_sci                        |  Percentage of pupils entered for combined science
+pt_ent_hist_geog                       |  Percentage of pupils entered for both history and geography
+pt_entbasics                           |  Percentage of pupils entering English and mathematics GCSEs
+pt_entered_art                         |  Percentage of pupils entered for any arts subject
+pt_entered_arts_qual                   |  Percentage of pupils entered for any arts qualificatiom
+pt_entered_music_qual                  |  Percentage of pupils entered for music qualification
+pt_entry_1                             |  Percentage of pupils entered for at least 1 GCSE or equivalent
+pt_l2basics_94                         |  Percentage of pupils achieving grades 4 or above in English and mathematics GCSEs
+pt_l2basics_95                         |  Percentage of pupils achieving grades 5 or above in English and mathematics GCSEs
+pt_multilan_e                          |  Percentage of pupils entered for more than one modern foreign language
+pt_triplesci_e                         |  Percentage of pupils entered for physics, chemistry and biology
+school_characteristic                  |  The types of school in the data
+t_anypass                              |  Total number of pupils achieving any passes at GCSE or equivalent
+t_att8                                 |  Total sum of pupils Attainment 8 scores
+t_att8_ebac                            |  Total sum of pupils Attainment 8 scores for Ebacc element
+t_att8_eng                             |  Total sum of pupils Attainment 8 scores for English element
+t_att8_mat                             |  Total sum of pupils Attainment 8 scores for mathematics element
+t_att8_open                            |  Total sum of pupils Attainment 8 scores for open element
+t_att8_open_g                          |  Total sum of pupils Attainment 8 scores for open element - GCSE only
+t_att8_open_ng                         |  Total sum of pupils Attainment 8 scores for open element - non-GCSE only
+t_ebac_fill                            |  Total number of Ebacc slots filled (all pupils)
+t_ebac2sci_94                          |  Total number of pupils achieving a pass in EBacc science pillar at grade 9-4
+t_ebac2sci_95                          |  Total number of pupils achieving a pass in EBacc science pillar at grade 9-5
+t_ebac2sci_e                           |  Total number of pupils entered for Ebacc science pillar
+t_ebacc_94                             |  Total number of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_95                             |  Total number of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_e_ptq_ee                       |  Total number of pupils entering the English Baccalaureate
+t_ebaccaps                             |  Total EBacc APS score of pupils
+t_ebaccsubjent_0                       |  Total number of pupils entering 0 components of the English Baccalaureate
+t_ebaccsubjent_1                       |  Total number of pupils entering 1 components of the English Baccalaureate
+t_ebaccsubjent_2                       |  Total number of pupils entering 2 components of the English Baccalaureate
+t_ebaccsubjent_3                       |  Total number of pupils entering 3 components of the English Baccalaureate
+t_ebaccsubjent_4                       |  Total number of pupils entering 4 components of the English Baccalaureate
+t_ebaceng_94                           |  Total number of pupils achieving a standard pass in EBacc English pillar at grade 9-4
+t_ebaceng_95                           |  Total number of pupils achieving a strong pass in EBacc English pillar at grade 9-5
+t_ebaceng_e                            |  Total number of pupils entered for Ebacc English pillar
+t_ebachum_94                           |  Total number of pupils achieving a pass in EBacc humanities pillar at grade 9-4
+t_ebachum_95                           |  Total number of pupils achieving a pass in EBacc humanities pillar at grade 9-5
+t_ebachum_e                            |  Total number of pupils entered for Ebacc humanities pillar
+t_ebaclan_94                           |  Total number of pupils achieving a pass in EBacc language pillar at grade 9-4
+t_ebaclan_95                           |  Total number of pupils achieving a pass in EBacc language pillar at grade 9-5
+t_ebaclan_e                            |  Total number of pupils entered for Ebacc language pillar
+t_ebacmat_94                           |  Total number of pupils achieving a standard pass in EBacc mathematics pillar at grade 9-4
+t_ebacmat_95                           |  Total number of pupils achieving a strong pass in EBacc mathematics pillar at grade 9-5
+t_ebacmat_e                            |  Total number of pupils entered for Ebacc mathematics pillar
+t_eballsci_ptq_ee                      |  Total number of pupils entered for three of: biology, physics, chemistry, computer science GCSE
+t_ebptseng_ll                          |  Total sum of pupils point scores for Ebacc English pillar including English literature
+t_ebptshum                             |  Total sum of pupils point scores for Ebacc humanities pillar
+t_ebptslan                             |  Total sum of pupils point scores for Ebacc language pillar
+t_ebptsmat                             |  Total sum of pupils point scores for Ebacc mathematics pillar
+t_ebptssci                             |  Total sum of pupils point scores for Ebacc science pillar
+t_ent_comb_sci                         |  Total number of pupils entered for combined science
+t_ent_hist_geog                        |  Total number of pupils entered for both history and geography
+t_entbasics                            |  Total number of pupils entering English and mathematics GCSEs
+t_entered_art                          |  Total number of pupils entered for any arts subject
+t_entered_arts_qual                    |  Total number of pupils entered for any arts qualification
+t_entered_music_qual                   |  Total number of pupils entered for music qualification
+t_entry_1                              |  Total number of pupils entered for at least 1 GCSE or equivalent
+t_inp8calc                             |  Total number of pupils included in Progress 8 measure
+t_l2basics_94                          |  Total number of pupils achieving grades 4 or above in English and mathematics GCSEs
+t_l2basics_95                          |  Total number of pupils achieving grades 5 or above in English and mathematics GCSEs
+t_multilan_e                           |  Total number of pupils entered for more than one modern foreign language
+t_open_fill                            |  Total number of open slots filled (all pupils)
+t_p8ebac                               |  Total sum of pupils Progress 8 scores for Ebacc element
+t_p8eng                                |  Total sum of pupils Progress 8 scores for English element
+t_p8mat                                |  Total sum of pupils Progress 8 scores for mathematics element
+t_p8open                               |  Total sum of pupils Progress 8 scores for open element
+t_p8score                              |  Total sum of pupils Progress 8 scores
+t_pupils                               |  Total number of pupils at the end of key stage 4
+t_schools                              |  Total number of schools
+t_triplesci_e                          |  Number of pupils entered for physics, chemistry and biology
+
+Footnotes:
+
+1. A Progress 8 score of 1.0 means pupils in the group make on average approximately a grade more progress than the national average; a score of -0.5 means they make on average approximately half a grade less progress than average. Progress 8 scores should be interpreted alongside the associated confidence intervals. If the lower bound of the confidence interval is greater than zero, it can be interpreted as meaning that the group achieves greater than average progress compared to pupils in mainstream schools nationally and that this is statistically significant. If the upper bound is negative, this means that the group achieves lower than average progress compared to pupils in mainstream schools nationally and that this is statistically significant.
+2. In 2020 and 2021, all GCSEs in England have been reformed and use the new 9 to 1 grading system (rather than A*-G). Year on year comparisons will be limited until these qualifications are consistently included from 2020 onwards. However, results for 2020 and 2021 are not comparable with earlier years due to the cancellation of exams (due to COVID-19) and the changes to the way GCSE grades were awarded and results for 2022 are not comparable with previous years due to the changes relating to grading assessments.
+3. c = a cell that has been suppressed due to low number of pupils. Suppression was applied where deemed necessary for all data up to 2018/19. For 2019/20, DfE suppression policy changed. For 2020 and 2021 results where a geographical area contains only one school (for example Isles of Scilly) the data for that area has been suppressed. This is in line with the announcement that school level data would not be published using either summer 2020 or summer 2021 exam grades awarded. Data is not being supressed in 2022 at local authority or national level.
+4. State-funded special schools include local authority maintained special schools, academy sponsor led special schools, academy special schools and special free schools. They exclude independent special schools and non-maintained special schools.
+5. Local authority (LA) maintained mainstream schools include community schools, voluntary aided schools, voluntary controlled schools and foundation schools. Schools fully or partially under local authority control that are state-funded, mainly by the Dedicated Schools Grant.
+6. Academies and free schools include sponsored academies, converter academies, free schools studio schools and university technical colleges (UTCs).
+7. Non selective schools in highly selective areas: Includes all non-selective schools in local authorities with a high level of selection (where 25% or more of state-funded secondary places are in state-funded selective schools). These local authorities are Bexley, Buckinghamshire, Kent, Lincolnshire, Medway, Slough, Southend-on-Sea, Sutton, Torbay, Trafford and Wirral.
+8. All schools include state-funded schools, independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision. Since September 2013, general further education colleges and sixth-form colleges have been able to directly enrol 14 to 16 year-olds. 2014/15 was the first year in which colleges have pupils at the end of key stage 4. From 2016 onwards, entries and achievements for these pupils are included in figures as state-funded schools.
+9. Most secondary schools educate pupils from year 7 (age 11 to 12) to year 11 (age 15 to 16). Some schools and colleges, such as university technical colleges (UTCs), studio schools or further education colleges with key stage 4 provision, differ in their age range and specialisms and this should be borne in mind when reviewing the performance tables data for these types of provision. For example, Progress 8 measures the progress made by pupils from the end of year 6 (end of primary school) through to the end of year 11, covering a period of five years. In UTCs, studio schools and some other academies, pupils typically start in year 10, rather than in year 7 as is the case for most secondary schools. This means that, by the end of year 11, pupils in these schools will have typically attended that school for only 2 years, compared to 5 years for pupils in most secondary schools. As a result, the Progress 8 data for these schools is not directly comparable with the Progress 8 data for other schools. UTCs, studio schools and some FE colleges with KS4 provision provide a specialist technical and professional education. The government’s position is that it is not appropriate to expect the same rates of EBacc entry from these types of provision and that each school should decide on a case by case basis whether its specialist curriculum is compatible with the full EBacc.
+10. Selective schools admit pupils wholly or mainly with reference to ability. These schools are formally designated as grammar schools.
+11. In 2020 and 2021 Progress 8 data was not published because of the cancellation of GCSE exams (due to COVID-19). Calculating Progress 8 has an element of modelling (estimating the average Attainment 8 score for pupils with similar prior attainment) and with the lack of exam data, the Progress 8 measure is not meaningful as a measure of Progress for 2021. Progress 8 has been reintroduced in 2022.
+12. : = When data is unavailable for other reasons
+13. All independent schools include non-maintained special schools, independent special schools and independent schools.
+14. All State-funded special schools include community special schools, foundation special schools, special sponsored academies, special converter academies and special free schools.
+15. EBacc sciences includes the double award GCSE in combined science, and single GCSEs in biology, chemistry, physics and computer science.
+16. Non selective schools in other areas: Includes all non-selective schools that are not in highly selective areas, including those in areas with some selection.
+17. Religious character is taken from the GIAS (Get information about schools) website and is the legal designation of each school. Any state-funded mainstream schools who do not have their religious character recorded on the GIAS website are recorded in 'no religious character'. Religious character is taken from GIAS and are given as at 12 September at the start of the academic year, and is the legal designation of each school.
+18. Hospital, PRU & AP schools include Community Hospital School, Foundation Hospital School, Pupil Referral Unit, sponsored academies, convertor academies, free school and alternative provision.
+19. State-funded mainstream schools include academies, free schools, city technology colleges and further education colleges with provision for 14 to 16 year-olds. They exclude state-funded special schools, independent schools, independent special schools, non-maintained special schools, hospital schools and alternative provision (including pupil referral units, AP free schools and AP academies as well as state-funded AP placements in other institutions). Further education colleges with 14-16 provision are included in the total figure for all state-funded schools but not in the breakdowns by religious character or school admissions; therefore, figures by religious character or school admissions will not add up to the figure for all state-funded mainstream schools.
+20. Average number of slots filled that contains U grades or other qualifications scoring 0 points are counted as a non-filled slot.
+21. z = When an observation is not applicable
+22. Since September 2013, general further education (FE) colleges and sixth-form colleges have been able to directly enrol 14- to 16-year-olds. Entries and achievements for these pupils are included in figures as state-funded schools. As FE colleges do not complete the school census, pupils at the end of key stage 4 attending FE colleges are included in the all pupils lines but not in the majority of the characteristics breakdowns. Therefore, there are some cases where the individual characteristics breakdowns will not add up to the all pupils figure. Pupils in FE colleges are included in the free school meals and disadvantaged figures from 2015/16 onwards.
+23. All state-funded schools include local authority maintained mainstream schools, academies, free schools, city technology colleges, further education colleges with provision for 14 to 16 year-olds and state-funded special schools. They exclude independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision.
+24. The open element contains the three highest point scores in any three other subjects, including English language or literature (if not counted in the English slot), further GCSE qualifications (including English Baccalaureate subjects) or any other non-GCSE qualifications on the DfE approved list.
+
+
+KS4 national characteristics data
+
+Filename: 2122_nationalchar_data_revised.csv
+Geographic levels: National
+Time period: 2018/19 to 2021/22
+Content summary: National level headline entry and attainment measures broken down by year, detailed school type, gender, major and minor ethnicity, free school meal eligibility, special educational need status and description, primary need, disadvantaged status, first language, school admission type and school religious denomination.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                          |  Variable description
+-------------------------------------  |  --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+avg_att8                               |  Average Attainment 8 score of all pupils
+avg_ebaccaps                           |  Average EBacc APS score per pupil
+avg_p8score                            |  Average Progress 8 score of all pupils
+characteristic_admission_type          |  Basis for admission into the school e.g. non-selective schools in other areas, selective schools
+characteristic_all_primary_need        |  Primary need grouping
+characteristic_disadvantage            |  Disadvantaged status
+characteristic_ethnic_major            |  Major ethnic group
+characteristic_ethnic_minor            |  Minor ethnic group
+characteristic_first_language          |  English as an Additional Language status
+characteristic_free_school_meals       |  Free school meal eligibility
+characteristic_gender                  |  Gender
+characteristic_primary_need            |  All pupils with a primary need (from 2014/15 onwards this consisted of pupils flagged as SEN with a statement, EHC plan, SEN support, school action or school action plus)
+characteristic_religious_denomination  |  Religious denomination of school
+characteristic_sen_description         |  Special Educational Needs description
+characteristic_sen_status              |  Special Educational Needs status
+p8score_CI_low                         |  Progress 8 lower 95% confidence interval
+p8score_CI_upp                         |  Progress 8 upper 95% confidence interval
+pt_ebacc_94                            |  Percentage of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_95                            |  Percentage of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_e_ptq_ee                      |  Percentage of pupils entering the English Baccalaureate
+pt_entbasics                           |  Percentage of pupils entering English and mathematics GCSEs
+pt_l2basics_94                         |  Percentage of pupils achieving grades 4 or above in English and mathematics GCSEs
+pt_l2basics_95                         |  Percentage of pupils achieving grades 5 or above in English and mathematics GCSEs
+school_characteristic                  |  The types of school in the data
+t_att8                                 |  Total sum of pupils Attainment 8 scores
+t_ebacc_94                             |  Total number of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_95                             |  Total number of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_e_ptq_ee                       |  Total number of pupils entering the English Baccalaureate
+t_ebaccaps                             |  Total EBacc APS score of pupils
+t_entbasics                            |  Total number of pupils entering English and mathematics GCSEs
+t_inp8calc                             |  Total number of pupils included in Progress 8 measure
+t_l2basics_94                          |  Total number of pupils achieving grades 4 or above in English and mathematics GCSEs
+t_l2basics_95                          |  Total number of pupils achieving grades 5 or above in English and mathematics GCSEs
+t_p8score                              |  Total sum of pupils Progress 8 scores
+t_pupils                               |  Total number of pupils at the end of key stage 4
+t_schools                              |  Total number of schools
+
+Footnotes:
+
+1. English includes 'pupils whose first language is English’ includes 'not known but believed to be English'.
+2. Other than English includes ‘pupils whose first language is other than English’ includes 'not known but believed to be other than English'.
+3. Statement/EHC plan indicates whether a pupil a pupil has a statement of SEN or an education, health and care (EHC) plan when a formal assessment has been made.
+4. Social, Emotional and Mental Health (SEMH) was added as a new type of need in 2014/15; the previous type of need Behaviour, Emotional and Social Difficulties has been removed although it is not expected that SEMH will be a direct replacement.
+5. SEN support indicates whether a pupil has extra or different help given from that provided as part of the school’s usual curriculum. The class teacher and SEN coordinator (SENCO) may receive advice or support from outside specialists. This category replaces the former ‘school action’ and ‘school action plus’ categories.
+6. A Progress 8 score of 1.0 means pupils in the group make on average approximately a grade more progress than the national average; a score of -0.5 means they make on average approximately half a grade less progress than average. Progress 8 scores should be interpreted alongside the associated confidence intervals. If the lower bound of the confidence interval is greater than zero, it can be interpreted as meaning that the group achieves greater than average progress compared to pupils in mainstream schools nationally and that this is statistically significant. If the upper bound is negative, this means that the group achieves lower than average progress compared to pupils in mainstream schools nationally and that this is statistically significant.
+7. In 2020 and 2021, all GCSEs in England have been reformed and use the new 9 to 1 grading system (rather than A*-G). Year on year comparisons will be limited until these qualifications are consistently included from 2020 onwards. However, results for 2020 and 2021 are not comparable with earlier years due to the cancellation of exams (due to COVID-19) and the changes to the way GCSE grades were awarded and results for 2022 are not comparable with previous years due to the changes relating to grading assessments.
+8. 'Any SEN' indicates whether a pupil has learning difficulties or disabilities that make it harder for them to learn than most children of the same age. This includes 'SEN with a statement 'EHC plan' or 'SEN support'.
+9. c = a cell that has been suppressed due to low number of pupils. Suppression was applied where deemed necessary for all data up to 2018/19. For 2019/20, DfE suppression policy changed. For 2020 and 2021 results where a geographical area contains only one school (for example Isles of Scilly) the data for that area has been suppressed. This is in line with the announcement that school level data would not be published using either summer 2020 or summer 2021 exam grades awarded. Data is not being supressed in 2022 at local authority or national level.
+10. State-funded special schools include local authority maintained special schools, academy sponsor led special schools, academy special schools and special free schools. They exclude independent special schools and non-maintained special schools.
+11. Sub totals may not sum to the grand total due to a small number of pupils with missing information e.g. for FSM, SEN, EAL and those where ethnicity is not recorded.
+12. Local authority (LA) maintained mainstream schools include community schools, voluntary aided schools, voluntary controlled schools and foundation schools. Schools fully or partially under local authority control that are state-funded, mainly by the Dedicated Schools Grant.
+13. Academies and free schools include sponsored academies, converter academies, free schools studio schools and university technical colleges (UTCs).
+14. Non selective schools in highly selective areas: Includes all non-selective schools in local authorities with a high level of selection (where 25% or more of state-funded secondary places are in state-funded selective schools). These local authorities are Bexley, Buckinghamshire, Kent, Lincolnshire, Medway, Slough, Southend-on-Sea, Sutton, Torbay, Trafford and Wirral.
+15. Most secondary schools educate pupils from year 7 (age 11 to 12) to year 11 (age 15 to 16). Some schools and colleges, such as university technical colleges (UTCs), studio schools or further education colleges with key stage 4 provision, differ in their age range and specialisms and this should be borne in mind when reviewing the performance tables data for these types of provision. For example, Progress 8 measures the progress made by pupils from the end of year 6 (end of primary school) through to the end of year 11, covering a period of five years. In UTCs, studio schools and some other academies, pupils typically start in year 10, rather than in year 7 as is the case for most secondary schools. This means that, by the end of year 11, pupils in these schools will have typically attended that school for only 2 years, compared to 5 years for pupils in most secondary schools. As a result, the Progress 8 data for these schools is not directly comparable with the Progress 8 data for other schools. UTCs, studio schools and some FE colleges with KS4 provision provide a specialist technical and professional education. The government’s position is that it is not appropriate to expect the same rates of EBacc entry from these types of provision and that each school should decide on a case by case basis whether its specialist curriculum is compatible with the full EBacc.
+16. Disadvantaged all other includes pupils for whom free school meal eligibility, Special Educational Needs status (SEN provision) or SEN primary need could not be determined.
+17. From 2014/15, disadvantaged pupils include pupils known to be eligible for free school meals (FSM) in any spring, autumn, summer, alternative provision or pupil referral unit census from year 6 to year 11 or are looked after children for at least one day or are adopted from care. For 2013/14 and earlier years, they include pupils known to be eligible for FSM in any spring, autumn, summer, alternative provision or pupil referral unit census from year 6 to year 11 or are looked after children.
+18. Selective schools admit pupils wholly or mainly with reference to ability. These schools are formally designated as grammar schools.
+19. In 2020 and 2021 Progress 8 data was not published because of the cancellation of GCSE exams (due to COVID-19). Calculating Progress 8 has an element of modelling (estimating the average Attainment 8 score for pupils with similar prior attainment) and with the lack of exam data, the Progress 8 measure is not meaningful as a measure of Progress for 2021. Progress 8 has been reintroduced in 2022.
+20. 'No identified SEN' includes pupils whom could not obtained, refused, unclassified or could not be determined.
+21. : = When data is unavailable for other reasons
+22. 'Total' includes pupils for whom Free School Meal eligibility (FSM), Special Educational Needs status (SEN provision) or SEN primary need could not be determined. This figure also includes pupils at further education colleges: as FE colleges do not complete the school census, we do not have matched pupil characteristics data of pupils in FE colleges and therefore these pupils are not included in characteristics breakdowns. This means that there are some cases where the individual characteristics breakdowns will not add up to the all pupils figure.
+23. 'No SEN' includes pupils whom could not obtained, refused, unclassified or could not be determined.
+24. All State-funded special schools include community special schools, foundation special schools, special sponsored academies, special converter academies and special free schools.
+25. English as an additional language (EAL) unclassified includes pupils whom first language was not obtained, refused or could not be determined.
+26. Non selective schools in other areas: Includes all non-selective schools that are not in highly selective areas, including those in areas with some selection.
+27. Religious character is taken from the GIAS (Get information about schools) website and is the legal designation of each school. Any state-funded mainstream schools who do not have their religious character recorded on the GIAS website are recorded in 'no religious character'. Religious character is taken from GIAS and are given as at 12 September at the start of the academic year, and is the legal designation of each school.
+28. All pupils with a primary need (from 2014/15 onwards this consisted of pupils flagged as SEN with a statement, EHC plan, SEN support).
+29. State-funded mainstream schools include academies, free schools, city technology colleges and further education colleges with provision for 14 to 16 year-olds. They exclude state-funded special schools, independent schools, independent special schools, non-maintained special schools, hospital schools and alternative provision (including pupil referral units, AP free schools and AP academies as well as state-funded AP placements in other institutions). Further education colleges with 14-16 provision are included in the total figure for all state-funded schools but not in the breakdowns by religious character or school admissions; therefore, figures by religious character or school admissions will not add up to the figure for all state-funded mainstream schools.
+30. Following special educational needs and disability (SEND) reforms in 2014/15, SEN pupils are categorised as 'SEN with a statement or Education, health and care (EHC) plan' and 'SEN support'. SEN support replaces 'school action' and 'school action plus' (grouped as SEN without a statement up to and including 2013/14) but some pupils remain with these provision types in first year of transition. More detailed information on the reforms can be found at this link: https://www.gov.uk/government/publications/send-code-of-practice-0-to-25
+31. z = When an observation is not applicable
+32. Unclassified includes pupils whom ethnicity was not obtained, refused or could not be determined.
+33. Free school meals (FSM) does not relate to pupils who actually received free school meals but those who are eligible to receive free school meals. Pupils not eligible for free school meals or unclassified pupils are described as ‘All other pupils’.
+34. Since September 2013, general further education (FE) colleges and sixth-form colleges have been able to directly enrol 14- to 16-year-olds. Entries and achievements for these pupils are included in figures as state-funded schools. As FE colleges do not complete the school census, pupils at the end of key stage 4 attending FE colleges are included in the all pupils lines but not in the majority of the characteristics breakdowns. Therefore, there are some cases where the individual characteristics breakdowns will not add up to the all pupils figure. Pupils in FE colleges are included in the free school meals and disadvantaged figures from 2015/16 onwards.
+35. Any science includes Astronomy, Electronics, Environmental Science and Geology.
+36. All state-funded schools include local authority maintained mainstream schools, academies, free schools, city technology colleges, further education colleges with provision for 14 to 16 year-olds and state-funded special schools. They exclude independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision.
+37. A new code was added in 2014/15 for those who are yet to be assessed for type of need. This may include some who have transferred from School Action to SEN support.
+
+
+KS4 national academies data
+
+Filename: 2122_national_academies_data_revised.csv
+Geographic levels: National
+Time period: 2021/22
+Content summary: National level headline entry and attainment measures for the latest year broken down by academy type and years open.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name              |  Variable description
+-------------------------  |  --------------------------------------------------------------------------------------------------------------------------------
+avg_att8                   |  Average Attainment 8 score of all pupils
+avg_ebaccaps               |  Average EBacc APS score per pupil
+characteristic_years_open  |  The number of academic years the school has been open
+pt_anypass                 |  Percentage of pupils achieving any passes at GCSE or equivalent
+pt_ebacc_94                |  Percentage of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_95                |  Percentage of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_e_ptq_ee          |  Percentage of pupils entering the English Baccalaureate
+pt_entbasics               |  Percentage of pupils entering English and mathematics GCSEs
+pt_entry_1                 |  Percentage of pupils entered for at least 1 GCSE or equivalent
+pt_l2basics_94             |  Percentage of pupils achieving grades 4 or above in English and mathematics GCSEs
+pt_l2basics_95             |  Percentage of pupils achieving grades 5 or above in English and mathematics GCSEs
+school_characteristic      |  The types of school in the data
+t_anypass                  |  Total number of pupils achieving any passes at GCSE or equivalent
+t_att8                     |  Total sum of pupils Attainment 8 scores
+t_ebacc_94                 |  Total number of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_95                 |  Total number of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_e_ptq_ee           |  Total number of pupils entering the English Baccalaureate
+t_ebaccaps                 |  Total EBacc APS score of pupils
+t_entbasics                |  Total number of pupils entering English and mathematics GCSEs
+t_entry_1                  |  Total number of pupils entered for at least 1 GCSE or equivalent
+t_l2basics_94              |  Total number of pupils achieving grades 4 or above in English and mathematics GCSEs
+t_l2basics_95              |  Total number of pupils achieving grades 5 or above in English and mathematics GCSEs
+t_pupils                   |  Total number of pupils
+t_schools                  |  Total number of schools
+
+Footnotes:
+
+1. Includes academies and LA maintained schools that were open before 12 September of the academic year and had pupils at the end of key stage 4.
+2. In 2020 and 2021, all GCSEs in England have been reformed and use the new 9 to 1 grading system (rather than A*-G). Year on year comparisons will be limited until these qualifications are consistently included from 2020 onwards. However, results for 2020 and 2021 are not comparable with earlier years due to the cancellation of exams (due to COVID-19) and the changes to the way GCSE grades were awarded and results for 2022 are not comparable with previous years due to the changes relating to grading assessments.
+3. c = a cell that has been suppressed due to low number of pupils. Suppression was applied where deemed necessary for all data up to 2018/19. For 2019/20, DfE suppression policy changed. For 2020 and 2021 results where a geographical area contains only one school (for example Isles of Scilly) the data for that area has been suppressed. This is in line with the announcement that school level data would not be published using either summer 2020 or summer 2021 exam grades awarded. Data is not being supressed in 2022 at local authority or national level.
+4. One academic year is between 12th September of one year to the 11th September the following year.
+5. Local authority (LA) maintained mainstream schools include community schools, voluntary aided schools, voluntary controlled schools and foundation schools. Schools fully or partially under local authority control that are state-funded, mainly by the Dedicated Schools Grant.
+6. : = When data is unavailable for other reasons
+7. Includes all converter academies that were open before 12 September of the academic year.
+8. z = When an observation is not applicable
+
+
+KS4 disadvantage gap index data
+
+Filename: 2122_disadvantage_gap_data_revised.csv
+Geographic levels: National
+Time period: 2010/11 to 2021/22
+Content summary: Disadvantaged attainment gap index. Timeseries from 2009/10 to the latest year. Pupils in state-funded schools.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                       |  Variable description
+----------------------------------  |  ----------------------------------
+disadvantaged_attainment_gap_index  |  Disadvantaged attainment gap index
+
+Footnotes:
+
+1. In 2020 and 2021, all GCSEs in England have been reformed and use the new 9 to 1 grading system (rather than A*-G). Year on year comparisons will be limited until these qualifications are consistently included from 2020 onwards. However, results for 2020 and 2021 are not comparable with earlier years due to the cancellation of exams (due to COVID-19) and the changes to the way GCSE grades were awarded and results for 2022 are not comparable with previous years due to the changes relating to grading assessments.
+2. c = a cell that has been suppressed due to low number of pupils. Suppression was applied where deemed necessary for all data up to 2018/19. For 2019/20, DfE suppression policy changed. For 2020 and 2021 results where a geographical area contains only one school (for example Isles of Scilly) the data for that area has been suppressed. This is in line with the announcement that school level data would not be published using either summer 2020 or summer 2021 exam grades awarded. Data is not being supressed in 2022 at local authority or national level.
+
+
+KS4 local authority data
+
+Filename: 2122_la_data_revised.csv
+Geographic levels: Local authority; National; Regional
+Time period: 2018/19 to 2021/22
+Content summary: Local authority and regional level headline entry and attainment measures for the latest year broken down gender. State-funded schools only.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name          |  Variable description
+---------------------  |  --------------------------------------------------------------------------------------------------------------------------------
+avg_att8               |  Average Attainment 8 score of all pupils
+avg_att8_ebac          |  Average Attainment 8 score per pupil in Ebacc subjects
+avg_att8_eng           |  Average Attainment 8 score per pupil in English
+avg_att8_mat           |  Average Attainment 8 score per pupil in Mathematics
+avg_att8_open          |  Average score per pupil from open Attainment 8 slots
+avg_att8_open_g        |  Average score per pupil from GCSEs in open Attainment 8 slots
+avg_att8_open_ng       |  Average score per pupil from non-GCSEs in open Attainment 8 slots
+avg_ebac_fill          |  Average number of Ebacc slots filled
+avg_ebaccaps           |  Average EBacc APS score per pupil
+avg_ebptseng_ll        |  Average point score in English EBacc subject area including English literature
+avg_ebptshum           |  Average highest point score in Humanities EBacc subject area
+avg_ebptslan           |  Average highest point score in Languages EBacc subject area
+avg_ebptsmat           |  Average point score in Mathematics EBacc subject area
+avg_ebptssci           |  Average point score in Science EBacc subject area
+avg_open_fill          |  Average number of Open slots filled
+characteristic_gender  |  Gender
+pt_anypass             |  Percentage of pupils achieving any passes at GCSE or equivalent
+pt_ebac2sci_94         |  Percentage of pupils achieving grade 4 or above in Ebacc Science component
+pt_ebac2sci_95         |  Percentage of pupils achieving grade 5 or above in Ebacc Science component
+pt_ebac2sci_e          |  Percentage of pupils entered for Ebacc Science
+pt_ebacc_94            |  Percentage of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_95            |  Percentage of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_e_ptq_ee      |  Percentage of pupils entering the English Baccalaureate
+pt_ebaceng_94          |  Percentage of pupils achieving grade 4 or above in Ebacc English component
+pt_ebaceng_95          |  Percentage of pupils achieving grade 5 or above in Ebacc English component
+pt_ebaceng_e           |  Percentage of pupils entered for Ebacc English
+pt_ebachum_94          |  Percentage of pupils achieving grade 4 or above in Ebacc Humanities component
+pt_ebachum_95          |  Percentage of pupils achieving grade 5 or above in Ebacc Humanities component
+pt_ebachum_e           |  Percentage of pupils entered for Ebacc Humanities (Geography or History)
+pt_ebaclan_94          |  Percentage of pupils achieving grade 4 or above in Ebacc Languages component
+pt_ebaclan_95          |  Percentage of pupils achieving grade 5 or above in Ebacc Languages component
+pt_ebaclan_e           |  Percentage of pupils entered for Ebacc Languages
+pt_ebacmat_94          |  Percentage of pupils achieving grade 4 or above in Ebacc Mathematics component
+pt_ebacmat_95          |  Percentage of pupils achieving grade 5 or above in Ebacc Mathematics component
+pt_ebacmat_e           |  Percentage of pupils entered for Ebacc Mathematics
+pt_entbasics           |  Percentage of pupils entering English and Mathematics GCSEs
+pt_entry_1             |  Percentage of pupils entering GCSEs or equivalents
+pt_l2basics_94         |  Percentage of pupils achieving grades 4 or above in English and Mathematics GCSEs
+pt_l2basics_95         |  Percentage of pupils achieving grades 5 or above in English and Mathematics GCSEs
+t_anypass              |  Total number of pupils achieving any passes at GCSE or equivalent
+t_att8                 |  Total sum of pupils Attainment 8 scores
+t_att8_ebac            |  Total Attainment 8 score in Ebacc subjects
+t_att8_eng             |  Total Attainment 8 score in English
+t_att8_mat             |  Total Attainment 8 score in Mathematics
+t_att8_open            |  Total score from open Attainment 8 slots
+t_att8_open_g          |  Total score from GCSEs in open Attainment 8 slots
+t_att8_open_ng         |  Total score from non-GCSEs in open Attainment 8 slots
+t_ebac_fill            |  Total number of Ebacc slots filled
+t_ebac2sci_94          |  Total number of pupils achieving grade 4 or above in Ebacc Science component
+t_ebac2sci_95          |  Total number of pupils achieving grade 5 or above in Ebacc Science component
+t_ebac2sci_e           |  Total number of pupils entered for Ebacc Science
+t_ebacc_94             |  Total number of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_95             |  Total number of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_e_ptq_ee       |  Total number of pupils entering the English Baccalaureate
+t_ebaccaps             |  Total EBacc APS score of pupils
+t_ebaceng_94           |  Total number of pupils achieving grade 4 or above in Ebacc English component
+t_ebaceng_95           |  Total number of pupils achieving grade 5 or above in Ebacc English component
+t_ebaceng_e            |  Total number of pupils entered for Ebacc English
+t_ebachum_94           |  Total number of pupils achieving grade 4 or above in Ebacc Humanities component
+t_ebachum_95           |  Total number of pupils achieving grade 5 or above in Ebacc Humanities component
+t_ebachum_e            |  Total number of pupils entered for Ebacc Humanities (Geography or History)
+t_ebaclan_94           |  Total number of pupils achieving grade 4 or above in Ebacc Languages component
+t_ebaclan_95           |  Total number of pupils achieving grade 5 or above in Ebacc Languages component
+t_ebaclan_e            |  Total number of pupils entered for Ebacc Languages
+t_ebacmat_94           |  Total number of pupils achieving grade 4 or above in Ebacc Mathematics component
+t_ebacmat_95           |  Total number of pupils achieving grade 5 or above in Ebacc Mathematics component
+t_ebacmat_e            |  Total number of pupils entered for Ebacc Mathematics
+t_ebptseng_ll          |  Total point score in English EBacc subject area including English literature
+t_ebptshum             |  Total highest point score in Humanities EBacc subject area
+t_ebptslan             |  Total highest point score in Languages EBacc subject area
+t_ebptsmat             |  Total point score in Mathematics EBacc subject area
+t_ebptssci             |  Total point score in Science EBacc subject area
+t_entbasics            |  Total number of pupils entering English and Mathematics GCSEs
+t_entry_1              |  Total number of pupils entering GCSEs or equivalents
+t_l2basics_94          |  Total number of pupils achieving grades 4 or above in English and Mathematics GCSEs
+t_l2basics_95          |  Total number of pupils achieving grades 5 or above in English and Mathematics GCSEs
+t_open_fill            |  Total number of Open slots filled
+t_pupils               |  Total number of pupils at the end of key stage 4
+t_schools              |  Total number of schools
+
+Footnotes:
+
+1. Local authority, region and the total (state-funded sector) figures cover achievements in state-funded schools only. They do not include pupils recently arrived from overseas and so will not match with state-funded figures in the national tables. 'England' includes all pupils from state-funded schools, independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision.
+2. In 2020 and 2021, all GCSEs in England have been reformed and use the new 9 to 1 grading system (rather than A*-G). Year on year comparisons will be limited until these qualifications are consistently included from 2020 onwards. However, results for 2020 and 2021 are not comparable with earlier years due to the cancellation of exams (due to COVID-19) and the changes to the way GCSE grades were awarded and results for 2022 are not comparable with previous years due to the changes relating to grading assessments.
+3. c = a cell that has been suppressed due to low number of pupils. Suppression was applied where deemed necessary for all data up to 2018/19. For 2019/20, DfE suppression policy changed. For 2020 and 2021 results where a geographical area contains only one school (for example Isles of Scilly) the data for that area has been suppressed. This is in line with the announcement that school level data would not be published using either summer 2020 or summer 2021 exam grades awarded. Data is not being supressed in 2022 at local authority or national level.
+4. In 2021, two new local authorities were introduced (North Northamptonshire and West Northamptonshire) which replaced Northamptonshire.
+5. City of London does not have any state funded secondary schools, therefore there are no entries present in the data for this local authority.
+6. : = When data is unavailable for other reasons
+7. EBacc sciences includes the double award GCSE in combined science, and single GCSEs in biology, chemistry, physics and computer science.
+8. Average number of slots filled that contains U grades or other qualifications scoring 0 points are counted as a non-filled slot.
+9. z = When an observation is not applicable
+10. In 2019, two new local authorities were created from a merger of others. Bournemouth, Christchurch and Poole was created on 1 April 2019 from areas that were previously administered by the unitary authorities of Bournemouth and Poole, and the district of Christchurch. Dorset was created on 1 April 2019 from the districts of Weymouth and Portland, West Dorset, North Dorset, Purbeck and East Dorset. 2019 data is not comparable to previous years.
+11. All state-funded schools include local authority maintained mainstream schools, academies, free schools, city technology colleges, further education colleges with provision for 14 to 16 year-olds and state-funded special schools. They exclude independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision.
+12. The open element contains the three highest point scores in any three other subjects, including English language or literature (if not counted in the English slot), further GCSE qualifications (including English Baccalaureate subjects) or any other non-GCSE qualifications on the DfE approved list.
+
+
+KS4 local authority characteristics data
+
+Filename: 2122_lachar_data_revised.csv
+Geographic levels: Local authority; National; Regional
+Time period: 2018/19 to 2021/22
+Content summary: Local authority and regional level headline entry and attainment measures for the latest year broken down by gender, major ethnicity, free school meal eligibility, special educational need status and description, disadvantaged status and first language. State-funded schools only.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                     |  Variable description
+--------------------------------  |  --------------------------------------------------------------------------------------------------------------------------------
+avg_att8                          |  Average Attainment 8 score of all pupils
+avg_ebaccaps                      |  Average EBacc APS score per pupil
+characteristic_disadvantage       |  Disadvantaged status
+characteristic_ethnic_major       |  Major ethnic group
+characteristic_first_language     |  English as an Additional Language status
+characteristic_free_school_meals  |  Free school meal eligibility
+characteristic_gender             |  Gender
+characteristic_sen_description    |  Special Educational Needs description
+characteristic_sen_status         |  Special Educational Needs status
+pt_ebacc_94                       |  Percentage of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_95                       |  Percentage of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_e_ptq_ee                 |  Percentage of pupils entering the English Baccalaureate
+pt_entbasics                      |  Percentage of pupils entering English and mathematics GCSEs
+pt_l2basics_94                    |  Percentage of pupils achieving grades 4 or above in English and mathematics GCSEs
+pt_l2basics_95                    |  Percentage of pupils achieving grades 5 or above in English and mathematics GCSEs
+t_att8                            |  Total sum of pupils Attainment 8 scores
+t_ebacc_94                        |  Total number of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_95                        |  Total number of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_e_ptq_ee                  |  Total number of pupils entering the English Baccalaureate
+t_ebaccaps                        |  Total EBacc APS score of pupils
+t_entbasics                       |  Total number of pupils entering English and mathematics GCSEs
+t_l2basics_94                     |  Total number of pupils achieving grades 4 or above in English and mathematics GCSEs
+t_l2basics_95                     |  Total number of pupils achieving grades 5 or above in English and mathematics GCSEs
+t_pupils                          |  Total number of pupils at the end of key stage 4
+t_schools                         |  Total number of schools
+
+Footnotes:
+
+1. Local authority, region and the total (state-funded sector) figures cover achievements in state-funded schools only. They do not include pupils recently arrived from overseas and so will not match with state-funded figures in the national tables. 'England' includes all pupils from state-funded schools, independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision.
+2. English includes 'pupils whose first language is English’ includes 'not known but believed to be English'.
+3. Other than English includes ‘pupils whose first language is other than English’ includes 'not known but believed to be other than English'.
+4. Statement/EHC plan indicates whether a pupil a pupil has a statement of SEN or an education, health and care (EHC) plan when a formal assessment has been made.
+5. SEN support indicates whether a pupil has extra or different help given from that provided as part of the school’s usual curriculum. The class teacher and SEN coordinator (SENCO) may receive advice or support from outside specialists. This category replaces the former ‘school action’ and ‘school action plus’ categories.
+6. In 2020 and 2021, all GCSEs in England have been reformed and use the new 9 to 1 grading system (rather than A*-G). Year on year comparisons will be limited until these qualifications are consistently included from 2020 onwards. However, results for 2020 and 2021 are not comparable with earlier years due to the cancellation of exams (due to COVID-19) and the changes to the way GCSE grades were awarded and results for 2022 are not comparable with previous years due to the changes relating to grading assessments.
+7. 'Any SEN' indicates whether a pupil has learning difficulties or disabilities that make it harder for them to learn than most children of the same age. This includes 'SEN with a statement 'EHC plan' or 'SEN support'.
+8. c = a cell that has been suppressed due to low number of pupils. Suppression was applied where deemed necessary for all data up to 2018/19. For 2019/20, DfE suppression policy changed. For 2020 and 2021 results where a geographical area contains only one school (for example Isles of Scilly) the data for that area has been suppressed. This is in line with the announcement that school level data would not be published using either summer 2020 or summer 2021 exam grades awarded. Data is not being supressed in 2022 at local authority or national level.
+9. Sub totals may not sum to the grand total due to a small number of pupils with missing information e.g. for FSM, SEN, EAL and those where ethnicity is not recorded.
+10. In 2021, two new local authorities were introduced (North Northamptonshire and West Northamptonshire) which replaced Northamptonshire.
+11. Disadvantaged all other includes pupils for whom free school meal eligibility, Special Educational Needs status (SEN provision) or SEN primary need could not be determined.
+12. City of London does not have any state funded secondary schools, therefore there are no entries present in the data for this local authority.
+13. From 2014/15, disadvantaged pupils include pupils known to be eligible for free school meals (FSM) in any spring, autumn, summer, alternative provision or pupil referral unit census from year 6 to year 11 or are looked after children for at least one day or are adopted from care. For 2013/14 and earlier years, they include pupils known to be eligible for FSM in any spring, autumn, summer, alternative provision or pupil referral unit census from year 6 to year 11 or are looked after children.
+14. 'No identified SEN' includes pupils whom could not obtained, refused, unclassified or could not be determined.
+15. : = When data is unavailable for other reasons
+16. 'Total' includes pupils for whom Free School Meal eligibility (FSM), Special Educational Needs status (SEN provision) or SEN primary need could not be determined. This figure also includes pupils at further education colleges: as FE colleges do not complete the school census, we do not have matched pupil characteristics data of pupils in FE colleges and therefore these pupils are not included in characteristics breakdowns. This means that there are some cases where the individual characteristics breakdowns will not add up to the all pupils figure.
+17. 'No SEN' includes pupils whom could not obtained, refused, unclassified or could not be determined.
+18. Following special educational needs and disability (SEND) reforms in 2014/15, SEN pupils are categorised as 'SEN with a statement or Education, health and care (EHC) plan' and 'SEN support'. SEN support replaces 'school action' and 'school action plus' (grouped as SEN without a statement up to and including 2013/14) but some pupils remain with these provision types in first year of transition. More detailed information on the reforms can be found at this link: https://www.gov.uk/government/publications/send-code-of-practice-0-to-25
+19. z = When an observation is not applicable
+20. Unclassified includes pupils whom ethnicity was not obtained, refused or could not be determined.
+21. Free school meals (FSM) does not relate to pupils who actually received free school meals but those who are eligible to receive free school meals. Pupils not eligible for free school meals or unclassified pupils are described as ‘All other pupils’.
+22. Any science includes Astronomy, Electronics, Environmental Science and Geology.
+23. In 2019, two new local authorities were created from a merger of others. Bournemouth, Christchurch and Poole was created on 1 April 2019 from areas that were previously administered by the unitary authorities of Bournemouth and Poole, and the district of Christchurch. Dorset was created on 1 April 2019 from the districts of Weymouth and Portland, West Dorset, North Dorset, Purbeck and East Dorset. 2019 data is not comparable to previous years.
+24. All state-funded schools include local authority maintained mainstream schools, academies, free schools, city technology colleges, further education colleges with provision for 14 to 16 year-olds and state-funded special schools. They exclude independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision.
+
+
+KS4 subject pupil level data
+
+Filename: 2122_subject_pupil_level_data_revised.csv
+Geographic levels: National
+Time period: 2021/22
+Content summary: National level entries and grade thresholds for the latest year broken down by subject, gender, detailed school type and qualification type e.g. GCSEs, AS levels and vocational.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name           |  Variable description
+----------------------  |  -------------------------------------------------------
+admission_type          |  Basis for admission into the school
+gender                  |  Gender
+grade                   |  The grade a pupil achieves
+number_achieving        |  The number of pupils achieving the designated grade
+percentage_achieving    |  The percentage of pupils achieving the designated grade
+qualification_type      |  The type of qualification being taken by a pupil
+religious_denomination  |  Religious denomination of school
+school_type             |  The types of school in the data
+subject                 |  The type of subject
+
+Footnotes:
+
+1. Combined Science GCSE is a Double Award and is included in this table for the purpose of comparison with other Science subjects.
+2. Any Design and Technology includes Design and Technology Engineering and Product Design qualifications.
+3. State-funded special schools include local authority maintained special schools, academy sponsor led special schools, academy special schools and special free schools. They exclude independent special schools and non-maintained special schools.
+4. Pupils also registered at an institution normally included within the Secondary School Performance Tables (state funded mainstream schools) are excluded from the Alternative Provision data. This methodology has been retained for attainment data in 2020 and 2021 even though the school performance tables have been cancelled.
+5. Academies and free schools include sponsored academies, converter academies, free schools studio schools and university technical colleges (UTCs).
+6. Non selective schools in highly selective areas: Includes all non-selective schools in local authorities with a high level of selection (where 25% or more of state-funded secondary places are in state-funded selective schools). These local authorities are Bexley, Buckinghamshire, Kent, Lincolnshire, Medway, Slough, Southend-on-Sea, Sutton, Torbay, Trafford and Wirral.
+7. All schools include state-funded schools, independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision. Since September 2013, general further education colleges and sixth-form colleges have been able to directly enrol 14 to 16 year-olds. 2014/15 was the first year in which colleges have pupils at the end of key stage 4. From 2016 onwards, entries and achievements for these pupils are included in figures as state-funded schools.
+8. Selective schools admit pupils wholly or mainly with reference to ability. These schools are formally designated as grammar schools.
+9. : = When data is unavailable for other reasons
+10. All independent schools include non-maintained special schools, independent special schools and independent schools.
+11. Discounting has been applied where pupils have taken the same subject more than once. In 2021/22, with the return of the exam series, we have reintroduced first entry rules for discounting. Further information can be found in the secondary accountability guidance. For more on the discounting methodology prior to 2020, read the Discounting and Early Entry Guidance.
+12. All State-funded special schools include community special schools, foundation special schools, special sponsored academies, special converter academies and special free schools.
+13. Non selective schools in other areas: Includes all non-selective schools that are not in highly selective areas, including those in areas with some selection.
+14. Religious character is taken from the GIAS (Get information about schools) website and is the legal designation of each school. Any state-funded mainstream schools who do not have their religious character recorded on the GIAS website are recorded in 'no religious character'. Religious character is taken from GIAS and are given as at 12 September at the start of the academic year, and is the legal designation of each school.
+15. Hospital, PRU & AP schools include Community Hospital School, Foundation Hospital School, Pupil Referral Unit, sponsored academies, convertor academies, free school and alternative provision.
+16. State-funded mainstream schools include academies, free schools, city technology colleges and further education colleges with provision for 14 to 16 year-olds. They exclude state-funded special schools, independent schools, independent special schools, non-maintained special schools, hospital schools and alternative provision (including pupil referral units, AP free schools and AP academies as well as state-funded AP placements in other institutions). Further education colleges with 14-16 provision are included in the total figure for all state-funded schools but not in the breakdowns by religious character or school admissions; therefore, figures by religious character or school admissions will not add up to the figure for all state-funded mainstream schools.
+17. All entries and achievements are for AS levels and applied AS levels with the exception of the mathematics (FSMQ) category which covers all Free Standing Mathematics Qualifications.
+18. z = When an observation is not applicable
+19. Since 2014/15, the early entry policy where only a pupil’s first attempt at a qualification is counted in performance measures was extended to all subjects.
+20. In 2017, new reformed GCSEs (which use the 9-1 grade scale) were introduced into secondary school performance tables in a phased approach. Unreformed subjects continued to be graded using the A* to G system. Information on how the 9 to 1 scale and the A* to G scale are different and not directly comparable is available in the secondary accountability measures guidance. From 2020 onwards all GCSEs are now reformed and use the 9-1 grading scale.
+21. Since September 2013, general further education (FE) colleges and sixth-form colleges have been able to directly enrol 14- to 16-year-olds. Entries and achievements for these pupils are included in figures as state-funded schools. As FE colleges do not complete the school census, pupils at the end of key stage 4 attending FE colleges are included in the all pupils lines but not in the majority of the characteristics breakdowns. Therefore, there are some cases where the individual characteristics breakdowns will not add up to the all pupils figure. Pupils in FE colleges are included in the free school meals and disadvantaged figures from 2015/16 onwards.
+22. Any science includes Astronomy, Electronics, Environmental Science and Geology.
+23. All state-funded schools include local authority maintained mainstream schools, academies, free schools, city technology colleges, further education colleges with provision for 14 to 16 year-olds and state-funded special schools. They exclude independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision.
+24. Includes schools that were open before 12 September of the academic year.
+25. Only GCSEs and established GCSE equivalents (Cambridge International certificates and Edexcel level 1/2 certificates) are included in this data. Excludes Double Awards.
+
+
+KS4 subject entry level data
+
+Filename: 2122_subject_entry_level_data_revised.csv
+Geographic levels: National
+Time period: 2021/22
+Content summary: National level entries and grades for the latest year for GCSE subjects for all schools.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name     |  Variable description
+----------------  |  --------------------------------------------------
+grade             |  The grade of an exam
+number_achieving  |  The number of exams achieving the designated grade
+subject           |  The subject of an exam
+
+Footnotes:
+
+1. Combined Science GCSE is a Double Award and is included in this table for the purpose of comparison with other Science subjects.
+2. Grade U refers to pupils' results which are ungraded or unclassified.
+3. Any Design and Technology includes Design and Technology Engineering and Product Design qualifications.
+4. In 2020 and 2021, all GCSEs in England have been reformed and use the new 9 to 1 grading system (rather than A*-G). Year on year comparisons will be limited until these qualifications are consistently included from 2020 onwards. However, results for 2020 and 2021 are not comparable with earlier years due to the cancellation of exams (due to COVID-19) and the changes to the way GCSE grades were awarded and results for 2022 are not comparable with previous years due to the changes relating to grading assessments.
+5. All schools include state-funded schools, independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision. Since September 2013, general further education colleges and sixth-form colleges have been able to directly enrol 14 to 16 year-olds. 2014/15 was the first year in which colleges have pupils at the end of key stage 4. From 2016 onwards, entries and achievements for these pupils are included in figures as state-funded schools.
+6. : = When data is unavailable for other reasons
+7. Discounting has been applied where pupils have taken the same subject more than once. In 2021/22, with the return of the exam series, we have reintroduced first entry rules for discounting. Further information can be found in the secondary accountability guidance. For more on the discounting methodology prior to 2020, read the Discounting and Early Entry Guidance.
+8. Grade X refers to pupils who were absent or whose results are pending.
+9. z = When an observation is not applicable
+10. In 2017, new reformed GCSEs (which use the 9-1 grade scale) were introduced into secondary school performance tables in a phased approach. Unreformed subjects continued to be graded using the A* to G system. Information on how the 9 to 1 scale and the A* to G scale are different and not directly comparable is available in the secondary accountability measures guidance. From 2020 onwards all GCSEs are now reformed and use the 9-1 grading scale.
+11. Only GCSEs and established GCSE equivalents (Cambridge International certificates and Edexcel level 1/2 certificates) are included in this data. Excludes Double Awards.
+12. For pupils at the end of KS4 in 2021/22, where pupils achieved qualifications in subjects between January 2020 and August 2021, we will not use results from these qualifications and these results are shown as covid impacted. The entries into the qualifications are still counted.
+
+
+KS4 subject year of entry data
+
+Filename: 2122_subject_year_entry_data_revised.csv
+Geographic levels: National
+Time period: 2021/22
+Content summary: National level numbers and proportions of pupils entering GCSE subjects in penultimate and final years in all schools.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name  |  Variable description
+-------------  |  -----------------------------------------
+number_pupils  |  The number of pupils
+percentage     |  The percentage of pupils
+subject        |  The subject pupils are entered for
+test_year      |  The school year in which the exam was sat
+
+Footnotes:
+
+1. All schools include state-funded schools, independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision. Since September 2013, general further education colleges and sixth-form colleges have been able to directly enrol 14 to 16 year-olds. 2014/15 was the first year in which colleges have pupils at the end of key stage 4. From 2016 onwards, entries and achievements for these pupils are included in figures as state-funded schools.
+2. : = When data is unavailable for other reasons
+3. From 2017, Core Science, Double Science, Additional and Further Science no longer count in the English Baccalaureate.
+4. Discounting has been applied where pupils have taken the same subject more than once. In 2021/22, with the return of the exam series, we have reintroduced first entry rules for discounting. Further information can be found in the secondary accountability guidance. For more on the discounting methodology prior to 2020, read the Discounting and Early Entry Guidance.
+5. From 2014/15, all subject mappings which are classed as Computer Science count towards the English Baccalaureate. In 2013/14, AS Levels and Cambridge International Certificates in Computer Science did not count towards the English Baccalaureate.
+6. From 2017, the new GCSE in Food preparation and nutrition was introduced. This replaces D & T: Food Technology which was previously included in the Design and Technology subject group.
+7. z = When an observation is not applicable
+
+
+KS4 subject timeseries data
+
+Filename: 2122_subject_timeseries_data_revised.csv
+Geographic levels: National
+Time period: 2009/10 to 2021/22
+Content summary: National level time series from 2009/10 to the latest year for entries into individual GCSE subjects broken down by gender and grades received in all schools.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name         |  Variable description
+--------------------  |  -------------------------------------------------------
+entries               |  The number of pupils entering each exam
+gender                |  Gender
+grade                 |  The grade achieved
+percentage_achieving  |  The percentage of pupils achieving the designated grade
+subject               |  The subject pupils are entered for
+
+Footnotes:
+
+1. Total number of entries include pupils who were absent, whose results are pending and results which are ungraded or unclassified.
+2. Some zero percentages may represent small numbers due to rounding.
+3. c = a cell that has been suppressed due to low number of pupils. Suppression was applied where deemed necessary for all data up to 2018/19. For 2019/20, DfE suppression policy changed. For 2020 and 2021 results where a geographical area contains only one school (for example Isles of Scilly) the data for that area has been suppressed. This is in line with the announcement that school level data would not be published using either summer 2020 or summer 2021 exam grades awarded. Data is not being supressed in 2022 at local authority or national level.
+4. All schools include state-funded schools, independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision. Since September 2013, general further education colleges and sixth-form colleges have been able to directly enrol 14 to 16 year-olds. 2014/15 was the first year in which colleges have pupils at the end of key stage 4. From 2016 onwards, entries and achievements for these pupils are included in figures as state-funded schools.
+5. Figures include attempts and achievements by these pupils in previous academic years where only the best grade in each individual subject is counted per pupil. Where subjects have been combined into a group (e.g. Other Modern Languages) and a pupil has two or more entries, each result in each subject is counted.
+6. : = When data is unavailable for other reasons
+7. Discounting has been applied where pupils have taken the same subject more than once. In 2021/22, with the return of the exam series, we have reintroduced first entry rules for discounting. Further information can be found in the secondary accountability guidance. For more on the discounting methodology prior to 2020, read the Discounting and Early Entry Guidance.
+8. z = When an observation is not applicable
+9. Since 2014/15, the early entry policy where only a pupil’s first attempt at a qualification is counted in performance measures was extended to all subjects.
+10. In 2017, new reformed GCSEs (which use the 9-1 grade scale) were introduced into secondary school performance tables in a phased approach. Unreformed subjects continued to be graded using the A* to G system. Information on how the 9 to 1 scale and the A* to G scale are different and not directly comparable is available in the secondary accountability measures guidance. From 2020 onwards all GCSEs are now reformed and use the 9-1 grading scale.
+11. For pupils at the end of KS4 in 2021/22, where pupils achieved qualifications in subjects between January 2020 and August 2021, we will not use results from these qualifications and these results are shown as covid impacted. The entries into the qualifications are still counted.
+12. Some percentages may not add up to exactly 100% due to rounding.
+
+
+KS4 local authority district and region of pupil residence data
+
+Filename: 2122_lad_pr_data_revised.csv
+Geographic levels: Local authority district; National; Regional
+Time period: 2021/22
+Content summary: Local authority district level headline entry and attainment measures for the latest year - based on pupil postcode rather than location of the school. State-funded school pupils only.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name      |  Variable description
+-----------------  |  --------------------------------------------------------------------------------------------------------------------------------
+avg_att8           |  Average Attainment 8 score of all pupils
+avg_ebaccaps       |  Average EBacc APS score per pupil
+avg_p8score        |  Average Progress 8 score of all pupils
+p8score_CI_low     |  Progress 8 lower 95% confidence interval
+p8score_CI_upp     |  Progress 8 upper 85% confidence interval
+pt_ebacc_94        |  Percentage of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_95        |  Percentage of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_e_ptq_ee  |  Percentage of pupils entering the English Baccalaureate
+pt_entbasics       |  Percentage of pupils entering English and Mathematics GCSEs
+pt_l2basics_94     |  Percentage of pupils achieving grades 4 or above in English and Mathematics GCSEs
+pt_l2basics_95     |  Percentage of pupils achieving grades 5 or above in English and Mathematics GCSEs
+t_att8             |  Total sum of pupils Attainment 8 scores
+t_ebacc_94         |  Total number of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_95         |  Total number of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_e_ptq_ee   |  Total number of pupils entering the English Baccalaureate
+t_ebaccaps         |  Total EBacc APS score of pupils
+t_entbasics        |  Total number of pupils entering English and Mathematics GCSEs
+t_inp8calc         |  Total number of pupils included in Progress 8 measure
+t_l2basics_94      |  Total number of pupils achieving grades 4 or above in English and Mathematics GCSEs
+t_l2basics_95      |  Total number of pupils achieving grades 5 or above in English and Mathematics GCSEs
+t_p8score          |  Total sum of pupils Progress 8 scores
+t_pupils           |  Total number of pupils at the end of key stage 4
+t_schools          |  Total number of schools
+
+Footnotes:
+
+1. In 2020 and 2021, all GCSEs in England have been reformed and use the new 9 to 1 grading system (rather than A*-G). Year on year comparisons will be limited until these qualifications are consistently included from 2020 onwards. However, results for 2020 and 2021 are not comparable with earlier years due to the cancellation of exams (due to COVID-19) and the changes to the way GCSE grades were awarded and results for 2022 are not comparable with previous years due to the changes relating to grading assessments.
+2. Some zero percentages may represent small numbers due to rounding.
+3. Northamptonshire district boundary was changed in 2021. The local authority district code was changed from E10000021 to E06000061 (North Northamptonshire) and E06000062 (West Northamptonshire).
+4. St Albans district boundary was changed in 2013. The local authority district code was changed from E07000100 to E07000240 to reflect this.
+5. c = a cell that has been suppressed due to low number of pupils. Suppression was applied where deemed necessary for all data up to 2018/19. For 2019/20, DfE suppression policy changed. For 2020 and 2021 results where a geographical area contains only one school (for example Isles of Scilly) the data for that area has been suppressed. This is in line with the announcement that school level data would not be published using either summer 2020 or summer 2021 exam grades awarded. Data is not being supressed in 2022 at local authority or national level.
+6. The residency of 897 pupils living in England in 2021/22 is unknown due to missing or invalid postcode information. Pupils not resident in England and pupils with missing or invalid postcode information are excluded from the figures in presented.
+7. Gateshead district boundary was changed in 2014. The local authority district code was changed from E08000020 to E08000037 to reflect this.
+8. Welwyn Hatfield district boundary was changed in 2013. The local authority district code was changed from E07000104 to E07000241 to reflect this.
+9. A Progress 8 score of 1.0 means pupils in the group make on average approximately a grade more progress than the national average; a score of -0.5 means they make on average approximately half a grade less progress than average. Progress 8 scores should be interpreted alongside the associated confidence intervals. If the lower bound of the confidence interval is greater than zero, it can be interpreted as meaning that the group achieves greater than average progress compared to pupils in mainstream schools nationally and that this is statistically significant. If the upper bound is negative, this means that the group achieves lower than average progress compared to pupils in mainstream schools nationally and that this is statistically significant.
+10. Stevenage district boundary was changed in 2014. The local authority district code was changed from E07000101 to E07000243 to reflect this.
+11. z = When an observation is not applicable
+12. : = When data is unavailable for other reasons
+13. Northumberland district boundary was changed in 2014. The local authority district code was changed from E06000048 to E06000057 to reflect this.
+14. All state-funded schools include local authority maintained mainstream schools, academies, free schools, city technology colleges, further education colleges with provision for 14 to 16 year-olds and state-funded special schools. They exclude independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision.
+15. East Hertfordshire district boundary was changed in 2014. The local authority district code was changed from E07000097 to E07000242 to reflect this.
+
+
+KS4 local authority district and region of school location data by FSM and disadvantage status
+
+Filename: 2122_sl_fsm_dis_lad_data_revised.csv
+Geographic levels: Local authority district; National; Regional
+Time period: 2021/22
+Content summary: 
+Local authority district level headline entry and attainment measures for the latest year including pupil free school meal eligibility and disadvantaged status. State-funded school pupils only.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                |  Variable description
+---------------------------  |  --------------------------------------------------------------------------------------------------------------------------------
+avg_att8                     |  Average Attainment 8 score of all pupils
+avg_att8_ebac                |  Average Attainment 8 score of all pupils for Ebacc element
+avg_att8_eng                 |  Average Attainment 8 score of all pupils for English element
+avg_att8_mat                 |  Average Attainment 8 score of all pupils for mathematics element
+avg_att8_open                |  Average Attainment 8 score of all pupils for open element
+avg_att8_open_g              |  Average Attainment 8 score of all pupils for open element - GCSE only
+avg_att8_open_ng             |  Average Attainment 8 score of all pupils for open element - non-GCSE only
+avg_ebac_fill                |  Average number of Ebacc slots filled (per pupil)
+avg_ebaccaps                 |  Average EBacc APS score per pupil
+avg_ebptseng_ll              |  Average point score of all pupils for Ebacc English pillar including English literature
+avg_ebptshum                 |  Average point score of all pupils for Ebacc humanities pillar
+avg_ebptslan                 |  Average point score of all pupils for Ebacc language pillar
+avg_ebptsmat                 |  Average point score of all pupils for Ebacc mathematics pillar
+avg_ebptssci                 |  Average point score of all pupils for Ebacc science pillar
+avg_open_fill                |  Average number of open slots filled (per pupil)
+avg_p8ebac                   |  Average Progress 8 score of all pupils for Ebacc element
+avg_p8eng                    |  Average Progress 8 score of all pupils for English element
+avg_p8mat                    |  Average Progress 8 score of all pupils for mathematics element
+avg_p8open                   |  Average Progress 8 score of all pupils for open element
+avg_p8score                  |  Average Progress 8 score of all pupils
+characteristic_disadvantage  |  Disadvantaged status
+characteristic_fsm           |  Free school meal eligibility
+p8ebac_CI_low                |  Progress 8 lower 95% confidence interval for Ebacc element
+p8ebac_CI_upp                |  Progress 8 upper 95% confidence interval for Ebacc element
+p8eng_CI_low                 |  Progress 8 lower 95% confidence interval for English element
+p8eng_CI_upp                 |  Progress 8 upper 95% confidence interval for English element
+p8mat_CI_low                 |  Progress 8 lower 95% confidence interval for mathematics element
+p8mat_CI_upp                 |  Progress 8 upper 95% confidence interval for mathematics element
+p8open_CI_low                |  Progress 8 lower 95% confidence interval for open element
+p8open_CI_upp                |  Progress 8 upper 95% confidence interval for open element
+p8score_CI_low               |  Progress 8 lower 95% confidence interval
+p8score_CI_upp               |  Progress 8 upper 95% confidence interval
+pt_anypass                   |  Percentage of pupils achieving any passes at GCSE or equivalent
+pt_ebac2sci_94               |  Percentage of pupils achieving a pass in EBacc science pillar at grade 9-4
+pt_ebac2sci_95               |  Percentage of pupils achieving a pass in EBacc science pillar at grade 9-5
+pt_ebac2sci_e                |  Percentage of pupils entered for Ebacc science pillar
+pt_ebacc_94                  |  Percentage of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_95                  |  Percentage of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_e_ptq_ee            |  Percentage of pupils entering the English Baccalaureate
+pt_ebaceng_94                |  Percentage of pupils achieving a standard pass in EBacc English pillar at grade 9-4
+pt_ebaceng_95                |  Percentage of pupils achieving a strong pass in EBacc English pillar at grade 9-5
+pt_ebaceng_e                 |  Percentage of pupils entered for Ebacc English pillar
+pt_ebachum_94                |  Percentage of pupils achieving a pass in EBacc humanities pillar at grade 9-4
+pt_ebachum_95                |  Percentage of pupils achieving a pass in EBacc humanities pillar at grade 9-5
+pt_ebachum_e                 |  Percentage of pupils entered for Ebacc humanities pillar
+pt_ebaclan_94                |  Percentage of pupils achieving a pass in EBacc language pillar at grade 9-4
+pt_ebaclan_95                |  Percentage of pupils achieving a pass in EBacc language pillar at grade 9-5
+pt_ebaclan_e                 |  Percentage of pupils entered for Ebacc language pillar
+pt_ebacmat_94                |  Percentage of pupils achieving a standard pass in EBacc mathematics pillar at grade 9-4
+pt_ebacmat_95                |  Percentage of pupils achieving a strong pass in EBacc mathematics pillar at grade 9-5
+pt_ebacmat_e                 |  Percentage of pupils entered for Ebacc mathematics pillar
+pt_entbasics                 |  Percentage of pupils entering English and mathematics GCSEs
+pt_entry_1                   |  Percentage of pupils entered for at least 1 GCSE or equivalent
+pt_l2basics_94               |  Percentage of pupils achieving grades 4 or above in English and mathematics GCSEs
+pt_l2basics_95               |  Percentage of pupils achieving grades 5 or above in English and mathematics GCSEs
+t_anypass                    |  Total number of pupils achieving any passes at GCSE or equivalent
+t_att8                       |  Total sum of pupils Attainment 8 scores
+t_att8_ebac                  |  Total sum of pupils Attainment 8 scores for Ebacc element
+t_att8_eng                   |  Total sum of pupils Attainment 8 scores for English element
+t_att8_mat                   |  Total sum of pupils Attainment 8 scores for mathematics element
+t_att8_open                  |  Total sum of pupils Attainment 8 scores for open element
+t_att8_open_g                |  Total sum of pupils Attainment 8 scores for open element - GCSE only
+t_att8_open_ng               |  Total sum of pupils Attainment 8 scores for open element - non-GCSE only
+t_ebac_fill                  |  Total number of Ebacc slots filled (all pupils)
+t_ebac2sci_94                |  Total number of pupils achieving a pass in EBacc science pillar at grade 9-4
+t_ebac2sci_95                |  Total number of pupils achieving a pass in EBacc science pillar at grade 9-5
+t_ebac2sci_e                 |  Total number of pupils entered for Ebacc science pillar
+t_ebacc_94                   |  Total number of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_95                   |  Total number of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_e_ptq_ee             |  Total number of pupils entering the English Baccalaureate
+t_ebaccaps                   |  Total EBacc APS score of pupils
+t_ebaceng_94                 |  Total number of pupils achieving a standard pass in EBacc English pillar at grade 9-4
+t_ebaceng_95                 |  Total number of pupils achieving a strong pass in EBacc English pillar at grade 9-5
+t_ebaceng_e                  |  Total number of pupils entered for Ebacc English pillar
+t_ebachum_94                 |  Total number of pupils achieving a pass in EBacc humanities pillar at grade 9-4
+t_ebachum_95                 |  Total number of pupils achieving a pass in EBacc humanities pillar at grade 9-5
+t_ebachum_e                  |  Total number of pupils entered for Ebacc humanities pillar
+t_ebaclan_94                 |  Total number of pupils achieving a pass in EBacc language pillar at grade 9-4
+t_ebaclan_95                 |  Total number of pupils achieving a pass in EBacc language pillar at grade 9-5
+t_ebaclan_e                  |  Total number of pupils entered for Ebacc language pillar
+t_ebacmat_94                 |  Total number of pupils achieving a standard pass in EBacc mathematics pillar at grade 9-4
+t_ebacmat_95                 |  Total number of pupils achieving a strong pass in EBacc mathematics pillar at grade 9-5
+t_ebacmat_e                  |  Total number of pupils entered for Ebacc mathematics pillar
+t_ebptseng_ll                |  Total sum of pupils point scores for Ebacc English pillar including English literature
+t_ebptshum                   |  Total sum of pupils point scores for Ebacc humanities pillar
+t_ebptslan                   |  Total sum of pupils point scores for Ebacc language pillar
+t_ebptsmat                   |  Total sum of pupils point scores for Ebacc mathematics pillar
+t_ebptssci                   |  Total sum of pupils point scores for Ebacc science pillar
+t_entbasics                  |  Total number of pupils entering English and mathematics GCSEs
+t_entry_1                    |  Total number of pupils entered for at least 1 GCSE or equivalent
+t_inp8calc                   |  Total number of pupils included in Progress 8 measure
+t_l2basics_94                |  Total number of pupils achieving grades 4 or above in English and mathematics GCSEs
+t_l2basics_95                |  Total number of pupils achieving grades 5 or above in English and mathematics GCSEs
+t_open_fill                  |  Total number of open slots filled (all pupils)
+t_p8ebac                     |  Total sum of pupils Progress 8 scores for Ebacc element
+t_p8eng                      |  Total sum of pupils Progress 8 scores for English element
+t_p8mat                      |  Total sum of pupils Progress 8 scores for mathematics element
+t_p8open                     |  Total sum of pupils Progress 8 scores for open element
+t_p8score                    |  Total sum of pupils Progress 8 scores
+t_pupils                     |  Total number of pupils at the end of key stage 4
+t_schools                    |  Total number of schools
+
+Footnotes:
+
+1. A Progress 8 score of 1.0 means pupils in the group make on average approximately a grade more progress than the national average; a score of -0.5 means they make on average approximately half a grade less progress than average. Progress 8 scores should be interpreted alongside the associated confidence intervals. If the lower bound of the confidence interval is greater than zero, it can be interpreted as meaning that the group achieves greater than average progress compared to pupils in mainstream schools nationally and that this is statistically significant. If the upper bound is negative, this means that the group achieves lower than average progress compared to pupils in mainstream schools nationally and that this is statistically significant.
+2. In 2020 and 2021, all GCSEs in England have been reformed and use the new 9 to 1 grading system (rather than A*-G). Year on year comparisons will be limited until these qualifications are consistently included from 2020 onwards. However, results for 2020 and 2021 are not comparable with earlier years due to the cancellation of exams (due to COVID-19) and the changes to the way GCSE grades were awarded and results for 2022 are not comparable with previous years due to the changes relating to grading assessments.
+3. In 2020 and 2021 Progress 8 data was not published because of the cancellation of GCSE exams (due to COVID-19). Calculating Progress 8 has an element of modelling (estimating the average Attainment 8 score for pupils with similar prior attainment) and with the lack of exam data, the Progress 8 measure is not meaningful as a measure of Progress for 2021. Progress 8 has been reintroduced in 2022.
+4. : = When data is unavailable for other reasons
+5. EBacc sciences includes the double award GCSE in combined science, and single GCSEs in biology, chemistry, physics and computer science.
+6. z = When an observation is not applicable
+7. All state-funded schools include local authority maintained mainstream schools, academies, free schools, city technology colleges, further education colleges with provision for 14 to 16 year-olds and state-funded special schools. They exclude independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision.
+
+
+KS4 IDACI decile and degree of rurality of pupil residence data
+
+Filename: 2122_ruralurban_idaci_data_revised.csv
+Geographic levels: National; Regional
+Time period: 2021/22
+Content summary: National and regional level headline entry and attainment measures for the latest year broken down by Income Deprivation Affecting Children Indices (IDACI) decile and degree of rurality - based on pupil postcode rather than location of the school. State-funded school pupils only.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name            |  Variable description
+-----------------------  |  --------------------------------------------------------------------------------------------------------------------------------
+avg_att8                 |  Average Attainment 8 score of all pupils
+avg_ebaccaps             |  Average EBacc APS score per pupil
+avg_p8score              |  Average Progress 8 score of all pupils
+idaci_decile             |  Income Deprivation Affecting Children Indices decile
+p8score_CI_low           |  Progress 8 lower 95% confidence interval
+p8score_CI_upp           |  Progress 8 upper 95% confidence interval
+pt_ebacc_94              |  Percentage of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_95              |  Percentage of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_e_ptq_ee        |  Percentage of pupils entering the English Baccalaureate
+pt_entbasics             |  Percentage of pupils entering English and Mathematics GCSEs
+pt_l2basics_94           |  Percentage of pupils achieving grades 4 or above in English and Mathematics GCSEs
+pt_l2basics_95           |  Percentage of pupils achieving grades 5 or above in English and Mathematics GCSEs
+pupil_residency_detail   |  Pupil residency detail
+ru11ind_pupil_residency  |  Degree of rurality - pupil residency
+t_att8                   |  Total sum of pupils Attainment 8 scores
+t_ebacc_94               |  Total number of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_95               |  Total number of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_e_ptq_ee         |  Total number of pupils entering the English Baccalaureate
+t_ebaccaps               |  Total EBacc APS score of pupils
+t_entbasics              |  Total number of pupils entering English and Mathematics GCSEs
+t_inp8calc               |  Total number of pupils included in Progress 8 measure
+t_l2basics_94            |  Total number of pupils achieving grades 4 or above in English and Mathematics GCSEs
+t_l2basics_95            |  Total number of pupils achieving grades 5 or above in English and Mathematics GCSEs
+t_p8score                |  Total sum of pupils Progress 8 scores
+t_pupils                 |  Total number of pupils at the end of key stage 4
+t_schools                |  Total number of schools
+
+Footnotes:
+
+1. A Progress 8 score of 1.0 means pupils in the group make on average approximately a grade more progress than the national average; a score of -0.5 means they make on average approximately half a grade less progress than average. Progress 8 scores should be interpreted alongside the associated confidence intervals. If the lower bound of the confidence interval is greater than zero, it can be interpreted as meaning that the group achieves greater than average progress compared to pupils in mainstream schools nationally and that this is statistically significant. If the upper bound is negative, this means that the group achieves lower than average progress compared to pupils in mainstream schools nationally and that this is statistically significant.
+2. In 2020 and 2021, all GCSEs in England have been reformed and use the new 9 to 1 grading system (rather than A*-G). Year on year comparisons will be limited until these qualifications are consistently included from 2020 onwards. However, results for 2020 and 2021 are not comparable with earlier years due to the cancellation of exams (due to COVID-19) and the changes to the way GCSE grades were awarded and results for 2022 are not comparable with previous years due to the changes relating to grading assessments.
+3. c = a cell that has been suppressed due to low number of pupils. Suppression was applied where deemed necessary for all data up to 2018/19. For 2019/20, DfE suppression policy changed. For 2020 and 2021 results where a geographical area contains only one school (for example Isles of Scilly) the data for that area has been suppressed. This is in line with the announcement that school level data would not be published using either summer 2020 or summer 2021 exam grades awarded. Data is not being supressed in 2022 at local authority or national level.
+4. The residency of 897 pupils living in England in 2021/22 is unknown due to missing or invalid postcode information. Pupils not resident in England and pupils with missing or invalid postcode information are excluded from the figures in presented.
+5. In 2020 and 2021 Progress 8 data was not published because of the cancellation of GCSE exams (due to COVID-19). Calculating Progress 8 has an element of modelling (estimating the average Attainment 8 score for pupils with similar prior attainment) and with the lack of exam data, the Progress 8 measure is not meaningful as a measure of Progress for 2021. Progress 8 has been reintroduced in 2022.
+6. : = When data is unavailable for other reasons
+7. Income Deprivation Affecting Children Indices. Each SOA in England is given a score which ranks it between 1 and 32,844, 1 being the most deprived.
+8. z = When an observation is not applicable
+9. The rural-urban classification of postcodes for 2022 are based on the 2011 classification of output areas released in August 2013. Census output areas forming settlements with populations of over 10,000 are defined as urban. The urban domain is further sub-divided into three broad morphological types based on the predominant settlement component. The remainder are defined as one of three rural types.
+10. All state-funded schools include local authority maintained mainstream schools, academies, free schools, city technology colleges, further education colleges with provision for 14 to 16 year-olds and state-funded special schools. They exclude independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision.
+
+
+KS4 degree of rurality of school location data
+
+Filename: 2122_ruralurban_sl_data_revised.csv
+Geographic levels: National; Regional
+Time period: 2021/22
+Content summary: National and regional level headline entry and attainment measures for the latest year broken down by degree of rurality - school location. State-funded school pupils only.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name            |  Variable description
+-----------------------  |  --------------------------------------------------------------------------------------------------------------------------------
+avg_att8                 |  Average Attainment 8 score of all pupils
+avg_ebaccaps             |  Average EBacc APS score per pupil
+avg_p8score              |  Average Progress 8 score of all pupils
+p8score_CI_low           |  Progress 8 lower 95% confidence interval
+p8score_CI_upp           |  Progress 8 upper 95% confidence interval
+pt_ebacc_94              |  Percentage of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_95              |  Percentage of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_e_ptq_ee        |  Percentage of pupils entering the English Baccalaureate
+pt_entbasics             |  Percentage of pupils entering English and Mathematics GCSEs
+pt_l2basics_94           |  Percentage of pupils achieving grades 4 or above in English and Mathematics GCSEs
+pt_l2basics_95           |  Percentage of pupils achieving grades 5 or above in English and Mathematics GCSEs
+ru11ind_school_location  |  Degree of rurality - school location
+t_att8                   |  Total sum of pupils Attainment 8 scores
+t_ebacc_94               |  Total number of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_95               |  Total number of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_e_ptq_ee         |  Total number of pupils entering the English Baccalaureate
+t_ebaccaps               |  Total EBacc APS score of pupils
+t_entbasics              |  Total number of pupils entering English and Mathematics GCSEs
+t_inp8calc               |  Total number of pupils included in Progress 8 measure
+t_l2basics_94            |  Total number of pupils achieving grades 4 or above in English and Mathematics GCSEs
+t_l2basics_95            |  Total number of pupils achieving grades 5 or above in English and Mathematics GCSEs
+t_p8score                |  Total sum of pupils Progress 8 scores
+t_pupils                 |  Total number of pupils at the end of key stage 4
+t_schools                |  Total number of schools
+
+Footnotes:
+
+1. c = a cell that has been suppressed due to low number of pupils. Suppression was applied where deemed necessary for all data up to 2018/19. For 2019/20, DfE suppression policy changed. For 2020 and 2021 results where a geographical area contains only one school (for example Isles of Scilly) the data for that area has been suppressed. This is in line with the announcement that school level data would not be published using either summer 2020 or summer 2021 exam grades awarded. Data is not being supressed in 2022 at local authority or national level.
+2. The residency of 897 pupils living in England in 2021/22 is unknown due to missing or invalid postcode information. Pupils not resident in England and pupils with missing or invalid postcode information are excluded from the figures in presented.
+3. : = When data is unavailable for other reasons
+4. z = When an observation is not applicable
+5. The rural-urban classification of postcodes for 2022 are based on the 2011 classification of output areas released in August 2013. Census output areas forming settlements with populations of over 10,000 are defined as urban. The urban domain is further sub-divided into three broad morphological types based on the predominant settlement component. The remainder are defined as one of three rural types.
+6. All state-funded schools include local authority maintained mainstream schools, academies, free schools, city technology colleges, further education colleges with provision for 14 to 16 year-olds and state-funded special schools. They exclude independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision.
+
+
+KS4 GCSE subject alternative provision data
+
+Filename: 2122_ap_gcsesubjects_data_revised.csv
+Geographic levels: National
+Time period: 2021/22
+Content summary: 
+
+
+National level GCSE grades for the latest year broken down by subject for pupils in alternative provision.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name     |  Variable description
+----------------  |  ---------------------------------------------------
+grade             |  The grade a pupil achieves
+number_achieving  |  The number of pupils achieving the designated grade
+subject           |  The type of subject
+
+Footnotes:
+
+1. Local authority, region and the total (state-funded sector) figures cover achievements in state-funded schools only. They do not include pupils recently arrived from overseas and so will not match with state-funded figures in the national tables. 'England' includes all pupils from state-funded schools, independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision.
+2. Grade U refers to pupils' results which are ungraded or unclassified.
+3. Any Design and Technology includes Design and Technology Engineering and Product Design qualifications.
+4. In 2020 and 2021, all GCSEs in England have been reformed and use the new 9 to 1 grading system (rather than A*-G). Year on year comparisons will be limited until these qualifications are consistently included from 2020 onwards. However, results for 2020 and 2021 are not comparable with earlier years due to the cancellation of exams (due to COVID-19) and the changes to the way GCSE grades were awarded and results for 2022 are not comparable with previous years due to the changes relating to grading assessments.
+5. c = a cell that has been suppressed due to low number of pupils. Suppression was applied where deemed necessary for all data up to 2018/19. For 2019/20, DfE suppression policy changed. For 2020 and 2021 results where a geographical area contains only one school (for example Isles of Scilly) the data for that area has been suppressed. This is in line with the announcement that school level data would not be published using either summer 2020 or summer 2021 exam grades awarded. Data is not being supressed in 2022 at local authority or national level.
+6. Pupils also registered at an institution normally included within the Secondary School Performance Tables (state funded mainstream schools) are excluded from the Alternative Provision data. This methodology has been retained for attainment data in 2020 and 2021 even though the school performance tables have been cancelled.
+7. : = When data is unavailable for other reasons
+8. Grade X refers to pupils who were absent or whose results are pending.
+9. z = When an observation is not applicable
+10. Any science includes Astronomy, Electronics, Environmental Science and Geology.
+11. Only GCSEs and established GCSE equivalents (Cambridge International certificates and Edexcel level 1/2 certificates) are included in this data. Excludes Double Awards.
+12. For pupils at the end of KS4 in 2021/22, where pupils achieved qualifications in subjects between January 2020 and August 2021, we will not use results from these qualifications and these results are shown as covid impacted. The entries into the qualifications are still counted.
+
+
+KS4 vocational subject alternative provision data
+
+Filename: 2122_ap_vocational_data_revised.csv
+Geographic levels: National
+Time period: 2021/22
+Content summary: National level vocational subject achievements for the latest year broken down by subject for pupils in alternative provision.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name         |  Variable description
+--------------------  |  -------------------------------------------------------
+grade                 |  The grade a pupil achieves
+number_achieving      |  The number of pupils achieving the designated grade
+percentage_achieving  |  The percentage of pupils achieving the designated grade
+subject               |  The type of subject
+
+Footnotes:
+
+1. Local authority, region and the total (state-funded sector) figures cover achievements in state-funded schools only. They do not include pupils recently arrived from overseas and so will not match with state-funded figures in the national tables. 'England' includes all pupils from state-funded schools, independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision.
+2. The subject totals do not sum to the overall total because some pupils enter more than one vocational subject. For example, a pupil that has entered both Art & Design and Business will appear in both the Art & Design and Business totals but will be counted only once in the overall total.
+3. : = When data is unavailable for other reasons
+4. Discounting has been applied where pupils have taken the same subject more than once. In 2021/22, with the return of the exam series, we have reintroduced first entry rules for discounting. Further information can be found in the secondary accountability guidance. For more on the discounting methodology prior to 2020, read the Discounting and Early Entry Guidance.
+5. z = When an observation is not applicable
+
+
+KS4 local authority alternative provision data
+
+Filename: 2122_la_ap_data_revised.csv
+Geographic levels: Local authority; National; Regional
+Time period: 2021/22
+Content summary: Local authority and regional level headline entry and attainment measures for the latest year broken down for alternative provision.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name      |  Variable description
+-----------------  |  --------------------------------------------------------------------------------------------------------------------------------
+avg_att8           |  Average Attainment 8 score of all pupils
+avg_att8_ebac      |  Average Attainment 8 score per pupil in Ebacc subjects
+avg_att8_eng       |  Average Attainment 8 score per pupil in English
+avg_att8_mat       |  Average Attainment 8 score per pupil in Mathematics
+avg_att8_open      |  Average score per pupil from open Attainment 8 slots
+avg_att8_open_g    |  Average score per pupil from GCSEs in open Attainment 8 slots
+avg_att8_open_ng   |  Average score per pupil from non-GCSEs in open Attainment 8 slots
+avg_ebac_fill      |  Average number of Ebacc slots filled
+avg_ebaccaps       |  Average EBacc APS score per pupil
+avg_ebptseng_ll    |  Average point score in English EBacc subject area including English literature
+avg_ebptshum       |  Average highest point score in Humanities EBacc subject area
+avg_ebptslan       |  Average highest point score in Languages EBacc subject area
+avg_ebptsmat       |  Average point score in Mathematics EBacc subject area
+avg_ebptssci       |  Average point score in Science EBacc subject area
+avg_open_fill      |  Average number of Open slots filled
+avg_p8ebac         |  Average Progress 8 score of all pupils for Ebacc element
+avg_p8eng          |  Average Progress 8 score of all pupils for English element
+avg_p8mat          |  Average Progress 8 score of all pupils for mathematics element
+avg_p8open         |  Average Progress 8 score of all pupils for open element
+avg_p8score        |  Average Progress 8 score of all pupils
+p8ebac_CI_low      |  Progress 8 lower 95% confidence interval for Ebacc element
+p8ebac_CI_upp      |  Progress 8 upper 95% confidence interval for Ebacc element
+p8eng_CI_low       |  Progress 8 lower 95% confidence interval for English element
+p8eng_CI_upp       |  Progress 8 upper 95% confidence interval for English element
+p8mat_CI_low       |  Progress 8 lower 95% confidence interval for mathematics element
+p8mat_CI_upp       |  Progress 8 upper 95% confidence interval for mathematics element
+p8open_CI_low      |  Progress 8 lower 95% confidence interval for open element
+p8open_CI_upp      |  Progress 8 upper 95% confidence interval for open element
+p8score_CI_low     |  Progress 8 lower 95% confidence interval
+p8score_CI_upp     |  Progress 8 upper 95% confidence interval
+pt_anypass         |  Percentage of pupils achieving any passes at GCSE or equivalent
+pt_ebac2sci_94     |  Percentage of pupils achieving grade 4 or above in Ebacc Science component
+pt_ebac2sci_95     |  Percentage of pupils achieving grade 5 or above in Ebacc Science component
+pt_ebac2sci_e      |  Percentage of pupils entered for Ebacc Science
+pt_ebacc_94        |  Percentage of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_95        |  Percentage of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_e_ptq_ee  |  Percentage of pupils entering the English Baccalaureate
+pt_ebaceng_94      |  Percentage of pupils achieving grade 4 or above in Ebacc English component
+pt_ebaceng_95      |  Percentage of pupils achieving grade 5 or above in Ebacc English component
+pt_ebaceng_e       |  Percentage of pupils entered for Ebacc English
+pt_ebachum_94      |  Percentage of pupils achieving grade 4 or above in Ebacc Humanities component
+pt_ebachum_95      |  Percentage of pupils achieving grade 5 or above in Ebacc Humanities component
+pt_ebachum_e       |  Percentage of pupils entered for Ebacc Humanities (Geography or History)
+pt_ebaclan_94      |  Percentage of pupils achieving grade 4 or above in Ebacc Languages component
+pt_ebaclan_95      |  Percentage of pupils achieving grade 5 or above in Ebacc Languages component
+pt_ebaclan_e       |  Percentage of pupils entered for Ebacc Languages
+pt_ebacmat_94      |  Percentage of pupils achieving grade 4 or above in Ebacc Mathematics component
+pt_ebacmat_95      |  Percentage of pupils achieving grade 5 or above in Ebacc Mathematics component
+pt_ebacmat_e       |  Percentage of pupils entered for Ebacc Mathematics
+pt_entbasics       |  Percentage of pupils entering English and Mathematics GCSEs
+pt_entry_1         |  Percentage of pupils entering GCSEs or equivalents
+pt_l2basics_94     |  Percentage of pupils achieving grades 4 or above in English and Mathematics GCSEs
+pt_l2basics_95     |  Percentage of pupils achieving grades 5 or above in English and Mathematics GCSEs
+t_anypass          |  Total number of pupils achieving any passes at GCSE or equivalent
+t_att8             |  Total sum of pupils Attainment 8 scores
+t_att8_ebac        |  Total Attainment 8 score in Ebacc subjects
+t_att8_eng         |  Total Attainment 8 score in English
+t_att8_mat         |  Total Attainment 8 score in Mathematics
+t_att8_open        |  Total score from open Attainment 8 slots
+t_att8_open_g      |  Total score from GCSEs in open Attainment 8 slots
+t_att8_open_ng     |  Total score from non-GCSEs in open Attainment 8 slots
+t_ebac_fill        |  Total number of Ebacc slots filled
+t_ebac2sci_94      |  Total number of pupils achieving grade 4 or above in Ebacc Science component
+t_ebac2sci_95      |  Total number of pupils achieving grade 5 or above in Ebacc Science component
+t_ebac2sci_e       |  Total number of pupils entered for Ebacc Science
+t_ebacc_94         |  Total number of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_95         |  Total number of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_e_ptq_ee   |  Total number of pupils entering the English Baccalaureate
+t_ebaccaps         |  Total EBacc APS score of pupils
+t_ebaceng_94       |  Total number of pupils achieving grade 4 or above in Ebacc English component
+t_ebaceng_95       |  Total number of pupils achieving grade 5 or above in Ebacc English component
+t_ebaceng_e        |  Total number of pupils entered for Ebacc English
+t_ebachum_94       |  Total number of pupils achieving grade 4 or above in Ebacc Humanities component
+t_ebachum_95       |  Total number of pupils achieving grade 5 or above in Ebacc Humanities component
+t_ebachum_e        |  Total number of pupils entered for Ebacc Humanities (Geography or History)
+t_ebaclan_94       |  Total number of pupils achieving grade 4 or above in Ebacc Languages component
+t_ebaclan_95       |  Total number of pupils achieving grade 5 or above in Ebacc Languages component
+t_ebaclan_e        |  Total number of pupils entered for Ebacc Languages
+t_ebacmat_94       |  Total number of pupils achieving grade 4 or above in Ebacc Mathematics component
+t_ebacmat_95       |  Total number of pupils achieving grade 5 or above in Ebacc Mathematics component
+t_ebacmat_e        |  Total number of pupils entered for Ebacc Mathematics
+t_ebptseng_ll      |  Total point score in English EBacc subject area including English literature
+t_ebptshum         |  Total highest point score in Humanities EBacc subject area
+t_ebptslan         |  Total highest point score in Languages EBacc subject area
+t_ebptsmat         |  Total point score in Mathematics EBacc subject area
+t_ebptssci         |  Total point score in Science EBacc subject area
+t_entbasics        |  Total number of pupils entering English and Mathematics GCSEs
+t_entry_1          |  Total number of pupils entering GCSEs or equivalents
+t_inp8calc         |  Total number of pupils included in Progress 8 measure
+t_l2basics_94      |  Total number of pupils achieving grades 4 or above in English and Mathematics GCSEs
+t_l2basics_95      |  Total number of pupils achieving grades 5 or above in English and Mathematics GCSEs
+t_open_fill        |  Total number of Open slots filled
+t_p8ebac           |  Total sum of pupils Progress 8 scores for Ebacc element
+t_p8eng            |  Total sum of pupils Progress 8 scores for English element
+t_p8mat            |  Total sum of pupils Progress 8 scores for mathematics element
+t_p8open           |  Total sum of pupils Progress 8 scores for open element
+t_p8score          |  Total sum of pupils Progress 8 scores
+t_pupils           |  Total number of pupils at the end of key stage 4
+t_schools          |  Total number of schools
+
+Footnotes:
+
+1. Local authority, region and the total (state-funded sector) figures cover achievements in state-funded schools only. They do not include pupils recently arrived from overseas and so will not match with state-funded figures in the national tables. 'England' includes all pupils from state-funded schools, independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision.
+2. In 2020 and 2021, all GCSEs in England have been reformed and use the new 9 to 1 grading system (rather than A*-G). Year on year comparisons will be limited until these qualifications are consistently included from 2020 onwards. However, results for 2020 and 2021 are not comparable with earlier years due to the cancellation of exams (due to COVID-19) and the changes to the way GCSE grades were awarded and results for 2022 are not comparable with previous years due to the changes relating to grading assessments.
+3. c = a cell that has been suppressed due to low number of pupils. Suppression was applied where deemed necessary for all data up to 2018/19. For 2019/20, DfE suppression policy changed. For 2020 and 2021 results where a geographical area contains only one school (for example Isles of Scilly) the data for that area has been suppressed. This is in line with the announcement that school level data would not be published using either summer 2020 or summer 2021 exam grades awarded. Data is not being supressed in 2022 at local authority or national level.
+4. In 2021, two new local authorities were introduced (North Northamptonshire and West Northamptonshire) which replaced Northamptonshire.
+5. City of London does not have any state funded secondary schools, therefore there are no entries present in the data for this local authority.
+6. : = When data is unavailable for other reasons
+7. Discounting has been applied where pupils have taken the same subject more than once. In 2021/22, with the return of the exam series, we have reintroduced first entry rules for discounting. Further information can be found in the secondary accountability guidance. For more on the discounting methodology prior to 2020, read the Discounting and Early Entry Guidance.
+8. EBacc sciences includes the double award GCSE in combined science, and single GCSEs in biology, chemistry, physics and computer science.
+9. Average number of slots filled that contains U grades or other qualifications scoring 0 points are counted as a non-filled slot.
+10. z = When an observation is not applicable
+11. In 2019, two new local authorities were created from a merger of others. Bournemouth, Christchurch and Poole was created on 1 April 2019 from areas that were previously administered by the unitary authorities of Bournemouth and Poole, and the district of Christchurch. Dorset was created on 1 April 2019 from the districts of Weymouth and Portland, West Dorset, North Dorset, Purbeck and East Dorset. 2019 data is not comparable to previous years.
+12. The open element contains the three highest point scores in any three other subjects, including English language or literature (if not counted in the English slot), further GCSE qualifications (including English Baccalaureate subjects) or any other non-GCSE qualifications on the DfE approved list.
+
+
+KS4 parliamentary constituency of school location data
+
+Filename: 2122_pcon_sl_data_revised.csv
+Geographic levels: Parliamentary constituency
+Time period: 2021/22
+Content summary: Headline entry and attainment measures for the latest year for each constituency. State-funded pupils only.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name      |  Variable description
+-----------------  |  --------------------------------------------------------------------------------------------------------------------------------
+avg_att8           |  Average Attainment 8 score of all pupils
+avg_ebaccaps       |  Average EBacc APS score per pupil
+avg_p8score        |  Average Progress 8 score of all pupils
+p8score_CI_low     |  Progress 8 lower 95% confidence interval
+p8score_CI_upp     |  Progress 8 upper 85% confidence interval
+pt_ebacc_94        |  Percentage of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_95        |  Percentage of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_e_ptq_ee  |  Percentage of pupils entering the English Baccalaureate
+pt_entbasics       |  Percentage of pupils entering English and Mathematics GCSEs
+pt_l2basics_94     |  Percentage of pupils achieving grades 4 or above in English and Mathematics GCSEs
+pt_l2basics_95     |  Percentage of pupils achieving grades 5 or above in English and Mathematics GCSEs
+t_att8             |  Total sum of pupils Attainment 8 scores
+t_ebacc_94         |  Total number of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_95         |  Total number of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_e_ptq_ee   |  Total number of pupils entering the English Baccalaureate
+t_ebaccaps         |  Total EBacc APS score of pupils
+t_entbasics        |  Total number of pupils entering English and Mathematics GCSEs
+t_inp8calc         |  Total number of pupils included in Progress 8 measure
+t_l2basics_94      |  Total number of pupils achieving grades 4 or above in English and Mathematics GCSEs
+t_l2basics_95      |  Total number of pupils achieving grades 5 or above in English and Mathematics GCSEs
+t_p8score          |  Total sum of pupils Progress 8 scores
+t_pupils           |  Total number of pupils at the end of key stage 4
+t_schools          |  Total number of schools
+
+Footnotes:
+
+1. The residency of 897 pupils living in England in 2021/22 is unknown due to missing or invalid postcode information. Pupils not resident in England and pupils with missing or invalid postcode information are excluded from the figures in presented.
+2. : = When data is unavailable for other reasons
+3. z = When an observation is not applicable
+4. All state-funded schools include local authority maintained mainstream schools, academies, free schools, city technology colleges, further education colleges with provision for 14 to 16 year-olds and state-funded special schools. They exclude independent schools, independent special schools, non-maintained special schools, hospital schools, pupil referral units and alternative provision. Alternative provision includes academy and free school alternative provision.
+
+
+KS4 national characteristics summary
+
+Filename: 2122_characteristics_summary_revised.csv
+Geographic levels: National
+Time period: 2018/19 to 2021/22
+Content summary: National level headline entry and attainment measures broken down by year, detailed school type, gender, major and minor ethnicity, free school meal eligibility, special educational need status and description, primary need, disadvantaged status, first language, school admission type and school religious denomination.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name      |  Variable description
+-----------------  |  --------------------------------------------------------------------------------------------------------------------------------
+avg_att8           |  Average Attainment 8 score of all pupils
+avg_ebaccaps       |  Average EBacc APS score per pupil
+avg_p8score        |  Average Progress 8 score of all pupils
+characteristic     |  The characteristic of the pupil
+p8score_CI_low     |  Progress 8 lower 95% confidence interval
+p8score_CI_upp     |  Progress 8 upper 95% confidence interval
+pt_ebacc_94        |  Percentage of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_95        |  Percentage of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+pt_ebacc_e_ptq_ee  |  Percentage of pupils entering the English Baccalaureate
+pt_entbasics       |  Percentage of pupils entering English and mathematics GCSEs
+pt_l2basics_94     |  Percentage of pupils achieving grades 4 or above in English and mathematics GCSEs
+pt_l2basics_95     |  Percentage of pupils achieving grades 5 or above in English and mathematics GCSEs
+t_att8             |  Total sum of pupils Attainment 8 scores
+t_ebacc_94         |  Total number of pupils achieving the English Baccalaureate (grades 4 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_95         |  Total number of pupils achieving the English Baccalaureate (grades 5 or above in English and maths, A*-C in unreformed subjects)
+t_ebacc_e_ptq_ee   |  Total number of pupils entering the English Baccalaureate
+t_ebaccaps         |  Total EBacc APS score of pupils
+t_entbasics        |  Total number of pupils entering English and mathematics GCSEs
+t_inp8calc         |  Total number of pupils included in Progress 8 measure
+t_l2basics_94      |  Total number of pupils achieving grades 4 or above in English and mathematics GCSEs
+t_l2basics_95      |  Total number of pupils achieving grades 5 or above in English and mathematics GCSEs
+t_p8score          |  Total sum of pupils Progress 8 scores
+t_pupils           |  Total number of pupils at the end of key stage 4
+t_schools          |  Total number of schools
+
+
+Key stage 2 to 4 transition matrices KS4 measures
+
+Filename: 2122_ks2_to_ks4_measures_tm_data_revised.data.csv
+Geographic levels: National
+Time period: 2021/22
+Content summary: National level EBacc entry, EBacc achievement (9-4), EBacc achievement (9-5), English and maths (9-4), English and maths (9-5) compared with KS2 scaled scores achieved broken down by gender, disadvantage, special educational needs (SEN) and English as an additional language (EAL). Pupils in state-funded mainstream and special schools, hospital schools and non-maintained special schools.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                 |  Variable description
+----------------------------  |  -----------------------------------------------------------------------------------------------------
+basics_9-4_achieved           |  Number of pupils achieving grades 4 or above in English and mathematics GCSEs
+basics_9-4_not_achieved       |  Number of pupils not achieving grades 4 or above in English and mathematics GCSEs
+basics_9-4_perc_achieved      |  Percentage of pupils achieving grades 4 or above in English and mathematics GCSEs
+basics_9-4_perc_not_achieved  |  Percentage of pupils not achieving grades 4 or above in English and mathematics GCSEs
+basics_9-5_achieved           |  Number of pupils achieving grades 5 or above in English and mathematics GCSEs
+basics_9-5_not_achieved       |  Number of pupils not achieving grades 5 or above in English and mathematics GCSEs
+basics_9-5_perc_achieved      |  Percentage of pupils achieving grades 5 or above in English and mathematics GCSEs
+basics_9-5_perc_not_achieved  |  Percentage of pupils not achieving grades 5 or above in English and mathematics GCSEs
+characteristic_value          |  Pupil characteristic disaggregation - Filter by Pupil characteristic disaggregation
+ebacc_9-4_achieved            |  Number of pupils achieving the English Baccalaureate (grades 4 or above in English and maths)
+ebacc_9-4_not_achieved        |  Number of pupils not achieving the English Baccalaureate (grades 4 or above in English and maths)
+ebacc_9-4_perc_achieved       |  Percentage of pupils achieving the English Baccalaureate (grades 4 or above in English and maths)
+ebacc_9-4_perc_not_achieved   |  Percentage of pupils not achieving the English Baccalaureate (grades 4 or above in English and maths)
+ebacc_9-5_achieved            |  Number of pupils achieving the English Baccalaureate (grades 5 or above in English and maths)
+ebacc_9-5_not_achieved        |  Number of pupils not achieving the English Baccalaureate (grades 5 or above in English and maths)
+ebacc_9-5_perc_achieved       |  Percentage of pupils achieving the English Baccalaureate (grades 5 or above in English and maths)
+ebacc_9-5_perc_not_achieved   |  Percentage of pupils not achieving the English Baccalaureate (grades 5 or above in English and maths)
+ebacc_all_entered             |  Total number of pupils entering the English Baccalaureate
+ebacc_all_not_entered         |  Total number of pupils not entering the English Baccalaureate
+ebacc_all_perc_entered        |  Percentage of pupils entering the English Baccalaureate
+ebacc_all_perc_not_entered    |  Percentage of pupils not entering the English Baccalaureate
+ks2_scaled_score              |  Key stage 2 scaled score group - Filter by Key stage 2 scaled score group
+
+
+Key stage 2 to 4 transition matrices GCSE subjects
+
+Filename: 2122_ks2_to_ks4_gcse_subjects_tm_data_revised.csv
+Geographic levels: National
+Time period: 2021/22
+Content summary: National level distributions of GCSE grades achieved compared with KS2 scaled scores achieved broken down by subject, gender, disadvantage, special educational needs (SEN) and English as an additional language (EAL). Pupils in state-funded mainstream and special schools, hospital schools and non-maintained special schools.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name              |  Variable description
+-------------------------  |  -----------------------------------------------------------------------------------
+all_double_grades          |  Total number of GCSE double grades achieved
+all_grades                 |  Total number of GCSE grades achieved
+characteristic_value       |  Pupil characteristic disaggregation - Filter by Pupil characteristic disaggregation
+ks2_scaled_score_group     |  Key stage 2 scaled score group - Filter by Key stage 2 scaled score group
+num_1                      |  Number of GCSE pupils with grade 1 achieved
+num_11                     |  Number of GCSE pupils with grade 11 achieved
+num_2                      |  Number of GCSE pupils with grade 2 achieved
+num_21                     |  Number of GCSE pupils with grade 21 achieved
+num_22                     |  Number of GCSE pupils with grade 22 achieved
+num_3                      |  Number of GCSE pupils with grade 3 achieved
+num_32                     |  Number of GCSE pupils with grade 32 achieved
+num_33                     |  Number of GCSE pupils with grade 33 achieved
+num_4                      |  Number of GCSE pupils with grade 4 achieved
+num_43                     |  Number of GCSE pupils with grade 43 achieved
+num_44                     |  Number of GCSE pupils with grade 44 achieved
+num_5                      |  Number of GCSE pupils with grade 5 achieved
+num_54                     |  Number of GCSE pupils with grade 54 achieved
+num_55                     |  Number of GCSE pupils with grade 55 achieved
+num_6                      |  Number of GCSE pupils with grade 6 achieved
+num_65                     |  Number of GCSE pupils with grade 65 achieved
+num_66                     |  Number of GCSE pupils with grade 66 achieved
+num_7                      |  Number of GCSE pupils with grade 7 achieved
+num_76                     |  Number of GCSE pupils with grade 76 achieved
+num_77                     |  Number of GCSE pupils with grade 77 achieved
+num_8                      |  Number of GCSE pupils with grade 8 achieved
+num_87                     |  Number of GCSE pupils with grade 87 achieved
+num_88                     |  Number of GCSE pupils with grade 88 achieved
+num_9                      |  Number of GCSE pupils with grade 9 achieved
+num_98                     |  Number of GCSE pupils with grade 98 achieved
+num_99                     |  Number of GCSE pupils with grade 99 achieved
+num_covid_impacted         |  Number of pupils achieving a covid 19 impacted grade
+num_covid_impacted_double  |  Number of pupils achieving a covid 19 impacted double grade
+num_U                      |  Number of GCSE pupils with grade U achieved
+num_UU                     |  Number of GCSE pupils with grade UU achieved
+num_X                      |  Number of GCSE pupils with grade X achieved
+num_XX                     |  Number of GCSE pupils with grade XX achieved
+per_covid_impacted         |  Percentage of pupils achieving a covid 19 impacted grade
+per_covid_impacted_double  |  Percentage of pupils achieving a covid 19 impacted double grade
+perc_1                     |  Percentage of pupils achieving GCSE grade 1
+perc_11                    |  Percentage of pupils achieving GCSE grade 11
+perc_2                     |  Percentage of pupils achieving GCSE grade 2
+perc_21                    |  Percentage of pupils achieving GCSE grade 21
+perc_22                    |  Percentage of pupils achieving GCSE grade 22
+perc_3                     |  Percentage of pupils achieving GCSE grade 3
+perc_32                    |  Percentage of pupils achieving GCSE grade 32
+perc_33                    |  Percentage of pupils achieving GCSE grade 33
+perc_4                     |  Percentage of pupils achieving GCSE grade 4
+perc_43                    |  Percentage of pupils achieving GCSE grade 43
+perc_44                    |  Percentage of pupils achieving GCSE grade 44
+perc_5                     |  Percentage of pupils achieving GCSE grade 5
+perc_54                    |  Percentage of pupils achieving GCSE grade 54
+perc_55                    |  Percentage of pupils achieving GCSE grade 55
+perc_6                     |  Percentage of pupils achieving GCSE grade 6
+perc_65                    |  Percentage of pupils achieving GCSE grade 65
+perc_66                    |  Percentage of pupils achieving GCSE grade 66
+perc_7                     |  Percentage of pupils achieving GCSE grade 7
+perc_76                    |  Percentage of pupils achieving GCSE grade 76
+perc_77                    |  Percentage of pupils achieving GCSE grade 77
+perc_8                     |  Percentage of pupils achieving GCSE grade 8
+perc_87                    |  Percentage of pupils achieving GCSE grade 87
+perc_88                    |  Percentage of pupils achieving GCSE grade 88
+perc_9                     |  Percentage of pupils achieving GCSE grade 9
+perc_98                    |  Percentage of pupils achieving GCSE grade 98
+perc_99                    |  Percentage of pupils achieving GCSE grade 99
+perc_U                     |  Percentage of pupils achieving GCSE grade U
+perc_UU                    |  Percentage of pupils achieving GCSE grade UU
+subjects                   |  GCSE subject entered - Filter by GCSE subject entered
+
+Footnotes:
+
+1. For pupils at the end of KS4 in 2021/22, where pupils achieved qualifications in subjects between January 2020 and August 2021, we will not use results from these qualifications and these results are shown as covid impacted. The entries into the qualifications are still counted.
+2. Some percentages may not add up to exactly 100% due to rounding.

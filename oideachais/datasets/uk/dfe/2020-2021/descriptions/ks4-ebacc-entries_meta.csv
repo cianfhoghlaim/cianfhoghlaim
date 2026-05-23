@@ -1,0 +1,32 @@
+﻿Column,Metafile heading,Metafile description,Methodology changes,Null field for special schools,Null field for local authority records,Null field for National (all schools) records,Null field for National (maintained schools) records
+1,RECTYPE,Record type (1=mainstream school; 2=special school; 4=local authority; 5=National (all schools); 7=National (maintained schools)),,Yes,Yes,Yes,Yes
+2,LEA,Local authority code (see separate list of local authorities and their codes),,Yes,Yes,Yes,Yes
+3,ESTAB,Establishment number,,Yes,Yes,Yes,Yes
+4,URN,School Unique Reference Number,,Yes,Yes,Yes,Yes
+5,SCHNAME,School name,,Yes,Yes,Yes,Yes
+6,SCHNAME_AC,School now known as (used if the school has converted to an academy on or after 12 Sept 2018),,Yes,Yes,Yes,Yes
+7,ADDRESS1,School address (1),,Yes,Yes,Yes,Yes
+8,ADDRESS2,School address (2),,,Yes,Yes,Yes
+9,ADDRESS3,School address (3),,,Yes,Yes,Yes
+10,TOWN,School town,,Yes,Yes,Yes,Yes
+11,PCODE,School postcode,,Yes,Yes,Yes,Yes
+12,TELNUM,School telephone number,,Yes,Yes,Yes,Yes
+13,PCON_CODE,Parliamentary Constituency code,,Yes,Yes,Yes,Yes
+14,PCON_NAME,Parliamentary Constituency name,,Yes,Yes,Yes,Yes
+15,CONTFLAG,Contingency flag - school results 'significantly affected'. This field is zero for all schools.,,,,Yes,Yes
+16,ICLOSE,Closed school flag (0=open; 1=closed),,,Yes,Yes,Yes
+17,NFTYPE,School type (see separate list of abbreviations used in the tables),,Yes,Yes,Yes,Yes
+18,RELDENOM,School religious character,,Yes,Yes,Yes,Yes
+19,ADMPOL,School admissions policy (self-declared by schools on Edubase),,Yes,Yes,Yes,Yes
+20,ADMPOL_18,School admissions policy - new definition from 2018,,,,,
+21,EGENDER,School gender of entry,,Yes,Yes,Yes,Yes
+22,FEEDER,Indicates whether school is a feeder school for sixth form centre/consortia (0=No; 1=Yes),,Yes,Yes,Yes,Yes
+23,TABKS2,Indicates whether school is published in the primary school (key stage 2) performance tables (0=No; 1=Yes),,Yes,Yes,Yes,Yes
+24,TAB1618,Indicates whether school is published in the school and college (16-18) performance tables (0=No; 1=Yes),,Yes,Yes,Yes,Yes
+25,TPUP,Number of pupils at the end of key stage 4,,,,,
+26,PTEBACC_E_PTQ_EE,Percentage of key stage 4 pupils with entries in all English Baccalaureate subject areas,,,,,
+27,PTEBACENG_E_PTQ_EE,Percentage of pupils entering the English Baccalaureate English subject area,,,,,
+28,PTEBACMAT_E_PTQ_EE,Percentage of pupils entering the English Baccalaureate Maths subject area,,,,,
+29,PTEBAC2SCI_E_PTQ_EE,% of pupils entering the English Baccalaureate Science subject area,,,,,
+30,PTEBACHUM_E_PTQ_EE,% of pupils entering the English Baccalaureate Humanities subject area,,,,,
+31,PTEBACLAN_E_PTQ_EE,% of pupils entering the English Baccalaureate Language subject area,,,,,

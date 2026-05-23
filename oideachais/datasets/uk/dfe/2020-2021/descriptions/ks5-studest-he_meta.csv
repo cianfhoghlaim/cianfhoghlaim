@@ -1,0 +1,39 @@
+﻿Variable,Type,Description
+LAESTAB,Integer,School code
+RECTYPE,Integer,1= school or college; 3= sixth form centre/consortium (see separate list of the sixth form centres and consortia and their feeder schools and colleges); 4= Local Authority; 5= National (all schools and colleges); 7= National (state-funded schools and colleges)
+LEA,Integer,Local authority number
+ESTAB,Integer,Institution number
+URN,Integer,Institution unique reference number
+SCHNAME,String,School name
+NFTYPE,String,Institution type
+FEEDER,Integer,Consortia feeder flag
+ICLOSE,Integer,"0 = Open, 1 = Closed"
+ALL_BAND,Character,"Band for the total cohort: 5 = Well below average, 4 = Below average, 3 = About average, 2 = Above average, 1 = Well above average"
+ALL_SCORE,Integer,Progression score for the total cohort
+ALL_COHORT,Integer,Cohort size
+ALL_PROGRESSED,Percentage,Progressed
+ALL_APPREN,Percentage,Apprenticeships
+ALL_HE,Percentage,HE
+ALL_TOP3RD,Percentage,Top third
+ALL_RUSSELL,Percentage,Russell
+ALL_OXBRIDGE,Percentage,Oxbridge
+ALL_HTECH,Percentage,Higher technical
+ACADAGEN_COHORT,Integer,Cohort size for academic/applied general cohort
+ACADAGEN_PROGRESSED,Percentage,Progressed for academic/applied general cohort
+ACADAGEN_SCORE,Integer,Progression score for academic/applied general cohort
+ACADAGEN_BAND,Character,"Band for academic/applied general cohort: 5 = Well below average, 4 = Below average, 3 = About average, 2 = Above average, 1 = Well above average"
+TLEV_COHORT,Integer,Cohort size for TLEV cohort
+TLEV_PROGRESSED,Percentage,Progressed for TLEV cohort
+TLEV_SCORE,Integer,Score for TLEV cohort
+TLEV_BAND,Character,"Band for TLEV cohort: 5 = Well below average, 4 = Below average, 3 = About average, 2 = Above average, 1 = Well above average"
+OTHER_COHORT,Integer,Cohort size for other level 3 qualifications cohort
+OTHER_PROGRESSED,Percentage,Progressed for other level 3 qualifications cohort
+OTHER_SCORE,Integer,Score for other level 3 qualifications cohort
+OTHER_BAND,Character,"Band for other level 3 qualifications cohort: 5 = Well below average, 4 = Below average, 3 = About average, 2 = Above average, 1 = Well above average"
+DIS_PROGRESSED,Percentage,Progressed for disadvantaged students
+DIS_APPREN,Percentage,Apprenticeships for disadvantaged students
+DIS_HE,Percentage,HE for disadvantaged students
+DIS_TOP3RD,Percentage,Top third for disadvantaged students
+DIS_RUSSELL,Percentage,Russell for disadvantaged students
+DIS_OXBRIDGE,Percentage,Oxbridge for disadvantaged students
+DIS_HTECH,Percentage,Higher technical for disadvantaged students

@@ -1,0 +1,107 @@
+Variable,Label,Type,Description
+URN,Unique Reference Number,,
+LONDON/NON-LONDON,London/Non-London,LONDONTYPE,
+MEDIAN,Group to compare,SAMEGROUPTYPE,
+PUPILS,Number of pupils (FTE),FLOATCFR,Full time equivalent pupils
+FSM,Percentage of pupils eligible for Free School Meals (FSM),PCT1,
+FSMBAND,Free school meals eligibility band,TEXT,
+GRANTFUNDING,Grant funding (&pound; per pupil),INTEGER,"Includes funds delegated by the LA, funding for 6th form students, SEN funding, funding for minority ethnic pupils, standards fund, other government grants, other grants and payments, SSG pupil focused, pupil focused extended school funding and/or grants and Additional grant for schools"
+SELFGENERATEDINCOME,Self generated income (&pound; per pupil),INTEGER,"Includes income from facilities and services, receipts from other insurance claims, income from contributions to visits etc, donations and/or private funds"
+TOTALINCOME,Total income (&pound; per pupil),INTEGER,Sum of grant funding and self generated income
+TEACHINGSTAFF,Teaching staff (&pound; per pupil),INTEGER,Includes all teachers' pay
+SUPPLYTEACHERS,Supply Staff (&pound; per pupil),INTEGER,"Includes salaries for supply staff employed directly by the school, agency staff and insurance costs"
+EDUCATIONSUPPORTSTAFF,Education support staff (&pound; per pupil),INTEGER,Includes salaries and wages of education support staff and insurance costs
+PREMISES,Premises (incl. Staff costs) (&pound; per pupil),INTEGER,"Includes building and premises maintenance and improvement, cleaning and caretaking, water and sewerage services including security and hygiene and includes salaries for employees of the school"
+BACKOFFICE,Back office (incl. Staff costs) (&pound; per pupil),INTEGER,"Includes administrative and clerical staff, administrative supplies and bought in professional services for administrative functions such as finances or legal"
+CATERING,Catering (incl. Staff costs) (&pound; per pupil),INTEGER,Includes spending on catering staff and catering supplies including providing free school meals and free milk
+OTHERSTAFF,Other staff costs (&pound; per pupil),INTEGER,"Includes cost of other staff, indirect employess expenses, development and training, staff related insurance"
+ENERGY,Energy (&pound; per pupil),INTEGER,Includes all costs related to fuel and energy
+LEARNINGRESOURCES,Learning resources (not ICT equipment) (&pound; per pupil),INTEGER,"Includes  books, classroom and learning equipment, school trips and payments to alternative provision services"
+ICT,ICT learning resources (&pound; per pupil),INTEGER,"Includes education software, cost of broadband, hire contracts and ICT revenue expenditure"
+BOUGHTINPROFESSIONALSERVICES,Bought in professional services - curriculum (&pound; per pupil),INTEGER,Includes spending on professional services to support the curriculum
+OTHER,Other expenditure (&pound; per pupil),INTEGER,"Includes rates, exam fees, other insurance premiums, revenue contributions to capital costs, special facilities such as swimming pools"
+TOTALEXPENDITURE,Total expenditure (&pound; per pupil),INTEGER,Sum of all expenditure categories
+T1819CAT1,2018-19 Teaching and Education Support Staff Costs (&pound; per pupil),INTEGER,
+T1920CAT1,2019-20 Teaching and Education Support Staff Costs (&pound; per pupil),INTEGER,
+T2021CAT1,2020-21 Teaching and Education Support Staff Costs (&pound; per pupil),INTEGER,
+DCAT1,Difference between 2018-19 and 2020-21 (&pound; per pupil),INTEGER,
+T1819CAT2,2018-19 Supply Staff Costs (&pound; per pupil),INTEGER,
+T1920CAT2,2019-20 Supply Staff Costs (&pound; per pupil),INTEGER,
+T2021CAT2,2020-21 Supply Staff Costs (&pound; per pupil),INTEGER,
+DCAT2,Difference between 2018-19 and 2020-21 (&pound; per pupil),INTEGER,
+T1819CAT3,2018-19 Back Office (&pound; per pupil),INTEGER,
+T1920CAT3,2019-20 Back Office (&pound; per pupil),INTEGER,
+T2021CAT3,2020-21 Back Office (&pound; per pupil),INTEGER,
+DCAT3,Difference between 2018-19 and 2020-21 (&pound; per pupil),INTEGER,
+T1819CAT4,2018-19 Energy (&pound; per pupil),INTEGER,
+T1920CAT4,2019-20 Energy (&pound; per pupil),INTEGER,
+T2021CAT4,2020-21 Energy (&pound; per pupil),INTEGER,
+DCAT4,Difference between 2018-19 and 2020-21 (&pound; per pupil),INTEGER,
+T1819CAT5,2018-19 Total Expenditure (&pound; per pupil),INTEGER,
+T1920CAT5,2019-20 Total Expenditure (&pound; per pupil),INTEGER,
+T2021CAT5,2020-21 Total Expenditure (&pound; per pupil),INTEGER,
+DCAT5,Difference between 2018-19 and 2020-21 (&pound; per pupil),INTEGER,
+PGRANTFUNDING,Grant funding (proportion of total income),PCT,"Includes funds delegated by the LA, funding for 6th form students, SEN funding, funding for minority ethnic pupils, standards fund, other government grants, other grants and payments, SSG pupil focused, pupil focused extended school funding and/or grants and Additional grant for schools"
+PSELFGENERATEDINCOME,Self generated income (proportion of total income),PCT,"Includes income from facilities and services, receipts from other insurance claims, income from contributions to visits etc, donations and/or private funds"
+PTEACHINGSTAFF,Teaching staff (proportion of total expenditure),PCT,Includes all teachers' pay
+PSUPPLYTEACHERS,Supply Staff (proportion of total expenditure),PCT,"Includes salaries for supply staff employed directly by the school, agency staff and insurance costs"
+PEDUCATIONSUPPORTSTAFF,Education support staff (proportion of total expenditure),PCT,Includes salaries and wages of education support staff and insurance costs
+PPREMISES,Premises (incl. Staff costs) (proportion of total expenditure),PCT,"Includes building and premises maintenance and improvement, cleaning and caretaking, water and sewerage services including security and hygiene and includes salaries for employees of the school"
+PBACKOFFICE,Back office (incl. Staff costs) (proportion of total expenditure),PCT,"Includes administrative and clerical staff, administrative supplies and bought in professional services for administrative functions such as finances or legal"
+PCATERING,Catering (incl. Staff costs) (proportion of total expenditure),PCT,Includes spending on catering staff and catering supplies including providing free school meals and free milk
+POTHERSTAFF,Other staff costs (proportion of total expenditure),PCT,"Includes cost of other staff, indirect employess expenses, development and training, staff related insurance"
+PENERGY,Energy (proportion of total expenditure),PCT,Includes all costs related to fuel and energy
+PLEARNINGRESOURCES,Learning resources (not ICT equipment) (proportion of total expenditure),PCT,"Includes  books, classroom and learning equipment, school trips and payments to alternative provision services"
+PICT,ICT learning resources (proportion of total expenditure),PCT,"Includes education software, cost of broadband, hire contracts and ICT revenue expenditure"
+PBOUGHTINPROFESSIONALSERVICES,Bought in professional services - curriculum (proportion of total expenditure),PCT,Includes spending on professional services to support the curriculum
+POTHER,Other expenditure (proportion of total expenditure),PCT,"Includes rates, exam fees, other insurance premiums, revenue contributions to capital costs, special facilities such as swimming pools"
+PT1819CAT1,2018-19 Teaching and Education Support Staff Costs (proportion of total expenditure),PCT,
+PT1920CAT1,2019-20 Teaching and Education Support Staff Costs (proportion of total expenditure),PCT,
+PT2021CAT1,2020-21 Teaching and Education Support Staff Costs (proportion of total expenditure),PCT,
+PDCAT1,Difference between 2018-19 and 2020-21 (percentage point difference),INTEGER,
+PT1819CAT2,2018-19 Supply Staff Costs (proportion of total expenditure),PCT,
+PT1920CAT2,2019-20 Supply Staff Costs (proportion of total expenditure),PCT,
+PT2021CAT2,2020-21 Supply Staff Costs (proportion of total expenditure),PCT,
+PDCAT2,Difference between 2018-19 and 2020-21 (percentage point difference),INTEGER,
+PT1819CAT3,2018-19 Back Office (proportion of total expenditure),PCT,
+PT1920CAT3,2019-20 Back Office (proportion of total expenditure),PCT,
+PT2021CAT3,2020-21 Back Office (proportion of total expenditure),PCT,
+PDCAT3,Difference between 2018-19 and 2020-21 (percentage point difference),INTEGER,
+PT1819CAT4,2018-19 Energy (proportion of total expenditure),PCT,
+PT1920CAT4,2019-20 Energy (proportion of total expenditure),PCT,
+PT2021CAT4,2020-21 Energy (proportion of total expenditure),PCT,
+PDCAT4,Difference between 2018-19 and 2020-21 (percentage point difference),INTEGER,
+PT1819CAT5,2018-19 Total Expenditure (proportion of total expenditure),PCT,
+PT1920CAT5,2019-20 Total Expenditure (proportion of total expenditure),PCT,
+PT2021CAT5,2020-21 Total Expenditure (proportion of total expenditure),PCT,
+PDCAT5,Difference between 2018-19 and 2020-21 (percentage point difference),INTEGER,
+T1819CAT1LA,2018-19 Teaching and Education Support Staff Costs (&pound; per pupil) for LA,FLOAT,
+T1920CAT1LA,2019-20 Teaching and Education Support Staff Costs (&pound; per pupil) for LA,FLOAT,
+T2021CAT1LA,2020-21 Teaching and Education Support Staff Costs (&pound; per pupil) for LA,FLOAT,
+T1819CAT2LA,2018-19 Supply Staff Costs (&pound; per pupil) for LA,FLOAT,
+T1920CAT2LA,2019-20 Supply Staff Costs (&pound; per pupil) for LA,FLOAT,
+T2021CAT2LA,2020-21 Supply Staff Costs (&pound; per pupil) for LA,FLOAT,
+T1819CAT3LA,2018-19 Back Office (&pound; per pupil) for LA,FLOAT,
+T1920CAT3LA,2019-20 Back Office (&pound; per pupil) for LA,FLOAT,
+T2021CAT3LA,2020-21 Back Office (&pound; per pupil) for LA,FLOAT,
+T1819CAT4LA,2018-19 Energy (&pound; per pupil) for LA,FLOAT,
+T1920CAT4LA,2019-20 Energy (&pound; per pupil) for LA,FLOAT,
+T2021CAT4LA,2020-21 Energy (&pound; per pupil) for LA,FLOAT,
+T1819CAT5LA,2018-19 Total Expenditure (&pound; per pupil) for LA,FLOAT,
+T1920CAT5LA,2019-20 Total Expenditure (&pound; per pupil) for LA,FLOAT,
+T2021CAT5LA,2020-21 Total Expenditure (&pound; per pupil) for LA,FLOAT,
+PT1819CAT1LA,2018-19 Teaching and Education Support Staff Costs (proportion of total expenditure) for LA,PCT,
+PT1920CAT1LA,2019-20 Teaching and Education Support Staff Costs (proportion of total expenditure) for LA,PCT,
+PT2021CAT1LA,2020-21 Teaching and Education Support Staff Costs (proportion of total expenditure) for LA,PCT,
+PT1819CAT2LA,2018-19 Supply Staff Costs (proportion of total expenditure) for LA,PCT,
+PT1920CAT2LA,2019-20 Supply Staff Costs (proportion of total expenditure) for LA,PCT,
+PT2021CAT2LA,2020-21 Supply Staff Costs (proportion of total expenditure) for LA,PCT,
+PT1819CAT3LA,2018-19 Back Office (proportion of total expenditure) for LA,PCT,
+PT1920CAT3LA,2019-20 Back Office (proportion of total expenditure) for LA,PCT,
+PT2021CAT3LA,2020-21 Back Office (proportion of total expenditure) for LA,PCT,
+PT1819CAT4LA,2018-19 Energy (proportion of total expenditure) for LA,PCT,
+PT1920CAT4LA,2019-20 Energy (proportion of total expenditure) for LA,PCT,
+PT2021CAT4LA,2020-21 Energy (proportion of total expenditure) for LA,PCT,
+PT1819CAT5LA,2018-19 Total Expenditure (proportion of total expenditure) for LA,PCT,
+PT1920CAT5LA,2019-20 Total Expenditure (proportion of total expenditure) for LA,PCT,
+PT2021CAT5LA,2020-21 Total Expenditure (proportion of total expenditure) for LA,PCT,

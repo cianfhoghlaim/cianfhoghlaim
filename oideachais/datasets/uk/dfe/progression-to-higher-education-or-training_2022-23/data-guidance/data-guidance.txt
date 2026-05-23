@@ -1,0 +1,141 @@
+Progression to higher education or training
+Academic year 2022/23
+
+Description
+
+This document describes the data included in the ‘Progression to higher education or training: 2019/20’ National Statistics release’s underlying data files. This data is released under the terms of the Open Government License (opens in a new tab) (http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/) and is intended to meet at least 3 stars for Open Data (opens in a new tab) (https://www.gov.uk/government/publications/2010-to-2015-government-policy-government-transparency-and-accountability/2010-to-2015-government-policy-government-transparency-and-accountability#appendix-3-releasing-data-in-open-and-anonymised-formats).
+
+The publication methodology, available on the publication report, should be referenced alongside this data. It provides information on the data sources, their coverage and quality as well as explaining methodology used in producing the data.
+
+Coverage
+
+This release provides information on destinations from state-funded mainstream schools and colleges.
+
+This information is based on data from the National Pupil Database.
+
+File formats and conventions
+
+The Code of Practice for Statistics requires us to take reasonable steps to ensure that our published or disseminated statistics protect confidentiality. Where appropriate we apply disclosure control to protect confidentiality.
+
+The following symbols have been used in this publication:
+
+( 0 ) zero
+
+( c ) small number suppressed to preserve confidentiality or for accountability reasons
+
+( z ) not applicable
+
+(x) not available
+
+( low ) positive % less than 0.5
+
+Small cohorts
+
+At institutional level, where cohorts are less than 6, all data are suppressed. This is to ensure that schools are not held to account for small cohorts of pupils rather than for confidentiality reasons.
+
+This does not apply to levels of data other than institutional level.
+
+Data files
+
+Progression to higher education and training - National level
+
+Filename: l4_tidy_2023_all_nat.csv
+Geographic levels: National
+Time period: 2015/16 to 2020/21
+Content summary: Progression to higher education or training at national level, including breakdowns by institution type and student characteristics.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name     |  Variable description
+----------------  |  --------------------------------------------------------------------
+acag_cohort       |  Number of pupils studying academic or applied general qualifications
+acag_comparator   |  Academic/AGQ national comparator
+acag_progressed   |  Academic/AGQ students who sustained L4+ destination
+acag_pscore       |  Academic/AGQ progression score
+all_appren        |  Sustained apprenticeship destination
+all_cohort        |  Number of pupils studying level 3 qualifications
+all_comparator    |  National comparator
+all_degree        |  Sustained degree destination
+all_htech         |  Sustained level 4 or 5 destination
+all_progressed    |  Sustained a level 4 or higher destination
+all_pscore        |  Progression score
+all_top3rd        |  Top third HE destination
+breakdown         |  Student characteristic
+data_type         |  Data type
+institution_type  |  Institution group
+otl3_cohort       |  Number of pupils studying other level 3 qualifications
+otl3_comparator   |  Other level 3 national comparator
+otl3_progressed   |  Other level 3 students who sustained L4+ destination
+otl3_pscore       |  Other level 3 progression score
+tlev_cohort       |  Number of pupils studying tech levels
+tlev_comparator   |  Tech level national comparator
+tlev_progressed   |  Tech level students who sustained L4+ destination
+tlev_pscore       |  Tech level progression score
+
+Footnotes:
+
+1. Local authority maintained includes community, voluntary aided, voluntary controlled and foundation schools.
+2. Note that the methodology used to determine the top third Higher Education Institutions changed in 2020 for the 2016/17 cohort. Instead of the top 33% of institutions, institutions are now only added to the list until 33% of the student intake is represented. Additionally, qualifications equivalent to A levels are now included in the process, rather than solely A levels. Top third results from the 2015/16 cohort are thus not directly comparable with 2016/17 and later cohorts.
+3. Special educational needs: following special educational needs and disability (SEND) reforms in 2014/15, SEN students are categorised as 'SEN with a statement or Education, health and care (EHC) plan' and 'SEN support'. SEN support replaces school action and school action plus (grouped as SEN without a statement up to and including 2013/14). It was expected that all transfers to this category take place during the 2014/15 academic year but some legacy categories remain in the current cohort.
+4. Free school meal status is given as in year 11. Students with no key stage 4 record were not known to be eligible in year 11 and are included in all other students.
+5. State-funded mainstream schools & colleges covers all state-funded mainstream schools, academies, free schools, city technology colleges (CTCs), sixth forms and other FE sector colleges. Excludes alternative provision, special schools, other government department funded colleges and independent schools.
+6. Non-selective in highly selective area includes all non-selective schools in local authorities with a high level of selection (where 25% or more of state-funded secondary places are in state-funded selective schools). These local authorities are Bexley, Buckinghamshire, Kent, Lincolnshire, Medway, Poole, Slough, Southend-on-Sea, Sutton, Torbay, Trafford and Wirral.
+7. Total state-funded mainstream schools also includes city technology colleges (CTCs). Figures for this institution type are not presented separately. Excludes pupil referral units (PRUs), alternative provision (AP), hospital schools, maintained and non-maintained special schools, independent schools, independent special schools and independent schools approved to take pupils with special educational needs (SEN).
+8. LLDD: Students in colleges may be recorded on the ILR as learners with learning difficulties and disabilities. The definitions differ from special educational needs recorded by schools.
+9. Other level 3 qualifications are those that are not included elsewhere in 16-18 performance tables.
+10. Other FE sector colleges excludes other government department funded colleges.
+11. State-funded mainstream colleges include further education sector colleges and other government department funded colleges.
+12. Unclassified ethnicity includes students for whom ethnicity was not obtained, refused or could not be determined.
+13. Selective schools admit pupils wholly or mainly with reference to ability. These schools are formally designated as grammar schools. The schools status is based on admission policy in the secondary phase (i.e. age 11).
+14. Other non-selective includes all non-selective schools that are not in highly selective areas, including those in areas with some selection.
+15. Academies and free schools: there are now fewer local authority maintained schools and more academies and free schools than at the start of the 2015/16 academic year (when these school types are reported). In the case of some groups of school, such as University Technical Colleges (UTCs), this means the picture of the sector given in these statistics includes some of the first schools of this type to open and is based on a relatively small number of schools, many of which only had students joining for the last year of key stage 4 study.
+16. Disadvantage status is given as in year 11. Disadvantaged students are defined as those who were eligible for free school meals at any point in the previous six years or having been looked after by their local authority. These are the students who would have been in receipt of the pupil premium when in year 11. Students with no key stage 4 record were not known to be disadvantaged in year 11 and are included in all other students.
+17. Note that the methodology used to determine the top third Higher Education Institutions changed in 2024 for the 2020/21 cohort.  The change is covered in detail within the accompanying methodology document.
+
+
+Progression to higher education and training - Local authority level
+
+Filename: l4_tidy_2023_all_la_final.csv
+Geographic levels: Local authority; Parliamentary constituency; Regional
+Time period: 2015/16 to 2020/21
+Content summary: Progression to higher education or training data by local authority, parliamentary constituency, and region.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name      |  Variable description
+-----------------  |  --------------------------------------------------------------------
+acag_cohort        |  Number of pupils studying academic or applied general qualifications
+acag_comparator    |  Academic/AGQ national comparator
+acag_progressed    |  Academic/AGQ students who sustained L4+ destination
+acag_pscore        |  Academic/AGQ progression score
+all_appren         |  Sustained apprenticeship destination
+all_cohort         |  Number of pupils studying level 3 qualifications
+all_comparator     |  National comparator
+all_degree         |  Sustained degree destination
+all_htech          |  Sustained level 4 or 5 destination
+all_progressed     |  Sustained a level 4 or higher destination
+all_pscore         |  Progression score
+all_top3rd         |  Top third HE destination
+breakdown          |  Student characteristic
+data_type          |  Data type
+institution_group  |  Institution group
+level_methodology  |  Level based on LEA area or provider location
+otl3_cohort        |  Number of pupils studying other level 3 qualifications
+otl3_comparator    |  Other level 3 national comparator
+otl3_progressed    |  Other level 3 students who sustained L4+ destination
+otl3_pscore        |  Other level 3 progression score
+tlev_cohort        |  Number of pupils studying tech levels
+tlev_comparator    |  Tech level national comparator
+tlev_progressed    |  Tech level students who sustained L4+ destination
+tlev_pscore        |  Tech level progression score
+
+Footnotes:
+
+1. Note that the methodology used to determine the top third Higher Education Institutions changed in 2020 for the 2016/17 cohort. Instead of the top 33% of institutions, institutions are now only added to the list until 33% of the student intake is represented. Additionally, qualifications equivalent to A levels are now included in the process, rather than solely A levels. Top third results from the 2015/16 cohort are thus not directly comparable with 2016/17 and later cohorts.
+2. Special educational needs: following special educational needs and disability (SEND) reforms in 2014/15, SEN students are categorised as 'SEN with a statement or Education, health and care (EHC) plan' and 'SEN support'. SEN support replaces school action and school action plus (grouped as SEN without a statement up to and including 2013/14). It was expected that all transfers to this category take place during the 2014/15 academic year but some legacy categories remain in the current cohort.
+3. State-funded mainstream schools & colleges covers all state-funded mainstream schools, academies, free schools, city technology colleges (CTCs), sixth forms and other FE sector colleges. Excludes alternative provision, special schools, other government department funded colleges and independent schools.
+4. Total state-funded mainstream schools also includes city technology colleges (CTCs). Figures for this institution type are not presented separately. Excludes pupil referral units (PRUs), alternative provision (AP), hospital schools, maintained and non-maintained special schools, independent schools, independent special schools and independent schools approved to take pupils with special educational needs (SEN).
+5. LLDD: Students in colleges may be recorded on the ILR as learners with learning difficulties and disabilities. The definitions differ from special educational needs recorded by schools.
+6. Other level 3 qualifications are those that are not included elsewhere in 16-18 performance tables.
+7. State-funded mainstream colleges include further education sector colleges and other government department funded colleges.
+8. Note that the methodology used to determine the top third Higher Education Institutions changed in 2024 for the 2020/21 cohort.  The change is covered in detail within the accompanying methodology document.
