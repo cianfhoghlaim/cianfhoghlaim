@@ -19,8 +19,8 @@ This project uses standard GitHub/Forgejo issues for task tracking. Please use `
 
 | Skill | Purpose | Key Features |
 |-------|---------|--------------|
-| [`agno`](.skills/agno/SKILL.md) | Multi-agent orchestration with tool calling | Knowledge graphs (v2.0+), memory systems, knowledge bases |
-| [`google-adk`](.skills/google-adk/SKILL.md) | Google's Agent Development Kit | Multi-agent coordination, Google AI integration, scalable architecture |
+| [`agno`](.skills/agno/SKILL.md) | Multi-agent orchestration with tool calling | AgentOS, stateless execution, full async knowledge base, unified media (v2.0+) |
+| [`google-adk`](.skills/google-adk/SKILL.md) | Google's Agent Development Kit | Multi-Agent Workflow Engine, NodeRunner, Native Inter-Agent Routing (v2.1+) |
 
 ### Knowledge & Memory Systems
 
@@ -35,8 +35,8 @@ This project uses standard GitHub/Forgejo issues for task tracking. Please use `
 
 | Skill | Purpose | Key Features |
 |-------|---------|--------------|
-| [`dagster`](.skills/dagster/SKILL.md) | Data orchestration platform | Asset-based pipelines (v1.9+), observability, partitioning |
-| [`dlt`](.skills/dlt/SKILL.md) | Data load tool for pipelines | Pythonic pipelines (v1.4+), streaming support, schema inference |
+| [`dagster`](.skills/dagster/SKILL.md) | Data orchestration platform | Asset-based pipelines (v1.13+), branch deployments, AI skills integration |
+| [`dlt`](.skills/dlt/SKILL.md) | Data load tool for pipelines | dlt+ Projects & Cache, Pythonic pipelines, schema inference |
 | [`sqlmesh`](.skills/sqlmesh/SKILL.md) | Data transformation framework | DuckDB integration, virtual data warehouse, CI/CD |
 
 ### Observability & Evaluation
