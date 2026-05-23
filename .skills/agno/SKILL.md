@@ -5,16 +5,17 @@ description: Expert assistance for building AI agent systems with Agno (formerly
 
 # Agno - AI Agent Framework
 
-**Version:** >=2.0.0 | **Last Updated:** 2025-04
+**Version:** >=2.0.0 | **Last Updated:** 2026-05
 
 ## Overview
 
 Agno (formerly PhiData) is a high-performance framework for building AI agents:
 
-- **Agent Orchestration**: Build single agents and multi-agent teams
-- **Tool Calling**: Integrate tools and function calling seamlessly
-- **Memory Systems**: Persistent agent memory across sessions
-- **Knowledge Bases**: RAG-style knowledge integration with knowledge graphs
+- **Agent Orchestration**: Build single agents and multi-agent teams. Fully stateless design.
+- **AgentOS**: A production-ready API for hosting agents, teams, and workflows.
+- **Tool Calling**: Integrate tools and function calling seamlessly with unified media.
+- **Memory Systems**: Persistent agent memory across sessions via unified DB structure.
+- **Knowledge Bases**: RAG-style knowledge integration with full `async` support for inserting and fetching.
 - **Multi-Model Support**: Works with OpenAI, Anthropic, Google, local models
 - **Knowledge Graphs**: Native support for graph-based knowledge representation
 

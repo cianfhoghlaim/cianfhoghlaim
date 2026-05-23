@@ -5,7 +5,7 @@ description: Expert assistance for data orchestration with Dagster. Use when use
 
 # Dagster - Modern Data Orchestration
 
-**Version:** >=1.9.0 | **Last Updated:** 2025-04
+**Version:** >=1.13.0 | **Last Updated:** 2026-05
 
 ## Overview
 
@@ -15,7 +15,8 @@ Dagster is an orchestrator for the modern data stack, providing:
 - **Observability**: Rich metadata, lineage, and data quality tracking
 - **Type Safety**: ConfigurableResource with Pydantic validation
 - **Partitioning**: Efficient incremental processing at scale
-- **Testing**: First-class support for mocked resources and unit tests
+- **Testing & Branch Deployments**: First-class support for mocked resources, unit tests, and ephemeral preview deployments on branch push.
+- **AI Skills**: Leverage newly introduced AI skills for development workflows.
 
 **Documentation**: https://docs.dagster.io
 

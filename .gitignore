@@ -221,3 +221,7 @@ opencode.json
 # Ignore massive data files that caused push failures
 oideachais/datasets/uk/
 oideachais/exam_scraper/downloaded_stats/
+
+# Ignore massive data directories entirely
+oideachais/datasets/
+oideachais/exam_scraper/

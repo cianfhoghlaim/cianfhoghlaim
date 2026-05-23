@@ -5,16 +5,16 @@ description: Expert assistance for building AI agents with Google's Agent Develo
 
 # Google ADK - Agent Development Kit
 
-**Version:** >=0.1.0 | **Last Updated:** 2025-04
+**Version:** >=2.1.0 | **Last Updated:** 2026-05
 
 ## Overview
 
 Google's Agent Development Kit (ADK) is a framework for building sophisticated AI agents:
 
-- **Multi-Agent Coordination**: Build teams of collaborating agents
-- **Agent Framework**: Structured patterns for agent development
-- **Google AI Integration**: Seamless integration with Google's AI services
-- **Scalable Architecture**: Production-ready agent orchestration
+- **Multi-Agent Coordination**: Build teams of collaborating agents with Native Inter-Agent Routing.
+- **Agent Framework**: Structured patterns for agent development via Multi-Agent Workflow Engine and NodeRunner.
+- **Google AI Integration**: Seamless integration with Google's AI services and Gemini Live API.
+- **Scalable Architecture**: Production-ready agent orchestration with advanced telemetry and OTEL metrics.
 
 **Documentation**: https://cloud.google.com/agent-development-kit
 
