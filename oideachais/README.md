@@ -46,8 +46,8 @@ This overlays the `sidecar.yaml` onto `compose.yaml`, spinning up the Locket ser
 ### Data Orchestration
 | Package | Version | Purpose |
 |---------|---------|---------|
-| **dagster** | >=1.9.0 | Data orchestration platform with asset-based pipelines |
-| **dlt** | >=1.4.0 | Data load tool for Pythonic pipelines with streaming support |
+| **dagster** | >=1.13.0 | Data orchestration platform with asset-based pipelines |
+| **dlt** | >=1.5.0 | Data load tool for Pythonic pipelines with streaming support |
 | **duckdb** | >=1.1.0 | In-process analytical database for local data processing |
 | **lancedb** | >=0.15.0 | Vector database with HNSW indexing and MVCC safety |
 | **neo4j** | >=5.0.0 | Graph database for relationship modeling |
@@ -74,7 +74,7 @@ This overlays the `sidecar.yaml` onto `compose.yaml`, spinning up the Locket ser
 ### Agent Frameworks
 | Package | Version | Purpose |
 |---------|---------|---------|
-| **google-adk** | >=0.1.0 | Google's Agent Development Kit for multi-agent coordination |
+| **google-adk** | >=2.1.0 | Google's Agent Development Kit for multi-agent coordination |
 | **agno** | >=2.0.0 | Multi-agent orchestration with knowledge graphs |
 | **litellm** | Latest | Unified interface for 100+ LLM providers |
 | **cocoindex** | >=0.1.0 | Indexing and search for unstructured data |
@@ -338,12 +338,12 @@ dlt_sources/
 
 ## Latest Package Updates (April 2026)
 
-### Dagster v1.9.0
+### Dagster v1.13.0
 - Asset-based pipelines with observability
 - Partitioning support for time-series data
 - Improved sensor and schedule definitions
 
-### DLT v1.4.0
+### DLT v1.5.0
 - Streaming support for real-time data
 - Schema inference for automatic type detection
 - Improved incremental loading with cursors
