@@ -217,3 +217,7 @@ sruth/oideachais/pipelines/filesystem/
 sruth/web/dashboard/
 sruth/meaisínfhoghlaim/language/source_repos_clarin_uk/pylaia/
 opencode.json
+
+# Ignore massive data files that caused push failures
+oideachais/datasets/uk/
+oideachais/exam_scraper/downloaded_stats/
