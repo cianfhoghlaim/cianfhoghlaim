@@ -2,8 +2,53 @@
 
 ## Executive Summary
 
-This document consolidates the data engineering strategy for building a semantic knowledge graph tailored to the Irish education system. The architecture utilizes **BAML** for structured extraction, **CocoIndex** for high-velocity ETL pipelines, **Cognee** for ontological enforcement, **Graphiti** for temporal reasoning, and **FalkorDB** for graph persistence.
+This document consolidates the data engineering strategy for building a semantic knowledge graph tailored to the Irish education system. The architecture has been modernized to utilize:
+- **Firecrawl/Browserbase** for dynamic web scraping.
+- **BAML** for structured extraction.
+- **Dagster** for pipeline orchestration.
+- **dlt (Data Load Tool)** for efficient data ingestion.
+- **MotherDuck** as the primary data warehouse (powered by DuckDB).
+- **Infisical** for unified secrets management.
+- **Cognee** for ontological enforcement and **Graphiti** for temporal reasoning.
 
+---
+
+## 1. The Tripartite Data Landscape
+
+### 1.1 Data Ingestion Strategy
+- **Static Ingestion**: Historical JSON files from `site_scrape_samples/` are ingested via `dlt` filesystem source.
+- **Dynamic Scraping**: **Firecrawl** and **Browserbase** MCP servers handle real-time content extraction from NCCA, Examinations.ie, and Oide.ie.
+- **Orchestration**: All pipelines are orchestrated by **Dagster**, ensuring resilient retries and observability.
+
+---
+
+## 2. Updated Data Flow Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 Irish Education Data Sources                │
+├──────────────┬──────────────┬──────────────┬────────────────┤
+│ curriculum   │ examinations │    ncca.ie   │    oide.ie     │
+│ online.ie    │     .ie      │              │                │
+└──────┬───────┴──────┬───────┴──────┬───────┴──────────┬─────┘
+       │              │              │                  │
+       ▼              ▼              ▼                  ▼
+┌─────────────────────────────────────────────────────────────┐
+│           Dynamic Scraping (Firecrawl / Browserbase)         │
+└──────────────────────┬──────────────────────────────────────┘
+                       │  Scraped HTML/JSON
+                       ▼
+┌─────────────────────────────────────────────────────────────┐
+│                 DLT Pipeline & BAML Extraction               │
+└──────────────────────┬──────────────────────────────────────┘
+                       │  Structured Data
+                       ▼
+┌─────────────────────────────────────────────────────────────┐
+│              MotherDuck (Data Warehouse)                     │
+└─────────────────────────────────────────────────────────────┘
+```
+
+(Rest of the document to be updated...)
 ---
 
 ## 1. The Tripartite Data Landscape

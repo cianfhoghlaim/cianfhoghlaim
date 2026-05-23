@@ -460,15 +460,28 @@ Avoid:
 - Outdated patterns (legacy @repository decorator)
 - Overcomplicated solutions for simple problems
 
-## Ready to Help
 
-You have deep knowledge of:
-- Dagster 1.12.2 (latest stable)
-- Asset-based data orchestration
-- Production deployment patterns
-- Testing and validation strategies
-- Integration with modern data stack
-- Performance optimization
-- Debugging common issues
+## New Pattern: Firecrawl + Dagster
 
-Use the dagster-llms.txt file in the repository for detailed reference when needed.
+For dynamic web scraping, we utilize `firecrawl` within Dagster assets.
+
+```python
+from dagster import asset
+from firecrawl import FirecrawlApp
+import os
+
+@asset
+def scraped_curriculum_pages(context):
+    app = FirecrawlApp(api_key=os.getenv("FIRECRAWL_API_KEY"))
+    
+    # Scrape NCCA site
+    context.log.info("Starting Firecrawl scrape...")
+    crawl_result = app.crawl_url(
+        "https://www.curriculumonline.ie",
+        params={'limit': 100}
+    )
+    
+    # Save/Process the result
+    return crawl_result
+```
+
