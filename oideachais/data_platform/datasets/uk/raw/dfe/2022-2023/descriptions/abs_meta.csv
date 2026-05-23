@@ -1,0 +1,6 @@
+Variable,Label,Type,Description
+LA,Local Authority Number,TEXT,
+ESTAB,DfE number of establishment within LA,TEXT,
+URN,School unique Reference Number,TEXT,
+PERCTOT,Percentage of overall absence,PCT,Percentage of overall absence (authorised and unauthorised) for the full 2022/23 academic year.
+PPERSABS10,Percentage of enrolments who are persistent absentees,PCT,Percentage of enrolments who are persistent absentees - missing 10% or more of possible sessions across the full 2022/23 academic year.

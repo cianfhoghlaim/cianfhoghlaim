@@ -1,0 +1,43 @@
+﻿Variable,Type,Description
+LAESTAB,Integer,School code
+RECTYPE,Integer,1= school or college; 3= sixth form centre/consortium (see separate list of the sixth form centres and consortia and their feeder schools and colleges); 4= Local Authority; 5= National (all schools and colleges); 7= National (state-funded schools and colleges)
+LEA,Integer,Local authority number
+ESTAB,Integer,Institution number
+URN,Integer,Institution unique reference number
+SCHNAME,String,School name
+NFTYPE,String,Institution type
+FEEDER,Integer,Consortia feeder flag
+ICLOSE,Integer,"0 = Open, 1 = Closed"
+ALL_SCORE,Integer,Progression score for the total cohort
+ALL_UPPER,Integer,Upper confidence limit on the progression score for the total cohort
+ALL_LOWER,Integer,Lower confidence limit on the progression score for the total cohort
+ALL_COHORT,Integer,Cohort size
+ALL_PROGRESSED,Percentage,Progressed
+ALL_APPREN,Percentage,Apprenticeships
+ALL_HE,Percentage,HE
+ALL_TOP3RD,Percentage,Top third
+ALL_RUSSELL,Percentage,Russell
+ALL_OXBRIDGE,Percentage,Oxbridge
+ALL_HTECH,Percentage,Higher technical
+ACADAGEN_COHORT,Integer,Cohort size for academic/applied general cohort
+ACADAGEN_PROGRESSED,Percentage,Progressed for academic/applied general cohort
+ACADAGEN_SCORE,Integer,Progression score for academic/applied general cohort
+ACADAGEN_UPPER,Integer,Upper confidence limit on the progression score for the academic/applied general cohort
+ACADAGEN_LOWER,Integer,Lower confidence limit on the progression score for the academic/applied/general cohort
+TLEV_COHORT,Integer,Cohort size for TLEV cohort
+TLEV_PROGRESSED,Percentage,Progressed for TLEV cohort
+TLEV_SCORE,Integer,Score for TLEV cohort
+TLEV_UPPER,Integer,Upper confidence limit on the progression score for the TLEV cohort
+TLEV_LOWER,Integer,Lower confidence limit on the progression score for the TLEV cohort
+OTHER_COHORT,Integer,Cohort size for other level 3 qualifications cohort
+OTHER_PROGRESSED,Percentage,Progressed for other level 3 qualifications cohort
+OTHER_SCORE,Integer,Score for other level 3 qualifications cohort
+OTHER_UPPER,Integer,Upper confidence limit on the progression score for the other level 3 qualifications cohort
+OTHER_LOWER,Integer,Lower confidence limit on the progression score for the other level 3 qualifications cohort
+DIS_PROGRESSED,Percentage,Progressed for disadvantaged students
+DIS_APPREN,Percentage,Apprenticeships for disadvantaged students
+DIS_HE,Percentage,HE for disadvantaged students
+DIS_TOP3RD,Percentage,Top third for disadvantaged students
+DIS_RUSSELL,Percentage,Russell for disadvantaged students
+DIS_OXBRIDGE,Percentage,Oxbridge for disadvantaged students
+DIS_HTECH,Percentage,Higher technical for disadvantaged students

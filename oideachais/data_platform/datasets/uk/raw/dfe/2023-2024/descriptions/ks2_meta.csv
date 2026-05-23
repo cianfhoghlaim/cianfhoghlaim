@@ -1,0 +1,307 @@
+Column,Field Name,Label/Description
+1,RECTYPE,Record type
+2,ALPHAIND,Alphabetic index
+3,LEA,Local authority number
+4,ESTAB,Establishment number
+5,URN,School unique reference number
+6,SCHNAME,School/Local authority name
+7,ADDRESS1,School address (1)
+8,ADDRESS2,School address (2)
+9,ADDRESS3,School address (3)
+10,TOWN,School town
+11,PCODE,School postcode
+12,TELNUM,School telephone number 
+13,PCON_CODE,School parliamentary constituency code
+14,PCON_NAME,School parliamentary constituency name
+15,URN_AC,Converter academy: URN 
+16,SCHNAME_AC,Converter academy: name
+17,OPEN_AC,Converter academy: open date
+18,NFTYPE,School type
+19,ICLOSE,Closed Flag
+20,RELDENOM,Religious denomination
+21,AGERANGE,Age range
+22,TAB15,School published in secondary school (key stage 4) performance tables
+23,TAB1618,School published in school and college (key stage 5) performance tables
+24,TOTPUPS,Total number of pupils (including part-time pupils)
+25,TPUPYEAR,Number of pupils aged 11 
+26,TELIG,Published eligible pupil number
+27,BELIG,Eligible boys on school roll at time of tests
+28,GELIG,Eligible girls on school roll at time of tests
+29,PBELIG,Percentage of eligible boys on school roll at time of tests
+30,PGELIG,Percentage of eligible girls on school roll at time of tests
+31,TKS1AVERAGE,Cohort level key stage 1 average points score [not populated in 2024]
+32,TKS1GROUP_L,Number of pupils in cohort with low KS1 attainment [not populated in 2024]
+33,PTKS1GROUP_L,Percentage of pupils in cohort with low KS1 attainment [not populated in 2024]
+34,TKS1GROUP_M,Number of pupils in cohort with medium KS1 attainment [not populated in 2024]
+35,PTKS1GROUP_M,Percentage of pupils in cohort with medium KS1 attainment [not populated in 2024]
+36,TKS1GROUP_H,Number of pupils in cohort high KS1 attainment [not populated in 2024]
+37,PTKS1GROUP_H,Percentage of pupils in cohort with high KS1 attainment [not populated in 2024]
+38,TKS1GROUP_NA,No. of pupils in KS1 group not calculable [not populated in 2024]
+39,PTKS1GROUP_NA,Percentage of pupils in KS1group not calculable [not populated in 2024]
+40,TFSM6CLA1A,Number of key stage 2 disadvantaged pupils (those who were eligible for free school meals in last 6 years or are looked after by the LA for a day or more or who have been adopted from care)
+41,PTFSM6CLA1A,Percentage of key stage 2 disadvantaged pupils
+42,TNOTFSM6CLA1A,Number of key stage 2 pupils who are not disadvantaged
+43,PTNOTFSM6CLA1A,Percentage of key stage 2 pupils who are not disadvantaged
+44,TEALGRP2,Number of eligible pupils with English as additional language (EAL)
+45,PTEALGRP2,Percentage of eligible pupils with English as additional language (EAL)
+46,TMOBN,Number of eligible pupils classified as non-mobile
+47,PTMOBN,Percentage of eligible pupils classified as non-mobile
+48,PTRWM_EXP,"Percentage of pupils reaching the expected standard in reading, writing and maths"
+49,PTRWM_HIGH,Percentage of pupils achieving a high score in reading and maths and working at greater depth in writing
+50,READPROG,Reading progress measure [not populated in 2024]
+51,READPROG_LOWER,Reading progress measure - lower confidence limit [not populated in 2024]
+52,READPROG_UPPER,Reading progress measure - upper confidence limit [not populated in 2024]
+53,READCOV,Reading progress measure - coverage [not populated in 2024]
+54,WRITPROG,Writing progress measure [not populated in 2024]
+55,WRITPROG_LOWER,Writing progress measure - lower confidence limit [not populated in 2024]
+56,WRITPROG_UPPER,Writing progress measure - upper confidence limit [not populated in 2024]
+57,WRITCOV,Writing progress measure - coverage [not populated in 2024]
+58,MATPROG,Maths progress measure [not populated in 2024]
+59,MATPROG_LOWER,Maths progress measure - lower confidence limit [not populated in 2024]
+60,MATPROG_UPPER,Maths progress measure - upper confidence limit [not populated in 2024]
+61,MATCOV,Maths progress measure - coverage [not populated in 2024]
+62,PTREAD_EXP,Percentage of pupils reaching the expected standard in reading
+63,PTREAD_HIGH,Percentage of pupils achieving a high score in reading
+64,PTREAD_AT,Percentage of pupils absent from or not able to access the test in reading
+65,READ_AVERAGE,Average scaled score in reading
+66,PTGPS_EXP,"Percentage of pupils reaching the expected standard in grammar, punctuation and spelling"
+67,PTGPS_HIGH,"Percentage of pupils achieving a high score in grammar, punctuation and spelling"
+68,PTGPS_AT,"Percentage of pupils absent from or not able to access the test in grammar, punctuation and spelling"
+69,GPS_AVERAGE,"Average scaled score in grammar, punctuation and spelling"
+70,PTMAT_EXP,Percentage of pupils reaching the expected standard in maths
+71,PTMAT_HIGH,Percentage of pupils achieving a high score in maths
+72,PTMAT_AT,Percentage of pupils absent from or not able to access the test in maths
+73,MAT_AVERAGE,Average scaled score in maths
+74,PTWRITTA_EXP,Percentage of pupils reaching the expected standard in writing
+75,PTWRITTA_HIGH,Percentage of pupils working at greater depth within the expected standard in writing
+76,PTWRITTA_WTS,Percentage of pupils working towards the expected standard in writing
+77,PTWRITTA_AD,Percentage of pupils absent or disapplied in writing TA
+78,PTSCITA_EXP,Percentage of pupils reaching the expected standard in science TA
+79,PTSCITA_AD,Percentage of pupils absent or disapplied in science TA
+80,PTRWM_EXP_B,"Percentage of boys reaching the expected standard in reading, writing and maths"
+81,PTRWM_EXP_G,"Percentage of girls reaching the expected standard in reading, writing and maths"
+82,PTRWM_EXP_L,"Percentage of pupils with low prior attainment reaching the expected standard in reading, writing and maths [not populated in 2024]"
+83,PTRWM_EXP_M,"Percentage of pupils with medium prior attainment reaching the expected standard in reading, writing and maths [not populated in 2024]"
+84,PTRWM_EXP_H,"Percentage of pupils with high prior attainment reaching the expected standard in reading, writing and maths [not populated in 2024]"
+85,PTRWM_EXP_FSM6CLA1A,"Percentage of disadvantaged pupils reaching the expected standard in reading, writing and maths"
+86,PTRWM_EXP_NotFSM6CLA1A,"Percentage of non-disadvantaged pupils reaching the expected standard in reading, writing and maths"
+87,DIFFN_RWM_EXP,"Difference between school percentage of disavantaged pupils and national percentage of other pupils reaching the expected standard in reading, writing and maths "
+88,PTRWM_EXP_EAL,"Percentage of EAL pupils reaching the expected standard in reading, writing and maths"
+89,PTRWM_EXP_MOBN,"Percentage of non-mobile pupils reaching the expected standard in reading, writing and maths"
+90,PTRWM_HIGH_B,Percentage of boys achieving a high score in reading and maths and working at greater depth in writing
+91,PTRWM_HIGH_G,"Percentage of girls reaching the HIGHected standard in reading, writing and maths"
+92,PTRWM_HIGH_L,Percentage of pupils with low prior attainment achieving a high score in reading and maths and working at greater depth in writing [not populated in 2024]
+93,PTRWM_HIGH_M,Percentage of pupils with medium prior attainment achieving a high score in reading and maths and working at greater depth in writing [not populated in 2024]
+94,PTRWM_HIGH_H,Percentage of pupils with high prior attainment achieving a high score in reading and maths and working at greater depth in writing [not populated in 2024]
+95,PTRWM_HIGH_FSM6CLA1A,Percentage of disadvantaged pupils achieving a high score in reading and maths and working at greater depth in writing
+96,PTRWM_HIGH_NotFSM6CLA1A,Percentage of non-disadvantaged pupils achieving a high score in reading and maths and working at greater depth in writing
+97,DIFFN_RWM_HIGH,"Difference between school percentage of disavantaged pupils and national percentage of other pupils achieving a high score in reading, writing and maths "
+98,PTRWM_HIGH_EAL,Percentage of EAL pupils achieving a high score in reading and maths and working at greater depth in writing
+99,PTRWM_HIGH_MOBN,Percentage of non-mobile pupils achieving a high score in reading and maths and working at greater depth in writing
+100,READPROG_B,Reading progress measure for boys [not populated in 2024]
+101,READPROG_B_LOWER,Reading progress measure for boys - lower confidence limit [not populated in 2024]
+102,READPROG_B_UPPER,Reading progress measure for boys - upper confidence limit [not populated in 2024]
+103,READPROG_G,Reading progress measure for girls [not populated in 2024]
+104,READPROG_G_LOWER,Reading progress measure for girls - lower confidence limit [not populated in 2024]
+105,READPROG_G_UPPER,Reading progress measure for girls - upper confidence limit [not populated in 2024]
+106,READPROG_L,Reading progress measure for pupils with low prior attainment [not populated in 2024]
+107,READPROG_L_LOWER,Reading progress measure for pupils with low prior attainment - lower confidence limit [not populated in 2024]
+108,READPROG_L_UPPER,Reading progress measure for pupils with low prior attainment - upper confidence limit [not populated in 2024]
+109,READPROG_M,Reading progress measure for pupils with medium prior attainment [not populated in 2024]
+110,READPROG_M_LOWER,Reading progress measure for pupils with medium prior attainment - lower confidence limit [not populated in 2024]
+111,READPROG_M_UPPER,Reading progress measure for pupils with medium prior attainment - upper confidence limit [not populated in 2024]
+112,READPROG_H,Reading progress measure for pupils with high prior attainment [not populated in 2024]
+113,READPROG_H_LOWER,Reading progress measure for pupils with high prior attainment - lower confidence limit [not populated in 2024]
+114,READPROG_H_UPPER,Reading progress measure for pupils with high prior attainment - upper confidence limit [not populated in 2024]
+115,READPROG_FSM6CLA1A,Reading progress measure for disadvantaged pupils [not populated in 2024]
+116,READPROG_FSM6CLA1A_LOWER,Reading progress measure for disadvantaged pupils - lower confidence limit [not populated in 2024]
+117,READPROG_FSM6CLA1A_UPPER,Reading progress measure for disadvantaged pupils - upper confidence limit [not populated in 2024]
+118,READPROG_NotFSM6CLA1A,Reading progress measure for non-disadvantaged pupils [not populated in 2024]
+119,READPROG_NotFSM6CLA1A_LOWER,Reading progress measure for non-disadvantaged pupils - lower confidence limit [not populated in 2024]
+120,READPROG_NotFSM6CLA1A_UPPER,Reading progress measure for non-disadvantaged pupils - upper confidence limit [not populated in 2024]
+121,DIFFN_READPROG,Difference between reading progress measure for disadvantaged pupils in school and other pupils nationally [not populated in 2024]
+122,READPROG_EAL,Reading progress measure for EAL pupils [not populated in 2024]
+123,READPROG_EAL_LOWER,Reading progress measure for EAL pupils - lower confidence limit [not populated in 2024]
+124,READPROG_EAL_UPPER,Reading progress measure for EAL pupils - upper confidence limit [not populated in 2024]
+125,READPROG_MOBN,Reading progress measure for non-mobile pupils [not populated in 2024]
+126,READPROG_MOBN_LOWER,Reading progress measure for non-mobile pupils - lower confidence limit [not populated in 2024]
+127,READPROG_MOBN_UPPER,Reading progress measure for non-mobile pupils - upper confidence limit [not populated in 2024]
+128,WRITPROG_B,Writing progress measure for boys [not populated in 2024]
+129,WRITPROG_B_LOWER,Writing progress measure for boys - lower confidence limit [not populated in 2024]
+130,WRITPROG_B_UPPER,Writing progress measure for boys - upper confidence limit [not populated in 2024]
+131,WRITPROG_G,Writing progress measure for girls [not populated in 2024]
+132,WRITPROG_G_LOWER,Writing progress measure for girls - lower confidence limit [not populated in 2024]
+133,WRITPROG_G_UPPER,Writing progress measure for girls - upper confidence limit [not populated in 2024]
+134,WRITPROG_L,Writing progress measure for pupils with low prior attainment [not populated in 2024]
+135,WRITPROG_L_LOWER,Writing progress measure for pupils with low prior attainment - lower confidence limit [not populated in 2024]
+136,WRITPROG_L_UPPER,Writing progress measure for pupils with low prior attainment - upper confidence limit [not populated in 2024]
+137,WRITPROG_M,Writing progress measure for pupils with medium prior attainment [not populated in 2024]
+138,WRITPROG_M_LOWER,Writing progress measure for pupils with medium prior attainment - lower confidence limit [not populated in 2024]
+139,WRITPROG_M_UPPER,Writing progress measure for pupils with medium prior attainment - upper confidence limit [not populated in 2024]
+140,WRITPROG_H,Writing progress measure for pupils with high prior attainment [not populated in 2024]
+141,WRITPROG_H_LOWER,Writing progress measure for pupils with high prior attainment - lower confidence limit [not populated in 2024]
+142,WRITPROG_H_UPPER,Writing progress measure for pupils with high prior attainment - upper confidence limit [not populated in 2024]
+143,WRITPROG_FSM6CLA1A,Writing progress measure for disadvantaged pupils [not populated in 2024]
+144,WRITPROG_FSM6CLA1A_LOWER,Writing progress measure for disadvantaged pupils - lower confidence limit [not populated in 2024]
+145,WRITPROG_FSM6CLA1A_UPPER,Writing progress measure for disadvantaged pupils - upper confidence limit [not populated in 2024]
+146,WRITPROG_NotFSM6CLA1A,Writing progress measure for non-disadvantaged pupils [not populated in 2024]
+147,WRITPROG_NotFSM6CLA1A_LOWER,Writing progress measure for non-disadvantaged pupils - lower confidence limit [not populated in 2024]
+148,WRITPROG_NotFSM6CLA1A_UPPER,Writing progress measure for non-disadvantaged pupils - upper confidence limit [not populated in 2024]
+149,DIFFN_WRITPROG,Difference between writing progress measure for disadvantaged pupils in school and other pupils nationally [not populated in 2024]
+150,WRITPROG_EAL,Writing progress measure for EAL pupils [not populated in 2024]
+151,WRITPROG_EAL_LOWER,Writing progress measure for EAL pupils - lower confidence limit [not populated in 2024]
+152,WRITPROG_EAL_UPPER,Writing progress measure for EAL pupils - upper confidence limit [not populated in 2024]
+153,WRITPROG_MOBN,Writing progress measure for non-mobile pupils [not populated in 2024]
+154,WRITPROG_MOBN_LOWER,Writing progress measure for non-mobile pupils - lower confidence limit [not populated in 2024]
+155,WRITPROG_MOBN_UPPER,Writing progress measure for non-mobile pupils - upper confidence limit [not populated in 2024]
+156,MATPROG_B,Maths progress measure for boys [not populated in 2024]
+157,MATPROG_B_LOWER,Maths progress measure for boys - lower confidence limit [not populated in 2024]
+158,MATPROG_B_UPPER,Maths progress measure for boys - upper confidence limit [not populated in 2024]
+159,MATPROG_G,Maths progress measure for girls [not populated in 2024]
+160,MATPROG_G_LOWER,Maths progress measure for girls - lower confidence limit [not populated in 2024]
+161,MATPROG_G_UPPER,Maths progress measure for girls - upper confidence limit [not populated in 2024]
+162,MATPROG_L,Maths progress measure for pupils with low prior attainment [not populated in 2024]
+163,MATPROG_L_LOWER,Maths progress measure for pupils with low prior attainment - lower confidence limit [not populated in 2024]
+164,MATPROG_L_UPPER,Maths progress measure for pupils with low prior attainment - upper confidence limit [not populated in 2024]
+165,MATPROG_M,Maths progress measure for pupils with medium prior attainment [not populated in 2024]
+166,MATPROG_M_LOWER,Maths progress measure for pupils with medium prior attainment - lower confidence limit [not populated in 2024]
+167,MATPROG_M_UPPER,Maths progress measure for pupils with medium prior attainment - upper confidence limit [not populated in 2024]
+168,MATPROG_H,Maths progress measure for pupils with high prior attainment [not populated in 2024]
+169,MATPROG_H_LOWER,Maths progress measure for pupils with high prior attainment - lower confidence limit [not populated in 2024]
+170,MATPROG_H_UPPER,Maths progress measure for pupils with high prior attainment - upper confidence limit [not populated in 2024]
+171,MATPROG_FSM6CLA1A,Maths progress measure for disadvantaged pupils [not populated in 2024]
+172,MATPROG_FSM6CLA1A_LOWER,Maths progress measure for disadvantaged pupils - lower confidence limit [not populated in 2024]
+173,MATPROG_FSM6CLA1A_UPPER,Maths progress measure for disadvantaged pupils - upper confidence limit [not populated in 2024]
+174,MATPROG_NotFSM6CLA1A,Maths progress measure for non-disadvantaged pupils [not populated in 2024]
+175,MATPROG_NotFSM6CLA1A_LOWER,Maths progress measure for non-disadvantaged pupils - lower confidence limit [not populated in 2024]
+176,MATPROG_NotFSM6CLA1A_UPPER,Maths progress measure for non-disadvantaged pupils - upper confidence limit [not populated in 2024]
+177,DIFFN_MATPROG,Difference between maths progress measure for disadvantaged pupils in school and other pupils nationally [not populated in 2024]
+178,MATPROG_EAL,Maths progress measure for EAL pupils [not populated in 2024]
+179,MATPROG_EAL_LOWER,Maths progress measure for EAL pupils - lower confidence limit [not populated in 2024]
+180,MATPROG_EAL_UPPER,Maths progress measure for EAL pupils - upper confidence limit [not populated in 2024]
+181,MATPROG_MOBN,Maths progress measure for non-mobile pupils [not populated in 2024]
+182,MATPROG_MOBN_LOWER,Maths progress measure for non-mobile pupils - lower confidence limit [not populated in 2024]
+183,MATPROG_MOBN_UPPER,Maths progress measure for non-mobile pupils - upper confidence limit [not populated in 2024]
+184,READ_AVERAGE_B,Average scaled score in reading for boys
+185,READ_AVERAGE_G,Average scaled score in reading for girls
+186,READ_AVERAGE_L,Average scaled score in reading for pupils with low prior attainment [not populated in 2024]
+187,READ_AVERAGE_M,Average scaled score in reading for pupils with medium prior attainment [not populated in 2024]
+188,READ_AVERAGE_H,Average scaled score in reading for pupils with high prior attainment [not populated in 2024]
+189,READ_AVERAGE_FSM6CLA1A,Average scaled score in reading for disadvantaged pupils
+190,READ_AVERAGE_NotFSM6CLA1A,Average scaled score in reading for non-disadvantaged pupils
+191,READ_AVERAGE_EAL,Average scaled score in reading for EAL pupils
+192,READ_AVERAGE_MOBN,Average scaled score in reading for MOBN pupils
+193,MAT_AVERAGE_B,Average scaled score in maths for boys
+194,MAT_AVERAGE_G,Average scaled score in maths for girls
+195,MAT_AVERAGE_L,Average scaled score in maths for pupils with low prior attainment [not populated in 2024]
+196,MAT_AVERAGE_M,Average scaled score in maths for pupils with medium prior attainment [not populated in 2024]
+197,MAT_AVERAGE_H,Average scaled score in maths for pupils with high prior attainment [not populated in 2024]
+198,MAT_AVERAGE_FSM6CLA1A,Average scaled score in maths for disadvantaged pupils
+199,MAT_AVERAGE_NotFSM6CLA1A,Average scaled score in maths for non-disadvantaged pupils
+200,MAT_AVERAGE_EAL,Average scaled score in maths for EAL pupils
+201,MAT_AVERAGE_MOBN,Average scaled score in maths for MOBN pupils
+202,GPS_AVERAGE_B,Average scaled score in GPS for boys
+203,GPS_AVERAGE_G,Average scaled score in GPS for girls
+204,GPS_AVERAGE_L,Average scaled score in GPS for pupils with low prior attainment [not populated in 2024]
+205,GPS_AVERAGE_M,Average scaled score in GPS for pupils with medium prior attainment [not populated in 2024]
+206,GPS_AVERAGE_H,Average scaled score in GPS for pupils with high prior attainment [not populated in 2024]
+207,GPS_AVERAGE_FSM6CLA1A,Average scaled score in GPS for disadvantaged pupils
+208,GPS_AVERAGE_NotFSM6CLA1A,Average scaled score in GPS for non-disadvantaged pupils
+209,GPS_AVERAGE_EAL,Average scaled score in GPS for EAL pupils
+210,GPS_AVERAGE_MOBN,Average scaled score in GPS for MOBN pupils
+211,PTREAD_EXP_L,Percentage of pupils with low prior attainment reaching the expected standard in reading [not populated in 2024]
+212,PTREAD_EXP_M,Percentage of pupils with medium prior attainment reaching the expected standard in reading [not populated in 2024]
+213,PTREAD_EXP_H,Percentage of pupils with high prior attainment reaching the expected standard in reading [not populated in 2024]
+214,PTREAD_EXP_FSM6CLA1A,Percentage of disadvantaged pupils reaching the expected standard in reading
+215,PTREAD_EXP_NotFSM6CLA1A,Percentage of non-disadvantaged pupils reaching the expected standard in reading
+216,PTGPS_EXP_L,"Percentage of pupils with low prior attainment reaching the expected standard in grammar, punctuation and spelling [not populated in 2024]"
+217,PTGPS_EXP_M,"Percentage of pupils with medium prior attainment reaching the expected standard in grammar, punctuation and spelling [not populated in 2024]"
+218,PTGPS_EXP_H,"Percentage of pupils with high prior attainment reaching the expected standard in grammar, punctuation and spelling [not populated in 2024]"
+219,PTGPS_EXP_FSM6CLA1A,"Percentage of disadvantaged pupils reaching the expected standard in grammar, punctuation and spelling"
+220,PTGPS_EXP_NotFSM6CLA1A,"Percentage of non-disadvantaged pupils reaching the expected standard in grammar, punctuation and spelling"
+221,PTMAT_EXP_L,Percentage of pupils with low prior attainment reaching the expected standard in maths [not populated in 2024]
+222,PTMAT_EXP_M,Percentage of pupils with medium prior attainment reaching the expected standard in maths [not populated in 2024]
+223,PTMAT_EXP_H,Percentage of pupils with high prior attainment reaching the expected standard in maths [not populated in 2024]
+224,PTMAT_EXP_FSM6CLA1A,Percentage of disadvantaged pupils reaching the expected standard in maths
+225,PTMAT_EXP_NotFSM6CLA1A,Percentage of non-disadvantaged pupils reaching the expected standard in maths
+226,PTWRITTA_EXP_L,Percentage of pupils with low prior attainment reaching the expected standard in writing [not populated in 2024]
+227,PTWRITTA_EXP_M,Percentage of pupils with medium prior attainment reaching the expected standard in writing [not populated in 2024]
+228,PTWRITTA_EXP_H,Percentage of pupils with high prior attainment reaching the expected standard in writing [not populated in 2024]
+229,PTWRITTA_EXP_FSM6CLA1A,Percentage of disadvantaged pupils reaching the expected standard in writing
+230,PTWRITTA_EXP_NotFSM6CLA1A,Percentage of non-disadvantaged pupils reaching the expected standard in writing
+231,PTREAD_HIGH_L,Percentage of pupils with low prior attainment achieving a high score in reading [not populated in 2024]
+232,PTREAD_HIGH_M,Percentage of pupils with medium prior attainment achieving a high score in reading [not populated in 2024]
+233,PTREAD_HIGH_H,Percentage of pupils with high prior attainment achieving a high score in reading [not populated in 2024]
+234,PTREAD_HIGH_FSM6CLA1A,Percentage of disadvantaged pupils achieving a high score in reading
+235,PTREAD_HIGH_NotFSM6CLA1A,Percentage of non-disadvantaged pupils achieving a high score in reading
+236,PTGPS_HIGH_L,"Percentage of pupils with low prior attainment achieving a high score in grammar, punctuation and spelling [not populated in 2024]"
+237,PTGPS_HIGH_M,"Percentage of pupils with medium prior attainment achieving a high score in grammar, punctuation and spelling [not populated in 2024]"
+238,PTGPS_HIGH_H,"Percentage of pupils with high prior attainment achieving a high score in grammar, punctuation and spelling [not populated in 2024]"
+239,PTGPS_HIGH_FSM6CLA1A,"Percentage of disadvantaged pupils achieving a high score in grammar, punctuation and spelling"
+240,PTGPS_HIGH_NotFSM6CLA1A,"Percentage of non-disadvantaged pupils achieving a high score in grammar, punctuation and spelling"
+241,PTMAT_HIGH_L,Percentage of pupils with low prior attainment achieving a high score in maths [not populated in 2024]
+242,PTMAT_HIGH_M,Percentage of pupils with medium prior attainment achieving a high score in maths [not populated in 2024]
+243,PTMAT_HIGH_H,Percentage of pupils with high prior attainment achieving a high score in maths [not populated in 2024]
+244,PTMAT_HIGH_FSM6CLA1A,Percentage of disadvantaged pupils achieving a high score in maths
+245,PTMAT_HIGH_NotFSM6CLA1A,Percentage of non-disadvantaged pupils achieving a high score in maths
+246,PTWRITTA_HIGH_L,Percentage of pupils with low prior attainment working at greater depth in writing [not populated in 2024]
+247,PTWRITTA_HIGH_M,Percentage of pupils with medium prior attainment working at greater depth in writing [not populated in 2024]
+248,PTWRITTA_HIGH_H,Percentage of pupils with high prior attainment working at greater depth in writing [not populated in 2024]
+249,PTWRITTA_HIGH_FSM6CLA1A,Percentage of disadvantaged pupils working at greater depth in writing
+250,PTWRITTA_HIGH_NotFSM6CLA1A,Percentage of non-disadvantaged pupils working at greater depth in writing
+251,TEALGRP1,Number of eligible pupils with English as first language
+252,PTEALGRP1,Percentage of eligible pupils with English as first language
+253,TEALGRP3,Number of eligible pupils with unclassified language
+254,PTEALGRP3,Percentage of eligible pupils with unclassified language
+255,TSENELE,Number of eligible pupils with EHC plan
+256,PSENELE,Percentage of eligible pupils with EHC plan
+257,TSENELK,Number of eligible pupils with SEN support
+258,PSENELK,Percentage of eligible pupils with SEN support
+259,TSENELEK,Number of eligible pupils with SEN (EHC plan or SEN support)
+260,PSENELEK,Percentage of eligible pupils with SEN  (EHC plan or SEN support)
+261,TELIG_23,Number of eligible pupils 2023
+262,PTFSM6CLA1A_23,Percentage of key stage 2 disadvantaged pupils one year prior
+263,PTNOTFSM6CLA1A_23,Percentage of key stage 2 pupils who are not disadvantaged one year prior
+264,PTRWM_EXP_23,"Percentage of pupils reaching the expected standard in reading, writing and maths one year prior"
+265,PTRWM_HIGH_23,Percentage of pupils achieving a high score in reading and maths and working at greater depth in writing  one year prior
+266,PTRWM_EXP_FSM6CLA1A_23,"Percentage of disadvantaged pupils reaching the expected standard in reading, writing and maths one year prior"
+267,PTRWM_HIGH_FSM6CLA1A_23,Percentage of disadvantaged pupils achieving a high score in reading and maths and working at greater depth in writing one year prior
+268,PTRWM_EXP_NotFSM6CLA1A_23,"Percentage of non-disadvantaged pupils reaching the expected standard in reading, writing and maths one year prior"
+269,PTRWM_HIGH_NotFSM6CLA1A_23,Percentage of non-disadvantaged pupils achieving a high score in reading and maths and working at greater depth in writing one year prior
+270,READPROG_23,Reading progress measure - one year prior
+271,READPROG_LOWER_23,Reading progress measure - lower confidence limit - one year prior
+272,READPROG_UPPER_23,Reading progress measure - upper confidence limit - one year prior
+273,WRITPROG_23,Writing progress measure - one year prior
+274,WRITPROG_LOWER_23,Writing progress measure - lower confidence limit - one year prior
+275,WRITPROG_UPPER_23,Writing progress measure - upper confidence limit - one year prior
+276,MATPROG_23,Maths progress measure - one year prior
+277,MATPROG_LOWER_23,Maths progress measure - lower confidence limit - one year prior
+278,MATPROG_UPPER_23,Maths progress measure - upper confidence limit - one year prior
+279,READ_AVERAGE_23,Average scaled score in reading - one year prior
+280,MAT_AVERAGE_23,Average scaled score in maths - one year prior
+281,TELIG_22,Number of eligible pupils 2022 [not populated in 2024]
+282,PTFSM6CLA1A_22,Percentage of key stage 2 disadvantaged pupils - two years prior [not populated in 2024]
+283,PTNOTFSM6CLA1A_22,Percentage of key stage 2 pupils who are not disadvantaged - two years prior [not populated in 2024]
+284,PTRWM_EXP_22,"Percentage of pupils reaching the expected standard in reading, writing and maths - two years prior [not populated in 2024]"
+285,PTRWM_HIGH_22,Percentage of pupils achieving a high score in reading and maths and working at greater depth in writing - two years prior [not populated in 2024]
+286,PTRWM_EXP_FSM6CLA1A_22,"Percentage of disadvantaged pupils reaching the expected standard in reading, writing and maths - two years prior [not populated in 2024]"
+287,PTRWM_HIGH_FSM6CLA1A_22,Percentage of disadvantaged pupils achieving a high score in reading and maths and working at greater depth in writing - two years prior [not populated in 2024]
+288,PTRWM_EXP_NotFSM6CLA1A_22,"Percentage of non-disadvantaged pupils reaching the expected standard in reading, writing and maths - two years prior [not populated in 2024]"
+289,PTRWM_HIGH_NotFSM6CLA1A_22,Percentage of non-disadvantaged pupils achieving a high score in reading and maths and working at greater depth in writing - two years prior [not populated in 2024]
+290,READPROG_22,Reading progress measure - two years prior [not populated in 2024]
+291,READPROG_LOWER_22,Reading progress measure - lower confidence limit - two years prior [not populated in 2024]
+292,READPROG_UPPER_22,Reading progress measure - upper confidence limit - two years prior [not populated in 2024]
+293,WRITPROG_22,Writing progress measure - two years prior [not populated in 2024]
+294,WRITPROG_LOWER_22,Writing progress measure - lower confidence limit - two years prior [not populated in 2024]
+295,WRITPROG_UPPER_22,Writing progress measure - upper confidence limit -  two years prior [not populated in 2024]
+296,MATPROG_22,Maths progress measure - two years prior [not populated in 2024]
+297,MATPROG_LOWER_22,Maths progress measure - lower confidence limit - two years prior [not populated in 2024]
+298,MATPROG_UPPER_22,Maths progress measure - upper confidence limit  - two years prior [not populated in 2024]
+299,READ_AVERAGE_22,Average scaled score in reading - two years prior [not populated in 2024]
+300,MAT_AVERAGE_22,Average scaled score in maths - two years prior [not populated in 2024]
+301,READPROG_UNADJUSTED,Unadjusted reading progress measure [not populated in 2024]
+302,WRITPROG_UNADJUSTED,Unadjusted writing progress measure [not populated in 2024]
+303,MATPROG_UNADJUSTED,Unadjusted maths progress measure [not populated in 2024]
+304,READPROG_DESCR,Reading progress measure 'description' [not populated in 2024]
+305,WRITPROG_DESCR,Writing progress measure 'description' [not populated in 2024]
+306,MATPROG_DESCR,Maths progress measure 'description' [not populated in 2024]

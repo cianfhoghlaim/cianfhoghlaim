@@ -1,0 +1,154 @@
+LEA,LA Name,REGION,REGION NAME
+841,Darlington,1,North East A
+840,County Durham,1,North East A
+805,Hartlepool,1,North East A
+806,Middlesbrough,1,North East A
+807,Redcar and Cleveland,1,North East A
+808,Stockton-on-Tees,1,North East A
+390,Gateshead,3,North East B
+391,Newcastle upon Tyne,3,North East B
+392,North Tyneside,3,North East B
+929,Northumberland,3,North East B
+393,South Tyneside,3,North East B
+394,Sunderland,3,North East B
+889,Blackburn with Darwen,6,North West A
+890,Blackpool,6,North West A
+942,Cumberland,6,North West A
+943,Westmorland & Furness ,6,North West A
+888,Lancashire,6,North West A
+350,Bolton,7,North West B
+351,Bury,7,North West B
+352,Manchester,7,North West B
+353,Oldham,7,North West B
+354,Rochdale,7,North West B
+355,Salford,7,North West B
+356,Stockport,7,North West B
+357,Tameside,7,North West B
+358,Trafford,7,North West B
+359,Wigan,7,North West B
+895,Cheshire East,9,North West C
+896,Cheshire West & Chester,9,North West C
+876,Halton,9,North West C
+340,Knowsley,9,North West C
+341,Liverpool,9,North West C
+343,Sefton,9,North West C
+342,St. Helens,9,North West C
+877,Warrington,9,North West C
+344,Wirral,9,North West C
+811,East Riding of Yorkshire,10,North Yorkshire and The Humber
+810,"Kingston Upon Hull, City of",10,North Yorkshire and The Humber
+812,North East Lincolnshire,10,North Yorkshire and The Humber
+813,North Lincolnshire,10,North Yorkshire and The Humber
+815,North Yorkshire,10,North Yorkshire and The Humber
+816,York,10,North Yorkshire and The Humber
+370,Barnsley,12,South and West Yorkshire
+380,Bradford,12,South and West Yorkshire
+381,Calderdale,12,South and West Yorkshire
+371,Doncaster,12,South and West Yorkshire
+382,Kirklees,12,South and West Yorkshire
+383,Leeds,12,South and West Yorkshire
+372,Rotherham,12,South and West Yorkshire
+373,Sheffield,12,South and West Yorkshire
+384,Wakefield,12,South and West Yorkshire
+831,Derby,14,East Midlands A
+830,Derbyshire,14,East Midlands A
+892,Nottingham,14,East Midlands A
+891,Nottinghamshire,14,East Midlands A
+856,Leicester,16,East Midlands B
+855,Leicestershire,16,East Midlands B
+925,Lincolnshire,16,East Midlands B
+940,West Northamptonshire,16,East Midlands B
+941,North Northamptonshire,16,East Midlands B
+857,Rutland,16,East Midlands B
+893,Shropshire,20,West Midlands A
+860,Staffordshire,20,West Midlands A
+861,Stoke-on-Trent,20,West Midlands A
+894,Telford and Wrekin,20,West Midlands A
+884,"Herefordshire, County of",22,West Midlands B
+885,Worcestershire,22,West Midlands B
+330,Birmingham,24,West Midlands C
+331,Coventry,24,West Midlands C
+332,Dudley,24,West Midlands C
+333,Sandwell,24,West Midlands C
+334,Solihull,24,West Midlands C
+335,Walsall,24,West Midlands C
+937,Warwickshire,24,West Midlands C
+336,Wolverhampton,24,West Midlands C
+822,Bedford,25,East of England A
+873,Cambridgeshire,25,East of England A
+823,Central Bedfordshire,25,East of England A
+919,Hertfordshire,25,East of England A
+821,Luton,25,East of England A
+874,Peterborough,25,East of England A
+881,Essex,27,East of England B
+926,Norfolk,27,East of England B
+882,Southend-on-Sea,27,East of England B
+935,Suffolk,27,East of England B
+883,Thurrock,27,East of England B
+202,Camden,31,London Central
+206,Islington,31,London Central
+207,Kensington and Chelsea,31,London Central
+208,Lambeth,31,London Central
+210,Southwark,31,London Central
+212,Wandsworth,31,London Central
+213,Westminster,31,London Central
+301,Barking and Dagenham,32,London East
+303,Bexley,32,London East
+201,City of London,32,London East
+203,Greenwich,32,London East
+204,Hackney,32,London East
+311,Havering,32,London East
+209,Lewisham,32,London East
+316,Newham,32,London East
+317,Redbridge,32,London East
+211,Tower Hamlets,32,London East
+302,Barnet,33,London North
+308,Enfield,33,London North
+309,Haringey,33,London North
+320,Waltham Forest,33,London North
+305,Bromley,34,London South
+306,Croydon,34,London South
+314,Kingston upon Thames,34,London South
+315,Merton,34,London South
+318,Richmond upon Thames,34,London South
+319,Sutton,34,London South
+304,Brent,35,London West
+307,Ealing,35,London West
+205,Hammersmith and Fulham,35,London West
+310,Harrow,35,London West
+312,Hillingdon,35,London West
+313,Hounslow,35,London West
+867,Bracknell Forest,36,South East A
+825,Buckinghamshire,36,South East A
+826,Milton Keynes,36,South East A
+931,Oxfordshire,36,South East A
+870,Reading,36,South East A
+871,Slough,36,South East A
+869,West Berkshire,36,South East A
+868,Windsor and Maidenhead,36,South East A
+872,Wokingham,36,South East A
+850,Hampshire,37,South East B
+921,Isle of Wight,37,South East B
+851,Portsmouth,37,South East B
+852,Southampton,37,South East B
+936,Surrey,38,South East C
+938,West Sussex,38,South East C
+846,Brighton and Hove,39,South East D
+845,East Sussex,39,South East D
+886,Kent,39,South East D
+887,Medway,39,South East D
+839,"Bournemouth, Christchurch and Poole",43,South West A
+908,Cornwall,43,South West A
+878,Devon,43,South West A
+838,Dorset,43,South West A
+420,Isles of Scilly,43,South West A
+879,Plymouth,43,South West A
+933,Somerset,43,South West A
+880,Torbay,43,South West A
+800,Bath and North East Somerset,45,South West B
+801,"Bristol, City of",45,South West B
+916,Gloucestershire,45,South West B
+802,North Somerset,45,South West B
+803,South Gloucestershire,45,South West B
+866,Swindon,45,South West B
+865,Wiltshire,45,South West B

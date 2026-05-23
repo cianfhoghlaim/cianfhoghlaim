@@ -1,0 +1,1639 @@
+Key stage 4 performance
+Academic year 2023/24
+
+Description
+
+This data covers the performance of pupils at the end of Key Stage 4 (KS4) in 2023/24. The data covers the main headline measures of:
+
+- Progress 8
+- Attainment 8
+- Percentage of pupils achieving 9-5 in English and maths
+- Percentage of pupils entering the English Baccalaureate
+- EBacc Average Points Score (EBacc APS)
+
+The data also covers numerous additional measures, depending on the data file.
+
+The publication methodology should be referenced alongside this data. It provides information on the data sources, their coverage and quality, as well as explaining methodology used in producing the data.
+
+Coverage
+
+This data covers the GCSE results of pupils at the end of Key Stage 4 (KS4) in 2023/24. The data is split by establishment type, as well as some data being split by pupil characteristics such as disadvantage status, free school meal status, special educational needs status and ethnicity. The data covers statistics at national, regional, local authority, local authority district and parliamentary constituency level.
+
+File formats and conventions
+
+The data is rounded to either 1 or 2 decimal places, depending on which measure you are looking at. Some of the raw data totals go up to 3 decimal places. No suppression has been applied.
+
+Data files
+
+National data
+
+Filename: 202324_national_data_revised.csv
+Geographic levels: National
+Time period: 2009/10 to 2023/24
+Content summary: National level performance measures by establishment type and some pupil characteristics since 2018/19, includes an extended timeseries of headline performance measures since 2009/10.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name             |  Variable description
+------------------------  |  -------------------------------------------------------------------------------
+admission_type            |  School admissions policy
+avg_att8                  |  Average Attainment 8 score
+avg_att8_ebac             |  Average Attainment 8 score for EBacc element
+avg_att8_eng              |  Average Attainment 8 score for English element
+avg_att8_mat              |  Average Attainment 8 score for maths element
+avg_att8_open             |  Average Attainment 8 score for open element
+avg_att8_open_g           |  Average Attainment 8 score for open element - GCSE only
+avg_att8_open_ng          |  Average Attainment 8 score for open element - non-GCSE only
+avg_ebac_fill             |  Average number of EBacc slots filled for Attainment 8
+avg_ebaccaps              |  Average EBacc APS score
+avg_ebptseng_ll           |  Average EBacc APS score for English pillar
+avg_ebptshum              |  Average EBacc APS score for humanities pillar
+avg_ebptslan              |  Average EBacc APS score for language pillar
+avg_ebptsmat              |  Average EBacc APS score for maths pillar
+avg_ebptssci              |  Average EBacc APS score for science pillar
+avg_open_fill             |  Average number of open slots filled for Attainment 8
+avg_p8ebac                |  Average Progress 8 score for EBacc element
+avg_p8eng                 |  Average Progress 8 score for English element
+avg_p8mat                 |  Average Progress 8 score for maths element
+avg_p8open                |  Average Progress 8 score for open element
+avg_p8score               |  Average Progress 8 score
+establishment_type_group  |  School type
+p8ebac_ci_low             |  Progress 8 lower 95% confidence interval for EBacc element
+p8ebac_ci_upp             |  Progress 8 upper 95% confidence interval for EBacc element
+p8eng_ci_low              |  Progress 8 lower 95% confidence interval for English element
+p8eng_ci_upp              |  Progress 8 upper 95% confidence interval for English element
+p8mat_ci_low              |  Progress 8 lower 95% confidence interval for maths element
+p8mat_ci_upp              |  Progress 8 upper 95% confidence interval for maths element
+p8open_ci_low             |  Progress 8 lower 95% confidence interval for open element
+p8open_ci_upp             |  Progress 8 upper 95% confidence interval for open element
+p8score_ci_low            |  Progress 8 lower 95% confidence interval
+p8score_ci_upp            |  Progress 8 upper 95% confidence interval
+prior_attainment          |  KS2 prior attainment status
+pt_anypass                |  Percentage of pupils achieving any passes at GCSE or equivalent
+pt_ebac2sci_94            |  Percentage of pupils achieving grades 4 or above in the Ebacc science pillar
+pt_ebac2sci_95            |  Percentage of pupils achieving grades 5 or above in the Ebacc science pillar
+pt_ebac2sci_e             |  Percentage of pupils entering the EBacc science pillar
+pt_ebacc_94               |  Percentage of pupils achieving grades 4 or above in the EBacc
+pt_ebacc_95               |  Percentage of pupils achieving grades 5 or above in the EBacc
+pt_ebacc_e_ptq_ee         |  Percentage of pupils entering the EBacc
+pt_ebaccsubjent_0         |  Percentage of pupils entering 0 EBacc pillars
+pt_ebaccsubjent_1         |  Percentage of pupils entering 1 EBacc pillar
+pt_ebaccsubjent_2         |  Percentage of pupils entering 2 EBacc pillars
+pt_ebaccsubjent_3         |  Percentage of pupils entering 3 EBacc pillars
+pt_ebaccsubjent_4         |  Percentage of pupils entering 4 EBacc pillars
+pt_ebaceng_94             |  Percentage of pupils achieving grades 4 or above in the Ebacc English pillar
+pt_ebaceng_95             |  Percentage of pupils achieving grades 5 or above in the Ebacc English pillar
+pt_ebaceng_e              |  Percentage of pupils entering the EBacc English pillar
+pt_ebachum_94             |  Percentage of pupils achieving grades 4 or above in the Ebacc humanities pillar
+pt_ebachum_95             |  Percentage of pupils achieving grades 5 or above in the Ebacc humanities pillar
+pt_ebachum_e              |  Percentage of pupils entering the EBacc humanities pillar
+pt_ebaclan_94             |  Percentage of pupils achieving grades 4 or above in the Ebacc language pillar
+pt_ebaclan_95             |  Percentage of pupils achieving grades 5 or above in the Ebacc language pillar
+pt_ebaclan_e              |  Percentage of pupils entering the EBacc language pillar
+pt_ebacmat_94             |  Percentage of pupils achieving grades 4 or above in the Ebacc maths pillar
+pt_ebacmat_95             |  Percentage of pupils achieving grades 5 or above in the Ebacc maths pillar
+pt_ebacmat_e              |  Percentage of pupils entering the EBacc maths pillar
+pt_eballsci_ptq_ee        |  Percentage of pupils entering three  out of four single sciences
+pt_ent_comb_sci           |  Percentage of pupils entering combined science
+pt_ent_hist_geog          |  Percentage of pupils entering history and geography
+pt_entbasics              |  Percentage of pupils entering English and maths GCSEs
+pt_entered_art            |  Percentage of pupils entering any arts subject
+pt_entered_arts_qual      |  Percentage of pupils entering any arts qualification
+pt_entered_music_qual     |  Percentage of pupils entering any music qualification
+pt_entry_1                |  Percentage of pupils entering at least 1 GCSE or equivalent
+pt_l2basics_94            |  Percentage of pupils achieving grades 4 or above in English and maths GCSEs
+pt_l2basics_95            |  Percentage of pupils achieving grades 5 or above in English and maths GCSEs
+pt_multilan_e             |  Percentage of pupils entering more than one modern foreign language
+pt_triplesci_e            |  Percentage of pupils entering biology, chemistry, and physics
+religious_denomination    |  School religious character
+sex                       |  Sex
+t_anypass                 |  Number of pupils achieving any passes at GCSE or equivalent
+t_att8                    |  Sum of Attainment 8 scores
+t_att8_ebac               |  Sum of Attainment 8 scores for EBacc element
+t_att8_eng                |  Sum of Attainment 8 scores for English element
+t_att8_mat                |  Sum of Attainment 8 scores for maths element
+t_att8_open               |  Sum of Attainment 8 scores for open element
+t_att8_open_g             |  Sum of Attainment 8 scores for open element - GCSE only
+t_att8_open_ng            |  Sum of Attainment 8 scores for open element - non-GCSE only
+t_ebac_fill               |  Total number of EBacc slots filled for Attainment 8
+t_ebac2sci_94             |  Number of pupils achieving grades 4 or above in the EBacc science pillar
+t_ebac2sci_95             |  Number of pupils achieving grades 5 or above in the EBacc science pillar
+t_ebac2sci_e              |  Number of pupils entering the EBacc science pillar
+t_ebacc_94                |  Number of pupils achieving grades 4 or above in the EBacc
+t_ebacc_95                |  Number of pupils achieving grades 5 or above in the EBacc
+t_ebacc_e_ptq_ee          |  Number of pupils entering the EBacc
+t_ebaccaps                |  Sum of EBacc APS scores
+t_ebaccsubjent_0          |  Number of pupils entering 0 EBacc pillars
+t_ebaccsubjent_1          |  Number of pupils entering 1 EBacc pillar
+t_ebaccsubjent_2          |  Number of pupils entering 2 EBacc pillars
+t_ebaccsubjent_3          |  Number of pupils entering 3 EBacc pillars
+t_ebaccsubjent_4          |  Number of pupils entering 4 EBacc pillars
+t_ebaceng_94              |  Number of pupils achieving grades 4 or above in the EBacc English pillar
+t_ebaceng_95              |  Number of pupils achieving grades 5 or above in the EBacc English pillar
+t_ebaceng_e               |  Number of pupils entering the EBacc English pillar
+t_ebachum_94              |  Number of pupils achieving grades 4 or above in the EBacc humanities pillar
+t_ebachum_95              |  Number of pupils achieving grades 5 or above in the EBacc humanities pillar
+t_ebachum_e               |  Number of pupils entering the EBacc humanities pillar
+t_ebaclan_94              |  Number of pupils achieving grades 4 or above in the EBacc language pillar
+t_ebaclan_95              |  Number of pupils achieving grades 5 or above in the EBacc language pillar
+t_ebaclan_e               |  Number of pupils entering the EBacc languge pillar
+t_ebacmat_94              |  Number of pupils achieving grades 4 or above in the EBacc maths pillar
+t_ebacmat_95              |  Number of pupils achieving grades 5 or above in the EBacc maths pillar
+t_ebacmat_e               |  Number of pupils entering the EBacc maths pillar
+t_eballsci_ptq_ee         |  Number of pupils entering three  out of four single sciences
+t_ebptseng_ll             |  Sum of EBacc APS scores for English pillar
+t_ebptshum                |  Sum of EBacc APS scores for humanities pillar
+t_ebptslan                |  Sum of EBacc APS scores for language pillar
+t_ebptsmat                |  Sum of EBacc APS scores for maths pillar
+t_ebptssci                |  Sum of EBacc APS scores for science pillar
+t_ent_comb_sci            |  Number of pupils entering combined science
+t_ent_hist_geog           |  Number of pupils entering history and geography
+t_entbasics               |  Number of pupils entering English and maths GCSEs
+t_entered_art             |  Number of pupils entering any arts subject
+t_entered_arts_qual       |  Number of pupils entering any arts qualification
+t_entered_music_qual      |  Number of pupils entering any music qualification
+t_entry_1                 |  Number of pupils entering at least 1 GCSE or equivalent
+t_inp8calc                |  Number of pupils included in Progress 8 measure
+t_l2basics_94             |  Number of pupils achieving grades 4 or above in English and maths GCSEs
+t_l2basics_95             |  Number of pupils achieving grades 5 or above in English and maths GCSEs
+t_multilan_e              |  Number of pupils entering more than one modern foreign language
+t_open_fill               |  Total number of open slots filled for Attainment 8
+t_p8ebac                  |  Sum of Progress 8 scores for EBacc element
+t_p8eng                   |  Sum of Progress 8 scores for English element
+t_p8mat                   |  Sum of Progress 8 scores for maths element
+t_p8open                  |  Sum of Progress 8 scores for open element
+t_p8score                 |  Sum of Progress 8 scores
+t_pupils                  |  Number of pupils at the end of KS4
+t_schools                 |  Number of schools
+t_triplesci_e             |  Number of pupils entering biology, chemistry, and physics
+
+Footnotes:
+
+1. Establishment types included in the establishment type groupings can be found in the glossary: https://explore-education-statistics.service.gov.uk/glossary (https://explore-education-statistics.service.gov.uk/glossary)
+2. Pupils at university technical colleges (UTCs), studio schools and further education colleges with key stage 4 provision typically attend that school for only 2 years, compared to 5 years for pupils in most secondary schools. These establishments also offer specialist curriculum. As a result, the Progress 8 data for these schools is not directly comparable with the Progress 8 data for other schools. The government’s position is that it is not appropriate to expect the same rates of EBacc entry from these types of provision and that each school should decide on a case by case basis whether its specialist curriculum is compatible with the full EBacc. This should be borne in mind when reviewing the performance data for these types of provisions.
+3. Selective areas include local authorities where more than 25% of state-funded secondary places are in selective schools. These local authorities are Bexley, Buckinghamshire, Kent, Lincolnshire, Medway, Slough, Southend-on-Sea, Sutton, Torbay, Trafford and Wirral.
+4. Progress 8 was not published in 2020 or 2021 because of the COVID-19 pandemic.
+5. A Progress 8 score of 1.0 means pupils make on average a grade more progress than the national average of pupils with similar KS2 prior attainment in mainstream schools. Progress 8 should be interpreted alongside the associated confidence intervals. If the confidence intervals cross 0, then progress is not significantly different compared to pupils with similar KS2 prior attainment in mainstream schools.
+6. EBacc science includes double award GCSE for pupils on the combined science pathway or the average of a pupil's best two science grades for pupils on the single science pathway (i.e., where pupils enter three of biology, chemistry, computer science, and physics).
+7. The open element of Attainment 8 contains the three highest point scores in any three other subjects eligible for performance tables, including English language or literature (if not counted in the English slot), further GCSE qualifications (including English Baccalaureate subjects) or any other non-GCSE qualifications on the DfE approved list.
+8. For the number of slots filled, entries that were awarded U grades or other qualifications scoring 0 points are counted as a non-filled slot.
+9. Subjects included in the 'entered art' indicator include: Applied Art and Design, Art and Design, Drama, Media/Film/TV, Music, Dance and Performing Arts.
+10. Changes were made to the methodology for calculating performance data due to the commitment not to use qualification results awarded between January 2020 and August 2021 in future measures. GCSE exams returned in 2022 and grades were awarded at a midpoint between 2021 and pre-pandemic grading. In 2023, there was a return to pre-pandemic grading, with some protections. Comparisons to 2020, 2021, and 2022 should be made with caution.
+11. In 2017, new reformed GCSEs (which use the 9-1 grade scale) were introduced into secondary school performance tables in a phased approach. Unreformed subjects continued to be graded using the A* to G system. From 2020 onwards all GCSEs are now reformed and use the 9-1 grading scale.
+
+
+National characteristics data
+
+Filename: 202324_national_char_data_revised.csv
+Geographic levels: National
+Time period: 2018/19 to 2023/24
+Content summary: National level headline performance measures in state-funded schools broken down by pupil and school characteristics since 2018/19.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name             |  Variable description
+------------------------  |  ---------------------------------------------------------------------------
+admission_type            |  School admissions policy
+avg_att8                  |  Average Attainment 8 score
+avg_ebaccaps              |  Average EBacc APS score
+avg_p8score               |  Average Progress 8 score
+disadvantage              |  Disadvantaged status
+establishment_type_group  |  School type
+ethnicity_major           |  Major ethnic group
+ethnicity_minor           |  Minor ethnic group
+first_language            |  First language
+free_school_meals         |  Free school meals status
+p8score_ci_low            |  Progress 8 lower 95% confidence interval
+p8score_ci_upp            |  Progress 8 upper 95% confidence interval
+pt_ebacc_94               |  Percentage of pupils achieving grades 4 or above in the EBacc
+pt_ebacc_95               |  Percentage of pupils achieving grades 5 or above in the EBacc
+pt_ebacc_e_ptq_ee         |  Percentage of pupils entering the EBacc
+pt_entbasics              |  Percentage of pupils entering English and maths GCSEs
+pt_l2basics_94            |  Percentage of pupils achieving grades 4 or above in English and maths GCSEs
+pt_l2basics_95            |  Percentage of pupils achieving grades 5 or above in English and maths GCSEs
+religious_denomination    |  School religious character
+sen_primary_need          |  Special educational needs - primary need
+sen_provision             |  Special educational needs - provision
+sen_status                |  Special educational needs - status
+sex                       |  Sex
+t_att8                    |  Sum of Attainment 8 scores
+t_ebacc_94                |  Number of pupils achieving grades 4 or above in the EBacc
+t_ebacc_95                |  Number of pupils achieving grades 5 or above in the EBacc
+t_ebacc_e_ptq_ee          |  Number of pupils entering the EBacc
+t_ebaccaps                |  Sum of EBacc APS scores
+t_entbasics               |  Number of pupils entering English and maths GCSEs
+t_inp8calc                |  Number of pupils included in Progress 8 measure
+t_l2basics_94             |  Number of pupils achieving grades 4 or above in English and maths GCSEs
+t_l2basics_95             |  Number of pupils achieving grades 5 or above in English and maths GCSEs
+t_p8score                 |  Sum of Progress 8 scores
+t_pupils                  |  Number of pupils at the end of KS4
+t_schools                 |  Number of schools
+
+Footnotes:
+
+1. Establishment types included in the establishment type groupings can be found in the glossary: https://explore-education-statistics.service.gov.uk/glossary (https://explore-education-statistics.service.gov.uk/glossary)
+2. Pupils at university technical colleges (UTCs), studio schools and further education colleges with key stage 4 provision typically attend that school for only 2 years, compared to 5 years for pupils in most secondary schools. These establishments also offer specialist curriculum. As a result, the Progress 8 data for these schools is not directly comparable with the Progress 8 data for other schools. The government’s position is that it is not appropriate to expect the same rates of EBacc entry from these types of provision and that each school should decide on a case by case basis whether its specialist curriculum is compatible with the full EBacc. This should be borne in mind when reviewing the performance data for these types of provisions.
+3. Further education colleges with key stage 4 provision do not complete the school census. Therefore, their pupils are not included in the majority of characteristics breakdowns. Since 2015/16, their pupils have been included in free school meals and disadvantaged breakdowns.
+4. Selective areas include local authorities where more than 25% of state-funded secondary places are in selective schools. These local authorities are Bexley, Buckinghamshire, Kent, Lincolnshire, Medway, Slough, Southend-on-Sea, Sutton, Torbay, Trafford and Wirral.
+5. Sub totals for EAL and SEN breakdowns may not sum to the grand total due to a small number of pupils with missing information.
+6. Unclassified includes pupils for whom the information was not obtained, refused or could not be determined.
+7. Progress 8 was not published in 2020 or 2021 because of the COVID-19 pandemic.
+8. A Progress 8 score of 1.0 means pupils make on average a grade more progress than the national average of pupils with similar KS2 prior attainment in mainstream schools. Progress 8 should be interpreted alongside the associated confidence intervals. If the confidence intervals cross 0, then progress is not significantly different compared to pupils with similar KS2 prior attainment in mainstream schools.
+9. Changes were made to the methodology for calculating performance data due to the commitment not to use qualification results awarded between January 2020 and August 2021 in future measures. GCSE exams returned in 2022 and grades were awarded at a midpoint between 2021 and pre-pandemic grading. In 2023, there was a return to pre-pandemic grading, with some protections. Comparisons to 2020, 2021, and 2022 should be made with caution.
+10. In 2017, new reformed GCSEs (which use the 9-1 grade scale) were introduced into secondary school performance tables in a phased approach. Unreformed subjects continued to be graded using the A* to G system. From 2020 onwards all GCSEs are now reformed and use the 9-1 grading scale.
+
+
+National characteristics summary
+
+Filename: 202324_characteristics_summary_revised.csv
+Geographic levels: National
+Time period: 2018/19 to 2023/24
+Content summary: National level headline performance measures in state-funded schools by pupil characteristics since 2018/19.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name      |  Variable description
+-----------------  |  ---------------------------------------------------------------------------
+avg_att8           |  Average Attainment 8 score
+avg_ebaccaps       |  Average EBacc APS score
+avg_p8score        |  Average Progress 8 score
+breakdown          |  Pupil characteristic
+p8score_ci_low     |  Progress 8 lower 95% confidence interval
+p8score_ci_upp     |  Progress 8 upper 95% confidence interval
+pt_ebacc_94        |  Percentage of pupils achieving grades 4 or above in the EBacc
+pt_ebacc_95        |  Percentage of pupils achieving grades 5 or above in the EBacc
+pt_ebacc_e_ptq_ee  |  Percentage of pupils entering the EBacc
+pt_entbasics       |  Percentage of pupils entering English and maths GCSEs
+pt_l2basics_94     |  Percentage of pupils achieving grades 4 or above in English and maths GCSEs
+pt_l2basics_95     |  Percentage of pupils achieving grades 5 or above in English and maths GCSEs
+t_att8             |  Sum of Attainment 8 scores
+t_ebacc_94         |  Number of pupils achieving grades 4 or above in the EBacc
+t_ebacc_95         |  Number of pupils achieving grades 5 or above in the EBacc
+t_ebacc_e_ptq_ee   |  Number of pupils entering the EBacc
+t_ebaccaps         |  Sum of EBacc APS scores
+t_entbasics        |  Number of pupils entering English and maths GCSEs
+t_inp8calc         |  Number of pupils included in Progress 8 measure
+t_l2basics_94      |  Number of pupils achieving grades 4 or above in English and maths GCSEs
+t_l2basics_95      |  Number of pupils achieving grades 5 or above in English and maths GCSEs
+t_p8score          |  Sum of Progress 8 scores
+t_pupils           |  Number of pupils at the end of KS4
+t_schools          |  Number of schools
+
+Footnotes:
+
+1. Sub totals for EAL and SEN breakdowns may not sum to the grand total due to a small number of pupils with missing information.
+
+
+Local authority data
+
+Filename: 202324_la_data_revised.csv
+Geographic levels: Local authority; National; Regional
+Time period: 2018/19 to 2023/24
+Content summary: Local authority and regional level performance measures in state-funded schools since 2018/19.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name      |  Variable description
+-----------------  |  -------------------------------------------------------------------------------
+avg_att8           |  Average Attainment 8 score
+avg_att8_ebac      |  Average Attainment 8 score for EBacc element
+avg_att8_eng       |  Average Attainment 8 score for English element
+avg_att8_mat       |  Average Attainment 8 score for maths element
+avg_att8_open      |  Average Attainment 8 score for open element
+avg_att8_open_g    |  Average Attainment 8 score for open element - GCSE only
+avg_att8_open_ng   |  Average Attainment 8 score for open element - non-GCSE only
+avg_ebac_fill      |  Average number of EBacc slots filled for Attainment 8
+avg_ebaccaps       |  Average EBacc APS score
+avg_ebptseng_ll    |  Average EBacc APS score for English pillar
+avg_ebptshum       |  Average EBacc APS score for humanities pillar
+avg_ebptslan       |  Average EBacc APS score for language pillar
+avg_ebptsmat       |  Average EBacc APS score for maths pillar
+avg_ebptssci       |  Average EBacc APS score for science pillar
+avg_open_fill      |  Average number of open slots filled for Attainment 8
+avg_p8ebac         |  Average Progress 8 score for EBacc element
+avg_p8eng          |  Average Progress 8 score for English element
+avg_p8mat          |  Average Progress 8 score for maths element
+avg_p8open         |  Average Progress 8 score for open element
+avg_p8score        |  Average Progress 8 score
+p8ebac_ci_low      |  Progress 8 lower 95% confidence interval for EBacc element
+p8ebac_ci_upp      |  Progress 8 upper 95% confidence interval for EBacc element
+p8eng_ci_low       |  Progress 8 lower 95% confidence interval for English element
+p8eng_ci_upp       |  Progress 8 upper 95% confidence interval for English element
+p8mat_ci_low       |  Progress 8 lower 95% confidence interval for maths element
+p8mat_ci_upp       |  Progress 8 upper 95% confidence interval for maths element
+p8open_ci_low      |  Progress 8 lower 95% confidence interval for open element
+p8open_ci_upp      |  Progress 8 upper 95% confidence interval for open element
+p8score_ci_low     |  Progress 8 lower 95% confidence interval
+p8score_ci_upp     |  Progress 8 upper 95% confidence interval
+pt_anypass         |  Percentage of pupils achieving any passes at GCSE or equivalent
+pt_ebac2sci_94     |  Percentage of pupils achieving grades 4 or above in the Ebacc science pillar
+pt_ebac2sci_95     |  Percentage of pupils achieving grades 5 or above in the Ebacc science pillar
+pt_ebac2sci_e      |  Percentage of pupils entering the EBacc science pillar
+pt_ebacc_94        |  Percentage of pupils achieving grades 4 or above in the EBacc
+pt_ebacc_95        |  Percentage of pupils achieving grades 5 or above in the EBacc
+pt_ebacc_e_ptq_ee  |  Percentage of pupils entering the EBacc
+pt_ebaceng_94      |  Percentage of pupils achieving grades 4 or above in the Ebacc English pillar
+pt_ebaceng_95      |  Percentage of pupils achieving grades 5 or above in the Ebacc English pillar
+pt_ebaceng_e       |  Percentage of pupils entering the EBacc English pillar
+pt_ebachum_94      |  Percentage of pupils achieving grades 4 or above in the Ebacc humanities pillar
+pt_ebachum_95      |  Percentage of pupils achieving grades 5 or above in the Ebacc humanities pillar
+pt_ebachum_e       |  Percentage of pupils entering the EBacc humanities pillar
+pt_ebaclan_94      |  Percentage of pupils achieving grades 4 or above in the Ebacc language pillar
+pt_ebaclan_95      |  Percentage of pupils achieving grades 5 or above in the Ebacc language pillar
+pt_ebaclan_e       |  Percentage of pupils entering the EBacc language pillar
+pt_ebacmat_94      |  Percentage of pupils achieving grades 4 or above in the Ebacc maths pillar
+pt_ebacmat_95      |  Percentage of pupils achieving grades 5 or above in the Ebacc maths pillar
+pt_ebacmat_e       |  Percentage of pupils entering the EBacc maths pillar
+pt_entbasics       |  Percentage of pupils entering English and maths GCSEs
+pt_entry_1         |  Percentage of pupils entering at least 1 GCSE or equivalent
+pt_l2basics_94     |  Percentage of pupils achieving grades 4 or above in English and maths GCSEs
+pt_l2basics_95     |  Percentage of pupils achieving grades 5 or above in English and maths GCSEs
+sex                |  Sex
+t_anypass          |  Number of pupils achieving any passes at GCSE or equivalent
+t_att8             |  Sum of Attainment 8 scores
+t_att8_ebac        |  Sum of Attainment 8 scores for EBacc element
+t_att8_eng         |  Sum of Attainment 8 scores for English element
+t_att8_mat         |  Sum of Attainment 8 scores for maths element
+t_att8_open        |  Sum of Attainment 8 scores for open element
+t_att8_open_g      |  Sum of Attainment 8 scores for open element - GCSE only
+t_att8_open_ng     |  Sum of Attainment 8 scores for open element - non-GCSE only
+t_ebac_fill        |  Total number of EBacc slots filled for Attainment 8
+t_ebac2sci_94      |  Number of pupils achieving grades 4 or above in the EBacc science pillar
+t_ebac2sci_95      |  Number of pupils achieving grades 5 or above in the EBacc science pillar
+t_ebac2sci_e       |  Number of pupils entering the EBacc science pillar
+t_ebacc_94         |  Number of pupils achieving grades 4 or above in the EBacc
+t_ebacc_95         |  Number of pupils achieving grades 5 or above in the EBacc
+t_ebacc_e_ptq_ee   |  Number of pupils entering the EBacc
+t_ebaccaps         |  Sum of EBacc APS scores
+t_ebaceng_94       |  Number of pupils achieving grades 4 or above in the EBacc English pillar
+t_ebaceng_95       |  Number of pupils achieving grades 5 or above in the EBacc English pillar
+t_ebaceng_e        |  Number of pupils entering the EBacc English pillar
+t_ebachum_94       |  Number of pupils achieving grades 4 or above in the EBacc humanities pillar
+t_ebachum_95       |  Number of pupils achieving grades 5 or above in the EBacc humanities pillar
+t_ebachum_e        |  Number of pupils entering the EBacc humanities pillar
+t_ebaclan_94       |  Number of pupils achieving grades 4 or above in the EBacc language pillar
+t_ebaclan_95       |  Number of pupils achieving grades 5 or above in the EBacc language pillar
+t_ebaclan_e        |  Number of pupils entering the EBacc languge pillar
+t_ebacmat_94       |  Number of pupils achieving grades 4 or above in the EBacc maths pillar
+t_ebacmat_95       |  Number of pupils achieving grades 5 or above in the EBacc maths pillar
+t_ebacmat_e        |  Number of pupils entering the EBacc maths pillar
+t_ebptseng_ll      |  Sum of EBacc APS scores for English pillar
+t_ebptshum         |  Sum of EBacc APS scores for humanities pillar
+t_ebptslan         |  Sum of EBacc APS scores for language pillar
+t_ebptsmat         |  Sum of EBacc APS scores for maths pillar
+t_ebptssci         |  Sum of EBacc APS scores for science pillar
+t_entbasics        |  Number of pupils entering English and maths GCSEs
+t_entry_1          |  Number of pupils entering at least 1 GCSE or equivalent
+t_inp8calc         |  Number of pupils included in Progress 8 measure
+t_l2basics_94      |  Number of pupils achieving grades 4 or above in English and maths GCSEs
+t_l2basics_95      |  Number of pupils achieving grades 5 or above in English and maths GCSEs
+t_open_fill        |  Total number of open slots filled for Attainment 8
+t_p8ebac           |  Sum of Progress 8 scores for EBacc element
+t_p8eng            |  Sum of Progress 8 scores for English element
+t_p8mat            |  Sum of Progress 8 scores for maths element
+t_p8open           |  Sum of Progress 8 scores for open element
+t_p8score          |  Sum of Progress 8 scores
+t_pupils           |  Number of pupils at the end of KS4
+t_schools          |  Number of schools
+
+Footnotes:
+
+1. Local authority, region, parliamentary constituency and the total (state-funded sector) figures cover achievements in state-funded schools only. They do not include pupils recently arrived from overseas and so will not match with state-funded figures in the national tables.
+2. Progress 8 was not published in 2020 or 2021 because of the COVID-19 pandemic.
+3. A Progress 8 score of 1.0 means pupils make on average a grade more progress than the national average of pupils with similar KS2 prior attainment in mainstream schools. Progress 8 should be interpreted alongside the associated confidence intervals. If the confidence intervals cross 0, then progress is not significantly different compared to pupils with similar KS2 prior attainment in mainstream schools.
+4. EBacc science includes double award GCSE for pupils on the combined science pathway or the average of a pupil's best two science grades for pupils on the single science pathway (i.e., where pupils enter three of biology, chemistry, computer science, and physics).
+5. The open element of Attainment 8 contains the three highest point scores in any three other subjects eligible for performance tables, including English language or literature (if not counted in the English slot), further GCSE qualifications (including English Baccalaureate subjects) or any other non-GCSE qualifications on the DfE approved list.
+6. For the number of slots filled, entries that were awarded U grades or other qualifications scoring 0 points are counted as a non-filled slot.
+7. Changes were made to the methodology for calculating performance data due to the commitment not to use qualification results awarded between January 2020 and August 2021 in future measures. GCSE exams returned in 2022 and grades were awarded at a midpoint between 2021 and pre-pandemic grading. In 2023, there was a return to pre-pandemic grading, with some protections. Comparisons to 2020, 2021, and 2022 should be made with caution.
+8. c = a cell that has been suppressed due to low number of pupils. Suppression was applied where deemed necessary for all data up to 2018/19. For 2019/20, DfE suppression policy changed. For 2020 and 2021 results where a geographical area contains only one school (for example Isles of Scilly) the data for that area has been suppressed. This is in line with the announcement that school level data would not be published using either summer 2020 or summer 2021 exam grades awarded. Data has not being supressed at local authority or national level from 2022 onwards.
+9. In 2017, new reformed GCSEs (which use the 9-1 grade scale) were introduced into secondary school performance tables in a phased approach. Unreformed subjects continued to be graded using the A* to G system. From 2020 onwards all GCSEs are now reformed and use the 9-1 grading scale.
+
+
+Local authority characteristics data
+
+Filename: 202324_la_char_data_revised.csv
+Geographic levels: Local authority; National; Regional
+Time period: 2018/19 to 2023/24
+Content summary: Local authority and regional headline performance measures in state-funded schools by pupil characteristics since 2018/19.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name      |  Variable description
+-----------------  |  ---------------------------------------------------------------------------
+avg_att8           |  Average Attainment 8 score
+avg_ebaccaps       |  Average EBacc APS score
+avg_p8score        |  Average Progress 8 score
+disadvantage       |  Disadvantaged status
+ethnicity_major    |  Major ethnic group
+ethnicity_minor    |  Minor ethnic group
+first_language     |  First language
+free_school_meals  |  Free school meals status
+p8score_ci_low     |  Progress 8 lower 95% confidence interval
+p8score_ci_upp     |  Progress 8 upper 95% confidence interval
+pt_ebacc_94        |  Percentage of pupils achieving grades 4 or above in the EBacc
+pt_ebacc_95        |  Percentage of pupils achieving grades 5 or above in the EBacc
+pt_ebacc_e_ptq_ee  |  Percentage of pupils entering the EBacc
+pt_entbasics       |  Percentage of pupils entering English and maths GCSEs
+pt_l2basics_94     |  Percentage of pupils achieving grades 4 or above in English and maths GCSEs
+pt_l2basics_95     |  Percentage of pupils achieving grades 5 or above in English and maths GCSEs
+sen_provision      |  Special educational needs - provision
+sen_status         |  Special educational needs - status
+sex                |  Sex
+t_att8             |  Sum of Attainment 8 scores
+t_ebacc_94         |  Number of pupils achieving grades 4 or above in the EBacc
+t_ebacc_95         |  Number of pupils achieving grades 5 or above in the EBacc
+t_ebacc_e_ptq_ee   |  Number of pupils entering the EBacc
+t_ebaccaps         |  Sum of EBacc APS scores
+t_entbasics        |  Number of pupils entering English and maths GCSEs
+t_inp8calc         |  Number of pupils included in Progress 8 measure
+t_l2basics_94      |  Number of pupils achieving grades 4 or above in English and maths GCSEs
+t_l2basics_95      |  Number of pupils achieving grades 5 or above in English and maths GCSEs
+t_p8score          |  Sum of Progress 8 scores
+t_pupils           |  Number of pupils at the end of KS4
+t_schools          |  Number of schools
+
+Footnotes:
+
+1. Local authority, region, parliamentary constituency and the total (state-funded sector) figures cover achievements in state-funded schools only. They do not include pupils recently arrived from overseas and so will not match with state-funded figures in the national tables.
+2. Sub totals for EAL and SEN breakdowns may not sum to the grand total due to a small number of pupils with missing information.
+3. Unclassified includes pupils for whom the information was not obtained, refused or could not be determined.
+4. Progress 8 was not published in 2020 or 2021 because of the COVID-19 pandemic.
+5. A Progress 8 score of 1.0 means pupils make on average a grade more progress than the national average of pupils with similar KS2 prior attainment in mainstream schools. Progress 8 should be interpreted alongside the associated confidence intervals. If the confidence intervals cross 0, then progress is not significantly different compared to pupils with similar KS2 prior attainment in mainstream schools.
+6. Changes were made to the methodology for calculating performance data due to the commitment not to use qualification results awarded between January 2020 and August 2021 in future measures. GCSE exams returned in 2022 and grades were awarded at a midpoint between 2021 and pre-pandemic grading. In 2023, there was a return to pre-pandemic grading, with some protections. Comparisons to 2020, 2021, and 2022 should be made with caution.
+7. c = a cell that has been suppressed due to low number of pupils. Suppression was applied where deemed necessary for all data up to 2018/19. For 2019/20, DfE suppression policy changed. For 2020 and 2021 results where a geographical area contains only one school (for example Isles of Scilly) the data for that area has been suppressed. This is in line with the announcement that school level data would not be published using either summer 2020 or summer 2021 exam grades awarded. Data has not being supressed at local authority or national level from 2022 onwards.
+8. In 2017, new reformed GCSEs (which use the 9-1 grade scale) were introduced into secondary school performance tables in a phased approach. Unreformed subjects continued to be graded using the A* to G system. From 2020 onwards all GCSEs are now reformed and use the 9-1 grading scale.
+
+
+Subject pupil level data
+
+Filename: 202324_subject_pupil_level_data_revised.csv
+Geographic levels: National
+Time period: 2023/24
+Content summary: National level pupil entries and achievements across subjects by establishment type for pupils at the end of KS4 in 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name             |  Variable description
+------------------------  |  ----------------------------------------
+admission_type            |  School admissions policy
+establishment_type_group  |  School type
+grade                     |  Grade
+number_achieving          |  Number of pupils achieving the grade
+percentage_achieving      |  Percentage of pupils achieving the grade
+qualification_type        |  Qualification
+religious_denomination    |  School religious character
+sex                       |  Sex
+subject                   |  Subject
+
+Footnotes:
+
+1. Establishment types included in the establishment type groupings can be found in the glossary: https://explore-education-statistics.service.gov.uk/glossary (https://explore-education-statistics.service.gov.uk/glossary)
+2. Selective areas include local authorities where more than 25% of state-funded secondary places are in selective schools. These local authorities are Bexley, Buckinghamshire, Kent, Lincolnshire, Medway, Slough, Southend-on-Sea, Sutton, Torbay, Trafford and Wirral.
+3. Discounting has been applied. For further information please see the discounting guidance ( https://www.gov.uk/government/publications/key-stage-4-qualifications-discount-codes-and-point-scores (https://www.gov.uk/government/publications/key-stage-4-qualifications-discount-codes-and-point-scores)).
+4. Any science includes Astronomy, Electronics, Environmental Science and Geology.
+5. Any Design and Technology includes Design and Technology Engineering and Product Design qualifications.
+6. Combined Science GCSE is a Double Award and is included in this table for the purpose of comparison with other Science subjects.
+7. For pupils at the end of KS4 in 2023/24, where pupils achieved qualifications in subjects between January 2020 and August 2021, we will not use results from these qualifications. The entries into the qualifications are still counted.
+8. Changes were made to the methodology for calculating performance data due to the commitment not to use qualification results awarded between January 2020 and August 2021 in future measures. GCSE exams returned in 2022 and grades were awarded at a midpoint between 2021 and pre-pandemic grading. In 2023, there was a return to pre-pandemic grading, with some protections. Comparisons to 2020, 2021, and 2022 should be made with caution.
+9. In 2017, new reformed GCSEs (which use the 9-1 grade scale) were introduced into secondary school performance tables in a phased approach. Unreformed subjects continued to be graded using the A* to G system. From 2020 onwards all GCSEs are now reformed and use the 9-1 grading scale.
+
+
+Subject pupil level characteristic data
+
+Filename: 202324_subject_pupil_level_char_data_revised.csv
+Geographic levels: National
+Time period: 2023/24
+Content summary: National level pupil entries and achievements across subjects in state-funded schools by pupil characteristics for pupils at the end of KS4 in 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name         |  Variable description
+--------------------  |  ----------------------------------------
+breakdown             |  Pupil characteristic
+grade                 |  Grade
+number_achieving      |  Number of pupils achieving the grade
+percentage_achieving  |  Percentage of pupils achieving the grade
+qualification_type    |  Qualification
+sex                   |  Sex
+subject               |  Subject
+
+Footnotes:
+
+1. Sub totals for EAL and SEN breakdowns may not sum to the grand total due to a small number of pupils with missing information.
+
+
+Subject pupil level local authority data
+
+Filename: 202324_subject_pupil_level_la_data_revised.csv
+Geographic levels: Local authority; National; Regional
+Time period: 2023/24
+Content summary: Local authority and regional level pupil entries and achievements across subjects in state-funded schools for pupils at the end of KS4 in 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name         |  Variable description
+--------------------  |  ----------------------------------------
+grade                 |  Grade
+number_achieving      |  Number of pupils achieving the grade
+percentage_achieving  |  Percentage of pupils achieving the grade
+qualification_type    |  Qualification
+sex                   |  Sex
+subject               |  Subject
+
+Footnotes:
+
+1. Local authority, region, parliamentary constituency and the total (state-funded sector) figures cover achievements in state-funded schools only. They do not include pupils recently arrived from overseas and so will not match with state-funded figures in the national tables.
+2. Discounting has been applied. For further information please see the discounting guidance ( https://www.gov.uk/government/publications/key-stage-4-qualifications-discount-codes-and-point-scores (https://www.gov.uk/government/publications/key-stage-4-qualifications-discount-codes-and-point-scores)).
+3. Any science includes Astronomy, Electronics, Environmental Science and Geology.
+4. Any Design and Technology includes Design and Technology Engineering and Product Design qualifications.
+5. Combined Science GCSE is a Double Award and is included in this table for the purpose of comparison with other Science subjects.
+6. For pupils at the end of KS4 in 2023/24, where pupils achieved qualifications in subjects between January 2020 and August 2021, we will not use results from these qualifications. The entries into the qualifications are still counted.
+
+
+Subject entry level data
+
+Filename: 202324_subject_entry_level_data_revised.csv
+Geographic levels: National
+Time period: 2023/24
+Content summary: National level number of GCSE entries achieving each grade across subjects in all schools for pupils at the end of KS4 in 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name     |  Variable description
+----------------  |  -----------------------------------
+grade             |  Grade
+number_achieving  |  Number of exams achieving the grade
+subject           |  Subject
+
+Footnotes:
+
+1. Discounting has been applied. For further information please see the discounting guidance ( https://www.gov.uk/government/publications/key-stage-4-qualifications-discount-codes-and-point-scores (https://www.gov.uk/government/publications/key-stage-4-qualifications-discount-codes-and-point-scores)).
+2. Any science includes Astronomy, Electronics, Environmental Science and Geology.
+3. Any Design and Technology includes Design and Technology Engineering and Product Design qualifications.
+4. Grade U refers to pupils' results which are ungraded or unclassified.
+5. Grade X refers to pupils who were absent or whose results are pending.
+6. Combined Science GCSE is a Double Award and is included in this table for the purpose of comparison with other Science subjects.
+7. For pupils at the end of KS4 in 2023/24, where pupils achieved qualifications in subjects between January 2020 and August 2021, we will not use results from these qualifications. The entries into the qualifications are still counted.
+
+
+Subject timeseries data
+
+Filename: 202324_subject_timeseries_data_revised.csv
+Geographic levels: National
+Time period: 2009/10 to 2023/24
+Content summary: National level percentage of GCSE (and equivalent for unreformed GCSEs) entries achieving each grade across subjects in all schools for pupils at the end of KS4 in each year since 2009/10.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name         |  Variable description
+--------------------  |  -----------------------------------------
+grade                 |  Grade
+percentage_achieving  |  Percentage of entries achieving the grade
+sex                   |  Sex
+subject               |  Subject
+total_exam_entries    |  Number of entries in the subject
+
+Footnotes:
+
+1. Discounting has been applied. For further information please see the discounting guidance ( https://www.gov.uk/government/publications/key-stage-4-qualifications-discount-codes-and-point-scores (https://www.gov.uk/government/publications/key-stage-4-qualifications-discount-codes-and-point-scores)).
+2. Total number of entries includes entries awarded U and X grades.
+3. Combined Science GCSE is a Double Award and is included in this table for the purpose of comparison with other Science subjects.
+4. For pupils at the end of KS4 in 2023/24, where pupils achieved qualifications in subjects between January 2020 and August 2021, we will not use results from these qualifications. The entries into the qualifications are still counted.
+5. c = a cell that has been suppressed due to low number of pupils. Suppression was applied where deemed necessary for all data up to 2018/19. For 2019/20, DfE suppression policy changed. For 2020 and 2021 results where a geographical area contains only one school (for example Isles of Scilly) the data for that area has been suppressed. This is in line with the announcement that school level data would not be published using either summer 2020 or summer 2021 exam grades awarded. Data has not being supressed at local authority or national level from 2022 onwards.
+6. In 2017, new reformed GCSEs (which use the 9-1 grade scale) were introduced into secondary school performance tables in a phased approach. Unreformed subjects continued to be graded using the A* to G system. From 2020 onwards all GCSEs are now reformed and use the 9-1 grading scale.
+7. Where subjects have been combined into a group (e.g. Other Modern Languages) and a pupil has two or more entries, each result in each subject is counted.
+8. Only GCSEs and established GCSE equivalents (Cambridge International certificates and Edexcel level 1/2 certificates) are included in this data. Excludes Double Awards.
+
+
+Subject year of entry data
+
+Filename: 202324_subject_year_entry_data_revised.csv
+Geographic levels: National
+Time period: 2023/24
+Content summary: National level percentage of GCSE entries in pupils’ penultimate and final year in all schools for pupils at the end of KS4 in 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name  |  Variable description
+-------------  |  ---------------------------------
+number_pupils  |  Number of pupils
+percentage     |  Percentage of pupils
+subject        |  Subject
+test_year      |  School year when the exam was sat
+
+Footnotes:
+
+1. Discounting has been applied. For further information please see the discounting guidance ( https://www.gov.uk/government/publications/key-stage-4-qualifications-discount-codes-and-point-scores (https://www.gov.uk/government/publications/key-stage-4-qualifications-discount-codes-and-point-scores)).
+2. Combined Science GCSE is a Double Award and is included in this table for the purpose of comparison with other Science subjects.
+
+
+Local authority district and region of pupil residence data
+
+Filename: 202324_pr_lad_data_revised.csv
+Geographic levels: Local authority district; National; Regional
+Time period: 2023/24
+Content summary: Pupil residency based local authority district, regional, and national level headline performance measures in state-funded schools in 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name      |  Variable description
+-----------------  |  ---------------------------------------------------------------------------
+avg_att8           |  Average Attainment 8 score
+avg_ebaccaps       |  Average EBacc APS score
+avg_p8score        |  Average Progress 8 score
+p8score_ci_low     |  Progress 8 lower 95% confidence interval
+p8score_ci_upp     |  Progress 8 upper 95% confidence interval
+pt_ebacc_94        |  Percentage of pupils achieving grades 4 or above in the EBacc
+pt_ebacc_95        |  Percentage of pupils achieving grades 5 or above in the EBacc
+pt_ebacc_e_ptq_ee  |  Percentage of pupils entering the EBacc
+pt_entbasics       |  Percentage of pupils entering English and maths GCSEs
+pt_l2basics_94     |  Percentage of pupils achieving grades 4 or above in English and maths GCSEs
+pt_l2basics_95     |  Percentage of pupils achieving grades 5 or above in English and maths GCSEs
+t_att8             |  Sum of Attainment 8 scores
+t_ebacc_94         |  Number of pupils achieving grades 4 or above in the EBacc
+t_ebacc_95         |  Number of pupils achieving grades 5 or above in the EBacc
+t_ebacc_e_ptq_ee   |  Number of pupils entering the EBacc
+t_ebaccaps         |  Sum of EBacc APS scores
+t_entbasics        |  Number of pupils entering English and maths GCSEs
+t_inp8calc         |  Number of pupils included in Progress 8 measure
+t_l2basics_94      |  Number of pupils achieving grades 4 or above in English and maths GCSEs
+t_l2basics_95      |  Number of pupils achieving grades 5 or above in English and maths GCSEs
+t_p8score          |  Sum of Progress 8 scores
+t_pupils           |  Number of pupils at the end of KS4
+t_schools          |  Number of schools
+
+Footnotes:
+
+1. Local authority, region, parliamentary constituency and the total (state-funded sector) figures cover achievements in state-funded schools only. They do not include pupils recently arrived from overseas and so will not match with state-funded figures in the national tables.
+2. 905 pupils are not included because their residency was unknown due to missing or invalid postcode information or because they were not resident in England.
+3. A Progress 8 score of 1.0 means pupils make on average a grade more progress than the national average of pupils with similar KS2 prior attainment in mainstream schools. Progress 8 should be interpreted alongside the associated confidence intervals. If the confidence intervals cross 0, then progress is not significantly different compared to pupils with similar KS2 prior attainment in mainstream schools.
+
+
+IDACI decile and degree of rurality of pupil residence data
+
+Filename: 202324_pr_ruralurban_idaci_data_revised.csv
+Geographic levels: National; Regional
+Time period: 2023/24
+Content summary: Pupil residency based regional and national level headline performance measures in state-funded schools by regional characteristics in 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name            |  Variable description
+-----------------------  |  ---------------------------------------------------------------------------
+avg_att8                 |  Average Attainment 8 score
+avg_ebaccaps             |  Average EBacc APS score
+avg_p8score              |  Average Progress 8 score
+idaci_decile             |  Income Deprivation Affecting Children Indices (IDACI) decile
+p8score_ci_low           |  Progress 8 lower 95% confidence interval
+p8score_ci_upp           |  Progress 8 upper 95% confidence interval
+pt_ebacc_94              |  Percentage of pupils achieving grades 4 or above in the EBacc
+pt_ebacc_95              |  Percentage of pupils achieving grades 5 or above in the EBacc
+pt_ebacc_e_ptq_ee        |  Percentage of pupils entering the EBacc
+pt_entbasics             |  Percentage of pupils entering English and maths GCSEs
+pt_l2basics_94           |  Percentage of pupils achieving grades 4 or above in English and maths GCSEs
+pt_l2basics_95           |  Percentage of pupils achieving grades 5 or above in English and maths GCSEs
+pupil_residency_detail   |  Degree of rurality - pupil residency
+ru11ind_pupil_residency  |  Rurality - Pupil residency
+t_att8                   |  Sum of Attainment 8 scores
+t_ebacc_94               |  Number of pupils achieving grades 4 or above in the EBacc
+t_ebacc_95               |  Number of pupils achieving grades 5 or above in the EBacc
+t_ebacc_e_ptq_ee         |  Number of pupils entering the EBacc
+t_ebaccaps               |  Sum of EBacc APS scores
+t_entbasics              |  Number of pupils entering English and maths GCSEs
+t_inp8calc               |  Number of pupils included in Progress 8 measure
+t_l2basics_94            |  Number of pupils achieving grades 4 or above in English and maths GCSEs
+t_l2basics_95            |  Number of pupils achieving grades 5 or above in English and maths GCSEs
+t_p8score                |  Sum of Progress 8 scores
+t_pupils                 |  Number of pupils at the end of KS4
+t_schools                |  Number of schools
+
+Footnotes:
+
+1. 905 pupils are not included because their residency was unknown due to missing or invalid postcode information or because they were not resident in England.
+2. A Progress 8 score of 1.0 means pupils make on average a grade more progress than the national average of pupils with similar KS2 prior attainment in mainstream schools. Progress 8 should be interpreted alongside the associated confidence intervals. If the confidence intervals cross 0, then progress is not significantly different compared to pupils with similar KS2 prior attainment in mainstream schools.
+
+
+Local authority district and region of school location data by FSM and disadvantage status
+
+Filename: 202324_sl_lad_fsm_dis_data_revised.csv
+Geographic levels: Local authority district; National; Regional
+Time period: 2023/24
+Content summary: School location based regional and national level performance measures in state-funded schools by pupil characteristics in 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name      |  Variable description
+-----------------  |  -------------------------------------------------------------------------------
+avg_att8           |  Average Attainment 8 score
+avg_att8_ebac      |  Average Attainment 8 score for EBacc element
+avg_att8_eng       |  Average Attainment 8 score for English element
+avg_att8_mat       |  Average Attainment 8 score for maths element
+avg_att8_open      |  Average Attainment 8 score for open element
+avg_att8_open_g    |  Average Attainment 8 score for open element - GCSE only
+avg_att8_open_ng   |  Average Attainment 8 score for open element - non-GCSE only
+avg_ebac_fill      |  Average number of EBacc slots filled for Attainment 8
+avg_ebaccaps       |  Average EBacc APS score
+avg_ebptseng_ll    |  Average EBacc APS score for English pillar
+avg_ebptshum       |  Average EBacc APS score for humanities pillar
+avg_ebptslan       |  Average EBacc APS score for language pillar
+avg_ebptsmat       |  Average EBacc APS score for maths pillar
+avg_ebptssci       |  Average EBacc APS score for science pillar
+avg_open_fill      |  Average number of open slots filled for Attainment 8
+avg_p8ebac         |  Average Progress 8 score for EBacc element
+avg_p8eng          |  Average Progress 8 score for English element
+avg_p8mat          |  Average Progress 8 score for maths element
+avg_p8open         |  Average Progress 8 score for open element
+avg_p8score        |  Average Progress 8 score
+disadvantage       |  Disadvantaged status
+free_school_meals  |  Free school meals status
+p8ebac_ci_low      |  Progress 8 lower 95% confidence interval for EBacc element
+p8ebac_ci_upp      |  Progress 8 upper 95% confidence interval for EBacc element
+p8eng_ci_low       |  Progress 8 lower 95% confidence interval for English element
+p8eng_ci_upp       |  Progress 8 upper 95% confidence interval for English element
+p8mat_ci_low       |  Progress 8 lower 95% confidence interval for maths element
+p8mat_ci_upp       |  Progress 8 upper 95% confidence interval for maths element
+p8open_ci_low      |  Progress 8 lower 95% confidence interval for open element
+p8open_ci_upp      |  Progress 8 upper 95% confidence interval for open element
+p8score_ci_low     |  Progress 8 lower 95% confidence interval
+p8score_ci_upp     |  Progress 8 upper 95% confidence interval
+pt_anypass         |  Percentage of pupils achieving any passes at GCSE or equivalent
+pt_ebac2sci_94     |  Percentage of pupils achieving grades 4 or above in the Ebacc science pillar
+pt_ebac2sci_95     |  Percentage of pupils achieving grades 5 or above in the Ebacc science pillar
+pt_ebac2sci_e      |  Percentage of pupils entering the EBacc science pillar
+pt_ebacc_94        |  Percentage of pupils achieving grades 4 or above in the EBacc
+pt_ebacc_95        |  Percentage of pupils achieving grades 5 or above in the EBacc
+pt_ebacc_e_ptq_ee  |  Percentage of pupils entering the EBacc
+pt_ebaceng_94      |  Percentage of pupils achieving grades 4 or above in the Ebacc English pillar
+pt_ebaceng_95      |  Percentage of pupils achieving grades 5 or above in the Ebacc English pillar
+pt_ebaceng_e       |  Percentage of pupils entering the EBacc English pillar
+pt_ebachum_94      |  Percentage of pupils achieving grades 4 or above in the Ebacc humanities pillar
+pt_ebachum_95      |  Percentage of pupils achieving grades 5 or above in the Ebacc humanities pillar
+pt_ebachum_e       |  Percentage of pupils entering the EBacc humanities pillar
+pt_ebaclan_94      |  Percentage of pupils achieving grades 4 or above in the Ebacc language pillar
+pt_ebaclan_95      |  Percentage of pupils achieving grades 5 or above in the Ebacc language pillar
+pt_ebaclan_e       |  Percentage of pupils entering the EBacc language pillar
+pt_ebacmat_94      |  Percentage of pupils achieving grades 4 or above in the Ebacc maths pillar
+pt_ebacmat_95      |  Percentage of pupils achieving grades 5 or above in the Ebacc maths pillar
+pt_ebacmat_e       |  Percentage of pupils entering the EBacc maths pillar
+pt_entbasics       |  Percentage of pupils entering English and maths GCSEs
+pt_entry_1         |  Percentage of pupils entering at least 1 GCSE or equivalent
+pt_l2basics_94     |  Percentage of pupils achieving grades 4 or above in English and maths GCSEs
+pt_l2basics_95     |  Percentage of pupils achieving grades 5 or above in English and maths GCSEs
+t_anypass          |  Number of pupils achieving any passes at GCSE or equivalent
+t_att8             |  Sum of Attainment 8 scores
+t_att8_ebac        |  Sum of Attainment 8 scores for EBacc element
+t_att8_eng         |  Sum of Attainment 8 scores for English element
+t_att8_mat         |  Sum of Attainment 8 scores for maths element
+t_att8_open        |  Sum of Attainment 8 scores for open element
+t_att8_open_g      |  Sum of Attainment 8 scores for open element - GCSE only
+t_att8_open_ng     |  Sum of Attainment 8 scores for open element - non-GCSE only
+t_ebac_fill        |  Total number of EBacc slots filled for Attainment 8
+t_ebac2sci_94      |  Number of pupils achieving grades 4 or above in the EBacc science pillar
+t_ebac2sci_95      |  Number of pupils achieving grades 5 or above in the EBacc science pillar
+t_ebac2sci_e       |  Number of pupils entering the EBacc science pillar
+t_ebacc_94         |  Number of pupils achieving grades 4 or above in the EBacc
+t_ebacc_95         |  Number of pupils achieving grades 5 or above in the EBacc
+t_ebacc_e_ptq_ee   |  Number of pupils entering the EBacc
+t_ebaccaps         |  Sum of EBacc APS scores
+t_ebaceng_94       |  Number of pupils achieving grades 4 or above in the EBacc English pillar
+t_ebaceng_95       |  Number of pupils achieving grades 5 or above in the EBacc English pillar
+t_ebaceng_e        |  Number of pupils entering the EBacc English pillar
+t_ebachum_94       |  Number of pupils achieving grades 4 or above in the EBacc humanities pillar
+t_ebachum_95       |  Number of pupils achieving grades 5 or above in the EBacc humanities pillar
+t_ebachum_e        |  Number of pupils entering the EBacc humanities pillar
+t_ebaclan_94       |  Number of pupils achieving grades 4 or above in the EBacc language pillar
+t_ebaclan_95       |  Number of pupils achieving grades 5 or above in the EBacc language pillar
+t_ebaclan_e        |  Number of pupils entering the EBacc languge pillar
+t_ebacmat_94       |  Number of pupils achieving grades 4 or above in the EBacc maths pillar
+t_ebacmat_95       |  Number of pupils achieving grades 5 or above in the EBacc maths pillar
+t_ebacmat_e        |  Number of pupils entering the EBacc maths pillar
+t_ebptseng_ll      |  Sum of EBacc APS scores for English pillar
+t_ebptshum         |  Sum of EBacc APS scores for humanities pillar
+t_ebptslan         |  Sum of EBacc APS scores for language pillar
+t_ebptsmat         |  Sum of EBacc APS scores for maths pillar
+t_ebptssci         |  Sum of EBacc APS scores for science pillar
+t_entbasics        |  Number of pupils entering English and maths GCSEs
+t_entry_1          |  Number of pupils entering at least 1 GCSE or equivalent
+t_inp8calc         |  Number of pupils included in Progress 8 measure
+t_l2basics_94      |  Number of pupils achieving grades 4 or above in English and maths GCSEs
+t_l2basics_95      |  Number of pupils achieving grades 5 or above in English and maths GCSEs
+t_open_fill        |  Total number of open slots filled for Attainment 8
+t_p8ebac           |  Sum of Progress 8 scores for EBacc element
+t_p8eng            |  Sum of Progress 8 scores for English element
+t_p8mat            |  Sum of Progress 8 scores for maths element
+t_p8open           |  Sum of Progress 8 scores for open element
+t_p8score          |  Sum of Progress 8 scores
+t_pupils           |  Number of pupils at the end of KS4
+t_schools          |  Number of schools
+
+Footnotes:
+
+1. Local authority, region, parliamentary constituency and the total (state-funded sector) figures cover achievements in state-funded schools only. They do not include pupils recently arrived from overseas and so will not match with state-funded figures in the national tables.
+2. A Progress 8 score of 1.0 means pupils make on average a grade more progress than the national average of pupils with similar KS2 prior attainment in mainstream schools. Progress 8 should be interpreted alongside the associated confidence intervals. If the confidence intervals cross 0, then progress is not significantly different compared to pupils with similar KS2 prior attainment in mainstream schools.
+3. EBacc science includes double award GCSE for pupils on the combined science pathway or the average of a pupil's best two science grades for pupils on the single science pathway (i.e., where pupils enter three of biology, chemistry, computer science, and physics).
+4. The open element of Attainment 8 contains the three highest point scores in any three other subjects eligible for performance tables, including English language or literature (if not counted in the English slot), further GCSE qualifications (including English Baccalaureate subjects) or any other non-GCSE qualifications on the DfE approved list.
+5. For the number of slots filled, entries that were awarded U grades or other qualifications scoring 0 points are counted as a non-filled slot.
+
+
+Degree of rurality of school location data
+
+Filename: 202324_sl_ruralurban_data_revised.csv
+Geographic levels: National; Regional
+Time period: 2023/24
+Content summary: School location based regional and national level headline performance measures in state-funded schools by regional degree of rurality in 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name            |  Variable description
+-----------------------  |  ---------------------------------------------------------------------------
+avg_att8                 |  Average Attainment 8 score
+avg_ebaccaps             |  Average EBacc APS score
+avg_p8score              |  Average Progress 8 score
+p8score_ci_low           |  Progress 8 lower 95% confidence interval
+p8score_ci_upp           |  Progress 8 upper 95% confidence interval
+pt_ebacc_94              |  Percentage of pupils achieving grades 4 or above in the EBacc
+pt_ebacc_95              |  Percentage of pupils achieving grades 5 or above in the EBacc
+pt_ebacc_e_ptq_ee        |  Percentage of pupils entering the EBacc
+pt_entbasics             |  Percentage of pupils entering English and maths GCSEs
+pt_l2basics_94           |  Percentage of pupils achieving grades 4 or above in English and maths GCSEs
+pt_l2basics_95           |  Percentage of pupils achieving grades 5 or above in English and maths GCSEs
+ru11ind_school_location  |  Degree of rurality - school location
+t_att8                   |  Sum of Attainment 8 scores
+t_ebacc_94               |  Number of pupils achieving grades 4 or above in the EBacc
+t_ebacc_95               |  Number of pupils achieving grades 5 or above in the EBacc
+t_ebacc_e_ptq_ee         |  Number of pupils entering the EBacc
+t_ebaccaps               |  Sum of EBacc APS scores
+t_entbasics              |  Number of pupils entering English and maths GCSEs
+t_inp8calc               |  Number of pupils included in Progress 8 measure
+t_l2basics_94            |  Number of pupils achieving grades 4 or above in English and maths GCSEs
+t_l2basics_95            |  Number of pupils achieving grades 5 or above in English and maths GCSEs
+t_p8score                |  Sum of Progress 8 scores
+t_pupils                 |  Number of pupils at the end of KS4
+t_schools                |  Number of schools
+
+Footnotes:
+
+1. Local authority, region, parliamentary constituency and the total (state-funded sector) figures cover achievements in state-funded schools only. They do not include pupils recently arrived from overseas and so will not match with state-funded figures in the national tables.
+2. A Progress 8 score of 1.0 means pupils make on average a grade more progress than the national average of pupils with similar KS2 prior attainment in mainstream schools. Progress 8 should be interpreted alongside the associated confidence intervals. If the confidence intervals cross 0, then progress is not significantly different compared to pupils with similar KS2 prior attainment in mainstream schools.
+
+
+Parliamentary constituency of school location data
+
+Filename: 202324_sl_pcon_data_revised.csv
+Geographic levels: National; Parliamentary constituency
+Time period: 2023/24
+Content summary: School location based parliamentary constituency and national level headline performance measures in state-funded schools in 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name      |  Variable description
+-----------------  |  ---------------------------------------------------------------------------
+avg_att8           |  Average Attainment 8 score
+avg_ebaccaps       |  Average EBacc APS score
+avg_p8score        |  Average Progress 8 score
+p8score_ci_low     |  Progress 8 lower 95% confidence interval
+p8score_ci_upp     |  Progress 8 upper 95% confidence interval
+pt_ebacc_94        |  Percentage of pupils achieving grades 4 or above in the EBacc
+pt_ebacc_95        |  Percentage of pupils achieving grades 5 or above in the EBacc
+pt_ebacc_e_ptq_ee  |  Percentage of pupils entering the EBacc
+pt_entbasics       |  Percentage of pupils entering English and maths GCSEs
+pt_l2basics_94     |  Percentage of pupils achieving grades 4 or above in English and maths GCSEs
+pt_l2basics_95     |  Percentage of pupils achieving grades 5 or above in English and maths GCSEs
+t_att8             |  Sum of Attainment 8 scores
+t_ebacc_94         |  Number of pupils achieving grades 4 or above in the EBacc
+t_ebacc_95         |  Number of pupils achieving grades 5 or above in the EBacc
+t_ebacc_e_ptq_ee   |  Number of pupils entering the EBacc
+t_ebaccaps         |  Sum of EBacc APS scores
+t_entbasics        |  Number of pupils entering English and maths GCSEs
+t_inp8calc         |  Number of pupils included in Progress 8 measure
+t_l2basics_94      |  Number of pupils achieving grades 4 or above in English and maths GCSEs
+t_l2basics_95      |  Number of pupils achieving grades 5 or above in English and maths GCSEs
+t_p8score          |  Sum of Progress 8 scores
+t_pupils           |  Number of pupils at the end of KS4
+t_schools          |  Number of schools
+
+Footnotes:
+
+1. Local authority, region, parliamentary constituency and the total (state-funded sector) figures cover achievements in state-funded schools only. They do not include pupils recently arrived from overseas and so will not match with state-funded figures in the national tables.
+2. A Progress 8 score of 1.0 means pupils make on average a grade more progress than the national average of pupils with similar KS2 prior attainment in mainstream schools. Progress 8 should be interpreted alongside the associated confidence intervals. If the confidence intervals cross 0, then progress is not significantly different compared to pupils with similar KS2 prior attainment in mainstream schools.
+
+
+Local authority alternative provision data
+
+Filename: 202324_ap_la_data_revised.csv
+Geographic levels: Local authority; National; Regional
+Time period: 2023/24
+Content summary: Local authority and regional level performance measures in alternative provision in 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name      |  Variable description
+-----------------  |  -------------------------------------------------------------------------------
+avg_att8           |  Average Attainment 8 score
+avg_att8_ebac      |  Average Attainment 8 score for EBacc element
+avg_att8_eng       |  Average Attainment 8 score for English element
+avg_att8_mat       |  Average Attainment 8 score for maths element
+avg_att8_open      |  Average Attainment 8 score for open element
+avg_att8_open_g    |  Average Attainment 8 score for open element - GCSE only
+avg_att8_open_ng   |  Average Attainment 8 score for open element - non-GCSE only
+avg_ebac_fill      |  Average number of EBacc slots filled for Attainment 8
+avg_ebaccaps       |  Average EBacc APS score
+avg_ebptseng_ll    |  Average EBacc APS score for English pillar
+avg_ebptshum       |  Average EBacc APS score for humanities pillar
+avg_ebptslan       |  Average EBacc APS score for language pillar
+avg_ebptsmat       |  Average EBacc APS score for maths pillar
+avg_ebptssci       |  Average EBacc APS score for science pillar
+avg_open_fill      |  Average number of open slots filled for Attainment 8
+avg_p8ebac         |  Average Progress 8 score for EBacc element
+avg_p8eng          |  Average Progress 8 score for English element
+avg_p8mat          |  Average Progress 8 score for maths element
+avg_p8open         |  Average Progress 8 score for open element
+avg_p8score        |  Average Progress 8 score
+p8ebac_ci_low      |  Progress 8 lower 95% confidence interval for EBacc element
+p8ebac_ci_upp      |  Progress 8 upper 95% confidence interval for EBacc element
+p8eng_ci_low       |  Progress 8 lower 95% confidence interval for English element
+p8eng_ci_upp       |  Progress 8 upper 95% confidence interval for English element
+p8mat_ci_low       |  Progress 8 lower 95% confidence interval for maths element
+p8mat_ci_upp       |  Progress 8 upper 95% confidence interval for maths element
+p8open_ci_low      |  Progress 8 lower 95% confidence interval for open element
+p8open_ci_upp      |  Progress 8 upper 95% confidence interval for open element
+p8score_ci_low     |  Progress 8 lower 95% confidence interval
+p8score_ci_upp     |  Progress 8 upper 95% confidence interval
+pt_anypass         |  Percentage of pupils achieving any passes at GCSE or equivalent
+pt_ebac2sci_94     |  Percentage of pupils achieving grades 4 or above in the Ebacc science pillar
+pt_ebac2sci_95     |  Percentage of pupils achieving grades 5 or above in the Ebacc science pillar
+pt_ebac2sci_e      |  Percentage of pupils entering the EBacc science pillar
+pt_ebacc_94        |  Percentage of pupils achieving grades 4 or above in the EBacc
+pt_ebacc_95        |  Percentage of pupils achieving grades 5 or above in the EBacc
+pt_ebacc_e_ptq_ee  |  Percentage of pupils entering the EBacc
+pt_ebaceng_94      |  Percentage of pupils achieving grades 4 or above in the Ebacc English pillar
+pt_ebaceng_95      |  Percentage of pupils achieving grades 5 or above in the Ebacc English pillar
+pt_ebaceng_e       |  Percentage of pupils entering the EBacc English pillar
+pt_ebachum_94      |  Percentage of pupils achieving grades 4 or above in the Ebacc humanities pillar
+pt_ebachum_95      |  Percentage of pupils achieving grades 5 or above in the Ebacc humanities pillar
+pt_ebachum_e       |  Percentage of pupils entering the EBacc humanities pillar
+pt_ebaclan_94      |  Percentage of pupils achieving grades 4 or above in the Ebacc language pillar
+pt_ebaclan_95      |  Percentage of pupils achieving grades 5 or above in the Ebacc language pillar
+pt_ebaclan_e       |  Percentage of pupils entering the EBacc language pillar
+pt_ebacmat_94      |  Percentage of pupils achieving grades 4 or above in the Ebacc maths pillar
+pt_ebacmat_95      |  Percentage of pupils achieving grades 5 or above in the Ebacc maths pillar
+pt_ebacmat_e       |  Percentage of pupils entering the EBacc maths pillar
+pt_entbasics       |  Percentage of pupils entering English and maths GCSEs
+pt_entry_1         |  Percentage of pupils entering at least 1 GCSE or equivalent
+pt_l2basics_94     |  Percentage of pupils achieving grades 4 or above in English and maths GCSEs
+pt_l2basics_95     |  Percentage of pupils achieving grades 5 or above in English and maths GCSEs
+t_anypass          |  Number of pupils achieving any passes at GCSE or equivalent
+t_att8             |  Sum of Attainment 8 scores
+t_att8_ebac        |  Sum of Attainment 8 scores for EBacc element
+t_att8_eng         |  Sum of Attainment 8 scores for English element
+t_att8_mat         |  Sum of Attainment 8 scores for maths element
+t_att8_open        |  Sum of Attainment 8 scores for open element
+t_att8_open_g      |  Sum of Attainment 8 scores for open element - GCSE only
+t_att8_open_ng     |  Sum of Attainment 8 scores for open element - non-GCSE only
+t_ebac_fill        |  Total number of EBacc slots filled for Attainment 8
+t_ebac2sci_94      |  Number of pupils achieving grades 4 or above in the EBacc science pillar
+t_ebac2sci_95      |  Number of pupils achieving grades 5 or above in the EBacc science pillar
+t_ebac2sci_e       |  Number of pupils entering the EBacc science pillar
+t_ebacc_94         |  Number of pupils achieving grades 4 or above in the EBacc
+t_ebacc_95         |  Number of pupils achieving grades 5 or above in the EBacc
+t_ebacc_e_ptq_ee   |  Number of pupils entering the EBacc
+t_ebaccaps         |  Sum of EBacc APS scores
+t_ebaceng_94       |  Number of pupils achieving grades 4 or above in the EBacc English pillar
+t_ebaceng_95       |  Number of pupils achieving grades 5 or above in the EBacc English pillar
+t_ebaceng_e        |  Number of pupils entering the EBacc English pillar
+t_ebachum_94       |  Number of pupils achieving grades 4 or above in the EBacc humanities pillar
+t_ebachum_95       |  Number of pupils achieving grades 5 or above in the EBacc humanities pillar
+t_ebachum_e        |  Number of pupils entering the EBacc humanities pillar
+t_ebaclan_94       |  Number of pupils achieving grades 4 or above in the EBacc language pillar
+t_ebaclan_95       |  Number of pupils achieving grades 5 or above in the EBacc language pillar
+t_ebaclan_e        |  Number of pupils entering the EBacc languge pillar
+t_ebacmat_94       |  Number of pupils achieving grades 4 or above in the EBacc maths pillar
+t_ebacmat_95       |  Number of pupils achieving grades 5 or above in the EBacc maths pillar
+t_ebacmat_e        |  Number of pupils entering the EBacc maths pillar
+t_ebptseng_ll      |  Sum of EBacc APS scores for English pillar
+t_ebptshum         |  Sum of EBacc APS scores for humanities pillar
+t_ebptslan         |  Sum of EBacc APS scores for language pillar
+t_ebptsmat         |  Sum of EBacc APS scores for maths pillar
+t_ebptssci         |  Sum of EBacc APS scores for science pillar
+t_entbasics        |  Number of pupils entering English and maths GCSEs
+t_entry_1          |  Number of pupils entering at least 1 GCSE or equivalent
+t_inp8calc         |  Number of pupils included in Progress 8 measure
+t_l2basics_94      |  Number of pupils achieving grades 4 or above in English and maths GCSEs
+t_l2basics_95      |  Number of pupils achieving grades 5 or above in English and maths GCSEs
+t_open_fill        |  Total number of open slots filled for Attainment 8
+t_p8ebac           |  Sum of Progress 8 scores for EBacc element
+t_p8eng            |  Sum of Progress 8 scores for English element
+t_p8mat            |  Sum of Progress 8 scores for maths element
+t_p8open           |  Sum of Progress 8 scores for open element
+t_p8score          |  Sum of Progress 8 scores
+t_pupils           |  Number of pupils at the end of KS4
+t_schools          |  Number of schools
+
+Footnotes:
+
+1. Pupils also registered at an institution normally included within the Secondary School Performance Tables are excluded from the Alternative Provision data.
+2. A Progress 8 score of 1.0 means pupils make on average a grade more progress than the national average of pupils with similar KS2 prior attainment in mainstream schools. Progress 8 should be interpreted alongside the associated confidence intervals. If the confidence intervals cross 0, then progress is not significantly different compared to pupils with similar KS2 prior attainment in mainstream schools.
+3. EBacc science includes double award GCSE for pupils on the combined science pathway or the average of a pupil's best two science grades for pupils on the single science pathway (i.e., where pupils enter three of biology, chemistry, computer science, and physics).
+4. The open element of Attainment 8 contains the three highest point scores in any three other subjects eligible for performance tables, including English language or literature (if not counted in the English slot), further GCSE qualifications (including English Baccalaureate subjects) or any other non-GCSE qualifications on the DfE approved list.
+5. For the number of slots filled, entries that were awarded U grades or other qualifications scoring 0 points are counted as a non-filled slot.
+
+
+GCSE subject alternative provision data
+
+Filename: 202324_subject_entry_level_ap_gcse_data_revised.csv
+Geographic levels: National
+Time period: 2023/24
+Content summary: National level number of GCSE entries achieving each grade across subjects in alternative provision for pupils at the end of KS4 in 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name     |  Variable description
+----------------  |  ------------------------------------
+grade             |  Grade
+number_achieving  |  Number of pupils achieving the grade
+subject           |  Subject
+
+Footnotes:
+
+1. Pupils also registered at an institution normally included within the Secondary School Performance Tables are excluded from the Alternative Provision data.
+2. Discounting has been applied. For further information please see the discounting guidance ( https://www.gov.uk/government/publications/key-stage-4-qualifications-discount-codes-and-point-scores (https://www.gov.uk/government/publications/key-stage-4-qualifications-discount-codes-and-point-scores)).
+3. Any science includes Astronomy, Electronics, Environmental Science and Geology.
+4. Any Design and Technology includes Design and Technology Engineering and Product Design qualifications.
+5. Grade U refers to pupils' results which are ungraded or unclassified.
+6. Grade X refers to pupils who were absent or whose results are pending.
+7. Combined Science GCSE is a Double Award and is included in this table for the purpose of comparison with other Science subjects.
+8. For pupils at the end of KS4 in 2023/24, where pupils achieved qualifications in subjects between January 2020 and August 2021, we will not use results from these qualifications. The entries into the qualifications are still counted.
+
+
+Vocational subject alternative provision data
+
+Filename: 202324_subject_pupil_level_ap_vocational_data_revised.csv
+Geographic levels: National
+Time period: 2023/24
+Content summary: National level pupil entries and achievements across subjects in alternative provision for pupils at the end of KS4 in 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name         |  Variable description
+--------------------  |  ----------------------------------------
+grade                 |  Grade
+number_achieving      |  Number of pupils achieving the grade
+percentage_achieving  |  Percentage of pupils achieving the grade
+subject               |  Subject
+
+Footnotes:
+
+1. Pupils also registered at an institution normally included within the Secondary School Performance Tables are excluded from the Alternative Provision data.
+2. Discounting has been applied. For further information please see the discounting guidance ( https://www.gov.uk/government/publications/key-stage-4-qualifications-discount-codes-and-point-scores (https://www.gov.uk/government/publications/key-stage-4-qualifications-discount-codes-and-point-scores)).
+3. For pupils at the end of KS4 in 2023/24, where pupils achieved qualifications in subjects between January 2020 and August 2021, we will not use results from these qualifications. The entries into the qualifications are still counted.
+
+
+National academies data
+
+Filename: 202324_national_academies_data_revised.csv
+Geographic levels: National
+Time period: 2023/24
+Content summary: National level headline performance measures in academies by the number of years the academies have been open in 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name             |  Variable description
+------------------------  |  ---------------------------------------------------------------------------
+avg_att8                  |  Average Attainment 8 score
+avg_ebaccaps              |  Average EBacc APS score
+avg_p8score               |  Average Progress 8 score
+establishment_type_group  |  School type
+p8score_ci_low            |  Progress 8 lower 95% confidence interval
+p8score_ci_upp            |  Progress 8 upper 95% confidence interval
+pt_anypass                |  Percentage of pupils achieving any passes at GCSE or equivalent
+pt_ebacc_94               |  Percentage of pupils achieving grades 4 or above in the EBacc
+pt_ebacc_95               |  Percentage of pupils achieving grades 5 or above in the EBacc
+pt_ebacc_e_ptq_ee         |  Percentage of pupils entering the EBacc
+pt_entbasics              |  Percentage of pupils entering English and maths GCSEs
+pt_entry_1                |  Percentage of pupils entering at least 1 GCSE or equivalent
+pt_l2basics_94            |  Percentage of pupils achieving grades 4 or above in English and maths GCSEs
+pt_l2basics_95            |  Percentage of pupils achieving grades 5 or above in English and maths GCSEs
+t_anypass                 |  Number of pupils achieving any passes at GCSE or equivalent
+t_att8                    |  Sum of Attainment 8 scores
+t_ebacc_94                |  Number of pupils achieving grades 4 or above in the EBacc
+t_ebacc_95                |  Number of pupils achieving grades 5 or above in the EBacc
+t_ebacc_e_ptq_ee          |  Number of pupils entering the EBacc
+t_ebaccaps                |  Sum of EBacc APS scores
+t_entbasics               |  Number of pupils entering English and maths GCSEs
+t_entry_1                 |  Number of pupils entering at least 1 GCSE or equivalent
+t_inp8calc                |  Number of pupils included in Progress 8 measure
+t_l2basics_94             |  Number of pupils achieving grades 4 or above in English and maths GCSEs
+t_l2basics_95             |  Number of pupils achieving grades 5 or above in English and maths GCSEs
+t_p8score                 |  Sum of Progress 8 scores
+t_pupils                  |  Number of pupils at the end of KS4
+t_schools                 |  Number of schools
+years_open                |  The number of academic years the school has been open
+
+Footnotes:
+
+1. Establishment types included in the establishment type groupings can be found in the glossary: https://explore-education-statistics.service.gov.uk/glossary (https://explore-education-statistics.service.gov.uk/glossary)
+2. Includes schools that were open before 12 September of the academic year. One academic year is between 12th September of one year to the 11th September the following year.
+3. A Progress 8 score of 1.0 means pupils make on average a grade more progress than the national average of pupils with similar KS2 prior attainment in mainstream schools. Progress 8 should be interpreted alongside the associated confidence intervals. If the confidence intervals cross 0, then progress is not significantly different compared to pupils with similar KS2 prior attainment in mainstream schools.
+
+
+Key stage 2 to 4 transition matrices GCSE subjects
+
+Filename: 202324_subject_entry_level_transition_matrices_revised.csv
+Geographic levels: National
+Time period: 2023/24
+Content summary: National level number of GCSE entries achieving each grade across subjects in state-funded schools by pupil characteristics, including KS2 scaled score, for pupils at the end of KS4 in 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name           |  Variable description
+----------------------  |  --------------------------------
+all_grades              |  Total number of entries
+breakdown               |  Pupil characteristic
+ks2_scaled_score_group  |  Key stage 2 scaled score group
+num_1                   |  Number of grade 1s
+num_11                  |  Number of grade 11s
+num_2                   |  Number of grade 2s
+num_21                  |  Number of grade 21s
+num_22                  |  Number of grade 22s
+num_3                   |  Number of grade 3s
+num_32                  |  Number of grade 32s
+num_33                  |  Number of grade 33s
+num_4                   |  Number of grade 4s
+num_43                  |  Number of grade 43s
+num_44                  |  Number of grade 44s
+num_5                   |  Number of grade 5s
+num_54                  |  Number of grade 54s
+num_55                  |  Number of grade 55s
+num_6                   |  Number of grade 6s
+num_65                  |  Number of grade 65s
+num_66                  |  Number of grade 66s
+num_7                   |  Number of grade 7s
+num_76                  |  Number of grade 76s
+num_77                  |  Number of grade 77s
+num_8                   |  Number of grade 8s
+num_87                  |  Number of grade 87s
+num_88                  |  Number of grade 88s
+num_9                   |  Number of grade 9s
+num_98                  |  Number of grade 98s
+num_99                  |  Number of grade 99s
+num_covid_impacted      |  Number of COVID impacted grades
+num_u                   |  Number of grade Us
+num_x                   |  Number of grade Xs
+perc_1                  |  Percentage grade 1s
+perc_11                 |  Percentage grade 11s
+perc_2                  |  Percentage grade 2s
+perc_21                 |  Percentage grade 21s
+perc_22                 |  Percentage grade 22s
+perc_3                  |  Percentage grade 3s
+perc_32                 |  Percentage grade 32s
+perc_33                 |  Percentage grade 33s
+perc_4                  |  Percentage grade 4s
+perc_43                 |  Percentage grade 43s
+perc_44                 |  Percentage grade 44s
+perc_5                  |  Percentage grade 5s
+perc_54                 |  Percentage grade 54s
+perc_55                 |  Percentage grade 55s
+perc_6                  |  Percentage grade 6s
+perc_65                 |  Percentage grade 65s
+perc_66                 |  Percentage grade 66s
+perc_7                  |  Percentage grade 7s
+perc_76                 |  Percentage grade 76s
+perc_77                 |  Percentage grade 77s
+perc_8                  |  Percentage grade 8s
+perc_87                 |  Percentage grade 87s
+perc_88                 |  Percentage grade 88s
+perc_9                  |  Percentage grade 9s
+perc_98                 |  Percentage grade 98s
+perc_99                 |  Percentage grade 99s
+perc_covid_impacted     |  Percentage COVID impacted grades
+perc_u                  |  Percentage grade Us
+perc_x                  |  Percentage grade Xs
+subject                 |  Subject
+
+
+Key stage 2 to 4 transition matrices KS4 measures
+
+Filename: 202324_national_transition_matrices_measures_data_revised.csv
+Geographic levels: National
+Time period: 2023/24
+Content summary: National level English and maths achievement measures and EBacc measures in state-funded schools by pupil characteristics, including KS2 scaled score, in 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                |  Variable description
+---------------------------  |  -------------------------------------------------------------------------------
+basics_94_achieved           |  Number of pupils achieving grades 4 or above in English and maths GCSEs
+basics_94_not_achieved       |  Number of pupils not achieving grades 4 or above in English and maths GCSEs
+basics_94_perc_achieved      |  Percentage of pupils achieving grades 4 or above in English and maths GCSEs
+basics_94_perc_not_achieved  |  Percentage of pupils not achieving grades 4 or above in English and maths GCSEs
+basics_95_achieved           |  Number of pupils achieving grades 5 or above in English and maths GCSEs
+basics_95_not_achieved       |  Number of pupils not achieving grades 5 or above in English and maths GCSEs
+basics_95_perc_achieved      |  Percentage of pupils achieving grades 5 or above in English and maths GCSEs
+basics_95_perc_not_achieved  |  Percentage of pupils not achieving grades 5 or above in English and maths GCSEs
+breakdown                    |  Pupil characteristic
+ebacc_94_achieved            |  Number of pupils achieving grades 4 or above in the EBacc
+ebacc_94_not_achieved        |  Number of pupils not achieving grades 4 or above in the EBacc
+ebacc_94_perc_achieved       |  Percentage of pupils achieving grades 4 or above in the EBacc
+ebacc_94_perc_not_achieved   |  Percentage of pupils not achieving grades 4 or above in the EBacc
+ebacc_95_achieved            |  Number of pupils achieving grades 5 or above in the EBacc
+ebacc_95_not_achieved        |  Number of pupils not achieving grades 5 or above in the EBacc
+ebacc_95_perc_achieved       |  Percentage of pupils achieving grades 5 or above in the EBacc
+ebacc_95_perc_not_achieved   |  Percentage of pupils not achieving grades 5 or above in the EBacc
+ebacc_all_entered            |  Number of pupils entering the EBacc
+ebacc_all_not_entered        |  Number of pupils not entering the EBacc
+ebacc_all_perc_entered       |  Percentage of pupils entering the EBacc
+ebacc_all_perc_not_entered   |  Percentage of pupils not entering the EBacc
+ks2_scaled_score_group       |  Key stage 2 scaled score group
+
+
+Disadvantage gap index data
+
+Filename: 202324_disadvantage_gap_data_revised.csv
+Geographic levels: National
+Time period: 2010/11 to 2023/24
+Content summary: Disadvantaged attainment gap index in state-funded schools since 2009/10.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                       |  Variable description
+----------------------------------  |  ----------------------------------
+disadvantaged_attainment_gap_index  |  Disadvantaged attainment gap index
+
+
+Average GCSE grades for English and Maths
+
+Filename: 202324_engmath_avggrade_data_revised.csv
+Geographic levels: National
+Time period: 2018/19 to 2023/24
+Content summary: Average English language and maths grades in state-funded schools since 2022/23, includes comparison in 2018/19.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name  |  Variable description
+---------  |  ------------------
+avg_grade  |  Average GCSE grade
+subject    |  Subject
+
+
+National multi-academy trusts data by pupil characteristics
+
+Filename: 202324_ks4_multi_academy_trusts_pupil_char_data_revised.csv
+Geographic levels: National
+Time period: 2021/22 to 2023/24
+Content summary: National level headline performance measures in multi-academy trusts by pupil characteristics and eligibility for MAT performance tables since 2021/22.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                      |  Variable description
+---------------------------------  |  ---------------------------------------------------------------------------
+avg_att8                           |  Average Attainment 8 score
+avg_ebaccaps                       |  Average EBacc APS score
+avg_p8score                        |  Average Progress 8 score
+disadvantage                       |  Disadvantaged status
+establishment_type_group           |  Academy type
+ethnicity_major                    |  Major ethnic group
+ethnicity_minor                    |  Minor ethnic group
+first_language                     |  First language
+mat_performance_tables_eligilbity  |  Performance tables eligibility of the academy
+p8score_ci_low                     |  Progress 8 lower 95% confidence interval
+p8score_ci_upp                     |  Progress 8 upper 95% confidence interval
+prior_attainment                   |  KS2 prior attainment status
+pt_ebacc_94                        |  Percentage of pupils achieving grades 4 or above in the EBacc
+pt_ebacc_95                        |  Percentage of pupils achieving grades 5 or above in the EBacc
+pt_ebacc_e_ptq_ee                  |  Percentage of pupils entering the EBacc
+pt_entbasics                       |  Percentage of pupils entering English and maths GCSEs
+pt_l2basics_94                     |  Percentage of pupils achieving grades 4 or above in English and maths GCSEs
+pt_l2basics_95                     |  Percentage of pupils achieving grades 5 or above in English and maths GCSEs
+sen_status                         |  Special educational needs - status
+sex                                |  Sex
+t_att8                             |  Sum of Attainment 8 scores
+t_ebacc_94                         |  Number of pupils achieving grades 4 or above in the EBacc
+t_ebacc_95                         |  Number of pupils achieving grades 5 or above in the EBacc
+t_ebacc_e_ptq_ee                   |  Number of pupils entering the EBacc
+t_ebaccaps                         |  Sum of EBacc APS scores
+t_entbasics                        |  Number of pupils entering English and maths GCSEs
+t_inp8calc                         |  Number of pupils included in Progress 8 measure
+t_l2basics_94                      |  Number of pupils achieving grades 4 or above in English and maths GCSEs
+t_l2basics_95                      |  Number of pupils achieving grades 5 or above in English and maths GCSEs
+t_p8score                          |  Sum of Progress 8 scores
+t_pupils                           |  Number of pupils at the end of KS4
+t_schools                          |  Number of schools
+
+Footnotes:
+
+1. Pupils at university technical colleges (UTCs), studio schools and further education colleges with key stage 4 provision typically attend that school for only 2 years, compared to 5 years for pupils in most secondary schools. These establishments also offer specialist curriculum. As a result, the Progress 8 data for these schools is not directly comparable with the Progress 8 data for other schools. The government’s position is that it is not appropriate to expect the same rates of EBacc entry from these types of provision and that each school should decide on a case by case basis whether its specialist curriculum is compatible with the full EBacc. This should be borne in mind when reviewing the performance data for these types of provisions.
+2. Sub totals for EAL and SEN breakdowns may not sum to the grand total due to a small number of pupils with missing information.
+3. Unclassified includes pupils for whom the information was not obtained, refused or could not be determined.
+4. A Progress 8 score of 1.0 means pupils make on average a grade more progress than the national average of pupils with similar KS2 prior attainment in mainstream schools. Progress 8 should be interpreted alongside the associated confidence intervals. If the confidence intervals cross 0, then progress is not significantly different compared to pupils with similar KS2 prior attainment in mainstream schools.
+5. Multi-academy trusts (MAT) were eligible for the MAT performance measures if they had at least three mainstream academies with results at KS4 and those academies had been in the MAT for at least three full academic years (since 12 September 2021).
+
+
+National multi-academy trusts data by trust characteristics
+
+Filename: 202324_ks4_multi_academy_trusts_mat_char_data_revised.csv
+Geographic levels: National
+Time period: 2021/22 to 2023/24
+Content summary: National level headline performance measures in multi-academy trusts by academy/trust characteristics and eligibility for MAT performance tables since 2021/22.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                      |  Variable description
+---------------------------------  |  ---------------------------------------------------------------------------
+avg_att8                           |  Average Attainment 8 score
+avg_ebaccaps                       |  Average EBacc APS score
+avg_p8score                        |  Average Progress 8 score
+establishment_type_group           |  Academy type
+mat_performance_tables_eligilbity  |  Performance tables eligibility of the academy
+p8score_ci_low                     |  Progress 8 lower 95% confidence interval
+p8score_ci_upp                     |  Progress 8 upper 95% confidence interval
+pt_ebacc_94                        |  Percentage of pupils achieving grades 4 or above in the EBacc
+pt_ebacc_95                        |  Percentage of pupils achieving grades 5 or above in the EBacc
+pt_ebacc_e_ptq_ee                  |  Percentage of pupils entering the EBacc
+pt_entbasics                       |  Percentage of pupils entering English and maths GCSEs
+pt_l2basics_94                     |  Percentage of pupils achieving grades 4 or above in English and maths GCSEs
+pt_l2basics_95                     |  Percentage of pupils achieving grades 5 or above in English and maths GCSEs
+t_att8                             |  Sum of Attainment 8 scores
+t_ebacc_94                         |  Number of pupils achieving grades 4 or above in the EBacc
+t_ebacc_95                         |  Number of pupils achieving grades 5 or above in the EBacc
+t_ebacc_e_ptq_ee                   |  Number of pupils entering the EBacc
+t_ebaccaps                         |  Sum of EBacc APS scores
+t_entbasics                        |  Number of pupils entering English and maths GCSEs
+t_inp8calc                         |  Number of pupils included in Progress 8 measure
+t_l2basics_94                      |  Number of pupils achieving grades 4 or above in English and maths GCSEs
+t_l2basics_95                      |  Number of pupils achieving grades 5 or above in English and maths GCSEs
+t_p8score                          |  Sum of Progress 8 scores
+t_pupils                           |  Number of pupils at the end of KS4
+t_schools                          |  Number of schools
+trust_size_mainstream              |  Number of mainstream academies in the trust
+years_in_trust                     |  Number of years the academy has been in the trust
+
+Footnotes:
+
+1. Pupils at university technical colleges (UTCs), studio schools and further education colleges with key stage 4 provision typically attend that school for only 2 years, compared to 5 years for pupils in most secondary schools. These establishments also offer specialist curriculum. As a result, the Progress 8 data for these schools is not directly comparable with the Progress 8 data for other schools. The government’s position is that it is not appropriate to expect the same rates of EBacc entry from these types of provision and that each school should decide on a case by case basis whether its specialist curriculum is compatible with the full EBacc. This should be borne in mind when reviewing the performance data for these types of provisions.
+2. A Progress 8 score of 1.0 means pupils make on average a grade more progress than the national average of pupils with similar KS2 prior attainment in mainstream schools. Progress 8 should be interpreted alongside the associated confidence intervals. If the confidence intervals cross 0, then progress is not significantly different compared to pupils with similar KS2 prior attainment in mainstream schools.
+3. Multi-academy trusts (MAT) were eligible for the MAT performance measures if they had at least three mainstream academies with results at KS4 and those academies had been in the MAT for at least three full academic years (since 12 September 2021).
+
+
+Key stage 4 institution level 2024 final data - Schools and colleges (performance)
+
+Filename: 202324_performance_tables_schools_final.csv
+Geographic levels: School
+Time period: 2023/24
+Content summary: School and college performance tables data in 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name              |  Variable description
+-------------------------  |  -------------------------------------------------------------------------------
+avg_att8                   |  Average Attainment 8 score
+avg_att8_ebac              |  Average Attainment 8 score for EBacc element
+avg_att8_eng               |  Average Attainment 8 score for English element
+avg_att8_mat               |  Average Attainment 8 score for maths element
+avg_att8_open              |  Average Attainment 8 score for open element
+avg_att8_open_g            |  Average Attainment 8 score for open element - GCSE only
+avg_att8_open_ng           |  Average Attainment 8 score for open element - non-GCSE only
+avg_ebac_fill              |  Average number of EBacc slots filled for Attainment 8
+avg_ebaccaps               |  Average EBacc APS score
+avg_gcse_e                 |  Average number of GCSE entries
+avg_ks4_e                  |  Average number of KS4 entries
+avg_open_fill              |  Average number of open slots filled for Attainment 8
+avg_p8ebac                 |  Average Progress 8 score for EBacc element
+avg_p8eng                  |  Average Progress 8 score for English element
+avg_p8mat                  |  Average Progress 8 score for maths element
+avg_p8open                 |  Average Progress 8 score for open element
+avg_p8orig                 |  Average unadjusted Progress 8 score
+avg_p8score                |  Average Progress 8 score
+avg_vahum                  |  Average EBacc humanities value added score
+avg_valan                  |  Average EBacc languages value added score
+avg_vasci                  |  Average EBacc science value added score
+avg_volume_e               |  Average number of entries without discounting
+breakdown                  |  Pupil characteristic
+p8ebac_ci_low              |  Progress 8 lower 95% confidence interval for EBacc element
+p8ebac_ci_upp              |  Progress 8 upper 95% confidence interval for EBacc element
+p8eng_ci_low               |  Progress 8 lower 95% confidence interval for English element
+p8eng_ci_upp               |  Progress 8 upper 95% confidence interval for English element
+p8mat_ci_low               |  Progress 8 lower 95% confidence interval for maths element
+p8mat_ci_upp               |  Progress 8 upper 95% confidence interval for maths element
+p8open_ci_low              |  Progress 8 lower 95% confidence interval for open element
+p8open_ci_upp              |  Progress 8 upper 95% confidence interval for open element
+p8orig_ci_low              |  Unadjusted Progress 8 lower 95% confidence interval
+p8orig_ci_upp              |  Unadjusted Progress 8 upper 95% confidence interval
+p8score_ci_low             |  Progress 8 lower 95% confidence interval
+p8score_ci_upp             |  Progress 8 upper 95% confidence interval
+pt_5em_94                  |  Percentage of pupils achieving 5+ level 2 passes including English and maths
+pt_adjp8                   |  Percentage of pupils with an adjusted Progress 8 score
+pt_anypass                 |  Percentage of pupils achieving any passes at GCSE or equivalent
+pt_ebac2sci_91             |  Percentage of pupils achieving grades 1 or above in the Ebacc science pillar
+pt_ebac2sci_94             |  Percentage of pupils achieving grades 4 or above in the Ebacc science pillar
+pt_ebac2sci_95             |  Percentage of pupils achieving grades 5 or above in the Ebacc science pillar
+pt_ebac2sci_e              |  Percentage of pupils entering the EBacc science pillar
+pt_ebacc_91                |  Percentage of pupils achieving grades 1 or above in the Ebacc
+pt_ebacc_94                |  Percentage of pupils achieving grades 4 or above in the EBacc
+pt_ebacc_95                |  Percentage of pupils achieving grades 5 or above in the EBacc
+pt_ebacc_e_ptq_ee          |  Percentage of pupils entering the EBacc
+pt_ebaceng_91              |  Percentage of pupils achieving grades 1 or above in the Ebacc English pillar
+pt_ebaceng_94              |  Percentage of pupils achieving grades 4 or above in the Ebacc English pillar
+pt_ebaceng_95              |  Percentage of pupils achieving grades 5 or above in the Ebacc English pillar
+pt_ebaceng_e               |  Percentage of pupils entering the EBacc English pillar
+pt_ebachum_91              |  Percentage of pupils achieving grades 1 or above in the Ebacc humanities pillar
+pt_ebachum_94              |  Percentage of pupils achieving grades 4 or above in the Ebacc humanities pillar
+pt_ebachum_95              |  Percentage of pupils achieving grades 5 or above in the Ebacc humanities pillar
+pt_ebachum_e               |  Percentage of pupils entering the EBacc humanities pillar
+pt_ebaclan_91              |  Percentage of pupils achieving grades 1 or above in the Ebacc language pillar
+pt_ebaclan_94              |  Percentage of pupils achieving grades 4 or above in the Ebacc language pillar
+pt_ebaclan_95              |  Percentage of pupils achieving grades 5 or above in the Ebacc language pillar
+pt_ebaclan_e               |  Percentage of pupils entering the EBacc language pillar
+pt_ebacmat_91              |  Percentage of pupils achieving grades 1 or above in the Ebacc maths pillar
+pt_ebacmat_94              |  Percentage of pupils achieving grades 4 or above in the Ebacc maths pillar
+pt_ebacmat_95              |  Percentage of pupils achieving grades 5 or above in the Ebacc maths pillar
+pt_ebacmat_e               |  Percentage of pupils entering the EBacc maths pillar
+pt_entbasics               |  Percentage of pupils entering English and maths GCSEs
+pt_inhumvacalc             |  Percentage of pupils included in EBacc humanities value added measure
+pt_inlanvacalc             |  Percentage of pupils included in EBacc languages value added measure
+pt_inp8calc                |  Percentage of pupils included in Progress 8 measure
+pt_inscivacalc             |  Percentage of pupils included in EBacc science value added measure
+pt_l2basics_94             |  Percentage of pupils achieving grades 4 or above in English and maths GCSEs
+pt_l2basics_95             |  Percentage of pupils achieving grades 5 or above in English and maths GCSEs
+pt_multilan_e              |  Percentage of pupils entering more than one modern foreign language
+pt_triplesci_e             |  Percentage of pupils entering biology, chemistry, and physics
+pt_volume_covidimpacted_e  |  Percentage of entries without discounting that were COVID impacted
+t_5em_94                   |  Number of pupils achieving 5+ level 2 passes including English and maths
+t_adjp8                    |  Number of pupils with an adjusted Progress 8 score
+t_anypass                  |  Number of pupils achieving any passes at GCSE or equivalent
+t_att8                     |  Sum of Attainment 8 scores
+t_att8_ebac                |  Sum of Attainment 8 scores for EBacc element
+t_att8_eng                 |  Sum of Attainment 8 scores for English element
+t_att8_mat                 |  Sum of Attainment 8 scores for maths element
+t_att8_open                |  Sum of Attainment 8 scores for open element
+t_att8_open_g              |  Sum of Attainment 8 scores for open element - GCSE only
+t_att8_open_ng             |  Sum of Attainment 8 scores for open element - non-GCSE only
+t_ebac_fill                |  Total number of EBacc slots filled for Attainment 8
+t_ebac2sci_91              |  Number of pupils achieving grades 1 or above in the EBacc science pillar
+t_ebac2sci_94              |  Number of pupils achieving grades 4 or above in the EBacc science pillar
+t_ebac2sci_95              |  Number of pupils achieving grades 5 or above in the EBacc science pillar
+t_ebac2sci_e               |  Number of pupils entering the EBacc science pillar
+t_ebacc_91                 |  Number of pupils achieving grades 1 or above in the Ebacc
+t_ebacc_94                 |  Number of pupils achieving grades 4 or above in the EBacc
+t_ebacc_95                 |  Number of pupils achieving grades 5 or above in the EBacc
+t_ebacc_e_ptq_ee           |  Number of pupils entering the EBacc
+t_ebaccaps                 |  Sum of EBacc APS scores
+t_ebaceng_91               |  Number of pupils achieving grades 1 or above in the EBacc English pillar
+t_ebaceng_94               |  Number of pupils achieving grades 4 or above in the EBacc English pillar
+t_ebaceng_95               |  Number of pupils achieving grades 5 or above in the EBacc English pillar
+t_ebaceng_e                |  Number of pupils entering the EBacc English pillar
+t_ebachum_91               |  Number of pupils achieving grades 1 or above in the EBacc humanities pillar
+t_ebachum_94               |  Number of pupils achieving grades 4 or above in the EBacc humanities pillar
+t_ebachum_95               |  Number of pupils achieving grades 5 or above in the EBacc humanities pillar
+t_ebachum_e                |  Number of pupils entering the EBacc humanities pillar
+t_ebaclan_91               |  Number of pupils achieving grades 1 or above in the EBacc language pillar
+t_ebaclan_94               |  Number of pupils achieving grades 4 or above in the EBacc language pillar
+t_ebaclan_95               |  Number of pupils achieving grades 5 or above in the EBacc language pillar
+t_ebaclan_e                |  Number of pupils entering the EBacc languge pillar
+t_ebacmat_91               |  Number of pupils achieving grades 1 or above in the EBacc maths pillar
+t_ebacmat_94               |  Number of pupils achieving grades 4 or above in the EBacc maths pillar
+t_ebacmat_95               |  Number of pupils achieving grades 5 or above in the EBacc maths pillar
+t_ebacmat_e                |  Number of pupils entering the EBacc maths pillar
+t_entbasics                |  Number of pupils entering English and maths GCSEs
+t_gcse_e                   |  Total number of GCSE entries
+t_inhumvacalc              |  Number of pupils included in EBacc humanities value added measure
+t_inlanvacalc              |  Number of pupils included in EBacc languages value added measure
+t_inp8calc                 |  Number of pupils included in Progress 8 measure
+t_inscivacalc              |  Number of pupils included in EBacc science value added measure
+t_ks4_e                    |  Total number of KS4 entries
+t_l2basics_94              |  Number of pupils achieving grades 4 or above in English and maths GCSEs
+t_l2basics_95              |  Number of pupils achieving grades 5 or above in English and maths GCSEs
+t_multilan_e               |  Number of pupils entering more than one modern foreign language
+t_open_fill                |  Total number of open slots filled for Attainment 8
+t_p8ebac                   |  Sum of Progress 8 scores for EBacc element
+t_p8eng                    |  Sum of Progress 8 scores for English element
+t_p8mat                    |  Sum of Progress 8 scores for maths element
+t_p8open                   |  Sum of Progress 8 scores for open element
+t_p8orig                   |  Sum of unadjusted Progress 8 scores
+t_p8score                  |  Sum of Progress 8 scores
+t_pupils                   |  Number of pupils at the end of KS4
+t_triplesci_e              |  Number of pupils entering biology, chemistry, and physics
+t_vahum                    |  Sum of EBacc humanities value added scores
+t_valan                    |  Sum of EBacc languages value added scores
+t_vasci                    |  Sum of EBacc science value added scores
+t_volume_covidimpacted_e   |  Number of COVID impacted entries without discounting
+t_volume_e                 |  Total number of entries without discounting
+vahum_ci_low               |  EBacc humanities lower 95% confidence interval
+vahum_ci_upp               |  EBacc humanities upper 95% confidence interval
+valan_ci_low               |  EBacc languages lower 95% confidence interval
+valan_ci_upp               |  EBacc languages upper 95% confidence interval
+vasci_ci_low               |  EBacc science lower 95% confidence interval
+vasci_ci_upp               |  EBacc science upper 95% confidence interval
+
+
+Key stage 4 institution level 2024 final data - Schools and colleges (subject entries and grades)
+
+Filename: 202324_subject_school_all_exam_entriesgrades_final.csv
+Geographic levels: School
+Time period: 2023/24
+Content summary: Subject entries and grades achieved in schools/colleges in the performance tables data for 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name     |  Variable description
+----------------  |  ----------------------------------
+grade             |  Grade
+number_achieving  |  Number of entries at grade
+subject_detailed  |  Subject
+t_pupils          |  Number of pupils at the end of KS4
+
+Footnotes:
+
+1. Individual grade breakdowns are suppressed (not shown) where the total number of entries (per school/qualification/discount code/subject description) is 5 or fewer.
+
+
+Key stage 4 institution level 2024 final data - Schools and colleges (school and college information)
+
+Filename: 202324_information_about_schools_final.csv
+Geographic levels: School
+Time period: 2023/24
+Content summary: Information about the schools included in the school and college performance tables data in 2023/24, includes the Progress 8 banding.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name             |  Variable description
+------------------------  |  -------------------------------------------------------------------------------------
+admpol_pt                 |  Admission policy
+agerange                  |  Age range
+avg_ks2_scaledscore       |  Average KS2 scaled score
+diffn_att8                |  Attainment 8 for disadvantaged pupils compared to non-disadvantaged pupils nationally
+diffn_p8mea               |  Progress 8 for disadvantaged pupils compared to non-disadvantaged pupils nationally
+egender                   |  Gender of entry
+establishment_type_group  |  School type
+full_address              |  Address
+p8_banding                |  Progress 8 banding
+reldenom                  |  Religious denomination
+t_allks_boys              |  Number of boys in establishment
+t_allks_girls             |  Number of girls in establishment
+t_allks_pupils            |  Number of pupils in establishment
+telnum                    |  Telephone number
+
+
+Key stage 4 institution level 2024 - Multi-academy trusts (performance)
+
+Filename: 202324_ks4_multi_academy_trusts_performancetables_performance_measures_revised.csv
+Geographic levels: MAT
+Time period: 2023/24
+Content summary: Multi-academy trust performance tables data. Performance measures in multi-academy trusts that are eligible for the performance tables in 2023/24.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name             |  Variable description
+------------------------  |  ----------------------------------------------------------------------------------------------
+disadvantage              |  Disadvantaged status
+p8score_ci_low            |  Progress 8 lower 95% confidence interval
+p8score_ci_upp            |  Progress 8 upper 95% confidence interval
+pt_inp8calc               |  Percentage of pupils included in Progress 8 measure
+t_pupils                  |  Number of pupils at the end of KS4
+wgtavg_att8               |  Average Attainment 8 score (weighted average)
+wgtavg_ebaccaps           |  Average EBacc APS score (weighted average)
+wgtavg_p8score            |  Average Progress 8 score (weighted average)
+wgtavg_pt_ebacc_94        |  Percentage of pupils achieving grades 4 or above in the Ebacc (weighted average)
+wgtavg_pt_ebacc_95        |  Percentage of pupils achieving grades 5 or above in the Ebacc (weighted average)
+wgtavg_pt_ebacc_e_ptq_ee  |  Percentage of pupils entering the EBacc (weighted average)
+wgtavg_pt_l2basics_95     |  Percentage of pupils achieving grades 5 or above in English and maths GCSEs (weighted average)
+
+Footnotes:
+
+1. A Progress 8 score of 1.0 means pupils make on average a grade more progress than the national average of pupils with similar KS2 prior attainment in mainstream schools. Progress 8 should be interpreted alongside the associated confidence intervals. If the confidence intervals cross 0, then progress is not significantly different compared to pupils with similar KS2 prior attainment in mainstream schools.
+2. Mainstream academies were eligible for the multi-academy trust (MAT) performance tables measures if they had been in the MAT for at least three full academic years (since 12 September 2021).
+
+
+Key stage 4 institution level 2024 - Multi-academy trusts (trust information)
+
+Filename: 202324_ks4_multi_academy_trusts_performancetables_mat_information_revised.csv
+Geographic levels: MAT
+Time period: 2023/24
+Content summary: Multi-academy trust level characteristics, includes the Progress 8 banding
+
+Variable names and descriptions for this file are provided below:
+
+Variable name            |  Variable description
+-----------------------  |  ---------------------------------------------------------------
+academy_eligibility      |  Performance tables eligibility of the academy
+avg_ks2scaledscore       |  Average Key Stage 2 scaled score
+p8_banding               |  Progress 8 banding
+pt_disadvantaged         |  Percentage of pupils who are disadvantaged
+pt_eal                   |  Percentage of pupils who have English as an additional language
+pt_not_disadvantaged     |  Percentage of pupils who are not disadvantaged
+pt_sen                   |  Percentage of pupils who have special educational needs
+t_pupils                 |  Number of pupils at the end of KS4
+t_schools                |  Number of academies
+t_schools_3years         |  Number of academies in MAT for 3 years
+t_schools_4years         |  Number of academies in MAT for 4 years
+t_schools_5plusyears     |  Number of academies in MAT for 5 or more years
+t_schools_converter      |  Number of converter academies
+t_schools_disadvantaged  |  Number of academies with disadvantaged pupils
+t_schools_free           |  Number of free schools
+t_schools_sponsor        |  Number of sponsor academies
+t_schools_studio         |  Number of studio schools
+t_schools_utc            |  Number of university technical colleges
+urns                     |  URN list
+
+Footnotes:
+
+1. Mainstream academies were eligible for the multi-academy trust (MAT) performance tables measures if they had been in the MAT for at least three full academic years (since 12 September 2021).

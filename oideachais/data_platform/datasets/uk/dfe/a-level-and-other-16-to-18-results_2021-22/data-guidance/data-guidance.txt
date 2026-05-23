@@ -1,0 +1,1016 @@
+A level and other 16 to 18 results
+Academic year 2021/22
+
+Description
+
+This document describes the data included in the ‘A level and other 16 to 18 results: 2022/23’ National Statistics release's underlying data files.  The statistical publication complements the 16-18 school and college performance tables. This data is released under the terms of the Open Government License (http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/) and is intended to meet at least 3 stars for Open Data (https://www.gov.uk/government/publications/2010-to-2015-government-policy-government-transparency-and-accountability/2010-to-2015-government-policy-government-transparency-and-accountability#appendix-3-releasing-data-in-open-and-anonymised-formats).
+
+The publication methodology, available on the publication report, should be referenced alongside this data. It provides information on the data sources, their coverage and quality as well as explaining methodology used in producing the data.
+
+Coverage
+
+This release provides information on A level and other 16-18 results in:
+
+- Students who have completed their 16-18 phase of education
+- Students who have entered an approved qualification in the reporting year
+
+Approved qualifications are those that are eligible for reporting in the 16-18 school and college performance tables, listed in the 16 to 18 qualifications, discount codes and point scores (https://www.gov.uk/government/publications/16-to-19-qualifications-discount-codes-and-point-scores).
+
+The information is based on data collected via awarding organisations, the school census, and the Individualised Learner Record.
+
+File formats and conventions
+
+Rounding
+
+This dataset has not had rounding applied.
+
+Suppression is applied to protect the disclosure of personal information or characteristics.
+
+Conventions
+
+The following convention is used throughout the underlying data.
+
+‘z’ Not applicable.
+
+Data files
+
+Attainment and other performance measures - student characteristics
+
+Filename: aggregated_attainment_by_characteristic_201822_complete.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: Attainment metrics for all qualification cohorts, by student characteristics.
+
+Student characteristics include gender, ethnicity, disadvantage status, free school meal provision, first language, SEN provision, and KS4 prior attainment.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                                               |  Variable description
+----------------------------------------------------------  |  ----------------------------------------------------------------------------------
+aps_per_entry_acad                                          |  APS per academic entry
+aps_per_entry_agen                                          |  APS per applied general entry
+aps_per_entry_alev                                          |  APS per A level entry
+aps_per_entry_best3                                         |  APS per 'Best 3' entries
+aps_per_entry_grade_acad                                    |  Average academic result
+aps_per_entry_grade_agen                                    |  Average applied general result
+aps_per_entry_grade_alev                                    |  Average A level result
+aps_per_entry_grade_best3                                   |  APS per 'Best 3' entries (grade)
+aps_per_entry_grade_technicalcertificate                    |  Average technical certificate result
+aps_per_entry_grade_tlev                                    |  Average tech level result
+aps_per_entry_technicalcertificate                          |  APS per technical certificate entry
+aps_per_entry_tlev                                          |  APS per tech level entry
+characteristic_value                                        |  Characteristic
+entered_any_level3_vocational_excluding_applied_generals    |  Number of students entered for any level 3 vocational (excluding applied generals)
+entered_any_level3_vocational_excluding_tech_levels         |  Number of students entered for any level 3 vocational (excluding tech levels)
+entered_for_one_or_more_alev                                |  Number of students entered for ≥ 1 A level
+entered_for_one_or_more_alev_or_applied                     |  Number of students entered for ≥ 1 A level or applied A level
+number_of_students_acad                                     |  Number of academic students
+number_of_students_agen                                     |  Number of applied general students
+number_of_students_alev                                     |  Number of A level students
+number_of_students_highest_entry_was_l2                     |  Number of level 2 vocational students (without approved level 3 entry)
+number_of_students_level3                                   |  Number of level 3 students
+number_of_students_potential                                |  Students at end of 16-18 study
+number_of_students_technicalcertificate                     |  Number of technical certificate students
+number_of_students_tlev                                     |  Number of tech level students
+pc_achieving_3_astar_to_a_alev                              |  % achieving 3 A* to A
+pc_achieving_aab_or_better_alev                             |  % achieving ≥ AAB
+pc_achieving_aab_or_better_atleast_two_facilitating_alev    |  % achieving ≥ AAB for a minimum of 2 facilitating A levels
+pc_achieving_atleast_two_alev                               |  % achieving ≥ 2 A levels
+pc_achieving_atleast_two_substantial_lev3                   |  % achieving ≥ 2 substantial level 3 results
+pc_achieving_atleast_two_substantial_lev3_acad              |  % achieving ≥ 2 academic results
+pc_level2_vocational_students_entered_technicalcertificate  |  % level 2 students vocational students entered for technical certificate
+pc_level3_vocational_students_entered_applied_generals      |  % level 3 vocational students (excluding tech levels) who entered applied general
+pc_level3_vocational_students_entered_tech_levels           |  % level 3 vocational students (excluding applied generals) who entered tech levels
+
+Footnotes:
+
+1. Includes students triggered for inclusion in performance tables.
+2. Figures for the total number of students may not match the sum of females and males, as not all institutions recorded the gender for every student.
+3. Disadvantage status is as reported at the end of key stage 4. Analysis involving disadvantage status includes students at state-funded schools and colleges only.
+4. EHC plans and statements of SEN are legal documents which detail the needs of the individual student, and the assistance they are to receive.
+
+
+Attainment and other performance measures - institution type and gender
+
+Filename: aggregated_attainment_by_institution_gender_201822_complete.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: Attainment metrics for all qualification cohorts, by institution type and student gender.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                                               |  Variable description
+----------------------------------------------------------  |  ----------------------------------------------------------------------------------
+aps_per_entry_acad                                          |  APS per academic entry
+aps_per_entry_agen                                          |  APS per applied general entry
+aps_per_entry_alev                                          |  APS per A level entry
+aps_per_entry_best3                                         |  APS per 'Best 3' entries
+aps_per_entry_grade_acad                                    |  Average academic result
+aps_per_entry_grade_agen                                    |  Average applied general result
+aps_per_entry_grade_alev                                    |  Average A level result
+aps_per_entry_grade_best3                                   |  APS per 'Best 3' entries (grade)
+aps_per_entry_grade_technicalcertificate                    |  Average technical certificate result
+aps_per_entry_grade_tlev                                    |  Average tech level result
+aps_per_entry_technicalcertificate                          |  APS per technical certificate entry
+aps_per_entry_tlev                                          |  APS per tech level entry
+characteristic_gender                                       |  Gender
+entered_any_level3_vocational_excluding_applied_generals    |  Number of students entered for any level 3 vocational (excluding applied generals)
+entered_any_level3_vocational_excluding_tech_levels         |  Number of students entered for any level 3 vocational (excluding tech levels)
+entered_for_one_or_more_alev                                |  Number of students entered for ≥ 1 A level
+entered_for_one_or_more_alev_or_applied                     |  Number of students entered for ≥ 1 A level or applied A level
+institution_count                                           |  Number of institutions
+number_of_students_acad                                     |  Number of academic students
+number_of_students_agen                                     |  Number of applied general students
+number_of_students_alev                                     |  Number of A level students
+number_of_students_highest_entry_was_l2                     |  Number of level 2 vocational students (without approved level 3 entry)
+number_of_students_level3                                   |  Number of level 3 students
+number_of_students_potential                                |  Students at end of 16-18 study
+number_of_students_technicalcertificate                     |  Number of technical certificate students
+number_of_students_tlev                                     |  Number of tech level students
+pc_achieving_3_astar_to_a_alev                              |  % achieving 3 A* to A
+pc_achieving_aab_or_better_alev                             |  % achieving ≥ AAB
+pc_achieving_aab_or_better_atleast_two_facilitating_alev    |  % achieving ≥ AAB for a minimum of 2 facilitating A levels
+pc_achieving_atleast_two_alev                               |  % achieving ≥ 2 A levels
+pc_achieving_atleast_two_substantial_lev3                   |  % achieving ≥ 2 substantial level 3 results
+pc_achieving_atleast_two_substantial_lev3_acad              |  % achieving ≥ 2 academic results
+pc_level2_vocational_students_entered_technicalcertificate  |  % level 2 students vocational students entered for technical certificate
+pc_level3_vocational_students_entered_applied_generals      |  % level 3 vocational students (excluding tech levels) who entered applied general
+pc_level3_vocational_students_entered_tech_levels           |  % level 3 vocational students (excluding applied generals) who entered tech levels
+school_type                                                 |  Institution
+
+Footnotes:
+
+1. Includes students triggered for inclusion in performance tables.
+2. Figures for the total number of students may not match the sum of females and males, as not all institutions recorded the gender for every student.
+3. Totals may be less than the sum of separate institution types as students who attend multiple institutions during 16 to 18 can be included more than once in institution breakdowns. More information can be found in the Quality and Methodology section.
+4. 'All state funded schools' includes city technology colleges (CTCs) and state-funded special schools. Figures for these institution types are not shown separately in the table. Excludes pupil referral units (PRUs), alternative provision (AP), hospital schools, non-maintained special schools, independent schools, independent special schools and independent schools approved to take pupils with special educational needs (SEN). These institution types are included in 'All schools'.
+
+
+Attainment and other performance measures - region and student characteristics
+
+Filename: aggregated_attainment_by_region_characteristic_201822_complete_sp.csv
+Geographic levels: Local authority; Regional
+Time period: 2017/18 to 2021/22
+Content summary: Attainment metrics for all qualification cohorts, by region or local authority and student characteristics.
+
+Student characteristics include gender, ethnicity, disadvantage status, free school meal provision, first language, SEN provision, and KS4 prior attainment.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                                               |  Variable description
+----------------------------------------------------------  |  ----------------------------------------------------------------------------------
+aps_per_entry_acad                                          |  APS per academic entry
+aps_per_entry_agen                                          |  APS per applied general entry
+aps_per_entry_alev                                          |  APS per A level entry
+aps_per_entry_best3                                         |  APS per 'Best 3' entries
+aps_per_entry_grade_acad                                    |  Average academic result
+aps_per_entry_grade_agen                                    |  Average applied general result
+aps_per_entry_grade_alev                                    |  Average A level result
+aps_per_entry_grade_best3                                   |  APS per 'Best 3' entries (grade)
+aps_per_entry_grade_technicalcertificate                    |  Average technical certificate result
+aps_per_entry_grade_tlev                                    |  Average tech level result
+aps_per_entry_technicalcertificate                          |  APS per technical certificate entry
+aps_per_entry_tlev                                          |  APS per tech level entry
+characteristic_value                                        |  Characteristic
+entered_any_level3_vocational_excluding_applied_generals    |  Number of students entered for any level 3 vocational (excluding applied generals)
+entered_any_level3_vocational_excluding_tech_levels         |  Number of students entered for any level 3 vocational (excluding tech levels)
+entered_for_one_or_more_alev                                |  Number of students entered for ≥ 1 A level
+entered_for_one_or_more_alev_or_applied                     |  Number of students entered for ≥ 1 A level or applied A level
+number_of_students_acad                                     |  Number of academic students
+number_of_students_agen                                     |  Number of applied general students
+number_of_students_alev                                     |  Number of A level students
+number_of_students_highest_entry_was_l2                     |  Number of level 2 vocational students (without approved level 3 entry)
+number_of_students_level3                                   |  Number of level 3 students
+number_of_students_potential                                |  Students at end of 16-18 study
+number_of_students_technicalcertificate                     |  Number of technical certificate students
+number_of_students_tlev                                     |  Number of tech level students
+pc_achieving_3_astar_to_a_alev                              |  % achieving 3 A* to A
+pc_achieving_aab_or_better_alev                             |  % achieving ≥ AAB
+pc_achieving_aab_or_better_atleast_two_facilitating_alev    |  % achieving ≥ AAB for a minimum of 2 facilitating A levels
+pc_achieving_atleast_two_alev                               |  % achieving ≥ 2 A levels
+pc_achieving_atleast_two_substantial_lev3                   |  % achieving ≥ 2 substantial level 3 results
+pc_achieving_atleast_two_substantial_lev3_acad              |  % achieving ≥ 2 academic results
+pc_level2_vocational_students_entered_technicalcertificate  |  % level 2 students vocational students entered for technical certificate
+pc_level3_vocational_students_entered_applied_generals      |  % level 3 vocational students (excluding tech levels) who entered applied general
+pc_level3_vocational_students_entered_tech_levels           |  % level 3 vocational students (excluding applied generals) who entered tech levels
+school_type                                                 |  Institution
+
+Footnotes:
+
+1. Includes students triggered for inclusion in performance tables.
+2. Figures for the total number of students may not match the sum of females and males, as not all institutions recorded the gender for every student.
+3. Disadvantage status is as reported at the end of key stage 4. Analysis involving disadvantage status includes students at state-funded schools and colleges only.
+4. EHC plans and statements of SEN are legal documents which detail the needs of the individual student, and the assistance they are to receive.
+
+
+Attainment and other performance measures - rurality
+
+Filename: aggregated_attainment_by_rurality_201822_complete.csv
+Geographic levels: Regional
+Time period: 2017/18 to 2021/22
+Content summary: Attainment metrics for all qualification cohorts, by rurality.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                                               |  Variable description
+----------------------------------------------------------  |  ----------------------------------------------------------------------------------
+aps_per_entry_acad                                          |  APS per academic entry
+aps_per_entry_agen                                          |  APS per applied general entry
+aps_per_entry_alev                                          |  APS per A level entry
+aps_per_entry_best3                                         |  APS per 'Best 3' entries
+aps_per_entry_grade_acad                                    |  Average academic result
+aps_per_entry_grade_agen                                    |  Average applied general result
+aps_per_entry_grade_alev                                    |  Average A level result
+aps_per_entry_grade_best3                                   |  APS per 'Best 3' entries (grade)
+aps_per_entry_grade_technicalcertificate                    |  Average technical certificate result
+aps_per_entry_grade_tlev                                    |  Average tech level result
+aps_per_entry_technicalcertificate                          |  APS per technical certificate entry
+aps_per_entry_tlev                                          |  APS per tech level entry
+entered_any_level3_vocational_excluding_applied_generals    |  Number of students entered for any level 3 vocational (excluding applied generals)
+entered_any_level3_vocational_excluding_tech_levels         |  Number of students entered for any level 3 vocational (excluding tech levels)
+entered_for_one_or_more_alev                                |  Number of students entered for ≥ 1 A level
+entered_for_one_or_more_alev_or_applied                     |  Number of students entered for ≥ 1 A level or applied A level
+number_of_students_acad                                     |  Number of academic students
+number_of_students_agen                                     |  Number of applied general students
+number_of_students_alev                                     |  Number of A level students
+number_of_students_highest_entry_was_l2                     |  Number of level 2 vocational students (without approved level 3 entry)
+number_of_students_level3                                   |  Number of level 3 students
+number_of_students_potential                                |  Students at end of 16-18 study
+number_of_students_technicalcertificate                     |  Number of technical certificate students
+number_of_students_tlev                                     |  Number of tech level students
+pc_achieving_3_astar_to_a_alev                              |  % achieving 3 A* to A
+pc_achieving_aab_or_better_alev                             |  % achieving ≥ AAB
+pc_achieving_aab_or_better_atleast_two_facilitating_alev    |  % achieving ≥ AAB for a minimum of 2 facilitating A levels
+pc_achieving_atleast_two_alev                               |  % achieving ≥ 2 A levels
+pc_achieving_atleast_two_substantial_lev3                   |  % achieving ≥ 2 substantial level 3 results
+pc_achieving_atleast_two_substantial_lev3_acad              |  % achieving ≥ 2 academic results
+pc_level2_vocational_students_entered_technicalcertificate  |  % level 2 students vocational students entered for technical certificate
+pc_level3_vocational_students_entered_applied_generals      |  % level 3 vocational students (excluding tech levels) who entered applied general
+pc_level3_vocational_students_entered_tech_levels           |  % level 3 vocational students (excluding applied generals) who entered tech levels
+rurality                                                    |  Rurality
+
+Footnotes:
+
+1. Includes students triggered for inclusion in performance tables.
+
+
+Attainment and other performance measures - student characteristics and disadvantage status
+
+Filename: aggregated_attainment_by_supercharacteristic_201822_complete.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: Attainment metrics for all qualification cohorts, by a combination of disadvantage status and other student characteristics.
+
+Other student characteristics include gender, ethnicity, first language, SEN provision, and KS4 prior attainment.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                                               |  Variable description
+----------------------------------------------------------  |  ----------------------------------------------------------------------------------
+aps_per_entry_acad                                          |  APS per academic entry
+aps_per_entry_agen                                          |  APS per applied general entry
+aps_per_entry_alev                                          |  APS per A level entry
+aps_per_entry_best3                                         |  APS per 'Best 3' entries
+aps_per_entry_grade_acad                                    |  Average academic result
+aps_per_entry_grade_agen                                    |  Average applied general result
+aps_per_entry_grade_alev                                    |  Average A level result
+aps_per_entry_grade_best3                                   |  APS per 'Best 3' entries (grade)
+aps_per_entry_grade_technicalcertificate                    |  Average technical certificate result
+aps_per_entry_grade_tlev                                    |  Average tech level result
+aps_per_entry_technicalcertificate                          |  APS per technical certificate entry
+aps_per_entry_tlev                                          |  APS per tech level entry
+characteristic_disadvantage                                 |  Characteristic disadvantage
+characteristic_value                                        |  Characteristic
+entered_any_level3_vocational_excluding_applied_generals    |  Number of students entered for any level 3 vocational (excluding applied generals)
+entered_any_level3_vocational_excluding_tech_levels         |  Number of students entered for any level 3 vocational (excluding tech levels)
+entered_for_one_or_more_alev                                |  Number of students entered for ≥ 1 A level
+entered_for_one_or_more_alev_or_applied                     |  Number of students entered for ≥ 1 A level or applied A level
+number_of_students_acad                                     |  Number of academic students
+number_of_students_agen                                     |  Number of applied general students
+number_of_students_alev                                     |  Number of A level students
+number_of_students_highest_entry_was_l2                     |  Number of level 2 vocational students (without approved level 3 entry)
+number_of_students_level3                                   |  Number of level 3 students
+number_of_students_potential                                |  Students at end of 16-18 study
+number_of_students_technicalcertificate                     |  Number of technical certificate students
+number_of_students_tlev                                     |  Number of tech level students
+pc_achieving_3_astar_to_a_alev                              |  % achieving 3 A* to A
+pc_achieving_aab_or_better_alev                             |  % achieving ≥ AAB
+pc_achieving_aab_or_better_atleast_two_facilitating_alev    |  % achieving ≥ AAB for a minimum of 2 facilitating A levels
+pc_achieving_atleast_two_alev                               |  % achieving ≥ 2 A levels
+pc_achieving_atleast_two_substantial_lev3                   |  % achieving ≥ 2 substantial level 3 results
+pc_achieving_atleast_two_substantial_lev3_acad              |  % achieving ≥ 2 academic results
+pc_level2_vocational_students_entered_technicalcertificate  |  % level 2 students vocational students entered for technical certificate
+pc_level3_vocational_students_entered_applied_generals      |  % level 3 vocational students (excluding tech levels) who entered applied general
+pc_level3_vocational_students_entered_tech_levels           |  % level 3 vocational students (excluding applied generals) who entered tech levels
+
+Footnotes:
+
+1. Includes students triggered for inclusion in performance tables.
+2. Figures for the total number of students may not match the sum of females and males, as not all institutions recorded the gender for every student.
+3. Disadvantage status is as reported at the end of key stage 4. Analysis involving disadvantage status includes students at state-funded schools and colleges only.
+4. EHC plans and statements of SEN are legal documents which detail the needs of the individual student, and the assistance they are to receive.
+
+
+Attainment and other performance measures - disadvantage status as a percentage of cohort
+
+Filename: aa_by_disadvantage_proportions_201822_complete.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: Attainment metrics, by disadvantage status as a percentage of each exam cohort.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                                 |  Variable description
+--------------------------------------------  |  ------------------------------------------------------------------------------
+disadvantage_status                           |  Disadvantage status
+number_of_students_agen                       |  Number of applied general students
+number_of_students_alev                       |  Number of A level students
+number_of_students_potential                  |  Students at end of 16-18 study
+number_of_students_technicalcertificate       |  Number of technical certificate students
+number_of_students_tlev                       |  Number of tech level students
+perc_number_of_students_agen                  |  Proportion of applied general students with selected disadvantage status
+perc_number_of_students_alev                  |  Proportion of A level students with selected disadvantage status
+perc_number_of_students_potential             |  Proportion of students at end of 16-18 study with selected disadvantage status
+perc_number_of_students_technicalcertificate  |  Proportion of technical certificate students with selected disadvantage status
+perc_number_of_students_tlev                  |  Proportion of tech level students with selected disadvantage status
+
+Footnotes:
+
+1. Includes students triggered for inclusion in performance tables.
+2. Disadvantage status is as reported at the end of key stage 4. Analysis involving disadvantage status includes students at state-funded schools and colleges only.
+
+
+Attainment and other performance measures - prior attainment as a percentage of cohort
+
+Filename: aa_by_priorattainment_proportions_201822_complete.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: Attainment metrics, by KS4 prior attainment as a percentage of each exam cohort.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                                 |  Variable description
+--------------------------------------------  |  ---------------------------------------------------------------------
+number_of_students_agen                       |  Number of applied general students
+number_of_students_alev                       |  Number of A level students
+number_of_students_potential                  |  Students at end of 16-18 study
+number_of_students_technicalcertificate       |  Number of technical certificate students
+number_of_students_tlev                       |  Number of tech level students
+perc_number_of_students_agen                  |  Proportion of applied general students at prior attainment band
+perc_number_of_students_alev                  |  Proportion of A level students at prior attainment band
+perc_number_of_students_potential             |  Proportion of students at end of 16-18 study at prior attainment band
+perc_number_of_students_technicalcertificate  |  Proportion of technical certificate students at prior attainment band
+perc_number_of_students_tlev                  |  Proportion of tech level students at prior attainment band
+prior_attainment                              |  Prior attainment
+
+Footnotes:
+
+1. Includes students triggered for inclusion in performance tables.
+
+
+Entries and Results - A level and AS by subject and student characteristics (single academic year)
+
+Filename: alevel_as_entries_results_by_characteristic_singleyr_201822_complete_sp.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: A level and AS level entries by grade achieved, subject and student characteristics.
+
+Student characteristics include gender, ethnicity, disadvantage status, free school meal provision, first language, SEN provision, and KS4 prior attainment.
+
+Includes entries in the current exam year for 16-18 students, after discounting. Includes pending awards.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                |  Variable description
+---------------------------  |  ------------------------------
+a_grade_achieved             |  Number at grade A.
+astar_grade_achieved         |  Number at grade A*.
+b_grade_achieved             |  Number at grade B.
+c_grade_achieved             |  Number at grade C.
+characteristic_value         |  Characteristic
+d_grade_achieved             |  Number at grade D.
+e_grade_achieved             |  Number at grade E.
+entry_count                  |  Exam entries
+perc_astar_a_grade_achieved  |  Percent achieving grade A* - A
+perc_astar_b_grade_achieved  |  Percent achieving grade A* - B
+perc_astar_c_grade_achieved  |  Percent achieving grade A* - C
+perc_astar_d_grade_achieved  |  Percent achieving grade A* - D
+perc_astar_e_grade_achieved  |  Percent achieving grade A* - E
+perc_astar_grade_achieved    |  Percent achieving grade A*
+qualification                |  Qualification
+subject_name                 |  Subject
+u_grade_achieved             |  Number at grade U.
+
+Footnotes:
+
+1. Exam entries are for the current exam year for 16-18 students, after discounting. Includes pending awards.
+2. Figures for the total number of students may not match the sum of females and males, as not all institutions recorded the gender for every student.
+3. Disadvantage status is as reported at the end of key stage 4. Analysis involving disadvantage status includes students at state-funded schools and colleges only.
+4. EHC plans and statements of SEN are legal documents which detail the needs of the individual student, and the assistance they are to receive.
+
+
+Entries and Results - A level and AS by institution type and gender (single academic year)
+
+Filename: alevel_as_entries_results_by_institution_gender_singleyr_201822_complete.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: A level and AS level entries by grade achieved, institution type and student gender.
+
+Includes entries in the current exam year for 16-18 students, after discounting. Includes pending awards.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                |  Variable description
+---------------------------  |  ------------------------------
+a_grade_achieved             |  Number at grade A.
+astar_grade_achieved         |  Number at grade A*.
+b_grade_achieved             |  Number at grade B.
+c_grade_achieved             |  Number at grade C.
+characteristic_gender        |  Gender
+d_grade_achieved             |  Number at grade D.
+e_grade_achieved             |  Number at grade E.
+entry_count                  |  Exam entries
+institution_count            |  Number of institutions
+perc_astar_a_grade_achieved  |  Percent achieving grade A* - A
+perc_astar_b_grade_achieved  |  Percent achieving grade A* - B
+perc_astar_c_grade_achieved  |  Percent achieving grade A* - C
+perc_astar_d_grade_achieved  |  Percent achieving grade A* - D
+perc_astar_e_grade_achieved  |  Percent achieving grade A* - E
+perc_astar_grade_achieved    |  Percent achieving grade A*
+qualification                |  Qualification
+school_type                  |  Institution
+u_grade_achieved             |  Number at grade U.
+
+Footnotes:
+
+1. Exam entries are for the current exam year for 16-18 students, after discounting. Includes pending awards.
+2. Figures for the total number of students may not match the sum of females and males, as not all institutions recorded the gender for every student.
+3. Totals may be less than the sum of separate institution types as students who attend multiple institutions during 16 to 18 can be included more than once in institution breakdowns. More information can be found in the Quality and Methodology section.
+4. 'All state funded schools' includes city technology colleges (CTCs) and state-funded special schools. Figures for these institution types are not shown separately in the table. Excludes pupil referral units (PRUs), alternative provision (AP), hospital schools, non-maintained special schools, independent schools, independent special schools and independent schools approved to take pupils with special educational needs (SEN). These institution types are included in 'All schools'.
+
+
+Entries and Results - A level and AS by region and subject (single academic year)
+
+Filename: alevel_as_entries_results_by_region_singleyr_201822_complete.csv
+Geographic levels: Local authority; Regional
+Time period: 2017/18 to 2021/22
+Content summary: A level and AS level entries by grade achieved, subject and region or local authority
+
+Includes entries in the current exam year for 16-18 students, after discounting. Includes pending awards.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                |  Variable description
+---------------------------  |  ------------------------------
+a_grade_achieved             |  Number at grade A.
+astar_grade_achieved         |  Number at grade A*.
+b_grade_achieved             |  Number at grade B.
+c_grade_achieved             |  Number at grade C.
+d_grade_achieved             |  Number at grade D.
+e_grade_achieved             |  Number at grade E.
+entry_count                  |  Exam entries
+perc_astar_a_grade_achieved  |  Percent achieving grade A* - A
+perc_astar_b_grade_achieved  |  Percent achieving grade A* - B
+perc_astar_c_grade_achieved  |  Percent achieving grade A* - C
+perc_astar_d_grade_achieved  |  Percent achieving grade A* - D
+perc_astar_e_grade_achieved  |  Percent achieving grade A* - E
+perc_astar_grade_achieved    |  Percent achieving grade A*
+qualification                |  Qualification
+school_type                  |  Institution
+subject_name                 |  Subject
+u_grade_achieved             |  Number at grade U.
+
+Footnotes:
+
+1. Exam entries are for the current exam year for 16-18 students, after discounting. Includes pending awards.
+
+
+Student counts and Results - A level by subject and student characteristics (end of 16-18 study)
+
+Filename: alevel_counts_results_by_characteristic_1618study_201822_complete_sp.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: A level student counts by grade achieved, subject and student characteristics.
+
+Student characteristics include gender, ethnicity, disadvantage status, free school meal provision, first language, SEN provision, and KS4 prior attainment.
+
+Includes students triggered for inclusion in performance tables who completed A levels during 16-18 study, after discounting of exams.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                |  Variable description
+---------------------------  |  ------------------------------
+a_grade_achieved             |  Number at grade A.
+astar_grade_achieved         |  Number at grade A*.
+b_grade_achieved             |  Number at grade B.
+c_grade_achieved             |  Number at grade C.
+characteristic_value         |  Characteristic
+d_grade_achieved             |  Number at grade D.
+e_grade_achieved             |  Number at grade E.
+perc_astar_a_grade_achieved  |  Percent achieving grade A* - A
+perc_astar_b_grade_achieved  |  Percent achieving grade A* - B
+perc_astar_c_grade_achieved  |  Percent achieving grade A* - C
+perc_astar_d_grade_achieved  |  Percent achieving grade A* - D
+perc_astar_e_grade_achieved  |  Percent achieving grade A* - E
+perc_astar_grade_achieved    |  Percent achieving grade A*
+subject_name                 |  Subject
+total_students               |  Total number of students
+u_grade_achieved             |  Number at grade U.
+
+Footnotes:
+
+1. Includes students triggered for inclusion in performance tables who completed A levels during 16-18 study, after discounting of exams.
+2. Figures for the total number of students may not match the sum of females and males, as not all institutions recorded the gender for every student.
+3. Disadvantage status is as reported at the end of key stage 4. Analysis involving disadvantage status includes students at state-funded schools and colleges only.
+4. EHC plans and statements of SEN are legal documents which detail the needs of the individual student, and the assistance they are to receive.
+
+
+Student counts and Results - A level by institution type and gender (end of 16-18 study)
+
+Filename: alevel_counts_results_by_institution_gender_1618study_201822_complete.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: A level student counts by grade achieved, institution type and student gender.
+
+Includes students triggered for inclusion in performance tables who completed A levels during 16-18 study, after discounting of exams.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                |  Variable description
+---------------------------  |  ------------------------------
+a_grade_achieved             |  Number at grade A.
+astar_grade_achieved         |  Number at grade A*.
+b_grade_achieved             |  Number at grade B.
+c_grade_achieved             |  Number at grade C.
+characteristic_gender        |  Gender
+d_grade_achieved             |  Number at grade D.
+e_grade_achieved             |  Number at grade E.
+perc_astar_a_grade_achieved  |  Percent achieving grade A* - A
+perc_astar_b_grade_achieved  |  Percent achieving grade A* - B
+perc_astar_c_grade_achieved  |  Percent achieving grade A* - C
+perc_astar_d_grade_achieved  |  Percent achieving grade A* - D
+perc_astar_e_grade_achieved  |  Percent achieving grade A* - E
+perc_astar_grade_achieved    |  Percent achieving grade A*
+school_type                  |  Institution
+total_students               |  Total number of students
+u_grade_achieved             |  Number at grade U.
+
+Footnotes:
+
+1. Includes students triggered for inclusion in performance tables who completed A levels during 16-18 study, after discounting of exams.
+2. Figures for the total number of students may not match the sum of females and males, as not all institutions recorded the gender for every student.
+3. Totals may be less than the sum of separate institution types as students who attend multiple institutions during 16 to 18 can be included more than once in institution breakdowns. More information can be found in the Quality and Methodology section.
+4. 'All state funded schools' includes city technology colleges (CTCs) and state-funded special schools. Figures for these institution types are not shown separately in the table. Excludes pupil referral units (PRUs), alternative provision (AP), hospital schools, non-maintained special schools, independent schools, independent special schools and independent schools approved to take pupils with special educational needs (SEN). These institution types are included in 'All schools'.
+
+
+Student counts and Results - A level by region and subject (end of 16-18 study)
+
+Filename: alevel_counts_results_by_region_1618study_201822_complete.csv
+Geographic levels: Local authority; Regional
+Time period: 2017/18 to 2021/22
+Content summary: A level student counts by grade achieved, subject and region or local authority.
+
+Includes students triggered for inclusion in performance tables who completed A levels during 16-18 study, after discounting of exams.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                |  Variable description
+---------------------------  |  ------------------------------
+a_grade_achieved             |  Number at grade A.
+astar_grade_achieved         |  Number at grade A*.
+b_grade_achieved             |  Number at grade B.
+c_grade_achieved             |  Number at grade C.
+d_grade_achieved             |  Number at grade D.
+e_grade_achieved             |  Number at grade E.
+perc_astar_a_grade_achieved  |  Percent achieving grade A* - A
+perc_astar_b_grade_achieved  |  Percent achieving grade A* - B
+perc_astar_c_grade_achieved  |  Percent achieving grade A* - C
+perc_astar_d_grade_achieved  |  Percent achieving grade A* - D
+perc_astar_e_grade_achieved  |  Percent achieving grade A* - E
+perc_astar_grade_achieved    |  Percent achieving grade A*
+school_type                  |  Institution
+subject_name                 |  Subject
+total_students               |  Total number of students
+u_grade_achieved             |  Number at grade U.
+
+Footnotes:
+
+1. Includes students triggered for inclusion in performance tables who completed A levels during 16-18 study, after discounting of exams.
+
+
+Student counts grade combinations - A level by student characteristics
+
+Filename: alevel_counts_grade_combinations_by_characteristic_201822.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: A level grade combinations achieved, by student characteristics.
+
+Student characteristics include gender, ethnicity, disadvantage status, free school meal provision, first language, SEN provision, and KS4 prior attainment.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name         |  Variable description
+--------------------  |  -----------------------------------------------------
+01_ucas_168           |  168+ UCAS Tariff Points (A*A*A* or equivalent/higher)
+02_ucas_144           |  144+ UCAS Tariff Points (AAA or equivalent/higher)
+03_ucas_120           |  120+ UCAS Tariff Points (BBB or equivalent/higher)
+04_ucas_96            |  96+ UCAS Tariff Points (CCC or equivalent/higher)
+05_ucas_72            |  72+ UCAS Tariff Points (DDD or equivalent/higher)
+06_ucas_48            |  48+ UCAS Tariff Points (EEE or equivalent/higher)
+characteristic_value  |  Characteristic
+student_count         |  Total number of students
+
+Footnotes:
+
+1. Includes students triggered for inclusion in performance tables who completed A levels during 16-18 study (excluding general studies and critical thinking), after discounting of exams. Includes pending awards.
+2. Figures for the total number of students may not match the sum of females and males, as not all institutions recorded the gender for every student.
+3. Disadvantage status is as reported at the end of key stage 4. Analysis involving disadvantage status includes students at state-funded schools and colleges only.
+4. EHC plans and statements of SEN are legal documents which detail the needs of the individual student, and the assistance they are to receive.
+
+
+Entries - vocational qualifications by subject and student characteristics (single academic year)
+
+Filename: vocational_entries_by_characteristic_singleyr_201822_complete.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: Vocational qualification entries, by Ofqual subject area and student characteristics.
+
+Student characteristics include gender, ethnicity, disadvantage status, free school meal provision, first language, SEN provision, and KS4 prior attainment.
+
+Includes entries in the current exam year for 16-18 students, after discounting. Includes pending awards.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name         |  Variable description
+--------------------  |  ----------------------
+characteristic_value  |  Characteristic
+entry_count           |  Exam entries
+entry_pass            |  Exam passes
+exam_cohort           |  Exam cohort
+ofqual_tier_2         |  Ofqual subject area
+perc_entry_pass       |  Percent of exam passes
+
+Footnotes:
+
+1. Exam entries are for the current exam year for 16-18 students, after discounting. Includes pending awards.
+2. Figures for the total number of students may not match the sum of females and males, as not all institutions recorded the gender for every student.
+3. Disadvantage status is as reported at the end of key stage 4. Analysis involving disadvantage status includes students at state-funded schools and colleges only.
+4. EHC plans and statements of SEN are legal documents which detail the needs of the individual student, and the assistance they are to receive.
+
+
+Student counts - vocational qualifications by subject and student characteristics (end of 16-18 study)
+
+Filename: vocational_counts_by_characteristic_1618study_201822_complete_sp.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: Vocational qualification student counts, by Ofqual subject area and student characteristics.
+
+Student characteristics include gender, ethnicity, disadvantage status, free school meal provision, first language, SEN provision, and KS4 prior attainment.
+
+Includes students triggered for inclusion in performance tables who completed A levels during 16-18 study, after discounting of exams.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name         |  Variable description
+--------------------  |  ------------------------------------
+characteristic_value  |  Characteristic
+exam_cohort           |  Exam cohort
+ofqual_tier_2         |  Ofqual subject area
+perc_student_pass     |  Percent of students achieving a pass
+student_count         |  Number of students
+student_pass          |  Number of students achieving a pass
+
+Footnotes:
+
+1. Includes students triggered for inclusion in performance tables who completed a vocational qualification during 16-18 study, after discounting of exams.
+2. Figures for the total number of students may not match the sum of females and males, as not all institutions recorded the gender for every student.
+3. Disadvantage status is as reported at the end of key stage 4. Analysis involving disadvantage status includes students at state-funded schools and colleges only.
+4. EHC plans and statements of SEN are legal documents which detail the needs of the individual student, and the assistance they are to receive.
+
+
+English and Maths - below level 3 entries by student characteristics
+
+Filename: english_maths_below_l3_by_characteristic_201822_complete_sp.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: Entries and passes for below level 3 English and maths, by qualification type and student characteristics.
+
+Student characteristics include gender, ethnicity, disadvantage status, free school meal provision, first language, SEN provision, and KS4 prior attainment.
+
+Includes entries in the current exam year for 16-18 students, after discounting. Includes pending awards.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name         |  Variable description
+--------------------  |  ----------------------------------------------
+characteristic_value  |  Characteristic
+entry_count           |  Number of entries
+entry_pass            |  Number of passes
+perc_entry_pass       |  Proportion of cohort achieving a pass at level
+progress_subject      |  Subject
+qual_minor            |  Qualification
+
+Footnotes:
+
+1. Exam entries are for the current exam year for 16-18 students, after discounting. Includes pending awards.
+2. Figures for the total number of students may not match the sum of females and males, as not all institutions recorded the gender for every student.
+3. Disadvantage status is as reported at the end of key stage 4. Analysis involving disadvantage status includes students at state-funded schools and colleges only.
+4. EHC plans and statements of SEN are legal documents which detail the needs of the individual student, and the assistance they are to receive.
+
+
+English and Maths - below level 3 entries by institution type
+
+Filename: english_maths_below_l3_by_institution_201822.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: Entries and passes for below level 3 English and maths, by qualification type, institution type and student gender.
+
+Includes entries in the current exam year for 16-18 students, after discounting. Includes pending awards.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name     |  Variable description
+----------------  |  ----------------------------------------------
+entry_count       |  Number of entries
+entry_pass        |  Number of passes
+perc_entry_pass   |  Proportion of cohort achieving a pass at level
+progress_subject  |  Subject
+qual_minor        |  Qualification
+school_type       |  Institution
+
+Footnotes:
+
+1. Exam entries are for the current exam year for 16-18 students, after discounting. Includes pending awards.
+2. Totals may be less than the sum of separate institution types as students who attend multiple institutions during 16 to 18 can be included more than once in institution breakdowns. More information can be found in the Quality and Methodology section.
+3. 'All state funded schools' includes city technology colleges (CTCs) and state-funded special schools. Figures for these institution types are not shown separately in the table. Excludes pupil referral units (PRUs), alternative provision (AP), hospital schools, non-maintained special schools, independent schools, independent special schools and independent schools approved to take pupils with special educational needs (SEN). These institution types are included in 'All schools'.
+
+
+Maths and science - subject combinations by student characteristics
+
+Filename: maths_science_combinations_by_characteristic_201822_complete.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: Number of students entered for combinations of STEM A levels during 16-18 study, by student characteristics.
+
+Student characteristics include gender, ethnicity, disadvantage status, free school meal provision, first language, SEN provision, and KS4 prior attainment.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name         |  Variable description
+--------------------  |  --------------------------------------------
+characteristic_value  |  Characteristic
+num_students          |  Number of students
+sub_name_comb         |  Combination of STEM subject A levels entered
+
+Footnotes:
+
+1. Includes students triggered for inclusion in performance tables who completed A levels during 16-18 study, after discounting of exams.
+2. Figures for the total number of students may not match the sum of females and males, as not all institutions recorded the gender for every student.
+3. Disadvantage status is as reported at the end of key stage 4. Analysis involving disadvantage status includes students at state-funded schools and colleges only.
+4. EHC plans and statements of SEN are legal documents which detail the needs of the individual student, and the assistance they are to receive.
+
+
+Maths and science entries - percent entered by student characteristics
+
+Filename: maths_science_percentages_by_characteristic_201822_complete.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: Percent of students entered for A levels in STEM subjects during 16-18 study, by student characteristics.
+
+Student characteristics include gender, ethnicity, disadvantage status, free school meal provision, first language, SEN provision, and KS4 prior attainment.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name             |  Variable description
+------------------------  |  -------------------------------------------
+characteristic_value      |  Characteristic
+number_alev_students      |  Number of students
+pc_entered_1plus_MatScis  |  Percent entered for 1 or more STEM subjects
+pc_entered_2plus_MatScis  |  Percent entered for 2 or more STEM subjects
+pc_entered_3plus_MatScis  |  Percent entered for 3 or more STEM subjects
+pc_entered_4plus_MatScis  |  Percent entered for 4 or more STEM subjects
+pc_entered_5plus_MatScis  |  Percent entered for 5 or more STEM subjects
+pc_entered_Biology        |  Percent entered for biology
+pc_entered_Chemistry      |  Percent entered for chemistry
+pc_entered_Computing      |  Percent entered for computing
+pc_entered_FurtherMaths   |  Percent entered for further maths
+pc_entered_Maths          |  Percent entered for maths
+pc_entered_no_MatSci      |  Percent not entered for a STEM subject
+pc_entered_Physics        |  Percent entered for physics
+
+Footnotes:
+
+1. Includes students triggered for inclusion in performance tables who completed A levels during 16-18 study, after discounting of exams.
+2. Figures for the total number of students may not match the sum of females and males, as not all institutions recorded the gender for every student.
+3. Disadvantage status is as reported at the end of key stage 4. Analysis involving disadvantage status includes students at state-funded schools and colleges only.
+4. EHC plans and statements of SEN are legal documents which detail the needs of the individual student, and the assistance they are to receive.
+
+
+Maths and science entries - percent entered by region
+
+Filename: maths_science_percentages_by_region_201822_complete.csv
+Geographic levels: Local authority; Regional
+Time period: 2017/18 to 2021/22
+Content summary: Percent of students entered for A levels in STEM subjects during 16-18 study, by region or local authority.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name             |  Variable description
+------------------------  |  -------------------------------------------
+number_alev_students      |  Number of students
+pc_entered_1plus_MatScis  |  Percent entered for 1 or more STEM subjects
+pc_entered_2plus_MatScis  |  Percent entered for 2 or more STEM subjects
+pc_entered_3plus_MatScis  |  Percent entered for 3 or more STEM subjects
+pc_entered_4plus_MatScis  |  Percent entered for 4 or more STEM subjects
+pc_entered_5plus_MatScis  |  Percent entered for 5 or more STEM subjects
+pc_entered_Biology        |  Percent entered for biology
+pc_entered_Chemistry      |  Percent entered for chemistry
+pc_entered_Computing      |  Percent entered for computing
+pc_entered_FurtherMaths   |  Percent entered for further maths
+pc_entered_Maths          |  Percent entered for maths
+pc_entered_no_MatSci      |  Percent not entered for a STEM subject
+pc_entered_Physics        |  Percent entered for physics
+
+Footnotes:
+
+1. Includes students triggered for inclusion in performance tables who completed A levels during 16-18 study, after discounting of exams.
+
+
+Retention - institution type and gender
+
+Filename: retention_by_institution_gender_201822.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: Retention metrics for all qualification cohorts, by institution type and gender.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name               |  Variable description
+--------------------------  |  -----------------------------------------
+characteristic_gender       |  Gender
+exam_cohort                 |  Cohort
+perc_retained               |  % retained
+perc_retained_and_assessed  |  % retained and assessed
+perc_returned_and_retained  |  % returned and retained for a second year
+school_type                 |  Institution type
+student_count_year_1        |  Number of students
+student_count_year_2        |  Number of students in two-year programme
+
+Footnotes:
+
+1. Figures for the total number of students may not match the sum of females and males, as not all institutions recorded the gender for every student.
+
+
+Retention - prior attainment as a percentage of cohort
+
+Filename: retention_by_priorattainment_proportions_201822.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: Retention cohorts by institution type and prior attainment, as a percentage of each qualification cohort.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name       |  Variable description
+------------------  |  ----------------------
+exam_cohort         |  Cohort
+percentage          |  Percentage of students
+prior_attainment    |  Prior attainment
+retention_in_scope  |  Number of students
+
+
+Retention - region
+
+Filename: retention_by_region_201822.csv
+Geographic levels: Local authority; Regional
+Time period: 2017/18 to 2021/22
+Content summary: Retention metrics for all qualification cohorts, by region or local authority.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name               |  Variable description
+--------------------------  |  -----------------------------------------
+exam_cohort                 |  Cohort
+perc_retained               |  % retained
+perc_retained_and_assessed  |  % retained and assessed
+perc_returned_and_retained  |  % returned and retained for a second year
+student_count_year_1        |  Number of students
+student_count_year_2        |  Number of students in two-year programme
+
+
+Retention - student characteristics
+
+Filename: retention_by_characteristic_201822.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: Retention metrics for all qualification cohorts, by student characteristics.
+
+Student characteristics include gender, ethnicity, disadvantage status, free school meal provision, first language, KS4 prior attainment and SEN provision.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name               |  Variable description
+--------------------------  |  -----------------------------------------
+characteristic_value        |  Characteristic
+exam_cohort                 |  Cohort
+perc_retained               |  % retained
+perc_retained_and_assessed  |  % retained and assessed
+perc_returned_and_retained  |  % returned and retained for a second year
+student_count_year_1        |  Number of students
+student_count_year_2        |  Number of students in two-year programme
+
+Footnotes:
+
+1. Figures for the total number of students may not match the sum of females and males, as not all institutions recorded the gender for every student.
+2. Disadvantage status is as reported at the end of key stage 4. Analysis involving disadvantage status includes students at state-funded schools and colleges only.
+3. EHC plans and statements of SEN are legal documents which detail the needs of the individual student, and the assistance they are to receive.
+
+
+Retention - student characteristics and disadvantage status
+
+Filename: retention_by_supercharacteristic_201822.csv
+Geographic levels: National
+Time period: 2017/18 to 2021/22
+Content summary: Retention metrics for all qualification cohorts, by a combination of disadvantage status and other student characteristics.
+
+Other student characteristics include gender, ethnicity (major groupings), free school meal provision, first language, KS4 prior attainment and SEN provision (major groupings).
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                |  Variable description
+---------------------------  |  -----------------------------------------
+characteristic_disadvantage  |  Characteristic disadvantage
+characteristic_value         |  Characteristic
+exam_cohort                  |  Cohort
+perc_retained                |  % retained
+perc_retained_and_assessed   |  % retained and assessed
+perc_returned_and_retained   |  % returned and retained for a second year
+student_count_year_1         |  Number of students
+student_count_year_2         |  Number of students in two-year programme
+
+Footnotes:
+
+1. Figures for the total number of students may not match the sum of females and males, as not all institutions recorded the gender for every student.
+2. Disadvantage status is as reported at the end of key stage 4. Analysis involving disadvantage status includes students at state-funded schools and colleges only.
+3. EHC plans and statements of SEN are legal documents which detail the needs of the individual student, and the assistance they are to receive.
+
+
+Retention - cohort time series
+
+Filename: retention_by_cohort_201622.csv
+Geographic levels: National
+Time period: 2015/16 to 2021/22
+Content summary: Retention metrics (% only) for all qualification cohorts, since measures were introduced.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name               |  Variable description
+--------------------------  |  -----------------------------------------
+exam_cohort                 |  Cohort
+perc_retained               |  % retained
+perc_retained_and_assessed  |  % retained and assessed
+perc_returned_and_retained  |  % returned and retained for a second year
+
+
+Time-series -  APS per entry by institution type
+
+Filename: timeseries_aggregated_attainment_by_institution_type.csv
+Geographic levels: National
+Time period: 2012/13 to 2021/22
+Content summary: Attainment (APS per entry) data for all level 3 qualification cohorts.
+
+Data for applied general and tech level cohorts starts in 2015/16 (when these cohorts were first defined in this statistical release, and school and college data). Data for the A level cohort starts in 2012/13.
+
+Variable names and descriptions for this file are provided below:
+
+Variable name          |  Variable description
+---------------------  |  ------------------
+aps_per_entry          |  APS per entry
+aps_per_entry_grade    |  Average  result
+characteristic_gender  |  Characteristic
+number_of_students     |  Number of students
+qualification_type     |  Qualification
+school_type            |  Institution
+
+
+Time-series - A level subject entries and grade by gender
+
+Filename: alevel_timeseries_subject_entries_results.csv
+Geographic levels: National
+Time period: 1995/96 to 2021/22
+Content summary: Data for A level entries and grades for individual subjects from 1995/96.
+
+Coverage of data is all students in England aged 16-18, entires/grades within the academic year stated (where 2022 means 2021/22)
+
+Variable names and descriptions for this file are provided below:
+
+Variable name                |  Variable description
+---------------------------  |  ------------------------------
+characteristic_value         |  Characteristic
+entry_count                  |  Exam entries
+perc_astar_a_grade_achieved  |  Percent achieving grade A* - A
+perc_astar_b_grade_achieved  |  Percent achieving grade A* - B
+perc_astar_c_grade_achieved  |  Percent achieving grade A* - C
+perc_astar_d_grade_achieved  |  Percent achieving grade A* - D
+perc_astar_e_grade_achieved  |  Percent achieving grade A* - E
+perc_astar_grade_achieved    |  Percent achieving grade A*
+subject_name                 |  Subject

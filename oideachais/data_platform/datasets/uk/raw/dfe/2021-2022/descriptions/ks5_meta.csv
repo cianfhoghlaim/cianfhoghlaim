@@ -1,0 +1,546 @@
+2022 KS5 excel and csv download data files: field names and descriptions,,,,,,
+ '.' indicates that a field is intentionally null/blank,,,,,,
+Note: retention data will be made available in March.,,,,,,
+,,,,,,
+Column,Field Name,Field description,Null/blank field for Rectype 1,Null/blank field for Rectype 3,Null/blank field for Rectype 4,Null/blank field for Rectype 5 or 7
+A,RECTYPE,"Record type: 
+1= school or college; 
+3= sixth form centre/consortium (see separate list of the sixth form centres and consortia and their feeder schools and colleges); 
+4= Local Authority; 
+5= National (all schools and colleges); 
+7= National (state-funded schools and colleges)",,,,
+B,ALPHAIND,Alphabetic index,,,.,.
+C,REGION,Region code (see separate list of region and local authority codes),,,,.
+D,LASORT,Local authority sort code within region,,.,,.
+E,LEA,LA number,,,,.
+F,ESTAB,Establishment number,,,.,.
+G,URN,Unique Reference Number of establishment,,,.,.
+H,PCON_CODE,School parliamentary constituency code,,.,.,.
+I,PCON_NAME,School parliamentary constituency name,,.,.,.
+J,SCHNAME_AC,Name of converter academy,,.,.,.
+K,SCHNAME,School/college name,,,.,.
+L,ADDRESS1,School/college address (1),,.,.,.
+M,ADDRESS2,School/college address (2),,.,.,.
+N,ADDRESS3,School/college address (3),,,.,.
+O,TOWN,Town where school/college is located,,,.,.
+P,PCODE,School/college postcode,,,.,.
+Q,TELNUM,School/college telephone number ,,,.,.
+R,CONTFLAG,"Contingency flag: results significantly affected: 
+0= not significantly affected; 1= significantly affected",,.,,.
+S,NFTYPE/FESITYPE,School type/FE college type,,,.,.
+T,RELDENOM,Religious character ,,,.,.
+U,ADMPOL,"Admissions policy
+",,.,.,.
+V,ADMPOL_PT,Admissions policy - new definition from 2019 onwards,,.,.,.
+W,GEND1618,"Gender of sixth form: girls, boys or mixed",,.,.,.
+X,FEEDER,"Indicates whether a school/college is a feeder school/college for sixth form centre or consortium:
+0= not a feeder school/college; 1= feeder school/college",,.,.,.
+Y,AGERANGE,Age range,,.,.,.
+Z,ICLOSE,Closed school/college flag: 0= open; 1= closed,,.,.,.
+AA,TABKS2,"Indicates if a school is published in the primary school (Key Stage 2) performance tables:
+0= No; 1= Yes",,.,.,.
+AB,TAB15,"Indicates if a school or college is published in the secondary school (Key Stage 4) performance tables: 
+0= No; 1= Yes",,.,.,.
+AC,CONFEXAM,"Indicates if a school or college has confirmed their results:
+blank/null= confirmed; R= not confirmed",,.,.,.
+AD,DUMMY,Dummy field,.,.,.,.
+AE,TPUP1618,Number of 16-18 year old students in sixth form,,,.,.
+AF,TALLPUP_1618,Number of students aged 16-18 at the end of 16-18 study (includes students who entered for advanced level 3 qualifications or below-level 3 qualifications),,,,
+AG,TALLPUP_ALEV_1618,Number of students at the end of 16-18 study who entered for at least one AS or A level qualification,,,,
+AH,TALLPPE_ALEV_1618,Average point score per A level entry,,,,
+AI,TALLPPEGRD_ALEV_1618,Average point score per A level entry expressed as a grade,,,,
+AJ,TINCLUDE_B3,Number of students included in the best 3 A levels measure,,,,
+AK,TB3PTSE,Average point score in best 3 A level entries,,,,
+AL,TB3PTSE_GRD,Average point score in best 3 A level entries expressed as a grade,,,,
+AM,TINCLUDE_AAB_2FAC,Number of students included in AAB in 2 facilitating subjects measure,,,,
+AN,PTAAB_2FAC,"Percentage of A level students achieving at least three levels at grades AAB or better, at least two of which are in facilitating subjects",,,,
+AO,TALLPUP_ACAD_1618,Number of students at the end of 16-18 study who entered for at least one advanced (level 3) academic qualification,,,,
+AP,TALLPPE_ACAD_1618,Average point score per academic entry,,,,
+AQ,TALLPPEGRD_ACAD_1618,Average point score per academic entry expressed as a grade,,,,
+AR,TALLPUP_AGEN,Number of students at the end of 16-18 study who entered for ant least one applied general qualification,,,,
+AS,TALLPPE_AGEN,Average point score per applied general entry,,,,
+AT,TALLPPEGRD_AGEN,Average point score per applied general entry expressed as a grade,,,,
+AU,TALLPUP_TLEV,Number of students at the end of 16-18 study who entered for at least one tech level qualification,,,,
+AV,TALLPPE_TLEV,Average point score per tech level entry,,,,
+AW,TALLPPEGRD_TLEV,Average point score per tech level entry expressed as a grade,,,,
+AX,TALLPUP_TLEVDENOM,Number of trigger students for 'level 3 vocational quals' - ignoring discounting and applied general,,,,
+AY,TLEV_PER,Proportion of level 3 vocational students that are tech level students,,,,
+AZ,TALLPUP_AGENDENOM,Number of trigger students for 'level 3 vocational quals' - ignoring discounting and tech levels,,,,
+BA,AGEN_PER,Proportion of level 3 vocational students that are applied general students,,,,
+BB,T_SCOPEEX_E,Number of students at the end of 16-18 study included in the English progress measure,.,.,.,.
+BC,PROGEX_E,Average progress made in English,.,.,.,.
+BD,ENTRY_PER_E,Proportion of students eligible for English progress measures entered for approved exams,.,.,.,.
+BE,T_SCOPEEX_M,Number of students at the end of 16-18 study included in the maths progress measure,.,.,.,.
+BF,PROGEX_M,Average progress made in maths,.,.,.,.
+BG,ENTRY_PER_M,Proportion of students eligible for maths progress measures entered for approved exams,.,.,.,.
+BH,TALLPUP_SCOPE_L3M,Number of students in scope for level 3 maths measure,.,.,.,.
+BI,L3M_PER,Percentage of students in scope for the level 3 maths measure who achieved approved a level 3 maths qualification,.,.,.,.
+BJ,T_InScope_ALEV_Ret,Number of students at the end of 16-18 study with an A level core aim,,,,
+BK,PT_Retained_ALEV_Ret,Percentage of A level core aims retained,,,,
+BL,PT_Ret_Assessed_ALEV,Percentage of A Level core aims retained and assessed,,,,
+BM,T_InScope_ALEV_2ndYr,Number of students in scope for returned and retained for a second year where core aim is an A Level,,,,
+BN,PT_Retained_ALEV_2ndYr,Percentage of students who were retained for a second year with an A Level programme core aim,,,,
+BO,T_InScope_ACAD_Ret,Number of students at the end of 16-18 study with an academic core aim,,,,
+BP,PT_Retained_ACAD_Ret,Percentage of academic core aims retained,,,,
+BQ,PT_Ret_Assessed_ACAD,Percentage of academic core aims retained and assessed,,,,
+BR,T_InScope_ACAD_2ndYr,Number of students in scope for returned and retained for a second year where core aim is an academic qualification,,,,
+BS,PT_Retained_ACAD_2ndYr,Percentage of students who were retained for a second year with an academic core aim,,,,
+BT,T_InScope_AGEN_Ret,Number of students at the end of 16-18 study with an applied general core aim,,,,
+BU,PT_Retained_AGEN_Ret,Percentage of applied general core aims retained,,,,
+BV,PT_Ret_Assessed_AGEN,Percentage of applied general core aims retained and assessed,,,,
+BW,T_InScope_AGEN_2ndYr,Number of students In scope for returned and retained for a second year where core aim is an applied general qualification,,,,
+BX,PT_Retained_AGEN_2ndYr,Percentage of students who were retained for a second year with an applied general core aim,,,,
+BY,T_InScope_TLEV_Ret,Number of students at the end of 16-18 study with a tech level core aim,,,,
+BZ,PT_Retained_TLEV_Ret,Percentage of tech level core aims retained,,,,
+CA,PT_Ret_Assessed_TLEV,Percentage of tech level core aims retained and assessed,,,,
+CB,T_InScope_TLEV_2ndYr,Number of students in scope for returned and retained for a second year measure where core aim is a tech level qualification,,,,
+CC,PT_Retained_TLEV_2ndYr,Percentage of students who were retained for a second year with a tech level core aim,,,,
+CD,TALLPUP_TechCert,Number of students at the end of 16-18 study who were entered for at least one technical certificate qualification,,,,
+CE,TALLPPE_TechCert,Average point score per technical certificate entry ,,,,
+CF,TALLPPEGRD_TechCert,Average point score per technical certificate entry expressed as a grade,,,,
+CG,T_InScope_TechCert_Ret,Number of students in scope for retention measure where core aim is a tech cert programme,,,,
+CH,PT_Retained_TechCert_Ret,Percentage of technical certificate core aims retained,,,,
+CI,PT_Ret_Assessed_TechCert,Percentage of technical certificate core aims retained and assessed,,,,
+CJ,TALLPUP_ANYL2VOC,"Number of students entered for at least one level 2 vocational, whose highest qualification during 16-18 study was at level 2.",,,,
+CK,TechCert_PER,Percentage of level 2 vocational students that are technical certificate students,,,,
+CL,TALLPUP_1618_DIS,Number of disadvantaged students aged 16-18 at the end of 16-18 study (includes students who entered for advanced level 3 qualifications or below-level 3 qualifications),,,,
+CM,TALLPUP_ALEV_1618_DIS,Number of disadvantaged students at the end of 16-18 study who entered for at least one AS or A level qualification,,,,
+CN,TALLPPE_ALEV_1618_DIS,Average point score per A level entry for disadvantaged students,,,,
+CO,TALLPPEGRD_ALEV_DIS,Average point score per A level entry for disadvantaged students expressed as a grade,,,,
+CP,TALLPUP_ACAD_1618_DIS,Number of disadvantaged students at the end of 16-18 study who entered for at least one advanced (level 3) academic qualification,,,,
+CQ,TALLPPE_ACAD_1618_DIS,Average point score per academic entry for disadvantaged students,,,,
+CR,TALLPPEGRD_ACAD_DIS,Average point score per academic entry for disadvantaged students expressed as a grade,,,,
+CS,TALLPUP_AGEN_DIS,Number of disadvantaged students at the end of 16-18 study who entered for at least one applied general exam entry,,,,
+CT,TALLPPE_AGEN_DIS,Average point score per applied general entry for disadvantaged students,,,,
+CU,TALLPPEGRD_AGEN_DIS,Average point score per applied general entry expressed as a grade for disadvantaged students,,,,
+CV,TALLPUP_TLEV_DIS,Number of disadvantaged students at the end of 16-18 study who entered for at least one tech level exam entry,,,,
+CW,TALLPPE_TLEV_DIS,Average point score per tech level entry for disadvantaged students,,,,
+CX,TALLPPEGRD_TLEV_DIS,Average point score per tech level entry expressed as a grade for disadvantaged students,,,,
+CY,T_SCOPEEX_E_DIS,Number of disadvantaged students at the end of 16-18 study in scope for English progress measure,.,.,.,.
+CZ,PROGEX_E_DIS,Average progress made in English by disadvantaged students,.,.,.,.
+DA,T_SCOPEEX_M_DIS,Number of disadvantaged students at the end of 16-18 study in scope for maths progress measure,.,.,.,.
+DB,PROGEX_M_DIS,Average progress made in maths by disadvantaged students,.,.,.,.
+DC,T_InScope_ALEV_Ret_DIS,Number of disadvantaged students in scope for retention measure where core aim is an A level qualification,,,,
+DD,PT_Retained_ALEV_Ret_DIS,Percentage of disadvantaged students who completed an A level core aim for retention measure,,,,
+DE,T_InScope_ACAD_Ret_DIS,Number of disadvantaged students in scope for retention measure where core aim is an academic qualification,,,,
+DF,PT_Retained_ACAD_Ret_DIS,Percentage of disadvantaged students who completed an academic core aim for retention measure,,,,
+DG,T_InScope_AGEN_Ret_DIS,Number of disadvantaged students in scope for retention measure where core aim is an applied general qualification,,,,
+DH,PT_Retained_AGEN_Ret_DIS,Percentage of disadvantaged students who completed an applied general core aim for retention measure,,,,
+DI,T_InScope_TLEV_Ret_DIS,Number of disadvantaged students in scope for retention measure where core aim is a tech level qualification,,,,
+DJ,PT_Retained_TLEV_Ret_DIS,Percentage of disadvantaged students who completed a tech level core aim for retention measure,,,,
+DK,TALLPUP_TechCert_DIS,Number of disadvantaged students at the end of 16-18 study entered for at least one technical certificate qualification ,,,,
+DL,TALLPPE_TechCert_DIS,Average point score per technical certificate entry for disadvantaged students,,,,
+DM,TALLPPEGRD_TechCert_DIS,Average point score per technical certificate entry expressed as a grade for disadvantaged students,,,,
+DN,T_InScope_TechCert_Ret_DIS,Number of disadvantaged students in scope for retention measure where core aim is a technical certificate programme,,,,
+DO,PT_Retained_TechCert_Ret_DIS,Percentage of disadvantaged students who completed a technical certificate core aim for retention measure,,,,
+DP,TALLPUP_1618_NOTDIS,Number of non-disadvantaged students aged 16-18 at the end of 16-18 study (includes students who entered for advanced level 3 qualifications or below-level 3 qualifications),,,,
+DQ,TALLPUP_ALEV_1618_NOTDIS,Number of non-disadvantaged students at the end of 16-18 study who entered for at least one A level qualification,,,,
+DR,TALLPPE_ALEV_1618_NOTDIS,Average point score per A level entry for non-disadvantaged students,,,,
+DS,TALLPPEGRD_ALEV_NOTDIS,Average point score per A level entry for non-disadvantaged students expressed as a grade,,,,
+DT,TALLPUP_ACAD_1618_NOTDIS,Number of non-disadvantaged students at the end of 16-18 study who entered for at least one academic qualification,,,,
+DU,TALLPPE_ACAD_1618_NOTDIS,Average point score per academic entry for non-disadvantaged students,,,,
+DV,TALLPPEGRD_ACAD_NOTDIS,Average point score per academic entry for non-disadvantaged students expressed as a grade,,,,
+DW,TALLPUP_AGEN_NOTDIS,Number of non-disadvantaged students at the end of 16-18 study who entered at lest one applied general qualification,,,,
+DX,TALLPPE_AGEN_NOTDIS,Average point score per applied general entry for non-disadvantaged students,,,,
+DY,TALLPPEGRD_AGEN_NOTDIS,Average point score per applied general entry expressed as a grade for non-disadvantaged students,,,,
+DZ,TALLPUP_TLEV_NOTDIS,Number of non-disadvantaged students at the end of 16-18 study who entered for at least one tech level qualification,,,,
+EA,TALLPPE_TLEV_NOTDIS,Average point score per tech level entry for non-disadvantaged students,,,,
+EB,TALLPPEGRD_TLEV_NOTDIS,Average point score per tech level entry expressed as a grade for non-disadvantaged students,,,,
+EC,T_SCOPEEX_E_NOTDIS,Number of non-disadvantaged students at the end of 16-18 study in scope for English progress measure,.,.,.,.
+ED,PROGEX_E_NOTDIS,Average progress made in English by non-disadvantaged students,.,.,.,.
+EE,T_SCOPEEX_M_NOTDIS,Number of non-disadvantaged students at the end of 16-18 study in scope for maths progress measure,.,.,.,.
+EF,PROGEX_M_NOTDIS,Average progress made in maths by non-disadvantaged students,.,.,.,.
+EG,T_InScope_ALEV_Ret_NOTDIS,Number of non-disadvantaged students in scope for retention measure where core aim is an A level qualification,,,,
+EH,PT_Retained_ALEV_Ret_NOTDIS,Percentage of non-disadvantaged students who completed an A level core aim for retention measure,,,,
+EI,T_InScope_ACAD_Ret_NOTDIS,Number of non-disadvantaged students in scope for retention measure where core aim is an academic qualification,,,,
+EJ,PT_Retained_ACAD_Ret_NOTDIS,Percentage of non-disadvantaged students who completed an academic core aim for retention measure,,,,
+EK,T_InScope_AGEN_Ret_NOTDIS,Number of non-disadvantaged students in scope for retention measure where core aim is an applied general qualification,,,,
+EL,PT_Retained_AGEN_Ret_NOTDIS,Percentage of non-disadvantaged students who completed an Applied General core aim for retention measure,,,,
+EM,T_InScope_TLEV_Ret_NOTDIS,Number of non-disadvantaged students in scope for retention measure where core aim is a tech level qualification,,,,
+EN,PT_Retained_TLEV_Ret_NOTDIS,Percentage of non-disadvantaged students who completed a tech level core aim for retention measure,,,,
+EO,TALLPUP_TechCert_NOTDIS,Number of non-disadvantaged students at the end of 16-18 study with a technical certificate qualification entry,,,,
+EP,TALLPPE_TechCert_NOTDIS,Average point score per technical certificate entry for non-disadvantaged students,,,,
+EQ,TALLPPEGRD_TechCert_NOTDIS,Average point score per technical certificate entry expressed as a grade for non-disadvantaged students,,,,
+ER,T_InScope_TechCert_Ret_NOTDIS,Number of non-disadvantaged students in scope for retention measure where core aim is a technical certificate programme,,,,
+ES,PT_Retained_TechCert_Ret_NOTDIS,Percentage of non-disadvantaged students who completed a technical certificate core aim for retention measure,,,,
+ET,TALLPUP_1618_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+EU,TALLPUP_1618_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+EV,TALLPUP_1618_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+EW,TALLPUP_ALEV_1618_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+EX,TALLPUP_ALEV_1618_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+EY,TALLPUP_ALEV_1618_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+EZ,TALLPPE_ALEV_1618_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+FA,TALLPPE_ALEV_1618_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+FB,TALLPPE_ALEV_1618_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+FC,TALLPPEGRD_ALEV_1618_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+FD,TALLPPEGRD_ALEV_1618_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+FE,TALLPPEGRD_ALEV_1618_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+FF,TALLPUP_ACAD_1618_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+FG,TALLPUP_ACAD_1618_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+FH,TALLPUP_ACAD_1618_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+FI,TALLPPE_ACAD_1618_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+FJ,TALLPPE_ACAD_1618_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+FK,TALLPPE_ACAD_1618_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+FL,TALLPPEGRD_ACAD_1618_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+FM,TALLPPEGRD_ACAD_1618_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+FN,TALLPPEGRD_ACAD_1618_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+FO,TALLPUP_AGEN_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+FP,TALLPUP_AGEN_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+FQ,TALLPUP_AGEN_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+FR,TALLPPE_AGEN_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+FS,TALLPPE_AGEN_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+FT,TALLPPE_AGEN_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+FU,TALLPPEGRD_AGEN_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+FV,TALLPPEGRD_AGEN_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+FW,TALLPPEGRD_AGEN_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+FX,TALLPUP_TLEV_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+FY,TALLPUP_TLEV_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+FZ,TALLPUP_TLEV_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+GA,TALLPPE_TLEV_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+GB,TALLPPE_TLEV_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+GC,TALLPPE_TLEV_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+GD,TALLPPEGRD_TLEV_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+GE,TALLPPEGRD_TLEV_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+GF,TALLPPEGRD_TLEV_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+GG,TALLPUP_TECHCERT_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+GH,TALLPUP_TECHCERT_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+GI,TALLPUP_TECHCERT_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+GJ,TALLPPE_TECHCERT_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+GK,TALLPPE_TECHCERT_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+GL,TALLPPE_TECHCERT_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+GM,TALLPPEGRD_TECHCERT_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+GN,TALLPPEGRD_TECHCERT_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+GO,TALLPPEGRD_TECHCERT_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+GP,T_AIMS_CA_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+GQ,T_AIMS_CA_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+GR,T_AIMS_CA_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+GS,T_SCOPEEX_E_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+GT,T_SCOPEEX_E_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+GU,T_SCOPEEX_E_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+GV,PROGEX_E_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+GW,PROGEX_E_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+GX,PROGEX_E_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+GY,T_SCOPEEX_M_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+GZ,T_SCOPEEX_M_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+HA,T_SCOPEEX_M_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+HB,PROGEX_M_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+HC,PROGEX_M_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+HD,PROGEX_M_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+HE,ENTRIES_ALEV_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+HF,ENTRIES_ALEV_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+HG,ENTRIES_ALEV_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+HH,VA_INS_ALEV_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+HI,VA_INS_ALEV_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+HJ,VA_INS_ALEV_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+HK,UCI_INS_ALEV_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+HL,UCI_INS_ALEV_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+HM,UCI_INS_ALEV_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+HN,LCI_INS_ALEV_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+HO,LCI_INS_ALEV_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+HP,LCI_INS_ALEV_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+HQ,ENTRIES_ACAD_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+HR,ENTRIES_ACAD_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+HS,ENTRIES_ACAD_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+HT,VA_INS_ACAD_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+HU,VA_INS_ACAD_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+HV,VA_INS_ACAD_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+HW,UCI_INS_ACAD_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+HX,UCI_INS_ACAD_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+HY,UCI_INS_ACAD_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+HZ,LCI_INS_ACAD_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+IA,LCI_INS_ACAD_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+IB,LCI_INS_ACAD_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+IC,ENTRIES_AGEN_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+ID,ENTRIES_AGEN_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+IE,ENTRIES_AGEN_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+IF,VA_INS_AGEN_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+IG,VA_INS_AGEN_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+IH,VA_INS_AGEN_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+II,UCI_INS_AGEN_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+IJ,UCI_INS_AGEN_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+IK,UCI_INS_AGEN_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+IL,LCI_INS_AGEN_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+IM,LCI_INS_AGEN_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+IN,LCI_INS_AGEN_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+IO,T_INSCOPE_ALEV_RET_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+IP,T_INSCOPE_ALEV_RET_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+IQ,T_INSCOPE_ALEV_RET_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+IR,PT_RETAINED_ALEV_RET_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+IS,PT_RETAINED_ALEV_RET_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+IT,PT_RETAINED_ALEV_RET_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+IU,T_INSCOPE_ACAD_RET_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+IV,T_INSCOPE_ACAD_RET_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+IW,T_INSCOPE_ACAD_RET_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+IX,PT_RETAINED_ACAD_RET_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+IY,PT_RETAINED_ACAD_RET_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+IZ,PT_RETAINED_ACAD_RET_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+JA,T_INSCOPE_AGEN_RET_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+JB,T_INSCOPE_AGEN_RET_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+JC,T_INSCOPE_AGEN_RET_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+JD,PT_RETAINED_AGEN_RET_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+JE,PT_RETAINED_AGEN_RET_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+JF,PT_RETAINED_AGEN_RET_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+JG,T_INSCOPE_TLEV_RET_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+JH,T_INSCOPE_TLEV_RET_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+JI,T_INSCOPE_TLEV_RET_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+JJ,PT_RETAINED_TLEV_RET_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+JK,PT_RETAINED_TLEV_RET_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+JL,PT_RETAINED_TLEV_RET_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+JM,T_INSCOPE_TECHCERT_RET_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+JN,T_INSCOPE_TECHCERT_RET_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+JO,T_INSCOPE_TECHCERT_RET_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+JP,PT_RETAINED_TECHCERT_RET_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+JQ,PT_RETAINED_TECHCERT_RET_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+JR,PT_RETAINED_TECHCERT_RET_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+JS,TALLPUP_1618_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+JT,TALLPUP_1618_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+JU,TALLPUP_1618_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+JV,TALLPUP_ALEV_1618_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+JW,TALLPUP_ALEV_1618_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+JX,TALLPUP_ALEV_1618_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+JY,TALLPPE_ALEV_1618_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+JZ,TALLPPE_ALEV_1618_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+KA,TALLPPE_ALEV_1618_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+KB,TALLPPEGRD_ALEV_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+KC,TALLPPEGRD_ALEV_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+KD,TALLPPEGRD_ALEV_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+KE,TALLPUP_ACAD_1618_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+KF,TALLPUP_ACAD_1618_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+KG,TALLPUP_ACAD_1618_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+KH,TALLPPE_ACAD_1618_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+KI,TALLPPE_ACAD_1618_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+KJ,TALLPPE_ACAD_1618_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+KK,TALLPPEGRD_ACAD_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+KL,TALLPPEGRD_ACAD_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+KM,TALLPPEGRD_ACAD_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+KN,TALLPUP_AGEN_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+KO,TALLPUP_AGEN_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+KP,TALLPUP_AGEN_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+KQ,TALLPPE_AGEN_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+KR,TALLPPE_AGEN_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+KS,TALLPPE_AGEN_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+KT,TALLPPEGRD_AGEN_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+KU,TALLPPEGRD_AGEN_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+KV,TALLPPEGRD_AGEN_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+KW,TALLPUP_TLEV_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+KX,TALLPUP_TLEV_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+KY,TALLPUP_TLEV_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+KZ,TALLPPE_TLEV_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+LA,TALLPPE_TLEV_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+LB,TALLPPE_TLEV_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+LC,TALLPPEGRD_TLEV_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+LD,TALLPPEGRD_TLEV_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+LE,TALLPPEGRD_TLEV_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+LF,TALLPUP_TECHCERT_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+LG,TALLPUP_TECHCERT_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+LH,TALLPUP_TECHCERT_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+LI,TALLPPE_TECHCERT_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+LJ,TALLPPE_TECHCERT_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+LK,TALLPPE_TECHCERT_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+LL,TALLPPEGRD_TECHCERT_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+LM,TALLPPEGRD_TECHCERT_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+LN,TALLPPEGRD_TECHCERT_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+LO,T_SCOPEEX_E_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+LP,T_SCOPEEX_E_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+LQ,T_SCOPEEX_E_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+LR,PROGEX_E_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+LS,PROGEX_E_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+LT,PROGEX_E_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+LU,T_SCOPEEX_M_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+LV,T_SCOPEEX_M_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+LW,T_SCOPEEX_M_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+LX,PROGEX_M_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+LY,PROGEX_M_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+LZ,PROGEX_M_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+MA,ENTRIES_ALEV_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+MB,ENTRIES_ALEV_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+MC,ENTRIES_ALEV_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+MD,VA_INS_ALEV_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+ME,VA_INS_ALEV_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+MF,VA_INS_ALEV_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+MG,UCI_INS_ALEV_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+MH,UCI_INS_ALEV_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+MI,UCI_INS_ALEV_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+MJ,LCI_INS_ALEV_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+MK,LCI_INS_ALEV_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+ML,LCI_INS_ALEV_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+MM,ENTRIES_ACAD_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+MN,ENTRIES_ACAD_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+MO,ENTRIES_ACAD_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+MP,VA_INS_ACAD_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+MQ,VA_INS_ACAD_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+MR,VA_INS_ACAD_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+MS,UCI_INS_ACAD_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+MT,UCI_INS_ACAD_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+MU,UCI_INS_ACAD_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+MV,LCI_INS_ACAD_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+MW,LCI_INS_ACAD_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+MX,LCI_INS_ACAD_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+MY,ENTRIES_AGEN_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+MZ,ENTRIES_AGEN_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+NA,ENTRIES_AGEN_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+NB,VA_INS_AGEN_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+NC,VA_INS_AGEN_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+ND,VA_INS_AGEN_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+NE,UCI_INS_AGEN_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+NF,UCI_INS_AGEN_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+NG,UCI_INS_AGEN_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+NH,LCI_INS_AGEN_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+NI,LCI_INS_AGEN_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+NJ,LCI_INS_AGEN_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+NK,T_INSCOPE_ALEV_RET_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+NL,T_INSCOPE_ALEV_RET_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+NM,T_INSCOPE_ALEV_RET_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+NN,PT_RETAINED_ALEV_RET_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+NO,PT_RETAINED_ALEV_RET_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+NP,PT_RETAINED_ALEV_RET_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+NQ,T_INSCOPE_ACAD_RET_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+NR,T_INSCOPE_ACAD_RET_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+NS,T_INSCOPE_ACAD_RET_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+NT,PT_RETAINED_ACAD_RET_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+NU,PT_RETAINED_ACAD_RET_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+NV,PT_RETAINED_ACAD_RET_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+NW,T_INSCOPE_AGEN_RET_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+NX,T_INSCOPE_AGEN_RET_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+NY,T_INSCOPE_AGEN_RET_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+NZ,PT_RETAINED_AGEN_RET_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+OA,PT_RETAINED_AGEN_RET_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+OB,PT_RETAINED_AGEN_RET_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+OC,T_INSCOPE_TLEV_RET_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+OD,T_INSCOPE_TLEV_RET_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+OE,T_INSCOPE_TLEV_RET_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+OF,PT_RETAINED_TLEV_RET_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+OG,PT_RETAINED_TLEV_RET_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+OH,PT_RETAINED_TLEV_RET_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+OI,T_INSCOPE_TECHCERT_RET_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+OJ,T_INSCOPE_TECHCERT_RET_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+OK,T_INSCOPE_TECHCERT_RET_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+OL,PT_RETAINED_TECHCERT_RET_DIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+OM,PT_RETAINED_TECHCERT_RET_DIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+ON,PT_RETAINED_TECHCERT_RET_DIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+OO,TALLPUP_1618_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+OP,TALLPUP_1618_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+OQ,TALLPUP_1618_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+OR,TALLPUP_ALEV_1618_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+OS,TALLPUP_ALEV_1618_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+OT,TALLPUP_ALEV_1618_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+OU,TALLPPE_ALEV_1618_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+OV,TALLPPE_ALEV_1618_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+OW,TALLPPE_ALEV_1618_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+OX,TALLPPEGRD_ALEV_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+OY,TALLPPEGRD_ALEV_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+OZ,TALLPPEGRD_ALEV_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+PA,TALLPUP_ACAD_1618_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+PB,TALLPUP_ACAD_1618_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+PC,TALLPUP_ACAD_1618_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+PD,TALLPPE_ACAD_1618_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+PE,TALLPPE_ACAD_1618_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+PF,TALLPPE_ACAD_1618_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+PG,TALLPPEGRD_ACAD_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+PH,TALLPPEGRD_ACAD_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+PI,TALLPPEGRD_ACAD_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+PJ,TALLPUP_AGEN_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+PK,TALLPUP_AGEN_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+PL,TALLPUP_AGEN_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+PM,TALLPPE_AGEN_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+PN,TALLPPE_AGEN_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+PO,TALLPPE_AGEN_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+PP,TALLPPEGRD_AGEN_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+PQ,TALLPPEGRD_AGEN_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+PR,TALLPPEGRD_AGEN_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+PS,TALLPUP_TLEV_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+PT,TALLPUP_TLEV_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+PU,TALLPUP_TLEV_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+PV,TALLPPE_TLEV_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+PW,TALLPPE_TLEV_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+PX,TALLPPE_TLEV_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+PY,TALLPPEGRD_TLEV_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+PZ,TALLPPEGRD_TLEV_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+QA,TALLPPEGRD_TLEV_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+QB,TALLPUP_TECHCERT_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+QC,TALLPUP_TECHCERT_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+QD,TALLPUP_TECHCERT_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+QE,TALLPPE_TECHCERT_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+QF,TALLPPE_TECHCERT_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+QG,TALLPPE_TECHCERT_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+QH,TALLPPEGRD_TECHCERT_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+QI,TALLPPEGRD_TECHCERT_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+QJ,TALLPPEGRD_TECHCERT_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+QK,T_SCOPEEX_E_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+QL,T_SCOPEEX_E_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+QM,T_SCOPEEX_E_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+QN,PROGEX_E_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+QO,PROGEX_E_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+QP,PROGEX_E_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+QQ,T_SCOPEEX_M_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+QR,T_SCOPEEX_M_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+QS,T_SCOPEEX_M_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+QT,PROGEX_M_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+QU,PROGEX_M_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+QV,PROGEX_M_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+QW,ENTRIES_ALEV_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+QX,ENTRIES_ALEV_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+QY,ENTRIES_ALEV_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+QZ,VA_INS_ALEV_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+RA,VA_INS_ALEV_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+RB,VA_INS_ALEV_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+RC,UCI_INS_ALEV_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+RD,UCI_INS_ALEV_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+RE,UCI_INS_ALEV_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+RF,LCI_INS_ALEV_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+RG,LCI_INS_ALEV_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+RH,LCI_INS_ALEV_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+RI,ENTRIES_ACAD_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+RJ,ENTRIES_ACAD_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+RK,ENTRIES_ACAD_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+RL,VA_INS_ACAD_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+RM,VA_INS_ACAD_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+RN,VA_INS_ACAD_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+RO,UCI_INS_ACAD_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+RP,UCI_INS_ACAD_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+RQ,UCI_INS_ACAD_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+RR,LCI_INS_ACAD_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+RS,LCI_INS_ACAD_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+RT,LCI_INS_ACAD_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+RU,ENTRIES_AGEN_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+RV,ENTRIES_AGEN_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+RW,ENTRIES_AGEN_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+RX,VA_INS_AGEN_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+RY,VA_INS_AGEN_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+RZ,VA_INS_AGEN_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+SA,UCI_INS_AGEN_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+SB,UCI_INS_AGEN_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+SC,UCI_INS_AGEN_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+SD,LCI_INS_AGEN_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+SE,LCI_INS_AGEN_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+SF,LCI_INS_AGEN_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+SG,T_INSCOPE_ALEV_RET_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+SH,T_INSCOPE_ALEV_RET_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+SI,T_INSCOPE_ALEV_RET_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+SJ,PT_RETAINED_ALEV_RET_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+SK,PT_RETAINED_ALEV_RET_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+SL,PT_RETAINED_ALEV_RET_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+SM,T_INSCOPE_ACAD_RET_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+SN,T_INSCOPE_ACAD_RET_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+SO,T_INSCOPE_ACAD_RET_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+SP,PT_RETAINED_ACAD_RET_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+SQ,PT_RETAINED_ACAD_RET_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+SR,PT_RETAINED_ACAD_RET_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+SS,T_INSCOPE_AGEN_RET_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+ST,T_INSCOPE_AGEN_RET_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+SU,T_INSCOPE_AGEN_RET_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+SV,PT_RETAINED_AGEN_RET_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+SW,PT_RETAINED_AGEN_RET_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+SX,PT_RETAINED_AGEN_RET_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+SY,T_INSCOPE_TLEV_RET_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+SZ,T_INSCOPE_TLEV_RET_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+TA,T_INSCOPE_TLEV_RET_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+TB,PT_RETAINED_TLEV_RET_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+TC,PT_RETAINED_TLEV_RET_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+TD,PT_RETAINED_TLEV_RET_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+TE,T_INSCOPE_TECHCERT_RET_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,,
+TF,T_INSCOPE_TECHCERT_RET_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+TG,T_INSCOPE_TECHCERT_RET_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+TH,PT_RETAINED_TECHCERT_RET_NOTDIS_21,This is a historical variable. It holds the 2021 value of the corresponding variable. Please see the current variable for the variable description.,,,.,.
+TI,PT_RETAINED_TECHCERT_RET_NOTDIS_20,This is a historical variable. It holds the 2020 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.
+TJ,PT_RETAINED_TECHCERT_RET_NOTDIS_19,This is a historical variable. It holds the 2019 value of the corresponding variable. Please see the current variable for the variable description.,.,.,.,.

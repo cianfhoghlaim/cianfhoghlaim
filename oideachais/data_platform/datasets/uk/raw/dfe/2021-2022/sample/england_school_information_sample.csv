@@ -1,0 +1,10 @@
+﻿URN,LANAME,LA,ESTAB,LAESTAB,SCHNAME,STREET,LOCALITY,ADDRESS3,TOWN,POSTCODE,SCHSTATUS,OPENDATE,CLOSEDATE,MINORGROUP,SCHOOLTYPE,ISPRIMARY,ISSECONDARY,ISPOST16,AGELOW,AGEHIGH,GENDER,RELCHAR,ADMPOL,OFSTEDRATING,OFSTEDLASTINSP
+100000,City of London,201,3614,2013614,The Aldgate School,St James's Passage,Duke's Place,,London,EC3A 5DE,Open,,,Maintained school,Voluntary aided school,1,0,0,3,11,Mixed,Church of England,Not applicable,Outstanding,19-04-2013
+100001,City of London,201,6005,2016005,City of London School for Girls,St Giles' Terrace,Barbican,,London,EC2Y 8BB,Open,,,Independent school,Other independent school,1,1,1,7,18,Girls,None,Selective
+100002,City of London,201,6006,2016006,St Paul's Cathedral School,2 New Change,,,London,EC4M 9AD,Open,,,Independent school,Other independent school,1,1,0,4,13,Mixed,Church of England,Not applicable
+100003,City of London,201,6007,2016007,City of London School,107 Queen Victoria Street,,,London,EC4V 3AL,Open,,,Independent school,Other independent school,1,1,1,10,18,Boys,None,Not applicable
+100008,Camden,202,2019,2022019,Argyle Primary School,Tonbridge Street,,,London,WC1H 9EG,Open,,,Maintained school,Community school,1,0,0,3,11,Mixed,Does not apply,Not applicable,Good,05-10-2022
+100009,Camden,202,2036,2022036,West Hampstead Primary School,Dornfell Street,West Hampstead,,London,NW6 1QL,Open,,,Maintained school,Community school,1,0,0,3,11,Mixed,Does not apply,Not applicable,Good,23-03-2022
+100010,Camden,202,2065,2022065,Brecknock Primary School,Cliff Villas,Camden,,London,NW1 9AL,Open,,,Maintained school,Community school,1,0,0,2,11,Mixed,Does not apply,Not applicable,Good,08-03-2023
+100011,Camden,202,2078,2022078,Brookfield Primary School,Chester Road,,,London,N19 5DH,Open,,,Maintained school,Community school,1,0,0,2,11,Mixed,Does not apply,Not applicable,Good,19-04-2018
+100012,Camden,202,2095,2022095,Carlton Primary School,Grafton Road,,,London,NW5 4AX,Closed,,31-08-2021,Maintained school,Community school,1,0,0,3,11,Mixed,Does not apply,Not applicable,Good,29-01-2019
