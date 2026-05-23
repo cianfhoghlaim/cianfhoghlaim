@@ -65,7 +65,7 @@ Based on comprehensive package research across the three primary streams, here's
 | Category | Packages | Latest Versions & Key Features |
 | :--- | :--- | :--- |
 | **Core Backend** | httpx, aiohttp, fastapi, uvicorn, pydantic | FastAPI async backend with Pydantic v2 validation |
-| **Agent Frameworks** | google-adk, agno, mcp, baml-py | google-adk (>=0.1.0) multi-agent coordination; agno (>=2.0.0) knowledge graphs |
+| **Agent Frameworks** | google-adk, agno, mcp, baml-py | google-adk (>=2.1.0) multi-agent coordination; agno (>=2.0.0) knowledge graphs |
 | **Observability** | langfuse, logfire, mlflow, ragas, datadog | langfuse (>=2.0.0) prompt management & A/B testing; ragas (>=0.1.10) trace-based metrics |
 | **Infrastructure** | @pulumi/hcloud, @pulumi/oci, @1password/connect | Multi-cloud IaC with Hetzner & Oracle Cloud |
 | **Browser Automation** | @browserbasehq/stagehand, patchright, crawl4ai, skyvern | Stagehand (latest) AI-powered precision interactions; Patchright stealth Chromium |
@@ -74,9 +74,9 @@ Based on comprehensive package research across the three primary streams, here's
 
 | Category | Packages | Latest Versions & Key Features |
 | :--- | :--- | :--- |
-| **Data Orchestration** | dagster, dlt, duckdb, lancedb, neo4j | dagster (>=1.9.0) asset-based pipelines; dlt (>=1.4.0) streaming support; lancedb (>=0.15.0) HNSW indexing & MVCC safety |
+| **Data Orchestration** | dagster, dlt, duckdb, lancedb, neo4j | dagster (>=1.13.0) asset-based pipelines; dlt (>=1.5.0) streaming support; lancedb (>=0.15.0) HNSW indexing & MVCC safety |
 | **ML/AI Core** | sentence-transformers, transformers, torch, accelerate | HuggingFace transformers with PyTorch backend |
-| **Agent Frameworks** | google-adk, agno, litellm, cocoindex | google-adk (>=0.1.0) multi-agent coordination; agno (>=2.0.0) knowledge graphs |
+| **Agent Frameworks** | google-adk, agno, litellm, cocoindex | google-adk (>=2.1.0) multi-agent coordination; agno (>=2.0.0) knowledge graphs |
 | **Memory Systems** | cognee, graphiti-core | graphiti-core (>=0.5.0) temporal knowledge graphs; cognee (>=0.1.0) graph traversal & temporal tracking |
 | **Model Training** | unsloth, trl, datasets, mlflow, wandb | unsloth (>=2024.12) multilingual support & flash attention (2x faster) |
 | **Observability** | langfuse, ragas, ddtrace, opentelemetry | langfuse (>=2.0.0) prompt management; ragas (>=0.1.10) trace-based metrics |
@@ -85,10 +85,10 @@ Based on comprehensive package research across the three primary streams, here's
 
 | Category | Packages | Latest Versions & Key Features |
 | :--- | :--- | :--- |
-| **Data Orchestration** | dagster, dlt, duckdb, lancedb, neo4j | dagster (>=1.9.0) asset-based pipelines; dlt (>=1.4.0) streaming support; lancedb (>=0.15.0) HNSW indexing |
+| **Data Orchestration** | dagster, dlt, duckdb, lancedb, neo4j | dagster (>=1.13.0) asset-based pipelines; dlt (>=1.5.0) streaming support; lancedb (>=0.15.0) HNSW indexing |
 | **ML/AI Core** | sentence-transformers, transformers, torch, unsloth | sentence-transformers for curriculum embeddings; unsloth (>=2024.12) multilingual support |
 | **Frontend Stack** | React, TypeScript, Vite, TanStack Router, CopilotKit, Vinxi | tanstack-start (^1.94.0) React Server Components; vinxi (^0.5.1) full-stack framework; copilotkit (>=0.1.0) AI agent UI |
-| **Agent Frameworks** | google-adk, agno, cocoindex, litellm | google-adk (>=0.1.0) multi-agent coordination; agno (>=2.0.0) knowledge graphs |
+| **Agent Frameworks** | google-adk, agno, cocoindex, litellm | google-adk (>=2.1.0) multi-agent coordination; agno (>=2.0.0) knowledge graphs |
 | **Memory Systems** | cognee, graphiti-core | graphiti-core (>=0.5.0) temporal knowledge graphs; cognee (>=0.1.0) graph traversal |
 | **Data Transformation** | sqlmesh | sqlmesh (>=0.228.1) DuckDB integration & virtual data warehouse |
 | **Observability** | langfuse, ragas, ddtrace | langfuse (>=2.0.0) prompt management; ragas (>=0.1.10) trace-based metrics |
@@ -97,10 +97,10 @@ Based on comprehensive package research across the three primary streams, here's
 
 | Package | Version | Key Features |
 | :--- | :--- | :--- |
-| **google-adk** | >=0.1.0 | Multi-agent coordination with Google AI integration |
+| **google-adk** | >=2.1.0 | Multi-agent coordination with Google AI integration |
 | **agno** | >=2.0.0 | Knowledge graphs feature for complex relationship tracking |
-| **dagster** | >=1.9.0 | Asset-based pipelines with observability and partitioning |
-| **dlt** | >=1.4.0 | Streaming support for real-time data pipelines |
+| **dagster** | >=1.13.0 | Asset-based pipelines with observability and partitioning |
+| **dlt** | >=1.5.0 | Streaming support for real-time data pipelines |
 | **lancedb** | >=0.15.0 | HNSW indexing, MVCC safety, hybrid search capabilities |
 | **langfuse** | >=2.0.0 | Prompt management, A/B testing, trace-based analytics |
 | **ragas** | >=0.1.10 | Trace-based metrics for RAG evaluation |
@@ -414,7 +414,7 @@ Bonneagar (Irish: "infrastructure") is the backbone of the Cianfhoghlaim platfor
 | **Browser Automation** | @browserbasehq/stagehand (latest), Patchright, Crawl4AI, Skyvern | Hunter-Gatherer-Operator pattern: Skyvern (vision-based Hunter), Crawl4AI (bulk Gatherer), Stagehand (AI-powered precision Operator), all sharing a stealth Chromium grid. Exposes MCP, AG-UI, and TanStack AI protocols. |
 | **Secrets** | 1Password Connect + Locket | Zero-disk-secret deployment via Locket sidecar containers injecting tmpfs-backed secrets from 1Password Connect. |
 | **Observability** | Datadog APM + MLflow + Langfuse (>=2.0.0) + Logfire + Ragas (>=0.1.10) | Three-tier: Datadog (full APM/metrics/logs), MLflow/Langfuse (ML/LLM-specific with prompt management & A/B testing), Logfire (Python app tracing), Ragas (trace-based metrics). |
-| **Agent Frameworks** | Google-ADK (>=0.1.0), Agno (>=2.0.0), MCP, BAML-py | Multi-agent coordination with Google AI integration; knowledge graphs for complex relationship tracking; Model Context Protocol for tool discovery. |
+| **Agent Frameworks** | Google-ADK (>=2.1.0), Agno (>=2.0.0), MCP, BAML-py | Multi-agent coordination with Google AI integration; knowledge graphs for complex relationship tracking; Model Context Protocol for tool discovery. |
 
 ```
                           ┌─────────────────────────────────────────────────────────────────┐
@@ -611,8 +611,8 @@ The [`.skills/`](.skills/) folder contains detailed skill documentation for key 
 *   [**lancedb**](.skills/lancedb/SKILL.md) — Vector database for RAG with HNSW indexing (v0.15+)
 
 **Data Pipelines & Orchestration:**
-*   [**dagster**](.skills/dagster/SKILL.md) — Data orchestration platform with asset-based pipelines (v1.9+)
-*   [**dlt**](.skills/dlt/SKILL.md) — Data load tool for pipelines with streaming support (v1.4+)
+*   [**dagster**](.skills/dagster/SKILL.md) — Data orchestration platform with asset-based pipelines (v1.13+)
+*   [**dlt**](.skills/dlt/SKILL.md) — Data load tool for pipelines with streaming support (v1.5+)
 *   [**sqlmesh**](.skills/sqlmesh/SKILL.md) — Data transformation framework with DuckDB integration
 
 **Observability & Evaluation:**
