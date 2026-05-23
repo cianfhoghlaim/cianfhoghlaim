@@ -9,7 +9,7 @@
         "@browserbasehq/mcp"
       ],
       "env": {
-        "BROWSERBASE_API_KEY": "bb_live_SjWIy63dVmsAyJj9fzQSwXC1H6c"
+        "BROWSERBASE_API_KEY": "infisical://dev-baile/browserbase/api_key"
       },
       "enabled": true
     },
@@ -21,7 +21,7 @@
         "firecrawl-mcp"
       ],
       "env": {
-        "FIRECRAWL_API_KEY": "fc-159a71fbd84140bd9fb80784910a739c"
+        "FIRECRAWL_API_KEY": "infisical://dev-baile/firecrawl/api_key"
       },
       "enabled": true
     },
@@ -34,7 +34,7 @@
       ],
       "env": {
         "INFISICAL_UNIVERSAL_AUTH_CLIENT_ID": "c56cbe28-88a4-4793-95a1-835d5164d8ad",
-        "INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET": "383b7d8e6a1c4c0cd7e5765f53c702f6e07c497a77363921bb2b206c8287b250",
+        "INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET": "infisical://dev-baile/infisical/client_secret",
         "INFISICAL_HOST_URL": "http://132.145.27.89:8080",
         "INFISICAL_PROJECT_ID": "d18560c0-75d5-436f-a411-0bb758567196"
       },
