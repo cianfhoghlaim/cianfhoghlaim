@@ -44,7 +44,7 @@ dependencies = [
     "dagster>=1.9.0",
     "dagster-webserver>=1.9.0",
     "dagster-dlt>=0.25.0",
-    "dlt[duckdb]>=1.4.0",
+    "dlt[duckdb,hub]==1.25.0",
     # Database
     "duckdb>=1.1.0",
     "lancedb>=0.15.0",
