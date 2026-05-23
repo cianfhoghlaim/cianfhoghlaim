@@ -59,7 +59,7 @@ from .assets import all_assets
 # - curriculum_assets.py (replaced by @dlt_assets pattern)
 # - subject_assets.py (replaced by @dlt_assets pattern)
 # Ireland Curriculum Assets (@dlt_assets pattern - auto-parallelized)
-from .assets.ireland import curriculum_dlt_assets
+from .assets.ireland import curriculum_dlt_assets, scraped_curriculum_pages
 
 # PDF Processing Assets
 from .assets.pdf_assets import pdf_processing_assets
@@ -191,6 +191,7 @@ CONCURRENCY_LIMITS = {
 combined_assets = [
     *all_assets,
     *curriculum_dlt_assets,  # Ireland curriculum (@dlt_assets pattern, auto-parallelized)
+    scraped_curriculum_pages, # New dynamic scraping asset
     *pdf_processing_assets,  # PDF download and OCR extraction
 ]
 

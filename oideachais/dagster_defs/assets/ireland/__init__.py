@@ -32,9 +32,11 @@ from .curriculum_dlt_assets import (
     create_cycle_asset,
     curriculum_dlt_assets,
 )
+from .firecrawl_assets import scraped_curriculum_pages
 
 __all__ = [
     "curriculum_dlt_assets",
+    "scraped_curriculum_pages",
     "create_cycle_asset",
     "create_all_curriculum_assets",
     "CYCLE_PARTITIONS",
