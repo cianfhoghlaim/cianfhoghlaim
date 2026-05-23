@@ -9,7 +9,7 @@ Provides a pre-configured httpx client with:
 - Structured logging
 
 Usage:
-    from oideachais.dlt_sources.http_client import get_client
+    from oideachais.data_platform.dlt_sources.http_client import get_client
 
     async with get_client() as client:
         response = await client.get("https://api.example.com/data")

@@ -20,7 +20,7 @@ Model Provenance:
     - irish_quality_score: For Irish content validation
 
 Usage:
-    from oideachais.cocoindex_flows.ocr_embedding import (
+    from cocoindex_flows.ocr_embedding import (
         OCREmbeddingFlow,
         run_ocr_embedding_flow,
     )

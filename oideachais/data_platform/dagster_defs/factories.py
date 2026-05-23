@@ -44,7 +44,7 @@ def create_dlt_asset(config: DLTAssetConfig) -> dg.AssetsDefinition:
     Usage:
         ncca_asset = create_dlt_asset(DLTAssetConfig(
             name="ncca_curriculum",
-            source_module="oideachais.dlt_sources.ncca",
+            source_module="data_platform.dlt_sources.ncca",
             source_function="ncca_source",
             group_name="ireland_education",
         ))
@@ -282,21 +282,21 @@ def create_ireland_education_assets() -> list[dg.AssetsDefinition]:
     return create_asset_group([
         DLTAssetConfig(
             name="ncca_curriculum",
-            source_module="oideachais.dlt_sources.ncca",
+            source_module="data_platform.dlt_sources.ncca",
             source_function="ncca_source",
             group_name="ireland_education",
             description="NCCA curriculum specifications and publications",
         ),
         DLTAssetConfig(
             name="curriculum_online",
-            source_module="oideachais.dlt_sources.curriculumonline",
+            source_module="data_platform.dlt_sources.curriculumonline",
             source_function="curriculum_source",
             group_name="ireland_education",
             description="Curriculum Online subject specifications",
         ),
         DLTAssetConfig(
             name="sec_exams",
-            source_module="oideachais.dlt_sources.sec",
+            source_module="data_platform.dlt_sources.sec",
             source_function="sec_source",
             group_name="ireland_education",
             description="State Examination Commission papers",
@@ -312,7 +312,7 @@ def create_celtic_language_assets() -> list[dg.AssetsDefinition]:
     return create_asset_group([
         DLTAssetConfig(
             name="duchas_schools",
-            source_module="oideachais.dlt_sources.duchas",
+            source_module="data_platform.dlt_sources.duchas",
             source_function="duchas_source",
             group_name="celtic_language",
             description="Dúchas.ie Schools Collection",
@@ -322,7 +322,7 @@ def create_celtic_language_assets() -> list[dg.AssetsDefinition]:
         ),
         DLTAssetConfig(
             name="tearma_terminology",
-            source_module="oideachais.dlt_sources.tearma",
+            source_module="data_platform.dlt_sources.tearma",
             source_function="tearma_source",
             group_name="celtic_language",
             description="Téarma.ie Irish terminology database",
@@ -596,7 +596,7 @@ def create_curriculum_ingestion_asset(
     ) -> dg.MaterializeResult:
         """Ingest curriculum content from all sources with deduplication."""
         import dlt as dlt_lib
-        from oideachais.dlt_sources.ireland.curriculum_source import curriculum_source
+        from dlt_sources.ireland.curriculum_source import curriculum_source
 
         # Get partition key (cycle)
         cycle = context.partition_key
@@ -789,7 +789,7 @@ def create_unified_curriculum_assets() -> list[dg.AssetsDefinition]:
         List of all curriculum asset definitions
 
     Usage:
-        from oideachais.dagster_defs.factories import create_unified_curriculum_assets
+        from dagster_defs.factories import create_unified_curriculum_assets
 
         curriculum_assets = create_unified_curriculum_assets()
         defs = Definitions(assets=curriculum_assets, ...)

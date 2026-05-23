@@ -11,7 +11,7 @@ Key Features:
 - Efficient incremental updates
 
 Usage:
-    from oideachais.dlt_sources.ireland.curriculum_source import (
+    from oideachais.data_platform.dlt_sources.ireland.curriculum_source import (
         curriculum_source,
     )
 
@@ -40,14 +40,14 @@ from typing import Any
 
 import dlt
 import structlog
-from oideachais.dlt_sources.ireland.content_deduplication import (
+from oideachais.data_platform.dlt_sources.ireland.content_deduplication import (
     ContentDeduplicator,
 )
-from oideachais.dlt_sources.ireland.curriculum_registry import (
+from oideachais.data_platform.dlt_sources.ireland.curriculum_registry import (
     SubjectRegistry,
     URLResolver,
 )
-from oideachais.dlt_sources.ireland.source_adapters import (
+from oideachais.data_platform.dlt_sources.ireland.source_adapters import (
     get_all_adapters,
 )
 
@@ -76,6 +76,49 @@ def _crawl_source(
     Yields:
         Raw page dictionaries from Firecrawl
     """
+    import os
+    import json
+    from pathlib import Path
+    from urllib.parse import urlparse
+    from datetime import datetime, UTC
+
+    # 1. Local Scrape Samples Interception
+    samples_dir = Path("/Users/cianmacandeisigh/dev/kings_college_galway/stedding/site_scrape_samples")
+    parsed_url = urlparse(base_url)
+    domain = parsed_url.netloc.replace("www.", "")
+    
+    domain_dir = samples_dir / domain
+    if domain_dir.exists() and os.environ.get("USE_LOCAL_SCRAPES", "true").lower() == "true":
+        logger.info("using_local_scrape_samples", domain=domain, base_url=base_url)
+        found_matches = False
+        for json_file in domain_dir.glob("*.json"):
+            try:
+                with open(json_file, 'r', encoding='utf-8') as f:
+                    page_data = json.load(f)
+                    
+                page_url = page_data.get("metadata", {}).get("url", "")
+                if not page_url or page_url.startswith("file://"):
+                    continue
+                    
+                if page_url.startswith(base_url):
+                    found_matches = True
+                    yield {
+                        "url": page_url,
+                        "title": page_data.get("metadata", {}).get("title", ""),
+                        "markdown": page_data.get("markdown", ""),
+                        "html": page_data.get("html", ""),
+                        "metadata": page_data.get("metadata", {}),
+                        "links": page_data.get("links", []),
+                        "status": "success",
+                        "source": source_name,
+                        "crawled_at": datetime.now(UTC).isoformat(),
+                    }
+            except Exception as e:
+                logger.warning("local_sample_load_failed", file=str(json_file), error=str(e))
+                
+        if found_matches:
+            return
+
     try:
         from firecrawl import FirecrawlApp
     except ImportError:
@@ -493,7 +536,7 @@ def _crawl_subjects(
 
 
 import dlthub
-from sruth.oideachais.data_platform.dlt_sources.dlthub_projects import apply_dlthub_wrappers
+from oideachais.data_platform.dlt_sources.dlthub_projects import apply_dlthub_wrappers
 
 @dlt.source(name="ireland_curriculum")
 def curriculum_source(

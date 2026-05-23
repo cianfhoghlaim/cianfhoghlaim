@@ -27,7 +27,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 from agno.os import AgentOS
 
 # Import existing education team and agents
-from oideachais.agents.agno.education_team import (
+from agents.agno.education_team import (
     corpus_agent,
     curriculum_agent,
     education_team,

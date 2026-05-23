@@ -8,7 +8,7 @@ Provides:
 - Incremental state management
 
 Usage:
-    from oideachais.dlt_sources.ireland.content_deduplication import (
+    from oideachais.data_platform.dlt_sources.ireland.content_deduplication import (
         ContentDeduplicator,
         DeduplicationResult,
     )
@@ -30,7 +30,7 @@ from datetime import datetime
 from typing import Any
 
 import structlog
-from oideachais.dlt_sources.ireland.source_adapters import NormalizedPage
+from oideachais.data_platform.dlt_sources.ireland.source_adapters import NormalizedPage
 
 logger = structlog.get_logger(__name__)
 
