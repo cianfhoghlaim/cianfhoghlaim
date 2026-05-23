@@ -1,0 +1,272 @@
+.. _beagleboneblack-specifications:
+
+BeagleBone Black High Level Specification
+#############################################
+
+This section provides the high level specification of the BeagleBone
+Black.
+
+Block Diagram
+**************
+
+.. figure:: images/image30.jpg
+   :width: 512px
+   :height: 454px
+   :align: center
+   :alt: BeagleBone Black Key Components
+
+   BeagleBone Black Key Components
+
+Processor
+**********
+
+The revision B and later boards have moved to the Sitara AM3358BZCZ100
+device.
+
+Memory
+********
+
+Described in the following sections are the three memory devices found
+on the board.
+
+512MB DDR3L
+============
+
+A single 256Mb x16 DDR3L 4Gb (512MB) memory device is used. The memory
+used is one of two devices:
+
+* MT41K256M16HA-125 from Micron
+* D2516EC4BXGGB from Kingston
+
+It will operate at a clock frequency of 400MHz yielding an effective
+rate of 800MHZ on the DDR3L bus allowing for 1.6GB/S of DDR3L memory
+bandwidth.
+
+4KB EEPROM
+==========
+
+A single 4KB EEPROM is provided on I2C0 that holds the board
+information. This information includes board name, serial number, and
+revision information. This is the not the same as the one used on the
+original BeagleBone. The device was changed for cost reduction reasons.
+It has a test point to allow the device to be programmed and otherwise
+to provide write protection when not grounded.
+
+4GB Embedded MMC
+================
+
+A single 4GB embedded MMC (eMMC) device is on the board. The device
+connects to the MMC1 port of the processor, allowing for 8bit wide
+access. Default boot mode for the board will be MMC1 with an option to
+change it to MMC0, the SD card slot, for booting from the SD card as a
+result of removing and reapplying the power to the board. Simply
+pressing the reset button will not change the boot mode. MMC0 cannot be
+used in 8Bit mode because the lower data pins are located on the pins
+used by the Ethernet port. This does not interfere with SD card
+operation but it does make it unsuitable for use as an eMMC port if the
+8 bit feature is needed.
+
+MicroSD Connector
+=================
+
+The board is equipped with a single microSD connector to act as the
+secondary boot source for the board and, if selected as such, can be the
+primary boot source. The connector will support larger capacity microSD
+cards. The microSD card is not provided with the board. Booting from
+MMC0 will be used to flash the eMMC in the production environment or can
+be used by the user to update the SW as needed.
+
+Boot Modes
+==========
+
+As mentioned earlier, there are four boot modes:
+
+* **eMMC Boot:** This is the default boot mode and will allow for the fastest boot time and will enable the board to boot out of the box using the pre-flashed OS image without having to purchase an microSD card or an microSD card writer.
+* **SD Boot:** This mode will boot from the microSD slot. This mode can be used to override what is on the eMMC device and can be used to program the eMMC when used in the manufacturing process or for field updates.
+* **Serial BooT:** This mode will use the serial port to allow downloading of the software direct. A separate USB to serial cable is required to use this port.
+* **USB Boot:** This mode supports booting over the USB port.
+
+*Software to support USB and serial boot modes is not provided by
+beagleboard.org.Please contact TI for support of this feature.*
+
+A switch is provided to allow switching between the modes.
+
+* Holding the boot switch down during a removal and reapplication of power without a microSD card inserted will force the boot source to be the USB port and if nothing is detected on the USB client port, it will go to the serial port for download.
+* Without holding the switch, the board will boot try to boot from the eMMC. If it is empty, then it will try booting from the microSD slot, followed by the serial port, and then the USB port.
+* If you hold the boot switch down during the removal and reapplication of power to the board, and you have a microSD card inserted with a bootable image, the board will boot from the microSD card.
+
+*NOTE: Pressing the RESET button on the board will NOT result in a
+change of the_ _boot mode. You MUST remove power and reapply power to
+change the boot mode.The boot pins are sampled during power on reset
+from the PMIC to the processor.The reset button on the board is a
+warm reset only and will not force a boot mode change.*
+
+Power Management
+*****************
+
+The *TPS65217C* power management device is used along with a separate
+LDO to provide power to the system. The**TPS65217C** version provides
+for the proper voltages required for the DDR3L. This is the same device
+as used on the original BeagleBone with the exception of the power rail
+configuration settings which will be changed in the internal EEPROM to
+the *TPS65217C* to support the new voltages.
+
+DDR3L requires 1.5V instead of 1.8V on the DDR2 as is the case on the
+original BeagleBone. The 1.8V regulator setting has been changed to 1.5V
+for the DDR3L. The LDO3 3.3V rail has been changed to 1.8V to support
+those rails on the processor. LDO4 is still 3.3V for the 3.3V rails on
+the processor. An external *LDOTLV70233* provides the 3.3V rail for the
+rest of the board.
+
+PC USB Interface
+=================
+
+The board has a miniUSB connector that connects the USB0 port to the
+processor. This is the same connector as used on the original
+BeagleBone.
+
+Serial Debug Port
+==================
+
+Serial debug is provided via UART0 on the processor via a single 1x6 pin
+header. In order to use the interface a USB to TTL adapter will be
+required. The header is compatible with the one provided by FTDI and can
+be purchased for about $$12 to $$20 from various sources. Signals
+supported are TX and RX. None of the handshake signals are supported.
+
+USB1 Host Port
+===============
+
+On the board is a single USB Type A female connector with full LS/FS/HS
+Host support that connects to USB1 on the processor. The port can
+provide power on/off control and up to 500mA of current at 5V. Under USB
+power, the board will not be able to supply the full 500mA, but should
+be sufficient to supply enough current for a lower power USB device
+supplying power between 50 to 100mA.
+
+You can use a wireless keyboard/mouse configuration or you can add a HUB
+for standard keyboard and mouse interfacing.
+
+Power Sources
+==============
+
+The board can be powered from four different sources:
+
+* A USB port on a PC
+* A 5VDC 1A power supply plugged into the DC connector.
+* A power supply with a USB connector.
+* Expansion connectors
+
+The USB cable is shipped with each board. This port is limited to 500mA
+by the Power Management IC. It is possible to change the settings in the
+*TPS65217C* to increase this current, but only after the initial boot.
+And, at that point the PC most likely will complain, but you can also
+use a dual connector USB cable to the PC to get to 1A.
+
+The power supply is not provided with the board but can be easily
+obtained from numerous sources. A 1A supply is sufficient to power the
+board, but if there is a cape plugged into the board or you have a power
+hungry device or hub plugged into the host port, then more current may
+needed from the DC supply.
+
+Power routed to the board via the expansion header could be provided
+from power derived on a cape. The DC supply should be well regulated and
+5V +/-.25V.
+
+Reset Button
+=============
+
+When pressed and released, causes a reset of the board. The reset button
+used on the BeagleBone Black is a little larger than the one used on the
+original BeagleBone. It has also been moved out to the edge of the board
+so that it is more accessible.
+
+Power Button
+=============
+
+A power button is provided near the reset button close to the Ethernet
+connector. This button takes advantage of the input to the PMIC for
+power down features. While a lot of capes have a button, it was decided
+to add this feature to the board to ensure everyone had access to some
+new features. These features include:
+
+* Interrupt is sent to the processor to facilitate an orderly shutdown to save files and to un-mount drives.
+* Provides ability to let processor put board into a sleep mode to save power.
+* Can alert processor to wake up from sleep mode and restore state before sleep was entered.
+
+If you hold the button down longer than 8 seconds, the board will power
+off if you release the button when the power LED turns off. If you
+continue to hold it, the board will power back up completing a power
+cycle.
+
+*We recommend that you use this method to power down the board. It will
+also help prevent contamination of the SD card or the eMMC.*
+
+If you do not remove the power jack, you can press the button again and
+the board will power up.
+
+Indicators
+===========
+
+There are a total of five blue LEDs on the board.
+
+* One blue power LED indicates that power is applied and the power management IC is up. If this LED flashes when applying power, it means that an excess current flow was detected and the PMIC has shut down.
+* Four blue LEDs that can be controlled via the SW by setting GPIO pins.
+
+In addition, there are two LEDs on the RJ45 to provide Ethernet status
+indication. One is yellow (100M Link up if on) and the other is green
+(Indicating traffic when flashing).
+
+CTI JTAG Header
+===============
+
+A place for an optional 20 pin CTI JTAG header is provided on the board
+to facilitate the SW development and debugging of the board by using
+various JTAG emulators. This header is not supplied standard on the
+board. To use this, a connector will need to be soldered onto the board.
+
+If you need the JTAG connector you can solder it on yourself. No other
+components are needed. The connector is made by Samtec and the part
+number is FTR-110-03-G-D-06. You can purchase it from
+`http://www.digikey.com/ <http://www.digikey.com>`_
+
+HDMI Interface
+==============
+
+A single HDMI interface is connected to the 16 bit LCD interface on the
+processor. The 16b interface was used to preserve as many expansion pins
+as possible to allow for use by the user. The NXP TDA19988BHN is used to
+convert the LCD interface to HDMI and convert the audio as well. The
+signals are still connected to the expansion headers to enable the use
+of LCD expansion boards or access to other functions on the board as
+needed.
+
+The HDMI device does not support HDCP copy protection. Support is
+provided via EDID to allow the SW to identify the compatible
+resolutions. Currently the following resolutions are supported via the
+software:
+
+* 1280 x 1024
+* 1440 x 900
+* 1024 x 768
+* 1280 x 720
+
+Cape Board Support
+==================
+
+The BeagleBone Black has the ability to accept up to four expansion
+boards or capes that can be stacked onto the expansion headers. The word
+cape comes from the shape of the board as it is fitted around the
+Ethernet connector on the main board. This notch acts as a key to ensure
+proper orientation of the cape.
+
+The majority of capes designed for the original BeagleBone will work on
+the BeagleBone Black. The two main expansion headers will be populated
+on the board. There are a few exceptions where certain capabilities may
+not be present or are limited to the BeagleBone Black. These include:
+
+* GPMC bus may NOT be available due to the use of those signals by the eMMC. If the eMMC is used for booting only and the file system is on the microSD card, then these signals could be used.
+* Another option is to use the microSD or serial boot modes and not use the eMMC.
+* The power expansion header is not on the BeagleBone Black so those functions are not supported.
+
+For more information on cape support refer to :ref:`beagleboneblack-mechanical` section.

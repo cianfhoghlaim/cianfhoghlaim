@@ -1,0 +1,23 @@
+.. Latest distro images
+.. Created on: 2023-11-17
+.. Updated on: 2023-11-17
+
+.. _BeaglePlay latest image (Xfce): https://www.beagleboard.org/distros/beagleplay-11-8-2023-10-07-10gb-emmc-xfce-flasher
+.. _BeaglePlay latest image (home-assistant): https://www.beagleboard.org/distros/beagleplay-11-8-2023-10-07-8gb-emmc-home-assistant-flasher
+
+.. _AM57xx latest image (IoT): https://www.beagleboard.org/distros/am57xx-12-2-2023-10-07-4gb-emmc-iot-flasher
+.. _AM57xx latest image (Xfce): https://www.beagleboard.org/distros/am57xx-11-7-2023-09-02-4gb-emmc-xfce-flasher
+
+.. _BeagleBone AI-64 latest image (Minimal): https://www.beagleboard.org/distros/bbai64-12-2-2023-10-07-6gb-emmc-minimal-flasher
+.. _BeagleBone AI-64 latest image (TI EDGEAI): https://www.beagleboard.org/distros/bbai64-11-8-2023-10-07-10gb-emmc-ti-edgeai-xfce-flasher
+.. _BeagleBone AI-64 latest image (Xfce): https://www.beagleboard.org/distros/bbai64-11-8-2023-10-07-10gb-emmc-xfce-flasher
+
+.. _AM335x latest image: https://www.beagleboard.org/distros/am335x-11-7-2023-09-02-4gb-microsd-iot
+.. _AM335x latest image (Xfce): https://www.beagleboard.org/distros/am335x-11-7-2023-09-02-4gb-emmc-xfce-flasher
+.. _AM335x latest image (IoT): https://www.beagleboard.org/distros/am335x-11-7-2023-09-02-4gb-emmc-iot-flasher
+
+.. _BeagleConnect Freedom latest image (micropython): https://www.beagleboard.org/distros/beagleconnect-freedom-micropython-v0-0-3
+
+.. _BeagleV-Ahead latest image (Ubuntu): https://www.beagleboard.org/distros/beaglev-ahead-ubuntu-2023-07-05
+.. _BeagleV-Ahead latest image (Yocto): https://www.beagleboard.org/distros/beaglev-ahead-yocto-npi-2023-06-10
+

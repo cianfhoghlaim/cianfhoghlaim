@@ -1,0 +1,27 @@
+P9,,,,  ,P8 ,,,
+Functions,odd,even,Functions, ,Functions,odd,even,Functions 
+USB D+,E1,E2,USB D-, ,-,-,-,- 
+5V OUT,E3,E4,GND, ,-,-,-,- 
+GND,1,2,GND, ,GND,1,2,GND 
+3V3 OUT,3,4,3V3 OUT, ,D M,3,4,D M 
+5V IN,5,6,5V IN, ,D M,5,6,D M 
+5V OUT,7,8,5V OUT, ,C2r D,7,8,C2t D 
+PWR BUT,9,10,RESET, ,D,9,10,D 
+D U4r,11,12,D, ,D P0o,11,12,D Q2a P0o 
+D U4t,13,14,D E1a, ,D E2b,13,14,D 
+D,15,16,D E1b, ,D P0i,15,16,D P0i 
+D I1c S00,17,18,D I1d S0o, ,D,17,18,D 
+C0r D I2c,19,20,C0t D I2d, ,D E2a,19,20,D M P1 
+D E0b S0i U2t,21,22,D E0a S0c U2r, ,D M P1,21,22,D M Q2b 
+D S01,23,24,C1r D I3c U1t, ,D M,23,24,D M 
+D P0,25,26,C1t D I3d U1r, ,D M,25,26,D 
+D P0 Q0b,27,28,D P0 S10, ,D L P1,27,28,D L P1 
+D E S1i P0,29,30,D P0 S1o, ,D L P1,29,30,D L P1 
+D E S1c P0,31,32,ADC VDD, ,D L,31,32,D L 
+A4,33,34,ADC GND, ,D L Q1b,33,34,D E L 
+A6,35,36,A5, ,D L Q1a,35,36,D E L 
+A2,37,38,A3, ,D L U5t,37,38,D L U5r 
+A0,39,40,A1, ,D L P1,39,40,D L P1 
+D P0,41,42,D Q0a S11 U3t P0, ,D L P1,41,42,D L P1 
+GND,43,44,GND, ,D L P1,43,44,D L P1 
+GND,45,46,GND, ,D E L P1,45,46,D E L P1 

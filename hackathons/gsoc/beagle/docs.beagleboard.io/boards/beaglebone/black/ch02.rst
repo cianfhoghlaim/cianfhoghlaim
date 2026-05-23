@@ -1,0 +1,232 @@
+.. _beagleboneblack-Change-History:
+
+Change History
+##################
+
+This section describes the change history of this document and board.
+Document changes are not always a result of a board change. A board
+change will always result in a document change.
+
+Document Change History
+***********************
+
+.. list-table:: AsciiDoc Change History
+   :header-rows: 1
+   :class: longtable
+   :widths: 8, 60, 25,7
+   :align: center
+
+   * - Rev
+     - Changes
+     - Date
+     - By
+   * - A4
+     - Preliminary
+     - January 4, 2013
+     - GC
+   * - A5
+     - Production release
+     - January 8.2013
+     - GC
+   * - A5.1
+     -
+       1. Added information on Power button and the battery access points. 
+       2. Final production released version.
+     - April 1 2013
+     - GC
+   * - A5.2
+     - 
+       1. Edited version. 
+       2. Added numerous pictures of the Rev A5A board.
+     - April 23 2013
+     - GC
+   * - A5.3
+     - 
+       1. Updated serial number locations. 
+       2. Corrected the feature table for 4 UARTS 
+       3. Corrected eMMC pin table to match other tables in the manual.
+     - April 30, 2013
+     - GC
+   * - A5.4
+     -
+       1. Corrected revision listed in section 2. Rev A5A is the initial production release. 
+       2. Added all the locations of the serial numbers 
+       3. Made additions to the compatibility list. 
+       4. Corrected <<table-7>> for LED GPIO pins. 
+       5. Fixed several typos. 
+       6. Added some additional information about LDOs and StepDown converters. 
+       7. Added short section on HDMI.
+     - May 12, 2013
+     - GC
+   * - A5.5
+     -
+       1. Release of the A5B version. 
+       2. The LEDS were dimmed by changing the resistors. 
+       3. The serial termination mode was incorporated into the PCB.
+     - May 20, 2013
+     - GC
+   * - A5.6
+     -
+      1. Added information on Rev A5C 
+      2. Added PRU/ICSS options to tables for P8 and P9. 
+      3. Added section on USB Host Correct modes on <<table-15>>. 
+      4. Fixed a few typos
+     - June 16, 2013
+     - GC
+   * - A5.7
+     -
+      1. Updated assembly revision to A6. 
+      2. PCB change to add buffer to the reset line and ground the oscillator GND pin. 
+      3. Added resistor on PCB for connection of OSC_GND to board GND.
+     - August 9, 2013
+     - GC
+   * - A6
+     -
+      1. Added Rev A6 changes.
+     - October 11, 2013
+     - GC
+   * - A6A
+     -
+      1. Added Rev A6A changes
+     - December 17, 2013
+     - GC
+   * - B
+     -
+      1. Changed the processor to the AM3358BZCZ
+     - January 20, 2013
+     - GC
+   * - C
+     -
+      1. Changed the eMMC from 2GB to 4GB. 
+      2. Added additional supplier to DDR2 and eMMC.
+     - March 21,2014
+     - GC
+   * - C.1
+     -
+      1. Added note to recommend powering off the board with the power
+     - March 22, 2014
+     - GC
+   * - C.2
+     - Numerous community edits and format changes to asciidoc.
+     - May 6, 2020
+     - JK
+   * - C.3
+     - Added information for board rev C3.
+     - August 24, 2021
+     - JK
+
+Board Changes
+**************
+
+Rev C3a
+========
+
+PCB revision C.
+
+* New USB Type-A connector.
+
+Rev C3
+=======
+
+PCB revision C.
+
+* Updated microSD card cage due to availability. See https://git.beagleboard.org/beagleboard/beaglebone-black/-/issues/6. Added series resistors and depopulated C5.
+* Added reset option (GPIO1_8) for Ethernet PHY to avoid possible start-up issue. See https://git.beagleboard.org/beagleboard/beaglebone-black/-/issues/4.
+* Added series resistors to MMC1 lines and depopulated C24.
+* Connected pin A6 of J5 on U13 (eMMC IC) to DGND.
+* Changed USB1_VBUS series resistor to 0 ohm.
+* Change required PCB revision to C.
+
+Initial boxes mistakenly say rev C1.
+
+Rev C2
+=======
+
+PCB revision B6.
+
+* Update memories based on availability. See https://github.com/beagleboard/beaglebone-black/commit/74914bd01efeb61376ec3dda4bf9143ad2bb635c.
+   
+  * DDR3:
+    
+    * Kingston D2516EC4BXGGB-U
+  
+  * eMMC:
+    
+    * Kingston MMC04G-M627-X02U
+
+Rev C1
+=======
+
+PCB revision B6.
+
+* Update memories based on availability. See https://github.com/beagleboard/beaglebone-black/commit/5787736d816832cc8cc9629d19f334b6a12e67f9.
+  
+  * DDR3:
+    
+    * Micron MT41K256M16TW-107:P
+  
+  * eMMC:
+    
+    * Micron MTFC4GACAJCN-1M WT
+    * Kingston EMMC04G-S100-A08U
+
+Rev C
+======
+
+* Changed the eMMC from 2GB to 4GB.
+
+2GB devices are getting harder to get as they are being phased out. This
+required us to move to 4GB. We now have two sources for the device. This
+will however, require an increase in the price of the board.
+
+Rev B
+======
+
+* Changed the processor to the AM3358BZCZ100.
+
+Rev A6A
+========
+
+* Added connection from 32KHz OSC_GND to system ground and changed C106 to 1uF.
+* Changes C25 to 2.2uF. This resolved an issue we were seeing in a few boards where the board would not boot in 1 in 20 tries.
+* Change required PCB revision to B6.
+
+Rev A6
+=======
+
+* In random instances there could be a glitch in the SYS_RESETn signal from the processor where the SYS_RESETn signal was taken high for a momentary amount of time before it was supposed to. To prevent this, the signal was ORed with the PORZn (Power On reset).
+* Noise issues were observed in other design where the clock oscillator was getting hit due to a suspected issue in ground bounce. A zero ohm resistor was added to connect the OSC_GND to the system ground.
+
+There are no new features added as a result of these changes.
+
+Rev A5C
+========
+
+We were seeing some fallout in production test where we were seeing some
+jitter on the HDMI display test. It started showing up on our second
+production run. R46, R47, R48 were changed to 0 ohm from 33 ohm. R45 was
+taken from 330 ohm to 22 ohm.
+
+We do not know of any boards that were shipped with this issue as this
+issue was caught in production test. No impact on features or
+functionality resulted from this change.
+
+Rev A5B
+========
+
+There is no operational difference between the Rev A5A and the Rev A5B.
+There were two changes made to the A5B version.
+
+* Due to complaints about the brightness of the LEDs keeping people awake at night, the LEDs were dimmed. Resistors were changed from 820 ohms to 4.75K ohms.
+* The PCB revision was updated to incorporate the hand mod that was being done on the board during manufacturing. The resistor was incorporated into the next revision of the PCB.
+
+The highest supported resolution is now listed as 1920x1080@24Hz. This
+was not a result of any hardware changes but only updated software. The
+A5A version also supports this resolution.
+
+Rev A5A
+========
+
+This is the initial production release of the board. We will be tracking
+changes from this point forward.
+

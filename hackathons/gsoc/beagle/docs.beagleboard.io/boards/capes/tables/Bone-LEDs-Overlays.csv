@@ -1,0 +1,3 @@
+Header,Pin,Overlay 
+P8,3,`BONE-LED_P8_03.dts <https://git.beagleboard.org/beagleboard/BeagleBoard-DeviceTrees/blob/v4.19.x-ti-overlays/src/arm/overlays/BONE-LED_P8_03.dts>`_ 
+P9,11,`BONE-LED_P9_11.dts <https://git.beagleboard.org/beagleboard/BeagleBoard-DeviceTrees/blob/v4.19.x-ti-overlays/src/arm/overlays/BONE-LED_P9_11.dts>`_

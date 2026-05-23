@@ -1,0 +1,26 @@
+.. _pocketbeagle_mechanical:
+
+PocketBeagle Mechanical
+########################
+
+.. _dimensions_and_weight:
+
+9.1 Dimensions and Weight
+***************************
+
+Size: 2.21” x 1.38” (56mm x 35mm)
+
+Max height: .197” (5mm)
+
+PCB size: 55mm x 35mm
+
+PCB Layers: 4
+
+PCB thickness: 1.6mm
+
+RoHS Compliant: Yes
+
+Weight: 10g
+
+Rough model can be found at
+`PocketBeagle models <https://git.beagleboard.org/beagleboard/pocketbeagle/-/tree/master/models>`__

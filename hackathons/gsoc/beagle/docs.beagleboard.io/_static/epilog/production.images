@@ -1,0 +1,21 @@
+.. Production board boot media
+.. Created on: 2024-03-22
+.. Updated on: 2024-04-12
+
+.. Add BeagleBone AI Rev -
+.. Add BeagleBone Blue Rev -
+.. Add BeagleV-Fire Rev -
+
+.. _BeaglePlay Rev A2: https://www.beagleboard.org/distros/beagleplay-rev-a2
+
+.. _BeagleBone AI-64 Rev B1: https://www.beagleboard.org/distros/beaglebone-ai-64-rev-b1
+
+.. _BeagleBone Black Rev C3a: https://www.beagleboard.org/distros/am3358-debian-10-3-2020-04-06-4gb-sd-iot
+
+.. _BeagleBone Black Industrial Rev C3a: https://www.beagleboard.org/distros/am3358-debian-10-3-2020-04-06-4gb-sd-iot
+
+.. _BeagleV-Ahead Rev 1.0: https://www.beagleboard.org/distros/beaglev-ahead-rev-1-0
+
+.. _PocketBeagle Rev Rev A2b: https://www.beagleboard.org/distros/am3358-debian-10-3-2020-04-06-4gb-sd-iot
+
+.. _BeagleConnect Freedom Rev C7: https://www.beagleboard.org/distros/beagleconnect-freedom-rev-c7

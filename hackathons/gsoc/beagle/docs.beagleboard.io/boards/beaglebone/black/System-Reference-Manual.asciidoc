@@ -1,0 +1,5833 @@
+= BeagleBone Black System Reference Manual
+:xrefstyle: full
+:table-caption!: 
+:toc:
+:toclevels: 3
+:toc-placement!:
+:autofit-option: 
+:base_font_size_min: 0
+:table_cell_padding: 0
+
+image:media/image1.jpg[media/image1.jpg,title="media/image1.jpg",width=598,height=400,align="center"]
+
+[.text-center]
+*Revision C.3 (wiki to PDF snapshot)*
+
+[.text-center]
+*Last PDF conversion: August 24, 2021*
+
+______________________________________________________________________________________________________________________________________________________
+*Maintaining editor: Jason Kridner* _jkridner@beagleboard.org_
+
+*Original author: Gerald Coley* _gcoley1@emprodesign.com_
+
+*Contributing Editor: Robert P J Day*
+
+Other contributions from the BeagleBoard.org community through the wiki
+______________________________________________________________________________________________________________________________________________________
+
+== THIS DOCUMENT
+
+_This work is licensed under the Creative Commons Attribution-Share
+Alike 3.0 Unported License. To view a copy of this license, visit
+http://creativecommons.org/licenses/by-sa/3.0/[http://creativecommons.org/licenses/bysa/3.0/]
+or send a letter to Creative Commons, 171 Second Street, Suite 300, San
+Francisco, California, 94105, USA._
+
+_All derivative works are to be attributed to Gerald Coley of
+BeagleBoard.org._
+
+_For more information, see
+http://creativecommons.org/license/results-one?license_code=by-sa[http://creativecommons.org/license/resultsone?license_code=by-sa]_
+
+______________________________________________________________________________________________________________________________________________________
+*Supply comments and errors via
+https://github.com/beagleboard/beaglebone-black/issues*
+
+*All information in this document is subject to change without notice.*
+
+*For an up to date version of this document refer to:*
+
+https://github.com/beagleboard/beaglebone-black/wiki/System-Reference-Manual[_https://github.com/beagleboard/beaglebone-black/wiki/System-Reference-Manual_]
+______________________________________________________________________________________________________________________________________________________
+
+== *BEAGLEBONE DESIGN*
+
+These design materials referred to in this document are **NOT
+SUPPORTED** and *DO NOT* constitute a reference design. Only “community”
+support is allowed via resources at
+http://beagleboard.org/discuss[_BeagleBoard.org/discuss._]
+
+THERE IS NO WARRANTY FOR THE DESIGN MATERIALS, TO THE EXTENT PERMITTED
+BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
+HOLDERS AND/OR OTHER PARTIES PROVIDE THE DESIGN MATERIALS “AS IS”
+WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING,
+BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND
+PERFORMANCE OF THE DESIGN MATERIALS IS WITH YOU. SHOULD THE DESIGN
+MATERIALS PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY
+SERVICING, REPAIR OR CORRECTION.
+
+This board was designed as an evaluation and development tool. It was
+not designed with any other application in mind. As such, the design
+materials that are provided which include schematic, BOM, and PCB files,
+may or may not be suitable for any other purposes. If used, the design
+material becomes your responsibility as to whether or not it meets your
+specific needs or your specific applications and may require changes to
+meet your requirements.
+
+== *BEAGLEBONE BLACK ADDITIONAL TERMS*
+
+BeagleBoard.org Foundation and logo-licensed manufacturers provide the
+enclosed BeagleBone under the following conditions:
+
+The user assumes all responsibility and liability for proper and safe
+handling of the goods. Further, the user indemnifies Supplier from all
+claims arising from the handling or use of the goods.
+
+Should the BeagleBone not meet the specifications indicated in the
+System Reference Manual, the BeagleBone may be returned within 90 days
+from the date of delivery to the distributor of purchase for a full
+refund. THE FOREGOING LIMITED WARRANTY IS THE EXCLUSIVE WARRANTY MADE BY
+SELLER TO BUYER AND IS IN LIEU OF ALL OTHER WARRANTIES, EXPRESSED,
+IMPLIED, OR STATUTORY, INCLUDING ANY WARRANTY OF MERCHANTABILITY OR
+FITNESS FOR ANY PARTICULAR PURPOSE. EXCEPT TO THE EXTENT OF THE
+INDEMNITY SET FORTH ABOVE, NEITHER PARTY SHALL BE LIABLE TO THE OTHER
+FOR ANY INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES.
+
+Please read the System Reference Manual and, specifically, the Warnings
+and Restrictions notice in the Systems Reference Manual prior to
+handling the product. This notice contains important safety information
+about temperatures and voltages.
+
+No license is granted under any patent right or other intellectual
+property right of Supplier covering or relating to any machine, process,
+or combination in which such Supplier products or services might be or
+are used. The Supplier currently deals with a variety of customers for
+products, and therefore our arrangement with the user is not exclusive.
+The Supplier assume no liability for applications assistance, customer
+product design, software performance, or infringement of patents or
+services described herein.
+
+== *UNITED STATES FCC AND CANADA IC REGULATORY COMPLIANCE INFORMATION*
+
+*The BeagleBone is annotated to comply with Part 15 of the FCC Rules*.
+Operation is subject to the following two conditions: (1) This device
+may not cause harmful interference, and (2) this device must accept any
+interference received, including interference that may cause undesired
+operation. Changes or modifications not expressly approved by the party
+responsible for compliance could void the user’s authority to operate
+the equipment.
+
+This Class A or B digital apparatus complies with Canadian ICES-003.
+Changes or modifications not expressly approved by the party responsible
+for compliance could void the user’s authority to operate the equipment.
+Cet appareil numérique de la classe A ou B est conforme à la norme
+NMB-003 du Canada. Les changements ou les modifications pas expressément
+approuvés par la partie responsible de la conformité ont pu vider
+l’autorité de l'utilisateur pour actionner l'équipement.
+
+== *BEAGLEBONE WARNINGS, RESTRICTIONS AND DISCLAIMERS*
+
+_For Feasibility Evaluation Only, in Laboratory/Development
+Environments_. BeagleBone Black is not a complete product. It is
+intended solely for use for preliminary feasibility evaluation in
+laboratory/development environments by technically qualified electronics
+experts who are familiar with the dangers and application risks
+associated with handling electrical mechanical components, systems and
+subsystems. It should not be used as all or part of a finished end
+product.
+
+*Your Sole Responsibility and Risk* you acknowledge, represent, and
+agree that:
+
+1.  You have unique knowledge concerning Federal, State and local
+regulatory requirements (including but not limited to Food and Drug
+Administration regulations, if applicable) which relate to your products
+and which relate to your use (and/or that of your employees, affiliates,
+contractors or designees) of the BeagleBone for evaluation, testing and
+other purposes.
+2.  You have full and exclusive responsibility to assure the safety and
+compliance of your products with all such laws and other applicable
+regulatory requirements, and also to assure the safety of any activities
+to be conducted by you and/or your employees, affiliates, contractors or
+designees, using the BeagleBone. Further, you are responsible to assure
+that any interfaces (electronic and/or mechanical) between the
+BeagleBone and any human body are designed with suitable isolation and
+means to safely limit accessible leakage currents to minimize the risk
+of electrical shock hazard.
+3.  Since the BeagleBone is not a completed product, it may not meet all
+applicable regulatory and safety compliance standards which may normally
+be associated with similar items. You assume full responsibility to
+determine and/or assure compliance with any such standards and related
+certifications as may be applicable. You will employ reasonable
+safeguards to ensure that your use of the BeagleBone will not result in
+any property damage, injury or death, even if the BeagleBone should fail
+to perform as described or expected.
+
+*Certain Instructions*. It is important to operate the BeagleBone Black
+within Supplier’s _recommended specifications and environmental
+considerations per the user guidelines._ _Exceeding the specified
+BeagleBone ratings (including but not limited to input and output_
+_voltage, current, power, and environmental ranges) may cause property
+damage, personal_ _injury or death. If there are questions concerning
+these ratings please contact the Supplier_ _representative prior to
+connecting interface electronics including input power and intended_
+_loads. Any loads applied outside of the specified output range may
+result in unintended_ _and/or inaccurate operation and/or possible
+permanent damage to the BeagleBone and/or_ _interface electronics.
+Please consult the System Reference Manual prior to connecting any_
+_load to the BeagleBone output. If there is uncertainty as to the load
+specification, please_ _contact the Supplier representative. During
+normal operation, some circuit components_ _may have case temperatures
+greater than 60 C as long as the input and output are_ _maintained at a
+normal ambient operating temperature. These components include but are_
+_not limited to linear regulators, switching transistors, pass
+transistors, and current sense_ _resistors which can be identified using
+the BeagleBone schematic located at the link in the_ _BeagleBone System
+Reference Manual. When placing measurement probes near these_ _devices
+during normal operation, please be aware that these devices may be very
+warm to_ _the touch. As with all electronic evaluation tools, only
+qualified personnel knowledgeable in_ _electronic measurement and
+diagnostics normally found in development environments_ _should use the
+BeagleBone._
+
+*Agreement to Defend, Indemnify and Hold Harmless*. You agree to defend,
+indemnify'' _and hold the Suppliers, its licensors and their
+representatives harmless from and against_ _any and all claims, damages,
+losses, expenses, costs and liabilities (collectively,_ _"Claims")
+arising out of or in connection with any use of the BeagleBone that is
+not in_ _accordance with the terms of the agreement. This obligation
+shall apply whether Claims_ _arise under law of tort or contract or any
+other legal theory, and even if the BeagleBone_ _fails to perform as
+described or expected._
+
+*Safety-Critical or Life-Critical Applications*. If you intend to
+evaluate the components for possible'' _use in safety critical
+applications (such as life support) where a failure of the Supplier’s
+product_ _would reasonably be expected to cause severe personal injury
+or death, such as devices which are_ _classified as FDA Class III or
+similar classification, then you must specifically notify Suppliers of_
+_such intent and enter into a separate Assurance and Indemnity
+Agreement._
+
+[.text-left]
+*Mailing Address*:
+
+BeagleBoard.org Foundation
+4467 Ascot Ct +
+Oakland Twp, MI 48306 U.S.A.
+
+*WARRANTY:* _The BeagleBone Black Assembly as purchased is warranted
+against defects in materials and workmanship for a period of 90 days
+from purchase. This warranty does not cover any problems occurring as a
+result of improper use, modifications, exposure to water, excessive
+voltages, abuse, or accidents. All boards will be returned via standard
+mail if an issue is found. If no issue is found or express return is
+needed, the customer will pay all shipping costs_.
+
+Before returning the board, please visit
+
+_BeagleBoard.org/support_
+
+For up to date SW images and technical information refer to
+https://www.beagleboard.org/distros[_https://www.beagleboard.org/distros_]
+
+All support for this board is provided via community support at
+https://beagleboard.org/discuss[_beagleboard.org/discuss_]
+
+To return a defective board for repair, please request an RMA at
+https://beagleboard.org/support/rma[_beagleboard.org/support/rma_]
+
+*Please DO NOT return the board without approval from the RMA team
+first.*
+
+All boards received without RMA approval will not be worked on.
+
+toc::[]
+
+[[introduction]]
+== 1.0 Introduction
+
+This document is the *System Reference Manual* for the BeagleBone Black
+and covers its use and design. The board will primarily be referred to
+in the remainder of this document simply as the board, although it may
+also be referred to as the BeagleBone Black as a reminder. There are
+also references to the original BeagleBone as well, and will be
+referenced as simply BeagleBone.
+
+This design is subject to change without notice as we will work to keep
+improving the design as the product matures based on feedback and
+experience. Software updates will be frequent and will be independent of
+the hardware revisions and as such not result in a change in the
+revision number.
+
+Make sure you check the support Wikis frequently for the most up to date
+information.
+
+https://github.com/beagleboard/beaglebone-black/wiki
+
+https://elinux.org/Beagleboard:BeagleBoneBlack
+
+[[change-history]]
+== 2.0 Change History
+
+This section describes the change history of this document and board.
+Document changes are not always a result of a board change. A board
+change will always result in a document change.
+
+[[document-change-history]]
+=== 2.1 Document Change History
+
+[[table-1]]
+.Table 1. Change History
+[cols="1,7,2,1",options="header",]
+|=======================================================================
+|*Rev* |*Changes* |*Date* |*By*
+|A4 |Preliminary |January 4, 2013 |GC
+|A5 |Production release |January 8.2013 |GC
+|A5.1 |1.  Added information on Power button and the battery access points. +
+2.  Final production released version. |April 1 2013 |GC
+|A5.2 |1. Edited version. +
+2.  Added numerous pictures of the Rev A5A board. |April 23 2013 |GC
+|A5.3 |1. Updated serial number locations. +
+2.  Corrected the feature table for 4 UARTS +
+3.  Corrected eMMC pin table to match other tables in the manual. |April 30, 2013 |GC
+|A5.4 |1. Corrected revision listed in section 2. Rev A5A is the initial
+production release. +
+2. Added all the locations of the serial numbers +
+3. Made additions to the compatibility list. +
+4. Corrected <<table-7>> for LED GPIO pins. +
+5. Fixed several typos. +
+6. Added some additional information about LDOs and StepDown converters. +
+7. Added short section on HDMI. |May 12, 2013 |GC
+|A5.5 |1. Release of the A5B version. +
+2. The LEDS were dimmed by changing the resistors. +
+3. The serial termination mode was incorporated into the PCB. |May 20, 2013 |GC
+|A5.6 |1. Added information on Rev A5C +
+2. Added PRU/ICSS options to tables for P8 and P9. +
+3. Added section on USB Host Correct modes on <<table-15>>. +
+4. Fixed a few typos |June 16, 2013 |GC
+|A5.7 |1. Updated assembly revision to A6. +
+2. PCB change to add buffer to the reset line and ground the oscillator GND
+pin. +
+3. Added resistor on PCB for connection of OSC_GND to board GND. |August 9,
+2013 |GC
+|A6 |1. Added Rev A6 changes. |October 11, 2013 |GC
+|A6A |1. Added Rev A6A changes |December 17, 2013 |GC
+|B |1. Changed the processor to the AM3358BZCZ |January 20, 2013 |GC
+|C |1. Changed the eMMC from 2GB to 4GB. +
+2. Added additional supplier to DDR2 and eMMC. |March 21,2014 |GC
+|C.1 |1. Added note to recommend powering off the board with the power |March 22, 2014 |GC
+|C.2 |Numerous community edits and format changes to asciidoc. |May 6, 2020 |JK
+|C.3 |Added information for board rev C3. |August 24, 2021 |JK
+|=======================================================================
+
+[[board-changes]]
+=== 2.2 Board Changes
+
+[[rev-c3]]
+==== 2.2.1 Rev C3
+
+PCB revision C.
+
+* Updated microSD card cage due to availability. See https://github.com/beagleboard/beaglebone-black/issues/6. Added series resistors and depopulated C5.
+* Added reset option (GPIO1_8) for Ethernet PHY to avoid possible start-up issue. See https://github.com/beagleboard/beaglebone-black/issues/4.
+* Added series resistors to MMC1 lines and depopulated C24.
+* Connected pin A6 of J5 on U13 (eMMC IC) to DGND.
+* Changed USB1_VBUS series resistor to 0 ohm.
+* Change required PCB revision to C.
+
+Initial boxes mistakenly say rev C1.
+
+[[rev-c2]]
+==== 2.2.2 Rev C2
+
+PCB revision B6.
+
+* Update memories based on availability. See https://github.com/beagleboard/beaglebone-black/commit/74914bd01efeb61376ec3dda4bf9143ad2bb635c.
+** DDR3:
+*** Kingston D2516EC4BXGGB-U
+** eMMC:
+**** Kingston MMC04G-M627-X02U
+
+[[rev-c1]]
+==== 2.2.3 Rev C1
+
+PCB revision B6.
+
+* Update memories based on availability. See https://github.com/beagleboard/beaglebone-black/commit/5787736d816832cc8cc9629d19f334b6a12e67f9.
+** DDR3:
+*** Micron MT41K256M16TW-107:P
+** eMMC:
+*** Micron MTFC4GACAJCN-1M WT
+*** Kingston EMMC04G-S100-A08U
+
+[[rev-c]]
+==== 2.2.4 Rev C
+
+* Changed the eMMC from 2GB to 4GB.
+
+2GB devices are getting harder to get as they are being phased out. This
+required us to move to 4GB. We now have two sources for the device. This
+will however, require an increase in the price of the board.
+
+[[rev-b]]
+==== 2.2.5 Rev B
+
+* Changed the processor to the AM3358BZCZ100.
+
+[[rev-a6a]]
+==== 2.2.6 Rev A6A
+
+* Added connection from 32KHz OSC_GND to system ground and changed C106
+to 1uF.
+* Changes C25 to 2.2uF. This resolved an issue we were seeing in a few
+boards where the board would not boot in 1 in 20 tries.
+* Change required PCB revision to B6.
+
+[[rev-a6]]
+==== 2.2.7 Rev A6
+
+* In random instances there could be a glitch in the SYS_RESETn signal
+from the processor where the SYS_RESETn signal was taken high for a
+momentary amount of time before it was supposed to. To prevent this, the
+signal was ORed with the PORZn (Power On reset).
+* Noise issues were observed in other design where the clock oscillator
+was getting hit due to a suspected issue in ground bounce. A zero ohm
+resistor was added to connect the OSC_GND to the system ground.
+
+There are no new features added as a result of these changes.
+
+[[rev-a5c]]
+==== 2.2.8 Rev A5C
+
+We were seeing some fallout in production test where we were seeing some
+jitter on the HDMI display test. It started showing up on out second
+production run. R46, R47, R48 were changed to 0 ohm from 33 ohm. R45 was
+taken from 330 ohm to 22 ohm.
+
+We do not know of any boards that were shipped with this issue as this
+issue was caught in production test. No impact on features or
+functionality resulted from this change.
+
+[[rev-a5b]]
+==== 2.2.9 Rev A5B
+
+There is no operational difference between the Rev A5A and the Rev A5B.
+There were two changes made to the A5B version.
+
+* Due to complaints about the brightness of the LEDs keeping people
+awake at night, the LEDs were dimmed. Resistors were changed from 820
+ohms to 4.75K ohms.
+* The PCB revision was updated to incorporate the hand mod that was
+being done on the board during manufacturing. The resistor was
+incorporated into the next revision of the PCB.
+
+The highest supported resolution is now listed as 1920x1080@24Hz. This
+was not a result of any hardware changes but only updated software. The
+A5A version also supports this resolution.
+
+[[rev-a5a]]
+==== 2.2.10 Rev A5A
+
+This is the initial production release of the board. We will be tracking
+changes from this point forward.
+
+[[connecting-up-your-beaglebone-black]]
+== 3.0 Connecting Up Your BeagleBone Black
+
+This section provides instructions on how to hook up your board. Two
+scenarios will be discussed:
+
+1.  Tethered to a PC and
+2.  As a standalone development platform in a desktop PC configuration.
+
+[[whats-in-the-box]]
+=== 3.1 What’s In the Box
+
+In the box you will find three main items as shown in <<figure-1>>.
+
+* BeagleBone Black
+* miniUSB to USB Type A Cable
+* Instruction card with link to the support WIKI address.
+
+This is sufficient for the tethered scenario and creates an out of box
+experience where the board can be used immediately with no other
+equipment needed.
+
+[[figure-1,Figure 1]]
+.Figure 1. In The Box
+image:media/image7.jpg[media/image7.jpg,title="media/image7.jpg",width=574,height=399]
+
+[[main-connection-scenarios]]
+=== 3.2 Main Connection Scenarios
+
+This section will describe how to connect the board for use. This
+section is basically a slightly more detailed description of the Quick
+Start Guide that came in the box. There is also a Quick Start Guide
+document on the board that should also be referred to. The intent here
+is that someone looking to purchase the board will be able to read this
+section and get a good idea as to what the initial set up will be like.
+
+The board can be configured in several different ways, but we will
+discuss the two most common scenarios as described in the Quick Start
+Guide card that comes in the box.
+
+* Tethered to a PC via the USB cable
+** Board is accessed as a storage drive 
+** Or a RNDIS Ethernet connection.
+* Standalone desktop 
+** Display
+** Keyboard and mouse
+** External 5V power supply
+
+Each of these configurations is discussed in general terms in the
+following sections.
+
+For an up-to-date list of confirmed working accessories please go to
+http://elinux.org/BeagleBone_Black_Accessories[_http://elinux.org/BeagleBone_Black_Accessories_]
+
+[[tethered-to-a-pc]]
+=== 3.3 Tethered To A PC
+
+In this configuration, the board is powered by the PC via the provided
+USB cable--no other cables are required. The board is accessed either as
+a USB storage drive or via the browser on the PC. You need to use either
+Firefox or Chrome on the PC, IEx will not work properly. <<figure-2>>
+shows this configuration.
+
+[[figure-2,Figure 2]]
+.Figure 2. Tethered Configuration
+image:media/image8.jpg[media/image8.jpg,title="media/image8.jpg",width=632,height=166,align="center"]
+
+All the power for the board is provided by the PC via the USB cable. In
+some instances, the PC may not be able to supply sufficient power for
+the board. In that case, an external 5VDC power supply can be used, but
+this should rarely be necessary.
+
+[[connect-the-cable-to-the-board]]
+==== 3.3.1 Connect the Cable to the Board
+
+1. Connect the small connector on the USB cable to the board as shown
+in <<figure-3>>. The connector is on the bottom side of the board.
++
+[[figure-3,Figure 3]]
+.Figure 3. USB Connection to the Board
+image:media/image9.jpg[media/image9.jpg,title="media/image9.jpg",width=451,height=206,float="right"]
+2.  Connect the large connector of the USB cable to your PC or laptop
+USB port.
+3.  The board will power on and the power LED will be on as shown in
+<<figure-4>> below.
++
+[[figure-4,Figure 4]]
+.Figure 4. Board Power LED
+image:media/image10.jpg[media/image10.jpg,title="media/image10.jpg",width=401,height=267,float="right"]
+4. When the board starts to the booting process started by the process
+of applying power, the LEDs will come on in sequence as shown in <<figure-5>>
+below. It will take a few seconds for the status LEDs to come on, so
+be patient. The LEDs will be flashing in an erratic manner as it begins
+to boot the Linux kernel.
++
+[[figure-5,Figure 5]]
+.Figure 5. Board Boot Status
+image:media/image11.jpg[media/image11.jpg,title="media/image11.jpg",width=541,height=254,float="right"]
+
+[[accessing-the-board-as-a-storage-drive]]
+==== 3.3.2 Accessing the Board as a Storage Drive
+
+The board will appear around a USB Storage drive on your PC after the
+kernel has booted, which will take a round 10 seconds. The kernel on the
+board needs to boot before the port gets enumerated. Once the board
+appears as a storage drive, do the following:
+
+1.  Open the USB Drive folder.
+2.  Click on the file named *start.htm*
+3.  The file will be opened by your browser on the PC and you should get
+a display showing the Quick Start Guide.
+4.  Your board is now operational! Follow the instructions on your PC
+screen.
+
+[[standalone-wdisplay-and-keyboardmouse]]
+=== 3.4 Standalone w/Display and Keyboard/Mouse
+
+In this configuration, the board works more like a PC, totally free from
+any connection to a PC as shown in <<figure-6>>. It allows you to create
+your code to make the board do whatever you need it to do. It will
+however require certain common PC accessories. These accessories and
+instructions are described in the following section.
+
+[[figure-6,Figure 6]]
+.Figure 6. Desktop Configuration
+image:media/image12.jpg[media/image12.jpg,title="media/image12.jpg",width=356,height=409]
+
+Optionally an Ethernet cable can also be used for network access.
+
+[[required-accessories]]
+==== 3.4.1 Required Accessories
+
+In order to use the board in this configuration, you will need the
+following accessories:
+
+* (1) 5VDC 1A power supply
+* (1) HDMI monitor or a DVI-D monitor. (*NOTE:* Only HDMI will give you
+audio capability).
+* (1) Micro HDMI to HDMI cable or a Micro HDMI to DVI-D adapter.
+* (1) USB wireless keyboard and mouse combo.
+* (1) USB HUB (OPTIONAL). The board has only one USB host port, so you
+may need to use a USB Hub if your keyboard and mouse requires two ports.
+
+For an up-to-date list of confirmed working accessories please go to
+http://elinux.org/BeagleBone_Black_Accessories[_http://elinux.org/BeagleBone_Black_Accessories_]
+
+[[connecting-up-the-board]]
+==== 3.4.2 Connecting Up the Board
+
+1. Connect the big end of the HDMI cable as shown in <<figure-7>> to your
+HDMI monitor. Refer to your monitor Owner’s Manual for the location of
+your HDMI port. If you have a DVI-D Monitor go to *Step 3*, otherwise
+proceed to *Step 4.*
++
+[[figure-7,Figure 7]]
+.Figure 7. Connect microHDMI Cable to the Monitor
+image:media/image13.jpg[media/image13.jpg,title="media/image13.jpg",width=260,height=95,align="center"]
+2.  If you have a DVI-D monitor you must use a DVI-D to HDMI adapter in
+addition to your HDMI cable. An example is shown in <<figure-8>> below
+from two perspectives. If you use this configuration, you will not have
+audio support.
++
+[[figure-8,Figure 8]]
+.Figure 8. DVI-D to HDMI Adapter
+image:media/image14.jpg[media/image14.jpg,title="media/image14.jpg",width=243,height=140,align="center"]
+3.  If you have a single wireless keyboard and mouse combination such as
+seen in <<figure-9>> below, you need to plug the receiver in the USB host
+port of the board as shown in <<figure-10>>.
++
+[[figure-9,Figure 9]]
+.Figure 9. Wireless Keyboard and Mouse Combo
+image:media/image16.jpg[media/image16.jpg,title="media/image16.jpg",width=237,height=108,align="center"]
++
+[[figure-10,Figure 10]]
+.Figure 10. Connect Keyboard and Mouse Receiver to the Board
+image:media/image17.jpg[media/image17.jpg,title="media/image17.jpg",width=279,height=222,align="center"]
++
+If you have a wired USB keyboard requiring two USB ports, you will need
+a HUB similar to the ones shown in <<figure-11>>. You may want to have
+more than one port for other devices. Note that the board can only
+supply up to 500mA, so if you plan to load it down, it will need to be
+externally powered.
++
+[[figure-11,Figure 11]]
+.Figure 11. Keyboard and Mouse Hubs
+image:media/image18.jpg[media/image18.jpg,title="media/image18.jpg",width=509,height=152,align="center"]
+4. Connect the Ethernet Cable
++
+If you decide you want to connect to your local area network, an
+Ethernet cable can be used. Connect the Ethernet Cable to the Ethernet
+port as shown in <<figure-12>>. Any standard 100M Ethernet cable should
+work.
++
+[[figure-12,Figure 12]]
+.Figure 12. Ethernet Cable Connection
+image:media/image24.jpg[media/image24.jpg,title="media/image24.jpg",width=433,height=264,align="center"]
+5. The final step is to plug in the DC power supply to the DC power jack as
+shown in <<figure-13>> below.
++
+[[figure-13,Figure 13]]
+.Figure 13. External DC Power
+image:media/image25.jpg[media/image25.jpg,title="media/image25.jpg",width=618,height=298,align="center"]
+6. The cable needed to connect to your display is a microHDMI to HDMI.
+Connect the microHDMI connector end to the board at this time. The
+connector is on the bottom side of the board as shown in <<figure-14>>
+below.
++
+[[figure-14,Figure 14]]
+.Figure 14. Connect microHDMI Cable to the Board
+image:media/image26.jpg[media/image26.jpg,title="media/image26.jpg",width=540,height=227,align="center"]
++
+The connector is fairly robust, but we suggest that you not use the
+cable as a leash for your Beagle. Take proper care not to put too much
+stress on the connector or cable.
+7. Booting the Board
++
+As soon as the power is applied to the board, it will start the booting
+up process. When the board starts to boot the LEDs will come on in
+sequence as shown in <<figure-15>> below. It will take a few seconds for
+the status LEDs to come on, so be patient. The LEDs will be flashing in
+an erratic manner as it boots the Linux kernel.
++
+[[figure-15,Figure 15]]
+.Figure 15. Board Boot Status
+image:media/image11.jpg[media/image11.jpg,title="media/image11.jpg",width=541,height=254,align="center"]
++
+While the four user LEDS can be over written and used as desired, they
+do have specific meanings in the image that is shipped with the board
+once the Linux kernel has booted.
++
+* *USER0* is the heartbeat indicator from the Linux kernel.
+* *USER1* turns on when the microSD card is being accessed
+* *USER2* is an activity indicator. It turns on when the kernel is not
+in the idle loop.
+* *USER3* turns on when the onboard eMMC is being accessed.
+8. A Booted System
+.. The board will have a mouse pointer appear on the screen as it
+enters the Linux boot step. You may have to move the physical mouse to
+get the mouse pointer to appear. The system can come up in the suspend
+mode with the HDMI port in a sleep mode.
+.. After a minute or two a login screen will appear. You do not have to
+do anything at this point.
+.. After a minute or two the desktop will appear. It should be similar
+to the one shown in <<figure-16>>. HOWEVER, it will change from one
+release to the next, so do not expect your system to look exactly like
+the one in the figure, but it will be very similar.
+.. And at this point you are ready to go! <<figure-16>> shows the desktop
+after booting.
++
+[[figure-16,Figure 16]]
+.Figure 16. Desktop Screen
+image:media/image27.jpg[media/image27.jpg,title="media/image27.jpg",width=513,height=288,align="center"]
+9. Powering Down
+.. Press the power button momentarily.
+.. The system will power down automatically. 
+.. Remove the power jack.
+
+[[beaglebone-black-overview]]
+== 4.0 BeagleBone Black Overview
+
+The BeagleBone Black is the latest addition to the BeagleBoard.org
+family and like its predecessors, is designed to address the Open Source
+Community, early adopters, and anyone interested in a low cost ARM
+Cortex-A8 based processor.
+
+It has been equipped with a minimum set of features to allow the user to
+experience the power of the processor and is not intended as a full
+development platform as many of the features and interfaces supplied by
+the processor are not accessible from the BeagleBone Black via onboard
+support of some interfaces. It is not a complete product designed to do
+any particular function. It is a foundation for experimentation and
+learning how to program the processor and to access the peripherals by
+the creation of your own software and hardware.
+
+It also offers access to many of the interfaces and allows for the use
+of add-on boards called capes, to add many different combinations of
+features. A user may also develop their own board or add their own
+circuitry.
+
+BeagleBone Black is manufactured and warranted by partners listed at
+https://beagleboard.org/logo for the benefit of the community and its
+supporters.
+
+Jason Kridner of Texas Instruments handles the community promotions and
+is the spokesman for BeagleBoard.org.
+
+The board is designed by Gerald Coley of EmProDesign, a charter member
+of the BeagleBoard.org community.
+
+The PCB layout up through PCB revision B was done by Circuitco and
+Circuitco is the sole funder of its development and transition to
+production. Later PCB revisions have been made by Embest, a subsidiary
+of Avent.
+
+The Software is written and supported by the thousands of community
+members, including Jason Kridner, employee of Texas Instruments, and
+Robert Nelson, employee of DigiKey.
+
+[[beaglebone-compatibility]]
+=== 4.1 BeagleBone Compatibility
+
+The board is intended to be compatible with the original BeagleBone as
+much as possible. There are several areas where there are differences
+between the two designs. These differences are listed below, along with
+the reasons for the differences.
+
+* Sitara AM3358BZCZ100, 1GHZ, processor.
+** Sorry, we just had to make it faster.
+* 512MB DDR3L
+** _Cost reduction_
+** Performance boost
+** Memory size increase
+** Lower power
+* No Serial port by default.
+** _Cost reduction_
+** Can be added by buying a TTL to USB Cable that is widely available
+** Single largest cost reduction action taken
+* No JTAG emulation over USB.
+** _Cost reduction._ JTAG header is not populated, but can easily be
+mounted.
+* EEPROM Reduced from 32KB to 4KB
+** _Cost Reduction_
+* Onboard Managed NAND (eMMC)
+** 4GB
+** _Cost reduction_
+** Performance boost x8 vs. x4 bits
+** Performance boost due to deterministic properties vs. microSD card
+* GPMC bus may not be accessible from the expansion headers in some
+cases
+** Result of eMMC on the main board
+** Signals are still routed to the expansion connector
+** If eMMC is not used, signals can be used via expansion if eMMC is
+held in reset
+* There may be 10 less GPIO pins available
+** Result of eMMC
+** If eMMC is not used, could still be used
+* The power expansion header, for battery and backlight, has been
+removed
+** __Cost reduction,__space reduction
+** Four pins were added to provide access to the battery charger
+function.
+* HDMI interface onboard
+** Feature addition
+** Audio and video capable
+** Micro HDMI
+* No three function USB cable
+** _Cost reduction_
+* GPIO3_21 has a 24.576 MHZ clock on it.
+** This is required by the HDMI Framer for Audio purposes. We needed to
+run a clock into the processor to generate the correct clock frequency.
+The pin on the processor was already routed to the expansion header. In
+order not to remove this feature on the expansion header, it was left
+connected. In order to use the pin as a GPIO pin, you need to disable
+the clock. While this disables audio to the HDMI, the fact that you want
+to use this pin for something else, does the same thing.
+
+[[beaglebone-black-features-and-specification]]
+=== 4.2 BeagleBone Black Features and Specification
+
+This section covers the specifications and features of the board and
+provides a high level description of the major components and interfaces
+that make up the board.
+
+<<table-2>> provides a list of the features.
+
+[[table-2,Table 2]]
+.Table 2. BeagleBone Black Features
+[cols="1h,3",options="header",]
+|=======================================================================
+| |*Feature*
+|*Processor* |Sitara AM3358BZCZ100 1GHz, 2000 MIPS
+
+|*Graphics Engine* |SGX530 3D, 20M Polygons/S
+
+|*SDRAM Memory* |512MB DDR3L 800MHZ
+
+|*Onboard Flash* |4GB, 8bit Embedded MMC
+
+|*PMIC* |TPS65217C PMIC regulator and one additional LDO.
+
+|*Debug Support* |Optional Onboard 20-pin CTI JTAG, Serial Header
+
+|*Power Source* |miniUSB USB or DC Jack
+
+|*PCB* |3.4” x 2.1”
+
+|*Indicators* |1-Power, 2-Ethernet, 4-User Controllable LEDs
+
+|*HS USB 2.0 Client Port* |Access to USB0, Client mode via miniUSB
+
+|*HS USB 2.0 Host Port* |Access to USB1, Type A Socket, 500mA LS/FS/HS
+
+|*Serial Port* |UART0 access via 6 pin 3.3V TTL Header. Header is
+populated
+
+|*Ethernet* |10/100, RJ45
+
+|*SD/MMC Connector* |microSD , 3.3V
+
+|*User Input* |Reset Button +
+Boot Button +
+Power Button
+
+|*Video Out* |16b HDMI, 1280x1024 (MAX) +
+1024x768,1280x720,1440x900 ,1920x1080@24Hz w/EDID Support
+
+|*Audio* |Via HDMI Interface, Stereo
+
+|*Expansion Connectors* |Power 5V, 3.3V , VDD_ADC(1.8V) +
+3.3V I/O on all signals +
+McASP0, SPI1, I2C, GPIO(69 max), LCD, GPMC, MMC1, MMC2, 7 +
+AIN _(1.8V MAX)_, 4 Timers, 4 Serial Ports, CAN0, +
+EHRPWM(0,2),XDMA Interrupt, Power button, Expansion Board ID (Up to 4
+can be stacked)
+
+|*Weight* |1.4 oz (39.68 grams)
+
+|*Power* |Refer to <<section-6-1-7>>
+|=======================================================================
+
+[[board-component-locations]]
+=== 4.3 Board Component Locations
+
+This section describes the key components on the board. It provides
+information on their location and function. Familiarize yourself with
+the various components on the board.
+
+[[connectors-leds-and-switches]]
+==== 4.3.1 Connectors, LEDs, and Switches
+
+<<figure-17>> below shows the locations of the connectors, LEDs, and
+switches on the PCB layout of the board.
+
+[[figure-17,Figure 17]]
+.Figure 17. Connectors, LEDs and Switches
+image:media/image28.jpg[media/image28.jpg,title="media/image28.jpg",width=509,height=340]
+
+* *DC Power* is the main DC input that accepts 5V power.
+* *Power Button* alerts the processor to initiate the power down
+sequence and is used to power down the board.
+* *10/100 Ethernet* is the connection to the LAN.
+* *Serial Debug* is the serial debug port.
+* *USB Client* is a miniUSB connection to a PC that can also power the
+board.
+* *BOOT switch* can be used to force a boot from the microSD card if the
+power is cycled on the board, removing power and reapplying the power to
+the board..
+* There are four blue **LED**S that can be used by the user.
+* *Reset Button* allows the user to reset the processor.
+* *microSD* slot is where a microSD card can be installed.
+* *microHDMI* connector is where the display is connected to.
+* *USB Host* can be connected different USB interfaces such as Wi-Fi,
+BT, Keyboard, etc.
+
+[[key-components]]
+==== 4.3.2 Key Components
+
+<<figure-18>> below shows the locations of the key components on the PCB
+layout of the board.
+
+[[figure-18,Figure 18]]
+.Figure 18. Key Components
+image:media/image29.jpg[media/image29.jpg,title="media/image29.jpg",width=575,height=417]
+
+* *Sitara AM3358BZCZ100* is the processor for the board.
+* *Micron 512MB DDR3L* or**Kingston 512mB DDR3** is the Dual Data Rate
+RAM memory.
+* *TPS65217C PMIC* provides the power rails to the various components on
+the board.
+* *SMSC Ethernet PHY* is the physical interface to the network.
+* *Micron eMMC* is an onboard MMC chip that holds up to 4GB of data.
+* *HDMI* Framer provides control for an HDMI or DVI-D display with an
+adapter.
+
+[[beaglebone-black-high-level-specification]]
+== 5.0 BeagleBone Black High Level Specification
+
+This section provides the high level specification of the BeagleBone
+Black.
+
+[[block-diagram]]
+=== 5.1 Block Diagram
+
+<<figure-19>> below is the high level block diagram of the BeagleBone
+Black.
+
+[[figure-19,Figure 19]]
+.Figure 19. BeagleBone Black Key Components
+image:media/image30.jpg[media/image30.jpg,title="media/image30.jpg",width=512,height=454,align="center"]
+
+[[processor]]
+=== 5.2 Processor
+
+The revision B and later boards have moved to the Sitara AM3358BZCZ100
+device.
+
+[[memory]]
+=== 5.3 Memory
+
+Described in the following sections are the three memory devices found
+on the board.
+
+[[mb-ddr3l]]
+==== 5.3.1 512MB DDR3L
+
+A single 256Mb x16 DDR3L 4Gb (512MB) memory device is used. The memory
+used is one of two devices:
+
+* MT41K256M16HA-125 from Micron
+* D2516EC4BXGGB from Kingston
+
+It will operate at a clock frequency of 400MHz yielding an effective
+rate of 800MHZ on the DDR3L bus allowing for 1.6GB/S of DDR3L memory
+bandwidth.
+
+[[kb-eeprom]]
+==== 5.3.2 4KB EEPROM
+
+A single 4KB EEPROM is provided on I2C0 that holds the board
+information. This information includes board name, serial number, and
+revision information. This is the not the same as the one used on the
+original BeagleBone. The device was changed for cost reduction reasons.
+It has a test point to allow the device to be programmed and otherwise
+to provide write protection when not grounded.
+
+[[gb-embedded-mmc]]
+==== 5.3.3 4GB Embedded MMC
+
+A single 4GB embedded MMC (eMMC) device is on the board. The device
+connects to the MMC1 port of the processor, allowing for 8bit wide
+access. Default boot mode for the board will be MMC1 with an option to
+change it to MMC0, the SD card slot, for booting from the SD card as a
+result of removing and reapplying the power to the board. Simply
+pressing the reset button will not change the boot mode. MMC0 cannot be
+used in 8Bit mode because the lower data pins are located on the pins
+used by the Ethernet port. This does not interfere with SD card
+operation but it does make it unsuitable for use as an eMMC port if the
+8 bit feature is needed.
+
+[[microsd-connector]]
+==== 5.3.4 MicroSD Connector
+
+The board is equipped with a single microSD connector to act as the
+secondary boot source for the board and, if selected as such, can be the
+primary boot source. The connector will support larger capacity microSD
+cards. The microSD card is not provided with the board. Booting from
+MMC0 will be used to flash the eMMC in the production environment or can
+be used by the user to update the SW as needed.
+
+[[boot-modes]]
+==== 5.3.5 Boot Modes
+
+As mentioned earlier, there are four boot modes:
+
+* **eMMC Boot…**This is the default boot mode and will allow for the
+fastest boot time and will enable the board to boot out of the box using
+the pre-flashed OS image without having to purchase an microSD card or
+an microSD card writer.
+* **SD Boot…**This mode will boot from the microSD slot. This mode can
+be used to override what is on the eMMC device and can be used to
+program the eMMC when used in the manufacturing process or for field
+updates.
+* **Serial Boot…**This mode will use the serial port to allow
+downloading of the software direct. A separate USB to serial cable is
+required to use this port.
+* **USB Boot…**This mode supports booting over the USB port.
+
+_Software to support USB and serial boot modes is not provided by
+beagleboard.org._ _Please contact TI for support of this feature._
+
+A switch is provided to allow switching between the modes.
+
+* Holding the boot switch down during a removal and reapplication of
+power without a microSD card inserted will force the boot source to be
+the USB port and if nothing is detected on the USB client port, it will
+go to the serial port for download.
+* Without holding the switch, the board will boot try to boot from the
+eMMC. If it is empty, then it will try booting from the microSD slot,
+followed by the serial port, and then the USB port.
+* If you hold the boot switch down during the removal and reapplication
+of power to the board, and you have a microSD card inserted with a
+bootable image, the board will boot from the microSD card.
+
+_NOTE: Pressing the RESET button on the board will NOT result in a
+change of the_ _boot mode. You MUST remove power and reapply power to
+change the boot mode._ _The boot pins are sampled during power on reset
+from the PMIC to the processor._ _The reset button on the board is a
+warm reset only and will not force a boot mode_ _change._
+
+[[power-management]]
+=== 5.4 Power Management
+
+The *TPS65217C* power management device is used along with a separate
+LDO to provide power to the system. The **TPS65217C** version provides
+for the proper voltages required for the DDR3L. This is the same device
+as used on the original BeagleBone with the exception of the power rail
+configuration settings which will be changed in the internal EEPROM to
+the *TPS65217C* to support the new voltages.
+
+DDR3L requires 1.5V instead of 1.8V on the DDR2 as is the case on the
+original BeagleBone. The 1.8V regulator setting has been changed to 1.5V
+for the DDR3L. The LDO3 3.3V rail has been changed to 1.8V to support
+those rails on the processor. LDO4 is still 3.3V for the 3.3V rails on
+the processor. An external *LDOTLV70233* provides the 3.3V rail for the
+rest of the board.
+
+[[pc-usb-interface]]
+=== 5.5 PC USB Interface
+
+The board has a miniUSB connector that connects the USB0 port to the
+processor. This is the same connector as used on the original
+BeagleBone.
+
+[[serial-debug-port]]
+=== 5.6 Serial Debug Port
+
+Serial debug is provided via UART0 on the processor via a single 1x6 pin
+header. In order to use the interface a USB to TTL adapter will be
+required. The header is compatible with the one provided by FTDI and can
+be purchased for about $$12 to $$20 from various sources. Signals
+supported are TX and RX. None of the handshake signals are supported.
+
+[[usb1-host-port]]
+=== 5.7 USB1 Host Port
+
+On the board is a single USB Type A female connector with full LS/FS/HS
+Host support that connects to USB1 on the processor. The port can
+provide power on/off control and up to 500mA of current at 5V. Under USB
+power, the board will not be able to supply the full 500mA, but should
+be sufficient to supply enough current for a lower power USB device
+supplying power between 50 to 100mA.
+
+You can use a wireless keyboard/mouse configuration or you can add a HUB
+for standard keyboard and mouse interfacing.
+
+[[power-sources]]
+=== 5.8 Power Sources
+
+The board can be powered from four different sources:
+
+* A USB port on a PC
+* A 5VDC 1A power supply plugged into the DC connector.
+* A power supply with a USB connector.
+* Expansion connectors
+
+The USB cable is shipped with each board. This port is limited to 500mA
+by the Power Management IC. It is possible to change the settings in the
+*TPS65217C* to increase this current, but only after the initial boot.
+And, at that point the PC most likely will complain, but you can also
+use a dual connector USB cable to the PC to get to 1A.
+
+The power supply is not provided with the board but can be easily
+obtained from numerous sources. A 1A supply is sufficient to power the
+board, but if there is a cape plugged into the board or you have a power
+hungry device or hub plugged into the host port, then more current may
+needed from the DC supply.
+
+Power routed to the board via the expansion header could be provided
+from power derived on a cape. The DC supply should be well regulated and
+5V +/-.25V.
+
+[[reset-button]]
+=== 5.9 Reset Button
+
+When pressed and released, causes a reset of the board. The reset button
+used on the BeagleBone Black is a little larger than the one used on the
+original BeagleBone. It has also been moved out to the edge of the board
+so that it is more accessible.
+
+[[power-button]]
+=== 5.10 Power Button
+
+A power button is provided near the reset button close to the Ethernet
+connector. This button takes advantage of the input to the PMIC for
+power down features. While a lot of capes have a button, it was decided
+to add this feature to the board to ensure everyone had access to some
+new features. These features include:
+
+* Interrupt is sent to the processor to facilitate an orderly shutdown
+to save files and to un-mount drives.
+* Provides ability to let processor put board into a sleep mode to save
+power.
+* Can alert processor to wake up from sleep mode and restore state
+before sleep was entered.
+
+If you hold the button down longer than 8 seconds, the board will power
+off if you release the button when the power LED turns off. If you
+continue to hold it, the board will power back up completing a power
+cycle.
+
+_We recommend that you use this method to power down the board. It will
+also help prevent contamination of the SD card or the eMMC._
+
+If you do not remove the power jack, you can press the button again and
+the board will power up.
+
+[[indicators]]
+=== 5.11 Indicators
+
+There are a total of five blue LEDs on the board.
+
+* One blue power LED indicates that power is applied and the power
+management IC is up. If this LED flashes when applying power, it means
+that an excess current flow was detected and the PMIC has shut down.
+* Four blue LEDs that can be controlled via the SW by setting GPIO pins.
+
+In addition, there are two LEDs on the RJ45 to provide Ethernet status
+indication. One is yellow (100M Link up if on) and the other is green
+(Indicating traffic when flashing).
+
+[[cti-jtag-header]]
+=== 5.12 CTI JTAG Header
+
+A place for an optional 20 pin CTI JTAG header is provided on the board
+to facilitate the SW development and debugging of the board by using
+various JTAG emulators. This header is not supplied standard on the
+board. To use this, a connector will need to be soldered onto the board.
+
+If you need the JTAG connector you can solder it on yourself. No other
+components are needed. The connector is made by Samtec and the part
+number is FTR-110-03-G-D-06. You can purchase it from
+http://www.digikey.com/[_www.digikey.com_.]
+
+[[hdmi-interface]]
+=== 5.13 HDMI Interface
+
+A single HDMI interface is connected to the 16 bit LCD interface on the
+processor. The 16b interface was used to preserve as many expansion pins
+as possible to allow for use by the user. The NXP TDA19988BHN is used to
+convert the LCD interface to HDMI and convert the audio as well. The
+signals are still connected to the expansion headers to enable the use
+of LCD expansion boards or access to other functions on the board as
+needed.
+
+The HDMI device does not support HDCP copy protection. Support is
+provided via EDID to allow the SW to identify the compatible
+resolutions. Currently the following resolutions are supported via the
+software:
+
+* 1280 x 1024
+* 1440 x 900
+* 1024 x 768
+* 1280 x 720
+
+[[cape-board-support]]
+=== 5.14 Cape Board Support
+
+The BeagleBone Black has the ability to accept up to four expansion
+boards or capes that can be stacked onto the expansion headers. The word
+cape comes from the shape of the board as it is fitted around the
+Ethernet connector on the main board. This notch acts as a key to ensure
+proper orientation of the cape.
+
+The majority of capes designed for the original BeagleBone will work on
+the BeagleBone Black. The two main expansion headers will be populated
+on the board. There are a few exceptions where certain capabilities may
+not be present or are limited to the BeagleBone Black. These include:
+
+* GPMC bus may NOT be available due to the use of those signals by the
+eMMC. If the eMMC is used for booting only and the file system is on the
+microSD card, then these signals could be used.
+* Another option is to use the microSD or serial boot modes and not use
+the eMMC.
+* The power expansion header is not on the BeagleBone Black so those
+functions are not supported.
+
+For more information on cape support refer to <<section-9>>.
+
+[[detailed-hardware-design]]
+== 6.0 Detailed Hardware Design
+
+This section provides a detailed description of the Hardware design.
+This can be useful for interfacing, writing drivers, or using it to help
+modify specifics of your own design.
+
+<<figure-20>> below is the high level block diagram of the board. For
+those who may be concerned, <<figure-20>> is the same figure as <<figure-19>>.
+It is placed here again for convenience so it is
+closer to the topics to follow.
+
+[[figure-20,Figure 20]]
+.Figure 20. BeagleBone Black Block Diagram
+image:media/image30.jpg[media/image30.jpg,title="media/image30.jpg",width=512,height=454]
+
+[[power-section]]
+=== 6.1 Power Section
+
+<<figure-21>> is the high level block diagram of the power section of the
+board.
+
+[[figure-21,Figure 21]]
+.Figure 21. High Level Power Block Diagram
+image:media/image31.png[media/image31.png,title="media/image31.png",width=417,height=278]
+
+This section describes the power section of the design and all the
+functions performed by the *TPS65217C*.
+
+[[tps65217c-pmic]]
+==== 6.1.1 TPS65217C PMIC
+
+The main Power Management IC (PMIC) in the system is the *TPS65217C*
+which is a single chip power management IC consisting of a linear
+dual-input power path, three step-down converters, and four LDOs. LDO
+stands for Low Drop Out. If you want to know more about an LDO, you can
+go to
+http://en.wikipedia.org/wiki/Low-dropout_regulator[_http://en.wikipedia.org/wiki/Low-dropout_regulator_.]
+If you want to learn more about step-down converters, you can go to
+http://en.wikipedia.org/wiki/DC-to-DC_converter[_http://en.wikipedia.org/wiki/DC-to-DC_converter_]
+
+The system is supplied by a USB port or DC adapter. Three
+high-efficiency 2.25MHz step-down converters are targeted at providing
+the core voltage, MPU, and memory voltage for the board.
+
+The step-down converters enter a low power mode at light load for
+maximum efficiency across the widest possible range of load currents.
+For low-noise applications the devices can be forced into fixed
+frequency PWM using the I2C interface. The step-down converters allow
+the use of small inductors and capacitors to achieve a small footprint
+solution size.
+
+LDO1 and LDO2 are intended to support system standby mode. In normal
+operation, they can support up to 100mA each. LDO3 and LDO4 can support
+up to 285mA each.
+
+By default only LDO1 is always ON but any rail can be configured to
+remain up in SLEEP state. In particular the DCDC converters can remain
+up in a low-power PFM mode to support processor suspend mode. The
+*TPS65217C* offers flexible power-up and power-down sequencing and
+several house-keeping functions such as power-good output, pushbutton
+monitor, hardware reset function and temperature sensor to protect the
+battery.
+
+For more information on the *TPS65217C*, refer to
+http://www.ti.com/product/tps65217C[_http://www.ti.com/product/tps65217C_.]
+
+<<figure-22>> is the high level block diagram of the **TPS65217C**.
+
+[[figure-22,Figure 22]]
+.Figure 22. TPS65217C Block Diagram
+image:media/image37.png[media/image37.png,title="media/image37.png",width=550,height=629]
+
+[[dc-input]]
+==== 6.1.2 DC Input
+
+<<figure-23>> below shows how the DC input is connected to
+the **TPS65217C**.
+
+[[figure-23,Figure 23]]
+.Figure 23. TPS65217 DC Connection
+image:media/image38.png[media/image38.png,title="media/image38.png",width=458,height=408]
+
+A 5VDC supply can be used to provide power to the board. The power
+supply current depends on how many and what type of add-on boards are
+connected to the board. For typical use, a 5VDC supply rated at 1A
+should be sufficient. If heavier use of the expansion headers or USB
+host port is expected, then a higher current supply will be required.
+
+The connector used is a 2.1MM center positive x 5.5mm outer barrel. The
+5VDC rail is connected to the expansion header. It is possible to power
+the board via the expansion headers from an add-on card. The 5VDC is
+also available for use by the add-on cards when the power is supplied by
+the 5VDC jack on the board.
+
+[[usb-power]]
+==== 6.1.3 USB Power
+
+The board can also be powered from the USB port. A typical USB port is
+limited to 500mA max. When powering from the USB port, the VDD_5V rail
+is not provided to the expansion headers, so capes that require the 5V
+rail to supply the cape direct, bypassing the *TPS65217C*, will not have
+that rail available for use. The 5VDC supply from the USB port is
+provided on the SYS_5V, the one that comes from the **TPS65217C**, rail
+of the expansion header for use by a cape. *Figure 24* is the connection
+of the USB power input on the PMIC.
+
+[[figure-24.-usb-power-connections]]
+.Figure 24. USB Power Connections
+image:media/image96.png[media/image96.png,title="media/image96.png",width=519,height=622]
+
+[[power-selection]]
+==== 6.1.4 Power Selection
+
+The selection of either the 5VDC or the USB as the power source is
+handled internally to the *TPS65217C* and automatically switches to 5VDC
+power if both are connected. SW can change the power configuration via
+the I2C interface from the processor. In addition, the SW can read
+the **TPS65217C** and determine if the board is running on the 5VDC input
+or the USB input. This can be beneficial to know the capability of the
+board to supply current for things like operating frequency and
+expansion cards.
+
+It is possible to power the board from the USB input and then connect
+the DC power supply. The board will switch over automatically to the DC
+input.
+
+[[power-button-1]]
+==== 6.1.5 Power Button
+
+A power button is connected to the input of the *TPS65217C*. This is a
+momentary switch, the same type of switch used for reset and boot
+selection on the board.
+
+If you push the button the *TPS65217C* will send an interrupt to the
+processor. It is up to the processor to then pull the **PMIC_POWER_EN**
+pin low at the correct time to power down the board. At this point, the
+PMIC is still active, assuming that the power input was not removed.
+Pressing the power button will cause the board to power up again if the
+processor puts the board in the power off mode.
+
+In power off mode, the RTC rail is still active, keeping the RTC powered
+and running off the main power input. If you remove that power, then the
+RTC will not be powered. You also have the option of using the battery
+holes on the board to connect a battery if desired as discussed in the
+next section.
+
+If you push and hold the button for greater than 8 seconds, the PMIC
+will power down. But you must release the button when the power LED
+turns off. Holding the button past that point will cause the board to
+power cycle.
+
+[[battery-access-pads]]
+==== 6.1.6 Battery Access Pads
+
+Four pads are provided on the board to allow access to the battery pins
+on the *TPS65217C*. The pads can be loaded with a 4x4 header or you may
+just wire a battery into the pads. In addition they could provide access
+via a cape if desired. The four signals are listed below in <<table-3>>.
+
+[[table-3,Table 3]]
+.Table 3. BeagleBone Black Battery Pins
+[cols="1h,2,6",options="header",]
+|=======================================================================
+|*PIN* |*DESIGNATION* |*FUNCTION*
+|*BAT* |TP5 |Battery connection point.
+
+|*SENSE* |TP6 |Battery voltage sense input, connect to BAT directly at
+the battery terminal.
+
+|*TS* |TP7 |Temperature sense input. Connect to NTC thermistor to sense
+battery temperature.
+
+|*GND* |TP8 |System ground.
+|=======================================================================
+
+There is no fuel gauge function provided by the *TPS65217C*. That would
+need to be added if that function was required. If you want to add a
+fuel gauge, and option is to use 1-wire SPI or I2C device. You will need
+to add this using the expansion headers and place it on an expansion
+board.
+
+*NOTE: Refer to the TPS65217C documentation* +
+*before connecting anything to these pins.*
+
+[[section-6-1-7,Section 6.1.7 Power Consumption]]
+==== 6.1.7 Power Consumption
+
+The power consumption of the board varies based on power scenarios and
+the board boot processes. Measurements were taken with the board in the
+following configuration:
+
+* DC powered and USB powered
+* HDMI monitor connected
+* USB HUB
+* 4GB USB flash drive
+* Ethernet connected @ 100M
+* Serial debug cable connected
+
+<<table-4>> is an analysis of the power consumption of the board in these
+various scenarios.
+
+[[table-4,Table 4]]
+.Table 4. BeagleBone Black Power Consumption(mA@5V)
+[cols="4h,1,1,1",options="header",]
+|============================================
+|*MODE* |*USB* |*DC* |*DC+USB*
+|*Reset* |TBD |TBD |TBD
+|*Idling @ UBoot* |210 |210 |210
+|*Kernel Booting (Peak)* |460 |460 |460
+|*Kernel Idling* |350 |350 |350
+|*Kernel Idling Display Blank* |280 |280 |280
+|*Loading a Webpage* |430 |430 |430
+|============================================
+
+The current will fluctuate as various activates occur, such as the LEDs
+on and microSD/eMMC accesses.
+
+[[processor-interfaces]]
+==== 6.1.8 Processor Interfaces
+
+The processor interacts with the *TPS65217C* via several different
+signals. Each of these signals is described below.
+
+[[i2c0]]
+===== 6.1.8.1 I2C0
+
+I2C0 is the control interface between the processor and the *TPS65217C*.
+It allows the processor to control the registers inside the **TPS65217C**
+for such things as voltage scaling and switching of the input rails.
+
+[[pmc_powr_en]]
+===== 6.1.8.2 PMIC_POWR_EN
+
+On power up the *VDD_RTC* rail activates first. After the RTC circuitry
+in the processor has activated it instructs the **TPS65217C** to initiate
+a full power up cycle by activating the *PMIC_POWR_EN* signal by taking
+it HI. When powering down, the processor can take this pin low to start
+the power down process.
+
+[[ldo_good]]
+===== 6.1.8.3 LDO_GOOD
+
+This signal connects to the *RTC_PORZn* signal, RTC power on reset. The
+small “*n*” indicates that the signal is an active low signal. Word
+processors seem to be unable to put a bar over a word so the **n** is
+commonly used in electronics. As the RTC circuitry comes up first, this
+signal indicates that the LDOs, the 1.8V VRTC rail, is up and stable.
+This starts the power up process.
+
+[[pmic_pgood]]
+===== 6.1.8.4 PMIC_PGOOD
+
+Once all the rails are up, the *PMIC_PGOOD* signal goes high. This
+releases the **PORZn** signal on the processor which was holding the
+processor reset.
+
+[[wakeup]]
+===== 6.1.8.5 WAKEUP
+
+The WAKEUP signal from the *TPS65217C* is connected to the **EXT_WAKEUP**
+signal on the processor. This is used to wake up the processor when it
+is in a sleep mode. When an event is detected by the *TPS65217C*, such
+as the power button being pressed, it generates this signal.
+
+[[pmic_int]]
+===== 6.1.8.6 PMIC_INT
+
+The *PMIC_INT* signal is an interrupt signal to the processor. Pressing
+the power button will send an interrupt to the processor allowing it to
+implement a power down mode in an orderly fashion, go into sleep mode,
+or cause it to wake up from a sleep mode. All of these require SW
+support.
+
+[[power-rails]]
+==== 6.1.9 Power Rails
+
+<<figure-25>> shows the connections of each of the rails from
+the **TPS65217C**.
+
+[[figure-25,Figure 25]]
+.Figure 25. Power Rails
+image:media/image39.jpg[media/image39.jpg,title="media/image39.jpg",width=562,height=505]
+
+===== 6.1.9.1 VRTC Rail
+
+The *VRTC* rail is a 1.8V rail that is the first rail to come up in the
+power sequencing. It provides power to the RTC domain on the processor
+and the I/O rail of the **TPS65217C**. It can deliver up to 250mA
+maximum.
+
+===== 6.1.9.2 VDD_3V3A Rail
+
+The *VDD_3V3A* rail is supplied by the **TPS65217C** and provides the
+3.3V for the processor rails and can provide up to 400mA.
+
+===== 6.1.9.3 VDD_3V3B Rail
+
+The current supplied by the *VDD_3V3A* rail is not sufficient to power
+all of the 3.3V rails on the board. So a second LDO is supplied, U4,
+a **TL5209A**, which sources the *VDD_3V3B* rail. It is powered up just
+after the *VDD_3V3A* rail.
+
+===== 6.1.9.4 VDD_1V8 Rail
+
+The *VDD_1V8* rail can deliver up to 400mA and provides the power
+required for the 1.8V rails on the processor and the HDMI framer. This
+rail is not accessible for use anywhere else on the board.
+
+===== 6.1.9.5 VDD_CORE Rail
+
+The *VDD_CORE* rail can deliver up to 1.2A at 1.1V. This rail is not
+accessible for use anywhere else on the board and connects only to the
+processor. This rail is fixed at 1.1V and should not be adjusted by SW
+using the PMIC. If you do, then the processor will no longer work.
+
+===== 6.1.9.6 VDD_MPU Rail
+
+The *VDD_MPU* rail can deliver up to 1.2A. This rail is not accessible
+for use anywhere else on the board and connects only to the processor.
+This rail defaults to 1.1V and can be scaled up to allow for higher
+frequency operation. Changing of the voltage is set via the I2C
+interface from the processor.
+
+===== 6.1.9.7 VDDS_DDR Rail
+
+The *VDDS_DDR* rail defaults to**1.5V** to support the DDR3L rails and
+can deliver up to 1.2A. It is possible to adjust this voltage rail down
+to *1.35V* for lower power operation of the DDR3L device. Only DDR3L
+devices can support this voltage setting of 1.35V.
+
+===== 6.1.9.8 Power Sequencing
+
+The power up process is consists of several stages and events. <<figure-26>>
+describes the events that make up the power up process for the
+processor from the PMIC. This diagram is used elsewhere to convey
+additional information. I saw no need to bust it up into smaller
+diagrams. It is from the processor datasheet supplied by Texas
+Instruments.
+
+[[figure-26,Figure 26]]
+.Figure 26. Power Rail Power Up Sequencing
+image:media/image40.png[media/image40.png,title="media/image40.png",width=547,height=397]
+
+<<figure-27>> the voltage rail sequencing for the **TPS65217C** as it
+powers up and the voltages on each rail. The power sequencing starts at
+15 and then goes to one. That is the way the *TPS65217C* is configured.
+You can refer to the TPS65217C datasheet for more information.
+
+[[figure-27,Figure 27]]
+.Figure 27. TPS65217C Power Sequencing Timing
+image:media/image41.png[media/image41.png,title="media/image41.png",width=225,height=188]
+
+[[power-led]]
+==== 6.1.10 Power LED
+
+The power LED is a blue LED that will turn on once the *TPS65217C* has
+finished the power up procedure. If you ever see the LED flash once,
+that means that the **TPS65217C** started the process and encountered an
+issue that caused it to shut down. The connection of the LED is shown in
+<<figure-25>>.
+
+[[tps65217c-power-up-process]]
+==== 6.1.11 TPS65217C Power Up Process
+
+<<figure-28>> shows the interface between the **TPS65217C** and the
+processor. It is a cut from the PDF form of the schematic and reflects
+what is on the schematic.
+
+[[figure-28,Figure 28]]
+.Figure 28. Power Processor Interfaces
+image:media/image42.jpg[media/image42.jpg,title="media/image42.jpg",width=575,height=185]
+
+When voltage is applied, DC or USB, the *TPS65217C* connects the power
+to the SYS output pin which drives the switchers and LDOs in
+the **TPS65217C**.
+
+At power up all switchers and LDOs are off except for the *VRTC LDO*
+(1.8V), which provides power to the VRTC rail and controls
+the **RTC_PORZn** input pin to the processor, which starts the power up
+process of the processor. Once the RTC rail powers up, the *RTC_PORZn*
+pin, driven by the *LDO_PGOOD* signal from the *TPS65217C*, of the
+processor is released.
+
+Once the *RTC_PORZn* reset is released, the processor starts the
+initialization process. After the RTC stabilizes, the processor launches
+the rest of the power up process by activating the **PMIC_POWER_EN**
+signal that is connected to the *TPS65217C* which starts the *TPS65217C*
+power up process.
+
+The *LDO_PGOOD* signal is provided by the **TPS65217C** to the processor.
+As this signal is 1.8V from the *TPS65217C* by virtue of the *TPS65217C*
+VIO rail being set to 1.8V, and the *RTC_PORZ* signal on the processor
+is 3.3V, a voltage level shifter, *U4*, is used. Once the LDOs and
+switchers are up on the *TPS65217C*, this signal goes active releasing
+the processor. The LDOs on the *TPS65217C* are used to power the VRTC
+rail on the processor.
+
+[[processor-control-interface]]
+==== 6.1.12 Processor Control Interface
+
+<<figure-28>> above shows two interfaces between the processor and
+the **TPS65217C** used for control after the power up sequence has
+completed.
+
+The first is the *I2C0* bus. This allows the processor to turn on and
+off rails and to set the voltage levels of each regulator to supports
+such things as voltage scaling.
+
+The second is the interrupt signal. This allows the *TPS65217C* to alert
+the processor when there is an event, such as when the power button is
+pressed. The interrupt is an open drain output which makes it easy to
+interface to 3.3V of the processor.
+
+[[low-power-mode-support]]
+==== 6.1.13 Low Power Mode Support
+
+This section covers three general power down modes that are available.
+These modes are only described from a Hardware perspective as it relates
+to the HW design.
+
+===== 6.1.13.1 RTC Only
+
+In this mode all rails are turned off except the *VDD_RTC*. The
+processor will need to turn off all the rails to enter this mode.
+The **VDD_RTC** staying on will keep the RTC active and provide for the
+wakeup interfaces to be active to respond to a wake up event.
+
+===== 6.1.13.2 RTC Plus DDR
+
+In this mode all rails are turned off except the *VDD_RTC* and
+the **VDDS_DDR**, which powers the DDR3L memory. The processor will need
+to turn off all the rails to enter this mode. The *VDD_RTC* staying on
+will keep the RTC active and provide for the wakeup interfaces to be
+active to respond to a wake up event.
+
+The *VDDS_DDR* rail to the DDR3L is provided by the 1.5V rail of
+the **TPS65217C** and with *VDDS_DDR* active, the DDR3L can be placed in
+a self refresh mode by the processor prior to power down which allows
+the memory data to be saved.
+
+Currently, this feature is not included in the standard software
+release. The plan is to include it in future releases.
+
+===== 6.1.13.3 Voltage Scaling
+
+For a mode where the lowest power is possible without going to sleep,
+this mode allows the voltage on the ARM processor to be lowered along
+with slowing the processor frequency down. The I2C0 bus is used to
+control the voltage scaling function in the *TPS65217C*.
+
+[[sitara-am3358bzcz100-processor]]
+=== 6.2 Sitara AM3358BZCZ100 Processor
+
+The board is designed to use the Sitara AM3358BZCZ100 processor in the
+15 x 15 package. Earlier revisions of the board used the XM3359AZCZ100
+processor.
+
+[[description]]
+==== 6.2.1 Description
+
+<<figure-29>> is a high level block diagram of the processor. For more
+information on the processor, go to
+http://www.ti.com/product/am3358[_http://www.ti.com/product/am3358_.]
+
+[[figure-29,Figure 29]]
+.Figure 29. Sitara AM3358BZCZ Block Diagram
+image:media/image43.png[media/image43.png,title="media/image43.png",width=503,height=511,align="center"]
+
+
+[[high-level-features]]
+==== 6.2.2 High Level Features
+
+<<table-5>> below shows a few of the high level features of the Sitara
+processor.
+
+[[table-5,Table 5]]
+.Table 5. Processor Features
+[cols="4h,5,2h,3",]
+|=======================================================================
+|Operating Systems |Linux, Android, Windows Embedded CE,QNX, +
+ThreadX |MMC/SD |3
+
+|Standby Power |7 mW |CAN |2
+
+|ARM CPU |1 ARM Cortex-A8 |UART (SCI) |6
+
+|ARM MHz (Max.) |275,500,600,800,1000 |ADC |8-ch 12-bit
+
+|ARM MIPS (Max.) |1000,1200,2000 |PWM (Ch) |3
+
+|Graphics Acceleration |1 3D |eCAP |3
+
+|Other Hardware Acceleration |2 PRU-ICSS,Crypto +
+Accelerator |eQEP |3
+
+|On-Chip L1 Cache |64 KB (ARM Cortex-A8) |RTC |1
+
+|On-Chip L2 Cache |256 KB (ARM Cortex- +
+A8) |I2C |3
+
+|Other On-Chip Memory |128 KB |McASP |2
+
+|Display Options |LCD |SPI |2
+
+|General Purpose Memory |1 16-bit (GPMC, NAND flash, NOR Flash, SRAM)
+|DMA (Ch) |64-Ch EDMA
+
+|DRAM |1 16-bit (LPDDR-400, +
+DDR2-532, DDR3-400) |IO Supply (V) |1.8V(ADC),3.3V
+
+|USB Ports |2 |Operating +
+Temperature Range (C) |-40 to 90
+|=======================================================================
+
+[[documentation]]
+==== 6.2.3 Documentation
+
+Full documentation for the processor can be found on the TI website at
+http://www.ti.com/product/am3358[_http://www.ti.com/product/am3358_] for
+the current processor used on the board. Make sure that you always use
+the latest datasheets and Technical Reference Manuals (TRM).
+
+[[crystal-circuitry]]
+==== 6.2.4 Crystal Circuitry
+
+<<figure-30>>is the crystal circuitry for the AM3358 processor.
+
+[[figure-30,Figure 30]]
+.Figure 30. Processor Crystals
+image:media/image44.png[media/image44.png,title="fig:media/image44.png",width=570,height=223,align="center"]
+
+[[reset-circuitry]]
+==== 6.2.5 Reset Circuitry
+
+<<figure-31>> is the board reset circuitry. The initial power on reset is
+generated by the **TPS65217C** power management IC. It also handles the
+reset for the Real Time Clock.
+
+The board reset is the SYS_RESETn signal. This is connected to the
+NRESET_INOUT pin of the processor. This pin can act as an input or an
+output. When the reset button is pressed, it sends a warm reset to the
+processor and to the system.
+
+On the revision A5D board, a change was made. On power up, the
+NRESET_INOUT signal can act as an output. In this instance it can cause
+the SYS_RESETn line to go high prematurely. In order to prevent this,
+the PORZn signal from the TPS65217C is connected to the SYS_RESETn line
+using an open drain buffer. These ensure that the line does not
+momentarily go high on power up.
+
+[[figure-31,Figure 31]]
+.Figure 31. Board Reset Circuitry
+image:media/image45.png[media/image45.png,title="media/image45.png",width=568,height=333,align="center"]
+
+This change is also in all revisions after A5D.
+
+DDR3L Memory
+
+The BeagleBone Black uses a single MT41K256M16HA-125 512MB DDR3L device
+from Micron that interfaces to the processor over 16 data lines, 16
+address lines, and 14 control lines. On rev C we added the Kingston
+*KE4CN2H5A-A58* device as a source for the DDR3L device**.**
+
+The following sections provide more details on the design.
+
+[[memory-device]]
+==== 6.2.6 Memory Device
+
+The design supports the standard DDR3 and DDR3L x16 devices and is built
+using the DDR3L. A single x16 device is used on the board and there is
+no support for two x8 devices. The DDR3 devices work at 1.5V and the
+DDR3L devices can work down to
+
+1.35V to achieve lower power. The DDR3L comes in a 96-BALL FBGA package
+with 0.8 mil pitch. Other standard DDR3 devices can also be supported,
+but the DDR3L is the lower power device and was chosen for its ability
+to work at 1.5V or 1.35V. The standard frequency that the DDR3L is run
+at on the board is 400MHZ.
+
+[[ddr3l-memory-design]]
+==== 6.2.7 DDR3L Memory Design
+
+<<figure-32>> is the schematic for the DDR3L memory device. Each of the
+groups of signals is described in the following lines.
+
+_Address Lines:_ Provide the row address for ACTIVATE commands, and the
+column address and auto pre-charge bit (A10) for READ/WRITE commands, to
+select one location out of the memory array in the respective bank. A10
+sampled during a 
+PRECHARGE command determines whether the PRECHARGE applies to one bank
+(A10 LOW, bank selected by BA[2:0]) or all banks (A10 HIGH). The address
+inputs also provide the op-code during a LOAD MODE command. Address
+inputs are referenced to VREFCA. A12/BC#: When enabled in the mode
+register (MR), A12 is sampled during READ and WRITE commands to
+determine whether burst chop (on-the-fly) will be performed (HIGH = BL8
+or no burst chop, LOW = BC4 burst chop).
+
+_Bank Address Lines:_ BA[2:0] define the bank to which an ACTIVATE,
+READ, WRITE, or PRECHARGE command is being applied. BA[2:0] define which
+mode register (MR0, MR1, MR2, or MR3) is loaded during the LOAD MODE
+command. BA[2:0] are referenced to VREFCA.
+
+_CK and CK# Lines:_ are differential clock inputs. All address and
+control input signals are sampled on the crossing of the positive edge
+of CK and the negative edge of CK#. Output data strobe (DQS, DQS#) is
+referenced to the crossings of CK and CK#.
+
+_Clock Enable Line:_ CKE enables (registered HIGH) and disables
+(registered LOW) internal circuitry and clocks on the DRAM. The specific
+circuitry that is enabled/disabled is dependent upon the DDR3 SDRAM
+configuration and operating mode. Taking CKE LOW provides PRECHARGE
+power-down and SELF REFRESH operations (all banks idle) or active
+power-down (row active in any bank). CKE is synchronous for powerdown
+entry and exit and for self refresh entry. CKE is asynchronous for self
+refresh exit. Input buffers (excluding CK, CK#, CKE, RESET#, and ODT)
+are disabled during powerdown. Input buffers (excluding CKE and RESET#)
+are disabled during SELF REFRESH. CKE is referenced to VREFCA.
+
+[[figure-32,Figure 32]]
+.Figure 32. DDR3L Memory Design
+image:media/image46.png[media/image46.png,title="media/image46.png",width=566,height=525,align="center"]
+
+_Chip Select Line:_ CS# enables (registered LOW) and disables
+(registered HIGH) the command decoder. All commands are masked when CS#
+is registered HIGH. CS# provides for external rank selection on systems
+with multiple ranks. CS# is considered part of the command code. CS# is
+referenced to VREFCA.
+
+_Input Data Mask Line:_ DM is an input mask signal for write data. Input
+data is masked when DM is sampled HIGH along with the input data during
+a write access. Although the DM ball is input-only, the DM loading is
+designed to match that of the DQ and DQS balls. DM is referenced to
+VREFDQ.
+
+_On-die Termination Line:_ ODT enables (registered HIGH) and disables
+(registered LOW) termination resistance internal to the DDR3L SDRAM.
+When enabled in normal operation, ODT is only applied to each of the
+following balls: DQ[7:0], DQS, DQS#, and DM for the x8; DQ[3:0], DQS,
+DQS#, and DM for the x4. The ODT input is ignored if disabled via the
+LOAD MODE command. ODT is referenced to VREFCA.
+
+[[power-rails-1]]
+==== 6.2.8 Power Rails
+
+The *DDR3L* memory device and the DDR3 rails on the processor are
+supplied by the **TPS65217C**. Default voltage is 1.5V but can be scaled
+down to 1.35V if desired.
+
+[[vref]]
+==== 6.2.9 VREF
+
+The *VREF* signal is generated from a voltage divider on the **VDDS_DDR**
+rail that powers the processor DDR rail and the DDR3L device itself.
+*Figure 33* below shows the configuration of this signal and the
+connection to the DDR3L memory device and the processor.
+
+[[figure-33,Figure 33]]
+.Figure 33. DDR3L VREF Design*
+image:media/image47.jpg[media/image47.jpg,title="media/image47.jpg",width=376,height=269,align="center"]
+
+[[gb-emmc-memory]]
+=== 6.3 4GB eMMC Memory
+
+The eMMC is a communication and mass data storage device that includes a
+Multi-MediaCard (MMC) interface, a NAND Flash component, and a
+controller on an advanced 11-signal bus, which is compliant with the MMC
+system specification. The nonvolatile eMMC draws no power to maintain
+stored data, delivers high performance across a wide range of operating
+temperatures, and resists shock and vibration disruption.
+
+One of the issues faced with SD cards is that across the different
+brands and even within the same brand, performance can vary. Cards use
+different controllers and different memories, all of which can have bad
+locations that the controller handles. But the controllers may be
+optimized for reads or writes. You never know what you will be getting.
+This can lead to varying rates of performance. The eMMC card is a known
+controller and when coupled with the 8bit mode, 8 bits of data instead
+of 4, you get double the performance which should result in quicker boot
+times.
+
+The following sections describe the design and device that is used on
+the board to implement this interface.
+
+[[emmc-device]]
+==== 6.3.1 eMMC Device
+
+The device used is one of two different devices:
+
+* Micron *MTFC4GLDEA 0M WT*
+* Kingston *KE4CN2H5A-A58*
+
+The package is a 153 ball WFBGA device on both devices.
+
+[[emmc-circuit-design]]
+==== 6.3.2 eMMC Circuit Design
+
+<<figure-34>> is the design of the eMMC circuitry. The eMMC device is
+connected to the MMC1 port on the processor. MMC0 is still used for the
+microSD card as is currently done on the original BeagleBone. The size
+of the eMMC supplied is now 4GB.
+
+The device runs at 3.3V both internally and the external I/O rails. The
+VCCI is an internal voltage rail to the device. The manufacturer
+recommends that a 1uF capacitor be attached to this rail, but a 2.2uF
+was chosen to provide a little margin.
+
+Pullup resistors are used to increase the rise time on the signals to
+compensate for any capacitance on the board.
+
+[[figure-34,Figure 34]]
+.Figure 34. eMMC Memory Design
+image:media/image48.png[media/image48.png,title="media/image48.png",width=542,height=224,align="center"]
+
+The pins used by the eMMC1 in the boot mode are listed below in *Table
+6*.
+
+[[table-6,Table 6]]
+.Table 6. eMMC Boot Pins
+image:media/image49.png[media/image49.png,title="media/image49.png",width=528,height=112,align="center"]
+
+For eMMC devices the ROM will only support raw mode. The ROM Code reads
+out raw sectors from image or the booting file within the file system
+and boots from it. In raw mode the booting image can be located at one
+of the four consecutive locations in the main area: offset 0x0 / 0x20000
+(128 KB) / 0x40000 (256 KB) / 0x60000 (384 KB). For this reason, a
+booting image shall not exceed 128KB in size. However it is possible to
+flash a device with an image greater than 128KB starting at one of the
+aforementioned locations. Therefore the ROM Code does not check the
+image size. The only drawback is that the image will cross the
+subsequent image boundary. The raw mode is detected by reading sectors
+#0, #256, #512, #768. The content of these sectors is then verified for
+presence of a TOC structure. In the case of a *GP Device*, a
+Configuration Header (CH)*must* be located in the first sector followed
+by a *GP header*. The CH might be void (only containing a CHSETTINGS
+item for which the Valid field is zero).
+
+The ROM only supports the 4-bit mode. After the initial boot, the switch
+can be made to 8-bit mode for increasing the overall performance of the
+eMMC interface.
+
+[[board-id-eeprom]]
+=== 6.4 Board ID EEPROM
+
+The BeagleBone is equipped with a single 32Kbit(4KB) 24LC32AT-I/OT
+EEPROM to allow the SW to identify the board. *Table 7* below defined
+the contents of the EEPROM.
+
+[[table-7,Table 7]]
+.Table 7. EEPROM Contents
+[cols="3,1,3",options="header",]
+|=======================================================================
+|*Name* |*Size (bytes)* |*Contents*
+|*Header* |*4* |*0xAA, 0x55, 0x33, EE*
+
+|*Board Name* |*8* |*Name for board in ASCII: A335BNLT*
+
+|*Version* |*4* |*Hardware version code for board in ASCII:* +
+*00A3 for Rev A3, 00A4 for Rev A4, 00A5 for Rev A5,* +
+*00A6 for Rev A6,00B0 for Rev B, and 00C0 for Rev C.*
+
+|*Serial Number* |*12* |*Serial number of the board. This is a 12
+character string which is:* +
+*WWYY4P16nnnn* +
+*where: WW = 2 digit week of the year of production* +
+*YY = 2 digit year of production* +
+*BBBK = BeagleBone Black nnnn = incrementing board number*
+
+|*Configuration Option* |*32* |*Codes to show the configuration setup on
+this board.* +
+*All FF*
+
+|*RSVD* |*6* |*FF FF FF FF FF FF*
+
+|*RSVD* |*6* |*FF FF FF FF FF FF*
+
+|*RSVD* |*6* |*FF FF FF FF FF FF*
+
+|*Available* |*4018* |*Available space for other non-volatile
+codes/data*
+|=======================================================================
+
+<<figure-35>> shows the new design on the EEPROM interface.
+
+[[figure-35,Figure 35]]
+.Figure 35. EEPROM Design Rev A5
+image:media/image50.png[media/image50.png,title="media/image50.png",width=473,height=194,align="center"]
+
+The EEPROM is accessed by the processor using the I2C 0 bus. The *WP*
+pin is enabled by default. By grounding the test point, the write
+protection is removed.
+
+The first 48 locations should not be written to if you choose to use the
+extras storage space in the EEPROM for other purposes. If you do, it
+could prevent the board from booting properly as the SW uses this
+information to determine how to set up the board.
+
+[[micro-secure-digital]]
+=== 6.5 Micro Secure Digital
+
+The microSD connector on the board will support a microSD card that can
+be used for booting or file storage on the BeagleBone Black.
+
+[[microsd-design]]
+==== 6.5.1 microSD Design
+
+<<figure-36>> below is the design of the microSD interface on the board.
+
+[[figure-36,Figure 36]]
+.Figure 36. microSD Design
+image:media/image51.png[media/image51.png,title="media/image51.png",width=550,height=216,align="center"]
+
+The signals *MMC0-3* are the data lines for the transfer of data between
+the processor and the microSD connector.
+
+The *MMC0_CLK* signal clocks the data in and out of the microSD card.
+
+The *MMCO_CMD* signal indicates that a command versus data is being
+sent.
+
+There is no separate card detect pin in the microSD specification. It
+uses *MMCO_DAT3* for that function. However, most microSD connectors
+still supply a CD function on the connectors. In the BeagleBone Black
+design, this pin is connected to the **MMC0_SDCD** pin for use by the
+processor. You can also change the pin to *GPIO0_6*, which is able to
+wake up the processor from a sleep mode when an microSD card is inserted
+into the connector.
+
+Pullup resistors are provided on the signals to increase the rise times
+of the signals to overcome PCB capacitance.
+
+Power is provided from the *VDD_3V3B* rail and a 10uF capacitor is
+provided for filtering.
+
+[[user-leds]]
+=== 6.6 User LEDs
+
+There are four user LEDs on the BeagleBone Black. These are connected to
+GPIO pins on the processor. *Figure 37* shows the interfaces for the
+user LEDs.
+
+[[figure-37,Figure 37]]
+.Figure 37. User LEDs
+image:media/image52.png[media/image52.png,title="media/image52.png",width=570,height=290,align="center"]
+
+Resistors R71-R74 were changed to 4.75K on the revision A5B and later
+boards.
+
+<<table-8>> shows the signals used to control the four LEDs from the
+processor.
+
+[[table-8,Table 8]]
+.Table 8. User LED Control Signals/Pins
+[cols=",,",options="header",]
+|================================
+|*LED* |*GPIO SIGNAL* |*PROC PIN*
+|USR0 |GPIO1_21 |V15
+|USR1 |GPIO1_22 |U15
+|USR2 |GPIO1_23 |T15
+|USR3 |GPIO1_24 |V16
+|================================
+
+A logic level of “1” will cause the LEDs to turn on.
+
+[[boot-configuration]]
+=== 6.7 Boot Configuration
+
+The design supports two groups of boot options on the board. The user
+can switch between these modes via the Boot button. The primary boot
+source is the onboard eMMC device. By holding the Boot button, the user
+can force the board to boot from the microSD slot. This enables the eMMC
+to be overwritten when needed or to just boot an alternate image. The
+following sections describe how the boot configuration works.
+
+In most applications, including those that use the provided demo
+distributions available from http://beagleboard.org/[_beagleboard.org_,]
+the processor-external boot code is composed of two stages. After the
+primary boot code in the processor ROM passes control, a secondary stage
+(secondary program loader -- "SPL" or "MLO") takes over. The SPL stage
+initializes only the required devices to continue the boot process, and
+then control is transferred to the third stage "U-boot". Based on the
+settings of the boot pins, the ROM knows where to go and get the SPL and
+UBoot code. In the case of the BeagleBone Black, that is either eMMC or
+microSD based on the position of the boot switch.
+
+[[boot-configuration-design]]
+==== 6.7.1 Boot Configuration Design
+
+<<figure-38>> shows the circuitry that is involved in the boot
+configuration process. On power up, these pins are read by the processor
+to determine the boot order. S2 is used to change the level of one bit
+from HI to LO which changes the boot order.
+
+[[figure-38,Figure 38]]
+.Figure 38. Processor Boot Configuration Design
+image:media/image53.png[media/image53.png,title="media/image53.png",width=448,height=367,align="center"]
+
+It is possible to override these setting via the expansion headers. But
+be careful not to add too much load such that it could interfere with
+the operation of the HDMI interface or LCD panels. If you choose to
+override these settings, it is strongly recommended that you gate these
+signals with the *SYS_RESETn* signal. This ensures that after coming out
+of reset these signals are removed from the expansion pins.
+
+[[default-boot-options]]
+=== 6.8 Default Boot Options
+
+Based on the selected option found in <<figure-39>> below, each of the
+boot sequences for each of the two settings is shown.
+
+[[figure-39,Figure 39]]
+.Figure 39. Processor Boot Configuration
+image:media/image54.jpg[media/image54.jpg,title="media/image54.jpg",width=601,height=130,align="center"]
+
+The first row in <<figure-39>> is the default setting. On boot, the
+processor will look for the eMMC on the MMC1 port first, followed by the
+microSD slot on MMC0, USB0 and UART0. In the event there is no microSD
+card and the eMMC is empty, UART0 or USB0 could be used as the board
+source.
+
+If you have a microSD card from which you need to boot from, hold the
+boot button down. On boot, the processor will look for the SPIO0 port
+first, then microSD on the MMC0 port, followed by USB0 and UART0. In the
+event there is no microSD card and the eMMC is empty, USB0 or UART0
+could be used as the board source.
+
+[[ethernet]]
+=== 6.9 10/100 Ethernet
+
+The BeagleBone Black is equipped with a 10/100 Ethernet interface. It
+uses the same PHY as is used on the original BeagleBone. The design is
+described in the following sections.
+
+[[ethernet-processor-interface]]
+==== 6.9.1 Ethernet Processor Interface
+
+<<figure-40>> shows the connections between the processor and the PHY. The
+interface is in the MII mode of operation.
+
+[[figure-40,Figure 40]]
+.Figure 40. Ethernet Processor Interface
+image:media/image55.png[media/image55.png,title="media/image55.png",width=448,height=312,align="center"]
+
+This is the same interface as is used on the BeagleBone. No changes were
+made in this design for the board.
+
+[[ethernet-connector-interface]]
+==== 6.9.2 Ethernet Connector Interface
+
+The off board side of the PHY connections are shown in *Figure 41*
+below.
+
+[[figure-41,Figure 41]]
+.Figure 41. Ethernet Connector Interface
+image:media/image56.png[media/image56.png,title="media/image56.png",width=570,height=347,align="center"]
+
+This is the same interface as is used on the BeagleBone. No changes were
+made in this design for the board.
+
+[[ethernet-phy-power-reset-and-clocks]]
+==== 6.9.3 Ethernet PHY Power, Reset, and Clocks
+
+<<figure-42>> shows the power, reset, and lock connections to
+the **LAN8710A** PHY. Each of these areas is discussed in more detail in
+the following sections.
+
+[[figure-42,Figure 42]]
+.Figure 42. Ethernet PHY, Power, Reset, and Clocks
+image:media/image57.png[media/image57.png,title="media/image57.png",width=570,height=367,align="center"]
+
+===== 6.9.3.1 VDD_3V3B Rail
+
+The VDD_3V3B rail is the main power rail for the *LAN8710A*. It
+originates at the VD_3V3B regulator and is the primary rail that
+supports all of the peripherals on the board. This rail also supplies
+the VDDIO rails which set the voltage levels for all of the I/O signals
+between the processor and the **LAN8710A**.
+
+===== 6.9.3.2 VDD_PHYA Rail
+
+A filtered version of VDD_3V3B rail is connected to the VDD rails of the
+LAN8710 and the termination resistors on the Ethernet signals. It is
+labeled as *VDD_PHYA*. The filtering inductor helps block transients
+that may be seen on the VDD_3V3B rail.
+
+===== 6.9.3.3 PHY_VDDCR Rail
+
+The *PHY_VDDCR* rail originates inside the LAN8710A. Filter and bypass
+capacitors are used to filter the rail. Only circuitry inside the
+LAN8710A uses this rail.
+
+===== 6.9.3.4 SYS_RESET
+
+The reset of the LAN8710A is controlled via the *SYS_RESETn* signal, the
+main board reset line.
+
+===== 6.9.3.5 Clock Signals
+
+A crystal is used to create the clock for the LAN8710A. The processor
+uses the *RMII_RXCLK* signal to provide the clocking for the data
+between the processor and the LAN8710A.
+
+[[lan8710a-mode-pins]]
+==== 6.9.4 LAN8710A Mode Pins
+
+There are mode pins on the LAN8710A that sets the operational mode for
+the PHY when coming out of reset. These signals are also used to
+communicate between the processor and the LAN8710A. As a result, these
+signals can be driven by the processor which can cause the PHY not to be
+initialized correctly. To ensure that this does not happen, three low
+value pull up resistors are used. *Figure 43* below shows the three mode
+pin resistors.
+
+[[figure-43,Figure 43]]
+.Figure 43. Ethernet PHY Mode Pins
+image:media/image97.png[media/image97.png,title="media/image97.png",width=386,height=349,align="center"]
+
+This will set the mode to be 111, which enables all modes and enables
+auto-negotiation.
+
+[[hdmi-interface-1]]
+=== 6.10 HDMI Interface
+
+The BeagleBone Black has an onboard HDMI framer that converts the LCD
+signals and audio signals to drive a HDMI monitor. The design uses an
+NXP *TDA19988* HDMI Framer.
+
+The following sections provide more detail into the design of this
+interface.
+
+[[supported-resolutions]]
+==== 6.10.1 Supported Resolutions
+
+The maximum resolution supported by the BeagleBone Black is 1280x1024 @
+60Hz. *Table 9* below shows the supported resolutions. Not all
+resolutions may work on all monitors, but these have been tested and
+shown to work on at least one monitor. EDID is supported on the
+BeagleBone Black. Based on the EDID reading from the connected monitor,
+the highest compatible resolution is selected.
+
+.Table 9. HDMI Supported Monitor Resolutions
+[cols="4,1",options="header",]
+|=======================
+|RESOLUTION |AUDIO
+|800 x 600 @60Hz | 
+|800 x 600 @56Hz | 
+|640 x 480 @75Hz | 
+|640 x 480 @60Hz |YES 
+|720 x 400 @70Hz | 
+|1280 x 1024 @75Hz | 
+|1024 x 768 @75Hz | 
+|1024 x 768 @70Hz | 
+|1024 x 768 @60Hz | 
+|800 x 600 @75Hz | 
+|800 x 600 @72Hz | 
+|720 x 480 @60Hz |YES 
+|1280 x 720 @60Hz |YES 
+|1920x1080@24Hz |YES 
+|=======================
+
+NOTE: The updated software image used on the Rev A5B and later boards
+added support for 1920x1080@24HZ.
+
+Audio is limited to CEA supported resolutions. LCD panels only activate
+the audio in CEA modes. This is a function of the specification and is
+not something that can be fixed on the board via a hardware change or a
+software change.
+
+[[hdmi-framer]]
+==== 6.10.2 HDMI Framer
+
+The *TDA19988* is a High-Definition Multimedia Interface (HDMI) 1.4a
+transmitter. It is backward compatible with DVI 1.0 and can be connected
+to any DVI 1.0 or HDMI sink. The HDCP mode is not used in the design.
+The non-HDCP version of the device is used in the BeagleBone Black
+design.
+
+This device provides additional embedded features like CEC (Consumer
+Electronic Control). CEC is a single bidirectional bus that transmits
+CEC over the home appliance network connected through this bus. This
+eliminates the need of any additional device to handle this feature.
+While this feature is supported in this device, as of this point, the SW
+to support this feature has not been implemented and is not a feature
+that is considered critical. It can be switched to very low power
+Standby or Sleep modes to save power when HDMI is not used. *TDA19988*
+embeds I~2~C-bus master interface for DDC-bus communication to read
+EDID. This device can be controlled or configured via I~2~C-bus
+interface.
+
+[[hdmi-video-processor-interface]]
+==== 6.10.3 HDMI Video Processor Interface
+
+The *Figure 44* shows the connections between the processor and the HDMI
+framer device. There are 16 bits of display data, 5-6-5 that is used to
+drive the framer. The reason for 16 bits is that allows for
+compatibility with display and LCD capes already available on the
+original BeagleBone. The unused bits on the **TDA19988** are tied low. In
+addition to the data signals are the VSYNC, HSYNC, DE, and PCLK signals
+that round out the video interface from the processor.
+
+[[figure-44,Figure 44]]
+.Figure 44. HDMI Framer Processor Interface
+image:media/image58.png[media/image58.png,title="media/image58.png",width=449,height=481,align="center"]
+
+[[hdmi-control-processor-interface]]
+==== 6.10.4 HDMI Control Processor Interface
+
+In order to use the *TDA19988*, the processor needs to setup the device.
+This is done via the I2C interface between the processor and
+the **TDA19988**. There are two signals on the *TDA19988* that could be
+used to set the address of the *TDA19988*. In this design they are both
+tied low. The I2C interface supports both 400kHz and 100KhZ operation.
+*Table 10* shows the I2C address.
+
+[[table-10,Table 10]]
+.Table 10. TDA19988 I2C Address
+image:media/image59.png[media/image59.png,title="media/image59.png",width=572,height=72,align="center"]
+
+[[interrupt-signal]]
+==== 6.10.5 Interrupt Signal
+
+There is a HDMI_INT signal that connects from the TDA19988 to the
+processor. This signal can be used to alert the processor in a state
+change on the HDMI interface.
+
+[[audio-interface]]
+==== 6.10.6 Audio Interface
+
+There is an I2S audio interface between the processor and the
+*TDA19988*. Stereo audio can be transported over the HDMI interface to
+an audio equipped display. In order to create the required clock
+frequencies, and external 24.576MHz oscillator,*Y4*, is used. From this
+clock, the processor generates the required clock frequencies for the
+*TDA19988*.
+
+There are three signals used to pass data from the processor to the
+*TDA19988*. SCLK is the serial clock. SPI1_CS0 is the data pin to
+the  **TDA199888**. SPI1_D0 is the word sync pin. These signals are
+configured as I2S interfaces.
+
+Audio is limited to CEA supported resolutions. LCD panels only activate
+the audio in CEA modes. This is a function of the specification and is
+not something that can be fixed on the board via a hardware change or a
+software change.
+
+In order to create the correct clock frequencies, we had to add an
+external *24.576MHz* oscillator. Unfortunately this had to be input into
+the processor using the pin previously used for **GPIO3_21**. In order to
+keep GPIO3_21 functionality, we provided a way to disable the oscillator
+if the need was there to use the pin on the expansion header. *Figure
+45* shows the oscillator circuitry.
+
+[[figure-45,Figure 45]]
+Figure 45. 24.576MHZ Oscillator
+image:media/image60.png[media/image60.png,title="media/image60.png",width=575,height=169,align="center"]
+
+[[power-connections]]
+==== 6.10.7 Power Connections
+
+<<figure-46>> shows the power connections to the **TDA19988** device. All
+voltage rails for the device are at 1.8V. A filter is provided to
+minimize any noise from the 1.8V rail getting back into the device.
+
+[[figure-46,Figure 46]]
+.Figure 46. HDMI Power Connections
+image:media/image64.png[media/image64.png,title="media/image64.png",width=550,height=315,align="center"]
+
+All of the interfaces between the processor and the *TDA19988* are 3.3V
+tolerant allowing for direct connection.
+
+[[hdmi-connector-interface]]
+==== 6.10.8 HDMI Connector Interface
+
+<<figure-47>> shows the design of the interface between the HDMI Framer
+and the connector.
+
+[[figure-47,Figure 47]]
+.Figure 47. Connector Interface Circuitry
+image:media/image65.png[media/image65.png,title="media/image65.png",width=521,height=430,align="center"]
+
+The connector for the HDMI interface is a microHDMI. It should be noted
+that this connector has a different pinout than the standard or mini
+HDMI connectors. D6 and D7 are ESD protection devices.
+
+[[usb-host]]
+=== 6.11 USB Host
+
+The board is equipped with a single USB host interface accessible from a
+single USB Type A female connector. <<figure-48>> is the design of the USB
+Host circuitry.
+
+[[figure-48,Figure 48]]
+.Figure 48. USB Host circuit
+image:media/image66.png[media/image66.png,title="media/image66.png",width=570,height=205,align="center"]
+
+[[power-switch]]
+==== 6.11.1 Power Switch
+
+*U8* is a switch that allows the power to the connector to be turned on
+or off by the processor. It also has an over current detection that can
+alert the processor if the current gets too high via the **USB1_OC**
+signal. The power is controlled by the *USB1_DRVBUS* signal from the
+processor.
+
+[[esd-protection]]
+==== 6.11.2 ESD Protection
+
+*U9* is the ESD protection for the signals that go to the connector.
+
+[[filter-options]]
+==== 6.11.3 Filter Options
+
+*FB7* and**FB8** were added to assist in passing the FCC emissions test.
+The *USB1_VBUS* signal is used by the processor to detect that the 5V is
+present on the connector. *FB7* is populated and *FB8* is replaced with
+a .1 ohm resistor.
+
+[[pru-icss]]
+=== 6.12 PRU-ICSS
+
+The PRU-ICSS module is located inside the AM3358 processor. Access to
+these pins is provided by the expansion headers and is multiplexed with
+other functions on the board. Access is not provided to all of the
+available pins.
+
+All documentation is located at
+http://github.com/beagleboard/am335x_pru_package[_http://github.com/beagleboard/am335x_pru_package_.]
+This feature is not supported by Texas Instruments.
+
+[[pru-icss-features]]
+==== 6.12.1 PRU-ICSS Features
+
+The features of the PRU-ICSS include:
+
+Two independent programmable real-time (PRU) cores:
+
+* 32-Bit Load/Store RISC architecture
+* 8K Byte instruction RAM (2K instructions) per core
+* 8K Bytes data RAM per core
+* 12K Bytes shared RAM
+* Operating frequency of 200 MHz
+* PRU operation is little endian similar to ARM processor
+* All memories within PRU-ICSS support parity
+* Includes Interrupt Controller for system event handling
+* Fast I/O interface
+
+– 16 input pins and 16 output pins per PRU core. (Not all of these are
+accessible on the BeagleBone Black).
+
+[[pru-icss-block-diagram]]
+==== 6.12.2 PRU-ICSS Block Diagram
+
+<<figure-49>> is a high level block diagram of the PRU-ICSS.
+
+[[figure-49,Figure 49]]
+.Figure 49. PRU-ICSS Block Diagram
+image:media/image67.png[media/image67.png,title="media/image67.png",width=427,height=275,align="center"]
+
+[[pru-icss-pin-access]]
+==== 6.12.3 PRU-ICSS Pin Access
+
+Both PRU 0 and PRU1 are accessible from the expansion headers. Some may
+not be usable without first disabling functions on the board like LCD
+for example. Listed below is what ports can be accessed on each PRU.
+
+PRU0
+
+* 8 outputs or 9 inputs
+
+PRU1
+
+* 13 outputs or 14 inputs
+* UART0_TXD, UART0_RXD, UART0_CTS, UART0_RTS
+
+<<table-11>> below shows which PRU-ICSS signals can be accessed on the
+BeagleBone Black and on which connector and pins they are accessible
+from. Some signals are accessible on the same pins.
+
+[[table-11,Table 11]]
+.Table 11. PRU0 and PRU1 Access
+[cols="2,2,3,7,21,14,14",options="header",stripes=even]
+|=======================================================================
+| |*PIN* |*PROC* |*NAME* | | |
+|P8 |11 |R12 |GPIO1_13 | |*pr1_pru0_pru_r30_15 (Output)* |
+| |12 |T12 |GPIO1_12 | |*pr1_pru0_pru_r30_14 (Output)* |
+| |15 |U13 |GPIO1_15 | |*pr1_pru0_pru_r31_15 (Input)* |
+| |16 |V13 |GPIO1_14 | |*pr1_pru0_pru_r31_14 (Input)* | 
+| |20 |V9 |GPIO1_31 |pr1_pru1_pru_r30_13 (Output) |pr1_pru1_pru_r31_13 (INPUT) | 
+| |21 |U9 |GPIO1_30 |pr1_pru1_pru_r30_12 (Output) |pr1_pru1_pru_r31_12 (INPUT) | 
+| |27 |U5 |GPIO2_22 |pr1_pru1_pru_r30_8 (Output) |pr1_pru1_pru_r31_8 (INPUT) | 
+| |28 |V5 |GPIO2_24 |pr1_pru1_pru_r30_10 (Output) |pr1_pru1_pru_r31_10 (INPUT) |
+| |29 |R5 |GPIO2_23 |pr1_pru1_pru_r30_9 (Output) |pr1_pru1_pru_r31_9 (INPUT) |
+| |39 |T3 |GPIO2_12 |pr1_pru1_pru_r30_6 (Output) |pr1_pru1_pru_r31_6 (INPUT) |
+| |40 |T4 |GPIO2_13 |pr1_pru1_pru_r30_7 (Output) |pr1_pru1_pru_r31_7 (INPUT) |
+| |41 |T1 |GPIO2_10 |pr1_pru1_pru_r30_4 (Output) |pr1_pru1_pru_r31_4 (INPUT) |
+| |42 |T2 |GPIO2_11 |pr1_pru1_pru_r30_5 (Output) |pr1_pru1_pru_r31_5 (INPUT) |
+| |43 |R3 |GPIO2_8 |pr1_pru1_pru_r30_2 (Output) |pr1_pru1_pru_r31_2 (INPUT) |
+| |44 |R4 |GPIO2_9 |pr1_pru1_pru_r30_3 (Output) |pr1_pru1_pru_r31_3 (INPUT) |
+| |45 |R1 |GPIO2_6 |pr1_pru1_pru_r30_0 (Output) |pr1_pru1_pru_r31_0 (INPUT) |
+| |46 |R2 |GPIO2_7 |pr1_pru1_pru_r30_1 (Output) |pr1_pru1_pru_r31_1 (INPUT) |
+| | | | | | |
+|P9 |17 |A16 |I2C1_SCL |pr1_uart0_txd | |
+| |18 |B16 |I2C1_SDA |pr1_uart0_rxd | | 
+| |19 |D17 |I2C2_SCL |pr1_uart0_rts_n | | 
+| |20 |D18 |I2C2_SDA |pr1_uart0_cts_n | | 
+| |21 |B17 |UART2_TXD |pr1_uart0_rts_n | | 
+| |22 |A17 |UART2_RXD |pr1_uart0_cts_n | | 
+| |24 |D15 |UART1_TXD |pr1_uart0_txd |*pr1_pru0_pru_r31_16 (Input)* |
+| |25 |A14 |GPIO3_21footnote:[GPIO3_21 is also the 24.576MHZ clock input to the processor to enable HDMI audio. To use this pin the oscillator must be disabled.] |*pr1_pru0_pru_r30_5 (Output)* |*pr1_pru0_pru_r31_5((Input)* |
+| |26 |D16 |UART1_RXD |pr1_uart0_rxd | pr1_pru1_pru_r31_16 |
+| |27 |C13 |GPIO3_19 | *pr1_pru0_pru_r30_7 (Output)* | *pr1_pru0_pru_r31_7 (Input)* |
+| |28 |C12 |SPI1_CS0 |eCAP2_in_PWM2_out |*pr1_pru0_pru_r30_3 (Output)* |*pr1_pru0_pru_r31_3 (Input)*
+| |29 |B13 |SPI1_D0 |*pr1_pru0_pru_r30_1 (Output)* |*pr1_pru0_pru_r31_1 (Input)* |
+| |30 |D12 |SPI1_D1 |*pr1_pru0_pru_r30_2 (Output)* |*pr1_pru0_pru_r31_2 (Input)* |
+| |31 |A13 |SPI1_SCLK |*pr1_pru0_pru_r30_0 (Output)* |*pr1_pru0_pru_r31_0 (Input)* |
+|=======================================================================
+
+[[connectors]]
+== 7.0 Connectors
+
+This section describes each of the connectors on the board.
+
+[[section-7-1,Section 7.1 Expansion Connectors]]
+=== 7.1 Expansion Connectors
+
+The expansion interface on the board is comprised of two 46 pin
+connectors. All signals on the expansion headers are _3.3V_ unless
+otherwise indicated.
+
+_NOTE: Do not connect 5V logic level signals to these pins or the board
+will be_ _damaged._ '''
+
+*NOTE: DO NOT APPLY VOLTAGE TO ANY I/O PIN WHEN POWER IS NOT SUPPLIED TO
+THE BOARD. IT WILL DAMAGE THE PROCESSOR AND VOID THE WARRANTY.*
+
+*NO PINS ARE TO BE DRIVEN UNTIL AFTER THE SYS_RESET LINE GOES HIGH.*
+
+<<figure-50>> shows the location of the expansion connectors.
+
+[[figure-50,Figure 50]]
+.Figure 50. Expansion Connector Location
+image:media/image68.jpg[media/image68.jpg,title="media/image68.jpg",width=286,height=394,align="center"]
+
+The location and spacing of the expansion headers are the same as on the
+original BeagleBone.
+
+[[connector-p8]]
+==== 7.1.1 Connector P8
+
+<<table-12>> shows the pinout of the **P8** expansion header. Other signals
+can be connected to this connector based on setting the pin mux on the
+processor, but this is the default settings on power up. The SW is
+responsible for setting the default function of each pin. There are some
+signals that have not been listed here. Refer to the processor
+documentation for more information on these pins and detailed
+descriptions of all of the pins listed. In some cases there may not be
+enough signals to complete a group of signals that may be required to
+implement a total interface.
+
+The *PROC* column is the pin number on the processor.
+
+The *PIN* column is the pin number on the expansion header.
+
+The *MODE* columns are the mode setting for each pin. Setting each mode
+to align with the mode column will give that function on that pin.
+
+*NOTE: DO NOT APPLY VOLTAGE TO ANY I/O PIN WHEN POWER IS NOT SUPPLIED TO
+THE BOARD. IT WILL DAMAGE THE PROCESSOR AND VOID THE WARRANTY.*
+
+*NO PINS ARE TO BE DRIVEN UNTIL AFTER THE SYS_RESET LINE GOES HIGH.*
+
+[.landscape]
+<<<
+
+[[table-12,Table 12]]
+.Table 12. Expansion Header P8 Pinout
+[.small,cols="3h,4h,10h,11,11,14,14,15,15,15,7",options="header",stripes="even"]
+|==================
+| *PIN* | *PROC*  | *NAME* | *MODE0* | *MODE1* | *MODE2* | *MODE3* | *MODE4* | *MODE5* | *MODE6* | *MODE7*
+| 1,2 |  9+| *GND* 
+|3 | R9 | GPIO1_6 | gpmc_ad6 | mmc1_dat6 | | | | | | gpio1[6]
+|4 | T9 |
+GPIO1_7
+
+ |
+gpmc_ad7
+
+ |
+mmc1_dat7
+
+ | | | | | |
+gpio1[7]
+
+|5 |R8 |
+GPIO1_2
+
+ |
+gpmc_ad2
+
+ |
+mmc1_dat2
+
+ | | | | | |
+gpio1[2]
+
+|6 |T8 |
+GPIO1_3
+
+ |
+gpmc_ad3
+
+ |
+mmc1_dat3
+
+ | | | | | |
+gpio1[3]
+
+|7 |R7 |
+TIMER4
+
+ |
+gpmc_advn_ale
+
+ | |
+timer4
+
+ | | | | |
+gpio2[2]
+
+|8 |T7 |
+TIMER7
+
+ |
+gpmc_oen_ren
+
+ | |
+timer7
+
+ | | | | |
+gpio2[3]
+
+|9 |T6 |
+TIMER5
+
+ |
+gpmc_be0n_cle
+
+ | |
+timer5
+
+ | | | | |
+gpio2[5]
+
+|
+10
+
+ |U6 |
+TIMER6
+
+ |
+gpmc_wen
+
+ | |
+timer6
+
+ | | | | |
+gpio2[4]
+
+|
+11
+
+ |R12 |
+GPIO1_13
+
+ |
+gpmc_ad13
+
+ |
+lcd_data18
+
+ |
+mmc1_dat5
+
+ |
+mmc2_dat1
+
+ |
+eQEP2B_in
+
+ | |
+pr1_pru0_pru_r30_15
+
+ |
+gpio1[13]
+
+|
+12
+
+ |T12 |
+GPIO1_12
+
+ |
+gpmc_ad12
+
+ |
+lcd_data19
+
+ |
+mmc1_dat4
+
+ |
+mmc2_dat0
+
+ |
+eQEP2a_in
+
+ | |
+pr1_pru0_pru_r30_14
+
+ |
+gpio1[12]
+
+|
+13
+
+ |T10 |
+EHRPWM2B
+
+ |
+gpmc_ad9
+
+ |
+lcd_data22
+
+ |
+mmc1_dat1
+
+ |
+mmc2_dat5
+
+ |
+ehrpwm2B
+
+ | | |
+gpio0[23]
+
+|
+14
+
+ |T11 |
+GPIO0_26
+
+ |
+gpmc_ad10
+
+ |
+lcd_data21
+
+ |
+mmc1_dat2
+
+ |
+mmc2_dat6
+
+ |
+ehrpwm2_tripzone_in
+
+ | | |
+gpio0[26]
+
+|
+15
+
+ |U13 |
+GPIO1_15
+
+ |
+gpmc_ad15
+
+ |
+lcd_data16
+
+ |
+mmc1_dat7
+
+ |
+mmc2_dat3
+
+ |
+eQEP2_strobe
+
+ | |
+pr1_pru0_pru_r31_15
+
+ |
+gpio1[15]
+
+|
+16
+
+ |V13 |
+GPIO1_14
+
+ |
+gpmc_ad14
+
+ |
+lcd_data17
+
+ |
+mmc1_dat6
+
+ |
+mmc2_dat2
+
+ |
+eQEP2_index
+
+ | |
+pr1_pru0_pru_r31_14
+
+ |
+gpio1[14]
+
+|
+17
+
+ |U12 |
+GPIO0_27
+
+ |
+gpmc_ad11
+
+ |
+lcd_data20
+
+ |
+mmc1_dat3
+
+ |
+mmc2_dat7
+
+ |
+ehrpwm0_synco
+
+ | | |
+gpio0[27]
+
+|
+18
+
+ |V12 |
+GPIO2_1
+
+ |
+gpmc_clk_mux0
+
+ |
+lcd_memory_clk
+
+ |
+gpmc_wait1
+
+ |
+mmc2_clk
+
+ | | |
+mcasp0_fsr
+
+ |
+gpio2[1]
+
+|
+19
+
+ |U10 |
+EHRPWM2A
+
+ |
+gpmc_ad8
+
+ |
+lcd_data23
+
+ |
+mmc1_dat0
+
+ |
+mmc2_dat4
+
+ |
+ehrpwm2A
+
+ | | |
+gpio0[22]
+
+|
+20
+
+ |V9 |
+GPIO1_31
+
+ |
+gpmc_csn2
+
+ |
+gpmc_be1n
+
+ |
+mmc1_cmd
+
+ | | |
+pr1_pru1_pru_r30_13
+
+ |
+pr1_pru1_pru_r31_13
+
+ |
+gpio1[31]
+
+|
+21
+
+ |U9 |
+GPIO1_30
+
+ |
+gpmc_csn1
+
+ |
+gpmc_clk
+
+ |
+mmc1_clk
+
+ | | |
+pr1_pru1_pru_r30_12
+
+ |
+pr1_pru1_pru_r31_12
+
+ |
+gpio1[30]
+
+|
+22
+
+ |V8 |
+GPIO1_5
+
+ |
+gpmc_ad5
+
+ |
+mmc1_dat5
+
+ | | | | | |
+gpio1[5]
+
+|
+23
+
+ |U8 |
+GPIO1_4
+
+ |
+gpmc_ad4
+
+ |
+mmc1_dat4
+
+ | | | | | |
+gpio1[4]
+
+|
+24
+
+ |V7 |
+GPIO1_1
+
+ |
+gpmc_ad1
+
+ |
+mmc1_dat1
+
+ | | | | | |
+gpio1[1]
+
+|
+25
+
+ |U7 |
+GPIO1_0
+
+ |
+gpmc_ad0
+
+ |
+mmc1_dat0
+
+ | | | | | |
+gpio1[0]
+
+|
+26
+
+ |V6 |
+GPIO1_29
+
+ |
+gpmc_csn0
+
+ | | | | | | |
+gpio1[29]
+
+|
+27
+
+ |U5 |
+GPIO2_22
+
+ |
+lcd_vsync
+
+ |
+gpmc_a8
+
+ | | | |
+pr1_pru1_pru_r30_8
+
+ |
+pr1_pru1_pru_r31_8
+
+ |
+gpio2[22]
+
+|
+28
+
+ |V5 |
+GPIO2_24
+
+ |
+lcd_pclk
+
+ |
+gpmc_a10
+
+ | | | |
+pr1_pru1_pru_r30_10
+
+ |
+pr1_pru1_pru_r31_10
+
+ |
+gpio2[24]
+
+|
+29
+
+ |R5 |
+GPIO2_23
+
+ |
+lcd_hsync
+
+ |
+gpmc_a9
+
+ | | | |
+pr1_pru1_pru_r30_9
+
+ |
+pr1_pru1_pru_r31_9
+
+ |
+gpio2[23]
+
+|
+30
+
+ |R6 |
+GPIO2_25
+
+ |
+lcd_ac_bias_en
+
+ |
+gpmc_a11
+
+ | | | | | |
+gpio2[25]
+
+|
+31
+
+ |V4 |
+UART5_CTSN
+
+ |
+lcd_data14
+
+ |
+gpmc_a18
+
+ |
+eQEP1_index
+
+ |
+mcasp0_axr1
+
+ |
+uart5_rxd
+
+ | |
+uart5_ctsn
+
+ |
+gpio0[10]
+
+|
+32
+
+ |T5 |
+UART5_RTSN
+
+ |
+lcd_data15
+
+ |
+gpmc_a19
+
+ |
+eQEP1_strobe
+
+ |
+mcasp0_ahclkx
+
+ |
+mcasp0_axr3
+
+ | |
+uart5_rtsn
+
+ |
+gpio0[11]
+
+|
+33
+
+ |V3 |
+UART4_RTSN
+
+ |
+lcd_data13
+
+ |
+gpmc_a17
+
+ |
+eQEP1B_in
+
+ |
+mcasp0_fsr
+
+ |
+mcasp0_axr3
+
+ | |
+uart4_rtsn
+
+ |
+gpio0[9]
+
+|
+34
+
+ |U4 |
+UART3_RTSN
+
+ |
+lcd_data11
+
+ |
+gpmc_a15
+
+ |
+ehrpwm1B
+
+ |
+mcasp0_ahclkr
+
+ |
+mcasp0_axr2
+
+ | |
+uart3_rtsn
+
+ |
+gpio2[17]
+
+|
+35
+
+ |V2 |
+UART4_CTSN
+
+ |
+lcd_data12
+
+ |
+gpmc_a16
+
+ |
+eQEP1A_in
+
+ |
+mcasp0_aclkr
+
+ |
+mcasp0_axr2
+
+ | |
+uart4_ctsn
+
+ |
+gpio0[8]
+
+|
+36
+
+ |U3 |
+UART3_CTSN
+
+ |
+lcd_data10
+
+ |
+gpmc_a14
+
+ |
+ehrpwm1A
+
+ |
+mcasp0_axr0
+
+ | | |
+uart3_ctsn
+
+ |
+gpio2[16]
+
+|
+37
+
+ |U1 |
+UART5_TXD
+
+ |
+lcd_data8
+
+ |
+gpmc_a12
+
+ |
+ehrpwm1_tripzone_in
+
+ |
+mcasp0_aclkx
+
+ |
+uart5_txd
+
+ | |
+uart2_ctsn
+
+ |
+gpio2[14]
+
+|
+38
+
+ |U2 |
+UART5_RXD
+
+ |
+lcd_data9
+
+ |
+gpmc_a13
+
+ |
+ehrpwm0_synco
+
+ |
+mcasp0_fsx
+
+ |
+uart5_rxd
+
+ | |
+uart2_rtsn
+
+ |
+gpio2[15]
+
+|
+39
+
+ |T3 |
+GPIO2_12
+
+ |
+lcd_data6
+
+ |
+gpmc_a6
+
+ | |
+eQEP2_index
+
+ | |
+pr1_pru1_pru_r30_6
+
+ |
+pr1_pru1_pru_r31_6
+
+ |
+gpio2[12]
+
+|
+40
+
+ |T4 |
+GPIO2_13
+
+ |
+lcd_data7
+
+ |
+gpmc_a7
+
+ | |
+eQEP2_strobe
+
+ |
+pr1_edio_data_out7
+
+ |
+pr1_pru1_pru_r30_7
+
+ |
+pr1_pru1_pru_r31_7
+
+ |
+gpio2[13]
+
+|
+41
+
+ |T1 |
+GPIO2_10
+
+ |
+lcd_data4
+
+ |
+gpmc_a4
+
+ | |
+eQEP2A_in
+
+ | |
+pr1_pru1_pru_r30_4
+
+ |
+pr1_pru1_pru_r31_4
+
+ |
+gpio2[10]
+
+|
+42
+
+ |T2 |
+GPIO2_11
+
+ |
+lcd_data5
+
+ |
+gpmc_a5
+
+ | |
+eQEP2B_in
+
+ | |
+pr1_pru1_pru_r30_5
+
+ |
+pr1_pru1_pru_r31_5
+
+ |
+gpio2[11]
+
+|
+43
+
+ |R3 |
+GPIO2_8
+
+ |
+lcd_data2
+
+ |
+gpmc_a2
+
+ | |
+ehrpwm2_tripzone_in
+
+ | |
+pr1_pru1_pru_r30_2
+
+ |
+pr1_pru1_pru_r31_2
+
+ |
+gpio2[8]
+
+|
+44
+
+ |R4 |
+GPIO2_9
+
+ |
+lcd_data3
+
+ |
+gpmc_a3
+
+ | |
+ehrpwm0_synco
+
+ | |
+pr1_pru1_pru_r30_3
+
+ |
+pr1_pru1_pru_r31_3
+
+ |
+gpio2[9]
+
+|
+45
+
+ |R1 |
+GPIO2_6
+
+ |
+lcd_data0
+
+ |
+gpmc_a0
+
+ | |
+ehrpwm2A
+
+ | |
+pr1_pru1_pru_r30_0
+
+ |
+pr1_pru1_pru_r31_0
+
+ |
+gpio2[6]
+
+|
+46
+
+ |R2 |
+GPIO2_7
+
+ |
+lcd_data1
+
+ |
+gpmc_a1
+
+ | |
+ehrpwm2B
+
+ | |
+pr1_pru1_pru_r30_1
+
+ |
+pr1_pru1_pru_r31_1
+
+ |
+gpio2[7]
+
+|==================
+
+[.portrait]
+<<<
+
+[[connector-p9]]
+==== 7.1.2 Connector P9
+
+<<table-13>> lists the signals on connector**P9**. Other signals can be
+connected to this connector based on setting the pin mux on the
+processor, but this is the default settings on power up.
+
+There are some signals that have not been listed here. Refer to the
+processor documentation for more information on these pins and detailed
+descriptions of all of the pins listed. In some cases there may not be
+enough signals to complete a group of signals that may be required to
+implement a total interface.
+
+The *PROC* column is the pin number on the processor.
+
+The *PIN* column is the pin number on the expansion header.
+
+The *MODE* columns are the mode setting for each pin. Setting each mode
+to align with the mode column will give that function on that pin.
+
+NOTES:
+
+In the table are the following notations:
+
+*PWR_BUT* is a 5V level as pulled up internally by the TPS65217C. It is
+activated by pulling the signal to GND.
+
+*NOTE: DO NOT APPLY VOLTAGE TO ANY I/O PIN WHEN POWER IS NOT SUPPLIED TO
+THE BOARD. IT WILL DAMAGE THE PROCESSOR AND VOID THE WARRANTY.*
+
+*NO PINS ARE TO BE DRIVEN UNTIL AFTER THE SYS_RESET LINE GOES HIGH.*
+
+\# Both of these signals connect to pin 41 of P11. Resistors are
+installed that allow for the GPIO3_20 connection to be removed by
+removing R221. The intent is to allow the SW to use either of these
+signals, one or the other, on pin 41. SW should set the unused pin in
+input mode when using the other pin. This allowed us to get an extra
+signal out to the expansion header.
+
+\@ Both of these signals connect to pin 42 of P11. Resistors are
+installed that allow for the GPIO3_18 connection to be removed by
+removing R202. The intent is to allow the SW to use either of these
+signals, on pin 42. SW should set the unused pin in input mode when
+using the other pin. This allowed us to get an extra signal out to the
+expansion header.
+
+[.landscape]
+<<<
+
+[[table-13,Table 13]]
+.Table 13. Expansion Header P9 Pinout
+[.small,cols="4h,4h,10h,11,11,14,14,15,15,15,7",options="header",stripes="even"]
+|====
+|
+*PIN*
+
+ |
+*PROC*
+
+ |
+*NAME*
+
+ |
+*MODE0*
+
+ |
+*MODE1*
+
+ |
+*MODE2*
+
+ |
+*MODE3*
+
+ |
+*MODE4*
+
+ |
+*MODE5*
+
+ |
+*MODE6*
+
+ |
+*MODE7*
+
+|
+1,2
+
+ 10+|
+GND
+
+|
+3,4
+
+ 10+|
+DC_3.3V
+
+|
+5,6
+
+ 10+|
+VDD_5V
+
+|
+7,8
+
+ 10+|
+SYS_5V
+
+|9 10+|
+*PWR_BUT*
+
+|
+10
+
+ |
+A10
+
+ 9+|
+SYS_RESETn
+
+|
+11
+
+ |
+T17
+
+ |
+UART4_RXD
+
+ |
+gpmc_wait0
+
+ |
+mii2_crs
+
+ |gpmc_csn4 |
+rmii2_crs_dv
+
+ |
+mmc1_sdcd
+
+ | |
+uart4_rxd_mux2
+
+ |
+gpio0[30]
+
+|
+12
+
+ |
+U18
+
+ |
+GPIO1_28
+
+ |
+gpmc_be1n
+
+ |
+mii2_col
+
+ |gpmc_csn6 |
+mmc2_dat3
+
+ |
+gpmc_dir
+
+ | |
+mcasp0_aclkr_mux3
+
+ |
+gpio1[28]
+
+|
+13
+
+ |
+U17
+
+ |
+UART4_TXD
+
+ |
+gpmc_wpn
+
+ |
+mii2_rxerr
+
+ |gpmc_csn5 |
+rmii2_rxerr
+
+ |
+mmc2_sdcd
+
+ | |
+uart4_txd_mux2
+
+ |
+gpio0[31]
+
+|
+14
+
+ |
+U14
+
+ |
+EHRPWM1A
+
+ |
+gpmc_a2
+
+ |
+mii2_txd3
+
+ |
+rgmii2_td3
+
+ |
+mmc2_dat1
+
+ |
+gpmc_a18
+
+ | |
+ehrpwm1A_mux1
+
+ |
+gpio1[18]
+
+|
+15
+
+ |
+R13
+
+ |
+GPIO1_16
+
+ |
+gpmc_a0
+
+ |
+gmii2_txen
+
+ |
+rmii2_tctl
+
+ |
+mii2_txen
+
+ |
+gpmc_a16
+
+ | |ehrpwm1_tripzone_input |
+gpio1[16]
+
+|
+16
+
+ |
+T14
+
+ |
+EHRPWM1B
+
+ |
+gpmc_a3
+
+ |
+mii2_txd2
+
+ |
+rgmii2_td2
+
+ |
+mmc2_dat2
+
+ |
+gpmc_a19
+
+ | |
+ehrpwm1B_mux1
+
+ |
+gpio1[19]
+
+|
+17
+
+ |
+A16
+
+ |
+I2C1_SCL
+
+ |
+spi0_cs0
+
+ |
+mmc2_sdwp
+
+ |
+I2C1_SCL
+
+ |
+ehrpwm0_synci
+
+ |
+pr1_uart0_txd
+
+ | | |
+gpio0[5]
+
+|
+18
+
+ |
+B16
+
+ |
+I2C1_SDA
+
+ |
+spi0_d1
+
+ |
+mmc1_sdwp
+
+ |
+I2C1_SDA
+
+ |
+ehrpwm0_tripzone
+
+ |
+pr1_uart0_rxd
+
+ | | |
+gpio0[4]
+
+|
+19
+
+ |
+D17
+
+ |
+I2C2_SCL
+
+ |
+uart1_rtsn
+
+ |
+timer5
+
+ |
+dcan0_rx
+
+ |
+I2C2_SCL
+
+ |
+spi1_cs1
+
+ |
+pr1_uart0_rts_n
+
+ | |
+gpio0[13]
+
+|
+20
+
+ |
+D18
+
+ |
+I2C2_SDA
+
+ |
+uart1_ctsn
+
+ |
+timer6
+
+ |
+dcan0_tx
+
+ |
+I2C2_SDA
+
+ |
+spi1_cs0
+
+ |
+pr1_uart0_cts_n
+
+ | |
+gpio0[12]
+
+|
+21
+
+ |
+B17
+
+ |
+UART2_TXD
+
+ |
+spi0_d0
+
+ |
+uart2_txd
+
+ |
+I2C2_SCL
+
+ |
+ehrpwm0B
+
+ |
+pr1_uart0_rts_n
+
+ | |
+EMU3_mux1
+
+ |
+gpio0[3]
+
+|
+22
+
+ |
+A17
+
+ |
+UART2_RXD
+
+ |
+spi0_sclk
+
+ |
+uart2_rxd
+
+ |
+I2C2_SDA
+
+ |
+ehrpwm0A
+
+ |
+pr1_uart0_cts_n
+
+ | |
+EMU2_mux1
+
+ |
+gpio0[2]
+
+|
+23
+
+ |
+V14
+
+ |
+GPIO1_17
+
+ |
+gpmc_a1
+
+ |
+gmii2_rxdv
+
+ |rgmii2_rxdv |
+mmc2_dat0
+
+ |
+gpmc_a17
+
+ | |
+ehrpwm0_synco
+
+ |
+gpio1[17]
+
+|
+24
+
+ |
+D15
+
+ |
+UART1_TXD
+
+ |
+uart1_txd
+
+ |
+mmc2_sdwp
+
+ |
+dcan1_rx
+
+ |
+I2C1_SCL
+
+ | |
+pr1_uart0_txd
+
+ |pr1_pru0_pru_r31_16 |
+gpio0[15]
+
+|
+25
+
+ |
+A14
+
+ |
+GPIO3_21*
+
+ |
+mcasp0_ahclkx
+
+ |
+eQEP0_strobe
+
+ |mcasp0_axr3 |
+mcasp1_axr1
+
+ |
+EMU4_mux2
+
+ |
+pr1_pru0_pru_r30_7
+
+ |pr1_pru0_pru_r31_7 |
+gpio3[21]
+
+|
+26
+
+ |
+D16
+
+ |
+UART1_RXD
+
+ |
+uart1_rxd
+
+ |
+mmc1_sdwp
+
+ |
+dcan1_tx
+
+ |
+I2C1_SDA
+
+ | |
+pr1_uart0_rxd
+
+ |pr1_pru1_pru_r31_16 |
+gpio0[14]
+
+|
+27
+
+ |
+C13
+
+ |
+GPIO3_19
+
+ |
+mcasp0_fsr
+
+ |
+eQEP0B_in
+
+ |mcasp0_axr3 |
+mcasp1_fsx
+
+ |
+EMU2_mux2
+
+ |
+pr1_pru0_pru_r30_5
+
+ |pr1_pru0_pru_r31_5 |
+gpio3[19]
+
+|
+28
+
+ |
+C12
+
+ |
+SPI1_CS0
+
+ |
+mcasp0_ahclkr
+
+ |
+ehrpwm0_synci
+
+ |mcasp0_axr2 |
+spi1_cs0
+
+ |
+eCAP2_in_PWM2_out
+
+ |
+pr1_pru0_pru_r30_3
+
+ |pr1_pru0_pru_r31_3 |
+gpio3[17]
+
+|
+29
+
+ |
+B13
+
+ |
+SPI1_D0
+
+ |
+mcasp0_fsx
+
+ |
+ehrpwm0B
+
+ | |
+spi1_d0
+
+ |
+mmc1_sdcd_mux1
+
+ |
+pr1_pru0_pru_r30_1
+
+ |pr1_pru0_pru_r31_1 |
+gpio3[15]
+
+|
+30
+
+ |
+D12
+
+ |
+SPI1_D1
+
+ |
+mcasp0_axr0
+
+ |
+ehrpwm0_tripzone
+
+ | |
+spi1_d1
+
+ |
+mmc2_sdcd_mux1
+
+ |
+pr1_pru0_pru_r30_2
+
+ |pr1_pru0_pru_r31_2 |
+gpio3[16]
+
+|
+31
+
+ |
+A13
+
+ |
+SPI1_SCLK
+
+ |
+mcasp0_aclkx
+
+ |
+ehrpwm0A
+
+ | |
+spi1_sclk
+
+ |
+mmc0_sdcd_mux1
+
+ |
+pr1_pru0_pru_r30_0
+
+ |pr1_pru0_pru_r31_0 |
+gpio3[14]
+
+|
+32
+
+ 10+|
+VADC
+
+|
+33
+
+ |
+C8
+
+ 9+|
+AIN4
+
+|
+34
+
+ 10+|
+AGND
+
+|
+35
+
+ |
+A8
+
+ 9+|
+AIN6
+
+|
+36
+
+ |
+B8
+
+ 9+|
+AIN5
+
+|
+37
+
+ |
+B7
+
+ 9+|
+AIN2
+
+|
+38
+
+ |
+A7
+
+ 9+|
+AIN3
+
+|
+39
+
+ |
+B6
+
+ 9+|
+AIN0
+
+|
+40
+
+ |
+C7
+
+ 9+|
+AIN1
+
+|
+41#
+
+ |
+D14
+
+ |
+CLKOUT2
+
+ |
+xdma_event_intr1
+
+ | |
+tclkin
+
+ |
+clkout2
+
+ |
+timer7_mux1
+
+ |
+pr1_pru0_pru_r31_16
+
+ |
+EMU3_mux0
+
+ |
+gpio0[20]
+
+| |
+D13
+
+ |
+GPIO3_20
+
+ |
+mcasp0_axr1
+
+ |
+eQEP0_index
+
+ | |
+mcasp1_axr0
+
+ |
+emu3
+
+ |
+pr1_pru0_pru_r30_6
+
+ |pr1_pru0_pru_r31_6 |
+gpio3[20]
+
+|
+42@
+
+ |
+C18
+
+ |
+GPIO0_7
+
+ |
+eCAP0_in_PWM0_out
+
+ |
+uart3_txd
+
+ |
+spi1_cs1
+
+ |
+pr1_ecap0_ecap_capin_apwm_o
+
+ |
+spi1_sclk
+
+ |
+mmc0_sdwp
+
+ |
+xdma_event_intr2
+
+ |
+gpio0[7]
+
+| |
+B12
+
+ |
+GPIO3_18
+
+ |
+mcasp0_aclkr
+
+ |
+eQEP0A_in
+
+ |mcasp0_axr2 |
+mcasp1_aclkx
+
+ | |
+pr1_pru0_pru_r30_4
+
+ |pr1_pru0_pru_r31_4 |
+gpio3[18]
+
+|
+43-46
+
+ 10+|
+GND
+
+|====
+
+[.portrait]
+<<<
+
+[[power-jack]]
+=== 7.2 Power Jack
+
+The DC power jack is located next to the RJ45 Ethernet connector as
+shown in <<figure-51>>. This uses the same power connector as is used on
+the original BeagleBone. The connector has a 2.1mm diameter center post
+(5VDC) and a 5.5mm diameter outer dimension on the barrel (GND).
+
+[[figure-51,Figure 51]]
+.Figure 51. 5VDC Power Jack
+image:media/image69.jpg[media/image69.jpg,title="media/image69.jpg",width=579,height=411]
+
+The board requires a regulated 5VDC +/-.25V supply at 1A. A higher
+current rating may be needed if capes are plugged into the expansion
+headers. Using a higher current power supply will not damage the board.
+
+[[usb-client]]
+=== 7.3 USB Client
+
+The USB Client connector is accessible on the bottom side of the board
+under the row of four LEDs as shown in <<figure-52>>. It uses a 5 pin
+miniUSB cable, the same as is used on the original BeagleBone. The cable
+is provided with the board. The cable can also be used to power the
+board.
+
+[[figure-52,Figure 52]]
+.Figure 52. USB Client
+image:media/image71.jpg[media/image71.jpg,title="media/image71.jpg",width=633,height=454]
+
+This port is a USB Client only interface and is intended for connection
+to a PC.
+
+[[usb-host-1]]
+7.4 USB Host
+^^^^^^^^^^^^
+
+There is a single USB Host connector on the board and is shown in
+*Figure 53* below.
+
+image:media/image71.jpg[media/image71.jpg,title="media/image71.jpg",width=593,height=387]
+
+[[figure-53.-usb-host-connector]]
+Figure 53. USB Host Connector
+
+The port is USB 2.0 HS compatible and can supply up to 500mA of current.
+If more current or ports is needed, then a HUB can be used.
+
+[[serial-header]]
+7.5 Serial Header
+^^^^^^^^^^^^^^^^^
+
+Each board has a debug serial interface that can be accessed by using a
+special serial cable that is plugged into the serial header as shown in
+*Figure 54* below.
+
+image:media/image71.jpg[media/image71.jpg,title="media/image71.jpg",width=527,height=351]
+
+[[figure-54.-serial-debug-header]]
+Figure 54. Serial Debug Header
+
+Two signals are provided, TX and RX on this connector. The levels on
+these signals are 3.3V. In order to access these signals, a FTDI USB to
+Serial cable is recommended as shown in *Figure 55* below.
+
+image:media/image73.jpg[media/image73.jpg,title="media/image73.jpg",width=428,height=162]
+
+The cable can be purchased from several different places and must be the
+3.3V version TTL-232R-3V3. Information on the cable itself can be found
+direct from FTDI at:
+
+http://www.ftdichip.com/Support/Documents/DataSheets/Cables/DS_TTL-232R_CABLES.pdf[_http://www.ftdichip.com/Support/Documents/DataSheets/Cables/DS_TTL232R_CABLES.pdf_]
+
+Pin 1 of the cable is the black wire. That must align with the pin 1 on
+the board which is designated by the white dot next to the connector on
+the board.
+
+Refer to the support WIKI
+http://elinux.org/BeagleBoneBlack[_http://elinux.org/BeagleBoneBlack_]
+for more sources of this cable and other options that will work.
+
+Table is the pinout of the connector as reflected in the schematic. It
+is the same as the
+
+FTDI cable which can be found at
+
+http://www.ftdichip.com/Support/Documents/DataSheets/Cables/DS_TTL-232R_CABLES.pdf[_http://www.ftdichip.com/Support/Documents/DataSheets/Cables/DS_TTL-232R_CABLES.pdf_]
+
+with the exception that only three pins are used on the board. The pin
+numbers are defined in *Table 14*. The signals are from the perspective
+of the board.
+
+[[table-14.-j1-serial-header-pins]]
+Table 14. J1 Serial Header Pins
+
+[cols=",",options="header",]
+|==================
+|PIN NUMBER |SIGNAL
+|*1* |Ground
+|*4* |Receive
+|*5* |Transmit
+|==================
+
+*Figure 56* shows the pin location on the board.
+
+image:media/image75.jpg[media/image75.jpg,title="media/image75.jpg",width=373,height=374]
+
+*Figure 56. Serial Header*
+
+[[hdmi]]
+7.6 HDMI
+^^^^^^^^
+
+Access to the HDMI interface is through the HDMI connector that is
+located on the bottom side of the board as shown in *Figure 57* below.
+
+image:media/image71.jpg[media/image71.jpg,title="media/image71.jpg",width=579,height=387]
+
+[[figure-57.-hdmi-connector]]
+Figure 57. HDMI Connector
+
+The connector is microHDMI connector. This was done due to the space
+limitations we had in finding a place to fit the connector. It requires
+a microHDMI to HDMI cable as shown in *Figure 58* below. The cable can
+be purchased from several different sources.
+
+image:media/image77.jpg[media/image77.jpg,title="media/image77.jpg",width=196,height=196]
+
+*Figure 58. HDMI Cable*
+
+[[microsd]]
+7.7 microSD
+^^^^^^^^^^^
+
+A microSD connector is located on the back or bottom side of the board
+as shown in *Figure 59* below. The microSD card is not supplied with the
+board.
+
+image:media/image71.jpg[media/image71.jpg,title="media/image71.jpg",width=579,height=438]
+
+[[figure-59.-microsd-connector]]
+Figure 59. microSD Connector
+
+When plugging in the SD card, the writing on the card should be up.
+Align the card with the connector and push to insert. Then release.
+There should be a click and the card will start to eject slightly, but
+it then should latch into the connector. To eject the card, push the SD
+card in and then remove your finger. The SD card will be ejected from
+the connector.
+
+Do not pull the SD card out or you could damage the connector.
+
+[[ethernet-1]]
+7.8 Ethernet
+^^^^^^^^^^^^
+
+The board comes with a single 10/100 Ethernet interface located next to
+the power jack as shown in *Figure 60*.
+
+image:media/image71.jpg[media/image71.jpg,title="media/image71.jpg",width=579,height=387]
+
+*Figure 60. Ethernet Connector*
+
+The PHY supports AutoMDX which means either a straight or a swap cable
+can be used
+
+[[jtag-connector]]
+7.9 JTAG Connector
+^^^^^^^^^^^^^^^^^^
+
+A place for an optional 20 pin CTI JTAG header is provided on the board
+to facilitate the SW development and debugging of the board by using
+various JTAG emulators. This header is not supplied standard on the
+board. To use this, a connector will need to be soldered onto the board.
+
+If you need the JTAG connector you can solder it on yourself. No other
+components are needed. The connector is made by Samtec and the part
+number is FTR-110-03-G-D-06. You can purchase it from
+http://www.digikey.com/[_www.digikey.com_.]
+
+[[cape-board-support-1]]
+*8.0 Cape Board Support*
+------------------------
+
+The BeagleBone Black has the ability to accept up to four expansion
+boards or capes that can be stacked onto the expansion headers. The word
+cape comes from the shape of the board as it is fitted around the
+Ethernet connector on the main board. This notch acts as a key to ensure
+proper orientation of the cape.
+
+This section describes the rules for creating capes to ensure proper
+operation with the BeagleBone Black and proper interoperability with
+other capes that are intended to coexist with each other. Co-existence
+is not a requirement and is in itself, something that is impossible to
+control or administer. But, people will be able to create capes that
+operate with other capes that are already available based on public
+information as it pertains to what pins and features each cape uses.
+This information will be able to be read from the EEPROM on each cape.
+
+This section is intended as a guideline for those wanting to create
+their own capes. Its intent is not to put limits on the creation of
+capes and what they can do, but to set a few basic rules that will allow
+the SW to administer their operation with the BeagleBone Black. For this
+reason there is a lot of flexibility in the specification that we hope
+most people will find liberating and in the spirit of Open Source
+Hardware. I am sure there are others that would like to see tighter
+control, more details, more rules and much more order to the way capes
+are handled.
+
+Over time, this specification will change and be updated, so please
+refer to the latest version of this manual prior to designing your own
+capes to get the latest information.
+
+*DO NOT APPLY VOLTAGE TO ANY I/O PIN WHEN*
+
+*POWER IS NOT SUPPLIED TO THE BOARD. IT WILL DAMAGE THE PROCESSOR AND
+VOID THE WARRANTY.*
+
+*NO PINS ARE TO BE DRIVEN UNTIL AFTER THE SYS_RESET LINE GOES HIGH.*
+
+[[beaglebone-black-cape-compatibility]]
+=== 8.1 BeagleBone Black Cape Compatibility
+
+The main expansion headers are the same between the BeagleBone and
+BeagleBone Black. While the pins are the same, some of these pins are
+now used on the BeagleBone Black. The following sections discuss these
+pins.
+
+The Power Expansion header was removed from the BeagleBone Black and is
+not available.
+
+_***PAY VERY CLOSE ATTENTION TO THIS SECTION AND READ CAREFULLY!!***_
+
+[[lcd-pins]]
+==== 8.1.1 LCD Pins
+
+The LCD pins are used on the BeagleBone Black to drive the HDMI framer.
+These signals are listed in *Table 15* below.
+
+[[table-15.-p8-lcd-conflict-pins]]
+Table 15. P8 LCD Conflict Pins
+
+[cols=",,,",options="header",]
+|================================
+|*PIN* |*PROC* |*NAME* |*MODE0*
+|27 |U5 |GPIO2_22 |lcd_vsync
+|28 |V5 |GPIO2_24 |lcd_pclk
+|29 |R5 |GPIO2_23 |lcd_hsync
+|30 |R6 |GPIO2_25 |lcd_ac_bias_en
+|31 |V4 |UART5_CTSN |lcd_data14
+|32 |T5 |UART5_RTSN |lcd_data15
+|33 |V3 |UART4_RTSN |lcd_data13
+|34 |U4 |UART3_RTSN |lcd_data11
+|35 |V2 |UART4_CTSN |lcd_data12
+|36 |U3 |UART3_CTSN |lcd_data10
+|37 |U1 |UART5_TXD |lcd_data8
+|38 |U2 |UART5_RXD |lcd_data9
+|39 |T3 |GPIO2_12 |lcd_data6
+|40 |T4 |GPIO2_13 |lcd_data7
+|41 |T1 |GPIO2_10 |lcd_data4
+|42 |T2 |GPIO2_11 |lcd_data5
+|43 |R3 |GPIO2_8 |lcd_data2
+|44 |R4 |GPIO2_9 |lcd_data3
+|45 |R1 |GPIO2_6 |lcd_data0
+|46 |R2 |GPIO2_7 |lcd_data1
+|================================
+
+If you are using these pins for other functions, there are a few things
+to keep in mind:
+
+* On the HDMI Framer, these signals are all inputs so the framer will
+not be driving these pins.
+* The HDMI framer will add a load onto these pins.
+* There are small filter caps on these signals which could also change
+the operation of these pins if used for other functions.
+* When used for other functions, the HDMI framer cannot be used.
+* There is no way to power off the framer as this would result in the
+framer being powered through these input pins which would not a be a
+good idea.
+* These pins are also the *SYSBOOT* pins. DO NOT drive them before
+the **SYS_RESETN** signal goes high. If you do, the board may not boot
+because you would be changing the boot order of the processor.
+
+In order to use these pins, the SW will need to reconfigure them to
+whatever function you need the pins to do. To keep power low, the HDMI
+framer should be put in a low power mode via the SW using the *I2C0*
+interface.
+
+[[emmc-pins]]
+8.1.2 eMMC Pins
++++++++++++++++
+
+The BeagleBone Black uses 10 pins to connect to the processor that also
+connect to the
+
+P8 expansion connector. These signals are listed below in *Table 16*.
+The proper mode is
+
+MODE2.
+
+[[table-16.-p8-emmc-conflict-pins]]
+Table 16. P8 eMMC Conflict Pins
+
+[cols=",,,",options="header",]
+|===============================
+|*PIN* |*PROC* |*SIGNAL* |*MODE*
+|22 |V8 |MMC1_DAT5 |1
+|23 |U8 |MMC1_DAT4 |1
+|24 |V7 |MMC1_DAT1 |1
+|5 |R8 |MMC1_DAT2 |1
+|4 |T9 |MMC1_DAT7 |1
+|3 |R9 |MMC1_DAT6 |1
+|6 |T8 |MMC1_DAT3 |1
+|25 |U7 |MMC1_DAT0 |1
+|20 |V9 |MMC1_CMD |2
+|21 |U9 |MMC1_CLK |2
+|===============================
+
+If using these pins, several things need to be kept in mind when doing
+so:
+
+* On the eMMC device, these signals are inputs and outputs.
+* The eMMC device will add a load onto these pins.
+* When used for other functions, the eMMC cannot be used. This means you
+must boot from the microSD slot.
+* If using these pins, you need to put the eMMC into reset. This
+requires that the eMMC be accessible from the processor in order to set
+the eMMC to accept the eMMC pins.
+* DO NOT drive the eMMC pins until the eMMC has been put into reset.
+This means that if you choose to use these pins, they must not drive any
+signal until enabled via Software. This requires a buffer or some other
+form of hold off function enabled by a GPIO pin on the expansion header.
+
+On power up, the eMMC is NOT reset. If you hold the Boot button down,
+this will force a boot from the microSD. This is not convenient when a
+cape is plugged into the board. There are two solutions to this issue:
+
+1.  Wipe the eMMC clean. This will cause the board to default to microSD
+boot. If you want to use the eMMC later, it can be reprogrammed.
+2.  You can also tie LCD_DATA2 low on the cape during boot. This will be
+the same as if you were holding the boot button. However, in order to
+prevent unforeseen issues, you need to gate this signal with RESET, when
+the data is sampled. After reset goes high, the signal should be removed
+from the pin.
+
+_BEFORE_ the SW reinitializes the pins, it _MUST_ put the eMMC in reset.
+This is done by taking eMMC_RSTn (GPIO1_20) LOW _**after**_ the eMMC has
+been put into a mode to enable the reset line. This pin does not connect
+to the expansion header and is accessible only on the board.
+
+*DO NOT* automatically drive any conflicting pins until the SW enables
+it. This puts the SW in control to ensure that the eMMC is in reset
+before the signals are used from the cape. You can use a GPIO pin for
+this. No, we will not designate a pin for this function. It will be
+determined on a cape by cape basis by the designer of the respective
+cape.
+
+[[eeprom]]
+8.2 EEPROM
+^^^^^^^^^^
+
+Each cape must have its own EEPROM containing information that will
+allow the SW to identify the board and to configure the expansion
+headers pins as needed. The one exception is proto boards intended for
+prototyping. They may or may not have an EEPROM on them. An EEPROM is
+required for all capes sold in order for them operate correctly when
+plugged into the BeagleBone Black.
+
+The address of the EEPROM will be set via either jumpers or a dipswitch
+on each expansion board. *Figure 61* below is the design of the EEPROM
+circuit.
+
+The EEPROM used is the same one as is used on the BeagleBone and the
+BeagleBone Black, a CAT24C256. The CAT24C256 is a 256 kb Serial CMOS
+EEPROM, internally organized as 32,768 words of 8 bits each. It features
+a 64-byte page write buffer and supports the Standard (100 kHz), Fast
+(400 kHz) and Fast-Plus (1 MHz) I2C protocol.
+
+image:media/image78.png[media/image78.png,title="media/image78.png",width=509,height=228]
+
+[[figure-61.-expansion-board-eeprom-without-write-protect]]
+Figure 61. Expansion Board EEPROM Without Write Protect
+
+The addressing of this device requires two bytes for the address which
+is not used on smaller size EEPROMs, which only require only one byte.
+Other compatible devices may be used as well. Make sure the device you
+select supports 16 bit addressing. The part package used is at the
+discretion of the cape designer.
+
+[[eeprom-address]]
+8.2.1 EEPROM Address
+++++++++++++++++++++
+
+In order for each cape to have a unique address, a board ID scheme is
+used that sets the address to be different depending on the setting of
+the dipswitch or jumpers on the capes. A two position dipswitch or
+jumpers is used to set the address pins of the EEPROM.
+
+It is the responsibility of the user to set the proper address for each
+board and the position in the stack that the board occupies has nothing
+to do with which board gets first choice on the usage of the expansion
+bus signals. The process for making that determination and resolving
+conflicts is left up to the SW and, as of this moment in time, this
+method is a something of a mystery due to the new Device Tree
+methodology introduced in the 3.8 kernel.
+
+Address line A2 is always tied high. This sets the allowable address
+range for the expansion cards to *0x54* to**0x57**. All other I2C
+addresses can be used by the user in the design of their capes. But,
+these addresses must not be used other than for the board EEPROM
+information. This also allows for the inclusion of EEPROM devices on the
+cape if needed without interfering with this EEPROM. It requires that A2
+be grounded on the EEPROM not used for cape identification.
+
+[[i2c-bus]]
+8.2.2 I2C Bus
++++++++++++++
+
+The EEPROMs on each expansion board are connected to I2C2 on connector
+P9 pins 19 and 20. For this reason I2C2 must always be left connected
+and should not be changed by SW to remove it from the expansion header
+pin mux settings. If this is done, the system will be unable to detect
+the capes.
+
+The I2C signals require pullup resistors. Each board must have a 5.6K
+resistor on these signals. With four capes installed this will result in
+an effective resistance of 1.4K if all capes were installed and all the
+resistors used were exactly 5.6K. As more capes are added the resistance
+is reduced to overcome capacitance added to the signals. When no capes
+are installed the internal pullup resistors must be activated inside the
+processor to prevent I2C timeouts on the I2C bus.
+
+The I2C2 bus may also be used by capes for other functions such as I/O
+expansion or other I2C compatible devices that do not share the same
+address as the cape EEPROM.
+
+[[eeprom-write-protect]]
+8.2.3 EEPROM Write Protect
+++++++++++++++++++++++++++
+
+The design in *Figure 62* has the write protect disabled. If the write
+protect is not enabled, this does expose the EEPROM to being corrupted
+if the I2C2 bus is used on the cape and the wrong address written to. It
+is recommended that a write protection function be implemented and a
+Test Point be added that when grounded, will allow the EEPROM to be
+written to. To enable write operation, Pin 7 of the EEPROM must be tied
+to ground.
+
+When not grounded, the pin is HI via pullup resistor R210 and therefore
+write protected. Whether or not Write Protect is provided is at the
+discretion of the cape designer.
+
+*Variable & MAC Memory*
+
+VDD_3V3B
+
+image:media/image79.png[media/image79.png,title="media/image79.png",width=567,height=189]
+
+[[figure-62.-expansion-board-eeprom-write-protect]]
+Figure 62. Expansion Board EEPROM Write Protect
+
+[[eeprom-data-format]]
+8.2.4 EEPROM Data Format
+++++++++++++++++++++++++
+
+*Table 17* shows the format of the contents of the expansion board
+EEPROM. Data is stored in Big Endian with the least significant value on
+the right. All addresses read as a single byte data from the EEPROM, but
+two byte addressing is used. ASCII values are intended to be easily read
+by the user when the EEPROM contents are dumped.
+
+[[table-17.-expansion-board-eeprom]]
+Table 17. Expansion Board EEPROM
+
+[cols=",,,",options="header",]
+|=======================================================================
+|*Name* |*Offset* |*Size (bytes)* |*Contents*
+|*Header* |*0* |*4* |*0xAA, 0x55, 0x33, 0xEE*
+
+|*EEPROM Revision* |*4* |*2* |*Revision number of the overall format of
+this EEPROM in ASCII =A1*
+
+|*Board Name* |*6* |*32* |*Name of board in ASCII so user can read it
+when the EEPROM is dumped. Up to developer of the board as to what they
+call the board..*
+
+|*Version* |*38* |*4* |*Hardware version code for board in ASCII.
+Version format is up to the developer.* *i.e. 02.1…00A1....10A0*
+
+|*Manufacturer* |*42* |*16* |*ASCII name of the manufacturer. Company or
+individual’s name.*
+
+|*Part Number* |*58* |*16* |*ASCII Characters for the part number. Up to
+maker of the board.*
+
+|*Number of Pins* |*74* |*2* |*Number of pins used by the daughter board
+including the power pins used. Decimal value of total pins 92 max,
+stored in HEX.*
+
+|*Serial Number* |*76* |*12* |*Serial number of the board. This is a 12
+character string which is:* +
+*WWYY&&&&nnnn* +
+*where: WW = 2 digit week of the year of production* +
+*YY = 2 digit year of production* +
+*&&&&=Assembly code to let the manufacturer document the assembly number
+or product. A way to quickly tell from reading the serial number what
+the board is. Up to the developer to determine.* *nnnn = incrementing
+board number for that week of production*
+
+|*Pin Usage* |*88* |*148* |**Two bytes** *for each configurable pins of
+the 74 pins on the expansion* +
+*connectors* **MSB LSB** +
+*Bit order: 15..14 ..... 1..0* +
+*Bit 15....Pin is used or not...0=Unused by cape 1=Used by cape* +
+*Bit 14-13...Pin Direction.....1 0=Output 01=Input 11=BDIR* +
+*Bits 12-7...Reserved........should be all zeros* +
+*Bit 6....Slew Rate .......0=Fast 1=Slow* +
+*Bit 5....Rx Enable.......0=Disabled 1=Enabled* +
+*Bit 4....Pull Up/Dn Select....0=Pulldown 1=PullUp* +
+*Bit 3....Pull Up/DN enabled...0=Enabled 1=Disabled* +
+*Bits 2-0 ...Mux Mode Selection...Mode 0-7*
+
+|*VDD_3V3B Current* |*236* |*2* |*Maximum current in milliamps. This is
+HEX value of the current in decimal* +
+*1500mA=0x05 0xDC 325mA=0x01 0x45*
+
+|*VDD_5V Current* |*238* |*2* |*Maximum current in milliamps. This is
+HEX value of the current in decimal* +
+*1500mA=0x05 0xDC 325mA=0x01 0x45*
+
+|*SYS_5V Current* |*240* |*2* |*Maximum current in milliamps. This is
+HEX value of the current in decimal* +
+*1500mA=0x05 0xDC 325mA=0x01 0x45*
+
+|*DC Supplied* |*242* |*2* |*Indicates whether or not the board is
+supplying voltage on the VDD_5V rail and the current rating 000=No
+1-0xFFFF is the current supplied storing the decimal* +
+*equivalent in HEX format*
+
+|*Available* |*244* |*32543* |*Available space for other non-volatile
+codes/data to be used as needed by the manufacturer or SW driver. Could
+also store presets for use by SW.*
+|=======================================================================
+
+[[pin-usage]]
+8.2.5 Pin Usage
++++++++++++++++
+
+*Table 18* is the locations in the EEPROM to set the I/O pin usage for
+the cape. It contains the value to be written to the Pad Control
+Registers. Details on this can be found in section**9.2.2** of the
+*AM3358 Technical Reference Manual*, The table is left blank as a
+convenience and can be printed out and used as a template for creating a
+custom setting for each cape. The 16 bit integers and all 16 bit fields
+are to be stored in Big Endian format.
+
+***Bit 15 PIN USAGE*** is an indicator and should be a 1 if the pin is
+used or 0 if it is unused.
+
+***Bits 14-7 RESERVED*** is not to be used and left as 0.
+
+***Bit 6 SLEW CONTROL*** 0=Fast 1=Slow
+
+***Bit 5 RX Enabled*** 0=Disabled 1=Enabled
+
+***Bit 4 PU/PD*** 0=Pulldown 1=Pullup.
+
+***Bit 3 PULLUP/DN*** 0=Pullup/pulldown enabled
+
+1= Pullup/pulldown disabled
+
+***Bit 2-0 MUX MODE SELECT*** Mode 0-7. (refer to TRM)
+
+Refer to the TRM for proper settings of the pin MUX mode based on the
+signal selection to be used.
+
+The *AIN0-6* pins do not have a pin mux setting, but they need to be set
+to indicate if each of the pins is used on the cape. Only bit 15 is used
+for the AIN signals.
+
+[[table-18.-eeprom-pin-usage]]
+Table 18. EEPROM Pin Usage
+
+[cols=",,,,,,,,,,,,,",options="header",]
+|=======================================================================
+| + | + | + |*15* |*14* |*13* |*12* |*11* |*10* |*9* |*8* |*7* |*6* |*5*
+|*Off set* |*Conn* |*Name* |*Pin* +
+*Usage* |*Type* | + |*Reserved* | + | + |*S* +
+*L* +
+*E* +
+*W* |*R* +
+*X* |*P* +
+*U* +
+*-* +
+*P* +
+*D* |*P* +
+*U* +
+*/* +
+*D E* +
+*N* |*Mux Mode*
+
+|*88* |*P9-22* |*UART2_RXD* | + | + | + | + | + | + | + | + | + | + | +
+
+|*90* |*P9-21* |*UART2_TXD* | + | + | + | + | + | + | + | + | + | + | +
+
+|*92* |*P9-18* |*I2C1_SDA* | + | + | + | + | + | + | + | + | + | + | +
+
+|*94* |*P9-17* |*I2C1_SCL* | + | + | + | + | + | + | + | + | + | + | +
+
+|*96* |*P9-42* |*GPIO0_7* | + | + | + | + | + | + | + | + | + | + | +
+
+|*98* |*P8-35* |*UART4_CTSN* | + | + | + | + | + | + | + | + | + | + | +
+
+|*100* |*P8-33* |*UART4_RTSN* | + | + | + | + | + | + | + | + | + | +
+| +
+
+|*102* |*P8-31* |*UART5_CTSN* | + | + | + | + | + | + | + | + | + | +
+| +
+
+|*104* |*P8-32* |*UART5_RTSN* | + | + | + | + | + | + | + | + | + | +
+| +
+
+|*106* |*P9-19* |*I2C2_SCL* | + | + | + | + | + | + | + | + | + | + | +
+
+|*108* |*P9-20* |*I2C2_SDA* | + | + | + | + | + | + | + | + | + | + | +
+
+|*110* |*P9-26* |*UART1_RXD* | + | + | + | + | + | + | + | + | + | + | +
+
+|*112* |*P9-24* |*UART1_TXD* | + | + | + | + | + | + | + | + | + | + | +
+
+|*114* |*P9-41* |*CLKOUT2* | + | + | + | + | + | + | + | + | + | + | +
+
+|*116* |*P8-19* |*EHRPWM2A* | + | + | + | + | + | + | + | + | + | + | +
+
+|*118* |*P8-13* |*EHRPWM2B* | + | + | + | + | + | + | + | + | + | + | +
+
+|*120* |*P8-14* |*GPIO0_26* | + | + | + | + | + | + | + | + | + | + | +
+
+|*122* |*P8-17* |*GPIO0_27* | + | + | + | + | + | + | + | + | + | + | +
+
+|*124* |*P9-11* |*UART4_RXD* | + | + | + | + | + | + | + | + | + | + | +
+
+|*126* |*P9-13* |*UART4_TXD* | + | + | + | + | + | + | + | + | + | + | +
+
+|*128* |*P8-25* |*GPIO1_0* | + | + | + | + | + | + | + | + | + | + | +
+
+|*130* |*P8-24* |*GPIO1_1* | + | + | + | + | + | + | + | + | + | + | +
+
+|*132* |*P8-5* |*GPIO1_2* | + | + | + | + | + | + | + | + | + | + | +
+
+|*134* |*P8-6* |*GPIO1_3* | + | + | + | + | + | + | + | + | + | + | +
+
+|*136* |*P8-23* |*GPIO1_4* | + | + | + | + | + | + | + | + | + | + | +
+
+|*138* |*P8-22* |*GPIO1_5* | + | + | + | + | + | + | + | + | + | + | +
+
+|*140* |*P8-3* |*GPIO1_6* | + | + | + | + | + | + | + | + | + | + | +
+
+|*142* |*P8-4* |*GPIO1_7* | + | + | + | + | + | + | + | + | + | + | +
+
+|*144* |*P8-12* |*GPIO1_12* | + | + | + | + | + | + | + | + | + | + | +
+
+|*146* |*P8-11* |*GPIO1_13* | + | + | + | + | + | + | + | + | + | + | +
+
+|*148* |*P8-16* |*GPIO1_14* | + | + | + | + | + | + | + | + | + | + | +
+
+|*150* |*P8-15* |*GPIO1_15* | + | + | + | + | + | + | + | + | + | + | +
+
+|*152* |*P9-15* |*GPIO1_16* | + | + | + | + | + | + | + | + | + | + | +
+|=======================================================================
+
+[cols=",,,,,,,,,,,,,",options="header",]
+|=======================================================================
+| | | |*15* |*14* |*13* |*12* |*11* |*10* |*9* |*8* |*7* |*6* |*5*
+|*Off set* |*Conn* |*Name* |*Pin* +
+*Usage* |*Type* | |*Reserved* | | |*S* +
+*L* +
+*E* +
+*W* |*R* +
+*X* |*P* +
+*U* +
+*-* +
+*P* +
+*D* |*P* +
+*U* +
+*/* +
+*D E* +
+*N* |*Mux Mode*
+
+|*154* |*P9-23* |*GPIO1_17* | | | | | | | | | | |
+
+|*156* |*P9-14* |*EHRPWM1A* | | | | | | | | | | |
+
+|*158* |*P9-16* |*EHRPWM1B* | | | | | | | | | | |
+
+|*160* |*P9-12* |*GPIO1_28* | | | | | | | | | | |
+
+|*162* |*P8-26* |*GPIO1_29* | | | | | | | | | | |
+
+|*164* |*P8-21* |*GPIO1_30* | | | | | | | | | | |
+
+|*166* |*P8-20* |*GPIO1_31* | | | | | | | | | | |
+
+|*168* |*P8-18* |*GPIO2_1* | | | | | | | | | | |
+
+|*170* |*P8-7* |*TIMER4* | | | | | | | | | | |
+
+|*172* |*P8-9* |*TIMER5* | + | + | + | + | + | + | + | + | + | + | +
+
+|*174* |*P8-10* |*TIMER6* | + | + | + | + | + | + | + | + | + | + | +
+
+|*176* |*P8-8* |*TIMER7* | + | + | + | + | + | + | + | + | + | + | +
+
+|*178* |*P8-45* |*GPIO2_6* | + | + | + | + | + | + | + | + | + | + | +
+
+|*180* |*P8-46* |*GPIO2_7* | + | + | + | + | + | + | + | + | + | + | +
+
+|*182* |*P8-43* |*GPIO2_8* | + | + | + | + | + | + | + | + | + | + | +
+
+|*184* |*P8-44* |*GPIO2_9* | + | + | + | + | + | + | + | + | + | + | +
+
+|*186* |*P8-41* |*GPIO2_10* | + | + | + | + | + | + | + | + | + | + | +
+
+|*188* |*P8-42* |*GPIO2_11* | + | + | + | + | + | + | + | + | + | + | +
+
+|*190* |*P8-39* |*GPIO2_12* | + | + | + | + | + | + | + | + | + | + | +
+
+|*192* |*P8-40* |*GPIO2_13* | + | + | + | + | + | + | + | + | + | + | +
+
+|*194* |*P8-37* |*UART5_TXD* | + | + | + | + | + | + | + | + | + | + | +
+
+|*196* |*P8-38* |*UART5_RXD* | + | + | + | + | + | + | + | + | + | + | +
+
+|*198* |*P8-36* |*UART3_CTSN* | + | + | + | + | + | + | + | + | + | +
+| +
+
+|*200* |*P8-34* |*UART3_RTSN* | + | + | + | + | + | + | + | + | + | +
+| +
+
+|*202* |*P8-27* |*GPIO2_22* | + | + | + | + | + | + | + | + | + | + | +
+
+|*204* |*P8-29* |*GPIO2_23* | + | + | + | + | + | + | + | + | + | + | +
+
+|*206* |*P8-28* |*GPIO2_24* | + | + | + | + | + | + | + | + | + | + | +
+
+|*208* |*P8-30* |*GPIO2_25* | + | + | + | + | + | + | + | + | + | + | +
+
+|*210* |*P9-29* |*SPI1_D0* | + | + | + | + | + | + | + | + | + | + | +
+
+|*212* |*P9-30* |*SPI1_D1* | + | + | + | + | + | + | + | + | + | + | +
+
+|*214* |*P9-28* |*SPI1_CS0* | + | + | + | + | + | + | + | + | + | + | +
+
+|*216* |*P9-27* |*GPIO3_19* | + | + | + | + | + | + | + | + | + | + | +
+
+|*218* |*P9-31* |*SPI1_SCLK* | + | + | + | + | + | + | + | + | + | + | +
+
+|*220* |*P9-25* |*GPIO3_21* | + | + | + | + | + | + | + | + | + | + | +
+
+| + | + | + |*15* |*14* |*13* |*12* |*11* |*10* |*9* |*8* |*7* |*6* |*5*
+
+|*Off set* |*Conn* |*Name* |*Pin* +
+*Usage* |*Type* | + |*Reserved* | + | + |*S* +
+*L* +
+*E* +
+*W* |*R* +
+*X* |*P* +
+*U* +
+*-* +
+*P* +
+*D* |*P* +
+*U* +
+*/* +
+*D E* +
+*N* |*Mux Mode*
+
+| + | + | + | + |*0* |*0* |*0* |*0* |*0* |*0* |*0* |*0* |*0* |*0*
+
+|*222* |*P9-39* |*AIN0* | + | + | + | + | + | + | + | + | + | + | +
+
+|*224* |*P9-40* |*AIN1* | + | + | + | + | + | + | + | + | + | + | +
+
+|*226* |*P9-37* |*AIN2* | + | + | + | + | + | + | + | + | + | + | +
+
+|*228* |*P9-38* |*AIN3* | + | + | + | + | + | + | + | + | + | + | +
+
+|*230* |*P9-33* |*AIN4* | + | + | + | + | + | + | + | + | + | + | +
+
+|*232* |*P9-36* |*AIN5* | + | + | + | + | + | + | + | + | + | + | +
+
+|*234* |*P9-35* |*AIN6* | + | + | + | + | + | + | + | + | + | + | +
+|=======================================================================
+
+[[pin-usage-consideration]]
+8.3 Pin Usage Consideration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This section covers things to watch for when hooking up to certain pins
+on the expansion headers.
+
+[[boot-pins]]
+8.3.1 Boot Pins
++++++++++++++++
+
+There are 16 pins that control the boot mode of the processor that are
+exposed on the expansion headers. *Figure 63* below shows those signals
+as they appear on the BeagleBone Black.:
+
+image:media/image80.png[media/image80.png,title="media/image80.png",width=530,height=468]
+
+If you plan to use any of these signals, then on power up, these pins
+should not be driven. If you do, it can affect the boot mode of the
+processor and could keep the processor from booting or working
+correctly.
+
+If you are designing a cape that is intended to be used as a boot
+source, such as a NAND board, then you should drive the pins to
+reconfigure the boot mode, but only at reset. After the reset phase, the
+signals should not be driven to allow them to be used for the other
+functions found on those pins. You will need to override the resistor
+values in order to change the settings. The DC pull-up requirement
+should be based on the AM3358 Vih min voltage of 2 volts and AM3358
+maximum input leakage current of 18uA. Also take into account any other
+current leakage paths on these signals which could be caused by your
+specific cape design.
+
+The DC pull-down requirement should be based on the AM3358 Vil max
+voltage of 0.8 volts and AM3358 maximum input leakage current of 18uA
+plus any other current leakage paths on these signals.
+
+[[expansion-connectors-1]]
+8.4 Expansion Connectors
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+A combination of male and female headers is used for access to the
+expansion headers on the main board. There are three possible mounting
+configurations for the expansion headers:
+
+* _Single_-no board stacking but can be used on the top of the stack.
+* _Stacking_-up to four boards can be stacked on top of each other.
+* _Stacking with signal stealing_-up to three boards can be stacked on
+top of each other, but certain boards will not pass on the signals they
+are using to prevent signal loading or use by other cards in the stack.
+
+The following sections describe how the connectors are to be implemented
+and used for each of the different configurations.
+
+[[non-stacking-headers-single-cape]]
+8.4.1 Non-Stacking Headers-Single Cape
+++++++++++++++++++++++++++++++++++++++
+
+For non-stacking capes single configurations or where the cape can be
+the last board on the stack, the two 46 pin expansion headers use the
+same connectors. *Figure 64* is a picture of the connector. These are
+dual row 23 position 2.54mm x 2.54mm connectors.
+
+image:media/image81.jpg[media/image81.jpg,title="media/image81.jpg",width=65,height=90]
+
+[[figure-64.-single-expansion-connector]]
+Figure 64. Single Expansion Connector
+
+The connector is typically mounted on the bottom side of the board as
+shown in *Figure 65*. These are very common connectors and should be
+easily located. You can also use two single row 23 pin headers for each
+of the dual row headers.
+
+image:media/image82.jpg[media/image82.jpg,title="media/image82.jpg",width=575,height=54]
+
+[[figure-65.-single-cape-expansion-connector]]
+Figure 65. Single Cape Expansion Connector
+
+It is allowed to only populate the pins you need. As this is a
+non-stacking configuration, there is no need for all headers to be
+populated. This can also reduce the overall cost of the cape. This
+decision is up to the cape designer.
+
+For convenience listed in *Table 19* are some possible choices for part
+numbers on this connector. They have varying pin lengths and some may be
+more suitable than others for your use. It should be noted, that the
+longer the pin and the further it is inserted into the BeagleBone Black
+connector, the harder it will be to remove due to the tension on 92
+pins. This can be minimized by using shorter pins or removing those pins
+that are not used by your particular design. The first item in**Table
+18** is on the edge and may not be the best solution. Overhang is the
+amount of the pin that goes past the contact point of the connector on
+the BeagleBone Black
+
+.
+
+[[table-19.-single-cape-connectors]]
+Table 19. Single Cape Connectors
+
+[cols=",,,",options="header",]
+|=======================================================================
+|*SUPPLIER* |*PARTNUMBER* |*TAIL LENGTH(in)* |*OVERHANG(in)*
+|http://www.mlelectronics.com/[_Major League_] |TSHC-123-D-03-145-G-LF
+|.145 |.004
+
+|http://www.mlelectronics.com/[_Major League_] |TSHC-123-D-03-240-G-LF
+|.240 |.099
+
+|http://www.mlelectronics.com/[_Major League_] |TSHC-123-D-03-255-G-LF
+|.255 |.114
+|=======================================================================
+
+The G in the part number is a plating option. Other options may be used
+as well as long as the contact area is gold. Other possible sources are
+Sullins and Samtec for these connectors. You will need to ensure the
+depth into the connector is sufficient
+
+[[main-expansion-headers-stacking]]
+8.4.2 Main Expansion Headers-Stacking
++++++++++++++++++++++++++++++++++++++
+
+For stacking configuration, the two 46 pin expansion headers use the
+same connectors. *Figure 66* is a picture of the connector. These are
+dual row 23 position 2.54mm x 2.54mm connectors.
+
+image:media/image83.jpg[media/image83.jpg,title="media/image83.jpg",width=69,height=90]
+
+[[figure-66.-expansion-connector]]
+Figure 66. Expansion Connector
+
+The connector is mounted on the top side of the board with longer tails
+to allow insertion into the BeagleBone Black. *Figure 67* is the
+connector configuration for the connector.
+
+image:media/image84.jpg[media/image84.jpg,title="media/image84.jpg",width=575,height=65]
+
+[[figure-67.-stacked-cape-expansion-connector]]
+Figure 67. Stacked Cape Expansion Connector
+
+For convenience listed in *Table 18* are some possible choices for part
+numbers on this connector. They have varying pin lengths and some may be
+more suitable than others for your use. It should be noted, that the
+longer the pin and the further it is inserted into the BeagleBone Black
+connector, the harder it will be to remove due to the tension on 92
+pins. This can be minimized by using shorter pins. There are most likely
+other suppliers out there that will work for this connector as well. If
+anyone finds other suppliers of compatible connectors that work, let us
+know and they will be added to this document. The first item in**Table
+19** is on the edge and may not be the best solution. Overhang is the
+amount of the pin that goes past the contact point of the connector on
+the BeagleBone Black.
+
+The third part listed in *Table 20* will have insertion force issues.
+
+[[table-20.-stacked-cape-connectors]]
+Table 20. Stacked Cape Connectors
+
+[cols=",,,",options="header",]
+|=======================================================================
+|*SUPPLIER* |*PARTNUMBER* |*TAIL LENGTH(in)* |*OVERHANG(in)*
+|http://www.mlelectronics.com/[_Major League_] |SSHQ-123-D-06-G-LF |.190
+|0.049
+
+|http://www.mlelectronics.com/[_Major League_] |SSHQ-123-D-08-G-LF |.390
+|0.249
+
+|http://www.mlelectronics.com/[_Major League_] |SSHQ-123-D-10-G-LF |.560
+|0.419
+|=======================================================================
+
+There are also different plating options on each of the connectors
+above. Gold plating on the contacts is the minimum requirement. If you
+choose to use a different part number for plating or availability
+purposes, make sure you do not select the “LT” option.
+
+Other possible sources are Sullins and Samtec but make sure you select
+one that has the correct mating depth.
+
+[[stacked-capes-wsignal-stealing]]
+8.4.3 Stacked Capes w/Signal Stealing
++++++++++++++++++++++++++++++++++++++
+
+*Figure 68* is the connector configuration for stackable capes that does
+not provide all of the signals upwards for use by other boards. This is
+useful if there is an expectation that other boards could interfere with
+the operation of your board by exposing those signals for expansion.
+This configuration consists of a combination of the stacking and
+nonstacking style connectors.
+
+image:media/image85.jpg[media/image85.jpg,title="media/image85.jpg",width=575,height=71]
+
+[[figure-68.-stacked-wsignal-stealing-expansion-connector]]
+Figure 68. Stacked w/Signal Stealing Expansion Connector
+
+[[retention-force]]
+8.4.4 Retention Force
++++++++++++++++++++++
+
+The length of the pins on the expansion header has a direct relationship
+to the amount of force that is used to remove a cape from the BeagleBone
+Black. The longer the pins extend into the connector the harder it is to
+remove. There is no rule that says that if longer pins are used, that
+the connector pins have to extend all the way into the mating connector
+on the BeagleBone Black, but this is controlled by the user and
+therefore is hard to control. We have also found that if you use gold
+pins, while more expensive, it makes for a smoother finish which reduces
+the friction.
+
+This section will attempt to describe the tradeoffs and things to
+consider when selecting a connector and its pin length.
+
+[[beaglebone-black-female-connectors]]
+8.4.5 BeagleBone Black Female Connectors
+++++++++++++++++++++++++++++++++++++++++
+
+*Figure 69* shows the key measurements used in calculating how much the
+pin extends past the contact point on the connector, what we call
+overhang.
+
+image:media/image86.jpg[media/image86.jpg,title="media/image86.jpg",width=552,height=314]
+
+[[figure-69.-connector-pin-insertion-depth]]
+Figure 69. Connector Pin Insertion Depth
+
+To calculate the amount of the pin that extends past the Point of
+Contact, use the following formula:
+
+Overhang=Total Pin Length- PCB thickness (.062) - contact point (.079)
+
+The longer the pin extends past the contact point, the more force it
+will take to insert and remove the board. Removal is a greater issue
+than the insertion.
+
+[[signal-usage]]
+8.5 Signal Usage
+^^^^^^^^^^^^^^^^
+
+Based on the pin muxing capabilities of the processor, each expansion
+pin can be configured for different functions. When in the stacking
+mode, it will be up to the user to ensure that any conflicts are
+resolved between multiple stacked cards. When stacked, the first card
+detected will be used to set the pin muxing of each pin. This will
+prevent other modes from being supported on stacked cards and may result
+in them being inoperative.
+
+In <<section-7-1>> of this document, the functions of the pins are defined
+as well as the pin muxing options. Refer to this section for more
+information on what each pin is. To simplify things, if you use the
+default name as the function for each pin and use those functions, it
+will simplify board design and reduce conflicts with other boards.
+
+Interoperability is up to the board suppliers and the user. This
+specification does not specify a fixed function on any pin and any pin
+can be used to the full extent of the functionality of that pin as
+enabled by the processor.
+
+*DO NOT APPLY VOLTAGE TO ANY I/O PIN WHEN POWER IS NOT SUPPLIED TO THE
+BOARD. IT WILL DAMAGE THE PROCESSOR AND VOID THE WARRANTY.*
+
+*NO PINS ARE TO BE DRIVEN UNTIL AFTER THE SYS_RESET LINE GOES HIGH.*
+
+[[cape-power]]
+8.6 Cape Power
+^^^^^^^^^^^^^^
+
+This section describes the power rails for the capes and their usage.
+
+[[main-board-power]]
+8.6.1 Main Board Power
+++++++++++++++++++++++
+
+The *Table 1* describes the voltages from the main board that are
+available on the expansion connectors and their ratings. All voltages
+are supplied by connector**P9**. The current ratings listed are per pin.
+
+[[table-21.-expansion-voltages]]
+Table 21. Expansion Voltages
+
+[cols=",,,,,",options="header",]
+|============================================
+|*Current* |*Name* |*P9* |*P9* |*Name* |*Current*
+|250mA |VDD_3V3B |3 |4 |VDD_3V3B |250mA
+|1000mA |VDD_5V |5 |6 |VDD_5V |1000mA
+|250mA |SYS_5V |7 |8 |SYS_5V |250mA
+|============================================
+
+The *VDD_3V3B* rail is supplied by the LDO on the BeagleBone Black and
+is the primary power rail for expansion boards. If the power requirement
+for the capes exceeds the current rating, then locally generated voltage
+rail can be used. It is recommended that this rail be used to power any
+buffers or level translators that may be used.
+
+*VDD_5V* is the main power supply from the DC input jack. This voltage
+is not present when the board is powered via USB. The amount of current
+supplied by this rail is dependent upon the amount of current available.
+Based on the board design, this rail is limited to 1A per pin from the
+main board.
+
+The *SYS_5V* rail is the main rail for the regulators on the main board.
+When powered from a DC supply or USB, this rail will be 5V. The
+available current from this rail depends on the current available from
+the USB and DC external supplies.
+
+[[expansion-board-external-power]]
+8.6.2 Expansion Board External Power
+++++++++++++++++++++++++++++++++++++
+
+A cape can have a jack or terminals to bring in whatever voltages may be
+needed by that board. Care should be taken not to let this voltage be
+fed back into any of the expansion header pins.
+
+It is possible to provide 5V to the main board from an expansion board.
+By supplying a 5V signal into the *VDD_5V* rail, the main board can be
+supplied. This voltage must not exceed 5V. You should not supply any
+voltage into any other pin of the expansion connectors. Based on the
+board design, this rail is limited to 1A per pin to the BeagleBone
+Black.
+
+*There are several precautions that need to be taken when working with
+the expansion headers to prevent damage to the board.*
+
+1.  *Do not apply any voltages to any I/O pins when the board is not
+powered on.*
+2.  *Do not drive any external signals into the I/O pins until after the
+VDD_3V3B rail is up.*
+3.  *Do not apply any voltages that are generated from external
+sources.*
+4.  *If voltages are generated from the VDD_5V signal, those supplies
+must not become active until after the VDD_3V3B rail is up.*
+5.  *If you are applying signals from other boards into the expansion
+headers, make sure you power the board up after you power up the
+BeagleBone Black or make the connections after power is applied on both
+boards.*
+
+*Powering the processor via its I/O pins can cause damage to the
+processor.*
+
+[[mechanical]]
+8.7 Mechanical
+^^^^^^^^^^^^^^
+
+This section provides the guidelines for the creation of expansion
+boards from a mechanical standpoint. Defined is a standard board size
+that is the same profile as the BeagleBone Black. It is expected that
+the majority of expansion boards created will be of standard size. It is
+possible to create boards of other sizes and in some cases this is
+required, as in the case of an LCD larger than the BeagleBone Black
+board.
+
+[[standard-cape-size]]
+8.7.1 Standard Cape Size
+++++++++++++++++++++++++
+
+*Figure 70* is the outline of the standard cape. The dimensions are in
+inches.
+
+image:media/image87.jpg[media/image87.jpg,title="media/image87.jpg",width=575,height=369]
+
+[[figure-70.-cape-board-dimensions]]
+Figure 70. Cape Board Dimensions
+
+A slot is provided for the Ethernet connector to stick up higher than
+the cape when mounted. This also acts as a key function to ensure that
+the cape is oriented correctly. Space is also provided to allow access
+to the user LEDs and reset button on the main board.
+
+Some people have inquired as to the difference in the radius of the
+corners of the BeagleBone Black and why they are different. This is a
+result of having the BeagleBone fit into the Altoids style tin.
+
+It is not required that the cape be exactly like the BeagleBone Black
+board in this respect.
+
+[[extended-cape-size]]
+8.7.2 Extended Cape Size
+++++++++++++++++++++++++
+
+Capes larger than the standard board size are also allowed. A good
+example would be an LCD panel. There is no practical limit to the sizes
+of these types of boards. The notch for the key is also not required,
+but it is up to the supplier of these boards to ensure that the
+BeagleBone Black is not plugged in incorrectly in such a manner that
+damage would be cause to the BeagleBone Black or any other capes that
+may be installed. Any such damage will be the responsibility of the
+supplier of such a cape to repair.
+
+As with all capes, the EEPROM is required and compliance with the power
+requirements must be adhered to.
+
+[[enclosures]]
+8.7.3 Enclosures
+++++++++++++++++
+
+There are numerous enclosures being created in all different sizes and
+styles. The mechanical design of these enclosures is not being defined
+by this specification.
+
+The ability of these designs to handle all shapes and sizes of capes,
+especially when you consider up to four can be mounted with all sorts of
+interface connectors, it is difficult to define a standard enclosure
+that will handle all capes already made and those yet to be defined.
+
+If cape designers want to work together and align with one enclosure and
+work around it that is certainly acceptable. But we will not pick
+winners and we will not do anything that impedes the openness of the
+platform and the ability of enclosure designers and cape designers to
+innovate and create new concepts.
+
+[[section-9,Section 9.0 BeagleBone Black Mechanical]]
+== 9.0 BeagleBone Black Mechanical
+
+[[dimensions-and-weight]]
+=== 9.1 Dimensions and Weight
+
+Size: 3.5” x 2.15” (86.36mm x 53.34mm)
+
+Max height: .187” (4.76mm)
+
+PCB Layers: 6
+
+PCB thickness: .062”
+
+RoHS Compliant: Yes
+
+Weight: 1.4 oz
+
+[[silkscreen-and-component-locations]]
+9.2 Silkscreen and Component Locations
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+image:media/image88.jpg[media/image88.jpg,title="media/image88.jpg",width=530,height=782]
+
+[[figure-71.-board-dimensions]]
+Figure 71. Board Dimensions
+
+image:media/image89.jpg[media/image89.jpg,title="media/image89.jpg",width=493,height=818]
+
+[[figure-72.-component-side-silkscreen]]
+Figure 72. Component Side Silkscreen
+
+image:media/image90.jpg[media/image90.jpg,title="media/image90.jpg",width=501,height=772]
+
+*Figure 73. Circuit Side Silkscreen*
+
+[[pictures]]
+*10.0 Pictures*
+---------------
+
+image:media/image91.jpg[media/image91.jpg,title="media/image91.jpg",width=476,height=768]
+
+*Figure 74. Top Side*
+
+image:media/image92.jpg[media/image92.jpg,title="media/image92.jpg",width=486,height=764]
+
+*Figure 75. Bottom Side*
+
+[[support-information]]
+== 11.0 Support Information
+
+All support for this design is through the BeagleBoard.org community at:
+
+_beagleboard@googlegroups.com_ or
+
+http://beagleboard.org/discuss[_http://beagleboard.org/discuss_] .
+
+[[hardware-design]]
+=== 11.1 Hardware Design
+
+Design documentation can be found on the eMMC of the board under the
+documents/hardware directory when connected using the USB cable.
+Provided there is:
+
+* Schematic in PDF
+* Schematic in OrCAD (Cadence Design Entry CIS 16.3)
+* PCB Gerber
+* PCB Layout (Allegro)
+* Bill of Material
+* System Reference Manual (This document).
+
+This directory is not always kept up to date in every SW release due to
+the frequency of changes of the SW. The best solution is to download the
+files from
+https://www.beagleboard.org/distros[_beagleboard.org/latest-images_]
+
+We do not track SW revision of what is in the eMMC. SW is tracked
+separately from the HW due to the frequency of changes which would
+require massive relabeling of boards due to the frequent SW changes. You
+should always use the latest SW revision.
+
+To see what SW revision is loaded into the eMMC follow the instructions
+at
+http://elinux.org/Beagleboard:Updating_The_Software#Checking_The_Angstrom_Image_Version[_http://elinux.org/Beagleboard:Updating_The_Software#Checking_The_Angstrom_Image_Version_]
+
+[[software-updates]]
+=== 11.2 Software Updates
+
+It is a good idea to always use the latest software. Instructions for
+how to update your software to the latest version can be found at:
+
+http://elinux.org/BeagleBoneBlack#Updating_the_eMMC_Software[_http://elinux.org/BeagleBoneBlack#Updating_the_eMMC_S
+oftware_]
+
+[[rma-support]]
+=== 11.3 RMA Support
+
+If you feel your board is defective or has issues, request an RMA by
+filling out the form at
+http://beagleboard.org/support/rma[_http://beagleboard.org/support/rma_]
+. You will need the serial number and revision of the board. The serial
+numbers and revisions keep moving. Different boards can have different
+locations depending on when they were made. The following figures show
+the three locations of the serial and revision number.
+
+[[figure-76,Figure 76]]
+.Figure 76. Initial Serial Number and Revision Locations
+image:media/image93.jpg[media/image93.jpg,title="media/image93.jpg",width=518,height=308]
+
+
+[[figure-77,Figure 77]]
+.Figure 77. Second Phase Serial Number and Revision Location
+image:media/image94.jpg[media/image94.jpg,title="media/image94.jpg",width=518,height=230]
+
+.Figure 78. Third Phase Serial Number and Revision Location
+image:media/image95.jpg[media/image95.jpg,title="media/image95.jpg",width=575,height=222]
+
+
+[[trouble-shooting-hdmi-issues]]
+=== 11.4 Trouble Shooting HDMI Issues
+
+Many people are having issues with getting HDMI to work on their
+TV/Display. Unfortunately, we do not have the resources to buy all the
+TVs and Monitors on the market today nor go to eBay and buy all of the
+TVs and monitors made over the last five years to thoroughly test each
+and every one. We are depending on community members to help us get
+these tested and information provided on how to get them to work.
+
+One would think that if it worked on a lot of different TVs and monitors
+it would work on most if not all of them, assuming they meet the
+specification. However, there are other issues that could also result in
+these various TVs and monitors not working. The intent is that this page
+will be useful in navigating some of these issues. As others also find
+solutions, as long as we know about them, they will be added here as
+well. For access to the most up to date troubleshooting capabilities, go
+to the support wiki at
+http://www.elinux.org/Beagleboard:BeagleBoneBlack_HDMI[_http://www.elinux.org/Beagleboard:BeagleBoneBlack_HDMI_]
+
+The early release of the Software had some issues in the HDMI driver. Be
+sure and use the latest SW to take advantage of the improvements.
+
+http://www.elinux.org/Beagleboard:BeagleBoneBlack#Software_Resources[_http://www.elinux.org/Beagleboard:BeagleBoneBlack#Software_Resources_]
+
+[[edid]]
+==== 11.4.1 EDID
+
+EDID is the way the board requests information from the display and
+determines all the resolutions that it can support. The driver on the
+board will then look at these timings and find the highest resolution
+that is compatible with the board and uses that resolution for the
+display. For more information on EDID, you can take a look at
+http://en.wikipedia.org/wiki/Extended_display_identification_data[_http://en.wikipedia.org/wiki/Extended_display_identification_data_]
+
+If the board is not able to read the EDID, for whatever reason, it does
+not have this information. A few possible reasons for this are:
+
+* Bad cable
+* Cable not plugged in all the way on both ends
+* Display not powered on. (It should still work powered off, but some
+displays do not).
+
+[[display-source-selection]]
+==== 11.4.2 DISPLAY SOURCE SELECTION
+
+One easy thing to overlook is that you need to select the display source
+that matches the port you are using on the TV. Some displays may auto
+select, so you may need to disconnect the other inputs until you are
+sure the display works with the board.
+
+[[out-of-sequence]]
+==== 11.4.3 OUT OF SEQUENCE
+
+Sometimes the display and the board can get confused. One way to prevent
+this is after everything is cabled up and running, you can power cycle
+the display, with the board still running. You can also try resetting
+the board and let it reboot to resync with the TV.
+
+[[overscan]]
+==== 11.4.4 OVERSCAN
+
+Some displays use what is called overscan. This can be seen in TVs and
+not so much on Monitors. It causes the image to be missing on the edges,
+such that you cannot see them displayed. Some higher end displays allow
+you to disable overscan.
+
+Most TVs have a mode that allows you to adjust the image. These are
+options like Normal, Wide, Zoom, or Fit. Normal seems to be the best
+option as it does not chop of the edges. The other ones will crop of the
+edges.
+
+[[taking-a-nap]]
+==== 11.4.5 Taking a Nap
+
+In some cases the board can come up in a power down/screen save mode. No
+display will be present. This is due to the board believing that it is
+asleep. To come out of this, you will need to hit the keyboard or move
+the mouse.
+
+Once working, the board will time out and go back to sleep again. This
+can cause the display to go into a power down mode as well. You may need
+to turn the display back on again. Sometimes, it may take a minute or so
+for the display to catch up and show the image.
+
+[[audio]]
+==== 11.4.6 AUDIO
+
+Audio will only work on TV resolutions. This is due to the way the
+specification was written. Some displays have built in speakers and
+others require external. Make sure you have a TV resolution and speakers
+are connected if they are not built in. The SW should default to a TV
+resolution giving audio support. The HDMI driver should default to the
+highest audio supported resolution.
+
+[[getting-help]]
+==== 11.4.7 Getting Help
+
+If you need some up to date troubleshooting techniques, we have a Wiki
+set up at
+http://elinux.org/Beagleboard:BeagleBoneBlack_HDMI[_http://elinux.org/Beagleboard:BeagleBoneBlack_HDMI_]
+
+== 12.0 Footnotes

@@ -1,0 +1,8 @@
+{% for pdf_path in pdf_paths %}
+    {% if pdf_path+'/' in pagename %}
+        {% set pdf_name = '-'.join(pdf_path.split('/')[1:]) %}
+        <a role="button" href="{{docs_url}}/{{pdf_name}}.pdf" target="_blank">
+            <i class="fa-solid fa-download"></i> Download PDF
+        </a>
+    {% endif %}
+{% endfor %}

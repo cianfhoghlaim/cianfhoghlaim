@@ -1,0 +1,23 @@
+.. tabs::
+
+     .. group-tab:: Python
+          
+          .. _py_internLED_code:
+
+          .. literalinclude:: ../code/03displays/internLED.py
+               :caption: Using an internal LED (internLED.py)
+               :language: python
+               :linenos:
+
+          :download:`internLED.py <../code/03displays/internLED.py>`
+
+     .. group-tab:: C
+
+          .. _c_internLED_code:
+
+          .. literalinclude:: ../code/03displays/internLED.c
+               :caption: Using an internal LED (internLED.c)
+               :language: c
+               :linenos:
+
+          :download:`internLED.c <../code/03displays/internLED.c>`

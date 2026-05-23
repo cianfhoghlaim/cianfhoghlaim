@@ -1,0 +1,1086 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg989"
+   width="385.61426"
+   height="120.06555"
+   viewBox="0 0 385.61427 120.06555"
+   sodipodi:docname="BeagleV-Fire_sch.pdf"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs993" />
+  <sodipodi:namedview
+     id="namedview991"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false" />
+  <g
+     id="g46965"
+     inkscape:groupmode="layer"
+     inkscape:label="Page 7"
+     transform="translate(-80.31962,-347.83302)">
+    <g
+       id="g47953">
+      <path
+         d="M 396.48001,430.07999 393.12,433.44"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path47955" />
+    </g>
+    <g
+       id="g47957">
+      <path
+         d="m 393.12,433.44 v 0"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path47959" />
+    </g>
+    <g
+       id="g47961">
+      <path
+         d="M 396.48001,430.07999 393.12,426.72"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path47963" />
+    </g>
+    <g
+       id="g47965">
+      <path
+         d="m 393.12,426.72 v 0"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path47967" />
+    </g>
+    <g
+       id="g47969">
+      <path
+         d="M 393.12,430.07999 389.76001,433.44"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path47971" />
+    </g>
+    <g
+       id="g47973">
+      <path
+         d="m 389.76001,433.44 v 0"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path47975" />
+    </g>
+    <g
+       id="g47977">
+      <path
+         d="M 393.12,430.07999 389.76001,426.72"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path47979" />
+    </g>
+    <g
+       id="g47981">
+      <path
+         d="m 389.76001,426.72 v 0"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path47983" />
+    </g>
+    <g
+       id="g47985"
+       transform="scale(0.017699,0.018066)">
+      <text
+         xml:space="preserve"
+         transform="translate(22780.801,23885.301)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text47989"><tspan
+           x="0 245.75999 468.5824 694.68158 940.44159 1130.496 1356.5952 1618.7391 1825.1776 2034.8927 2297.0369 2965.5039 3053.9775 3244.032 3434.0864"
+           y="0"
+           sodipodi:role="line"
+           id="tspan47987">USER_BOTTON[16]</tspan></text>
+    </g>
+    <g
+       id="g50937"
+       transform="scale(0.040346,0.038574)">
+      <text
+         xml:space="preserve"
+         transform="translate(5329.9199,9735.04)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F9;-inkscape-font-specification:F9;writing-mode:lr-tb;fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text50941"><tspan
+           x="0 226.0992 448.9216 694.68158 920.78076 1035.4688"
+           y="0"
+           sodipodi:role="line"
+           id="tspan50939">BANK 4</tspan></text>
+    </g>
+    <g
+       id="g50943">
+      <path
+         d="M 302.39999,356.16 H 181.44 v 94.07999 h 120.95999 z"
+         style="fill:none;stroke:#0000ff;stroke-width:1.92;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path50945" />
+    </g>
+    <g
+       id="g50947"
+       transform="scale(0.017699,0.018066)">
+      <text
+         xml:space="preserve"
+         transform="translate(10513.6,19492.5)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#000080;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text50951"><tspan
+           x="0 242.4832 432.5376"
+           y="0"
+           sodipodi:role="line"
+           id="tspan50949">U1E</tspan></text>
+    </g>
+    <g
+       id="g50953"
+       transform="scale(0.017699,0.018066)">
+      <text
+         xml:space="preserve"
+         transform="translate(10558.7,25373.1)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#000080;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text50957"><tspan
+           x="0 281.80478 504.6272 714.34241 940.44159 1130.496 1320.5504 1510.6047 1717.0432 1825.1776 2034.8927 2277.376 2503.4751 2765.6191 2955.6736 3145.728 3335.7822"
+           y="0"
+           sodipodi:role="line"
+           id="tspan50955">MPFS025T-FCVG484E</tspan></text>
+    </g>
+    <g
+       id="g50959"
+       transform="scale(0.017699,0.018066)">
+      <text
+         xml:space="preserve"
+         transform="translate(10251.4,25851.4)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text50963"><tspan
+           x="0 281.80478 468.5824 632.42236 822.47681 1012.5312 1202.5856 1392.64 1556.48 1743.2576 1916.928 2106.9824 2195.4561 2369.1265 2523.136 2713.1904 2903.2446"
+           y="0"
+           sodipodi:role="line"
+           id="tspan50961">m5s250_soc_fcv484</tspan></text>
+    </g>
+    <g
+       id="g50965">
+      <path
+         d="M 181.44,389.76001 H 161.28"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path50967" />
+    </g>
+    <g
+       id="g50969">
+      <path
+         d="m 161.28,389.76001 v 0"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path50971" />
+    </g>
+    <g
+       id="g50973"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(9827.04,21152.6)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#004080;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text50977"><tspan
+           x="0 262.14398 475.13599 688.12799 783.15521 1038.7456 1215.6927 1428.6848"
+           y="0"
+           sodipodi:role="line"
+           id="tspan50975">MSSIO0B4</tspan></text>
+    </g>
+    <g
+       id="g50979"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(9061.2803,20928.5)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text50983"><tspan
+           x="0 160.5632"
+           y="0"
+           sodipodi:role="line"
+           id="tspan50981">J1</tspan></text>
+    </g>
+    <g
+       id="g50985">
+      <path
+         d="M 181.44,396.48001 H 161.28"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path50987" />
+    </g>
+    <g
+       id="g50989">
+      <path
+         d="m 161.28,396.48001 v 0"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path50991" />
+    </g>
+    <g
+       id="g50993"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(9827.04,21514.699)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#004080;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text50997"><tspan
+           x="0 262.14398 475.13599 688.12799 783.15521 1038.7456 1215.6927 1428.6848"
+           y="0"
+           sodipodi:role="line"
+           id="tspan50995">MSSIO1B4</tspan></text>
+    </g>
+    <g
+       id="g50999"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(9010.2402,21290.6)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51003"><tspan
+           x="0 212.99199"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51001">K5</tspan></text>
+    </g>
+    <g
+       id="g51005">
+      <path
+         d="M 181.44,403.20001 H 161.28"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51007" />
+    </g>
+    <g
+       id="g51009">
+      <path
+         d="m 161.28,403.20001 v 0"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51011" />
+    </g>
+    <g
+       id="g51013"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(9827.04,21877)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#004080;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51017"><tspan
+           x="0 262.14398 475.13599 688.12799 783.15521 1038.7456 1215.6927 1428.6848"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51015">MSSIO2B4</tspan></text>
+    </g>
+    <g
+       id="g51019"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(8993.2803,21652.801)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51023"><tspan
+           x="0 229.37599"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51021">H1</tspan></text>
+    </g>
+    <g
+       id="g51025">
+      <path
+         d="M 181.44,409.92001 H 161.28"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51027" />
+    </g>
+    <g
+       id="g51029">
+      <path
+         d="m 161.28,409.92001 v 0"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51031" />
+    </g>
+    <g
+       id="g51033"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(9827.04,22239.199)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#004080;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51037"><tspan
+           x="0 262.14398 475.13599 688.12799 783.15521 1038.7456 1215.6927 1428.6848"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51035">MSSIO3B4</tspan></text>
+    </g>
+    <g
+       id="g51039"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(9061.2803,22014.9)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51043"><tspan
+           x="0 160.5632"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51041">J4</tspan></text>
+    </g>
+    <g
+       id="g51045">
+      <path
+         d="M 181.44,416.64001 H 161.28"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51047" />
+    </g>
+    <g
+       id="g51049">
+      <path
+         d="m 161.28,416.64001 v 0"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51051" />
+    </g>
+    <g
+       id="g51053"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(9827.04,22601.301)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#004080;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51057"><tspan
+           x="0 262.14398 475.13599 688.12799 783.15521 1038.7456 1215.6927 1428.6848"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51055">MSSIO4B4</tspan></text>
+    </g>
+    <g
+       id="g51059"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(9010.2402,22377.1)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51063"><tspan
+           x="0 212.99199"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51061">K4</tspan></text>
+    </g>
+    <g
+       id="g51065">
+      <path
+         d="M 181.44,423.35999 H 161.28"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51067" />
+    </g>
+    <g
+       id="g51069">
+      <path
+         d="m 161.28,423.35999 v 0"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51071" />
+    </g>
+    <g
+       id="g51073"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(9827.04,22963.5)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#004080;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51077"><tspan
+           x="0 262.14398 475.13599 688.12799 783.15521 1038.7456 1215.6927 1428.6848"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51075">MSSIO5B4</tspan></text>
+    </g>
+    <g
+       id="g51079"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(9061.2803,22739.199)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51083"><tspan
+           x="0 160.5632"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51081">J7</tspan></text>
+    </g>
+    <g
+       id="g51085">
+      <path
+         d="M 181.44,430.07999 H 161.28"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51087" />
+    </g>
+    <g
+       id="g51089">
+      <path
+         d="m 161.28,430.07999 v 0"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51091" />
+    </g>
+    <g
+       id="g51093"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(9827.04,23325.6)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#004080;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51097"><tspan
+           x="0 262.14398 475.13599 688.12799 783.15521 1038.7456 1215.6927 1428.6848"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51095">MSSIO6B4</tspan></text>
+    </g>
+    <g
+       id="g51099"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(9010.2402,23101.4)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51103"><tspan
+           x="0 212.99199"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51101">K3</tspan></text>
+    </g>
+    <g
+       id="g51105">
+      <path
+         d="M 302.39999,389.76001 H 322.56"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51107" />
+    </g>
+    <g
+       id="g51109">
+      <path
+         d="m 322.56,389.76001 v 0"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51111" />
+    </g>
+    <g
+       id="g51113"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(14293.8,21152.6)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#004080;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51117"><tspan
+           x="0 265.42081 475.13599 688.12799 783.15521 1038.7456 1215.6927 1428.6848"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51115">MSSIO7B4</tspan></text>
+    </g>
+    <g
+       id="g51119"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(16327.4,20928.5)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51123"><tspan
+           x="0 229.37599"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51121">H4</tspan></text>
+    </g>
+    <g
+       id="g51125">
+      <path
+         d="M 302.39999,396.48001 H 322.56"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51127" />
+    </g>
+    <g
+       id="g51129">
+      <path
+         d="m 322.56,396.48001 v 0"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51131" />
+    </g>
+    <g
+       id="g51133"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(14293.8,21514.699)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#004080;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51137"><tspan
+           x="0 265.42081 475.13599 688.12799 783.15521 1038.7456 1215.6927 1428.6848"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51135">MSSIO8B4</tspan></text>
+    </g>
+    <g
+       id="g51139"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(16327.4,21290.6)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51143"><tspan
+           x="0 160.5632"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51141">J6</tspan></text>
+    </g>
+    <g
+       id="g51145">
+      <path
+         d="M 302.39999,403.20001 H 322.56"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51147" />
+    </g>
+    <g
+       id="g51149">
+      <path
+         d="m 322.56,403.20001 v 0"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51151" />
+    </g>
+    <g
+       id="g51153"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(14293.8,21877)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#004080;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51157"><tspan
+           x="0 265.42081 475.13599 688.12799 783.15521 1038.7456 1215.6927 1428.6848"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51155">MSSIO9B4</tspan></text>
+    </g>
+    <g
+       id="g51159"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(16327.4,21652.801)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51163"><tspan
+           x="0 229.37599"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51161">H6</tspan></text>
+    </g>
+    <g
+       id="g51165">
+      <path
+         d="M 302.39999,409.92001 H 322.56"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51167" />
+    </g>
+    <g
+       id="g51169">
+      <path
+         d="m 322.56,409.92001 v 0"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51171" />
+    </g>
+    <g
+       id="g51173"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(14115.2,22239.199)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#004080;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51177"><tspan
+           x="0 262.14398 475.13599 688.12799 783.15521 1038.7456 1215.6927 1395.9167 1608.9088"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51175">MSSIO10B4</tspan></text>
+    </g>
+    <g
+       id="g51179"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(16327.4,22014.9)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51183"><tspan
+           x="0 160.5632"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51181">J3</tspan></text>
+    </g>
+    <g
+       id="g51185">
+      <path
+         d="M 302.39999,416.64001 H 322.56"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51187" />
+    </g>
+    <g
+       id="g51189">
+      <path
+         d="m 322.56,416.64001 v 0"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51191" />
+    </g>
+    <g
+       id="g51193"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(14115.2,22601.301)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#004080;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51197"><tspan
+           x="0 262.14398 475.13599 688.12799 783.15521 1038.7456 1215.6927 1395.9167 1608.9088"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51195">MSSIO11B4</tspan></text>
+    </g>
+    <g
+       id="g51199"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(16327.4,22377.1)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51203"><tspan
+           x="0 229.37599"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51201">H2</tspan></text>
+    </g>
+    <g
+       id="g51205">
+      <path
+         d="M 302.39999,423.35999 H 322.56"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51207" />
+    </g>
+    <g
+       id="g51209">
+      <path
+         d="m 322.56,423.35999 v 0"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51211" />
+    </g>
+    <g
+       id="g51213"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(14115.2,22963.5)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#004080;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51217"><tspan
+           x="0 262.14398 475.13599 688.12799 783.15521 1038.7456 1215.6927 1395.9167 1608.9088"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51215">MSSIO12B4</tspan></text>
+    </g>
+    <g
+       id="g51219"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(16327.4,22739.199)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51223"><tspan
+           x="0 229.37599"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51221">H5</tspan></text>
+    </g>
+    <g
+       id="g51225">
+      <path
+         d="M 302.39999,430.07999 H 322.56"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51227" />
+    </g>
+    <g
+       id="g51229">
+      <path
+         d="m 322.56,430.07999 v 0"
+         style="fill:none;stroke:#ff0000;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path51231" />
+    </g>
+    <g
+       id="g51233"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(14115.2,23325.6)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#004080;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51237"><tspan
+           x="0 262.14398 475.13599 688.12799 783.15521 1038.7456 1215.6927 1395.9167 1608.9088"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51235">MSSIO13B4</tspan></text>
+    </g>
+    <g
+       id="g51239"
+       transform="scale(0.018805,0.018555)">
+      <text
+         xml:space="preserve"
+         transform="translate(16327.4,23101.4)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text51243"><tspan
+           x="0 160.5632"
+           y="0"
+           sodipodi:role="line"
+           id="tspan51241">J2</tspan></text>
+    </g>
+    <g
+       id="g59257">
+      <path
+         d="M 161.28,396.48001 H 80.639999"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59259" />
+    </g>
+    <g
+       id="g59261">
+      <path
+         d="m 80.639999,396.48001 v 0"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59263" />
+    </g>
+    <g
+       id="g59265"
+       transform="scale(0.017699,0.018066)">
+      <text
+         xml:space="preserve"
+         transform="translate(5008.1602,21830.6)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text59269"><tspan
+           x="0 226.0992 504.6272 786.43201 1032.192 1218.9696 1464.7296 1743.2576"
+           y="0"
+           sodipodi:role="line"
+           id="tspan59267">EMMC_CMD</tspan></text>
+    </g>
+    <g
+       id="g59271">
+      <path
+         d="M 161.28,403.20001 H 80.639999"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59273" />
+    </g>
+    <g
+       id="g59275">
+      <path
+         d="m 80.639999,403.20001 v 0"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59277" />
+    </g>
+    <g
+       id="g59279"
+       transform="scale(0.017699,0.018066)">
+      <text
+         xml:space="preserve"
+         transform="translate(5008.1602,22202.6)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text59283"><tspan
+           x="0 226.0992 504.6272 786.43201 1032.192 1218.9696 1464.7296 1690.8287 1897.2672 2123.3665"
+           y="0"
+           sodipodi:role="line"
+           id="tspan59281">EMMC_DATA0</tspan></text>
+    </g>
+    <g
+       id="g59285">
+      <path
+         d="M 161.28,409.92001 H 80.639999"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59287" />
+    </g>
+    <g
+       id="g59289">
+      <path
+         d="m 80.639999,409.92001 v 0"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59291" />
+    </g>
+    <g
+       id="g59293"
+       transform="scale(0.017699,0.018066)">
+      <text
+         xml:space="preserve"
+         transform="translate(5008.1602,22574.6)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text59297"><tspan
+           x="0 226.0992 504.6272 786.43201 1032.192 1218.9696 1464.7296 1690.8287 1897.2672 2123.3665"
+           y="0"
+           sodipodi:role="line"
+           id="tspan59295">EMMC_DATA1</tspan></text>
+    </g>
+    <g
+       id="g59299">
+      <path
+         d="M 161.28,416.64001 H 80.639999"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59301" />
+    </g>
+    <g
+       id="g59303">
+      <path
+         d="m 80.639999,416.64001 v 0"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59305" />
+    </g>
+    <g
+       id="g59307"
+       transform="scale(0.017699,0.018066)">
+      <text
+         xml:space="preserve"
+         transform="translate(5008.1602,22946.4)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text59311"><tspan
+           x="0 226.0992 504.6272 786.43201 1032.192 1218.9696 1464.7296 1690.8287 1897.2672 2123.3665"
+           y="0"
+           sodipodi:role="line"
+           id="tspan59309">EMMC_DATA2</tspan></text>
+    </g>
+    <g
+       id="g59313">
+      <path
+         d="M 161.28,423.35999 H 80.639999"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59315" />
+    </g>
+    <g
+       id="g59317">
+      <path
+         d="m 80.639999,423.35999 v 0"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59319" />
+    </g>
+    <g
+       id="g59321"
+       transform="scale(0.017699,0.018066)">
+      <text
+         xml:space="preserve"
+         transform="translate(5008.1602,23318.4)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text59325"><tspan
+           x="0 226.0992 504.6272 786.43201 1032.192 1218.9696 1464.7296 1690.8287 1897.2672 2123.3665"
+           y="0"
+           sodipodi:role="line"
+           id="tspan59323">EMMC_DATA3</tspan></text>
+    </g>
+    <g
+       id="g59327">
+      <path
+         d="M 161.28,430.07999 H 80.639999"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59329" />
+    </g>
+    <g
+       id="g59331">
+      <path
+         d="m 80.639999,430.07999 v 0"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59333" />
+    </g>
+    <g
+       id="g59335"
+       transform="scale(0.017699,0.018066)">
+      <text
+         xml:space="preserve"
+         transform="translate(5008.1602,23690.4)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text59339"><tspan
+           x="0 226.0992 504.6272 786.43201 1032.192 1218.9696 1464.7296"
+           y="0"
+           sodipodi:role="line"
+           id="tspan59337">EMMC_DQ</tspan></text>
+    </g>
+    <g
+       id="g59341">
+      <path
+         d="M 389.76001,389.76001 H 322.56"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59343" />
+    </g>
+    <g
+       id="g59345">
+      <path
+         d="m 322.56,389.76001 v 0"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59347" />
+    </g>
+    <g
+       id="g59349"
+       transform="scale(0.017699,0.018066)">
+      <text
+         xml:space="preserve"
+         transform="translate(19436,21458.6)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text59353"><tspan
+           x="0 226.0992 504.6272 786.43201 1032.192 1218.9696 1464.7296 1690.8287 1897.2672"
+           y="0"
+           sodipodi:role="line"
+           id="tspan59351">EMMC_RSTn</tspan></text>
+    </g>
+    <g
+       id="g59355">
+      <path
+         d="M 389.76001,396.48001 H 322.56"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59357" />
+    </g>
+    <g
+       id="g59359">
+      <path
+         d="m 322.56,396.48001 v 0"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59361" />
+    </g>
+    <g
+       id="g59363"
+       transform="scale(0.017699,0.018066)">
+      <text
+         xml:space="preserve"
+         transform="translate(19436,21830.6)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text59367"><tspan
+           x="0 226.0992 504.6272 786.43201 1032.192 1218.9696 1464.7296 1690.8287 1897.2672 2123.3665"
+           y="0"
+           sodipodi:role="line"
+           id="tspan59365">EMMC_DATA4</tspan></text>
+    </g>
+    <g
+       id="g59369">
+      <path
+         d="M 389.76001,403.20001 H 322.56"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59371" />
+    </g>
+    <g
+       id="g59373">
+      <path
+         d="m 322.56,403.20001 v 0"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59375" />
+    </g>
+    <g
+       id="g59377"
+       transform="scale(0.017699,0.018066)">
+      <text
+         xml:space="preserve"
+         transform="translate(19436,22202.6)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text59381"><tspan
+           x="0 226.0992 504.6272 786.43201 1032.192 1218.9696 1464.7296 1690.8287 1897.2672 2123.3665"
+           y="0"
+           sodipodi:role="line"
+           id="tspan59379">EMMC_DATA5</tspan></text>
+    </g>
+    <g
+       id="g59383">
+      <path
+         d="M 389.76001,409.92001 H 322.56"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59385" />
+    </g>
+    <g
+       id="g59387">
+      <path
+         d="m 322.56,409.92001 v 0"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59389" />
+    </g>
+    <g
+       id="g59391"
+       transform="scale(0.017699,0.018066)">
+      <text
+         xml:space="preserve"
+         transform="translate(19436,22574.6)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text59395"><tspan
+           x="0 226.0992 504.6272 786.43201 1032.192 1218.9696 1464.7296 1690.8287 1897.2672 2123.3665"
+           y="0"
+           sodipodi:role="line"
+           id="tspan59393">EMMC_DATA6</tspan></text>
+    </g>
+    <g
+       id="g59397">
+      <path
+         d="M 389.76001,416.64001 H 322.56"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59399" />
+    </g>
+    <g
+       id="g59401">
+      <path
+         d="m 322.56,416.64001 v 0"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59403" />
+    </g>
+    <g
+       id="g59405"
+       transform="scale(0.017699,0.018066)">
+      <text
+         xml:space="preserve"
+         transform="translate(19436,22946.4)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text59409"><tspan
+           x="0 226.0992 504.6272 786.43201 1032.192 1218.9696 1464.7296 1690.8287 1897.2672 2123.3665"
+           y="0"
+           sodipodi:role="line"
+           id="tspan59407">EMMC_DATA7</tspan></text>
+    </g>
+    <g
+       id="g59411">
+      <path
+         d="M 389.76001,423.35999 H 322.56"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59413" />
+    </g>
+    <g
+       id="g59415">
+      <path
+         d="m 322.56,423.35999 v 0"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59417" />
+    </g>
+    <g
+       id="g59419"
+       transform="scale(0.017699,0.018066)">
+      <text
+         xml:space="preserve"
+         transform="translate(19436,23318.4)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text59423"><tspan
+           x="0 226.0992 468.5824 714.34241 940.44159 1182.9248 1428.6848 1618.7391 1861.2224"
+           y="0"
+           sodipodi:role="line"
+           id="tspan59421">SDCARD_CS</tspan></text>
+    </g>
+    <g
+       id="g59425">
+      <path
+         d="M 389.76001,430.07999 H 322.56"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59427" />
+    </g>
+    <g
+       id="g59429">
+      <path
+         d="m 322.56,430.07999 v 0"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path59431" />
+    </g>
+    <g
+       id="g60149">
+      <path
+         d="M 161.28,389.76001 H 80.639999"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path60151" />
+    </g>
+    <g
+       id="g60153">
+      <path
+         d="m 80.639999,389.76001 v 0"
+         style="fill:none;stroke:#800040;stroke-width:0.64;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         id="path60155" />
+    </g>
+    <g
+       id="g60157"
+       transform="scale(0.017699,0.018066)">
+      <text
+         xml:space="preserve"
+         transform="translate(5008.1602,21458.6)"
+         style="font-variant:normal;font-weight:normal;font-size:327.68px;font-family:F1;-inkscape-font-specification:F1;writing-mode:lr-tb;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="text60161"><tspan
+           x="0 226.0992 504.6272 786.43201 1032.192 1218.9696 1464.7296 1654.7839"
+           y="0"
+           sodipodi:role="line"
+           id="tspan60159">EMMC_CLK</tspan></text>
+    </g>
+  </g>
+</svg>

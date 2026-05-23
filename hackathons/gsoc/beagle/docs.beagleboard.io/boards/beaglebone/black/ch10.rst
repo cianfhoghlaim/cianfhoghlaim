@@ -1,0 +1,26 @@
+.. _beagleboneblack-pictures:
+
+Pictures
+#############
+
+.. figure:: images/DSC00481.*
+   :width: 768px
+   :align: center
+   :alt: Top Side
+
+   Top Side
+
+.. figure:: images/DSC00484.*
+   :width: 768px
+   :align: center
+   :alt: Bottom Side
+
+   Bottom Side
+
+.. figure:: images/DSC00505.*
+   :width: 768px
+   :align: center
+   :alt: 45 Degree Top
+
+   45 Degree Top
+

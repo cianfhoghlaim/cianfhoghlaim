@@ -1,0 +1,57 @@
+image: registry.git.beagleboard.org/docs/sphinx-build-env:latest
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+cache:
+  key: sphinx-build-env-docs-003
+  paths:
+  - .venv
+  - .cache
+
+build:
+  stage: build
+  tags:
+  - docker-amd64
+  parallel:
+    matrix:
+      - TARGET: [html, pdf]
+  artifacts:
+    paths:
+    - public/$TARGET
+  before_script:
+    - source ./venv-build-env.sh
+  script:
+    - ./gitlab-build.sh $TARGET
+
+pages:
+  stage: deploy
+  dependencies:
+    - "build: [html]"
+    - "build: [pdf]"
+  tags:
+  - docker-amd64
+  script:
+  - ./gitlab-build.sh publish
+  artifacts:
+    paths:
+    - public
+  except:
+    - tags
+
+docs:
+  stage: deploy
+  dependencies:
+    - "build: [html]"
+    - "build: [pdf]"
+  tags:
+  - docker-amd64
+  script:
+  - ./gitlab-build.sh publish
+  artifacts:
+    paths:
+    - public
+  only:
+    - tags
+  except:
+    - branches

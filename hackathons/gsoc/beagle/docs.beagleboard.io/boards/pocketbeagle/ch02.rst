@@ -1,0 +1,107 @@
+.. _pocketbeagle_change_history:
+
+Change History
+###############
+
+This section describes the change history of this document and board.
+Document changes are not always a result of a board change. A board
+change will always result in a document change.
+
+.. _document_change_history:
+
+Document Change History
+************************
+
+.. table:: Change History
+
+    +--------+--------------------------------------+--------------------+--------+
+    |**Rev** | **Changes**                          | **Date**           | **By** |
+    +========+======================================+====================+========+
+    |A.x     | Production Document                  | *December 7, 2017* | JK     |
+    +--------+--------------------------------------+--------------------+--------+
+    |0.0.5   | Converted to .rst and gitlab hosting | *July 21, 2022*    | DK     |
+    +--------+--------------------------------------+--------------------+--------+
+
+.. _board_changes:
+
+Board Changes
+***************
+
+.. table:: Board History  
+
+    +---------+-----------------------------------------------------------------------------------------+----------------------+--------+
+    | **Rev** | **Changes**                                                                             | **Date**             | **By** |
+    +=========+=========================================================================================+======================+========+
+    | A1      | Preliminary                                                                             | *February 14, 2017*  | JK     |
+    +---------+-----------------------------------------------------------------------------------------+----------------------+--------+
+    | A2      | Production. Fixed                                                                       | *September 22, 2017* | JK     |
+    |         | mikroBUS Click reset                                                                    |                      |        |
+    |         | pins (made GPIO).                                                                       |                      |        |
+    +---------+-----------------------------------------------------------------------------------------+----------------------+--------+
+    | A2a     | Fixed label on P2_24. Was labeled GPIO48, should be GPIO44.                             | *November 7, 2017*   | JK     |
+    +---------+-----------------------------------------------------------------------------------------+----------------------+--------+
+    | A2b     | Because there are 2 TI parts which have long lead-time,                                 | *June 15, 2021*      | JK     |
+    |         | we made the following changes:                                                          |                      |        |
+    |         |                                                                                         |                      |        |
+    |         | 1. Use ESD discrete devices instead of integrated TVS TI: TPD4S012DRYR.                 |                      |        |
+    |         | 2. Change Logic IC TI SN74LVC1G07DCKR to Nexperia 74LVC1G07GV                           |                      |        |
+    +---------+-----------------------------------------------------------------------------------------+----------------------+--------+
+
+PocketBone
+**********
+
+Upon the creation of the first, 27mm-by-27mm, Octavo Systems OSD3358
+SIP, Jason did a hack two-layer board in EAGLE called “PocketBone” to
+drop the Beagle name as this was a totally unofficial effort not geared
+at being a BeagleBoard.org Foundation project. The board never worked
+because the 32kHz and 24MHz crystals were backwards and Michael Welling
+decided to pick it up and redo the design in KiCad as a four-layer
+board. Jason paid for some prototypes and this resulted in the first
+successful “PocketBone”, a fully-open-source 1-GHz Linux computer in a
+fitting into a mini-mint tin.
+
+.. _rev_a1:
+
+Rev A1
+======
+
+The Rev A1 of PocketBeagle was a prototype not released to production. A
+few lines were wrong to be able to control mikroBUS Click add-on board
+reset lines and they were adjusted.
+
+.. _rev_a2:
+
+Rev A2
+======
+
+The Rev A2 of PocketBeagle was released to production and
+`launched at World MakerFaire 2017 <https://www.prnewswire.com/news-releases/small-in-size--cost-meet-pocketbeagle-the-25-development-board-for-hobbyists-educators-and-professionals-300519950.html>`__.
+
+Known issues in rev A2:
+
++----------------------------------+----------------------------------------------------------------------------------+
+| **Issue**                        | **Link**                                                                         |
++==================================+==================================================================================+
+| GPIO44 is incorrectly labelled   | `Issue #4 <https://git.beagleboard.org/beagleboard/pocketbeagle/-/issues/4>`__   |
+| as GPIO48                        |                                                                                  |
++----------------------------------+----------------------------------------------------------------------------------+
+
+Rev A2B
+=======
+
+Because 2 TI parts had a long lead time, we made the following changes:
+
++---------------+-------------------------------------------------+-----------------------+--------------+-----------------+-----------------------------+
+| Change # | Modification                                         | Reference Designators | Part Type    | Before（value ）| After（value)               |
++==========+======================================================+=======================+==============+=================+=============================+
+| 1        | Changed C2,C3 from 18pF to 22pF.                     | C2,C3                 | Cap Ceramic  | 18pF            | 22pF                        |
++----------+------------------------------------------------------+-----------------------+--------------+-----------------+-----------------------------+
+| 2        | Changed Y1 from 24MHz_18pF to 24MHz_22pF.            | Y1                    | Crystal      | 24MHz_18pF      | 24MHz_22pF                  |
++----------+------------------------------------------------------+-----------------------+--------------+-----------------+-----------------------------+
+| 3        | Use ESD discrete devices(D1-D4) to replace U3.       | U3                    | ESD Solution | integrated      | ESD discrete devices(D1-D4) |
++----------+------------------------------------------------------+-----------------------+--------------+-----------------+-----------------------------+
+| 4        | Changed U2 from SN74LVC1G07DCKR to 74LVC1G07GV,125.  | U2                    | Logic        | SN74LVC1G07DCKR | 74LVC1G07GV,125             |
++----------+------------------------------------------------------+-----------------------+--------------+-----------------+-----------------------------+
+| 5        | The PCB Revision for this board is Rev A2b.          | The PCB Revision for this board is Rev A2b.	                                         |
++----------+------------------------------------------------------+-----------------------+--------------+-----------------+-----------------------------+
+

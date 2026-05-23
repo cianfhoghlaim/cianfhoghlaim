@@ -1,0 +1,10 @@
+.. _pocketbeagle_pocketcape_support:
+
+PocketBeagle Cape Support
+##########################
+
+This is a placeholder for recommendations for those building their own
+PocketBeagle Cape designs. If you'd like to join the conversation
+`'check out the discussion on the forum for PocketBeagle' <https://forum.beagleboard.org/t/pocketbeagle-headers/26861>`__
+
+See also PocketBeagle under `'BeagleBoard Capes' <https://git.beagleboard.org/beagleboard/capes>`__

@@ -1,0 +1,30 @@
+% LaTeX documentation preamble
+%
+% Copyright (c) 2021 Nordic Semiconductor ASA
+% SPDX-License-Identifier: Apache-2.0
+
+\usepackage[some]{background}
+\usepackage{sectsty}
+\usepackage{lscape}
+\usepackage{longtable}
+\usepackage{fontspec}
+\usepackage{comment}
+\usepackage[maxfloats=256]{morefloats}
+\maxdeadcycles=1000
+\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+\setmainfont{DejaVuSans}
+\setmonofont{FreeMono}
+
+\definecolor{bg-color}{HTML}{a97f2c}
+
+\setcounter{tocdepth}{2}
+
+\addto\captionsenglish{\renewcommand{\contentsname}{Table of contents}}
+
+\allsectionsfont{\color{bg-color}}
+
+\let\oldtabular\tabular
+\renewcommand{\tabular}{\footnotesize\oldtabular}
+
+\newcommand{\sphinxcontribyoutube}[3]{\begin{figure}\sphinxincludegraphics{{#2}.jpg}\caption{\url{#1#2#3}}\end{figure}}
+\newcommand{\sphinxcontribvimeo}[3]{\begin{figure}\sphinxincludegraphics{{#2}.jpg}\caption{\url{#1#2#3}}\end{figure}}

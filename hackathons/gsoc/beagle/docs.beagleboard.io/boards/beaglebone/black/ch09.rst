@@ -1,0 +1,49 @@
+.. _beagleboneblack-mechanical:
+
+BeagleBone Black Mechanical
+###############################
+
+Dimensions and Weight
+***********************
+
+Size: 3.5” x 2.15” (86.36mm x 53.34mm)
+
+Max height: .187” (4.76mm)
+
+PCB Layers: 6
+
+PCB thickness: .062”
+
+RoHS Compliant: Yes
+
+Weight: 1.4 oz
+
+Silkscreen and Component Locations
+***********************************
+
+.. figure:: images/image88.jpg
+   :width: 530px
+   :height: 782px
+   :align: center
+   :alt: Board Dimensions
+
+   Board Dimensions
+
+
+.. figure:: images/image89.jpg
+   :width: 493px
+   :height: 818px
+   :align: center
+   :alt: Component Side Silkscreen
+
+   Component Side Silkscreen
+
+
+.. figure:: images/image90.jpg
+   :width: 501px
+   :height: 772px
+   :align: center
+   :alt: Circuit Side Silkscreen
+
+   Circuit Side Silkscreen
+   

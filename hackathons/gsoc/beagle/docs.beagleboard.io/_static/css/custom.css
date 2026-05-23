@@ -1,0 +1,142 @@
+.wy-side-nav-search>a img.logo {
+    width: 340px;
+    height: 66px;
+}
+
+.rst-content div.figure,
+.rst-content figure {
+    text-align: center;
+}
+
+.rst-content div.figure p.caption {
+    text-align: center;
+    margin-top: 8px;
+    opacity: 0.75;
+}
+
+.rst-content div.figure.figure-w480 {
+    max-width: 480px;
+}
+
+.wy-nav-content {
+    max-width: 100%;
+}
+
+.wy-side-scroll {
+    overflow-y: hidden;
+}
+
+.wy-menu.wy-menu-vertical {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100% - 247px);
+}
+
+.wy-side-nav-search {
+    background-color: #25282b;
+    background-color: #25282b;
+}
+
+.wy-nav-top {
+    background-color: #25282b;
+    background-color: #25282b;
+}
+
+.wy-nav-side {
+    padding-bottom: 0px;
+    background-color: #25282b;
+    background-color: #25282b;
+}
+
+
+/* Override table no-wrap */
+/* The first column cells are not verbose, no need to wrap them */
+.wy-table-responsive table td:not(:nth-child(1)),
+.wy-table-responsive table th:not(:nth-child(1)) {
+    white-space: normal;
+}
+
+/* Make sure not to wrap keyboard shortcuts */
+.wy-table-responsive table td kbd {
+    white-space: nowrap;
+}
+
+/* Force table content font-size in responsive tables to be 100%
+ * fixing larger font size for paragraphs in the kconfig tables */
+.wy-table-responsive td p {
+    font-size: 100%;
+}
+
+span.strike {
+    text-decoration: line-through;
+}
+
+.admonition-license-terms.admonition {
+    overflow: auto;
+}
+
+/* Site horizontal spacing */
+.bd-main .bd-content .bd-article-container {
+    max-width: 120em;
+    /* default is 60em */
+}
+
+.bd-page-width {
+    max-width: 120rem;
+    /* default is 88rem */
+}
+
+/* Figure headerlink */
+
+figure a.headerlink {
+    position: static;
+}
+
+/* Primary sidebar toggle button */
+#pst-primary-sidebar.collapsed {
+    overflow: hidden;
+    padding: 0;
+    width: 0; /* Collapse the sidebar */
+    transition: none;
+}
+
+#pst-secondary-sidebar.collapsed {
+    overflow: hidden;
+    padding: 0;
+    width: 0; /* Collapse the sidebar */
+    transition: none;
+}
+
+#pst-secondary-sidebar {
+    padding-left: 0px;
+}
+
+/* Toggle button styles */
+.sidebar-toggle-btn {
+    margin-top: 44px; /* Space between sidebar and button */
+    padding: 7px; /* Set padding for the button, horizontally more */
+    background-color: #F16321; /* Button background color */
+    color: white; /* Text color */
+    border: none; /* Remove border */
+    cursor: pointer; /* Pointer cursor on hover */
+    display: block; /* Ensure the button is block-level */
+    font-size: 20px; /* Adjust font size */
+    font-weight: bold; /* Bold text */
+    height: 40px; /* Set a fixed height for the button */
+    width: auto; /* Width based on content */
+    line-height: 20px; /* Vertically center the text */
+}
+
+#toggle-primary-sidebar.sidebar-toggle-btn{
+    border-radius: 0 5px 5px 0; /* Rounded corners */
+}
+
+#toggle-secondary-sidebar.sidebar-toggle-btn{
+    border-radius: 5px 0 0 5px; /* Rounded corners */
+}
+
+/* Optional: Adding a hover effect */
+.sidebar-toggle-btn:hover {
+    background-color: #C7480D; /* Slightly darker blue on hover */
+}
+
