@@ -65,7 +65,7 @@ services:
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
-        export SERVER_SECRET=$$(cat /run/secrets/locket/server_secret)
+        set -a; . /run/secrets/locket/secrets.env; set +a
         npm run start
     volumes:
       - ./config:/app/config
@@ -80,8 +80,12 @@ services:
         condition: service_healthy
     environment:
       POSTGRES_USER: pangolin
-      POSTGRES_PASSWORD_FILE: /run/secrets/locket/postgres_password
-      POSTGRES_DB: pangolin
+      POSTGRES_PASSWORD: ""
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -a; . /run/secrets/locket/secrets.env; set +a
+        exec docker-entrypoint.sh postgres
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - pangolin-secrets:/run/secrets/locket:ro
@@ -96,8 +100,7 @@ services:
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
-        export POCKETID_CLIENT_ID=$$(cat /run/secrets/locket/pocketid_client_id)
-        export POCKETID_CLIENT_SECRET=$$(cat /run/secrets/locket/pocketid_client_secret)
+        set -a; . /run/secrets/locket/secrets.env; set +a
         /app/tinyauth
     volumes:
       - pangolin-secrets:/run/secrets/locket:ro
@@ -112,7 +115,7 @@ services:
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
-        export CF_DNS_API_TOKEN=$$(cat /run/secrets/locket/cf_dns_api_token)
+        set -a; . /run/secrets/locket/secrets.env; set +a
         traefik --configFile=/etc/traefik/traefik_config.yml
     volumes:
       - pangolin-secrets:/run/secrets/locket:ro
