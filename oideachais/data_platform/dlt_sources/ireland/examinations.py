@@ -257,7 +257,7 @@ def _get_exam_materials_browser(
     This is a synchronous wrapper that runs the async scraper.
     """
     try:
-        from sruth.browser.tools.examinations_scraper import (
+        from sruth_browser.tools.examinations_scraper import (
             scrape_exam_materials_sync,
         )
     except ImportError:

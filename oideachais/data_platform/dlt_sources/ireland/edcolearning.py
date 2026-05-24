@@ -29,8 +29,8 @@ from typing import Any
 import dlt
 from bs4 import BeautifulSoup
 from dlt.sources import DltResource
-from oideachais.http_utils import HttpClientFactory
-from oideachais.observability.logging import get_logger
+from http_utils import HttpClientFactory
+from observability.logging import get_logger
 
 logger = get_logger(__name__)
 

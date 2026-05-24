@@ -13,7 +13,7 @@ Includes:
 - Subject content requirements
 
 Usage:
-    from oideachais.data_platform.dlt_sources.uk.england.national_curriculum import (
+    from dlt_sources.uk.england.national_curriculum import (
         national_curriculum_source,
         aqa_qualifications_source,
         edexcel_qualifications_source,

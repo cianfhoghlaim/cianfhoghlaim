@@ -5,7 +5,7 @@ Provides per-subject DLT resources for all 18 Junior Cycle subjects.
 Each subject yields pages and PDF URLs from curriculumonline.ie.
 
 Usage:
-    from oideachais.data_platform.dlt_sources.ireland.subjects.junior_cycle import (
+    from dlt_sources.ireland.subjects.junior_cycle import (
         junior_cycle_source,
     )
 

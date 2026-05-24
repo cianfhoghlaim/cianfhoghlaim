@@ -11,7 +11,7 @@ Key Features:
 - Efficient incremental updates
 
 Usage:
-    from oideachais.data_platform.dlt_sources.ireland.curriculum_source import (
+    from dlt_sources.ireland.curriculum_source import (
         curriculum_source,
     )
 
@@ -40,14 +40,14 @@ from typing import Any
 
 import dlt
 import structlog
-from oideachais.data_platform.dlt_sources.ireland.content_deduplication import (
+from dlt_sources.ireland.content_deduplication import (
     ContentDeduplicator,
 )
-from oideachais.data_platform.dlt_sources.ireland.curriculum_registry import (
+from dlt_sources.ireland.curriculum_registry import (
     SubjectRegistry,
     URLResolver,
 )
-from oideachais.data_platform.dlt_sources.ireland.source_adapters import (
+from dlt_sources.ireland.source_adapters import (
     get_all_adapters,
 )
 
@@ -83,14 +83,14 @@ def _crawl_source(
     from datetime import datetime, UTC
 
     # 1. Local Scrape Samples Interception
-    samples_dir = Path("/Users/cianmacandeisigh/dev/kings_college_galway/stedding/site_scrape_samples")
+    samples_dir = Path("/Users/cianmacandeisigh/dev/kings_college_galway/stedding/ingest_queue")
     parsed_url = urlparse(base_url)
     domain = parsed_url.netloc.replace("www.", "")
     
     domain_dir = samples_dir / domain
     if domain_dir.exists() and os.environ.get("USE_LOCAL_SCRAPES", "true").lower() == "true":
         logger.info("using_local_scrape_samples", domain=domain, base_url=base_url)
-        found_matches = False
+        found_matches = 0
         for json_file in domain_dir.glob("*.json"):
             try:
                 with open(json_file, 'r', encoding='utf-8') as f:
@@ -101,7 +101,7 @@ def _crawl_source(
                     continue
                     
                 if page_url.startswith(base_url):
-                    found_matches = True
+                    found_matches += 1
                     yield {
                         "url": page_url,
                         "title": page_data.get("metadata", {}).get("title", ""),
@@ -113,6 +113,8 @@ def _crawl_source(
                         "source": source_name,
                         "crawled_at": datetime.now(UTC).isoformat(),
                     }
+                    if found_matches >= 10:
+                        break
             except Exception as e:
                 logger.warning("local_sample_load_failed", file=str(json_file), error=str(e))
                 
@@ -536,7 +538,7 @@ def _crawl_subjects(
 
 
 import dlthub
-from oideachais.data_platform.dlt_sources.dlthub_projects import apply_dlthub_wrappers
+from dlt_sources.dlthub_projects import apply_dlthub_wrappers
 
 @dlt.source(name="ireland_curriculum")
 def curriculum_source(

@@ -1,2 +1,2 @@
 import dlthub
-from sruth.oideachais.data_platform.dlt_sources.dlthub_projects import apply_dlthub_wrappers
+from dlt_sources.dlthub_projects import apply_dlthub_wrappers

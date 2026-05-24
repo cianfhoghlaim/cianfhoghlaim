@@ -203,6 +203,10 @@ def create_cycle_asset(cycle: str):
         # Disable DLT plugin scanning to avoid metadata bug
         os.environ.setdefault("DLT_DISABLE_PLUGINS", "true")
 
+        import sys
+        import os
+        sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
+        
         from dlt_sources.ireland.curriculum_registry import SubjectRegistry
         from dlt_sources.ireland.curriculum_source import (
             build_subject_urls,

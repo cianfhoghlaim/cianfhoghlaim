@@ -183,3 +183,26 @@ When working on tasks, activate the appropriate skill based on the domain:
 
 See [`.skills/`](.skills/) directory for detailed skill documentation.
 
+
+## 🤖 Critical Agent Protocols & Habits
+
+As an autonomous agent operating within the Cianfhoghlaim stack (via OpenCode, Roo, or Cline), you **MUST** adhere to these recursive habits to prevent regressions and maintain stability:
+
+### 1. Zero Absolute Namespaces in Data Pipelines
+Never import `oideachais.data_platform...` from within the data platform itself. Always use relative or local package imports (e.g., `from dlt_sources.ireland...`). Failing to do so causes critical `ModuleNotFoundError` crashes in the Dagster orchestrator.
+
+### 2. Respect the Ingestion Cache
+Before executing live web scrapes (e.g., Firecrawl on `examinations.ie`) that drain API credits and risk rate limits, always test `dlt` pipelines with the fallback cache enabled:
+`os.environ['USE_LOCAL_SCRAPES'] = 'true'`
+This automatically routes extraction to the highly curated `stedding/ingest_queue/`.
+
+### 3. Strict Secret Hydration
+**Never create manual `.env` files.** If a secret is missing:
+1. Add it to the `.infisical.env` template.
+2. Run `bun run init-vault.ts` in `scripts/infisical/` to synchronize it with the remote `dev-baile` Infisical vault.
+3. Allow the `mise` directory hooks or `locket inject` to hydrate the runtime environment automatically.
+
+### 4. Self-Documenting Telemetry
+Upon finishing a complex task, pipeline update, or major deployment, you **MUST** execute the synchronization script:
+`./scripts/sync_agent_docs.sh`
+This updates the local telemetry blocks across `README.md` and ensures no rogue imports were introduced.
