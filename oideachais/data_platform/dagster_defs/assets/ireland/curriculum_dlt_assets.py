@@ -207,8 +207,8 @@ def create_cycle_asset(cycle: str):
         import os
         sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
         
-        from dlt_sources.ireland.curriculum_registry import SubjectRegistry
-        from dlt_sources.ireland.curriculum_source import (
+        from oideachais.data_platform.dlt_sources.ireland.curriculum_registry import SubjectRegistry
+        from oideachais.data_platform.dlt_sources.ireland.curriculum_source import (
             build_subject_urls,
             parallel_scrape_subject,
         )
@@ -347,7 +347,7 @@ def create_short_course_asset():
         """Ingest short course curriculum data."""
         os.environ.setdefault("DLT_DISABLE_PLUGINS", "true")
 
-        from dlt_sources.ireland.curriculum_source import (
+        from oideachais.data_platform.dlt_sources.ireland.curriculum_source import (
             _scrape_single_url,
         )
 

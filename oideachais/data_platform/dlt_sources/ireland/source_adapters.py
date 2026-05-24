@@ -8,7 +8,7 @@ Provides adapters that:
 - Support bilingual content (English/Irish)
 
 Usage:
-    from dlt_sources.ireland.source_adapters import (
+    from oideachais.data_platform.dlt_sources.ireland.source_adapters import (
         CurriculumOnlineAdapter,
         NCCAAdapter,
         ExaminationsAdapter,
@@ -28,7 +28,7 @@ from typing import Any, Protocol
 from urllib.parse import parse_qs, urlparse
 
 import structlog
-from dlt_sources.common.incremental import compute_content_hash
+from oideachais.data_platform.dlt_sources.common.incremental import compute_content_hash
 
 logger = structlog.get_logger(__name__)
 

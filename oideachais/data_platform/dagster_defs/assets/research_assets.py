@@ -59,7 +59,7 @@ def research_bunchloch_raw(context) -> MaterializeResult:
     """
     import dlt
 
-    from dlt_sources.bunchloch import bunchloch_source
+    from oideachais.data_platform.dlt_sources.bunchloch import bunchloch_source
 
     # Create DLT pipeline
     pipeline = dlt.pipeline(
@@ -110,7 +110,7 @@ def research_bunchloch_by_subject(context) -> MaterializeResult:
     """
     import dlt
 
-    from dlt_sources.bunchloch import bunchloch_by_subject_source
+    from oideachais.data_platform.dlt_sources.bunchloch import bunchloch_by_subject_source
 
     subject = context.partition_key
 
