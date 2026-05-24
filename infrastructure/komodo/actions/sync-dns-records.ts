@@ -30,11 +30,11 @@ interface CloudflareDnsRecord {
 // DNS records to manage - maps subdomains to Komodo servers
 const DNS_RECORDS: DnsRecord[] = [
   // Core services on OCI
-  { name: "komodo", type: "A", server: "arm1-oci", proxied: false },
-  { name: "pangolin", type: "A", server: "arm1-oci", proxied: false },
-  { name: "auth", type: "A", server: "arm1-oci", proxied: false },
+  { name: "komodo", type: "A", server: "arm1-oci", proxied: true },
+  { name: "pangolin", type: "A", server: "arm1-oci", proxied: true },
+  { name: "auth", type: "A", server: "arm1-oci", proxied: true },
   // Wildcard for Pangolin tunnels
-  { name: "*", type: "A", server: "arm1-oci", proxied: false },
+  { name: "*", type: "A", server: "arm1-oci", proxied: true },
 ];
 
 // Results tracking
