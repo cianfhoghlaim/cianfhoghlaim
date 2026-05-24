@@ -1,5 +1,5 @@
 import { LocalWorkspace, LocalProgramArgs } from "@pulumi/pulumi/automation";
-import { InfisicalClient } from "@infisical/sdk";
+import { InfisicalSDK } from "@infisical/sdk";
 import { execSync, exec } from "child_process";
 import * as path from "path";
 import * as fs from "fs";
@@ -19,6 +19,7 @@ const CONFIG = {
     infisicalClientSecret: process.env.INFISICAL_CLIENT_SECRET || "",
     infisicalProjectId: process.env.INFISICAL_PROJECT_ID || "",
     infisicalEnvironment: process.env.INFISICAL_ENVIRONMENT || "prod",
+    infisicalUrl: process.env.INFISICAL_URL || "http://localhost:8081",
     // Cloudflare (can be loaded from Infisical)
     cloudflareZoneId: process.env.CLOUDFLARE_ZONE_ID || "",
     cloudflareApiToken: process.env.CLOUDFLARE_API_TOKEN || "",
@@ -42,30 +43,44 @@ function getInfisicalSecret(): string {
     throw new Error("INFISICAL_CLIENT_SECRET not set and secret file not found");
 }
 
-let _client: InfisicalClient | null = null;
-function getInfisicalClient(): InfisicalClient {
+let _client: InfisicalSDK | null = null;
+function getInfisicalClient(): InfisicalSDK {
     if (_client) return _client;
     const clientSecret = getInfisicalSecret();
-    _client = new InfisicalClient({
-        clientId: CONFIG.infisicalClientId,
-        clientSecret,
+    _client = new InfisicalSDK({
+        siteUrl: CONFIG.infisicalUrl || "http://localhost:8081",
     });
+    // @ts-ignore - Simple hack to ensure login is performed later
+    _client._needsLogin = true;
     return _client;
 }
 
 /**
  * Load Cloudflare credentials from Infisical
  */
+async function getAuthClient() {
+    const client = getInfisicalClient();
+    // @ts-ignore
+    if (client._needsLogin) {
+        await client.auth().universalAuth.login({
+            clientId: CONFIG.infisicalClientId,
+            clientSecret: getInfisicalSecret()
+        });
+        // @ts-ignore
+        client._needsLogin = false;
+    }
+    return client;
+}
+
 async function loadCloudflareCredentials(): Promise<{ apiToken: string; zoneId: string } | null> {
     if (CONFIG.cloudflareApiToken && CONFIG.cloudflareZoneId) {
-        // Already set via environment
         return { apiToken: CONFIG.cloudflareApiToken, zoneId: CONFIG.cloudflareZoneId };
     }
 
     try {
-        const client = getInfisicalClient();
-        const apiTokenSecret = await client.getSecret({ secretName: "CLOUDFLARE_API_TOKEN", projectId: CONFIG.infisicalProjectId, environment: CONFIG.infisicalEnvironment, path: "/" });
-        const zoneIdSecret = await client.getSecret({ secretName: "CLOUDFLARE_ZONE_ID", projectId: CONFIG.infisicalProjectId, environment: CONFIG.infisicalEnvironment, path: "/" });
+        const client = await getAuthClient();
+        const apiTokenSecret = await client.secrets().getSecret({ secretName: "CLOUDFLARE_API_TOKEN", projectId: CONFIG.infisicalProjectId, environment: CONFIG.infisicalEnvironment, secretPath: "/" });
+        const zoneIdSecret = await client.secrets().getSecret({ secretName: "CLOUDFLARE_ZONE_ID", projectId: CONFIG.infisicalProjectId, environment: CONFIG.infisicalEnvironment, secretPath: "/" });
 
         const apiToken = apiTokenSecret.secretValue;
         const zoneId = zoneIdSecret.secretValue;
@@ -77,7 +92,6 @@ async function loadCloudflareCredentials(): Promise<{ apiToken: string; zoneId: 
     } catch (err) {
         console.log("Cloudflare credentials not found in Infisical, DNS records will not be created");
     }
-
     return null;
 }
 
@@ -130,7 +144,7 @@ async function preview() {
 
 async function saveToInfisical(outputs: Record<string, { value: unknown }>) {
     try {
-        const client = getInfisicalClient();
+        const client = await getAuthClient();
 
         const publicIp = outputs.publicIp?.value as string;
         const privateIp = outputs.privateIp?.value as string;
@@ -149,20 +163,18 @@ async function saveToInfisical(outputs: Record<string, { value: unknown }>) {
         for (const secret of secretsToSave) {
             if (!secret.value) continue;
             try {
-                await client.createSecret({
-                    secretName: secret.name,
+                await client.secrets().createSecret(secret.name, {
                     secretValue: secret.value,
                     projectId: CONFIG.infisicalProjectId,
                     environment: CONFIG.infisicalEnvironment,
-                    path: "/"
+                    secretPath: "/"
                 });
             } catch {
-                await client.updateSecret({
-                    secretName: secret.name,
+                await client.secrets().updateSecret(secret.name, {
                     secretValue: secret.value,
                     projectId: CONFIG.infisicalProjectId,
                     environment: CONFIG.infisicalEnvironment,
-                    path: "/"
+                    secretPath: "/"
                 });
             }
         }
