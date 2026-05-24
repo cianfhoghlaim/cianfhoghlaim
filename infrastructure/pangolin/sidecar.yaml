@@ -32,8 +32,7 @@ services:
       - "--infisical-client-secret=file:/run/secrets/infisical_secret"
       - "--infisical-url=$${INFISICAL_URL:-http://host.docker.internal:8081}"
       - "--infisical-default-environment=$${INFISICAL_ENVIRONMENT:-dev}"
-      - "--infisical-default-project-id=$${INFISICAL_PROJECT_ID:-project-id}
-      - "--connect.host=${
+      - "--infisical-default-project-id=$${INFISICAL_PROJECT_ID:-project-id}"
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:
@@ -61,6 +60,7 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
+    environment:
       SERVER_SECRET: ""  # Clear default, use file
     entrypoint: ["/bin/sh", "-c"]
     command:
@@ -78,6 +78,7 @@ services:
     depends_on:
       locket:
         condition: service_healthy
+    environment:
       POSTGRES_USER: pangolin
       POSTGRES_PASSWORD_FILE: /run/secrets/locket/postgres_password
       POSTGRES_DB: pangolin
