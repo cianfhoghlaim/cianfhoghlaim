@@ -122,7 +122,7 @@ bun run dev
 For deeper technical details on specific modules, please consult the respective READMEs inside `oideachais/` and the `.skills/` directory.
 
 <!-- AGENT_TELEMETRY_START -->
-> **Agent Telemetry (Last Updated: 2026-05-24 16:44:06 UTC)**
+> **Agent Telemetry (Last Updated: 2026-05-24 17:10:15 UTC)**
 > - **Total Cached Structural Documents:** 7010
 > - **Examinations.ie Cache:**     1635 files
 > - **NCCA.ie Cache:**     1778 files
