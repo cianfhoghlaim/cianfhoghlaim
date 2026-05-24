@@ -1,0 +1,36 @@
+{
+  "cycles": {
+    "junior_cycle": {
+      "name": {"en": "Junior Cycle", "ga": "An tSraith Shóisearach"},
+      "age_range": "12-15"
+    }
+  },
+  "sources": {
+    "curriculumonline": {
+      "base_url": "https://curriculumonline.ie",
+      "languages": {"en": "", "ga": "/ga-ie"}
+    },
+    "ncca": {
+      "base_url": "https://ncca.ie",
+      "languages": {"en": "/en", "ga": "/ga"}
+    },
+    "examinations": {
+      "base_url": "https://examinations.ie",
+      "languages": {"en": "", "ga": ""}
+    }
+  },
+  "subjects": [
+    {
+      "slug": "mathematics",
+      "name": {"en": "Mathematics", "ga": "Matamaitic"},
+      "cycles": ["junior_cycle"],
+      "specification_type": "specification",
+      "development_status": "current",
+      "urls": {
+        "curriculumonline": "/Junior-cycle/Junior-Cycle-Subjects/Mathematics",
+        "ncca": "/junior-cycle/subjects/mathematics"
+      }
+    }
+  ],
+  "short_courses": []
+}
