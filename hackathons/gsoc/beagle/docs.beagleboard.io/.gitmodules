@@ -1,9 +1,0 @@
-[submodule "books/beaglebone-cookbook/code"]
-	path = books/beaglebone-cookbook/code
-	url = https://openbeagle.org/beagleboard/beaglebone-cookbook-code.git
-[submodule "books/pru-cookbook/code"]
-	path = books/pru-cookbook/code
-	url = https://openbeagle.org/beagleboard/pru-cookbook-code
-[submodule "projects/librobotcontrol"]
-	path = projects/librobotcontrol
-	url = https://openbeagle.org/beagleboard/librobotcontrol
