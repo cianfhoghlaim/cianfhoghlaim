@@ -21,6 +21,11 @@ from .mythology_assets import (
     celtic_stories,
     mythology_aggregate,
 )
+from .exam_analysis import (
+    ingest_leaving_cert_documents,
+    parse_exam_documents_with_vlm,
+    generate_study_plan_assets,
+)
 from .schedules import (
     daily_curriculum_schedule,
     daily_embedding_schedule,
@@ -45,6 +50,10 @@ __all__ = [
     "curriculum_embeddings",
     "mythology_embeddings",
     "embedding_stats",
+    # Exam Analysis
+    "ingest_leaving_cert_documents",
+    "parse_exam_documents_with_vlm",
+    "generate_study_plan_assets",
     # Schedules
     "daily_curriculum_schedule",
     "weekly_mythology_schedule",
