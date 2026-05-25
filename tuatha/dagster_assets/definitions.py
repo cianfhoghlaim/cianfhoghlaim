@@ -11,7 +11,7 @@ from dagster import (
     load_assets_from_modules,
 )
 
-from . import curriculum_assets, embedding_assets, mythology_assets
+from . import curriculum_assets, embedding_assets, mythology_assets, exam_analysis
 from ..fibo_generation import assets as fibo_assets
 from ..fibo_generation.resources import FiboResource, ValidationResource
 from .schedules import (
@@ -29,6 +29,7 @@ curriculum_asset_list = load_assets_from_modules([curriculum_assets])
 mythology_asset_list = load_assets_from_modules([mythology_assets])
 embedding_asset_list = load_assets_from_modules([embedding_assets])
 fibo_asset_list = load_assets_from_modules([fibo_assets])
+exam_analysis_list = load_assets_from_modules([exam_analysis])
 
 # Define jobs
 curriculum_sync_job = define_asset_job(
@@ -93,14 +94,14 @@ full_pipeline_job = define_asset_job(
 # Complete pipeline including FIBO generation
 complete_pipeline_job = define_asset_job(
     name="complete_pipeline_job",
-    selection=curriculum_asset_list + mythology_asset_list + embedding_asset_list + fibo_asset_list,
-    description="Run complete Tuath pipeline including FIBO asset generation",
+    selection=curriculum_asset_list + mythology_asset_list + embedding_asset_list + fibo_asset_list + exam_analysis_list,
+    description="Run complete Tuath pipeline including FIBO asset generation and Exam Analysis",
     tags={"pipeline": "tuath", "type": "complete"},
 )
 
 # Combine all definitions
 defs = Definitions(
-    assets=curriculum_asset_list + mythology_asset_list + embedding_asset_list + fibo_asset_list,
+    assets=curriculum_asset_list + mythology_asset_list + embedding_asset_list + fibo_asset_list + exam_analysis_list,
     jobs=[
         curriculum_sync_job,
         mythology_sync_job,

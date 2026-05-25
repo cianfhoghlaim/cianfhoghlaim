@@ -751,6 +751,29 @@ As part of the cross-stream alignment between `oideachais` and `meaisínfhoghlai
 *   **Cognee (Cognition):** Semantic extraction into deterministic, graph-based memories. 
 *   **Unified Lakehouse (Storage):** All extracted intelligence is routed natively to the `oideachais` unified Lakehouse stack over the Pangolin network.
 
+## 🎓 Leaving Certificate Exam Analysis & FIBO Integration
+
+We have deployed a specialized workflow for the Leaving Certificate curriculum (focusing on Gaeilge, English, Mathematics, Geography, History, Biology, and Chemistry). This pipeline leverages VLMs and BAML to deeply analyze past papers and generate tailored study resources.
+
+### Architectural Workflow:
+1. **Extraction (Garage S3 + `dlt`)**: 
+   A robust `dlt` pipeline (`tuatha/dlt_sources/leaving_cert`) scrapes curriculumonline.ie and examinations.ie. The raw PDF binary files are routed instantly to Garage S3, and schema inferences (subject, year, S3 path) are stored in MotherDuck.
+2. **Visual Indexing (ColPali + LanceDB)**: 
+   Dagster triggers an asset that retrieves the PDFs from Garage S3 and passes them to `cocindex` (powered by ColPali). This creates multi-vector embeddings of the page visuals (crucial for Math formulas and Biology diagrams) and stores them in LanceDB.
+3. **VLM Document Analysis (`BAML` + `LiteLLM`)**:
+   Vision Language Models (like GPT-4o or Gemini 1.5 Pro) visually parse the exam papers and marking schemes, strictly outputting structured data via our customized BAML schemas (`exam_analysis.baml`), such as `ExamQuestion` and `MarkingSchemeRubric`.
+4. **Agentic Generation (FIBO)**:
+   The extracted `VisualRequirement` BAML nodes trigger our FIBO framework (`tuatha/fibo_generation`). The system generates highly accurate, syllabus-aligned visual diagrams (e.g., tectonic boundaries for Geography, molecular models for Chemistry).
+5. **Caching & Distribution (Cloudflare R2)**:
+   The finalized JSON study plans and FIBO-generated images are uploaded to Cloudflare R2, providing zero-egress, edge-cached distribution to the TanStack web app.
+
+### Subject-Specific Study Plan Generation (2026 Timetable):
+*   **Gaeilge (Irish)**: Generates spaced repetition modules for grammar leading up to the clustered exams, using FIBO to create visual narrative arcs for *Sraith Pictiúr* and prose.
+*   **English**: Parses past examiners' reports to map out the core PCLM grading logic, creating structured study guidelines.
+*   **Mathematics**: Retrieves visual equations and geometric proofs, generating step-by-step resolution diagrams for common 50-mark question formats.
+*   **Geography & History**: Extracts SRPs (Significant Relevant Points), generating visual tectonic maps and historical chronological timelines to maximize point accumulation.
+*   **Biology & Chemistry**: Identifies mandatory experimental setups, generating specific molecular and cellular diagrams that highlight exact keywords required by the marking scheme.
+
 ## 🔌 Core MCP Ecosystem
 
 Oideachais leverages a comprehensive suite of Model Context Protocol (MCP) servers to grant autonomous agents secure, standardized access to infrastructure and intelligence layers:
