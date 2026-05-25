@@ -1,0 +1,6 @@
+#showtooltip Detox
+/cast [mod:shift, @focus, harm, nodead] Spear Hand Strike;
+/cast [mod:shift, @mouseover, harm, nodead] Spear Hand Strike;
+/cast [mod:shift] Spear Hand Strike;
+/cast [@mouseover, help] Detox;
+/cast Detox;

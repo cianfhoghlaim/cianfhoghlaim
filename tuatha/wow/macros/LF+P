@@ -1,0 +1,6 @@
+#showtooltip Life Cocoon
+/cast [mod:shift, @focus, harm, nodead] Paralysis;
+/cast [mod:shift, @mouseover, harm, nodead] Paralysis;
+/cast [mod:shift] Paralysis;
+/cast [@mouseover, help] Life Cocoon;
+/cast Life Cocoon;
