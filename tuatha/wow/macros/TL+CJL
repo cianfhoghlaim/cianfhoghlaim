@@ -1,0 +1,6 @@
+#showtooltip Crackling Jade Lightning
+/cast [mod:shift, @focus, harm, nodead] Crackling Jade Lightning;
+/cast [mod:shift, @mouseover, harm, nodead] Crackling Jade Lightning;
+/cast [mod:shift] Crackling Jade Lightning;
+/cast [@mouseover, help] Tiger's Lust;
+/cast Tiger's Lust;
