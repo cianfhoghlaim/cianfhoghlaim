@@ -203,7 +203,7 @@ def validate_subjects(subjects: list[str] | None, cycle: str) -> list[str] | Non
 
     # Import registry to check subject availability
     try:
-        from dlt_sources.ireland.curriculum_registry import (
+        from oideachais.data_platform.dlt_sources.ireland.curriculum_registry import (
             SubjectRegistry,
         )
 

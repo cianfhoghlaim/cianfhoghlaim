@@ -12,7 +12,7 @@ Includes:
 - Cross-curricular skills
 
 Usage:
-    from dlt_sources.uk.northern_ireland.ccea_curriculum import (
+    from oideachais.data_platform.dlt_sources.uk.northern_ireland.ccea_curriculum import (
         ni_curriculum_source,
         ccea_qualifications_source,
     )

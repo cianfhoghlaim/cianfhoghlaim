@@ -9,7 +9,7 @@ os.environ['DLT_DISABLE_PLUGINS'] = 'true'
 os.environ['USE_DUCKLAKE'] = 'false'
 os.environ['USE_LOCAL_SCRAPES'] = 'true'
 
-from dlt_sources.ireland.curriculum_source import curriculum_source
+from oideachais.data_platform.dlt_sources.ireland.curriculum_source import curriculum_source
 
 pipeline = dlt.pipeline(
     pipeline_name='curriculum_unified',

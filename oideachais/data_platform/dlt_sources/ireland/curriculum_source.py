@@ -11,7 +11,7 @@ Key Features:
 - Efficient incremental updates
 
 Usage:
-    from dlt_sources.ireland.curriculum_source import (
+    from oideachais.data_platform.dlt_sources.ireland.curriculum_source import (
         curriculum_source,
     )
 
@@ -40,14 +40,14 @@ from typing import Any
 
 import dlt
 import structlog
-from dlt_sources.ireland.content_deduplication import (
+from oideachais.data_platform.dlt_sources.ireland.content_deduplication import (
     ContentDeduplicator,
 )
-from dlt_sources.ireland.curriculum_registry import (
+from oideachais.data_platform.dlt_sources.ireland.curriculum_registry import (
     SubjectRegistry,
     URLResolver,
 )
-from dlt_sources.ireland.source_adapters import (
+from oideachais.data_platform.dlt_sources.ireland.source_adapters import (
     get_all_adapters,
 )
 
@@ -536,7 +536,7 @@ def _crawl_subjects(
 
 
 import dlthub
-from dlt_sources.dlthub_projects import apply_dlthub_wrappers
+from oideachais.data_platform.dlt_sources.dlthub_projects import apply_dlthub_wrappers
 
 @dlt.source(name="ireland_curriculum")
 def curriculum_source(

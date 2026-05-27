@@ -102,7 +102,7 @@ def duchas_pages(
     try:
         import dlt
 
-        from dlt_sources.celtic.duchas_images import duchas_images_source
+        from oideachais.data_platform.dlt_sources.celtic.duchas_images import duchas_images_source
 
         pipeline = dlt.pipeline(
             pipeline_name=f"duchas_{county}",

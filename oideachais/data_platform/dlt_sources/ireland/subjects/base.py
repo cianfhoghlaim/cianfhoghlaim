@@ -9,7 +9,7 @@ Provides the BaseSubjectSource class that handles:
 - Content hashing for deduplication
 
 Usage:
-    from dlt_sources.ireland.subjects.base import (
+    from oideachais.data_platform.dlt_sources.ireland.subjects.base import (
         create_subject_source,
         crawl_subject,
         extract_pdfs_from_subject,

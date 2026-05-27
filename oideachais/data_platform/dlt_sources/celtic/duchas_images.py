@@ -16,7 +16,7 @@ Uses HttpClientFactory for resilient HTTP client with:
 - Automatic retries
 
 Usage:
-    from dlt_sources.duchas_images import duchas_images_source
+    from oideachais.data_platform.dlt_sources.duchas_images import duchas_images_source
 
     source = duchas_images_source(
         collection="cbes",
