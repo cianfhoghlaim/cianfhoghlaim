@@ -28,7 +28,7 @@ services:
       - ./secrets.env:/templates/secrets.env:ro
       - oideachais-secrets:/run/secrets/locket
     healthcheck:
-      test: ["CMD", "/locket", "healthcheck"]
+      test: ["CMD", "locket", "healthcheck"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -52,7 +52,7 @@ services:
 
 secrets:
   infisical_secret:
-    file: ${INFISICAL_SECRET_FILE:-../../infisical_secret}
+    file: ${INFISICAL_SECRET_FILE:-../infisical_secret}
 
 volumes:
   oideachais-secrets:
