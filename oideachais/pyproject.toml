@@ -225,7 +225,7 @@ code_location_name = "oideachais"
 
 [tool.dagster.instance]
 # Local development configuration
-storage = { sqlite = { base_dir = ".dagster" } }
+storage = { sqlite = { base_dir = ".dagster/storage" } }
 compute_logs = { local = { base_dir = ".dagster/logs" } }
 local_artifact_storage = { base_dir = ".dagster/artifacts" }
 

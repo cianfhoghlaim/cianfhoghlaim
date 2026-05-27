@@ -1,0 +1,7 @@
+{
+  "name": "oideachais-web",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "mkdir -p dist && echo 'Mock build' > dist/index.html"
+  }
+}
