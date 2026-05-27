@@ -30,9 +30,7 @@ Oideachais is an advanced, AI-driven educational data platform designed to stand
 ### I. The Anam Initiative: High-Fidelity Environmental Simulation
 As outlined in our core developmental blueprints, the Anam Initiative represents a convergence of meteorological data and real-time rendering. This system simulates the "Dust of the Celtic World"—a dynamic, particulate medium that flows according to real-world meteorological data (GRIB2/NetCDF).
 *   **Aesthetic Framework:** Drawing upon the narrative gravity of Kryptonian dust, the Anam (Irish for "soul") serves as a manifestation of the land's spiritual history. It is characterized by distinct macroscopic particles and a saturated red hue, necessitating advanced shading models (Subsurface Scattering).
-*   **Technical Implementation:** The architecture relies on **SpacetimeDB** for real-time data streaming, **Vector Quantization** for bandwidth efficiency, and **Strong Interpolation** (Bicubic/Catmull-Rom splines) to translate discrete weather grids into continuous fluid flow within Unreal Engine 5, Unity 6, and Godot 4.
-
-### II. Agentic Infrastructure & Orchestration Workflows
+*   **Technical Implementation:** The architecture relies on **SpacetimeDB** for real-time data streaming, **Vector Quantization** for bandwidth efficiency, and **Strong Interpolation** (Bicubic/Catmull-Rom splines) to translate discrete weather grids into continuous fluid flow within Unreal Engine 5, Unity 6, and Godot 4. ### II. Agentic Infrastructure & Orchestration Workflows
 To maintain the integrity and autonomous capabilities of this platform, all operations adhere to strict multi-agent coordination protocols:
 *   **Agent Frameworks:** Utilizing `google-adk` and `agno` for hierarchical, sequential, and parallel task execution.
 *   **Knowledge Graph Memory:** Leveraging `graphiti-core` for the bi-temporal tracking of evolving curriculum data, ensuring MVCC safety and accurate historical provenance.
@@ -151,9 +149,7 @@ Based on comprehensive package research across the three primary streams, here's
 - **TRL** and datasets for efficient model fine-tuning
 - **MLflow** and WandB for experiment tracking
 
----
-
-## 📚 Oideachais — Education Platform Details
+--- ## 📚 Oideachais — Education Platform Details
 
 > Full source: [`oideachais/README.md`](oideachais/README.md)
 
@@ -396,9 +392,7 @@ dlt_sources/
 └── crown_dependencies/             # Channel Islands, Isle of Man
 ```
 
----
-
-## 🏗️ Bonneagar — Infrastructure & Platform Details
+--- ## 🏗️ Bonneagar — Infrastructure & Platform Details
 
 > Full source: [`infrastructure/README.md`](infrastructure/README.md)
 
@@ -581,9 +575,7 @@ stacks/<category>/<stack>/
 - **DNS**: Cloudflare DNS with Let's Encrypt wildcard certificates via DNS-01 challenge.
 - **Monitoring**: Datadog APM agents on all servers; MLflow/Langfuse for ML/LLM observability.
 
----
-
-## ️ Knowledge & Research Vaults
+--- ## ️ Knowledge & Research Vaults
 
 Beyond the active code streams, this repository serves as a massive knowledge base for British Isles cultural and political research.
 
@@ -660,9 +652,7 @@ git sparse-checkout set bunchloch/university_of_galway
 git checkout main
 ```
 
----
-
-## 🎓 Cian CV: Academic, Professional & Civic Credentials
+--- ## 🎓 Cian CV: Academic, Professional & Civic Credentials
 
 To ensure transparency and verify the author's background, high-resolution scans of key credentials and professional references are provided below:
 
@@ -697,21 +687,15 @@ To ensure transparency and verify the author's background, high-resolution scans
 *   **[Royal Communication (Buckingham Palace)](./cian_mac_an_déisigh_uí_liatháin/buckingham_letter.pdf)**
 *   **[Dual Citizenship Verification (ROI & UK)](./cian_mac_an_déisigh_uí_liatháin/deacy/old_passports_dual_citizen_verification_roi_uk.pdf)**
 
----
-
-## 🛰️ Pangolin (Hybrid Strategy)
+--- ## 🛰️ Pangolin (Hybrid Strategy)
 
 > **See [Bonneagar — Infrastructure & Platform Details](#️-bonneagar--infrastructure--platform-details) for the full architecture.** The platform uses a two-tier Pangolin Convergence strategy: OCI (Control Plane) for availability, routing, and identity; and local MacBook M4 Max (Bunchloch) for high-performance compute, vector/graph databases, and heavy data analytics. All connectivity is secured via WireGuard tunnels with zero-trust authentication.
 
----
-
-## 📂 Directory Description: `/Users/cianmacandeisigh/dev/kings_college_galway/cian_mac_an_déisigh_uí_liatháin`
+--- ## 📂 Directory Description: `/Users/cianmacandeisigh/dev/kings_college_galway/cian_mac_an_déisigh_uí_liatháin`
 
 The `/Users/cianmacandeisigh/dev/kings_college_galway/cian_mac_an_déisigh_uí_liatháin` directory contains the digital artifacts and verifiable proof of the author's academic and professional journey. It acts as a dedicated proof-of-paternity vault within the repository, housing high-resolution scans of degree parchments, civic memberships, and security clearances. This ensures that the project's lead developer is identifiable and their qualifications are transparently available to collaborators and stakeholders.
 
----
-
-## 🗣️ A Note on the Name & Author
+--- ## 🗣️ A Note on the Name & Author
 
 **Cianfhoghlaim & Celtic Linguistic Roots:**
 The domain `cianfhoghlaim.ie` || `cian.lyons.co.uk` is a deliberate linguistic play on words that highlights the mechanics of the Irish language while pointing to the broader Celtic linguistic traditions this repository aims to protect:
@@ -723,9 +707,7 @@ This digital sanctuary will ensure the inter-generational transmission of Goidel
 **Author Identity:**
 This platform is developed entirely by **Cian Lyons-Deacy** (Irish Passport Name: **Cian Mac Liatháin Uí Dhéisigh**).
 
----
-
-## ⚖️ Paternity & Usage Policy
+--- ## ⚖️ Paternity & Usage Policy
 
 **Moral Rights & Paternity:**
 The author explicitly asserts their moral right of paternity under the Copyright and Related Rights Act 2000 (Ireland) and the Copyright, Designs and Patents Act 1988 (UK) to be permanently identified as the creator of this work.
@@ -796,9 +778,7 @@ Cianfhoghlaim (and its interactive frontend, **Awen Hub**) represents a paradigm
 
 By leveraging autonomous agents, semantic code/knowledge bases, and a Web3 "Learn-to-Earn" economy (utilising the x402 protocol and a dual-token Anam system), Awen Hub provides hyper-personalised, interactive learning experiences wrapped in immersive Celtic RPG aesthetics.
 
----
-
-## Core Architecture: The Dual-Stack
+--- ## Core Architecture: The Dual-Stack
 
 ### The Quadrant Architecture & Interoperability
 The platform is heavily decoupled into four sovereign quadrants to isolate state, infrastructure, and inference:
@@ -845,9 +825,7 @@ The user-facing portal, built on the bleeding-edge of the React ecosystem and ma
 *   **MotherDuck Embedded Dives**: Delivers zero-latency, client-side analytics. MotherDuck's dual-execution engine pushes a DuckDB-WASM instance directly into the browser, allowing students to filter and explore massive datasets (like CSO statistics or exam results) instantly.
 *   **Celtic Dark Mode (Tailwind v4)**: An immersive UI drawing inspiration from RPGs (*Hades*, *Clair Obscur*). Features deep `slate-900` backgrounds, tactile "Duolingo-style" buttons, Ogham stone noise textures, and specific Celtic-nation accent colours.
 
----
-
-## Deployment & Development Guide
+--- ## Deployment & Development Guide
 
 **Why order matters:** This is a highly distributed system. Agents need API access, pipelines need databases, and the frontend needs the pipelines. Furthermore, **secrets are managed dynamically and must be hydrated before anything else runs.**
 
@@ -905,9 +883,7 @@ bun run dev
 ```
 *(Note: If you encounter specific Vite/Rollup plugin incompatibilities with Bun during builds, fallback to `npm run dev`).*
 
----
-
-For deeper technical details on specific modules, please consult the respective READMEs inside `oideachais/` and the `.skills/` directory.
+--- For deeper technical details on specific modules, please consult the respective READMEs inside `oideachais/` and the `.skills/` directory.
 
 <!-- AGENT_TELEMETRY_START -->
 > **Agent Telemetry (Last Updated: 2026-05-25 16:00:19 UTC)**
@@ -955,54 +931,83 @@ docker-compose up -d dagster api frontend litellm
 Because of USE_DUCKLAKE="true", Dagster and the FastAPI API will now route DuckDB queries to MotherDuck while utilizing your curriculum_unified.duckdb data. The TanStack frontend at http://localhost:3000 will stream the CopilotKit AI interactions.
 2. Automating the Pipeline (Dagster + dlt + cocindex + R2)
 I have scaffolded a new Dagster asset file for you at oideachais/assets/leaving_cert_assets.py to automate this workflow. Here is how the architecture handles it:
-1. 
-Extraction (Garage S3 + dlt): 
+1. Extraction (Garage S3 + dlt): 
 A dlt pipeline scrapes curriculumonline.ie and examinations.ie. The raw PDF binary files are routed instantly to Garage S3 (s3://education-documents/syllabus/). dlt infers the schema and writes the metadata (subject, year, S3 path) directly into MotherDuck.
-2. 
-Vision Indexing (cocindex + LanceDB): 
+2. Vision Indexing (cocindex + LanceDB): 
 Dagster triggers an asset that retrieves the PDFs from Garage S3 and passes them to cocindex (powered by ColPali). Instead of brittle text OCR, ColPali creates multi-vector embeddings of the page visuals (crucial for Math formulas and Biology diagrams) and stores them in LanceDB/MotherDuck.
-3. 
-Agentic Generation (FIBO + tuatha):
+3. Agentic Generation (FIBO + tuatha):
 We invoke the existing tuatha/fibo_generation logic. The system extracts CurriculumConcept and LearningOutcome nodes. BAML + LiteLLM generate visual FIBO JSON configurations (e.g., diagram_type="molecular" for Chemistry).
-4. 
-Caching & Distribution (Cloudflare R2):
+4. Caching & Distribution (Cloudflare R2):
 The finalized JSON study plans and FIBO-generated images are uploaded to a Cloudflare R2 bucket. Using Cloudflare's edge caching provides zero-egress, low-latency delivery directly to your TanStack web application.
 3. Study Plans & Marking Schemes for 2026 Sample Subjects
 By cross-referencing your 2026 Leaving Certificate Timetable with the tuatha research and syllabus data, here is how the CopilotKit agent formulates marking schemes and study plans for the students:
 Gaeilge (Irish) - June 8 & 9
-- 
-Syllabus & Exam Integration: Paper 1 (Monday) heavily focuses on the Cluastuiscint (Aural) and Ceapadóireacht (Composition). The pipeline extracts marking schemes to show students how the Sraith Pictiúr and oral exams are scored heavily on stór focal (vocabulary) and cruinneas (grammar accuracy).
-- 
-Study Plan Agent: Generates spaced repetition modules for grammar in the final weeks leading up to the clustered exams, and uses FIBO to generate visual narrative arcs for the standard prose/poetry (Paper 2, Tuesday).
+- Syllabus & Exam Integration: Paper 1 (Monday) heavily focuses on the Cluastuiscint (Aural) and Ceapadóireacht (Composition). The pipeline extracts marking schemes to show students how the Sraith Pictiúr and oral exams are scored heavily on stór focal (vocabulary) and cruinneas (grammar accuracy).
+- Study Plan Agent: Generates spaced repetition modules for grammar in the final weeks leading up to the clustered exams, and uses FIBO to generate visual narrative arcs for the standard prose/poetry (Paper 2, Tuesday).
 English - June 3 & 4
-- 
-Syllabus & Exam Integration: Paper 1 (Comprehending & Composing) and Paper 2 (Comparative & Single Text). The cocindex pipeline parses past examiners' reports to extract the core grading logic: PCLM (Purpose, Coherence, Language, Mechanics).
-- 
-Study Plan Agent: The agent uses Graphiti memory to cross-reference the student's chosen comparative texts against the PCLM rubric, ensuring their essay structure aligns with examiner expectations.
+- Syllabus & Exam Integration: Paper 1 (Comprehending & Composing) and Paper 2 (Comparative & Single Text). The cocindex pipeline parses past examiners' reports to extract the core grading logic: PCLM (Purpose, Coherence, Language, Mechanics).
+- Study Plan Agent: The agent uses Graphiti memory to cross-reference the student's chosen comparative texts against the PCLM rubric, ensuring their essay structure aligns with examiner expectations.
 Mathematics - June 5 & 8
-- 
-Syllabus & Exam Integration: Paper 1 (Algebra, Calculus) on Friday; Paper 2 (Statistics, Geometry) on Monday. Text-based RAG fails at math, but cocindex successfully retrieves visual equations and geometric proofs from past papers. 
-- 
-Study Plan Agent: FIBO generates visual, step-by-step resolution diagrams for common 50-mark question formats, helping students visualize integration and statistical bell curves.
+- Syllabus & Exam Integration: Paper 1 (Algebra, Calculus) on Friday; Paper 2 (Statistics, Geometry) on Monday. Text-based RAG fails at math, but cocindex successfully retrieves visual equations and geometric proofs from past papers. 
+- Study Plan Agent: FIBO generates visual, step-by-step resolution diagrams for common 50-mark question formats, helping students visualize integration and statistical bell curves.
 Geography (June 5) & History (June 10)
-- 
-Syllabus & Exam Integration: For Geography, the agent extracts the concept of SRPs (Significant Relevant Points), where 2 marks are awarded per distinct factual point. For History, it analyzes the marking matrix for the RSR (Research Study Report) and structured essays.
-- 
-Study Plan Agent: FIBO visualizes geographical processes (e.g., tectonic plate boundaries). For History, the agent uses tuatha data to map out verifiable chronological timelines that maximize SRP accumulation.
+- Syllabus & Exam Integration: For Geography, the agent extracts the concept of SRPs (Significant Relevant Points), where 2 marks are awarded per distinct factual point. For History, it analyzes the marking matrix for the RSR (Research Study Report) and structured essays.
+- Study Plan Agent: FIBO visualizes geographical processes (e.g., tectonic plate boundaries). For History, the agent uses tuatha data to map out verifiable chronological timelines that maximize SRP accumulation.
 Biology (June 9) & Chemistry (June 16)
-- 
-Syllabus & Exam Integration: The exams heavily penalize missing mandatory keywords. cocindex extracts diagrams of mandatory experiments (e.g., titrations, cell plasmolysis).
-- 
-Study Plan Agent: Uses your tuatha schemas (VisualRequirement(diagram_type="molecular") for Chemistry and diagram_type="cell_diagram" for Biology). The agent generates active recall quizzes targeting the strict marking scheme keywords required for full marks.
+- Syllabus & Exam Integration: The exams heavily penalize missing mandatory keywords. cocindex extracts diagrams of mandatory experiments (e.g., titrations, cell plasmolysis).
+- Study Plan Agent: Uses your tuatha schemas (VisualRequirement(diagram_type="molecular") for Chemistry and diagram_type="cell_diagram" for Biology). The agent generates active recall quizzes targeting the strict marking scheme keywords required for full marks.
 German (June 12)
-- 
-Syllabus & Exam Integration: Written & Aural. The pipeline analyzes past paper rubrics for the Äußerung zum Thema (opinion piece) and Leseverstehen (reading comprehension).
-- 
-Study Plan Agent: Focuses on thematic vocabulary clustering and visual templates for formal/informal letter writing, caching the templates in Cloudflare R2 for fast retrieval during study sessions.
+- Syllabus & Exam Integration: Written & Aural. The pipeline analyzes past paper rubrics for the Äußerung zum Thema (opinion piece) and Leseverstehen (reading comprehension).
+- Study Plan Agent: Focuses on thematic vocabulary clustering and visual templates for formal/informal letter writing, caching the templates in Cloudflare R2 for fast retrieval during study sessions.
 Next Steps
-1. 
-Navigate to the UI at http://localhost:3000. 
-2. 
-Open the CopilotKit chat interface. 
+1. Navigate to the UI at http://localhost:3000. 
+2. Open the CopilotKit chat interface. 
 3. 
 You can now prompt the agent: "Show me the marking scheme breakdown for the 2026 Biology mandatory experiments using the MotherDuck index." The agent will query DuckDB, retrieve the ColPali image embeddings of the syllabus, and stream the generated study plan directly to the frontend.
+### 🔐 Configuring Google Cloud Service Account Keys
+
+To enable integrations like Vertex AI behind OpenCode, you must grant the necessary permissions on your Google Cloud organization and project, generate a service account key, and configure your local environment.
+
+#### 1. Disable Key Creation Restrictions (If Enforced)
+
+By default, some Google Cloud organizations prevent the creation of Service Account keys. Assuming you have the `roles/orgpolicy.policyAdmin` role at the Organization or Folder level, you can disable this constraint on your specific project:
+
+```bash
+gcloud resource-manager org-policies disable-enforce iam.disableServiceAccountKeyCreation --project=YOUR_PROJECT_ID
+```
+
+#### 2. Create the Service Account Key
+
+Once the policy is deactivated, generate the JSON credentials file. It's recommended to store this in a secure local directory such as `~/.ssh/`:
+
+```bash
+gcloud iam service-accounts keys create ~/.ssh/vertex.json   --iam-account=YOUR_SERVICE_ACCOUNT@YOUR_PROJECT_ID.iam.gserviceaccount.com
+```
+
+#### 3. Update the Environment Variable
+
+Link the newly generated JSON key to your environment variables. Open your `.env` file (or your shell profile) and add the `GOOGLE_APPLICATION_CREDENTIALS` path:
+
+```env
+GOOGLE_APPLICATION_CREDENTIALS="/absolute/path/to/.ssh/vertex.json"
+```
+
+Restart your terminal or reload your environment (`source .env`) so that application libraries (like the Vertex AI SDK or OpenCode MCP) successfully authenticate with Google Cloud.
+
+#### 4. Handling Billing Errors or Resetting Credentials
+
+If you encounter the error `Lightning dunning decision is deny` (indicating a billing suspension on the old account) or need to switch Google Cloud projects, follow these steps to reset the OpenCode CLI state:
+
+1.  **Remove Stale Credentials**: Open `~/.local/share/opencode/auth.json` and remove any `google` or `google-vertex` entries. This forces the CLI to use the `GOOGLE_APPLICATION_CREDENTIALS` from your `.env`.
+2.  **Clear Model Cache**: Delete the cached model list to ensure OpenCode pulls from the new project:
+    ```bash
+    rm ~/.cache/opencode/models.json
+    ```
+3.  **Synchronize Vault**: If using Infisical, update your `.env` and `.infisical.env` with the new `GOOGLE_CLOUD_PROJECT`, then sync the secrets:
+    ```bash
+    cd scripts/infisical && bun run init-vault.ts
+    ```
+4.  **Refresh Models**: Verify connectivity by refreshing the model list:
+    ```bash
+    opencode models --refresh google-vertex
+    ```
