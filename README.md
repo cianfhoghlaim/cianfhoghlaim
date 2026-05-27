@@ -1067,7 +1067,7 @@ GOOGLE_APPLICATION_CREDENTIALS="/absolute/path/to/.ssh/vertex.json"
 GOOGLE_CLOUD_PROJECT="YOUR_PROJECT_ID"
 
 # The Vertex AI Location (Note: Generative AI models often require specific regions like us-central1)
-VERTEX_LOCATION="us-central1"
+VERTEX_LOCATION="global"
 ```
 
 *Note: You may also see `GOOGLE_CLOUD_REGION` or `CLOUD_ML_REGION` used in some contexts, but `VERTEX_LOCATION` is commonly respected by integrations connecting to Vertex endpoints.*
