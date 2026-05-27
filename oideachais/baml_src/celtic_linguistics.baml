@@ -124,11 +124,11 @@ enum MutationType {
 
 // Initial mutation details
 class InitialMutation {
-  type MutationType @description("Type of mutation applied")
-  original_initial string @description("Original initial consonant/vowel")
-  mutated_form string @description("Form after mutation")
-  trigger string? @description("What triggered the mutation")
-  language CelticLanguage @description("Language context")
+  type: MutationType @description("Type of mutation applied")
+  original_initial: string @description("Original initial consonant/vowel")
+  mutated_form: string @description("Form after mutation")
+  trigger: string? @description("What triggered the mutation")
+  language: CelticLanguage @description("Language context")
 }
 
 // ============================================================================
@@ -137,16 +137,16 @@ class InitialMutation {
 
 // Complete morphological feature bundle
 class MorphologicalFeatures {
-  gender GrammaticalGender? @description("Grammatical gender")
-  number GrammaticalNumber? @description("Singular/plural")
+  gender: GrammaticalGender? @description("Grammatical gender")
+  number: GrammaticalNumber? @description("Singular/plural")
   case_ GrammaticalCase? @alias("case") @description("Grammatical case")
-  person int? @description("1st, 2nd, or 3rd person")
-  tense VerbTense? @description("Verb tense")
-  mood VerbMood? @description("Verb mood")
-  voice string? @description("Active, Passive, Autonomous")
-  aspect string? @description("Perfective, Imperfective")
-  polarity string? @description("Positive or Negative")
-  mutation MutationType? @description("Initial mutation if any")
+  person: int? @description("1st, 2nd, or 3rd person")
+  tense: VerbTense? @description("Verb tense")
+  mood: VerbMood? @description("Verb mood")
+  voice: string? @description("Active, Passive, Autonomous")
+  aspect: string? @description("Perfective, Imperfective")
+  polarity: string? @description("Positive or Negative")
+  mutation: MutationType? @description("Initial mutation if any")
 }
 
 // ============================================================================
@@ -155,13 +155,13 @@ class MorphologicalFeatures {
 
 // A fully annotated linguistic token
 class LinguisticToken {
-  surface_form string @description("Word as it appears in text")
-  lemma string @description("Dictionary form / base form")
-  language CelticLanguage @description("Language of the token")
-  pos PartOfSpeech @description("Part of speech tag")
-  features MorphologicalFeatures? @description("Morphological features")
-  mutation InitialMutation? @description("Initial mutation if present")
-  gloss string? @description("English translation/gloss")
+  surface_form: string @description("Word as it appears in text")
+  lemma: string @description("Dictionary form / base form")
+  language: CelticLanguage @description("Language of the token")
+  pos: PartOfSpeech @description("Part of speech tag")
+  features: MorphologicalFeatures? @description("Morphological features")
+  mutation: InitialMutation? @description("Initial mutation if present")
+  gloss: string? @description("English translation/gloss")
 }
 
 // ============================================================================
@@ -169,12 +169,11 @@ class LinguisticToken {
 // ============================================================================
 
 // Extract morphological features from a Celtic word in context
-function ExtractMorphology(
-  word string @description("The word to analyze"),
-  context string @description("Sentence or phrase containing the word"),
-  language CelticLanguage @description("Celtic language of the word")
+function ExtractMorphology(  word: string @description("The word to analyze"),
+  context: string @description("Sentence or phrase containing the word"),
+  language: CelticLanguage @description("Celtic language of the word")
 ) -> LinguisticToken {
-  client Claude
+  client: Claude
   prompt #"
     Analyze the following Celtic word and extract its morphological features.
 
@@ -194,11 +193,10 @@ function ExtractMorphology(
 }
 
 // Analyze a complete sentence for linguistic annotation
-function AnalyzeSentence(
-  sentence string @description("Celtic language sentence"),
-  language CelticLanguage @description("Language of the sentence")
+function AnalyzeSentence(  sentence: string @description("Celtic language sentence"),
+  language: CelticLanguage @description("Language of the sentence")
 ) -> LinguisticToken[] {
-  client Claude
+  client: Claude
   prompt #"
     Analyze this {{ language }} sentence and annotate each token.
 
@@ -221,10 +219,9 @@ function AnalyzeSentence(
 }
 
 // Identify the dialect of Irish text
-function IdentifyDialect(
-  text string @description("Irish language text sample")
+function IdentifyDialect(  text: string @description("Irish language text sample")
 ) -> IrishDialect {
-  client ClaudeHaiku
+  client: ClaudeHaiku
   prompt #"
     Analyze this Irish text and identify which dialect it represents.
 

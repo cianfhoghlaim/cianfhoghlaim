@@ -36,61 +36,61 @@ enum IrishCopulaType {
 
 // A grammatical pattern instance
 class GrammarPattern {
-  pattern_type GrammarPatternType @description("Type of pattern")
-  example_sentence string @description("Example sentence")
-  translation string @description("English translation")
-  structure string @description("Structural description")
-  language CelticLanguage @description("Language")
-  notes string? @description("Usage notes")
+  pattern_type: GrammarPatternType @description("Type of pattern")
+  example_sentence: string @description("Example sentence")
+  translation: string @description("English translation")
+  structure: string @description("Structural description")
+  language: CelticLanguage @description("Language")
+  notes: string? @description("Usage notes")
 }
 
 // Irish copula pattern analysis
 class IrishCopulaPattern {
-  sentence string @description("The sentence")
-  copula_type IrishCopulaType @description("Type of copula usage")
-  copula_form string @description("Form of copula: is, ba, an, nach, etc.")
-  predicate string @description("What follows the copula")
-  subject string @description("The subject")
-  translation string @description("English translation")
-  explanation string @description("Why this form is used")
+  sentence: string @description("The sentence")
+  copula_type: IrishCopulaType @description("Type of copula usage")
+  copula_form: string @description("Form of copula: is, ba, an, nach, etc.")
+  predicate: string @description("What follows the copula")
+  subject: string @description("The subject")
+  translation: string @description("English translation")
+  explanation: string @description("Why this form is used")
 }
 
 // VSO word order analysis
 class VSOPattern {
-  sentence string @description("The sentence")
-  verb string @description("The verb")
-  subject string @description("The subject")
-  object string? @description("The object if present")
-  modifiers string[]? @description("Any modifiers")
-  translation string @description("English translation")
+  sentence: string @description("The sentence")
+  verb: string @description("The verb")
+  subject: string @description("The subject")
+  object: string? @description("The object if present")
+  modifiers: string[]? @description("Any modifiers")
+  translation: string @description("English translation")
 }
 
 // Possession expression
 class PossessionPattern {
-  sentence string @description("The sentence expressing possession")
-  possessor string @description("Who possesses")
-  possessed string @description("What is possessed")
-  construction_type string @description("ag + owner, le + owner, etc.")
-  translation string @description("English translation")
+  sentence: string @description("The sentence expressing possession")
+  possessor: string @description("Who possesses")
+  possessed: string @description("What is possessed")
+  construction_type: string @description("ag + owner, le + owner, etc.")
+  translation: string @description("English translation")
 }
 
 // Prepositional pronoun
 class PrepositionalPronoun {
-  preposition string @description("Base preposition")
-  person int @description("1, 2, or 3")
-  number string @description("sing or plur")
-  form string @description("The fused form")
-  meaning string @description("English meaning")
-  examples string[]? @description("Example sentences")
+  preposition: string @description("Base preposition")
+  person: int @description("1, 2, or 3")
+  number: string @description("sing or plur")
+  form: string @description("The fused form")
+  meaning: string @description("English meaning")
+  examples: string[]? @description("Example sentences")
 }
 
 // Mutation trigger pattern
 class MutationTriggerPattern {
-  trigger string @description("What triggers the mutation")
-  mutation_type MutationType @description("Type of mutation caused")
-  affected_pos string @description("Part of speech affected")
-  example string @description("Example")
-  exceptions string? @description("Any exceptions")
+  trigger: string @description("What triggers the mutation")
+  mutation_type: MutationType @description("Type of mutation caused")
+  affected_pos: string @description("Part of speech affected")
+  example: string @description("Example")
+  exceptions: string? @description("Any exceptions")
 }
 
 // ============================================================================
@@ -98,11 +98,10 @@ class MutationTriggerPattern {
 // ============================================================================
 
 // Extract grammar patterns from text
-function ExtractGrammarPatterns(
-  text string @description("Celtic language text"),
-  language CelticLanguage @description("Language of the text")
+function ExtractGrammarPatterns(  text: string @description("Celtic language text"),
+  language: CelticLanguage @description("Language of the text")
 ) -> GrammarPattern[] {
-  client Claude
+  client: Claude
   prompt #"
     Identify grammatical patterns in this {{ language }} text.
 
@@ -129,10 +128,9 @@ function ExtractGrammarPatterns(
 }
 
 // Analyze Irish copula usage
-function ExtractIrishCopula(
-  sentence string @description("Irish sentence possibly containing copula")
+function ExtractIrishCopula(  sentence: string @description("Irish sentence possibly containing copula")
 ) -> IrishCopulaPattern? {
-  client Claude
+  client: Claude
   prompt #"
     Analyze the copula usage in this Irish sentence.
 
@@ -162,11 +160,10 @@ function ExtractIrishCopula(
 }
 
 // Analyze VSO word order
-function AnalyzeVSOOrder(
-  sentence string @description("Celtic sentence"),
-  language CelticLanguage @description("Language")
+function AnalyzeVSOOrder(  sentence: string @description("Celtic sentence"),
+  language: CelticLanguage @description("Language")
 ) -> VSOPattern {
-  client Claude
+  client: Claude
   prompt #"
     Analyze the VSO (Verb-Subject-Object) word order in this {{ language }} sentence.
 
@@ -191,10 +188,9 @@ function AnalyzeVSOOrder(
 }
 
 // Extract possession patterns
-function ExtractPossession(
-  sentence string @description("Sentence expressing possession")
+function ExtractPossession(  sentence: string @description("Sentence expressing possession")
 ) -> PossessionPattern {
-  client Claude
+  client: Claude
   prompt #"
     Analyze how possession is expressed in this Irish sentence.
 
@@ -224,11 +220,10 @@ function ExtractPossession(
 }
 
 // Generate prepositional pronoun table
-function GeneratePrepositionalPronouns(
-  preposition string @description("Base preposition"),
-  language CelticLanguage @description("Language")
+function GeneratePrepositionalPronouns(  preposition: string @description("Base preposition"),
+  language: CelticLanguage @description("Language")
 ) -> PrepositionalPronoun[] {
-  client Claude
+  client: Claude
   prompt #"
     Generate the full prepositional pronoun paradigm for this {{ language }} preposition.
 
@@ -253,10 +248,9 @@ function GeneratePrepositionalPronouns(
 }
 
 // Document mutation triggers
-function DocumentMutationTriggers(
-  language CelticLanguage @description("Language to document")
+function DocumentMutationTriggers(  language: CelticLanguage @description("Language to document")
 ) -> MutationTriggerPattern[] {
-  client Claude
+  client: Claude
   prompt #"
     Document the main initial mutation triggers in {{ language }}.
 

@@ -58,68 +58,68 @@ enum DataSource {
 // =============================================================================
 
 class StatisticMetadata {
-  source DataSource
-  publication_date string? @description("ISO date of publication")
-  reference_period string @description("Period data refers to (e.g., '2023-24')")
-  methodology_notes string?
+  source: DataSource
+  publication_date: string? @description("ISO date of publication")
+  reference_period: string @description("Period data refers to (e.g., '2023-24')")
+  methodology_notes: string?
   data_quality_rating "high" | "medium" | "low" | "provisional"
-  next_update string? @description("Expected next update date")
+  next_update: string? @description("Expected next update date")
 }
 
 class Metric {
-  name string @description("Metric name")
-  description string?
-  category MetricCategory
-  unit string @description("Unit of measurement (%, count, GBP, etc.)")
-  value float
-  value_formatted string? @description("Formatted value with units")
+  name: string @description("Metric name")
+  description: string?
+  category: MetricCategory
+  unit: string @description("Unit of measurement (%, count, GBP, etc.)")
+  value: float
+  value_formatted: string? @description("Formatted value with units")
 
   // Confidence/precision
-  confidence_interval float[]? @description("[lower, upper] bounds")
-  sample_size int?
-  is_estimated bool?
-  is_provisional bool?
+  confidence_interval: float[]? @description("[lower, upper] bounds")
+  sample_size: int?
+  is_estimated: bool?
+  is_provisional: bool?
 }
 
 class Breakdown {
-  dimension string @description("Breakdown dimension (gender, ethnicity, FSM, etc.)")
+  dimension: string @description("Breakdown dimension (gender, ethnicity, FSM, etc.)")
   categories map<string, float> @description("Category -> value mapping")
 }
 
 class TrendPoint {
-  period string @description("Time period label")
-  value float
-  change_from_previous float? @description("Absolute change")
-  percent_change float? @description("Percentage change")
+  period: string @description("Time period label")
+  value: float
+  change_from_previous: float? @description("Absolute change")
+  percent_change: float? @description("Percentage change")
 }
 
 class StatisticRecord {
-  id string? @description("Unique identifier for this record")
-  metric Metric
+  id: string? @description("Unique identifier for this record")
+  metric: Metric
 
   // Geographic context
-  nation string @description("Nation name")
-  aggregation_level AggregationLevel
-  area_code string? @description("Geographic area code (LAD, LSOA, etc.)")
-  area_name string? @description("Geographic area name")
+  nation: string @description("Nation name")
+  aggregation_level: AggregationLevel
+  area_code: string? @description("Geographic area code (LAD, LSOA, etc.)")
+  area_name: string? @description("Geographic area name")
 
   // Time context
-  academic_year string @description("Academic year (e.g., '2023-24')")
-  time_granularity TimeGranularity
+  academic_year: string @description("Academic year (e.g., '2023-24')")
+  time_granularity: TimeGranularity
 
   // School context (if school-level)
-  school_urn string? @description("Unique Reference Number")
-  school_name string?
-  school_type string?
+  school_urn: string? @description("Unique Reference Number")
+  school_name: string?
+  school_type: string?
 
   // Disaggregations
-  breakdowns Breakdown[]?
+  breakdowns: Breakdown[]?
 
   // Trends
-  trend TrendPoint[]? @description("Historical trend data")
+  trend: TrendPoint[]? @description("Historical trend data")
 
   // Metadata
-  metadata StatisticMetadata
+  metadata: StatisticMetadata
 }
 
 // =============================================================================
@@ -127,50 +127,50 @@ class StatisticRecord {
 // =============================================================================
 
 class NationComparison {
-  metric_name string
-  category MetricCategory
-  academic_year string
+  metric_name: string
+  category: MetricCategory
+  academic_year: string
 
   values_by_nation map<string, float>
-  uk_average float?
-  british_isles_average float?
+  uk_average: float?
+  british_isles_average: float?
 
-  highest_nation string
-  lowest_nation string
-  spread float @description("Difference between highest and lowest")
+  highest_nation: string
+  lowest_nation: string
+  spread: float @description("Difference between highest and lowest")
 
-  notes string[]?
+  notes: string[]?
 }
 
 class TrendAnalysis {
-  metric_name string
-  nation string
-  start_year string
-  end_year string
+  metric_name: string
+  nation: string
+  start_year: string
+  end_year: string
 
   trend_direction "increasing" | "decreasing" | "stable" | "volatile"
-  average_annual_change float
-  total_change float
-  percent_total_change float
+  average_annual_change: float
+  total_change: float
+  percent_total_change: float
 
-  significant_events string[]? @description("Events affecting trend (COVID, policy changes)")
-  projection float? @description("Projected next year value")
+  significant_events: string[]? @description("Events affecting trend (COVID, policy changes)")
+  projection: float? @description("Projected next year value")
 }
 
 class AreaRanking {
-  metric_name string
-  aggregation_level AggregationLevel
-  academic_year string
-  nation string
+  metric_name: string
+  aggregation_level: AggregationLevel
+  academic_year: string
+  nation: string
 
   top_areas map<string, float> @description("Top 10 areas with values")
   bottom_areas map<string, float> @description("Bottom 10 areas with values")
 
-  median_value float
-  mean_value float
-  std_deviation float
+  median_value: float
+  mean_value: float
+  std_deviation: float
 
-  deprivation_correlation float? @description("Correlation with deprivation index")
+  deprivation_correlation: float? @description("Correlation with deprivation index")
 }
 
 // =============================================================================
@@ -178,25 +178,25 @@ class AreaRanking {
 // =============================================================================
 
 class StatisticsQuery {
-  metrics MetricCategory[]
-  nations string[]
-  aggregation_level AggregationLevel
-  academic_years string[]
-  include_breakdowns bool
-  include_trends bool
+  metrics: MetricCategory[]
+  nations: string[]
+  aggregation_level: AggregationLevel
+  academic_years: string[]
+  include_breakdowns: bool
+  include_trends: bool
 
   // Filters
-  area_codes string[]?
-  school_types string[]?
-  min_sample_size int?
+  area_codes: string[]?
+  school_types: string[]?
+  min_sample_size: int?
 }
 
 class QueryResult {
-  query StatisticsQuery
-  total_records int
-  records StatisticRecord[]
-  warnings string[]?
-  data_gaps string[]? @description("Missing data notes")
+  query: StatisticsQuery
+  total_records: int
+  records: StatisticRecord[]
+  warnings: string[]?
+  data_gaps: string[]? @description("Missing data notes")
 }
 
 // =============================================================================
@@ -207,7 +207,7 @@ function ExtractStatistics(
   document: string,
   expected_source: DataSource
 ) -> StatisticRecord[] {
-  client Claude
+  client: Claude
   prompt #"
     Extract structured education statistics from this {{ expected_source }} document.
 
@@ -254,7 +254,7 @@ function CompareNationStatistics(
   academic_year: string,
   statistics: StatisticRecord[]
 ) -> NationComparison {
-  client Claude
+  client: Claude
   prompt #"
     Compare this education metric across British Isles nations.
 
@@ -287,7 +287,7 @@ function AnalyzeTrend(
   nation: string,
   historical_data: TrendPoint[]
 ) -> TrendAnalysis {
-  client Claude
+  client: Claude
   prompt #"
     Analyze the trend for this education metric.
 
@@ -319,7 +319,7 @@ function RankAreas(
   aggregation_level: AggregationLevel,
   statistics: StatisticRecord[]
 ) -> AreaRanking {
-  client Claude
+  client: Claude
   prompt #"
     Rank geographic areas by this education metric.
 
@@ -343,7 +343,7 @@ function RankAreas(
 function GenerateStatisticsQuery(
   natural_language_query: string
 ) -> StatisticsQuery {
-  client ClaudeHaiku
+  client: ClaudeHaiku
   prompt #"
     Convert this natural language question into a structured statistics query.
 
@@ -371,7 +371,7 @@ function GenerateStatisticsQuery(
 // =============================================================================
 
 test extract_dfe_stats {
-  functions [ExtractStatistics]
+  functions: [ExtractStatistics]
   args {
     document #"
       Key Stage 4 Performance 2023/24
@@ -389,22 +389,22 @@ test extract_dfe_stats {
       Publication date: January 2025
       Status: Revised
     "#
-    expected_source DFE
+    expected_source: DFE
   }
 }
 
 test compare_attainment {
-  functions [CompareNationStatistics]
+  functions: [CompareNationStatistics]
   args {
     metric_name "5+ GCSEs equivalent at grades A*-C/9-4"
-    category ATTAINMENT
+    category: ATTAINMENT
     academic_year "2023-24"
-    statistics []
+    statistics: []
   }
 }
 
 test natural_language_query {
-  functions [GenerateStatisticsQuery]
+  functions: [GenerateStatisticsQuery]
   args {
     natural_language_query "Show me pupil attendance rates by local authority in Wales for the last 3 years, broken down by FSM status"
   }

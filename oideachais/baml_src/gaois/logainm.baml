@@ -78,31 +78,31 @@ enum GeoFeatureCategory {
 
 // Geographic coordinates
 class LogainmCoordinates {
-  latitude float @description("WGS84 latitude")
-  longitude float @description("WGS84 longitude")
-  accurate bool @description("True if coordinates are precise, false if extrapolated")
+  latitude: float @description("WGS84 latitude")
+  longitude: float @description("WGS84 longitude")
+  accurate: bool @description("True if coordinates are precise, false if extrapolated")
 }
 
 // Placename in multiple languages
 class PlacenameText {
-  ga string? @description("Irish/Gaeilge name")
-  en string? @description("English name")
-  alternatives string[]? @description("Alternative spellings or historical names")
+  ga: string? @description("Irish/Gaeilge name")
+  en: string? @description("English name")
+  alternatives: string[]? @description("Alternative spellings or historical names")
 }
 
 // Reference to a glossary word (placename element)
 class GlossaryReference {
-  id int @description("Glossary entry ID")
-  word string @description("The word/element")
-  meaning string? @description("Meaning of the element")
-  language string @description("Language: ga or en")
+  id: int @description("Glossary entry ID")
+  word: string @description("The word/element")
+  meaning: string? @description("Meaning of the element")
+  language: string @description("Language: ga or en")
 }
 
 // Parent place reference
 class ParentPlace {
-  id int @description("Logainm place ID")
-  name PlacenameText @description("Place name")
-  category string @description("Category code (C, PAR, BAR, etc.)")
+  id: int @description("Logainm place ID")
+  name: PlacenameText @description("Place name")
+  category: string @description("Category code (C, PAR, BAR, etc.)")
 }
 
 // ============================================================================
@@ -112,46 +112,46 @@ class ParentPlace {
 // Full place record from Logainm API
 class LogainmPlace {
   // Identification
-  id int @description("Unique Logainm place identifier")
-  cluster_id int? @description("Cluster ID for related places")
+  id: int @description("Unique Logainm place identifier")
+  cluster_id: int? @description("Cluster ID for related places")
   
   // Names
-  name PlacenameText @description("Official placename in Irish and English")
-  similar_names PlacenameText[]? @description("Similar or related names found")
+  name: PlacenameText @description("Official placename in Irish and English")
+  similar_names: PlacenameText[]? @description("Similar or related names found")
   
   // Classification
-  category string @description("Category code (T, PAR, BAR, C, etc.)")
-  category_name PlacenameText? @description("Category name in Irish/English")
+  category: string @description("Category code (T, PAR, BAR, C, etc.)")
+  category_name: PlacenameText? @description("Category name in Irish/English")
   
   // Geographic
-  coordinates LogainmCoordinates? @description("Geographic coordinates if available")
+  coordinates: LogainmCoordinates? @description("Geographic coordinates if available")
   
   // Administrative hierarchy
-  county ParentPlace? @description("County this place belongs to")
-  barony ParentPlace? @description("Barony containing this place")
-  parish ParentPlace? @description("Parish containing this place")
-  electoral_division ParentPlace? @description("ED containing this place")
+  county: ParentPlace? @description("County this place belongs to")
+  barony: ParentPlace? @description("Barony containing this place")
+  parish: ParentPlace? @description("Parish containing this place")
+  electoral_division: ParentPlace? @description("ED containing this place")
   
   // Attributes
-  gaeltacht bool @description("Whether place is in a Gaeltacht area")
-  post_office bool @description("Whether place has/had a post office")
-  northern_ireland bool @description("Whether place is in Northern Ireland")
+  gaeltacht: bool @description("Whether place is in a Gaeltacht area")
+  post_office: bool @description("Whether place has/had a post office")
+  northern_ireland: bool @description("Whether place is in Northern Ireland")
   
   // Etymology
-  glossary_entries GlossaryReference[]? @description("Placename elements/etymology")
+  glossary_entries: GlossaryReference[]? @description("Placename elements/etymology")
   
   // Metadata
-  created_at string? @description("ISO datetime when record created")
-  modified_at string? @description("ISO datetime when record last modified")
+  created_at: string? @description("ISO datetime when record created")
+  modified_at: string? @description("ISO datetime when record last modified")
 }
 
 // Paginated list response
 class LogainmSearchResult {
-  places LogainmPlace[] @description("List of places matching query")
-  total_count int @description("Total number of results")
-  page int @description("Current page number")
-  per_page int @description("Results per page")
-  has_more bool @description("Whether more pages are available")
+  places: LogainmPlace[] @description("List of places matching query")
+  total_count: int @description("Total number of results")
+  page: int @description("Current page number")
+  per_page: int @description("Results per page")
+  has_more: bool @description("Whether more pages are available")
 }
 
 // ============================================================================
@@ -160,15 +160,15 @@ class LogainmSearchResult {
 
 // Glossary entry - common words in Irish placenames
 class GlossaryEntry {
-  id int @description("Glossary entry ID")
-  headword string @description("The headword/lemma")
-  headword_ga string? @description("Irish form of headword")
-  headword_en string? @description("English form of headword")
-  meaning string? @description("Meaning/definition")
-  meaning_ga string? @description("Irish meaning")
-  meaning_en string? @description("English meaning")
-  examples string[]? @description("Example placenames using this word")
-  related_entries int[]? @description("IDs of related glossary entries")
+  id: int @description("Glossary entry ID")
+  headword: string @description("The headword/lemma")
+  headword_ga: string? @description("Irish form of headword")
+  headword_en: string? @description("English form of headword")
+  meaning: string? @description("Meaning/definition")
+  meaning_ga: string? @description("Irish meaning")
+  meaning_en: string? @description("English meaning")
+  examples: string[]? @description("Example placenames using this word")
+  related_entries: int[]? @description("IDs of related glossary entries")
 }
 
 // ============================================================================
@@ -179,7 +179,7 @@ class GlossaryEntry {
 function ParseLogainmPlace(
   json_response: string
 ) -> LogainmPlace {
-  client Extractor
+  client: Extractor
   prompt #"
     Parse this Logainm.ie API JSON response and extract structured place data.
 
@@ -209,7 +209,7 @@ function ParseLogainmPlace(
 function ParseLogainmSearchResults(
   json_response: string
 ) -> LogainmSearchResult {
-  client Extractor
+  client: Extractor
   prompt #"
     Parse this Logainm.ie API search results JSON and extract all places.
 
@@ -231,7 +231,7 @@ function ParseLogainmSearchResults(
 function ExtractPlacenameEtymology(
   place: LogainmPlace
 ) -> string {
-  client Extractor
+  client: Extractor
   prompt #"
     Given this Logainm place record, explain the etymology of the placename.
 
@@ -258,7 +258,7 @@ function ParseGeoQuery(
   center_lon: float,
   radius_m: int
 ) -> LogainmSearchResult {
-  client Extractor
+  client: Extractor
   prompt #"
     Parse this Logainm.ie geographic query response.
 
@@ -282,11 +282,11 @@ function ParseGeoQuery(
 
 // Link Logainm place to Dúchas Schools Collection
 class LogainmDuchasLink {
-  logainm_id int @description("Logainm place ID")
-  logainm_name PlacenameText @description("Place name from Logainm")
-  duchas_school_count int @description("Number of schools in this place in CBÉS")
-  duchas_story_count int @description("Number of stories from this place")
-  duchas_volume_numbers string[]? @description("Volume numbers containing stories from here")
+  logainm_id: int @description("Logainm place ID")
+  logainm_name: PlacenameText @description("Place name from Logainm")
+  duchas_school_count: int @description("Number of schools in this place in CBÉS")
+  duchas_story_count: int @description("Number of stories from this place")
+  duchas_volume_numbers: string[]? @description("Volume numbers containing stories from here")
 }
 
 // Enrich place data with Dúchas folklore references
@@ -294,7 +294,7 @@ function EnrichPlaceWithFolklore(
   place: LogainmPlace,
   duchas_data: string
 ) -> LogainmDuchasLink {
-  client Extractor
+  client: Extractor
   prompt #"
     Link this Logainm place to Dúchas Schools Collection data.
 
