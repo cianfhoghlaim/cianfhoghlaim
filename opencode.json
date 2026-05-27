@@ -33,10 +33,10 @@
         "@infisical/mcp"
       ],
       "env": {
-        "INFISICAL_UNIVERSAL_AUTH_CLIENT_ID": "c56cbe28-88a4-4793-95a1-835d5164d8ad",
-        "INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET": "infisical://dev-baile/infisical/client_secret",
-        "INFISICAL_HOST_URL": "http://132.145.27.89:8080",
-        "INFISICAL_PROJECT_ID": "d18560c0-75d5-436f-a411-0bb758567196"
+        "INFISICAL_UNIVERSAL_AUTH_CLIENT_ID": "${INFISICAL_CLIENT_ID}",
+        "INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET": "${INFISICAL_CLIENT_SECRET}",
+        "INFISICAL_HOST_URL": "http://localhost:8081",
+        "INFISICAL_PROJECT_ID": "${INFISICAL_PROJECT_ID}"
       },
       "enabled": true
     },

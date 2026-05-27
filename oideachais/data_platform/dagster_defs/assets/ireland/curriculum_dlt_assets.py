@@ -200,12 +200,13 @@ def create_cycle_asset(cycle: str):
     )
     def _cycle_asset(context) -> dg.MaterializeResult:
         """Ingest curriculum data for this cycle's subject/language partition."""
+        import os
+        import sys
         # Disable DLT plugin scanning to avoid metadata bug
         os.environ.setdefault("DLT_DISABLE_PLUGINS", "true")
 
-        import sys
-        import os
         sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
+
         
         from oideachais.data_platform.dlt_sources.ireland.curriculum_registry import SubjectRegistry
         from oideachais.data_platform.dlt_sources.ireland.curriculum_source import (

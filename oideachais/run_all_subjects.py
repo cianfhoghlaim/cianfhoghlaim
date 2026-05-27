@@ -16,7 +16,7 @@ pipeline = dlt.pipeline(
     dataset_name='curriculum'
 )
 
-subjects = ['mathematics', 'geography', 'chemistry', 'gaeilge', 'english', 'biology', 'history', 'business-studies']
+subjects = ['geography', 'chemistry', 'gaeilge', 'english', 'biology', 'history', 'business-studies']
 cycles = ['junior_cycle', 'senior_cycle']
 
 for cycle in cycles:
@@ -28,4 +28,3 @@ for cycle in cycles:
             print(f"Success: {cycle} - {subject}")
         except Exception as e:
             print(f"Failed {cycle} - {subject}: {e}")
-
