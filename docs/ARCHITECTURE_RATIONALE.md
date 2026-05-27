@@ -39,4 +39,4 @@ To maintain this stack autonomously, the CLI agents are augmented with specializ
 *   **Skyvern / Crawl4AI MCP**: Powers the asynchronous browser automation required to navigate legacy dropdowns on government websites (like `examinations.ie`).
 *   **ChunkHound**: Indexes the monorepo codebase into an AST-aware semantic database, allowing agents to navigate the vast Python and TypeScript environments efficiently.
 
-By adhering to these strict bounds (e.g., no cross-polluting `oideachais` absolute imports in `meaisínfhoghlaim`), the repository remains modular, testable, and highly resilient.
+By adhering to these strict bounds, the repository remains modular, testable, and highly resilient.
