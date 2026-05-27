@@ -1,4 +1,4 @@
 # Dagster workspace configuration for Oideachais
 load_from:
   - python_module:
-      module_name: dagster_defs.definitions
+      module_name: data_platform.dagster_defs.definitions
