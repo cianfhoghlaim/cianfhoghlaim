@@ -21,7 +21,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 import dlt
-from sruth.shared.http import stats_wales_odata_client
+from shared.http import stats_wales_odata_client
 
 
 def _get_odata_factory():

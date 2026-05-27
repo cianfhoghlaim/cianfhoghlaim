@@ -16,7 +16,7 @@ Uses HttpClientFactory for resilient HTTP client with:
 - Automatic retries
 
 Usage:
-    from oideachais.data_platform.dlt_sources.duchas_images import duchas_images_source
+    from dlt_sources.duchas_images import duchas_images_source
 
     source = duchas_images_source(
         collection="cbes",
@@ -45,7 +45,7 @@ import dlt
 from dlt.sources import DltResource
 from dlt.sources.incremental import Incremental
 from observability.logging import get_logger
-from sruth.shared.http import doras_client, duchas_client
+from shared.http import doras_client, duchas_client
 
 logger = get_logger(__name__)
 

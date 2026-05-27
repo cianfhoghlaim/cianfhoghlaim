@@ -14,7 +14,7 @@ Includes:
 - Welsh-medium and bilingual resources
 
 Usage:
-    from oideachais.data_platform.dlt_sources.uk.wales.curriculum_for_wales import (
+    from dlt_sources.uk.wales.curriculum_for_wales import (
         curriculum_for_wales_source,
         wjec_qualifications_source,
     )

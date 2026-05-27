@@ -19,7 +19,7 @@ Uses HttpClientFactory for resilient HTTP client with:
 
 Usage:
     import dlt
-    from oideachais.data_platform.dlt_sources.geospatial.cso_small_areas import cso_small_areas_source
+    from dlt_sources.geospatial.cso_small_areas import cso_small_areas_source
 
     pipeline = dlt.pipeline(
         pipeline_name="cso_small_areas",
@@ -35,7 +35,7 @@ from typing import Any
 
 import dlt
 from dlt.sources import TDataItem
-from sruth.shared.http import cso_pxstat_client, data_gov_ie_client
+from shared.http import cso_pxstat_client, data_gov_ie_client
 
 
 def _get_pxstat_factory():

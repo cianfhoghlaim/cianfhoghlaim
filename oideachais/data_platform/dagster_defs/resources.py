@@ -237,8 +237,8 @@ class BrowserbaseResource(ConfigurableResource):
         proj = self.project_id or os.getenv("BROWSERBASE_PROJECT_ID", "")
         if not key or not proj:
             raise ValueError("BROWSERBASE_API_KEY and BROWSERBASE_PROJECT_ID not configured")
-        from sruth.browser import BrowserConfig
-        from sruth.browser.backends.paid.browserbase import BrowserbaseBackend
+        from browser import BrowserConfig
+        from browser.backends.paid.browserbase import BrowserbaseBackend
 
         config = BrowserConfig(
             browserbase_api_key=key,

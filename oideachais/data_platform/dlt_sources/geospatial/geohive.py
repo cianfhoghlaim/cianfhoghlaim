@@ -16,7 +16,7 @@ Uses HttpClientFactory for resilient HTTP client with:
 
 Usage:
     import dlt
-    from oideachais.data_platform.dlt_sources.geospatial.geohive import geohive_source
+    from dlt_sources.geospatial.geohive import geohive_source
 
     pipeline = dlt.pipeline(
         pipeline_name="geohive",
@@ -33,7 +33,7 @@ from typing import Any
 
 import dlt
 from dlt.sources import TDataItem
-from sruth.shared.http import arcgis_geohive_client, cso_pxstat_client, data_gov_ie_client
+from shared.http import arcgis_geohive_client, cso_pxstat_client, data_gov_ie_client
 
 
 def _get_geohive_factory():

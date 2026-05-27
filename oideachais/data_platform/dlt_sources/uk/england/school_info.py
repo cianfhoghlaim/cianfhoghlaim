@@ -19,7 +19,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 import dlt
-from sruth.shared.http import get_info_schools_client
+from shared.http import get_info_schools_client
 
 
 def _get_gias_factory():

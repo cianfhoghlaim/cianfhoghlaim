@@ -7,7 +7,7 @@ Processes local files from bunchloch research directory:
 - mata/          (Applied Statistics, Networks - Mathematics)
 - oideachas/     (ED###, lesson plans - Education)
 
-Migrated from sruth.taighde.dlt_sources.filesystem_source.
+Migrated from taighde.dlt_sources.filesystem_source.
 """
 
 from .filesystem_source import (

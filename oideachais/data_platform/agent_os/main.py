@@ -36,10 +36,10 @@ from agents.agno.education_team import (
     statistics_agent,
     translation_agent,
 )
-from sruth.shared.agent_os.config import init_config
+from shared.agent_os.config import init_config
 
 # Import shared middleware
-from sruth.shared.agent_os.middleware import A2AAuthMiddleware, TinyAuthMiddleware
+from shared.agent_os.middleware import A2AAuthMiddleware, TinyAuthMiddleware
 
 # Initialize config for this service
 config = init_config(service_name="oideachais", service_port=7772)
@@ -127,7 +127,7 @@ async def call_remote_agent(request: dict):
     (e.g., for scraping educational resources).
     """
     from fastapi import HTTPException
-    from sruth.shared.agent_os.a2a import call_agent
+    from shared.agent_os.a2a import call_agent
 
     target_agent = request.get("agent")
     message = request.get("message")

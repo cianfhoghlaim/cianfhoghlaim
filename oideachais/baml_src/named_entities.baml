@@ -45,59 +45,59 @@ enum EntityConfidence {
 
 // A named entity from Celtic text
 class CelticNamedEntity {
-  text string @description("Entity as it appears in text")
-  entity_type CelticEntityType @description("Type of entity")
-  normalized_form string? @description("Standardized form")
-  irish_form string? @description("Irish language form")
-  english_form string? @description("English translation/form")
-  confidence EntityConfidence @description("Extraction confidence")
+  text: string @description("Entity as it appears in text")
+  entity_type: CelticEntityType @description("Type of entity")
+  normalized_form: string? @description("Standardized form")
+  irish_form: string? @description("Irish language form")
+  english_form: string? @description("English translation/form")
+  confidence: EntityConfidence @description("Extraction confidence")
 }
 
 // Person entity with role
 class PersonEntity {
-  name string @description("Person's name")
-  name_ga string? @description("Name in Irish")
-  role string? @description("Role: collector, informant, teacher, storyteller")
-  gender string? @description("Gender if known")
-  birth_year int? @description("Birth year if known")
-  death_year int? @description("Death year if known")
-  location string? @description("Associated location")
-  occupation string? @description("Occupation if known")
+  name: string @description("Person's name")
+  name_ga: string? @description("Name in Irish")
+  role: string? @description("Role: collector, informant, teacher, storyteller")
+  gender: string? @description("Gender if known")
+  birth_year: int? @description("Birth year if known")
+  death_year: int? @description("Death year if known")
+  location: string? @description("Associated location")
+  occupation: string? @description("Occupation if known")
 }
 
 // Place entity with Logainm linkage
 class PlaceEntity {
-  name string @description("Place name as written")
-  name_ga string? @description("Irish form")
-  name_en string? @description("English form")
-  place_type string? @description("Type: townland, parish, county, etc.")
-  county string? @description("County if applicable")
-  province string? @description("Province")
-  logainm_id int? @description("Logainm.ie ID for linking")
-  latitude float? @description("Latitude if known")
-  longitude float? @description("Longitude if known")
+  name: string @description("Place name as written")
+  name_ga: string? @description("Irish form")
+  name_en: string? @description("English form")
+  place_type: string? @description("Type: townland, parish, county, etc.")
+  county: string? @description("County if applicable")
+  province: string? @description("Province")
+  logainm_id: int? @description("Logainm.ie ID for linking")
+  latitude: float? @description("Latitude if known")
+  longitude: float? @description("Longitude if known")
 }
 
 // Supernatural entity with folklore context
 class SupernaturalEntity {
-  name string @description("Entity name or type")
-  name_ga string? @description("Irish name")
-  supernatural_type SupernaturalType @description("Category of supernatural being")
-  appearance string? @description("How it appears")
-  behavior string? @description("What it does")
-  associated_location string? @description("Where it appears")
-  protection string? @description("How to protect against it")
-  summoning string? @description("How to summon or attract it")
+  name: string @description("Entity name or type")
+  name_ga: string? @description("Irish name")
+  supernatural_type: SupernaturalType @description("Category of supernatural being")
+  appearance: string? @description("How it appears")
+  behavior: string? @description("What it does")
+  associated_location: string? @description("Where it appears")
+  protection: string? @description("How to protect against it")
+  summoning: string? @description("How to summon or attract it")
 }
 
 // Festival/calendar custom entity
 class FestivalEntity {
-  name string @description("Festival name")
-  name_ga string @description("Irish name")
-  date string @description("When it occurs")
-  customs string? @description("Associated customs")
-  foods string? @description("Associated foods")
-  beliefs string? @description("Associated beliefs")
+  name: string @description("Festival name")
+  name_ga: string @description("Irish name")
+  date: string @description("When it occurs")
+  customs: string? @description("Associated customs")
+  foods: string? @description("Associated foods")
+  beliefs: string? @description("Associated beliefs")
 }
 
 // ============================================================================
@@ -105,11 +105,10 @@ class FestivalEntity {
 // ============================================================================
 
 // Extract all named entities from Celtic text
-function ExtractCelticEntities(
-  text string @description("Celtic folklore or historical text"),
-  language CelticLanguage @description("Language of the text")
+function ExtractCelticEntities(  text: string @description("Celtic folklore or historical text"),
+  language: CelticLanguage @description("Language of the text")
 ) -> CelticNamedEntity[] {
-  client Claude
+  client: Claude
   prompt #"
     Extract all named entities from this {{ language }} text.
 
@@ -136,10 +135,9 @@ function ExtractCelticEntities(
 }
 
 // Extract person entities with detailed metadata
-function ExtractPersonEntities(
-  text string @description("Text containing person references")
+function ExtractPersonEntities(  text: string @description("Text containing person references")
 ) -> PersonEntity[] {
-  client Claude
+  client: Claude
   prompt #"
     Extract all person references from this folklore text.
 
@@ -163,10 +161,9 @@ function ExtractPersonEntities(
 }
 
 // Extract and link place entities
-function ExtractPlaceEntities(
-  text string @description("Text with place references")
+function ExtractPlaceEntities(  text: string @description("Text with place references")
 ) -> PlaceEntity[] {
-  client Claude
+  client: Claude
   prompt #"
     Extract all place references from this text.
 
@@ -189,10 +186,9 @@ function ExtractPlaceEntities(
 }
 
 // Extract supernatural entities
-function ExtractSupernaturalEntities(
-  text string @description("Folklore text about supernatural beings")
+function ExtractSupernaturalEntities(  text: string @description("Folklore text about supernatural beings")
 ) -> SupernaturalEntity[] {
-  client Claude
+  client: Claude
   prompt #"
     Extract supernatural beings and folklore entities from this text.
 
@@ -219,10 +215,9 @@ function ExtractSupernaturalEntities(
 }
 
 // Extract festivals and calendar customs
-function ExtractFestivalEntities(
-  text string @description("Text mentioning festivals or customs")
+function ExtractFestivalEntities(  text: string @description("Text mentioning festivals or customs")
 ) -> FestivalEntity[] {
-  client Claude
+  client: Claude
   prompt #"
     Extract festival and calendar custom references from this text.
 

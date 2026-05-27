@@ -14,7 +14,7 @@ Models for Irish:
 - GaBERT: Irish BERT for validation
 
 Usage:
-    from sruth.oideachas.ocr.irish_processing import IrishOCRProcessor
+    from oideachas.ocr.irish_processing import IrishOCRProcessor
 
     processor = IrishOCRProcessor()
     result = await processor.process_with_fallback(image_bytes, "qwen3-vl")

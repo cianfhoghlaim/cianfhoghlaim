@@ -6,7 +6,7 @@ Provides research workflow for bunchloch academic collection:
 2. Gatherer: Extracts structured information and learning paths
 3. Analyst: Synthesizes findings into comprehensive reports
 
-Migrated from sruth.taighde.agents.research_team (Agno → ADK).
+Migrated from taighde.agents.research_team (Agno → ADK).
 
 Collection includes:
 - Computer Science (CT511-CT870): 8 courses, 400+ files
@@ -91,7 +91,7 @@ async def vector_search(
         limit: Maximum results
     """
     import duckdb
-    from sruth.shared.embeddings import get_embedding_service
+    from shared.embeddings import get_embedding_service
 
     try:
         embedding_service = get_embedding_service()
@@ -198,7 +198,7 @@ async def graph_search(
     """
     # Graph search via Memgraph/FalkorDB if available
     try:
-        from sruth.shared.graph import get_graph_client
+        from shared.graph import get_graph_client
 
         client = get_graph_client()
 

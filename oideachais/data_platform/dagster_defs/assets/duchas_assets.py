@@ -161,7 +161,7 @@ async def duchas_volume_discovery(
     context.log.info(f"Discovering volumes for county: {county}")
 
     # Import scraper (lazy to avoid circular imports)
-    from sruth.browser.tools.duchas_scraper import DuchasScraper
+    from browser.tools.duchas_scraper import DuchasScraper
 
     scraper = DuchasScraper(rate_limit=1.0)
 
@@ -227,13 +227,13 @@ async def duchas_pages(
     county = context.partition_key
     context.log.info(f"Scraping pages for county: {county}")
 
-    from sruth.browser.tools.duchas_scraper import (
+    from browser.tools.duchas_scraper import (
         scrape_duchas_collection,
     )
 
     # Use Blaxel for bulk scraping if available, else local
     try:
-        from sruth.browser.backends.cloud.blaxel_backend import BlaxelBackend
+        from browser.backends.cloud.blaxel_backend import BlaxelBackend
         backend = BlaxelBackend()
         if backend.is_configured:
             context.log.info("Using Blaxel cloud backend for bulk scraping")

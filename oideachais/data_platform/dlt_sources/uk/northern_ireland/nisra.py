@@ -15,7 +15,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 import dlt
-from sruth.shared.http import nisra_client
+from shared.http import nisra_client
 
 
 def _get_nisra_factory():

@@ -255,8 +255,8 @@ class PDFEmbeddingPipeline:
         if all_chunks:
             texts = [c["text"] for c in all_chunks]
 
-            # Ensure batch size meets minimum
-            batch_size = max(MIN_EMBEDDING_BATCH_SIZE, len(texts))
+            # Ensure batch size does not exceed chunk count to avoid OOM, but processes safely
+            batch_size = min(MIN_EMBEDDING_BATCH_SIZE, len(texts))
 
             embeddings = self.engine.embed_batch(texts, batch_size=batch_size)
 
@@ -268,7 +268,7 @@ class PDFEmbeddingPipeline:
 
             # Insert into LanceDB with HNSW management
             if self.sink and len(all_chunks) > 0:
-                rows_inserted = self.sink.insert_with_index_management(all_chunks)
+                rows_inserted = self.sink.insert_with_index_management(all_chunks, schema=PDF_EMBEDDING_SCHEMA)
                 logger.info("lancedb_insert_complete", rows=rows_inserted)
 
         stats["elapsed_seconds"] = round(time.time() - start_time, 2)

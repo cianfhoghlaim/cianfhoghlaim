@@ -17,7 +17,7 @@ Uses HttpClientFactory for resilient HTTP client with:
 
 Usage:
     import dlt
-    from oideachais.data_platform.dlt_sources.geospatial.met_office import met_office_source
+    from dlt_sources.geospatial.met_office import met_office_source
 
     pipeline = dlt.pipeline(
         pipeline_name="met_office",
@@ -34,7 +34,7 @@ from typing import Any
 
 import dlt
 from dlt.sources import TDataItem
-from sruth.shared.http import met_office_climate_client, met_office_datahub_client
+from shared.http import met_office_climate_client, met_office_datahub_client
 
 
 def _get_datahub_factory():

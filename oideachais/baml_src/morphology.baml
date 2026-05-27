@@ -15,66 +15,66 @@ enum VerbConjugationClass {
 
 // A single conjugated verb form
 class VerbForm {
-  person int @description("1, 2, or 3")
-  number string @description("sing or plur")
-  form string @description("The conjugated form")
-  mutation MutationType? @description("Mutation on the form")
-  is_autonomous bool @description("Is this the autonomous form?")
+  person: int @description("1, 2, or 3")
+  number: string @description("sing or plur")
+  form: string @description("The conjugated form")
+  mutation: MutationType? @description("Mutation on the form")
+  is_autonomous: bool @description("Is this the autonomous form?")
 }
 
 // Complete verb conjugation paradigm
 class VerbConjugation {
-  infinitive string @description("Infinitive / citation form")
-  language CelticLanguage @description("Language of the verb")
-  verb_stem string? @description("The verb stem")
-  conjugation_class VerbConjugationClass? @description("Conjugation class")
+  infinitive: string @description("Infinitive / citation form")
+  language: CelticLanguage @description("Language of the verb")
+  verb_stem: string? @description("The verb stem")
+  conjugation_class: VerbConjugationClass? @description("Conjugation class")
 
-  verbal_noun string? @description("Ainm briathartha (Irish)")
-  verbal_adjective string? @description("Aidiacht bhriathartha (Irish)")
+  verbal_noun: string? @description("Ainm briathartha (Irish)")
+  verbal_adjective: string? @description("Aidiacht bhriathartha (Irish)")
 
   // Present tense
-  present_1sg string? @description("1st person singular present")
-  present_2sg string? @description("2nd person singular present")
-  present_3sg string? @description("3rd person singular present")
-  present_1pl string? @description("1st person plural present")
-  present_2pl string? @description("2nd person plural present")
-  present_3pl string? @description("3rd person plural present")
-  present_auto string? @description("Autonomous present")
+  present_1sg: string? @description("1st person singular present")
+  present_2sg: string? @description("2nd person singular present")
+  present_3sg: string? @description("3rd person singular present")
+  present_1pl: string? @description("1st person plural present")
+  present_2pl: string? @description("2nd person plural present")
+  present_3pl: string? @description("3rd person plural present")
+  present_auto: string? @description("Autonomous present")
 
   // Past tense
-  past_1sg string? @description("1st person singular past")
-  past_2sg string? @description("2nd person singular past")
-  past_3sg string? @description("3rd person singular past")
-  past_1pl string? @description("1st person plural past")
-  past_2pl string? @description("2nd person plural past")
-  past_3pl string? @description("3rd person plural past")
-  past_auto string? @description("Autonomous past")
+  past_1sg: string? @description("1st person singular past")
+  past_2sg: string? @description("2nd person singular past")
+  past_3sg: string? @description("3rd person singular past")
+  past_1pl: string? @description("1st person plural past")
+  past_2pl: string? @description("2nd person plural past")
+  past_3pl: string? @description("3rd person plural past")
+  past_auto: string? @description("Autonomous past")
 
   // Future tense
-  future_1sg string? @description("1st person singular future")
-  future_2sg string? @description("2nd person singular future")
-  future_3sg string? @description("3rd person singular future")
-  future_1pl string? @description("1st person plural future")
-  future_2pl string? @description("2nd person plural future")
-  future_3pl string? @description("3rd person plural future")
-  future_auto string? @description("Autonomous future")
+  future_1sg: string? @description("1st person singular future")
+  future_2sg: string? @description("2nd person singular future")
+  future_3sg: string? @description("3rd person singular future")
+  future_1pl: string? @description("1st person plural future")
+  future_2pl: string? @description("2nd person plural future")
+  future_3pl: string? @description("3rd person plural future")
+  future_auto: string? @description("Autonomous future")
 
   // Conditional
-  conditional_1sg string? @description("1st person singular conditional")
-  conditional_2sg string? @description("2nd person singular conditional")
-  conditional_3sg string? @description("3rd person singular conditional")
-  conditional_1pl string? @description("1st person plural conditional")
-  conditional_2pl string? @description("2nd person plural conditional")
-  conditional_3pl string? @description("3rd person plural conditional")
-  conditional_auto string? @description("Autonomous conditional")
+  conditional_1sg: string? @description("1st person singular conditional")
+  conditional_2sg: string? @description("2nd person singular conditional")
+  conditional_3sg: string? @description("3rd person singular conditional")
+  conditional_1pl: string? @description("1st person plural conditional")
+  conditional_2pl: string? @description("2nd person plural conditional")
+  conditional_3pl: string? @description("3rd person plural conditional")
+  conditional_auto: string? @description("Autonomous conditional")
 
   // Imperative
-  imperative_2sg string? @description("2nd person singular imperative")
-  imperative_3sg string? @description("3rd person singular imperative")
-  imperative_1pl string? @description("1st person plural imperative")
-  imperative_2pl string? @description("2nd person plural imperative")
-  imperative_3pl string? @description("3rd person plural imperative")
-  imperative_auto string? @description("Autonomous imperative")
+  imperative_2sg: string? @description("2nd person singular imperative")
+  imperative_3sg: string? @description("3rd person singular imperative")
+  imperative_1pl: string? @description("1st person plural imperative")
+  imperative_2pl: string? @description("2nd person plural imperative")
+  imperative_3pl: string? @description("3rd person plural imperative")
+  imperative_auto: string? @description("Autonomous imperative")
 }
 
 // ============================================================================
@@ -92,26 +92,26 @@ enum NounDeclensionClass {
 
 // Complete noun declension paradigm
 class NounDeclension {
-  lemma string @description("Citation form (nominative singular)")
-  language CelticLanguage @description("Language of the noun")
-  gender GrammaticalGender @description("Grammatical gender")
-  declension_class NounDeclensionClass? @description("Declension class")
+  lemma: string @description("Citation form (nominative singular)")
+  language: CelticLanguage @description("Language of the noun")
+  gender: GrammaticalGender @description("Grammatical gender")
+  declension_class: NounDeclensionClass? @description("Declension class")
 
   // Singular forms
-  nom_sg string @description("Nominative singular")
-  gen_sg string? @description("Genitive singular")
-  voc_sg string? @description("Vocative singular")
-  dat_sg string? @description("Dative singular (archaic)")
+  nom_sg: string @description("Nominative singular")
+  gen_sg: string? @description("Genitive singular")
+  voc_sg: string? @description("Vocative singular")
+  dat_sg: string? @description("Dative singular (archaic)")
 
   // Plural forms
-  nom_pl string? @description("Nominative plural")
-  gen_pl string? @description("Genitive plural")
-  voc_pl string? @description("Vocative plural")
-  dat_pl string? @description("Dative plural (archaic)")
+  nom_pl: string? @description("Nominative plural")
+  gen_pl: string? @description("Genitive plural")
+  voc_pl: string? @description("Vocative plural")
+  dat_pl: string? @description("Dative plural (archaic)")
 
   // Notes
-  plural_type string? @description("How plural is formed: strong, weak, irregular")
-  notes string? @description("Special notes about this noun")
+  plural_type: string? @description("How plural is formed: strong, weak, irregular")
+  notes: string? @description("Special notes about this noun")
 }
 
 // ============================================================================
@@ -120,10 +120,10 @@ class NounDeclension {
 
 // Adjective comparison forms
 class AdjectiveComparison {
-  positive string @description("Positive degree")
-  comparative string @description("Comparative degree")
-  superlative string @description("Superlative degree")
-  language CelticLanguage @description("Language")
+  positive: string @description("Positive degree")
+  comparative: string @description("Comparative degree")
+  superlative: string @description("Superlative degree")
+  language: CelticLanguage @description("Language")
 }
 
 // ============================================================================
@@ -131,11 +131,10 @@ class AdjectiveComparison {
 // ============================================================================
 
 // Extract full verb conjugation
-function ExtractVerbConjugation(
-  verb string @description("Verb infinitive or any form"),
-  language CelticLanguage @description("Language of the verb")
+function ExtractVerbConjugation(  verb: string @description("Verb infinitive or any form"),
+  language: CelticLanguage @description("Language of the verb")
 ) -> VerbConjugation {
-  client Claude
+  client: Claude
   prompt #"
     Generate the complete conjugation paradigm for this Celtic verb.
 
@@ -160,11 +159,10 @@ function ExtractVerbConjugation(
 }
 
 // Extract noun declension
-function ExtractNounDeclension(
-  noun string @description("Noun in any form"),
-  language CelticLanguage @description("Language of the noun")
+function ExtractNounDeclension(  noun: string @description("Noun in any form"),
+  language: CelticLanguage @description("Language of the noun")
 ) -> NounDeclension {
-  client Claude
+  client: Claude
   prompt #"
     Generate the complete declension paradigm for this Celtic noun.
 
@@ -189,12 +187,11 @@ function ExtractNounDeclension(
 }
 
 // Identify conjugation/declension class
-function IdentifyMorphologicalClass(
-  word string @description("Word to classify"),
-  pos PartOfSpeech @description("Part of speech"),
-  language CelticLanguage @description("Language")
+function IdentifyMorphologicalClass(  word: string @description("Word to classify"),
+  pos: PartOfSpeech @description("Part of speech"),
+  language: CelticLanguage @description("Language")
 ) -> string {
-  client ClaudeHaiku
+  client: ClaudeHaiku
   prompt #"
     Identify the morphological class of this {{ language }} {{ pos }}.
 
@@ -215,11 +212,10 @@ function IdentifyMorphologicalClass(
 }
 
 // Compare adjectives
-function CompareAdjective(
-  adjective string @description("Adjective in positive form"),
-  language CelticLanguage @description("Language")
+function CompareAdjective(  adjective: string @description("Adjective in positive form"),
+  language: CelticLanguage @description("Language")
 ) -> AdjectiveComparison {
-  client ClaudeHaiku
+  client: ClaudeHaiku
   prompt #"
     Provide the comparison forms for this {{ language }} adjective.
 

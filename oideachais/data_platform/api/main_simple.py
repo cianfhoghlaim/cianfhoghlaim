@@ -17,10 +17,10 @@ from contextlib import asynccontextmanager
 
 # Ensure the correct directories are on the Python path
 # This allows imports like 'from storage.curriculum_vectors import ...'
-# and 'from sruth.shared.storage import ...'
+# and 'from shared.storage import ...'
 _oideachais_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 _sruth_dir = os.path.dirname(_oideachais_dir)  # sruth/
-_root_dir = os.path.dirname(_sruth_dir)  # Parent of sruth/ (for 'from sruth.X import')
+_root_dir = os.path.dirname(_sruth_dir)  # Parent of sruth/ (for 'from X import')
 
 for _path in [_oideachais_dir, _root_dir]:
     if _path not in sys.path:

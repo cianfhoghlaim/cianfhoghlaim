@@ -20,7 +20,7 @@ Document Counts (1,251 files, 3.4GB):
 - Code: 42 (Java)
 - Other: Keynote, text, images
 
-Migrated from sruth.taighde.dlt_sources.filesystem_source.
+Migrated from taighde.dlt_sources.filesystem_source.
 """
 
 import hashlib

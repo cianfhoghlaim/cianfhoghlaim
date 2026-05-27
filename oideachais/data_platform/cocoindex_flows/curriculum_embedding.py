@@ -280,14 +280,19 @@ class LanceDBEmbeddingSink:
             self._db = lancedb.connect(self.db_path)
         return self._db
 
-    def _get_or_create_table(self, schema: dict[str, Any] | None = None) -> Any:
+    def _get_or_create_table(self, schema: dict[str, Any] | Any | None = None) -> Any:
         """Get or create table."""
         db = self._connect()
 
         if self.table_name in db.table_names():
             self._table = db.open_table(self.table_name)
         elif schema:
-            self._table = db.create_table(self.table_name, data=[schema])
+            # If schema is a PyArrow schema, use schema kwarg, else use data logic
+            import pyarrow as pa
+            if isinstance(schema, pa.Schema):
+                self._table = db.create_table(self.table_name, schema=schema)
+            else:
+                self._table = db.create_table(self.table_name, data=[schema])
         else:
             raise ValueError(f"Table {self.table_name} does not exist and no schema provided")
 
@@ -296,22 +301,14 @@ class LanceDBEmbeddingSink:
     def insert_with_index_management(
         self,
         data: list[dict[str, Any]],
+        schema: Any = None,
     ) -> int:
         """
         Insert data with HNSW index management.
 
         MANDATORY: For >50 rows, drops HNSW index before insert, recreates after.
-
-        Args:
-            data: List of records with embeddings
-
-        Returns:
-            Number of records inserted
         """
-        if not data:
-            return 0
-
-        table = self._get_or_create_table(data[0])
+        table = self._get_or_create_table(schema if schema else data[0])
         need_index_management = len(data) > HNSW_DROP_THRESHOLD
 
         # Drop index before bulk insert

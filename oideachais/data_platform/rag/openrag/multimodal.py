@@ -224,7 +224,7 @@ class ImageProcessor:
         """Get LLM router for vision processing."""
         if self._llm_router is None:
             try:
-                from sruth.browser.core.llm_router import get_llm_router
+                from browser.core.llm_router import get_llm_router
                 self._llm_router = await get_llm_router()
             except ImportError:
                 logger.warning("LLM router not available for image processing")

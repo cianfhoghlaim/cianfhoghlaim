@@ -1,7 +1,7 @@
 """
 Research Knowledge Graph for bunchloch document collection.
 
-Migrated from sruth.taighde.knowledge_graph.
+Migrated from taighde.knowledge_graph.
 
 Provides unified research retrieval combining:
 - LightRAG: Dual retrieval (local + global) with entity extraction

@@ -74,7 +74,7 @@ def pdf_downloads_asset(context) -> dg.MaterializeResult:
     """
     os.environ.setdefault("DLT_DISABLE_PLUGINS", "true")
 
-    from oideachais.data_platform.dlt_sources.ireland.pdf_downloader import pdf_download_source
+    from dlt_sources.ireland.pdf_downloader import pdf_download_source
 
     # DuckDB path for querying curriculum_pdfs
     duckdb_path = str(DLT_PIPELINES_DIR / DLT_PIPELINE_NAME / f"{DLT_DATASET_NAME}.duckdb")
@@ -165,10 +165,33 @@ def pdf_extracted_text_asset(context) -> dg.MaterializeResult:
     os.environ.setdefault("DLT_DISABLE_PLUGINS", "true")
 
     from ocr.adapters import get_adapter
+    import duckdb
+    from data_platform.dlt_utils.destinations import get_duckdb_fallback_destination
+
+    # 1. Query DuckDB to find already processed PDFs to avoid infinite loop
+    db_path = str(OUTPUT_PATH / "ducklake" / "ducklake_data" / "curriculum.duckdb")
+    if not os.path.exists(db_path):
+        db_path = str(OUTPUT_PATH / "ducklake" / "ducklake_data" / "curriculum_unified.duckdb")
+        if not os.path.exists(db_path):
+             db_path = get_duckdb_fallback_destination(str(OUTPUT_PATH / "curriculum_unified.duckdb")).credentials
+
+    processed_stems = set()
+    try:
+        with duckdb.connect(db_path, read_only=True) as conn:
+            # Check if table exists
+            tables = [t[0] for t in conn.execute("SHOW TABLES").fetchall()]
+            if 'pdf_extracted_text' in tables:
+                df = conn.execute("SELECT DISTINCT document_id FROM pdf_extracted_text").df()
+                processed_stems = set(df['document_id'].tolist())
+                context.log.info(f"Found {len(processed_stems)} already processed PDFs in DB")
+    except Exception as e:
+        context.log.warning(f"Could not read processed state from DuckDB: {e}")
 
     # Find PDFs to process
-    pdfs_to_process = list(PDF_DOWNLOAD_DIR.rglob("*.pdf"))
-    context.log.info(f"Found {len(pdfs_to_process)} PDFs to process")
+    all_pdfs = list(PDF_DOWNLOAD_DIR.rglob("*.pdf"))
+    pdfs_to_process = [p for p in all_pdfs if p.stem not in processed_stems]
+    
+    context.log.info(f"Found {len(all_pdfs)} total PDFs. {len(pdfs_to_process)} remaining to process.")
 
     if not pdfs_to_process:
         return dg.MaterializeResult(

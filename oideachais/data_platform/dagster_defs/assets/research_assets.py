@@ -4,7 +4,7 @@ Research Assets for Oideachais Pipeline.
 DLT filesystem ingestion for bunchloch research documents.
 Loads to DuckLake SQL catalog with partitioning by subject.
 
-Migrated from sruth.taighde.dagster_assets.ingestion_assets.
+Migrated from taighde.dagster_assets.ingestion_assets.
 
 Document Counts (1,251 files, 3.4GB):
 - PDFs: 843
@@ -59,7 +59,7 @@ def research_bunchloch_raw(context) -> MaterializeResult:
     """
     import dlt
 
-    from oideachais.data_platform.dlt_sources.bunchloch import bunchloch_source
+    from dlt_sources.bunchloch import bunchloch_source
 
     # Create DLT pipeline
     pipeline = dlt.pipeline(
@@ -110,7 +110,7 @@ def research_bunchloch_by_subject(context) -> MaterializeResult:
     """
     import dlt
 
-    from oideachais.data_platform.dlt_sources.bunchloch import bunchloch_by_subject_source
+    from dlt_sources.bunchloch import bunchloch_by_subject_source
 
     subject = context.partition_key
 
@@ -253,7 +253,7 @@ def research_code_ingestion(context) -> MaterializeResult:
     - Function/class extraction
     """
     import duckdb
-    from sruth.códeolas import chunk_code_file, detect_language
+    from códeolas import chunk_code_file, detect_language
 
     conn = duckdb.connect(DUCKDB_PATH)
 

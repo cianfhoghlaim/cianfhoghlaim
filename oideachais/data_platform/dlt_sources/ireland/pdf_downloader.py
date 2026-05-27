@@ -8,7 +8,7 @@ This source:
 4. Tracks download status for incremental processing
 
 Usage:
-    from oideachais.data_platform.dlt_sources.ireland.pdf_downloader import pdf_download_source
+    from dlt_sources.ireland.pdf_downloader import pdf_download_source
 
     pipeline = dlt.pipeline(...)
     pipeline.run(pdf_download_source(
@@ -158,41 +158,37 @@ def _query_pending_pdfs(
     import duckdb
 
     try:
-        conn = duckdb.connect(duckdb_path, read_only=True)
+        with duckdb.connect(duckdb_path, read_only=True) as conn:
 
-        # Build query with optional filters
-        query = """
-            SELECT DISTINCT
-                url,
-                cycle,
-                subject,
-                language,
-                pdf_type,
-                source,
-                discovered_at
-            FROM curriculum_pdfs
-            WHERE 1=1
-        """
-        params = []
-
-        if cycle:
-            query += " AND cycle = ?"
-            params.append(cycle)
-
-        if subject:
-            query += " AND subject = ?"
-            params.append(subject)
-
-        query += " ORDER BY discovered_at DESC LIMIT ?"
-        params.append(limit)
-
-        result = conn.execute(query, params).fetchall()
-        columns = ["url", "cycle", "subject", "language", "pdf_type", "source", "discovered_at"]
-
-        return [dict(zip(columns, row)) for row in result]
+            # Build query with optional filters
+            query = """
+                SELECT DISTINCT
+                    url,
+                    cycle,
+                    subject,
+                    language,
+                    pdf_type
+                FROM curriculum_pdfs
+                WHERE 1=1
+            """
+            
+            params = []
+            if cycle:
+                query += " AND cycle = ?"
+                params.append(cycle)
+                
+            if subject:
+                query += " AND subject = ?"
+                params.append(subject)
+                
+            query += f" LIMIT {limit}"
+            
+            # Execute query and convert to list of dicts
+            df = conn.execute(query, params).df()
+            return df.to_dict(orient="records")
 
     except Exception as e:
-        logger.warning("pdf_query_error", error=str(e))
+        logger.warning("query_pending_pdfs_failed", error=str(e))
         return []
 
 

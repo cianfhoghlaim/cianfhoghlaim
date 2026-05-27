@@ -61,43 +61,43 @@ enum HandbookTopicCode {
 
 // Person record from the Persons Database
 class DuchasPerson {
-  id int @description("CBED person identifier")
+  id: int @description("CBED person identifier")
   
   // Names
-  names DuchasPersonName[] @description("Person's names (may have variants)")
-  gender string? @description("Gender: f or m")
+  names: DuchasPersonName[] @description("Person's names (may have variants)")
+  gender: string? @description("Gender: f or m")
   
   // Biographical data
-  birth_year int? @description("Year of birth")
-  birth_year_accuracy string? @description("APPROX, INFER, or QUESTION")
-  death_year int? @description("Year of death")
-  death_year_accuracy string? @description("APPROX, INFER, or QUESTION")
+  birth_year: int? @description("Year of birth")
+  birth_year_accuracy: string? @description("APPROX, INFER, or QUESTION")
+  death_year: int? @description("Year of death")
+  death_year_accuracy: string? @description("APPROX, INFER, or QUESTION")
   
   // Location
-  county_id int? @description("Logainm county ID")
-  place_id int? @description("Logainm place ID")
-  country string? @description("ISO 3166 country code")
-  geoname_id int? @description("GeoNames ID if outside Ireland")
+  county_id: int? @description("Logainm county ID")
+  place_id: int? @description("Logainm place ID")
+  country: string? @description("ISO 3166 country code")
+  geoname_id: int? @description("GeoNames ID if outside Ireland")
   
   // Occupation
-  occupations FolkloreOccupation[]? @description("Person's occupations")
+  occupations: FolkloreOccupation[]? @description("Person's occupations")
   
   // External links
-  ainm_id int? @description("Ainm.ie biography ID")
-  viaf_id int? @description("VIAF authority ID")
+  ainm_id: int? @description("Ainm.ie biography ID")
+  viaf_id: int? @description("VIAF authority ID")
   
   // Metadata
-  created_at string? @description("ISO datetime created")
-  modified_at string? @description("ISO datetime modified")
+  created_at: string? @description("ISO datetime created")
+  modified_at: string? @description("ISO datetime modified")
 }
 
 // Person name structure
 class DuchasPersonName {
-  forename string? @description("First name")
-  surname string? @description("Surname/family name")
-  maiden_name string? @description("Maiden name if applicable")
-  full_name string @description("Full name as displayed")
-  language string? @description("Language of name: ga or en")
+  forename: string? @description("First name")
+  surname: string? @description("Surname/family name")
+  maiden_name: string? @description("Maiden name if applicable")
+  full_name: string @description("Full name as displayed")
+  language: string? @description("Language of name: ga or en")
 }
 
 // ============================================================================
@@ -106,89 +106,89 @@ class DuchasPersonName {
 
 // Schools Collection volume
 class DuchasSchoolsVolume {
-  id int @description("Volume ID")
-  volume_number string @description("Archival reference (e.g., 0154)")
+  id: int @description("Volume ID")
+  volume_number: string @description("Archival reference (e.g., 0154)")
   
   // School information
-  school DuchasSchool @description("School that created this volume")
+  school: DuchasSchool @description("School that created this volume")
   
   // Content
-  total_pages int @description("Total pages in volume")
-  parts DuchasSchoolsPart[]? @description("Parts/sections within volume")
+  total_pages: int @description("Total pages in volume")
+  parts: DuchasSchoolsPart[]? @description("Parts/sections within volume")
   
   // Status
-  status int? @description("Editorial status (0-4)")
+  status: int? @description("Editorial status (0-4)")
   
   // Metadata
-  created_at string? @description("ISO datetime created")
-  modified_at string? @description("ISO datetime modified")
+  created_at: string? @description("ISO datetime created")
+  modified_at: string? @description("ISO datetime modified")
 }
 
 // School record
 class DuchasSchool {
-  name string @description("School name")
-  name_ga string? @description("School name in Irish")
-  roll_number string? @description("Official school roll number")
+  name: string @description("School name")
+  name_ga: string? @description("School name in Irish")
+  roll_number: string? @description("Official school roll number")
   
   // Location
-  county_id int @description("Logainm county ID")
-  place_id int? @description("Logainm place ID")
-  latitude float? @description("School latitude")
-  longitude float? @description("School longitude")
+  county_id: int @description("Logainm county ID")
+  place_id: int? @description("Logainm place ID")
+  latitude: float? @description("School latitude")
+  longitude: float? @description("School longitude")
   
   // Teacher
-  teacher DuchasPersonName? @description("Supervising teacher")
-  teacher_id int? @description("Teacher's CBES ID")
+  teacher: DuchasPersonName? @description("Supervising teacher")
+  teacher_id: int? @description("Teacher's CBES ID")
 }
 
 // Part/section within a Schools Collection volume
 class DuchasSchoolsPart {
-  id int @description("Part ID")
-  title string? @description("Part title")
-  title_ga string? @description("Title in Irish")
-  pages int @description("Number of pages")
-  items DuchasSchoolsItem[]? @description("Items/stories within this part")
+  id: int @description("Part ID")
+  title: string? @description("Part title")
+  title_ga: string? @description("Title in Irish")
+  pages: int @description("Number of pages")
+  items: DuchasSchoolsItem[]? @description("Items/stories within this part")
 }
 
 // Individual item/story in Schools Collection
 class DuchasSchoolsItem {
-  id int @description("Item ID")
+  id: int @description("Item ID")
   
   // Content
-  title string? @description("Story title")
-  title_ga string? @description("Title in Irish")
+  title: string? @description("Story title")
+  title_ga: string? @description("Title in Irish")
   
   // Classification
-  topics DuchasSchoolsTopic[]? @description("Topic classifications")
-  language string @description("Primary language: ga or en")
+  topics: DuchasSchoolsTopic[]? @description("Topic classifications")
+  language: string @description("Primary language: ga or en")
   
   // People
-  collectors DuchasPersonName[]? @description("Student collectors")
-  informants DuchasPersonName[]? @description("Story informants")
+  collectors: DuchasPersonName[]? @description("Student collectors")
+  informants: DuchasPersonName[]? @description("Story informants")
   
   // Location
-  county_id int? @description("Logainm county ID of story origin")
-  place_id int? @description("Logainm place ID")
+  county_id: int? @description("Logainm county ID of story origin")
+  place_id: int? @description("Logainm place ID")
   
   // Transcription
-  transcription DuchasTranscription? @description("Page transcription if available")
+  transcription: DuchasTranscription? @description("Page transcription if available")
 }
 
 // Topic from Schools Collection Subject List
 class DuchasSchoolsTopic {
-  id int @description("Topic ID")
-  name string @description("Topic name")
-  name_ga string? @description("Topic name in Irish")
-  parent_id int? @description("Parent topic ID for hierarchy")
+  id: int @description("Topic ID")
+  name: string @description("Topic name")
+  name_ga: string? @description("Topic name in Irish")
+  parent_id: int? @description("Parent topic ID for hierarchy")
 }
 
 // Page transcription
 class DuchasTranscription {
-  text string @description("Transcribed text")
-  language string @description("Language of transcription: ga or en")
-  pages int[] @description("Page numbers covered")
-  confidence float? @description("Transcription confidence 0-1")
-  verified bool @description("Whether human-verified")
+  text: string @description("Transcribed text")
+  language: string @description("Language of transcription: ga or en")
+  pages: int[] @description("Page numbers covered")
+  confidence: float? @description("Transcription confidence 0-1")
+  verified: bool @description("Whether human-verified")
 }
 
 // ============================================================================
@@ -197,40 +197,40 @@ class DuchasTranscription {
 
 // Main Manuscript volume
 class DuchasManuscriptVolume {
-  id int @description("Volume ID")
-  volume_number string @description("Archival reference")
+  id: int @description("Volume ID")
+  volume_number: string @description("Archival reference")
   
   // Content
-  total_pages int @description("Total pages")
-  items DuchasManuscriptItem[]? @description("Items in volume")
+  total_pages: int @description("Total pages")
+  items: DuchasManuscriptItem[]? @description("Items in volume")
   
   // Status and metadata
-  status int? @description("Editorial status")
-  created_at string?
-  modified_at string?
+  status: int? @description("Editorial status")
+  created_at: string?
+  modified_at: string?
 }
 
 // Item in Main Manuscript Collection
 class DuchasManuscriptItem {
-  id int @description("Item ID")
+  id: int @description("Item ID")
   
   // Content
-  title string? @description("Item title")
-  title_ga string? @description("Title in Irish")
-  language string @description("Primary language")
+  title: string? @description("Item title")
+  title_ga: string? @description("Title in Irish")
+  language: string @description("Primary language")
   
   // People (linked to CBED)
-  collector_id int? @description("Collector's CBED ID")
-  informant_id int? @description("Informant's CBED ID")
+  collector_id: int? @description("Collector's CBED ID")
+  informant_id: int? @description("Informant's CBED ID")
   
   // Location
-  county_id int? @description("Logainm county ID")
-  place_id int? @description("Logainm place ID")
+  county_id: int? @description("Logainm county ID")
+  place_id: int? @description("Logainm place ID")
   
   // Date
-  date_from int? @description("Year from")
-  date_to int? @description("Year to")
-  date_accuracy string? @description("APPROX, INFER, QUESTION")
+  date_from: int? @description("Year from")
+  date_to: int? @description("Year to")
+  date_accuracy: string? @description("APPROX, INFER, QUESTION")
 }
 
 // ============================================================================
@@ -239,40 +239,40 @@ class DuchasManuscriptItem {
 
 // Photograph record
 class DuchasPhotograph {
-  id int @description("Photograph ID")
+  id: int @description("Photograph ID")
   
   // Image
-  image_url string? @description("URL to image file")
-  digitized bool @description("Whether digitized")
+  image_url: string? @description("URL to image file")
+  digitized: bool @description("Whether digitized")
   
   // Metadata
-  title string? @description("Photograph title/caption")
-  description string? @description("Full description")
+  title: string? @description("Photograph title/caption")
+  description: string? @description("Full description")
   
   // Classification
-  handbook_topic HandbookTopicCode? @description("Handbook topic code")
+  handbook_topic: HandbookTopicCode? @description("Handbook topic code")
   
   // People
-  photographer_id int? @description("Photographer's CBED ID")
-  relevant_persons int[]? @description("People depicted - CBED IDs")
+  photographer_id: int? @description("Photographer's CBED ID")
+  relevant_persons: int[]? @description("People depicted - CBED IDs")
   
   // Location
-  county_id int? @description("Logainm county ID")
-  place_id int? @description("Logainm place ID")
-  country string? @description("ISO country code")
+  county_id: int? @description("Logainm county ID")
+  place_id: int? @description("Logainm place ID")
+  country: string? @description("ISO country code")
   
   // Date
-  date_from int? @description("Year from")
-  date_to int? @description("Year to")
-  date_accuracy string? @description("APPROX, INFER, QUESTION")
+  date_from: int? @description("Year from")
+  date_to: int? @description("Year to")
+  date_accuracy: string? @description("APPROX, INFER, QUESTION")
   
   // Rights
-  copyright string? @description("Copyright holder code")
-  condition int? @description("Physical condition 0-3")
+  copyright: string? @description("Copyright holder code")
+  condition: int? @description("Physical condition 0-3")
   
   // Metadata
-  created_at string?
-  modified_at string?
+  created_at: string?
+  modified_at: string?
 }
 
 // ============================================================================
@@ -283,7 +283,7 @@ class DuchasPhotograph {
 function ParseSchoolsVolume(
   json_response: string
 ) -> DuchasSchoolsVolume {
-  client Extractor
+  client: Extractor
   prompt #"
     Parse this Dúchas Schools Collection (CBÉS) API response.
 
@@ -311,7 +311,7 @@ function ParseSchoolsVolume(
 function ParsePerson(
   json_response: string
 ) -> DuchasPerson {
-  client Extractor
+  client: Extractor
   prompt #"
     Parse this Dúchas Persons Database (CBÉD) API response.
 
@@ -333,7 +333,7 @@ function ParsePerson(
 function ParsePhotograph(
   json_response: string
 ) -> DuchasPhotograph {
-  client Extractor
+  client: Extractor
   prompt #"
     Parse this Dúchas Photographic Collection (CBÉG) API response.
 
@@ -357,7 +357,7 @@ function ClassifyFolkloreTopic(
   item_text: string,
   available_topics: DuchasSchoolsTopic[]
 ) -> DuchasSchoolsTopic[] {
-  client Extractor
+  client: Extractor
   prompt #"
     Classify this folklore text according to the Schools Collection Subject List.
 
@@ -385,7 +385,7 @@ function LinkStoryToPlaces(
   story: DuchasSchoolsItem,
   mentioned_places: string[]
 ) -> int[] {
-  client Extractor
+  client: Extractor
   prompt #"
     Identify Logainm place IDs for locations mentioned in this folklore story.
 

@@ -22,7 +22,7 @@ import dlt
 from bs4 import BeautifulSoup
 from dlt.sources import DltResource
 from observability.logging import get_logger
-from sruth.shared.http import canuint_client
+from shared.http import canuint_client
 
 logger = get_logger(__name__)
 

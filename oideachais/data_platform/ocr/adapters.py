@@ -8,7 +8,7 @@ Provides unified interface for OCR extraction via:
 - Unstract (REST API)
 
 Usage:
-    from sruth.oideachas.ocr.adapters import get_adapter, compare_ocr_models
+    from oideachas.ocr.adapters import get_adapter, compare_ocr_models
 
     adapter = get_adapter("paddleocr")
     result = await adapter.process_image(image_bytes)

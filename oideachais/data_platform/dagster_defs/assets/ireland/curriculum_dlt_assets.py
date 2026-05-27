@@ -32,7 +32,7 @@ from dagster import (
     StaticPartitionsDefinition,
 )
 
-from data_platform.dlt_utils import (
+from dlt_utils import (
     get_dlt_destination,
     get_duckdb_fallback_destination,
     safe_dlt_run,
@@ -208,8 +208,8 @@ def create_cycle_asset(cycle: str):
         sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 
         
-        from oideachais.data_platform.dlt_sources.ireland.curriculum_registry import SubjectRegistry
-        from oideachais.data_platform.dlt_sources.ireland.curriculum_source import (
+        from dlt_sources.ireland.curriculum_registry import SubjectRegistry
+        from dlt_sources.ireland.curriculum_source import (
             build_subject_urls,
             parallel_scrape_subject,
         )
@@ -348,7 +348,7 @@ def create_short_course_asset():
         """Ingest short course curriculum data."""
         os.environ.setdefault("DLT_DISABLE_PLUGINS", "true")
 
-        from oideachais.data_platform.dlt_sources.ireland.curriculum_source import (
+        from dlt_sources.ireland.curriculum_source import (
             _scrape_single_url,
         )
 

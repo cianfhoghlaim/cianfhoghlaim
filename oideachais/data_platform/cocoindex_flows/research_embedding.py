@@ -1,7 +1,7 @@
 """
 Research Document and Code Embedding Flows.
 
-Migrated from sruth.taighde.cocoindex_flows.
+Migrated from taighde.cocoindex_flows.
 
 Provides embedding flows for Bunchloch research documents:
 - Document embedding: PDFs, DOCX using BGE-M3

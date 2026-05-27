@@ -22,7 +22,7 @@ from typing import Any
 
 import dlt
 import structlog
-from sruth.shared.http import dfe_explore_client
+from shared.http import dfe_explore_client
 
 logger = structlog.get_logger(__name__)
 

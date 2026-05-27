@@ -13,7 +13,7 @@ Supported models:
 All models accessed through LiteLLM unified API.
 
 Usage:
-    from sruth.oideachas.ocr.vision_comparison import compare_vision_models
+    from oideachas.ocr.vision_comparison import compare_vision_models
 
     results = await compare_vision_models(
         image_bytes,
