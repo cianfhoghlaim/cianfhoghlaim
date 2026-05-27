@@ -1042,3 +1042,38 @@ Policy propagation across the organization may take several minutes to reflect. 
 
 [Managing Organization Policy Key Restrictions](https://www.youtube.com/watch?v=kODA63BNfL0)
 This video demonstrates the workflow for toggling service account key restrictions in the Organization Policies dashboard, which utilizes the exact same console interface and process required to modify your API key constraint.
+
+---
+
+### **Configuring OpenCode with Vertex AI API Keys**
+
+If you prefer to connect OpenCode to Vertex AI using a direct API Key (instead of or alongside a Service Account JSON), you can generate one from the Agent Platform Studio and configure your local environment variables.
+
+#### 1. Generate the Vertex AI API Key
+Once you have overridden the constraints as described above, you can generate an API key directly from the Vertex AI console:
+1. Navigate to: [Vertex AI Agent Platform Studio API Keys](https://console.cloud.google.com/agent-platform/studio/settings/api-keys)
+2. Follow the prompts to create a new API Key for your project.
+
+#### 2. Configure Your `.env` File
+To guarantee OpenCode successfully reads your credentials and routes to the correct Google Cloud region for generative models, you must provide the proper environment variables.
+
+Open your local `.env` file and append the following variables:
+
+```env
+# If using a Service Account JSON for authentication:
+GOOGLE_APPLICATION_CREDENTIALS="/absolute/path/to/.ssh/vertex.json"
+
+# The Google Cloud Project ID hosting the Vertex AI models
+GOOGLE_CLOUD_PROJECT="YOUR_PROJECT_ID"
+
+# The Vertex AI Location (Note: Generative AI models often require specific regions like us-central1)
+VERTEX_LOCATION="us-central1"
+```
+
+*Note: You may also see `GOOGLE_CLOUD_REGION` or `CLOUD_ML_REGION` used in some contexts, but `VERTEX_LOCATION` is commonly respected by integrations connecting to Vertex endpoints.*
+
+#### 3. Add the Vertex Provider to OpenCode
+With the environment variables in place:
+1. Reload your environment (`source .env`) or restart your terminal.
+2. Launch OpenCode.
+3. Add **Google Vertex AI** as an LLM provider and input the API key generated in Step 1 (or rely on the `GOOGLE_APPLICATION_CREDENTIALS` if using the Service Account method). OpenCode will automatically parse the Project ID and Location from your environment variables.
