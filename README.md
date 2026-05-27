@@ -962,8 +962,7 @@ German (June 12)
 Next Steps
 1. Navigate to the UI at http://localhost:3000. 
 2. Open the CopilotKit chat interface. 
-3. 
-You can now prompt the agent: "Show me the marking scheme breakdown for the 2026 Biology mandatory experiments using the MotherDuck index." The agent will query DuckDB, retrieve the ColPali image embeddings of the syllabus, and stream the generated study plan directly to the frontend.
+3. You can now prompt the agent: "Show me the marking scheme breakdown for the 2026 Biology mandatory experiments using the MotherDuck index." The agent will query DuckDB, retrieve the ColPali image embeddings of the syllabus, and stream the generated study plan directly to the frontend.
 ### 🔐 Configuring Google Cloud Service Account Keys
 
 To enable integrations like Vertex AI behind OpenCode, you must grant the necessary permissions on your Google Cloud organization and project, generate a service account key, and configure your local environment.
@@ -1011,3 +1010,35 @@ If you encounter the error `Lightning dunning decision is deny` (indicating a bi
     ```bash
     opencode models --refresh google-vertex
     ```
+
+
+### **Required IAM Roles for Organization Policy Modification**
+
+To override the organizational security policy that blocks API key creation, you must grant specific roles at the **Organization level** rather than the Project level.
+
+You need to assign the following role to your principal (your user account or the administrator account):
+
+* **Organization Policy Administrator** (`roles/orgpolicy.policyAdmin`): This role grants the exact permissions required to modify, override, or disable organization policies across the Google Cloud hierarchy.
+
+Once the policy is successfully bypassed, you will also need the appropriate role to actually generate the key:
+
+* **API Keys Admin** (`roles/serviceusage.apiKeysAdmin`): This role is required to create, delete, and manage API keys within a given project.
+
+---
+
+### **Execution Protocol: Overriding the Constraint**
+
+Once the `Organization Policy Administrator` role is active on your principal, execute the following steps to lift the restriction:
+
+1. Navigate to **IAM & Admin > Organization Policies** in the Google Cloud Console.
+2. Crucially, use the project selector at the top left to select your **Organization** or the specific **Folder** encompassing your project, rather than the project itself. The role must be evaluated at this higher level.
+3. In the filter box, search for the constraint ID: `constraints/iam.disableApiKeyCreation`.
+4. Select the constraint and click **Manage Policy**.
+5. Under the policy source, select **Override parent's policy**.
+6. Click **Add a rule** and set the Enforcement state to **Off**.
+7. Click **Set policy** or **Save**.
+
+Policy propagation across the organization may take several minutes to reflect. Once propagated, you will be able to generate an API key for Vertex AI within your project.
+
+[Managing Organization Policy Key Restrictions](https://www.youtube.com/watch?v=kODA63BNfL0)
+This video demonstrates the workflow for toggling service account key restrictions in the Organization Policies dashboard, which utilizes the exact same console interface and process required to modify your API key constraint.
