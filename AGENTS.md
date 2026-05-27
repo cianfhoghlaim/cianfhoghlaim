@@ -70,50 +70,17 @@ Use [`google-adk`](.skills/google-adk/SKILL.md) or [`agno`](.skills/agno/SKILL.m
 - **Parallel execution**: Multiple agents working simultaneously
 - **Hierarchical patterns**: Orchestrator managing specialist agents
 
-```python
-# Example: Multi-agent research team
-orchestrator = AgentOrchestrator(
-    agents=[researcher, analyst, writer],
-    workflow="sequential"
-)
-```
-
 ### Knowledge Graph Memory
 
-Use [`graphiti-core`](.skills/graphiti-core/SKILL.md) for temporal tracking:
-
-```python
-# Track curriculum changes over time
-episode = await client.add_episode(
-    name="Curriculum Update",
-    episode_body="Added data science to Junior Cycle Mathematics",
-    reference_time=datetime(2025, 4, 23),
-    episode_type=EpisodeType.knowledge_update
-)
-```
+Use [`graphiti-core`](.skills/graphiti-core/SKILL.md) for temporal tracking.
 
 ### Data Pipeline Patterns
 
-Use [`dagster`](.skills/dagster/SKILL.md) assets with [`dlt`](.skills/dlt/SKILL.md) sources:
-
-```python
-@asset
-def curriculum_data():
-    """Asset defined in Dagster"""
-    return pipeline.run(my_api_source())  # dlt pipeline
-```
+Use [`dagster`](.skills/dagster/SKILL.md) assets with [`dlt`](.skills/dlt/SKILL.md) sources.
 
 ### RAG Evaluation
 
-Use [`ragas`](.skills/ragas/SKILL.md) with [`langfuse`](.skills/langfuse/SKILL.md) tracing:
-
-```python
-result = evaluate(
-    dataset=dataset,
-    metrics=[faithfulness, answer_relevancy]
-)
-langfuse.score(name="rag_evaluation", value=result)
-```
+Use [`ragas`](.skills/ragas/SKILL.md) with [`langfuse`](.skills/langfuse/SKILL.md) tracing.
 
 ## Best Practices
 
@@ -169,20 +136,6 @@ langfuse.score(name="rag_evaluation", value=result)
 - NEVER stop before pushing - that leaves work stranded locally
 - NEVER say "ready to push when you are" - YOU must push
 - If push fails, resolve and retry until it succeeds
-
-## Skill Activation
-
-When working on tasks, activate the appropriate skill based on the domain:
-
-- **Agent development**: `agno`, `google-adk`
-- **Knowledge management**: `graphiti-core`, `graphiti`, `cognee`, `lancedb`
-- **Data pipelines**: `dagster`, `dlt`, `sqlmesh`
-- **Observability**: `langfuse`, `ragas`
-- **UI development**: `copilotkit`, `vinxi`, `tanstack-start`
-- **Model training**: `unsloth`
-
-See [`.skills/`](.skills/) directory for detailed skill documentation.
-
 
 ## 🤖 Critical Agent Protocols & Habits
 

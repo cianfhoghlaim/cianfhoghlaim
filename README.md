@@ -808,6 +808,34 @@ graph TD;
 ```
 
 
+### The Quadrant Architecture & Interoperability
+The platform is heavily decoupled into four sovereign quadrants to isolate state, infrastructure, and inference:
+
+1. **`infrastructure/` (The Foundation)**: Provides zero-trust mesh ingress (`Pangolin`), fleet orchestration (`Komodo`), identity (`PocketID`), and secrets (`Infisical`).
+2. **`oideachais/` (The Engine)**: Houses the `Dagster` orchestrator, `DLT` extractors, and the `TanStack` frontend UI.
+3. **`meaisínfhoghlaim/` (The Brain)**: Manages model routing (`LiteLLM`), extraction schemas (`BAML`), and AI memory graphs (`Cognee`, `Graphiti`).
+4. **`tuatha/` (The Edge)**: Manages distributed node states, agent interactions, and cryptographic token tracking (`x402`).
+
+```mermaid
+graph TD;
+    subgraph Extraction & Orchestration
+        A[oideachais/dlt_sources] -->|Extracts HTML/PDF| B(Firecrawl / Local Cache);
+        B -->|Raw Text| C[Dagster Orchestrator];
+    end
+    subgraph The Brain: AI & Knowledge
+        C -->|Raw Text| D[meaisínfhoghlaim/baml_src];
+        D -->|Structured Schema via Claude/Gemma| E[Graphiti / Neo4j];
+        D -->|Vector Embeddings via Colpali| F[LanceDB];
+    end
+    subgraph The Lakehouse: Storage
+        C -->|Metadata| G[(DuckLake / DuckDB)];
+        C -->|Binary PDFs| H[(Garage S3 / Cloudflare R2)];
+    end
+    G -.->|Query| I[TanStack Frontend];
+    F -.->|Semantic Search| I;
+```
+
+
 To maintain a strict separation of concerns, the project is divided into two distinct halves: Python-based Data Engineering and TypeScript-based Full-Stack Web Development.
 
 ### 1. `oideachais/data_platform` (Python / Data & Agents)
@@ -886,7 +914,7 @@ bun run dev
 --- For deeper technical details on specific modules, please consult the respective READMEs inside `oideachais/` and the `.skills/` directory.
 
 <!-- AGENT_TELEMETRY_START -->
-> **Agent Telemetry (Last Updated: 2026-05-25 16:00:19 UTC)**
+> **Agent Telemetry (Last Updated: 2026-05-27 11:50:26 UTC)**
 > - **Total Cached Structural Documents:** 7010
 > - **Examinations.ie Cache:**     1635 files
 > - **NCCA.ie Cache:**     1778 files
