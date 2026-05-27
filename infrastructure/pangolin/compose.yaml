@@ -149,6 +149,7 @@ services:
       APP_URL: ${POCKET_ID_URL:-https://auth.cianfhoghlaim.ie}
       TRUST_PROXY: "true"
       PUID: 1000
+      ENCRYPTION_KEY: ${POCKETID_ENCRYPTION_KEY:-01234567890123456789012345678901}
       PGID: 1000
     volumes:
       - pocket-id-data:/app/data
