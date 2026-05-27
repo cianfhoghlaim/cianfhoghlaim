@@ -152,7 +152,7 @@ sruth-browser = { path = "./browser", editable = true }
 
 [tool.hatch.build.targets.wheel]
 packages = [
-    "dagster_defs",
+    "data_platform.dagster_defs",
     "dlt_sources",
     "dlt_utils",
     "cocoindex_flows",
@@ -208,15 +208,15 @@ python_files = "test_*.py"
 python_functions = "test_*"
 
 [tool.dagster]
-module_name = "dagster_defs.definitions"
+module_name = "data_platform.dagster_defs.definitions"
 
 # dg workspace configuration - enables unified workspace loading via dg.toml
 [tool.dg]
 directory_type = "project"
 
 [tool.dg.project]
-root_module = "dagster_defs"
-code_location_target_module = "dagster_defs.definitions"
+root_module = "data_platform.dagster_defs"
+code_location_target_module = "data_platform.dagster_defs.definitions"
 code_location_name = "oideachais"
 
 # ============================================================================

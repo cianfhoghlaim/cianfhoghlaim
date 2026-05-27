@@ -30,7 +30,7 @@ services:
       - "--provider=infisical"
       - "--infisical-client-id=${INFISICAL_CLIENT_ID}"
       - "--infisical-client-secret=file:/run/secrets/infisical_secret"
-      - "--infisical-url=${INFISICAL_URL:-http://host.docker.internal:8081}"
+      - "--infisical-url=${INFISICAL_URL:-http://192.168.0.98:8081}"
       - "--infisical-default-environment=${INFISICAL_ENVIRONMENT:-dev}"
       - "--infisical-default-project-id=${INFISICAL_PROJECT_ID:-project-id}"
       - "--map=/templates:/run/secrets/locket"
@@ -101,7 +101,7 @@ services:
     command:
       - |
         set -a; . /run/secrets/locket/secrets.env; set +a
-        /app/tinyauth
+        tinyauth
     volumes:
       - pangolin-secrets:/run/secrets/locket:ro
 

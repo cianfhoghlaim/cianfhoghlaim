@@ -514,3 +514,10 @@ See `bonneagar/oideachais/` for Kubernetes manifests.
 - [Tearma.ie Terminology](https://tearma.ie)
 - [TanStack Start](https://tanstack.com/start)
 - [Google ADK](https://developers.google.com/agent-developer-kit)
+
+## Local Deployment UI Screenshots
+### Dagster Local Pipeline
+![Dagster UI](/docs/images/dagster_ui.png)
+
+### MotherDuck Integration
+![MotherDuck UI](/docs/images/motherduck_ui.png)

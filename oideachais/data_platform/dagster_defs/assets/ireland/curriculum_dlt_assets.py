@@ -32,7 +32,7 @@ from dagster import (
     StaticPartitionsDefinition,
 )
 
-from dlt_utils import (
+from data_platform.dlt_utils import (
     get_dlt_destination,
     get_duckdb_fallback_destination,
     safe_dlt_run,

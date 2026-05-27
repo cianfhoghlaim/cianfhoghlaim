@@ -28,7 +28,7 @@ compression_level = 1
 # For production, use Locket secret injection with envsubst
 rpc_bind_addr = "[::]:3901"
 rpc_public_addr = "127.0.0.1:3901"
-rpc_secret = "b8c5f946dad482bb911d534aa99b1c03598de04e526212d33fc8084eca4c79d3"
+rpc_secret = "a113063123736ef390b51302c98099d2abf08eb0e8a7347e7aba331d10779f0d"
 
 # =============================================================================
 # S3 API - Virtual-Host Style (Critical for Lance)

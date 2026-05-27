@@ -42,6 +42,12 @@ services:
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
       LANGFUSE_HOST: ${LANGFUSE_HOST:-https://langfuse.cianfhoghlaim.ie}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dagster.rule=Host(`dagster.cianfhoghlaim.ie`)"
+      - "traefik.http.routers.dagster.entrypoints=websecure"
+      - "traefik.http.services.dagster.loadbalancer.server.port=3000"
+      - "pangolin.resource.middlewares=tinyauth"
     volumes:
       - dagster-storage:/opt/dagster/storage
       - dagster-home:/opt/dagster/home
@@ -62,7 +68,7 @@ services:
     image: ghcr.io/cianfhoghlaim/dagster:latest
     container_name: dagster-daemon
     restart: unless-stopped
-    command: ["dagster-daemon", "run"]
+    command: ["uv", "run", "dagster-daemon", "run"]
     environment:
       DAGSTER_HOME: /opt/dagster/home
       USE_DUCKLAKE: ${USE_DUCKLAKE:-true}
@@ -77,6 +83,12 @@ services:
       AWS_REGION: ${AWS_REGION:-garage}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dagster.rule=Host(`dagster.cianfhoghlaim.ie`)"
+      - "traefik.http.routers.dagster.entrypoints=websecure"
+      - "traefik.http.services.dagster.loadbalancer.server.port=3000"
+      - "pangolin.resource.middlewares=tinyauth"
     volumes:
       - dagster-storage:/opt/dagster/storage
       - dagster-home:/opt/dagster/home

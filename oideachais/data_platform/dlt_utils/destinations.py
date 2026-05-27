@@ -6,7 +6,7 @@ Multiple Dagster partitions can write simultaneously because data is stored as
 Parquet files in S3, with transaction coordination via PostgreSQL MVCC.
 
 Usage:
-    from dlt_utils import get_dlt_destination, create_pipeline
+    from data_platform.dlt_utils import get_dlt_destination, create_pipeline
 
     pipeline = create_pipeline(
         pipeline_name="curriculum",

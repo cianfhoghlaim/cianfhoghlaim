@@ -10,7 +10,7 @@ Best Practices (from CLAUDE.md):
 - Recreate indexes after batch complete
 
 Usage:
-    from dlt_utils.batching import (
+    from data_platform.dlt_utils.batching import (
         batch_embeddings,
         EmbeddingBatcher,
     )
