@@ -9,7 +9,8 @@
         "@browserbasehq/mcp"
       ],
       "env": {
-        "BROWSERBASE_API_KEY": "infisical://dev-baile/browserbase/api_key"
+        "BROWSERBASE_API_KEY": "infisical://dev-baile/browserbase/api_key",
+        "BROWSERBASE_PROJECT_ID": "infisical://dev-baile/browserbase/project_id"
       },
       "enabled": true
     },
