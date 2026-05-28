@@ -13,7 +13,7 @@ Includes:
 - Irish-medium (Gaeilge) resources
 
 Usage:
-    from oideachais.data_platform.dlt_sources.ireland.oide import (
+    from data_platform.dlt_sources.ireland.oide import (
         oide_source,
         oide_subject_source,
     )

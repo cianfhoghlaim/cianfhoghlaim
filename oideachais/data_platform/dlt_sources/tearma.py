@@ -8,7 +8,7 @@ API: https://www.tearma.ie/api/
 Download: https://www.tearma.ie/ioslodail/
 
 Usage:
-    from oideachais.data_platform.dlt_sources.tearma import tearma_source
+    from data_platform.dlt_sources.tearma import tearma_source
 
     pipeline = dlt.pipeline(
         pipeline_name="tearma",

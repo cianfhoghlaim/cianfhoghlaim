@@ -10,7 +10,7 @@ os.environ['DLT_DISABLE_PLUGINS'] = 'true'
 os.environ['USE_DUCKLAKE'] = 'false'
 os.environ['USE_LOCAL_SCRAPES'] = 'true'
 
-from oideachais.data_platform.dlt_sources.ireland.curriculum_source import curriculum_source
+from data_platform.dlt_sources.ireland.curriculum_source import curriculum_source
 
 # Try running just one pipeline to see if it populates the local duckdb
 pipeline = dlt.pipeline(

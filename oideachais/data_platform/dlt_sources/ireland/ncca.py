@@ -8,7 +8,7 @@ Crawls and extracts:
 - Early childhood, primary, and post-primary content
 
 Usage:
-    from oideachais.data_platform.dlt_sources.ireland.ncca import ncca_source
+    from data_platform.dlt_sources.ireland.ncca import ncca_source
 
     # Full crawl (all cycles, subjects, languages)
     pipeline = dlt.pipeline(pipeline_name="ncca", destination="duckdb")

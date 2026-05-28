@@ -17,7 +17,7 @@ Uses HttpClientFactory for resilient HTTP client with:
 
 Usage:
     import dlt
-    from oideachais.data_platform.dlt_sources.geospatial.met_office import met_office_source
+    from data_platform.dlt_sources.geospatial.met_office import met_office_source
 
     pipeline = dlt.pipeline(
         pipeline_name="met_office",

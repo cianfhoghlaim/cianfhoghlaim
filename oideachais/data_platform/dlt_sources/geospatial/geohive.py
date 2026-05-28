@@ -16,7 +16,7 @@ Uses HttpClientFactory for resilient HTTP client with:
 
 Usage:
     import dlt
-    from oideachais.data_platform.dlt_sources.geospatial.geohive import geohive_source
+    from data_platform.dlt_sources.geospatial.geohive import geohive_source
 
     pipeline = dlt.pipeline(
         pipeline_name="geohive",
