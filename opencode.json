@@ -47,8 +47,9 @@
         "uvx",
         "mcp-server-motherduck",
         "--db-path",
-        "md:",
-        "--read-write"
+        ":memory:",
+        "--read-write",
+        "--allow-switch-databases"
       ],
       "env": {
         "MOTHERDUCK_TOKEN": "infisical://dev-baile/motherduck/token"
