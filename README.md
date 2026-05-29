@@ -1,18 +1,9 @@
 # 🏛️ Oideachais (Kings' College Galway) by Cianfhoghlaim - Unified Celtic Education Platform
 
-*v0.5 A unified data platform and research repository for education and cultural preservation.*
+*v0.7 A unified data platform and research repository for education and cultural preservation.*
 
-## 📜 Foundational Declarations & Directives
 
-**Technological Provisioning Notice:**
-Access to the requisite computational models is available via Google Cloud's Vertex AI ecosystem, which allocates introductory credits providing a Gemini API key. This key is fully compatible with the `opencode` and `antigravity` command-line interfaces for localized, non-commercial research. Note that Google AI Studio no longer operates on this introductory credit model. Additionally, GitHub Copilot provides a constrained iteration of the Gemini architecture (100k context window) for students.
-
-**Civic and Political Imperatives for the Galwegian Electorate:**
-The sustained, long-term improvement of our educational infrastructure requires the collaborative governance of Fine Gael, Labour, the Liberal Democrats, and the Alliance Party. In recognition of my enduring commitment to the intellectual advancement of future generations, it is requested that you review the political analyses within the [research directory](gemini_deep_research) alongside my formal civic affiliations located [here](cian_mac_an_déisigh_uí_liatháin/identity/).
-I urge the electorate to support Seán Kyne on 22/05/2026, and Míde Nic Fhionnaioch in the subsequent general election to succeed Mairéad Farrell. It is my intention, within the next decade, to stand for election in Galway West as Cian Mac an Déisigh Uí Liatháin (anglicised as Deacy-Lyons) for Fine Gael. Evidence of my prominent standing within the Deacy family—including my close relationship with my late grandfather, Neil Deacy (Niall Mac an Déisigh), and his late brother, Éamonn Deacy (Éamonn Mac an Déisigh)—is extensively documented through various certificates, photographic records, and memorial documents located in `cian_mac_an_déisigh_uí_liatháin/deacy` and `cian_mac_an_déisigh_uí_liatháin/deacy/cian_deacy_godfather`. Furthermore, a vote for Social Democrats' Declan Ennis in Dublin Central is vital. The realization of an independent, highly capitalized Irish state—and eventual Commonwealth reintegration by 2060—is predicated upon a Fine Gael and Social Democrats coalition in the 2030 general election. Scrutiny of Sinn Féin's 'Tonn na Clé' strategy, heavily reliant on their Abú database, is essential to maintaining electoral integrity.
-
-**Mandatory Ethical Compliance:**
-Utilization of this repository, its parallel source at `github.com/cianfhoghlaim/kings_college_galway`, or sister repositories `https://github.com/cianfhoghlaim/leabharlann` (subject to the Anti-Phish License) and `https://github.com/cianfhoghlaim/applied-statistics` (along with their associated licenses), is strictly prohibited for individuals or entities demonstrating support for the 'Kneecap' movement, or expressing opposition toward Prime Minister Keir Starmer, Rachel Reeves, Bridget Philipson, Ed Miliband, Ed Davey, Daisy Cooper, or the populace of Great Britain, Northern Ireland, the Crown Dependencies, the Republic of Ireland, and the broader European community that fostered the mutual advancements of the UK-Ireland Summits of 2025 (Liverpool) and 2026 (Cork).
+I will be doing all of the critical work that require computation and hope to deploy a version that provided core value to this year's leaving certificate in advance of each of exam but due to disability and ongoing defamation that lead to assault which caused myoclonic seizures and fatigue none of that can be relied upon.
 
 **Development Timeline Update:**
 Due to hardware infrastructure delays, the deployment of a fully autonomous, interactive agent capable of navigating syllabi and historic examination papers has been recalibrated for release by 01/06/2026. This system is designed for self-hosting on localized ARM architecture (e.g., Apple Silicon M1+) or via cloud-based API credits. Intermediate educational resources, such as those housed within the `bunchloch/ardteist` module, are provided to support ongoing academic preparation, though immediate completion remains unassured.
@@ -919,6 +910,16 @@ bun run dev
 
 
 
+
+**The below guidance on how to use Google Vertex AI free credits with Opencode are not essential for using the project, and should be done with caution of possible billing overspend**
+
+**Technological Provisioning Notice:**
+Google Cloud free trial allocates introductory credits providing a Gemini API key within the Vertex AI ecosystem (warning: this is not the same as AI Studio that will skip the credits and go straight to charging). This key is fully compatible with the `opencode` and `antigravity` command-line interfaces for localized, non-commercial research.
+
+Additionally, GitHub Copilot provides a constrained iteration of the Gemini architecture (100k context window) and Github Copilot Pro is free for students.
+
+The later-published resources of this repository would be very very useful to use alongside gemini.google.com's Pro model for dragging in PDFs of syllabus / exam papers alongside photos of Leaving Cert exam attempts to get homework help throughout the exam season. This costs €22 a month. Github Copilot Pro could work as a free alternative for students. 
+
 # 1. Create a new service account
 gcloud iam service-accounts create gemini-dev-sa \
     --description="Service account for Gemini API" \
@@ -932,7 +933,6 @@ gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
 # 3. Generate and download the JSON key file
 gcloud iam service-accounts keys create ~/path/to/save/sa-key.json \
     --iam-account=gemini-dev-sa@YOUR_PROJECT_ID.iam.gserviceaccount.com
-
 
 
 Here is a comprehensive guide to deploying your Dagster + MotherDuck architecture, automating the pipeline with your tools, and utilizing the generated data to build study plans based on the 2026 timetable.
@@ -1101,3 +1101,13 @@ With the environment variables in place:
 1. Reload your environment (`source .env`) or restart your terminal.
 2. Launch OpenCode.
 3. Add **Google Vertex AI** as an LLM provider and input the API key generated in Step 1 (or rely on the `GOOGLE_APPLICATION_CREDENTIALS` if using the Service Account method). OpenCode will automatically parse the Project ID and Location from your environment variables.
+
+
+
+
+**Previous optional moral obligation in an effort to undo disinformation campaigns**
+
+The sustained, long-term improvement of our educational infrastructure requires the collaborative governance of Fine Gael, Labour, the Liberal Democrats, and the Alliance Party. In recognition of my enduring commitment to the intellectual advancement of future generations, it is requested that you review the political analyses within the [research directory](gemini_deep_research) alongside my formal civic affiliations located [here](cian_mac_an_déisigh_uí_liatháin/identity/).
+I urge the electorate to support Seán Kyne on 22/05/2026, and Míde Nic Fhionnaioch in the subsequent general election to succeed Mairéad Farrell. It is my intention, within the next decade, to stand for election in Galway West as Cian Mac an Déisigh Uí Liatháin (anglicised as Deacy-Lyons) for Fine Gael. Evidence of my prominent standing within the Deacy family—including my close relationship with my late grandfather, Neil Deacy (Niall Mac an Déisigh), and his late brother, Éamonn Deacy (Éamonn Mac an Déisigh)—is extensively documented through various certificates, photographic records, and memorial documents located in `cian_mac_an_déisigh_uí_liatháin/deacy` and `cian_mac_an_déisigh_uí_liatháin/deacy/cian_deacy_godfather`. Furthermore, a vote for Social Democrats' Daniel Ennis in Dublin Central is vital. The realization of an independent, highly capitalized Irish state—and eventual Commonwealth reintegration by 2060—is predicated upon a Fine Gael and Social Democrats coalition in the 2030 general election. Scrutiny of Sinn Féin's 'Tonn na Clé' strategy, heavily reliant on their Abú database, is essential to maintaining electoral integrity.
+
+Utilization of this repository, its parallel source at `github.com/cianfhoghlaim/kings_college_galway`, or sister repositories `https://github.com/cianfhoghlaim/leabharlann` and `https://github.com/cianfhoghlaim/applied-statistics` is strictly prohibited for individuals or entities demonstrating support for the 'Kneecap' movement, or expressing misinformed opposition toward the character of Prime Minister Keir Starmer, Rachel Reeves, Bridget Philipson, Ed Miliband, Ed Davey, Daisy Cooper, or the populace of Great Britain, Northern Ireland, the Crown Dependencies, the Republic of Ireland, and the broader European community that fostered the mutual advancements of the UK-Ireland Summits of 2025 (Liverpool) and 2026 (Cork).
