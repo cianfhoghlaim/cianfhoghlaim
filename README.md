@@ -781,33 +781,6 @@ By leveraging autonomous agents, semantic code/knowledge bases, and a Web3 "Lear
 --- ## Core Architecture: The Dual-Stack
 
 ### The Quadrant Architecture & Interoperability
-The platform is heavily decoupled into four sovereign quadrants to isolate state, infrastructure, and inference:
-
-1. **`infrastructure/` (The Foundation)**: Provides zero-trust mesh ingress (`Pangolin`), fleet orchestration (`Komodo`), identity (`PocketID`), and secrets (`Infisical`).
-2. **`oideachais/` (The Engine)**: Houses the `Dagster` orchestrator, `DLT` extractors, and the `TanStack` frontend UI.
-3. **`meaisínfhoghlaim/` (The Brain)**: Manages model routing (`LiteLLM`), extraction schemas (`BAML`), and AI memory graphs (`Cognee`, `Graphiti`).
-4. **`tuatha/` (The Edge)**: Manages distributed node states, agent interactions, and cryptographic token tracking (`x402`).
-
-```mermaid
-graph TD;
-    subgraph Extraction & Orchestration
-        A[oideachais/dlt_sources] -->|Extracts HTML/PDF| B(Firecrawl / Local Cache);
-        B -->|Raw Text| C[Dagster Orchestrator];
-    end
-    subgraph The Brain: AI & Knowledge
-        C -->|Raw Text| D[meaisínfhoghlaim/baml_src];
-        D -->|Structured Schema via Claude/Gemma| E[Graphiti / Neo4j];
-        D -->|Vector Embeddings via Colpali| F[LanceDB];
-    end
-    subgraph The Lakehouse: Storage
-        C -->|Metadata| G[(DuckLake / DuckDB)];
-        C -->|Binary PDFs| H[(Garage S3 / Cloudflare R2)];
-    end
-    G -.->|Query| I[TanStack Frontend];
-    F -.->|Semantic Search| I;
-```
-
-
 ### The Quadrant Architecture & Interoperability
 The platform is heavily decoupled into four sovereign quadrants to isolate state, infrastructure, and inference:
 
@@ -837,6 +810,29 @@ graph TD;
 
 
 To maintain a strict separation of concerns, the project is divided into two distinct halves: Python-based Data Engineering and TypeScript-based Full-Stack Web Development.
+
+
+### 🔄 End-to-End Curriculum Data Pipeline
+The core data ingestion mechanism in `oideachais/` orchestrates the extraction of syllabus data across the British Isles. The primary flow targets the Irish Curriculum (CurriculumOnline, NCCA, Examinations.ie) via Dagster and dlt.
+
+1. **Curriculum Extraction (Web Scraping)**
+   - Triggered via Dagster materialization partitions (e.g., `en|english`).
+   - `dlt` connects to **Firecrawl** (or a local cache) to scrape syllabus pathways, filtering out irrelevant headers/footers (`onlyMainContent=True`).
+   - The engine correctly resolves complex and irregular paths across different domains (e.g. `/junior-cycle/subjects/...` vs `/senior-cycle/curriculum-developments/...`).
+   - Output securely drops metadata and markdown text natively into the **DuckLake PostgreSQL** catalog and **Garage S3** artifact storage.
+
+2. **PDF Downloader Asset**
+   - The downstream `pdf_downloads_asset` cleanly queries the `curriculum_pdfs` DuckLake table.
+   - It isolates the raw PDF URLs and downloads them directly to the local filesystem (or S3 volumes) employing strict rate limits and concurrency throttling to preserve APIs and storage.
+
+3. **OCR Extraction (Docling/Paddle)**
+   - Following successful downloads, the `pdf_extracted_text_asset` is triggered.
+   - The **Docling** adapter natively parses the dense curriculum PDFs, reconstructing highly structured Markdown formats from textbooks, syllabuses, and exam papers.
+   - This output seamlessly pushes back into the local `curriculum_unified.duckdb` Lakehouse state for the next AI processes to read.
+
+4. **Vector Embeddings & Generation**
+   - The markdown tables serve as pristine bases for downstream assets which tokenize the structured text.
+   - Outputs are vectorized into our **LanceDB namespace**, allowing Awen Hub to perform rapid semantic search across millions of words of educational material with exact provenance tracking.
 
 ### 1. `oideachais/data_platform` (Python / Data & Agents)
 This is the engine room of the platform, managed with `uv` for lightning-fast Python dependency resolution.
