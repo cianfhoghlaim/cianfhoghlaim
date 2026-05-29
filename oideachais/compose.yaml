@@ -25,9 +25,12 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-lakehouse}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-devpassword}
       AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-http://lakehouse-garage:3900}
-      AWS_REGION: ${AWS_REGION:-auto}
+      AWS_REGION: garage
+      FIRECRAWL_API_KEY: ${FIRECRAWL_API_KEY}
+      USE_LOCAL_SCRAPES: "true"
     volumes:
       - .:/app
+      - ../stedding:/stedding:ro
       - ../../.env:/app/.env:ro
       - /app/.venv
       - ./dagster.yaml:/opt/dagster/home/dagster.yaml:ro
@@ -96,7 +99,7 @@ services:
     container_name: oideachais-frontend
     restart: unless-stopped
     ports:
-      - "${FRONTEND_PORT:-3000}:3000"
+      - "${FRONTEND_PORT:-3000}:80"
     environment:
       NODE_ENV: ${ENVIRONMENT:-production}
       VITE_API_URL: ${API_URL:-http://api:8000}
@@ -104,7 +107,7 @@ services:
     volumes:
       - ./web/src:/app/src
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -168,4 +171,5 @@ networks:
   oideachais:
     driver: bridge
   lakehouse:
+    name: lakehouse_lakehouse
     external: true
