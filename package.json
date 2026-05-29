@@ -4,6 +4,7 @@
   "description": "Celtic language AI learning platform - Data pipelines, ML models, Infrastructure",
   "workspaces": [],
   "dependencies": {
+    "@browserbasehq/stagehand": "^3.4.0",
     "@convex-dev/better-auth": "^0.9.7",
     "@convex-dev/react-query": "^0.1.0",
     "@fission-ai/openspec": "^0.16.0",
