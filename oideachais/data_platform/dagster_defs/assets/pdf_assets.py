@@ -18,7 +18,7 @@ import dagster as dg
 import dlt
 import structlog
 
-from data_platform.dlt_utils import (
+from oideachais.data_platform.dlt_utils import (
     get_dlt_destination,
     get_duckdb_fallback_destination,
     safe_dlt_run,
@@ -27,7 +27,8 @@ from data_platform.dlt_utils import (
 logger = structlog.get_logger(__name__)
 
 # Configuration
-PDF_DOWNLOAD_DIR = Path("./downloads/curriculum_pdfs")
+import os
+PDF_DOWNLOAD_DIR = Path("/Users/cianmacandeisigh/dev/kings_college_galway/downloads/curriculum_pdfs")
 DLT_PIPELINE_NAME = "curriculum_unified"
 DLT_DATASET_NAME = "curriculum"
 DLT_PIPELINES_DIR = Path(__file__).parent.parent.parent / ".dlt"
@@ -74,10 +75,10 @@ def pdf_downloads_asset(context) -> dg.MaterializeResult:
     """
     os.environ.setdefault("DLT_DISABLE_PLUGINS", "true")
 
-    from data_platform.dlt_sources.ireland.pdf_downloader import pdf_download_source
+    from oideachais.data_platform.dlt_sources.ireland.pdf_downloader import pdf_download_source
 
     # DuckDB path for querying curriculum_pdfs
-    duckdb_path = str(DLT_PIPELINES_DIR / DLT_PIPELINE_NAME / f"{DLT_DATASET_NAME}.duckdb")
+    duckdb_path = "/Users/cianmacandeisigh/dev/kings_college_galway/curriculum_unified.duckdb"
 
     context.log.info(f"Querying PDF URLs from {duckdb_path}")
 
@@ -164,16 +165,17 @@ def pdf_extracted_text_asset(context) -> dg.MaterializeResult:
     """
     os.environ.setdefault("DLT_DISABLE_PLUGINS", "true")
 
-    from ocr.adapters import get_adapter
+    from oideachais.data_platform.ocr.adapters import get_adapter
     import duckdb
-    from data_platform.dlt_utils.destinations import get_duckdb_fallback_destination
+    from oideachais.data_platform.dlt_utils.destinations import get_duckdb_fallback_destination
 
     # 1. Query DuckDB to find already processed PDFs to avoid infinite loop
-    db_path = str(OUTPUT_PATH / "ducklake" / "ducklake_data" / "curriculum.duckdb")
+    from oideachais.data_platform.dagster_defs.assets.ireland.curriculum_dlt_assets import DLT_PIPELINES_DIR, DLT_PIPELINE_NAME, DLT_DATASET_NAME
+    db_path = "/Users/cianmacandeisigh/dev/kings_college_galway/curriculum_unified.duckdb"
     if not os.path.exists(db_path):
-        db_path = str(OUTPUT_PATH / "ducklake" / "ducklake_data" / "curriculum_unified.duckdb")
+        db_path = "/Users/cianmacandeisigh/dev/kings_college_galway/curriculum_unified.duckdb"
         if not os.path.exists(db_path):
-             db_path = get_duckdb_fallback_destination(str(OUTPUT_PATH / "curriculum_unified.duckdb")).credentials
+             db_path = "/Users/cianmacandeisigh/dev/kings_college_galway/curriculum_unified.duckdb"
 
     processed_stems = set()
     try:
@@ -246,12 +248,9 @@ def pdf_extracted_text_asset(context) -> dg.MaterializeResult:
     # Store results via DLT
     if results:
         use_ducklake = os.environ.get("USE_DUCKLAKE", "true").lower() == "true"
-        duckdb_path = str(DLT_PIPELINES_DIR / DLT_PIPELINE_NAME / f"{DLT_DATASET_NAME}.duckdb")
+        duckdb_path = "/Users/cianmacandeisigh/dev/kings_college_galway/curriculum_unified.duckdb"
 
-        if use_ducklake:
-            destination = get_dlt_destination()
-        else:
-            destination = get_duckdb_fallback_destination(duckdb_path)
+        destination = get_duckdb_fallback_destination(duckdb_path) # Force fallback so local runs write to the correct db in Dagster
 
         dlt_pipeline = dlt.pipeline(
             pipeline_name=DLT_PIPELINE_NAME,

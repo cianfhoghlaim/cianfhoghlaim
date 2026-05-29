@@ -8,7 +8,7 @@ This source:
 4. Tracks download status for incremental processing
 
 Usage:
-    from data_platform.dlt_sources.ireland.pdf_downloader import pdf_download_source
+    from oideachais.data_platform.dlt_sources.ireland.pdf_downloader import pdf_download_source
 
     pipeline = dlt.pipeline(...)
     pipeline.run(pdf_download_source(
@@ -150,43 +150,54 @@ def _query_pending_pdfs(
     subject: str | None = None,
     limit: int = 100,
 ) -> list[dict[str, Any]]:
-    """
-    Query PDF URLs from curriculum_pdfs table.
-
-    Returns list of dicts with url, cycle, subject, language, pdf_type
-    """
     import duckdb
+    import os
 
     try:
-        with duckdb.connect(duckdb_path, read_only=True) as conn:
+        conn = duckdb.connect(duckdb_path, read_only=True)
+        table_ref = "curriculum.curriculum_pdfs"
 
-            # Build query with optional filters
-            query = """
-                SELECT DISTINCT
-                    url,
-                    cycle,
-                    subject,
-                    language,
-                    pdf_type
-                FROM curriculum_pdfs
-                WHERE 1=1
-            """
-            
-            params = []
-            if cycle:
-                query += " AND cycle = ?"
-                params.append(cycle)
-                
-            if subject:
-                query += " AND subject = ?"
-                params.append(subject)
-                
-            query += f" LIMIT {limit}"
-            
-            # Execute query and convert to list of dicts
-            df = conn.execute(query, params).df()
-            return df.to_dict(orient="records")
+        try:
+            conn.execute(f"SELECT 1 FROM {table_ref} LIMIT 1")
+        except Exception:
+            table_ref = "curriculum_pdfs"
 
+        query = f"""
+            SELECT DISTINCT
+                url,
+                cycle,
+                subject,
+                language,
+                pdf_type
+            FROM {table_ref}
+            WHERE 1=1
+        """
+        
+        params = []
+        if cycle:
+            query += " AND cycle = ?"
+            params.append(cycle)
+            
+        if subject:
+            query += " AND subject = ?"
+            params.append(subject)
+            
+        query += f" LIMIT {limit}"
+        
+        res = conn.execute(query, params).fetchall()
+        
+        pdfs = []
+        for r in res:
+            pdfs.append({
+                "url": r[0],
+                "cycle": r[1],
+                "subject": r[2],
+                "language": r[3],
+                "pdf_type": r[4]
+            })
+            
+        return pdfs
+        
     except Exception as e:
         logger.warning("query_pending_pdfs_failed", error=str(e))
         return []

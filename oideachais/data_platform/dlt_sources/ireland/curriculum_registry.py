@@ -8,7 +8,7 @@ Provides a centralized registry for:
 - Crawl configuration generation
 
 Usage:
-    from data_platform.dlt_sources.ireland.curriculum_registry import (
+    from oideachais.data_platform.dlt_sources.ireland.curriculum_registry import (
         SubjectRegistry,
         URLResolver,
     )
@@ -420,21 +420,30 @@ class URLResolver:
         subject_path: str,
         language: str,
     ) -> list[str]:
-        """Build include paths for Firecrawl based on source type."""
+        if cycle == "senior_cycle":
+            subject_path = subject_path.replace("Junior-cycle", "Senior-cycle").replace("Junior-Cycle", "Senior-Cycle")
+            subject_path = subject_path.replace("junior-cycle", "senior-cycle")
+            
         if source == "curriculumonline":
-            # Curriculumonline uses path prefix for language
             lang_prefix = "/ga-ie" if language == "ga" else ""
             return [f"{lang_prefix}{subject_path}*"]
 
         elif source == "ncca":
-            # NCCA uses /en or /ga prefix
             lang_prefix = "/ga" if language == "ga" else "/en"
             cycle_path = self.CYCLE_PATH_MAPPING.get(cycle, {}).get(language, cycle)
-            return [f"{lang_prefix}/{cycle_path}{subject_path}*"]
+            
+            if subject_path.startswith("/" + cycle_path) or subject_path.startswith("/junior-cycle") or subject_path.startswith("/senior-cycle"):
+                base_path = subject_path
+            else:
+                base_path = f"/{cycle_path}{subject_path}"
+                
+            if cycle == "senior_cycle" and "/subjects/" in base_path:
+                dev_path = base_path.replace("/subjects/", "/curriculum-developments/")
+                return [f"{lang_prefix}{base_path}*", f"{lang_prefix}{dev_path}*"]
+            
+            return [f"{lang_prefix}{base_path}*"]
 
         elif source == "examinations":
-            # Examinations uses query params for language
-            # Language is handled in query params, not paths
             return ["/exammaterialarchive/*", "/?*"]
 
         return [subject_path]

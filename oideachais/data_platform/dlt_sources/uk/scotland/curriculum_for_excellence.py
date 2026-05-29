@@ -12,7 +12,7 @@ Includes:
 - Gaelic Medium Education resources
 
 Usage:
-    from data_platform.dlt_sources.uk.scotland.curriculum_for_excellence import (
+    from oideachais.data_platform.dlt_sources.uk.scotland.curriculum_for_excellence import (
         curriculum_for_excellence_source,
         sqa_qualifications_source,
     )

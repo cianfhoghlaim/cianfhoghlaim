@@ -596,7 +596,7 @@ def create_curriculum_ingestion_asset(
     ) -> dg.MaterializeResult:
         """Ingest curriculum content from all sources with deduplication."""
         import dlt as dlt_lib
-        from data_platform.dlt_sources.ireland.curriculum_source import curriculum_source
+        from oideachais.data_platform.dlt_sources.ireland.curriculum_source import curriculum_source
 
         # Get partition key (cycle)
         cycle = context.partition_key

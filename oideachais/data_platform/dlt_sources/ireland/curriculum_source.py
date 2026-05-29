@@ -11,7 +11,7 @@ Key Features:
 - Efficient incremental updates
 
 Usage:
-    from data_platform.dlt_sources.ireland.curriculum_source import (
+    from oideachais.data_platform.dlt_sources.ireland.curriculum_source import (
         curriculum_source,
     )
 
@@ -40,14 +40,14 @@ from typing import Any
 
 import dlt
 import structlog
-from data_platform.dlt_sources.ireland.content_deduplication import (
+from oideachais.data_platform.dlt_sources.ireland.content_deduplication import (
     ContentDeduplicator,
 )
-from data_platform.dlt_sources.ireland.curriculum_registry import (
+from oideachais.data_platform.dlt_sources.ireland.curriculum_registry import (
     SubjectRegistry,
     URLResolver,
 )
-from data_platform.dlt_sources.ireland.source_adapters import (
+from oideachais.data_platform.dlt_sources.ireland.source_adapters import (
     get_all_adapters,
 )
 
@@ -84,7 +84,12 @@ def _crawl_source(
     from datetime import datetime, UTC
 
     # 1. Local Scrape Samples Interception
-    samples_dir = Path("/Users/cianmacandeisigh/dev/kings_college_galway/stedding/ingest_queue")
+    samples_dir = Path("/stedding/ingest_queue")
+    if not samples_dir.exists():
+        samples_dir = Path(__file__).parent.parent.parent.parent.parent.parent / "stedding" / "ingest_queue"
+        if not samples_dir.exists():
+            samples_dir = Path("/Users/cianmacandeisigh/dev/kings_college_galway/stedding/ingest_queue")
+    
     parsed_url = urlparse(base_url)
     domain = parsed_url.netloc.replace("www.", "")
     
@@ -101,7 +106,30 @@ def _crawl_source(
                 if not page_url or page_url.startswith("file://"):
                     continue
                     
-                if page_url.startswith(base_url):
+                if page_url.replace("www.", "").startswith(base_url.replace("www.", "")) or page_url.startswith(base_url):
+                    import fnmatch
+                    parsed_page_url = urlparse(page_url)
+                    page_path = parsed_page_url.path
+                    
+                    is_excluded = False
+                    if exclude_paths:
+                        for pattern in exclude_paths:
+                            if fnmatch.fnmatch(page_path.lower(), pattern.lower()) or fnmatch.fnmatch(page_url.lower(), pattern.lower()):
+                                is_excluded = True
+                                break
+                    if is_excluded:
+                        continue
+                        
+                    is_included = True
+                    if include_paths:
+                        is_included = False
+                        for pattern in include_paths:
+                            if fnmatch.fnmatch(page_path.lower(), pattern.lower()) or fnmatch.fnmatch(page_url.lower(), pattern.lower()):
+                                is_included = True
+                                break
+                    if not is_included:
+                        continue
+
                     found_matches += 1
                     yield {
                         "url": page_url,
@@ -163,7 +191,7 @@ def _crawl_source(
     # Build scrape options for the new Firecrawl v2 API
     try:
         from firecrawl.v2.types import ScrapeOptions
-        scrape_opts = ScrapeOptions(formats=["markdown", "links"])
+        scrape_opts = ScrapeOptions(formats=["markdown", "links"], onlyMainContent=True)
     except ImportError:
         scrape_opts = None
 
@@ -192,7 +220,11 @@ def _crawl_source(
         if exclude_paths:
             crawl_kwargs["exclude_paths"] = exclude_paths
 
-        # Use new Firecrawl v2 API: crawl() with direct parameters
+                # Use new Firecrawl v2 API: crawl() with direct parameters
+        # Rate limit protection for live scrapes (Firecrawl free/base tiers have 3 req/min limit)
+        import time
+        logger.info("firecrawl_rate_limit_throttle", delay_seconds=21, source=source_name)
+        time.sleep(21)
         result = app.crawl(**crawl_kwargs)
 
         page_count = 0
@@ -311,6 +343,17 @@ def build_subject_urls(
             "site": "ncca",
             "language": "ga",
             "url": f"https://ncca.ie/ga/{cycle_ga}/forbairtí-curaclaim/{subject_ga}/",
+        },
+        # Examinations.ie
+        {
+            "site": "examinations",
+            "language": "en",
+            "url": "https://www.examinations.ie/exammaterialarchive/",
+        },
+        {
+            "site": "examinations",
+            "language": "ga",
+            "url": "https://www.examinations.ie/exammaterialarchive/",
         },
     ]
 
@@ -554,7 +597,7 @@ def _crawl_subjects(
 
 
 import dlthub
-from data_platform.dlt_sources.dlthub_projects import apply_dlthub_wrappers
+from oideachais.data_platform.dlt_sources.dlthub_projects import apply_dlthub_wrappers
 
 @dlt.source(name="ireland_curriculum")
 def curriculum_source(
@@ -662,7 +705,8 @@ def curriculum_source(
         ):
             # Filter out provenance records (they go to source_provenance)
             if not page_data.get("is_duplicate"):
-                yield page_data
+                if not str(page_data.get("url", "")).lower().endswith(".pdf"):
+                    yield page_data
 
     @dlt.resource(
         name="source_provenance",
@@ -713,6 +757,7 @@ def curriculum_source(
     )
     def curriculum_pdfs() -> Iterator[dict[str, Any]]:
         """Discovered PDF URLs from crawled pages."""
+        import hashlib
         # Extract PDF URLs from crawled page links
         seen_pdfs: set[str] = set()
 

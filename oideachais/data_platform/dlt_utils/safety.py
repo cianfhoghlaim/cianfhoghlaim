@@ -5,7 +5,7 @@ Ensures all DuckDB writes through DLT go through the single-threaded executor,
 preventing segfaults and data corruption from concurrent access.
 
 Usage:
-    from data_platform.dlt_utils.safety import safe_dlt_run
+    from oideachais.data_platform.dlt_utils.safety import safe_dlt_run
 
     load_info = safe_dlt_run(pipeline, source_data)
 """
@@ -17,7 +17,7 @@ from typing import Any, TypeVar
 
 import dlt
 
-from core import get_executor
+from oideachais.core import get_executor
 
 logger = logging.getLogger(__name__)
 

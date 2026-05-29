@@ -8,7 +8,7 @@ Crawls and extracts:
 - Early childhood, primary, and post-primary content
 
 Usage:
-    from data_platform.dlt_sources.ireland.ncca import ncca_source
+    from oideachais.data_platform.dlt_sources.ireland.ncca import ncca_source
 
     # Full crawl (all cycles, subjects, languages)
     pipeline = dlt.pipeline(pipeline_name="ncca", destination="duckdb")
@@ -28,7 +28,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 import dlt
-from observability.logging import get_logger
+from oideachais.observability.logging import get_logger
 
 logger = get_logger(__name__)
 

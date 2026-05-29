@@ -6,7 +6,7 @@ Multiple Dagster partitions can write simultaneously because data is stored as
 Parquet files in S3, with transaction coordination via PostgreSQL MVCC.
 
 Usage:
-    from data_platform.dlt_utils import get_dlt_destination, create_pipeline
+    from oideachais.data_platform.dlt_utils import get_dlt_destination, create_pipeline
 
     pipeline = create_pipeline(
         pipeline_name="curriculum",
@@ -49,6 +49,7 @@ def _get_local_ducklake_destination() -> Any:
             "aws_access_key_id": aws_access_key_id,
             "aws_secret_access_key": aws_secret_access_key,
             "endpoint_url": endpoint_url,
+            "region_name": os.environ.get("AWS_REGION", "garage"),
         },
         # Force path-style URLs for S3-compatible storage (Garage, MinIO)
         # s3fs uses virtual-host style by default which requires DNS for bucket subdomains

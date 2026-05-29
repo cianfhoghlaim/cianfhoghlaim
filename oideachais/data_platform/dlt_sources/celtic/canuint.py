@@ -21,7 +21,7 @@ from collections.abc import Iterator
 import dlt
 from bs4 import BeautifulSoup
 from dlt.sources import DltResource
-from observability.logging import get_logger
+from oideachais.observability.logging import get_logger
 from shared.http import canuint_client
 
 logger = get_logger(__name__)

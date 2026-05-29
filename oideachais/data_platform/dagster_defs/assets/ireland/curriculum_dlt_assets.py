@@ -32,7 +32,7 @@ from dagster import (
     StaticPartitionsDefinition,
 )
 
-from data_platform.dlt_utils import (
+from oideachais.data_platform.dlt_utils import (
     get_dlt_destination,
     get_duckdb_fallback_destination,
     safe_dlt_run,
@@ -127,6 +127,7 @@ SHORT_COURSES = [
 # Unified DLT pipeline configuration
 DLT_PIPELINE_NAME = "curriculum_unified"
 DLT_DATASET_NAME = "curriculum"
+DLT_SCHEMA_NAME = "ireland_curriculum"
 DLT_PIPELINES_DIR = Path(__file__).parent.parent.parent.parent / ".dlt"
 
 
@@ -208,52 +209,35 @@ def create_cycle_asset(cycle: str):
         sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 
         
-        from data_platform.dlt_sources.ireland.curriculum_registry import SubjectRegistry
-        from data_platform.dlt_sources.ireland.curriculum_source import (
+        from oideachais.data_platform.dlt_sources.ireland.curriculum_registry import SubjectRegistry
+        from oideachais.data_platform.dlt_sources.ireland.curriculum_source import (
             build_subject_urls,
             parallel_scrape_subject,
         )
 
         # Extract partition keys
-        partition_keys = context.partition_key.keys_by_dimension
-        subject = partition_keys["subject"]
-        language = partition_keys["language"]
+        partition_key_str = context.partition_key
+        parts = partition_key_str.split("|")
+        language = parts[0]
+        subject = parts[1] if len(parts) > 1 else ""
 
         context.log.info(
             f"Ingesting: {cycle}/{subject}/{language}"
         )
 
-        # Initialize registry for URL building
+        
+        from oideachais.data_platform.dlt_sources.ireland.curriculum_source import curriculum_source
+        
+        # Determine URLs and count (just for logging)
+        from oideachais.data_platform.dlt_sources.ireland.curriculum_registry import SubjectRegistry
+        from oideachais.data_platform.dlt_sources.ireland.curriculum_source import build_subject_urls
         registry = SubjectRegistry.from_default()
-
-        # Build and log URLs
         urls = build_subject_urls(cycle, subject, registry, language=language)
+        
         for url_info in urls:
             context.log.info(f"  {url_info['site']}/{url_info['language']}: {url_info['url']}")
 
-        # Parallel scrape filtered URLs
-        pages = list(parallel_scrape_subject(
-            cycle=cycle,
-            subject=subject,
-            registry=registry,
-            language=language,
-            max_workers=2,
-            max_pages_per_url=50,
-            max_depth=3,
-        ))
-
-        context.log.info(f"Scraped {len(pages)} pages from {len(urls)} URLs")
-
-        # Ensure we have valid pages before passing to DLT pipeline
-        valid_pages = [p for p in pages if p.get("status") not in ("error", "no_api_key", "firecrawl_not_installed")]
-        if not valid_pages:
-            raise RuntimeError(
-                f"Firecrawl failed to scrape any valid pages for {cycle}/{subject}/{language}. "
-                f"Check API limits or error logs. URLs attempted: {[u['url'] for u in urls]}"
-            )
-
         # Choose destination based on environment
-        # Set USE_DUCKLAKE=false to use plain DuckDB (when lakehouse not running)
         use_ducklake = os.environ.get("USE_DUCKLAKE", "true").lower() == "true"
 
         if use_ducklake:
@@ -273,21 +257,19 @@ def create_cycle_asset(cycle: str):
             pipelines_dir=str(DLT_PIPELINES_DIR),
         )
 
-        # Prepare data for loading
-        def generate_pages():
-            for page in pages:
-                # Skip error pages
-                if page.get("status") in ("error", "no_api_key", "firecrawl_not_installed"):
-                    continue
-                yield page
+        source = curriculum_source(
+            cycle=cycle,
+            subject=subject,
+            language=language
+        )
 
         # Run DLT pipeline through serial executor for DuckDB safety
         load_info = safe_dlt_run(
             dlt_pipeline,
-            generate_pages(),
-            table_name="curriculum_pages",
-            write_disposition="merge",
-            primary_key=["content_hash"],  # Dedupe by content_hash
+            source,
+            # No explicit table_name, write_disposition, or primary_key here,
+            # because curriculum_source yields multiple resources 
+            # (curriculum_pages, curriculum_pdfs, etc.) which define their own schemas.
         )
 
         # Calculate rows loaded
@@ -306,7 +288,7 @@ def create_cycle_asset(cycle: str):
                 "subject": subject,
                 "language": language,
                 "urls_scraped": len(urls),
-                "pages_found": len(pages),
+                
                 "rows_loaded": rows_loaded,
                 "load_id": str(load_info.loads_ids[0]) if load_info.loads_ids else "unknown",
                 "duckdb_path": str(DLT_PIPELINES_DIR / DLT_PIPELINE_NAME / f"{DLT_DATASET_NAME}.duckdb"),
@@ -348,14 +330,15 @@ def create_short_course_asset():
         """Ingest short course curriculum data."""
         os.environ.setdefault("DLT_DISABLE_PLUGINS", "true")
 
-        from data_platform.dlt_sources.ireland.curriculum_source import (
+        from oideachais.data_platform.dlt_sources.ireland.curriculum_source import (
             _scrape_single_url,
         )
 
         # Extract partition keys
-        partition_keys = context.partition_key.keys_by_dimension
-        course = partition_keys["course"]
-        language = partition_keys["language"]
+        partition_key_str = context.partition_key
+        parts = partition_key_str.split("|")
+        language = parts[0]
+        course = parts[1] if len(parts) > 1 else ""
 
         context.log.info(f"Ingesting short course: {course}/{language}")
 
@@ -443,7 +426,7 @@ def create_short_course_asset():
                 "language": language,
                 "is_short_course": True,
                 "urls_scraped": len(urls),
-                "pages_found": len(pages),
+                
                 "rows_loaded": rows_loaded,
                 "load_id": str(load_info.loads_ids[0]) if load_info.loads_ids else "unknown",
             }

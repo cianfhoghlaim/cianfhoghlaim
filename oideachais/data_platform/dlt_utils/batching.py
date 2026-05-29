@@ -10,7 +10,7 @@ Best Practices (from CLAUDE.md):
 - Recreate indexes after batch complete
 
 Usage:
-    from data_platform.dlt_utils.batching import (
+    from oideachais.data_platform.dlt_utils.batching import (
         batch_embeddings,
         EmbeddingBatcher,
     )
@@ -31,7 +31,7 @@ from collections.abc import Callable, Generator, Iterable
 from typing import Protocol, TypeVar
 
 # Import from core to get the threshold constant
-from core import HNSW_DROP_THRESHOLD
+from oideachais.core import HNSW_DROP_THRESHOLD
 
 logger = logging.getLogger(__name__)
 

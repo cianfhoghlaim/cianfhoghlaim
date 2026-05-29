@@ -8,7 +8,7 @@ Provides adapters that:
 - Support bilingual content (English/Irish)
 
 Usage:
-    from data_platform.dlt_sources.ireland.source_adapters import (
+    from oideachais.data_platform.dlt_sources.ireland.source_adapters import (
         CurriculumOnlineAdapter,
         NCCAAdapter,
         ExaminationsAdapter,
@@ -28,7 +28,7 @@ from typing import Any, Protocol
 from urllib.parse import parse_qs, urlparse
 
 import structlog
-from data_platform.dlt_sources.common.incremental import compute_content_hash
+from oideachais.data_platform.dlt_sources.common.incremental import compute_content_hash
 
 logger = structlog.get_logger(__name__)
 
@@ -160,6 +160,14 @@ class CurriculumOnlineAdapter:
 
         # Compute content hash
         content_hash = compute_content_hash(content) if content else ""
+
+        links = raw_page.get("links", [])
+        if not links and content:
+            import re
+            md_links = [match.split(" ")[0] for match in re.findall(r"\]\((http[^\)]+)\)", content)]
+            links.extend(md_links)
+        if links and "links" not in metadata:
+            metadata["links"] = list(set(links))
 
         return NormalizedPage(
             url=url,
@@ -299,6 +307,14 @@ class NCCAAdapter:
 
         content_hash = compute_content_hash(content) if content else ""
 
+        links = raw_page.get("links", [])
+        if not links and content:
+            import re
+            md_links = [match.split(" ")[0] for match in re.findall(r"\]\((http[^\)]+)\)", content)]
+            links.extend(md_links)
+        if links and "links" not in metadata:
+            metadata["links"] = list(set(links))
+
         return NormalizedPage(
             url=url,
             title=metadata.get("title"),
@@ -429,6 +445,14 @@ class ExaminationsAdapter:
         detected_year = self._extract_year_from_url(url)
 
         content_hash = compute_content_hash(content) if content else ""
+
+        links = raw_page.get("links", [])
+        if not links and content:
+            import re
+            md_links = [match.split(" ")[0] for match in re.findall(r"\]\((http[^\)]+)\)", content)]
+            links.extend(md_links)
+        if links and "links" not in metadata:
+            metadata["links"] = list(set(links))
 
         return NormalizedPage(
             url=url,

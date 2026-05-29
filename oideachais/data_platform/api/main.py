@@ -31,7 +31,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 # Initialize observability BEFORE any other imports that might use tracing
-from observability import (
+from oideachais.observability import (
     init_langfuse,
     init_mlflow,
     init_observability,
@@ -170,7 +170,7 @@ async def health_check() -> HealthResponse:
 
     Returns status of API, dependent services, and observability stack.
     """
-    from observability import get_langfuse_client, is_initialized, is_llmobs_enabled
+    from oideachais.observability import get_langfuse_client, is_initialized, is_llmobs_enabled
 
     services = {
         "api": "healthy",
