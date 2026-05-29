@@ -123,7 +123,7 @@ flags:
 # PostgreSQL Database Configuration
 # -----------------------------------------------------------------------------
 postgres:
-  connection_string: postgresql://pangolin:pangolin@postgres:5432/pangolin
+  connection_string: postgresql://pangolin:empty@postgres:5432/pangolin
 
 # -----------------------------------------------------------------------------
 # DNS Configuration
