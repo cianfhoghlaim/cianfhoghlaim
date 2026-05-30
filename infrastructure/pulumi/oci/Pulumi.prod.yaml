@@ -2,4 +2,7 @@ environment:
   - infrastructure/oci
 config:
   oci:region: uk-london-1
+  oci-infrastructure:compartmentOcid: ocid1.tenancy.oc1..aaaaaaaazjzelgz2fwfqfjzjxwckslmhtq6yimvcz3oyzhonp2lisa2yfekq
+  oci-infrastructure:sshPublicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDbqHx+ESJGhhbXjYl+s+54is1lJrCFWhXcwffWhhtBBLsJfor8lqlW4WCeF6GRvgj2K2RjxtBZ8XRhF75QPo4w6VBIwLl0EYlLiqI+f6gnB4WTm+4N9BHzzDlpI8RKuJIBR2q8z1lWuHYZk+94YSZj1yTAzytLRXu/k9UDN26n/VlBbPQKLd+D7WwDfrryMpsHEbyuQj6N7UETYSFWxDIRS3hjMal98Gk3mxW876lGBIoyAQOahd/WitM6hxSTR+KAdjGR5sncm0Bo6m3Lc7evMzwlQ6EktjzOD8Ux/f0lrPSRkpTNNj2iE9RhZIt9prNnCBiJGQ1q4dsgq2ciuZwl
   oci-infrastructure:serverName: arm1-oci
+  oci-infrastructure:cloudflareZoneId: 30d33f2b3f3c71c6d27c986f2e398618
