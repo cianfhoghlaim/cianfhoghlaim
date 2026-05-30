@@ -39,7 +39,7 @@ all:
     periphery:
       hosts:
         arm1.oci:
-          ansible_host: 132.145.27.89
+          ansible_host: "{{ lookup('env', 'OCI_ARM1_IP') }}"
           ansible_user: ubuntu
 
           machine_type: oracle_arm
