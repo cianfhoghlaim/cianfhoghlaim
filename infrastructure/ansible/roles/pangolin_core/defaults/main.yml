@@ -18,7 +18,7 @@ locket_image: "ghcr.io/bpbradley/locket:connect"
 postgres_image: "postgres:17"
 middleware_manager_image: "hhftechnology/middleware-manager:latest"
 pocket_id_image: "ghcr.io/pocket-id/pocket-id:latest"
-tinyauth_image: "ghcr.io/steveiliop56/tinyauth:v4"
+tinyauth_image: "ghcr.io/tinyauthapp/tinyauth:v5"
 
 # -----------------------------------------------------------------------------
 # DOMAIN CONFIGURATION

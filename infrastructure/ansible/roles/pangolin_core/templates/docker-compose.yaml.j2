@@ -13,7 +13,6 @@ services:
   # ===========================================================================
   locket:
     image: {{ locket_image }}
-    platform: linux/amd64
     container_name: pangolin-locket
     user: "65532:65532"
     restart: unless-stopped
@@ -27,6 +26,9 @@ services:
       - "--provider=infisical"
       - "--infisical-client-id={{ infisical_client_id }}"
       - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-default-environment=dev"
+      - "--infisical-url={{ pangolin_infisical_host }}"
+      - "--infisical-default-project-id={{ infisical_project_id }}"
       - "--mode=watch"
       - "--map=/templates:/run/secrets/locket"
     volumes:
@@ -151,8 +153,7 @@ services:
   # MIDDLEWARE MANAGER - Traefik Middleware UI
   # ===========================================================================
   middleware-manager:
-    image: {{ middleware_manager_image }}
-    platform: linux/amd64
+    image: hhftechnology/middleware-manager:latest
     container_name: middleware-manager
     restart: unless-stopped
     depends_on:
@@ -182,6 +183,8 @@ services:
     depends_on:
       locket:
         condition: service_healthy
+    env_file:
+      - /opt/pangolin/.env
     environment:
       APP_URL: {{ pangolin_auth_url }}
       TRUST_PROXY: "true"
@@ -208,21 +211,13 @@ services:
     depends_on:
       locket:
         condition: service_healthy
-    environment:
-      PORT: 3000
-      ADDRESS: 0.0.0.0
-      APP_URL: {{ pangolin_tinyauth_url }}
-      USERS_FILE: /app/config/users
-      SECURE_COOKIE: "true"
-      SESSION_EXPIRY: 86400
-      LOGIN_TIMEOUT: 300
-      LOGIN_MAX_RETRIES: 5
-      DATABASE_PATH: /data/tinyauth.db
-      LOG_LEVEL: info
-      DISABLE_ANALYTICS: "true"
+    env_file:
+      - /opt/pangolin/.env
     volumes:
-      - tinyauth-data:/data
       - ./config/tinyauth:/app/config:ro
+      - tinyauth-data:/data
+    # In v5 we pass config purely via env vars and the mounted config file
+    # command is empty so it uses the default ENTRYPOINT
     healthcheck:
       test: ["CMD", "./tinyauth", "healthcheck"]
       interval: 30s
