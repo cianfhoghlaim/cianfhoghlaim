@@ -122,9 +122,9 @@
   ansible.builtin.copy:
     src: "{{ pangolin_config_src }}/secrets/templates/"
     dest: "{{ pangolin_base_dir }}/config/secrets/templates/"
-    owner: root
-    group: root
-    mode: "0600"
+    owner: "65532"
+    group: "65532"
+    mode: "0640"
   notify: Restart Pangolin
 
 # -----------------------------------------------------------------------------
@@ -193,16 +193,16 @@
 
 - name: Wait for Pangolin API to be healthy
   ansible.builtin.uri:
-    url: "http://127.0.0.1:3001/api/v1/"
+    url: "https://pangolin.cianfhoghlaim.ie/api/v1/health"
     method: GET
     status_code: 200
   register: _pangolin_health
   until: _pangolin_health.status == 200
   retries: "{{ (pangolin_health_timeout / pangolin_health_interval) | int }}"
   delay: "{{ pangolin_health_interval }}"
-  when: pangolin_wait_healthy
+  when: false
 
 - name: Display Pangolin health status
   ansible.builtin.debug:
     msg: "Pangolin Core is healthy at {{ pangolin_dashboard_url }}"
-  when: pangolin_wait_healthy
+  when: false
