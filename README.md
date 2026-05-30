@@ -140,7 +140,9 @@ Based on comprehensive package research across the three primary streams, here's
 - **TRL** and datasets for efficient model fine-tuning
 - **MLflow** and WandB for experiment tracking
 
---- ## 📚 Oideachais — Education Platform Details
+---
+
+## 📚 Oideachais — Education Platform Details
 
 > Full source: [`oideachais/README.md`](oideachais/README.md)
 
@@ -383,7 +385,9 @@ dlt_sources/
 └── crown_dependencies/             # Channel Islands, Isle of Man
 ```
 
---- ## 🏗️ Bonneagar — Infrastructure & Platform Details
+---
+
+## 🏗️ Bonneagar — Infrastructure & Platform Details
 
 > Full source: [`infrastructure/README.md`](infrastructure/README.md)
 
@@ -566,7 +570,9 @@ stacks/<category>/<stack>/
 - **DNS**: Cloudflare DNS with Let's Encrypt wildcard certificates via DNS-01 challenge.
 - **Monitoring**: Datadog APM agents on all servers; MLflow/Langfuse for ML/LLM observability.
 
---- ## ️ Knowledge & Research Vaults
+---
+
+## ️ Knowledge & Research Vaults
 
 Beyond the active code streams, this repository serves as a massive knowledge base for British Isles cultural and political research.
 
@@ -643,7 +649,9 @@ git sparse-checkout set bunchloch/university_of_galway
 git checkout main
 ```
 
---- ## 🎓 Cian CV: Academic, Professional & Civic Credentials
+---
+
+## 🎓 Cian CV: Academic, Professional & Civic Credentials
 
 To ensure transparency and verify the author's background, high-resolution scans of key credentials and professional references are provided below:
 
@@ -678,15 +686,21 @@ To ensure transparency and verify the author's background, high-resolution scans
 *   **[Royal Communication (Buckingham Palace)](./cian_mac_an_déisigh_uí_liatháin/buckingham_letter.pdf)**
 *   **[Dual Citizenship Verification (ROI & UK)](./cian_mac_an_déisigh_uí_liatháin/deacy/old_passports_dual_citizen_verification_roi_uk.pdf)**
 
---- ## 🛰️ Pangolin (Hybrid Strategy)
+---
+
+## 🛰️ Pangolin (Hybrid Strategy)
 
 > **See [Bonneagar — Infrastructure & Platform Details](#️-bonneagar--infrastructure--platform-details) for the full architecture.** The platform uses a two-tier Pangolin Convergence strategy: OCI (Control Plane) for availability, routing, and identity; and local MacBook M4 Max (Bunchloch) for high-performance compute, vector/graph databases, and heavy data analytics. All connectivity is secured via WireGuard tunnels with zero-trust authentication.
 
---- ## 📂 Directory Description: `/Users/cianmacandeisigh/dev/kings_college_galway/cian_mac_an_déisigh_uí_liatháin`
+---
+
+## 📂 Directory Description: `/Users/cianmacandeisigh/dev/kings_college_galway/cian_mac_an_déisigh_uí_liatháin`
 
 The `/Users/cianmacandeisigh/dev/kings_college_galway/cian_mac_an_déisigh_uí_liatháin` directory contains the digital artifacts and verifiable proof of the author's academic and professional journey. It acts as a dedicated proof-of-paternity vault within the repository, housing high-resolution scans of degree parchments, civic memberships, and security clearances. This ensures that the project's lead developer is identifiable and their qualifications are transparently available to collaborators and stakeholders.
 
---- ## 🗣️ A Note on the Name & Author
+---
+
+## 🗣️ A Note on the Name & Author
 
 **Cianfhoghlaim & Celtic Linguistic Roots:**
 The domain `cianfhoghlaim.ie` || `cian.lyons.co.uk` is a deliberate linguistic play on words that highlights the mechanics of the Irish language while pointing to the broader Celtic linguistic traditions this repository aims to protect:
@@ -698,7 +712,9 @@ This digital sanctuary will ensure the inter-generational transmission of Goidel
 **Author Identity:**
 This platform is developed entirely by **Cian Lyons-Deacy** (Irish Passport Name: **Cian Mac Liatháin Uí Dhéisigh**).
 
---- ## ⚖️ Paternity & Usage Policy
+---
+
+## ⚖️ Paternity & Usage Policy
 
 **Moral Rights & Paternity:**
 The author explicitly asserts their moral right of paternity under the Copyright and Related Rights Act 2000 (Ireland) and the Copyright, Designs and Patents Act 1988 (UK) to be permanently identified as the creator of this work.
@@ -769,9 +785,10 @@ Cianfhoghlaim (and its interactive frontend, **Awen Hub**) represents a paradigm
 
 By leveraging autonomous agents, semantic code/knowledge bases, and a Web3 "Learn-to-Earn" economy (utilising the x402 protocol and a dual-token Anam system), Awen Hub provides hyper-personalised, interactive learning experiences wrapped in immersive Celtic RPG aesthetics.
 
---- ## Core Architecture: The Dual-Stack
+---
 
-### The Quadrant Architecture & Interoperability
+## Core Architecture: The Dual-Stack
+
 ### The Quadrant Architecture & Interoperability
 The platform is heavily decoupled into four sovereign quadrants to isolate state, infrastructure, and inference:
 
@@ -840,7 +857,9 @@ The user-facing portal, built on the bleeding-edge of the React ecosystem and ma
 *   **MotherDuck Embedded Dives**: Delivers zero-latency, client-side analytics. MotherDuck's dual-execution engine pushes a DuckDB-WASM instance directly into the browser, allowing students to filter and explore massive datasets (like CSO statistics or exam results) instantly.
 *   **Celtic Dark Mode (Tailwind v4)**: An immersive UI drawing inspiration from RPGs (*Hades*, *Clair Obscur*). Features deep `slate-900` backgrounds, tactile "Duolingo-style" buttons, Ogham stone noise textures, and specific Celtic-nation accent colours.
 
---- ## Deployment & Development Guide
+---
+
+## Deployment & Development Guide
 
 **Why order matters:** This is a highly distributed system. Agents need API access, pipelines need databases, and the frontend needs the pipelines. Furthermore, **secrets are managed dynamically and must be hydrated before anything else runs.**
 
@@ -862,17 +881,46 @@ infisical login
 
 # 3. Export secrets to the local environment (Mise hooks normally handle this automatically)
 # This resolves your `.infisical.env` template into a hydrated, git-ignored `.env` file.
-infisical export --env=dev > .env
+# You can also manually sync the vault via script:
+cd scripts/infisical && bun run init-vault.ts
 ```
 
-#### Step 2: Spin Up Backing Infrastructure
-Start the vector databases (LanceDB), graph databases (Neo4j), temporal memory services, and the Locket sidecar.
+#### Step 2: Provision OCI Control Plane (Pulumi & Ansible)
+The overarching architecture uses a decoupled control plane (Komodo on local MacBook, Pangolin on Oracle Cloud).
+This requires using a local Pulumi backend bypassed from ESC, fully hydrated by Infisical + Mise.
+
+1. **Verify OCI Credentials:** Ensure `~/.oci/config` is configured and working locally.
+2. **Ensure Pulumi Env Variables:** Your `.env` and `.infisical.env` must contain `PULUMI_BACKEND_URL=file://${HOME}/.pulumi/state` and `PULUMI_CONFIG_PASSPHRASE`. (Mise will automatically export these).
+3. **Deploy with Pulumi:**
+   ```bash
+   cd infrastructure/pulumi/oci/
+   
+   # 1. Login to the local file backend (uses $PULUMI_BACKEND_URL automatically)
+   pulumi login
+   
+   # 2. Initialize and select the production stack (if not already done)
+   pulumi stack init prod
+   
+   # 3. Deploy the infrastructure
+   pulumi up
+   ```
+   *Capture the Public IP Output from Pulumi once successful.*
+
+4. **Deploy Control Planes (Ansible):**
+   Update `infrastructure/ansible/inventory/inventory.yml` (under `periphery.hosts.arm1.oci`) with the new Public IP.
+   ```bash
+   cd ../../ansible/
+   ansible-playbook -i inventory/inventory.yml playbooks/deploy-infrastructure.yml
+   ```
+
+#### Step 3: Spin Up Local Backing Infrastructure
+Start the vector databases (LanceDB), graph databases (Neo4j), temporal memory services, and the Locket sidecar locally.
 ```bash
 # Deploys compose.yaml overlaid with sidecar.yaml for secure tmpfs secret mounting
 docker compose -f compose.yaml -f sidecar.yaml up -d
 ```
 
-#### Step 3: Run the Data Platform (Python)
+#### Step 4: Run the Data Platform (Python)
 Hydrate MotherDuck and your vector stores with the Irish curriculum datasets.
 ```bash
 cd oideachais/data_platform
@@ -885,7 +933,7 @@ uv run dagster dev -m dagster_defs.definitions
 ```
 *(Inside the Dagster UI, trigger the `ireland_curriculum` and `exam_source` assets to pull the latest SEC and NCCA data into your dltHub Projects cache and MotherDuck).*
 
-#### Step 4: Start the Web App (TypeScript)
+#### Step 5: Start the Web App (TypeScript)
 With data populated and secrets hydrated, spin up the TanStack application.
 ```bash
 cd ../web_app
@@ -898,7 +946,9 @@ bun run dev
 ```
 *(Note: If you encounter specific Vite/Rollup plugin incompatibilities with Bun during builds, fallback to `npm run dev`).*
 
---- For deeper technical details on specific modules, please consult the respective READMEs inside `oideachais/` and the `.skills/` directory.
+---
+
+For deeper technical details on specific modules, please consult the respective READMEs inside `oideachais/` and the `.skills/` directory.
 
 <!-- AGENT_TELEMETRY_START -->
 > **Agent Telemetry (Last Updated: 2026-05-27 11:50:26 UTC)**
