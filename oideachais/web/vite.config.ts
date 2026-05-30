@@ -10,6 +10,8 @@ export default defineConfig({
     tsconfigPaths(),
   ],
   server: {
+    port: 80,
+    host: true,
     proxy: {
       '/api': 'http://localhost:8000'
     }
