@@ -13,6 +13,20 @@ all:
     ansible_ssh_private_key_file: ~/.ssh/id_ed25519
     ansible_python_interpreter: /usr/bin/python3
     
+    # Pangolin Defaults
+    pangolin_domain: "cianfhoghlaim.ie"
+    pangolin_config_src: "/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/pangolin/config"
+    
+    # Infisical
+    infisical_pocketid_client_id: "{{ lookup('env', 'POCKETID_CLIENT_ID') }}"
+    infisical_pocketid_client_secret: "{{ lookup('env', 'POCKETID_CLIENT_SECRET') }}"
+    pangolin_infisical_host: "http://172.18.0.1:8082"
+    infisical_project_id: "{{ lookup('env', 'INFISICAL_PROJECT_ID') }}"
+    infisical_client_id: "{{ lookup('env', 'INFISICAL_CLIENT_ID') }}"
+
+    # Locket
+    locket_image: "ghcr.io/bpbradley/locket:infisical"
+
     # Komodo Defaults
     komodo_core_image_tag: "2"
     komodo_periphery_image_tag: "2"
@@ -30,8 +44,7 @@ all:
           komodo_host: "https://komodo.cianfhoghlaim.ie"
           
           # Infisical integration is done via Locket Sidecar
-          infisical_client_id: "{{ lookup('env', 'INFISICAL_CLIENT_ID') }}"
-          infisical_client_secret_file: "/path/to/infisical_secret"
+          infisical_client_secret_file: "/opt/pangolin/config/infisical_secret"
 
     # =========================================================================
     # WORKLOADS (Oracle Cloud Free Tier)
@@ -52,4 +65,4 @@ all:
           
           # Newt Pangolin Tunnel
           pangolin_endpoint: "wss://pangolin.cianfhoghlaim.ie"
-          infisical_secret_path: "/path/to/infisical_secret"
+          infisical_secret_path: "/opt/pangolin/config/infisical_secret"
