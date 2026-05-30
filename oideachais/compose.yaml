@@ -99,7 +99,7 @@ services:
     container_name: oideachais-frontend
     restart: unless-stopped
     ports:
-      - "${FRONTEND_PORT:-3000}:80"
+      - "${FRONTEND_PORT:-3000}:5173"
     environment:
       NODE_ENV: ${ENVIRONMENT:-production}
       VITE_API_URL: ${API_URL:-http://api:8000}
