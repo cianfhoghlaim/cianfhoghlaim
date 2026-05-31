@@ -52,6 +52,10 @@ all:
           komodo_base_dir: "/Users/cianmacandeisigh/dev/kings_college_galway/.local/komodo"
           komodo_periphery_root: "/Users/cianmacandeisigh/dev/kings_college_galway/.local/komodo_periphery"
           
+          komodo_local_auth: false
+          komodo_enable_new_users: false
+          komodo_disable_user_registration: true
+          
           newt_base_dir: "/Users/cianmacandeisigh/dev/kings_college_galway/.local/newt"
           
           # Infisical integration is done via Locket Sidecar
