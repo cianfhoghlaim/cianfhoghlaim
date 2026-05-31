@@ -22,7 +22,7 @@
 
 - name: Deploy Site Infrastructure
   hosts: all
-  become: true
+  become: "{{ 'false' if inventory_hostname == 'bunchloch' else 'true' }}"
 
   pre_tasks:
     - name: Verify Docker is installed

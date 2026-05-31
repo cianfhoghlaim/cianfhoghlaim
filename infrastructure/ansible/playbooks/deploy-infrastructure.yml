@@ -19,8 +19,8 @@
     - role: pangolin_core
 
 - name: Deploy Komodo Core (Orchestration)
-  hosts: periphery # MacBook
-  become: true
+  hosts: infrastructure # MacBook
+  become: false
   gather_facts: true
   tags: [komodo, orchestration]
   roles:
@@ -35,7 +35,7 @@
           =============================================================================
           INFRASTRUCTURE DEPLOYMENT COMPLETE
           =============================================================================
-          Komodo Core deployed to: arm1.oci (Oracle Cloud)
+          Komodo Core deployed to: bunchloch (MacBook Pro)
           Pangolin Core deployed to: arm1.oci (Oracle Cloud)
 
           Next steps:
