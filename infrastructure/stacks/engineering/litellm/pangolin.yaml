@@ -1,8 +1,9 @@
 services:
-  main-service:
+  litellm:
     labels:
-      - "pangolin.public-resources.litellm.name=Litellm"
+      - "pangolin.public-resources.litellm.name=LiteLLM"
       - "pangolin.public-resources.litellm.full-domain=litellm.cianfhoghlaim.ie"
       - "pangolin.public-resources.litellm.protocol=http"
       - "pangolin.public-resources.litellm.targets[0].method=http"
-      - "pangolin.public-resources.litellm.targets[0].port=8080"
+      - "pangolin.public-resources.litellm.targets[0].port=4000"
+      - "pangolin.resource.middlewares=tinyauth"
