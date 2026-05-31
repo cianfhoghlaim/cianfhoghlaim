@@ -20,16 +20,24 @@ services:
       - ./secrets.env:/templates/secrets.env:ro
       - stack-secrets:/run/secrets/locket
     healthcheck:
-      test: ["CMD", "/locket", "healthcheck"]
+      test: ["CMD", "/usr/local/bin/locket", "healthcheck"]
       interval: 10s
       timeout: 5s
       retries: 3
       start_period: 5s
     networks:
-      - stack
+      - default
 
-  # Replace 'main-service' with the actual name of the primary app container
-  main-service:
+  langfuse-web:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - stack-secrets:/run/secrets/locket:ro
+    env_file:
+      - /run/secrets/locket/secrets.env
+      
+  langfuse-worker:
     depends_on:
       locket:
         condition: service_healthy
