@@ -9,43 +9,33 @@
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    owner: root
-    group: root
     mode: "0755"
   loop:
     - "{{ newt_base_dir }}"
     - "{{ newt_secrets_dir }}"
     - "{{ newt_templates_dir }}"
 
-- name: Create /etc/connect directory for OP token
-  ansible.builtin.file:
-    path: /etc/connect
-    state: directory
-    owner: root
-    group: root
-    mode: "0700"
-
 - name: Deploy Locket secret templates
   ansible.builtin.template:
-    src: locket-templates.j2
-    dest: "{{ newt_templates_dir }}/secrets.env"
-    owner: root
-    group: root
-    mode: "0600"
+    src: "locket_templates/{{ item }}.j2"
+    dest: "{{ newt_templates_dir }}/{{ item }}"
+    mode: "0640"
+  loop:
+    - newt_id
+    - newt_secret
+    - onboarding_key
 
 - name: Deploy docker-compose.yaml
   ansible.builtin.template:
     src: docker-compose.yaml.j2
     dest: "{{ newt_base_dir }}/docker-compose.yaml"
-    owner: root
-    group: root
     mode: "0644"
   notify: Restart site services
 
 - name: Create Docker network
-  community.docker.docker_network:
-    name: "{{ docker_network_name }}"
-    state: present
+  ansible.builtin.shell: |
+    docker network inspect {{ docker_network_name }} >/dev/null 2>&1 || docker network create {{ docker_network_name }}
+  changed_when: false
 
 - name: Pull Docker images
   ansible.builtin.shell: |
@@ -62,7 +52,7 @@
 
 - name: Wait for Locket to be healthy
   ansible.builtin.shell: |
-    timeout 60 bash -c 'until docker inspect --format="{{.State.Health.Status}}" {{ inventory_hostname }}-locket 2>/dev/null | grep -q healthy; do sleep 2; done'
+    bash -c 'for i in {1..30}; do if docker inspect --format="{{ '{{' }}.State.Health.Status{{ '}}' }}" {{ inventory_hostname }}-locket 2>/dev/null | grep -q healthy; then exit 0; fi; sleep 2; done; exit 1'
   changed_when: false
   when: not ansible_check_mode
 
@@ -72,7 +62,9 @@
   register: newt_status
   changed_when: false
   failed_when: "'Up' not in newt_status.stdout"
-  when: not ansible_check_mode
+  when: 
+    - not ansible_check_mode
+    - deploy_newt | default(true) | bool
 
 - name: Verify Periphery is running
   ansible.builtin.shell: |
