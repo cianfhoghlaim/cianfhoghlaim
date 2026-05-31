@@ -1,0 +1,9 @@
+services:
+  llama-swap:
+    labels:
+      - "pangolin.public-resources.llamaswap.name=Llama-Swap"
+      - "pangolin.public-resources.llamaswap.full-domain=llamaswap.cianfhoghlaim.ie"
+      - "pangolin.public-resources.llamaswap.protocol=http"
+      - "pangolin.public-resources.llamaswap.targets[0].method=http"
+      - "pangolin.public-resources.llamaswap.targets[0].port=8080"
+      - "pangolin.resource.middlewares=tinyauth"
