@@ -1,0 +1,116 @@
+# =============================================================================
+# KOMODO CORE - Infrastructure Orchestration with FerretDB v2
+# =============================================================================
+# Deploys Komodo Core with PostgreSQL-backed MongoDB API via FerretDB.
+#
+# USAGE:
+#   Development:  docker compose --env-file ../../.env.local up -d
+#   Production:   docker compose -f compose.yaml -f sidecar.yaml up -d
+#   With Pangolin: docker compose -f compose.yaml -f sidecar.yaml -f pangolin.yaml up -d
+# =============================================================================
+
+name: komodo
+
+services:
+  # ---------------------------------------------------------------------------
+  # MONGODB - Database Backend 
+  # ---------------------------------------------------------------------------
+  mongo:
+    image: mongo:latest
+    container_name: komodo-mongo
+    restart: unless-stopped
+    labels:
+      komodo.skip: # Prevent Komodo from stopping with StopAllContainers
+    command: --quiet --wiredTigerCacheSizeGB 0.25
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${KOMODO_DATABASE_USERNAME:-komodo}
+      MONGO_INITDB_ROOT_PASSWORD: ${KOMODO_DATABASE_PASSWORD:-devpassword}
+    volumes:
+      - komodo-mongo-data:/data/db
+      - komodo-mongo-config:/data/configdb
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - komodo
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+
+  # ---------------------------------------------------------------------------
+  # KOMODO CORE - Orchestration Engine
+  # ---------------------------------------------------------------------------
+  core:
+    image: ghcr.io/moghtech/komodo-core:${KOMODO_IMAGE_TAG:-2}
+    container_name: komodo-core
+    init: true
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    ports:
+      - "${KOMODO_PORT:-9120}:9120"
+    environment:
+      # Database
+      KOMODO_DATABASE_ADDRESS: mongo:27017
+      KOMODO_DATABASE_USERNAME: ${KOMODO_DATABASE_USERNAME:-komodo}
+      KOMODO_DATABASE_PASSWORD: ${KOMODO_DATABASE_PASSWORD:-devpassword}
+
+      # Host & Security
+      KOMODO_HOST: ${KOMODO_HOST:-https://komodo.cianfhoghlaim.ie}
+      KOMODO_JWT_SECRET: ${KOMODO_JWT_SECRET:-}
+      KOMODO_PASSKEY: ${KOMODO_PASSKEY:-}
+      KOMODO_WEBHOOK_SECRET: ${KOMODO_WEBHOOK_SECRET:-}
+
+      # Auth
+      KOMODO_LOCAL_AUTH: ${KOMODO_LOCAL_AUTH:-true}
+      KOMODO_INIT_ADMIN_USERNAME: ${KOMODO_INIT_ADMIN_USERNAME:-ciansedai}
+      KOMODO_INIT_ADMIN_PASSWORD: ${KOMODO_INIT_ADMIN_PASSWORD:-}
+
+      # OIDC (optional)
+      KOMODO_OIDC_ENABLED: ${KOMODO_OIDC_ENABLED:-false}
+      KOMODO_OIDC_PROVIDER: ${KOMODO_OIDC_PROVIDER:-}
+      KOMODO_OIDC_CLIENT_ID: ${KOMODO_OIDC_CLIENT_ID:-}
+      KOMODO_OIDC_CLIENT_SECRET: ${KOMODO_OIDC_CLIENT_SECRET:-}
+
+      # Rate Limiting (default: 10 requests/second)
+      # Increased to 500 for automation workflows
+      KOMODO_REQUEST_RATE_LIMIT: ${KOMODO_REQUEST_RATE_LIMIT:-500}
+
+      # Backups
+      KOMODO_BACKUP_ENABLED: ${KOMODO_BACKUP_ENABLED:-true}
+      KOMODO_BACKUP_SCHEDULE: ${KOMODO_BACKUP_SCHEDULE:-0 2 * * *}
+    volumes:
+      - komodo-keys:/config/keys
+      - komodo-backups:/backups
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:9120/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - komodo
+      - pangolin
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+
+volumes:
+  komodo-mongo-data:
+  komodo-mongo-config:
+  komodo-keys:
+  komodo-backups:
+
+networks:
+  komodo:
+    driver: bridge
+  pangolin:
+    external: true
