@@ -17,16 +17,12 @@
   ansible.builtin.file:
     path: "{{ komodo_base_dir }}"
     state: directory
-    owner: root
-    group: root
     mode: "0755"
 
 - name: Create Komodo subdirectories
   ansible.builtin.file:
     path: "{{ komodo_base_dir }}/{{ item }}"
     state: directory
-    owner: root
-    group: root
     mode: "0755"
   loop:
     - backups
@@ -36,53 +32,60 @@
   ansible.builtin.file:
     path: "{{ komodo_periphery_root }}"
     state: directory
-    owner: root
-    group: root
     mode: "0755"
 
 # -----------------------------------------------------------------------------
 # DEPLOY CONFIGURATION FILES
 # -----------------------------------------------------------------------------
 
-- name: Deploy secrets.env (Infisical templates)
+- name: Deploy secrets.env template
   ansible.builtin.template:
     src: secrets.env.j2
-    dest: "{{ komodo_base_dir }}/secrets.env"
-    owner: root
-    group: root
+    dest: "{{ komodo_base_dir }}/secrets.env.template"
     mode: "0600"
+
+- name: Render secrets.env using Locket
+  ansible.builtin.shell: |
+    docker run --rm \
+      -v {{ komodo_base_dir }}:{{ komodo_base_dir }} \
+      -v {{ infisical_client_secret_file }}:{{ infisical_client_secret_file }}:ro \
+      -e INFISICAL_URL \
+      {{ locket_image }} \
+      --mode one-shot \
+      --provider infisical \
+      --infisical-client-id "$INFISICAL_CLIENT_ID" \
+      --infisical-client-secret "$INFISICAL_CLIENT_SECRET" \
+      --infisical-default-environment dev \
+      --infisical-default-project-id "$INFISICAL_PROJECT_ID" \
+      --map {{ komodo_base_dir }}/secrets.env.template:{{ komodo_base_dir }}/secrets.env
+  environment:
+    INFISICAL_CLIENT_ID: "{{ infisical_client_id }}"
+    INFISICAL_CLIENT_SECRET: "file:{{ infisical_client_secret_file }}"
+    INFISICAL_PROJECT_ID: "{{ infisical_project_id }}"
+    INFISICAL_URL: "{{ pangolin_infisical_host }}"
+  register: _locket_render
+  changed_when: false
 
 - name: Deploy docker-compose.yaml
   ansible.builtin.template:
     src: docker-compose.yaml.j2
     dest: "{{ komodo_base_dir }}/docker-compose.yaml"
-    owner: root
-    group: root
     mode: "0644"
 
 # -----------------------------------------------------------------------------
-# START STACK VIA LOCKET (Infisical)
+# START STACK
 # -----------------------------------------------------------------------------
 
 - name: Pull Docker images
-  ansible.builtin.command: docker compose -f {{ komodo_base_dir }}/docker-compose.yaml pull
+  ansible.builtin.command: docker compose --env-file secrets.env -f docker-compose.yaml pull
   args:
     chdir: "{{ komodo_base_dir }}"
   changed_when: false
 
-- name: Start Komodo stack using Locket
-  ansible.builtin.shell: |
-    locket exec \
-      --provider infisical \
-      --infisical-client-id "$INFISICAL_CLIENT_ID" \
-      --infisical-client-secret "$INFISICAL_CLIENT_SECRET" \
-      --env-file {{ komodo_base_dir }}/secrets.env \
-      -- docker compose -f {{ komodo_base_dir }}/docker-compose.yaml up -d --remove-orphans
+- name: Start Komodo stack
+  ansible.builtin.command: docker compose --env-file secrets.env -f docker-compose.yaml up -d --remove-orphans
   args:
     chdir: "{{ komodo_base_dir }}"
-  environment:
-    INFISICAL_CLIENT_ID: "{{ infisical_client_id }}"
-    INFISICAL_CLIENT_SECRET: "file:{{ infisical_client_secret_file }}"
   register: _komodo_compose
 
 - name: Display compose output

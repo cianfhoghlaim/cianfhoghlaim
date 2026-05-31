@@ -20,7 +20,7 @@ all:
     # Infisical
     infisical_pocketid_client_id: "{{ lookup('env', 'POCKETID_CLIENT_ID') }}"
     infisical_pocketid_client_secret: "{{ lookup('env', 'POCKETID_CLIENT_SECRET') }}"
-    pangolin_infisical_host: "http://172.18.0.1:8082"
+    pangolin_infisical_host: "http://172.18.0.1:8081"
     infisical_project_id: "{{ lookup('env', 'INFISICAL_PROJECT_ID') }}"
     infisical_client_id: "{{ lookup('env', 'INFISICAL_CLIENT_ID') }}"
 
@@ -30,6 +30,10 @@ all:
     # Komodo Defaults
     komodo_core_image_tag: "2"
     komodo_periphery_image_tag: "2"
+    komodo_domain: "komodo.cianfhoghlaim.ie"
+    
+    # Newt Pangolin Tunnel
+    pangolin_endpoint: "https://pangolin.cianfhoghlaim.ie"
 
   children:
     # =========================================================================
@@ -40,11 +44,19 @@ all:
         bunchloch:
           ansible_connection: local
           ansible_host: localhost
+          ansible_become: false
+
+          pangolin_infisical_host: "http://host.docker.internal:8081"
 
           komodo_host: "https://komodo.cianfhoghlaim.ie"
+          komodo_base_dir: "/Users/cianmacandeisigh/dev/kings_college_galway/.local/komodo"
+          komodo_periphery_root: "/Users/cianmacandeisigh/dev/kings_college_galway/.local/komodo_periphery"
+          
+          newt_base_dir: "/Users/cianmacandeisigh/dev/kings_college_galway/.local/newt"
           
           # Infisical integration is done via Locket Sidecar
-          infisical_client_secret_file: "/opt/pangolin/config/infisical_secret"
+          infisical_client_secret_file: "/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/pangolin/config/infisical_secret"
+          infisical_secret_path: "/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/pangolin/config/infisical_secret"
 
     # =========================================================================
     # WORKLOADS (Oracle Cloud Free Tier)
@@ -59,10 +71,12 @@ all:
           architecture: arm64
           ram_gb: 2
 
+          # Komodo Periphery uses WSS outbound, we don't need a Newt client for it
+          deploy_newt: false
+          
           # Komodo Periphery uses WSS outbound
-          periphery_core_address: "wss://komodo.cianfhoghlaim.ie:9120"
+          periphery_core_address: "wss://komodo.cianfhoghlaim.ie"
           periphery_connect_as: "arm1-oci"
           
-          # Newt Pangolin Tunnel
-          pangolin_endpoint: "wss://pangolin.cianfhoghlaim.ie"
+          # Infisical Secret Path
           infisical_secret_path: "/opt/pangolin/config/infisical_secret"
