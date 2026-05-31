@@ -21,7 +21,7 @@ tags = ["location:oracle-london", "role:control-plane", "arch:arm64"]
 address = ""
 region = "uk-london-1"
 enabled = true
-passkey = "[[KOMODO_PASSKEY]]"
+public_key = "MCowBQYDK2VuAyEAQbp8iLZRZQN+fpIU0hXWySQq+V4iCVixdDAR+zNCkhE="
 
 # -----------------------------------------------------------------------------
 # MACBOOK M4 MAX - Primary Workloads & Analytics (bunchloch)
@@ -41,4 +41,4 @@ tags = ["location:local", "role:primary-workloads", "arch:arm64"]
 address = ""
 region = "local"
 enabled = true
-passkey = "[[KOMODO_PASSKEY]]"
+public_key = "MCowBQYDK2VuAyEAdLu6e3EGKX43iTfoNxMThCBXxSkZMOcNQAHAiH16oU0="
