@@ -26,13 +26,19 @@ services:
       - "--provider=infisical"
       - "--infisical-client-id={{ infisical_client_id }}"
       - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-default-environment=dev"
+      - "--infisical-url={{ pangolin_infisical_host }}"
+      - "--infisical-default-project-id={{ infisical_project_id }}"
       - "--mode=watch"
       - "--map=/templates:/run/secrets/locket"
     volumes:
       - ./secrets/templates:/templates:ro
       - secrets-store:/run/secrets/locket
+    networks:
+      - infrastructure
+      - {{ docker_network_name }}
     healthcheck:
-      test: ["CMD", "/locket", "healthcheck"]
+      test: ["CMD", "/usr/local/bin/locket", "healthcheck"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -41,6 +47,7 @@ services:
   # ---------------------------------------------------------------------------
   # NEWT - Pangolin Tunnel Agent
   # ---------------------------------------------------------------------------
+{% if deploy_newt | default(true) %}
   newt:
     image: fosrl/newt:latest
     container_name: {{ inventory_hostname }}-newt
@@ -50,10 +57,14 @@ services:
         condition: service_healthy
     environment:
       PANGOLIN_ENDPOINT: {{ pangolin_endpoint }}
-      NEWT_ID_FILE: /run/secrets/locket/newt_id
-      NEWT_SECRET_FILE: /run/secrets/locket/newt_secret
       LOG_LEVEL: {{ log_level }}
       DOCKER_SOCKET: /var/run/docker.sock
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        export NEWT_ID=$$(cat /run/secrets/locket/newt_id | tr -d '\n' | tr -d '\r')
+        export NEWT_SECRET=$$(cat /run/secrets/locket/newt_secret | tr -d '\n' | tr -d '\r')
+        exec /entrypoint.sh newt
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - secrets-store:/run/secrets/locket:ro
@@ -61,6 +72,7 @@ services:
       - {{ docker_network_name }}
     labels:
       - "komodo.skip=true"
+{% endif %}
 
 {% if deploy_periphery | default(true) %}
   # ---------------------------------------------------------------------------
@@ -71,18 +83,26 @@ services:
     container_name: {{ inventory_hostname }}-periphery
     init: true
     restart: unless-stopped
+    depends_on:
+      locket:
+        condition: service_healthy
     environment:
       PERIPHERY_CORE_ADDRESS: {{ periphery_core_address }}
       PERIPHERY_CONNECT_AS: {{ periphery_connect_as }}
-      PERIPHERY_ONBOARDING_KEY: /run/secrets/locket/onboarding_key
       PERIPHERY_ROOT_DIRECTORY: /etc/komodo
       PERIPHERY_DISABLE_TERMINALS: "false"
       PERIPHERY_DISABLE_CONTAINER_EXEC: "false"
       PERIPHERY_INCLUDE_DISK_MOUNTS: /etc/hostname
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        export PERIPHERY_PASSKEYS=$$(cat /run/secrets/locket/onboarding_key | tr -d '\n' | tr -d '\r')
+        exec entrypoint.sh periphery
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /proc:/proc
       - /etc/komodo:/etc/komodo
+      - secrets-store:/run/secrets/locket:ro
     networks:
       - {{ docker_network_name }}
     labels:
@@ -129,5 +149,7 @@ volumes:
 # NETWORKS
 # =============================================================================
 networks:
+  infrastructure:
+    external: true
   {{ docker_network_name }}:
-    driver: bridge
+    external: true
