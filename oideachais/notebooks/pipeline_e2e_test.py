@@ -21,63 +21,51 @@ def _():
     return boto3, duckdb, lancedb, mo, os, pd, SentenceTransformer
 
 @app.cell
-def _(duckdb, mo):
+def _(mo):
     # Configure Services
     AWS_ENDPOINT = "http://localhost:3900"
-    AWS_ACCESS_KEY = "lakehouse"
-    AWS_SECRET_KEY = "devpassword"
-
-    # Configure DuckDB Connection to S3/Postgres
-    con = duckdb.connect()
-    con.execute("INSTALL httpfs; LOAD httpfs;")
-    con.execute("INSTALL postgres; LOAD postgres;")
-
-    con.execute(f"SET s3_endpoint='{AWS_ENDPOINT.replace('http://', '')}';")
-    con.execute("SET s3_use_ssl=false;")
-    con.execute("SET s3_url_style='path';")
-    con.execute(f"SET s3_access_key_id='{AWS_ACCESS_KEY}';")
-    con.execute(f"SET s3_secret_access_key='{AWS_SECRET_KEY}';")
-    con.execute("SET s3_region='garage';")
-
-    # Try to attach remote ducklake catalog, fallback to local duckdb file
-    try:
-        catalog_uri = "postgresql://lakekeeper:devpassword@localhost:5433/ducklake_oideachais"
-        con.execute(f"ATTACH '{catalog_uri}' AS ducklake (TYPE POSTGRES);")
-        catalog_type = "PostgreSQL (Remote)"
-    except Exception as e:
-        con.execute("ATTACH 'curriculum_unified.duckdb' AS ducklake;")
-        catalog_type = "DuckDB File (Local)"
-
+    AWS_ACCESS_KEY = "GK8126ec04258979d6abd12d8e"
+    AWS_SECRET_KEY = "0c3ec792597afad234d35f2dcf788e4e88cde3378e12525c2f8d1708b89af70e"
+    
+    # We will use DLT directly to query the data destination (DuckDB or Postgres)
+    # as it abstracts away the connection details.
+    
     mo.md(f"""
     ## 1. Infrastructure Status
-
-    - **Garage S3:** Connected to `{AWS_ENDPOINT}`
-    - **DuckLake Catalog:** Attached via `{catalog_type}`
+    
+    - **Garage S3:** Configured at `{AWS_ENDPOINT}`
+    - **Pipeline Catalog:** Will attach via DLT `curriculum_unified` pipeline
     """)
-    return AWS_ACCESS_KEY, AWS_ENDPOINT, AWS_SECRET_KEY, catalog_type, catalog_uri, con
+    return AWS_ACCESS_KEY, AWS_ENDPOINT, AWS_SECRET_KEY
 
 @app.cell
-def _(con, mo, pd):
-    # Verify DuckLake Extraction
-    query = """
-    SELECT cycle, subject, language, count(*) as pages 
-    FROM ducklake.curriculum_pages 
-    GROUP BY cycle, subject, language 
-    ORDER BY pages DESC
-    """
+def _(mo, pd):
+    import dlt
 
     try:
-        df_pages = con.execute(query).df()
-        ducklake_status = "✅ Data successfully extracted to DuckLake"
+        pipeline = dlt.attach("curriculum_unified")
+        with pipeline.sql_client() as client:
+            query = """
+            SELECT cycle, subject, language, count(*) as pages 
+            FROM curriculum.curriculum_pages 
+            GROUP BY cycle, subject, language 
+            ORDER BY pages DESC
+            """
+            with client.execute_query(query) as cursor:
+                columns = [col[0] for col in cursor.description] if cursor.description else []
+                rows = cursor.fetchall()
+                
+            df_pages = pd.DataFrame(rows, columns=columns)
+            ducklake_status = "✅ Data successfully queried via DLT pipeline"
     except Exception as e:
         df_pages = pd.DataFrame({"error": [str(e)]})
-        ducklake_status = f"❌ DuckLake extraction failed or pending: {e}"
+        ducklake_status = f"❌ Pipeline connection failed: {e}"
 
     mo.vstack([
-        mo.md(f"### 2. DuckLake Verification\n{ducklake_status}"),
+        mo.md(f"### 2. DuckLake/DLT Verification\n{ducklake_status}"),
         mo.ui.table(df_pages, selection=None)
     ])
-    return df_pages, ducklake_status, query
+    return df_pages, dlt, ducklake_status, pipeline, query
 
 @app.cell
 def _(AWS_ACCESS_KEY, AWS_ENDPOINT, AWS_SECRET_KEY, boto3, mo):

@@ -169,9 +169,9 @@ def _(mo, pipeline, query_input, run_button):
 
     try:
         with pipeline.sql_client() as client:
-            result = client.execute_sql(query_input.value)
-            columns = [col[0] for col in result.description] if hasattr(result, "description") else []
-            rows = list(result)
+            with client.execute_query(query_input.value) as cursor:
+                columns = [col[0] for col in cursor.description] if cursor.description else []
+                rows = cursor.fetchall()
 
         if rows:
             # Create table from results
@@ -223,9 +223,9 @@ def _(mo, pipeline, preview_limit, table_select):
 
         with pipeline.sql_client() as client:
             query = f"SELECT * FROM curriculum.{table_name} LIMIT {limit}"
-            result = client.execute_sql(query)
-            columns = [col[0] for col in result.description]
-            rows = list(result)
+            with client.execute_query(query) as cursor:
+                columns = [col[0] for col in cursor.description] if cursor.description else []
+                rows = cursor.fetchall()
 
         if rows:
             df = pd.DataFrame(rows, columns=columns)
