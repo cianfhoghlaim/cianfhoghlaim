@@ -1,0 +1,32 @@
+{
+  "name": "huggingface-skills",
+  "owner": {
+    "name": "Hugging Face"
+  },
+  "metadata": {
+    "description": "Agent Context Protocol (ACP) skills for AI/ML tasks including dataset creation, model training, evaluation, and research paper publishing on Hugging Face Hub",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "model-trainer",
+      "source": "./hf-llm-trainer",
+      "description": "This skill should be used when users want to train or fine-tune language models using TRL (Transformer Reinforcement Learning) on Hugging Face Jobs infrastructure. Covers SFT, DPO, GRPO and reward modeling training methods, plus GGUF conversion for local deployment. Includes guidance on the TRL Jobs package, UV scripts with PEP 723 format, dataset preparation and validation, hardware selection, cost estimation, Trackio monitoring, Hub authentication, and model persistence. Should be invoked for tasks involving cloud GPU training, GGUF conversion, or when users mention training on Hugging Face Jobs without local GPU setup."
+    },
+    {
+      "name": "hugging-face-paper-publisher",
+      "source": "./hf-paper-publisher",
+      "description": "Publish and manage research papers on Hugging Face Hub. Supports creating paper pages, linking papers to models/datasets, claiming authorship, and generating professional markdown-based research articles."
+    },
+    {
+      "name": "hugging-face-dataset-creator",
+      "source": "./hf_dataset_creator",
+      "description": "Create and manage datasets on Hugging Face Hub. Supports initializing repos, defining configs/system prompts, and streaming row updates. Designed to work alongside HF MCP server for comprehensive dataset workflows."
+    },
+    {
+      "name": "hugging-face-evaluation-manager",
+      "source": "./hf_model_evaluation",
+      "description": "Add and manage evaluation results in Hugging Face model cards. Supports extracting eval tables from README content and importing scores from Artificial Analysis API. Works with the model-index metadata format."
+    }
+  ]
+}
