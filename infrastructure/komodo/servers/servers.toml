@@ -41,4 +41,4 @@ tags = ["location:local", "role:primary-workloads", "arch:arm64"]
 address = ""
 region = "local"
 enabled = true
-public_key = "MCowBQYDK2VuAyEAdLu6e3EGKX43iTfoNxMThCBXxSkZMOcNQAHAiH16oU0="
+public_key = "MCowBQYDK2VuAyEAvgp1bX/2190RTaY0Mnqr/ERUIJoMzWzNirfWwa14FT4="
