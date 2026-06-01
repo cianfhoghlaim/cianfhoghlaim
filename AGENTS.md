@@ -19,52 +19,69 @@ This project uses standard GitHub/Forgejo issues for task tracking. Please use `
 
 | Skill | Purpose | Key Features |
 |-------|---------|--------------|
-| [`agno`](.skills/agno/SKILL.md) | Multi-agent orchestration with tool calling | AgentOS, stateless execution, full async knowledge base, unified media (v2.0+) |
-| [`google-adk`](.skills/google-adk/SKILL.md) | Google's Agent Development Kit | Multi-Agent Workflow Engine, NodeRunner, Native Inter-Agent Routing (v2.1+) |
+| [`agno`](.agents/skills/agno/SKILL.md) | Multi-agent orchestration with tool calling | AgentOS, stateless execution, full async knowledge base, unified media (v2.0+) |
+| [`google-adk`](.agents/skills/google-adk/SKILL.md) | Google's Agent Development Kit | Multi-Agent Workflow Engine, NodeRunner, Native Inter-Agent Routing (v2.1+) |
 
 ### Knowledge & Memory Systems
 
 | Skill | Purpose | Key Features |
 |-------|---------|--------------|
-| [`graphiti-core`](.skills/graphiti-core/SKILL.md) | Temporal knowledge graph memory | Bi-temporal model, episodic memory, temporal tracking |
-| [`graphiti`](.skills/graphiti/SKILL.md) | Knowledge graph for agents | HNSW indexing (v0.5+), MVCC safety, hybrid search |
-| [`cognee`](.skills/cognee/SKILL.md) | Graph-based knowledge management | Graph traversal (v0.1+), temporal tracking, multi-modal support |
-| [`lancedb`](.skills/lancedb/SKILL.md) | Vector database for RAG | HNSW indexing (v0.15+), MVCC safety, hybrid search |
+| [`graphiti-core`](.agents/skills/graphiti-core/SKILL.md) | Temporal knowledge graph memory | Bi-temporal model, episodic memory, temporal tracking |
+| [`graphiti`](.agents/skills/graphiti/SKILL.md) | Knowledge graph for agents | HNSW indexing (v0.5+), MVCC safety, hybrid search |
+| [`cognee`](.agents/skills/cognee/SKILL.md) | Graph-based knowledge management | Graph traversal (v0.1+), temporal tracking, multi-modal support |
+| [`lancedb`](.agents/skills/lancedb/SKILL.md) | Vector database for RAG | HNSW indexing (v0.15+), MVCC safety, hybrid search |
 
 ### Data Pipelines & Orchestration
 
 | Skill | Purpose | Key Features |
 |-------|---------|--------------|
-| [`dagster`](.skills/dagster/SKILL.md) | Data orchestration platform | Asset-based pipelines (v1.13+), branch deployments, AI skills integration |
-| [`dlt`](.skills/dlt/SKILL.md) | Data load tool for pipelines | dlt+ Projects & Cache, Pythonic pipelines, schema inference |
-| [`sqlmesh`](.skills/sqlmesh/SKILL.md) | Data transformation framework | DuckDB integration, virtual data warehouse, CI/CD |
+| [`dagster`](.agents/skills/dagster/SKILL.md) | Data orchestration platform | Asset-based pipelines (v1.13+), branch deployments, AI skills integration |
+| [`dlt`](.agents/skills/dlt/SKILL.md) | Data load tool for pipelines | dlt+ Projects & Cache, Pythonic pipelines, schema inference |
+| [`sqlmesh`](.agents/skills/sqlmesh/SKILL.md) | Data transformation framework | DuckDB integration, virtual data warehouse, CI/CD |
 
 ### Observability & Evaluation
 
 | Skill | Purpose | Key Features |
 |-------|---------|--------------|
-| [`langfuse`](.skills/langfuse/SKILL.md) | LLM observability platform | Prompt management, A/B testing, trace-based analytics |
-| [`ragas`](.skills/ragas/SKILL.md) | RAG evaluation framework | Trace-based metrics, faithfulness, answer relevance |
+| [`langfuse`](.agents/skills/langfuse/SKILL.md) | LLM observability platform | Prompt management, A/B testing, trace-based analytics |
+| [`ragas`](.agents/skills/ragas/SKILL.md) | RAG evaluation framework | Trace-based metrics, faithfulness, answer relevance |
 
 ### UI & Agent Interaction
 
 | Skill | Purpose | Key Features |
 |-------|---------|--------------|
-| [`copilotkit`](.skills/copilotkit/SKILL.md) | AI agent UI framework | React components, multi-agent support, state management |
-| [`vinxi`](.skills/vinxi/SKILL.md) | Full-stack framework (Poimandres) | Vite-based, server components, edge runtime |
+| [`copilotkit`](.agents/skills/copilotkit/SKILL.md) | AI agent UI framework | React components, multi-agent support, state management |
+| [`vinxi`](.agents/skills/vinxi/SKILL.md) | Full-stack framework (Poimandres) | Vite-based, server components, edge runtime |
 
 ### Model Training & Fine-tuning
 
 | Skill | Purpose | Key Features |
 |-------|---------|--------------|
-| [`unsloth`](.skills/unsloth/SKILL.md) | LLM fine-tuning | Multilingual support (v2024.12+), flash attention, 2x faster |
-| [`tanstack-start`](.skills/tanstack-start/SKILL.md) | React framework | React Server Components (v1.94+), edge runtime, streaming suspense |
+| [`unsloth`](.agents/skills/unsloth/SKILL.md) | LLM fine-tuning | Multilingual support (v2024.12+), flash attention, 2x faster |
+| [`tanstack-start`](.agents/skills/tanstack-start/SKILL.md) | React framework | React Server Components (v1.94+), edge runtime, streaming suspense |
+
+## Domain-to-Skill Mapping
+
+To ensure you use the appropriate skills for the different aspects of the project, strictly adhere to this mapping:
+
+### Codebase Exploration & General Development
+- **Code Search**: Use [`ccc`](.agents/skills/ccc/SKILL.md) (CocoIndex Code) for semantic search over the codebase. Prefer `ccc search` over raw `grep` or `find` to get context-aware, relevant files instantly.
+- **Python Quality**: Use [`dignified-python`](.agents/skills/dignified-python/SKILL.md) for LBYL exception handling patterns, ABC interfaces, and explicit module boundaries.
+
+### Core Data Platform (`oideachais/data_platform`)
+- **Orchestration**: Load [`dagster`](.agents/skills/dagster/SKILL.md) (specifically the expert routing rules inside it). This ensures you know how to build `MultiPartitionsDefinition` and avoid absolute namespace errors.
+- **Extraction**: Load [`dlt`](.agents/skills/dlt/SKILL.md). This skill router will point you to `create-filesystem-pipeline` (crucial for our `USE_LOCAL_SCRAPES` strategy) or `create-rest-api-pipeline`.
+- **Storage & Lakehouse**: Load [`motherduck`](.agents/skills/motherduck/SKILL.md). This serves as the master router to help you pick between `motherduck-ducklake` (our Garage S3 architecture), `motherduck-duckdb-sql`, or `motherduck-connect`.
+
+### Analytics & Notebooks (`oideachais/notebooks`)
+- **Data Exploration**: Load [`explore-data`](.agents/skills/explore-data/SKILL.md) to query endpoints or databases and generate an `analysis_plan.md` artifact.
+- **Notebook Assembly**: Load [`build-notebook`](.agents/skills/build-notebook/SKILL.md) to translate the `analysis_plan.md` into a fully functional, highly reactive `marimo` Python notebook.
 
 ## Tool Integration Patterns
 
 ### Multi-Agent Coordination
 
-Use [`google-adk`](.skills/google-adk/SKILL.md) or [`agno`](.skills/agno/SKILL.md) for:
+Use [`google-adk`](.agents/skills/google-adk/SKILL.md) or [`agno`](.agents/skills/agno/SKILL.md) for:
 
 - **Sequential workflows**: Research → Analyze → Write
 - **Parallel execution**: Multiple agents working simultaneously
@@ -72,24 +89,24 @@ Use [`google-adk`](.skills/google-adk/SKILL.md) or [`agno`](.skills/agno/SKILL.m
 
 ### Knowledge Graph Memory
 
-Use [`graphiti-core`](.skills/graphiti-core/SKILL.md) for temporal tracking.
+Use [`graphiti-core`](.agents/skills/graphiti-core/SKILL.md) for temporal tracking.
 
 ### Data Pipeline Patterns
 
-Use [`dagster`](.skills/dagster/SKILL.md) assets with [`dlt`](.skills/dlt/SKILL.md) sources.
+Use [`dagster`](.agents/skills/dagster/SKILL.md) assets with [`dlt`](.agents/skills/dlt/SKILL.md) sources.
 
 ### RAG Evaluation
 
-Use [`ragas`](.skills/ragas/SKILL.md) with [`langfuse`](.skills/langfuse/SKILL.md) tracing.
+Use [`ragas`](.agents/skills/ragas/SKILL.md) with [`langfuse`](.agents/skills/langfuse/SKILL.md) tracing.
 
 ## Best Practices
 
 ### Agent Development
 
-1. **Use knowledge graphs** for complex relationships ([`agno`](.skills/agno/SKILL.md) v2.0+, [`cognee`](.skills/cognee/SKILL.md) v0.1+)
-2. **Implement temporal tracking** for evolving data ([`graphiti-core`](.skills/graphiti-core/SKILL.md))
-3. **Leverage MVCC safety** for concurrent operations ([`lancedb`](.skills/lancedb/SKILL.md) v0.15+, [`graphiti`](.skills/graphiti/SKILL.md) v0.5+)
-4. **Use hybrid search** for better relevance ([`lancedb`](.skills/lancedb/SKILL.md), [`graphiti`](.skills/graphiti/SKILL.md))
+1. **Use knowledge graphs** for complex relationships ([`agno`](.agents/skills/agno/SKILL.md) v2.0+, [`cognee`](.agents/skills/cognee/SKILL.md) v0.1+)
+2. **Implement temporal tracking** for evolving data ([`graphiti-core`](.agents/skills/graphiti-core/SKILL.md))
+3. **Leverage MVCC safety** for concurrent operations ([`lancedb`](.agents/skills/lancedb/SKILL.md) v0.15+, [`graphiti`](.agents/skills/graphiti/SKILL.md) v0.5+)
+4. **Use hybrid search** for better relevance ([`lancedb`](.agents/skills/lancedb/SKILL.md), [`graphiti`](.agents/skills/graphiti/SKILL.md))
 
 ### Data Engineering
 
