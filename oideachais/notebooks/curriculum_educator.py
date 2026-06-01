@@ -220,9 +220,9 @@ def _(mo, subject_selector):
         cp.subject,
         COUNT(DISTINCT cp.content_hash) as pages_crawled,
         COUNT(DISTINCT pdfs.url) as pdfs_discovered,
-        SUM(CASE WHEN dl.status = 'downloaded' THEN 1 ELSE 0 END) as pdfs_downloaded,
-        SUM(CASE WHEN pdfs.pdf_type = 'exam_paper' THEN 1 ELSE 0 END) as exam_papers,
-        SUM(CASE WHEN pdfs.pdf_type = 'marking_scheme' THEN 1 ELSE 0 END) as marking_schemes
+        COUNT(DISTINCT CASE WHEN dl.status IN ('downloaded', 'already_exists') THEN dl.url END) as pdfs_downloaded,
+        COUNT(DISTINCT CASE WHEN pdfs.pdf_type = 'exam_paper' THEN pdfs.url END) as exam_papers,
+        COUNT(DISTINCT CASE WHEN pdfs.pdf_type = 'marking_scheme' THEN pdfs.url END) as marking_schemes
     FROM curriculum.curriculum_pages cp
     LEFT JOIN curriculum.curriculum_pdfs pdfs ON cp.subject = pdfs.subject
     LEFT JOIN curriculum.pdf_downloads dl ON pdfs.url = dl.url
