@@ -1,5 +1,7 @@
 # 🏛️ Oideachais (Kings' College Galway) by Cianfhoghlaim - Unified Celtic Education Platform
 
+**Update 01/06/26: due to the fatigue associated with, and the debilitating nature of, my CPTSD emotional flashbacks and thought-provoked myoclonic seizure it is important to be aware that any useful resources that come from this repository for this year's Leaving Certificate will be a fluke. I am incapable of completing any of the relevant areas in time. It most certainly will be very useful however for next year's Junior Cert, Leaving Cert, GCSE, A-Levels and other associated exams throughout the British Isles.**
+
 *v0.7 A unified data platform and research repository for education and cultural preservation.*
 
 
