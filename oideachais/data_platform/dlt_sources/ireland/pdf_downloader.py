@@ -69,9 +69,12 @@ def _get_download_path(
     cycle: str,
     subject: str,
     download_dir: Path,
+    pdf_type: str = None,
+    year: int = None,
+    level: str = None,
 ) -> Path:
     """Build download path: download_dir/cycle/subject/filename.pdf"""
-    filename = _safe_filename(url, content_hash)
+    filename = _safe_filename(url, content_hash, pdf_type, year, level, subject)
     path = download_dir / cycle / subject / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     return path
@@ -162,13 +165,16 @@ def _query_pending_pdfs(
         except Exception:
             table_ref = "curriculum_pdfs"
 
+        # Fetch BAML extracted metadata for normalization
         query = f"""
             SELECT DISTINCT
                 url,
                 cycle,
                 subject,
                 language,
-                pdf_type
+                pdf_type,
+                year,
+                level
             FROM {table_ref}
             WHERE 1=1
         """
@@ -193,7 +199,9 @@ def _query_pending_pdfs(
                 "cycle": r[1],
                 "subject": r[2],
                 "language": r[3],
-                "pdf_type": r[4]
+                "pdf_type": r[4],
+                "year": r[5] if len(r) > 5 else None,
+                "level": r[6] if len(r) > 6 else None
             })
             
         return pdfs
@@ -273,6 +281,9 @@ def pdf_downloads(
                     cycle=pdf_cycle,
                     subject=pdf_subject,
                     download_dir=download_dir,
+                    pdf_type=pdf_info.get("pdf_type"),
+                    year=pdf_info.get("year"),
+                    level=pdf_info.get("level"),
                 )
 
                 # Only write if file doesn't exist (hash-based dedup)

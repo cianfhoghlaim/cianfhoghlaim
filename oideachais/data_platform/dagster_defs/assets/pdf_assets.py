@@ -82,23 +82,21 @@ def pdf_downloads_asset(context) -> dg.MaterializeResult:
 
     context.log.info(f"Querying PDF URLs from {duckdb_path}")
 
-    # Choose destination
+    # 1. Primary Destination (DuckLake / DuckDB for Analytics)
     use_ducklake = os.environ.get("USE_DUCKLAKE", "true").lower() == "true"
 
     if use_ducklake:
-        destination = get_dlt_destination()
+        primary_dest = get_dlt_destination()
     else:
-        destination = get_duckdb_fallback_destination(duckdb_path)
+        primary_dest = get_duckdb_fallback_destination(duckdb_path)
 
-    # Create DLT pipeline
-    dlt_pipeline = dlt.pipeline(
+    primary_pipeline = dlt.pipeline(
         pipeline_name=DLT_PIPELINE_NAME,
-        destination=destination,
+        destination=primary_dest,
         dataset_name=DLT_DATASET_NAME,
         pipelines_dir=str(DLT_PIPELINES_DIR),
     )
 
-    # Run PDF download source
     source = pdf_download_source(
         duckdb_path=duckdb_path,
         download_dir=PDF_DOWNLOAD_DIR,
@@ -108,11 +106,43 @@ def pdf_downloads_asset(context) -> dg.MaterializeResult:
     )
 
     load_info = safe_dlt_run(
-        dlt_pipeline,
+        primary_pipeline,
         source,
-        table_name=None,  # Use resource names
+        table_name=None,
         write_disposition="merge",
     )
+
+    # 2. Secondary Destination (Filesystem Export for Offline Users)
+    export_to_fs = os.environ.get("EXPORT_TO_FILESYSTEM", "true").lower() == "true"
+    fs_export_dir = ""
+    
+    if export_to_fs:
+        fs_export_dir = str(Path("/Users/cianmacandeisigh/dev/kings_college_galway/downloads/structured_export").absolute())
+        context.log.info(f"Dual Execution: Exporting structured metadata to filesystem at {fs_export_dir}")
+        
+        fs_pipeline = dlt.pipeline(
+            pipeline_name=f"{DLT_PIPELINE_NAME}_export",
+            destination=dlt.destinations.filesystem(bucket_url=f"file://{fs_export_dir}"),
+            dataset_name=DLT_DATASET_NAME,
+            pipelines_dir=str(DLT_PIPELINES_DIR),
+        )
+        
+        # We run the source again, but the PDFs are already downloaded (hash deduplication handles this safely)
+        # This run purely extracts the structured metadata out to Parquet/JSONL.
+        safe_dlt_run(
+            fs_pipeline,
+            pdf_download_source(
+                duckdb_path=duckdb_path,
+                download_dir=PDF_DOWNLOAD_DIR,
+                max_files=100,
+                max_size_mb=50,
+                rate_limit_delay=1.0,
+            ),
+            table_name=None,
+            write_disposition="merge",
+            # Ensure output is Parquet for the filesystem
+            loader_file_format="parquet"
+        )
 
     # Count results
     rows_loaded = 0
@@ -128,6 +158,7 @@ def pdf_downloads_asset(context) -> dg.MaterializeResult:
         metadata={
             "pdfs_processed": rows_loaded,
             "download_dir": str(PDF_DOWNLOAD_DIR),
+            "fs_export_dir": fs_export_dir,
             "load_id": str(load_info.loads_ids[0]) if load_info.loads_ids else "unknown",
         }
     )
