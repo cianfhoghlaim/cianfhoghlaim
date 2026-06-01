@@ -89,13 +89,7 @@ def _(mo):
     To process the entire Irish curriculum without triggering API rate limits on Firecrawl or the SEC website, we use **Dagster MultiPartitions**.
     
     Instead of one massive run, we partition by `subject` and `language`.
-    """)
-    return
-
-@app.cell
-def _(mo):
-    # Dagster Code Snippet
-    mo.md("""
+    
     ```python
     # dagster_defs/assets/ireland/curriculum_dlt_assets.py
     
@@ -120,18 +114,46 @@ def _(mo):
 @app.cell
 def _(mo):
     mo.md("""
-    ## 3. Extraction with DLT and Firecrawl v2
+    ## 3. How Dagster Routes to DuckDB / DuckLake
     
-    DLT (Data Load Tool) dynamically creates table schemas based on the data we `yield`. We have a central source function `curriculum_source()` that combines multiple web sources.
+    Before data is extracted, Dagster decides *where* the data should land. In `curriculum_dlt_assets.py`, we dynamically route the DLT pipeline output based on the environment:
     
-    For web scraping, we utilize **Firecrawl v2**. A key best practice is caching and handling rate limits: Firecrawl base tiers limit concurrent scrapes.
+    ```python
+    # 1. Check environment toggle
+    use_ducklake = os.environ.get("USE_DUCKLAKE", "true").lower() == "true"
+    
+    if use_ducklake:
+        # Resolves to a PostgreSQL catalog + S3/R2 storage (True Lakehouse)
+        destination = get_dlt_destination()
+    else:
+        # Fallback: Resolves to a local .duckdb file
+        destination = get_duckdb_fallback_destination(
+            str(DLT_PIPELINES_DIR / DLT_PIPELINE_NAME / f"{DLT_DATASET_NAME}.duckdb")
+        )
+        
+    # 2. Configure the DLT pipeline
+    dlt_pipeline = dlt.pipeline(
+        pipeline_name="curriculum_unified",
+        destination=destination,
+        dataset_name="curriculum",
+    )
+    
+    # 3. Execute with safety
+    # We use a serial executor for DuckDB safety to avoid concurrent write locks!
+    load_info = safe_dlt_run(dlt_pipeline, source)
+    ```
+    
+    This seamless routing means developers can test locally on a simple `.duckdb` file, while production leverages the scalable, multi-user DuckLake architecture with Postgres/PlanetScale.
     """)
     return
 
 @app.cell
 def _(mo):
-    # DLT Code Snippet
     mo.md("""
+    ## 4. Extraction with DLT and Firecrawl v2
+    
+    DLT (Data Load Tool) dynamically creates table schemas based on the data we `yield`. We have a central source function `curriculum_source()` that combines multiple web sources.
+    
     ```python
     # oideachais/data_platform/dlt_sources/ireland/curriculum_source.py
     
@@ -166,7 +188,7 @@ def _(mo):
 @app.cell
 def _(mo):
     mo.md("""
-    ## 4. The DuckLake Architecture
+    ## 5. The DuckLake Architecture
     
     Once DLT extracts the data, it loads it into **DuckLake**. 
     
@@ -205,11 +227,39 @@ def _(env_dropdown, mo, subject_selector):
 def _(mo, run_query, sql_area):
     import dlt
     import pandas as pd
+    import os
+    import sys
+    from pathlib import Path
+    
+    # Add project root to path so we can import our modules safely
+    project_root = Path(__file__).parent.parent.parent if "__file__" in globals() else Path().absolute().parent.parent
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+    
+    from oideachais.data_platform.dlt_utils import get_duckdb_fallback_destination, get_dlt_destination
     
     mo.stop(not run_query.value, mo.md("*Click 'Execute' to run the SQL query against the active DuckLake environment.*"))
     
+    output_ui = None
     try:
-        pipeline = dlt.attach("curriculum_unified")
+        # Defaulting to false so the tutorial runs without needing Docker Postgres
+        use_ducklake = os.environ.get("USE_DUCKLAKE", "false").lower() == "true"
+        
+        if use_ducklake:
+            destination = get_dlt_destination()
+        else:
+            # Match the exact local dev duckdb path used by the curriculum_dlt_assets!
+            dlt_dir = project_root / "oideachais/data_platform/.dlt"
+            db_path = str(dlt_dir / "curriculum_unified" / "curriculum_unified.duckdb")
+            destination = get_duckdb_fallback_destination(db_path)
+            
+        # We use our built-in factory to guarantee we use the same DuckDB/Postgres destination as the Dagster assets
+        pipeline = dlt.pipeline(
+            pipeline_name="curriculum_unified", 
+            dataset_name="curriculum",
+            destination=destination
+        )
+        
         with pipeline.sql_client() as client:
             with client.execute_query(sql_area.value) as cursor:
                 columns = [col[0] for col in cursor.description] if cursor.description else []
@@ -217,18 +267,21 @@ def _(mo, run_query, sql_area):
                 
         if rows:
             df = pd.DataFrame(rows, columns=columns)
-            mo.ui.table(df)
+            output_ui = mo.ui.table(df)
         else:
-            mo.md("*No results found. (Have you run the `dagster dev` pipeline for these subjects yet?)*")
+            output_ui = mo.md("*No results found. (The query ran successfully, but returned 0 rows)*")
+            
     except Exception as e:
-        mo.callout(mo.md(f"**DuckLake Execution Error:**\n```\n{e}\n```"), kind="danger")
+        # Format the exception beautifully
+        output_ui = mo.callout(mo.md(f"**Execution Error:**\n\n```text\n{e}\n```\n\n*(Have you run the `dagster dev` pipeline to generate the `curriculum_unified` dataset yet?)*"), kind="danger")
         
-    return client, columns, df, dlt, pd, pipeline, rows
+    output_ui
+    return dlt, pd, output_ui
 
 @app.cell
 def _(mo):
     mo.md("""
-    ## 5. Stagehand: Browser Automation for Exam Papers
+    ## 6. Stagehand: Browser Automation for Exam Papers
     
     While Firecrawl handles standard sites, downloading past papers from the SEC (`examinations.ie`) requires interacting with dropdowns. We use **Stagehand** via Browserbase for this.
     
@@ -252,18 +305,12 @@ def _(mo):
 @app.cell
 def _(mo):
     mo.md("""
-    ## 6. CocoIndex: Incremental LLM Transformations
+    ## 7. CocoIndex: Incremental LLM Transformations
     
     Now that our Lakehouse holds clean Markdown and downloaded PDFs, we need to convert them into vector embeddings for RAG. **CocoIndex** is our transformation engine.
     
     CocoIndex is incredible because it operates **incrementally**. It tracks which rows in DuckLake/Postgres have changed and only processes the new ones.
-    """)
-    return
-
-@app.cell
-def _(mo):
-    # CocoIndex Flow Definition
-    mo.md("""
+    
     ### Example CocoIndex Flow
     
     Notice how CocoIndex operates strictly on row fields via `.transform()`. We do not mutate existing fields or use intermediate variables.
@@ -328,7 +375,7 @@ def _(mo):
 @app.cell
 def _(mo):
     mo.md("""
-    ## 7. LanceDB: Vector Retrieval
+    ## 8. LanceDB: Vector Retrieval
     
     Finally, CocoIndex writes the embeddings directly to **LanceDB**. 
     

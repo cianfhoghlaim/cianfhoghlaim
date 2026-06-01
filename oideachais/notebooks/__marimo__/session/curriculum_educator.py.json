@@ -1,0 +1,165 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.23.8",
+    "script_metadata_hash": null
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "640ff4d80a5542e64dd3a8562afacc5d",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"oideachais-pipeline-from-syllabus-to-vector-space\">Oideachais Pipeline: From Syllabus to Vector Space</h1>\n<span class=\"paragraph\">Welcome to the interactive educator notebook! This guide traces the journey of Irish Senior Cycle subjects \nfrom raw web pages on NCCA, CurriculumOnline, and Examinations.ie, all the way to structured, searchable \nembeddings in a vector database.</span>\n<h3 id=\"the-modern-data-stack\">The Modern Data Stack</h3>\n<span class=\"paragraph\">Our architecture uses a modern, local-first but production-ready stack:</span>\n<ol>\n<li><strong>Extraction (DLT + Firecrawl/Stagehand):</strong> We crawl the curriculum sites and parse the content. Firecrawl v2 handles standard web pages (with automatic markdown conversion and link extraction), while Stagehand automates complex interactions like downloading exam papers from dropdowns.</li>\n<li><strong>Orchestration (Dagster):</strong> Manages concurrent, partitioned runs to avoid rate limits while ensuring robust retries.</li>\n<li><strong>Storage (DuckLake):</strong> A lightweight Lakehouse separating compute (DuckDB) from storage (S3/R2) and metadata (Postgres/PlanetScale).</li>\n<li><strong>Transformation (CocoIndex):</strong> Real-time, incremental processing to chunk documents and generate LLM embeddings.</li>\n<li><strong>Retrieval (LanceDB):</strong> Embedded vector storage utilizing HNSW indexing for hybrid text/vector search.</li>\n</ol></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "5fab27fa5a0a408dc2c8eef41c7151b9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: row;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 1.0rem'><marimo-ui-element object-id='MJUe-0' random-id='b9998b89-c3d5-d0df-a078-09936ddb6e86'><marimo-dropdown data-initial-value='[&quot;local&quot;]' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eDuckLake Environment&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-options='[&quot;local&quot;,&quot;production&quot;]' data-allow-select-none='false' data-searchable='false' data-full-width='false' data-disabled='false'></marimo-dropdown></marimo-ui-element><marimo-ui-element object-id='MJUe-1' random-id='8bec97b2-02f7-3377-265a-8a4b0d5db8a2'><marimo-multiselect data-initial-value='[&quot;biology&quot;,&quot;chemistry&quot;]' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eTarget Subjects&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-options='[&quot;english&quot;,&quot;mathematics&quot;,&quot;gaeilge&quot;,&quot;biology&quot;,&quot;geography&quot;,&quot;history&quot;,&quot;german&quot;,&quot;business&quot;,&quot;chemistry&quot;]' data-full-width='false' data-disabled='false'></marimo-multiselect></marimo-ui-element></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "46890c3269fff4e17e7771df634414cf",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\"><strong>Current Configuration:</strong></span>\n<ul>\n<li><strong>Environment:</strong> <code>local</code> (Routes DLT outputs to local S3/Postgres vs Cloudflare R2/PlanetScale).</li>\n<li><strong>Selected Subjects:</strong> <code>biology</code>, <code>chemistry</code></li>\n</ul></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "ee8d623a26d86668de1a087de3024e33",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"2-orchestration-with-dagster\">2. Orchestration with Dagster</h2>\n<span class=\"paragraph\">To process the entire Irish curriculum without triggering API rate limits on Firecrawl or the SEC website, we use <strong>Dagster MultiPartitions</strong>.</span>\n<span class=\"paragraph\">Instead of one massive run, we partition by <code>subject</code> and <code>language</code>.</span>\n<div class=\"language-python codehilite\"><pre><span></span><code><span class=\"c1\"># dagster_defs/assets/ireland/curriculum_dlt_assets.py</span>\n\n<span class=\"c1\"># 1. Define the dimensions of our data</span>\n<span class=\"n\">senior_cycle_partition</span> <span class=\"o\">=</span> <span class=\"n\">MultiPartitionsDefinition</span><span class=\"p\">({</span>\n    <span class=\"s2\">&quot;subject&quot;</span><span class=\"p\">:</span> <span class=\"n\">StaticPartitionsDefinition</span><span class=\"p\">([</span><span class=\"s2\">&quot;biology&quot;</span><span class=\"p\">,</span> <span class=\"s2\">&quot;chemistry&quot;</span><span class=\"p\">,</span> <span class=\"s2\">&quot;mathematics&quot;</span><span class=\"p\">,</span> <span class=\"o\">...</span><span class=\"p\">]),</span>\n    <span class=\"s2\">&quot;language&quot;</span><span class=\"p\">:</span> <span class=\"n\">StaticPartitionsDefinition</span><span class=\"p\">([</span><span class=\"s2\">&quot;en&quot;</span><span class=\"p\">,</span> <span class=\"s2\">&quot;ga&quot;</span><span class=\"p\">]),</span>\n<span class=\"p\">})</span>\n\n<span class=\"c1\"># 2. Assign partition to the asset and limit concurrency</span>\n<span class=\"nd\">@dg</span><span class=\"o\">.</span><span class=\"n\">asset</span><span class=\"p\">(</span>\n    <span class=\"n\">partitions_def</span><span class=\"o\">=</span><span class=\"n\">senior_cycle_partition</span><span class=\"p\">,</span>\n    <span class=\"n\">op_tags</span><span class=\"o\">=</span><span class=\"p\">{</span><span class=\"s2\">&quot;dagster/concurrency_key&quot;</span><span class=\"p\">:</span> <span class=\"s2\">&quot;curriculum_senior_cycle&quot;</span><span class=\"p\">},</span> <span class=\"c1\"># Prevents Firecrawl rate limits!</span>\n<span class=\"p\">)</span>\n<span class=\"k\">def</span><span class=\"w\"> </span><span class=\"nf\">senior_cycle_asset</span><span class=\"p\">(</span><span class=\"n\">context</span><span class=\"p\">):</span>\n    <span class=\"n\">partition_key_str</span> <span class=\"o\">=</span> <span class=\"n\">context</span><span class=\"o\">.</span><span class=\"n\">partition_key</span> <span class=\"c1\"># e.g., &quot;en|biology&quot;</span>\n    <span class=\"o\">...</span>\n</code></pre></div></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "ce842584c06f668fbec4d79de87a2f74",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"3-how-dagster-routes-to-duckdb-ducklake\">3. How Dagster Routes to DuckDB / DuckLake</h2>\n<span class=\"paragraph\">Before data is extracted, Dagster decides <em>where</em> the data should land. In <code>curriculum_dlt_assets.py</code>, we dynamically route the DLT pipeline output based on the environment:</span>\n<div class=\"language-python codehilite\"><pre><span></span><code><span class=\"c1\"># 1. Check environment toggle</span>\n<span class=\"n\">use_ducklake</span> <span class=\"o\">=</span> <span class=\"n\">os</span><span class=\"o\">.</span><span class=\"n\">environ</span><span class=\"o\">.</span><span class=\"n\">get</span><span class=\"p\">(</span><span class=\"s2\">&quot;USE_DUCKLAKE&quot;</span><span class=\"p\">,</span> <span class=\"s2\">&quot;true&quot;</span><span class=\"p\">)</span><span class=\"o\">.</span><span class=\"n\">lower</span><span class=\"p\">()</span> <span class=\"o\">==</span> <span class=\"s2\">&quot;true&quot;</span>\n\n<span class=\"k\">if</span> <span class=\"n\">use_ducklake</span><span class=\"p\">:</span>\n    <span class=\"c1\"># Resolves to a PostgreSQL catalog + S3/R2 storage (True Lakehouse)</span>\n    <span class=\"n\">destination</span> <span class=\"o\">=</span> <span class=\"n\">get_dlt_destination</span><span class=\"p\">()</span>\n<span class=\"k\">else</span><span class=\"p\">:</span>\n    <span class=\"c1\"># Fallback: Resolves to a local .duckdb file</span>\n    <span class=\"n\">destination</span> <span class=\"o\">=</span> <span class=\"n\">get_duckdb_fallback_destination</span><span class=\"p\">(</span>\n        <span class=\"nb\">str</span><span class=\"p\">(</span><span class=\"n\">DLT_PIPELINES_DIR</span> <span class=\"o\">/</span> <span class=\"n\">DLT_PIPELINE_NAME</span> <span class=\"o\">/</span> <span class=\"sa\">f</span><span class=\"s2\">&quot;</span><span class=\"si\">{</span><span class=\"n\">DLT_DATASET_NAME</span><span class=\"si\">}</span><span class=\"s2\">.duckdb&quot;</span><span class=\"p\">)</span>\n    <span class=\"p\">)</span>\n\n<span class=\"c1\"># 2. Configure the DLT pipeline</span>\n<span class=\"n\">dlt_pipeline</span> <span class=\"o\">=</span> <span class=\"n\">dlt</span><span class=\"o\">.</span><span class=\"n\">pipeline</span><span class=\"p\">(</span>\n    <span class=\"n\">pipeline_name</span><span class=\"o\">=</span><span class=\"s2\">&quot;curriculum_unified&quot;</span><span class=\"p\">,</span>\n    <span class=\"n\">destination</span><span class=\"o\">=</span><span class=\"n\">destination</span><span class=\"p\">,</span>\n    <span class=\"n\">dataset_name</span><span class=\"o\">=</span><span class=\"s2\">&quot;curriculum&quot;</span><span class=\"p\">,</span>\n<span class=\"p\">)</span>\n\n<span class=\"c1\"># 3. Execute with safety</span>\n<span class=\"c1\"># We use a serial executor for DuckDB safety to avoid concurrent write locks!</span>\n<span class=\"n\">load_info</span> <span class=\"o\">=</span> <span class=\"n\">safe_dlt_run</span><span class=\"p\">(</span><span class=\"n\">dlt_pipeline</span><span class=\"p\">,</span> <span class=\"n\">source</span><span class=\"p\">)</span>\n</code></pre></div>\n<span class=\"paragraph\">This seamless routing means developers can test locally on a simple <code>.duckdb</code> file, while production leverages the scalable, multi-user DuckLake architecture with Postgres/PlanetScale.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "c483996e17cd6c5950011f91007d2b4b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"4-extraction-with-dlt-and-firecrawl-v2\">4. Extraction with DLT and Firecrawl v2</h2>\n<span class=\"paragraph\">DLT (Data Load Tool) dynamically creates table schemas based on the data we <code>yield</code>. We have a central source function <code>curriculum_source()</code> that combines multiple web sources.</span>\n<div class=\"language-python codehilite\"><pre><span></span><code><span class=\"c1\"># oideachais/data_platform/dlt_sources/ireland/curriculum_source.py</span>\n\n<span class=\"nd\">@dlt</span><span class=\"o\">.</span><span class=\"n\">resource</span><span class=\"p\">(</span>\n    <span class=\"n\">name</span><span class=\"o\">=</span><span class=\"s2\">&quot;curriculum_pages&quot;</span><span class=\"p\">,</span>\n    <span class=\"n\">write_disposition</span><span class=\"o\">=</span><span class=\"s2\">&quot;merge&quot;</span><span class=\"p\">,</span>           <span class=\"c1\"># Idempotent: only inserts/updates, never duplicates</span>\n    <span class=\"n\">primary_key</span><span class=\"o\">=</span><span class=\"p\">[</span><span class=\"s2\">&quot;content_hash&quot;</span><span class=\"p\">],</span>        <span class=\"c1\"># Cross-source deduplication key</span>\n<span class=\"p\">)</span>\n<span class=\"k\">def</span><span class=\"w\"> </span><span class=\"nf\">curriculum_pages</span><span class=\"p\">()</span> <span class=\"o\">-&gt;</span> <span class=\"n\">Iterator</span><span class=\"p\">[</span><span class=\"nb\">dict</span><span class=\"p\">]:</span>\n    <span class=\"c1\"># Using Firecrawl v2 API patterns</span>\n    <span class=\"n\">scrape_opts</span> <span class=\"o\">=</span> <span class=\"n\">ScrapeOptions</span><span class=\"p\">(</span><span class=\"n\">formats</span><span class=\"o\">=</span><span class=\"p\">[</span><span class=\"s2\">&quot;markdown&quot;</span><span class=\"p\">,</span> <span class=\"s2\">&quot;links&quot;</span><span class=\"p\">],</span> <span class=\"n\">onlyMainContent</span><span class=\"o\">=</span><span class=\"kc\">True</span><span class=\"p\">)</span>\n\n    <span class=\"n\">result</span> <span class=\"o\">=</span> <span class=\"n\">app</span><span class=\"o\">.</span><span class=\"n\">crawl</span><span class=\"p\">(</span>\n        <span class=\"n\">url</span><span class=\"o\">=</span><span class=\"s2\">&quot;https://www.curriculumonline.ie/Senior-cycle/Senior-Cycle-Subjects/Biology/&quot;</span><span class=\"p\">,</span>\n        <span class=\"n\">limit</span><span class=\"o\">=</span><span class=\"mi\">50</span><span class=\"p\">,</span>\n        <span class=\"n\">scrape_options</span><span class=\"o\">=</span><span class=\"n\">scrape_opts</span>\n    <span class=\"p\">)</span>\n\n    <span class=\"k\">for</span> <span class=\"n\">page</span> <span class=\"ow\">in</span> <span class=\"n\">result</span><span class=\"o\">.</span><span class=\"n\">data</span><span class=\"p\">:</span>\n        <span class=\"k\">yield</span> <span class=\"p\">{</span>\n            <span class=\"s2\">&quot;url&quot;</span><span class=\"p\">:</span> <span class=\"n\">page</span><span class=\"o\">.</span><span class=\"n\">metadata</span><span class=\"p\">[</span><span class=\"s2\">&quot;sourceURL&quot;</span><span class=\"p\">],</span>\n            <span class=\"s2\">&quot;markdown&quot;</span><span class=\"p\">:</span> <span class=\"n\">page</span><span class=\"o\">.</span><span class=\"n\">markdown</span><span class=\"p\">,</span>\n            <span class=\"s2\">&quot;content_hash&quot;</span><span class=\"p\">:</span> <span class=\"n\">hashlib</span><span class=\"o\">.</span><span class=\"n\">sha256</span><span class=\"p\">(</span><span class=\"n\">page</span><span class=\"o\">.</span><span class=\"n\">markdown</span><span class=\"o\">.</span><span class=\"n\">encode</span><span class=\"p\">())</span><span class=\"o\">.</span><span class=\"n\">hexdigest</span><span class=\"p\">(),</span>\n            <span class=\"s2\">&quot;subject&quot;</span><span class=\"p\">:</span> <span class=\"s2\">&quot;biology&quot;</span>\n        <span class=\"p\">}</span>\n</code></pre></div>\n<span class=\"paragraph\">Notice <code>write_disposition=\"merge\"</code>: This ensures that if we run the pipeline weekly, we don't duplicate data. We only update rows where the <code>content_hash</code> changes.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "7e60a5602af5ae831efb69ea478537d5",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"5-the-ducklake-architecture\">5. The DuckLake Architecture</h2>\n<span class=\"paragraph\">Once DLT extracts the data, it loads it into <strong>DuckLake</strong>. </span>\n<span class=\"paragraph\">DuckLake solves a massive problem: it gives us a lightweight data lakehouse without needing Spark or a heavy Hive Metastore.</span>\n<ul>\n<li><strong>Compute:</strong> Fast, local, in-process analytics using <code>DuckDB</code>.</li>\n<li><strong>Storage:</strong> Cheap, decoupled storage using <code>Parquet</code> files on <code>S3</code> or Cloudflare <code>R2</code>.</li>\n<li><strong>Metadata:</strong> ACID compliance and multi-user concurrency using a <code>PostgreSQL</code> catalog.</li>\n</ul></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "3fa4ab23f42ec2930043af040e730873",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"query-the-lakehouse\">Query the Lakehouse</h3></span><marimo-ui-element object-id='SFPL-0' random-id='2bf5d34c-0dba-6428-46b5-3c4d80de3069'><marimo-text-area data-initial-value='&quot;-- Querying the DuckLake Catalog&#92;nSELECT &#92;n    subject, &#92;n    COUNT(*) as pages_crawled, &#92;n    MIN(crawled_at) as first_crawl&#92;nFROM curriculum.curriculum_pages &#92;nWHERE subject IN (&#x27;biology&#x27;, &#x27;chemistry&#x27;)&#92;nGROUP BY subject;&quot;' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eTest Query&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-placeholder='&quot;&quot;' data-disabled='false' data-debounce='true' data-full-width='true' data-rows='6'></marimo-text-area></marimo-ui-element><marimo-ui-element object-id='SFPL-1' random-id='7c163930-34ce-b48a-112d-d43062f58764'><marimo-button data-initial-value='0' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eExecute against DuckLake&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-kind='&quot;neutral&quot;' data-disabled='false' data-full-width='false'></marimo-button></marimo-ui-element></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "5858f7c3e1d8eb15216be722291131bb",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\"><em>No results found. (The query ran successfully, but returned 0 rows)</em></span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "732ebe68967220cce866830ac0c8d17e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"6-stagehand-browser-automation-for-exam-papers\">6. Stagehand: Browser Automation for Exam Papers</h2>\n<span class=\"paragraph\">While Firecrawl handles standard sites, downloading past papers from the SEC (<code>examinations.ie</code>) requires interacting with dropdowns. We use <strong>Stagehand</strong> via Browserbase for this.</span>\n<div class=\"language-python codehilite\"><pre><span></span><code><span class=\"c1\"># Stagehand extraction logic</span>\n<span class=\"kn\">from</span><span class=\"w\"> </span><span class=\"nn\">sruth_browser.tools.examinations_scraper</span><span class=\"w\"> </span><span class=\"kn\">import</span> <span class=\"n\">scrape_exam_materials_sync</span>\n\n<span class=\"c1\"># We yield metadata to DLT, which creates a `curriculum_pdfs` table</span>\n<span class=\"n\">materials</span> <span class=\"o\">=</span> <span class=\"n\">scrape_exam_materials_sync</span><span class=\"p\">(</span>\n    <span class=\"n\">subject</span><span class=\"o\">=</span><span class=\"s2\">&quot;biology&quot;</span><span class=\"p\">,</span>\n    <span class=\"n\">years</span><span class=\"o\">=</span><span class=\"p\">[</span><span class=\"mi\">2023</span><span class=\"p\">,</span> <span class=\"mi\">2024</span><span class=\"p\">],</span>\n    <span class=\"n\">level</span><span class=\"o\">=</span><span class=\"s2\">&quot;leaving_certificate&quot;</span>\n<span class=\"p\">)</span>\n\n<span class=\"c1\"># Later, our pdf_downloader.py queries DuckLake for pending PDFs and safely downloads them:</span>\n<span class=\"c1\"># SELECT url FROM curriculum_pdfs WHERE subject = &#39;biology&#39;</span>\n</code></pre></div></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "f5c2c2dc8ea417d7808d1935540333b6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"7-cocoindex-incremental-llm-transformations\">7. CocoIndex: Incremental LLM Transformations</h2>\n<span class=\"paragraph\">Now that our Lakehouse holds clean Markdown and downloaded PDFs, we need to convert them into vector embeddings for RAG. <strong>CocoIndex</strong> is our transformation engine.</span>\n<span class=\"paragraph\">CocoIndex is incredible because it operates <strong>incrementally</strong>. It tracks which rows in DuckLake/Postgres have changed and only processes the new ones.</span>\n<h3 id=\"example-cocoindex-flow\">Example CocoIndex Flow</h3>\n<span class=\"paragraph\">Notice how CocoIndex operates strictly on row fields via <code>.transform()</code>. We do not mutate existing fields or use intermediate variables.</span>\n<div class=\"language-python codehilite\"><pre><span></span><code><span class=\"kn\">import</span><span class=\"w\"> </span><span class=\"nn\">cocoindex</span>\n\n<span class=\"nd\">@cocoindex</span><span class=\"o\">.</span><span class=\"n\">flow_def</span><span class=\"p\">(</span><span class=\"n\">name</span><span class=\"o\">=</span><span class=\"s2\">&quot;SeniorCycleEmbeddings&quot;</span><span class=\"p\">)</span>\n<span class=\"k\">def</span><span class=\"w\"> </span><span class=\"nf\">embed_curriculum</span><span class=\"p\">(</span><span class=\"n\">flow_builder</span><span class=\"p\">:</span> <span class=\"n\">cocoindex</span><span class=\"o\">.</span><span class=\"n\">FlowBuilder</span><span class=\"p\">,</span> <span class=\"n\">data_scope</span><span class=\"p\">:</span> <span class=\"n\">cocoindex</span><span class=\"o\">.</span><span class=\"n\">DataScope</span><span class=\"p\">):</span>\n\n    <span class=\"c1\"># 1. Source: Read from DuckLake Postgres Catalog</span>\n    <span class=\"n\">data_scope</span><span class=\"p\">[</span><span class=\"s2\">&quot;pages&quot;</span><span class=\"p\">]</span> <span class=\"o\">=</span> <span class=\"n\">flow_builder</span><span class=\"o\">.</span><span class=\"n\">add_source</span><span class=\"p\">(</span>\n        <span class=\"n\">cocoindex</span><span class=\"o\">.</span><span class=\"n\">sources</span><span class=\"o\">.</span><span class=\"n\">Postgres</span><span class=\"p\">(</span>\n            <span class=\"n\">connection</span><span class=\"o\">=...</span><span class=\"p\">,</span>\n            <span class=\"n\">query</span><span class=\"o\">=</span><span class=\"s2\">&quot;SELECT content_hash, subject, markdown FROM curriculum.curriculum_pages&quot;</span>\n        <span class=\"p\">)</span>\n    <span class=\"p\">)</span>\n\n    <span class=\"n\">target</span> <span class=\"o\">=</span> <span class=\"n\">data_scope</span><span class=\"o\">.</span><span class=\"n\">add_collector</span><span class=\"p\">()</span>\n\n    <span class=\"c1\"># 2. Iterate rows</span>\n    <span class=\"k\">with</span> <span class=\"n\">data_scope</span><span class=\"p\">[</span><span class=\"s2\">&quot;pages&quot;</span><span class=\"p\">]</span><span class=\"o\">.</span><span class=\"n\">row</span><span class=\"p\">()</span> <span class=\"k\">as</span> <span class=\"n\">page</span><span class=\"p\">:</span>\n\n        <span class=\"c1\"># 3. Transform: Chunk the markdown</span>\n        <span class=\"n\">page</span><span class=\"p\">[</span><span class=\"s2\">&quot;chunks&quot;</span><span class=\"p\">]</span> <span class=\"o\">=</span> <span class=\"n\">page</span><span class=\"p\">[</span><span class=\"s2\">&quot;markdown&quot;</span><span class=\"p\">]</span><span class=\"o\">.</span><span class=\"n\">transform</span><span class=\"p\">(</span>\n            <span class=\"n\">cocoindex</span><span class=\"o\">.</span><span class=\"n\">functions</span><span class=\"o\">.</span><span class=\"n\">SplitRecursively</span><span class=\"p\">(</span>\n                <span class=\"n\">language</span><span class=\"o\">=</span><span class=\"s2\">&quot;markdown&quot;</span><span class=\"p\">,</span>\n                <span class=\"n\">chunk_size</span><span class=\"o\">=</span><span class=\"mi\">1500</span>\n            <span class=\"p\">)</span>\n        <span class=\"p\">)</span>\n\n        <span class=\"c1\"># 4. Nested iteration over the generated chunks</span>\n        <span class=\"k\">with</span> <span class=\"n\">page</span><span class=\"p\">[</span><span class=\"s2\">&quot;chunks&quot;</span><span class=\"p\">]</span><span class=\"o\">.</span><span class=\"n\">row</span><span class=\"p\">()</span> <span class=\"k\">as</span> <span class=\"n\">chunk</span><span class=\"p\">:</span>\n\n            <span class=\"c1\"># 5. Transform: LLM Embeddings (via OpenAI/Voyage API)</span>\n            <span class=\"n\">chunk</span><span class=\"p\">[</span><span class=\"s2\">&quot;vector&quot;</span><span class=\"p\">]</span> <span class=\"o\">=</span> <span class=\"n\">chunk</span><span class=\"p\">[</span><span class=\"s2\">&quot;text&quot;</span><span class=\"p\">]</span><span class=\"o\">.</span><span class=\"n\">transform</span><span class=\"p\">(</span>\n                <span class=\"n\">cocoindex</span><span class=\"o\">.</span><span class=\"n\">functions</span><span class=\"o\">.</span><span class=\"n\">EmbedText</span><span class=\"p\">(</span>\n                    <span class=\"n\">api_type</span><span class=\"o\">=</span><span class=\"n\">cocoindex</span><span class=\"o\">.</span><span class=\"n\">LlmApiType</span><span class=\"o\">.</span><span class=\"n\">OPENAI</span><span class=\"p\">,</span>\n                    <span class=\"n\">model</span><span class=\"o\">=</span><span class=\"s2\">&quot;text-embedding-3-small&quot;</span>\n                <span class=\"p\">)</span>\n            <span class=\"p\">)</span>\n\n            <span class=\"c1\"># Collect the final results</span>\n            <span class=\"n\">target</span><span class=\"o\">.</span><span class=\"n\">collect</span><span class=\"p\">(</span>\n                <span class=\"nb\">id</span><span class=\"o\">=</span><span class=\"n\">cocoindex</span><span class=\"o\">.</span><span class=\"n\">GeneratedField</span><span class=\"o\">.</span><span class=\"n\">UUID</span><span class=\"p\">,</span>\n                <span class=\"n\">subject</span><span class=\"o\">=</span><span class=\"n\">page</span><span class=\"p\">[</span><span class=\"s2\">&quot;subject&quot;</span><span class=\"p\">],</span>\n                <span class=\"n\">content_hash</span><span class=\"o\">=</span><span class=\"n\">page</span><span class=\"p\">[</span><span class=\"s2\">&quot;content_hash&quot;</span><span class=\"p\">],</span>\n                <span class=\"n\">text</span><span class=\"o\">=</span><span class=\"n\">chunk</span><span class=\"p\">[</span><span class=\"s2\">&quot;text&quot;</span><span class=\"p\">],</span>\n                <span class=\"n\">vector</span><span class=\"o\">=</span><span class=\"n\">chunk</span><span class=\"p\">[</span><span class=\"s2\">&quot;vector&quot;</span><span class=\"p\">]</span>\n            <span class=\"p\">)</span>\n\n    <span class=\"c1\"># 6. Target: Export to LanceDB</span>\n    <span class=\"n\">target</span><span class=\"o\">.</span><span class=\"n\">export</span><span class=\"p\">(</span>\n        <span class=\"s2\">&quot;lancedb_export&quot;</span><span class=\"p\">,</span>\n        <span class=\"n\">cocoindex</span><span class=\"o\">.</span><span class=\"n\">targets</span><span class=\"o\">.</span><span class=\"n\">LanceDB</span><span class=\"p\">(</span><span class=\"n\">uri</span><span class=\"o\">=</span><span class=\"s2\">&quot;s3://lancedb/curriculum&quot;</span><span class=\"p\">,</span> <span class=\"n\">table_name</span><span class=\"o\">=</span><span class=\"s2\">&quot;vectors&quot;</span><span class=\"p\">),</span>\n        <span class=\"n\">primary_key_fields</span><span class=\"o\">=</span><span class=\"p\">[</span><span class=\"s2\">&quot;id&quot;</span><span class=\"p\">]</span>\n    <span class=\"p\">)</span>\n</code></pre></div></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "4d8e5ee81dbd91c71beddf7ad182cb9b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"8-lancedb-vector-retrieval\">8. LanceDB: Vector Retrieval</h2>\n<span class=\"paragraph\">Finally, CocoIndex writes the embeddings directly to <strong>LanceDB</strong>.</span>\n<span class=\"paragraph\">Why LanceDB?</span>\n<ul>\n<li><strong>Embedded:</strong> Runs in process.</li>\n<li><strong>Multimodal:</strong> Supports text, images, and vectors in one place.</li>\n<li><strong>HNSW Indexing:</strong> High-speed approximate nearest neighbor search.</li>\n<li><strong>Hybrid Search:</strong> Mixes semantic search with keyword filtering.</li>\n</ul>\n<div class=\"language-python codehilite\"><pre><span></span><code><span class=\"kn\">import</span><span class=\"w\"> </span><span class=\"nn\">lancedb</span>\n\n<span class=\"n\">db</span> <span class=\"o\">=</span> <span class=\"n\">lancedb</span><span class=\"o\">.</span><span class=\"n\">connect</span><span class=\"p\">(</span><span class=\"s2\">&quot;s3://lancedb/curriculum&quot;</span><span class=\"p\">)</span>\n<span class=\"n\">table</span> <span class=\"o\">=</span> <span class=\"n\">db</span><span class=\"o\">.</span><span class=\"n\">open_table</span><span class=\"p\">(</span><span class=\"s2\">&quot;vectors&quot;</span><span class=\"p\">)</span>\n\n<span class=\"c1\"># Create Full-Text Search index</span>\n<span class=\"n\">table</span><span class=\"o\">.</span><span class=\"n\">create_fts_index</span><span class=\"p\">(</span><span class=\"s2\">&quot;text&quot;</span><span class=\"p\">)</span>\n\n<span class=\"c1\"># Hybrid search for Biology queries</span>\n<span class=\"n\">results</span> <span class=\"o\">=</span> <span class=\"p\">(</span><span class=\"n\">table</span><span class=\"o\">.</span><span class=\"n\">search</span><span class=\"p\">(</span><span class=\"s2\">&quot;mitosis cellular division&quot;</span><span class=\"p\">,</span> <span class=\"n\">query_type</span><span class=\"o\">=</span><span class=\"s2\">&quot;hybrid&quot;</span><span class=\"p\">)</span>\n          <span class=\"o\">.</span><span class=\"n\">where</span><span class=\"p\">(</span><span class=\"s2\">&quot;subject = &#39;biology&#39;&quot;</span><span class=\"p\">)</span>\n          <span class=\"o\">.</span><span class=\"n\">limit</span><span class=\"p\">(</span><span class=\"mi\">5</span><span class=\"p\">)</span>\n          <span class=\"o\">.</span><span class=\"n\">rerank</span><span class=\"p\">(</span><span class=\"n\">method</span><span class=\"o\">=</span><span class=\"s2\">&quot;rrf&quot;</span><span class=\"p\">)</span>\n          <span class=\"o\">.</span><span class=\"n\">to_pandas</span><span class=\"p\">())</span>\n</code></pre></div>\n<span class=\"paragraph\">And just like that, the Irish curriculum has been fully ingested, processed, embedded, and is ready to power our AI agents!</span></span>"
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}
