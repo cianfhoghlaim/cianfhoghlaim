@@ -1,0 +1,31 @@
+name: Check AGENTS.md
+
+on:
+  pull_request:
+    paths:
+      - "scripts/AGENTS_TEMPLATE.md"
+      - "scripts/generate_agents.py"
+      - "**/SKILL.md"
+      - "AGENTS.md"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Regenerate AGENTS.md
+        run: python scripts/generate_agents.py
+
+      - name: Ensure AGENTS.md is up to date
+        run: |
+          git diff --quiet -- AGENTS.md || {
+            echo "::error::AGENTS.md is outdated. Run 'python scripts/generate_agents.py' and commit the changes."
+            exit 1
+          }

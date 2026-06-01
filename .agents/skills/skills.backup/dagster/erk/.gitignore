@@ -1,0 +1,22 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Testing
+.pytest_cache
+.coverage
+
+# Virtual environments
+.venv
+activate.sh
+
+# Local implementation and configuration (not tracked in git)
+.impl/
+.erk/scratch/
+.env
+
+CLAUDE.local.md
