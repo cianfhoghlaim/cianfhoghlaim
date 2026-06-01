@@ -1,1 +1,0 @@
-"""Implementation queue core functionality."""
