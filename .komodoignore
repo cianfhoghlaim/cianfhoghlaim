@@ -1,0 +1,24 @@
+# Ignore heavy directories during Komodo deployments
+university_of_galway/
+oideachais/data_platform/datasets/
+docs/
+leabharlann/
+zotero/
+stedding/
+models/
+instagram_output/
+mlx_models/
+.cocoindex_code/
+
+# Ignore normal gitignore stuff
+.git/
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.dagger/
+.dlt/
+.dagster/
+ducklake.files/
+.lancedb/
