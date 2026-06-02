@@ -78,7 +78,7 @@
       ]
     }
   },
-  "subagents": {
+  "agent": {
     "explorer": {
       "description": "Fast agent specialized for codebase exploration, code search, and reading logs. Use this BEFORE writing code to understand the workspace.",
       "model": "opencode-go/deepseek-v4-flash",
