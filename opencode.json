@@ -1,19 +1,22 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "skills": {
-    "paths": [".skills"]
-  },
   "mcp": {
     "browserbase": {
       "type": "local",
       "command": [
         "npx",
         "-y",
-        "@browserbasehq/mcp"
+        "@browserbasehq/mcp",
+        "--modelName", "vertex/gemini-2.5-flash",
+        "--experimental",
+        "--modelApiKey", "dummy"
       ],
       "env": {
         "BROWSERBASE_API_KEY": "infisical://dev-baile/browserbase/api_key",
-        "BROWSERBASE_PROJECT_ID": "infisical://dev-baile/browserbase/project_id"
+        "BROWSERBASE_PROJECT_ID": "infisical://dev-baile/browserbase/project_id",
+        "GOOGLE_VERTEX_PROJECT": "infisical://dev-baile/vertex/project_id",
+        "GOOGLE_VERTEX_LOCATION": "infisical://dev-baile/vertex/location",
+        "GEMINI_API_KEY": "infisical://dev-baile/gemini/api_key"
       },
       "enabled": true
     },
@@ -67,6 +70,39 @@
         "chrome-devtools-mcp"
       ],
       "enabled": true
+    },
+    "cocoindex-code": {
+      "type": "local",
+      "command": [
+        "ccc", "mcp"
+      ]
+    }
+  },
+  "subagents": {
+    "explorer": {
+      "description": "Fast agent specialized for codebase exploration, code search, and reading logs. Use this BEFORE writing code to understand the workspace.",
+      "model": "opencode-go/deepseek-v4-flash",
+      "system_prompt": "You are a fast codebase explorer. Your goal is to map the repository and find relevant files using `ccc` (cocoindex-code) .skill and mcp server. Do not write new features. Just gather information and return a precise list of files and context."
+    },
+    "data-engineer": {
+      "description": "Expert Data Engineer for ELT, Dagster orchestration, DLT pipelines, DuckDB, and LanceDB.",
+      "model": "opencode-go/qwen3.7-max",
+      "system_prompt": "You are an expert Data Engineer. Your stack: Dagster, dlt, DuckDB, LanceDB, and Garage (S3). Rely on the `skill` tool to read `.skills/dagster`, `.skills/dlt`, and `.skills/motherduck`."
+    },
+    "ai-engineer": {
+      "description": "AI/ML Engineer focused on agentic workflows, OCR, semantic extraction, LiteLLM orchestration, and Unsloth finetuning.",
+      "model": "opencode-go/deepseek-v4-pro",
+      "system_prompt": "You are an AI/ML Engineer handling the `meaisínfhoghlaim` and `oideachais` AI features. Your focus is strictly-typed extraction using BAML, LLM routing via LiteLLM, temporal knowledge graphs via Graphiti, and OCR via Docling and our Vision Language Models. Use the `skill` tool to consult `.skills/baml`, `.skills/litellm`, and `.skills/document-intelligence`."
+    },
+    "frontend-dev": {
+      "description": "Frontend Developer for interactive educational interfaces, React, TanStack Start, and Marimo notebooks.",
+      "model": "opencode-go/kimi-k2.6",
+      "system_prompt": "You are a Frontend Developer building UI components and data exploration interfaces. Use TanStack Start and test our deployments within the Cloudflare environment. For data exploration, build reactive notebooks using Marimo. Consult `.skills/tanstack-start`, `.skills/marimo`, and `.skills/canvas-design` via the `skill` tool."
+    },
+    "devops-architect": {
+      "description": "Infrastructure Architect for zero-egress lakehouse deployments, Docker Compose, Komodo, and Pangolin routing.",
+      "model": "opencode-go/glm-5.1",
+      "system_prompt": "You are a DevOps Architect. You manage the 25+ local Docker stacks in `/infrastructure`. CRITICAL: Do NOT attempt to manually manage or write `.env` files. Secrets are auto-hydrated via Infisical and `mise`. Use `.skills/docker-compose`, `.skills/komodo`, and `.skills/pangolin`."
     }
   }
 }
