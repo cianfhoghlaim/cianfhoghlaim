@@ -244,53 +244,83 @@ ALL_JC_SUBJECTS = [
     "religious-education",
 ]
 
+ALL_LCA_SUBJECTS = [
+    "english-and-communications",
+    "mathematical-applications",
+    "information-technology",
+]
+
 
 def _get_exam_materials_browser(
     subjects: list[str],
     years: list[int],
     level: str,
     language: str,
+    material_types: list[str] | None = None,
 ) -> Iterator[dict[str, Any]]:
     """
-    Get exam materials using browser automation.
+    Get exam materials using browser automation with session reuse.
 
-    This is a synchronous wrapper that runs the async scraper.
+    Uses scrape_materials_batch which initializes Stagehand once for all
+    subjects instead of re-initializing per subject (~30s savings each).
+
+    When USE_LOCAL_SCRAPES=true, skips browser automation entirely
+    and yields a stub record indicating the skip.
     """
+    # USE_LOCAL_SCRAPES: skip browser automation for testing/offline mode
+    if os.environ.get("USE_LOCAL_SCRAPES", "").lower() == "true":
+        logger.info("Skipping browser automation (USE_LOCAL_SCRAPES=true)")
+        for subject in subjects:
+            yield {
+                "subject": subject,
+                "year": 0,
+                "level": level,
+                "material_type": "skipped",
+                "pdf_url": "",
+                "status": "skipped_local_mode",
+                "scraped_at": datetime.now(UTC).isoformat(),
+            }
+        return
+
     try:
         from sruth_browser.tools.examinations_scraper import (
-            scrape_exam_materials_sync,
+            scrape_materials_batch_sync,
         )
     except ImportError:
         logger.warning("browser_tools_not_available")
-        yield {
-            "subject": "all",
-            "year": 0,
-            "level": level,
-            "material_type": "error",
-            "pdf_url": "",
-            "status": "browser_tools_not_available",
-            "scraped_at": datetime.now(UTC).isoformat(),
-        }
+        for subject in subjects:
+            yield {
+                "subject": subject,
+                "year": 0,
+                "level": level,
+                "material_type": "error",
+                "pdf_url": "",
+                "status": "browser_tools_not_available",
+                "scraped_at": datetime.now(UTC).isoformat(),
+            }
         return
 
-    for subject in subjects:
-        try:
-            materials = scrape_exam_materials_sync(
-                subject=subject,
-                years=years,
-                level=level,
-                language=language,
-            )
+    try:
+        materials = scrape_materials_batch_sync(
+            subjects=subjects,
+            years=years,
+            level=level,
+            language=language,
+            material_types=material_types,
+        )
 
-            for material in materials:
-                yield material.to_dict()
+        for material in materials:
+            record = material.to_dict()
+            if record.get("material_type") == "paper" and record.get("content_hash") == "error":
+                record["status"] = "error"
+                record["error"] = record.get("title", "unknown error")
+            else:
+                record["status"] = "success"
+            yield record
 
-        except Exception as e:
-            logger.error(
-                "browser_scrape_failed",
-                subject=subject,
-                error=str(e),
-            )
+    except Exception as e:
+        logger.error(f"batch_browser_scrape_failed: {e}")
+        for subject in subjects:
             yield {
                 "subject": subject,
                 "year": 0,
@@ -309,44 +339,67 @@ def sec_examinations_browser_source(
     years: list[int] | None = None,
     level: str = "leaving_certificate",
     language: str = "en",
+    material_types: list[str] | None = None,
 ):
     """
     DLT source for SEC exam materials using browser automation.
 
     Uses Stagehand browser automation to interact with dropdowns on examinations.ie
-    and download exam papers, marking schemes, and examiner reports.
+    and discover exam papers, marking schemes, and examiner reports.
+
+    The exam archive page uses a cascading JavaScript form:
+    1. Accept terms checkbox
+    2. Choose Type dropdown (Exam Papers, Marking Schemes, etc.)
+    3. Level dropdown → Subject dropdown → Year dropdown → Submit
+
+    A single Stagehand session is reused across all subjects for efficiency.
 
     Args:
-        subjects: List of subject slugs (default: all LC subjects)
-        years: List of years (default: 2020-2024)
-        level: Exam level (leaving_certificate, junior_cycle)
-        language: Language code (en, ga)
+        subjects: List of subject slugs (default: all LC/JC subjects for level)
+        years: List of years (default: 2020-2024, full archive: 1999-2025)
+        level: Exam level (leaving_certificate, junior_cycle, leaving_certificate_applied)
+        language: Language code (en, ga). Both languages' papers are downloaded.
+        material_types: List of types to scrape (default: both exam_papers and marking_schemes)
+            Options: "exam_papers", "marking_schemes"
 
     Returns:
-        DLT resources for exam papers, marking schemes, and reports
+        DLT resources: exam_papers, marking_schemes, all_exam_materials
 
     Examples:
-        # All Leaving Certificate subjects, recent years
+        # All Leaving Certificate subjects, recent 5 years
         pipeline.run(sec_examinations_browser_source(years=[2023, 2024]))
 
-        # Mathematics only, full archive
+        # Mathematics exam papers only, full archive
         pipeline.run(sec_examinations_browser_source(
             subjects=["mathematics"],
-            years=list(range(1999, 2025)),
+            years=list(range(1999, 2026)),
+            material_types=["exam_papers"],
+        ))
+
+        # All marking schemes for Junior Cycle
+        pipeline.run(sec_examinations_browser_source(
+            level="junior_cycle",
+            material_types=["marking_schemes"],
         ))
     """
+    _LEVEL_SUBJECTS = {
+        "leaving_certificate": ALL_LC_SUBJECTS,
+        "junior_cycle": ALL_JC_SUBJECTS,
+        "leaving_certificate_applied": ALL_LCA_SUBJECTS,
+    }
     if subjects is None:
-        subjects = ALL_LC_SUBJECTS if level == "leaving_certificate" else ALL_JC_SUBJECTS
+        subjects = _LEVEL_SUBJECTS.get(level, ALL_LC_SUBJECTS)
 
     if years is None:
         years = list(range(2020, 2025))
 
+    if material_types is None:
+        material_types = ["exam_papers", "marking_schemes"]
+
     logger.info(
-        "sec_examinations_browser_source_initialized",
-        subject_count=len(subjects),
-        year_count=len(years),
-        level=level,
-        language=language,
+        f"sec_examinations_browser_source_initialized: "
+        f"subject_count={len(subjects)}, year_count={len(years)}, "
+        f"level={level}, language={language}, material_types={material_types}"
     )
 
     @dlt.resource(
@@ -365,11 +418,12 @@ def sec_examinations_browser_source(
             "language": {"data_type": "text"},
             "content_hash": {"data_type": "text"},
             "scraped_at": {"data_type": "timestamp"},
+            "status": {"data_type": "text"},
         },
     )
     def exam_papers() -> Iterator[dict[str, Any]]:
         """Past examination papers."""
-        for material in _get_exam_materials_browser(subjects, years, level, language):
+        for material in _get_exam_materials_browser(subjects, years, level, language, material_types):
             if material.get("material_type") == "paper":
                 yield material
 
@@ -377,34 +431,51 @@ def sec_examinations_browser_source(
         name="marking_schemes",
         write_disposition="merge",
         primary_key=["pdf_url"],
+        columns={
+            "subject": {"data_type": "text"},
+            "year": {"data_type": "bigint"},
+            "level": {"data_type": "text"},
+            "material_type": {"data_type": "text"},
+            "pdf_url": {"data_type": "text"},
+            "title": {"data_type": "text"},
+            "paper_number": {"data_type": "bigint"},
+            "exam_level": {"data_type": "text"},
+            "language": {"data_type": "text"},
+            "content_hash": {"data_type": "text"},
+            "scraped_at": {"data_type": "timestamp"},
+            "status": {"data_type": "text"},
+        },
     )
     def marking_schemes() -> Iterator[dict[str, Any]]:
         """Marking schemes for examination papers."""
-        for material in _get_exam_materials_browser(subjects, years, level, language):
+        for material in _get_exam_materials_browser(subjects, years, level, language, material_types):
             if material.get("material_type") == "marking_scheme":
-                yield material
-
-    @dlt.resource(
-        name="examiner_reports",
-        write_disposition="append",
-        primary_key=["pdf_url"],
-    )
-    def examiner_reports() -> Iterator[dict[str, Any]]:
-        """Chief Examiner Reports."""
-        for material in _get_exam_materials_browser(subjects, years, level, language):
-            if material.get("material_type") == "examiner_report":
                 yield material
 
     @dlt.resource(
         name="all_exam_materials",
         write_disposition="merge",
         primary_key=["pdf_url"],
+        columns={
+            "subject": {"data_type": "text"},
+            "year": {"data_type": "bigint"},
+            "level": {"data_type": "text"},
+            "material_type": {"data_type": "text"},
+            "pdf_url": {"data_type": "text"},
+            "title": {"data_type": "text"},
+            "paper_number": {"data_type": "bigint"},
+            "exam_level": {"data_type": "text"},
+            "language": {"data_type": "text"},
+            "content_hash": {"data_type": "text"},
+            "scraped_at": {"data_type": "timestamp"},
+            "status": {"data_type": "text"},
+        },
     )
     def all_exam_materials() -> Iterator[dict[str, Any]]:
         """All exam materials (papers, schemes, reports)."""
-        yield from _get_exam_materials_browser(subjects, years, level, language)
+        yield from _get_exam_materials_browser(subjects, years, level, language, material_types)
 
-    return exam_papers, marking_schemes, examiner_reports, all_exam_materials
+    return exam_papers, marking_schemes, all_exam_materials
 
 
 # Convenience functions
@@ -414,6 +485,7 @@ def leaving_certificate_source(
     subjects: list[str] | None = None,
     years: list[int] | None = None,
     language: str = "en",
+    material_types: list[str] | None = None,
 ):
     """DLT source for Leaving Certificate exam materials."""
     return sec_examinations_browser_source(
@@ -421,6 +493,7 @@ def leaving_certificate_source(
         years=years,
         level="leaving_certificate",
         language=language,
+        material_types=material_types,
     )
 
 
@@ -428,6 +501,7 @@ def junior_cycle_exams_source(
     subjects: list[str] | None = None,
     years: list[int] | None = None,
     language: str = "en",
+    material_types: list[str] | None = None,
 ):
     """DLT source for Junior Cycle exam materials."""
     return sec_examinations_browser_source(
@@ -435,6 +509,7 @@ def junior_cycle_exams_source(
         years=years,
         level="junior_cycle",
         language=language,
+        material_types=material_types,
     )
 
 
@@ -442,6 +517,7 @@ def mathematics_exams_source(
     years: list[int] | None = None,
     level: str = "leaving_certificate",
     language: str = "en",
+    material_types: list[str] | None = None,
 ):
     """DLT source for Mathematics exam materials only."""
     return sec_examinations_browser_source(
@@ -449,12 +525,14 @@ def mathematics_exams_source(
         years=years,
         level=level,
         language=language,
+        material_types=material_types,
     )
 
 
 def science_subjects_exams_source(
     years: list[int] | None = None,
     language: str = "en",
+    material_types: list[str] | None = None,
 ):
     """DLT source for all science subjects (Biology, Chemistry, Physics)."""
     return sec_examinations_browser_source(
@@ -462,4 +540,5 @@ def science_subjects_exams_source(
         years=years,
         level="leaving_certificate",
         language=language,
+        material_types=material_types,
     )

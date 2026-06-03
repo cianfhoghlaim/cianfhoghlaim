@@ -61,6 +61,9 @@ from .assets import all_assets
 # Ireland Curriculum Assets (@dlt_assets pattern - auto-parallelized)
 from .assets.ireland import curriculum_dlt_assets, scraped_curriculum_pages
 
+# Ireland Exam Materials Assets (Stagehand browser -> DLT -> DuckLake)
+from .assets.ireland import exam_materials_assets
+
 # PDF Processing Assets
 from .assets.pdf_assets import pdf_processing_assets
 
@@ -147,6 +150,28 @@ pdf_processing_job = define_asset_job(
     tags={"pipeline": "ireland_curriculum", "stage": "pdf_processing"},
 )
 
+# Exam Materials Pipeline Jobs (one per cycle due to different partition definitions)
+sec_examinations_lc_job = define_asset_job(
+    name="sec_examinations_leaving_certificate",
+    selection=AssetSelection.assets(AssetKey(["ireland", "exam_materials", "leaving_certificate"])),
+    description="Ireland Leaving Certificate exam papers and marking schemes (Stagehand browser)",
+    tags={"pipeline": "ireland_examinations", "cycle": "leaving_certificate"},
+)
+
+sec_examinations_jc_job = define_asset_job(
+    name="sec_examinations_junior_cycle",
+    selection=AssetSelection.assets(AssetKey(["ireland", "exam_materials", "junior_cycle"])),
+    description="Ireland Junior Cycle exam papers and marking schemes (Stagehand browser)",
+    tags={"pipeline": "ireland_examinations", "cycle": "junior_cycle"},
+)
+
+sec_examinations_lca_job = define_asset_job(
+    name="sec_examinations_leaving_certificate_applied",
+    selection=AssetSelection.assets(AssetKey(["ireland", "exam_materials", "leaving_certificate_applied"])),
+    description="Ireland Leaving Certificate Applied exam papers (Stagehand browser)",
+    tags={"pipeline": "ireland_examinations", "cycle": "leaving_certificate_applied"},
+)
+
 # Note: Each cycle has MultiPartition(subject, language)
 # Short courses have MultiPartition(course, language)
 # Assets can be materialized individually or via backfill
@@ -161,6 +186,9 @@ all_jobs = [
     curriculum_senior_cycle_job,
     curriculum_short_courses_job,
     pdf_processing_job,
+    sec_examinations_lc_job,
+    sec_examinations_jc_job,
+    sec_examinations_lca_job,
 ]
 
 
@@ -192,6 +220,7 @@ combined_assets = [
     *all_assets,
     *curriculum_dlt_assets,  # Ireland curriculum (@dlt_assets pattern, auto-parallelized)
     scraped_curriculum_pages, # New dynamic scraping asset
+    *exam_materials_assets,  # SEC exam materials (Stagehand browser -> DLT -> DuckLake)
     *pdf_processing_assets,  # PDF download and OCR extraction
 ]
 

@@ -43,13 +43,16 @@ DLT_PIPELINES_DIR = Path(__file__).parent.parent.parent / ".dlt"
     group_name="pdf_processing",
     compute_kind="dlt",
     description="Download curriculum PDFs from discovered URLs",
-    # Depends on curriculum assets that discover PDF URLs in curriculum_pdfs table
     deps=[
         dg.AssetKey(["ireland", "curriculum", "early_childhood"]),
         dg.AssetKey(["ireland", "curriculum", "primary"]),
         dg.AssetKey(["ireland", "curriculum", "junior_cycle"]),
         dg.AssetKey(["ireland", "curriculum", "senior_cycle"]),
         dg.AssetKey(["ireland", "curriculum", "short_courses"]),
+        # Exam materials — pdf_urls discovered by Stagehand browser scraping
+        dg.AssetKey(["ireland", "exam_materials", "leaving_certificate"]),
+        dg.AssetKey(["ireland", "exam_materials", "junior_cycle"]),
+        dg.AssetKey(["ireland", "exam_materials", "leaving_certificate_applied"]),
     ],
     retry_policy=dg.RetryPolicy(
         max_retries=2,

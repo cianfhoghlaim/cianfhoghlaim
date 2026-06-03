@@ -33,6 +33,7 @@ logger = structlog.get_logger(__name__)
 
 # Download configuration
 DEFAULT_DOWNLOAD_DIR = Path("./downloads/curriculum_pdfs")
+EXAM_DOWNLOAD_DIR = Path("./downloads/examinations")
 MAX_FILE_SIZE_MB = 50
 RATE_LIMIT_DELAY = 1.0  # Seconds between requests
 REQUEST_TIMEOUT = 30  # Seconds
@@ -44,23 +45,27 @@ def _compute_content_hash(content: bytes) -> str:
     return hashlib.sha256(content).hexdigest()
 
 
-def _safe_filename(url: str, content_hash: str) -> str:
-    """Generate a safe filename from URL and content hash."""
+def _safe_filename(url: str, content_hash: str, pdf_type: str = None, year: int = None, level: str = None, subject: str = None) -> str:
+    """Generate a normalized filename incorporating metadata if available, but preserving the original filename."""
     parsed = urlparse(url)
     path_parts = parsed.path.strip("/").split("/")
-
-    # Get the original filename from URL path
-    if path_parts and path_parts[-1].endswith(".pdf"):
-        original_name = path_parts[-1]
-    else:
-        original_name = "document.pdf"
-
-    # Remove extension, add hash, add extension back
-    name_without_ext = original_name.rsplit(".", 1)[0]
-    # Truncate name if too long
-    name_without_ext = name_without_ext[:50]
-
-    return f"{name_without_ext}_{content_hash[:12]}.pdf"
+    original_name = path_parts[-1] if (path_parts and path_parts[-1].lower().endswith(".pdf")) else "document.pdf"
+    
+    name_without_ext = original_name.rsplit(".", 1)[0][:50]
+    
+    parts = []
+    if year:
+        parts.append(str(year))
+    if level:
+        parts.append(str(level).replace(" ", "").title())
+    if pdf_type:
+        parts.append(str(pdf_type).replace(" ", "").title())
+        
+    if parts:
+        prefix = "_".join(parts)
+        return f"{prefix}_{name_without_ext}_{content_hash[:6]}.pdf"
+        
+    return f"{name_without_ext}_{content_hash[:6]}.pdf"
 
 
 def _get_download_path(
@@ -68,14 +73,26 @@ def _get_download_path(
     content_hash: str,
     cycle: str,
     subject: str,
+    source: str,
     download_dir: Path,
     pdf_type: str = None,
     year: int = None,
     level: str = None,
 ) -> Path:
-    """Build download path: download_dir/cycle/subject/filename.pdf"""
-    filename = _safe_filename(url, content_hash, pdf_type, year, level, subject)
-    path = download_dir / cycle / subject / filename
+    """Build download path based on source type.
+    
+    Curriculum PDFs: download_dir/source/cycle/subject/filename.pdf
+    Exam materials: download_dir/level/subject/year_level_paper_hash.pdf
+    """
+    if source == "examinations":
+        # Exam materials use a different path structure:
+        # downloads/examinations/{level}/{subject}/{year}_{level}_{paper}_{hash}.pdf
+        filename = _safe_filename(url, content_hash, pdf_type, year, level, subject)
+        path = download_dir / str(level or cycle) / subject / filename
+    else:
+        filename = _safe_filename(url, content_hash, pdf_type, year, level, subject)
+        source_safe = source if source else "unknown_source"
+        path = download_dir / source_safe / cycle / subject / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     return path
 
@@ -158,24 +175,64 @@ def _query_pending_pdfs(
 
     try:
         conn = duckdb.connect(duckdb_path, read_only=True)
-        table_ref = "curriculum.curriculum_pdfs"
+        
+        # We might have tables in different schemas, let's look for them
+        tables_query = conn.execute("SELECT table_schema, table_name FROM information_schema.tables WHERE table_name IN ('curriculum_pdfs', 'all_exam_materials')").fetchall()
+        
+        queries = []
+        
+        for schema, table in tables_query:
+            if table == "curriculum_pdfs":
+                columns_info = conn.execute(f"DESCRIBE {schema}.{table}").fetchall()
+                column_names = [col[0] for col in columns_info]
+                
+                url_col = "url"
+                cycle_col = "cycle"
+                subject_col = "subject"
+                lang_col = "language"
+                type_col = "pdf_type"
+                source_col = "source"
+                
+                year_col = "year" if "year" in column_names else "NULL AS year"
+                level_col = "level" if "level" in column_names else "NULL AS level"
+                
+                queries.append(f"""
+                    SELECT DISTINCT
+                        {url_col} as url,
+                        {cycle_col} as cycle,
+                        {subject_col} as subject,
+                        {lang_col} as language,
+                        {type_col} as pdf_type,
+                        {source_col} as source,
+                        {year_col},
+                        {level_col}
+                    FROM {schema}.{table}
+                """)
+            elif table == "all_exam_materials":
+                # For examinations.ie output
+                queries.append(f"""
+                    SELECT DISTINCT
+                        pdf_url as url,
+                        level as cycle,
+                        subject as subject,
+                        'en' as language,
+                        'examinations' as source,
+                        material_type as pdf_type,
+                        year,
+                        level
+                    FROM {schema}.{table}
+                    WHERE pdf_url IS NOT NULL AND pdf_url != ''
+                """)
 
-        try:
-            conn.execute(f"SELECT 1 FROM {table_ref} LIMIT 1")
-        except Exception:
-            table_ref = "curriculum_pdfs"
+        if not queries:
+            logger.warning("no_pdf_tables_found")
+            return []
 
-        # Fetch BAML extracted metadata for normalization
+        base_query = " UNION ALL ".join(queries)
+        
         query = f"""
-            SELECT DISTINCT
-                url,
-                cycle,
-                subject,
-                language,
-                pdf_type,
-                year,
-                level
-            FROM {table_ref}
+            SELECT url, cycle, subject, language, pdf_type, source, year, level
+            FROM ({base_query})
             WHERE 1=1
         """
         
@@ -200,8 +257,9 @@ def _query_pending_pdfs(
                 "subject": r[2],
                 "language": r[3],
                 "pdf_type": r[4],
-                "year": r[5] if len(r) > 5 else None,
-                "level": r[6] if len(r) > 6 else None
+                "source": r[5],
+                "year": r[6],
+                "level": r[7],
             })
             
         return pdfs
@@ -280,6 +338,7 @@ def pdf_downloads(
                     content_hash=metadata["content_hash"],
                     cycle=pdf_cycle,
                     subject=pdf_subject,
+                    source=pdf_info.get("source"),
                     download_dir=download_dir,
                     pdf_type=pdf_info.get("pdf_type"),
                     year=pdf_info.get("year"),
@@ -361,8 +420,128 @@ def pdf_download_source(
     )
 
 
+@dlt.resource(
+    name="exam_pdf_downloads",
+    write_disposition="merge",
+    primary_key=["content_hash"],
+)
+def exam_pdf_downloads(
+    duckdb_path: str,
+    download_dir: Path | str = EXAM_DOWNLOAD_DIR,
+    level: str | None = None,
+    subject: str | None = None,
+    max_files: int = 500,
+    max_size_mb: int = MAX_FILE_SIZE_MB,
+    rate_limit_delay: float = RATE_LIMIT_DELAY,
+) -> Iterator[dict[str, Any]]:
+    """
+    Download exam material PDFs from all_exam_materials table.
+
+    Uses examinations-specific path structure:
+        downloads/examinations/{level}/{subject}/{year}_{level}_{paper}_{hash}.pdf
+
+    Args:
+        duckdb_path: Path to DuckDB database with all_exam_materials table
+        download_dir: Directory to save downloaded exam PDFs
+        level: Optional level filter (leaving_certificate, junior_cycle, leaving_certificate_applied)
+        subject: Optional subject filter
+        max_files: Maximum number of PDFs to download
+        max_size_mb: Maximum file size in MB
+        rate_limit_delay: Delay between downloads in seconds
+    """
+    download_dir = Path(download_dir)
+    download_dir.mkdir(parents=True, exist_ok=True)
+
+    pending_pdfs = _query_pending_pdfs(
+        duckdb_path=duckdb_path,
+        cycle=level,
+        subject=subject,
+        limit=max_files,
+    )
+
+    # Filter to only exam materials
+    exam_pdfs = [p for p in pending_pdfs if p.get("source") == "examinations" or p.get("level")]
+
+    logger.info("exam_pdf_download_starting", count=len(exam_pdfs))
+
+    with httpx.Client(
+        timeout=REQUEST_TIMEOUT,
+        headers={"User-Agent": USER_AGENT},
+        follow_redirects=True,
+    ) as client:
+        for pdf_info in exam_pdfs:
+            url = pdf_info["url"]
+            pdf_level = pdf_info.get("level") or pdf_info.get("cycle", "leaving_certificate")
+            pdf_subject = pdf_info["subject"]
+
+            content, metadata = _download_pdf(url, client, max_size_mb)
+
+            record = {**pdf_info, **metadata}
+
+            if content and metadata.get("content_hash"):
+                file_path = _get_download_path(
+                    url=url,
+                    content_hash=metadata["content_hash"],
+                    cycle=pdf_level,
+                    subject=pdf_subject,
+                    source="examinations",
+                    download_dir=download_dir,
+                    pdf_type=pdf_info.get("pdf_type"),
+                    year=pdf_info.get("year"),
+                    level=pdf_level,
+                )
+
+                if not file_path.exists():
+                    file_path.write_bytes(content)
+                    record["local_path"] = str(file_path)
+                    record["is_new"] = True
+                    logger.info("exam_pdf_saved", path=str(file_path))
+                else:
+                    record["local_path"] = str(file_path)
+                    record["is_new"] = False
+                    record["status"] = "already_exists"
+
+            yield record
+            time.sleep(rate_limit_delay)
+
+
+@dlt.source(name="exam_pdf_downloads")
+def exam_pdf_download_source(
+    duckdb_path: str,
+    download_dir: Path | str = EXAM_DOWNLOAD_DIR,
+    level: str | None = None,
+    subject: str | None = None,
+    max_files: int = 500,
+    max_size_mb: int = MAX_FILE_SIZE_MB,
+    rate_limit_delay: float = RATE_LIMIT_DELAY,
+):
+    """
+    DLT source for downloading exam material PDFs.
+
+    Usage:
+        pipeline = dlt.pipeline(...)
+        pipeline.run(exam_pdf_download_source(
+            duckdb_path="./curriculum_unified.duckdb",
+            download_dir="./downloads/examinations",
+            level="leaving_certificate",
+        ))
+    """
+    yield exam_pdf_downloads(
+        duckdb_path=duckdb_path,
+        download_dir=download_dir,
+        level=level,
+        subject=subject,
+        max_files=max_files,
+        max_size_mb=max_size_mb,
+        rate_limit_delay=rate_limit_delay,
+    )
+
+
 __all__ = [
     "pdf_download_source",
     "pdf_downloads",
     "pdf_download_errors",
+    "exam_pdf_download_source",
+    "exam_pdf_downloads",
+    "EXAM_DOWNLOAD_DIR",
 ]
