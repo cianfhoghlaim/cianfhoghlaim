@@ -40,14 +40,15 @@ import asyncio
 import hashlib
 import logging
 import re
+from collections.abc import AsyncIterator
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, AsyncIterator
+from typing import Any
 from urllib.parse import urljoin
 
 from ..backends.router import get_router
-from ..browser_types import BackendType, BrowserOperation, ExtractionFormat
+from ..browser_types import BrowserOperation, ExtractionFormat
 
 logger = logging.getLogger(__name__)
 
@@ -237,7 +238,19 @@ async def scrape_exam_materials(
 
     # Get browser backend
     router = get_router()
-    backend = await router.select_backend(BrowserOperation.EXTRACTION)
+    if not router._backends:
+        try:
+            from ..backends.selfhosted.stagehand_backend import StagehandBackend
+            router.register_backend(StagehandBackend())
+        except ImportError:
+            pass
+
+    backend_type = await router.select_backend(BrowserOperation.EXTRACTION)
+    if not backend_type:
+        logger.error("No browser backend available")
+        return
+        
+    backend = router.get_backend(backend_type)
 
     try:
         await backend.initialize()
@@ -255,44 +268,61 @@ async def scrape_exam_materials(
 
         # Select level from dropdown
         level_display = "Leaving Certificate" if level == "leaving_certificate" else "Junior Cycle"
-        await backend.act(f"Select '{level_display}' from the level dropdown menu")
+        await backend.interact(f"Select '{level_display}' from the level dropdown menu")
         await asyncio.sleep(RATE_LIMIT_SECONDS)
 
         # Select subject from dropdown
-        await backend.act(f"Select '{sec_subject}' from the subject dropdown menu")
+        await backend.interact(f"Select '{sec_subject}' from the subject dropdown menu")
         await asyncio.sleep(RATE_LIMIT_SECONDS)
 
         for year in years:
             logger.info(f"Scraping {sec_subject} {year}")
 
             # Select year from dropdown
-            await backend.act(f"Select '{year}' from the year dropdown menu")
+            await backend.interact(f"Select '{year}' from the year dropdown menu")
             await asyncio.sleep(RATE_LIMIT_SECONDS)
 
             # Click search/view button
-            await backend.act("Click the 'View' or 'Search' button to show results")
+            await backend.interact("Click the 'View' or 'Search' button to show results")
             await asyncio.sleep(2)
 
             # Extract all PDF links from the results
             extraction_result = await backend.extract(
-                instruction="""
+                url="",
+                prompt="""
                 Extract all PDF download links from the results table.
                 For each link, extract:
                 - url: The full URL to the PDF file
                 - title: The link text or description
                 Return as a list of objects with url and title fields.
                 """,
-                format=ExtractionFormat.STRUCTURED,
+                formats=[ExtractionFormat.STRUCTURED],
+                schema={
+                    "type": "object",
+                    "properties": {
+                        "links": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "url": {"type": "string"},
+                                    "title": {"type": "string"},
+                                },
+                            },
+                        },
+                    },
+                },
             )
 
-            if not extraction_result.success or not extraction_result.data:
+            if not extraction_result.success or not extraction_result.content:
                 logger.warning(f"No results found for {sec_subject} {year}")
                 continue
 
             # Process extracted links
-            links = extraction_result.data
+            links = extraction_result.content
             if isinstance(links, dict):
-                links = links.get("links", links.get("results", [links]))
+                links = links.get("extracted", links)
+                links = links.get("links", links.get("results", [links] if isinstance(links, dict) else links))
 
             for link in links:
                 if isinstance(link, str):
@@ -337,7 +367,7 @@ async def scrape_exam_materials(
             await asyncio.sleep(RATE_LIMIT_SECONDS)
 
     finally:
-        await backend.close()
+        if backend and hasattr(backend, "close"): await backend.close()
 
 
 async def scrape_all_subjects(
@@ -436,22 +466,39 @@ async def scrape_statistics(
 
         for year in years:
             # Select year
-            await backend.act(f"Select or click on '{year}' to view statistics")
+            await backend.interact(f"Select or click on '{year}' to view statistics")
             await asyncio.sleep(RATE_LIMIT_SECONDS)
 
             # Extract download links
             extraction_result = await backend.extract(
-                instruction="""
+                url="",
+                prompt="""
                 Extract all downloadable file links (CSV, PDF, XLS) for statistics.
                 For each link, extract url and title.
                 """,
-                format=ExtractionFormat.STRUCTURED,
+                formats=[ExtractionFormat.STRUCTURED],
+                schema={
+                    "type": "object",
+                    "properties": {
+                        "links": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "url": {"type": "string"},
+                                    "title": {"type": "string"},
+                                },
+                            },
+                        },
+                    },
+                },
             )
 
-            if extraction_result.success and extraction_result.data:
-                links = extraction_result.data
+            if extraction_result.success and extraction_result.content:
+                links = extraction_result.content
                 if isinstance(links, dict):
-                    links = links.get("links", [links])
+                    links = links.get("extracted", links)
+                    links = links.get("links", [links] if isinstance(links, dict) else links)
 
                 for link in links:
                     url = link.get("url") if isinstance(link, dict) else link
@@ -471,7 +518,7 @@ async def scrape_statistics(
                         )
 
     finally:
-        await backend.close()
+        if backend and hasattr(backend, "close"): await backend.close()
 
 
 # Sync wrappers for DLT compatibility

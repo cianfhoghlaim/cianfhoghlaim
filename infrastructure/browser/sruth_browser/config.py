@@ -41,16 +41,16 @@ class BrowserConfig(BaseSettings):
         description="Stagehand local server URL",
     )
     stagehand_model: str = Field(
-        default="glm-4.6",
-        description="Default model for Stagehand navigation decisions",
+        default="openai/deepseek-v4-pro",
+        description="Default model for Stagehand (routed through stagehand-proxy)",
     )
     stagehand_vision_model: str = Field(
-        default="glm-4.6v",
-        description="Vision model for Stagehand screenshot analysis",
+        default="openai/deepseek-v4-pro",
+        description="Vision model for Stagehand (routed through stagehand-proxy)",
     )
     stagehand_agent_model: str = Field(
-        default="google/gemini-3-flash-preview",
-        description="Model for Stagehand agent mode (CUA)",
+        default="openai/deepseek-v4-pro",
+        description="Model for Stagehand agent mode (routed through stagehand-proxy)",
     )
     stagehand_auto_fallback: bool = Field(
         default=True,
@@ -123,15 +123,19 @@ class BrowserConfig(BaseSettings):
         description="Gemini Pro model for planning",
     )
 
-    # LLM configuration
+    # LLM configuration (routed through stagehand-proxy for OpenCode Go)
     openai_api_key: str | None = Field(default=None)
     anthropic_api_key: str | None = Field(default=None)
+    opencode_go_api: str | None = Field(
+        default=None,
+        description="OpenCode Go API key for LLM calls through proxy",
+    )
     llm_provider: str = Field(
-        default="openai/gpt-4o",
-        description="Default LLM provider for extraction",
+        default="openai/deepseek-v4-pro",
+        description="Default LLM provider for extraction (routed through stagehand-proxy)",
     )
     llm_fallback_order: list[str] = Field(
-        default=["glm-4.6v", "gemini-2.0-flash", "openai/gpt-4o"],
+        default=["openai/deepseek-v4-pro", "openai/gpt-4o"],
         description="LLM fallback order for provider failures",
     )
 
