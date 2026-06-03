@@ -190,13 +190,29 @@ def dlt_github_repos(context):
 
 ## Destinations
 
-### DuckDB (Local Analytics)
+### DuckLake (Recommended - Production)
+DuckLake destination writes Parquet files to Garage S3 with Postgres catalog for ACID transactions, time-travel queries, and multi-reader safety.
+
+```python
+pipeline = dlt.pipeline(
+    pipeline_name="curriculum_unified",
+    destination="dlt.destinations.ducklake",
+    dataset_name="curriculum"
+)
+# DuckLake connects via Postgres catalog + S3 endpoint
+# ATTACH 'postgresql://lakekeeper:password@host:5433/ducklake_oideachais'
+#     AS ducklake (TYPE POSTGRES);
+# Then SET s3_endpoint, s3_access_key_id, s3_secret_access_key
+```
+
+### DuckDB (Local Development)
 ```python
 pipeline = dlt.pipeline(
     pipeline_name="local_analysis",
     destination="duckdb",
     dataset_name="analytics"
 )
+# Falls back to local .duckdb file when USE_DUCKLAKE=false
 ```
 
 ### BigQuery
@@ -205,15 +221,6 @@ pipeline = dlt.pipeline(
     pipeline_name="bq_pipeline",
     destination="bigquery",
     dataset_name="raw_data"
-)
-```
-
-### Snowflake
-```python
-pipeline = dlt.pipeline(
-    pipeline_name="snowflake_pipeline",
-    destination="snowflake",
-    dataset_name="analytics"
 )
 ```
 

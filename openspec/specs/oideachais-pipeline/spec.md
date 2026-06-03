@@ -2,108 +2,177 @@
 
 ## Overview
 
-Celtic education curriculum pipeline processing Irish, UK, and pan-Celtic educational content with AI-enhanced learning experiences.
+Celtic education curriculum pipeline processing Irish, UK, and pan-Celtic educational content with AI-enhanced learning experiences. Orchestrated via Dagster on a DuckLake destination backed by Garage S3.
 
 | Feature | Description |
 |---------|-------------|
-| DLT Ingestion | NCCA, SEC, UK curriculum sources |
-| CocoIndex Transform | Embedding generation |
-| Knowledge Graph | Prerequisite mapping in Memgraph |
-| ADK Agents | Education-focused AI agents |
+| DLT Ingestion | NCCA, SEC, UK curriculum sources via Firecrawl + local cache |
+| DuckLake Destination | Parquet on Garage S3 with Postgres catalog |
+| Vector Embeddings | LanceDB via Lance Namespace sidecar (Iceberg catalog) |
+| Knowledge Graph | Prerequisite mapping in Memgraph (staged for implementation) |
+| Multi-Agent AI | Google ADK and Agno education agents via LiteLLM routing |
 
 ## Requirements
 
 ### Requirement: Curriculum Ingestion
 
-The system SHALL ingest curriculum documents from multiple sources.
+The system SHALL ingest curriculum documents from multiple Irish and UK sources with caching fallback.
 
 #### Scenario: Irish Curriculum
-- **GIVEN** NCCA curriculum documents
+- **GIVEN** NCCA curriculum documents at `curriculumonline.ie`
+- **WHEN** DLT pipeline runs with `USE_LOCAL_SCRAPES=false`
+- **THEN** documents are scraped via Firecrawl and loaded to DuckLake
+
+#### Scenario: Local Cache Fallback
+- **GIVEN** `USE_LOCAL_SCRAPES=true` environment variable
 - **WHEN** DLT pipeline runs
-- **THEN** documents are extracted and stored in DuckDB
+- **THEN** documents are read from `/stedding/ingest_queue/` cache instead of live scraping
+
+#### Scenario: Three-Source Unified Crawling
+- **GIVEN** curriculumonline.ie, ncca.ie, and examinations.ie sources
+- **WHEN** the unified curriculum DLT source runs
+- **THEN** content is deduplicated via content hashing with source provenance tracking
 
 #### Scenario: UK Curriculum
-- **GIVEN** UCAS, DfE, ONS datasets
-- **WHEN** DLT pipeline runs
-- **THEN** data is normalized and stored
+- **GIVEN** England, Scotland, Wales, and Northern Ireland curriculum sources
+- **WHEN** respective nation-specific DLT pipelines run
+- **THEN** data is normalized and stored with per-nation partitions
 
 #### Scenario: Exam Papers
 - **GIVEN** SEC exam papers and marking schemes
-- **WHEN** extraction pipeline runs
-- **THEN** questions and answers are aligned
+- **WHEN** extraction pipeline runs with BAML schemas
+- **THEN** questions and marking scheme answers are aligned
 
-### Requirement: Embedding Generation
+#### Scenario: Curriculum Index Registry
+- **GIVEN** curriculum sources defined in `curriculum_index.json` registry
+- **WHEN** pipeline initializes
+- **THEN** URLs and subjects are resolved from the registry rather than hardcoded
 
-The system SHALL generate embeddings via CocoIndex for semantic search.
+### Requirement: Partition Strategy (v2)
+
+The system SHALL use a 4-cycle partition scheme with runtime subject selection.
+
+#### Scenario: Cycle-Based Partitions
+- **GIVEN** partition definitions for early_childhood, primary, junior_cycle, senior_cycle
+- **WHEN** Dagster job is triggered
+- **THEN** each cycle partition materializes independently
+
+#### Scenario: Runtime Subject Config
+- **GIVEN** `CURRICULUM_CONFIG_SCHEMA` with subject selection
+- **WHEN** a partition is materialized with subject override
+- **THEN** only specified subjects are processed instead of all 33+
+
+### Requirement: Vector Embeddings
+
+The system SHALL generate embeddings for semantic search via LanceDB.
 
 #### Scenario: Document Embeddings
-- **GIVEN** curriculum documents
-- **WHEN** CocoIndex flow runs
-- **THEN** embeddings are stored in LanceDB with HNSW index
+- **GIVEN** curriculum documents extracted via Docling OCR
+- **WHEN** embedding assets materialize
+- **THEN** embeddings are generated using `paraphrase-multilingual-MiniLM-L12-v2` (384 dims) and stored in LanceDB with HNSW index
 
 #### Scenario: Bilingual Embeddings
 - **GIVEN** English and Irish content
 - **WHEN** embedding flow runs
-- **THEN** both languages are indexed with language tags
+- **THEN** both languages are indexed with language tags in the same vector space
+
+#### Scenario: Batch Constraint Enforcement
+- **GIVEN** fewer than 100 texts to embed
+- **WHEN** embedding function is called
+- **THEN** texts are batched to meet the 100-minimum constraint before API call
 
 ### Requirement: Knowledge Graph
 
 The system SHALL maintain curriculum knowledge graph for prerequisites.
 
 #### Scenario: Prerequisite Mapping
-- **GIVEN** curriculum topics
-- **WHEN** graph is built
-- **THEN** prerequisite relationships are captured in Memgraph
+- **GIVEN** curriculum topics extracted from NCCA documents
+- **WHEN** graph enrichment assets run
+- **THEN** prerequisite relationships are captured in Memgraph using Cypher schemas
 
 #### Scenario: Topic Hierarchy
-- **GIVEN** subject areas
+- **GIVEN** subject areas with strand and level metadata
 - **WHEN** hierarchy is built
-- **THEN** topics are organized by strand and level
+- **THEN** topics are organized by strand and education level
 
 ### Requirement: Agent Integration
 
-The system SHALL support ADK education agents.
+The system SHALL support Google ADK and Agno education agents with LiteLLM routing.
 
 #### Scenario: Curriculum Query
-- **GIVEN** student query
-- **WHEN** agent processes
-- **THEN** curriculum-aware response is generated
+- **GIVEN** student query about a curriculum topic
+- **WHEN** agent processes via LiteLLM router
+- **THEN** curriculum-aware response is generated using LanceDB semantic search
 
 #### Scenario: Assessment Help
-- **GIVEN** exam question
-- **WHEN** agent analyzes
-- **THEN** marking scheme guidance is provided
+- **GIVEN** exam question extracted via BAML
+- **WHEN** agent analyzes the question
+- **THEN** marking scheme guidance and prerequisite mapping are provided
+
+#### Scenario: Agent Routing
+- **GIVEN** a domain-specific education question
+- **WHEN** Root Agent receives the request
+- **THEN** the appropriate Domain Agent (Curriculum, Translation, Corpus, Geospatial, Statistics, Research) is invoked
 
 ## Components
 
 | Component | Path | Purpose |
 |-----------|------|---------|
-| `dlt_sources/` | `sruth/oideachais/dlt_sources/` | Ireland, UK, Celtic, geospatial |
-| `cocoindex_flows/` | `sruth/oideachais/cocoindex_flows/` | Embedding pipelines |
-| `dagster_defs/` | `sruth/oideachais/dagster/` | Asset orchestration |
-| `agents/` | `sruth/oideachais/agents/` | ADK education agents |
-| `storage/` | `sruth/oideachais/storage/` | DuckDB, LanceDB, Memgraph |
+| DLT Sources | `oideachais/data_platform/dlt_sources/` | Ireland, UK, Celtic, geospatial ingestion |
+| Dagster Definitions | `oideachais/data_platform/dagster_defs/` | Asset orchestration, jobs, schedules, sensors |
+| DLT Utils | `oideachais/data_platform/dlt_utils/` | DuckLake destination config, caching |
+| DuckLake Client | `oideachais/storage/ducklake_client.py` | Postgres catalog + Garage S3 connection |
+| LanceDB Cloud | `oideachais/storage/lancedb_cloud.py` | Local/Cloud/Iceberg vector store modes |
+| Embedding Service | `oideachais/embeddings/service.py` | Multi-provider batch embedding |
+| BAML Schemas | `baml_src/` | Type-safe LLM extraction schemas |
+| OCR Models | `meaisínfhoghlaim/ocr/` | Multi-model comparison (Docling, PaddleOCR, ColPali) |
+| ML Training | `oideachais/training/` | LLM, HTR, TTS training as Dagster assets |
+| Agents | `meaisínfhoghlaim/agents/` | Root Agent + 6 domain agents |
+
+## Storage Architecture
+
+```
+Firecrawl/LocalScrape → DLT Pipeline → DuckLake (Parquet + Postgres catalog)
+                                            │
+                                    Garage S3 (ducklake bucket)
+                                            │
+                              ┌─────────────┼─────────────┐
+                              ▼             ▼             ▼
+                      DuckDB Query    Lance Namespace   MotherDuck
+                      (direct)        Sidecar (8182)   (optional)
+                                            │
+                                      ├─ Lakekeeper Iceberg Catalog (8181)
+                                      │   └─ Postgres metadata (5433)
+                                      └─ LanceDB tables on S3 (lance bucket)
+                                            │
+                                      Vector Search API
+```
 
 ## Constraints
 
-From `.claude/CONSTRAINTS.md`:
-- **DuckDB:** SINGLE_THREADED_ONLY (concurrent access = segfault/corruption)
-- **LanceDB:** MVCC safe with SerialDatabaseExecutor
-- **Embeddings:** Batch minimum 100 texts per API call
+- **DuckDB:** SINGLE_THREADED_ONLY (concurrent access causes corruption)
+- **LanceDB:** MVCC-safe with SerialDatabaseExecutor and circuit breaker (3-failure threshold)
+- **Embeddings:** Batch minimum 100 texts per API call; model: `paraphrase-multilingual-MiniLM-L12-v2`
 - **HNSW:** Drop indexes before bulk inserts >50 rows
 - **Irish Language:** Use UCCIX or GaBERT models
+- **Zero Absolute Namespaces:** NEVER import `oideachais.data_platform...` from within the data platform (use relative imports)
+- **Ingestion Cache:** Test with `USE_LOCAL_SCRAPES=true` before live web scraping to avoid API rate limits
 
 ## Implementation References
 
 | Component | Path |
 |-----------|------|
-| Main Pipeline | `sruth/oideachais/` |
-| Dagster Definitions | `sruth/oideachais/dagster/definitions.py` |
+| Dagster Definitions | `oideachais/data_platform/dagster_defs/definitions.py` |
+| DLT Utils | `oideachais/data_platform/dlt_utils/` |
+| Storage Config | `oideachais/storage/` |
+| Pipeline Ops Guide | `oideachais/PIPELINE_OPERATIONS.md` |
+| PyProject | `oideachais/pyproject.toml` |
 
 ## Related Specs
 
-- [curriculum-ingestion](../curriculum-ingestion/spec.md) - Document processing
-- [bilingual-content](../bilingual-content/spec.md) - English/Irish management
-- [knowledge-graph](../knowledge-graph/spec.md) - Prerequisite mapping
-- [semantic-search](../semantic-search/spec.md) - Vector search
-- [assessment-extraction](../assessment-extraction/spec.md) - Exam papers
+- [curriculum-ingestion](../curriculum-ingestion/spec.md) — Document processing
+- [bilingual-content](../bilingual-content/spec.md) — English/Irish management
+- [knowledge-graph](../knowledge-graph/spec.md) — Prerequisite mapping
+- [semantic-search](../semantic-search/spec.md) — Vector search
+- [assessment-extraction](../assessment-extraction/spec.md) — Exam papers
+- [data-pipeline](../data-pipeline/spec.md) — Pipeline patterns

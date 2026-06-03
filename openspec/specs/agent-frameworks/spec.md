@@ -75,19 +75,20 @@ The system SHALL support structured, typed outputs from agents.
 
 ## Supported Frameworks
 
-### Google ADK (>=0.1.0)
+### Google ADK (>=1.0.0) — Primary Framework
 
 **Key Features:**
-- Multi-agent coordination with sequential, parallel, and hierarchical workflows
+- Multi-agent coordination with SequentialAgent, LoopAgent, and hierarchical workflows
+- Native inter-agent routing in v2.1+
 - Tool integration with WebSearchTool, CalculatorTool, and custom tools
 - Memory systems with vector_store, key_value, and hybrid options
-- Google AI integration with Gemini models
+- First-class Google AI integration with Gemini models
 
 **Documentation:** https://cloud.google.com/agent-development-kit
 
-**Skill:** [`.skills/google-adk/SKILL.md`](.skills/google-adk/SKILL.md)
+**Skill:** [`.agents/skills/google-adk/SKILL.md`](../../.agents/skills/google-adk/SKILL.md)
 
-### Agno (>=2.0.0)
+### Agno (>=2.0.0) — Secondary Framework
 
 **Key Features:**
 - Agent orchestration for single agents and multi-agent teams
@@ -99,7 +100,32 @@ The system SHALL support structured, typed outputs from agents.
 
 **Documentation:** https://docs.agno.com
 
-**Skill:** [`.skills/agno/SKILL.md`](.skills/agno/SKILL.md)
+**Skill:** [`.agents/skills/agno/SKILL.md`](../../.agents/skills/agno/SKILL.md)
+
+## Domain Agent Architecture
+
+The system SHALL deploy a Root Agent routing to 6+ specialized domain agents:
+
+| Agent | Purpose | Key Tools |
+|-------|---------|-----------|
+| Root Agent | Orchestration and routing | LiteLLM router, fallback chains |
+| Curriculum Agent | Irish/UK curriculum queries | LanceDB vector search, DuckDB |
+| Translation Agent | Irish↔English translation | OPUS-MT, M2M100, NLLB-200 |
+| Corpus Agent | Celtic language corpus search | Duchas, Canuint, Terma, GAOIS |
+| Geospatial Agent | School boundaries and maps | DuckDB Spatial |
+| Statistics Agent | Cross-nation education stats | NationComparison |
+| Research Agent | Multi-source web research | Google ADK SequentialAgent |
+
+## Observability Stack
+
+| Tool | Purpose |
+|------|---------|
+| Langfuse | LLM call tracing, prompt management, A/B testing |
+| MLflow | Experiment tracking, model registry |
+| RAGAS | RAG evaluation (faithfulness, answer relevance) |
+| Logfire | Structured logging and metrics |
+| Kafka | Event streaming for agent interactions |
+| Letta | Persistent conversation memory |
 
 ## Agent Patterns
 
