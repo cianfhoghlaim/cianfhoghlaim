@@ -18,6 +18,7 @@
 | Delivery / cloud cache | **Real-Debrid** | Cached torrents → direct HTTPS streams (video *and* comics via RDT-Client) | ~€3/month (16 days) → ~€4/month (180 days bulk) |
 | Comics (parallel stack) | **Mylar3** + GetComics DDL | Sonarr-style automation for comic series (CBR/CBZ), native GetComics support | Free, self-hosted |
 | Books / journals | **libgen.li + Z-Library** | World's largest free book and academic-paper repositories | Free |
+| Local playback / PiP | **VLC** (everywhere), **IINA** (macOS) | Picture-in-Picture floating-window players for lectures while multitasking | Free |
 
 **Total monthly cost: ~€3–4** for the entire video catalogue of recorded human
 cinema and television **plus** a self-hosted comics library **plus** essentially
@@ -486,7 +487,165 @@ provides plausible-deniability traffic patterns. Available from
 
 ---
 
-## 7. Architecture at a Glance
+## 7. Local Video Playback — VLC and IINA (Picture-in-Picture)
+
+Stremio handles streaming. Everything you *download* — a lecture from a
+university VLE, a recorded webinar, an MP4 pulled from YouTube via `yt-dlp`,
+an MKV from Real-Debrid via the "download" rather than "stream" option, an
+audiobook or MP3 from Z-Library, a CPD course video saved offline — needs a
+local player. The two right answers are **VLC** (everywhere) and **IINA**
+(macOS only, but better). The point of this section is the same one: their
+**Picture-in-Picture / always-on-top** modes turn a lecture into a small
+floating window above your code editor / notes / spreadsheet so you can
+actually study while watching, instead of context-switching.
+
+### VLC — the universal default
+
+**Site:** [videolan.org/vlc](https://www.videolan.org/vlc/)
+**Latest:** 3.0.23 · **Downloads to date:** 288 million+ · **Licence:** GPL ·
+**Platforms:** Windows, Windows ARM64, macOS (Intel + Apple Silicon), Linux
+(every major distro), iOS, Android, Apple TV, Chrome OS, FreeBSD, NetBSD,
+OpenBSD, Solaris, QNX, OS/2. There is essentially no device VLC does not run on.
+
+**What it does** (verbatim from videolan.org):
+
+- *Plays everything* — Files, Discs, Webcams, Devices and Streams.
+- *Plays most codecs with no codec packs needed* — MPEG-2, MPEG-4, H.264,
+  H.265/HEVC, MKV, WebM, WMV, MP3, FLAC, Opus, AV1.
+- *Runs on all platforms.*
+- *Completely free* — **no spyware, no ads, no user tracking.**
+
+**Why it matters for lectures and study material:**
+
+- **Always-on-Top (poor man's PiP):** `View → Always on top` (macOS:
+  `Video → Always on top`). Shrink the window to ~400×225 in a corner of
+  your screen and it sits above every other window — VS Code, Notion,
+  PowerPoint, the browser — without grabbing focus.
+- **Playback speed:** `Playback → Speed` or `[` / `]` keys. 1.25× to 1.75× is
+  the sweet spot for compressed listening of recorded lectures; VLC handles
+  pitch correction so the audio stays intelligible.
+- **A→B loop:** `Shift+L` (macOS) marks an A and B point, looping just that
+  segment — invaluable for re-listening to a tricky derivation or accent.
+- **Frame-by-frame:** `E` advances one frame; useful for slides in screen-
+  recorded lectures.
+- **Native PiP on mobile:** the iOS and Android VLC apps both implement
+  system-level Picture-in-Picture (the small floating window that survives
+  app-switching). Pause a lecture on your laptop, open VLC on your phone
+  with the same file (or a cloud sync of it), and the PiP window stays alive
+  while you reply to a message or check email.
+- **Streams anything by URL:** `File → Open Network…` and paste any
+  `http://`, `rtsp://`, `rtmp://`, `mms://`, or playlist URL. Combined with
+  `yt-dlp -g <url>` to extract direct stream URLs, this lets VLC play
+  arbitrary YouTube/Vimeo/lecture-site content without a browser.
+- **Convert / extract audio:** `Media → Convert / Save` can rip the audio
+  off a video lecture into MP3 for podcast-style listening. Replaces a
+  dozen shady "online MP3 converter" sites.
+
+**Where VLC is good but IINA is better (on macOS):** IINA has a *real*
+system-level Picture-in-Picture that integrates with macOS's Stage Manager and
+Control Center. VLC's "Always on top" is a window-manager hack — close
+enough, but it does not survive Mission Control / app-switching the way a
+native PiP window does. If you are on macOS, install both: VLC for codec
+edge cases and `.iso` / DVD playback, IINA for daily-driver PiP.
+
+### IINA — the macOS daily driver
+
+**Site:** [iina.io](https://iina.io/) ·
+**Source:** [github.com/iina/iina](https://github.com/iina/iina) ·
+**Latest:** 1.4.3 (May 2026) · **Licence:** GPL-3.0 · **Stars:** 45.1k ·
+**Requires:** macOS 12+ (Apple Silicon) or macOS 10.15+ (Intel).
+
+**What it is:** A native Swift wrapper around **mpv** (the gold-standard
+hardware-accelerated open-source media engine), built specifically for modern
+macOS. Where VLC was designed to run on everything from Solaris to Apple TV,
+IINA was designed to run *well* on a Mac.
+
+**Features that matter for the studying-while-working use case:**
+
+- **Native Picture-in-Picture** — properly integrated with macOS. The PiP
+  window survives Cmd-Tab, Mission Control, Stage Manager, and full-screen
+  app transitions. It floats above *everything*, including other full-screen
+  apps. This is the killer feature: open a 90-minute Anatomy lecture in IINA,
+  hit PiP, full-screen VS Code, and the lecture lives in the corner while you
+  code. Toggle via `Video → Enter Picture-in-Picture` or the dedicated
+  toolbar button. There is also a community plugin
+  [**PiP Toggle for IINA**](https://github.com/nastarandarjani/iina-pip-toggle)
+  that maps a single key to PiP ↔ fullscreen.
+- **Music Mode** — `Window → Enter Music Mode`. Strips the video player down
+  to a Spotify-like mini player. Perfect for audiobooks downloaded from
+  Z-Library, podcasts, or audio-only lectures. Persistent waveform / album-
+  art bar that stays visible at any size.
+- **Speed control with pitch correction** — same `[` and `]` keys as VLC,
+  same pitch handling, slightly cleaner UI.
+- **Online subtitle search built in** — `Subtitle → Search Subtitles…` hits
+  OpenSubtitles directly. For non-English lectures (or lectures with poor
+  audio), this is the difference between watching and not watching.
+- **Thumbnail scrubbing** — hover over the timeline and you get a thumbnail
+  preview, so you can find "the bit where she explained the Krebs cycle"
+  without scrubbing blind.
+- **Browser extensions** — Safari/Chrome/Firefox extension that adds a "Play
+  in IINA" button to YouTube, Bilibili, and most embedded video players.
+  Click once, the video opens in a native IINA window (PiP-capable), and
+  YouTube's ads / Shorts shelf / autoplay-next-trash are gone. With Firefox
+  + uBO + the IINA extension, "watch YouTube lectures" becomes a clean,
+  focused experience instead of an attention-economy battlefield.
+- **`iina-cli` command-line tool** — `iina <file> --pip` opens any video
+  directly into Picture-in-Picture mode. `iina <file> --music-mode` opens
+  audio-only. Aliasable in your shell: `alias lecture='iina --pip'`. From
+  the terminal, a lecture appears in the corner of your screen in one word.
+- **Plugin system** — extensible JavaScript plugins. Notable ones from the
+  official list:
+  - **Episode Info** (TMDB metadata overlay on pause)
+  - **Hold to Speed** (hold Space for 2× playback, just like YouTube)
+  - **Skip Intro** (auto-detects intros/recaps/credits)
+  - **Bookmarks** (timestamp bookmarks within a video — useful for marking
+    "review this" points in a lecture)
+  - **Jellyfin** (browse and play media from a self-hosted Jellyfin server
+    — pairs with the larger media stack)
+  - **Trakt Scrobbler** (Trakt.tv scrobbling for watched-status sync)
+  - **PolyScript** (dual subtitles + hover dictionary + AI translation —
+    purpose-built for language learners studying foreign-language video)
+- **mpv configuration files** — power users can drop a `mpv.conf` into
+  IINA's config directory and unlock the entire mpv feature set: shader
+  pipelines, motion interpolation, custom audio filters, Anime4K upscaling
+  (via the community plugin), etc.
+
+### Typical "studying" workflow
+
+1. Download the lecture (`.mp4` from the VLE, `yt-dlp` of a YouTube lecture,
+   audio-only ripped from a podcast, etc.).
+2. **macOS:** `iina <file> --pip` — lecture is now in the corner.
+   **Windows/Linux:** open in VLC, `View → Always on top`, shrink to corner.
+3. Set playback speed to 1.5× for review material, 1.25× for new material,
+   1× for problem-solving lectures where you'll pause often.
+4. Open your real work app (VS Code, Notion, Obsidian, a PDF reader for
+   the corresponding textbook from libgen, etc.) full-screen.
+5. The lecture floats above. You actually pay attention because it is
+   *literally on top of* the thing you are doing, instead of behind it in
+   another window you will forget about.
+6. Hit pause (`Space`) to take notes, resume with the same key. No
+   alt-tab, no context-switch cost.
+
+### Install
+
+| OS | VLC | IINA |
+|---|---|---|
+| macOS (Apple Silicon) | [3.0.23 arm64 dmg](https://get.videolan.org/vlc/3.0.23/macosx/vlc-3.0.23-arm64.dmg) or `brew install --cask vlc` | [1.4.3 dmg](https://dl-portal.iina.io/IINA.v1.4.3.dmg) or `brew install --cask iina` |
+| macOS (Intel) | [3.0.23 intel64 dmg](https://get.videolan.org/vlc/3.0.23/macosx/vlc-3.0.23-intel64.dmg) | [1.4.3 dmg](https://dl-portal.iina.io/IINA.v1.4.3.dmg) (requires macOS 10.15+) |
+| Windows | [3.0.23 win64 installer](https://get.videolan.org/vlc/3.0.23/win64/vlc-3.0.23-win64.exe) or `winget install VideoLAN.VLC` | — (use VLC or MPV/mpv.net) |
+| Linux | `apt install vlc` / `dnf install vlc` / `pacman -S vlc` / Flatpak / Snap | — |
+| iOS | App Store: VLC for Mobile (free) | — |
+| Android | [Play Store](https://play.google.com/store/apps/details?id=org.videolan.vlc) | — |
+| Apple TV | App Store: VLC | — |
+
+Neither app costs anything, neither tracks you, neither shows ads, both are
+GPL — the same ideology as uBlock Origin and Mylar3. The pattern across this
+entire document should be obvious by now: the tools that respect you and your
+attention are the tools built by people who refused to commercialise them.
+
+---
+
+## 8. Architecture at a Glance
 
 ```
                       ┌──────────────────────┐
@@ -527,11 +686,22 @@ provides plausible-deniability traffic patterns. Available from
    │  + uBO      │         │  or              │            │ /Zotero  │
    │             │         │ z-library.bz     │            │          │
    └─────────────┘         └──────────────────┘            └──────────┘
+
+
+           ── local playback layer (for anything downloaded) ──
+
+   ┌─────────────┐                                       ┌───────────────┐
+   │ .mp4/.mkv/  │  ──► macOS: IINA --pip   ─────────►   │   floating    │
+   │ .m4a from   │                                       │   PiP window  │
+   │ VLE, yt-dlp,│  ──► everywhere: VLC                  │   over your   │
+   │ Z-Lib, RD,  │       (View → Always on top)          │   real work   │
+   │ Mylar3, ... │                                       │               │
+   └─────────────┘                                       └───────────────┘
 ```
 
 ---
 
-## 8. The Ethics — Why This Document Exists
+## 9. The Ethics — Why This Document Exists
 
 This section is not technical. Skip it if the rest of the document is enough.
 It exists because the framing of "piracy" in mainstream discourse is so
@@ -638,7 +808,7 @@ and basic dignity.
 
 ---
 
-## 9. Risks, Costs, Reality Check
+## 10. Risks, Costs, Reality Check
 
 **Financial:** ~€3–4/month Real-Debrid, covering **both** video (Stremio/Torrentio)
 **and** comics (Mylar3 via GetComics DDL is free; Real-Debrid only kicks in via
@@ -654,7 +824,7 @@ personal non-commercial copying differently from redistribution, and
 enforcement against individual end-users for personal-use streaming, debrid
 consumption, or book downloading has been effectively zero to date — the
 prosecutions that *do* exist target uploaders, seeders, and commercial
-redistributors, not readers. (See §8 for the ethical framing; this is the
+redistributors, not readers. (See §9 for the ethical framing; this is the
 narrow legal note.)
 
 **Technical:**
@@ -675,7 +845,7 @@ narrow legal note.)
 
 ---
 
-## 10. References (sources used to write this document)
+## 11. References (sources used to write this document)
 
 - [ublockorigin.com](https://ublockorigin.com/) — official site, Manifest V3
   explainer (updated January 2026), browser support matrix, FAQ.
@@ -717,6 +887,16 @@ narrow legal note.)
   manager.
 - [zotero.org](https://www.zotero.org) — open-source citation/PDF manager for
   academic reading.
+- [videolan.org/vlc](https://www.videolan.org/vlc/) — VLC 3.0.23, 288M+
+  downloads, GPL, cross-platform (Windows / macOS Intel + Apple Silicon /
+  Linux / iOS / Android / Apple TV / Chrome OS), no spyware/ads/tracking,
+  Always-on-Top window mode.
+- [iina.io](https://iina.io/) — IINA, mpv-based modern macOS player; native
+  Picture-in-Picture, Music Mode, plugin system, browser extensions,
+  `iina-cli --pip`.
+- [github.com/iina/iina](https://github.com/iina/iina) — IINA source,
+  GPL-3.0, 45.1k stars, v1.4.3 (May 2026), plugins list (PiP Toggle, Hold to
+  Speed, Skip Intro, Bookmarks, Jellyfin, PolyScript for language learners).
 - [MDPI energy-conservation study](https://www.mdpi.com/2227-7080/8/2/18/htm)
   — cited by ublockorigin.com for the ~$1.8 billion/year global energy
   savings figure from ad blocking.
