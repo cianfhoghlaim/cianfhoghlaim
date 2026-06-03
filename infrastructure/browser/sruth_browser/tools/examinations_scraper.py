@@ -39,6 +39,7 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import logging
+import os
 import re
 from collections.abc import AsyncIterator
 from dataclasses import dataclass, field
@@ -180,6 +181,17 @@ def _classify_material_type(url: str, title: str | None = None) -> ExamMaterialT
         return ExamMaterialType.STATISTICS
     else:
         return ExamMaterialType.PAPER
+
+
+def _material_type_from_key(key: str) -> ExamMaterialType:
+    """Convert material type key string to ExamMaterialType enum."""
+    mapping = {
+        "exam_papers": ExamMaterialType.PAPER,
+        "marking_schemes": ExamMaterialType.MARKING_SCHEME,
+        "deferred_papers": ExamMaterialType.PAPER,
+        "deferred_marking_schemes": ExamMaterialType.MARKING_SCHEME,
+    }
+    return mapping.get(key, ExamMaterialType.PAPER)
 
 
 def _extract_paper_number(url: str, title: str | None = None) -> int | None:
@@ -844,6 +856,254 @@ async def _scrape_single_subject_session(
         await asyncio.sleep(RATE_LIMIT_SECONDS)
 
 
+async def scrape_materials_playwright(
+    subjects: list[str],
+    years: list[int] | None = None,
+    level: str = "leaving_certificate",
+    language: str = "en",
+    material_types: list[str] | None = None,
+    cdp_url: str | None = None,
+) -> AsyncIterator[ExamMaterial]:
+    """Scrape exam materials using Playwright directly (no LLM calls).
+
+    Uses native select_option() for dropdowns and query_selector_all()
+    for PDF link extraction. Deterministic and zero LLM cost.
+
+    Falls back to the BROWSER_CDP_URL env var or http://127.0.0.1:9223/json/version.
+    """
+    if years is None:
+        years = list(range(2020, 2025))
+    if material_types is None:
+        material_types = ["exam_papers", "marking_schemes"]
+
+    from playwright.async_api import async_playwright
+
+    if cdp_url is None:
+        cdp_url = os.environ.get("BROWSER_CDP_URL", "http://127.0.0.1:9223")
+
+    level_selectors = {
+        "leaving_certificate": "Leaving Certificate",
+        "junior_cycle": "Junior Cycle",
+        "leaving_certificate_applied": "Leaving Cert Applied",
+    }
+    type_selectors = {
+        "exam_papers": "Exam Papers",
+        "marking_schemes": "Marking Schemes",
+        "deferred_papers": "Deferred Exam Papers",
+        "deferred_marking_schemes": "Deferred Exam Marking Schemes",
+    }
+
+    level_value = level_selectors.get(level, "Leaving Certificate")
+
+    pw = await async_playwright().start()
+    try:
+        if cdp_url.startswith("http"):
+            import json as _json
+            import urllib.request
+            req = urllib.request.Request(cdp_url.rstrip("/") + "/json/version")
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                payload = _json.loads(resp.read().decode())
+            ws_url = payload["webSocketDebuggerUrl"].replace("0.0.0.0", "127.0.0.1")
+        else:
+            ws_url = cdp_url
+
+        browser = await pw.chromium.connect_over_cdp(ws_url)
+        context = browser.contexts[0] if browser.contexts else await browser.new_context()
+        page = context.pages[0] if context.pages else await context.new_page()
+
+        for mt_key in material_types:
+            mt_label = type_selectors.get(mt_key, mt_key)
+
+            for subject in subjects:
+                sec_subject = SEC_SUBJECT_MAPPING.get(subject, subject.replace("-", " ").title())
+                logger.info(f"playwright_scrape: {sec_subject} {mt_label} ({level})")
+
+                try:
+                    async for m in _playwright_scrape_one(
+                        page=page,
+                        subject=subject,
+                        sec_subject=sec_subject,
+                        years=years,
+                        level_value=level_value,
+                        mt_key=mt_key,
+                        mt_label=mt_label,
+                        language=language,
+                    ):
+                        yield m
+                except Exception as e:
+                    logger.error(f"playwright_scrape_failed: {subject}", error=str(e))
+                    yield ExamMaterial(
+                        subject=subject,
+                        year=0,
+                        level=level,
+                        material_type=_material_type_from_key(mt_key),
+                        pdf_url="",
+                        title=f"Error: {e}",
+                        content_hash="error",
+                    )
+
+                await asyncio.sleep(RATE_LIMIT_SECONDS * 2)
+
+    finally:
+        await pw.stop()
+
+
+async def _playwright_scrape_one(
+    page: Any,
+    subject: str,
+    sec_subject: str,
+    years: list[int],
+    level_value: str,
+    mt_key: str,
+    mt_label: str,
+    language: str,
+) -> AsyncIterator[ExamMaterial]:
+    """Scrape one subject/material_type using Playwright with ASP.NET progressive disclosure.
+
+    The examinations.ie site uses ASP.NET postback-style progressive disclosure:
+    1. Check terms checkbox → reveals Type dropdown
+    2. Select Type → reveals Examination dropdown
+    3. Select Examination → reveals Subject dropdown
+    4. Select Subject → reveals Year dropdown (and sometimes results)
+    Each step triggers a postback that renders new elements.
+    """
+    await page.goto(EXAM_ARCHIVE_URL, wait_until="domcontentloaded", timeout=30000)
+    await asyncio.sleep(2)
+
+    # 1. Check the terms checkbox (ASP.NET postback triggers)
+    cb = await page.query_selector("#MaterialArchive__noTable__cbv__AgreeCheck")
+    if cb and not await cb.is_checked():
+        await cb.check()
+        # Also update the hidden field that ASP.NET uses
+        await page.evaluate("""() => {
+            const hidden = document.querySelector('input[name="MaterialArchive__noTable__cbh__AgreeCheck"]');
+            if (hidden) hidden.value = 'on';
+        }""")
+        await page.wait_for_load_state("networkidle", timeout=15000)
+        await asyncio.sleep(2)
+
+    # 2. Select material type (ViewType)
+    type_select = await page.query_selector("#MaterialArchive__noTable__sbv__ViewType")
+    if not type_select:
+        logger.error(f"type_dropdown_not_found for {sec_subject}")
+        return
+    await type_select.select_option(label=mt_label)
+    await asyncio.sleep(3)
+
+    # 3. Select examination level (Examination)
+    exam_select = await page.query_selector("#MaterialArchive__noTable__sbv__Examination")
+    if not exam_select:
+        # Try alternate IDs
+        exam_select = await page.query_selector("select[id*='Examination']")
+    if not exam_select:
+        logger.error(f"examination_dropdown_not_found for {sec_subject}")
+        return
+
+    # Find the option matching our level
+    exam_options = await exam_select.query_selector_all("option")
+    exam_value = None
+    for opt in exam_options:
+        text = (await opt.inner_text()).strip()
+        if level_value.lower() in text.lower():
+            exam_value = await opt.get_attribute("value")
+            break
+    if not exam_value:
+        logger.error(f"level_option_not_found: {level_value} for {sec_subject}")
+        return
+    await exam_select.select_option(value=exam_value)
+    await asyncio.sleep(3)
+
+    # 4. Select subject
+    subject_select = await page.query_selector("#MaterialArchive__noTable__sbv__Subject")
+    if not subject_select:
+        subject_select = await page.query_selector("select[id*='Subject']")
+    if not subject_select:
+        logger.error(f"subject_dropdown_not_found for {sec_subject}")
+        return
+
+    subject_options = await subject_select.query_selector_all("option")
+    subject_value = None
+    for opt in subject_options:
+        text = (await opt.inner_text()).strip()
+        if sec_subject.lower() in text.lower() or subject.lower().replace("-", " ") in text.lower():
+            subject_value = await opt.get_attribute("value")
+            break
+    if not subject_value:
+        logger.error(f"subject_option_not_found: {sec_subject}")
+        return
+    await subject_select.select_option(value=subject_value)
+    await asyncio.sleep(3)
+
+    # 5. For each year, select and extract PDFs
+    for year in years:
+        # Select year
+        year_select = await page.query_selector("#MaterialArchive__noTable__sbv__Year")
+        if not year_select:
+            year_select = await page.query_selector("select[id*='Year']")
+
+        if year_select:
+            year_options = await year_select.query_selector_all("option")
+            year_value = None
+            for opt in year_options:
+                text = (await opt.inner_text()).strip()
+                if str(year) == text:
+                    year_value = await opt.get_attribute("value")
+                    break
+            if year_value:
+                await year_select.select_option(value=year_value)
+                await asyncio.sleep(3)
+
+        # Click View/Submit button
+        view_btn = await page.query_selector(
+            "input[type='submit'][value*='View'], "
+            "input[type='submit'][value*='Search'], "
+            "input[type='submit'][value*='Submit'], "
+            "#MaterialArchive__noTable__btnView"
+        )
+        if view_btn:
+            await view_btn.click()
+            await page.wait_for_load_state("networkidle", timeout=15000)
+            await asyncio.sleep(3)
+
+        # Extract PDF links
+        links = await page.query_selector_all("a[href]")
+        pdf_links_found = 0
+        for link in links:
+            href = await link.get_attribute("href") or ""
+            text = (await link.inner_text()).strip()
+            if not href:
+                continue
+            if ".pdf" not in href.lower():
+                continue
+            if not href.startswith("http"):
+                href = urljoin(EXAMINATIONS_BASE_URL, href)
+
+            material_type = _classify_material_type(href, text)
+
+            yield ExamMaterial(
+                subject=subject,
+                year=year,
+                level=level_value.lower().replace(" ", "_"),
+                material_type=material_type,
+                pdf_url=href,
+                title=text or None,
+                paper_number=_extract_paper_number(href, text),
+                exam_level=_extract_exam_level(href, text),
+                language=language,
+                content_hash=hashlib.sha256(href.encode()).hexdigest()[:16],
+            )
+            pdf_links_found += 1
+
+        if pdf_links_found == 0:
+            logger.info(f"no_pdf_links: {sec_subject} {year} {mt_key}")
+        else:
+            logger.info(f"found_pdfs: {sec_subject} {year} {mt_key} count={pdf_links_found}")
+
+        await asyncio.sleep(RATE_LIMIT_SECONDS)
+
+    await page.goto("about:blank")
+
+
 # Sync wrappers for DLT compatibility
 
 
@@ -890,3 +1150,28 @@ def scrape_all_subjects_sync(
 ) -> list[ExamMaterial]:
     """Synchronous wrapper for scrape_all_subjects."""
     return asyncio.run(scrape_all_subjects(level, years, language, subjects))
+
+
+def scrape_materials_playwright_sync(
+    subjects: list[str],
+    years: list[int] | None = None,
+    level: str = "leaving_certificate",
+    language: str = "en",
+    material_types: list[str] | None = None,
+    cdp_url: str | None = None,
+) -> list[ExamMaterial]:
+    """Synchronous wrapper for scrape_materials_playwright.
+
+    Uses Playwright directly (no LLM calls) to scrape exam materials.
+    Preferred over Stagehand when CDP connection is available.
+    """
+
+    async def _collect():
+        materials = []
+        async for m in scrape_materials_playwright(
+            subjects, years, level, language, material_types, cdp_url,
+        ):
+            materials.append(m)
+        return materials
+
+    return asyncio.run(_collect())
