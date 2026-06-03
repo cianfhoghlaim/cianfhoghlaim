@@ -62,6 +62,33 @@ Members import each other via `[tool.uv.sources]` (e.g. `oideachais` imports `sr
 | Toolchain | `mise.toml` | `python 3.12`, `uv`, `bun`, `dagger`, `pulumi`, `duckdb`, `sops`; aliases `mise turbo dev`, `mise secrets:init`, `mise dagster:oideachais`, … |
 | Dagster | `dg.toml` | Loads `oideachais` and `tuatha` code-locations into one UI |
 
+### Toolchain rationale — why `mise` + `bun` + `uv` + `turbo`
+
+The polyglot monorepo is built on **four composable tools**, each picked because it is the best-in-class for one job and they do not overlap:
+
+| Tool | Role | What it gives us | Why this tool |
+|:--|:--|:--|:--|
+| **mise** | Toolchain manager | Single declarative `mise.toml` pins `python 3.12`, `uv`, `bun`, `dagger`, `pulumi`, `duckdb`, `sops`, `opencode`, plus 100+ `mise run <alias>` task shortcuts. Directory hooks auto-hydrate `.env` from `.infisical.env` on every `cd`. | Replaces asdf/pyenv/nodenv + Make + shell scripts with one TOML. Atomic, per-directory env, no global state. |
+| **bun** | JS/TS runtime + package manager + workspace orchestrator | Installs and executes every TypeScript workspace (`oideachais/web`, `oideachais/mcp/filesystem`, `tuatha/ui`). The root `package.json` is a **bun workspace shell** — no runtime business logic, only orchestration scripts and `ccc:index` / `secrets:init` glue. | One binary replaces Node + npm + yarn + pnpm + tsc + tsx. ~3× faster cold installs, native TS execution, no transpile step. |
+| **bunx** | Package runner (Bun's `npx` equivalent) | All 6 MCP servers in `opencode.json` use `bunx -y <pkg>` to spawn `@browserbasehq/mcp`, `firecrawl-mcp`, `@infisical/mcp`, `chrome-devtools-mcp`. Bun is already on `$PATH` from mise — no separate `node` install required. | `npx` ships with Node.js only; if `node` is not in `mise.toml`, every `npx -y` MCP fails with `Executable not found in $PATH`. `bunx` is a drop-in and faster. |
+| **uv** | Python package manager + workspace orchestrator | `pyproject.toml` is a uv-workspace shell. A single `uv sync` from the root resolves **all** Python members (`oideachais`, `tuatha`, `códeolas`, `sruth-browser`, `mcpo`) via `[tool.uv.sources]`. `uvx` runs CLI tools (`mcp-server-motherduck`, `ccc`) into ephemeral venvs. | 10–100× faster than pip/poetry, single lockfile (`uv.lock`) across the whole graph, no virtualenv plumbing. Replaces pip + poetry + pyenv + virtualenv. |
+| **turbo** | Task graph orchestrator | `turbo.json` declares `build`, `dev`, `typecheck`, `lint`, `format`, `test`, `clean`, `dagster`, `ccc:index`, `spec:validate`. `mise turbo dev` is the alias for `bunx turbo run dev`. | Content-hashed caching means a touched leaf only re-runs itself and its consumers, not the whole graph. Works identically across the TS and Python sides. |
+
+**Concrete example — the MCP npx→bunx migration (Jun 2026):**
+
+`opencode.json` originally wired 4 of 6 MCP servers with `"command": ["npx", "-y", ...]`. Because `mise.toml` only installed `bun` (not `node`), `npx` was not on `$PATH` and `opencode mcp list` showed:
+
+```
+✗ browserbase  failed  Executable not found in $PATH: "npx"
+✗ firecrawl    failed  Executable not found in $PATH: "npx"
+✗ infisical    failed  Executable not found in $PATH: "npx"
+✗ chrome       failed  Executable not found in $PATH: "npx"
+✓ motherduck   connected  (uvx)
+✓ cocoindex-code connected (ccc)
+```
+
+Swapping `npx` → `bunx` (one `sed` over `opencode.json`) brought all 6 to `connected` without adding `node` to the toolchain. This is the payoff of the mise/bun/uv split: each binary does one job, none of them depend on the others, and adding a new MCP server is one `bunx -y` line.
+
 ### Common commands (from root)
 
 | Command | What it does |
