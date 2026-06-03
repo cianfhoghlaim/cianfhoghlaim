@@ -3,7 +3,16 @@
 services:
   graphiti-mcp:
     labels:
-      - "pangolin.resource.name=Graphiti"
-      - "pangolin.resource.domain=graphiti.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://graphiti-mcp:8000"
-      - "pangolin.resource.middlewares=tinyauth"
+      - "pangolin.private-resources.graphiti-mcp.name=Graphiti MCP"
+      - "pangolin.private-resources.graphiti-mcp.mode=http"
+      - "pangolin.private-resources.graphiti-mcp.destination-port=8000"
+      - "pangolin.private-resources.graphiti-mcp.protocol=http"
+      - "pangolin.private-resources.graphiti-mcp.roles[0]=Member"
+      - "pangolin.private-resources.graphiti-mcp.full-domain=graphiti.cianfhoghlaim.ie"
+
+      - "pangolin.private-resources.graphiti-api.name=Graphiti API"
+      - "pangolin.private-resources.graphiti-api.mode=http"
+      - "pangolin.private-resources.graphiti-api.destination-port=8000"
+      - "pangolin.private-resources.graphiti-api.protocol=http"
+      - "pangolin.private-resources.graphiti-api.roles[0]=Member"
+      - "pangolin.private-resources.graphiti-api.full-domain=graphiti-api.cianfhoghlaim.ie"

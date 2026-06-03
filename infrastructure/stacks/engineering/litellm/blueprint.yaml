@@ -1,10 +1,11 @@
-public-resources:
+private-resources:
   litellm:
     name: "Litellm"
+    mode: http
     full-domain: "litellm.cianfhoghlaim.ie"
-    protocol: "http"
-    targets:
-      - site: "arm1-oci"
-        hostname: "litellm-main"
-        method: "http"
-        port: 8080
+    destination-port: 4000
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

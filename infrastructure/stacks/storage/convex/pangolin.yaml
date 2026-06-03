@@ -3,7 +3,23 @@
 services:
   dashboard:
     labels:
-      - "pangolin.resource.name=Convex"
-      - "pangolin.resource.domain=convex.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://convex-dashboard:6791"
-      - "pangolin.resource.middlewares=tinyauth"
+      - "pangolin.private-resources.convex-backend.name=Convex Backend API"
+      - "pangolin.private-resources.convex-backend.mode=http"
+      - "pangolin.private-resources.convex-backend.destination-port=3210"
+      - "pangolin.private-resources.convex-backend.protocol=http"
+      - "pangolin.private-resources.convex-backend.roles[0]=Member"
+      - "pangolin.private-resources.convex-backend.full-domain=convex-api.cianfhoghlaim.ie"
+
+      - "pangolin.private-resources.convex-site.name=Convex Site"
+      - "pangolin.private-resources.convex-site.mode=http"
+      - "pangolin.private-resources.convex-site.destination-port=3211"
+      - "pangolin.private-resources.convex-site.protocol=http"
+      - "pangolin.private-resources.convex-site.roles[0]=Member"
+      - "pangolin.private-resources.convex-site.full-domain=convex-site.cianfhoghlaim.ie"
+
+      - "pangolin.private-resources.convex-dashboard.name=Convex Dashboard"
+      - "pangolin.private-resources.convex-dashboard.mode=http"
+      - "pangolin.private-resources.convex-dashboard.destination-port=6791"
+      - "pangolin.private-resources.convex-dashboard.protocol=http"
+      - "pangolin.private-resources.convex-dashboard.roles[0]=Member"
+      - "pangolin.private-resources.convex-dashboard.full-domain=convex.cianfhoghlaim.ie"

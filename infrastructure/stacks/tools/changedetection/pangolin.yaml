@@ -1,8 +1,9 @@
 services:
   main-service:
     labels:
-      - "pangolin.public-resources.changedetection.name=Changedetection"
-      - "pangolin.public-resources.changedetection.full-domain=changedetection.cianfhoghlaim.ie"
-      - "pangolin.public-resources.changedetection.protocol=http"
-      - "pangolin.public-resources.changedetection.targets[0].method=http"
-      - "pangolin.public-resources.changedetection.targets[0].port=8080"
+      - "pangolin.private-resources.changedetection.name=Changedetection"
+      - "pangolin.private-resources.changedetection.mode=http"
+      - "pangolin.private-resources.changedetection.full-domain=changedetection.cianfhoghlaim.ie"
+      - "pangolin.private-resources.changedetection.destination-port=8080"
+      - "pangolin.private-resources.changedetection.protocol=http"
+      - "pangolin.private-resources.changedetection.roles[0]=Member"

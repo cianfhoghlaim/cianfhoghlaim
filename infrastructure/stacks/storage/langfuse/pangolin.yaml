@@ -3,7 +3,9 @@
 services:
   langfuse-web:
     labels:
-      - "pangolin.resource.name=Langfuse"
-      - "pangolin.resource.domain=langfuse.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://langfuse-web:3000"
-      - "pangolin.resource.middlewares=tinyauth"
+      - "pangolin.private-resources.langfuse.name=Langfuse"
+      - "pangolin.private-resources.langfuse.mode=http"
+      - "pangolin.private-resources.langfuse.destination-port=3000"
+      - "pangolin.private-resources.langfuse.protocol=http"
+      - "pangolin.private-resources.langfuse.roles[0]=Member"
+      - "pangolin.private-resources.langfuse.full-domain=langfuse.cianfhoghlaim.ie"

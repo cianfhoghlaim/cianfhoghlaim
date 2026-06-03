@@ -1,8 +1,9 @@
 services:
   main-service:
     labels:
-      - "pangolin.public-resources.rybbit.name=Rybbit"
-      - "pangolin.public-resources.rybbit.full-domain=rybbit.cianfhoghlaim.ie"
-      - "pangolin.public-resources.rybbit.protocol=http"
-      - "pangolin.public-resources.rybbit.targets[0].method=http"
-      - "pangolin.public-resources.rybbit.targets[0].port=8080"
+      - "pangolin.private-resources.rybbit.name=Rybbit"
+      - "pangolin.private-resources.rybbit.mode=http"
+      - "pangolin.private-resources.rybbit.full-domain=rybbit.cianfhoghlaim.ie"
+      - "pangolin.private-resources.rybbit.destination-port=8080"
+      - "pangolin.private-resources.rybbit.protocol=http"
+      - "pangolin.private-resources.rybbit.roles[0]=Member"

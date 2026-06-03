@@ -3,7 +3,9 @@
 services:
   memgraph-lab:
     labels:
-      - "pangolin.resource.name=Memgraph Lab"
-      - "pangolin.resource.domain=memgraph.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://memgraph-lab:3000"
-      - "pangolin.resource.middlewares=tinyauth"
+      - "pangolin.private-resources.memgraph-lab.name=Memgraph Lab"
+      - "pangolin.private-resources.memgraph-lab.mode=http"
+      - "pangolin.private-resources.memgraph-lab.destination-port=3000"
+      - "pangolin.private-resources.memgraph-lab.protocol=http"
+      - "pangolin.private-resources.memgraph-lab.roles[0]=Member"
+      - "pangolin.private-resources.memgraph-lab.full-domain=memgraph.cianfhoghlaim.ie"

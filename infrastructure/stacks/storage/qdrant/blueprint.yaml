@@ -2,17 +2,14 @@
 # QDRANT - Pangolin Blueprint
 # =============================================================================
 
-public-resources:
+private-resources:
   qdrant:
     name: "Qdrant"
     full-domain: "qdrant.cianfhoghlaim.ie"
-    protocol: "http"
-    auth:
-      sso-enabled: true
-      sso-roles:
-        - Member
-    targets:
-      - site: "arm1-oci"
-        hostname: "qdrant"
-        method: "http"
-        port: 6333
+    mode: http
+    destination-port: 6333
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

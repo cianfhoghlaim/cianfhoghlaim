@@ -2,17 +2,14 @@
 # LANCEDB - Pangolin Blueprint
 # =============================================================================
 
-public-resources:
+private-resources:
   lancedb:
     name: "LanceDB Viewer"
     full-domain: "lancedb.cianfhoghlaim.ie"
-    protocol: "http"
-    auth:
-      sso-enabled: true
-      sso-roles:
-        - Member
-    targets:
-      - site: "arm1-oci"
-        hostname: "lancedb"
-        method: "http"
-        port: 8080
+    mode: http
+    destination-port: 8080
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

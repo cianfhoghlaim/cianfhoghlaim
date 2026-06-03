@@ -2,31 +2,25 @@
 # GRAPHITI - Pangolin Blueprint
 # =============================================================================
 
-public-resources:
+private-resources:
   graphiti-mcp:
     name: "Graphiti MCP"
     full-domain: "graphiti.cianfhoghlaim.ie"
-    protocol: "http"
-    auth:
-      sso-enabled: true
-      sso-roles:
-        - Member
-    targets:
-      - site: "arm1-oci"
-        hostname: "graphiti-mcp"
-        method: "http"
-        port: 8000
+    mode: http
+    destination-port: 8000
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member
 
   graphiti-api:
     name: "Graphiti API"
     full-domain: "graphiti-api.cianfhoghlaim.ie"
-    protocol: "http"
-    auth:
-      sso-enabled: true
-      sso-roles:
-        - Member
-    targets:
-      - site: "arm1-oci"
-        hostname: "graphiti-api"
-        method: "http"
-        port: 8000
+    mode: http
+    destination-port: 8000
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

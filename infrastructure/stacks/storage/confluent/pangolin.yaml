@@ -3,7 +3,9 @@
 services:
   kafka-ui:
     labels:
-      - "pangolin.resource.name=Kafka UI"
-      - "pangolin.resource.domain=kafka.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://kafka-ui:8080"
-      - "pangolin.resource.middlewares=tinyauth"
+      - "pangolin.private-resources.kafka-ui.name=Kafka UI"
+      - "pangolin.private-resources.kafka-ui.mode=http"
+      - "pangolin.private-resources.kafka-ui.destination-port=8080"
+      - "pangolin.private-resources.kafka-ui.protocol=http"
+      - "pangolin.private-resources.kafka-ui.roles[0]=Member"
+      - "pangolin.private-resources.kafka-ui.full-domain=kafka.cianfhoghlaim.ie"

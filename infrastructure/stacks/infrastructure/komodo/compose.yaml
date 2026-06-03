@@ -26,8 +26,8 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${KOMODO_DATABASE_USERNAME:-komodo}
       MONGO_INITDB_ROOT_PASSWORD: ${KOMODO_DATABASE_PASSWORD:-devpassword}
     volumes:
-      - komodo-mongo-data:/data/db
-      - komodo-mongo-config:/data/configdb
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
       interval: 10s
@@ -71,12 +71,15 @@ services:
       KOMODO_LOCAL_AUTH: ${KOMODO_LOCAL_AUTH:-true}
       KOMODO_INIT_ADMIN_USERNAME: ${KOMODO_INIT_ADMIN_USERNAME:-ciansedai}
       KOMODO_INIT_ADMIN_PASSWORD: ${KOMODO_INIT_ADMIN_PASSWORD:-}
+      KOMODO_AUTH_RATE_LIMIT_DISABLED: "true"
+      KOMODO_AUTH_RATE_LIMIT_MAX_ATTEMPTS: "250"
 
       # OIDC (optional)
       KOMODO_OIDC_ENABLED: ${KOMODO_OIDC_ENABLED:-false}
       KOMODO_OIDC_PROVIDER: ${KOMODO_OIDC_PROVIDER:-}
       KOMODO_OIDC_CLIENT_ID: ${KOMODO_OIDC_CLIENT_ID:-}
       KOMODO_OIDC_CLIENT_SECRET: ${KOMODO_OIDC_CLIENT_SECRET:-}
+      KOMODO_OIDC_USE_FULL_EMAIL: ${KOMODO_OIDC_USE_FULL_EMAIL:-true}
 
       # Rate Limiting (default: 10 requests/second)
       # Increased to 500 for automation workflows
@@ -86,8 +89,8 @@ services:
       KOMODO_BACKUP_ENABLED: ${KOMODO_BACKUP_ENABLED:-true}
       KOMODO_BACKUP_SCHEDULE: ${KOMODO_BACKUP_SCHEDULE:-0 2 * * *}
     volumes:
-      - komodo-keys:/config/keys
-      - komodo-backups:/backups
+      - keys:/config/keys
+      - backups:/backups
     healthcheck:
       test: ["CMD", "curl", "-sf", "http://localhost:9120/"]
       interval: 30s
@@ -104,10 +107,10 @@ services:
           memory: 2G
 
 volumes:
-  komodo-mongo-data:
-  komodo-mongo-config:
-  komodo-keys:
-  komodo-backups:
+  mongo-data:
+  mongo-config:
+  keys:
+  backups:
 
 networks:
   komodo:

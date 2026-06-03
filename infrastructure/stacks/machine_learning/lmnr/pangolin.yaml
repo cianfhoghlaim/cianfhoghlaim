@@ -1,8 +1,10 @@
 services:
   main-service:
     labels:
-      - "pangolin.public-resources.lmnr.name=Lmnr"
-      - "pangolin.public-resources.lmnr.full-domain=lmnr.cianfhoghlaim.ie"
-      - "pangolin.public-resources.lmnr.protocol=http"
-      - "pangolin.public-resources.lmnr.targets[0].method=http"
-      - "pangolin.public-resources.lmnr.targets[0].port=8080"
+      - "pangolin.private-resources.lmnr.name=Lmnr"
+      - "pangolin.private-resources.lmnr.mode=http"
+      - "pangolin.private-resources.lmnr.destination-port=8080"
+      - "pangolin.private-resources.lmnr.protocol=http"
+      - "pangolin.private-resources.lmnr.roles[0]=Member"
+
+      - "pangolin.private-resources.lmnr.full-domain=lmnr.cianfhoghlaim.ie"
