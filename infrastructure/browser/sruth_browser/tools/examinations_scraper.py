@@ -593,6 +593,257 @@ async def scrape_statistics(
         if backend and hasattr(backend, "close"): await backend.close()
 
 
+async def scrape_materials_batch(
+    subjects: list[str],
+    years: list[int] | None = None,
+    level: str = "leaving_certificate",
+    language: str = "en",
+    material_types: list[str] | None = None,
+) -> AsyncIterator[ExamMaterial]:
+    """Scrape exam materials for multiple subjects using a single browser session.
+
+    Reuses one Stagehand initialization across all subjects, avoiding
+    the 30+ second startup cost per subject.
+
+    Args:
+        subjects: List of subject slugs (e.g., ["mathematics", "english"])
+        years: Years to scrape (default: 2020-2024)
+        level: Exam level (leaving_certificate, junior_cycle, leaving_certificate_applied)
+        language: Language code (en, ga). Both languages' papers are downloaded.
+        material_types: List of types to scrape ("exam_papers", "marking_schemes").
+                       Default: both.
+
+    Yields:
+        ExamMaterial objects for all subjects/years/types requested
+    """
+    if years is None:
+        years = list(range(2020, 2025))
+    if material_types is None:
+        material_types = ["exam_papers", "marking_schemes"]
+
+    level_labels = {
+        "leaving_certificate": "Leaving Certificate",
+        "junior_cycle": "Junior Cycle",
+        "leaving_certificate_applied": "Leaving Cert Applied",
+    }
+    level_display = level_labels.get(level, "Leaving Certificate")
+
+    type_dropdown_labels = {
+        "exam_papers": "Exam Papers",
+        "marking_schemes": "Marking Schemes",
+        "deferred_papers": "Deferred Papers",
+        "deferred_marking_schemes": "Deferred Marking Schemes",
+    }
+
+    router = get_router()
+    if not router._backends:
+        try:
+            from ..backends.selfhosted.stagehand_backend import StagehandBackend
+            router.register_backend(StagehandBackend())
+        except ImportError:
+            logger.error("No browser backend available for batch scrape")
+            return
+
+    backend_type = await router.select_backend(BrowserOperation.EXTRACTION)
+    if not backend_type:
+        logger.error("No browser backend selected for batch scrape")
+        return
+
+    backend = router.get_backend(backend_type)
+
+    try:
+        await backend.initialize()
+
+        for material_type_key in material_types:
+            material_type_label = type_dropdown_labels.get(material_type_key, material_type_key)
+
+            for subject in subjects:
+                sec_subject = SEC_SUBJECT_MAPPING.get(subject, subject.replace("-", " ").title())
+                logger.info(f"Batch scrape: {sec_subject} {material_type_label} ({level})")
+
+                try:
+                    async for material in _scrape_single_subject_session(
+                        backend=backend,
+                        subject=subject,
+                        sec_subject=sec_subject,
+                        years=years,
+                        level=level,
+                        level_display=level_display,
+                        material_type_key=material_type_key,
+                        material_type_label=material_type_label,
+                        language=language,
+                    ):
+                        yield material
+                except Exception as e:
+                    logger.error(f"subject_failed: {subject}", error=str(e))
+                    yield ExamMaterial(
+                        subject=subject,
+                        year=0,
+                        level=level,
+                        material_type=ExamMaterialType.PAPER,
+                        pdf_url="",
+                        title=f"Error: {e}",
+                        content_hash="error",
+                    )
+
+                await asyncio.sleep(RATE_LIMIT_SECONDS * 2)
+
+    finally:
+        if backend and hasattr(backend, "close"):
+            await backend.close()
+
+
+async def _scrape_single_subject_session(
+    backend: Any,
+    subject: str,
+    sec_subject: str,
+    years: list[int],
+    level: str,
+    level_display: str,
+    material_type_key: str,
+    material_type_label: str,
+    language: str,
+) -> AsyncIterator[ExamMaterial]:
+    """Scrape a single subject using an existing browser session.
+
+    Does NOT initialize or close the backend — caller manages the session lifecycle.
+    Navigates to the archive fresh for each subject/type combo.
+    """
+    nav_result = await backend.navigate(EXAM_ARCHIVE_URL)
+    if not nav_result.success:
+        logger.error(f"Failed to navigate to exam archive: {nav_result.error}")
+        return
+
+    await asyncio.sleep(2)
+
+    agree_result = await backend.interact(
+        "Check the 'I have read, understand and accept the Terms and Conditions' checkbox"
+    )
+    if not agree_result.success:
+        logger.error(f"Failed to accept terms for {sec_subject}: {agree_result.error}")
+        return
+    await asyncio.sleep(RATE_LIMIT_SECONDS)
+
+    type_result = await backend.interact(
+        f"Select '{material_type_label}' from the 'Choose Type' dropdown menu"
+    )
+    if not type_result.success:
+        logger.error(f"Failed to select type for {sec_subject}: {type_result.error}")
+        return
+    await asyncio.sleep(RATE_LIMIT_SECONDS)
+
+    level_result = await backend.interact(
+        f"Select '{level_display}' from the level dropdown menu"
+    )
+    if not level_result.success:
+        logger.error(f"Failed to select level for {sec_subject}: {level_result.error}")
+        return
+    await asyncio.sleep(RATE_LIMIT_SECONDS)
+
+    subject_result = await backend.interact(
+        f"Select '{sec_subject}' from the subject dropdown menu"
+    )
+    if not subject_result.success:
+        logger.error(f"Failed to select subject {sec_subject}: {subject_result.error}")
+        return
+    await asyncio.sleep(RATE_LIMIT_SECONDS)
+
+    for year in years:
+        logger.info(f"Extracting {sec_subject} {material_type_label} {year}")
+
+        year_result = await backend.interact(
+            f"Select '{year}' from the year dropdown menu"
+        )
+        if not year_result.success:
+            logger.warning(f"Failed to select year {year}: {year_result.error}")
+            continue
+        await asyncio.sleep(RATE_LIMIT_SECONDS)
+
+        submit_result = await backend.interact(
+            "Click the 'View' or 'Search' or 'Submit' button to show exam material results"
+        )
+        if not submit_result.success:
+            logger.warning(f"Failed to submit for {sec_subject} {year}: {submit_result.error}")
+            continue
+        await asyncio.sleep(3)
+
+        extraction_result = await backend.extract(
+            url="",
+            prompt="""
+            Extract all PDF download links from the exam material results on this page.
+            For each link found, extract:
+            - url: Full URL to the PDF file (possibly relative to examinations.ie)
+            - title: Link text or description (e.g. "Higher Level Paper 1")
+            Return as a list of objects with url and title fields.
+            """,
+            formats=[ExtractionFormat.STRUCTURED],
+            schema={
+                "type": "object",
+                "properties": {
+                    "links": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "url": {"type": "string"},
+                                "title": {"type": "string"},
+                            },
+                        },
+                    },
+                },
+            },
+        )
+
+        if not extraction_result.success or not extraction_result.content:
+            logger.warning(f"No results found for {sec_subject} {year}")
+            continue
+
+        links = extraction_result.content
+        if isinstance(links, dict):
+            links = links.get("extracted", links)
+            links = links.get("links", links.get("results", [links] if isinstance(links, dict) else links))
+
+        if not isinstance(links, list):
+            logger.warning(f"Unexpected links format for {sec_subject} {year}: {type(links)}")
+            continue
+
+        for link in links:
+            if isinstance(link, str):
+                url = link
+                title = None
+            elif isinstance(link, dict):
+                url = link.get("url") or link.get("href", "")
+                title = link.get("title") or link.get("text")
+            else:
+                continue
+
+            if not url:
+                continue
+
+            if not url.endswith(".pdf") and ".pdf" not in url:
+                continue
+
+            if not url.startswith("http"):
+                url = urljoin(EXAMINATIONS_BASE_URL, url)
+
+            material_type = _classify_material_type(url, title)
+
+            yield ExamMaterial(
+                subject=subject,
+                year=year,
+                level=level,
+                material_type=material_type,
+                pdf_url=url,
+                title=title,
+                paper_number=_extract_paper_number(url, title),
+                exam_level=_extract_exam_level(url, title),
+                language=language,
+                content_hash=hashlib.sha256(url.encode()).hexdigest()[:16],
+            )
+
+        await asyncio.sleep(RATE_LIMIT_SECONDS)
+
+
 # Sync wrappers for DLT compatibility
 
 
@@ -607,6 +858,24 @@ def scrape_exam_materials_sync(
     async def _collect():
         materials = []
         async for m in scrape_exam_materials(subject, years, level, language):
+            materials.append(m)
+        return materials
+
+    return asyncio.run(_collect())
+
+
+def scrape_materials_batch_sync(
+    subjects: list[str],
+    years: list[int] | None = None,
+    level: str = "leaving_certificate",
+    language: str = "en",
+    material_types: list[str] | None = None,
+) -> list[ExamMaterial]:
+    """Synchronous wrapper for scrape_materials_batch (session-reused batch)."""
+
+    async def _collect():
+        materials = []
+        async for m in scrape_materials_batch(subjects, years, level, language, material_types):
             materials.append(m)
         return materials
 
