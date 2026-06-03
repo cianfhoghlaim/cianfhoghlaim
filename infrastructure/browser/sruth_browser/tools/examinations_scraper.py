@@ -219,6 +219,14 @@ async def scrape_exam_materials(
     """
     Scrape exam materials for a subject using browser automation.
 
+    The exam archive page uses a JavaScript-driven cascading form:
+    1. Accept terms checkbox (id: MaterialArchive__noTable__cbv__AgreeCheck)
+    2. "Choose Type" dropdown (Exam Papers, Marking Schemes, etc.)
+    3. Level dropdown (appears after type selection)
+    4. Subject dropdown (appears after level selection)
+    5. Year dropdown (appears after subject selection)
+    6. Submit to view results with PDF links
+
     Args:
         subject: Subject slug (e.g., "mathematics")
         years: Years to scrape (default: 2020-2024)
@@ -233,10 +241,23 @@ async def scrape_exam_materials(
     if years is None:
         years = list(range(2020, 2025))
 
-    # Get SEC subject name
     sec_subject = SEC_SUBJECT_MAPPING.get(subject, subject.replace("-", " ").title())
 
-    # Get browser backend
+    # Map our level enum to SEC dropdown labels
+    level_labels = {
+        "leaving_certificate": "Leaving Certificate",
+        "junior_cycle": "Junior Cycle",
+        "leaving_certificate_applied": "Leaving Cert Applied",
+    }
+    level_display = level_labels.get(level, "Leaving Certificate")
+
+    # Determine material type selector label
+    # The site has separate dropdown entries for different material types
+    # e.g., "Exam Papers", "Marking Schemes"
+    material_type_labels = ["Exam Papers"]
+    if include_marking_schemes:
+        material_type_labels.append("Marking Schemes")
+
     router = get_router()
     if not router._backends:
         try:
@@ -249,125 +270,176 @@ async def scrape_exam_materials(
     if not backend_type:
         logger.error("No browser backend available")
         return
-        
+
     backend = router.get_backend(backend_type)
 
     try:
         await backend.initialize()
 
-        # Navigate to exam archive
-        logger.info(f"Navigating to exam archive for {sec_subject}")
-        nav_result = await backend.navigate(EXAM_ARCHIVE_URL)
+        for material_type_label in material_type_labels:
+            logger.info(f"Scraping {sec_subject} {material_type_label}")
 
-        if not nav_result.success:
-            logger.error(f"Failed to navigate to exam archive: {nav_result.error}")
-            return
+            # Start fresh for each material type (dropdown state is sticky)
+            nav_result = await backend.navigate(EXAM_ARCHIVE_URL)
+            if not nav_result.success:
+                logger.error(f"Failed to navigate to exam archive: {nav_result.error}")
+                return
 
-        # Wait for page to load
-        await asyncio.sleep(2)
-
-        # Select level from dropdown
-        level_display = "Leaving Certificate" if level == "leaving_certificate" else "Junior Cycle"
-        await backend.interact(f"Select '{level_display}' from the level dropdown menu")
-        await asyncio.sleep(RATE_LIMIT_SECONDS)
-
-        # Select subject from dropdown
-        await backend.interact(f"Select '{sec_subject}' from the subject dropdown menu")
-        await asyncio.sleep(RATE_LIMIT_SECONDS)
-
-        for year in years:
-            logger.info(f"Scraping {sec_subject} {year}")
-
-            # Select year from dropdown
-            await backend.interact(f"Select '{year}' from the year dropdown menu")
-            await asyncio.sleep(RATE_LIMIT_SECONDS)
-
-            # Click search/view button
-            await backend.interact("Click the 'View' or 'Search' button to show results")
+            # Wait for page to load
             await asyncio.sleep(2)
 
-            # Extract all PDF links from the results
-            extraction_result = await backend.extract(
-                url="",
-                prompt="""
-                Extract all PDF download links from the results table.
-                For each link, extract:
-                - url: The full URL to the PDF file
-                - title: The link text or description
-                Return as a list of objects with url and title fields.
-                """,
-                formats=[ExtractionFormat.STRUCTURED],
-                schema={
-                    "type": "object",
-                    "properties": {
-                        "links": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "url": {"type": "string"},
-                                    "title": {"type": "string"},
+            # Step 1: Accept Terms & Conditions checkbox
+            logger.info("Accepting terms and conditions checkbox")
+            agree_result = await backend.interact(
+                "Check the 'I have read, understand and accept the Terms and Conditions' checkbox"
+            )
+            if not agree_result.success:
+                logger.error(f"Failed to accept terms: {agree_result.error}")
+                continue
+            await asyncio.sleep(RATE_LIMIT_SECONDS)
+
+            # Step 2: Select "Choose Type" dropdown
+            logger.info(f"Selecting material type: {material_type_label}")
+            type_result = await backend.interact(
+                f"Select '{material_type_label}' from the 'Choose Type' dropdown menu"
+            )
+            if not type_result.success:
+                logger.error(f"Failed to select type: {type_result.error}")
+                continue
+            await asyncio.sleep(RATE_LIMIT_SECONDS)
+
+            # Step 3: Select Level dropdown
+            logger.info(f"Selecting level: {level_display}")
+            level_result = await backend.interact(
+                f"Select '{level_display}' from the level dropdown menu"
+            )
+            if not level_result.success:
+                logger.error(f"Failed to select level: {level_result.error}")
+                continue
+            await asyncio.sleep(RATE_LIMIT_SECONDS)
+
+            # Step 4: Select Subject dropdown
+            logger.info(f"Selecting subject: {sec_subject}")
+            subject_result = await backend.interact(
+                f"Select '{sec_subject}' from the subject dropdown menu"
+            )
+            if not subject_result.success:
+                logger.error(f"Failed to select subject: {subject_result.error}")
+                continue
+            await asyncio.sleep(RATE_LIMIT_SECONDS)
+
+            for year in years:
+                logger.info(f"Scraping {sec_subject} {material_type_label} {year}")
+
+                # Step 5: Select Year
+                year_result = await backend.interact(
+                    f"Select '{year}' from the year dropdown menu"
+                )
+                if not year_result.success:
+                    logger.warning(f"Failed to select year {year}: {year_result.error}")
+                    continue
+                await asyncio.sleep(RATE_LIMIT_SECONDS)
+
+                # Step 6: Submit the form (click View/Search button)
+                submit_result = await backend.interact(
+                    "Click the 'View' or 'Search' or 'Submit' button to show exam material results"
+                )
+                if not submit_result.success:
+                    logger.warning(f"Failed to submit for {year}: {submit_result.error}")
+                    continue
+                await asyncio.sleep(3)  # Wait for results to load
+
+                # Step 7: Extract PDF links from results
+                extraction_result = await backend.extract(
+                    url="",
+                    prompt="""
+                    Extract all PDF download links from the exam material results on this page.
+                    For each link found, extract:
+                    - url: Full URL to the PDF file (possibly relative to examinations.ie)
+                    - title: Link text or description (e.g. "Higher Level Paper 1")
+                    Return as a list of objects with url and title fields.
+                    """,
+                    formats=[ExtractionFormat.STRUCTURED],
+                    schema={
+                        "type": "object",
+                        "properties": {
+                            "links": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "url": {"type": "string"},
+                                        "title": {"type": "string"},
+                                    },
                                 },
                             },
                         },
                     },
-                },
-            )
-
-            if not extraction_result.success or not extraction_result.content:
-                logger.warning(f"No results found for {sec_subject} {year}")
-                continue
-
-            # Process extracted links
-            links = extraction_result.content
-            if isinstance(links, dict):
-                links = links.get("extracted", links)
-                links = links.get("links", links.get("results", [links] if isinstance(links, dict) else links))
-
-            for link in links:
-                if isinstance(link, str):
-                    url = link
-                    title = None
-                elif isinstance(link, dict):
-                    url = link.get("url") or link.get("href", "")
-                    title = link.get("title") or link.get("text")
-                else:
-                    continue
-
-                if not url or not url.endswith(".pdf"):
-                    continue
-
-                # Make absolute URL
-                if not url.startswith("http"):
-                    url = urljoin(EXAMINATIONS_BASE_URL, url)
-
-                # Classify material type
-                material_type = _classify_material_type(url, title)
-
-                # Filter based on options
-                if material_type == ExamMaterialType.MARKING_SCHEME and not include_marking_schemes:
-                    continue
-                if material_type == ExamMaterialType.EXAMINER_REPORT and not include_examiner_reports:
-                    continue
-
-                yield ExamMaterial(
-                    subject=subject,
-                    year=year,
-                    level=level,
-                    material_type=material_type,
-                    pdf_url=url,
-                    title=title,
-                    paper_number=_extract_paper_number(url, title),
-                    exam_level=_extract_exam_level(url, title),
-                    language=language,
-                    content_hash=hashlib.sha256(url.encode()).hexdigest()[:16],
                 )
 
-            # Rate limiting between years
-            await asyncio.sleep(RATE_LIMIT_SECONDS)
+                if not extraction_result.success or not extraction_result.content:
+                    logger.warning(f"No results found for {sec_subject} {year}")
+                    continue
+
+                # Process extracted links
+                links = extraction_result.content
+                if isinstance(links, dict):
+                    links = links.get("extracted", links)
+                    links = links.get("links", links.get("results", [links] if isinstance(links, dict) else links))
+
+                if not isinstance(links, list):
+                    logger.warning(f"Unexpected links format for {sec_subject} {year}: {type(links)}")
+                    continue
+
+                for link in links:
+                    if isinstance(link, str):
+                        url = link
+                        title = None
+                    elif isinstance(link, dict):
+                        url = link.get("url") or link.get("href", "")
+                        title = link.get("title") or link.get("text")
+                    else:
+                        continue
+
+                    if not url:
+                        continue
+
+                    # Accept both .pdf and other document URLs
+                    if not url.endswith(".pdf") and ".pdf" not in url:
+                        continue
+
+                    if not url.startswith("http"):
+                        url = urljoin(EXAMINATIONS_BASE_URL, url)
+
+                    material_type = _classify_material_type(url, title)
+
+                    if material_type == ExamMaterialType.MARKING_SCHEME and not include_marking_schemes:
+                        continue
+                    if material_type == ExamMaterialType.EXAMINER_REPORT and not include_examiner_reports:
+                        continue
+
+                    yield ExamMaterial(
+                        subject=subject,
+                        year=year,
+                        level=level,
+                        material_type=material_type,
+                        pdf_url=url,
+                        title=title,
+                        paper_number=_extract_paper_number(url, title),
+                        exam_level=_extract_exam_level(url, title),
+                        language=language,
+                        content_hash=hashlib.sha256(url.encode()).hexdigest()[:16],
+                    )
+
+                # Rate limiting between years
+                await asyncio.sleep(RATE_LIMIT_SECONDS)
+
+            # Rate limiting between material types
+            await asyncio.sleep(RATE_LIMIT_SECONDS * 2)
 
     finally:
-        if backend and hasattr(backend, "close"): await backend.close()
+        if backend and hasattr(backend, "close"):
+            await backend.close()
 
 
 async def scrape_all_subjects(
