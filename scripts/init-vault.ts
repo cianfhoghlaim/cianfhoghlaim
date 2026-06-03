@@ -33,8 +33,8 @@ async function main() {
         clientSecret: CONFIG.infisicalClientSecret
     });
 
-    const envLocalPath = path.join(process.cwd(), "../../.env");
-    const infisicalEnvPath = path.join(process.cwd(), "../../.infisical.env");
+    const envLocalPath = path.join(process.cwd(), ".env");
+    const infisicalEnvPath = path.join(process.cwd(), ".infisical.env");
     
     // Load local actual values
     let localEnv: Record<string, string> = {};

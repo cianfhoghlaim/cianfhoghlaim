@@ -2,6 +2,96 @@
 
 This project uses standard GitHub/Forgejo issues for task tracking. Please use `gh` or standard `git` workflows.
 
+## Monorepo Topology (v2 — Polyglot)
+
+Cianfhoghlaim is a **bun + uv + turbo polyglot monorepo**. Two language graphs live side by side, orchestrated by `turbo.json` and a single `mise.toml` toolchain.
+
+### TypeScript graph (bun workspaces)
+
+The root `package.json` declares these `workspaces` and is the only manifest bun resolves:
+
+| Workspace | Path | Purpose |
+|:--|:--|:--|
+| `oideachais-web` | `oideachais/web/` | TanStack Start + React front-end (the public web app) |
+| `oideachais-mcp-filesystem` | `oideachais/mcp/filesystem/` | Filesystem MCP server for the data platform |
+| `tuatha-ui` | `tuatha/ui/` | Túatha educational MMO front-end |
+
+There is **no** runtime business logic at the root. The root `package.json` only orchestrates: setup, turbo passthroughs, secret management, dagster, komodo/pangolin/locket glue, ccc indexing, and OpenSpec.
+
+### Python graph (uv workspaces)
+
+The root `pyproject.toml` is a uv-workspace **shell** (no dependencies, no console scripts). Members:
+
+| Member | Path | Purpose |
+|:--|:--|:--|
+| `oideachais` | `oideachais/` | Celtic education data platform (Dagster, DLT, LanceDB) |
+| `tuath` | `tuatha/` | Educational MMO + crypto platform (Babylon.js, siwe, x402) |
+| `códeolas` | `códeolas/` | Code intelligence library (publishable) |
+| `sruth-browser` | `infrastructure/browser/` | Browser automation client (Stagehand, MCP) |
+| `mcpo` | `oideachais/mcp/mcpo/` | MCPO bridge (optional) |
+
+Members import each other via `[tool.uv.sources]` (e.g. `oideachais` imports `sruth-browser`, `códeolas`).
+
+### Pipeline orchestration
+
+- `turbo.json` — cross-language task graph (`build`, `dev`, `typecheck`, `lint`, `format`, `test`, `clean`, `dagster`, `ccc:index`, `spec:validate`).
+- `mise.toml` — toolchain (`python 3.12`, `uv`, `bun`, `dagger`, `pulumi`, `duckdb`, `sops`, `opencode`) **and** the developer task aliases (`mise turbo dev`, `mise ccc:search …`, `mise secrets:init`, `mise dagster:oideachais`, etc.).
+- `dg.toml` — Dagster `dg` workspace that loads `oideachais` and `tuatha` code-locations into a single UI.
+
+### Developer onboarding (one command)
+
+```bash
+bun run setup
+# expands to: mise install && bun install && uv sync && bun run secrets:env && bun run secrets:init
+```
+
+## Secrets Bootstrap (do not skip)
+
+Secrets follow a strict three-way contract. **Never** hand-edit `.env`:
+
+1. **Source of truth** — `dev-baile` environment in the self-hosted Infisical vault (Komodo+Pangolin stack on `arm1-oci`).
+2. **Template** — `.infisical.env` (committed) — every value is an `infisical://dev-baile/...` reference.
+3. **Hydrated runtime** — `.env` (gitignored) — written by `mise`/`locket`/`bun run secrets:init` from the template.
+
+The scripts live at the **root** of the repository (not in a nested package):
+
+| Script | Purpose | When to run |
+|:--|:--|:--|
+| `bun run scripts/create-env.ts` | Create the `dev-baile` environment + folders in the vault | First time only |
+| `bun run scripts/init-vault.ts` | Read `.env` + `.infisical.env`; create / update each vault secret | Whenever `.env` or `.infisical.env` changes |
+| `mise run secrets:init` | Same as the bun script above (mise alias) | — |
+| `mise run locket:exec -- <cmd>` | Wrap a command with Locket secret injection at runtime | Production containers |
+
+`mise` directory hooks then keep `.env` in sync on every `cd` and the Locket sidecar re-injects on every container start.
+
+## Codebase Indexing & Spec-Driven Development
+
+### `ccc` — semantic code search (cocoindex-code)
+
+`ccc` (CocoIndex Code) gives every agent a per-project semantic index in `.cocoindex_code/target_sqlite.db`. Treat it as a first-class tool — **always** use it before `grep`/`find`.
+
+```bash
+bun run ccc:init     # first time only
+bun run ccc:index    # (re)build the index
+bun run ccc:search "Dagster asset partition definition"
+```
+
+If the index is missing or stale, the agent **owns** running `ccc:index` — do not ask the user. Full skill in [`.agents/skills/ccc/SKILL.md`](.agents/skills/ccc/SKILL.md).
+
+### `openspec` — spec-driven changes
+
+`openspec/` is the canonical change-management surface. The workflow is `list → write proposal/tasks/spec deltas → validate --strict → implement → archive`.
+
+```bash
+bun run spec:list
+bun run spec:validate my-change-id --strict
+bun run spec:archive my-change-id
+```
+
+Full workflow in [`openspec/AGENTS.md`](openspec/AGENTS.md).
+
+---
+
 ## Infrastructure & Secrets (Critical for Agents)
 
 ### Pangolin Convergence Architecture
@@ -169,7 +259,7 @@ This automatically routes extraction to the highly curated `stedding/ingest_queu
 ### 3. Strict Secret Hydration
 **Never create manual `.env` files.** If a secret is missing:
 1. Add it to the `.infisical.env` template.
-2. Run `bun run init-vault.ts` in `scripts/infisical/` to synchronize it with the remote `dev-baile` Infisical vault.
+2. Run `bun run secrets:init` (a.k.a. `bun run scripts/init-vault.ts`) to synchronize it with the remote `dev-baile` Infisical vault.
 3. Allow the `mise` directory hooks or `locket inject` to hydrate the runtime environment automatically.
 
 ### 4. Self-Documenting Telemetry

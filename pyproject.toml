@@ -1,180 +1,78 @@
 [project]
-name = "oideachais"
-version = "0.1.0"
-description = "Unified Celtic Education Platform - Irish curriculum, Celtic languages, and British Isles education statistics"
+name = "cianfhoghlaim"
+version = "0.0.0"
+description = "Cianfhoghlaim polyglot monorepo shell — uv workspace orchestrator. Delegates all real work to workspace members."
 readme = "README.md"
-requires-python = ">=3.11"
-license = { text = "MIT" }
+requires-python = ">=3.12"
+license = { text = "BUSL-1.1" }
 authors = [
-    { name = "Cianfhoghlaim Team" }
+    { name = "Cianfhoghlaim Team" },
 ]
 keywords = [
-    "education",
-    "curriculum",
-    "irish",
-    "celtic",
-    "gaelic",
-    "welsh",
-    "translation",
-    "nlp",
-    "machine-learning",
+    "monorepo",
+    "uv-workspace",
+    "celtech",
     "dagster",
     "dlt",
-]
-classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Education",
-    "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Topic :: Education",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "baml",
+    "irish",
+    "celtic",
 ]
 
-dependencies = [
-    # Shared utilities (disabled - package doesn't exist yet)
-    # "sruth-shared[storage,graph,embeddings,observability]>=0.1.0",
-    # Core
-    "python-dotenv>=1.0.0",
-    "pydantic>=2.0.0",
-    "pydantic-settings>=2.0.0",
-    "httpx>=0.27.0",
-    # Data pipeline
-    "dagster>=1.9.0",
-    "dagster-webserver>=1.9.0",
-    "dagster-dlt>=0.25.0",
-    "dlt[duckdb,hub]>=1.4.0",
-    # Database
-    "duckdb>=1.1.0",
-    "lancedb>=0.15.0",
-    "pyarrow>=18.0.0",
-    # Graph databases
-    "neo4j>=5.0.0",
-    # Note: mgclient requires separate installation (C extension)
-    # Vector embeddings
-    "sentence-transformers>=3.0.0",
-    "numpy>=1.26.0",
-    # Web crawling
-    "firecrawl-py>=1.0.0",
-    "beautifulsoup4>=4.12.0",
-    "lxml>=5.0.0",
-    # PDF processing
-    "pymupdf>=1.24.0",
-    "pdfplumber>=0.11.0",
-    # ML/AI
-    "transformers>=4.45.0",
-    "torch>=2.4.0",
-    "accelerate>=1.0.0",
-    # Geospatial
-    "geopandas>=1.0.0",
-    "shapely>=2.0.0",
-    # API
-    "fastapi>=0.115.0",
-    "uvicorn>=0.32.0",
-    # Observability
-    "opentelemetry-sdk>=1.28.0",
-    "structlog>=24.0.0",
-    "ddtrace>=2.15.0",
-    # Kafka streaming
-    "confluent-kafka>=2.6.0",
-    # CocoIndex for vector indexing
-    "cocoindex>=0.1.0",
-    # Google ADK for agents
-    "google-adk>=0.1.0",
-    "litellm",
-    "logfire",
-    "sqlmesh[duckdb]>=0.228.1",
-    "pdf2image>=1.17.0",
-    "pillow>=12.2.0",
-    "dlthub>=0.22.1,<0.26",
-    "cocoindex-code[full]>=0.2.33",
-]
-
-[project.optional-dependencies]
-dev = [
-    "pytest>=8.0.0",
-    "pytest-asyncio>=0.24.0",
-    "ruff>=0.8.0",
-    "mypy>=1.13.0",
-    "pre-commit>=4.0.0",
-]
-ocr = [
-    # OCR models
-    "pytesseract>=0.3.13",
-    "pillow>=11.0.0",
-    "easyocr>=1.7.0",
-]
-training = [
-    # Model training
-    "unsloth>=2024.12",
-    "trl>=0.12.0",
-    "datasets>=3.0.0",
-    "mlflow>=2.18.0",
-    "wandb>=0.18.0",
-]
-memory = [
-    # AI memory
-    "cognee>=0.1.0",
-    "graphiti-core>=0.5.0",
-]
-observability = [
-    # LLM observability and evaluation
-    "langfuse>=2.0.0",
-    "ragas>=0.1.10",
-    "datasets>=3.0.0",
-]
-ui = [
-    # CopilotKit for AI agents
-    "copilotkit>=0.1.0",
-]
-all = [
-    "oideachais[dev,ocr,training,memory,observability,ui]",
-]
-
-[project.scripts]
-oideachais = "dagster:dev"
-
-[project.urls]
-Homepage = "https://github.com/cianfhoghlaim/sruth"
-Documentation = "https://github.com/cianfhoghlaim/sruth#readme"
-Repository = "https://github.com/cianfhoghlaim/sruth"
-Issues = "https://github.com/cianfhoghlaim/sruth/issues"
+# This root project deliberately has no [project.dependencies] and no
+# [project.scripts] — it is a workspace shell only. Real packages live in
+# members and import each other via [tool.uv.sources].
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-
-
 [tool.hatch.build.targets.wheel]
-packages = [
-    "dagster_defs",
-    "dlt_sources",
-    "dlt_utils",
-    "cocoindex_flows",
-    "agents",
-    "agent_os",
-    "alignment",
-    "ocr",
-    "training",
-    "memory",
-    "graph",
-    "geospatial",
-    "api",
-    "storage",
-    "observability",
-    "kafka",
-    "core",
-    "quality",
-    "pipelines",
-    "document_factory",
-    "evaluation",
+packages = []
+
+# =============================================================================
+# UV Workspace — single lockfile for the whole monorepo
+# =============================================================================
+
+[tool.uv]
+managed = true
+package = false
+# Reuse the per-member .venv (root stays clean)
+# Each member sets [tool.uv] package = true in its own pyproject.toml
+
+[tool.uv.workspace]
+members = [
+    "oideachais",
+    "tuatha",
+    "códeolas_codebase_indexing",
+    "infrastructure/browser",
+    "oideachais/mcp/mcpo",
 ]
+
+[tool.uv.sources]
+# Members can depend on each other; uv resolves them via the workspace lockfile.
+# Keys are the package names (ASCII); values are the workspace source spec.
+codeolas = { workspace = true }
+sruth-browser = { workspace = true }
+oideachais = { workspace = true }
+tuath = { workspace = true }
+
+# =============================================================================
+# Shared dev tooling — applied to every workspace member
+# =============================================================================
 
 [tool.ruff]
 line-length = 100
-target-version = "py311"
+target-version = "py312"
+extend-exclude = [
+    ".venv",
+    "node_modules",
+    "docs",
+    "stedding",
+    ".cocoindex_code",
+    "instagram_output",
+    "dlthub",
+]
 
 [tool.ruff.lint]
 select = [
@@ -184,54 +82,41 @@ select = [
     "I",   # isort
     "B",   # flake8-bugbear
     "UP",  # pyupgrade
+    "SIM", # flake8-simplify
+    "RUF", # Ruff-specific rules
 ]
 ignore = [
     "E501",  # line too long (handled by formatter)
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["oideachais"]
+known-first-party = ["oideachais", "tuatha", "codeolas", "códeolas", "sruth_browser"]
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 warn_return_any = true
 warn_unused_configs = true
 ignore_missing_imports = true
+exclude = [
+    "docs/",
+    "stedding/",
+    "instagram_output/",
+    "dlthub/",
+    ".venv/",
+]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
-python_files = "test_*.py"
+python_files = ["test_*.py", "*_test.py"]
 python_functions = "test_*"
+addopts = "-ra -q"
 
-[tool.dagster]
-module_name = "dagster_defs.definitions"
-
-# dg workspace configuration - enables unified workspace loading via dg.toml
-[tool.dg]
-directory_type = "project"
-
-[tool.dg.project]
-root_module = "dagster_defs"
-code_location_target_module = "dagster_defs.definitions"
-code_location_name = "oideachais"
-
-# ============================================================================
-# Dagster Configuration
-# ============================================================================
-
-[tool.dagster.instance]
-# Local development configuration
-storage = { sqlite = { base_dir = ".dagster" } }
-compute_logs = { local = { base_dir = ".dagster/logs" } }
-local_artifact_storage = { base_dir = ".dagster/artifacts" }
-
-# ============================================================================
-# DLT Configuration
-# ============================================================================
+# =============================================================================
+# Workspace-level DAGSTER / DLT defaults (members may override)
+# =============================================================================
 
 [tool.dlt]
-# Default destination
 destination = "duckdb"
 
 [tool.dlt.sources.geospatial]
@@ -243,17 +128,15 @@ dataset_name = "education"
 [tool.dlt.sources.celtic]
 dataset_name = "celtic"
 
-# ============================================================================
-# Coverage Notes
-# ============================================================================
-# This unified project merges:
-# - sruth/oideachas: Irish education (NCCA, SEC, curriculumonline.ie)
-# - sruth/teanga: Celtic language processing (6 Celtic languages)
-# - sruth/oideachas_oileáin: British Isles education (6 nations)
+# =============================================================================
+# Coverage
+# =============================================================================
+# This workspace unifies:
+#   oideachais/                  — Irish + British Isles education data platform
+#   tuatha/                      — Educational MMO + crypto platform
+#   códeolas/                    — Code intelligence library (publishable)
+#   infrastructure/browser/      — sruth-browser web crawling utility
+#   oideachais/mcp/mcpo/         — MCPO bridge (optional member)
 #
-# Features:
-# - 6 nations: England, Scotland, Wales, NI, Ireland, Crown Dependencies
-# - 6 Celtic languages: ga, gd, cy, gv, kw, br
-# - Geospatial: DuckDB Spatial + 18,641 Irish Small Areas + UK LSOAs
-# - Auto-translation: Curriculum to all Celtic languages on ingestion
-# - Weather correlation: Met Office data with education outcomes
+# 6 nations: England, Scotland, Wales, NI, Ireland, Crown Dependencies
+# 6 Celtic languages: ga, gd, cy, gv, kw, br
