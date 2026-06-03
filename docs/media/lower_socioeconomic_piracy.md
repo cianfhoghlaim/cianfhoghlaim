@@ -12,12 +12,122 @@
 
 | Layer | Service | Role | Cost (approx.) |
 |---|---|---|---|
+| **Browser foundation** | **Firefox + uBlock Origin** | Mandatory before touching any of the sites below | Free |
 | Player / UI | **Stremio** | Open-source media centre (Netflix-like front-end) | Free |
 | Source / scraper | **Torrentio** (Stremio addon) | Aggregates torrent indexers, hands magnets to the debrid | Free |
-| Delivery / cloud cache | **Real-Debrid** | Cached torrents served as direct HTTPS streams | ~€3/month (16 days) → ~€4/month (180 days bulk) |
-| Comics (parallel stack) | **Mylar3** | Sonarr-style automation for comic series (CBR/CBZ) | Free, self-hosted |
+| Delivery / cloud cache | **Real-Debrid** | Cached torrents → direct HTTPS streams (video *and* comics via RDT-Client) | ~€3/month (16 days) → ~€4/month (180 days bulk) |
+| Comics (parallel stack) | **Mylar3** + GetComics DDL | Sonarr-style automation for comic series (CBR/CBZ), native GetComics support | Free, self-hosted |
+| Books / journals | **libgen.li + Z-Library** | World's largest free book and academic-paper repositories | Free |
 
-**Total monthly cost: ~€3–4** for the entire video catalogue of recorded human cinema and television, plus a self-hosted comics library.
+**Total monthly cost: ~€3–4** for the entire video catalogue of recorded human
+cinema and television **plus** a self-hosted comics library **plus** essentially
+every book and academic paper ever published — the same one Real-Debrid sub
+covers the video and comics layers; the rest is free.
+
+---
+
+## 0. Prerequisite — Firefox + uBlock Origin
+
+**Do not visit any of the sites in this document from Chrome, Safari, or a mobile
+browser without an ad blocker.** The sites described here — getcomics.org,
+readcomiconline.ru / readcomiconline.li, libgen.li, z-library.bz, the torrent
+indexers Torrentio scrapes — survive on aggressive, often malicious advertising:
+fake "download" buttons, redirect chains to scam pages, pop-unders, cryptominers,
+drive-by malware. **uBlock Origin (uBO) on Firefox neutralises essentially all of
+it.** This is non-negotiable.
+
+### Why specifically Firefox + uBlock Origin (as of 2026)
+
+The ad-blocking landscape changed materially in the last two years. The
+[ublockorigin.com](https://ublockorigin.com/) homepage (updated January 2026)
+states it directly:
+
+| Browser | uBlock Origin status |
+|---|---|
+| **Firefox (recommended)** | Full uBO works. Mozilla committed to keeping Manifest V2 support. |
+| **Brave** | Full uBO works. Brave engineered workarounds. |
+| Chrome / Chromium | **Full uBO removed from the Chrome Web Store in late 2024. All remaining MV2 extensions permanently disabled by Google in July 2025.** Only **uBO Lite** is available — and Lite cannot do cosmetic filtering by default, has hard rule limits (declarativeNetRequest API), no scriptlet injection by default, and no dynamic per-site filtering. It is meaningfully weaker on exactly the kinds of sites this document discusses. |
+| Edge | Full uBO currently works but is expected to follow Chrome's deprecation path since Edge is Chromium-based. |
+| Safari / iOS WebKit | **Not supported since Safari 13.** Apple's content-blocker API (`WKContentRuleList`) is sandboxed, capped at 150,000 rules, and cannot do scriptlet injection, dynamic filtering, or response-body filtering. The full uBO simply cannot exist on Safari/iOS even if the author wanted to ship it. Every iOS browser (Chrome iOS, Firefox iOS, Brave iOS, etc.) is forced by App Store policy to use WebKit underneath, so this limitation extends to every browser on iPhone and iPad. |
+
+The two failure modes have **different causes**:
+
+- **Safari/iOS** is *technically* unable to host a real content blocker. Apple's
+  argument is that the sandbox protects users; the side effect is that no
+  third-party blocker can match uBO's capabilities on the platform.
+- **Chrome** is *politically* unwilling. Google's Manifest V3 transition was
+  positioned as a security improvement, but the practical outcome is that
+  Google — the world's largest advertising company — has restricted the
+  capabilities of the most effective ad blocker on the world's most-used
+  browser. uBO's author Raymond Hill maintained throughout that the Lite
+  version is a worse product, not a "modernised" one.
+
+The conclusion is uncomfortable but simple: **if you want a fully functional ad
+blocker in 2026, you need Firefox** (or Brave). Firefox is the only mainstream
+browser whose vendor's commercial interests are not in direct conflict with
+content blocking.
+
+### Why this matters for everything else in this document
+
+- **getcomics.org** serves real CBR/CBZ downloads but the page is saturated with
+  ad networks. The actual download button is often surrounded by 3–5 fake ones.
+  uBO removes them all.
+- **readcomiconline.ru / readcomiconline.li** are excellent free in-browser
+  comic readers but the page DOM is full of pop-under triggers, redirect
+  iframes, and "your computer has a virus" overlays. Without uBO they are
+  basically unusable; with uBO they are quiet, clean reading apps.
+- **libgen.li and z-library.bz** are comparatively clean, but mirrors and clone
+  domains run by impersonators are not — uBO's malicious-domain filter
+  (URLhaus) blocks the worst of them outright.
+- **Real-Debrid, Stremio, Torrentio** themselves are clean; uBO is still
+  recommended because it speeds up every other site you visit in a day.
+
+### Universal benefits of uBO (not just on piracy sites)
+
+uBO is the single highest-impact change you can make to your browsing
+experience. From the official site and project README:
+
+- **YouTube** — blocks all video pre-roll, mid-roll, and overlay ads, full
+  effectiveness on Firefox. (Chrome's uBO Lite is noticeably weaker here and
+  YouTube actively fights back; Firefox + full uBO is still the only reliable
+  configuration.) Also removes Shorts shelf, "people also watched" injections,
+  and home-page ad rows if you enable the appropriate annoyance lists.
+- **Twitch** — blocks in-stream ads.
+- **News sites** — kills paywalls that rely on client-side overlays, removes
+  newsletter pop-ups, cookie banners, "related stories" chumboxes.
+- **Reddit** — removes promoted posts and sidebar ads.
+- **Privacy** — blocks tracker scripts (Google Analytics, Facebook Pixel,
+  hotjar, segment, etc.) on every site you visit by default.
+- **Performance** — pages load measurably faster and use less CPU/RAM. A 2020
+  [MDPI energy-conservation study](https://www.mdpi.com/2227-7080/8/2/18/htm)
+  cited on the uBO site estimated the global savings from ad blocking at over
+  **$1.8 billion/year** in energy alone.
+- **Safety** — the default lists include the
+  [Online Malicious URL Blocklist (URLhaus)](https://gitlab.com/malware-filter/urlhaus-filter#malicious-url-blocklist),
+  which blocks known malware and phishing domains before they can load. This
+  is the part that matters when navigating fringe sites.
+- **No business model conflict** — uBO is GPL-3.0, has no "acceptable ads"
+  programme (unlike AdBlock Plus), and **refuses donations** as a matter of
+  policy. Raymond Hill instead asks users to support filter-list maintainers.
+
+### Install (one minute)
+
+1. Install Firefox: [mozilla.org/firefox](https://www.mozilla.org/firefox/).
+2. Install uBlock Origin from
+   [addons.mozilla.org/addon/ublock-origin](https://addons.mozilla.org/addon/ublock-origin/).
+3. Open the uBO toolbar icon → dashboard → *Filter lists* tab. The defaults
+   (EasyList, EasyPrivacy, Peter Lowe's, uBO filters, URLhaus) are already
+   tuned correctly. Optionally enable:
+   - **Annoyances → AdGuard Annoyances** (kills cookie banners and newsletter
+     pop-ups).
+   - **Annoyances → uBlock filters – Annoyances** (kills overlay videos, social
+     widgets).
+   - **Regions, languages → uBlock filters – Badware risks** (extra blocklist
+     for shady file-sharing sites — strongly recommended given the rest of
+     this document).
+4. That is it. Do not install any other ad blocker alongside uBO; per the
+   project README, stacking blockers actively breaks uBO's anti-anti-blocker
+   features.
 
 ---
 
@@ -201,17 +311,48 @@ configured providers, then sorts, renames, and metatags them into a clean librar
 
 **Where Mylar3 fits in the same household:**
 
-Mylar3 does **not** use Real-Debrid — comics piracy economics are different. The
-recommended pairing is:
+You do **not** need Usenet for comics. Mylar3 has first-class support for
+**GetComics DDL** (direct-download) and that single source alone covers the vast
+majority of mainstream and back-catalogue comics. No paid indexer, no SABnzbd, no
+extra subscription. The recommended pairing is:
 
-- **Indexer:** a paid Usenet indexer (e.g. NZBgeek, DrunkenSlug — ~$15/year flat)
-  *or* a Newznab-compatible torrent indexer.
-- **Download client:** **SABnzbd** (Usenet) or your existing torrent client
-  (`qbittorrent`, Deluge, Transmission).
+- **Primary source: GetComics DDL** — enabled directly in Mylar3 under
+  *Settings → Search Providers → DDL (GetComics)*. Mylar3 ships with this built in,
+  scrapes [getcomics.org](https://getcomics.org), and downloads CBR/CBZ files
+  straight to your library. Most series, single issues, TPBs, and OmniBus volumes
+  resolve on the first try.
+- **Fallback / torrent path (optional): Real-Debrid + RDT-Client.**
+  [`RDT-Client`](https://github.com/rogerfar/rdt-client) is a small Docker service
+  that exposes a qBittorrent-compatible API to Mylar3 (and Sonarr/Radarr/etc.) but
+  routes everything through your existing Real-Debrid account. You point Mylar3 at
+  RDT-Client as a "torrent client", paste a torrent indexer (or a Newznab/Jackett
+  proxy), and any magnet Mylar3 grabs is sent to Real-Debrid, cached, and pulled
+  back as a clean HTTPS download — the same trick the video stack uses. **One
+  Real-Debrid subscription powers both video and comics.**
+- **Skip Usenet entirely** unless you already have a Usenet provider — between
+  GetComics DDL and the optional Real-Debrid fallback there is nothing left for it
+  to do.
 - **Storage:** local NAS or a directory on the same machine.
 - **Reader:** [Komga](https://komga.org) or [Kavita](https://www.kavitareader.com) —
   both are self-hosted comic servers with web + mobile readers, and both consume
   Mylar3's `series.json` natively.
+
+### No-setup alternative — in-browser comic readers
+
+If you do not want to self-host anything, two web readers cover essentially the
+entire DC + Marvel + indie catalogue with a browser-only reading experience:
+
+- **[readcomiconline.ru](https://readcomiconline.ru) / [readcomiconline.li](https://readcomiconline.li)** —
+  same operator, different mirror domains. Search any series, click an issue,
+  read it in a built-in reader. No download, no account required.
+
+**Warning:** these sites are *unusable* without uBlock Origin. The pages
+trigger pop-unders, "your device has been infected" overlays, and fake-VPN
+redirect chains the moment you click anywhere. **With uBO on Firefox the site
+is silent and the reader works flawlessly.** This is the single best
+demonstration of why §0 of this document exists. If you find yourself fighting
+pop-ups on `readcomiconline.*`, you have either not installed uBO or you are
+not using Firefox — go back and fix that first.
 
 **Install (Docker, recommended):**
 
@@ -236,7 +377,116 @@ Then open `http://localhost:8090` and walk the setup wizard. Documentation at
 
 ---
 
-## 6. Architecture at a Glance
+## 6. Books, Textbooks, and Academic Papers — libgen.li + Z-Library
+
+Video and comics are the visible top of the iceberg. The thing that
+*disproportionately* matters for someone shut out of paid access is **books and
+academic journals**, where a single textbook can run €60–120, a paywalled
+journal article can run €40 for a 24-hour rental, and a full subscription to
+the Big Five academic publishers is priced for university libraries, not
+individuals. Two services have made this a non-issue for a generation of
+self-taught learners, students in countries without university access, and
+researchers outside institutional walls.
+
+### Library Genesis (libgen)
+
+**Current primary domain:** [libgen.li](https://libgen.li/)
+**Active mirrors:** `libgen.li`, `libgen.vg`, `libgen.la`, `libgen.bz`,
+`libgen.gl`
+**Dead/seized mirrors (do not use):** `libgen.lc`, `libgen.gs`
+
+Library Genesis is an open repository of books, scientific articles, comics,
+fiction, magazines, and academic standards. As of 2026 the site exposes a
+search across:
+
+- **Topics:** Libgen (general non-fiction & textbooks), Comics, Fiction,
+  Scientific Articles, Magazines, Russian Fiction, Standards.
+- **Object types:** Files, Editions, Series, Authors, Publishers, Works.
+- **Search fields:** Title, Author, Series, Year, Publisher, ISBN.
+- **Bibliographic integration:** verbatim from the libgen.li front page —
+  *"20.10.2025 Added bibliography search in local databases of the Worldcat.org
+  and the Russian State Library"*, *"02.09.2025 Bibliography search from
+  Openlibrary.org added to loader"*. So an ISBN that does not directly hit a
+  libgen file can still resolve via OCLC/OpenLibrary metadata.
+- **Database dumps:** *"21.09.2025 Added database dumps by sections"* — the
+  entire catalogue is downloadable as section-by-section dumps. Libgen is
+  designed to be irreducibly distributed; you can mirror it yourself.
+
+Coverage is, in practice, the majority of every English-language textbook ever
+printed, plus several million Sci-Hub-sourced academic papers, plus the
+Russian, German, French, and Chinese non-fiction back catalogues.
+
+### Z-Library
+
+**Current primary domain:** [z-library.bz](https://z-library.bz/)
+**Active community mirror landing page:** the .bz domain lists current working
+mirrors — at time of writing: `z-library.im`, `z-lib.gs`, `z-lib.fm`. Domains
+rotate; the landing page is the authoritative source.
+
+Z-Library (often `zlib`, `z-lib`) describes itself on its project homepage as:
+
+> *Your gateway to knowledge and culture. Accessible for everyone.*
+
+The numbers it publishes:
+
+- **~15,000,000 books** in EPUB, PDF, MOBI, AZW, AZW3, FB2, DJVU, DJVU, LIT,
+  CBZ, RTF, TXT formats (Kindle-compatible).
+- **~80,000,000 articles** (scientific papers, journal articles, conference
+  proceedings).
+- **~250,000 booklists** — curated reading lists by community members,
+  searchable and forkable.
+- **24 top-level categories** covering fiction, nonfiction, children's
+  literature, medical, history, mathematics, law, economics, business,
+  religion, programming, and academic subjects.
+- **Languages:** English, Russian, Chinese, Japanese, Korean, Spanish, French,
+  Arabic, Italian, Portuguese, Urdu, Pashto, Turkish, German, Malay, and
+  others. This is one of the few services where a Welsh-, Tamil-, or Vietnamese-
+  speaking learner can actually find first-language educational material.
+
+**Z-Library was not shut down.** The 2022 FBI domain seizure took two domains
+(`z-lib.org` and `b-ok.cc`); the project itself rebuilt on rotating domains
+and a TOR-aware desktop launcher. From the current `z-library.bz` homepage:
+
+> *Contrary to popular belief, Z-Library (Z-Lib) has not shut down and is still
+> working. You just need to find the right Z-Lib website, as there are plenty
+> of copy-cat websites and even fake sites out there.*
+
+Use the `.bz` landing page or the official desktop app to find the current
+working domain. Avoid randomly Googled "Z-Library" results — the impersonator
+sites are aggressive and full of malware. **(This is the single highest-payoff
+use case for uBO's URLhaus filter.)**
+
+**Z-Library Desktop App:** Windows / macOS / Linux launchers exist that route
+through Tor automatically; this both insulates you from domain blocks and
+provides plausible-deniability traffic patterns. Available from
+[go-to-library.sk](https://go-to-library.sk/#desktop_app_tab).
+
+### What to use libgen vs Z-Library for
+
+| Need | Better choice |
+|---|---|
+| Specific textbook, you have the ISBN | **libgen.li** — ISBN search is excellent |
+| English-language popular fiction | Either; **Z-Library** has nicer UX and better cover art |
+| Academic paper / journal article | **libgen.li** (Scientific Articles topic) or [sci-hub.se](https://sci-hub.se) directly |
+| Non-English educational material | **Z-Library** — vastly better language coverage |
+| Audiobook / multi-format need | **Z-Library** — exposes AZW3, MOBI, EPUB, PDF for the same title |
+| You want a TOR-routed desktop app | **Z-Library** — has an official one |
+| You want to mirror the whole archive | **libgen.li** — section-by-section database dumps |
+| You hit a "this title was removed" page | Try the other one — overlap is partial but the union covers almost everything |
+
+### Practical workflow
+
+1. Browse to the site on Firefox (with uBO active — *always*).
+2. Search by title / author / ISBN / DOI.
+3. Click the result, choose a format (EPUB is best for fiction; PDF for
+   textbooks with diagrams; DJVU for old scans).
+4. Download. The file is yours; back it up. For books, [Calibre](https://calibre-ebook.com)
+   is the de-facto open-source library manager. For papers,
+   [Zotero](https://www.zotero.org) handles citations alongside the PDF.
+
+---
+
+## 7. Architecture at a Glance
 
 ```
                       ┌──────────────────────┐
@@ -263,26 +513,149 @@ Then open `http://localhost:8090` and walk the setup wizard. Documentation at
 
            ── separate, parallel stack for comics ──
 
-   ┌─────────────┐   queues   ┌──────────┐   downloads   ┌──────────┐
-   │   Mylar3    ├───────────►│ SABnzbd  ├──────────────►│  Komga   │
-   │ (watchlist) │            │ /qbit    │               │  /Kavita │
-   └─────────────┘            └──────────┘               └──────────┘
+   ┌─────────────┐ queues  ┌──────────────────┐ DDL/HTTPS  ┌──────────┐
+   │   Mylar3    ├────────►│ GetComics (DDL)  ├───────────►│  Komga   │
+   │ (watchlist) │         │  ── or ──        │            │  /Kavita │
+   │             │         │ RDT-Client ──► RD│            │          │
+   └─────────────┘         └──────────────────┘            └──────────┘
+
+
+           ── browser-only stack for books / papers ──
+
+   ┌─────────────┐         ┌──────────────────┐  EPUB/PDF  ┌──────────┐
+   │  Firefox    ├────────►│ libgen.li        ├───────────►│ Calibre  │
+   │  + uBO      │         │  or              │            │ /Zotero  │
+   │             │         │ z-library.bz     │            │          │
+   └─────────────┘         └──────────────────┘            └──────────┘
 ```
 
 ---
 
-## 7. Risks, Costs, Reality Check
+## 8. The Ethics — Why This Document Exists
 
-**Financial:** ~€3–4/month Real-Debrid + ~$15/year Usenet indexer (optional, for
-comics) = under €50/year total. For reference, that is one month of Sky.
+This section is not technical. Skip it if the rest of the document is enough.
+It exists because the framing of "piracy" in mainstream discourse is so
+poisoned by a century of rights-holder lobbying that it is worth saying clearly
+what the moral situation actually is.
+
+### Copying is not theft
+
+The legal fiction that copying a file is equivalent to stealing a physical
+object was invented in the late 1970s by the US Motion Picture Association as a
+rhetorical strategy. It is not how property has been understood for any of the
+preceding 5,000 years of human civilisation, and it is not how copyright law
+itself defines the act — copyright infringement and theft are distinct
+offences with distinct elements, distinct penalties, and distinct remedies,
+and have been throughout the entire history of the statute.
+
+When a person streams a film through Real-Debrid, no original is removed. The
+rights-holder retains exactly the same number of copies, the same master, the
+same distribution rights, and the same ability to sell to everyone else. The
+physical universe has one more copy in it than it did a minute ago. The
+appropriate analogy is closer to *singing a song someone else wrote in the
+shower* than to *stealing their car* — both are technically copyright
+violations in the strictest reading of the statute, and both are non-rivalrous
+acts that cost the rights-holder nothing absent a separate counterfactual
+sale.
+
+The "lost sale" counterfactual is the entire moral argument the industry leans
+on, and for the population this document is aimed at, **it is empirically
+false**. A nursing student in Ireland cannot afford the €110 list price of
+*Robbins Basic Pathology*. A teenager whose family is on social welfare
+cannot afford a €15.99/month Disney+ subscription on top of food, rent, and
+ESB. A researcher in Nigeria cannot afford a €38 paywalled Elsevier article.
+**These people are not lost sales.** They are people who would simply not
+read the book, not watch the film, not learn the science. The rights-holder
+loses nothing they would otherwise have gained. The reader, viewer, or
+student gains everything.
+
+### The right to read
+
+There is a well-developed body of thought on this — Cory Doctorow's writing on
+*"adversarial interoperability"*, Aaron Swartz's *"Guerilla Open Access
+Manifesto"*, the Library Genesis project's own foundational documents, and the
+Z-Library community's "knowledge accessible for everyone" framing all converge
+on the same point: in an age where the marginal cost of distributing a book is
+effectively zero, **gatekeeping knowledge behind paywalls that exceed the means
+of the people who most need it is itself an ethical violation** — one orders
+of magnitude more serious than the act of routing around it.
+
+The UN Universal Declaration of Human Rights, Article 27, states that:
+
+> *Everyone has the right freely to participate in the cultural life of the
+> community, to enjoy the arts and to share in scientific advancement and its
+> benefits.*
+
+It does not say *"everyone who can afford €110 per textbook"*. It does not
+condition the right on a credit card.
+
+### Socioeconomic equality, not opportunism
+
+This document is written for people who would otherwise be locked out. It is
+not a how-to for someone with a €120k salary to dodge a Netflix bill — that
+person should just pay for Netflix; doing otherwise is freeloading on the
+people who actually need these tools to exist. The moral character of this
+stack is conditioned entirely on **who is using it**:
+
+- A student paying their own way through college, using libgen to access
+  their reading list — yes, unambiguously.
+- A retiree on a fixed pension who would otherwise watch nothing because Sky
+  Sports doubled in price — yes.
+- A teenager in a household where Netflix and Spotify combined cost more than
+  the family's weekly food budget — yes.
+- A non-anglophone immigrant trying to learn English through TV — yes.
+- A researcher whose university dropped its Elsevier subscription — yes.
+- A €200k-a-year software engineer who simply doesn't want to pay for
+  Disney+ — that is freeloading, do better.
+
+The tools described in this document are morally neutral; what gives them
+their moral weight is that, for the first category of users, **the only
+alternative to using them is not paying — it is not consuming at all**, and
+that has its own real cost to a person's education, cultural participation,
+and basic dignity.
+
+### Practical considerations
+
+- **Buy the things you can afford.** When you have the money for a Stremio
+  donation, a Real-Debrid sub, a paperback novel, an academic journal you
+  rely on, a Bandcamp album, a cinema ticket — buy them. This stack is for
+  the gap between what your circumstances allow and what a full participation
+  in modern culture would otherwise cost. It is not a license to never
+  contribute.
+- **Support the maintainers.** uBlock Origin refuses donations and asks you
+  to support filter-list maintainers instead. Mylar3 is volunteer-developed.
+  Libgen and Z-Library run on donations. Kiwix (offline Wikipedia, often
+  paired with this stack in rural deployments) runs on donations. Pick one
+  and contribute when you can.
+- **Don't redistribute commercially.** The line that matters in most
+  jurisdictions, and the line that matters ethically, is *commercial*
+  redistribution — selling someone else's work as your own. Personal use,
+  even at scale, has never been the actual target of copyright enforcement.
+- **Don't be smug.** The people who maintain this infrastructure do so at
+  real personal risk in some cases. Use the tools quietly, share them
+  privately with people who need them, and don't post screenshots on social
+  media bragging about not paying for things.
+
+---
+
+## 9. Risks, Costs, Reality Check
+
+**Financial:** ~€3–4/month Real-Debrid, covering **both** video (Stremio/Torrentio)
+**and** comics (Mylar3 via GetComics DDL is free; Real-Debrid only kicks in via
+RDT-Client for torrent fallbacks). Total under €50/year for the entire stack. For
+reference, that is one month of Sky.
 
 **Legal:** This stack relies on accessing copyrighted content via unauthorised
 intermediaries. Real-Debrid itself is a legal company providing a generic
-file-hosting service; the legality of the *content* you stream through it is on you
-and depends entirely on your local jurisdiction. Irish copyright law treats personal
-non-commercial copying differently from redistribution, but enforcement against
-individual end-users via debrid services has been effectively zero to date because
-no swarm participation occurs.
+file-hosting service; libgen and Z-Library operate outside any one
+jurisdiction; the legality of the *content* you stream or download is on you
+and depends entirely on your local jurisdiction. Irish copyright law treats
+personal non-commercial copying differently from redistribution, and
+enforcement against individual end-users for personal-use streaming, debrid
+consumption, or book downloading has been effectively zero to date — the
+prosecutions that *do* exist target uploaders, seeders, and commercial
+redistributors, not readers. (See §8 for the ethical framing; this is the
+narrow legal note.)
 
 **Technical:**
 
@@ -296,14 +669,22 @@ no swarm participation occurs.
 
 - Do not share your Real-Debrid API key.
 - Do not connect Real-Debrid to public-facing self-hosted services without auth.
-- If you also self-host an *arr stack (Sonarr/Radarr/Prowlarr), the same
-  Real-Debrid account can power those via Prowlarr indexers — one subscription,
-  many consumers.
+- One Real-Debrid account legitimately covers Stremio/Torrentio, Mylar3 (via
+  RDT-Client), and a self-hosted *arr stack (Sonarr/Radarr/Prowlarr/Readarr) all
+  at the same time — one subscription, many consumers.
 
 ---
 
-## 8. References (sources used to write this document)
+## 10. References (sources used to write this document)
 
+- [ublockorigin.com](https://ublockorigin.com/) — official site, Manifest V3
+  explainer (updated January 2026), browser support matrix, FAQ.
+- [github.com/gorhill/uBlock](https://github.com/gorhill/uBlock) — uBO source,
+  README ("uBO works best on Firefox"), MANIFESTO.md, default filter lists
+  (EasyList, EasyPrivacy, Peter Lowe's, URLhaus), 1.71.0 release (May 2026),
+  GPL-3.0, 65.2k stars.
+- [addons.mozilla.org/addon/ublock-origin](https://addons.mozilla.org/addon/ublock-origin/)
+  — install page for Firefox desktop and Firefox for Android.
 - [stremio.com](https://www.stremio.com/) — feature list, supported platforms, FAQ.
 - [web.stremio.com](https://web.stremio.com/) — browser client behaviour.
 - [torrentio.strem.fun/configure](https://torrentio.strem.fun/configure) — indexer
@@ -316,4 +697,26 @@ no swarm participation occurs.
   list, installation paths (git clone or
   [linuxserver/mylar3](https://hub.docker.com/r/linuxserver/mylar3) Docker image),
   v0.8.3 latest release (Aug 2025), GPL-3.0 licence, Python 3.
+- [getcomics.org](https://getcomics.org) — primary DDL source consumed natively by
+  Mylar3's built-in GetComics provider.
+- [readcomiconline.ru](https://readcomiconline.ru) /
+  [readcomiconline.li](https://readcomiconline.li) — in-browser comic reader
+  mirrors; require uBlock Origin.
+- [github.com/rogerfar/rdt-client](https://github.com/rogerfar/rdt-client) —
+  qBittorrent-compatible bridge to Real-Debrid; lets Mylar3 (and Sonarr/Radarr)
+  use one Real-Debrid subscription for everything.
 - [mylarcomics.com](https://mylarcomics.com/) — official documentation.
+- [libgen.li](https://libgen.li/) — Library Genesis primary domain (2026);
+  mirrors `libgen.vg / la / bz / gl`; provides ISBN/Worldcat/OpenLibrary
+  bibliographic search and section-by-section database dumps.
+- [z-library.bz](https://z-library.bz/) — Z-Library community landing page
+  listing current working mirrors (`z-library.im`, `z-lib.gs`, `z-lib.fm` at
+  time of writing); ~15M books, ~80M articles, multi-format downloads,
+  TOR-aware desktop launcher.
+- [calibre-ebook.com](https://calibre-ebook.com) — open-source book library
+  manager.
+- [zotero.org](https://www.zotero.org) — open-source citation/PDF manager for
+  academic reading.
+- [MDPI energy-conservation study](https://www.mdpi.com/2227-7080/8/2/18/htm)
+  — cited by ublockorigin.com for the ~$1.8 billion/year global energy
+  savings figure from ad blocking.
