@@ -751,22 +751,7 @@ async def _scrape_single_subject_session(
         return
     await asyncio.sleep(RATE_LIMIT_SECONDS)
 
-    level_result = await backend.interact(
-        f"Select '{level_display}' from the level dropdown menu"
-    )
-    if not level_result.success:
-        logger.error(f"Failed to select level for {sec_subject}: {level_result.error}")
-        return
-    await asyncio.sleep(RATE_LIMIT_SECONDS)
-
-    subject_result = await backend.interact(
-        f"Select '{sec_subject}' from the subject dropdown menu"
-    )
-    if not subject_result.success:
-        logger.error(f"Failed to select subject {sec_subject}: {subject_result.error}")
-        return
-    await asyncio.sleep(RATE_LIMIT_SECONDS)
-
+    # SEC cascade: Type → Year → Examination → Subject
     for year in years:
         logger.info(f"Extracting {sec_subject} {material_type_label} {year}")
 
@@ -775,6 +760,22 @@ async def _scrape_single_subject_session(
         )
         if not year_result.success:
             logger.warning(f"Failed to select year {year}: {year_result.error}")
+            continue
+        await asyncio.sleep(RATE_LIMIT_SECONDS)
+
+        level_result = await backend.interact(
+            f"Select '{level_display}' from the examination dropdown menu"
+        )
+        if not level_result.success:
+            logger.warning(f"Failed to select level for {sec_subject} {year}: {level_result.error}")
+            continue
+        await asyncio.sleep(RATE_LIMIT_SECONDS)
+
+        subject_result = await backend.interact(
+            f"Select '{sec_subject}' from the subject dropdown menu"
+        )
+        if not subject_result.success:
+            logger.warning(f"Failed to select subject {sec_subject} {year}: {subject_result.error}")
             continue
         await asyncio.sleep(RATE_LIMIT_SECONDS)
 
@@ -972,11 +973,13 @@ async def _playwright_scrape_one(
     """Scrape one subject/material_type using Playwright with ASP.NET progressive disclosure.
 
     The examinations.ie site uses ASP.NET postback-style progressive disclosure:
-    1. Check terms checkbox → reveals Type dropdown
-    2. Select Type → reveals Examination dropdown
-    3. Select Examination → reveals Subject dropdown
-    4. Select Subject → reveals Year dropdown (and sometimes results)
-    Each step triggers a postback that renders new elements.
+    1. Check terms checkbox → reveals ViewType dropdown
+    2. Select ViewType (Exam Papers) → reveals YearSelect dropdown
+    3. Select Year (e.g. 2024) → reveals ExaminationSelect dropdown
+    4. Select Examination (Leaving Certificate) → reveals SubjectSelect dropdown
+    5. Select Subject (Mathematics) → shows results after View button click
+
+    NOTE: The method also extracts obfuscated ?fp= URLs used by the SEC for PDF downloads.
     """
     await page.goto(EXAM_ARCHIVE_URL, wait_until="domcontentloaded", timeout=30000)
     await asyncio.sleep(2)
@@ -990,7 +993,7 @@ async def _playwright_scrape_one(
             is_checked = False
         if not is_checked:
             await cb.click()
-            # Wait for ASP.NET postback to render the Type dropdown
+            # Wait for ASP.NET postback to render the ViewType dropdown
             try:
                 await page.wait_for_selector(
                     "#MaterialArchive__noTable__sbv__ViewType", state="visible", timeout=10000,
@@ -998,104 +1001,120 @@ async def _playwright_scrape_one(
             except Exception:
                 await asyncio.sleep(5)
 
-    # 2. Select material type (ViewType)
+    # 2. Select material type (ViewType) — triggers YearSelect dropdown
     type_select = await page.query_selector("#MaterialArchive__noTable__sbv__ViewType")
     if not type_select:
         logger.error(f"type_dropdown_not_found for {sec_subject}")
         return
     await type_select.select_option(label=mt_label)
-    # Wait for ASP.NET postback to render the Examination dropdown
     try:
-        await page.wait_for_selector("#MaterialArchive__noTable__sbv__Examination", state="visible", timeout=10000)
+        await page.wait_for_selector(
+            "#MaterialArchive__noTable__sbv__YearSelect", state="visible", timeout=10000,
+        )
     except Exception:
-        await asyncio.sleep(4)
+        await asyncio.sleep(5)
 
-    # 3. Select examination level (Examination)
-    exam_select = await page.query_selector("#MaterialArchive__noTable__sbv__Examination")
-    if not exam_select:
-        # Try alternate IDs
-        exam_select = await page.query_selector("select[id*='Examination']")
-    if not exam_select:
-        logger.error(f"examination_dropdown_not_found for {sec_subject}")
-        return
-
-    # Find the option matching our level
-    exam_options = await exam_select.query_selector_all("option")
-    exam_value = None
-    for opt in exam_options:
-        text = (await opt.inner_text()).strip()
-        if level_value.lower() in text.lower():
-            exam_value = await opt.get_attribute("value")
-            break
-    if not exam_value:
-        logger.error(f"level_option_not_found: {level_value} for {sec_subject}")
-        return
-    await exam_select.select_option(value=exam_value)
-    # Wait for ASP.NET postback to render the Subject dropdown
-    try:
-        await page.wait_for_selector("#MaterialArchive__noTable__sbv__Subject", state="visible", timeout=10000)
-    except Exception:
-        await asyncio.sleep(4)
-
-    # 4. Select subject
-    subject_select = await page.query_selector("#MaterialArchive__noTable__sbv__Subject")
-    if not subject_select:
-        subject_select = await page.query_selector("select[id*='Subject']")
-    if not subject_select:
-        logger.error(f"subject_dropdown_not_found for {sec_subject}")
-        return
-
-    subject_options = await subject_select.query_selector_all("option")
-    subject_value = None
-    for opt in subject_options:
-        text = (await opt.inner_text()).strip()
-        if sec_subject.lower() in text.lower() or subject.lower().replace("-", " ") in text.lower():
-            subject_value = await opt.get_attribute("value")
-            break
-    if not subject_value:
-        logger.error(f"subject_option_not_found: {sec_subject}")
-        return
-    await subject_select.select_option(value=subject_value)
-    # Wait for ASP.NET postback to render the Year dropdown
-    try:
-        await page.wait_for_selector("#MaterialArchive__noTable__sbv__Year", state="visible", timeout=10000)
-    except Exception:
-        await asyncio.sleep(4)
-
-    # 5. For each year, select and extract PDFs
+    # 3. Select year — reveals ExaminationSelect dropdown
     for year in years:
-        # Select year
-        year_select = await page.query_selector("#MaterialArchive__noTable__sbv__Year")
+        logger.info(f"playwright_scrape: {sec_subject} {mt_label} {year}")
+
+        year_select = await page.query_selector("#MaterialArchive__noTable__sbv__YearSelect")
         if not year_select:
             year_select = await page.query_selector("select[id*='Year']")
+        if not year_select:
+            logger.error(f"year_dropdown_not_found for {sec_subject}")
+            return
 
-        if year_select:
-            year_options = await year_select.query_selector_all("option")
-            year_value = None
-            for opt in year_options:
+        year_value = None
+        for opt in await year_select.query_selector_all("option"):
+            text = (await opt.inner_text()).strip()
+            if str(year) == text:
+                year_value = await opt.get_attribute("value")
+                break
+        if not year_value:
+            logger.error(f"year_option_not_found: {year} for {sec_subject}")
+            continue
+        await year_select.select_option(value=year_value)
+        try:
+            await page.wait_for_selector(
+                "#MaterialArchive__noTable__sbv__ExaminationSelect",
+                state="visible", timeout=10000,
+            )
+        except Exception:
+            await asyncio.sleep(5)
+
+        # 4. Select examination level — reveals SubjectSelect dropdown
+        exam_select = await page.query_selector("#MaterialArchive__noTable__sbv__ExaminationSelect")
+        if not exam_select:
+            exam_select = await page.query_selector("select[id*='Examination']")
+        if not exam_select:
+            logger.error(f"examination_dropdown_not_found for {sec_subject}")
+            continue
+
+        exam_value = None
+        for opt in await exam_select.query_selector_all("option"):
+            text = (await opt.inner_text()).strip()
+            # Exact match to avoid "Leaving Certificate Applied" matching "Leaving Certificate"
+            if text == level_value or (level_value.lower() == "leaving certificate" and text == level_value):
+                exam_value = await opt.get_attribute("value")
+                break
+        if not exam_value:
+            # Fallback: case-insensitive partial match (but prefer exact)
+            for opt in await exam_select.query_selector_all("option"):
                 text = (await opt.inner_text()).strip()
-                if str(year) == text:
-                    year_value = await opt.get_attribute("value")
+                if level_value.lower() in text.lower() and "applied" not in text.lower():
+                    exam_value = await opt.get_attribute("value")
                     break
-            if year_value:
-                await year_select.select_option(value=year_value)
-                await asyncio.sleep(3)
+        if not exam_value:
+            logger.error(f"level_option_not_found: {level_value} for {sec_subject}")
+            continue
+        await exam_select.select_option(value=exam_value)
+        try:
+            await page.wait_for_selector(
+                "#MaterialArchive__noTable__sbv__SubjectSelect",
+                state="visible", timeout=10000,
+            )
+        except Exception:
+            await asyncio.sleep(5)
 
-        # Click View/Submit button
+        # 5. Select subject
+        subject_select = await page.query_selector("#MaterialArchive__noTable__sbv__SubjectSelect")
+        if not subject_select:
+            subject_select = await page.query_selector("select[id*='Subject']")
+        if not subject_select:
+            logger.error(f"subject_dropdown_not_found for {sec_subject}")
+            continue
+
+        subject_value = None
+        for opt in await subject_select.query_selector_all("option"):
+            text = (await opt.inner_text()).strip()
+            if sec_subject.lower() in text.lower() or subject.lower().replace("-", " ") in text.lower():
+                subject_value = await opt.get_attribute("value")
+                break
+        if not subject_value:
+            logger.error(f"subject_option_not_found: {sec_subject}")
+            continue
+        await subject_select.select_option(value=subject_value)
+        await asyncio.sleep(2)
+
+        # 6. Click View/Submit button
         view_btn = await page.query_selector(
+            "#MaterialArchive__noTable__btnView, "
             "input[type='submit'][value*='View'], "
             "input[type='submit'][value*='Search'], "
-            "input[type='submit'][value*='Submit'], "
-            "#MaterialArchive__noTable__btnView"
+            "input[type='submit'][value*='Submit']"
         )
         if view_btn:
             await view_btn.click()
-            await page.wait_for_load_state("networkidle", timeout=15000)
+            try:
+                await page.wait_for_load_state("networkidle", timeout=15000)
+            except Exception:
+                pass
             await asyncio.sleep(3)
 
-        # Extract PDF links — SEC uses obfuscated ?fp= URLs
-        # e.g. /exammaterialarchive/?fp=96.113.98.103.104...
-        # Also handles direct .pdf links and /qvp/ paths
+        # 7. Extract PDF links — SEC uses obfuscated ?fp= URLs
+        # e.g. https://www.examinations.ie?fp=92.109.94.99.100.113...
+        # Also handles direct .pdf links and /qvp/ paths.
         pdf_data = await page.evaluate("""() => {
             const results = [];
             const allLinks = document.querySelectorAll('a[href]');
