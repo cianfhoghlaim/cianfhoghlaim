@@ -1,69 +1,76 @@
-# Bonneagar (Infrastructure) - AI Agent Instructions
+# Infrastructure - AI Agent Instructions
 
 ## Overview
 
-Bonneagar (Irish: "infrastructure") contains deployment configurations, infrastructure-as-code, and service orchestration for the cianfhoghlaim platform.
+Infrastructure contains deployment configurations, infrastructure-as-code, and service orchestration for the Cianfhoghlaim platform implementing Pangolin Convergence Architecture (two-tier: OCI ARM1 control plane + MacBook M4 workload host).
 
 ## Directory Structure
 
 | Directory | Purpose | Technology |
 |-----------|---------|------------|
-| `storage/` | Database and storage stacks | Docker Compose |
-| `komodo/` | Container orchestration | Komodo |
-| `pangolin/` | VPN and network access | Pangolin/WireGuard |
-| `locket/` | Secret management | Infisical/Vault |
+| `stacks/storage/` | Database and storage stacks | Docker Compose |
+| `stacks/infrastructure/` | Control plane (Pangolin, Komodo, Pocket ID) | Docker Compose |
+| `stacks/engineering/` | Dev tooling (LiteLLM, Crawl4AI, Coder) | Docker Compose |
+| `stacks/machine_learning/` | ML training and serving | Docker Compose |
+| `stacks/tools/` | Productivity and media utilities | Docker Compose |
+| `stacks/browser/` | Browser automation stacks | Docker Compose |
+| `komodo/` | Komodo configuration and profiles | Komodo |
+| `pangolin/` | Pangolin setup documentation | Markdown |
+| `infisical/` | Local Infisical dev server | Docker Compose |
 | `pulumi/` | Cloud infrastructure | Pulumi IaC |
-| `dagger/` | CI/CD pipelines | Dagger |
 | `ansible/` | Server configuration | Ansible |
-| `forgejo/` | Git hosting | Forgejo |
-| `api_specs/` | API specifications | OpenAPI |
-| `uirlisí/` | CLI tools | TypeScript/Bun |
-| `op/` | Infisical integration | Infisical CLI |
 | `scripts/` | Utility scripts | Shell/TypeScript |
 
 ## Stack Categories
 
-### Database Stacks (`storage/`)
+### Infrastructure (Control Plane)
 
-| Stack | Purpose | Port |
-|-------|---------|------|
-| `lancedb/` | Vector database | N/A (embedded) |
-| `memgraph/` | Graph database | 7687 |
-| `qdrant/` | Vector search | 6333 |
-| `duckdb/` | Analytics database | N/A (embedded) |
-| `falkordb/` | Graph + vector | 6379 |
-| `risingwave/` | Streaming SQL | 4566 |
+| Stack | Purpose | Key Ports |
+|-------|---------|-----------|
+| `pangolin/` | VPN + Traefik + Pocket ID + CrowdSec + TinyAuth | 51820/udp, 443, 80, 8443 |
+| `komodo/` | Container orchestration and deployment | 9120 |
+| `pocket-id/` | OIDC identity provider | 1411 |
+| `dozzle/` | Container log viewer | Internal |
+| `DnsServer/` | Local DNS resolution | Internal |
 
-### ML/AI Stacks (`storage/`)
+### Storage (Data Infrastructure)
 
-| Stack | Purpose | Port |
-|-------|---------|------|
-| `mlflow/` | ML experiment tracking | 5000 |
+| Stack | Purpose | Key Ports |
+|-------|---------|-----------|
+| `garage/` | CRDT S3-compatible object storage | 3900-3904 |
+| `lakehouse/` | Lakekeeper catalog + Lance Namespace + Postgres + Garage | 3900-3904, 5433, 8181-8182 |
+| `dagster/` | Pipeline orchestration (custom image) | 3335 |
+| `lancedb/` | LanceDB data viewer | 8080 |
+| `memgraph/` | Graph database (MAGE + Lab UI) | 7687, 7444, 3000 |
+| `falkordb/` | Vector+graph hybrid | 6379, 3000 |
+| `qdrant/` | Vector search | 6333, 6334 |
 | `langfuse/` | LLM observability | 3000 |
-| `ollama/` | Local LLM inference | 11434 |
-| `litellm/` | LLM proxy | 4000 |
+| `mlflow/` | ML experiment tracking | 5000 |
+| `forgejo/` | Git forge | 3000, 2222 |
+| `cognee/` | AI memory system | Internal |
+| `graphiti/` | Temporal knowledge graph | Internal |
 
-### Observability Stacks (`storage/`)
+### Engineering
 
-| Stack | Purpose | Port |
-|-------|---------|------|
-| `grafana/` | Dashboards | 3000 |
-| `prometheus/` | Metrics | 9090 |
-| `loki/` | Logs | 3100 |
+| Stack | Purpose | Key Ports |
+|-------|---------|-----------|
+| `litellm/` | LLM proxy gateway (Postgres + Prometheus) | 4000, 5432, 9090 |
+| `crawl4ai/` | Web crawling API | 11235 |
+| `coder/` | Cloud development environment | Internal |
+| `windmill/` | Workflow automation | Internal |
 
 ## Standard Stack Structure
 
-Each stack SHOULD follow this structure:
+Each stack under `infrastructure/stacks/<category>/<name>/` SHALL follow this structure:
 
 ```
-bonneagar/storage/<stack>/
-├── docker-compose.yml      # Main compose file
-├── docker-compose.dev.yml  # Development overrides
-├── .env.example           # Environment template
-├── README.md              # Stack documentation
-├── config/                # Configuration files
-│   └── *.yaml
-└── data/                  # Persistent data (gitignored)
+stacks/<category>/<name>/
+├── compose.yaml           # Docker service definitions
+├── pangolin.yaml          # Traefik routing + TinyAuth (if web-facing)
+├── sidecar.yaml           # Locket container for Infisical injection
+├── secrets.env            # Infisical URI references
+└── config/                # Configuration files
+    └── *.yaml
 ```
 
 ## Critical Constraints
@@ -71,7 +78,7 @@ bonneagar/storage/<stack>/
 ### Docker Compose Best Practices
 
 ```yaml
-# CORRECT: Health checks and restart policies
+# CORRECT: Health checks, restart policies, named volumes
 services:
   database:
     image: postgres:16
@@ -83,39 +90,31 @@ services:
       retries: 5
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
-# WRONG: Missing health checks and persistence
-# services:
-#   database:
-#     image: postgres:16  # No restart, no health, no volume!
 ```
 
 ### Secret Management
 
-**NEVER commit secrets to git.** Use:
+**NEVER commit secrets to git.** The `.env` file is gitignored. Secrets flow:
 
-1. **Infisical CLI (`op/`):**
-   ```bash
-   infisical secrets get "infisical://vault/item/field"
-   ```
+1. **Infisical vault** (`dev-baile`): Source of truth for all secrets
+2. **`.infisical.env` template** (committed): Contains `infisical://dev-baile/...` references
+3. **`mise` hooks**: Automatically run `infisical export` on directory entry, hydrating `.env`
+4. **Locket sidecar**: Per-stack container that injects secrets at runtime
 
-2. **Environment files:**
-   ```bash
-   # .env.example (committed)
-   DATABASE_URL=postgresql://user:password@host:5432/db
+```bash
+# Template format (.infisical.env - committed, no plaintext)
+MOTHERDUCK_TOKEN=infisical://dev-baile/motherduck/token
+FIRECRAWL_API_KEY=infisical://dev-baile/firecrawl/api_key
 
-   # .env (gitignored, actual values)
-   DATABASE_URL=postgresql://prod_user:$ECRET@prod-host:5432/db
-   ```
+# Stack format (secrets.env - committed, no plaintext)
+MOTHERDUCK_TOKEN=infisical://dev-baile/motherduck/token
+```
 
-3. **Pulumi secrets:**
-   ```typescript
-   const dbPassword = new pulumi.Config().requireSecret("dbPassword");
-   ```
+**DO NOT manually create `.env` files.** Allow mise hooks and Locket to hydrate the environment.
 
 ### Network Configuration
 
-All stacks should use the shared network for inter-service communication:
+All stacks use shared Docker network for inter-service communication:
 
 ```yaml
 services:
@@ -128,122 +127,70 @@ networks:
     external: true
 ```
 
-Create the network once:
-```bash
-docker network create cianfhoghlaim
-```
-
 ## Deployment Workflow
 
-### 1. Local Development
+### Local Development
 
 ```bash
-# Start a stack
-cd bonneagar/storage/<stack>
-cp .env.example .env
-# Edit .env with local values
-docker-compose up -d
-
-# View logs
-docker-compose logs -f
-
-# Stop stack
-docker-compose down
+# Stacks use Komodo for management. For direct Docker Compose:
+cd infrastructure/stacks/storage/<stack>
+docker compose up -d
+docker compose logs -f
+docker compose down
 ```
 
-### 2. Production Deployment
+### Production Deployment (Komodo GitOps)
 
-Using Komodo (`komodo/`):
+Komodo syncs from Forgejo and manages all stacks:
 
 ```bash
-# Deploy stack to production
-komodo deploy <stack>
+# Access Komodo UI
+open https://komodo.cianfhoghlaim.ie
 
-# Check status
-komodo status <stack>
-
-# View logs
-komodo logs <stack> -f
+# Deploy/update a stack via Komodo UI or API
+# Each stack has compose.yaml + pangolin.yaml + sidecar.yaml + secrets.env
 ```
 
-### 3. Infrastructure Changes
-
-Using Pulumi (`pulumi/`):
+### Infrastructure Changes (Pulumi)
 
 ```bash
-cd bonneagar/pulumi/<project>
-
-# Preview changes
+cd infrastructure/pulumi/<project>
 pulumi preview
-
-# Apply changes
 pulumi up
-
-# Destroy resources (CAREFUL!)
-pulumi destroy
 ```
 
-## Stack-Specific Documentation
+## Key Infrastructure Services
 
-### LanceDB (`storage/lancedb/`)
+### Garage (S3 Object Storage)
+- CRDT-based S3-compatible object storage
+- Ports: 3900 (S3 API), 3901 (admin), 3902 (web), 3903-3904 (rpc)
+- Used by DuckLake for Parquet storage and LanceDB for vector data
 
-Embedded vector database for semantic search:
-- No Docker required (Python library)
-- Use `merge_insert` for idempotent writes
-- Follows MVCC for multi-process safety
+### Lakehouse Stack
+- Garage S3 → Lakekeeper Iceberg Catalog (8181) → Lance Namespace Sidecar (8182)
+- Postgres (5433) for Lakekeeper catalog metadata
+- Custom `lakehouse-lance-namespace:latest` sidecar registers LanceDB tables as Iceberg tables
 
-See `.claude/CONSTRAINTS.md` for critical usage patterns.
+### Pangolin (VPN + Routing)
+- WireGuard-based tunneling (port 51820/udp)
+- Traefik v3.4.0 reverse proxy
+- Pocket ID OIDC + TinyAuth for SSO
+- CrowdSec for intrusion detection
 
-### Memgraph (`storage/memgraph/`)
-
-Graph database for curriculum relationships:
-- Cypher query language
-- Port 7687 (Bolt protocol)
-- Used for prerequisite chains, topic relationships
-
-```bash
-docker-compose -f bonneagar/storage/memgraph/docker-compose.yml up -d
-```
-
-### Qdrant (`storage/qdrant/`)
-
-High-performance vector search:
-- REST API on port 6333
-- gRPC on port 6334
-- Supports multi-vector search (ColPali)
-
-### Pangolin (`pangolin/`)
-
-VPN and secure network access:
-- WireGuard-based tunneling
-- Zero-trust network access
-- Used for secure database access
-
-### Komodo (`komodo/`)
-
-Container orchestration and deployment:
-- GitOps workflow
-- Multi-server deployments
-- Integrated with Forgejo
+### Komodo (Container Orchestration)
+- GitOps workflow synced from Forgejo
+- Multi-server deployments (OCI + MacBook)
+- Integrated with Pangolin for service routing
 
 ## Common Operations
 
-### Starting All Required Stacks
+### Starting Core Infrastructure
 
 ```bash
-# Create network
-docker network create cianfhoghlaim
-
-# Start databases
-docker-compose -f bonneagar/storage/memgraph/docker-compose.yml up -d
-docker-compose -f bonneagar/storage/qdrant/docker-compose.yml up -d
-
-# Start ML services
-docker-compose -f bonneagar/storage/mlflow/docker-compose.yml up -d
-docker-compose -f bonneagar/storage/ollama/docker-compose.yml up -d
-
-# Start observability
-docker-compose -f bonneagar/storage/grafana/docker-compose.yml up -d
+# Core control plane (Pangolin + Komodo + Pocket ID) managed via Komodo
+# Individual stacks can be started via:
+docker compose -f infrastructure/stacks/storage/garage/compose.yaml up -d
+docker compose -f infrastructure/stacks/storage/lakehouse/compose.yaml up -d
 ```
 
 ### Health Checks
@@ -259,52 +206,22 @@ docker inspect --format='{{.State.Health.Status}}' <container>
 docker stats --no-stream
 ```
 
-### Backup Operations
-
-```bash
-# Backup Memgraph
-docker exec memgraph mgconsole -c "CREATE SNAPSHOT;"
-
-# Backup Qdrant
-curl -X POST "http://localhost:6333/collections/curriculum/snapshots"
-
-# Backup DuckDB (file copy)
-cp data/*.duckdb backups/
-```
-
-## Troubleshooting
-
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| Container won't start | Port conflict | Check `docker ps` and `lsof -i :<port>` |
-| Network unreachable | Missing network | Run `docker network create cianfhoghlaim` |
-| Out of disk space | Data accumulation | Run `docker system prune -a` |
-| Permission denied | Volume ownership | Check UID/GID in compose file |
-| Stack won't connect | Network isolation | Ensure same Docker network |
-
-## Adding New Stacks
+### Adding New Stacks
 
 1. Create directory structure:
    ```bash
-   mkdir -p bonneagar/storage/<stack>/{config,data}
+   mkdir -p infrastructure/stacks/<category>/<name>
    ```
-
-2. Create docker-compose.yml with:
-   - Health checks
-   - Restart policies
-   - Named volumes
-   - Network configuration
-
-3. Create .env.example with all required variables
-
-4. Add to this AGENTS.md with port and purpose
-
-5. Test locally before adding to Komodo
+2. Create `compose.yaml` with health checks, restart policies, named volumes, and network config
+3. Create `pangolin.yaml` for web-facing services (Traefik + TinyAuth routing)
+4. Create `sidecar.yaml` for Locket secret injection
+5. Create `secrets.env` with Infisical URI references
+6. Add to this AGENTS.md with port and purpose
+7. Commit and let Komodo sync deploy
 
 ## Resources
 
-- **Docker Compose Docs:** https://docs.docker.com/compose
-- **Pulumi Docs:** https://www.pulumi.com/docs
-- **Komodo Docs:** https://komo.do/docs
 - **Pangolin Docs:** https://pangolin.dev
-- **Infisical CLI:** https://developer.infisical.com/docs/cli
+- **Komodo Docs:** https://komo.do/docs
+- **Infisical Docs:** https://infisical.com/docs
+- **Pulumi Docs:** https://www.pulumi.com/docs

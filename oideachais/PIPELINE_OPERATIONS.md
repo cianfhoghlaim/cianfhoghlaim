@@ -63,7 +63,7 @@ catalog_uri = "postgresql://lakekeeper:devpassword@localhost:5433/ducklake_oidea
 con.execute(f"ATTACH '{catalog_uri}' AS ducklake (TYPE POSTGRES);")
 
 # Query the Extracted Pages
-print(con.execute("SELECT cycle, subject, language, count(*) FROM ducklake.oideachais.curriculum_pages GROUP BY cycle, subject, language;").fetchall())
+print(con.execute("SELECT cycle, subject, language, count(*) FROM ducklake.curriculum.curriculum_pages GROUP BY cycle, subject, language;").fetchall())
 ```
 
 *Note:* In local Dagster dev mode when `USE_DUCKLAKE=false`, it will write to a local DuckDB file (e.g., `curriculum_unified.duckdb`) instead of the remote Postgres catalog.
