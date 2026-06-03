@@ -34,6 +34,9 @@ _.python.venv = { path = ".venv" }
 _.file = '.env'
 MISE_ENV_FILE = ".env"
 PYTHONPATH = "."
+UV_PROJECT_ENVIRONMENT = ".venv"
+# LOCKET_TOKEN, KOMODO_URL, PANGOLIN_URL are set per-environment (not required here)
+# They are provided by the Locket sidecar in production or by the user's shell in dev.
 
 
 # =============================================================================
@@ -42,7 +45,7 @@ PYTHONPATH = "."
 
 [tasks.sync]
 description = "Sync all Python workspace packages"
-run = "uv sync --all-packages"
+run = "uv sync"
 
 [tasks.test]
 description = "Run pytest on all Python packages"
@@ -57,28 +60,36 @@ description = "Format all Python code with ruff"
 run = "uv run ruff format ."
 
 [tasks."py:typecheck"]
-description = "Type check Python code with pyright"
-run = "uv run pyright"
+description = "Type check Python code with mypy"
+run = "uv run mypy"
 
 # =============================================================================
-# TypeScript Tasks
+# TypeScript Tasks (delegated to turbo)
 # =============================================================================
 
 [tasks."ts:install"]
-description = "Install all TypeScript dependencies"
+description = "Install all TypeScript dependencies (bun workspaces)"
 run = "bun install"
 
 [tasks."ts:build"]
-description = "Build all TypeScript packages"
-run = "bun run build"
+description = "Build all TypeScript packages via turbo"
+run = "bunx turbo run build"
 
 [tasks."ts:typecheck"]
-description = "Type check TypeScript code"
-run = "bun run typecheck"
+description = "Type check TypeScript code via turbo"
+run = "bunx turbo run typecheck"
 
 [tasks."ts:lint"]
-description = "Lint TypeScript code"
-run = "bun run lint"
+description = "Lint TypeScript code via turbo"
+run = "bunx turbo run lint"
+
+# =============================================================================
+# Turborepo shortcut
+# =============================================================================
+
+[tasks.turbo]
+description = "Run any turbo task (e.g. 'mise turbo dev')"
+run = "bunx turbo run ${@}"
 
 # =============================================================================
 # Rust Tasks
@@ -86,31 +97,27 @@ run = "bun run lint"
 
 [tasks."rs:build"]
 description = "Build Locket (Rust)"
-run = "cd bonneagar/locket && cargo build"
+run = "cd infrastructure/locket && cargo build"
 
 [tasks."rs:test"]
 description = "Test Locket (Rust)"
-run = "cd bonneagar/locket && cargo test"
+run = "cd infrastructure/locket && cargo test"
 
 [tasks."rs:clippy"]
 description = "Run clippy on Locket"
-run = "cd bonneagar/locket && cargo clippy"
+run = "cd infrastructure/locket && cargo clippy"
 
 # =============================================================================
-# Dagster Tasks
+# Dagster Tasks (post-sruth-restructure)
 # =============================================================================
 
-[tasks."dagster:oideachas"]
-description = "Run Dagster for oideachas pipeline"
-run = "cd sruth/oideachas && uv run dagster dev"
+[tasks."dagster:oideachais"]
+description = "Run Dagster for oideachais pipeline"
+run = "cd oideachais && uv run dagster dev -m data_platform.dagster_defs.definitions"
 
-[tasks."dagster:tuath"]
-description = "Run Dagster for tuath pipeline"
-run = "cd sruth/tuath && uv run dagster dev"
-
-[tasks."dagster:teanga"]
-description = "Run Dagster for teanga pipeline"
-run = "cd sruth/teanga && uv run dagster dev"
+[tasks."dagster:tuatha"]
+description = "Run Dagster for tuatha pipeline"
+run = "cd tuatha && uv run dagster dev -m dagster_assets.definitions"
 
 # =============================================================================
 # Dagger CI/CD Tasks
@@ -118,35 +125,35 @@ run = "cd sruth/teanga && uv run dagster dev"
 
 [tasks."dagger:ci"]
 description = "Run full CI pipeline with Dagger"
-run = "cd bonneagar/dagger && dagger call ci --source ../.."
+run = "cd infrastructure/dagger && dagger call ci --source ../.."
 
 [tasks."dagger:test-python"]
 description = "Run Python tests with Dagger"
-run = "cd bonneagar/dagger && dagger call test-python --source ../.."
+run = "cd infrastructure/dagger && dagger call test-python --source ../.."
 
 [tasks."dagger:test-typescript"]
 description = "Run TypeScript tests with Dagger"
-run = "cd bonneagar/dagger && dagger call test-typescript --source ../.."
+run = "cd infrastructure/dagger && dagger call test-typescript --source ../.."
 
 [tasks."dagger:deploy-cloudflare"]
 description = "Deploy docs to Cloudflare Pages"
-run = "cd bonneagar/dagger && dagger call deploy-cloudflare --source ../.."
+run = "cd infrastructure/dagger && dagger call deploy-cloudflare --source ../.."
 
 # =============================================================================
 # Documentation Tasks
 # =============================================================================
 
 [tasks."docs:dev"]
-description = "Start Docusaurus dev server"
-run = "bun --cwd docs-site run start"
+description = "Start Docusaurus dev server (if present)"
+run = "if [ -d docs-site ]; then bun --cwd docs-site run start; else echo 'No docs-site/ present — skipping.'; fi"
 
 [tasks."docs:build"]
-description = "Build Docusaurus site"
-run = "bun --cwd docs-site run build"
+description = "Build Docusaurus site (if present)"
+run = "if [ -d docs-site ]; then bun --cwd docs-site run build; else echo 'No docs-site/ present — skipping.'; fi"
 
 [tasks."docs:serve"]
-description = "Serve built Docusaurus site"
-run = "bun --cwd docs-site run serve"
+description = "Serve built Docusaurus site (if present)"
+run = "if [ -d docs-site ]; then bun --cwd docs-site run serve; else echo 'No docs-site/ present — skipping.'; fi"
 
 # =============================================================================
 # Infrastructure Tasks
@@ -154,23 +161,79 @@ run = "bun --cwd docs-site run serve"
 
 [tasks."stack:up"]
 description = "Start a Docker stack"
-run = "cd bonneagar && ./scripts/stack.sh ${1} up -d"
+run = "cd infrastructure && ./scripts/stack.sh ${1} up -d"
 
 [tasks."stack:down"]
 description = "Stop a Docker stack"
-run = "cd bonneagar && ./scripts/stack.sh ${1} down"
+run = "cd infrastructure && ./scripts/stack.sh ${1} down"
 
 [tasks."stack:logs"]
 description = "View Docker stack logs"
-run = "cd bonneagar && ./scripts/stack.sh ${1} logs -f"
+run = "cd infrastructure && ./scripts/stack.sh ${1} logs -f"
 
 [tasks."pulumi:up"]
 description = "Deploy with Pulumi"
-run = "cd bonneagar/pulumi/${1} && pulumi up"
+run = "cd infrastructure/pulumi/${1} && pulumi up"
 
 [tasks."pulumi:preview"]
 description = "Preview Pulumi changes"
-run = "cd bonneagar/pulumi/${1} && pulumi preview"
+run = "cd infrastructure/pulumi/${1} && pulumi preview"
+
+# =============================================================================
+# Secret management (Infisical + Locket + Komodo + Pangolin)
+# =============================================================================
+
+[tasks."secrets:env"]
+description = "Create the dev-baile environment in Infisical"
+run = "bun run scripts/create-env.ts"
+
+[tasks."secrets:init"]
+description = "Seed the Infisical vault from .env using .infisical.env template"
+run = "bun run scripts/init-vault.ts"
+
+[tasks."secrets:sync"]
+description = "Re-sync the Infisical vault (alias of secrets:init)"
+run = "bun run scripts/init-vault.ts"
+
+[tasks."locket:exec"]
+description = "Inject secrets via Locket sidecar and run a command"
+run = "locket exec -- ${@}"
+
+[tasks."komodo:sync"]
+description = "Trigger Komodo to re-sync all stacks from Forgejo"
+run = "komodo sync || echo 'komodo CLI not in PATH; trigger via Komodo UI.'"
+
+[tasks."pangolin:check"]
+description = "Verify Pangolin tunnel health"
+run = "pangolin health-check || echo 'pangolin CLI not in PATH; check via Pangolin UI.'"
+
+# =============================================================================
+# Codebase indexing (ccc / cocoindex-code) and OpenSpec
+# =============================================================================
+
+[tasks."ccc:init"]
+description = "Initialise ccc (cocoindex-code) for this project"
+run = "ccc init || true"
+
+[tasks."ccc:index"]
+description = "Build the cocoindex-code semantic index"
+run = "ccc index"
+
+[tasks."ccc:search"]
+description = "Semantic search the codebase with ccc"
+run = "ccc search ${@}"
+
+[tasks."openspec:list"]
+description = "List OpenSpec specs and changes"
+run = "openspec list"
+
+[tasks."openspec:validate"]
+description = "Validate an OpenSpec change (pass change-id as first arg)"
+run = "openspec validate ${1} --strict"
+
+[tasks."openspec:archive"]
+description = "Archive a deployed OpenSpec change"
+run = "openspec archive ${1} --yes"
 
 # =============================================================================
 # Utility Tasks
@@ -183,13 +246,14 @@ echo '=== Tool Versions ==='
 echo 'Python:' && python --version
 echo 'uv:' && uv --version
 echo 'Bun:' && bun --version
+echo 'Turbo:' && bunx turbo --version
 echo 'Dagger:' && dagger version
 echo 'Rust:' && rustc --version
 echo 'DuckDB:' && duckdb --version
 echo ''
 echo '=== Workspace Status ==='
-echo 'Python packages:' && uv pip list --format=freeze | wc -l
-echo 'Node modules:' && find node_modules -maxdepth 1 -type d 2>/dev/null | wc -l
+echo 'UV workspace members:' && uv workspace list 2>/dev/null || echo 'n/a'
+echo 'Bun workspaces:' && bun pm ls 2>/dev/null | head -20 || echo 'n/a'
 """
 
 [tasks.clean]
@@ -205,7 +269,7 @@ find . -type d -name '.pytest_cache' -exec rm -rf {} + 2>/dev/null || true
 description = "Full reset - clean and reinstall"
 depends = ["clean"]
 run = """
-uv sync --all-packages
+uv sync
 bun install
 """
 
