@@ -1,21 +1,64 @@
 {
   "$schema": "https://turborepo.com/schema.json",
-  "globalDependencies": ["**/.env.*local"],
+  "globalDependencies": [
+    ".env",
+    ".env.locket",
+    ".infisical.env",
+    "mise.toml",
+    "pyproject.toml",
+    "**/pyproject.toml"
+  ],
+  "globalEnv": [
+    "INFISICAL_*",
+    "BROWSERBASE_*",
+    "FIRECRAWL_*",
+    "MOTHERDUCK_*",
+    "GOOGLE_VERTEX_*",
+    "GEMINI_*",
+    "DAGSTER_HOME",
+    "LOCKET_*",
+    "KOMODO_*",
+    "PANGOLIN_*",
+    "PATH"
+  ],
   "tasks": {
+    "postinstall": {
+      "cache": false
+    },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".output/**", "dist/**", ".next/**", "!.next/cache/**"]
+      "outputs": ["dist/**", ".output/**", "build/**", ".vinxi/**"]
     },
     "dev": {
-      "dependsOn": ["^build"],
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": ["^build"]
     },
     "typecheck": {
-      "dependsOn": ["^build"],
       "outputs": []
     },
     "lint": {
+      "outputs": []
+    },
+    "format": {
+      "outputs": [],
+      "cache": false
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "clean": {
+      "cache": false
+    },
+    "dagster": {
+      "cache": false,
+      "persistent": true
+    },
+    "ccc:index": {
+      "cache": false
+    },
+    "spec:validate": {
       "outputs": []
     }
   },

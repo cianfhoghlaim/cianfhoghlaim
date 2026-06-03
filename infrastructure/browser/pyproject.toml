@@ -2,7 +2,7 @@
 name = "sruth-browser"
 version = "0.1.0"
 description = "Browser automation client with circuit breaker fallback for sruth pipelines"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
     # Async HTTP clients
     "httpx>=0.27.0",
@@ -67,18 +67,24 @@ sruth-browser-mcp = "sruth_browser.mcp.server:main"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+# ============================================================================
+# UV Workspace — sruth-browser is a member of the root cianfhoghlaim workspace.
+# ============================================================================
+[tool.uv]
+package = true
+
 [tool.hatch.build.targets.wheel]
 packages = ["sruth_browser"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py311"
+target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 strict = true
 
 [tool.pytest.ini_options]

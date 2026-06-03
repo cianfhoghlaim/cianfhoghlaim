@@ -1,4 +1,8 @@
 {
+  "name": "oideachais-mcp-filesystem",
+  "private": true,
+  "type": "module",
+  "description": "Filesystem MCP server for the oideachais data platform (read-only access to stedding/ingest_queue, oideachais/data_platform/datasets, etc.)",
   "dependencies": {
     "@modelcontextprotocol/server-filesystem": "^2025.3.28"
   }

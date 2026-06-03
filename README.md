@@ -4,6 +4,80 @@
 
 ---
 
+## Quickstart
+
+```bash
+# 1. Clone and enter the repo
+git clone https://github.com/cianfhoghlaim/kings_college_galway.git
+cd kings_college_galway
+
+# 2. One-shot developer onboarding (mise → bun → uv → Infisical)
+bun run setup
+# expands to: mise install && bun install && uv sync && bun run secrets:env && bun run secrets:init
+
+# 3. Pick your day-job
+bun run dev:oideachais      # TanStack Start web app (oideachais/web)
+bun run dagster:oideachais  # Dagster UI for the data platform
+bun run dagster:tuatha      # Dagster UI for the MMO data
+bun run ccc:search "..."    # semantic code search
+```
+
+> The setup command hydrates `.env` from the `dev-baile` Infisical vault using `.infisical.env` as a template. Never hand-edit `.env` — see [AGENTS.md § Secrets Bootstrap](AGENTS.md#secrets-bootstrap-do-not-skip).
+
+---
+
+## Monorepo Topology (v2 — Polyglot)
+
+Cianfhoghlaim is a **bun + uv + turbo polyglot monorepo**. Two language graphs live side by side, sharing one `mise.toml` toolchain and one `turbo.json` task graph.
+
+### TypeScript graph (bun workspaces)
+
+```
+package.json            # bun workspace orchestrator
+├── oideachais/web      # TanStack Start + React (oideachais-web)
+├── oideachais/mcp/filesystem  # filesystem MCP server
+└── tuatha/ui           # Túatha educational MMO UI
+```
+
+The root `package.json` has **no runtime business logic** — it only orchestrates: setup, turbo passthroughs, secret management (`secrets:env`/`secrets:init`/`secrets:sync`), dagster glue, ccc indexing, and openspec.
+
+### Python graph (uv workspaces)
+
+```
+pyproject.toml          # uv-workspace shell (zero deps)
+├── oideachais          # Celtic education data platform
+├── tuatha              # Educational MMO + crypto
+├── códeolas            # Code intelligence library (publishable)
+├── infrastructure/browser   # sruth-browser
+└── oideachais/mcp/mcpo # MCPO bridge (optional member)
+```
+
+Members import each other via `[tool.uv.sources]` (e.g. `oideachais` imports `sruth-browser` from `infrastructure/browser`). A single `uv.lock` covers the whole graph; `uv sync` from the root reconciles all members.
+
+### Cross-language orchestration
+
+| Concern | File | Purpose |
+|:--|:--|:--|
+| Task graph | `turbo.json` | `build`, `dev`, `typecheck`, `lint`, `format`, `test`, `clean`, `dagster`, `ccc:index`, `spec:validate` |
+| Toolchain | `mise.toml` | `python 3.12`, `uv`, `bun`, `dagger`, `pulumi`, `duckdb`, `sops`; aliases `mise turbo dev`, `mise secrets:init`, `mise dagster:oideachais`, … |
+| Dagster | `dg.toml` | Loads `oideachais` and `tuatha` code-locations into one UI |
+
+### Common commands (from root)
+
+| Command | What it does |
+|:--|:--|
+| `bun run setup` | One-shot onboarding: mise + bun + uv + Infisical |
+| `bun run dev:oideachais` / `dev:tuatha` | turbo-filtered dev of one workspace |
+| `bun run dagster:oideachais` | Dagster UI for the data platform |
+| `bun run secrets:init` | Sync `.env` ↔ Infisical vault via `.infisical.env` |
+| `bun run ccc:index` / `ccc:search "…"` | Semantic code search via cocoindex-code |
+| `bun run spec:list` / `spec:validate <id> --strict` | OpenSpec spec-driven changes |
+| `bun run komodo:sync` | Trigger Komodo to re-sync all stacks |
+| `mise run locket:exec -- <cmd>` | Wrap a command with Locket secret injection |
+| `mise turbo <task>` | Shortcut to `bunx turbo run <task>` |
+
+---
+
 ## Personal Foundation & Modularity Rationale
 
 This project is the direct product of lived academic experience across two University of Galway postgraduate programmes — the **Higher Diploma in Applied Mathematics** (analytics, modelling, numerical methods) and the **HDip/MSc in Software Development & Entrepreneurship** (algorithms, databases, enterprise Java, internet programming). The modularity of this monorepo mirrors the modularity of that education: each directory is a self-contained domain that maps to specific mathematical, statistical, or software-engineering competencies, yet all are orchestrated to serve a single purpose — pan-Celtic educational equity.
