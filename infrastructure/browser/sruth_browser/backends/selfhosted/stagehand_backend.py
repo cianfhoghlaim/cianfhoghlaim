@@ -1,13 +1,20 @@
-"""Stagehand backend for precision browser interactions with local-first + cloud fallback."""
+"""Stagehand backend using the official Python SDK.
 
+Architecture:
+  Stagehand SEA binary → /v1/responses → stagehand-proxy → /v1/chat/completions → OpenCode Go
+
+The SEA binary inherits OPENAI_BASE_URL from os.environ, pointing to our local proxy
+that translates between OpenAI Responses API and Chat Completions format.
+"""
+
+import json
+import os
 import time
+import urllib.request
 from typing import Any
 
-import httpx
 import structlog
 
-from ...config import BrowserConfig, get_config
-from ...exceptions import BackendError, BackendTimeoutError
 from ...browser_types import (
     BackendType,
     ExtractionFormat,
@@ -16,164 +23,163 @@ from ...browser_types import (
     NavigationResult,
     ScreenshotResult,
 )
+from ...config import BrowserConfig, get_config
+from ...exceptions import BackendError
 from ..base import BrowserBackend
+
+try:
+    from playwright.async_api import async_playwright
+    from stagehand import AsyncStagehand
+except ImportError:
+    pass
 
 logger = structlog.get_logger()
 
-# Anti-bot error patterns that trigger cloud fallback
-FALLBACK_ERROR_PATTERNS = [
-    "cloudflare",
-    "captcha",
-    "verify",
-    "blocked",
-    "403",
-    "forbidden",
-    "rate limit",
-    "too many requests",
-    "connection refused",
-    "econnrefused",
-]
+PROXY_DEFAULT_HOST = "127.0.0.1"
+PROXY_DEFAULT_PORT = 4005
 
 
 class StagehandBackend(BrowserBackend):
-    """Stagehand backend for AI-powered browser interactions.
+    """Stagehand backend for AI-powered browser interactions using the official Python SDK.
 
     Features:
-    - Local browser first (CDP/Playwright) for $0 cost
-    - Automatic Browserbase fallback when anti-bot detected
+    - Official Stagehand Python SDK integration with local SEA binary
+    - CDP connection to Stealth Browser Grid (Patchright)
+    - Routes LLM calls through stagehand-proxy for Responses API translation
     - Natural language action execution (observe → act pattern)
-    - Intelligent element observation with cached selectors
-    - Structured data extraction with LLM
-    - Multi-LLM support (GLM-4.6, Gemini 3 Flash)
     """
 
     backend_type = BackendType.STAGEHAND_LOCAL
 
     def __init__(self, config: BrowserConfig | None = None):
         self.config = config or get_config()
-        self._client: httpx.AsyncClient | None = None
-        self._session_id: str | None = None
-        self._using_cloud: bool = False
-        self._fallback_count: int = 0
+        self._client: AsyncStagehand | None = None
+        self._session = None
+        self._playwright = None
+        self._browser = None
+        self._context = None
+        self._page = None
 
     async def initialize(self) -> None:
-        """Initialize connection to Stagehand local server."""
-        stagehand_url = getattr(self.config, "stagehand_local_url", None) or self.config.stagehand_url
-        self._client = httpx.AsyncClient(
-            base_url=stagehand_url,
-            timeout=httpx.Timeout(self.config.interaction_timeout * 2),
+        """Initialize connection to Stealth Grid and Stagehand SDK."""
+        cdp_url_env = os.environ.get("BROWSER_CDP_URL", "http://127.0.0.1:9223")
+        bb_api_key = os.environ.get("BROWSERBASE_API_KEY", "local")
+        model_api_key = os.environ.get("MODEL_API_KEY") or os.environ.get("OPENAI_API_KEY") or ""
+
+        # Point OPENAI_BASE_URL to the stagehand-proxy so the SEA binary routes
+        # /v1/responses requests through our proxy which translates them to
+        # /v1/chat/completions for OpenCode Go.
+        proxy_host = os.environ.get("STAGEHAND_PROXY_HOST", PROXY_DEFAULT_HOST)
+        proxy_port = os.environ.get("STAGEHAND_PROXY_PORT", str(PROXY_DEFAULT_PORT))
+        proxy_url = f"http://{proxy_host}:{proxy_port}/v1"
+        os.environ["OPENAI_BASE_URL"] = proxy_url
+        logger.info("stagehand_proxy_configured", proxy_url=proxy_url)
+
+        # Resolve the actual WS URL via the proxy /json/version
+        if cdp_url_env.startswith("http://"):
+            try:
+                version_url = cdp_url_env.rstrip("/") + "/json/version"
+                req = urllib.request.Request(version_url)
+                with urllib.request.urlopen(req, timeout=5) as response:
+                    payload = json.loads(response.read().decode("utf-8"))
+                cdp_url = payload.get("webSocketDebuggerUrl")
+                if not cdp_url:
+                    raise BackendError(
+                        "No webSocketDebuggerUrl in /json/version",
+                        self.backend_type,
+                    )
+            except Exception as e:
+                raise BackendError(
+                    f"Failed to resolve CDP WS URL from {cdp_url_env}: {e}",
+                    self.backend_type,
+                )
+        else:
+            cdp_url = cdp_url_env
+
+        # Normalize CDP URL for container networking
+        if "0.0.0.0" in cdp_url:
+            cdp_url = cdp_url.replace("0.0.0.0", "127.0.0.1")
+
+        # Initialize the official Stagehand client — SEA binary inherits os.environ
+        # so it picks up OPENAI_BASE_URL pointing to our proxy.
+        self._client = AsyncStagehand(
+            server="local",
+            browserbase_api_key=bb_api_key,
+            model_api_key=model_api_key,
+            local_ready_timeout_s=30.0,
         )
 
-        # Create local session
         try:
-            response = await self._client.post(
-                "/session/create",
-                json={
-                    "modelName": getattr(self.config, "stagehand_model", "glm-4.6"),
-                    "useCloud": False,
+            logger.info("Initializing Stagehand Playwright connection", cdp_url=cdp_url)
+            self._playwright = await async_playwright().start()
+
+            if "playwright" in cdp_url:
+                self._browser = await self._playwright.chromium.connect(cdp_url)
+            else:
+                self._browser = await self._playwright.chromium.connect_over_cdp(cdp_url)
+
+            self._context = (
+                self._browser.contexts[0]
+                if self._browser.contexts
+                else await self._browser.new_context()
+            )
+            self._page = (
+                self._context.pages[0]
+                if self._context.pages
+                else await self._context.new_page()
+            )
+
+            # Use openai/ provider — the SEA binary will route through our proxy
+            # which translates Responses API → Chat Completions for OpenCode Go.
+            model_name = os.environ.get("STAGEHAND_MODEL", "openai/deepseek-v4-pro")
+
+            self._session = await self._client.sessions.start(
+                model_name=model_name,
+                browser={
+                    "type": "local",
+                    "launchOptions": {"cdpUrl": cdp_url},
                 },
+                verbose=1
             )
-            response.raise_for_status()
-            data = response.json()
-            self._session_id = data.get("sessionId")
-            self._using_cloud = False
-            logger.info(
-                "stagehand_initialized",
-                url=stagehand_url,
-                session_id=self._session_id,
-                env="LOCAL",
-            )
+            logger.info("stagehand_initialized", session_id=self._session.id, model=model_name)
+
         except Exception as e:
             logger.warning("stagehand_local_init_failed", error=str(e))
-            # Try cloud fallback if auto_fallback enabled
-            if getattr(self.config, "stagehand_auto_fallback", True):
-                await self._fallback_to_cloud()
-            else:
-                raise BackendError(f"Failed to initialize Stagehand: {e}", self.backend_type)
-
-    def _should_fallback(self, error: Exception | str) -> bool:
-        """Determine if error warrants cloud fallback."""
-        error_str = str(error).lower()
-        return any(pattern in error_str for pattern in FALLBACK_ERROR_PATTERNS)
-
-    async def _fallback_to_cloud(self) -> None:
-        """Fallback to Browserbase cloud when local fails."""
-        if self._using_cloud:
-            return
-
-        logger.info("stagehand_falling_back_to_cloud", session_id=self._session_id)
-        self._fallback_count += 1
-
-        # Close local session if exists
-        if self._session_id and self._client:
-            try:
-                await self._client.post(f"/session/{self._session_id}/close")
-            except Exception:
-                pass
-
-        # Create cloud session
-        try:
-            response = await self._client.post(
-                "/session/create",
-                json={
-                    "modelName": getattr(self.config, "stagehand_model", "glm-4.6"),
-                    "useCloud": True,
-                    "browserbaseApiKey": self.config.browserbase_api_key,
-                    "browserbaseProjectId": self.config.browserbase_project_id,
-                },
-            )
-            response.raise_for_status()
-            data = response.json()
-            self._session_id = data.get("sessionId")
-            self._using_cloud = True
-            logger.info(
-                "stagehand_cloud_initialized",
-                session_id=self._session_id,
-                fallback_count=self._fallback_count,
-            )
-        except Exception as e:
-            raise BackendError(f"Failed to fallback to cloud: {e}", self.backend_type)
-
-    @property
-    def is_using_cloud(self) -> bool:
-        """Check if currently using cloud backend."""
-        return self._using_cloud
+            await self.close()
+            raise BackendError(f"Failed to initialize Stagehand: {e}", self.backend_type)
 
     async def close(self) -> None:
-        """Close Stagehand connection and session."""
-        if self._client and self._session_id:
+        """Close connections."""
+        if self._session and self._client:
             try:
-                await self._client.post("/session/close")
+                await self._session.end()
             except Exception:
                 pass
+        self._session = None
+
+        if self._browser:
+            try:
+                await self._browser.close()
+            except Exception:
+                pass
+        self._browser = None
+
+        if self._playwright:
+            try:
+                await self._playwright.stop()
+            except Exception:
+                pass
+        self._playwright = None
+
         if self._client:
-            await self._client.aclose()
             self._client = None
-        self._session_id = None
 
     async def health_check(self) -> bool:
-        """Check Stagehand health."""
-        try:
-            if not self._client:
-                return False
-            response = await self._client.get("/health")
-            return response.status_code == 200
-        except Exception:
-            return False
+        return self._session is not None and self._page is not None
 
-    async def _ensure_session(self) -> str:
-        """Ensure we have an active Stagehand session."""
-        if not self._client:
-            raise BackendError("Stagehand not initialized", self.backend_type)
-
-        if not self._session_id:
-            response = await self._client.post("/session/create")
-            response.raise_for_status()
-            data = response.json()
-            self._session_id = data.get("sessionId")
-            logger.info("stagehand_session_created", session_id=self._session_id)
-
-        return self._session_id
+    async def _ensure_session(self) -> None:
+        if not self._session or not self._page:
+            await self.initialize()
 
     async def navigate(
         self,
@@ -182,61 +188,31 @@ class StagehandBackend(BrowserBackend):
         wait_until: str = "load",
         timeout: float | None = None,
     ) -> NavigationResult:
-        """Navigate using Stagehand with automatic anti-bot detection and fallback."""
-        if not self._client:
-            raise BackendError("Stagehand not initialized", self.backend_type)
-
         await self._ensure_session()
         start_time = time.perf_counter()
 
         try:
-            response = await self._client.post(
-                "/navigate",
-                json={"sessionId": self._session_id, "url": url},
-                timeout=timeout or self.config.navigation_timeout,
-            )
-            response.raise_for_status()
-            data = response.json()
-
-            # Check for anti-bot detection
-            if data.get("shouldFallback") and not self._using_cloud:
-                logger.info(
-                    "stagehand_antibot_on_navigate",
-                    url=url,
-                    signals=data.get("signals"),
-                )
-                await self._fallback_to_cloud()
-                # Retry with cloud
-                return await self.navigate(url, wait_until=wait_until, timeout=timeout)
-
+            # We map playwright wait_until terms
+            pw_wait = "domcontentloaded" if wait_until == "domcontentloaded" else "load"
+            timeout = (timeout or self.config.navigation_timeout) * 1000
+            await self._page.goto(url, wait_until=pw_wait, timeout=timeout)
             latency_ms = (time.perf_counter() - start_time) * 1000
 
+            title = await self._page.title()
             return NavigationResult(
                 success=True,
-                url=data.get("url", url),
-                title=data.get("title"),
-                backend_used=BackendType.BROWSERBASE_MCP if self._using_cloud else self.backend_type,
+                url=self._page.url,
+                title=title,
+                backend_used=self.backend_type,
                 latency_ms=latency_ms,
             )
 
-        except httpx.TimeoutException as e:
-            raise BackendTimeoutError(
-                self.backend_type,
-                timeout or self.config.navigation_timeout,
-            ) from e
-
         except Exception as e:
-            # Check if we should fallback on error
-            if not self._using_cloud and self._should_fallback(e):
-                logger.info("stagehand_navigate_fallback", url=url, error=str(e))
-                await self._fallback_to_cloud()
-                return await self.navigate(url, wait_until=wait_until, timeout=timeout)
-
             latency_ms = (time.perf_counter() - start_time) * 1000
             return NavigationResult(
                 success=False,
                 url=url,
-                backend_used=BackendType.BROWSERBASE_MCP if self._using_cloud else self.backend_type,
+                backend_used=self.backend_type,
                 latency_ms=latency_ms,
                 error=str(e),
             )
@@ -250,46 +226,53 @@ class StagehandBackend(BrowserBackend):
         prompt: str | None = None,
         timeout: float | None = None,
     ) -> ExtractionResult:
-        """Extract structured data using Stagehand's extract capability."""
-        if not self._client:
-            raise BackendError("Stagehand not initialized", self.backend_type)
-
         await self._ensure_session()
         start_time = time.perf_counter()
 
         try:
-            # Navigate first
-            nav_result = await self.navigate(url, timeout=timeout)
-            if not nav_result.success:
-                return ExtractionResult(
-                    success=False,
-                    url=url,
-                    content={},
-                    format=ExtractionFormat.JSON,
-                    backend_used=self.backend_type,
-                    latency_ms=nav_result.latency_ms,
-                    error=nav_result.error,
-                )
+            if self._page.url != url and url:
+                nav_result = await self.navigate(url, timeout=timeout)
+                if not nav_result.success:
+                    return ExtractionResult(
+                        success=False,
+                        url=url,
+                        content={},
+                        format=ExtractionFormat.JSON,
+                        backend_used=self.backend_type,
+                        latency_ms=nav_result.latency_ms,
+                        error=nav_result.error,
+                    )
 
-            # Use Stagehand extract
-            extract_payload = {
+            # Build kwargs for stagehand SDK extract
+            kwargs = {
                 "instruction": prompt or "Extract all relevant information from this page",
+                "page": self._page
             }
+            if schema:
+                kwargs["schema"] = schema
 
-            response = await self._client.post(
-                "/extract",
-                json=extract_payload,
-                timeout=timeout or self.config.extraction_timeout,
-            )
-            response.raise_for_status()
-            data = response.json()
-
+            result = await self._session.extract(**kwargs)
             latency_ms = (time.perf_counter() - start_time) * 1000
+
+            # Stagehand SDK returns a SessionExtractResponse with .data attribute
+            # .data contains the structured extraction result
+            raw = result
+            if hasattr(result, "data"):
+                raw = result.data
+            # If data is a Data instance, unwrap its result attribute
+            if hasattr(raw, "result"):
+                raw = raw.result
+            # If still a string, try JSON parse
+            if isinstance(raw, str):
+                try:
+                    raw = json.loads(raw)
+                except (json.JSONDecodeError, TypeError):
+                    pass
 
             return ExtractionResult(
                 success=True,
-                url=url,
-                content={"extracted": data},
+                url=self._page.url,
+                content={"extracted": raw},
                 format=ExtractionFormat.JSON,
                 backend_used=self.backend_type,
                 latency_ms=latency_ms,
@@ -298,13 +281,8 @@ class StagehandBackend(BrowserBackend):
         except Exception as e:
             latency_ms = (time.perf_counter() - start_time) * 1000
             return ExtractionResult(
-                success=False,
-                url=url,
-                content={},
-                format=ExtractionFormat.JSON,
-                backend_used=self.backend_type,
-                latency_ms=latency_ms,
-                error=str(e),
+                success=False, url=url, content={}, format=ExtractionFormat.JSON,
+                backend_used=self.backend_type, latency_ms=latency_ms, error=str(e),
             )
 
     async def interact(
@@ -315,98 +293,40 @@ class StagehandBackend(BrowserBackend):
         value: str | None = None,
         timeout: float | None = None,
     ) -> InteractionResult:
-        """Perform interaction using Stagehand's observe → act pattern.
-
-        Stagehand uses natural language instructions rather than selectors.
-        The 'action' parameter should be a natural language description.
-
-        If anti-bot measures are detected, automatically falls back to cloud.
-        """
-        if not self._client:
-            raise BackendError("Stagehand not initialized", self.backend_type)
-
         await self._ensure_session()
         start_time = time.perf_counter()
 
         try:
-            # Build action instruction
+            instruction = action
             if selector and action in ("click", "fill", "type"):
-                # Convert selector-based to natural language
                 instruction = f"{action} the element matching '{selector}'"
                 if value:
                     instruction += f" with value '{value}'"
-            else:
-                # Use action as natural language instruction
-                instruction = action
-                if value:
-                    instruction += f": {value}"
+            elif value:
+                instruction += f": {value}"
 
-            # First observe to find elements (recommended pattern)
-            observe_response = await self._client.post(
-                "/observe",
-                json={"sessionId": self._session_id, "instruction": instruction},
-                timeout=timeout or self.config.interaction_timeout,
+            # Execute action using the official SDK
+            result = await self._session.act(
+                input=instruction,
+                page=self._page
             )
-            observe_data = observe_response.json()
-
-            # Then act on observed element or directly
-            if observe_data.get("elements"):
-                act_response = await self._client.post(
-                    "/act",
-                    json={
-                        "sessionId": self._session_id,
-                        "observedElement": observe_data["elements"][0],
-                    },
-                    timeout=timeout or self.config.interaction_timeout,
-                )
-            else:
-                act_response = await self._client.post(
-                    "/act",
-                    json={"sessionId": self._session_id, "action": instruction},
-                    timeout=timeout or self.config.interaction_timeout,
-                )
-
-            act_response.raise_for_status()
-            data = act_response.json()
-
-            # Check for fallback signal from server
-            if data.get("shouldFallback") and not self._using_cloud:
-                logger.info("stagehand_antibot_detected", signals=data.get("signals"))
-                await self._fallback_to_cloud()
-                # Retry with cloud
-                return await self.interact(action, selector=selector, value=value, timeout=timeout)
-
+            
             latency_ms = (time.perf_counter() - start_time) * 1000
+            success = getattr(result, "success", True) if hasattr(result, "success") else True
 
             return InteractionResult(
-                success=data.get("success", True),
+                success=success,
                 action=action,
                 selector=selector,
-                backend_used=BackendType.BROWSERBASE_MCP if self._using_cloud else self.backend_type,
+                backend_used=self.backend_type,
                 latency_ms=latency_ms,
             )
-
-        except httpx.TimeoutException as e:
-            raise BackendTimeoutError(
-                self.backend_type,
-                timeout or self.config.interaction_timeout,
-            ) from e
 
         except Exception as e:
-            # Check if we should fallback on error
-            if not self._using_cloud and self._should_fallback(e):
-                logger.info("stagehand_error_fallback", error=str(e))
-                await self._fallback_to_cloud()
-                return await self.interact(action, selector=selector, value=value, timeout=timeout)
-
             latency_ms = (time.perf_counter() - start_time) * 1000
             return InteractionResult(
-                success=False,
-                action=action,
-                selector=selector,
-                backend_used=BackendType.BROWSERBASE_MCP if self._using_cloud else self.backend_type,
-                latency_ms=latency_ms,
-                error=str(e),
+                success=False, action=action, selector=selector,
+                backend_used=self.backend_type, latency_ms=latency_ms, error=str(e),
             )
 
     async def screenshot(
@@ -417,45 +337,32 @@ class StagehandBackend(BrowserBackend):
         selector: str | None = None,
         timeout: float | None = None,
     ) -> ScreenshotResult:
-        """Capture screenshot using Stagehand."""
-        if not self._client:
-            raise BackendError("Stagehand not initialized", self.backend_type)
-
         await self._ensure_session()
         start_time = time.perf_counter()
 
         try:
-            if url:
-                nav_result = await self.navigate(url, timeout=timeout)
-                if not nav_result.success:
-                    return ScreenshotResult(
-                        success=False,
-                        url=url or "",
-                        image_data="",
-                        width=0,
-                        height=0,
-                        backend_used=self.backend_type,
-                        latency_ms=nav_result.latency_ms,
-                        error=nav_result.error,
-                    )
+            if url and self._page.url != url:
+                await self.navigate(url, timeout=timeout)
 
-            response = await self._client.post(
-                "/screenshot",
-                json={"fullPage": full_page},
-                timeout=timeout or self.config.interaction_timeout,
-            )
-            response.raise_for_status()
-            data = response.json()
-
+            # Playwright native screenshot
+            screenshot_bytes = await self._page.screenshot(full_page=full_page)
+            import base64
+            b64_img = base64.b64encode(screenshot_bytes).decode("utf-8")
+            
             latency_ms = (time.perf_counter() - start_time) * 1000
+            
+            # Approximating dimensions for full page
+            viewport = self._page.viewport_size
+            width = viewport["width"] if viewport else 1920
+            height = viewport["height"] if viewport else 1080
 
             return ScreenshotResult(
                 success=True,
-                url=url or "",
-                image_data=data.get("screenshot", ""),
+                url=self._page.url,
+                image_data=b64_img,
                 format="png",
-                width=data.get("width", 1920),
-                height=data.get("height", 1080),
+                width=width,
+                height=height,
                 backend_used=self.backend_type,
                 latency_ms=latency_ms,
             )
@@ -463,14 +370,8 @@ class StagehandBackend(BrowserBackend):
         except Exception as e:
             latency_ms = (time.perf_counter() - start_time) * 1000
             return ScreenshotResult(
-                success=False,
-                url=url or "",
-                image_data="",
-                width=0,
-                height=0,
-                backend_used=self.backend_type,
-                latency_ms=latency_ms,
-                error=str(e),
+                success=False, url=url or "", image_data="", width=0, height=0,
+                backend_used=self.backend_type, latency_ms=latency_ms, error=str(e),
             )
 
     async def observe(
@@ -479,27 +380,31 @@ class StagehandBackend(BrowserBackend):
         *,
         timeout: float | None = None,
     ) -> list[dict[str, Any]]:
-        """Observe interactive elements on the page.
-
-        Returns elements that match the instruction with
-        their selectors and descriptions.
-        """
-        if not self._client:
-            raise BackendError("Stagehand not initialized", self.backend_type)
-
         await self._ensure_session()
-
         try:
-            response = await self._client.post(
-                "/observe",
-                json={"instruction": instruction},
-                timeout=timeout or self.config.interaction_timeout,
+            result = await self._session.observe(
+                instruction=instruction,
+                page=self._page
             )
-            response.raise_for_status()
-            data = response.json()
-
-            return data.get("elements", [])
-
+            # Stagehand observe returns a Data object with .result attribute
+            raw = result
+            if hasattr(result, "data"):
+                raw = result.data
+            if hasattr(raw, "result"):
+                raw = raw.result
+            # Normalize to list of dicts
+            if isinstance(raw, str):
+                try:
+                    parsed = json.loads(raw)
+                    return parsed if isinstance(parsed, list) else [parsed]
+                except (json.JSONDecodeError, TypeError):
+                    return [{"observation": raw}]
+            if isinstance(raw, list):
+                return raw
+            if isinstance(raw, dict):
+                return [raw]
+            return [{"observation": str(raw)}]
         except Exception as e:
             logger.warning("observe_failed", error=str(e))
             return []
+
