@@ -1,7 +1,7 @@
 services:
   locket:
     image: ghcr.io/bpbradley/locket:infisical
-    container_name: litellm-locket
+    container_name: invokeai-locket
     restart: unless-stopped
     user: "65532:65532"
     security_opt:
@@ -28,18 +28,7 @@ services:
     networks:
       - stack
 
-  # litellm service needs the secrets injected
-  litellm:
-    depends_on:
-      locket:
-        condition: service_healthy
-    volumes:
-      - stack-secrets:/run/secrets/locket:ro
-    env_file:
-      - /run/secrets/locket/secrets.env
-
-  # db service also needs credentials from Locket
-  db:
+  invokeai:
     depends_on:
       locket:
         condition: service_healthy

@@ -1,0 +1,46 @@
+name: invokeai
+
+services:
+  invokeai:
+    image: ghcr.io/invokeai/invokeai:latest
+    container_name: invokeai
+    restart: unless-stopped
+    ports:
+      - "9090:9090"     # InvokeAI API (OpenAI-compatible /v1 endpoints)
+      - "9091:9090"     # alt host port
+    volumes:
+      - invokeai_data:/invokeai
+      - ../../stedding/huggingface:/stedding/huggingface:ro
+    environment:
+      - INVOKEAI_ROOT=/invokeai
+      - HF_HOME=/stedding/huggingface
+      - HF_HUB_CACHE=/stedding/huggingface/hub
+      - INVOKEAI_API_KEY=${INVOKEAI_API_KEY}
+      - INVOKEAI_DATABASE_URL=${INVOKEAI_DATABASE_URL}
+      - INVOKEAI_REDIS_PASSWORD=${INVOKEAI_REDIS_PASSWORD:-}
+      - CONTAINER_REGISTRY=ghcr.io/invokeai
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:9090/v1/models || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 16G
+          cpus: '8'
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+
+volumes:
+  invokeai_data:
+    driver: local
+
+networks:
+  cianfhoghlaim:
+    driver: bridge
+  lakehouse:
+    name: lakehouse_lakehouse
+    external: true
