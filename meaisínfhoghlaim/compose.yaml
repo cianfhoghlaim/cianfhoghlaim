@@ -1,18 +1,49 @@
+name: meaisínfhoghlaim
+
 services:
+  # ---------------------------------------------------------------------------
+  # LLAMA-SWAP — dynamic GGUF model swapper
+  # ---------------------------------------------------------------------------
   llama-swap:
     image: ghcr.io/mmoehring/llama-swap:latest
     container_name: llama-swap
     restart: unless-stopped
+    # Mount the GGUF directory (converted from stedding/huggingface/hub/ via
+    # the Phase 5 Dagster model_conversion asset, or pre-existing .gguf files
+    # downloaded directly from unsloth/).
+    volumes:
+      - ../../stedding/huggingface/gguf:/models:ro
+      - ./llama-swap-config.yaml:/etc/llama-swap/config.yaml:ro
+    command:
+      - "--config"
+      - "/etc/llama-swap/config.yaml"
+      - "--listen"
+      - "0.0.0.0:8080"
+    environment:
+      - HF_HOME=/stedding/huggingface
+      - HF_HUB_CACHE=/stedding/huggingface/hub
+      - HF_HUB_DOWNLOAD_TIMEOUT=600
     ports:
       - "8080:8080"
-    environment:
-      - HOST=0.0.0.0
-      - PORT=8080
-      - MODELS_DIR=/models
-    volumes:
-      - ./models:/models
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     deploy:
       resources:
         limits:
-          memory: 32G
-          cpus: '8'
+          # One 17GB model (FLUX.2) or two 8GB models can fit
+          memory: 48G
+          cpus: '14'
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+
+networks:
+  cianfhoghlaim:
+    driver: bridge
+  lakehouse:
+    name: lakehouse_lakehouse
+    external: true

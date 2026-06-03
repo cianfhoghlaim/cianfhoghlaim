@@ -1,0 +1,11 @@
+private-resources:
+  mlxomni:
+    name: "MLX-Omni"
+    mode: http
+    full-domain: "mlxomni.cianfhoghlaim.ie"
+    destination-port: 10240
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member
