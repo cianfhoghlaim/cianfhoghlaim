@@ -37,17 +37,19 @@ Celtic language education platform with AI-powered tools for Irish curriculum pr
 
 ## AI Agent Toolchain & Conventions
 
-The project embraces an AI-first development workflow utilizing **Gemini CLI**, **Roo Code**, and **GitHub Copilot**. 
+The project embraces an AI-first development workflow utilizing **OpenCode CLI** with multi-model subagents.
 
-1. **Agent Skills (`.skills/`)**: We utilize the [Agent Skills standard](https://agentskills.io/). Specialized capabilities, workflows, and prompts must be documented as skills within the `.skills/` directory (e.g., `.skills/skill-creator/SKILL.md`). This ensures portability across all AI agents.
-2. **Issue Tracking**: All AI agents should use standard GitHub/Forgejo issues or standard project management. Follow the `AGENTS.md` handoff protocol upon session completion.
-3. **Model Context Protocol (MCP)**: Agents access local and remote capabilities (like `browserbase` and `firecrawl`) via the MCP servers defined in `.roo/mcp.json` and `.mcp.json`.
+1. **Agent Skills (`.agents/skills/`)**: We utilize the [Agent Skills standard](https://agentskills.io/). Specialized capabilities, workflows, and prompts must be documented as skills within the `.agents/skills/` directory. This ensures portability across all AI agents.
+2. **Issue Tracking**: All AI agents should use standard GitHub/Forgejo issues. Follow the `AGENTS.md` handoff protocol upon session completion.
+3. **Model Context Protocol (MCP)**: Agents access local and remote capabilities (like `browserbase`, `firecrawl`, `motherduck`, `infisical`, `chrome`) via the MCP servers defined in `opencode.json`.
+4. **Subagent Architecture**: Specialized subagents (data-engineer, ai-engineer, frontend-dev, devops-architect, explorer) are defined in `opencode.json` with model-specific routing for cost optimization.
 
-## Naming Conventions
+## Infrastructure
 
 | Capability | Description | Status |
 |------------|-------------|--------|
-| `infrastructure-stacks` | 25+ storage and utility Docker stacks | Active |
+| `infrastructure` | Pangolin convergence, secrets, Komodo GitOps | Active |
+| `infrastructure-stacks` | 65+ storage, tools, engineering, ML, infra stacks | Active |
 
 ## Naming Conventions
 
@@ -62,7 +64,7 @@ The project embraces an AI-first development workflow utilizing **Gemini CLI**, 
 
 ## Technology Constraints
 
-All specs MUST respect constraints from `.claude/CONSTRAINTS.md`:
+All specs MUST respect constraints from `docs/context/00-core/CONSTRAINTS.md`:
 
 1. **Database:** Single-threaded DuckDB, MVCC LanceDB
 2. **Embeddings:** Batch minimum 100 texts
