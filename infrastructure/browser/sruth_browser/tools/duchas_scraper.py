@@ -510,7 +510,7 @@ async def scrape_duchas_collection(
                 if produce_to_kafka:
                     # Import here to avoid circular dependency
                     try:
-                        from sruth.oideachais.kafka.producer import produce_event
+                        from oideachais.kafka.producer import produce_event
 
                         await produce_event(
                             topic="edu.duchas.pages",

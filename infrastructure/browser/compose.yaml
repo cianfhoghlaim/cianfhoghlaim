@@ -278,7 +278,7 @@ services:
     environment:
       OPENCODE_GO_API: ${OPENCODE_GO_API:-}
       OPENCODE_BASE_URL: https://opencode.ai/zen/go/v1
-      PROXY_DEFAULT_MODEL: deepseek-v4-pro
+      PROXY_DEFAULT_MODEL: ${PROXY_DEFAULT_MODEL:-deepseek-v4-flash}
       PROXY_PORT: "4005"
       PROXY_HOST: "0.0.0.0"
     healthcheck:
