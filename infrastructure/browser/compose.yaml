@@ -43,7 +43,10 @@ x-llm-env: &llm-env
   ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
   ZAI_API_KEY: ${ZAI_API_KEY:-}
   GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+  OPENCODE_GO_API: ${OPENCODE_GO_API:-}
+  MODEL_API_KEY: ${OPENCODE_GO_API:-${OPENAI_API_KEY:-}}
   LLM_PROVIDER: ${LLM_PROVIDER:-anthropic}
+  OPENAI_BASE_URL: http://stagehand-proxy:4005/v1
 
 services:
   # ===========================================================================
@@ -61,6 +64,10 @@ services:
     init: true
     expose:
       - "9222"
+      - "9223"
+    ports:
+      - "9222:9222"
+      - "9223:9223"
     environment:
       DISPLAY: ":99"
       CHROME_FLAGS: "--disable-gpu --no-sandbox --disable-dev-shm-usage"
@@ -205,50 +212,6 @@ services:
       - browser-net
 
   # ===========================================================================
-  # STAGEHAND LOCAL - Operator Agent (AI-powered interactions)
-  # ===========================================================================
-  stagehand-local:
-    build:
-      context: ./stagehand-server
-      dockerfile: Dockerfile
-    container_name: browser-stagehand
-    restart: unless-stopped
-    ports:
-      - "${STAGEHAND_PORT:-3100}:3100"
-    environment:
-      PORT: "3100"
-      HEADLESS: "${STAGEHAND_HEADLESS:-true}"
-      MAX_SESSIONS: "${STAGEHAND_MAX_SESSIONS:-10}"
-      SESSION_TTL_MS: "${STAGEHAND_SESSION_TTL:-300000}"
-      # LLM Models
-      DEFAULT_MODEL: "${STAGEHAND_MODEL:-glm-4.6}"
-      VISION_MODEL: "${STAGEHAND_VISION_MODEL:-glm-4.6v}"
-      AGENT_MODEL: "${STAGEHAND_AGENT_MODEL:-google/gemini-3-flash-preview}"
-      # LLM API Keys
-      <<: *llm-env
-      # Browserbase fallback
-      BROWSERBASE_API_KEY: ${BROWSERBASE_API_KEY:-}
-      BROWSERBASE_PROJECT_ID: ${BROWSERBASE_PROJECT_ID:-}
-    cap_add:
-      - SYS_ADMIN
-    security_opt:
-      - seccomp:unconfined
-    shm_size: '2gb'
-    healthcheck:
-      test: ["CMD", "curl", "-sf", "http://localhost:3100/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 4G
-    networks:
-      - browser-net
-
-  # ===========================================================================
   # API - FastAPI Backend (Unified browser automation API)
   # ===========================================================================
   api:
@@ -284,8 +247,6 @@ services:
         condition: service_healthy
       crawl4ai:
         condition: service_healthy
-      stagehand-local:
-        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-sf", "http://localhost:8000/health"]
       interval: 10s
@@ -301,8 +262,51 @@ services:
       - browser-net
 
   # ===========================================================================
-  # MCP SERVER - Model Context Protocol exposure
+  # STAGEHAND PROXY - Translates OpenAI Responses API → Chat Completions
   # ===========================================================================
+  # Stagehand V3's SEA binary uses @ai-sdk/openai's OpenAIResponsesLanguageModel
+  # which sends requests to /v1/responses. OpenCode Go only supports
+  # /v1/chat/completions. This proxy converts between the two formats.
+  stagehand-proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile.proxy
+    container_name: browser-stagehand-proxy
+    restart: unless-stopped
+    ports:
+      - "4005:4005"
+    environment:
+      OPENCODE_GO_API: ${OPENCODE_GO_API:-}
+      OPENCODE_BASE_URL: https://opencode.ai/zen/go/v1
+      PROXY_DEFAULT_MODEL: deepseek-v4-pro
+      PROXY_PORT: "4005"
+      PROXY_HOST: "0.0.0.0"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:4005/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - browser-net
+
+  # ===========================================================================
+  # LITELLM - Model Proxy for Stagehand
+  # ===========================================================================
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: browser-litellm
+    restart: unless-stopped
+    ports:
+      - "4001:4000"
+    environment:
+      OPENCODE_GO_API: ${OPENCODE_GO_API:-}
+      LITELLM_MASTER_KEY: sk-1234
+    volumes:
+      - ./litellm_config.yaml:/app/config.yaml:ro
+    command: [ "--config", "/app/config.yaml", "--port", "4000" ]
+    networks:
+      - browser-net
   mcp-server:
     build:
       context: .

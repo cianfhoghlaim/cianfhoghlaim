@@ -1,0 +1,15 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY stagehand_proxy.py .
+COPY pyproject.toml .
+
+RUN pip install --no-cache-dir httpx fastapi uvicorn
+
+EXPOSE 4005
+
+HEALTHCHECK --interval=10s --timeout=5s --retries=3 \
+  CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:4005/health')"]
+
+CMD ["python", "stagehand_proxy.py"]

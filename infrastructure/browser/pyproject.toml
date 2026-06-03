@@ -9,6 +9,9 @@ dependencies = [
     "aiohttp>=3.9.0",
     "websockets>=12.0",
 
+    # Stagehand Official Python SDK
+    "stagehand[aiohttp]>=3.7.0",
+
     # Data validation
     "pydantic>=2.5.0",
     "pydantic-settings>=2.1.0",
