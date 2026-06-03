@@ -2,17 +2,14 @@
 # FALKORDB - Pangolin Blueprint
 # =============================================================================
 
-public-resources:
+private-resources:
   falkordb:
     name: "FalkorDB Browser"
     full-domain: "falkordb.cianfhoghlaim.ie"
-    protocol: "http"
-    auth:
-      sso-enabled: true
-      sso-roles:
-        - Member
-    targets:
-      - site: "arm1-oci"
-        hostname: "falkordb"
-        method: "http"
-        port: 3000
+    mode: http
+    destination-port: 3000
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

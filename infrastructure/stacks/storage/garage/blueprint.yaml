@@ -1,8 +1,8 @@
 # =============================================================================
 # GARAGE - Pangolin Blueprint
 # =============================================================================
-# Note: S3 API endpoint is not SSO-protected for programmatic access.
-# Web UI is SSO-protected.
+# Note: S3 API endpoint stays public for programmatic access.
+# Web UI is private (zero-trust via Pangolin).
 # =============================================================================
 
 public-resources:
@@ -16,16 +16,14 @@ public-resources:
         method: "http"
         port: 3900
 
+private-resources:
   garage-web:
     name: "Garage Web"
     full-domain: "garage.cianfhoghlaim.ie"
-    protocol: "http"
-    auth:
-      sso-enabled: true
-      sso-roles:
-        - Member
-    targets:
-      - site: "arm1-oci"
-        hostname: "garage"
-        method: "http"
-        port: 3903
+    mode: http
+    destination-port: 3903
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

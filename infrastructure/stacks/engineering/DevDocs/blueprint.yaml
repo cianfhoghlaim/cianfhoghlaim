@@ -1,10 +1,11 @@
-public-resources:
+private-resources:
   DevDocs:
     name: "Devdocs"
     full-domain: "DevDocs.cianfhoghlaim.ie"
-    protocol: "http"
-    targets:
-      - site: "arm1-oci"
-        hostname: "DevDocs-main"
-        method: "http"
-        port: 8080
+    mode: http
+    destination-port: 8080
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

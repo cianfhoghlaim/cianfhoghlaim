@@ -3,7 +3,9 @@
 services:
   lakekeeper:
     labels:
-      - "pangolin.resource.name=Lakekeeper"
-      - "pangolin.resource.domain=lakekeeper.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://lakekeeper:8181"
-      - "pangolin.resource.middlewares=tinyauth"
+      - "pangolin.private-resources.lakekeeper.name=Lakekeeper"
+      - "pangolin.private-resources.lakekeeper.mode=http"
+      - "pangolin.private-resources.lakekeeper.destination-port=8181"
+      - "pangolin.private-resources.lakekeeper.protocol=http"
+      - "pangolin.private-resources.lakekeeper.roles[0]=Member"
+      - "pangolin.private-resources.lakekeeper.full-domain=lakekeeper.cianfhoghlaim.ie"

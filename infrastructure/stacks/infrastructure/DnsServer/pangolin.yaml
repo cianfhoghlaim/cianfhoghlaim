@@ -1,8 +1,10 @@
 services:
   main-service:
     labels:
-      - "pangolin.public-resources.DnsServer.name=Dnsserver"
-      - "pangolin.public-resources.DnsServer.full-domain=DnsServer.cianfhoghlaim.ie"
-      - "pangolin.public-resources.DnsServer.protocol=http"
-      - "pangolin.public-resources.DnsServer.targets[0].method=http"
-      - "pangolin.public-resources.DnsServer.targets[0].port=8080"
+      - "pangolin.private-resources.DnsServer.name=Dnsserver"
+      - "pangolin.private-resources.DnsServer.mode=http"
+      - "pangolin.private-resources.DnsServer.destination-port=8080"
+      - "pangolin.private-resources.DnsServer.protocol=http"
+      - "pangolin.private-resources.DnsServer.roles[0]=Member"
+
+      - "pangolin.private-resources.DnsServer.full-domain=DnsServer.cianfhoghlaim.ie"

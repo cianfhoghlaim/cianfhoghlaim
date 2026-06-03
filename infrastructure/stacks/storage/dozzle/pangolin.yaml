@@ -1,9 +1,10 @@
 # Pangolin auto-discovery labels for Dozzle
 # Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
+# NOTE: Dozzle is public (debug/log viewer) with SSO
 services:
   dozzle:
     labels:
-      - "pangolin.resource.name=Dozzle"
-      - "pangolin.resource.domain=dozzle.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://dozzle:8080"
-      - "pangolin.resource.middlewares=tinyauth"
+      - "pangolin.public-resources.dozzle.name=Dozzle"
+      - "pangolin.public-resources.dozzle.full-domain=dozzle.cianfhoghlaim.ie"
+      - "pangolin.public-resources.dozzle.protocol=http"
+      - "pangolin.public-resources.dozzle.target=http://dozzle:8080"

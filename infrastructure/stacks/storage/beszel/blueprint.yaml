@@ -2,17 +2,14 @@
 # BESZEL - Pangolin Blueprint
 # =============================================================================
 
-public-resources:
+private-resources:
   beszel:
     name: "Beszel"
     full-domain: "beszel.cianfhoghlaim.ie"
-    protocol: "http"
-    auth:
-      sso-enabled: true
-      sso-roles:
-        - Member
-    targets:
-      - site: "arm1-oci"
-        hostname: "beszel-hub"
-        method: "http"
-        port: 8090
+    mode: http
+    destination-port: 8090
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

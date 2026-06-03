@@ -1,8 +1,9 @@
 services:
   main-service:
     labels:
-      - "pangolin.public-resources.mailcow-dockerized.name=Mailcow-dockerized"
-      - "pangolin.public-resources.mailcow-dockerized.full-domain=mailcow-dockerized.cianfhoghlaim.ie"
-      - "pangolin.public-resources.mailcow-dockerized.protocol=http"
-      - "pangolin.public-resources.mailcow-dockerized.targets[0].method=http"
-      - "pangolin.public-resources.mailcow-dockerized.targets[0].port=8080"
+      - "pangolin.private-resources.mailcow-dockerized.name=Mailcow-dockerized"
+      - "pangolin.private-resources.mailcow-dockerized.mode=http"
+      - "pangolin.private-resources.mailcow-dockerized.full-domain=mailcow-dockerized.cianfhoghlaim.ie"
+      - "pangolin.private-resources.mailcow-dockerized.destination-port=8080"
+      - "pangolin.private-resources.mailcow-dockerized.protocol=http"
+      - "pangolin.private-resources.mailcow-dockerized.roles[0]=Member"

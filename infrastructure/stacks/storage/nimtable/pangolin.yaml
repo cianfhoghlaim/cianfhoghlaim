@@ -3,7 +3,9 @@
 services:
   nimtable:
     labels:
-      - "pangolin.resource.name=Nimtable"
-      - "pangolin.resource.domain=nimtable.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://nimtable:3000"
-      - "pangolin.resource.middlewares=tinyauth"
+      - "pangolin.private-resources.nimtable.name=Nimtable"
+      - "pangolin.private-resources.nimtable.mode=http"
+      - "pangolin.private-resources.nimtable.destination-port=3000"
+      - "pangolin.private-resources.nimtable.protocol=http"
+      - "pangolin.private-resources.nimtable.roles[0]=Member"
+      - "pangolin.private-resources.nimtable.full-domain=nimtable.cianfhoghlaim.ie"

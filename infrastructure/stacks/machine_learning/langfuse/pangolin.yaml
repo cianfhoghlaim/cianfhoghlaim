@@ -1,9 +1,11 @@
+# Pangolin auto-discovery labels for Langfuse
+# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
 services:
   langfuse-web:
     labels:
-      - "pangolin.public-resources.langfuse.name=Langfuse"
-      - "pangolin.public-resources.langfuse.full-domain=langfuse.cianfhoghlaim.ie"
-      - "pangolin.public-resources.langfuse.protocol=http"
-      - "pangolin.public-resources.langfuse.targets[0].method=http"
-      - "pangolin.public-resources.langfuse.targets[0].port=3000"
-      - "pangolin.resource.middlewares=tinyauth"
+      - "pangolin.private-resources.langfuse.name=Langfuse"
+      - "pangolin.private-resources.langfuse.mode=http"
+      - "pangolin.private-resources.langfuse.destination-port=8080"
+      - "pangolin.private-resources.langfuse.protocol=http"
+      - "pangolin.private-resources.langfuse.roles[0]=Member"
+      - "pangolin.private-resources.langfuse.full-domain=langfuse.cianfhoghlaim.ie"

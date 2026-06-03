@@ -3,7 +3,9 @@
 services:
   olake-ui:
     labels:
-      - "pangolin.resource.name=OLake"
-      - "pangolin.resource.domain=olake.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://olake-ui:8000"
-      - "pangolin.resource.middlewares=tinyauth"
+      - "pangolin.private-resources.olake-ui.name=OLake UI"
+      - "pangolin.private-resources.olake-ui.mode=http"
+      - "pangolin.private-resources.olake-ui.destination-port=8000"
+      - "pangolin.private-resources.olake-ui.protocol=http"
+      - "pangolin.private-resources.olake-ui.roles[0]=Member"
+      - "pangolin.private-resources.olake-ui.full-domain=olake.cianfhoghlaim.ie"

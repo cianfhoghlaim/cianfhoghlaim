@@ -1,13 +1,20 @@
 # Pangolin auto-discovery labels for Garage S3 Storage
 # Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
-# NOTE: Uses TinyAuth middleware - Garage has no built-in web auth
+# NOTE: S3 API is public for programmatic access; Web UI is private (TinyAuth)
 services:
   garage:
     labels:
-      - "pangolin.resource.name=Garage S3"
-      - "pangolin.resource.domain=garage.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://garage:3904"
-      - "pangolin.resource.middlewares=tinyauth"
+      - "pangolin.public-resources.garage-s3.name=Garage S3 API"
+      - "pangolin.public-resources.garage-s3.full-domain=s3.cianfhoghlaim.ie"
+      - "pangolin.public-resources.garage-s3.protocol=http"
+      - "pangolin.public-resources.garage-s3.target=http://garage:3900"
+
+      - "pangolin.private-resources.garage-web.name=Garage Web"
+      - "pangolin.private-resources.garage-web.mode=http"
+      - "pangolin.private-resources.garage-web.destination-port=3903"
+      - "pangolin.private-resources.garage-web.protocol=http"
+      - "pangolin.private-resources.garage-web.roles[0]=Member"
+      - "pangolin.private-resources.garage-web.full-domain=garage.cianfhoghlaim.ie"
     networks:
       - pangolin
 

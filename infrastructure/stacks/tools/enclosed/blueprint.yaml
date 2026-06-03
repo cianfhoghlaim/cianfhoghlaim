@@ -1,10 +1,11 @@
-public-resources:
+private-resources:
   enclosed:
     name: "Enclosed"
+    mode: http
     full-domain: "enclosed.cianfhoghlaim.ie"
-    protocol: "http"
-    targets:
-      - site: "arm1-oci"
-        hostname: "enclosed-main"
-        method: "http"
-        port: 8080
+    destination-port: 8080
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

@@ -3,7 +3,16 @@
 services:
   cognee:
     labels:
-      - "pangolin.resource.name=Cognee"
-      - "pangolin.resource.domain=cognee.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://cognee:8000"
-      - "pangolin.resource.middlewares=tinyauth"
+      - "pangolin.private-resources.cognee.name=Cognee"
+      - "pangolin.private-resources.cognee.mode=http"
+      - "pangolin.private-resources.cognee.destination-port=8000"
+      - "pangolin.private-resources.cognee.protocol=http"
+      - "pangolin.private-resources.cognee.roles[0]=Member"
+      - "pangolin.private-resources.cognee.full-domain=cognee.cianfhoghlaim.ie"
+
+      - "pangolin.private-resources.cognee-mcp.name=Cognee MCP"
+      - "pangolin.private-resources.cognee-mcp.mode=http"
+      - "pangolin.private-resources.cognee-mcp.destination-port=8000"
+      - "pangolin.private-resources.cognee-mcp.protocol=http"
+      - "pangolin.private-resources.cognee-mcp.roles[0]=Member"
+      - "pangolin.private-resources.cognee-mcp.full-domain=cognee-mcp.cianfhoghlaim.ie"

@@ -1,0 +1,50 @@
+# =============================================================================
+# KAFKA - Pangolin Blueprint (Private Resources)
+# =============================================================================
+# Kafka UI and REST APIs are private HTTP resources (zero-trust access).
+# Kafka broker uses TCP mode for remote producers/consumers.
+# =============================================================================
+
+private-resources:
+  kafka-ui:
+    name: "Kafka UI"
+    mode: http
+    full-domain: "kafka.cianfhoghlaim.ie"
+    destination-port: 8080
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member
+
+  schema-registry:
+    name: "Schema Registry"
+    mode: http
+    full-domain: "schema-registry.cianfhoghlaim.ie"
+    destination-port: 8081
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member
+
+  kafka-connect:
+    name: "Kafka Connect"
+    mode: http
+    full-domain: "kafka-connect.cianfhoghlaim.ie"
+    destination-port: 8083
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member
+
+  kafka-broker:
+    name: "Kafka Broker"
+    mode: host
+    destination: "127.0.0.1"
+    tcp-ports: "9094"
+    sites:
+      - arm1-oci
+    roles:
+      - Member
