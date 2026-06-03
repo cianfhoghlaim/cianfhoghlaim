@@ -3,7 +3,9 @@
 services:
   falkordb:
     labels:
-      - "pangolin.resource.name=FalkorDB"
-      - "pangolin.resource.domain=falkordb.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://falkordb:3000"
-      - "pangolin.resource.middlewares=tinyauth"
+      - "pangolin.private-resources.falkordb.name=FalkorDB Browser"
+      - "pangolin.private-resources.falkordb.mode=http"
+      - "pangolin.private-resources.falkordb.destination-port=3000"
+      - "pangolin.private-resources.falkordb.protocol=http"
+      - "pangolin.private-resources.falkordb.roles[0]=Member"
+      - "pangolin.private-resources.falkordb.full-domain=falkordb.cianfhoghlaim.ie"

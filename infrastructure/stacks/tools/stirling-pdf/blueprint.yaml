@@ -1,0 +1,11 @@
+private-resources:
+  stirling-pdf:
+    name: "Stirling PDF"
+    mode: http
+    full-domain: "stirling-pdf.cianfhoghlaim.ie"
+    destination-port: 8080
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

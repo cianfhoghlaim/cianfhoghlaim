@@ -3,7 +3,9 @@
 services:
   qdrant:
     labels:
-      - "pangolin.resource.name=Qdrant"
-      - "pangolin.resource.domain=qdrant.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://qdrant:6333"
-      - "pangolin.resource.middlewares=tinyauth"
+      - "pangolin.private-resources.qdrant.name=Qdrant"
+      - "pangolin.private-resources.qdrant.mode=http"
+      - "pangolin.private-resources.qdrant.destination-port=6333"
+      - "pangolin.private-resources.qdrant.protocol=http"
+      - "pangolin.private-resources.qdrant.roles[0]=Member"
+      - "pangolin.private-resources.qdrant.full-domain=qdrant.cianfhoghlaim.ie"

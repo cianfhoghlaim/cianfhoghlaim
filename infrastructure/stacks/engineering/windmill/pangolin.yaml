@@ -1,8 +1,9 @@
 services:
   main-service:
     labels:
-      - "pangolin.public-resources.windmill.name=Windmill"
-      - "pangolin.public-resources.windmill.full-domain=windmill.cianfhoghlaim.ie"
-      - "pangolin.public-resources.windmill.protocol=http"
-      - "pangolin.public-resources.windmill.targets[0].method=http"
-      - "pangolin.public-resources.windmill.targets[0].port=8080"
+      - "pangolin.private-resources.windmill.name=Windmill"
+      - "pangolin.private-resources.windmill.mode=http"
+      - "pangolin.private-resources.windmill.full-domain=windmill.cianfhoghlaim.ie"
+      - "pangolin.private-resources.windmill.destination-port=8080"
+      - "pangolin.private-resources.windmill.protocol=http"
+      - "pangolin.private-resources.windmill.roles[0]=Member"

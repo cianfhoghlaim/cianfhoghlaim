@@ -17,67 +17,82 @@ services:
   # ---------------------------------------------------------------------------
   api:
     labels:
-      - "pangolin.public-resources.browser-api.name=Browser API"
-      - "pangolin.public-resources.browser-api.full-domain=browser.cianfhoghlaim.ie"
-      - "pangolin.public-resources.browser-api.protocol=https"
-      - "pangolin.public-resources.browser-api.targets[0].method=http"
-      - "pangolin.public-resources.browser-api.targets[0].port=8000"
+      - "pangolin.private-resources.browser-api.name=Browser API"
+      - "pangolin.private-resources.browser-api.mode=http"
+      - "pangolin.private-resources.browser-api.destination-port=8000"
+      - "pangolin.private-resources.browser-api.protocol=http"
+      - "pangolin.private-resources.browser-api.roles[0]=Member"
+
+      - "pangolin.private-resources.browser-api.full-domain=browser.cianfhoghlaim.ie"
+      - "pangolin.private-resources.browser-api.protocol=https"
       # SSO authentication required
-      - "pangolin.public-resources.browser-api.sso.idp-id=pocketid"
-      - "pangolin.public-resources.browser-api.sso.roles[0]=Member"
+      - "pangolin.private-resources.browser-api.sso.idp-id=pocketid"
+      - "pangolin.private-resources.browser-api.sso.roles[0]=Member"
 
   # ---------------------------------------------------------------------------
   # STAGEHAND LOCAL - AI-powered browser interactions
   # ---------------------------------------------------------------------------
   stagehand-local:
     labels:
-      - "pangolin.public-resources.stagehand.name=Stagehand"
-      - "pangolin.public-resources.stagehand.full-domain=stagehand.cianfhoghlaim.ie"
-      - "pangolin.public-resources.stagehand.protocol=https"
-      - "pangolin.public-resources.stagehand.targets[0].method=http"
-      - "pangolin.public-resources.stagehand.targets[0].port=3100"
+      - "pangolin.private-resources.stagehand.name=Stagehand"
+      - "pangolin.private-resources.stagehand.mode=http"
+      - "pangolin.private-resources.stagehand.destination-port=3100"
+      - "pangolin.private-resources.stagehand.protocol=http"
+      - "pangolin.private-resources.stagehand.roles[0]=Member"
+
+      - "pangolin.private-resources.stagehand.full-domain=stagehand.cianfhoghlaim.ie"
+      - "pangolin.private-resources.stagehand.protocol=https"
       # SSO authentication required
-      - "pangolin.public-resources.stagehand.sso.idp-id=pocketid"
-      - "pangolin.public-resources.stagehand.sso.roles[0]=Member"
+      - "pangolin.private-resources.stagehand.sso.idp-id=pocketid"
+      - "pangolin.private-resources.stagehand.sso.roles[0]=Member"
 
   # ---------------------------------------------------------------------------
   # SKYVERN - Vision-based browser automation
   # ---------------------------------------------------------------------------
   skyvern:
     labels:
-      - "pangolin.public-resources.skyvern.name=Skyvern"
-      - "pangolin.public-resources.skyvern.full-domain=skyvern.cianfhoghlaim.ie"
-      - "pangolin.public-resources.skyvern.protocol=https"
-      - "pangolin.public-resources.skyvern.targets[0].method=http"
-      - "pangolin.public-resources.skyvern.targets[0].port=8000"
+      - "pangolin.private-resources.skyvern.name=Skyvern"
+      - "pangolin.private-resources.skyvern.mode=http"
+      - "pangolin.private-resources.skyvern.destination-port=8000"
+      - "pangolin.private-resources.skyvern.protocol=http"
+      - "pangolin.private-resources.skyvern.roles[0]=Member"
+
+      - "pangolin.private-resources.skyvern.full-domain=skyvern.cianfhoghlaim.ie"
+      - "pangolin.private-resources.skyvern.protocol=https"
       # SSO authentication required
-      - "pangolin.public-resources.skyvern.sso.idp-id=pocketid"
-      - "pangolin.public-resources.skyvern.sso.roles[0]=Member"
+      - "pangolin.private-resources.skyvern.sso.idp-id=pocketid"
+      - "pangolin.private-resources.skyvern.sso.roles[0]=Member"
 
   # ---------------------------------------------------------------------------
   # SKYVERN UI - Visual task management interface
   # ---------------------------------------------------------------------------
   skyvern-ui:
     labels:
-      - "pangolin.public-resources.skyvern-ui.name=Skyvern UI"
-      - "pangolin.public-resources.skyvern-ui.full-domain=skyvern-ui.cianfhoghlaim.ie"
-      - "pangolin.public-resources.skyvern-ui.protocol=https"
-      - "pangolin.public-resources.skyvern-ui.targets[0].method=http"
-      - "pangolin.public-resources.skyvern-ui.targets[0].port=8080"
+      - "pangolin.private-resources.skyvern-ui.name=Skyvern UI"
+      - "pangolin.private-resources.skyvern-ui.mode=http"
+      - "pangolin.private-resources.skyvern-ui.destination-port=8080"
+      - "pangolin.private-resources.skyvern-ui.protocol=http"
+      - "pangolin.private-resources.skyvern-ui.roles[0]=Member"
+
+      - "pangolin.private-resources.skyvern-ui.full-domain=skyvern-ui.cianfhoghlaim.ie"
+      - "pangolin.private-resources.skyvern-ui.protocol=https"
       # SSO authentication required
-      - "pangolin.public-resources.skyvern-ui.sso.idp-id=pocketid"
-      - "pangolin.public-resources.skyvern-ui.sso.roles[0]=Member"
+      - "pangolin.private-resources.skyvern-ui.sso.idp-id=pocketid"
+      - "pangolin.private-resources.skyvern-ui.sso.roles[0]=Member"
 
   # ---------------------------------------------------------------------------
   # GARAGE - S3-compatible storage (optional public access)
   # ---------------------------------------------------------------------------
   garage:
     labels:
-      - "pangolin.public-resources.garage.name=Browser Storage"
-      - "pangolin.public-resources.garage.full-domain=browser-storage.cianfhoghlaim.ie"
-      - "pangolin.public-resources.garage.protocol=https"
-      - "pangolin.public-resources.garage.targets[0].method=http"
-      - "pangolin.public-resources.garage.targets[0].port=3902"
+      - "pangolin.private-resources.garage.name=Browser Storage"
+      - "pangolin.private-resources.garage.mode=http"
+      - "pangolin.private-resources.garage.destination-port=3902"
+      - "pangolin.private-resources.garage.protocol=http"
+      - "pangolin.private-resources.garage.roles[0]=Member"
+
+      - "pangolin.private-resources.garage.full-domain=browser-storage.cianfhoghlaim.ie"
+      - "pangolin.private-resources.garage.protocol=https"
       # SSO authentication required for admin access
-      - "pangolin.public-resources.garage.sso.idp-id=pocketid"
-      - "pangolin.public-resources.garage.sso.roles[0]=Admin"
+      - "pangolin.private-resources.garage.sso.idp-id=pocketid"
+      - "pangolin.private-resources.garage.sso.roles[0]=Admin"

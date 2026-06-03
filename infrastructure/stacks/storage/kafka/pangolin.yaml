@@ -1,33 +1,42 @@
 # =============================================================================
-# KAFKA PANGOLIN TUNNEL CONFIGURATION
+# KAFKA - Pangolin Private Resource Labels
 # =============================================================================
-# Exposes Kafka services via Pangolin secure tunnel
-# =============================================================================
+# Kafka UI, Schema Registry, and Connect API are private (zero-trust).
+# Kafka broker uses TCP mode for remote producers/consumers.
+# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
 
-http:
-  # Kafka UI - Web management interface
-  - name: kafka-ui
-    subdomain: kafka
-    target: kafka-ui
-    port: 8080
-    setHeaders:
-      X-Frame-Options: SAMEORIGIN
+services:
+  kafka-ui:
+    labels:
+      - "pangolin.private-resources.kafka-ui.name=Kafka UI"
+      - "pangolin.private-resources.kafka-ui.mode=http"
+      - "pangolin.private-resources.kafka-ui.full-domain=kafka.cianfhoghlaim.ie"
+      - "pangolin.private-resources.kafka-ui.destination-port=8080"
+      - "pangolin.private-resources.kafka-ui.protocol=http"
+      - "pangolin.private-resources.kafka-ui.roles[0]=Member"
 
-  # Schema Registry API
-  - name: schema-registry
-    subdomain: schema-registry
-    target: schema-registry
-    port: 8081
+  schema-registry:
+    labels:
+      - "pangolin.private-resources.schema-registry.name=Schema Registry"
+      - "pangolin.private-resources.schema-registry.mode=http"
+      - "pangolin.private-resources.schema-registry.full-domain=schema-registry.cianfhoghlaim.ie"
+      - "pangolin.private-resources.schema-registry.destination-port=8081"
+      - "pangolin.private-resources.schema-registry.protocol=http"
+      - "pangolin.private-resources.schema-registry.roles[0]=Member"
 
-  # Kafka Connect REST API
-  - name: kafka-connect
-    subdomain: kafka-connect
-    target: kafka-connect
-    port: 8083
+  kafka-connect:
+    labels:
+      - "pangolin.private-resources.kafka-connect.name=Kafka Connect"
+      - "pangolin.private-resources.kafka-connect.mode=http"
+      - "pangolin.private-resources.kafka-connect.full-domain=kafka-connect.cianfhoghlaim.ie"
+      - "pangolin.private-resources.kafka-connect.destination-port=8083"
+      - "pangolin.private-resources.kafka-connect.protocol=http"
+      - "pangolin.private-resources.kafka-connect.roles[0]=Member"
 
-tcp:
-  # Kafka broker external port (for remote producers/consumers)
-  - name: kafka-broker
-    port: 9094
-    target: kafka
-    targetPort: 9094
+  kafka:
+    labels:
+      - "pangolin.private-resources.kafka-broker.name=Kafka Broker"
+      - "pangolin.private-resources.kafka-broker.mode=host"
+      - "pangolin.private-resources.kafka-broker.destination=127.0.0.1"
+      - "pangolin.private-resources.kafka-broker.tcp-ports=9094"
+      - "pangolin.private-resources.kafka-broker.roles[0]=Member"

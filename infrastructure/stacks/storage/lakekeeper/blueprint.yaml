@@ -2,17 +2,14 @@
 # LAKEKEEPER - Pangolin Blueprint
 # =============================================================================
 
-public-resources:
+private-resources:
   lakekeeper:
     name: "Lakekeeper"
     full-domain: "lakekeeper.cianfhoghlaim.ie"
-    protocol: "http"
-    auth:
-      sso-enabled: true
-      sso-roles:
-        - Member
-    targets:
-      - site: "bunchloch"
-        hostname: "lakekeeper"
-        method: "http"
-        port: 8181
+    mode: http
+    destination-port: 8181
+    protocol: http
+    sites:
+      - bunchloch
+    roles:
+      - Member

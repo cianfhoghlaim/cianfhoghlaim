@@ -1,10 +1,11 @@
-public-resources:
+private-resources:
   langfuse:
     name: "Langfuse"
     full-domain: "langfuse.cianfhoghlaim.ie"
-    protocol: "http"
-    targets:
-      - site: "arm1-oci"
-        hostname: "langfuse-main"
-        method: "http"
-        port: 8080
+    mode: http
+    destination-port: 8080
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

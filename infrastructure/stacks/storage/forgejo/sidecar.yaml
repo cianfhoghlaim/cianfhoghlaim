@@ -16,15 +16,10 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
-    read_only: true
     command:
       - "--provider=infisical"
       - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
       - "--infisical-client-secret=file:/run/secrets/infisical_secret"
-      - "--infisical-url=$${INFISICAL_URL:-http://host.docker.internal:8081}"
-      - "--infisical-default-environment=$${INFISICAL_ENVIRONMENT:-dev}"
-      - "--infisical-default-project-id=$${INFISICAL_PROJECT_ID:-project-id}
-      - "--connect.host=${
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:

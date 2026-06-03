@@ -3,7 +3,9 @@
 services:
   mlflow:
     labels:
-      - "pangolin.resource.name=MLflow"
-      - "pangolin.resource.domain=mlflow.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://mlflow-server:5000"
-      - "pangolin.resource.middlewares=tinyauth"
+      - "pangolin.private-resources.mlflow.name=MLflow"
+      - "pangolin.private-resources.mlflow.mode=http"
+      - "pangolin.private-resources.mlflow.destination-port=5000"
+      - "pangolin.private-resources.mlflow.protocol=http"
+      - "pangolin.private-resources.mlflow.roles[0]=Member"
+      - "pangolin.private-resources.mlflow.full-domain=mlflow.cianfhoghlaim.ie"

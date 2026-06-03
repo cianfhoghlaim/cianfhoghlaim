@@ -3,8 +3,8 @@
 # =============================================================================
 # Unified Data Lakehouse: Garage S3 + Lakekeeper + Lance + DuckLake
 #
-# Note: S3 API endpoints are not SSO-protected for programmatic access.
-# Admin UI is SSO-protected.
+# Note: S3 API endpoints stay PUBLIC for programmatic access.
+# Admin/UI resources are PRIVATE (zero-trust via Pangolin).
 #
 # DNS REQUIREMENTS:
 #   - s3.lakehouse.cianfhoghlaim.ie       -> Pangolin ingress
@@ -16,37 +16,7 @@
 
 public-resources:
   # ---------------------------------------------------------------------------
-  # Lakekeeper REST Catalog API
-  # ---------------------------------------------------------------------------
-  lakekeeper:
-    name: "Lakekeeper REST Catalog"
-    full-domain: "lakekeeper.cianfhoghlaim.ie"
-    protocol: "http"
-    auth:
-      sso-enabled: true
-      sso-roles:
-        - Member
-    targets:
-      - site: "bunchloch"
-        hostname: "lakehouse-lakekeeper"
-        method: "http"
-        port: 8181
-
-  # ---------------------------------------------------------------------------
-  # Lance Namespace Sidecar API
-  # ---------------------------------------------------------------------------
-  lance-api:
-    name: "Lance Namespace API"
-    full-domain: "lance-api.cianfhoghlaim.ie"
-    protocol: "http"
-    targets:
-      - site: "bunchloch"
-        hostname: "lakehouse-lance-namespace"
-        method: "http"
-        port: 8182
-
-  # ---------------------------------------------------------------------------
-  # Garage S3 API (Virtual-Host Style) - No SSO for programmatic access
+  # Garage S3 API (Virtual-Host Style) - Stays public for programmatic access
   # ---------------------------------------------------------------------------
   lakehouse-s3:
     name: "Lakehouse S3 API"
@@ -88,19 +58,45 @@ public-resources:
         method: "http"
         port: 3900
 
+private-resources:
   # ---------------------------------------------------------------------------
-  # Garage Web/Admin UI - SSO Protected
+  # Lakekeeper REST Catalog API
+  # ---------------------------------------------------------------------------
+  lakekeeper:
+    name: "Lakekeeper REST Catalog"
+    full-domain: "lakekeeper.cianfhoghlaim.ie"
+    mode: http
+    destination-port: 8181
+    protocol: http
+    sites:
+      - bunchloch
+    roles:
+      - Member
+
+  # ---------------------------------------------------------------------------
+  # Lance Namespace Sidecar API
+  # ---------------------------------------------------------------------------
+  lance-api:
+    name: "Lance Namespace API"
+    full-domain: "lance-api.cianfhoghlaim.ie"
+    mode: http
+    destination-port: 8182
+    protocol: http
+    sites:
+      - bunchloch
+    roles:
+      - Member
+
+  # ---------------------------------------------------------------------------
+  # Garage Web/Admin UI
   # ---------------------------------------------------------------------------
   lakehouse-admin:
     name: "Lakehouse Admin"
     full-domain: "lakehouse-admin.cianfhoghlaim.ie"
-    protocol: "http"
-    auth:
-      sso-enabled: true
-      sso-roles:
-        - Member
-    targets:
-      - site: "bunchloch"
-        hostname: "lakehouse-garage"
-        method: "http"
-        port: 3903
+    mode: http
+    destination-port: 3903
+    protocol: http
+    sites:
+      - bunchloch
+    roles:
+      - Member

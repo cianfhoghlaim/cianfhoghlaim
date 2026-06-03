@@ -1,8 +1,9 @@
 services:
   main-service:
     labels:
-      - "pangolin.public-resources.blinko.name=Blinko"
-      - "pangolin.public-resources.blinko.full-domain=blinko.cianfhoghlaim.ie"
-      - "pangolin.public-resources.blinko.protocol=http"
-      - "pangolin.public-resources.blinko.targets[0].method=http"
-      - "pangolin.public-resources.blinko.targets[0].port=8080"
+      - "pangolin.private-resources.blinko.name=Blinko"
+      - "pangolin.private-resources.blinko.mode=http"
+      - "pangolin.private-resources.blinko.full-domain=blinko.cianfhoghlaim.ie"
+      - "pangolin.private-resources.blinko.destination-port=8080"
+      - "pangolin.private-resources.blinko.protocol=http"
+      - "pangolin.private-resources.blinko.roles[0]=Member"

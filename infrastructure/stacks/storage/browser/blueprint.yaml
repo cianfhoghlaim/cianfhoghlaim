@@ -1,7 +1,7 @@
 # =============================================================================
 # BROWSER STACK - Pangolin Blueprint
 # =============================================================================
-# Defines public routing for Browser automation services via Pangolin/Newt.
+# Defines private routing for Browser automation services via Pangolin/Newt.
 #
 # Services exposed:
 #   - browser.cianfhoghlaim.ie     -> API (port 8000)
@@ -15,59 +15,47 @@
 #   Via sync script:  ./scripts/sync-blueprints.sh
 # =============================================================================
 
-public-resources:
+private-resources:
   browser-api:
     name: "Browser API"
     full-domain: "browser.cianfhoghlaim.ie"
-    protocol: "http"
-    auth:
-      sso-enabled: true
-      sso-roles:
-        - Member
-    targets:
-      - site: "arm1-oci"
-        hostname: "browser-api"
-        method: "http"
-        port: 8000
+    mode: http
+    destination-port: 8000
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member
 
   stagehand:
     name: "Stagehand"
     full-domain: "stagehand.cianfhoghlaim.ie"
-    protocol: "http"
-    auth:
-      sso-enabled: true
-      sso-roles:
-        - Member
-    targets:
-      - site: "arm1-oci"
-        hostname: "browser-stagehand"
-        method: "http"
-        port: 3100
+    mode: http
+    destination-port: 3100
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member
 
   skyvern:
     name: "Skyvern"
     full-domain: "skyvern.cianfhoghlaim.ie"
-    protocol: "http"
-    auth:
-      sso-enabled: true
-      sso-roles:
-        - Member
-    targets:
-      - site: "arm1-oci"
-        hostname: "browser-skyvern"
-        method: "http"
-        port: 8000
+    mode: http
+    destination-port: 8000
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member
 
   skyvern-ui:
     name: "Skyvern UI"
     full-domain: "skyvern-ui.cianfhoghlaim.ie"
-    protocol: "http"
-    auth:
-      sso-enabled: true
-      sso-roles:
-        - Member
-    targets:
-      - site: "arm1-oci"
-        hostname: "browser-skyvern-ui"
-        method: "http"
-        port: 8080
+    mode: http
+    destination-port: 8080
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member
