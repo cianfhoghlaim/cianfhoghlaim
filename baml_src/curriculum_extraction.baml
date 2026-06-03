@@ -680,3 +680,63 @@ test ExtractSkillsTest {
     curriculum_context "Junior Cycle Irish language curriculum focusing on communicative competence"
   }
 }
+
+// =============================================================================
+// Document Metadata Extraction
+// =============================================================================
+
+enum DocumentCategory {
+  SPECIFICATION           @description("Modern curriculum specifications")
+  SYLLABUS                @description("Older curriculum syllabi")
+  MEETING_MINUTES         @description("Curriculum development group meeting minutes")
+  ASSESSMENT_GUIDELINES   @description("Guidelines for CBAs or final assessments")
+  FRAMEWORK               @description("Overarching educational frameworks")
+  CONSULTATION_DOCUMENT   @description("Drafts or feedback on proposed changes")
+  EXAM_PAPER              @description("State examination papers")
+  MARKING_SCHEME          @description("State examination marking schemes")
+  EXAMINER_REPORT         @description("Chief examiner reports")
+  OTHER                   @description("Other documents")
+}
+
+class DocumentMetadata {
+  title string           @description("The contextual title, e.g. \"Leaving Certificate English Specification\"")
+  category DocumentCategory
+  subject_slug string?
+  cycle EducationLevel?   
+  year_effective int?    @description("Extracted from phrases like \"effect earlier than 2027\"")
+  year_examined int?     @description("Extracted from phrases like \"examination to 2028\"")
+  language string?       @description(\"en\" or \"ga\")
+  url string             @description("The exact URL to the PDF")
+}
+
+function ExtractAllPdfMetadata(
+  page_markdown: string,
+  pdf_urls: string[]
+) -> DocumentMetadata[] {
+  client Claude
+  prompt #"
+    You are an expert curriculum analyst specializing in Irish education.
+
+    Analyze the markdown context surrounding these PDF links to extract metadata.
+
+    PDF URLS TO ANALYZE:
+    {{ for url in pdf_urls }}
+    - {{ url }}
+    {{ endfor }}
+
+    PAGE MARKDOWN:
+    {{ page_markdown }}
+
+    Extract the following metadata for EACH PDF URL:
+    1. The exact URL matching one of the URLs provided.
+    2. A clear, descriptive title based on the link text or preceding heading.
+    3. The most appropriate category (Specification, Syllabus, Meeting Minutes, etc.).
+    4. The subject slug (e.g., "mathematics", "english", "history").
+    5. The education cycle (JUNIOR_CYCLE, SENIOR_CYCLE, etc.).
+    6. The year it becomes effective (if mentioned, e.g., "no earlier than September 2027" -> 2027).
+    7. The year it is examined (if mentioned, e.g., "examination to 2028" -> 2028).
+    8. The language ("en" for English, "ga" for Irish). Use context clues.
+
+    Return the structured extraction as {{ ctx.output_format }}.
+  "#
+}

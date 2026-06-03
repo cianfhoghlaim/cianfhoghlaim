@@ -44,7 +44,7 @@ dependencies = [
     "dagster>=1.9.0",
     "dagster-webserver>=1.9.0",
     "dagster-dlt>=0.25.0",
-    "dlt[duckdb]>=1.4.0",
+    "dlt[duckdb,hub]>=1.4.0",
     # Database
     "duckdb>=1.1.0",
     "lancedb>=0.15.0",
@@ -87,6 +87,8 @@ dependencies = [
     "sqlmesh[duckdb]>=0.228.1",
     "pdf2image>=1.17.0",
     "pillow>=12.2.0",
+    "dlthub>=0.22.1,<0.26",
+    "cocoindex-code[full]>=0.2.33",
 ]
 
 [project.optional-dependencies]

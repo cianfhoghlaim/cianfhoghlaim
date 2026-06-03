@@ -166,12 +166,16 @@ SEC_SUBJECT_MAPPING = {
 
 
 def _classify_material_type(url: str, title: str | None = None) -> ExamMaterialType:
-    """Classify exam material type from URL/title."""
+    """Classify exam material type from URL/title.
+
+    Handles both direct .pdf URLs and SEC obfuscated ?fp= URLs where
+    classification must rely on title/context rather than file path.
+    """
     text = f"{url} {title or ''}".lower()
 
-    if "marking" in text or "scheme" in text or "ms_" in text:
+    if "marking" in text or "scheme" in text or "ms_" in text or "marking_scheme" in text:
         return ExamMaterialType.MARKING_SCHEME
-    elif "examiner" in text or "report" in text or "cer_" in text:
+    elif "examiner" in text or "report" in text or "cer_" in text or "chief" in text:
         return ExamMaterialType.EXAMINER_REPORT
     elif "aural" in text or "audio" in text or "listening" in text:
         return ExamMaterialType.AURAL
@@ -365,9 +369,12 @@ async def scrape_exam_materials(
                 extraction_result = await backend.extract(
                     url="",
                     prompt="""
-                    Extract all PDF download links from the exam material results on this page.
+                    Extract all download links from the exam material results on this page.
+                    The site uses obfuscated ?fp= URLs like /exammaterialarchive/?fp=96.113...
+                    These ARE valid PDF download links — extract them.
+                    Also extract any direct .pdf links or /qvp/ paths.
                     For each link found, extract:
-                    - url: Full URL to the PDF file (possibly relative to examinations.ie)
+                    - url: Full URL (possibly relative to examinations.ie)
                     - title: Link text or description (e.g. "Higher Level Paper 1")
                     Return as a list of objects with url and title fields.
                     """,
@@ -416,8 +423,8 @@ async def scrape_exam_materials(
                     if not url:
                         continue
 
-                    # Accept both .pdf and other document URLs
-                    if not url.endswith(".pdf") and ".pdf" not in url:
+                    # Accept .pdf links, ?fp= obfuscated URLs, /qvp/ paths
+                    if not (".pdf" in url.lower() or "?fp=" in url or "/qvp/" in url.lower()):
                         continue
 
                     if not url.startswith("http"):
@@ -687,7 +694,7 @@ async def scrape_materials_batch(
                     ):
                         yield material
                 except Exception as e:
-                    logger.error(f"subject_failed: {subject}", error=str(e))
+                    logger.error(f"subject_failed: {subject}: {e}")
                     yield ExamMaterial(
                         subject=subject,
                         year=0,
@@ -782,9 +789,12 @@ async def _scrape_single_subject_session(
         extraction_result = await backend.extract(
             url="",
             prompt="""
-            Extract all PDF download links from the exam material results on this page.
+            Extract all download links from the exam material results on this page.
+            The site uses obfuscated ?fp= URLs like /exammaterialarchive/?fp=96.113...
+            These ARE valid PDF download links — extract them.
+            Also extract any direct .pdf links or /qvp/ paths.
             For each link found, extract:
-            - url: Full URL to the PDF file (possibly relative to examinations.ie)
+            - url: Full URL (possibly relative to examinations.ie)
             - title: Link text or description (e.g. "Higher Level Paper 1")
             Return as a list of objects with url and title fields.
             """,
@@ -832,7 +842,8 @@ async def _scrape_single_subject_session(
             if not url:
                 continue
 
-            if not url.endswith(".pdf") and ".pdf" not in url:
+            # Accept .pdf links, ?fp= obfuscated URLs, /qvp/ paths
+            if not (".pdf" in url.lower() or "?fp=" in url or "/qvp/" in url.lower()):
                 continue
 
             if not url.startswith("http"):
@@ -931,7 +942,7 @@ async def scrape_materials_playwright(
                     ):
                         yield m
                 except Exception as e:
-                    logger.error(f"playwright_scrape_failed: {subject}", error=str(e))
+                    logger.error(f"playwright_scrape_failed: {subject}: {e}")
                     yield ExamMaterial(
                         subject=subject,
                         year=0,
@@ -970,17 +981,22 @@ async def _playwright_scrape_one(
     await page.goto(EXAM_ARCHIVE_URL, wait_until="domcontentloaded", timeout=30000)
     await asyncio.sleep(2)
 
-    # 1. Check the terms checkbox (ASP.NET postback triggers)
+    # 1. Check the terms checkbox (triggers ASP.NET postback to reveal dropdowns)
     cb = await page.query_selector("#MaterialArchive__noTable__cbv__AgreeCheck")
-    if cb and not await cb.is_checked():
-        await cb.check()
-        # Also update the hidden field that ASP.NET uses
-        await page.evaluate("""() => {
-            const hidden = document.querySelector('input[name="MaterialArchive__noTable__cbh__AgreeCheck"]');
-            if (hidden) hidden.value = 'on';
-        }""")
-        await page.wait_for_load_state("networkidle", timeout=15000)
-        await asyncio.sleep(2)
+    if cb:
+        try:
+            is_checked = await cb.is_checked()
+        except Exception:
+            is_checked = False
+        if not is_checked:
+            await cb.click()
+            # Wait for ASP.NET postback to render the Type dropdown
+            try:
+                await page.wait_for_selector(
+                    "#MaterialArchive__noTable__sbv__ViewType", state="visible", timeout=10000,
+                )
+            except Exception:
+                await asyncio.sleep(5)
 
     # 2. Select material type (ViewType)
     type_select = await page.query_selector("#MaterialArchive__noTable__sbv__ViewType")
@@ -988,7 +1004,11 @@ async def _playwright_scrape_one(
         logger.error(f"type_dropdown_not_found for {sec_subject}")
         return
     await type_select.select_option(label=mt_label)
-    await asyncio.sleep(3)
+    # Wait for ASP.NET postback to render the Examination dropdown
+    try:
+        await page.wait_for_selector("#MaterialArchive__noTable__sbv__Examination", state="visible", timeout=10000)
+    except Exception:
+        await asyncio.sleep(4)
 
     # 3. Select examination level (Examination)
     exam_select = await page.query_selector("#MaterialArchive__noTable__sbv__Examination")
@@ -1011,7 +1031,11 @@ async def _playwright_scrape_one(
         logger.error(f"level_option_not_found: {level_value} for {sec_subject}")
         return
     await exam_select.select_option(value=exam_value)
-    await asyncio.sleep(3)
+    # Wait for ASP.NET postback to render the Subject dropdown
+    try:
+        await page.wait_for_selector("#MaterialArchive__noTable__sbv__Subject", state="visible", timeout=10000)
+    except Exception:
+        await asyncio.sleep(4)
 
     # 4. Select subject
     subject_select = await page.query_selector("#MaterialArchive__noTable__sbv__Subject")
@@ -1032,7 +1056,11 @@ async def _playwright_scrape_one(
         logger.error(f"subject_option_not_found: {sec_subject}")
         return
     await subject_select.select_option(value=subject_value)
-    await asyncio.sleep(3)
+    # Wait for ASP.NET postback to render the Year dropdown
+    try:
+        await page.wait_for_selector("#MaterialArchive__noTable__sbv__Year", state="visible", timeout=10000)
+    except Exception:
+        await asyncio.sleep(4)
 
     # 5. For each year, select and extract PDFs
     for year in years:
@@ -1065,15 +1093,28 @@ async def _playwright_scrape_one(
             await page.wait_for_load_state("networkidle", timeout=15000)
             await asyncio.sleep(3)
 
-        # Extract PDF links
-        links = await page.query_selector_all("a[href]")
+        # Extract PDF links — SEC uses obfuscated ?fp= URLs
+        # e.g. /exammaterialarchive/?fp=96.113.98.103.104...
+        # Also handles direct .pdf links and /qvp/ paths
+        pdf_data = await page.evaluate("""() => {
+            const results = [];
+            const allLinks = document.querySelectorAll('a[href]');
+            for (const a of allLinks) {
+                const href = a.getAttribute('href') || '';
+                const text = a.textContent.trim();
+                if (href.includes('?fp=') || href.toLowerCase().includes('.pdf') ||
+                    href.toLowerCase().includes('exampapers') || href.toLowerCase().includes('qvp')) {
+                    results.push({url: href, title: text});
+                }
+            }
+            return results;
+        }""")
+
         pdf_links_found = 0
-        for link in links:
-            href = await link.get_attribute("href") or ""
-            text = (await link.inner_text()).strip()
+        for item in pdf_data:
+            href = item.get("url", "")
+            text = item.get("title", "")
             if not href:
-                continue
-            if ".pdf" not in href.lower():
                 continue
             if not href.startswith("http"):
                 href = urljoin(EXAMINATIONS_BASE_URL, href)
