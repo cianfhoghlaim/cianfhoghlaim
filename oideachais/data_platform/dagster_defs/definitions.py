@@ -67,6 +67,12 @@ from .assets.ireland import exam_materials_assets
 # PDF Processing Assets
 from .assets.pdf_assets import pdf_processing_assets
 
+# Model Conversion Assets (HF → GGUF for llama-swap)
+from oideachais.data_platform.dagster_assets import model_conversion_assets
+
+# Asset Generation Assets (BAML → image gen → Garage S3)
+from oideachais.data_platform.dagster_assets import asset_generation_assets
+
 # UK Education Assets
 # ============================================================================
 # Partition Imports
@@ -177,6 +183,14 @@ sec_examinations_lca_job = define_asset_job(
 # Assets can be materialized individually or via backfill
 # Firecrawl concurrency limited via op_tags
 
+# Model conversion job — runs HF downloads + GGUF conversions
+model_conversion_job = define_asset_job(
+    name="model_conversion",
+    selection=AssetSelection.key_prefixes(["gguf_"]).upstream(),
+    description="Download HF models and convert to GGUF for llama-swap",
+    tags={"pipeline": "model_conversion", "stage": "gguf"},
+)
+
 all_jobs = [
     enriched_job,
     search_job,
@@ -189,6 +203,7 @@ all_jobs = [
     sec_examinations_lc_job,
     sec_examinations_jc_job,
     sec_examinations_lca_job,
+    model_conversion_job,
 ]
 
 
@@ -222,6 +237,8 @@ combined_assets = [
     scraped_curriculum_pages, # New dynamic scraping asset
     *exam_materials_assets,  # SEC exam materials (Stagehand browser -> DLT -> DuckLake)
     *pdf_processing_assets,  # PDF download and OCR extraction
+    *model_conversion_assets, # HF → GGUF conversion (10 models)
+    *asset_generation_assets, # BAML → image gen → Garage S3
 ]
 
 defs = dg.Definitions(

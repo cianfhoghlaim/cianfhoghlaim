@@ -117,7 +117,7 @@ function ExtractLearningOutcomeRelationships(
   target_outcomes LearningOutcome[],
   subject_context string
 ) -> RelationshipExtractionResult {
-  client Claude
+  client LiteLLM
   prompt #"
     You are an expert curriculum analyst specializing in Irish education.
 
@@ -156,7 +156,7 @@ function ExtractSkillsFromOutcome(
   outcome LearningOutcome,
   curriculum_context string
 ) -> SkillExtractionResult {
-  client Claude
+  client LiteLLM
   prompt #"
     You are an expert curriculum analyst.
 
@@ -188,7 +188,7 @@ function ExtractCurriculumFromDocument(
   subject string,
   level EducationLevel
 ) -> ExtractedCurriculumDocument {
-  client Claude
+  client LiteLLM
   prompt #"
     You are an expert curriculum analyst for Irish education.
 
@@ -221,7 +221,7 @@ function IdentifyPrerequisiteChain(
   available_outcomes LearningOutcome[],
   max_depth int
 ) -> LearningOutcome[] {
-  client Claude
+  client LiteLLM
   prompt #"
     You are an expert curriculum analyst.
 
@@ -433,7 +433,7 @@ function ExtractExamPaperStructure(
   level ExamLevel,
   paper_number int
 ) -> ExamPaper {
-  client Claude
+  client LiteLLM
   prompt #"
     You are an expert at analyzing Irish State Examination papers.
 
@@ -472,7 +472,7 @@ function ExtractMarkingScheme(
   year int,
   level ExamLevel
 ) -> MarkingScheme {
-  client Claude
+  client LiteLLM
   prompt #"
     You are an expert at analyzing SEC marking schemes.
 
@@ -506,7 +506,7 @@ function ExtractExaminerReportInsights(
   year int,
   level ExamLevel
 ) -> ExaminerReport {
-  client Claude
+  client LiteLLM
   prompt #"
     You are an expert curriculum analyst.
 
@@ -542,7 +542,7 @@ function ExtractCurriculumSpecification(
   cycle EducationLevel,
   language string
 ) -> CurriculumSpecification {
-  client Claude
+  client LiteLLM
   prompt #"
     You are an expert Irish curriculum analyst.
 
@@ -585,7 +585,7 @@ function MapOutcomesToExamQuestions(
   specification CurriculumSpecification,
   exam_papers ExamPaper[]
 ) -> map<string, string[]> {
-  client Claude
+  client LiteLLM
   prompt #"
     You are an expert curriculum analyst.
 
@@ -713,7 +713,7 @@ function ExtractAllPdfMetadata(
   page_markdown: string,
   pdf_urls: string[]
 ) -> DocumentMetadata[] {
-  client Claude
+  client LiteLLM
   prompt #"
     You are an expert curriculum analyst specializing in Irish education.
 

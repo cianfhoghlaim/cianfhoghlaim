@@ -285,6 +285,132 @@ docker ps --format "table {{.Names}}\t{{.Status}}" | grep lakehouse
 
 ---
 
+## 8.5 LLM Gateway — Why LiteLLM Matters for Oideachais
+
+The Oideachais data platform has **zero direct calls** to any LLM provider. Every
+text generation, embedding, OCR, and image generation call goes through a single
+gateway: the **LiteLLM proxy** at `infrastructure/stacks/engineering/litellm`.
+
+### 8.5.1 Why a gateway is non-negotiable here
+
+The Oideachais pipeline has to mix:
+
+| Need | Provider |
+|:--|:--|
+| **High-quality BAML extraction** of curriculum specs and exam papers | Gemini 2.5 Pro, Claude Sonnet 4 (cloud) |
+| **High-volume OCR** of SEC PDFs | Gemini 2.5 Flash, plus local VLM fallback |
+| **Multimodal vision** for handwritten SEC marking schemes | Qwen2.5-VL 7B (GGUF), Granite Docling (MLX) |
+| **Math reasoning** for worked-example generation | Qwen2.5-Math 7B (GGUF) |
+| **Irish text generation** for tutoring | UCCIX Llama2 13B (GGUF), Qwen2.5-Math English fallback |
+| **Embeddings** (BGE-M3, GaBERT, ColPali) | transformers (local), not llama-swap |
+| **Image generation** for study assets (FIBO JSON config → Bria FIBO) | Bria FIBO (MLX), Z-Image-Turbo (GGUF), FLUX.2 (GGUF), Qwen-Image (GGUF), SDXL (InvokeAI) |
+| **Cheap generic** tasks (entity extraction, classification) | OpenCode Go subscription per `Go.md` |
+| **Privacy-sensitive** on-device work | MLX on MacBook M4 Max, llama-swap with F16 mmproj |
+
+Without a gateway, every Dagster asset, BAML function, marimo notebook, and
+FastAPI endpoint would have to:
+
+1. Hardcode which provider + which model to call
+2. Implement its own retry / fallback / circuit-breaker logic
+3. Set up its own Langfuse / MLflow / RAGAS integration
+4. Track its own rate limits and spend caps
+5. Re-validate the JSON schema on every provider's quirk
+
+That's ~5–10× more code per call site, and the moment you add a new model
+you have to touch every consumer.
+
+### 8.5.2 What the gateway gives us
+
+The LiteLLM proxy (`infrastructure/stacks/engineering/litellm/`) provides:
+
+- **One OpenAI-compatible URL** for everything (`http://litellm:4000/v1`)
+- **Alias routes** that abstract model choice:
+  - `ocr` → `local/ocr/olmocr-mlx` → `local/ocr/deepseek-ocr` → `gemini-2.5-flash`
+  - `vision` → `local/vision/qwen25-vl` → `local/vision/gemma3-vision` → `gemini-2.5-flash`
+  - `document` → `local/document/granite-docling` → `local/vision/qwen25-vl`
+  - `extract` → `gemini-2.5-pro` → `glm-4.6` → `gemini-2.5-flash`
+  - `math` → `local/math/qwen25-math` → `glm-4.6`
+  - `irish` → `local/irish/uccix` → `local/math/qwen25-math` → `gemini-2.5-flash`
+  - `image` → `local/image/z-image-turbo` → `local/image/qwen-image` → `local/image/flux2` → `local/image/sdxl`
+  - `image-fibo` → `local/image/fibo` → `local/image/z-image-turbo`
+  - `embedding-curriculum` → `celtic/embedding/bge-m3`
+  - `general` → `opencode-go/deepseek-v4-flash` → `glm-4.6` → `gpt-4o-mini`
+- **Langfuse tracing** for every request (full lineage: which alias → which
+  model → which asset)
+- **Spend caps** in the gateway config (per-model rate limits, monthly budget)
+- **BAML clients** (`baml_src/clients.baml`) that point all functions to
+  `client LiteLLM` — no more `client Claude`, no direct Anthropic SDK
+- **Resource**: `oideachais/data_platform/dagster_defs/resources.py`
+  defines `LiteLLMResource` so any Dagster asset can call the gateway
+  uniformly
+
+### 8.5.3 Bringing up the full stack
+
+```bash
+# 1. Start the lakehouse (Garage, PostgreSQL, Lakekeeper)
+cd infrastructure/stacks/storage/lakehouse
+docker compose up -d
+
+# 2. Start the LLM gateway + backends
+cd infrastructure/stacks/engineering/litellm
+docker compose -f compose.yaml -f sidecar.yaml up -d   # gateway + Locket
+cd ../../engineering/mlx-omni
+docker compose -f compose.yaml -f sidecar.yaml up -d   # Apple Silicon MLX
+cd ../meaisínfhoghlaim
+docker compose -f compose.yaml -f sidecar.yaml up -d   # llama-swap GGUF
+cd ../../engineering/invokeai
+docker compose -f compose.yaml -f sidecar.yaml up -d   # SDXL
+
+# 3. Verify all routes
+curl -H "Authorization: Bearer $LITELLM_MASTER_KEY" \
+     http://localhost:4000/v1/models | jq '.data[].id' | head -20
+
+# 4. From Dagster, materialise the model_conversion job
+#    (downloads HF models, converts to GGUF, copies to /stedding/huggingface/gguf)
+uv run dagster dev -m data_platform.dagster_defs.definitions
+# → Open http://localhost:3000 → Jobs → model_conversion → Materialize
+```
+
+### 8.5.4 The BAML bridge
+
+Every BAML function in `baml_src/*.baml` now declares `client LiteLLM`
+(see the swap in `curriculum_extraction.baml` — 10 `client Claude`
+references replaced with `client LiteLLM`). The BAML client points to
+`LITELLM_BASE_URL` and the gateway in turn:
+
+- Tries `extract` (Gemini Pro) first for BAML extraction (strongest JSON
+  schema adherence, best Irish support)
+- Falls back to `glm-4.6` if Gemini quota exceeded
+- Falls back to `gemini-2.5-flash` for cost
+- Falls back to `local-vision` (Qwen2.5-VL on llama-swap) if all cloud routes
+  are down
+
+BAML tests in `baml_src/curriculum_extraction.baml` still pass — the schema
+is identical, only the routing changed.
+
+### 8.5.5 Why not just call providers directly?
+
+Three reasons specific to this project:
+
+1. **Irish + Bilingual Reliability** — Gemini Flash occasionally returns
+   English even when prompted in Irish. The gateway's `extract` alias falls
+   through to UCCIX 13B (which is Irish-trained) before returning. Calling
+   Gemini directly would miss this.
+2. **Local-First by Default** — The oideachais monorepo is run on a
+   **MacBook M4 Max with no always-on cloud**. The gateway's `ocr` and
+   `vision` aliases start on local MLX/GGUF, so an offline oideachais
+   session still works (the only things that break are cloud fallbacks).
+3. **BAML Just Works** — The BAML compiler validates schema adherence on
+   every response, but it doesn't care which LLM answered. Pointing it at
+   the gateway means we can swap entire model families in `config.yaml`
+   without regenerating BAML.
+
+See `infrastructure/stacks/engineering/litellm/config/config.yaml` for the
+full route table, and `docs/meaisínfhoghlaim/Setting Up Local LLM Services on Mac.md`
+for the architectural rationale.
+
+---
+
 ## 9. Agent Guidelines
 
 If you are extending these pipelines, **assume the `data-engineer` persona**.

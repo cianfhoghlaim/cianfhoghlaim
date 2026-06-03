@@ -1,6 +1,6 @@
 private-resources:
   litellm:
-    name: "Litellm"
+    name: "LiteLLM Gateway"
     mode: http
     full-domain: "litellm.cianfhoghlaim.ie"
     destination-port: 4000

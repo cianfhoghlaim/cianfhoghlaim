@@ -381,6 +381,62 @@ class ProgressTrackerResource(ConfigurableResource):
 
 
 # ============================================================================
+# LLM Gateway Resource (LiteLLM)
+# ============================================================================
+
+
+class LiteLLMResource(ConfigurableResource):
+    """OpenAI-compatible client wrapping the canonical LiteLLM gateway.
+
+    The gateway lives at infrastructure/stacks/engineering/litellm and exposes
+    a unified API for: local GGUF (llama-swap), local MLX (mlx-omni), local
+    image gen (InvokeAI), plus all cloud providers (Gemini, GLM, OpenAI,
+    Anthropic, OpenCode Go).
+
+    All Dagster assets and BAML extractions should call through this
+    resource rather than hitting any provider directly. That way:
+      - Failover chains are honoured automatically.
+      - Langfuse traces the full lineage per request.
+      - Rate limits and spend caps are enforced uniformly.
+      - New providers are added in one place (the gateway config.yaml).
+    """
+
+    base_url: str = "http://litellm:4000/v1"
+    master_key: str = "sk-1234"
+    default_model: str = "extract"  # alias from the gateway config
+    timeout_s: float = 600.0
+
+    def get_client(self) -> "OpenAI":
+        """Return an OpenAI client targeting the LiteLLM gateway."""
+        try:
+            from openai import OpenAI
+        except ImportError as exc:  # pragma: no cover
+            raise RuntimeError(
+                "openai package not installed. Run: uv pip install openai"
+            ) from exc
+
+        return OpenAI(
+            base_url=self.base_url,
+            api_key=self.master_key,
+            timeout=self.timeout_s,
+        )
+
+    def completion(
+        self,
+        messages: list[dict],
+        model: str | None = None,
+        **kwargs,
+    ):
+        """OpenAI-compatible chat completion routed through the gateway."""
+        client = self.get_client()
+        return client.chat.completions.create(
+            model=model or self.default_model,
+            messages=messages,
+            **kwargs,
+        )
+
+
+# ============================================================================
 # Resource Instances
 # ============================================================================
 
@@ -410,6 +466,7 @@ translation_resource = TranslationResource()
 terminology_resource = TerminologyResource()
 
 progress_tracker_resource = ProgressTrackerResource()
+litellm_resource = LiteLLMResource()
 
 
 # ============================================================================
@@ -444,6 +501,8 @@ all_resources = {
     "image_gen": image_generation_resource,
     "translation": translation_resource,
     "terminology": terminology_resource,
+    # LLM Gateway (the canonical entry point for every model call)
+    "litellm": litellm_resource,
     # Observability
     "progress_tracker": progress_tracker_resource,
 }
