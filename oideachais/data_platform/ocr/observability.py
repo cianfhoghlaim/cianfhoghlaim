@@ -8,7 +8,7 @@ Provides Langfuse and Datadog instrumentation for OCR operations:
 - Model comparison metrics
 
 Usage:
-    from ocr.observability import OCRObservability, traced_ocr
+    from oideachais.data_platform.ocr.observability import OCRObservability, traced_ocr
 
     obs = OCRObservability()
 

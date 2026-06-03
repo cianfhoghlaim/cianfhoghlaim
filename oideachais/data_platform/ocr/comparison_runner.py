@@ -5,7 +5,7 @@ Runs multiple OCR models on the same images and compares results
 using Gaelic-specific metrics.
 
 Usage:
-    from ocr import ComparisonRunner, ModelRegistry
+    from oideachais.data_platform.ocr import ComparisonRunner, ModelRegistry
 
     registry = ModelRegistry()
     runner = ComparisonRunner(registry)

@@ -789,7 +789,7 @@ def create_unified_curriculum_assets() -> list[dg.AssetsDefinition]:
         List of all curriculum asset definitions
 
     Usage:
-        from dagster_defs.factories import create_unified_curriculum_assets
+        from oideachais.data_platform.dagster_defs.factories import create_unified_curriculum_assets
 
         curriculum_assets = create_unified_curriculum_assets()
         defs = Definitions(assets=curriculum_assets, ...)

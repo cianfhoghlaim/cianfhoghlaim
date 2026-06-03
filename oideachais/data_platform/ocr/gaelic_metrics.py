@@ -13,7 +13,7 @@ Based on research in:
 - taighde_new/document-intelligence-ocr.md
 
 Usage:
-    from ocr import GaelicMetrics, calculate_cer, calculate_wer
+    from oideachais.data_platform.ocr import GaelicMetrics, calculate_cer, calculate_wer
 
     metrics = GaelicMetrics()
     result = metrics.evaluate(prediction, reference)

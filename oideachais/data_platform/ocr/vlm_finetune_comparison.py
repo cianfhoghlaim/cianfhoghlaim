@@ -22,7 +22,7 @@ Supports:
 - Mobile deployment parameter comparison
 
 Usage:
-    from ocr.vlm_finetune_comparison import VLMComparisonPipeline
+    from oideachais.data_platform.ocr.vlm_finetune_comparison import VLMComparisonPipeline
 
     pipeline = VLMComparisonPipeline(
         dataset_path="./irish_htr_dataset/unsloth",

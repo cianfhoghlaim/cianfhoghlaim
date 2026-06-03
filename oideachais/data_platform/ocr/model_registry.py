@@ -9,7 +9,7 @@ Based on research in:
 - taighde_teanga/Finetuning Qwen3-VL for Gaelic OCR.md
 
 Usage:
-    from ocr import ModelRegistry
+    from oideachais.data_platform.ocr import ModelRegistry
 
     registry = ModelRegistry()
 

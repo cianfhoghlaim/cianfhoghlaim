@@ -752,6 +752,8 @@ def curriculum_source(
             "language": {"data_type": "text"},
             "source": {"data_type": "text"},
             "pdf_type": {"data_type": "text"},
+            "year": {"data_type": "bigint", "nullable": True},
+            "level": {"data_type": "text", "nullable": True},
             "discovered_at": {"data_type": "timestamp"},
         },
     )
@@ -774,23 +776,116 @@ def curriculum_source(
             # Extract PDF links from metadata
             metadata = page_data.get("metadata", {})
             links = metadata.get("links", [])
+            
+            markdown = page_data.get("content", "") or page_data.get("markdown", "")
+            
+            pdf_links = [link for link in links if isinstance(link, str) and ".pdf" in link.lower()]
+            new_pdf_links = [link for link in pdf_links if link not in seen_pdfs]
+            
+            if not new_pdf_links:
+                continue
+                
+            seen_pdfs.update(new_pdf_links)
+            
+            # Use BAML to classify all new PDFs based on markdown context
+            baml_metadata = {}
+            if new_pdf_links and markdown:
+                try:
+                    from baml_client import b
+                    
+                    trunc_markdown = markdown[:15000]
+                    res = b.ExtractAllPdfMetadata(page_markdown=trunc_markdown, pdf_urls=new_pdf_links)
+                    for meta in res:
+                        baml_metadata[meta.url] = meta
+                except ImportError:
+                    logger.warning("baml_client_not_available_using_litellm_fallback")
+                    try:
+                        import json
+                        from litellm import completion
+                        
+                        trunc_markdown = markdown[:15000]
+                        prompt = f"""
+You are an expert curriculum analyst specializing in Irish education.
+Analyze the markdown context surrounding these PDF links to extract metadata.
 
-            for link in links:
-                if isinstance(link, str) and ".pdf" in link.lower():
-                    if link in seen_pdfs:
-                        continue
-                    seen_pdfs.add(link)
+PDF URLS TO ANALYZE:
+{json.dumps(new_pdf_links, indent=2)}
 
-                    yield {
-                        "url": link,
-                        "content_hash": hashlib.sha256(link.encode()).hexdigest(),
-                        "cycle": cycle,
-                        "subject": page_data.get("subject"),
-                        "language": language,
-                        "source": page_data.get("source"),
-                        "pdf_type": _classify_pdf(link),
-                        "discovered_at": datetime.now(UTC).isoformat(),
-                    }
+PAGE MARKDOWN:
+{trunc_markdown}
+
+Extract the following metadata for EACH PDF URL:
+1. "url": The exact URL matching one of the URLs provided.
+2. "title": A clear, descriptive title based on the link text or preceding heading.
+3. "category": One of [SPECIFICATION, SYLLABUS, MEETING_MINUTES, ASSESSMENT_GUIDELINES, FRAMEWORK, CONSULTATION_DOCUMENT, EXAM_PAPER, MARKING_SCHEME, EXAMINER_REPORT, OTHER]
+4. "subject_slug": The subject slug (e.g., 'mathematics', 'english', 'history').
+5. "cycle": The education cycle (JUNIOR_CYCLE, SENIOR_CYCLE).
+6. "year_effective": The year it becomes effective (if mentioned, e.g., 'no earlier than September 2027' -> 2027) (integer or null).
+7. "year_examined": The year it is examined (if mentioned, e.g., 'examination to 2028' -> 2028) (integer or null).
+8. "language": 'en' for English, 'ga' for Irish.
+
+Respond ONLY with a valid JSON array of objects.
+"""
+                        response = completion(
+                            model="gemini/gemini-1.5-flash",
+                            messages=[{"role": "user", "content": prompt}],
+                            response_format={"type": "json_object"}
+                        )
+                        content = response.choices[0].message.content
+                        
+                        # litellm json_object often wraps in an object, let's parse safely
+                        data = json.loads(content)
+                        if isinstance(data, dict) and len(data.keys()) == 1:
+                            data = list(data.values())[0]
+                        
+                        if isinstance(data, list):
+                            for item in data:
+                                class FallbackMeta:
+                                    def __init__(self, d):
+                                        self.url = d.get("url")
+                                        self.title = d.get("title")
+                                        self.category = d.get("category")
+                                        self.subject_slug = d.get("subject_slug")
+                                        self.cycle = d.get("cycle")
+                                        self.year_effective = d.get("year_effective")
+                                        self.year_examined = d.get("year_examined")
+                                        self.language = d.get("language")
+                                meta = FallbackMeta(item)
+                                baml_metadata[meta.url] = meta
+                    except Exception as fallback_err:
+                        logger.error("litellm_fallback_failed", error=str(fallback_err))
+                except Exception as e:
+                    logger.error("baml_extraction_failed", error=str(e))
+
+            for link in new_pdf_links:
+                meta = baml_metadata.get(link)
+                
+                # Resolve values from BAML or fallbacks
+                resolved_cycle = cycle
+                resolved_subject = page_data.get("subject")
+                resolved_language = language
+                resolved_pdf_type = _classify_pdf(link)
+                resolved_year = None
+                
+                if meta:
+                    resolved_cycle = str(meta.cycle) if meta.cycle else cycle
+                    resolved_subject = meta.subject_slug if meta.subject_slug else page_data.get("subject")
+                    resolved_language = meta.language if meta.language else language
+                    resolved_pdf_type = str(meta.category) if meta.category else _classify_pdf(link)
+                    resolved_year = meta.year_effective if meta.year_effective else meta.year_examined
+
+                yield {
+                    "url": link,
+                    "content_hash": hashlib.sha256(link.encode()).hexdigest(),
+                    "cycle": resolved_cycle,
+                    "subject": resolved_subject,
+                    "language": resolved_language,
+                    "source": page_data.get("source"),
+                    "pdf_type": resolved_pdf_type,
+                    "year": resolved_year,
+                    "level": None,  # Can add if BAML extracts level later
+                    "discovered_at": datetime.now(UTC).isoformat(),
+                }
 
     return curriculum_pages, source_provenance, curriculum_pdfs
 

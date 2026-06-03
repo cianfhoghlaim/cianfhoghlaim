@@ -17,7 +17,7 @@ Environment:
     DLT_ENVIRONMENT=production: Cloudflare R2 + PlanetScale
 
 Usage:
-    from dagster_defs.assets.ireland import curriculum_dlt_assets
+    from oideachais.data_platform.dagster_defs.assets.ireland import curriculum_dlt_assets
 
     defs = Definitions(assets=curriculum_dlt_assets)
 """
@@ -206,9 +206,9 @@ def create_cycle_asset(cycle: str):
         # Disable DLT plugin scanning to avoid metadata bug
         os.environ.setdefault("DLT_DISABLE_PLUGINS", "true")
 
-        sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent.parent))  # Add oideachais to path
+        sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))  # Add data_platform to path
 
-        
         from oideachais.data_platform.dlt_sources.ireland.curriculum_registry import SubjectRegistry
         from oideachais.data_platform.dlt_sources.ireland.curriculum_source import (
             build_subject_urls,

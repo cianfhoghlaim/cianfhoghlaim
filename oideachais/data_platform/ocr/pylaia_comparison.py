@@ -9,7 +9,7 @@ for historical Irish manuscripts from sources like:
 Based on /taighde/teanga/pylaia/ reference implementation.
 
 Usage:
-    from ocr.pylaia_comparison import HTRComparison, compare_htr_models
+    from oideachais.data_platform.ocr.pylaia_comparison import HTRComparison, compare_htr_models
 
     comparison = HTRComparison()
     results = await comparison.compare_models(image_path, ground_truth)

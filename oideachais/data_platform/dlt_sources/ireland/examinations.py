@@ -282,55 +282,90 @@ def _get_exam_materials_browser(
             }
         return
 
+    # Strategy: Try Playwright-native first (zero LLM cost, deterministic).
+    # Fall back to Stagehand (LLM-driven) if Playwright fails.
+    playwright_ok = False
+    try:
+        from sruth_browser.tools.examinations_scraper import (
+            scrape_materials_playwright_sync,
+        )
+    except ImportError:
+        scrape_materials_playwright_sync = None
+
     try:
         from sruth_browser.tools.examinations_scraper import (
             scrape_materials_batch_sync,
         )
     except ImportError:
-        logger.warning("browser_tools_not_available")
-        for subject in subjects:
-            yield {
-                "subject": subject,
-                "year": 0,
-                "level": level,
-                "material_type": "error",
-                "pdf_url": "",
-                "status": "browser_tools_not_available",
-                "scraped_at": datetime.now(UTC).isoformat(),
-            }
-        return
+        scrape_materials_batch_sync = None
 
-    try:
-        materials = scrape_materials_batch_sync(
-            subjects=subjects,
-            years=years,
-            level=level,
-            language=language,
-            material_types=material_types,
-        )
-
-        for material in materials:
-            record = material.to_dict()
-            if record.get("material_type") == "paper" and record.get("content_hash") == "error":
-                record["status"] = "error"
-                record["error"] = record.get("title", "unknown error")
+    # Try Playwright-native first
+    if scrape_materials_playwright_sync is not None:
+        try:
+            logger.info("Attempting Playwright-native scrape (zero LLM cost)")
+            materials = scrape_materials_playwright_sync(
+                subjects=subjects,
+                years=years,
+                level=level,
+                language=language,
+                material_types=material_types,
+            )
+            real_materials = [m for m in materials if m.pdf_url and m.content_hash != "error"]
+            if real_materials:
+                logger.info(f"Playwright-native succeeded: {len(real_materials)} materials")
+                for material in materials:
+                    record = material.to_dict()
+                    if record.get("content_hash") == "error":
+                        record["status"] = "error"
+                        record["error"] = record.get("title", "unknown error")
+                    else:
+                        record["status"] = "success"
+                    record["scraper"] = "playwright"
+                    yield record
+                return
             else:
-                record["status"] = "success"
-            yield record
+                logger.warning(f"Playwright-native returned 0 real materials, falling back to Stagehand")
+        except Exception as e:
+            logger.warning(f"Playwright-native failed: {e}, falling back to Stagehand")
 
-    except Exception as e:
-        logger.error(f"batch_browser_scrape_failed: {e}")
-        for subject in subjects:
-            yield {
-                "subject": subject,
-                "year": 0,
-                "level": level,
-                "material_type": "error",
-                "pdf_url": "",
-                "status": "error",
-                "error": str(e),
-                "scraped_at": datetime.now(UTC).isoformat(),
-            }
+    # Fall back to Stagehand (LLM-driven)
+    if scrape_materials_batch_sync is not None:
+        try:
+            logger.info("Attempting Stagehand LLM scrape")
+            materials = scrape_materials_batch_sync(
+                subjects=subjects,
+                years=years,
+                level=level,
+                language=language,
+                material_types=material_types,
+            )
+
+            for material in materials:
+                record = material.to_dict()
+                if record.get("material_type") == "paper" and record.get("content_hash") == "error":
+                    record["status"] = "error"
+                    record["error"] = record.get("title", "unknown error")
+                else:
+                    record["status"] = "success"
+                record["scraper"] = "stagehand"
+                yield record
+            return
+
+        except Exception as e:
+            logger.error(f"batch_browser_scrape_failed: {e}")
+
+    # No scraper available
+    logger.error("No browser scraper available")
+    for subject in subjects:
+        yield {
+            "subject": subject,
+            "year": 0,
+            "level": level,
+            "material_type": "error",
+            "pdf_url": "",
+            "status": "no_scraper_available",
+            "scraped_at": datetime.now(UTC).isoformat(),
+        }
 
 
 @dlt.source(name="sec_examinations_browser")

@@ -208,22 +208,27 @@ def _crawl_ncca(
             include_paths=include_paths,
         )
 
-        result = app.crawl_url(
-            "https://ncca.ie",
-            params=crawl_config,
+        result = app.crawl(
+            url="https://ncca.ie",
+            limit=max_pages,
+            max_discovery_depth=3,
+            include_paths=include_paths,
+            scrape_options={
+                "formats": ["markdown", "links"],
+            },
             poll_interval=5,
         )
 
         page_count = 0
-        for page in result.get("data", []):
-            metadata = page.get("metadata", {})
+        for page in getattr(result, "data", []):
+            metadata = getattr(page, "metadata", {}) if hasattr(page, "metadata") else page.get("metadata", {})
             page_count += 1
             yield {
-                "url": metadata.get("sourceURL"),
-                "title": metadata.get("title"),
-                "description": metadata.get("description"),
-                "markdown": page.get("markdown"),
-                "links": page.get("links", []),
+                "url": getattr(metadata, "sourceURL", "") if hasattr(metadata, "sourceURL") else metadata.get("sourceURL", ""),
+                "title": getattr(metadata, "title", "") if hasattr(metadata, "title") else metadata.get("title", ""),
+                "description": getattr(metadata, "description", "") if hasattr(metadata, "description") else metadata.get("description", ""),
+                "markdown": getattr(page, "markdown", "") if hasattr(page, "markdown") else page.get("markdown", ""),
+                "links": getattr(page, "links", []) if hasattr(page, "links") else page.get("links", []),
                 "language": language,
                 "cycle": cycle,
                 "subject": subject,
