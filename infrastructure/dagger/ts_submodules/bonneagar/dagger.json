@@ -1,0 +1,8 @@
+{
+  "name": "bonneagar",
+  "engineVersion": "v0.19.2",
+  "sdk": {
+    "source": "typescript"
+  },
+  "source": "src"
+}

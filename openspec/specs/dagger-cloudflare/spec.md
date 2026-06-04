@@ -72,7 +72,7 @@ The system SHALL stream worker logs for debugging.
 
 | Component | Path |
 |-----------|------|
-| Main Module | `bonneagar/dagger/src/cloudflare.ts` |
+| Main Module | `infrastructure/dagger/src/web/__init__.py (calls bonny.cloudflare_deploy_pages) or infrastructure/dagger/ts_submodules/bonneagar/src/cloudflare.ts` |
 
 ## Related Specs
 

@@ -78,10 +78,10 @@ The system SHALL deploy specific infrastructure components independently.
 
 | Component | Path |
 |-----------|------|
-| Main Module | `bonneagar/dagger/src/ci.ts` |
-| Python CI | `bonneagar/dagger/src/python.ts` |
-| TypeScript CI | `bonneagar/dagger/src/typescript.ts` |
-| Rust CI | `bonneagar/dagger/src/rust.ts` |
+| Main Module | `infrastructure/dagger/src/__init__.py (UnifiedPipeline) or infrastructure/dagger/ts_submodules/bonneagar/src/ci.ts (TS submodule)` |
+| Python CI | `infrastructure/dagger/src/infrastructure/__init__.py or infrastructure/dagger/ts_submodules/bonneagar/src/python.ts` |
+| TypeScript CI | `infrastructure/dagger/src/web/__init__.py or infrastructure/dagger/ts_submodules/bonneagar/src/typescript.ts` |
+| Rust CI | `infrastructure/dagger/src/shared/containers.py (rust_container) or infrastructure/dagger/ts_submodules/bonneagar/src/rust.ts` |
 
 ## Related Specs
 

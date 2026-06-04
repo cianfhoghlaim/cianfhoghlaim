@@ -93,7 +93,7 @@ The system SHALL manage Forgejo runners.
 
 | Component | Path |
 |-----------|------|
-| Main Module | `bonneagar/dagger/src/forgejo.ts` |
+| Main Module | `infrastructure/dagger/src/infrastructure/__init__.py or infrastructure/dagger/ts_submodules/bonneagar/src/forgejo.ts` |
 
 ## Related Specs
 

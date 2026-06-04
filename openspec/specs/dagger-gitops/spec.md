@@ -84,9 +84,9 @@ The system SHALL register Forgejo runners with appropriate labels.
 
 | Component | Path |
 |-----------|------|
-| Main Module | `bonneagar/dagger/src/gitops.ts` |
-| Forgejo Client | `bonneagar/dagger/src/forgejo.ts` |
-| Komodo Client | `bonneagar/dagger/src/komodo.ts` |
+| Main Module | `infrastructure/dagger/src/__init__.py (UnifiedPipeline) or infrastructure/dagger/ts_submodules/bonneagar/src/gitops.ts` |
+| Forgejo Client | `infrastructure/dagger/src/infrastructure/__init__.py or infrastructure/dagger/ts_submodules/bonneagar/src/forgejo.ts` |
+| Komodo Client | `infrastructure/dagger/src/infrastructure/__init__.py (calls bonny.komodo_redeploy) or infrastructure/dagger/ts_submodules/bonneagar/src/komodo.ts` |
 
 ## Related Specs
 

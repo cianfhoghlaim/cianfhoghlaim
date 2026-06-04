@@ -1,0 +1,60 @@
+# Forgejo Actions workflow: dagger call deploy to staging + production.
+# Reference: openspec/changes/dagger-monorepo-integration/
+#
+# Production deploys are gated by the Forgejo `environment: production`
+# gate (manual approval). The `approved: false` default in the Dagger
+# function is a belt-and-braces safety check inside the pipeline itself.
+
+name: Deploy (Dagger)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy-staging:
+    name: dagger deploy (staging)
+    runs-on: ubuntu-latest-arm64
+    environment: staging
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Install mise + Dagger
+        run: |
+          curl -fsSL https://mise.jdx.dev/install.sh | sh
+          curl -fsSL https://dl.dagger.io/dagger/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - run: mise install
+      - name: dagger deploy (staging)
+        run: |
+          cd infrastructure/dagger
+          dagger call deploy --source ../.. --environment=staging
+
+  deploy-production:
+    name: dagger deploy (production, gated)
+    needs: deploy-staging
+    runs-on: ubuntu-latest-arm64
+    environment:
+      name: production
+      url: https://cianfhoghlaim.ie
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Install mise + Dagger
+        run: |
+          curl -fsSL https://mise.jdx.dev/install.sh | sh
+          curl -fsSL https://dl.dagger.io/dagger/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - run: mise install
+      - name: dagger deploy (production, with --approved=true)
+        run: |
+          cd infrastructure/dagger
+          dagger call deploy \
+            --source ../.. \
+            --environment=production \
+            --approved=true
