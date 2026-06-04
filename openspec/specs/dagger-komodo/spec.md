@@ -106,7 +106,7 @@ The system SHALL query server information.
 
 | Component | Path |
 |-----------|------|
-| Main Module | `bonneagar/dagger/src/komodo.ts` |
+| Main Module | `infrastructure/dagger/src/infrastructure/__init__.py (calls bonny.komodo_redeploy) or infrastructure/dagger/ts_submodules/bonneagar/src/komodo.ts` |
 | Stack Configs | `bonneagar/komodo/stacks/` |
 
 ## Related Specs
