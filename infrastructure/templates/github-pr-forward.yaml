@@ -9,7 +9,7 @@
 # Prerequisites:
 # 1. Set FORGEJO_TOKEN secret in GitHub repo settings
 # 2. Forgejo token needs write:repository permission
-# 3. Replace FLOW_NAME with the actual flow name (oideachais, crypteolas, aleyum)
+# 3. Replace FLOW_NAME with the actual flow name (oideachais, crypteolas, aleyum, croilar)
 
 name: Forward PR to Forgejo
 
@@ -20,7 +20,7 @@ on:
 env:
   FORGEJO_API: https://git.cianfhoghlaim.ie/api/v1
   FORGEJO_REPO: cliste/bonneagar
-  # Set this to the flow name (oideachais, crypteolas, or aleyum)
+  # Set this to the flow name (oideachais, crypteolas, aleyum, or croilar)
   FLOW_NAME: REPLACE_WITH_FLOW_NAME
 
 jobs:
