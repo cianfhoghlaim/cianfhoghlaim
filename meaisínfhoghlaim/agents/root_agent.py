@@ -17,16 +17,24 @@ Observability:
 - Langfuse for LLM cost tracking
 - Logfire for Pydantic-native tracing
 - MLflow for experiment logging
-- Kafka for event streaming
+- RisingWave for event streaming (sources, sinks, materialized views)
 
 Memory:
 - Letta Cloud for conversation memory
 - Cognee for knowledge graph memory
+
+Streaming migration: Replaced Confluent Kafka with RisingWave per the
+Q1 decision. RisingWave gives us SQL-native streaming (CREATE SOURCE,
+CREATE MATERIALIZED VIEW, CREATE SINK) plus Iceberg-on-Garage S3 as
+the durable event store. See `infrastructure/stacks/machine_learning/
+risingwave/` and `docs/data_engineering/risingwave-*.md`.
 """
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
+import os
 import time
 import uuid
 from dataclasses import dataclass, field
@@ -86,12 +94,81 @@ except ImportError:
     HAS_LITELLM = False
     logger.debug("LiteLLM not available")
 
-# Import Kafka (lazy)
+# Import RisingWave (lazy) — replaces Kafka
+# RisingWave uses PostgreSQL wire protocol, so psycopg2 is the driver.
+RISINGWAVE_HOST = os.getenv("RISINGWAVE_HOST", "risingwave")
+RISINGWAVE_PORT = int(os.getenv("RISINGWAVE_PORT", "4566"))
+RISINGWAVE_USER = os.getenv("RISINGWAVE_USER", "root")
+RISINGWAVE_DB = os.getenv("RISINGWAVE_DB", "dev")
 try:
-    from kafka import AGENT_QUERIES, AGENT_RESPONSES, get_producer
-    HAS_KAFKA = True
+    import psycopg2
+    import psycopg2.extras
+
+    HAS_RISINGWAVE = True
 except ImportError:
-    HAS_KAFKA = False
+    HAS_RISINGWAVE = False
+    logger.debug("psycopg2 not available; RisingWave event streaming disabled")
+
+
+def _rw_insert_event(table: str, payload: dict) -> None:
+    """Best-effort insert into a RisingWave table. No-op if unavailable."""
+    if not HAS_RISINGWAVE:
+        return
+    try:
+        conn = psycopg2.connect(
+            host=RISINGWAVE_HOST,
+            port=RISINGWAVE_PORT,
+            user=RISINGWAVE_USER,
+            dbname=RISINGWAVE_DB,
+            connect_timeout=5,
+        )
+        with conn, conn.cursor() as cur:
+            cur.execute(
+                f"INSERT INTO {table} (event_id, payload, event_time) "
+                "VALUES (%s, %s, NOW())",
+                (str(uuid.uuid4()), json.dumps(payload)),
+            )
+    except Exception as e:
+        logger.warning(f"RisingWave insert into {table} failed: {e}")
+
+
+def _rw_ensure_tables() -> None:
+    """Create agent_queries / agent_responses tables if they don't exist.
+
+    The full source/sink/MV topology is owned by RisingWave; this function
+    just makes the tables idempotent for dev startup. Production should
+    have these managed via SQL migrations in
+    `infrastructure/stacks/machine_learning/risingwave/init.sql`."""
+    if not HAS_RISINGWAVE:
+        return
+    ddl = """
+    CREATE TABLE IF NOT EXISTS agent_queries (
+        event_id    VARCHAR PRIMARY KEY,
+        payload     JSONB,
+        event_time  TIMESTAMP DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS agent_responses (
+        event_id    VARCHAR PRIMARY KEY,
+        payload     JSONB,
+        event_time  TIMESTAMP DEFAULT NOW()
+    );
+    """
+    try:
+        conn = psycopg2.connect(
+            host=RISINGWAVE_HOST,
+            port=RISINGWAVE_PORT,
+            user=RISINGWAVE_USER,
+            dbname=RISINGWAVE_DB,
+            connect_timeout=5,
+        )
+        with conn, conn.cursor() as cur:
+            cur.execute(ddl)
+    except Exception as e:
+        logger.warning(f"RisingWave DDL failed: {e}")
+
+
+# Run idempotent DDL at import time so the agent can stream events immediately.
+_rw_ensure_tables()
 
 
 class AgentDomain(str, Enum):
@@ -386,30 +463,21 @@ class RootAgent:
         1. Route to appropriate domain
         2. Execute domain agent
         3. Log to observability stack
-        4. Publish to Kafka
+        4. Stream to RisingWave (sources → materialized views → Iceberg sink)
         5. Return response with sources
         """
         start_time = time.time()
         query_id = str(uuid.uuid4())
         session_id = context.session_id or str(uuid.uuid4())
 
-        # Publish query to Kafka
-        if HAS_KAFKA:
-            try:
-                producer = get_producer()
-                producer.produce(
-                    AGENT_QUERIES.name,
-                    key=session_id,
-                    value={
-                        "query_id": query_id,
-                        "session_id": session_id,
-                        "query": context.query,
-                        "language": context.language,
-                        "agent_name": "root_agent",
-                    }
-                )
-            except Exception as e:
-                logger.warning(f"Kafka query publish failed: {e}")
+        # Publish query to RisingWave (replaces Kafka)
+        _rw_insert_event("agent_queries", {
+            "query_id": query_id,
+            "session_id": session_id,
+            "query": context.query,
+            "language": context.language,
+            "agent_name": "root_agent",
+        })
 
         # Route the query
         domain = await self.router.route(context.query)
@@ -467,27 +535,18 @@ class RootAgent:
                 response = await agent.process(context)
                 response.domain = domain
 
-            # Publish response to Kafka
+            # Publish response to RisingWave (replaces Kafka)
             latency_ms = (time.time() - start_time) * 1000
-            if HAS_KAFKA:
-                try:
-                    producer = get_producer()
-                    producer.produce(
-                        AGENT_RESPONSES.name,
-                        key=session_id,
-                        value={
-                            "response_id": str(uuid.uuid4()),
-                            "query_id": query_id,
-                            "session_id": session_id,
-                            "response": response.content[:2000],  # Truncate for Kafka
-                            "agent_name": domain.value,
-                            "sources_count": len(response.sources),
-                            "latency_ms": latency_ms,
-                        }
-                    )
-                    producer.flush()
-                except Exception as e:
-                    logger.warning(f"Kafka response publish failed: {e}")
+            # Publish response to RisingWave (replaces Kafka)
+            _rw_insert_event("agent_responses", {
+                "response_id": str(uuid.uuid4()),
+                "query_id": query_id,
+                "session_id": session_id,
+                "response": response.content[:2000],  # Truncate for Iceberg
+                "agent_name": domain.value,
+                "sources_count": len(response.sources),
+                "latency_ms": latency_ms,
+            })
 
             # Log to Logfire (alongside Datadog/Langfuse)
             if HAS_LOGFIRE:

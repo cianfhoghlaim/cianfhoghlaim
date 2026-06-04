@@ -6,13 +6,17 @@ Provides complete processing pipelines for:
 - HTR dataset generation from Dúchas.ie
 - VLM model comparison and fine-tuning
 - Mobile deployment with federated learning
+- Real-time audio streaming (ASR + TTS via Pipecat)
 
 Each pipeline integrates:
 - DLT for data ingestion
 - Dagster for orchestration
 - Modal for GPU compute
 - LanceDB Cloud + local lakehouse
-- Confluent Kafka for streaming
+- **RisingWave** for streaming (sources, sinks, materialized views, Iceberg)
+  — Replaces Confluent Kafka per the RisingWave refactor. See
+  `infrastructure/stacks/machine_learning/risingwave/` for the stack
+  and `docs/data_engineering/risingwave-*.md` for the patterns.
 - MLflow for experiment tracking
 """
 
