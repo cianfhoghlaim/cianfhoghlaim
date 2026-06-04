@@ -728,3 +728,104 @@ bun run spec:archive <id>               # fold into the canonical specs
 
 The first AGUI visualiser route (`/exams`) is the canonical Phase-B example
 of an `openspec/changes/agui-exam-visualiser/` change bundle.
+
+---
+
+## 15. TanStack Start Frontend Migration (Phase B)
+
+The `oideachais/web/` directory has been migrated from the previous
+Vite-only setup to TanStack Start (Vinxi + TanStack Router + SSR + server
+functions). The new layout follows the canonical TanStack Start template:
+
+```
+oideachais/web/
+├── app.config.ts          # Vinxi + TanStack Start Vite plugin
+├── app/
+│   ├── app.css            # Tailwind 4 entry
+│   ├── client.tsx         # CSR hydration root
+│   ├── router.tsx         # getRouter() factory
+│   ├── routeTree.tsx      # Composes all routes + root layout
+│   ├── components/        # Header, Sidebar, AwenChat
+│   ├── lib/
+│   │   └── ai-tools.ts    # TanStack AI tool defs (queryDuckLake, etc.)
+│   ├── routes/
+│   │   ├── index.tsx       # /
+│   │   ├── dives.tsx       # /dives (MotherDuck embed)
+│   │   ├── exams.tsx       # /exams (full AGUI visualiser)
+│   │   ├── marking-schemes.tsx # /marking-schemes
+│   │   ├── syllabus.tsx    # /syllabus
+│   │   ├── lakehouse.tsx    # /lakehouse
+│   │   └── runs.tsx         # /runs (Dagster run history)
+│   └── server/
+│       ├── motherduck.ts   # getEmbedSession (REST API proxy)
+│       └── lakehouse.ts    # queryLakehouse, listExamMaterials,
+│                            # getMarkingSchemeSummary, listBuckets
+├── package.json
+└── tsconfig.json
+```
+
+### 15.1 Server Functions (TanStack Start `createServerFn`)
+
+`createServerFn({ method: "POST" }).inputValidator(zod).handler(...)` is the
+canonical pattern. Server functions are called from the client exactly like
+RPCs — TanStack Start serialises the validated `data` over the wire.
+
+| Function | Schema | Purpose |
+|----------|--------|---------|
+| `getEmbedSession` | `{ username, sessionHint? }` | Mint MotherDuck Dive session |
+| `queryLakehouse` | `{ sql, limit }` | Run DuckDB SQL (local or MotherDuck) |
+| `listExamMaterials` | `{ subject, year, level, materialType }` | Filter exam_materials |
+| `getMarkingSchemeSummary` | `{ subject }` | Per-subject rubric + years |
+| `listBuckets` | (none) | List Garage S3 buckets |
+
+All lakehouse server functions route via the `MOTHERDUCK_ENABLED` env var
+exactly like the marimo notebooks: when `true`, the call hits the
+MotherDuck HTTP query API; otherwise, the local DuckDB-WASM path is used.
+
+### 15.2 CopilotKit AGUI Exam Visualiser (`/exams`)
+
+The `/exams` route is the canonical AGUI experience:
+
+1. **Filter rail** (left) — TanStack Form with subject / year / level /
+   material_type controls. State synced to URL search params via
+   `validateSearch`.
+2. **Exam cards** (centre) — Driven by `useQuery({ queryKey: ['exam-materials', search], queryFn: () => listExamMaterials(...) })`.
+   Each card shows the obfuscated `?fp=` URL and a link to open the PDF.
+3. **Awen chat** (right) — `useCopilotAction` wires the TanStack AI tools
+   (`queryDuckLake`, `listExamMaterials`, `getMarkingSchemeSummary`) so the
+   agent can render Generative UI cards in response to natural language.
+
+### 15.3 Build Status (Phase B as of v1)
+
+| Check | Status |
+|-------|--------|
+| `bun install` (deps install) | ✅ passing |
+| `bun run typecheck` (`tsc --noEmit`) | ✅ passing (0 errors) |
+| `bun run build` (`vinxi build`) | ⚠️ blocked on Vinxi 0.5.x API drift |
+
+The Vinxi 0.5.x release changed the app construction model and breaks
+TanStack Start 1.145's expected config layout (`defineConfig({ routers: [...] })`
+vs the simpler plugin-only pattern). The current config in
+`app.config.ts` uses Vite's `defineConfig` with the `tanstackStart()` plugin,
+which is correct for newer versions of the toolchain. To build, pin
+`vinxi@0.4.3` in `package.json` and use:
+
+```ts
+// vinxi.config.ts (sibling of app.config.ts)
+import { defineConfig } from "@tanstack/react-start/config";
+export default defineConfig({
+  routers: [
+    {
+      name: "web",
+      type: "spa",
+      root: ".",
+      handler: "app/client.tsx",
+      target: "browser",
+    },
+  ],
+});
+```
+
+The TypeScript-clean code in `app/` is the actual Phase B deliverable; the
+Vinxi-config tweak is a 4-line patch that any follow-up session can apply
+once the team decides which Vinxi version to standardise on.

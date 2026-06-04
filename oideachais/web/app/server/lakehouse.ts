@@ -66,7 +66,7 @@ async function runDuckLakeQuery(sql: string, limit: number): Promise<SqlRow[]> {
   const logger = new duckdb.ConsoleLogger();
   const bundle = await duckdb.selectBundle(duckdb.getJsDelivrBundles());
   const db = new duckdb.AsyncDuckDB(logger, worker);
-  await db.instantiate(bundle, new duckdb.ConsoleLogger());
+  await db.instantiate(bundle as never, new duckdb.ConsoleLogger() as never);
   const conn = await db.connect();
   try {
     const trimmed = sql.trim().replace(/;$/, "");
@@ -75,7 +75,9 @@ async function runDuckLakeQuery(sql: string, limit: number): Promise<SqlRow[]> {
       : `${trimmed} LIMIT ${limit}`;
     const result = await conn.query(bounded);
     return result.toArray().map((row: { toJSON: () => Record<string, unknown> }) =>
-      Object.fromEntries(row.toJSON()),
+      Object.fromEntries(
+        Object.entries(row.toJSON()).map(([k, v]) => [k, v as SqlRow[string]]),
+      ),
     );
   } finally {
     await conn.close();

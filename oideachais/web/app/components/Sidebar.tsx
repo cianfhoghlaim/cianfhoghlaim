@@ -1,6 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 
-const NAV = [
+const NAV: Array<{ to: string; label: string; icon: string; end?: boolean }> = [
   { to: "/", label: "Curriculum", icon: "📚", end: true },
   { to: "/exams", label: "Exams (AGUI)", icon: "❖" },
   { to: "/marking-schemes", label: "Marking Schemes", icon: "✎" },
@@ -8,7 +8,7 @@ const NAV = [
   { to: "/dives", label: "Dives (MotherDuck)", icon: "🦆" },
   { to: "/lakehouse", label: "Lakehouse", icon: "⌬" },
   { to: "/runs", label: "Dagster Runs", icon: "⏱" },
-] as const;
+];
 
 export function Sidebar() {
   const location = useRouterState({ select: (s) => s.location.pathname });
