@@ -1,6 +1,6 @@
 # Dagster dg workspace configuration
-# Loads all sruth/* data pipeline projects in a unified UI
-# Run `dg dev` from repository root to start all code locations
+# Loads all data pipeline projects in a unified UI.
+# Run `dg dev` from repository root to start all code locations.
 
 directory_type = "workspace"
 
@@ -8,4 +8,16 @@ directory_type = "workspace"
 
 # Celtic Education Platform - Irish curriculum, Celtic languages, British Isles education
 [[workspace.projects]]
-path = "sruth/oideachais"
+path = "oideachais"
+
+# Celtic Educational MMO + Crypto Platform
+[[workspace.projects]]
+path = "tuatha"
+
+# Crypteolas — crypto data intelligence (added in consolidate-external-libs-into-tuatha)
+[[workspace.projects]]
+path = "tuatha/crypteolas"
+
+# Crypteolas Demo — the standalone TanStack + Agno demo app
+[[workspace.projects]]
+path = "tuatha/apps/crypteolas_demo"
