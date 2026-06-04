@@ -1,19 +1,20 @@
 # =============================================================================
 # DAGSTER UNIFIED - Production Stack
 # =============================================================================
-# Runs all sruth pipelines in a single Dagster instance.
-# Connects to lakehouse for data storage via DuckLake.
+# Runs the unified Dagster instance for the oideachais data platform.
+# Connects to the lakehouse for DuckLake / Garage S3 storage.
 #
 # USAGE:
-#   Development:  docker compose up -d
-#   Production:   locket exec --env-file secrets.env -- docker compose up -d
+#   Development:  docker compose --env-file .env.local up -d
+#   Production:   docker compose -f compose.yaml -f sidecar.yaml up -d
+#                 (Locket resolves secrets from Infisical at runtime)
 # =============================================================================
 
 name: dagster
 
 services:
   # ---------------------------------------------------------------------------
-  # DAGSTER WEBSERVER & DAEMON
+  # DAGSTER WEBSERVER
   # ---------------------------------------------------------------------------
   dagster:
     image: ghcr.io/cianfhoghlaim/dagster:latest
@@ -23,31 +24,25 @@ services:
       - "${DAGSTER_PORT:-3335}:3000"
     environment:
       DAGSTER_HOME: /opt/dagster/home
-      # DuckLake Configuration
+      # DuckLake
       USE_DUCKLAKE: ${USE_DUCKLAKE:-true}
       DUCKLAKE_POSTGRES_HOST: ${DUCKLAKE_POSTGRES_HOST:-lakehouse-postgres}
       DUCKLAKE_POSTGRES_PORT: ${DUCKLAKE_POSTGRES_PORT:-5432}
       DUCKLAKE_POSTGRES_USER: ${DUCKLAKE_POSTGRES_USER:-lakekeeper}
       DUCKLAKE_POSTGRES_PASSWORD: ${DUCKLAKE_POSTGRES_PASSWORD}
       DLT_ENVIRONMENT: ${DLT_ENVIRONMENT:-production}
-      # Garage S3 Configuration
+      # Garage S3
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-http://lakehouse-garage:3900}
       AWS_REGION: ${AWS_REGION:-garage}
-      # LLM Configuration
+      # LLM
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
-      # Observability
+      # Langfuse
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
       LANGFUSE_HOST: ${LANGFUSE_HOST:-https://langfuse.cianfhoghlaim.ie}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.dagster.rule=Host(`dagster.cianfhoghlaim.ie`)"
-      - "traefik.http.routers.dagster.entrypoints=websecure"
-      - "traefik.http.services.dagster.loadbalancer.server.port=3000"
-      - "pangolin.resource.middlewares=tinyauth"
     volumes:
       - dagster-storage:/opt/dagster/storage
       - dagster-home:/opt/dagster/home
@@ -57,9 +52,14 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
     networks:
-      - dagster
-      - pangolin
+      - cianfhoghlaim
+      - lakehouse
 
   # ---------------------------------------------------------------------------
   # DAGSTER DAEMON - Schedules, Sensors, Run Queue
@@ -83,33 +83,34 @@ services:
       AWS_REGION: ${AWS_REGION:-garage}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.dagster.rule=Host(`dagster.cianfhoghlaim.ie`)"
-      - "traefik.http.routers.dagster.entrypoints=websecure"
-      - "traefik.http.services.dagster.loadbalancer.server.port=3000"
-      - "pangolin.resource.middlewares=tinyauth"
     volumes:
       - dagster-storage:/opt/dagster/storage
       - dagster-home:/opt/dagster/home
     depends_on:
       dagster:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "dagster-daemon"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
     networks:
-      - dagster
+      - cianfhoghlaim
+      - lakehouse
 
-# =============================================================================
-# VOLUMES
-# =============================================================================
 volumes:
   dagster-storage:
   dagster-home:
 
-# =============================================================================
-# NETWORKS
-# =============================================================================
 networks:
-  dagster:
+  cianfhoghlaim:
     driver: bridge
-  pangolin:
+  lakehouse:
+    name: lakehouse_lakehouse
     external: true

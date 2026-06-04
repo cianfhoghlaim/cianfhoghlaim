@@ -60,6 +60,14 @@
     },
     "spec:validate": {
       "outputs": []
+    },
+    "validate-stacks": {
+      "cache": false,
+      "outputs": []
+    },
+    "doctor": {
+      "cache": false,
+      "outputs": []
     }
   },
   "ui": "tui"
