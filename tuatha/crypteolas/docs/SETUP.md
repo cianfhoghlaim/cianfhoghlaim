@@ -1,89 +1,117 @@
 # Crypteolas Setup Guide
 
-This guide covers setting up the Crypteolas project for local development with Dagster orchestration and Cloudflare services.
+This guide covers setting up the Crypteolas sub-package for local
+development. Crypteolas lives at `tuatha/crypteolas/` after the
+[consolidation refactor](../../../../openspec/changes/consolidate-external-libs-into-tuatha/).
+See [`../STATUS.md`](../STATUS.md) for the full refactor history.
 
 ## Prerequisites
 
 - Python 3.12+
-- Node.js 20+ (for frontend)
+- Node.js 20+ (for the TanStack UI — the new frontend is at
+  `tuatha/apps/crypteolas demo/`; the legacy `tuatha/crypteolas/ui/`
+  directory is no longer the canonical frontend)
 - [1Password CLI](https://developer.1password.com/docs/cli/) (`brew install 1password-cli`)
 - [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/) (`npm install -g wrangler`)
 - [uv](https://github.com/astral-sh/uv) package manager (`brew install uv`)
+- [Bun](https://bun.sh) 1.3+ (for the new frontend)
+- Docker & Docker Compose
 
 ## Quick Start
 
 ```bash
-# Navigate to project
-cd src/crypteolas
+# Navigate to the monorepo root
+cd /Users/cianmacandeisigh/dev/kings_college_galway
 
-# Set up 1Password vault and secrets (first time only)
-./scripts/setup_1password.sh
+# Toolchain + secrets + LLM backend (from repo root)
+bun run setup
 
-# Start Dagster (with 1Password secret injection)
-op run --env-file .env -- dagster dev -w workspace.local.yaml
+# Sync the tuath workspace member (resolves crypteolas)
+cd tuatha && uv sync
+
+# Start the unified Dagster UI (loads all 3 code-locations)
+cd tuatha && uv run dagster dev
+# → http://localhost:3000
+
+# Or run crypteolas in isolation
+cd tuatha && uv run dagster dev -m crypteolas.definitions
 ```
 
 ## 1. 1Password Setup
 
-### Create the Vault
-
-Run the setup script to create the 1Password vault and empty secret items:
+The secrets are now managed by the **Infisical** vault at
+`dev-baile/crypteolas/` (not 1Password). The 1Password CLI used by the
+prior setup script has been replaced by the Locket sidecar / Infisical
+hydration flow. To seed the vault for the first time:
 
 ```bash
-chmod +x scripts/setup_1password.sh
-./scripts/setup_1password.sh
+# From the monorepo root
+bun run secrets:env     # create the dev-baile environment
+bun run secrets:init    # seed the vault from .infisical.env template
 ```
 
-### Fill in Required Secrets
+The crypteolas-specific secrets (LITELLM_MASTER_KEY, OPENAI_API_KEY,
+GITHUB_ACCESS_TOKEN, etc.) are referenced as
+`infisical://dev-baile/crypteolas/<key>` in
+[`../.env.lakekeeper.example`](../.env.lakekeeper.example) and
+[`../dagster.yaml.example`](../dagster.yaml.example).
 
-After running the script, fill in these required values in 1Password:
+### Required Secrets (in Infisical)
 
 | Item | Field | Description | Where to Get |
 |------|-------|-------------|--------------|
-| `openai` | `api_key` | OpenAI API key | platform.openai.com |
-| `postgresql` | `password` | PostgreSQL password | Generate: `openssl rand -hex 16` |
-| `dagster_postgresql` | `password` | Dagster DB password | Generate: `openssl rand -hex 16` |
-| `better_auth` | `secret` | Auth secret | Generate: `openssl rand -base64 32` |
-| `cloudflare` | `account_id` | Cloudflare account ID | Cloudflare dashboard |
-| `cloudflare` | `api_token` | API token (Workers edit) | cloudflare.com/profile/api-tokens |
-| `cloudflare_r2` | `access_key_id` | R2 API access key | R2 dashboard > Manage R2 API Tokens |
-| `cloudflare_r2` | `secret_access_key` | R2 secret key | Same as above |
-| `payment_wallet` | `address` | Your EVM wallet address | Your wallet |
+| `crypteolas/openai` | `api_key` | OpenAI API key | platform.openai.com |
+| `crypteolas/litellm` | `master_key` | LiteLLM master key | Generate: `openssl rand -hex 32` |
+| `crypteolas/litellm` | `salt_key` | LiteLLM salt key | Generate: `openssl rand -hex 16` |
+| `crypteolas/github` | `access_token` | GitHub PAT | github.com/settings/tokens |
+| `crypteolas/postgresql` | `password` | PostgreSQL password | Generate: `openssl rand -hex 16` |
+| `crypteolas/dagster_postgresql` | `password` | Dagster DB password | Generate: `openssl rand -hex 16` |
+| `crypteolas/better_auth` | `secret` | Auth secret | Generate: `openssl rand -base64 32` |
+| `crypteolas/cloudflare` | `account_id` | Cloudflare account ID | Cloudflare dashboard |
+| `crypteolas/cloudflare` | `api_token` | API token (Workers edit) | cloudflare.com/profile/api-tokens |
+| `crypteolas/cloudflare_r2` | `access_key_id` | R2 API access key | R2 dashboard > Manage R2 API Tokens |
+| `crypteolas/cloudflare_r2` | `secret_access_key` | R2 secret key | Same as above |
+| `crypteolas/payment_wallet` | `address` | Your EVM wallet address | Your wallet |
 
-### Optional Secrets
+### Optional Secrets (in Infisical)
 
 | Item | Field | Description |
 |------|-------|-------------|
-| `coingecko` | `api_key` | CoinGecko Pro API key |
-| `etherscan` | `api_key` | Etherscan API key |
-| `firecrawl` | `api_key` | Firecrawl API key |
-| `walletconnect` | `project_id` | WalletConnect project ID |
-| `github_oauth` | `client_id`, `client_secret` | GitHub OAuth app |
+| `crypteolas/coingecko` | `api_key` | CoinGecko Pro API key |
+| `crypteolas/etherscan` | `api_key` | Etherscan API key |
+| `crypteolas/firecrawl` | `api_key` | Firecrawl API key |
+| `crypteolas/walletconnect` | `project_id` | WalletConnect project ID |
+| `crypteolas/github_oauth` | `client_id`, `client_secret` | GitHub OAuth app |
 
 ## 2. Dagster Development
 
 ### Install Dependencies
 
 ```bash
-# Activate virtual environment
-source ../../.venv/bin/activate
-
-# Or use uv to install to the project venv
-uv pip install --python .venv/bin/python dagster-dlt dagster-postgres
+# From the tuatha/ root (the crypteolas workspace member is a sub-package)
+cd tuatha && uv sync
 ```
+
+The `uv sync` command resolves the crypteolas sub-package plus all its
+runtime dependencies (dlt, cocoindex, cognee, fastapi, etc.).
 
 ### Start Dagster Dev Server
 
 ```bash
-# With 1Password secret injection
-op run --env-file .env -- dagster dev -w workspace.local.yaml
+# From the tuatha/ root (loads the unified UI with 3 code-locations)
+cd tuatha
+uv run dagster dev
+# → http://localhost:3000
 
-# Or export secrets first
-eval $(op inject -i .env)
-dagster dev -w workspace.local.yaml
+# Or just the crypteolas code-location
+cd tuatha
+uv run dagster dev -m crypteolas.definitions
 ```
 
-The Dagster UI will be available at http://localhost:3000
+The Dagster UI will be available at http://localhost:3000. The
+`uv.lock` at the monorepo root is the single source of truth for all
+workspace members; the per-member `uv.lock` was removed during the
+consolidation.
 
 ### Available Jobs
 
@@ -93,6 +121,8 @@ The Dagster UI will be available at http://localhost:3000
 | `crypto_document_processing` | Scrape and index protocol documentation |
 | `crypto_analytics` | Run analytics transformations |
 | `funding_rate_pipeline` | Binance funding rate data (hourly partitioned) |
+| `embedding_pipeline` | Code + docs embedding into LanceDB |
+| `knowledge_graph_pipeline` | Cognee + Graphiti entity extraction |
 
 ### Available Schedules
 
@@ -125,55 +155,56 @@ wrangler kv:namespace create SESSION_CACHE
 wrangler kv:namespace create RATE_LIMITS
 ```
 
-Update `wrangler.toml` with the namespace IDs from the output.
+Update [`../wrangler.toml`](../wrangler.toml) with the namespace IDs from
+the output. The `wrangler.toml` is preserved with a `# TODO` comment for
+the missing `workers/index.ts` (the Workers code is not yet implemented;
+see `../STATUS.md`).
 
 ### Set Worker Secrets
 
 ```bash
-# Read secrets from 1Password and set in Cloudflare
-op read op://crypteolas/openai/api_key | wrangler secret put OPENAI_API_KEY
-op read op://crypteolas/payment_wallet/address | wrangler secret put PAYMENT_RECIPIENT
-op read op://crypteolas/better_auth/secret | wrangler secret put BETTER_AUTH_SECRET
+# Read secrets from Infisical and set in Cloudflare
+infisical export --path=/crypteolas/openai/api_key | wrangler secret put OPENAI_API_KEY
+infisical export --path=/crypteolas/payment_wallet/address | wrangler secret put PAYMENT_RECIPIENT
+infisical export --path=/crypteolas/better_auth/secret | wrangler secret put BETTER_AUTH_SECRET
 ```
 
 ### Deploy Workers (when ready)
 
 ```bash
 # Development
-wrangler dev
+cd tuatha/crypteolas && wrangler dev
 
 # Production
-wrangler deploy --env production
+cd tuatha/crypteolas && wrangler deploy --env production
 ```
 
 ## 4. Frontend Development
 
-### Install Dependencies
+The new TanStack Start frontend lives at
+`tuatha/apps/crypteolas demo/` (not in `tuatha/crypteolas/ui/`, which is
+legacy).
 
 ```bash
-cd demo
+cd tuatha/apps/crypteolas demo
+
+# Install dependencies
 bun install
-```
 
-### Start Development Server
-
-```bash
-# With 1Password secret injection
-op run --env-file .env -- bun run dev
-
-# Or
-eval $(op inject -i .env)
+# Start development server
 bun run dev
+# → http://localhost:3000 (proxies /api → localhost:8001)
 ```
 
-### Database Setup
+> The TanStack app is currently a buildable shell of stubs. See
+> [`../../apps/crypteolas demo/STATUS.md`](../../apps/crypteolas_demo/STATUS.md)
+> for the inventory of stubbed `src/lib/*` modules and `models/*` packages.
+
+### Database Setup (for the demo)
 
 ```bash
-# Run migrations
-bun run db:migrate
-
-# Seed initial data
-bun run db:seed
+cd tuatha/apps/crypteolas demo
+bun run db:push      # push Drizzle schema to PostgreSQL
 ```
 
 ## 5. Docker Compose (Full Stack)
@@ -182,12 +213,15 @@ For running all services together:
 
 ```bash
 # Start all services
-docker compose up -d
+cd tuatha/crypteolas
+docker compose -f compose.yaml -f compose.dev.yaml up -d
 
 # View logs
+cd tuatha/crypteolas
 docker compose logs -f dagster-webserver
 
 # Stop services
+cd tuatha/crypteolas
 docker compose down
 ```
 
@@ -198,47 +232,80 @@ docker compose down
 | `dagster-webserver` | 3000 | Dagster UI |
 | `dagster-daemon` | - | Background scheduler |
 | `postgres` | 5432 | PostgreSQL database |
-| `restate` | 8080, 9070 | Durable workflows |
-| `marimo` | 2718 | Notebooks |
-| `mcp-server` | 3001 | Agent tools |
+| `dragonfly` | 6379 | Redis-compatible cache |
+| `memgraph` | 7687 | Static knowledge graph |
+| `memgraph-lab` | 3000 | Memgraph Lab UI |
+| `langfuse` | 3000 | LLM observability |
+| `lance-viewer` | 3030 | LanceDB viewer |
+| `api` | 8000 | Crypteolas FastAPI backend |
+| `ui` | 3000 | Legacy TanStack Start UI |
+
+> The `restate` and `mcp-server` services from the prior setup are no
+> longer in the stack. The Crypteolas MCP server now runs as a stdio
+> process (`uv run python -m crypteolas.mcp_server`) rather than as a
+> container. Marimo notebooks are run with `marimo edit` rather than as
+> a containerised service.
 
 ## Directory Structure
 
 ```
-src/crypteolas/
-├── .env                  # Environment config (1Password refs)
-├── workspace.local.yaml  # Dagster workspace (local dev)
-├── workspace.yaml        # Dagster workspace (Docker)
-├── dagster.yaml          # Dagster instance config
-├── wrangler.toml         # Cloudflare Workers config
-├── orchestration/        # Dagster assets and jobs
-├── pipelines/            # DLT data pipelines
-├── demo/                 # TanStack Start frontend
-├── agents/               # Agno AI agents
-├── workflows/            # Restate workflows
-└── scripts/              # Setup scripts
+tuatha/crypteolas/
+├── STATUS.md
+├── __init__.py
+├── definitions.py              # Dagster code-location
+├── pyproject.toml              # name = "crypteolas"
+├── dg.toml                     # Dagster project config
+├── compose.yaml, compose.dev.yaml
+├── docker/                     # Dockerfile.api, Dockerfile.ui
+├── _shims/                     # sruth.shared.* compatibility shims
+├── agent_os/                   # AgentOS production runtime
+├── agents/                     # ADK + Agno + HITL + MCP server
+├── api/                        # FastAPI backend
+├── baml_src/                   # 6 crypto BAML schemas
+├── cocoindex_flows/            # unified_embedding, live_docs, protocol_graph
+├── config/                     # repos.yaml, protocol configs
+├── crates/                     # SpacetimeDB crypteolas-sync
+├── dagster_assets/             # github + defi + embedding + lakekeeper
+├── dagster_assets/components/  # YAML PipelineComponent loader
+├── demo/                       # mock data
+├── dlt_sources/                # defi/, github/, local/, documentation/
+├── dlt_utils/                  # destinations
+├── graphiti/                   # top-level Graphiti client
+├── knowledge_graph/            # cognee/ + graphiti/
+├── mcp_server/                 # top-level MCP server
+├── notebooks/                  # 4 marimo (post-dedup)
+├── pipelines/                  # older Dagster pipelines
+├── storage/                    # LanceCatalog, Garage, DuckLake, Lakekeeper
+├── tests/                      # 61 passing + pre-existing failures
+├── transformations/            # Ibis-based crypto analytics
+├── ui/                         # legacy TanStack (deferred to apps/crypteolas demo/)
+├── docs/                       # 7 historical design docs
+├── wrangler.toml               # Cloudflare Workers (TODO)
+├── dagster.yaml.example
+├── .env.example
+└── .env.lakekeeper.example
 ```
 
 ## Troubleshooting
 
-### 1Password CLI Not Working
+### Infisical CLI Not Working
 
 ```bash
 # Sign in
-op signin
+infisical login
 
-# Verify account
-op account list
+# Verify
+infisical whoami
 ```
 
 ### Dagster Module Import Errors
 
 ```bash
 # Ensure you're using the project venv
-source ../../.venv/bin/activate
+cd tuatha && uv sync
 
-# Or use uv
-uv pip install --python .venv/bin/python <package>
+# Re-resolve the workspace
+uv lock
 ```
 
 ### Port Already in Use
@@ -258,15 +325,34 @@ kill -9 <PID>
 wrangler whoami
 
 # Validate config
-wrangler config check
+cd tuatha/crypteolas && wrangler config check
 ```
+
+### Crypteolas Demo `bun run dev` Fails
+
+The TanStack frontend is a stub. See
+`tuatha/apps/crypteolas demo/STATUS.md` for the inventory of stubs and
+what needs to be implemented.
 
 ## Environment Variable Reference
 
-See `.env` for the complete list. Key variables:
+See [`../.env.example`](../.env.example) for the complete list. Key
+variables:
 
-- `OPENAI_API_KEY` - Required for LLM features
-- `DUCKDB_PATH` - Local analytics database path
-- `LANCEDB_URI` - Vector database path
-- `COINGECKO_API_KEY` - Optional, for higher rate limits
-- `FIRECRAWL_API_KEY` - Required for doc scraping
+- `OPENAI_API_KEY` — required for LLM features
+- `ANTHROPIC_API_KEY` — required if not going through LiteLLM
+- `LITELLM_API_BASE` — `http://localhost:4000` if using the gateway
+- `DUCKDB_PATH` — local analytics database path
+- `LANCEDB_URI` — vector database path
+- `GITHUB_ACCESS_TOKEN` — GitHub PAT for ingestion
+- `COINGECKO_API_KEY` — optional, for higher rate limits
+- `FIRECRAWL_API_KEY` — required for doc scraping
+- `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` — LLM observability
+
+## See Also
+
+- [`../STATUS.md`](../STATUS.md) — the full refactor history
+- [`../QUICKSTART.md`](../QUICKSTART.md) — quickstart for local dev
+- [`../DEVELOPMENT.md`](../DEVELOPMENT.md) — development workflow
+- [`../ARCHITECTURE.md`](../ARCHITECTURE.md) — 25 KB architecture deep-dive
+- [`../../README.md`](../../README.md) — the tuath workspace README

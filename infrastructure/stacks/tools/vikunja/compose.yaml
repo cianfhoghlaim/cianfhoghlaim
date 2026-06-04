@@ -1,0 +1,84 @@
+name: vikunja
+
+services:
+  # ---------------------------------------------------------------------------
+  # VIKUNJA — kanban + Gantt + lists + team sharing
+  # ---------------------------------------------------------------------------
+  vikunja:
+    image: vikunja/vikunja:1.0.0-rc2
+    container_name: vikunja
+    restart: unless-stopped
+    environment:
+      # Service
+      VIKUNJA_SERVICE_ROOTPATH: /app/vikunja/
+      VIKUNJA_SERVICE_ENABLEEMAILREMINDERS: "true"
+      VIKUNJA_SERVICE_JWT_SECRET: ${VIKUNJA_SERVICE_JWT_SECRET}
+      VIKUNJA_SERVICE_PUBLICURL: ${VIKUNJA_SERVICE_PUBLICURL:-https://vikunja.cianfhoghlaim.ie/}
+      # Database
+      VIKUNJA_DATABASE_HOST: vikunja-db
+      VIKUNJA_DATABASE_PORT: "5432"
+      VIKUNJA_DATABASE_USER: ${VIKUNJA_POSTGRES_USER:-vikunja}
+      VIKUNJA_DATABASE_PASSWORD: ${VIKUNJA_DATABASE_PASSWORD}
+      VIKUNJA_DATABASE_NAME: ${VIKUNJA_POSTGRES_DB:-vikunja}
+      VIKUNJA_DATABASE_SSLMODE: disable
+      VIKUNJA_DATABASE_PATH: /db/vikunja.db
+      # CalDAV (so cal-diy bookings surface as tasks with start/end dates → Gantt)
+      VIKUNJA_CALDAV_ENABLED: "true"
+      # Mailer (used by reminders)
+      VIKUNJA_MAILER_ENABLED: "true"
+      VIKUNJA_MAILER_SMTPHOST: ${VIKUNJA_MAILER_SMTPHOST:-imap.cianfhoghlaim.ie}
+      VIKUNJA_MAILER_SMTPPORT: ${VIKUNJA_MAILER_SMTPPORT:-587}
+      VIKUNJA_MAILER_SMTPAUTHTYPE: ${VIKUNJA_MAILER_SMTPAUTHTYPE:-PLAIN}
+      VIKUNJA_MAILER_SMTPUSER: ${VIKUNJA_MAILER_SMTPUSER}
+      VIKUNJA_MAILER_SMTPPASSWORD: ${VIKUNJA_MAILER_SMTPPASSWORD}
+      VIKUNJA_MAILER_FROMEMAIL: ${VIKUNJA_MAILER_FROMEMAIL:-vikunja.cianfhoghlaim.ie}
+      # Misc
+      VIKUNJA_REDIS_ENABLED: "false"   # single instance, queue not required
+    volumes:
+      - vikunja_files:/app/vikunja/files
+    ports:
+      - "3456:3456"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3456/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      vikunja-db:
+        condition: service_healthy
+    networks:
+      - cianfhoghlaim
+
+  # ---------------------------------------------------------------------------
+  # VIKUNJA POSTGRES
+  # ---------------------------------------------------------------------------
+  vikunja-db:
+    image: postgres:16-alpine
+    container_name: vikunja-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${VIKUNJA_POSTGRES_DB:-vikunja}
+      POSTGRES_USER: ${VIKUNJA_POSTGRES_USER:-vikunja}
+      POSTGRES_PASSWORD: ${VIKUNJA_DATABASE_PASSWORD}
+    volumes:
+      - vikunja_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "pg_isready -d $${POSTGRES_DB:-vikunja} -U $${POSTGRES_USER:-vikunja}"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cianfhoghlaim
+
+volumes:
+  vikunja_files:
+    name: vikunja_files
+  vikunja_db_data:
+    name: vikunja_db_data
+
+networks:
+  cianfhoghlaim:
+    driver: bridge

@@ -1,0 +1,9 @@
+services:
+  calcom-web:
+    labels:
+      - "pangolin.private-resources.cal-diy.name=cal-diy Scheduling"
+      - "pangolin.private-resources.cal-diy.mode=http"
+      - "pangolin.private-resources.cal-diy.full-domain=calcom.cianfhoghlaim.ie"
+      - "pangolin.private-resources.cal-diy.destination-port=3000"
+      - "pangolin.private-resources.cal-diy.protocol=http"
+      - "pangolin.private-resources.cal-diy.roles[0]=Member"

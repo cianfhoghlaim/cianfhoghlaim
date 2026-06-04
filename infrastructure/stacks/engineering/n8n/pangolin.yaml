@@ -1,0 +1,9 @@
+services:
+  n8n:
+    labels:
+      - "pangolin.private-resources.n8n.name=n8n Workflow Automation"
+      - "pangolin.private-resources.n8n.mode=http"
+      - "pangolin.private-resources.n8n.full-domain=n8n.cianfhoghlaim.ie"
+      - "pangolin.private-resources.n8n.destination-port=5678"
+      - "pangolin.private-resources.n8n.protocol=http"
+      - "pangolin.private-resources.n8n.roles[0]=Member"

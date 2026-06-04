@@ -1,0 +1,11 @@
+private-resources:
+  cal-diy:
+    name: "cal-diy Scheduling"
+    mode: http
+    full-domain: "calcom.cianfhoghlaim.ie"
+    destination-port: 3000
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member
