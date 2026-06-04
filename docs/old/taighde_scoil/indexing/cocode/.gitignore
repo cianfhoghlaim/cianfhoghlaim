@@ -1,0 +1,53 @@
+
+# env
+.env
+
+# venv
+.venv
+venv/
+
+# reports
+reports/
+
+# pycache
+__pycache__
+
+# Python build artifacts
+build/*
+*.egg-info/
+dist/
+*.pyc
+
+# mkdocs
+site/
+
+# Unit test / coverage reports
+htmlcov/
+.pytest_cache/
+.coverage
+coverage.xml
+
+# mypy
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
+# Results
+results/
+
+# Testing
+.coverage
+
+# temps
+temp/
+
+# Local settings
+pipelex_super.toml
+settings.local.json
+
+# To be removed
+/pipelex_libraries
+
+# GCP credentials
+gcp_credentials.json

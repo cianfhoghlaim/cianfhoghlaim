@@ -1,0 +1,43 @@
+{
+  "name": "coding-agent-monorepo",
+  "version": "1.0.0",
+  "description": "A monorepo containing agent, infra, and ui projects",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "pnpm -r --parallel start",
+    "build": "pnpm -r build",
+    "dev": "pnpm -r --parallel dev",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "clean": "pnpm -r clean",
+    "install:all": "pnpm install"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.34.0",
+    "@types/node": "^22.18.1",
+    "@typescript-eslint/eslint-plugin": "^8.42.0",
+    "@typescript-eslint/parser": "^8.42.0",
+    "@vitest/ui": "^3.2.4",
+    "eslint": "^9.34.0",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@restatedev/restate-sdk": "^1.8.4",
+      "@restatedev/restate-sdk-zod": "^1.8.4",
+      "@restatedev/restate-sdk-clients": "^1.8.4"
+    }
+  },
+  "packageManager": "pnpm@9.0.0"
+}

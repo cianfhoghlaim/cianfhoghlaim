@@ -1,0 +1,97 @@
+name: "Check notebooks"
+on:
+  push:
+    branches:
+      - 'main'
+    paths-ignore:
+      - '01_standalone_examples/**'
+  pull_request:
+    paths-ignore:
+      - '01_standalone_examples/**'
+
+jobs:
+  check-notebooks:
+    runs-on: ubuntu-latest-8-cores
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Build container
+        run: docker compose --profile local-lakefs --env-file .github/workflows/check-notebooks.env up --build --pull always -d
+
+      - name: Wait until Jupyter container is up
+        run: |
+          if ! timeout 5m bash -c '
+              while ! nc -z localhost 8888; do
+                  sleep 1
+              done
+          '; then
+              echo "❌ Timeout (5 minutes) occurred waiting for Jupyter to be available."
+              exit 1
+          fi
+
+
+      - name: Wait until lakeFS container is properly up
+        run: |
+          if ! timeout 5m bash -c '
+          while ! curl -s http://localhost:8000/_health; do
+              sleep 1
+            done
+          '; then
+              echo "❌ Timeout (5 minutes) occurred waiting for lakeFS to be available."
+              exit 1
+          fi
+
+      - name: Run all notebooks other than those excluded
+        working-directory: 00_notebooks
+        run: |
+          mkdir -p papermill-out
+
+          find . -name "*.ipynb" | \
+            grep -vFf <(grep -v -e '^#' -e '^$' ../.github/workflows/notebooks_to_exclude.txt) | \
+            xargs -I {} docker exec $(docker ps -q --filter expose=8888) \
+              papermill --cwd /home/jovyan/notebooks/ \
+                        "/home/jovyan/notebooks/{}" \
+                        "/home/jovyan/notebooks/papermill-out/{}" \
+                        2> papermill-out/papermill.err \
+                        1> papermill-out/papermill.out || true
+                
+      - name: Check for any failed notebooks
+        working-directory: 00_notebooks
+        run: |
+          mkdir -p papermill-out/failed
+          for file in $(grep -r -l "papermill-error-cell-tag" papermill-out); do
+            mv "$file" papermill-out/failed
+            echo "* 😱 ${file/papermill-out\//}" >> $GITHUB_STEP_SUMMARY
+          done
+
+          # Set the exit code based on whether we detected any failures
+          if [ "$(ls -A papermill-out/failed)" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "## 🚨👆🏻👆🏻 Failing notebooks found 👆🏻👆🏻🚨" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "_ℹ️ Download the **Failed notebooks** artifact to inspect the executed notebook and resulting errors._" >> $GITHUB_STEP_SUMMARY
+            cat $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "## ✅ No notebook failures found" >> $GITHUB_STEP_SUMMARY
+            echo "_Notebooks and paths listed in `.github/workflows/notebooks_to_exclude.txt` are excluded from automated testing._" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Store any failing notebooks
+        uses: actions/upload-artifact@v4
+        if: ${{ failure() }}
+        with:
+          name: Failed notebooks
+          path: |
+            00_notebooks/papermill-out/failed
+
+      - name: Store Papermill output
+        uses: actions/upload-artifact@v4
+        with:
+          name: Papermill output
+          path: |
+            00_notebooks/papermill-out/papermill.out
+            00_notebooks/papermill-out/papermill.err

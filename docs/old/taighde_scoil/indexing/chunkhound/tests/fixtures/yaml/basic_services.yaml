@@ -1,0 +1,11 @@
+services:
+  web:
+    image: nginx:1.25
+    env:
+      - key: PORT
+        value: "8080"
+      - key: LOG_LEVEL
+        value: info
+  worker:
+    image: alpine:3.18
+    command: ["python", "worker.py"]

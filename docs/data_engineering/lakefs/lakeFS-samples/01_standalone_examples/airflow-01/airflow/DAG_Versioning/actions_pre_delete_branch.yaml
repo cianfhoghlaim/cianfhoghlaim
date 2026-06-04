@@ -1,0 +1,16 @@
+name: TriggerAirflowDAGPreDeleteBranch
+description: This hook triggers Airflow DAG at pre delete branch
+on:
+  pre-delete-branch:
+    branches:
+      - version*
+hooks:
+  - id: trigger_airflow_lakefs_delete_dag
+    type: airflow
+    description: Trigger Airflow DAG lakefs_delete_dag
+    properties:
+      url: "http://host.docker.internal:8080/"
+      dag_id: "lakefs_delete_dag"
+      username: "airflow"
+      password: "airflow"
+      wait_for_dag: true

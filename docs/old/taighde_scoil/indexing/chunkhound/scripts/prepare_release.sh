@@ -1,0 +1,78 @@
+#!/bin/bash
+set -e
+
+# ChunkHound Release Preparation Script
+# Modern uv-based release process with dependency locking
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
+echo "🚀 Preparing ChunkHound Release..."
+echo "Project root: $PROJECT_ROOT"
+
+# Change to project root
+cd "$PROJECT_ROOT"
+
+# Check if we're in a clean git state
+if ! git diff-index --quiet HEAD --; then
+    echo "⚠️  Warning: You have uncommitted changes. Consider committing them first."
+    read -p "Continue anyway? (y/N): " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "❌ Release preparation cancelled."
+        exit 1
+    fi
+fi
+
+# Get current version
+CURRENT_VERSION=$(grep 'version = ' pyproject.toml | head -1 | sed 's/.*version = "\([^"]*\)".*/\1/')
+echo "📋 Current version: $CURRENT_VERSION"
+
+# Clean previous builds
+echo "🧹 Cleaning previous builds..."
+rm -rf dist/ build/
+
+# Run smoke tests (mandatory before release)
+echo "🧪 Running smoke tests..."
+if ! uv run python -m pytest tests/test_smoke.py -v; then
+    echo "❌ Smoke tests failed! Fix critical issues before releasing."
+    exit 1
+fi
+echo "✅ Smoke tests passing"
+
+# Regenerate locked requirements for reproducible installs
+echo "🔒 Regenerating locked requirements..."
+uv pip compile pyproject.toml --all-extras -o requirements-lock.txt
+echo "✅ Updated requirements-lock.txt with exact versions"
+
+# Build Python distributions
+echo "📦 Building distributions..."
+uv build
+echo "✅ Built wheel and source distribution"
+
+# Generate checksums for release artifacts
+echo "🔐 Generating checksums..."
+cd dist/
+find . -name "*.tar.gz" -o -name "*.whl" | xargs sha256sum > SHA256SUMS
+cd "$PROJECT_ROOT"
+
+# Display release summary
+echo ""
+echo "✅ Release preparation complete!"
+echo ""
+echo "📦 Release artifacts in dist/:"
+ls -la dist/
+echo ""
+echo "🎯 Next steps:"
+echo "1. Test the built distributions locally:"
+echo "   pip install dist/chunkhound-${CURRENT_VERSION}-py3-none-any.whl"
+echo "2. Publish to PyPI (requires API token):"
+echo "   uv publish"
+echo "3. Create GitHub release with artifacts from dist/"
+echo ""
+echo "🔒 Dependency locking:"
+echo "  - requirements-lock.txt updated with exact versions"
+echo "  - SHA256SUMS generated for verification"
+echo "  - Reproducible installs guaranteed"
+echo ""
+echo "🎉 Ready for release!"

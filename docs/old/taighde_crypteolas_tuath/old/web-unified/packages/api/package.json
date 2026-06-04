@@ -1,0 +1,33 @@
+{
+  "name": "@web-unified/api",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "type": "module",
+  "scripts": {},
+  "devDependencies": {
+    "@web-unified/config": "workspace:*"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@orpc/server": "catalog:",
+    "@orpc/client": "catalog:",
+    "@orpc/openapi": "catalog:",
+    "@orpc/zod": "catalog:",
+    "hono": "catalog:",
+    "drizzle-orm": "catalog:",
+    "ai": "catalog:",
+    "@ai-sdk/google": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "^4.1.11",
+    "@web-unified/auth": "workspace:*",
+    "@web-unified/db": "workspace:*"
+  }
+}
