@@ -1,0 +1,9 @@
+private-resources:
+  pulumi:
+    name: "Pulumi IaC"
+    mode: http
+    full-domain: "pulumi.cianfhoghlaim.ie"
+    destination-port: 8080
+    protocol: http
+    sites: [arm1-oci]
+    roles: [Member]

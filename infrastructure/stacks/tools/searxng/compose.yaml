@@ -1,0 +1,27 @@
+name: searxng
+services:
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    restart: unless-stopped
+    ports: ["8888:8080"]
+    environment:
+      - SEARXNG_SETTINGS_PATH=/etc/searxng/settings.yml
+      - SEARXNG_UWSGI_SETTINGS_PATH=/etc/searxng/uwsgi.ini
+      - SEARXNG_REDIS_URL=${SEARXNG_REDIS_URL:-redis://redis:6379/0}
+    volumes:
+      - searxng_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/healthz || exit 1"]
+      interval: 30s; timeout: 10s; retries: 3; start_period: 15s
+    networks: [cianfhoghlaim]
+  redis:
+    image: redis:7-alpine
+    container_name: searxng-redis
+    restart: unless-stopped
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    networks: [cianfhoghlaim]
+volumes:
+  searxng_data: {driver: local}
+networks:
+  cianfhoghlaim: {driver: bridge}
