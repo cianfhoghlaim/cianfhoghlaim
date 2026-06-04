@@ -93,17 +93,17 @@ export function AwenChat() {
                 Fáilte! Ask about exam papers, marking schemes, or syllabi.
               </p>
             ) : (
-              visibleMessages.map((m) => (
+              visibleMessages.map((m, idx: number) => (
                 <div
-                  key={m.id}
+                  key={m.id ?? idx}
                   className={
                     "p-2 rounded-lg " +
-                    (m.role === "user"
+                    ((m as { role?: string }).role === "user"
                       ? "bg-emerald-700/20 text-emerald-100"
                       : "bg-slate-800 text-slate-200")
                   }
                 >
-                  {m.content}
+                  {String((m as { content?: string }).content ?? "")}
                 </div>
               ))
             )}
@@ -120,7 +120,7 @@ export function AwenChat() {
               ) as HTMLInputElement;
               const text = input.value.trim();
               if (!text) return;
-              await appendMessage({ role: "user", content: text });
+              await appendMessage({ role: "user", content: text } as never);
               input.value = "";
             }}
           >

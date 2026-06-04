@@ -32,8 +32,8 @@ export function Exams() {
   const navigate = useNavigate();
   const [chatOpen, setChatOpen] = useState(true);
 
-  const setFilter = (patch: Partial<typeof search>) =>
-    navigate({ search: (prev) => ({ ...prev, ...patch }), to: "/exams" });
+  const setFilter = (patch: Record<string, string | number>) =>
+    navigate({ search: (prev) => ({ ...prev, ...patch }) as never, to: "/exams" });
 
   const { data: materials = [], isLoading } = useQuery({
     queryKey: ["exam-materials", search],
@@ -131,14 +131,14 @@ export function Exams() {
           </div>
         ) : (
           <ul className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-            {materials.map((m, i) => (
+            {materials.map((m: Record<string, unknown>, i: number) => (
               <li
                 key={`${m.pdf_url}-${i}`}
                 className="bg-slate-950 border border-slate-800 rounded-xl p-4 flex flex-col gap-2"
               >
                 <div className="flex items-baseline gap-2">
                   <h3 className="font-bold text-slate-100">
-                    {m.title || (m.pdf_url as string).slice(0, 60) + "…"}
+                    {String(m.title ?? "") || String(m.pdf_url ?? "").slice(0, 60) + "…"}
                   </h3>
                   <span className="ml-auto text-xs font-mono text-slate-500">
                     {String(m.scraper ?? "—")}
@@ -150,12 +150,12 @@ export function Exams() {
                   <span>Status: {String(m.status ?? "—")}</span>
                 </div>
                 <a
-                  href={String(m.pdf_url)}
+                  href={String(m.pdf_url ?? "")}
                   target="_blank"
                   rel="noreferrer"
                   className="text-xs text-emerald-400 hover:text-emerald-300 break-all font-mono"
                 >
-                  {String(m.pdf_url).slice(0, 120)}
+                  {String(m.pdf_url ?? "").slice(0, 120)}
                 </a>
               </li>
             ))}
