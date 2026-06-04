@@ -1,81 +1,41 @@
-# =============================================================================
-# AGENT-OS - Komodo Deployment Blueprint
-# =============================================================================
-# Defines the AgentOS stack for Komodo deployment.
-#
-# USAGE:
-#   komodo stack deploy agent-os
-#
-# PREREQUISITES:
-#   - Secrets configured in Infisical (dev-baile vault)
-#   - Pangolin a2a-resources.blueprint.yaml applied
-# =============================================================================
-
-name: agent-os
-description: |
-  Production runtime for AI agents using Agno AgentOS.
-  Provides A2A and AG-UI interfaces for 4 domain-specific flows:
-  - Oideachais: Irish Education & Curriculum
-  - Crypteolas: DeFi Protocol Analysis
-  - Browser: Web Automation Orchestration
-  - Aleyum: Deep Research & Discovery
-
-# Stack configuration
-config:
-  # Server to deploy on
-  server: arm1-oci
-
-  # Git repository for stack definition
-  repo: cliste/bonneagar
-  branch: main
-  path: bonneagar/storage/agent-os
-
-  # Build configuration
-  build_on_deploy: true
-
-  # Resource limits
-  resources:
-    memory: 4Gi
-    cpu: 2
-
-# Environment from secrets
-env_from_secrets:
-  - agent-os-secrets
-
-# Health check endpoints
-health_checks:
-  - name: oideachais
-    endpoint: http://oideachais-agentos:7777/health
-    interval: 30s
-  - name: crypteolas
-    endpoint: http://crypteolas-agentos:7777/health
-    interval: 30s
-  - name: browser
-    endpoint: http://browser-agentos:7777/health
-    interval: 30s
-  - name: aleyum
-    endpoint: http://aleyum-agentos:7777/health
-    interval: 30s
-
-# Deployment hooks
-hooks:
-  pre_deploy:
-    - echo "Deploying AgentOS stack..."
-  post_deploy:
-    - echo "AgentOS stack deployed successfully"
-    - echo "Services:"
-    - echo "  - Oideachais: agents.oideachais.cianfhoghlaim.ie"
-    - echo "  - Crypteolas: agents.crypteolas.cianfhoghlaim.ie"
-    - echo "  - Browser: agents.browser.cianfhoghlaim.ie"
-    - echo "  - Aleyum: agents.aleyum.cianfhoghlaim.ie"
-
-# Dependencies
-depends_on:
-  - langfuse  # For observability
-  - qdrant    # For vector storage (optional)
-
-# Labels for organization
-labels:
-  category: agents
-  domain: ai
-  team: cianfhoghlaim
+private-resources:
+  oideachais-agentos:
+    name: "oideachais AgentOS"
+    mode: http
+    full-domain: "agents.oideachais.cianfhoghlaim.ie"
+    destination-port: 7777
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member
+  crypteolas-agentos:
+    name: "crypteolas AgentOS"
+    mode: http
+    full-domain: "agents.crypteolas.cianfhoghlaim.ie"
+    destination-port: 7777
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member
+  browser-agentos:
+    name: "browser AgentOS"
+    mode: http
+    full-domain: "agents.browser.cianfhoghlaim.ie"
+    destination-port: 7777
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member
+  aleyum-agentos:
+    name: "aleyum AgentOS"
+    mode: http
+    full-domain: "agents.aleyum.cianfhoghlaim.ie"
+    destination-port: 7777
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

@@ -1,7 +1,7 @@
 services:
   locket:
     image: ghcr.io/bpbradley/locket:infisical
-    container_name: browser-locket
+    container_name: stirling-pdf-locket
     restart: unless-stopped
     user: "65532:65532"
     security_opt:
@@ -28,37 +28,7 @@ services:
     networks:
       - stack
 
-  browser-grid:
-    depends_on:
-      locket: { condition: service_healthy }
-    volumes: [stack-secrets:/run/secrets/locket:ro]
-    env_file: [/run/secrets/locket/secrets.env]
-  stagehand-local:
-    depends_on:
-      locket: { condition: service_healthy }
-    volumes: [stack-secrets:/run/secrets/locket:ro]
-    env_file: [/run/secrets/locket/secrets.env]
-  api:
-    depends_on:
-      locket: { condition: service_healthy }
-    volumes: [stack-secrets:/run/secrets/locket:ro]
-    env_file: [/run/secrets/locket/secrets.env]
-  crawl4ai:
-    depends_on:
-      locket: { condition: service_healthy }
-    volumes: [stack-secrets:/run/secrets/locket:ro]
-    env_file: [/run/secrets/locket/secrets.env]
-  skyvern:
-    depends_on:
-      locket: { condition: service_healthy }
-    volumes: [stack-secrets:/run/secrets/locket:ro]
-    env_file: [/run/secrets/locket/secrets.env]
-  skyvern-db:
-    depends_on:
-      locket: { condition: service_healthy }
-    volumes: [stack-secrets:/run/secrets/locket:ro]
-    env_file: [/run/secrets/locket/secrets.env]
-  garage:
+  stirling-pdf:
     depends_on:
       locket: { condition: service_healthy }
     volumes: [stack-secrets:/run/secrets/locket:ro]

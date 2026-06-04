@@ -1,11 +1,12 @@
-# =============================================================================
-# KAFKA - Pangolin Private Resource Labels
-# =============================================================================
-# Kafka UI, Schema Registry, and Connect API are private (zero-trust).
-# Kafka broker uses TCP mode for remote producers/consumers.
-# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
-
 services:
+  kafka:
+    labels:
+      - "pangolin.private-resources.kafka.name=Kafka Broker"
+      - "pangolin.private-resources.kafka.mode=tcp"
+      - "pangolin.private-resources.kafka.tcp-ports=9094"
+      - "pangolin.private-resources.kafka.destination=127.0.0.1"
+      - "pangolin.private-resources.kafka.protocol=tcp"
+      - "pangolin.private-resources.kafka.roles[0]=Member"
   kafka-ui:
     labels:
       - "pangolin.private-resources.kafka-ui.name=Kafka UI"
@@ -14,29 +15,3 @@ services:
       - "pangolin.private-resources.kafka-ui.destination-port=8080"
       - "pangolin.private-resources.kafka-ui.protocol=http"
       - "pangolin.private-resources.kafka-ui.roles[0]=Member"
-
-  schema-registry:
-    labels:
-      - "pangolin.private-resources.schema-registry.name=Schema Registry"
-      - "pangolin.private-resources.schema-registry.mode=http"
-      - "pangolin.private-resources.schema-registry.full-domain=schema-registry.cianfhoghlaim.ie"
-      - "pangolin.private-resources.schema-registry.destination-port=8081"
-      - "pangolin.private-resources.schema-registry.protocol=http"
-      - "pangolin.private-resources.schema-registry.roles[0]=Member"
-
-  kafka-connect:
-    labels:
-      - "pangolin.private-resources.kafka-connect.name=Kafka Connect"
-      - "pangolin.private-resources.kafka-connect.mode=http"
-      - "pangolin.private-resources.kafka-connect.full-domain=kafka-connect.cianfhoghlaim.ie"
-      - "pangolin.private-resources.kafka-connect.destination-port=8083"
-      - "pangolin.private-resources.kafka-connect.protocol=http"
-      - "pangolin.private-resources.kafka-connect.roles[0]=Member"
-
-  kafka:
-    labels:
-      - "pangolin.private-resources.kafka-broker.name=Kafka Broker"
-      - "pangolin.private-resources.kafka-broker.mode=host"
-      - "pangolin.private-resources.kafka-broker.destination=127.0.0.1"
-      - "pangolin.private-resources.kafka-broker.tcp-ports=9094"
-      - "pangolin.private-resources.kafka-broker.roles[0]=Member"

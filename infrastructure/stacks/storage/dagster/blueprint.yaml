@@ -1,0 +1,21 @@
+private-resources:
+  dagster:
+    name: "Dagster Unified"
+    mode: http
+    full-domain: "dagster.cianfhoghlaim.ie"
+    destination-port: 3000
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member
+  dagster-daemon:
+    name: "Dagster Daemon"
+    mode: http
+    full-domain: "dagster-daemon.cianfhoghlaim.ie"
+    destination-port: 3000
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

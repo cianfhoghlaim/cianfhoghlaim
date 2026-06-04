@@ -50,6 +50,8 @@
     "spec:validate": "openspec validate",
     "spec:archive": "openspec archive",
 
+    "validate-stacks": "bash scripts/stack-doctor.sh",
+    "doctor:stacks": "bash scripts/stack-doctor.sh --json | jq",
     "mise:run": "mise run"
   },
   "devDependencies": {
