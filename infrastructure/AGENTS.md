@@ -8,10 +8,10 @@ Infrastructure contains deployment configurations, infrastructure-as-code, and s
 
 | Directory | Purpose | Technology |
 |-----------|---------|------------|
-| `stacks/storage/` | Database and storage stacks | Docker Compose |
-| `stacks/infrastructure/` | Control plane (Pangolin, Komodo, Pocket ID) | Docker Compose |
-| `stacks/engineering/` | Dev tooling (LiteLLM, Crawl4AI, Coder) | Docker Compose |
-| `stacks/machine_learning/` | ML training and serving | Docker Compose |
+| `stacks/storage/` | Foundational substrates (S3, catalogs, version control) | Docker Compose |
+| `stacks/infrastructure/` | Control plane (Pangolin, Komodo, Pocket ID, Forgejo, Pulumi, R2, MotherDuck, PlanetScale) | Docker Compose |
+| `stacks/engineering/` | Dev tooling + gateways + services (LiteLLM, llama-swap, Coder, Dagster, Convex, Pipecat) | Docker Compose |
+| `stacks/machine_learning/` | AI services (Cognee, Graphiti, Langfuse, MLflow, LanceDB, Qdrant, Memgraph, FalkorDB, RisingWave) | Docker Compose |
 | `stacks/tools/` | Productivity and media utilities | Docker Compose |
 | `stacks/browser/` | Browser automation stacks | Docker Compose |
 | `komodo/` | Komodo configuration and profiles | Komodo |
@@ -20,6 +20,14 @@ Infrastructure contains deployment configurations, infrastructure-as-code, and s
 | `pulumi/` | Cloud infrastructure | Pulumi IaC |
 | `ansible/` | Server configuration | Ansible |
 | `scripts/` | Utility scripts | Shell/TypeScript |
+
+### Categorisation philosophy (after Phase 0 reorganisation)
+
+- **`stacks/infrastructure/`** — Control-plane services. Anything that other services depend on for routing/auth/identity/storage provisioning.
+- **`stacks/engineering/`** — Service mesh + dev tooling + AI gateways. Things humans and agents interact with daily.
+- **`stacks/machine_learning/`** — AI/ML-specific services: vector DBs, knowledge graphs, observability, streaming, training.
+- **`stacks/storage/`** — Foundational substrates only: S3 (Garage), Iceberg (Lakekeeper), git (Forgejo runner, LakeFS).
+- **`stacks/tools/`** — Productivity / media utilities (rarely tied to the platform's data flow).
 
 ## Stack Categories
 
@@ -33,31 +41,68 @@ Infrastructure contains deployment configurations, infrastructure-as-code, and s
 | `dozzle/` | Container log viewer | Internal |
 | `DnsServer/` | Local DNS resolution | Internal |
 
-### Storage (Data Infrastructure)
+### Storage (Foundational Substrates)
 
 | Stack | Purpose | Key Ports |
 |-------|---------|-----------|
 | `garage/` | CRDT S3-compatible object storage | 3900-3904 |
 | `lakehouse/` | Lakekeeper catalog + Lance Namespace + Postgres + Garage | 3900-3904, 5433, 8181-8182 |
-| `dagster/` | Pipeline orchestration (custom image) | 3335 |
-| `lancedb/` | LanceDB data viewer | 8080 |
-| `memgraph/` | Graph database (MAGE + Lab UI) | 7687, 7444, 3000 |
-| `falkordb/` | Vector+graph hybrid | 6379, 3000 |
-| `qdrant/` | Vector search | 6333, 6334 |
-| `langfuse/` | LLM observability | 3000 |
-| `mlflow/` | ML experiment tracking | 5000 |
-| `forgejo/` | Git forge | 3000, 2222 |
-| `cognee/` | AI memory system | Internal |
-| `graphiti/` | Temporal knowledge graph | Internal |
+| `lakekeeper/` | Iceberg REST catalog | 8181 |
+| `lakefs/` | Git-for-data on S3 (versioned lake) | 8000 |
+| `forgejo-runner/` | GitHub Actions runner for Forgejo | Internal |
+| `beszel/` | Server/Docker monitoring hub | 8090 |
 
-### Engineering
+### Infrastructure (Control Plane)
+
+| Stack | Purpose | Key Ports |
+|-------|---------|-----------|
+| `pangolin/` | VPN + Traefik + Pocket ID + CrowdSec + TinyAuth | 51820/udp, 443, 80, 8443 |
+| `komodo/` | Container orchestration and deployment | 9120 |
+| `pocket-id/` | OIDC identity provider | 1411 |
+| `dozzle/` | Container log viewer | Internal |
+| `DnsServer/` | Local DNS resolution | Internal |
+| `forgejo/` | Self-hosted Git forge (control-plane) | 3000, 2222 |
+| `r2/` | Cloudflare R2 adapter | Internal |
+| `motherduck/` | Cloud query engine | Internal |
+| `planetscale/` | Postgres-compatible cloud DB | Internal |
+| `monitoring/` | Prometheus + Grafana + Loki | 9090, 3000 |
+
+### Engineering (Dev Tooling + Gateways + Services)
 
 | Stack | Purpose | Key Ports |
 |-------|---------|-----------|
 | `litellm/` | LLM proxy gateway (Postgres + Prometheus) | 4000, 5432, 9090 |
+| `mlx-omni/` | Apple Silicon MLX-format OpenAI server | 10240 |
+| `invokeai/` | SDXL image generation | 9090 |
 | `crawl4ai/` | Web crawling API | 11235 |
 | `coder/` | Cloud development environment | Internal |
 | `windmill/` | Workflow automation | Internal |
+| `MCPJungle/` | MCP server manager | Internal |
+| `DevDocs/` | Developer documentation UI | Internal |
+| `n8n/` | Visual workflow automation | 5678 |
+| `networking-toolbox/` | Network diagnostic tools | Internal |
+| `dagster/` | Pipeline orchestration (engineering entry) | 3335 |
+| `convex/` | Realtime backend for web | Internal |
+| `pydantic-gateway/` | Pydantic AI gateway (LLM routing) | Internal |
+| `mathesar/` | Postgres UI | Internal |
+| `agent-os/` | AgentOS (Letta) | Internal |
+
+### Machine Learning (AI Services)
+
+| Stack | Purpose | Key Ports |
+|-------|---------|-----------|
+| `cognee/` | AI memory system (Neo4j, Memgraph, FalkorDB) | 8000 |
+| `graphiti/` | Temporal knowledge graph | 8080 |
+| `langfuse/` | LLM observability (v3) | 3000 |
+| `lmnr/` | LMNR observability | Internal |
+| `olake/` | ELT from MongoDB→warehouse | 8080 |
+| `qdrant/` | Vector search | 6333, 6334 |
+| `memgraph/` | Graph database (MAGE + Lab UI) | 7687, 7444, 3000 |
+| `falkordb/` | Vector+graph hybrid | 6379, 3000 |
+| `lancedb/` | LanceDB data viewer | 8080 |
+| `mlflow/` | ML experiment tracking | 5000 |
+| `logfire/` | Pydantic Logfire (Python tracing) | Internal |
+| `nimtable/` | Iceberg catalog UI | Internal |
 
 ## Standard Stack Structure
 
