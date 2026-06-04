@@ -12,7 +12,8 @@
   "workspaces": [
     "oideachais/web",
     "oideachais/mcp/filesystem",
-    "tuatha/ui"
+    "tuatha/ui",
+    "tuatha/apps/crypteolas_demo"
   ],
   "scripts": {
     "postinstall": "turbo run postinstall --filter=./scripts/* || true",

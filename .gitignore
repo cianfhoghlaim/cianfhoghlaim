@@ -7,9 +7,12 @@ instagram_output/
 stedding/
 .dlt
 /Users/cianmacandeisigh/dev/kings_college_galway/infisical_secret
-
+/Users/cianmacandeisigh/dev/kings_college_galway/dlthub
 .gemini
 .DS_Store
+
+dlthub
+.local
 
 # =============================================================================
 # CIANFHOGHLAIM MONOREPO - GITIGNORE
@@ -228,3 +231,5 @@ oideachais/data_platform/datasets/uk/dfe/key-stage-4-performance_2023-24/data/20
 oideachais/data_platform/datasets/uk/dfe/a-level-and-other-16-to-18-results_2023-24/data/all_inst_data.csv
 hackathons/gsoc/beagle/docs.beagleboard.io/.git_disabled/objects/pack/*.pack
 university_of_galway/mata/modelling_2/exam_papers/Past/SinéadNotes (1).pdf
+# CocoIndex Code (ccc)
+/.cocoindex_code/

@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  html, body {
+    @apply h-full;
+  }
+}
+
+@layer components {
+  .btn-tactile {
+    @apply bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-1 rounded-md
+           font-medium text-sm transition-colors border border-emerald-800
+           shadow-sm;
+  }
+}
+
+/* TanStack Start server-rendered output uses the Awen-style dark theme. */

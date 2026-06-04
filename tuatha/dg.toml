@@ -1,5 +1,12 @@
 # Tuath - Celtic Educational MMO Data Pipeline
-# Project-level configuration for dg CLI
+# Project-level configuration for dg CLI.
+#
+# The Celtic MMO code-location is registered here. The two new
+# code-locations added during the consolidation (crypteolas and
+# crypteolas_demo) live in their own pyproject.toml + dg.toml files
+# under tuatha/crypteolas/dg.toml and
+# tuatha/apps/crypteolas_demo/dg.toml respectively, and are discovered
+# by the workspace-level dg.toml at the repo root.
 
 directory_type = "project"
 

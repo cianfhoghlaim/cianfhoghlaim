@@ -44,7 +44,9 @@ package = false
 members = [
     "oideachais",
     "tuatha",
-    "códeolas_codebase_indexing",
+    "tuatha/codeolas",
+    "tuatha/crypteolas",
+    "tuatha/apps/crypteolas_demo",
     "infrastructure/browser",
     "oideachais/mcp/mcpo",
 ]
@@ -53,6 +55,8 @@ members = [
 # Members can depend on each other; uv resolves them via the workspace lockfile.
 # Keys are the package names (ASCII); values are the workspace source spec.
 codeolas = { workspace = true }
+crypteolas = { workspace = true }
+crypteolas-demo = { workspace = true }
 sruth-browser = { workspace = true }
 oideachais = { workspace = true }
 tuath = { workspace = true }

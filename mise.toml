@@ -115,9 +115,30 @@ run = "cd infrastructure/locket && cargo clippy"
 description = "Run Dagster for oideachais pipeline"
 run = "cd oideachais && uv run dagster dev -m data_platform.dagster_defs.definitions"
 
-[tasks."dagster:tuatha"]
-description = "Run Dagster for tuatha pipeline"
+[tasks."dagster:tuath"]
+description = "Run Dagster for the Celtic MMO (tuath) code-location"
 run = "cd tuatha && uv run dagster dev -m dagster_assets.definitions"
+
+[tasks."dagster:crypteolas"]
+description = "Run Dagster for the crypteolas code-location"
+run = "cd tuatha && uv run dagster dev -m crypteolas.definitions"
+
+[tasks."dagster:crypteolas_demo"]
+description = "Run Dagster for the crypteolas_demo code-location"
+run = "cd tuatha/apps/crypteolas_demo && uv run dagster dev -m definitions"
+
+# Per-package test runners
+[tasks."test:codeolas"]
+description = "Run pytest on the códeolas library"
+run = "cd tuatha && uv run pytest codeolas/tests/"
+
+[tasks."test:crypteolas"]
+description = "Run pytest on the crypteolas platform"
+run = "cd tuatha && uv run pytest crypteolas/tests/"
+
+[tasks."test:crypteolas_demo"]
+description = "Run pytest on the crypteolas_demo app"
+run = "cd tuatha/apps/crypteolas_demo && uv run pytest"
 
 # =============================================================================
 # Dagger CI/CD Tasks
