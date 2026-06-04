@@ -1,0 +1,9 @@
+services:
+  paperless:
+    labels:
+      - "pangolin.private-resources.paperless.name=Paperless-ngx"
+      - "pangolin.private-resources.paperless.mode=http"
+      - "pangolin.private-resources.paperless.full-domain=paperless.cianfhoghlaim.ie"
+      - "pangolin.private-resources.paperless.destination-port=8000"
+      - "pangolin.private-resources.paperless.protocol=http"
+      - "pangolin.private-resources.paperless.roles[0]=Member"
