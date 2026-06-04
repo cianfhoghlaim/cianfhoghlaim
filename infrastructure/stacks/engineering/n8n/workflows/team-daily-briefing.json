@@ -1,0 +1,134 @@
+{
+  "name": "team-daily-briefing",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 6 * * 1-5"
+            }
+          ]
+        },
+        "name": "Cron 06:00 weekdays",
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [240, 300]
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://calcom.cianfhoghlaim.ie/api/v2/bookings",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "name": "List today's cal.com bookings",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 200]
+    },
+    {
+      "parameters": {
+        "url": "http://vikunja:3456/api/v1/tasks?due_date=2026-01-01T00:00:00Z&per_page=50",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "name": "List Vikunja tasks due in 48h",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.OPENAI_BASE_URL }}/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "value": "Bearer {{ $env.OPENAI_API_KEY }}"},
+            {"name": "Content-Type", "value": "application/json"}
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "model", "value": "opencode-go/kimi-k2.6"},
+            {"name": "messages", "value": "=[{\"role\":\"system\",\"content\":\"You are a team-lead briefing assistant. Produce a concise morning briefing covering: today's meetings (from cal.com), tasks due in the next 48 hours (from Vikunja), and any inbox items that look urgent. Markdown. Under 400 words.\"},{\"role\":\"user\",\"content\":\"BOOKINGS: {{ $('List today\\\\'s cal.com bookings').item.json }}\n\nTASKS: {{ $('List Vikunja tasks due in 48h').item.json }}\"}]"}
+          ]
+        }
+      },
+      "name": "Summarise with kimi-k2.6 (OpenCode Go)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.sendgrid.com/v3/mail/send",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "value": "Bearer {{ $env.SENDGRID_API_KEY }}"},
+            {"name": "Content-Type", "value": "application/json"}
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "to", "value": "={{ $env.TEAM_NOTIFICATION_EMAIL }}"},
+            {"name": "from", "value": "team@cianfhoghlaim.ie"},
+            {"name": "subject", "value": "Daily briefing — {{ $now.format('yyyy-MM-dd') }}"},
+            {"name": "text", "value": "={{ $('Summarise with kimi-k2.6 (OpenCode Go)').item.json.choices[0].message.content }}"}
+          ]
+        }
+      },
+      "name": "Email briefing to team lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "http://vikunja:3456/api/v1/projects/1/tasks",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "title", "value": "Briefing {{ $now.format('yyyy-MM-dd') }}"},
+            {"name": "description", "value": "={{ $('Summarise with kimi-k2.6 (OpenCode Go)').item.json.choices[0].message.content }}"},
+            {"name": "assignees", "value": "=[\"team\"]"}
+          ]
+        }
+      },
+      "name": "Create Vikunja note in /_briefings",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 400]
+    }
+  ],
+  "connections": {
+    "Cron 06:00 weekdays": {
+      "main": [
+        [
+          {"node": "List today's cal.com bookings", "type": "main", "index": 0},
+          {"node": "List Vikunja tasks due in 48h", "type": "main", "index": 0}
+        ]
+      ]
+    },
+    "List today's cal.com bookings": {"main": [[{"node": "Summarise with kimi-k2.6 (OpenCode Go)", "type": "main", "index": 0}]]},
+    "List Vikunja tasks due in 48h": {"main": [[{"node": "Summarise with kimi-k2.6 (OpenCode Go)", "type": "main", "index": 0}]]},
+    "Summarise with kimi-k2.6 (OpenCode Go)": {
+      "main": [
+        [
+          {"node": "Email briefing to team lead", "type": "main", "index": 0},
+          {"node": "Create Vikunja note in /_briefings", "type": "main", "index": 0}
+        ]
+      ]
+    }
+  },
+  "settings": {"executionOrder": "v1"},
+  "tags": [{"name": "team"}, {"name": "llm"}, {"name": "opencode-go"}]
+}

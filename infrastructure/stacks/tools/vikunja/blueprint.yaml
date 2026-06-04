@@ -1,0 +1,11 @@
+private-resources:
+  vikunja:
+    name: "Vikunja Team Workspace"
+    mode: http
+    full-domain: "vikunja.cianfhoghlaim.ie"
+    destination-port: 3456
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

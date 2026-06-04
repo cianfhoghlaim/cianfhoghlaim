@@ -1,0 +1,80 @@
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:infisical
+    container_name: n8n-locket
+    restart: unless-stopped
+    user: "65532:65532"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    command:
+      - "--provider=infisical"
+      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--map=/templates:/run/secrets/locket"
+      - "--mode=${LOCKET_MODE:-watch}"
+    secrets:
+      - infisical_secret
+    volumes:
+      - ./secrets.env:/templates/secrets.env:ro
+      - stack-secrets:/run/secrets/locket
+    healthcheck:
+      test: ["CMD", "/locket", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - stack
+
+  # n8n main service receives secrets at /run/secrets/locket/secrets.env
+  n8n:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - stack-secrets:/run/secrets/locket:ro
+    env_file:
+      - /run/secrets/locket/secrets.env
+
+  # n8n-init (one-shot) needs the same secrets + reach the n8n REST API
+  n8n-init:
+    image: ghcr.io/cianfhoghlaim/n8n-init:latest
+    container_name: n8n-init
+    depends_on:
+      locket:
+        condition: service_healthy
+      n8n:
+        condition: service_healthy
+    environment:
+      N8N_BASE_URL: http://n8n:5678
+      N8N_API_KEY: ${N8N_API_KEY}
+      WORKFLOWS_DIR: /workflows
+    volumes:
+      - ./workflows:/workflows:ro
+      - stack-secrets:/run/secrets/locket:ro
+    env_file:
+      - /run/secrets/locket/secrets.env
+    networks:
+      - stack
+      - cianfhoghlaim
+    restart: "no"
+
+secrets:
+  infisical_secret:
+    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+
+volumes:
+  stack-secrets:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=700
+
+networks:
+  stack:
+    driver: bridge
+  cianfhoghlaim:
+    driver: bridge

@@ -155,13 +155,19 @@ Full workflow in [`openspec/AGENTS.md`](openspec/AGENTS.md).
 To ensure you use the appropriate skills for the different aspects of the project, strictly adhere to this mapping:
 
 ### Codebase Exploration & General Development
-- **Code Search**: Use [`ccc`](.agents/skills/ccc/SKILL.md) (CocoIndex Code) for semantic search over the codebase. Prefer `ccc search` over raw `grep` or `find` to get context-aware, relevant files instantly.
+- **Code Search**: Use [`ccc`](.agents/skills/ccc/SKILL.md) (CocoIndex Code) for semantic search over the codebase. Prefer `ccc search` over raw `grep`/`find` to get context-aware, relevant files instantly.
 - **Python Quality**: Use [`dignified-python`](.agents/skills/dignified-python/SKILL.md) for LBYL exception handling patterns, ABC interfaces, and explicit module boundaries.
 
 ### Core Data Platform (`oideachais/data_platform`)
 - **Orchestration**: Load [`dagster`](.agents/skills/dagster/SKILL.md) (specifically the expert routing rules inside it). This ensures you know how to build `MultiPartitionsDefinition` and avoid absolute namespace errors.
 - **Extraction**: Load [`dlt`](.agents/skills/dlt/SKILL.md). This skill router will point you to `create-filesystem-pipeline` (crucial for our `USE_LOCAL_SCRAPES` strategy) or `create-rest-api-pipeline`.
 - **Storage & Lakehouse**: Load [`motherduck`](.agents/skills/motherduck/SKILL.md). This serves as the master router to help you pick between `motherduck-ducklake` (our Garage S3 architecture), `motherduck-duckdb-sql`, or `motherduck-connect`.
+
+### Team Workflow Stack (`infrastructure/stacks/{engineering/n8n,tools/vikunja,tools/cal-diy}/`)
+- **Workflow authoring / debugging**: n8n visual pipeline editor at `n8n.cianfhoghlaim.ie` (private). The 6 seeded workflows live in `engineering/n8n/workflows/team-*.json` and are imported by the `n8n-init` one-shot container.
+- **Task management + Gantt + team sharing**: Vikunja REST API at `vikunja.cianfhoghlaim.ie/api/v1/`. Kanban + Gantt + list views; team group shared across `client-work`, `internal`, `support` projects.
+- **Scheduling**: cal-diy (cal.com community build) at `calcom.cianfhoghlaim.ie`. Team booking page at `/team`, per-member pages at `/<member-slug>`. Outbound webhooks → n8n.
+- **LLM backbone**: All workflow LLM steps use the OpenCode Go API (`$OPENAI_BASE_URL/chat/completions`) as a unified OpenAI-compatible endpoint. Models: `kimi-k2.6`, `glm-5.1`, `minimax-m2.5`, `mimo-v2.5`, `deepseek-v4-flash`.
 
 ### Analytics & Notebooks (`oideachais/notebooks`)
 - **Data Exploration**: Load [`explore-data`](.agents/skills/explore-data/SKILL.md) to query endpoints or databases and generate an `analysis_plan.md` artifact.

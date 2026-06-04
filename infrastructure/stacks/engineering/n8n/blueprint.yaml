@@ -1,0 +1,11 @@
+private-resources:
+  n8n:
+    name: "n8n Workflow Automation"
+    mode: http
+    full-domain: "n8n.cianfhoghlaim.ie"
+    destination-port: 5678
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

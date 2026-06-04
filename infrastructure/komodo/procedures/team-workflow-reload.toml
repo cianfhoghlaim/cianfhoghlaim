@@ -1,0 +1,28 @@
+# =============================================================================
+# TEAM WORKFLOW — RELOAD
+# =============================================================================
+# Re-imports the 6 seeded n8n workflow JSONs and re-seeds Vikunja team/projects.
+# Run after editing anything in:
+#   infrastructure/stacks/engineering/n8n/workflows/team-*.json
+#   infrastructure/stacks/tools/vikunja/init/seed.ts
+# =============================================================================
+
+[[action]]
+name = "n8n-reload"
+type = "command"
+description = "Restart n8n-init to re-import workflow JSONs"
+command = """
+cd /etc/komodo/sruth/team-workflow-stack/n8n && \
+  docker compose -f compose.yaml -f sidecar.yaml up -d --force-recreate --no-deps n8n-init
+"""
+timeout = 60
+
+[[action]]
+name = "vikunja-reseed"
+type = "command"
+description = "Restart vikunja-seed to re-create team + projects (idempotent)"
+command = """
+cd /etc/komodo/sruth/team-workflow-stack/vikunja && \
+  docker compose -f compose.yaml -f sidecar.yaml up -d --force-recreate --no-deps vikunja-seed
+"""
+timeout = 60

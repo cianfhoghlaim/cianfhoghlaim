@@ -1,11 +1,14 @@
 # Crypteolas Demo
 
 Standalone demonstration of the GitHub Intelligence + DeFi Analytics platform.
+Crypteolas lives at `tuatha/crypteolas/` after the
+[consolidation refactor](../../../../openspec/changes/consolidate-external-libs-into-tuatha/).
+See [`../STATUS.md`](../STATUS.md) for the full refactor history.
 
 ## Quick Start
 
 ```bash
-cd sruth/crypteolas
+cd tuatha/crypteolas
 python demo/run_demo.py
 ```
 
@@ -22,6 +25,8 @@ python demo/run_demo.py
 - Pool yield comparisons
 - Chain TVL breakdown
 - Cross-protocol analytics
+- Funding-rate analysis (Binance, Bybit, OKX)
+- Subgraph data (Aave v3, Pendle)
 
 ### 3. Hybrid Search
 - Vector search across GitHub + DeFi data
@@ -29,11 +34,14 @@ python demo/run_demo.py
 - Semantic query understanding
 
 ### 4. Knowledge Graph
+- Cognee static protocol knowledge graph (Memgraph)
+- Graphiti temporal protocol graph (FalkorDB)
 - Protocol development metrics
 - GitHub stars vs TVL correlation
 - Contributor expertise mapping
 
 ### 5. Research Agent
+- Agno-based agent team (research, analysis, pipeline)
 - CopilotKit integration
 - Multi-step research workflows
 - Automated report generation
@@ -43,20 +51,21 @@ python demo/run_demo.py
 This demo requires the FastAPI server running:
 
 ```bash
-cd sruth/crypteolas
+cd tuatha
 uv run uvicorn crypteolas.api.main:app --port 8001 --reload
 ```
 
 Then run the demo:
 
 ```bash
+cd tuatha/crypteolas
 python demo/run_demo.py
 ```
 
 ## Demo Structure
 
 ```
-demo/
+tuatha/crypteolas/demo/
 ├── __init__.py
 ├── run_demo.py       # Main demo script
 └── README.md         # This file
@@ -68,10 +77,11 @@ The demo expects the API server at `http://localhost:8001`.
 
 ```bash
 # Terminal 1: Start API server
-cd sruth/crypteolas
+cd tuatha
 uv run uvicorn crypteolas.api.main:app --port 8001 --reload
 
 # Terminal 2: Run demo
+cd tuatha/crypteolas
 python demo/run_demo.py
 ```
 
@@ -89,22 +99,29 @@ The demo will showcase:
 To run the complete platform:
 
 ```bash
-# Install dependencies
-cd sruth/crypteolas
-uv sync
+# Install dependencies (from the tuath workspace root)
+cd tuatha && uv sync
 
 # Configure environment
 cp .env.example .env
 # Edit .env with your credentials
+# (See ../docs/SETUP.md for the full secrets reference)
 
 # Run API server
+cd tuatha
 uv run uvicorn crypteolas.api.main:app --port 8001 --reload
 
-# Start Dagster (another terminal)
-dagster dev -m crypteolas.dagster_assets
+# Start the unified Dagster UI (loads all 3 code-locations)
+cd tuatha
+uv run dagster dev
+
+# Or just the crypteolas code-location
+cd tuatha
+uv run dagster dev -m crypteolas.definitions
 
 # Run tests
-uv run pytest tests/ -v
+cd tuatha
+uv run pytest crypteolas/tests/ -v
 ```
 
 ## API Endpoints
@@ -120,9 +137,10 @@ When the server is running:
 - `GET /defi/protocols` - List protocols
 - `GET /defi/pools` - Yield opportunities
 - `GET /defi/metrics/tvl` - TVL breakdown
+- `GET /defi/funding-rates` - Funding rates (Binance, Bybit, OKX)
 
 **Search**
-- `POST /search/` - Hybrid search
+- `POST /search/` - Hybrid search (LanceDB + Memgraph)
 
 ## Architecture
 
@@ -148,11 +166,13 @@ When the server is running:
          │                    │                    │
          ▼                    ▼                    ▼
 ┌─────────────┐      ┌─────────────┐      ┌─────────────┐
-│ Knowledge   │      │ Hybrid      │      │ CopilotKit  │
-│ Graph       │      │ Search      │      │ Agent       │
+│ Knowledge   │      │ Hybrid      │      │ Agno Agent  │
+│ Graph       │      │ Search      │      │ Team        │
 │             │      │             │      │             │
-│ • Neo4j     │      │ • Vector    │      │ • Tools     │
-│ • Relations │      │ • Graph     │      │ • Research  │
+│ • Cognee    │      │ • Vector    │      │ • Research  │
+│ • Graphiti  │      │ • Graph     │      │ • Analysis  │
+│ • Memgraph  │      │ • Memgraph  │      │ • Pipeline  │
+│ • FalkorDB  │      │ • FalkorDB  │      │             │
 └─────────────┘      └─────────────┘      └─────────────┘
 ```
 
@@ -168,9 +188,19 @@ When the server is running:
 - **Pools**: Yield opportunities, risk scores
 - **Metrics**: Historical data, rankings
 
+### CoinGecko
+- Token prices, market cap, 24h change
+
+### Binance / Bybit / OKX
+- Funding rates, open interest, long/short ratio
+
+### Aave v3 / Pendle Subgraphs
+- Reserves, user positions, markets, swaps
+
 ## Key Features
 
 ### Hybrid Search
+
 Combines vector similarity with graph traversal:
 
 ```python
@@ -183,6 +213,7 @@ response = await client.post("/search/", json={
 ```
 
 ### Cross-Domain Analysis
+
 Correlate GitHub activity with DeFi metrics:
 
 | Protocol | TVL | Stars | Commits/30d | Contributors |
@@ -194,19 +225,19 @@ Correlate GitHub activity with DeFi metrics:
 ### Agent Capabilities
 
 **Available Tools:**
-- `search_github` - Search repositories
-- `get_repo_metrics` - Detailed repo stats
-- `analyze_contributors` - Contributor patterns
+- `search_protocol_docs` - Search protocol docs
 - `get_protocol_tvl` - TVL data
 - `compare_yields` - Yield comparison
-- `correlate_dev_tvl` - Development vs TVL
+- `get_funding_rates` - Live funding rates
+- `query_knowledge_graph` - Cypher over the temporal graph
+- `run_pipeline` - Trigger Dagster materialization
 
 **Example Query:**
 ```
 User: Find lending protocols with the most active GitHub development
 
 Agent:
-1. Calls search_github(category="lending")
+1. Calls search_protocol_docs(category="lending")
 2. Calls get_repo_metrics for top results
 3. Calls get_protocol_tvl to correlate
 4. Renders comparison table
@@ -214,14 +245,20 @@ Agent:
 
 ## Dagster Assets
 
+The crypteolas code-location registers these assets in
+`tuatha/crypteolas/dagster_assets/`:
+
 | Asset | Description | Schedule |
 |-------|-------------|----------|
-| `github_repositories` | DeFi repos from GitHub API | hourly |
-| `github_commits` | Commit history analysis | hourly |
-| `defi_protocols` | Protocol TVL from DeFiLlama | 15 min |
-| `defi_pools` | Pool yields from DeFiLlama | hourly |
-| `embeddings` | BGE-M3 vectors for search | on change |
-| `knowledge_graph` | Neo4j relationships | on change |
+| `github_api_assets` | GitHub issues, PRs, commits, workflows | hourly |
+| `crawl_assets` | Documentation crawling (Firecrawl) | on demand |
+| `files_assets` | Local file processing | on demand |
+| `defi_assets` | CoinGecko, DeFiLlama, Binance, subgraphs | 15 min / hourly |
+| `code_vector_index` | Code embeddings → LanceDB | on change |
+| `docs_vector_index` | Doc embeddings → LanceDB | on change |
+| `docs_graph_index` | Doc graph → Memgraph | on change |
+| `cognee_knowledge_graph` | Static knowledge graph (Cognee) | on change |
+| `graphiti_temporal_graph` | Temporal knowledge graph (Graphiti) | on change |
 
 ## Observability
 
@@ -229,21 +266,30 @@ Integrated observability stack:
 - **Datadog APM**: API latency, error rates
 - **Datadog LLMObs**: Agent token usage
 - **MLflow**: Experiment tracking
-- **Langfuse**: Cost tracking
+- **Langfuse**: Cost tracking + LLM tracing
+- **Prometheus**: Infrastructure metrics
 
 ## Related Projects
 
-- **códeolas** - Code analysis (imports crypteolas for intelligence)
-- **oideachas** - Education curriculum processing
-- **tuath** - Celtic MMO game
+- **códeolas** (`tuatha/codeolas/`) - Code analysis (imports crypteolas for intelligence)
+- **oideachas** (`oideachais/`) - Education curriculum processing
+- **tuath** (`tuatha/`) - Celtic Educational MMO game
 
 ## Support
 
 For issues or questions:
-- Main README: [sruth/crypteolas/README.md](../README.md)
+- Main README: [`../README.md`](../README.md)
+- Tuath workspace README: [`../../README.md`](../../README.md)
+- Tuath workspace DEVELOPMENT: [`../../DEVELOPMENT.md`](../../DEVELOPMENT.md)
+- Crypteolas STATUS (refactor history): [`../STATUS.md`](../STATUS.md)
+- Crypteolas QUICKSTART: [`../QUICKSTART.md`](../QUICKSTART.md)
+- Crypteolas SETUP: [`../SETUP.md`](../SETUP.md)
+- Crypteolas DEVELOPMENT: [`../DEVELOPMENT.md`](../DEVELOPMENT.md)
+- Crypteolas ARCHITECTURE: [`../ARCHITECTURE.md`](../ARCHITECTURE.md)
 - DeFiLlama: https://defillama.com
 - GitHub API: https://docs.github.com/rest
 
 ## License
 
-MIT
+BUSL-1.1 (matching the parent tuath workspace; transitions to AGPL-3.0
+after 4 years).

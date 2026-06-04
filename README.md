@@ -515,6 +515,33 @@ After this, `litellm.cianfhoghlaim.ie` is the gateway, `*.cianfhoghlaim.ie`
 routes via Pangolin, and every consumer (BAML, Dagster, FastAPI, web)
 calls through it.
 
+### Team Workflow Stack (optional — deploy as needed)
+
+End-to-end team loop: shared mailbox → LLM triage → Vikunja kanban/Gantt → cal-diy scheduling → daily/weekly briefings. All three services are private Pangolin resources behind Olm VPN + Pocket ID SSO. The 6 seeded n8n workflows use the OpenCode Go API as the LLM backbone.
+
+```bash
+# 9. Team workflow stack (n8n + Vikunja + cal-diy)
+# Deploy via Komodo UI using procedures team-stack-up / team-stack-down,
+# OR manually:
+for stack in vikunja cal-diy n8n; do
+  cd /etc/komodo/sruth/team-workflow-stack/$stack
+  docker compose -f compose.yaml -f sidecar.yaml up -d
+done
+
+# 10. Verify
+curl -fsS http://n8n.cianfhoghlaim.ie/healthz
+curl -fsS http://vikunja.cianfhoghlaim.ie/api/v1/info
+curl -fsS http://calcom.cianfhoghlaim.ie/api/v2/ping
+```
+
+| Service | Domain | What it does |
+|:--|:--|:--|
+| n8n | `n8n.cianfhoghlaim.ie` | Visual workflow + LLM pipelines (community + queue mode) |
+| Vikunja | `vikunja.cianfhoghlaim.ie` | Kanban + Gantt + list + team sharing |
+| cal-diy | `calcom.cianfhoghlaim.ie` | Team + per-member booking pages, webhooks → n8n |
+
+The 6 seeded workflows (imported by `n8n-init` on first boot): `team-daily-briefing`, `team-email-triage`, `team-booking-to-vikunja`, `team-followup-drafter`, `team-weekly-summary`, `team-stale-task-nudger`. See `infrastructure/README.md § Team Workflow Stack` and the `team-workflow-stack` OpenSpec change for full details.
+
 ---
 
 ## Licensing
