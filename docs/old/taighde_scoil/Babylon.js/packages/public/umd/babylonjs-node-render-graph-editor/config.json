@@ -1,7 +1,0 @@
-{
-    "declarationLibs": ["@tools/node-render-graph-editor", "@dev/shared-ui-components"],
-    "devPackageName": "nodeRenderGraphEditor",
-    "filename": "babylon.nodeRenderGraphEditor.module.d.ts",
-    "outputDirectory": "./",
-    "fileFilterRegex": "stories"
-}

@@ -1,8 +1,0 @@
-{
-    "extends": "../../../tools/viewer/tsconfig.build.json",
-    "compilerOptions": {
-        "outDir": "dist",
-        "composite": false,
-        "declaration": false
-    }
-}

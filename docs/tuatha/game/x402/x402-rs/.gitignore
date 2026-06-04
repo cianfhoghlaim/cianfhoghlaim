@@ -1,0 +1,5 @@
+/target/
+.idea/
+.env
+crates/*/target/
+examples/*/.env

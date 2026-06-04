@@ -1,2 +1,0 @@
-#include<sceneVertexDeclaration>
-#include<meshVertexDeclaration>

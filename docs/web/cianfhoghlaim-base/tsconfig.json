@@ -1,0 +1,6 @@
+{
+  "extends": "@cianfhoghlaim-base/config/tsconfig.base.json",
+  "compilerOptions": {
+    "strictNullChecks": true
+  }
+}

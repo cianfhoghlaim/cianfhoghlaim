@@ -1,1 +1,0 @@
-varying sampleCoord{X}: vec2f;

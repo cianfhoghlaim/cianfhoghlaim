@@ -1,1 +1,0 @@
-vertexOutputs.sampleCoord{X} = vertexOutputs.sampleCenter + uniforms.delta * KERNEL_OFFSET{X};

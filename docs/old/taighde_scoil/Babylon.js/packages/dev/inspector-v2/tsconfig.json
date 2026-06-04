@@ -1,8 +1,0 @@
-{
-    "extends": ["../../../tsconfig.json", "./tsconfig.common.json"],
-
-    "compilerOptions": {
-        "strict": true,
-        "jsx": "react-jsx"
-    }
-}
