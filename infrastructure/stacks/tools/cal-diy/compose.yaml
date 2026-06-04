@@ -1,0 +1,124 @@
+name: cal-diy
+
+services:
+  # ---------------------------------------------------------------------------
+  # CAL-DIY (cal.com community self-hosted build) — scheduling
+  # ---------------------------------------------------------------------------
+  calcom-web:
+    build:
+      context: ../../stedding/repos/cal.diy
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_LICENSE_CONSENT=agree
+        - CALCOM_TELEMETRY_DISABLED=1
+        - NEXT_PUBLIC_API_V2_URL=https://calcom.cianfhoghlaim.ie/api/v2
+    image: ghcr.io/cianfhoghlaim/cal-diy:local
+    container_name: calcom-web
+    restart: unless-stopped
+    environment:
+      # Public
+      NEXTAUTH_URL: ${CALCOM_NEXTAUTH_URL:-https://calcom.cianfhoghlaim.ie}
+      NEXTAUTH_SECRET: ${CALCOM_NEXTAUTH_SECRET}
+      NEXT_PUBLIC_WEBAPP_URL: ${CALCOM_NEXTAUTH_URL:-https://calcom.cianfhoghlaim.ie}
+      NEXT_PUBLIC_WEBSITE_TERMS_URL: https://cal.com/terms
+      NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL: https://cal.com/privacy
+      NEXT_PUBLIC_LICENSE_CONSENT: agree
+      CALCOM_TELEMETRY_DISABLED: "1"
+      ALLOWED_HOSTNAMES: ${CALCOM_ALLOWED_HOSTNAMES:-calcom.cianfhoghlaim.ie}
+      # Database
+      DATABASE_URL: ${CALCOM_DATABASE_URL}
+      DATABASE_DIRECT_URL: ${CALCOM_DATABASE_URL}
+      # Encryption
+      CALENDSO_ENCRYPTION_KEY: ${CALCOM_ENCRYPTION_KEY}
+      # Webhook signing
+      WEBHOOK_SECRET: ${CALCOM_WEBHOOK_SECRET}
+      # Cron
+      CRON_API_KEY: ${CALCOM_CRON_API_KEY}
+      CRON_ENABLE: "true"
+      # Outbound email (reuses team-mailbox)
+      EMAIL_SERVER_HOST: ${TEAM_SMTP_HOST:-imap.cianfhoghlaim.ie}
+      EMAIL_SERVER_PORT: ${TEAM_SMTP_PORT:-587}
+      EMAIL_SERVER_USER: ${TEAM_IMAP_USER}
+      EMAIL_SERVER_PASSWORD: ${TEAM_SMTP_PASSWORD}
+      EMAIL_FROM: ${TEAM_FROM_EMAIL:-team@cianfhoghlaim.ie}
+      # Redis (queue/cache)
+      REDIS_URL: redis://calcom-redis:6379
+      # Single-process mode
+      NEXT_PUBLIC_SINGLE_ORG_SLUG: team
+      ORGANIZATIONS_ENABLED: "true"
+      CSP_POLICY: "strict"
+    volumes:
+      - calcom_data:/app/apps/web/.next-cache
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/v2/ping || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    depends_on:
+      calcom-db:
+        condition: service_healthy
+      calcom-redis:
+        condition: service_healthy
+    networks:
+      - cianfhoghlaim
+
+  # ---------------------------------------------------------------------------
+  # CALCOM POSTGRES
+  # ---------------------------------------------------------------------------
+  calcom-db:
+    image: postgres:16-alpine
+    container_name: calcom-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${CALCOM_POSTGRES_DB:-calcom}
+      POSTGRES_USER: ${CALCOM_POSTGRES_USER:-calcom}
+      POSTGRES_PASSWORD: ${CALCOM_POSTGRES_PASSWORD}
+    volumes:
+      - calcom_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "pg_isready -d $${POSTGRES_DB:-calcom} -U $${POSTGRES_USER:-calcom}"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cianfhoghlaim
+
+  # ---------------------------------------------------------------------------
+  # CALCOM REDIS (queue + cache)
+  # ---------------------------------------------------------------------------
+  calcom-redis:
+    image: redis:7-alpine
+    container_name: calcom-redis
+    restart: unless-stopped
+    command:
+      - "redis-server"
+      - "--maxmemory"
+      - "256mb"
+      - "--maxmemory-policy"
+      - "allkeys-lru"
+    volumes:
+      - calcom_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cianfhoghlaim
+
+volumes:
+  calcom_data:
+    name: calcom_data
+  calcom_db_data:
+    name: calcom_db_data
+  calcom_redis_data:
+    name: calcom_redis_data
+
+networks:
+  cianfhoghlaim:
+    driver: bridge

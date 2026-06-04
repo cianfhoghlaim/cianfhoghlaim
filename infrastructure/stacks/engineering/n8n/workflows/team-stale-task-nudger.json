@@ -1,0 +1,105 @@
+{
+  "name": "team-stale-task-nudger",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {"interval": [{"field": "cronExpression", "expression": "0 8 * * *"}]}
+      },
+      "name": "Cron daily 08:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://vikunja:3456/api/v1/tasks?updated=2026-01-01T00:00:00Z&done=false",
+        "options": {}
+      },
+      "name": "Find tasks untouched for 14+ days",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.OPENAI_BASE_URL }}/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "value": "Bearer {{ $env.OPENAI_API_KEY }}"},
+            {"name": "Content-Type", "value": "application/json"}
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "model", "value": "opencode-go/mimo-v2.5"},
+            {"name": "messages", "value": "=[{\"role\":\"system\",\"content\":\"Classify the stale task as: stuck, abandoned, on-hold. Reply as JSON: {\\\"classification\\\":\\\"...\\\",\\\"nudge_message\\\":\\\"...\\\"}\"},{\"role\":\"user\",\"content\":\"TASK: {{ $json.title }}\\nLAST_UPDATE: {{ $json.updated_at }}\\nDESCRIPTION: {{ $json.description }}\"}]"}
+          ]
+        }
+      },
+      "name": "Classify with mimo-v2.5 (OpenCode Go)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://vikunja:3456/api/v1/tasks/{{ $('Find tasks untouched for 14+ days').item.json.id }}/comments",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "comment", "value": "=Nudge (auto): classified as {{ $json.classification }}. {{ $json.nudge_message }}"}
+          ]
+        }
+      },
+      "name": "Comment on stale task",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.sendgrid.com/v3/mail/send",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "value": "Bearer {{ $env.SENDGRID_API_KEY }}"},
+            {"name": "Content-Type", "value": "application/json"}
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "to", "value": "={{ $env.TEAM_NOTIFICATION_EMAIL }}"},
+            {"name": "from", "value": "team@cianfhoghlaim.ie"},
+            {"name": "subject", "value": "Stale task nudge: {{ $('Find tasks untouched for 14+ days').item.json.title }}"},
+            {"name": "text", "value": "={{ $json.nudge_message }}"}
+          ]
+        }
+      },
+      "name": "Email owner",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 400]
+    }
+  ],
+  "connections": {
+    "Cron daily 08:00": {"main": [[{"node": "Find tasks untouched for 14+ days", "type": "main", "index": 0}]]},
+    "Find tasks untouched for 14+ days": {"main": [[{"node": "Classify with mimo-v2.5 (OpenCode Go)", "type": "main", "index": 0}]]},
+    "Classify with mimo-v2.5 (OpenCode Go)": {
+      "main": [
+        [
+          {"node": "Comment on stale task", "type": "main", "index": 0},
+          {"node": "Email owner", "type": "main", "index": 0}
+        ]
+      ]
+    }
+  },
+  "settings": {"executionOrder": "v1"},
+  "tags": [{"name": "team"}, {"name": "llm"}, {"name": "opencode-go"}]
+}

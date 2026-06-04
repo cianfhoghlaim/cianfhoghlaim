@@ -64,16 +64,64 @@ Our repository features a unified structure for pre-configured stacks under `inf
 Each stack generally contains:
 1. `compose.yaml`: The core application definitions.
 2. `pangolin.yaml`: The routing and proxy blueprint (adding public domains, ports, and `tinyauth` middleware).
+3. `sidecar.yaml` + `secrets.env`: Locket sidecar that resolves `{{ infisical:///key }}` references at container boot.
+4. `blueprint.yaml`: Pangolin resource blueprint (mirror of `pangolin.yaml`).
+5. `.env.example`: Non-secret defaults for local dev.
+
+See `infrastructure/stacks/GOLD_STANDARD.md` for the full 5-file pattern.
 
 ### Step-by-step Komodo Deployment Guide
 To deploy a new service and integrate it into the Pangolin mesh:
 1. Go to **Komodo UI** → **Stacks**.
 2. Create a new Stack pointing to this GitHub repository.
 3. Set the path to the desired tool (e.g., `infrastructure/stacks/storage/dagster`).
-4. In the Compose Files section, type: `compose.yaml, pangolin.yaml`.
+4. In the Compose Files section, type: `compose.yaml, sidecar.yaml, pangolin.yaml`.
 5. Deploy to a Periphery agent (e.g., your MacBook or the Oracle Cloud).
-6. **Result**: 
+6. **Result**:
    - Komodo spins up the container.
    - Locket injects the necessary secrets from Infisical.
    - Newt broadcasts the Pangolin labels to Traefik.
    - The app instantly gets a secure, valid subdomain (e.g., `https://dagster.cianfhoghlaim.ie`) protected by Pocket ID SSO!
+
+## Team Workflow Stack (n8n + Vikunja + cal-diy)
+
+The `team-workflow-stack` is an end-to-end team loop: capture inbound requests from a shared mailbox, triage them into a structured backlog, schedule appointments that automatically populate that backlog with Gantt-visible time blocks, and run daily/weekly reviews with LLM-generated briefings and summaries.
+
+### Stacks
+
+| Stack | Path | Domain | Services | Private? |
+|:--|:--|:--|:--|:--:|
+| **n8n** | `infrastructure/stacks/engineering/n8n/` | `n8n.cianfhoghlaim.ie` | n8n (queue mode) + postgres:16-alpine + redis:7-alpine + locket + n8n-init | ✓ |
+| **Vikunja** | `infrastructure/stacks/tools/vikunja/` | `vikunja.cianfhoghlaim.ie` | vikunja + postgres:16-alpine + locket + vikunja-seed | ✓ |
+| **cal-diy** | `infrastructure/stacks/tools/cal-diy/` | `calcom.cianfhoghlaim.ie` | calcom-web (built from `stedding/repos/cal.diy/`) + postgres:16-alpine + redis:7-alpine + locket | ✓ |
+
+All three are private Pangolin resources — only accessible via the Olm VPN client + Pocket ID SSO.
+
+### Six seeded n8n workflows
+
+The `n8n-init` one-shot container auto-imports these on first boot (idempotent):
+
+| Workflow | Trigger | LLM call (OpenCode Go) | Sink |
+|:--|:--|:--|:--|
+| `team-daily-briefing` | Cron 06:00 Mon–Fri | `kimi-k2.6` | Email + Vikunja `/_briefings` |
+| `team-email-triage` | IMAP poll every 5 min | `minimax-m2.5` | Vikunja task (assignees=[team]) |
+| `team-booking-to-vikunja` | cal-diy `booking.created` webhook | none (router) | Vikunja task with start/end (Gantt) |
+| `team-followup-drafter` | Cron every 4h | `deepseek-v4-flash` | Vikunja `/_drafts/` |
+| `team-weekly-summary` | Cron Friday 17:00 | `glm-5.1` | Vikunja `/_reports/weekly/` |
+| `team-stale-task-nudger` | Cron daily 08:00 | `mimo-v2.5` | Email + Vikunja comment |
+
+All LLM steps use the **OpenCode Go API** (`https://opencode.ai/zen/go/v1`) as a unified OpenAI-compatible endpoint via the existing `OPENAI_API_KEY` / `OPENAI_BASE_URL` env vars. One bill, one rate-limit pool, one model catalogue shared with the rest of the monorepo.
+
+### Komodo procedures
+
+| Procedure | Purpose |
+|:--|:--|
+| `team-stack-up` | Pulls images, starts all 3 stacks in dependency order |
+| `team-stack-down` | Graceful shutdown, reverse order |
+| `team-stack-health` | Hits `/healthz` (n8n), `/api/v1/info` (vikunja), `/api/v2/ping` (cal-diy) |
+| `team-workflow-reload` | Re-runs `n8n-init` + `vikunja-seed` containers after edits |
+| `team-backup` | Nightly `pg_dump` to `s3://team-backups/{n8n,vikunja,calcom}/` |
+
+### OpenSpec specs
+
+Capability specs at `openspec/specs/{task-management,scheduling,workflow-automation}/spec.md`. Change proposal at `openspec/changes/team-workflow-stack/`.

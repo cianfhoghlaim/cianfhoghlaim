@@ -1,0 +1,89 @@
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:infisical
+    container_name: vikunja-locket
+    restart: unless-stopped
+    user: "65532:65532"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    command:
+      - "--provider=infisical"
+      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--map=/templates:/run/secrets/locket"
+      - "--mode=${LOCKET_MODE:-watch}"
+    secrets:
+      - infisical_secret
+    volumes:
+      - ./secrets.env:/templates/secrets.env:ro
+      - stack-secrets:/run/secrets/locket
+    healthcheck:
+      test: ["CMD", "/locket", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - stack
+
+  vikunja:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - stack-secrets:/run/secrets/locket:ro
+    env_file:
+      - /run/secrets/locket/secrets.env
+
+  vikunja-db:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - stack-secrets:/run/secrets/locket:ro
+    env_file:
+      - /run/secrets/locket/secrets.env
+
+  # vikunja-seed — one-shot. Creates the team group + 6 seed projects on first boot.
+  vikunja-seed:
+    image: ghcr.io/cianfhoghlaim/vikunja-seed:latest
+    container_name: vikunja-seed
+    depends_on:
+      locket:
+        condition: service_healthy
+      vikunja:
+        condition: service_healthy
+    environment:
+      VIKUNJA_BASE_URL: http://vikunja:3456
+      VIKUNJA_JWT: ${VIKUNJA_SERVICE_JWT_SECRET}
+      VIKUNJA_ADMIN_USER: ${VIKUNJA_ADMIN_USER:-admin}
+      VIKUNJA_ADMIN_PASSWORD: ${VIKUNJA_ADMIN_PASSWORD}
+      VIKUNJA_TEAM_NAME: ${VIKUNJA_TEAM_NAME:-team}
+    volumes:
+      - stack-secrets:/run/secrets/locket:ro
+    env_file:
+      - /run/secrets/locket/secrets.env
+    networks:
+      - stack
+      - cianfhoghlaim
+    restart: "no"
+
+secrets:
+  infisical_secret:
+    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+
+volumes:
+  stack-secrets:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=700
+
+networks:
+  stack:
+    driver: bridge
+  cianfhoghlaim:
+    driver: bridge

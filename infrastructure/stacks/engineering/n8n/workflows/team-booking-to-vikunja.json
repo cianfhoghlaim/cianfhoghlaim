@@ -1,0 +1,43 @@
+{
+  "name": "team-booking-to-vikunja",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "team-booking-to-vikunja",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "name": "cal-diy webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "http://vikunja:3456/api/v1/projects",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "title", "value": "Booking: {{ $json.payload.title }}"},
+            {"name": "description", "value": "Meeting with {{ $json.payload.organizer.name }} from {{ $json.payload.organizer.email }}\\n\\nNotes: {{ $json.payload.notes }}"},
+            {"name": "assignees", "value": "=[\"team\"]"},
+            {"name": "start_date", "value": "={{ $json.payload.startTime }}"},
+            {"name": "end_date", "value": "={{ $json.payload.endTime }}"},
+            {"name": "due_date", "value": "={{ $json.payload.startTime }}"}
+          ]
+        }
+      },
+      "name": "Create Vikunja task with start/end (Gantt)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 300]
+    }
+  ],
+  "connections": {
+    "cal-diy webhook": {"main": [[{"node": "Create Vikunja task with start/end (Gantt)", "type": "main", "index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "tags": [{"name": "team"}, {"name": "cal-diy"}, {"name": "vikunja"}]
+}
