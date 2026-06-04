@@ -1,0 +1,24 @@
+# Tasks — Fix Existing Stacks
+
+- [x] 1. P1.1 — `storage/dagster` activate `secrets.env`, add `sidecar.yaml`, modernise `pangolin.yaml`, add `.env.example`, seed 3 Infisical items
+- [x] 2. P1.2 — `storage/agent-os` rewrite `compose.yaml` build contexts (sruth → oideachais/tuatha/infrastructure), add `sidecar.yaml`, populate `secrets.env`, seed 6 Infisical items
+- [x] 3. P1.3 — `storage/browser` rewrite `compose.yaml` build contexts, add `sidecar.yaml`, populate `secrets.env`, seed 3 Infisical items
+- [x] 4. P1.4 — `storage/kafka` add `sidecar.yaml`, populate `secrets.env`, add `kafka-init` one-shot, seed 3 Infisical items
+- [x] 5. P1.5 — `storage/confluent` add `sidecar.yaml`, populate `secrets.env`, add `.env.example`, seed 9 Infisical items
+- [x] 6. P2 — `storage/lancedb` add healthcheck + `deploy.resources.limits` + switch to `cianfhoghlaim` shared network
+- [x] 7. P3 — `tools/stirling-pdf` add `sidecar.yaml`, populate `secrets.env`, add `.env.example`, seed 2 Infisical items
+- [x] 8. P5.1 — create `infrastructure/monitoring` stack (Prometheus + Grafana + Loki + Promtail + Alertmanager), seed 1 Infisical item
+- [x] 9. P5.3 — add `infrastructure/komodo/procedures/stack-health-snapshot.toml`
+- [x] 10. P6 — write `scripts/stack-doctor.sh` (bash 3.2 compatible, markdown + JSON output)
+- [x] 11. P6 — add `.agents/skills/stack-ops/SKILL.md`
+- [x] 12. P6 — add `validate-stacks` and `doctor` tasks to `turbo.json`; add `validate-stacks` and `doctor:stacks` scripts to `package.json`
+- [x] 13. Run `stack-doctor` and confirm report
+- [x] 14. OpenSpec change `fix-existing-stacks` (proposal + tasks + capability spec)
+- [x] 15. Git commit + push
+- [ ] 16. (Follow-up) Pin `:latest` tags in the 30+ remaining stacks
+- [ ] 17. (Follow-up) Add `deploy.resources.limits` to the 30+ remaining stacks
+- [ ] 18. (Follow-up) Add `healthcheck:` to the 14 remaining stacks
+- [ ] 19. (Follow-up) Populate the 9 remaining empty `secrets.env` files
+- [ ] 20. (Follow-up) Delete or rebuild `motherduck` / `planetscale` / `logfire` / `pydantic-gateway` placeholders
+- [ ] 21. (Follow-up) Deploy `beszel-agent` on `arm1-oci` and `cax41-hetzner`
+- [ ] 22. (Follow-up) Restore `aleyum/` source and re-enable the `aleyum-agentos` build

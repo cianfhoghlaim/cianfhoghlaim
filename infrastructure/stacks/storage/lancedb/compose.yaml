@@ -25,8 +25,19 @@ services:
       - "${LANCEDB_PORT:-8080}:8080"
     volumes:
       - lancedb-data:/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
     networks:
-      - lancedb
+      - cianfhoghlaim
 
   # ---------------------------------------------------------------------------
   # RCLONE S3 MOUNTER - FUSE Mount for S3/R2 (Optional)
@@ -61,11 +72,11 @@ services:
         bind:
           propagation: rshared
     networks:
-      - lancedb
+      - cianfhoghlaim
 
 volumes:
   lancedb-data:
 
 networks:
-  lancedb:
+  cianfhoghlaim:
     driver: bridge
