@@ -104,7 +104,9 @@ ducklake.files/
 # -----------------------------------------------------------------------------
 # DATA DIRECTORIES
 # -----------------------------------------------------------------------------
-data/
+# Only the repo-root data/ directory (runtime data, not source code).
+# Source code paths like croilar/src/pages/data/ are NOT ignored.
+/data/
 !**/data/.gitkeep
 
 # -----------------------------------------------------------------------------
