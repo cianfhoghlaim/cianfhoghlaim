@@ -1,0 +1,11 @@
+private-resources:
+  croilar-marimo:
+    name: "croilar Marimo"
+    mode: http
+    full-domain: "marimo.croilar.cianfhoghlaim.ie"
+    destination-port: 2718
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

@@ -1,0 +1,9 @@
+services:
+  croilar-web:
+    labels:
+      - "pangolin.private-resources.croilar-web.name=croilar Web"
+      - "pangolin.private-resources.croilar-web.mode=http"
+      - "pangolin.private-resources.croilar-web.full-domain=web.croilar.cianfhoghlaim.ie"
+      - "pangolin.private-resources.croilar-web.destination-port=3000"
+      - "pangolin.private-resources.croilar-web.protocol=http"
+      - "pangolin.private-resources.croilar-web.roles[0]=Member"

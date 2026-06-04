@@ -1,0 +1,11 @@
+private-resources:
+  croilar-portal:
+    name: "croilar Portal"
+    mode: http
+    full-domain: "portal.croilar.cianfhoghlaim.ie"
+    destination-port: 3000
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

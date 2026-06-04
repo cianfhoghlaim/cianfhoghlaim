@@ -1,0 +1,33 @@
+services:
+  croilar-dagster:
+    image: ghcr.io/cianfhoghlaim/croilar-dagster:0.1.0
+    container_name: croilar-dagster
+    restart: unless-stopped
+    ports:
+      - "${CROILAR_DAGSTER_PORT:-3336}:3000"
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+      DAGSTER_ENV: ${DAGSTER_ENV:-local}
+      DUCKDB_PATH: ${DUCKDB_PATH:-./croilar.duckdb}
+      LANCEDB_URI: ${LANCEDB_URI:-./lancedb_data_cv}
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID:-}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET:-}
+      SOUNDCLOUD_CLIENT_ID: ${SOUNDCLOUD_CLIENT_ID:-}
+      YOUTUBE_API_KEY: ${YOUTUBE_API_KEY:-}
+      CROILAR_ENCRYPTION_KEY: ${CROILAR_ENCRYPTION_KEY:-}
+    volumes:
+      - croilar-dagster-home:/opt/dagster/dagster_home
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - cianfhoghlaim
+
+volumes:
+  croilar-dagster-home:
+
+networks:
+  cianfhoghlaim:
+    external: true
