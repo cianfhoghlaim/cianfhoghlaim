@@ -23,11 +23,19 @@ services:
       - "pangolin.private-resources.browser-agentos.destination-port=7777"
       - "pangolin.private-resources.browser-agentos.protocol=http"
       - "pangolin.private-resources.browser-agentos.roles[0]=Member"
-  aleyum-agentos:
+  aleyum-agentos:  # TODO: legacy alias, remove once croilar-agentos is provisioned
     labels:
-      - "pangolin.private-resources.aleyum-agentos.name=aleyum AgentOS"
+      - "pangolin.private-resources.aleyum-agentos.name=aleyum AgentOS (legacy)"
       - "pangolin.private-resources.aleyum-agentos.mode=http"
       - "pangolin.private-resources.aleyum-agentos.full-domain=agents.aleyum.cianfhoghlaim.ie"
       - "pangolin.private-resources.aleyum-agentos.destination-port=7777"
       - "pangolin.private-resources.aleyum-agentos.protocol=http"
       - "pangolin.private-resources.aleyum-agentos.roles[0]=Member"
+  croilar-agentos:
+    labels:
+      - "pangolin.private-resources.croilar-agentos.name=croilar AgentOS"
+      - "pangolin.private-resources.croilar-agentos.mode=http"
+      - "pangolin.private-resources.croilar-agentos.full-domain=agents.croilar.cianfhoghlaim.ie"
+      - "pangolin.private-resources.croilar-agentos.destination-port=7777"
+      - "pangolin.private-resources.croilar-agentos.protocol=http"
+      - "pangolin.private-resources.croilar-agentos.roles[0]=Member"

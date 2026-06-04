@@ -1,0 +1,9 @@
+services:
+  glance:
+    labels:
+      - "pangolin.private-resources.glance.name=Glance Dashboard"
+      - "pangolin.private-resources.glance.mode=http"
+      - "pangolin.private-resources.glance.full-domain=glance.cianfhoghlaim.ie"
+      - "pangolin.private-resources.glance.destination-port=8080"
+      - "pangolin.private-resources.glance.protocol=http"
+      - "pangolin.private-resources.glance.roles[0]=Member"

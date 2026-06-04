@@ -1,0 +1,9 @@
+services:
+  docling-serve:
+    labels:
+      - "pangolin.private-resources.docling.name=Docling Serve"
+      - "pangolin.private-resources.docling.mode=http"
+      - "pangolin.private-resources.docling.full-domain=docling.cianfhoghlaim.ie"
+      - "pangolin.private-resources.docling.destination-port=5001"
+      - "pangolin.private-resources.docling.protocol=http"
+      - "pangolin.private-resources.docling.roles[0]=Member"
