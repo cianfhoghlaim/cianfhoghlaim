@@ -1,0 +1,9 @@
+private-resources:
+  karakeep:
+    name: "Karakeep (Bookmarks)"
+    mode: http
+    full-domain: "karakeep.cianfhoghlaim.ie"
+    destination-port: 3000
+    protocol: http
+    sites: [arm1-oci]
+    roles: [Member]

@@ -1,0 +1,9 @@
+private-resources:
+  it-tools:
+    name: "IT Tools"
+    mode: http
+    full-domain: "ittools.cianfhoghlaim.ie"
+    destination-port: 8080
+    protocol: http
+    sites: [arm1-oci]
+    roles: [Member]

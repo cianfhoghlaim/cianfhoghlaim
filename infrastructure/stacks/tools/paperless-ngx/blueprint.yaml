@@ -1,0 +1,9 @@
+private-resources:
+  paperless:
+    name: "Paperless-ngx"
+    mode: http
+    full-domain: "paperless.cianfhoghlaim.ie"
+    destination-port: 8000
+    protocol: http
+    sites: [arm1-oci]
+    roles: [Member]

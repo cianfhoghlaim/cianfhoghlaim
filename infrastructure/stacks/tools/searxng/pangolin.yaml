@@ -1,0 +1,9 @@
+services:
+  searxng:
+    labels:
+      - "pangolin.private-resources.searxng.name=SearXNG (Privacy Search)"
+      - "pangolin.private-resources.searxng.mode=http"
+      - "pangolin.private-resources.searxng.full-domain=search.cianfhoghlaim.ie"
+      - "pangolin.private-resources.searxng.destination-port=8888"
+      - "pangolin.private-resources.searxng.protocol=http"
+      - "pangolin.private-resources.searxng.roles[0]=Member"
