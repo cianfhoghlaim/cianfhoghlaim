@@ -1,242 +1,190 @@
 """Dagster Jobs, Schedules, and Sensors.
 
-Orchestration configuration for the Aleyum pipeline.
+Orchestration configuration for the Croílár pipeline.
 
 Jobs:
-    - daily_ingestion_job: Ingest from all sources
-    - weekly_full_refresh_job: Full data refresh
-    - artwork_embedding_job: Generate embeddings
+    - daily_ingestion_job: Ingest from all sources (music + CV)
+    - weekly_cv_refresh_job: Full CV refresh
+    - weekly_full_refresh_job: Full data refresh (all assets)
+    - artwork_embedding_job: Generate CLIP embeddings
+    - monthly_identity_job: Identity document verification
 
 Schedules:
-    - daily_ingestion_schedule: Run ingestion daily at 6 AM
-    - weekly_refresh_schedule: Full refresh on Sundays
+    - daily_ingestion_schedule: Run music ingestion daily at 3 AM UTC
+    - weekly_cv_refresh_schedule: CV refresh Sundays at 4 AM UTC
+    - weekly_full_refresh_schedule: Full pipeline Sundays at 3 AM UTC
+    - monthly_identity_schedule: Identity check on 1st of month at 5 AM UTC
 
 Sensors:
     - new_artwork_sensor: Trigger embedding when new artwork arrives
+    - source_update_sensor: Trigger artwork processing when source data updates
 """
 
 from dagster import (
     AssetSelection,
-    Definitions,
     ScheduleDefinition,
     define_asset_job,
     sensor,
     RunRequest,
     SensorEvaluationContext,
     SkipReason,
-    AssetKey,
     DefaultSensorStatus,
 )
 
 
-# Asset selections for jobs
-INGESTION_ASSETS = AssetSelection.groups("spotify", "soundcloud", "labels")
-ARTWORK_ASSETS = AssetSelection.groups("artwork")
-EMBEDDING_ASSETS = AssetSelection.groups("embeddings")
-ALL_ASSETS = INGESTION_ASSETS | ARTWORK_ASSETS | EMBEDDING_ASSETS
+# Asset selections
+MUSIC_INGESTION = AssetSelection.groups("spotify_manual", "soundcloud_manual", "labels_manual")
+ARTWORK = AssetSelection.groups("artwork")
+EMBEDDINGS = AssetSelection.groups("embeddings")
+CV_PIPELINE = AssetSelection.groups("cv_pipeline")
+TEACHING_PIPELINE = AssetSelection.groups("teaching_pipeline")
+CROSS_LINK = AssetSelection.groups("cross_link")
+IDENTITY = AssetSelection.groups("identity_pipeline")
+
+ALL_CV = CV_PIPELINE | TEACHING_PIPELINE | CROSS_LINK | IDENTITY
+ALL_MUSIC = MUSIC_INGESTION | ARTWORK | EMBEDDINGS
 
 
 # Jobs
 
-daily_ingestion_job = define_asset_job(
-    name="daily_ingestion_job",
-    selection=INGESTION_ASSETS,
-    description="Daily data ingestion from all music sources",
-    tags={"type": "ingestion", "frequency": "daily"},
+daily_music_job = define_asset_job(
+    name="daily_music_job",
+    selection=MUSIC_INGESTION,
+    description="Daily music ingestion from Spotify, SoundCloud, and labels",
+    tags={"type": "ingestion", "frequency": "daily", "domain": "music"},
 )
 
-artwork_processing_job = define_asset_job(
-    name="artwork_processing_job",
-    selection=ARTWORK_ASSETS,
-    description="Process and cache artwork images",
-    tags={"type": "processing", "resource": "artwork"},
-)
-
-embedding_job = define_asset_job(
-    name="embedding_job",
-    selection=EMBEDDING_ASSETS,
-    description="Generate CLIP embeddings for artwork",
-    tags={"type": "embedding", "resource": "lancedb"},
+weekly_cv_refresh_job = define_asset_job(
+    name="weekly_cv_refresh_job",
+    selection=CV_PIPELINE | TEACHING_PIPELINE,
+    description="Weekly CV and teaching data refresh from scanned PDFs",
+    tags={"type": "extraction", "frequency": "weekly", "domain": "cv"},
 )
 
 weekly_full_refresh_job = define_asset_job(
     name="weekly_full_refresh_job",
-    selection=ALL_ASSETS,
-    description="Full pipeline refresh - all sources and processing",
+    selection=ALL_MUSIC | ALL_CV,
+    description="Full pipeline refresh — all sources and processing",
     tags={"type": "full_refresh", "frequency": "weekly"},
 )
 
-full_pipeline_job = define_asset_job(
-    name="full_pipeline_job",
-    selection=ALL_ASSETS,
-    description="Run complete pipeline: ingestion → processing → embedding",
-    tags={"type": "full_pipeline"},
+monthly_identity_job = define_asset_job(
+    name="monthly_identity_job",
+    selection=IDENTITY,
+    description="Monthly identity document verification and expiry check",
+    tags={"type": "verification", "frequency": "monthly", "domain": "identity"},
 )
 
 
-# Schedules
+# Schedules (per spec: music at 03:00, CV at 04:00 Sun, identity at 05:00 1st)
 
-daily_ingestion_schedule = ScheduleDefinition(
-    job=daily_ingestion_job,
-    cron_schedule="0 6 * * *",  # 6 AM daily
-    execution_timezone="UTC",
-    description="Daily ingestion at 6 AM UTC",
+daily_music_schedule = ScheduleDefinition(
+    job=daily_music_job,
+    cron_schedule="0 3 * * *",
+    execution_timezone="Europe/Dublin",
+    description="Daily music ingestion at 3 AM Dublin time",
 )
 
-weekly_refresh_schedule = ScheduleDefinition(
+weekly_cv_refresh_schedule = ScheduleDefinition(
+    job=weekly_cv_refresh_job,
+    cron_schedule="0 4 * * 0",
+    execution_timezone="Europe/Dublin",
+    description="Weekly CV and teaching refresh on Sundays at 4 AM Dublin time",
+)
+
+weekly_full_refresh_schedule = ScheduleDefinition(
     job=weekly_full_refresh_job,
-    cron_schedule="0 3 * * 0",  # 3 AM on Sundays
-    execution_timezone="UTC",
-    description="Weekly full refresh on Sundays at 3 AM UTC",
+    cron_schedule="0 3 * * 0",
+    execution_timezone="Europe/Dublin",
+    description="Weekly full pipeline refresh on Sundays at 3 AM Dublin time",
+)
+
+monthly_identity_schedule = ScheduleDefinition(
+    job=monthly_identity_job,
+    cron_schedule="0 5 1 * *",
+    execution_timezone="Europe/Dublin",
+    description="Monthly identity document verification on the 1st at 5 AM Dublin time",
 )
 
 
 # Sensors
 
-
 @sensor(
     name="new_artwork_sensor",
-    job=embedding_job,
-    minimum_interval_seconds=300,  # Check every 5 minutes
+    job=weekly_full_refresh_job,
+    minimum_interval_seconds=300,
     default_status=DefaultSensorStatus.RUNNING,
-    description="Trigger embedding when new artwork is detected",
+    description="Trigger pipeline refresh when new artwork is detected",
 )
 def new_artwork_sensor(context: SensorEvaluationContext):
-    """Sensor that triggers embedding when new artwork arrives.
-
-    Monitors the artwork_data.images table for new entries
-    that haven't been embedded yet.
-    """
+    """Trigger pipeline when new artwork arrives in the DuckDB store."""
     import duckdb
     import os
 
-    duckdb_path = os.environ.get("DUCKDB_PATH", "./aleyum.duckdb")
-    lancedb_uri = os.environ.get("LANCEDB_URI", "./lancedb_data")
+    duckdb_path = os.environ.get("DUCKDB_PATH", "./croilar.duckdb")
 
     try:
         conn = duckdb.connect(duckdb_path, read_only=True)
-
-        # Count artwork in DuckDB
-        artwork_count = conn.execute("""
-            SELECT COUNT(*) FROM artwork_data.images
-        """).fetchone()[0]
-
+        artwork_count = conn.execute(
+            "SELECT COUNT(*) FROM artwork_data.images"
+        ).fetchone()[0]
         conn.close()
+    except Exception:
+        return SkipReason("Artwork data not available yet")
 
-        # Count embeddings in LanceDB
-        try:
-            import lancedb
-
-            db = lancedb.connect(lancedb_uri)
-            table = db.open_table("artwork_embeddings")
-            embedding_count = len(table)
-        except Exception:
-            embedding_count = 0
-
-        # Check if we have new artwork to embed
-        new_count = artwork_count - embedding_count
-
-        if new_count > 0:
-            context.log.info(
-                f"Found {new_count} new artwork images to embed "
-                f"(artwork: {artwork_count}, embedded: {embedding_count})"
-            )
-            return RunRequest(
-                run_key=f"new_artwork_{artwork_count}",
-                run_config={},
-                tags={"trigger": "sensor", "new_artwork_count": str(new_count)},
-            )
-        else:
-            return SkipReason(
-                f"No new artwork to embed (artwork: {artwork_count}, embedded: {embedding_count})"
-            )
-
-    except Exception as e:
-        return SkipReason(f"Error checking for new artwork: {e}")
+    cursor = int(context.cursor or "0")
+    if artwork_count > cursor:
+        context.update_cursor(str(artwork_count))
+        return RunRequest(
+            run_key=f"artwork_{artwork_count}",
+            tags={"trigger": "sensor", "new_artwork_count": str(artwork_count - cursor)},
+        )
+    return SkipReason(f"No new artwork (count: {artwork_count})")
 
 
 @sensor(
-    name="source_update_sensor",
-    job=artwork_processing_job,
-    minimum_interval_seconds=600,  # Check every 10 minutes
-    default_status=DefaultSensorStatus.STOPPED,  # Manual activation
-    description="Trigger artwork processing when source data updates",
+    name="cv_document_sensor",
+    job=weekly_cv_refresh_job,
+    minimum_interval_seconds=3600,
+    default_status=DefaultSensorStatus.RUNNING,
+    description="Trigger CV refresh when new PDFs are detected in the author directory",
 )
-def source_update_sensor(context: SensorEvaluationContext):
-    """Sensor that triggers artwork processing when source data updates.
+def cv_document_sensor(context: SensorEvaluationContext):
+    """Trigger CV pipeline when new PDFs appear in the author directory."""
+    from pathlib import Path
 
-    Monitors the label and Spotify tables for new releases
-    with artwork URLs.
-    """
-    import duckdb
-    import os
+    author_dir = Path(__file__).parent.parent.parent.parent.parent / (
+        "author_cian_deacy_lyons_mac_an_déisigh_uí_liatháin"
+    )
+    pdf_count = len(list(author_dir.rglob("*.pdf")))
 
-    duckdb_path = os.environ.get("DUCKDB_PATH", "./aleyum.duckdb")
-
-    # Get cursor from previous run
-    cursor = context.cursor or "0"
-    last_count = int(cursor)
-
-    try:
-        conn = duckdb.connect(duckdb_path, read_only=True)
-
-        # Count total artwork URLs across sources
-        current_count = 0
-
-        try:
-            label_count = conn.execute("""
-                SELECT COUNT(*) FROM label_data.artwork
-            """).fetchone()[0]
-            current_count += label_count
-        except Exception:
-            pass
-
-        try:
-            spotify_count = conn.execute("""
-                SELECT COUNT(*) FROM spotify_data.cached_images
-            """).fetchone()[0]
-            current_count += spotify_count
-        except Exception:
-            pass
-
-        conn.close()
-
-        if current_count > last_count:
-            new_count = current_count - last_count
-            context.log.info(f"Found {new_count} new artwork URLs")
-
-            # Update cursor
-            context.update_cursor(str(current_count))
-
-            return RunRequest(
-                run_key=f"source_update_{current_count}",
-                run_config={},
-                tags={"trigger": "sensor", "new_urls": str(new_count)},
-            )
-        else:
-            return SkipReason(f"No new artwork URLs (count: {current_count})")
-
-    except Exception as e:
-        return SkipReason(f"Error checking sources: {e}")
+    cursor = int(context.cursor or "0")
+    if pdf_count > cursor:
+        context.update_cursor(str(pdf_count))
+        return RunRequest(
+            run_key=f"cv_pdfs_{pdf_count}",
+            tags={"trigger": "sensor", "new_pdf_count": str(pdf_count - cursor)},
+        )
+    return SkipReason(f"No new author PDFs (count: {pdf_count})")
 
 
-# List of all jobs for export
+# Export lists
+
 all_jobs = [
-    daily_ingestion_job,
-    artwork_processing_job,
-    embedding_job,
+    daily_music_job,
+    weekly_cv_refresh_job,
     weekly_full_refresh_job,
-    full_pipeline_job,
+    monthly_identity_job,
 ]
 
-# List of all schedules for export
 all_schedules = [
-    daily_ingestion_schedule,
-    weekly_refresh_schedule,
+    daily_music_schedule,
+    weekly_cv_refresh_schedule,
+    weekly_full_refresh_schedule,
+    monthly_identity_schedule,
 ]
 
-# List of all sensors for export
 all_sensors = [
     new_artwork_sensor,
-    source_update_sensor,
+    cv_document_sensor,
 ]

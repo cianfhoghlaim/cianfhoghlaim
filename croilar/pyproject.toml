@@ -70,7 +70,7 @@ directory_type = "project"
 [tool.dg.project]
 root_module = "dagster_assets"
 code_location_target_module = "dagster_assets.definitions"
-code_location_name = "aleyum"
+code_location_name = "croilar"
 
 [tool.ruff]
 line-length = 100
