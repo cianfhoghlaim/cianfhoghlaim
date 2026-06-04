@@ -102,7 +102,7 @@ The system SHALL run complete blockchain CI across all platforms.
 
 | Component | Path |
 |-----------|------|
-| Main Module | `bonneagar/dagger/src/blockchain.ts` |
+| Main Module | `dagger-blockchain is DEFERRED to a followup OpenSpec change` |
 
 ## Related Specs
 

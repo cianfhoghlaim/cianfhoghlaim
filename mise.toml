@@ -143,22 +143,49 @@ run = "cd tuatha/apps/crypteolas_demo && uv run pytest"
 # =============================================================================
 # Dagger CI/CD Tasks
 # =============================================================================
+# Reference: openspec/changes/dagger-monorepo-integration/
+# The dagger module at infrastructure/dagger/ exposes 8 callable functions
+# (test_all, build_images, deploy, rollback × 3 pipelines) via the
+# `cianchoghlaim:UnifiedPipeline` entry point. The 4 pre-existing broken
+# task aliases are rewritten to use the new function names; a 5th
+# (`dagger:build-images`) is added.
 
 [tasks."dagger:ci"]
-description = "Run full CI pipeline with Dagger"
-run = "cd infrastructure/dagger && dagger call ci --source ../.."
+description = "Run the full Dagger test pipeline (lint + typecheck + unit across all 3 pipelines)"
+run = """
+cd infrastructure/dagger
+dagger call test-all --source ../..
+"""
 
 [tasks."dagger:test-python"]
-description = "Run Python tests with Dagger"
-run = "cd infrastructure/dagger && dagger call test-python --source ../.."
+description = "Run Dagger test pipeline scoped to the Python uv workspace"
+run = """
+cd infrastructure/dagger
+dagger call test-all --source ../.. 2>&1 | grep -E "ruff|mypy|pytest|DataPipeline"
+"""
 
 [tasks."dagger:test-typescript"]
-description = "Run TypeScript tests with Dagger"
-run = "cd infrastructure/dagger && dagger call test-typescript --source ../.."
+description = "Run Dagger test pipeline scoped to the bun workspaces"
+run = """
+cd infrastructure/dagger
+dagger call test-all --source ../.. 2>&1 | grep -E "bun|turbo|eslint|tsc|WebPipeline"
+"""
+
+[tasks."dagger:build-images"]
+description = "Build + publish the 3 pipeline images to ghcr.io/cianfhoghlaim"
+run = """
+cd infrastructure/dagger
+dagger call build-images --source ../.. \
+  --registry=ghcr.io/cianfhoghlaim \
+  --tag=$(git rev-parse --short HEAD)
+"""
 
 [tasks."dagger:deploy-cloudflare"]
-description = "Deploy docs to Cloudflare Pages"
-run = "cd infrastructure/dagger && dagger call deploy-cloudflare --source ../.."
+description = "Build + deploy the web pipeline to staging (Cloudflare Pages + Komodo)"
+run = """
+cd infrastructure/dagger
+dagger call deploy --source ../.. --environment=staging
+"""
 
 # =============================================================================
 # Documentation Tasks

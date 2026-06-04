@@ -1,0 +1,8 @@
+{
+  "name": "cianchoghlaim_dagger",
+  "engineVersion": "v0.20.8",
+  "sdk": {
+    "source": "python"
+  },
+  "disableDefaultFunctionCaching": true
+}

@@ -30,12 +30,13 @@ Celtic language education platform with AI-powered tools for Irish curriculum pr
 
 | Capability | Description | Status |
 |------------|-------------|--------|
+| `dagger-monorepo-integration` | Python root at `infrastructure/dagger/` with 3 pipelines (infra/web/data) × test/build/deploy/rollback + TS submodule + Locket secret model + 2 Forgejo Actions | Active |
 | `dagger-ci` | Polyglot CI orchestration (Python, TypeScript, Rust) | Active |
 | `dagger-gitops` | 8-step GitOps pipeline (Forgejo + Komodo) | Active |
 | `dagger-forgejo` | Forgejo API automation | Active |
 | `dagger-komodo` | Komodo SDK wrapper | Active |
 | `dagger-cloudflare` | Pages and Worker deployment | Active |
-| `dagger-blockchain` | SpacetimeDB, Solana, Ethereum CI | Active |
+| `dagger-blockchain` | SpacetimeDB, Solana, Ethereum CI | Deferred (requires Rust toolchain in Python root + GPU support) |
 
 ### Team Workflow
 

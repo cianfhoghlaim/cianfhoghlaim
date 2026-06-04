@@ -1,0 +1,75 @@
+# Forgejo Actions workflow: dagger call test-all on every PR + main push.
+# Reference: openspec/changes/dagger-monorepo-integration/
+#
+# This workflow is the single entry point for CI. The Dagger module
+# itself is the pipeline — this YAML is just a thin shell that
+# installs Dagger + mise, then calls one `dagger call` command.
+#
+# The M-series Mac runners (bunchloch) and the OCI arm1 runner both
+# support the `runs-on: ubuntu-latest-arm64` label.
+
+name: CI (Dagger)
+
+on:
+  pull_request:
+    paths:
+      - "**/*.py"
+      - "**/*.ts"
+      - "**/*.toml"
+      - "**/*.json"
+      - "**/*.baml"
+      - "**/*.yaml"
+      - "**/*.yml"
+      - "infrastructure/dagger/**"
+      - "mise.toml"
+      - "pyproject.toml"
+      - "turbo.json"
+      - "dagger.json"
+  push:
+    branches: [main, develop]
+    paths: same as above
+  workflow_dispatch:
+
+jobs:
+  dagger-test:
+    name: dagger test-all
+    runs-on: ubuntu-latest-arm64
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Install mise + toolchain
+        run: |
+          curl -fsSL https://mise.jdx.dev/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Install Python + uv + bun
+        run: mise install
+      - run: mise run sync
+
+      - name: Install Dagger
+        run: |
+          curl -fsSL https://dl.dagger.io/dagger/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          dagger version
+
+      - name: Dagger test-all
+        env:
+          # These are passed as Dagger Secrets by the pipeline, not
+          # as env vars. The Python root sets them up internally.
+          DAGGER_CACHE_DIR: ${{ runner.temp }}/dagger-cache
+        run: |
+          mkdir -p "$DAGGER_CACHE_DIR"
+          cd infrastructure/dagger
+          dagger call test-all --source ../..
+
+      - name: Dagger build-images (main only)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          cd infrastructure/dagger
+          dagger call build-images \
+            --source ../.. \
+            --registry=ghcr.io/cianfhoghlaim \
+            --tag=${{ github.sha }}
