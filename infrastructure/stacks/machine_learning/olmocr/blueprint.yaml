@@ -1,0 +1,9 @@
+private-resources:
+  olmocr:
+    name: "OlmOCR (Ai2)"
+    mode: http
+    full-domain: "olmocr.cianfhoghlaim.ie"
+    destination-port: 8003
+    protocol: http
+    sites: [arm1-oci]
+    roles: [Member]
