@@ -1,0 +1,9 @@
+services:
+  croilar-dagster:
+    labels:
+      - "pangolin.private-resources.croilar-dagster.name=croilar Dagster"
+      - "pangolin.private-resources.croilar-dagster.mode=http"
+      - "pangolin.private-resources.croilar-dagster.full-domain=dagster.croilar.cianfhoghlaim.ie"
+      - "pangolin.private-resources.croilar-dagster.destination-port=3000"
+      - "pangolin.private-resources.croilar-dagster.protocol=http"
+      - "pangolin.private-resources.croilar-dagster.roles[0]=Member"

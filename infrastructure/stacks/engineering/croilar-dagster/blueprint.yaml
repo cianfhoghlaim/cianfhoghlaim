@@ -1,0 +1,11 @@
+private-resources:
+  croilar-dagster:
+    name: "croilar Dagster"
+    mode: http
+    full-domain: "dagster.croilar.cianfhoghlaim.ie"
+    destination-port: 3000
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member
