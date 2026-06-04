@@ -8,7 +8,7 @@ Usage:
     from pipelines.spotify import spotify_source
 
     pipeline = dlt.pipeline(
-        pipeline_name="spotify_aleyum",
+        pipeline_name="spotify_croilar",
         destination="duckdb",
         dataset_name="spotify_data",
     )
@@ -29,8 +29,8 @@ from dlt.sources.rest_api import RESTAPIConfig, rest_api_resources
 from pipelines.spotify.resources import SPOTIFY_RESOURCES, get_artist_endpoints
 
 
-# Aleyum Spotify Artist ID
-ALEYUM_ARTIST_ID = "2vLlk2CcC4NnN7yoNSTmX2"
+# Croílár (Aleyum) Spotify Artist ID
+CROILAR_ARTIST_ID = "2vLlk2CcC4NnN7yoNSTmX2"
 
 
 def get_spotify_token(client_id: str, client_secret: str) -> str:
@@ -110,7 +110,7 @@ def get_artist(
 
 @dlt.source(name="spotify_api")
 def spotify_source(
-    artist_id: str = ALEYUM_ARTIST_ID,
+    artist_id: str = CROILAR_ARTIST_ID,
     client_id: str | None = None,
     client_secret: str | None = None,
     include_audio_features: bool = True,
@@ -361,7 +361,7 @@ def extract_images_from_artist(artist: dict[str, Any]) -> list[dict[str, Any]]:
 
 
 def run_spotify_pipeline(
-    artist_id: str = ALEYUM_ARTIST_ID,
+    artist_id: str = CROILAR_ARTIST_ID,
     destination: str | Any | None = None,
     dataset_name: str = "spotify_data",
     cache_images: bool = True,
@@ -437,7 +437,7 @@ def run_spotify_pipeline(
 if __name__ == "__main__":
     # Example usage
     load_info = run_spotify_pipeline(
-        artist_id=ALEYUM_ARTIST_ID,
+        artist_id=CROILAR_ARTIST_ID,
         destination="duckdb",
         cache_images=False,  # Set True when R2 is configured
         fetch_audio_features=True,
