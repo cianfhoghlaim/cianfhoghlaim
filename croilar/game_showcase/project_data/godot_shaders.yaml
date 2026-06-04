@@ -1,0 +1,106 @@
+# Godot Celtic Shaders
+# GDExtension Rust shaders for Celtic visual effects
+
+title: "Celtic Shader Suite"
+subtitle: "Godot 4 GDExtension with Rust-Powered Shaders"
+category: godot
+order: 2
+
+description: |
+  Custom shader library for Godot 4 built with gdext (godot-rust). Features
+  procedural Celtic patterns including knotwork, spirals, and illuminated
+  manuscript effects. All shaders are GPU-accelerated with WGSL and integrate
+  with SpacetimeDB for real-time multiplayer sync.
+
+technologies:
+  - Godot 4.4
+  - Rust (gdext)
+  - GDExtension
+  - GLSL/WGSL
+  - SpacetimeDB SDK
+
+features:
+  - SDF-based Celtic knotwork with animation
+  - Archimedean spiral/triskele patterns
+  - Fire and magic particle effects
+  - Terrain shaders with fog and normal mapping
+  - GPU compute particle physics
+  - Hot-reload support for rapid iteration
+
+shaders:
+  - name: Knotwork
+    type: fragment
+    description: "SDF-based interlacing lines with animation"
+
+  - name: Spiral/Triskele
+    type: fragment
+    description: "Multi-arm Archimedean spirals with glow"
+
+  - name: Fire/Magic
+    type: vertex+fragment
+    description: "Billboard particle quads with life fade"
+
+  - name: Particle Compute
+    type: compute
+    description: "GPU physics: gravity, wind, turbulence"
+
+  - name: Terrain
+    type: vertex+fragment
+    description: "Fog, normal mapping, diffuse lighting"
+
+media:
+  thumbnail: "/portfolio/godot/thumbnail.png"
+  video: "https://www.youtube.com/watch?v=EXAMPLE"
+  gallery:
+    - "/portfolio/godot/knotwork.png"
+    - "/portfolio/godot/spiral.png"
+    - "/portfolio/godot/particles.png"
+  demo: "/demos/godot-shaders"  # Embedded Godot scene
+
+code_samples:
+  - title: "Knotwork Shader (GLSL)"
+    language: glsl
+    code: |
+      shader_type spatial;
+
+      uniform vec4 primary_color : source_color = vec4(0.8, 0.6, 0.2, 1.0);
+      uniform vec4 secondary_color : source_color = vec4(0.2, 0.5, 0.3, 1.0);
+      uniform float animation_speed : hint_range(0.0, 5.0) = 1.0;
+
+      float knot_segment(vec2 p, float r, float w) {
+          return abs(length(p) - r) - w;
+      }
+
+      void fragment() {
+          vec2 uv = UV;
+          float pattern = celtic_pattern(uv, TIME * animation_speed);
+          float edge = smoothstep(0.0, fwidth(pattern) * 2.0, pattern);
+          ALBEDO = mix(primary_color.rgb, secondary_color.rgb, edge);
+      }
+
+  - title: "GDExtension Class"
+    language: rust
+    code: |
+      #[derive(GodotClass)]
+      #[class(base=Node3D)]
+      pub struct CelticZone {
+          base: Base<Node3D>,
+          #[export]
+          zone_id: GString,
+          players: Vec<Gd<Player3D>>,
+      }
+
+      #[godot_api]
+      impl INode3D for CelticZone {
+          fn ready(&mut self) {
+              self.connect_to_spacetimedb();
+          }
+      }
+
+links:
+  docs: "/docs/godot-rust"
+  github: "https://github.com/example/celtic-shaders"
+
+dates:
+  started: "2024-03"
+  completed: null

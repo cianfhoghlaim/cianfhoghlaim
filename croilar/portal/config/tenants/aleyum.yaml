@@ -1,0 +1,140 @@
+tenant:
+  id: aleyum
+  name: aleyum
+  displayName: Aleyum Portal
+  domains:
+    - aleyum.cianfhoghlaim.ie
+    - localhost:3001
+  type: portfolio
+  description: Developer portal for infrastructure management and monitoring
+  tagline: Infrastructure at a glance
+
+owner:
+  name: Aleyum
+  title: Music Producer & Developer
+  email: contact@aleyum.com
+  github: Yedya
+  spotify: aleyum
+  soundcloud: aleyum
+  youtube: "@aleyummusic"
+
+theme:
+  primaryColor: "oklch(0.65 0.2 250)"
+  secondaryColor: "oklch(0.269 0 0)"
+  accentColor: "oklch(0.556 0.17 250)"
+  backgroundColor: "oklch(0.145 0 0)"
+  foregroundColor: "oklch(0.985 0 0)"
+  logo: /logo.svg
+  favicon: /favicon.svg
+  fontFamily: "system-ui, -apple-system, sans-serif"
+  fontHeading: "system-ui, -apple-system, sans-serif"
+  borderRadius: "0.5rem"
+  assets:
+    style: music
+    patterns: []
+
+routes:
+  enabled:
+    - path: /
+      component: DashboardPage
+      title: Dashboard
+    - path: /stacks
+      component: StacksPage
+      title: Stacks
+    - path: /agents
+      component: AgentsPage
+      title: Agents
+    - path: /agents/chat
+      component: AgentChatPage
+      title: Agent Chat
+    - path: /data/pipelines
+      component: PipelinesPage
+      title: Pipelines
+    - path: /monitoring/logs
+      component: LogsPage
+      title: Logs
+    - path: /monitoring/metrics
+      component: MetricsPage
+      title: Metrics
+    - path: /tools
+      component: ToolsPage
+      title: Tools
+    - path: /widgets
+      component: WidgetsPage
+      title: Widgets
+    - path: /login
+      component: LoginPage
+      title: Login
+  disabled: []
+
+features:
+  curriculumBrowser: false
+  translationTool: false
+  aiChat: true
+  resourceLibrary: false
+  vocabularyTracker: false
+  examPrep: false
+  musicPlayer: false
+  portfolioMode: false
+  gameShowcase: false
+  spotifyEmbed: false
+  soundcloudEmbed: false
+
+navigation:
+  primary:
+    - label: Dashboard
+      path: /
+      icon: home
+    - label: Stacks
+      path: /stacks
+      icon: server
+    - label: Agents
+      path: /agents
+      icon: bot
+    - label: Pipelines
+      path: /data/pipelines
+      icon: workflow
+    - label: Logs
+      path: /monitoring/logs
+      icon: scroll
+    - label: Metrics
+      path: /monitoring/metrics
+      icon: activity
+  footer:
+    - label: Tools
+      path: /tools
+    - label: Widgets
+      path: /widgets
+
+languages:
+  primary: en
+  supported:
+    - code: en
+      name: English
+      nativeName: English
+
+dataSources:
+  yaml: []
+  database: []
+  external: []
+
+storage:
+  duckdbPath: ./data/aleyum.duckdb
+  lancedbPath: ./data/lancedb
+  assetsPath: ./public/assets
+
+analytics:
+  enabled: false
+  provider: none
+  siteId: ""
+
+seo:
+  title: Aleyum Portal - Developer Dashboard
+  description: Internal developer portal for infrastructure management, monitoring, and AI agent interactions
+  keywords:
+    - developer portal
+    - infrastructure
+    - monitoring
+    - AI agents
+  ogImage: /og-image.png
+  twitterHandle: ""
