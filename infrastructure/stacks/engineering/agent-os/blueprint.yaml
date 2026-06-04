@@ -29,10 +29,20 @@ private-resources:
       - arm1-oci
     roles:
       - Member
-  aleyum-agentos:
-    name: "aleyum AgentOS"
+  aleyum-agentos:  # TODO: legacy alias, remove once croilar-agentos is provisioned
+    name: "aleyum AgentOS (legacy)"
     mode: http
     full-domain: "agents.aleyum.cianfhoghlaim.ie"
+    destination-port: 7777
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member
+  croilar-agentos:
+    name: "croilar AgentOS"
+    mode: http
+    full-domain: "agents.croilar.cianfhoghlaim.ie"
     destination-port: 7777
     protocol: http
     sites:

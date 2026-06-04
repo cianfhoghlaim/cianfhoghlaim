@@ -1,0 +1,9 @@
+services:
+  bytebase:
+    labels:
+      - "pangolin.private-resources.bytebase.name=Bytebase"
+      - "pangolin.private-resources.bytebase.mode=http"
+      - "pangolin.private-resources.bytebase.full-domain=bytebase.cianfhoghlaim.ie"
+      - "pangolin.private-resources.bytebase.destination-port=5670"
+      - "pangolin.private-resources.bytebase.protocol=http"
+      - "pangolin.private-resources.bytebase.roles[0]=Member"
