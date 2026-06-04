@@ -1,7 +1,7 @@
 services:
   locket:
     image: ghcr.io/bpbradley/locket:infisical
-    container_name: agent-os-locket
+    container_name: backrest-locket
     restart: unless-stopped
     user: "65532:65532"
     security_opt:
@@ -28,35 +28,7 @@ services:
     networks:
       - stack
 
-  # 4 agent services all consume the same shared secrets (LLM keys + AGENT_OS_SECRET_KEY)
-  oideachais-agentos:
-    depends_on:
-      locket:
-        condition: service_healthy
-    volumes:
-      - stack-secrets:/run/secrets/locket:ro
-    env_file:
-      - /run/secrets/locket/secrets.env
-
-  crypteolas-agentos:
-    depends_on:
-      locket:
-        condition: service_healthy
-    volumes:
-      - stack-secrets:/run/secrets/locket:ro
-    env_file:
-      - /run/secrets/locket/secrets.env
-
-  browser-agentos:
-    depends_on:
-      locket:
-        condition: service_healthy
-    volumes:
-      - stack-secrets:/run/secrets/locket:ro
-    env_file:
-      - /run/secrets/locket/secrets.env
-
-  croilar-agentos:
+  backrest:
     depends_on:
       locket:
         condition: service_healthy

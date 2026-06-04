@@ -1,0 +1,11 @@
+private-resources:
+  gluetun:
+    name: "Gluetun (VPN sidecar)"
+    mode: http
+    full-domain: "gluetun.cianfhoghlaim.ie"
+    destination-port: 11235
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

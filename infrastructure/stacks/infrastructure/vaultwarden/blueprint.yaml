@@ -1,0 +1,11 @@
+private-resources:
+  vaultwarden:
+    name: "Vaultwarden (Bitwarden-compatible)"
+    mode: http
+    full-domain: "vault.cianfhoghlaim.ie"
+    destination-port: 8080
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

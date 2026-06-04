@@ -1,0 +1,11 @@
+private-resources:
+  docling:
+    name: "Docling Serve"
+    mode: http
+    full-domain: "docling.cianfhoghlaim.ie"
+    destination-port: 5001
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

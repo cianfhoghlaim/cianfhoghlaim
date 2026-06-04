@@ -5,13 +5,13 @@
 #   - oideachais-agentos: Irish Education & Curriculum (port 7772)
 #   - crypteolas-agentos: DeFi Protocol Analysis        (port 7771)
 #   - browser-agentos:   Web Automation Orchestration    (port 7773)
-#   - aleyum-agentos:    Deep Research & Discovery     (port 7774)
+#   - croilar-agentos:   Croílár (Personal Portfolio + CV + Data Eng) (port 7774)
 #
 # Build contexts (post v2 restructure):
 #   oideachais  -> oideachais/data_platform/agent_os/
 #   crypteolas  -> tuatha/crypteolas/agent_os/
 #   browser     -> infrastructure/browser/agent_os/
-#   aleyum      -> ./aleyum/  (NOT YET MIGRATED — see openspec/AGENTS.md)
+#   croilar     -> croilar/agent_os/  (NEW — was sruth/aleyum/agent_os/)
 #
 # USAGE:
 #   Development:  docker compose --env-file ../../.env.local up -d
@@ -159,25 +159,24 @@ services:
       - cianfhoghlaim
 
   # ---------------------------------------------------------------------------
-  # ALEYUM AGENTOS - Deep Research & Discovery
-  # Source: PENDING — aleyum/ source not yet migrated (was sruth/aleyum, deleted in v2).
-  # Service still defined; build is currently disabled (skipped if source missing).
+  # CROILAR AGENTOS - Croílár (Personal Portfolio + CV + Data Engineering)
+  # Source: croilar/agent_os/ (renamed from sruth/aleyum/agent_os/)
   # ---------------------------------------------------------------------------
-  aleyum-agentos:
-    # build: skipped until aleyum/ is restored; falls back to a stub image.
-    image: ghcr.io/cianfhoghlaim/agent-os-aleyum:stub
-    container_name: aleyum-agentos
+  croilar-agentos:
+    # build: skipped until croilar/ is wired to a Dockerfile; falls back to a stub image.
+    image: ghcr.io/cianfhoghlaim/agent-os-croilar:stub
+    container_name: croilar-agentos
     restart: unless-stopped
     ports:
-      - "${ALEYUM_PORT:-7774}:7777"
+      - "${CROILAR_PORT:-7774}:7777"
     environment:
-      AGENT_OS_SERVICE_NAME: aleyum
+      AGENT_OS_SERVICE_NAME: croilar
       AGENT_OS_PORT: 7777
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       AGNO_DEFAULT_MODEL: ${AGNO_DEFAULT_MODEL:-gpt-4o}
       AGNO_CLAUDE_MODEL: ${AGNO_CLAUDE_MODEL:-claude-sonnet-4-20250514}
-      AGENT_OS_DB_URL: ${ALEYUM_DB_URL:-sqlite:///./storage/aleyum.db}
+      AGENT_OS_DB_URL: ${CROILAR_DB_URL:-sqlite:///./storage/croilar.db}
       AGENT_OS_SECRET_KEY: ${AGENT_OS_SECRET_KEY}
       OIDEACHAIS_AGENT_OS_URL: http://oideachais-agentos:7777
       CRYPTEOLAS_AGENT_OS_URL: http://crypteolas-agentos:7777
@@ -186,7 +185,7 @@ services:
       LANGFUSE_HOST: ${LANGFUSE_HOST:-https://langfuse.cianfhoghlaim.ie}
       AGNO_DEBUG: ${AGNO_DEBUG:-false}
     volumes:
-      - aleyum-storage:/app/storage
+      - croilar-storage:/app/storage
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7777/health"]
       interval: 30s
@@ -204,7 +203,7 @@ volumes:
   oideachais-storage:
   crypteolas-storage:
   browser-storage:
-  aleyum-storage:
+  croilar-storage:
 
 networks:
   cianfhoghlaim:
