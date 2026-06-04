@@ -1,0 +1,27 @@
+services:
+  croilar-marimo:
+    image: ghcr.io/cianfhoghlaim/croilar-marimo:0.1.0
+    container_name: croilar-marimo
+    restart: unless-stopped
+    ports:
+      - "${CROILAR_MARIMO_PORT:-2718}:2718"
+    environment:
+      MARIMO_RUNTIME: ${MARIMO_RUNTIME:-lazy}
+      DUCKDB_PATH: ${DUCKDB_PATH:-./croilar.duckdb}
+      LANCEDB_URI: ${LANCEDB_URI:-./lancedb_data_cv}
+    volumes:
+      - notebook-data:/app/notebooks
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:2718/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - cianfhoghlaim
+
+volumes:
+  notebook-data:
+
+networks:
+  cianfhoghlaim:
+    external: true
