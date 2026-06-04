@@ -1,0 +1,12 @@
+{
+  "name": "@oideachais/auth",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "better-auth": "^1.4.0",
+    "@oideachais/db": "workspace:*",
+    "@oideachais/env": "workspace:*"
+  }
+}
