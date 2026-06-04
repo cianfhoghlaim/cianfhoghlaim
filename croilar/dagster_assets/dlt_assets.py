@@ -1,4 +1,4 @@
-"""DLT Assets for Aleyum Pipeline.
+"""DLT Assets for Croílár Pipeline.
 
 Wraps DLT pipelines as Dagster assets for orchestration.
 Uses dagster-dlt integration for automatic asset tracking.
@@ -117,7 +117,7 @@ def artwork_processing_asset(context: AssetExecutionContext) -> MaterializeResul
     from pipelines.artwork import run_artwork_pipeline
     import duckdb
 
-    conn = duckdb.connect("./aleyum.duckdb")
+    conn = duckdb.connect("./croilar.duckdb")
     urls = []
 
     try:

@@ -1,7 +1,7 @@
-"""CocoIndex Assets for Artwork Embedding.
+"""CocoIndex Assets for the Croílár Portfolio.
 
 Wraps CocoIndex flows as Dagster assets.
-Embeds artwork images and exports to LanceDB.
+Embeds artwork images and CV/teaching text, exports to LanceDB.
 
 Assets:
     - artwork_embeddings: CLIP embeddings in LanceDB
@@ -30,7 +30,7 @@ class CocoIndexConfig(Config):
     """Configuration for CocoIndex assets."""
 
     use_duckdb_source: bool = True
-    duckdb_path: str = "./aleyum.duckdb"
+    duckdb_path: str = "./croilar.duckdb"
     lancedb_uri: str = "./lancedb_data"
     enable_captioning: bool = False
     vision_model: str = "qwen3-vl"

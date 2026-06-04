@@ -1,5 +1,5 @@
 """
-Environment-aware DuckLake destination factory for aleyum.
+Environment-aware DuckLake destination factory for croilar.
 
 Solves DuckDB concurrency issues by using DuckLake (S3 + PostgreSQL catalog).
 Multiple Dagster partitions can write simultaneously because data is stored as
@@ -9,7 +9,7 @@ Usage:
     from dlt_utils import get_dlt_destination, create_pipeline
 
     pipeline = create_pipeline(
-        pipeline_name="spotify_aleyum",
+        pipeline_name="spotify_croilar",
         dataset_name="spotify_data",
     )
 """
@@ -23,7 +23,7 @@ from typing import Any
 import dlt
 
 
-NAMESPACE = "aleyum"
+NAMESPACE = "croilar"
 
 
 @dataclass
@@ -80,14 +80,14 @@ def get_dlt_destination(
     use_ducklake: bool | None = None,
 ) -> Any:
     """
-    Get DLT destination for aleyum pipelines.
+    Get DLT destination for croilar pipelines.
 
     Environment Variables:
         DLT_ENVIRONMENT: "local" (default) or "production"
         USE_DUCKLAKE: "true" (default) or "false"
 
     Local:
-        - Data: Garage S3 at s3://ducklake/aleyum/
+        - Data: Garage S3 at s3://ducklake/croilar/
         - Metadata: PostgreSQL at localhost:5432
 
     Production:

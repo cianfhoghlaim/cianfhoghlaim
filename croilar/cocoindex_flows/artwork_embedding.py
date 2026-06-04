@@ -45,7 +45,7 @@ from transformers import CLIPModel, CLIPProcessor
 
 
 # Configuration
-DUCKDB_PATH = os.environ.get("DUCKDB_PATH", "./aleyum.duckdb")
+DUCKDB_PATH = os.environ.get("DUCKDB_PATH", "./croilar.duckdb")
 LANCEDB_URI = os.environ.get("LANCEDB_URI", "./lancedb_data")
 LANCEDB_TABLE = "artwork_embeddings"
 CLIP_MODEL_NAME = os.environ.get("CLIP_MODEL", "openai/clip-vit-large-patch14")
