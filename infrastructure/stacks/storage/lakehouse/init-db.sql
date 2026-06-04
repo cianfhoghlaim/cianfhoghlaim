@@ -8,7 +8,8 @@
 -- Create DuckLake catalog databases for each project
 CREATE DATABASE ducklake_oideachais;
 CREATE DATABASE ducklake_crypteolas;
-CREATE DATABASE ducklake_aleyum;
+CREATE DATABASE ducklake_aleyum;  -- legacy: sruth/aleyum, superseded by croilar
+CREATE DATABASE ducklake_croilar;
 CREATE DATABASE ducklake_tuath;
 CREATE DATABASE dagster_local;
 
@@ -19,6 +20,7 @@ CREATE DATABASE langfuse;
 GRANT ALL PRIVILEGES ON DATABASE ducklake_oideachais TO lakekeeper;
 GRANT ALL PRIVILEGES ON DATABASE ducklake_crypteolas TO lakekeeper;
 GRANT ALL PRIVILEGES ON DATABASE ducklake_aleyum TO lakekeeper;
+GRANT ALL PRIVILEGES ON DATABASE ducklake_croilar TO lakekeeper;
 GRANT ALL PRIVILEGES ON DATABASE ducklake_tuath TO lakekeeper;
 GRANT ALL PRIVILEGES ON DATABASE dagster_local TO lakekeeper;
 GRANT ALL PRIVILEGES ON DATABASE langfuse TO lakekeeper;

@@ -47,6 +47,7 @@ members = [
     "tuatha/codeolas",
     "tuatha/crypteolas",
     "tuatha/apps/crypteolas_demo",
+    "croilar",
     "infrastructure/browser",
     "oideachais/mcp/mcpo",
 ]
@@ -60,6 +61,7 @@ crypteolas-demo = { workspace = true }
 sruth-browser = { workspace = true }
 oideachais = { workspace = true }
 tuath = { workspace = true }
+croilar = { workspace = true }
 
 # =============================================================================
 # Shared dev tooling — applied to every workspace member

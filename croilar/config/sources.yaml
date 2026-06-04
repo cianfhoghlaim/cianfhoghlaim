@@ -1,0 +1,91 @@
+# Aleyum Portfolio Data Sources Configuration
+# Defines all data sources for the portfolio project
+
+spotify:
+  artist_id: "2vLlk2CcC4NnN7yoNSTmX2"
+  artist_name: "Aleyum"
+  artist_url: "https://open.spotify.com/artist/2vLlk2CcC4NnN7yoNSTmX2"
+  market: "IE"  # Ireland
+  resources:
+    - artist
+    - albums
+    - top_tracks
+    - audio_features
+  # Images expire < 24 hours - must cache to R2
+  cache_images: true
+
+soundcloud:
+  profile_url: "https://soundcloud.com/aleyummusic"
+  username: "aleyummusic"
+  # No public API - requires scraping
+  scrape_enabled: true
+  resources:
+    - tracks
+    - playlists
+    - reposts
+    - followers
+    - comments
+  # Download audio files to R2 for streaming
+  download_audio: true
+
+github:
+  username: "Yedya"
+  repositories_url: "https://github.com/Yedya?tab=repositories"
+  resources:
+    - repositories
+    - commits
+    - languages
+    - readme
+  # Repositories to highlight in portfolio
+  featured_repos:
+    - Portfolio
+    # Add more featured repos here
+
+resume:
+  pdf_url: "https://github.com/Yedya/Portfolio/blob/master/Conor_Hynes_Resume_.pdf"
+  readme_url: "https://github.com/Yedya/Portfolio/blob/master/README.md"
+
+labels:
+  - name: "Lemongrass Music"
+    url: "https://lemongrassmusic.de/artists/Aleyum/"
+    country: "Germany"
+  - name: "Monstercat"
+    url: "https://www.monstercat.com/artist/aleyum"
+    country: "Canada"
+  - name: "Fokuz Recordings"
+    url: "https://fokuzrecordings.com"
+    genre: "Drum & Bass"
+  - name: "Immersed Records"
+    url: "https://immersedrec.com"
+    genre: "Electronic"
+  - name: "Offworld Recordings"
+    url: "https://offworldrecordings.com"
+    genre: "Drum & Bass"
+  - name: "Soul Deep Recordings"
+    url: "https://souldeeprecordings.com"
+    genre: "Liquid Funk"
+
+socials:
+  facebook: "https://www.facebook.com/aleyummusic"
+  instagram: "https://www.instagram.com/aleyummusic/"
+  youtube: "https://www.youtube.com/@aleyummusic"
+
+storage:
+  r2:
+    assets_bucket: "aleyum-assets"
+    data_bucket: "aleyum-data"
+    images_prefix: "images/"
+    audio_prefix: "audio/"
+
+  duckdb:
+    path: "./data/aleyum.duckdb"
+
+  lancedb:
+    uri: "./data/aleyum.lancedb"
+    tables:
+      - tracks
+      - projects
+
+defaults:
+  chunk_size: 1000
+  embedding_model: "sentence-transformers/all-MiniLM-L6-v2"

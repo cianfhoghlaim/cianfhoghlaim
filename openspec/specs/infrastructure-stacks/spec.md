@@ -101,7 +101,7 @@ The system SHALL deploy the Pangolin Convergence control plane.
 | falkordb | Vector+graph hybrid | 6379, 3000 |
 | qdrant | Vector database | 6333, 6334 |
 | lancedb | LanceDB data viewer | 8080 |
-| agent-os | 4 custom services: oideachais, crypteolas, browser, aleyum | 7771-7774 |
+| agent-os | 4 custom services: oideachais, crypteolas, browser, croilar (was aleyum) | 7771-7774 |
 | browser | Browser automation (Skyvern + Postgres + Garage) | 3001, 3100, 8001, 11235 |
 | confluent | Kafka UI (kafka+zookeeper commented out) | 9080 |
 | graphiti | Temporal knowledge graph | Internal |

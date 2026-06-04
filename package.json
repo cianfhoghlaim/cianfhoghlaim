@@ -13,7 +13,9 @@
     "oideachais/web",
     "oideachais/mcp/filesystem",
     "tuatha/ui",
-    "tuatha/apps/crypteolas_demo"
+    "tuatha/apps/crypteolas_demo",
+    "croilar",
+    "croilar/portal"
   ],
   "scripts": {
     "postinstall": "turbo run postinstall --filter=./scripts/* || true",

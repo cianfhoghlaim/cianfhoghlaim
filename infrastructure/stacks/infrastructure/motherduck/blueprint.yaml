@@ -42,11 +42,18 @@ databases:
       - transactions.history
 
   - name: aleyum_market
-    pipeline: sruth/aleyum
-    purpose: Art market analytics
+    pipeline: sruth/aleyum  # legacy — was aleyum, now superseded by croilar
+    purpose: Art market analytics (legacy — see croilar_market)
     tables:
       - artworks.metadata
       - sales.history
+  - name: croilar_market
+    pipeline: croilar/pipelines
+    purpose: Croílár (personal portfolio + CV + data engineering) analytics
+    tables:
+      - cv.extracted
+      - teaching.extracted
+      - music.tracks
       - artists.profiles
 
 integrations:

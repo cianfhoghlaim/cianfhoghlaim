@@ -27,7 +27,8 @@ export MOTHERDUCK_TOKEN="{{ infisical://taisce-secrets/motherduck/token }}"
 |----------|----------|---------|
 | `oideachas_education` | sruth/oideachais | Curriculum analytics |
 | `crypteolas_defi` | sruth/crypteolas | DeFi protocol data |
-| `aleyum_market` | sruth/aleyum | Art market analytics |
+| `aleyum_market` | sruth/aleyum | Art market analytics (legacy) |
+| `croilar_market` | croilar/pipelines | Croílár (portfolio + CV + data eng) analytics |
 
 ## Usage with DLT
 
