@@ -106,6 +106,7 @@ services:
     container_name: pocket-id
     restart: unless-stopped
     environment:
+      ENCRYPTION_KEY: ${POCKETID_ENCRYPTION_KEY:-364c2b9c66851000c4062e7c8f40e21d7d456483744dc1ad7ee54a31b87efc74}
       APP_URL: https://auth.cianfhoghlaim.ie
       TRUST_PROXY: "true"
       PUID: "1000"

@@ -88,6 +88,7 @@ dependencies = [
     "sqlmesh[duckdb]>=0.228.1",
     "browserbase>=1.11.0",
     "playwright>=1.60.0",
+    "cognee>=1.0.1",
 ]
 
 [project.optional-dependencies]
