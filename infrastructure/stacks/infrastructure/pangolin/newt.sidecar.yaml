@@ -24,10 +24,8 @@ services:
       - "--provider=infisical"
       - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
       - "--infisical-client-secret=file:/run/secrets/infisical_secret"
-      - "--infisical-url=$${INFISICAL_URL:-http://host.docker.internal:8081}"
-      - "--infisical-default-environment=$${INFISICAL_ENVIRONMENT:-dev}"
-      - "--infisical-default-project-id=$${INFISICAL_PROJECT_ID:-project-id}
-      - "--connect.host=${
+      - "--infisical-default-environment=${INFISICAL_ENVIRONMENT:-dev}"
+      - "--infisical-default-project-id=${INFISICAL_PROJECT_ID:-}"
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:
@@ -53,6 +51,7 @@ services:
     depends_on:
       locket:
         condition: service_healthy
+    environment:
       PANGOLIN_ENDPOINT: ${PANGOLIN_ENDPOINT:-https://pangolin.cianfhoghlaim.ie}
       NEWT_ID_FILE: /run/secrets/locket/newt_id
       NEWT_SECRET_FILE: /run/secrets/locket/newt_secret
