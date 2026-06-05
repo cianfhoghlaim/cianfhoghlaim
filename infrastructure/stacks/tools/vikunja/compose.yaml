@@ -21,7 +21,7 @@ services:
       VIKUNJA_DATABASE_PASSWORD: ${VIKUNJA_DATABASE_PASSWORD}
       VIKUNJA_DATABASE_NAME: ${VIKUNJA_POSTGRES_DB:-vikunja}
       VIKUNJA_DATABASE_SSLMODE: disable
-      VIKUNJA_DATABASE_PATH: /db/vikunja.db
+      VIKUNJA_DATABASE_TYPE: postgres
       # CalDAV (so cal-diy bookings surface as tasks with start/end dates → Gantt)
       VIKUNJA_CALDAV_ENABLED: "true"
       # Mailer (used by reminders)
