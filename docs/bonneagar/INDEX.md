@@ -2,6 +2,21 @@
 
 Centralized hub for infrastructure, deployment, and platform engineering research for the Cianfhoghlaim platform.
 
+---
+
+## Comprehensive Merged Guides
+
+These are the primary reference documents, consolidated from scattered files:
+
+| Guide | Source Files | Topics |
+|-------|-------------|--------|
+| **[KOMODO_COMPLETE_GUIDE.md](./KOMODO_COMPLETE_GUIDE.md)** | 21 files from `komodo/` | Core/Periphery, GitOps, recursive deployment, Resource Sync, SDK, Ansible |
+| **[PANGOLIN_COMPLETE_GUIDE.md](./PANGOLIN_COMPLETE_GUIDE.md)** | 27 files from `pangolin/` | Zero-trust, Newt, WireGuard, OIDC, Blueprints, multi-site HA, alerting |
+| **[SECRETS_MANAGEMENT_GUIDE.md](./SECRETS_MANAGEMENT_GUIDE.md)** | 30 files from `locket/` + `infisical/` | Three-way contract, Infisical vault, Locket sidecar, tmpfs, providers |
+| **[ARCHITECTURE.md](./ARCHITECTURE.md)** | Root-level research | Core stack overview, CI/CD, deployment, networking, secrets, IaC |
+
+---
+
 ## Core Research Modules
 
 ### 1. Document Intelligence & VLM Fine-Tuning

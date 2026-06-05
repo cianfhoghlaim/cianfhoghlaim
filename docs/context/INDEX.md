@@ -3,7 +3,7 @@
 Consolidated documentation for NotebookLM and LLM context research.
 Curated from ~50,000 files across 16+ source directories.
 
-**Generated:** 2025-12-30
+**Generated:** 2025-12-30 | **Updated:** 2025-06-05 (cognified)
 
 ---
 
@@ -13,8 +13,25 @@ Curated from ~50,000 files across 16+ source directories.
    - `01-patterns/` - Proven implementation patterns (~3,800 lines)
    - `02-architecture/` - System architecture docs
    - `00-core/CLAUDE.md` - Project identity and constraints
+   - `../agents/` - Cognified agent documentation (10 merged docs from 100+ source files)
 
 2. **Total files:** 66 files across 9 categories
+
+---
+
+## Linked: Agent Documentation
+
+See `../agents/INDEX.md` for the cognified agent documentation. Key merged documents:
+
+| Document | Content |
+|---|---|
+| `../agents/BAML_COMPREHENSIVE_GUIDE.md` | BAML patterns, education schemas, scraping pipeline |
+| `../agents/MCP_COMPREHENSIVE_RESEARCH.md` | MCP protocol, integrations, MCP-UI |
+| `../agents/IRISH_EDUCATION_PLATFORM_BLUEPRINT.md` | Agentic education, Irish language AI, translation |
+| `../agents/AGNO_COMPREHENSIVE_REFERENCE.md` | Agno framework, A2A protocol, AgentOS |
+| `../agents/STAGEHAND_COMPREHENSIVE_REFERENCE.md` | Stagehand browser automation |
+| `../agents/GOOGLE_ADK_COMPREHENSIVE_REFERENCE.md` | Google ADK workflow primitives |
+| `../agents/DURABLE_EXECUTION_COMPREHENSIVE_REFERENCE.md` | Restate durable execution, DBOS |
 
 ---
 
