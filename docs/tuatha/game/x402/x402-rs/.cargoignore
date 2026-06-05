@@ -1,5 +1,0 @@
-justfile
-Dockerfile
-.env.example
-.github
-.cargo
