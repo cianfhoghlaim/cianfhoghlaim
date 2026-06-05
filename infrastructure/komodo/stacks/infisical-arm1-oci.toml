@@ -1,0 +1,27 @@
+# =============================================================================
+# INFISICAL — Komodo-Orchestrated Secret Vault (arm1-oci, private Pangolin)
+# =============================================================================
+# Migrated from standalone docker compose on bunchloch to Komodo-managed on
+# arm1-oci. The vault is re-seeded after deployment via:
+#   bun run scripts/init-vault.ts
+# =============================================================================
+
+[[stack]]
+name = "infisical"
+description = "Infisical — Self-hosted secret vault (arm1-oci, port 8081, infisical.cianfhoghlaim.ie)"
+tags = ["host:arm1-oci","tier:infrastructure","type:infrastructure","domain:infisical.cianfhoghlaim.ie"]
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/sruth/infrastructure/infisical"
+file_paths = ["compose.yaml","sidecar.yaml","pangolin.yaml","blueprint.yaml"]
+environment = """
+INFISICAL_HOST=http://infisical-backend:8080
+LOCKET_MODE=watch
+POSTGRES_USER=infisical
+POSTGRES_PASSWORD=infisical_password
+POSTGRES_DB=infisical
+DB_CONNECTION_URI=postgres://infisical:infisical_password@db:5432/infisical
+ENCRYPTION_KEY=bd1956fddc0e8d8ceea26484f6025637
+REDIS_URL=redis://redis:6379
+SITE_URL=https://infisical.cianfhoghlaim.ie
+"""
