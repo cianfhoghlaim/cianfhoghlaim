@@ -364,3 +364,32 @@ bonneagar/pangolin/
 3. Manually block IPs if needed
 4. Review and update rate limits
 5. Document incident
+
+## Enterprise Edition Features
+
+Pangolin is now running **Enterprise Edition** (`fosrl/pangolin:ee-latest`).
+
+### Integration API (port 3003)
+The Integration API enables programmatic management of resources, sites, and blueprints.
+- API docs: `https://api.cianfhoghlaim.ie/v1/docs` (via Pangolin routing)
+- Create API keys: Pangolin UI → Server Admin → API Keys
+- Use with `pangolin apply blueprint --file ... --api-key <key>`
+
+### Private Resource Discovery
+Container labels are auto-discovered by Newt agents with Docker socket access.
+To register a container as a private resource, include `pangolin.yaml` in the deploy:
+```bash
+docker compose -f compose.yaml -f sidecar.yaml -f pangolin.yaml up -d
+```
+
+### Licence Management
+- EE licence: `PANGOLIN_LICENCE` in `.env` → Infisical via `bun run scripts/init-vault.ts`
+- Activate: `docker compose up -d` (licence applied via env var)
+- Renew: update `.env` → `bun run scripts/init-vault.ts` → restart pangolin stack
+
+### Accessing Services
+All private resources require the Pangolin client (Olm) authenticated with PocketID SSO:
+1. Install Olm from https://pangolin.net/downloads
+2. Connect to `pangolin.cianfhoghlaim.ie`
+3. Login via PocketID at `auth.cianfhoghlaim.ie`
+4. Access services at their `*.cianfhoghlaim.ie` domains
