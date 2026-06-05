@@ -7,16 +7,13 @@
         "bunx",
         "-y",
         "@browserbasehq/mcp",
-        "--modelName", "vertex/gemini-2.5-flash",
-        "--experimental",
-        "--modelApiKey", "dummy"
+        "--modelName", "deepseek/deepseek-chat",
+        "--experimental"
       ],
       "env": {
         "BROWSERBASE_API_KEY": "infisical://dev-baile/browserbase/api_key",
         "BROWSERBASE_PROJECT_ID": "infisical://dev-baile/browserbase/project_id",
-        "GOOGLE_VERTEX_PROJECT": "infisical://dev-baile/vertex/project_id",
-        "GOOGLE_VERTEX_LOCATION": "infisical://dev-baile/vertex/location",
-        "GEMINI_API_KEY": "infisical://dev-baile/gemini/api_key"
+        "DEEPSEEK_API_KEY": "infisical://dev-baile/deepseek/api_key"
       },
       "enabled": true
     },

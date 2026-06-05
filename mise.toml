@@ -236,8 +236,20 @@ description = "Create the dev-baile environment in Infisical"
 run = "bun run scripts/create-env.ts"
 
 [tasks."secrets:init"]
-description = "Seed the Infisical vault from .env using .infisical.env template"
+description = "Sync .env secrets into Infisical vault"
 run = "bun run scripts/init-vault.ts"
+
+[tasks."sops:encrypt"]
+description = "Encrypt .env with SOPS + age key for git-safe backup"
+run = "sops encrypt --age age1ucuy60fykra7p49x8qx9lha9qsv444fy4vkckupv8nupat0jg5nscdgnkr .env > .env.enc"
+
+[tasks."sops:decrypt"]
+description = "Decrypt .env.enc back to .env"
+run = "sops decrypt --age-key-file ~/.ssh/croilar-sops-key.txt .env.enc > .env"
+
+[tasks."sops:edit"]
+description = "Edit .env.enc in place"
+run = "sops .env.enc"
 
 [tasks."secrets:sync"]
 description = "Re-sync the Infisical vault (alias of secrets:init)"
