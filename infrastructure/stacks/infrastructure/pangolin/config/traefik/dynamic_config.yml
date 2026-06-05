@@ -51,6 +51,23 @@ http:
       tls:
         certResolver: letsencrypt
 
+    # Pocket ID OIDC — identity provider (no auth middleware, public)
+    pocket-id-router:
+      rule: "Host(`auth.cianfhoghlaim.ie`)"
+      service: pocket-id-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+
+    pocket-id-router-redirect:
+      rule: "Host(`auth.cianfhoghlaim.ie`)"
+      service: pocket-id-service
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+
   services:
     next-service:
       loadBalancer:
@@ -61,3 +78,8 @@ http:
       loadBalancer:
         servers:
           - url: "http://pangolin:3000"
+
+    pocket-id-service:
+      loadBalancer:
+        servers:
+          - url: "http://pocket-id:1411"
