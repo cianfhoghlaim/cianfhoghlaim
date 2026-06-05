@@ -490,6 +490,19 @@ model_list:
       tier: hf-passthrough
 
   # =========================================================================
+  # CLOUD — DeepSeek (native API)
+  # =========================================================================
+  - model_name: cloud/deepseek-v4-pro
+    litellm_params:
+      model: openai/deepseek-chat
+      api_base: https://api.deepseek.com/v1/chat/completions
+      api_key: os.environ/DEEPSEEK_API_KEY
+    model_info:
+      description: "DeepSeek V4 Pro — strong reasoning, 64K context (native DeepSeek API, $0.14 input / $0.28 output per 1M tokens)"
+      capabilities: ["reasoning", "code", "general", "long_context"]
+      tier: cloud
+
+  # =========================================================================
   # ALIASES (preferred for client code)
   # =========================================================================
 
