@@ -425,6 +425,140 @@ the agents consult via the `skill` tool.
 
 ---
 
+## Budget AI Tooling — $0–25/month to run everything
+
+This project is deliberately architected to run on **free and near-free** AI
+infrastructure. You do not need a $200/month API budget. Every model choice
+in `opencode.json` and every alias in the LiteLLM gateway was selected to
+maximise capability per dollar.
+
+### OpenCode Go — 6 frontier models, one flat rate
+
+The `opencode.json` agent configuration maps each subagent to its optimal
+OpenCode Go model. All six are accessed through a single OpenAI-compatible
+endpoint (`http://litellm:4000/v1` → OpenCode Go route):
+
+| Model | Subagent or alias | Task profile |
+|:--|:--|:--|
+| `deepseek-v4-pro` | `ai-engineer` subagent, `extract` alias | Frontier reasoning — BAML extraction, Celtic NLP, OCR |
+| `deepseek-v4-flash` | `explorer` subagent, `general` alias | High-volume cheap tasks — code search, schema lookups, generic chat |
+| `kimi-k2.6` | `frontend-dev` subagent | React/TanStack/Marimo UI generation, canvas design |
+| `glm-5.1` | `devops-architect` subagent | Docker Compose, Komodo, Pulumi infrastructure-as-code |
+| `minimax-m2.5` | `general` alias fallback | 1M-token context window — document summarisation, long-form reasoning |
+| `qwen-3.7-max` | `data-engineer` subagent | Dagster pipelines, DLT sources, DuckDB/SQL transformations |
+
+**Value proposition:** Flat-rate pricing means you pay the same whether you
+use 1 model or all 6. No per-token anxiety. No API key juggling across five
+different provider dashboards. The LiteLLM gateway handles routing
+transparently — every consumer in this monorepo writes the same
+`POST /v1/chat/completions` call and gets the right model for the right task.
+
+Contrast with direct API pricing: switching between GPT-4o ($15/Mtok in),
+Claude Opus ($15/Mtok in), Gemini Pro ($3.50/Mtok in), and DeepSeek V4
+($0.55/Mtok in) across five separate billing accounts would produce a
+$50–200+/month bill for a project of this complexity. OpenCode Go's flat
+rate collapses that to a single predictable cost — and because the agent
+routing is model-aware, every task gets the optimal model without manual
+switching.
+
+**DeepSeek V4 Pro is the workhorse.** The `ai-engineer` subagent and the
+`extract` LiteLLM alias both route to `deepseek-v4-pro` as their primary
+model. This is the same model class the Chinese AI lab charges ~$0.55/Mtok
+input for on their API — but here it's included in the flat rate. For the
+curriculum extraction workload (100+ Leaving Cert exam PDFs per subject,
+9 subjects, senior + junior cycles, ~50M input tokens per full run),
+this single model choice alone avoids hundreds of dollars in per-run costs.
+
+**minimax-m2.5 fills the 1M-context niche.** When a task requires processing
+an entire syllabus document (often 200+ pages) in a single prompt, minimax's
+million-token context window handles it natively — no chunking, no map-reduce,
+no lost cross-reference fidelity. This is a capability no other model in the
+OpenCode Go lineup currently matches, and it's included at the same flat rate.
+
+### DeepSeek Pro API — pay-as-you-go for large extraction jobs
+
+For workloads that exceed the OpenCode Go flat-rate quota, the project
+includes fallback routing to DeepSeek's own API:
+
+- **V4 Pro**: ~$0.55/Mtok in, ~$2.19/Mtok out — an order of magnitude below
+  comparable reasoning models from Anthropic or OpenAI
+- **V4 Flash**: ~$0.15/Mtok in, ~$0.60/Mtok out — ideal for the `general`
+  alias fallback chain
+
+DeepSeek's API is structured as credit packs rather than monthly subscriptions,
+so costs scale linearly with actual usage. The LiteLLM gateway's alias chain
+ensures DeepSeek Pro API is only called when local models (llama-swap GGUF,
+mlx-omni MLX) and the OpenCode Go flat-rate route are unavailable or
+over-capacity — the most expensive path is always the last fallback.
+
+### GitHub Copilot Pro Student — zero-cost developer AI
+
+Verified students get Copilot Pro at no cost: IDE autocomplete, chat, agent
+mode, and access to Claude Sonnet and GPT-4o through the Copilot interface.
+This covers the entire *developer* side of the monorepo — TypeScript
+(TanStack, Convex, Hono), Python (Dagster, DLT, BAML), and infrastructure
+(Docker Compose, Komodo, Pulumi) — at literally zero dollars.
+
+### Google Cloud Free Trial — $300 in Vertex AI Gemini credits
+
+Google Cloud's free trial provides $300 in credits usable on Vertex AI. This
+project's `extract` LiteLLM alias already routes `gemini-2.5-pro` as primary
+and `gemini-2.5-flash` as fallback. The $300 credit covers:
+
+- **VLM PDF processing** (`vision` alias): Gemini 2.5 Flash handles page-by-page
+  exam paper OCR and diagram extraction — fully covered by the credit
+- **BAML extraction** (`extract` alias): Gemini 2.5 Pro handles the structured
+  extraction of learning outcomes, prerequisite chains, and marking schemes
+- **Embedding generation**: BGE-M3, Snowflake Arctic, and GaBERT embeddings are
+  served locally via HF passthrough — no cloud credit needed
+
+The `ocr` and `vision` LiteLLM aliases are architected to start on **local
+MLX/GGUF models first** (mlx-omni's Granite-Docling, llama-swap's DeepSeek-OCR
+GGUF), falling back to Gemini Flash only when local models fail. This means
+the $300 credit lasts far longer than it would in a cloud-first architecture —
+local-first by design, cloud as insurance.
+
+### What this architecture costs
+
+| Cost tier | What you get | Approximate monthly AI spend |
+|:--|:--|:--|
+| **Free** | GitHub Copilot Pro (student), Google Vertex AI $300 trial, DeepSeek free-tier credits | $0 |
+| **$5–10/month** | OpenCode Go flat rate → all 6 frontier models, local models on MacBook M4 | ~$5–10 |
+| **$20–25/month** | The above + DeepSeek Pro API pay-as-you-go for large extraction runs | ~$20–25 |
+
+Total running cost for this entire polyglot monorepo — 89 Docker Compose
+stacks, 28 HuggingFace models, 5 subagents, 3 local AI servers (llama-swap
+GGUF, mlx-omni MLX, InvokeAI), and the full multi-subject curriculum
+extraction pipeline — is **under $25/month in AI API costs**.
+
+Compare to running the same workloads on direct OpenAI/Anthropic APIs, which
+would conservatively cost $200–500+/month. The combination of OpenCode Go's
+flat rate, DeepSeek's aggressive per-token pricing, the LiteLLM gateway's
+local-first alias routing, and the student-tier free tools makes a project
+of this scope financially accessible to individual researchers, teachers,
+and small teams — not just well-funded labs.
+
+### Fork this project: your models, your choices
+
+The entire model selection surface is two plain-text config files:
+
+- `opencode.json` (§ agents) — which OpenCode Go model each subagent uses
+- `infrastructure/stacks/engineering/litellm/config/config.yaml` — which
+  cloud or local model each alias routes to
+
+To branch off with your own research direction:
+1. Clone the repo
+2. Edit the two config files above to point to your own API keys / model preferences
+3. Run `bun run setup` — the rest of the infrastructure adapts automatically
+
+Every BAML function, Dagster asset, and marimo notebook in this monorepo
+calls the LiteLLM gateway's aliases (e.g. `model="extract"`, `model="vision"`),
+not hardcoded provider model IDs. Change the alias once in `config.yaml`,
+and every consumer across all 89 stacks and 5 programming languages
+(TypeScript, Python, BAML, Rust, TOML) follows.
+
+---
+
 ## HuggingFace Model Registry (Local Cache)
 
 Cache location: `stedding/huggingface/hub/` (NOT `~/.cache/huggingface/`).
