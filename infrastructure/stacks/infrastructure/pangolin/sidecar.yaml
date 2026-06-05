@@ -1,24 +1,15 @@
 # =============================================================================
-# PANGOLIN - Locket Sidecar Configuration
+# PANGOLIN — Locket Sidecar for Infisical Secret Injection
 # =============================================================================
-# Adds Locket sidecar for Infisical-based secret injection.
-#
-# USAGE:
-#   docker compose -f compose.yaml -f sidecar.yaml up -d
-#
-# PREREQUISITES:
-#   - Infisical running (http://132.145.27.89:8080)
-#   - OP Connect token at /etc/connect/token or INFISICAL_SECRET_FILE
-#   - Secrets created in Infisical project (taisce-secrets)
+# The Locket sidecar watches Infisical and writes resolved secrets to
+# /run/secrets/locket/secrets.env. Pangolin/Postgres/TinyAuth containers
+# source this file on startup to pick up SERVER_SECRET, POSTGRES_PASSWORD,
+# POSTGRES_CONNECTION_STRING, POCKETID_CLIENT_ID/SECRET.
 # =============================================================================
 
 services:
-  # ---------------------------------------------------------------------------
-  # LOCKET - Secrets Management Sidecar
-  # ---------------------------------------------------------------------------
   locket:
     image: ghcr.io/bpbradley/locket:infisical
-    platform: linux/amd64
     container_name: pangolin-locket
     user: "65532:65532"
     restart: unless-stopped
@@ -36,11 +27,11 @@ services:
       - infisical_secret
     volumes:
       - ./secrets.env:/templates/secrets.env:ro
-      - pangolin-secrets:/run/secrets/locket
+      - stack-secrets:/run/secrets/locket
     extra_hosts:
       - host.docker.internal:host-gateway
     healthcheck:
-      test: ["CMD", "locket", "healthcheck"]
+      test: ["CMD", "/locket", "healthcheck"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -48,48 +39,39 @@ services:
     networks:
       - pangolin
 
-  # ---------------------------------------------------------------------------
-  # PANGOLIN - Override to use Locket secrets
-  # ---------------------------------------------------------------------------
+  # Override pangolin to source secrets before starting
   pangolin:
     depends_on:
       locket:
         condition: service_healthy
       postgres:
         condition: service_healthy
-    environment:
-      SERVER_SECRET: ""  # Clear default, use file
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
-        set -a; . /run/secrets/locket/secrets.env; set +a
-        npm run start
+        set -a
+        . /run/secrets/locket/secrets.env
+        set +a
+        exec npm run start
     volumes:
-      - ./config:/app/config
-      - pangolin-secrets:/run/secrets/locket:ro
+      - stack-secrets:/run/secrets/locket:ro
 
-  # ---------------------------------------------------------------------------
-  # POSTGRES - Override to use Locket secrets
-  # ---------------------------------------------------------------------------
+  # Override postgres to use secrets for password
   postgres:
     depends_on:
       locket:
         condition: service_healthy
-    environment:
-      POSTGRES_USER: pangolin
-      POSTGRES_PASSWORD: ""
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
-        set -a; . /run/secrets/locket/secrets.env; set +a
+        set -a
+        . /run/secrets/locket/secrets.env
+        set +a
         exec docker-entrypoint.sh postgres
     volumes:
-      - postgres-data:/var/lib/postgresql/data
-      - pangolin-secrets:/run/secrets/locket:ro
+      - stack-secrets:/run/secrets/locket:ro
 
-  # ---------------------------------------------------------------------------
-  # TINYAUTH - Override to use Locket secrets for PocketID OAuth
-  # ---------------------------------------------------------------------------
+  # Override tinyauth to use secrets for PocketID OAuth
   tinyauth:
     depends_on:
       locket:
@@ -97,32 +79,19 @@ services:
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
-        set -a; . /run/secrets/locket/secrets.env; set +a
-        tinyauth
+        set -a
+        . /run/secrets/locket/secrets.env
+        set +a
+        exec tinyauth
     volumes:
-      - pangolin-secrets:/run/secrets/locket:ro
-
-  # ---------------------------------------------------------------------------
-  # TRAEFIK - Override to use Locket secrets for Cloudflare DNS challenge
-  # ---------------------------------------------------------------------------
-  traefik:
-    depends_on:
-      locket:
-        condition: service_healthy
-    entrypoint: ["/bin/sh", "-c"]
-    command:
-      - |
-        set -a; . /run/secrets/locket/secrets.env; set +a
-        traefik --configFile=/etc/traefik/traefik_config.yml
-    volumes:
-      - pangolin-secrets:/run/secrets/locket:ro
+      - stack-secrets:/run/secrets/locket:ro
 
 secrets:
   infisical_secret:
     file: ${INFISICAL_SECRET_FILE:-../../../../infisical_secret}
 
 volumes:
-  pangolin-secrets:
+  stack-secrets:
     driver: local
     driver_opts:
       type: tmpfs
