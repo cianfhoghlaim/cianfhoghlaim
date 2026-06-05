@@ -46,9 +46,6 @@ entryPoints:
     http:
       tls:
         certResolver: "letsencrypt"
-      encodedCharacters:
-        allowEncodedSlash: true
-        allowEncodedQuestionMark: true
 
 serversTransport:
   insecureSkipVerify: true
