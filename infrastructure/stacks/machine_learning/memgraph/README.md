@@ -54,4 +54,6 @@ Deployed via Komodo on cax41-hetzner. Locket resolves `MEMGRAPH_PASSWORD` from I
 
 ## Screenshot
 
-Memgraph Lab provides a graph visualisation interface: nodes rendered with customisable colours and sizes, edges showing relationship types, a Cypher query editor with autocomplete, and query result tables. The graph view supports zoom, pan, node expansion, and force-directed layout.
+![Memgraph Documentation](https://storage.googleapis.com/firecrawl-scrape-media/screenshot-d159a896-6723-4bc3-8daa-35f271b6283f.png)
+
+Memgraph's documentation at [memgraph.com/docs](https://memgraph.com/docs) covers graph algorithms and Cypher. Memgraph Lab provides a graph visualisation interface: nodes rendered with customisable colours and sizes, edges showing relationship types, a Cypher query editor with autocomplete, and query result tables with zoom, pan, and force-directed layout.

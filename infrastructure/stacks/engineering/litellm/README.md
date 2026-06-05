@@ -72,3 +72,9 @@ docker ps --filter name=litellm --format "table {{.Names}}\t{{.Status}}"
 - **Repository**: https://github.com/BerriAI/litellm
 - **Documentation**: https://docs.litellm.ai
 - **Latest release**: v1.87.1 (2026-06-04) — Backported fixes into stable branch including session-token budget-ceiling exemption and multiple staged fixes.
+
+## Screenshot
+
+![LiteLLM Documentation](https://storage.googleapis.com/firecrawl-scrape-media/screenshot-ec272ea2-035f-42cb-a737-0022e6c19f04.png)
+
+LiteLLM's documentation at [docs.litellm.ai](https://docs.litellm.ai) covers the full API surface: 100+ LLM providers, load balancing, fallbacks, spend tracking, and virtual keys. The admin UI shows model health per deployment, rate limit configuration, and per-user/per-team budget management.

@@ -66,3 +66,9 @@ docker ps --filter name=dagster --format "table {{.Names}}\t{{.Status}}"
 - **Repository**: https://github.com/dagster-io/dagster
 - **Documentation**: https://docs.dagster.io
 - **Latest release**: Dagster 1.13.8 (2026-06-04) — Added Microsoft Fabric/OneLake icons, fixed ClickHouse SQL injection, fixed TypedDict component config, DbtProject improvements, and deployment strategy documentation.
+
+## Screenshot
+
+![Dagster Documentation](https://storage.googleapis.com/firecrawl-scrape-media/screenshot-1a114b7d-86ea-487c-abc0-7588bca67989.png)
+
+Dagster's documentation at [docs.dagster.io](https://docs.dagster.io) covers asset-based orchestration. The web UI (Dagit) shows an asset graph with nodes colour-coded by materialization status, a run timeline with pipeline execution history, per-asset detail views with metadata and lineage, and a job launcher for triggering runs.

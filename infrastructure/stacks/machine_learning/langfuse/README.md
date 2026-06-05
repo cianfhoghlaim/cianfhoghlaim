@@ -58,4 +58,6 @@ docker compose -f compose.yaml -f sidecar.yaml -f pangolin.yaml up -d
 
 ## Screenshot
 
-Langfuse's web UI shows: a trace waterfall view (every LLM call in a pipeline rendered as nested spans with timing), a prompt management interface (version history, A/B test configuration, variable editor), a dashboard with cost/latency/volume charts, and an evaluations tab showing RAGAS scores per trace.
+![Langfuse Documentation](https://storage.googleapis.com/firecrawl-scrape-media/screenshot-07037cab-f26d-4413-8239-229991bec66c.png)
+
+Langfuse's web UI at [langfuse.com/docs](https://langfuse.com/docs) shows: a trace waterfall view (every LLM call rendered as nested spans with timing), a prompt management interface (version history, A/B test configuration, variable editor), a dashboard with cost/latency/volume charts, and an evaluations tab showing RAGAS scores per trace.
