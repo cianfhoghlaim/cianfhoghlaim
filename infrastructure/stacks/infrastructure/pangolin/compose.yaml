@@ -45,7 +45,7 @@ services:
   # PANGOLIN - Identity-Aware Tunneled Reverse Proxy
   # ---------------------------------------------------------------------------
   pangolin:
-    image: fosrl/pangolin:ee-latest  # Enterprise Edition (free licence for <$100K revenue)
+    image: fosrl/pangolin:ee-latest  # Enterprise Edition (free licence for <$100K revenue)  # Enterprise Edition (free licence for <$100K revenue)
     container_name: pangolin
     restart: unless-stopped
     depends_on:
