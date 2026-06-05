@@ -45,7 +45,7 @@ services:
   # PANGOLIN - Identity-Aware Tunneled Reverse Proxy
   # ---------------------------------------------------------------------------
   pangolin:
-    image: fosrl/pangolin:postgresql-latest
+    image: fosrl/pangolin:ee-latest  # Enterprise Edition (free licence for <$100K revenue)
     container_name: pangolin
     restart: unless-stopped
     depends_on:
@@ -53,6 +53,8 @@ services:
         condition: service_healthy
     environment:
       SERVER_SECRET: ${SERVER_SECRET:-devserversecret}
+      PANGOLIN_LICENCE: ${PANGOLIN_LICENCE}
+      PANGOLIN_INTEGRATION_API_ENABLED: "true"
     volumes:
       - ./config:/app/config
     healthcheck:
