@@ -55,4 +55,6 @@ docker compose -f compose.yaml -f sidecar.yaml up -d
 
 ## Screenshot
 
-Qdrant's built-in web dashboard at port 6333 provides a collections browser, a visual search interface (enter a query, see nearest neighbours with similarity scores), and a telemetry panel showing index size, memory usage, and query throughput.
+![Qdrant Documentation](https://storage.googleapis.com/firecrawl-scrape-media/screenshot-97d683b2-6514-4d13-aad6-494f8acaefbe.png)
+
+Qdrant's documentation at [qdrant.tech/documentation](https://qdrant.tech/documentation) covers vector search patterns. The built-in web dashboard provides a collections browser, visual search interface (nearest neighbours with similarity scores), and a telemetry panel showing index size, memory usage, and query throughput.
