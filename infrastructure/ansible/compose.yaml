@@ -1,63 +1,40 @@
 ---
 # =============================================================================
-# ANSIBLE AUTOMATION ENVIRONMENT
+# ANSIBLE AUTOMATION ENVIRONMENT — with Infisical + Locket integration
 # =============================================================================
 # Runs Ansible playbooks in a containerized execution environment.
-# See SETUP.md for complete setup instructions.
+# Secrets flow: Infisical vault → Locket sidecar → Ansible container env.
 # =============================================================================
 
 services:
   ansible:
-    # Multi-arch image built from ee-builder/ (supports ARM64 + AMD64)
-    # Falls back to bpbradley's image if local image not available
     image: ${ANSIBLE_EE_IMAGE:-ansible-komodo-ee:latest}
     extra_hosts:
       - host.docker.internal:host-gateway
     volumes:
-      # -----------------------------------------------------------------------
-      # ANSIBLE FILES
-      # -----------------------------------------------------------------------
+      # Ansible files
       - .:/ansible
-
-      # -----------------------------------------------------------------------
-      # SSH KEY - Using dedicated ansible key
-      # -----------------------------------------------------------------------
-      - /Users/cliste/.ssh/ansible:/root/.ssh/id_ed25519:ro
-
-      # -----------------------------------------------------------------------
-      # INFISICAL CONNECT TOKEN (for vault decryption verification)
-      # -----------------------------------------------------------------------
-
-      # -----------------------------------------------------------------------
-      # INFRASTRUCTURE DEPLOYMENT FILES
-      # -----------------------------------------------------------------------
-      # Infisical credentials (for deploying Connect to remote)
-      # Infisical token (for Locket/Connect authentication)
-      # Pangolin config directory (for pangolin_core role)
+      # SSH key (dedicated ansible key pair — public key is authorized on arm1-oci)
+      - /Users/cianmacandeisigh/.ssh/ansible:/root/.ssh/id_ed25519:ro
+      # Pangolin config (for pangolin_core role)
       - ../pangolin/config:/config/pangolin:ro
-
-    # Run as root to match the documented SSH key mount paths
     user: root
-
     environment:
-      # Set HOME for Ansible temp directories
       HOME: /root
-
-      # Use our ansible.cfg
       ANSIBLE_CONFIG: /ansible/ansible.cfg
-
-      # Disable host key checking for automation
       ANSIBLE_HOST_KEY_CHECKING: ${ANSIBLE_HOST_KEY_CHECKING:-false}
-
-      # Infisical (accessible via host.docker.internal)
-
-      # Vault password file (created at runtime or passed via env)
       ANSIBLE_VAULT_PASSWORD_FILE: /tmp/.vaultpass
-
-      # Vault password (from .env file, used by entrypoint to create password file)
       ANSIBLE_VAULT_PASSWORD: ${ANSIBLE_VAULT_PASSWORD:-}
-
-    # Auto-create vault password file from ANSIBLE_VAULT_PASSWORD env var
+      # Infisical wiring — used by inventory.yml lookup('env', ...) calls
+      INFISICAL_PROJECT_ID: ${INFISICAL_PROJECT_ID}
+      INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
+      INFISICAL_CLIENT_SECRET: ${INFISICAL_CLIENT_SECRET}
+      POCKETID_CLIENT_ID: ${POCKETID_CLIENT_ID}
+      POCKETID_CLIENT_SECRET: ${POCKETID_CLIENT_SECRET}
+      # OCI target host
+      OCI_ARM1_IP: ${OCI_ARM1_IP}
+      # Locket mode
+      LOCKET_MODE: ${LOCKET_MODE:-watch}
     entrypoint:
       - /bin/sh
       - -c
@@ -66,35 +43,70 @@ services:
           printf '%s' "$$ANSIBLE_VAULT_PASSWORD" > /tmp/.vaultpass
           chmod 600 /tmp/.vaultpass
         fi
+        # Source Locket secrets if available
+        if [ -f /run/secrets/locket/secrets.env ]; then
+          set -a; . /run/secrets/locket/secrets.env; set +a
+        fi
         exec "$$@"
       - --
     command: ["sleep", "3600"]
     stdin_open: true
     tty: true
+    networks:
+      - ansible
+
+  # ---------------------------------------------------------------------------
+  # LOCKET — Infisical secret injection sidecar
+  # ---------------------------------------------------------------------------
+  locket:
+    image: ghcr.io/bpbradley/locket:infisical
+    container_name: ansible-locket
+    restart: "no"
+    user: "65532:65532"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    command:
+      - "--provider=infisical"
+      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-client-secret=$${INFISICAL_CLIENT_SECRET}"
+      - "--map=/templates:/run/secrets/locket"
+      - "--mode=${LOCKET_MODE:-watch}"
+    volumes:
+      - ./secrets.env:/templates/secrets.env:ro
+      - stack-secrets:/run/secrets/locket
+    healthcheck:
+      test: ["CMD", "/locket", "healthcheck"]
+      interval: 10s; timeout: 5s; retries: 3; start_period: 5s
+    networks:
+      - ansible
+
+volumes:
+  stack-secrets:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=700
+
+networks:
+  ansible:
+    driver: bridge
 
 # =============================================================================
-# USAGE EXAMPLES
+# USAGE
 # =============================================================================
+# 1. SSH test:
+#    docker compose run --rm ansible ssh -o StrictHostKeyChecking=no ubuntu@$${OCI_ARM1_IP} echo OK
 #
-# SETUP: Create .env file with your vault password:
-#   echo "ANSIBLE_VAULT_PASSWORD=your-vault-pass" > .env
+# 2. Deploy site infrastructure (Newt + Periphery + Locket to arm1-oci):
+#    docker compose run --rm ansible ansible-playbook \
+#      -i /ansible/inventory/inventory.yml \
+#      /ansible/playbooks/site.yml -l arm1.oci
 #
-# 1. Run playbook (simplest - uses .env automatically):
-#    docker compose run --rm ansible sleep infinity &
-#    # Then:
-#    docker compose exec ansible ansible-playbook \
-#      -i /ansible/inventory/komodo.yml \
-#      /ansible/playbooks/periphery.yml
-#
-# 2. One-liner with vault password:
-#    ANSIBLE_VAULT_PASSWORD=your-pass docker compose run --rm ansible \
-#      sh -c 'ansible-playbook -i /ansible/inventory/komodo.yml /ansible/playbooks/periphery.yml'
-#
-# 3. Interactive shell (vault password auto-loaded from .env):
-#    docker compose run --rm ansible sh
-#
-# 4. Dry run:
-#    docker compose run --rm ansible \
-#      sh -c 'ansible-playbook -i /ansible/inventory/komodo.yml /ansible/playbooks/periphery.yml --check --diff'
-#
+# 3. Deploy control plane (Pangolin + Komodo Core):
+#    docker compose run --rm ansible ansible-playbook \
+#      -i /ansible/inventory/inventory.yml \
+#      /ansible/playbooks/deploy-infrastructure.yml
 # =============================================================================
