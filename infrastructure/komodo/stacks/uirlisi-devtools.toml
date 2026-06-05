@@ -108,23 +108,6 @@ SITE_ID=bunchloch
 """
 
 # -----------------------------------------------------------------------------
-# CHANGEDETECTION - Web Monitor
-# -----------------------------------------------------------------------------
-[[stack]]
-name = "changedetection"
-description = "Website change detection and alerts"
-tags = ["host:bunchloch", "tier:monitoring"]
-
-[stack.config]
-server_id = "bunchloch"
-run_directory = "/etc/komodo/uirlisi/changedetection"
-file_paths = ["compose.yaml", "pangolin.yaml"]
-environment = """
-DOMAIN=cianfhoghlaim.ie
-SITE_ID=bunchloch
-"""
-
-# -----------------------------------------------------------------------------
 # RESTATE - Durable Execution
 # -----------------------------------------------------------------------------
 [[stack]]

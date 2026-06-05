@@ -1,0 +1,11 @@
+private-resources:
+  infisical:
+    name: "Infisical Vault"
+    mode: http
+    full-domain: "infisical.cianfhoghlaim.ie"
+    destination-port: 8081
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member
