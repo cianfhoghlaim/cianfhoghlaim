@@ -1,0 +1,9 @@
+services:
+  backend:
+    labels:
+      - "pangolin.private-resources.infisical.name=Infisical Vault"
+      - "pangolin.private-resources.infisical.mode=http"
+      - "pangolin.private-resources.infisical.full-domain=infisical.cianfhoghlaim.ie"
+      - "pangolin.private-resources.infisical.destination-port=8081"
+      - "pangolin.private-resources.infisical.protocol=http"
+      - "pangolin.private-resources.infisical.roles[0]=Member"

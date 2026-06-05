@@ -1,0 +1,60 @@
+# =============================================================================
+# TEAM WORKFLOW STACKS — Production on arm1-oci via Komodo GitOps
+# =============================================================================
+# Extracted from procedures/team-stack-up.toml into the canonical stacks/
+# directory per the Gold Standard convention.
+#
+# These 3 stacks form the core team productivity cluster:
+#   vikunja  — kanban + Gantt + list task management (port 3456)
+#   cal-diy  — team scheduling (cal.com community build, port 3000)
+#   n8n      — workflow automation + LLM pipelines via LiteLLM (port 5678)
+#
+# All use PlanetScale "bunchloch" DB as primary, self-hosted as fallback.
+# OIDC SSO via shared pocketid-team-workflow client.
+# Secrets injected by Locket sidecar from Infisical vault.
+# =============================================================================
+
+[[stack]]
+name = "vikunja"
+description = "Vikunja — kanban + Gantt + list task management (port 3456)"
+tags = ["host:arm1-oci","tier:production","type:tool","domain:vikunja.cianfhoghlaim.ie","team:workflow"]
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/sruth/team-workflow-stack/vikunja"
+file_paths = ["compose.yaml","sidecar.yaml","pangolin.yaml","blueprint.yaml"]
+environment = """
+VIKUNJA_SERVICE_PUBLICURL=https://vikunja.cianfhoghlaim.ie/
+INFISICAL_HOST=http://infisical-backend:8080
+LOCKET_MODE=watch
+"""
+
+[[stack]]
+name = "cal-diy"
+description = "cal-diy (cal.com community build) — team scheduling (port 3000)"
+tags = ["host:arm1-oci","tier:production","type:tool","domain:calcom.cianfhoghlaim.ie","team:workflow"]
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/sruth/team-workflow-stack/cal-diy"
+file_paths = ["compose.yaml","sidecar.yaml","pangolin.yaml","blueprint.yaml"]
+environment = """
+CALCOM_NEXTAUTH_URL=https://calcom.cianfhoghlaim.ie
+CALCOM_ALLOWED_HOSTNAMES=calcom.cianfhoghlaim.ie
+INFISICAL_HOST=http://infisical-backend:8080
+LOCKET_MODE=watch
+"""
+
+[[stack]]
+name = "n8n"
+description = "n8n — workflow automation + LLM pipelines via LiteLLM (port 5678)"
+tags = ["host:arm1-oci","tier:production","type:engineering","domain:n8n.cianfhoghlaim.ie","team:workflow"]
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/sruth/team-workflow-stack/n8n"
+file_paths = ["compose.yaml","sidecar.yaml","pangolin.yaml","blueprint.yaml"]
+environment = """
+N8N_HOST=n8n.cianfhoghlaim.ie
+N8N_WEBHOOK_URL=https://n8n.cianfhoghlaim.ie/
+GENERIC_TIMEZONE=Europe/Dublin
+INFISICAL_HOST=http://infisical-backend:8080
+LOCKET_MODE=watch
+"""

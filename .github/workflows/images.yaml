@@ -1,0 +1,37 @@
+name: Build Images (Dagger)
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Image tag (default: git sha)"
+        required: false
+        default: ""
+
+jobs:
+  build-images:
+    name: dagger build-images
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Install mise + Dagger
+        run: |
+          curl -fsSL https://mise.jdx.dev/install.sh | sh
+          curl -fsSL https://dl.dagger.io/dagger/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - run: mise install
+      - name: Build + push images to ghcr.io
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          TAG="${{ inputs.tag }}"
+          if [ -z "$TAG" ]; then TAG=$(git rev-parse --short HEAD); fi
+          echo "$GH_TOKEN" | docker login ghcr.io -u cianfhoghlaim --password-stdin
+          cd infrastructure/dagger
+          dagger call build-images \
+            --source ../.. \
+            --registry=ghcr.io/cianfhoghlaim \
+            --tag="$TAG"
