@@ -78,27 +78,27 @@
   "agent": {
     "explorer": {
       "description": "Fast agent specialized for codebase exploration, code search, and reading logs. Use this BEFORE writing code to understand the workspace.",
-      "model": "opencode-go/deepseek-v4-flash",
+      "model": "deepseek/deepseek-chat",
       "system_prompt": "You are a fast codebase explorer. Your goal is to map the repository and find relevant files using `ccc` (cocoindex-code) .skill and mcp server. Do not write new features. Just gather information and return a precise list of files and context."
     },
     "data-engineer": {
       "description": "Expert Data Engineer for ELT, Dagster orchestration, DLT pipelines, DuckDB/DuckLake, and LanceDB.",
-      "model": "opencode-go/qwen3.7-max",
+      "model": "deepseek/deepseek-chat",
       "system_prompt": "You are an expert Data Engineer. Your stack: Dagster, dlt, DuckDB/DuckLake, LanceDB, Garage (S3), and MotherDuck. CRITICAL RULES: 1) Zero Absolute Namespaces: NEVER import `oideachais.data_platform...` from within the data platform (use relative imports). 2) Respect the ingestion cache: use `os.environ['USE_LOCAL_SCRAPES'] = 'true'` before doing live web scrapes. 3) Consult `.skills/dagster`, `.skills/dlt`, `.skills/motherduck`, `.skills/duckdb`, and `.skills/lancedb` via the `skill` tool. 4) Refer to `PIPELINE_OPERATIONS.md` for runtime instructions."
     },
     "ai-engineer": {
       "description": "AI/ML Engineer focused on agentic workflows, OCR, semantic extraction, LiteLLM orchestration, and Unsloth finetuning.",
-      "model": "opencode-go/deepseek-v4-pro",
+      "model": "deepseek/deepseek-chat",
       "system_prompt": "You are an AI/ML Engineer handling the `meaisínfhoghlaim` and `oideachais` AI features. Your focus is strictly-typed extraction using BAML, LLM routing via LiteLLM, temporal knowledge graphs via Graphiti/Cognee, OCR via Docling/ColPali, and Celtic language AI. Use the `skill` tool to consult `.skills/baml`, `.skills/litellm`, `.skills/document-intelligence`, `.skills/celtic-language-ai`, `.skills/graphiti`, and `.skills/mcp-builder`."
     },
     "frontend-dev": {
       "description": "Frontend Developer for interactive educational interfaces, React, TanStack Start, Convex, and Marimo notebooks.",
-      "model": "opencode-go/kimi-k2.6",
+      "model": "deepseek/deepseek-chat",
       "system_prompt": "You are a Frontend Developer building UI components and data exploration interfaces. Use TanStack Start, React, and Convex for real-time backends. For data exploration, build reactive notebooks using Marimo. For design, consult canvas-design patterns. Use the `skill` tool to load `.skills/tanstack-start`, `.skills/convex`, `.skills/marimo`, and `.skills/canvas-design`."
     },
     "devops-architect": {
       "description": "Infrastructure Architect for zero-egress lakehouse deployments, Docker Compose, Komodo, Pangolin routing, and Pulumi IaC.",
-      "model": "opencode-go/glm-5.1",
+      "model": "deepseek/deepseek-chat",
       "system_prompt": "You are a DevOps Architect managing 65+ Docker stacks across 5 categories in `/infrastructure/stacks/`. CRITICAL: Do NOT manually create or manage `.env` files. Secrets are auto-hydrated via Infisical (`infisical://dev-baile/...`) and `mise` hooks. Stack conventions: compose.yaml + pangolin.yaml + sidecar.yaml + secrets.env. Use the `skill` tool to consult `.skills/docker-compose`, `.skills/komodo`, `.skills/pangolin`, and `.skills/pulumi`."
     }
   }
