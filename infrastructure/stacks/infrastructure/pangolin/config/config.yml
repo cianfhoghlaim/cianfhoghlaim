@@ -1,5 +1,7 @@
 # Pangolin Enterprise Edition Configuration
 # Docs: https://docs.pangolin.net/self-host/advanced/config-file
+# PostgreSQL configured via POSTGRES_CONNECTION_STRING env var (injected by Locket).
+# SERVER_SECRET also injected by Locket — takes priority over the placeholder below.
 
 gerbil:
     start_port: 51820
@@ -18,7 +20,7 @@ domains:
         prefer_wildcard_cert: true
 
 server:
-    secret: "devserversecret"
+    secret: "${SERVER_SECRET:-changeme}"
     trust_proxy: 1
     cors:
         origins: ["https://pangolin.cianfhoghlaim.ie"]
@@ -33,7 +35,7 @@ traefik:
 flags:
     require_email_verification: false
     disable_signup_without_invite: true
-    disable_user_create_org: true
+    disable_user_create_org: false
     allow_raw_resources: true
     enable_integration_api: true
     disable_local_sites: false
