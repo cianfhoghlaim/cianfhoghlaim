@@ -16,6 +16,7 @@
     "tuatha/apps/crypteolas_demo",
     "croilar/apps/web",
     "croilar/apps/portal",
+    "croilar/hono-api",
     "croilar/packages/*"
   ],
   "scripts": {
