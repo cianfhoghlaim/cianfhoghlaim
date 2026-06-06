@@ -1090,6 +1090,212 @@ class DataPipeline:
 
 
 # ============================================================================
+
+# ==============================================================================
+# SECTION 7b: Croílár Pipeline
+# ==============================================================================
+# Builds + deploys the croilar multi-persona portfolio platform:
+#   - 5 new multi-arch images: croilar-web, croilar-portal, croilar-dagster,
+#     croilar-marimo, croilar-image-pipeline
+#   - Multi-arch: linux/amd64, linux/arm64
+#   - Publishes to ghcr.io/cianfhoghlaim/<image>:<tag>
+#   - Deploys via Komodo GitOps + Pangolin routing
+# ==============================================================================
+
+
+@object_type
+class CroilarPipeline:
+    """Croílár multi-persona portfolio — build, test, deploy."""
+
+    komodo_url: str = "https://komodo.cianfhoghlaim.ie"
+    pangolin_url: str = "https://pangolin.cianfhoghlaim.ie"
+    web_url: str = "https://croilar.cianfhoghlaim.ie"
+
+    CROILAR_IMAGES = [
+        "croilar-web",
+        "croilar-portal",
+        "croilar-dagster",
+        "croilar-marimo",
+        "croilar-image-pipeline",
+    ]
+
+    @function
+    async def ci(
+        self,
+        source: Annotated[Directory, DefaultPath(".")],
+    ) -> str:
+        """Run the croilar CI gate: lint + typecheck + pytest + openspec validate."""
+        py = await python_container(source).with_exec(
+            [
+                "uv",
+                "run",
+                "--directory",
+                "/src/croilar",
+                "pytest",
+                "-q",
+                "--tb=short",
+            ]
+        ).stdout()
+        py += await python_container(source).with_exec(
+            ["uv", "run", "ruff", "check", "croilar/", "--select", "E,F,I,W"]
+        ).stdout()
+        py += await python_container(source).with_exec(
+            [
+                "uv",
+                "run",
+                "--directory",
+                "/src/croilar",
+                "openspec",
+                "validate",
+                "croilar-revitalisation",
+                "--type",
+                "change",
+                "--strict",
+            ]
+        ).stdout()
+        ts = await bun_container(source).with_exec(
+            ["bun", "run", "--filter", "./croilar/apps/web", "typecheck"]
+        ).stdout()
+        return f"=== CROILAR CI ===\n{py}\n{ts}\n=== OK ==="
+
+    @function
+    async def build_images(
+        self,
+        source: Annotated[Directory, DefaultPath(".")],
+        platforms: str = "linux/amd64,linux/arm64",
+        image: str = "",
+    ) -> str:
+        """Multi-arch build of one or all croilar images."""
+        targets = [image] if image else self.CROILAR_IMAGES
+        results: list[str] = []
+        for img in targets:
+            c = (
+                dag.container()
+                .from_("docker:24-cli")
+                .with_directory("/src", source)
+                .with_exec(
+                    [
+                        "docker",
+                        "buildx",
+                        "build",
+                        "--platform",
+                        platforms,
+                        "-t",
+                        f"ghcr.io/cianfhoghlaim/{img}:latest",
+                        "-f",
+                        f"croilar/{img}/Dockerfile",
+                        ".",
+                    ]
+                )
+            )
+            out = await c.stdout()
+            results.append(f"{img}: {out[-200:]}")
+        return "\n".join(results)
+
+    @function
+    async def deploy_cloudflare(
+        self,
+        source: Annotated[Directory, DefaultPath(".")],
+    ) -> str:
+        """Trigger Komodo deploy (Cloudflare Pages is a future option)."""
+        return await (
+            dag.container()
+            .from_("curlimages/curl:8.11.1")
+            .with_exec(
+                [
+                    "curl",
+                    "-X",
+                    "POST",
+                    "-H",
+                    "X-Api-Key: $KOMODO_API_KEY",
+                    f"{self.komodo_url}/procedure/run",
+                    "-d",
+                    '{"procedure": "croilar-stack-up", "approved": true}',
+                ]
+            )
+            .stdout()
+        )
+
+    @function
+    async def deploy_komodo(
+        self,
+        source: Annotated[Directory, DefaultPath(".")],
+        stack: str = "croilar-web",
+        approved: bool = False,
+    ) -> str:
+        """Trigger a single-stack Komodo deploy (gated by `approved`)."""
+        if not approved:
+            return f"REFUSED: deploy_komodo({stack}) requires approved=True"
+        return await (
+            dag.container()
+            .from_("curlimages/curl:8.11.1")
+            .with_exec(
+                [
+                    "curl",
+                    "-X",
+                    "POST",
+                    "-H",
+                    "X-Api-Key: $KOMODO_API_KEY",
+                    f"{self.komodo_url}/stack/{stack}/deploy",
+                ]
+            )
+            .stdout()
+        )
+
+    @function
+    async def deploy_pangolin(
+        self,
+        source: Annotated[Directory, DefaultPath(".")],
+        resource: str = "croilar-web",
+    ) -> str:
+        """Refresh a Pangolin resource so Traefik picks up the new container."""
+        return await (
+            dag.container()
+            .from_("curlimages/curl:8.11.1")
+            .with_exec(
+                [
+                    "curl",
+                    "-X",
+                    "POST",
+                    "-H",
+                    "X-Api-Key: $PANGOLIN_API_KEY",
+                    f"{self.pangolin_url}/api/v1/resource/{resource}/refresh",
+                ]
+            )
+            .stdout()
+        )
+
+    @function
+    async def gitops_fullstack(
+        self,
+        source: Annotated[Directory, DefaultPath(".")],
+        approved: bool = False,
+    ) -> str:
+        """Full chain: ci -> build -> backup -> down -> up -> pangolin -> health."""
+        if not approved:
+            return "REFUSED: gitops_fullstack requires approved=True"
+        results = await asyncio.gather(
+            self.ci(source),
+            self.build_images(source),
+        )
+        komodo = await (
+            dag.container()
+            .from_("curlimages/curl:8.11.1")
+            .with_exec(
+                [
+                    "curl",
+                    "-X",
+                    "POST",
+                    f"{self.komodo_url}/procedure/run",
+                    "-d",
+                    '{"procedure": "croilar-gitops-fullstack", "approved": true}',
+                ]
+            )
+            .stdout()
+        )
+        return f"=== GITOPS FULLSTACK ===\n{results}\n{komodo}\n=== OK ==="
+
+
 # SECTION 8: Top-level orchestrator
 # ============================================================================
 

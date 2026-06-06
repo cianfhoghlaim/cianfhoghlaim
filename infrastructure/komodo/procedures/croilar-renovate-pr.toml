@@ -1,0 +1,22 @@
+# =============================================================================
+# CROILAR-RENOVATE-PR PROCEDURE
+# =============================================================================
+# Opens a Renovate-style PR that updates pinned image tags in:
+#   - infrastructure/stacks/engineering/croilar-*/*.yaml
+#   - mise.toml
+#   - .github/workflows/*.yaml
+# Triggers a code review and CI run.
+#
+# Usage:
+#   km run procedure croilar-renovate-pr
+# =============================================================================
+
+[[procedure]]
+name = "croilar-renovate-pr"
+description = "Open a Renovate-style PR to update pinned croilar image tags"
+
+[[procedure.config.stages]]
+name = "detect-updates"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunSync", params = { sync = "croilar-renovate" } }
