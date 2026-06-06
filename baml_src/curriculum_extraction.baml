@@ -112,140 +112,55 @@ class ExtractedCurriculumDocument {
 // Functions
 // =============================================================================
 
-function ExtractLearningOutcomeRelationships(
-  source_outcome LearningOutcome,
-  target_outcomes LearningOutcome[],
-  subject_context string
-) -> RelationshipExtractionResult {
-  client LiteLLM
-  prompt #"
-    You are an expert curriculum analyst specializing in Irish education.
+function ExtractLearningOutcomeRelationships(source_outcome: LearningOutcome,
+  target_outcomes: LearningOutcome[],
+  subject_context: string) -> RelationshipExtractionResult {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Analyze relationships between learning outcomes in {{ subject_context }}.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    SOURCE LEARNING OUTCOME:
-    Code: {{ source_outcome.code }}
-    Description (EN): {{ source_outcome.description_en }}
-    {{ if source_outcome.description_ga }}Description (GA): {{ source_outcome.description_ga }}{{ endif }}
-    Subject: {{ source_outcome.subject }}
-    Level: {{ source_outcome.level }}
-    Difficulty: {{ source_outcome.difficulty }}
-    {{ if source_outcome.strand }}Strand: {{ source_outcome.strand }}{{ endif }}
-    {{ if source_outcome.strand_unit }}Unit: {{ source_outcome.strand_unit }}{{ endif }}
-    Key Skills: {{ source_outcome.key_skills }}
+{{ _.role("user") }}
 
-    POTENTIAL TARGET OUTCOMES:
-    {{ for target in target_outcomes }}
-    - {{ target.code }}: {{ target.description_en }}
-      Level: {{ target.level }}, Difficulty: {{ target.difficulty }}
-    {{ endfor }}
-
-    For each meaningful relationship found:
-    1. Identify the relationship type (PREREQUISITE_FOR, BUILDS_ON, ASSESSES, RELATED_TO, PART_OF, ENABLES, CONTRASTS_WITH)
-    2. Assign a confidence score (0.0-1.0)
-    3. Provide brief reasoning
-
-    Only include relationships with confidence >= 0.6.
-    Consider curriculum progression, conceptual dependencies, and skill development.
-
-    Return your analysis as {{ ctx.output_format }}.
-  "#
+"#
 }
 
-function ExtractSkillsFromOutcome(
-  outcome LearningOutcome,
-  curriculum_context string
-) -> SkillExtractionResult {
-  client LiteLLM
-  prompt #"
-    You are an expert curriculum analyst.
+function ExtractSkillsFromOutcome(outcome: LearningOutcome,
+  curriculum_context: string) -> SkillExtractionResult {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Analyze this learning outcome to identify the skills it develops and assesses.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    LEARNING OUTCOME:
-    Code: {{ outcome.code }}
-    Description: {{ outcome.description_en }}
-    Subject: {{ outcome.subject }}
-    Level: {{ outcome.level }}
-    Key Skills Listed: {{ outcome.key_skills }}
+{{ _.role("user") }}
 
-    CURRICULUM CONTEXT:
-    {{ curriculum_context }}
-
-    Extract all skills this outcome develops, including:
-    - The skill category (COGNITIVE, LINGUISTIC, MATHEMATICAL, CREATIVE, SOCIAL, PHYSICAL, DIGITAL, METACOGNITIVE)
-    - A clear name and description
-    - Proficiency levels expected
-
-    Identify which skill is the primary focus.
-
-    Return your analysis as {{ ctx.output_format }}.
-  "#
+"#
 }
 
-function ExtractCurriculumFromDocument(
-  document_text string,
-  subject string,
-  level EducationLevel
-) -> ExtractedCurriculumDocument {
-  client LiteLLM
-  prompt #"
-    You are an expert curriculum analyst for Irish education.
+function ExtractCurriculumFromDocument(document_text: string,
+  subject: string,
+  level: EducationLevel) -> ExtractedCurriculumDocument {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Extract curriculum structure from this document.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    DOCUMENT:
-    Subject: {{ subject }}
-    Level: {{ level }}
+{{ _.role("user") }}
 
-    {{ document_text }}
-
-    Extract:
-    1. Document metadata (title, year)
-    2. All sections (strands, units, assessment criteria)
-    3. All learning outcomes with:
-       - Unique codes
-       - Descriptions in English and Irish (if present)
-       - Associated strand/unit
-       - Difficulty level
-       - Key skills
-
-    Ensure learning outcome codes follow the pattern: LO-SUBJECT-LEVEL-STRAND.UNIT.NUMBER
-
-    Return structured extraction as {{ ctx.output_format }}.
-  "#
+"#
 }
 
-function IdentifyPrerequisiteChain(
-  target_outcome LearningOutcome,
-  available_outcomes LearningOutcome[],
-  max_depth int
-) -> LearningOutcome[] {
-  client LiteLLM
-  prompt #"
-    You are an expert curriculum analyst.
+function IdentifyPrerequisiteChain(target_outcome: LearningOutcome,
+  available_outcomes: LearningOutcome[],
+  max_depth: int) -> LearningOutcome[] {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Identify the prerequisite learning chain for this outcome:
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    TARGET OUTCOME:
-    {{ target_outcome.code }}: {{ target_outcome.description_en }}
-    Level: {{ target_outcome.level }}, Difficulty: {{ target_outcome.difficulty }}
+{{ _.role("user") }}
 
-    AVAILABLE OUTCOMES (potential prerequisites):
-    {{ for outcome in available_outcomes }}
-    - {{ outcome.code }}: {{ outcome.description_en }} ({{ outcome.level }}, {{ outcome.difficulty }})
-    {{ endfor }}
-
-    Return an ordered list of prerequisite outcomes, from foundational to advanced.
-    Maximum chain length: {{ max_depth }}
-
-    Consider:
-    - Conceptual dependencies (what must be understood first)
-    - Skill progression (simpler skills before complex)
-    - Curriculum sequencing (earlier levels before later)
-
-    Return as {{ ctx.output_format }}.
-  "#
+"#
 }
 
 // =============================================================================
@@ -426,164 +341,65 @@ class ExamStatistics {
 // Extraction Functions for Exam Papers
 // =============================================================================
 
-function ExtractExamPaperStructure(
-  document_text string,
-  subject string,
-  year int,
-  level ExamLevel,
-  paper_number int
-) -> ExamPaper {
-  client LiteLLM
-  prompt #"
-    You are an expert at analyzing Irish State Examination papers.
+function ExtractExamPaperStructure(document_text: string,
+  subject: string,
+  year: int,
+  level: ExamLevel,
+  paper_number: int) -> ExamPaper {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Extract the complete structure of this examination paper.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    PAPER DETAILS:
-    Subject: {{ subject }}
-    Year: {{ year }}
-    Level: {{ level }}
-    Paper: {{ paper_number }}
+{{ _.role("user") }}
 
-    DOCUMENT TEXT:
-    {{ document_text }}
-
-    Extract:
-    1. General instructions and duration
-    2. Each section with its title and instructions
-    3. All questions with:
-       - Question numbers (including sub-parts)
-       - Marks allocated
-       - Question type (MCQ, short answer, essay, etc.)
-       - Topic/strand covered
-       - The actual question text
-    4. Materials allowed (calculators, log tables, etc.)
-
-    For Mathematics/Science: identify calculation vs. theory questions.
-    For Languages: identify comprehension, writing, aural components.
-
-    Return as {{ ctx.output_format }}.
-  "#
+"#
 }
 
-function ExtractMarkingScheme(
-  document_text string,
-  subject string,
-  year int,
-  level ExamLevel
-) -> MarkingScheme {
-  client LiteLLM
-  prompt #"
-    You are an expert at analyzing SEC marking schemes.
+function ExtractMarkingScheme(document_text: string,
+  subject: string,
+  year: int,
+  level: ExamLevel) -> MarkingScheme {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Extract the marking criteria from this document.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    MARKING SCHEME DETAILS:
-    Subject: {{ subject }}
-    Year: {{ year }}
-    Level: {{ level }}
+{{ _.role("user") }}
 
-    DOCUMENT TEXT:
-    {{ document_text }}
-
-    Extract:
-    1. General marking guidelines
-    2. For each question:
-       - Mark allocation breakdown
-       - Acceptable answers
-       - Partial credit rules
-       - Examiner notes
-
-    Be precise about mark allocations - these are used for grading.
-
-    Return as {{ ctx.output_format }}.
-  "#
+"#
 }
 
-function ExtractExaminerReportInsights(
-  document_text string,
-  subject string,
-  year int,
-  level ExamLevel
-) -> ExaminerReport {
-  client LiteLLM
-  prompt #"
-    You are an expert curriculum analyst.
+function ExtractExaminerReportInsights(document_text: string,
+  subject: string,
+  year: int,
+  level: ExamLevel) -> ExaminerReport {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Extract insights from this Chief Examiner Report.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    REPORT DETAILS:
-    Subject: {{ subject }}
-    Year: {{ year }}
-    Level: {{ level }}
+{{ _.role("user") }}
 
-    DOCUMENT TEXT:
-    {{ document_text }}
-
-    Extract:
-    1. Overall candidate performance commentary
-    2. For each question analyzed:
-       - Performance summary
-       - Common errors and misconceptions
-       - Examples of good answers
-       - Teaching recommendations
-    3. Statistical information if present
-    4. General recommendations for teachers and students
-
-    Focus on actionable insights for curriculum improvement.
-
-    Return as {{ ctx.output_format }}.
-  "#
+"#
 }
 
-function ExtractCurriculumSpecification(
-  document_text string,
-  subject string,
-  cycle EducationLevel,
-  language string
-) -> CurriculumSpecification {
-  client LiteLLM
-  prompt #"
-    You are an expert Irish curriculum analyst.
+function ExtractCurriculumSpecification(document_text: string,
+  subject: string,
+  cycle: EducationLevel,
+  language: string) -> CurriculumSpecification {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Extract the complete curriculum specification structure.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    SPECIFICATION DETAILS:
-    Subject: {{ subject }}
-    Cycle: {{ cycle }}
-    Language: {{ language }}
+{{ _.role("user") }}
 
-    DOCUMENT TEXT:
-    {{ document_text }}
-
-    Extract:
-    1. Document metadata (title, version year, type)
-    2. Rationale and aims
-    3. All strands with:
-       - Names (English and Irish)
-       - Descriptions
-       - Learning outcomes within each strand
-    4. For each learning outcome:
-       - Unique code (generate if not present: LO-SUBJECT-CYCLE-STRAND.NUMBER)
-       - Full text in both languages if available
-       - Action verbs used
-       - Cross-curricular links
-       - Key skills developed
-    5. Assessment information:
-       - Components and weightings
-       - Levels offered
-       - Grading approach
-    6. Key skills mapping
-
-    Ensure learning outcomes are comprehensive and correctly categorized.
-
-    Return as {{ ctx.output_format }}.
-  "#
+"#
 }
 
-function MapOutcomesToExamQuestions(
-  specification CurriculumSpecification,
-  exam_papers ExamPaper[]
+function MapOutcomesToExamQuestions(specification: CurriculumSpecification,
+  exam_papers: ExamPaper[]
 ) -> map<string, string[]> {
   client LiteLLM
   prompt #"
@@ -596,19 +412,19 @@ function MapOutcomesToExamQuestions(
     Cycle: {{ specification.cycle }}
 
     LEARNING OUTCOMES:
-    {{ for outcome in specification.learning_outcomes }}
+    {% for outcome in specification.learning_outcomes %}
     - {{ outcome.outcome_code }}: {{ outcome.text }}
-    {{ endfor }}
+    {% endfor %}
 
     EXAM PAPERS:
-    {{ for paper in exam_papers }}
+    {% for paper in exam_papers %}
     Paper {{ paper.paper_number }} ({{ paper.year }}, {{ paper.level }}):
-    {{ for section in paper.sections }}
-      {{ for q in section.questions }}
+    {% for section in paper.sections %}
+      {% for q in section.questions %}
       - Q{{ q.question_number }}: {{ q.text }}
-      {{ endfor }}
-    {{ endfor }}
-    {{ endfor }}
+      {% endfor %}
+    {% endfor %}
+    {% endfor %}
 
     For each learning outcome, identify which exam questions assess it.
     Return a mapping of outcome codes to lists of question identifiers.
@@ -705,40 +521,24 @@ class DocumentMetadata {
   cycle EducationLevel?   
   year_effective int?    @description("Extracted from phrases like \"effect earlier than 2027\"")
   year_examined int?     @description("Extracted from phrases like \"examination to 2028\"")
-  language string?       @description(\"en\" or \"ga\")
+  language string?       @description("en or ga")
   url string             @description("The exact URL to the PDF")
 }
 
 function ExtractAllPdfMetadata(
   page_markdown: string,
-  pdf_urls: string[]
-) -> DocumentMetadata[] {
-  client LiteLLM
-  prompt #"
-    You are an expert curriculum analyst specializing in Irish education.
+  pdf_urls: string[]) -> DocumentMetadata[] {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Analyze the markdown context surrounding these PDF links to extract metadata.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    PDF URLS TO ANALYZE:
-    {{ for url in pdf_urls }}
-    - {{ url }}
-    {{ endfor }}
-
-    PAGE MARKDOWN:
-    {{ page_markdown }}
-
-    Extract the following metadata for EACH PDF URL:
-    1. The exact URL matching one of the URLs provided.
-    2. A clear, descriptive title based on the link text or preceding heading.
-    3. The most appropriate category (Specification, Syllabus, Meeting Minutes, etc.).
-    4. The subject slug (e.g., "mathematics", "english", "history").
-    5. The education cycle (JUNIOR_CYCLE, SENIOR_CYCLE, etc.).
-    6. The year it becomes effective (if mentioned, e.g., "no earlier than September 2027" -> 2027).
-    7. The year it is examined (if mentioned, e.g., "examination to 2028" -> 2028).
-    8. The language ("en" for English, "ga" for Irish). Use context clues.
-
-    Return the structured extraction as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{ subject }}
+    {{ cycle }}
+    {{page_markdown}}
+    {{pdf_urls}}
+"#
 }
 
 // =============================================================================
@@ -903,107 +703,63 @@ class ExtractionBudget {
   remaining_papers int            @description("5 - papers_extracted, default daily budget")
 }
 
-function ExtractSubjectRubric(
-  text: string,
-  subject: LeavingCertSubject
-) -> SubjectRubric {
-  client "litellm/gemini-2.0-flash"
-  prompt #"
-    You are an expert Irish Leaving Certificate rubric analyst.
+function ExtractSubjectRubric(text: string,
+  subject: LeavingCertSubject) -> SubjectRubric {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Extract the per-subject rubric for {{ subject }}.
-    Identify the RubricStyle (PCLM, SRP, EQUATION_STEPS, etc.) and the list of
-    RubricDescriptors with their weights.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    SUBJECT: {{ subject }}
-    Text: {{ text }}
-
-    Return SubjectRubric as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{text}}
+    {{subject}}
+"#
 }
 
-function ScoreEssayAgainstRubric(
-  essay: string,
-  rubric: SubjectRubric
-) -> RubricScore {
-  client "litellm/anthropic/claude-sonnet-4-20250514"
-  prompt #"
-    You are an expert Irish Leaving Certificate assessor for {{ rubric.subject }}.
+function ScoreEssayAgainstRubric(essay: string,
+  rubric: SubjectRubric) -> RubricScore {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Score the student's essay against the rubric descriptors.
-    Award a 0-100 score per descriptor. Summarise strengths, improvements,
-    and reviewer notes in both English and Irish.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    ESSAY:
-    {{ essay }}
-
-    RUBRIC:
-    Style: {{ rubric.style }}
-    Descriptors:
-    {% for d in rubric.descriptors %}
-    - {{ d.text_en }}
-    {% endfor %}
-
-    Return RubricScore as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{essay}}
+    {{rubric}}
+"#
 }
 
-function CompareMarkingSchemes(
-  year_a: int,
+function CompareMarkingSchemes(year_a: int,
   year_b: int,
-  subject: LeavingCertSubject
-) -> MarkingSchemeDiff {
-  client "litellm/gemini-2.0-flash"
-  prompt #"
-    You are an expert Irish Leaving Certificate marking-scheme analyst.
+  subject: LeavingCertSubject) -> MarkingSchemeDiff {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Compare the {{ subject }} marking schemes for year {{ year_a }} and year {{ year_b }}.
-    Identify added questions, removed questions, changed marks, and the topic drift.
-    Produce a bilingual summary.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    Return MarkingSchemeDiff as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{year_a}}
+    {{year_b}}
+    {{subject}}
+"#
 }
 
-function LazyExtractExamPaper(
-  text: string,
+function LazyExtractExamPaper(text: string,
   subject: LeavingCertSubject,
   year: int,
   level: ExamLevel,
-  paper_number: int
-) -> ExamPaper {
-  client "litellm/gemini-2.0-flash"
-  prompt #"
-    You are an expert at analyzing Irish State Examination papers.
+  paper_number: int) -> ExamPaper {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Extract the complete structure of this examination paper on-demand.
-    This is the LAZY extraction path — the SPA will only call it when the user
-    opens a specific past paper, and the result is memoised in LanceDB.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    PAPER DETAILS:
-    Subject: {{ subject }}
-    Year: {{ year }}
-    Level: {{ level }}
-    Paper: {{ paper_number }}
-
-    DOCUMENT TEXT:
-    {{ text }}
-
-    Extract:
-    1. General instructions and duration
-    2. Each section with its title and instructions
-    3. All questions with:
-       - Question numbers (including sub-parts)
-       - Marks allocated
-       - Question type (MCQ, short answer, essay, etc.)
-       - Topic/strand covered
-       - The actual question text
-    4. Materials allowed (calculators, log tables, etc.)
-
-    For Mathematics/Science: identify calculation vs. theory questions.
-    For Languages: identify comprehension, writing, aural components.
-
-    Return as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{text}}
+    {{subject}}
+    {{year}}
+    {{level}}
+    {{paper_number}}
+"#
 }
 

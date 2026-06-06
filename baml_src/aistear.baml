@@ -105,68 +105,34 @@ class BridgeEdge {
 // -----------------------------------------------------------------------------
 
 function ExtractAistearFramework(text: string, language: string) -> AistearDocument {
-  client "litellm/gemini-2.0-flash"
-  prompt #"
-    You are an expert Irish early-childhood (Aistear) curriculum analyst.
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Extract the Aistear framework structure. Aistear is qualitative; preserve nuance.
-    CRITICAL: Always extract BOTH English and Irish versions of every field.
-    If the source text is in one language, translate the other.
-    Preserve the 4 Aistear themes: Well-being, Identity & Belonging, Communicating, Exploring & Thinking.
-    Preserve the 4 age bands: Infants, Toddlers, Pre-school, Early-Primary Bridge.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    LANGUAGE: {{ language }}
-
-    DOCUMENT TEXT:
-    {{ text }}
-
-    Return the structured AistearDocument as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{text}}
+"#
 }
 
 function ExtractNaionraListing(page_markdown: string) -> Naionra[] {
-  client "litellm/gemini-2.0-flash"
-  prompt #"
-    You are an Irish pre-school directory parser.
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Extract every naíonra (Irish-medium pre-school) listing from the page markdown.
-    For each, capture the name (Irish + English where given), county, eircode,
-    language medium (Irish / English / Bilingual), age range, and source URL.
-    Geocode is null (filled in by a downstream spatial pass).
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    PAGE MARKDOWN:
-    {{ page_markdown }}
-
-    Return the Naionra[] as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{page_markdown}}
+"#
 }
 
 function BridgeAistearToPrimary(aistear_doc: AistearDocument, primary_doc: PrimaryCurriculumArea) -> BridgeEdge[] {
-  client "litellm/gemini-2.0-flash"
-  prompt #"
-    You are an Irish early-childhood / primary curriculum analyst.
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Find the strongest conceptual bridges between the Aistear learning goals (early childhood)
-    and the Primary Curriculum learning outcomes (Stage 1: Junior/Senior Infants, ages 4-6).
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    AISTEAR DOCUMENT:
-    Themes: {{ aistear_doc.themes }}
-    Learning Goals:
-    {% for g in aistear_doc.learning_goals %}
-    - {{ g.id }}: {{ g.text_en }}
-    {% endfor %}
-
-    PRIMARY DOCUMENT:
-    Area: {{ primary_doc.name }}
-    Strands:
-    {% for s in primary_doc.strands %}
-    - Strand: {{ s.name }}
-    {% for o in s.outcomes %}
-      - Outcome: {{ o.id }}: {{ o.text_en }}
-    {% endfor %}
-    {% endfor %}
-
-    Return BridgeEdge[] as {{ ctx.output_format }}.
-    Only include bridges with strength >= 0.5.
-  "#
+{{ _.role("user") }}
+    {{aistear_doc}}
+"#
 }
