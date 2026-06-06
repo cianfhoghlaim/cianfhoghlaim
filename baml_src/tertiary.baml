@@ -197,56 +197,136 @@ function ExtractQQIFetAwards(page_markdown: string) -> QqiFetAward[] {
 "#
 }
 
-function ExtractApprenticeshipListings(page_markdown: string) -> Apprenticeship[] {
+function ExtractApprenticeshipListings(page_markdown: string) -> Apprenticeship {
   client "anthropic/claude-sonnet-4-20250514"
-  prompt #"Extract the requested data.
+  prompt #"You are an expert at parsing Irish Apprenticeship programme listings.
+
+Parse the SOLAS (or equivalent) apprenticeship directory.
+
+PAGE MARKDOWN:
+{{ page_markdown }}
+
+For each apprenticeship programme, extract:
+1. Programme name (e.g., "Electrician", "Carpentry & Joinery", "Plumbing", "Software Developer")
+2. Trade/sector classification
+3. Awarding body (SOLAS, ETB, IMI, etc.)
+4. Duration (typically 2-4 years)
+5. NFQ level (5-8)
+6. Off-the-job training location
+7. On-the-job employer requirements
+8. Entry requirements (minimum age, education)
+9. Progression routes to higher education (CAO courses, university pathways)
+10. Source URL
+
+Apprenticeships are an ALTERNATIVE pathway to CAO courses, particularly for craft and technical trades.
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
 
 {{ _.role("user") }}
-    {{page_markdown}}
+    ENTRIES: {{ page_markdown|length }} chars
 "#
 }
 
-function ExtractApplicationTimeline(page_markdown: string, year: int) -> ApplicationTimeline[] {
+
+function ExtractApplicationTimeline(page_markdown: string,
+  year: int) -> ApplicationTimeline {
   client "anthropic/claude-sonnet-4-20250514"
-  prompt #"Extract the requested data.
+  prompt #"You are an expert at parsing the Irish CAO (Central Applications Office) application timeline.
+
+Parse the CAO application timeline for a specific year.
+
+YEAR: {{ year }}
+
+PAGE MARKDOWN:
+{{ page_markdown }}
+
+Extract all critical dates and milestones:
+1. Application opens (typically November of preceding year)
+2. Application closes (typically February 1st)
+3. Change of mind opens (typically May)
+4. Change of mind closes (typically July 1st)
+5. Round 1 offers (typically August)
+6. Round 2 offers (typically late August)
+7. Acceptance deadlines
+8. Late application window
+9. HEAR/DARE scheme deadlines
+10. Mature applicant deadlines
+11. QQI FET application deadlines
+
+These dates power the ApplicationTimelineGuide agent in the Tertiary team. Be exact with dates and provide both year-specific and rolling calendar info.
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
 
 {{ _.role("user") }}
-    {{page_markdown}}
+    YEAR: {{ year }}
 "#
 }
+
 
 function EstimateCoursePoints(course: CAOCourse,
-  applicant_grades: map<string, string>,
-  historical: CAOGradeProfile[]) -> CoursePointsPrediction {
+  historical_points: int[],
+  applicant_profile: string) -> CoursePointsPrediction {
   client "anthropic/claude-sonnet-4-20250514"
-  prompt #"Extract the requested data.
+  prompt #"You are an expert at predicting CAO course points for an applicant.
+
+Given a course's historical points data and an applicant's profile, estimate the points they'll need.
+
+COURSE: {{ course.course_code }} - {{ course.title_en }}
+HISTORICAL POINTS: {{ historical_points|join(", ") }}
+
+APPLICANT PROFILE:
+{{ applicant_profile }}
+
+Provide:
+1. Predicted points range (low and high)
+2. Confidence level (high if data is strong, low if volatile)
+3. Trend analysis (rising, falling, stable)
+4. Key factors that could shift points this year (e.g., "new supply from neighbouring school", "popularity surge")
+5. Recommendation (apply, strong backup needed, or re-consider)
+6. Alternative courses to consider (similar level, similar subject, nearby institution)
+
+This powers the Tertiary team's points estimation feature.
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
 
 {{ _.role("user") }}
-    {{course}}
-    {{applicant_grades}}
-    {{historical}}
+    COURSE: {{ course.course_code }}
+    YEARS: {{ historical_points|length }}
 "#
 }
+
 
 function AuditMatriculation(institution: string,
-  pathway: EntryPathway,
-  applicant_grades: map<string, string>,
-  rules: MatriculationRequirement[]) -> MatriculationAudit {
+  course_code: string,
+  applicant_grades: string) -> MatriculationAudit {
   client "anthropic/claude-sonnet-4-20250514"
-  prompt #"Extract the requested data.
+  prompt #"You are an expert at auditing a student's Leaving Certificate grades against NUI/HEI matriculation requirements.
+
+Audit the applicant's grades against the matriculation rules for a specific course.
+
+INSTITUTION: {{ institution }}
+COURSE: {{ course_code }}
+
+APPLICANT GRADES:
+{{ applicant_grades }}
+
+Provide:
+1. Overall pass/fail status
+2. Per-requirement analysis (which subject/grade combinations meet/fail/miss)
+3. Near-miss subjects (one grade short of meeting the requirement)
+4. Failed requirements (subjects not taken or grades too low)
+5. Compensating subjects (if NUI allows compensation)
+6. Recommendations (could the applicant re-sit, apply for QQI FET, etc.)
+7. Alternative courses that match the applicant's profile
+8. Bilingual feedback labels
+
+This audit is the critical decision-support feature for the MatriculationCheck agent.
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
 
 {{ _.role("user") }}
-    {{institution}}
-    {{pathway}}
-    {{applicant_grades}}
-    {{rules}}
+    INSTITUTION: {{ institution }}
+    COURSE: {{ course_code }}
 "#
 }
+

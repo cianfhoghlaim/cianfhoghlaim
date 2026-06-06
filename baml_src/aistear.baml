@@ -104,35 +104,105 @@ class BridgeEdge {
 // Functions
 // -----------------------------------------------------------------------------
 
-function ExtractAistearFramework(text: string, language: string) -> AistearDocument {
+function ExtractAistearFramework(text: string,
+  language: string) -> AistearDocument {
   client "anthropic/claude-sonnet-4-20250514"
-  prompt #"Extract the requested data.
+  prompt #"You are an expert at parsing the Irish Aistear Framework for early childhood education (ages 0-6).
+
+Parse the Aistear framework document and extract its complete structure.
+
+LANGUAGE: {{ language }}
+
+DOCUMENT TEXT:
+{{ text }}
+
+Extract:
+1. Framework metadata (title_en, title_ga, year, version, NCCA publication reference, language)
+2. All 4 Aistear themes with their English and Irish names:
+   - Well-being / Folláine
+   - Identity and Belonging / Féiniúlacht agus Cáilíocht
+   - Communicating / Cumarsáid
+   - Exploring and Thinking / Taiscéalaíocht agus Smaointeoireacht
+3. For each theme, learning goals across the 4 age bands:
+   - Babies (0-18 months)
+   - Toddlers (1.5-3 years)
+   - Young Children (3-6 years)
+   - Pre-school to Primary Bridge
+4. 12 Aistear principles (e.g., "The adult has a key role in supporting learning")
+5. Sample learning opportunities for each age band
+
+All content must be BILINGUAL (English and Irish). For each piece of text, provide both en and ga variants when available.
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
 
 {{ _.role("user") }}
-    {{text}}
+    LANGUAGE: {{ language }}
 "#
 }
+
 
 function ExtractNaionraListing(page_markdown: string) -> Naionra[] {
   client "anthropic/claude-sonnet-4-20250514"
-  prompt #"Extract the requested data.
+  prompt #"You are an expert at parsing listings of Irish-medium early childhood education services (naíonraí).
+
+Parse a directory listing of naíonraí (Irish-medium pre-schools) and extract structured data.
+
+PAGE MARKDOWN:
+{{ page_markdown }}
+
+For each naíonra, extract:
+1. Name (English and Irish variants where available)
+2. Address (street, town, county, Eircode)
+3. Contact (phone, email, website)
+4. Geo location (latitude, longitude) if present
+5. Age range served (typically 0-6)
+6. Capacity (number of children)
+7. Operating hours / sessional hours
+8. Language of instruction (Irish, bilingual, English)
+9. Gaeltacht status (in Gaeltacht region or not)
+10. AIM (Access and Inclusion Model) supports available
+11. ECEC scheme affiliation (ECCE, CCSP, TEC)
+
+This data supports the "Find nearest naíonra" feature in the Aistear team's NaionraFinder agent.
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
 
 {{ _.role("user") }}
-    {{page_markdown}}
+    ENTRIES: {{ page_markdown|length }} chars
 "#
 }
 
-function BridgeAistearToPrimary(aistear_doc: AistearDocument, primary_doc: PrimaryCurriculumArea) -> BridgeEdge[] {
+
+function BridgeAistearToPrimary(aistear_doc: AistearDocument,
+  primary_doc: PrimaryCurriculumArea) -> BridgeEdge[] {
   client "anthropic/claude-sonnet-4-20250514"
-  prompt #"Extract the requested data.
+  prompt #"You are an expert at identifying bridges between the Aistear early childhood framework and the Primary School curriculum.
+
+Aistear is the curriculum framework for children aged 0-6, while Primary curriculum begins at Junior Infants (age 4-5). Identify how Aistear themes and learning goals support, prepare, or align with the Primary curriculum area.
+
+AISTEAR FRAMEWORK:
+{{ aistear_doc.title_en }} ({{ aistear_doc.year }})
+Themes: {% for theme in aistear_doc.themes %}- {{ theme.name_en }} / {{ theme.name_ga }}{% endfor %}
+
+PRIMARY CURRICULUM AREA:
+{{ primary_doc.name }}
+Strands: {% for strand in primary_doc.strands %}- {{ strand.name }}{% endfor %}
+
+For each bridge edge, identify:
+- Source: An Aistear learning goal (with age band)
+- Target: A Primary curriculum area learning outcome
+- Edge type (PREPARES_FOR, ALIGNS_WITH, CONTINUES_FROM, DEVELOPS_INTO)
+- Confidence score (0.0-1.0)
+- Rationale explaining how the Aistear goal bridges to the Primary outcome
+- Bilingual labels for both source and target
+
+These edges power the cross-stage cognify pass and enable "What did my pre-schooler learn in naíonra that prepares them for Primary school?" queries.
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
 
 {{ _.role("user") }}
-    {{aistear_doc}}
+    AISTEAR: {{ aistear_doc.title_en }}
+    PRIMARY: {{ primary_doc.name }}
 "#
 }
+

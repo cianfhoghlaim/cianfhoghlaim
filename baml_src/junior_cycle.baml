@@ -110,43 +110,111 @@ class L2LPOutcome {
 // -----------------------------------------------------------------------------
 
 function ExtractJCSpec(text: string,
-  subject: JuniorCycleSubject) -> JCSubjectSpec {
+  subject: string) -> JCSubjectSpec {
   client "anthropic/claude-sonnet-4-20250514"
-  prompt #"Extract the requested data.
+  prompt #"You are an expert at parsing NCCA Junior Cycle subject specifications (Irish secondary school, ages 12-15).
+
+Parse a complete Junior Cycle specification for a subject.
+
+SUBJECT: {{ subject }}
+
+DOCUMENT TEXT:
+{{ text }}
+
+Extract:
+1. Specification metadata (title_en, title_ga, year, NCCA reference, version)
+2. Aims and rationale (bilingual)
+3. Strands (typically 2-5 per subject) with codes, titles (EN/GA), descriptions
+4. Strand units within each strand
+5. Learning outcomes (each with code, bilingual descriptions)
+6. 2 Classroom-Based Assessments (CBAs):
+   - CBA 1 details (task type, duration, learning outcomes assessed)
+   - CBA 2 details
+7. Assessment components:
+   - Written examination structure and mark allocation
+   - CBA mark contribution to final grade
+8. Achievement levels (4 levels: Exceptional, Above Expectations, In Line With, Yet to Meet Expectations)
+9. Key skills and short courses that link to this subject
+
+The 18 Junior Cycle subjects are: Art, Business Studies, CSPE, Classics, English, French, Geography, German, Graphics, History, Home Economics, Irish, Italian, Mathematics, Music, Religious Education, Science, Spanish.
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
 
 {{ _.role("user") }}
-    {{text}}
-    {{subject}}
+    SUBJECT: {{ subject }}
 "#
 }
+
 
 function ExtractCBADescriptor(text: string,
-  task_name: string) -> RubricDescriptor[] {
+  task_name: string) -> CBATask {
   client "anthropic/claude-sonnet-4-20250514"
-  prompt #"Extract the requested data.
+  prompt #"You are an expert at parsing NCCA Junior Cycle Classroom-Based Assessment (CBA) task descriptors.
+
+Parse a single CBA task description.
+
+TASK NAME: {{ task_name }}
+
+CBA TEXT:
+{{ text }}
+
+Extract:
+1. Task name (English and Irish)
+2. Subject (which Junior Cycle subject)
+3. CBA number (1 or 2)
+4. Duration (in weeks or class periods)
+5. Format (research project, practical investigation, portfolio, oral presentation, etc.)
+6. Learning outcomes assessed (cite specific codes)
+7. Key skills developed
+8. Assessment criteria and descriptors for each achievement level:
+   - Exceptional
+   - Above Expectations
+   - In Line With Expectations
+   - Yet to Meet Expectations
+9. Student reflection requirements
+10. Teacher guidance and supports
+11. Submission format and deadlines
+
+CBAs account for a significant portion of the Junior Cycle final grade, so extract all details that would help students prepare and teachers assess.
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
 
 {{ _.role("user") }}
-    {{text}}
-    {{task_name}}
+    TASK: {{ task_name }}
 "#
 }
+
 
 function ExtractShortCourse(text: string,
-  course: JuniorCycleShortCourse) -> JCSubjectSpec {
+  course_name: string) -> JuniorCycleShortCourse {
   client "anthropic/claude-sonnet-4-20250514"
-  prompt #"Extract the requested data.
+  prompt #"You are an expert at parsing NCCA Junior Cycle Short Course specifications.
+
+Parse a Junior Cycle Short Course (typically 100 hours of student work over 1-2 years).
+
+COURSE NAME: {{ course_name }}
+
+DOCUMENT TEXT:
+{{ text }}
+
+Extract:
+1. Course metadata (title_en, title_ga, year, NCCA reference)
+2. Course aim and rationale
+3. Strands and learning outcomes (bilingual)
+4. Assessment components (project, portfolio, presentation)
+5. Achievement levels (4 levels)
+6. Linkages to main Junior Cycle subjects
+7. Cross-curricular skills (Coding, Digital Media Literacy, Civic Action, etc.)
+
+The 16 NCCA Short Courses include: Coding, Digital Media Literacy, Civic Action, Chinese Language, Philosophy, Astronomy, Climate Action, etc.
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
 
 {{ _.role("user") }}
-    {{text}}
-    {{course}}
+    COURSE: {{ course_name }}
 "#
 }
+
 
 // -----------------------------------------------------------------------------
 // Tests
