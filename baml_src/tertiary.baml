@@ -14,6 +14,7 @@
 
 enum NFQLevel {
   NFQ_1  @description("NFQ Level 1 — Foundation")
+  // (see below for additional enums)
   NFQ_2  @description("NFQ Level 2 — Foundation")
   NFQ_3  @description("NFQ Level 3 — Junior Cycle equivalent")
   NFQ_4  @description("NFQ Level 4 — Leaving Certificate equivalent")
@@ -164,150 +165,88 @@ class MatriculationAudit {
 // -----------------------------------------------------------------------------
 
 function ExtractCAOCourseList(page_markdown: string, year: int) -> CAOCourse[] {
-  client "litellm/gemini-2.0-flash"
-  prompt #"
-    You are an expert Irish CAO course directory analyst.
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Extract the list of CAO courses from the page markdown for the given year.
-    For each course capture: course_code, title_en, title_ga, institution, hei_type,
-    nfq_level, duration_years, points_required, language, subjects_required,
-    specialism, cao_url.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    CRITICAL: Preserve the 3-year points history (points_2022, points_2023, points_2024)
-    and the rolling 3-year midpoint (points_midpoint).
-    Extract BOTH English and Irish versions of the title.
-
-    YEAR: {{ year }}
-
-    PAGE MARKDOWN:
-    {{ page_markdown }}
-
-    Return CAOCourse[] as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{page_markdown}}
+"#
 }
 
 function ExtractMatriculationRules(page_markdown: string, institution: string) -> MatriculationRequirement[] {
-  client "litellm/gemini-2.0-flash"
-  prompt #"
-    You are an expert Irish matriculation requirements analyst.
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Extract the matriculation rules for the given institution.
-    For NUI institutions, the standard rules are:
-    - 3 H5s (one in English, Irish, Maths)
-    - 4 O6/H7s (including Maths and English/Irish)
-    - Specific subject + grade requirements for certain courses (e.g., H4 in
-      Chemistry for Medicine, H4 in a language for Modern Languages)
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    For Trinity (TCD) the rules are:
-    - 4 H5s (one in English, Maths, a language, a third subject)
-    - 3 O6/H7s
-    - Specific course requirements
-
-    For IoTs (ATU/TUS/SETU/MTU), the rules are simpler (5 O6/H7s, Maths required).
-
-    CRITICAL: Capture the institution, pathway, subject, minimum_grade, and any notes.
-
-    INSTITUTION: {{ institution }}
-
-    PAGE MARKDOWN:
-    {{ page_markdown }}
-
-    Return MatriculationRequirement[] as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{page_markdown}}
+"#
 }
 
 function ExtractQQIFetAwards(page_markdown: string) -> QqiFetAward[] {
-  client "litellm/gemini-2.0-flash"
-  prompt #"
-    You are an expert Irish QQI FET award directory analyst.
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Extract every QQI FET (Further Education & Training) award from the page markdown.
-    For each capture: award_code, title_en, title_ga, nfq_level, institution,
-    links_to_courses (CAO course codes this award ladders into).
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    PAGE MARKDOWN:
-    {{ page_markdown }}
-
-    Return QqiFetAward[] as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{page_markdown}}
+"#
 }
 
 function ExtractApprenticeshipListings(page_markdown: string) -> Apprenticeship[] {
-  client "litellm/gemini-2.0-flash"
-  prompt #"
-    You are an expert Irish Apprenticeship directory analyst.
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Extract every Apprenticeship programme from the page markdown.
-    For each capture: programme_code, title_en, title_ga, duration_years, nfq_level,
-    consortia_lead, consortia_partners, source_url.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    PAGE MARKDOWN:
-    {{ page_markdown }}
-
-    Return Apprenticeship[] as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{page_markdown}}
+"#
 }
 
 function ExtractApplicationTimeline(page_markdown: string, year: int) -> ApplicationTimeline[] {
-  client "litellm/gemini-2.0-flash"
-  prompt #"
-    You are an expert Irish CAO application timeline analyst.
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Extract the CAO application timeline for the given year.
-    Capture: cao_open_date, cao_close_date, late_application_close, offer_round_1,
-    offer_round_2, registration_open.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    YEAR: {{ year }}
-
-    PAGE MARKDOWN:
-    {{ page_markdown }}
-
-    Return ApplicationTimeline[] as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{page_markdown}}
+"#
 }
 
-function EstimateCoursePoints(
-  course: CAOCourse,
+function EstimateCoursePoints(course: CAOCourse,
   applicant_grades: map<string, string>,
-  historical: CAOGradeProfile[]
-) -> CoursePointsPrediction {
-  client "litellm/gemini-2.0-flash"
-  prompt #"
-    You are an expert Irish CAO points analyst.
+  historical: CAOGradeProfile[]) -> CoursePointsPrediction {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Given the course, the applicant's projected LC grades (subject → H1-H8 / O1-O8),
-    and the historical cutoff data, predict the likely cutoff points for this year
-    and a confidence score (0-1).
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    CRITICAL: Be conservative. Round to the nearest 5 points.
-
-    COURSE: {{ course.title_en }} ({{ course.course_code }})
-    HISTORICAL MIDPOINT: {{ course.points_midpoint }}
-    APPLICANT GRADES: {{ applicant_grades }}
-
-    Return CoursePointsPrediction as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{course}}
+    {{applicant_grades}}
+    {{historical}}
+"#
 }
 
-function AuditMatriculation(
-  institution: string,
+function AuditMatriculation(institution: string,
   pathway: EntryPathway,
   applicant_grades: map<string, string>,
-  rules: MatriculationRequirement[]
-) -> MatriculationAudit {
-  client "litellm/anthropic/claude-sonnet-4-20250514"
-  prompt #"
-    You are an expert Irish matriculation auditor.
+  rules: MatriculationRequirement[]) -> MatriculationAudit {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Check the applicant's LC grades against the matriculation rules for the institution.
-    Capture failed requirements and near-misses (one grade short).
-    Produce a bilingual summary explaining the result.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    INSTITUTION: {{ institution }}
-    PATHWAY: {{ pathway }}
-    APPLICANT GRADES: {{ applicant_grades }}
-    RULES: {{ rules }}
-
-    Return MatriculationAudit as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{institution}}
+    {{pathway}}
+    {{applicant_grades}}
+    {{rules}}
+"#
 }

@@ -60,6 +60,7 @@ enum AchievementLevel {
 
 // -----------------------------------------------------------------------------
 // Classes
+
 // -----------------------------------------------------------------------------
 
 class RubricDescriptor {
@@ -108,72 +109,43 @@ class L2LPOutcome {
 // Functions
 // -----------------------------------------------------------------------------
 
-function ExtractJCSpec(
-  text: string,
-  subject: JuniorCycleSubject
-) -> JCSubjectSpec {
-  client "litellm/gemini-2.0-flash"
-  prompt #"
-    You are an expert Irish Junior Cycle curriculum analyst.
+function ExtractJCSpec(text: string,
+  subject: JuniorCycleSubject) -> JCSubjectSpec {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Extract the Junior Cycle specification for a single subject.
-    Junior Cycle features:
-    - A 'Nature of Science' Unifying Strand (for Science) and contextual strands
-    - Two Classroom-Based Assessments (CBAs) per subject, graded on the 4-level rubric
-    - A 2nd-level assessment (written exam) at the end of 3rd Year
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    CRITICAL: Extract BOTH English and Irish versions of every field.
-    Preserve the AchievementLevel (4 levels) on every RubricDescriptor.
-
-    SUBJECT: {{ subject }}
-
-    Text: {{ text }}
-
-    Return the structured JCSubjectSpec as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{text}}
+    {{subject}}
+"#
 }
 
-function ExtractCBADescriptor(
-  text: string,
-  task_name: string
-) -> RubricDescriptor[] {
-  client "litellm/gemini-2.0-flash"
-  prompt #"
-    You are an expert Irish Junior Cycle assessor.
+function ExtractCBADescriptor(text: string,
+  task_name: string) -> RubricDescriptor[] {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Extract the rubric descriptors for the CBA task named "{{ task_name }}".
-    The rubric has exactly 4 levels: Exceptional, AboveExpectations,
-    InLineWithExpectations, YetToMeetExpectations.
-    Capture the key qualities and negative indicators for each level.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    Text: {{ text }}
-
-    Return RubricDescriptor[] as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{text}}
+    {{task_name}}
+"#
 }
 
-function ExtractShortCourse(
-  text: string,
-  course: JuniorCycleShortCourse
-) -> JCSubjectSpec {
-  client "litellm/gemini-2.0-flash"
-  prompt #"
-    You are an expert Irish Junior Cycle short-course analyst.
+function ExtractShortCourse(text: string,
+  course: JuniorCycleShortCourse) -> JCSubjectSpec {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Extract the specification for a short course (100-hour module).
-    Short courses are non-examinable; they have only learning outcomes, no CBAs.
-    The 16 short courses include Coding, CSPE, Digital Media Literacy, Philosophy,
-    PE, SPHE, Chinese Language & Culture, Artistic Performance, CSI Forensic Science,
-    plus 5 Level-2 Learning Programme (L2LP) short courses.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    CRITICAL: Extract BOTH English and Irish versions of every field.
-
-    COURSE: {{ course }}
-
-    Text: {{ text }}
-
-    Return the structured JCSubjectSpec as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{text}}
+    {{course}}
+"#
 }
 
 // -----------------------------------------------------------------------------
