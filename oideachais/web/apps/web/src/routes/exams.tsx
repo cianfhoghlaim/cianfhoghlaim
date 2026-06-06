@@ -94,7 +94,7 @@ export function ExamsPage() {
         <div className="bg-slate-950 border border-slate-800 rounded-xl h-full flex flex-col">
           <div className="flex items-center justify-between p-3 border-b border-slate-800">
             {chatOpen && <span className="font-cinzel text-emerald-400">Oideachas</span>}
-          </button>
+          </div>
         </div>
         <div className="h-1/2 border-t border-slate-800 overflow-y-auto p-4">
           {chatOpen && <div className="flex-1 p-3 text-xs text-slate-500 italic">Open Oideachas Chat (bottom-right) and ask: "Compare Higher vs Ordinary 2024 Mathematics"</div>}
