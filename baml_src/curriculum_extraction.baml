@@ -352,6 +352,15 @@ class ExamQuestion {
   learning_outcomes string[] @description("LO codes this question assesses")
 }
 
+class OutcomeQuestionMapping {
+  learning_outcome_code string @description("Curriculum learning outcome code (e.g., 'ML-3.1')")
+  learning_outcome_description string? @description("Description of the LO for context")
+  primary_questions string[] @description("Question numbers that primarily assess this LO")
+  secondary_questions string[] @description("Question numbers that partially cover this LO")
+  confidence_score float @description("Strength of the mapping (0.0-1.0)")
+  rationale string? @description("Why this question maps to this LO")
+}
+
 class ExamSection {
   section_name string @description("Section identifier (A, B, C or name)")
   title string? @description("Section title")
@@ -481,80 +490,147 @@ function ExtractMarkingScheme(document_text: string,
   year: int,
   level: ExamLevel) -> MarkingScheme {
   client "anthropic/claude-sonnet-4-20250514"
-  prompt #"Extract the requested data.
+  prompt #"You are an expert at parsing Irish State Examination Commission (SEC) marking schemes.
+
+Parse a SEC marking scheme document and extract its complete grading structure.
+
+SUBJECT: {{ subject }}
+YEAR: {{ year }}
+LEVEL: {{ level }}
+
+MARKING SCHEME TEXT:
+{{ document_text }}
+
+Extract:
+1. Scheme metadata (total marks, grade boundaries, special instructions)
+2. Question-by-question marking allocation:
+   - Question number
+   - Required answer content (key terms, concepts, equations)
+   - Mark allocation per answer element (partial credit breakdown)
+   - Specific marking notes (e.g., "accept equivalent wording", "penalise 1 mark for unit error")
+3. Common errors and misconceptions to penalise
+4. Grade descriptors (the descriptor that defines each grade level for the subject)
+5. Any cross-reference to the syllabus learning outcomes being assessed
+
+The marking scheme is the AUTHORITATIVE source for grading. Be exact and preserve all marking notes verbatim where they affect scoring.
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
 
 {{ _.role("user") }}
-
+    SUBJECT: {{ subject }}
+    YEAR: {{ year }}
 "#
 }
+
 
 function ExtractExaminerReportInsights(document_text: string,
   subject: string,
   year: int,
   level: ExamLevel) -> ExaminerReport {
   client "anthropic/claude-sonnet-4-20250514"
-  prompt #"Extract the requested data.
+  prompt #"You are an expert at analyzing Irish State Examination Commission (SEC) Chief Examiner reports.
+
+Parse a Chief Examiner's report and extract pedagogical insights about student performance.
+
+SUBJECT: {{ subject }}
+YEAR: {{ year }}
+LEVEL: {{ level }}
+
+EXAMINER REPORT TEXT:
+{{ document_text }}
+
+Extract:
+1. Report metadata (chief examiner name, total candidates, grade distribution)
+2. Overall performance commentary
+3. Per-question performance analysis:
+   - Question number
+   - Performance summary (excellent, good, fair, poor)
+   - Common errors observed
+   - Topics students found most difficult
+4. Pedagogical recommendations for teachers
+5. Trends across the candidate cohort
+
+Focus on actionable insights that can guide teaching practice and help students avoid common mistakes in future examinations.
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
 
 {{ _.role("user") }}
-
+    SUBJECT: {{ subject }}
+    YEAR: {{ year }}
 "#
 }
+
 
 function ExtractCurriculumSpecification(document_text: string,
   subject: string,
   cycle: EducationLevel,
   language: string) -> CurriculumSpecification {
   client "anthropic/claude-sonnet-4-20250514"
-  prompt #"Extract the requested data.
+  prompt #"You are an expert at parsing Irish NCCA Curriculum Specifications for both Junior Cycle and Senior Cycle.
+
+Parse a complete NCCA curriculum specification document.
+
+SUBJECT: {{ subject }}
+CYCLE: {{ cycle }}
+LANGUAGE: {{ language }}
+
+DOCUMENT TEXT:
+{{ document_text }}
+
+Extract:
+1. Document metadata (title_en, title_ga, year, specification version, language, URL, NCCA publication reference)
+2. Aims and rationale (bilingual where available)
+3. Strands with codes, titles (EN/GA), and descriptions
+4. Strand units within each strand
+5. Learning outcomes (each with code, bilingual descriptions)
+6. Key skills framework mapping
+7. Assessment arrangements (examination and classroom-based)
+8. Differentiation and inclusion guidance
+9. Cross-curricular links
+
+This is the canonical NCCA specification for a subject — extract everything that would help a teacher, student, or parent understand the curriculum intent and structure.
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
 
 {{ _.role("user") }}
-
+    SUBJECT: {{ subject }}
+    CYCLE: {{ cycle }}
 "#
 }
 
+
 function MapOutcomesToExamQuestions(specification: CurriculumSpecification,
-  exam_papers: ExamPaper[]
-) -> map<string, string[]> {
-  client LiteLLM
-  prompt #"
-    You are an expert curriculum analyst.
+  exam_papers: ExamPaper[]) -> OutcomeQuestionMapping[] {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"You are an expert at mapping NCCA curriculum specification learning outcomes to SEC exam paper questions.
 
-    Map learning outcomes to examination questions.
+Build a mapping between the learning outcomes in a curriculum specification and the questions that assess them in past exam papers.
 
-    CURRICULUM SPECIFICATION:
-    Subject: {{ specification.subject }}
-    Cycle: {{ specification.cycle }}
+CURRICULUM SPECIFICATION:
+- Subject: {{ specification.subject }}
+- Year: {{ specification.year }}
+- {{ specification.learning_outcomes|length }} learning outcomes total
 
-    LEARNING OUTCOMES:
-    {% for outcome in specification.learning_outcomes %}
-    - {{ outcome.outcome_code }}: {{ outcome.text }}
-    {% endfor %}
+EXAM PAPERS PROVIDED:
+{% for paper in exam_papers %}
+- {{ paper.subject }} {{ paper.year }} Paper {{ paper.paper_number }} ({{ paper.level }})
+{% endfor %}
 
-    EXAM PAPERS:
-    {% for paper in exam_papers %}
-    Paper {{ paper.paper_number }} ({{ paper.year }}, {{ paper.level }}):
-    {% for section in paper.sections %}
-      {% for q in section.questions %}
-      - Q{{ q.question_number }}: {{ q.text }}
-      {% endfor %}
-    {% endfor %}
-    {% endfor %}
+For each exam question, identify the learning outcome(s) it primarily assesses and any secondary outcomes it partially covers.
 
-    For each learning outcome, identify which exam questions assess it.
-    Return a mapping of outcome codes to lists of question identifiers.
+The mapping should be bidirectional (outcome -> question AND question -> outcome) to enable both:
+- Teachers: "Which questions cover outcome X?"
+- Students: "What outcomes does question Q test?"
 
-    Format question identifiers as: YEAR-LEVEL-PAPER-QUESTION
-    e.g., "2023-H-1-3a" for 2023 Higher Paper 1 Question 3a
+Be precise about the strength of the mapping (primary vs secondary assessment).
 
-    Return as {{ ctx.output_format }}.
-  "#
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
+
+{{ _.role("user") }}
+    SUBJECT: {{ specification.subject }}
+"#
 }
+
 
 // =============================================================================
 // Test Cases
@@ -645,21 +721,39 @@ class DocumentMetadata {
   url string             @description("The exact URL to the PDF")
 }
 
-function ExtractAllPdfMetadata(
-  page_markdown: string,
+function ExtractAllPdfMetadata(page_markdown: string,
   pdf_urls: string[]) -> DocumentMetadata[] {
   client "anthropic/claude-sonnet-4-20250514"
-  prompt #"Extract the requested data.
+  prompt #"You are an expert at extracting metadata from Irish education PDF documents.
+
+Parse metadata for a batch of PDFs from their pre-extracted text content.
+
+PDF URLS: {{ pdf_urls|join(", ") }}
+
+PAGES MARKDOWN:
+{{ page_markdown }}
+
+For each PDF, extract:
+1. Document type (curriculum_specification, exam_paper, marking_scheme, examiner_report, annual_report, policy_document)
+2. Title (English and Irish if available)
+3. Author/publisher (NCCA, SEC, Department of Education, etc.)
+4. Year of publication
+5. Subject (if applicable, use the canonical subject slug)
+6. Educational cycle/level (early_childhood, primary, junior_cycle, senior_cycle, tertiary)
+7. Language (en, ga, bilingual)
+8. Year of examination (if exam material)
+9. URL of the source PDF
+10. Brief description of content
+
+Group results by document type for downstream routing. This metadata enables efficient caching and topic-graph construction in the knowledge graph.
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
 
 {{ _.role("user") }}
-    {{ subject }}
-    {{ cycle }}
-    {{page_markdown}}
-    {{pdf_urls}}
+    BATCH: {{ pdf_urls|length }} URLs
 "#
 }
+
 
 // =============================================================================
 // Senior Cycle (Leaving Certificate) — 50+ subjects, multi-paper, multi-level
