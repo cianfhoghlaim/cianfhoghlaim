@@ -940,6 +940,12 @@ wheels = [
 name = "cianfhoghlaim"
 version = "0.0.0"
 source = { virtual = "." }
+dependencies = [
+    { name = "baml-py" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "baml-py", specifier = ">=0.222.0" }]
 
 [[package]]
 name = "ckzg"

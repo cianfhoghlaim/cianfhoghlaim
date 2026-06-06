@@ -19,7 +19,7 @@ enum PrimaryStage {
     @description("Rang 5 & 6, ages 10-12")
 }
 
-enum PrimaryCurriculumArea {
+enum PrimaryAreaCode {
   PRIMARY_LANGUAGE_ENGLISH
   PRIMARY_LANGUAGE_IRISH
   PRIMARY_MATHEMATICS
@@ -50,7 +50,7 @@ class PrimaryLearningOutcome {
   text_ga string?           @description("Irish translation of the outcome text")
   element string            @description("The 'Element' of learning")
   stage PrimaryStage
-  area PrimaryCurriculumArea
+  area PrimaryAreaCode
   progression_continuum string?  @description("Description of how the outcome progresses across stages")
   key_competencies CompetencyLink[]
   action_verbs string[]      @description("e.g., 'investigate', 'analyse', 'create'")
@@ -67,7 +67,7 @@ class PrimaryStrand {
 }
 
 class PrimaryCurriculumArea {
-  name PrimaryCurriculumArea
+  name PrimaryAreaCode
   rationale string
   rationale_ga string?
   strands PrimaryStrand[]

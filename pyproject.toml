@@ -18,6 +18,9 @@ keywords = [
     "irish",
     "celtic",
 ]
+dependencies = [
+    "baml-py>=0.222.0",
+]
 
 # This root project deliberately has no [project.dependencies] and no
 # [project.scripts] — it is a workspace shell only. Real packages live in

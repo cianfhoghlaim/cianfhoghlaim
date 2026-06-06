@@ -61,6 +61,11 @@ class AistearLearningGoal {
   linked_primary_outcome string? @description("Primary Stage 1 outcome code if bridged, e.g., 'LO-PRI-EN-1.1'")
 }
 
+class GeoPoint {
+  lat float @description("Latitude")
+  lon float @description("Longitude")
+}
+
 class Naionra {
   id string
   name_en string
@@ -71,7 +76,7 @@ class Naionra {
   age_range_months int[]         @description("e.g., [24, 36, 48, 60] for ages 2-5")
   enrollment int?
   source_url string
-  geo { lat float, lon float }
+  geo GeoPoint
 }
 
 class AistearDocument {
