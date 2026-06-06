@@ -83,33 +83,79 @@ class PrimaryCurriculumArea {
 
 function ExtractPrimaryFramework(text: string,
   stage: PrimaryStage,
-  area: PrimaryCurriculumArea) -> PrimaryCurriculumArea {
+  area: PrimaryAreaCode) -> PrimaryCurriculumArea {
   client "anthropic/claude-sonnet-4-20250514"
-  prompt #"Extract the requested data.
+  prompt #"You are an expert at parsing the Irish Primary School Curriculum (NCCA, ages 4-12).
+
+Parse a Primary curriculum area document for a specific stage and area.
+
+STAGE: {{ stage }}
+AREA: {{ area }}
+
+DOCUMENT TEXT:
+{{ text }}
+
+Extract:
+1. Curriculum area metadata (title, code, year, NCCA reference)
+2. Rationale (both English and Irish)
+3. Strands within this curriculum area with codes, titles (EN/GA), and descriptions
+4. Strand units within each strand
+5. Learning outcomes for this stage and area
+6. Key competencies and skills developed
+7. Assessment approaches
+8. Integration links to other curriculum areas
+9. Differentiation guidance
+
+For bilingual content, provide both description_en and description_ga variants. The 12 Primary curriculum areas are: English, Irish, Mathematics, SESE (Science, History, Geography), Visual Arts, Music, Drama, Physical Education, SPHE, Religion.
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
 
 {{ _.role("user") }}
-    {{text}}
-    {{stage}}
-    {{area}}
+    STAGE: {{ stage }}
+    AREA: {{ area }}
 "#
 }
+
 
 function ExtractPrimaryLearningOutcomes(text: string,
   stage: PrimaryStage,
-  area: PrimaryCurriculumArea) -> PrimaryLearningOutcome[] {
+  area: PrimaryAreaCode) -> PrimaryLearningOutcome[] {
   client "anthropic/claude-sonnet-4-20250514"
-  prompt #"Extract the requested data.
+  prompt #"You are an expert at extracting individual learning outcomes from the Irish Primary School Curriculum.
+
+Parse learning outcomes for a specific stage and curriculum area.
+
+STAGE: {{ stage }}
+AREA: {{ area }}
+
+DOCUMENT TEXT:
+{{ text }}
+
+Extract all learning outcomes, each with:
+1. Outcome code (e.g., "M-1.1" for Mathematics stage 1 strand 1)
+2. Bilingual description (description_en and description_ga)
+3. Strand it belongs to
+4. Strand unit
+5. Sub-strand (if any)
+6. Key skills (Numeracy, Literacy, etc.)
+7. Evidence of learning (what students should demonstrate)
+8. Integration with other areas
+9. Differentiation notes
+
+The 4 stages of Primary are:
+- Junior Infants and Senior Infants (ages 4-6)
+- First and Second Class (ages 6-8)
+- Third and Fourth Class (ages 8-10)
+- Fifth and Sixth Class (ages 10-12)
 
 {{ ctx.output_format(prefix="Answer with this format:\n") }}
 
 {{ _.role("user") }}
-    {{text}}
-    {{stage}}
-    {{area}}
+    STAGE: {{ stage }}
+    AREA: {{ area }}
 "#
 }
+
 
 // -----------------------------------------------------------------------------
 // Tests
