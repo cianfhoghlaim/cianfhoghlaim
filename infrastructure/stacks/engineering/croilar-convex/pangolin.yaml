@@ -1,0 +1,22 @@
+# Croílár Convex — Pangolin Traefik routing
+# Routes convex.croilar.cianfhoghlaim.ie to the existing convex-backend container.
+# TinyAuth is OMITTED — BetterAuth handles OIDC auth at the application layer.
+http:
+  routers:
+    croilar-convex:
+      entryPoints:
+        - websecure
+      rule: "Host(`convex.croilar.cianfhoghlaim.ie`)"
+      service: croilar-convex
+      tls:
+        certResolver: letsencrypt
+
+  services:
+    croilar-convex:
+      loadBalancer:
+        servers:
+          - url: "http://convex-backend:3210"
+        healthCheck:
+          path: /version
+          interval: 10s
+          timeout: 3s
