@@ -13,8 +13,6 @@ After the 5 stage knowledge-graph assets materialise, this asset creates the
   (:QQIFetAward) -[:LADDERS_INTO]-> (:CAOCourse)
   (:Apprenticeship) -[:ALTERNATIVE_TO]-> (:CAOCourse)
 """
-from __future__ import annotations
-
 from dagster import asset
 
 EDGE_DEFINITIONS = [

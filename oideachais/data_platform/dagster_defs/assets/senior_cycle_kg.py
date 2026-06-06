@@ -17,8 +17,6 @@ asset:
 The cross_stage_cognify asset then walks the edges between the
 (:SCLearningOutcome) nodes and the (:ExamQuestion) nodes from this stage.
 """
-from __future__ import annotations
-
 import asyncio
 import hashlib
 import os
@@ -41,7 +39,7 @@ from oideachais.data_platform.dagster_defs.assets.ireland.exam_materials_assets 
 from oideachais.data_platform.dlt_utils.destinations import get_dlt_destination
 from oideachais.data_platform.dlt_utils.safety import safe_dlt_run
 
-SENIOR_CYCLE_SUBJECTS = StaticPartitionsDefinition(EXAM_SUBJECTS)
+SENIOR_CYCLE_SUBJECTS = StaticPartitionsDefinition(EXAM_SUBJECTS["leaving_certificate"])
 SENIOR_CYCLE_MATERIAL_TYPES = StaticPartitionsDefinition(MATERIAL_TYPES)
 SENIOR_CYCLE_PARTITIONS = MultiPartitionsDefinition(
     {
@@ -59,7 +57,7 @@ DAILY_PARTITIONS = DailyPartitionsDefinition(start_date="2024-01-01")
     description="Senior Cycle knowledge graph — ExamPaper, MarkingScheme, SubjectRubric, ExaminerReport per (subject, material_type).",
 )
 def senior_cycle_knowledge_graph(
-    context: AssetExecutionContext,
+    context,
     pdf_extracted_text,  # from pdf_assets.pdf_extracted_text_asset
 ) -> dict[str, int]:
     """Extract Senior Cycle exam + rubric structure from PDF text.

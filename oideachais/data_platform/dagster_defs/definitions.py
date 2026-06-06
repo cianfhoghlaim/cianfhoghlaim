@@ -78,18 +78,13 @@ from oideachais.data_platform.dagster_defs.assets.ui_suggestion import (
     ui_suggestion_asset,
     ui_suggestion_schedule,
 )
-try:
-    from oideachais.data_platform.dagster_defs.assets.senior_cycle_kg import (
-        senior_cycle_kg_asset,
-    )
-except Exception:
-    senior_cycle_kg_asset = []
-try:
-    from oideachais.data_platform.cognee_integration.cross_stage_cognify import (
-        cross_stage_cognify,
-    )
-except Exception:
-    cross_stage_cognify = None
+from oideachais.data_platform.dagster_defs.assets.senior_cycle_kg import (
+    senior_cycle_knowledge_graph,
+    lazy_extract_exam_paper,
+)
+from oideachais.data_platform.cognee_integration.cross_stage_cognify import (
+    cross_stage_cognify,
+)
 
 # UK Education Assets
 # ============================================================================
@@ -251,13 +246,16 @@ CONCURRENCY_LIMITS = {
 # Combine all asset lists
 combined_assets = [
     *all_assets,
-    *curriculum_dlt_assets,  # Ireland curriculum (@dlt_assets pattern, auto-parallelized)
-    scraped_curriculum_pages, # New dynamic scraping asset
-    *exam_materials_assets,  # SEC exam materials (Stagehand browser -> DLT -> DuckLake)
-    *pdf_processing_assets,  # PDF download and OCR extraction
-    *model_conversion_assets, # HF → GGUF conversion (10 models)
-    *asset_generation_assets, # BAML → image gen → Garage S3
-    ui_suggestion_asset,      # Nightly UI component suggestions (BAML + Cognee)
+    *curriculum_dlt_assets,
+    scraped_curriculum_pages,
+    *exam_materials_assets,
+    *pdf_processing_assets,
+    *model_conversion_assets,
+    *asset_generation_assets,
+    ui_suggestion_asset,            # Nightly UI component suggestions (BAML + Cognee)
+    senior_cycle_knowledge_graph,   # Senior Cycle knowledge graph (exam papers + marking schemes)
+    lazy_extract_exam_paper,        # On-demand exam paper BAML extraction
+    cross_stage_cognify,            # Cross-stage Cognee cognify (8 edges, 5 stages)
 ]
 
 defs = dg.Definitions(
