@@ -1,11 +1,33 @@
 # Oideachais — The Celtic Education Lakehouse Engine
 
-The `oideachais` workspace is the **offline-first ELT engine and lakehouse** at the
-heart of the `cianfhoghlaim` stack. It extracts, loads, transforms, and serves
-Irish, UK, and pan-Celtic education data — syllabi, exam papers, marking schemes,
-Chief Examiner reports, and statistical publications — through a unified
-DuckDB/DuckLake core that can deploy identically to local Garage S3 or to
-Cloudflare R2 + PlanetScale + MotherDuck.
+> The offline-first ELT engine and lakehouse that powers the entire
+> `cianfhoghlaim` stack. Irish, UK, and pan-Celtic education data — syllabi,
+> exam papers, marking schemes, Chief Examiner reports, statistical
+> publications — through a unified DuckDB/DuckLake core that deploys
+> identically to local Garage S3 or to Cloudflare R2 + PlanetScale +
+> MotherDuck.
+
+## Quick navigation — "I want to do X, where do I go?"
+
+| If you want to... | Look at... |
+|:--|:--|
+| Add a new DLT source (e.g. a new curriculum PDF site) | `data_platform/dlt_sources/ireland/` + the matching `dagster_defs/assets/ireland/` |
+| Add a new Dagster asset | `data_platform/dagster_defs/assets/` (per domain: `ireland/`, `uk/`, `celtic/`, `geospatial/`) |
+| Run a single asset / pipeline | `mission_control.py` notebook, or `dagster job execute -m data_platform.dagster_defs.definitions -j daily_ingestion_job` |
+| Browse exam papers, marking schemes, examiner reports | `notebooks/exam_papers_explorer.py` |
+| Inspect the lakehouse (schemas, tables, counts) | `notebooks/ducklake_explorer.py` or `notebooks/lakehouse_inspector.py` |
+| End-to-end pipeline smoke test | `notebooks/pipeline_e2e_test.py` |
+| Work with raw curriculum PDFs | `data_platform/dlt_sources/ireland/pdf_downloader.py` |
+| Add an MCP server | `mcp/` (filesystem, context7, mcpo) |
+| Inspect the consumer-facing web app | `oideachais/web/` |
+| Operate the operational dashboard | `dashboard/` (separate Vite app) |
+| Deploy a new stack | `infrastructure/stacks/` (lakehouse, dagster, liteLLM, etc.) |
+| Run LLM calls (BAML extraction) | `oideachais/data_platform/baml_src/` + `baml_client/` |
+| Understand the data contracts | Section 2 below |
+| Add an agent or evaluate RAG quality | `meaisínfhoghlaim/` (sister subproject) |
+| Configure secrets | `.infisical.env` + `bun run secrets:init` |
+
+---
 
 This README documents the engine itself: data contracts, asset topology, DLT
 patterns, environment variables, and the conventions agents must follow when
@@ -236,8 +258,8 @@ bun run secrets:init              # or rely on `mise` directory hooks
 cd infrastructure/stacks/storage/lakehouse
 docker compose up -d
 
-# Start Dagster
-cd /Users/cianmacandeisigh/dev/kings_college_galway/oideachais
+# Start Dagster (from the oideachais subdir, not absolute path)
+cd oideachais
 DAGSTER_HOME=. uv run dagster dev -m data_platform.dagster_defs.definitions
 
 # Start marimo ops dashboard
