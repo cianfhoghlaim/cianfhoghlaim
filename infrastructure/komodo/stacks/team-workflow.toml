@@ -24,7 +24,7 @@ run_directory = "/etc/komodo/sruth/team-workflow-stack/vikunja"
 file_paths = ["compose.yaml","sidecar.yaml","pangolin.yaml","blueprint.yaml"]
 environment = """
 VIKUNJA_SERVICE_PUBLICURL=https://vikunja.cianfhoghlaim.ie/
-INFISICAL_HOST=http://infisical-backend:8080
+INFISICAL_URL=http://infisical-backend:8080
 LOCKET_MODE=watch
 """
 
@@ -39,7 +39,7 @@ file_paths = ["compose.yaml","sidecar.yaml","pangolin.yaml","blueprint.yaml"]
 environment = """
 CALCOM_NEXTAUTH_URL=https://calcom.cianfhoghlaim.ie
 CALCOM_ALLOWED_HOSTNAMES=calcom.cianfhoghlaim.ie
-INFISICAL_HOST=http://infisical-backend:8080
+INFISICAL_URL=http://infisical-backend:8080
 LOCKET_MODE=watch
 """
 
@@ -55,6 +55,6 @@ environment = """
 N8N_HOST=n8n.cianfhoghlaim.ie
 N8N_WEBHOOK_URL=https://n8n.cianfhoghlaim.ie/
 GENERIC_TIMEZONE=Europe/Dublin
-INFISICAL_HOST=http://infisical-backend:8080
+INFISICAL_URL=http://infisical-backend:8080
 LOCKET_MODE=watch
 """
