@@ -83,7 +83,7 @@
       "env": {
         "COGNEE_API_URL": "http://localhost:8100",
         "COGNEE_API_KEY": "infisical://dev-baile/cognee/api_key",
-        "LLM_API_KEY": "infisical://dev-baile/deepseek/api_key"
+        "LLM_API_KEY": "${DEEPSEEK_API_KEY}"
       },
       "enabled": true
     },
