@@ -1,15 +1,25 @@
 services:
+  # Locket sidecar template — to be activated after team-workflow migration.
+  # Currently, POCKETID_ENCRYPTION_KEY is injected directly via Komodo env.
+  # When ready, add this file alongside compose in Komodo file_paths and set
+  # LOCKET_MODE=watch with INFISICAL_CLIENT_ID in the stack environment block.
   locket:
     image: ghcr.io/bpbradley/locket:infisical
     container_name: pocket-id-locket
-    restart: unless-stopped
+    restart: always
     user: "65532:65532"
     security_opt:
       - no-new-privileges:true
     cap_drop:
       - ALL
+    environment:
+      - INFISICAL_CLIENT_ID=${INFISICAL_CLIENT_ID}
+      - INFISICAL_PROJECT_ID=${INFISICAL_PROJECT_ID:-f3cff583-b74b-4804-b9d3-db8b68885236}
     command:
       - "--provider=infisical"
+      - "--infisical-url=http://infisical-backend:8080"
+      - "--infisical-default-environment=dev-baile"
+      - "--infisical-default-project-id=f3cff583-b74b-4804-b9d3-db8b68885236"
       - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
       - "--infisical-client-secret=file:/run/secrets/infisical_secret"
       - "--map=/templates:/run/secrets/locket"
@@ -20,16 +30,16 @@ services:
       - ./secrets.env:/templates/secrets.env:ro
       - stack-secrets:/run/secrets/locket
     healthcheck:
-      test: ["CMD", "/locket", "healthcheck"]
+      test: ["CMD", "/usr/local/bin/locket", "healthcheck"]
       interval: 10s
       timeout: 5s
       retries: 3
       start_period: 5s
     networks:
       - stack
+      - infrastructure
 
-  # Replace 'main-service' with the actual name of the primary app container
-  main-service:
+  pocket-id:
     depends_on:
       locket:
         condition: service_healthy
@@ -49,3 +59,9 @@ volumes:
       type: tmpfs
       device: tmpfs
       o: uid=65532,gid=65532,mode=700
+
+networks:
+  stack:
+    driver: bridge
+  infrastructure:
+    external: true
