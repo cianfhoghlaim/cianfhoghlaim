@@ -1,12 +1,17 @@
 """
-Configuration management for Aleyum.
+Configuration management for Croílár.
 
-Provides Pydantic-based settings with environment variable support.
+Provides Pydantic-based settings with environment variable support
+and path-resolution helpers used by dagster assets and pipelines.
 """
 
+from .paths import get_author_dir, get_repo_root, resolve_path
 from .settings import AleyumSettings, get_settings
 
 __all__ = [
     "AleyumSettings",
     "get_settings",
+    "get_repo_root",
+    "get_author_dir",
+    "resolve_path",
 ]

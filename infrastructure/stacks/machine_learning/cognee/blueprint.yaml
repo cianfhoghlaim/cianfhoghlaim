@@ -1,11 +1,25 @@
-private-resources:
-  cognee:
-    name: "Cognee"
-    full-domain: "cognee.cianfhoghlaim.ie"
-    mode: http
-    destination-port: 8080
-    protocol: http
-    sites:
-      - arm1-oci
-    roles:
-      - Member
+# Cognee stack — Cianfhoghlaim Oideachais
+# Multi-dataset knowledge graph for the 5-stage bilingual platform.
+# See: openspec/changes/cianfhoghlaim-oideachais-baml-first/
+
+name: cianfhoghlaim-cognee
+purpose: Knowledge graph memory for Aistear → Primary → Junior Cycle → Senior Cycle → Tertiary
+depends_on:
+  - infrastructure/stacks/engineering/litellm
+  - infrastructure/stacks/storage/lakehouse
+datasets:
+  - oideachais.aistear
+  - oideachais.primary
+  - oideachais.junior_cycle
+  - oideachais.senior_cycle
+  - oideachais.tertiary
+  - oideachais.cross_stage
+cross_stage_edges:
+  - BRIDGES_TO
+  - PREPARES_FOR
+  - PROGRESSES_TO
+  - ASSESSED_BY
+  - REQUIRED_FOR
+  - DELIVERS
+  - LADDERS_INTO
+  - ALTERNATIVE_TO

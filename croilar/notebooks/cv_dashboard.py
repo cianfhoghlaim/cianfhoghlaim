@@ -12,11 +12,12 @@ app = marimo.App(width="full", app_title="Croílár CV Dashboard")
 
 @app.cell
 def __():
-    import marimo as mo
-    import duckdb
-    import altair as alt
-    import polars as pl
     from pathlib import Path
+
+    import altair as alt
+    import duckdb
+    import marimo as mo
+    import polars as pl
     return mo, duckdb, alt, pl, Path
 
 
@@ -40,7 +41,7 @@ def __(duckdb, duckdb_path, mo, pl):
             "SELECT COUNT(*) FROM cv_data.cv_raw"
         ).fetchone()[0]
         conn.close()
-    except Exception as e:
+    except Exception:
         raw_count = 0
 
     mo.statistic(

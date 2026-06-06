@@ -8,12 +8,12 @@ The gateway proxies MCP calls through LiteLLM which manages the
 underlying MCP server connections (stdio, HTTP, streamable-http).
 """
 
-import asyncio
-import httpx
 import logging
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
 from enum import Enum
+from typing import Any, Dict, List, Optional
+
+import httpx
 
 from ..config.settings import get_settings
 

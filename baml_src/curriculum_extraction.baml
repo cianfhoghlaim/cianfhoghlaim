@@ -740,3 +740,270 @@ function ExtractAllPdfMetadata(
     Return the structured extraction as {{ ctx.output_format }}.
   "#
 }
+
+// =============================================================================
+// Senior Cycle (Leaving Certificate) — 50+ subjects, multi-paper, multi-level
+// See: docs/bonneagar/education-subject-inventory.md:107-145
+//      docs/data_engineering/education/Leaving Certificate Subject Analysis Plan.md
+// =============================================================================
+
+enum LeavingCertSubject {
+  LC_MATHS                      @description("Mathematics")
+  LC_APPLIED_MATHS              @description("Applied Mathematics")
+  LC_ENGLISH                    @description("English")
+  LC_GAEILGE                    @description("Gaeilge / Irish")
+  LC_FRENCH                     @description("French")
+  LC_GERMAN                     @description("German")
+  LC_SPANISH                    @description("Spanish")
+  LC_ITALIAN                    @description("Italian")
+  LC_JAPANESE                   @description("Japanese")
+  LC_RUSSIAN                    @description("Russian")
+  LC_ARABIC                     @description("Arabic")
+  LC_MANDARIN                   @description("Mandarin Chinese")
+  LC_LATIN                      @description("Latin")
+  LC_GREEK                      @description("Ancient Greek")
+  LC_CLASSICAL_STUDIES          @description("Classical Studies")
+  LC_HISTORY                    @description("History")
+  LC_GEOGRAPHY                  @description("Geography")
+  LC_PHYSICS                    @description("Physics")
+  LC_CHEMISTRY                  @description("Chemistry")
+  LC_BIOLOGY                    @description("Biology")
+  LC_AGRICULTURAL_SCIENCE       @description("Agricultural Science")
+  LC_BUSINESS                   @description("Business")
+  LC_ACCOUNTING                 @description("Accounting")
+  LC_ECONOMICS                  @description("Economics")
+  LC_HOME_ECONOMICS_SOCIAL      @description("Home Economics — Social and Scientific")
+  LC_ART                        @description("Art")
+  LC_MUSIC                      @description("Music")
+  LC_DCG                        @description("Design and Communication Graphics")
+  LC_ENGINEERING                @description("Engineering")
+  LC_TECHNOLOGY                 @description("Technology")
+  LC_CONSTRUCTION_STUDIES       @description("Construction Studies")
+  LC_PHYSICAL_EDUCATION         @description("Physical Education")
+  LC_COMPUTER_SCIENCE           @description("Computer Science")
+  LC_PHILOSOPHY                  @description("Philosophy")
+  LC_POLITICS_AND_SOCIETY       @description("Politics and Society")
+  LC_RELIGIOUS_EDUCATION        @description("Religious Education")
+  LC_LINK_MODULES_LCVP          @description("Link Modules (LCVP)")
+  LC_TRANSITION_YEAR            @description("Transition Year")
+  LC_CAREERS_PORTFOLIO          @description("Careers Portfolio")
+  LC_LCA_VOCATIONAL_PREP        @description("Leaving Certificate Applied — Vocational Preparation")
+  LC_LCA_ENGLISH_COMM           @description("LCA — English and Communication")
+  LC_LCA_GAEILGE_CUM            @description("LCA — Gaeilge Chumarsáideach")
+  LC_LCA_MATHEMATICAL           @description("LCA — Mathematical Applications")
+  LC_LCA_SOCIAL_EDUCATION       @description("LCA — Social Education")
+  LC_LCA_HOTEL_CATERING         @description("LCA — Hotel, Catering and Tourism")
+  LC_LCA_OFFICE_ADMIN           @description("LCA — Office Administration and Customer Care")
+  LC_LCA_ICT                    @description("LCA — Information and Communication Technology")
+  LC_LCA_ACTIVE_LEISURE         @description("LCA — Active Leisure Studies")
+  LC_LCA_AGRICULTURE            @description("LCA — Agriculture/Horticulture")
+  LC_LCA_CHILDCARE              @description("LCA — Childcare/Community Care")
+  LC_LCA_CRAFT_DESIGN           @description("LCA — Craft and Design")
+  LC_LCA_DANCE                  @description("LCA — Dance")
+  LC_LCA_DRAMA                  @description("LCA — Drama")
+  LC_LCA_ENGINEERING_LCA        @description("LCA — Engineering")
+  LC_LCA_GRAPHICS_CONSTRUCTION  @description("LCA — Graphics and Construction Studies")
+  LC_LCA_HAIR_BEAUTY            @description("LCA — Hair and Beauty")
+  LC_LCA_LEISURE_RECREATION     @description("LCA — Leisure and Recreation")
+  LC_LCA_MUSIC_LCA              @description("LCA — Music")
+  LC_LCA_RELIGIOUS_ED           @description("LCA — Religious Education")
+  LC_LCA_SCIENCE_LCA            @description("LCA — Science")
+  LC_LCA_SIGN_LANGUAGE          @description("LCA — Sign Language")
+  LC_LCA_TECHNOLOGY_LCA         @description("LCA — Technology")
+  LC_LCA_VISUAL_ART             @description("LCA — Visual Art")
+  LC_OTHER                      @description("Fallback for new subjects not yet catalogued")
+}
+
+enum Specialism {
+  SCIENCES
+  LANGUAGES
+  BUSINESS
+  HUMANITIES
+  PRACTICAL
+  ARTS
+  APPLIED
+  INTERDISCIPLINARY
+}
+
+enum AssessmentComponentType {
+  WRITTEN
+  ORAL
+  AURAL
+  PRACTICAL
+  COURSEWORK
+  CBA
+  PROJECT
+  PORTFOLIO
+}
+
+class AssessmentComponent {
+  type AssessmentComponentType
+  weight_pct int
+  duration_minutes int?
+  language string
+  levels ExamLevel[]
+}
+
+enum RubricStyle {
+  PCLM                            @description("Purpose / Coherence / Language / Mechanics — English")
+  SRP                             @description("Significant Relevant Points — Geography, History")
+  EQUATION_STEPS                  @description("Step-by-step equation solving — Mathematics, Physics")
+  KEYWORD_MATCH_DIAGRAM            @description("Mandatory keyword + diagram labels — Biology, Science")
+  COMPREHENSION_EXPRESSION        @description("Compréhension / expression — French, German, Spanish")
+  SECTION_B_KEYWORD                @description("Section B keyword marks — Business, Accounting")
+  DIAGRAM_SKETCH_STEPS            @description("Diagram / sketch + reasoning — Construction Studies, DCG")
+  BALANCED_EQUATION_STATE_SYMBOLS @description("Balanced equations with state symbols — Chemistry")
+  DEFINITION_UNIT_FORMULA          @description("Definition + unit + formula — Physics, Ag Science")
+  RUBRIC_PCLM_IRISH                @description("Cumarsáid / Léamhthuiscint / Litríocht / Gramadach — Gaeilge")
+  LINGUISTIC_PRINCIPLES            @description("Linguistic principles + examples — MFL, Classical languages")
+}
+
+class SpecialismRubric {
+  specialism Specialism
+  rubric_style RubricStyle
+  descriptors RubricDescriptor[]  @description("From junior_cycle.baml (cross-BAML reference)")
+  weight_per_descriptor_pct float?
+}
+
+class SubjectRubric {
+  subject LeavingCertSubject
+  style RubricStyle
+  descriptors RubricDescriptor[]
+  source_url string               @description("Link to NCCA spec or SEC examiner report")
+  document_year int
+}
+
+class RubricScore {
+  subject LeavingCertSubject
+  total_score float               @description("0-100")
+  descriptor_scores map<string, float>  @description("descriptor text → score 0-100")
+  strengths string[]
+  improvements string[]
+  reviewer_notes_en string
+  reviewer_notes_ga string?
+}
+
+class MarkingSchemeDiff {
+  subject LeavingCertSubject
+  year_a int
+  year_b int
+  added_questions string[]        @description("Question IDs only in year_b")
+  removed_questions string[]      @description("Question IDs only in year_a")
+  changed_marks map<string, int>   @description("Question ID → year_b marks - year_a marks")
+  topic_drift_en string           @description("Plain English summary of the drift")
+  topic_drift_ga string?
+}
+
+class ExtractionBudget {
+  session_id string
+  papers_extracted int            @description("Number of papers extracted in this session")
+  tokens_consumed int
+  last_extraction_at string
+  reset_at string                 @description("ISO 8601 timestamp when the budget resets")
+  remaining_papers int            @description("5 - papers_extracted, default daily budget")
+}
+
+function ExtractSubjectRubric(
+  text: string,
+  subject: LeavingCertSubject
+) -> SubjectRubric {
+  client "litellm/gemini-2.0-flash"
+  prompt #"
+    You are an expert Irish Leaving Certificate rubric analyst.
+
+    Extract the per-subject rubric for {{ subject }}.
+    Identify the RubricStyle (PCLM, SRP, EQUATION_STEPS, etc.) and the list of
+    RubricDescriptors with their weights.
+
+    SUBJECT: {{ subject }}
+    Text: {{ text }}
+
+    Return SubjectRubric as {{ ctx.output_format }}.
+  "#
+}
+
+function ScoreEssayAgainstRubric(
+  essay: string,
+  rubric: SubjectRubric
+) -> RubricScore {
+  client "litellm/anthropic/claude-sonnet-4-20250514"
+  prompt #"
+    You are an expert Irish Leaving Certificate assessor for {{ rubric.subject }}.
+
+    Score the student's essay against the rubric descriptors.
+    Award a 0-100 score per descriptor. Summarise strengths, improvements,
+    and reviewer notes in both English and Irish.
+
+    ESSAY:
+    {{ essay }}
+
+    RUBRIC:
+    Style: {{ rubric.style }}
+    Descriptors:
+    {% for d in rubric.descriptors %}
+    - {{ d.text_en }}
+    {% endfor %}
+
+    Return RubricScore as {{ ctx.output_format }}.
+  "#
+}
+
+function CompareMarkingSchemes(
+  year_a: int,
+  year_b: int,
+  subject: LeavingCertSubject
+) -> MarkingSchemeDiff {
+  client "litellm/gemini-2.0-flash"
+  prompt #"
+    You are an expert Irish Leaving Certificate marking-scheme analyst.
+
+    Compare the {{ subject }} marking schemes for year {{ year_a }} and year {{ year_b }}.
+    Identify added questions, removed questions, changed marks, and the topic drift.
+    Produce a bilingual summary.
+
+    Return MarkingSchemeDiff as {{ ctx.output_format }}.
+  "#
+}
+
+function LazyExtractExamPaper(
+  text: string,
+  subject: LeavingCertSubject,
+  year: int,
+  level: ExamLevel,
+  paper_number: int
+) -> ExamPaper {
+  client "litellm/gemini-2.0-flash"
+  prompt #"
+    You are an expert at analyzing Irish State Examination papers.
+
+    Extract the complete structure of this examination paper on-demand.
+    This is the LAZY extraction path — the SPA will only call it when the user
+    opens a specific past paper, and the result is memoised in LanceDB.
+
+    PAPER DETAILS:
+    Subject: {{ subject }}
+    Year: {{ year }}
+    Level: {{ level }}
+    Paper: {{ paper_number }}
+
+    DOCUMENT TEXT:
+    {{ text }}
+
+    Extract:
+    1. General instructions and duration
+    2. Each section with its title and instructions
+    3. All questions with:
+       - Question numbers (including sub-parts)
+       - Marks allocated
+       - Question type (MCQ, short answer, essay, etc.)
+       - Topic/strand covered
+       - The actual question text
+    4. Materials allowed (calculators, log tables, etc.)
+
+    For Mathematics/Science: identify calculation vs. theory questions.
+    For Languages: identify comprehension, writing, aural components.
+
+    Return as {{ ctx.output_format }}.
+  "#
+}
+

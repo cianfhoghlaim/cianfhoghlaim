@@ -1,75 +1,103 @@
-# Cognee v1.1 — AI Memory Platform (Docker)
-# Uses pre-built cognee/cognee:latest image with Neo4j backend
+# Cognee knowledge graph stack for Cianfhoghlaim Oideachais.
+# Serves 6 Cognee datasets (aistear, primary, junior_cycle, senior_cycle, tertiary, cross_stage)
+# via the REST API on port 8000. Joins the lakehouse_lakehouse external network.
 #
-# Usage:
-#   docker compose -f compose.yaml up -d
-#   # API at http://localhost:8000
-#   # Docs at http://localhost:8000/docs
-#
-
-name: cognee
+# To start: docker compose -f compose.yaml -f sidecar.yaml up -d
 
 services:
   cognee:
-    image: cognee/cognee:latest
-    container_name: cognee
+    image: cognee-ai/cognee:latest
+    container_name: cianfhoghlaim-cognee
     restart: unless-stopped
     ports:
-      - "8100:8000"
-      - "5678:5678"
+      - "8000:8000"
+    env_file:
+      - path: /run/secrets/locket/secrets.env
+        required: false
     environment:
-      # LLM: OpenAI (via OPENAI_API_KEY from env)
-      - LLM_API_KEY=${DEEPSEEK_API_KEY}
-      - LLM_PROVIDER=openai
-      - LLM_MODEL=deepseek-chat
-      - LLM_ENDPOINT=https://api.deepseek.com/v1
-      - EMBEDDING_PROVIDER=openai
-      - EMBEDDING_MODEL=text-embedding-3-small
-      - EMBEDDING_API_KEY=${DEEPSEEK_API_KEY}
-      - EMBEDDING_ENDPOINT=https://api.deepseek.com/v1
-      # Embedding
-      - EMBEDDING_PROVIDER=openai
-      - EMBEDDING_MODEL=text-embedding-3-small
-      # Graph: Neo4j
-      - GRAPH_DATABASE_PROVIDER=neo4j
-      - GRAPH_DATABASE_URL=bolt://host.docker.internal:7687
-      - GRAPH_DATABASE_USERNAME=neo4j
-      - GRAPH_DATABASE_PASSWORD=devpassword
-      # Vector: LanceDB
-      - VECTOR_DATABASE_PROVIDER=lancedb
-      - VECTOR_DATABASE_URL=/data/lancedb
-      # Disable multi-user access control for local use
-      - ENABLE_BACKEND_ACCESS_CONTROL=false
-      - CACHING=false
-      # Data persistence
-      - DATA_PATH=/data
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    volumes:
-      - cognee_data:/data
+      LLM_API_KEY: ${LITELLM_API_KEY:-sk-1234}
+      LLM_PROVIDER: litellm
+      LLM_BASE_URL: http://litellm:4000/v1
+      LLM_MODEL: gemini-2.0-flash
+      COGNEE_DATABASES: oideachais.aistear,oideachais.primary,oideachais.junior_cycle,oideachais.senior_cycle,oideachais.tertiary,oideachais.cross_stage
+      COGNEE_STORAGE: postgresql
+      COGNEE_POSTGRES_HOST: cognee-postgres
+      COGNEE_POSTGRES_PORT: "5432"
+      COGNEE_POSTGRES_USER: cognee
+      COGNEE_POSTGRES_PASSWORD: ${COGNEE_POSTGRES_PASSWORD:-devpassword}
+      COGNEE_POSTGRES_DB: cognee_oideachais
+      VECTOR_DB_PROVIDER: pgvector
+      GRAPH_DATABASE_PROVIDER: postgres
+      LANCEDB_URI: rest://lakehouse-lance-namespace:8182
+      LANCEDB_API_KEY: ${LANCEDB_API_KEY:-devtoken}
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: "4"
+          memory: 8G
+    depends_on:
+      cognee-postgres:
+        condition: service_healthy
+      locket:
+        condition: service_healthy
     networks:
-      - cognee
+      - lakehouse
 
-  neo4j:
-    image: neo4j:5.26.2
-    container_name: cognee-neo4j
-    profiles:
-      - neo4j
-    ports:
-      - "7474:7474"
-      - "17687:7687"
+  cognee-postgres:
+    image: pgvector/pgvector:pg17
+    container_name: cianfhoghlaim-cognee-postgres
+    restart: unless-stopped
     environment:
-      - NEO4J_AUTH=neo4j/devpassword
-      - NEO4J_PLUGINS=["apoc", "graph-data-science"]
+      POSTGRES_USER: cognee
+      POSTGRES_PASSWORD: ${COGNEE_POSTGRES_PASSWORD:-devpassword}
+      POSTGRES_DB: cognee_oideachais
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "cognee", "-d", "cognee_oideachais"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
     volumes:
-      - cognee_neo4j_data:/data
+      - cognee-postgres-data:/var/lib/postgresql/data
     networks:
-      - cognee
+      - lakehouse
+    env_file:
+      - path: /run/secrets/locket/secrets.env
+        required: false
+
+  locket:
+    image: ghcr.io/bpbradley/locket:infisical
+    container_name: cianfhoghlaim-cognee-locket
+    user: "65532"
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "/locket", "healthcheck"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+    volumes:
+      - type: tmpfs
+        target: /run/secrets/locket
+        tmpfs:
+          mode: 0700
+    env_file:
+      - ./secrets.env
+    networks:
+      - lakehouse
 
 volumes:
-  cognee_data:
-  cognee_neo4j_data:
+  cognee-postgres-data:
 
 networks:
-  cognee:
-    driver: bridge
+  lakehouse:
+    name: lakehouse_lakehouse
+    external: true

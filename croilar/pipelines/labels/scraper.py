@@ -22,8 +22,6 @@ Usage:
 """
 
 import asyncio
-import hashlib
-import json
 import os
 import re
 from dataclasses import dataclass
@@ -38,9 +36,7 @@ from pipelines.labels.base import (
     LabelRelease,
     get_label_url,
     normalize_artwork_url,
-    parse_duration,
 )
-
 
 # Firecrawl API configuration
 FIRECRAWL_API_URL = os.environ.get("FIRECRAWL_API_URL", "https://api.firecrawl.dev/v1")

@@ -15,7 +15,6 @@ from typing import Any, Iterator
 import dlt
 from dlt.sources.rest_api import RESTAPIConfig, rest_api_resources
 
-
 # Aleyum GitHub username
 ALEYUM_GITHUB_USERNAME = "Yedya"
 
@@ -129,8 +128,9 @@ def get_repo_readmes(
     Yields:
         README data for each repository
     """
-    import requests
     import base64
+
+    import requests
 
     headers = {
         "Accept": "application/vnd.github.v3+json",
@@ -190,8 +190,8 @@ def get_recent_commits(
     Yields:
         Commit data for each repository
     """
-    import requests
     import pendulum
+    import requests
 
     headers = {"Accept": "application/vnd.github.v3+json"}
     if access_token:

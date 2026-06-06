@@ -6,6 +6,7 @@ Uses Pydantic Settings for environment variable loading and validation.
 
 from functools import lru_cache
 from typing import Optional
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 

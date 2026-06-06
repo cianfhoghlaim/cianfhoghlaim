@@ -7,12 +7,11 @@ Note: Only download audio you have rights to use. This is intended for
 downloading your own published tracks for portfolio purposes.
 """
 
-import os
 import hashlib
 import tempfile
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterator
-from dataclasses import dataclass
 
 import dlt
 
@@ -44,8 +43,8 @@ def download_track(url: str, output_dir: Path) -> Path | None:
     Returns:
         Path to downloaded file or None if failed
     """
-    import subprocess
     import json
+    import subprocess
 
     # Get track info first
     info_cmd = ["yt-dlp", "--dump-json", "--no-download", url]
@@ -210,8 +209,9 @@ def run_download_pipeline(
     Returns:
         LoadInfo from the pipeline run
     """
-    from pipelines.soundcloud.scraper import SoundCloudScraper
     import asyncio
+
+    from pipelines.soundcloud.scraper import SoundCloudScraper
 
     # First, scrape track metadata
     print(f"Scraping tracks from {username}...")

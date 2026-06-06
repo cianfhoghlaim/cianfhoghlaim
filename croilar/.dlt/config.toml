@@ -1,0 +1,21 @@
+# DLT configuration for croilar pipelines
+# See https://dlthub.com/docs/general-usage/dlt-config-file
+
+[runtime]
+log_level = "INFO"
+# Sentry is wired in via the _shared/observability layer when DLT_SENTRY_DSN is set
+sentry_dsn = "${DLT_SENTRY_DSN}"
+
+# Telemetry — opt-out by setting DLT_DISABLE_TELEMETRY=true
+disable_telemetry = false
+
+[normalize.data_writer]
+# Use parquet for columnar analytics workloads (DuckDB / DuckLake)
+file_format = "parquet"
+# Compression reduces R2 storage costs
+disable_compression = false
+
+[load]
+# Retry on transient S3 failures (R2 returns 503s during failover)
+retry_on_failed_load = true
+max_retries = 3

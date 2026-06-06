@@ -14,11 +14,10 @@ import os
 from dagster import (
     Definitions,
     load_assets_from_modules,
-    load_assets_from_package_module,
 )
 from dagster_dlt import DagsterDltResource
 
-from dagster_assets import dlt_assets, cocoindex_assets, cv_assets
+from dagster_assets import cocoindex_assets, cv_assets, dlt_assets
 from dagster_assets.schedules import (
     all_jobs,
     all_schedules,

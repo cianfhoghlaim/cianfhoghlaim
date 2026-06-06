@@ -22,15 +22,14 @@ Sensors:
 
 from dagster import (
     AssetSelection,
-    ScheduleDefinition,
-    define_asset_job,
-    sensor,
+    DefaultSensorStatus,
     RunRequest,
+    ScheduleDefinition,
     SensorEvaluationContext,
     SkipReason,
-    DefaultSensorStatus,
+    define_asset_job,
+    sensor,
 )
-
 
 # Asset selections
 MUSIC_INGESTION = AssetSelection.groups("spotify_manual", "soundcloud_manual", "labels_manual")
@@ -118,8 +117,9 @@ monthly_identity_schedule = ScheduleDefinition(
 )
 def new_artwork_sensor(context: SensorEvaluationContext):
     """Trigger pipeline when new artwork arrives in the DuckDB store."""
-    import duckdb
     import os
+
+    import duckdb
 
     duckdb_path = os.environ.get("DUCKDB_PATH", "./croilar.duckdb")
 
@@ -151,11 +151,9 @@ def new_artwork_sensor(context: SensorEvaluationContext):
 )
 def cv_document_sensor(context: SensorEvaluationContext):
     """Trigger CV pipeline when new PDFs appear in the author directory."""
-    from pathlib import Path
+    from _shared.config import get_author_dir
 
-    author_dir = Path(__file__).parent.parent.parent.parent.parent / (
-        "author_cian_deacy_lyons_mac_an_déisigh_uí_liatháin"
-    )
+    author_dir = get_author_dir()
     pdf_count = len(list(author_dir.rglob("*.pdf")))
 
     cursor = int(context.cursor or "0")

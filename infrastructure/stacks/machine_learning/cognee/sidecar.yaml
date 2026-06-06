@@ -1,51 +1,32 @@
+# Cognee stack sidecar — Infisical Locket secret injection.
+# Injects COGNEE_POSTGRES_PASSWORD, LITELLM_API_KEY, LANCEDB_API_KEY.
 services:
   locket:
     image: ghcr.io/bpbradley/locket:infisical
-    container_name: cognee-locket
     restart: unless-stopped
-    user: "65532:65532"
-    security_opt:
-      - no-new-privileges:true
+    container_name: cianfhoghlaim-cognee-locket
+    user: "65532"
     cap_drop:
       - ALL
-    command:
-      - "--provider=infisical"
-      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
-      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
-      - "--map=/templates:/run/secrets/locket"
-      - "--mode=${LOCKET_MODE:-watch}"
-    secrets:
-      - infisical_secret
-    volumes:
-      - ./secrets.env:/templates/secrets.env:ro
-      - stack-secrets:/run/secrets/locket
+    security_opt:
+      - no-new-privileges:true
     healthcheck:
       test: ["CMD", "/locket", "healthcheck"]
       interval: 10s
-      timeout: 5s
+      timeout: 3s
       retries: 3
-      start_period: 5s
-    networks:
-      - stack
-
-  # Replace 'main-service' with the actual name of the primary app container
-  main-service:
-    depends_on:
-      locket:
-        condition: service_healthy
+      start_period: 15s
     volumes:
-      - stack-secrets:/run/secrets/locket:ro
+      - type: tmpfs
+        target: /run/secrets/locket
+        tmpfs:
+          mode: 0700
     env_file:
-      - /run/secrets/locket/secrets.env
+      - ./secrets.env
+    networks:
+      - lakehouse
 
-secrets:
-  infisical_secret:
-    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
-
-volumes:
-  stack-secrets:
-    driver: local
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-      o: uid=65532,gid=65532,mode=700
+networks:
+  lakehouse:
+    name: lakehouse_lakehouse
+    external: true

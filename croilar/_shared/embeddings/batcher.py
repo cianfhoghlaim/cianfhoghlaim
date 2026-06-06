@@ -9,8 +9,8 @@ This module enforces minimum batch sizes and provides utilities
 for efficient embedding generation.
 """
 
-from typing import List, Optional, Callable, Any
 import logging
+from typing import Callable, List
 
 logger = logging.getLogger(__name__)
 

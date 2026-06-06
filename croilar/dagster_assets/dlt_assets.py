@@ -15,15 +15,14 @@ Reference:
     https://docs.dagster.io/integrations/libraries/dlt/dlt-pythonic
 """
 
-import os
-from typing import Any
 
 from dagster import (
     AssetExecutionContext,
     AssetKey,
-    asset,
     MaterializeResult,
+    asset,
 )
+
 # Note: DagsterDltResource and dlt_assets would be used for full dagster-dlt integration,
 # but we use manual @asset definitions to avoid DLT config init at import time.
 
@@ -114,8 +113,9 @@ def label_ingestion_asset(context: AssetExecutionContext) -> MaterializeResult:
 )
 def artwork_processing_asset(context: AssetExecutionContext) -> MaterializeResult:
     """Run artwork processing pipeline."""
-    from pipelines.artwork import run_artwork_pipeline
     import duckdb
+
+    from pipelines.artwork import run_artwork_pipeline
 
     conn = duckdb.connect("./croilar.duckdb")
     urls = []

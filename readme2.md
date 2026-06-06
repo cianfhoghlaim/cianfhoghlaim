@@ -1,12 +1,10 @@
-# Cianfhoghlaim & Awen Hub
-*An Agentic Educational MMO and Data Platform for Celtic Languages and the Irish Curriculum.*
+# Cianfhoghlaim Oideachais
+*A Bilingual, BAML-First Agentic Platform for the Irish Education System — Aistear, Primary, Junior Cycle, Senior Cycle, Tertiary.*
 
 ![Architecture Overview](docs/images/hero_banner.jpg) <!-- Update path if needed -->
 
 ## The Vision
-Cianfhoghlaim (and its interactive frontend, **Awen Hub**) represents a paradigm shift from static Learning Management Systems. It is a decentralised, AI-driven educational MMO. It fuses the comprehensive scale of the **Irish Leaving Certificate** and **Junior Cycle** curricula with cutting-edge web architecture. 
-
-By leveraging autonomous agents, semantic code/knowledge bases, and a Web3 "Learn-to-Earn" economy (utilising the x402 protocol and a dual-token Anam system), Awen Hub provides hyper-personalised, interactive learning experiences wrapped in immersive Celtic RPG aesthetics.
+Cianfhoghlaim Oideachais is a bilingual (EN/GA) agentic platform that covers the **entire** Irish education system: Aistear (early childhood), Primary, Junior Cycle, Senior Cycle, and Tertiary (CAO + QQI-FET + Apprenticeship). It pairs the BAML-extracted knowledge of NCCA specifications, SEC exam papers, marking schemes, Chief Examiner reports, and CAO/NUI matriculation rules with an Agno stage-team architecture, a Cognee-backed knowledge graph, and a CopilotKit/AGUI-powered TanStack Start front-end.
 
 ---
 
