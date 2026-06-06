@@ -20,12 +20,26 @@ from pathlib import Path
 
 from agno.agent import Agent
 from agno.db.sqlite import SqliteDb
-from agno.models.anthropic import Claude
-from agno.models.google import Gemini
 from agno.models.openai import OpenAIChat
 from agno.team import Team
-from agno.tools.duckduckgo import DuckDuckGoTools
-from agno.tools.newspaper4k import Newspaper4kTools
+
+# Lazy imports for optional dependencies
+try:
+    from agno.models.anthropic import Claude
+except ImportError:
+    Claude = None
+try:
+    from agno.models.google import Gemini
+except ImportError:
+    Gemini = None
+try:
+    from agno.tools.duckduckgo import DuckDuckGoTools
+except ImportError:
+    DuckDuckGoTools = None
+try:
+    from agno.tools.newspaper4k import Newspaper4kTools
+except ImportError:
+    Newspaper4kTools = None
 from pydantic import BaseModel, Field
 
 # Session storage configuration
@@ -159,10 +173,13 @@ CLAUDE_MODEL = os.getenv("AGNO_CLAUDE_MODEL", "claude-sonnet-4-20250514")
 
 
 def get_model(model_type: str = "default"):
-    """Get the appropriate model based on configuration."""
-    if model_type == "gemini":
+    """Get the appropriate model based on configuration.
+    
+    Falls back to OpenAIChat (LiteLLM) when optional model packages (anthropic, google-genai) are not installed.
+    """
+    if model_type == "gemini" and Gemini is not None:
         return Gemini(id=GEMINI_MODEL)
-    elif model_type == "claude":
+    elif model_type == "claude" and Claude is not None:
         return Claude(id=CLAUDE_MODEL)
     else:
         return OpenAIChat(id=DEFAULT_MODEL)
@@ -195,7 +212,7 @@ research_agent = Agent(
     role="Discovers and synthesizes research from academic sources and Celtic "
     "language resources. Searches GAOIS, arXiv, ACL Anthology, and Celtic "
     "digital humanities collections.",
-    tools=[DuckDuckGoTools(), Newspaper4kTools()],
+    tools=[t() for t in [DuckDuckGoTools, Newspaper4kTools] if t is not None],
     instructions=[
         "Search for peer-reviewed research and authoritative Celtic sources.",
         "Prioritize Irish-language and Celtic-focused resources:",
@@ -278,7 +295,7 @@ statistics_agent = Agent(
     role="Analyzes Irish education statistics from Department of Education, "
     "CSO, NCCA, and SEC. Provides trends, comparisons, and visualizations "
     "for metrics like enrollment, attainment, and Irish language uptake.",
-    tools=[DuckDuckGoTools()],  # Placeholder - will use stats tools
+    tools=[DuckDuckGoTools()] if DuckDuckGoTools is not None else [],  # Placeholder - will use stats tools
     instructions=[
         "Reference official sources (gov.ie, cso.ie, ncca.ie, examinations.ie).",
         "Provide year-over-year trend analysis when available.",
