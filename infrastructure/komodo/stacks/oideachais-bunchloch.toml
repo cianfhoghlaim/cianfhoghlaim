@@ -1,0 +1,62 @@
+# =============================================================================
+# OIDEACHAIS-BUNCHLOCH — Cianfhoghlaim Education Platform on MacBook M4
+# =============================================================================
+# Replaces the old oideachais/compose.yaml manual docker compose.
+# Deploys 3 services (dagster, api, frontend) with Locket secret injection
+# and Pangolin routing. Joins lakehouse_lakehouse for LiteLLM, Garage S3,
+# Lance Namespace, and LanceDB.
+#
+# Server: bunchloch (MacBook M4 Max, ~14 cores, 48 GB RAM)
+# Routes via: Pangolin on arm1-oci (oideachais.cianfhoghlaim.ie)
+# Secrets via: Locket + Infisical vault (dev-baile environment)
+# =============================================================================
+
+[[stack]]
+name = "oideachais-bunchloch"
+description = "Cianfhoghlaim Oideachais education platform — Dagster pipelines, FastAPI AG-UI streaming, TanStack Start SPA"
+tags = [
+  "host:bunchloch",
+  "tier:development",
+  "type:education",
+  "pipeline:sruth",
+  "stack:oideachais",
+]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/oideachais"
+file_paths = [
+  "oideachais/compose.yaml",
+  "oideachais/sidecar.yaml",
+]
+environment = """
+DAGSTER_PORT=3335
+API_PORT=8000
+FRONTEND_PORT=3000
+ENVIRONMENT=development
+LOG_LEVEL=DEBUG
+LLM_BASE_URL=http://litellm:4000/v1
+--mount type=bind,source=/Users/cianmacandeisigh/dev/kings_college_galway/stedding,target=/stedding,readonly
+"""
+
+[stack.config.repo]
+server_id = "arm1-oci"
+git_account = "cianfhoghlaim"
+repo = "kings_college_galway"
+branch = "main"
+
+# -----------------------------------------------------------------------------
+# Resource limits (MacBook M4 Max — share with other stacks)
+# -----------------------------------------------------------------------------
+# Dagster: 4 CPUs, 8 GB (pipeline orchestration + DuckLake + LanceDB)
+# API:     2 CPUs, 4 GB (FastAPI + BAML extraction + AG-UI streaming)
+# Frontend: 1 CPU, 1 GB (TanStack Start SPA dev server)
+
+# -----------------------------------------------------------------------------
+# Procedure: deploy-oideachais-bunchloch
+# -----------------------------------------------------------------------------
+# 1. Deploy oideachais-bunchloch stack (docker compose up -d via Komodo)
+# 2. Apply oideachais Pangolin blueprint (registers routes on arm1-oci)
+# 3. Verify health: dagster (:3335/health), api (:8000/health), frontend (:3000)
+#
+# Run via: km run procedure deploy-oideachais-bunchloch

@@ -1,0 +1,85 @@
+# =============================================================================
+# DEPLOY OIDEACHAIS-BUNCHLOCH PROCEDURE
+# =============================================================================
+# Deploys the Cianfhoghlaim Oideachais education platform to bunchloch (MacBook M4).
+# Replaces the old oideachais/compose.yaml manual deployment.
+#
+# Architecture:
+#   bunchloch:3866 (MacBook M4 Max) — dagster (:3335), api (:8000), frontend (:3000)
+#   Routed through Pangolin on arm1-oci:
+#     oideachais.cianfhoghlaim.ie → bunchloch:3000 (Pocket ID SSO)
+#     api.oideachais.cianfhoghlaim.ie → bunchloch:8000 (API key auth)
+#     dagster.oideachais.cianfhoghlaim.ie → bunchloch:3335 (Pocket ID SSO, VPN-only)
+#
+# Secrets injected via Locket + Infisical vault (dev-baile).
+#
+# Usage:
+#   km run procedure deploy-oideachais-bunchloch
+# =============================================================================
+
+[[procedure]]
+name = "deploy-oideachais-bunchloch"
+description = "Deploy Oideachais education platform to bunchloch (MacBook M4)"
+
+# =============================================================================
+# STAGE 1: Dependency Services (bunchloch + arm1-oci)
+# =============================================================================
+# Dependencies that must be running before oideachais starts:
+#   - lakehouse (Garage S3 + Postgres + Lakekeeper + Lance Namespace) → arm1-oci
+#   - litellm (LLM gateway) → bunchloch or arm1-oci
+#   - lancedb (vector database viewer) → bunchloch
+#   - langfuse (LLM observability) → bunchloch
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "dependency-services"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "lakehouse" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "litellm" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "lancedb" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "langfuse" } }
+
+# =============================================================================
+# STAGE 2: Oideachais Platform (bunchloch)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "oideachais-platform"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "oideachais-bunchloch" } }
+
+# =============================================================================
+# STAGE 3: Pangolin Routes (arm1-oci)
+# =============================================================================
+# Apply the Oideachais routing blueprint via Pangolin Integration API.
+# Registers:
+#   - oideachais.cianfhoghlaim.ie → bunchloch:3000
+#   - api.oideachais.cianfhoghlaim.ie → bunchloch:8000
+#   - dagster.oideachais.cianfhoghlaim.ie → bunchloch:3335
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "pangolin-routes"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "apply-oideachais-routes" } }
+
+# =============================================================================
+# STAGE 4: Health Verification (bunchloch)
+# =============================================================================
+# Verify all 3 services are healthy after deployment.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "oideachais-health-check" } }
