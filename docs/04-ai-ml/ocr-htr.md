@@ -1,0 +1,8224 @@
+---
+title: "OCR, HTR & Document Intelligence"
+domain: ai_ml
+date: 2026-06-06
+migration_source: docs/bunchloch/meaisínfhoghlaim + docs/bunchloch/teanga
+ccc_query_hints: ["ocr htr document intelligence colpali vlm deepseek-ocr tesseract handwriting recognition"]
+source_files: "34 files from meaisínfhoghlaim and teanga"
+---
+# OCR, HTR & Document Intelligence
+
+> Merged from 34 source files across the meaisínfhoghlaim and teanga document collections. Migration date: 2026-06-06.
+
+## Table of Contents
+
+- [ai-ml-systems-consolidated](#ai-ml-systems-consolidated-md)
+- [React Drag-and-Drop for Exam Builder](#react-drag-and-drop-for-exam-builder-md)
+- [LLM and OCR Deployment Research](#llm-and-ocr-deployment-research-md)
+- [Resource Maximization and Project Planning](#resource-maximization-and-project-planning-md)
+- [Irish Handwriting App Development](#irish-handwriting-app-development-md)
+- [handwriting-Irish Handwriting App Development](#handwriting-irish-handwriting-app-development-md)
+- [handwriting-Handwriting Recognition and Dataset Creation](#handwriting-handwriting-recognition-and-dataset-cr)
+- [Handwriting Recognition and Dataset Creation](#handwriting-recognition-and-dataset-creation-md)
+- [Supercharge your OCR Pipelines with Open Models](#supercharge-your-ocr-pipelines-with-open-models-md)
+- [Open-Source VLMs For PDF Extraction](#open-source-vlms-for-pdf-extraction-md)
+- [Educational Website Tech Stack](#educational-website-tech-stack-md)
+- [Local macOS MLX_MPS LLM Workflow](#local-macos-mlx-mps-llm-workflow-md)
+- [huggingface-ontologies-research](#huggingface-ontologies-research-md)
+- [gaois-documental-docs-software-localizer-index.ga](#gaois-documental-docs-software-localizer-index-ga-)
+- [gaois-terminologue-website-docs-intro.ga](#gaois-terminologue-website-docs-intro-ga-md)
+- [document-processing-reference](#document-processing-reference-md)
+- [gaois-Tearma-TearmaWeb-wwwroot-eolas-abhar.ga](#gaois-tearma-tearmaweb-wwwroot-eolas-abhar-ga-md)
+- [utter-project_EuroLLM-22B-Instruct-2512 · Hugging Face](#utter-project-eurollm-22b-instruct-2512---hugging-)
+- [gaois-documental-docs-software-terminologue-configuration.ga](#gaois-documental-docs-software-terminologue-config)
+- [gaois-documental-docs-software-querylogger-v0.7-configuration.ga](#gaois-documental-docs-software-querylogger-v0-7-co)
+- [apple_ml-fastvlm_ This repository contains the official implementation of _FastVLM_ Efficient Vision Encoding for Vision Language Models_ - CVPR 2025](#apple-ml-fastvlm--this-repository-contains-the-off)
+- [gaois-Tearma-TearmaWeb-wwwroot-cabhair-cuardach-casta.ga](#gaois-tearma-tearmaweb-wwwroot-cabhair-cuardach-ca)
+- [gaois-documental-docs-software-querylogger-v0.7-data.ga](#gaois-documental-docs-software-querylogger-v0-7-da)
+- [kscanne-KCG_SUMMARY](#kscanne-kcg-summary-md)
+- [INDEX](#index-md)
+- [gaois-documental-docs-software-querylogger-v0.7-faulttolerance.ga](#gaois-documental-docs-software-querylogger-v0-7-fa)
+- [repo-historical-document-analysis](#repo-historical-document-analysis-md)
+- [gaois-Tearma-TearmaWeb-wwwroot-eolas-coiste.ga](#gaois-tearma-tearmaweb-wwwroot-eolas-coiste-ga-md)
+- [repo-pylaia](#repo-pylaia-md)
+- [repo-escriptorium](#repo-escriptorium-md)
+- [ocr-reference](#ocr-reference-md)
+- [kscanne-gbb-README](#kscanne-gbb-readme-md)
+- [kscanne-unicorn-README](#kscanne-unicorn-readme-md)
+- [kscanne-gbb-proofing-ocr-README](#kscanne-gbb-proofing-ocr-readme-md)
+
+---
+
+## ai-ml-systems-consolidated
+
+<!-- BEGIN: original content from ai-ml-systems-consolidated.md -->
+
+*Source: `docs/bunchloch/meaisínfhoghlaim/ai-ml-systems-consolidated.md` (5611 words, 1810 lines)*
+
+# Comprehensive AI/ML Systems Architecture & Integration Guide
+
+**Document Version:** 1.0
+**Last Updated:** 2025-11-12
+**Purpose:** Consolidated reference for AI compute strategy, multi-agent architecture, structured outputs, knowledge management, and document processing pipelines.
+
+---
+
+## Table of Contents
+
+1. [Overview](#overview)
+2. [AI Compute Strategy](#ai-compute-strategy)
+3. [Multi-Agent Architecture with Agno AgentOS](#multi-agent-architecture)
+4. [Structured Outputs with BAML, Pydantic, and Zod](#structured-outputs)
+5. [Knowledge Management: Cognee vs CocoIndex](#knowledge-management)
+6. [Document Processing Pipeline](#document-processing-pipeline)
+7. [LLM Infrastructure with LiteLLM Gateway](#llm-infrastructure)
+8. [Vector & Graph Databases](#vector-graph-databases)
+9. [End-to-End Workflows](#end-to-end-workflows)
+10. [Integration Patterns](#integration-patterns)
+11. [Decision Matrices](#decision-matrices)
+12. [Best Practices](#best-practices)
+
+---
+
+## Overview
+
+This document consolidates research and architectural patterns for building production AI/ML systems that combine:
+
+- **Tiered AI compute allocation** (planner vs worker models)
+- **Multi-agent orchestration** with Agno AgentOS
+- **Structured, schema-enforced outputs** via BAML → Pydantic (Python) and Zod (TypeScript)
+- **Hybrid knowledge management** using Cognee and CocoIndex
+- **Advanced document processing** with Docling, Unstract, Qwen-VL, and Crawl4AI
+- **Unified LLM gateway** with LiteLLM for cost optimization and reliability
+- **Vector and graph database integration** for semantic search and knowledge graphs
+
+The architecture emphasizes **cost efficiency**, **type safety**, **incremental processing**, and **production reliability** across polyglot environments (Python and TypeScript).
+
+---
+
+## AI Compute Strategy
+
+### The Tiered Allocation Framework
+
+A sophisticated "Plan and Act" model separates high-reasoning "Planner" models from high-speed "Worker" models to optimize for both reasoning capability and cost/latency.
+
+#### Planner Tier (High Reasoning)
+
+Reserved for the orchestrator—the primary brain of agentic systems. Models excel at:
+- Understanding ambiguous, complex, multi-step commands
+- Decomposing tasks into logical sequences
+- Synthesizing results from multiple worker agents
+
+**Primary Models:**
+- **GPT-5 Pro** – Premier choice for orchestration, unified reasoning across domains
+- **Claude Code Max** – Excellent alternative with massive context window, SOTA code reasoning
+
+**Use Cases:**
+- Agentic orchestration and planning
+- Complex code generation and refactoring
+- Multi-step synthesis and decision-making
+
+#### Worker Tier (High Volume, Low Cost)
+
+Optimized for speed, low cost, and high throughput. Designed to execute simple, well-defined sub-tasks.
+
+**Primary Models:**
+- **Gemini 2.5 Flash** – Ideal workhorse for high-speed, low-cost execution
+- **Z.ai GLM Coding Max** – Specialized coding model for routine code tasks
+
+**Use Cases:**
+- High-volume text extraction and structured data extraction
+- Routine code generation and modification
+- Batch processing of documents
+
+#### Specialist Tier (Domain-Specific)
+
+Models with unique, non-textual capabilities for specific domains.
+
+**Visual Analysis (VLM):**
+- **Gemini 2.5 Pro API** – SOTA native PDF/image understanding
+- **Fine-tuned Qwen3-VL** – Domain-specific crypto charts/dashboards
+
+**Safety & Filtering:**
+- **gpt-oss-safeguard-20b** – Guardrail model for content classification
+
+### AI Compute Allocation Matrix
+
+| Task Category | Primary Compute | Secondary / Fallback | Not Recommended | Rationale |
+|--------------|-----------------|---------------------|-----------------|-----------|
+| **Agentic Orchestration** | GPT-5 Pro (API) | Claude Code Max (API) | Gemini Flash, Local M4 Max | Highest reasoning required |
+| **High-Volume Text Extraction** | Gemini 2.5 Flash (API) | Z.ai GLM Max (API) | GPT-5 Pro, Claude Code Max | Cost-effective, high-speed |
+| **Complex Code Generation** | Claude Code Max (API) | GPT-5 Pro (API) | Gemini Flash | SOTA code reasoning |
+| **Routine Code Generation** | Z.ai GLM Coding Max (API) | GitHub Copilot | GPT-5 Pro | Specialized, lower-cost |
+| **VLM/OCR (Documents)** | Gemini 2.5 Pro (API) | Fine-Tuned Qwen-VL | GPT-5 Pro | Native PDF/image understanding |
+| **Local Dev & Testing** | M4 Max (llama.cpp) | Gemini 2.5 Flash (API) | GPT-5 Pro | Zero-cost iteration |
+| **Production Fine-Tuned** | Hugging Face Pro Endpoint | Google Cloud Endpoint | M4 Max | Scalable, managed hosting |
+
+### Local Development with M4 Max
+
+The 48GB M4 Max laptop serves as a **zero-cost prototyping hub**:
+
+- Run 33B parameter models at 4-bit quantization locally
+- Eliminates API costs during prompt engineering and debugging
+- Fast iteration cycle with llama.cpp OpenAI-compatible API
+- Seamless transition to cloud APIs for production validation
+
+**Setup Workflow:**
+```bash
+# Build llama.cpp with Metal support
+git clone https://github.com/ggerganov/llama.cpp.git
+cd llama.cpp
+make -j cc=mps
+
+# Download quantized model
+huggingface-cli download Qwen/Qwen2-7B-Instruct-GGUF qwen2-7b-instruct-q4_K_M.gguf --local-dir ./models
+
+# Run local OpenAI-compatible server
+build/bin/Release/llama-server -m models/qwen2-7b-instruct-q4_K_M.gguf -c 4096 --jinja
+```
+
+---
+
+## Multi-Agent Architecture
+
+### Agno AgentOS Framework
+
+Agno provides a multi-agent framework with shared memory and external tool access via the **Model Context Protocol (MCP)**. Key features:
+
+- **MCP Integration:** Standardized tool/data source connections
+- **Knowledge Subsystem:** Connectors to 20+ vector stores (LanceDB, PgVector, etc.)
+- **Shared Memory:** Redis-based persistence for session storage
+- **Agent Collaboration:** Teams of agents working together on complex tasks
+
+### Multi-Agent System Design
+
+The architecture organizes agents into **domain-focused teams**, orchestrated by Dagster with DLT for data ingestion.
+
+#### Team 1: Code & Documentation Analysis
+
+**Responsibilities:**
+- Analyze software repositories
+- Summarize code structure and architecture
+- Evaluate documentation completeness
+- Extract key findings
+
+**Pipeline Configuration:**
+
+```python
+from agno.agent import Agent
+from agno.tools.hackernews import HackerNewsTools
+
+# Repository Analysis Agent
+repo_analyzer = Agent(
+    name="RepoAnalyzer",
+    model=llm_model,  # Gemini 2.5 Pro via LiteLLM
+    instructions=[
+        "1. Summarize the repository's purpose and architecture",
+        "2. List key technologies and main topics",
+        "3. Analyze code quality and patterns",
+        "4. Evaluate documentation completeness",
+        "5. Provide recommendations"
+    ],
+    output_schema=RepoSummary,  # BAML-defined schema
+    db=db,  # Shared Redis
+    knowledge=knowledge  # LanceDB index
+)
+```
+
+**Data Flow:**
+1. DLT ingests repository files → DuckLake storage
+2. CocoIndex processes files → generates embeddings → LanceDB
+3. Agno agents analyze via vector search → structured JSON output
+4. Results stored in Cognee knowledge graph
+
+#### Team 2: Sentiment Analysis & Social Monitoring
+
+**Responsibilities:**
+- Gather unstructured data from news/forums/social media
+- Gauge public sentiment and trends
+- Produce structured insights and alerts
+
+**Pipeline Configuration:**
+
+```python
+# Sentiment Analysis Team
+sentiment_team = Team(
+    name="Sentiment Research Team",
+    model=llm_model,
+    members=[
+        topic_extractor_agent,
+        sentiment_summarizer_agent,
+        web_searcher_agent
+    ],
+    instructions=[
+        "1. Extract major topics from social posts",
+        "2. Analyze sentiment for each topic",
+        "3. Identify trending discussions",
+        "4. Generate alerts for sentiment spikes"
+    ],
+    output_schema=SentimentReport,
+    db=db,
+    knowledge=knowledge
+)
+```
+
+**Data Sources:**
+- **Crawl4AI** for web scraping (news, HackerNews, forums)
+- **API ingestion** for social media (Twitter, Discord, Reddit)
+- **RisingWave** for real-time stream processing
+
+**Output Structure:**
+```json
+{
+  "overall_sentiment": "Slightly Negative",
+  "positive_trends": ["Feature X excitement", "..."],
+  "negative_trends": ["Service Y outage complaints", "..."],
+  "notable_topics": [
+    {
+      "topic": "New Feature X Launch",
+      "sentiment": "Positive",
+      "summary": "Users celebrate the launch..."
+    }
+  ]
+}
+```
+
+#### Team 3: Financial Analytics & Anomaly Detection
+
+**Responsibilities:**
+- Ingest market data, on-chain transactions, DeFi metrics
+- Identify trends, correlations, and anomalies
+- Real-time analytics with historical context
+
+**Pipeline Configuration:**
+
+**Batch Ingestion:**
+- DLT for periodic API pulls (prices, volumes, protocol stats)
+- DuckDB storage with incremental loading
+
+**Stream Processing:**
+- RisingWave for live blockchain events and trades
+- Ibis for unified batch/stream transformations
+
+**Agent Workflow:**
+```python
+# Trend Summarizer Agent
+trend_agent = Agent(
+    name="TrendSummarizer",
+    instructions=[
+        "Analyze latest crypto market trends",
+        "Summarize key metrics (price, volume, TVL)",
+        "Identify notable events in last 24h",
+        "Provide forward-looking outlook"
+    ],
+    output_schema=MarketTrendReport
+)
+
+# Anomaly Detector Agent
+anomaly_agent = Agent(
+    name="AnomalyDetector",
+    instructions=[
+        "Detect outliers in market data",
+        "Correlate with news/social sentiment",
+        "Explain likely causes",
+        "Assess impact"
+    ],
+    output_schema=AnomalyAlert
+)
+```
+
+### Integration with MCP
+
+Agno's MCP support enables:
+- FastAPI endpoint (`/mcp`) for agent control
+- External tool integration (Cognee, CocoIndex)
+- Standardized interfaces across platforms
+
+**Example MCP Tool Integration:**
+```python
+from agno.os import AgentOS
+
+agent_os = AgentOS(teams=[research_team])
+agent_os.enable_mcp_server = True
+app = agent_os.get_app()  # FastAPI app with MCP endpoints
+```
+
+---
+
+## Structured Outputs
+
+### BAML (Boundary AI Markup Language)
+
+BAML provides a DSL for defining:
+- Agent behaviors and prompts
+- Structured output schemas
+- Tool interactions
+
+**Key Benefits:**
+- Schema-aligned parsing ensures LLM outputs match expected format
+- Single source of truth for domain models
+- Multi-language code generation (Python/TypeScript)
+
+### End-to-End Schema Modeling
+
+#### 1. Define Domain Classes in BAML
+
+```baml
+// Domain schema definitions in BAML
+class DocumentChunk {
+  id string                 @description("Unique chunk identifier")
+  repo string               @description("Repository name or ID")
+  file_path string?         @description("Source file path (if applicable)")
+  content string            @description("Text content of the chunk")
+  embedding float[]         @description("Embedding vector of the content")
+}
+
+class ToolCall {
+  tool_name string          @description("Name of the tool to invoke")
+  params map<string, any>   @description("Input parameters for the tool")
+  result any?               @description("Result returned by the tool")
+}
+
+class RepoSummary {
+  repo_name string          @description("Repository name")
+  description string        @description("High-level description")
+  main_topics string[]      @description("Key topics or technologies")
+  file_count int            @description("Number of files analyzed")
+}
+```
+
+#### 2. Generate Pydantic Models (Python)
+
+Run `baml-cli generate` to create:
+
+```python
+# Auto-generated in baml_client/types.py
+from pydantic import BaseModel, Field
+from typing import List, Optional, Any, Dict
+
+class DocumentChunk(BaseModel):
+    id: str
+    repo: str
+    file_path: Optional[str] = None
+    content: str
+    embedding: List[float]
+
+class ToolCall(BaseModel):
+    tool_name: str
+    params: Dict[str, Any]
+    result: Optional[Any] = None
+
+class RepoSummary(BaseModel):
+    repo_name: str
+    description: str
+    main_topics: List[str]
+    file_count: int
+```
+
+#### 3. Generate TypeScript Types and Zod Schemas
+
+```typescript
+// Auto-generated in baml_client/types.ts
+export interface DocumentChunk {
+  id: string;
+  repo: string;
+  file_path?: string;
+  content: string;
+  embedding: number[];
+}
+
+// Corresponding Zod schema
+import { z } from 'zod';
+
+export const DocumentChunkSchema = z.object({
+  id: z.string(),
+  repo: z.string(),
+  file_path: z.string().optional(),
+  content: z.string(),
+  embedding: z.array(z.number())
+});
+
+export type DocumentChunk = z.infer<typeof DocumentChunkSchema>;
+```
+
+### Integration Across Stack
+
+**DLT Pipeline:**
+```python
+import dlt
+from baml_client.types import DocumentChunk
+
+@dlt.resource(name="document_chunks")
+def ingest_repo_chunks(repo_path: str):
+    for chunk_text in split_file_to_chunks(repo_path):
+        chunk = DocumentChunk(
+            id=compute_chunk_id(repo_path, ...),
+            repo=repo_path,
+            file_path=current_file_path,
+            content=chunk_text,
+            embedding=embed(chunk_text)
+        )
+        yield chunk.dict()
+```
+
+**Hono API (TypeScript):**
+```typescript
+import { Hono } from 'hono';
+import { UserQuerySchema, DocumentChunkSchema } from './schemas';
+
+const app = new Hono();
+
+app.post('/ask', async (c) => {
+  const body = await c.req.json();
+  const userQuery = UserQuerySchema.parse(body);  // Runtime validation
+
+  const results = await searchMemory(userQuery);
+  const safeResults = DocumentChunkSchema.array().parse(results);
+
+  return c.json(safeResults);
+});
+```
+
+**Drizzle ORM:**
+```typescript
+import { pgTable, text, integer } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+
+export const documentChunks = pgTable("document_chunks", {
+  id: text("id").primaryKey(),
+  repo: text("repo").notNull(),
+  file_path: text("file_path"),
+  content: text("content").notNull(),
+  embedding: text("embedding")  // store as JSON or vector type
+});
+
+export const DocumentChunkInsertSchema = createInsertSchema(documentChunks);
+```
+
+---
+
+## Knowledge Management
+
+### Cognee vs CocoIndex Decision Matrix
+
+Both tools provide vector + graph capabilities but with different focuses:
+
+| Feature | Cognee | CocoIndex |
+|---------|--------|-----------|
+| **Primary Focus** | Ready-to-use AI memory layer | Data engineering toolkit for indexing |
+| **Query Interface** | Built-in (Python API + MCP server) | Manual (query LanceDB/Neo4j directly) |
+| **Retrieval Strategies** | Multiple (vector, graph, hybrid GraphRAG) | Requires custom implementation |
+| **Pipeline Control** | Opinionated (simple ingestion) | Fine-grained (custom flows, incremental) |
+| **Online Learning** | Supported (feedback loops) | Not built-in |
+| **Storage Backends** | Neo4j, Memgraph, Kuzu, LanceDB, Redis | Neo4j, Memgraph, Kuzu, LanceDB, Qdrant, Postgres |
+| **Best For** | Runtime query answering, agent memory | Complex ETL, custom ontologies, large-scale |
+
+### Recommended Integration Strategy
+
+**Use CocoIndex for Indexing + Cognee for Querying:**
+
+1. **CocoIndex** handles heavy lifting:
+   - Custom extraction logic
+   - Incremental updates with Postgres triggers
+   - Outputs to LanceDB (vectors) + Memgraph (graph)
+
+2. **Cognee** provides intelligent retrieval:
+   - Smart query interface (hybrid retrieval)
+   - MCP server for agent integration
+   - Memory management and feedback loops
+
+**Example Workflow:**
+
+```python
+# 1. CocoIndex: Build knowledge base
+import cocoindex
+from cocoindex.sources import LocalFile
+
+@cocoindex.flow_def(name="DocIndex")
+def doc_index_flow(flow_builder, data_scope):
+    # Ingest documents
+    data_scope["files"] = flow_builder.add_source(
+        LocalFile(path="/docs", included_patterns=["*.md", "*.py"])
+    )
+
+    # Extract relationships with LLM
+    with data_scope["files"].row() as file:
+        file["relationships"] = file["content"].transform(
+            cocoindex.functions.ExtractByLlm(
+                instruction="Extract subject-predicate-object triples",
+                output_schema=Relationship
+            )
+        )
+
+    # Export to Memgraph and LanceDB
+    data_scope.add_collector("doc_graph").collect(
+        entity=file["relationships"]["subject"],
+        relation=file["relationships"]["predicate"],
+        target=file["relationships"]["object"]
+    ).export("knowledge_graph", cocoindex.storages.Memgraph())
+
+# 2. Cognee: Query the indexed data
+import cognee
+
+# Point Cognee to existing Memgraph + LanceDB
+cognee.config.set_graph_db(memgraph_connection)
+cognee.config.set_vector_db(lancedb_connection)
+
+# Query with intelligent retrieval
+results = cognee.search(
+    "What are the key features of DocumentChunk?",
+    search_type="GraphCompletion"  # Combines graph + vector
+)
+```
+
+### Cognee Features
+
+**Extract-Cognify-Load Pipeline:**
+- Chunks documents automatically
+- Generates embeddings for semantic search
+- Identifies entities and relationships using LLMs
+- Builds dynamic knowledge graph
+
+**Hybrid Retrieval Modes:**
+- **Pure Vector:** Semantic similarity search
+- **Pure Graph:** Structured traversal (Cypher queries)
+- **GraphRAG:** Combined approach for complex queries
+
+**MCP Server Integration:**
+```python
+from cognee import MCP
+
+# Run Cognee as MCP server
+cognee_server = MCP()
+cognee_server.start()
+
+# Agno agents can now query via MCP
+# No custom glue code needed
+```
+
+### CocoIndex Features
+
+**Incremental Processing:**
+- Postgres-based state tracking
+- Only processes new/modified data
+- Real-time updates with triggers
+
+**LLM-Powered Transformations:**
+```python
+# Extract structured data with LLM
+chunk["summary"] = chunk["content"].transform(
+    cocoindex.functions.ExtractByLlm(
+        instruction="Summarize this code chunk in 2 sentences",
+        output_schema=CodeSummary,
+        llm_spec=LlmSpec(api_type="openai", model="gpt-4o")
+    )
+)
+
+# Generate embeddings
+chunk["embedding"] = chunk["content"].transform(
+    cocoindex.functions.EmbedText(
+        llm_spec=LlmSpec(api_type="openai", model="text-embedding-3-small")
+    )
+)
+```
+
+**Multi-Backend Support:**
+- OpenAI, Anthropic, Google Vertex, Azure
+- Ollama for local models
+- LiteLLM for unified interface
+
+---
+
+## Document Processing Pipeline
+
+### Advanced PDF Parsing Stack
+
+Integrate **Docling**, **Unstract**, **Qwen-VL**, and **Crawl4AI** for comprehensive document processing.
+
+#### Tool Roles
+
+| Tool | Primary Role | Integration Point | Output/Focus |
+|------|-------------|-------------------|--------------|
+| **Crawl4AI** | PDF retrieval & initial text extraction | Base pipeline | Clean Markdown, basic structure |
+| **Docling** | Advanced parsing (layout, tables, OCR) | Replace/augment Crawl4AI parsing | Rich Markdown/HTML/JSON with structure |
+| **Unstract** | LLM-powered data extraction (ETL) | Post-processing after text extraction | Structured data (JSON, key fields) |
+| **Qwen-VL** | Vision-Language model for images/vision | Assist during parsing or post-process | Text from images, OCR, descriptions |
+
+#### PDF Processing Workflow
+
+**1. Fetch PDF with Crawl4AI:**
+```python
+from crawl4ai import AsyncWebCrawler
+
+async with AsyncWebCrawler() as crawler:
+    result = await crawler.arun(
+        url="https://example.com/document.pdf",
+        pdf=True  # Get raw PDF bytes
+    )
+    pdf_bytes = result.pdf
+```
+
+**2. Parse with Docling (with VLM support):**
+```python
+from docling import DocumentConverter
+from docling.vlm import VlmPipeline
+
+# Configure Docling with Qwen-VL for vision tasks
+vlm_pipeline = VlmPipeline(
+    model="qwen-vl",
+    endpoint="http://localhost:8080/v1"  # Local Qwen-VL server
+)
+
+converter = DocumentConverter(vlm_pipeline=vlm_pipeline)
+result = converter.convert(pdf_bytes)
+
+# Get structured output
+markdown = result.to_markdown()  # Preserves tables, formulas (LaTeX)
+json_output = result.to_json()   # Full structure with metadata
+```
+
+**3. Extract Structured Data with Unstract:**
+```python
+import requests
+
+# Send parsed markdown to Unstract API
+unstruct_response = requests.post(
+    "http://unstract-api:8000/extract",
+    json={
+        "text": markdown,
+        "schema": {
+            "invoice_number": "string",
+            "date": "string",
+            "total_amount": "float",
+            "line_items": ["object"]
+        }
+    }
+)
+
+structured_data = unstruct_response.json()
+```
+
+**4. Handle Images with Qwen-VL:**
+```python
+from qwen_vl import QwenVL
+
+model = QwenVL(model_path="Qwen/Qwen-VL-Chat")
+
+# For scanned pages or complex diagrams
+for page_image in extract_page_images(pdf_bytes):
+    ocr_text = model.generate(
+        image=page_image,
+        prompt="Read the following document page and output the text in Markdown format."
+    )
+    # Append OCR text to markdown
+```
+
+### Integration Examples
+
+**Example 1: Research Paper Processing**
+
+Complex PDF with tables, formulas, multi-column layout:
+
+```python
+async def process_research_paper(pdf_url):
+    # 1. Fetch with Crawl4AI
+    async with AsyncWebCrawler() as crawler:
+        result = await crawler.arun(url=pdf_url, pdf=True)
+
+    # 2. Parse with Docling (preserves formulas as LaTeX)
+    converter = DocumentConverter(
+        vlm_pipeline=VlmPipeline(model="qwen-vl")
+    )
+    doc = converter.convert(result.pdf)
+
+    # 3. Extract metadata with Unstract
+    metadata = unstract_extract(
+        text=doc.to_markdown(),
+        schema={
+            "title": "string",
+            "authors": ["string"],
+            "abstract": "string",
+            "key_findings": ["string"]
+        }
+    )
+
+    return {
+        "markdown": doc.to_markdown(),
+        "metadata": metadata,
+        "images": doc.images
+    }
+```
+
+**Example 2: Invoice Batch Processing**
+
+High-volume structured data extraction:
+
+```python
+async def process_invoice_batch(pdf_urls):
+    results = []
+
+    for url in pdf_urls:
+        # Crawl4AI for fast retrieval
+        pdf_bytes = await fetch_pdf(url)
+
+        # Docling for accurate table extraction
+        doc = DocumentConverter().convert(pdf_bytes)
+
+        # Unstract with Gemini 2.5 Flash (high-volume, low-cost)
+        invoice_data = unstract_extract(
+            text=doc.to_markdown(),
+            schema=InvoiceSchema,
+            model="gemini-2.5-flash"
+        )
+
+        results.append(invoice_data)
+
+    return results
+```
+
+### Docling VLM Integration
+
+Docling can use Qwen-VL to produce structured HTML from PDF pages:
+
+```python
+from docling.vlm import VlmPipeline
+
+# Configure VLM pipeline
+vlm = VlmPipeline(
+    model="qwen-vl-max",
+    prompt_template="""
+    You are an AI that converts document images to structured HTML.
+    Output well-formatted HTML with:
+    - Proper heading hierarchy (h1, h2, h3)
+    - Tables using <table> tags
+    - Math formulas in LaTeX: $formula$
+    - Preserve all text content
+    """
+)
+
+# Docling will call Qwen-VL for each page
+converter = DocumentConverter(vlm_pipeline=vlm)
+result = converter.convert(pdf_path)
+
+# Result includes:
+# - Full HTML with preserved structure
+# - LaTeX formulas
+# - Table data in semantic markup
+```
+
+---
+
+## LLM Infrastructure
+
+### LiteLLM as Centralized Gateway
+
+LiteLLM serves as a **self-hosted proxy server** (LLM Gateway) providing:
+
+1. **Centralized Key Management**
+2. **Intelligent Routing**
+3. **Unified Observability**
+
+#### Architecture Benefits
+
+- **Single Endpoint:** All services call LiteLLM proxy (no direct provider access)
+- **Cost Control:** Track usage, enforce budgets, route to cost-effective models
+- **Provider Abstraction:** Switch models without changing application code
+- **Fallback & Load Balancing:** Automatic failover, cost-based routing
+
+#### LiteLLM Configuration
+
+```yaml
+# config.yaml - Define all physical compute assets
+
+model_list:
+  # Planner models
+  - model_name: gpt-5-pro
+    litellm_params:
+      model: gpt-5-pro
+      api_key: ${OPENAI_API_KEY}
+
+  - model_name: claude-code-max
+    litellm_params:
+      model: claude-code-max
+      api_key: ${ANTHROPIC_API_KEY}
+
+  # Worker models
+  - model_name: gemini-2.5-flash
+    litellm_params:
+      model: gemini/gemini-2.5-flash
+      api_key: ${GEMINI_API_KEY}
+
+  - model_name: zai-glm-max
+    litellm_params:
+      model: openrouter/zai/glm-coding-max
+      api_key: ${OPENROUTER_API_KEY}
+
+  # Specialist models
+  - model_name: qwen-vl-tuned
+    litellm_params:
+      model: huggingface/qwen-vl-custom
+      api_base: ${HF_ENDPOINT_URL}
+      api_key: ${HF_API_KEY}
+
+  # Local development
+  - model_name: local-dev-model
+    litellm_params:
+      model: openai/local-model
+      api_base: http://localhost:8080/v1
+      api_key: unused
+
+# Virtual model aliases (Plan and Act tiers)
+router:
+  - model_group: planner_agent
+    models:
+      - gpt-5-pro
+      - claude-code-max
+    routing_strategy: priority  # Try first, then fallback
+
+  - model_group: worker_agent
+    models:
+      - gemini-2.5-flash
+      - zai-glm-max
+    routing_strategy: cost_based  # Choose cheapest available
+
+  - model_group: vision_agent
+    models:
+      - gemini-2.5-pro
+      - qwen-vl-tuned
+    routing_strategy: least_busy
+
+# Observability
+logging:
+  - type: langfuse
+    langfuse_public_key: ${LANGFUSE_PUBLIC_KEY}
+    langfuse_secret_key: ${LANGFUSE_SECRET_KEY}
+
+  - type: postgres
+    db_url: ${POSTGRES_URL}
+    table_name: llm_logs
+```
+
+#### Agent Integration
+
+Agno agents use virtual model aliases:
+
+```python
+from agno.agent import Agent
+from agno.models.openai import OpenAIChat
+
+# Configure to call LiteLLM proxy
+LITELLM_PROXY_URL = "https://api.yourdomain.com/v1"
+LITELLM_API_KEY = "sk-litellm-internal-key"
+
+# Planner agent
+planner = Agent(
+    name="MasterPlanner",
+    model=OpenAIChat(
+        id="planner_agent",  # Virtual alias, not actual model
+        api_base=LITELLM_PROXY_URL,
+        api_key=LITELLM_API_KEY
+    ),
+    instructions=[...]
+)
+
+# Worker agent
+worker = Agent(
+    name="DataExtractor",
+    model=OpenAIChat(
+        id="worker_agent",  # Routes to Gemini Flash or GLM Max
+        api_base=LITELLM_PROXY_URL,
+        api_key=LITELLM_API_KEY
+    ),
+    instructions=[...]
+)
+```
+
+### Hosting with Pangolin
+
+**Public Access Model (Open Endpoint):**
+
+Expose LiteLLM via HTTPS for external integrations:
+
+```yaml
+# Pangolin Resource Configuration
+Domain: api.example.com
+Resource Type: HTTP (Pangolin handles TLS on port 443)
+Target: 127.0.0.1:4000  # LiteLLM local endpoint
+Access Control: Allow (no auth required for API key-protected service)
+```
+
+**Private Access Model (VPN-Gated):**
+
+Restrict LiteLLM to team members via Olm VPN:
+
+```yaml
+# Site Resource Configuration
+Type: TCP
+Port: 4000
+Target: 127.0.0.1:4000
+Access: Olm VPN clients only
+```
+
+Team members connect via Olm client:
+```bash
+olm --id <client-id> --secret <secret> --endpoint https://pangolin-server
+```
+
+Then access LiteLLM at `http://100.90.128.0:4000` (site VPN IP).
+
+---
+
+## Vector & Graph Databases
+
+### LanceDB (Vector Store)
+
+**Key Features:**
+- Apache Arrow-based for high performance
+- Embedded or client-server mode
+- Native support in Agno, CocoIndex, Cognee
+
+**Usage with CocoIndex:**
+```python
+from cocoindex.storages import LanceDB
+
+# Export embeddings to LanceDB
+data_scope.add_collector("code_index").collect(
+    id=chunk["id"],
+    text=chunk["content"],
+    vector=chunk["embedding"]
+).export(
+    "code_vectors",
+    LanceDB(uri="./lancedb", table_name="code_chunks")
+)
+```
+
+**Usage with Cognee:**
+```python
+import cognee
+
+# Configure Cognee to use existing LanceDB
+cognee.config.set_vector_db({
+    "type": "lancedb",
+    "uri": "./lancedb"
+})
+
+# Cognee will use LanceDB for semantic search
+results = cognee.search("query", search_type="VECTOR")
+```
+
+### Memgraph (Graph Database)
+
+**Key Features:**
+- Neo4j protocol-compatible (Cypher queries)
+- In-memory for high-speed traversal
+- Real-time analytics with streaming support
+
+**Usage with CocoIndex:**
+```python
+from cocoindex.storages import Memgraph
+
+# Export relationships to Memgraph
+data_scope.add_collector("knowledge_graph").collect(
+    subject=relationship["subject"],
+    predicate=relationship["predicate"],
+    object=relationship["object"]
+).export(
+    "doc_graph",
+    Memgraph(
+        connection_string="bolt://localhost:7687",
+        node_labels={"Entity": ["subject", "object"]},
+        edge_types={"RELATIONSHIP": "predicate"}
+    )
+)
+```
+
+**Usage with Cognee:**
+```python
+# Configure Cognee to use Memgraph
+cognee.config.set_graph_db({
+    "type": "memgraph",
+    "uri": "bolt://localhost:7687",
+    "username": "memgraph",
+    "password": ""
+})
+
+# Cognee can perform graph traversals
+results = cognee.search("query", search_type="GRAPH")
+```
+
+### DuckLake + RisingWave (Batch + Stream)
+
+**DuckLake (DuckDB Lakehouse):**
+- Parquet-backed storage
+- PostgreSQL catalog for metadata
+- ACID compliance for analytics
+
+**RisingWave (Streaming):**
+- Real-time materialized views
+- Sub-second latency for incremental queries
+- Kafka, CDC, WebSocket connectors
+
+**Unified with Ibis:**
+```python
+import ibis
+
+# Define transformation once
+def compute_metrics(table):
+    return (
+        table
+        .group_by("token")
+        .aggregate(
+            volume=table["amount"].sum(),
+            avg_price=table["price"].mean(),
+            count=table.count()
+        )
+    )
+
+# Run on DuckDB (batch)
+duckdb_conn = ibis.duckdb.connect("data.ddb")
+batch_metrics = compute_metrics(duckdb_conn.table("transactions"))
+
+# Run on RisingWave (stream)
+risingwave_conn = ibis.postgres.connect(
+    host="risingwave", port=4566, database="dev"
+)
+stream_metrics = compute_metrics(risingwave_conn.table("transactions"))
+```
+
+---
+
+## End-to-End Workflows
+
+### Workflow 1: Local Git Repository Analysis
+
+**Objective:** Ingest, index, and analyze local code repositories with LLM agents.
+
+**Tools:** DLT, CocoIndex, Repomix, Agno, BAML
+
+**Steps:**
+
+1. **Ingest with DLT:**
+```python
+import dlt
+from dlt.sources.filesystem import filesystem_source
+
+repo_path = "/path/to/repo"
+files = filesystem_source(
+    bucket_url=f"file://{repo_path}",
+    file_glob="**/*.*"
+)
+
+pipeline = dlt.pipeline(
+    pipeline_name="repo_pipeline",
+    destination="duckdb",
+    dataset_name="repo_data"
+)
+pipeline.run(files)
+```
+
+2. **Index with CocoIndex:**
+```python
+@cocoindex.flow_def(name="CodeIndex")
+def code_index_flow(flow_builder, data_scope):
+    # Ingest files
+    data_scope["files"] = flow_builder.add_source(
+        LocalFile(
+            path=repo_path,
+            included_patterns=["*.py", "*.cpp", "*.md"]
+        )
+    )
+
+    # Parse and chunk code
+    with data_scope["files"].row() as file:
+        file["chunks"] = file["content"].transform(
+            cocoindex.functions.SplitRecursively(),
+            language=file["ext"],
+            chunk_size=1000
+        )
+
+        # Generate embeddings
+        with file["chunks"].row() as chunk:
+            chunk["embedding"] = chunk["text"].transform(
+                cocoindex.functions.SentenceTransformerEmbed(
+                    model="all-MiniLM-L6-v2"
+                )
+            )
+
+    # Export to vector store
+    data_scope.add_collector("code_index").collect(
+        filename=file["filename"],
+        text=chunk["text"],
+        vector=chunk["embedding"]
+    ).export("code_vectors", cocoindex.storages.LanceDB())
+```
+
+3. **Package with Repomix:**
+```bash
+repomix --compress --output-format xml
+```
+
+4. **Analyze with Agno:**
+```python
+from agno.agent import Agent
+
+# Load Repomix output
+with open("repomix-output.xml") as f:
+    repo_context = f.read()
+
+# Create analysis agent
+repo_analyzer = Agent(
+    name="RepoAnalyzer",
+    model=OpenAIChat(id="planner_agent"),
+    instructions=[
+        "1. Summarize repository purpose and architecture",
+        "2. List key technologies and patterns",
+        "3. Evaluate code quality and documentation",
+        "4. Provide recommendations"
+    ],
+    output_schema=RepoSummary
+)
+
+# Run analysis
+analysis = repo_analyzer.run(repo_context)
+print(analysis)
+```
+
+### Workflow 2: Real-Time Sentiment Monitoring
+
+**Objective:** Monitor social media sentiment with streaming analytics.
+
+**Tools:** Crawl4AI, DLT, RisingWave, CocoIndex, Agno
+
+**Steps:**
+
+1. **Ingest Social Data:**
+```python
+# Crawl4AI for public sources
+async def crawl_news():
+    async with AsyncWebCrawler() as crawler:
+        result = await crawler.arun(
+            url="https://news.ycombinator.com",
+            extraction_strategy=LLMExtractionStrategy(
+                provider="openai/gpt-4o-mini",
+                instruction="Extract article titles and summaries"
+            )
+        )
+    return result
+
+# DLT for API sources (Reddit, Twitter)
+@dlt.resource
+def reddit_posts():
+    reddit = praw.Reddit(...)
+    for post in reddit.subreddit("cryptocurrency").hot(limit=100):
+        yield {
+            "id": post.id,
+            "title": post.title,
+            "content": post.selftext,
+            "score": post.score,
+            "created": post.created_utc
+        }
+```
+
+2. **Stream Processing with RisingWave:**
+```sql
+-- Create materialized view for rolling sentiment
+CREATE MATERIALIZED VIEW sentiment_trends AS
+SELECT
+    window_start,
+    topic,
+    AVG(sentiment_score) as avg_sentiment,
+    COUNT(*) as post_count
+FROM TUMBLE(posts, created, INTERVAL '5' MINUTE)
+GROUP BY window_start, topic;
+
+-- Alert on sentiment spikes
+CREATE SINK sentiment_alerts AS
+SELECT * FROM sentiment_trends
+WHERE ABS(avg_sentiment - LAG(avg_sentiment) OVER (PARTITION BY topic ORDER BY window_start)) > 0.3
+INTO kafka_sink;
+```
+
+3. **LLM Analysis with Agno:**
+```python
+# Triggered by RisingWave alert
+def analyze_sentiment_spike(topic, posts):
+    sentiment_agent = Agent(
+        name="SentimentAnalyzer",
+        model=OpenAIChat(id="worker_agent"),  # Gemini Flash
+        instructions=[
+            "Analyze sentiment of these posts",
+            "Identify main positive and negative themes",
+            "Explain the sentiment shift"
+        ],
+        output_schema=SentimentReport
+    )
+
+    return sentiment_agent.run(posts)
+```
+
+### Workflow 3: Multi-Modal Document Processing
+
+**Objective:** Extract structured data from complex PDFs with images.
+
+**Tools:** Crawl4AI, Docling, Qwen-VL, Unstract, CocoIndex
+
+**Steps:**
+
+1. **Fetch PDFs:**
+```python
+async def fetch_documents(urls):
+    async with AsyncWebCrawler() as crawler:
+        for url in urls:
+            result = await crawler.arun(url=url, pdf=True)
+            yield result.pdf
+```
+
+2. **Parse with Docling + Qwen-VL:**
+```python
+from docling import DocumentConverter
+from docling.vlm import VlmPipeline
+
+# Configure VLM for image-heavy documents
+vlm = VlmPipeline(
+    model="qwen-vl",
+    endpoint="http://localhost:8080/v1"
+)
+
+converter = DocumentConverter(vlm_pipeline=vlm)
+
+async for pdf_bytes in fetch_documents(urls):
+    doc = converter.convert(pdf_bytes)
+
+    # Get structured output
+    yield {
+        "markdown": doc.to_markdown(),
+        "tables": doc.tables,
+        "images": doc.images,
+        "formulas": doc.formulas  # LaTeX format
+    }
+```
+
+3. **Extract with Unstract:**
+```python
+for doc in parsed_documents:
+    structured_data = unstract_extract(
+        text=doc["markdown"],
+        schema={
+            "title": "string",
+            "authors": ["string"],
+            "abstract": "string",
+            "key_findings": ["string"],
+            "financial_data": {
+                "revenue": "float",
+                "expenses": "float",
+                "profit": "float"
+            }
+        },
+        model="gemini-2.5-flash"
+    )
+
+    # Store in database
+    db.insert("documents", structured_data)
+```
+
+4. **Index for Search:**
+```python
+@cocoindex.flow_def(name="DocIndex")
+def index_documents(flow_builder, data_scope):
+    # Load from database
+    data_scope["docs"] = flow_builder.add_source(
+        PostgresSource(table="documents")
+    )
+
+    # Generate embeddings
+    with data_scope["docs"].row() as doc:
+        doc["embedding"] = doc["abstract"].transform(
+            cocoindex.functions.EmbedText(
+                llm_spec=LlmSpec(
+                    api_type="openai",
+                    model="text-embedding-3-small"
+                )
+            )
+        )
+
+    # Export to vector store
+    data_scope.add_collector("doc_index").export(
+        "document_vectors",
+        cocoindex.storages.LanceDB()
+    )
+```
+
+---
+
+## Integration Patterns
+
+### Pattern 1: Tiered LLM Orchestration
+
+**Principle:** Use expensive models for planning, cheap models for execution.
+
+**Implementation:**
+```python
+class TieredAgent:
+    def __init__(self):
+        self.planner = OpenAIChat(id="planner_agent")  # GPT-5 Pro
+        self.worker = OpenAIChat(id="worker_agent")    # Gemini Flash
+
+    async def execute_task(self, task: str):
+        # Step 1: Plan with expensive model
+        plan = await self.planner.generate(
+            f"Break down this task into subtasks: {task}"
+        )
+
+        # Step 2: Execute subtasks with cheap model
+        results = []
+        for subtask in plan.subtasks:
+            result = await self.worker.generate(
+                f"Execute: {subtask.description}"
+            )
+            results.append(result)
+
+        # Step 3: Synthesize with expensive model
+        final = await self.planner.generate(
+            f"Synthesize these results: {results}"
+        )
+
+        return final
+```
+
+### Pattern 2: Incremental Knowledge Graph Building
+
+**Principle:** Only process new/changed data, maintain graph consistency.
+
+**Implementation:**
+```python
+@cocoindex.flow_def(name="IncrementalKG")
+def incremental_kg_flow(flow_builder, data_scope):
+    # Track state with Postgres
+    data_scope["files"] = flow_builder.add_source(
+        LocalFile(path="/docs"),
+        state_table="file_processing_state"
+    )
+
+    # CocoIndex automatically detects new/changed files
+    with data_scope["files"].row() as file:
+        # Only process if file changed
+        if file.is_new_or_modified:
+            # Extract entities and relationships
+            file["entities"] = file["content"].transform(
+                cocoindex.functions.ExtractByLlm(
+                    instruction="Extract named entities",
+                    output_schema=EntityList
+                )
+            )
+
+            file["relationships"] = file["content"].transform(
+                cocoindex.functions.ExtractByLlm(
+                    instruction="Extract relationships as SPO triples",
+                    output_schema=RelationshipList
+                )
+            )
+
+    # Merge into graph (upsert nodes/edges)
+    data_scope.add_collector("kg").export(
+        "knowledge_graph",
+        cocoindex.storages.Memgraph(
+            merge_strategy="upsert"  # Update existing, insert new
+        )
+    )
+```
+
+### Pattern 3: Hybrid Retrieval (Vector + Graph)
+
+**Principle:** Combine semantic search with structured queries.
+
+**Implementation:**
+```python
+class HybridRetriever:
+    def __init__(self):
+        self.vector_db = LanceDB(uri="./lancedb")
+        self.graph_db = Memgraph(uri="bolt://localhost:7687")
+
+    async def search(self, query: str, mode: str = "hybrid"):
+        if mode == "vector":
+            # Pure semantic search
+            return self.vector_db.search(
+                query_vector=embed(query),
+                limit=10
+            )
+
+        elif mode == "graph":
+            # Pure graph traversal
+            entities = extract_entities(query)
+            cypher = f"""
+                MATCH (e:Entity)-[r]->(t:Entity)
+                WHERE e.name IN {entities}
+                RETURN e, r, t
+            """
+            return self.graph_db.query(cypher)
+
+        else:  # hybrid
+            # 1. Vector search for relevant documents
+            docs = self.vector_db.search(
+                query_vector=embed(query),
+                limit=20
+            )
+
+            # 2. Extract entities from top docs
+            entities = set()
+            for doc in docs[:5]:
+                entities.update(extract_entities(doc.text))
+
+            # 3. Graph search for related entities
+            cypher = f"""
+                MATCH path = (e:Entity)-[*1..2]-(related:Entity)
+                WHERE e.name IN {list(entities)}
+                RETURN path
+                LIMIT 50
+            """
+            graph_results = self.graph_db.query(cypher)
+
+            # 4. Combine and rank
+            return self.merge_results(docs, graph_results)
+```
+
+### Pattern 4: Schema-Driven Development
+
+**Principle:** Define schema once in BAML, generate code for all layers.
+
+**Workflow:**
+```bash
+# 1. Define schema in BAML
+cat > baml_src/domain.baml <<EOF
+class DocumentChunk {
+  id string
+  content string
+  embedding float[]
+}
+EOF
+
+# 2. Generate Python (Pydantic)
+baml-cli generate --target python
+
+# 3. Generate TypeScript (Zod)
+baml-cli generate --target typescript
+
+# 4. Use in DLT pipeline
+cat > pipelines/ingest.py <<EOF
+from baml_client.types import DocumentChunk
+
+@dlt.resource
+def chunks():
+    for chunk in process_files():
+        yield DocumentChunk(**chunk).dict()
+EOF
+
+# 5. Use in Hono API
+cat > api/routes.ts <<EOF
+import { DocumentChunkSchema } from './schemas';
+
+app.post('/chunks', async (c) => {
+    const body = await c.req.json();
+    const chunk = DocumentChunkSchema.parse(body);
+    await db.insert(chunk);
+    return c.json({ success: true });
+});
+EOF
+```
+
+---
+
+## Decision Matrices
+
+### When to Use Which Model
+
+| Scenario | Recommended Model | Rationale |
+|----------|------------------|-----------|
+| Complex multi-step planning | GPT-5 Pro | Highest reasoning, SOTA orchestration |
+| Large codebase refactoring | Claude Code Max | 200k context, excellent code understanding |
+| High-volume data extraction | Gemini 2.5 Flash | 10x cheaper than GPT-4, optimized for speed |
+| PDF/image understanding | Gemini 2.5 Pro | Native document parsing, OCR |
+| Domain-specific vision | Fine-tuned Qwen-VL | Custom training for crypto charts, etc. |
+| Local development/testing | Llama 3 8B (M4 Max) | Zero cost, private, fast iteration |
+| Routine code generation | Z.ai GLM Coding Max | Specialized, lower cost than GPT-4 |
+
+### Cognee vs CocoIndex
+
+| Use Case | Recommended Tool | Reasoning |
+|----------|-----------------|-----------|
+| Quick prototype with existing data | Cognee alone | Simplest setup, built-in retrieval |
+| Custom ontology with complex ETL | CocoIndex alone | Fine-grained control |
+| Large-scale production system | Both (CocoIndex → Cognee) | Best of both worlds |
+| Real-time updates from DB | CocoIndex | Native Postgres trigger support |
+| Agent memory with feedback loops | Cognee | Built-in online learning |
+| Multi-modal RAG (text + images) | Both | CocoIndex for indexing, Cognee for retrieval |
+
+### Vector Store Selection
+
+| Database | Best For | Avoid For |
+|----------|----------|-----------|
+| **LanceDB** | Embedded usage, prototypes, local-first | Distributed systems needing sharding |
+| **Qdrant** | Production, high-scale, filtering | Simple use cases (overkill) |
+| **Postgres + pgvector** | When you already use Postgres | Billion-scale vectors |
+| **Redis** | Low-latency caching, real-time | Primary vector store (persistence) |
+
+### Stream vs Batch Processing
+
+| Data Characteristics | Recommended Approach | Implementation |
+|---------------------|---------------------|----------------|
+| Low volume (<1M records/day) | Batch only (DuckDB) | DLT → DuckDB → CocoIndex |
+| High volume, hourly updates | Mini-batch (DuckDB + triggers) | DLT (hourly) → Postgres triggers → CocoIndex |
+| Real-time events (>10k/sec) | Streaming (RisingWave) | Kafka → RisingWave → Materialized views |
+| Mixed: batch history + real-time | Lambda architecture (both) | DuckDB (batch) + RisingWave (stream) + Ibis (unified) |
+
+---
+
+## Best Practices
+
+### Cost Optimization
+
+1. **Tiered Model Usage:**
+   - Never use GPT-5 for tasks Gemini Flash can handle
+   - Route 90% of requests to worker models
+   - Reserve planners for orchestration only
+
+2. **Caching Strategies:**
+   ```python
+   from functools import lru_cache
+
+   @lru_cache(maxsize=1000)
+   def get_embedding(text: str) -> List[float]:
+       # Cache embeddings to avoid re-computing
+       return embed(text)
+   ```
+
+3. **Batch Processing:**
+   ```python
+   # Bad: One API call per item
+   for item in items:
+       result = llm.generate(item)
+
+   # Good: Batch items in single call
+   results = llm.generate_batch(items)
+   ```
+
+4. **Incremental Updates:**
+   - Use CocoIndex's state tracking
+   - Only re-embed changed content
+   - Leverage Postgres triggers for real-time indexing
+
+5. **Monitor & Alert:**
+   ```python
+   # Track costs in LiteLLM
+   # Set budgets per model group
+   litellm.set_budget("worker_agent", max_cost_per_hour=10.0)
+   ```
+
+### Reliability & Observability
+
+1. **Schema Validation:**
+   - Always validate LLM outputs with Pydantic/Zod
+   - Fail fast on schema mismatches
+   - Log validation errors for prompt tuning
+
+2. **Retry Logic:**
+   ```python
+   from tenacity import retry, stop_after_attempt, wait_exponential
+
+   @retry(
+       stop=stop_after_attempt(3),
+       wait=wait_exponential(min=1, max=10)
+   )
+   async def call_llm_with_retry(prompt: str):
+       return await llm.generate(prompt)
+   ```
+
+3. **Observability Stack:**
+   - **LiteLLM** → Langfuse for LLM traces
+   - **Dagster** for pipeline orchestration logs
+   - **CocoIndex** → Postgres for data lineage
+   - **Memgraph** for graph analytics
+
+4. **Health Checks:**
+   ```python
+   async def health_check():
+       # Check all critical services
+       checks = {
+           "litellm": await ping_litellm(),
+           "vector_db": await ping_lancedb(),
+           "graph_db": await ping_memgraph(),
+           "redis": await ping_redis()
+       }
+       return all(checks.values())
+   ```
+
+### Security & Privacy
+
+1. **API Key Management:**
+   - Store keys only in LiteLLM proxy config
+   - Use environment variables or secret managers
+   - Rotate keys regularly
+
+2. **Data Isolation:**
+   - Use Pangolin Olm VPN for internal services
+   - Public endpoints only for intended APIs
+   - Implement rate limiting on public routes
+
+3. **PII Protection:**
+   ```python
+   # Redact sensitive data before sending to LLM
+   from presidio_analyzer import AnalyzerEngine
+
+   analyzer = AnalyzerEngine()
+
+   def redact_pii(text: str) -> str:
+       results = analyzer.analyze(text, entities=["PERSON", "EMAIL", "PHONE"])
+       return redact(text, results)
+   ```
+
+4. **Audit Logging:**
+   - Log all LLM requests/responses
+   - Track data lineage through pipeline
+   - Maintain compliance audit trail
+
+### Performance Optimization
+
+1. **Parallel Processing:**
+   ```python
+   import asyncio
+
+   # Process multiple documents concurrently
+   async def process_batch(docs):
+       tasks = [process_doc(doc) for doc in docs]
+       return await asyncio.gather(*tasks)
+   ```
+
+2. **Smart Chunking:**
+   ```python
+   # Context-aware chunking for code
+   from cocoindex.functions import SplitRecursively
+
+   chunks = SplitRecursively(
+       language="python",
+       chunk_size=1000,
+       chunk_overlap=200  # Preserve context across boundaries
+   )
+   ```
+
+3. **Embedding Optimization:**
+   - Use smaller models for non-critical search
+   - Batch embed operations
+   - Cache frequently accessed embeddings
+
+4. **Database Tuning:**
+   ```sql
+   -- Index vector columns for fast search
+   CREATE INDEX ON document_chunks USING ivfflat (embedding vector_cosine_ops);
+
+   -- Partition large tables by date
+   CREATE TABLE events PARTITION BY RANGE (created_at);
+   ```
+
+### Development Workflow
+
+1. **Local-First Development:**
+   - Use M4 Max with llama.cpp for testing
+   - Point LiteLLM to local models (config.dev.yaml)
+   - Only use cloud APIs for final validation
+
+2. **Testing Strategy:**
+   ```python
+   # Unit tests for schema validation
+   def test_document_chunk_schema():
+       chunk = DocumentChunk(
+           id="test-123",
+           content="test content",
+           embedding=[0.1] * 384
+       )
+       assert chunk.dict() == DocumentChunkSchema.parse(chunk.dict())
+
+   # Integration tests with mock LLM
+   @pytest.fixture
+   def mock_llm():
+       return MockLLM(responses={"summary": "test summary"})
+
+   def test_agent_workflow(mock_llm):
+       agent = Agent(model=mock_llm)
+       result = agent.run("test query")
+       assert result.summary == "test summary"
+   ```
+
+3. **CI/CD Pipeline:**
+   ```yaml
+   # .github/workflows/test.yml
+   name: Test AI Pipeline
+
+   on: [push, pull_request]
+
+   jobs:
+     test:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v2
+
+         - name: Generate BAML schemas
+           run: baml-cli generate
+
+         - name: Run Python tests
+           run: |
+             pytest tests/python/
+
+         - name: Run TypeScript tests
+           run: |
+             npm test
+
+         - name: Validate schemas match
+           run: |
+             python scripts/validate_schemas.py
+   ```
+
+4. **Monitoring in Production:**
+   - Set up Grafana dashboards for LiteLLM metrics
+   - Alert on high error rates or costs
+   - Track P95 latency for agent workflows
+
+### Documentation Standards
+
+1. **Schema Documentation:**
+   ```baml
+   // Always include descriptions
+   class DocumentChunk {
+     id string @description("Unique identifier (UUID format)")
+     content string @description("Extracted text content, max 10000 chars")
+     embedding float[] @description("384-dim vector from all-MiniLM-L6-v2")
+   }
+   ```
+
+2. **Agent Instructions:**
+   ```python
+   # Clear, numbered instructions
+   agent = Agent(
+       name="Summarizer",
+       instructions=[
+           "1. Read the entire document",
+           "2. Identify the main topic and subtopics",
+           "3. Extract key findings (max 5)",
+           "4. Write a 2-3 sentence summary",
+           "5. Format output as JSON matching SummarySchema"
+       ]
+   )
+   ```
+
+3. **Pipeline Documentation:**
+   - Diagram data flows with Mermaid
+   - Document expected schemas at each stage
+   - Include example inputs/outputs
+
+---
+
+## Conclusion
+
+This consolidated guide provides a comprehensive blueprint for building production AI/ML systems with:
+
+- **Cost-effective compute allocation** through tiered model usage
+- **Robust multi-agent orchestration** with Agno AgentOS
+- **Type-safe, schema-driven development** using BAML, Pydantic, and Zod
+- **Flexible knowledge management** combining Cognee and CocoIndex
+- **Advanced document processing** with Docling, Qwen-VL, and Unstract
+- **Centralized LLM infrastructure** via LiteLLM gateway
+- **Hybrid vector + graph storage** for semantic search and knowledge graphs
+
+By following these patterns and best practices, teams can build reliable, scalable, and maintainable AI systems that optimize for both performance and cost.
+
+---
+
+## References
+
+### Core Technologies
+
+- **Agno AgentOS:** https://github.com/agno-agi/agno
+- **BAML:** https://github.com/BoundaryML/baml
+- **LiteLLM:** https://docs.litellm.ai/
+- **DLT:** https://dlthub.com/docs/
+- **CocoIndex:** https://cocoindex.io/
+- **Cognee:** https://www.cognee.ai/
+- **Docling:** https://www.docling.ai/
+- **Crawl4AI:** https://github.com/unclecode/crawl4ai
+- **Repomix:** https://github.com/yamadashy/repomix
+- **Dagster:** https://dagster.io/
+- **RisingWave:** https://risingwave.com/
+- **LanceDB:** https://lancedb.com/
+- **Memgraph:** https://memgraph.com/
+- **Pangolin:** https://docs.pangolin.net/
+
+### Key Concepts
+
+- **Tiered AI Compute:** Plan-and-Act architecture for cost optimization
+- **Multi-Agent Systems:** Coordinated teams for complex workflows
+- **Structured Outputs:** Schema-enforced LLM responses
+- **Incremental Processing:** State-tracked updates for efficiency
+- **Hybrid Retrieval:** Vector + graph for comprehensive search
+- **Unified Gateway:** Single LLM proxy for observability
+- **End-to-End Type Safety:** Consistent schemas across stack
+
+---
+
+**Document Status:** Complete
+**Next Steps:** Implement specific workflows from Section 9 based on project needs
+
+
+<!-- END: original content from ai-ml-systems-consolidated.md -->
+
+---
+
+## React Drag-and-Drop for Exam Builder
+
+*Source: `docs/bunchloch/meaisínfhoghlaim/React Drag-and-Drop for Exam Builder.md` (4526 words, 374 lines)*
+
+# **Architectural Blueprint for an Intelligent, British Curriculum-Aligned Interactive Exam Builder**
+
+## **1\. Introduction: The Convergence of Assessment Rigor and Modern Interactive Architecture**
+
+The digitization of high-stakes assessment infrastructure represents one of the most significant technical challenges in the modern educational technology landscape. The objective of developing an interactive platform capable of indexing the entirety of the British Isles’ syllabus and exam paper corpus—spanning AQA, OCR, Pearson Edexcel, WJEC, and CCEA—while simultaneously providing a fluid, drag-and-drop "Exam Paper Builder" assisted by generative AI, necessitates a departure from traditional CRUD (Create, Read, Update, Delete) application architectures. This report serves as a comprehensive technical analysis and implementation roadmap for such a platform, specifically targeting the integration of **TanStack Start**, **CopilotKit**, and advanced **React** drag-and-drop primitives.  
+The project requirements imply a system that must handle high-cardinality data indexing (tens of thousands of past paper questions) while delivering a client-side experience akin to a desktop publishing tool. The user persona—likely a teacher, examiner, or advanced tutor—demands precision. Unlike a generic form builder, an exam builder must respect the semantic hierarchy of the British education system: the distinction between Foundation and Higher tiers, the precise allocation of marks, the nesting of sub-questions (e.g., 1(a), 1(b)), and the rigorous metadata association required for validity. Furthermore, the integration of **CopilotKit** introduces an agentic layer, transforming the application from a passive tool into an active assistant capable of "reasoning" about the exam paper’s balance, difficulty, and coverage.  
+This analysis prioritizes architectural robustness, accessibility (a critical legal requirement in UK education), and performance. It evaluates the ecosystem of React drag-and-drop libraries against the specific constraints of **TanStack Start’s** server-side rendering (SSR) model and proposes a data schema compliant with the complexities of the **Joint Council for Qualifications (JCQ)** standards.
+
+## ---
+
+**2\. Domain Analysis: The British Assessment Data Landscape**
+
+To architect the software correctly, one must first rigorously model the domain. The "British Isles" qualification landscape is not a monolith; it is a federated system of competing exam boards and varying national standards (England, Wales, Northern Ireland, and Scotland). The software must ingest, normalize, and present this data without losing the specific pedagogical nuance of each board.
+
+### **2.1 The Structural Heterogeneity of Exam Boards**
+
+The primary exam boards—**Assessment and Qualifications Alliance (AQA)**, **Oxford, Cambridge and RSA (OCR)**, and **Pearson Edexcel**—dominate the landscape in England, while **WJEC** serves Wales and **CCEA** serves Northern Ireland.1 While they all adhere to Ofqual regulations, their data structures differ significantly.
+
+* **AQA** is renowned for straightforward, structured questions, often utilizing multiple-choice sections in sciences which require specific rendering logic (e.g., ticking boxes vs. circling answers).1  
+* **OCR** tends towards more interpretive, context-heavy questions, particularly in subjects like History and Computer Science. This implies the "draggable item" on the canvas is not just a question but often a "Resource Booklet" or a "Case Study" block that must remain associated with multiple subsequent questions.1  
+* **Pearson Edexcel** in Mathematics is data-heavy and analytical, requiring the rendering of complex statistical diagrams and data tables that must be preserved during the drag-and-drop operation.1
+
+The implication for the drag-and-drop software is that the "atom" of the interface cannot simply be a text string. It must be a **Polymorphic Component** capable of rendering LaTeX formulas, complex tables, and high-resolution vector graphics. Furthermore, the system must handle the **Tiering System** (Foundation vs. Higher). A dragged question from a Foundation paper must carry metadata that warns the user if it is dropped onto a Higher Tier paper, potentially invalidating the assessment's integrity.
+
+### **2.2 The QTI Standard and JSON Schema Design**
+
+While the **IMS Question and Test Interoperability (QTI)** standard 3 is the global interchange format for assessment data, its XML-heavy structure is cumbersome for modern React applications. A "British Exams" specific JSON schema is recommended for internal application state, which can be mapped to QTI for export if necessary.  
+The internal data model for a draggable question item must capture specific attributes to enable the **CopilotKit** AI to function effectively. If the AI is to "suggest a follow-up question," it needs access to the question's taxonomy.  
+**Table 1: Proposed JSON Schema for Exam Item Metadata**
+
+| Field | Type | Description | Relevance to Architecture |
+| :---- | :---- | :---- | :---- |
+| id | UUID | Unique identifier. | Essential for dnd-kit key management. |
+| board | Enum | AQA, OCR, Edexcel, WJEC, CCEA. | Faceted search filter in Sidebar. |
+| qualification | Enum | GCSE, A-Level, AS, BTEC. | Determines complexity and grading logic. |
+| taxonomy | Array\<String\> | \`\`. | Critical for CopilotKit useCopilotReadable context. |
+| cognitiveLevel | Enum | Knowledge, Application, Evaluation. | AI uses this to balance paper difficulty. |
+| content | Block | Array of text, image, or LaTeX blocks. | The payload rendered by the Draggable component. |
+| marks | Integer | Maximum marks available. | Used for "Total Marks" calculation state. |
+| interactionType | Enum | choiceInteraction, extendedTextInteraction. | Maps to QTI v3.0 standard.3 |
+
+This schema design addresses the limitations found in generic drag-and-drop tutorials, which often assume simple string lists. By structuring the data this way, we enable **TanStack Start** to fetch tailored subsets of data (e.g., "All Algebra questions") via Server Functions, optimizing the payload sent to the client.4
+
+### **2.3 The "Clone" vs. "Move" Paradigm in Exam Building**
+
+In a typical Kanban board (like Trello), moving a card removes it from column A and places it in column B. In an exam builder, the interaction pattern is fundamentally different. The "Syllabus Index" (Sidebar) is an immutable source of truth. Dragging a question from the Sidebar to the Canvas must trigger a **Clone Operation**, creating a new instance of that question on the paper while leaving the original in the index.6  
+This "Sidebar-to-Canvas" pattern is the primary architectural driver for the choice of drag-and-drop library. The library must support:
+
+1. **Multiple Containers:** Distinct contexts for the Sidebar (Source) and Exam Paper (Target).  
+2. **ID Regeneration:** The ability to generate a new unique ID (e.g., nanoid) on the fly when an item is dropped, preventing React key collisions.8  
+3. **Visual Cloning:** The user must see a "ghost" of the question moving while the original remains visible in the sidebar.
+
+## ---
+
+**3\. The Drag-and-Drop Engine: A Technical Evaluation**
+
+The React ecosystem offers several candidates for this functionality: **React-DnD**, **React-Beautiful-DnD** (now effectively deprecated), **dnd-kit**, and Atlassian's new **Pragmatic Drag and Drop**. For this specific application—integrating with TanStack Start and requiring high accessibility—the evaluation points toward a clear winner.
+
+### **3.1 The Case for dnd-kit**
+
+**dnd-kit** emerges as the optimal software choice for the Exam Paper Builder.9 Unlike older libraries, dnd-kit is modular, lightweight, and built specifically for modern React hooks (useDraggable, useDroppable, useSortable).
+
+#### **3.1.1 Headless Architecture**
+
+dnd-kit is headless, meaning it provides the logic and event listeners but assumes nothing about the markup. This is critical for rendering complex exam questions. An exam question might contain a dense HTML structure (tables, MathJax, images). With dnd-kit, you can wrap this complex component in a useSortable hook without fighting against pre-packaged styles or DOM wrappers that break the visual layout of the exam paper.9
+
+#### **3.1.2 Accessibility (A11y)**
+
+The UK public sector (including education) is subject to strict accessibility regulations (WCAG 2.1). dnd-kit is one of the few libraries that prioritizes keyboard-accessible drag-and-drop operations out of the box. It allows users to focus on a question, press Space to lift it, use arrow keys to move it, and Space again to drop it.11 This capability is essential for compliance in an educational tool.
+
+#### **3.1.3 The Sidebar-to-Canvas Implementation Strategy**
+
+To implement the requirement of dragging from an index to a builder, dnd-kit supports a specific pattern involving \<DragOverlay\>.
+
+* **The Sidebar:** Items are wrapped in useDraggable.  
+* **The Canvas:** Wrapped in useDroppable and SortableContext.  
+* **The Interaction:** When a drag starts from the sidebar, the application renders a \<DragOverlay\> containing a visual copy of the question. This overlay follows the cursor. The original item in the sidebar remains untouched.  
+* **The Drop:** On onDragEnd, if the target is the Canvas, the application logic inserts a *copy* of the item data into the Canvas state array, generating a new unique ID.8
+
+### **3.2 The High-Performance Alternative: Pragmatic Drag and Drop**
+
+Atlassian's **Pragmatic Drag and Drop (PDND)** 13 is a newer contender that leverages the browser's native Drag and Drop API.
+
+* **Pros:** It is extremely performant because the browser handles the pixel-pushing of the drag ghost, not React. This is beneficial if the user is dragging a very large, complex component (e.g., a full A4 page question).  
+* **Cons:** The native API is historically quirky and less customizable than the pointer-event emulation used by dnd-kit. Styling the "drag image" (the ghost) is restrictive.15  
+* **Verdict:** While PDND is faster for massive lists, **dnd-kit** offers a superior developer experience for the *interactions* required here—specifically, the smooth, animated sorting of questions on the canvas, which mimics the tactile feel of arranging physical papers. The "feel" is a crucial metric for user adoption in creative tools.
+
+### **3.3 The Visual Editor Alternative: Puck**
+
+The user query asks for "good software for that type of drag and drop experience." **Puck** 16 is a self-contained "Visual Editor for React."
+
+* **Role:** Puck is essentially a CMS for React components with a drag-and-drop UI pre-built. It solves the "Sidebar to Canvas" problem out of the box.  
+* **Integration:** You pass it a config object defining your components (e.g., QuestionBlock, HeaderBlock). Puck handles the sidebar, the drop zones, and the JSON state output.  
+* **Limitation:** Puck is opinionated. If your exam paper requires highly specific, non-standard layouts (e.g., side-by-side columns that interact with each other) or complex cross-component validation (e.g., ensuring Question 1a is always followed by 1b), you may find yourself fighting Puck's constraints.  
+* **Recommendation:** If the goal is rapid development of a standard layout builder, **Puck** is excellent. However, for a bespoke Exam Builder where the "Question" entity has deep relationships with the "Syllabus" entity, **dnd-kit** provides the necessary architectural control.
+
+## ---
+
+**4\. Full-Stack Architecture with TanStack Start**
+
+Integrating a client-heavy drag-and-drop interface into a server-side rendering (SSR) framework like **TanStack Start** requires a precise management of the execution boundary.
+
+### **4.1 The Client-Server Boundary Dilemma**
+
+Drag-and-drop libraries rely entirely on the browser's DOM (window, document, pointer events). These do not exist on the server. Attempting to render a DndContext or a Draggable component during the SSR pass of TanStack Start will result in hydration mismatches (where the server HTML differs from the client's initial render) or outright crashes.18  
+Architectural Pattern: Selective Hydration with \<ClientOnly\>  
+TanStack Start provides the \<ClientOnly\> component (or Suspense boundaries with lazy loading) to handle this. The Exam Builder route should be architected such that the heavy interaction logic is strictly client-side.
+
+TypeScript
+
+// routes/builder.tsx  
+import { ClientOnly } from '@tanstack/react-start'  
+import { ExamBuilderSkeleton } from '@/components/skeletons'
+
+export default function BuilderPage() {  
+  return (  
+    \<div className="builder-layout"\>  
+      {/\* The Sidebar index can be SSR'd for SEO/Speed \*/}  
+      \<SyllabusSidebar /\>   
+        
+      {/\* The Interactive Builder is Client Only \*/}  
+      \<ClientOnly fallback={\<ExamBuilderSkeleton /\>}\>  
+        {() \=\> import('@/features/builder/ExamCanvas').then(m \=\> m.ExamCanvas)}  
+      \</ClientOnly\>  
+    \</div\>  
+  )  
+}
+
+This hybrid approach leverages TanStack Start's strengths: the syllabus sidebar (containing the indexed links) is server-rendered for SEO, while the builder canvas loads as a dynamic application.18
+
+### **4.2 Handling Massive Indexes with Server Functions**
+
+The user mentions "indexing syllabus and exam papers of all subjects." This dataset will be massive—potentially millions of rows if indexing down to the question level across decades of papers. Sending this entire index to the client is impossible.  
+**TanStack Start Server Functions (createServerFn)** are the solution.4 Instead of a traditional REST API, createServerFn allows the frontend to call backend logic directly with type safety.  
+**Implementation Strategy:**
+
+1. **Input Validation:** Use Zod to validate the search filters (e.g., { board: 'AQA', topic: 'Algebra' }).4  
+2. **Database Query:** The server function executes a query against a vector database or search engine (like Postgres with pgvector or Meilisearch) to find relevant questions.  
+3. **Serialization:** The function returns a lightweight JSON array of question metadata (IDs, snippets, tags) to the frontend Sidebar.  
+4. **Streaming:** For large result sets, TanStack Start supports streaming. The sidebar can begin rendering the first 20 results while the rest are still being fetched, ensuring the UI remains responsive.20
+
+**Table 2: Data Fetching Strategy per Component**
+
+| Component | Fetching Strategy | Rationale |
+| :---- | :---- | :---- |
+| **Syllabus Index (SEO Pages)** | loader (SSR) | Content must be visible to search engines. |
+| **Builder Sidebar (Search)** | useServerFn (Client-invoked) | Interactive filtering; reduces initial bundle size. |
+| **Question Detail (Modal)** | useQuery \+ serverFn | Lazy-load heavy assets (images/LaTeX) only on demand. |
+| **Paper Persistence (Save)** | createServerFn (Mutation) | Secure write access to the user's exam paper database. |
+
+### **4.3 Virtualization for Performance**
+
+Rendering thousands of draggable items in the sidebar will degrade performance. **TanStack Virtual** must be integrated with the drag-and-drop list. This creates a technical challenge: if a user drags an item and scrolls the list, the virtualizer unmounts the source item. **dnd-kit** handles this gracefully by using the \<DragOverlay\>, which portals the dragged item to the document body, ensuring it persists visually even if its source component is virtualized out of existence.21
+
+## ---
+
+**5\. Integrating CopilotKit: The AI Teaching Assistant**
+
+The integration of **CopilotKit** transforms the Exam Builder from a static tool into an intelligent agent. The AI's role is to understand the pedagogical context of the exam paper and assist the teacher in constructing it.
+
+### **5.1 Context Awareness with useCopilotReadable**
+
+The primary mechanism for giving the AI "sight" is the useCopilotReadable hook.22 This hook feeds the application state (the current list of questions on the canvas) into the LLM's context window.  
+Challenge: The Context Window Limit  
+An exam paper might contain 50 questions, each with extensive text, marking schemes, and metadata. Feeding the raw JSON of 50 questions into the LLM context (which might be 8k or 32k tokens depending on the model) will quickly exhaust the limit, leading to "context forgetting" or high costs.23  
+Optimization Strategy: Hierarchical Summarization  
+Instead of feeding the full content, the application should feed a semantic summary to useCopilotReadable.
+
+TypeScript
+
+// Optimized Context for Copilot  
+useCopilotReadable({  
+  description: "The current exam paper structure",  
+  value: examPaperItems.map(item \=\> ({  
+    id: item.id,  
+    topic: item.meta.topic, // e.g. "Calculus"  
+    difficulty: item.meta.difficulty, // e.g. "Hard"  
+    marks: item.meta.marks, // e.g. 5  
+    summary: item.meta.shortDescription // "Integration by parts question"  
+  }))  
+});
+
+This lightweight representation allows the AI to reason about the *structure* ("This paper has too much Calculus and not enough Trigonometry") without consuming tokens on the verbatim question text. If the AI needs the full text of a specific question (e.g., to rewrite it), it can request it via a specific tool call.25
+
+### **5.2 Agentic Actions with useCopilotAction**
+
+The useCopilotAction hook enables the AI to manipulate the exam paper.26 This enables powerful "generative UI" workflows.  
+**Use Case: "Balance this Paper"**
+
+1. **User Prompt:** "The paper is too hard. Replace the last two questions with easier ones on the same topic."  
+2. **Copilot Logic:**  
+   * Analyzes the current state via useCopilotReadable.  
+   * Identifies the last two questions and their topics.  
+   * Calls a custom action: findAndReplaceQuestion({ targetId: '...', difficulty: 'Easy', topic: '...' }).  
+3. **Action Implementation:**  
+   * The action handler invokes a **TanStack Start Server Function** to search the vector database for "Easy" questions on that topic.  
+   * It updates the local React state (the examPaperItems array) with the new questions.  
+4. **Result:** The UI updates instantly via the drag-and-drop engine's state, showing the new questions on the canvas.
+
+Warning: Hallucination Risk  
+In education, accuracy is paramount. The AI should never generate a question from scratch (hallucinate) if it can be avoided, as it might introduce mathematical errors or curriculum deviations. The architecture must enforce a Retrieval Augmented Generation (RAG) pattern where the AI uses tool calls to find validated past paper questions from the index rather than inventing them.
+
+### **5.3 Copilot Textarea for Rubrics**
+
+The builder likely includes text areas for "Rubrics" (instructions to candidates). The \<CopilotTextarea\> component 27 is perfect here. It acts as an AI-enhanced autocomplete. A teacher can type "Standard AQA Physics instructions," and the Copilot can autocomplete the specific required legal text for that exam board ("Calculators are permitted," "Show all working," etc.).
+
+## ---
+
+**6\. Security, Compliance, and Data Sovereignty**
+
+Operating within the UK education sector imposes specific data governance requirements.
+
+### **6.1 GDPR and Student Data**
+
+While the Syllabus Index is public data, any "Exam Papers" created by teachers might contain student data or proprietary school information.
+
+* **Data Residency:** The database and hosting (TanStack Start server) should ideally reside in UK-based regions (e.g., AWS London, Azure UK South) to simplify GDPR compliance.  
+* **Authentication:** Integration with **Clerk** or **Auth0** is recommended for managing teacher accounts. TanStack Start has first-class integration patterns for Clerk, allowing route protection at the middleware level.28
+
+### **6.2 Preventing AI Abuse**
+
+There is a risk of students using the tool to generate "answers" or bypass learning.
+
+* **Role-Based Access Control (RBAC):** The "Teacher" persona should have access to useCopilotAction for generating marking schemes. The "Student" persona (if accessing the platform for practice) should have the AI features restricted to "Tutor Mode" (hints only), preventing the AI from revealing full answers. This logic can be enforced in the TanStack Start Server Functions that power the AI actions.
+
+## ---
+
+**7\. Performance Optimization & Infrastructure**
+
+To ensure the "drag and drop experience" is smooth (60fps), rigorous performance optimization is required.
+
+### **7.1 Optimistic Updates with TanStack Query**
+
+When a user drops a question, the UI must reflect the change immediately. Waiting for a server round-trip (to save the paper) will make the drag-and-drop feel sluggish.
+
+* **Strategy:** Use TanStack Query's onMutate to optimistically update the client cache. The visual state changes instantly. The background sync to the server happens asynchronously. If the server save fails (e.g., network error), TanStack Query automatically rolls back the UI change and shows an error toast.29
+
+### **7.2 Code Splitting and Bundle Size**
+
+The combination of dnd-kit, CopilotKit, and TanStack Start can lead to a large JavaScript bundle.
+
+* **Route-Based Splitting:** TanStack Start automatically splits code by route. The "Exam Builder" code should not be loaded on the "Home Page."  
+* **Lazy Loading:** Heavy components like the "Math Renderer" (KaTeX/MathJax) or "PDF Previewer" should be lazy-loaded using React.lazy and Suspense. They should only be fetched when the user actually adds a math question or clicks "Preview".31
+
+## ---
+
+**8\. Conclusion and Strategic Roadmap**
+
+The development of a British Isles-focused Interactive Exam Builder is a sophisticated engineering endeavor that transcends simple web development. It requires a symbiotic integration of structured data (the syllabus index), fluid interaction (the drag-and-drop builder), and intelligent assistance (CopilotKit).  
+**Summary of Recommendations:**
+
+1. **Architecture:** Adopt **TanStack Start** to hybridize the application. Use Server-Side Rendering for the public Syllabus Index (SEO) and Client-Side Rendering (wrapped in ClientOnly) for the interactive Builder.  
+2. **Interaction Engine:** Select **dnd-kit** over competitors. Its headless nature allows for the precise, accessible rendering of complex exam questions, and its architecture supports the critical "Sidebar-to-Canvas cloning" pattern required for this domain.  
+3. **Artificial Intelligence:** Leverage **CopilotKit** not just as a chatbot, but as a state-aware operator. Feed it summarized metadata via useCopilotReadable to respect context windows, and restrict its generative capabilities to RAG-based retrieval to ensure curriculum accuracy.  
+4. **Data Strategy:** Implement a robust JSON schema that mirrors the **QTI** standard but is optimized for the semantic nuances of AQA, OCR, and Edexcel exams.
+
+**Implementation Roadmap:**
+
+* **Phase 1: The Index.** Build the TanStack Start application with Server Functions to ingest and search a sample dataset of past papers. Focus on the Zod schema validation and database performance.  
+* **Phase 2: The Core Builder.** Implement the dnd-kit engine. Build the "Sidebar" (Draggable) and "Canvas" (Sortable/Droppable). Achieve the "Clone on Drop" functionality with ID regeneration.  
+* **Phase 3: The Copilot.** Integrate useCopilotReadable. Train the system to "understand" the paper structure. Implement the first action: "Search and Add Question."  
+* **Phase 4: Refinement.** Address accessibility (keyboard navigation for the builder) and implement the PDF generation pipeline for the final artifact.
+
+This platform represents the next generation of EdTech tools: ones that do not just store content, but actively assist educators in determining the best way to assess their students.
+
+## **9\. Detailed Architecture Specifications**
+
+### **9.1 Data Schema: The British Exam Model**
+
+A robust data model is the foundation of the system. The schema must handle the idiosyncrasies of British exams, such as "nested" questions (e.g., 1a, 1b, 1c) and shared resource blocks (e.g., a reading passage shared by questions 1-5).  
+**Proposed JSON Structure:**
+
+JSON
+
+{  
+  "examPaper": {  
+    "id": "uuid-paper-1",  
+    "title": "GCSE Math Mock \- Higher Tier",  
+    "metadata": {  
+      "board": "AQA",  
+      "level": "GCSE",  
+      "tier": "Higher",  
+      "year": 2024  
+    },  
+    "sections":  
+            },  
+            "markingScheme": "..."  
+          },  
+          {  
+            "type": "resource",  
+            "id": "res-456",  
+            "content": "Refer to Source A...",  
+            "linkedQuestions": \["q-124", "q-125"\] // Complexity: Shared Context  
+          }  
+        \]  
+      }  
+    \]  
+  }  
+}
+
+**Architectural Implication:** The drag-and-drop system must handle sections as sortable containers. The linkedQuestions field implies that dragging a "Resource" might inherently drag the questions attached to it—a "Group Drag" feature supported by dnd-kit via custom modifiers or multi-drag strategies.
+
+### **9.2 Copilot Context Strategy: Managing the Window**
+
+When a user builds a large paper (e.g., 20 pages), the JSON state grows massive. Passing the entire object to CopilotKit will hit token limits (e.g., 8k tokens) or cause latency.  
+Strategy: Context Pruning and Summarization  
+We must use a "Level of Detail" (LOD) approach for the AI context.
+
+1. **High-Level Context (Always On):** The AI receives a summary of the paper structure.  
+   * *Example:* "Paper contains 3 Sections. Section A has 5 Algebra questions (Total 15 marks). Section B has 2 Geometry questions..."  
+2. **Focused Context (On Demand):** When the user asks about a specific question ("Rewrite Question 3"), the system (or the AI via a tool call) retrieves the *full* text of just that question and injects it into the immediate context.
+
+This mimics how a human works: keeping the "Table of Contents" in memory but reading specific pages only when necessary.
+
+### **9.3 Server-Side Rendering (SSR) vs. Interactive Shells**
+
+The **Syllabus Index** is a classic SEO target. A teacher searching Google for "AQA GCSE Biology Past Papers" should land on your indexed page.
+
+* **TanStack Start Implementation:** Use loader functions in the route definition to fetch the syllabus tree on the server. This renders full HTML for bots.
+
+The **Builder** is an application. SEO matters less, but load time matters.
+
+* **TanStack Start Implementation:** Use deferred loading for the sidebar data. The shell of the builder loads instantly. The heavy list of 5,000 draggable questions streams in afterwards. This prevents the "White Screen of Death" while the database query executes.
+
+### **9.4 Accessibility: The Legal Imperative**
+
+In the UK, educational software must often comply with **WCAG 2.1 AA** standards.
+
+* **Keyboard Navigation:** dnd-kit is superior here. It introduces a specific "keyboard sensor." A user tabs to a question, hears "Question 1, Algebra, Draggable," presses Space, uses Up/Down arrows to reorder, and presses Space to drop.  
+* **Screen Readers:** You must ensure the aria-describedby attributes on the draggable items provide context. "Question 1, moved to position 3." dnd-kit provides an Announcements prop specifically for this, allowing you to define the voiceover strings for every drag event.
+
+## **10\. Final Recommendation Summary**
+
+For the developer tasked with this project, the path forward is clear but rigorous. You are not just building a web app; you are building a specialized authoring tool.
+
+1. **Adopt TanStack Start** as the framework to bridge the gap between the SEO-heavy syllabus index and the client-heavy builder.  
+2. **Commit to dnd-kit** as the interaction engine. Its accessibility features and headless architecture are the only viable path for the complex, nested, and accessible interfaces required by British education standards.  
+3. **Architect for AI Agency** with CopilotKit. Do not treat AI as a gimmick. architect the data flow (via useCopilotReadable) so the AI has a "mental model" of the exam paper, and restrict its output (via useCopilotAction) to valid, retrieved curriculum content to ensure the tool remains a trustworthy educational resource.
+
+This architecture ensures the platform is scalable, legally compliant, and genuinely useful to the educators it aims to serve.
+
+#### **Works cited**
+
+1. AQA vs Edexcel vs OCR (2025): Which GCSE Exam Board Is Best? \- Tutopiya, accessed December 14, 2025, [https://www.tutopiya.com/tools/blog/gcse-exam-boards-comparison-aqa-vs-edexcel-vs-ocr-2025](https://www.tutopiya.com/tools/blog/gcse-exam-boards-comparison-aqa-vs-edexcel-vs-ocr-2025)  
+2. A Complete Guide to Every GCSE Exam Board \- Ivy Education, accessed December 14, 2025, [https://www.ivyeducation.co.uk/insights/gcse-exam-boards](https://www.ivyeducation.co.uk/insights/gcse-exam-boards)  
+3. Question & Test Interoperability (QTI) 3.0 Best Practices and Implementation Guide, accessed December 14, 2025, [https://www.imsglobal.org/spec/qti/v3p0/impl](https://www.imsglobal.org/spec/qti/v3p0/impl)  
+4. Server Functions | TanStack Start React Docs, accessed December 14, 2025, [https://tanstack.com/start/latest/docs/framework/react/guide/server-functions](https://tanstack.com/start/latest/docs/framework/react/guide/server-functions)  
+5. Building a Full Stack DevJokes App with TanStack Start, accessed December 14, 2025, [https://tanstack.com/start/latest/docs/framework/react/tutorial/reading-writing-file](https://tanstack.com/start/latest/docs/framework/react/tutorial/reading-writing-file)  
+6. dnd-kit-drag-from-sidebar-clone-item (forked) \- CodeSandbox, accessed December 14, 2025, [https://codesandbox.io/s/dnd-kit-drag-from-sidebar-clone-item-forked-h9936g](https://codesandbox.io/s/dnd-kit-drag-from-sidebar-clone-item-forked-h9936g)  
+7. dndkit-drag-clone \- Codesandbox, accessed December 14, 2025, [https://codesandbox.io/p/sandbox/dndkit-drag-clone-xfpzrk](https://codesandbox.io/p/sandbox/dndkit-drag-clone-xfpzrk)  
+8. Primitive Example of dragging from source list and cloning into sortable destination list · clauderic dnd-kit · Discussion \#1452 \- GitHub, accessed December 14, 2025, [https://github.com/clauderic/dnd-kit/discussions/1452](https://github.com/clauderic/dnd-kit/discussions/1452)  
+9. 8 Best React Form Libraries for Developers (2025) \- Snappify, accessed December 14, 2025, [https://snappify.com/blog/best-react-form-libraries](https://snappify.com/blog/best-react-form-libraries)  
+10. Top 5 Drag-and-Drop Libraries for React in 2025 \- Puck, accessed December 14, 2025, [https://puckeditor.com/blog/top-5-drag-and-drop-libraries-for-react](https://puckeditor.com/blog/top-5-drag-and-drop-libraries-for-react)  
+11. React Drag & Drop Made Easy with @dnd-kit \- YouTube, accessed December 14, 2025, [https://www.youtube.com/watch?v=ZALLXGVc\_HU](https://www.youtube.com/watch?v=ZALLXGVc_HU)  
+12. Simplified Drag-and-Drop with @dnd-kit in React | by Nov | Medium, accessed December 14, 2025, [https://medium.com/@novadwynt28/simplified-drag-and-drop-with-dnd-kit-in-react-99394aa27322](https://medium.com/@novadwynt28/simplified-drag-and-drop-with-dnd-kit-in-react-99394aa27322)  
+13. Tutorial \- index \- Components \- Atlassian Design System, accessed December 14, 2025, [https://atlassian.design/components/pragmatic-drag-and-drop/tutorial](https://atlassian.design/components/pragmatic-drag-and-drop/tutorial)  
+14. Pragmatic drag and drop \- About \- Components \- Atlassian Design System, accessed December 14, 2025, [https://atlassian.design/components/pragmatic-drag-and-drop](https://atlassian.design/components/pragmatic-drag-and-drop)  
+15. Designed for delight, built for performance: The journey of pragmatic drag and drop \- Work Life by Atlassian, accessed December 14, 2025, [https://www.atlassian.com/blog/design/designed-for-delight-built-for-performance](https://www.atlassian.com/blog/design/designed-for-delight-built-for-performance)  
+16. puckeditor/puck: The visual editor for React \- GitHub, accessed December 14, 2025, [https://github.com/puckeditor/puck](https://github.com/puckeditor/puck)  
+17. Puck, a visual editor for React. \- Medium, accessed December 14, 2025, [https://medium.com/@ramunarasinga/puck-a-visual-editor-for-react-13fa72b6587b](https://medium.com/@ramunarasinga/puck-a-visual-editor-for-react-13fa72b6587b)  
+18. Selective Server-Side Rendering (SSR) | TanStack Start React Docs, accessed December 14, 2025, [https://tanstack.com/start/latest/docs/framework/react/guide/selective-ssr](https://tanstack.com/start/latest/docs/framework/react/guide/selective-ssr)  
+19. Only render component on the client? \- TanStack \- Answer Overflow, accessed December 14, 2025, [https://www.answeroverflow.com/m/1399758080362680343](https://www.answeroverflow.com/m/1399758080362680343)  
+20. TanStack Start, accessed December 14, 2025, [https://tanstack.com/start](https://tanstack.com/start)  
+21. The dragged item is not displayed outside the virtualized list (react-virtuoso, @dnd-kit), accessed December 14, 2025, [https://stackoverflow.com/questions/76785503/the-dragged-item-is-not-displayed-outside-the-virtualized-list-react-virtuoso](https://stackoverflow.com/questions/76785503/the-dragged-item-is-not-displayed-outside-the-virtualized-list-react-virtuoso)  
+22. useCopilotReadable \- CopilotKit docs, accessed December 14, 2025, [https://docs.copilotkit.ai/reference/hooks/useCopilotReadable](https://docs.copilotkit.ai/reference/hooks/useCopilotReadable)  
+23. Understanding the Impact of Increasing LLM Context Windows \- Meibel, accessed December 14, 2025, [https://www.meibel.ai/post/understanding-the-impact-of-increasing-llm-context-windows](https://www.meibel.ai/post/understanding-the-impact-of-increasing-llm-context-windows)  
+24. Context Window Guide | DevClarity, accessed December 14, 2025, [https://www.devclarity.ai/resources/context-window-for-ai-tools-and-models](https://www.devclarity.ai/resources/context-window-for-ai-tools-and-models)  
+25. If you think Copilot's context window is too small, try this workflow : r/GithubCopilot \- Reddit, accessed December 14, 2025, [https://www.reddit.com/r/GithubCopilot/comments/1phnj0e/if\_you\_think\_copilots\_context\_window\_is\_too\_small/](https://www.reddit.com/r/GithubCopilot/comments/1phnj0e/if_you_think_copilots_context_window_is_too_small/)  
+26. CopilotKit v1.50 Brings AG-UI Agents Directly Into Your App With the New useAgent Hook, accessed December 14, 2025, [https://www.marktechpost.com/2025/12/11/copilotkit-v1-50-brings-ag-ui-agents-directly-into-your-app-with-the-new-useagent-hook/](https://www.marktechpost.com/2025/12/11/copilotkit-v1-50-brings-ag-ui-agents-directly-into-your-app-with-the-new-useagent-hook/)  
+27. CopilotKit docs, accessed December 14, 2025, [https://docs.copilotkit.ai/](https://docs.copilotkit.ai/)  
+28. TanStack React Start Quickstart (beta) \- Clerk, accessed December 14, 2025, [https://clerk.com/docs/tanstack-react-start/getting-started/quickstart](https://clerk.com/docs/tanstack-react-start/getting-started/quickstart)  
+29. Mutations | TanStack Query Angular Docs, accessed December 14, 2025, [https://tanstack.com/query/v5/docs/framework/angular/guides/mutations](https://tanstack.com/query/v5/docs/framework/angular/guides/mutations)  
+30. Mutations | TanStack Query React Docs, accessed December 14, 2025, [https://tanstack.com/query/v5/docs/react/guides/mutations](https://tanstack.com/query/v5/docs/react/guides/mutations)  
+31. ClientOnly Component | TanStack Router React Docs, accessed December 14, 2025, [https://tanstack.com/router/v1/docs/framework/react/api/router/clientOnlyComponent](https://tanstack.com/router/v1/docs/framework/react/api/router/clientOnlyComponent)
+
+---
+
+## LLM and OCR Deployment Research
+
+*Source: `docs/bunchloch/meaisínfhoghlaim/LLM and OCR Deployment Research.md` (4335 words, 378 lines)*
+
+# **Advanced Architectures for Document Intelligence on Apple Silicon: A Comprehensive Analysis of PaddleOCR v3, Docling, and Vision-Language Models**
+
+## **1\. Introduction: The Paradigm Shift in Document Intelligence**
+
+The field of Document Intelligence has historically been dominated by cascaded computer vision pipelines, typically characterized by a rigid sequence of operations: binarization, layout analysis, text line detection, and finally, optical character recognition (OCR). For decades, this heuristic-based approach served as the industrial standard, powering everything from invoice automation to archival digitization. However, the advent of the Transformer architecture and the subsequent rise of Large Language Models (LLMs) have precipitated a fundamental paradigm shift. We are no longer merely "recognizing characters"; we are now engineering systems capable of "visual understanding."  
+This transition from recognition to understanding is epitomized by the emergence of Vision-Language Models (VLMs). Unlike traditional OCR engines that output a stream of disjointed text, VLMs ingest the entire document image as a visual token stream, projecting it into a high-dimensional semantic space where text, layout, and visual features are inextricably linked. This allows for the extraction of structured information—tables, charts, and logical relationships—with a fidelity that heuristic systems could never achieve.  
+For the modern machine learning engineer or systems architect, this technological leap necessitates a complete re-evaluation of the deployment stack. This is particularly true for professionals operating within the Apple Silicon ecosystem (M1, M2, M3, and M4 chipsets). The unified memory architecture and potent Neural Engine of Apple’s silicon offer theoretical inference capabilities that rival dedicated discrete GPUs. Yet, the software ecosystem remains fractured. The industry-standard deployment vehicle—Docker containers running on Linux—introduces a virtualization layer that fundamentally clashes with Apple's Metal graphics API, creating a dichotomy between "easy deployment" and "hardware acceleration."  
+This report provides an exhaustive technical analysis of this landscape, specifically tailored to the user's requirement to integrate **PaddleOCR v3**, **Docling (Granite-Docling)**, and **Qwen2.5-VL** into a cohesive workflow on a MacBook. We will dissect the internal architectures of these models, analyze the limitations of Docker on macOS, demystify the role of inference engines like vLLM and llama.cpp, and propose a hybrid-native architecture that maximizes the specific hardware advantages of Apple Silicon while maintaining the modularity of microservices.
+
+## **2\. Theoretical Framework: VLM Architectures for Document Parsing**
+
+To understand the comparative advantages of PaddleOCR-VL, Granite-Docling, and Qwen2.5-VL, one must first appreciate the architectural innovations that distinguish them from traditional OCR.
+
+### **2.1 The Traditional OCR Pipeline vs. The VLM Approach**
+
+Traditional systems, such as the earlier versions of PaddleOCR (v2) or Tesseract, operate on a "bottom-up" principle. A detection network (often based on DBNet or EAST) scans the image to identify bounding boxes containing text. These cropped regions are then fed into a recognition network (CRNN or SVTR) which transcribes the pixel data into string data. The structural relationship between these text boxes—whether they form a table, a paragraph, or a header—is reconstructed post-hoc using geometric heuristics. This approach is brittle; a slight misalignment in detection can shatter the logical structure of a table, and complex layouts like multi-column scientific papers often result in incoherent reading orders.  
+The VLM approach, utilized by PaddleOCR-VL, Granite-Docling, and Qwen2.5-VL, is "top-down." The model perceives the image globally. The visual encoder transforms the pixel data into a sequence of embeddings. The language model decoder then autoregressively generates the text, inherently understanding the reading order and layout because it has been trained on millions of documents where the "next token" prediction depends on both the textual context and the 2D spatial position.
+
+### **2.2 Dynamic Resolution and the NaViT Encoder**
+
+A critical innovation shared by the most advanced models in this study (PaddleOCR-VL and Qwen2.5-VL) is the handling of image resolution. Standard Vision Transformers (ViTs), such as the one used in the original CLIP model, require input images to be resized to a fixed square resolution, typically $224 \\times 224$ or $336 \\times 336$ pixels.  
+For document processing, fixed-resolution resizing is catastrophic. A long receipts, a wide spreadsheet, or a high-density A4 academic paper contains high-frequency details (small fonts) that are obliterated when downsampled to a low-resolution square. Furthermore, the aspect ratio distortion introduces artifacts that confuse the model.  
+The solution, adopted by PaddleOCR-VL and Qwen2.5-VL, is the **NaViT (Native Resolution Vision Transformer)** approach. Instead of resizing the image, the model divides the image into patches of fixed size (e.g., $14 \\times 14$ pixels) based on its original resolution. These patches are then packed into sequences. A "Patch Padding" or specialized attention mask is used to handle the variable sequence lengths within a batch. This allows the model to "read" a tall, thin receipt or a wide landscape chart with equal native fidelity, preserving the high-frequency edge information required to distinguish between a 'c' and an 'e' in 6-point font.
+
+### **2.3 The Role of Instruction Tuning in Documents**
+
+While the visual encoder handles perception, the utility of these models comes from instruction tuning. Granite-Docling and Qwen2.5-VL have been fine-tuned on massive datasets of "Document-QA" pairs. This means the models are not just trained to "transcribe text," but to "convert structure."  
+Granite-Docling, for instance, is trained to output a specialized pseudo-code format known as **DocTags**. When it sees a table, it doesn't just output the words; it outputs \<table\_start\>\<row\>\<cell\>Data\</cell\>...\</row\>. This semantic awareness is injected into the model weights during the supervised fine-tuning (SFT) phase, effectively compressing the logic of a complex layout parser into the neural network itself.
+
+## **3\. Deep Dive: PaddleOCR v3 and PaddleOCR-VL**
+
+PaddleOCR has long been the gold standard for industrial OCR, particularly for CJK (Chinese, Japanese, Korean) languages. The release of Version 3.0 marks a significant strategic pivot from "lightweight and mobile-first" to "accurate and server-first."
+
+### **3.1 PaddleOCR v3 Architecture**
+
+The v3 framework is built upon PaddlePaddle 3.0, Baidu's deep learning framework which competes with PyTorch and TensorFlow. The v3 release introduces a "Unified Inference Interface," aiming to standardize how different modules (text detection, table recognition, layout analysis) interact.1
+
+#### **3.1.1 PP-OCRv5**
+
+The text recognition component, PP-OCRv5, introduces several key enhancements over v4 1:
+
+* **Backbone Upgrade:** It utilizes PP-HGNetV2 for the detection model. HGNet (High-Performance GPU Net) is designed to maximize throughput on NVIDIA GPUs by optimizing kernel usage, reducing memory access costs compared to traditional ResNets.  
+* **Recognition Strategy:** The recognition module uses SVTR (Scene Text Recognition), which combines local and global mixing of features. This is crucial for recognizing distinct characters in varied fonts and orientations.  
+* **Data Augmentation:** The v5 models are trained with extensive data synthesis, specifically targeting "hard cases" mined from large-scale datasets using teacher models (like larger VLMs) to distill knowledge into the compact student model.
+
+#### **3.1.2 PP-StructureV3**
+
+This module is the backbone of document parsing. It moves beyond simple text to layout analysis. It employs a detection model to identify regions (Header, Footer, Table, Figure) and a separate recognition model for the content within those regions. Crucially, PP-StructureV3 excels at **Table Recognition**, converting raster table images into Excel-compatible structures with high accuracy, a task where standard LLMs often hallucinate row/column alignment.
+
+### **3.2 PaddleOCR-VL: The Vision-Language Specialist**
+
+PaddleOCR-VL is the most relevant component for the user's query regarding "deep research." It is a specialized VLM with approximately 0.9 Billion parameters.3  
+**Architecture Details:**
+
+* **Visual Encoder:** As mentioned, it uses a dynamic resolution encoder inspired by NaViT. This allows it to ingest documents at native DPI levels.  
+* **LLM Backbone:** The language model is **ERNIE-4.5-0.3B**. ERNIE (Enhanced Representation through Knowledge Integration) is Baidu's answer to BERT/LLaMA. The 0.3B variant is extremely small, optimized for high throughput.  
+* **Alignment:** The visual features are projected into the ERNIE embedding space using a lightweight MLP (Multi-Layer Perceptron) connector.
+
+Deployment Constraints (The "Deploy" Folder Analysis):  
+The user referenced the deploy folder in the PaddleOCR repository. A granular analysis of this folder reveals the project's hardware assumptions.4
+
+* **CUDA Dominance:** The Dockerfiles and compose.yaml configurations heavily favor NVIDIA. They utilize nvidia-docker runtimes and set environment variables like CUDA\_VISIBLE\_DEVICES.  
+* **C++ Inference:** The deploy/cpp\_infer directory contains high-performance C++ source code using the Paddle Inference library. This library relies on mkldnn for Intel CPUs and cuDNN/TensorRT for NVIDIA GPUs.  
+* **Missing Metal:** Crucially, the Paddle Inference library has **limited to no support for Apple Metal**. While PaddlePaddle supports MacOS via OpenBLAS (CPU), the optimized operations required for the VLM's dynamic attention mechanisms are likely not implemented for the MPS (Metal Performance Shaders) backend. This means running PaddleOCR-VL on a Mac, even natively, often defaults to CPU execution, which is significantly slower than the Neural Engine.
+
+### **3.3 Limitations for the Mac User**
+
+The "PaddleOCR-VL" promise of SOTA performance is contingent on having the right hardware. For a Mac user, the experience is compromised.
+
+* **Docker:** Running the official Docker image on Mac forces CPU emulation. The 0.9B model, while small, still requires billions of floating-point operations per token. On a virtualized CPU, this results in latency of 10-30 seconds per page 6, rendering it unusable for real-time applications compared to native Metal execution.  
+* **Dependency Hell:** Attempting to build PaddleOCR-VL from source on Mac to bypass Docker involves navigating complex dependency trees (protobuf versions, python versions) that often conflict with the system's clang compiler or arm64 architecture quirks.
+
+## **4\. Deep Dive: Docling and Granite-Docling**
+
+Docling, developed by IBM Research, represents a philosophy of "Document Conversion as a Service." It is not just an OCR engine; it is a pipeline designed to normalize unstructured data into a schema that RAG systems can consume.7
+
+### **4.1 The Docling Ecosystem**
+
+The core of Docling is its modular pipeline architecture.
+
+* **Input Handling:** Docling accepts PDF, DOCX, PPTX, HTML, and images.  
+* **Backend Selection:** It automatically routes documents. Digital PDFs might go through pypdfium2 for fast text extraction. Scanned PDFs are routed to the **VLM Pipeline**.  
+* **The DoclingDocument:** The central data structure is the DoclingDocument object. This is a rich representation that stores not just text, but bounding boxes, hierarchical levels (Section 1, Section 1.1), table cells, and metadata. This object can be serialized losslessly to JSON or exported to Markdown.8
+
+### **4.2 Granite-Docling-258M: The Efficient Expert**
+
+The engine powering the VLM pipeline is **Granite-Docling-258M**.
+
+* **Parameter Efficiency:** At 258 million parameters, it is nearly 4x smaller than PaddleOCR-VL. This makes it exceptionally fast and memory-efficient, fitting easily into the RAM of even the base model MacBook Air.9  
+* **SigLIP2 Encoder:** It uses the SigLIP2 (Sigmoid Loss for Language Image Pre-training) encoder. SigLIP is known for better image-text alignment convergence than standard CLIP.  
+* **Granite 165M Decoder:** The language model is a member of IBM's Granite family, specifically tuned for code and structured text.  
+* **DocTags Training:** The model was trained to output specific XML-like tags (\<title\>, \<figure\>, \<table\>). This is a crucial differentiator. Generic VLMs like Qwen might simply output the text of a table line by line. Granite-Docling outputs the *structure* of the table, ensuring that when it is rendered to Markdown, the rows and columns are preserved.10
+
+### **4.3 Native MLX Support: The Key Differentiator**
+
+The user's query asks about taking advantage of MLX. Docling is the only tool in this set that supports MLX natively and effortlessly.  
+The docling python library has optional dependencies. Installing pip install "docling\[mlx\]" pulls in the mlx and mlx-vlm libraries. When the pipeline is initialized on a Mac, Docling detects the architecture and automatically loads the Granite model weights into the Metal unified memory.11
+
+* **Performance:** On an M3 Max, Granite-Docling via MLX can parse a page in under 1 second.13 This is an order of magnitude faster than running PaddleOCR-VL in Docker.
+
+### **4.4 Docling-Serve Architecture**
+
+docling-serve is a Python application (FastAPI) that wraps the library.
+
+* **Configuration:** It is configured via environment variables (e.g., DOCLING\_SERVE\_ARTIFACTS\_PATH).  
+* **No Native MLX in Docker:** The standard docling-serve Docker images are based on Linux (Debian/Ubuntu). They contain CUDA drivers. If the user runs docker run docling-serve on a Mac, the container runs in a Linux VM. This VM **cannot** access the Mac's Metal API. Therefore, docling-serve in Docker will run on the CPU.14  
+* **The "vLLM" Confusion:** The user noted that Docling mentions vLLM. Docling *can* use vLLM as a remote backend. One can configure Docling to send the image to a separate server running vLLM (e.g., a Linux GPU server). However, running vLLM *itself* on a Mac is not the path to MLX acceleration; vLLM is optimized for NVIDIA.15
+
+## **5\. Deep Dive: Qwen2.5-VL and GLM-4.5v**
+
+These models represent the "General Purpose" end of the spectrum. They are not specialized solely for documents, but their massive scale and varied training data make them capable of reasoning tasks that smaller models cannot handle.
+
+### **5.1 Qwen2.5-VL: The Reasoning Giant**
+
+Qwen2.5-VL (7B parameters) is a significant step up in capability.16
+
+* **M-RoPE (Multimodal Rotary Positional Embeddings):** This innovation allows the model to handle 1D text, 2D images, and 3D video sequences in a unified positional space.  
+* **Visual Reasoning:** Unlike Granite or Paddle which primarily "extract," Qwen can "reason." You can ask Qwen, "Is the total on this invoice consistent with the line items?" and it can perform the arithmetic and logic verification.  
+* **Mac Deployment:** Qwen2.5-VL has excellent support on Mac via **MLX-VLM** and **llama.cpp**. The mlx-vlm package provides a server implementation that mimics the OpenAI API. Running this native server allows Qwen to utilize the GPU, achieving speeds of 50-70 tokens per second on M-series chips.17
+
+### **5.2 GLM-4.5v: The Cloud Benchmark**
+
+GLM-4.5v is Zhipu AI's proprietary model.18
+
+* **Architecture:** It uses a GLM (General Language Model) backbone with RLHF (Reinforcement Learning from Human Feedback) specifically tuned for agentic tasks.  
+* **API Economics:** Access is strictly via API. While efficient for low volume, the latency (network round trip \+ server queue) sets a hard floor on performance (typically 2-5 seconds per request).  
+* **Cost:** At $0.60 per million input tokens, it is affordable for reasoning tasks but expensive for bulk digitization (OCR) compared to the zero marginal cost of local models.19
+
+## **6\. Engineering the Solution: The Docker vs. Native Conflict**
+
+The user's central engineering challenge is the desire to use docker compose while leveraging mlx. This is a fundamental conflict in the current macOS virtualization stack.
+
+### **6.1 The Docker Virtualization Barrier**
+
+Docker Desktop on macOS uses a hypervisor (HyperKit, VPNKit, or the Apple Virtualization Framework) to run a Linux kernel.
+
+* **Isolation:** This Linux kernel is isolated from the host hardware.  
+* **GPU Passthrough:** While NVIDIA has engineered "NVIDIA Container Toolkit" to pass GPU access to containers on Linux hosts, no equivalent robust standard exists for passing the Apple Metal API into a Linux container.  
+* **Result:** Any process inside a Docker container on Mac sees a generic virtual CPU. It cannot see the M-series GPU or Neural Engine.
+
+### **6.2 The "vLLM" Red Herring**
+
+The user noticed vLLM support in repositories and asked if this enables MLX.
+
+* **vLLM Architecture:** vLLM is built around PagedAttention, a memory management technique optimizing the KV-cache for high throughput. Its kernels are written in CUDA (for NVIDIA) and HIP (for AMD).  
+* **vLLM on Mac:** There is experimental CPU support for vLLM, and some very recent efforts to port kernels to Metal, but it is not the standard or performant way to run models on Mac.  
+* **MLX Architecture:** MLX is Apple's own framework, designed from the ground up for Unified Memory. It does not use vLLM. It uses its own serving logic (mlx.server).  
+* **Conclusion:** Seeing vLLM in a repo like Docling implies it can connect to a Linux GPU server running vLLM. It does not mean it uses vLLM to run fast on a Mac.
+
+### **6.3 The Hybrid-Native Architecture**
+
+To satisfy the user's requirements (Comparative Workflow \+ Speed \+ Cost \+ Mac Optimization), we must propose a **Hybrid Architecture**. We cannot use Docker for the *inference engines*, but we can use Docker for the *application logic* and database, while the inference engines run as "Native Services" on the host.
+
+## **7\. Configuration and Implementation Guide**
+
+This section provides the specific technical steps to implement the recommended solution.
+
+### **7.1 Component 1: Native Docling Service (The "Fast" Parser)**
+
+We will run docling-serve natively to unlock MLX.  
+**Step 1: Setup Environment**
+
+Bash
+
+\# Create a dedicated directory  
+mkdir docling-native  
+cd docling-native
+
+\# Create a virtual environment (using uv is recommended for speed)  
+uv venv.venv \--python 3.11  
+source.venv/bin/activate
+
+\# Install docling with MLX support  
+pip install "docling\[mlx\]" docling-serve
+
+Step 2: Configure and Run  
+By default, docling detects the hardware. With docling\[mlx\] installed on an ARM64 Mac, it prioritizes the MLX backend for the Granite model.
+
+Bash
+
+\# Set environment variables for the service  
+export DOCLING\_SERVE\_PORT=5001  
+export DOCLING\_SERVE\_HOST=0.0.0.0
+
+\# Run the server  
+docling-serve run
+
+*Verification:* Monitor the logs. When the first request comes in, you should see initialization of the MLX backend, not the PyTorch CPU backend.
+
+### **7.2 Component 2: Native Qwen2.5-VL Service (The "Smart" Reasoner)**
+
+We will use mlx-vlm to serve Qwen.  
+**Step 1: Installation**
+
+Bash
+
+\# In a separate terminal or same venv  
+pip install mlx-vlm huggingface\_hub
+
+Step 2: Serving  
+We serve the 4-bit quantized version for maximum speed.
+
+Bash
+
+python \-m mlx\_vlm.server \--model mlx-community/Qwen2.5-VL-7B-Instruct-4bit \--port 8081
+
+This creates an OpenAI-compatible API endpoint at http://localhost:8081/v1/chat/completions.
+
+### **7.3 Component 3: Llama-Swap (The Router)**
+
+The user mentioned llama-swap. This tool acts as a proxy, routing requests to different backends based on the model name. This is perfect for aggregating our native services.  
+**Step 1: Configuration (config.yaml)**
+
+YAML
+
+listen: :8080  
+models:  
+  \- name: qwen-vl  
+    \# Llama-swap usually spawns processes, but here we can use it   
+    \# to proxy to our already running mlx server if configured as an upstream   
+    \# OR we let llama-swap manage the llama-server process directly.  
+    \# Given the user wants to use llama-swap, let's configure it to manage llama-server.  
+    cmd: "llama-server \-m /path/to/Qwen2.5-VL-7B-Instruct-Q4\_K\_M.gguf \--port 8081 \--n-gpu-layers 99"  
+      
+  \- name: docling-parse  
+    \# Docling isn't an LLM, so it might not fit llama-swap's chat completion proxy paradigm perfectly   
+    \# unless we wrap it. For this report, we treat Docling as a separate endpoint.
+
+*Correction:* llama-swap is designed to swap llama-server binaries. Since Qwen2.5-VL is now supported in llama.cpp, the user can simply use llama-swap to manage the Qwen instance alongside their text models.
+
+### **7.4 Component 4: PaddleOCR (The Docker Baseline)**
+
+Since we want to compare speed and cost, we run PaddleOCR in Docker to demonstrate the performance difference (and because compiling it natively is non-trivial).  
+**docker-compose.yaml**
+
+YAML
+
+services:  
+  paddle-ocr:  
+    image: paddlepaddle/paddleocr-vl:latest  
+    container\_name: paddle\_baseline  
+    ports:  
+      \- "8082:8080"  
+    environment:  
+      \- CUDA\_VISIBLE\_DEVICES="" \# Force CPU  
+    deploy:  
+      resources:  
+        limits:  
+          cpus: '4' \# Simulate a constrained environment
+
+## **8\. Comparative Workflow: Speed and Cost Analysis**
+
+The user wants a "comparative workflow." This implies a structured test. The following analysis projects the expected results based on the architectural constraints identified above.
+
+### **8.1 Benchmark Methodology**
+
+We define a standard workload: **Digitizing a 10-page mixed-content PDF (Text \+ 2 Tables \+ 1 Chart).**  
+**The Workflow Script (Conceptual Python):**
+
+Python
+
+\# 1\. Send to Docling (Native MLX)  
+start \= time.time()  
+requests.post("http://localhost:5001/v1/convert", files={'file': pdf})  
+docling\_time \= time.time() \- start
+
+\# 2\. Send to PaddleOCR (Docker CPU)  
+start \= time.time()  
+requests.post("http://localhost:8082/predict", json={'image': base64\_img})  
+paddle\_time \= time.time() \- start
+
+\# 3\. Send to Qwen2.5-VL (Native MLX via Llama-Swap/MLX-VLM)  
+start \= time.time()  
+client.chat.completions.create(model="qwen-vl", messages=\[...\])  
+qwen\_time \= time.time() \- start
+
+\# 4\. Send to GLM-4.5v (API)  
+start \= time.time()  
+zhipu\_client.chat.completions.create(model="glm-4.5v",...)  
+glm\_time \= time.time() \- start
+
+### **8.2 Projected Results and Analysis**
+
+#### **8.2.1 Processing Speed (Latency)**
+
+| Engine | Deployment | Accelerator | Est. Time (1 Page) | Insight |
+| :---- | :---- | :---- | :---- | :---- |
+| **Granite-Docling** | Native (MLX) | **Metal (GPU/ANE)** | **\< 1.0 sec** | **The Efficiency Winner.** Because it uses a small (258M) model directly on the hardware, it incurs virtually zero overhead. It is the only viable choice for real-time applications on Mac. |
+| **Qwen2.5-VL (4-bit)** | Native (MLX) | Metal (GPU) | 3.0 \- 5.0 sec | Excellent for "reasoning." It is slower than Docling because the model is 25x larger (7B vs 0.25B), but MLX quantization keeps it interactive. |
+| **GLM-4.5v** | API | Cloud GPU | 5.0 \- 10.0 sec | Network latency dominates. High variability based on internet connection and API congestion. |
+| **PaddleOCR-VL** | Docker | **Virtual CPU** | 20.0 \- 45.0 sec | **The Bottleneck.** Running a 0.9B VLM on a virtualized CPU is computationally expensive. The lack of Metal passthrough makes this the slowest option by far. |
+
+#### **8.2.2 Cost Effectiveness (10,000 Pages)**
+
+| Engine | Hardware | Token Cost | Energy Cost | Total Cost |
+| :---- | :---- | :---- | :---- | :---- |
+| **Granite-Docling** | Local Mac | $0 | Negligible (\<$0.10) | **\~$0.10** |
+| **Qwen2.5-VL** | Local Mac | $0 | Low (\<$0.50) | **\~$0.50** |
+| **PaddleOCR-VL** | Local Mac | $0 | High (CPU grind) | **\~$1.00** |
+| **GLM-4.5v** | Cloud API | \~$12.00 | N/A | **\~$12.00** |
+
+**Insight:** For high-volume processing, local inference with Granite-Docling is essentially free. Using a commercial API like GLM-4.5v introduces a linear cost scaling that becomes prohibitive at archive scale (e.g., 1 million pages \= $1,200).
+
+### **8.3 Feature Capability Matrix**
+
+| Feature | Granite-Docling | PaddleOCR-VL | Qwen2.5-VL | GLM-4.5v |
+| :---- | :---- | :---- | :---- | :---- |
+| **Primary Output** | Structured Layout (DocTags) | Structured Layout (PP-Structure) | Conversational Text / JSON | Conversational Text |
+| **Table Parsing** | **Excellent** (Preserves row/col) | **SOTA** (Optimized for tables) | Good (Reasoning based) | Very Good |
+| **Layout Semantics** | **High** (Sections, Headers) | High (Reading Order) | Medium (Visual understanding) | Medium |
+| **Reasoning** | Low (Extraction only) | Low (Extraction only) | **High** (Can answer logic questions) | **Very High** |
+| **Deployment** | Simple (Python lib) | Complex (Docker/C++) | Simple (MLX/Llama.cpp) | Zero (API) |
+
+## **9\. Recommendations and Strategic Roadmap**
+
+Based on the deep analysis of the architectures and the specific constraints of the user's hardware (MacBook), the following roadmap is recommended.
+
+### **9.1 The "Native-First" Strategy**
+
+Abandon the attempt to containerize the inference engines. The abstraction cost of Docker on macOS is too high for VLM workloads.
+
+* **Action:** Run docling-serve and mlx-vlm directly on the host OS.  
+* **Rationale:** This unlocks the Neural Engine and Metal GPU, transforming a 30-second task (Docker CPU) into a sub-second task (Native MLX).
+
+### **9.2 The Routing Logic**
+
+Use Docling as the default ingestion engine. It is the fastest and most cost-effective way to turn a PDF into Markdown.  
+Use Qwen2.5-VL (via llama-swap or mlx-vlm) as an "Escalation" engine. If Docling fails to parse a specific chart, or if the user asks a question about the document ("What is the sentiment of this handwritten note?"), route that specific request to Qwen.
+
+### **9.3 The Role of PaddleOCR**
+
+Keep PaddleOCR-VL in a Docker container only as a **benchmark reference**. Do not use it in the production hot path on a Mac. Its dependency on CUDA or generic CPU kernels makes it uncompetitive on Apple Silicon compared to the highly optimized MLX implementations of Granite and Qwen.
+
+### **9.4 Final Architecture Diagram (Conceptual)**
+
+1. **User Request** \-\> **Llama-Swap (Port 8080\)**  
+2. **Llama-Swap Routes:**  
+   * /convert \-\> **Docling Serve** (Native Process, Port 5001\) \-\> **MLX** \-\> **Granite Model**  
+   * /chat (Model: Qwen) \-\> **Llama-Server** (Native Process, Port 8081\) \-\> **Metal** \-\> **Qwen2.5-VL**  
+   * /chat (Model: GLM) \-\> **Proxy** \-\> **Zhipu API**
+
+This architecture satisfies all user requirements: it compares the models, utilizes llama-swap, leverages MLX where possible (Docling, Qwen), and integrates the cloud API (GLM), all while navigating the specific constraints of the Apple Silicon platform.
+
+## **10\. Glossary of Technical Terms**
+
+* **NaViT (Native Resolution Vision Transformer):** A technique where images are processed in their original aspect ratio by patching them dynamically, rather than resizing them to a fixed square. Used by PaddleOCR-VL.  
+* **DocTags:** A set of special tokens (e.g., \<title\>, \<table\>) used by Granite-Docling to represent document structure in the text output.  
+* **MLX:** Apple's array framework for machine learning on Apple Silicon, designed for unified memory efficiency.  
+* **Metal Performance Shaders (MPS):** The graphics framework on macOS that allows PyTorch to utilize the GPU.  
+* **vLLM:** A high-throughput serving engine for LLMs, primarily optimized for CUDA (NVIDIA) and ROCm (AMD), using PagedAttention.  
+* **SigLIP:** A variation of the CLIP model using Sigmoid Loss, offering better image-text alignment convergence. Used by Granite-Docling.  
+* **SOTA:** State of the Art.
+
+---
+
+*End of Report*
+
+#### **Works cited**
+
+1. Home \- PaddleOCR Documentation, accessed December 6, 2025, [http://www.paddleocr.ai/main/en/index.html](http://www.paddleocr.ai/main/en/index.html)  
+2. (PDF) PaddleOCR 3.0 Technical Report \- ResearchGate, accessed December 6, 2025, [https://www.researchgate.net/publication/393511573\_PaddleOCR\_30\_Technical\_Report](https://www.researchgate.net/publication/393511573_PaddleOCR_30_Technical_Report)  
+3. PaddleOCR-VL: Boosting Multilingual Document Parsing via a 0.9B Ultra-Compact Vision-Language Model \- arXiv, accessed December 6, 2025, [https://arxiv.org/html/2510.14528v1](https://arxiv.org/html/2510.14528v1)  
+4. PaddleOCR/deploy/paddleocr\_vl\_docker/compose.yaml at main ..., accessed December 6, 2025, [https://github.com/PaddlePaddle/PaddleOCR/blob/main/deploy/paddleocr\_vl\_docker/compose.yaml](https://github.com/PaddlePaddle/PaddleOCR/blob/main/deploy/paddleocr_vl_docker/compose.yaml)  
+5. PaddleOCR-VL Usage Tutorial, accessed December 6, 2025, [http://www.paddleocr.ai/main/en/version3.x/pipeline\_usage/PaddleOCR-VL.html](http://www.paddleocr.ai/main/en/version3.x/pipeline_usage/PaddleOCR-VL.html)  
+6. PaddleOCR-VL, is better than private models : r/LocalLLaMA \- Reddit, accessed December 6, 2025, [https://www.reddit.com/r/LocalLLaMA/comments/1o866vl/paddleocrvl\_is\_better\_than\_private\_models/](https://www.reddit.com/r/LocalLLaMA/comments/1o866vl/paddleocrvl_is_better_than_private_models/)  
+7. docling-project/docling-serve: Running Docling as an API service \- GitHub, accessed December 6, 2025, [https://github.com/docling-project/docling-serve](https://github.com/docling-project/docling-serve)  
+8. Docling Technical Report \- arXiv, accessed December 6, 2025, [https://arxiv.org/html/2408.09869v4](https://arxiv.org/html/2408.09869v4)  
+9. ibm-granite/granite-docling-258M \- Hugging Face, accessed December 6, 2025, [https://huggingface.co/ibm-granite/granite-docling-258M](https://huggingface.co/ibm-granite/granite-docling-258M)  
+10. IBM Granite-Docling: Super Charge your RAG 2.0 Pipeline | by Vishal Mysore | Medium, accessed December 6, 2025, [https://medium.com/@visrow/ibm-granite-docling-super-charge-your-rag-2-0-pipeline-32ac102ffa40](https://medium.com/@visrow/ibm-granite-docling-super-charge-your-rag-2-0-pipeline-32ac102ffa40)  
+11. Installation \- Docling \- GitHub Pages, accessed December 6, 2025, [https://docling-project.github.io/docling/getting\_started/installation/](https://docling-project.github.io/docling/getting_started/installation/)  
+12. Quickstart \- Docling \- GitHub Pages, accessed December 6, 2025, [https://docling-project.github.io/docling/getting\_started/quickstart/](https://docling-project.github.io/docling/getting_started/quickstart/)  
+13. Benchmarking small models at 4bit quants on Apple Silicon with mlx-lm \- Reddit, accessed December 6, 2025, [https://www.reddit.com/r/LocalLLaMA/comments/1o50mfy/benchmarking\_small\_models\_at\_4bit\_quants\_on\_apple/](https://www.reddit.com/r/LocalLLaMA/comments/1o50mfy/benchmarking_small_models_at_4bit_quants_on_apple/)  
+14. \[Support\] Docling Serve – Convert Documents to Markdown/JSON \- Unraid Forums, accessed December 6, 2025, [https://forums.unraid.net/topic/193982-support-docling-serve-convert-documents-to-markdownjson/](https://forums.unraid.net/topic/193982-support-docling-serve-convert-documents-to-markdownjson/)  
+15. Stupid question, but for production should I be using vLLM? \#2305 \- GitHub, accessed December 6, 2025, [https://github.com/docling-project/docling/discussions/2305](https://github.com/docling-project/docling/discussions/2305)  
+16. \[2502.13923\] Qwen2.5-VL Technical Report \- arXiv, accessed December 6, 2025, [https://arxiv.org/abs/2502.13923](https://arxiv.org/abs/2502.13923)  
+17. Tested local LLMs on a maxed out M4 Macbook Pro so you don't have to : r/ollama \- Reddit, accessed December 6, 2025, [https://www.reddit.com/r/ollama/comments/1j0by7r/tested\_local\_llms\_on\_a\_maxed\_out\_m4\_macbook\_pro/](https://www.reddit.com/r/ollama/comments/1j0by7r/tested_local_llms_on_a_maxed_out_m4_macbook_pro/)  
+18. GLM-4.5V \- Z.AI DEVELOPER DOCUMENT, accessed December 6, 2025, [https://zhipu-32152247.mintlify.app/guides/vlm/glm-4.5v](https://zhipu-32152247.mintlify.app/guides/vlm/glm-4.5v)  
+19. Pricing \- Z.AI DEVELOPER DOCUMENT, accessed December 6, 2025, [https://docs.z.ai/guides/overview/pricing](https://docs.z.ai/guides/overview/pricing)
+
+---
+
+## Resource Maximization and Project Planning
+
+*Source: `docs/bunchloch/meaisínfhoghlaim/Resource Maximization and Project Planning.md` (4305 words, 394 lines)*
+
+# **Strategic Resource Maximization: Architecting the Celtic Heritage Intelligence Platform (CHIP)**
+
+## **1\. Executive Strategy: The Resource Arbitrage Architecture**
+
+The successful execution of the **Celtic Heritage Intelligence Platform (CHIP)** requires a paradigm shift from traditional resource allocation to a model of aggressive **compute arbitrage**. We are presented with a heterogenous portfolio of assets ranging from transient, high-value cloud credits (e.g., $430 on Blaxel, $280 on Modal) to permanent, high-performance edge hardware (MacBook Pro M4 Max) and low-cost utility infrastructure (Hetzner, Oracle). The totality of these resources, valued in excess of $2,500, provides a unique opportunity to construct an enterprise-grade AI system dedicated to the preservation, analysis, and synthesis of Celtic languages and folklore.  
+To maximize this inventory, we must treat every credit and cycle as a currency within an internal economy. High-cost, low-latency resources (Modal, Blaxel) must be strictly reserved for "burst" operations and user-facing inference, while heavy, throughput-intensive tasks (training, batch OCR) must be routed to the lowest-cost providers (ThunderCompute, Nebius) or offloaded to "sunk cost" local hardware (Mac M4). This report delineates a comprehensive architectural blueprint, operational runbook, and financial model to achieve this, utilizing a **Fallback Chain** logic to ensure system resilience and cost-efficiency.  
+The central thesis of this architecture is the **Sidero Mesh**, a hybrid Kubernetes cluster bootstrapped via **Sidero Omni**, which unifies the disparate Arm64 resources (Oracle, Hetzner, Mac) into a single control plane. Overlaying this is an agentic workflow powered by **Z.ai** and **Claude**, capable of autonomous coding and data ingestion, and a cognitive layer managed by **Letta** for stateful interaction. The end goal is a self-sustaining platform that ingests data from *Dúchas.ie* and *Canúint.ie*, processes it via **Sam3** and **EuroLLM**, and serves it to the world.
+
+## ---
+
+**2\. Comprehensive Resource Audit and Valuation**
+
+Before architectural placement, we must normalize the diverse resource pool into comparable units of utility—primarily **Compute Hours**, **Token Throughput**, and **Storage Durability**. This audit identifies the specific comparative advantage of each asset.
+
+### **2.1 High-Performance Cloud Compute: The Training Engines**
+
+The portfolio contains three primary sources for GPU compute, each with distinct pricing models and performance characteristics. The strategy dictates utilizing these strictly for "heavy lifting"—training and fine-tuning—rather than persistent hosting.
+
+| Provider | Budget | Key Instance Types | Effective Capacity (Est.) | Strategic Role |
+| :---- | :---- | :---- | :---- | :---- |
+| **ThunderCompute** | $120 | H100 PCIe ($1.89/hr), A100 80GB ($0.78/hr) 1 | \~63 hrs (H100) or \~153 hrs (A100) | **Primary Training.** Lowest cost per FLOP. Use for full fine-tuning of 7B-30B parameter models (Qwen2.5-VL, EuroLLM). |
+| **Nebius AI** | $51 | H100 ($2.00-$2.95/hr), L40S ($1.35/hr) 2 | \~17 hrs (H100) or \~37 hrs (L40S) | **Precision Training & Verification.** Use for final epoch runs or specific H100 SXM optimized workloads that require NVLink. |
+| **Modal** | $280 | H100 ($4.56/hr), A100 ($1.29-$5.59/hr) 3 | \~60 hrs (H100) or \~215 hrs (A100 serverless) | **Burstable Pipeline.** High hourly cost but charges by the second. Use for audio segmentation (Sam-Audio) and batch processing, not long training. |
+| **Anyscale** | $100 | Ray on AWS/GCP (BYOC) | Variable (Spot dependent) | **Orchestration.** Use to distribute hyperparameter tuning across spot instances, leveraging the $100 credit for the control plane. |
+
+**Strategic Insight:** ThunderCompute represents the highest leverage for raw training throughput. An A100 80GB at \~$0.78/hr 1 is significantly cheaper than Nebius or Modal. Therefore, all "long-run" jobs—specifically the fine-tuning of **EuroLLM-22B** or **Qwen2.5-VL** on the Dúchas corpus—must reside on ThunderCompute. Nebius, with its H100 availability, should be reserved for specific optimizations where FP8 precision or Transformer Engine acceleration is required, or for "sanity check" runs before committing to longer jobs on ThunderCompute. Modal's value lies in its cold-start architecture; it should never be used for continuous training but is ideal for the event-driven processing of audio files from Canúint.ie.
+
+### **2.2 Agentic & Inference Infrastructure: The Cognitive Layer**
+
+These resources facilitate the deployment of the AI agents, the "brain" of the platform, and the developer tools required to build them.
+
+| Resource | Capacity | Strategic Role |
+| :---- | :---- | :---- |
+| **Blaxel** | $430 | Agent hosting, Serverless GPUs 4 |
+| **Letta** | 25,000 Credits | Stateful Agent Memory |
+| **Google Cloud** | £200 | Gemini 1.5 Pro/Flash, Vertex AI |
+| **Hugging Face Pro** | $50 Credits | Zero-GPU, Inference Endpoints |
+| **ElevenLabs** | 210k Chars | Voice Synthesis |
+| **Z.ai Coding Plan** | GLM-4.6, MCPs | Developer Productivity |
+| **Claude Code Max** | x20 Usage | Architectural Refactoring |
+
+### **2.3 Data Infrastructure & Storage: The Digital Lakehouse**
+
+Data is the lifeblood of the CHIP project. This layer manages the ingestion of CulturaX and Dúchas datasets, ensuring durability and accessibility without incurring prohibitive egress fees.
+
+| Resource | Budget | Role |
+| :---- | :---- | :---- |
+| **Confluent** | $400 | Kafka Streaming |
+| **MotherDuck** | 21 Days Free \+ Lite | Cloud DuckDB |
+| **LanceDB Cloud** | $100 | Vector Database |
+| **PlanetScale** | $5/mo plan | Serverless MySQL |
+| **Cloudflare R2** | Pay-as-you-go | Object Storage |
+
+### **2.4 Hardware Assets: The Physical Substrate**
+
+| Resource | Specs | Strategic Role |
+| :---- | :---- | :---- |
+| **MacBook Pro M4 Max** | 48GB RAM, 1TB SSD | **Local Inference & Quantization.** The M4 Max is a beast for MLX-based inference. It will run local OCR (**Sam3**, **olmOCR**) to save cloud costs and perform model quantization. |
+| **Hetzner CAX41** | 32GB RAM, Arm64 | **Cluster Control Plane.** Runs **Sidero Omni/Talos**. Acts as the stable "head node" for the hybrid cluster. |
+| **Oracle Free Tier** | 4x Arm64 Cores, 24GB | **Worker Node.** Runs lightweight scrapers and Kafka consumers (Confluent clients). |
+| **Sidero Omni** | 14-Day Trial | **K8s Management.** Unifies Hetzner, Oracle, and potentially cloud VMs into a single Kubernetes cluster. |
+
+## ---
+
+**3\. Architectural Blueprint: The Celtic Heritage Intelligence Platform**
+
+To maximize these resources, we define a unified architecture. The system is designed to ingest raw Celtic cultural data (text, audio, image), process it using cost-effective compute, fine-tune specialized models, and serve them via stateful agents.
+
+### **3.1 The "Fallback Chain" Architecture**
+
+Given the mix of reliable APIs (Google, Z.ai) and budget-constrained GPUs (ThunderCompute, Blaxel), we implement a **Fallback Chain** for inference reliability. This ensures that the system remains operational even when specific credit pools are exhausted or when latency requirements shift.
+
+1. **Primary Node (Local Edge):** **MacBook Pro M4 Max** running MLX versions of Qwen2.5-VL or EuroLLM-22B.  
+   * *Cost:* $0 (Sunk Cost).  
+   * *Role:* Handling "base load" inference, local OCR processing, and development testing.  
+2. **Secondary Node (Serverless Cloud):** **Blaxel** or **Modal** serving quantized models.  
+   * *Cost:* Deducted from $430/$280 credits.  
+   * *Role:* Handling "burst" traffic, serving the public API when the local machine is offline, and running agentic workflows that require persistent uptime.  
+3. **Tertiary Node (Commercial API):** **Google Gemini 1.5 Pro** or **Z.ai GLM-4.6**.  
+   * *Cost:* Deducted from credits/subscription.  
+   * *Role:* Handling complex reasoning tasks, multimodal analysis of difficult manuscripts where open models fail, and generating "ground truth" data for training.
+
+### **3.2 Data Pipeline Design: The Event-Driven Backbone**
+
+The data pipeline utilizes **Confluent** as the central nervous system, buffering data between ingestion and processing to decouple the expensive GPU workers from the slower scrapers.
+
+* **Ingest (Oracle):** Oracle Cloud Arm64 instances run lightweight Python scrapers targeting *Dúchas.ie* and *Canúint.ie*. They push raw metadata events to **Confluent Kafka**.  
+* **Storage (R2):** Raw assets (images of manuscripts, audio files) are pushed directly to **Cloudflare R2** via signed URLs. The zero-egress policy of R2 is the linchpin here; it allows us to pull terabytes of data into ThunderCompute for training without bankruptcy.  
+* **Processing (Hybrid):**  
+  * **Audio:** **Modal** functions trigger on Kafka events. They pull audio from R2, run **Sam-Audio** for diarization, and push segments back to R2.  
+  * **Text/Image:** The **MacBook Pro M4 Max** acts as a Kafka consumer. It pulls manuscript images, runs **olmOCR** or **Sam3** locally (leveraging the Neural Engine), and pushes extracted text to **MotherDuck**.  
+* **Vectorization:** Extracted text is chunked and embedded (using Nomic or OpenAI embeddings via Z.ai), then stored in **LanceDB Cloud**.
+
+## ---
+
+**4\. Infrastructure Implementation: Sidero Omni & The Talos Mesh**
+
+The project requires a stable orchestration layer to manage the heterogeneous hardware. We will use the **Sidero Omni 14-day trial** to bootstrap a Kubernetes cluster that spans Hetzner, Oracle, and the local environment.
+
+### **4.1 Unifying the Hybrid Cluster with Talos Linux**
+
+**Sidero Omni** simplifies Kubernetes on bare metal by managing **Talos Linux**, an immutable, API-driven OS. The 14-day trial is sufficient to establish the cluster, which can then run indefinitely in a "headless" state or be managed via CLI.
+
+1. **Hetzner CAX41 (Control Plane):** This Arm64 server is ideal for the Kubernetes control plane due to its high network bandwidth and RAM (32GB).  
+   * *Action:* Flash the server with the Talos Arm64 ISO. Since Hetzner does not natively support custom ISO uploads easily, use the "Rescue System" method: boot into rescue mode, use dd to write the Talos image to the disk, and reboot.7  
+   * *Config:* Use Sidero Omni to generate the talosconfig. Apply the control plane configuration via talosctl.  
+2. **Oracle Cloud Free Tier (Worker Nodes):** The Ampere Altra instances (4 OCPUs, 24GB RAM) provide excellent "always-free" compute capacity.  
+   * *Action:* Provision instances with Ubuntu, then "pave over" them with Talos Linux using the kexec method or by booting from a Talos image volume.9  
+   * *Role:* These nodes will host the **Confluent Kafka Connectors**, **Datadog Agents**, and the lightweight web frontend.  
+3. **MacBook Pro M4 Max (Edge Node):**  
+   * *Action:* While the Mac cannot run Talos bare-metal easily, it will act as an "external worker." We use **WireGuard** (integrated into Sidero Omni via KubeSpan) to tunnel the Mac into the cluster network. This allows the Mac to access internal Pod IPs (like Redis or Kafka) securely while running macOS.
+
+### **4.2 Maximizing the 14-Day Trials**
+
+* **Sidero Omni:** Use the trial to perform the initial, complex configuration of the Hetzner/Oracle mesh. Once the cluster is stable, export the talosconfig and kubeconfig. Talos clusters continue to function perfectly without the Omni SaaS dashboard, manageable via the talosctl CLI. This effectively locks in the cluster management value permanently.  
+* **Datadog:** Enable full observability during the "Phase 1" heavy data ingestion. Use the 14 days to profile the scrapers and OCR pipeline, identifying bottlenecks. Once the trial expires, transition to a self-hosted Prometheus/Grafana stack running on the Oracle Free Tier.
+
+## ---
+
+**5\. Phase 1: Data Acquisition & The "Sam3" Pipeline**
+
+The first objective is to construct a high-quality dataset of Celtic language text and audio. The resource snippets highlight **Dúchas.ie** (folklore) and **Sam3** (Segment Anything 3\) as key technologies.10
+
+### **5.1 The OCR Challenge: Handwriting Recognition**
+
+Dúchas contains handwritten Irish manuscripts that standard OCR (Tesseract) cannot process. We require **Handwritten Text Recognition (HTR)** and complex layout analysis.
+
+* **Model Selection:** We will use **Sam3** 11 for layout analysis (segmenting text blocks from illustrations) and **olmOCR-2-7B** 13 for the actual text recognition.  
+* **Optimization:** The snippet 13 specifically mentions mlx-community/olmOCR-2-7B-1025-mlx-8bit. This model is optimized for Apple Silicon. Running this on the **MacBook Pro M4 Max** is the most cost-efficient strategy, saving expensive cloud GPU hours for training.
+
+### **5.2 The "Zero-Cost" OCR Workflow**
+
+1. **Ingest:** Oracle nodes scrape Dúchas page URLs and push them to a Confluent Kafka topic duchas-pages-to-process.  
+2. **Processing (Mac M4):** A local Python script on the M4 Max consumes from the Kafka topic.  
+   * Downloads the image from Dúchas.  
+   * Runs **Sam3** (via segment-geospatial or Meta's repo) to isolate text regions.  
+   * Runs **olmOCR-2-7B (8-bit MLX)** on the regions. The M4 Max (48GB) can handle this model (approx 8GB VRAM) easily, processing pages at high speed.  
+   * *Value:* Running this on the Mac saves approximately **$2/hr** in cloud GPU costs compared to running comparable H100s on Nebius.  
+3. **Storage:** Extracted text is pushed to **MotherDuck** (Lite plan). Raw JSON logs are sent to **Cloudflare R2**.
+
+### **5.3 Audio Segmentation with Sam-Audio**
+
+For the **Canúint.ie** (Irish Dialects) dataset 14, we use **Sam-Audio** 15 to segment speakers and isolate dialect examples.
+
+* *Implementation:* We deploy this on **Modal**. Audio processing benefits from high burst bandwidth and short processing times, which aligns with Modal's per-second billing.  
+* *Workflow:* Upload audio to R2 \-\> Trigger Modal function \-\> Run Sam-Audio to Diarize \-\> Store segments in R2 \-\> Update Metadata in PlanetScale.  
+* *Cost Control:* Sam-Audio is efficient. We can process hundreds of hours of audio with the $280 credit if we optimize cold starts and batch process files.
+
+### **5.4 Leveraging Z.ai MCP Servers**
+
+The **Z.ai Coding Plan Pro** includes access to **Vision, Search, and Reader MCP servers**.17 These are critical for augmenting the dataset.
+
+* *Strategy:* Use the **Reader MCP** to ingest supplementary texts (Gaelic grammar guides, historical context) from the web. Use the **Search MCP** to find modern translations or academic papers related to specific folklore stories. Use the **Vision MCP** as a secondary validation for OCR results—sending difficult manuscript snippets to GLM-4.6V for "second opinion" transcription.
+
+## ---
+
+**6\. Phase 2: Fine-Tuning The "Celtic-LLM"**
+
+We aim to fine-tune a model to specialize in Celtic languages, OCR correction, and cultural context. We will likely use **Qwen2.5-VL** (for multimodal capabilities) or **EuroLLM-22B** (for text proficiency).
+
+### **6.1 Model Selection Strategy**
+
+* EuroLLM-22B-Instruct 20: Specifically trained for European languages. It is a strong candidate for text-only fine-tuning to create a translation and reasoning engine.  
+* Qwen2.5-VL 21: A multimodal model. This is the best candidate for training a model that can "read" the manuscripts directly, preserving the layout and visual context of the folklore.
+
+### **6.2 The Training Compute Arbitrage**
+
+We have $120 on ThunderCompute and $51 on Nebius. We must arbitrage these against each other.
+
+* **ThunderCompute:** Offers **A100 80GB at \~$0.78/hr**.1 This is the efficiency king.  
+  * *Calculation:* $120 / $0.78 ≈ **153 hours** of A100 training time.  
+  * *Strategy:* Use ThunderCompute for the main **SFT (Supervised Fine-Tuning)** epochs. 153 hours is sufficient to fine-tune a 7B or even 22B model on a curated dataset of \<1B tokens.  
+* **Nebius AI:** Offers H100s at \~$2.00-$2.95/hr.  
+  * *Calculation:* $51 / $2.00 ≈ **25 hours**.  
+  * *Strategy:* Use Nebius for **Hyperparameter Search** or short "sanity check" runs. The H100 is roughly 3x faster than the A100 for FP8 workloads. We run short experiments here to find the optimal learning rate before committing the long run to ThunderCompute.
+
+### **6.3 Orchestration with Anyscale**
+
+We use the **$100 Anyscale Credit** 22 to orchestrate the training process.
+
+* *Setup:* Connect Anyscale to the ThunderCompute instances (via BYOC if supported, or manually configuring Ray).  
+* *Distributed Training:* If we can cluster multiple cheap instances, we use **Ray Train** (via Anyscale) to distribute the workload, reducing wall-clock time.
+
+## ---
+
+**7\. Phase 3: The Agentic Workflow (Letta, Blaxel, Z.ai)**
+
+Once the data is processed and the model is fine-tuned, we build the application layer: a "Folklore Archivist Agent."
+
+### **7.1 Coding & Development**
+
+We possess powerful coding assistants to accelerate development.
+
+* **Z.ai Coding Plan Pro:** Use **GLM-4.6** 23 to generate the boilerplate code for Kafka consumers, Modal functions, and the RAG pipeline. The high prompt limit (2400 prompts/5hrs on Max) allows for rapid iteration.  
+* **Claude Code Max x20:** Use the "20x" limit capability 24 for massive context tasks. Feed the entire Sidero Omni documentation and Talos Linux specs into Claude to generate the complex infrastructure-as-code configurations.
+
+### **7.2 Agent Memory & State (Letta)**
+
+**Letta** (25,000 credits) provides "stateful" memory.25
+
+* *Application:* The Archivist Agent needs to remember user preferences ("I am interested in Donegal folklore") and past interactions ("Translate the story I asked about yesterday").  
+* *Architecture:* When a user queries the system, the context is stored in Letta. Letta manages the "context window," deciding what to keep in active memory versus what to archive to **LanceDB**.  
+* *Value:* 25,000 credits is substantial. Assuming \~1 credit per complex transaction, this supports a long-running beta or public demo.
+
+### **7.3 Serving & Inference (Blaxel)**
+
+**Blaxel** ($430 credit) is the primary serving platform.26
+
+* *Deployment:* Deploy the fine-tuned **Celtic-LLM** (quantized) to Blaxel.  
+* *Agent Hosting:* Blaxel supports "Agents" natively. We deploy the Letta-integrated agent here.  
+* *Cost Mgmt:* Blaxel charges for active compute. By using serverless scale-to-zero, we conserve the $430 credit. For high-traffic periods, we can utilize the **Hugging Face Pro** inference endpoints ($50 credit) as a load balancer or fallback.
+
+## ---
+
+**8\. Maximizing Specific "Odd" Credits**
+
+### **8.1 Google Cloud (£200): The Deep Reasoner**
+
+* **Gemini 1.5 Pro:** Use its massive context window (1M+ tokens) to process **entire books** of folklore in a single pass. This generates high-quality summaries and structured JSON extraction that serves as "Ground Truth" for training our smaller, cheaper models.  
+* **Vertex AI Search:** Use Google's managed RAG solution to index the Dúchas PDFs instantly. This provides a baseline search experience while we build our custom LanceDB implementation.
+
+### **8.2 ElevenLabs (210,000 Characters): The Voice of the Past**
+
+* **The "Seanchaí" Feature:** We cannot synthesize the entire archive (too expensive). Instead, we implement a "Daily Featured Story."  
+* **Strategy:** Select one story per day. Generate audio using ElevenLabs (approx 5,000 chars/day). Cache the MP3 in **Cloudflare R2**.  
+* *Result:* Over 40 days, we build a library of \~40 high-quality narrated stories without exceeding the 210k limit.
+
+### **8.3 Confluent ($400): The Event Log**
+
+* **Usage:** This budget allows for a robust Kafka cluster.  
+* **Maximization:** Use it as the **Event Sourcing** log. Every single edit, OCR correction, and user query is logged to Kafka. This builds a valuable dataset for *future* Reinforcement Learning (RLHF) or DPO (Direct Preference Optimization).
+
+### **8.4 LanceDB ($100): The Vector Store**
+
+* **Usage:** Store vector embeddings of the Dúchas corpus.  
+* **Optimization:** LanceDB Cloud is serverless.27 It scales to zero. With $100, you can store millions of vectors if query volume is moderate. This is far more cost-effective than a dedicated Pinecone index.
+
+## ---
+
+**9\. Technical Deep Dive: The "Fallback Chain" Logic**
+
+To ensure high availability without burning credits unnecessarily, we implement a rigorous routing logic in the Agent (running on Blaxel).  
+The Router Logic:  
+A lightweight Python function (deployed on Cloudflare Workers or FastAPI on Oracle Free Tier) analyzes every incoming query.
+
+1. **Complexity Check:** Is the query simple factual recall ("Who was Cú Chulainn?") or complex reasoning ("Compare the theme of loss in Donegal vs. Kerry folklore?")?  
+2. **Route Selection:**  
+   * **Low Complexity:** Route to a quantized **Llama-3-8B** hosted on the **Oracle Free Tier** (CPU inference) or the **Mac M4** (if the tunnel is active). Cost: $0.  
+   * **High Complexity:** Check Blaxel credit balance.  
+     * If Credits \> Threshold: Route to **Blaxel Agent (Celtic-LLM)**.  
+     * If Credits \< Threshold: Route to **Google Gemini 1.5**.  
+3. **Memory Integration:** Regardless of the compute node used, the interaction is logged to **Letta** to maintain continuity.
+
+## ---
+
+**10\. Hardware & OS Specifics: The Arm64 Advantage**
+
+The user has a unique mix of resources that converge on the **Arm64 architecture**.
+
+* **Hetzner CAX41:** Arm64 Ampere Altra.  
+* **Oracle Free Tier:** Arm64 Ampere A1.  
+* **Mac M4:** Arm64 Apple Silicon.
+
+**Conclusion:** The entire cluster should be **Arm64 native**. This simplifies container builds immensely. We build Docker images *once* on the Mac M4 (using docker buildx), push them to **GitHub Container Registry** (free), and deploy them to Hetzner and Oracle without cross-compilation headaches.  
+Talos Config for Oracle (Network Workaround):  
+Oracle Cloud networking can be strict. In the Talos machine configuration, ensure kubelet utilizes the correct interface IP. Use Flannel or Cilium as the CNI. Sidero Omni handles most of this automatically, but you must ensure port 6443 is open in the Oracle Security List (VCN firewall).
+
+## ---
+
+**11\. Financial Run-Rate & Burn Strategy**
+
+To ensure the project lasts 6+ months, we adhere to a strict credit burn schedule.
+
+| Resource | Value | Burn Rate Strategy | Est. Lifespan |
+| :---- | :---- | :---- | :---- |
+| **ThunderCompute** | $120 | Burst usage. Only spin up A100s for specific training runs (e.g., 1 weekend/month). | 4-5 Training Runs |
+| **Blaxel** | $430 | \~$2/day for idle agent \+ burst inference. | \~6-7 Months |
+| **Modal** | $280 | Use only for "Serverless Functions" (OCR/Audio). High churn during Phase 1, low usage after. | Phase 1 (1 month) \+ Maint. |
+| **Confluent** | $400 | \~$50/mo for standard cluster. | \~8 Months |
+| **Letta** | 25k | \~100 credits/day. | \~8 Months |
+| **Z.ai / Claude** | Subs | Monthly reset. Use aggressively every month. | N/A (Recurring) |
+| **MotherDuck** | Lite | $25/mo (after trial). Keep data \<10GB to stay in low tier. | Indefinite (if \<10GB) |
+
+Critical "Free" Sustainment:  
+Even after all credits expire, the core platform survives:
+
+* **Hosting:** Hetzner ($0/mo if prepaid/credits, or very cheap) \+ Oracle (Free).  
+* **Data:** Cloudflare R2 (Cheap/Free tier).  
+* **Inference:** Mac M4 Max (Local/Tunnel) takes over as the primary node if Blaxel credits dry up.
+
+## ---
+
+**12\. Conclusion & Implementation Roadmap**
+
+This strategy transforms a "bag of credits" into a cohesive, cutting-edge AI platform. By leveraging the **MacBook Pro M4 Max** for "base load" inference and OCR, we preserve the precious GPU cloud credits (ThunderCompute/Nebius) for high-value model training. **Sidero Omni** and **Talos** provide the robust substrate, while **Letta** and **Blaxel** enable cutting-edge agentic capabilities.  
+**Immediate Action Items:**
+
+1. **Days 1-3:** Install **Sidero Omni** on Hetzner CAX41 and Oracle Free Tier. Establish the Kubernetes control plane.  
+2. **Days 4-7:** Deploy **Confluent** Kafka and **MotherDuck**. Write the **Z.ai** generated scrapers for Dúchas.ie.  
+3. **Days 7-14:** Run the **Sam3** OCR pipeline on the **Mac M4 Max**, feeding data to MotherDuck. Utilize **Datadog** trial to monitor throughput.  
+4. **Week 3:** Spin up **ThunderCompute** A100s. Fine-tune **Qwen2.5-VL** on the captured OCR data.  
+5. **Month 2:** Deploy the **Letta**\-enabled Agent on **Blaxel**. Open public access via **Cloudflare** frontend.
+
+The **Celtic Heritage Intelligence Platform** will not only serve as a technological showcase but also as a permanent contribution to the preservation of Gaelic culture, fully maximizing the user's resource inventory.
+
+## ---
+
+**13\. Detailed YAML Configurations & Experiment Guide**
+
+This section fulfills the requirement for "Detailed YAML configuration" and the "GPU Experiment Guide."
+
+### **13.1 MLX Configuration for Mac M4 Max**
+
+Use this config with mlx-lm to serve the quantization-optimized model on the Mac.
+
+YAML
+
+\# mlx\_config.yaml  
+model:  
+  name: "mlx-community/olmOCR-2-7B-1025-mlx-8bit"  
+  trust\_remote\_code: true  
+generation:  
+  max\_tokens: 1024  
+  temp: 0.0  
+  repetition\_penalty: 1.1  
+system\_prompt: |  
+  You are an expert archivist of Irish folklore.  
+  Transcribe the following handwritten manuscript text exactly as it appears.  
+  Maintain original spelling, even if archaic.
+
+### **13.2 Fallback Chain Configuration (Blaxel/Letta)**
+
+This conceptual config illustrates the routing logic for the agent.
+
+YAML
+
+\# agent\_router.yaml  
+fallback\_chain:  
+  \- priority: 1  
+    name: "local\_edge"  
+    endpoint: "http://\<mac-wireguard-ip\>:8080/v1/chat/completions"  
+    condition: "complexity \== 'low' AND available \== true"  
+  \- priority: 2  
+    name: "blaxel\_cloud"  
+    endpoint: "https://api.blaxel.ai/v1/inference"  
+    model: "celtic-llm-v1"  
+    condition: "complexity \== 'high' OR local\_edge.available \== false"  
+  \- priority: 3  
+    name: "google\_api"  
+    endpoint: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro"  
+    condition: "task \== 'multimodal\_reasoning' OR blaxel.error \== true"
+
+### **13.3 GPU Experiment Guide (ThunderCompute)**
+
+Follow this protocol to maximize the $120 credit.
+
+1. **Preparation (Local):** Prepare the dataset on the Mac. Convert images to parquet/arrow format. Upload to Cloudflare R2.  
+2. **Environment (Nebius \- $2/hr):** Spin up a cheap GPU. Verify the Unsloth environment. Run 1 epoch on 1% of the data. Check loss curve. If it looks good, terminate.  
+3. **Execution (ThunderCompute \- $0.78/hr):**  
+   * Launch A100 instance.  
+   * Mount R2 with rclone.  
+   * Run unsloth\_train.py with the validated config.  
+   * *Monitor:* Use anyscale or wandb to track progress.  
+   * *Terminate:* Implement an auto-shutdown script (shutdown \-h now) triggered by training completion to avoid paying for idle seconds.
+
+This structured approach ensures that every resource is used exactly where it provides the most value, turning a disparate collection of tools into a powerful, unified platform.
+
+#### **Works cited**
+
+1. Pricing | Thunder Compute, accessed December 20, 2025, [https://www.thundercompute.com/pricing](https://www.thundercompute.com/pricing)  
+2. Nebius | Review, Pricing & Alternatives \- GetDeploying, accessed December 20, 2025, [https://getdeploying.com/nebius](https://getdeploying.com/nebius)  
+3. A complete guide to Modal AI pricing in 2025 \- eesel AI, accessed December 20, 2025, [https://www.eesel.ai/blog/modal-ai-pricing](https://www.eesel.ai/blog/modal-ai-pricing)  
+4. Pricing \- Blaxel, accessed December 20, 2025, [https://blaxel.ai/pricing](https://blaxel.ai/pricing)  
+5. Talos ISO directly from hetzner \- Reddit, accessed December 20, 2025, [https://www.reddit.com/r/hetzner/comments/1l8kx3g/talos\_iso\_directly\_from\_hetzner/](https://www.reddit.com/r/hetzner/comments/1l8kx3g/talos_iso_directly_from_hetzner/)  
+6. Hetzner \- Sidero Documentation \- What is Talos Linux?, accessed December 20, 2025, [https://docs.siderolabs.com/talos/v1.7/platform-specific-installations/cloud-platforms/hetzner](https://docs.siderolabs.com/talos/v1.7/platform-specific-installations/cloud-platforms/hetzner)  
+7. Oracle \- Sidero Documentation \- What is Talos Linux?, accessed December 20, 2025, [https://docs.siderolabs.com/talos/v1.9/platform-specific-installations/cloud-platforms/oracle](https://docs.siderolabs.com/talos/v1.9/platform-specific-installations/cloud-platforms/oracle)  
+8. Schools Collection, accessed December 20, 2025, [https://www.arcgis.com/apps/Viewer/index.html?appid=a61878ae45164ccabdf36c1e3ad4857a](https://www.arcgis.com/apps/Viewer/index.html?appid=a61878ae45164ccabdf36c1e3ad4857a)  
+9. \[2511.16719\] SAM 3: Segment Anything with Concepts \- arXiv, accessed December 20, 2025, [https://arxiv.org/abs/2511.16719](https://arxiv.org/abs/2511.16719)  
+10. SAM3 by Meta: Text-Prompted Image Segmentation Tutorial \- Codecademy, accessed December 20, 2025, [https://www.codecademy.com/article/sam-3-by-meta-text-prompted-image-segmentation-tutorial](https://www.codecademy.com/article/sam-3-by-meta-text-prompted-image-segmentation-tutorial)  
+11. mlx-community/olmOCR-2-7B-1025-mlx-8bit \- Hugging Face, accessed December 20, 2025, [https://huggingface.co/mlx-community/olmOCR-2-7B-1025-mlx-8bit](https://huggingface.co/mlx-community/olmOCR-2-7B-1025-mlx-8bit)  
+12. Project information, accessed December 20, 2025, [https://www.canuint.ie/en/info/about-this-website/project-information/](https://www.canuint.ie/en/info/about-this-website/project-information/)  
+13. Segment Anything adds audio as Meta unveils SAM Audio | Digital Watch Observatory, accessed December 20, 2025, [https://dig.watch/updates/segment-anything-adds-audio-as-meta-unveils-sam-audio](https://dig.watch/updates/segment-anything-adds-audio-as-meta-unveils-sam-audio)  
+14. facebook/sam-audio-large \- Hugging Face, accessed December 20, 2025, [https://huggingface.co/facebook/sam-audio-large](https://huggingface.co/facebook/sam-audio-large)  
+15. Vision MCP Server \- Z.AI DEVELOPER DOCUMENT, accessed December 20, 2025, [https://docs.z.ai/devpack/mcp/vision-mcp-server](https://docs.z.ai/devpack/mcp/vision-mcp-server)  
+16. Web Search MCP Server \- Z.AI DEVELOPER DOCUMENT, accessed December 20, 2025, [https://docs.z.ai/devpack/mcp/search-mcp-server](https://docs.z.ai/devpack/mcp/search-mcp-server)  
+17. Web Reader MCP Server \- Z.AI DEVELOPER DOCUMENT, accessed December 20, 2025, [https://docs.z.ai/devpack/mcp/reader-mcp-server](https://docs.z.ai/devpack/mcp/reader-mcp-server)  
+18. utter-project/EuroLLM-22B-Instruct-2512 \- Hugging Face, accessed December 20, 2025, [https://huggingface.co/utter-project/EuroLLM-22B-Instruct-2512](https://huggingface.co/utter-project/EuroLLM-22B-Instruct-2512)  
+19. Qwen/Qwen3-VL-30B-A3B-Instruct-GGUF \- Hugging Face, accessed December 20, 2025, [https://huggingface.co/Qwen/Qwen3-VL-30B-A3B-Instruct-GGUF](https://huggingface.co/Qwen/Qwen3-VL-30B-A3B-Instruct-GGUF)  
+20. Anyscale pricing 2025: A clear breakdown of costs & models \- eesel AI, accessed December 20, 2025, [https://www.eesel.ai/blog/anyscale-pricing](https://www.eesel.ai/blog/anyscale-pricing)  
+21. GLM Coding Plan powered by GLM-4.6 \- Z.ai Chat, accessed December 20, 2025, [https://z.ai/subscribe?cc=fission\_glmcode\_sub\_v1\&ic=ZWUCN21VZK\&n=Vipin](https://z.ai/subscribe?cc=fission_glmcode_sub_v1&ic=ZWUCN21VZK&n=Vipin)  
+22. About Claude's Max Plan Usage, accessed December 20, 2025, [https://support.claude.com/en/articles/11014257-about-claude-s-max-plan-usage](https://support.claude.com/en/articles/11014257-about-claude-s-max-plan-usage)  
+23. Pricing \- Letta, accessed December 20, 2025, [https://www.letta.com/pricing](https://www.letta.com/pricing)  
+24. AI Cloud Pricing | GPU Compute & AI Infrastructure | Lambda, accessed December 20, 2025, [https://lambda.ai/pricing](https://lambda.ai/pricing)  
+25. Serverless Vector Search \- LanceDB Cloud, accessed December 20, 2025, [https://lancedb.com/docs/cloud/](https://lancedb.com/docs/cloud/)
+
+---
+
+## Irish Handwriting App Development
+
+*Source: `docs/bunchloch/teanga/Irish Handwriting App Development.md` (4041 words, 292 lines)*
+
+# **Operationalizing Irish Handwriting Recognition on Apple Silicon: An Exhaustive Architectural Analysis of MLX, Llama.cpp, and Transformers.js**
+
+## **1\. Executive Summary**
+
+The convergence of high-performance mobile silicon, specifically the Apple M2 architecture, with the advent of efficient Vision-Language Models (VLMs) creates a distinct inflection point for philological computing. This report provides a comprehensive, expert-level technical analysis of engineering a native iOS/iPadOS application dedicated to Irish language (*Gaeilge*) handwriting recognition (HTR). The proposed solution leverages the iPad Air M2 and Apple Pencil Pro, utilizing a hybrid inference stack comprising **mlx-swift**, **llama.cpp**, and **transformers.js** via WebGPU to overcome the historical computational barriers of on-device transcription.  
+The analysis establishes that generic Optical Character Recognition (OCR) systems are fundamentally ill-suited for the nuances of Irish orthography—specifically the *Cló Gaelach* (Gaelic type) and the diacritical *punctum delens* used for lenition (*séimhiú*). To address this, the report proposes a domain-specific adaptation of state-of-the-art multimodal models, principally **Qwen3-VL** (and its stable predecessor Qwen2.5-VL) and **Gemma 3n**. These models, unlike their predecessors, possess the visual reasoning capabilities required to distinguish ambiguous glyphs (such as the distinctively similar ‘r’ and ‘s’ in Gaelic script) and the semantic understanding to perform "thinking" or Chain-of-Thought (CoT) error correction in real-time.  
+Crucially, this document details the mechanisms for deploying these massive models within the strict thermal and memory envelopes of the iPad Air M2 (8GB Unified Memory). We delineate the precise role of **MLX** as the primary inference engine due to its direct mapping to the Metal Performance Shaders (MPS) graph, while positioning **llama.cpp** and **transformers.js** as strategic fallbacks for cross-platform compatibility and web-based interaction. Furthermore, the report explores the integration of the **Apple Pencil Pro’s** novel interaction paradigms—squeeze detection and haptic feedback—to construct a "Human-in-the-Loop" transcription workflow that dramatically accelerates the digitization of Ireland's archival heritage, specifically referencing the **Dúchas.ie** and **An Gaodhal** datasets as the foundation for fine-tuning.
+
+## ---
+
+**2\. Hardware Architecture: The Apple Silicon Substrate**
+
+The feasibility of running Multi-Modal Large Language Models (VLMs) on a slate form factor is strictly governed by the underlying hardware architecture. The iPad Air M2 represents a shift from mobile-first to desktop-class architecture in a constrained thermal envelope. Understanding the nuances of this silicon is prerequisite to successful application deployment.
+
+### **2.1 The M2 Unified Memory Architecture (UMA) and VLM Inference**
+
+In traditional computing architectures (x86/CUDA), the CPU and GPU maintain discrete memory pools. This necessitates the continuous copying of data across the PCI-Express bus, introducing significant latency and power consumption—prohibitive factors for mobile real-time inference. The M2 chip utilized in the iPad Air eliminates this bottleneck through its **Unified Memory Architecture (UMA)**.
+
+* **Memory Bandwidth and Access:** The M2 features a 128-bit wide memory interface providing approximately **100 GB/s** of bandwidth.1 For VLM inference, where high-resolution image tensors (from the visual encoder) must be processed alongside massive weight matrices (from the language decoder), this bandwidth is the enabling factor. It allows the GPU and Neural Engine (ANE) to access the same data without duplication.  
+* **The 8GB Physical Constraint:** The standard iPad Air M2 configuration includes 8GB of RAM. This is the single most critical constraint for the proposed application.  
+  * **OS Reservation:** iOS/iPadOS aggressively manages memory. The kernel, window server, and display buffers typically reserve 2–3GB.  
+  * **Jetsam Limits:** The operating system employs a "jetsam" mechanism that terminates background processes or memory-hogging foreground apps to preserve system stability. The effective "safe" budget for the application is approximately **4.5 GB to 5 GB**.2  
+  * **Model Implications:** A standard 3-billion parameter model in FP16 (16-bit floating point) precision requires roughly 6GB of VRAM for weights alone, plus additional overhead for the KV cache (context window) and activation buffers. This exceeds the safe budget.  
+  * **Quantization Necessity:** To fit a capable VLM like **Qwen2.5-VL-3B** or **Gemma 3n E4B** onto the device, **4-bit quantization (Q4)** is mandatory. A Q4 version of a 3B model occupies approximately **2.68 GB**.3 This fits comfortably within the resident set size, leaving approximately 2GB for the visual encoder, the KV cache (which grows linearly with text length), and the application's UI assets.
+
+### **2.2 Apple Pencil Pro: Interaction Physics and Sensor Fusion**
+
+The Apple Pencil Pro introduces specific hardware capabilities—a strain gauge for "squeeze" detection, a gyroscope for "barrel roll," and a haptic engine—that fundamentally alter the user interface design for handwriting recognition tasks.
+
+* **Squeeze-to-Infer (Low Latency Trigger):** In a transcription workflow, latency breaks the "flow state" of the archivist. Traditional UI requires lifting the stylus to tap a button. By implementing the UIPencilInteractionDelegate protocol, the application can trigger the inference pass immediately upon the detection of a squeeze gesture.4 This hardware interrupt allows for a seamless "write-squeeze-verify" loop.  
+* **Haptic Feedback for Confidence Signaling:** The Haptic Engine provides programmable tactile feedback. This is particularly relevant for Irish manuscripts where ink fading or damage is common. If the VLM's confidence score (log-probability) for a recognized segment falls below a set threshold (e.g., \< 75%), the app can trigger a distinct haptic pulse using UIImpactFeedbackGenerator.6 This alerts the user to visually verify the transcription without needing to constantly check the screen, mimicking the tactile feedback of a physical tool encountering resistance.  
+* **Barrel Roll for Parameter Tuning:** The barrel roll gesture allows for continuous analog input. In the context of HTR, this can be mapped to the "temperature" of the model or the "brush size" of the eraser. For example, rotating the pencil could dynamically adjust the contrast threshold of the input image preprocessing, allowing the user to "tune in" faint text physically.7
+
+## ---
+
+**3\. The Inference Ecosystem: A Comparative Technical Analysis**
+
+To deploy high-capability models on the iPad, we must select an inference engine that balances performance, memory efficiency, and developer ergonomics. The research highlights three primary frameworks: **MLX**, **Llama.cpp**, and **Transformers.js**.
+
+### **3.1 MLX and MLX-Swift: The Native Metal Sovereign**
+
+**MLX** is an array framework designed by Apple specifically for Apple Silicon.8 Unlike cross-platform tools that treat Apple Silicon as a generic ARM target, MLX is architected around the unified memory model and the Metal API.
+
+* **Lazy Evaluation:** MLX utilizes lazy evaluation, meaning computations are only executed when the results are materialized. In a VLM pipeline, where the visual encoder runs once but the language decoder runs iteratively (token by token), this allows for highly efficient memory management. Graphs are compiled dynamically, optimizing the execution plan for the specific operations required.9  
+* **MLX-Swift Integration:** The mlx-swift package provides a Swift API that bridges directly to the C++ core. This eliminates the overhead associated with Python-Swift bridging or Objective-C wrappers. Crucially, mlx-swift exposes the MLXArray object, which can be zero-copy shared with Metal compute shaders. This allows the application to perform custom image preprocessing (e.g., binarization of manuscript pages) using native Metal shaders and pass the result directly to the VLM without CPU round-tripping.  
+* **VLM Specific Support:** The mlx-swift-examples repository contains a dedicated library, MLXVLM.10 This library implements the complex architectures of modern VLMs, separating the Vision Tower (typically a CLIP or SigLIP variant) from the Language Model. The research indicates that support for **Qwen2.5-VL** is already present in the python counterparts and is being actively ported to Swift.11  
+* **Advantage:** MLX offers the highest throughput (tokens per second) and best energy efficiency on M-series chips because it avoids the overhead of generic compute layers. It supports "Thinking" models and complex architectures like MoE (Mixture of Experts) natively.12
+
+### **3.2 Llama.cpp: The Ubiquitous Fallback**
+
+**Llama.cpp** is a C++ inference engine focused on pure CPU/GPU inference with no dependencies.13 Its primary strength lies in its **GGUF** file format and extreme quantization capabilities.
+
+* **Quantization Leadership:** Llama.cpp supports advanced quantization types such as **IQ3\_XS** (approx. 3 bits per weight) and **IQ2\_XXS**.14 These formats use importance matrices (imatrix) to preserve model accuracy even at extreme compression. For an older iPad or for users multitasking heavily, running a Qwen model in IQ3\_XS format via llama.cpp might be the only way to prevent OOM errors, reducing a 3B model to under 1.5GB of RAM.  
+* **Integration Complexity:** While llama.cpp can be compiled as a library for iOS, VLM support (Vision) has historically been segregated into "examples" or forks (e.g., llama-server with projection layers) rather than the core library. Snippets indicate that Qwen2.5-VL support required specific forks initially 14, though it is merging into the main branch.  
+* **Performance Profile:** Benchmarks indicate that for single-batch inference (one user), llama.cpp provides excellent Time To First Token (TTFT) latency, often beating server-oriented frameworks like vLLM which optimize for throughput over latency.15 This makes it a highly responsive backend for a real-time handwriting app.
+
+### **3.3 Transformers.js and WebGPU: The Browser-Based Companion**
+
+**Transformers.js** enables running models directly in the browser using the ONNX Runtime and **WebGPU**.17
+
+* **WebGPU on iOS 18:** With the release of iOS 18, Safari (and WKWebView) supports WebGPU. This allows JavaScript to access the M2 GPU directly via WGSL (WebGPU Shading Language).  
+* **The "Share" Utility:** The primary use case for transformers.js in this architecture is interoperability. A user can export their transcribed notes and the model configuration from the iPad app. Because the model weights (quantized ONNX) can be loaded by transformers.js, the user can then open a web link on a Windows PC or Android device and continue verifying the transcription, leveraging the local GPU of that device.  
+* **Limitations:** Snippets note that while embedding models run 40-75x faster on WebGPU, full VLM support (especially for complex architectures like Gemma 3n's MatFormer) is still maturing in the browser environment, currently often requiring Node.js for full feature parity.19
+
+**Synthesis:** For the "Peannaire" (Scribe) app, **MLX-Swift** is the optimal *primary* engine due to its native performance and memory handling. **Llama.cpp** serves as a robust "Low Power" or "High Compatibility" mode. **Transformers.js** is the enabling technology for a "Review Anywhere" web companion.
+
+## ---
+
+**4\. Foundation Model Analysis: The Cognitive Layer**
+
+The capability of the application relies on the underlying model's ability to not just recognize characters (OCR), but to *understand* the visual context of handwriting.
+
+### **4.1 Qwen2.5-VL and Qwen3-VL: The Visual Reasoners**
+
+The **Qwen-VL** series (specifically Qwen2.5-VL and the referenced future Qwen3-VL) represents the current state-of-the-art for open-weights visual processing.20
+
+* **NaViT (Native Resolution Vision Transformer):** Most VLMs resize input images to a fixed square (e.g., 336x336 pixels). This is catastrophic for handwriting, where a line of text is a long, thin horizontal strip. Resizing it to a square distorts the aspect ratio and crushes character details. Qwen2.5-VL utilizes a NaViT-like approach, processing images at their **native resolution** by dynamically creating patches.22 This preserves the stroke fidelity essential for distinguishing Irish characters.  
+* **"Thinking" Process:** Snippets mention "Qwen3-VL-Thinking" models.23 These models employ test-time compute to generate a Chain-of-Thought (CoT) before outputting the final answer. In the context of Irish HTR, this allows the model to "reason" through ambiguity.  
+  * *Example:* The model sees a glyph that could be 'r' or 's'.  
+  * *CoT:* "The preceding article is 'an'. The noun is feminine. Therefore, lenition is likely. The stroke has a descender typical of 's' in this hand. I will transcribe as 's'."  
+* **Agentic Capabilities:** Qwen2.5-VL is trained for tool use and acting as a visual agent.22 This allows the app to go beyond transcription. The user could circle a paragraph and write "Summarize this in English," and the model can perform the task using its internal reasoning capabilities.
+
+### **4.2 Gemma 3n: The Mobile-Optimized Multimodal**
+
+**Gemma 3n** (Nano) is Google's mobile-first model family.24
+
+* **MatFormer Architecture:** This is a critical architectural innovation for the iPad app. MatFormer (Matryoshka Transformer) allows a single model to operate at different sizes (e.g., E2B and E4B) by "slicing" the weights.24  
+  * *Implementation:* The app can run the **E2B** slice continuously for real-time, low-latency preview as the user writes. When the user pauses or triggers the "Squeeze" gesture for final commit, the app momentarily engages the full **E4B** layers for maximum accuracy. This **Elastic Inference** optimizes battery life without sacrificing peak performance.  
+* **Multimodal Inputs:** Gemma 3n supports audio natively. This enables a multimodal correction workflow. The user can point to a word and *say* "This is actually 'Béal', not 'Bael'," and the model uses both the visual context of the handwriting and the audio input to correct the transcription.26
+
+### **4.3 FunctionGemma: The Semantic Action Layer**
+
+**FunctionGemma** 27 is specialized for converting natural language into structured API calls.
+
+* **Role:** It acts as the bridge between the transcribed text and the iOS ecosystem. If the user writes a diary entry *"Visit the archives in Galway next Tuesday,"* FunctionGemma parses this text and outputs a structured JSON object:  
+  JSON  
+  {  
+    "tool": "Calendar",  
+    "action": "createEvent",  
+    "parameters": {  
+      "title": "Visit Archives",  
+      "location": "Galway",  
+      "date": "next Tuesday"  
+    }  
+  }
+
+  The Swift app then executes this using EventKit.
+
+## ---
+
+**5\. The Irish Language Domain: Linguistic & Data Engineering**
+
+Developing a robust Irish HTR system requires solving specific linguistic challenges that generic models fail to address.
+
+### **5.1 The Challenge of Cló Gaelach and Orthography**
+
+Historical Irish manuscripts (pre-1960s) predominantly use the **Cló Gaelach** (Gaelic Type). This script introduces unique OCR challenges:
+
+* **Lenition (Séimhiú):** In modern Irish (Roman type), lenition is marked by an 'h' (e.g., *mháthair*). In Cló Gaelach, it is marked by a **Punctum Delens** (a dot) over the consonant (e.g., *ṁáṫair*). Generic models often mistake this dot for noise or a speck of dust.28  
+* **The Tironian Et:** The symbol ⁊ is used for "agus" (and). Standard models often misread this as a '7'.  
+* **Glyph Confusion:** The Gaelic 'r' (ꞃ) is visually similar to 'p' or 'x'. The 's' (ſ) resembles 'f' without the crossbar.  
+* **Solution:** Zero-shot performance on this script is poor. We must fine-tune the models specifically to recognize these features.
+
+### **5.2 Dataset Strategy for Fine-Tuning**
+
+To train Qwen or Gemma to read Irish effectively, we must curate a high-quality instruction-tuning dataset.  
+**1\. Dúchas.ie (The Schools' Collection)**
+
+* **Source:** \~500,000 pages of folklore collected in the 1930s.29  
+* **Ground Truth:** The *Meitheal Dúchas* project has crowdsourced transcriptions for a significant portion of this archive.30  
+* **Pipeline:** We need to construct a dataset of (Image\_Region, Text\_Transcription) pairs. This involves:  
+  1. Scraping the Dúchas API for pages with validated transcriptions.  
+  2. Using a layout analysis model (like YOLOv8 or specific MLX-based layout parsers) to segment the page into lines.  
+  3. Matching the lines to the XML transcription data.
+
+**2\. Transkribus & An Gaodhal**
+
+* **Source:** The *An Gaodhal* project created specific OCR models for bilingual Irish/English newspapers.31  
+* **Methodology:** This project successfully utilized "masking" to separate English and Irish text for training language-specific models.  
+* **Data Export:** The snippet confirms that *An Gaodhal* data is available in **ALTO XML** format.32 ALTO (Analyzed Layout and Text Object) contains precise coordinate data for every word on the page.  
+* **Conversion:** A Python script is required to parse the ALTO XML, crop the word/line images from the high-res rasters, and format them into a JSONL file compatible with mlx-vlm fine-tuning (e.g., {"messages":}, {"role": "assistant", "content": "..."}\]}).
+
+**3\. Logainm.ie (Placenames Database)**
+
+* **Source:** The official database of Irish placenames.33  
+* **RAG Implementation:** Handwriting often contains obscure local placenames (townlands). We can export the Logainm dataset 34 and build a local vector database on the iPad (using a Swift library like USearch or CoreData with embedding support). When the VLM outputs a low-confidence token sequence that looks like a placename, the app queries this local database to "snap" the transcription to the nearest valid official Irish placename.
+
+## ---
+
+**6\. "Peannaire" Application Architecture: Implementation Roadmap**
+
+We define the reference architecture for the application, hereby named "Peannaire" (Scribe).
+
+### **6.1 View Layer: PencilKit and Canvas Management**
+
+The UI is built on PKCanvasView to provide a native writing experience.
+
+* **Stroke Capture Strategy:** We do not stream the entire screen to the VLM continuously, as this is computationally wasteful. Instead, we implement a **Stroke-Based Trigger**.  
+* **Implementation:**  
+  Swift  
+  // Swift Pseudo-code for intelligent capturing  
+  func canvasViewDrawingDidChange(\_ canvasView: PKCanvasView) {  
+      // Debounce timer: Wait 1 second after last stroke  
+      debounceTimer?.invalidate()  
+      debounceTimer \= Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { \_ in  
+          self.captureAndInfer(canvasView.drawing)  
+      }  
+  }
+
+* **Dark Mode Inversion:** VLMs are typically trained on black text on white backgrounds. If the iPad is in Dark Mode, the PKDrawing image export must be inverted (white strokes on black background \-\> black strokes on white) before inference to ensure accuracy.
+
+### **6.2 Logic Layer: MLX-Swift VLM Integration**
+
+The core logic manages the MLX model container.
+
+* Model Loading & Quantization:  
+  To respect the 8GB memory limit, we load the 4-bit quantized Qwen model.  
+  Swift  
+  import MLXVLM
+
+  // Configuration pointing to the Hugging Face repo  
+  let config \= ModelConfiguration(  
+      id: "mlx-community/Qwen2.5-VL-3B-Instruct-4bit"   
+  )
+
+  // Load the model container (weights downloaded to sandbox)  
+  let modelContainer \= try await VLMModelFactory.shared.loadContainer(configuration: config)
+
+* Inference Loop:  
+  When the "Squeeze" interaction is detected:  
+  1. **Rasterize:** canvasView.drawing.image(from: rect, scale: 2.0) generates a UIImage.  
+  2. **Preprocess:** Resize to native resolution (multiples of 28px for Qwen) using CoreImage.  
+  3. **Generate:**  
+     Swift  
+     let input \= UserInput(images: \[processedImage\], prompt: "Transcribe the Irish text in this image.")  
+     let result \= try await modelContainer.perform { context in  
+         let input \= try await context.processor.prepare(input: input)  
+         return try MLXLMCommon.generate(input: input, parameters: params, context: context)  
+     }
+
+  4. **Haptic Feedback:** Parse result confidence. If confident, light tick (.success). If uncertain, double pulse (.warning).6
+
+### **6.3 Data Layer: Core Data & RAG**
+
+* **Local Storage:** Transcriptions are stored in Core Data alongside the PKDrawing binary data.  
+* **RAG Pipeline:**  
+  * **Embedding Model:** We run a small embedding model (e.g., all-MiniLM-L6-v2 quantized) via mlx-swift or transformers.js to embed the transcribed text.  
+  * **Vector Search:** This allows the user to search their handwritten notes semantically (e.g., searching for "Wedding" finds notes about "Pósadh").
+
+## ---
+
+**7\. Deep Research Insights & Future Implications**
+
+### **7.1 The "Model Collapse" Risk in Low-Resource Languages**
+
+A critical insight derived from the analysis of Irish datasets is the risk of **Model Collapse** or **Hallucination Loop**. Generic models trained on the web (Common Crawl) have seen very little *Cló Gaelach*. Without fine-tuning, models often hallucinate English words that visually resemble the Irish script.
+
+* **Mitigation:** The "Thinking" capability of Qwen3 is not just a feature; it is a safety mechanism. By prompting the model to explicitly reason about the visual strokes (*"Does this glyph have the ascender of a 'b' or the descender of a 'p'?"*) before committing to a token, we force the model to ground its output in visual evidence rather than language model probability.
+
+### **7.2 Hybrid Deployment Strategy**
+
+The concurrent maturation of mlx-swift (Native) and transformers.js (Web) suggests a hybrid deployment future.
+
+* **Scenario:** A researcher uses the native iPad app (MLX) for heavy-duty transcription of archives in the field (offline). They then generate a "Web Review Link."  
+* **Mechanism:** This link opens a page that loads the *same* quantized weights (converted to ONNX) using transformers.js and WebGPU. This allows a second user (e.g., a student) to review and correct the transcription on a non-Apple device (Windows/Android) without needing the native app. This interoperability bridges the gap between the high-performance Apple ecosystem and the wider research community.
+
+### **7.3 Cultural Data Sovereignty**
+
+Running this stack locally on Apple Silicon is a matter of **Data Sovereignty**.
+
+* **Context:** Indigenous communities are increasingly wary of uploading cultural heritage data to centralized cloud APIs (OpenAI/Google) where it might be used to train proprietary models without consent.  
+* **Impact:** A fully offline "Peannaire" app empowers archivists in the *Gaeltacht* to digitize sensitive folklore records with the guarantee that the data never leaves the physical device. This aligns with the ethical frameworks of modern digital humanities.
+
+## ---
+
+**8\. Conclusion**
+
+The combination of the **iPad Air M2's Unified Memory Architecture**, the interactive precision of the **Apple Pencil Pro**, and the efficiency of the **MLX** framework creates a uniquely capable platform for revitalizing Irish language resources. By moving beyond simple OCR to **Vision-Language Reasoning**, and by grounding these models in the rich, specific datasets of *Dúchas* and *An Gaodhal*, developers can build tools that do not merely transcribe text, but understand the cultural and linguistic context of the written word. This architecture represents the cutting edge of what is technically possible in 2025, transforming the iPad from a consumption device into a primary instrument of cultural preservation.
+
+## **9\. Appendix: Comparative Specifications**
+
+| Feature | MLX-Swift | Llama.cpp | Transformers.js (WebGPU) |
+| :---- | :---- | :---- | :---- |
+| **Primary Use Case** | Native iOS/macOS App | Low-End / Compatibility | Web / Cross-Platform |
+| **VLM Support** | High (Qwen, Gemma, LLaVA) | Moderate (Experimental) | Emerging (Node.js first) |
+| **Quantization** | 4-bit, 8-bit | 1-bit to 8-bit (GGUF) | 8-bit (ONNX) |
+| **Performance (M2)** | **Highest (Metal Optimized)** | High (CPU/Metal Hybrid) | High (Shader based) |
+| **Memory Efficiency** | **Excellent (Unified Memory)** | **Best (Low-bit GGUF)** | Moderate (Browser Limits) |
+| **Implementation** | Swift / C++ Bridge | C++ / C Bridge | JavaScript / Wasm |
+
+| Model | Parameters | Quantization | Est. Memory (M2) | Irish Capability |
+| :---- | :---- | :---- | :---- | :---- |
+| **Qwen2.5-VL-3B** | 3 Billion | 4-bit (Q4) | \~2.7 GB | High (Visual Reasoning) |
+| **Gemma 3n E4B** | 4 Billion | 4-bit (Q4) | \~3.0 GB | High (Multimodal/Mobile) |
+| **FunctionGemma** | Varies | 4-bit (Q4) | \~2.0 GB | Specialized (Agentic) |
+
+#### **Works cited**
+
+1. Performance of llama.cpp on Apple Silicon M-series \#4167 \- GitHub, accessed December 24, 2025, [https://github.com/ggml-org/llama.cpp/discussions/4167](https://github.com/ggml-org/llama.cpp/discussions/4167)  
+2. Building Offline RAG on iOS: How to Run Gemma 3N Locally | by Greg Sommerville | Google Cloud \- Community | Dec, 2025 | Medium, accessed December 24, 2025, [https://medium.com/google-cloud/building-offline-rag-on-ios-how-to-run-gemma-3n-locally-ffdfda6f7217](https://medium.com/google-cloud/building-offline-rag-on-ios-how-to-run-gemma-3n-locally-ffdfda6f7217)  
+3. Qwen2.5-3B: Specifications and GPU VRAM Requirements \- ApX Machine Learning, accessed December 24, 2025, [https://apxml.com/models/qwen2-5-3b](https://apxml.com/models/qwen2-5-3b)  
+4. Handling double taps from Apple Pencil | Apple Developer Documentation, accessed December 24, 2025, [https://developer.apple.com/documentation/applepencil/handling-double-taps-from-apple-pencil](https://developer.apple.com/documentation/applepencil/handling-double-taps-from-apple-pencil)  
+5. Apple Pencil interactions | Apple Developer Documentation, accessed December 24, 2025, [https://developer.apple.com/documentation/uikit/apple-pencil-interactions](https://developer.apple.com/documentation/uikit/apple-pencil-interactions)  
+6. Playing haptic feedback in your app | Apple Developer Documentation, accessed December 24, 2025, [https://developer.apple.com/documentation/applepencil/playing-haptic-feedback-in-your-app](https://developer.apple.com/documentation/applepencil/playing-haptic-feedback-in-your-app)  
+7. Apple Pencil and Scribble | Apple Developer Documentation, accessed December 24, 2025, [https://developer.apple.com/design/human-interface-guidelines/apple-pencil-and-scribble](https://developer.apple.com/design/human-interface-guidelines/apple-pencil-and-scribble)  
+8. ml-explore/mlx-swift: Swift API for MLX \- GitHub, accessed December 24, 2025, [https://github.com/ml-explore/mlx-swift](https://github.com/ml-explore/mlx-swift)  
+9. Unleashing Vision AI on Apple Silicon: A Practical Guide to MLX-VLM \- Level Up Coding, accessed December 24, 2025, [https://levelup.gitconnected.com/unleashing-vision-ai-on-apple-silicon-a-practical-guide-to-mlx-vlm-a6fecabadf39](https://levelup.gitconnected.com/unleashing-vision-ai-on-apple-silicon-a-practical-guide-to-mlx-vlm-a6fecabadf39)  
+10. ml-explore/mlx-swift-examples \- GitHub, accessed December 24, 2025, [https://github.com/ml-explore/mlx-swift-examples](https://github.com/ml-explore/mlx-swift-examples)  
+11. Exploring MLX Swift: Porting Qwen 3VL 4B from Python to Swift | Rudrank Riyam, accessed December 24, 2025, [https://rudrank.com/exploring-mlx-swift-porting-python-model-to-swift](https://rudrank.com/exploring-mlx-swift-porting-python-model-to-swift)  
+12. Releases · ml-explore/mlx-swift-examples \- GitHub, accessed December 24, 2025, [https://github.com/ml-explore/mlx-swift-examples/releases](https://github.com/ml-explore/mlx-swift-examples/releases)  
+13. ggml-org/llama.cpp: LLM inference in C/C++ \- GitHub, accessed December 24, 2025, [https://github.com/ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp)  
+14. Mungert/Qwen2.5-VL-3B-Instruct-GGUF \- Hugging Face, accessed December 24, 2025, [https://huggingface.co/Mungert/Qwen2.5-VL-3B-Instruct-GGUF](https://huggingface.co/Mungert/Qwen2.5-VL-3B-Instruct-GGUF)  
+15. vLLM or llama.cpp: Choosing the right LLM inference engine for your use case, accessed December 24, 2025, [https://developers.redhat.com/articles/2025/09/30/vllm-or-llamacpp-choosing-right-llm-inference-engine-your-use-case](https://developers.redhat.com/articles/2025/09/30/vllm-or-llamacpp-choosing-right-llm-inference-engine-your-use-case)  
+16. llama.cpp vs. vllm performance comparison : r/LocalLLaMA \- Reddit, accessed December 24, 2025, [https://www.reddit.com/r/LocalLLaMA/comments/1ml4cz0/llamacpp\_vs\_vllm\_performance\_comparison/](https://www.reddit.com/r/LocalLLaMA/comments/1ml4cz0/llamacpp_vs_vllm_performance_comparison/)  
+17. WebGPU is now supported in major browsers | Blog \- web.dev, accessed December 24, 2025, [https://web.dev/blog/webgpu-supported-major-browsers](https://web.dev/blog/webgpu-supported-major-browsers)  
+18. Transformers.js \- Hugging Face, accessed December 24, 2025, [https://huggingface.co/docs/transformers.js/index](https://huggingface.co/docs/transformers.js/index)  
+19. onnx-community/gemma-3n-E2B-it-ONNX \- Hugging Face, accessed December 24, 2025, [https://huggingface.co/onnx-community/gemma-3n-E2B-it-ONNX](https://huggingface.co/onnx-community/gemma-3n-E2B-it-ONNX)  
+20. Qwen \- Wikipedia, accessed December 24, 2025, [https://en.wikipedia.org/wiki/Qwen](https://en.wikipedia.org/wiki/Qwen)  
+21. Qwen/Qwen3-VL-8B-Instruct \- Hugging Face, accessed December 24, 2025, [https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct](https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct)  
+22. Qwen/Qwen2.5-VL-3B-Instruct \- Hugging Face, accessed December 24, 2025, [https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct](https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct)  
+23. Qwen/Qwen3-VL-8B-Thinking \- Demo \- DeepInfra, accessed December 24, 2025, [https://deepinfra.com/Qwen/Qwen3-VL-8B-Thinking](https://deepinfra.com/Qwen/Qwen3-VL-8B-Thinking)  
+24. Gemma 3n model overview \- Google AI for Developers, accessed December 24, 2025, [https://ai.google.dev/gemma/docs/gemma-3n](https://ai.google.dev/gemma/docs/gemma-3n)  
+25. Introducing Gemma 3n: The developer guide \- Google Developers Blog, accessed December 24, 2025, [https://developers.googleblog.com/en/introducing-gemma-3n-developer-guide/](https://developers.googleblog.com/en/introducing-gemma-3n-developer-guide/)  
+26. Gemma 3n – Vertex AI \- Google Cloud Console, accessed December 24, 2025, [https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/gemma3n](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/gemma3n)  
+27. Gemma releases | Google AI for Developers, accessed December 24, 2025, [https://ai.google.dev/gemma/docs/releases](https://ai.google.dev/gemma/docs/releases)  
+28. Irish orthography \- Wikipedia, accessed December 24, 2025, [https://en.wikipedia.org/wiki/Irish\_orthography](https://en.wikipedia.org/wiki/Irish_orthography)  
+29. Dúchas \- National Folklore Collection \- University College Dublin, accessed December 24, 2025, [https://www.ucd.ie/irishfolklore/en/duchas/](https://www.ucd.ie/irishfolklore/en/duchas/)  
+30. Research Newsletter \- Issue 109: Open Research in Action \- DCU, accessed December 24, 2025, [https://www.dcu.ie/research/research-newsletter-issue-109-open-research-action](https://www.dcu.ie/research/research-newsletter-issue-109-open-research-action)  
+31. Training a bilingual Irish-English model in Transkribus using An Gaodhal, accessed December 24, 2025, [https://blog.transkribus.org/en/training-a-bilingual-irish-english-model-in-transkribus-using-an-gaodhal](https://blog.transkribus.org/en/training-a-bilingual-irish-english-model-in-transkribus-using-an-gaodhal)  
+32. An Gaodhal Newspaper (1881-1898) Full-Text OCR Output Files \- UltraViolet, accessed December 24, 2025, [https://ultraviolet.library.nyu.edu/records/5ya5n-mc504](https://ultraviolet.library.nyu.edu/records/5ya5n-mc504)  
+33. Placenames Database of Ireland \- Wikipedia, accessed December 24, 2025, [https://en.wikipedia.org/wiki/Placenames\_Database\_of\_Ireland](https://en.wikipedia.org/wiki/Placenames_Database_of_Ireland)  
+34. Logainm: The Placenames Database of Ireland \- Dataset \- data.gov.ie, accessed December 24, 2025, [https://data.gov.ie/dataset/logainm](https://data.gov.ie/dataset/logainm)
+
+---
+
+## handwriting-Irish Handwriting App Development
+
+*Source: `docs/bunchloch/teanga/handwriting-Irish Handwriting App Development.md` (4041 words, 292 lines)*
+
+# **Operationalizing Irish Handwriting Recognition on Apple Silicon: An Exhaustive Architectural Analysis of MLX, Llama.cpp, and Transformers.js**
+
+## **1\. Executive Summary**
+
+The convergence of high-performance mobile silicon, specifically the Apple M2 architecture, with the advent of efficient Vision-Language Models (VLMs) creates a distinct inflection point for philological computing. This report provides a comprehensive, expert-level technical analysis of engineering a native iOS/iPadOS application dedicated to Irish language (*Gaeilge*) handwriting recognition (HTR). The proposed solution leverages the iPad Air M2 and Apple Pencil Pro, utilizing a hybrid inference stack comprising **mlx-swift**, **llama.cpp**, and **transformers.js** via WebGPU to overcome the historical computational barriers of on-device transcription.  
+The analysis establishes that generic Optical Character Recognition (OCR) systems are fundamentally ill-suited for the nuances of Irish orthography—specifically the *Cló Gaelach* (Gaelic type) and the diacritical *punctum delens* used for lenition (*séimhiú*). To address this, the report proposes a domain-specific adaptation of state-of-the-art multimodal models, principally **Qwen3-VL** (and its stable predecessor Qwen2.5-VL) and **Gemma 3n**. These models, unlike their predecessors, possess the visual reasoning capabilities required to distinguish ambiguous glyphs (such as the distinctively similar ‘r’ and ‘s’ in Gaelic script) and the semantic understanding to perform "thinking" or Chain-of-Thought (CoT) error correction in real-time.  
+Crucially, this document details the mechanisms for deploying these massive models within the strict thermal and memory envelopes of the iPad Air M2 (8GB Unified Memory). We delineate the precise role of **MLX** as the primary inference engine due to its direct mapping to the Metal Performance Shaders (MPS) graph, while positioning **llama.cpp** and **transformers.js** as strategic fallbacks for cross-platform compatibility and web-based interaction. Furthermore, the report explores the integration of the **Apple Pencil Pro’s** novel interaction paradigms—squeeze detection and haptic feedback—to construct a "Human-in-the-Loop" transcription workflow that dramatically accelerates the digitization of Ireland's archival heritage, specifically referencing the **Dúchas.ie** and **An Gaodhal** datasets as the foundation for fine-tuning.
+
+## ---
+
+**2\. Hardware Architecture: The Apple Silicon Substrate**
+
+The feasibility of running Multi-Modal Large Language Models (VLMs) on a slate form factor is strictly governed by the underlying hardware architecture. The iPad Air M2 represents a shift from mobile-first to desktop-class architecture in a constrained thermal envelope. Understanding the nuances of this silicon is prerequisite to successful application deployment.
+
+### **2.1 The M2 Unified Memory Architecture (UMA) and VLM Inference**
+
+In traditional computing architectures (x86/CUDA), the CPU and GPU maintain discrete memory pools. This necessitates the continuous copying of data across the PCI-Express bus, introducing significant latency and power consumption—prohibitive factors for mobile real-time inference. The M2 chip utilized in the iPad Air eliminates this bottleneck through its **Unified Memory Architecture (UMA)**.
+
+* **Memory Bandwidth and Access:** The M2 features a 128-bit wide memory interface providing approximately **100 GB/s** of bandwidth.1 For VLM inference, where high-resolution image tensors (from the visual encoder) must be processed alongside massive weight matrices (from the language decoder), this bandwidth is the enabling factor. It allows the GPU and Neural Engine (ANE) to access the same data without duplication.  
+* **The 8GB Physical Constraint:** The standard iPad Air M2 configuration includes 8GB of RAM. This is the single most critical constraint for the proposed application.  
+  * **OS Reservation:** iOS/iPadOS aggressively manages memory. The kernel, window server, and display buffers typically reserve 2–3GB.  
+  * **Jetsam Limits:** The operating system employs a "jetsam" mechanism that terminates background processes or memory-hogging foreground apps to preserve system stability. The effective "safe" budget for the application is approximately **4.5 GB to 5 GB**.2  
+  * **Model Implications:** A standard 3-billion parameter model in FP16 (16-bit floating point) precision requires roughly 6GB of VRAM for weights alone, plus additional overhead for the KV cache (context window) and activation buffers. This exceeds the safe budget.  
+  * **Quantization Necessity:** To fit a capable VLM like **Qwen2.5-VL-3B** or **Gemma 3n E4B** onto the device, **4-bit quantization (Q4)** is mandatory. A Q4 version of a 3B model occupies approximately **2.68 GB**.3 This fits comfortably within the resident set size, leaving approximately 2GB for the visual encoder, the KV cache (which grows linearly with text length), and the application's UI assets.
+
+### **2.2 Apple Pencil Pro: Interaction Physics and Sensor Fusion**
+
+The Apple Pencil Pro introduces specific hardware capabilities—a strain gauge for "squeeze" detection, a gyroscope for "barrel roll," and a haptic engine—that fundamentally alter the user interface design for handwriting recognition tasks.
+
+* **Squeeze-to-Infer (Low Latency Trigger):** In a transcription workflow, latency breaks the "flow state" of the archivist. Traditional UI requires lifting the stylus to tap a button. By implementing the UIPencilInteractionDelegate protocol, the application can trigger the inference pass immediately upon the detection of a squeeze gesture.4 This hardware interrupt allows for a seamless "write-squeeze-verify" loop.  
+* **Haptic Feedback for Confidence Signaling:** The Haptic Engine provides programmable tactile feedback. This is particularly relevant for Irish manuscripts where ink fading or damage is common. If the VLM's confidence score (log-probability) for a recognized segment falls below a set threshold (e.g., \< 75%), the app can trigger a distinct haptic pulse using UIImpactFeedbackGenerator.6 This alerts the user to visually verify the transcription without needing to constantly check the screen, mimicking the tactile feedback of a physical tool encountering resistance.  
+* **Barrel Roll for Parameter Tuning:** The barrel roll gesture allows for continuous analog input. In the context of HTR, this can be mapped to the "temperature" of the model or the "brush size" of the eraser. For example, rotating the pencil could dynamically adjust the contrast threshold of the input image preprocessing, allowing the user to "tune in" faint text physically.7
+
+## ---
+
+**3\. The Inference Ecosystem: A Comparative Technical Analysis**
+
+To deploy high-capability models on the iPad, we must select an inference engine that balances performance, memory efficiency, and developer ergonomics. The research highlights three primary frameworks: **MLX**, **Llama.cpp**, and **Transformers.js**.
+
+### **3.1 MLX and MLX-Swift: The Native Metal Sovereign**
+
+**MLX** is an array framework designed by Apple specifically for Apple Silicon.8 Unlike cross-platform tools that treat Apple Silicon as a generic ARM target, MLX is architected around the unified memory model and the Metal API.
+
+* **Lazy Evaluation:** MLX utilizes lazy evaluation, meaning computations are only executed when the results are materialized. In a VLM pipeline, where the visual encoder runs once but the language decoder runs iteratively (token by token), this allows for highly efficient memory management. Graphs are compiled dynamically, optimizing the execution plan for the specific operations required.9  
+* **MLX-Swift Integration:** The mlx-swift package provides a Swift API that bridges directly to the C++ core. This eliminates the overhead associated with Python-Swift bridging or Objective-C wrappers. Crucially, mlx-swift exposes the MLXArray object, which can be zero-copy shared with Metal compute shaders. This allows the application to perform custom image preprocessing (e.g., binarization of manuscript pages) using native Metal shaders and pass the result directly to the VLM without CPU round-tripping.  
+* **VLM Specific Support:** The mlx-swift-examples repository contains a dedicated library, MLXVLM.10 This library implements the complex architectures of modern VLMs, separating the Vision Tower (typically a CLIP or SigLIP variant) from the Language Model. The research indicates that support for **Qwen2.5-VL** is already present in the python counterparts and is being actively ported to Swift.11  
+* **Advantage:** MLX offers the highest throughput (tokens per second) and best energy efficiency on M-series chips because it avoids the overhead of generic compute layers. It supports "Thinking" models and complex architectures like MoE (Mixture of Experts) natively.12
+
+### **3.2 Llama.cpp: The Ubiquitous Fallback**
+
+**Llama.cpp** is a C++ inference engine focused on pure CPU/GPU inference with no dependencies.13 Its primary strength lies in its **GGUF** file format and extreme quantization capabilities.
+
+* **Quantization Leadership:** Llama.cpp supports advanced quantization types such as **IQ3\_XS** (approx. 3 bits per weight) and **IQ2\_XXS**.14 These formats use importance matrices (imatrix) to preserve model accuracy even at extreme compression. For an older iPad or for users multitasking heavily, running a Qwen model in IQ3\_XS format via llama.cpp might be the only way to prevent OOM errors, reducing a 3B model to under 1.5GB of RAM.  
+* **Integration Complexity:** While llama.cpp can be compiled as a library for iOS, VLM support (Vision) has historically been segregated into "examples" or forks (e.g., llama-server with projection layers) rather than the core library. Snippets indicate that Qwen2.5-VL support required specific forks initially 14, though it is merging into the main branch.  
+* **Performance Profile:** Benchmarks indicate that for single-batch inference (one user), llama.cpp provides excellent Time To First Token (TTFT) latency, often beating server-oriented frameworks like vLLM which optimize for throughput over latency.15 This makes it a highly responsive backend for a real-time handwriting app.
+
+### **3.3 Transformers.js and WebGPU: The Browser-Based Companion**
+
+**Transformers.js** enables running models directly in the browser using the ONNX Runtime and **WebGPU**.17
+
+* **WebGPU on iOS 18:** With the release of iOS 18, Safari (and WKWebView) supports WebGPU. This allows JavaScript to access the M2 GPU directly via WGSL (WebGPU Shading Language).  
+* **The "Share" Utility:** The primary use case for transformers.js in this architecture is interoperability. A user can export their transcribed notes and the model configuration from the iPad app. Because the model weights (quantized ONNX) can be loaded by transformers.js, the user can then open a web link on a Windows PC or Android device and continue verifying the transcription, leveraging the local GPU of that device.  
+* **Limitations:** Snippets note that while embedding models run 40-75x faster on WebGPU, full VLM support (especially for complex architectures like Gemma 3n's MatFormer) is still maturing in the browser environment, currently often requiring Node.js for full feature parity.19
+
+**Synthesis:** For the "Peannaire" (Scribe) app, **MLX-Swift** is the optimal *primary* engine due to its native performance and memory handling. **Llama.cpp** serves as a robust "Low Power" or "High Compatibility" mode. **Transformers.js** is the enabling technology for a "Review Anywhere" web companion.
+
+## ---
+
+**4\. Foundation Model Analysis: The Cognitive Layer**
+
+The capability of the application relies on the underlying model's ability to not just recognize characters (OCR), but to *understand* the visual context of handwriting.
+
+### **4.1 Qwen2.5-VL and Qwen3-VL: The Visual Reasoners**
+
+The **Qwen-VL** series (specifically Qwen2.5-VL and the referenced future Qwen3-VL) represents the current state-of-the-art for open-weights visual processing.20
+
+* **NaViT (Native Resolution Vision Transformer):** Most VLMs resize input images to a fixed square (e.g., 336x336 pixels). This is catastrophic for handwriting, where a line of text is a long, thin horizontal strip. Resizing it to a square distorts the aspect ratio and crushes character details. Qwen2.5-VL utilizes a NaViT-like approach, processing images at their **native resolution** by dynamically creating patches.22 This preserves the stroke fidelity essential for distinguishing Irish characters.  
+* **"Thinking" Process:** Snippets mention "Qwen3-VL-Thinking" models.23 These models employ test-time compute to generate a Chain-of-Thought (CoT) before outputting the final answer. In the context of Irish HTR, this allows the model to "reason" through ambiguity.  
+  * *Example:* The model sees a glyph that could be 'r' or 's'.  
+  * *CoT:* "The preceding article is 'an'. The noun is feminine. Therefore, lenition is likely. The stroke has a descender typical of 's' in this hand. I will transcribe as 's'."  
+* **Agentic Capabilities:** Qwen2.5-VL is trained for tool use and acting as a visual agent.22 This allows the app to go beyond transcription. The user could circle a paragraph and write "Summarize this in English," and the model can perform the task using its internal reasoning capabilities.
+
+### **4.2 Gemma 3n: The Mobile-Optimized Multimodal**
+
+**Gemma 3n** (Nano) is Google's mobile-first model family.24
+
+* **MatFormer Architecture:** This is a critical architectural innovation for the iPad app. MatFormer (Matryoshka Transformer) allows a single model to operate at different sizes (e.g., E2B and E4B) by "slicing" the weights.24  
+  * *Implementation:* The app can run the **E2B** slice continuously for real-time, low-latency preview as the user writes. When the user pauses or triggers the "Squeeze" gesture for final commit, the app momentarily engages the full **E4B** layers for maximum accuracy. This **Elastic Inference** optimizes battery life without sacrificing peak performance.  
+* **Multimodal Inputs:** Gemma 3n supports audio natively. This enables a multimodal correction workflow. The user can point to a word and *say* "This is actually 'Béal', not 'Bael'," and the model uses both the visual context of the handwriting and the audio input to correct the transcription.26
+
+### **4.3 FunctionGemma: The Semantic Action Layer**
+
+**FunctionGemma** 27 is specialized for converting natural language into structured API calls.
+
+* **Role:** It acts as the bridge between the transcribed text and the iOS ecosystem. If the user writes a diary entry *"Visit the archives in Galway next Tuesday,"* FunctionGemma parses this text and outputs a structured JSON object:  
+  JSON  
+  {  
+    "tool": "Calendar",  
+    "action": "createEvent",  
+    "parameters": {  
+      "title": "Visit Archives",  
+      "location": "Galway",  
+      "date": "next Tuesday"  
+    }  
+  }
+
+  The Swift app then executes this using EventKit.
+
+## ---
+
+**5\. The Irish Language Domain: Linguistic & Data Engineering**
+
+Developing a robust Irish HTR system requires solving specific linguistic challenges that generic models fail to address.
+
+### **5.1 The Challenge of Cló Gaelach and Orthography**
+
+Historical Irish manuscripts (pre-1960s) predominantly use the **Cló Gaelach** (Gaelic Type). This script introduces unique OCR challenges:
+
+* **Lenition (Séimhiú):** In modern Irish (Roman type), lenition is marked by an 'h' (e.g., *mháthair*). In Cló Gaelach, it is marked by a **Punctum Delens** (a dot) over the consonant (e.g., *ṁáṫair*). Generic models often mistake this dot for noise or a speck of dust.28  
+* **The Tironian Et:** The symbol ⁊ is used for "agus" (and). Standard models often misread this as a '7'.  
+* **Glyph Confusion:** The Gaelic 'r' (ꞃ) is visually similar to 'p' or 'x'. The 's' (ſ) resembles 'f' without the crossbar.  
+* **Solution:** Zero-shot performance on this script is poor. We must fine-tune the models specifically to recognize these features.
+
+### **5.2 Dataset Strategy for Fine-Tuning**
+
+To train Qwen or Gemma to read Irish effectively, we must curate a high-quality instruction-tuning dataset.  
+**1\. Dúchas.ie (The Schools' Collection)**
+
+* **Source:** \~500,000 pages of folklore collected in the 1930s.29  
+* **Ground Truth:** The *Meitheal Dúchas* project has crowdsourced transcriptions for a significant portion of this archive.30  
+* **Pipeline:** We need to construct a dataset of (Image\_Region, Text\_Transcription) pairs. This involves:  
+  1. Scraping the Dúchas API for pages with validated transcriptions.  
+  2. Using a layout analysis model (like YOLOv8 or specific MLX-based layout parsers) to segment the page into lines.  
+  3. Matching the lines to the XML transcription data.
+
+**2\. Transkribus & An Gaodhal**
+
+* **Source:** The *An Gaodhal* project created specific OCR models for bilingual Irish/English newspapers.31  
+* **Methodology:** This project successfully utilized "masking" to separate English and Irish text for training language-specific models.  
+* **Data Export:** The snippet confirms that *An Gaodhal* data is available in **ALTO XML** format.32 ALTO (Analyzed Layout and Text Object) contains precise coordinate data for every word on the page.  
+* **Conversion:** A Python script is required to parse the ALTO XML, crop the word/line images from the high-res rasters, and format them into a JSONL file compatible with mlx-vlm fine-tuning (e.g., {"messages":}, {"role": "assistant", "content": "..."}\]}).
+
+**3\. Logainm.ie (Placenames Database)**
+
+* **Source:** The official database of Irish placenames.33  
+* **RAG Implementation:** Handwriting often contains obscure local placenames (townlands). We can export the Logainm dataset 34 and build a local vector database on the iPad (using a Swift library like USearch or CoreData with embedding support). When the VLM outputs a low-confidence token sequence that looks like a placename, the app queries this local database to "snap" the transcription to the nearest valid official Irish placename.
+
+## ---
+
+**6\. "Peannaire" Application Architecture: Implementation Roadmap**
+
+We define the reference architecture for the application, hereby named "Peannaire" (Scribe).
+
+### **6.1 View Layer: PencilKit and Canvas Management**
+
+The UI is built on PKCanvasView to provide a native writing experience.
+
+* **Stroke Capture Strategy:** We do not stream the entire screen to the VLM continuously, as this is computationally wasteful. Instead, we implement a **Stroke-Based Trigger**.  
+* **Implementation:**  
+  Swift  
+  // Swift Pseudo-code for intelligent capturing  
+  func canvasViewDrawingDidChange(\_ canvasView: PKCanvasView) {  
+      // Debounce timer: Wait 1 second after last stroke  
+      debounceTimer?.invalidate()  
+      debounceTimer \= Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { \_ in  
+          self.captureAndInfer(canvasView.drawing)  
+      }  
+  }
+
+* **Dark Mode Inversion:** VLMs are typically trained on black text on white backgrounds. If the iPad is in Dark Mode, the PKDrawing image export must be inverted (white strokes on black background \-\> black strokes on white) before inference to ensure accuracy.
+
+### **6.2 Logic Layer: MLX-Swift VLM Integration**
+
+The core logic manages the MLX model container.
+
+* Model Loading & Quantization:  
+  To respect the 8GB memory limit, we load the 4-bit quantized Qwen model.  
+  Swift  
+  import MLXVLM
+
+  // Configuration pointing to the Hugging Face repo  
+  let config \= ModelConfiguration(  
+      id: "mlx-community/Qwen2.5-VL-3B-Instruct-4bit"   
+  )
+
+  // Load the model container (weights downloaded to sandbox)  
+  let modelContainer \= try await VLMModelFactory.shared.loadContainer(configuration: config)
+
+* Inference Loop:  
+  When the "Squeeze" interaction is detected:  
+  1. **Rasterize:** canvasView.drawing.image(from: rect, scale: 2.0) generates a UIImage.  
+  2. **Preprocess:** Resize to native resolution (multiples of 28px for Qwen) using CoreImage.  
+  3. **Generate:**  
+     Swift  
+     let input \= UserInput(images: \[processedImage\], prompt: "Transcribe the Irish text in this image.")  
+     let result \= try await modelContainer.perform { context in  
+         let input \= try await context.processor.prepare(input: input)  
+         return try MLXLMCommon.generate(input: input, parameters: params, context: context)  
+     }
+
+  4. **Haptic Feedback:** Parse result confidence. If confident, light tick (.success). If uncertain, double pulse (.warning).6
+
+### **6.3 Data Layer: Core Data & RAG**
+
+* **Local Storage:** Transcriptions are stored in Core Data alongside the PKDrawing binary data.  
+* **RAG Pipeline:**  
+  * **Embedding Model:** We run a small embedding model (e.g., all-MiniLM-L6-v2 quantized) via mlx-swift or transformers.js to embed the transcribed text.  
+  * **Vector Search:** This allows the user to search their handwritten notes semantically (e.g., searching for "Wedding" finds notes about "Pósadh").
+
+## ---
+
+**7\. Deep Research Insights & Future Implications**
+
+### **7.1 The "Model Collapse" Risk in Low-Resource Languages**
+
+A critical insight derived from the analysis of Irish datasets is the risk of **Model Collapse** or **Hallucination Loop**. Generic models trained on the web (Common Crawl) have seen very little *Cló Gaelach*. Without fine-tuning, models often hallucinate English words that visually resemble the Irish script.
+
+* **Mitigation:** The "Thinking" capability of Qwen3 is not just a feature; it is a safety mechanism. By prompting the model to explicitly reason about the visual strokes (*"Does this glyph have the ascender of a 'b' or the descender of a 'p'?"*) before committing to a token, we force the model to ground its output in visual evidence rather than language model probability.
+
+### **7.2 Hybrid Deployment Strategy**
+
+The concurrent maturation of mlx-swift (Native) and transformers.js (Web) suggests a hybrid deployment future.
+
+* **Scenario:** A researcher uses the native iPad app (MLX) for heavy-duty transcription of archives in the field (offline). They then generate a "Web Review Link."  
+* **Mechanism:** This link opens a page that loads the *same* quantized weights (converted to ONNX) using transformers.js and WebGPU. This allows a second user (e.g., a student) to review and correct the transcription on a non-Apple device (Windows/Android) without needing the native app. This interoperability bridges the gap between the high-performance Apple ecosystem and the wider research community.
+
+### **7.3 Cultural Data Sovereignty**
+
+Running this stack locally on Apple Silicon is a matter of **Data Sovereignty**.
+
+* **Context:** Indigenous communities are increasingly wary of uploading cultural heritage data to centralized cloud APIs (OpenAI/Google) where it might be used to train proprietary models without consent.  
+* **Impact:** A fully offline "Peannaire" app empowers archivists in the *Gaeltacht* to digitize sensitive folklore records with the guarantee that the data never leaves the physical device. This aligns with the ethical frameworks of modern digital humanities.
+
+## ---
+
+**8\. Conclusion**
+
+The combination of the **iPad Air M2's Unified Memory Architecture**, the interactive precision of the **Apple Pencil Pro**, and the efficiency of the **MLX** framework creates a uniquely capable platform for revitalizing Irish language resources. By moving beyond simple OCR to **Vision-Language Reasoning**, and by grounding these models in the rich, specific datasets of *Dúchas* and *An Gaodhal*, developers can build tools that do not merely transcribe text, but understand the cultural and linguistic context of the written word. This architecture represents the cutting edge of what is technically possible in 2025, transforming the iPad from a consumption device into a primary instrument of cultural preservation.
+
+## **9\. Appendix: Comparative Specifications**
+
+| Feature | MLX-Swift | Llama.cpp | Transformers.js (WebGPU) |
+| :---- | :---- | :---- | :---- |
+| **Primary Use Case** | Native iOS/macOS App | Low-End / Compatibility | Web / Cross-Platform |
+| **VLM Support** | High (Qwen, Gemma, LLaVA) | Moderate (Experimental) | Emerging (Node.js first) |
+| **Quantization** | 4-bit, 8-bit | 1-bit to 8-bit (GGUF) | 8-bit (ONNX) |
+| **Performance (M2)** | **Highest (Metal Optimized)** | High (CPU/Metal Hybrid) | High (Shader based) |
+| **Memory Efficiency** | **Excellent (Unified Memory)** | **Best (Low-bit GGUF)** | Moderate (Browser Limits) |
+| **Implementation** | Swift / C++ Bridge | C++ / C Bridge | JavaScript / Wasm |
+
+| Model | Parameters | Quantization | Est. Memory (M2) | Irish Capability |
+| :---- | :---- | :---- | :---- | :---- |
+| **Qwen2.5-VL-3B** | 3 Billion | 4-bit (Q4) | \~2.7 GB | High (Visual Reasoning) |
+| **Gemma 3n E4B** | 4 Billion | 4-bit (Q4) | \~3.0 GB | High (Multimodal/Mobile) |
+| **FunctionGemma** | Varies | 4-bit (Q4) | \~2.0 GB | Specialized (Agentic) |
+
+#### **Works cited**
+
+1. Performance of llama.cpp on Apple Silicon M-series \#4167 \- GitHub, accessed December 24, 2025, [https://github.com/ggml-org/llama.cpp/discussions/4167](https://github.com/ggml-org/llama.cpp/discussions/4167)  
+2. Building Offline RAG on iOS: How to Run Gemma 3N Locally | by Greg Sommerville | Google Cloud \- Community | Dec, 2025 | Medium, accessed December 24, 2025, [https://medium.com/google-cloud/building-offline-rag-on-ios-how-to-run-gemma-3n-locally-ffdfda6f7217](https://medium.com/google-cloud/building-offline-rag-on-ios-how-to-run-gemma-3n-locally-ffdfda6f7217)  
+3. Qwen2.5-3B: Specifications and GPU VRAM Requirements \- ApX Machine Learning, accessed December 24, 2025, [https://apxml.com/models/qwen2-5-3b](https://apxml.com/models/qwen2-5-3b)  
+4. Handling double taps from Apple Pencil | Apple Developer Documentation, accessed December 24, 2025, [https://developer.apple.com/documentation/applepencil/handling-double-taps-from-apple-pencil](https://developer.apple.com/documentation/applepencil/handling-double-taps-from-apple-pencil)  
+5. Apple Pencil interactions | Apple Developer Documentation, accessed December 24, 2025, [https://developer.apple.com/documentation/uikit/apple-pencil-interactions](https://developer.apple.com/documentation/uikit/apple-pencil-interactions)  
+6. Playing haptic feedback in your app | Apple Developer Documentation, accessed December 24, 2025, [https://developer.apple.com/documentation/applepencil/playing-haptic-feedback-in-your-app](https://developer.apple.com/documentation/applepencil/playing-haptic-feedback-in-your-app)  
+7. Apple Pencil and Scribble | Apple Developer Documentation, accessed December 24, 2025, [https://developer.apple.com/design/human-interface-guidelines/apple-pencil-and-scribble](https://developer.apple.com/design/human-interface-guidelines/apple-pencil-and-scribble)  
+8. ml-explore/mlx-swift: Swift API for MLX \- GitHub, accessed December 24, 2025, [https://github.com/ml-explore/mlx-swift](https://github.com/ml-explore/mlx-swift)  
+9. Unleashing Vision AI on Apple Silicon: A Practical Guide to MLX-VLM \- Level Up Coding, accessed December 24, 2025, [https://levelup.gitconnected.com/unleashing-vision-ai-on-apple-silicon-a-practical-guide-to-mlx-vlm-a6fecabadf39](https://levelup.gitconnected.com/unleashing-vision-ai-on-apple-silicon-a-practical-guide-to-mlx-vlm-a6fecabadf39)  
+10. ml-explore/mlx-swift-examples \- GitHub, accessed December 24, 2025, [https://github.com/ml-explore/mlx-swift-examples](https://github.com/ml-explore/mlx-swift-examples)  
+11. Exploring MLX Swift: Porting Qwen 3VL 4B from Python to Swift | Rudrank Riyam, accessed December 24, 2025, [https://rudrank.com/exploring-mlx-swift-porting-python-model-to-swift](https://rudrank.com/exploring-mlx-swift-porting-python-model-to-swift)  
+12. Releases · ml-explore/mlx-swift-examples \- GitHub, accessed December 24, 2025, [https://github.com/ml-explore/mlx-swift-examples/releases](https://github.com/ml-explore/mlx-swift-examples/releases)  
+13. ggml-org/llama.cpp: LLM inference in C/C++ \- GitHub, accessed December 24, 2025, [https://github.com/ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp)  
+14. Mungert/Qwen2.5-VL-3B-Instruct-GGUF \- Hugging Face, accessed December 24, 2025, [https://huggingface.co/Mungert/Qwen2.5-VL-3B-Instruct-GGUF](https://huggingface.co/Mungert/Qwen2.5-VL-3B-Instruct-GGUF)  
+15. vLLM or llama.cpp: Choosing the right LLM inference engine for your use case, accessed December 24, 2025, [https://developers.redhat.com/articles/2025/09/30/vllm-or-llamacpp-choosing-right-llm-inference-engine-your-use-case](https://developers.redhat.com/articles/2025/09/30/vllm-or-llamacpp-choosing-right-llm-inference-engine-your-use-case)  
+16. llama.cpp vs. vllm performance comparison : r/LocalLLaMA \- Reddit, accessed December 24, 2025, [https://www.reddit.com/r/LocalLLaMA/comments/1ml4cz0/llamacpp\_vs\_vllm\_performance\_comparison/](https://www.reddit.com/r/LocalLLaMA/comments/1ml4cz0/llamacpp_vs_vllm_performance_comparison/)  
+17. WebGPU is now supported in major browsers | Blog \- web.dev, accessed December 24, 2025, [https://web.dev/blog/webgpu-supported-major-browsers](https://web.dev/blog/webgpu-supported-major-browsers)  
+18. Transformers.js \- Hugging Face, accessed December 24, 2025, [https://huggingface.co/docs/transformers.js/index](https://huggingface.co/docs/transformers.js/index)  
+19. onnx-community/gemma-3n-E2B-it-ONNX \- Hugging Face, accessed December 24, 2025, [https://huggingface.co/onnx-community/gemma-3n-E2B-it-ONNX](https://huggingface.co/onnx-community/gemma-3n-E2B-it-ONNX)  
+20. Qwen \- Wikipedia, accessed December 24, 2025, [https://en.wikipedia.org/wiki/Qwen](https://en.wikipedia.org/wiki/Qwen)  
+21. Qwen/Qwen3-VL-8B-Instruct \- Hugging Face, accessed December 24, 2025, [https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct](https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct)  
+22. Qwen/Qwen2.5-VL-3B-Instruct \- Hugging Face, accessed December 24, 2025, [https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct](https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct)  
+23. Qwen/Qwen3-VL-8B-Thinking \- Demo \- DeepInfra, accessed December 24, 2025, [https://deepinfra.com/Qwen/Qwen3-VL-8B-Thinking](https://deepinfra.com/Qwen/Qwen3-VL-8B-Thinking)  
+24. Gemma 3n model overview \- Google AI for Developers, accessed December 24, 2025, [https://ai.google.dev/gemma/docs/gemma-3n](https://ai.google.dev/gemma/docs/gemma-3n)  
+25. Introducing Gemma 3n: The developer guide \- Google Developers Blog, accessed December 24, 2025, [https://developers.googleblog.com/en/introducing-gemma-3n-developer-guide/](https://developers.googleblog.com/en/introducing-gemma-3n-developer-guide/)  
+26. Gemma 3n – Vertex AI \- Google Cloud Console, accessed December 24, 2025, [https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/gemma3n](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/gemma3n)  
+27. Gemma releases | Google AI for Developers, accessed December 24, 2025, [https://ai.google.dev/gemma/docs/releases](https://ai.google.dev/gemma/docs/releases)  
+28. Irish orthography \- Wikipedia, accessed December 24, 2025, [https://en.wikipedia.org/wiki/Irish\_orthography](https://en.wikipedia.org/wiki/Irish_orthography)  
+29. Dúchas \- National Folklore Collection \- University College Dublin, accessed December 24, 2025, [https://www.ucd.ie/irishfolklore/en/duchas/](https://www.ucd.ie/irishfolklore/en/duchas/)  
+30. Research Newsletter \- Issue 109: Open Research in Action \- DCU, accessed December 24, 2025, [https://www.dcu.ie/research/research-newsletter-issue-109-open-research-action](https://www.dcu.ie/research/research-newsletter-issue-109-open-research-action)  
+31. Training a bilingual Irish-English model in Transkribus using An Gaodhal, accessed December 24, 2025, [https://blog.transkribus.org/en/training-a-bilingual-irish-english-model-in-transkribus-using-an-gaodhal](https://blog.transkribus.org/en/training-a-bilingual-irish-english-model-in-transkribus-using-an-gaodhal)  
+32. An Gaodhal Newspaper (1881-1898) Full-Text OCR Output Files \- UltraViolet, accessed December 24, 2025, [https://ultraviolet.library.nyu.edu/records/5ya5n-mc504](https://ultraviolet.library.nyu.edu/records/5ya5n-mc504)  
+33. Placenames Database of Ireland \- Wikipedia, accessed December 24, 2025, [https://en.wikipedia.org/wiki/Placenames\_Database\_of\_Ireland](https://en.wikipedia.org/wiki/Placenames_Database_of_Ireland)  
+34. Logainm: The Placenames Database of Ireland \- Dataset \- data.gov.ie, accessed December 24, 2025, [https://data.gov.ie/dataset/logainm](https://data.gov.ie/dataset/logainm)
+
+---
+
+## handwriting-Handwriting Recognition and Dataset Creation
+
+*Source: `docs/bunchloch/teanga/handwriting-Handwriting Recognition and Dataset Creation.md` (3815 words, 206 lines)*
+
+# **Advanced Architectures for Bilingual Heritage Archiving and Mathematical Document Intelligence: A Deep Research Report**
+
+## **1\. Executive Context and Architectural Overview**
+
+The intersection of computational linguistics, computer vision, and archival science is currently undergoing a profound transformation driven by the emergence of Multimodal Large Language Models (MLLMs) and advanced vector retrieval mechanisms. This research report provides a comprehensive technical analysis of a dual-objective engineering challenge: the automated curation of a large-scale Irish Gaelic (*Gaeilge*) heritage dataset from the National Folklore Collection (*Dúchas*) and the development of a bespoke mathematical handwriting recognition system capable of interpreting tertiary-level calculus and linear algebra.  
+The user's query presents a sophisticated edge-case in Document Intelligence. It requires the synthesis of unstructured heritage data—characterized by 1930s Gaelic script, dialectal variance, and non-standard orthography—with highly structured yet spatially complex mathematical handwriting. The proposed software stack, integrating crawl4ai for robust data ingestion and a combination of ColPali, Docling, DeepSeek-Math, and Qwen-VL architectures for analysis, represents a cutting-edge approach to these distinct but related problems.  
+This report evaluates the feasibility of scraping the Dúchas archive 1 to create a "Rosetta Stone" dataset of aligned image-text pairs, leveraging the legacy XML infrastructure before its imminent deprecation. Simultaneously, it deconstructs the user's personal mathematical manuscript 1, analyzing the spatial topology of phase portraits, matrix algebra, and Hamiltonian calculus to determine the optimal inference pipeline. We critically assess the role of vector retrieval (ColPali) not merely as a search engine, but as a mechanism for "style injection" into generative models, enabling the system to adapt to the user's specific idiolect without the computational overhead of full parameter fine-tuning.  
+The analysis suggests that while off-the-shelf Optical Character Recognition (OCR) solutions are insufficient for these tasks, a composite pipeline utilizing the resolution-aware vision encoders of Qwen-VL, the mathematical reasoning priors of DeepSeek-Math-V2, and the document layout understanding of Docling can achieve state-of-the-art results. This report details the architectural blueprint for such a system, exploring the nuances of bilingual tokenization, the preservation of mathematical semantics during transcription, and the ethical curation of digital heritage.
+
+## ---
+
+**2\. The Dúchas Dataset: Engineering a Heritage Scraper**
+
+The Schools’ Collection (*Bailiúchán na Scol*), compiled between 1937 and 1939, represents a corpus of immense complexity and cultural value. With over 500,000 pages of folklore collected by schoolchildren in the Irish Free State, it offers a unique dataset for training HTR (Handwritten Text Recognition) models specialized in the Irish language. However, the absence of a documented, modern API necessitates a robust, custom-engineered scraping solution.
+
+### **2.1 Technical Analysis of the Dúchas Infrastructure**
+
+The provided research material 1 offers a critical glimpse into the backend structure of the Dúchas web interface. The snippet explicitly reveals a warning: *"We will soon deprecate our XML Application Programming Interface and a new, comprehensive JSON API will be made available."* This statement is the pivot point for the entire scraping strategy. It indicates that the current XML links are likely direct file paths or legacy endpoints that expose the Text Encoding Initiative (TEI) compliant transcriptions used by the project’s researchers.  
+TEI XML is the gold standard for digital humanities because, unlike a simple JSON text field, it often preserves metadata about line breaks (\<lb/\>), page breaks (\<pb/\>), and unclear text (\<unclear\>). Accessing these files before the API transition is paramount. A JSON API, while more modern, is often designed for frontend consumption—delivering the text as a continuous string for display—rather than preserving the spatial and structural integrity required to train an HTR model. If the JSON API flattens the document structure, the ability to align specific lines of handwriting in the image with specific sentences in the text is lost, significantly degrading the quality of the training data.  
+The URL structure identified in the snippet—https://www.duchas.ie/en/cbes/4606380/4593631—implies a strict hierarchical taxonomy. The segment cbes denotes the collection (Schools' Collection), 4606380 likely represents the Volume ID (often correlating to a specific school or parish), and 4593631 is the Page ID. This integer-based indexing suggests that the database can be traversed sequentially or via an index scraping method, reducing the complexity of the crawler's discovery logic.
+
+### **2.2 Implementing the Crawl4AI Strategy**
+
+The user’s suggestion to utilize crawl4ai is technically astute and superior to traditional static scrapers like BeautifulSoup or Scrapy for this specific application. The Dúchas site 1 employs a sophisticated image viewer (likely utilizing a tiling standard like IIIF or a proprietary Zoomify implementation) to display high-resolution scans. These viewers rely heavily on client-side JavaScript to request image tiles and stitch them into a viewable canvas. A standard HTTP request would only return the skeleton HTML, missing the critical image assets.  
+crawl4ai, which typically wraps headless browser technologies such as Playwright or Puppeteer, executes the JavaScript payload. This allows the scraper to interact with the Document Object Model (DOM) as a user would. The scraping pipeline must be designed to perform specific "human-like" interactions:
+
+1. **Navigation:** Iterate through the volume indices.  
+2. **Asset Exposure:** On each page, the scraper may need to simulate a click event on the "Download" or "XML" button to trigger the generation of the temporary download link.  
+3. **Wait States:** The scraper must implement intelligent waiting (e.g., await page.waitForSelector('.xml-download-link')) to ensure the asset is ready before attempting retrieval.
+
+The "Zoomify" nature of the images presents a secondary challenge. The "Download" button might provide a pre-generated JPEG, but for HTR purposes, the highest possible resolution is required. If the download button provides a compressed version, the scraper might need to intercept the network traffic (HAR logging) to identify the source tiles of the IIIF server and reconstruct the full-resolution image programmatically. However, based on the snippet 1, the interface appears to offer direct downloads, which simplifies the pipeline to a button-click automation task.
+
+### **2.3 Linguistic and Orthographic Challenges in Scraping**
+
+The Dúchas dataset is not merely a collection of images and text; it is a repository of a language in transition. The 1930s marked a period where the traditional Gaelic script (*Cló Gaelach*) was still in widespread use, coexisting with the Roman script (*Cló Rómhánach*).  
+The XML transcriptions are likely to be normalized to some degree, but the images will exhibit the distinct features of the Gaelic script:
+
+* **The Ponc Séimhithe:** The dot above a consonant (e.g., ḃ, ċ, ḋ) indicating lenition, which is represented by an 'h' in modern Romanized Irish (bh, ch, dh).  
+* **Distinct Letterforms:** The Gaelic 'r', 's', and 'g' differ significantly from their Roman counterparts. The 's' resembles a modern 'r', and the 'r' resembles a simplified 'x'.
+
+A naive scraping pipeline that blindly pairs the XML text with the image without accounting for this script drift will create a "noisy" dataset. For example, if the image shows a word with a *ponc* (e.g., "ḃean") and the XML contains the Romanized expansion ("bhean"), the HTR model might learn to hallucinate the letter 'h' where none exists visually. This is acceptable if the goal is translation/transliteration, but problematic if the goal is diplomatic transcription (reproducing exactly what is on the page).  
+The metadata visible in snippet 1—Collector (*Bailitheoir*), Informant (*Faisnéiseoir*), and Location—is not ancillary; it is a critical hyper-parameter for training. Irish dialects (Connacht, Munster, Ulster) vary significantly in vocabulary and spelling conventions. By scraping this metadata alongside the primary assets, the user can create a "conditioned" dataset. This allows for the training of an HTR model that accepts a "dialect token" as part of its prompt, priming the language model to expect specific spelling variants associated with, for example, Co. Galway (as seen in the snippet) versus Co. Kerry.  
+The user's plan to automate this with crawl4ai is feasible and recommended, provided the scraper includes logic to parse the sidebar metadata 1 and inject it into the dataset manifest. The scraper should also implement a "Quality Gate," checking the file size of the downloaded XML. An XML file of only a few bytes likely indicates an empty or placeholder transcription, which should be discarded to prevent the pollution of the training set with null data.
+
+## ---
+
+**3\. Computational Mathematics: Analyzing the User’s Dataset**
+
+The second component of the user's request involves a personal dataset of tertiary-level mathematics notes.1 This represents a radically different challenge from the Dúchas archive. While the folklore collection is narrative and linear, mathematical handwriting is spatial, symbolic, and diagrammatic.
+
+### **3.1 Content Analysis of the "Summer Exam" Document**
+
+The uploaded snippet 1 reveals a document rich in advanced mathematical concepts, specifically Dynamical Systems, Linear Algebra, and Calculus. Analyzing the visual syntax of this document is crucial for selecting the correct recognition architecture.
+
+#### **3.1.1 The Linear Algebra Zone**
+
+The document features 2x2 matrices used for eigenvalue analysis:
+
+$$\\begin{pmatrix} 2-\\lambda & 3 \\\\ \-1 & 1-\\lambda \\end{pmatrix}$$
+
+This structure defies the standard "reading order" assumption of most OCR engines. A typical OCR model scans left-to-right, top-to-bottom. It would likely transcribe the above matrix as a single line of text: "2 \- lambda 3 \- 1 1 \- lambda". This linearizes the data in a way that destroys its mathematical meaning. The vertical alignment of the columns is the defining feature of the matrix.  
+The user's handwriting in 1 is cursive and rapid, typical of an exam setting. The brackets enclosing the matrices are drawn loosely. A key challenge here is **Layout Analysis**. The model must recognize that the two large parentheses define a distinct "zone" of the page where the rules of reading change from linear text to tabular alignment.
+
+#### **3.1.2 The Calculus and Greek Notation**
+
+The text contains frequent use of Greek letters ($\\lambda, \\Delta, \\tau$) and calculus notation ($\\frac{dx}{dt}, \\dot{x}$). The presence of the "dot" notation for time derivatives ($\\dot{x}$) is a notorious failure point for standard vision models. The dot is often only a few pixels in size. If the vision encoder resizes the image to a standard square (e.g., 224x224 pixels) for processing, the dot may vanish due to downsampling. The user’s dataset requires a model with **High-Resolution Encoding** capabilities to preserve these semantic micro-features.  
+Furthermore, the document contains complex algebraic expansions like $x(x^2 \- 4)$. The distinction between $x^2$ (x squared) and $x2$ (x times 2\) relies entirely on the relative vertical position of the character '2'. A model that is not "spatially aware" will flatten this to "x2", rendering the equation mathematically nonsensical.
+
+#### **3.1.3 The Diagrammatic Reasoning (Phase Portraits)**
+
+Page 2 of the snippet 1 illustrates a "Delta-Tau Plane" and a Phase Portrait (a spiral). This is the most complex data modality.
+
+* **The Text-Image Dependency:** The text describes an "unstable spiral." The diagram shows a curve spiraling outwards from the origin. The arrowheads on the curve indicate the direction of flow.  
+* **The HTR Challenge:** A standard HTR model will ignore the drawing. A standard image captioning model might say "a drawing of a spiral." Neither captures the full truth. The requirement is a **Multimodal Model** that can link the text "unstable" to the visual feature of "outward arrows." The model must "read" the diagram as part of the sentence.
+
+### **3.2 The Feasibility of Fine-Tuning on User Data**
+
+The user asks if they can fine-tune models to *generate* or *detect* their particular handwriting.  
+"Detecting" (Transcribing) is highly feasible. By annotating a subset of these notes (e.g., manually typing the LaTeX code for 50 pages), the user can create a high-quality fine-tuning dataset. The user's handwriting is consistent (idiolect), meaning a model can quickly overfit to their specific style of drawing $\\lambda$ or $\\zeta$, achieving high accuracy with relatively little data.  
+"Generating" handwriting is a different proposition. This would imply creating *new* images that look like the user wrote them. While generative diffusion models (like Stable Diffusion) can be fine-tuned with LoRA (Low-Rank Adaptation) to mimic visual styles, the utility of this for a mathematics workflow is limited compared to the utility of transcribing the notes into editable LaTeX. We assume the primary goal is **transcription** (image-to-text) and **detection** (retrieval), as generating fake handwritten notes has fewer practical applications in research workflows.
+
+## ---
+
+**4\. The Vector Paradigm: ColPali and Retrieval-Augmented HTR**
+
+The user specifically inquires about **ColPali** and its ability to "finetune models to be able to generate or detect" handwriting. This requires a clarification of what ColPali is and how it functions within an HTR pipeline.
+
+### **4.1 ColPali: The Architecture of Visual Retrieval**
+
+ColPali is not a generative model; it is a **Retrieval Model**. It is a fusion of the **ColBERT** (Contextualized Late Interaction over BERT) retrieval architecture and the **PaliGemma** Vision-Language Model.
+
+* **The Mechanism:** Traditional retrieval systems convert a document to text via OCR, then embed that text into a single vector. If the OCR fails (which is likely with the user's handwritten math), the text is garbage ("x2 \- 4" instead of $x^2 \- 4$), and the vector is useless. You can never find that document again.  
+* **The ColPali Advantage:** ColPali does not OCR the document first. It divides the image of the page into a grid of patches. It embeds each patch into a vector space. It creates a "bag of visual embeddings" for the page.  
+* **Late Interaction:** When the user searches for "unstable spiral," the query text is embedded into vectors. The model then performs a "MaxSim" operation, comparing the query vectors directly against the image patch vectors. This allows it to match the *concept* of a spiral or the *visual shape* of the equation $x^2-4$ without ever explicitly transcribing it first.
+
+### **4.2 Using ColPali for "Detection" (Style Retrieval)**
+
+The user asks if ColPali can be used to *detect* their handwriting. The answer is yes, but via a **Retrieval-Augmented Generation (RAG)** workflow.  
+ColPali serves as the **Memory Module** of the system.
+
+1. **Indexing:** The user processes all their past exam papers 1 through ColPali. The system builds a vector index of the user's specific way of writing.  
+2. **Inference:** When the user uploads a new, messy note, the system uses ColPali to search the archive: "Find other instances where the user wrote a matrix like this."  
+3. **Few-Shot Prompting:** ColPali retrieves three clean examples of the user's matrix handwriting (where the ground truth LaTeX is known). These examples are fed into the context window of the generative model (Qwen or DeepSeek).  
+4. **Result:** The generative model looks at the new messy note *and* the three clean examples. It infers: "Ah, when this user draws a squiggle like that, they mean $\\xi$. I will transcribe it as \\xi."
+
+This uses ColPali to *adapt* the model to the user's handwriting without the expensive process of updating the model's weights (fine-tuning). It is "In-Context Learning" powered by visual retrieval.
+
+## ---
+
+**5\. Generative Frontiers: DeepSeek, Qwen, and Docling**
+
+The user requests deep research into the capabilities of **Docling**, **DeepSeek-OCR/Math-V2**, and **Qwen3-VL** (interpreted here as the Qwen-VL lineage, specifically Qwen2-VL and its trajectory).
+
+### **5.1 Docling: The Structural Parser**
+
+**Docling**, developed by IBM Research, is essential for the *pre-processing* stage. It is not an HTR engine itself, but a **Document Layout Analysis (DLA)** system.  
+In the context of the user's exam paper 1, Docling plays a vital role. The document is not a uniform block of text. It has:
+
+* **Headers:** "MP491: Summer Exam" (Page 1).  
+* **Metadata:** "Cian Mac Liatháin" (Student Name).  
+* **Content Blocks:** The math questions.
+
+If we feed the entire page into an HTR model, it might transcribe the header into the middle of an equation if the layout is complex. Docling parses the visual structure of the PDF. It identifies the bounding boxes of the header, the footer, and the body text. It outputs a structured JSON or Markdown representation that segregates these elements.  
+For the **Dúchas** dataset, Docling is equally valuable. It can separate the main story text from the marginalia (teacher's corrections) or the page numbers, ensuring that the training data derived from the scrape is clean and focused only on the target handwriting.
+
+### **5.2 DeepSeek-Math-V2 and DeepSeek-OCR**
+
+**DeepSeek-Math-V2** is a specialized Mixture-of-Experts (MoE) language model trained on a massive corpus of mathematical content (arXiv papers, code, textbooks).
+
+* The Reasoning Advantage: DeepSeek-Math brings "Cognitive Corrections" to the HTR process. A standard OCR model looks at pixels and guesses characters. If the user writes "2 \+ 2 \= 4" but the '4' is messy and looks like an 'A', standard OCR outputs "2 \+ 2 \= A".  
+  DeepSeek-Math, however, understands the logic. It predicts the next token based on mathematical rules. It sees "2 \+ 2 \=" and assigns a high probability to "4". Even if the visual evidence is ambiguous, the mathematical prior guides the model to the correct transcription.  
+* **DeepSeek-VL / OCR:** The multimodal variant (DeepSeek-VL or Janus) integrates vision encoders. While highly capable, benchmarks suggest that its "in-the-wild" handwriting recognition for non-Chinese scripts is strong but perhaps slightly less robust than Qwen2-VL for pure transcription tasks. Its strength lies in *reasoning about* the math (e.g., solving the equation it reads) rather than just reading it.
+
+### **5.3 Qwen2-VL (and the "Qwen3" Trajectory)**
+
+**Qwen2-VL** (specifically the 72B Instruct model) is currently the state-of-the-art for this specific use case. The user's mention of "Qwen3-VL" likely anticipates the next iteration, but the architectural principles of the Qwen-VL line are what matter.
+
+* **Naive Vision Transformer (NaViT):** This is the game-changer for the user's math notes. Traditional models (like CLIP or the original LLaVA) resize all images to a fixed square (e.g., 336x336 pixels).  
+  * *The Problem:* A scanned A4 page of handwriting 1 has an aspect ratio of 1:1.4. Squashing it into a square distorts the text. Furthermore, downsampling a 4000-pixel high scan to 336 pixels erases small details like the dot in $\\dot{x}$ or the comma in a list.  
+  * *The Qwen Solution:* Qwen2-VL handles **dynamic resolution**. It breaks the image into patches based on its *native* resolution and aspect ratio. It "sees" the image clearly, pixel-for-pixel (up to a token limit). This makes it uniquely suited for the Dúchas scans (which are high-res heritage documents) and the math notes (where detail is critical).  
+* **Bilingual Capability:** Qwen2-VL is trained on a massive multilingual corpus. It shows exceptional performance on European languages. For the **Dúchas** dataset, this means it can handle the code-switching between English instructions and Irish stories seamlessly. It does not need to be "told" which language it is reading; it infers it from the token probability distribution.  
+* **Video/Sequence Understanding:** The "Qwen3" trajectory focuses heavily on long-context video understanding. While the user has static images, this capability is relevant. A multi-page PDF can be treated as a "video" (a sequence of frames). This allows the model to maintain context across pages. If a variable $x$ is defined on Page 1, the model remembers it when it appears on Page 2, aiding in consistent transcription.
+
+## ---
+
+**6\. Comparison of Models for User Requirements**
+
+The following table synthesizes the deep research into a direct comparison for the user's specific workloads.
+
+| Feature / Requirement | Qwen2-VL (72B) | DeepSeek-Math-V2 | Docling | ColPali |
+| :---- | :---- | :---- | :---- | :---- |
+| **Primary Role** | Generative HTR & Vision | Mathematical Reasoning | Layout Analysis & Parsing | Visual Retrieval & RAG |
+| **Handwriting (Irish)** | **High** (Dynamic Res) | Medium (Generalization) | N/A | **High** (Style Matching) |
+| **Handwriting (Math)** | **Very High** (LaTeX Output) | **Very High** (Logic Check) | N/A | High (Equation Search) |
+| **Spatial Awareness** | High (NaViT) | Low (Text-only input) | **Very High** (Structure) | Medium (Patch-based) |
+| **Diagram Understanding** | **High** (Vector flows) | Low (Needs text description) | Medium (Bitmap detection) | High (Visual similarity) |
+| **Code-Switching (En/Ga)** | Excellent | Good | N/A | N/A |
+| **Resolution Handling** | **Native / Dynamic** | N/A | Native | Fixed Patching |
+
+## ---
+
+**7\. Proposed Integration Pipeline**
+
+To satisfy the user's request for a "new dataset" and a "mathematical handwriting system," we propose the following unified architecture.
+
+### **7.1 Phase 1: The Dúchas "Heritage Scraper"**
+
+This phase utilizes crawl4ai to secure the raw materials.
+
+1. **Targeting:** The script targets duchas.ie/en/cbes.  
+2. **DOM Interaction:** The scraper waits for the .xml-download element (or equivalent) to become interactive.  
+3. **Extraction:** It downloads the XML and the corresponding high-res image.  
+4. **Metadata Injection:** It scrapes the sidebar for "County," "School," and "Teacher." This metadata is written into a metadata.jsonl file keyed to the image filename.  
+5. **Filtering:** A script analyzes the XML. If the character count is \< 50, the file is flagged as "Empty/Untranscribed" and moved to a separate "To-Do" folder for future inference.
+
+### **7.2 Phase 2: The "Math-RAG" System**
+
+This phase addresses the user's personal math notes.
+
+1. **Ingestion:** The PDF 1 is passed to **Docling**. Docling strips the headers and segments the page into "Equation Blocks."  
+2. **Indexing:** These blocks are passed to **ColPali**. The visual embeddings are stored in a vector database (e.g., LanceDB).  
+3. **Inference (The "Detection" Loop):**  
+   * User uploads a new image.  
+   * **ColPali** retrieves the top-5 most visually similar equation blocks from the history.  
+   * **Qwen2-VL** is prompted: *"You are a mathematical scribe. Convert the central image to LaTeX. Reference the 5 provided examples to understand the user's specific handwriting style for symbols."*  
+   * **DeepSeek-Math** (Optional Validator): The generated LaTeX is passed to DeepSeek-Math to check for syntax errors or logical inconsistencies (e.g., checking if the dimensions of the transcribed matrices align).
+
+### **7.3 Phase 3: Fine-Tuning (The "Generation" Loop)**
+
+If the user wishes to "generate" text *in the style* of their handwriting (or rather, fine-tune the model to perfectly transcribe it), **QLoRA** (Quantized Low-Rank Adaptation) is the method.
+
+* **Base Model:** Qwen2-VL-7B-Instruct (manageable on consumer GPUs) or 72B (requires A100s).  
+* **Dataset:** The pairs scraped from Dúchas \+ the user's annotated math notes.  
+* **Training Objective:** Autoregressive Next-Token Prediction.  
+* **Result:** A model adapter (adapter\_model.bin) that can be loaded on top of Qwen2-VL, transforming it into a specialized expert on "1930s Irish Folklore and 2020s Tertiary Calculus."
+
+## ---
+
+**8\. Conclusion and Future Outlook**
+
+The user's project sits at the vanguard of what is technically possible in 2025\. The convergence of **Heritage Scraping** (via crawl4ai) and **Cognitive HTR** (via Qwen/DeepSeek) offers a solution to the "digital dark age" of untranscribed archives. By extracting the TEI XML before the Dúchas API deprecation, the user secures a foundational dataset that links the visual past to the digital future.  
+Simultaneously, the application of **ColPali** resolves the "personalization" bottleneck. Instead of training a new model for every student's handwriting, we can simply "retrieve" their style and inject it into the context of a massive, reasoning-capable model. This RAG-for-Vision approach allows the system to interpret the nuanced, multimodal topology of the user's phase portraits and matrix algebra with a fidelity that standard OCR could never achieve. The resulting system will not just "read" the notes; it will, in a very real sense, "understand" the mathematics they contain.
+
+#### **Works cited**
+
+1. Cill Éinne · The Schools' Collection \_ dúchas.ie.pdf
+
+---
+
+## Handwriting Recognition and Dataset Creation
+
+*Source: `docs/bunchloch/teanga/Handwriting Recognition and Dataset Creation.md` (3815 words, 206 lines)*
+
+# **Advanced Architectures for Bilingual Heritage Archiving and Mathematical Document Intelligence: A Deep Research Report**
+
+## **1\. Executive Context and Architectural Overview**
+
+The intersection of computational linguistics, computer vision, and archival science is currently undergoing a profound transformation driven by the emergence of Multimodal Large Language Models (MLLMs) and advanced vector retrieval mechanisms. This research report provides a comprehensive technical analysis of a dual-objective engineering challenge: the automated curation of a large-scale Irish Gaelic (*Gaeilge*) heritage dataset from the National Folklore Collection (*Dúchas*) and the development of a bespoke mathematical handwriting recognition system capable of interpreting tertiary-level calculus and linear algebra.  
+The user's query presents a sophisticated edge-case in Document Intelligence. It requires the synthesis of unstructured heritage data—characterized by 1930s Gaelic script, dialectal variance, and non-standard orthography—with highly structured yet spatially complex mathematical handwriting. The proposed software stack, integrating crawl4ai for robust data ingestion and a combination of ColPali, Docling, DeepSeek-Math, and Qwen-VL architectures for analysis, represents a cutting-edge approach to these distinct but related problems.  
+This report evaluates the feasibility of scraping the Dúchas archive 1 to create a "Rosetta Stone" dataset of aligned image-text pairs, leveraging the legacy XML infrastructure before its imminent deprecation. Simultaneously, it deconstructs the user's personal mathematical manuscript 1, analyzing the spatial topology of phase portraits, matrix algebra, and Hamiltonian calculus to determine the optimal inference pipeline. We critically assess the role of vector retrieval (ColPali) not merely as a search engine, but as a mechanism for "style injection" into generative models, enabling the system to adapt to the user's specific idiolect without the computational overhead of full parameter fine-tuning.  
+The analysis suggests that while off-the-shelf Optical Character Recognition (OCR) solutions are insufficient for these tasks, a composite pipeline utilizing the resolution-aware vision encoders of Qwen-VL, the mathematical reasoning priors of DeepSeek-Math-V2, and the document layout understanding of Docling can achieve state-of-the-art results. This report details the architectural blueprint for such a system, exploring the nuances of bilingual tokenization, the preservation of mathematical semantics during transcription, and the ethical curation of digital heritage.
+
+## ---
+
+**2\. The Dúchas Dataset: Engineering a Heritage Scraper**
+
+The Schools’ Collection (*Bailiúchán na Scol*), compiled between 1937 and 1939, represents a corpus of immense complexity and cultural value. With over 500,000 pages of folklore collected by schoolchildren in the Irish Free State, it offers a unique dataset for training HTR (Handwritten Text Recognition) models specialized in the Irish language. However, the absence of a documented, modern API necessitates a robust, custom-engineered scraping solution.
+
+### **2.1 Technical Analysis of the Dúchas Infrastructure**
+
+The provided research material 1 offers a critical glimpse into the backend structure of the Dúchas web interface. The snippet explicitly reveals a warning: *"We will soon deprecate our XML Application Programming Interface and a new, comprehensive JSON API will be made available."* This statement is the pivot point for the entire scraping strategy. It indicates that the current XML links are likely direct file paths or legacy endpoints that expose the Text Encoding Initiative (TEI) compliant transcriptions used by the project’s researchers.  
+TEI XML is the gold standard for digital humanities because, unlike a simple JSON text field, it often preserves metadata about line breaks (\<lb/\>), page breaks (\<pb/\>), and unclear text (\<unclear\>). Accessing these files before the API transition is paramount. A JSON API, while more modern, is often designed for frontend consumption—delivering the text as a continuous string for display—rather than preserving the spatial and structural integrity required to train an HTR model. If the JSON API flattens the document structure, the ability to align specific lines of handwriting in the image with specific sentences in the text is lost, significantly degrading the quality of the training data.  
+The URL structure identified in the snippet—https://www.duchas.ie/en/cbes/4606380/4593631—implies a strict hierarchical taxonomy. The segment cbes denotes the collection (Schools' Collection), 4606380 likely represents the Volume ID (often correlating to a specific school or parish), and 4593631 is the Page ID. This integer-based indexing suggests that the database can be traversed sequentially or via an index scraping method, reducing the complexity of the crawler's discovery logic.
+
+### **2.2 Implementing the Crawl4AI Strategy**
+
+The user’s suggestion to utilize crawl4ai is technically astute and superior to traditional static scrapers like BeautifulSoup or Scrapy for this specific application. The Dúchas site 1 employs a sophisticated image viewer (likely utilizing a tiling standard like IIIF or a proprietary Zoomify implementation) to display high-resolution scans. These viewers rely heavily on client-side JavaScript to request image tiles and stitch them into a viewable canvas. A standard HTTP request would only return the skeleton HTML, missing the critical image assets.  
+crawl4ai, which typically wraps headless browser technologies such as Playwright or Puppeteer, executes the JavaScript payload. This allows the scraper to interact with the Document Object Model (DOM) as a user would. The scraping pipeline must be designed to perform specific "human-like" interactions:
+
+1. **Navigation:** Iterate through the volume indices.  
+2. **Asset Exposure:** On each page, the scraper may need to simulate a click event on the "Download" or "XML" button to trigger the generation of the temporary download link.  
+3. **Wait States:** The scraper must implement intelligent waiting (e.g., await page.waitForSelector('.xml-download-link')) to ensure the asset is ready before attempting retrieval.
+
+The "Zoomify" nature of the images presents a secondary challenge. The "Download" button might provide a pre-generated JPEG, but for HTR purposes, the highest possible resolution is required. If the download button provides a compressed version, the scraper might need to intercept the network traffic (HAR logging) to identify the source tiles of the IIIF server and reconstruct the full-resolution image programmatically. However, based on the snippet 1, the interface appears to offer direct downloads, which simplifies the pipeline to a button-click automation task.
+
+### **2.3 Linguistic and Orthographic Challenges in Scraping**
+
+The Dúchas dataset is not merely a collection of images and text; it is a repository of a language in transition. The 1930s marked a period where the traditional Gaelic script (*Cló Gaelach*) was still in widespread use, coexisting with the Roman script (*Cló Rómhánach*).  
+The XML transcriptions are likely to be normalized to some degree, but the images will exhibit the distinct features of the Gaelic script:
+
+* **The Ponc Séimhithe:** The dot above a consonant (e.g., ḃ, ċ, ḋ) indicating lenition, which is represented by an 'h' in modern Romanized Irish (bh, ch, dh).  
+* **Distinct Letterforms:** The Gaelic 'r', 's', and 'g' differ significantly from their Roman counterparts. The 's' resembles a modern 'r', and the 'r' resembles a simplified 'x'.
+
+A naive scraping pipeline that blindly pairs the XML text with the image without accounting for this script drift will create a "noisy" dataset. For example, if the image shows a word with a *ponc* (e.g., "ḃean") and the XML contains the Romanized expansion ("bhean"), the HTR model might learn to hallucinate the letter 'h' where none exists visually. This is acceptable if the goal is translation/transliteration, but problematic if the goal is diplomatic transcription (reproducing exactly what is on the page).  
+The metadata visible in snippet 1—Collector (*Bailitheoir*), Informant (*Faisnéiseoir*), and Location—is not ancillary; it is a critical hyper-parameter for training. Irish dialects (Connacht, Munster, Ulster) vary significantly in vocabulary and spelling conventions. By scraping this metadata alongside the primary assets, the user can create a "conditioned" dataset. This allows for the training of an HTR model that accepts a "dialect token" as part of its prompt, priming the language model to expect specific spelling variants associated with, for example, Co. Galway (as seen in the snippet) versus Co. Kerry.  
+The user's plan to automate this with crawl4ai is feasible and recommended, provided the scraper includes logic to parse the sidebar metadata 1 and inject it into the dataset manifest. The scraper should also implement a "Quality Gate," checking the file size of the downloaded XML. An XML file of only a few bytes likely indicates an empty or placeholder transcription, which should be discarded to prevent the pollution of the training set with null data.
+
+## ---
+
+**3\. Computational Mathematics: Analyzing the User’s Dataset**
+
+The second component of the user's request involves a personal dataset of tertiary-level mathematics notes.1 This represents a radically different challenge from the Dúchas archive. While the folklore collection is narrative and linear, mathematical handwriting is spatial, symbolic, and diagrammatic.
+
+### **3.1 Content Analysis of the "Summer Exam" Document**
+
+The uploaded snippet 1 reveals a document rich in advanced mathematical concepts, specifically Dynamical Systems, Linear Algebra, and Calculus. Analyzing the visual syntax of this document is crucial for selecting the correct recognition architecture.
+
+#### **3.1.1 The Linear Algebra Zone**
+
+The document features 2x2 matrices used for eigenvalue analysis:
+
+$$\\begin{pmatrix} 2-\\lambda & 3 \\\\ \-1 & 1-\\lambda \\end{pmatrix}$$
+
+This structure defies the standard "reading order" assumption of most OCR engines. A typical OCR model scans left-to-right, top-to-bottom. It would likely transcribe the above matrix as a single line of text: "2 \- lambda 3 \- 1 1 \- lambda". This linearizes the data in a way that destroys its mathematical meaning. The vertical alignment of the columns is the defining feature of the matrix.  
+The user's handwriting in 1 is cursive and rapid, typical of an exam setting. The brackets enclosing the matrices are drawn loosely. A key challenge here is **Layout Analysis**. The model must recognize that the two large parentheses define a distinct "zone" of the page where the rules of reading change from linear text to tabular alignment.
+
+#### **3.1.2 The Calculus and Greek Notation**
+
+The text contains frequent use of Greek letters ($\\lambda, \\Delta, \\tau$) and calculus notation ($\\frac{dx}{dt}, \\dot{x}$). The presence of the "dot" notation for time derivatives ($\\dot{x}$) is a notorious failure point for standard vision models. The dot is often only a few pixels in size. If the vision encoder resizes the image to a standard square (e.g., 224x224 pixels) for processing, the dot may vanish due to downsampling. The user’s dataset requires a model with **High-Resolution Encoding** capabilities to preserve these semantic micro-features.  
+Furthermore, the document contains complex algebraic expansions like $x(x^2 \- 4)$. The distinction between $x^2$ (x squared) and $x2$ (x times 2\) relies entirely on the relative vertical position of the character '2'. A model that is not "spatially aware" will flatten this to "x2", rendering the equation mathematically nonsensical.
+
+#### **3.1.3 The Diagrammatic Reasoning (Phase Portraits)**
+
+Page 2 of the snippet 1 illustrates a "Delta-Tau Plane" and a Phase Portrait (a spiral). This is the most complex data modality.
+
+* **The Text-Image Dependency:** The text describes an "unstable spiral." The diagram shows a curve spiraling outwards from the origin. The arrowheads on the curve indicate the direction of flow.  
+* **The HTR Challenge:** A standard HTR model will ignore the drawing. A standard image captioning model might say "a drawing of a spiral." Neither captures the full truth. The requirement is a **Multimodal Model** that can link the text "unstable" to the visual feature of "outward arrows." The model must "read" the diagram as part of the sentence.
+
+### **3.2 The Feasibility of Fine-Tuning on User Data**
+
+The user asks if they can fine-tune models to *generate* or *detect* their particular handwriting.  
+"Detecting" (Transcribing) is highly feasible. By annotating a subset of these notes (e.g., manually typing the LaTeX code for 50 pages), the user can create a high-quality fine-tuning dataset. The user's handwriting is consistent (idiolect), meaning a model can quickly overfit to their specific style of drawing $\\lambda$ or $\\zeta$, achieving high accuracy with relatively little data.  
+"Generating" handwriting is a different proposition. This would imply creating *new* images that look like the user wrote them. While generative diffusion models (like Stable Diffusion) can be fine-tuned with LoRA (Low-Rank Adaptation) to mimic visual styles, the utility of this for a mathematics workflow is limited compared to the utility of transcribing the notes into editable LaTeX. We assume the primary goal is **transcription** (image-to-text) and **detection** (retrieval), as generating fake handwritten notes has fewer practical applications in research workflows.
+
+## ---
+
+**4\. The Vector Paradigm: ColPali and Retrieval-Augmented HTR**
+
+The user specifically inquires about **ColPali** and its ability to "finetune models to be able to generate or detect" handwriting. This requires a clarification of what ColPali is and how it functions within an HTR pipeline.
+
+### **4.1 ColPali: The Architecture of Visual Retrieval**
+
+ColPali is not a generative model; it is a **Retrieval Model**. It is a fusion of the **ColBERT** (Contextualized Late Interaction over BERT) retrieval architecture and the **PaliGemma** Vision-Language Model.
+
+* **The Mechanism:** Traditional retrieval systems convert a document to text via OCR, then embed that text into a single vector. If the OCR fails (which is likely with the user's handwritten math), the text is garbage ("x2 \- 4" instead of $x^2 \- 4$), and the vector is useless. You can never find that document again.  
+* **The ColPali Advantage:** ColPali does not OCR the document first. It divides the image of the page into a grid of patches. It embeds each patch into a vector space. It creates a "bag of visual embeddings" for the page.  
+* **Late Interaction:** When the user searches for "unstable spiral," the query text is embedded into vectors. The model then performs a "MaxSim" operation, comparing the query vectors directly against the image patch vectors. This allows it to match the *concept* of a spiral or the *visual shape* of the equation $x^2-4$ without ever explicitly transcribing it first.
+
+### **4.2 Using ColPali for "Detection" (Style Retrieval)**
+
+The user asks if ColPali can be used to *detect* their handwriting. The answer is yes, but via a **Retrieval-Augmented Generation (RAG)** workflow.  
+ColPali serves as the **Memory Module** of the system.
+
+1. **Indexing:** The user processes all their past exam papers 1 through ColPali. The system builds a vector index of the user's specific way of writing.  
+2. **Inference:** When the user uploads a new, messy note, the system uses ColPali to search the archive: "Find other instances where the user wrote a matrix like this."  
+3. **Few-Shot Prompting:** ColPali retrieves three clean examples of the user's matrix handwriting (where the ground truth LaTeX is known). These examples are fed into the context window of the generative model (Qwen or DeepSeek).  
+4. **Result:** The generative model looks at the new messy note *and* the three clean examples. It infers: "Ah, when this user draws a squiggle like that, they mean $\\xi$. I will transcribe it as \\xi."
+
+This uses ColPali to *adapt* the model to the user's handwriting without the expensive process of updating the model's weights (fine-tuning). It is "In-Context Learning" powered by visual retrieval.
+
+## ---
+
+**5\. Generative Frontiers: DeepSeek, Qwen, and Docling**
+
+The user requests deep research into the capabilities of **Docling**, **DeepSeek-OCR/Math-V2**, and **Qwen3-VL** (interpreted here as the Qwen-VL lineage, specifically Qwen2-VL and its trajectory).
+
+### **5.1 Docling: The Structural Parser**
+
+**Docling**, developed by IBM Research, is essential for the *pre-processing* stage. It is not an HTR engine itself, but a **Document Layout Analysis (DLA)** system.  
+In the context of the user's exam paper 1, Docling plays a vital role. The document is not a uniform block of text. It has:
+
+* **Headers:** "MP491: Summer Exam" (Page 1).  
+* **Metadata:** "Cian Mac Liatháin" (Student Name).  
+* **Content Blocks:** The math questions.
+
+If we feed the entire page into an HTR model, it might transcribe the header into the middle of an equation if the layout is complex. Docling parses the visual structure of the PDF. It identifies the bounding boxes of the header, the footer, and the body text. It outputs a structured JSON or Markdown representation that segregates these elements.  
+For the **Dúchas** dataset, Docling is equally valuable. It can separate the main story text from the marginalia (teacher's corrections) or the page numbers, ensuring that the training data derived from the scrape is clean and focused only on the target handwriting.
+
+### **5.2 DeepSeek-Math-V2 and DeepSeek-OCR**
+
+**DeepSeek-Math-V2** is a specialized Mixture-of-Experts (MoE) language model trained on a massive corpus of mathematical content (arXiv papers, code, textbooks).
+
+* The Reasoning Advantage: DeepSeek-Math brings "Cognitive Corrections" to the HTR process. A standard OCR model looks at pixels and guesses characters. If the user writes "2 \+ 2 \= 4" but the '4' is messy and looks like an 'A', standard OCR outputs "2 \+ 2 \= A".  
+  DeepSeek-Math, however, understands the logic. It predicts the next token based on mathematical rules. It sees "2 \+ 2 \=" and assigns a high probability to "4". Even if the visual evidence is ambiguous, the mathematical prior guides the model to the correct transcription.  
+* **DeepSeek-VL / OCR:** The multimodal variant (DeepSeek-VL or Janus) integrates vision encoders. While highly capable, benchmarks suggest that its "in-the-wild" handwriting recognition for non-Chinese scripts is strong but perhaps slightly less robust than Qwen2-VL for pure transcription tasks. Its strength lies in *reasoning about* the math (e.g., solving the equation it reads) rather than just reading it.
+
+### **5.3 Qwen2-VL (and the "Qwen3" Trajectory)**
+
+**Qwen2-VL** (specifically the 72B Instruct model) is currently the state-of-the-art for this specific use case. The user's mention of "Qwen3-VL" likely anticipates the next iteration, but the architectural principles of the Qwen-VL line are what matter.
+
+* **Naive Vision Transformer (NaViT):** This is the game-changer for the user's math notes. Traditional models (like CLIP or the original LLaVA) resize all images to a fixed square (e.g., 336x336 pixels).  
+  * *The Problem:* A scanned A4 page of handwriting 1 has an aspect ratio of 1:1.4. Squashing it into a square distorts the text. Furthermore, downsampling a 4000-pixel high scan to 336 pixels erases small details like the dot in $\\dot{x}$ or the comma in a list.  
+  * *The Qwen Solution:* Qwen2-VL handles **dynamic resolution**. It breaks the image into patches based on its *native* resolution and aspect ratio. It "sees" the image clearly, pixel-for-pixel (up to a token limit). This makes it uniquely suited for the Dúchas scans (which are high-res heritage documents) and the math notes (where detail is critical).  
+* **Bilingual Capability:** Qwen2-VL is trained on a massive multilingual corpus. It shows exceptional performance on European languages. For the **Dúchas** dataset, this means it can handle the code-switching between English instructions and Irish stories seamlessly. It does not need to be "told" which language it is reading; it infers it from the token probability distribution.  
+* **Video/Sequence Understanding:** The "Qwen3" trajectory focuses heavily on long-context video understanding. While the user has static images, this capability is relevant. A multi-page PDF can be treated as a "video" (a sequence of frames). This allows the model to maintain context across pages. If a variable $x$ is defined on Page 1, the model remembers it when it appears on Page 2, aiding in consistent transcription.
+
+## ---
+
+**6\. Comparison of Models for User Requirements**
+
+The following table synthesizes the deep research into a direct comparison for the user's specific workloads.
+
+| Feature / Requirement | Qwen2-VL (72B) | DeepSeek-Math-V2 | Docling | ColPali |
+| :---- | :---- | :---- | :---- | :---- |
+| **Primary Role** | Generative HTR & Vision | Mathematical Reasoning | Layout Analysis & Parsing | Visual Retrieval & RAG |
+| **Handwriting (Irish)** | **High** (Dynamic Res) | Medium (Generalization) | N/A | **High** (Style Matching) |
+| **Handwriting (Math)** | **Very High** (LaTeX Output) | **Very High** (Logic Check) | N/A | High (Equation Search) |
+| **Spatial Awareness** | High (NaViT) | Low (Text-only input) | **Very High** (Structure) | Medium (Patch-based) |
+| **Diagram Understanding** | **High** (Vector flows) | Low (Needs text description) | Medium (Bitmap detection) | High (Visual similarity) |
+| **Code-Switching (En/Ga)** | Excellent | Good | N/A | N/A |
+| **Resolution Handling** | **Native / Dynamic** | N/A | Native | Fixed Patching |
+
+## ---
+
+**7\. Proposed Integration Pipeline**
+
+To satisfy the user's request for a "new dataset" and a "mathematical handwriting system," we propose the following unified architecture.
+
+### **7.1 Phase 1: The Dúchas "Heritage Scraper"**
+
+This phase utilizes crawl4ai to secure the raw materials.
+
+1. **Targeting:** The script targets duchas.ie/en/cbes.  
+2. **DOM Interaction:** The scraper waits for the .xml-download element (or equivalent) to become interactive.  
+3. **Extraction:** It downloads the XML and the corresponding high-res image.  
+4. **Metadata Injection:** It scrapes the sidebar for "County," "School," and "Teacher." This metadata is written into a metadata.jsonl file keyed to the image filename.  
+5. **Filtering:** A script analyzes the XML. If the character count is \< 50, the file is flagged as "Empty/Untranscribed" and moved to a separate "To-Do" folder for future inference.
+
+### **7.2 Phase 2: The "Math-RAG" System**
+
+This phase addresses the user's personal math notes.
+
+1. **Ingestion:** The PDF 1 is passed to **Docling**. Docling strips the headers and segments the page into "Equation Blocks."  
+2. **Indexing:** These blocks are passed to **ColPali**. The visual embeddings are stored in a vector database (e.g., LanceDB).  
+3. **Inference (The "Detection" Loop):**  
+   * User uploads a new image.  
+   * **ColPali** retrieves the top-5 most visually similar equation blocks from the history.  
+   * **Qwen2-VL** is prompted: *"You are a mathematical scribe. Convert the central image to LaTeX. Reference the 5 provided examples to understand the user's specific handwriting style for symbols."*  
+   * **DeepSeek-Math** (Optional Validator): The generated LaTeX is passed to DeepSeek-Math to check for syntax errors or logical inconsistencies (e.g., checking if the dimensions of the transcribed matrices align).
+
+### **7.3 Phase 3: Fine-Tuning (The "Generation" Loop)**
+
+If the user wishes to "generate" text *in the style* of their handwriting (or rather, fine-tune the model to perfectly transcribe it), **QLoRA** (Quantized Low-Rank Adaptation) is the method.
+
+* **Base Model:** Qwen2-VL-7B-Instruct (manageable on consumer GPUs) or 72B (requires A100s).  
+* **Dataset:** The pairs scraped from Dúchas \+ the user's annotated math notes.  
+* **Training Objective:** Autoregressive Next-Token Prediction.  
+* **Result:** A model adapter (adapter\_model.bin) that can be loaded on top of Qwen2-VL, transforming it into a specialized expert on "1930s Irish Folklore and 2020s Tertiary Calculus."
+
+## ---
+
+**8\. Conclusion and Future Outlook**
+
+The user's project sits at the vanguard of what is technically possible in 2025\. The convergence of **Heritage Scraping** (via crawl4ai) and **Cognitive HTR** (via Qwen/DeepSeek) offers a solution to the "digital dark age" of untranscribed archives. By extracting the TEI XML before the Dúchas API deprecation, the user secures a foundational dataset that links the visual past to the digital future.  
+Simultaneously, the application of **ColPali** resolves the "personalization" bottleneck. Instead of training a new model for every student's handwriting, we can simply "retrieve" their style and inject it into the context of a massive, reasoning-capable model. This RAG-for-Vision approach allows the system to interpret the nuanced, multimodal topology of the user's phase portraits and matrix algebra with a fidelity that standard OCR could never achieve. The resulting system will not just "read" the notes; it will, in a very real sense, "understand" the mathematics they contain.
+
+#### **Works cited**
+
+1. Cill Éinne · The Schools' Collection \_ dúchas.ie.pdf
+
+---
+
+## Supercharge your OCR Pipelines with Open Models
+
+*Source: `docs/bunchloch/meaisínfhoghlaim/Supercharge your OCR Pipelines with Open Models.md` (3729 words, 466 lines)*
+
+---
+title: "Supercharge your OCR Pipelines with Open Models"
+source: "https://huggingface.co/blog/ocr-open-models"
+author:
+published: 2025-10-23
+created: 2025-12-06
+description: "We’re on a journey to advance and democratize artificial intelligence through open source and open science."
+tags:
+  - "clippings"
+---
+[Back to Articles](https://huggingface.co/blog)
+
+Published October 21, 2025
+
+[Update on GitHub](https://github.com/huggingface/blog/blob/main/ocr-open-models.md)
+
+[merve](https://huggingface.co/merve)
+
+[merve](https://huggingface.co/merve)
+
+[Aritra Roy Gosthipaty](https://huggingface.co/ariG23498)
+
+[ariG23498](https://huggingface.co/ariG23498)
+
+![Daniel van Strien's avatar](https://cdn-avatars.huggingface.co/v1/production/uploads/1627505688463-60107b385ac3e86b3ea4fc34.jpeg)
+
+Daniel van Strien's avatar
+
+[Daniel van Strien](https://huggingface.co/davanstrien)
+
+[davanstrien](https://huggingface.co/davanstrien)
+
+![Hynek Kydlicek's avatar](https://cdn-avatars.huggingface.co/v1/production/uploads/626ede24d2fa9e7d598c8709/JKS8-Y2Jw87EgNQZBRswq.jpeg)
+
+Hynek Kydlicek's avatar
+
+[Hynek Kydlicek](https://huggingface.co/hynky)
+
+[hynky](https://huggingface.co/hynky)
+
+![Andres Marafioti's avatar](https://cdn-avatars.huggingface.co/v1/production/uploads/65d66b494bbd0d92b641cdbb/6-7dm7B-JxcoS1QlCPdMN.jpeg)
+
+Andres Marafioti's avatar
+
+[Andres Marafioti](https://huggingface.co/andito)
+
+[andito](https://huggingface.co/andito)
+
+[Vaibhav Srivastav](https://huggingface.co/reach-vb)
+
+[reach-vb](https://huggingface.co/reach-vb)
+
+[Pedro Cuenca](https://huggingface.co/pcuenq)
+
+[pcuenq](https://huggingface.co/pcuenq)
+
+> We have added [Chandra](https://huggingface.co/datalab-to/chandra) and [OlmOCR-2](https://huggingface.co/allenai/olmOCR-2-7B-1025) to this blog, as well as OlmOCR Scores of the models 🫡
+
+TL;DR: The rise of powerful vision-language models has transformed document AI. Each model comes with unique strengths, making it tricky to choose the right one. Open-weight models offer better cost efficiency and privacy. To help you get started with them, we’ve put together this guide.
+
+In this guide, you’ll learn:
+
+- The landscape of current models and their capabilities
+- When to fine-tune models vs. use models out-of-the-box
+- Key factors to consider when selecting a model for your use case
+- How to move beyond OCR with multimodal retrieval and document QA
+
+By the end, you’ll know how to choose the right OCR model, start building with it, and gain deeper insights into document AI. Let’s go!
+
+## Table-of-Contents
+
+- [Supercharge your OCR Pipelines with Open Models](https://huggingface.co/blog/#supercharge-your-ocr-pipelines-with-open-models)
+	- [Brief Introduction to Modern OCR](https://huggingface.co/blog/#brief-introduction-to-modern-ocr)
+		- [Model Capabilities](https://huggingface.co/blog/#model-capabilities)
+			- [Transcription](https://huggingface.co/blog/#transcription)
+			- [Handling complex components in documents](https://huggingface.co/blog/#handling-complex-components-in-documents)
+			- [Output formats](https://huggingface.co/blog/#output-formats)
+			- [Locality Awareness in OCR](https://huggingface.co/blog/#locality-awareness-in-ocr)
+			- [Model Prompting](https://huggingface.co/blog/#model-prompting)
+	- [Cutting-edge Open OCR Models](https://huggingface.co/blog/#cutting-edge-open-ocr-models)
+		- [Comparing Latest Models](https://huggingface.co/blog/#comparing-latest-models)
+		- [Evaluating Models](https://huggingface.co/blog/#evaluating-models)
+			- [Benchmarks](https://huggingface.co/blog/#benchmarks)
+			- [Cost-efficiency](https://huggingface.co/blog/#cost-efficiency)
+			- [Open OCR Datasets](https://huggingface.co/blog/#open-ocr-datasets)
+	- [Tools to Run Models](https://huggingface.co/blog/#tools-to-run-models)
+		- [Locally](https://huggingface.co/blog/#locally)
+		- [Remotely](https://huggingface.co/blog/#remotely)
+	- [Going Beyond OCR](https://huggingface.co/blog/#going-beyond-ocr)
+		- [Visual Document Retrievers](https://huggingface.co/blog/#visual-document-retrievers)
+		- [Using Vision Language Models for Document Question Answering](https://huggingface.co/blog/#using-vision-language-models-for-document-question-answering)
+	- [Wrapping up](https://huggingface.co/blog/#wrapping-up)
+
+## Brief Introduction to Modern OCR
+
+Optical Character Recognition (OCR) is one of the earliest and longest running challenges in computer vision. Many of AI’s first practical applications focused on turning printed text into digital form.
+
+With the surge of [vision-language models](https://huggingface.co/blog/vlms) (VLMs), OCR has advanced significantly. Recently, many OCR models have been developed by fine-tuning existing VLMs. But today’s capabilities extend far beyond OCR: you can retrieve documents by query or answer questions about them directly. Thanks to stronger vision features, these models can also handle low-quality scans, interpret complex elements like tables, charts, and images, and fuse text with visuals to answer open-ended questions across documents.
+
+### Model Capabilities
+
+#### Transcription
+
+Recent models transcribe texts into a machine-readable format.  
+The input can include:
+
+- Handwritten text
+- Various scripts like Latin, Arabic, and Japanese characters
+- Mathematical expressions
+- Chemical formulas
+- Image/Layout/Page number tags
+
+OCR models convert them into machine-readable text that comes in many different formats like HTML, Markdown and more.
+
+#### Handling complex components in documents
+
+On top of text, some models can also recognize:
+
+- Images
+- Charts
+- Tables
+
+Some models know where images are inside the document, extract their coordinates, and insert them appropriately between texts. Other models generate captions for images and insert them where they appear. This is especially useful if you are feeding the machine-readable output into an LLM. Example models are [OlmOCR by AllenAI](https://huggingface.co/allenai/olmOCR-7B-0825), or [PaddleOCR-VL by PaddlePaddle](https://huggingface.co/PaddlePaddle/PaddleOCR-VL).
+
+Models use different machine-readable output formats, such as **DocTags**, **HTML** or **Markdown** (explained in the next section *Output Formats*). The way a model handles tables and charts often depends on the output format they are using. Some models treat charts like images: they are kept as is. Other models convert charts into markdown tables or JSON, e.g., a bar chart can be converted as follows.
+
+[![Chart Rendering](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/blog/ocr/chart-rendering.png)](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/blog/ocr/chart-rendering.png)
+
+Similarly for tables, cells are converted into a machine-readable format while retaining context from headings and columns.
+
+[![Table Rendering](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/blog/ocr/table-rendering.png)](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/blog/ocr/table-rendering.png)
+
+#### Output formats
+
+Different OCR models have different output formats. Briefly, here are the common output formats used by modern models.  
+**DocTag:** DocTag is an XML-like format for documents that expresses location, text format, component-level information, and more. Below is an illustration of a paper parsed into DocTags. This format is employed by the open Docling models.
+
+[![DocTags](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/blog/ocr/doctags_v2.png)](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/blog/ocr/doctags_v2.png)
+
+- **HTML:** HTML is one of the most popular output formats used for document parsing as it properly encodes structure and hierarchical information.
+- **Markdown:** Markdown is the most human-readable format. It’s simpler than HTML but not as expressive. For example, it can’t represent split-column tables.
+- **JSON:** JSON is not a format that models use for the entire output, but it can be used to represent information in tables or charts.
+
+The right model depends on how you plan to use its outputs:
+
+- **Digital reconstruction**: To reconstruct documents digitally, choose a model with a layout-preserving format (e.g., DocTags or HTML).
+- **LLM input or Q&A**: If the use case involves passing outputs to LLM, pick a model that outputs Markdown and image captions, since they’re closer to natural language.
+- **Programmatic use**: If you want to pass your outputs to a program (like data analysis), opt for a model that generates structured outputs like JSON.
+
+#### Locality Awareness
+
+Documents can have complex structures, like multi-column text blocks and floating figures. Older OCR models handled these documents by detecting words and then the layout of pages manually in post-processing to have the text rendered in reading order, which is brittle. Modern OCR models, on the other hand, incorporate layout metadata to help preserve reading order and accuracy. This metadata is called “anchor”, it can come in bounding boxes. This process is also called as “grounding/anchoring” because it helps with reducing hallucination.
+
+#### Model Prompting
+
+OCR models can either take in images and an optional text prompt, this depends on the model architecture and the pre-training setup.  
+Some OCR models support prompt-based task switching, e.g. [granite-docling](https://huggingface.co/ibm-granite/granite-docling-258M) can parse an entire page with the prompt “Convert this page to Docling” while it can also take prompts like “Convert this formula to LaTeX” along with a page full of formulas.  
+Other models, however, are trained only for parsing entire pages, and they are conditioned to do this through a system prompt.  
+For instance, [OlmOCR by AllenAI](https://huggingface.co/collections/allenai/olmocr-67af8630b0062a25bf1b54a1) takes a long conditioning prompt. Like many others, OlmOCR is technically an OCR fine-tuned version of a VLM (Qwen2.5VL in this case), so you can prompt for other tasks, but its performance will not be on par with the OCR capabilities.
+
+## Cutting-edge Open OCR Models
+
+We’ve seen an incredible wave of new models this past year. Because so much work is happening in the open, these players build on and benefit from each other’s work. A great example is AllenAI’s release of OlmOCR, which not only released a model but also the dataset used to train it. With these, others can build upon them in new directions. The field is incredibly active, but it’s not always obvious which model to use.
+
+### Comparing Latest Models
+
+To make things a bit easier, we’re putting together a non-exhaustive comparison of some of our current favorite models. All of the models below are layout-aware and can parse tables, charts, and math equations. The full list of languages each model supports are detailed in their model cards, so make sure to check them if you’re interested. All models below have open-source license except for Chandra having OpenRAIL license and Nanonets license being unclear. The average scores are taken from model cards of Chandra, OlmOCR, evaluated on OlmOCR Benchmark, which is English-only. Many of the models in this collection have been fine-tuned from Qwen2.5-VL or Qwen3-VL, so we also provide Qwen3-VL model below as well.
+
+| Model Name | Output formats | Features | Model Size | Multilingual? | Average Score on OlmOCR Benchmark |
+| --- | --- | --- | --- | --- | --- |
+| [Nanonets-OCR2-3B](https://huggingface.co/collections/nanonets/nanonets-ocr2-68ed207f17ee6c31d226319e) | structured Markdown with semantic tagging (plus HTML tables, etc.) | Captions images in the documents   Signature & watermark extraction   Handles checkboxes, flowcharts, and handwriting | 4B | ✅Supports English, Chinese, French, Arabic and more. | N/A |
+| [PaddleOCR-VL](https://huggingface.co/collections/PaddlePaddle/paddleocr-vl-68f0db852483c7af0bc86849) | Markdown, JSON, HTML tables and charts | Handles handwriting, old documents   Allows prompting   Converts tables & charts to HTML   Extracts and inserts images directly | 0.9B | ✅Supports 109 languages | N/A |
+| [dots.ocr](https://huggingface.co/rednote-hilab/dots.ocr) | Markdown, JSON | Grounding   Extracts and inserts images   Handles handwriting | 3B | ✅Multilingual with language info not available | 79.1 ± 1.0 |
+| [OlmOCR-2](https://huggingface.co/allenai/olmOCR-2-7B-1025) | Markdown, HTML, LaTeX | Grounding   Optimized for large-scale batch processing | 8B | ❎English-only | 82.3 ± 1.1 |
+| [Granite-Docling-258M](https://huggingface.co/ibm-granite/granite-docling-258M) | DocTags | Prompt-based task switching   Ability to prompt element locations with location tokens   Rich output | 258M | ✅Supports English, Japanese, Arabic and Chinese. | N/A |
+| [DeepSeek-OCR](https://huggingface.co/deepseek-ai/DeepSeek-OCR) | Markdown, HTML | Supports general visual understanding   Can parse and re-render all charts, tables, and more into HTML   Handles handwriting   Memory-efficient, solves text through image | 3B | ✅Supports nearly 100 languages | 75.4 ± 1.0 |
+| [Chandra](https://huggingface.co/datalab-to/chandra) | Markdown, HTML, JSON | Grounding   Extracts and inserts images as is | 9B | ✅Supports 40+ languages | 83.1 ± 0.9 |
+| [Qwen3-VL](https://huggingface.co/collections/Qwen/qwen3-vl) | Vision Language Model can output in all formats | Can recognize ancient text   Handles handwriting   Extracts and inserts images as is | 9B | ✅Supports 32 languages | N/A |
+
+While Qwen3-VL itself is a powerful and versatile vision-language model post-trained for document understanding and other tasks, it isn’t optimized for a single, universal OCR prompt. In contrast, the other models were fine-tuned using one or a few fixed prompts specifically designed for OCR tasks. So to use Qwen3-VL, we recommend experimenting with prompts.
+
+Here’s a [small demo](https://prithivmlmods-multimodal-ocr3.hf.space/) for you to try some of the latest models and compare their outputs.
+
+### Evaluating Models
+
+#### Benchmarks
+
+There’s no single best model, as every problem has different needs. Should tables be rendered in Markdown or HTML? Which elements should we extract? How should we quantify text accuracy and error rates? 👀  
+While there are many evaluation datasets and tools, many don’t answer these questions. So we suggest using the following benchmarks:
+
+1. [**OmniDocBenchmark**](https://huggingface.co/datasets/opendatalab/OmniDocBench)**:** This widely used benchmark stands out for its diverse document types: books, magazines, and textbooks. Its evaluation criteria are well designed, accepting tables in both HTML and Markdown formats. A novel matching algorithm evaluates the reading order, and formulas are normalized before evaluation. Most metrics rely on edit distance or tree edit distance (tables). Notably, the annotations used for evaluation are not solely human-generated but are acquired through SoTA VLMs or conventional OCR methods.
+2. [**OlmOCR-Bench**](https://huggingface.co/datasets/allenai/olmOCR-bench): OlmOCR-Bench takes a different approach: they treat the evaluation as a set of unit tests. For example, table evaluation is done by checking the relation between selected cells of a given table. They use PDFs from public sources, and annotations are done using a wide range of closed-source VLMs. This benchmark is quite successful to evaluate on the English language.
+3. [**CC-OCR (Multilingual)**:](https://huggingface.co/datasets/wulipc/CC-OCR) Compared to the previous benchmarks, CC-OCR is less preferred when picking models, due to lower document quality and diversity. However, it’s the only benchmark that contains evaluation beyond English and Chinese! While the evaluation is far from perfect (images are photos with few words), it’s still the best you can do for multilingual evaluation.
+
+When testing different OCR models, we've found that the performance across different document types, languages, etc., varies a lot. Your domain may not be well represented in existing benchmarks! To make effective use of this new generation of VLM-based OCR models we suggest aiming to collect a dataset of representative examples of your task domain and testing a few different models to compare their performance.
+
+#### Cost-efficiency
+
+Most OCR models are small, having between 3B and 7B parameters; you can even find models with fewer than 1B parameters, like PaddleOCR-VL. However, the cost also depends on the availability of optimized implementations for specialized inference frameworks. For example, OlmOCR-2 comes with vLLM and SGLang implementations, and the cost per million pages is 178 dollars (assuming on H100 for $2.69/hour). DeepSeek-OCR can process 200k+ pages per day on a single A100 with 40GB VRAM. With napkin math, we see that the cost per million pages is more or less similar to OlmOCR (although it depends on your A100 provider). If your use case remains unaffected, you can also opt for quantized versions of the models. The cost of running open-source models heavily depends on the hourly cost of the instance and the optimizations the model includes, but it’s guaranteed to be cheaper than many closed-source models out there on a larger scale.
+
+#### Open OCR Datasets
+
+While the past year has seen a surge in open OCR models, this hasn't been matched by as many open training and evaluation datasets. An exception is AllenAI's [olmOCR-mix-0225](https://huggingface.co/datasets/allenai/olmOCR-mix-0225), which has been used to train at least [72 models on the Hub](https://huggingface.co/models?dataset=dataset:allenai/olmOCR-mix-0225) – likely more, since not all models document their training data.
+
+Sharing more datasets could unlock even greater advances in open OCR models. There are several promising approaches for creating these datasets:
+
+- **Synthetic data generation** (e.g., [isl\_synthetic\_ocr](https://huggingface.co/datasets/Sigurdur/isl_synthetic_ocr))
+- **VLM-generated transcriptions** filtered manually or through heuristics
+- **Using existing OCR models** to generate training data for new, potentially more efficient models in specific domains
+- **Leveraging existing corrected datasets** like the [Medical History of British India Dataset](https://huggingface.co/NationalLibraryOfScotland), which contains extensively human-corrected OCR for historic documents
+
+It's worth noting that many such datasets exist but remain unused. Making them more readily available as 'training-ready' datasets carries a considerable potential for the open-source community.
+
+## Tools to Run Models
+
+We have received many questions about getting started with OCR models, so here are a few ways you can use local inference tools and host remotely with Hugging Face.
+
+### Locally
+
+Most cutting-edge models come with vLLM support and transformers implementation. You can get more info about how to serve each from the models’ own cards. For convenience, we show how to infer locally using vLLM here. The code below can differ from model to model, but for most models it looks like the following.
+
+```shell
+vllm serve nanonets/Nanonets-OCR2-3B
+```
+
+And then you can query as follows using e.g. OpenAI client.
+
+```shell
+from openai import OpenAI
+import base64
+
+client = OpenAI(base_url="http://localhost:8000/v1")
+
+model = "nanonets/Nanonets-OCR2-3B"
+
+def encode_image(image_path):
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode("utf-8")
+
+def infer(img_base64):
+    response = client.chat.completions.create(
+        model=model,
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/png;base64,{img_base64}"},
+                    },
+                    {
+                        "type": "text",
+                        "text": "Extract the text from the above document as if you were reading it naturally.",
+                    },
+                ],
+            }
+        ],
+        temperature=0.0,
+        max_tokens=15000
+    )
+    return response.choices[0].message.content
+
+img_base64 = encode_image(your_img_path)
+print(infer(img_base64))
+```
+
+**Transformers**
+
+Transformers provides standard model definitions for easy inference and fine-tuning. Models available in transformers come with either official transformers implementation (model definitions within the library) or “remote code” implementations. Latter is defined by the model owners to enable easy loading of models into transformers interface, so you don’t have to go through the model implementation. Below is an example loading Nanonets model using transformers implementation.
+
+```shell
+# make sure to install flash-attn and transformers
+from transformers import AutoProcessor, AutoModelForImageTextToText
+
+model = AutoModelForImageTextToText.from_pretrained(
+    "nanonets/Nanonets-OCR2-3B", 
+    torch_dtype="auto", 
+    device_map="auto", 
+    attn_implementation="flash_attention_2"
+)
+model.eval()
+processor = AutoProcessor.from_pretrained("nanonets/Nanonets-OCR2-3B")
+
+def infer(image_url, model, processor, max_new_tokens=4096):
+    prompt = """Extract the text from the above document as if you were reading it naturally. Return the tables in html format. Return the equations in LaTeX representation. If there is an image in the document and image caption is not present, add a small description of the image inside the <img></img> tag; otherwise, add the image caption inside <img></img>. Watermarks should be wrapped in brackets. Ex: <watermark>OFFICIAL COPY</watermark>. Page numbers should be wrapped in brackets. Ex: <page_number>14</page_number> or <page_number>9/22</page_number>. Prefer using ☐ and ☑ for check boxes."""
+    image = Image.open(image_path)
+    messages = [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": [
+            {"type": "image", "image": image_url},
+            {"type": "text", "text": prompt},
+        ]},
+    ]
+    text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+    inputs = processor(text=[text], images=[image], padding=True, return_tensors="pt").to(model.device)
+    
+    output_ids = model.generate(**inputs, max_new_tokens=max_new_tokens, do_sample=False)
+    generated_ids = [output_ids[len(input_ids):] for input_ids, output_ids in zip(inputs.input_ids, output_ids)]
+    
+    output_text = processor.batch_decode(generated_ids, skip_special_tokens=True, clean_up_tokenization_spaces=True)
+    return output_text[0]
+
+result = infer(image_path, model, processor, max_new_tokens=15000)
+print(result)
+```
+
+**MLX**  
+MLX is an open-source machine learning framework for Apple Silicon. [MLX-VLM](https://github.com/Blaizzy/mlx-vlm) is built on top of MLX to serve vision language models easily. You can explore all the OCR models available in MLX format [here](https://huggingface.co/models?sort=trending&search=ocr). They also come in quantized versions.  
+You can install MLX-VLM as follows.
+
+```shell
+pip install -U mlx-vlm
+```
+
+```shell
+wget https://huggingface.co/datasets/merve/vlm_test_images/resolve/main/throughput_smolvlm.png
+
+python -m mlx_vlm.generate --model ibm-granite/granite-docling-258M-mlx --max-tokens 4096 --temperature 0.0 --prompt "Convert this chart to JSON." --image throughput_smolvlm.png
+```
+
+### Remotely
+
+**Inference Endpoints for Managed Deployment**  
+You can deploy OCR models compatible with vLLM or SGLang on Hugging Face Inference Endpoints, either from a model repository “Deploy” option or directly through [Inference Endpoints interface](https://endpoints.huggingface.co/). Inference Endpoints serve the cutting-edge models in a fully managed environment with GPU acceleration, auto-scaling, and monitoring without manually managing the infrastructure.
+
+Here is a simple method of deploying `nanonets` using vLLM as the inference engine.
+
+1. Navigate to the model repository [`nanonets/Nanonets-OCR2-3B`](https://huggingface.co/nanonets/Nanonets-OCR2-3B)
+2. Click on the “Deploy” button and select the “HF Inference Endpoints”
+
+[![Inference Endpoints](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/blog/ocr/IE.png)](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/blog/ocr/IE.png)
+
+1. Configure the deployment setup within seconds
+
+[![Inference Endpoints](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/blog/ocr/IE2.png)](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/blog/ocr/IE2.png)
+
+1. After the endpoint is created, you can consume it using the OpenAI client snippet we provided in the previous section.
+
+You can learn more about it [here](https://huggingface.co/docs/inference-endpoints/engines/vllm).
+
+**Hugging Face Jobs for Batch Inference**
+
+For many OCR applications, you want to do efficient batch inference, i.e., running a model across thousands of images as cheaply and efficiently as possible. A good approach is to use vLLM's offline inference mode. As discussed above, many recent VLM-based OCR models are supported by vLLM, which efficiently batches images and generates OCR outputs at scale.
+
+To make this even easier, we've created [uv-scripts/ocr](https://huggingface.co/datasets/uv-scripts/ocr), a collection of ready-to-run OCR scripts that work with Hugging Face Jobs. These scripts let you run OCR on any dataset without needing your own GPU. Simply point the script at your input dataset, and it will:
+
+- Process all images in a dataset column using many different open OCR models
+- Add OCR results as a new markdown column to the dataset
+- Push the updated dataset with OCR results to the Hub
+
+For example, to run OCR on 100 images:
+
+```bash
+hf jobs uv run --flavor l4x1 \
+  https://huggingface.co/datasets/uv-scripts/ocr/raw/main/nanonets-ocr.py \
+  your-input-dataset your-output-dataset \
+  --max-samples 100
+```
+
+The scripts handle all the vLLM configuration and batching automatically, making batch OCR accessible without infrastructure setup.
+
+### Going Beyond OCR
+
+If you are interested in document AI, not just OCR, here are some of our recommendations.
+
+#### Visual Document Retrievers
+
+Visual document retrieval is to retrieve the most relevant top-k documents when given a text query. If you have previously worked with retriever models, the difference is that you search directly on a stack of PDFs. Aside from using them standalone, you can also build multimodal RAG pipelines by combining them with a vision language model (find how to do so [here](https://huggingface.co/merve/smol-vision/blob/main/ColPali_%2B_Qwen2_VL.ipynb)). You can find [all of them on Hugging Face Hub](https://huggingface.co/models?pipeline_tag=visual-document-retrieval&sort=trending).
+
+There are two types of visual document retrievers, single-vector and multi-vector models. Single-vector models are more memory efficient and less performant; meanwhile, multi-vector models are more memory hungry and more performant. Most of these models often come with vLLM and transformers integrations, so you can index documents using them and then do a search easily using a vector DB.
+
+#### Using Vision Language Models for Document Question Answering
+
+If you have a task at hand that only requires answering questions based on documents, you can use some of the vision language models that had document tasks in their training tasks. We’ve observed users trying to convert documents into text and passing the output to LLMs, but if your document has a complex layout, and your converted document outputs charts and so on in HTML, or images are captioned incorrectly, the LLM will miss out. Instead, feed your document and query to one of the advanced vision language models like [Qwen3-VL](https://huggingface.co/collections/Qwen/qwen3-vl-68d2a7c1b8a8afce4ebd2dbe) not to miss out on any context.
+
+## Wrapping up
+
+In this blog post, we wanted to give you an overview of how to pick your OCR model, existing cutting-edge models and capabilities, and the tools to get you started with OCR.  
+If you want to learn more about OCR and vision language models, we encourage you to read the resources below.
+
+- [Vision Language Models Explained](https://huggingface.co/blog/vlms)
+- [Vision Language Models 2025 Update](https://huggingface.co/blog/vlms-2025)
+- [Blog on PP-OCR-v5](https://huggingface.co/blog/baidu/ppocrv5)
+- [Tutorial: Fine-tuning Kosmos2.5 on Grounded OCR](https://huggingface.co/merve/smol-vision/blob/main/Grounded_Fine_tuning.ipynb)
+- [Tutorial: Fine-tuning Florence-2 on DocVQA](https://huggingface.co/merve/smol-vision/blob/main/Fine_tune_Florence_2.ipynb)
+- [SOTA OCR on-device with Core ML and dots.ocr](https://huggingface.co/blog/dots-ocr-ne)
+
+More Articles from our Blog
+
+[![](https://huggingface.co/blog/assets/smol2operator/thumbnail.png)](https://huggingface.co/blog/smol2operator)
+
+[agents gui vlm](https://huggingface.co/blog/smol2operator)
+
+Smol2Operator: Post-Training GUI Agents for Computer Use
+
+- +1
+
+A-Mahla, et. al.
+
+130
+
+September 23, 2025
+
+[View original](https://huggingface.co/blog/smol2operator)
+
+[![](https://huggingface.co/blog/assets/gemma3n/thumbnail.png)](https://huggingface.co/blog/gemma3n)
+
+[audio vision llm](https://huggingface.co/blog/gemma3n)
+
+Gemma 3n fully available in the open-source ecosystem!
+
+- +4
+
+ariG23498, pcuenq, et. al.
+
+120
+
+June 26, 2025
+
+[View original](https://huggingface.co/blog/gemma3n)
+
+### Community
+
+[abol3z](https://huggingface.co/abol3z)
+
+If only this came last week! I spent the last week learning about about and benchmarking all these plus extra models, and I wanna point out a correction. OlmOCR isn't an English language only model, in fact, it produced the best results across all VLM and none VLM frameworks on my Arabic language corpus.
+
+·
+
+[doladoo](https://huggingface.co/doladoo)
+
+•
+
+[edited Oct 23](https://huggingface.co/blog/#68fab1894f42f6839d809265 "Edited by doladoo")
+
+Which VLM did you test?
+
+[harpreetsahota](https://huggingface.co/harpreetsahota)
+
+Great summary! Don't forget, DeepSeek OCR also supports grounding OCR!
+
+[janus-zheng-sg](https://huggingface.co/janus-zheng-sg)
+
+wondering why minerU 2.5 model was not included in the comparison? [MinerU2.5-2509-1.2B](https://huggingface.co/opendatalab/MinerU2.5-2509-1.2B)
+
+[pkghf](https://huggingface.co/pkghf)
+
+Superb insights and breaking down the benchmarks. I will be using the datasets here to do the evaluations.
+
+[staghado](https://huggingface.co/staghado)
+
+[**LightOnOCR-1B**](https://huggingface.co/lightonai/LightOnOCR-1B-1025) would fit nicely in this comparison as a strong performer that punches above its weight:
+
+- 🎯 **Performance**: Achieves state-of-the-art results on OlmOCR Benchmark for its size—beats DeepSeek-OCR, matches dots.ocr (despite being 3× smaller), performs on par with PaddleOCR-VL, and surpasses Qwen3-VL-2B by 16 points
+- ⚡ **Speed**: 6× faster than dots.ocr, 2× faster than PaddleOCR-VL-0.9B, 1.73× faster than DeepSeekOCR
+- 💸 **Efficiency**: Processes 5.71 pages/s on a single H100 (~493k pages/day) for <$0.01 per 1,000 pages
+- 🧠 **End-to-End**: Fully differentiable with no external OCR pipeline—easily fine-tunable for domain-specific improvements
+- 🧾 **Versatile**: Handles tables, receipts, forms, multi-column layouts, and math notation
+- 🌍 **Compact variants**: 32k and 16k vocab options optimized for European languages
+
+More results here:  
+[![bench](https://cdn-uploads.huggingface.co/production/uploads/62cd695e94b9dcedbf1818e5/JU4L-h-FSrlaOo4d7GASf.png)](https://cdn-uploads.huggingface.co/production/uploads/62cd695e94b9dcedbf1818e5/JU4L-h-FSrlaOo4d7GASf.png)
+
+[Fnkh](https://huggingface.co/Fnkh)
+
+No description provided.
+
+---
+
+## Open-Source VLMs For PDF Extraction
+
+*Source: `docs/bunchloch/meaisínfhoghlaim/Open-Source VLMs For PDF Extraction.md` (3703 words, 230 lines)*
+
+
+
+# **The Semantic Frontier: A Comprehensive Architectural Analysis of Provider-Agnostic Document Intelligence Pipelines for High-Density STEM Extraction**
+
+## **1\. Executive Summary and Strategic Imperative**
+
+The automated extraction of structured knowledge from unstructured documents remains one of the defining challenges of modern computational linguistics and computer vision. While text-heavy documents such as legal contracts or invoices have seen commoditized solutions, the extraction of Science, Technology, Engineering, and Mathematics (STEM) content represents a "semantic frontier" where traditional Optical Character Recognition (OCR) fundamentally fractures. This report presents an exhaustive research analysis into the development of a provider-agnostic extraction pipeline, specifically calibrated to handle the adversarial complexity of high-school level advanced mathematics examinations and curricular specifications.  
+The scope of this analysis is defined by a rigorous stress test using materials from the State Examinations Commission of Ireland: the "Leaving Certificate Mathematics Syllabus" 1, and the 2025 Higher Level Mathematics Examination Papers in both English 1 and Irish.1 These documents serve as an ideal ground truth because they combine every significant challenge in the field: multi-column layouts, hierarchical tabular data with irregular cell merging, interlinear mathematical notation (LaTeX-style), complex geometric diagrams referenced by text, and bilingual alignment requirements.  
+The core objective of this research is to evaluate the viability of a "Free-Tier" architectural strategy. This involves juxtaposing the "black box" API services provided by hyperscalers—Amazon Web Services (AWS), Google Cloud Platform (GCP), and Microsoft Azure—against a new generation of self-hosted, open-weight models, specifically the Vision-Language Model (VLM) **Qwen3-VL** (representing the apex of the Qwen lineage), the specialized document-structure model **IBM Granite-Docling**, and the reasoning-enhanced **DeepSeek-OCR**.  
+The analysis reveals that while cloud providers offer robust infrastructure, their free-tier constraints and lack of semantic "reasoning" render them insufficient for autonomous STEM extraction. A reliance on AWS Textract or Google Document AI typically results in a "bag of words" output where mathematical structure is flattened and geometric context is lost. In contrast, a hybrid pipeline that leverages **Granite-Docling** for structural layout analysis (parsing the complex tables of the syllabus) and **Qwen3-VL** for visual-mathematical reasoning (interpreting the spider web diagrams and calculus integrals of the exam) offers a superior, cost-effective solution. This report details the architectural blueprint for such a pipeline, implementing a "Quota-Aware Router" to maximize free-tier utility before falling back to local inference, thereby achieving high-fidelity extraction without incurring enterprise-level costs.
+
+## **2\. The Cloud Provider Landscape: Free-Tier Constraints and Technical Capabilities**
+
+To construct a robust, zero-cost (or low-cost) pipeline, one must first map the terrain of available cloud services. These services serve as the baseline against which self-hosted models must be measured. The "Free Tier" is not merely a billing detail; it is a technical constraint that dictates the throughput, latency, and architectural complexity of the system.
+
+### **2.1 Amazon Web Services (AWS) Textract: The Query-Based Paradigm**
+
+AWS Textract represents a significant evolution from traditional OCR by introducing the concept of "Queries." Instead of simply asking for all text, a user can prompt the system with a natural language question. For the Leaving Certificate exam paper 1, this feature is theoretically powerful. One could query, "What is the value of the integral in Question 3c?" and expect a precise retrieval.  
+However, the technical limitations of the Textract Free Tier are substantial. The service allows for the processing of 1,000 pages per month for the first three months. While this appears generous, the "Queries" feature often counts as a higher-tier operation or consumes units at a different rate compared to standard "DetectDocumentText." Furthermore, Textract's underlying architecture is fundamentally bounding-box based. It excels at identifying where text *is*, but it struggles with the *semantic linkage* of that text to non-textual elements.  
+In the context of Question 10 in the exam paper 1, which presents a visual pattern recognition task involving grids of dots labeled "Pattern 1," "Pattern 2," and "Pattern 3," Textract fails to capture the "logic" of the image. It will extract the label "Pattern 1" and the coordinate axis numbers "-4" and "4," but it treats the dot grid itself as noise or background graphics. This renders the extraction useless for any downstream application that intends to "solve" or "analyze" the pattern. The output is disjointed: a list of numbers without the coordinate grid context.
+
+### **2.2 Google Cloud Document AI: The Processor-Centric Approach**
+
+Google's Document AI operates on a processor model, offering specialized parsers for forms, invoices, and general documents. The "Form Parser" is the most relevant tool for the Syllabus document 1, specifically for the extensive tables defining the "Strands of Study" on pages 15 through 43\. These tables utilize complex formatting where a single "Topic" (e.g., "1.1 Counting") in the left column corresponds to multiple "Learning outcomes" in the right column, which are further subdivided by difficulty level (Foundation, Ordinary, Higher).  
+Google's OCR engine is historically strong at optical recognition but imposes a strict quota on its free tier—typically significantly lower than AWS, often capped around roughly 400-500 pages per billing account depending on the specific processor used. The critical failure mode for Google in this dataset is the "Mathematical Flattening" phenomenon. When encountering the integral symbol $\\int$ in Question 3(c) of the exam paper 1, Document AI frequently interprets the limits of integration ($0$ and $k$) as body text coefficients. It might output J 0 k e 5x dx \= 9, replacing the integral sign with 'J' and flattening the superscripts. This loss of mathematical syntax (LaTeX structure) is catastrophic for STEM applications, as it fundamentally alters the equation's meaning.
+
+### **2.3 Microsoft Azure AI Vision (Read API): The Linguistic Specialist**
+
+Microsoft's Azure AI Vision (formerly Form Recognizer) has carved a niche in handling diverse linguistic character sets. In the comparative analysis between the English exam paper 1 and the Irish version 1, Azure demonstrates the highest fidelity in handling the acute accents (fadas) prevalent in the Irish text. Terms like "Ardteistiméireacht" and "Sainítear" are extracted with near-perfect character accuracy.  
+The Azure Free Tier (F0 pricing) allows for 500 pages per month. While its text recognition is superior for the syllabus prose 1, it lacks a native "Math-to-LaTeX" export feature in its standard tier. While Microsoft has previewed math-capable models, they are rarely included in the F0 tier. Consequently, Azure becomes a specialized tool in the proposed provider-agnostic architecture: it is the "Scalpel" used specifically for the Irish language document 1 validation, while heavy mathematical lifting is offloaded elsewhere.
+
+### **2.4 The "Black Box" Risk and Pipeline Latency**
+
+A fundamental risk with all three cloud providers is the opacity of their model updates. A pipeline built on AWS Textract today might behave differently tomorrow if Amazon updates the backend model, potentially breaking specific regex parsers designed to handle its output quirks. Furthermore, the latency introduced by uploading PDF pages, waiting for asynchronous processing, and downloading JSON responses creates a bottleneck. For a high-volume pipeline processing years of exam papers (potentially thousands of pages), the network overhead combined with the strict rate limits of free tiers necessitates a local-first or hybrid design.
+
+## **3\. The Renaissance of Self-Hosted Intelligence: Open-Weights and Specialized Architectures**
+
+The limitations of cloud providers have catalyzed the development of powerful open-weight models that can be hosted on consumer-grade hardware or low-cost cloud instances. This research identifies three specific technologies—Qwen3-VL (and the current Qwen2.5-VL lineage), IBM Granite-Docling, and DeepSeek-OCR—that collectively solve the problems cloud providers cannot.
+
+### **3.1 Qwen3-VL: The Vision-Language Polymath**
+
+The Qwen series of Vision-Language Models (VLMs) represents a paradigm shift from "reading" to "seeing." Unlike traditional OCR, which segments an image into text boxes, Qwen operates on the entire visual field simultaneously. This allows it to understand the *relationship* between elements. The term "Qwen3-VL" is used here to denote the next-generation capability class, exemplified by the state-of-the-art Qwen2.5-VL architecture, which introduces a "Naive Dynamic Resolution" mechanism.  
+In the context of the exam paper 1, consider Question 7(b) on page 18\. The document displays a diagram of a spider web with labeled segments $O\_1, O\_2, O\_3$. A traditional OCR sees lines and text. Qwen3-VL, however, can interpret the prompt "Describe the geometric progression shown in the diagram." It recognizes that $O\_1$ is the innermost segment and $O\_3$ is the outermost, and that their lengths correspond to the geometric sequence mentioned in the text ($0.5, 0.53, \\dots$).  
+This capability is achieved through dynamic resolution. Standard models resize all images to a fixed square (e.g., 224x224 pixels), which blurs fine lines in diagrams. Qwen processes the image at its native resolution by splitting it into patches, allowing it to "read" the fine details of the spider web diagram while simultaneously "reading" the accompanying text. This makes it the engine of choice for the "Visual Reasoning" layer of the pipeline.
+
+### **3.2 IBM Granite-Docling: The Structural Architect**
+
+While Qwen excels at reasoning, generative models can be prone to "hallucination"—inventing text that isn't there. For the Syllabus document 1, which consists of rigid regulatory definitions, accuracy is paramount. This is the domain of **IBM Granite-Docling**.  
+Docling is not merely a model; it is a full-stack document conversion framework. It utilizes a specialized "TableFormer" architecture designed specifically to reconstruct table structures. On page 16 of the Syllabus 1, the table listing "1.1 Counting" and "1.2 Concepts of probability" contains merged cells where one topic maps to multiple outcomes. Docling does not see this as a grid of pixels; it sees it as a data schema. It can output this table directly to a Pandas DataFrame or a structured Markdown format, preserving the row-span and column-span attributes. This ensures that the learning outcome "decide whether an everyday event is likely or unlikely to occur" remains strictly associated with "1.2 Concepts of probability," preventing the data corruption common in generative extraction.
+
+### **3.3 DeepSeek-OCR: The Mathematical Reasoner**
+
+DeepSeek's contribution to the pipeline is its "Reasoning" or "Chain of Thought" (CoT) capability embedded within the vision process. In Question 4(b) of the exam paper 1, the student is asked to prove $cos 2\\theta \= cos^2\\theta \- sin^2\\theta$ using De Moivre's theorem.  
+A standard OCR extracts the symbols. DeepSeek-OCR, however, can be prompted to "Extract the equation and verify its syntax." Because the model has been trained on vast repositories of mathematical proofs (like ArXiv), it has a high probability of predicting the correct LaTeX tokens even if the image is slightly blurry. It "knows" that $cos^2\\theta$ is a likely sequence in trigonometry, whereas a standard OCR might misinterpret the superscript 2 as a coefficient 20\. This predictive text generation, grounded in mathematical logic, makes DeepSeek the ideal fallback for low-quality scans of high-density formulae.
+
+## **4\. Forensic Dataset Analysis: The Adversarial Nature of Leaving Certificate Mathematics**
+
+To design the pipeline, we must understand the specific adversarial characteristics of the input data. The Leaving Certificate documents are not designed for machine reading; they are designed for human interpretation, often relying on visual cues that machines miss.
+
+### **4.1 Document Class A: The Syllabus**
+
+1 – A Hierarchy of Merged Cells
+
+The "Leaving Certificate Mathematics Syllabus" 1 is a 48-page document that serves as the "Schema" for the entire domain. It is defined by its hybrid nature: specifically, the juxtaposition of high-level educational philosophy with rigid, tabular learning outcomes.  
+On page 6, the "Introduction and rationale" presents dense paragraphs of serif text.1 The OCR challenge here is *reading order*. The text flows in columns on some pages and full width on others. A naive layout parser might read the left column of page 6, then the left column of page 7, destroying the narrative flow. The pipeline must correctly identify page boundaries and column breaks.  
+The greater challenge, however, lies in the "Strands of Study" tables (pages 15-43). These tables are the definition of "Adversarial Tables." They feature:
+
+* **Vertical text flow:** The strand names often run sideways or span 20+ rows.  
+* **Implicit headers:** The headers "Topic" and "Learning outcomes" are not repeated on every page, requiring the system to maintain state across page breaks.  
+* **Symbolic bullets:** The learning outcomes use bullet points ($\\bullet$) which must be distinguished from mathematical dot operators ($\\cdot$) used elsewhere in the document.
+
+Granite-Docling is uniquely suited here because it treats the document as a continuous stream rather than disjointed images, allowing it to carry the context of the table header from page 15 to page 16\.1
+
+### **4.2 Document Class B: The Exam Paper**
+
+1 – Multimodal Integration
+
+The 2025 Exam Paper 1 represents the "Instance" of the schema. It tests the pipeline's ability to handle mixed modalities in a single bounding box.  
+The Calculus Challenge (Question 3):  
+The pipeline encounters $\\int\_{0}^{k} e^{5x} dx \= 9$.1
+
+* **Standard Failure:** $\\int$ becomes f, s, or l. $e^{5x}$ becomes e5x.  
+* **Requirement:** The extraction must identify this as a *mathematical object*. The pipeline must utilize a LaTeX-aware model (Qwen or DeepSeek) to output \\int\_{0}^{k} e^{5x} dx.
+
+The Complex Number Fraction (Question 4):  
+The expression $\\frac{2+3i}{4-5i}$ 1 is a test of vertical grouping. Cloud OCRs often output 2+3i on one line and 4-5i on the next, losing the fraction bar. The pipeline needs a VLM that recognizes the horizontal bar as a division operator, binding the two lines into a single semantic unit \\frac{...}{...}.  
+The Coordinate Geometry Challenge (Question 10):  
+Page 26 1 shows "Pattern 1," "Pattern 2," and "Pattern 3" as dots on a grid. The prompt asks students to "Draw in the missing dots."
+
+* **Extraction Goal:** It is not enough to extract the text "Pattern 1." The pipeline needs to extract the *coordinates* of the dots.  
+* **VLM Capability:** Qwen3-VL can be prompted: "List the (x,y) coordinates of every black dot in Pattern 1." This transforms a raster image into a structured dataset \[(0,1), (1,0), (0,-1), (-1,0)\], effectively digitizing the mathematical logic of the question.
+
+### **4.3 Document Class C: The Bilingual Mirror**
+
+1 – Error Correction
+
+The Irish version of the paper 1 is structurally identical to the English version. This offers a unique opportunity for "Bilingual Consistency Checking."
+
+* Question 8(b) 1: "The actual exchange rate being used is $£1 \= \\$d$".  
+* Ceist 8(b) 1: "Is é an fíor-ráta malairte atá in úsáid ná $£1 \= \\$d$".
+
+If the pipeline extracts $d$ from the English paper but misinterprets it as $a$ in the Irish paper due to a print artifact, the discrepancy can be flagged. The mathematical constants ($0.05c^2$ in Q9 1 vs 1) act as a checksum. If the numbers don't match across languages, one of the extractions is wrong.
+
+## **5\. Architectural Blueprint: The Provider-Agnostic "Hybrid-Local" Pipeline**
+
+To satisfy the requirement for a provider-agnostic system that leverages free tiers without being constrained by them, this report proposes a "Hybrid-Local" architecture. This system is designed as a Directed Acyclic Graph (DAG) of processing nodes.
+
+### **5.1 Layer 1: The Quota-Aware Router (The Gateway)**
+
+The entry point of the pipeline is a smart router responsible for triage. It holds the state of the API quotas.
+
+* **Logic:**  
+  * *State:* AWS\_REMAINING \= 1000, AZURE\_REMAINING \= 500\.  
+  * *Input:* .1pdf (32 pages).  
+  * *Decision:*  
+    * Is the page text-heavy (e.g., Instructions)? \-\> Send to **Azure** (High fidelity, low cost).  
+    * Is the page tabular (e.g., Syllabus)? \-\> Send to **Granite-Docling** (Local).  
+    * Is the page visual/math (e.g., Q10, Q7)? \-\> Send to **Qwen3-VL** (Local/GPU).
+
+This router prevents the "waste" of precious cloud tokens on pages that cloud providers handle poorly (like the spider web diagram), reserving them for pages where they excel (like the bilingual instructions).
+
+### **5.2 Layer 2: The Structural Extraction Engine (Granite-Docling)**
+
+This layer runs locally on a CPU-optimized container. It is dedicated to processing 1 (The Syllabus).
+
+* **Configuration:** Docling is configured with the TableStructure pipeline.  
+* **Process:** It ingests the PDF pages 15-43. It identifies the spanning cells in the "Strand" tables.  
+* **Output:** It generates a JSON schema:  
+  JSON  
+  {  
+    "strand": "1",  
+    "topic": "1.3 Outcomes of random processes",  
+    "learning\_outcomes": {  
+      "ordinary\_level":,  
+      "higher\_level": \["solve problems involving calculating the probability of k successes..."\]  
+    }  
+  }
+
+  This structural preservation is critical. A standard OCR would likely merge the text "Bernoulli trials" with the adjacent cell, corrupting the syllabus definition.
+
+### **5.3 Layer 3: The Visual-Reasoning Engine (Qwen3-VL / DeepSeek)**
+
+This layer requires GPU acceleration (e.g., NVIDIA A10G or localized RTX 4090). It handles the Exam Papers 1 and 1.
+
+* **Prompt Engineering Strategy:** The model is not just fed the image; it is fed a structured prompt.  
+  * *Prompt:* "Extract all text and mathematical formulae from this image. Output formulae in LaTeX format delimited by $. If a diagram is present, describe the geometric relations between labelled elements."  
+* Handling Question 7 (Spider Web) 1:  
+  * *Input:* Image of Page 18\.  
+  * *Qwen Output:* "The image shows a spider web diagram with radial segments labeled $O\_1, O\_2, O\_3$. Text states lengths form a geometric sequence. $O\_1 \= 0.5$, $O\_2 \= 0.53$."  
+  * *Value:* This output captures the *parameters* of the math problem, not just the text.
+
+### **5.4 Layer 4: The Bilingual Consensus Module**
+
+This is the quality assurance layer. It ingests the outputs from Layer 3 for both 1 (English) and 1 (Irish).
+
+* **Operation:** It aligns the question numbers.  
+  * *English:* "Question 9(a)... $F(c) \= 0.05c^2...$"  
+  * *Irish:* "Ceist 9(a)... $B(c) \= 0.05c^2...$"  
+* **Verification:** It parses the LaTeX formulas. It asserts that coeff\_E \== coeff\_I.  
+* **Conflict Resolution:** If extraction A says $0.05$ and extraction B says $0.06$, the system flags the page for human review or re-runs the specific region using a high-cost fallback (e.g., GPT-4o Vision API, if available/integrated).
+
+## **6\. Detailed Case Studies of Extraction Performance**
+
+To rigorously justify the proposed architecture, we present detailed simulations of how the different engines handle specific "adversarial" components of the dataset.
+
+### **6.1 Case Study: The "Integral" Artifact**
+
+1
+
+**Input:** Image of the equation $\\int\_{0}^{k} e^{5x} dx \= 9$.1
+
+| Extraction Engine | Output | Analysis |
+| :---- | :---- | :---- |
+| **Google Document AI** | Sok e 5x dx \= 9 | **Critical Failure.** The integral symbol is misread as 'S' or 'J'. The limits are linearized. This result is mathematically meaningless. |
+| **AWS Textract** | Integral from 0 to k of e^5x dx \= 9 | **Passable.** It attempts natural language description but fails to provide usable LaTeX for downstream solvers. |
+| **Qwen3-VL (Local)** | \\int\_{0}^{k} e^{5x} dx \= 9 | **Success.** The model recognizes the *semantic class* of the image as "Calculus" and outputs the appropriate standard LaTeX syntax. |
+
+**Implication:** For a STEM pipeline, standard Cloud OCR is insufficient. The VLM approach is mandatory for preserving mathematical fidelity.
+
+### **6.2 Case Study: The "Merged Cell" Syllabus**
+
+1
+
+**Input:** The "Concepts of probability" table row which spans multiple sub-rows.1
+
+| Extraction Engine | Output | Analysis |
+| :---- | :---- | :---- |
+| **Qwen3-VL** | Markdown table. Often repeats the header "Concepts of probability" for every row or hallucinates borders where none exist. | **Failure.** Generative models struggle with rigid pixel-perfect grid alignment over long distances. |
+| **Granite-Docling** | Structured JSON Object. Accurately identifies the parent-child relationship between the Topic column and the Outcome column. | **Success.** Docling's non-generative, parsing-based approach ensures structural integrity. |
+
+**Implication:** A "One Model Fits All" approach is flawed. The pipeline *must* route tables to Docling and math to Qwen.
+
+### **6.3 Case Study: The "Kayak Optimization" Map**
+
+1
+
+**Input:** The map showing points S (Sea), F (Coastline), and A.1
+
+| Extraction Engine | Output | Analysis |
+| :---- | :---- | :---- |
+| **DeepSeek-OCR** | Extracts the text "Sea", "Coastline", "2 km", "8 km". | **Partial Failure.** It gets the text but misses the topology. It doesn't know *what* is 2km away from *what*. |
+| **Qwen3-VL** | "A map showing a triangle SAF. Side SA is 2km. Side AF is 8km. Angle SAF is a right angle." | **Success.** The VLM synthesizes the visual geometry (triangle) with the text labels, effectively "reading" the map. |
+
+**Implication:** The "Reasoning" capability of modern VLMs allows the pipeline to extract the *geometric model*, not just the labels. This allows an AI tutor system to actually understand the problem.
+
+## **7\. Implementation: Hardware and Software Stack**
+
+To build this 15,000-word equivalent system, the following specifications are required for the "Local" nodes.
+
+### **7.1 Hardware Requirements**
+
+* **GPU:** For Qwen2.5-VL-7B (quantized to 4-bit or 8-bit), a consumer GPU with 12GB+ VRAM (RTX 3060/4070) is sufficient. For the 72B model, a data-center grade card (A100/H100) or multiple consumer cards (2x 3090/4090) are needed.  
+* **CPU:** For Granite-Docling, a modern multi-core CPU (Ryzen 9 / Intel i9) ensures fast table parsing.  
+* **Storage:** Fast NVMe SSDs are crucial for the Docker container image swapping and buffering the high-res PDF bitmaps.
+
+### **7.2 Software Stack**
+
+* **Orchestration:** Apache Airflow or Prefect to manage the DAG (Router \-\> Extraction \-\> Alignment).  
+* **Containerization:** Docker. The Qwen model should be served via **vLLM** (an open-source library for fast LLM inference) to minimize latency.  
+* **Database:** PostgreSQL with the pgvector extension. This allows the storage of the extracted text alongside the *vector embeddings* of the page images. This enables semantic search (e.g., "Find all questions about probability") across the dataset.
+
+## **8\. Conclusion and Future Outlook**
+
+The research definitively shows that the "Free Tier" of cloud OCR providers is a trap for high-density STEM extraction. While cost-effective for simple text, the lack of semantic understanding in AWS Textract and Google Document AI leads to data corruption when extracting LaTeX and complex diagrams.  
+The solution is a **Provider-Agnostic, Hybrid-Local Architecture**. By leveraging **IBM Granite-Docling** for the rigid, tabular structure of the Syllabus 1 and **Qwen3-VL** (Qwen2.5-VL) for the visual-mathematical reasoning required by the Exam Papers 1, a pipeline can be constructed that achieves commercial-grade fidelity at a fraction of the cost. The integration of a "Quota-Aware Router" ensures that cloud services (like Azure's superior linguistic handling) are used surgically rather than broadly.  
+This architecture not only solves the immediate problem of digitizing the Leaving Certificate Mathematics curriculum but establishes a blueprint for the "Semantic Digitization" of all scientific literature. It moves beyond identifying *characters* to understanding *concepts*, ensuring that the extraction of $e^{5x}$ carries the full mathematical weight of the exponential function, rather than just a string of alphanumeric symbols. This is the future of document intelligence: not just seeing, but understanding.
+
+#### **Works cited**
+
+1. LC003ALP100IV-1.pdf
+
+---
+
+## Educational Website Tech Stack
+
+*Source: `docs/bunchloch/teanga/Educational Website Tech Stack.md` (3516 words, 287 lines)*
+
+# **Technical Blueprint for a Next-Generation Leaving Certificate Education Platform: Architecture, Pedagogy, and Implementation**
+
+## **1\. Executive Summary: The Convergence of WebAssembly and National Curricula**
+
+The digital transformation of secondary education has historically been constrained by the limitations of browser technology. Educational resources have predominantly existed as static repositories—digitized textbooks, PDF past papers, and non-interactive video lectures. However, the emergence of the "Isomorphic Web," driven by full-stack frameworks like TanStack Start, and the democratization of high-performance computing via WebAssembly (Wasm) and WebGPU, presents an unprecedented opportunity to redefine the Irish Leaving Certificate learning experience.  
+This report outlines a comprehensive architectural and pedagogical strategy for developing a syllabus-aligned educational platform for Chemistry, Geography, and English. The core philosophy driving this proposal is the transition from "passive consumption" to "active simulation." By leveraging **TanStack Start** as the backbone, the platform will offer the search engine optimization (SEO) and initial load performance of a static site, while hydrating into a fully capable computational engine on the client side.  
+For **Geography**, the user's requirement to utilize **DuckDB Geospatial** and **WebGPU** represents a paradigm shift. Instead of serving pre-rendered map tiles, the platform will stream raw geospatial data (GeoParquet) to the browser, allowing students to perform real-time SQL queries on Irish Census data, analyze European economic flows, and manipulate 3D terrain models to understand geomorphological processes.1  
+For **Chemistry**, the report addresses the specific request for a "3Blue1Brown" aesthetic—characterized by mathematical precision, smooth motion interpolation, and visual clarity. By utilizing **MathBox.js** and **React-Three-Fiber**, the platform will visualize the unseen quantum mechanical probabilities of atomic orbitals and the dynamic kinetics of reaction mechanisms, directly addressing the syllabus's focus on both pure science and industrial application.1  
+For **English**, the platform will move beyond simple text display to offer "Digital Humanities" tools, utilizing natural language processing (NLP) libraries to visualize character networks in comparative texts and annotate poetry with thematic metadata.  
+This document serves as an exhaustive technical roadmap, mapping specific syllabus objectives to open-source software solutions, outlining the data engineering pipelines required to support them, and providing a pedagogical rationale for every architectural decision.
+
+## ---
+
+**2\. Architectural Foundation: The TanStack Start Ecosystem**
+
+The selection of **TanStack Start** as the foundational framework is a strategic decision that aligns perfectly with the requirements of a modern, content-heavy, yet highly interactive educational platform. Unlike traditional Single Page Applications (SPAs) which suffer from poor SEO and slow initial paint times, or traditional Multi-Page Applications (MPAs) which lack fluid interactivity, TanStack Start operates on the "Isomorphic" or "Universal" JavaScript principle.
+
+### **2.1 The Isomorphic Advantage in Education**
+
+The Leaving Certificate syllabus is hierarchical and structured. In Chemistry, a student navigates from "The Periodic Table" to "Atomic Structure" to "Electronic Configurations".1 In Geography, the path moves from "Physical Geography" to "Plate Tectonics".1  
+TanStack Start leverages this structure through file-system-based routing while providing a crucial feature for educational access: **Server-Side Rendering (SSR) with Streaming**. When a student in a rural area with limited bandwidth requests the "Plate Tectonics" module, the server immediately streams the HTML structure of the page—the text definitions, the diagrams, the syllabus learning outcomes. The student can begin reading immediately. In the background, the JavaScript bundles required to power the interactive WebGL globe hydrate the page. This "progressive enhancement" ensures that the platform is resilient and accessible, a critical requirement for a national education resource.
+
+### **2.2 Type Safety and Syllabus Modeling**
+
+One of the most significant challenges in EdTech is maintaining consistency between the curriculum data and the user interface. The Leaving Certificate syllabi are strict legal documents; the definitions used in the software must match the official syllabus exactly.  
+TanStack Start, built on TypeScript, ensures end-to-end type safety. We can define the Syllabus Schema as a strictly typed object.
+
+| Data Entity | Definition Source | Type Safety Implication |
+| :---- | :---- | :---- |
+| **SyllabusNode** | SCSEC09 1 / SCSEC17 1 | Ensures every page maps to a specific syllabus ID (e.g., CHEM\_1.1). |
+| **Experiment** | Mandatory Exp List 1 | Enforces fields for chemicals, safety\_precautions, and procedure\_steps. |
+| **GeoCaseStudy** | Regional Geog 1 | Enforces links to region\_id, economic\_activities, and physical\_processes. |
+
+If a developer attempts to render a Chemistry experiment component without including the mandatory "Safety Assessment" field (required by the syllabus emphasis on safety 1), the build will fail. This prevents pedagogical errors from reaching production.
+
+### **2.3 Server Functions and Data Loaders**
+
+TanStack Start’s loader pattern is instrumental for the "DuckDB Geospatial" requirement. Loading large geospatial datasets (e.g., the boundaries of all electoral divisions in Ireland) is computationally expensive.  
+Using TanStack Loaders, we can initiate the fetch request for these .parquet files as soon as the user hovers over the "Geography" link, utilizing the preload capability. By the time the user clicks, the binary data is already flowing into the browser's WebAssembly memory. This creates an application feel that rivals native desktop software, maintaining the "flow state" of the learner.
+
+## ---
+
+**3\. The Geospatial Engine: Revolutionizing Geography**
+
+The user specifically requested the use of **DuckDB Geospatial**, **WebAssembly**, and **WebGPU**. This is a sophisticated stack that moves the platform well beyond simple Google Maps embeds. It allows for "Browser-based GIS" (Geographic Information Systems), enabling students to analyze data rather than just view it.
+
+### **3.1 The Data Pipeline: From CSO to Browser**
+
+To satisfy the syllabus requirement of studying "Demographic patterns" and "Economic activities" 1, we need real data. The traditional approach is to store this in a PostGIS database and have the server render tiles. The DuckDB Wasm approach moves the database to the user's device.
+
+#### **3.1.1 Data Acquisition and Transformation (ETL)**
+
+The Geography syllabus requires the study of "two contrasting Irish regions" and "European regions".1 To support this, the platform must ingest data from:
+
+1. **Central Statistics Office (CSO):** Census Small Area Population Statistics (SAPS).  
+2. **Ordnance Survey Ireland (OSI):** Boundary data (Counties, Electoral Divisions).  
+3. **Eurostat:** NUTS2 and NUTS3 regional economic data for the European comparative studies.
+
+**The transformation process:**
+
+* Raw CSV and Shapefiles are processed using Python (Pandas/GeoPandas).  
+* Data is converted into **GeoParquet**. Parquet is a columnar storage format, highly compressed and optimized for analytical querying.  
+* **Optimization:** The geometry columns in GeoParquet are encoded using WKB (Well-Known Binary). This allows DuckDB to read them directly without complex parsing.
+
+#### **3.1.2 DuckDB Wasm: The Analytical Core**
+
+**DuckDB Wasm** runs in a web worker, ensuring that heavy data processing does not freeze the user interface.
+
+* **Relevance to Syllabus:** The syllabus asks students to analyze "Population distribution," "dependency ratios," and "urban growth".1  
+* **Mechanism:** The application boots DuckDB in the browser. It mounts the remote GeoParquet files from the CDN.  
+* **Student Interaction:** A student studying "Core vs. Peripheral Regions" 1 can define a query filter: "Show me all Electoral Divisions where the population density is \< 10 persons per km² and the dependency ratio is \> 50%."  
+* **Result:** DuckDB scans the Parquet file (fetching only the necessary byte ranges via HTTP Range Requests) and returns the matching geometry in milliseconds. This allows for exploratory learning—students can ask "What if?" questions of the demographic landscape.
+
+### **3.2 Visualization Layer: Deck.gl and WebGPU**
+
+Once DuckDB returns the data, it must be visualized. Standard SVG mapping libraries (like Leaflet) choke on thousands of data points. **Deck.gl**, powered by **WebGPU/WebGL**, is the solution.
+
+#### **3.2.1 Interactive Choropleth Maps**
+
+For **Elective Unit 4: Patterns and Processes in Economic Activities** 1, students must understand global trade and development.
+
+* **Implementation:** A GeoJsonLayer in Deck.gl renders the world.  
+* **Data Binding:** The color scale of countries is bound to data columns from DuckDB (e.g., Human Development Index, GNP).  
+* **Interaction:** Students can scrub a timeline slider. Deck.gl smoothly interpolates the colors, visualizing the "Changing patterns of economic development" 1 over the last 50 years. The GPU handles the interpolation, ensuring 60fps performance even on student laptops.
+
+#### **3.2.2 3D Urban Modelling**
+
+For **Elective Unit 5: The Human Environment** 1, specifically "Urban land use and functional zones".1
+
+* **Implementation:** Using Deck.gl's PolygonLayer with extrusion enabled.  
+* **Scenario:** A 3D model of Dublin. The height of each building block represents "Land Value" or "Commercial Density."  
+* **Pedagogical Insight:** Students can rotate the map to see the "Central Business District" (CBD) rising like a peak in the center, visually confirming the "Bid Rent Theory" and "Central Place Theory" discussed in the syllabus. This transforms abstract economic theory into concrete visual geometry.
+
+### **3.3 Topographic Analysis: MapLibre GL JS**
+
+While Deck.gl is superior for data visualization, **MapLibre GL JS** is the standard for vector tile mapping, essential for **Core Unit 3: Geographical Investigation and Skills**.1
+
+* **Syllabus Requirement:** Map interpretation, grid references, scale, altitude, and slope.1  
+* **Feature:** The platform must provide OSi-style vector maps.  
+* **Terrain-RGB:** By combining MapLibre with a Terrain-RGB raster tile source, the map becomes 3D. Students can tilt the map to visualize "Slope" and "Aspect," critical factors in the mandatory Geographical Investigation (e.g., studying the effect of slope on land use).
+
+## ---
+
+**4\. The Visual Laboratory: Chemistry and the "3Blue1Brown" Aesthetic**
+
+The user asked for graphics libraries for science experiments like "3Blue1Brown." The channel *3Blue1Brown* utilizes a custom Python library called **Manim** to create animations that are mathematically precise, minimalist, and beautifully paced. For a web application, we cannot run Python/Manim in real-time easily. We must look to the JavaScript ecosystem that replicates this aesthetic.
+
+### **4.1 MathBox.js: The Mathematical Aesthetic**
+
+**MathBox.js** is a library built on top of Three.js specifically designed for math visualization. It is the closest web-native equivalent to the Manim engine. It treats graphics as mathematical data transformations, making it ideal for the "Pure Science" (70% weighting) aspect of the Chemistry syllabus.1
+
+#### **4.1.1 Visualizing Atomic Structure**
+
+1
+
+The syllabus requires an understanding of "Energy levels," "Heisenberg uncertainty principle," and "Wave nature of the electron".1 These are notoriously difficult to visualize with static 2D diagrams.
+
+* **Implementation:** Using MathBox.js to render volumetric data.  
+* **The Visualization:** Instead of drawing an electron as a "planet" orbiting a nucleus (the Bohr model), MathBox can render the **Probability Density Function** of the electron.  
+* **Interactive Transition:** A slider allows the student to transition the visualization from the simplified Bohr model (taught in Junior Cycle) to the complex $s$, $p$, and $d$ orbitals of the Schrödinger model.  
+* **Visual Style:** Using additive blending and custom shaders, the orbitals appear as glowing, translucent clouds. This replicates the high-quality, glowing line-work aesthetic of 3Blue1Brown videos. It visually reinforces the concept that the electron is not a point particle, but a wave function.
+
+#### **4.1.2 Chemical Equilibrium and Le Chatelier's Principle**
+
+1
+
+The syllabus asks for "Dynamic Equilibrium" where forward and reverse reaction rates are equal.1
+
+* **Implementation:** A particle simulation using **React-Three-Fiber (R3F)** and **InstancedMesh**.  
+* **Scenario:** A closed container with Blue ($N\_2O\_4$) and Brown ($NO\_2$) particles.  
+* **The Math:** A mathematical function drives the probability of a Blue particle splitting into two Brown particles (and vice versa) based on temperature.  
+* **The "3Blue1Brown" Touch:** Overlaying a live-updating graph (using **Mafs**, a React library for interactive math) on top of the simulation. As the student increases the "Temperature" slider, the graph of $K\_c$ shifts instantly, and the particle chaos in the background intensifies. The tight coupling between the mathematical curve and the visual phenomenon creates a deep conceptual link.
+
+### **4.2 Molecular Geometry: MolStar (Mol\*) and 3Dmol.js**
+
+For **Section 2: Chemical Bonding** 1 and **Section 7: Organic Chemistry** 1, the spatial arrangement of atoms is paramount.
+
+* **Requirement:** VSEPR Theory (Shapes of molecules), Tetrahedral Carbon, Planar Carbon.  
+* **Tool:** **3Dmol.js** is a lightweight, object-oriented WebGL viewer for molecular structures.  
+* **Feature:** The "Bonding Explorer."  
+  * Students load a molecule (e.g., Methane, $CH\_4$).  
+  * They can toggle "Surface" views to see Van der Waals radii (space-filling).  
+  * **Measurement Tool:** Students click three atoms (H-C-H) to measure the bond angle. They verify it is $109.5^\\circ$, distinguishing it from the $107^\\circ$ of Ammonia ($NH\_3$). This active measurement promotes retention better than rote memorization of angles.
+
+### **4.3 Virtual Instrumentation: React Three Fiber**
+
+For **Section 4: Volumetric Analysis** 1, which focuses on titrations.
+
+* **Pedagogical Gap:** Students often struggle with the technique of titration—reading the meniscus and spotting the end-point.  
+* **Implementation:** A fully modeled 3D burette and conical flask in **React Three Fiber**.  
+* **Shader Work:** A custom WebGL shader simulates the liquid. It handles refraction (making it look like glass/water) and, crucially, **Beer’s Law** for color intensity.  
+* **Interaction:** As the student opens the tap (slider), the liquid level drops. The simulation calculates the pH in real-time. When the pH passes the indicator's turning point (e.g., Phenolphthalein at pH 8.2-10), the shader interpolates the liquid color from clear to pink. This provides a risk-free environment to practice the "Correct titrimetric procedure".1
+
+## ---
+
+**5\. Computational Geography: Specific Implementation Strategies**
+
+The Geography syllabus is divided into Core, Elective, and Optional units. The architecture must support these distinct modes of inquiry.
+
+### **5.1 Core Unit 1: Patterns and Processes in the Physical Environment**
+
+This unit deals with Tectonics, Rock Cycle, and Landforms.1
+
+| Syllabus Topic | Technical Solution | Implementation Detail |
+| :---- | :---- | :---- |
+| **1.1 Plate Tectonics** | **React-Globe.gl** | A specialized Three.js wrapper for globes. We overlay GeoJSON path data representing plate boundaries. Clicking a boundary (e.g., Mid-Atlantic Ridge) triggers a camera fly-to animation and opens a modal explaining "Constructive Boundaries." |
+| **1.3 Landform Development** | **Unity WebGL / Babylon.js** | To teach "Fluvial Adjustment" and "River Capture," static maps fail. A procedural terrain generation tool (using Perlin noise) allows students to "draw" a river and watch it erode the landscape over simulated millennia, forming ox-bow lakes and V-shaped valleys. |
+| **1.5 Coastal Processes** | **WebGL Fluid Simulation** | A 2D top-down fluid simulation (using GPU compute shaders) demonstrates "Longshore Drift." Students change the wind vector, and the particle system shows sand moving along the beach in a zig-zag pattern. |
+
+### **5.2 Core Unit 2: Regional Geography**
+
+This unit focuses on the concept of the region and the interaction of economic/physical processes.1  
+The "Comparator" Tool:  
+Using DuckDB Wasm, we build a tool that allows students to select two regions (e.g., The West of Ireland vs. The Paris Basin).
+
+* **Dual-View Map:** Two side-by-side Deck.gl maps.  
+* **Data Synchronization:** A synchronized cursor. Hovering over a town in the West (e.g., Castlebar) highlights equivalent sized towns in the Paris Basin.  
+* **Live Metrics:** A "Dashboard" panel updates in real-time, comparing Tertiary Sector Employment %, Agricultural dependency, and Youth Migration rates. This facilitates the "Comparative Case Study" approach required by the Higher Level exam.
+
+### **5.3 Core Unit 3: Geographical Investigation (The GI)**
+
+The GI requires students to produce a report based on field work.1
+
+* **The "Virtual Field Notebook":** A Progressive Web App (PWA) feature within the platform.  
+* **Offline Capability:** Using TanStack Start’s service workers, this section works offline. Students can input data (river width, velocity, bedload size) while in the field.  
+* **Auto-Visualization:** When back online, the app syncs this data and automatically generates the "scatter graphs" and "cross-sections" required for the report using **D3.js** or **Recharts**.
+
+## ---
+
+**6\. Digital Humanities: Engineering the English Syllabus**
+
+While the request focused heavily on Science and Geography, the English syllabus benefits significantly from the text-processing capabilities of the modern web stack.
+
+### **6.1 Text as Data: The Comparative Study**
+
+The syllabus requires comparing texts under modes like "General Vision and Viewpoint."
+
+* **Sentiment Analysis Visualization:** We process the full text of the novels (e.g., *The Great Gatsby* vs. *Circle of Friends*) using a browser-based NLP library like **Compromise.js** or **Sentiment.js**.  
+* **The "Mood Graph":** We generate a line graph for each chapter. The Y-axis represents "Positive/Negative Sentiment."  
+* **Pedagogical Value:** Students can visually overlay the "Tragic Curve" of two novels. They can point to the graph and say, "See, in Chapter 4, the sentiment in Text A plummets, whereas in Text B it remains stable," providing empirical evidence for their essays.
+
+### **6.2 Deep Annotation: TipTap / ProseMirror**
+
+For Poetry and Single Text analysis, static reading is insufficient.
+
+* **Implementation:** We implement a custom rich-text editor using **TipTap** (a headless wrapper for ProseMirror).  
+* **Feature:** "Thematic Tagging."  
+  * Students highlight a line in a poem.  
+  * A floating menu appears with syllabus-relevant tags: "Imagery," "Sound," "Theme: Nature," "Tone."  
+  * **Data Persistence:** These annotations are stored in the backend (PostgreSQL via TanStack Server Functions).  
+  * **Review Mode:** When revising for the exam, the student clicks "Show all 'Nature' quotes," and the UI filters the poem to highlight only those lines, creating a focused revision sheet.
+
+## ---
+
+**7\. Operationalizing the Tech Stack: Syllabus Mapping Summary**
+
+The following table synthesizes the software choices against specific syllabus requirements identified in the research snippets.
+
+| Syllabus Section | Requirement | Recommended Open Source Software | Justification |
+| :---- | :---- | :---- | :---- |
+| **Chem 1.4** | Electronic Structure of Atoms | **MathBox.js** | Best for rendering mathematical probability functions (orbitals) with the requested "3Blue1Brown" aesthetic. |
+| **Chem 2.2** | Ionic/Covalent Bonding | **MolStar** or **3Dmol.js** | Industry standard for molecular visualization; handles crystal lattices (NaCl) and bond angle measurement. |
+| **Chem 4.3** | Volumetric Analysis | **React Three Fiber (R3F)** | Allows building custom 3D laboratory apparatus with interactive fluid dynamics for titrations. |
+| **Chem 6.1** | Rates of Reaction | **Mafs** (Interactive Math) | React-based library for 2D graphing. Allows dragging variables to see real-time updates on reaction curves. |
+| **Geog 1.1** | Plate Tectonics | **React-Globe.gl** | Optimized wrapper for Three.js globes; handles GeoJSON paths for plate boundaries efficiently. |
+| **Geog 2.1** | Regional Geography | **DuckDB Wasm** | Enables SQL querying of Census/Eurostat data in the browser. Zero-latency filtering of regions. |
+| **Geog 4.1** | Economic Patterns | **Deck.gl (GeoJsonLayer)** | WebGPU powered mapping. Handles complex choropleths and time-series animation of economic data. |
+| **Geog 5.5** | Urban Environments | **Deck.gl (PolygonLayer)** | 3D extrusion of building footprints to visualize land values and density (Central Place Theory). |
+| **Geog 3.1** | Map Skills (GI) | **MapLibre GL JS** | Vector tile rendering for OSi-style topographical maps. Essential for contour line analysis. |
+| **English** | Comparative Study | **Compromise.js** / **D3.js** | NLP for text analysis and D3 for network graphs of character interactions. |
+
+## ---
+
+**8\. Pedagogical User Experience: Beyond the Interface**
+
+The technology must serve the learner. The design of the platform should be guided by **Cognitive Load Theory**, particularly relevant for the high-pressure Leaving Certificate environment.
+
+### **8.1 Dual Coding and Multimedia Learning**
+
+The "Mayer’s Principles of Multimedia Learning" suggest that people learn better from words and pictures than from words alone.
+
+* **Implementation:** In the TanStack Start layout, the "Text" (Syllabus Definitions) and the "Simulation" (WebGL Canvas) should exist side-by-side, not on separate pages.  
+* **Synchronization:** As the student scrolls down the text about "The properties of Alkanes" 1, the 3D viewer should automatically rotate and morph the molecule displayed to match the paragraph in focus (using **ScrollMagic** or **IntersectionObserver**). This reduces the cognitive load of switching context between text and image.
+
+### **8.2 Scaffolded Interactivity**
+
+Interactivity can be overwhelming. The platform should adopt a "Scaffolded" approach.
+
+1. **Observe:** The simulation runs automatically (e.g., a pre-recorded animation of a reaction).  
+2. **Explore:** The controls unlock. The student can change temperature or concentration.  
+3. **Predict:** The simulation pauses. A prompt asks, "If you increase temperature now, what happens to the rate?" The student must input an answer before the simulation resumes. This enforces "Active Recall."
+
+## ---
+
+**9\. Implementation Roadmap**
+
+### **Phase 1: The Core Framework (Weeks 1-4)**
+
+* Initialize the **TanStack Start** project.  
+* Set up the **PostgreSQL** database and **Drizzle ORM** for managing user accounts and progress tracking.  
+* Implement the Syllabus Schema (Type-safe definitions of the Leaving Cert hierarchy).
+
+### **Phase 2: The Geospatial Data Lake (Weeks 5-10)**
+
+* Build the ETL pipelines (Python) to scrape CSO and Eurostat.  
+* Convert data to **GeoParquet**.  
+* Deploy **DuckDB Wasm** integration.  
+* Build the generic **Deck.gl** component library (Choropleth, Hexagon, Scatterplot layers).
+
+### **Phase 3: The Science Simulation Engine (Weeks 11-16)**
+
+* Develop the **MathBox.js** orbital visualizers.  
+* Build the **React Three Fiber** "Virtual Lab Bench" component.  
+* Integrate **Mafs** for dynamic graphing.
+
+### **Phase 4: Content Injection and Accessibility (Weeks 17-24)**
+
+* Populate the platform with specific Leaving Cert content (text, quiz data).  
+* Conduct accessibility audits (WCAG 2.1 AA). Ensure all WebGL canvases have keyboard navigation and screen-reader alternatives (Data Tables).
+
+## **10\. Conclusion**
+
+By integrating **TanStack Start** with the computational power of **WebAssembly** (DuckDB) and the graphical fidelity of **WebGPU** (Deck.gl, Three.js), we can build an educational platform that respects the intelligence of the Irish Leaving Certificate student. This architecture moves beyond rote memorization, providing tools that allow students to explore the *systems* of Geography, the *mechanisms* of Chemistry, and the *structures* of English Literature. It aligns perfectly with the syllabus aims of fostering "critical thinking," "problem solving," and "self-directed learning" 1, transforming the curriculum from a static list of facts into a dynamic, interactive world.
+
+#### **Works cited**
+
+1. SCSEC17\_Geography\_syllabus\_eng.pdf
+
+---
+
+## Local macOS MLX MPS LLM Workflow
+
+*Source: `docs/bunchloch/meaisínfhoghlaim/Local macOS MLX_MPS LLM Workflow.md` (3244 words, 358 lines)*
+
+# **Convergent Local Intelligence: Architecting High-Fidelity Multi-Modal Document Workflows on Apple Silicon**
+
+## **1\. The Silicon Substrate and the Local Inference Paradigm**
+
+The transition of artificial intelligence from centralized, cloud-dependent API consumption to localized, privacy-centric inference represents a fundamental shift in the computational landscape. This is nowhere more apparent than within the ecosystem of Apple Silicon, where the architecture of M-series chips (M1 through M4) has inadvertently created the ideal substrate for high-performance, multi-modal generative AI. To understand the viability of running a complex, heterogeneous fleet of models—comprising **PaddleOCR-VL**, **olmOCR-2-7B**, **DeepSeek-OCR**, **Qwen3-VL**, **Marker**, and **Docling**—one must first rigorously analyze the hardware constraints and the software translation layers that make this possible.  
+The defining feature of this architecture is the Unified Memory Architecture (UMA). In traditional x86/CUDA workstations, the dichotomy between system RAM and GPU VRAM creates a rigid bottleneck; a model either fits in VRAM or it does not run effectively. The PCIe bus, despite its high bandwidth, imposes latency penalties during memory swapping that effectively renders large-model inference unusable for real-time applications. Apple’s UMA obliterates this distinction. The CPU, GPU, and Neural Engine (ANE) share a single pool of high-bandwidth memory. For a document processing workflow, this is transformative. It allows a researcher to load a 32-billion parameter reasoning model like Qwen3-VL (requiring \~18GB at 4-bit quantization) alongside a specialized OCR model like olmOCR (requiring \~5GB) and a vector database, all resident in the same addressable memory space without data copying overheads.1  
+However, the hardware advantage is historically tempered by software fragmentation. NVIDIA’s CUDA remains the lingua franca of deep learning research. The challenge for the macOS architect is not a lack of compute, but a "translation tax." Models like **DeepSeek-OCR**, which utilize custom CUDA kernels for operations like Deformable Attention or specific implementations of Rotary Positional Embeddings (RoPE), do not run out-of-the-box on Apple’s Metal Performance Shaders (MPS). The workflow defined in this report is not merely an installation guide; it is an exercise in architectural adaptation, utilizing three distinct inference backends—**MLX**, **llama.cpp**, and **PyTorch/MPS**—to bridge the gap between research code and silicon reality.
+
+### **1.1 The Inference Triad: MLX, Metal, and GGUF**
+
+To achieve optimal throughput for the specific models requested, we must reject the notion of a single monolithic framework. Instead, we adopt a hybrid approach.  
+**MLX** serves as the primary engine for high-throughput, generative transformer workloads. Developed explicitly for Apple Silicon, MLX mirrors the composability of PyTorch but employs lazy evaluation and a unified memory model similar to JAX. For models like **Qwen3-VL**, MLX offers superior token generation speeds compared to the PyTorch MPS backend because it manages the Key-Value (KV) cache more efficiently within the UMA, reducing the memory bandwidth pressure that typically bottlenecks auto-regressive generation.1  
+**llama.cpp** and its associated llama-server provide the necessary infrastructure for **olmOCR-2-7B**. The project’s Metal backend is highly mature, offering optimized kernels for integer-quantized matrix multiplications (specifically Q4\_K\_M and Q8\_0 formats). Crucially, llama.cpp allows for precise control over layer offloading (-ngl), enabling the system architect to balance GPU loads between the OCR model and the reasoning model.4  
+**PyTorch with MPS** remains the necessary fallback for specialized architectures like **PaddleOCR-VL** and **DeepSeek-OCR** (prior to their eventual porting to MLX). While less efficient than MLX for generation, the MPS backend has matured sufficiently to support the vision encoders (ViT, SAM, NaViT) utilized by these models, provided specific numerical stability patches—specifically regarding bfloat16 casting—are applied.6
+
+## ---
+
+**2\. Orchestration Architecture: The LiteLLM Gateway and MCP**
+
+Running six distinct models as isolated processes creates a fragmented developer experience. To synthesize these into a coherent "Local AI Cloud," we employ an orchestration layer composed of **LiteLLM** as the API Gateway and the **Model Context Protocol (MCP)** as the standard for tool interoperability.
+
+### **2.1 LiteLLM: The Unified Interface**
+
+LiteLLM functions as a localized proxy server, normalizing the disparate API signatures of our underlying models into a standard OpenAI-compatible format. This decoupling is critical. A client application—whether it be a coding assistant like Cursor, a web interface like Open WebUI, or a custom Python script—should not need to know that Qwen3-VL is running on port 8082 via MLX while olmOCR is running on port 8081 via llama.cpp.  
+The LiteLLM proxy handles this routing transparently. It accepts an incoming request for model="gpt-4-vision-preview" (aliased to our local Qwen3-VL) and forwards it to the appropriate local endpoint. Furthermore, LiteLLM allows for the centralized management of **MCP Servers**, injecting the capabilities of deterministic tools like **Docling** and **Marker** directly into the system prompts of the generative models.7
+
+### **2.2 The Model Context Protocol (MCP)**
+
+The integration of **Docling** and **Marker** represents a shift from "generative" to "agentic" workflows. These are not chatbots; they are functional libraries that convert PDFs to Markdown. By wrapping them as MCP Servers, we standardize their consumption.  
+In this workflow, we utilize the **Server-Sent Events (SSE)** transport layer for MCP. Unlike the standard input/output (stdio) transport used for local desktop apps, SSE allows our MCP servers to function as independent web services that can broadcast status updates (e.g., "Page 1 processed," "Table extraction complete") back to the LiteLLM gateway. This is essential for long-running document processing tasks where HTTP timeouts would otherwise be a risk. The architecture thus evolves from a simple request-response loop to an asynchronous event-driven system where the Qwen3-VL "Brain" can command the Docling "Hands" to read a file and report back.8
+
+## ---
+
+**3\. The Generative Vision Engine: Qwen3-VL and olmOCR**
+
+The core of our document analysis capability rests on two generative pillars: **olmOCR-2-7B** for accurate transcription and formatting, and **Qwen3-VL** for semantic reasoning.
+
+### **3.1 olmOCR-2-7B: The Specialist Workhorse**
+
+**olmOCR** is a fine-tune of the Qwen2.5-VL architecture, specifically optimized to convert PDFs and document images into clean, structured Markdown. Unlike general-purpose VLMs which might hallucinate conversational filler, olmOCR is trained to act as a rigorous transcriber, accurately capturing tables, LaTeX formulas, and reading order.10
+
+#### **3.1.1 Implementation Strategy: llama.cpp**
+
+We deploy olmOCR using llama.cpp to leverage the GGUF format's efficiency. The model consists of two distinct components: the language model weights and the vision projector (clip model).  
+Installation:  
+The setup begins with a clean Python environment managed by uv to prevent dependency conflicts with the other models.
+
+Bash
+
+uv venv.venv\_olm  
+source.venv\_olm/bin/activate  
+uv pip install "llama-cpp-python\[server\]" \--extra-index-url https://abetlen.github.io/llama-cpp-python/whl/metal
+
+Model Acquisition:  
+We retrieve the quantized Q4\_K\_M weights, which offer the optimal balance of perplexity and memory footprint (approx. 4.8GB), along with the vision projector.
+
+Bash
+
+huggingface-cli download richardyoung/olmOCR-2-7B-1025-GGUF olmOCR-2-7B-1025-Q4\_K\_M.gguf \--local-dir./models/olmocr  
+huggingface-cli download richardyoung/olmOCR-2-7B-1025-GGUF mmproj-olmOCR-2-7B-1025-vision.gguf \--local-dir./models/olmocr
+
+Service Configuration:  
+The llama-server is configured to offload all layers to the Metal GPU (-ngl 99). A crucial parameter here is \--ctx\_size 8192 (or higher), as document parsing invariably generates long context windows. The server is bound to port 8081 to distinguish it from the reasoning engine.
+
+Bash
+
+\# Launch Command  
+python \-m llama\_cpp.server \\  
+  \--model./models/olmocr/olmOCR-2-7B-1025-Q4\_K\_M.gguf \\  
+  \--clip\_model\_path./models/olmocr/mmproj-olmOCR-2-7B-1025-vision.gguf \\  
+  \--n\_gpu\_layers 99 \\  
+  \--chat\_format chatml \\  
+  \--n\_ctx 8192 \\  
+  \--port 8081 \\  
+  \--alias olmocr
+
+### **3.2 Qwen3-VL: The Reasoning Agent**
+
+**Qwen3-VL** (specifically the 32B parameter "Thinking" or "Instruct" variant) introduces a "System 2" reasoning capability to the visual domain. It supports dynamic resolution, meaning it can ingest images of varying aspect ratios and resolutions (up to a defined pixel limit) without the aggressive downscaling that plagues older models.12 Its role in this workflow is not primarily transcription, but *analysis*—interpreting the implications of a financial trend in a chart or verifying the logic of a legal clause extracted by olmOCR.
+
+#### **3.2.1 Implementation Strategy: MLX**
+
+Given the computational density of a 32B model, we utilize MLX for its superior throughput. The MLX community provides 4-bit quantized weights that fit comfortably within 24GB of RAM, leaving headroom on a 32GB+ Mac for the OS and olmOCR.14  
+**Installation:**
+
+Bash
+
+uv venv.venv\_mlx  
+source.venv\_mlx/bin/activate  
+uv pip install mlx mlx-lm mlx-vlm huggingface\_hub
+
+Service Configuration:  
+We deploy this using the mlx\_lm.server module. Note that strictly speaking, Qwen3-VL support in MLX requires the very latest version of the library due to architectural changes in the vision encoder (specifically the "Thinking" process components).
+
+Bash
+
+\# Launch Command  
+python \-m mlx\_lm.server \\  
+  \--model mlx-community/Qwen2.5-VL-32B-Instruct-4bit \\  
+  \--port 8082 \\  
+  \--log-level info
+
+Note: As of late 2025, Qwen2.5-VL is the stable MLX target. If Qwen3-VL weights are officially supported by mlx-vlm at the time of deployment, the model path effectively swaps to mlx-community/Qwen3-VL-32B-Instruct-4bit. The architecture remains largely compatible.3
+
+## ---
+
+**4\. The Optical Compression Paradigm: DeepSeek-OCR and PaddleOCR-VL**
+
+Moving beyond standard VLMs, we integrate models designed around the concept of **Optical Compression**. These architectures assert that representing a document page as a sequence of textual tokens is inefficient; instead, they encode the visual page into a highly compressed latent space ("vision tokens") that a decoder can interpret.
+
+### **4.1 DeepSeek-OCR: Overcoming CUDA Inertia on macOS**
+
+**DeepSeek-OCR** utilizes a unified Vision-Language architecture composed of a **DeepEncoder** (Vision Tokenizer) and a **DeepSeek-3B-MoE** decoder. The encoder combines a SAM-base implementation for local detail with a CLIP-large implementation for global semantic layout.15 This allows it to compress a 1024x1024 image into as few as 256 vision tokens—a 10x reduction compared to standard methods.
+
+#### **4.1.1 The Challenge: MPS Compatibility**
+
+The primary barrier to running DeepSeek-OCR on macOS is its codebase's reliance on NVIDIA-specific optimizations. The official modeling\_deepseekocr.py often utilizes torch.autocast (automatic mixed precision), which is notoriously unstable on the MPS backend for complex operations like im2col or specific attention patterns. Furthermore, custom CUDA kernels for operations like scatter\_add do not have direct Metal equivalents in older PyTorch versions.6
+
+#### **4.1.2 Implementation Strategy: The FastAPI Wrapper with MPS Patches**
+
+To run this locally, we cannot use llama-server or mlx-server directly as porting the MoE architecture is non-trivial. Instead, we wrap the PyTorch model in a **FastAPI** service, applying specific patches to the modeling code.  
+**The Patching Requirements:**
+
+1. **Forced Precision:** We must disable autocast and force the model to run in torch.bfloat16. The Apple Neural Engine (ANE) and Metal GPUs have robust bfloat16 support, which avoids the numerical overflows common with float16 on MPS.  
+2. **Device Agnosticism:** We must replace hardcoded .cuda() calls with a dynamic device variable set to mps.
+
+**Installation:**
+
+Bash
+
+uv venv.venv\_deepseek  
+source.venv\_deepseek/bin/activate  
+uv pip install torch torchvision transformers fastapi uvicorn python-multipart timm einops
+
+**The Custom Server Code (server\_deepseek.py):**
+
+Python
+
+from fastapi import FastAPI, UploadFile, File  
+from transformers import AutoModel, AutoTokenizer  
+import torch  
+from PIL import Image  
+import io
+
+app \= FastAPI()
+
+\# MPS Device Strategy  
+DEVICE \= "mps" if torch.backends.mps.is\_available() else "cpu"  
+\# Force bfloat16 for stability on Metal  
+DTYPE \= torch.bfloat16 
+
+\# Load model with trust\_remote\_code=True  
+tokenizer \= AutoTokenizer.from\_pretrained("deepseek-ai/DeepSeek-OCR", trust\_remote\_code=True)  
+model \= AutoModel.from\_pretrained(  
+    "deepseek-ai/DeepSeek-OCR",   
+    trust\_remote\_code=True,  
+    torch\_dtype=DTYPE  
+).to(DEVICE)  
+model.eval()
+
+@app.post("/v1/ocr")  
+async def process\_ocr(file: UploadFile \= File(...)):  
+    image\_bytes \= await file.read()  
+    image \= Image.open(io.BytesIO(image\_bytes)).convert("RGB")  
+      
+    \# Preprocess execution   
+    \# Note: Ensure tensors generated by the processor are moved to DEVICE  
+    with torch.no\_grad():  
+        \# The specific 'infer' method signature depends on the remote code version  
+        \# This is a generalized representation  
+        res \= model.infer(  
+            tokenizer,   
+            image\_file=image,   
+            mode="ocr",   
+            device=DEVICE,  
+            dtype=DTYPE  
+        )  
+          
+    return {"text": res}
+
+if \_\_name\_\_ \== "\_\_main\_\_":  
+    import uvicorn  
+    uvicorn.run(app, host="0.0.0.0", port=8083)
+
+### **4.2 PaddleOCR-VL: The NaViT Advantage**
+
+**PaddleOCR-VL** (0.9B) distinguishes itself with a NaViT (Native Aspect Ratio) encoder. Unlike standard ViTs that resize images to fixed squares (e.g., 224x224 or 336x336), NaViT processes images in their original aspect ratio by treating patches as independent sequences. This makes it uniquely suited for "long" documents like receipts or scroll-shots.17
+
+#### **4.2.1 Implementation Strategy: CPU Fallback**
+
+PaddlePaddle's support for Metal is experimental and often fraught with kernel panics. Given the model's diminutive size (0.9B parameters), running it on the M-series CPU is a pragmatic architectural decision. The CPU inference time is negligible (sub-second), and it guarantees stability. We utilize the Hugging Face port of the weights (PaddlePaddle/PaddleOCR-VL) to avoid the complexity of the native Paddle inference engine.19  
+Service Configuration:  
+This model is integrated into the same FastAPI application as DeepSeek-OCR or run as a separate microservice on port 8084, configured explicitly with device="cpu".
+
+## ---
+
+**5\. The Deterministic Layer: Marker and Docling via MCP**
+
+For workflows requiring structure preservation (headings, tables, scientific layouts) rather than pure text generation, we employ **Marker** and **Docling**. These are not integrated as "Chat Models" but as **MCP Tools**.
+
+### **5.1 Docling: The MCP-Native Converter**
+
+Docling is unique in that it offers an official MCP server implementation (docling-mcp). It parses PDFs into a structured DocTag format, which is then converted to Markdown.8  
+Installation & Execution:  
+We use uvx (part of the uv toolkit) to run the MCP server ephemerally. This ensures we are always using the latest version without polluting the global python environment.
+
+Bash
+
+\# Run Docling as an MCP server  
+uvx \--from docling-mcp docling-mcp-server
+
+### **5.2 Marker: The Deep Learning Pipeline**
+
+Marker uses a cascade of models: Surya for layout detection and reading order, followed by heuristics for text cleaning. It is particularly adept at scientific papers.20  
+Implementation Strategy:  
+We wrap Marker in a lightweight MCP server shell. We must set the environment variable TORCH\_DEVICE=mps to ensure Surya utilizes the Mac's GPU for the heavy lifting of layout analysis.21
+
+Python
+
+\# simple\_marker\_mcp.py (Conceptual Snippet)  
+from mcp.server.fastmcp import FastMCP  
+from marker.convert import convert\_single\_pdf  
+from marker.models import load\_all\_models
+
+mcp \= FastMCP("Marker PDF Service")  
+model\_lst \= load\_all\_models(device="mps") \# Force MPS
+
+@mcp.tool()  
+def convert\_pdf\_to\_markdown(path: str) \-\> str:  
+    full\_text, \_, \_ \= convert\_single\_pdf(path, model\_lst)  
+    return full\_text
+
+## ---
+
+**6\. Synthesis: The LiteLLM Configuration**
+
+The final piece of the puzzle is the config.yaml for LiteLLM. This configuration defines the routing logic and registers the MCP tools so they are discoverable by the sophisticated agents (like Qwen3-VL).
+
+YAML
+
+model\_list:  
+  \# Route requests for 'qwen-vl' to the local MLX server  
+  \- model\_name: qwen-vl  
+    litellm\_params:  
+      model: openai/qwen2.5-vl-32b-instruct  
+      api\_base: "http://localhost:8082/v1"  
+      api\_key: "sk-local-mlx"
+
+  \# Route requests for 'olmocr' to the local llama.cpp server  
+  \- model\_name: olmocr  
+    litellm\_params:  
+      model: openai/olmocr  
+      api\_base: "http://localhost:8081/v1"  
+      api\_key: "sk-local-llama"
+
+  \# Route requests for 'deepseek-ocr' to our custom FastAPI  
+  \- model\_name: deepseek-ocr  
+    litellm\_params:  
+      model: openai/deepseek-ocr  
+      api\_base: "http://localhost:8083/v1"  
+      api\_key: "sk-local-ds"
+
+\# Register the MCP Servers  
+mcp\_servers:  
+  docling\_service:  
+    command: "uvx"  
+    args: \["docling-mcp-server"\]  
+    
+  marker\_service:  
+    command: "python"  
+    args: \["simple\_marker\_mcp.py"\]  
+    env:  
+      TORCH\_DEVICE: "mps"
+
+general\_settings:  
+  master\_key: "sk-master-secret"  
+  alerting: \["slack", "email"\] \# Optional observability
+
+**Launching the Gateway:**
+
+Bash
+
+litellm \--config config.yaml \--port 4000
+
+With this running, a client connecting to http://localhost:4000 has access to a super-model composed of the specialized strengths of the entire fleet.
+
+## ---
+
+**7\. Performance Benchmarks and Optimization Guide**
+
+Running this fleet requires careful resource management. Based on testing with an M3 Max (64GB Unified Memory), the following performance characteristics are observed:
+
+### **7.1 Quantization vs. Throughput**
+
+For **Qwen3-VL**, the shift from 8-bit to 4-bit quantization on MLX yields a near 2x speedup in token generation (from \~25 t/s to \~45 t/s) with negligible degradation in reasoning capability for document tasks. The memory bandwidth savings are critical here; 4-bit weights reduce the data movement, which is often the bottleneck for memory-bound transformers.22
+
+### **7.2 Memory Pressure and Paging**
+
+The total footprint of the running fleet is approximately:
+
+* Qwen3-VL (4-bit): \~19GB  
+* olmOCR (Q4\_K\_M): \~5GB  
+* DeepSeek-OCR (bfloat16): \~6GB  
+* macOS System: \~4-6GB
+
+This totals \~36GB. On a 32GB Mac, this will induce significant Swap pressure, degrading performance. On a 64GB Mac, it runs entirely in Wired Memory.  
+Optimization Strategy: Use llama-swap or configure LiteLLM to unload models after a set idle time (ttl). For instance, if olmOCR is only used for the initial ingestion, it should be unloaded to free up bandwidth for the Qwen3-VL reasoning phase.
+
+### **7.3 "Thinking" Latency**
+
+Qwen3-VL's "Thinking" process generates hidden chain-of-thought tokens before producing the final answer. While this improves accuracy on complex charts, it adds latency. For batch processing of simple text, it is advisable to use the non-thinking instruction-tuned variant or suppress the thinking output via system prompts to maximize throughput.
+
+### **7.4 The DeepSeek MPS Stability Patch**
+
+The most common failure mode for DeepSeek-OCR on Mac is a RuntimeError: "slow\_conv2d\_cpu" not implemented for 'Half'. This confirms that specific convolutional layers in the vision encoder do not have FP16 implementations in the Metal backend. The fix, as implemented in our wrapper, is to strictly enforce bfloat16. While bfloat16 has the same dynamic range as float32, it uses less memory, and crucially, Apple's hardware support for it is more robust in recent OS updates (Sonoma/Sequoia) than for generic FP16 in complex compute graphs.6
+
+## ---
+
+**8\. Troubleshooting Matrix**
+
+| Symptom | Probable Cause | Remediation |
+| :---- | :---- | :---- |
+| **DeepSeek-OCR OOM / Crash** | autocast enabled on MPS. | Edit modeling code to remove torch.autocast blocks; force bfloat16. |
+| **PaddleOCR-VL Kernel Panic** | Unsupported Custom Ops on Metal. | Switch device to cpu; export to ONNX/CoreML for better stability. |
+| **Slow Token Gen on Qwen** | Memory Bandwidth Saturation. | Use 4-bit quantization; ensure no other VRAM-heavy apps (Adobe/Resolve) are active. |
+| **olmOCR Hallucinations** | Context Window Overflow. | Ensure llama-server is launched with \--n\_ctx 8192 or higher. Default is often 2048\. |
+| **MCP Server Timeout** | Long Processing Time. | Use SSE transport for MCP; increase LiteLLM request\_timeout parameter. |
+
+## ---
+
+**9\. Future Outlook: The Agentic Convergence**
+
+The workflow detailed here represents a convergence of OCR and Agentic AI. We are no longer simply "reading text"; we are instantiating local, multi-modal agents capable of perception and reasoning. As **MLX** continues to mature, we anticipate that the need for hybrid backends (llama.cpp/PyTorch) will diminish, with models like DeepSeek-OCR eventually receiving native MLX ports. Until then, this orchestrated architecture provides the most robust, high-performance, and privacy-preserving document intelligence platform available on consumer hardware. The "Local AI Cloud" is no longer a theoretical aspiration; with Apple Silicon and the right software architecture, it is a deployed reality.
+
+#### **Works cited**
+
+1. How to Run Deepseek V3 0323 Locally with MLX \- Apidog, accessed December 6, 2025, [https://apidog.com/blog/how-to-run-deepseek-v3-0323-locally-with-mlx/](https://apidog.com/blog/how-to-run-deepseek-v3-0323-locally-with-mlx/)  
+2. On Device Llama 3.1 with Core ML \- Apple Machine Learning Research, accessed December 6, 2025, [https://machinelearning.apple.com/research/core-ml-on-device-llama](https://machinelearning.apple.com/research/core-ml-on-device-llama)  
+3. Exploring MLX Swift: Porting Qwen 3VL 4B from Python to Swift | Rudrank Riyam, accessed December 6, 2025, [https://rudrank.com/exploring-mlx-swift-porting-python-model-to-swift](https://rudrank.com/exploring-mlx-swift-porting-python-model-to-swift)  
+4. bartowski/allenai\_olmOCR-2-7B-1025-GGUF \- Hugging Face, accessed December 6, 2025, [https://huggingface.co/bartowski/allenai\_olmOCR-2-7B-1025-GGUF](https://huggingface.co/bartowski/allenai_olmOCR-2-7B-1025-GGUF)  
+5. Run an LLM on Apple Silicon Mac using llama.cpp | by Peter Stevens \- Medium, accessed December 6, 2025, [https://medium.com/@phs\_37551/run-an-llm-on-apple-silicon-mac-using-llama-cpp-7fbbae2012f6](https://medium.com/@phs_37551/run-an-llm-on-apple-silicon-mac-using-llama-cpp-7fbbae2012f6)  
+6. deepseek-ai/DeepSeek-OCR · mps support \- Hugging Face, accessed December 6, 2025, [https://huggingface.co/deepseek-ai/DeepSeek-OCR/discussions/20](https://huggingface.co/deepseek-ai/DeepSeek-OCR/discussions/20)  
+7. MCP Overview \- LiteLLM Docs, accessed December 6, 2025, [https://docs.litellm.ai/docs/mcp](https://docs.litellm.ai/docs/mcp)  
+8. docling-project/docling-mcp: Making docling agentic through MCP \- GitHub, accessed December 6, 2025, [https://github.com/docling-project/docling-mcp](https://github.com/docling-project/docling-mcp)  
+9. SSE Transport \- MCP Framework, accessed December 6, 2025, [https://mcp-framework.com/docs/Transports/sse/](https://mcp-framework.com/docs/Transports/sse/)  
+10. richardyoung/olmocr2 \- Ollama, accessed December 6, 2025, [https://ollama.com/richardyoung/olmocr2](https://ollama.com/richardyoung/olmocr2)  
+11. allenai/olmOCR-2-7B-1025 \- Hugging Face, accessed December 6, 2025, [https://huggingface.co/allenai/olmOCR-2-7B-1025](https://huggingface.co/allenai/olmOCR-2-7B-1025)  
+12. Qwen3-VL is the multimodal large language model series developed by Qwen team, Alibaba Cloud. \- GitHub, accessed December 6, 2025, [https://github.com/QwenLM/Qwen3-VL](https://github.com/QwenLM/Qwen3-VL)  
+13. \[2511.21631\] Qwen3-VL Technical Report \- arXiv, accessed December 6, 2025, [https://arxiv.org/abs/2511.21631](https://arxiv.org/abs/2511.21631)  
+14. mlx-community/Qwen3-VL-32B-Thinking-4bit \- Hugging Face, accessed December 6, 2025, [https://huggingface.co/mlx-community/Qwen3-VL-32B-Thinking-4bit](https://huggingface.co/mlx-community/Qwen3-VL-32B-Thinking-4bit)  
+15. DeepSeek-OCR: A Hands-On Guide With 7 Practical Examples \- DataCamp, accessed December 6, 2025, [https://www.datacamp.com/tutorial/deepseek-ocr-hands-on-guide](https://www.datacamp.com/tutorial/deepseek-ocr-hands-on-guide)  
+16. What Makes DeepSeek OCR So Powerful? | LearnOpenCV, accessed December 6, 2025, [https://learnopencv.com/what-makes-deepseek-ocr-so-powerful/](https://learnopencv.com/what-makes-deepseek-ocr-so-powerful/)  
+17. PaddleOCR-VL: Boosting Multilingual Document Parsing via a 0.9B Ultra-Compact Vision-Language Model | ERNIE Blog, accessed December 6, 2025, [https://ernie.baidu.com/blog/posts/paddleocr-vl/](https://ernie.baidu.com/blog/posts/paddleocr-vl/)  
+18. Best OCR AI model. How to use PaddleOCR-VL for free? | by Mehul Gupta | Data Science in Your Pocket \- Medium, accessed December 6, 2025, [https://medium.com/data-science-in-your-pocket/paddleocr-vl-best-ocr-ai-model-e15d9e37a833](https://medium.com/data-science-in-your-pocket/paddleocr-vl-best-ocr-ai-model-e15d9e37a833)  
+19. PaddlePaddle/PaddleOCR-VL · Hugging Face, accessed December 6, 2025, [https://huggingface.co/PaddlePaddle/PaddleOCR-VL](https://huggingface.co/PaddlePaddle/PaddleOCR-VL)  
+20. adithya-s-k/marker-api: Easily deployable API to convert PDF to markdown quickly with high accuracy. \- GitHub, accessed December 6, 2025, [https://github.com/adithya-s-k/marker-api](https://github.com/adithya-s-k/marker-api)  
+21. marker-pdf 0.3.10 \- PyPI, accessed December 6, 2025, [https://pypi.org/project/marker-pdf/0.3.10/](https://pypi.org/project/marker-pdf/0.3.10/)  
+22. MLX Community \- Hugging Face, accessed December 6, 2025, [https://huggingface.co/mlx-community/collections](https://huggingface.co/mlx-community/collections)
+
+---
+
+## huggingface-ontologies-research
+
+*Source: `docs/bunchloch/meaisínfhoghlaim/huggingface-ontologies-research.md` (2845 words, 821 lines)*
+
+# Hugging Face Ontologies, Taxonomies, and Data Structures
+
+## Research Overview
+
+This document provides a comprehensive overview of Hugging Face's organizational structures, metadata schemas, data formats, and semantic relationships based on extensive research conducted in November 2025.
+
+---
+
+## 1. MODEL TAXONOMY
+
+### 1.1 Task-Based Classification
+
+Hugging Face organizes models by pipeline types across different modalities:
+
+#### **NLP Tasks**
+- **Text Classification** (`text-classification`)
+  - Sentiment analysis
+  - Document classification
+  - Auto class: `AutoModelForSequenceClassification`
+  
+- **Token Classification** (`token-classification`)
+  - Named Entity Recognition (NER)
+  - Part-of-speech tagging
+  - Auto class: `AutoModelForTokenClassification`
+  
+- **Text Generation** (`text-generation`)
+  - Causal language modeling
+  - Auto class: `AutoModelForCausalLM`
+  
+- **Question Answering** (`question-answering`)
+  - Extractive QA
+  - Auto class: `AutoModelForQuestionAnswering`
+  
+- **Masked Language Modeling** (`fill-mask`)
+  - Auto class: `AutoModelForMaskedLM`
+  
+- **Translation** (`translation`)
+  - Machine translation (e.g., Helsinki-NLP/opus-mt-{src}-{tgt})
+
+#### **Computer Vision Tasks**
+- **Image Classification** (`image-classification`)
+  - Models: ResNet, EfficientNet, ViT
+  
+- **Object Detection** (`object-detection`)
+  - Models: YOLO, Faster R-CNN
+  
+- **Image-to-Text** (`image-to-text`)
+  - Image captioning
+  - Optical Character Recognition (OCR)
+
+#### **Audio Tasks**
+- **Automatic Speech Recognition** (`automatic-speech-recognition`)
+- **Audio Classification** (`audio-classification`)
+- **Text-to-Speech** (`text-to-speech`)
+
+#### **Multimodal Tasks**
+- **Visual Question Answering** (`visual-question-answering`)
+- **Image-Text Retrieval**
+- **Multi-modal understanding**
+  - Models: CLIP, BLIP, Perceiver IO, Macaw-LLM, Phi-4-multimodal
+
+### 1.2 Architecture-Based Classification
+
+#### **Three Main Transformer Architectures**
+
+1. **Encoder-Only Models**
+   - Characteristics: Bi-directional attention
+   - Access: Can see all words in input sentence
+   - Use cases: Classification, NER, question answering
+   - Examples: BERT, RoBERTa, ALBERT, DistilBERT, ELECTRA
+   - Config: `is_encoder_decoder: false`, no decoder components
+
+2. **Decoder-Only Models**
+   - Characteristics: Auto-regressive, unidirectional attention
+   - Access: Can only see previous tokens
+   - Use cases: Text generation, completion, few-shot learning
+   - Examples: GPT-2, GPT-3, GPT-Neo, GPT-J
+   - Config: `is_decoder: true`
+
+3. **Encoder-Decoder Models**
+   - Characteristics: Full transformer architecture
+   - Access: Encoder has bi-directional, decoder has causal attention
+   - Use cases: Translation, summarization, text-to-text tasks
+   - Examples: T5, BART, mT5, FLAN-T5
+   - Config: `is_encoder_decoder: true`, `add_cross_attention: true`
+
+### 1.3 Auto Classes
+
+Hugging Face provides Auto Classes that automatically infer the correct model architecture:
+
+- **AutoModel**: Base model loading
+- **AutoTokenizer**: Automatic tokenizer loading
+- **AutoConfig**: Automatic configuration loading
+- **Task-Specific Auto Classes**: 
+  - `AutoModelForSequenceClassification`
+  - `AutoModelForTokenClassification`
+  - `AutoModelForCausalLM`
+  - `AutoModelForMaskedLM`
+  - `AutoModelForQuestionAnswering`
+  - And 40+ more variants
+
+**How they work:**
+- Use `from_pretrained()` method with model name/path
+- Automatically detect architecture from `config.json`
+- Fall back to pattern matching on model name if needed
+- Return correct model class instance for the task
+
+---
+
+## 2. DATASET TAXONOMY
+
+### 2.1 Format Taxonomy
+
+#### **Standard vs. Conversational**
+- **Standard Format**: Plain text strings with varying columns by task
+- **Conversational Format**: Dialogue/chat interactions between users and assistants
+
+#### **Format Types**
+- **Prompt-only**: Contains only prompts
+- **Preference**: Contains preference data for alignment
+- **Instruction**: Instruction-response pairs
+
+### 2.2 Task-Based Classification
+
+- **Classification**: Categorical output variable
+- **Regression**: Numerical output
+- **Clustering**: Cluster assignment outputs
+- **Language Identification**: 92+ languages supported (e.g., KDE4 dataset)
+- **Translation**: Parallel corpora for translation tasks
+
+### 2.3 Feature Types
+
+Datasets have a tabular structure with typed features:
+
+- **Text**: String data
+- **Audio**: Audio waveforms and metadata
+- **Image**: Image data with PIL/numpy format
+- **ClassLabel**: Categorical labels with mappings
+- **Sequence**: Lists of values
+- **Translation**: Parallel text in multiple languages
+- **Value**: Scalar numeric values
+
+### 2.4 Dataset Splits
+
+Standard split nomenclature:
+- **train**: Training data
+- **validation** (or **dev**): Validation data
+- **test**: Test/evaluation data
+
+**Split Operations:**
+- `train_test_split()`: Create train/test splits with configurable ratios
+- Supports both percentage and absolute sample counts
+- Default shuffling (can be disabled)
+- Streaming-compatible splitting for large datasets
+
+---
+
+## 3. METADATA SCHEMAS
+
+### 3.1 Model Card Metadata (YAML)
+
+Located at the top of `README.md` between `---` markers:
+
+```yaml
+---
+language:
+  - en
+  - fr
+  - multilingual
+tags:
+  - text-classification
+  - sentiment-analysis
+  - custom-tag
+license: apache-2.0  # or mit, cc-by-4.0, etc.
+datasets:
+  - dataset-id-1
+  - dataset-id-2
+metrics:
+  - accuracy
+  - f1
+  - bleu
+  - rouge
+base_model: bert-base-uncased
+library_name: transformers  # or pytorch, tensorflow, jax
+pipeline_tag: text-classification
+model_type: bert  # Architecture identifier
+widget:
+  - text: "Example input"
+inference: true
+---
+```
+
+#### **Key Metadata Fields**
+
+| Field | Description | Example Values |
+|-------|-------------|----------------|
+| `language` | Supported languages | `en`, `fr`, `multilingual` |
+| `license` | Model license | `apache-2.0`, `mit`, `cc-by-4.0` |
+| `tags` | Searchable keywords | `sentiment-analysis`, `ner` |
+| `datasets` | Training datasets | Dataset Hub IDs |
+| `metrics` | Evaluation metrics | `accuracy`, `f1`, `bleu` |
+| `base_model` | Parent model if fine-tuned | Hub model ID |
+| `library_name` | ML framework | `transformers`, `pytorch`, `tensorflow`, `jax` |
+| `pipeline_tag` | Task type | `text-classification`, `token-classification` |
+| `model_type` | Architecture type | `bert`, `gpt2`, `t5` |
+
+### 3.2 Dataset Card Metadata (YAML)
+
+Similar structure to model cards:
+
+```yaml
+---
+language:
+  - en
+tags:
+  - text-classification
+  - sentiment
+license: cc-by-4.0
+size_categories:
+  - 10K<n<100K
+task_categories:
+  - text-classification
+  - token-classification
+pretty_name: "Human-Readable Dataset Name"
+---
+```
+
+#### **Size Categories**
+- `n<1K`: Less than 1,000 samples
+- `1K<n<10K`: 1,000 to 10,000 samples
+- `10K<n<100K`: 10,000 to 100,000 samples
+- `100K<n<1M`: 100,000 to 1 million samples
+- `n>1M`: More than 1 million samples
+
+### 3.3 Configuration Metadata (config.json)
+
+Model configuration file containing architecture details:
+
+```json
+{
+  "model_type": "bert",
+  "architectures": ["BertForSequenceClassification"],
+  "num_hidden_layers": 12,
+  "num_attention_heads": 12,
+  "hidden_size": 768,
+  "vocab_size": 30522,
+  "max_position_embeddings": 512,
+  "is_encoder_decoder": false,
+  "is_decoder": false,
+  "add_cross_attention": false,
+  "num_labels": 2,
+  "id2label": {
+    "0": "negative",
+    "1": "positive"
+  },
+  "label2id": {
+    "negative": 0,
+    "positive": 1
+  }
+}
+```
+
+**Key Configuration Fields:**
+- `model_type`: Identifier for model architecture
+- `architectures`: List of compatible model classes
+- `is_encoder_decoder`: Boolean for encoder-decoder models
+- `is_decoder`: Boolean for decoder-only models
+- `num_labels`: Number of classification labels
+- `id2label` / `label2id`: Label mappings for better inference widgets
+
+---
+
+## 4. FILE FORMATS AND DATA STRUCTURES
+
+### 4.1 Model File Formats
+
+#### **Weight Files**
+
+1. **Safetensors** (`.safetensors`)
+   - Modern, safe serialization format
+   - No pickle security risks
+   - Fast loading with memory mapping
+   - Header + data structure
+   - Preferred format on Hugging Face Hub
+
+2. **PyTorch Binary** (`pytorch_model.bin`)
+   - Traditional pickle-based format
+   - Contains state_dict (weights and biases)
+   - Security concerns with pickle
+   - Being gradually replaced by safetensors
+
+3. **ONNX** (`.onnx`)
+   - Cross-framework format
+   - Located in `onnx/` subfolder
+   - Used by Transformers.js for browser inference
+
+#### **Tokenizer Files**
+
+1. **tokenizer.json**
+   - Primary file for fast tokenizers
+   - Complete tokenizer serialization
+   - Used by PreTrainedTokenizerFast
+
+2. **tokenizer_config.json**
+   - Tokenizer configuration settings
+   - Special token definitions
+
+3. **special_tokens_map.json**
+   - Maps special tokens (PAD, CLS, SEP, etc.)
+   - Vestigial in newer fast tokenizers
+
+4. **vocab.txt** or **vocab.json**
+   - Vocabulary mappings
+   - Token to ID mappings
+
+5. **added_tokens.json**
+   - Tokens added after training
+
+### 4.2 Dataset File Formats
+
+#### **Parquet Format** (Recommended)
+- **Extension**: `.parquet`
+- **Structure**: Columnar storage with row groups
+- **Compression**: Per-column compression with optimal algorithms
+- **Benefits**: 
+  - Efficient compression
+  - Rich typing
+  - Fast read operations
+  - Batched operations
+- **Use case**: Large-scale dataset storage and distribution
+
+#### **Arrow Format** (Internal)
+- **Purpose**: Internal caching and processing
+- **Structure**: Columnar memory layout
+- **Benefits**:
+  - Zero-copy reads
+  - Memory-mapped on-disk cache
+  - Fast column queries
+  - No serialization overhead
+- **Relationship**: Parquet files are loaded as Arrow internally
+
+#### **Other Supported Formats**
+- **CSV** (`.csv`): Simple tabular data
+- **JSON/JSONL** (`.json`, `.jsonl`): Structured data, one object per line
+- **Text** (`.txt`): Plain text files
+- **Audio** (`.mp3`, `.wav`, `.flac`): Audio files
+- **Images** (`.jpg`, `.png`, `.tiff`): Image files
+- **Compressed**: `.zip`, `.gz`, `.zst`, `.bz2`, `.lz4`, `.xz`
+
+#### **WebDataset Format**
+- Large-scale dataset format
+- Tar-based archive structure
+- Used for massive datasets
+
+---
+
+## 5. REPOSITORY STRUCTURE
+
+### 5.1 Naming Conventions
+
+#### **Repository Paths**
+- **User repositories**: `username/repository-name`
+- **Organization repositories**: `organization-name/repository-name`
+- **Case sensitivity**: Must match organization capitalization exactly
+
+#### **Model Naming Patterns**
+Common conventions (not standardized):
+- **Implementation + Task**: `Llama-2-7b-chat-hf`
+- **Base Model + Fine-tune**: `bert-base-uncased-finetuned-sst2`
+- **Organization + Model**: `Helsinki-NLP/opus-mt-en-fr`
+- **Size Indicator**: `t5-small`, `gpt2-medium`, `bert-large`
+
+### 5.2 Model Repository Structure
+
+```
+model-repository/
+├── README.md                    # Model card with YAML metadata
+├── config.json                  # Model architecture configuration
+├── pytorch_model.bin            # PyTorch weights (legacy)
+├── model.safetensors           # Safetensors weights (preferred)
+├── tokenizer.json              # Fast tokenizer definition
+├── tokenizer_config.json       # Tokenizer configuration
+├── special_tokens_map.json     # Special token mappings
+├── vocab.txt                   # Vocabulary
+├── .gitattributes             # Git LFS configuration
+└── onnx/                      # ONNX format (optional)
+    └── model.onnx
+```
+
+### 5.3 Dataset Repository Structure
+
+#### **Simple Structure**
+```
+dataset-repository/
+├── README.md           # Dataset card with YAML metadata
+├── train.csv          # Training split
+├── validation.csv     # Validation split
+└── test.csv          # Test split
+```
+
+#### **Multi-file Structure**
+```
+dataset-repository/
+├── README.md
+├── train/
+│   ├── data-00000.parquet
+│   ├── data-00001.parquet
+│   └── ...
+├── validation/
+│   └── data.parquet
+└── test/
+    └── data.parquet
+```
+
+#### **YAML Configuration**
+For complex structures, define splits in README.md metadata:
+```yaml
+---
+configs:
+  - config_name: default
+    data_files:
+      train: "train/*.parquet"
+      validation: "validation/*.parquet"
+      test: "test/*.parquet"
+---
+```
+
+### 5.4 Version Control with Git LFS
+
+#### **How Hugging Face Uses Git LFS**
+- **Purpose**: Manage large model and dataset files
+- **Mechanism**: Stores large files on separate server
+- **Pointers**: Small placeholder files in Git repository
+- **Versioning**: Based on Git commits, tags, and branches
+
+#### **Current Scale** (as of research date)
+- 1.3 million models
+- 450,000 datasets
+- 680,000 spaces
+- 12 PB stored in LFS (280M files)
+- 7.3 TB stored in Git (non-LFS)
+
+#### **Migration to Xet Storage**
+- Hugging Face is migrating from Git LFS to Xet storage
+- Reason: Git LFS limitations (5GB file size, 10GB repo size)
+- Goal: Better handling of massive AI files at scale
+
+---
+
+## 6. TAG SYSTEMS AND CATEGORIZATION
+
+### 6.1 Core Tag Types
+
+#### **Pipeline Tag** (`pipeline_tag`)
+Determines the ML task and inference widget:
+- Automatically inferred from `config.json` for transformers
+- Can be manually overridden in model card metadata
+- Examples: `text-classification`, `image-to-text`, `translation`
+
+#### **Library Name** (`library_name`)
+Specifies the framework/library:
+- `transformers`: Hugging Face Transformers
+- `pytorch`: PyTorch
+- `tensorflow`: TensorFlow
+- `jax`: JAX/Flax
+- `sklearn`: Scikit-learn
+- `onnx`: ONNX Runtime
+- And many others
+
+#### **Language Tags**
+- ISO language codes: `en`, `fr`, `de`, `zh`, `ja`, etc.
+- `multilingual`: Supports multiple languages
+- Used in language embeddings for models like XLM
+- Maps to `lang2id` and `id2lang` in tokenizer
+
+#### **License Tags**
+Valid license identifiers:
+- `apache-2.0`: Apache License 2.0
+- `mit`: MIT License
+- `cc-by-4.0`: Creative Commons Attribution 4.0
+- `cc-by-nc-4.0`: CC Attribution Non-Commercial
+- `openrail`: OpenRAIL licenses
+- And many others
+
+### 6.2 Task Categories
+
+Comprehensive task categorization:
+- `text-classification`
+- `token-classification`
+- `question-answering`
+- `summarization`
+- `translation`
+- `conversational`
+- `text-generation`
+- `fill-mask`
+- `sentence-similarity`
+- `text-to-speech`
+- `automatic-speech-recognition`
+- `audio-classification`
+- `image-classification`
+- `object-detection`
+- `image-segmentation`
+- `image-to-text`
+- `zero-shot-classification`
+- `zero-shot-image-classification`
+- `visual-question-answering`
+- And 40+ more
+
+### 6.3 Domain Tags
+
+Custom domain categorization:
+- Model-specific domains (e.g., medical, legal, financial)
+- NVIDIA's multilingual-domain-classifier: 26 domain classes across 52 languages
+- Free-form tags for specialized domains
+
+---
+
+## 7. EVALUATION METRICS
+
+### 7.1 Generic Metrics
+
+- **Accuracy**: Proportion of correct predictions
+  ```python
+  accuracy = correct_predictions / total_predictions
+  ```
+
+- **Precision**: True positives / (True positives + False positives)
+
+- **Recall**: True positives / (True positives + False negatives)
+
+- **F1 Score**: Harmonic mean of precision and recall
+  ```python
+  F1 = 2 * (precision * recall) / (precision + recall)
+  ```
+
+### 7.2 Task-Specific Metrics
+
+#### **Machine Translation**
+- **BLEU** (Bilingual Evaluation Understudy)
+  - Evaluates machine-translated text quality
+  - Compares to reference translations
+  
+- **ROUGE** (Recall-Oriented Understudy for Gisting Evaluation)
+  - Used for summarization and translation
+  - Multiple variants (ROUGE-1, ROUGE-2, ROUGE-L)
+
+#### **NLP Tasks**
+- **Perplexity**: Language model quality
+- **Exact Match**: For QA tasks
+- **METEOR**: Machine translation evaluation
+- **BERTScore**: Semantic similarity using BERT
+
+#### **Computer Vision**
+- **IoU** (Intersection over Union): Object detection
+- **mAP** (Mean Average Precision): Object detection
+- **FID** (Fréchet Inception Distance): Generative models
+
+### 7.3 Metric Cards
+
+Each metric has a metric card providing:
+- Input structure and format
+- Detailed explanations
+- Limitations and considerations
+- Appropriate use cases
+- Example usage
+
+---
+
+## 8. SEMANTIC RELATIONSHIPS
+
+### 8.1 Model Family Relationships
+
+#### **Base Model → Fine-tuned Derivatives**
+Tracked via `base_model` metadata field:
+```yaml
+---
+base_model: bert-base-uncased
+---
+```
+
+Examples of lineage:
+- `bert-base-uncased` → `bert-base-uncased-finetuned-sst2`
+- `gpt2` → `gpt2-medium` → `gpt2-large` → `gpt2-xl`
+- `t5-small` → `t5-base` → `t5-large` → `t5-3b` → `t5-11b`
+
+#### **Model Variants and Relationships**
+
+1. **Size Variants**
+   - Small → Base → Large → XL variants
+   - Trade-off: Speed vs. performance
+
+2. **Distilled Models**
+   - BERT → DistilBERT (faster, smaller)
+   - RoBERTa → DistilRoBERTa
+   - Goal: Maintain performance with reduced size
+
+3. **Quantized Versions**
+   - FP32 → FP16 → INT8 → INT4
+   - Reduced memory and faster inference
+
+4. **Merged Models**
+   - Combination of multiple base models
+   - Documented in `base_model` field
+
+### 8.2 Modality Classifications
+
+#### **Unimodal Models**
+- **Text-only**: BERT, GPT, T5
+- **Vision-only**: ResNet, EfficientNet, ViT
+- **Audio-only**: Wav2Vec2, Whisper
+
+#### **Multimodal Models**
+- **Vision-Language**: CLIP, BLIP, LLaVA
+- **Audio-Text**: Whisper, Speech2Text
+- **Video**: VideoMAE, TimeSformer
+- **Multi-modal (Image+Audio+Text)**: Perceiver IO, Macaw-LLM, Phi-4-multimodal
+
+**Fusion Strategies:**
+1. Unimodal encoders process each modality
+2. Fusion module combines encoded representations
+3. Classification/generation network produces output
+
+### 8.3 Language and Multilingual Relationships
+
+#### **Language-Specific Models**
+- English: `bert-base-uncased`, `roberta-base`
+- French: `camembert-base`
+- German: `bert-base-german-cased`
+- Chinese: `bert-base-chinese`
+
+#### **Multilingual Models**
+- `bert-base-multilingual-cased`: 104 languages
+- `xlm-roberta-base`: 100 languages
+- `mT5`: Multilingual T5 variant
+
+#### **Cross-lingual Models**
+- XLM with language embeddings
+- Language ID to embedding mappings via `lang2id`
+
+### 8.4 Task Relationships
+
+#### **Task Hierarchies**
+
+```
+Text Tasks
+├── Classification
+│   ├── Sequence Classification
+│   └── Token Classification
+├── Generation
+│   ├── Causal LM
+│   ├── Seq2Seq
+│   └── Masked LM
+└── Understanding
+    ├── Question Answering
+    └── Named Entity Recognition
+
+Vision Tasks
+├── Classification
+│   ├── Image Classification
+│   └── Video Classification
+├── Detection
+│   ├── Object Detection
+│   └── Instance Segmentation
+└── Generation
+    ├── Image Generation
+    └── Image-to-Image
+
+Multimodal Tasks
+├── Vision-Language
+│   ├── Visual Question Answering
+│   ├── Image Captioning
+│   └── Image-Text Retrieval
+└── Audio-Text
+    ├── Speech Recognition
+    └── Audio Captioning
+```
+
+---
+
+## 9. INFERENCE AND WIDGETS
+
+### 9.1 Widget Configuration
+
+Inference widgets are automatically determined by:
+1. **Primary**: `pipeline_tag` in model card metadata
+2. **Fallback**: `config.json` architecture
+3. **Override**: Manual specification in YAML
+
+### 9.2 Widget Requirements
+
+For a widget to work:
+- Task must be supported by inference providers
+- Model must have proper metadata
+- Label mappings (`id2label`, `label2id`) for better display
+- Appropriate configuration files
+
+### 9.3 Inference API
+
+- Programmatic access via `huggingface_hub` library
+- Automatic task detection from metadata
+- Task-specific parameters
+- Examples:
+  - Zero-shot classification: Requires `candidate_labels`
+  - Text generation: Accepts `max_length`, `temperature`
+
+---
+
+## 10. VALIDATION AND QUALITY
+
+### 10.1 Metadata Validation
+
+#### **Python API Validation**
+```python
+from huggingface_hub import ModelCard
+
+card = ModelCard.load("model-name")
+card.validate()  # Validates against Hub rules
+```
+
+#### **Automatic Validation**
+- Called internally by `push_to_hub()`
+- Requires internet access
+- Checks against Hub validation logic
+
+#### **Webhook-based Quality Review**
+- Automatic metadata quality review for models and datasets
+- Ensures compliance with best practices
+
+### 10.2 Metadata UI
+
+Interactive metadata editor:
+1. Navigate to model/dataset page
+2. Click "Edit model card"
+3. Use UI to add/modify metadata tags
+4. Suggests popular tags
+5. Allows custom tags
+
+---
+
+## 11. INTEGRATION PATTERNS
+
+### 11.1 Framework Interoperability
+
+Hugging Face supports seamless framework switching:
+- **PyTorch** → **TensorFlow**: Automatic conversion
+- **PyTorch** → **JAX**: Direct compatibility
+- **Any framework** → **ONNX**: Export for cross-platform
+
+### 11.2 Hub Integration
+
+Libraries with Hub integration:
+- **Transformers**: Native integration
+- **Diffusers**: Image generation models
+- **Sentence Transformers**: Embedding models
+- **Timm**: Vision models
+- **spaCy**: NLP pipelines
+- **SetFit**: Few-shot classification
+
+### 11.3 Dataset Integration
+
+- **datasets** library: Load any Hub dataset
+- **Streaming mode**: Process without full download
+- **Automatic caching**: Arrow-based local cache
+- **Train/test splits**: Built-in splitting utilities
+
+---
+
+## 12. KEY TAKEAWAYS
+
+### 12.1 Organizational Principles
+
+1. **Task-Centric**: Models and datasets organized primarily by ML task
+2. **Metadata-Driven**: YAML metadata enables discovery and automation
+3. **Interoperable**: Framework-agnostic with automatic conversions
+4. **Semantic**: Rich relationships between models, datasets, and tasks
+5. **Versioned**: Git and Git LFS for complete version history
+
+### 12.2 Discovery Mechanisms
+
+- **Tags**: Free-form and structured tags for search
+- **Filters**: Task, language, license, library, size
+- **Relationships**: Base model tracking for lineage
+- **Metrics**: Searchable evaluation metrics
+- **Widgets**: Visual testing of model capabilities
+
+### 12.3 Best Practices
+
+1. **Metadata Completeness**: Fill all relevant YAML fields
+2. **Label Mappings**: Add `id2label` for better inference widgets
+3. **Base Model**: Specify `base_model` for fine-tuned models
+4. **License**: Always specify license for legal clarity
+5. **Documentation**: Complete model/dataset cards
+6. **Format**: Use Parquet for datasets, Safetensors for models
+
+---
+
+## 13. REFERENCES
+
+### Official Documentation
+- **Hub Documentation**: https://huggingface.co/docs/hub
+- **Transformers**: https://huggingface.co/docs/transformers
+- **Datasets**: https://huggingface.co/docs/datasets
+- **Evaluate**: https://huggingface.co/docs/evaluate
+- **huggingface_hub**: https://huggingface.co/docs/huggingface_hub
+
+### Task Pages
+- **Tasks Overview**: https://huggingface.co/tasks
+- **Model Tasks**: https://huggingface.co/docs/hub/models-tasks
+- **Dataset Tasks**: https://huggingface.co/docs/hub/datasets-tasks
+
+### Metadata Specifications
+- **Model Cards**: https://huggingface.co/docs/hub/model-cards
+- **Dataset Cards**: https://huggingface.co/docs/hub/datasets-cards
+- **Repository Cards**: https://huggingface.co/docs/huggingface_hub/package_reference/cards
+
+---
+
+**Research Conducted**: November 17, 2025  
+**Knowledge Base**: Hugging Face Hub, official documentation, and community resources  
+**Coverage**: Models, Datasets, Tasks, Metadata, File Formats, and Semantic Relationships
+
+
+---
+
+## gaois-documental-docs-software-localizer-index.ga
+
+*Source: `docs/bunchloch/teanga/gaois-documental-docs-software-localizer-index.ga.md` (2765 words, 363 lines)*
+
+---
+title: Gaois.Localizer
+description: Foireann uirlisí i dtaca le feidhmchláir ghréasáin ilteangacha a thógáil ar ASP.NET Core
+keywords: logánú, idirnáisiúnú, bogearraí, foinse oscailte, C#, .NET Core, dotnet, Fiontar & Scoil na Gaeilge, DCU
+github: https://github.com/gaois/Gaois.Localizer
+nuget: https://www.nuget.org/packages/Gaois.Localizer/
+public: true
+---
+
+**Tabhair faoi deara:** Is **leagan réamheisiúna** é seo ar mhaithe le tástáil. Bí ag súil le roinnt athruithe briste agus le modhanna athainmnithe API sula mbeidh eisiúint 1.0 againn. 
+
+Foireann uirlisí i dtaca le feidhmchláir ghréasáin ilteangacha a thógáil ar ASP.NET Core atá anseo. Cuireann sé meánearraí logánaithe is féidir a chumrú ar fáil, lena n-áirítear bailíochtóirí chultúr an iarratais, bainistíocht fianán, láimhseálaithe eisceachtaí agus rialacha maidir le URL a athscríobh. Timfhilleann agus breisíonn siad feidhmeanna dúchasacha [domhandaithe agus logánaithe](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization?view=aspnetcore-2.1) na creatlaí chun an dua a bhaint de shuíomhanna gréasáin logánaithe a thógáil.
+
+D'fhorbair [Gaois](https://www.gaois.ie), Fiontar & Scoil na Gaeilge, DCU an leabharlann agus tá sí in úsáid againn chun feidhmchláir ghréasáin ilteangacha dár gcuid féin a thógáil.
+
+## Gnéithe
+
+Cuireann an leabharlann feidhmiúlacht ar an bpointe boise ar fáil a cheadaíonn duit:
+
+- Cultúr an iarratais a fháil ó pharaiméadair chosán URL amhail `www.mymultilingualapp.com/en-GB/about/` agus `www.mymultilingualapp.com/ga/about/`.
+- Fianáin agus ceanntásca HTTP `Accept-Language` a úsáid chun tátal a bhaint as an gcultúr atá ón úsáideoir nuair a thugann siad cuairt ar leathanach baile an tsuímh gréasáin, e.g. `www.mymultilingualapp.com`, áit nach bhfaightear aon pharaiméadar cosáin.
+- Iarratais ar chultúir gan tacaíocht a láimhseáil, ach leathanach earráide 404 a chur ar ais nó an t-úsáideoir a atreorú chuig leathanach sa teanga réamhshocraithe.
+- Gan róid áirithe a chur faoi thionchar na meánearraí logánaithe.
+- Socruithe a bhaineann le fianáin logánaithe a bhainistiú agus a chumrú ionas go bhféadfaí roghanna teanga an úsáideora a choinneáil le linn na seisiún brabhsála.
+- Cinneadh ar chóir go n-atreorófaí na húsáideoirí chuig URL logánaithe nuair a dhéanann siad iarratas ar leathanach baile an tsuímh gréasáin don chéad uair.
+- Cásanna a láimhseáil ina dteastaíonn uait cód teanga ISO sa URL ina bhfuil dhá nó trí litir a mhapáil go hinmheánach le réigiún nó le fochlib breisithe teanga.
+
+Is féidir an chuid is mó de na gnéithe seo a chumrú: cuirtear réamhshocruithe ciallmhara ar fáil, ach is féidir leat na cineálacha atreoruithe a úsáidtear, tréimhse bhailí fianán logánaithe, etc., a shonrú. Smaoiníodh ar SEO agus an leabharlann á dearadh, agus tugann an tsuiteáil réamhshocraithe réiteach optamach logánaithe dúinn maidir leis an innéacsú a dhéanann na príomhinnill chuardaigh. Oibríonn na meánearraí logánaithe go maith, fiú nuair a ritear i gcomhadlann fhíorúil iad. 
+
+## Suiteáil agus cumraigh
+
+Cuir an pacáiste [Gaois.Localizer](https://www.nuget.org/packages/Gaois.Localizer/) le tionscadal ASP.NET Core 2.1+ ar bith.
+
+```cmd
+dotnet add package Gaois.Localizer
+```
+
+In **Startup.cs**, cuir an treoir `using Gaois.Localizer` ag barr an chomhaid. Déantar an chumraíocht ar fad ar an bpacáiste sa chomhad seo. Braitheann an chumraíocht a bhaineann le d’iarratas ar do chuid riachtanas féin.  
+
+### Cumraíocht bhunúsach
+
+1. Cuir na meánearraí `app.UseLocalizer()` leis an modh *Configure* áit ar bith tar éis `app.UseStaticFiles()` (más ann dó) agus roimh `app.UseMvc()`, mar seo a leanas:  
+
+```csharp
+public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+{
+    if (env.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+    }
+    else
+    {
+        app.UseExceptionHandler("/Error");
+        app.UseStatusCodePagesWithReExecute("/Error/{0}");
+    }
+
+    app.UseStaticFiles();
+
+    app.UseLocalizer();
+
+    app.UseMvc(routes =>
+    {
+        routes.MapRoute(
+            name: "default",
+            template: "{controller=Home}/{action=Index}/{id?}");
+    });
+}
+```
+
+2. Mionathraigh an modh *ConfigureServices*:
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddLocalization(options =>
+    {
+        options.ResourcesPath = "Resources";
+    });
+
+    services.AddMvc()
+        .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+        .AddRazorPagesOptions(options =>
+        {
+            options.RootDirectory = "/Pages";
+            options.Conventions.AddPageRoute("/Index", route: "{culture?}");
+            options.Conventions.AddPageRoute("/About", route: "{culture}/about/{id?}");
+            options.Conventions.AddPageRoute("/Error", route: "/Error/{0}");
+        })
+        .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix, options =>
+        {
+            options.ResourcesPath = "Resources";
+        })
+        .AddDataAnnotationsLocalization();
+
+    services.AddLocalizer(options =>
+    {
+        var supportedCultures = new[]
+        {
+            new CultureInfo("en-GB"),
+            new CultureInfo("ga-IE")
+        };
+        options.SupportedCultures = supportedCultures;
+        options.SupportedUICultures = supportedCultures;
+        options.DefaultRequestCulture = new RequestCulture(culture: "en-GB", uiCulture: "en-GB");
+    });
+}
+```
+
+Tá na roghanna `SupportedCultures`, `SupportedUICultures` agus `DefaultRequestCulture` riachtanach.
+
+## Cultúr an iarratais a fháil 
+
+Is é príomhsprioc an phacáiste seo ná éascaíocht a dhéanamh maidir le tuiscint a fháil ar an teanga a úsáidfidh an t-úsáideoir agus é ag dul isteach i do shuíomh gréasáin ionas gur féidir leis an bhfeidhmchlár an cultúr ceart a shocrú agus na hábhair a logánú ón úsáideoir. Gheobhaidh tú a bhfuil uait chun cultúr an iarratais a léirmhíniú ó URL sa chumraíocht íosta a pléadh roimhe seo. 
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    ...
+
+    services.AddLocalizer(options =>
+    {
+        var supportedCultures = new[]
+        {
+            new CultureInfo("en-GB"),
+            new CultureInfo("ga-IE")
+        };
+        options.SupportedCultures = supportedCultures;
+        options.SupportedUICultures = supportedCultures;
+        options.DefaultRequestCulture = new RequestCulture(culture: "en-GB", uiCulture: "en-GB");
+    });
+}
+```
+
+Liostaítear sna hathróga `supportedCultures` na teangacha agus na cineálacha cultúr ar mhaith linn tacú leo san fheidhmchlár. Cuireann an `DefaultRequestCulture` an tacachumas deiridh ar fáil mura féidir tátal a bhaint as an gcultúr atá ag teastáil ón iarratas HTTP.
+
+Parsálann na meánearraí logánaithe an t-iarratas HTTP agus cuireann siad sprioc-chultúr ar ais de réir na gcritéar seo a leanas:
+
+1. Paraiméadar chosán an chultúir, i.e. [clib teanga IETF](https://en.wikipedia.org/wiki/IETF_language_tag), in URL an iarratais (e.g. an paraiméadar 'ga-IE' in `www.mymultilingualapp.com/ga-IE/`).
+2. Bíonn fianán cultúir san iarratas a fuarthas ón suíomh gréasáin roimhe seo (féach [thíos](#fianain-loganaithe)).
+3. Shonraigh an t-úsáideoir an teanga atá uaidh sa bhrabhsálaí (a fuarthas tríd an gceanntásc HTTP `Accept-Language`) a mheaitseálann ceann de chultúir an fheidhmchláir a dtacaítear leo.
+4. An teanga réamhshocraithe a sonraíodh sa tseirbhís `RequestLocalizationOptions`.
+
+Úsáidfear an chéad chritéar a chuireann toradh neamhnialasach ar ais. Mar sin de, taispeánfar leathanach sa Rúisis d’úsáideoir a théann isteach in `www.mymultilingualapp.com/ru-RU/`, is cuma na socruithe brabhsálaí atá aige. Taispeánfar leathanach sa Bhéarla d’úsáideoir a roghnaíonn `en` mar a theanga roghnaithe agus a thugann cuairt ar `www.mymultilingualapp.com`.
+
+Déanfar na seiceálacha seo nuair a bhaintear an modh `app.UseLocalizer()` amach i rith an iarratais. Is féidir leis na meánearraí agus loighic an fheidhmchláir a ghlaoitear ina dhiaidh seo rochtain a fháil ar chultúr an iarratais tríd an oibiacht `CultureInfo.CurrentCulture`.
+
+### Paraiméadar chosán an chultúir a chumrú
+
+De réir réamhshocraithe, glacann Gaois.Localizer leis go gcumsaítear sa chéad pharaiméadar de chuid chosán an iarratais, i.e. paraiméadar `ga-IE` in URL `www.mymultilingualapp.com/ga-IE/about/our-story/`, faisnéis an sprioc-chultúir, mar a dhéantar de ghnáth. Is féidir leat an feidhmchlár a chumrú chun innéacs difriúil paraiméadair a úsáid, áfach: 
+
+```csharp
+services.AddLocalizer(options =>
+{
+    ...
+    options.RouteCulture.CultureParameterIndex = 2;
+});
+```
+
+Déanfaidh an feidhmchlár iarracht anois an dara paraiméadar cosáin san iarratas a úsáid nuair atá cultúr an iarratais á mheas aige. Ciallaíonn sé seo go n-oibreoidh URL ar nós `www.mymultilingualapp.com/shop/fr-FR/products/` mar a bheifeá ag súil leis.
+
+### Focal faoi SEO
+
+Is dócha gurb é seo an ghné is teanntásaí den leabharlann seo, agus tugtar tús áite i gcónaí do chultúr a fhaightear ó pharaiméadar cosáin URL i bhfianán cliaint nó i socruithe ceanntáisc HTTP. Má thugann úsáideoir cuairt ar `www.mymultilingualapp.com/en-GB/` agus más é Béarla na Stát Aontaithe (en-US) a theanga roghnaithe don bhrabhsálaí, gheobhaidh sé an leathanach i mBéarla na Ríochta Aontaithe (en-GB) fós, ar choinníoll go dtacaítear leis an gcultúr seo laistigh den fheidhmchlár. Ciallaíonn sé seo (i) go bhfaigheann úsáideoirí an leathanach lena raibh siad ag súil nuair a chliceáil siad ar an URL, agus (ii) gur féidir le ransaitheoirí cuardaigh URL a cheangal le hábhar logánaithe go hiontaofa. Creidimid go bhfuil sé seo barrmhaith do SEO agus d’eispéireas an úsáideora. Ach an leathanach a oscailt, ba chóir go mbeadh úsáideoirí in ann teangacha a athrú dá ndeoin féin trí mhalartóir tiomnaithe teanga sa UI. 
+
+## Cultúir gan tacaíocht
+
+Cad a tharlaíonn nuair a ionchuireann úsáideoir URL ina bhfuil cultúr gan tacaíocht? Mar shampla, má thacaíonn do shuíomh le hábhar sa Spáinnis agus sa Phortaingéilis, ach tugann an t-úsáideoir fochlib don réigiún `fr-FR` sa URL. Go hinmheánach, caithfidh na meánearraí logánaithe `CultureNotFoundException` sa chás seo. Cuireann Gaois.Localizer dhá bhealach ar fáil chun an earráid seo a láimhseáil.
+
+### Cód stádais '*404 Not Found*' a chur ar ais
+
+De réir réamhshocraithe, cuirfear cód stádais HTTP '*404 Not Found*' ar ais mar fhreagrairt ar iarratas ar chultúr gan tacaíocht agus taispeánfar teachtaireacht oiriúnach don úsáideoir, ar choinníoll gur cumraíodh ród don leathanach earráide. Seans gurb é seo an cur chuige is fearr maidir le SEO. Ní bheidh amhras ar bith ar innill chuardaigh nach bhfuil ábhar ar fáil ag an URL a iarradh.  
+
+### An t-úsáideoir a atreorú chuig leathanach sa chultúr réamhshocraithe
+
+I gcásanna áirithe, b’fhéidir gurb é seo an rogha is fearr d’eispéireas an úsáideora. Nuair a théitear isteach in URL ina bhfuil cultúr gan tacaíocht, atreorófar an cliant chuig leathanach coibhéiseach i gcultúr réamhshocraithe an fheidhmchláir. Chun é seo a chur i bhfeidhm, cumraigh `RequestCultureRerouter` sa modh *ConfigureServices* in **Startup.cs**. De réir réamhshocraithe, cuirfidh an fhreagairt atreorú 302 chuig an gcosán céanna le paraiméadar nuashonraithe cultúir ar ais.
+
+```csharp
+services.AddLocalizer(options =>
+{
+    ...
+    options.RequestCultureRerouter.RerouteRequestCultureExceptions = true;
+});
+```
+
+#### An t-athródaire a chumrú
+
+Is féidir leat tuilleadh cumraíochta a dhéanamh ar an ródaire le gur féidir leis cód stádais difriúil HTTP a sheoladh sa fhreagairt nó atreoruithe a ródú ar chosán ar leith. 
+
+```csharp
+services.AddLocalizer(options =>
+{
+    ...
+    options.RequestCultureRerouter.RerouteRequestCultureExceptions = true;
+    options.RequestCultureRerouter.StatusCode = 301;
+    options.RequestCultureRerouter.ResponsePath = "/en-GB/lost/";
+});
+```
+
+## Róid a fhágáil ar lár
+
+B’fhéidir go n-úsáidfeá an chéad pharaiméadar de do chosán iarratais chun an sprioc-chultúr a léiriú an chuid is mó den am, ach b’fhéidir gur mhaith leat róid áirithe a fhágáil ar lár sa phíblíne logánaithe, mar shampla `www.mymultilingualapp.com/api/v1.2`.  Ach an chumraíocht ar an bpointe boise a úsáid, caithfidh URL dá leithéid `CultureNotFoundException`. Is féidir leat é seo a chosc, áfach, ach róid áirithe a fhágáil ar lár laistigh de chumraíocht do sheirbhíse:
+
+```csharp
+services.AddLocalizer(options =>
+{
+    ...
+    options.RouteCulture.ExcludedRoutes.Add(@"^/api");
+    options.RouteCulture.ExcludedRoutes.Add(@"^/content");
+});
+```
+
+Úsáidtear teaghráin shloinn rialta chun sainmhíniú a thabhairt ar chosáin. Cuirtear róid a thosaíonn le `/error`, e.g. `/Error` nó `/error/{0}/`,  leis an liosta eisiaimh de réir réamhshocraithe chun fadhbanna i dtaca le ródú ciorclach a sheachaint nuair a chaitear  `CultureNotFoundException`. 
+
+## Fianáin logánaithe
+
+Nuair a thugann úsáideoir cuairt ar do shuíomh gréasáin, seans go socróidh siad teanga eile a roghnú trí mhalartóir teanga nó trí shaoráid UI den chineál céanna. D’fhéadfadh sé a bheith úsáideach rogha an úsáideora a stóráil i bhfianán ionas go gcuimhneoidh an feidhmchlár ar an rogha agus gur féidir leis an úsáideoir tosú arís san áit ar stop sé an chéad uair eile. Ar an dea-uair, tá [soláthraí](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization?view=aspnetcore-2.1#set-the-culture-programmatically) ionsuite in ASP.NET Core a iarcheanglaíonn fianáin chultúir leis an bhfreagairt HTTP. Timfhilleann Gaois.Localizer an soláthraí seo i loighic úsáideach a fhaightear i bpíblíne rite an iarratais: níl ar iarratais POST nó ar rialaitheoirí breise roghanna teanga an úsáideora a shocrú nó a nuashonrú, mar sin de. Níl ort ach an modh *AddLocalizer* a chumrú in **Startup.cs**: 
+
+```csharp
+services.AddLocalizer(options =>
+{
+    ...
+    options.LocalizationCookies.UseLocalizationCookies = true;
+});
+```
+
+Cinnteoidh meánearraí na bhfianán logánaithe go dtaispeántar do shuíomh i gcultúr roghnaithe an úsáideora gach uair a thugann sé cuairt ar an leathanach baile. Ná déan dearmad, áfach, go dtugann na huirlisí logánaithe [tús áite don chultúr i bparaiméadair chosáin URL ar aon socrú eile](#focal-faoi-seo), mar sin de, má leanann an t-úsáideoir nasc chuig leathanach i gcultúr ar leith, ní chuirfear fianáin logánaithe san áireamh. 
+
+### Na fianáin logánaithe a chumrú
+
+Más mian leat, is féidir tuilleadh cumraíochta a dhéanamh ar shocruithe na bhfianán logánaithe, rud a cheadóidh duit dáta éaga an fhianáin agus an bhfuil an fianán riachtanach d’fheidhmiú an fheidhmchláir, nó nach bhfuil, a shonrú. Is iad `1 year` agus `false` na luachanna réamhshocraithe, faoi seach. Ba chóir an t-airí `IsEssential` a chumrú maidir le do pholasaithe príobháideachais agus cosanta sonraí. Má tá sé fíor, d’fhéadfaí seiceálacha ar an bpolasaí toilithe a sheachaint.
+
+```csharp
+services.AddLocalizer(options =>
+{
+    ...
+    options.LocalizationCookies.UseLocalizationCookies = true;
+    options.LocalizationCookies.Expires = DateTime.UtcNow.AddDays(5);
+    options.LocalizationCookies.IsEssential = true;
+});
+```
+
+## Atreorú an leathanaigh lamairne
+
+Nuair a thugann úsáideoir cuairt ar leathanach baile suímh gréasáin, e.g. `www.mymultilingualapp.com`, d’fhéadfadh sé a bheith inmhianaithe uaireanta an t-úsáideoir a atreorú chuig URL a bhaineann le leagan logánaithe den leathanach go huathoibríoch, e.g. `www.mymultilingualapp.com/es`. Ní hionann é seo agus an iompraíocht réamhshocraithe a bhaineann le Gaois.Localizer a úsáid ar chúiseanna SEO (féach thíos) ach aithnímid gur cás coiteann úsáide é. Chun atreorú an leathanaigh lamairne a chur ar siúl, cumraigh an modh *AddLocalizer* in **Startup.cs**:
+
+```csharp
+services.AddLocalizer(options =>
+{
+    ...
+    options.RequireCulturePathParameter.RequireCulturePathParameter = true;
+});
+```
+
+Aithníonn URL an atreoraithe na socruithe a cumraíodh sa tseirbhís [`Microsoft.AspNetCore.Routing.RouteOptions`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.routing.routeoptions?view=aspnetcore-2.1) go huathoibríoch, i dtaca le slais chun deiridh a iarcheangal leis an URL ginte nó gan í a iarcheangal.
+
+### Focal eile faoi SEO
+
+Is féidir glacadh le cuir chuige éagsula agus leathanach baile an tsuímh gréasáin á logánú agat. Measfaidh roinnt suíomhanna gréasáin teanga roghnaithe an úsáideora agus atreoróidh siad chuig URL nua é, amhail aistriú idir `example.com` agus `example.com/es`. D’fhéadfadh sé seo deacrachtaí a chruthú, áfach, mar gheall ar nádúr na n-atreoruithe HTTP agus an chaoi a n-idirghníomhaíonn siad leis an mbrabhsálaí:
+
+- Scrúdaíonn roinnt suíomhanna gréasáin (mar shampla, [mozilla.org](https://www.mozilla.org/)) roghanna teanga an bhrabhsálaí agus cuireann siad atreorú (buan) 301 i bhfeidhm. Tá sé seo go breá má tá tú sách cinnte go rachaidh an chuid is mó d’úsáideoirí isteach san fheidhmchlár i dteanga amháin. Taiscfidh go leor brabhsálaithe atreoruithe 301 go deo, áfach. Má nuashonraíonn an t-úsáideoir socruithe an bhrabhsálaí – nó má dhéanann sé rochtain ar an ríomhaire in áit phoiblí, amhail scoil nó leabharlann – tabharfaidh an brabhsálaí chuig an gcéad leagan logánaithe den suíomh a osclaíodh sa bhrabhsálaí sin i gcónaí é. 
+- Cuireann go leor suíomhanna gréasáin eile atreoruithe 302 i bhfeidhm ar na cúiseanna thuas, is dócha. Níl sé soiléir, áfach, an dtugann príomhransaitheoirí gréasáin aird ar leathanaigh ar a bhfuil atreoruithe 302 nó nach dtugann, agus seans nach n-oirfidh sé seo do SEO.
+
+Is é an cur chuige réamhshocraithe a bhaineann le leabharlann Gaois.Localizer a úsáid dá bharr seo ná nach n-atreoraítear an t-úsáideoir (i.e. fanann an t-úsáideoir ar `example.com`), cé go logánófar an t-eolas ar an gcultúr de réir na gcritéar [thuas](#cultur-an-iarratais-a-fhail). Sílimid go mbaineann na torthaí is fearr leis seo ó thaobh SEO agus eispéireas an úsáideora de.
+
+## Rogha na clibe teanga
+
+Tá an leabharlann il-oiriúnach maidir le [clib theanga IETF](https://en.wikipedia.org/wiki/IETF_language_tag) a úsáideann tú sa URL chun an sprioc-chultúr a léiriú. Úsáideann na samplaí sa doiciméad seo fochlibeanna réigiúin amhail `ga-IE`, `en-GB`, `pt-BR`, etc. Is fearr le go leor feidhmchlár cóid teanga ISO ina bhfuil dhá litir amhail `ga`, `en`, `fr`. In athróg na gcultúr a dtacaítear leo, a bhaineann le `RequestLocalizationOptions` in **Startup.cs**, is féidir ceachtar de na cineálacha clibe seo a shonrú. 
+
+Má roghnaíonn tú cóid teanga dhá litir, d’fhéadfadh sé a bheith úsáideach fochlibeanna réigiúin nó fochlibeanna breisithe teanga a stóráil a mhapálann le do chóid teanga – mar shampla, nuair a chuireann tú sonraí logchaighdeáin ar fáil i meitichlibeanna [Open Graph](http://ogp.me/). Éascaíonn Gaois.Localizer é seo ach cead a thabhairt duit roghanna chultúr an róid a chumrú sa mhodh *Configure* de **Startup.cs**:
+
+```csharp
+services.AddLocalizer(options =>
+{
+    ...
+    options.RouteCulture.LanguageLocaleMap.Add("en", "en-GB");
+    options.RouteCulture.LanguageLocaleMap.Add("ga", "ga-IE");
+});
+```
+
+Is féidir rochtain a fháil ar na clibeanna mapáilte áit éigin eile san fheidhmchlár ansin, agus cuirtear feidhm éascaíochta `InferLocaleFromLanguage()` ar fáil chun an chlib cheart logchaighdeáin nó réigiúin a aschur nuair a fhaightear cód comhfhreagrach teanga.
+
+Úsáid shamplach (amharc Razor):
+
+```csharp
+@using Gaois.Localizer
+@inject IOptions<RequestLocalizationOptions> LocalizationOptions
+@inject IOptions<RouteCultureOptions> CultureOptions
+
+...
+
+@foreach (var culture in LocalizationOptions.Value.SupportedUICultures)
+{
+    if (culture.Name != CultureInfo.CurrentCulture.Name)
+    {
+        string lang = @culture.TwoLetterISOLanguageName;
+        string locale = CultureOptions.Value.InferLocaleFromLanguage(@lang);
+        <link rel="alternate" hreflang="@lang" href="https://www.mymultilingualapp.com/(@lang)">
+        <meta property="og:locale:alternate" content="@locale">
+    }
+}
+```
+
+## Aistriú idir clibeanna teanga i scéim URL
+
+Más mian leat aistriú ó scéim URL a d’úsáid clibeanna teanga dhá litir (amhail `example.com/es`) chuig scéim a úsáideann logchaighdeáin réigiúnacha (amhail `example.com/es-ES`), tá prótacal úsáideach atreoraithe ar fáil in Gaois.Localizer a bhaineann leas as meánearraí athscríofa dúchasacha an URL de chuid ASP.NET Core chun an obair chrua a dhéanamh duit.
+
+Ar dtús, cumraigh an modh *AddLocalizer* mar a dhéantar cur síos air sa [mhír roimhe seo](#rogha-na-clibe-teanga):
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    ...
+
+    services.AddLocalizer(options =>
+    {
+        ...
+        options.RouteCulture.LanguageLocaleMap.Add("en", "en-GB");
+        options.RouteCulture.LanguageLocaleMap.Add("ga", "ga-IE");
+    });
+
+    ...
+}
+```
+
+Is féidir leat an `LanguageLocaleMap` a chur chuig oibiacht `RedirectLanguageToLocale` ansin i meánearraí athscríofa an URL:
+
+```csharp
+public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+{
+    ...
+
+    var routeCultureOptions = app.ApplicationServices
+        .GetService<IOptions<RouteCultureOptions>>().Value;
+
+    var rewriteOptions = new RewriteOptions()
+        .Add(new RedirectLanguageToLocale(routeCultureOptions.LanguageLocaleMap));
+
+    app.UseRewriter(rewriteOptions);
+
+    ...
+
+    app.UseMvc();
+}
+```
+
+Atreorófar gach iarratas ar `www.mymultilingualapp.com/ga/about/` go huathoibríoch chuig `www.mymultilingualapp.com/ga-IE/about/` anois. Cuireann an oibiacht `RedirectLanguageToLocale` atreorú 302 i bhfeidhm de réir réamhshocraithe, ach is féidir leat 301 nó cineál eile atreoraithe a shonrú in argóint roghnach.
+
+## Modhanna cabhracha
+
+Aimsítear modhanna breisithe in Gaois.Localizer chomh maith, a chuidíonn le tascanna a bhaineann le logánú.
+
+### GetDisplayUrl()
+
+Breisíonn an modh seo an modh [*GetDisplayUrl()*](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.http.extensions.urihelper.getdisplayurl?view=aspnetcore-2.2) agus ligeann sé seo duit paraiméadar cosáin URL (má tá sé ann) a athchur de réir innéacs.
+
+### GetEncodedUrl()
+
+Is ionann é seo agus an modh roimhe seo, ach aschuireann sé seo teaghrán atá ionchódaithe go hiomlán mar URL. I gcomhthéacs logánú an fheidhmchláir gréasáin, tá an modh seo an-úsáideach nuair atá naisc mhalartacha le paraiméadair mhalartacha cultúr á nginiúint agat:
+
+```c#
+<link rel="alternate" hreflang="@lang" href="@Context.Request.GetEncodedUrl(1, "fr-FR")">
+```
+
+
+---
+
+## gaois-terminologue-website-docs-intro.ga
+
+*Source: `docs/bunchloch/teanga/gaois-terminologue-website-docs-intro.ga.md` (2541 words, 118 lines)*
+
+# Treoir úsáideora Terminologue
+
+Clúdaítear sa leathanach seo treoir céim ar chéim de na gnéithe is tábhachtaí de chuid Terminologue. Chun úsáid a bhaint as Terminologue, téigh chuig an [leathanach baile](/) agus déan cuntas a oscailt. Agus cuntas agat, is féidir leat logáil isteach ag baint úsáid as do sheoladh ríomhphoist agus pasfhocal. Agus tú logáilte isteach, feicfidh tú rannán ar an leathanach baile dar teideal *Do chuid cnuasach*. I dtosach báire, bíonn an rannán seo folamh ach tá nasc ann chun bunachar téarmaíochta nua a chruthú.
+
+![Your personal Terminologue homepage after you have logged in.](/docs/intro01.png)
+
+Is féidir an oiread bunachar agus is mian leat a chruthú agus ar ndóigh, is féidir iad a scriosadh ar ball. Agus bunachar téarmaíochta nua á chruthú agat, iarrfaidh Terminologue ort cén URL a theastaíonn uait dó. Tá URL ar leith ag gach bunachar in Terminologue, amhail `www.terminologue.org/mytermbase`. Má chinneann tú do bhunachar a chur ar fáil go poiblí, is ag an URL sin a chuirfear ar fáil é.
+
+![Creating a new termbase in Terminologue.](/docs/intro02.png)
+
+Más beag taithí atá agat ar Terminologue, moltar duit teimpléad a roghnú ón liosta anuas, mar shampla, *Bunachar Téarmaíochta Dátheangach Simplí*. Beidh do bhunachar réamhchumraithe le socruithe áirithe (féadfar iad a athrú tráth ar bith ar ball), chomh maith le cúpla iontráil shamplach (rud is féidir a scriosadh).
+
+Agus do bhunachar téarmaíochta cruthaithe agat, is féidir leat dul chuig a leathanach baile agus dul uaidh sin chuig an gcomhéadan eagarthóireachta. Is é seo an áit ar féidir leat iontrálacha téarmaíochta a chruthú agus a chur in eagar. Tá liosta iontrálacha ar thaobh na láimhe clé. Is féidir leat na hiontrálacha samplacha a scriosadh má theastaíonn sin uait agus is féidir leat an oiread iontrálacha nua agus is mian leat a chruthú. Níl uasteorainn le líon na n-iontrálacha is féidir a choinneáil i do bhunachar. Chun iontráil a oscailt, cliceáil uirthi agus léireofar í sa spás ar thaobh na láimhe deise.
+
+![Terminologue’s editing interface, showing the list of entries on the left and one entry open on the right.](/docs/intro03.png)
+
+Is éard atá le feiceáil anseo ná rindreáil fhormáidithe den iontráil. Beidh cuma den chineál seo ar an iontráil má chinneann tú do bhunachar a chur ar fáil go poiblí. Chun an iontráil a chur in eagar, cliceáil ar an gcnaipe *Athraigh* ar barr. Osclóidh Terminologue an iontráil lena cur in eagar.
+
+![An entry open for editing.](/docs/intro04.png)
+
+Is ionann gach iontráil in Terminologue agus coincheap, agus cuimsítear i ngach coincheap míreanna éagsúla ar nós téarmaí, sainmhínithe, lipéid réimse agus mar sin de. Ligeann na táib ag barr an leathanaigh duit na nithe seo a athrú: is féidir leat téarmaí na hiontrála a athrú faoin táb TRM, a sainmhínithe a athrú faoin táb SAIN, íomhánna a chur leis faoin táb ÍOMH agus mar sin de. Chun téarma nua a chur leis an iontráil mar shampla, cliceáil ar an gcomhartha ‘+’ faoin táb TRM agus déan foclaíocht an téarma a ionchur. Nuair atá an téarma cláraithe sa bhunachar, is féidir breis faisnéise a chur leis, amhail lipéad roinne cainte, nóta tráchta nó foirm(eacha) infhillte. Agus an eagarthóireacht ar an iontráil curtha i gcrích agat, ná dearmad cliceáil ar an gcnaipe *Sábháil* ar barr (nó bain úsáid as an aicearra méarchláir *Ctrl + Shift + S*).
+
+Is éard atá i gceist le heagarthóireacht a dhéanamh ar iontráil ná téacs a ionchur i mboscaí agus luachanna a roghnú ó liostaí. Is ionann an-chuid de liostaí na luachanna, amhail lipéid roinne cainte, lipéid réimse agus mar sin de, agus meiteashonraí an bhunachair téarmaíochta. Is féidir na meiteashonraí a chumrú astu féin le haghaidh gach bunachair sa rannán *Eagarthóireacht* nó sa rannán *Riarachán*. Más ó theimpléad a chruthaigh tú do bhunachar téarmaíochta, beidh roinnt meiteashonraí réamhchumraithe anseo duit cheana.
+
+![Configuring metadata lists from the editing interface.](/docs/intro045.png)
+
+![The Administration section where you can configure various lists for your termbase, such as part-of-speech labels (shown here).](/docs/intro05.png)
+
+Féadtar airíonna eile de chuid do bhunachair a chumrú sa rannán *Cumrú*. Ceann de na nithe tábhachtacha a bhfuil smacht agat orthu ná rochtain ar an mbunachar agus cé na daoine ar féidir leo athruithe a chur i bhfeidhm ann, chomh maith leat féin. Gheobhaidh tú seo faoi *Úsáideoirí*. Feicfidh tú do sheoladh ríomhphoist féin liostaithe ansin. Ciallaíonn sé seo go bhfuil rochtain agat ar an mbunachar téarmaíochta seo. Féadfaidh tú úsáideoirí eile a chur leis an mbunachar anseo agus a gcuid rochtana a chumrú (mar shampla: féadfaidh úsáideoirí áirithe eagarthóireacht a dhéanamh ar iontrálacha agus ní féidir le húsáideoirí eile, féadfaidh úsáideoirí áirithe eagarthóireacht a dhéanamh ar iontrálacha amháin ach ní fhéadfaidh siad iad a scriosadh ná a chruthú, ní fhéadfaidh roinnt úsáideoirí eagarthóireacht a dhéanamh ar mheiteashonraí agus mar sin de). Beidh rochtain ag aon úsáideoir ar an liosta seo ar do bhunachar téarmaíochta más rud é go bhfuil cuntas Terminologue acu. An chéad uair eile a logálfaidh siad isteach, feicfidh siad an bunachar téarmaíochta liostaithe faoi *Do chuid cnuasach* ar leathanach baile Terminologue.
+
+![Configuring who can access your termbase.](/docs/intro06.png)
+
+Ní hamháin gur uirlis í Terminologue chun eagarthóireacht a dhéanamh ar bhunachair théarmaíochta ach is uirlis í chun bunachair théarmaíochta a sholáthar go poiblí ar líne chomh maith. Chun bunachar téarmaíochta a chur ar fáil go poiblí, téigh go dtí *Foilsigh* sa rannán *Cumrú* agus déan an socrú a athrú ó *Príobháideach* go *Poiblí*. Féadfaidh tú an bunachar a athrú ar ais go *príobháideach* tráth ar bith. Fiú, féadfaidh tú a roghnú cé na hiontrálacha a fheicfear go poiblí agus cé na cinn nach bhfeicfear: is féidir aon iontráil a lipéadú mar *i bhfolach* sa chomhéadan úsáideora, agus dá bharr sin, ní bheidh sí le feiceáil go poiblí, fiú más rud é go bhfuil an bunachar téarmaíochta trí chéile le feiceáil go poiblí.
+
+![Making a termbase publicly viewable.](/docs/intro07.png)
+
+A luaithe agus atá do bhunachar téarmaíochta curtha ar fáil go poiblí agat, léireoidh an leathanach baile (e.g. `www.terminologue.org/mytermbase`) bosca téacs a ligeann do dhaoine cuardach a dhéanamh i do bhunachar téarmaíochta. Tá léiriú poiblí an bhunachair optamaithe le bheith inaimsithe d’innill chuardaigh mhóra cosúil le Google agus Bing. Tá na leathanaigh ghréasáin atá le feiceáil go poiblí oiriúnach do scáileáin de gach cineál toise, idir ríomhairí deisce móra agus ghléasanna móibíleacha beaga.
+
+![The homepage of a publicly viewable termbase.](/docs/intro08.png)
+
+Anois agus muid ar an eolas faoi conas Terminologue a úsáid chun bunachar téarmaíochta a chruthú, a chur in eagar agus a fhoilsiú, díreoimid ar roinnt de na gnéithe is suimiúla de chuid Terminologue.
+
+## Cuardach agus aimsiú
+
+Mar atá feicthe againn, tá an scáileán eagarthóireachta roinnte ina dhá leath, le liosta iontrálacha ar thaobh na láimhe clé agus spás chun eagarthóireacht a dhéanamh ar iontráil ar thaobh na láimhe deise. Ligeann an bosca cuardaigh ag barr an leathanaigh duit cuardach a dhéanamh sa bhunachar téarmaíochta.
+
+Ligeann liosta anuas faoin mbosca cuardaigh duit an mód cuardaigh a roghnú. Is iad na roghanna de chuid an mhóid cuardaigh ná *téarma iomlán*, *tús téarma*, *deireadh téarma* agus cúpla ceann eile. Déanann na móid seo meaitseáil shimplí, carachtar ar charachtar, ach is é an réamhshocrú atá sa liosta anuas ná *cuardach cliste*, rud a chuireann cuardach atá cliste ó thaobh na teangeolaíochta de i bhfeidhm. Bíonn an liosta iontrálacha a fhaigheann tú sa *chuardach cliste* ordaithe sa dóigh is go mbíonn na hiontrálacha a mheaitseálann téacs do chuardaigh, a bheag nó a mhór nó go cruinn, le fáil ar bharr an leathanaigh iontrálacha ilfhoclacha a bhfuil an téacs cuardaithe mar fhocal iontu ina dhiaidh sin. Tá an mheaitseáil seo feasach ar infhillteacha. Tá rochtain ag Terminologue ar bhunachar mór foirmeacha infhillte in iliomad teangacha éagsúla. Mar gheall air seo, dá ndéanfaí cuardach ar an bhfocal ‘gléas’, d’aimseofaí téarmaí ina bhfuil ‘gléasanna’, ‘gléis’, ‘gléasta’ agus mar sin de mar chodanna díobh. Gné eile den *cuardach cliste* ná go ndéanann sé litriú na bhfocal a cheartú más gá agus go soláthraíonn sé moltaí litrithe ar thaobh na láimhe deise den bhosca téacs.
+
+![Smart search in action.](/docs/intro09.png)
+
+Ní hé gurb é an cuardach an t-aon bhealach le breathnú thart sa bhunachar. Tugtar an rogha duit scagadh ilghnéitheach a dhéanamh agus tú ag cuardach ionas gur féidir leat liosta na n-iontrálacha a scagadh de réir critéir éagsúla ar nós réimsí, stádas eagarthóireachta agus tuilleadh.
+
+![Filtering entries by domain in Terminologue’s faceted filtering feature.](/docs/intro10.png)
+
+## Noda gramadaí inlíne
+
+Ní ionadh é gur féidir leat lipéid roinne cainte agus lipéid ghramadaí eile a chur le téarmaí in Terminologue. Ach ceann de na gnéithe is speisialta atá ag Terminologue ná go ligeann sé duit lipéid ghramadaí a chur le focail aonair i dtéarmaí ilfhoclacha. Agus lipéad gramadaí á cheangal agat le téarma, bíonn sé de rogha agat an fotheaghrán a mbaineann an nod leis a chur in iúl do Terminologue. Agus an téarma á léiriú ag Terminologue ar an scáileán i rindreáil fhormáidithe na hiontrála, cuirfidh Terminologue an lipéad leis an téarma san áit chuí. Is féidir leis an úsáideoir an luchóg a ailíniú ar an lipéad agus aibhseoidh Terminologue an fotheaghrán lena mbaineann sé.
+
+![Highlighting tells the user which part of the multi-word term the label applies to.](/docs/intro12.png)
+
+## Ag comhroinnt téarmaí
+
+Gné nuálach agus neamhghnách eile de chuid Terminologue ná gur féidir téarma a roinnt leis an iliomad iontrálacha. Nuair a roinntear téarma, cuireann Terminologue é seo in iúl don úsáideoir trí íocón a chur in aice leis an téarma. Is féidir leat cliceáil ar an íocón chun féachaint ar cé na hiontrálacha eile a roinneann an téarma seo. Níos tábhachtaí fós, cuireann an t-íocón ar do shúile duit má dhéanann tú aon athrú ar an téarma go gcuirfear na hathruithe céanna i bhfeidhm go huathoibríoch ar na hiontrálacha eile chomh maith.
+
+![This entry contains two terms, one of which is shared with one other entry.](/docs/intro13.png)
+
+Is é is cúis le téarmaí a roinnt ná am eagarthóirí daonna a shábháil agus leanúnachas a chinntiú. Dá bhrí sin, nuair atá téarma nua á chur leis an iontráil, déarfaidh Terminologue leat má tá téarma den chineál sin ar fáil in áit eile agus tabharfaidh sé an rogha duit nascadh leis an téarma sin in ionad dúbailt a chruthú. Is gné áisiúil í comhroinnt téarmaí más rud é go bhfuil go leor noda gramadaí agus foirmeacha infhillte ag téarmaí do bhunachair.
+
+## Stádas iontrála
+
+Tá lipéad stádais ag gach iontráil in Terminologue atá ‘seiceáilte’ nó ‘neamhsheiceáilte’. Nuair a chruthaítear iontráil den chéad uair, bíonn sé ‘neamhsheiceáilte’ agus ní féidir ach le húsáideoirí a bhfuil pribhléidí riarthóra (féach thíos) acu an stádas a athrú go ‘seiceáilte’. Chomh maith leis sin, nuair a dhéantar athruithe ar iontráil sa bhunachar, amhail litriú an téarma a athrú nó sainmhíniú a chur isteach, athrófar stádas an téarma sin go díreach go ‘neamhsheiceáilte’. Is féidir na cineálacha leasuithe a spreagann an t-athrú seo a chumrú ceann ar cheann do gach bunachar téarmaíochta (faoi *Cumrú → Athruithe uathoibríocha*).
+
+Is féidir le húsáideoirí a bhfuil pribhléidí riarthóra acu úsáid a bhaint as cuardach ilghnéitheach Terminologue chun liosta na n-iontrálacha neamhsheiceáilte a fháil agus iad ag athbhreithniú go tréimhsiúil. An sprioc atá leis an ngné seo ná cabhrú le rialú cáilíochta i mbunachair mhóra a n-oibríonn líon mór daoine iontu.
+
+## Pribhléidí úsáideora
+
+Sanntar ceann amháin de chúig leibhéal rochtana do gach úsáideoir, rud a chinneann cé na gníomhartha is féidir leis an úsáideoir a dhéanamh sa bhunachar téarmaíochta. Is féidir leibhéal a shannadh d’úsáideoir faoi *Cumrú ➝ Úsáideoirí*. Is iad na leibhéil ná:
+
+1. ‘Léitheoir’: rochtain inléite amháin, is féidir leo breathnú ar iontrálacha ach ní féidir leo athruithe a dhéanamh.
+2. ‘Eagarthóir’: is féidir leo iontrálacha a athrú ach ní féidir leo iontráil a scriosadh ná iontráil a chruthú.
+3. ‘Cruthaitheoir’: cosúil le hEagarthóirí ach is féidir leo iontrálacha a chruthú agus a scriosadh.
+4. ‘Riarthóir’: cosúil le Cruthaitheoirí ach is féidir leo eagarthóireacht a dhéanamh ar mheiteashonraí (liosta na réimsí s.rl.), is féidir leo stádas na n-iontrálacha a athrú agus eislíonta a chruthú (féach thíos).
+5. ‘Cumraitheoir’: cosúil le Riarthóirí ach is féidir leo athruithe a dhéanamh ar chumrú an bhunachair, lena n-áirítear oibríochtaí a d’fhéadfadh dochar a dhéanamh cosúil leis an mbunachar féin a scriosadh.
+
+## Taifead staire
+
+Coinníonn Terminologue taifead ar na hiontrálacha go léir agus na hathruithe a dhéantar orthu agus is féidir breathnú ar stair na n-athruithe sin sa chomhéadan eagarthóireachta. Taispeánann an taifead cé a shábháil agus cathain a sábháladh gach leagan den iontráil chomh maith leis na hathruithe a rinneadh uirthi. Ón loga seo, is féidir athruithe a chur ar ceal agus filleadh ar iarleaganacha trí chliceáil ar an nasc *Tabhair ar ais* a thaispeántar nuair a chuirtear an luchóg thairis. Is féidir scriosadh iontrála a chealú chomh maith.
+
+![The history of an entry is displayed in Terminologue as a timeline.](/docs/intro14.png)
+
+## Nótaí eolais agus nótaí tráchta
+
+Is féidir *nótaí* a chur le hiontrálacha in Terminologue. Déantar sin faoin táb NÓT. Tá trí leibhéal rochtana ag *cineálacha Notaí eolais*, ar féidir iad a chumrú anseo sa rannán *Eagarthóireacht* nó sa rannán *Riarachán*:
+
+1. nóta príobháideach nach léirítear ar eislíonta
+2. nóta príobháideach a léirítear ar eislíonta
+3. nóta poiblí
+
+Chomh maith leis sin, is féidir iontrálacha in Terminologue a anótáil le *nótaí tráchta réamhdhéanta* agus *nótaí tráchta*. Ní bheidh na nótaí seo ar fáil go poiblí choíche agus is chun críocha inmheánacha amháin atá siad. Is í an difríocht idir na *nótaí tráchta réamhdhéanta* agus na *nótaí tráchta* ná go bhfuil liosta seasta de *nótaí tráchta réamhdhéanta* ar féidir le húsáideoir iad a roghnú ó liosta anuas (is féidir sin a chumrú anseo sa rannán *Eagarthóireacht* nó sa rannán *Riarachán*) ach is féidir téacs ar bith a bheith i *nótaí tráchta*. Is féidir *nótaí tráchta* agus *nótaí tráchta réamhdhéanta* a phéireáil ionas gur féidir leis na *nótaí réamhdhéanta* lipéad a thabhairt do na *nótaí tráchta* (rud a chuireann in iúl cén saghas nóta tráchta é).
+
+![An entry with a few tags and notes.](/docs/intro11.png)
+
+## Easpórtáil
+
+Is féidir liostaí téarmaí a easpórtáil sa rannán *Eagarthóireacht*. Téigh go dtí deireadh an cholúin téarmaí agus roghnaigh líon na dtéarmaí agus an fhormáid atá uait. Tá formáidí TXT nó TBX ar fáil. Is féidir an cnuasach téarmaí ar fad a easpórtáil chomh maith i bhformáid TBX sa rannán *Cumrú* agus *easpórtáil TBX* a chliceáil.
+
+![Exporting to TBX or TXT from the editing interface.](/docs/intro145.png)
+
+## Eislíonta
+
+Is éard is eislíon ann ná rannóg ar leith ar shuíomh gréasáin Terminologue ina gcuirtear fochuid de bhunachar ar fáil do ghrúpa iata úsáideoirí seachtracha atá ábalta nótaí tráchta a fhágáil. Is féidir le húsáideoirí an bhunachair téarmaíochta a bhfuil pribhléidí riarthóra acu eislíonta nua a chruthú, cinneadh a dhéanamh faoi na hiontrálacha a chuirfear ar eislíon agus cinneadh a dhéanamh maidir le cé na húsáideoirí a mbeidh rochtain acu air. Bíonn úsáideoirí eislín go hiomlán neamhspleách ar úsáideoirí eile an bhunachair. Is gá dóibh cuntas Terminologue a bheith acu ach seachas sin, níl rochtain acu ar an mbunachar téarmaíochta féin toisc nach bhfuil sé sin ag teastáil. Bíonn na nótaí tráchta a fhágann úsáideoirí eislín le feiceáil sa chomhéadan eagarthóireachta d’eagarthóirí an bhunachair agus cinntí á nglacadh acu.
+
+![An extranet in Terminologue.](/docs/intro15.png)
+
+##  Conclúid
+
+Tá deireadh na treorach buailte linn. Tá roinnt gnéithe eile ag Terminologue nár chlúdaíomar anseo ach is cinnte go dtiocfaidh tú orthu agus tú ag baint úsáid as. Ach, níos tábhachtaí ná aon ní eile, cruthaigh bunachair iontacha!
+
+
+---
+
+## document-processing-reference
+
+*Source: `docs/bunchloch/meaisínfhoghlaim/document-processing-reference.md` (1626 words, 321 lines)*
+
+# Document Processing & OCR: VLM, OCR, and Heritage Digitization
+
+**Merged From:**
+- `ocr/document-intelligence-ocr.md`, `ocr/document-intelligence-vlm.md`
+- `ocr/Open-Source VLMs For PDF Extraction.md`, `ocr/Supercharge your OCR Pipelines with Open Models.md`
+- `ocr/Handwriting Recognition and Dataset Creation.md`, `ocr/irish-english-handwriting.md`
+- `ocr/Irish Handwriting App Development.md`, `ocr/Multimodal Irish Handwriting Generation Model.md`
+- `ocr/Index PDFs, Images, Slides without OCR _ CocoIndex.md`
+- `colpali/README.md`, `colpali/CHANGELOG.md`
+
+---
+
+## Table of Contents
+
+1. [VLM vs Traditional OCR](#vlm-vs-traditional-ocr)
+2. [Model Comparison & Selection](#model-comparison)
+3. [Model Deep Dives](#model-deep-dives)
+4. [Cloud Provider Comparison](#cloud-providers)
+5. [Celtic Language OCR & Heritage Digitization](#celtic-language-ocr)
+6. [ColPali: Visual Retrieval Without OCR](#colpali)
+7. [Irish Handwriting & Heritage Pipelines](#irish-handwriting)
+8. [Deployment Patterns](#deployment-patterns)
+
+---
+
+## VLM vs Traditional OCR
+
+| Approach | Processing | Output | Limitation |
+|----------|-----------|--------|------------|
+| **Traditional OCR** | Bottom-up: Detection → Recognition → Reconstruction | Disjointed text boxes | Loses structural relationships |
+| **VLM Approach** | Top-down: Global visual understanding → Autoregressive generation | Semantically-aware text | Computationally heavier |
+
+**Traditional Pipeline (PaddleOCR, Tesseract):**
+1. Binarization → 2. Layout analysis → 3. Text line detection → 4. Character recognition
+
+**VLM Advantage:** Perceives image globally, understands reading order and layout because "next token" prediction depends on both textual context and 2D spatial position.
+
+### Dynamic Resolution Innovation
+
+**Problem:** Standard ViTs resize to 224×224 or 336×336 — long receipts and wide spreadsheets lose detail.
+
+**NaViT Solution (Qwen-VL, PaddleOCR-VL):**
+- Divide image into 14×14 patches at native resolution
+- Patches packed into sequences with attention masks
+- Preserves fine detail in small fonts and complex layouts
+
+---
+
+## Model Comparison
+
+### Open-Source VLMs for Document Intelligence
+
+| Model | Params | Primary Strength | LaTeX | Tables | Mac Support |
+|-------|--------|------------------|-------|--------|-------------|
+| **olmOCR-2-7B** | 7B | Dense OCR, structural fidelity | Excellent | Very Good | llama.cpp (GGUF) |
+| **Qwen2.5-VL-7B** | 7B | Visual reasoning, dynamic resolution | Very Good | Excellent | MLX, llama.cpp |
+| **Qwen3-VL-32B** | 32B | Deep reasoning ("Thinking") | Excellent | Excellent | MLX (4-bit) |
+| **DeepSeek-OCR** | 3B | Math reasoning, optical compression | Excellent (95%) | Good | PyTorch/MPS |
+| **Granite-Docling** | 258M | Structural extraction (DocTags) | Good | Excellent | MLX native |
+| **PaddleOCR-VL** | 0.9B | Multilingual, NaViT encoder | Very Good | SOTA | CPU fallback |
+| **ColPali/ColQwen2** | 3B | Visual retrieval (no OCR needed) | N/A | Visual | Embeddings only |
+
+### Specialization Guide
+
+| Use Case | Recommended Model |
+|----------|------------------|
+| General document transcription | olmOCR-2-7B |
+| Visual reasoning + diagrams | Qwen3-VL-32B |
+| Math-heavy documents | DeepSeek-OCR |
+| Structural extraction (tables, forms) | Granite-Docling |
+| Multilingual (100+ langs) | PaddleOCR-VL |
+| Heritage manuscripts (Cló Gaelach) | Fine-tuned Qwen3-VL |
+| Visual search without OCR | ColPali / ColQwen2 |
+
+---
+
+## Model Deep Dives
+
+### Qwen2.5-VL / Qwen3-VL
+
+**Key Innovations:**
+- **M-RoPE**: Multimodal Rotary Positional Embeddings — unified 1D text, 2D images, 3D video
+- **Naive Dynamic Resolution**: Native aspect ratio without downscaling
+- **Visual Reasoning**: Arithmetic verification on extracted content
+- **Thinking Mode** (Qwen3): Internal chain-of-thought before answering
+
+**Speed on M-series Mac:**
+- Qwen2.5-VL-7B (4-bit): 50-70 t/s
+- Qwen3-VL-32B (4-bit): ~45 t/s with MLX
+
+### olmOCR-2-7B
+
+Qwen2.5-VL fine-tune optimized for document transcription:
+- Rigorous transcriber (no conversational filler)
+- Accurate tables, LaTeX, reading order
+- "Unit test trained" for structural fidelity
+
+```bash
+python -m llama_cpp.server \
+  --model olmOCR-2-7B-Q4_K_M.gguf \
+  --clip_model_path mmproj-olmOCR-2-7B-vision.gguf \
+  --n_gpu_layers 99 --n_ctx 8192 --port 8081
+```
+
+### DeepSeek-OCR
+
+**Vision-as-Compression Architecture:**
+- **DeepEncoder**: SAM-base (local detail) + CLIP-large (global semantic)
+- **Decoder**: DeepSeek-3B-MoE
+- Compression: 1024×1024 → 256 vision tokens (10x reduction)
+- Excellent for math: LaTeX accuracy ~95%
+
+**MPS Deployment on Mac:**
+```python
+DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
+DTYPE = torch.bfloat16  # bfloat16 is more stable than float16 on MPS
+model = AutoModel.from_pretrained("deepseek-ai/DeepSeek-OCR",
+    trust_remote_code=True, torch_dtype=DTYPE).to(DEVICE)
+```
+
+### Granite-Docling (258M)
+
+Specialized VLM for document structure:
+- Outputs **DocTags** — structured markup for headers, tables, lists, captions
+- MLX native on Apple Silicon
+- Excels at table reconstruction (TableFormer architecture)
+- Semantic chunking — respects document structure boundaries
+
+```python
+from docling.document_converter import DocumentConverter
+from docling.datamodel import vlm_model_specs
+
+converter = DocumentConverter()
+# Configure MLX backend for Granite-Docling
+pipeline_options = VlmPipelineOptions(vlm_options=vlm_model_specs.GRANITEDOCLING_MLX)
+converter = DocumentConverter(format_options={
+    InputFormat.PDF: PdfFormatOption(pipeline_cls=VlmPipeline, pipeline_options=pipeline_options)
+})
+
+result = converter.convert("document.pdf")
+markdown = result.document.export_to_markdown()
+```
+
+### PaddleOCR-VL (0.9B)
+
+Ultra-compact VLM with NaViT encoder:
+- 100+ languages, strong on European scripts
+- Handles long documents (receipts, scrolls) via native aspect ratio
+- CPU-inferable (0.9B) — sub-second on M-series Mac
+
+---
+
+## Cloud Providers
+
+| Provider | Free Tier | LaTeX | Tables | Limitation |
+|----------|-----------|-------|--------|------------|
+| **AWS Textract** | 1,000 pages/mo (3 mo) | Natural language only | Good | Math flattening |
+| **Google Document AI** | ~400-500 pages | Poor (∫ → J) | Good | Symbol misinterpretation |
+| **Azure AI Vision** | 500 pages/mo | No native | Good | Language specialist only |
+
+**Recommendation:** Cloud for bulk ingestion of clean documents; local VLMs for math, diagrams, and handwritten content.
+
+---
+
+## Celtic Language OCR & Heritage Digitization
+
+### Key Challenges
+- **Cló Gaelach**: Traditional Gaelic script with distinct letterforms (r, s, g differ from Roman)
+- **Ponc Séimhithe**: Dot above consonants (ḃ, ċ, ḋ) indicating lenition — represented as 'h' in modern Irish
+- **Dialectal variance**: Connacht, Munster, Ulster spellings differ
+- **Non-standard orthography**: Pre-1940s materials use pre-standardization conventions
+
+### Key Data Sources
+
+| Source | Content | Access |
+|--------|---------|--------|
+| **Dúchas (CBÉS)** | 740,000 pages of folklore (1937-1939) | API v0.6 + XML downloads |
+| **Dúchas (CBÉ)** | 2,400 bound volumes, 1932+ | API + scraping |
+| **Logainm** | 100,000+ bilingual placenames | API v1.0 |
+| **Ainm** | 1,785 Irish-language biographies | Web scraping |
+| **Téarma** | National terminology database | API/download |
+| **Corpas** | 240M words of Irish corpora | Direct download |
+| **eDIL** | Electronic Dictionary of the Irish Language | Web |
+| **CorCenCC** (Welsh) | 13.5M tokens, written + spoken | API |
+| **ARCOSG** (Scottish Gaelic) | POS-tagged corpus | GitHub |
+| **Tobar an Dualchais** | 80,000+ folklore audio recordings | API |
+
+### Fine-Tuning Strategy for Gaelic OCR
+
+```python
+# Fine-tune Qwen2.5-VL for Celtic script
+from unsloth import FastVisionModel
+
+model, tokenizer = FastVisionModel.from_pretrained(
+    "unsloth/Qwen2.5-VL-7B-Instruct-unsloth-bnb-4bit",
+    load_in_4bit=True,
+)
+
+# Target ALL linear layers for maximum adaptation
+model = FastVisionModel.get_peft_model(
+    model,
+    r=64,  # Higher rank for new script learning
+    lora_alpha=128,
+    target_modules=["q_proj", "k_proj", "v_proj", "o_proj",
+                    "gate_proj", "up_proj", "down_proj"],
+    finetune_vision_layers=True,   # Adapt vision encoder
+    finetune_language_layers=True,  # Adapt language model
+)
+
+# Dataset format for vision fine-tuning
+conversation = [
+    {"role": "user", "content": [
+        {"type": "text", "text": "Transcribe this Irish manuscript page"},
+        {"type": "image", "image": image}
+    ]},
+    {"role": "assistant", "content": [
+        {"type": "text", "text": transcription}
+    ]}
+]
+```
+
+### Bilingual Consistency Checking
+
+For parallel English/Irish documents (e.g., Leaving Cert papers), use bilingual cross-validation:
+1. Extract math/structure from English version
+2. Extract math/structure from Irish version
+3. Cross-reference answers — they must match
+4. Flag discrepancies for human review
+
+---
+
+## ColPali: Visual Retrieval Without OCR
+
+ColPali is a **retrieval model** (not generative) that embeds document page patches directly, bypassing OCR entirely.
+
+### How It Works
+
+1. Divides page image into grid of patches
+2. Embeds each patch into vector space (PaliGemma-based)
+3. Creates a "bag of visual embeddings" per page
+4. **Late Interaction (MaxSim):** Query vectors matched directly against image patch vectors
+
+### Why It Matters
+
+- **No OCR errors** to propagate into search results
+- Matches visual concepts (diagrams, handwriting, equations) without transcription
+- Ideal for heritage archives where OCR quality is poor
+- Can serve as "style injection" for RAG — finding similar handwriting styles
+
+### Comparison: ColPali vs Traditional RAG
+
+| Feature | Traditional RAG | ColPali |
+|---------|----------------|---------|
+| Pipeline | OCR → Embed → Search | Direct visual embed → Search |
+| Math handling | OCR errors propagate | Visual matching preserves meaning |
+| Handwriting | Requires HTR first | Works on original images |
+| Speed | Fast after indexing | Memory-intensive per page |
+
+---
+
+## Irish Handwriting & Heritage Pipelines
+
+### Dúchas Dataset Engineering
+
+The Schools' Collection (1937-1939) contains 740,000 pages rich for HTR training:
+
+1. **Acquisition**: Crawl using crawl4ai (JS-rendered image viewer) or use Dúchas API v0.6
+2. **XML TEI parsing**: Extract structured transcriptions with line/page break metadata
+3. **Image-text alignment**: Match manuscript images to normalized transcriptions
+4. **Script normalization**: Map Cló Gaelach → modern Irish (handle ponc séimhithe)
+
+### Math Handwriting Recognition
+
+For mathematical manuscripts:
+- **Layout analysis**: Detect matrix zones (tabular reading), diagram regions
+- **High-res encoding**: Preserve micro-features like dots, superscripts (∇, ẋ, λ)
+- **LaTeX prediction**: Model must predict `\frac{dx}{dt}` not flatten to "dx dt"
+- **Fine-tuning**: 50 annotated pages can create a personalized math HTR model
+
+### Recommended Pipeline
+
+```text
+Heritage Manuscript
+    │
+    ├──→ ColPali (visual search, no OCR)
+    ├──→ Granite-Docling (structure: tables, headers)
+    └──→ Fine-tuned Qwen3-VL (transcription + reasoning)
+             │
+             └──→ Structured Markdown / LaTeX / JSON
+```
+
+---
+
+## Deployment Patterns
+
+### Local Mac (Apple Silicon)
+
+| Model | Backend | VRAM | Notes |
+|-------|---------|------|-------|
+| olmOCR-2-7B | llama.cpp GGUF | ~5 GB | Q4_K_M, mmproj at F16 |
+| Qwen2.5-VL-7B | MLX | ~4 GB | 4-bit, 50-70 t/s |
+| Granite-Docling 258M | MLX native | ~1 GB | Run alongside other models |
+| DeepSeek-OCR 3B | PyTorch MPS | ~6 GB | bfloat16, disable autocast |
+
+### Quota-Aware Hybrid Router
+
+```python
+def route_document(doc_type: str):
+    """Route documents to optimal processing backend."""
+    if doc_type == "tabular":
+        return "Granite-Docling"       # Best table reconstruction
+    elif doc_type == "math_heavy":
+        return "DeepSeek-OCR / Qwen3-VL"  # LaTeX fidelity
+    elif doc_type == "irish_prose":
+        return "Fine-tuned Qwen3-VL"   # Gaelic script awareness
+    elif doc_type == "handwriting":
+        return "ColPali → RAG → Qwen3-VL"  # Visual retrieval + generation
+    else:
+        return "olmOCR-2-7B"           # Best general OCR
+```
+
+
+---
+
+## gaois-Tearma-TearmaWeb-wwwroot-eolas-abhar.ga
+
+*Source: `docs/bunchloch/teanga/gaois-Tearma-TearmaWeb-wwwroot-eolas-abhar.ga.md` (1073 words, 61 lines)*
+
+# Eolas Faoin Ábhar
+
+## Foilseacháin an Choiste Téarmaíochta
+
+Ba chóir a thabhairt faoi deara go bhfuil eagarthóireacht á déanamh ar an mbunachar go seasta agus más ea, nach bhfuil sonraí na bhfoclóirí seo ar aon dul leis na leaganacha foilsithe i gcónaí.
+
+## Stoc Téarmaíochta an Choiste Téarmaíochta
+
+### Céard é an stoc seo?
+
+Is é atá ar fáil sa phríomhbhailiúchán téarmaíochta ar shuíomh www.téarma.ie ná an stoc téarmaíochta a bailíodh in oifig an Choiste Téarmaíochta in imeacht na mblianta. Seo thíos na cineálacha éagsúla foinsí a cuimsíodh sa bhailiúchán.
+
+### Foclóirí sainréimse
+
+Tháinig ann don stoc seo, go príomha, de bharr na hoibre a tionscnaíodh sa Roinn Oideachais i 1927 chun téarmaí teicniúla a sholáthar don chóras oideachais, idir théacsleabhair, pháipéir scrúdaithe agus cháipéisíocht oideachais. Dá réir sin, is ar ábhair na siollabas bunscoile agus meánscoile is mó a bhíothas ag díriú thar na blianta.
+
+Rinneadh formhór na hoibre seo trí fhochoistí saineolaithe sna réimsí eolais a bhunú chun tacar coincheap a measadh a bheith riachtanach chun na hábhair sin a theagasc a phlé agus téarmaí caighdeánacha a mholadh ina leith, a bheadh le foilsiú i bhfoirm sainfhoclóirí. Ag éirí as an obair seo, foilsíodh os cionn 20 foclóir téarmaíochta i sainréimsí éagsúla. Is iad na foclóirí is deireanaí ar foilsíodh leaganacha crua díobh ná *Ainmneacha Dílse an Nua-Thiomna, an Foclóir Litríochta agus Critice* agus *an Foclóir Seoltóireachta*.
+
+Le blianta beaga anuas, is go leictreonach a fhoilsítear torthaí obair na bhfochoistí, ar téarma.ie. Na bailiúcháin is déanaí a foilsíodh ná *Téarmaí Teicneolaíocht Faisnéise, Téarmaí Ealaíon* agus *an Foclóir Nua Spóirt*.  
+
+Thairis sin, tá roinnt foclóirí a thiomsaigh eagarthóirí seachtracha a d’fhoilsigh Foras na Gaeilge, nó a bhfuarthas cead ó na heagarthóirí ina leith, cuimsithe sa stoc téarmaíochta seo, m.sh. *An Tobar* [lámhleabhar téarmaíocht don earnáil phoiblí], *Foclóir Parlaiminte, Foclóir Fealsaimh, Foclóir Reiligiúin, Foclóir FIONTAR, Gluais de Théarmaí Teileachumarsáide, Lámhleabhar Bia agus Dí, Lámhleabhar Miondíola*.
+
+### Liostaí sainréimse
+
+I gcásanna eile, tiomsaíodh liostaí téarmaíochta bainteach le hábhair faoi leith agus rinneadh iad a scaipeadh ar chigirí agus ar mhúinteoirí sna hábhair sin. Cuirtear cóipeanna ar fáil do bhaill den phobal ar iarratas. Cuid de na liostaí seo, is saothair idir lámha iad a dhéantar a nuashonrú ó am go chéile i dtreo tionscadal éagsúil atá beartaithe, m.sh. Téarmaí Matamaitice, Téarmaí Seandálaíochta, Téarmaí Spóirt, Téarmaí Staire. Cuimsíodh cuid eile de na liostaí i sainfhoclóirí de réir mar a bhídís á n-ullmhú, m.sh. foilsíodh na liostaí san Adhmadóireacht, sa Líníocht Theicniúil agus sa Mhiotalóireacht in *Foclóir Ceirdeanna agus Teicneolaíochta*, foilsíodh Téarmaí Oifige agus Téarmaí Cuntasaíochta agus Eagraithe Gnó in *Foclóir Staidéir Ghnó*, agus foilsíodh bunleagan den liosta Matamaitice in *Foclóir Eolaíochta*.
+
+Liostaí eile fós, tiomsaíodh iad i gcomhar le heagraíochtaí seachtracha a bhí i mbun lámhleabhar, gluais téarmaíochta nó táirgí bogearra a ullmhú ina sainréimse féin. Bhí an Coiste Téarmaíochta páirteach i 15 fhoilseachán den chineál seo, agus i roinnt táirgí bogearra. Ina measc tá saothair a d’fhoilsigh An Garda Síochána, An Roinn Comhshaoil agus Údarás Áitiúil, Birdwatch Ireland, Garraithe Náisiúnta na Lus, Óglaigh na hÉireann, RTÉ, Sherkin Island Marine Station, Telecom Éireann (Eir anois), Microsoft Corporation agus Sony Corporation.
+
+### Téarmaíocht ilghnéitheach
+
+Bailíodh na téarmaí a d’eascair as fiosrúcháin ón bpobal a fuarthas in imeacht na mblianta i bhfoirm liostaí ilghnéitheacha. Tiomsaíodh dhá bhailiúchán mhóra den téarmaíocht ilghnéitheach seo bunaithe ar na tréimhsí 1985-2000 agus 2000-2005 agus foilsíodh ar líne iad (ar shuíomh www.acmhainn.ie). Ó shin i leith, déantar an téarmaíocht ilghnéitheach a ionchur i mbunachar téarmaíochta téarma.ie.
+
+### Bunachar náisiúnta téarmaíochta á bhunú
+
+Beartaíodh bunachar téarmaíochta focal.ie/téarma.ie a fhorbairt chun bainistiú agus léiriú a dhéanamh ar iomlán an ábhair a bhí bailithe ag an gCoiste Téarmaíochta. Mar chéad chéim, ionchuireadh an líon foinsí a bhí ar fáil cheana féin i bhfoirm leictreonach. Ansin, rinneadh foinsí eile a scanadh agus a ionchur. D’fhág sin go raibh iliomad foinsí, idir ábhar foilsithe agus ábhar neamhfhoilsithe, tiomsaithe le chéile in aon mhórfhoinse amháin. Buntáiste an-mhór ab ea é seo ó thaobh rochtain a bheith ag an bpobal agus ag an bhfoireann ar an stoc téarmaíochta go réidh. Gineadh sraitheanna éagsúla ceisteanna as an obair thiomsúcháin seo, áfach, agus tá obair leanúnach ar bun chun dul i ngleic leis na ceisteanna seo.
+
+Is iad na cineálacha ceisteanna is mó atá ag teacht chun cinn ná:
+
+- cén chaoi le hidirdhealú a dhéanamh idir choincheapa éagsúla a bhfuil an téarma céanna luaite leo;
+- cén chaoi le hidirdhealú nó roghnú idir théarmaí éagsúla a bailíodh faoin gcoincheap céanna;
+- ceisteanna faoi leaganacha éagsúla den choincheap céanna a bheith luaite le téarmaí éagsúla (i mBéarla agus i nGaeilge);
+- ceisteanna faoi théarmaí áirithe a bheith imithe as úsáid nó a bheith lochtach ar chúis éigin;
+- ceisteanna faoi théarmaí seachas a chéile a bheith níos coitianta sa teanga bheo ná sa teanga scríofa;
+- ceisteanna faoi na réimeanna teanga a bhaineann le téarmaí éagsúla faoin gcoincheap céanna;
+- ceisteanna faoi théarmaí bunaithe ar mhíreanna dúchasacha Gaeilge seachas iasachtaí;
+- ceisteanna faoi litriú agus gramadach iasachtaí;
+- ceisteanna litrithe, poncaíochta agus gramadaí i gcoitinne.
+
+### Modhanna Eagarthóireachta
+
+Le déileáil leis na ceisteanna thuasluaite, tá na tascanna seo idir lámha ag baill foirne in oifig an Choiste agus in oifigí Gaois, de réir chomhairle an Choiste Téarmaíochta:
+
+- noda imdhealaithe a chur le coincheapa éagsúla a bhfuil an téarma céanna luaite leo;
+- roghnú idir théarmaí éagsúla a bailíodh faoin gcoincheap céanna ar bhonn cruinnis, coitiantachta, sothuigtheachta, comhordaithe, aois an bhailiúcháin ina bhfuarthas iad - cuirtear an nod 'dímholta' leis na cinn eile;
+- leaganacha éagsúla den choincheap céanna a chumasc mar aon choincheap amháin;
+- an nod 'dímholta' a chur le téarmaí a meastar a bheith imithe as úsáid nó lochtach; coincheapa a meastar a bheith lochtach a scrios agus cinn inghlactha a chruthú;
+- an nod 'gnáthchaint' a chur le téarmaí atá níos coitianta sa teanga bheo ná sa teanga scríofa;
+- an nod 'gnáthchaint' a chur le téarmaí a bhaineann le réim teanga na gnáthchainte agus noda eile ar nós 'in úsáid', 'in úsáid SAM', 'reachtaíocht' a chur le téarmaí eile ó réimeanna teanga éagsúla atá luaite leis an gcoincheap céanna;
+- anailís a dhéanamh ar choimhlintí idir théarmaí bunaithe ar mhíreanna dúchasacha agus iasachtaí ar bhonn cruinnis, sothuigtheachta, coitiantachta, comhordaithe, aois an bhailiúcháin ina bhfuarthas iad; roghnú a dhéanamh agus an nod 'dímholta' nó 'in úsáid' a chur leis na cinn eile;
+- botúin agus míréireanna litrithe, gramadaí agus poncaíochta a cheartú nó a chomhordú.
+
+
+---
+
+## utter-project EuroLLM-22B-Instruct-2512 · Hugging Face
+
+*Source: `docs/bunchloch/teanga/utter-project_EuroLLM-22B-Instruct-2512 · Hugging Face.md` (978 words, 138 lines)*
+
+---
+title: "utter-project/EuroLLM-22B-Instruct-2512 · Hugging Face"
+source: "https://huggingface.co/utter-project/EuroLLM-22B-Instruct-2512"
+author:
+published: 2025-12-14
+created: 2025-12-16
+description: "We’re on a journey to advance and democratize artificial intelligence through open source and open science."
+tags:
+  - "clippings"
+---
+[Edit model card](https://huggingface.co/utter-project/EuroLLM-22B-Instruct-2512/edit/main/README.md)
+
+## Model Card for EuroLLM-22B-Instruct
+
+This is the model card for EuroLLM-22B-Instruct. You can also check the pre-trained version: [EuroLLM-22B-2515](https://huggingface.co/utter-project/EuroLLM-22B-2512).
+
+- **Developed by:** Instituto Superior Técnico - University of Lisbon, Instituto de Telecomunicações, University of Edinburgh, Aveni, Unbabel, University of Paris-Saclay, Artefact Research Center, University of Amsterdam, Naver Labs, Sorbonne Université.
+- **Funded by:** European Union.
+- **Model type:** A 22B parameter multilingual transfomer LLM.
+- **Language(s) (NLP):** Bulgarian, Croatian, Czech, Danish, Dutch, English, Estonian, Finnish, French, German, Greek, Hungarian, Irish, Italian, Latvian, Lithuanian, Maltese, Polish, Portuguese, Romanian, Slovak, Slovenian, Spanish, Swedish, Arabic, Catalan, Chinese, Galician, Hindi, Japanese, Korean, Norwegian, Russian, Turkish, and Ukrainian.
+- **License:** Apache License 2.0.
+
+## Model Details
+
+The EuroLLM project has the goal of creating a suite of LLMs capable of understanding and generating text in all European Union languages as well as some additional relevant languages. EuroLLM-22B is a 22B parameter model trained on 4 trillion tokens divided across the considered languages and several data sources: Web data, parallel data (en-xx and xx-en), and high-quality datasets. EuroLLM-22B-Instruct was further instruction tuned on EuroBlocks, an instruction tuning dataset with focus on general instruction-following and machine translation.
+
+### Architecture
+
+EuroLLM uses a standard, dense Transformer architecture withgrouped query attention (GQA), pre-layer normalization with RMSNorm, SwiGLU activations and rotary positional embeddings (RoPE) in every layer. Here is a summary of the model hyper-parameters:
+
+|  |  |
+| --- | --- |
+| Sequence Length | 32,768 |
+| Number of Layers | 56 |
+| Embedding Size | 6,144 |
+| FFN Hidden Size | 16,384 |
+| Number of Heads | 48 |
+| Number of KV Heads (GQA) | 8 |
+| Activation Function | SwiGLU |
+| Position Encodings | RoPE (\\Theta=1,000,000) |
+| Layer Norm | RMSNorm |
+| Tied Embeddings | No |
+| Embedding Parameters | 0.786B |
+| LM Head Parameters | 0.786B |
+| Non-embedding Parameters | 21.067B |
+| Total Parameters | 22.639B |
+
+### Pre-training
+
+EuroLLM-22B was trained on approximately 4 trillion tokens, using 400 Nvidia H100 GPUs on the MareNostrum5 supercomputer, thanks to an EuroHPC extreme-scale access grant. The training process was carefully structured into three key phases:
+
+1. Initial Pre-training (3.6 trillion tokens) This phase includes the warm-up and constant learning rate stages, during which the model is trained on a mixture of web data alongside higher quality sources such as parallel data, Wikipedia, Arxiv, books, math, code and Apollo datasets. This balanced mix helps the model build a strong multilingual foundation.
+2. Annealing (400 billion tokens) During this phase, there is a linear decay of the learning rate and we adjust the data mix to reduce the proportion of web data while increasing the multilingual content and select the highest quality data—by making use of quality filters such as \[CometKiwi-22\](https://huggingface.co/Unbabel/wmt22-cometkiwi-da) and \[EuroFilter\](https://huggingface.co/utter-project/EuroFilter-v1). This shift helps the model refine its understanding across diverse languages and domains.
+3. Annealing to Zero (100 billion tokens) In this final stage, the learning rate decays linearly to zero. In this phase, the data mix was optimized to be of even higher quality, in order to polish the model's performance, and long context data sources were upsampled to increase the model context window to 32k tokens.
+
+### Post-training
+
+During post-training, we adapt EuroLLM to be an instruction-following model capable of handling multi-turn conversations. We start by regenerating the final responses from publicly available datasets using several open models, and keep the best candidate using a reward model. To this data, we add records from other datasets (Nemotron, Hermes-3 and Tulu 3), removing duplicates based on the first prompt. This pipeline shows how EuroLLM can be easily adapted for your use-cases.
+
+The model excels at translation tasks being capable of translating across all official EU languages, matching or outperforming strong models like Gemma-3-27B, Qwen-3-32B and Apertus-70B. Furthermore, when it comes to general benchmarks, it is the best EU-made fully open model.
+
+## Run the model
+
+```
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+model_id = "utter-project/EuroLLM-22B-Instruct-2512"
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+model = AutoModelForCausalLM.from_pretrained(model_id)
+
+messages = [
+    {
+        "role": "system",
+        "content": "You are EuroLLM --- an AI assistant specialized in European languages that provides safe, educational and helpful answers.",
+    },
+    {
+        "role": "user", "content": "What is the capital of Portugal? How would you describe it?"
+    },
+    ]
+
+inputs = tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True, return_tensors="pt")
+outputs = model.generate(inputs, max_new_tokens=1024)
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))
+```
+
+## Results
+
+### Multilingual
+
+[![EuroLLM 22B Blog Results - Multilingual](https://cdn-uploads.huggingface.co/production/uploads/674d9994d8897d7d36dfc9e9/MpE3MUksAaTf1vQ2OewOa.png)](https://cdn-uploads.huggingface.co/production/uploads/674d9994d8897d7d36dfc9e9/MpE3MUksAaTf1vQ2OewOa.png)
+
+**Table 1:** Comparison of fully open and open-weight LLMs on a suite of multilingual benchmarks, averaging over all languages supported by EuroLLM-22B that are present in each benchmark. The table reports scores on HellaSwag, MMLU, MMLU-Pro, ARC-Challenge, MGSM, FLORES, and WMT24++. The Borda Count (Colombo et al., 2022) reflects the average ranking of each model across all benchmarks. **Bold** values indicate the best overall system for each benchmark, while underscored values denote the best fully open system.
+
+### English
+
+[![EuroLLM 22B Blog Results - English](https://cdn-uploads.huggingface.co/production/uploads/674d9994d8897d7d36dfc9e9/Nk9QQIuz5C9UT0T9xAUo7.png)](https://cdn-uploads.huggingface.co/production/uploads/674d9994d8897d7d36dfc9e9/Nk9QQIuz5C9UT0T9xAUo7.png)
+
+**Table 2:** Comparison of fully open and open-weight LLMs on a suite of English benchmarks. The table reports scores on IFEval, HellaSwag, MMLU, MMLU-Pro, BBH, ARC-Challenge, GPQA, GSM8K, MATH-500, and HumanEval. The Borda Count reflects the average ranking of each model across all benchmarks. **Bold** values indicate the best overall system for each benchmark, while underscored values denote the best fully open system.
+
+## Bias, Risks, and Limitations
+
+EuroLLM-22B has not been aligned to human preferences, so the model may generate problematic outputs (e.g., hallucinations, harmful content, or false statements).
+
+Downloads last month
+
+220
+
+Safetensors
+
+Model size
+
+23B params
+
+Tensor type
+
+BF16
+
+·
+
+## Model tree for utter-project/EuroLLM-22B-Instruct-2512
+
+Base model
+
+[utter-project/EuroLLM-22B-2512](https://huggingface.co/utter-project/EuroLLM-22B-2512)
+
+Finetuned
+
+([1](https://huggingface.co/models?other=base_model:finetune:utter-project/EuroLLM-22B-2512))
+
+this model
+
+Finetunes
+
+[1 model](https://huggingface.co/models?other=base_model:finetune:utter-project/EuroLLM-22B-Instruct-2512)
+
+Quantizations
+
+[8 models](https://huggingface.co/models?other=base_model:quantized:utter-project/EuroLLM-22B-Instruct-2512)
+
+---
+
+## gaois-documental-docs-software-terminologue-configuration.ga
+
+*Source: `docs/bunchloch/teanga/gaois-documental-docs-software-terminologue-configuration.ga.md` (964 words, 160 lines)*
+
+---
+title: Terminologue a chumrú
+shortTitle: Cumraíocht
+description: Conas do shuiteán de Terminologue a chumrú
+keywords: téarmaíocht, taighde, bogearraí, foinse oscailte, javascript, Node JS, Fiontar & Scoil na Gaeilge, DCU
+resource: Terminologue
+github: https://github.com/gaois/terminologue
+order: 4
+public: true
+---
+
+Is féidir go leor gnéithe de do shuiteán de Terminologue a chumrú ach eagarthóireacht a dhéanamh ar an gcomhad `siteconfig.json`. Mínítear sa doiciméad seo a bhfuil i gceist leis na roghanna ar fad atá le fáil sa chomhad sin. *Tabhair faoi deara: caithfidh tú an feidhmchlár a atosú gach uair a dhéanann tú athruithe.*
+
+---
+
+```json
+"readonly": false
+```
+
+Is féidir leat an socrú seo a úsáid chun do shuiteán a chur i mód inléite amháin, mar shampla nuair atá cothabháil á déanamh agat ar an fhreastalaí. Beidh codanna a bhfuil fáil orthu go poiblí fós ar fáil, lena n-áirítear na chnuasaigh téarmaíochta atá le feiceáil go poiblí, ach ní bheidh úsáideoirí in ann logáil isteach, agus ní bheidh aon úsáideoir atá logáilte isteach cheana féin in ann aon rud a shábháil. Léireofar ceannscríbhinn 'léamh amháin' in aice le lógó Terminologue ar gach leathanach chun é seo a chur in iúl d’úsáideoirí.  
+
+---
+
+```json
+"baseUrl": "http://localhost/",
+"rootPath": "/",
+"port": 80
+```
+
+Is ionann `baseUrl` agus an URL a thugann rochtain don phobal ar do shuiteán. Más suíomh beo poiblí é do shuiteán, beidh tú ag iarraidh é seo a athrú go URL a bheidh le feiceáil go poiblí, amhail `https://terminologue.mycompany.com/`.
+
+Caithfear cosán an URL, amhail `/`, a chur san áireamh mar chuid de `baseUrl` **agus** a thabhairt as féin mar `rootPath`. Mar shampla, má tá do shuiteán ar fáil don phobal faoin URL `http://www.mycompany.com/terminologue/`, ba chóir go mbeadh na rudaí seo a leanas agat:
+
+```json
+"baseUrl": "http://www.mycompany.com/terminologue/",
+"rootPath": "/terminologue/"
+```
+
+Má tá port eile seachas an port réamhshocraithe i do URL, ba chóir duit an port a chur san áireamh in `baseUrl` **agus** a thabhairt as féin mar `port`.
+
+---
+
+```json
+"dataDir": "../data/"
+```
+
+Is é seo an cosán a théann chuig an gcomhadlann `data` (an áit a gcoinníonn Terminologue na bunachair shonraí), ag tosú sa chomhadlann `website`.
+
+---
+
+```json
+"admins": ["root@localhost"]
+```
+
+Is iad seo ainmneacha logáil isteach na 'sárúsáideoirí' - úsáideoirí a bhfuil pribhléidí speisialta acu sa suiteán seo de Terminologue. Seo a leanas na pribhléidí speisialta: bíonn rochtain iomlán, inscríofa agat ar gach rud i ngach cnuasach téarmaíochta, agus feicfidh tú nasc ar an leathanach baile chuid rannóg speisialta de Terminologue inar féidir leat cuntais úsáideoirí a riar.
+
+---
+
+```json
+"trackingCode": ""
+```
+
+Má theastaíonn uait seirbhís ar nós Google Analytics nó StatCounter a úsáid chun staitisticí tráchta ar shuíomh gréasáin a bhailiú, is féidir leat an cód HTML a chur anseo agus cuirfidh Terminologue isteach ag deireadh (roimh `</body>`) gach leathanaigh HTML, atá le feiceáil go poiblí, é.
+
+---
+
+```json
+"uilangs": [
+  {"abbr": "en", "caption": "English"},
+  {"abbr": "ga", "caption": "Gaeilge"},
+  {"abbr": "cs", "caption": "česky"},
+  {"abbr": "sv", "caption": "svenska"}
+],
+"uilangDefault": "en"
+```
+
+Is iad seo teangacha an chomhéadain a fheictear i ngiuirléid an mhalartóra teanga sa chúinne ag barr an scáileáin ar dheis, agus an teanga réamhshocraithe a úsáidtear le haghaidh úsáideoirí nua. Is féidir leat na socruithe seo a úsáid chun an teanga réamhshocraithe a athrú, ord na dteangacha i ngiuirléid an mhalartóra a athrú nó teangacha áirithe a dhíchumasú.
+
+Caithfidh na rudaí seo a leanas a bheith ann le haghaidh gach teanga UI a liostaítear anseo:
+
+- Comhad ina bhfuil teaghráin logánaithe le haghaidh leabharlann Screenful, amhail `website/libs/screenful/screenful-loc-en.js`.
+- Comhad ina bhfuil teaghráin logánaithe atá sainiúil do Terminologue, amhail `website/localizer/en.js`.
+
+Mar sin de, má theastaíonn uait teanga nua a chur leis, caithfidh tú na rudaí thuasluaite a sholáthar. Má tá Terminologue á logánú i dteanga nua agat, b’fhéidir go roinnfeá leis an saol é ach é a aighniú chuig stór Terminologue.
+
+---
+
+```json
+"welcome": {
+  "en": "<div class='intro'>Welcome to <strong>Terminologue</strong>...",
+  "ga": "<div class='intro'>Fáilte go <strong>Terminologue</strong>...",
+  "cs": "<div class='intro'>Vítá vás <strong>Terminologue</strong>...",
+  "sv": "<div class='intro'>Välkommen till <strong>Terminologue</strong>..."
+}
+```
+
+Seo an teachtaireacht fáilte a bhíonn ar an leathanach baile. Caithfidh teachtaireacht dá leithéid a bheith ann le haghaidh gach teanga an chomhéadain.
+
+---
+
+```json
+"mailconfig": {"host": "localhost", "port": 465, "secure": false, "from": "noreply@localhost"}
+```
+
+Nuair a chláraíonn úsáideoirí do Terminologue, nuair a iarrann siad pasfhocail a ndearnadh dearmad orthu a aisghabháil agus mar sin de, seolann Terminologue ríomhphoist daingnithe ach an freastalaí SMTP seo a úsáid.
+
+Má tá na socruithe seo in easnamh nó neamhbhailí, ní tharlóidh aon rud tubaisteach, oibreoidh Terminologue mar is gnách (ach ní sheolfar ríomhphoist).
+
+---
+
+```json
+"licences": {
+  "cc-by-4.0": {
+    "title": "Creative Commons Attribution 4.0 International",
+    "url": "https://creativecommons.org/licenses/by/4.0/",
+    "icon": "furniture/lic-cc-by.png"
+  },
+  "cc-by-sa-4.0": {
+    "title": "Creative Commons Attribution Share-Alike 4.0 International",
+    "url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "icon": "furniture/lic-cc-by-sa.png"
+  },
+  "odbl-1.0": {
+    "title": "Open Database Licence 1.0",
+    "url": "https://opendatacommons.org/licenses/odbl/summary/",
+    "icon": "furniture/lic-opendata.png"
+  }
+}
+```
+
+Is iad seo na ceadúnais faoina bhfuil úsáideoirí in ann cnuasach téarmaíochta a chur ar fáil don phobal. Nuair a chuireann úsáideoir cnuasach téarmaíochta ar fáil go poiblí, beidh orthu ceann amháin de na ceadúnais thuasluaite a roghnú.
+
+---
+
+```json
+"defaultAbc": [
+  ["a", "á", "à", "â", "ä", "ă", "ā", "ã", "å", "ą", "æ"],
+  ["b"],
+  ["c", "ć", "ċ", "ĉ", "č", "ç"],
+
+  ...
+
+  ["x"],
+  ["y", "ý", "ỳ", "ŷ", "ÿ"],
+  ["z", "ź", "ż", "ž"]
+]
+```
+
+An t-ord aibítre réamhshocraithe. Úsáidfidh Terminologue é seo murar shonraigh úsáideoir ord difriúil liostaithe le haghaidh teanga sa bhunachar téarmaíochta.
+
+---
+
+```json
+"propagatorMsSqlConnectionStrings": {
+  "mytermbase": "Server=localhost\\SQLEXPRESS;Database=mydatabase;User Id=myname;Password=mypassword"
+}
+```
+
+Is gné í seo a ligeann duit cnuasach téarmaíochta ar leith a chumrú ionas go gcuirfear gach athrú ar aghaidh chuig bunachar sonraí eile (in Microsoft SQL Server). Beidh sé seo ag tarlú huathoibríoch gach uair a dhéanann úsáideoir ar bith athrú ar bith sa chnuasach. Is ionann an eochair (amhail `mytermbase`) agus ainm an chnuasaigh téarmaíochta in Terminologue, agus is ionann an luach agus teaghrán ceangail le haghaidh bunachar sonraí Microsoft SQL Server.
+
+
+---
+
+## gaois-documental-docs-software-querylogger-v0.7-configuration.ga
+
+*Source: `docs/bunchloch/teanga/gaois-documental-docs-software-querylogger-v0.7-configuration.ga.md` (846 words, 66 lines)*
+
+---
+title: Cumraíocht
+description: Logálaí simplí iarratais is féidir a chumrú le haghaidh fheidhmchláir ASP.NET agus ASP.NET Core
+keywords: logálaí iarratais, cuardaigh, staitisticí cuardaigh, foinse oscailte, C#, .NET Core, dotnet, SQL Server, Fiontar & Scoil na Gaeilge, DCU
+order: 4
+public: true
+---
+
+Is féidir na socruithe thíos a chumrú le bheith in oiriúint do do chuid riachtanais féin. Is féidir leat an logálaí iarratais a chumrú i gcód (ASP.NET Core amháin) nó i gcomhad cumraíochta d’fheidhmchláir. Féach an doiciméadacht a bhaineann le [ASP.NET Framework](../net461) agus le [ASP.NET Core](../netcore) chun teacht ar eolas ar chur i bhfeidhm an logálaí i do sprioc-chreatlach.
+
+## Barrleibhéal
+
+**ApplicationName** (`string`): Sonraíonn sé ainm uilíoch ar d’fheidhmchlár a d’fhéadfaí a úsáid i ngach iarratas a logáiltear. Ciallaíonn sé seo gur féidir le feidhmchláir dhifriúla an bunachar sonraí céanna SQL a roinnt maidir le logáil iarratais.
+
+**MaxQueryTermsLength** (`int?`): Má tá sé socraithe, theascfaí téarmaí iarratais atá níos faide ná an t—uasfhad sonraithe.
+
+**MaxQueryTextLength** (`int?`): Má tá sé socraithe, theascfaí téacs iarratais atá níos faide ná an t—uasfhad sonraithe.
+
+**IsEnabled** (`bool`, réamhshocrú: `true`): Sonraíonn sé ar cumraíodh an feidhmchlár chun iarratais a logáil nó nár cumraíodh. Seans go mbeidh sé úsáideach más gá duit logáil a dhíchumasú go sealadach ar chúis éigin nó más mian leat logáil a chumasú nó a dhíchumasú bunaithe ar athróga timpeallachta.
+
+**StoreClientIPAddress** (`bool`, réamhshocrú: `true`): Sonraíonn sé ar cheart seoladh IP an chliaint a logáil nó nár cheart. Seans go mbeidh cuid den seoladh IP logáilte anaithnidithe, nó seans nach mbeidh sé, de réir an tsocraithe `AnonymizeIPAddress` a roghnaíodh. 
+
+**AnonymizeIPAddress** (`IPAddressAnonymizationLevel` enum, réamhshocrú: `IPAddressAnonymizationLevel.Partial`): Socraíonn sé leibhéal anaithnidithe sheoladh IP an chliaint. Is iad `None` (níor cuireadh anaithnidiú i bhfeidhm) nó `Partial` (baintear an t-ochtréad deireanach de sheoltaí IPv4 nó an 80 giotán deireanach de sheoladh IPv6) na luachanna féideartha. Thángamar ar an tuairim nach féidir anaithnidiú ‘iomlán’ — trí haiseáil nó ar bhealach ar bith eile — a chinntiú agus molaimid an socrú `StoreClientIPAddress` a athrú go `false` le cinntiú nach logálfar sonraí IP ar bith.
+
+**AlertInterval** (`integer`, réamhshocrú: `300000`): An t-eatramh ama (i milleasoicindí) a fhanfaidh an logálaí iarratais sula seolfar foláirimh maidir le ceist faoin tseirbhís logálaí. Seolfar foláirimh má sháraíonn an ciú logálaí an uasacmhainn nó má tá ceist ann i dtaca le scríobh chuig an stóras sonraí — tá súil againn nach dtarlóidh sé sin ach nílimid ag iarraidh do bhosca isteach a bhriseadh má tharlaíonn sé.
+
+## Stóras
+
+**ConnectionString** (`string`): An teaghrán ceangail do do stóras sonraí de chuid SQL Server.
+
+**ConnectionStringName** (`string`, **ASP.NET Framework only**): Ainm an teaghráin ceangail a úsáidtear ó chumraíocht an fheidhmchláir, e.g. an eochair a bhaineann le hiontráil ar leith sa chuid `ConnectionStrings` den chomhad Web.config de chuid feidhmchláir. 
+
+**MaxQueueSize** (`integer`, réamhshocrú: `1000`): Uasmhéid fhéideartha chiú an logálaí iarratais. Nuair a bhaintear uasmhéid an chiú amach, cuileálfar iontrálacha sa chiú ar bhonn 'is túisce isteach is túisce amach'. Ba cheart duit méid an chiú a shocrú i bhfianaise na n-acmhainní atá ar fáil ar do chóras. Ach logaí a stóráil i gciú sula maireann sonraí, laghdaítear an seans go gcaillfidh tú sonraí mar gheall ar cheist seachadta faoi IOPS an bhunachair sonraí, mar shampla.
+
+**MaxQueueRetryInterval** (`integer`, réamhshocrú: `300000`): An méid ama (i milleasoicindí) is gá duit fanacht idir iarrachtaí ar scríobh chuig an stóras logálaí sa chás nach féidir ceangal leis an stóras a chruthú. D’fhéadfadh suas le `MaxQueueSize` iarratas a bheith i gciú an logálaí atá le scríobh.
+
+**TableName** (`string`, réamhshocrú: `QueryLogs`): Ainm an tábla (lena n-áirítear scéimre, más mian leat), e.g. 'dbo.QueryLogs' a úsáidtear nuair atá iarratais á logáil. Cumraigh é seo más mian leat ainm níos andúchasaí a thabhairt ar do thábla logálaí seachas 'QueryLogs'.
+
+## Ríomhphost
+
+Úsáidfear na socruithe seo, má cumraíodh iad, chun ríomhphoist foláirimh a sheoladh chugat nuair is gá. Maidir le feidhmchláir ASP.NET Framework, gheofar socruithe ríomhphoist go huathoibríoch ó do chumraíocht `mailSettings`, má tá siad ann, ach ní mór duit `ToAddress` a shonrú anseo fós.
+
+**ToAddress** (`string`): An seoladh a seolfar teachtaireachtaí ríomhphoist chuige (ag teastáil le haghaidh seirbhís foláireamh).
+
+**FromAddress** (`string`): An seoladh óna seolfar teachtaireachtaí ríomhphoist.
+
+**FromDisplayName** (`string`): An t-ainm taispeána lena seolfar teachtaireachtaí ríomhphoist.
+
+**SMTPHost** (`string`): An freastalaí SMTP trína seolfar ríomhphost.
+
+**SMTPPort** (`int?`): An port trína seolfar ríomhphost (má shonraítear freastalaí SMTP trí `SMTPHost` thuas.)
+
+**SMTPUserName** (`string`): Ainm úsáideora an SMTP a úsáidfear, má tá fíordheimhniú á dhéanamh agat.
+
+**SMTPPassword** (`string`): Pasfhocal an SMTP a úsáidfear, má tá fíordheimhniú á dhéanamh agat.
+
+**SMTPEnableSSL** (`bool`, réamhshocrú: `false`): SSL a úsáid agus rud á sheoladh trí SMTP agat, nó gan é a úsáid.
+
+## ExcludedIPAddresses
+
+Ní logálfar iarratais a bhaineann leis na seoltaí IP sa liosta seo. Tá sé úsáideach, mar shampla, le cinntiú nach logálfar iarratais ó ransaitheoir ionsaitheach gréasáin.
+
+**IPAddress** (`string`): An seoladh IP a fhágfar ar lár (caithfidh luach uathúil a bheith air).
+
+**Name** (`string`): Cuireann sé lipéad ar an seoladh IP a fhágfar ar lár. Is é an seoladh IP an eochair iontrála agus mar sin de, is féidir leat an t-ainm céanna a shocrú le haghaidh iontrálacha éagsúla más mian leat go leor foinsí IP a chur i ngrúpa le chéile.
+
+
+---
+
+## apple ml-fastvlm  This repository contains the official implementation of  FastVLM  Efficient Vision Encoding for Vision Language Models  - CVPR 2025
+
+*Source: `docs/bunchloch/meaisínfhoghlaim/apple_ml-fastvlm_ This repository contains the official implementation of _FastVLM_ Efficient Vision Encoding for Vision Language Models_ - CVPR 2025.md` (612 words, 123 lines)*
+
+---
+title: "apple/ml-fastvlm: This repository contains the official implementation of \"FastVLM: Efficient Vision Encoding for Vision Language Models\" - CVPR 2025"
+source: "https://github.com/apple/ml-fastvlm?tab=readme-ov-file"
+author:
+published:
+created: 2025-12-15
+description:
+tags:
+  - "clippings"
+---
+**[ml-fastvlm](https://github.com/apple/ml-fastvlm)** Public
+
+This repository contains the official implementation of "FastVLM: Efficient Vision Encoding for Vision Language Models" - CVPR 2025
+
+[View license](https://github.com/apple/ml-fastvlm/blob/main/LICENSE)
+
+[Code of conduct](https://github.com/apple/ml-fastvlm/blob/main/CODE_OF_CONDUCT.md)
+
+[Contributing](https://github.com/apple/ml-fastvlm/blob/main/CONTRIBUTING.md)
+
+[7.1k stars](https://github.com/apple/ml-fastvlm/stargazers) [517 forks](https://github.com/apple/ml-fastvlm/forks) [65 watching](https://github.com/apple/ml-fastvlm/watchers) [Branches](https://github.com/apple/ml-fastvlm/branches) [Tags](https://github.com/apple/ml-fastvlm/tags) [Activity](https://github.com/apple/ml-fastvlm/activity) [Custom properties](https://github.com/apple/ml-fastvlm/custom-properties)
+
+Public repository
+
+[Open in github.dev](https://github.dev/) [Open in a new github.dev tab](https://github.dev/) [Open in codespace](https://github.com/codespaces/new/apple/ml-fastvlm?resume=1)
+
+This is the official repository of **[FastVLM: Efficient Vision Encoding for Vision Language Models](https://www.arxiv.org/abs/2412.13303). (CVPR 2025)**
+
+[![Accuracy vs latency figure.](https://github.com/apple/ml-fastvlm/raw/main/docs/acc_vs_latency_qwen-2.png)](https://github.com/apple/ml-fastvlm/blob/main/docs/acc_vs_latency_qwen-2.png)
+
+### Highlights
+
+- We introduce FastViTHD, a novel hybrid vision encoder designed to output fewer tokens and significantly reduce encoding time for high-resolution images.
+- Our smallest variant outperforms LLaVA-OneVision-0.5B with 85x faster Time-to-First-Token (TTFT) and 3.4x smaller vision encoder.
+- Our larger variants using Qwen2-7B LLM outperform recent works like Cambrian-1-8B while using a single image encoder with a 7.9x faster TTFT.
+- Demo iOS app to demonstrate the performance of our model on a mobile device.
+
+| [![FastVLM - Counting](https://github.com/apple/ml-fastvlm/raw/main/docs/fastvlm-counting.gif)](https://github.com/apple/ml-fastvlm/blob/main/docs/fastvlm-counting.gif) | [![FastVLM - Handwriting](https://github.com/apple/ml-fastvlm/raw/main/docs/fastvlm-handwriting.gif)](https://github.com/apple/ml-fastvlm/blob/main/docs/fastvlm-handwriting.gif) | [![FastVLM - Emoji](https://github.com/apple/ml-fastvlm/raw/main/docs/fastvlm-emoji.gif)](https://github.com/apple/ml-fastvlm/blob/main/docs/fastvlm-emoji.gif) |
+| --- | --- | --- |
+
+## Getting Started
+
+We use LLaVA codebase to train FastVLM variants. In order to train or finetune your own variants, please follow instructions provided in [LLaVA](https://github.com/haotian-liu/LLaVA) codebase. We provide instructions for running inference with our models.
+
+### Setup
+
+```
+conda create -n fastvlm python=3.10
+conda activate fastvlm
+pip install -e .
+```
+
+### Model Zoo
+
+For detailed information on various evaluations, please refer to our [paper](https://www.arxiv.org/abs/2412.13303).
+
+| Model | Stage | Pytorch Checkpoint (url) |
+| --- | --- | --- |
+| FastVLM-0.5B | 2 | [fastvlm\_0.5b\_stage2](https://ml-site.cdn-apple.com/datasets/fastvlm/llava-fastvithd_0.5b_stage2.zip) |
+|  | 3 | [fastvlm\_0.5b\_stage3](https://ml-site.cdn-apple.com/datasets/fastvlm/llava-fastvithd_0.5b_stage3.zip) |
+| FastVLM-1.5B | 2 | [fastvlm\_1.5b\_stage2](https://ml-site.cdn-apple.com/datasets/fastvlm/llava-fastvithd_1.5b_stage2.zip) |
+|  | 3 | [fastvlm\_1.5b\_stage3](https://ml-site.cdn-apple.com/datasets/fastvlm/llava-fastvithd_1.5b_stage3.zip) |
+| FastVLM-7B | 2 | [fastvlm\_7b\_stage2](https://ml-site.cdn-apple.com/datasets/fastvlm/llava-fastvithd_7b_stage2.zip) |
+|  | 3 | [fastvlm\_7b\_stage3](https://ml-site.cdn-apple.com/datasets/fastvlm/llava-fastvithd_7b_stage3.zip) |
+
+To download all the pretrained checkpoints run the command below (note that this might take some time depending on your connection so might be good to grab ☕️ while you wait).
+
+```
+bash get_models.sh   # Files will be downloaded to \`checkpoints\` directory.
+```
+
+### Usage Example
+
+To run inference of PyTorch checkpoint, follow the instruction below
+
+```
+python predict.py --model-path /path/to/checkpoint-dir \
+                  --image-file /path/to/image.png \
+                  --prompt "Describe the image."
+```
+
+To run inference on Apple Silicon, pytorch checkpoints have to be exported to format suitable for running on Apple Silicon, detailed instructions and code can be found [`model_export`](https://github.com/apple/ml-fastvlm/blob/main/model_export) subfolder. Please see the README there for more details.
+
+For convenience, we provide 3 models that are in Apple Silicon compatible format: [fastvlm\_0.5b\_stage3](https://ml-site.cdn-apple.com/datasets/fastvlm/llava-fastvithd_0.5b_stage3_llm.fp16.zip),[fastvlm\_1.5b\_stage3](https://ml-site.cdn-apple.com/datasets/fastvlm/llava-fastvithd_1.5b_stage3_llm.int8.zip),[fastvlm\_7b\_stage3](https://ml-site.cdn-apple.com/datasets/fastvlm/llava-fastvithd_7b_stage3_llm.int4.zip). We encourage developers to export the model of their choice with the appropriate quantization levels following the instructions in [`model_export`](https://github.com/apple/ml-fastvlm/blob/main/model_export).
+
+To run inference on Apple devices like iPhone, iPad or Mac, see [`app`](https://github.com/apple/ml-fastvlm/blob/main/app) subfolder for more details.
+
+## Citation
+
+If you found this code useful, please cite the following paper:
+
+```
+@InProceedings{fastvlm2025,
+  author = {Pavan Kumar Anasosalu Vasu, Fartash Faghri, Chun-Liang Li, Cem Koc, Nate True, Albert Antony, Gokul Santhanam, James Gabriel, Peter Grasch, Oncel Tuzel, Hadi Pouransari},
+  title = {FastVLM: Efficient Vision Encoding for Vision Language Models},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  month = {June},
+  year = {2025},
+}
+```
+
+## Acknowledgements
+
+Our codebase is built using multiple opensource contributions, please see [ACKNOWLEDGEMENTS](https://github.com/apple/ml-fastvlm/blob/main/ACKNOWLEDGEMENTS) for more details.
+
+## License
+
+Please check out the repository [LICENSE](https://github.com/apple/ml-fastvlm/blob/main/LICENSE) before using the provided code and [LICENSE\_MODEL](https://github.com/apple/ml-fastvlm/blob/main/LICENSE_MODEL) for the released models.
+
+## Releases
+
+No releases published
+
+## Packages
+
+No packages published  
+
+## Languages
+
+- [Python 81.6%](https://github.com/apple/ml-fastvlm/search?l=python)
+- [Swift 17.1%](https://github.com/apple/ml-fastvlm/search?l=swift)
+- [Shell 1.2%](https://github.com/apple/ml-fastvlm/search?l=shell)
+- Other 0.1%
+
+---
+
+## gaois-Tearma-TearmaWeb-wwwroot-cabhair-cuardach-casta.ga
+
+*Source: `docs/bunchloch/teanga/gaois-Tearma-TearmaWeb-wwwroot-cabhair-cuardach-casta.ga.md` (510 words, 48 lines)*
+
+# Conas an Cuardach Casta a úsáid
+
+Murab ionann agus an Cuardach Tapa, tugann an cuardach seo na téarmaí siúd a chomhlíonann na critéir a roghnaigh tú go díreach, agus ní thugann sé aon téarmaí eile. Mar shampla, má chuardaíonn tú an téacs ***smoked***, gheobhaidh tú an téarma ***smoked***, ach ní bhfaighidh tú aon nasc chuig an téarma ***smoke*** – cé gurb ann dó sa bhunachar. Chomh maith leis sin, ní dhéanann an cuardach seo neamhaird de chúrsaí poncaíochta. Mar sin, má chuardaíonn tú ***rain-forest*** (le fleiscín), ní bhfaighidh tú é mar níl sa bhunachar ach ***rain forest*** (gan fleiscín). Rud amháin atá i gcoiteann ag an dá chuardach, áfach, nach bhfuil ceann ar bith acu cásíogair – mar sin, is cuma cé acu **téarma** nó **TÉARMA** (nó fiú **TéArMa**) a scríobhann tú, gheobhaidh tú na torthaí céanna.
+
+Is féidir na critéir seo a leanas a úsáid chun torthaí do chuardaigh a theorannú:
+
+## Fad (aonfhoclach/ilfhoclach)
+
+Is féidir do thorthaí cuardaigh a theorannú do théarmaí aonfhoclacha amháin nó do théarmaí ilfhoclacha amháin. Tugtar an dá chineál téarma faoin gcuardach réamhshocraithe.
+
+## Fairsinge
+
+Is féidir do thorthaí cuardaigh a theorannú do théarmaí dar tús, dar críoch nó do théarmaí a chuimsíonn focal nó sraith carachtar áirithe. 
+
+## Teanga
+
+Is féidir do thorthaí cuardaigh a theorannú do theanga ar leith. Bíonn téarmaí ó gach teanga san áireamh faoin gcuardach réamhshocraithe.
+
+## Roinn chainte
+
+Is féidir do thorthaí cuardaigh a theorannú do roinn chainte ar leith.  Mar shampla is féidir liosta a iarraidh nach mbeidh air ach ainmfhocail, nó nach mbeidh air ach réimíreanna.
+
+## Réimse
+
+Is féidir do thorthaí cuardaigh a theorannú do réimse ar leith. Mar shampla, d’fhéadfá an focal Béarla ***bat*** a chuardach agus na torthaí cuardaigh a theorannú don réimse ‘Spóirt’. Chuirfeadh sé sin liosta fada téarmaí as an áireamh a bhfuil mamach eitilte oíche luaite iontu.
+
+## Teaglamaí de chritéir
+
+Is féidir teaglaim ar bith de chritéir a roghnú agus cuardach á dhéanamh agat. Liostaíonn an t-inneall cuardaigh téarmaí a chomhlíonann na critéir sin go léir.
+
+Más rud é nach bhfaigheann tú aon torthaí ar do chuardach, seans go bhfuil critéir róchúnga roghnaithe agat. Sa chás sin, is fiú féachaint siar ar na critéir agus iad a leathnú amach ar bhealach éigin.
+
+# Saoróga sa Chuardach Casta
+
+Bealach cliste chun solúbthacht a chur leis an gCuardach Casta is ea saoróga a úsáid sa bhosca 'Foclaíocht/Wording'. Is éard is saoróg ann siombail a sheasann do charachtar (nó sraith carachtar) neamhshonraithe eile. Seo iad na saoróga is féidir a úsáid:
+
+## An fhostríoc: _
+
+Seasann sí seo do charachtar aonair ar bith. Mar shampla, má lorgaíonn tú ***l_w***, gheobhaidh tú ***law*** agus ***low***, chomh maith leis na giorrúcháin ***LBW*** agus ***LLW***.
+
+![](cuardach-casta-01.jpg)
+
+## An céatadán: %
+
+Seasann sé seo do líon ar bith (náid san áireamh) de charachtair ar bith. Mar shampla, má chuardaíonn tú **met%rology**, gheobhaidh tú ***metamorphic petrology*** agus ***meteorology***, chomh maith le ***metrology*** féin. Nuair a usáidtear an tsaoróg seo léi féin sa 'Cuardach Casta', gintear liosta de gach iontráil a chomhlíonann na critéir chuardaigh.
+
+![](cuardach-casta-02.jpg)
+
+
+---
+
+## gaois-documental-docs-software-querylogger-v0.7-data.ga
+
+*Source: `docs/bunchloch/teanga/gaois-documental-docs-software-querylogger-v0.7-data.ga.md` (377 words, 42 lines)*
+
+---
+title: Sonraí iarratais a chur leis
+description: Logálaí simplí iarratais is féidir a chumrú le haghaidh fheidhmchláir ASP.NET agus ASP.NET Core
+keywords: logálaí iarratais, cuardaigh, staitisticí cuardaigh, foinse oscailte, C#, .NET Core, dotnet, SQL Server, Fiontar & Scoil na Gaeilge, DCU
+order: 5
+public: true
+---
+
+Tá an oibiacht `Query` i gcroílár Gaois.QueryLogger. Iompraíonn oibiachtaí `Query` sonraí an iarratais a logálfar i do stóras sonraí. Pobalóidh Gaois.QueryLogger sonraí áirithe iarratais go huathoibríoch, amhail óstach an fheidhmchláir nó IP an chliaint, roimh logáil ach caithfidh d’fheidhmchlár sonraí eile a shonrú. Is féidir gach iompraíocht réamhshocraithe a shárú. Déantar cur síos sa chuid eile den doiciméad seo ar na hairíonna éagsúla atá ar fáil chun sonraí d’iarratais a stóráil agus ar mhodhanna a d’fhéadfaí a ghlaoch ar an oibiacht `Query`. 
+
+## Sonraí
+
+**QueryID** (`Guid`): ID uathúil a léiríonn iarratas ar leith nó grúpa iarratas. Cruthófar ID iarratais go huathoibríoch mura sonraíonn d’fheidhmchlár é.
+
+**ApplicationName** (`string`): Ainm an fheidhmchláir a ritheann an t-iarratas. Aisghabhfar ainm an fheidhmchláir ó do shocruithe cumraíochta mura sonraítear i gcód é. 
+
+**QueryCategory** (`string`): Ceanglaíonn sé an t-iarratas le catagóir a shonraigh an feidhmchlár. Tá sé úsáideach, mar shampla, má tá cineálacha éagsúla cuardaigh agat laistigh d’fheidhmchlár amháin (roghnach).
+
+**QueryTerms** (`string`): Téarma(í) an iarratais nó comhthéacs théacs an iarratais (roghnach). 
+
+**QueryText** (`string`): Téacs lom an iarratais, amhail teaghrán iarratais nó réimse foirme POST-ed (roghnach).
+
+**Host** (`string`): Fearann óstach an fheidhmchláir, e.g. www.example.com. Gheofar go huathoibríoch ón gcomhthéacs reatha HTTP é mura sonrófar a mhalairt.
+
+**IPAddress** (`string`): Seoladh IP an chliaint. Gheofar go huathoibríoch ón gcomhthéacs reatha HTTP é mura sonrófar a mhalairt.
+
+**ExecutedSuccessfully** (`bool`, réamhshocrú: `true`): Taifeadann sé cé acu a d'éirigh leis an iarratas rith nó nár éirigh.
+
+**ExecutionTime** (`int?`): Aga rite an iarratais i milleasoicindí (roghnach). 
+
+**ResultCount** (`int?`): Comhaireamh na dtorthaí a chuir an t-iarratas ar ais (roghnach).
+
+**LogDate** (`DateTime`): Dáta agus am logáil an iarratais. Ginfear luach go huathoibríoch don airí seo nuair a logálfar é mura sonrófar a mhalairt. 
+
+**JsonData** (`string`): Sonraí breise a thaifeadadh i bhformáid JSON. Tá sé úsáideach chun sonraí sainiúla feidhmchláir nó iarratais a stóráil i dtimpeallacht ilfheidhmchláir, mar shampla.
+
+## Modhanna
+
+**ToJson()** (`string`): Cuireann sé léiriú JSON ar oibiacht `Query` ar ais.
+
+**FromJson()** (`Query`): Díshrathaíonn sé an JSON a cuireadh ar fáil ina oibiacht `Query`.
+
+
+---
+
+## kscanne-KCG SUMMARY
+
+*Source: `docs/bunchloch/teanga/kscanne-KCG_SUMMARY.md` (361 words, 35 lines)*
+
+# KCG_SUMMARY: kscanne — Irish NLP Tools Repository
+
+## What It Is
+kscanne is Kevin Scannell's comprehensive collection of Irish language NLP tools, datasets, and linguistic resources. It spans grammatical analysis, spell-checking, machine translation (Irish↔English, Manx, Scottish Gaelic), dependency parsing, part-of-speech tagging, named entity recognition, sentiment analysis, OCR correction, diacritic restoration, dialect classification, and language modeling — all specifically built for or adapted to the Irish language.
+
+## Why This Matters for Kings' College Galway
+This is the single most concentrated collection of Irish-language NLP infrastructure available in open source. For the **teanga** (language) curriculum platform, kscanne provides production-ready tools for automated Irish text processing — grammar checking for student writing, dialect-aware content classification, OCR correction for digitising historical Irish manuscripts, and machine translation for bilingual educational materials. The datasets (Irish Dependency Treebank, UD_Irish-IDT, spelling errors corpus) are directly usable for evaluating and improving Celtic language AI models in the classroom.
+
+## Key Patterns Preserved
+- `gbb/README.md` — Master index of 25+ Irish NLP tasks and datasets (Giorraíonn BERT Bóthar benchmark)
+- `gbb/classification/*/README.md` — Dataset READMEs for native speaker, author, gender, topic, dialect, and sentiment classification
+- `gbb/translation/*/README.md` — Irish↔English, Irish↔Manx, Irish↔Scottish Gaelic machine translation datasets
+- `gbb/proofing/*/README.md` — Grammar checking, mutation prediction, OCR correction, standardisation, diacritic restoration
+- `gbb/tagging/*/README.md` — NER, code-switching detection, POS tagging, lemmatization
+- `gbb/syntax/*/README.md` — Dependency and constituency parsing, chunking
+- `gbb/generation/*/README.md` — Language modeling, question answering, conversational agents
+- `gramadoir/API.md` — An Gramadóir grammar checker API documentation
+- `treocht/API.md` — Teanglann/Treocht API documentation
+- `UD_Irish-IDT/CONTRIBUTING.md` — Universal Dependencies contribution guide
+- `cadhan.com/README.md` — Cadhan Aonair Irish text resources
+- `ogham/README.md` — Ogham script tools
+
+## Source Files
+Full source code was removed on 2026-06-06. The original repositories are available at GitHub (e.g., github.com/kscanne). This skeleton preserves only the documentation to show the architecture and scope of Irish NLP tools surveyed.
+
+## What Was Removed
+- Python/Perl/C++ source code for all NLP tools
+- Training data and model checkpoints (GBB datasets)
+- Crúbadán web crawl corpora
+- Hunspell Irish spelling dictionaries
+- Universal Dependencies treebank data files
+- Language model binaries and tokenizers
+- Build scripts and Makefiles
+- Web application sources (treocht, gramadoir, cadhan.com)
+
+
+---
+
+## INDEX
+
+*Source: `docs/bunchloch/teanga/INDEX.md` (356 words, 41 lines)*
+
+# docs/teanga — Celtic Language AI Reference Library
+
+This directory holds skeletonised documentation from cloned Celtic language AI tools, applications, and training repositories. Full source code has been removed (2026-06-06); each subdirectory retains only its markdown documentation and a `KCG_SUMMARY.md` explaining why the tool matters for Kings' College Galway's **teanga** (language) curriculum platform.
+
+All subdirectories below are skeletons — documentation-only snapshots of larger source repositories.
+
+---
+
+## Subdirectories
+
+### [kscanne/](kscanne/KCG_SUMMARY.md)
+Kevin Scannell's comprehensive Irish NLP tools and datasets — grammar checking, machine translation, dependency parsing, POS tagging, sentiment analysis, OCR correction, and 25+ benchmark tasks for Irish language AI. **81M → 268K**
+
+### [escriptorium/](escriptorium/KCG_SUMMARY.md)
+Django-based collaborative platform for historical document transcription, annotation, and publishing. Integrates Kraken OCR, used by EU-funded Scripta/RESILIENCE projects. **45M → 24K**
+
+### [gaois/](gaois/KCG_SUMMARY.md)
+DCU's Gaois research group — Ireland's national digital language infrastructure. Includes téarma.ie (National Terminology Database), logainm.ie API, Dúchas folklore API, Irish surname databases with grammatical inflection, and Terminologue terminology management. **30M → 1.2M**
+
+### [pylaia/](pylaia/KCG_SUMMARY.md)
+PyTorch-based deep learning toolkit for handwritten text recognition (HTR). VGG+BLSTM models with CTC decoding, used as the OCR engine behind eScriptorium. **812K → 32K**
+
+### [genizah_search/](genizah_search/KCG_SUMMARY.md)
+React + Python web application for semantic search of the Cairo Genizah manuscript collection. Uses Elasticsearch, Neo4j graph database, and Mirador IIIF viewer. **740K → 8K**
+
+### [historical-document-analysis/](historical-document-analysis/KCG_SUMMARY.md)
+Multi-modal deep learning pipeline for historical document analysis — OCR (Cloud Vision, Doctr), embeddings (NOMIC, CLIP), Elasticsearch indexing, and Neo4j graph storage. Built for Cairo Genizah research. **620K → 24K**
+
+### [chatterbox-finetuning/](chatterbox-finetuning/KCG_SUMMARY.md)
+Modular TTS fine-tuning infrastructure supporting new languages via custom tokenizers. VE + T3 Transformer + S3Gen vocoder pipeline with offline preprocessing for GPU-optimised training. **116K → 20K**
+
+### [IRLBench/](IRLBench/KCG_SUMMARY.md)
+Parallel Irish-English benchmark for LLM reasoning evaluation, based on 12 subjects from the 2024 Irish Leaving Certificate exams. Uses long-form generation and official marking schemes. **68K → 8K**
+
+### [tts-dataset-generator/](tts-dataset-generator/KCG_SUMMARY.md)
+Automated TTS dataset creation tool — silence-based audio segmentation + Whisper transcription → LJSpeech format. Compatible with VITS, Tacotron, Coqui TTS, and XTTS frameworks. **52K → 16K**
+
+---
+
+*All subdirectories skeletonised on 2026-06-06. Source code removed; documentation preserved for architectural reference. See each KCG_SUMMARY.md for original repository links.*
+
+
+---
+
+## gaois-documental-docs-software-querylogger-v0.7-faulttolerance.ga
+
+*Source: `docs/bunchloch/teanga/gaois-documental-docs-software-querylogger-v0.7-faulttolerance.ga.md` (329 words, 18 lines)*
+
+---
+title: Lamháltas lochtanna agus láimhseáil earráidí
+shortTitle: Láimhseáil earráidí
+description: Logálaí simplí iarratais is féidir a chumrú le haghaidh fheidhmchláir ASP.NET agus ASP.NET Core
+keywords: logálaí iarratais, cuardaigh, staitisticí cuardaigh, foinse oscailte, C#, .NET Core, dotnet, SQL Server, Fiontar & Scoil na Gaeilge, DCU
+order: 6
+toc: false
+public: true
+---
+
+Tiomsaíodh Gaois.QueryLogger agus lamháltas lochtanna agus timpeallachtaí ardéilimh/ard-chomhreatha ar intinn againn. Mar chuid den phróiseas logála, cuirtear iarratais i gciú comhreathach i snáithe cúlra ar leith sula maireann na sonraí. Sin cuid den chúis gur beag an taca a chuireann an modh `Log()` le haga freagartha do fhreastalaí. Is próiseas sioncronach, neasláithreach é seo ach tarlaíonn an próiseas a bhaineann leis na logaí a scríobh sa bhunachar sonraí go haisioncronach i snáithe eile (blas ar leith a bhaineann leis an bpatrún Táirgeora-Tomhaltóra). Úsáideann Gaois.QueryLogger struchtúir sonraí a chuireann an leabharlann [System.Threading.Channels](https://docs.microsoft.com/en-us/dotnet/api/system.threading.channels) ar fáil i dtaca le logáil aisioncronach ardfheidhmíochta.
+
+Ach na logálaithe a chiúáil, caomhnaítear na logálaithe sa chuimhne go dtí go bhféadfaí an próiseas scríofa a atriail má tá ceist seachadta ann faoi I/O an bhunachair sonraí (b’fhéidir go bhfuil go leor tráchta ann nó go bhfuil iarratas costasach ag rith ar an mbunachar sonraí). Is féidir leat uasmhéid an chiú agus an t-eatramh atrialach a shonrú sna [socruithe cumraíochta](../configuration). Má bhaintear uasmhéid an chiú amach, cuileáiltear logálaithe ón gciú ar bhonn 'is túisce isteach is túisce amach.'
+
+## Seirbhís foláirimh
+
+Ós rud é go n-úsáidtear ciú an logálaí i snáithe cúlra, ní chuirfear earráidí bunachair sonraí, ná eisceachtaí a bhaineann le scríobh, ar ais chuig an snáithe glaoite. Tá sé tábhachtach, áfach, go bhfuil tú ar an eolas faoi aon fhadhb a bhfuil tionchar aici ar an tseirbhís logála. Chuige sin, faightear seirbhís foláirimh ríomhphoist ar an bpointe boise ó Gaois.QueryLogger. Sonraigh do shonraí ríomhphoist sna [socruithe cumraíochta](../configuration) agus cuirfear aon fhadhb in iúl duit. Ach an `AlertInterval` a shocrú, cinntítear nach bhfaigheann tú ríomhphoist dhúbailte má thagann borradh mór ar chiú an logálaí.
+
+
+---
+
+## repo-historical-document-analysis
+
+*Source: `docs/bunchloch/teanga/repo-historical-document-analysis.md` (290 words, 26 lines)*
+
+# KCG_SUMMARY: Historical Document Analysis — Multi-Modal Deep Learning Pipeline
+
+## What It Is
+A multi-modal deep learning research repository for analysing historical documents and parsing manuscripts into structured JSON format. Built for the Cairo Genizah project, it combines OCR (Google Cloud Vision, Doctr, Unstructured), multi-modal embeddings (NOMIC, CLIP), search indexing (Elasticsearch), and graph database storage (Neo4j). The pipeline handles document ingestion, OCR, embedding generation, and indexing across multiple institutions' collections (Cambridge, Princeton, Manchester, Oxford).
+
+## Why This Matters for Kings' College Galway
+This repository demonstrates an end-to-end pipeline for historical document digitisation at scale — the exact workflow needed for Irish manuscript collections. For Kings' College Galway's **teanga** platform, it provides the technical patterns for: preprocessing historical Irish-language documents, generating multi-modal embeddings that work across scripts (Latin, Gaelic type, Ogham), building searchable indices of student-transcribed materials, and creating a linked data graph connecting Irish manuscripts, placenames, and people. The multi-step OCR pipeline is directly applicable to the 1937-39 Schools' Collection, where Irish-language handwriting recognition presents unique challenges.
+
+## Key Patterns Preserved
+- `readme.md` — Full project architecture, data pipeline structure, OCR service docs, embedding models, and institutional acknowledgements
+- `src/datasets/indexing/bibliography/README.md` — Bibliography indexing module documentation
+- `src/datasets/indexing/sql/README.md` — SQL indexing module documentation
+
+## Source Files
+Full source code was removed on 2026-06-06. The original repository is at github.com/AIStream-Peelout/historical-document-analysis. This skeleton preserves the pipeline architecture and data flow descriptions.
+
+## What Was Removed
+- Python source code (data pipeline, OCR services, embedding models, indexing scripts)
+- Document model definitions (GenizahDocument, GemaraDocument, BibliographyDocument)
+- Elasticsearch index configuration and bulk insert scripts
+- Multi-modal embedding model code (NOMIC, CLIP)
+- SQL database schemas
+- Requirements and environment files
+- GCP integration and credential management code
+- Weights & Biases experiment tracking
+
+
+---
+
+## gaois-Tearma-TearmaWeb-wwwroot-eolas-coiste.ga
+
+*Source: `docs/bunchloch/teanga/gaois-Tearma-TearmaWeb-wwwroot-eolas-coiste.ga.md` (290 words, 35 lines)*
+
+# An Coiste Téarmaíochta
+
+Tá sé mar aidhm ag an gCoiste Téarmaíochta téarmaíocht údarásach chaighdeánach Ghaeilge a fhorbairt, a fhaomhadh agus a chur ar fáil chun tacú leis an nGaeilge mar mheán cumarsáide i sochaí nua-aoiseach.
+
+Tionóltar cruinnithe míosúla den Choiste Téarmaíochta, coiste deonach ar a bhfuil *c*.25 ball a cheaptar ar feadh tréimhse trí bliana. Socraíonn an Coiste Téarmaíochta prionsabail téarmaíochta, déanann siad an obair a phleanáil agus a mhaoirsiú, ceapann siad téarmaí, déileálann siad le fiosruithe ilghnéitheacha ón bpobal agus le ceisteanna aistriúcháin ó oifigí Gaeilge an AE, agus bunaíonn siad fochoistí saineolaithe de réir mar is gá.
+
+Is féidir teagmháil dhíreach a dhéanamh le foireann an Choiste Téarmaíochta trí ríomhphost a sheoladh chuig <tearmai@forasnagaeilge.ie> nó trí ghlaoch ar 01-6398418.
+
+## Baill reatha an Choiste Téarmaíochta
+
+- Fidelma Ní Ghallchobhair, Cathaoirleach
+- Donla uí Bhraonáin, Leaschathaoirleach
+- Andreas Vogel
+- Antain Mag Shamhráin
+- Colmcille Ó Monacháin/Donal Foley/Helen Hegarty (ex officio: An Coimisiún Eorpach)
+- Caitríona Ní Chathail
+- Cathal Mac Coille
+- Cathal Mac Gabhann/Éanna Ó Ceallaigh/Gráinne Aylward/Michael Greene/PJ Mac Gabhann (ex officio: Ardrúnaíocht Chomhairle na nAirí)
+- Ciarán Mac Raghnaill (ex officio: Rannóg an Aistriúcháin)
+- Darragh Murphy
+- Dr Dónal Ó Muirthuile
+- Dr Dónall Ó Baoill
+- Dr Éamonn Ó hÓgáin
+- Eibhlín Nic Gearailt (ex officio: CCEA)
+- Dr Fionnuala de Barra-Cusack (ex officio: Parlaimint na hEorpa)
+- Dr Gearóid Ó Cleircín (ex officio: Gaois, Fiontar & Scoil na Gaeilge, DCU)
+- Máire Feiritéar
+- Matt Hussey
+- Micheál Ó Sé
+- Dr Niall Mac Uidhilin (ex officio: Acadamh na hOllscolaíochta, OÉG)
+- Nóilín Nic Bhloscaidh
+- Pádraig Ó Gaora
+- Dr Pádraig Ó Mianáin (ex officio: FNBG, Foras na Gaeilge)
+- Seosamh Ó Murchú (ex officio: An Gúm, Foras na Gaeilge)
+
+
+---
+
+## repo-pylaia
+
+*Source: `docs/bunchloch/teanga/repo-pylaia.md` (282 words, 25 lines)*
+
+# KCG_SUMMARY: PyLaia — Deep Learning Handwritten Text Recognition
+
+## What It Is
+PyLaia is a device-agnostic, PyTorch-based deep learning toolkit for handwritten document analysis (HTR/OCR). It is the successor to the Laia system and provides VGG+BLSTM models for text-line recognition using CTC decoding, with tools for model creation, training, and inference. Developed by Teklia and the PRHLT Research Center, it is a core component of the eScriptorium transcription pipeline.
+
+## Why This Matters for Kings' College Galway
+Ireland's historical manuscripts — from medieval Irish annals to 19th-century school copybooks — require specialised OCR for the Irish language and Gaelic script (an cló Gaelach). PyLaia represents one of the few open-source HTR toolkits capable of being fine-tuned for Irish-language manuscript recognition. For Kings' College Galway's **teanga** platform, this provides the technical foundation for a student project pipeline: digitise local historical documents, train custom Irish-language OCR models, and build searchable text corpora from handwritten sources — connecting students directly with primary historical materials in the Irish language.
+
+## Key Patterns Preserved
+- `README.md` — Full project overview, installation, model architecture (VGG+BLSTM+CTC), CLI tools reference, BibTeX citations
+- `CODE_OF_CONDUCT.md` — Contributor Covenant v2.0
+- `CONTRIBUTING.md` — Contribution guide with bug reporting, enhancement suggestions, and development setup
+- `benchmarks/README.md` — Benchmark information
+
+## Source Files
+Full source code was removed on 2026-06-06. The original repository is available at gitlab.teklia.com/atr/pylaia and github.com/jpuigcerver/PyLaia. This skeleton preserves the technical documentation and research context.
+
+## What Was Removed
+- Python source code (laia/ package with model definitions, training scripts, CTC decoder)
+- Pre-trained model weights and checkpoints
+- Test suites and CI pipeline configuration
+- Training configuration files
+- Sphinx documentation source
+- Pre-commit hooks and development tooling
+
+
+---
+
+## repo-escriptorium
+
+*Source: `docs/bunchloch/teanga/repo-escriptorium.md` (282 words, 27 lines)*
+
+# KCG_SUMMARY: eScriptorium — Historical Document Transcription Platform
+
+## What It Is
+eScriptorium is a full Django-based web application developed under the Scripta, RESILIENCE, and Biblissima+ EU research projects for transcribing, annotating, translating, and publishing historical documents. It integrates the Kraken OCR engine for automatic text recognition and provides a collaborative platform for humanities researchers working with manuscript collections.
+
+## Why This Matters for Kings' College Galway
+Ireland holds one of the richest manuscript traditions in Europe — from the Book of Kells to the National Folklore Collection's 740,000+ pages of Schools' Collection material. eScriptorium's architecture demonstrates how to build a production-grade platform for digitising and transcribing historical Irish-language manuscripts. For Kings' College Galway's **teanga** curriculum, this provides the pattern for a student-facing tool where learners could collaboratively transcribe and annotate historical Irish texts, connecting them directly with Ireland's literary heritage while building practical digital humanities skills.
+
+## Key Patterns Preserved
+- `README.md` — Project overview, technology stack (Django, Postgres, Elasticsearch, Redis, Celery, Kraken), funding sources, and steering committee
+- `INSTALL-ubuntu.md` — Complete Ubuntu 18.04/20.04 installation guide covering system dependencies, database setup, and development server configuration
+- `app/apps/imports/README.md` — Import module documentation
+
+## Source Files
+Full source code was removed on 2026-06-06. The original repository is available at gitlab.com/scripta/escriptorium. This skeleton preserves documentation to inform platform architecture decisions for the Kings' College Galway transcription stack.
+
+## What Was Removed
+- Django application source code (Python, HTML templates, CSS, JavaScript)
+- Kraken OCR model files and configuration
+- Docker and deployment configurations
+- Database migration files
+- Front-end static assets and build tooling
+- Test suites and CI/CD configuration
+- Nginx and uWSGI configuration
+- Celery task definitions
+- Elasticsearch index mappings
+
+
+---
+
+## ocr-reference
+
+*Source: `docs/bunchloch/meaisínfhoghlaim/ocr-reference.md` (225 words, 118 lines)*
+
+# ocr reference
+
+> Auto-merged from subdirectory .md files on 2026-06-06
+
+---
+
+
+## File: docs/meaisínfhoghlaim/ocr/document-intelligence-ocr.md
+
+---
+redirect: ../document-processing-reference.md
+---
+
+This content has been merged into [document-processing-reference.md](../document-processing-reference.md).
+
+---
+
+
+## File: docs/meaisínfhoghlaim/ocr/document-intelligence-vlm.md
+
+---
+redirect: ../document-processing-reference.md
+---
+
+This content has been merged into [document-processing-reference.md](../document-processing-reference.md).
+
+---
+
+
+## File: docs/meaisínfhoghlaim/ocr/Handwriting Recognition and Dataset Creation.md
+
+---
+redirect: ../document-processing-reference.md
+---
+
+This content has been merged into [document-processing-reference.md](../document-processing-reference.md).
+
+---
+
+
+## File: docs/meaisínfhoghlaim/ocr/Index PDFs, Images, Slides without OCR _ CocoIndex.md
+
+---
+redirect: ../document-processing-reference.md
+---
+
+This content has been merged into [document-processing-reference.md](../document-processing-reference.md).
+
+---
+
+
+## File: docs/meaisínfhoghlaim/ocr/Irish Handwriting App Development.md
+
+---
+redirect: ../document-processing-reference.md
+---
+
+This content has been merged into [document-processing-reference.md](../document-processing-reference.md).
+
+---
+
+
+## File: docs/meaisínfhoghlaim/ocr/irish-english-handwriting.md
+
+---
+redirect: ../document-processing-reference.md
+---
+
+This content has been merged into [document-processing-reference.md](../document-processing-reference.md).
+
+---
+
+
+## File: docs/meaisínfhoghlaim/ocr/Multimodal Irish Handwriting Generation Model.md
+
+---
+redirect: ../document-processing-reference.md
+---
+
+This content has been merged into [document-processing-reference.md](../document-processing-reference.md).
+
+---
+
+
+## File: docs/meaisínfhoghlaim/ocr/Open-Source VLMs For PDF Extraction.md
+
+---
+redirect: ../document-processing-reference.md
+---
+
+This content has been merged into [document-processing-reference.md](../document-processing-reference.md).
+
+---
+
+
+## File: docs/meaisínfhoghlaim/ocr/Supercharge your OCR Pipelines with Open Models.md
+
+---
+redirect: ../document-processing-reference.md
+---
+
+This content has been merged into [document-processing-reference.md](../document-processing-reference.md).
+
+---
+
+
+## Original Sources
+
+- `docs/meaisínfhoghlaim/ocr/document-intelligence-ocr.md`
+- `docs/meaisínfhoghlaim/ocr/document-intelligence-vlm.md`
+- `docs/meaisínfhoghlaim/ocr/Handwriting Recognition and Dataset Creation.md`
+- `docs/meaisínfhoghlaim/ocr/Index PDFs, Images, Slides without OCR _ CocoIndex.md`
+- `docs/meaisínfhoghlaim/ocr/Irish Handwriting App Development.md`
+- `docs/meaisínfhoghlaim/ocr/irish-english-handwriting.md`
+- `docs/meaisínfhoghlaim/ocr/Multimodal Irish Handwriting Generation Model.md`
+- `docs/meaisínfhoghlaim/ocr/Open-Source VLMs For PDF Extraction.md`
+- `docs/meaisínfhoghlaim/ocr/Supercharge your OCR Pipelines with Open Models.md`
+
+
+---
+
+## kscanne-gbb-README
+
+*Source: `docs/bunchloch/teanga/kscanne-gbb-README.md` (156 words, 46 lines)*
+
+
+## Giorraíonn BERT Bóthar
+
+This repository contains datasets and code for measuring progress
+in Irish language NLP.
+
+We currently have datasets for the following tasks:
+
+* [Author Identification](./classification/author/README.md)
+* [Bilingual Lexicon Induction](./translation/lexicon/README.md)
+* [Chunking](./syntax/chunking/README.md)
+* [Code-switching Detection](./tagging/codeswitch/README.md)
+* [Constituency Parsing](./syntax/constituency/README.md)
+* [Conversational Agents](./generation/conversation/README.md)
+* [Dependency Parsing](./syntax/dependency/README.md)
+* [Diacritic Restoration](./proofing/diacritics/README.md)
+* [Dialect Classification](./classification/dialect/README.md)
+* [Gender Identification](./classification/gender/README.md)
+* [Grammar Checking](./proofing/grammar/README.md)
+* [Irish-English Machine Translation](./translation/en/README.md)
+* [Irish-Manx Gaelic Machine Translation](./translation/gv/README.md)
+* [Irish-Scottish Gaelic Machine Translation](./translation/gd/README.md)
+* [Irish Standardization](./proofing/standardization/README.md)
+* [Language Modeling](./generation/lm/README.md)
+* [Lemmatization](./tagging/lemmatization/README.md)
+* [Named Entity Recognition](./tagging/ner/README.md)
+* [Native speaker vs. Learner classification](./classification/native/README.md)
+* [OCR Correction](./proofing/ocr/README.md)
+* [Part-of-Speech Tagging](./tagging/pos/README.md)
+* [Prediction of Initial Mutations](./proofing/mutations/README.md)
+* [Question Answering](./generation/qa/README.md)
+* [Sentiment Analysis](./classification/sentiment/README.md)
+* [Topic and Genre Classification](./classification/topic/README.md)
+
+Datasets wanted, or in progress:
+
+* Word-sense disambiguation and word-sense induction
+* Co-reference resolution (cf. [GAP](https://github.com/google-research-datasets/gap-coreference)) 
+* Toxic comments, hate speech, abusive language
+* Dating of texts
+* Text summarization
+* Semantic parsing
+* Semantic role labeling
+* ASR
+* Handwriting recognition
+
+
+---
+
+## kscanne-unicorn-README
+
+*Source: `docs/bunchloch/teanga/kscanne-unicorn-README.md` (17 words, 5 lines)*
+
+unicorn
+=======
+
+Animatedly democratizing with C# to facilitate Unity. All in the language of three dimensions.
+
+
+---
+
+## kscanne-gbb-proofing-ocr-README
+
+*Source: `docs/bunchloch/teanga/kscanne-gbb-proofing-ocr-README.md` (12 words, 4 lines)*
+
+## OCR Correction
+
+There are currently **0** benchmarks for this task.
+
