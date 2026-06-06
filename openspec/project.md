@@ -164,5 +164,5 @@ All specs MUST respect constraints from `docs/context/00-core/CONSTRAINTS.md`:
 | `monorepo-restructure-v2` | implemented |
 | `team-workflow-stack` | implemented |
 | `fix-existing-stacks` | implemented |
-| `croilar-portfolio` | implemented (superseded) |
-| `croilar-revitalisation` | in-flight |
+| `croilar-portfolio` | implemented (superseded by croilar-revitalisation) |
+| `croilar-revitalisation` | implemented |

@@ -1,5 +1,8 @@
 {
-  "site": { "title": "Croílár", "tagline": "Punann Phearsanta + CV + Innealtóireacht Sonraí" },
+  "site": {
+    "title": "Croílár",
+    "tagline": "Punann Phearsanta + CV + Innealtóireacht Sonraí"
+  },
   "nav": {
     "home": "Baile",
     "cv": "CV",
@@ -106,5 +109,10 @@
     "loading": "Ag lódáil…",
     "comingSoon": "Ag teacht go luath",
     "noData": "Níl aon sonraí ar fáil go fóill"
+  },
+  "notFound": {
+    "title": "404 — Gan Aimsiú",
+    "subtitle": "Níl an leathanach atá á lorg agat ann nó tá sé athshuite.",
+    "backHome": "Ar ais chuig an mBaile"
   }
 }
