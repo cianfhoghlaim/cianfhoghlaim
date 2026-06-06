@@ -1,5 +1,12 @@
 # oideachais - Unified Celtic Education Platform
 
+> ⚠️ **This document is a historical/legacy reference.** The canonical
+> documentation is [`README.md`](README.md) which is kept in sync with the
+> current architecture. This file is preserved for the older content it
+> documents (Datadog APM code examples, MLflow code examples, Langfuse code
+> examples, RAGAS code examples, the Kafka topics table, and the
+> credits table) which are not duplicated in the primary README.
+
 A unified data platform for Celtic language education, covering 6 nations and 6 Celtic languages with comprehensive observability and AI agent capabilities.
 
 ## Overview
