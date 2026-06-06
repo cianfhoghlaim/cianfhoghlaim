@@ -37,7 +37,7 @@ interface BrowserTaskRequest {
   };
 }
 
-interface BrowserTaskStatus {
+export interface BrowserTaskStatus {
   task_id: string;
   status: "pending" | "running" | "completed" | "failed";
   progress?: number;

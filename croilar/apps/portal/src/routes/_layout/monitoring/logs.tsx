@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Filter, RefreshCw, Search } from "lucide-react";
+import { RefreshCw, Search } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/_layout/monitoring/logs")({

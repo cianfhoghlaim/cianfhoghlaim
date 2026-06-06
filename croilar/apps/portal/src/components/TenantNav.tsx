@@ -5,6 +5,7 @@
 
 import { Link, useRouter } from "@tanstack/react-router";
 import { useTenant, useNavigation } from "@/lib/tenant";
+import type { TenantFeatures } from "@/lib/tenant";
 import {
   BookOpen,
   Languages,
@@ -208,7 +209,7 @@ export function TenantFooter() {
  * Only renders children if the feature is enabled for the tenant
  */
 interface FeatureGuardProps {
-  feature: keyof import("@/../../../shared/types/tenant").TenantFeatures;
+  feature: keyof TenantFeatures;
   children: React.ReactNode;
   fallback?: React.ReactNode;
 }
@@ -235,7 +236,6 @@ interface RouteGuardProps {
 
 export function RouteGuard({ path, children }: RouteGuardProps) {
   const tenant = useTenant();
-  const enabledPaths = tenant.routes.enabled.map((r) => r.path);
   const disabledPaths = tenant.routes.disabled;
 
   // Check if route is explicitly disabled

@@ -1,12 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Server,
   Globe,
   BookOpen,
   Database,
   Activity,
-  Clock,
   ExternalLink,
   RefreshCw,
   CheckCircle2,

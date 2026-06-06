@@ -373,7 +373,7 @@ function ToolsPage() {
                   {error}
                 </div>
               )}
-              {result && (
+              {result ? (
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-green-500">
                     <CheckCircle2 size={16} />
@@ -383,7 +383,7 @@ function ToolsPage() {
                     {JSON.stringify(result, null, 2)}
                   </pre>
                 </div>
-              )}
+              ) : null}
               {!error && !result && (
                 <p className="text-muted-foreground">
                   Execute the tool to see results

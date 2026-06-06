@@ -26,11 +26,12 @@ export function SIWEConnect({ onConnect, onDisconnect }: SIWEConnectProps) {
       }
 
       // Request account access
-      const accounts = await window.ethereum.request({
+      const accountsResult = await window.ethereum.request({
         method: 'eth_requestAccounts',
       });
+      const accounts = (accountsResult ?? []) as string[];
 
-      if (!accounts || accounts.length === 0) {
+      if (accounts.length === 0) {
         throw new Error('No accounts found');
       }
 
@@ -176,13 +177,4 @@ Issued At: ${params.issuedAt}
 Expiration Time: ${params.expirationTime}`;
 }
 
-// Type declaration for window.ethereum
-declare global {
-  interface Window {
-    ethereum?: {
-      request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
-      on: (event: string, callback: (...args: unknown[]) => void) => void;
-      removeListener: (event: string, callback: (...args: unknown[]) => void) => void;
-    };
-  }
-}
+// (window.ethereum type declaration is in src/hooks/useAuth.ts)
