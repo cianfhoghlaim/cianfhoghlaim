@@ -2,7 +2,7 @@
 // Shared by all /ga/* routes. Provides the GA locale context.
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/ga")({
+export const Route = createFileRoute("/ga/__layout")({
   component: GaLayoutComponent,
 });
 

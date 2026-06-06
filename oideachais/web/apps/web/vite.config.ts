@@ -9,6 +9,7 @@
 // Pattern from https://github.com/TanStack/router/tree/main/examples/react/start-basic
 import { defineConfig } from "vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 import tailwindcss from "@tailwindcss/vite";
@@ -17,16 +18,21 @@ export default defineConfig({
   plugins: [
     tsconfigPaths(),
     tailwindcss(),
-    // The TanStack Start Vite plugin provides createStartHandler, SSR, server
-    // functions, and file-based routing. It composes with @tanstack/router-plugin
-    // (loaded via app/router.tsx's tsr plugin config).
-    tanstackStart(),
+    // TanStack Router plugin: generates the file-based route tree from
+    // src/routes/. The generated routeTree.gen.ts is imported by
+    // app/router.tsx. autoCodeSplitting disabled for now — needs proper
+    // TSR transformer setup that requires @vitejs/plugin-react SSR mode.
+    TanStackRouterVite(),
+    tanstackStart({
+      tsr: {
+        appDirectory: "src/app",
+      },
+    }),
     react(),
   ],
   server: {
     port: 3001,
     host: true,
-    // Proxy /api, /rpc, /api-reference, /api/copilotkit to the Hono app server.
     proxy: {
       "/api": "http://localhost:8787",
       "/api-reference": "http://localhost:8787",
