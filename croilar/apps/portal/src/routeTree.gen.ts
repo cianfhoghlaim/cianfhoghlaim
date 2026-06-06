@@ -20,6 +20,7 @@ import { Route as ApiAgentRouteImport } from './routes/api/agent'
 import { Route as LayoutWidgetsRouteImport } from './routes/_layout/widgets'
 import { Route as LayoutToolsRouteImport } from './routes/_layout/tools'
 import { Route as LayoutStacksIndexRouteImport } from './routes/_layout/stacks/index'
+import { Route as LayoutAnalyticsIndexRouteImport } from './routes/_layout/analytics/index'
 import { Route as LayoutAgentsIndexRouteImport } from './routes/_layout/agents/index'
 import { Route as ApiMcpGatewayRouteImport } from './routes/api/mcp.gateway'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -82,6 +83,11 @@ const LayoutStacksIndexRoute = LayoutStacksIndexRouteImport.update({
   path: '/stacks/',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutAnalyticsIndexRoute = LayoutAnalyticsIndexRouteImport.update({
+  id: '/analytics/',
+  path: '/analytics/',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutAgentsIndexRoute = LayoutAgentsIndexRouteImport.update({
   id: '/agents/',
   path: '/agents/',
@@ -119,6 +125,7 @@ const LayoutAgentsChatRoute = LayoutAgentsChatRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof LayoutIndexRoute
   '/login': typeof LoginRoute
   '/tools': typeof LayoutToolsRoute
   '/widgets': typeof LayoutWidgetsRoute
@@ -127,15 +134,15 @@ export interface FileRoutesByFullPath {
   '/api/codeolas': typeof ApiCodeolasRoute
   '/api/health': typeof ApiHealthRoute
   '/api/mcp': typeof ApiMcpRouteWithChildren
-  '/': typeof LayoutIndexRoute
   '/agents/chat': typeof LayoutAgentsChatRoute
   '/data/pipelines': typeof LayoutDataPipelinesRoute
   '/monitoring/logs': typeof LayoutMonitoringLogsRoute
   '/monitoring/metrics': typeof LayoutMonitoringMetricsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/mcp/gateway': typeof ApiMcpGatewayRoute
-  '/agents': typeof LayoutAgentsIndexRoute
-  '/stacks': typeof LayoutStacksIndexRoute
+  '/agents/': typeof LayoutAgentsIndexRoute
+  '/analytics/': typeof LayoutAnalyticsIndexRoute
+  '/stacks/': typeof LayoutStacksIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -154,6 +161,7 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/mcp/gateway': typeof ApiMcpGatewayRoute
   '/agents': typeof LayoutAgentsIndexRoute
+  '/analytics': typeof LayoutAnalyticsIndexRoute
   '/stacks': typeof LayoutStacksIndexRoute
 }
 export interface FileRoutesById {
@@ -175,11 +183,13 @@ export interface FileRoutesById {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/mcp/gateway': typeof ApiMcpGatewayRoute
   '/_layout/agents/': typeof LayoutAgentsIndexRoute
+  '/_layout/analytics/': typeof LayoutAnalyticsIndexRoute
   '/_layout/stacks/': typeof LayoutStacksIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/login'
     | '/tools'
     | '/widgets'
@@ -188,15 +198,15 @@ export interface FileRouteTypes {
     | '/api/codeolas'
     | '/api/health'
     | '/api/mcp'
-    | '/'
     | '/agents/chat'
     | '/data/pipelines'
     | '/monitoring/logs'
     | '/monitoring/metrics'
     | '/api/auth/$'
     | '/api/mcp/gateway'
-    | '/agents'
-    | '/stacks'
+    | '/agents/'
+    | '/analytics/'
+    | '/stacks/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -215,6 +225,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/mcp/gateway'
     | '/agents'
+    | '/analytics'
     | '/stacks'
   id:
     | '__root__'
@@ -235,6 +246,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/mcp/gateway'
     | '/_layout/agents/'
+    | '/_layout/analytics/'
     | '/_layout/stacks/'
   fileRoutesById: FileRoutesById
 }
@@ -261,7 +273,7 @@ declare module '@tanstack/react-router' {
     '/_layout': {
       id: '/_layout'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof LayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -324,14 +336,21 @@ declare module '@tanstack/react-router' {
     '/_layout/stacks/': {
       id: '/_layout/stacks/'
       path: '/stacks'
-      fullPath: '/stacks'
+      fullPath: '/stacks/'
       preLoaderRoute: typeof LayoutStacksIndexRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/analytics/': {
+      id: '/_layout/analytics/'
+      path: '/analytics'
+      fullPath: '/analytics/'
+      preLoaderRoute: typeof LayoutAnalyticsIndexRouteImport
       parentRoute: typeof LayoutRoute
     }
     '/_layout/agents/': {
       id: '/_layout/agents/'
       path: '/agents'
-      fullPath: '/agents'
+      fullPath: '/agents/'
       preLoaderRoute: typeof LayoutAgentsIndexRouteImport
       parentRoute: typeof LayoutRoute
     }
@@ -389,6 +408,7 @@ interface LayoutRouteChildren {
   LayoutMonitoringLogsRoute: typeof LayoutMonitoringLogsRoute
   LayoutMonitoringMetricsRoute: typeof LayoutMonitoringMetricsRoute
   LayoutAgentsIndexRoute: typeof LayoutAgentsIndexRoute
+  LayoutAnalyticsIndexRoute: typeof LayoutAnalyticsIndexRoute
   LayoutStacksIndexRoute: typeof LayoutStacksIndexRoute
 }
 
@@ -401,6 +421,7 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutMonitoringLogsRoute: LayoutMonitoringLogsRoute,
   LayoutMonitoringMetricsRoute: LayoutMonitoringMetricsRoute,
   LayoutAgentsIndexRoute: LayoutAgentsIndexRoute,
+  LayoutAnalyticsIndexRoute: LayoutAnalyticsIndexRoute,
   LayoutStacksIndexRoute: LayoutStacksIndexRoute,
 }
 
@@ -431,12 +452,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}

@@ -15,7 +15,7 @@ import type { TenantClientContext } from "@/lib/tenant";
 
 export const Route = createRootRoute({
   // Load tenant config before rendering
-  beforeLoad: async ({ context }) => {
+  beforeLoad: async () => {
     try {
       const tenantConfig = await fetchTenantConfig();
       return { tenantConfig };

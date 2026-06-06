@@ -15,34 +15,42 @@ import { createFileRoute } from "@tanstack/react-router";
 // LiteLLM base URL for MCP calls
 const LITELLM_BASE_URL = process.env.LITELLM_BASE_URL || "http://litellm:4000";
 
-interface CodeolasSearchRequest {
+export interface CodeolasSearchRequest {
   query: string;
-  options?: {
-    limit?: number;
-    language?: string;
-    repository?: string;
-    include_context?: boolean;
-    rerank?: boolean;
-  };
+  path?: string;
+  languages?: string[];
+  limit?: number;
+  context_lines?: number;
+  include_patterns?: string[];
+  exclude_patterns?: string[];
+  semantic?: boolean;
 }
 
-interface CodeolasSearchResult {
-  file_path: string;
-  content: string;
-  language: string;
-  score: number;
-  line_start?: number;
-  line_end?: number;
-  context?: string;
+export interface CodeolasSearchResult {
+  results: Array<{
+    file_path: string;
+    line_start: number;
+    line_end: number;
+    language: string;
+    content: string;
+    score: number;
+    match_type: "exact" | "semantic" | "regex";
+    context?: {
+      before: string[];
+      after: string[];
+    };
+  }>;
+  total_results: number;
+  search_time_ms: number;
 }
 
-interface CodeolasAnalyzeRequest {
-  file_path: string;
+export interface CodeolasAnalyzeRequest {
+  path: string;
   analysis_type?: "structure" | "dependencies" | "symbols" | "all";
 }
 
-interface CodeolasRelationshipsRequest {
-  entity: string;
+export interface CodeolasRelationshipsRequest {
+  path: string;
   entity_type?: "file" | "function" | "class" | "module";
   depth?: number;
 }

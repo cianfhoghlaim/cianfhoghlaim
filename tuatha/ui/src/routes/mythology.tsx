@@ -75,7 +75,7 @@ function MythologyPage() {
             className="px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-purple-500"
           >
             <option value="">All Traditions</option>
-            {traditionsQuery.data?.map((tradition) => (
+            {traditionsQuery.data?.map((tradition: { id: string; name: string; description: string }) => (
               <option key={tradition.id} value={tradition.id}>
                 {tradition.name}
               </option>
@@ -90,7 +90,7 @@ function MythologyPage() {
             disabled={!cyclesQuery.data?.length}
           >
             <option value="">All Cycles</option>
-            {cyclesQuery.data?.map((cycle) => (
+            {cyclesQuery.data?.map((cycle: { id: string; name: string; tradition: string }) => (
               <option key={cycle.id} value={cycle.id}>
                 {cycle.name}
               </option>
