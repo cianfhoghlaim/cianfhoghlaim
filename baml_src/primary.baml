@@ -81,48 +81,34 @@ class PrimaryCurriculumArea {
 // Functions
 // -----------------------------------------------------------------------------
 
-function ExtractPrimaryFramework(
-  text: string,
+function ExtractPrimaryFramework(text: string,
   stage: PrimaryStage,
-  area: PrimaryCurriculumArea
-) -> PrimaryCurriculumArea {
-  client "litellm/gemini-2.0-flash"
-  prompt #"
-    You are an expert Irish primary curriculum analyst.
+  area: PrimaryCurriculumArea) -> PrimaryCurriculumArea {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Analyze the text from the Primary Curriculum Framework for a specific stage and area.
-    CRITICAL: The Primary Framework uses a matrix of 'Strands' and 'Elements'.
-    Look for specific icons or text labels that indicate 'Key Competencies'.
-    Always extract BOTH English and Irish versions of every field.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    STAGE: {{ stage }}
-    AREA: {{ area }}
-
-    Text: {{ text }}
-
-    Return the structured PrimaryCurriculumArea as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{text}}
+    {{stage}}
+    {{area}}
+"#
 }
 
-function ExtractPrimaryLearningOutcomes(
-  text: string,
+function ExtractPrimaryLearningOutcomes(text: string,
   stage: PrimaryStage,
-  area: PrimaryCurriculumArea
-) -> PrimaryLearningOutcome[] {
-  client "litellm/gemini-2.0-flash"
-  prompt #"
-    You are an expert Irish primary curriculum analyst.
+  area: PrimaryCurriculumArea) -> PrimaryLearningOutcome[] {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"Extract the requested data.
 
-    Extract all learning outcomes from this Primary Curriculum text for the given stage and area.
-    Each outcome should have a unique ID, the element it belongs to, the action verbs,
-    and any cross-curricular links to other primary areas.
+{{ ctx.output_format(prefix="Answer with this format:\n") }}
 
-    STAGE: {{ stage }}
-    AREA: {{ area }}
-    Text: {{ text }}
-
-    Return PrimaryLearningOutcome[] as {{ ctx.output_format }}.
-  "#
+{{ _.role("user") }}
+    {{text}}
+    {{stage}}
+    {{area}}
+"#
 }
 
 // -----------------------------------------------------------------------------
