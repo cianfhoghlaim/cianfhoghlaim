@@ -15,7 +15,7 @@ After the 5 stage knowledge-graph assets materialise, this asset creates the
 """
 from __future__ import annotations
 
-from dagster import AssetExecutionContext, asset
+from dagster import asset
 
 EDGE_DEFINITIONS = [
     {
@@ -82,7 +82,7 @@ EDGE_DEFINITIONS = [
     description="Cross-stage Cognee cognify: creates 8 cross-stage edges spanning Aistear → Primary → JC → SC → Tertiary.",
 )
 def cross_stage_cognify(
-    context: AssetExecutionContext,
+    context,
     aistear_knowledge_graph,
     primary_knowledge_graph,
     junior_cycle_knowledge_graph,

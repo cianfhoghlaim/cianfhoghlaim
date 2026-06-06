@@ -963,8 +963,11 @@ dependencies = [
     { name = "agno" },
     { name = "anthropic" },
     { name = "baml-py" },
+    { name = "fastapi" },
+    { name = "firecrawl" },
     { name = "google-genai" },
     { name = "groq" },
+    { name = "logfire" },
     { name = "openai" },
 ]
 
@@ -973,8 +976,11 @@ requires-dist = [
     { name = "agno", specifier = ">=2.6.11" },
     { name = "anthropic", specifier = ">=0.106.0" },
     { name = "baml-py", specifier = ">=0.222.0" },
+    { name = "fastapi", specifier = ">=0.136.0" },
+    { name = "firecrawl", specifier = ">=4.28.2" },
     { name = "google-genai", specifier = ">=1.73.1" },
     { name = "groq", specifier = ">=1.4.0" },
+    { name = "logfire", specifier = ">=4.15.1" },
     { name = "openai", specifier = ">=2.32.0" },
 ]
 
@@ -2788,6 +2794,24 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/bb/29/745f7d30d47fe0f251d3ad3dc2978a23141917661998763bebb6da007eb1/filetype-1.2.0.tar.gz", hash = "sha256:66b56cd6474bf41d8c54660347d37afcc3f7d1970648de365c102ef77548aadb", size = 998020, upload-time = "2022-11-02T17:34:04.141Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/18/79/1b8fa1bb3568781e84c9200f951c735f3f157429f44be0495da55894d620/filetype-1.2.0-py2.py3-none-any.whl", hash = "sha256:7ce71b6880181241cf7ac8697a2f1eb6a8bd9b429f7ad6d27b8db9ba5f1c2d25", size = 19970, upload-time = "2022-11-02T17:34:01.425Z" },
+]
+
+[[package]]
+name = "firecrawl"
+version = "4.28.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "aiohttp" },
+    { name = "httpx" },
+    { name = "nest-asyncio" },
+    { name = "pydantic" },
+    { name = "python-dotenv" },
+    { name = "requests" },
+    { name = "websockets" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/0b/be/fead16e9584d6e9de74b42ad75d446fee2a7be6ec1bc0625c42427ad581d/firecrawl-4.28.2.tar.gz", hash = "sha256:747449863629ac39ff2d890764107d19738b33c09555e789bd2a160a5243ab25", size = 191844, upload-time = "2026-05-28T00:03:53.543Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/54/09/9c82ac924eece839f8c2bca44827282ed4ff832ee2ac6db8cd525912cb2d/firecrawl-4.28.2-py3-none-any.whl", hash = "sha256:1b861809a0dc240cc70fbffe509c9263e6878f21da13f1a329b8f781c65fb2a4", size = 239132, upload-time = "2026-05-28T00:03:51.899Z" },
 ]
 
 [[package]]

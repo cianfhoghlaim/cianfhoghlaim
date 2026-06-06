@@ -11,9 +11,9 @@ import datetime
 import json
 import os
 
-from dagster import AssetExecutionContext, asset, schedule
+from dagster import asset, define_asset_job, schedule
 
-from ...dlt_utils.safety import safe_dataset_query
+from oideachais.data_platform.dlt_utils.safety import safe_dataset_query
 
 UI_SUGGESTION_TABLE = "ui_component_suggestions"
 
@@ -22,7 +22,7 @@ UI_SUGGESTION_TABLE = "ui_component_suggestions"
     group_name="ui_suggestion",
     description="Nightly UI component suggestions, driven by the populated Cognee index and BAML extraction keywords.",
 )
-def ui_suggestion_asset(context: AssetExecutionContext) -> int:
+def ui_suggestion_asset(context) -> int:
     """Run SuggestUIComponents for each of the 5 stages.
 
     The real BAML invocation is:
@@ -53,11 +53,13 @@ def ui_suggestion_asset(context: AssetExecutionContext) -> int:
     return 5  # 5 stage components suggested
 
 
+_ui_suggestion_job = define_asset_job(
+    name="ui_suggestion_job",
+    selection=[ui_suggestion_asset],
+)
+
 ui_suggestion_schedule = schedule(
     cron_schedule="0 3 * * *",  # 03:00 daily
-    job=define_ui_suggestion_job := __import__("dagster").define_asset_job(
-        name="ui_suggestion_job",
-        selection=[ui_suggestion_asset],
-    ),
+    job=_ui_suggestion_job,
     execution_timezone="Europe/Dublin",
 )

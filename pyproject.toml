@@ -22,8 +22,11 @@ dependencies = [
     "agno>=2.6.11",
     "anthropic>=0.106.0",
     "baml-py>=0.222.0",
+    "fastapi>=0.136.0",
+    "firecrawl>=4.28.2",
     "google-genai>=1.73.1",
     "groq>=1.4.0",
+    "logfire>=4.15.1",
     "openai>=2.32.0",
 ]
 

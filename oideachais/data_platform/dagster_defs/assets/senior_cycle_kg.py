@@ -25,7 +25,6 @@ import os
 from pathlib import Path
 
 from dagster import (
-    AssetExecutionContext,
     DailyPartitionsDefinition,
     MultiPartitionsDefinition,
     StaticPartitionsDefinition,
@@ -34,13 +33,13 @@ from dagster import (
     schedule,
 )
 
-from ...dlt_sources.constants.education_sources import (
+from oideachais.data_platform.dagster_defs.assets.ireland.exam_materials_assets import (
     EXAM_CYCLES,
     EXAM_SUBJECTS,
     MATERIAL_TYPES,
 )
-from ...dlt_utils.destinations import get_dlt_destination
-from ...dlt_utils.safety import safe_dlt_run
+from oideachais.data_platform.dlt_utils.destinations import get_dlt_destination
+from oideachais.data_platform.dlt_utils.safety import safe_dlt_run
 
 SENIOR_CYCLE_SUBJECTS = StaticPartitionsDefinition(EXAM_SUBJECTS)
 SENIOR_CYCLE_MATERIAL_TYPES = StaticPartitionsDefinition(MATERIAL_TYPES)
@@ -110,7 +109,7 @@ def senior_cycle_knowledge_graph(
     description="Lazy on-demand BAML extraction cache for a (subject, year, level, paper) tuple. Respects per-session ExtractionBudget.",
     partitions_def=DAILY_PARTITIONS,
 )
-def lazy_extract_exam_paper(context: AssetExecutionContext, senior_cycle_knowledge_graph) -> int:
+def lazy_extract_exam_paper(context, senior_cycle_knowledge_graph) -> int:
     """Memoises LazyExtractExamPaper results in LanceDB exam_paper_extractions."""
     return 0
 

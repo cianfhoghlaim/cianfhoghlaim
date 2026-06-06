@@ -73,6 +73,24 @@ from oideachais.data_platform.dagster_assets import model_conversion_assets
 # Asset Generation Assets (BAML → image gen → Garage S3)
 from oideachais.data_platform.dagster_assets import asset_generation_assets
 
+# Phase 2 — BAML-driven extraction assets
+from oideachais.data_platform.dagster_defs.assets.ui_suggestion import (
+    ui_suggestion_asset,
+    ui_suggestion_schedule,
+)
+try:
+    from oideachais.data_platform.dagster_defs.assets.senior_cycle_kg import (
+        senior_cycle_kg_asset,
+    )
+except Exception:
+    senior_cycle_kg_asset = []
+try:
+    from oideachais.data_platform.cognee_integration.cross_stage_cognify import (
+        cross_stage_cognify,
+    )
+except Exception:
+    cross_stage_cognify = None
+
 # UK Education Assets
 # ============================================================================
 # Partition Imports
@@ -239,6 +257,7 @@ combined_assets = [
     *pdf_processing_assets,  # PDF download and OCR extraction
     *model_conversion_assets, # HF → GGUF conversion (10 models)
     *asset_generation_assets, # BAML → image gen → Garage S3
+    ui_suggestion_asset,      # Nightly UI component suggestions (BAML + Cognee)
 ]
 
 defs = dg.Definitions(
