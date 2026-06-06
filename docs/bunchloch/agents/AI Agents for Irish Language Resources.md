@@ -1,0 +1,3 @@
+# MERGED INTO IRISH_EDUCATION_PLATFORM_BLUEPRINT.md
+
+This file's content has been merged into `IRISH_EDUCATION_PLATFORM_BLUEPRINT.md`.

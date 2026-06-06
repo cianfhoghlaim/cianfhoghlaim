@@ -1,0 +1,13073 @@
+# Infrastructure Tools
+
+## Komodo, Pangolin, Locket & Infisical — Deployment & Secrets Infrastructure
+
+### `Backup and Restore _ Komodo.md` — komodo
+
+---
+title: "Backup and Restore | Komodo"
+source: "https://komo.do/docs/setup/backup"
+author:
+published:
+created: 2025-12-15
+description: "Database backup and restore is actually a function of the Komodo CLI,"
+tags:
+  - "clippings"
+---
+Starting from **v1.19.0**, new Komodo installs will automatically create the **Backup Core Database** [Procedure](https://komo.do/docs/resources/procedures#procedures), scheduled daily. If you don't have it, this is the Toml:
+
+```toml
+[[procedure]]
+name = "Backup Core Database"
+description = "Triggers the Core database backup at the scheduled time."
+tags = ["system"]
+config.schedule = "Every day at 01:00"
+
+[[procedure.config.stage]]
+name = "Stage 1"
+enabled = true
+executions = [
+  { execution.type = "BackupCoreDatabase", execution.params = {}, enabled = true }
+]
+```
+
+## Backups
+
+When Komodo takes a database backup, it creates a **folder named for the time the backup was taken**, and dumps the gzip-compressed documents to files in this folder. In order to store the backups to disk, **mount a host path to `/backups`** in the Komodo Core container.
+
+Due to its larger size and relative unimportance, the `Stats` collection (containing historical server cpu / mem / disk usage) is not included in dated backups. Just latest Stats are maintained at the top level of the backup folder.
+
+In order to prevent unbounded growth, the backup process implements a pruning feature which will ensure only the most recent 14 backup folders are kept. To change this number, set `max_backups` (`KOMODO_CLI_MAX_BACKUPS`) in `core.config.toml`, `komodo.cli.toml`, or in the Core container environment.
+
+```markdown
+# Folder structure
+/backups
+| 2025-08-12_03-00-01
+| | Action.gz
+| | Alerter.gz
+| | ...
+| 2025-08-13_03-00-01
+| 2025-08-14_03-00-01
+| ...
+| Stats.gz
+```
+
+## Remote Backups
+
+Since database backup is actually a function of the [Komodo CLI](https://komo.do/docs/ecosystem/cli), you can also backup directly to a remote server using the `ghcr.io/moghtech/komodo-cli` image. This service will backup once and then exit, so the scheduled deployment should still happen using a Procedure or Action:
+
+```yaml
+services:
+  cli:
+    image: ghcr.io/moghtech/komodo-cli
+    command: km database backup -y
+    volumes:
+      - /path/to/komodo/backups:/backups
+    environment:
+      ## Database port must be reachable.
+      KOMODO_DATABASE_ADDRESS: komodo.example.com:27017
+      KOMODO_DATABASE_USERNAME: <db username>
+      KOMODO_DATABASE_PASSWORD: <db password>
+      KOMODO_DATABASE_DB_NAME: komodo
+      KOMODO_CLI_MAX_BACKUPS: 30 # set to your preference
+```
+
+## Restore
+
+The Komodo CLI handles database restores as well.
+
+```yaml
+services:
+  cli:
+    image: ghcr.io/moghtech/komodo-cli
+    ## Optionally specify a specific folder with \`--restore-folder\`,
+    ## otherwise restores the most recent backup.
+    command: km database restore -y # --restore-folder 2025-08-14_03-00-01
+    volumes:
+      # Same mount to backup files as above
+      - /path/to/komodo/backups:/backups
+    environment:
+      ## Database port must be reachable.
+      ## Note the different env vars needed compared to backup.
+      ## This is to prevent any accidental restores.
+      KOMODO_CLI_DATABASE_TARGET_ADDRESS: komodo.example.com:27017
+      KOMODO_CLI_DATABASE_TARGET_USERNAME: <db username>
+      KOMODO_CLI_DATABASE_TARGET_PASSWORD: <db password>
+      KOMODO_CLI_DATABASE_TARGET_DB_NAME: komodo-restore
+```
+
+## Consistency
+
+So long as the backup process completes successfully, the files produces can always be restored no matter how active the Komodo instance is at the time of backup. However writes that happen during the backup process, such as updates to the resource configuration, may or may not be included in the backup depending on the timing.
+
+While it should be rare that this causes any kind of issue when it comes to restoring, if your Komodo undergoes a lot of usage at all hours and you are worried about consistency, you could consider [locking](https://www.mongodb.com/docs/manual/reference/method/db.fsyncLock/#mongodb-method-db.fsyncLock) Mongo before the backup. Just make sure to [unlock](https://www.mongodb.com/docs/manual/reference/method/db.fsyncUnlock/) the database afterwards.
+
+---
+
+### `Configuring Webhooks _ Komodo.md` — komodo
+
+---
+title: "Configuring Webhooks | Komodo"
+source: "https://komo.do/docs/resources/webhooks"
+author:
+published:
+created: 2025-12-15
+description: "Multiple Komodo resources can take advantage of webhooks from your git provider. Komodo supports incoming webhooks using either the Github or Gitlab webhook authentication type, which is also supported by other providers like Gitea."
+tags:
+  - "clippings"
+---
+Multiple Komodo resources can take advantage of webhooks from your git provider. Komodo supports incoming webhooks using either the Github or Gitlab webhook authentication type, which is also supported by other providers like Gitea.
+
+## Copy the Webhook URL
+
+Find the resource in UI, like a `Build`, `Repo`, or `Stack`. Go to the `Config` section, find "Webhooks", and copy the webhook for the action you want.
+
+The webhook URL is constructed as follows:
+
+```shell
+https://${HOST}/listener/${AUTH_TYPE}/${RESOURCE_TYPE}/${ID_OR_NAME}/${EXECUTION}
+```
+- **`HOST`**: Your Komodo endpoint to recieve webhooks.
+	- If your Komodo sits in a private network, you will need a public proxy setup to forward `/listener` requests to Komodo.
+- **`AUTH_TYPE`**:
+	- options: `github` | `gitlab`
+	- `github`: Validates the signature attached with `X-Hub-Signature-256`. [reference](https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries)
+	- `gitlab`: Checks that the secret attached to `X-Gitlab-Token` is valid. [reference](https://docs.gitlab.com/ee/user/project/integrations/webhooks.html#create-a-webhook)
+- **`RESOURCE_TYPE`**:
+	- options: `build` | `repo` | `stack` | `sync` | `procedure` | `action`
+- **`ID_OR_NAME`**:
+	- Reference the specific resource by id or name. If the name may change, it is better to use id.
+- **`EXECUTION`**:
+	- Which executions are available depends on the `RESOURCE_TYPE`. Builds only have the `/build` action. Repos can select between `/pull`, `/clone`, or `/build`. Stacks have `/deploy` and `/refresh`, and Resource Syncs have `/sync` and `/refresh`.
+	- For **Procedures and Actions**, this will be the **branch to listen to for pushes**, or `__ANY__` to trigger on pushes to any branch.
+
+## Create the webhook on the Git Provider
+
+Navigate to the repo page on your git provider, and go to the settings for the Repo. Find Webhook settings, and click to create a new webhook.
+
+You will have to input some information.
+
+1. The `Payload URL` is the link that you copied in the step above, `Copy the Resource Payload URL`.
+2. For Content-type, choose `application/json`
+3. For Secret, input the secret you configured in the Komodo Core config (`KOMODO_WEBHOOK_SECRET`).
+4. Enable SSL Verification, if you have proper TLS setup to your git provider (recommended).
+5. For "events that trigger the webhook", just the push request is what most people want.
+6. Of course, make sure the webhook is "Active" and hit create.
+
+## When does it trigger?
+
+Your git provider will now push this webhook to Komodo on *every* push to *any* branch. However, your `Build`, `Repo`, etc. only cares about a specific branch of the repo.
+
+Because of this, the webhook will trigger the action **only on pushes to the branch configured on the resource**.
+
+For example, if I make a build, I may point the build to the `release` branch of a particular repo. If I set up a webhook, and push to the `main` branch, the action will *not trigger*. It will only trigger when the push is to the `release` branch.
+
+---
+
+### `KCG_SUMMARY.md` — komodo
+
+# Komodo — KCG Summary
+
+## What It Is
+Komodo is an open-source container orchestration platform by Moghtech. It provides GitOps-driven deployment management with a web UI, API, and CLI — syncing Docker Compose stacks from a Git repository across multiple servers.
+
+## Why This Matters for Kings' College Galway
+Komodo is the deployment engine for all 89 Docker Compose stacks in the `infrastructure/stacks/` directory. Every stack change committed to Forgejo is automatically synced and deployed by Komodo to the correct server (arm1-oci, cax41-hetzner, or bunchloch MacBook). This GitOps loop is what makes the infrastructure reproducible.
+
+## Key Patterns
+- **GitOps sync**: Komodo watches Forgejo repositories and applies compose.yaml + sidecar.yaml on change
+- **Multi-server**: One Komodo Core manages Periphery agents on all 3 physical hosts
+- **Pangolin integration**: All stacks automatically register as private Pangolin resources
+- **Locket sidecar**: Secrets injected via Infisical at runtime, never in compose files
+
+## Source Files
+Full source code was removed (2026-06-05). Available at <https://github.com/moghtech/komodo>. The live deployment configs are in `infrastructure/stacks/infrastructure/komodo/`.
+
+
+---
+
+### `Komodo Deployment Technical Outline.md` — komodo
+
+
+
+# **Orchestrating Distributed Infrastructure: A Technical Analysis of Komodo v2 (Dev-90), Ansible Automation, and Identity-Aware Ingress**
+
+## **1\. Introduction: The Evolution of Self-Hosted Orchestration**
+
+The landscape of self-hosted infrastructure management has historically been fragmented, often necessitating a patchwork of disparate tools to achieve what hyperscale cloud providers offer as a cohesive platform. In the context of Docker-based environments, administrators have traditionally relied on monolithic management interfaces or bare-metal CLI interactions, both of which struggle to scale efficiently across multi-server topologies. The emergence of **Komodo**, particularly its second major version iteration (v2), represents a significant architectural shift towards a distributed, API-first orchestration model designed to bridge the gap between simple container management and complex infrastructure-as-code (IaC) workflows.1  
+This report provides an exhaustive technical analysis of deploying the **Komodo v2 ecosystem**, specifically focusing on the v2.0.0-dev-90 release candidate.3 This specific build serves as a critical case study due to its introduction of hardened database schemas, enhanced telemetry capabilities, and strict image tagging conventions that differentiate it from the v1 lineage. Furthermore, effective orchestration at scale requires robust automation; thus, this analysis deeply investigates the **ansible-role-komodo** (specifically the komodo\_v2 branch maintained by Brian Bradley), which shifts the deployment paradigm of the Komodo Periphery agent from a containerized workload to a highly integrated, systemd-managed system service.4  
+To complete the architectural picture, the report integrates **Pangolin**, a modern identity-aware reverse proxy.5 By layering Pangolin’s tunneling and authentication capabilities over Komodo’s management plane, administrators can establish a zero-trust ingress model, securing the critical control plane against unauthorized access while simplifying the network topology required for multi-node communication.  
+The following sections will deconstruct the architectural requirements, detailed deployment procedures, and automation logic required to synthesize these components into a unified, resilient infrastructure platform. This analysis assumes a professional DevOps context, prioritizing reproducibility, security, and scalability over ease of initial setup.
+
+## **2\. Architectural Foundations of the Komodo v2 Ecosystem**
+
+Understanding the deployment mechanics of Komodo v2 requires a foundational grasp of its bipartite architecture, which decouples the management state from execution logic. This separation is the defining characteristic that allows Komodo to scale beyond the limitations of traditional, agentless Docker management tools.
+
+### **2.1 The Core-Periphery Dichotomy**
+
+The architecture is predicated on two primary components: **Komodo Core** and **Komodo Periphery**. This design mirrors the "control plane/data plane" separation found in Kubernetes and other distributed systems, though tailored specifically for Docker Compose workflows.
+
+#### **2.1.1 Komodo Core: The State Engine**
+
+Komodo Core acts as the centralized monolith responsible for state management, API exposure, and user interaction. It serves as the authoritative source of truth for the entire infrastructure.1
+
+* **Functionality:** The Core hosts the web UI, processes API requests, manages the persistent database (MongoDB), and orchestrates deployment procedures. It does not directly execute Docker commands on remote hosts; instead, it delegates these tasks to the Periphery agents.  
+* **State Management:** All configurations—Stacks, Repositories, Users, and Alerts—are stored in the Core's database. This centralization simplifies backup and recovery strategies, as securing the Core's data volume effectively secures the configuration state of the entire fleet.7  
+* **Connectivity:** The Core requires ingress connectivity (typically HTTP/HTTPS) to serve the UI and receive webhooks from git providers (e.g., GitHub, Gitea).8 Crucially, in the v2 architecture, the Core actively establishes connections to Periphery agents (a "pull" model from the perspective of the operator, but technically the Core initiates the request to the agent's API).1
+
+#### **2.1.2 Komodo Periphery: The Execution Agent**
+
+The Periphery is a lightweight, stateless agent deployed on every server managed by Komodo—including the server hosting the Core itself.1
+
+* **Statelessness:** The Periphery agent maintains minimal local state. Its primary function is to translate API directives from the Core into local system calls (e.g., docker compose up, git pull, cat /proc/meminfo).  
+* **Execution Scope:** The Periphery binary interacts with the host's Docker socket (or Podman equivalent) to manage containers. It also manages local git repositories used for building images.  
+* **Security Model:** The Periphery exposes a REST API (typically on port 8120\) protected by a passkey. The Core must present this passkey to authenticate its requests. In v2, this authentication is bidirectional in concept; the Periphery allows the Core to connect, but the Core must also be configured with the correct passkey to authorize the connection.9  
+* **Telemetry:** A significant enhancement in v2 (and specifically noted in the komodo\_v2 Ansible role variables) is the integration of OpenTelemetry (OTLP). The Periphery can stream traces and metrics to an external collector, providing granular observability into infrastructure performance beyond simple CPU/RAM usage.4
+
+### **2.2 The Database Transformation: MongoDB vs. FerretDB v2**
+
+One of the most critical architectural decisions in deploying Komodo v2 (dev-90) is the choice of the backing store. The transition from v1 to v2 introduced significant changes to the database layer, driven by performance requirements and licensing considerations.
+
+#### **2.2.1 Native MongoDB (Recommended)**
+
+For the majority of deployments, **MongoDB** is the standard and recommended database.11 Komodo Core uses the MongoDB driver to interact with the database.
+
+* **Version Requirements:** Recent MongoDB versions (5.0+) impose strict hardware requirements, specifically the support for AVX (Advanced Vector Extensions) instruction sets on x86\_64 processors.13 This can be a blockage for users running on older hardware (e.g., Celeron J-series, older Pentiums) or certain virtualization platforms that do not pass through these CPU flags.14  
+* **Compatibility:** Native MongoDB ensures full compatibility with Komodo's complex relational mapping between Users, Repos, and Stacks. The dev-90 release and its predecessors in the v2 cycle have optimized queries specifically for the MongoDB document model.
+
+#### **2.2.2 FerretDB v2: The SQL Alternative**
+
+For users who cannot run MongoDB due to hardware constraints (lack of AVX) or licensing preferences (avoiding SSPL), Komodo supports **FerretDB**. However, the v2 release cycle introduced a **breaking change**: support for FerretDB v1 (which used a standard PostgreSQL backend) was dropped in favor of **FerretDB v2**.15
+
+* **Backend Shift:** FerretDB v2 requires a specialized backend: postgres-documentdb (an extension for PostgreSQL that enables native BSON handling). This is *not* compatible with standard PostgreSQL instances.17  
+* **Migration Complexity:** Upgrading from a v1 installation using SQLite or FerretDB v1 to Komodo v2 requires a complex migration process involving a komodo-util container to transcode data to the new schema.18  
+* **Architectural Implication:** For a fresh deployment of dev-90, attempting to use the legacy SQLite or standard Postgres configurations will result in startup failures. The operator must strictly choose between Native MongoDB or the FerretDB v2 \+ postgres-documentdb combination.
+
+### **2.3 Pangolin: Identity-Aware Ingress**
+
+Pangolin complements the Komodo architecture by serving as the secure entry point. Unlike a standard reverse proxy (Nginx, Traefik) that simply routes traffic based on hostnames, Pangolin acts as an **identity-aware proxy** with tunneling capabilities.5
+
+* **Fossorial Components:** Pangolin's architecture consists of the "Pangolin" dashboard/control plane, "Gerbil" (the server-side tunnel endpoint), and "Newt" (the client-side tunneling agent).5  
+* **Tunneled Access:** For distributed Komodo deployments where Periphery agents reside behind restrictive firewalls or CGNAT, Pangolin's tunneling (via WireGuard) allows the Core to communicate with Periphery agents without exposing ports 8120 to the public internet.  
+* **Context-Aware Access:** Pangolin enforces access control policies (OIDC, MFA) *before* traffic reaches Komodo Core, adding a defense-in-depth layer critical for infrastructure management interfaces.6
+
+---
+
+## **3\. Deployment Strategy: Komodo Core v2 (Release dev-90)**
+
+Deploying the dev-90 release of Komodo Core requires meticulous attention to the docker-compose configuration. The "dev" nomenclature implies a rolling release channel, but specific snapshots like dev-90 often contain database schema changes that serve as checkpoints in the development process.
+
+### **3.1 Prerequisite Requirements**
+
+Before initiating the deployment, the hosting environment must meet specific criteria to support the Komodo stack.
+
+| Component | Requirement | Context |
+| :---- | :---- | :---- |
+| **CPU** | x86\_64 (with AVX) or ARM64 | Essential for MongoDB 5.0+ and komodo-core binaries.13 |
+| **OS** | Linux (Debian/Ubuntu preferred) | The ansible-role-komodo is optimized for Debian-like systems.4 |
+| **Container Engine** | Docker Engine 24+ & Compose v2 | Komodo relies heavily on docker compose CLI commands.2 |
+| **Network** | Ports 80, 443, 9120, 8120 | 9120 for Core UI, 8120 for local Periphery, 80/443 for Pangolin.20 |
+
+### **3.2 The docker-compose.yaml Configuration**
+
+The following configuration represents a production-ready definition for Komodo Core v2 (dev-90), incorporating the native MongoDB backend and the requisite environment variables for v2 operation. This configuration is synthesized from the official Moghtech examples and community adaptations for v2 stability.10
+
+YAML
+
+services:  
+  \# \---------------------------------------------------------------------------  
+  \# Komodo Core: The Central Management Plane  
+  \# \---------------------------------------------------------------------------  
+  core:  
+    \# Pinning to the 2-dev tag. Ideally, one should use the specific SHA digest   
+    \# for dev-90 if immutability is required, as dev tags roll forward.  
+    image: ghcr.io/moghtech/komodo-core:2-dev  
+    container\_name: komodo-core  
+    restart: unless-stopped  
+      
+    \# Core listens on 9120 by default.   
+    \# In a Pangolin setup, this might not need to be exposed publicly,   
+    \# but is exposed here for initial bootstrapping.  
+    ports:  
+      \- "9120:9120"  
+      
+    \# Environment variables override config.toml defaults.  
+    environment:  
+      \# \--- General Configuration \---  
+      \- KOMODO\_HOST=https://komodo.example.com  
+      \- KOMODO\_TITLE=Komodo Orchestrator  
+      \- TZ=Etc/UTC  
+        
+      \# \--- Database Connection (MongoDB) \---  
+      \# V2 Core uses the MongoDB driver.  
+      \- KOMODO\_DATABASE\_ADDRESS=mongo:27017  
+      \- KOMODO\_DATABASE\_USERNAME=komodo  
+      \- KOMODO\_DATABASE\_PASSWORD=secure\_db\_password  
+      \- KOMODO\_DATABASE\_DB\_NAME=komodo  
+        
+      \# \--- Security & Authentication \---  
+      \# The Passkey is the shared secret for Core\<-\>Periphery communication.  
+      \# In v2, this is critical for the initial handshake.  
+      \- KOMODO\_PASSKEY=super\_secure\_shared\_secret  
+        
+      \# \--- OIDC Integration (Optional) \---  
+      \# Enabled for external identity providers (Keycloak, Google, GitHub).  
+      \- KOMODO\_OIDC\_ENABLED=false  
+      \# \- KOMODO\_OIDC\_CLIENT\_ID=...  
+      \# \- KOMODO\_OIDC\_PROVIDER=...  
+        
+    volumes:  
+      \# Persistent configuration file (optional but recommended for complex configs)  
+      \-./config/core.config.toml:/config/config.toml  
+      \# SSH keys for accessing private Git repositories  
+      \-./ssh-keys:/home/nonroot/.ssh  
+      
+    depends\_on:  
+      mongo:  
+        condition: service\_started
+
+  \# \---------------------------------------------------------------------------  
+  \# MongoDB: The State Store  
+  \# \---------------------------------------------------------------------------  
+  mongo:  
+    \# Using MongoDB 6.0 based on Komodo recommendations.   
+    \# Warning: Requires AVX CPU support. Use mongo:4.4 if on older hardware.  
+    image: mongo:6.0  
+    container\_name: komodo-mongo  
+    restart: unless-stopped  
+    command:  
+    environment:  
+      \- MONGO\_INITDB\_ROOT\_USERNAME=root  
+      \- MONGO\_INITDB\_ROOT\_PASSWORD=root\_password  
+      \# This creates the initial user/db for Komodo  
+      \- MONGO\_INITDB\_DATABASE=komodo  
+    volumes:  
+      \- mongo\_data:/data/db  
+      \- mongo\_config:/data/configdb
+
+  \# \---------------------------------------------------------------------------  
+  \# Local Periphery: Managing the Core Server  
+  \# \---------------------------------------------------------------------------  
+  \# Even the Core server needs a Periphery agent to manage itself   
+  \# (Self-hosting orchestration).  
+  periphery:  
+    image: ghcr.io/moghtech/komodo-periphery:2-dev  
+    container\_name: komodo-periphery  
+    restart: unless-stopped  
+    environment:  
+      \# The agent must know where to find the Core to report telemetry  
+      \- KOMODO\_HOST=http://core:9120  
+      \# Must match the KOMODO\_PASSKEY in Core  
+      \- KOMODO\_PASSKEY=super\_secure\_shared\_secret  
+      \# Identification  
+      \- KOMODO\_SERVER\_NAME=Local-Core-Node  
+    volumes:  
+      \# Access to the Docker socket is mandatory for Periphery functionality  
+      \- /var/run/docker.sock:/var/run/docker.sock  
+      \# Storage for locally cloned repos and build artifacts  
+      \- /etc/komodo:/etc/komodo  
+    depends\_on:  
+      \- core
+
+volumes:  
+  mongo\_data:  
+  mongo\_config:
+
+### **3.3 Deep Analysis of Configuration Parameters**
+
+#### **3.3.1 Image Tagging and Stability Risks**
+
+The release notes for dev-90 highlight a critical operational risk: **Database Schema Instability**. The dev branch is fluid. When the container updates from dev-90 to a newer build (e.g., dev-93), the application may automatically apply database schema migrations. If these migrations are buggy or if the administrator wishes to rollback, the database may be in an incompatible state.3
+
+* **Mitigation:** The dev-90 release includes a CLI tool within the core container: km. Specifically, the command km database v1-downgrade is provided to revert schema changes if a rollback to v1 or an earlier v2 snapshot is necessary.  
+* **Best Practice:** In a production environment utilizing dev tags, it is advisable to pin the image by its SHA256 digest (e.g., ghcr.io/moghtech/komodo-core@sha256:f4986...) to prevent unintended schema upgrades during a docker compose pull.22
+
+#### **3.3.2 The core.config.toml vs. Environment Variables**
+
+While the example above uses environment variables, Komodo v2 strongly advocates for the use of a TOML configuration file (core.config.toml) mounted into the container. This approach is superior for managing complex OIDC configurations and nested structures that are cumbersome to represent as flat environment variables.9
+
+* **OIDC Configuration:** When enabling OIDC (e.g., with Keycloak), the host parameter in core.config.toml becomes critical. It determines the redirect URI (\<KOMODO\_HOST\>/auth/oidc/callback) that must be registered with the identity provider. A mismatch here will cause authentication loops.
+
+#### **3.3.3 The Local Periphery**
+
+The inclusion of a periphery service in the docker-compose.yml is essential for the "self-management" capability. Without this local agent, Komodo Core can manage *other* servers but cannot manage the stack it runs on. By deploying a local agent, Komodo can auto-update itself—a meta-circular capability that defines advanced orchestration platforms.24  
+---
+
+## **4\. Automating Infrastructure: The komodo\_v2 Ansible Role**
+
+While Docker Compose is sufficient for the Core, manually deploying Periphery agents to dozens of servers is inefficient. The **ansible-role-komodo** (specifically the komodo\_v2 branch) provides a sophisticated automation framework that shifts the Periphery deployment model from containerization to **systemd-managed binaries**.4
+
+### **4.1 Architectural Shift: Systemd vs. Docker**
+
+The komodo\_v2 Ansible role deliberately installs the Periphery agent as a binary service directly on the host OS, managed by Systemd. This offers several distinct advantages over the Docker-based deployment used in the Core setup:
+
+1. **Reduced Overhead:** Eliminates the container runtime overhead for the agent itself.  
+2. **Simplified Socket Access:** Avoids the complexities of mounting /var/run/docker.sock into a container, which can sometimes be complicated by SELinux or AppArmor profiles.  
+3. **User Isolation:** The role creates a dedicated komodo user. This user is granted membership in the docker group, allowing it to manage containers without running the agent process as root. This adheres to the Principle of Least Privilege.4
+
+### **4.2 The Ansible Configuration Workflow**
+
+To utilize this role, the control node (where Ansible runs) must be configured with specific inventory variables that drive the automation logic.
+
+#### **4.2.1 Installation**
+
+The role is installed via Ansible Galaxy, but one must ensure the komodo\_v2 branch is targeted if pulling from source, or the latest version if using the package manager.
+
+Bash
+
+ansible-galaxy role install bpbradley.komodo
+
+#### **4.2.2 Inventory Variable Reference**
+
+The following table details the critical variables required to configure the role for a dev-90 environment. These variables effectively program the automation behavior.4
+
+| Variable Name | Default / Example | Function & Implication |
+| :---- | :---- | :---- |
+| komodo\_version | "2-dev" | **Crucial:** Sets the version of the binary to download. Must match the Core version to avoid API incompatibilities. |
+| komodo\_action | "install" | Controls the playbook mode (install, update, uninstall). |
+| enable\_server\_management | true | **Automation Key:** If true, the playbook contacts the Core API to register the server automatically. |
+| komodo\_core\_url | "https://komodo.example.com" | The endpoint the Periphery will use to connect to Core. |
+| komodo\_passkeys | \["secret\_key"\] | A list of valid passkeys injected into periphery.config.toml. Core must use one of these to connect. |
+| komodo\_logging\_level | "info" | Sets the verbosity of the agent logs in Systemd journal. |
+| komodo\_user | "komodo" | The system user created to run the service. |
+| komodo\_group | "docker" | The group assignment allowing the agent to execute Docker commands. |
+
+#### **4.2.3 Server Management: The "Auto-Registration" Feature**
+
+A standout feature of the komodo\_v2 role is enable\_server\_management. In a standard manual setup, an administrator must install the agent, then log into the Komodo UI, click "Add Server," and type in the IP and passkey.  
+The Ansible role automates this loop:
+
+1. **Check:** It queries the Core API (using provided API credentials) to see if a server with the hostname already exists.  
+2. **Register:** If not, it sends a POST request to create the server, automatically populating the ip\_address and passkey fields.  
+3. Update: If the server exists but the IP has changed, it updates the record.  
+   This transforms the deployment from a manual operational task to a fully idempotent code-driven process.4
+
+### **4.3 The Playbook Implementation**
+
+Below is a complete deploy\_komodo.yaml playbook that integrates these concepts. It assumes the use of Ansible Vault for securing sensitive API keys and passkeys.
+
+YAML
+
+\---  
+\- name: Orchestrate Komodo Periphery Deployment  
+  hosts: komodo\_nodes  
+  become: true  
+    
+  vars\_files:  
+    \- secrets/vault.yml  \# Contains encrypted API keys and Passkeys
+
+  vars:  
+    \# Target the v2 Dev branch logic  
+    komodo\_version: "2-dev"  
+      
+    \# Configure Systemd Service  
+    komodo\_user: "komodo"  
+    komodo\_group: "docker"  
+      
+    \# Automation Configuration  
+    enable\_server\_management: true  
+    komodo\_core\_url: "https://komodo.example.com"  
+      
+    \# Vaulted Variables Mapping  
+    komodo\_core\_api\_key: "{{ vault\_komodo\_api\_key }}"  
+    komodo\_core\_api\_secret: "{{ vault\_komodo\_api\_secret }}"  
+    komodo\_passkeys: \["{{ vault\_komodo\_shared\_passkey }}"\]
+
+  roles:  
+    \- role: bpbradley.komodo  
+      vars:  
+        komodo\_action: "install"  
+        \# Security: Only allow connections from localhost (tunnel) or Core IP  
+        komodo\_allowed\_ips:  
+          \- "127.0.0.1"   
+          \- "192.168.10.5" \# IP of the Core server
+
+  tasks:  
+    \- name: Verify Service Health  
+      systemd:  
+        name: komodo-periphery  
+        state: started  
+        enabled: yes
+
+### **4.4 Automation Logic and Security Nuances**
+
+The role's logic explicitly handles the v2 architecture's requirement for the komodo user.
+
+* **Linger:** For user-scope systemd services, the role enables "linger" (loginctl enable-linger komodo). This ensures the Periphery process does not terminate when the SSH session creating the user closes. This is a subtle but common failure mode in manual systemd-user setups.4  
+* **Binary Stripping:** The role supports cargo strip to reduce the binary size. The dev-90 release notes emphasize that binary sizes were reduced by \~5MB using this technique, improving deployment speed on low-bandwidth edge devices.3
+
+---
+
+## **5\. Integrating Pangolin: The Secure Ingress Layer**
+
+While Komodo orchestrates the containers, **Pangolin** provides the secure pathway to access them. In a robust deployment, Pangolin sits in front of Komodo Core.
+
+### **5.1 Deploying Pangolin via Docker Compose**
+
+Pangolin itself is a containerized stack comprising the Dashboard, the Gerbil server, and Traefik.
+
+YAML
+
+services:  
+  pangolin:  
+    image: ghcr.io/fosrl/pangolin:latest  
+    container\_name: pangolin  
+    restart: unless-stopped  
+    ports:  
+      \- "80:80"  
+      \- "443:443"  
+      \# WireGuard ports for Tunnels (Gerbil)  
+      \- "51820:51820/udp"  
+    environment:  
+      \- PANGOLIN\_DOMAIN=network.example.com  
+      \- PANGOLIN\_EMAIL=admin@example.com  
+    volumes:  
+      \-./config:/data/config  
+      \-./letsencrypt:/data/letsencrypt
+
+### **5.2 The Tunneling Advantage (Gerbil & Newt)**
+
+The synergy between Komodo and Pangolin is most evident in **Tunneled Ingress**.
+
+* **Problem:** A Komodo Periphery agent is deployed on a server at a remote site behind a residential router (Dynamic IP, no port forwarding). Komodo Core cannot connect to it.  
+* **Solution:**  
+  1. Deploy the **Newt** client (Pangolin's tunneling agent) on the remote server alongside Komodo Periphery.  
+  2. Newt establishes an outbound WireGuard connection to the Pangolin server (Gerbil).  
+  3. Pangolin assigns a stable internal hostname (e.g., remote-node.pangolin.internal).  
+  4. Komodo Core is configured to connect to http://remote-node.pangolin.internal:8120.  
+  5. Traffic flows: Core \-\> Pangolin \-\> WireGuard Tunnel \-\> Newt \-\> Local Periphery.
+
+This architecture enables Komodo to manage servers anywhere in the world without exposing any management ports to the public internet, significantly reducing the attack surface.5
+
+### **5.3 Configuring Traefik for Komodo Core**
+
+To expose the Komodo Core UI securely through Pangolin, one must utilize the dynamic\_config.yml feature of Pangolin's Traefik instance. This allows for hot-reloading of routing rules.  
+**config/traefik/dynamic\_config.yml:**
+
+YAML
+
+http:  
+  routers:  
+    komodo-ui:  
+      rule: "Host(\`komodo.network.example.com\`)"  
+      service: komodo-service  
+      tls:  
+        certResolver: letsencrypt  
+      middlewares:  
+        \- "pangolin-auth" \# Enforce OIDC/Auth via Pangolin before reaching Komodo
+
+  services:  
+    komodo-service:  
+      loadBalancer:  
+        servers:  
+          \- url: "http://core:9120"
+
+By applying the pangolin-auth middleware, access to the Komodo control plane is gated by Pangolin's identity provider. This means an attacker cannot even see the Komodo login screen without first authenticating against the corporate/admin identity provider configured in Pangolin.6  
+---
+
+## **6\. Operational Workflows and Day-2 Operations**
+
+Once deployed, the focus shifts to utilizing the platform for "GitOps" workflows and maintaining the stability of the dev release channel.
+
+### **6.1 The GitOps Pipeline: From Code to Container**
+
+Komodo v2 streamlines the deployment pipeline. The workflow automated by this architecture is as follows:
+
+1. **Code Push:** Developer pushes code to a Git repository (GitHub/Gitea).  
+2. **Webhook:** The Git provider sends a webhook payload to Komodo Core (via the Pangolin ingress).  
+3. **Authentication:** Pangolin verifies the request (if configured) or passes it to Core which validates the webhook secret.  
+4. **Procedure Execution:**  
+   * Core identifies the Stack associated with the repo.  
+   * Core instructs the target Periphery agent to git pull the changes.  
+   * Core instructs the Periphery to docker compose build (if building from source) or docker compose pull (if using pre-built images).  
+   * Core instructs Periphery to docker compose up \-d to roll the update.  
+5. **Telemetry:** The Periphery streams the deployment logs back to the Core UI in real-time.
+
+### **6.2 Managing Database Schema Migrations**
+
+The dev-90 release notes explicitly warn about schema volatility.
+
+* **The Check:** Before upgrading the Core container, administrators should back up the mongo\_data volume.  
+* **The Fix:** If an update fails due to schema mismatch, the km utility is the recovery tool.  
+  Bash  
+  docker compose exec core km database v1-downgrade \-y
+
+  This command, introduced in the v2 dev cycle, allows the database to be reverted to a state compatible with previous versions, preventing data loss during failed upgrades.3
+
+### **6.3 Telemetry and Observability**
+
+The komodo\_v2 Ansible role introduces variables for **OpenTelemetry (OTLP)**.
+
+* komodo\_logging\_otlp\_endpoint: If set (e.g., to a Grafana Tempo or Jaeger endpoint), the Periphery binary will emit trace data.  
+* **Insight:** This moves monitoring beyond simple "is it up?" checks. Administrators can visualize the latency of Docker commands, identifying if slow disk I/O on a specific node is causing deployment timeouts. This level of observability is characteristic of the mature "v2" architecture compared to the opaque operation of v1.4
+
+## **7\. Conclusion**
+
+The deployment of **Komodo v2 (dev-90)**, orchestrated by the **komodo\_v2 Ansible role** and secured by **Pangolin**, represents a sophisticated reference architecture for modern self-hosted infrastructure. This setup transcends simple container management, offering a unified platform that is:
+
+1. **Scalable:** Through the Core/Periphery split and the use of efficient, systemd-managed binaries (via Ansible) rather than resource-heavy agent containers.  
+2. **Automated:** By leveraging Ansible's enable\_server\_management to make infrastructure self-registering, eliminating manual inventory management in the UI.  
+3. **Resilient:** Utilizing native MongoDB for complex state management and providing tooling (km) to handle the inevitable volatility of development release channels.  
+4. **Secure:** Implementing a zero-trust ingress model via Pangolin's tunneling and identity-aware proxying, protecting the management plane from the open internet.
+
+For the professional infrastructure engineer, this stack offers a compelling alternative to heavy Kubernetes deployments or fragmented scripts, providing a cohesive "glass cockpit" for the entire server fleet. The complexity of the initial setup—requiring careful database selection, Ansible configuration, and ingress planning—is the necessary investment for a platform that offers such granular control and broad automation capabilities.
+
+#### **Works cited**
+
+1. What is Komodo? | Komodo, accessed December 1, 2025, [https://komo.do/docs/intro](https://komo.do/docs/intro)  
+2. moghtech/komodo: a tool to build and deploy software on ... \- GitHub, accessed December 1, 2025, [https://github.com/moghtech/komodo](https://github.com/moghtech/komodo)  
+3. Releases · moghtech/komodo \- GitHub, accessed December 1, 2025, [https://github.com/moghtech/komodo/releases](https://github.com/moghtech/komodo/releases)  
+4. Ansible role for simplified deployment of Komodo with systemd \- GitHub, accessed December 1, 2025, [https://github.com/bpbradley/ansible-role-komodo](https://github.com/bpbradley/ansible-role-komodo)  
+5. Pangolin Docs: Introduction to Pangolin, accessed December 1, 2025, [https://docs.pangolin.net/](https://docs.pangolin.net/)  
+6. fosrl/pangolin: Identity-Aware Tunneled Reverse Proxy Server with Dashboard UI \- GitHub, accessed December 1, 2025, [https://github.com/fosrl/pangolin](https://github.com/fosrl/pangolin)  
+7. Komodo \- v1.19.1 \- Edit all .env and config files in UI : r/selfhosted \- Reddit, accessed December 1, 2025, [https://www.reddit.com/r/selfhosted/comments/1mz6sa4/komodo\_v1191\_edit\_all\_env\_and\_config\_files\_in\_ui/](https://www.reddit.com/r/selfhosted/comments/1mz6sa4/komodo_v1191_edit_all_env_and_config_files_in_ui/)  
+8. Streamline Your Deployments : Komodo \+ GitHub Webhooks | by Rishav Kapil \- Medium, accessed December 1, 2025, [https://medium.com/@rishavkapil61/streamline-your-deployments-komodo-github-webhooks-51d4d3a04891](https://medium.com/@rishavkapil61/streamline-your-deployments-komodo-github-webhooks-51d4d3a04891)  
+9. Advanced Configuration \- Komodo, accessed December 1, 2025, [https://komo.do/docs/setup/advanced](https://komo.do/docs/setup/advanced)  
+10. accessed December 1, 2025, [https://raw.githubusercontent.com/moghtech/komodo/main/config/core.config.toml](https://raw.githubusercontent.com/moghtech/komodo/main/config/core.config.toml)  
+11. Setup Komodo Core, accessed December 1, 2025, [https://komo.do/docs/setup](https://komo.do/docs/setup)  
+12. MongoDB \- Komodo, accessed December 1, 2025, [https://komo.do/docs/setup/mongo](https://komo.do/docs/setup/mongo)  
+13. Production Notes for Self-Managed Deployments \- Database Manual \- MongoDB Docs, accessed December 1, 2025, [https://www.mongodb.com/docs/manual/administration/production-notes/](https://www.mongodb.com/docs/manual/administration/production-notes/)  
+14. MongoDB relies on AVX enabled CPU. If you can't run Mongo, use FerretDB instead. · Issue \#59 · moghtech/komodo \- GitHub, accessed December 1, 2025, [https://github.com/moghtech/komodo/issues/59](https://github.com/moghtech/komodo/issues/59)  
+15. FerretDB v2.5.0 is available\!, accessed December 1, 2025, [https://blog.ferretdb.io/ferretdb-v250-is-available/](https://blog.ferretdb.io/ferretdb-v250-is-available/)  
+16. Plain Authentication not enabled: Komodo stack fails after auto-updating to new ferretdb 2.0 version · Issue \#331 \- GitHub, accessed December 1, 2025, [https://github.com/moghtech/komodo/issues/331](https://github.com/moghtech/komodo/issues/331)  
+17. FerretDB 2.0 GA: Open Source MongoDB alternative, ready for production, accessed December 1, 2025, [https://blog.ferretdb.io/ferretdb-v2-ga-open-source-mongodb-alternative-ready-for-production/](https://blog.ferretdb.io/ferretdb-v2-ga-open-source-mongodb-alternative-ready-for-production/)  
+18. Komodo Migration Guide: SQLite / PostgreSQL → FerretDB v2 \#5689 \- GitHub, accessed December 1, 2025, [https://github.com/community-scripts/ProxmoxVE/discussions/5689](https://github.com/community-scripts/ProxmoxVE/discussions/5689)  
+19. How to Install and Run Pangolin Locally on Your Server | daily.dev, accessed December 1, 2025, [https://app.daily.dev/posts/how-to-install-and-run-pangolin-locally-on-your-server-9eavjtnaj](https://app.daily.dev/posts/how-to-install-and-run-pangolin-locally-on-your-server-9eavjtnaj)  
+20. Docker Compose \- Pangolin Docs, accessed December 1, 2025, [https://docs.pangolin.net/self-host/manual/docker-compose](https://docs.pangolin.net/self-host/manual/docker-compose)  
+21. provision fedora coreos with ucore, komodo core, and komodo periphery as a systemd service \- GitHub Gist, accessed December 1, 2025, [https://gist.github.com/b-/f2c0f5269d6463793f07418e37467dae](https://gist.github.com/b-/f2c0f5269d6463793f07418e37467dae)  
+22. komodo-periphery versions · moghtech \- GitHub, accessed December 1, 2025, [https://github.com/orgs/moghtech/packages/container/komodo-periphery/558666720?tag=2-dev](https://github.com/orgs/moghtech/packages/container/komodo-periphery/558666720?tag=2-dev)  
+23. komodo-periphery versions · moghtech \- GitHub, accessed December 1, 2025, [https://github.com/orgs/moghtech/packages/container/komodo-periphery/558666720?tag=2.0.0-dev](https://github.com/orgs/moghtech/packages/container/komodo-periphery/558666720?tag=2.0.0-dev)  
+24. Komodo \- Docker Container / Compose management \- v1.17 release : r/selfhosted, accessed December 1, 2025, [https://www.reddit.com/r/selfhosted/comments/1jilchk/komodo\_docker\_container\_compose\_management\_v117/](https://www.reddit.com/r/selfhosted/comments/1jilchk/komodo_docker_container_compose_management_v117/)  
+25. Self-Host a Tunneled Reverse Proxy with Pangolin \- Pi My Life Up, accessed December 1, 2025, [https://pimylifeup.com/pangolin-linux/](https://pimylifeup.com/pangolin-linux/)
+
+---
+
+### `Komodo Deployment and Workflow Integration.md` — komodo
+
+# **Comprehensive Architectural Analysis and Implementation Strategy for Sovereign Infrastructure: Komodo, Pangolin, and Middleware Integration**
+
+## **1\. Executive Summary and Strategic Context**
+
+The contemporary landscape of self-hosted infrastructure has undergone a paradigm shift, moving away from fragmented, imperative scripting toward cohesive, declarative "Sovereign Stacks." This evolution is driven by a critical need for data sovereignty, architectural autonomy, and the mitigation of vendor lock-in risks associated with hyperscale cloud providers. In this context, the integration of **Komodo** (Infrastructure Orchestration), **Pangolin** (Tunneled Mesh Ingress), and **TinyAuth** (Identity Assurance) represents a sophisticated architectural pattern that rivals commercial Platform-as-a-Service (PaaS) offerings while operating entirely on user-controlled hardware.  
+This report provides an exhaustive technical analysis and implementation roadmap for this specific stack. The primary objective is to define a unified, automated workflow where Komodo serves as the central "Source of Truth" (SoT), managing not only the application workloads but also the lifecycle of the underlying network fabric (Pangolin/Newt) and the security perimeter (TinyAuth/Middleware Manager).
+
+### **1.1 The Operational Mandate**
+
+The analysis addresses a complex set of operational requirements:
+
+1. **Recursive Orchestration:** The capability of the orchestration engine (Komodo) to deploy and update its own distributed agents (Periphery), creating a self-sustaining management loop.  
+2. **Zero-Trust Networking:** The establishment of a secure, tunneled ingress architecture using Pangolin and its Newt agent to eliminate open port vulnerabilities and bypass CGNAT (Carrier-Grade NAT) restrictions.  
+3. **Identity-Aware Access:** The implementation of a robust authentication layer using TinyAuth, integrated via Pangolin's Middleware Manager to enforce Forward Authentication (ForwardAuth) protocols at the edge.  
+4. **Unified Workflow Automation:** The synthesis of disparate configuration artifacts—Declarative Blueprints, TypeScript Actions, and Docker Compose YAML—into a single, atomic deployment procedure.
+
+The ensuing sections deconstruct these components, analyzing their internal architectures, data flows, and integration points to provide a definitive guide for deploying this high-resilience infrastructure.
+
+## ---
+
+**2\. Architectural Deconstruction: The Komodo Orchestration Plane**
+
+To understand the efficacy of the proposed workflow, one must first analyze the design philosophy and internal mechanics of the Komodo platform. Unlike traditional container management solutions that often rely on local state or simple API wrappers, Komodo employs a rigorous GitOps-centric architecture built on a "Core/Periphery" distributed model. This separation of concerns is fundamental to achieving the user's goal of self-managed infrastructure.
+
+### **2.1 The Core-Periphery Dichotomy**
+
+The Komodo architecture is bifurcated into two distinct operational roles: the **Core**, which serves as the decision-making brain, and the **Periphery**, which acts as the execution arm.
+
+#### **2.1.1 Komodo Core: The State Engine**
+
+Komodo Core is the centralized control plane. Hosted typically on a high-availability node or a stable VPS, it is responsible for maintaining the system's state, managing the database (supporting MongoDB, FerretDB, and PostgreSQL), and serving the user interface.1
+
+* **State Reconciliation:** Core continuously polls linked Git repositories to detect changes in infrastructure definitions (Docker Compose files, configuration TOMLs). Upon detecting a divergence between the repository (Desired State) and the reported status from agents (Actual State), Core calculates the necessary diff operations—such as pulling a new image, restarting a container, or injecting updated environment variables.  
+* **API and Webhooks:** Core acts as the ingress point for external triggers. It processes webhooks from Git providers (GitHub, GitLab, Gitea) to initiate deployment pipelines instantly upon code commits, a feature critical for the automated workflow discussed in Section 7\.2
+
+#### **2.1.2 Komodo Periphery: The Privileged Agent**
+
+The Periphery agent is a lightweight, compiled binary (written in Rust) that resides on every managed server. Its role is execution and telemetry. Unlike agentless systems that rely on SSH—which can be fragile and difficult to secure behind NAT—Periphery establishes a persistent, secure communication channel with Core.  
+**Operational Capabilities:**
+
+* **Docker Socket Control:** Periphery mounts the host's Docker socket (/var/run/docker.sock), granting it the authority to spawn, kill, and inspect sibling containers. This architecture allows Komodo to manage the very infrastructure it runs on, enabling the "self-managing" requirement.3  
+* **System Telemetry:** By mounting the host's /proc directory, Periphery leverages system information libraries (likely sysinfo in Rust) to scrape granular metrics—CPU load, memory usage, disk I/O—and stream this data back to Core for alerting and visualization.4  
+* **Secure Connectivity:** Communication between Core and Periphery is secured via a shared secret (KOMODO\_PASSKEY) and can be encapsulated in mTLS (Mutual TLS). This ensures that even if the Periphery port (default 8120\) is exposed, unauthorized actors cannot issue orchestration commands without the cryptographic keys.5
+
+### **2.2 The Recursive Deployment Paradox**
+
+A unique challenge identified in the research is the "Bootstrap Problem": How does one use Komodo to manage the Periphery agent that Komodo relies on to communicate with the server?  
+The solution lies in Komodo’s ability to treat the Periphery agent as just another "Stack" (a Docker Compose deployment). By defining the Periphery configuration in a Git repository and importing it into Komodo Core as a Stack, we create a recursive management loop.  
+**Mechanism of Action:**
+
+1. **Initial State:** The administrator manually installs the Periphery agent on a server via CLI.  
+2. **Adoption:** The administrator defines the Periphery's docker-compose.yaml in Git and creates a Stack in Komodo Core targeting that server.  
+3. **The Handover:** When Komodo deploys this Stack, it essentially instructs the running Periphery agent to "redeploy yourself."  
+4. **Graceful Replacement:** The Docker daemon handles the request. It pulls the new Periphery image, stops the old container, and starts the new one. Because the configuration (Passkeys, Certs) is persisted in host volumes (e.g., /etc/komodo), the new agent immediately reconnects to Core, completing the update cycle without severing administrative control.
+
+This capability is pivotal for the "Single Workflow" requirement, as it ensures that updates to the orchestration layer itself can be automated alongside application deployments.
+
+## ---
+
+**3\. Network Fabric Analysis: Pangolin and the Tunneled Mesh**
+
+With the orchestration plane established, the analysis turns to the connectivity layer. The user requirements specify the use of **Pangolin** and its **Newt** agent. This choice indicates a preference for a "Tunneled Mesh" architecture over traditional port-forwarding or VPN solutions.
+
+### **3.1 The Pangolin Ingress Model**
+
+Pangolin operates as a self-hosted alternative to Cloudflare Tunnels. It solves the problem of exposing services running in private networks (home labs, corporate intranets, VPCs without public IPs) to the public internet without opening inbound firewall ports.
+
+#### **3.1.1 The Core Gateway**
+
+Pangolin Core acts as the public-facing gateway. It terminates SSL connections using automatically provisioned Let's Encrypt certificates and enforces access control policies. It listens for incoming tunnel connections from Newt agents, effectively reversing the traditional connection model. Instead of the internet connecting *in* to the server, the server connects *out* to Pangolin.7
+
+#### **3.1.2 The Newt Agent: User-Space WireGuard**
+
+The Newt agent is the linchpin of this architecture. It is a user-space application that establishes a WireGuard tunnel to the Pangolin Core.
+
+* **User-Space Advantage:** Unlike kernel-level WireGuard, Newt does not require root privileges to modify network interfaces (though it often runs as root in Docker for convenience). It creates a virtualized network path, encapsulating traffic from the Pangolin Core and forwarding it to specific containers within the Docker network.8  
+* **Multiplexing:** A single Newt connection can route traffic for multiple distinct services based on subdomains. This allows for a "Sidecar" deployment pattern, where a single Newt agent services an entire Docker Compose stack, or a "Router" pattern, where one Newt agent services an entire host.
+
+### **3.2 Declarative Configuration: The Blueprint System**
+
+Integration with Komodo relies heavily on Pangolin's "Blueprint" feature. Blueprints allow administrators to define the routing and access rules declaratively, rather than configuring them in the Pangolin UI.  
+**Configuration Vectors:**
+
+1. **YAML Definition:** A standalone file defining resources, upstream targets, and auth policies.  
+2. **Docker Labels:** The preferred method for Komodo integration. By adding specific labels to a container in the Docker Compose file (e.g., pangolin.resource.name=MyApp), the Newt agent automatically detects the service and registers it with the Core. This adheres strictly to the "Infrastructure as Code" (IaC) philosophy managed by Komodo.9
+
+**Table 3.1: Comparison of Configuration Methods**
+
+| Feature | Pangolin UI | YAML Blueprint | Docker Labels (Recommended) |
+| :---- | :---- | :---- | :---- |
+| **Source of Truth** | Database (Opaque) | File System | Git (via Komodo) |
+| **Automation** | Low (Manual Click) | Medium (File Sync) | High (Auto-Discovery) |
+| **Coupling** | Decoupled from App | Decoupled from App | Tightly Coupled with App |
+| **Komodo Synergy** | Low | Medium | **Maximum** |
+
+## ---
+
+**4\. Security Architecture: Identity Assurance and Middleware**
+
+The mere exposure of services via Pangolin/Newt is insufficient; they must be secured. The research materials point to a specific integration pattern involving **TinyAuth** and the **Pangolin Middleware Manager**. This section analyzes how these components enforce a Zero Trust model.
+
+### **4.1 TinyAuth: The Forward Authentication Provider**
+
+TinyAuth is a minimalist authentication service designed to integrate with reverse proxies like Traefik (which underpins Pangolin). It implements the "ForwardAuth" protocol.  
+**The ForwardAuth Protocol:**
+
+1. **Interception:** An incoming request reaches Pangolin (Traefik).  
+2. **Delegation:** Traefik pauses the request and sends a verification sub-request to TinyAuth.  
+3. **Verification:** TinyAuth checks for a valid session cookie.  
+   * *If Valid:* TinyAuth returns HTTP 200 OK, potentially injecting headers like X-User.  
+   * *If Invalid:* TinyAuth returns HTTP 401/302, redirecting the user's browser to the TinyAuth login portal.11  
+4. **Resumption:** Upon successful login, the user is redirected back to the original resource.
+
+Operational Simplicity:  
+Unlike complex IdPs (Identity Providers) like Keycloak, TinyAuth is designed for "homelab" scale, using a simple flat-file or environment-variable based user database (username:hash). This makes it ideal for embedding directly into a Komodo stack without external dependencies.
+
+### **4.2 The Middleware Manager**
+
+Pangolin abstracts Traefik, but advanced users often need direct access to Traefik's middleware features (Rate Limiting, IP Whitelisting, ForwardAuth). The **Middleware Manager** is a helper microservice that bridges this gap.
+
+* **Function:** It provides a UI and API to define Traefik middlewares. It writes these definitions to a dynamic configuration file (YAML) that is mounted into the Pangolin/Traefik container.  
+* **Integration:** By defining a forwardAuth middleware in the Manager pointing to the TinyAuth container, administrators can create a reusable security object. This object can then be referenced in Pangolin Blueprints (e.g., pangolin.resource.middleware=tinyauth-protection), effectively applying the security policy to any resource managed by Komodo.12
+
+## ---
+
+**5\. Technical Outline: Recursive Deployment of Komodo Periphery**
+
+This section addresses the user's first specific technical request: a guide to using Komodo to manage its own Periphery. This procedure transforms the "Pet" server (manually managed) into "Cattle" (automated).
+
+### **5.1 Prerequisite Configuration**
+
+Before automation can take over, the bootstrap environment must be correctly configured.
+
+* **Docker Network:** The Periphery container needs to reside on a network that allows outbound access to the Komodo Core URL.  
+* **Volume Persistence:** The /etc/komodo directory on the host must be preserved. This directory contains the generated unique ID of the agent. If this is lost during a redeployment, the agent will appear as a *new* server in Core, breaking the continuity.
+
+### **5.2 The Deployment Workflow**
+
+The following steps outline the transformation of the manual Periphery install into a Komodo-managed Stack.
+
+#### **Step 1: Git Repository Preparation**
+
+Create a dedicated Git repository (e.g., infrastructure-live) to house the infrastructure definitions. Create a directory periphery/ and add the docker-compose.yaml.
+
+#### **Step 2: The Compose Definition**
+
+This YAML definition is critical. It must use environment variables for sensitive data (Passkeys) to allow Komodo to inject them securely.
+
+YAML
+
+\# infrastructure-live/periphery/docker-compose.yaml  
+services:  
+  periphery:  
+    \# Use a variable for the tag to allow controlled upgrades via Komodo  
+    image: ghcr.io/moghtech/komodo-periphery:${KOMODO\_IMAGE\_TAG:-latest}  
+    container\_name: komodo-periphery  
+    restart: unless-stopped  
+      
+    \# CRITICAL: This label prevents Komodo from stopping this container  
+    \# during "Stop All" actions, which would kill the management connection.  
+    labels:  
+      \- "komodo.skip=true"  
+        
+    environment:  
+      \- PERIPHERY\_ROOT\_DIRECTORY=/etc/komodo  
+      \- KOMODO\_HOST=${KOMODO\_CORE\_URL}  
+      \- PERIPHERY\_PASSKEYS=${KOMODO\_SHARED\_PASSKEY}  
+      \- PERIPHERY\_SSL\_ENABLED=true  
+      \# Disable remote terminal for security if not needed  
+      \- PERIPHERY\_DISABLE\_TERMINALS=false  
+        
+    volumes:  
+      \# The Agent requires control over the Docker Daemon  
+      \- /var/run/docker.sock:/var/run/docker.sock  
+      \# Read-only access to host processes for metrics  
+      \- /proc:/proc:ro  
+      \# Persistence for Agent Identity and SSL Certs  
+      \- /etc/komodo:/etc/komodo  
+        
+    logging:  
+      driver: "json-file"  
+      options:  
+        max-size: "10m"  
+        max-file: "3"
+
+#### **Step 3: Stack Configuration in Core**
+
+1. Navigate to the **Stacks** menu in Komodo Core.  
+2. Create a new Stack named Self-Managed-Periphery.  
+3. **Repository:** Connect the infrastructure-live repo.  
+4. **Variables:** Define the variables used in the Compose file:  
+   * KOMODO\_CORE\_URL: https://core.yourdomain.com (or internal IP).  
+   * KOMODO\_SHARED\_PASSKEY: The secure key defined in Core settings.  
+   * KOMODO\_IMAGE\_TAG: v1.16.1 (or latest).  
+5. **Deploy:** Execute the deployment. Komodo will pull the repo, inject variables, and instruct the *existing* Periphery agent to replace itself with the *new* configuration defined in Git.
+
+Risk Mitigation:  
+The transition is almost instantaneous, but if the new configuration is invalid (e.g., wrong Passkey), the agent will fail to reconnect. Recommendation: Always test the configuration on a staging server before applying it to the Core server's own agent.
+
+## ---
+
+**6\. Technical Outline: Pangolin, Newt, and TinyAuth Integration**
+
+This section synthesizes the remaining components into the requested "single workflow." The goal is to deploy an application stack that is automatically connected to the internet via a secure tunnel and protected by authentication, without manual configuration steps.
+
+### **6.1 The Infrastructure Bootstrap (One-Time Setup)**
+
+Before individual apps can be deployed, the shared infrastructure (Pangolin Core, TinyAuth, Middleware Manager) must be established. This is done via a "Base Infrastructure" Stack in Komodo.  
+**Base Infrastructure Compose (Snippet):**
+
+YAML
+
+services:  
+  \# Pangolin Core (The Tunnel Server)  
+  pangolin:  
+    image: fosrl/pangolin:latest  
+    volumes:  
+      \-./pangolin-data:/data  
+      \-./pangolin-config:/config  
+      \# Shared volume for Middleware Manager to write config  
+      \- pangolin\_traefik\_dynamic:/app/traefik/dynamic
+
+  \# TinyAuth (The Auth Provider)  
+  tinyauth:  
+    image: ghcr.io/steveiliop56/tinyauth:v4  
+    environment:  
+      \- APP\_URL=https://auth.yourdomain.com  
+      \# Users format: username:bcrypt\_hash  
+      \- USERS=admin:$2y$10$hashed\_secret...  
+    labels:  
+      \# Self-expose TinyAuth via Pangolin so users can login  
+      \- "pangolin.resource.name=TinyAuth"  
+      \- "pangolin.resource.domain=auth.yourdomain.com"  
+      \- "pangolin.resource.target=http://tinyauth:3000"
+
+  \# Middleware Manager (The Config Injector)  
+  middleware-manager:  
+    image: hhftechnology/middleware-manager:latest  
+    environment:  
+      \- PANGOLIN\_API\_URL=http://pangolin:3001  
+    volumes:  
+      \# Writes the ForwardAuth config here for Pangolin to read  
+      \- pangolin\_traefik\_dynamic:/traefik-config
+
+volumes:  
+  pangolin\_traefik\_dynamic:
+
+Configuration Action:  
+Once deployed, log in to the Middleware Manager UI and create a Middleware object:
+
+* **Name:** secure-access  
+* **Type:** forwardAuth  
+* **Address:** http://tinyauth:3000/verify (Internal Docker network address)  
+* **TrustForwardHeader:** true
+
+This creates the reusable security policy.
+
+### **6.2 The Unified Workflow: "Deploy-with-Tunnel" Procedure**
+
+The user requests a method to integrate these components into a "single workflow." The primary obstacle is that the Newt agent requires unique credentials (ID/Secret) which are generated by the Pangolin API. We can automate this using **Komodo Actions** (TypeScript automation) and **Procedures**.
+
+#### **6.2.1 The TypeScript Automation Script**
+
+We create a Komodo **Action** named Provision-Pangolin-Tunnel. This script interacts with the Pangolin API to generate a new Site (tunnel endpoint) whenever a new stack is deployed.  
+**Script Logic Analysis:**
+
+1. **Trigger:** The script accepts an argument (e.g., STACK\_NAME).  
+2. **API Call:** It sends a POST request to the Pangolin Core API (/api/v1/sites) creating a site named STACK\_NAME.  
+3. **Extraction:** It parses the JSON response to retrieve the id and secret for the Newt agent.  
+4. **Injection:** It uses the Komodo Client SDK to update the **Stack Variables** of the target stack, injecting NEWT\_ID and NEWT\_SECRET.14
+
+*Note: While the specific API endpoints for Pangolin were not accessible in the snippets, the standard pattern for such integrations involves RESTful interaction authenticated via an API token.*
+
+#### **6.2.2 The Stack Definition (Sidecar Pattern)**
+
+The application stack in Git is defined with a "Sidecar" Newt container. It relies on the variables injected by the Action.
+
+YAML
+
+\# my-app/docker-compose.yaml  
+services:  
+  \# The Application Workload  
+  wiki:  
+    image: wikijs/wikijs:2  
+    container\_name: wiki  
+    labels:  
+      \# Pangolin Blueprint: Define the public route  
+      \- "pangolin.resource.name=Wiki"  
+      \- "pangolin.resource.domain=wiki.yourdomain.com"  
+      \- "pangolin.resource.target=http://wiki:3000"  
+      \# Security: Apply the TinyAuth middleware defined in Step 6.1  
+      \- "pangolin.resource.middlewares=secure-access"
+
+  \# The Network Sidecar (Newt)  
+  tunnel:  
+    image: fosrl/newt:latest  
+    restart: unless-stopped  
+    environment:  
+      \# Variables populated by the Komodo Action  
+      \- NEWT\_ID=${NEWT\_ID}  
+      \- NEWT\_SECRET=${NEWT\_SECRET}  
+      \- PANGOLIN\_ENDPOINT=https://pangolin.yourdomain.com  
+    volumes:  
+      \# Discovery: Reads the labels from the 'wiki' container  
+      \- /var/run/docker.sock:/var/run/docker.sock:ro
+
+#### **6.2.3 The Execution Procedure**
+
+Finally, we define a **Komodo Procedure** to bind it all together. This represents the "Single Workflow."  
+**Procedure: Deploy Secure App**
+
+1. **Stage 1 (Provision):** Run Action Provision-Pangolin-Tunnel with arg wiki-stack.  
+   * *Result:* Komodo talks to Pangolin, gets keys, updates Stack Variables.  
+2. **Stage 2 (Deploy):** Deploy Stack wiki-stack.  
+   * *Result:* Komodo pulls the Compose file, injects the new keys, and starts the containers.  
+3. **Stage 3 (Verify):** (Optional) Run Action Check-Tunnel-Health.
+
+**Outcome:** The administrator clicks one button. The system generates unique credentials, deploys the app, establishes a secure encrypted tunnel, and applies ForwardAuth security policies automatically.
+
+## ---
+
+**7\. Resilience, Observability, and Failure Modes**
+
+Implementing such a complex stack requires understanding potential failure points. This section analyzes critical operational risks.
+
+### **7.1 The "Split-Brain" Tunnel Risk**
+
+If a Stack is deleted in Komodo but the Site is not deleted in Pangolin, "zombie" sites accumulate. Conversely, if the Newt container is recreated (e.g., during an update), it must reuse the same credentials.
+
+* **Solution:** The workflow defined in 6.2.1 persists credentials into Komodo Variables. This ensures that when the stack redeploys, it reuses the *existing* NEWT\_ID, preventing the creation of duplicate tunnels. A "Teardown" Procedure should be created to call the Pangolin API and DELETE the site when the stack is destroyed.
+
+### **7.2 Security of the Docker Socket**
+
+Both the Komodo Periphery and the Newt Agent require access to /var/run/docker.sock. This is a high-privilege interface; access to it is equivalent to root access on the host.
+
+* **Mitigation Strategy:**  
+  * **Newt:** Use the :ro (read-only) flag for the Newt container volume mount (/var/run/docker.sock:/var/run/docker.sock:ro). Newt only needs to *read* labels to configure Blueprints; it does not need to execute commands.16  
+  * **Periphery:** Must have write access. Mitigation involves network segmentation (VLANs) and strictly controlling access to the Komodo Core UI via Multi-Factor Authentication (MFA) or OIDC (e.g., Keycloak), as a compromise of Core leads to a compromise of all Periphery agents.14
+
+### **7.3 Database Schema Volatility**
+
+Research indicates that the dev branches of Komodo often introduce breaking database schema changes.17
+
+* **Operational Discipline:** Never set image tags to latest in a production environment. Pin versions (e.g., ghcr.io/moghtech/komodo-core:v1.16) in your Stack definitions. Create a "Maintenance Procedure" in Komodo that backups the MongoDB database before pulling new images, ensuring a rollback path exists if a schema migration fails.
+
+## ---
+
+**8\. Conclusion**
+
+The integration of Komodo, Pangolin, and TinyAuth creates a formidable "Sovereign Stack" that addresses the trifecta of modern infrastructure needs: Orchestration, Connectivity, and Security. By leveraging the recursive deployment capabilities of Komodo, administrators can manage the management layer itself, ensuring the system is self-updating and resilient. The automated provisioning of Newt tunnels via Komodo Actions eliminates the friction of manual credential handling, while the Blueprint system ensures that network configuration is version-controlled alongside application code. Finally, the inclusion of TinyAuth via the Middleware Manager provides a robust, zero-trust security perimeter that travels with the application, regardless of the underlying network topology. This architecture represents a mature, enterprise-grade approach to self-hosting.
+
+#### **Works cited**
+
+1. accessed December 5, 2025, [https://raw.githubusercontent.com/moghtech/komodo/main/compose/mongo.compose.yaml](https://raw.githubusercontent.com/moghtech/komodo/main/compose/mongo.compose.yaml)  
+2. Streamline Your Deployments : Komodo \+ GitHub Webhooks | by Rishav Kapil | Medium, accessed December 5, 2025, [https://medium.com/@rishavkapil61/streamline-your-deployments-komodo-github-webhooks-51d4d3a04891](https://medium.com/@rishavkapil61/streamline-your-deployments-komodo-github-webhooks-51d4d3a04891)  
+3. Komodo (komo.do): A Build & Deployment System for Docker/Compose | by mario marco, accessed December 5, 2025, [https://medium.com/@mariomarco08/komodo-komo-do-a-build-deployment-system-for-docker-compose-9470136d5751](https://medium.com/@mariomarco08/komodo-komo-do-a-build-deployment-system-for-docker-compose-9470136d5751)  
+4. \[HELP\] komodo-periphery memory leak · Issue \#203 \- GitHub, accessed December 5, 2025, [https://github.com/mbecker20/komodo/issues/203](https://github.com/mbecker20/komodo/issues/203)  
+5. Ansible role for simplified deployment of Komodo with systemd \- GitHub, accessed December 5, 2025, [https://github.com/bpbradley/ansible-role-komodo](https://github.com/bpbradley/ansible-role-komodo)  
+6. Has anyone managed to figure out periphery for komodo? : r/selfhosted \- Reddit, accessed December 5, 2025, [https://www.reddit.com/r/selfhosted/comments/1j5ydbx/has\_anyone\_managed\_to\_figure\_out\_periphery\_for/](https://www.reddit.com/r/selfhosted/comments/1j5ydbx/has_anyone_managed_to_figure_out_periphery_for/)  
+7. fosrl/pangolin: Identity-Aware Tunneled Reverse Proxy Server with Dashboard UI \- GitHub, accessed December 5, 2025, [https://github.com/fosrl/pangolin](https://github.com/fosrl/pangolin)  
+8. fosrl/newt: Pangolin tunneled site & network connector \- GitHub, accessed December 5, 2025, [https://github.com/fosrl/newt](https://github.com/fosrl/newt)  
+9. Infrastructure-as-Code for Proxies: Pangolin Blueprints with YAML and Docker Labels, accessed December 5, 2025, [https://pangolin.net/blog/posts/blueprints](https://pangolin.net/blog/posts/blueprints)  
+10. Pangolin 1.10.2: Declarative configs & Docker labels, multi-site failover, path-based routing, and more : r/selfhosted \- Reddit, accessed December 5, 2025, [https://www.reddit.com/r/selfhosted/comments/1nnry8a/pangolin\_1102\_declarative\_configs\_docker\_labels/](https://www.reddit.com/r/selfhosted/comments/1nnry8a/pangolin_1102_declarative_configs_docker_labels/)  
+11. Getting Started \- Tinyauth, accessed December 5, 2025, [https://tinyauth.app/docs/getting-started/](https://tinyauth.app/docs/getting-started/)  
+12. Middleware Manager \- Pangolin Docs, accessed December 5, 2025, [https://docs.pangolin.net/self-host/community-guides/middlewaremanager](https://docs.pangolin.net/self-host/community-guides/middlewaremanager)  
+13. Middleware Manager for your Pangolin Deployment- Update with Adds Features & Fixes : r/selfhosted \- Reddit, accessed December 5, 2025, [https://www.reddit.com/r/selfhosted/comments/1k2856d/middleware\_manager\_for\_your\_pangolin\_deployment/](https://www.reddit.com/r/selfhosted/comments/1k2856d/middleware_manager_for_your_pangolin_deployment/)  
+14. Advanced Configuration \- Komodo, accessed December 5, 2025, [https://komo.do/docs/setup/advanced](https://komo.do/docs/setup/advanced)  
+15. Resources \- Komodo, accessed December 5, 2025, [https://komo.do/docs/resources](https://komo.do/docs/resources)  
+16. Docker Network and Service Configuration for newt if you are getting Bad Gateway \- Reddit, accessed December 5, 2025, [https://www.reddit.com/r/PangolinReverseProxy/comments/1mufupo/docker\_network\_and\_service\_configuration\_for\_newt/](https://www.reddit.com/r/PangolinReverseProxy/comments/1mufupo/docker_network_and_service_configuration_for_newt/)  
+17. Releases · moghtech/komodo \- GitHub, accessed December 5, 2025, [https://github.com/moghtech/komodo/releases](https://github.com/moghtech/komodo/releases)
+
+---
+
+### `Komodo FAQ, Tips, and Tricks.md` — komodo
+
+---
+title: "Komodo FAQ, Tips, and Tricks"
+source: "https://blog.foxxmd.dev/posts/komodo-tips-tricks/"
+author:
+  - "[[FoxxMD]]"
+published: 2025-04-02
+created: 2025-12-05
+description: "Everything you wanted to know but were afraid to ask 🦎"
+tags:
+  - "clippings"
+---
+A semi-organized list of FAQs, tips, and tricks for using Komodo. This is a follow-up to my [migration guide and Introduction for Komodo](https://blog.foxxmd.dev/posts/migrating-to-komodo)
+
+This is living guide that will be updated as Komodo is updated and community knowledge is consolidated. For feedback, contributions, and corrections:
+
+- [PRs are welcome](https://github.com/FoxxMD/blog)
+- Use the Giscuss widget at the bottom of the post with your Github account
+	- Or directly comment on the [discussion](https://github.com/FoxxMD/blog/discussions) thread for this post
+- Available in the [Komodo Discord](https://discord.gg/DRqE8Fvg5c) **only** [^1] as `FoxxMD`
+
+## FAQ
+
+### Can Komodo Core update itself?
+
+Yes! If using [systemd Periphery agent](https://komo.do/docs/setup/connect-servers#install-the-periphery-agent---systemd) you can re-deploy a Stack with Komodo Core without issue. If you are using the Docker agent it’s recommended to keep the periphery and core services in different stacks so the UI continues to work during deployment, but not necessary.
+
+### Can Periphery Agents updates be automated?
+
+Not from within Komodo the same way Core be can updated, unfortunately. However, if you are familiar with [Ansbile](https://docs.ansible.com/ansible/latest/getting_started/introduction.html) there several playbooks available from the community to automate this process:
+
+- from mbecker (Komodo creator) [https://github.com/moghtech/komodo/discussions/220](https://github.com/moghtech/komodo/discussions/220)
+- from bpbradley [https://github.com/bpbradley/ansible-role-komodo](https://github.com/bpbradley/ansible-role-komodo)
+
+### How can I customize systemd Periphery Agents?
+
+The komodo repository describes where [systemd **service units** are placed](https://github.com/moghtech/komodo/tree/main/scripts#periphery-setup-script) when using the [official install script.](https://komo.do/docs/setup/connect-servers#install-the-periphery-agent---systemd)
+
+Properties like the Working Directory and [Komodo Environmental Variables](https://komo.do/docs/setup/connect-servers#configuration), specific to Komodo, can be added to the Service Unit to configure the Periphery Agent without having to add these to your global environment.
+
+To make these modification use a [**drop-in** file](https://unix.stackexchange.com/a/468067) so that your modifications survive any future Periphery install script updates.
+
+Create and edit a drop-in for the service:
+
+```shell
+1
+systemctl edit periphery.service
+```
+
+(add `--user` if that is how it was installed)
+
+Or manually create it at `/etc/systemd/system/periphery.service.d/override.conf` (path based on install location mentioned in **service units** link above)
+
+Use this file like a regular systemd service definition. Anything here will add to, or override, properties in the existing `periphery.service` unit. EX:
+
+```
+1
+2
+3
+[Service]
+Environment="PERIPHERY_ROOT_DIRECTORY=/home/myUser/komodo"
+Environment="PERIPHERY_DISABLE_TERMINALS=true"
+```
+
+Reload systemd config and restart Periphery after making any changes:
+
+```shell
+1
+2
+systemctl daemon-reload
+systemctl restart periphery.service
+```
+
+### Systemd Periphery stops after closing SSH?
+
+Likely you installed Periphery using `--user`. Depending on your OS, it may exit all processes *started by that user* when that user logs out IE closes SSH connection. Use [`loginctl enable-linger`](https://docs.oracle.com/en/operating-systems/oracle-linux/8/obe-systemd-linger/) to enable processes started by your user to continue running after the sessions has closed:
+
+### How can I migrate periphery agent to systemd?
+
+It is possible to switch between systemd and container [periphery agents](https://komo.do/docs/setup/connect-servers) without needing to re-create your Resources, Stacks, etc… manually, but it may require some planning depending on which you switch from/to.
+
+##### Concepts to Understand
+
+###### Periphery Configuration and State are Indepedent
+
+- Periphery **Configuration** can be expressed as a [`periphery.config.toml` file](https://komo.do/docs/setup/connect-servers#configuration) or as [environmental variables](https://komo.do/docs/setup/connect-servers#install-the-periphery-agent---container). All agent types can use both, but *where they are defined* is dependent on the agent type used.
+- Periphery **State** is data storing the *internal state* of the Periphery agent EX what Stacks are on this machine, cloned repositories for Stacks, Build artifacts,.env files written from Stack Environment, etc…
+- **State** be reconstructed from a [Resource Sync](https://blog.foxxmd.dev/posts/migrating-to-komodo#resource-sync) but **Configuration** cannot
+
+###### Periphery State is owned by the user running the Agent
+
+All of the files/folders created by the agent to hold **State** is created by the user running the agent:
+
+- [Periphery **container**](https://komo.do/docs/setup/connect-servers#install-the-periphery-agent---container) is run by `root`
+- [Periphery systemd **system**](https://github.com/moghtech/komodo/tree/main/scripts#system-requires-root) is run by `root`
+- [Periphery systemd **user**](https://github.com/moghtech/komodo/tree/main/scripts#system-requires-root) is run by your local user
+
+If you switch from an agent run by `root` to one run by a local user you may run into file/folder ownership issues. These can be corrected with `chown -R` but it’s important to recognize this is something you may need to deal with.
+
+###### Compose project volumes are independent from Periphery Data and created by the user running the Agent
+
+Any non-existent **bind-mounted** directories, or explicit files, in your compose `volumes:` are created by the user running `docker compose`.
+
+These volumes are *not* part of Periphery State and cannot be fixed by Sync Resource.
+
+Example
+```yaml
+1
+2
+3
+4
+services:
+  myService:
+    volumes:
+      - /my/host/directory:/config
+```
+
+If `/my/host/directory` didn’t already exist then it will be created by the user running `docker compose` on the host machine. For Periphery container and system agent this would be `root`. If you decide to switch to systemd **user**, and setup [docker management using a non-root user](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user), you *may* have permission issues when trying to run the container.
+
+This *could* be fixed by running `chown myUser:myUser /my/host/directory` **without** recursive (no `-R`). But it might need to be fixed on a case-by-case basis as well.
+
+#### Migrating Configuration
+
+If you are using [`environment:` on the periphery container](https://komo.do/docs/setup/connect-servers#install-the-periphery-agent---container) for configuration, EX `PERIPHERY_ROOT` or `PERIPHERY_PASSKEYS` etc.., you will need to **either**
+
+a) convert these to a [`periphery.config.toml`](https://komo.do/docs/setup/connect-servers#configuration) file and place it in the [appropriate path](https://github.com/moghtech/komodo/tree/main/scripts#system-requires-root). If you are already using a `periphery.config.toml` file then make sure to place it in the correct location.
+
+b) after installing systemd agent, create a [drop-in systemd file](https://blog.foxxmd.dev/posts/komodo-tips-tricks/#how-can-i-customize-systemd-periphery-agents) with `Environment=...` entries containing all the environmental configuration currently used in your periphery container
+
+#### Migrating State
+
+Use either of the two methods below to restore Periphery Agent state:
+
+##### Reproducing from Sync Resource
+
+The [periphery state ownership issues](https://blog.foxxmd.dev/posts/komodo-tips-tricks/#periphery-owned) can be bypassed by using a [Resource Sync](https://blog.foxxmd.dev/posts/migrating-to-komodo#resource-sync) to re-deploy the Resources on your server. In this scenario you would:
+
+- create a **Managed** Resource Sync
+- Refresh/get the TOML for your server (periphery agent machine) backed up somewhere
+- Switch to systemd agent *without* re-using any directories from the container
+	- This will create a “blank” server with only your [migrated configuration](https://blog.foxxmd.dev/posts/komodo-tips-tricks/#migrating-periphery-configuration) from the first step, but no Stacks etc… yet
+- Create the Resource Sync from the backed up TOML
+- **Execute Sync** to re-create all your stacks etc…
+
+This does not re-deploy the actual docker compose projects or create/destroy anything on the machine, just the **periphery state** of “this stack belongs on this machine” etc – so you’d be back to your original state but with the new periphery agent.
+
+##### Using Existing Periphery State Data
+
+You may need to move the directories you bound in the periphery container `volumes:` to their default location of `/etc/komodo` or specify `root_directory` to tell the new agent where the komodo directories are located.
+
+Depending on which [systemd agent you are switching to](https://blog.foxxmd.dev/posts/komodo-tips-tricks/#periphery-owned) you *may* need to change the ownership of the existing komodo directories using `chown`.
+
+If you can resolve these issues then you can use all of the existing komodo data/directories as-is with the new agent.
+
+### How can I automate stack updates?
+
+Komodo has built-in checking for image updates on a Stack. These need to be enabled on each Stack. Find the configuration at
+
+> **Stack** -> **Config** section -> **Auto Update** -> **Poll For Updates**
+
+The interval at which Stacks/Images are polled for updates can be configured using the env `KOMODO_RESOURCE_POLL_INTERVAL` or `resource_poll_interval` variable found in the [Komodo Core configuration](https://komo.do/docs/setup/advanced#mount-a-config-file).
+
+Stacks can be automatically updated using **Auto Update** or **Full Stack Auto Update** toggles also found in the Stack’s Config section.
+
+#### Updating Specific Stacks
+
+For simple stack matching based on name, wildcard, or regex (no lookbehind/backtracing) create a [**Procedure**](https://komo.do/docs/resources/procedures) and use a **Batch Deploy** stage with your desired target.
+
+For more advanced filtering create an **Action** using the snippet below. Fill out the arrays at the top of the snippet with your **exclude** filter values.
+
+Action Snippet
+```ts
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+// add values to each filter to NOT re-deploy if stack contains X
+const REPOS = []; // Stack X Repo 'MyName/MyRepo' includes ANY part of string Y from list
+const SERVER_IDS = []; // Stack X Server '67659da61af880a9d21f25be' matches string Y from list
+const TAGS = []; // Stack X Tags A,B,C like '67b8cb3ce8d02869dd500af6' matches string Y from list
+const STACKS = []; // Stack 'my-cool-stack' matches ANY part of string Y from list
+const SERVICES = []; // Stack X Service 'my-cool-service' includes ANY part of string Y from list
+const IMAGES = []; // Stack X Image 'lscr.io/linuxserver/socket-proxy:latest' includes ANY part of string Y from list
+
+const intersect = (a: Array<any>, b: Array<any>) => {
+    const setA = new Set(a);
+    const setB = new Set(b);
+    const intersection = new Set([...setA].filter(x => setB.has(x)));
+    return Array.from(intersection);
+}
+
+const availableUpdates = await komodo.read('ListStacks', {
+  query: {
+    specific: {
+      update_available: true
+    }
+  }
+});
+
+const candidates = availableUpdates.filter(x => {
+  if(REPOS.length > 0 && REPOS.some(x => x.info.repo.includes(x))) {
+      return false;
+  }
+  if(SERVER_IDS.length > 0 && SERVER_IDS.includes(x.info.server_id)) {
+    return false;
+  }
+  if(TAGS.length > 0 && intersect(TAGS, x.tags).length > 0) {
+    return false;
+  }
+  if(STACKS.length > 0 && STACKS.some(y => x.name.includes(y))) {
+    return false;
+  }
+  if(SERVICES.length > 0) {
+    const s = x.info.services.map(x => x.service);
+    if(s.some(x => SERVICES.some(y => x.includes(y)))) {
+      return false;
+    }
+  }
+  if(IMAGES.length > 0) {
+    const s = x.info.services.map(x => x.image);
+    if(s.some(x => IMAGES.includes(y => y.includes(s)))) {
+      return false;
+    }
+  }
+  return true;
+});
+
+console.log(\`Redeploying:
+${candidates.map(x => x.name).join('\n')}\`);
+
+// comment out the line below to test filtering without actually re-deploying anything
+await komodo.execute('BatchDeployStack', {pattern: candidates.map(x => x.id).join(',')});
+```
+
+Example: To re-deploy any stacks with image updates available EXCEPT any stack/service that contains the word `periphery`, modify the top arrays to contain:
+
+```ts
+1
+2
+const STACKS = ['periphery'];
+const SERVICES = ['periphery'];
+```
+
+> Since v1.17.2 Both Actions and Procedures can now be .
+
+#### Advanced Update Automation
+
+See Nick Cunningham’s post: [**How To: Automate version updates for your self-hosted Docker containers with Gitea, Renovate, and Komodo**](https://nickcunningh.am/blog/how-to-automate-version-updates-for-your-self-hosted-docker-containers-with-gitea-renovate-and-komodo)
+
+### How do I bulk import existing compose projects?
+
+An existing compose project can be manually imported as a **Files on Server** mode **Stack**. [Make sure the Stack name is the same as the compose project](https://komo.do/docs/resources/docker-compose#importing-existing-compose-projects) so Komodo picks up its status automatically.
+
+Komodo does not have a built-in way to import compose projects automatically. However, **I have created a small tool that can generate [Sync Resource](https://komo.do/docs/resources/sync-resources) TOML from many existing compose projects.** That TOML can be copy-pasted into Komodo, or directly created with the API, to create Stacks from your existing compose-folders.
+
+More information and instructions to use this tool are at [**https://foxxmd.github.io/komodo-import**](https://foxxmd.github.io/komodo-import) and the [interactive Quickstart docs](https://foxxmd.github.io/komodo-import/docs/quickstart)
+
+You will need to create an Alerter that uses the **Custom** endpoint with a service that can ingest it and forward it to your service.
+
+I have developed a few Alerter implementations for popular notification platforms:
+
+- [ntfy](https://github.com/FoxxMD/deploy-ntfy-alerter)
+- [gotify](https://github.com/FoxxMD/deploy-gotify-alerter)
+- [discord](https://github.com/FoxxMD/deploy-discord-alerter) (more customization than built-in discord)
+- [apprise](https://github.com/FoxxMD/deploy-apprise-alerter) (can be used to notify to any of the [100+ providers apprise supports](https://github.com/caronc/apprise/wiki#notification-services) including email)
+
+And the Komodo community is creating more implementations too:
+
+- [telegram](https://github.com/mattsmallman/komodo-alert-to-telgram) uses Cloudflare Workers
+- *(more to be added)*
+
+Generally, these are standalone **Stacks** you can run on Komodo. After the Stack is deployed, create a new Alerter with a Custom endpoint and point it to the IP:PORT of the service to finish setup.
+
+#### How do I stop Komodo from sending transient notifications?
+
+You may find Komodo sends notifications for *unresolved* events like `StackStateChange` when it is redeploying a Stack. Or it sends alerts for 100% CPU when it’s only a temporary spike.
+
+For ntfy/gotify/discord/apprise implementations I developed you can use [`UNRESOLVED_TIMEOUT_TYPES` and `UNRESOLVED_TIMEOUT`](https://github.com/FoxxMD/deploy-gotify-alerter/blob/main/README.md?plain=1#L52) to “timeout” temporary events: If the event of `type` is `unresolved` and the alerter sends another event of the same `type` **before** `timeout` milliseconds then it cancels sending the notification.
+
+#### My notification service isn’t listed here! How do I get it to work?
+
+First, you should check if it’s supported by [apprise](https://github.com/caronc/apprise/wiki#notification-services). If it is then use the apprise implementation from above as that is probably the easiest route.
+
+If it is not supported by apprise or you want to build your own then check out my repository where I implemented notification Alerters, [https://github.com/FoxxMD/komodo-utilities](https://github.com/FoxxMD/komodo-utilities). The repo uses VS Code Devcontainers for easy environment setup and each implementation uses the official [Komodo Typescript API client](https://komo.do/docs/ecosystem/api) to make things simple. It should be straightforward to fork my repo, copy-paste one of the existing implementations, and modify [`program.ts`](https://github.com/FoxxMD/komodo-utilities/blob/main/notifiers/gotify/program.ts) to work with your service.
+
+### Run Directory is defined but the entire repo is downloaded?
+
+In a **Stack** config the **Run Directory** only determines the working directory for Komodo to run `compose up -d` from.
+
+Komodo does not do anything “smart” when cloning the repo for the Stack, even if it knows the Run Directory. It’s not possible for it to know if you only use files from that directory for the Stack.
+
+Why Isn't it Smarter?
+
+The issue is the feasibility of covering all use cases vs complexity of the “smartness” involved.
+
+The use-case you may have considered is
+
+> Komodo only needs to know about the files inside **Run Directory**
+
+which is fine when everything inside `compose.yaml` refers to published images or volumes/bind mounts with absolute paths. But consider this example:
+
+> `compose.yaml` uses relative bind mounts to folders a few parents up and sideways…
+> 
+> ```yaml
+> 1
+> 2
+> 3
+> 4
+> 5
+> services:
+>  myService:
+>  # ...
+>    volumes:
+>     - ../../common-data/secrets:/secrets:ro
+> ```
+
+Ok…so cloning only **Run Directory** won’t cover this. So Komodo should implement code that instead parses all `volumes`, both short-hand syntax above and [long-hand syntax](https://docs.docker.com/reference/compose-file/services/#volumes) to look for relative paths, parse those, and then include those when cloning. It’s a bit more complicated but possibly still doable.
+
+But what about this scenario?
+
+> `compose.yaml` uses `build` instead of `image` and dockerfile/context is at a relative path
+> 
+> ```yaml
+> 1
+> 2
+> 3
+> 4
+> 5
+> services:
+>  myService:
+>    build:
+>      context: ../../master-folder/
+>      Dockerfile: ../docker/myservice.Dockerfile
+> ```
+> 
+> AND the `Dockerfile` copies files from another relative directory
+> 
+> ```dockerfile
+> 1
+> 2
+> 3
+> FROM nginx:alpine
+> 
+> COPY ../common-nginx /var/nginx/html
+> ```
+
+So, in order for Komodo to cover this use-case it needs to also:
+
+- Check for `build` instead of `image`
+	- Parse relative paths in `context`
+	- Parse relative paths in `Dockerfile`
+- Parse the `Dockerfile`
+	- Look for any `COPY` or `ADD` directives, check those for relative paths, and make sure to copy everything from those folders
+
+This is way more complexity. And it’s just scratching the surface of what is possible with the compose specification.
+
+Covering all use-cases may be possible but its a lot of work and maintenance. But there is a simpler and completely fool-proof approach to making sure all of these use-cases work: **clone the entire repository.**
+
+This is already “how it works”. For any project built from a dockerfile/compose.yaml file that is based on a git repo it must be possible to build it if the repo is cloned, so this is exactly what Komodo does. It may not look smart but its actually the simplest solution to covering all use-cases.
+
+Example of Git Repo and Komodo Stack Directory Structure
+
+Git Repo
+
+```
+1
+2
+3
+4
+5
+6
+7
+8
+9
+.
+├── stacks/
+│   ├── immich/
+│   │   └── compose.yaml
+│   └── frigate/
+│       ├── compose.yaml
+│       └── compose-nvidia.yaml
+└── resources/
+    └── servers.toml
+```
+
+Komodo config defines root directory (for Komodo) at `/opt/komodo` and you create a Stack named **immich** that uses the git repo from above with run directory `stacks/immich` …
+
+Immich Stack TOML example
+```toml
+1
+2
+3
+4
+5
+6
+7
+8
+9
+[[stack]]
+name = "immich"
+[stack.config]
+server = "myServer"
+git_account = "GitUser"
+repo = "GitUser/komodo"
+run_directory = "stacks/immich"
+environment = """
+"""
+```
+
+Directory structure on host running **immich** stack:
+
+```
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+.
+└── opt/
+    └── komodo/
+        └── stacks/
+            └── immich/
+                ├── stacks/
+                │   ├── immich/
+                │   │   └── compose.yaml
+                │   └── frigate/
+                │       ├── compose.yaml
+                │       └── compose.nvidia.yaml
+                └── resources/
+                    └── servers.toml
+```
+
+The directory stucture is `komodo root directory` + `komodo stacks` + `stack name` + `git repo`
+
+```
+1
+2
+/opt/komodo      /stacks        /immich      /stacks/immich
+komodo root dir  komodo stacks  stack name   git repo + run directory
+```
+
+If you are concerned about cloning/pulling the same repo for each Stack see [Stacks in Monorepo vs. Stack Per Repo](https://blog.foxxmd.dev/posts/komodo-tips-tricks/#stacks-monorepo-vs-individual) below.
+
+### How do I view logs in real time?
+
+Komodo doesn’t support “true” realtime log viewing yet but “near realtime” logging can be enabled by toggling the **Poll** switch on any Log tab. [Dozzle](https://dozzle.dev/) is a good alternative if you need consolidated, realtime logging for all containers with rich display, search, regex filtering, etc…
+
+### How do I shell/exec/attach to a container?
+
+Starting with Komodo has the ability to open fully-featured, persisted shells on each connected *server* as well as exec’ing into containers. Make sure to read the release notes for what type of *server* terminal is available to you, based on the type of perihery agent installed. The TLDR:
+
+- periphery docker container => shell is inside container and can interact with docker daemon but not host
+- periphery systemd (root) => logs in (like SSH) as `root` on host, access to host system and docker daemon
+- periphery systemd (user) => logs in (like SSH) as `user` running periphery systemd service, access to host and docker daemon
+
+Expand the sections below for instructions on how to use both:
+
+Server Shell
+
+To access the terminal navigate to the **Server** details page from any Stack/Resource/Server and open the **Terminals** tab to create a new Terminal.
+
+From this terminal any container can be exec’d in to by using normal docker commands IE
+
+```shell
+1
+docker container exec -it my-container-name /bin/sh
+```
+
+> Install this [fuzzy search => exec into container script](https://blog.foxxmd.dev/posts/komodo-tips-tricks/#container-exec-shortcut) as an alias for the logged in user to make exec’ing into a container easier IE
+> 
+> ```shell
+> 1
+> 2
+> 3
+> $ dex sonarr
+> # Found media-sonarr-1
+> /app #
+> ```
+
+This terminal can also be used for general shell access.
+
+Container Shell
+
+Navigate to any **Container** details page from a Stack or `Server -> Docker -> Container` details list. **Note** that the Container details page is NOT the same as the Stack or Service page IE to access a Container from a Stack:
+
+- Navigate to the Stack page (has `/stacks/` in url)
+- Switch to the **Services** tab
+- Click on any Service in the list (now has `/service/` in url)
+- In the Service header click the link with the green cube ([![komodo container icon](https://blog.foxxmd.dev/assets/img/komodo/komodo-container-icon.png)](https://blog.foxxmd.dev/assets/img/komodo/komodo-container-icon.png)) icon
+	- url should now have `/container/` in url
+
+From the container details click on the **Terminal** tab to open a terminal and automatically exec into the container. The shell used to exec can be changed from the dropdown on the right side.
+
+### Environmental Variables/Secrets don’t work!
+
+This is likely a misunderstanding of how [Compose file interpolation](https://docs.docker.com/compose/how-tos/environment-variables/variable-interpolation/#env-file) and [environmental variables in Compose](https://docs.docker.com/compose/how-tos/environment-variables) work. Please read [**this guide**](https://blog.foxxmd.dev/posts/compose-envs-explained) for a better understanding of how `.env` `--env-file` `env_file:` and `environment:` work in Docker *as well as* how [Komodo fits into them.](https://blog.foxxmd.dev/posts/compose-envs-explained#komodo-and-envs)
+
+### How do I deploy a service that doesn’t have a published Docker Image?
+
+#### Dockerfile exists and no modification needed
+
+If the service has a project git repository with a `Dockerfile` and you know the project is “ready” and just needs to be built from the Dockerfile ([example](https://github.com/logdyhq/logdy-core)) then this can be done within your `compose.yaml` file! Compose’s build `context` supports directories or a [**URL to a git repository**](https://docs.docker.com/reference/compose-file/build/#context) so:
+
+```yaml
+1
+2
+3
+4
+5
+6
+7
+services:
+  logdy:
+    build:
+      # can use a specific branch like logdy-core.git#myBranch
+      context: https://github.com/logdyhq/logdy-core.git
+      # only needed if not in root dir and named Dockerfile
+#      dockerfile:  Dockerfile
+```
+
+#### Dockerfile needs modification
+
+Docker Compose also allows inlining [`Dockerfile` contents](https://docs.docker.com/reference/compose-file/build/#dockerfile_inline) so if it’s a simple setup it can be yolo’d:
+
+```yaml
+1
+2
+3
+4
+5
+6
+7
+services:
+  myService:
+    build:
+      context: . # or use a git URL to build with a repository
+      dockerfile_inline: |
+        FROM baseimage
+        RUN some command
+```
+
+#### My setup is more complex…
+
+If you need to keep better track of your changes, want to build the image before the stack is deployed, or want n+1 machines on your network to able to use the same build then you need to **build and publish the image** rather than building it inline in the stack.
+
+##### Standalone Container
+
+If the use-case is building one image that can be deployed to **one, standalone container** than the convenient way to do this is to:
+
+- setup a local [Builder](https://komo.do/docs/resources/build-images/builders) and configure a Build without any Image Registry (not publishing externally)
+- Build the image
+- Create a [Deployment](https://komo.do/docs/resources#deployment) with the [Komodo build you just made](https://komo.do/docs/resources/deploy-containers/configuration#attaching-a-komodo-build)
+
+##### Same-Machine Stack
+
+If you want to keep everything in a **Stack** then
+
+- follow the same steps above (Builder, configure Build)
+- On the Build…
+	- Make sure to set **Image Name**
+	- Add an **Extra Arg** `--load`
+
+This will push the built image to the **local registry on the machine where the Builder ran.** You can then use the Image Name in a Stack deploy **to that same machine only**.
+
+##### Any-Machine Stack
+
+This is the same as the Same-Machine Stack but requires extra step(s) to get the image to another machine.
+
+In all the below options the first step is to build the image using the [Same-Machine Stack](https://blog.foxxmd.dev/posts/komodo-tips-tricks/#same-machine-stack-image) steps from above.
+
+###### Docker save over SSH
+
+This is the most straightforward but least repeatable option. Assuming you can connect to the remote machine over SSH, run this command from the machine where the image was built:
+
+```shell
+1
+docker save myImageName:latest | ssh <remote server> docker load
+```
+
+This command can be used in a [post-build step](https://blog.foxxmd.dev/posts/komodo-tips-tricks/#post-build-step) to automate pushing to the remote machine.
+
+###### Unregistry
+
+Install and use [**unregistry**](https://github.com/psviderski/unregistry) to push images directly from the builder machine to the remote machine.
+
+This is essentially the same as [Docker `save` over SSH](https://blog.foxxmd.dev/posts/komodo-tips-tricks/#save-over-ssh) but is more efficient in that it only pushes missing layers for the image. Make sure to [read the requirements](https://github.com/psviderski/unregistry?tab=readme-ov-file#requirements) for unregistry!
+
+```shell
+1
+docker pussh myapp:latest user@server
+```
+
+This command can be used in a [post-build step](https://blog.foxxmd.dev/posts/komodo-tips-tricks/#post-build-step) to automate pushing to the remote machine.
+
+###### Self-Hosted Registry
+
+Create a docker container/stack that hosts a registry that any machine on your network can pull from.
+
+This approach requires the most work but makes subsequent image publishing as easy as pushing to official registries like dockerhub, github packages, etc. using the **Image Registry** setting in a Komodo Build config.
+
+There are several popular registry images to choose from:
+
+- [Distribution](https://distribution.github.io/distribution/about/deploying/)
+	- Simplest to run, requires no setup
+	- No authentication out of the box, requires implementing your own
+- [Forgejo](https://forgejo.org/docs/latest/user/packages/container/) or [Gitea](https://docs.gitea.com/usage/packages/container)
+	- Full git platforms that also provide registries
+	- Requires setup and creating a user
+	- Authentication out of the box, works with Komodo Git/Registry providers
+
+**By default Docker will only pull from registries using a secure connection (`https`).** You will need to host your registry behind a real domain with some kind of internal access like a reverse proxy. You may want to check out my post on [LAN-Only DNS](https://blog.foxxmd.dev/posts/redundant-lan-dns) and [Traefik](https://blog.foxxmd.dev/posts/migrating-to-traefik) as a jumping off point if you don’t already have this setup.
+
+Using a Registry with an insecure connection
+
+It is not recommended, but this can be done by [modifying the docker daemon on every machine](https://distribution.github.io/distribution/about/insecure/) that will pull the image.
+
+Modify or create `daemon.json` and add your insecure endpoint:
+
+```json
+1
+2
+3
+{
+  "insecure-registries" : ["192.168.0.101:5000"]
+}
+```
+
+Then, restart docker for the change to take effect.
+
+### How to create post-build steps for a Build?
+
+There is no built-in “post-build” functionality for a [Build](https://komo.do/docs/build-images). But this functionality can be created using an [Action](https://komo.do/docs/resources/procedures#actions) to run your post-build commands, combined with a [Procedure](https://komo.do/docs/resources/procedures#procedures) that runs the Build.
+
+Create an **Action** that
+
+- Creates a terminal on the Server the Builder runs on
+- Executes your post-build script or commands in that terminal
+```ts
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+  await komodo.write("CreateTerminal", {
+    server: "MyBuilderServer",
+    name: "MyTerminalName",
+    command: "bash",
+    recreate: Types.TerminalRecreateMode.DifferentCommand,
+  });
+
+  await komodo.execute_terminal(
+    {
+      server: "MyBuilderServer",
+      terminal: "MyTerminalName",
+      // can run any arbitrary shell commands...
+      // Run a script saved on the server or run commands directly
+      command:
+        "cd /my/cool/path/post-build.sh && docker image tag myDigestId myImage:anotherTag",
+    },
+    {
+      onLine: console.log,
+      onFinish: (code) => console.log("Finished:", code),
+    },
+  );
+```
+
+Then, create a **Procedure** with two Stages so your steps run sequentially. The first stage is your Build, the second your Post-Build Action
+
+[![post-build procedure](https://blog.foxxmd.dev/assets/img/komodo/post-build-procedure.jpg)](https://blog.foxxmd.dev/assets/img/komodo/post-build-procedure.jpg)
+
+### Is there a Homepage widget?
+
+> Homepage **1.4.0** [introduced](https://github.com/gethomepage/homepage/pull/5407) an [official Komodo Widget](https://gethomepage.dev/widgets/services/komodo/)! You will still need an API Key and Secret (detailed below) but **the custom widget below is no longer needed**.
+> 
+> The custom widget, however, is still a useful template if you want to display stats other than what the official widget offers.
+
+~~There is no officially integrated~~ [Homepage](https://gethomepage.dev/) [widget](https://gethomepage.dev/widgets/) yet but [stonkage](https://github.com/stonkage) has created a [Custom API widget](https://gethomepage.dev/widgets/services/customapi/) template to [display Total/Running/Unhealthy/Stopped Stacks:](https://github.com/stonkage/fantastic-broccoli/blob/main/Komodo%2Freadme.md)
+
+First, You’ll need an **API Key and Secret** for a Komodo User. (Settings -> Users -> Select User -> Api Keys section)
+
+> I would recommend creating a new “Read Only” Service User. Give it only permissions for Server/Stack Read. Create the API Key and copy the Secret as it will not be shown again.
+
+Custom API Widget Template
+
+### How do I use the API?
+
+Komodo has official [Rust and Typescript clients](https://komo.do/docs/ecosystem/api) for programmatic usage anywhere outside of Komodo. Inside Komodo, the Typescript Client can be used in an [**Action** Resource](https://komo.do/docs/resources/procedures#actions) (which can then be composed as part of a larger [**Procedure** Resource](https://komo.do/docs/resources/procedures)). When using the client within these mentioned Resource it does not need to be authenticated. Additionally, Actions and Procedures can be run on a schedule configured within Komodo.
+
+See the [available modules](https://docs.rs/komodo_client/latest/komodo_client/api/index.html#modules) for all possible functions and example arguments that can be used with the client libraries.
+
+#### Raw HTTP
+
+The API can also be called as a normal HTTP request. [The API documentation](https://docs.rs/komodo_client/latest/komodo_client/api/index.html) describes everything required to build a request.
+
+> I recommend using `X-Api-Key` and `X-Api-Secret` for authentication. To get these you will need to create an Api Key for a user, located in Komodo UI under `Settings -> Users -> (User Detail) -> Api Keys`
+> 
+> I also recommend creating a new **Service** user for API usage. Remove or restrict premissions to **Read** based on how you will use the API.
+
+## Tips and Tricks
+
+### Stacks in Monorepo vs. Stack Per Repo
+
+There are valid reasons to use individual repositories per stack such as organizational preference, webhook usage for deployment, permissions, large/binary files, etc…
+
+But with majority *text-based* repositories concerns regarding data usage and performance (clone for new stack or pull repo on each deployment) are not usually valid.
+
+**The Reciepts 🧾**
+
+My own monorepo for Komodo contains **100+ stacks** (folders) ranging from full \*arr/Plex sized stacks to single service test stacks.
+
+A full clone of this repository is **2MB on disk.** Benchmarking a full clone of this monorepo against a repo containing only a few text files, both from github, on my Raspberry Pi 4:
+
+```
+1
+2
+3
+4
+5
+Benchmark 1: git clone https://github.com/FoxxMD/[myrepo] myMonoRepoFolder
+  Time (abs ≡):        884.1 ms               [User: 306.9 ms, System: 216.4 ms]
+ 
+Benchmark 1: git clone https://github.com/FoxxMD/compose-env-interpolation-example mySimpleFolder
+  Time (abs ≡):        389.9 ms               [User: 150.7 ms, System: 107.4 ms]
+```
+
+So, **800ms** for the full monorepo and only ~500ms slower than an almost empty repo. On a low power ARM machine. The subsequent pulls to update the repo on redeployment is in the tens of milliseconds.
+
+If you are critically space constrained the size on disk for each stack may be a valid reason to go with per-stack repos but otherwise even an RP4 with a 512GB sd card is not going to have an issue with this setup.
+
+### Shell-into-Container Shortcut
+
+The bash script below can be used to “fuzzy search” for containers by name and then exec into a shell in that container.
+
+Example Usage
+```shell
+1
+2
+$ dex
+Usage: CONTAINER_FUZZY_NAME [SHELL_CMD:-sh]
+```
+```bash
+1
+2
+3
+$ ./dex.sh sonarr
+# Found media-sonarr-1
+/app #
+```
+```bash
+1
+2
+3
+4
+$ ./dex.sh test
+Found: test-new-app-1
+Found: test-1
+More than one container found, be more specific
+```
+```bash
+1
+2
+3
+$ ./dex.sh sonarr /bin/ash
+# Found container media-sonarr-1
+/app #
+```
+Bash Script
+```bash
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+#!/bin/bash
+
+# * Does a fuzzy search for container by name so you only need a partial name
+#   * If there is more than one container with partial name it will print all containers
+#     * And if one is an exact match then use it otherwise exit
+#   * If there is only one container matching it execs
+# * Second arg can be shell command to use, defaults to sh
+# EX
+# ./dex.sh sonarr
+# ./dex.sh sonarr bash
+#
+# Can be set in a function in .bashrc for easy aliasing
+
+if [[ -z "$1" ]]; then
+  printf "Usage: CONTAINER_FUZZY_NAME [SHELL_CMD:-sh]\n"
+else
+
+  names=$(docker ps --filter name=^/.*$1.*$ --format '{{.Names}}')
+  lines=$(echo -n "$names" | grep -c '^')
+  name=""
+
+  if [ "$lines" -eq "0" ]; then
+
+    printf "No container found\n"
+
+  elif [ "$lines" -gt "1" ]; then
+
+    while IFS= read -r line
+    do
+      printf "Found: %s\n" "$line"
+      if [ "$line" = "$1" ]; then
+        name="$1"
+      fi
+    done < <(printf '%s\n' "$names")
+
+    if [[ -z "$name" ]]; then
+      printf "More than one container found, be more specific\n"
+    else
+      printf "More than one container found but input matched one perfectly.\n"
+    fi
+
+  else
+      name="$names"
+      printf "Found: %s\n" "$name"
+  fi
+
+  if [[ -n "$name" ]]; then
+    docker container exec -it $name ${2:-sh}
+  fi
+
+fi
+```
+
+Save this script and `chmod +x` it on each machine, then add it as an alias to the appropriate user’s `.bashrc` to make it a command line shortcut:
+
+```bash
+1
+alias dex="~/dex.sh"
+```
+
+### Docker Data Agnostic Location
+
+One of the benefits to Komodo is being able to re-deploy a stack to any Server with basically one click. What isn’t so easy, though, is moving (or generally locating) any persistent data that needs to be mounted into those services.
+
+If you use named volumes and have a backup strategy already this is a moot point but if you are like me and use [bind mounts](https://docs.docker.com/engine/storage/bind-mounts/) I found a good approach is to use a host-specific ENV as a directory prefix when writing compose files.
+
+This has the advantage of making the compose bind mount location agnostic to the host it is on and makes moving data, or rebuilding a host, much easier since compose files don’t need to be modifed if the data location changes parent directories.
+
+An example:
+
+```yaml
+1
+2
+3
+4
+5
+services:
+  my-service:
+    image: #...
+    volumes:
+      - $DOCKER_DATA/my-service-data:/app/data
+```
+
+As long as `DOCKER_DATA` is set as an ENV on each host then the compose file becomes storage location agnostic. It doesn’t matter whether you use `/home/MyUser/docker` or `/opt/docker` or whatever.
+
+To do this you’ll need to set this ENV in either the shell used by Periphery (`.bashrc` or `.profile`), set in the Periphery’s docker container ENVs, or set it in the [systemd configuration](https://www.baeldung.com/linux/systemd-services-environment-variables) for a [systemd periphery agent.](https://github.com/mbecker20/komodo/blob/main/scripts/readme.md#periphery-setup-script)
+
+Setting ENV for systemd periphery
+
+**For systemd periphery** check which [`periphery.service` install path](https://github.com/moghtech/komodo/tree/main/scripts) you used and then add a folder `periphery.service.d` with file `override.conf` with the contents:
+
+```
+1
+2
+[Service]
+Environment="DOCKER_DATA=/home/myUser/docker-data"
+```
+
+and then restart the periphery service
+
+EX
+
+```
+1
+2
+/home/foxx/.config/systemd/user/periphery.service <--- systemd unit for periphery
+/home/foxx/.config/systemd/user/periphery.service.d/override.conf  <--- config to provide \`Environment\`
+```
+Setting ENV for docker periphery
+
+**For docker periphery** container make sure you add `DOCKER_DATA` to your environment:
+
+```yaml
+1
+2
+3
+4
+5
+6
+7
+services:
+  periphery:
+    image: ghcr.io/moghtech/komodo-periphery:latest
+    # ...
+    environment:
+      # ...
+      DOCKER_DATA: /home/myUser/docker-data
+```
+
+and then restart the periphery container.
+
+### Monitoring Services with Komodo and Uptime Kuma
+
+[Uptime Kuma](https://uptime.kuma.pet/) has the *Docker Container* monitor type but using Komodo’s API has the advantage of being able to monitor a Stack/Service status **independent of what Server it is deployed to and what the container name is.**
+
+#### Prerequisites
+
+You’ll need an **API Key and Secret** for a Komodo User. (Settings -> Users -> Select User -> Api Keys section)
+
+I would recommend creating a new “Read Only” Service User. Give it only permissions for Server/Stack Read. Create the API Key and copy the Secret as it will not be shown again.
+
+#### Create Uptime Kuma Monitor
+
+Create a new Monitor with the type `HTTP(s) - Json Query`
+
+##### HTTP Options
+
+- Method: `POST`
+- Body Encoding: `JSON`
+
+##### Body
+
+Visit the Stack in Komodo UI and copy the ID after `/stacks/` from the URL. Use it in `stack` value below:
+
+```json
+1
+2
+3
+4
+5
+6
+{
+    "type": "ListStackServices",
+    "params": {
+        "stack": "67913976afe9cffd0fa1f963"
+    }
+}
+```
+
+##### Headers
+
+Use the Api Key and Secret created earlier:
+
+```json
+1
+2
+3
+4
+{
+    "X-Api-Key": "YourKey",
+    "X-Api-Secret": "YourSecret"
+}
+```
+
+##### URL
+
+```
+1
+http://YOUR_KOMODO_SERVER/read
+```
+
+##### Json Query / Expected Value
+
+To monitor **all** services in the stack and report UP only if **all** are running
+
+- Json Query: `$count($.container[state!='running'].state ) = 0`
+- Expected Value: `true`
+
+To monitor a **specific** service in the stack and report UP if it is running
+
+- Json Query: `$[service="SERVICE_NAME_FROM_COMPOSE"].container.state`
+- Expected Value: `running`
+
+### Resource Templates
+
+, Komodo now supports Resource **Templates**. These are partial (or full!) Resources that can be used as a “starting point” for any new Resources of the same type you create.
+
+**To create a template** create any Resource as normal (or use an existing one). From the Resource’s detail page toggle the **Template** switch in right-hand corner of the Detail header (across from the Resource’s name).
+
+[![komodo template switch](https://blog.foxxmd.dev/assets/img/komodo/komodo-template.png)](https://blog.foxxmd.dev/assets/img/komodo/komodo-template.png)
+
+#### Example
+
+A common usage for a Template would be to “pre-fill” **Stack** Resource with your default settings for a monorepo:
+
+- Create a new Stack named `Repo Template`
+- Leave **Server** empty and choose **Mode** `Git Repo`
+- Set **Git Provider**, **Account**, and **Repo** with your monorepo details
+- Set the **Run Directory** to your common stack root directory (if applicable)
+- Add `TZ=America/New_York` to the **Environment** section so it’s included in any new stacks
+
+Save your changes, then toggle **Template** on for the Stack.
+
+Now, when creating a new Stack, you can choose the `Repo Template` from the **Template** dropdown in the new Stack dialog to get all those fields/config filled automatically.
+
+> Remember, Templates can be created for **any type of Resource**, not just Stacks.
+
+---
+
+[^1]: Please do not DM me unless we have discussed this prior. I get way too much discord DM spam and will most likely ignore you. @ me on the Komodo server instead.
+
+---
+
+### `Procedures and Actions _ Komodo.md` — komodo
+
+---
+title: "Procedures and Actions | Komodo"
+source: "https://komo.do/docs/resources/procedures"
+author:
+published:
+created: 2025-12-15
+description: "For orchestrations involving multiple resources and executions,"
+tags:
+  - "clippings"
+---
+For orchestrations involving multiple resources and executions, Komodo offers the `Procedure` and `Action` resource types.
+
+## Procedures
+
+`Procedures` are compositions of many executions, such as `RunBuild` and `DeployStack`. The executions are grouped into a series of `Stages`, where each `Stage` contains one or more executions to run ***all at once***. The Procedure will wait until all of the executions in a `Stage` are complete before moving on to the next stage. In short, the executions in a `Stage` are run ***in parallel***, and the stages themselves are executed ***sequentially***.
+
+### Batch Executions
+
+Many executions have a `Batch` version you can select, for example [**BatchDeployStackIfChanged**](https://docs.rs/komodo_client/latest/komodo_client/api/execute/struct.BatchDeployStackIfChanged.html). With this, you can match multiple Stacks by name using [**wildcard syntax**](https://docs.rs/wildcard/latest/wildcard) and [**regex**](https://docs.rs/regex/latest/regex).
+
+### TOML Example
+
+Like all Resources, `Procedures` have a TOML representation, and can be managed in `ResourceSyncs`.
+
+```toml
+[[procedure]]
+name = "pull-deploy"
+description = "Pulls stack-repo, deploys stacks"
+
+[[procedure.config.stage]]
+name = "Pull Repo"
+executions = [
+  { execution.type = "PullRepo", execution.params.pattern = "stack-repo" },
+]
+
+[[procedure.config.stage]]
+name = "Deploy if changed"
+executions = [
+  # Uses the Batch version, witch matches many stacks by pattern
+  # This one matches all stacks prefixed with \`foo-\` (wildcard) and \`bar-\` (regex).
+  { execution.type = "BatchDeployStackIfChanged", execution.params.pattern = "foo-* , \\^bar-.*$\\" },
+]
+```
+
+## Actions
+
+`Actions` give users the power of Typescript to write calls to the Komodo API.
+
+For example, an `Action` script like this will align the versions and branches of many `Builds`.
+
+```ts
+const VERSION = "1.16.5";
+const BRANCH = "dev/" + VERSION;
+const APPS = ["core", "periphery"];
+const ARCHS = ["x86", "aarch64"];
+
+await komodo.write("UpdateVariableValue", {
+  name: "KOMODO_DEV_VERSION",
+  value: VERSION,
+});
+console.log("Updated KOMODO_DEV_VERSION to " + VERSION);
+
+for (const app of APPS) {
+  for (const arch of ARCHS) {
+    const name = \`komodo-${app}-${arch}-dev\`;
+    await komodo.write("UpdateBuild", {
+      id: name,
+      config: {
+        version: VERSION as any,
+        branch: BRANCH,
+      },
+    });
+    console.log(
+      \`Updated Build ${name} to version ${VERSION} and branch ${BRANCH}\`,
+    );
+  }
+}
+
+for (const arch of ARCHS) {
+  const name = \`periphery-bin-${arch}-dev\`;
+  await komodo.write("UpdateRepo", {
+    id: name,
+    config: {
+      branch: BRANCH,
+    },
+  });
+  console.log(\`Updated Repo ${name} to branch ${BRANCH}\`);
+}
+```
+
+---
+
+### `Sync Resources _ Komodo.md` — komodo
+
+---
+title: "Sync Resources | Komodo"
+source: "https://komo.do/docs/resources/sync-resources"
+author:
+published:
+created: 2025-12-15
+description: "Komodo is able to create, update, delete, and deploy resources declared in TOML files by diffing them against the existing resources,"
+tags:
+  - "clippings"
+---
+Komodo is able to create, update, delete, and deploy resources declared in TOML files by diffing them against the existing resources, and apply updates based on the diffs. Similar to Stacks, the files can be configured in UI, in a local file, or in files pushed to a remote git repo. The Komodo Core backend will poll the files for for any updates, and alert about pending changes when diffs are detected.
+
+You can spread out your resource declarations across any number of files and use any nesting of folders to organize resources inside a root folder. Additionally, you can create multiple `ResourceSyncs` and configure `Match Tags` to filter down which resources are synced, and each sync will be handled independently. This allows different syncs to manage resources on a "per-project" basis.
+
+The UI will display the computed sync actions and only execute them upon manual confirmation. Or the sync execution git webhook may be configured on the git repo to automatically execute syncs upon pushes to the configured branch.
+
+## Commit to Syncs
+
+If the Sync is pointing to just a single file, you can enable "Managed Mode" to allow Core to write the updates you made in UI *back to the file*. This works no matter where the files are located, and will create a commit to your git repository for repo based files.
+
+## Example Declarations
+
+### Server
+
+- [Server config schema](https://docs.rs/komodo_client/latest/komodo_client/entities/server/struct.ServerConfig.html)
+```toml
+[[server]] # Declare a new server
+name = "server-prod"
+description = "the prod server"
+tags = ["prod"]
+[server.config]
+address = "http://localhost:8120"
+region = "AshburnDc1"
+enabled = true # default: false
+```
+
+### Builder and build
+
+- [Builder config schema](https://docs.rs/komodo_client/latest/komodo_client/entities/builder/enum.BuilderConfig.html)
+- [Build config schema](https://docs.rs/komodo_client/latest/komodo_client/entities/build/struct.BuildConfig.html)
+```toml
+[[builder]] # Declare a builder
+name = "builder-01"
+tags = []
+config.type = "Aws"
+[builder.config.params]
+region = "us-east-2"
+ami_id = "ami-0e9bd154667944680"
+# These things come from your specific setup
+subnet_id = "subnet-xxxxxxxxxxxxxxxxxx"
+key_pair_name = "xxxxxxxx"
+assign_public_ip = true
+use_public_ip = true
+security_group_ids = [
+  "sg-xxxxxxxxxxxxxxxxxx",
+  "sg-xxxxxxxxxxxxxxxxxx"
+]
+
+##
+
+[[build]]
+name = "test_logger"
+description = "Logs randomly at INFO, WARN, ERROR levels to test logging setups"
+tags = ["test"]
+[build.config]
+builder_id = "builder-01"
+repo = "mbecker20/test_logger"
+branch = "master"
+git_account = "mbecker20"
+image_registry.type = "Standard"
+image_registry.params.domain = "github.com" # or your custom domain
+image_registry.params.account = "your_username"
+image_registry.params.organization = "your_organization" # optinoal
+# Set docker labels
+labels = """
+org.opencontainers.image.source = https://github.com/mbecker20/test_logger
+org.opencontainers.image.description = Logs randomly at INFO, WARN, ERROR levels to test logging setups
+org.opencontainers.image.licenses = GPL-3.0
+"""
+```
+
+### Deployments
+
+- [Deployment config schema](https://docs.rs/komodo_client/latest/komodo_client/entities/deployment/struct.DeploymentConfig.html)
+```toml
+# Declare variables
+[[variable]]
+name = "OTLP_ENDPOINT"
+value = "http://localhost:4317"
+
+##
+
+[[deployment]] # Declare a deployment
+name = "test-logger-01"
+description = "test logger deployment 1"
+tags = ["test"]
+# sync will deploy the container:
+#  - if it is not running.
+#  - has relevant config updates.
+#  - the attached build has new version.
+deploy = true
+[deployment.config]
+server_id = "server-01"
+image.type = "Build"
+image.params.build = "test_logger"
+# set the volumes / bind mounts
+volumes = """
+# Supports comments
+/data/logs = /etc/logs
+# And other formats (eg yaml list)
+- "/data/config:/etc/config"
+"""
+# Set the environment variables
+environment = """
+# Comments supported
+OTLP_ENDPOINT = [[OTLP_ENDPOINT]] # interpolate variables into the envs.
+VARIABLE_1 = value_1
+VARIABLE_2 = value_2
+"""
+# Set Docker labels
+labels = "deployment.type = logger"
+
+##
+
+[[deployment]]
+name = "test-logger-02"
+description = "test logger deployment 2"
+tags = ["test"]
+deploy = true
+# Create a dependency on test-logger-01. This deployment will only be deployed after test-logger-01 is deployed.
+# Additionally, any sync deploy of test-logger-01 will also trigger sync deploy of this deployment.
+after = ["test-logger-01"]
+[deployment.config]
+server_id = "server-01"
+image.type = "Build"
+image.params.build = "test_logger"
+volumes = """
+/data/logs = /etc/logs
+/data/config = /etc/config"""
+environment = """
+VARIABLE_1 = value_1
+VARIABLE_2 = value_2
+"""
+# Set Docker labels
+labels = "deployment.type = logger"
+```
+
+### Stack
+
+- [Stack config schema](https://docs.rs/komodo_client/latest/komodo_client/entities/stack/struct.StackConfig.html)
+```toml
+[[stack]]
+name = "test-stack"
+description = "stack test"
+deploy = true
+after = ["test-logger-01"] # Stacks can depend on deployments, and vice versa.
+tags = ["test"]
+[stack.config]
+server_id = "server-prod"
+file_paths = ["mongo.yaml", "redis.yaml"]
+git_provider = "git.mogh.tech"
+git_account = "mbecker20" # clone private repo by specifying account
+repo = "mbecker20/stack_test"
+```
+
+### Procedure
+
+- [Procedure config schema](https://docs.rs/komodo_client/latest/komodo_client/entities/procedure/struct.ProcedureConfig.html)
+```toml
+[[procedure]]
+name = "test-procedure"
+description = "Do some things in a specific order"
+tags = ["test"]
+
+[[procedure.config.stage]]
+name = "Build stuff"
+executions = [
+  { execution.type = "RunBuild", execution.params.build = "test_logger" },
+  # Uses the Batch version, witch matches many builds by pattern
+  # This one matches all builds prefixed with \`foo-\` (wildcard) and \`bar-\` (regex).
+  { execution.type = "BatchRunBuild", execution.params.pattern = "foo-* , \\^bar-.*$\\" },
+  { execution.type = "PullRepo", execution.params.repo = "komodo-periphery" },
+]
+
+[[procedure.config.stage]]
+name = "Deploy test logger 1"
+executions = [
+  { execution.type = "Deploy", execution.params.deployment = "test-logger-01" },
+  { execution.type = "Deploy", execution.params.deployment = "test-logger-03", enabled = false },
+]
+
+[[procedure.config.stage]]
+name = "Deploy test logger 2"
+enabled = false
+executions = [
+  { execution.type = "Deploy", execution.params.deployment = "test-logger-02" }
+]
+```
+
+### Repo
+
+- [Repo config schema](https://docs.rs/komodo_client/latest/komodo_client/entities/repo/struct.RepoConfig.html)
+
+### Resource sync
+
+- [Resource sync config schema](https://docs.rs/komodo_client/latest/komodo_client/entities/sync/type.ResourceSync.html)
+```toml
+[[resource_sync]]
+name = "resource-sync"
+[resource_sync.config]
+git_provider = "git.mogh.tech" # use an alternate git provider (default is github.com)
+git_account = "mbecker20"
+repo = "moghtech/komodo"
+resource_path = ["stacks.toml", "repos.toml"]
+```
+
+### User Group:
+
+- [UserGroup schema](https://docs.rs/komodo_client/latest/komodo_client/entities/toml/struct.UserGroupToml.html)
+```toml
+[[user_group]]
+name = "groupo"
+everyone = false # Set to true to give these permission to all users.
+users = ["mbecker20", "karamvirsingh98"]
+# Configure write access with all specific permissions
+all.Server = { level = "Write", specific = ["Attach", "Logs", "Inspect", "Terminal", "Processes"] }
+# Attach base level of Execute on all builds
+all.Build = "Execute"
+# Allow users to see all Builders, and attach builds to them.
+all.Builder = { level = "Read", specific = ["Attach"] }
+permissions = [
+  # Attach permissions to specific resources by name
+  { target.type = "Repo", target.id = "komodo-periphery", level = "Execute" },
+  # Attach permissions to many resources with name matching regex (this uses '^(.+)-(.+)$' as regex expression)
+  { target.type = "Server", target.id = "\\^(.+)-(.+)$\\", level = "Read" },
+  { target.type = "Deployment", target.id = "\\^immich\\", level = "Execute" },
+]
+```
+
+---
+
+### `ansible-role-komodo/README.md` — komodo
+
+# Ansible Role for Komodo
+
+This role is designed for managing systemd deployments of the [komodo](https://github.com/moghtech/komodo) periphery agent,
+minimizing permissions by creating a service user and running the service as that user.
+The role supports both systemd **user** and **system** scopes; in both cases the service runs as the unprivileged `komodo` user.
+
+The user will only have access to:
+
+* Its configuration files
+* The periphery agent binary
+* Its SSL certificates/Authentication Keys for connection to Komodo Core
+* Its repo, stacks, and build directories, located in `komodo_user` home directory by default
+
+In this way, it should have no more access to the host system than it would running
+in a docker container. But since it is running directly on the host filesystem, it should eliminate
+the numerous edge cases which appear when running it as a docker container.
+
+## Features
+
+1. **Install** or **Update** Komodo Periphery as a systemd unit
+1. **Create a komodo service user** to run the service
+1. Supports both systemd **User Units** and **System Units**
+1. **Uninstall** of periphery agent and removal of configuration files, and *optionally* deletion of service user.
+
+## Required Role Variables
+
+Only the `komodo_action` variable is required, to specify the intended behavior for the play.
+Relying fully on defaults will work, but will result in a less secure setup as it will choose
+an [inbound connection](#inbound-connection) without authentication.
+
+>[!TIP]
+> Refer to [Basic Installation](#basic-installation--setup) for a recommended simple and secure setup
+
+| Variable                                 | Default               | Description                                                                       |
+| ---------------------------------------- | ----------------------| --------------------------------------------------------------------------------- |
+| **komodo_action**                        | `None`                | `install`, `update`, or `uninstall`                                               |
+
+> [!NOTE]
+> `install` and `update` are almost functionally identical, except that `install`
+> by default allows creation of the `komodo_user`.
+> See [Komodo User Management](#komodo-user-management).
+
+## Version Management
+
+* Set `komodo_version=X.Y.Z` to install a specific version.
+* Set `komodo_version=latest` to install the newest GitHub release. 
+* Set `komodo_version=core` to match the version reported by Komodo Core. Must provide `komodo_core_http_address` to probe core.
+  * Core must expose a reachable `/version` endpoint (Komodo Core **v2.0.0+**)
+  * **OR** For earlier Core versions (v1), provide API credentials as described in [Server Management](#server-management)
+  * `komodo_core_http_address` must be reachable from the **Ansible control host**
+
+| Variable                      | Default                             | Description                                                                                |
+| ----------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------ |
+| **komodo_version**            | `2.1.2`                             | Release tag, or `latest`/`core` for automatic versioning                                   |
+| **komodo_core_http_address**  | Derived from `komodo_core_address`  | **Required when `komodo_version=core`.** ex. `https://komodo.example.com` or `http:IP:9120`|
+
+## Connection Flow
+
+Periphery can connect **Outbound** (Periphery -> Core) or **Inbound** (Core -> Periphery).
+For deeper background, see [Inbound vs Outbound Connections](#inbound-vs-outbound-connections). 
+
+As a rule of thumb, choose *one* connection flow per-host (they’re not mutually exclusive, but mixing modes on one host is rarely needed).
+
+1. Recommendation is [Outbound](#outbound-connection) (Periphery -> Core), when topology allows it (Periphery can reach Core)
+2. **Otherwise** use [Inbound](#inbound-connection) (Core -> Periphery)
+3. [Legacy](#legacy-connection) when using Core version < 2.0.0
+
+### Outbound Connection
+
+> [!NOTE]
+> Setting `komodo_core_address` coerces `komodo_server_enabled=false` (i.e., outbound-only)
+> and sets `komodo_core_public_key` to a file reference for automatic core pinning (recommended)
+
+| Variable                   | Default                                          | Description                                                                                                         |
+| -------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| **komodo_core_address**    | `None`                                           | **Required.** WebSocket URL of Komodo Core (`wss://komodo.example.com` or `ws://IP:9120`).                          |
+| **komodo_server_enabled**  | `false` when `komodo_core_address` is set        | Disables the inbound server when outbound is configured.                                                            |
+| **komodo_connect_as**      | `{{ inventory_hostname }}`                       | Name of the server in Komodo Core this Periphery authenticates *as*.                                                |
+| **komodo_private_key**     | `None`                                           | Periphery private key; public is derived. Auto-generated at `{{ komodo_root_directory }}/periphery.key` if omitted. |
+| **komodo_core_public_key** | `file:{{ komodo_root_directory }}/keys/core.pub` | Optional pinning. Default pins the first Core encountered and stores it.                                            |
+| **komodo_onboarding_key**  | `None`                                           | Allows Core to auto-create the server in Core. Generate in **Settings > Onboarding**. Disable after use.            |
+
+### Inbound Connection
+
+> [!IMPORTANT]
+> When running inbound, set `komodo_core_public_key` to authenticate Core. Consider encrypting it with Ansible Vault.
+
+| Variable                   | Default | Description                                                                                      |
+| -------------------------- | ------- | ------------------------------------------------------------------------------------------------ |
+| **komodo_server_enabled**  | `true`  | Enables the inbound server.                                                                      |
+| **komodo_core_public_key** | `None`  | **Strongly recommended.** Core public key. click the key icon in Komodo Core header to copy.     |
+| **komodo_allowed_ips**     | `[]`    | CIDRs/IPs allowed to access Periphery (empty = allow all).                                       |
+| **komodo_ssl_enabled**     | `true`  | HTTPS between Core/Periphery. Autogenerates certs unless files provided.                         |
+| **komodo_ssl_key_file**    | `None`  | Path to an existing key with ownership `komodo:komodo`.                                          |
+| **komodo_ssl_cert_file**   | `None`  | Path to an existing cert with ownership `komodo:komodo`.                                         |
+
+### Legacy Connection
+
+> [!WARNING]
+> Supported for backwards compatibility and required for Core < 2.0.0. On Core ≥ 2.0.0 you’ll see deprecation warnings.
+> Migrate by replacing `komodo_passkeys` with `komodo_core_public_key`.
+
+| Variable                  | Default | Description                                             |
+| ------------------------- | ------- | ------------------------------------------------------- |
+| **komodo_passkeys**       | `[]`    | **Deprecated.** List of passkeys accepted by Periphery. |
+| **komodo_server_enabled** | `true`  | Enables the inbound server.                             |
+| **komodo_bind_ip**        | `[::]`  | Bind address (`0.0.0.0` to force IPv4).                 |
+| **komodo_allowed_ips**    | `[]`    | CIDRs/IPs allowed to access Periphery.                  |
+| **komodo_ssl_enabled**    | `true`  | HTTPS enabled by default.                               |
+| **komodo_ssl_key_file**   | `None`  | Path to an existing key with ownership `komodo:komodo`. |
+| **komodo_ssl_cert_file**  | `None`  | Path to an existing cert with ownership `komodo:komodo`.|
+
+## Key Management
+
+Every Periphery deployment will have a private/public key pair used for mutual authentication
+with Komodo Core using a key exchange process. For the most part, this role (and the default behavior of periphery)
+try to minimize effort to manage these keys by the end user. For example, in [Outbound](#outbound-connection),
+all keys can be completely managed securely with default settings.
+
+If however you must manually set keys (as with `komodo_core_public_key` in Inbound mode), it is
+highly recommended that these keys be managed in their own *file* rather than as a raw key in the config file.
+
+The reason for this is that when keys are managed in files, key rotation for both Core and Periphery key pairs
+can be managed. If these are not written to files, then a key rotation will break connection.
+
+For that reason, all *raw keys* provided to either `komodo_core_public_key` or `komodo_private_key` will
+be materialized to a file in `{{ komodo_root_directory }}/keys` by default. This behavior can be controlled
+by overriding these variables.
+
+| Variable                       | Default | Description                                                                   |
+| ------------------------------ | --------| ----------------------------------------------------------------------------- |
+| **allow_write_keys_to_files**  | `true`  | Raw keys are materialized to files in `{{ komodo_root_directory }}/keys`      |
+| **allow_overwrite_key_files**  | `false` | If a file already exists for this key, it will only overwrite it if allowed.  |
+
+## Komodo User Management
+
+By default, the komodo user (i.e. the user perhiphery is run as) is managed by this role, and the level of management of the `komodo_user` is influenced by the `komodo_action`
+
+| Variable                                     | Default                                | Description                                                                                                                                             |
+| -------------------------------------------- | ---------------------------------------| ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **allow_create_komodo_user**                 | `true` on `install`, otherwise `false` | Allows `komodo_user` to be created. Will be created as a service account with no login, unless the user exists already in which case it wont be touched |
+| **allow_modify_komodo_user**                 | `true`                                 | Allows the role to enable or disable linger, when `komodo_service_scope=user`, and allows the role to add the user to the `docker` group                |
+| **allow_delete_komodo_user**                 | `false`                                | Allows the role to delete the `komodo_user` on `komodo_action=uninstall`. This **must** be set explicitly, it is never defaulted true                   |
+
+## Systemd Configuration
+
+This role supports running periphery under either the systemd **user** manager (i.e. `systemctl --user start periphery`) 
+or the systemd **system** manager (i.e.`systemctl start periphery`). In both cases, the service process runs as `komodo_user`.
+
+- In **user** scope, the service is managed by the per-user systemd instance and therefore *must* run as that user. 
+  To have it start at boot without a login session, **linger** will be enabled for that user (`loginctl enable-linger komodo`) if `allow_modify_komodo_user=true`,
+  which is the default.
+- In **system** scope, the unit is installed under the system manager and explicitly drops privileges to `komodo_user` via `User=` in the unit file.
+
+Least-privilege is the default, so **user** scope is recommended. For a deeper comparison, see [Systemd User vs System Units](#systemd-user-vs-system-units).
+
+> [!NOTE]
+> If switching between `user` and `system` mode, you should make sure to `uninstall` with the currently installed mode set first, then `install` or `update` in the desired mode.
+
+| Variable                    | Default | Description                                                                            |
+|-----------------------------|---------|----------------------------------------------------------------------------------------|
+| **komodo_service_scope**    | `user`  | `user` or `system`. See [Systemd User vs System Units](#systemd-user-vs-system-units). |
+
+## Periphery Specific Providers
+
+You can define providers in the periphery configuration that will only be available to that deployment
+
+| Variable                          | Default | Description                                                                                                      |
+| --------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------- |
+| **komodo_git_providers**          | `[]`    | Configure Periphery based git providers. Example below                                                           |
+| **komodo_registry_providers**     | `[]`    | Configure Periphery based docker registries. Example below                                                       |
+
+Below are examples of the expected data structures
+
+```yaml
+# Define periphery specific git providers
+komodo_git_providers:
+  - domain: "github.com"
+    accounts:
+      - username: "alice"
+        token: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          <redacted>
+      - username: "bob"
+        token: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          <redacted>
+# Define periphery specific registry providers
+komodo_registry_providers:
+  - domain: "ghcr.io"
+    organizations:
+      - "MyOrg"
+    accounts:
+      - username: "alice"
+        token: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          <redacted>
+      - username: "bob"
+        token: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          <redacted>
+```
+
+## Server Management
+
+>[!IMPORTANT]
+> Server management features are not needed at all when using **Outbound** connections. This will only be relevant to **Inbound** connections where there is no onboarding mechanism.
+> If using outbound connections, simply use the `komodo_onboarding_key` and skip this section.
+
+When enabled and provided with API credentials / details, the role can automatically create and update servers for you when using **Inbound** mode
+
+| Variable                       | Default                            | Description                                                                                 |
+| ------------------------------ | ---------------------------------- | ------------------------------------------------------------------------------------------- |
+| **enable_server_management**   | `false`                            | Allows the role to create / update servers automatically in Komodo Core                     |
+| **server_name**                | `{{ inventory_hostname }}`         | Name under which the server is registered in Core.                                          |
+| **server_address**             | `""`                               | Public URL advertised to Core (auto-detected when blank)                                    |
+| **server_passkey**             | `""`                               | **DEPRECATED:** Passkey specific to this server                                             |
+| **generate_server_passkey**    | `false`                            | **DEPRECATED:** Generate a random passkey                                                   |
+| **komodo_core_api_key**        | `""`                               | API key used to authenticate to Core                                                        |
+| **komodo_core_api_secret**     | `""`                               | Secret paired with the API key                                                              |
+| **komodo_core_http_address**   | Derives from `komodo_core_address` | ex. `https://komodo.example.com` or `http:IP:9120`. Must be reachable by ansible localhost. |
+
+## Additional Variables
+
+Some additional variables to tweak settings or override default behavior.
+
+| Variable                                          | Default                                         | Description                                                                                                     |
+| ------------------------------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **komodo_user**                                   | `komodo`                                        | System user that owns files and runs the service                                                                |
+| **komodo_group**                                  | `komodo`                                        | Group that owns files and runs the service                                                                      |
+| **komodo_uid**                                    | `None`                                          | User ID for komodo_user (system-chosen by default)                                                              |
+| **komodo_gid**                                    | `None`                                          | Group ID for komodo_group (system-chosen by default)                                                            |
+| **komodo_home**                                   | `/home/{{ komodo_user }}`                       | Home directory of `komodo_user`                                                                                 |
+| **komodo_default_terminal_command**               | `bash`                                          | The default terminal command used to init the shell                                                             |
+| **komodo_extra_env**                              | `[]`                                            | Extra env vars available to periphery. Define in the same format as [Secrets](#adding-periphery-secrets)        |
+| **komodo_agent_secrets**                          | `[]`                                            | List (name/value pairs) for secrets only available to the agent. See [Secrets](#adding-periphery-secrets)       |
+| **komodo_config_dir**                             | `{{ komodo_home }}/.config/komodo`              | Directory that holds Komodo configuration files                                                                 |
+| **komodo_config_file_template**                   | `periphery.config.toml.j2`                      | ([Refer to Note](#overriding-default-configuration-templates))                                                  |
+| **komodo_config_path**                            | `{{ komodo_config_dir }}/periphery.config.toml` | Destination path of the rendered config file                                                                    |
+| **komodo_service_file_template**                  | `periphery.service.j2`                          | ([Refer to Note](#overriding-default-configuration-templates))                                                  |
+| **komodo_periphery_port**                         | `8120`                                          | TCP port the server listens on                                                                                  |
+| **komodo_root_directory**                         | `{{ komodo_home }}/.komodo`                     | Default root directory for periphery                                                                            |
+| **komodo_repo_dir**                               | `{{ komodo_root_directory }}/repos`             | Default root for repository check-outs                                                                          |
+| **komodo_stack_dir**                              | `{{ komodo_root_directory }}/stacks`            | Default root for stack folders                                                                                  |
+| **komodo_build_dir**                              | `{{ komodo_root_directory }}/build`             | Default root for builds                                                                                         |
+| **komodo_stats_polling_rate**                     | `5-sec`                                         | Interval at which periphery polls the stack directory                                                           |
+| **komodo_logging_level**                          | `info`                                          | Periphery log level                                                                                             |
+| **komodo_logging_stdio**                          | `standard`                                      | Log output format                                                                                               |
+| **komodo_logging_opentelemetry_service_name**     | `Komodo-Periphery`                              | Set the opentelemetry service name attached to the telemetry Periphery will send.                               |
+| **komodo_logging_otlp_endpoint**                  | `""`                                            | Specify a opentelemetry otlp endpoint to send traces to.                                                        |
+| **komodo_logging_pretty**                         | `false`                                         | Specify whether logging is more human readable.                                                                 |
+| **komodo_logging_pretty_startup_config**          | `false`                                         | Specify whether startup config log is more human readable (multi-line)                                          |
+| **komodo_disable_terminals**                      | `false`                                         | Disable the terminal APIs and disallow remote shell access through Periphery                                    |
+| **komodo_disable_container_exec**                 | `false`                                         | Disable the container exec APIs and disallow remote container shell access through Periphery.                   |
+| **komodo_container_stats_polling_rate**           | `30-sec`                                        | How often Periphery polls the host for container stats                                                          |
+| **komodo_legacy_compose_cli**                     | `false`                                         | Whether stack actions should use `docker-compose` instead of `docker compose`                                   |
+| **komodo_include_disk_mounts**                    | `[]`                                            | Optional. Only include mounts at specific paths in the disk report i.e. `["/mnt/include/1", "/mnt/include/2"]`  |
+| **komodo_exclude_disk_mounts**                    | `[]`                                            | Optional. Don't include these mounts in the disk report. i.e. `["/mnt/exclude/1", "/mnt/exclude/2"]`            |
+| **komodo_api_delegate_to**                        | `localhost`                                     | Sets the host (from ansible inventory) which API calls/version checks delegate to. Must be able to reach core   |
+
+### Inbound vs Outbound Connections
+
+Komodo 2.0.0 introduces the **Outbound Connection** model.
+Prior to this milestone, all communication between Komodo Core and Periphery was **Inbound** to Periphery. 
+This means that Periphery itself must host a server, which a “server” in Core is configured to reach out to and establish connection. 
+Communication was established (usually) with TLS/SSL, and authentication required setting a passkey and an IP allow list to filter out connections from clients that are not the intended Komodo Core.
+This all still works in v2 for compatibility, but it carries several issues.
+
+1. **Reachability**: The Periphery host must be able to host a server, and that server must be accessible by Komodo Core. This sometimes required complex overlay networks and/or VPN configurations to do securely.
+1. **Credential Security**: Passkey authentication transmits sensitive, *static* credentials.
+1. **Credential Separation**: Unique credentials and rotation typically required API-based automation, adding complexity and API credential exposure risk.
+
+Komodo 2.0.0 addresses the **network reachability** problem by allowing an **Outbound** flow **and** replaces passkey authentication in both directions with the [Noise Protocol](https://noiseprotocol.org/noise.html).
+Specifically, it uses the [Noise XX Handshake](https://noiseprotocol.org/noise.html#handshake-patterns) which provides *mutual authentication* and *forward secrecy* for **Inbound and Outbound** connections alike.
+
+It also introduces a number of additional convenience and security features that make it easier to be secure by default,
+and largely removes the necessity of API-driven Server Management that was needed in v1 for full onboarding and passkey rotation automation.
+With outbound connections, that API automation is unnecessary.
+
+### Systemd User vs System Units
+
+Systemd has two distinct kinds of managers for running services.
+
+- The **System Manager** (i.e. `systemctl`) which is directly started by the kernel as the first user-space process (PID 1).
+It helps to boot the system, manages networking, other system services, etc.
+- **User Managers** (i.e. `systemctl --user`) for each user on the system, which are session-scoped init systems and manages services *as the running user*
+
+They exist side-by-side for different purposes. Some of the relevant differences for this role come down to:
+
+- **Privilege / Isolation**: User services *must* run as the same user as the user manager. 
+So privilege escalation should not be possible even with misconfiguration. Processes in user scopes should have cgroup-isolation from system services.
+- **Lifecycle**: User services tie to, obviously, the users session. Running with a service account can be tricky, and it requires linger-mode to be enabled for the user
+to keep the process alive after boot. It also makes debugging a little trickier, because you need to run commands from the proper runtime environment.
+- **Dependency Separation**: Each manager has its *own targets and units*. So a user unit cannot (or should not) try to order after or depend on system targets.
+For example, in `system` mode, we can depend on `network-online.target`, but we cannot in `user` mode.
+
+There are many other subtle differences of course, but these are probably the main considerations when choosing which type of deployment makes the most sense for this role.
+
+Here is a quick comparison of how exactly the services are deployed when using this role, to understand some of the implications.
+
+|                          | **User units**                                                                                                  | **System units**                                                                      |
+|--------------------------|-----------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| Manager                  | `systemctl --user`                                                                                              | `systemctl`                                                                           |
+| Privilege                | *Can only* run as `komodo_user`                                                                                 | Runs as `komodo_user` via privilege-drop in the Unit file with `User={{komodo_user}}` |
+| Lifecycle                | User session; requires linger mode with `loginctl enable-linger komodo` (needs `allow_modify_komodo_user=true`) | Machine boot; starts via system target `multi-user.target`                            |
+| Unit locations           | `{{ komodo_home }}/.config/systemd/user/…`                                                                      | `/etc/systemd/system`                                                                 |
+| Capture Logs             | `sudo -u komodo journalctl --user -u periphery`                                                                 | `journalctl -u periphery`                                                             |
+| Manually Control Service | `sudo -u komodo XDG_RUNTIME_DIR="/run/user/$(id -u komodo)" systemctl start --user periphery`                   | `systemctl start periphery`                                                           |
+| Targets / Ordering       | Uses `default.target`, and relies on restart policy to reliably handle startup failures                         | Uses `multi-user.target` and `After=`/`Wants=network-online.target`                   |
+
+A rule of thumb would probably be to stick with `user` mode for home use, as it is unlikely you will be impacted by any of the complications associated with it.
+Otherwise, consider `system` mode when you want to minimize friction with managing the service, and have a more reliable dependency ordering.
+
+### Adding Periphery Secrets
+
+[Secrets](https://komo.do/docs/resources/variables#defining-variables-and-secrets) can be bound directly to periphery agent in Komodo.
+This can be achieved with this role by adding your secrets as a list of name/value pairs containing your variable name and its value.
+
+For example, you could add this directly to the inventory for a particular host.
+
+```yaml
+komodo_agent_secrets:
+  - name: "SECRET"
+    value: "this-is-a-secret"
+  - name: "ANOTHER_SECRET" 
+    value: "also-a-secret"
+  - name: "SUPER_SECRET"
+    value: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          66386439653762316464626437653766643665373063...
+```
+
+## Basic Installation / Setup
+
+> [!TIP]
+> Before running the role, you can run it safely in dry-run more with `--check --diff`
+> Note that a few tasks will error (and be ignored, not failed) in dry run mode, notably ones that require
+> the existence of the `komodo_user` during `install`, because the roles is unable to
+> actually create the user in a dry-run.
+
+1. `ansible-galaxy role install bpbradley.komodo`
+1. Create an `inventory/komodo.yml` file which specifies your komodo hosts, and the required connection configurations
+
+    ```yaml
+    komodo:
+        hosts:
+            # Outbound connetion, recommended
+            komodo_periphery1:
+                ansible_host: 192.168.10.20
+                komodo_core_address: "wss://komodo.example.com" # or "ws://<komodo core ip>:9120
+                komodo_connect_as: "server_name"
+                komodo_server_enabled: false
+            # Inbound connection if necessary for an isolated host
+            komodo_periphery2:
+                ansible_host: 192.168.10.21
+                komodo_allowed_ips:
+                    - "192.168.10.22" # Komodo core IP
+                komodo_core_public_key: <public key copied from komodo core> 
+    ```
+
+1. Create a playbook which selects the role.
+
+    `playbooks/komodo.yml`
+
+    ```yaml
+    ---
+    - name: Manage Komodo Service
+      hosts: komodo
+      roles:
+          - role: bpbradley.komodo
+          komodo_action: "install" # default action
+          komodo_version: "core"
+          komodo_core_http_address: "https://komodo.example.com" # needed to use `core` versioning
+    ```
+
+1. Run the playbook
+
+    Install using default values
+
+    ```sh
+    ansible-playbook -i inventory/komodo.yaml playbooks/komodo.yml
+    ```
+
+    Onboard a new server
+
+    ```sh
+    ansible-playbook -i inventory/komodo.yaml playbooks/komodo.yml \
+    -e komodo_action=install \
+    -e komodo_onboarding_key=O-... \
+    -l komodo_periphery1
+    ```
+
+    Install an older version instead
+
+    ```sh
+    ansible-playbook -i inventory/komodo.yaml playbooks/komodo.yml \
+    -e komodo_version=v1.16.11
+    ```
+
+    Update to the latest version
+
+    ```sh
+    ansible-playbook -i inventory/komodo.yaml playbooks/komodo.yml \
+    -e komodo_action=update \
+    -e komodo_version=latest
+    ```
+
+    Uninstall the periphery agent and all installed files, and delete the user.
+
+    ```sh
+    ansible-playbook -i inventory/komodo.yaml playbooks/komodo.yml \
+    -e komodo_action=uninstall \
+    -e allow_delete_komodo_user=true"
+    ```
+
+  ## More Examples / Advanced Features
+
+  This guide only covers the basic information to get off the ground, but you can see more thorough examples
+  and explanations in the [`examples/`](./examples) section.
+
+  1. Basic usage demonstrating recommended outbound connections: [`examples/outbound`](./examples/outbound)
+  1. Example using inbound connections: [`examples/inbound`](./examples/inbound)
+  1. Building out full automation for komodo-managed periphery redeployment using ansible-in-docker with a custom ansible execution environment that includes this role: [`examples/komodo_automation`](./examples/komodo_automation)
+
+
+---
+
+### `ansible-role-komodo/examples/inbound/README.md` — komodo
+
+# Inbound Connection Example
+
+In some cases, connection to komodo core cannot be achieved in outbound mode,
+so it is still possible for periphery to host an inbound server for core
+to connect to.
+
+There are some key differences to consider when setting up that are outlined here.
+
+## Core Public Key
+
+In Inbound mode, the core public key is crucial for authentication and should be set.
+You can copy this by clicking the key icon in the header.
+
+Consider encrypting with ansible-vault: `ansible-vault encrypt_string "<pubkey>"`
+
+## Allowed IPs
+
+In inbound mode, you can configure periphery to deny certain connecting IPs, to try to filter out
+just the intended komodo core. In this example, the inventory has some host-specific settings describing what IPs are allowed to authenticate with periphery.
+
+For example, in one of the deployments, periphery is deployed on the same system as core.
+In this case, it is binding to the docker network directly,
+and is specifying only the komodo core internal docker IP
+for authentication.
+
+## Usage
+
+You can run this with `ansible-playbook playbooks/komodo.yml`
+
+You can use also it to update / uninstall, or change the version by
+overriding variables with `-e`
+
+```sh
+# Use latest instead of core
+ansible-playbook playbooks/komodo.yml \
+    -e "komodo_action=update" \
+    -e "komodo_version=latest" 
+
+# Uninstall and delete komodo service user
+ansible-playbook playbooks/komodo.yml \
+    -e "komodo_action=uninstall" \
+    -e "komodo_delete_user=true" \
+```
+
+
+---
+
+### `ansible-role-komodo/examples/komodo_automation/README.md` — komodo
+
+> [!IMPORTANT]
+> This example requires komodo core and periphery to be updated to  v2.0.0 or higher.
+> You should use the deployment role in a more conventional manner first to get updated
+> to at least that version before continuing
+
+> [!NOTE]
+> If updating from prior to v2, make sure to update action script and compose.yaml and playbooks.
+> I was having issues with following the logs reliably on v2, and so changed to a different method.
+> Now you must mount a persistent logs volume, and ansible will log the play there in detached mode,
+> to be read from after the update.
+
+# Automating Deployment with Komodo and Docker
+
+This provides an exhaustive example for how to use ansible-in-docker using an
+ansible execution image provided by this role to have komodo update its own periphery servers automatically
+
+The following guide will walk you through the steps, and the provided inventory file annotates a lot
+of available functionality so you understand how you may need to adjust it to your own environment.
+The example will strictly use outbound mode for servers, which provides the best security by default
+and allows for robust automation without the need of API keys. However, any configuration will work here,
+modify as needed.
+
+## Prerequisites
+
+- Working Komodo Core installation
+- Basic understanding of Ansible and Docker
+- Komodo core and at least one periphery server updated to v2.0.0+
+
+## Step 0: Familiarize Yourself
+
+In case anything goes wrong, it is wise that you know
+how to deploy periphery using this role in a more typical
+manner first, from a proper ansible host. This way, if something goes wrong,
+you can very quickly remedy it with a redeploy from your working
+environment. Trying to debug issues with ansible-in-docker is not ideal. This should be done only once you have a working setup and want to add full automation.
+
+## Step 1: Create the komodo-ee stack
+
+1. In Komodo, navigate to **Stacks > New Stack**
+1. Create a stack with your preferred settings
+1. I recommend using a git based or files on server stack, so that you can manage your config files (inventory, playbooks) within komodo directly
+1. Use the following configuration files, plus the included `ansible/` folder alongside your compose.yaml:
+
+### compose.yaml
+
+```yaml
+---
+
+services:
+  ansible:
+    image: ghcr.io/bpbradley/ansible/komodo-ee
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - ./ansible:/ansible # Mount ansible files into container
+      - update_logs:/var/log/ansible # Mount a volume for ansible logs. Otherwise play recap can't be found
+      - /path/on/host/to/.ssh/ansible:/root/.ssh/id_ed25519:ro # Make sure the user you run the container has read access to the key
+    environment:
+      ANSIBLE_HOST_KEY_CHECKING: ${ANSIBLE_HOST_KEY_CHECKING:-false} # Necessary for automation, unless you manage known_hosts and map it into container
+    command: "sleep 3600" # this keeps the container running by default, which will help with testing so you can exec into it temporarily
+volumes:
+  update_logs:
+```
+
+Here, I am providing a default command of `sleep 3600` so that we can, if needed, deploy the container and exec into it for testing. This will allow us to do all steps in this guide from *within komodo* if we choose to.
+
+### Configuration Notes
+
+1. **File Mounting**: The example uses relative paths with bind mounts. Ensure the `./ansible` folder is mounted to `/ansible` in the container.
+
+1. **SSH Keys**: Store SSH keys securely (e.g., I keep mine in 1Password) and mount them to the expected location. Ensure the container user owns the SSH key files (SSH keys cannot be world-readable).
+
+1. **Host Key Checking**: If you enable `ANSIBLE_HOST_KEY_CHECKING=true`, create a known_hosts file:
+   ```bash
+   ssh-keyscan -H <target_ip> >> ~/.ssh/known_hosts
+   ```
+   Then mount it with:
+   ```yaml
+   - ~/.ssh/known_hosts:/etc/ssh/ssh_known_hosts:ro
+   ```
+
+### Optional: Encrypt Credentials with Ansible Vault
+
+For security, encrypt any sensitive credentials Ansible Vault. There are countless ways to do this, but I am going to try to achieve *everything* in this guide from within komodo. So Deploy the stack we created earlier. **Stacks > komodo-ee > Deploy**
+
+Because of the `sleep 3600` command used by default in the compose file, the execution environment will stay alive (for an hour), so we can shell into the container (in komodo), and use ansible tools.
+
+Open a shell in komodo-ee by Navigating to **Stacks > komodo-ee > Services Tab > Select ansible container > Terminals > New Terminal**
+
+```bash
+# Generate a vault passphrase (or provide your own)
+head /dev/urandom | tr -dc _A-Z-a-z-0-9 | head -c${1:-64} > /tmp/.vaultpass
+# Use env variable to inform ansible of vault password
+export ANSIBLE_VAULT_PASSWORD_FILE=/tmp/.vaultpass
+# Encrypt any sensitive material in your inventory
+ansible-vault encrypt_string "XXXXXXXXX" --name "ansible_become_pass"
+```
+
+Example output:
+
+```sh
+ansible-vault encrypt_string "XXXXXXXXX" --name "ansible_become_pass"
+Encryption successful
+ansible_become_pass: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          36623436616338363562373236366237333166303362373333613963393132626538303064616435
+          3131666462663431386538643735376136613231646537340a303634383563613061633339633030
+          30663939353566616464633933663636346262656564653665333032653666396264316131306539
+          3036323332626666350a663537653434646236616532386463613432386539343334626638633431
+          66623464326230653033336331616661663732313165626463663535316433666363313362366130
+          3435323862663331666666616163653966383232623961616337
+```
+
+Take note of these variables, and any other variables you need to similarly encrypt.
+
+Finally, don't forget to record your vault password.
+
+```bash
+bash-5.2$ cat ${ANSIBLE_VAULT_PASSWORD_FILE};echo
+ebA2VEbBpHc6ZmA_wd1jIoxEPIS0s4BC9bHSUdXqRACAVDmN1iT7cpfw_pD_uCVu
+```
+
+For this guide, we will store the vault password as a komodo secret. **Komodo > Settings > Variables > New Variable** paste in your output `ebA2VEbBpHc6ZmA_wd1jIoxEPIS0s4BC9bHSUdXqRACAVDmN1iT7cpfw_pD_uCVu` in the example above. Save it is **VAULT_PASS** and mark the variable as secret.
+
+> [!NOTE]
+> You can destroy the stack now. It no longer needs to be running. **Stacks > komodo-ee > Destroy**
+
+## Step 3: Update Your Inventory File
+
+Update `ansible/inventory/komodo.yml` with the encrypted variables created above and configure the core URL:
+
+> [!IMPORTANT]
+> Review the example inventory and read the annotations.
+> In order for all of the automations to work as designed in all configurations,
+> you should ideally name all of your inventory host names exactly the same as they are in komodo.
+> i.e. if you have a server in komodo with name `test_server` then you should make that servers inventory name `test_server`.
+> This isn't generally necessary, but in this case the automation relies on being "aware" of your inventory
+> because it will attempt to only update systems that are out of date, rather than all of them.
+
+### ansible/inventory/komodo.yml
+```yaml
+all:
+  # Here you can have your typical inventory configurations.
+  # Add additonal vars: section for ssh keyfiles, etc.
+  hosts:
+    # Important: for best automation, name your hosts in your inventory
+    # the exact same way that they are named in komodo.
+    # This way, komodo can be "aware" of your ansible hosts automatically.
+    # and automation features will work seamlessly.
+    internal_server:
+      ansible_host: 10.1.10.4
+    external_server:
+      ansible_host: 10.1.10.5
+    test_server:
+      ansible_host: 10.1.10.6
+  vars:
+    ansible_user: actual_user_to_run_playbook_as
+    # This role needs elevated privileges for some tasks.
+    # remember to encrypt ansible_become_pass with vault.
+    ansible_become_pass: !vault |
+            $ANSIBLE_VAULT;1.1;AES256
+            65353234373130353539663661376563613539303866643963363830376661316638333139343366
+            3563656637303235373336336131346338336634653232300a313736396336316330666237653237
+            64613231323433373637313462633863613732653136366462313134393938623136326633346166
+            3834333462333162310a313037306336613061313733363862633437376133316234326431633131
+            35386565333538623231643433396334323132616438353839663534373030393266
+    # You will need to mount any ssh keys into the container,
+    # with the correct permissions for the user the container is running as
+    ansible_ssh_private_key_file: /root/.ssh/id_ed25519 # i.e. (/path/to/ssh/key/in/container)
+    # Because all nodes are outbound, we can define the core address as shared.
+    komodo_core_address: "wss://komodo.example.com"
+    komodo_server_enabled: false
+  children:
+    komodo:
+      vars:
+        # I like to "inform" each server what UID/GID it is running as
+        # which is useful when running containers as the komodo user.
+        # The role will also populate the UID/GID env variables in the
+        # systemd service file for you, but this is just a convenience.
+        komodo_agent_secrets:
+          - name: "KOMODO_UID"
+            value: "{{ ansible_facts.getent_passwd[komodo_user].1 }}"
+          - name: "KOMODO_GID"
+            value: "{{ ansible_facts.getent_passwd[komodo_user].2 }}"
+      children:
+        # It isn't necessary to split the inventory up into core / periphery,
+        # but it is useful for organization and I personally have other roles
+        # which only target core or periphery exclusively.
+        core:
+          hosts:
+            internal_server:
+              # Maybe you want to reach core with a different address on some servers.
+              # You can override the group var here.
+              komodo_core_address: "wss://komodo.example.com" 
+        periphery:
+          hosts:
+            external_server:
+              # Add any additional secrets you want here, This will override
+              # the group vars.
+              komodo_agent_secrets:
+                - name: "KOMODO_UID"
+                  value: "{{ ansible_facts.getent_passwd[komodo_user].1 }}"
+                - name: "KOMODO_GID"
+                  value: "{{ ansible_facts.getent_passwd[komodo_user].2 }}"
+                - name: "SUPER_SECRET"
+                  value: !vault |
+                    $ANSIBLE_VAULT;1.1;AES256
+                    66386439653762316464626437653766643665373063...
+            test_server:
+              # Not usually needed, but maybe you need to manually set a specific
+              # private key for this server.
+              komodo_private_key: !vault |
+                $ANSIBLE_VAULT;1.1;AES256
+                62336466363161396537316566366466323266663536...
+              # This would allow the role to overwrite existing key files
+              # on this server, if they already exist.
+              allow_overwrite_key_files: true
+
+```
+
+## Step 5: Create a playbook
+
+This is just a very basic playbook which pulls in the role, and thats all it needs to be.
+We are primarily controlling execution with inventory settings and Action arguments.
+
+### ansible/playbooks/komodo.yml
+```yaml
+---
+- name: Manage Komodo Periphery Service
+  hosts: komodo
+  roles:
+    - role: bpbradley.komodo
+```
+
+## Step 5: Automate with Actions
+
+With the infrastructure in place, we can handle complex automations using the komodo API, which we can leverage to make sure that periphery always stays up to date. Here is the action script and arguments to copy in **Actions > New Action > DeployPeriphery**
+
+This script and the associated action arguments are fairly complex, so that as many use cases
+as possible can be captured with this setup. Feel free to simplify it (potentially dramatically) to meet your specific needs.
+
+The general concept of the script is
+
+1. On startup, check if targeted servers are up to date
+1. If they are, do nothing. If they are not, update any servers that are out of date using `docker compose run` targeting the stack we created.
+1. Try to attach to the process to capture logs and extract the play recap
+
+> [!IMPORTANT]
+> Make sure you have your vault password saved as a secret variable in komodo
+> called `VAULT_PASS`. I didn't include this as an action argument because
+> the variable will be interpolated too early, and then be exposed in logs
+
+### Action Arguments
+
+```json
+{
+  "PLAYBOOK": "/ansible/playbooks/komodo.yml",
+  "INVENTORY": "/ansible/inventory/all.yml",
+  "KOMODO_ACTION": "update",
+  "KOMODO_VERSION": "core",
+  "STACK_NAME": "komodo-ee",
+  "SERVICE_NAME": "ansible",
+  "DRY_RUN": false,
+  "FORCE": false,
+  "LIMIT_SERVERS": [],
+  "IGNORE_SERVERS": []
+}
+```
+
+### Action Script
+
+```typescript
+type Server = { id: string; name: string; version: string; err?: Error };
+
+function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)); }
+function normalizeVersion(s: string | undefined | null): string { return String(s ?? "").trim().replace(/^v/i, ""); }
+
+function getErrorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  if (typeof err === "string") return err;
+  if (err && typeof err === "object" && "message" in err) return String(err.message);
+  return JSON.stringify(err) || "Unknown error occurred";
+}
+
+function truthy(v: unknown): boolean {
+  if (typeof v === "boolean") return v;
+  const s = String(v ?? "").trim().toLowerCase();
+  return s === "true" || s === "1" || s === "yes" || s === "on";
+}
+
+function parseLimitServers(x: unknown): string[] {
+  if (Array.isArray(x)) return x.map(String).map(s => s.trim()).filter(Boolean);
+  const raw = String(x ?? "").trim();
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) return parsed.map(String).map(s => s.trim()).filter(Boolean);
+  } catch {}
+  return raw.split(/[,\s]+/).map(s => s.trim()).filter(Boolean);
+}
+
+function extractRecap(s: string): string | null {
+  const i = s.indexOf("PLAY RECAP");
+  return i >= 0 ? s.slice(i) : null;
+}
+
+function recapHasFailures(recap: string): boolean {
+  const failed = [...recap.matchAll(/failed=(\d+)/g)].some(([,n]) => parseInt(n,10) > 0);
+  const unreachable = [...recap.matchAll(/unreachable=(\d+)/g)].some(([,n]) => parseInt(n,10) > 0);
+  return failed || unreachable;
+}
+
+async function waitForServerUpdate(server: Server, timeoutMs = 40000, intervalMs = 1000): Promise<boolean> {
+  const end = Date.now() + timeoutMs;
+  while (Date.now() < end) {
+    const { version } = (await komodo.read("GetPeripheryInformation", { server: server.id })) as Types.GetPeripheryInformationResponse;
+    if (version === server.version) { console.log(`${server.name} Updated!`); return true; }
+    console.debug(`Version: ${version}`)
+    await sleep(intervalMs);
+  }
+  console.log(`${server.name} offline during update... Waiting to come back online...`);
+  return false;
+}
+
+async function resolveRequiredVersion(): Promise<string> {
+  const req = String(ARGS.KOMODO_VERSION || "");
+  if (req.toLowerCase() === "core") {
+    const { version } = (await komodo.read("GetVersion", {})) as Types.GetVersionResponse;
+    return normalizeVersion(version);
+  }
+  return normalizeVersion(req);
+}
+
+async function isServerOnline(id: string): Promise<boolean> {
+  const res = await komodo.read("GetServerState", { server: id }) as Types.GetServerStateResponse;
+  return res.status === Types.ServerState.Ok;
+}
+
+async function update() {
+  const DRY_RUN = truthy(ARGS.DRY_RUN);
+  const FORCE = truthy(ARGS.FORCE);
+  const LIMIT_SERVERS = parseLimitServers(ARGS.LIMIT_SERVERS);
+  const IGNORE_SERVERS = parseLimitServers(ARGS.IGNORE_SERVERS);
+
+  console.log("Waiting for periphery...");
+  await sleep(15000);
+
+  const requiredVersion = await resolveRequiredVersion();
+  if (!requiredVersion) throw new Error("Missing required version");
+
+  const base = (await komodo.read("ListServers", { query: {} })) as Types.ListServersResponse;
+
+  const allServers: Server[] = await Promise.all(
+    base.map(async ({ id, name }) => {
+      try {
+        const { version } = (await komodo.read("GetPeripheryInformation", { server: id })) as Types.GetPeripheryInformationResponse;
+        return { id, name, version };
+      } catch (err) {
+        return { id, name, version: "ERROR", err: new Error(getErrorMessage(err)) };
+      }
+    })
+  );
+
+  const ignoreSet = new Set(IGNORE_SERVERS);
+  const unknownIgnores = IGNORE_SERVERS.filter(v => !allServers.some(s => s.name === v || s.id === v));
+  let servers = allServers.filter(s => !ignoreSet.has(s.name) && !ignoreSet.has(s.id));
+
+  if (IGNORE_SERVERS.length) {
+    console.log(`Ignoring servers: ${IGNORE_SERVERS.join(", ") || "(none)"}`);
+    if (unknownIgnores.length) console.log(`No match for ignored: ${unknownIgnores.join(", ")}`);
+  }
+
+  if (servers.length === 0) {
+    console.log("🦎 All servers are ignored. Nothing to do. 🦎");
+    return;
+  }
+
+  const byName = new Map(servers.map(s => [s.name, s]));
+  const limits = LIMIT_SERVERS;
+  const unknownLimits = limits.filter(n => !byName.has(n));
+  if (limits.length) console.log(`Limiting to: ${limits.join(", ") || "(none)"}`);
+  if (unknownLimits.length) console.log(`Ignoring unknown servers: ${unknownLimits.join(", ")}`);
+
+  let candidates: Server[];
+  if (limits.length) {
+    candidates = limits.map(n => byName.get(n)).filter((x): x is Server => !!x);
+    candidates = FORCE ? candidates : candidates.filter(s => !s.err && normalizeVersion(s.version) !== requiredVersion);
+  } else if (FORCE) {
+    candidates = servers.filter(s => !s.err);
+  } else {
+    candidates = servers.filter(s => !s.err && normalizeVersion(s.version) !== requiredVersion);
+  }
+
+  const targetIds = new Set(candidates.map(s => s.id));
+  const labelWidth = Math.max(...servers.map(({ id, name }) => `${name} (id=${id})`.length));
+
+  console.log("Periphery version check:");
+  servers.forEach((s) => {
+    const label = `${s.name} (id=${s.id})`.padEnd(labelWidth);
+    const cur = normalizeVersion(s.version);
+    const inScope = targetIds.has(s.id);
+
+    let msg: string;
+    if (s.err) msg = `❌  Error: ${(s.err as Error).message}`;
+    else if (inScope) msg = (FORCE && cur === requiredVersion) ? `🔁 forcing update (currently ${cur})` : cur !== requiredVersion ? `🎯 target: ${cur} → ${requiredVersion}` : `✅ up to date${FORCE ? " (forcing update)" : ""}`;
+    else msg = cur !== requiredVersion ? `⏭️  not targeted (current ${cur}, required ${requiredVersion})` : `✅ up to date`;
+
+    console.log(`  - ${label} : ${msg}`);
+  });
+
+  if (candidates.length === 0) {
+    console.log("🦎 Nothing to do. 🦎");
+    return;
+  }
+
+  const stack = (await komodo.read("GetStack", { stack: ARGS.STACK_NAME })) as Types.GetStackResponse;
+  const stackServerId = (stack as any).config?.server_id as string | undefined;
+  const stackServer = servers.find(s => s.id === stackServerId);
+  const includesStackServer = !!stackServer && candidates.some(s => s.id === stackServer.id);
+
+  const DETACH = DRY_RUN ? false : includesStackServer;
+  const allManaged = servers.filter(s => !s.err);
+  const allTargeted = candidates.length === allManaged.length;
+  const limitPattern = (LIMIT_SERVERS.length || IGNORE_SERVERS.length || !allTargeted) ? candidates.map(s => s.name).join(",") : undefined;
+  
+  const command = [
+    "ansible-playbook", ARGS.PLAYBOOK,
+    "-i", ARGS.INVENTORY,
+    "-e", `komodo_action=${ARGS.KOMODO_ACTION}`,
+    "-e", `komodo_version=v${requiredVersion}`,
+  ];
+  if (limitPattern) command.push("-l", limitPattern);
+  if (DRY_RUN) command.push("--check", "--diff");
+
+  // Define persistent log path
+  const logFileName = `update-${Date.now()}.log`;
+  const containerLogPath = `/var/log/ansible/${logFileName}`;
+
+  const execEnv: Record<string, string> = { VAULT_PASS: "[[VAULT_PASS]]" };
+  // Only route logs to the file if we are running detached
+  if (DETACH) execEnv.ANSIBLE_LOG_PATH = containerLogPath;
+
+  const result = (await komodo.execute_and_poll("RunStackService", {
+    stack: ARGS.STACK_NAME,
+    service: ARGS.SERVICE_NAME,
+    command,
+    detach: DETACH,
+    pull: true,
+    no_deps: true,
+    env: execEnv,
+  })) as Types.Update;
+
+  const runLog = result.logs.find(l => l.stage === "Compose Run");
+  if (!runLog) throw new Error("No 'Compose Run' stage found in logs.");
+
+  let recapText: string | null = null;
+
+  if (DETACH && stackServer) {
+    console.log(`Update running detached in background on ${stackServer.name}...`);
+    stackServer.version = requiredVersion;
+
+    console.log("Waiting for agent to restart and come back online...");
+    await sleep(15000); 
+    const ok = await waitForServerUpdate(stackServer);
+    if (!ok) throw new Error(`Timeout waiting for ${stackServer.name} to report version ${stackServer.version}`);
+
+    console.log(`Agent online. Waiting for playbook to finish...`);
+    await sleep(10000);
+
+    console.log(`Fetching run logs and cleaning up...`);
+    // Run a shell command to cat the file, then instantly delete it
+    const fetchResult = (await komodo.execute_and_poll("RunStackService", {
+      stack: ARGS.STACK_NAME,
+      service: ARGS.SERVICE_NAME,
+      command: ["sh", "-c", `cat ${containerLogPath} && rm -f ${containerLogPath}`],
+      detach: false,
+      pull: false,
+      no_deps: true,
+    })) as Types.Update;
+
+    const fetchLog = fetchResult.logs.find(l => l.stage === "Compose Run");
+    const output = `${fetchLog?.stdout || ""}\n${fetchLog?.stderr || ""}`;
+
+    if (output.includes("No such file")) {
+      throw new Error(`Log file missing. Permissions issue? Did you add a logs volume?`)
+    }
+
+    recapText = extractRecap(output);
+    if (!recapText) {
+      console.log("Raw fetched log:", output);
+      throw new Error("Log fetched successfully, but no PLAY RECAP was found inside it.");
+    }
+    console.log(recapText);
+
+  } else {
+    if (!runLog.success) {
+      console.error(runLog.stdout);
+      console.error(runLog.stderr);
+      throw new Error("Periphery Update Failed");
+    }
+    recapText = extractRecap(runLog.stdout) ?? extractRecap(runLog.stderr || "");
+    if (!recapText) throw new Error("Ansible run completed but recap was not found in output.");
+    console.log(recapText);
+  }
+
+  if (recapHasFailures(recapText)) throw new Error("Ansible recap indicates failures.");
+
+  if (!DRY_RUN) {
+    const offline = await Promise.all(
+      candidates.map(async s => ({ s, ok: await isServerOnline(s.id) }))
+    ).then(rows => rows.filter(r => !r.ok).map(r => r.s.name));
+    if (offline.length) throw new Error(`Post-update check failed: offline servers: ${offline.join(", ")}`);
+  }
+
+  console.log("🦎 Periphery Update Successful 🦎");
+}
+
+await update();
+
+```
+
+### Testing
+
+Now with everything in place, testing is strongly recommended. The action includes a `DRY_RUN` and `LIMIT_SERVERS` option, and both should ideally be used to test fully before deploying across the entire inventory.
+
+1. Use `DRY_RUN=true` and `"LIMIT_SERVERS": []` to perform a `--check --diff` with ansible. This will attempt to run the role and report what it *would* (probably) do, without actually doing it. I say probably because not all tasks can be easily dry-run. But this will catch most configuration errors.
+2. Set `DRY_RUN=false` and try actually running the role on a limited set of servers -- i.e. `"LIMIT_SERVERS": ["test_server"]`. You can test changing different versions (ideally not earlier than 1.19.2) to see that it is working.
+
+### Update Periphery
+
+It is now time to see if the update is working. set `"LIMIT_SERVERS": []` and **Run Action**. You should observe all servers listed in your inventory go down and come back up with the new version.
+
+> [!NOTE]
+> Capturing logs from periphery here is surprisingly delicate. The
+> reason being that periphery goes offline during the update, and so we lose
+> connection. The run command runs detached, so the update will happen
+> regardless, but in order to capture logs we log the play to a file,
+> then later reconnect and try to capture that file and cleanup.
+> This may not always work, and you may need to tweak some of the delays on your system.
+
+## Final Touches
+
+Once everything is working correctly, you have everything you need to implement full automation of periphery redeployment without leaving komodo.
+
+Here is just a final checklist to go through to make sure.
+
+1. Verify `"LIMIT_SERVERS"=[]` so that your entire inventory is targeted, unless you have a specific reason to target only specific servers
+1. If you have non-systemd managed servers, you should include them in `IGNORE_SERVERS` so that these servers are not considered when deciding to update.
+1. Verify `"DRY_RUN": false` so that the runs actually execute
+1. Verify `"FORCE": false`, or it will always update your servers when the action is run, even if it doesn't need to.
+1. Verify `"KOMODO_VERSION": "core"` so that it will always update to match core when they go out of date
+1. Configure action to **Run on Startup** in the action settings. This way, when komodo updates (and therefore restarts), it will immediately detect the version mismatch and begin updating before you can even finish logging back in.
+
+## Final Notes
+
+If you have any issues with this setup, or improvement suggestions, please raise an issue. I am sure there is plenty of room for improvement.
+
+
+---
+
+### `ansible-role-komodo/examples/outbound/README.md` — komodo
+
+# Outbound Connection example
+
+This example shows the recommended setup in outbound mode for
+all servers.
+
+You can run with `ansible-playbook playbooks/komodo.yml`
+
+You can use also it to update / uninstall, or change the version by
+overriding variables with `-e`
+
+You can also onboard a server that doesn't yet exist in komodo core
+once you add it to your inventory.
+
+`ansible-playbook playbooks/komodo.yml -e komodo_onboarding_key=O-... -l komodo_host2`
+
+
+---
+
+### `ansible-role-komodo/examples/server_management/README.md` — komodo
+
+# Server Management / Advanced Authentication
+
+> [!WARNING]
+> This example is provided for users prior to Komodo V2.0.0.
+> It revolves around adding more robust credential management and separation
+> to each periphery deployment, via API. This is **no longer necessary** and
+> users needing key rotation and per-periphery credentials should migrate
+> to Komodo 2.0.0 where this is **default behavior**
+
+This example is fairly exhaustive on all the things you can do.
+Here, periphery is deployed as normal, but when server management is enabled,
+the role will automatically create (or update if already existing)
+the server in Komodo Core automatically, through the Komodo API.
+
+It demonstrates some advanced authentication features that
+are only possible (right now) via API with Komodo, such as
+specifying *per-server* passkeys, and being able to randomly
+generate and rotate server passkeys on every update/install.
+
+## Server management
+
+A new section in the inventory was added for some common vars
+for komodo hosts. Here we put the defaut settings, enabling server management,
+and adding the API credentials generated from Komodo Core which you can
+generate in **Settings > Profile > New Api Key +**
+
+Reminder to encrypt your API credentials with `ansible-vault`
+
+On `komodo_host1`, the host which is on the same machine as core,
+we are manually setting the server address to `https://host.docker.internal:{{ komodo_periphery_port }}`
+since we are specifying a unique bind address to the docker network. In this setup,
+this host does not have any passkeys configured.
+
+All the other servers will be allowed to automatically determine their server address, if they can.
+If we tried to allow `komodo_host1` to automatically detect the server address, it would fail.
+That is because the detection works by getting a route to komodo core via the supplied API url.
+In this case, it would likely determine that `komodo.example.com` is located at `10.1.10.4`,
+but since we bound periphery to the docker network, it can't be reached at that address. It
+can only be reached on the docker network directly, and so the detected route would not be valid.
+
+So basically, the automatic detection will *usually* work fine, but may have issues in unique
+circumstances/configurations. And so you can always just specify the address manually.
+
+`komodo_host4` has overridden the default behavior, and disabled server management.
+This host is defining its own `komodo_passkeys` and basically behaving the same way
+that all hosts in `examples/auth` did.
+
+## Passkeys
+
+Now, with server management, we can set periphery-unique passkeys, so
+those can be set with `server_passkey: some-secret-passkey` as `komodo_host3` does,
+or you can even allow the role to automatically generate a *new* unique passkey
+with every run, effectively rotating passkeys every update. This is enabled
+in `komodo_host2` settings. 
+
+The `server_passkey`, either explicitly provided or randomly generated, will
+ultimately be *merged* with the `komodo_passkeys` otherwise defined.
+
+So when periphery is deployed on `komodo_host3` for example, it will allow
+access by passkeys `passkey` *and* `some-secret-passkey`. Note that neither of
+these variables are required, but both will be honored if provided.
+
+`komodo_host4` obviously does not include a `server_passkey`, because it cannot
+since it disabled server_management. But it did override the default global passkeys.
+
+## Usage
+
+You can run this with `ansible-playbook playbooks/komodo.yml`
+
+You can use also it to update / uninstall, or change the version by
+overriding variables with `-e`
+
+```sh
+# Update to latest
+ansible-playbook playbooks/komodo.yml \
+    -e "komodo_action=update" \
+    -e "komodo_version=latest" 
+
+# Uninstall and delete komodo service user
+ansible-playbook playbooks/komodo.yml \
+    -e "komodo_action=uninstall" \
+    -e "komodo_delete_user=true" \
+```
+
+
+---
+
+### `komodo/SKILL_CONTEXT.md` — komodo
+
+# Komodo — Skill Context
+
+**Upstream:** [moghtech/komodo](https://github.com/moghtech/komodo)  
+**License:** AGPL-3.0  
+**Purpose:** Rust-based tool to build and deploy software across many servers.
+
+## How We Use Komodo
+
+Komodo is our **GitOps deployment orchestrator**. It watches our monorepo, builds Docker images, and deploys stacks to all three servers in the fleet. It manages:
+
+- **Build pipelines** — multi-stage Docker builds for each service
+- **Stack deployments** — docker-compose stacks across hosts
+- **Resource syncs** — config file distribution to servers
+- **Secret management** — integrates with Infisical via Locket
+
+## Key Integration Points
+
+- **Monorepo watch** — triggers builds on push to main
+- **Server groups** — `arm1-oci` (periphery), `cax41-hetzner` (periphery), `bunchloch` (local)
+- **Stack definitions** — `infrastructure/stacks/` → Komodo stack configs
+- **Pangolin tunnel integration** — port mapping for tunneled services
+- **Locket sidecar** — secret injection at container runtime
+
+## Reference Files (preserved)
+
+- `readme.md` — full documentation
+- `LICENSE` — AGPL-3.0
+- `Cargo.toml` — Rust workspace manifest
+- `runfile.toml` — build task definitions
+- `example/` — example resource configs
+- `compose/` — compose file templates
+- `config/` — core configuration templates
+- `scripts/` — utility scripts
+- `roadmap.md` — project roadmap
+
+## Related Docs
+
+- `docs/bonneagar/komodo/` — our infrastructure research on Komodo
+- `infrastructure/komodo/` — our live Komodo configs
+- `.agents/skills/komodo/SKILL.md` — agent skill for Komodo
+
+
+---
+
+### `komodo/example/alerter/README.md` — komodo
+
+# Alerter
+
+This crate sets up a basic axum server that listens for incoming alert POSTs.
+It can be used as a Komodo alerting endpoint, and serves as a template for other custom alerter implementations.
+
+---
+
+### `komodo/readme.md` — komodo
+
+# Komodo 🦎
+
+A tool to build and deploy software across many servers. 
+
+🦎 [See the docs](https://komo.do)
+
+🦎 [Try the Demo](https://demo.komo.do) - Login: `demo` : `demo`
+
+🦎 [See the Build Server](https://build.mogh.tech)  - Login: `komodo` : `komodo`
+
+🦎 [Join the Discord](https://discord.gg/DRqE8Fvg5c)
+
+## About
+
+The Komodo dragon is the largest living member of the [*Monitor* family of lizards](https://en.wikipedia.org/wiki/Monitor_lizard).
+
+There is no limit to the number of servers you can connect, and there will never be. There is no limit to what API you can use for automation, and there never will be. No "business edition" here.
+
+## Disclaimer
+
+Warning. This is open source software (GPL-V3), and while we make a best effort to ensure releases are stable and bug-free,
+there are no warranties. Use at your own risk.
+
+## Links
+
+- [periphery setup](https://github.com/moghtech/komodo/blob/main/scripts/readme.md)
+- [roadmap](https://github.com/moghtech/komodo/blob/main/roadmap.md)
+
+## Screenshots
+
+### Light Theme
+
+![Dashboard](https://raw.githubusercontent.com/moghtech/komodo/main/screenshots/Light-Dashboard.png)
+![Stack](https://raw.githubusercontent.com/moghtech/komodo/main/screenshots/Light-Stack.png)
+![Compose](https://raw.githubusercontent.com/moghtech/komodo/main/screenshots/Light-Compose.png)
+![Env](https://raw.githubusercontent.com/moghtech/komodo/main/screenshots/Light-Env.png)
+![Sync](https://raw.githubusercontent.com/moghtech/komodo/main/screenshots/Light-Sync.png)
+![Update](https://raw.githubusercontent.com/moghtech/komodo/main/screenshots/Light-Update.png)
+![Stats](https://raw.githubusercontent.com/moghtech/komodo/main/screenshots/Light-Stats.png)
+![Export](https://raw.githubusercontent.com/moghtech/komodo/main/screenshots/Light-Export.png)
+
+### Dark Theme
+
+![Dashboard](https://raw.githubusercontent.com/moghtech/komodo/main/screenshots/Dark-Dashboard.png)
+![Stack](https://raw.githubusercontent.com/moghtech/komodo/main/screenshots/Dark-Stack.png)
+![Compose](https://raw.githubusercontent.com/moghtech/komodo/main/screenshots/Dark-Compose.png)
+![Env](https://raw.githubusercontent.com/moghtech/komodo/main/screenshots/Dark-Env.png)
+![Sync](https://raw.githubusercontent.com/moghtech/komodo/main/screenshots/Dark-Sync.png)
+![Update](https://raw.githubusercontent.com/moghtech/komodo/main/screenshots/Dark-Update.png)
+![Stats](https://raw.githubusercontent.com/moghtech/komodo/main/screenshots/Dark-Stats.png)
+![Export](https://raw.githubusercontent.com/moghtech/komodo/main/screenshots/Dark-Export.png)
+
+
+---
+
+### `komodo/roadmap.md` — komodo
+
+# Roadmap
+
+In order to clarify the goals and invite community participation in the direction of the project, this document will serve as a roadmap for upcoming features / releases.
+
+If you have an idea for Komodo, feel free to open an issue beginning with the `[Request]` tag. The community is also encouraged to open PRs fulfilling the goals of any planned release.
+
+## Release plans
+
+- **v1.12**: Support any git provider / docker registry (supports self-hosted providers like Gitea) ✅
+- **v1.13**: Support "Compose" resource - Paste in a docker compose file and manage it like a Portainer "Stack" ✅
+- **v1.14**: Manage docker networks, images, volumes in the UI ✅
+- **v1.15**: Support generic OIDC providers (including self-hosted) ✅
+- **v1.16**: "Action" resource: Run requests on the Komodo API using snippets of typescript. ✅
+- **v1.17**: Procedure Schedules: Run procedures / Actions at scheduled times, like CRON job. Connect to host terminals and exec into containers ✅
+- **v1.18**: Upgrade granular role based access control system ✅
+- **v2.0**: Support "Swarm" resource - Manage docker swarms, attach Deployments / Stacks to "Swarm". 
+- **Undecided**: Support "Cluster" resource - Manage Kubernetes cluster, can attach deployments to "Cluster"
+
+**Note. The specific versions associated with these features are not final.**
+
+---
+
+### `komodo/scripts/readme.md` — komodo
+
+# Periphery setup script
+
+```
+usage: setup-periphery [-h] [--version VERSION] [--user] [--root-directory ROOT_DIRECTORY] [--core-address CORE_ADDRESS]
+                       [--connect-as CONNECT_AS] [--onboarding-key ONBOARDING_KEY] [--force-service-file FORCE_SERVICE_FILE]
+                       [--config-url CONFIG_URL] [--binary-url BINARY_URL]
+
+Install systemd-managed Komodo Periphery
+
+options:
+  -h, --help            show this help message and exit
+  --version, -v VERSION
+                        Install a specific Komodo version, like 'v2.0.0' (default: latest)
+  --user, -u            Install systemd '--user' service (default: False)
+  --root-directory, -r ROOT_DIRECTORY
+                        Specify a specific Periphery root directory. (default: /etc/komodo)
+  --core-address, -c CORE_ADDRESS
+                        Specify the Komodo Core address for outbound connection. Leave blank to enable inbound connection server. (default: None)
+  --connect-as, -n CONNECT_AS
+                        Specify the Server name to connect as. Defaults to hostname. (default: hostname)
+  --onboarding-key, -k ONBOARDING_KEY
+                        Give an onboarding key for automatic Server onboarding into Komodo Core. (default: None)
+  --force-service-file FORCE_SERVICE_FILE
+                        Recreate the systemd service file even if it already exists. (default: None)
+  --config-url CONFIG_URL
+                        Use a custom config url. (default:
+                        https://raw.githubusercontent.com/moghtech/komodo/refs/heads/main/config/periphery.config.toml)
+  --binary-url BINARY_URL
+                        Use alternate binary source (default: https://github.com/moghtech/komodo/releases/download)
+```
+
+These scripts will set up Komodo Periphery on your hosts, managed by systemd.
+
+*Note*. This script can be **run multiple times without issue**, and it won't change existing config after the first run. Just run it again after a Komodo version release, and it will update the periphery version.
+
+*Note*. The script can usually detect aarch64 system and use the periphery-aarch64 binary.
+
+There's two ways to install periphery: `System` and `User`
+
+## System (requires root)
+
+Note. Run this after switching to root user (eg `sudo su -`).
+
+```sh
+curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py \
+  | python3 - --core-address <YOUR-CORE-ADDRESS> \
+  --onboarding-key <YOUR-ONBOARDING-KEY>
+```
+
+Will install to paths:
+- periphery (binary) -> `/usr/local/bin/periphery`
+- periphery.service -> `/etc/systemd/system/periphery.service`
+- periphery.config.toml -> `/etc/komodo/periphery.config.toml`
+
+## User
+
+*Note*. The user running periphery must be a member of the docker group, in order to use the docker cli without sudo.
+
+```sh
+curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py \
+  | python3 - --user --core-address <YOUR-CORE-ADDRESS> \
+  --onboarding-key <YOUR-ONBOARDING-KEY>
+```
+
+Will install to paths:
+- periphery (binary) -> `$HOME/.local/bin`
+- periphery.service -> `$HOME/.config/systemd/user/periphery.service`
+- periphery.config.toml -> `$HOME/.config/komodo/periphery.config.toml`
+
+*Note*. Ensure the user running periphery has write permissions to the configured `root_directory`.
+
+*Note*. To ensure periphery stays running when your user logs out, use this:
+```shell
+sudo loginctl enable-linger $USER
+```
+
+For additional information on configuring the systemd service, see the systemd service file documentation here:
+[https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html).
+
+## Force Service File Recreation
+
+Usually the installer will only create the systemd service files (`periphery.service`) if one doesn't already exist.
+This means the user is free to customize it to fit their needs, such as changing the `User=` running the binary.
+
+You can change this behavior by passing `--force-service-file`, which will restore the service file
+to the current default.
+
+Example:
+
+```sh
+curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py \
+  | python3 - --core-address <YOUR-CORE-ADDRESS> \
+  --onboarding-key <YOUR-ONBOARDING-KEY> \
+  --force-service-file
+```
+
+---
+
+### `komodo.md` — komodo
+
+# Komodo
+
+Container orchestration and deployment management platform.
+
+## Overview
+
+Komodo provides a GitOps-style deployment platform for Docker containers:
+
+- **Stack Management** - Compose-based service definitions
+- **GitOps Workflows** - Deploy on git push
+- **Multi-Server** - Manage containers across servers
+- **Build Automation** - Automated container builds
+
+## Dashboard
+
+Access the Komodo dashboard at your configured URL to:
+
+- View running containers and their status
+- Trigger deployments manually
+- View build logs and history
+- Manage environment variables
+
+## Stack Configuration
+
+Stacks are defined in `bonneagar/komodo/stacks/`:
+
+```yaml
+# stack.yaml
+name: education-pipeline
+description: Oideachas data processing services
+
+services:
+  dagster:
+    image: ghcr.io/cianfhoghlaim/dagster:latest
+    build:
+      context: sruth/oideachas
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+
+  memgraph:
+    image: memgraph/memgraph:latest
+    volumes:
+      - memgraph_data:/var/lib/memgraph
+```
+
+## Deployment
+
+### Via Dashboard
+
+1. Navigate to Stacks
+2. Select target stack
+3. Click "Deploy"
+
+### Via CLI
+
+```bash
+# Install komodo CLI
+npm install -g komodo_client
+
+# Deploy a stack
+komodo stack deploy education-pipeline
+```
+
+### Via API
+
+```typescript
+import { KomodoClient } from 'komodo_client';
+
+const client = new KomodoClient({
+  url: process.env.KOMODO_URL,
+  apiKey: process.env.KOMODO_API_KEY,
+});
+
+await client.stacks.deploy('education-pipeline');
+```
+
+## Environment Management
+
+Environment variables are managed securely:
+
+```bash
+# Set environment variable
+komodo env set education-pipeline DATABASE_URL "postgres://..."
+
+# List variables
+komodo env list education-pipeline
+```
+
+For sensitive values, integrate with [Locket](./locket).
+
+## Build Configuration
+
+Automated builds on git push:
+
+```yaml
+# komodo.build.yaml
+builds:
+  dagster:
+    repo: github.com/cianfhoghlaim/cianfhoghlaim
+    branch: main
+    path: sruth/oideachas
+    dockerfile: Dockerfile
+    triggers:
+      - paths: ["sruth/oideachas/**"]
+```
+
+## Integration with Cianfhoghlaim
+
+| Stack | Purpose | Services |
+|-------|---------|----------|
+| `education-pipeline` | Data processing | Dagster, workers |
+| `graph-services` | Knowledge graph | Memgraph, FalkorDB |
+| `docs` | Documentation | Docusaurus |
+
+## Related
+
+- [Dagger](./dagger) - CI/CD pipelines
+- [Locket](./locket) - Secret management
+- [Infrastructure Overview](./overview)
+
+
+---
+
+### `komodo_client - Rust.md` — komodo
+
+---
+title: "komodo_client - Rust"
+source: "https://docs.rs/komodo_client/latest/komodo_client/"
+author:
+published:
+created: 2025-12-20
+description: "Komodo"
+tags:
+  - "clippings"
+---
+## Crate komodo\_client
+
+## Crate komodo\_client
+
+[Source](https://docs.rs/komodo_client/latest/src/komodo_client/lib.rs.html#1-213)
+
+[Search](https://docs.rs/komodo_client/latest/komodo_client/?search=)
+
+Expand description
+
+## Komodo
+
+*A system to build and deploy software across many servers*. [**https://komo.do**](https://komo.do/)
+
+This is a client library for the Komodo Core API. It contains:
+
+- Definitions for the application [api](https://docs.rs/komodo_client/latest/komodo_client/api/index.html "mod komodo_client::api") and [entities](https://docs.rs/komodo_client/latest/komodo_client/entities/index.html "mod komodo_client::entities").
+- A [client](https://docs.rs/komodo_client/latest/komodo_client/struct.KomodoClient.html "struct komodo_client::KomodoClient") to interact with the Komodo Core API.
+- Information on configuring Komodo [Core](https://docs.rs/komodo_client/latest/komodo_client/entities/config/core/index.html "mod komodo_client::entities::config::core") and [Periphery](https://docs.rs/komodo_client/latest/komodo_client/entities/config/periphery/index.html "mod komodo_client::entities::config::periphery").
+
+### Client Configuration
+
+The client includes a convenenience method to parse the Komodo API url and credentials from the environment:
+
+- `KOMODO_ADDRESS`
+- `KOMODO_API_KEY`
+- `KOMODO_API_SECRET`
+
+### Client Example
+
+```
+dotenvy::dotenv().ok();
+
+let client = KomodoClient::new_from_env()?;
+
+// Get all the deployments
+let deployments = client.read(ListDeployments::default()).await?;
+
+println!("{deployments:#?}");
+
+let update = client.execute(RunBuild { build: "test-build".to_string() }).await?:
+```
+
+## Modules
+
+[api](https://docs.rs/komodo_client/latest/komodo_client/api/index.html "mod komodo_client::api")
+
+Komodo Core API
+
+[busy](https://docs.rs/komodo_client/latest/komodo_client/busy/index.html "mod komodo_client::busy")
+
+[deserializers](https://docs.rs/komodo_client/latest/komodo_client/deserializers/index.html "mod komodo_client::deserializers")
+
+Deserializers for custom behavior and backward compatibility.
+
+[entities](https://docs.rs/komodo_client/latest/komodo_client/entities/index.html "mod komodo_client::entities")
+
+[parsers](https://docs.rs/komodo_client/latest/komodo_client/parsers/index.html "mod komodo_client::parsers")
+
+[terminal](https://docs.rs/komodo_client/latest/komodo_client/terminal/index.html "mod komodo_client::terminal")
+
+[ws](https://docs.rs/komodo_client/latest/komodo_client/ws/index.html "mod komodo_client::ws")
+
+## Structs
+
+[Komodo  Client](https://docs.rs/komodo_client/latest/komodo_client/struct.KomodoClient.html "struct komodo_client::KomodoClient")
+
+Client to interface with [Komodo](https://komo.do/docs/api#rust-client)
+
+[Komodo  Env](https://docs.rs/komodo_client/latest/komodo_client/struct.KomodoEnv.html "struct komodo_client::KomodoEnv")
+
+Default environment variables for the [KomodoClient](https://docs.rs/komodo_client/latest/komodo_client/struct.KomodoClient.html "struct komodo_client::KomodoClient").
+
+## Functions
+
+[komodo\_  client](https://docs.rs/komodo_client/latest/komodo_client/fn.komodo_client.html "fn komodo_client::komodo_client")
+
+&’static KomodoClient initialized from environment.
+
+---
+
+### `komodo_client__api - Rust.md` — komodo
+
+---
+title: "komodo_client::api - Rust"
+source: "https://docs.rs/komodo_client/latest/komodo_client/api/index.html"
+author:
+published:
+created: 2025-12-05
+description: "Komodo Core API"
+tags:
+  - "clippings"
+---
+## Module api
+
+## Module api
+
+[Source](https://docs.rs/komodo_client/latest/src/komodo_client/api/mod.rs.html#1-74)
+
+[Search](https://docs.rs/komodo_client/latest/komodo_client/api/index.html?search=)
+
+Expand description
+
+## Komodo Core API
+
+Komodo Core exposes an HTTP api using standard JSON serialization.
+
+All calls share some common HTTP params:
+
+- Method: `POST`
+- Path: `/auth`, `/user`, `/read`, `/write`, `/execute`
+- Headers:
+	- Content-Type: `application/json`
+	- Authorization: `your_jwt`
+	- X-Api-Key: `your_api_key`
+	- X-Api-Secret: `your_api_secret`
+	- Use either Authorization *or* X-Api-Key and X-Api-Secret to authenticate requests.
+- Body: JSON specifying the request type (`type`) and the parameters (`params`).
+
+You can create API keys for your user, or for a Service User with limited permissions, from the Komodo UI Settings page.
+
+To call the api, construct JSON bodies following the schemas given in [read](https://docs.rs/komodo_client/latest/komodo_client/api/read/index.html "mod komodo_client::api::read"), [write](https://docs.rs/komodo_client/latest/komodo_client/api/write/index.html "mod komodo_client::api::write"), [execute](https://docs.rs/komodo_client/latest/komodo_client/api/execute/index.html "mod komodo_client::api::execute"), and so on.
+
+For example, this is an example body for [read::GetDeployment](https://docs.rs/komodo_client/latest/komodo_client/api/read/struct.GetDeployment.html "struct komodo_client::api::read::GetDeployment"):
+
+```json
+{
+  "type": "GetDeployment",
+  "params": {
+    "deployment": "66113df3abe32960b87018dd"
+  }
+}
+```
+
+The request’s parent module (eg. [read](https://docs.rs/komodo_client/latest/komodo_client/api/read/index.html "mod komodo_client::api::read"), [write](https://docs.rs/komodo_client/latest/komodo_client/api/write/index.html "mod komodo_client::api::write")) determines the http path which must be used for the requests. For example, requests under [read](https://docs.rs/komodo_client/latest/komodo_client/api/read/index.html "mod komodo_client::api::read") are made using http path `/read`.
+
+### Curl Example
+
+Putting it all together, here is an example `curl` for [write::UpdateBuild](https://docs.rs/komodo_client/latest/komodo_client/api/write/struct.UpdateBuild.html "struct komodo_client::api::write::UpdateBuild"), to update the version:
+
+### Modules
+
+- [auth](https://docs.rs/komodo_client/latest/komodo_client/api/auth/index.html "mod komodo_client::api::auth"): Requests relating to logging in / obtaining authentication tokens.
+- [user](https://docs.rs/komodo_client/latest/komodo_client/api/user/index.html "mod komodo_client::api::user"): User self-management actions (manage api keys, etc.)
+- [read](https://docs.rs/komodo_client/latest/komodo_client/api/read/index.html "mod komodo_client::api::read"): Read only requests which retrieve data from Komodo.
+- [execute](https://docs.rs/komodo_client/latest/komodo_client/api/execute/index.html "mod komodo_client::api::execute"): Run actions on Komodo resources, eg [execute::RunBuild](https://docs.rs/komodo_client/latest/komodo_client/api/execute/struct.RunBuild.html "struct komodo_client::api::execute::RunBuild").
+- [write](https://docs.rs/komodo_client/latest/komodo_client/api/write/index.html "mod komodo_client::api::write"): Requests which alter data, like create / update / delete resources.
+
+### Errors
+
+Request errors will be returned with a JSON body containing information about the error. They will have the following common format:
+
+```json
+{
+  "error": "top level error message",
+  "trace": [
+    "first traceback message",
+    "second traceback message"
+  ]
+}
+```
+
+## Modules
+
+[auth](https://docs.rs/komodo_client/latest/komodo_client/api/auth/index.html "mod komodo_client::api::auth")
+
+[execute](https://docs.rs/komodo_client/latest/komodo_client/api/execute/index.html "mod komodo_client::api::execute")
+
+[read](https://docs.rs/komodo_client/latest/komodo_client/api/read/index.html "mod komodo_client::api::read")
+
+[terminal](https://docs.rs/komodo_client/latest/komodo_client/api/terminal/index.html "mod komodo_client::api::terminal")
+
+[user](https://docs.rs/komodo_client/latest/komodo_client/api/user/index.html "mod komodo_client::api::user")
+
+[write](https://docs.rs/komodo_client/latest/komodo_client/api/write/index.html "mod komodo_client::api::write")
+
+---
+
+### `Blueprints.md` — pangolin
+
+---
+title: "Blueprints"
+source: "https://docs.pangolin.net/manage/blueprints"
+author:
+  - "[[Pangolin Docs]]"
+published:
+created: 2025-12-05
+description: "Pangolin Blueprints are declarative configurations that allow you to define your resources and their settings in a structured format"
+tags:
+  - "clippings"
+---
+Blueprints provide a way to define your Pangolin resources and their configurations in a structured, declarative format. This allows for easier management, version control, and automation of your resource setups.![](https://www.youtube.com/watch?v=lMauwwitSAE)
+
+## Overview
+
+Pangolin supports two blueprint formats:
+1. **YAML Configuration Files**: Standalone configuration files
+2. **Docker Labels**: Configuration embedded in Docker Compose files
+
+## YAML Configuration Format
+
+YAML config can be applied using Docker labels, API, from a Newt site, or in the UI. *Application through a CLI tool is planned.*
+
+## Newt YAML
+
+Newt automatically discovers and applies blueprints defined in YAML format when passing the `--blueprint-file` argument. For example
+
+```
+newt --blueprint-file /path/to/blueprint.yaml <other-args>
+```
+
+## API YAML
+
+You can also apply blueprints directly through the Pangolin API with an API key. [Take a look at the API documentation for more details.](https://api.pangolin.net/v1/docs/#/Organization/put_org__orgId__blueprint)POST to `/org/{orgId}/blueprint` with a base64 encodes JSON body like the following:
+
+```
+{
+
+  "blueprint": "base64-encoded-json-content"
+
+}
+```
+
+[See this python example](https://github.com/fosrl/pangolin/blob/dev/blueprint.py)
+
+### Proxy Resources
+
+Proxy resources are used to expose HTTP, TCP, or UDP services through Pangolin. Below is an example configuration for proxy resources:
+
+### Authentication Configuration
+
+Authentication is off by default. You can enable it by adding the relevant fields in the `auth` section as shown in the example below.
+
+```
+proxy-resources:
+
+  secure-resource:
+
+    name: Secured Resource
+
+    protocol: http
+
+    full-domain: secure.example.com
+
+    auth:
+
+      pincode: 123456
+
+      password: your-secure-password
+
+      basic-auth:
+
+        user: asdfa
+
+        password: sadf
+
+      sso-enabled: true
+
+      sso-roles:
+
+        - Member
+
+        - Admin
+
+      sso-users:
+
+        - user@example.com
+
+      whitelist-users:
+
+        - admin@example.com
+```
+
+### Targets-Only Resources
+
+You can define simplified resources that contain only target configurations. This is useful for adding targets to existing resources or for simple configurations:
+
+```
+proxy-resources:
+
+  additional-targets:
+
+    targets:
+
+    - site: another-site
+
+      hostname: backend-server
+
+      method: https
+
+      port: 8443
+
+    - site: another-site
+
+      hostname: backup-server
+
+      method: http
+
+      port: 8080
+```
+
+When using targets-only resources, the `name` and `protocol` fields are not required. All other resource-level validations are skipped for these simplified configurations.
+
+### Client Resources
+
+Client resources define proxied resources accessible when connected via an Olm client:
+
+```
+client-resources:
+
+  client-resource-nice-id-uno:
+
+    name: this is my resource
+
+    protocol: tcp
+
+    proxy-port: 3001
+
+    hostname: localhost
+
+    internal-port: 3000
+
+    site: lively-yosemite-toad
+```
+
+For containerized applications, you can define blueprints using Docker labels.
+
+Blueprints will **continuously apply** from changes in the docker stack, newt restarting, or when viewing the resource in the dashboard.
+
+### Enabling Docker Socket Access
+
+To use Docker labels, enable the Docker socket when running Newt:
+
+```
+newt --docker-socket /var/run/docker.sock <other-args>
+```
+
+or using the environment variable:
+
+```
+DOCKER_SOCKET=/var/run/docker.sock
+```
+
+### Docker Compose Example
+
+The compose file will be the source of truth, any edits through the resources dashboard will be **overwritten** by the blueprint labels defined in the compose stack.
+
+This will create a resource that looks like the following:
+
+![Example resource](https://mintcdn.com/fossorial/urmJt4paswtGsg_S/images/docker-compose-blueprint-example.png?w=280&fit=max&auto=format&n=urmJt4paswtGsg_S&q=85&s=d8a553522179030f7a53067afa2c9d5b)
+
+Example resource
+
+Pangolin UI showing Docker Compose blueprint example
+
+## Automatic Discovery
+
+When hostname and internal port are not explicitly defined in labels, Pangolin will automatically detect them from the container configuration.
+
+## Site Assignment
+
+If no site is specified in the labels, the resource will be assigned to the Newt site that discovered the container.
+
+## Configuration Merging
+
+Configuration across different containers is automatically merged to form complete resource definitions. This allows you to distribute targets across multiple containers while maintaining a single logical resource.
+
+## Configuration Properties
+
+### Proxy Resources
+
+### Target Configuration
+
+### Health Check Configuration
+
+Health checks can be configured for individual targets to monitor their availability. Add a `healthcheck` object to any target:
+
+### Authentication Configuration
+
+Not allowed on TCP/UDP resources.
+
+### Rules Configuration
+
+### Client Resources
+
+These are resources used with Pangolin Olm clients (e.g., SSH, RDP).
+
+## Validation Rules and Constraints
+
+### Resource-Level Validations
+
+1. **Targets-Only Resources**: A resource can contain only the `targets` field, in which case `name` and `protocol` are not required.
+2. **Protocol-Specific Requirements**:
+	- **HTTP Protocol**: Must have `full-domain` and all targets must have `method` field
+	- **TCP/UDP Protocol**: Must have `proxy-port` and targets must NOT have `method` field
+	- **TCP/UDP Protocol**: Cannot have `auth` configuration
+3. **Port Uniqueness**:
+	- `proxy-port` values must be unique within `proxy-resources`
+	- `proxy-port` values must be unique within `client-resources`
+	- Cross-validation between proxy and client resources is not enforced
+4. **Domain Uniqueness**: `full-domain` values must be unique across all proxy resources
+5. **Target Method Requirements**: When protocol is `http`, all non-null targets must specify a `method`
+When working with blueprints, you may encounter these validation errors:
+
+### “Admin role cannot be included in sso-roles”
+
+The `Admin` role is reserved and cannot be included in the `sso-roles` array for authentication configuration.
+
+### ”Duplicate ‘full-domain’ values found”
+
+Each `full-domain` must be unique across all proxy resources. If you need multiple resources for the same domain, use different subdomains or paths.
+
+### ”Duplicate ‘proxy-port’ values found”
+
+Port numbers in `proxy-port` must be unique within their resource type (proxy-resources or client-resources separately).
+
+### ”When protocol is ‘http’, all targets must have a ‘method’ field”
+
+All targets in HTTP proxy resources must specify whether they use `http`, `https`, or `h2c`.
+
+### ”When protocol is ‘tcp’ or ‘udp’, targets must not have a ‘method’ field”
+
+TCP and UDP targets should not include the `method` field as it’s only applicable to HTTP resources.
+
+### ”When protocol is ‘tcp’ or ‘udp’, ‘auth’ must not be provided”
+
+Authentication is only supported for HTTP resources, not TCP or UDP.
+
+### ”Resource must either be targets-only or have both ‘name’ and ‘protocol’ fields”
+
+Resources must either contain only the `targets` field (targets-only) or include both `name` and `protocol` for complete resource definitions.[Health Checks](https://docs.pangolin.net/manage/healthchecks-failover)
+
+[
+
+Previous
+
+](https://docs.pangolin.net/manage/healthchecks-failover)[
+
+Highly Available Nodes
+
+Next
+
+](https://docs.pangolin.net/manage/remote-node/ha)
+
+---
+
+### `Configuration File.md` — pangolin
+
+---
+title: "Configuration File"
+source: "https://docs.pangolin.net/self-host/advanced/config-file"
+author:
+  - "[[​]]"
+published:
+created: 2025-12-08
+description: "Configure Pangolin using the config.yml file with detailed settings for all components"
+tags:
+  - "clippings"
+---
+The `config.yml` file controls all aspects of your Pangolin deployment, including server settings, domain configuration, email setup, and security options. This file is mounted at `config/config.yml` in your Docker container.
+
+## Setting up your config.yml
+
+To get started, create a basic configuration file with the essential settings:Minimal Pangolin configuration:
+
+Generate a strong secret for `server.secret`. Use at least 32 characters with a mix of letters, numbers, and special characters.
+
+## Reference
+
+This section contains the complete reference for all configuration options in `config.yml`.
+
+### Application Settingsapp
+
+object
+
+required
+
+Core application configuration including dashboard URL, logging, and general settings.
+
+ShowAppdashboard\_url
+
+string
+
+required
+
+The URL where your Pangolin dashboard is hosted.**Examples**: `https://example.com`, `https://pangolin.example.com` This URL is used for generating links, redirects, and authentication flows. You can run Pangolin on a subdomain or root domain.log\_level
+
+string
+
+The logging level for the application.**Options**: `debug`, `info`, `warn`, `error` **Default**: `info`save\_logs
+
+boolean
+
+Whether to save logs to files in the `config/logs/` directory.**Default**: `false`
+
+When enabled, logs rotate automatically:
+- Max file size: 20MB
+- Max files: 7 dayslog\_failed\_attempts
+
+boolean
+
+Whether to log failed authentication attempts for security monitoring.**Default**: `false`telemetry
+
+object
+
+Telemetry configuration settings.
+
+ShowTelemetryanonymous\_usage
+
+boolean
+
+Whether to enable anonymous usage telemetry.**Default**: `true`notifications
+
+object
+
+Notification configuration settings.
+
+ShowNotificationproduct\_updates
+
+boolean
+
+Whether to enable showing product updates notifications on the UI.**Default**: `true`new\_releases
+
+boolean
+
+Whether to enable showing new releases notifications on the UI.**Default**: `true`
+
+### Server Configurationserver
+
+object
+
+required
+
+Server ports, networking, and authentication settings.
+
+ShowServerexternal\_port
+
+integer
+
+The port for the front-end API that handles external requests.**Example**: `3000`internal\_port
+
+integer
+
+The port for the internal private-facing API.**Example**: `3001`
+
+The port for the frontend server (Next.js).**Example**: `3002`integration\_port
+
+integer
+
+The port for the integration API (optional).**Example**: `3003`internal\_hostname
+
+string
+
+The hostname of the Pangolin container for internal communication.**Example**: `pangolin`
+
+If using Docker Compose, this should match your container name.resource\_access\_token\_param
+
+string
+
+Query parameter name for passing access tokens in requests.**Example**: `p_token` **Default**: `p_token`resource\_session\_request\_param
+
+string
+
+Query parameter for session request tokens.**Example**: `p_session_request` **Default**: `p_session_request`cors
+
+object
+
+Cross-Origin Resource Sharing (CORS) configuration.
+
+ShowCORSorigins
+
+array of strings
+
+Allowed origins for cross-origin requests.**Example**: `["https://pangolin.example.com"]`methods
+
+array of strings
+
+Allowed HTTP methods for CORS requests.**Example**: `["GET", "POST", "PUT", "DELETE", "PATCH"]`credentials
+
+boolean
+
+Whether to allow credentials in CORS requests.**Default**: `true`dashboard\_session\_length\_hours
+
+integer
+
+Dashboard session duration in hours.**Example**: `720` (30 days) **Default**: `720`resource\_session\_length\_hours
+
+integer
+
+Resource session duration in hours.**Example**: `720` (30 days) **Default**: `720`secret
+
+string
+
+required
+
+Secret key for encrypting sensitive data.**Environment Variable**: `SERVER_SECRET` **Minimum Length**: 8 characters **Example**: `"d28@a2b.2HFTe2bMtZHGneNYgQFKT2X4vm4HuXUXBcq6aVyNZjdGt6Dx-_A@9b3y"`
+
+Generate a strong, random secret. This is used for encrypting sensitive data and should be kept secure.maxmind\_db\_path
+
+string
+
+Path to the MaxMind GeoIP database file for geolocation features.**Example**: `./config/GeoLite2-Country.mmdb`
+
+Used for IP geolocation functionality. Requires a MaxMind GeoLite2 or GeoIP2 database file.
+
+### Domain Configurationdomains
+
+object
+
+required
+
+Domain settings for SSL certificates and routing.At least one domain must be configured.It is best to add it in the UI for ease of use or when you want the domain to *only be present in the org it was created in*.You should create it in the config file for permanence across installs and if you want the domain to be present in all orgs.
+
+ShowDomains<domain\_key>
+
+object
+
+Domain configuration with a unique key of your choice.base\_domain
+
+string
+
+required
+
+The base domain for this configuration.**Example**: `example.com`cert\_resolver
+
+string
+
+required
+
+The Traefik certificate resolver name.**Example**: `letsencrypt`
+
+This must match the certificate resolver name in your Traefik configuration.prefer\_wildcard\_cert
+
+boolean
+
+Whether to prefer wildcard certificates for this domain.**Example**: `true`
+
+Useful for domains with many subdomains to reduce certificate management overhead.
+
+### Traefik Integrationtraefik
+
+object
+
+Traefik reverse proxy configuration settings.
+
+ShowTraefikhttp\_entrypoint
+
+string
+
+The Traefik entrypoint name for HTTP traffic.**Example**: `web`
+
+Must match the entrypoint name in your Traefik configuration.https\_entrypoint
+
+string
+
+The Traefik entrypoint name for HTTPS traffic.**Example**: `websecure`
+
+Must match the entrypoint name in your Traefik configuration.cert\_resolver
+
+string
+
+The default certificate resolver for domains created through the UI.**Example**: `letsencrypt`
+
+This only applies to domains created through the Pangolin dashboard.prefer\_wildcard\_cert
+
+boolean
+
+Whether to prefer wildcard certificates for UI-created domains.**Example**: `true`
+
+This only applies to domains created through the Pangolin dashboard.additional\_middlewares
+
+array of strings
+
+Additional Traefik middlewares to apply to resource routers.**Example**: `["middleware1", "middleware2"]`
+
+These middlewares must be defined in your Traefik dynamic configuration.certificates\_path
+
+string
+
+Path where SSL certificates are stored. This is used only with managed Pangolin deployments.**Example**: `/var/certificates` **Default**: `/var/certificates`monitor\_interval
+
+integer
+
+Interval in milliseconds for monitoring configuration changes.**Example**: `5000` **Default**: `5000`dynamic\_cert\_config\_path
+
+string
+
+Path to the dynamic certificate configuration file. This is used only with managed Pangolin deployments.**Example**: `/var/dynamic/cert_config.yml` **Default**: `/var/dynamic/cert_config.yml`dynamic\_router\_config\_path
+
+string
+
+Path to the dynamic router configuration file.**Example**: `/var/dynamic/router_config.yml` **Default**: `/var/dynamic/router_config.yml`site\_types
+
+array of strings
+
+Supported site types for Traefik configuration.**Example**: `["newt", "wireguard", "local"]` **Default**: `["newt", "wireguard", "local"]`file\_mode
+
+boolean
+
+Whether to use file-based configuration mode for Traefik.**Example**: `false` **Default**: `false`
+
+When enabled, uses file-based dynamic configuration instead of API-based updates.
+
+### Gerbil Tunnel Controllergerbil
+
+object
+
+required
+
+Gerbil tunnel controller settings for WireGuard tunneling.
+
+ShowGerbilbase\_endpoint
+
+string
+
+required
+
+Domain name included in WireGuard configuration for tunnel connections.**Example**: `pangolin.example.com`start\_port
+
+integer
+
+Starting port for WireGuard tunnels.**Example**: `51820`use\_subdomain
+
+boolean
+
+Whether to assign unique subdomains to Gerbil exit nodes.**Default**: `false`
+
+Keep this set to `false` for most deployments.subnet\_group
+
+string
+
+IP address CIDR range for Gerbil exit node subnets.**Example**: `10.0.0.0/8`block\_size
+
+integer
+
+Block size for Gerbil exit node CIDR ranges.**Example**: `24`site\_block\_size
+
+integer
+
+Block size for site CIDR ranges connected to Gerbil.**Example**: `26`
+
+### Organization Settingsorgs
+
+object
+
+Organization network configuration settings.
+
+ShowOrganizationsblock\_size
+
+integer
+
+Block size for organization CIDR ranges.**Example**: `24` **Default**: `24`
+
+Determines the subnet size allocated to each organization for network isolation.subnet\_group
+
+string
+
+IP address CIDR range for organization subnets.**Example**: `100.90.128.0/24` **Default**: `100.90.128.0/24`
+
+Base subnet from which organization-specific subnets are allocated.
+
+### Rate Limitingrate\_limits
+
+object
+
+Rate limiting configuration for API requests.global
+
+object
+
+Global rate limit settings for all external API requests.
+
+ShowGlobalwindow\_minutes
+
+integer
+
+Time window for rate limiting in minutes.**Example**: `1`max\_requests
+
+integer
+
+Maximum number of requests allowed in the time window.**Example**: `100`auth
+
+object
+
+Rate limit settings specifically for authentication endpoints.window\_minutes
+
+integer
+
+Time window for authentication rate limiting in minutes.**Example**: `1` **Default**: `1`max\_requests
+
+integer
+
+Maximum number of authentication requests allowed in the time window.**Example**: `10` **Default**: `500`
+
+Consider setting this lower than global limits for security.
+
+### Email Configurationemail
+
+object
+
+SMTP settings for sending transactional emails.
+
+ShowEmailsmtp\_host
+
+string
+
+SMTP server hostname.**Example**: `smtp.gmail.com`smtp\_port
+
+integer
+
+SMTP server port.**Example**: `587` (TLS) or `465` (SSL)smtp\_user
+
+string
+
+SMTP username.**Example**: `no-reply@example.com`smtp\_pass
+
+string
+
+SMTP password.**Environment Variable**: `EMAIL_SMTP_PASS`smtp\_secure
+
+boolean
+
+Whether to use secure connection (SSL/TLS).**Default**: `false`
+
+Enable this when using port 465 (SSL).no\_reply
+
+string
+
+From address for sent emails.**Example**: `no-reply@example.com`
+
+Usually the same as `smtp_user`.
+
+smtp\_tls\_reject\_unauthorized
+
+boolean
+
+Whether to fail on invalid server certificates.**Default**: `true`
+
+### Feature Flagsflags
+
+object
+
+Feature flags to control application behavior.
+
+ShowFlagsrequire\_email\_verification
+
+boolean
+
+Whether to require email verification for new users.**Default**: `false`
+
+Only enable this if you have email configuration set up.disable\_user\_create\_org
+
+boolean
+
+Whether to prevent users from creating organizations.**Default**: `false`
+
+Server admins can always create organizations.allow\_raw\_resources
+
+boolean
+
+Whether to allow raw TCP/UDP resource creation.**Default**: `true`
+
+If set to `false`, users will only be able to create http/https resources.enable\_integration\_api
+
+boolean
+
+Whether to enable the integration API.**Default**: `false`disable\_local\_sites
+
+boolean
+
+Whether to disable local site creation and management.**Default**: `false`
+
+When enabled, users cannot create sites that connect to local networks.disable\_basic\_wireguard\_sites
+
+boolean
+
+Whether to disable basic WireGuard site functionality.**Default**: `false`
+
+When enabled, only advanced WireGuard configurations are allowed.disable\_config\_managed\_domains
+
+boolean
+
+Whether to disable domains managed through the configuration file.**Default**: `false`
+
+When enabled, only domains created through the UI are allowed.
+
+### Database Configurationpostgres
+
+object
+
+PostgreSQL database configuration (optional).
+
+ShowPostgreSQLconnection\_string
+
+string
+
+required
+
+PostgreSQL connection string.**Example**: `postgresql://user:password@host:port/database`
+
+See [PostgreSQL documentation](https://docs.pangolin.net/self-host/advanced/database-options#postgresql) for setup instructions.replicas
+
+array of objects
+
+Read-only replica database configurations for load balancing.connection\_string
+
+string
+
+required
+
+Connection string for the read replica database.**Example**: `postgresql://user:password@replica-host:port/database`pool
+
+object
+
+Database connection pool settings.max\_connections
+
+integer
+
+Maximum number of connections to the primary database.**Default**: `20` **Example**: `50`max\_replica\_connections
+
+integer
+
+Maximum number of connections to replica databases.**Default**: `10` **Example**: `25`idle\_timeout\_ms
+
+integer
+
+Time in milliseconds before idle connections are closed.**Default**: `30000` (30 seconds) **Example**: `60000`connection\_timeout\_ms
+
+integer
+
+Time in milliseconds to wait for a database connection.**Default**: `5000` (5 seconds) **Example**: `10000`
+
+### DNS Configurationdns
+
+object
+
+DNS settings for domain name resolution and CNAME extensions.
+
+ShowDNSnameservers
+
+array of strings
+
+List of nameservers used for DNS resolution.**Example**: `["ns1.example.com", "ns2.example.com"]` **Default**: `["ns1.pangolin.net", "ns2.pangolin.net", "ns3.pangolin.net"]`
+
+These nameservers are used for DNS queries and domain resolution.cname\_extension
+
+string
+
+Domain extension used for CNAME record management.**Example**: `cname.example.com` **Default**: `cname.pangolin.net`
+
+Used for creating CNAME records for dynamic domain routing.
+
+## Environment Variables
+
+Some configuration values can be set using environment variables for enhanced security:
+
+---
+
+### `Database Options.md` — pangolin
+
+---
+title: "Database Options"
+source: "https://docs.pangolin.net/self-host/advanced/database-options"
+author:
+  - "[[Pangolin Docs]]"
+published:
+created: 2025-12-08
+description: "Configure SQLite or PostgreSQL database for Pangolin"
+tags:
+  - "clippings"
+---
+Pangolin supports two database options: SQLite for simplicity and PostgreSQL for production deployments.
+
+## SQLite (Default)
+
+- No configuration required
+- Easy to use and portable
+- Built into the main image
+- Perfect for development
+
+## PostgreSQL
+
+- Production-ready database
+- Better performance at scale
+- Requires separate image
+- Advanced configuration options
+
+## SQLite
+
+By default, Pangolin uses SQLite for its ease of use and portability.**Docker Image**: `fosrl/pangolin:<version>`
+
+No configuration is required to use SQLite with Pangolin.
+
+## PostgreSQL
+
+You can optionally use PostgreSQL for production deployments.**Docker Image**: `fosrl/pangolin:postgresql-<version>`
+
+### Configuration
+
+Add the following section to your Pangolin configuration file:
+
+config.yml
+
+```
+postgres:
+
+  connection_string: postgresql://<user>:<password>@<host>:<port>/<database>
+```
+
+Replace the placeholders with your actual PostgreSQL connection details.
+
+### Docker Compose Example
+
+This example sets up PostgreSQL with health checks to ensure the database is ready before Pangolin starts:
+
+docker-compose.yml
+
+```
+name: pangolin
+
+services:
+
+  pangolin:
+
+    image: fosrl/pangolin:postgresql-latest # Don't use latest in production
+
+    container_name: pangolin
+
+    restart: unless-stopped
+
+    depends_on:
+
+      postgres:
+
+        condition: service_healthy
+
+    volumes:
+
+      - ./config:/app/config
+
+    healthcheck:
+
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/v1/"]
+
+      interval: "10s"
+
+      timeout: "10s"
+
+      retries: 15
+
+  # ... other services ...
+
+  postgres:
+
+    image: postgres:17
+
+    container_name: postgres
+
+    restart: unless-stopped
+
+    environment:
+
+      POSTGRES_USER: postgres
+
+      POSTGRES_PASSWORD: postgres
+
+    volumes:
+
+      - ./config/postgres:/var/lib/postgresql/data
+
+    healthcheck:
+
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+
+      interval: 10s
+
+      timeout: 5s
+
+      retries: 5
+```
+
+This example is not necessarily production-ready. Adjust the configuration according to your needs and security requirements.
+
+Do not use `latest` tags in production. Use specific version tags for stability.[Internal CLI (pangctl)](https://docs.pangolin.net/self-host/advanced/container-cli-tool)
+
+[
+
+Previous
+
+](https://docs.pangolin.net/self-host/advanced/container-cli-tool)[
+
+Enable Integration API
+
+Next
+
+](https://docs.pangolin.net/self-host/advanced/integration-api)
+
+---
+
+### `Docker Compose.md` — pangolin
+
+---
+title: "Docker Compose"
+source: "https://docs.pangolin.net/self-host/manual/docker-compose"
+author:
+  - "[[Pangolin Docs]]"
+published:
+created: 2025-12-10
+description: "Deploy Pangolin manually using Docker Compose without the automated installer"
+tags:
+  - "clippings"
+---
+This guide walks you through setting up Pangolin manually using Docker Compose without the automated installer. This approach gives you full control over the configuration and deployment process.This guide assumes you already have a Linux server with Docker and Docker Compose installed. If you don’t, please refer to the [official Docker documentation](https://docs.docker.com/get-docker/) for installation instructions. You must also have root access to the server.
+
+## Prerequisites
+
+Checkout the [quick install guide](https://docs.pangolin.net/self-host/quick-install) for more info regarding what is needed before you install Pangolin.
+
+## File Structure
+
+Create the following directory structure for your Pangolin deployment:
+
+```
+.
+
+├── config/
+
+│   ├── config.yml (*)
+
+│   ├── db/
+
+│   │   └── db.sqlite
+
+│   ├── key
+
+│   ├── letsencrypt/
+
+│   │   └── acme.json
+
+│   ├── logs/
+
+│   └── traefik/
+
+│       ├── traefik_config.yml (*)
+
+│       └── dynamic_config.yml (*)
+
+└── docker-compose.yml (*)
+```
+
+Files marked with `(*)` must be created manually. Volumes and other files are generated automatically by the services.
+
+Configuration Files
+
+**`config/config.yml`**: Main Pangolin configuration file
+- Contains all Pangolin settings and options
+- See [Configuration Guide](https://docs.pangolin.net/self-host/advanced/config-file) for details
+**`config/traefik/traefik_config.yml`**: Traefik static configuration
+- Global Traefik settings and entry points
+- SSL certificate resolver configuration
+**`config/traefik/dynamic_config.yml`**: Traefik dynamic configuration
+- HTTP routers and services for Pangolin
+- Load balancer and middleware configuration
+
+Generated Files
+
+**`config/db/db.sqlite`**: SQLite database file
+- Created automatically on first startup
+- Contains all Pangolin data and settings
+**`config/key`**: Private key file
+- Generated by Gerbil service
+- Used for WireGuard tunnel encryption
+**`config/letsencrypt/acme.json`**: SSL certificate storage
+- Managed by Traefik
+- Contains Let’s Encrypt certificates
+
+Docker Files
+
+**`docker-compose.yml`**: Service definitions
+- Defines Pangolin, Gerbil, and Traefik services
+- Network configuration and volume mounts
+- Health checks and dependencies
+
+## Starting the Stack
+
+## Docker Compose Configuration
+
+Create `docker-compose.yml` in your project root:
+
+docker-compose.yml
+
+```
+services:
+
+  pangolin:
+
+    image: fosrl/pangolin:latest # https://github.com/fosrl/pangolin/releases
+
+    container_name: pangolin
+
+    restart: unless-stopped
+
+    volumes:
+
+      - ./config:/app/config
+
+    healthcheck:
+
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/v1/"]
+
+      interval: "3s"
+
+      timeout: "3s"
+
+      retries: 15
+
+  gerbil:
+
+    image: fosrl/gerbil:latest # https://github.com/fosrl/gerbil/releases
+
+    container_name: gerbil
+
+    restart: unless-stopped
+
+    depends_on:
+
+      pangolin:
+
+        condition: service_healthy
+
+    command:
+
+      - --reachableAt=http://gerbil:3004
+
+      - --generateAndSaveKeyTo=/var/config/key
+
+      - --remoteConfig=http://pangolin:3001/api/v1/
+
+    volumes:
+
+      - ./config/:/var/config
+
+    cap_add:
+
+      - NET_ADMIN
+
+      - SYS_MODULE
+
+    ports:
+
+      - 51820:51820/udp
+
+      - 21820:21820/udp
+
+      - 443:443 # Port for traefik because of the network_mode
+
+      - 80:80 # Port for traefik because of the network_mode
+
+  traefik:
+
+    image: traefik:v3.4.0
+
+    container_name: traefik
+
+    restart: unless-stopped
+
+    network_mode: service:gerbil # Ports appear on the gerbil service
+
+    depends_on:
+
+      pangolin:
+
+        condition: service_healthy
+
+    command:
+
+      - --configFile=/etc/traefik/traefik_config.yml
+
+    volumes:
+
+      - ./config/traefik:/etc/traefik:ro # Volume to store the Traefik configuration
+
+      - ./config/letsencrypt:/letsencrypt # Volume to store the Let's Encrypt certificates
+
+      - ./config/traefik/logs:/var/log/traefik # Volume to store Traefik logs
+
+networks:
+
+  default:
+
+    driver: bridge
+
+    name: pangolin
+```
+
+## Traefik Static Configuration
+
+Create `config/traefik/traefik_config.yml`:
+
+config/traefik/traefik\_config.yml
+
+```
+api:
+
+  insecure: true
+
+  dashboard: true
+
+providers:
+
+  http:
+
+    endpoint: "http://pangolin:3001/api/v1/traefik-config"
+
+    pollInterval: "5s"
+
+  file:
+
+    filename: "/etc/traefik/dynamic_config.yml"
+
+experimental:
+
+  plugins:
+
+    badger:
+
+      moduleName: "github.com/fosrl/badger"
+
+      version: "v1.2.0"
+
+log:
+
+  level: "INFO"
+
+  format: "common"
+
+certificatesResolvers:
+
+  letsencrypt:
+
+    acme:
+
+      httpChallenge:
+
+        entryPoint: web
+
+      email: admin@example.com # REPLACE WITH YOUR EMAIL
+
+      storage: "/letsencrypt/acme.json"
+
+      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+
+entryPoints:
+
+  web:
+
+    address: ":80"
+
+  websecure:
+
+    address: ":443"
+
+    transport:
+
+      respondingTimeouts:
+
+        readTimeout: "30m"
+
+    http:
+
+      tls:
+
+        certResolver: "letsencrypt"
+
+serversTransport:
+
+  insecureSkipVerify: true
+
+ping:
+
+    entryPoint: "web"
+```
+
+## Traefik Dynamic Configuration
+
+Create `config/traefik/dynamic_config.yml`:
+
+config/traefik/dynamic\_config.yml
+
+```
+http:
+
+  middlewares:
+
+    redirect-to-https:
+
+      redirectScheme:
+
+        scheme: https
+
+  routers:
+
+    # HTTP to HTTPS redirect router
+
+    main-app-router-redirect:
+
+      rule: "Host(\`pangolin.example.com\`)" # REPLACE WITH YOUR DOMAIN
+
+      service: next-service
+
+      entryPoints:
+
+        - web
+
+      middlewares:
+
+        - redirect-to-https
+
+    # Next.js router (handles everything except API and WebSocket paths)
+
+    next-router:
+
+      rule: "Host(\`pangolin.example.com\`) && !PathPrefix(\`/api/v1\`)" # REPLACE WITH YOUR DOMAIN
+
+      service: next-service
+
+      entryPoints:
+
+        - websecure
+
+      tls:
+
+        certResolver: letsencrypt
+
+    # API router (handles /api/v1 paths)
+
+    api-router:
+
+      rule: "Host(\`pangolin.example.com\`) && PathPrefix(\`/api/v1\`)" # REPLACE WITH YOUR DOMAIN
+
+      service: api-service
+
+      entryPoints:
+
+        - websecure
+
+      tls:
+
+        certResolver: letsencrypt
+
+    # WebSocket router
+
+    ws-router:
+
+      rule: "Host(\`pangolin.example.com\`)" # REPLACE WITH YOUR DOMAIN
+
+      service: api-service
+
+      entryPoints:
+
+        - websecure
+
+      tls:
+
+        certResolver: letsencrypt
+
+  services:
+
+    next-service:
+
+      loadBalancer:
+
+        servers:
+
+          - url: "http://pangolin:3002" # Next.js server
+
+    api-service:
+
+      loadBalancer:
+
+        servers:
+
+          - url: "http://pangolin:3000" # API/WebSocket server
+```
+
+## Pangolin Configuration
+
+Create `config/config.yml` with your Pangolin settings. See the [configuration guide](https://docs.pangolin.net/self-host/advanced/config-file) for detailed options and examples.[Quick Install Guide](https://docs.pangolin.net/self-host/quick-install)
+
+[
+
+Previous
+
+](https://docs.pangolin.net/self-host/quick-install)[
+
+Unraid Deployment
+
+Next
+
+](https://docs.pangolin.net/self-host/manual/unraid)
+
+---
+
+### `Enable Integration API.md` — pangolin
+
+---
+title: "Enable Integration API"
+source: "https://docs.pangolin.net/self-host/advanced/integration-api"
+author:
+  - "[[Pangolin Docs]]"
+published:
+created: 2025-12-08
+description: "Enable and configure the Integration API for external access"
+tags:
+  - "clippings"
+---
+[Skip to main content](https://docs.pangolin.net/self-host/advanced/#content-area)
+
+The Integration API provides programmatic access to Pangolin functionality. It includes OpenAPI documentation via Swagger UI.
+
+## Enable Integration API
+
+Update your Pangolin configuration file:
+
+config.yml
+
+```
+flags:
+
+  enable_integration_api: true
+```
+
+If you want to specify a port other than the default `3003`, you can do so in the config as well:
+
+config.yml
+
+```
+server:
+
+  integration_port: 3003 # Specify different port
+```
+
+## Configure Traefik Routing
+
+Add the following configuration to your `config/traefik/dynamic_config.yml` to expose the Integration API at `https://api.example.com/v1`:
+
+dynamic\_config.yml
+
+```
+routers:
+
+    # Add the following two routers
+
+    int-api-router-redirect:
+
+      rule: "Host(\`api.example.com\`)"
+
+      service: int-api-service
+
+      entryPoints:
+
+        - web
+
+      middlewares:
+
+        - redirect-to-https
+
+    int-api-router:
+
+      rule: "Host(\`api.example.com\`)"
+
+      service: int-api-service
+
+      entryPoints:
+
+        - websecure
+
+      tls:
+
+        certResolver: letsencrypt
+
+  services:
+
+    # Add the following service
+
+    int-api-service:
+
+      loadBalancer:
+
+        servers:
+
+          - url: "http://pangolin:3003"
+```
+
+## Access Documentation
+
+Once configured, access the Swagger UI documentation at:
+
+```
+https://api.example.com/v1/docs
+```
+
+![Swagger UI Preview](https://mintcdn.com/fossorial/u-2SUNWyK_LJL3sU/images/swagger.png?w=280&fit=max&auto=format&n=u-2SUNWyK_LJL3sU&q=85&s=163c4b68c9f9d9ee2589898f8af8fedf)
+
+Swagger UI Preview
+
+Swagger UI documentation interface
+
+The Integration API will be accessible at `https://api.example.com/v1` for external applications.
+
+Was this page helpful?
+
+---
+
+### `Enabling the Pangolin Integration API - and Building a Simple “Shadow-IT Detector” Agent - Guides & Tutorials.md` — pangolin
+
+---
+title: "Enabling the Pangolin Integration API - and Building a Simple “Shadow-IT Detector” Agent - Guides & Tutorials"
+source: "https://forum.hhf.technology/t/enabling-the-pangolin-integration-api-and-building-a-simple-shadow-it-detector-agent/4030"
+author:
+  - "[[Mattercoder]]"
+published: 2025-12-08
+created: 2025-12-29
+description: "The Pangolin Integration API allows DevOps teams to script, automate, and integrate Pangolin functionality using a secure, permission-scoped REST interface. In this guide, we’ll walk through: How to enable the Pangolin…"
+tags:
+  - "clippings"
+---
+[Guides & Tutorials](https://forum.hhf.technology/c/guides-tutorials/52)
+
+## post by Mattercoder on Dec 8
+
+[![](https://forum.hhf.technology/letter_avatar_proxy/v4/letter/m/54ee81/96.png)](https://forum.hhf.technology/u/mattercoder)
+
+[Mattercoder](https://forum.hhf.technology/u/mattercoder)
+
+[21d](https://forum.hhf.technology/t/enabling-the-pangolin-integration-api-and-building-a-simple-shadow-it-detector-agent/4030?u=ciansedai "Post date")
+
+The Pangolin Integration API allows DevOps teams to script, automate, and integrate Pangolin functionality using a secure, permission-scoped REST interface. In this guide, we’ll walk through:
+
+1. **How to enable the Pangolin API**
+2. **How to create scoped API keys**
+3. **A simple, real-world example** using an AI agent (Google ADK) to detect internal resources that are not protected by SSO (a classic “Shadow-IT” scenario)
+
+This keeps the focus on API activation and usage — the agent merely demonstrates what becomes possible once the API is available.
+
+[![agent-development-kit](https://forum-cdn.hhf.technology/original/2X/9/9c8c8a6ed256ceebc73486fa9d88c50b923a8178.png)](https://forum-cdn.hhf.technology/original/2X/9/9c8c8a6ed256ceebc73486fa9d88c50b923a8178.png "agent-development-kit")
+
+---
+
+## Part 1 — Enabling the Pangolin Integration API
+
+By default, the Integration API is disabled in Community Edition.  
+To activate it, edit your main config file:
+
+```lua
+config.yml
+```
+
+### Enable the API:
+
+```yaml
+flags:
+  enable_integration_api: true
+```
+
+If you’d like it to run on a different port (defaults to 3003):
+
+```yaml
+server:
+  integration_port: 3003
+```
+
+---
+
+## Expose the API Through Traefik
+
+In your `config/traefik/dynamic_config.yml` or `config/traefik/rules/dynamic_config.yml`, add:
+
+```yaml
+routers:
+  int-api-router-redirect:
+    rule: "Host(\`api.example.com\`)"
+    service: int-api-service
+    entryPoints:
+      - web
+    middlewares:
+      - redirect-to-https
+
+  int-api-router:
+    rule: "Host(\`api.example.com\`)"
+    service: int-api-service
+    entryPoints:
+      - websecure
+    tls:
+      certResolver: letsencrypt
+
+services:
+  int-api-service:
+    loadBalancer:
+      servers:
+        - url: "http://pangolin:3003"
+```
+
+Note: replace [example.com](http://example.com/) with your domain.
+
+After you restart Traefik `docker restart traefik`, your Integration API will be reachable at:
+
+```bash
+https://api.example.com/v1
+```
+
+Swagger documentation becomes available at:
+
+```bash
+https://api.example.com/v1/docs
+```
+
+Note: replace [example.com](http://example.com/) with your domain.
+
+---
+
+## Part 2 — Creating API Keys
+
+Pangolin supports two types of API keys:
+
+### 1\. Organization API Keys
+
+Scoped to a single organization  
+Can only operate on resources belonging to that org
+
+### 2\. Root API Keys (self-hosted only)
+
+Server-level permissions  
+Can operate across all organizations  
+Should be handled carefully  
+We will use Root API keys for this example (not this is not production ready!)
+
+---
+
+## How to Create a Key
+
+1. Navigate to the appropriate location:
+	- **Organization → API Keys**
+2. Click **Create API Key**
+3. Give it a descriptive name (testkey)
+4. Select the permissions it needs - we will just use `List Organizations` and `List Resources`
+
+[![pangolin-api-key-scopes](https://forum-cdn.hhf.technology/optimized/2X/4/496d134666d648d5832d5d4a66e302f5180a4aea_2_690x272.png)](https://forum-cdn.hhf.technology/original/2X/4/496d134666d648d5832d5d4a66e302f5180a4aea.png "pangolin-api-key-scopes")
+
+The generated key will only be shown once — keep it safe.
+
+---
+
+## Part 3 — Testing the API
+
+A simple test:
+
+```bash
+curl -H "Authorization: Bearer YOUR_KEY" \
+  https://api.example.com/v1/orgs
+```
+
+If the API is enabled and your key is valid, you will receive a JSON list of organizations.
+
+---
+
+## Part 4 — A Simple Real-World Demo:
+
+## Building a “Shadow-IT Detector” Agent
+
+Once the Integration API is enabled, you can build automation on top of it — including AI-powered audits.
+
+In this example, we create a **Shadow-IT Detector** that answers:
+
+> *“Scan organization X and list any resources where SSO is disabled.”*
+
+[![ai-agent-detector](https://forum-cdn.hhf.technology/optimized/2X/1/1c4ae840a77c30c1091c5aa4683e671b41d4c01c_2_690x198.png)](https://forum-cdn.hhf.technology/original/2X/1/1c4ae840a77c30c1091c5aa4683e671b41d4c01c.png "ai-agent-detector")
+
+This is a common compliance requirement and a perfect beginner use-case.
+
+The agent only uses **read-only API endpoints**:
+
+- `GET /orgs` — find the organization ID
+- `GET /org/{orgId}/resources` — enumerate resources and check the `sso` field
+
+The agent does *not* retrieve user access lists, because that endpoint is not available — so the audit focuses solely on “Which resources are unprotected?”
+
+---
+
+## Step 1 — Create a Starter Agent in Google Cloud
+
+Log into Cloud Console:
+
+```bash
+https://console.cloud.google.com/
+```
+
+Open Cloud Shell and run:
+
+```bash
+uvx agent-starter-pack create shadow-it-detector-agent
+```
+
+Choose:
+
+1 → ADK base agent  
+2 → Cloud Run  
+1 → In-memory session  
+3 → Skip CI/CD  
+Region → default (us-central1)
+
+Then install and launch the playground:
+
+```bash
+cd shadow-it-detector-agent
+make install
+make playground
+```
+
+you will then see the message
+
+[![terminal-ai-agent](https://forum-cdn.hhf.technology/original/2X/4/4f7782f48bdae495ef080896313892c946cb9520.png)](https://forum-cdn.hhf.technology/original/2X/4/4f7782f48bdae495ef080896313892c946cb9520.png "terminal-ai-agent")
+
+[![google-ai-agent](https://forum-cdn.hhf.technology/optimized/2X/a/aac546abd857f67a0828d7af5059c86f2ad70367_2_690x345.png)](https://forum-cdn.hhf.technology/original/2X/a/aac546abd857f67a0828d7af5059c86f2ad70367.png "google-ai-agent")
+
+---
+
+## Step 2 — Add Pangolin API Tools
+
+Click on the “Open Editor Button”  
+
+[![cloudeditor](https://forum-cdn.hhf.technology/optimized/2X/a/a9d267706238801a99e2e0b0b81dab2594b28c81_2_690x425.png)](https://forum-cdn.hhf.technology/original/2X/a/a9d267706238801a99e2e0b0b81dab2594b28c81.png "cloudeditor")
+
+Create a file in the same folder as agent.py:
+
+```lua
+pangolin_tools.py
+```
+
+Paste in the following code:
+
+```lua
+import os
+import requests
+from typing import List, Dict, Any
+
+# Global variable to store the key provided during the chat session
+_PANGOLIN_API_KEY_HOLDER = None 
+
+# Base URL for the API
+API_BASE = "https://api.example.com/v1"
+
+def set_pangolin_api_key(api_key: str) -> str:
+    """Stores the Pangolin API Key provided by the user in the current session.
+    The Agent should use this tool immediately after the user provides the key.
+
+    Args:
+        api_key: The Bearer token (key) to use for API authentication.
+
+    Returns:
+        A confirmation message.
+    """
+    global _PANGOLIN_API_KEY_HOLDER
+    _PANGOLIN_API_KEY_HOLDER = api_key
+    return "Pangolin API Key successfully stored for this session. You can now proceed with your audit request."
+
+def _get_headers() -> Dict[str, str]:
+    """Retrieves the API key from environment variables OR the session holder."""
+    global _PANGOLIN_API_KEY_HOLDER
+    
+    # 1. Check the session holder (key provided by user during chat)
+    api_key = _PANGOLIN_API_KEY_HOLDER
+    
+    # 2. If not in the holder, check environment variables (key provided at startup)
+    if not api_key:
+        api_key = os.environ.get("PANGOLIN_API_KEY")
+
+    if not api_key:
+        # Raise ValueError if key is missing from both places
+        raise ValueError("Please provide your Pangolin API Key so I can authenticate using the 'set_pangolin_api_key' tool.")
+        
+    return {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+
+# Keep the rest of your functions (list_organizations, list_organization_resources) the same...
+
+def list_organizations() -> str:
+    # ... (same implementation) ...
+    try:
+        response = requests.get(f"{API_BASE}/orgs", headers=_get_headers())
+        response.raise_for_status()
+        return str(response.json())
+    except Exception as e:
+        return f"Error fetching organizations: {e}"
+
+def list_organization_resources(org_id: str) -> str:
+    # ... (same implementation) ...
+    try:
+        response = requests.get(f"{API_BASE}/org/{org_id}/resources", headers=_get_headers())
+        response.raise_for_status()
+        return str(response.json())
+    except Exception as e:
+        return f"Error fetching resources for org {org_id}: {e}"
+```
+
+Note: replace [example.com](http://example.com/) with your domain.
+
+---
+
+## Step 3 — Update the Agent
+
+In `agent.py`, import your tools:
+
+```python
+from .pangolin_tools import list_organizations, list_organization_resources, set_pangolin_api_key
+```
+
+Replace the `root_agent` with this:
+
+```graphql
+# --- UPDATED AGENT DEFINITION ---
+root_agent = Agent(
+    name="root_agent",
+    model="gemini-3-pro-preview",
+    instruction=(
+        "You are a helpful AI assistant. "
+        "If asked about Pangolin audit or security, ask the user for their API Key first "
+        "If the user provides an API key, use the \`set_pangolin_api_key\` tool immediately to store it. "
+        "Use the provided tools to audit organizations for resources with SSO disabled."
+        "First check the names of all the organizations and then look for resources in each organization that have SSO disabled."
+    ),
+    tools=[
+        get_weather, 
+        get_current_time,
+        # Add the new tools here
+        list_organizations,
+        list_organization_resources,
+        set_pangolin_api_key
+    ],
+)
+```
+
+---
+
+## Step 4 — Run the Audit
+
+Open the Playground UI and ask:
+
+```sql
+Find the organization named "admin", check all its resources, and tell me which ones have SSO disabled.
+```
+
+A correct working output looks like:  
+
+[![ai-detector-answer](https://forum-cdn.hhf.technology/optimized/2X/8/866193a3b43918e2249791bc51826ca20c507553_2_690x268.png)](https://forum-cdn.hhf.technology/original/2X/8/866193a3b43918e2249791bc51826ca20c507553.png "ai-detector-answer")
+
+```csharp
+Here are the resources in the "admin" organization where SSO is disabled:
+
+1. XXXXXX-webhook
+   Domain: webhook.example.com
+   Status: SSO disabled (resource is publicly accessible)
+
+2. nlweb-mcp
+   Domain: nlweb-mcp.example.com
+   Status: SSO disabled (resource is publicly accessible)
+```
+
+This confirms the Integration API is working, your agent is authenticated, and the audit flow is functioning.
+
+---
+
+## Step 5 — Clean Up
+
+Finally - since we were only experimenting - you should go back into Pangolin and delete your api key since you provided it to an LLM in our testing.
+
+## What This Demonstrates
+
+This article shows two simple things:
+
+## 1\. How to enable and authenticate the Pangolin Integration API
+
+A required first step for DevOps automation.
+
+## 2\. How to use the API in a realistic scenario (with an AI Agent)
+
+A simple but powerful compliance audit that:
+
+- Safely uses only GET requests
+- Cannot break production
+- Automatically identifies misconfigured resources
+
+The AI agent example is intentionally lightweight — just enough to show how automation becomes possible once the API is turned on. With some imagination and creativity you can start to imagine how you could build an AI agent to help you.
+
+  
+
+### Want to read more? Browse other topics in Guides & Tutorials or view latest topics.
+
+[Powered by Discourse](https://discourse.org/powered-by)
+
+---
+
+### `GitHub OAuth.md` — pangolin
+
+---
+title: "GitHub OAuth"
+source: "https://tinyauth.app/docs/guides/github-oauth"
+author:
+published:
+created: 2025-12-29
+description: "Use GitHub OAuth for authenticating to Tinyauth."
+tags:
+  - "clippings"
+---
+Guides
+
+Use GitHub OAuth for authenticating to Tinyauth.
+
+Tinyauth has built-in support for GitHub OAuth with just two environment variables. Most of the configuration happens on the GitHub side rather than Tinyauth.
+
+## Requirements
+
+- A domain name (non-gTLDs are supported)
+- A GitHub account
+
+## Creating the GitHub OAuth App
+
+Begin by creating a GitHub OAuth app. Navigate to the [GitHub developer settings](https://github.com/settings/developers) and click **New OAuth App**. Fill in the following details:
+
+![GitHub new OAuth app](https://tinyauth.app/assets/github-new-oauth-app-D9hMSz-B.png)
+
+After entering the details, click **Register Application**.
+
+## Retrieving Credentials
+
+Once the application is created, the following screen will appear:
+
+![GitHub OAuth app homepage](https://tinyauth.app/assets/github-oauth-app-homepage-x7Xf0XN0.png)
+
+Note down the client ID. To generate the client secret, click **Generate a new client secret**. GitHub will prompt for login confirmation and then display the secret:
+
+![GitHub OAuth Client Secret](https://tinyauth.app/assets/github-oauth-client-secret-Dgb3uWe5.png)
+
+Note down the client ID and secret for later use.
+
+## Configuring Tinyauth
+
+Add the following environment variables to the Tinyauth Docker container:
+
+```
+services:
+
+  tinyauth:
+
+    environment:
+
+      - PROVIDERS_GITHUB_CLIENT_ID=your-github-client-id
+
+      - PROVIDERS_GITHUB_CLIENT_SECRET=your-github-secret
+```
+
+OAuth alone does not guarantee security. By default, any GitHub account can log in as a normal user. To restrict access, use the `OAUTH_WHITELIST` environment variable to allow specific email addresses. Refer to the [configuration](https://tinyauth.app/docs/reference/configuration) page for details.
+
+Restart Tinyauth. Upon visiting the login screen, an additional option to log in with GitHub will appear.[GitHub Apps OAuth](https://tinyauth.app/docs/guides/github-app-oauth)
+
+[
+
+Use the GitHub Apps OAuth screen for authenticating to Tinyauth.
+
+](https://tinyauth.app/docs/guides/github-app-oauth)[
+
+Google OAuth
+
+Use Google's OAuth screen to authenticate to Tinyauth.
+
+](https://tinyauth.app/docs/guides/google-oauth)
+
+---
+
+### `Google OAuth.md` — pangolin
+
+---
+title: "Google OAuth"
+source: "https://tinyauth.app/docs/guides/google-oauth"
+author:
+published:
+created: 2025-12-29
+description: "Use Google's OAuth screen to authenticate to Tinyauth."
+tags:
+  - "clippings"
+---
+Guides
+
+Use Google's OAuth screen to authenticate to Tinyauth.
+
+Tinyauth has built-in support for Google OAuth, making it straightforward to set up.
+
+## Requirements
+
+- A domain name (gTLDs required)
+- A Google account
+
+## Creating the Google OAuth App
+
+To begin, create an app in the [Google Cloud Console](https://console.cloud.google.com/). Create a new project (a default project may already exist). After creating the project, the following screen should appear:
+
+![Google Cloud Console Home](https://tinyauth.app/assets/google-cloud-home-Dicdx44B.png)
+
+From the quick access menu, click **APIs & Services**, then select **OAuth consent screen** from the sidebar. Click the **Get Started** button in the middle of the screen.
+
+Google has updated the OAuth section. This guide uses the new OAuth experience. If a button appears saying "Try the new OAuth experience," click it to match the steps in this guide.
+
+After clicking the button, the following screen should appear:
+
+![Configure OAuth Consent Screen](https://tinyauth.app/assets/google-cloud-oauth-configure-y3TS6-09.png)
+
+- **App Name**: Use `Tinyauth`.
+- **Support Email**: Select the available email address.
+- **Audience**: Choose **External**.
+- **Contact Information**: Enter an email address.
+- Agree to the data use policy and click **Create**.
+
+After some time, the OAuth homepage will appear:
+
+![Google Cloud OAuth Home](https://tinyauth.app/assets/google-cloud-oauth-home-CWM-UiKB.png)
+
+Click **Create OAuth Client**.
+
+- **Application Type**: Select **Web Application**.
+- **Name**: Optionally rename the client (default is `Web Client 1`).
+- **Authorized Redirect URIs**: Add the domain with the `/api/oauth/callback/google` suffix, e.g., `https://tinyauth.example.com/api/oauth/callback/google`.
+
+Click **Create**. Once the application is created, the following screen will appear:
+
+![Google Cloud OAuth Clients](https://tinyauth.app/assets/google-cloud-oauth-created-Cmhg9N16.png)
+
+Click the client (e.g., `Web Client 1`) and copy the Client ID and Client Secret from the Additional Information section.
+
+## Configuring Tinyauth
+
+Add the following environment variables to the Tinyauth Docker container:
+
+```
+services:
+
+  tinyauth:
+
+    environment:
+
+      - PROVIDERS_GOOGLE_CLIENT_ID=your-google-client-id
+
+      - PROVIDERS_GOOGLE_CLIENT_SECRET=your-google-secret
+```
+
+OAuth alone does not guarantee security. By default, any GitHub account can log in as a normal user. To restrict access, use the `OAUTH_WHITELIST` environment variable to allow specific email addresses. Refer to the [configuration](https://tinyauth.app/docs/reference/configuration) page for details.
+
+Restart Tinyauth. Upon visiting the login screen, an additional option to log in with Google will appear.[GitHub OAuth](https://tinyauth.app/docs/guides/github-oauth)
+
+[
+
+Use GitHub OAuth for authenticating to Tinyauth.
+
+](https://tinyauth.app/docs/guides/github-oauth)[
+
+LDAP
+
+Use a centralized LDAP server for user management in Tinyauth.
+
+](https://tinyauth.app/docs/guides/ldap)
+
+### On this page
+
+[Requirements](https://tinyauth.app/docs/guides/#requirements) [Creating the Google OAuth App](https://tinyauth.app/docs/guides/#creating-the-google-oauth-app) [Configuring Tinyauth](https://tinyauth.app/docs/guides/#configuring-tinyauth)
+
+---
+
+### `Guide to Securing Your Traefik Setup- part 2 - Guides & Tutorials.md` — pangolin
+
+---
+title: "Guide to Securing Your Traefik Setup- part 2 - Guides & Tutorials"
+source: "https://forum.hhf.technology/t/guide-to-securing-your-traefik-setup-part-2/4073/4"
+author:
+  - "[[hhf.technoloy]]"
+published: 2025-12-18
+created: 2025-12-29
+description: "Guide to Securing Your Traefik SetupThis guide hardens your current Traefik configuration. Your setup uses one dynamic file: /etc/traefik/dynamic_config.yml. Make changes step by step. Restart Traefik after. Test on S…"
+tags:
+  - "clippings"
+---
+[Guides & Tutorials](https://forum.hhf.technology/c/guides-tutorials/52)
+
+## post by hhf.technoloy on Dec 18
+
+[hhf.technoloy](https://forum.hhf.technology/u/hhf.technoloy) Leader
+
+[11d](https://forum.hhf.technology/t/guide-to-securing-your-traefik-setup-part-2/4073?u=ciansedai "Post date")
+
+## Guide to Securing Your Traefik Setup
+
+This guide hardens your current Traefik configuration.  
+Your setup uses one dynamic file: `/etc/traefik/dynamic_config.yml`.
+
+Make changes step by step. Restart Traefik after. Test on [SSL Server Test (Powered by Qualys SSL Labs)](https://www.ssllabs.com/ssltest/) and [https://securityheaders.com/](https://securityheaders.com/).
+
+## Step 1: Add Secure Headers Middleware
+
+Add headers for A+ score on [securityheaders.com](http://securityheaders.com/).
+
+In dynamic file `/etc/traefik/dynamic_config.yml`, add to `http.middlewares`:
+
+```yaml
+http:
+  middlewares:
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+
+    secure-headers:
+      headers:
+        stsSeconds: 63072000  # 2 years
+        stsIncludeSubdomains: true
+        stsPreload: true
+        forceSTSHeader: true
+        frameDeny: true
+        customFrameOptionsValue: "SAMEORIGIN"
+        contentTypeNosniff: true
+        browserXssFilter: true
+        customBrowserXSSValue: "1; mode=block"
+        referrerPolicy: "same-origin"
+        permissionsPolicy: "camera=(), microphone=(), geolocation=()"
+        customResponseHeaders:
+          X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex"
+          X-Powered-By: ""
+          Server: ""
+```
+
+This adds HSTS, blocks frames, removes server info.
+
+## Step 2: Apply Secure Headers to HTTPS Routers
+
+Apply only on HTTPS.
+
+In dynamic file, add `middlewares: - secure-headers` to each HTTPS router:
+
+Example for `next-router`:
+
+```yaml
+next-router:
+      rule: "Host(\`{{.DashboardDomain}}\`) && !PathPrefix(\`/api/v1\`)"
+      service: next-service
+      entryPoints:
+        - websecure
+      middlewares:
+        - secure-headers
+      tls:
+        certResolver: letsencrypt
+```
+
+Do same for `api-router` and `ws-router`.
+
+Your HTTP redirect router keeps `redirect-to-https`. Good.
+
+## Step 3: Harden TLS Settings
+
+Force strong TLS. Good for A+ on SSL Labs.
+
+In dynamic file, add at top level:
+
+```yaml
+tls:
+  options:
+    default:
+      minVersion: VersionTLS12
+      maxVersion: VersionTLS13
+      sniStrict: true
+      cipherSuites:
+        - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+      curvePreferences:
+        - X25519
+        - CurveP384
+        - CurveP521
+```
+
+In static config, under `entryPoints.websecure.http.tls`:
+
+```yaml
+http:
+      tls:
+        options: default
+        certResolver: letsencrypt
+```
+
+This applies to all HTTPS traffic.
+
+## Step 4: Fix insecureSkipVerify
+
+Do not skip backend cert verify.
+
+In static config, change or remove:
+
+```yaml
+serversTransport:
+  insecureSkipVerify: false  # Or remove line
+```
+
+Force verify backend certs. Use real certs on backends if needed.
+
+## Step 5: Remove Unneeded Timeouts (Optional)
+
+You have `respondingTimeouts: readTimeout: "30m"`.  
+Long timeouts risk DoS. Remove or lower if not needed.
+
+In static config, under `entryPoints.websecure.transport`:
+
+Remove or set lower like `readTimeout: "10s"`.
+
+## Step 6: Switch to DNS Challenge (Recommended)
+
+HTTP challenge needs port 80 open always.  
+DNS challenge better. Supports wildcards. No port open for renew.
+
+In static config, change `certificatesResolvers`:
+
+```yaml
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: "{{.LetsEncryptEmail}}"
+      storage: "/letsencrypt/acme.json"
+      dnsChallenge:
+        provider: cloudflare  # Or your provider
+        delayBeforeCheck: 60
+        resolvers:
+          - "1.1.1.1:53"
+          - "1.0.0.1:53"
+```
+
+Add env vars or secrets for provider token.  
+Use scoped token.
+
+## Final Notes
+
+- Keep your TCP proxy protocol parts if needed.
+- Test changes. Check logs.
+- This setup gets A+ on tests.
+- For extra: Add rate limit middlewares or CrowdSec.
+
+Restart Traefik. Your setup now secure.
+
+Old Guild which is in-depth and comprehensive  
+[Security and Performance Enhancements in Traefik Configuration in pangolin - Networking - HHF Technology Forums](https://forum.hhf.technology/t/security-and-performance-enhancements-in-traefik-configuration-in-pangolin/478)
+
+## Pinned globally on Dec 18
+
+## post by DarkToad on Dec 20
+
+[DarkToad](https://forum.hhf.technology/u/darktoad)
+
+[9d](https://forum.hhf.technology/t/guide-to-securing-your-traefik-setup-part-2/4073/3?u=ciansedai "Post date")
+
+Just wanted to say thanks for all that you’re doing for the community. Your Web apps and guides have been extremely helpful and in the past you personally helped me get my Pangolin instance working. Appreciate all that you do, keep it up!
+
+All this stuff for someone that knows enough to set up but not enough to actually know best practice is great.
+
+Thanks again!
+
+## post by A4ali 1 day ago
+
+[A4ali](https://forum.hhf.technology/u/a4ali)
+
+[1d](https://forum.hhf.technology/t/guide-to-securing-your-traefik-setup-part-2/4073/4?u=ciansedai "Post date")
+
+Is this applicable with MWM?  
+just not to add step 1 as already the middleware is defined in templates.yaml  
+step2: add headers\_secure@file at top in middleware in HTTPS router except HTTP which will have redirect-to-https.  
+rest follow all other steps i-e 3, 4, 5 and 6.
+
+This topic is unpinned for you; it will display in regular order
+
+  
+
+### Want to read more? Browse other topics in Guides & Tutorials or view latest topics.
+
+[Powered by Discourse](https://discourse.org/powered-by)
+
+---
+
+### `How to install and activate crowdsec in pangolin - Guides & Tutorials.md` — pangolin
+
+---
+title: "How to install and activate crowdsec in pangolin - Guides & Tutorials"
+source: "https://forum.hhf.technology/t/how-to-install-and-activate-crowdsec-in-pangolin/3437/5"
+author:
+  - "[[Runningman]]"
+published: 2025-08-06
+created: 2025-12-29
+description: "How to install and active crowdsec in pangolinPrerequisits: Succesful installation of pangolin + DNS entriesDomain and DNS entries:For beginners: You should own a fresh domain name with no other A records than these 2…"
+tags:
+  - "clippings"
+---
+[Guides & Tutorials](https://forum.hhf.technology/c/guides-tutorials/52)
+
+## post by Runningman on Aug 6
+
+[Runningman](https://forum.hhf.technology/u/runningman)
+
+[Aug 6](https://forum.hhf.technology/t/how-to-install-and-activate-crowdsec-in-pangolin/3437?u=ciansedai "Post date")
+
+## How to install and active crowdsec in pangolin
+
+## Prerequisits: Succesful installation of pangolin + DNS entries
+
+### Domain and DNS entries:
+
+For beginners: You should own a fresh domain name with no other A records than these 2, pointing to your VPS IP (example):
+
+[![pangolin-DNS](https://forum-cdn.hhf.technology/optimized/2X/8/8e91d60a8cf7a05e4565de3b51ebaa5fe0cc5e5e_2_690x112.png)](https://forum-cdn.hhf.technology/original/2X/8/8e91d60a8cf7a05e4565de3b51ebaa5fe0cc5e5e.png "pangolin-DNS")
+
+### Succesful installation of pangolin
+
+- You should already have pangolin installed as written in the [Docs](https://docs.digpangolin.com/self-host/quick-install).
+- And you should have gotten this message at the end of installation, like this:
+
+*Installation complete!*
+
+*To complete the initial setup, please visit:*
+
+*[https://pangolin.geekgully.de/auth/initial-setup](https://pangolin.geekgully.de/auth/initial-setup)*
+
+*Diesen Link aufrufen und admin account anlegen!*
+
+### Web-Interface of pangolin
+
+You sould have visited the Web-Interface of your pangolin instance at least once, you should have setup the organisation already. No need to have a site yet.
+
+## Installation of crowdsec
+
+### Installation procedures
+
+Start the installer of pangolin again like this:
+
+`sudo ./installer`
+
+You should see the following text:
+
+*Welcome to the Pangolin installer!*
+
+*This installer will help you set up Pangolin on your server.*
+
+*Please make sure you have the following prerequisites:*
+
+- *Open TCP ports 80 and 443 and UDP ports 51820 and 21820 on your VPS and firewall.*
+- *Point your domain to the VPS IP with A records.*
+
+*[http://docs.fossorial.io/Getting%20Started/dns-networking](http://docs.fossorial.io/Getting%20Started/dns-networking)*
+
+*Lets get started!*
+
+*Would you like to run Pangolin as Docker or Podman containers? (default: docker):*
+
+**Here you respond with ENTER**
+
+You receive this text now:
+
+*Looks like you already installed, so I am going to do the setup…*
+
+*\=== CrowdSec Install === Would you like to install CrowdSec? (yes/no) (default: no):*
+
+**Respond with YES**
+
+Next:
+
+*This installer constitutes a minimal viable CrowdSec deployment. CrowdSec will add extra complexity to your Pangolin installation and may not work to the best of its abilities out of the box. Users are expected to implement configuration adjustments on their own to achieve the best security posture. Consult the CrowdSec documentation for detailed configuration instructions. Are you willing to manage CrowdSec? (yes/no) (default: no):*
+
+**Respond with YES**
+
+Next:
+
+*Detected values: Dashboard Domain: [pangolin.geekgully.de](http://pangolin.geekgully.de/) Let’s Encrypt Email: [mail@geekgully.de](https://forum.hhf.technology/t/how-to-install-and-activate-crowdsec-in-pangolin/3437/) Badger Version: v1.2.0 Are these values correct? (yes/no) (default: yes):*
+
+**Respond with YES if it’s correct**
+
+Next:
+
+*Installation complete!*
+
+*To complete the initial setup, please visit:*
+
+*[https://pangolin.geekgully.de/auth/initial-setup](https://pangolin.geekgully.de/auth/initial-setup)*
+
+Now crowdsec is installed, congratulations!
+
+### crowdsec acitivation:
+
+Execut these two commands now to activate crowdsec:
+
+`docker compose down`
+
+`docker compose up -d`
+
+### Is all working correctly?
+
+To see if crowdsec is working correctly, send this command:
+
+`docker exec crowdsec cscli bouncers list`
+
+When you see a text output like this, all is working well:
+
+```markdown
+---------------------------------------------------------------------------------------------------------------
+ Name             IP Address  Valid  Last API pull         Type                             Version  Auth Type
+---------------------------------------------------------------------------------------------------------------
+ traefik-bouncer  172.18.0.4  ✔     2025-08-05T13:55:54Z  Crowdsec-Bouncer-Traefik-Plugin  1.X.X    api-key
+---------------------------------------------------------------------------------------------------------------
+```
+
+## Crowdsec dashboard
+
+If you already have a login to the [crowdsec dashboard](https://www.crowdsec.net/), you can add this crowdsec instance to the dashboard. If not, use the link to register first.
+
+### Add pangolin to your crowdsec dashboard
+
+#### Show enrollment key
+
+Klick in your crowdsec dashboard on the button *“Enroll command”*, you will see a window with a command like this:
+
+```bash
+sudo cscli console enroll -e context <MyEnrollemtKey>
+```
+
+Copy the part at the end, after “context”, which is marked **MyEnrollmentKey**
+
+#### Enroll command
+
+Now execute the following command in your ssh console on the VPS to add your pangolin instance with crowdsec to your dasboard, add the Key to the end of the command:
+
+`docker exec crowdsec cscli console enroll <MyEnrollmentKey>`
+
+#### crowdsec Dashboard
+
+Switch to your crowdsec dashboard now, you will see a popup like this after a view moments:
+
+[![pangolin-enrollment](https://forum-cdn.hhf.technology/optimized/2X/0/0317003de2fc4041e9a1fff2051cd33d086b38e3_2_690x190.png)](https://forum-cdn.hhf.technology/original/2X/0/0317003de2fc4041e9a1fff2051cd33d086b38e3.png "pangolin-enrollment")
+
+**Klick to accept it.**
+
+After a view seconds, you see your pangolin instance in the corwsec dashboard, like this:
+
+[![pangolin-dashboard](https://forum-cdn.hhf.technology/optimized/2X/e/e1c0906d0676c0655d37f316bc6257f51a4d61b0_2_690x373.png)](https://forum-cdn.hhf.technology/original/2X/e/e1c0906d0676c0655d37f316bc6257f51a4d61b0.png "pangolin-dashboard")
+
+## Now you’re set and ready!
+
+You have your pangolin instance with crowdsec added to the dashbord and you can watch which treads for your pangolin instance arise.
+
+*Note at the end:*
+
+*[@hhf.technoloy](https://forum.hhf.technology/u/hhf.technoloy) created a traefik dashboard to visualize what happends in you pangolin instance, I will write a guide for it later.*
+
+## post by hexagram1959 on Aug 8
+
+[hexagram1959](https://forum.hhf.technology/u/hexagram1959)
+
+[Aug 8](https://forum.hhf.technology/t/how-to-install-and-activate-crowdsec-in-pangolin/3437/2?u=ciansedai "Post date")
+
+Is it normal that I have 3 bouncers?
+
+[![image](https://forum-cdn.hhf.technology/optimized/2X/2/2639934fa92925800d8ec9bec158f65d416642c8_2_690x203.png)](https://forum-cdn.hhf.technology/original/2X/2/2639934fa92925800d8ec9bec158f65d416642c8.png "image")
+
+## post by Runningman on Aug 8
+
+[Runningman](https://forum.hhf.technology/u/runningman)
+
+[Aug 8](https://forum.hhf.technology/t/how-to-install-and-activate-crowdsec-in-pangolin/3437/3?u=ciansedai "Post date")
+
+I installed pangolin with crowdsec two times, always had only one bouncer..
+
+## post by hexagram1959 on Aug 8
+
+[hexagram1959](https://forum.hhf.technology/u/hexagram1959)
+
+[Aug 8](https://forum.hhf.technology/t/how-to-install-and-activate-crowdsec-in-pangolin/3437/4?u=ciansedai "Post date")
+
+Strange, I did everything according to the official documentation. Fortunately, everything works as it should. My instance has been running since the first release; maybe some update caused that.
+
+last visit
+
+## post by hhf.technoloy on Aug 8
+
+[hhf.technoloy](https://forum.hhf.technology/u/hhf.technoloy) Leader
+
+[Aug 8](https://forum.hhf.technology/t/how-to-install-and-activate-crowdsec-in-pangolin/3437/5?u=ciansedai "Post date")
+
+it will work. all bouncers are independent but only one is connected. whcih one is magic….hehehehe
+
+## post by Hezza11 on Aug 11
+
+[![](https://forum.hhf.technology/user_avatar/forum.hhf.technology/hezza11/96/2335_2.png)](https://forum.hhf.technology/u/hezza11)
+
+[Hezza11](https://forum.hhf.technology/u/hezza11)
+
+[Aug 11](https://forum.hhf.technology/t/how-to-install-and-activate-crowdsec-in-pangolin/3437/6?u=ciansedai "Post date")
+
+This is because the IP of your traefik instance is changing when docker goes down/up. I have similar happening on one of my VPS setups, it doesn’t seem to make any difference apart from the clutter. On a cleaner VPS I have with fewer containers Traefik keeps the same IP and I only have the one bouncer registered.
+
+## post by hexagram1959 on Aug 11
+
+[hexagram1959](https://forum.hhf.technology/u/hexagram1959)
+
+[Aug 11](https://forum.hhf.technology/t/how-to-install-and-activate-crowdsec-in-pangolin/3437/7?u=ciansedai "Post date")
+
+That makes sense. Thanks for the explanation.
+
+2 months later
+
+## post by tarantula on Oct 12
+
+[tarantula](https://forum.hhf.technology/u/tarantula)
+
+[Oct 12](https://forum.hhf.technology/t/how-to-install-and-activate-crowdsec-in-pangolin/3437/8?u=ciansedai "Post date")
+
+Can this install of crowdsec also be used for securing the VPS on which Pangolin is running?
+
+## post by hhf.technoloy on Oct 12
+
+[hhf.technoloy](https://forum.hhf.technology/u/hhf.technoloy) Leader
+
+[Oct 12](https://forum.hhf.technology/t/how-to-install-and-activate-crowdsec-in-pangolin/3437/9?u=ciansedai "Post date")
+
+yes why not, it definitely can
+
+## post by tarantula on Oct 12
+
+[tarantula](https://forum.hhf.technology/u/tarantula)
+
+[Oct 12](https://forum.hhf.technology/t/how-to-install-and-activate-crowdsec-in-pangolin/3437/10?u=ciansedai "Post date")
+
+How to do this? Any guides for this?
+
+## post by hhf.technoloy on Oct 12
+
+[hhf.technoloy](https://forum.hhf.technology/u/hhf.technoloy) Leader
+
+[Oct 12](https://forum.hhf.technology/t/how-to-install-and-activate-crowdsec-in-pangolin/3437/11?u=ciansedai "Post date")
+
+## You should not use docker crowdsec if you install this on VPS.
+
+### Guide for Debian and Ubuntu Systems
+
+This document provides instructions for installing and configuring CrowdSec on Debian and Ubuntu.
+
+### 1\. Install CrowdSec
+
+The installation process begins with adding the official CrowdSec repository and then installing the package using the `apt` package manager.
+
+1. Execute the installer script to add the CrowdSec repository to your system’s sources.
+	```bash
+	curl -s https://install.crowdsec.net | sudo bash
+	```
+2. Install the CrowdSec agent.
+	```bash
+	sudo apt update
+	sudo apt install crowdsec -y
+	```
+
+#### Optional: Change CrowdSec Default Port
+
+To enhance security or avoid port conflicts, you may change the default port (8080) for the Local API (LAPI) and configure it to listen on all network interfaces.
+
+1. Edit the main configuration file `/etc/crowdsec/config.yaml`. Modify the `listen_uri` under the `api.server` section.
+	```yaml
+	api:
+	    server:
+	        listen_uri: 0.0.0.0:9090
+	```
+2. Update the LAPI credentials file at `/etc/crowdsec/local_api_credentials.yaml` to point to the new port.
+	```yaml
+	url: http://127.0.0.1:9090
+	```
+
+#### Start and Enable the CrowdSec Service
+
+Ensure the CrowdSec service starts on boot and run it immediately. These commands are standard across systems using `systemd`.
+
+```bash
+sudo systemctl enable crowdsec
+sudo systemctl start crowdsec
+```
+
+### 2\. Install CrowdSec Firewall Bouncer
+
+The firewall bouncer is the component that applies decisions (e.g., blocking an IP address) at the firewall level.
+
+Recent versions of Debian and Ubuntu use `nftables` as the default firewall backend. However, `iptables` is also available.
+
+- **For `nftables` (Recommended for modern systems):**
+	```bash
+	sudo apt install crowdsec-firewall-bouncer-nftables -y
+	```
+- **For `iptables` (If preferred or required by your environment):**
+	```bash
+	sudo apt install crowdsec-firewall-bouncer-iptables -y
+	```
+
+### 3\. CrowdSec Configuration
+
+The following steps configure CrowdSec to monitor your applications. These commands are part of the CrowdSec toolchain and are independent of the underlying operating system.
+
+1. Install the necessary collections for Traefik and the Application Security (AppSec) component.
+	```bash
+	sudo cscli collections install crowdsecurity/traefik crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules
+	```
+2. Enable the AppSec component by creating a dedicated acquisition configuration file.
+	```bash
+	sudo mkdir -p /etc/crowdsec/acquis.d
+	sudo tee /etc/crowdsec/acquis.d/appsec.yaml > /dev/null << EOF
+	listen_addr: 0.0.0.0:7422
+	appsec_config: crowdsecurity/appsec-default
+	name: myAppSecComponent
+	source: appsec
+	labels:
+	  type: appsec
+	EOF
+	```
+3. Configure log acquisition by adding the path to your Pangolin/Traefik logs in the main acquisition file, `/etc/crowdsec/acquis.yaml`. Replace `/srv/pangolin` with the correct path for your deployment.
+	```yaml
+	---
+	filenames:
+	  - /srv/pangolin/config/traefik/logs/*.log
+	labels:
+	  type: traefik
+	```
+4. Restart the CrowdSec service to apply all configuration changes.
+	```bash
+	sudo systemctl restart crowdsec
+	```
+
+#### Create a Bouncer API Key
+
+Generate a unique API key for your Pangolin bouncer. You must save the generated key for use in the next section.
+
+```bash
+sudo cscli bouncers add pangolin-traefik
+```
+
+### 4\. Configure Pangolin CrowdSec Integration
+
+This section details the configuration within your Docker and Traefik files. These steps are not dependent on the host operating system.
+
+1. Remove the pre-existing CrowdSec service definition from your Pangolin `docker-compose.yaml` file, as CrowdSec is now running directly on the host.
+2. In your `docker-compose.yml`, modify the `gerbil` service definition to include the `extra_hosts` section. This allows the container to resolve `host.docker.internal` to the host machine’s IP address.
+	```yaml
+	container_name: gerbil
+	    extra_hosts:
+	      - "host.docker.internal:host-gateway"
+	    depends_on:
+	      pangolin:
+	        condition: service_healthy
+	```
+3. In your Traefik dynamic configuration file (`config/traefik/dynamic_config.yml`), update the CrowdSec middleware parameters to point to the host machine’s CrowdSec services.
+	```yaml
+	crowdsecAppsecHost: host.docker.internal:7422
+	crowdsecLapiHost: host.docker.internal:9090
+	crowdsecLapiKey: <key_from_cscli_bouncers_add_command>
+	```
+
+### 5\. Optional Configurations
+
+These adjustments are also independent of the operating system.
+
+#### Configure Firewall Bouncer to Ignore HTTP Bans
+
+To use captcha-based remediations within Traefik instead of firewall-level bans for web-related incidents, modify the bouncer configuration.
+
+Add the following line to `/etc/crowdsec/bouncers/crowdsec-firewall-bouncer.yaml`:
+
+```yaml
+scenarios_not_containing: ["http"]
+```
+
+#### Configure a Captcha-First Remediation Profile
+
+This profile instructs CrowdSec to issue a captcha remediation for the first three offenses from an IP within a 48-hour window for HTTP-related scenarios. Subsequent offenses will result in a standard ban.
+
+Add the following profile to the top of `/etc/crowdsec/profiles.yaml`:
+
+```yaml
+name: captcha_remediation
+filters:
+  - Alert.Remediation == true && Alert.GetScope() == "Ip" && Alert.GetScenario() contains "http" && GetDecisionsSinceCount(Alert.GetValue(),"48h") < 3
+decisions:
+ - type: captcha
+   duration: 4h
+on_success: break
+---
+```
+
+2 months later
+
+## post by rkt3ch on Dec 24
+
+## post by rkt3ch on Dec 24
+
+## post by hhf.technoloy on Dec 24
+
+## post by rkt3ch on Dec 24
+
+## post by codewhiz 5 days ago
+
+  
+
+### There is 1 new topic remaining, or browse other topics in Guides & Tutorials
+
+[Powered by Discourse](https://discourse.org/powered-by)
+
+---
+
+### `Implementing External Authentication in Pangolin Using Tinyauth and the Middleware Manager - Networking.md` — pangolin
+
+---
+title: "Implementing External Authentication in Pangolin Using Tinyauth and the Middleware Manager - Networking"
+source: "https://forum.hhf.technology/t/implementing-external-authentication-in-pangolin-using-tinyauth-and-the-middleware-manager/1417"
+author:
+  - "[[Mattercoder]]"
+published: 2025-04-18
+created: 2025-12-05
+description: "Implementing External Authentication in Pangolin Using Tinyauth and the Middleware Manager  Pangolin now supports flexible authentication options through the Middleware-manager. While Authentik and Authelia are popular…"
+tags:
+  - "clippings"
+---
+## Implementing External Authentication in Pangolin Using Tinyauth and the Middleware Manager
+
+## post by Mattercoder on Apr 18
+
+[Mattercoder](https://forum.hhf.technology/u/mattercoder)
+
+[Apr 18](https://forum.hhf.technology/t/implementing-external-authentication-in-pangolin-using-tinyauth-and-the-middleware-manager/1417?u=ciansedai "Post date")
+
+## Implementing External Authentication in Pangolin Using Tinyauth and the Middleware Manager
+
+Pangolin now supports flexible authentication options through the Middleware-manager. While [Authentik](https://goauthentik.io/) and [Authelia](https://www.authelia.com/) are popular options, this guide shows how to implement external authentication using [Tinyauth](https://tinyauth.app/) — a lightweight, rising middleware project.
+
+> **Prerequisite:** This article assumes you’ve already implemented [Pangolin’s Middleware Manager](https://forum.hhf.technology/t/enhancing-your-pangolin-deployment-with-middleware-manager/1324). If not, go through that guide first.
+
+---
+
+## Prerequisites
+
+- Pangolin deployed with the Middleware Manager
+- Docker and Docker Compose set up on your VPS
+- A registered domain (e.g. `mydomain.com`) with a subdomain for Tinyauth (e.g. `tinyauth.mydomain.com`) pointing to your VPS
+- Basic familiarity with managing Docker and editing YAML files
+
+---
+
+## Step 1: Add Tinyauth to Docker Compose
+
+In your existing Docker Compose setup, add the following service:
+
+```yaml
+tinyauth:
+    image: ghcr.io/steveiliop56/tinyauth:v3
+    container_name: tinyauth
+    restart: unless-stopped
+    environment:
+      - PORT=10000
+      - SECRET=${TINYAUTH_SECRET_KEY}
+      - APP_URL=https://tinyauth.mydomain.com
+      - LOG_LEVEL=0
+      - USERS_FILE=users_file
+    volumes:
+      - ./config/tinyauth/users:/tinyauth/users_file
+```
+
+---
+
+## Step 2: Create the Secret Key
+
+Create a `.env` file in the same folder as your docker-compose.yml file with this line:
+
+```
+TINYAUTH_SECRET_KEY=your-generated-secret-key
+```
+
+You can generate the key using:
+
+```bash
+openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 32
+```
+
+---
+
+## Step 3: Create User Credentials
+
+Create a new folder in the pangolin config folder called tinyauth  
+Inside `./config/tinyauth/`, create a `users` file with the login credentials.
+
+Use the `htpasswd` tool to generate secure bcrypt hashes. Note: escape `$` characters as `$$`.
+
+```bash
+echo $(htpasswd -nB test) | sed -e s/\\$/\\$\\$/g
+```
+
+Example content for a `test/test` login:
+
+```
+test:$$2y$$05$$BsP6eSe4FIAqhhtGO8EUEuZWkdgWtU9NdqrJopxicTVvqxMQZ6BYu
+```
+
+> Alternatively, credentials can be passed directly via the `USERS` environment variable
+
+You can get more info on the Tinyauth set up including integration of OAuth to Github in [this Jim’s garage video](https://www.youtube.com/watch?v=qmlHirOpzpc)).
+
+---
+
+NOTE: THE FOLLOWING CHANGES COULD RESULT IN BREAKING CHANGES. PLEASE BE CAREFUL.
+
+## Step 4: Expose the Tinyauth Port
+
+Update your `gerbil` service in Docker Compose to expose the Tinyauth port:
+
+```yaml
+ports:
+      - 10000:10000  # Exposes Tinyauth
+```
+
+---
+
+## Step 5: Add Traefik Routing Rules
+
+Edit your Traefik dynamic configuration file (e.g., `dynamic_config.yml`) to include Tinyauth routes.
+
+### HTTP Redirect Router
+
+```yaml
+tinyauth-router-redirect:
+    rule: "Host(\`tinyauth.mydomain.com\`)"
+    service: tinyauth-service
+    entryPoints:
+      - web
+    middlewares:
+      - redirect-to-https
+```
+
+### HTTPS Router
+
+```yaml
+tinyauth:
+    rule: "Host(\`tinyauth.mydomain.com\`)"
+    service: tinyauth-service
+    entryPoints:
+      - websecure
+    tls:
+      certResolver: letsencrypt
+```
+
+### Service Entry
+
+```yaml
+tinyauth-service:
+    loadBalancer:
+      servers:
+        - url: "http://tinyauth:10000"
+```
+
+---
+
+## Step 6: Define Middleware Template
+
+In your Middleware Manager templates file (`middleware/templates.yml`), add a new entry:
+
+```yaml
+- id: tinyauth
+    name: Tiny Auth
+    type: forwardAuth
+    config:
+      address: http://tinyauth:10000/api/auth/traefik
+```
+
+---
+
+## Step 7: Start Services
+
+Start everything:
+
+```bash
+docker compose up -d
+```
+
+Check services are running:
+
+```bash
+sudo lsof -i -P -n | grep LISTEN
+```
+
+> **Screenshot:** this is the command and the result with `:10000` showing in the list.
+
+[![port listen](https://forum-cdn.hhf.technology/original/2X/5/5e41f901b8b042c2e0b46163769c22220b6b312e.png)](https://forum-cdn.hhf.technology/original/2X/5/5e41f901b8b042c2e0b46163769c22220b6b312e.png "port listen")
+
+In your browser, open an incognito tab and visit:
+
+```bash
+https://tinyauth.mydomain.com
+```
+
+You should see the Tinyauth login page.
+
+---
+
+## Step 8: Test with a Simple App
+
+Set up a basic app (like a Python web server):
+
+```bash
+python3 -m http.server 8000
+```
+
+Expose it with Pangolin as a resource, e.g.:
+
+```bash
+https://helloworld.mydomain.com
+```
+
+Verify it works without authentication first.
+
+> **Screenshot** Here’s my URL unauthenticated.  
+> 
+> [![HelloWorldUnauthenticated](https://forum-cdn.hhf.technology/original/2X/9/95caf21e92f6a0b799ccb4845ac8038ee6fa5c91.png)](https://forum-cdn.hhf.technology/original/2X/9/95caf21e92f6a0b799ccb4845ac8038ee6fa5c91.png "HelloWorldUnauthenticated")
+
+---
+
+## Step 9: Attach Middleware in Pangolin
+
+1. Open the Pangolin Middleware Manager UI.
+2. Navigate to the **Middlewares** tab.
+	- Confirm you see `Tinyauth` listed.
+3. Return to the **Dashboard** and click **Manage** next to the resource you want to protect.
+4. Under **Attached Middlewares**, click **Add Middleware**.
+5. Select **Tinyauth (forwardAuth)** and click **Add Middlewares**.
+
+> **Screenshot:** Here’s the middleware list and the form where you attach Tinyauth.  
+> 
+> [![Tinyauth-middleware-select](https://forum-cdn.hhf.technology/optimized/2X/0/09a2fce3236c47f869f0e02583247d20fe43bd35_2_536x500.png)](https://forum-cdn.hhf.technology/original/2X/0/09a2fce3236c47f869f0e02583247d20fe43bd35.png "Tinyauth-middleware-select")
+
+## Step 10: Final Test
+
+Open your protected resource in an incognito window:
+
+```bash
+https://resourcename.mydomain.com
+```
+
+You should be redirected to `https://tinyauth.mydomain.com` for login. After authenticating, you’ll return to the protected app.
+
+---
+
+## Summary
+
+In this article, we walked through how to set up the blazing fast, minimalist [Tinyauth](https://tinyauth.app/) as a forward auth provider for Pangolin. With just a few steps and clever integration using the Middleware Manager, you now have a lightweight and secure authentication layer protecting your self-hosted apps. There are more integrations to come!!!
+
+---
+
+## Thanks for Reading!
+
+Tinyauth is a fantastic project from an incredibly talented young developer — it’s inspiring to see such innovation in the open-source space. If you found this guide helpful, consider exploring more of what Pangolin has to offer, and feel free to share your feedback or improvements in the [Pangolin forum](https://forum.hhf.technology/).
+
+Happy self-hosting!
+
+## post by hdsplus on Apr 19
+
+## post by hhf.technoloy on Apr 19
+
+## post by hdsplus on Apr 19
+
+## Pinned globally on Apr 20
+
+  
+
+### Want to read more? Browse other topics in Networking or view latest topics.
+
+[Powered by Discourse](https://discourse.org/powered-by)
+
+---
+
+### `Integration API.md` — pangolin
+
+---
+title: "Integration API"
+source: "https://docs.pangolin.net/manage/integration-api"
+author:
+  - "[[Pangolin Docs]]"
+published:
+created: 2025-12-05
+description: "Learn how to use Pangolin's REST API to automate and script operations with fine-grained permissions"
+tags:
+  - "clippings"
+---
+[Skip to main content](https://docs.pangolin.net/manage/#content-area)
+
+The API is REST-based and supports many operations available through the web interface. Authentication uses Bearer tokens, and you can create multiple API keys with specific permissions for different use cases.
+
+For Pangolin Community Edition, the integration API must be enabled. Check out [the documentation](https://docs.pangolin.net/self-host/advanced/integration-api) for how to enable the integration API.
+
+## Authentication
+
+All API requests require authentication using a Bearer token in the Authorization header:
+
+## API Key Types
+
+Pangolin supports two types of API keys with different permission levels:
+
+### Organization API Keys
+
+Organization API keys are created by organization admins and have limited scope to perform actions only in that organization.
+
+### Root API Keys
+
+Root API keys have some extra permissions and can execute operations across orgs. They are only available in the Community Edition of Pangolin:
+
+Root API keys have elevated permissions and should be used carefully. Only create them when you need server-wide access.
+
+## Creating API Keys
+
+## API Documentation
+
+View the Swagger docs here: [https://api.pangolin.net/v1/docs](https://api.pangolin.net/v1/docs).Interactive API documentation is available through Swagger UI:
+
+![Swagger Docs](https://mintcdn.com/fossorial/u-2SUNWyK_LJL3sU/images/swagger.png?w=280&fit=max&auto=format&n=u-2SUNWyK_LJL3sU&q=85&s=163c4b68c9f9d9ee2589898f8af8fedf)
+
+Swagger Docs
+
+Swagger UI showing API endpoints and interactive testing
+
+For self-hosted Pangolin, access the documentation at `https://api.your-domain.com/v1/docs`.
+
+Was this page helpful?[Domains](https://docs.pangolin.net/manage/domains)
+
+[
+
+Previous
+
+](https://docs.pangolin.net/manage/domains)[
+
+Branding
+
+Next
+
+](https://docs.pangolin.net/manage/branding)
+
+---
+
+### `KCG_SUMMARY.md` — pangolin
+
+# Pangolin — KCG Summary
+
+## What It Is
+Pangolin is an open-source identity-aware reverse proxy by Fosrl. It combines WireGuard VPN tunnels, Traefik reverse proxy, Pocket ID OIDC authentication, and CrowdSec intrusion detection into a single stack for zero-trust service access.
+
+## Why This Matters for Kings' College Galway
+Pangolin is the outermost security layer. Every one of the 89 stacks is exposed as a private Pangolin resource behind WireGuard tunnels and Pocket ID SSO. The `pangolin.yaml` and `blueprint.yaml` files in every stack directory define how each service is routed and who can access it.
+
+## Key Patterns
+- **Private by default**: All services use private Pangolin resources requiring WireGuard + Pocket ID Member role
+- **Traefik middleware**: TinyAuth forward authentication, CrowdSec intrusion detection, TLS termination
+- **Gerbil controller**: WireGuard peer management without manual key distribution
+- **Docker label-based config**: `pangolin.private-resources.<name>.*` labels on containers
+
+## Source Files
+Full source code was removed (2026-06-05). Available at <https://github.com/fosrl/pangolin>. Live deployment configs are in `infrastructure/stacks/infrastructure/pangolin/`.
+
+
+---
+
+### `Middleware Manager.md` — pangolin
+
+---
+title: "Middleware Manager"
+source: "https://docs.pangolin.net/self-host/community-guides/middlewaremanager"
+author:
+  - "[[Pangolin Docs]]"
+published:
+created: 2025-12-08
+description:
+tags:
+  - "clippings"
+---
+This is a community guide and not officially supported. For issues, contributions, or bug reports, please use the [official GitHub repository](https://github.com/hhftechnology/middleware-manager).
+
+## What is Middleware Manager?
+
+The **Middleware Manager** is a microservice that extends your existing traefik deployments.  
+It provides a **web UI** to attach Traefik middlewares to resources without editing Pangolin itself.
+
+#### Security Warning
+
+Middlewares can strengthen security but also create vulnerabilities if misconfigured.
+- Test in staging before production.
+- Misusing forward authentication can leak credentials.
+- Bad rate limiter configs may be bypassed.
+- Header misconfigurations can expose apps to XSS/CSRF.
+- Stacking too many middlewares impacts performance.
+- Always check provider references (`@http` vs `@file`).
+
+---
+
+### Key Use Cases
+
+- External authentication (Authelia, Authentik, JWT)
+- Security headers and CSP policies
+- Geographic IP blocking
+- Rate limiting / DDoS protection
+- Redirects & path rewrites
+- CrowdSec and other security tool integrations
+
+---
+
+## Prerequisites
+
+- A running **Pangolin v1.0.0+**
+- Docker + Docker Compose
+- Basic Traefik knowledge
+- Admin access to your Pangolin host
+
+---
+
+## Step 1: Add Middleware Manager Service
+
+Update your `docker-compose.yml`:
+
+```
+middleware-manager:
+
+  image: hhftechnology/middleware-manager:latest
+
+  container_name: middleware-manager
+
+  restart: unless-stopped
+
+  volumes:
+
+    - ./data:/data
+
+    - ./config/traefik/rules:/conf
+
+    - ./config/middleware-manager/templates.yaml:/app/config/templates.yaml  # Optional custom templates
+
+  environment:
+
+    - PANGOLIN_API_URL=http://pangolin:3001/api/v1
+
+    - TRAEFIK_CONF_DIR=/conf
+
+    - DB_PATH=/data/middleware.db
+
+    - PORT=3456
+
+  ports:
+
+    - "3456:3456"
+```
+
+---
+
+## Step 2: Create Required Directories
+
+```
+mkdir -p ./config/traefik/rules
+
+mkdir -p ./config/middleware-manager
+```
+
+Move any dynamic configs into `./config/traefik/rules`.
+
+---
+
+## Step 3: Update Traefik Volumes & Providers
+
+In your `traefik` service:
+
+```
+volumes:
+
+  - ./config/traefik:/etc/traefik:ro
+
+  - ./config/letsencrypt:/letsencrypt
+
+  - ./config/traefik/logs:/var/log/traefik
+
+  - ./config/traefik/rules:/rules   # required
+```
+
+In `traefik_config.yml`:
+
+```
+providers:
+
+  file:
+
+    directory: "/rules"
+
+    watch: true
+```
+
+---
+
+## Step 4: Start Services
+
+```
+docker compose up -d
+```
+
+---
+
+## Step 5: Access the UI
+
+Middleware Manager runs at: 👉 [http://localhost:3456](http://localhost:3456/)
+
+---
+
+## Common Middleware Examples
+
+### Rate Limiting
+
+```
+middlewares:
+
+  - id: "rate-limit"
+
+    type: "rateLimit"
+
+    config:
+
+      average: 100
+
+      burst: 50
+```
+
+### Security Headers
+
+---
+
+## Troubleshooting
+
+- **Service does not exist** → Check `@http` or `@file` suffix in references
+- **Middleware does not exist** → Verify config and required plugins
+- **No changes applied** → Check Traefik logs, middleware priority, restart services
+- **UI not showing resources** → Confirm `PANGOLIN_API_URL` and network connectivity
+- **Database errors** → Check `./data` permissions, or reset `middleware.db`
+- \*\*CrowdSec errors → Ensure the crowdsec container is running; middlewares fail if the service is down.
+- **Protecting Pangolin itself** → Apply middlewares (e.g. geoblock, headers) directly on the websecure entryPoint to cover all traffic.
+- **Applying to many services** → Attach middleware to entryPoints instead of individual resources to cover all subdomains at once.
+- **TCP / SMTP with STARTTLS** → Not supported. Traefik cannot handle STARTTLS negotiation (only implicit TLS like SMTPS on 465).
+
+---
+
+## Final Notes
+
+The Middleware Manager gives you a UI to work with Traefik’s powerful middleware ecosystem.
+- Start with simple configs → test thoroughly → expand gradually.
+- Use templates where possible.
+- Always validate in staging before production.[Home Assistant Add-on](https://docs.pangolin.net/self-host/community-guides/homeassistant)
+
+[
+
+Previous
+
+](https://docs.pangolin.net/self-host/community-guides/homeassistant)[
+
+Traefik Log Dashboard (v2 – Agent Architecture)
+
+Next
+
+](https://docs.pangolin.net/self-host/community-guides/traefiklogsdashboard)
+
+---
+
+### `Pangolin 1.18 - HTTPS Private Resources, Multi-Site Routing, and Alerting.md` — pangolin
+
+---
+title: "Pangolin 1.18 - HTTPS Private Resources, Multi-Site Routing, and Alerting"
+source: "https://pangolin.net/news/1-18-release"
+author:
+  - "[[Pangolin]]"
+published: 2026-04-29
+created: 2026-05-17
+description: "Pangolin 1.18 brings HTTPS support for private resources, multi-site high availability routing, uptime tracking, health checks, alert rules, wildcard resources, and more. Let's dig in!"
+tags:
+  - "clippings"
+---
+Pangolin 1.18 is a big one. This release adds HTTPS support for private resources, multi-site high-availability routing, uptime tracking, a flexible alerting system, wildcard resources, and more. Let's walk through everything.
+
+## HTTPS on Private Resources
+
+Private HTTP is a new kind of private resource designed for web workloads. It works like a public resource in that it gets a real domain name on your Pangolin-managed domain and traffic flows through a reverse proxy with valid TLS, but it's only reachable when the user has an active Pangolin client connection. Nothing is exposed on the public internet.
+
+When a connected user opens the URL in their browser, Pangolin resolves the name through the tunnel, the site-side reverse proxy terminates TLS using a certificate provisioned by the control plane, and the request is forwarded to your backend. The scheme and destination port are both configurable. If you've been approximating this with aliases and non-standard ports, private HTTP is the cleaner answer!
+
+![](https://cdn.prod.website-files.com/699d90fb38a034f4ca0324da/69f145028d127d0604345389_7035ff61.png)
+
+Read more about [HTTPs on private resources](https://docs.pangolin.net/manage/resources/private/private-http) in the docs.
+
+## Multi-Site Routing (HA) on Private Resources
+
+Private resources now support multiple sites. Attach more than one site connector to a resource and Pangolin routes client traffic through whichever path is best at the time, weighing factors like latency and availability. If a site goes offline, clients automatically fail over to the next available site with no manual reconfiguration needed.
+
+A common pattern is redundant connectors into the same network. Install a Pangolin site on two servers in the same LAN, attach both to your private resource, and you have a resilient path in. One connector goes down and users stay connected through the other.
+
+The one requirement is that every site you attach must have routable access to the resource's destination. Pangolin assumes any site in the list is a valid path to the same backend, so confirm reachability before adding a site. Expect a short gap of a few seconds during failover while the downed site is registered and routing changes propagate to clients.
+
+![](https://cdn.prod.website-files.com/699d90fb38a034f4ca0324da/69f145028d127d0604345380_005b0bc0.png)
+
+Read more about [multi-site routing on private resources](https://docs.pangolin.net/manage/resources/private/multi-site-routing) in the docs.
+
+## Uptime Tracking
+
+Sites and resources now track uptime. You'll see uptime history on site and resource detail pages, giving you a quick at-a-glance view of recent availability. This also serves as the jumping-off point for creating alert rules. More on that below!
+
+![](https://cdn.prod.website-files.com/699d90fb38a034f4ca0324da/69f145028d127d0604345386_014b0aea.png)
+
+## Standalone Health Checks
+
+Pangolin now supports standalone health checks that aren't tied to any resource. Pick a site to run the probe from, give it a target, choose HTTP or TCP, configure your timing and thresholds, and Pangolin continuously checks whether that endpoint is reachable from the site's network.
+
+This is useful for anything you want to monitor but haven't modeled as a Pangolin resource such as a network printer, an IP camera, a PLC, a legacy server. HTTP checks issue a full request and validate the response; TCP checks simply confirm a connection can be established on a given port.
+
+![](https://cdn.prod.website-files.com/699d90fb38a034f4ca0324da/69f145028d127d0604345383_30a47368.png)
+
+Read more about [health checks](https://docs.pangolin.net/manage/alerting/health-checks) in the docs.
+
+## Alert Rules
+
+Alert rules let you subscribe to state changes across sites, resources, and health checks and automatically deliver notifications when something happens. Setup involves three steps: choose a source (what to watch), a trigger (which change should fire the rule), and one or more actions (what to do).
+
+Actions include email to users, roles, or arbitrary addresses; webhooks that POST a JSON payload to any URL; and native integrations with PagerDuty, Opsgenie, ServiceNow, and incident.io. You can stack multiple actions on the same rule.
+
+You can create rules from the Alert rules page under Alerting, or jump directly from a site or resource detail page using the Create alert rule shortcut near the uptime graph.
+
+![](https://cdn.prod.website-files.com/699d90fb38a034f4ca0324da/69f145028d127d060434538c_071db8bf.png)
+
+Read more about [alert rules](https://docs.pangolin.net/manage/alerting/alert-rules) in the docs.
+
+## Wildcard Resources
+
+Public resources now support wildcard subdomains. Set the subdomain field to \* and Pangolin routes every hostname at that level through the same resource and tunnel. Access rules and authentication apply across all matched hostnames, and the original Host header is preserved so downstream systems can continue routing as expected.
+
+Wildcards require TLS certificates that cover \*.your-level, which means DNS-01 validation. HTTP-01 can only prove a single exact hostname. For self-hosted Pangolin, configure Traefik and Let's Encrypt for DNS-01 and set up wildcard DNS records. For Pangolin Cloud, use a domain delegation and Pangolin handles the certificates automatically.
+
+Read more about [wildcard resources](https://docs.pangolin.net/manage/resources/public/wildcard-resources) in the docs.
+
+## General Improvements and Bug Fixes
+
+A handful of smaller but worthwhile additions made it into 1.18 as well:
+
+1. **Import an identity provider across organizations**. Organization-level identity providers can now be shared across organizations. From the Identity Providers table, click Add Identity Provider and choose Import to see providers from other organizations where you're an administrator. Auto-provisioning settings are configured separately per organization since each has its own roles, but the underlying provider configuration is shared.
+2. **Quickly see resources associated with a site**. On the sites table, clicking the resource count text or opening the three-dot row menu now takes you directly to the resources table with a filter already applied for that site. The site edit page also now shows a simplified list of resources associated with that site.
+3. **Reject pending sites**. Admins can now reject sites from the Pending Sites tab rather than only being able to approve them.
+
+As always, this release also includes various other UI improvements and bug fixes throughout the product.
+
+## Looking Forward
+
+1.18 brings features that connect to each other in meaningful ways: health checks feed into alerting, uptime feeds into alerting, multi-site routing feeds into high availability. We're excited to see how you put it all together!
+
+Give us a star: [https://github.com/fosrl/pangolin](https://github.com/fosrl/pangolin)
+
+Stay tuned!
+
+About Pangolin
+
+Pangolin is an open-source infrastructure company that provides secure, zero trust remote access for teams of all sizes. Built to simplify user workflows and protect critical systems, Pangolin helps companies and individuals connect to their networks, applications, and devices safely without relying on traditional VPNs. With a focus on device security, usability, and transparency, Pangolin empowers organizations to manage access efficiently while keeping their infrastructure secure.
+
+---
+
+### `Pocket ID OAuth.md` — pangolin
+
+---
+title: "Pocket ID OAuth"
+source: "https://tinyauth.app/docs/guides/pocket-id/"
+author:
+published:
+created: 2025-12-29
+description: "Use Pocket ID as an OAuth provider in Tinyauth."
+tags:
+  - "clippings"
+---
+Guides
+
+Use Pocket ID as an OAuth provider in Tinyauth.
+
+[Pocket ID](https://pocket-id.org/) is a popular OIDC server that enables login to apps with passkeys. Most proxies do not support OIDC/OAuth servers for authentication, meaning Pocket ID cannot be connected with them. With Tinyauth, Pocket ID can be integrated with proxies to secure apps.
+
+## Requirements
+
+A working Pocket ID installation is required. Refer to Pocket ID's [documentation](https://pocket-id.org/docs/setup/installation) for installation instructions.
+
+## Configuring Pocket ID
+
+Begin by accessing Pocket ID's admin dashboard:
+
+![Pocket ID Admin Page](https://tinyauth.app/assets/pocket-id-home-DOztcnkK.png)
+
+Navigate to the **OIDC Clients** tab and click **Add OIDC Client**. Provide the following details:
+
+| Name | Value |
+| --- | --- |
+| Name | Assign a name to the client, such as `Tinyauth`. |
+| Callback URLs | Enter the Tinyauth app URL followed by `/api/oauth/callback/pocketid`. For example: `https://tinyauth.example.com/api/oauth/callback/pocketid`. |
+
+![Pocket ID Create Client](https://tinyauth.app/assets/pocket-id-new-client-B5IY6qhg.png)
+
+Optionally, upload a logo for the OIDC client. The Tinyauth logo is available on [GitHub](https://github.com/steveiliop56/tinyauth/blob/main/assets/logo.png).
+
+Click **Save**. A new page will display the OIDC credentials:
+
+![Pocket ID Client Page](https://tinyauth.app/assets/pocket-id-client-page-DFFF-SUD.png)
+
+Note down the client ID and secret for later use.
+
+## Configuring Tinyauth
+
+To integrate Tinyauth with Pocket ID, add the following environment variables to the Tinyauth Docker container:
+
+```
+services:
+
+  tinyauth:
+
+    environment:
+
+      - PROVIDERS_POCKETID_CLIENT_ID=your-pocket-id-client-id
+
+      - PROVIDERS_POCKETID_CLIENT_SECRET=your-pocket-id-client-secret
+
+      - PROVIDERS_POCKETID_AUTH_URL=https://pocket-id.example.com/authorize
+
+      - PROVIDERS_POCKETID_TOKEN_URL=https://pocket-id.example.com/api/oidc/token
+
+      - PROVIDERS_POCKETID_USER_INFO_URL=https://pocket-id.example.com/api/oidc/userinfo
+
+      - PROVIDERS_POCKETID_REDIRECT_URL=https://tinyauth.example.com/api/oauth/callback/pocketid
+
+      - PROVIDERS_POCKETID_SCOPES=openid email profile groups
+
+      - PROVIDERS_POCKETID_NAME=Pocket ID
+```
+
+OAuth alone does not guarantee security. By default, any Pocket ID account can log in as a normal user. To restrict access, use the `OAUTH_WHITELIST` environment variable to allow specific email addresses. Refer to the [configuration](https://tinyauth.app/docs/reference/configuration) page for details.
+
+Restart Tinyauth to apply the changes. The login screen will now include an option to log in with Pocket ID.
+
+## Access Controls with Pocket ID Groups
+
+Pocket ID supports user groups, which can simplify access control management. To use groups, create one by navigating to the **User Groups** tab and clicking **Add Group**. Assign a name and save the group:
+
+![Pocket ID New Group](https://tinyauth.app/assets/pocket-id-new-group-BIC3yRTT.png)
+
+Select users to include in the group:
+
+![Pocket ID Group Home](https://tinyauth.app/assets/pocket-id-group-home-Cy5VJ1ta.png)
+
+Configure Tinyauth-protected apps to require OAuth groups by adding the `oauth.groups` label:
+
+```
+tinyauth.apps.myapp.oauth.groups: admins
+```
+
+In this example, only Pocket ID users in the `admins` group can access the app. Users outside the group will be redirected to an unauthorized page.
+
+By default, Tinyauth uses the subdomain name of the request to find a matching container for labels. For example, a request to `myapp.example.com` checks for labels in the container named `myapp`. This behavior can be modified using the `tinyauth.apps.[app].config.domain` label. Refer to the [access controls](https://tinyauth.app/docs/guides/pocket-id/access-controls.md#label-discovery) guide for more information.[Nginx Proxy Manager](https://tinyauth.app/docs/guides/nginx-proxy-manager)
+
+[
+
+Use Tinyauth with the Nginx Proxy Manager reverse proxy.
+
+](https://tinyauth.app/docs/guides/nginx-proxy-manager)[
+
+Runtipi
+
+Use Tinyauth with the Runtipi homeserver management platform.
+
+](https://tinyauth.app/docs/guides/runtipi)
+
+### On this page
+
+[Requirements](https://tinyauth.app/docs/guides/pocket-id/#requirements) [Configuring Pocket ID](https://tinyauth.app/docs/guides/pocket-id/#configuring-pocket-id) [Configuring Tinyauth](https://tinyauth.app/docs/guides/pocket-id/#configuring-tinyauth) [Access Controls with Pocket ID Groups](https://tinyauth.app/docs/guides/pocket-id/#access-controls-with-pocket-id-groups)
+
+---
+
+### `Pocket ID.md` — pangolin
+
+---
+title: "Pocket ID"
+source: "https://docs.pangolin.net/manage/identity-providers/pocket-id"
+author:
+  - "[[​]]"
+published:
+created: 2025-12-08
+description: "Configure Pocket ID Single Sign-On using OpenID Connect"
+tags:
+  - "clippings"
+---
+The following steps will integrate Pocket ID with Pangolin SSO using OpenID Connect (OIDC).
+
+## Prerequisites
+
+Before you can start, you’ll need to have Pocket ID accessible and ensure it’s not secured with Pangolin SSO.
+
+### Creating an OIDC Client in Pocket ID
+
+In Pocket ID, create a new OIDC Client.
+
+The callback URL is displayed in the IdP settings after you create the IdP in Pangolin.
+
+After you have created the OIDC Client, take note of the following fields from the top of the page (click “Show more details” to see all of them):
+- **Client ID**
+- **Client secret**
+- **Authorization URL**
+- **Token URL**
+
+## Configuring Identity Providers in Pangolin
+
+In Pangolin, go to “Identity Providers” and click “Add Identity Provider”. Select the OAuth2/OIDC provider option.“Name” should be set to something memorable (eg. Pocket ID). The “Provider Type” should be set to the default `OAuth2/OIDC`.
+
+### OAuth2/OIDC Configuration (Provider Credentials and Endpoints)
+
+In the OAuth2/OIDC Configuration, you’ll need the following fields:Client ID
+
+string
+
+required
+
+The Client ID from your Pocket ID OIDC client.Client Secret
+
+string
+
+required
+
+The Client secret from your Pocket ID OIDC client.
+
+Authorization URL
+
+string
+
+required
+
+The Authorization URL from your Pocket ID OIDC client.Token URL
+
+string
+
+required
+
+The Token URL from your Pocket ID OIDC client.
+
+## Token Configuration
+
+You should leave all of the paths default. In the “Scopes” field, add `openid profile email`.
+
+Set the “Identifier Path” to `preferred_username` for Pocket ID integration.
+
+When you’re done, click “Create Identity Provider”! Then, copy the Redirect URL in the “General” tab as you will now need this for your Pocket ID OIDC client.
+
+## Returning to Pocket ID
+
+Lastly, you’ll need to return to your Pocket ID OIDC client in order to add the redirect URI created by Pangolin. Add the URI to “Callback URLs”, then save your changes! Your configuration should now be complete. You’ll now need to add an external user to Pangolin, or if you have “Auto Provision Users” enabled, you can now log in using Pocket ID SSO.
+
+---
+
+### `Set up Pangolin Zero Trust VPN for private networks - Guides & Tutorials.md` — pangolin
+
+---
+title: "Set up Pangolin Zero Trust VPN for private networks - Guides & Tutorials"
+source: "https://forum.hhf.technology/t/set-up-pangolin-zero-trust-vpn-for-private-networks/4045/9"
+author:
+  - "[[hhf.technoloy]]"
+published: 2025-12-13
+created: 2025-12-29
+description: "Pangolin Zero-Trust VPN GuideComplete setup guide for private resource access with real-world examples. What is Pangolin VPN?Pangolin 1.13+ introduces Zero-Trust Network Access (ZTNA). Access private resources like S…"
+tags:
+  - "clippings"
+---
+[Guides & Tutorials](https://forum.hhf.technology/c/guides-tutorials/52)
+
+## post by hhf.technoloy on Dec 13
+
+## Pinned globally on Dec 13
+
+## post by C8opmBMzz on Dec 17
+
+## post by phil9309 on Dec 18
+
+[![](https://forum.hhf.technology/letter_avatar_proxy/v4/letter/p/f4b2a3/96.png)](https://forum.hhf.technology/u/phil9309)
+
+[phil9309](https://forum.hhf.technology/u/phil9309)
+
+[11d](https://forum.hhf.technology/t/set-up-pangolin-zero-trust-vpn-for-private-networks/4045/4?u=ciansedai "Post date")
+
+Hey there, thank you for your guide, maybe you have an idea for my specific setup. Right now I do use newt to connect my VPS and my homelab. The VPS side has complete access to my homelab network, like your guide, so far so good.
+
+But my homelab is running komodo core. Right now, the komodo periphery agent, which allows me to control pangolin docker stack on the VPS is connected over the VPSs internet IP, which of course forces me to open a port. Since my homelabs IP is dynamic i have the port open to the whole internet, which sucks. I’m now trying to get the “reverse” connection of your guide working. But I’m starting to think that this isn’t intended? The VPS itself, isn’t reachable from any of my homelab clients. I played around with the –native option of newt, where it creates a tun device so I can actually use ip routes to reach the VPS, but I still cant get a connection the the specific port komodo agent is using going. Do you have any idea for this particular setup? Is it possible with the new version of pangolin?
+
+## post by ISeeMangos on Dec 18
+
+[ISeeMangos](https://forum.hhf.technology/u/iseemangos)
+
+[11d](https://forum.hhf.technology/t/set-up-pangolin-zero-trust-vpn-for-private-networks/4045/5?u=ciansedai "Post date")
+
+Thanks a lot for the detailed guide. I was having some trouble trying to set up, and didn’t know why.
+
+I have identified my mistakes, and it works as expected now.
+
+## post by partytimeexcellent 5 days ago
+
+[partytimeexcellent](https://forum.hhf.technology/u/partytimeexcellent)
+
+[5d](https://forum.hhf.technology/t/set-up-pangolin-zero-trust-vpn-for-private-networks/4045/6?u=ciansedai "Post date")
+
+This will be fantastic if they can get a iOS & Android app out. A lot of my remote access needs are on mobile. Any idea if that’s in the works?
+
+## post by hhf.technoloy 5 days ago
+
+[hhf.technoloy](https://forum.hhf.technology/u/hhf.technoloy) Leader
+
+[5d](https://forum.hhf.technology/t/set-up-pangolin-zero-trust-vpn-for-private-networks/4045/7?u=ciansedai "Post date")
+
+I have a different solution till they come out with this feature. Will post here soon.
+
+## post by FlyFox-FR 3 hours ago
+
+[FlyFox-FR](https://forum.hhf.technology/u/flyfox-fr)
+
+[3h](https://forum.hhf.technology/t/set-up-pangolin-zero-trust-vpn-for-private-networks/4045/8?u=ciansedai "Post date")
+
+Question:
+
+Would it be possible to host a pangolin instance on a vps (e.g. hetzner) without a domain pointing to it - and with the new VPN features in pangolin, connect to the private ressources directly with client←→server tunnels?
+
+If i combine this maybe with a free oracle vps - i have no costs at all.
+
+Basically having a self hosted pangolin VPN relay Server, thats easy to setup and maintain for me(beginner). And not having the need of a public domain, maybe having pangolin dashboard on tailscale.
+
+Yes, that is confusing, why not using tailscale in the first place. For me its because of trying to experiment with pangolin and loving the self host aspect of it and for me headscale was not that easy to setup now.
+
+## post by hhf.technoloy 3 hours ago
+
+[hhf.technoloy](https://forum.hhf.technology/u/hhf.technoloy) Leader
+
+[3h](https://forum.hhf.technology/t/set-up-pangolin-zero-trust-vpn-for-private-networks/4045/9?u=ciansedai "Post date")
+
+Nope, not possible. Instead used an alternative solution. Like wgeasy or similar.  
+Then internal you can have your own dns server for your names.
+
+This topic is unpinned for you; it will display in regular order
+
+  
+
+### Want to read more? Browse other topics in Guides & Tutorials or view latest topics.
+
+[Powered by Discourse](https://discourse.org/powered-by)
+
+---
+
+### `Telemetry.md` — pangolin
+
+---
+title: "Telemetry"
+source: "https://docs.pangolin.net/self-host/telemetry"
+author:
+  - "[[Pangolin Docs]]"
+published:
+created: 2025-12-08
+description: "Understanding Pangolin's anonymous usage data collection"
+tags:
+  - "clippings"
+---
+[Skip to main content](https://docs.pangolin.net/self-host/#content-area)
+
+Pangolin collects anonymous usage telemetry to help us understand how the software is used and guide future improvements and feature development.
+
+## What We Collect
+
+The telemetry system collects **anonymous, aggregated data** about your Pangolin deployment. For example:
+- **System metrics**: Number of sites, users, resources, and clients
+- **Usage patterns**: Resource types, protocols, and SSO configurations
+- **Performance data**: Site traffic volumes and online status
+- **Deployment info**: App version and installation timestamp
+
+## Privacy & Anonymity
+
+**No personal information is ever collected or transmitted.** All data is:
+- **Anonymized**: Identifying info is hashed using SHA-256
+- **Non-identifying**: Cannot be used to identify specific users or organizations
+
+## Configuration
+
+You can control telemetry collection in your `config.yml`:
+
+```
+app:
+
+  telemetry:
+
+    anonymous_usage: true  # Set to false to disable
+```
+
+## What This Helps
+
+Anonymous usage data helps us:
+- Identify popular features and usage patterns
+- Prioritize development efforts
+- Improve performance and reliability
+- Make Pangolin better for everyone
+If you have concerns about telemetry collection, you can disable it entirely by setting `anonymous_usage: false` in your configuration.
+
+Was this page helpful?
+
+---
+
+### `Traefik Dashboard_ A Vital Prerequisite for Debugging Pangolin and Middleware Manager - Guides & Tutorials.md` — pangolin
+
+---
+title: "Traefik Dashboard: A Vital Prerequisite for Debugging Pangolin and Middleware Manager - Guides & Tutorials"
+source: "https://forum.hhf.technology/t/traefik-dashboard-a-vital-prerequisite-for-debugging-pangolin-and-middleware-manager/2208/12"
+author:
+  - "[[Mattercoder]]"
+published: 2025-05-25
+created: 2025-12-29
+description: ":globe_with_meridians: Enabling the Traefik Dashboard: A Vital Prerequisite for Debugging Pangolin and Middleware ManagerThe Traefik Dashboard is an essential UI tool for visualizing and debugging your reverse proxy set…"
+tags:
+  - "clippings"
+---
+## post by Mattercoder on May 25
+
+1 month later
+
+## post by Daniel on Jun 25
+
+## post by Mattercoder on Jun 25
+
+## post by Daniel on Jun 25
+
+## post by BlackrazorNZ on Jun 28
+
+## post by Mattercoder on Jun 28
+
+## post by BlackrazorNZ on Jun 28
+
+[BlackrazorNZ](https://forum.hhf.technology/u/blackrazornz)
+
+[Jun 28](https://forum.hhf.technology/t/traefik-dashboard-a-vital-prerequisite-for-debugging-pangolin-and-middleware-manager/2208/7?u=ciansedai "Post date")
+
+So I’m an idiot, but i figure i better document my idiocy in case anyone else makes the same mistake.
+
+I have a split DNS setup where traffic to mydomain outside my local network goes via Pangolin, but traffic to \*.mydomain inside my local network goes via NPM and is resolved locally. On my local DNS host(AdGuard Home), pangolin.mydomain is explicitly pointed at my Pangolin VPS.
+
+The issue here was that I hadn’t clicked that I needed to create an explicit DNS record pointing at traefik.mydomain in my local DNS host so that it didn’t get pointed at NPM via the wildcard redirect. So it was trying to resolve an SSL cert for a url that wasn’t even on NPM.
+
+Figured it out when I followed your instructions above on my tablet while sitting at a cafe, and when I got to the Pangolin part I tried the Traefik link one more time just to confirm it was still broken. Worked fine, that’s when I clicked the issue was the split DNS.
+
+With an explicit DNS record in place for traefik.mydomain locally, everything works great. Thanks.
+
+2 months later
+
+## post by OddMagnet on Aug 31
+
+[![](https://forum.hhf.technology/user_avatar/forum.hhf.technology/oddmagnet/96/3241_2.png)](https://forum.hhf.technology/u/oddmagnet)
+
+[OddMagnet](https://forum.hhf.technology/u/oddmagnet)
+
+[Aug 31](https://forum.hhf.technology/t/traefik-dashboard-a-vital-prerequisite-for-debugging-pangolin-and-middleware-manager/2208/8?u=ciansedai "Post date")
+
+THANK YOU!!
+
+I was trying for way too long before I decided to scroll down a bit. I used the guide and initially it was working, which was a lucky coincidence cause I just happened to manually set a DNS server on my laptop to test something.
+
+Later, when I removed the manual DNS server, accessing the VPS’ Traefik Dashboard stopped working, since my Adguard rewrote my query
+
+1 month later
+
+## post by Kerry on Oct 2
+
+[Kerry](https://forum.hhf.technology/u/kerry)
+
+[Oct 2](https://forum.hhf.technology/t/traefik-dashboard-a-vital-prerequisite-for-debugging-pangolin-and-middleware-manager/2208/9?u=ciansedai "Post date")
+
+Very nice I missed the traefik dashboard, works great…thank you.
+
+## post by Kerry on Oct 2
+
+[Kerry](https://forum.hhf.technology/u/kerry)
+
+[Oct 2](https://forum.hhf.technology/t/traefik-dashboard-a-vital-prerequisite-for-debugging-pangolin-and-middleware-manager/2208/10?u=ciansedai "Post date")
+
+Where would you add the label traefik-auth.basicauth.users=admin:$$2y$$05$$8Ue to enable insecure: false
+
+## post by Mattercoder on Oct 3
+
+[Mattercoder](https://forum.hhf.technology/u/mattercoder)
+
+[Oct 3](https://forum.hhf.technology/t/traefik-dashboard-a-vital-prerequisite-for-debugging-pangolin-and-middleware-manager/2208/11?u=ciansedai "Post date")
+
+If you use the middleware manager you can apply the basic auth middleware. Otherwise you will have to look putting the middleware in your traefik’s dynamic\_config.yml
+
+last visit
+
+3 months later
+
+## post by codewhiz 5 days ago
+
+[codewhiz](https://forum.hhf.technology/u/codewhiz)
+
+[5d](https://forum.hhf.technology/t/traefik-dashboard-a-vital-prerequisite-for-debugging-pangolin-and-middleware-manager/2208/12?u=ciansedai "Post date")
+
+Thank you so much [@Mattercoder](https://forum.hhf.technology/u/mattercoder)!
+
+  
+
+### There is 1 new topic remaining, or browse other topics in Guides & Tutorials
+
+[Powered by Discourse](https://discourse.org/powered-by)
+
+---
+
+### `Visualizing Your Traefik Logs_ Deploying the Traefik Log Dashboard with the Pangolin Stack - Guides & Tutorials.md` — pangolin
+
+---
+title: "Visualizing Your Traefik Logs: Deploying the Traefik Log Dashboard with the Pangolin Stack - Guides & Tutorials"
+source: "https://forum.hhf.technology/t/visualizing-your-traefik-logs-deploying-the-traefik-log-dashboard-with-the-pangolin-stack/3263/2"
+author:
+  - "[[hhf.technoloy]]"
+published: 2025-07-30
+created: 2025-12-29
+description: "Visualizing Your Traefik Traffic: Deploy the Enhanced Traefik Log Dashboard with OpenTelemetry Support  Usage Load for the containers   If you’re using the powerful Pangolin stack with Traefik as your reverse proxy,…"
+tags:
+  - "clippings"
+---
+## post by hhf.technoloy on Jul 30
+
+[hhf.technoloy](https://forum.hhf.technology/u/hhf.technoloy) Leader
+
+[Jul 30](https://forum.hhf.technology/t/visualizing-your-traefik-logs-deploying-the-traefik-log-dashboard-with-the-pangolin-stack/3263?u=ciansedai "Post date")
+
+## Visualizing Your Traefik Traffic: Deploy the Enhanced Traefik Log Dashboard with OpenTelemetry Support
+
+[![dashboard](https://forum-cdn.hhf.technology/optimized/2X/8/8730b20368e1fddb4d01e920017006f8fc982980_2_500x500.jpeg)](https://forum-cdn.hhf.technology/original/2X/8/8730b20368e1fddb4d01e920017006f8fc982980.jpeg "dashboard")
+
+---
+
+Usage Load for the containers
+
+[![image](https://forum-cdn.hhf.technology/original/2X/1/14fab98c9ba1714459ae7f825a3d954e475770f2.png)](https://forum-cdn.hhf.technology/original/2X/1/14fab98c9ba1714459ae7f825a3d954e475770f2.png "image")
+
+If you’re using the powerful Pangolin stack with Traefik as your reverse proxy, you’re already handling traffic like a pro. But what about monitoring that traffic in real-time? Raw log files and scattered metrics can make it challenging to get a comprehensive view of what’s happening across your infrastructure.
+
+This is where the enhanced Traefik Log Dashboard truly shines. It’s evolved into a comprehensive monitoring solution that provides clean, real-time visualization of your Traefik traffic through multiple data sources - traditional log parsing, modern OpenTelemetry traces, and enhanced geolocation analytics.
+
+In this guide, we’ll show you how to seamlessly integrate the latest Traefik Log Dashboard into your existing Pangolin docker-compose setup with both traditional log monitoring and cutting-edge OpenTelemetry support.
+
+## What’s New in the Latest Version
+
+The Traefik Log Dashboard has undergone significant enhancements:
+
+- **OpenTelemetry OTLP Support**: Direct real-time telemetry ingestion from Traefik v3.0+
+- **Enhanced Geolocation**: MaxMind GeoIP2 integration with offline database support
+- **Hybrid Data Sources**: Simultaneously monitor via OTLP traces AND traditional log files
+- **Advanced Analytics**: Real-time request rates, response times, error tracking, and geographic distribution
+- **Smart Filtering**: Hide unknown services, private IPs, with advanced pagination
+- **Production Ready**: Resource limits, health checks, and performance optimizations
+- **Easy Deployment**: Multiple deployment modes with Docker Compose profiles
+
+## Prerequisites
+
+Before we start, ensure you have the following installed on your system:
+
+- Docker & Docker Compose
+- Traefik v3.0+ (for OTLP support) or v2.x (for log-only mode)
+
+This guide assumes you already have a basic Pangolin stack running. We’ll be adding the enhanced Traefik Log Dashboard services to it.
+
+## Step 1: Choose Your Monitoring Approach
+
+The dashboard now supports three monitoring modes:
+
+### Option A: OpenTelemetry Only (Recommended - Real-time)
+
+Modern approach using Traefik’s built-in OTLP exporter for immediate trace data.
+
+### Option B: Log Files Only (Traditional)
+
+Parse structured JSON log files - works with any Traefik version.
+
+### Option C: Hybrid Mode (Best of Both)
+
+Combine real-time OTLP with historical log data for complete visibility.
+
+## Step 2: Configure Traefik for Enhanced Monitoring
+
+### For OpenTelemetry Support (Recommended)
+
+Update your `traefik_config.yml` to enable both OTLP tracing and traditional logging:
+
+```yaml
+# ./config/traefik/traefik_config.yml
+
+log:
+  level: INFO
+  filePath: "/var/log/traefik/traefik.log"
+  format: json
+
+# Traditional JSON access logs (optional with OTLP)
+accessLog:
+  filePath: "/var/log/traefik/access.log"
+  format: json
+
+# NEW: OpenTelemetry Tracing Configuration
+tracing:
+  otlp:
+    http:
+      endpoint: "http://log-dashboard-backend:4318/v1/traces"
+    # Alternative: GRPC for better performance
+    # grpc:
+    #   endpoint: "log-dashboard-backend:4317"
+    #   insecure: true
+  
+  # Sampling rate (adjust for your needs)
+  sampleRate: 1.0  # 100% for development, 0.1 (10%) for production
+  
+  # Global attributes added to all traces
+  globalAttributes:
+    environment: "production"
+    service.version: "v3.0"
+    deployment.environment: "pangolin"
+```
+
+### For Log Files Only
+
+If you prefer the traditional approach or are using an older Traefik version:
+
+```yaml
+# ./config/traefik/traefik_config.yml
+
+log:
+  level: INFO
+  filePath: "/var/log/traefik/traefik.log"
+
+accessLog:
+  filePath: "/var/log/traefik/access.log"
+  format: json # <-- Essential for dashboard parsing
+  fields:
+    defaultMode: keep
+    headers:
+      defaultMode: keep
+      names:
+        User-Agent: keep
+        Authorization: drop
+```
+
+## Step 3: Add Enhanced Dashboard to Your docker-compose.yml
+
+Here’s your updated `docker-compose.yml` with the enhanced dashboard services:
+
+```
+name: pangolin
+services:
+  pangolin:
+    image: fosrl/pangolin:1.5.1
+    container_name: pangolin
+    restart: unless-stopped
+    volumes:
+      - ./config:/app/config
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/v1/"]
+      interval: "10s"
+      timeout: "10s"
+      retries: 15
+
+  gerbil:
+    image: fosrl/gerbil:1.0.0
+    container_name: gerbil
+    restart: unless-stopped
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    command:
+      - --reachableAt=http://gerbil:3003
+      - --generateAndSaveKeyTo=/var/config/key
+      - --remoteConfig=http://pangolin:3001/api/v1/gerbil/get-config
+      - --reportBandwidthTo=http://pangolin:3001/api/v1/gerbil/receive-bandwidth
+    volumes:
+      - ./config/:/var/config
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    ports:
+      - "51820:51820/udp"
+      - "8080:8080"
+      - "443:443"
+      - "80:80"
+
+  traefik:
+    image: traefik:v3.4.0
+    container_name: traefik
+    restart: unless-stopped
+    network_mode: service:gerbil
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    command:
+      - --configFile=/etc/traefik/traefik_config.yml
+    volumes:
+      - ./config/traefik:/etc/traefik:ro
+      - ./config/letsencrypt:/letsencrypt
+      - ./config/traefik/logs:/var/log/traefik
+      - ./traefik/plugins-storage:/plugins-storage:rw
+
+  # --- Enhanced Traefik Log Dashboard with OTLP Support ---
+
+  log-dashboard-backend:
+    image: ghcr.io/hhftechnology/traefik-log-dashboard-backend:latest
+    container_name: log-dashboard-backend
+    restart: unless-stopped
+    ports:
+      - "4317:4317"   # OTLP GRPC endpoint
+      - "4318:4318"   # OTLP HTTP endpoint
+    volumes:
+      - ./config/traefik/logs:/logs:ro
+      - ./config/maxmind:/maxmind:ro
+    environment:
+      # Basic configuration
+      - PORT=3001
+      - TRAEFIK_LOG_FILE=/logs/access.log
+      
+      # OTLP Configuration (NEW)
+      - OTLP_ENABLED=true
+      - OTLP_GRPC_PORT=4317
+      - OTLP_HTTP_PORT=4318
+      
+      # MaxMind GeoIP (Enhanced)
+      - USE_MAXMIND=true
+      - MAXMIND_DB_PATH=/maxmind/GeoLite2-City.mmdb
+      - MAXMIND_FALLBACK_ONLINE=true
+      
+      # Performance optimization
+      - GOGC=50
+      - GOMEMLIMIT=500MiB
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.2'
+          memory: 128M
+
+  log-dashboard-frontend:
+    image: ghcr.io/hhftechnology/traefik-log-dashboard-frontend:latest
+    container_name: log-dashboard-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    environment:
+      - BACKEND_SERVICE=log-dashboard-backend
+      - BACKEND_PORT=3001
+    depends_on:
+      - log-dashboard-backend
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+
+  # Optional: MaxMind GeoIP Database Updater
+  maxmind-updater:
+    image: alpine:latest
+    container_name: maxmind-db-updater
+    restart: "no"
+    volumes:
+      - ./config/maxmind:/data
+    environment:
+      - MAXMIND_LICENSE_KEY=${MAXMIND_LICENSE_KEY:-your-license-key-here}
+    command: >
+      sh -c "
+        apk add --no-cache wget tar &&
+        cd /data &&
+        if [ ! -f GeoLite2-City.mmdb ] || [ $$(find . -name 'GeoLite2-City.mmdb' -mtime +7) ]; then
+          echo 'Downloading/updating MaxMind database...' &&
+          wget -O GeoLite2-City.tar.gz 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=$$MAXMIND_LICENSE_KEY&suffix=tar.gz' &&
+          tar --wildcard -xzf GeoLite2-City.tar.gz --strip-components=1 '*/GeoLite2-City.mmdb' &&
+          rm -f GeoLite2-City.tar.gz &&
+          echo 'MaxMind database updated successfully'
+        else
+          echo 'MaxMind database is up to date'
+        fi
+      "
+
+networks:
+  default:
+    driver: bridge
+    name: pangolin
+```
+
+## What’s Enhanced in the New Setup?
+
+### OpenTelemetry Integration
+
+- **Real-time traces**: Get immediate visibility into requests as they happen
+- **OTLP endpoints**: Both HTTP (4318) and GRPC (4317) support for maximum compatibility
+- **Hybrid monitoring**: Combine OTLP traces with traditional log parsing
+
+### Advanced Geolocation
+
+- **MaxMind GeoIP2**: Offline IP geolocation with city-level accuracy
+- **Automatic updates**: Database refreshes weekly for accuracy
+- **Privacy-focused**: Optional offline-only mode
+
+### Enhanced Analytics
+
+- **Real-time metrics**: Request rates, response times, error tracking
+- **Geographic visualization**: Interactive world map showing request origins
+- **Service insights**: Detailed router and service performance analytics
+
+### Production Optimizations
+
+- **Resource limits**: Controlled CPU and memory usage
+- **Health checks**: Comprehensive monitoring of service health
+- **Performance tuning**: Optimized garbage collection and memory management
+
+## Step 4: Setup MaxMind GeoIP (Recommended)
+
+For enhanced geographic insights, set up MaxMind GeoIP:
+
+1. **Get a free MaxMind account**: Sign up at [https://www.maxmind.com/en/geolite2/signup](https://www.maxmind.com/en/geolite2/signup)
+2. **Generate a license key** from your account dashboard
+3. **Set the environment variable**:
+	```bash
+	export MAXMIND_LICENSE_KEY=your_license_key_here
+	```
+4. **Create the directory**:
+	```bash
+	mkdir -p ./config/maxmind
+	```
+
+The MaxMind updater will automatically download the database on first run.
+
+## Step 5: Launch Your Enhanced Stack
+
+With all configurations in place, let’s bring everything online:
+
+```bash
+# Navigate to your Pangolin directory
+cd /path/to/your/pangolin
+
+# Start all services
+docker compose up -d
+
+# Check service health
+docker compose ps
+```
+
+## Step 6: Explore Your Enhanced Dashboard!
+
+Open your web browser and navigate to:
+
+[http://localhost:3000](http://localhost:3000/)
+
+You’ll now see a comprehensive dashboard featuring:
+
+- **Real-time Statistics**: Live request counts, response times, error rates
+- **Geographic Map**: Interactive world map showing request origins
+- **Status Code Analytics**: Visual breakdown of HTTP response codes
+- **Advanced Log Table**: Searchable, filterable request logs with pagination
+- **Service Insights**: Performance metrics by service and router
+- **Live Updates**: Real-time data via WebSocket connections
+
+### Key Dashboard Features
+
+1. **Dual Data Sources**: See both OTLP traces (real-time) and log entries (historical)
+2. **Smart Filtering**: Hide unknown services, private IPs, or apply custom filters
+3. **Geographic Intelligence**: See exactly where your traffic is coming from
+4. **Performance Monitoring**: Track response times, error rates, and throughput
+5. **Service Analytics**: Understand which services are most active
+
+## Step 7: Performance Optimization (Optional)
+
+For high-traffic environments, consider these optimizations:
+
+### Reduce OTLP Sampling
+
+```yaml
+# In traefik_config.yml
+tracing:
+  sampleRate: 0.1  # 10% sampling for production
+```
+
+### Use GRPC for Better Performance
+
+```yaml
+# In traefik_config.yml  
+tracing:
+  otlp:
+    grpc:
+      endpoint: "log-dashboard-backend:4317"
+      insecure: true
+```
+
+### Optimize Resource Usage
+
+```makefile
+# In docker-compose.yml
+environment:
+  - GOGC=20  # More aggressive garbage collection
+  - GOMEMLIMIT=1GiB
+```
+
+## Troubleshooting Common Issues
+
+### OTLP Data Not Appearing
+
+1. Verify Traefik configuration points to correct endpoint
+2. Check that OTLP ports (4317/4318) are accessible
+3. Ensure sampling rate > 0
+
+### Log Files Not Loading
+
+1. Verify log file path: `./config/traefik/logs:/logs:ro`
+2. Ensure Traefik outputs JSON format
+3. Check container logs: `docker compose logs log-dashboard-backend`
+
+### Performance Issues
+
+1. Reduce sampling rate in Traefik
+2. Use GRPC instead of HTTP for OTLP
+3. Limit logs in memory with environment variables
+
+## Development and Testing
+
+The dashboard includes helpful development features:
+
+```bash
+# View backend logs
+docker compose logs -f log-dashboard-backend
+
+# Check OTLP receiver status
+curl http://localhost:3001/api/otlp/status
+
+# View real-time statistics
+curl http://localhost:3001/api/stats | jq .
+```
+
+## Conclusion
+
+By integrating the enhanced Traefik Log Dashboard with OpenTelemetry support into your Pangolin stack, you gain unprecedented visibility into your traffic patterns. The combination of real-time OTLP traces, comprehensive log analysis, and geographic intelligence provides everything you need to monitor, debug, and optimize your infrastructure.
+
+The dashboard’s hybrid approach means you can start with traditional log parsing and gradually adopt OpenTelemetry traces as you modernize your monitoring stack - all while maintaining complete visibility into your Traefik traffic.
+
+Whether you’re troubleshooting performance issues, monitoring for security threats, or simply want to understand your traffic patterns better, this enhanced dashboard provides the insights you need in a clean, intuitive interface.
+
+**Happy monitoring!**
+
+---
+
+*For more advanced features, configuration options, and troubleshooting, visit the [GitHub repository](https://github.com/hhftechnology/traefik-log-dashboard) for comprehensive documentation and community support.*
+
+last visit
+
+## Pinned globally on Jul 31
+
+## post by german on Aug 3
+
+[![](https://forum.hhf.technology/letter_avatar_proxy/v4/letter/g/c67d28/96.png)](https://forum.hhf.technology/u/german)
+
+[german](https://forum.hhf.technology/u/german)
+
+[Aug 3](https://forum.hhf.technology/t/visualizing-your-traefik-logs-deploying-the-traefik-log-dashboard-with-the-pangolin-stack/3263/3?u=ciansedai "Post date")
+
+how to update this dashboard
+
+## post by hhf.technoloy on Aug 3
+
+[hhf.technoloy](https://forum.hhf.technology/u/hhf.technoloy) Leader
+
+[Aug 3](https://forum.hhf.technology/t/visualizing-your-traefik-logs-deploying-the-traefik-log-dashboard-with-the-pangolin-stack/3263/4?u=ciansedai "Post date")
+
+```yaml
+backend:
+  image: ghcr.io/hhftechnology/traefik-log-dashboard-backend:latest
+  container_name: log-dashboard-backend
+  restart: unless-stopped
+  volumes:
+    - ./config/traefik/logs:/logs:ro # Mount the Traefik logs directory
+    - ./config/maxmind:/maxmind # Mount the Traefik logs directory
+  environment:
+    - PORT=3001
+    - TRAEFIK_LOG_FILE=/logs/access.log
+    - USE_MAXMIND=true
+    - MAXMIND_DB_PATH=/maxmind/GeoLite2-City.mmdb
+    - MAXMIND_FALLBACK_ONLINE=true
+    - GOGC=50
+    - GOMEMLIMIT=500MiB
+
+frontend:
+  image: ghcr.io/hhftechnology/traefik-log-dashboard-frontend:latest
+  container_name: log-dashboard-frontend
+  restart: unless-stopped
+  ports:
+    - "3000:80"
+  depends_on:
+    - backend
+  deploy:
+    resources:
+      limits:
+        cpus: '0.5'
+        memory: 256M
+      reservations:
+        cpus: '0.1'
+        memory: 64M
+```
+
+## post by phneeley on Aug 3
+
+[phneeley](https://forum.hhf.technology/u/phneeley)
+
+[Aug 3](https://forum.hhf.technology/t/visualizing-your-traefik-logs-deploying-the-traefik-log-dashboard-with-the-pangolin-stack/3263/5?u=ciansedai "Post date")
+
+Nice! Though, I tried to implement this and it really messed up my pangolin VPS, which I had set up mostly based on your crowdsec and middleware manager guides. I think it ended up causing a massive memory leak that then prevented me from access my VPS via SSH. I ended up having to detach the boot volume and attach it to a rescue VM as a secondary volume to revert the docker compose stack and volumes to their prior state.
+
+## post by hhf.technoloy on Aug 3
+
+[hhf.technoloy](https://forum.hhf.technology/u/hhf.technoloy) Leader
+
+[Aug 3](https://forum.hhf.technology/t/visualizing-your-traefik-logs-deploying-the-traefik-log-dashboard-with-the-pangolin-stack/3263/6?u=ciansedai "Post date")
+
+there is no memory leak. your log file might have overwhelmed the system. currently v1.0.6 is running on almost 62 pangolin installations.
+
+below is with 22000 entries
+
+[![image](https://forum-cdn.hhf.technology/original/2X/d/d9cb69509a6d9378335be2a8736c9bd096c72a74.png)](https://forum-cdn.hhf.technology/original/2X/d/d9cb69509a6d9378335be2a8736c9bd096c72a74.png "image")
+
+## post by Der\_Joker on Aug 3
+
+[Der\_Joker](https://forum.hhf.technology/u/der_joker)
+
+[Aug 3](https://forum.hhf.technology/t/visualizing-your-traefik-logs-deploying-the-traefik-log-dashboard-with-the-pangolin-stack/3263/7?u=ciansedai "Post date")
+
+First of all, thank you for your work on this project — I love dashboards because they’re so useful!
+
+I’m currently using an ARM64-based VPS (Ampere A1 Oracle Instance), and I ran into an issue with running the provided Docker image due to architecture incompatibility (`exec format error`).
+
+Would it be possible to add support for ARM64 (aarch64) either?
+
+## post by hhf.technoloy on Aug 3
+
+[hhf.technoloy](https://forum.hhf.technology/u/hhf.technoloy) Leader
+
+[Aug 3](https://forum.hhf.technology/t/visualizing-your-traefik-logs-deploying-the-traefik-log-dashboard-with-the-pangolin-stack/3263/8?u=ciansedai "Post date")
+
+yes, i am working on non-root image. once that’s done will incorporate arm in the same release. 1.0.7
+
+## post by phneeley on Aug 3
+
+[phneeley](https://forum.hhf.technology/u/phneeley)
+
+[Aug 3](https://forum.hhf.technology/t/visualizing-your-traefik-logs-deploying-the-traefik-log-dashboard-with-the-pangolin-stack/3263/9?u=ciansedai "Post date")
+
+I’m sure it was my own user error or lack of understanding about how the config would interact with my existing set up. Also now seeing that this is for AMD arch, and I’m also running ARM Ampere like user above.
+
+## post by Der\_Joker on Aug 3
+
+[Der\_Joker](https://forum.hhf.technology/u/der_joker)
+
+[Aug 3](https://forum.hhf.technology/t/visualizing-your-traefik-logs-deploying-the-traefik-log-dashboard-with-the-pangolin-stack/3263/10?u=ciansedai "Post date")
+
+That’s awesome! Thanks!
+
+## post by hhf.technoloy on Aug 3
+
+## post by Der\_Joker on Aug 3
+
+## post by hhf.technoloy on Aug 3
+
+## post by negilo6865 on Aug 7
+
+## post by hhf.technoloy on Aug 7
+
+## post by hhf.technoloy on Aug 7
+
+## post by hhf.technoloy on Aug 7
+
+## post by phneeley on Aug 9
+
+10 days later
+
+---
+
+### `fosrl_olm_ A tunneling client to Newt sites.md` — pangolin
+
+---
+title: "fosrl/olm: A tunneling client to Newt sites"
+source: "https://github.com/fosrl/olm"
+author:
+  - "[[oschwartz10612]]"
+published:
+created: 2025-12-08
+description: "A tunneling client to Newt sites . Contribute to fosrl/olm development by creating an account on GitHub."
+tags:
+  - "clippings"
+---
+**[olm](https://github.com/fosrl/olm)** Public
+
+A tunneling client to Newt sites
+
+[docs.pangolin.net](https://docs.pangolin.net/ "https://docs.pangolin.net")
+
+[AGPL-3.0 license](https://github.com/fosrl/olm/blob/main/LICENSE)
+
+[Contributing](https://github.com/fosrl/olm/blob/main/CONTRIBUTING.md)
+
+[Security policy](https://github.com/fosrl/olm/blob/main/SECURITY.md)
+
+[87 stars](https://github.com/fosrl/olm/stargazers) [11 forks](https://github.com/fosrl/olm/forks) [3 watching](https://github.com/fosrl/olm/watchers) [Branches](https://github.com/fosrl/olm/branches) [Tags](https://github.com/fosrl/olm/tags) [Activity](https://github.com/fosrl/olm/activity) [Custom properties](https://github.com/fosrl/olm/custom-properties)
+
+Public repository
+
+[Open in github.dev](https://github.dev/) [Open in a new github.dev tab](https://github.dev/) [Open in codespace](https://github.com/codespaces/new/fosrl/olm?resume=1)
+
+<table><thead><tr><th colspan="2"><span>Name</span></th><th colspan="1"><span>Name</span></th><th><p><span>Last commit message</span></p></th><th colspan="1"><p><span>Last commit date</span></p></th></tr></thead><tbody><tr><td colspan="3"><p><span><a href="https://github.com/fosrl/olm/commit/f24add4f72b7503bd2e40982a8012b714307409c">f24add4</a> ·</span></p><p><a href="https://github.com/fosrl/olm/commits/main/"><span><span><span>365 Commits</span></span></span></a></p></td></tr><tr><td colspan="2"><p><a href="https://github.com/fosrl/olm/tree/main/.github">.github</a></p></td><td colspan="1"><p><a href="https://github.com/fosrl/olm/tree/main/.github">.github</a></p></td><td><p><a href="https://github.com/fosrl/olm/commit/25644db2f3ee1d99279d2e0399a959082081873f">Update test</a></p></td><td></td></tr><tr><td colspan="2"><p><a href="https://github.com/fosrl/olm/tree/main/api">api</a></p></td><td colspan="1"><p><a href="https://github.com/fosrl/olm/tree/main/api">api</a></p></td><td><p><a href="https://github.com/fosrl/olm/commit/2a60de4f1f55037e893dfb087de57d2efac623f7">Add site name</a></p></td><td></td></tr><tr><td colspan="2"><p><a href="https://github.com/fosrl/olm/tree/main/device">device</a></p></td><td colspan="1"><p><a href="https://github.com/fosrl/olm/tree/main/device">device</a></p></td><td><p><a href="https://github.com/fosrl/olm/commit/692800b411c445f631943efeaaddbe933ce0c7de">Shutting down correct now</a></p></td><td></td></tr><tr><td colspan="2"><p><a href="https://github.com/fosrl/olm/tree/main/dns">dns</a></p></td><td colspan="1"><p><a href="https://github.com/fosrl/olm/tree/main/dns">dns</a></p></td><td><p><a href="https://github.com/fosrl/olm/commit/b601368cc7b4ba76c81f0f0bc978e4053a18f0dc">Add component to override the dns</a></p></td><td></td></tr><tr><td colspan="2"><p><a href="https://github.com/fosrl/olm/tree/main/olm">olm</a></p></td><td colspan="1"><p><a href="https://github.com/fosrl/olm/tree/main/olm">olm</a></p></td><td><p><a href="https://github.com/fosrl/olm/commit/02c838eb862de868e6aa35e0db05d093340bbc20">Fix small bugs =</a></p></td><td></td></tr><tr><td colspan="2"><p><a href="https://github.com/fosrl/olm/tree/main/peers">peers</a></p></td><td colspan="1"><p><a href="https://github.com/fosrl/olm/tree/main/peers">peers</a></p></td><td><p><a href="https://github.com/fosrl/olm/commit/2a60de4f1f55037e893dfb087de57d2efac623f7">Add site name</a></p></td><td></td></tr><tr><td colspan="2"><p><a href="https://github.com/fosrl/olm/tree/main/websocket">websocket</a></p></td><td colspan="1"><p><a href="https://github.com/fosrl/olm/tree/main/websocket">websocket</a></p></td><td><p><a href="https://github.com/fosrl/olm/commit/25644db2f3ee1d99279d2e0399a959082081873f">Update test</a></p></td><td></td></tr><tr><td colspan="2"><p><a href="https://github.com/fosrl/olm/blob/main/.dockerignore">.dockerignore</a></p></td><td colspan="1"><p><a href="https://github.com/fosrl/olm/blob/main/.dockerignore">.dockerignore</a></p></td><td><p><a href="https://github.com/fosrl/olm/commit/f24add4f72b7503bd2e40982a8012b714307409c">Fix docker ignore</a></p></td><td></td></tr><tr><td colspan="2"><p><a href="https://github.com/fosrl/olm/blob/main/.gitignore">.gitignore</a></p></td><td colspan="1"><p><a href="https://github.com/fosrl/olm/blob/main/.gitignore">.gitignore</a></p></td><td><p><a href="https://github.com/fosrl/olm/commit/218e4f88bc8890ed44cba7c99b76711392e0dce4">Package?</a></p></td><td></td></tr><tr><td colspan="2"><p><a href="https://github.com/fosrl/olm/blob/main/.go-version">.go-version</a></p></td><td colspan="1"><p><a href="https://github.com/fosrl/olm/blob/main/.go-version">.go-version</a></p></td><td><p><a href="https://github.com/fosrl/olm/commit/d64a4b5973a13cb5c5d496d09d61a9e63f624b73">Update.go-version</a></p></td><td></td></tr><tr><td colspan="3"></td></tr></tbody></table>
+
+## Olm
+
+Olm is a [WireGuard](https://www.wireguard.com/) tunnel client designed to securely connect your computer to Newt sites running on remote networks.
+
+Olm is used with Pangolin and Newt as part of the larger system. See documentation below:
+
+- [Full Documentation](https://docs.pangolin.net/)
+
+## Key Functions
+
+Using the Olm ID and a secret, the olm will make HTTP requests to Pangolin to receive a session token. Using that token, it will connect to a websocket and maintain that connection. Control messages will be sent over the websocket.
+
+When Olm receives WireGuard control messages, it will use the information encoded (endpoint, public key) to bring up a WireGuard tunnel on your computer to a remote Newt. It will ping over the tunnel to ensure the peer is brought up.
+
+## CLI Args
+
+- `endpoint`: The endpoint where both Gerbil and Pangolin reside in order to connect to the websocket.
+- `id`: Olm ID generated by Pangolin to identify the olm.
+- `secret`: A unique secret (not shared and kept private) used to authenticate the olm ID with the websocket in order to receive commands.
+- `org` (optional): Organization ID to connect to.
+- `user-token` (optional): User authentication token.
+- `mtu` (optional): MTU for the internal WG interface. Default: 1280
+- `dns` (optional): DNS server to use to resolve the endpoint. Default: 8.8.8.8
+- `upstream-dns` (optional): Upstream DNS server(s), comma-separated. Default: 8.8.8.8:53
+- `log-level` (optional): The log level to use (DEBUG, INFO, WARN, ERROR, FATAL). Default: INFO
+- `ping-interval` (optional): Interval for pinging the server. Default: 3s
+- `ping-timeout` (optional): Timeout for each ping. Default: 5s
+- `interface` (optional): Name of the WireGuard interface. Default: olm
+- `enable-api` (optional): Enable API server for receiving connection requests. Default: false
+- `http-addr` (optional): HTTP server address (e.g., ':9452'). Default::9452
+- `socket-path` (optional): Unix socket path (or named pipe on Windows). Default: /var/run/olm.sock (Linux/macOS) or olm (Windows)
+- `disable-holepunch` (optional): Disable hole punching. Default: false
+- `override-dns` (optional): Override system DNS settings. Default: false
+- `disable-relay` (optional): Disable relay connections. Default: false
+
+## Environment Variables
+
+All CLI arguments can also be set via environment variables:
+
+- `PANGOLIN_ENDPOINT`: Equivalent to `--endpoint`
+- `OLM_ID`: Equivalent to `--id`
+- `OLM_SECRET`: Equivalent to `--secret`
+- `ORG`: Equivalent to `--org`
+- `USER_TOKEN`: Equivalent to `--user-token`
+- `MTU`: Equivalent to `--mtu`
+- `DNS`: Equivalent to `--dns`
+- `UPSTREAM_DNS`: Equivalent to `--upstream-dns`
+- `LOG_LEVEL`: Equivalent to `--log-level`
+- `INTERFACE`: Equivalent to `--interface`
+- `ENABLE_API`: Set to "true" to enable API server (equivalent to `--enable-api`)
+- `HTTP_ADDR`: Equivalent to `--http-addr`
+- `SOCKET_PATH`: Equivalent to `--socket-path`
+- `PING_INTERVAL`: Equivalent to `--ping-interval`
+- `PING_TIMEOUT`: Equivalent to `--ping-timeout`
+- `DISABLE_HOLEPUNCH`: Set to "true" to disable hole punching (equivalent to `--disable-holepunch`)
+- `OVERRIDE_DNS`: Set to "true" to override system DNS settings (equivalent to `--override-dns`)
+- `DISABLE_RELAY`: Set to "true" to disable relay connections (equivalent to `--disable-relay`)
+- `CONFIG_FILE`: Set to the location of a JSON file to load secret values
+
+Examples:
+
+```
+olm \
+--id 31frd0uzbjvp721 \
+--secret h51mmlknrvrwv8s4r1i210azhumt6isgbpyavxodibx1k2d6 \
+--endpoint https://example.com
+```
+
+You can also run it with Docker compose. For example, a service in your `docker-compose.yml` might look like this using environment vars (recommended):
+
+```
+services:
+    olm:
+        image: fosrl/olm
+        container_name: olm
+        restart: unless-stopped
+        network_mode: host
+        devices:
+            - /dev/net/tun:/dev/net/tun
+        environment:
+            - PANGOLIN_ENDPOINT=https://example.com
+            - OLM_ID=31frd0uzbjvp721
+            - OLM_SECRET=h51mmlknrvrwv8s4r1i210azhumt6isgbpyavxodibx1k2d6
+```
+
+You can also pass the CLI args to the container:
+
+```
+services:
+    olm:
+        image: fosrl/olm
+        container_name: olm
+        restart: unless-stopped
+        network_mode: host
+        devices:
+            - /dev/net/tun:/dev/net/tun
+        command:
+            - --id 31frd0uzbjvp721
+            - --secret h51mmlknrvrwv8s4r1i210azhumt6isgbpyavxodibx1k2d6
+            - --endpoint https://example.com
+```
+
+**Docker Configuration Notes:**
+
+- `network_mode: host` brings the olm network interface to the host system, allowing the WireGuard tunnel to function properly
+- `devices: - /dev/net/tun:/dev/net/tun` is required to give the container access to the TUN device for creating WireGuard interfaces
+
+You can use `CONFIG_FILE` to define a location of a config file to store the credentials between runs.
+
+```
+$ cat ~/.config/olm-client/config.json
+{
+  "id": "spmzu8rbpzj1qq6",
+  "secret": "f6v61mjutwme2kkydbw3fjo227zl60a2tsf5psw9r25hgae3",
+  "endpoint": "https://app.pangolin.net",
+  "org": "",
+  "userToken": "",
+  "mtu": 1280,
+  "dns": "8.8.8.8",
+  "upstreamDNS": ["8.8.8.8:53"],
+  "interface": "olm",
+  "logLevel": "INFO",
+  "enableApi": false,
+  "httpAddr": "",
+  "socketPath": "/var/run/olm.sock",
+  "pingInterval": "3s",
+  "pingTimeout": "5s",
+  "disableHolepunch": false,
+  "overrideDNS": false,
+  "disableRelay": false,
+  "tlsClientCert": ""
+}
+```
+
+This file is also written to when olm first starts up. So you do not need to run every time with --id and secret if you have run it once!
+
+Default locations:
+
+- **macOS**: `~/Library/Application Support/olm-client/config.json`
+- **Windows**: `%PROGRAMDATA%\olm\olm-client\config.json`
+- **Linux/Others**: `~/.config/olm-client/config.json`
+
+## Hole Punching
+
+In the default mode, olm uses both relaying through Gerbil and NAT hole punching to connect to newt. If you want to disable hole punching, use the `--disable-holepunch` flag. Hole punching attempts to orchestrate a NAT hole punch between the two sites so that traffic flows directly, which can save data costs and improve speed. If hole punching fails, traffic will fall back to relaying through Gerbil.
+
+Right now, basic NAT hole punching is supported. We plan to add:
+
+- Birthday paradox
+- UPnP
+- LAN detection
+
+## Windows Service
+
+On Windows, olm has to be installed and run as a Windows service. When running it with the cli args live above it will attempt to install and run the service to function like a cli tool. You can also run the following:
+
+```
+# Install the service
+olm.exe install
+
+# Start the service
+olm.exe start
+
+# Stop the service
+olm.exe stop
+
+# Check service status
+olm.exe status
+
+# Remove the service
+olm.exe remove
+
+# Run in debug mode (console output) with our without id & secret
+olm.exe debug
+
+# Show help
+olm.exe help
+```
+
+Note running the service requires credentials in `%PROGRAMDATA%\olm\olm-client\config.json`.
+
+### Service Configuration
+
+When running as a service, Olm will read configuration from environment variables or you can modify the service to include command-line arguments:
+
+1. Install the service: `olm.exe install`
+2. Set the credentials in `%PROGRAMDATA%\olm\olm-client\config.json`. Hint: if you run olm once with --id and --secret this file will be populated!
+3. Start the service: `olm.exe start`
+
+### Service Logs
+
+When running as a service, logs are written to:
+
+- Windows Event Log (Application log, source: "OlmWireguardService")
+- Log files in: `%PROGRAMDATA%\olm\logs\olm.log`
+
+You can view the Windows Event Log using Event Viewer or PowerShell:
+
+```
+Get-EventLog -LogName Application -Source "OlmWireguardService" -Newest 10
+```
+
+## HTTP API
+
+Olm can be controlled with an embedded HTTP server when using `--enable-http`. This allows you to start it as a daemon and trigger it with the following endpoints. The API can listen on either a TCP address or a Unix socket/Windows named pipe.
+
+By default, when `--enable-http` is used, Olm listens on a TCP address (configured via `--http-addr`, default `:9452`). Alternatively, Olm can listen on a Unix socket (Linux/macOS) or Windows named pipe for local-only communication with better security.
+
+**Unix Socket (Linux/macOS):**
+
+- Socket path example: `/var/run/olm/olm.sock`
+- The directory is created automatically if it doesn't exist
+- Socket permissions are set to `0666` to allow access
+- Existing socket files are automatically removed on startup
+- Socket file is cleaned up when Olm stops
+
+**Windows Named Pipe:**
+
+- Pipe path example: `\\.\pipe\olm`
+- If the path doesn't start with `\`, it's automatically prefixed with `\\.\pipe\`
+- Security descriptor grants full access to Everyone and the current owner
+- Named pipes are automatically cleaned up by Windows
+
+**Connecting to the Socket:**
+
+```
+# Linux/macOS - using curl with Unix socket
+curl --unix-socket /var/run/olm/olm.sock http://localhost/status
+
+---
+
+### POST /connect
+Initiates a new connection request to a Pangolin server.
+
+**Request Body:**
+\`\`\`json
+{
+  "id": "string",
+  "secret": "string",
+  "endpoint": "string",
+  "userToken": "string",
+  "mtu": 1280,
+  "dns": "8.8.8.8",
+  "dnsProxyIP": "string",
+  "upstreamDNS": ["8.8.8.8:53", "1.1.1.1:53"],
+  "interfaceName": "olm",
+  "holepunch": false,
+  "tlsClientCert": "string",
+  "pingInterval": "3s",
+  "pingTimeout": "5s",
+  "orgId": "string"
+}
+```
+
+**Required Fields:**
+
+- `id`: Olm ID generated by Pangolin
+- `secret`: Authentication secret for the Olm ID
+- `endpoint`: Target Pangolin endpoint URL
+
+**Optional Fields:**
+
+- `userToken`: User authentication token
+- `mtu`: MTU for the internal WireGuard interface (default: 1280)
+- `dns`: DNS server to use for resolving the endpoint
+- `dnsProxyIP`: DNS proxy IP address
+- `upstreamDNS`: Array of upstream DNS servers
+- `interfaceName`: Name of the WireGuard interface (default: olm)
+- `holepunch`: Enable NAT hole punching (default: false)
+- `tlsClientCert`: TLS client certificate
+- `pingInterval`: Interval for pinging the server (default: 3s)
+- `pingTimeout`: Timeout for each ping (default: 5s)
+- `orgId`: Organization ID to connect to
+
+**Response:**
+
+- **Status Code:**`202 Accepted`
+- **Content-Type:**`application/json`
+```
+{
+  "status": "connection request accepted"
+}
+```
+
+**Error Responses:**
+
+- `405 Method Not Allowed` - Non-POST requests
+- `400 Bad Request` - Invalid JSON or missing required fields
+- `409 Conflict` - Already connected to a server (disconnect first)
+
+---
+
+### GET /status
+
+Returns the current connection status, registration state, and peer information.
+
+**Response:**
+
+- **Status Code:**`200 OK`
+- **Content-Type:**`application/json`
+
+**Fields:**
+
+- `connected`: Boolean indicating if connected to Pangolin
+- `registered`: Boolean indicating if registered with the server
+- `terminated`: Boolean indicating if the connection was terminated
+- `version`: Olm version string
+- `agent`: Agent identifier
+- `orgId`: Current organization ID
+- `peers`: Map of peer statuses by site ID
+	- `siteId`: Peer site identifier
+	- `name`: Site name
+	- `connected`: Boolean peer connection state
+	- `rtt`: Peer round-trip time (integer, nanoseconds)
+	- `lastSeen`: Last time peer was seen (RFC3339 timestamp)
+	- `endpoint`: Peer endpoint address
+	- `isRelay`: Whether the peer is relayed (true) or direct (false)
+	- `peerAddress`: Peer's IP address in the tunnel
+	- `holepunchConnected`: Whether holepunch connection is established
+- `networkSettings`: Current network configuration including tunnel IP
+
+**Error Responses:**
+
+- `405 Method Not Allowed` - Non-GET requests
+
+---
+
+### POST /disconnect
+
+Disconnects from the current Pangolin server and tears down the WireGuard tunnel.
+
+**Request Body:** None required
+
+**Response:**
+
+- **Status Code:**`200 OK`
+- **Content-Type:**`application/json`
+```
+{
+  "status": "disconnect initiated"
+}
+```
+
+**Error Responses:**
+
+- `405 Method Not Allowed` - Non-POST requests
+- `409 Conflict` - Not currently connected to a server
+
+---
+
+### POST /switch-org
+
+Switches to a different organization while maintaining the connection.
+
+**Request Body:**
+
+```
+{
+  "orgId": "string"
+}
+```
+
+**Required Fields:**
+
+- `orgId`: The organization ID to switch to
+
+**Response:**
+
+- **Status Code:**`200 OK`
+- **Content-Type:**`application/json`
+```
+{
+  "status": "org switch request accepted"
+}
+```
+
+**Error Responses:**
+
+- `405 Method Not Allowed` - Non-POST requests
+- `400 Bad Request` - Invalid JSON or missing orgId field
+- `500 Internal Server Error` - Org switch failed
+
+---
+
+### POST /exit
+
+Initiates a graceful shutdown of the Olm process.
+
+**Request Body:** None required
+
+**Response:**
+
+- **Status Code:**`200 OK`
+- **Content-Type:**`application/json`
+```
+{
+  "status": "shutdown initiated"
+}
+```
+
+**Note:** The response is sent before shutdown begins. There is a 100ms delay before the actual shutdown to ensure the response is delivered.
+
+**Error Responses:**
+
+- `405 Method Not Allowed` - Non-POST requests
+
+---
+
+### GET /health
+
+Simple health check endpoint to verify the API server is running.
+
+**Response:**
+
+- **Status Code:**`200 OK`
+- **Content-Type:**`application/json`
+```
+{
+  "status": "ok"
+}
+```
+
+**Error Responses:**
+
+- `405 Method Not Allowed` - Non-GET requests
+
+---
+
+## Usage Examples
+
+```
+curl -X POST http://localhost:9452/connect \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": "31frd0uzbjvp721",
+    "secret": "h51mmlknrvrwv8s4r1i210azhumt6isgbpyavxodibx1k2d6",
+    "endpoint": "https://example.com"
+  }'
+```
+```
+curl -X POST http://localhost:9452/connect \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": "31frd0uzbjvp721",
+    "secret": "h51mmlknrvrwv8s4r1i210azhumt6isgbpyavxodibx1k2d6",
+    "endpoint": "https://example.com",
+    "mtu": 1400,
+    "holepunch": true,
+    "pingInterval": "5s"
+  }'
+```
+```
+curl http://localhost:9452/status
+```
+
+### Switch organization
+
+```
+curl -X POST http://localhost:9452/switch-org \
+  -H "Content-Type: application/json" \
+  -d '{"orgId": "org_456"}'
+```
+```
+curl -X POST http://localhost:9452/disconnect
+```
+
+### Health check
+
+```
+curl http://localhost:9452/health
+```
+
+### Shutdown Olm
+
+```
+curl -X POST http://localhost:9452/exit
+```
+```
+curl --unix-socket /var/run/olm/olm.sock http://localhost/status
+curl --unix-socket /var/run/olm/olm.sock -X POST http://localhost/disconnect
+```
+
+## Build
+
+### Binary
+
+Make sure to have Go 1.23.1 installed.
+
+```
+make local
+```
+
+## Licensing
+
+Olm is dual licensed under the AGPLv3 and the Fossorial Commercial license. For inquiries about commercial licensing, please contact us.
+
+## Contributions
+
+Please see [CONTRIBUTIONS](https://github.com/fosrl/olm/blob/main/CONTRIBUTING.md) in the repository for guidelines and best practices.
+
+## Releases 8
+
+[\+ 7 releases](https://github.com/fosrl/olm/releases)
+
+## Packages 1
+
+- [olm](https://github.com/orgs/fosrl/packages/container/package/olm)
+
+## Languages
+
+- [Go 92.7%](https://github.com/fosrl/olm/search?l=go)
+- [Shell 4.3%](https://github.com/fosrl/olm/search?l=shell)
+- [Inno Setup 2.0%](https://github.com/fosrl/olm/search?l=inno-setup)
+- Other 1.0%
+
+---
+
+### `old_Implementing External Authentication in Pangolin Using Tinyauth and the Middleware Manager - Networking.md` — pangolin
+
+---
+title: "Implementing External Authentication in Pangolin Using Tinyauth and the Middleware Manager - Networking"
+source: "https://forum.hhf.technology/t/implementing-external-authentication-in-pangolin-using-tinyauth-and-the-middleware-manager/1417"
+author:
+  - "[[HHF Technology Forums]]"
+published:
+created: 2025-12-29
+description: "A collection of user-written guides and step-by-step tutorials for everything from beginner setups to advanced configurations."
+tags:
+  - "clippings"
+---
+## Implementing External Authentication in Pangolin Using Tinyauth and the Middleware Manager
+
+## post by Mattercoder on Apr 18
+
+[Mattercoder](https://forum.hhf.technology/u/mattercoder)
+
+[Apr 18](https://forum.hhf.technology/t/implementing-external-authentication-in-pangolin-using-tinyauth-and-the-middleware-manager/1417?u=ciansedai "Post date")
+
+## Implementing External Authentication in Pangolin Using Tinyauth and the Middleware Manager
+
+Pangolin now supports flexible authentication options through the Middleware-manager. While [Authentik](https://goauthentik.io/) and [Authelia](https://www.authelia.com/) are popular options, this guide shows how to implement external authentication using [Tinyauth](https://tinyauth.app/) — a lightweight, rising middleware project.
+
+> **Prerequisite:** This article assumes you’ve already implemented [Pangolin’s Middleware Manager](https://forum.hhf.technology/t/enhancing-your-pangolin-deployment-with-middleware-manager/1324). If not, go through that guide first.
+
+---
+
+## Prerequisites
+
+- Pangolin deployed with the Middleware Manager
+- Docker and Docker Compose set up on your VPS
+- A registered domain (e.g. `mydomain.com`) with a subdomain for Tinyauth (e.g. `tinyauth.mydomain.com`) pointing to your VPS
+- Basic familiarity with managing Docker and editing YAML files
+
+---
+
+## Step 1: Add Tinyauth to Docker Compose
+
+In your existing Docker Compose setup, add the following service:
+
+```yaml
+tinyauth:
+    image: ghcr.io/steveiliop56/tinyauth:v3
+    container_name: tinyauth
+    restart: unless-stopped
+    environment:
+      - PORT=10000
+      - SECRET=${TINYAUTH_SECRET_KEY}
+      - APP_URL=https://tinyauth.mydomain.com
+      - LOG_LEVEL=0
+      - USERS_FILE=users_file
+    volumes:
+      - ./config/tinyauth/users:/tinyauth/users_file
+```
+
+---
+
+## Step 2: Create the Secret Key
+
+Create a `.env` file in the same folder as your docker-compose.yml file with this line:
+
+```
+TINYAUTH_SECRET_KEY=your-generated-secret-key
+```
+
+You can generate the key using:
+
+```bash
+openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 32
+```
+
+---
+
+## Step 3: Create User Credentials
+
+Create a new folder in the pangolin config folder called tinyauth  
+Inside `./config/tinyauth/`, create a `users` file with the login credentials.
+
+Use the `htpasswd` tool to generate secure bcrypt hashes. Note: escape `$` characters as `$$`.
+
+```bash
+echo $(htpasswd -nB test) | sed -e s/\\$/\\$\\$/g
+```
+
+Example content for a `test/test` login:
+
+```
+test:$$2y$$05$$BsP6eSe4FIAqhhtGO8EUEuZWkdgWtU9NdqrJopxicTVvqxMQZ6BYu
+```
+
+> Alternatively, credentials can be passed directly via the `USERS` environment variable
+
+You can get more info on the Tinyauth set up including integration of OAuth to Github in [this Jim’s garage video](https://www.youtube.com/watch?v=qmlHirOpzpc)).
+
+---
+
+NOTE: THE FOLLOWING CHANGES COULD RESULT IN BREAKING CHANGES. PLEASE BE CAREFUL.
+
+## Step 4: Expose the Tinyauth Port
+
+Update your `gerbil` service in Docker Compose to expose the Tinyauth port:
+
+```yaml
+ports:
+      - 10000:10000  # Exposes Tinyauth
+```
+
+---
+
+## Step 5: Add Traefik Routing Rules
+
+Edit your Traefik dynamic configuration file (e.g., `dynamic_config.yml`) to include Tinyauth routes.
+
+### HTTP Redirect Router
+
+```yaml
+tinyauth-router-redirect:
+    rule: "Host(\`tinyauth.mydomain.com\`)"
+    service: tinyauth-service
+    entryPoints:
+      - web
+    middlewares:
+      - redirect-to-https
+```
+
+### HTTPS Router
+
+```yaml
+tinyauth:
+    rule: "Host(\`tinyauth.mydomain.com\`)"
+    service: tinyauth-service
+    entryPoints:
+      - websecure
+    tls:
+      certResolver: letsencrypt
+```
+
+### Service Entry
+
+```yaml
+tinyauth-service:
+    loadBalancer:
+      servers:
+        - url: "http://tinyauth:10000"
+```
+
+---
+
+## Step 6: Define Middleware Template
+
+In your Middleware Manager templates file (`middleware/templates.yml`), add a new entry:
+
+```yaml
+- id: tinyauth
+    name: Tiny Auth
+    type: forwardAuth
+    config:
+      address: http://tinyauth:10000/api/auth/traefik
+```
+
+---
+
+## Step 7: Start Services
+
+Start everything:
+
+```bash
+docker compose up -d
+```
+
+Check services are running:
+
+```bash
+sudo lsof -i -P -n | grep LISTEN
+```
+
+> **Screenshot:** this is the command and the result with `:10000` showing in the list.
+
+[![port listen](https://forum-cdn.hhf.technology/original/2X/5/5e41f901b8b042c2e0b46163769c22220b6b312e.png)](https://forum-cdn.hhf.technology/original/2X/5/5e41f901b8b042c2e0b46163769c22220b6b312e.png "port listen")
+
+In your browser, open an incognito tab and visit:
+
+```bash
+https://tinyauth.mydomain.com
+```
+
+You should see the Tinyauth login page.
+
+---
+
+## Step 8: Test with a Simple App
+
+Set up a basic app (like a Python web server):
+
+```bash
+python3 -m http.server 8000
+```
+
+Expose it with Pangolin as a resource, e.g.:
+
+```bash
+https://helloworld.mydomain.com
+```
+
+Verify it works without authentication first.
+
+> **Screenshot** Here’s my URL unauthenticated.  
+> 
+> [![HelloWorldUnauthenticated](https://forum-cdn.hhf.technology/original/2X/9/95caf21e92f6a0b799ccb4845ac8038ee6fa5c91.png)](https://forum-cdn.hhf.technology/original/2X/9/95caf21e92f6a0b799ccb4845ac8038ee6fa5c91.png "HelloWorldUnauthenticated")
+
+---
+
+## Step 9: Attach Middleware in Pangolin
+
+1. Open the Pangolin Middleware Manager UI.
+2. Navigate to the **Middlewares** tab.
+	- Confirm you see `Tinyauth` listed.
+3. Return to the **Dashboard** and click **Manage** next to the resource you want to protect.
+4. Under **Attached Middlewares**, click **Add Middleware**.
+5. Select **Tinyauth (forwardAuth)** and click **Add Middlewares**.
+
+> **Screenshot:** Here’s the middleware list and the form where you attach Tinyauth.  
+> 
+> [![Tinyauth-middleware-select](https://forum-cdn.hhf.technology/optimized/2X/0/09a2fce3236c47f869f0e02583247d20fe43bd35_2_536x500.png)](https://forum-cdn.hhf.technology/original/2X/0/09a2fce3236c47f869f0e02583247d20fe43bd35.png "Tinyauth-middleware-select")
+
+## Step 10: Final Test
+
+Open your protected resource in an incognito window:
+
+```bash
+https://resourcename.mydomain.com
+```
+
+You should be redirected to `https://tinyauth.mydomain.com` for login. After authenticating, you’ll return to the protected app.
+
+---
+
+## Summary
+
+In this article, we walked through how to set up the blazing fast, minimalist [Tinyauth](https://tinyauth.app/) as a forward auth provider for Pangolin. With just a few steps and clever integration using the Middleware Manager, you now have a lightweight and secure authentication layer protecting your self-hosted apps. There are more integrations to come!!!
+
+---
+
+## Thanks for Reading!
+
+Tinyauth is a fantastic project from an incredibly talented young developer — it’s inspiring to see such innovation in the open-source space. If you found this guide helpful, consider exploring more of what Pangolin has to offer, and feel free to share your feedback or improvements in the [Pangolin forum](https://forum.hhf.technology/).
+
+Happy self-hosting!
+
+## post by hdsplus on Apr 19
+
+## post by hhf.technoloy on Apr 19
+
+## post by hdsplus on Apr 19
+
+## Pinned globally on Apr 20
+
+  
+
+### There is 1 new topic remaining, or browse other topics in Networking
+
+[Powered by Discourse](https://discourse.org/powered-by)
+
+---
+
+### `pangolin/README.md` — pangolin
+
+<div align="center">
+    <h2>
+    <a href="https://pangolin.net/">
+        <picture>
+            <source media="(prefers-color-scheme: dark)" srcset="public/logo/word_mark_white.png">
+            <img alt="Pangolin Logo" src="public/logo/word_mark_black.png" width="350">
+        </picture>
+    </a>
+    </h2>
+</div>
+
+<div align="center">
+  <h5>
+      <a href="https://pangolin.net/">
+        Website
+      </a>
+      <span> | </span>
+      <a href="https://docs.pangolin.net/">
+        Documentation
+      </a>
+      <span> | </span>
+      <a href="mailto:contact@pangolin.net">
+        Contact Us
+      </a>
+  </h5>
+</div>
+
+<div align="center">
+
+[![Discord](https://img.shields.io/discord/1325658630518865980?logo=discord&style=flat-square)](https://discord.gg/HCJR8Xhme4)
+[![Slack](https://img.shields.io/badge/chat-slack-yellow?style=flat-square&logo=slack)](https://pangolin.net/slack)
+[![Docker](https://img.shields.io/docker/pulls/fosrl/pangolin?style=flat-square)](https://hub.docker.com/r/fosrl/pangolin)
+![Stars](https://img.shields.io/github/stars/fosrl/pangolin?style=flat-square)
+[![YouTube](https://img.shields.io/badge/YouTube-red?logo=youtube&logoColor=white&style=flat-square)](https://www.youtube.com/@pangolin-net)
+
+</div>
+
+<p align="center">
+    <strong>
+        Get started with Pangolin at <a href="https://app.pangolin.net/auth/signup">app.pangolin.net</a>
+    </strong>
+</p>
+
+Pangolin is an open-source, identity-based remote access platform built on WireGuard® that enables secure, seamless connectivity to private and public resources. Pangolin combines reverse proxy and VPN capabilities into one platform, providing browser-based access to web applications and client-based access to any private resources with NAT traversal, all with granular access controls.
+
+## Installation
+
+- Get started for free with [Pangolin Cloud](https://app.pangolin.net/).
+- Or, check out the [quick install guide](https://docs.pangolin.net/self-host/quick-install) for how to self-host Pangolin.
+  - Install from the [DigitalOcean marketplace](https://marketplace.digitalocean.com/apps/pangolin-ce-1?refcode=edf0480eeb81) for a one-click pre-configured installer.
+
+<img src="public/screenshots/hero.png" alt="Pangolin" width="100%" />
+
+## Deployment Options
+
+- **Pangolin Cloud** - Fully managed service - no infrastructure required.
+- **Self-Host: Community Edition** - Free, open source, and licensed under AGPL-3.
+- **Self-Host: Enterprise Edition** - Licensed under Fossorial Commercial License. Free for personal and hobbyist use, and for businesses making less than \$100K USD gross annual revenue.
+
+## Key Features
+
+### Connect remote networks with sites and NAT traversal
+
+Pangolin's site connectors provide gateways into networks so you can access any networked resources. Sites use outbound tunnels and intelligent NAT traversal to make networks behind restrictive firewalls available for authorized access without public IPs or open ports. Easily deploy a site as a binary or container on any platform.
+
+<img src="public/screenshots/sites.png" alt="Sites" width="100%" />
+
+### Browser-based reverse proxy access
+
+Expose web applications through identity and context-aware tunneled reverse proxies. Users access applications through any web browser with authentication and granular access control without installing a client. Pangolin handles routing, load balancing, health checking, and automatic SSL certificates without exposing your network directly to the internet.
+
+<img src="public/clip.gif" alt="Reverse proxy access" width="100%" />
+
+### Client-based private resource access
+
+Access private resources like SSH servers, databases, RDP, and entire network ranges through Pangolin clients. Intelligent NAT traversal enables connections even through restrictive firewalls, while DNS aliases provide friendly names and fast connections to resources across all your sites. Add redundancy by routing traffic through multiple connectors in your network.
+
+<img src="public/screenshots/private-resources.png" alt="Private resources" width="100%" />
+
+### Give users and roles access to resources
+
+Use Pangolin's built in users or bring your own identity provider and set up role based access control (RBAC). Grant users access to specific resources, not entire networks. Unlike traditional VPNs that expose full network access, Pangolin's zero-trust model ensures users can only reach the applications, services, and routes you explicitly define.
+
+<img src="public/screenshots/users.png" alt="Users from identity provider with roles" width="100%" />
+
+## Download Clients
+
+Download the Pangolin client for your platform:
+
+- [Mac](https://pangolin.net/downloads/mac)
+- [Windows](https://pangolin.net/downloads/windows)
+- [Linux](https://pangolin.net/downloads/linux)
+- [iOS](https://pangolin.net/downloads/ios)
+- [Android](https://pangolin.net/downloads/android)
+
+## Get Started
+
+### Sign up now
+
+Create a free account at [app.pangolin.net](https://app.pangolin.net) to get started with Pangolin Cloud.
+
+### Check out the docs
+
+We encourage everyone to read the full documentation first, which is
+available at [docs.pangolin.net](https://docs.pangolin.net). This README provides only a very brief subset of
+the docs to illustrate some basic ideas.
+
+## Licensing
+
+Pangolin is dual licensed under the AGPL-3 and the [Fossorial Commercial License](https://pangolin.net/fcl.html). For inquiries about commercial licensing, please contact us at [contact@pangolin.net](mailto:contact@pangolin.net).
+
+## Contributions
+
+Please see [CONTRIBUTING](./CONTRIBUTING.md) in the repository for guidelines and best practices.
+
+
+---
+
+### `pangolin/SECURITY.md` — pangolin
+
+# Security Policy
+
+If you discover a security vulnerability, please follow the steps below to responsibly disclose it to us:
+
+1. **Do not create a public GitHub issue or discussion post.** This could put the security of other users at risk.
+2. Send a detailed report to [security@pangolin.net](mailto:security@pangolin.net) with the following information:
+
+-   Description and location of the vulnerability.
+-   Potential impact of the vulnerability.
+-   Steps to reproduce the vulnerability.
+-   Potential solutions to fix the vulnerability.
+-   Your name/handle and a link for recognition (optional).
+
+We aim to address the issue as soon as possible.
+
+
+---
+
+### `pangolin/SKILL_CONTEXT.md` — pangolin
+
+# Pangolin — Skill Context
+
+**Upstream:** [fosrl/pangolin](https://github.com/fosrl/pangolin)  
+**License:** AGPL-3.0  
+**Purpose:** Self-hosted identity-aware reverse proxy with SSO, built with Next.js.
+
+## How We Use Pangolin
+
+Pangolin serves as the **primary reverse proxy and TLS termination layer** for our multi-cloud infrastructure. It routes traffic to backend services across the fleet:
+
+- `arm1-oci` (Oracle Cloud) — control plane
+- `cax41-hetzner` — workload host
+- `bunchloch` (MacBook M4) — local dev
+
+## Key Integration Points
+
+- **Traefik subdomain routing** → Pangolin tunnel endpoints
+- **Pocket ID SSO** — identity federation via Pangolin's auth layer
+- **Komodo orchestration** — Pangolin stacks are deployed and updated by Komodo
+- **Locket sidecar injection** — secrets are injected at container start
+
+## Reference Files (preserved)
+
+- `README.md` — full documentation
+- `LICENSE` — AGPL-3.0
+- `package.json` — dependency manifest
+- `Dockerfile` — production image build
+- `docker-compose.yml` — primary deployment manifest
+- `docker-compose.example.yml` — example full-stack deployment
+- `Makefile` — build targets
+- `config/` — configuration templates
+- `install/` — installation scripts
+- `components.json` — shadcn/ui component registry
+
+## Related Docs
+
+- `docs/bonneagar/pangolin/` — our infrastructure research on Pangolin
+- `infrastructure/pangolin/` — our live Pangolin blueprints and configs
+- `.agents/skills/pangolin/SKILL.md` — agent skill for Pangolin
+
+
+---
+
+### `pangolin.md` — pangolin
+
+# Pangolin
+
+Identity-aware VPN with WireGuard and Traefik integration for secure infrastructure access.
+
+## Overview
+
+Pangolin (from [Fossorial/Pangolin](https://github.com/fossorial/pangolin)) provides:
+
+- **WireGuard VPN** - Fast, modern VPN tunnel
+- **Traefik Proxy** - Reverse proxy with automatic TLS
+- **Identity Awareness** - Authentication via OIDC/OAuth2
+- **Zero Trust** - No direct exposure of internal services
+
+## Architecture
+
+```
+Internet → Traefik (TLS) → Pangolin Gateway → WireGuard → Internal Services
+                ↓
+           Auth Provider (Authentik/Keycloak)
+```
+
+## Installation
+
+```bash
+# From bonneagar/pangolin directory
+docker-compose up -d
+```
+
+## Configuration
+
+### Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `PANGOLIN_DOMAIN` | Public domain for VPN access | - |
+| `WIREGUARD_PEERS` | Number of peer configs to generate | 5 |
+| `AUTH_PROVIDER_URL` | OIDC provider endpoint | - |
+
+### Docker Compose
+
+```yaml
+services:
+  pangolin:
+    image: fossor/pangolin:latest
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    volumes:
+      - ./config:/config
+    ports:
+      - 51820:51820/udp
+```
+
+## Client Setup
+
+1. Generate client config: `./scripts/add-peer.sh <client-name>`
+2. Import WireGuard config on client device
+3. Enable VPN connection
+
+## Integration with Traefik
+
+Pangolin works with Traefik for routing authenticated requests:
+
+```yaml
+# traefik dynamic config
+http:
+  routers:
+    internal-app:
+      rule: "Host(`app.internal.cianfhoghlaim.dev`)"
+      service: internal-app
+      middlewares:
+        - pangolin-auth
+```
+
+## Related
+
+- [Komodo](./komodo) - Container orchestration
+- [Locket](./locket) - Secret management
+- [Infrastructure Overview](./overview)
+
+
+---
+
+### `CONFIGURATION.md` — locket
+
+# locket 0.14.0 -- Configuration Reference
+## Commands
+
+- [`run`](./run.md) - Start the secret sidecar agent.
+All secrets will be collected and materialized according to configuration.
+- [`exec`](./exec.md) - Execute a command with secrets injected into the process environment.
+- [`healthcheck`](./healthcheck.md) - Checks the health of the sidecar agent, determined by the state of materialized secrets.
+Exits with code 0 if all known secrets are materialized, otherwise exits with non-zero exit code.
+- [`compose`](./compose.md) - Docker Compose provider API
+
+
+---
+
+### `KCG_SUMMARY.md` — locket
+
+# Locket — KCG Summary
+
+## What It Is
+Locket is a secret injection sidecar by Bradley that resolves Infisical URI references at container runtime. It mounts a tmpfs volume with hydrated secrets, allowing containers to access credentials without hardcoded `.env` files or Kubernetes secrets.
+
+## Why This Matters for Kings' College Galway
+Every production Docker Compose stack uses a `sidecar.yaml` that defines a Locket container. Locket reads `secrets.env` templates (containing `{{ infisical:///<key> }}` references), resolves them against the Infisical vault, and writes hydrated secrets to `/run/secrets/locket/secrets.env` on a non-root tmpfs. This means no `.env` file is ever committed or exposed.
+
+## Key Patterns
+- **Infisical provider**: `--provider=infisical` with machine identity client credentials
+- **Watch mode**: `--mode=watch` auto-reloads secrets when Infisical vault changes
+- **Tmpfs secrets**: `/run/secrets/locket` is a memory-only tmpfs — never touches disk
+- **Service dependency**: `depends_on: locket: condition: service_healthy` in sidecar.yaml
+
+## Source Files
+Full source code was removed (2026-06-05). Available at <https://github.com/bpbradley/locket>. Live sidecar configs are in every `infrastructure/stacks/*/*/sidecar.yaml`.
+
+
+---
+
+### `README.md` — locket
+
+# locket
+
+> *A secrets management agent. Keeps your secrets safe, but out of sight.*
+
+[![Build Status](https://github.com/bpbradley/locket/actions/workflows/ci.yml/badge.svg)](https://github.com/bpbradley/locket/actions)
+[![Crates.io](https://img.shields.io/crates/v/locket.svg)](https://crates.io/crates/locket)
+[![Docker](https://img.shields.io/github/v/release/bpbradley/locket?sort=semver&label=docker&logo=docker)](https://github.com/bpbradley/locket/pkgs/container/locket)
+[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL%203.0-blue.svg)](LICENSE)
+
+1. [Overview](#overview)
+1. [Supported Providers](#providers)
+1. [Full Configuration](./docs/CONFIGURATION.md)
+1. [Roadmap](#roadmap)
+
+## Overview
+locket is a small CLI tool, packaged as a tiny rootless and distroless Docker image, designed to orchestrate secrets for dependent applications and services. locket is designed to work with most secrets providers, and it will orchestrate the retrieval of secrets and injection of them into dependent services. locket can help keep sensitive files off disk completely in tmpfs, or just somewhere out of revision control.
+
+Currently, locket operates in two modes for two distinct purposes.
+
+1. [Sidecar mode](#sidecar-mode): Inject secrets into configuration files stored in a shared, ephemeral tmpfs volume. locket will render files with secret references replaced with actual secrets so that dependent services can use them.
+1. [Provider mode](#provider-mode): locket can be installed as a Docker CLI plugin, and it will inject secrets directly into the dependent process enviornment before it starts.
+
+## Providers
+
+1. [1password Connect](./docs/providers/connect.md)
+2. [1password Service Accounts](./docs/providers/op.md)
+3. [Bitwarden Secrets Manager](./docs/providers/bws.md)
+
+> [!TIP]
+> Each provider has its own docker image for sidecar mode, if a slim version is preferred. The `latest` tag bundles all providers and their respective dependencies. But a provider specific tag like `locket:connect` is only about 4MB and has no extra dependencies besides what is needed for the connect provider.
+
+## Sidecar Mode
+
+The basic premise of locket as a sidecar service is:
+
+1. Move your sensitive data to a dedicated secret manager ([Supported Providers](#providers))
+1. Adjust your config files to carry *secret references* instead of raw sensitive data, which are safe to commit directly to revision control (i.e `{{ op://vault/keys/privatekey?ssh-format=openssh }}`)
+1. Configure locket to use your secrets provider `--provider=bws` or with env: `SECRETS_PROVIDER=bws`. Or just use the docker image tag `locket:bws`
+1. Mount your templates containing secret references for locket to read, i.e. `./templates:/templates:ro`, and mount an output directory for the secrets to be placed (usually a named tmpfs volume, or some secure location) `secrets-store:/run/secrets/locket`
+1. Finally, map the template->output for each required mapping. You can map arbitrarily many directories->directories or files->files. `--map /templates:/run/secrets/locket`
+
+Your secrets will all be injected according to the provided configuration, and any dependant applications will have materialized secrets available.
+
+> [!TIP] 
+> By default, locket will also *watch* for changes to your secret reference files, and will reflect those changes immediately to the configured output. So if you have an application which supports a dynamic config file with hot-reloading, you can manage this with locket directly without downtime. If you dont want files watched, simply use `--mode=park` to inject once and then hang out (to keep the process alive for healthchecks). Or use `--mode=one-shot` to do a single inject and exit.
+
+A full configuration reference for all available options is provided in [`docs/run.md`](./docs/run.md)
+
+```yaml
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:latest
+    user: "65532:65532" # The default user is 65532:65532 (nonroot) when not specified
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    # Configurations can be supplied via command like below, or via env variables.
+    command:
+        - "--provider=op-connect"
+        - "--op.token-file=/run/secrets/op_token"
+        - "--map=/templates:/run/secrets/locket" # Supports multiple maps, if needed.
+        - "--secret=db_pass={{ op://vault/db/pass }}"
+        - "--secret=db_host={{ op://vault/db/host }}"
+        - "--secret=key={{ op://vault/keys/privatekey?ssh-format=openssh }}"
+    secrets:
+      - op_token
+    volumes:
+        # Mount in your actual secret templates, with secret references
+      - ./config/templates:/templates:ro
+        # Mount in your output directory, where you want secrets materialized
+      - secrets-store:/run/secrets/locket
+  app:
+    image: my-app:latest
+    depends_on:
+        locket:
+            condition: healthy # locket is healthy once all secrets are injected
+    volumes:
+      # Mount the shared volume wherever you want the secrets in the container
+      - secrets-store:/run/secrets/locket:ro
+    environment:
+        # We can directly reference the materialized secrets as files
+        DB_PASSWORD_FILE: /run/secrets/locket/db_pass
+        DB_HOST_FILE: /run/secrets/locket/db_host
+        SECRET_KEY: /run/secrets/locket/key
+
+secrets:
+  op_token:
+    file: /etc/op/token # Must have read permissions by locket user
+
+# We can create a shared tmpfs volume that locket will write to, and our app will
+# read from
+volumes:
+  secrets-store:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+```
+
+### Security
+
+The sidecar image runs as user `65532` (`nonroot`) by default. This was adopted from the standards set in Google's popular rootless/distroless images. In addition, locket does not serve inbound requests and requires no elevated privilege. So it is safe to add any additional security measures to docker compose configuration.
+
+It may be useful to explicitly set permissions on the tmpfs driver, to avoid any ambiguity. However, docker will typically set this up correctly when the volume is created, depending on what services depend on it.
+
+```yaml
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket
+    user: "1000:1000"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    volumes:
+      - secrets-store:/run/secrets/locket:ro
+
+volumes:
+  secrets-store:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=1000,gid=1000,mode=700
+```
+
+## Provider mode
+
+ locket can be installed as a docker CLI plugin, and be used as a [Docker Compose provider service](https://docs.docker.com/compose/how-tos/provider-services/). In this mode, locket manages the `compose up` lifecycle. Every time `docker compose up` is called, `locket compose up` is first called by Docker, where locket will take provided secret references and set them as environment variables in the dependent container.
+
+ A full configuration reference for all available options is provided in [`docs/compose.md`](./docs/compose.md)
+
+```yaml
+---
+name: provider
+services:
+  locket:
+    provider:
+      type: locket
+      options:
+        provider: op-connect
+        connect.token-file: /etc/connect/token
+        connect.host: $OP_CONNECT_HOST
+        secrets:
+          - "secret1={{ op://Mordin/SecretPassword/Test Section/text }}"
+          - "secret2={{ op://Mordin/SecretPassword/Test Section/date }}"
+  demo:
+    image: busybox
+    user: "1000:1000"
+    command: 
+      - sh
+      - -c
+      - "env | grep LOCKET"
+    depends_on:
+      - locket
+
+```
+
+> [!NOTE]
+> The environment variables are injected with the providers service name prefixed.
+> This is behavior managed by Docker directly, and cannot be changed. So in some cases it may be necessary to expand the environment variable in the container like `$$APPLICATION_SECRET`.
+
+In order to use the Provider mode, `locket` must be installed on the host system directly as a Docker CLI plugin. The simplest way to do this is to install the binary directly from GitHub, and symlink it to the appropriate directory for docker to access it as a cli-plugin.
+
+### Install prebuilt binaries
+
+The install script will install `locket` to your user home directory, as well as a `locket-update` script.
+
+```sh
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/bpbradley/locket/releases/latest/download/locket-installer.sh | sh
+```
+
+Otherwise, install the prebuilt binary directly for your architecture. The script above will install for the correct architecture automatically.
+
+|  File  | Platform | Checksum |
+|--------|----------|----------|
+| [locket-aarch64-apple-darwin.tar.xz](https://github.com/bpbradley/locket/releases/latest/download/locket-aarch64-apple-darwin.tar.xz) | Apple Silicon macOS | [checksum](https://github.com/bpbradley/locket/releases/latest/download/locket-aarch64-apple-darwin.tar.xz.sha256) |
+| [locket-x86_64-apple-darwin.tar.xz](https://github.com/bpbradley/locket/releases/latest/download/locket-x86_64-apple-darwin.tar.xz) | Intel macOS | [checksum](https://github.com/bpbradley/locket/releases/latest/download/locket-x86_64-apple-darwin.tar.xz.sha256) |
+| [locket-aarch64-unknown-linux-gnu.tar.xz](https://github.com/bpbradley/locket/releases/latest/download/locket-aarch64-unknown-linux-gnu.tar.xz) | ARM64 Linux | [checksum](https://github.com/bpbradley/locket/releases/latest/download/locket-aarch64-unknown-linux-gnu.tar.xz.sha256) |
+| [locket-x86_64-unknown-linux-gnu.tar.xz](https://github.com/bpbradley/locket/releases/latest/download/locket-x86_64-unknown-linux-gnu.tar.xz) | x64 Linux | [checksum](https://github.com/bpbradley/locket/releases/latest/download/locket-x86_64-unknown-linux-gnu.tar.xz.sha256) |
+| [locket-x86_64-unknown-linux-musl.tar.xz](https://github.com/bpbradley/locket/releases/latest/download/locket-x86_64-unknown-linux-musl.tar.xz) | x64 MUSL Linux | [checksum](https://github.com/bpbradley/locket/releases/latest/download/locket-x86_64-unknown-linux-musl.tar.xz.sha256) |
+
+### Symlink locket binary to docker-locket as a Docker CLI Plugin
+
+1. Confirm `locket` is installed with `locket --version`
+1. Make sure a cli-plugins directory exists `mkdir -p ~/.docker/cli-plugins`
+1. Symlink locket -> cli-plugins/locket `ln -sf $(which locket) ~/.docker/cli-plugins/docker-locket`
+1. Confirm docker sees it. `docker info | grep locket`
+
+## Example: Hot-Reloading Traefik configurations with Secrets
+
+Traefik supports Dynamic Configuration via files, which it watches for changes. By pairing Traefik with locket, you can inject secrets (like Dashboard credentials, TLS certificates, or middleware auth) into your configuration files and have Traefik hot-reload them automatically without a restart.
+
+1. locket watches a local `templates/` directory containing your Traefik config with `{{ op://... }}` placeholders.
+1. When a template changes, locket atomically updates the file in the shared secrets-store volume.
+1. Traefik detects the change in the shared volume and reloads its configuration without a restart.
+
+So a snippet from `./templates/dynamic_conf.yaml` might look like
+
+```yaml
+http:
+  middlewares:
+    auth:
+      basicAuth:
+        users:
+          - "{{ op://DevOps/Traefik/basic_auth_user }}"
+
+  routers:
+    dashboard:
+      rule: "Host(`traefik.localhost`)"
+      service: "api@internal"
+      middlewares: ["auth"]
+# Any other secrets can be included here too....
+```
+
+```yaml
+---
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:op # Can use the 1pass specific tag
+    container_name: locket
+    user: "65532:65532" 
+    environment:
+      OP_SERVICE_ACCOUNT_TOKEN_FILE: /run/secrets/op_token
+    secrets:
+      - op_token
+    command:
+      - "--map=/templates:/run/secrets/locket"
+      - "--mode=watch"
+    volumes:
+      - ./templates:/templates:ro
+      - secrets-store:/run/secrets/locket
+
+  traefik:
+    image: traefik:v3
+    container_name: traefik
+    depends_on:
+      locket:
+        condition: service_healthy
+    command:
+      # Tell Traefik to watch the directory where locket writes
+      - "--providers.file.directory=/etc/traefik/dynamic"
+      - "--providers.file.watch=true"
+      - "--api.dashboard=true"
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      # Mount the SHARED volume where locket writes the 'real' config
+      - secrets-store:/etc/traefik/dynamic:ro 
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+secrets:
+  op_token:
+    file: /etc/op/token
+
+volumes:
+  # The bridge between locket and Traefik.
+  # Using tmpfs ensures secrets never touch the disk.
+  secrets-store:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+```
+
+## Roadmap
+
+### Before v1.0.0
+
+1. Have support for at least 4 providers
+1. **exec Command**: A wrapper mode (`locket exec --env .env -- docker compose up -d`) that injects secrets into the child process environment without writing files.
+1. **Templating Engine**: Adding attributes to the secret reference which can transform secrets before injection. For example `{{ secret_reference | base64 }}` to encode the secret as base64, or `{{ secret_reference | totp }}` to interpret the secret as a totp code.
+
+### Beyond
+
+1. **Swarm Operator**: Native integration for Docker Swarm secrets.
+
+
+---
+
+### `compose.md` — locket
+
+[Return to Index](./CONFIGURATION.md)
+
+> [!TIP]
+> All configuration options can be set via command line arguments OR environment variables. CLI arguments take precedence.
+
+## `locket compose`
+
+Docker Compose provider API
+
+### Options
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--project-name` | `COMPOSE_PROJECT_NAME` |  | Compose Project Name |
+
+---
+
+## `locket compose up`
+
+Injects secrets into a Docker Compose service environment with `docker compose up`
+
+### Options
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--provider` | `SECRETS_PROVIDER` |  | Secrets provider <br> **Choices:** `op`, `op-connect`, `bws` |
+| `--env-file` | `LOCKET_ENV_FILE` |  | Files containing environment variables which may contain secret references |
+| `--env` | `LOCKET_ENV` |  | Environment variable overrides which may contain secret references |
+| `<service>` |  |  | Service name from Docker Compose |
+### 1Password (op)
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--op.token` | `OP_SERVICE_ACCOUNT_TOKEN` |  | 1Password Service Account token |
+| `--op.token-file` | `OP_SERVICE_ACCOUNT_TOKEN_FILE` |  | Path to file containing 1Password Service Account token |
+| `--op.config-dir` | `OP_CONFIG_DIR` |  | Optional: Path to 1Password config directory Defaults to standard op config locations if not provided, e.g. $XDG_CONFIG_HOME/op |
+### 1Password Connect
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--connect.host` | `OP_CONNECT_HOST` |  | 1Password Connect Host HTTP(S) URL |
+| `--connect.token` | `OP_CONNECT_TOKEN` |  | 1Password Connect API token |
+| `--connect.token-file` | `OP_CONNECT_TOKEN_FILE` |  | Path to file containing 1Password Connect API token |
+| `--connect.max-concurrent` | `OP_CONNECT_MAX_CONCURRENT` | `20` | Maximum allowed concurrent requests to Connect API |
+### Bitwarden Secrets Provider
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--bws.api` | `BWS_API_URL` | `https://api.bitwarden.com` | Bitwarden API URL |
+| `--bws.identity` | `BWS_IDENTITY_URL` | `https://identity.bitwarden.com` | Bitwarden Identity URL |
+| `--bws.max-concurrent` | `BWS_MAX_CONCURRENT` | `20` | Maximum number of concurrent requests to Bitwarden Secrets Manager |
+| `--bws.user-agent` | `BWS_USER_AGENT` | `locket` | BWS User Agent |
+| `--bws.token` | `BWS_MACHINE_TOKEN` |  | Bitwarden Secrets Manager machine token |
+| `--bws.token-file` | `BWS_MACHINE_TOKEN_FILE` |  | Path to file containing Bitwarden Secrets Manager machine token |
+
+---
+
+## `locket compose down`
+
+Handler for Docker Compose `down`, but no-op because secrets are not persisted
+
+_No options._
+
+
+---
+
+## `locket compose metadata`
+
+Handler for Docker Compose `metadata` command so that docker can query plugin capabilities
+
+_No options._
+
+
+
+---
+
+### `exec.md` — locket
+
+[Return to Index](./CONFIGURATION.md)
+
+> [!TIP]
+> All configuration options can be set via command line arguments OR environment variables. CLI arguments take precedence.
+
+## `locket exec`
+
+Execute a command with secrets injected into the process environment.
+
+Example:
+
+```sh
+locket exec --provider bws --bws-token-file /path/to/token \
+    -e locket.env -e OVERRIDE={{ reference }} \
+    -- docker compose up -d
+```
+
+### Options
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--watch` | `LOCKET_EXEC_WATCH` | `false` | Watch mode will monitor for changes to .env files and restart the command if changes are detected <br> **Choices:** `true`, `false` |
+| `--interactive` | `LOCKET_EXEC_INTERACTIVE` |  | Run the command in interactive mode, attaching stdin/stdout/stderr. If not specified, defaults to true in non-watch mode and false in watch mode <br> **Choices:** `true`, `false` |
+| `--env-file` | `LOCKET_ENV_FILE` |  | Files containing environment variables which may contain secret references |
+| `--env` | `LOCKET_ENV` |  | Environment variable overrides which may contain secret references |
+| `--timeout` | `LOCKET_EXEC_TIMEOUT` | `30s` | Timeout duration for process termination signals. Unitless numbers are interpreted as seconds |
+| `--debounce` | `WATCH_DEBOUNCE` | `500ms` | Debounce duration for filesystem events in watch mode. Events occurring within this duration will be coalesced into a single update so as to not overwhelm the secrets manager with rapid successive updates from filesystem noise. Handles human-readable strings like "100ms", "2s", etc. Unitless numbers are interpreted as milliseconds |
+| `--log-format` | `LOCKET_LOG_FORMAT` | `text` | Log format <br> **Choices:** `text`, `json` |
+| `--log-level` | `LOCKET_LOG_LEVEL` | `info` | Log level <br> **Choices:** `trace`, `debug`, `info`, `warn`, `error` |
+| `<cmd>` |  |  | Command to execute with secrets injected into environment Must be the last argument(s), following a `--` separator. Example: locket exec -e locket.env -- docker compose up -d |
+### Provider Configuration
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--provider` | `SECRETS_PROVIDER` |  | Secrets provider <br> **Choices:** `op`, `op-connect`, `bws` |
+### 1Password (op)
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--op.token` | `OP_SERVICE_ACCOUNT_TOKEN` |  | 1Password Service Account token |
+| `--op.token-file` | `OP_SERVICE_ACCOUNT_TOKEN_FILE` |  | Path to file containing 1Password Service Account token |
+| `--op.config-dir` | `OP_CONFIG_DIR` |  | Optional: Path to 1Password config directory Defaults to standard op config locations if not provided, e.g. $XDG_CONFIG_HOME/op |
+### 1Password Connect
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--connect.host` | `OP_CONNECT_HOST` |  | 1Password Connect Host HTTP(S) URL |
+| `--connect.token` | `OP_CONNECT_TOKEN` |  | 1Password Connect API token |
+| `--connect.token-file` | `OP_CONNECT_TOKEN_FILE` |  | Path to file containing 1Password Connect API token |
+| `--connect.max-concurrent` | `OP_CONNECT_MAX_CONCURRENT` | `20` | Maximum allowed concurrent requests to Connect API |
+### Bitwarden Secrets Provider
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--bws.api` | `BWS_API_URL` | `https://api.bitwarden.com` | Bitwarden API URL |
+| `--bws.identity` | `BWS_IDENTITY_URL` | `https://identity.bitwarden.com` | Bitwarden Identity URL |
+| `--bws.max-concurrent` | `BWS_MAX_CONCURRENT` | `20` | Maximum number of concurrent requests to Bitwarden Secrets Manager |
+| `--bws.user-agent` | `BWS_USER_AGENT` | `locket` | BWS User Agent |
+| `--bws.token` | `BWS_MACHINE_TOKEN` |  | Bitwarden Secrets Manager machine token |
+| `--bws.token-file` | `BWS_MACHINE_TOKEN_FILE` |  | Path to file containing Bitwarden Secrets Manager machine token |
+
+
+---
+
+### `healthcheck.md` — locket
+
+[Return to Index](./CONFIGURATION.md)
+
+> [!TIP]
+> All configuration options can be set via command line arguments OR environment variables. CLI arguments take precedence.
+
+## `locket healthcheck`
+
+Checks the health of the sidecar agent, determined by the state of materialized secrets.
+Exits with code 0 if all known secrets are materialized, otherwise exits with non-zero exit code.
+
+### Options
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--status-file` | `LOCKET_STATUS_FILE` | `/tmp/.locket/ready` | Status file path used for healthchecks |
+
+
+---
+
+### `locket/README.md` — locket
+
+# locket
+
+> *A secrets management agent. Keeps your secrets safe and out of sight.*
+
+[![Build Status](https://github.com/bpbradley/locket/actions/workflows/ci.yml/badge.svg)](https://github.com/bpbradley/locket/actions)
+[![Crates.io](https://img.shields.io/crates/v/locket.svg)](https://crates.io/crates/locket)
+[![Docker](https://img.shields.io/github/v/release/bpbradley/locket?sort=semver&label=docker&logo=docker)](https://github.com/bpbradley/locket/pkgs/container/locket)
+[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL%203.0-blue.svg)](LICENSE)
+
+1. [Overview](#overview)
+1. [Supported Providers](#providers)
+1. [Full Configuration](./docs/CONFIGURATION.md)
+1. [Roadmap](#roadmap)
+
+## Overview
+locket is a small CLI tool (also packaged as a tiny rootless and distroless Docker image) designed to orchestrate secrets for dependent applications and services. locket is designed to work with most secrets providers, and it will coordinate the retrieval of secrets and injection of them into dependent services.
+
+locket is a versatile tool and it supports various forms of secrets injection.
+
+1. [Secrets Injection](./docs/inject.md): Materialize secrets from templates into files using `locket inject`
+1. [Container Sidecar](#sidecar-mode): Inject secrets into configuration files stored in a shared, ephemeral tmpfs volume. locket will render files with secret references replaced with actual secrets so that dependent services can use them.
+1. [Provider](#provider-mode): locket can be installed as a Docker CLI plugin, and it will inject secrets directly into the dependent process enviornment before it starts.
+1. [Orchestrator](#orchestration): `locket exec` is able to manage a specified subcommand, injecting secrets into its process environment. It can also watch for changes to environment files, and restart the dependent service automatically.
+1. [Docker Volume Driver](#docker-volume-driver): locket can be installed as a Docker Enginer Plugin. In this mode, locket can be used as a Volume Driver, where secrets are injected directly into tmpfs-backed volumes that can be mounted by dependent containers. This allows the Docker daemon to manage the lifecycle of secrets and their injection directly, without needing a sidecar container.
+
+## Providers
+
+1. [1password Connect](./docs/providers/connect.md)
+2. [1password Service Accounts](./docs/providers/op.md)
+3. [Bitwarden Secrets Manager](./docs/providers/bws.md)
+4. [Infisical](./docs/providers/infisical.md)
+
+> [!TIP]
+> Each provider has its own docker image for sidecar mode, if a slim version is preferred. The `latest` tag bundles all providers and their respective dependencies. But a provider specific tag like `locket:connect` is only about 4MB and has no extra dependencies besides what is needed for the connect provider.
+
+## Sidecar Mode
+
+In sidecar mode, locket runs as a separate container alongside your application container. The basic premise is:
+
+1. Move your sensitive data to a dedicated secret manager ([Supported Providers](#providers))
+1. Adjust your config files to carry *secret references* instead of raw sensitive data, which are safe to commit directly to revision control (i.e `{{ op://vault/keys/privatekey?ssh-format=openssh }}`)
+1. Configure locket to use your secrets provider, or just use the docker image tag for your provider.
+1. Mount your templates containing secret references for locket to read, i.e. `./templates:/templates:ro`, and mount an output directory for the secrets to be placed (usually a named tmpfs volume, or some secure location) `secrets-store:/run/secrets/locket`
+1. Finally, map the template->output for each required mapping. You can map arbitrarily many directories->directories or files->files. `--map /templates:/run/secrets/locket`
+
+Your secrets will all be injected according to the provided configuration, and any dependant applications will have materialized secrets available.
+
+> [!TIP] 
+> By default, locket will also *watch* for changes to your secret reference files, and will reflect those changes immediately to the configured output. So if you have an application which supports a dynamic config file with hot-reloading, you can manage this with locket directly without downtime. If you dont want files watched, simply use `--mode=park` to inject once and then hang out (to keep the process alive for healthchecks). Or use `--mode=one-shot` to do a single inject and exit.
+
+A full configuration reference for all available options is provided in [`docs/inject.md`](./docs/inject.md)
+
+```yaml
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:latest
+    user: "65532:65532" # The default user is 65532:65532 (nonroot) when not specified
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    # Configurations can be supplied via command like below, or via env variables.
+    command:
+        - "--provider=op-connect"
+        - "--op-token=file:/run/secrets/op_token"
+        - "--map=/templates:/run/secrets/locket" # Supports multiple maps, if needed.
+        - "--secret=db_pass={{ op://vault/db/pass }}"
+        - "--secret=db_host={{ op://vault/db/host }}"
+        - "--secret=key={{ op://vault/keys/privatekey?ssh-format=openssh }}"
+    secrets:
+      - op_token
+    volumes:
+        # Mount in your actual secret templates, with secret references
+      - ./config/templates:/templates:ro
+        # Mount in your output directory, where you want secrets materialized
+      - secrets-store:/run/secrets/locket
+  app:
+    image: my-app:latest
+    depends_on:
+        locket:
+            condition: service_healthy # locket is healthy once all secrets are injected
+    volumes:
+      # Mount the shared volume wherever you want the secrets in the container
+      - secrets-store:/run/secrets/locket:ro
+    environment:
+        # We can directly reference the materialized secrets as files
+        DB_PASSWORD_FILE: /run/secrets/locket/db_pass
+        DB_HOST_FILE: /run/secrets/locket/db_host
+        SECRET_KEY: /run/secrets/locket/key
+
+secrets:
+  op_token:
+    file: /etc/op/token # Must have read permissions by locket user
+
+# We can create a shared tmpfs volume that locket will write to, and our app will
+# read from
+volumes:
+  secrets-store:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+```
+
+### Security
+
+The sidecar image runs as user `65532` (`nonroot`) by default. This was adopted from the standards set in Google's popular rootless/distroless images. In addition, locket does not serve inbound requests and requires no elevated privilege. So it is safe to add any additional security measures to docker compose configuration.
+
+It may be useful to explicitly set permissions on the tmpfs driver, to avoid any ambiguity. However, docker will typically set this up correctly when the volume is created, depending on what services depend on it.
+
+```yaml
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket
+    user: "1000:1000"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    volumes:
+      - secrets-store:/run/secrets/locket:ro
+
+volumes:
+  secrets-store:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=1000,gid=1000,mode=700
+```
+
+## Provider mode
+
+ locket can be installed as a docker CLI plugin, and be used as a [Docker Compose provider service](https://docs.docker.com/compose/how-tos/provider-services/). In this mode, locket manages the `compose up` lifecycle. Every time `docker compose up` is called, `locket compose up` is first called by Docker, where locket will take provided secret references and set them as environment variables in the dependent container.
+
+ A full configuration reference for all available options is provided in [`docs/compose.md`](./docs/compose.md)
+
+```yaml
+---
+name: provider
+services:
+  locket:
+    provider:
+      type: locket
+      options:
+        provider: op-connect
+        connect-token: file:/etc/connect/token
+        connect-host: $OP_CONNECT_HOST
+        secrets:
+          - "secret1={{ op://Mordin/SecretPassword/Test Section/text }}"
+          - "secret2={{ op://Mordin/SecretPassword/Test Section/date }}"
+  demo:
+    image: busybox
+    user: "1000:1000"
+    command: 
+      - sh
+      - -c
+      - "env | grep LOCKET"
+    depends_on:
+      - locket
+
+```
+
+> [!NOTE]
+> The environment variables are injected with the providers service name prefixed.
+> This is behavior managed by Docker directly, and cannot be changed. So in some cases it may be necessary to get creative with the service names to ensure the secrets are namespaced as desired.
+
+In order to use the Provider mode, `locket` must be installed on the host system directly as a Docker CLI plugin. The simplest way to do this is to install the binary directly from GitHub, and symlink it to the appropriate directory for docker to access it as a cli-plugin.
+
+### Install prebuilt binaries
+
+The install script will install `locket` to your user home directory, as well as a `locket-update` script.
+
+```sh
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/bpbradley/locket/releases/latest/download/locket-installer.sh | sh
+```
+
+Otherwise, install the prebuilt binary directly for your architecture. The script above will install for the correct architecture automatically.
+
+|  File  | Platform | Checksum |
+|--------|----------|----------|
+| [locket-aarch64-apple-darwin.tar.xz](https://github.com/bpbradley/locket/releases/latest/download/locket-aarch64-apple-darwin.tar.xz) | Apple Silicon macOS | [checksum](https://github.com/bpbradley/locket/releases/latest/download/locket-aarch64-apple-darwin.tar.xz.sha256) |
+| [locket-x86_64-apple-darwin.tar.xz](https://github.com/bpbradley/locket/releases/latest/download/locket-x86_64-apple-darwin.tar.xz) | Intel macOS | [checksum](https://github.com/bpbradley/locket/releases/latest/download/locket-x86_64-apple-darwin.tar.xz.sha256) |
+| [locket-aarch64-unknown-linux-gnu.tar.xz](https://github.com/bpbradley/locket/releases/latest/download/locket-aarch64-unknown-linux-gnu.tar.xz) | ARM64 Linux | [checksum](https://github.com/bpbradley/locket/releases/latest/download/locket-aarch64-unknown-linux-gnu.tar.xz.sha256) |
+| [locket-x86_64-unknown-linux-gnu.tar.xz](https://github.com/bpbradley/locket/releases/latest/download/locket-x86_64-unknown-linux-gnu.tar.xz) | x64 Linux | [checksum](https://github.com/bpbradley/locket/releases/latest/download/locket-x86_64-unknown-linux-gnu.tar.xz.sha256) |
+| [locket-x86_64-unknown-linux-musl.tar.xz](https://github.com/bpbradley/locket/releases/latest/download/locket-x86_64-unknown-linux-musl.tar.xz) | x64 MUSL Linux | [checksum](https://github.com/bpbradley/locket/releases/latest/download/locket-x86_64-unknown-linux-musl.tar.xz.sha256) |
+
+### Symlink locket binary to docker-locket as a Docker CLI Plugin
+
+1. Confirm `locket` is installed with `locket --version`
+1. Make sure a cli-plugins directory exists `mkdir -p ~/.docker/cli-plugins`
+1. Symlink locket -> cli-plugins/locket `ln -sf $(which locket) ~/.docker/cli-plugins/docker-locket`
+1. Confirm docker sees it. `docker info | grep locket`
+
+## Orchestration
+
+Process orchestration is achievable via the `locket exec` command, which allows locket to act as a parent process / supervisor for a specified subcommand. It resolves secrets from your templates or `.env` files and injects them directly into the environment of a subprocess.
+
+Optionally, the `--watch` flag can be provided so that locket will watch for changes to any
+.env files provided, and restart the child process or process group. 
+
+Full configuration reference available at [docs/exec.md](./docs/exec.md)
+
+> [!IMPORTANT]
+> locket must be installed on the host system to use this mode. Follow the [steps here](#install-prebuilt-binaries)
+
+### Basic Usage
+
+Simply wrap your command with `locket exec`. You can supply secrets via individual files, `.env` files, or inline arguments.
+
+```bash
+locket exec \
+    --provider bws \
+    --bws-token file:/path/to/token \
+    --env .env \
+    --env .env.override \
+    --env MY_SECRET={{reference}}\
+    -- docker compose up -d
+```
+Now, any provided env variables will be available to docker, so your compose can
+reference `$MY_SECRET` for example, and it will have the resolved secret available, without ever needing it on disk or in host environment.
+
+### Interactive Example
+
+```sh
+locket exec \
+  --provider bws \
+  --bws-token file:/etc/tokens/bws \
+  -e MY_SECRET={{3832b656-a93b-45ad-bdfa-b267016802c3}} \
+  -- python3
+
+2025-12-14T19:29:10.126886Z  INFO Starting locket v0.14.0 `exec` service 
+2025-12-14T19:29:10.708684Z  INFO resolving environment and starting process...
+2025-12-14T19:29:10.709115Z  INFO batch fetching secrets count=1
+2025-12-14T19:29:10.839831Z  INFO Spawning child process cmd=["python3"]
+Python 3.11.2 (main, Apr 28 2025, 14:11:48) [GCC 12.2.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import os
+>>> os.environ["MY_SECRET"]
+'ABB80C10E50A96B3CE9480D880B2CAED1A7D205A'
+>>> 
+```
+
+## Docker Volume Driver
+
+locket can run as a managed Docker Engine Plugin. This allows you to offload the lifecycle of secret injection to the Docker Daemon. Volumes created with this driver are `tmpfs` (in-memory) filesystems, ensuring secrets are never written to disk. When a volume is unmounted and no references to it remain, the secrets are automatically removed from memory.
+
+### Setup
+
+Create a directory on your host (e.g., `/etc/locket`) to hold configuration and persistent state. This directory will be mounted into the plugin container.
+
+```bash
+sudo mkdir -p /etc/locket
+```
+
+#### Optional: Create a Default Configuration
+The plugin can be configured with defaults via config file loaded from `/etc/locket/locket.toml`. When configuring paths in this file, remember they are relative to the *plugin's* view of the mount, so place referenced files in `/etc/locket`.
+
+```bash
+sudo mkdir -p /etc/locket/tokens
+echo "your-bws-token" | sudo tee /etc/locket/tokens/bws
+sudo chmod 600 /etc/locket/tokens/bws
+```
+
+Create the default configuration at `/etc/locket/locket.toml`. The full reference is available at [docs/volume.md](./docs/volume.md)
+
+
+```toml
+[volume]
+# Select the default provider. This can be overridden per volume using driver_opts.
+provider = "bws"
+
+# Default settings for providers
+bws-token = "file:/etc/locket/tokens/bws"
+# Configure defaults for other providers if needed.
+connect-host = "https://connect.example.com"
+connect-token = "file:/etc/locket/tokens/connect"
+
+# Optional: Set global defaults for all volumes created. Can also be overridden per volume.
+user = "1000:1000"
+```
+
+> [!NOTE]
+> Configurations can be overridden on a per-volume basis using `driver_opts`. A configuration file is not strictly necessary at all if you prefer to configure everything via `driver_opts`.
+
+#### Install the Plugin
+Install the plugin and map your host directory to the plugin's config source.
+
+```bash
+docker plugin install bpbradley/locket:plugin \
+ --alias locket \
+ config.source=/etc/locket
+```
+
+### Example usage
+
+```yaml
+---
+name: volume-demo
+services:
+    demo:
+        user: 1000:1000
+        image: busybox
+        command:
+            - "sh"
+            - "-c"
+            - "cat /run/secrets/locket/template && echo && sleep 30"
+        volumes:
+            - locket-volume:/run/secrets/locket:ro
+volumes:
+    locket-volume:
+        driver: locket
+        driver_opts:
+            # Can set provider options here, or leave empty if they were set in default config.
+            provider: op
+            op-token: file:/etc/locket/tokens/op
+            user: 1000:1000 # Make sure the container has permissions to access the volume
+            mode: 0700 # Sets permissions for the mounted tmpfs volume on the host
+            secret.template: "{{ op://Mordin/TestKey/private key }}"
+```
+
+### Limitations
+
+#### File-Based Templates
+
+While locket generally supports loading templates from files (e.g., `-o secret.config="/path/to/template.yaml"`), this is not going to be easy to leverage when running as a managed Docker Plugin (`docker plugin install ...`)
+
+Managed plugins run in an isolated rootfs and do not have access to the host filesystem. Therefore, they cannot read template files residing on the host without placing the files somewhere the plugin can access them, (such as `/etc/locket` if following the recommended installation).
+
+If you require file-backed templates (and the ability to watch them for changes), you must run locket as a standalone binary on the host (ideally managed via systemd, in a manner described [here](https://docs.docker.com/engine/extend/plugin_api/#plugin-lifecycle)) rather than as a managed Docker Plugin. When running as a native process, locket volume has full access to the host filesystem to read templates and watch them for changes. You will still need to specify them by absolute path though.
+
+Example running directly on host via systemd
+
+```ini
+[Unit]
+Description=Locket Docker Volume Plugin
+Documentation=https://github.com/bpbradley/locket
+# Start before Docker so that volumes are resolvable immediately on boot
+Before=docker.service
+After=network.target
+
+[Service]
+Type=simple
+# Ensure the binary can be invoked directly, or provide the full path to the binary here
+ExecStart=locket volume --config /etc/locket/locket.toml
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Refer to [these instructions](#install-prebuilt-binaries) for installing the locket binary on the host.
+
+## Example: Hot-Reloading Traefik configurations with Secrets
+
+Traefik supports Dynamic Configuration via files, which it watches for changes. By pairing Traefik with locket, you can inject secrets (like Dashboard credentials, TLS certificates, or middleware auth) into your configuration files and have Traefik hot-reload them automatically without a restart.
+
+1. locket watches a local `templates/` directory containing your Traefik config with `{{ op://... }}` placeholders.
+1. When a template changes, locket atomically updates the file in the shared secrets-store volume.
+1. Traefik detects the change in the shared volume and reloads its configuration without a restart.
+
+So a snippet from `./templates/dynamic_conf.yaml` might look like
+
+```yaml
+http:
+  middlewares:
+    auth:
+      basicAuth:
+        users:
+          - "{{ op://DevOps/Traefik/basic_auth_user }}"
+
+  routers:
+    dashboard:
+      rule: "Host(`traefik.localhost`)"
+      service: "api@internal"
+      middlewares: ["auth"]
+# Any other secrets can be included here too....
+```
+
+```yaml
+---
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:op # Can use the 1pass specific tag
+    container_name: locket
+    user: "65532:65532" 
+    environment:
+      OP_SERVICE_ACCOUNT_TOKEN_FILE: /run/secrets/op_token
+    secrets:
+      - op_token
+    command:
+      - "--map=/templates:/run/secrets/locket"
+      - "--mode=watch"
+    volumes:
+      - ./templates:/templates:ro
+      - secrets-store:/run/secrets/locket
+
+  traefik:
+    image: traefik:v3
+    container_name: traefik
+    depends_on:
+      locket:
+        condition: service_healthy
+    command:
+      # Tell Traefik to watch the directory where locket writes
+      - "--providers.file.directory=/etc/traefik/dynamic"
+      - "--providers.file.watch=true"
+      - "--api.dashboard=true"
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      # Mount the SHARED volume where locket writes the 'real' config
+      - secrets-store:/etc/traefik/dynamic:ro 
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+secrets:
+  op_token:
+    file: /etc/op/token
+
+volumes:
+  # The bridge between locket and Traefik.
+  # Using tmpfs ensures secrets never touch the disk.
+  secrets-store:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+```
+
+## Roadmap
+
+1. **Init system**: `locket init` which could be used as a thin container init system, similar to tini or dumb-init, but with support for secret injection into child process groups. This would allow other developers to transparently wrap their applications with `locket init` in their Docker entrypoint, and gain secret injection capabilities in their applications natively.
+1. **Templating Engine**: Adding attributes to the secret reference which can transform secrets before injection. For example `{{ secret_reference | base64 }}` to encode the secret as base64, or `{{ secret_reference | totp }}` to interpret the secret as a totp code.
+1. **Swarm Operator**: Native integration for Docker Swarm secrets.
+
+
+---
+
+### `locket/SKILL_CONTEXT.md` — locket
+
+# Locket — Skill Context
+
+**Upstream:** [bpbradley/locket](https://github.com/bpbradley/locket)  
+**License:** AGPL-3.0  
+**Purpose:** Secrets management agent (Rust CLI + Docker). Orchestrates secret retrieval and injection into dependent services.
+
+## How We Use Locket
+
+Locket runs as a **sidecar container** in every docker-compose stack that needs secrets at runtime. It:
+
+1. Authenticates with Infisical
+2. Retrieves secrets for the specific service
+3. Injects them into the container's environment
+4. Optionally watches for secret rotations
+
+This eliminates the need to bake secrets into images or hand-manage `.env` files on servers.
+
+## Key Integration Points
+
+- **Gold-standard stack pattern** — every stack has `sidecar.yaml` defining Locket injection
+- **`mise run locket:exec -- <cmd>`** — wraps any command with Locket secret injection
+- **Infisical integration** — Locket pulls from our `dev-baile` environment
+- **Container lifecycle** — Locket starts before the main service, injects secrets, then the service starts
+
+## Reference Files (preserved)
+
+- `README.md` — full documentation including providers and injection methods
+- `LICENSE` — AGPL-3.0
+- `Cargo.toml` — Rust package manifest
+- `runfile.toml` — build task definitions
+- `dist-workspace.toml` — distribution workspace config
+- `docker/` — multi-stage Docker builds
+- `docs/` — CONFIGURATION.md, inject.md, integration docs
+
+## Related Docs
+
+- `docs/bonneagar/locket/` — our infrastructure research on Locket
+- `infrastructure/stacks/GOLD_STANDARD.md` — sidecar pattern specification
+- `AGENTS.md` — Secrets Bootstrap section
+- `.agents/skills/stack-ops/SKILL.md` — stack operations skill
+
+
+---
+
+### `locket/docs/CONFIGURATION.md` — locket
+
+# locket 0.17.3 -- Configuration Reference
+## Commands
+
+- [`inject`](./inject.md) - Inject secrets from secret references into files and directories.
+- [`exec`](./exec.md) - Execute a command with secrets injected into the process environment.
+and optionally materialize secrets from template files.
+- [`healthcheck`](./healthcheck.md) - Checks the health of the sidecar agent, determined by the state of materialized secrets.
+- [`volume`](./volume.md) - Run as a Docker Volume Plugin
+- [`compose`](./compose.md) - Docker Compose provider API
+
+
+---
+
+### `locket/docs/compose.md` — locket
+
+[Return to Index](./CONFIGURATION.md)
+
+> [!TIP]
+> All configuration options can be set via command line arguments OR environment variables. CLI arguments take precedence.
+
+## `locket compose`
+
+Docker Compose provider API
+
+### Options
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--project-name` | `COMPOSE_PROJECT_NAME` |  | Compose Project Name |
+
+---
+
+## `locket compose up`
+
+Injects secrets into a Docker Compose service environment with `docker compose up`
+
+### Options
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--provider` | `SECRETS_PROVIDER` |  | Secrets provider backend to use <br><br> **Choices:**<br>- `op`: 1Password Service Account<br>- `op-connect`: 1Password Connect Provider<br>- `bws`: Bitwarden Secrets Provider<br>- `infisical`: Infisical Secrets Provider |
+| `--env-file` | `LOCKET_ENV_FILE` |  | Files containing environment variables which may contain secret references |
+| `--env` | `LOCKET_ENV` |  | Environment variable overrides which may contain secret references |
+| `<service>` |  |  | Service name from Docker Compose |
+### 1Password (op)
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--op-token` | `OP_SERVICE_ACCOUNT_TOKEN` |  | 1Password Service Account Token<br><br>Either provide the token directly or via a file with `file:` prefix |
+| `--op-config-dir` | `OP_CONFIG_DIR` |  | Optional: Path to 1Password config directory<br><br>Defaults to standard op config locations if not provided, e.g. `$XDG_CONFIG_HOME/op` |
+### 1Password Connect
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--connect-host` | `OP_CONNECT_HOST` |  | 1Password Connect Host HTTP(S) URL |
+| `--connect-token` | `OP_CONNECT_TOKEN` |  | 1Password Connect Token<br><br>Either provide the token directly or via a file with `file:` prefix |
+| `--connect-max-concurrent` | `OP_CONNECT_MAX_CONCURRENT` |  | Maximum allowed concurrent requests to Connect API |
+### Bitwarden Secrets Provider
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--bws-api-url` | `BWS_API_URL` |  | Bitwarden API URL |
+| `--bws-identity-url` | `BWS_IDENTITY_URL` |  | Bitwarden Identity URL |
+| `--bws-max-concurrent` | `BWS_MAX_CONCURRENT` |  | Maximum number of concurrent requests to Bitwarden Secrets Manager |
+| `--bws-user-agent` | `BWS_USER_AGENT` |  | BWS User Agent |
+| `--bws-token` | `BWS_MACHINE_TOKEN` |  | Bitwarden Machine Token<br><br>Either provide the token directly or via a file with `file:` prefix |
+### Infisical Secrets Provider
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--infisical-url` | `INFISICAL_URL` |  | The URL of the Infisical instance to connect to |
+| `--infisical-client-secret` | `INFISICAL_CLIENT_SECRET` |  | The client secret for Universal Auth to authenticate with Infisical.<br><br>Either provide the token directly or via a file with `file:` prefix |
+| `--infisical-client-id` | `INFISICAL_CLIENT_ID` |  | The client ID for Universal Auth to authenticate with Infisical |
+| `--infisical-default-environment` | `INFISICAL_DEFAULT_ENVIRONMENT` |  | The default environment slug to use when one is not specified |
+| `--infisical-default-project-id` | `INFISICAL_DEFAULT_PROJECT_ID` |  | The default project ID to use when one is not specified |
+| `--infisical-default-path` | `INFISICAL_DEFAULT_PATH` |  | The default path to use when one is not specified |
+| `--infisical-default-secret-type` | `INFISICAL_DEFAULT_SECRET_TYPE` |  | The default secret type to use when one is not specified <br><br> **Choices:**<br>- `shared`<br>- `personal` |
+| `--infisical-max-concurrent` | `INFISICAL_MAX_CONCURRENT` |  | Maximum allowed concurrent requests to Infisical API |
+| `--log-level` | `LOCKET_LOG_LEVEL` | `debug` | Log level <br><br> **Choices:**<br>- `trace`<br>- `debug`<br>- `info`<br>- `warn`<br>- `error` |
+
+---
+
+## `locket compose down`
+
+Handler for Docker Compose `down`, but no-op because secrets are not persisted
+
+_No options._
+
+
+---
+
+## `locket compose metadata`
+
+Handler for Docker Compose `metadata` command so that docker can query plugin capabilities
+
+_No options._
+
+
+
+---
+
+### `locket/docs/exec.md` — locket
+
+[Return to Index](./CONFIGURATION.md)
+
+> [!TIP]
+> All configuration options can be set via command line arguments OR environment variables. CLI arguments take precedence.
+
+## `locket exec`
+
+Execute a command with secrets injected into the process environment.
+and optionally materialize secrets from template files.
+
+Example:
+
+```sh
+locket exec --provider bws --bws-token=file:/path/to/token \
+    -e locket.env -e OVERRIDE={{ reference }}
+    --map ./tpl/config:/app/config \
+    -- docker compose up -d
+```
+
+### Options
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--config` | `LOCKET_CONFIG` |  | Path to configuration files<br><br>Can be specified multiple times to layer multiple files. Each file is loaded in the order specified, with later files overriding earlier ones. |
+| `--interactive` | `LOCKET_EXEC_INTERACTIVE` |  | Run the command in interactive mode, attaching stdin/stdout/stderr.<br><br>If not specified, defaults to true in non-watch mode and false in watch mode. <br><br> **Choices:**<br>- `true`<br>- `false` |
+| `--env-files` | `LOCKET_ENV_FILE` |  | Files containing environment variables which may contain secret references |
+| `--env-overrides` | `LOCKET_ENV` |  | Environment variable overrides which may contain secret references |
+| `--map` | `SECRET_MAP` |  | Mapping of source paths to destination paths.<br><br>Maps sources (holding secret templates) to destination paths (where secrets are materialized) in the form `SRC:DST` or `SRC=DST`.<br><br>Multiple mappings can be provided, separated by commas, or supplied multiple times as arguments.<br><br>Example: `--map /templates:/run/secrets/app`<br><br>**CLI Default:** No mappings <br>**Docker Default:** `/templates:/run/secrets/locket` |
+| `--secrets` | `LOCKET_SECRETS` |  | Additional secret values specified as LABEL=SECRET_TEMPLATE<br><br>Multiple values can be provided, separated by commas. Or supplied multiple times as arguments.<br><br>Loading from file is supported via `LABEL=@/path/to/file`.<br><br>Example:<br><br>```sh --secret db_password={{op://..}} --secret api_key={{op://..}} ``` |
+| `--user` | `LOCKET_FILE_OWNER` |  | Owner of the file/dir<br><br>Defaults to the running user/group. The running user must have write permissions on the directory to change the owner. |
+| `<cmd>` |  |  | Command to execute with secrets injected into environment<br><br>Must be the last argument(s), following a `--` separator.<br><br>Example: `locket exec -e locket.env -- docker compose up -d` |
+| `--watch` | `LOCKET_EXEC_WATCH` | `false` | Watch mode will monitor for changes to .env files and restart the command if changes are detected <br><br> **Choices:**<br>- `true`<br>- `false` |
+| `--out` | `DEFAULT_SECRET_DIR` | `/run/secrets/locket` | Directory where secret values (literals) are materialized |
+| `--inject-failure-policy` | `INJECT_POLICY` | `passthrough` | Policy for handling injection failures <br><br> **Choices:**<br>- `error`: Failures are treated as errors and will abort the process<br>- `passthrough`: On failure, copy the unmodified secret to destination<br>- `ignore`: On failure, ignore the secret and log a warning |
+| `--max-file-size` | `MAX_FILE_SIZE` | `10M` | Maximum allowable size for a template file. Files larger than this will be rejected.<br><br>Supports human-friendly suffixes like K, M, G (e.g. 10M = 10 Megabytes). |
+| `--file-mode` | `LOCKET_FILE_MODE` | `0600` | File permission mode |
+| `--dir-mode` | `LOCKET_DIR_MODE` | `0700` | Directory permission mode |
+| `--timeout` | `LOCKET_EXEC_TIMEOUT` | `30s` | Timeout duration for process termination signals.<br><br>Unitless numbers are interpreted as seconds. |
+| `--debounce` | `WATCH_DEBOUNCE` | `500ms` | Debounce duration for filesystem events in watch mode.<br><br>Events occurring within this duration will be coalesced into a single update so as to not overwhelm the secrets manager with rapid successive updates from filesystem noise.<br><br>Handles human-readable strings like "100ms", "2s", etc. Unitless numbers are interpreted as milliseconds. |
+| `--log-format` | `LOCKET_LOG_FORMAT` | `text` | Log format <br><br> **Choices:**<br>- `text`: Plain text log format<br>- `json`: JSON log format<br>- `compose`: Special format for Docker Compose Provider specification |
+| `--log-level` | `LOCKET_LOG_LEVEL` | `info` | Log level <br><br> **Choices:**<br>- `trace`<br>- `debug`<br>- `info`<br>- `warn`<br>- `error` |
+### Provider Configuration
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--provider` | `SECRETS_PROVIDER` |  | Secrets provider backend to use <br><br> **Choices:**<br>- `op`: 1Password Service Account<br>- `op-connect`: 1Password Connect Provider<br>- `bws`: Bitwarden Secrets Provider<br>- `infisical`: Infisical Secrets Provider |
+### 1Password (op)
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--op-token` | `OP_SERVICE_ACCOUNT_TOKEN` |  | 1Password Service Account Token<br><br>Either provide the token directly or via a file with `file:` prefix |
+| `--op-config-dir` | `OP_CONFIG_DIR` |  | Optional: Path to 1Password config directory<br><br>Defaults to standard op config locations if not provided, e.g. `$XDG_CONFIG_HOME/op` |
+### 1Password Connect
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--connect-host` | `OP_CONNECT_HOST` |  | 1Password Connect Host HTTP(S) URL |
+| `--connect-token` | `OP_CONNECT_TOKEN` |  | 1Password Connect Token<br><br>Either provide the token directly or via a file with `file:` prefix |
+| `--connect-max-concurrent` | `OP_CONNECT_MAX_CONCURRENT` | `20` | Maximum allowed concurrent requests to Connect API |
+### Bitwarden Secrets Provider
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--bws-token` | `BWS_MACHINE_TOKEN` |  | Bitwarden Machine Token<br><br>Either provide the token directly or via a file with `file:` prefix |
+| `--bws-api-url` | `BWS_API_URL` | `https://api.bitwarden.com` | Bitwarden API URL |
+| `--bws-identity-url` | `BWS_IDENTITY_URL` | `https://identity.bitwarden.com` | Bitwarden Identity URL |
+| `--bws-max-concurrent` | `BWS_MAX_CONCURRENT` | `20` | Maximum number of concurrent requests to Bitwarden Secrets Manager |
+| `--bws-user-agent` | `BWS_USER_AGENT` | `locket` | BWS User Agent |
+### Infisical Secrets Provider
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--infisical-client-secret` | `INFISICAL_CLIENT_SECRET` |  | The client secret for Universal Auth to authenticate with Infisical.<br><br>Either provide the token directly or via a file with `file:` prefix |
+| `--infisical-client-id` | `INFISICAL_CLIENT_ID` |  | The client ID for Universal Auth to authenticate with Infisical |
+| `--infisical-default-environment` | `INFISICAL_DEFAULT_ENVIRONMENT` |  | The default environment slug to use when one is not specified |
+| `--infisical-default-project-id` | `INFISICAL_DEFAULT_PROJECT_ID` |  | The default project ID to use when one is not specified |
+| `--infisical-url` | `INFISICAL_URL` | `https://us.infisical.com` | The URL of the Infisical instance to connect to |
+| `--infisical-default-path` | `INFISICAL_DEFAULT_PATH` | `/` | The default path to use when one is not specified |
+| `--infisical-default-secret-type` | `INFISICAL_DEFAULT_SECRET_TYPE` | `shared` | The default secret type to use when one is not specified <br><br> **Choices:**<br>- `shared`<br>- `personal` |
+| `--infisical-max-concurrent` | `INFISICAL_MAX_CONCURRENT` | `20` | Maximum allowed concurrent requests to Infisical API |
+
+## TOML Reference
+
+> [!TIP]
+> Settings can be provided via config.toml as well, using the --config option.
+> Provided is the reference configuration in TOML format
+
+```toml
+# Watch mode will monitor for changes to .env files and restart the command if changes are detected
+watch = false
+
+# Run the command in interactive mode, attaching stdin/stdout/stderr
+# interactive = ...
+
+# Files containing environment variables which may contain secret references
+env-files = []
+
+# Environment variable overrides which may contain secret references
+# 
+# TOML syntax supports list of strings or map form:
+# List form:
+# env = ["db_password={{..}}", "api_key={{..}}"]
+# 
+# Map form:
+# [env]
+# db_password = "{{..}}"
+# api_key = "{{..}}"
+# 
+env-overrides = []
+
+# Mapping of source paths to destination paths
+# 
+# TOML syntax supports list of strings or map form:
+# List form:
+# map = ["/templates:/run/secrets/app", "/config:/run/secrets/config"]
+# 
+# Map form:
+# [map]
+# source = "/templates"
+# destination = "/run/secrets/app"
+# [map]
+# source = "/config"
+# destination = "/run/secrets/config"
+# 
+map = []
+
+# Additional secret values specified as LABEL=SECRET_TEMPLATE
+# 
+# TOML syntax supports list of strings or map form:
+# List form:
+# secrets = ["db_password={{..}}", "api_key={{..}}"]
+# 
+# Map form:
+# [secrets]
+# db_password = "{{..}}"
+# api_key = "{{..}}"
+# 
+secrets = []
+
+# Directory where secret values (literals) are materialized
+out = "/run/secrets/locket"
+
+# Policy for handling injection failures
+inject-failure-policy = "passthrough"
+
+# Maximum allowable size for a template file. Files larger than this will be rejected
+max-file-size = "10M"
+
+# File permission mode
+file-mode = "0600"
+
+# Directory permission mode
+dir-mode = "0700"
+
+# Owner of the file/dir
+# user = ...
+
+# Timeout duration for process termination signals
+timeout = "30s"
+
+# Debounce duration for filesystem events in watch mode
+debounce = "500ms"
+
+# Log format
+log-format = "text"
+
+# Log level
+log-level = "info"
+
+# Secrets provider backend to use
+# provider = ...
+
+# 1Password Service Account Token
+# op-token = ...
+
+# Optional: Path to 1Password config directory
+# op-config-dir = ...
+
+# 1Password Connect Host HTTP(S) URL
+# connect-host = ...
+
+# 1Password Connect Token
+# connect-token = ...
+
+# Maximum allowed concurrent requests to Connect API
+connect-max-concurrent = 20
+
+# Bitwarden API URL
+bws-api-url = "https://api.bitwarden.com/"
+
+# Bitwarden Identity URL
+bws-identity-url = "https://identity.bitwarden.com/"
+
+# Maximum number of concurrent requests to Bitwarden Secrets Manager
+bws-max-concurrent = 20
+
+# BWS User Agent
+bws-user-agent = "locket"
+
+# Bitwarden Machine Token
+# bws-token = ...
+
+# The URL of the Infisical instance to connect to
+infisical-url = "https://us.infisical.com/"
+
+# The client secret for Universal Auth to authenticate with Infisical
+# infisical-client-secret = ...
+
+# The client ID for Universal Auth to authenticate with Infisical
+# infisical-client-id = ...
+
+# The default environment slug to use when one is not specified
+# infisical-default-environment = ...
+
+# The default project ID to use when one is not specified
+# infisical-default-project-id = ...
+
+# The default path to use when one is not specified
+infisical-default-path = "/"
+
+# The default secret type to use when one is not specified
+infisical-default-secret-type = "shared"
+
+# Maximum allowed concurrent requests to Infisical API
+infisical-max-concurrent = 20
+
+cmd = []
+
+```
+
+
+---
+
+### `locket/docs/healthcheck.md` — locket
+
+[Return to Index](./CONFIGURATION.md)
+
+> [!TIP]
+> All configuration options can be set via command line arguments OR environment variables. CLI arguments take precedence.
+
+## `locket healthcheck`
+
+Checks the health of the sidecar agent, determined by the state of materialized secrets.
+
+Exits with code 0 if all known secrets are materialized, otherwise exits with non-zero exit code.
+
+### Options
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--status-file` | `LOCKET_STATUS_FILE` | `/dev/shm/locket/ready` | Status file path used for healthchecks |
+
+
+---
+
+### `locket/docs/inject.md` — locket
+
+[Return to Index](./CONFIGURATION.md)
+
+> [!TIP]
+> All configuration options can be set via command line arguments OR environment variables. CLI arguments take precedence.
+
+## `locket inject`
+
+Inject secrets from secret references into files and directories.
+
+Example:
+
+```sh
+locket inject --provider bws --bws-token=file:/path/to/token \ # Select the BWS provider
+    --out /run/secrets/locket \ # Default output directory
+    --secret=/path/to/secrets.yaml \ # An anonymous secret file, placed in `/run/secrets/locket/secrets.yaml`
+    --secret=auth_key=@key.pem \ # A named secret file, placed in `/run/secrets/locket/auth_key`
+    --map ./tpl:/run/secrets/locket/mapped \ # Maps all templates in `./tpl/` directory to secrets in `/run/secrets/locket/mapped`
+```
+
+### Options
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--config` | `LOCKET_CONFIG` |  | Path to configuration files<br><br>Can be specified multiple times to layer multiple files. Each file is loaded in the order specified, with later files overriding earlier ones. |
+| `--status-file` | `LOCKET_STATUS_FILE` |  | Status file path used for healthchecks.<br><br>If not provided, no status file is created.<br><br>**Docker Default:** `/dev/shm/locket/ready` |
+| `--map` | `SECRET_MAP` |  | Mapping of source paths to destination paths.<br><br>Maps sources (holding secret templates) to destination paths (where secrets are materialized) in the form `SRC:DST` or `SRC=DST`.<br><br>Multiple mappings can be provided, separated by commas, or supplied multiple times as arguments.<br><br>Example: `--map /templates:/run/secrets/app`<br><br>**CLI Default:** No mappings <br>**Docker Default:** `/templates:/run/secrets/locket` |
+| `--secrets` | `LOCKET_SECRETS` |  | Additional secret values specified as LABEL=SECRET_TEMPLATE<br><br>Multiple values can be provided, separated by commas. Or supplied multiple times as arguments.<br><br>Loading from file is supported via `LABEL=@/path/to/file`.<br><br>Example:<br><br>```sh --secret db_password={{op://..}} --secret api_key={{op://..}} ``` |
+| `--user` | `LOCKET_FILE_OWNER` |  | Owner of the file/dir<br><br>Defaults to the running user/group. The running user must have write permissions on the directory to change the owner. |
+| `--mode` | `LOCKET_INJECT_MODE` | `one-shot` | Mode of operation <br><br> **Choices:**<br>- `one-shot`: **Default** Materialize all secrets once and exit<br>- `watch`: **Docker Default** Watch for changes on templates and reinject<br>- `park`: Inject once and then park to keep the process alive |
+| `--out` | `DEFAULT_SECRET_DIR` | `/run/secrets/locket` | Directory where secret values (literals) are materialized |
+| `--inject-failure-policy` | `INJECT_POLICY` | `passthrough` | Policy for handling injection failures <br><br> **Choices:**<br>- `error`: Failures are treated as errors and will abort the process<br>- `passthrough`: On failure, copy the unmodified secret to destination<br>- `ignore`: On failure, ignore the secret and log a warning |
+| `--max-file-size` | `MAX_FILE_SIZE` | `10M` | Maximum allowable size for a template file. Files larger than this will be rejected.<br><br>Supports human-friendly suffixes like K, M, G (e.g. 10M = 10 Megabytes). |
+| `--file-mode` | `LOCKET_FILE_MODE` | `0600` | File permission mode |
+| `--dir-mode` | `LOCKET_DIR_MODE` | `0700` | Directory permission mode |
+| `--debounce` | `WATCH_DEBOUNCE` | `500ms` | Debounce duration for filesystem events in watch mode.<br><br>Events occurring within this duration will be coalesced into a single update so as to not overwhelm the secrets manager with rapid successive updates from filesystem noise.<br><br>Handles human-readable strings like "100ms", "2s", etc. Unitless numbers are interpreted as milliseconds. |
+| `--log-format` | `LOCKET_LOG_FORMAT` | `text` | Log format <br><br> **Choices:**<br>- `text`: Plain text log format<br>- `json`: JSON log format<br>- `compose`: Special format for Docker Compose Provider specification |
+| `--log-level` | `LOCKET_LOG_LEVEL` | `info` | Log level <br><br> **Choices:**<br>- `trace`<br>- `debug`<br>- `info`<br>- `warn`<br>- `error` |
+### Provider Configuration
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--provider` | `SECRETS_PROVIDER` |  | Secrets provider backend to use <br><br> **Choices:**<br>- `op`: 1Password Service Account<br>- `op-connect`: 1Password Connect Provider<br>- `bws`: Bitwarden Secrets Provider<br>- `infisical`: Infisical Secrets Provider |
+### 1Password (op)
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--op-token` | `OP_SERVICE_ACCOUNT_TOKEN` |  | 1Password Service Account Token<br><br>Either provide the token directly or via a file with `file:` prefix |
+| `--op-config-dir` | `OP_CONFIG_DIR` |  | Optional: Path to 1Password config directory<br><br>Defaults to standard op config locations if not provided, e.g. `$XDG_CONFIG_HOME/op` |
+### 1Password Connect
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--connect-host` | `OP_CONNECT_HOST` |  | 1Password Connect Host HTTP(S) URL |
+| `--connect-token` | `OP_CONNECT_TOKEN` |  | 1Password Connect Token<br><br>Either provide the token directly or via a file with `file:` prefix |
+| `--connect-max-concurrent` | `OP_CONNECT_MAX_CONCURRENT` | `20` | Maximum allowed concurrent requests to Connect API |
+### Bitwarden Secrets Provider
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--bws-token` | `BWS_MACHINE_TOKEN` |  | Bitwarden Machine Token<br><br>Either provide the token directly or via a file with `file:` prefix |
+| `--bws-api-url` | `BWS_API_URL` | `https://api.bitwarden.com` | Bitwarden API URL |
+| `--bws-identity-url` | `BWS_IDENTITY_URL` | `https://identity.bitwarden.com` | Bitwarden Identity URL |
+| `--bws-max-concurrent` | `BWS_MAX_CONCURRENT` | `20` | Maximum number of concurrent requests to Bitwarden Secrets Manager |
+| `--bws-user-agent` | `BWS_USER_AGENT` | `locket` | BWS User Agent |
+### Infisical Secrets Provider
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--infisical-client-secret` | `INFISICAL_CLIENT_SECRET` |  | The client secret for Universal Auth to authenticate with Infisical.<br><br>Either provide the token directly or via a file with `file:` prefix |
+| `--infisical-client-id` | `INFISICAL_CLIENT_ID` |  | The client ID for Universal Auth to authenticate with Infisical |
+| `--infisical-default-environment` | `INFISICAL_DEFAULT_ENVIRONMENT` |  | The default environment slug to use when one is not specified |
+| `--infisical-default-project-id` | `INFISICAL_DEFAULT_PROJECT_ID` |  | The default project ID to use when one is not specified |
+| `--infisical-url` | `INFISICAL_URL` | `https://us.infisical.com` | The URL of the Infisical instance to connect to |
+| `--infisical-default-path` | `INFISICAL_DEFAULT_PATH` | `/` | The default path to use when one is not specified |
+| `--infisical-default-secret-type` | `INFISICAL_DEFAULT_SECRET_TYPE` | `shared` | The default secret type to use when one is not specified <br><br> **Choices:**<br>- `shared`<br>- `personal` |
+| `--infisical-max-concurrent` | `INFISICAL_MAX_CONCURRENT` | `20` | Maximum allowed concurrent requests to Infisical API |
+
+## TOML Reference
+
+> [!TIP]
+> Settings can be provided via config.toml as well, using the --config option.
+> Provided is the reference configuration in TOML format
+
+```toml
+# Mode of operation
+mode = "one-shot"
+
+# Status file path used for healthchecks
+# status-file = ...
+
+# Mapping of source paths to destination paths
+# 
+# TOML syntax supports list of strings or map form:
+# List form:
+# map = ["/templates:/run/secrets/app", "/config:/run/secrets/config"]
+# 
+# Map form:
+# [map]
+# source = "/templates"
+# destination = "/run/secrets/app"
+# [map]
+# source = "/config"
+# destination = "/run/secrets/config"
+# 
+map = []
+
+# Additional secret values specified as LABEL=SECRET_TEMPLATE
+# 
+# TOML syntax supports list of strings or map form:
+# List form:
+# secrets = ["db_password={{..}}", "api_key={{..}}"]
+# 
+# Map form:
+# [secrets]
+# db_password = "{{..}}"
+# api_key = "{{..}}"
+# 
+secrets = []
+
+# Directory where secret values (literals) are materialized
+out = "/run/secrets/locket"
+
+# Policy for handling injection failures
+inject-failure-policy = "passthrough"
+
+# Maximum allowable size for a template file. Files larger than this will be rejected
+max-file-size = "10M"
+
+# File permission mode
+file-mode = "0600"
+
+# Directory permission mode
+dir-mode = "0700"
+
+# Owner of the file/dir
+# user = ...
+
+# Debounce duration for filesystem events in watch mode
+debounce = "500ms"
+
+# Log format
+log-format = "text"
+
+# Log level
+log-level = "info"
+
+# Secrets provider backend to use
+# provider = ...
+
+# 1Password Service Account Token
+# op-token = ...
+
+# Optional: Path to 1Password config directory
+# op-config-dir = ...
+
+# 1Password Connect Host HTTP(S) URL
+# connect-host = ...
+
+# 1Password Connect Token
+# connect-token = ...
+
+# Maximum allowed concurrent requests to Connect API
+connect-max-concurrent = 20
+
+# Bitwarden API URL
+bws-api-url = "https://api.bitwarden.com/"
+
+# Bitwarden Identity URL
+bws-identity-url = "https://identity.bitwarden.com/"
+
+# Maximum number of concurrent requests to Bitwarden Secrets Manager
+bws-max-concurrent = 20
+
+# BWS User Agent
+bws-user-agent = "locket"
+
+# Bitwarden Machine Token
+# bws-token = ...
+
+# The URL of the Infisical instance to connect to
+infisical-url = "https://us.infisical.com/"
+
+# The client secret for Universal Auth to authenticate with Infisical
+# infisical-client-secret = ...
+
+# The client ID for Universal Auth to authenticate with Infisical
+# infisical-client-id = ...
+
+# The default environment slug to use when one is not specified
+# infisical-default-environment = ...
+
+# The default project ID to use when one is not specified
+# infisical-default-project-id = ...
+
+# The default path to use when one is not specified
+infisical-default-path = "/"
+
+# The default secret type to use when one is not specified
+infisical-default-secret-type = "shared"
+
+# Maximum allowed concurrent requests to Infisical API
+infisical-max-concurrent = 20
+
+```
+
+
+---
+
+### `locket/docs/providers/bws.md` — locket
+
+# BWS Provider
+
+This provider is based on the [Bitwarden Secrets Manager](https://bitwarden.com/products/secrets-manager/). It uses the offical `bitwarden` rust crate as the backend.
+
+> [!NOTE]
+> This is **not** the same as a Bitwarden/Vaultwarden provider. A Bitwarden Vault Management API based provider is significantly more complex because it is not designed for machine access.
+
+1. [Setup a Bitwarden Secrets Manager account](https://bitwarden.com/help/secrets-manager-quick-start/)
+1. [Add a machine account with access to desired secrets / projects](https://bitwarden.com/help/secrets-manager-quick-start/#add-a-machine-account)
+1. Configure locket with your machine token. [Configuration Reference](../inject.md#bitwarden-secrets-provider)
+
+```sh
+locket inject --provider bws --bws-token=file:/path/to/token
+    --out /run/secrets/locket
+    --secret=/path/to/secrets.yaml
+    --secret=auth_key=@key.pem
+    --map ./tpl:/run/secrets/locket/mapped
+```
+
+## Example `locket inject` Configuration
+
+```yaml
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:bws
+    user: "1000:1000"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    container_name: locket-bws
+    secrets:
+      - bws_token
+    volumes:
+      - ./templates:/templates:ro
+      - out-bws:/run/secrets/locket
+    command: # Or use environment variables
+      - "--bws-token=file:/run/secrets/bws_token"
+secrets:
+  bws_token:
+    file: /etc/tokens/bws
+volumes:
+  out-bws: { driver: local, driver_opts: { type: tmpfs, device: tmpfs, o: "uid=1000,gid=1000,mode=0700" } }
+```
+
+## Example Provider Configuration
+
+```yaml
+---
+name: provider
+services:
+  locket:
+    provider:
+      type: locket
+      options:
+        provider: bws
+        bws-token: file:/etc/bws/token
+        secrets:
+          - "secret1={{ 3832b656-a93b-45ad-bdfa-b267016802c3 }}"
+          - "secret2={{ 3e0f2247-b359-4408-83d0-b3a70152731c }}"
+  demo:
+    image: busybox
+    user: "1000:1000"
+    command: 
+      - sh
+      - -c
+      - "env | grep LOCKET"
+    depends_on:
+      - locket
+
+```
+
+
+---
+
+### `locket/docs/providers/connect.md` — locket
+
+# 1password Connect Provider
+
+This provider is based on a [1password Connect](https://developer.1password.com/docs/connect/) backend. Requests for secrets are made via calls to the Connect REST API on your configured Connect host.
+
+> [!NOTE]
+> This provider requires a functioning and reachable 1password connect deployment. You cannot access `my.1password.com` using the Connect API
+
+1. [Deploy a 1password Connect Server](https://developer.1password.com/docs/connect/get-started#step-2-deploy-a-1password-connect-server)
+1. [Create an access token](https://developer.1password.com/docs/connect/manage-connect#create-a-token)
+1. Configure locket with your reachable connect host URL, and your authentication token. [Configuration Reference](../inject.md#1password-connect)
+
+```sh
+locket inject --provider op-connect \
+  --connect-token file:/path/to/token \
+  --connect-host https://connect.example.com \
+  --out /run/secrets/locket \
+  --secret name={{op://Vault/Secret/Section/Item}}
+  --secret /path/to/secrets.yaml \
+  --secret auth_key=@key.pem \
+  --map ./tpl:/run/secrets/locket/mapped 
+```
+
+## Example `locket inject` Configuration
+
+```yaml
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:connect
+    user: "1000:1000"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    container_name: locket-connect
+    secrets:
+      - connect_token
+    volumes:
+      - ./templates:/templates:ro
+      - out-connect:/run/secrets/locket
+    command: # Or use environment variables
+      - "--connect-token=file:/run/secrets/connect_token"
+      - "--connect-host=https://connect.example.com"
+secrets:
+  connect_token:
+    file: /etc/tokens/connect
+volumes:
+  out-connect: { driver: local, driver_opts: { type: tmpfs, device: tmpfs, o: "uid=1000,gid=1000,mode=0700" } }
+```
+
+## Example Provider Configuration
+
+```yaml
+---
+name: provider
+services:
+  locket:
+    provider:
+      type: locket
+      options:
+        provider: op-connect
+        connect-token: file:/etc/connect/token
+        connect-host: $OP_CONNECT_HOST
+        secrets:
+          - "secret1={{ op://Mordin/SecretPassword/Test Section/text }}"
+          - "secret2={{ op://Mordin/SecretPassword/Test Section/date }}"
+  demo:
+    image: busybox
+    user: "1000:1000"
+    command: 
+      - sh
+      - -c
+      - "env | grep LOCKET"
+    depends_on:
+      - locket
+
+```
+
+
+---
+
+### `locket/docs/providers/infisical.md` — locket
+
+# Infisical Provider
+
+This provider is based on the [Infisical](https://infisical.com/) secret management platform.
+It uses the [Infisical API](https://infisical.com/docs/api-reference/overview/introduction) to fetch secrets and manage authentication using Universal Auth.
+
+## Reference syntax.
+
+Infisical does not have a native secret reference syntax like other providers. It is fundamentally
+unique in how it organizes secrets. Secrets must be part of a project and an environment, and they will have a path (either at the root of the project, or nested internally). They may also be a shared secret, or a personal one. So in order to make secret referencing work within locket, we define a custom URI scheme:
+
+`infisical:///<secret-key>?env=<env-slug>&path=</path/to/folder>&project_id=<project-uuid>&type=<secret-type[shared | personal]>`
+
+* The URI prefix is used to disambiguate from other providers and to easily identify Infisical secrets within templates.
+* The secret key is required and is encoded in the path component.
+* The environment slug, path, project ID, and secret type are optional query parameters, which override defaults (defaults set in [configuration](../inject.md#infisical-secrets-provider))
+
+## Setup
+
+> [!TIP]
+> Below are steps to create a Machine Identity on your Infisical Organization, which makes it simpler to manage access for locket if it needs access to multiple projects. If you only need access to a single project, you can create a Machine Identity scoped to that project instead.
+
+1. [Create an Infisical Account](https://app.infisical.com/signup)
+1. Create a project, and add secrets to it.
+1. Create a Machine Identity for locket. Navigate to Organization > Access Control > Machine Identities. Select `Create Organization Machine Identity`. Give it a name, and you can assign the permissions to `No Access`. 
+1. Once redirected, in the Universal Auth tab, select `Add Client Secret`. Give it a name, and any TTL or usage limits as needed. Select `Create`
+1. Take note of the `Client Secret` and keep it in a safe location. It will not be shown again.
+1. Make sure to associate this `Client Secret` with the `Client ID` of the Universal Auth instance, as both are needed to configure locket for authentication.
+1. Add any projects that you want locket to have access to here.
+
+[Here](../inject.md#infisical-secrets-provider) is the reference configuration for locket using Infisical
+
+```sh
+locket inject --provider infisical \
+  --infisical-client-secret file:/path/to/token \
+  --infisical-client-id c74d3ea3-d189-43f0-96bb-649fa27bee30 \
+  --infisical-default-environment dev \
+  --infisical-default-project-id 6ca04a90-e171-41c2-b838-fa0d951822e3 \
+  --out /run/secrets/locket \
+  --secret name={{infisical:///SECRET?env=prod&path=/path/to/folder}}
+  --secret /path/to/secrets.yaml \
+  --secret auth_key=@key.pem \
+  --map ./tpl:/run/secrets/locket/mapped 
+```
+
+## Example Sidecar Configuration
+
+```yaml
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:infisical
+    user: "1000:1000"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    container_name: locket-infisical
+    secrets:
+      - infisical_secret
+    volumes:
+      - ./templates:/templates:ro
+      - out-infisical:/run/secrets/locket
+    command: # Or use environment variables/TOML
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-client-id=c74d3ea3-d189-43f0-96bb-649fa27bee30"
+      - "--infisical-default-environment=prod"
+      - "--infisical-default-project-id=6ca04a90-e171-41c2-b838-fa0d951822e3"
+secrets:
+  connect_token:
+    file: /etc/tokens/infisical
+volumes:
+  out-infisical: { driver: local, driver_opts: { type: tmpfs, device: tmpfs, o: "uid=1000,gid=1000,mode=0700" } }
+```
+
+## Example Provider Configuration
+
+```yaml
+---
+name: provider
+services:
+  locket:
+    provider:
+      type: locket
+      options:
+        provider: infisical
+        infisical-client-secret: file:/etc/tokens/infisical
+        infisical-client-id: "c74d3ea3-d189-43f0-96bb-649fa27bee30"
+        infisical-default-project-id: "6ca04a90-e171-41c2-b838-fa0d951822e3"
+        infisical-default-environment: "dev"
+        env:
+            - TEXT={{infisical:///SECRET}}
+            - SECRET={{infisical:///SECRET?env=prod}}
+  demo:
+    image: busybox
+    user: "1000:1000"
+    command: 
+      - sh
+      - -c
+      - "env | grep LOCKET"
+    depends_on:
+      - locket
+```
+
+
+---
+
+### `locket/docs/providers/op.md` — locket
+
+# 1password Service Account Provider
+
+This provider is based on the 1password `op` CLI as a backend. Each request for a secret is handled via a subprocess call to `op read`. This is unfortunately the only reasonable means of supporting 1password service accounts, because 1password does not provider a Rust SDK. It works generally just fine, but carries some side effects.
+
+1. Because each request for a secret is executed via a subprocess call to `op read`, for injection of many secret files, this can take some time (about 0.5 seconds to process each file, compared to milliseconds for other providers). For each file, secrets are pre-collected and then batch requested in batches of 10 at a time, so it takes the same amount of time to resolve 10 secrets as it does 1. But secrets are batched per-file, not collected in advance and then batch processed. This means that it can take a material amount of time to inject secrets if many config files are needed.
+1. The `op` CLI has very strict permissions checks in place on its configuration directory which cannot be overridden. Most of these are handled by the default configuration, but if a non-root user *besides* the default user (`nonroot(65532):nonroot(65532)`), it will not work without a [workaround](#workaround-for-arbitrary-non-root-users).
+1. If using locket as a standalone CLI and need the `op` provider, you will also need to have the `op` binary installed on system.
+
+If these issues are not satisfactory, the [1password connect provider](./connect.md) does not carry these issues
+
+> [!NOTE]
+> Because of the above constraints, using `op` provider in Provider mode (where `locket`) is installed directly on the host, means that you must also have the `op` CLI installed.
+
+## Setup
+
+1. [Create a Service Account](https://developer.1password.com/docs/service-accounts/get-started#create-a-service-account)
+1. Make sure to set permissions on the service account for the Vaults that it should have access to.
+1. Store the Service Account token securely (i.e. in 1password)
+1. Authenticate locket using the service account token via `--op-token` (or via env variables, supports raw token or `file:path/to/token`)
+1. If using provider mode, [install `op` cli](https://developer.1password.com/docs/cli/get-started/) dependency. 
+
+
+[Full configuration reference](../inject.md#1password-op)
+
+```sh
+locket inject --provider op \
+  --op-token file:/path/to/token \\
+  --out /run/secrets/locket \
+  --secret name={{op://Vault/Secret/Section/Item}}
+  --secret /path/to/secrets.yaml \
+  --secret auth_key=@key.pem \
+  --map ./tpl:/run/secrets/locket/mapped 
+```
+
+# Example `locket inject` Configuration
+
+```yaml
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:op
+    user: "1000:1000"
+    container_name: locket
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    secrets:
+      - op_token
+    volumes:
+      - ./templates:/templates:ro
+      - out-op:/run/secrets/locket
+    command: # Or use environment variables
+      - "--op-token=file:/run/secrets/op_token"
+secrets:
+  op_token:
+    file: /etc/tokens/op
+volumes:
+  out-op: { driver: local, driver_opts: { type: tmpfs, device: tmpfs, o: "uid=1000,gid=1000,mode=0700" } }
+```
+
+## Workaround for arbitrary non-root users
+
+To run as an arbitrary non-root user (i.e. `1000:1000`), the `$XDG_CONFIG_DIR/op` directory must:
+
+1. Have strict `0700` permissions
+1. Be owned by the running user (i.e. `1000:1000`)
+1. Be owned by a *named user* resolvable by `/etc/passwd`
+
+Because every user cannot be exhaustively added to `/etc/passwd`, one must be supplied which is able to satisfy `op`. The only users available by default are the default `nonroot` and `root`.
+
+Here is an example configuration which will work with `user: 1000:1000`
+
+```yaml
+# Create cfg volume with defined permissions. Can also bind mount one if permissions are correct
+volumes:
+  op-cfg: { driver: local, driver_opts: { type: tmpfs, device: tmpfs, o: "uid=1000,gid=1000,mode=0700" } }
+  out-op: { driver: local, driver_opts: { type: tmpfs, device: tmpfs, o: "uid=1000,gid=1000,mode=0700" } }
+
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:op
+    user: "1000:1000"
+    container_name: locket
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    secrets:
+      - op_token
+    volumes:
+      - ./templates:/templates:ro
+      - out-op:/run/secrets/locket
+      - op-cfg:/config:rw # Mount config directory
+      - /etc/passwd:/etc/passwd:ro # Mount /etc/passwd (can be a separate, stripped down version with just one user if desired)
+    command:
+      - "--op-token=file:/run/secrets/op_token"
+```
+
+## Example Provider Configuration
+
+
+> [!IMPORTANT]
+> If using `op` in provider mode, you must have `op` cli installed on your system as well.
+
+```yaml
+---
+name: provider
+services:
+  locket:
+    provider:
+      type: locket
+      options:
+        provider: op
+        op-token: file:/etc/op/token
+        secrets:
+          - "secret1={{ op://Mordin/SecretPassword/Test Section/text }}"
+          - "secret2={{ op://Mordin/SecretPassword/Test Section/date }}"
+  demo:
+    image: busybox
+    user: "1000:1000"
+    command: 
+      - sh
+      - -c
+      - "env | grep LOCKET"
+    depends_on:
+      - locket
+```
+
+
+---
+
+### `locket/docs/volume.md` — locket
+
+[Return to Index](./CONFIGURATION.md)
+
+> [!TIP]
+> All configuration options can be set via command line arguments OR environment variables. CLI arguments take precedence.
+
+## `locket volume`
+
+Run as a Docker Volume Plugin
+
+### Options
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--config` | `LOCKET_CONFIG` |  | Path to configuration files<br><br>Can be specified multiple times to layer multiple files. Each file is loaded in the order specified, with later files overriding earlier ones. |
+| `--secrets` | `LOCKET_VOLUME_DEFAULT_SECRETS` |  | Default secrets to mount into the volume<br><br>These will typically be specified in driver_opts for volume. However, default secrets can be provided via CLI/ENV which would be available to all volumes by default. |
+| `--user` | `LOCKET_FILE_OWNER` |  | Owner of the file/dir<br><br>Defaults to the running user/group. The running user must have write permissions on the directory to change the owner. |
+| `--provider` | `SECRETS_PROVIDER` |  | Secrets provider backend to use <br><br> **Choices:**<br>- `op`: 1Password Service Account<br>- `op-connect`: 1Password Connect Provider<br>- `bws`: Bitwarden Secrets Provider<br>- `infisical`: Infisical Secrets Provider |
+| `--socket` | `LOCKET_PLUGIN_SOCKET` | `/run/docker/plugins/locket.sock` | Path to the listening socket |
+| `--state-dir` | `LOCKET_PLUGIN_STATE_DIR` | `/var/lib/locket` | Path to directory where state configuration is stored.<br><br>This is where the plugin will store necessary data to reload configured volumes from cold start |
+| `--runtime-dir` | `LOCKET_PLUGIN_RUNTIME_DIR` | `/var/lib/locket` | Path to directory where runtime data is stored.<br><br>This is where volumes are physically mounted on the host filesystem. |
+| `--log-format` | `LOCKET_LOG_FORMAT` | `text` | Log format <br><br> **Choices:**<br>- `text`: Plain text log format<br>- `json`: JSON log format<br>- `compose`: Special format for Docker Compose Provider specification |
+| `--log-level` | `LOCKET_LOG_LEVEL` | `info` | Log level <br><br> **Choices:**<br>- `trace`<br>- `debug`<br>- `info`<br>- `warn`<br>- `error` |
+| `--watch` | `LOCKET_VOLUME_DEFAULT_WATCH` | `false` | Default behavior for file watching.<br><br>If set to true, the volume will watch for changes in the secrets and update the files accordingly. <br><br> **Choices:**<br>- `true`<br>- `false` |
+| `--inject-failure-policy` | `LOCKET_VOLUME_DEFAULT_INJECT_POLICY` | `passthrough` | Default policy for handling failures when errors are encountered <br><br> **Choices:**<br>- `error`: Failures are treated as errors and will abort the process<br>- `passthrough`: On failure, copy the unmodified secret to destination<br>- `ignore`: On failure, ignore the secret and log a warning |
+| `--max-file-size` | `LOCKET_VOLUME_DEFAULT_MAX_FILE_SIZE` | `10M` | Default maximum size of individual secret files |
+| `--file-mode` | `LOCKET_FILE_MODE` | `0600` | File permission mode |
+| `--dir-mode` | `LOCKET_DIR_MODE` | `0700` | Directory permission mode |
+| `--size` | `LOCKET_VOLUME_DEFAULT_MOUNT_SIZE` | `10M` | Default size of the in-memory filesystem |
+| `--mode` | `LOCKET_VOLUME_DEFAULT_MOUNT_MODE` | `0700` | Default file mode for the mounted filesystem |
+| `--flags` | `LOCKET_VOLUME_DEFAULT_MOUNT_FLAGS` | `rw,noexec,nosuid,nodev` | Default mount flags for the in-memory filesystem |
+### 1Password (op)
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--op-token` | `OP_SERVICE_ACCOUNT_TOKEN` |  | 1Password Service Account Token<br><br>Either provide the token directly or via a file with `file:` prefix |
+| `--op-config-dir` | `OP_CONFIG_DIR` |  | Optional: Path to 1Password config directory<br><br>Defaults to standard op config locations if not provided, e.g. `$XDG_CONFIG_HOME/op` |
+### 1Password Connect
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--connect-host` | `OP_CONNECT_HOST` |  | 1Password Connect Host HTTP(S) URL |
+| `--connect-token` | `OP_CONNECT_TOKEN` |  | 1Password Connect Token<br><br>Either provide the token directly or via a file with `file:` prefix |
+| `--connect-max-concurrent` | `OP_CONNECT_MAX_CONCURRENT` | `20` | Maximum allowed concurrent requests to Connect API |
+### Bitwarden Secrets Provider
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--bws-token` | `BWS_MACHINE_TOKEN` |  | Bitwarden Machine Token<br><br>Either provide the token directly or via a file with `file:` prefix |
+| `--bws-api-url` | `BWS_API_URL` | `https://api.bitwarden.com` | Bitwarden API URL |
+| `--bws-identity-url` | `BWS_IDENTITY_URL` | `https://identity.bitwarden.com` | Bitwarden Identity URL |
+| `--bws-max-concurrent` | `BWS_MAX_CONCURRENT` | `20` | Maximum number of concurrent requests to Bitwarden Secrets Manager |
+| `--bws-user-agent` | `BWS_USER_AGENT` | `locket` | BWS User Agent |
+### Infisical Secrets Provider
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--infisical-client-secret` | `INFISICAL_CLIENT_SECRET` |  | The client secret for Universal Auth to authenticate with Infisical.<br><br>Either provide the token directly or via a file with `file:` prefix |
+| `--infisical-client-id` | `INFISICAL_CLIENT_ID` |  | The client ID for Universal Auth to authenticate with Infisical |
+| `--infisical-default-environment` | `INFISICAL_DEFAULT_ENVIRONMENT` |  | The default environment slug to use when one is not specified |
+| `--infisical-default-project-id` | `INFISICAL_DEFAULT_PROJECT_ID` |  | The default project ID to use when one is not specified |
+| `--infisical-url` | `INFISICAL_URL` | `https://us.infisical.com` | The URL of the Infisical instance to connect to |
+| `--infisical-default-path` | `INFISICAL_DEFAULT_PATH` | `/` | The default path to use when one is not specified |
+| `--infisical-default-secret-type` | `INFISICAL_DEFAULT_SECRET_TYPE` | `shared` | The default secret type to use when one is not specified <br><br> **Choices:**<br>- `shared`<br>- `personal` |
+| `--infisical-max-concurrent` | `INFISICAL_MAX_CONCURRENT` | `20` | Maximum allowed concurrent requests to Infisical API |
+
+## TOML Reference
+
+> [!TIP]
+> Settings can be provided via config.toml as well, using the --config option.
+> Provided is the reference configuration in TOML format
+
+```toml
+# Path to the listening socket
+socket = "/run/docker/plugins/locket.sock"
+
+# Path to directory where state configuration is stored
+state-dir = "/var/lib/locket"
+
+# Path to directory where runtime data is stored
+runtime-dir = "/var/lib/locket"
+
+# Log format
+log-format = "text"
+
+# Log level
+log-level = "info"
+
+# Default secrets to mount into the volume
+secrets = []
+
+# Default behavior for file watching
+watch = false
+
+# Default policy for handling failures when errors are encountered
+inject-failure-policy = "passthrough"
+
+# Default maximum size of individual secret files
+max-file-size = "10M"
+
+# File permission mode
+file-mode = "0600"
+
+# Directory permission mode
+dir-mode = "0700"
+
+# Owner of the file/dir
+# user = ...
+
+# Default size of the in-memory filesystem
+size = "10M"
+
+# Default file mode for the mounted filesystem
+mode = "0700"
+
+# Default mount flags for the in-memory filesystem
+flags = "rw,noexec,nosuid,nodev"
+
+# Secrets provider backend to use
+# provider = ...
+
+# 1Password Service Account Token
+# op-token = ...
+
+# Optional: Path to 1Password config directory
+# op-config-dir = ...
+
+# 1Password Connect Host HTTP(S) URL
+# connect-host = ...
+
+# 1Password Connect Token
+# connect-token = ...
+
+# Maximum allowed concurrent requests to Connect API
+connect-max-concurrent = 20
+
+# Bitwarden API URL
+bws-api-url = "https://api.bitwarden.com/"
+
+# Bitwarden Identity URL
+bws-identity-url = "https://identity.bitwarden.com/"
+
+# Maximum number of concurrent requests to Bitwarden Secrets Manager
+bws-max-concurrent = 20
+
+# BWS User Agent
+bws-user-agent = "locket"
+
+# Bitwarden Machine Token
+# bws-token = ...
+
+# The URL of the Infisical instance to connect to
+infisical-url = "https://us.infisical.com/"
+
+# The client secret for Universal Auth to authenticate with Infisical
+# infisical-client-secret = ...
+
+# The client ID for Universal Auth to authenticate with Infisical
+# infisical-client-id = ...
+
+# The default environment slug to use when one is not specified
+# infisical-default-environment = ...
+
+# The default project ID to use when one is not specified
+# infisical-default-project-id = ...
+
+# The default path to use when one is not specified
+infisical-default-path = "/"
+
+# The default secret type to use when one is not specified
+infisical-default-secret-type = "shared"
+
+# Maximum allowed concurrent requests to Infisical API
+infisical-max-concurrent = 20
+
+```
+
+
+---
+
+### `locket.md` — locket
+
+# Locket
+
+Secrets management with 1Password integration for infrastructure and applications.
+
+## Overview
+
+Locket provides secure secret distribution:
+
+- **1Password Connect** - Fetch secrets from 1Password vaults
+- **Environment Injection** - Inject secrets as environment variables
+- **Rotation Support** - Automatic secret rotation
+- **Rust CLI** - Fast, secure CLI tool
+
+## Location
+
+```
+bonneagar/locket/
+├── Cargo.toml           # Rust workspace
+├── src/
+│   ├── main.rs          # CLI entry point
+│   ├── onepassword.rs   # 1Password Connect client
+│   ├── inject.rs        # Environment injection
+│   └── rotate.rs        # Secret rotation
+└── xtask/               # Build tasks
+```
+
+## Installation
+
+```bash
+# Build from source
+cd bonneagar/locket
+cargo build --release
+
+# Or install globally
+cargo install --path .
+```
+
+## Usage
+
+### Fetch Secrets
+
+```bash
+# Fetch a single secret
+locket get vault/item/field
+
+# Fetch and inject as environment
+locket inject --vault production -- ./my-app
+```
+
+### Environment Files
+
+Generate `.env` files from 1Password:
+
+```bash
+# Generate .env from vault
+locket env generate --vault production --output .env.production
+```
+
+### Docker Integration
+
+```yaml
+# docker-compose.yml
+services:
+  app:
+    image: myapp:latest
+    environment:
+      - DATABASE_URL=op://vault/database/url
+    entrypoint: ["locket", "inject", "--", "/app/start.sh"]
+```
+
+## Configuration
+
+### 1Password Connect
+
+Set up 1Password Connect server:
+
+```yaml
+# docker-compose.yml
+services:
+  op-connect-api:
+    image: 1password/connect-api:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./1password-credentials.json:/home/opuser/.op/1password-credentials.json
+
+  op-connect-sync:
+    image: 1password/connect-sync:latest
+    volumes:
+      - ./1password-credentials.json:/home/opuser/.op/1password-credentials.json
+      - op-data:/home/opuser/.op/data
+```
+
+### Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `OP_CONNECT_HOST` | 1Password Connect server URL |
+| `OP_CONNECT_TOKEN` | API token for Connect |
+
+## Secret Reference Syntax
+
+```
+op://vault-name/item-name/field-name
+```
+
+Examples:
+- `op://production/database/password`
+- `op://development/api-keys/openai`
+
+## Integration with Dagger
+
+```typescript
+// In Dagger pipeline
+const secrets = await client
+  .container()
+  .from("rust:latest")
+  .withExec(["cargo", "install", "--path", "bonneagar/locket"])
+  .withEnvVariable("OP_CONNECT_HOST", process.env.OP_CONNECT_HOST!)
+  .withSecretVariable("OP_CONNECT_TOKEN", opToken)
+  .withExec(["locket", "env", "generate", "--output", ".env"]);
+```
+
+## Related
+
+- [Pangolin](./pangolin) - VPN access
+- [Komodo](./komodo) - Deployment management
+- [Infrastructure Overview](./overview)
+
+
+---
+
+### `providers/bws.md` — locket
+
+# BWS Provider
+
+This provider is based on the [Bitwarden Secrets Manager](https://bitwarden.com/products/secrets-manager/). It uses the offical `bitwarden` rust crate as the backend.
+
+> [!NOTE]
+> This is **not** the same as a Bitwarden/Vaultwarden provider. A Bitwarden Vault Management API based provider is significantly more complex because it is not designed for machine access.
+
+1. [Setup a Bitwarden Secrets Manager account](https://bitwarden.com/help/secrets-manager-quick-start/)
+1. [Add a machine account with access to desired secrets / projects](https://bitwarden.com/help/secrets-manager-quick-start/#add-a-machine-account)
+1. Configure locket with your machine token. [Configuration Reference](../run.md#bitwarden-secrets-provider)
+
+## Example `locket run` Configuration
+
+```yaml
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:bws
+    user: "1000:1000"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    container_name: locket-bws
+    secrets:
+      - bws_token
+    volumes:
+      - ./templates:/templates:ro
+      - out-bws:/run/secrets/locket
+    command: # Or use environment variables
+      - "--bws.token-file=/run/secrets/bws_token"
+secrets:
+  bws_token:
+    file: /etc/tokens/bws
+volumes:
+  out-bws: { driver: local, driver_opts: { type: tmpfs, device: tmpfs, o: "uid=1000,gid=1000,mode=0700" } }
+```
+
+## Example Provider Configuration
+
+```yaml
+---
+name: provider
+services:
+  locket:
+    provider:
+      type: locket
+      options:
+        provider: bws
+        bws.token-file: /etc/bws/token
+        secrets:
+          - "secret1={{ 3832b656-a93b-45ad-bdfa-b267016802c3 }}"
+          - "secret2={{ 3e0f2247-b359-4408-83d0-b3a70152731c }}"
+  demo:
+    image: busybox
+    user: "1000:1000"
+    command: 
+      - sh
+      - -c
+      - "env | grep LOCKET"
+    depends_on:
+      - locket
+
+```
+
+---
+
+### `providers/connect.md` — locket
+
+# 1password Connect Provider
+
+This provider is based on a [1password Connect](https://developer.1password.com/docs/connect/) backend. Requests for secrets are made via calls to the Connect REST API on your configured Connect host.
+
+> [!NOTE]
+> This provider requires a functioning and reachable 1password connect deployment. You cannot access `my.1password.com` using the Connect API
+
+1. [Deploy a 1password Connect Server](https://developer.1password.com/docs/connect/get-started#step-2-deploy-a-1password-connect-server)
+1. [Create an access token](https://developer.1password.com/docs/connect/manage-connect#create-a-token)
+1. Configure locket with your reachable connect host URL, and your authentication token. [Configuration Reference](../run.md#1password-connect)
+
+## Example `locket run` Configuration
+
+```yaml
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:connect
+    user: "1000:1000"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    container_name: locket-connect
+    secrets:
+      - connect_token
+    volumes:
+      - ./templates:/templates:ro
+      - out-connect:/run/secrets/locket
+    command: # Or use environment variables
+      - "--connect.token-file=/run/secrets/connect_token"
+      - "--connect.host=https://connect.example.com"
+secrets:
+  connect_token:
+    file: /etc/tokens/connect
+volumes:
+  out-connect: { driver: local, driver_opts: { type: tmpfs, device: tmpfs, o: "uid=1000,gid=1000,mode=0700" } }
+```
+
+## Example Provider Configuration
+
+```yaml
+---
+name: provider
+services:
+  locket:
+    provider:
+      type: locket
+      options:
+        provider: op-connect
+        connect.token-file: /etc/connect/token
+        connect.host: $OP_CONNECT_HOST
+        secrets:
+          - "secret1={{ op://Mordin/SecretPassword/Test Section/text }}"
+          - "secret2={{ op://Mordin/SecretPassword/Test Section/date }}"
+  demo:
+    image: busybox
+    user: "1000:1000"
+    command: 
+      - sh
+      - -c
+      - "env | grep LOCKET"
+    depends_on:
+      - locket
+
+```
+
+
+---
+
+### `providers/op.md` — locket
+
+# 1password Service Account Provider
+
+This provider is based on the 1password `op` CLI as a backend. Each request for a secret is handled via a subprocess call to `op read`. This is unfortunately the only reasonable means of supporting 1password service accounts, because 1password does not provider a Rust SDK. It works generally just fine, but carries some side effects.
+
+1. Because each request for a secret is executed via a subprocess call to `op read`, for injection of many secret files, this can take some time (about 0.5 seconds to process each file, compared to milliseconds for other providers). For each file, secrets are pre-collected and then batch requested in batches of 10 at a time, so it takes the same amount of time to resolve 10 secrets as it does 1. But secrets are batched per-file, not collected in advance and then batch processed. This means that it can take a material amount of time to inject secrets if many config files are needed.
+1. The `op` CLI has very strict permissions checks in place on its configuration directory which cannot be overridden. Most of these are handled by the default configuration, but if a non-root user *besides* the default user (`nonroot(65532):nonroot(65532)`), it will not work without a [workaround](#workaround-for-arbitrary-non-root-users).
+1. If using locket as a standalone CLI and need the `op` provider, you will also need to have the `op` binary installed on system.
+
+If these issues are not satisfactory, the [1password connect provider](./connect.md) does not carry these issues
+
+> [!NOTE]
+> Because of the above constraints, using `op` provider in Provider mode (where `locket`) is installed directly on the host, means that you must also have the `op` CLI installed.
+
+## Setup
+
+1. [Create a Service Account](https://developer.1password.com/docs/service-accounts/get-started#create-a-service-account)
+1. Make sure to set permissions on the service account for the Vaults that it should have access to.
+1. Store the Service Account token securely (i.e. in 1password)
+1. Authenticate locket using the service account token via `--op.token` or `--op.token-file` (or via env variables)
+1. If using provider mode, [install `op` cli](https://developer.1password.com/docs/cli/get-started/) dependency. 
+
+
+[Full configuration reference](../run.md#1password-op)
+
+# Example `locket run` Configuration
+
+```yaml
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:op
+    user: "1000:1000"
+    container_name: locket
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    secrets:
+      - op_token
+    volumes:
+      - ./templates:/templates:ro
+      - out-op:/run/secrets/locket
+    command: # Or use environment variables
+      - "--op.token-file=/run/secrets/op_token"
+secrets:
+  op_token:
+    file: /etc/tokens/op
+volumes:
+  out-op: { driver: local, driver_opts: { type: tmpfs, device: tmpfs, o: "uid=1000,gid=1000,mode=0700" } }
+```
+
+## Workaround for arbitrary non-root users
+
+To run as an arbitrary non-root user (i.e. `1000:1000`), the `$XDG_CONFIG_DIR/op` directory must:
+
+1. Have strict `0700` permissions
+1. Be owned by the running user (i.e. `1000:1000`)
+1. Be owned by a *named user* resolvable by `/etc/passwd`
+
+Because every user cannot be exhaustively added to `/etc/passwd`, one must be supplied which is able to satisfy `op`. The only users available by default are the default `nonroot` and `root`.
+
+Here is an example configuration which will work with `user: 1000:1000`
+
+```yaml
+# Create cfg volume with defined permissions. Can also bind mount one if permissions are correct
+volumes:
+  op-cfg: { driver: local, driver_opts: { type: tmpfs, device: tmpfs, o: "uid=1000,gid=1000,mode=0700" } }
+  out-op: { driver: local, driver_opts: { type: tmpfs, device: tmpfs, o: "uid=1000,gid=1000,mode=0700" } }
+
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:op
+    user: "1000:1000"
+    container_name: locket
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    secrets:
+      - op_token
+    volumes:
+      - ./templates:/templates:ro
+      - out-op:/run/secrets/locket
+      - op-cfg:/config:rw # Mount config directory
+      - /etc/passwd:/etc/passwd:ro # Mount /etc/passwd (can be a separate, stripped down version with just one user if desired)
+    command:
+      - "--op.token-file=/run/secrets/op_token"
+```
+
+## Example Provider Configuration
+
+
+> [!IMPORTANT]
+> If using `op` in provider mode, you must have `op` cli installed on your system as well.
+
+```yaml
+---
+name: provider
+services:
+  locket:
+    provider:
+      type: locket
+      options:
+        provider: op
+        op.token-file: /etc/op/token
+        secrets:
+          - "secret1={{ op://Mordin/SecretPassword/Test Section/text }}"
+          - "secret2={{ op://Mordin/SecretPassword/Test Section/date }}"
+  demo:
+    image: busybox
+    user: "1000:1000"
+    command: 
+      - sh
+      - -c
+      - "env | grep LOCKET"
+    depends_on:
+      - locket
+```
+
+
+
+---
+
+### `run.md` — locket
+
+[Return to Index](./CONFIGURATION.md)
+
+> [!TIP]
+> All configuration options can be set via command line arguments OR environment variables. CLI arguments take precedence.
+
+## `locket run`
+
+Start the secret sidecar agent.
+All secrets will be collected and materialized according to configuration.
+
+Example:
+
+```sh
+locket run --provider bws --bws-token-file /path/to/token \
+    --secret=/path/to/secrets.yaml \
+    --secret=key=@key.pem \
+    --map /templates=/run/secrets/locket
+```
+
+### Options
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--mode` | `LOCKET_RUN_MODE` | `watch` | Mode of operation <br> **Choices:** `one-shot`, `watch`, `park` |
+| `--status-file` | `LOCKET_STATUS_FILE` | `/tmp/.locket/ready` | Status file path used for healthchecks |
+| `--map` | `SECRET_MAP` | `/templates:/run/secrets/locket` | Mapping of source paths (holding secret templates) to destination paths (where secrets are materialized and reflected) in the form `SRC:DST` or `SRC=DST`. Multiple mappings can be provided, separated by commas, or supplied multiple times as arguments. e.g. `--map /templates:/run/secrets/locket/app --map /other_templates:/run/secrets/locket/other` |
+| `--secret` | `LOCKET_SECRETS` |  | Additional secret values specified as LABEL=SECRET_TEMPLATE Multiple values can be provided, separated by commas. Or supplied multiple times as arguments. Loading from file is supported via `LABEL=@/path/to/file`. e.g. `--secret db_password={{op://..}} --secret api_key={{op://..}}` |
+| `--out` | `DEFAULT_SECRET_DIR` | `/run/secrets/locket` | Directory where secret values (literals) are materialized |
+| `--inject-policy` | `INJECT_POLICY` | `copy-unmodified` | Policy for handling injection failures <br> **Choices:** `error`, `copy-unmodified`, `ignore` |
+| `--max-file-size` | `MAX_FILE_SIZE` | `10M` | Maximum allowable size for a template file. Files larger than this will be rejected. Supports human-friendly suffixes like K, M, G (e.g. 10M = 10 Megabytes) |
+| `--file-mode` | `LOCKET_FILE_MODE` | `600` | File permission mode |
+| `--dir-mode` | `LOCKET_DIR_MODE` | `700` | Directory permission mode |
+| `--debounce` | `WATCH_DEBOUNCE` | `500ms` | Debounce duration for filesystem events in watch mode. Events occurring within this duration will be coalesced into a single update so as to not overwhelm the secrets manager with rapid successive updates from filesystem noise. Handles human-readable strings like "100ms", "2s", etc. Unitless numbers are interpreted as milliseconds |
+| `--log-format` | `LOCKET_LOG_FORMAT` | `text` | Log format <br> **Choices:** `text`, `json` |
+| `--log-level` | `LOCKET_LOG_LEVEL` | `info` | Log level <br> **Choices:** `trace`, `debug`, `info`, `warn`, `error` |
+### Provider Configuration
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--provider` | `SECRETS_PROVIDER` |  | Secrets provider <br> **Choices:** `op`, `op-connect`, `bws` |
+### 1Password (op)
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--op.token` | `OP_SERVICE_ACCOUNT_TOKEN` |  | 1Password Service Account token |
+| `--op.token-file` | `OP_SERVICE_ACCOUNT_TOKEN_FILE` |  | Path to file containing 1Password Service Account token |
+| `--op.config-dir` | `OP_CONFIG_DIR` |  | Optional: Path to 1Password config directory Defaults to standard op config locations if not provided, e.g. $XDG_CONFIG_HOME/op |
+### 1Password Connect
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--connect.host` | `OP_CONNECT_HOST` |  | 1Password Connect Host HTTP(S) URL |
+| `--connect.token` | `OP_CONNECT_TOKEN` |  | 1Password Connect API token |
+| `--connect.token-file` | `OP_CONNECT_TOKEN_FILE` |  | Path to file containing 1Password Connect API token |
+| `--connect.max-concurrent` | `OP_CONNECT_MAX_CONCURRENT` | `20` | Maximum allowed concurrent requests to Connect API |
+### Bitwarden Secrets Provider
+
+| Command | Env | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--bws.api` | `BWS_API_URL` | `https://api.bitwarden.com` | Bitwarden API URL |
+| `--bws.identity` | `BWS_IDENTITY_URL` | `https://identity.bitwarden.com` | Bitwarden Identity URL |
+| `--bws.max-concurrent` | `BWS_MAX_CONCURRENT` | `20` | Maximum number of concurrent requests to Bitwarden Secrets Manager |
+| `--bws.user-agent` | `BWS_USER_AGENT` | `locket` | BWS User Agent |
+| `--bws.token` | `BWS_MACHINE_TOKEN` |  | Bitwarden Secrets Manager machine token |
+| `--bws.token-file` | `BWS_MACHINE_TOKEN_FILE` |  | Path to file containing Bitwarden Secrets Manager machine token |
+
+
+---
+
+### `CLAUDE.md` — infisical
+
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Essential Commands
+
+- `make reviewable-api` / `make reviewable-ui` — lint:fix + type:check (run before PRs)
+- `cd backend && npm run migration:new` — create new DB migration
+- `cd backend && npm run generate:schema` — regenerate Zod types from DB after migration changes
+
+Both backend and frontend use `@app/*` as path alias to `./src/*`.
+
+## Repository Structure
+
+Infisical is an open-source secret management platform. Monorepo layout:
+
+```
+infisical/
+├── backend/               # Fastify 4 API server (see backend/CLAUDE.md)
+├── frontend/              # React 18 SPA (see frontend/CLAUDE.md)
+├── wasm/                  # Rust crates compiled to WASM for the frontend (see wasm/<crate>/CLAUDE.md)
+├── docs/                  # Documentation site (Mintlify-based)
+├── docker-compose.dev.yml        # Local dev (PostgreSQL, Redis, backend, frontend, Nginx)
+├── docker-compose.prod.yml       # Production deployment stack
+├── docker-compose.bdd.yml        # BDD testing environment
+├── docker-compose.e2e-dbs.yml    # E2E test databases (Oracle, SAP, Snowflake, etc.)
+├── Dockerfile.standalone-infisical       # Standalone image (frontend + backend)
+├── Dockerfile.fips.standalone-infisical  # FIPS-compliant standalone image
+├── .github/               # CI workflows, PR template
+└── CLAUDE.md               # This file
+```
+
+- **`backend/`** — Fastify 4 API server, TypeScript, PostgreSQL via Knex, BullMQ queues. See [`backend/CLAUDE.md`](backend/CLAUDE.md) for architecture, patterns, and commands.
+- **`frontend/`** — React 18 SPA, Vite 6, TanStack Router + React Query, Tailwind CSS v4. See [`frontend/CLAUDE.md`](frontend/CLAUDE.md) for architecture, patterns, and commands.
+- **`wasm/`** — Rust crates that compile to WASM for the frontend. Generated bindings are committed under `frontend/src/lib/<crate>/` so the frontend builds without a Rust toolchain. Each crate has its own `CLAUDE.md` with the rebuild command (e.g. [`wasm/ironrdp-decoder/CLAUDE.md`](wasm/ironrdp-decoder/CLAUDE.md)) — run it after any change to that crate's `src/` or `Cargo.toml` so source and bindings stay in sync.
+- **`docs/`** — Product documentation site. Has its own Dockerfile for building. Reference docs for up-to-date feature descriptions and API usage.
+
+Enterprise features live in `backend/src/ee/` (services and routes), registered before community routes so they can override/extend them.
+
+### Self-Hosted Deployment
+
+Infisical supports self-hosted deployment via Docker. Key considerations:
+- **`Dockerfile.standalone-infisical`** — single-container image with both frontend and backend; used for simple deployments.
+- **`Dockerfile.fips.standalone-infisical`** — FIPS 140-2 compliant variant for regulated environments. Be strict about not introducing dependencies that break FIPS compliance.
+- **`docker-compose.prod.yml`** — production compose with backend, PostgreSQL, and Redis.
+- New backend dependencies should be evaluated carefully — they affect container size, FIPS compliance, and the encryption boundary. Check `docs/` for self-hosted deployment documentation when in doubt.
+
+### Dependency Policy
+
+Both `backend/` and `frontend/` enforce a minimum release age of 7 days for npm packages (configured via `.npmrc` in each directory). This means `npm install` will only resolve package versions published at least 7 days ago, as a supply-chain security measure.
+
+## Cross-Cutting Patterns
+
+### Design System & Voice
+
+The v3 visual system (colors, typography, components, layout) and product voice/content tone are documented in [`DESIGN.md`](DESIGN.md). Read it before producing new UI or user-visible copy.
+
+### Auth & Permissions
+
+Auth modes (JWT, IDENTITY_ACCESS_TOKEN, SCIM_TOKEN, MCP_JWT) are extracted in `backend/src/server/plugins/auth/`. Authorization uses CASL (`@casl/ability`) with project-level and org-level permission checks — see `backend/CLAUDE.md` for backend details and `frontend/CLAUDE.md` for frontend permission hooks/HOCs. Note: `API_KEY` and `SERVICE_TOKEN` auth modes are deprecated — do not use them in new code.
+
+### Service Factory + Manual DI (Backend)
+
+No IoC container. Every service is a factory function with explicit dependencies. The entire dependency graph is wired in `backend/src/server/routes/index.ts` — see `backend/CLAUDE.md` for the full wiring map and patterns.
+
+### API Layer (Frontend)
+
+React Query + Axios with query key factories per domain. Each API domain in `frontend/src/hooks/api/` has `queries.tsx`, `mutations.tsx`, and `types.tsx` — see `frontend/CLAUDE.md` for conventions.
+
+## Keeping CLAUDE.md Up to Date
+
+When making significant changes to the codebase (new services, architectural shifts, new patterns, major refactors), update the relevant CLAUDE.md file(s) with high-level findings. This includes this root file for cross-cutting concerns, `backend/CLAUDE.md` for backend changes, and `frontend/CLAUDE.md` for frontend changes. The goal is to keep these files accurate as living documentation so future sessions start with correct context.
+
+## Wiring a New Full-Stack Feature
+
+1. **Backend**: Create service module, migration, wire DI, add routes — see checklist in `backend/CLAUDE.md`
+2. **Frontend**: Add API hooks in `src/hooks/api/<domain>/`, create page/view, wire route — see `frontend/CLAUDE.md` for routing and component patterns
+3. Run `make reviewable-api` and `make reviewable-ui` before submitting
+
+
+---
+
+### `CODE_OF_CONDUCT.md` — infisical
+
+# Contributor Covenant Code of Conduct
+
+## Our Pledge
+
+We as members, contributors, and leaders pledge to make participation in our
+community a harassment-free experience for everyone, regardless of age, body
+size, visible or invisible disability, ethnicity, sex characteristics, gender
+identity and expression, level of experience, education, socio-economic status,
+nationality, personal appearance, race, religion, or sexual identity
+and orientation.
+
+We pledge to act and interact in ways that contribute to an open, welcoming,
+diverse, inclusive, and healthy community.
+
+## Our Standards
+
+Examples of behavior that contributes to a positive environment for our
+community include:
+
+* Demonstrating empathy and kindness toward other people
+* Being respectful of differing opinions, viewpoints, and experiences
+* Giving and gracefully accepting constructive feedback
+* Accepting responsibility and apologizing to those affected by our mistakes,
+  and learning from the experience
+* Focusing on what is best not just for us as individuals, but for the
+  overall community
+
+Examples of unacceptable behavior include:
+
+* The use of sexualized language or imagery, and sexual attention or
+  advances of any kind
+* Trolling, insulting or derogatory comments, and personal or political attacks
+* Public or private harassment
+* Publishing others' private information, such as a physical or email
+  address, without their explicit permission
+* Other conduct which could reasonably be considered inappropriate in a
+  professional setting
+
+## Enforcement Responsibilities
+
+Community leaders are responsible for clarifying and enforcing our standards of
+acceptable behavior and will take appropriate and fair corrective action in
+response to any behavior that they deem inappropriate, threatening, offensive,
+or harmful.
+
+Community leaders have the right and responsibility to remove, edit, or reject
+comments, commits, code, wiki edits, issues, and other contributions that are
+not aligned to this Code of Conduct, and will communicate reasons for moderation
+decisions when appropriate.
+
+## Scope
+
+This Code of Conduct applies within all community spaces, and also applies when
+an individual is officially representing the community in public spaces.
+Examples of representing our community include using an official e-mail address,
+posting via an official social media account, or acting as an appointed
+representative at an online or offline event.
+
+## Enforcement
+
+Instances of abusive, harassing, or otherwise unacceptable behavior may be
+reported to the community leaders responsible for enforcement at
+support@infisical.com.
+All complaints will be reviewed and investigated promptly and fairly.
+
+All community leaders are obligated to respect the privacy and security of the
+reporter of any incident.
+
+## Enforcement Guidelines
+
+Community leaders will follow these Community Impact Guidelines in determining
+the consequences for any action they deem in violation of this Code of Conduct:
+
+### 1. Correction
+
+**Community Impact**: Use of inappropriate language or other behavior deemed
+unprofessional or unwelcome in the community.
+
+**Consequence**: A private, written warning from community leaders, providing
+clarity around the nature of the violation and an explanation of why the
+behavior was inappropriate. A public apology may be requested.
+
+### 2. Warning
+
+**Community Impact**: A violation through a single incident or series
+of actions.
+
+**Consequence**: A warning with consequences for continued behavior. No
+interaction with the people involved, including unsolicited interaction with
+those enforcing the Code of Conduct, for a specified period of time. This
+includes avoiding interactions in community spaces as well as external channels
+like social media. Violating these terms may lead to a temporary or
+permanent ban.
+
+### 3. Temporary Ban
+
+**Community Impact**: A serious violation of community standards, including
+sustained inappropriate behavior.
+
+**Consequence**: A temporary ban from any sort of interaction or public
+communication with the community for a specified period of time. No public or
+private interaction with the people involved, including unsolicited interaction
+with those enforcing the Code of Conduct, is allowed during this period.
+Violating these terms may lead to a permanent ban.
+
+### 4. Permanent Ban
+
+**Community Impact**: Demonstrating a pattern of violation of community
+standards, including sustained inappropriate behavior,  harassment of an
+individual, or aggression toward or disparagement of classes of individuals.
+
+**Consequence**: A permanent ban from any sort of public interaction within
+the community.
+
+## Attribution
+
+This Code of Conduct is adapted from the [Contributor Covenant][homepage],
+version 2.0, available at
+https://www.contributor-covenant.org/version/2/0/code_of_conduct.html.
+
+Community Impact Guidelines were inspired by [Mozilla's code of conduct
+enforcement ladder](https://github.com/mozilla/diversity).
+
+[homepage]: https://www.contributor-covenant.org
+
+For answers to common questions about this code of conduct, see the FAQ at
+https://www.contributor-covenant.org/faq. Translations are available at
+https://www.contributor-covenant.org/translations.
+
+
+---
+
+### `DESIGN.md` — infisical
+
+# Infisical Design System (v3)
+
+This document captures the v3 visual language and product voice used across
+Infisical. It is the single reference for engineers, designers, and AI coding
+agents producing new UI or user-visible copy.
+
+**Source of truth for tokens:** [`frontend/src/index.css`](frontend/src/index.css) (`@theme` block).
+**Canonical semantic reference:** [`Badge.stories.tsx`](frontend/src/components/v3/generic/Badge/Badge.stories.tsx).
+**Canonical page references:** [`OverviewPage`](frontend/src/pages/secret-manager/OverviewPage) and [`AccessControlPage`](frontend/src/pages/project/AccessControlPage).
+**Component usage reference:** Every v3 generic component has a sibling `<Name>.stories.tsx` at `frontend/src/components/v3/generic/<Name>/`. Read it before producing UI with that component — the stories carry the variants, compositions, and use-when guidance the source does not.
+
+---
+
+## 1. Visual Theme & Atmosphere
+
+Infisical is a security tool for operators. The interface reads like
+infrastructure: dense, calm, and legible — never ornamental. Dark is the native
+medium; the page canvas is `--color-background`, and light themes are not part
+of the system yet.
+
+Color carries **meaning before brand**. A danger badge is red because the
+action is destructive, not because red is the accent. A project-colored button
+signals project scope, not visual variety. Designers pick intent; hex values
+follow.
+
+Depth is drawn with borders and surface tones, not shadows. Motion is
+restrained — 200ms ease-in-out, no springs, no decorative animation. Secret
+values are masked by default; revealing one is an intentional act.
+
+**Key characteristics:**
+
+- Dark-native; `--color-background` page canvas
+- Semantic-first color (danger / success / warning / info / neutral)
+- Scope-aware (org / sub-org / project / admin)
+- Border-defined depth, no decorative shadows
+- Inter, one family, across everything
+- Secrets masked by default; reveal is an act
+
+## 2. Color Palette & Roles
+
+All colors are defined as CSS custom properties in
+[`frontend/src/index.css`](frontend/src/index.css) and consumed via Tailwind v4
+utilities (`bg-org`, `text-danger`, etc.). Never introduce a hex that is not
+in this file.
+
+### Scope colors (hierarchy)
+
+Used to signal the scope a surface, badge, or action belongs to.
+
+| Scope            | Token              |
+| ---------------- | ------------------ |
+| Organization     | `--color-org`      |
+| Sub-Organization | `--color-sub-org`  |
+| Project          | `--color-project`  |
+| Admin            | `--color-admin`    |
+
+### Semantic colors
+
+| Intent   | Token              | Use                                              |
+| -------- | ------------------ | ------------------------------------------------ |
+| Success  | `--color-success`  | Healthy states, completed rotations              |
+| Info     | `--color-info`     | Informational states, external documentation     |
+| Warning  | `--color-warning`  | Attention-warranting states, stale items         |
+| Danger   | `--color-danger`   | Destructive actions, errors, expired access      |
+| Neutral  | `--color-neutral`  | Disabled, muted, "empty" states                  |
+
+### Surface & chrome
+
+| Role               | Token                    |
+| ------------------ | ------------------------ |
+| Page background    | `--color-background`     |
+| Foreground text    | `--color-foreground`     |
+| Card surface       | `--color-card`           |
+| Popover / Sheet    | `--color-popover`        |
+| Container          | `--color-container`      |
+| Container (hover)  | `--color-container-hover`|
+| Border             | `--color-border`         |
+| Focus ring         | `--color-ring`           |
+| Accent text        | `--color-accent`         |
+| Muted text         | `--color-muted`          |
+| Label text         | `--color-label`          |
+
+The `mineshaft-*` scale (50–900) is the underlying neutral ramp; see
+`index.css` for the full list. Prefer semantic tokens (`card`, `border`,
+`accent`) over raw mineshaft values.
+
+### Product-area accents (secret-manager)
+
+Reserved for resource types in the secret management product:
+`--color-folder`, `--color-secret`, `--color-dynamic-secret`,
+`--color-import`, `--color-secret-rotation`, `--color-override`.
+Do not repurpose these for generic UI.
+
+### Tint pattern
+
+Colored variants always layer as tinted backgrounds with matching borders —
+never as solid fills. The two canonical recipes:
+
+- **Badge** — `bg-<c>/15 border-<c>/10 text-<c>`, hover `bg-<c>/35`
+  (see [`Badge.tsx`](frontend/src/components/v3/generic/Badge/Badge.tsx))
+- **Button** — `bg-<c>/10 border-<c>/25 text-foreground`, hover `bg-<c>/15 border-<c>/30`
+  (see [`Button.tsx`](frontend/src/components/v3/generic/Button/Button.tsx))
+
+## 3. Typography
+
+Inter is the only font family (`--font-inter`). All weights and sizes use
+Tailwind's default scale.
+
+| Role                     | Class                                   | Notes                                                                 |
+| ------------------------ | --------------------------------------- | --------------------------------------------------------------------- |
+| Page title (h1)          | `text-2xl font-medium underline underline-offset-4 decoration-<scope>/90` | In `PageHeader`; scope icon (size 26) sits inline before the title    |
+| Page description         | `text-mineshaft-300`                    | Sits under the title, `mt-1.5`                                        |
+| Card title               | `text-lg font-semibold leading-none`    | `flex gap-1.5` so badges can sit inline                               |
+| Card description         | `text-sm text-accent`                   |                                                                       |
+| Body                     | `text-sm`                               | Default for table cells, form values, dialog content                  |
+| Label / meta             | `text-xs text-accent`                   | Field labels, table column captions, metadata                         |
+| Badge                    | `text-xs` (auto, via `Badge`)           | Never override                                                        |
+| Button                   | `text-sm` (md/sm/lg), `text-xs` (xs)    | Auto via `Button` sizing                                              |
+
+Sentence case for descriptions, helper text, and empty states. Title Case for
+page titles, card titles, dialog titles, sheet titles, button labels, badge
+labels, and dropdown menu items. See §8 for voice rules on copy itself.
+
+## 4. Component Stylings
+
+New UI must use v3 components from [`frontend/src/components/v3/`](frontend/src/components/v3).
+The v2 library is legacy; only fall back when no v3 equivalent exists.
+`PageHeader` is the notable exception — still v2, still canonical for page titles.
+
+For exact tokens, class lists, and every variant, read the component source
+and its `*.stories.tsx` — this doc cites them rather than duplicating them.
+
+### Reading the stories
+
+Every component's `.stories.tsx` follows the same shape:
+
+- **`Variant: X`** stories — one per prop-driven variant (e.g. `Variant: Outline`).
+- **`Example: X`** stories — composition recipes (e.g. `Example: With Header`,
+  `Example: Inside Card / Sheet / Dialog`).
+- Each story's `parameters.docs.description.story` is the use-when guidance.
+
+When picking a component, find the `Example:` story closest to your need and
+mirror it. When picking a variant, the `Variant:` story descriptions are the
+canonical "use this when..." guidance.
+
+Run Storybook with `cd frontend && npm run storybook` (port 6006) to preview.
+
+### Component inventory
+
+Use these tables to find the component for a given intent. For props,
+variants, sizes, and class lists, open the source or its `*.stories.tsx`
+— the stories are canonical.
+
+#### Actions
+| Component | Reach for this when… |
+| --- | --- |
+| [`Button`](frontend/src/components/v3/generic/Button/Button.tsx) | A text-bearing button — primary or secondary action. |
+| [`IconButton`](frontend/src/components/v3/generic/IconButton/IconButton.tsx) | A square icon-only button — toolbars, row actions, compact triggers. Always `aria-label`. |
+| [`ButtonGroup`](frontend/src/components/v3/generic/ButtonGroup/ButtonGroup.tsx) | Visually join related controls — toolbars, segmented controls, split buttons, key-value chips. |
+| [`Dropdown`](frontend/src/components/v3/generic/Dropdown/Dropdown.tsx) | An action menu — overflow `⋯`, split-button alternates, contextual lists. |
+
+#### Forms
+| Component | Reach for this when… |
+| --- | --- |
+| [`Field`](frontend/src/components/v3/generic/Field/Field.tsx) | Wrap every form control — label + control + description + error. **Never render a bare control in a form.** |
+| [`Label`](frontend/src/components/v3/generic/Label/Label.tsx) | Standalone form label outside a `Field`. |
+| [`Input`](frontend/src/components/v3/generic/Input/Input.tsx) / [`TextArea`](frontend/src/components/v3/generic/TextArea/TextArea.tsx) | Single-line / multi-line text entry. |
+| [`InputGroup`](frontend/src/components/v3/generic/InputGroup/InputGroup.tsx) | Input with left/right addons — search bars, prefixed values. |
+| [`Select`](frontend/src/components/v3/generic/Select/Select.tsx) / [`ReactSelect`](frontend/src/components/v3/generic/ReactSelect/index.ts) | Native-style dropdown / async or searchable dropdown. |
+| [`Switch`](frontend/src/components/v3/generic/Switch/Switch.tsx) / [`Checkbox`](frontend/src/components/v3/generic/Checkbox/Checkbox.tsx) | Boolean toggle / multi-select boolean. |
+| [`Calendar`](frontend/src/components/v3/generic/Calendar/Calendar.tsx) | Date / multi-date / range picker primitive. |
+| [`DateRangeFilter`](frontend/src/components/v3/generic/DateRangeFilter/DateRangeFilter.tsx) | Date-range filter with presets — for filter bars. |
+| [`SecretInput`](frontend/src/components/v3/generic/SecretInput/SecretInput.tsx) | Secret-value editor with mask toggle and `${var}` highlighting. |
+| [`PasswordGenerator`](frontend/src/components/v3/generic/PasswordGenerator/PasswordGenerator.tsx) | Generate a password against project secret-validation rules. |
+
+#### Containers & overlays
+| Component | Reach for this when… |
+| --- | --- |
+| [`Card`](frontend/src/components/v3/generic/Card/Card.tsx) | Default section container — tables, filters, forms, empty states all live in a Card. |
+| [`Sheet`](frontend/src/components/v3/generic/Sheet/Sheet.tsx) | Right-side panel — **use for large create/edit forms** (multiple fields, multi-step, scrollable detail). |
+| [`Dialog`](frontend/src/components/v3/generic/Dialog/Dialog.tsx) | Centered modal — **use for small create/edit forms** (1–2 fields, single confirmation prompt) and short interactive prompts. |
+| [`AlertDialog`](frontend/src/components/v3/generic/AlertDialog/AlertDialog.tsx) | Confirm an action (destructive included). Replaces `confirm()`. |
+| [`Popover`](frontend/src/components/v3/generic/Popover/Popover.tsx) | Anchored floating panel — filters, pickers, contextual UI. |
+| [`Tooltip`](frontend/src/components/v3/generic/Tooltip/Tooltip.tsx) | Small floating annotation on hover/focus. |
+| [`Accordion`](frontend/src/components/v3/generic/Accordion/Accordion.tsx) | Collapsible sections. |
+
+#### Data display
+| Component | Reach for this when… |
+| --- | --- |
+| [`Table`](frontend/src/components/v3/generic/Table/Table.tsx) | Read-mostly list of records with sortable columns. Pair with `Empty` + `Pagination`. |
+| [`DataGrid`](frontend/src/components/v3/generic/DataGrid/data-grid.tsx) | Editable spreadsheet-style grid — copy/paste, multi-cell selection, keyboard nav. Use only when `Table` isn't enough. |
+| [`Pagination`](frontend/src/components/v3/generic/Pagination/Pagination.tsx) | Page controls under a Table or list. |
+| [`Item`](frontend/src/components/v3/generic/Item/Item.tsx) | Vertically-stacked list rows with shared spacing — when a `Table` is too heavy. |
+| [`Detail`](frontend/src/components/v3/generic/Detail/Detail.tsx) | Read-only label/value pairs in a detail view. |
+| [`Badge`](frontend/src/components/v3/generic/Badge/Badge.tsx) | Small label or chip — status, scope tag, key/value pair. |
+
+#### Navigation & search
+| Component | Reach for this when… |
+| --- | --- |
+| [`Sidebar`](frontend/src/components/v3/generic/Sidebar/Sidebar.tsx) | Scope-aware product navigation panel. |
+| [`Breadcrumb`](frontend/src/components/v3/generic/Breadcrumb/Breadcrumb.tsx) | Hierarchical location trail at the top of a page. |
+| [`Command`](frontend/src/components/v3/generic/Command/Command.tsx) | Search-driven command palette / typeahead list. |
+
+#### Feedback & loading
+| Component | Reach for this when… |
+| --- | --- |
+| [`Alert`](frontend/src/components/v3/generic/Alert/Alert.tsx) | Inline message banner inside a page or Card. |
+| [`Toast`](frontend/src/components/v3/generic/Toast/Toast.tsx) | Transient post-action feedback. Replaces `alert()`. |
+| [`Empty`](frontend/src/components/v3/generic/Empty/Empty.tsx) | Zero-state placeholder — pair with Table, list, or empty filter. |
+| [`Skeleton`](frontend/src/components/v3/generic/Skeleton/Skeleton.tsx) | Shimmer placeholder while data is loading. |
+| [`PageLoader`](frontend/src/components/v3/generic/PageLoader/PageLoader.tsx) | Centered Lottie spinner for full-page loading. |
+
+#### Atoms & domain
+| Component | Reach for this when… |
+| --- | --- |
+| [`Separator`](frontend/src/components/v3/generic/Separator/Separator.tsx) | Horizontal/vertical divider. |
+| [`ScopeIcons`](frontend/src/components/v3/platform/ScopeIcons.tsx) | `OrgIcon` / `SubOrgIcon` / `ProjectIcon` / `InstanceIcon` — use when intent is scope. |
+| [`DocumentationLinkBadge`](frontend/src/components/v3/platform/DocumentationLinkBadge/DocumentationLinkBadge.tsx) | Inline "Documentation" link badge in `CardTitle`. |
+
+**Icons** — [`lucide-react`](https://lucide.dev). Sizing is bound by the
+host component; don't override unless necessary.
+
+## 5. Layout Principles
+
+- **Page container** — `max-w-8xl` (88rem) centered, `bg-bunker-800`.
+- **Page header** — `PageHeader` with scope icon + underlined `h1` + description. See [`PageHeader.tsx`](frontend/src/components/v2/PageHeader/PageHeader.tsx). Always set `scope` to the correct hierarchy level.
+- **Section** — one `Card` per logical section. Title + optional `DocumentationLinkBadge` in `CardHeader`; primary action in `CardAction` (top-right).
+- **Tables inside Cards** — filters and search sit in the `CardHeader` above the table; pagination sits in the `CardFooter` or bottom of `CardContent`. **Empty state** — when the table has no rows (and isn't loading), hide the `Table` entirely and render `Empty` in its place; never leave a column header floating above a blank body. Add `className="border"` to `Empty` whenever it's nested in a `Card`, `Sheet`, or `Dialog` so the dashed frame is visible against the parent surface (the component ships dashed-but-borderless on purpose for page-level use).
+- **Forms inside Sheets/Dialog** — create / edit flows open in a Sheet or Dialog, never inline, never as a full-page route. **Pick by form size:** small forms (1–2 fields, e.g. "Add domain", "Rename") go in a centered `Dialog`; large or multi-step forms (multiple fields, scrollable detail, file uploads, wizard steps) go in a right-side `Sheet`. When in doubt, default to Dialog — Sheet is for cases where Dialog feels cramped.
+- **Spacing rhythm** — `gap-1.5` (intra-element), `gap-2 / gap-3` (adjacent elements), `p-4 / p-5` (section padding). Card = `p-5 gap-5`; Sheet header/footer = `p-4`.
+
+## 6. Depth & Elevation
+
+Depth is conveyed by layered surface tones and borders. Shadows are reserved
+for elements that float (Popover, DropdownMenu, Sheet).
+
+| Layer               | Surface            | Border        |
+| ------------------- | ------------------ | ------------- |
+| Page                | `bg-bunker-800`    | —             |
+| Card                | `bg-card`          | `border-border` |
+| Popover / Sheet     | `bg-popover`       | `border-border` + `shadow-lg` |
+| Row hover           | `bg-container-hover` | — |
+| Focus               | — | 3px ring, `--color-ring` |
+| Disabled            | `opacity-50 / 75`, `pointer-events-none` | — |
+
+Never add a box-shadow to a Card, Table row, or Badge; it breaks the
+border-defined system.
+
+## 7. Do's and Don'ts
+
+- **DO** choose Badge and Button variants by **intent** (danger / success /
+  warning / info / neutral), not by color preference.
+- **DO** use scope colors (`org`, `sub-org`, `project`, `admin`) to reinforce
+  hierarchy — the scope of a page, a primary button, a scope-link badge.
+- **DO** mask secret values by default. Reveal must be an explicit user
+  action and should be logged.
+- **DO** put large create / edit forms in a right-side Sheet; smaller forms can be in Dialogs.
+- **DO** pair destructive confirmations with the resource name and the
+  consequence (see §9).
+- **DO** cite tokens (`bg-card`) over hex (`#xxxxxx`) in new code.
+- **DON'T** use v2 components when a v3 equivalent exists unless the existing scope is v2.
+- **DON'T** add box-shadows as a depth cue — borders and surface tones do
+  that work. The exception is elements that genuinely float (Popover,
+  DropdownMenu, Sheet), which already include it.
+- **DON'T** invent new colors. If it isn't in `index.css` `@theme`, it
+  doesn't belong.
+- **DON'T** use `project` yellow, `org` blue, or `sub-org` green as generic
+  accents. They are scope signals; repurposing them creates false hierarchy.
+- **DON'T** mix font families. Inter only.
+- **DON'T** animate for decoration. Motion should clarify state change only.
+
+## 8. Voice & Content Tone
+
+Copy should read as if written by an engineer for another engineer: direct,
+technical, specific. The domain is serious — secrets, access, compliance —
+and the voice reflects that.
+
+### Stance
+
+- Direct. Active voice. Lead with the subject: "Delete this role" — not
+  "This role will be deleted".
+- Specific. Name the resource, the action, the consequence. Avoid vague
+  verbs ("handle", "manage") when a precise verb exists (`rotate`, `revoke`,
+  `import`).
+- Calm. No exclamation marks. No second-person cheer ("Awesome!",
+  "You're all set!"). No emoji.
+- Honest. Never claim speed, power, or ease in UI copy ("seamless",
+  "powerful", "blazing-fast"). Those belong on the marketing site, not here.
+
+### Shapes
+
+- **Labels & buttons** — Title Case, imperative: "Add Secret", "Revoke
+  Access", "Rotate Key".
+- **Title Case applies to** — buttons, badges, dropdown menu items, card
+  titles, dialog titles, sheet titles, page titles, tab labels, table column
+  headers. Anything that names a thing or an action is Title Case.
+- **Descriptions & helper text** — sentence case, one short sentence.
+- **Empty states** — state what's missing, then the next action:
+  "No secrets yet. Add your first secret to get started."
+- **Errors** — name the failure and the remedy. Never "Something went wrong":
+  "Could not rotate secret — token lacks `secrets:write` permission."
+- **Destructive confirmation** — name the resource and the consequence "Delete "API_KEY" — this cannot be undone."
+- **Success toasts** — past tense, specific: "Secret "API_KEY" created".
+
+### Secrets & sensitive values
+
+Never include a secret's value in any user-visible copy — UI, logs, toasts,
+errors, audit trails, or analytics. Refer to secrets by key only. Mask
+tokens and keys in screenshots and docs as well.
+
+### Documentation links
+
+Use `DocumentationLinkBadge` (info variant, external-link icon). Label it
+"Documentation" — not "Learn more", "Read docs", "See more".
+
+## 9. Agent Prompt Guide
+
+Pasteable prompt fragments for AI coding agents producing new UI.
+
+**Before generating UI for any component:**
+
+1. Open `frontend/src/components/v3/generic/<Name>/<Name>.stories.tsx`.
+2. Pick the `Example:` story closest to your need; mirror its composition exactly.
+3. Pick the variant by reading the matching `Variant:` story's description —
+   not by color preference.
+
+**Adding a section to an existing page:**
+> Wrap the section in a `Card` from `@app/components/v3`. Use `CardHeader`
+> with `CardTitle` + optional `CardDescription` + `CardAction` for the
+> top-right primary button (variant `project` on a project page). Put the
+> table or content in `CardContent`.
+
+**A new create/edit form:**
+> Pick the container by form size. **Small forms (1–2 fields, e.g. "Add
+> domain", "Rename"):** centered `Dialog` (`Dialog`, `DialogContent`,
+> `DialogHeader` with `DialogTitle` + `DialogDescription`, `DialogFooter`
+> with the action buttons). **Large or multi-step forms (many fields,
+> scrollable detail, wizards):** right-side `Sheet` (`Sheet`, `SheetContent`,
+> `SheetHeader` with `SheetTitle` + `SheetDescription`, `SheetFooter` with
+> the action buttons). Use `react-hook-form` with a Zod resolver in both
+> cases. Each input is wrapped in `Field` + `FieldLabel` + `FieldContent` +
+> `FieldError`. Primary button variant is scope dependent (`project` /
+> `org` / `sub-org`), cancel is `ghost`.
+
+**A status indicator:**
+> Use `Badge` from `@app/components/v3`. Pick the variant by intent:
+> `danger` for errors or expired access, `warning` for stale or
+> attention-warranting, `success` for healthy / completed, `info` for
+> informational, `neutral` for disabled / empty, `project` / `org` /
+> `sub-org` for scope references. Include a matching Lucide icon as the
+> first child.
+
+**A destructive confirmation:**
+> Use `AlertDialog`. Title: "Delete `<resource-name>`". Description: one
+> sentence naming the consequence, ending with "This cannot be undone."
+> Confirm button is variant `danger`. Cancel button is variant `outline`.
+
+**A documentation link in a section:**
+> Use `DocumentationLinkBadge` from `@app/components/v3/platform`. Place it
+> in the `CardTitle` next to the section name.
+
+**Refer to:**
+
+- [`Badge.stories.tsx`](frontend/src/components/v3/generic/Badge/Badge.stories.tsx) — canonical semantic reference for variant choice.
+- [`OverviewPage`](frontend/src/pages/secret-manager/OverviewPage) — full-page reference (PageHeader, Card-with-table, Create Secret Sheet, filters, DropdownMenu + ButtonGroup).
+- [`AccessControlPage`](frontend/src/pages/project/AccessControlPage) — full-page reference (permission-gated actions, `DocumentationLinkBadge`, role badges with `ClockAlertIcon` for expired access).
+- §8 above for any user-visible copy.
+
+## Appendix: Iteration Guide
+
+1. **Run Storybook** — `cd frontend && npm run storybook` (port 6006). Open
+   Badge, Button, Card, Table, Sheet first.
+2. **Read the two reference pages** — `OverviewPage` and `AccessControlPage`
+   render the full v3 vocabulary in production.
+3. **Tokens live in `index.css`** — `@theme` block, lines 56–214. Never
+   introduce a hex that is not here.
+4. **Adding a variant** — extend the `cva()` block in the component and add
+   a story. Keep the tint pattern (`bg-<c>/15 border-<c>/10` for Badge,
+   `bg-<c>/10 border-<c>/25` for Button).
+5. **Never use v2 for new code** — unless no v3 equivalent exists.
+   `PageHeader` is the notable v2 exception still used by all pages.
+6. **Before merging** — `make reviewable-ui` (lint + type-check).
+7. **When in doubt** — mirror `OverviewPage`.
+
+
+---
+
+### `KCG_SUMMARY.md` — infisical
+
+# Infisical — KCG Summary
+
+## What It Is
+Infisical is an open-source secret management platform providing a central vault for API keys, database passwords, and configuration secrets. It exposes a REST API and CLI for secret retrieval, with project-scoped environments and folder-based organization.
+
+## Why This Matters for Kings' College Galway
+The `dev-baile` environment in Infisical is the single source of truth for all project secrets. The `.infisical.env` template file contains `infisical://dev-baile/<item>/<key>` references, and `mise` directory hooks run `infisical export` to hydrate the runtime `.env`. Locket sidecars resolve secrets at container startup for production deployments.
+
+## Key Patterns
+- **URI references**: `infisical://dev-baile/<folder>/<key>` format for all secret references
+- **Machine identity**: INFISICAL_CLIENT_ID + INFISICAL_CLIENT_SECRET for automated access
+- **Folder organization**: Secrets organized by service (litellm, dagster, firecrawl, browserbase, etc.)
+- **Template hydration**: `.infisical.env` (committed) → `bun run secrets:init` → vault writes
+
+## Source Files
+Full source code was removed (2026-06-05). Available at <https://github.com/Infisical/infisical>. Live configs are in `infrastructure/stacks/infrastructure/infisical/`.
+
+
+---
+
+### `README.md` — infisical
+
+<h1 align="center">
+  <img width="300" src="/img/logoname-white.svg#gh-dark-mode-only" alt="infisical">
+</h1>
+<p align="center">
+  <p align="center"><b>The open-source secret management platform</b>: Sync secrets/configs across your team/infrastructure and prevent secret leaks.</p>
+</p>
+
+<h4 align="center">
+  <a href="https://infisical.com/slack">Slack</a> |
+  <a href="https://infisical.com/">Infisical Cloud</a> |
+  <a href="https://infisical.com/docs/self-hosting/overview">Self-Hosting</a> |
+  <a href="https://infisical.com/docs/documentation/getting-started/introduction">Docs</a> |
+  <a href="https://www.infisical.com">Website</a> |
+  <a href="https://infisical.com/careers">Hiring (Remote/SF)</a>
+</h4>
+
+<h4 align="center">
+  <a href="https://github.com/Infisical/infisical/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="Infisical is released under the MIT license." />
+  </a>
+  <a href="https://github.com/infisical/infisical/blob/main/CONTRIBUTING.md">
+    <img src="https://img.shields.io/badge/PRs-Welcome-brightgreen" alt="PRs welcome!" />
+  </a>
+  <a href="https://github.com/Infisical/infisical/issues">
+    <img src="https://img.shields.io/github/commit-activity/m/infisical/infisical" alt="git commit activity" />
+  </a>
+  <a href="https://cloudsmith.io/~infisical/repos/">
+    <img src="https://img.shields.io/badge/Downloads-6.95M-orange" alt="Cloudsmith downloads" />
+  </a>
+  <a href="https://infisical.com/slack">
+    <img src="https://img.shields.io/badge/chat-on%20Slack-blueviolet" alt="Slack community channel" />
+  </a>
+  <a href="https://twitter.com/infisical">
+    <img src="https://img.shields.io/twitter/follow/infisical?label=Follow" alt="Infisical Twitter" />
+  </a>
+</h4>
+
+<img src="/img/infisical_github_repo2.png" width="100%" alt="Dashboard" />
+
+## Introduction
+
+**[Infisical](https://infisical.com)** is the open source secret management platform that teams use to centralize their application configuration and secrets like API keys and database credentials as well as manage their internal PKI.
+
+We're on a mission to make security tooling more accessible to everyone, not just security teams, and that means redesigning the entire developer experience from ground up.
+
+## Features
+
+### Secrets Management:
+
+- **[Dashboard](https://infisical.com/docs/documentation/platform/project)**: Manage secrets across projects and environments (e.g. development, production, etc.) through a user-friendly interface.
+- **[Secret Syncs](https://infisical.com/docs/integrations/secret-syncs/overview)**: Sync secrets to platforms like [GitHub](https://infisical.com/docs/integrations/cicd/githubactions), [Vercel](https://infisical.com/docs/integrations/cloud/vercel), [AWS](https://infisical.com/docs/integrations/cloud/aws-secret-manager), and use tools like [Terraform](https://infisical.com/docs/integrations/frameworks/terraform), [Ansible](https://infisical.com/docs/integrations/platforms/ansible), and more.
+- **[Secret versioning](https://infisical.com/docs/documentation/platform/secret-versioning)** and **[Point-in-Time Recovery](https://infisical.com/docs/documentation/platform/pit-recovery)**: Keep track of every secret and project state; roll back when needed.
+- **[Secret Rotation](https://infisical.com/docs/documentation/platform/secret-rotation/overview)**: Rotate secrets at regular intervals for services like [PostgreSQL](https://infisical.com/docs/documentation/platform/secret-rotation/postgres-credentials), [MySQL](https://infisical.com/docs/documentation/platform/secret-rotation/mysql), [AWS IAM](https://infisical.com/docs/documentation/platform/secret-rotation/aws-iam), and more.
+- **[Dynamic Secrets](https://infisical.com/docs/documentation/platform/dynamic-secrets/overview)**: Generate ephemeral secrets on-demand for services like [PostgreSQL](https://infisical.com/docs/documentation/platform/dynamic-secrets/postgresql), [MySQL](https://infisical.com/docs/documentation/platform/dynamic-secrets/mysql), [RabbitMQ](https://infisical.com/docs/documentation/platform/dynamic-secrets/rabbit-mq), and more.
+- **[Secret Scanning and Leak Prevention](https://infisical.com/docs/cli/scanning-overview)**: Prevent secrets from leaking to git.
+- **[Infisical Kubernetes Operator](https://infisical.com/docs/documentation/getting-started/kubernetes)**: Deliver secrets to your Kubernetes workloads and automatically reload deployments.
+- **[Infisical Agent](https://infisical.com/docs/infisical-agent/overview)**: Inject secrets into applications without modifying any code logic.
+
+### Certificate Management
+
+- **[Internal CA](https://infisical.com/docs/documentation/platform/pki/private-ca)**: Create and manage a private
+  CA hierarchy directly within Infisical.
+- **[External CA](https://infisical.com/docs/documentation/platform/pki/ca/external-ca)**: Integrate with third-party certificate authorities such as Let’s Encrypt, DigiCert, Microsoft AD CS, and more to leverage existing PKI infrastructure
+  or issue publicly trusted certificates.
+- **[Certificate Lifecycle Management](https://infisical.com/docs/documentation/platform/pki/certificates/overview)**: Create certificate [profiles](https://infisical.com/docs/documentation/platform/pki/certificates/profiles) and [policies](https://infisical.com/docs/documentation/platform/pki/certificates/policies) to control how certificates are issued, including [enrollment methods](https://infisical.com/docs/documentation/platform/pki/enrollment-methods/overview) such as API, ACME, or EST. Manage the full lifecycle from issuance to renewal and [revocation](https://infisical.com/docs/documentation/platform/pki/certificates/certificates#guide-to-revoking-certificates) with CRL and inventory tracking.
+- **[Certificate Syncs](https://infisical.com/docs/documentation/platform/pki/certificate-syncs/overview)**: Sync certificates to external platforms like [AWS Certificate Manager](https://infisical.com/docs/documentation/platform/pki/certificate-syncs/aws-certificate-manager) and [Azure Key Vault](https://infisical.com/docs/documentation/platform/pki/certificate-syncs/azure-key-vault).
+- **[Alerting](https://infisical.com/docs/documentation/platform/pki/alerting)**: Configure alerting for expiring CA and end-entity certificates.
+
+### Infisical Key Management System (KMS):
+
+- **[Cryptographic Keys](https://infisical.com/docs/documentation/platform/kms)**: Centrally manage keys across projects through a user-friendly interface or via the API.
+- **[Encrypt and Decrypt Data](https://infisical.com/docs/documentation/platform/kms#guide-to-encrypting-data)**: Use symmetric keys to encrypt and decrypt data.
+
+### Infisical SSH
+
+- **[Signed SSH Certificates](https://infisical.com/docs/documentation/platform/ssh)**: Issue ephemeral SSH credentials for secure, short-lived, and centralized access to infrastructure.
+
+### General Platform:
+
+- **Authentication Methods**: Authenticate machine identities with Infisical using a cloud-native or platform agnostic authentication method ([Kubernetes Auth](https://infisical.com/docs/documentation/platform/identities/kubernetes-auth), [GCP Auth](https://infisical.com/docs/documentation/platform/identities/gcp-auth), [Azure Auth](https://infisical.com/docs/documentation/platform/identities/azure-auth), [AWS Auth](https://infisical.com/docs/documentation/platform/identities/aws-auth), [OIDC Auth](https://infisical.com/docs/documentation/platform/identities/oidc-auth/general), [Universal Auth](https://infisical.com/docs/documentation/platform/identities/universal-auth)).
+- **[Access Controls](https://infisical.com/docs/documentation/platform/access-controls/overview)**: Define advanced authorization controls for users and machine identities with [RBAC](https://infisical.com/docs/documentation/platform/access-controls/role-based-access-controls), [additional privileges](https://infisical.com/docs/documentation/platform/access-controls/additional-privileges), [temporary access](https://infisical.com/docs/documentation/platform/access-controls/temporary-access), [access requests](https://infisical.com/docs/documentation/platform/access-controls/access-requests), [approval workflows](https://infisical.com/docs/documentation/platform/pr-workflows), and more.
+- **[Audit logs](https://infisical.com/docs/documentation/platform/audit-logs)**: Track every action taken on the platform.
+- **[Self-hosting](https://infisical.com/docs/self-hosting/overview)**: Deploy Infisical on-prem or cloud with ease; keep data on your own infrastructure.
+- **[Infisical SDK](https://infisical.com/docs/sdks/overview)**: Interact with Infisical via client SDKs ([Node](https://infisical.com/docs/sdks/languages/node), [Python](https://github.com/Infisical/python-sdk-official?tab=readme-ov-file#infisical-python-sdk), [Go](https://infisical.com/docs/sdks/languages/go), [Ruby](https://infisical.com/docs/sdks/languages/ruby), [Java](https://infisical.com/docs/sdks/languages/java), [.NET](https://infisical.com/docs/sdks/languages/csharp))
+- **[Infisical CLI](https://infisical.com/docs/cli/overview)**: Interact with Infisical via CLI; useful for injecting secrets into local development and CI/CD pipelines.
+- **[Infisical API](https://infisical.com/docs/api-reference/overview/introduction)**: Interact with Infisical via API.
+
+## Getting started
+
+Check out the [Quickstart Guides](https://infisical.com/docs/documentation/getting-started/overview)
+
+| Use Infisical Cloud                                                                                                                                     | Deploy Infisical on premise                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| The fastest and most reliable way to <br> get started with Infisical is signing up <br> for free to [Infisical Cloud](https://app.infisical.com/login). | <br> View all [deployment options](https://infisical.com/docs/self-hosting/overview) |
+
+### Run Infisical locally
+
+To set up and run Infisical locally, make sure you have [Git](https://git-scm.com/downloads) and [Docker](https://www.docker.com/get-started/) installed on your system.
+
+**Linux/macOS:**
+```console
+git clone https://github.com/Infisical/infisical && cd "$(basename $_ .git)" && cp .env.example .env && docker compose -f docker-compose.prod.yml up
+```
+
+**Windows (Command Prompt):**
+```console
+git clone https://github.com/Infisical/infisical && cd infisical && copy .env.example .env && docker compose -f docker-compose.prod.yml up
+```
+
+Once running, create an account at [http://localhost:80](http://localhost:80).
+
+> **Contributing?** Check out our guide to see how to [get started](https://infisical.com/docs/contributing/getting-started).
+
+### Scan and prevent secret leaks
+
+On top managing secrets with Infisical, you can also [scan for over 140+ secret types]() in your files, directories and git repositories.
+
+To scan your full git history, run:
+
+```
+infisical scan --verbose
+```
+
+Install pre commit hook to scan each commit before you push to your repository
+
+```
+infisical scan install --pre-commit-hook
+```
+
+Learn about Infisical's code scanning feature [here](https://infisical.com/docs/cli/scanning-overview)
+
+## Open-source vs. paid
+
+This repo available under the [MIT expat license](https://github.com/Infisical/infisical/blob/main/LICENSE), with the exception of the `ee` directory which will contain premium enterprise features requiring a Infisical license.
+
+If you are interested in managed Infisical Cloud of self-hosted Enterprise Offering, take a look at [our website](https://infisical.com/) or [book a meeting with us](https://infisical.cal.com/vlad/infisical-demo).
+
+## Security
+
+Please do not file GitHub issues or post on our public forum for security vulnerabilities, as they are public!
+
+Infisical takes security issues very seriously. If you have any concerns about Infisical or believe you have uncovered a vulnerability, please get in touch via the e-mail address security@infisical.com. In the message, try to provide a description of the issue and ideally a way of reproducing it. The security team will get back to you as soon as possible.
+
+Note that this security address should be used only for undisclosed vulnerabilities. Please report any security problems to us before disclosing it publicly.
+
+## Contributing
+
+Whether it's big or small, we love contributions. Check out our guide to see how to [get started](https://infisical.com/docs/contributing/getting-started).
+
+Not sure where to get started? You can:
+
+- Join our <a href="https://infisical.com/slack">Slack</a>, and ask us any questions there.
+
+## We are hiring!
+
+If you're reading this, there is a strong chance you like the products we created.
+
+You might also make a great addition to our team. We're growing fast and would love for you to [join us](https://infisical.com/careers).
+
+
+---
+
+### `SECURITY.md` — infisical
+
+# Security Policy
+
+## Supported versions
+
+We always recommend using the latest version of Infisical to ensure you get all security updates.
+
+## Reporting vulnerabilities
+
+Please do not file GitHub issues or post on our public forum for security vulnerabilities, as they are public!
+
+Infisical takes security issues very seriously. If you have any concerns about Infisical or believe you have uncovered a vulnerability, please get in touch via the e-mail address security@infisical.com. In the message, try to provide a description of the issue and ideally a way of reproducing it. The security team will get back to you as soon as possible.
+
+Note that this security address should be used only for undisclosed vulnerabilities. Please report any security problems to us before disclosing it publicly.
+
+---
+
+### `SKILL_CONTEXT.md` — infisical
+
+# Infisical — Skill Context
+
+**Upstream:** [Infisical/infisical](https://github.com/Infisical/infisical)  
+**License:** MIT  
+**Purpose:** Open-source secret management platform (Fastify backend + React frontend).
+
+## How We Use Infisical
+
+Infisical is our **source of truth for secrets**. The `dev-baile` environment in our self-hosted Infisical vault holds all project secrets. Secrets flow through a three-way contract:
+
+1. **Infisical vault** (source of truth) → `dev-baile` environment
+2. **`.infisical.env`** (committed template) → references via `infisical://` URIs
+3. **`.env`** (gitignored, hydrated) → resolved at runtime by `mise` hooks or `locket inject`
+
+## Key Integration Points
+
+- **`scripts/create-env.ts`** — creates the `dev-baile` environment
+- **`scripts/init-vault.ts`** — syncs `.env` + `.infisical.env` → vault
+- **`mise run secrets:init`** — mise alias for vault sync
+- **`mise run locket:exec`** — wraps commands with Locket injection
+- **Three-way contract** — never hand-edit `.env`, always use the template
+
+## Reference Files (preserved)
+
+- `README.md` — full documentation
+- `LICENSE` — MIT
+- `package.json` — workspace manifest
+- `CLAUDE.md` — agent instructions for Infisical's own repo
+- `DESIGN.md` — design system reference
+- `CLAUDE.md` — agent context for this repo
+- `Makefile` — build targets
+- `.env.dev.example` — dev environment template
+- `.env.example` — production environment template
+- `.infisicalignore` — Infisical's own ignore rules
+- `Dockerfile.standalone-infisical` — single-container deployment
+- `docker-compose.dev.yml` — dev stack deployment
+- `docker-compose.prod.yml` — production stack deployment
+- `standalone-entrypoint.sh` — container entrypoint
+- `nginx/` — reverse proxy config templates
+- `SECURITY.md` — security policy
+- `CODE_OF_CONDUCT.md` — community conduct
+
+## Related Docs
+
+- `docs/bonneagar/infisical/` — our infrastructure research on Infisical
+- `AGENTS.md` — Secrets Bootstrap section
+- `infrastructure/infisical/` — our Infisical deployment config
+- `.infisical.env` — our secret template (root)
+
+
+---
+
+## Original Sources
+
+- `komodo/`
+- `pangolin/`
+- `locket/`
+- `infisical/`
