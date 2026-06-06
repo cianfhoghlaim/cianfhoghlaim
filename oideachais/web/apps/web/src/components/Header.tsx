@@ -1,3 +1,5 @@
+import { TranslationToggle } from "./TranslationToggle";
+
 export function Header() {
   return (
     <header className="h-14 bg-slate-950 border-b border-slate-800 flex items-center px-4 justify-between shrink-0">
@@ -17,11 +19,7 @@ export function Header() {
           <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
           <span className="text-xs font-mono text-slate-300">oRPC Connected</span>
         </div>
-        <div className="flex items-center gap-1 bg-slate-800 px-3 py-1 rounded-full border border-slate-700 text-xs font-mono">
-          <button className="text-emerald-400 hover:text-emerald-300" title="English">EN</button>
-          <span className="text-slate-600">/</span>
-          <button className="text-slate-400 hover:text-slate-200" title="Gaeilge">GA</button>
-        </div>
+        <TranslationToggle />
         <button className="btn-tactile text-sm">Sign In</button>
       </div>
     </header>
