@@ -4,7 +4,7 @@
 
 generator lang_py {
   output_type "python/pydantic"
-  output_dir "../baml_client"
+  output_dir ".."
   version "0.222.0"
   default_client_mode sync
 }
