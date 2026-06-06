@@ -22,7 +22,9 @@ export default defineConfig({
     // src/routes/. The generated routeTree.gen.ts is imported by
     // app/router.tsx. autoCodeSplitting disabled for now — needs proper
     // TSR transformer setup that requires @vitejs/plugin-react SSR mode.
-    TanStackRouterVite(),
+    TanStackRouterVite({
+      addHmr: false,
+    }),
     tanstackStart({
       tsr: {
         appDirectory: "src/app",
