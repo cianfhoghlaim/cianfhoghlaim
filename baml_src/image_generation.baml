@@ -98,11 +98,11 @@ class FIBOConfig {
   sampler string @description("Sampler name (e.g. 'euler_a', 'dpmpp_2m')")
   scheduler string @description("Scheduler (e.g. 'karras')")
   style_preset string? @description("Optional style preset (e.g. 'photographic', 'cinematic')")
-  camera json @description("Camera parameters (focal_length, aperture, etc.)")
-  lighting json @description("Lighting parameters (key_light_angle, fill_intensity, etc.)")
-  composition json @description("Composition parameters (rule_of_thirds, depth_of_field)")
+  camera string @description("Camera parameters (focal_length, aperture, etc.)")
+  lighting string @description("Lighting parameters (key_light_angle, fill_intensity, etc.)")
+  composition string @description("Composition parameters (rule_of_thirds, depth_of_field)")
   output_format string @description("Output format (png, jpeg, webp)")
-  metadata json @description("Free-form metadata (subject, outcome_id, syllabus_path)")
+  metadata string @description("Free-form metadata (subject, outcome_id, syllabus_path)")
 }
 
 // =============================================================================

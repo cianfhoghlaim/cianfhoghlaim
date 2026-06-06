@@ -54,24 +54,6 @@ enum EntryPathway {
   APPRENTICESHIP      @description("Craft/apprenticeship-to-degree progression")
 }
 
-enum Specialism {
-  SCIENCES
-  LANGUAGES
-  BUSINESS
-  HUMANITIES
-  PRACTICAL
-  ARTS
-  APPLIED
-  INTERDISCIPLINARY
-}
-
-enum ExamLevel {
-  FOUNDATION @description("Foundation level (LC Maths only currently)")
-  ORDINARY
-  HIGHER
-  COMMON   @description("Common level (no foundation/ordinary split)")
-}
-
 // -----------------------------------------------------------------------------
 // Classes
 // -----------------------------------------------------------------------------

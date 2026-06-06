@@ -3,9 +3,9 @@
 // baml_src/clients.baml for the primary client definitions.
 
 generator lang_py {
-  output_type python/pydantic
-  output_dir ../baml_client
-  version "0.74.0"
+  output_type "python/pydantic"
+  output_dir "../baml_client"
+  version "0.222.0"
   default_client_mode sync
 }
 
