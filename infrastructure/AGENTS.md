@@ -34,38 +34,28 @@ Infrastructure contains deployment configurations, infrastructure-as-code, and s
 ### Infrastructure (Control Plane)
 
 | Stack | Purpose | Key Ports |
-|-------|---------|-----------|
+|:--|:--|:--|
 | `pangolin/` | VPN + Traefik + Pocket ID + CrowdSec + TinyAuth | 51820/udp, 443, 80, 8443 |
 | `komodo/` | Container orchestration and deployment | 9120 |
 | `pocket-id/` | OIDC identity provider | 1411 |
 | `dozzle/` | Container log viewer | Internal |
-| `DnsServer/` | Local DNS resolution | Internal |
+| `dnsserver/` | Local DNS resolution | Internal |
+| `forgejo/` | Self-hosted Git forge (control-plane) | 3000, 2222 |
+| `r2/` | Cloudflare R2 adapter | Internal |
+| `motherduck/` | Cloud query engine | Internal |
+| `planetscale/` | Postgres-compatible cloud DB | Internal |
+| `monitoring/` | Prometheus + Grafana + Loki | 9090, 3000 |
 
 ### Storage (Foundational Substrates)
 
 | Stack | Purpose | Key Ports |
-|-------|---------|-----------|
+|:--|:--|:--|
 | `garage/` | CRDT S3-compatible object storage | 3900-3904 |
 | `lakehouse/` | Lakekeeper catalog + Lance Namespace + Postgres + Garage | 3900-3904, 5433, 8181-8182 |
 | `lakekeeper/` | Iceberg REST catalog | 8181 |
 | `lakefs/` | Git-for-data on S3 (versioned lake) | 8000 |
 | `forgejo-runner/` | GitHub Actions runner for Forgejo | Internal |
 | `beszel/` | Server/Docker monitoring hub | 8090 |
-
-### Infrastructure (Control Plane)
-
-| Stack | Purpose | Key Ports |
-|-------|---------|-----------|
-| `pangolin/` | VPN + Traefik + Pocket ID + CrowdSec + TinyAuth | 51820/udp, 443, 80, 8443 |
-| `komodo/` | Container orchestration and deployment | 9120 |
-| `pocket-id/` | OIDC identity provider | 1411 |
-| `dozzle/` | Container log viewer | Internal |
-| `DnsServer/` | Local DNS resolution | Internal |
-| `forgejo/` | Self-hosted Git forge (control-plane) | 3000, 2222 |
-| `r2/` | Cloudflare R2 adapter | Internal |
-| `motherduck/` | Cloud query engine | Internal |
-| `planetscale/` | Postgres-compatible cloud DB | Internal |
-| `monitoring/` | Prometheus + Grafana + Loki | 9090, 3000 |
 
 ### Engineering (Dev Tooling + Gateways + Services)
 

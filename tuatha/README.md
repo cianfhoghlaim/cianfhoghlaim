@@ -636,6 +636,139 @@ DEVELOPMENT, SETUP}.md` files have also been updated to the new
 
 ---
 
+## Table of Contents
+
+1. [What This Is](#what-this-is)
+2. [Quickstart](#quickstart)
+3. [The Dagster Code-Location Dispatcher](#the-dagster-code-location-dispatcher)
+4. [codeolas — Code Analysis Library](#codeolas--code-analysis-library)
+5. [crypteolas — Crypto Data Intelligence Platform](#crypteolas--crypto-data-intelligence-platform)
+6. [apps/crypteolas_demo — Standalone Demo App](#appscrypteolas_demo--standalone-demo-app)
+7. [Architecture Overview](#architecture-overview)
+8. [Project Maturity Matrix](#project-maturity-matrix)
+9. [Design Docs & Background](#design-docs--background)
+10. [Irish Terminology Glossary](#irish-terminology-glossary)
+11. [Related Documentation](#related-documentation)
+
+---
+
+## Architecture Overview
+
+```mermaid
+flowchart TB
+    subgraph clients["Client surfaces"]
+        UI[TanStack Start<br/>ui/<br/>tuatha/ui/]
+        GODOT[Godot 4.x<br/>godot-client/]
+        WEBGPU[wgpu/shader experiments<br/>crates/]
+        GRADIO[Gradio app<br/>crypteolas_demo/ui/]
+    end
+
+    subgraph realtime["Real-time layer"]
+        SPACETIME[SpacetimeDB<br/>api-rs/ game server]
+        AGUI[AG-UI protocol<br/>api/ag_ui_protocol.py]
+        X402[x402 micropayments<br/>siwe/]
+    end
+
+    subgraph data["Data + intelligence layer"]
+        DLT[DLT sources<br/>dlt_sources/, pipelines/]
+        BAML[BAML extraction<br/>baml_src/, scéimre/]
+        COCO[CocoIndex flows<br/>cocoindex_flows/]
+        COG[Cognee knowledge<br/>knowledge_graph/]
+        LANCE[LanceDB vectors<br/>storage/]
+    end
+
+    subgraph agents["Agent runtime"]
+        ROOT[orchestrator.py]
+        ADK[Google ADK<br/>agents/adk/]
+        AGNO[Agno AgentOS<br/>crypteolas/agent_os/]
+    end
+
+    subgraph orch["Orchestration + observability"]
+        DAGSTER[Dagster UI<br/>3 code-locations]
+        LITELLM[LiteLLM gateway]
+        LANGFUSE[Langfuse traces]
+    end
+
+    UI --> AGUI
+    GODOT --> SPACETIME
+    WEBGPU --> SPACETIME
+    GRADIO --> AGNO
+    AGUI --> ROOT
+    SPACETIME --> X402
+    ROOT --> DAGSTER
+    AGNO --> DAGSTER
+    DLT --> LANCE
+    COCO --> LANCE
+    COG --> LANCE
+    BAML --> LANCE
+    ROOT --> LITELLM
+    AGNO --> LITELLM
+    LITELLM --> LANGFUSE
+```
+
+The four cooperating streams are layered from client → real-time → data →
+orchestration. Note that the MMO client and web client can share the same
+SpacetimeDB instance; the wgpu shader crates are isolated R&D for atmospheric
+effects described in `summary.txt`.
+
+---
+
+## Project Maturity Matrix
+
+| Component | Status | Tests | Deployable | Notes |
+|:--|:--|:--|:--|:--|
+| `codeolas/` | **Production** | 100+ pytest | Yes (`uv tool install`) | CLI + library + MCP server; the keystone for forking |
+| `crypteolas/` | **Production** | 80+ pytest | Yes (FastAPI) | Crypto intelligence platform; battle-tested DLT sources |
+| `crypteolas_demo/` agents | **Production** | Yes | Yes (Agno AgentOS) | Crypto research / analysis / pipeline agents |
+| `ui/` (crypteolas_demo) | **Stable** | E2E partial | Yes (Vercel) | TanStack Start stub; full UI work planned |
+| `agents/orchestrator.py` | **Active dev** | Smoke | Local only | Root agent routing (Curriculum / Geospatial / Translation / Corpus / Statistics) |
+| `agents/adk/` | **Active dev** | Partial | Local only | Google ADK integration for Celtic domain agents |
+| `api/` (FastAPI) | **Active dev** | Smoke | Yes | Celtic MMO REST API; AG-UI protocol endpoint |
+| `api-rs/` (Rust game server) | **Active dev** | cargo test | Yes | SpacetimeDB-backed game server (MUD-style) |
+| `dagster_assets/` (tuath location) | **Active dev** | Asset tests | Yes | Dagster dispatcher for all 3 code-locations |
+| `baml_src/` | **Active dev** | BAML compile | — | 7 BAML schemas (curriculum, fibo, validation, agent_outputs, anam_schema, crypto_document, generators) |
+| `game/godot-client/` | **Prototype** | Manual | Local only | Godot 4.x MMO client (see `wow/`, `Hades II/` for design refs) |
+| `crates/` (wgpu shaders) | **Prototype** | None | — | Atmospheric particle effects research (see `summary.txt`) |
+| `anam-contracts/` (Solidity) | **Prototype** | Foundry tests | Testnet only | AnamCaraDAO, CuchulainnNFT, TuathToken contracts |
+| `fibo_generation/` | **Stub** | — | — | FIBO-MLX stub; raises `NotImplementedError` until a runnable weights file is downloaded |
+
+Maturity is reported here per sub-package; specific code locations may be
+more or less complete than the package as a whole — see each `STATUS.md` for
+fine-grained detail.
+
+---
+
+## Design Docs & Background
+
+These three documents capture the long-form design intent that informed the
+implementation. They are **prose, not code** — agents do not need to read
+them to extend the system, but they are useful for understanding *why* the
+components are shaped the way they are.
+
+| File | Topic | Read this if you want to... |
+|:--|:--|:--|
+| `anam.md` | The Celtic educational MMO vision | Understand the Anam / x402 / SpacetimeDB / soulbound-credential story; plan new in-game features |
+| `gaeilge.md` | Irish-language data source inventory for the PoC map | Add a new Gaeltacht / Irish-medium school / Census dataset; understand the geospatial data lineage |
+| `summary.txt` | The "Anam Initiative" — Celtic meteorology particles via wgpu | Understand the visual atmosphere R&D in `crates/`; design new weather/atmospheric effects |
+
+---
+
+## Irish Terminology Glossary
+
+| Term | Pronunciation | Meaning | Used in |
+|:--|:--|:--|:--|
+| **Tuatha** | "TOO-a-ha" | The mythical Celtic people (Tuatha Dé Danann) | The subproject itself |
+| **Códeolas** | "KOH-dyo-las" | "code" + "eolas" (knowledge) | The code analysis library |
+| **Crypteolas** | "KRIP-tyo-las" | "crypto" + "eolas" (knowledge) | The crypto intelligence platform |
+| **Anam** | "AH-nam" | "soul" in Irish | The Celtic MMO; the soulbound credentials design |
+| **Scéimre** | "SHAYM-re" | "scheme" or "schema" (Irish) | The BAML schema directory in `crypteolas_demo/scéimre/` |
+| **Foinse** | "FWIN-she" | "source" (Irish) | The LiteLLM configs / 1Password template in `crypteolas_demo/foinse/` |
+| **Córas** | "KOH-ras" | "system" (Irish) | (Naming convention only — not currently a directory) |
+| **Gaeltacht** | "GWAY-lahkht" | Irish-speaking regions of Ireland | Referenced in `gaeilge.md` and the geospatial assets |
+| **AnamCara** | "AH-nam KAH-ra" | "soul friend" (Irish) | The DAO contract in `anam-contracts/` |
+
+---
+
 ## Related Documentation
 
 - `tuatha/codeolas/STATUS.md` — dedup + shim history for códeolas
