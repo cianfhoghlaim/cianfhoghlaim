@@ -283,6 +283,18 @@ run = "ccc index"
 description = "Semantic search the codebase with ccc"
 run = "ccc search ${@}"
 
+[tasks."docs:cognee"]
+description = "Ingest canonical docs/ into the Cognee knowledge graph (requires COGNEE_API_URL + LLM_API_KEY)"
+run = "uv run python infrastructure/scripts/cognee-ingest-docs.py --all"
+
+[tasks."docs:cognee:domain"]
+description = "Ingest a single canonical domain into the Cognee knowledge graph"
+run = "uv run python infrastructure/scripts/cognee-ingest-docs.py --domain ${@}"
+
+[tasks."docs:cognee:summary"]
+description = "Print the per-domain Cognee ingestion plan without executing"
+run = "uv run python infrastructure/scripts/cognee-ingest-docs.py --all --summary"
+
 [tasks."openspec:list"]
 description = "List OpenSpec specs and changes"
 run = "openspec list"
