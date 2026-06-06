@@ -1,0 +1,74 @@
+# Croílár — gitignore for the personal portfolio subproject
+# Mirrors the root .gitignore but scoped to croilar/ for subproject isolation
+
+# === DLT runtime secrets (NEVER commit) ===
+!.dlt/
+!.dlt/config.toml
+!.dlt/secrets.toml.example
+.dlt/secrets.toml
+
+# === DuckDB files (analytics + DLT destinations) ===
+data/*.duckdb
+data/*.duckdb.wal
+data/*.duckdb-journal
+data/lancedb/
+data/croilar.lance/
+data/croilar_vectors.lance/
+
+# === BAML generated client ===
+baml_client/
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# === Notebooks ===
+notebooks/__pycache__/
+notebooks/.marimo/
+notebooks/.ipynb_checkpoints/
+
+# === TanStack Start / Vite / Bun ===
+node_modules/
+.tanstack/
+.output/
+.nitro/
+.vinxi/
+.vercel/
+.netlify/
+.wrangler/
+
+# === TypeScript build artefacts ===
+*.tsbuildinfo
+
+# === Environment files (NEVER commit) ===
+.env
+.env.local
+.env.*.local
+.envrc
+.op.env
+
+# === Editor / OS ===
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# === Downloads / scratch ===
+downloads/
+scratch/
+*.tmp
+*.bak

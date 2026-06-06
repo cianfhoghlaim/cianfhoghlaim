@@ -16,8 +16,8 @@ from abc import ABC, abstractmethod
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Dict, Generator, List, Optional
 from functools import wraps
+from typing import Any, Dict, Generator, List, Optional
 
 logger = logging.getLogger(__name__)
 

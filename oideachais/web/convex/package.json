@@ -1,0 +1,14 @@
+{
+  "name": "@oideachais/convex",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Convex schema + functions for Cianfhoghlaim Oideachais (chat persistence, practice, annotations, classmate shares, extraction budget).",
+  "scripts": {
+    "dev": "convex dev",
+    "deploy": "convex deploy",
+    "codegen": "convex codegen"
+  },
+  "dependencies": {
+    "convex": "^1.16.0"
+  }
+}

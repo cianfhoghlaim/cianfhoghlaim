@@ -5,7 +5,6 @@ from record label websites.
 """
 
 from dataclasses import dataclass, field
-from datetime import date
 from enum import Enum
 from typing import Any
 

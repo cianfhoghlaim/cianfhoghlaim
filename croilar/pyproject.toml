@@ -32,6 +32,9 @@ dependencies = [
     "marimo>=0.17.0",
     "altair>=5.3.0",
 
+    # Pydantic settings (used by _shared.config.settings.AleyumSettings)
+    "pydantic-settings>=2.0.0",
+
     # Utilities
     "pyyaml>=6.0.0",
     "python-dotenv>=1.0.0",

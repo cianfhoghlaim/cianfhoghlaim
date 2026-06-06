@@ -11,27 +11,29 @@ Assets:
     Cross-link (2):     oideachais_assets_embedded, meaisinfhoghlaim_assets_embedded
 """
 
-import os
-from typing import Any
 
 from dagster import (
     AssetExecutionContext,
     AssetKey,
-    asset,
-    MaterializeResult,
     Config,
+    MaterializeResult,
+    asset,
 )
+
+from _shared.config import get_author_dir, get_repo_root
 
 
 class CvPipelineConfig(Config):
-    """Configuration for CV pipeline assets."""
+    """Configuration for CV pipeline assets.
 
-    author_dir: str = str(
-        __import__("pathlib").Path(__file__).parent.parent.parent.parent.parent
-        / "author_cian_deacy_lyons_mac_an_déisigh_uí_liatháin"
-    )
-    duckdb_path: str = "./croilar.duckdb"
-    lancedb_uri: str = "./lancedb_data_cv"
+    ``author_dir`` defaults to the canonical author PDFs directory at the
+    cianfhoghlaim repo root. Override via the Dagster launch UI or the
+    ``CV_AUTHOR_DIR`` env var (read by pipelines.cv.source).
+    """
+
+    author_dir: str = str(get_author_dir())
+    duckdb_path: str = str(get_repo_root() / "croilar.duckdb")
+    lancedb_uri: str = str(get_repo_root() / "lancedb_data_cv")
     enable_baml_extraction: bool = True
 
 

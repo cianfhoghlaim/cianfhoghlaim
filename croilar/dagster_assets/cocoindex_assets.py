@@ -14,15 +14,14 @@ from typing import Any
 from dagster import (
     AssetExecutionContext,
     AssetKey,
-    asset,
-    MaterializeResult,
     Config,
-    OpExecutionContext,
-    op,
-    job,
-    Out,
     In,
+    MaterializeResult,
+    OpExecutionContext,
+    Out,
+    asset,
     graph,
+    op,
 )
 
 

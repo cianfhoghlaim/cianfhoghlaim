@@ -24,7 +24,7 @@ from typing import Any
 
 import dlt
 
-from pipelines.cv.source import REPO_ROOT, AUTHOR_DIR, cv_pdf_text_resource
+from pipelines.cv.source import AUTHOR_DIR, REPO_ROOT, cv_pdf_text_resource
 
 
 def run_teaching_pipeline(

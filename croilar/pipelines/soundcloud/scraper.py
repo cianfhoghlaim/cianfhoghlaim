@@ -18,7 +18,6 @@ from typing import Any
 
 import dlt
 
-
 # SoundCloud profile URL for Aleyum
 ALEYUM_SOUNDCLOUD_URL = "https://soundcloud.com/aleyummusic"
 
@@ -80,7 +79,7 @@ class SoundCloudScraper:
     async def _get_crawler(self) -> Any:
         """Lazy-initialize the Crawl4AI crawler."""
         if self._crawler is None:
-            from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig
+            from crawl4ai import AsyncWebCrawler, BrowserConfig
 
             browser_config = BrowserConfig(
                 headless=self.headless,
@@ -109,7 +108,6 @@ class SoundCloudScraper:
             SoundCloudProfile with extracted data
         """
         from crawl4ai import CrawlerRunConfig
-        from crawl4ai.extraction_strategy import JsonCssExtractionStrategy
 
         crawler = await self._get_crawler()
         url = f"https://soundcloud.com/{username}"
@@ -161,7 +159,7 @@ class SoundCloudScraper:
         scroll_count = max(1, limit // 10)
         run_config = CrawlerRunConfig(
             wait_for="css:.soundList__item",
-            js_code=f"""
+            js_code="""
                 // Scroll to bottom to trigger lazy loading
                 window.scrollTo(0, document.body.scrollHeight);
             """,
@@ -507,7 +505,7 @@ async def scrape_soundcloud_profile(username: str = "aleyummusic") -> SoundCloud
 
 def run_soundcloud_pipeline(
     username: str = "aleyummusic",
-    destination: str | dlt.destinations.Destination | None = None,
+    destination: Any = None,
     dataset_name: str = "soundcloud_data",
 ) -> Any:
     """Run the SoundCloud scraping pipeline.

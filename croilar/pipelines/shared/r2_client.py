@@ -5,8 +5,8 @@ Used for caching Spotify images and storing SoundCloud audio files.
 """
 
 import os
-from typing import Any, BinaryIO
 from dataclasses import dataclass
+from typing import Any, BinaryIO
 
 import boto3
 from botocore.config import Config

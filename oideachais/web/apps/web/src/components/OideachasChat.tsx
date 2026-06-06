@@ -2,7 +2,7 @@ import { useCopilotChat, useCopilotAction } from "@copilotkit/react-core";
 import { useState } from "react";
 import { client } from "../utils/orpc";
 
-export function AwenChat() {
+export function OideachasChat() {
   const { visibleMessages, appendMessage, isLoading } = useCopilotChat();
   const [open, setOpen] = useState(false);
 
@@ -52,7 +52,7 @@ export function AwenChat() {
       {open ? (
         <div className="fixed bottom-4 right-4 w-96 h-[600px] bg-slate-950 border border-slate-800 rounded-xl shadow-2xl flex flex-col z-50">
           <div className="flex items-center justify-between p-3 border-b border-slate-800">
-            <span className="font-cinzel text-emerald-400">Awen Assistant</span>
+            <span className="font-cinzel text-emerald-400">Oideachas Assistant</span>
             <button
               onClick={() => setOpen(false)}
               className="text-slate-400 hover:text-slate-200 text-sm"
@@ -95,7 +95,7 @@ export function AwenChat() {
           >
             <input
               name="prompt"
-              placeholder="Ask Awen…"
+              placeholder="Ask Oideachas… (Cianfhoghlaim Oideachais)"
               className="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-sm"
             />
           </form>

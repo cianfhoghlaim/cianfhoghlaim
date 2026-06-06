@@ -26,8 +26,7 @@ import dlt
 import requests
 from dlt.sources.rest_api import RESTAPIConfig, rest_api_resources
 
-from pipelines.spotify.resources import SPOTIFY_RESOURCES, get_artist_endpoints
-
+from pipelines.spotify.resources import get_artist_endpoints
 
 # Croílár (Aleyum) Spotify Artist ID
 CROILAR_ARTIST_ID = "2vLlk2CcC4NnN7yoNSTmX2"
@@ -54,7 +53,7 @@ def get_spotify_token(client_id: str, client_secret: str) -> str:
         )
     if client_secret and client_secret.startswith("op://"):
         raise ValueError(
-            f"Got 1Password reference instead of resolved value for client_secret. "
+            "Got 1Password reference instead of resolved value for client_secret. "
             "Run with: op run --env-file=.env -- dagster dev ..."
         )
 
@@ -248,8 +247,9 @@ def cache_images_to_r2(
         Image metadata with R2 URLs
     """
     import hashlib
-    import requests
+
     import boto3
+    import requests
     from botocore.config import Config
 
     # Get R2 credentials from environment

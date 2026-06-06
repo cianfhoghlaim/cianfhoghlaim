@@ -33,7 +33,6 @@ Query:
 import datetime
 import functools
 import io
-import math
 import os
 from typing import Any, Literal
 
@@ -42,7 +41,6 @@ import cocoindex.targets.lancedb as coco_lancedb
 import torch
 from PIL import Image
 from transformers import CLIPModel, CLIPProcessor
-
 
 # Configuration
 DUCKDB_PATH = os.environ.get("DUCKDB_PATH", "./croilar.duckdb")
@@ -127,8 +125,8 @@ def extract_color_palette(img_bytes: bytes) -> list[str]:
         List of hex color codes
     """
     try:
-        from sklearn.cluster import KMeans
         import numpy as np
+        from sklearn.cluster import KMeans
 
         image = Image.open(io.BytesIO(img_bytes)).convert("RGB")
         image.thumbnail((100, 100))
@@ -345,7 +343,6 @@ def artwork_embedding_duckdb_flow(
     This is the production flow that integrates with the
     DLT artwork pipeline.
     """
-    import httpx
 
     enable_vector_index = os.environ.get(
         "ENABLE_LANCEDB_VECTOR_INDEX", "0"
