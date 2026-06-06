@@ -1,0 +1,30 @@
+# =============================================================================
+# CROILAR-IMAGE-PUBLISH PROCEDURE
+# =============================================================================
+# Publishes a rebuilt image to ghcr.io/cianfhoghlaim/<image>:<tag>
+# after the rebuild step. Skips the rebuild; only pushes.
+#
+# Usage:
+#   km run procedure croilar-image-publish --image=croilar-web --tag=v0.2.0
+# =============================================================================
+
+[[procedure]]
+name = "croilar-image-publish"
+description = "Push a rebuilt croilar image to ghcr.io with the given tag"
+
+[[procedure.config.variables]]
+name = "image"
+default = "croilar-web"
+description = "Which croilar image to publish"
+
+[[procedure.config.variables]]
+name = "tag"
+default = "v0.0.0"
+description = "Tag to apply (e.g. v0.2.0)"
+
+
+[[procedure.config.stages]]
+name = "publish-image"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "dagger-publish-croilar-image" } }

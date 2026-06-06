@@ -1,0 +1,67 @@
+# Mirror of .forgejo/workflows/croilar-ci.yaml for GitHub Actions
+# Triggered on push to main and PRs touching the croilar/ tree.
+name: Croilar CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "croilar/**"
+      - "pyproject.toml"
+      - "package.json"
+      - "turbo.json"
+  pull_request:
+    paths:
+      - "croilar/**"
+
+jobs:
+  typescript:
+    name: TypeScript — typecheck + build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.0"
+      - name: Install
+        run: bun install --frozen-lockfile
+      - name: Typecheck (croilar web)
+        working-directory: croilar/apps/web
+        run: bun run typecheck
+      - name: Build (croilar web)
+        working-directory: croilar/apps/web
+        run: bun run build
+      - name: Typecheck (croilar portal)
+        working-directory: croilar/apps/portal
+        run: bun run typecheck
+  python:
+    name: Python — lint + pytest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Sync dependencies
+        run: uv sync --frozen
+      - name: Ruff lint
+        run: uv run ruff check croilar/ --select E,F,I,W
+      - name: Pytest smoke tests
+        working-directory: croilar
+        run: uv run pytest tests/ -v --tb=short
+        env:
+          USE_LOCAL_SCRAPES: "true"
+          DLT_ENVIRONMENT: "local"
+          USE_DUCKLAKE: "false"
+          DLT_DISABLE_TELEMETRY: "true"
+      - name: Verify Dagster definitions load
+        working-directory: croilar
+        run: uv run python -c "from definitions import defs; print('OK:', len(defs.get_all_asset_keys()), 'assets')"
+  docker:
+    name: Docker — validate compose configs
+    runs-on: ubuntu-latest
+    needs: [typescript, python]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate croilar-postgres stack
+        run: docker compose -f infrastructure/stacks/storage/croilar-postgres/compose.yaml -f infrastructure/stacks/storage/croilar-postgres/sidecar.yaml --env-file infrastructure/stacks/storage/croilar-postgres/.env.example config --quiet
+      - name: Validate croilar-hono-api stack
+        run: docker compose -f infrastructure/stacks/engineering/croilar-hono-api/compose.yaml -f infrastructure/stacks/engineering/croilar-hono-api/sidecar.yaml --env-file infrastructure/stacks/engineering/croilar-hono-api/.env.example config --quiet

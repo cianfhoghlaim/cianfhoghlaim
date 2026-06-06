@@ -1,0 +1,20 @@
+name: Renovate (croilar)
+
+on:
+  schedule:
+    - cron: "0 3 * * 1"  # weekly Monday 03:00 UTC
+  workflow_dispatch:
+
+jobs:
+  renovate:
+    name: renovate (croilar)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Renovate
+        uses: renovatebot/github-action@v41
+        with:
+          config-file: .github/renovate.json5
+          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

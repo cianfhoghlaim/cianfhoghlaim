@@ -1,0 +1,47 @@
+# =============================================================================
+# CROILAR-STACK-UP PROCEDURE
+# =============================================================================
+# Starts all 5 croilar Docker Compose stacks in dependency order:
+#   1. croilar-postgres (storage)        — local Postgres 16
+#   2. croilar-web (engineering)         — TanStack Start frontend
+#   3. croilar-hono-api (engineering)    — BetterAuth OIDC issuer
+#   4. croilar-convex (engineering)      — Self-hosted Convex backend
+#   5. croilar-dagster (engineering)     — Dagster orchestration
+#   6. croilar-marimo (engineering)      — Marimo notebook server
+#
+# Usage:
+#   km run procedure croilar-stack-up
+# =============================================================================
+
+[[procedure]]
+name = "croilar-stack-up"
+description = "Start all croilar Docker Compose stacks in dependency order"
+
+[[procedure.config.stages]]
+name = "postgres"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "croilar-postgres" } }
+
+
+[[procedure.config.stages]]
+name = "web-and-hono"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "croilar-web" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "croilar-hono-api" } }
+
+
+[[procedure.config.stages]]
+name = "convex-and-dagster"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "croilar-convex" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "croilar-dagster" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "croilar-marimo" } }

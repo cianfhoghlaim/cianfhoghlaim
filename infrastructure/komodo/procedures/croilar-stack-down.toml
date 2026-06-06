@@ -1,0 +1,45 @@
+# =============================================================================
+# CROILAR-STACK-DOWN PROCEDURE
+# =============================================================================
+# Stops all 5 croilar stacks in reverse dependency order.
+#
+# Usage:
+#   km run procedure croilar-stack-down
+# =============================================================================
+
+[[procedure]]
+name = "croilar-stack-down"
+description = "Stop all croilar Docker Compose stacks in reverse dependency order"
+
+[[procedure.config.stages]]
+name = "stop-leaf-services"
+
+[[procedure.config.stages.executions]]
+execution = { type = "StopStack", params = { stack = "croilar-marimo" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "StopStack", params = { stack = "croilar-dagster" } }
+
+
+[[procedure.config.stages]]
+name = "stop-convex"
+
+[[procedure.config.stages.executions]]
+execution = { type = "StopStack", params = { stack = "croilar-convex" } }
+
+
+[[procedure.config.stages]]
+name = "stop-hono-and-web"
+
+[[procedure.config.stages.executions]]
+execution = { type = "StopStack", params = { stack = "croilar-hono-api" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "StopStack", params = { stack = "croilar-web" } }
+
+
+[[procedure.config.stages]]
+name = "stop-postgres"
+
+[[procedure.config.stages.executions]]
+execution = { type = "StopStack", params = { stack = "croilar-postgres" } }
