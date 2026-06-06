@@ -8,6 +8,8 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
+    environment:
+      - INFISICAL_CLIENT_ID=${INFISICAL_CLIENT_ID}
     command:
       - "--provider=infisical"
       - "--infisical-url=http://infisical-backend:8080"
