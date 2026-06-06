@@ -1,0 +1,94 @@
+# =============================================================================
+# PANGOLIN ROUTING — Cianfhoghlaim Oideachais
+# =============================================================================
+# Applied via Pangolin Integration API: km run procedure apply-pangolin-blueprints
+# Routes oideachais.cianfhoghlaim.ie → bunchloch:3000 (TanStack Start SPA)
+#           api.oideachais.cianfhoghlaim.ie → bunchloch:8000 (FastAPI backend)
+#           dagster.oideachais.cianfhoghlaim.ie → bunchloch:3335 (Dagster UI)
+#
+# Site: bunchloch (MacBook M4 Max — Mac client: rude-malagasy-giant-rat)
+# Tunnel: newt-bunchloch (exposes ports through Pangolin Gerbil)
+# Auth: Pocket ID SSO for UI, API key for API, Pocket ID SSO for Dagster
+# =============================================================================
+
+apiVersion: v1
+kind: Blueprint
+metadata:
+  name: oideachais-routes
+spec:
+  resources:
+    # ---------------------------------------------------------------------------
+    # PUBLIC — TanStack Start SPA (Pocket ID SSO)
+    # ---------------------------------------------------------------------------
+    - name: oideachais-web
+      kind: Http
+      spec:
+        domains:
+          - oideachais.cianfhoghlaim.ie
+        target:
+          site: bunchloch
+          resource: localhost
+          port: 3000
+        auth:
+          oidc:
+            provider: pocket-id
+            client_id: ${POCKET_ID_OIDEACHAIS_CLIENT_ID}
+        headers:
+          X-Frame-Options: SAMEORIGIN
+          X-Content-Type-Options: nosniff
+        rate_limit:
+          requests_per_second: 50
+          burst: 100
+
+    # ---------------------------------------------------------------------------
+    # PUBLIC — FastAPI AG-UI Streaming Backend (API key auth)
+    # ---------------------------------------------------------------------------
+    - name: oideachais-api
+      kind: Http
+      spec:
+        domains:
+          - api.oideachais.cianfhoghlaim.ie
+        target:
+          site: bunchloch
+          resource: localhost
+          port: 8000
+        auth:
+          api_key:
+            header: X-Oideachais-API-Key
+        cors:
+          allowed_origins:
+            - https://oideachais.cianfhoghlaim.ie
+          allowed_methods:
+            - GET
+            - POST
+            - OPTIONS
+        headers:
+          X-Frame-Options: DENY
+        rate_limit:
+          requests_per_second: 100
+          burst: 200
+
+    # ---------------------------------------------------------------------------
+    # INTERNAL — Dagster UI (Pocket ID SSO, VPN-only)
+    # ---------------------------------------------------------------------------
+    - name: oideachais-dagster
+      kind: Http
+      spec:
+        domains:
+          - dagster.oideachais.cianfhoghlaim.ie
+        target:
+          site: bunchloch
+          resource: localhost
+          port: 3335
+        auth:
+          oidc:
+            provider: pocket-id
+            client_id: ${POCKET_ID_OIDEACHAIS_CLIENT_ID}
+        access:
+          # VPN-only — requires Pangolin client connection
+          require_vpn: true
+        headers:
+          X-Frame-Options: SAMEORIGIN
+          Content-Security-Policy: "frame-ancestors 'self'"
+        websocket:
+          enabled: true  # Dagster uses WebSockets for live updates

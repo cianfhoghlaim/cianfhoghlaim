@@ -50,6 +50,13 @@ services:
     volumes:
       - oideachais-secrets:/run/secrets/locket:ro
 
+  frontend:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - oideachais-secrets:/run/secrets/locket:ro
+
 secrets:
   infisical_secret:
     file: ${INFISICAL_SECRET_FILE:-../infisical_secret}

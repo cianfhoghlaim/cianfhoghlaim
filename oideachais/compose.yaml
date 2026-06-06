@@ -5,6 +5,9 @@ services:
   # DAGSTER - Pipeline Orchestration
   # ---------------------------------------------------------------------------
   dagster:
+    # Development: build from source. Production: use pre-built image.
+    # To switch to production: uncomment `image` and comment `build`.
+    # image: ghcr.io/cianfhoghlaim/oideachais-dagster:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile.dagster
@@ -18,16 +21,16 @@ services:
     environment:
       DAGSTER_HOME: /opt/dagster/home
       USE_DUCKLAKE: "true"
-      DUCKLAKE_POSTGRES_HOST: lakehouse-postgres
-      DUCKLAKE_POSTGRES_PORT: "5432"
-      DUCKLAKE_POSTGRES_USER: lakekeeper
-      DUCKLAKE_POSTGRES_PASSWORD: devpassword
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-lakehouse}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-devpassword}
+      DUCKLAKE_POSTGRES_HOST: ${DUCKLAKE_POSTGRES_HOST:-lakehouse-postgres}
+      DUCKLAKE_POSTGRES_PORT: ${DUCKLAKE_POSTGRES_PORT:-5432}
+      DUCKLAKE_POSTGRES_USER: ${DUCKLAKE_POSTGRES_USER:-lakekeeper}
+      DUCKLAKE_POSTGRES_PASSWORD: ${DUCKLAKE_POSTGRES_PASSWORD}
+      AWS_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY}
       AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-http://lakehouse-garage:3900}
-      AWS_REGION: garage
+      AWS_REGION: ${AWS_REGION:-garage}
       FIRECRAWL_API_KEY: ${FIRECRAWL_API_KEY}
-      USE_LOCAL_SCRAPES: "true"
+      USE_LOCAL_SCRAPES: ${USE_LOCAL_SCRAPES:-true}
     volumes:
       - .:/app
       - ../stedding:/stedding:ro
@@ -35,6 +38,11 @@ services:
       - /app/.venv
       - ./dagster.yaml:/opt/dagster/home/dagster.yaml:ro
       - dagster-storage:/opt/dagster/storage
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
     networks:
       - oideachais
       - lakehouse
@@ -43,6 +51,8 @@ services:
   # API - FastAPI Backend with AG-UI Streaming
   # ---------------------------------------------------------------------------
   api:
+    # Development: build from source. Production: use pre-built image.
+    # image: ghcr.io/cianfhoghlaim/oideachais-api:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile
@@ -54,39 +64,24 @@ services:
       - path: /run/secrets/locket/secrets.env
         required: false
     environment:
-      # Application
       HOST: "0.0.0.0"
       PORT: "8000"
-      ENVIRONMENT: ${ENVIRONMENT:-production}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
-      # Database paths
-      DUCKDB_PATH: /app/storage/data/celtic_education.duckdb
-      LANCEDB_URI: rest://lakehouse-lance-namespace:8182
-      LANCEDB_API_KEY: ${LANCEDB_API_KEY:-devtoken}
-      # LLM Configuration
-      # The local litellm service block that previously lived here has been
-      # removed — see `infrastructure/stacks/engineering/litellm/` for the
-      # canonical gateway (Gemini + OpenCode Go + llama-swap GGUF + MLX-Omni).
-      # Bring it up with:
-      #   cd infrastructure/stacks/engineering/litellm
-      #   docker compose -f compose.yaml -f sidecar.yaml up -d
-      LLM_API_KEY: ${LITELLM_MASTER_KEY:-sk-1234}
+      DUCKDB_PATH: ${DUCKDB_PATH:-/app/storage/data/celtic_education.duckdb}
+      LANCEDB_URI: ${LANCEDB_URI:-rest://lakehouse-lance-namespace:8182}
+      LANCEDB_API_KEY: ${LANCEDB_API_KEY}
+      LLM_API_KEY: ${LITELLM_MASTER_KEY}
       LLM_PROVIDER: ${LLM_PROVIDER:-litellm}
       LLM_BASE_URL: ${LLM_BASE_URL:-http://litellm:4000}
       LLM_MODEL: ${LLM_MODEL:-gemini/gemini-2.0-flash}
-      # HuggingFace cache wiring (so on-demand model fetches land in the
-      # shared stedding/huggingface/ directory).
       HF_HOME: /stedding/huggingface
       HF_HUB_CACHE: /stedding/huggingface/hub
       HF_TOKEN: ${HF_TOKEN}
       HUGGINGFACE_HUB_TOKEN: ${HUGGINGFACE_HUB_TOKEN}
-      HUGGINGFACE_TOKEN: ${HUGGINGFACE_TOKEN}
-      # Observability
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
       LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
-    volumes:
-      - oideachais-data:/app/storage/data
     healthcheck:
       test: ["CMD", "curl", "-sf", "http://localhost:8000/health"]
       interval: 10s
@@ -96,8 +91,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '4'
-          memory: 16G
+          cpus: '2'
+          memory: 4G
     networks:
       - oideachais
       - lakehouse
@@ -106,6 +101,8 @@ services:
   # FRONTEND - TanStack Start Web Application
   # ---------------------------------------------------------------------------
   frontend:
+    # Development: build from source. Production: use pre-built image.
+    # image: ghcr.io/cianfhoghlaim/oideachais-frontend:${IMAGE_TAG:-latest}
     build:
       context: ./web
       dockerfile: Dockerfile
@@ -113,12 +110,13 @@ services:
     restart: unless-stopped
     ports:
       - "${FRONTEND_PORT:-3000}:5173"
+    env_file:
+      - path: /run/secrets/locket/secrets.env
+        required: false
     environment:
-      NODE_ENV: ${ENVIRONMENT:-production}
+      NODE_ENV: ${ENVIRONMENT:-development}
       VITE_API_URL: ${API_URL:-http://api:8000}
       VITE_API_PUBLIC_URL: ${API_PUBLIC_URL:-http://localhost:8000}
-    volumes:
-      - ./web/src:/app/src
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80"]
       interval: 10s
@@ -128,6 +126,11 @@ services:
     depends_on:
       api:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
     networks:
       - oideachais
       - lakehouse
