@@ -1,28 +1,55 @@
 import { Hono } from "hono";
+import { cors } from "hono/cors";
+import { auth } from "./auth";
+import { requireAuth, requireOrg } from "./middleware";
 
 const app = new Hono();
 
-app.get("/api/health", (c) => {
-  return c.json({ status: "ok", service: "croilar-hono-api", version: "0.1.0" });
-});
+app.use(
+  "*",
+  cors({
+    origin: [
+      process.env.PUBLIC_WEB_URL ?? "http://localhost:3000",
+      process.env.PUBLIC_AUTH_URL ?? "http://localhost:4000",
+      "https://croilar.cianfhoghlaim.ie",
+      "https://convex.croilar.cianfhoghlaim.ie",
+      "https://auth.croilar.cianfhoghlaim.ie",
+    ],
+    credentials: true,
+    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 
-app.get("/.well-known/openid-configuration", (c) => {
-  const issuer = process.env.PUBLIC_AUTH_URL || "https://auth.croilar.cianfhoghlaim.ie";
+app.get("/api/health", (c) => {
   return c.json({
-    issuer,
-    authorization_endpoint: `${issuer}/api/auth/authorize`,
-    token_endpoint: `${issuer}/api/auth/token`,
-    jwks_uri: `${issuer}/api/auth/jwks`,
-    userinfo_endpoint: `${issuer}/api/auth/userinfo`,
-    scopes_supported: ["openid", "profile", "email"],
-    response_types_supported: ["code"],
-    grant_types_supported: ["authorization_code", "refresh_token"],
-    subject_types_supported: ["public"],
-    id_token_signing_alg_values_supported: ["RS256"],
+    status: "ok",
+    service: "croilar-hono-api",
+    version: "0.1.0",
+    timestamp: new Date().toISOString(),
   });
 });
 
-// BetterAuth routes will be mounted at /api/auth/* in PR-2b
-// app.route("/api/auth", authHandler);
+// Mount BetterAuth handler at /api/auth/*
+// Handles: /sign-in, /sign-up, /sign-out, /session, /oauth2/callback, /jwks, etc.
+app.on(["GET", "POST"], "/api/auth/*", (c) => auth.handler(c.req.raw));
 
-export default app;
+// Example protected route — returns the current user's session info
+app.get("/api/me", requireAuth, async (c) => {
+  const user = c.get("user");
+  return c.json({ user });
+});
+
+// Example org-protected route — only members of aleyum/cianfhoghlaim/croilar-admin
+app.get("/api/admin/stacks", requireAuth, requireOrg("admin"), async (c) => {
+  // Will be filled in by PR-4a (Stacks module via Komodo API)
+  return c.json({ stacks: [] });
+});
+
+const port = parseInt(process.env.PORT ?? "4000", 10);
+console.log(`[croilar-hono-api] Listening on port ${port}`);
+
+export default {
+  port,
+  fetch: app.fetch,
+};
