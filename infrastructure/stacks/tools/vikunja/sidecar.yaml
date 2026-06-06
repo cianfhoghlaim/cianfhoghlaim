@@ -10,9 +10,12 @@ services:
       - ALL
     environment:
       - INFISICAL_CLIENT_ID=${INFISICAL_CLIENT_ID}
+      - INFISICAL_PROJECT_ID=${INFISICAL_PROJECT_ID:-f3cff583-b74b-4804-b9d3-db8b68885236}
     command:
       - "--provider=infisical"
       - "--infisical-url=http://infisical-backend:8080"
+      - "--infisical-default-environment=dev-baile"
+      - "--infisical-default-project-id=f3cff583-b74b-4804-b9d3-db8b68885236"
       - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
       - "--infisical-client-secret=file:/run/secrets/infisical_secret"
       - "--map=/templates:/run/secrets/locket"
@@ -30,6 +33,7 @@ services:
       start_period: 5s
     networks:
       - stack
+      - infrastructure
 
   vikunja:
     depends_on:
@@ -90,3 +94,5 @@ networks:
     driver: bridge
   cianfhoghlaim:
     driver: bridge
+  infrastructure:
+    external: true
