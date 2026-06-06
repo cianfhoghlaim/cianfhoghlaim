@@ -71,9 +71,11 @@ A bilingual (EN/GA) agentic educational platform covering 5 stages of the Irish 
 
 | Capability | Description | Status |
 |------------|-------------|--------|
-| `croilar-portfolio` | Public TanStack Start site — 9 subprojects (home/cv/music/code/research/teaching/data/identity/contact) | Active |
-| `croilar-data-engineering` | Dagster + DLT + CocoIndex + BAML pipelines (read from DuckLake catalog) | Active |
-| `croilar-cv-extraction` | BAML extraction of the author's CV/achievements/teaching PDFs | Active |
+| `croilar-portfolio` | Multi-persona TanStack Start platform — N personas with per-persona theme, i18n, and data | Active |
+| `croilar-data-engineering` | Dagster + DLT + CocoIndex + BAML pipelines with per-persona asset groups | Active |
+| `croilar-cv-extraction` | BAML extraction of the author's CV/achievements/teaching PDFs with persona field | Active |
+| `croilar-persona-registry` | Type-safe Zod-typed persona config schema + lookup table | Proposed |
+| `croilar-self-hosted-portal` | Self-hosted platform dashboard — stacks, pipelines, monitoring, MCP, registry | Proposed |
 
 ## AI Agent Toolchain & Conventions
 
@@ -158,4 +160,5 @@ All specs MUST respect constraints from `docs/context/00-core/CONSTRAINTS.md`:
 | `monorepo-restructure-v2` | implemented |
 | `team-workflow-stack` | implemented |
 | `fix-existing-stacks` | implemented |
-| `croilar-portfolio` | in-flight |
+| `croilar-portfolio` | implemented (superseded) |
+| `croilar-revitalisation` | in-flight |
