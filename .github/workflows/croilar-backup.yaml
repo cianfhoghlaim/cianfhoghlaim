@@ -1,0 +1,21 @@
+name: Backup (croilar)
+
+on:
+  schedule:
+    - cron: "0 3 * * *"  # daily 03:00 UTC
+  workflow_dispatch:
+
+jobs:
+  backup:
+    name: komodo backup (croilar)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trigger Komodo backup procedure
+        env:
+          KOMODO_API_KEY: ${{ secrets.KOMODO_API_KEY }}
+        run: |
+          curl -X POST \
+            -H "X-Api-Key: ${KOMODO_API_KEY}" \
+            https://komodo.cianfhoghlaim.ie/procedure/run \
+            -d '{"procedure": "croilar-backup"}'

@@ -1,0 +1,31 @@
+# =============================================================================
+# CROILAR-IMAGE-REBUILD PROCEDURE
+# =============================================================================
+# Rebuilds one or more croilar images from source via Dagger.
+# Multi-arch (linux/amd64, linux/arm64).
+#
+# Usage:
+#   km run procedure croilar-image-rebuild --image=croilar-web
+#   km run procedure croilar-image-rebuild --image=croilar-portal
+# =============================================================================
+
+[[procedure]]
+name = "croilar-image-rebuild"
+description = "Rebuild a single croilar image from source via Dagger (multi-arch)"
+
+[[procedure.config.variables]]
+name = "image"
+default = "croilar-web"
+description = "Which croilar image to rebuild (croilar-web | croilar-portal | croilar-dagster | croilar-marimo | croilar-image-pipeline)"
+
+[[procedure.config.variables]]
+name = "tag"
+default = "git-sha"
+description = "Image tag (git-sha | <explicit>)"
+
+
+[[procedure.config.stages]]
+name = "rebuild-image"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "dagger-build-croilar-image" } }
