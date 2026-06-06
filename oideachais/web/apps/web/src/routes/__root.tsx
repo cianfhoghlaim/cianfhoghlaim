@@ -1,7 +1,7 @@
 // app/routes/__root.tsx — TanStack Start file-based root route (Cianfhoghlaim Oideachais)
 //
 // Replaces the code-based routeTree.tsx (which was a Vite SPA workaround).
-// Bilingual EN/GA pages live under src/app/routes/(en)/ and src/app/routes/(ga)/.
+// Bilingual EN/GA pages live under src/routes/(en)/ and src/routes/(ga)/.
 import {
   HeadContent,
   Outlet,
@@ -61,22 +61,19 @@ function RootComponent() {
         <HeadContent />
       </head>
       <body className="bg-slate-900 text-slate-100 font-sans h-screen w-screen overflow-hidden flex flex-col">
-        <CopilotKit
-          runtimeUrl="/api/copilotkit"
-          agent="cianfhoghlaim-oideachais-stage-explorer"
-        >
-          <Header />
-          <div className="flex-1 flex overflow-hidden">
-            <Sidebar />
-            <main className="flex-1 flex flex-col min-w-0 bg-slate-900 relative">
-              <div className="flex-1 overflow-y-auto p-6">
-                <Outlet />
-              </div>
-            </main>
-          </div>
-          <OideachasChat />
-        </CopilotKit>
+        <Header />
+        <div className="flex-1 flex overflow-hidden">
+          <Sidebar />
+          <main className="flex-1 flex flex-col min-w-0 bg-slate-900 relative">
+            <div className="flex-1 overflow-y-auto p-6">
+              <Outlet />
+            </div>
+          </main>
+        </div>
         <Scripts />
+        {typeof window !== "undefined" && (
+          <TanStackRouterDevtools position="bottom-right" />
+        )}
       </body>
     </html>
   );
