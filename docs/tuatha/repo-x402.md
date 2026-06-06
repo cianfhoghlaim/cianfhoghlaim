@@ -12,5 +12,11 @@ The `tuatha/` educational MMO uses x402 for in-game microtransactions — studen
 - SIWE (Sign-In With Ethereum) for wallet authentication
 - MCPay integration for MCP server monetization
 
+## Current Stats (Firecrawl-verified 2026-06-06)
+- **Canonical upstream:** [x402-foundation/x402](https://github.com/x402-foundation/x402)
+- **Coinbase fork:** 88 stars, 104 forks (199 commits behind upstream)
+- **Tagline:** "A payments protocol for the internet. Built on HTTP."
+- **Key integrations:** MCPay (MCP server monetization), SIWE wallet auth, Base/Arbitrum USDC
+
 ## Source Files
-Full source code and TypeScript examples removed (2026-06-05). Available at <https://github.com/coinbase/x402>. Live implementation in `tuatha/apps/crypteolas_demo/`.
+This documentation-only summary. Full source at <https://github.com/coinbase/x402>. Canonical: <https://github.com/x402-foundation/x402>. Live implementation in `tuatha/apps/crypteolas_demo/`.

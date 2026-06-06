@@ -1,3 +1,0 @@
-# sam module
-
-::: geoai.sam

@@ -20,5 +20,13 @@ The `tuatha/` educational MMO uses SpacetimeDB for real-time multiplayer state m
 - Uses the LiteLLM gateway for AI-driven NPC dialogue
 - Serves the `tuatha/ui` Babylon.js frontend via WebSocket
 
+## Current Stats (Firecrawl-verified 2026-06-06)
+- **Stars:** 24.7k
+- **Forks:** 1k
+- **Branches:** 1,330
+- **Tags:** 186
+- **Last commit:** 8 hours ago (active daily development)
+- **Language:** Rust (primary)
+
 ## Source Files
-This directory contains documentation only. Full source code was removed (2026-06-05) — it is available at <https://github.com/clockworklabs/SpacetimeDB>.
+This documentation-only summary. Full source available at <https://github.com/clockworklabs/SpacetimeDB>.
