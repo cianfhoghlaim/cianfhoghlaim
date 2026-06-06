@@ -88,7 +88,7 @@ The edge layer consumes the data for the MMO gamification and web frontends.
    * **SpacetimeDB** (`localhost:3011`): The ECS database/server handling real-time multiplayer states.
    * **x402 Middleware**: An ASGI router that intercepts API calls to AI agents. It checks SpacetimeDB identities to deduct `Pinginn`/`Screpall` tokens prior to executing LLM generation tasks.
 
-2. **Start the Awen Hub Frontend (`oideachais` Web App):**
+2. **Start the Cianfhoghlaim Oideachais web app (`oideachais/web/apps/web`):**
    ```bash
    cd oideachais/web_app
    bun install

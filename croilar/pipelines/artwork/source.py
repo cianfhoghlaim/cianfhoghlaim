@@ -309,8 +309,9 @@ class ArtworkProcessor:
         Returns:
             ArtworkMetadata with extracted info
         """
-        from PIL import Image
         import colorsys
+
+        from PIL import Image
 
         metadata = ArtworkMetadata(
             id=f"meta_{artwork_id}",
@@ -378,8 +379,8 @@ class ArtworkProcessor:
             List of color dicts with hex, rgb, and percentage
         """
         try:
-            from sklearn.cluster import KMeans
             import numpy as np
+            from sklearn.cluster import KMeans
 
             # Resize for faster processing
             img_small = img.copy()
@@ -618,7 +619,7 @@ def run_artwork_pipeline(
     artwork_urls: list[dict[str, Any]] | None = None,
     source_table: str | None = None,
     source_pipeline: str | None = None,
-    destination: str | dlt.destinations.Destination | None = None,
+    destination: Any = None,
     dataset_name: str = "artwork_data",
 ) -> Any:
     """Run the artwork processing pipeline.

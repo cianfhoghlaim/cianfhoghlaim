@@ -1,0 +1,71 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "user-application",
+  "main": "worker/index.ts",
+  "compatibility_date": "2025-06-17",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/auth/*", "/trpc/*", "/click-socket"],
+  },
+  "observability": {
+    "enabled": true,
+  },
+  "env": {
+    "stage": {
+      "vars": {
+        "STRIPE_PRODUCT_BASIC": "price_1RwXlNHpob3EHbKhMjiWZEfa",
+        "STRIPE_PRODUCT_PRO": "price_1RwXmNHpob3EHbKhYXQMxvSn",
+        "STRIPE_PRODUCT_ENTERPRISE": "price_1RwXn3Hpob3EHbKht3rxzXKE",
+        "GOOGLE_CLIENT_ID": "497355098387-e2v8702a0g0s8l2otchlqi88klt3d0gh.apps.googleusercontent.com",
+      },
+      "routes": [
+        {
+          "custom_domain": true,
+          "pattern": "stage.smrtlk.com",
+        },
+      ],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_id": "65409933-f910-4bab-8c45-469b94f2eb90",
+          "remote": true,
+        },
+      ],
+      "services": [
+        {
+          "binding": "BACKEND_SERVICE",
+          "service": "data-service-stage",
+          "remote": true,
+        },
+      ],
+    },
+    "production": {
+      "routes": [
+        {
+          "custom_domain": true,
+          "pattern": "smrtlk.com",
+        },
+      ],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_id": "cdecc784-37f7-4c46-bf09-9a6bdad9452e",
+          "remote": true,
+        },
+      ],
+      "services": [
+        {
+          "binding": "BACKEND_SERVICE",
+          "service": "data-service-production",
+          "remote": true,
+        },
+      ],
+    },
+  },
+}

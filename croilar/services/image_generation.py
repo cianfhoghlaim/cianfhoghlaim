@@ -38,7 +38,6 @@ from typing import Any
 import httpx
 from PIL import Image
 
-
 # InvokeAI configuration
 INVOKEAI_URL = os.environ.get("INVOKEAI_URL", "http://localhost:9090")
 LITELLM_URL = os.environ.get("LITELLM_URL", "http://localhost:4000")

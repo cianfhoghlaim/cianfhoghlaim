@@ -9,7 +9,6 @@ Artist ID for Aleyum: 2vLlk2CcC4NnN7yoNSTmX2
 
 from typing import Any
 
-
 # Spotify API resource configurations
 # Each resource defines an endpoint with pagination, data selection, and merge keys
 

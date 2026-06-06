@@ -7,11 +7,11 @@ for comprehensive agent and LLM observability.
 
 from .tracing import (
     AleyumTracer,
-    TraceSpan,
-    TracingBackend,
     DatadogBackend,
     LangfuseBackend,
     LogfireBackend,
+    TraceSpan,
+    TracingBackend,
     get_tracer,
     trace_agent_run,
     trace_tool_call,

@@ -32,7 +32,6 @@ from typing import Any
 import httpx
 from PIL import Image
 
-
 # LiteLLM configuration
 LITELLM_URL = os.environ.get("LITELLM_URL", "http://localhost:4000")
 LITELLM_API_KEY = os.environ.get("LITELLM_API_KEY", "sk-1234")

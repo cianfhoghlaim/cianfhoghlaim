@@ -4,7 +4,6 @@ Factory functions for creating DLT destinations including DuckDB and DuckLake.
 """
 
 import os
-from typing import Any
 
 import dlt
 

@@ -1,4 +1,4 @@
-"""Dagster Assets for Aleyum Pipeline.
+"""Dagster Assets for Croílár Pipeline.
 
 Orchestrates DLT data ingestion, CocoIndex embedding,
 and artwork processing workflows.
@@ -15,7 +15,7 @@ Usage:
     from dagster_assets import defs
 
     # Run in development
-    defs.get_job_def("daily_ingestion_job").execute_in_process()
+    defs.get_job_def("daily_music_job").execute_in_process()
 """
 
 # Add project root to path for pipelines package
@@ -26,22 +26,25 @@ _project_root = Path(__file__).parent.parent
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
 
-from dagster_assets.dlt_assets import (
-    # Manual DLT assets (avoiding dlt_assets decorator due to import-time issues)
-    spotify_ingestion_asset,
-    soundcloud_ingestion_asset,
-    label_ingestion_asset,
-    artwork_processing_asset,
-)
 from dagster_assets.cocoindex_assets import (
     artwork_embedding_asset,
     run_cocoindex_flow,
 )
+from dagster_assets.dlt_assets import (
+    artwork_processing_asset,
+    label_ingestion_asset,
+    soundcloud_ingestion_asset,
+    # Manual DLT assets (avoiding dlt_assets decorator due to import-time issues)
+    spotify_ingestion_asset,
+)
 from dagster_assets.schedules import (
-    daily_ingestion_job,
-    weekly_full_refresh_job,
-    daily_ingestion_schedule,
+    all_jobs,
+    all_schedules,
+    all_sensors,
+    daily_music_job,
+    daily_music_schedule,
     new_artwork_sensor,
+    weekly_full_refresh_job,
 )
 
 __all__ = [
@@ -54,8 +57,11 @@ __all__ = [
     "artwork_embedding_asset",
     "run_cocoindex_flow",
     # Jobs & Schedules
-    "daily_ingestion_job",
+    "all_jobs",
+    "all_schedules",
+    "all_sensors",
+    "daily_music_job",
+    "daily_music_schedule",
     "weekly_full_refresh_job",
-    "daily_ingestion_schedule",
     "new_artwork_sensor",
 ]

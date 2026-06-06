@@ -1,8 +1,8 @@
-# Cianfhoghlaim Project Conventions
+# Cianfhoghlaim Oideachais Project Conventions
 
 ## Project Overview
 
-Celtic language education platform with AI-powered tools for Irish curriculum processing. The monorepo is a **bun + uv + turbo polyglot orchestration** of multiple subprojects and 70+ Docker Compose stacks.
+A bilingual (EN/GA) agentic educational platform covering 5 stages of the Irish education system: Aistear, Primary, Junior Cycle, Senior Cycle, and Tertiary. Powered by BAML extraction, Cognee + LanceDB + DuckLake knowledge graph, Agno + Google ADK agents, and a TanStack Start / CopilotKit AG-UI front-end. The monorepo is a **bun + uv + turbo polyglot orchestration** of multiple subprojects and 70+ Docker Compose stacks.
 
 ## Subprojects
 

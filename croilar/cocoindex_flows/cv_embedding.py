@@ -23,7 +23,6 @@ import functools
 import json
 import os
 from pathlib import Path
-from typing import Any, Literal
 
 import cocoindex
 import cocoindex.targets.lancedb as coco_lancedb

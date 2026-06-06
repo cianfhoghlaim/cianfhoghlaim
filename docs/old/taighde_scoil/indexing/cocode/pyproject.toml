@@ -1,0 +1,252 @@
+[project]
+name = "cocode"
+version = "0.6.3"
+description = "Cocode is the friend of your code"
+authors = [{ name = "Evotis S.A.S.", email = "evotis@pipelex.com" }]
+maintainers = [{ name = "Pipelex staff", email = "oss@pipelex.com" }]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "pipelex[anthropic,google,google-genai,bedrock]==0.15.7",
+    "PyGithub==2.4.0",
+]
+
+[project.optional-dependencies]
+docs = [
+    "mkdocs==1.6.1",
+    "mkdocs-glightbox==0.4.0",
+    "mkdocs-material==9.6.14",
+    "mkdocs-meta-manager==1.1.0",
+]
+dev = [
+    "boto3-stubs>=1.35.24",
+    "mypy>=1.11.2",
+    "pyright>=1.1.405",
+    "pytest>=9.0.1",
+    "pytest_asyncio>=0.24.0",
+    "pytest-cov>=6.1.1",
+    "pytest-mock>=3.14.0",
+    "pytest-sugar>=1.0.0",
+    "ruff>=0.6.8",
+    "types-aioboto3[bedrock,bedrock-runtime]>=13.4.0",
+    "types-aiofiles>=24.1.0.20240626",
+    "types-markdown>=3.6.0.20240316",
+    "types-networkx>=3.3.0.20241020",
+    "types-openpyxl>=3.1.5.20250306",
+    "types-PyYAML>=6.0.12.20250326",
+]
+
+[project.scripts]
+cocode = "cocode.cli.main:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["cocode"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"pipelex.toml" = "pipelex.toml"
+
+[tool.hatch.build.targets.sdist]
+packages = ["cocode"]
+
+[tool.hatch.build.targets.sdist.force-include]
+"pipelex.toml" = "pipelex.toml"
+
+[project.urls]
+Homepage = "https://pipelex.com"
+Repository = "https://github.com/pipelex/cocode"
+Documentation = "https://docs.pipelex.com/"
+
+[tool.uv]
+required-version = ">=0.7.2"
+
+[tool.mypy]
+packages = ["cocode", "tests"]
+check_untyped_defs = true
+exclude = "^.*\\.venv/.*$"
+mypy_path = "."
+plugins = ["pydantic.mypy"]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+ignore_missing_imports = true
+module = ["json2html"]
+
+[tool.pyright]
+include = ["cocode", "tests"]
+exclude = ["**/node_modules", "**/__pycache__"]
+extraPaths = ["./tests"]
+analyzeUnannotatedFunctions = true
+deprecateTypingAliases = false
+disableBytesTypePromotions = true
+enableExperimentalFeatures = false
+enableTypeIgnoreComments = true
+pythonVersion = "3.11"
+reportAbstractUsage = "error"
+reportArgumentType = "error"
+reportAssertAlwaysTrue = "error"
+reportAssertTypeFailure = "error"
+reportAssignmentType = "error"
+reportAttributeAccessIssue = "error"
+reportCallInDefaultInitializer = true
+reportCallIssue = "error"
+reportDeprecated = "error"
+reportDuplicateImport = "error"
+reportFunctionMemberAccess = "error"
+reportGeneralTypeIssues = "error"
+reportImplicitOverride = true
+reportImplicitStringConcatenation = false
+reportImportCycles = true
+reportIncompatibleMethodOverride = "error"
+reportIncompatibleVariableOverride = "error"
+reportIncompleteStub = "error"
+reportInconsistentConstructor = "error"
+reportInconsistentOverload = "error"
+reportIndexIssue = "error"
+reportInvalidStringEscapeSequence = "error"
+reportInvalidStubStatement = "error"
+reportInvalidTypeArguments = "error"
+reportInvalidTypeForm = "error"
+reportInvalidTypeVarUse = "error"
+reportMatchNotExhaustive = "error"
+reportMissingImports = "error"
+reportMissingModuleSource = "warning"
+reportMissingParameterType = "error"
+reportMissingSuperCall = "none"
+reportMissingTypeArgument = "error"
+reportMissingTypeStubs = false
+reportNoOverloadImplementation = "error"
+reportOperatorIssue = "error"
+reportOptionalCall = "error"
+reportOptionalContextManager = "error"
+reportOptionalIterable = "error"
+reportOptionalMemberAccess = "error"
+reportOptionalOperand = "error"
+reportOptionalSubscript = "error"
+reportOverlappingOverload = "error"
+reportPossiblyUnboundVariable = "error"
+reportPrivateImportUsage = "error"
+reportPrivateUsage = "error"
+reportPropertyTypeMismatch = true
+reportRedeclaration = "error"
+reportReturnType = "error"
+reportSelfClsParameterName = "error"
+reportTypeCommentUsage = "error"
+reportTypedDictNotRequiredAccess = "error"
+reportUnboundVariable = "error"
+reportUndefinedVariable = "error"
+reportUninitializedInstanceVariable = "none"
+reportUnknownArgumentType = "error"
+reportUnknownLambdaType = "error"
+reportUnknownMemberType = "error"
+reportUnknownParameterType = "error"
+reportUnknownVariableType = "error"
+reportUnnecessaryCast = "error"
+reportUnnecessaryComparison = "error"
+reportUnnecessaryContains = "error"
+reportUnnecessaryIsInstance = "error"
+reportUnnecessaryTypeIgnoreComment = "none"
+reportUnsupportedDunderAll = "error"
+reportUntypedBaseClass = "error"
+reportUntypedClassDecorator = "error"
+reportUntypedFunctionDecorator = "error"
+reportUntypedNamedTuple = "error"
+reportUnusedCallResult = "none"
+reportUnusedClass = "error"
+reportUnusedCoroutine = "error"
+reportUnusedExcept = "error"
+reportUnusedExpression = "error"
+reportUnusedFunction = "error"
+reportUnusedImport = "none"
+reportUnusedVariable = "error"
+reportWildcardImportFromLibrary = "error"
+strictDictionaryInference = true
+strictListInference = true
+strictParameterNoneValue = true
+strictSetInference = true
+typeCheckingMode = "strict"
+
+[tool.pytest]
+minversion = "9.0"
+addopts = [
+    "--import-mode=importlib",
+    "-ra",
+    "-m",
+    "not (inference or llm or img_gen or extract or needs_output or pipelex_api)",
+]
+asyncio_default_fixture_loop_scope = "session"
+xfail_strict = true
+filterwarnings = [
+    "ignore:Support for class-based `config` is deprecated:DeprecationWarning",
+    "ignore:websockets.*is deprecated:DeprecationWarning",
+    "ignore:typing\\.io is deprecated:DeprecationWarning",
+    "ignore:typing\\.re is deprecated:DeprecationWarning",
+    "ignore:.*has been moved to cryptography.*",
+    "ignore:Use.*Types instead",
+]
+markers = [
+    "unit: fast isolated tests with no external dependencies",
+    "integration: tests that require external services or dependencies",
+    "end2end: full workflow tests that test complete user scenarios",
+    "inference: slow and costly due to inference calls",
+    "gha_disabled: tests that should not run in GitHub Actions",
+    "codex_disabled: tests that should not run in Codex",
+    "dry_runnable: tests that can be run in dry-run mode",
+]
+
+[tool.ruff]
+exclude = [
+    ".cursor",
+    ".git",
+    ".github",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".venv",
+    ".vscode",
+    "trigger_pipeline",
+]
+line-length = 150
+target-version = "py311"
+
+[tool.ruff.format]
+
+[tool.ruff.lint]
+ignore = ["F401"]
+external = ["F401"]
+select = [
+    "E4",
+    "E7",
+    "E9",
+    "F",
+    "A001",
+    "A002",
+    "A003",
+    "RUF008",
+    "RUF009",
+    "RUF012",
+    "RUF013",
+    "RUF100",
+    "E501",
+    "I",
+]
+
+[tool.pipelex]
+config_inheritance = ["pipelex"]

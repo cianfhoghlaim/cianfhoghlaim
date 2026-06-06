@@ -17,8 +17,8 @@ Usage:
 """
 
 from cocoindex_flows.artwork_embedding import (
-    artwork_embedding_flow,
     artwork_embedding_duckdb_flow,
+    artwork_embedding_flow,
     embed_image_clip,
     search_similar_artwork,
 )

@@ -23,13 +23,13 @@ Usage:
 """
 
 from pipelines.labels.scraper import (
-    LabelRelease,
     LabelProfile,
+    LabelRelease,
     LabelScraper,
     label_source,
-    scrape_label,
-    scrape_all_labels,
     run_labels_pipeline,
+    scrape_all_labels,
+    scrape_label,
 )
 
 __all__ = [

@@ -61,6 +61,15 @@ jobs:
       - name: Ruff lint
         run: uv run ruff check croilar/ --select E,F,I,W
 
+      - name: Pytest smoke tests
+        working-directory: croilar
+        run: uv run pytest tests/ -v --tb=short
+        env:
+          USE_LOCAL_SCRAPES: "true"
+          DLT_ENVIRONMENT: "local"
+          USE_DUCKLAKE: "false"
+          DLT_DISABLE_TELEMETRY: "true"
+
       - name: Verify Dagster definitions load
         working-directory: croilar
         run: uv run python -c "from definitions import defs; print('OK:', len(defs.get_all_asset_keys()), 'assets')"

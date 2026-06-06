@@ -1,0 +1,90 @@
+{
+  "name": "react-sql-workbench-embedded",
+  "version": "0.1.2",
+  "type": "module",
+  "description": "React wrapper component for the sql-workbench-embedded package, which is a library for creating interactive SQL editors in the browser using DuckDB WASM.",
+  "main": "./dist/react-sql-workbench-embedded.umd.js",
+  "module": "./dist/react-sql-workbench-embedded.esm.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/react-sql-workbench-embedded.esm.js",
+      "require": "./dist/react-sql-workbench-embedded.umd.js"
+    }
+  },
+  "files": [
+    "dist/index.d.ts",
+    "dist/react-sql-workbench-embedded.esm.js",
+    "dist/react-sql-workbench-embedded.umd.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "rm -rf dist/ && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
+  },
+  "keywords": [
+    "sql",
+    "duckdb",
+    "wasm",
+    "embed",
+    "embedded",
+    "embeddable",
+    "interactive",
+    "sql-editor",
+    "sql-workbench",
+    "documentation",
+    "tutorial",
+    "education",
+    "queries",
+    "in-browser"
+  ],
+  "author": "TobiLG <tobilg@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tobilg/react-sql-workbench-embedded.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tobilg/react-sql-workbench-embedded/issues"
+  },
+  "homepage": "https://github.com/tobilg/react-sql-workbench-embedded#readme",
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "sql-workbench-embedded": "^0.1.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.38.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
+    "@vitejs/plugin-react": "^5.1.0",
+    "@vitest/ui": "^4.0.3",
+    "eslint": "^9.38.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.4.0",
+    "jsdom": "^27.0.1",
+    "react": "^19",
+    "react-dom": "^19",
+    "terser": "^5.44.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.2",
+    "vite": "^7.1.12",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^4.0.3"
+  }
+}

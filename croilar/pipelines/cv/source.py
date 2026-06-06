@@ -18,14 +18,15 @@ Usage:
     load_info = pipeline.run(cv_pdf_source())
 """
 
-import os
 from pathlib import Path
 from typing import Any
 
 import dlt
 
-REPO_ROOT = Path(__file__).parent.parent.parent.parent.parent
-AUTHOR_DIR = REPO_ROOT / "author_cian_deacy_lyons_mac_an_déisigh_uí_liatháin"
+from _shared.config import get_author_dir, get_repo_root
+
+REPO_ROOT = get_repo_root()
+AUTHOR_DIR = get_author_dir()
 
 
 def find_author_pdfs(base_dir: Path) -> list[dict[str, Any]]:
@@ -75,7 +76,7 @@ def author_pdf_resource(base_dir: str | None = None) -> Any:
                     page_text = page.extract_text()
                     if page_text:
                         text += page_text + "\n"
-        except Exception as e:
+        except Exception:
             page_count = 0
             text = ""
 

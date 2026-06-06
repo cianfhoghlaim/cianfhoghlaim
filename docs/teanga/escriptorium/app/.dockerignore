@@ -1,7 +1,0 @@
-env/
-static/
-media/
-test_media/
-logs/
-ci/
-.vscode

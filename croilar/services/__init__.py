@@ -21,16 +21,16 @@ Usage:
     )
 """
 
+from services.image_generation import (
+    GeneratedImage,
+    ImageGenerationService,
+    generate_artwork,
+)
 from services.vision import (
-    VisionService,
     ArtworkAnalysis,
     StyleAnalysis,
+    VisionService,
     analyze_artwork,
-)
-from services.image_generation import (
-    ImageGenerationService,
-    GeneratedImage,
-    generate_artwork,
 )
 
 __all__ = [

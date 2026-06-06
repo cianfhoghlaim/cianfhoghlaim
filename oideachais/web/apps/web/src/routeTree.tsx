@@ -2,7 +2,7 @@ import { createRootRoute, createRoute, Outlet, HeadContent, Scripts } from "@tan
 import { CopilotKit } from "@copilotkit/react-core";
 import { Sidebar } from "./components/Sidebar";
 import { Header } from "./components/Header";
-import { AwenChat } from "./components/AwenChat";
+import { OideachasChat } from "./components/OideachasChat";
 import { IndexComponent } from "./routes/index";
 import { DivesPage } from "./routes/dives";
 import { ExamsPage } from "./routes/exams";
@@ -17,7 +17,7 @@ const rootRoute = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Awen Hub — Oideachais Education Engine" },
+      { title: "Cianfhoghlaim Oideachais" },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
   }),
@@ -32,7 +32,7 @@ const rootRoute = createRootRoute({
         />
       </head>
       <body className="bg-slate-900 text-slate-100 font-sans h-screen w-screen overflow-hidden flex flex-col">
-        <CopilotKit runtimeUrl="/api/copilotkit" agent="oideachais-exam-explorer">
+        <CopilotKit runtimeUrl="/api/copilotkit" agent="cianfhoghlaim-oideachais-stage-explorer">
           <Header />
           <div className="flex-1 flex overflow-hidden">
             <Sidebar />
@@ -42,7 +42,7 @@ const rootRoute = createRootRoute({
               </div>
             </main>
           </div>
-          <AwenChat />
+          <OideachasChat />
         </CopilotKit>
         <Scripts />
       </body>

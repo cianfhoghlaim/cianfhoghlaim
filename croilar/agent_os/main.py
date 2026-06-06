@@ -16,24 +16,24 @@ from __future__ import annotations
 import os
 import sys
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 
 # Add parent paths for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
 from agno.agent import Agent
-from agno.models.openai import OpenAIChat
-from agno.models.anthropic import Claude
-from agno.os import AgentOS
 from agno.db.sqlite import SqliteDb
+from agno.models.anthropic import Claude
+from agno.models.openai import OpenAIChat
+from agno.os import AgentOS
 from agno.team import Team
 from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.newspaper4k import Newspaper4kTools
 from pydantic import BaseModel, Field
+from sruth.shared.agent_os.config import init_config
 
 # Import shared middleware
-from sruth.shared.agent_os.middleware import TinyAuthMiddleware, A2AAuthMiddleware
-from sruth.shared.agent_os.config import init_config
+from sruth.shared.agent_os.middleware import A2AAuthMiddleware, TinyAuthMiddleware
 
 # Initialize config for this service
 config = init_config(service_name="aleyum", service_port=7774)

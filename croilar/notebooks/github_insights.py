@@ -15,12 +15,13 @@ app = marimo.App(width="full")
 @app.cell
 def imports():
     """Import dependencies."""
-    import marimo as mo
-    import ibis
-    import altair as alt
-    import polars as pl
-    from pathlib import Path
     from datetime import datetime
+    from pathlib import Path
+
+    import altair as alt
+    import ibis
+    import marimo as mo
+    import polars as pl
 
     alt.data_transformers.enable("vegafusion")
 
