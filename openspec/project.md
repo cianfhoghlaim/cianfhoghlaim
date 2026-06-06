@@ -70,6 +70,7 @@ A bilingual (EN/GA) agentic educational platform covering 5 stages of the Irish 
 |------------|-------------|--------|
 | `chunkhound-code-search` | Semantic code search with MVCC | Active |
 | `ai-agent-skills` | Portable instruction directories (`.agents/skills/`) | Active |
+| `documentation` | Canonical docs/ structure (7 numbered domains), frontmatter schema, Cognee ingestion, agent-skill routing | Active |
 
 ### Personal Portfolio (croilar)
 
@@ -145,6 +146,9 @@ All specs MUST respect constraints from `docs/context/00-core/CONSTRAINTS.md`:
 - Historical research: `docs/openspec/` (point-in-time, do not edit)
 - Agent skills: `.agents/skills/<skill-name>/SKILL.md`
 - Docker stacks: `infrastructure/stacks/<category>/<name>/`
+- Canonical docs: `docs/0*-<domain>/<topic>.md` (frontmatter required)
+- Doc index: `docs/00_index.md`
+- Doc archive: `docs/archive/YYYY-MM-DD-<subtree>/`
 
 ## Review Process
 
@@ -166,3 +170,4 @@ All specs MUST respect constraints from `docs/context/00-core/CONSTRAINTS.md`:
 | `fix-existing-stacks` | implemented |
 | `croilar-portfolio` | implemented (superseded by croilar-revitalisation) |
 | `croilar-revitalisation` | implemented |
+| `docs-restructuring` | implemented (canonical + Cognee script + opencode.json fix; per-domain cognify pending LLM key) |
