@@ -1,3 +1,0 @@
-#!/usr/bin/env node
-
-require('/cubejs/rust/dist/cubestore-bin.js');

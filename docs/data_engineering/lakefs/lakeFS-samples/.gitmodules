@@ -1,3 +1,0 @@
-[submodule "lakeFS-hooks"]
-	path = lakeFS-hooks
-	url = https://github.com/treeverse/lakeFS-hooks.git

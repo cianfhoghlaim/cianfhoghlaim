@@ -1,7 +1,0 @@
-output/
-.dlt/secrets.toml
-*.duckdb
-*.wal
-.ipynb_checkpoints
-.setup/
-**__marimo__/

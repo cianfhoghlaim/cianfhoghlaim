@@ -1,1 +1,0 @@
-"""olmoearth_projects utilities."""

@@ -1,8 +1,0 @@
-tqdm
-llama_index
-lancedb
-openai
-sentence-transformers
-accelerate
-llama-index-vector-stores-lancedb
-llama-index-embeddings-huggingface

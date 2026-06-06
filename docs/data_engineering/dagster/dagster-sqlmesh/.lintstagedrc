@@ -1,6 +1,0 @@
-{
-  "**/*.py": [
-    "uv run ruff check --fix --force-exclude",
-    "pnpm pyright"
-  ]
-}
