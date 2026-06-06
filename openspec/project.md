@@ -19,12 +19,16 @@ A bilingual (EN/GA) agentic educational platform covering 5 stages of the Irish 
 
 | Capability | Description | Status |
 |------------|-------------|--------|
-| `curriculum-ingestion` | NCCA/SEC document processing | Active |
-| `bilingual-content` | English/Irish content management | Active |
-| `knowledge-graph` | Prerequisite and topic relationships | Active |
-| `semantic-search` | Vector-based curriculum search | Active |
-| `assessment-extraction` | Exam papers and marking schemes | Active |
-| `oideachais-pipeline` | Celtic education curriculum pipeline | Active |
+| `curriculum-ingestion` | NCCA/SEC document processing (5 stages: Aistear → Primary → JC → SC → Tertiary) | Active |
+| `bilingual-content` | English/Irish parallel content management with URL-level `/en/` + `/ga/` routing | Active |
+| `knowledge-graph` | Prerequisite and topic relationships across 5 stages via Cognee (6 datasets + 8 cross-stage edge types) | Active |
+| `semantic-search` | Vector-based curriculum search via LanceDB HNSW (BAAI/bge-m3, 1024d) | Active |
+| `assessment-extraction` | Exam papers and marking schemes — BAML ExtractExamPaperStructure, ExtractMarkingScheme, ExtractSubjectRubric | Active |
+| `oideachais-pipeline` | Celtic education curriculum pipeline — Agno stage teams, CopilotKit AG-UI, TanStack Start | Active |
+| `multi-stage-platform` | 5-stage bilingual agentic platform (Aistear, Primary, Junior Cycle, Senior Cycle, Tertiary) with per-stage BAML schemas | Active |
+| `agentic-ui` | CopilotKit-powered AG-UI chat with per-stage Agno teams, lazy BAML extraction, and Convex persistence | Active |
+| `tertiary-pathways` | CAO courses, NUI/HEI matriculation, QQI FET awards, Apprenticeships, Application Timeline | Active |
+| `cognee-kg-memory` | Multi-modal knowledge graph memory — 6 datasets, 8 cross-stage edges, postgres + pgvector | Active |
 
 ### Dagger Modules
 
