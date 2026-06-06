@@ -164,3 +164,71 @@ def artwork_processing_asset(context: AssetExecutionContext) -> MaterializeResul
             "images_processed": len(urls),
         }
     )
+
+
+@asset(
+    name="motherduck_sync",
+    group_name="cross_link",
+    description="Sync DuckDB tables to MotherDuck cloud for Dive embedding",
+    compute_kind="motherduck",
+    deps=[
+        AssetKey(["spotify_ingestion"]),
+        AssetKey(["soundcloud_ingestion"]),
+        AssetKey(["cv_pdf_ingestion"]),
+        AssetKey(["placement_ingestion"]),
+    ],
+)
+def motherduck_sync_asset(context: AssetExecutionContext) -> MaterializeResult:
+    """Copy all DuckDB tables to MotherDuck cloud.
+
+    MotherDuck provides a cloud-hosted DuckDB with the Dive UI for
+    self-service SQL exploration by collaborators.
+
+    The MotherDuck token comes from env var MOTHERDUCK_TOKEN (set via
+    Infisical dev-baile/croilar/motherduck/).
+
+    Runs after all upstream DLT ingestion assets to keep Dive in sync.
+    """
+    import os
+    import duckdb
+
+    token = os.environ.get("MOTHERDUCK_TOKEN")
+    if not token:
+        context.log.warning("MOTHERDUCK_TOKEN not set — MotherDuck sync skipped")
+        return MaterializeResult(
+            metadata={"synced_tables": 0, "reason": "missing_token"},
+        )
+
+    local = duckdb.connect("./data/croilar.duckdb", read_only=True)
+    md = duckdb.connect(f"md:?motherduck_token={token}")
+    synced = 0
+
+    tables = [
+        ("spotify_data", "tracks"),
+        ("spotify_data", "artists"),
+        ("spotify_data", "albums"),
+        ("github_data", "repos"),
+        ("cv_data", "cv_raw"),
+        ("teaching_data", "cv_raw"),
+    ]
+
+    for schema, table in tables:
+        try:
+            full_name = f"{schema}.{table}"
+            count = local.execute(f"SELECT COUNT(*) FROM {full_name}").fetchone()[0]
+            if count > 0:
+                md.execute(f"CREATE OR REPLACE TABLE {schema}.{table} AS SELECT * FROM local.{full_name}")
+                synced += 1
+                context.log.info(f"Synced {full_name} ({count} rows) to MotherDuck")
+        except Exception as e:
+            context.log.warning(f"Failed to sync {schema}.{table}: {e}")
+
+    local.close()
+    md.close()
+
+    return MaterializeResult(
+        metadata={
+            "synced_tables": synced,
+            "total_tables": len(tables),
+        }
+    )
