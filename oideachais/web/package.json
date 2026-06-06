@@ -18,6 +18,7 @@
     "db:studio": "turbo db:studio"
   },
   "dependencies": {
+    "convex": "^1.40.0",
     "zod": "^4.0.0"
   },
   "devDependencies": {
