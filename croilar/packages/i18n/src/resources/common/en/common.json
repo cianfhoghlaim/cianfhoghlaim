@@ -1,5 +1,8 @@
 {
-  "site": { "title": "Croílár", "tagline": "Personal Portfolio + CV + Data Engineering" },
+  "site": {
+    "title": "Croílár",
+    "tagline": "Personal Portfolio + CV + Data Engineering"
+  },
   "nav": {
     "home": "Home",
     "cv": "CV",
@@ -106,5 +109,10 @@
     "loading": "Loading…",
     "comingSoon": "Coming soon",
     "noData": "No data available yet"
+  },
+  "notFound": {
+    "title": "404 — Not Found",
+    "subtitle": "The page you are looking for does not exist or has been moved.",
+    "backHome": "Back to Home"
   }
 }
