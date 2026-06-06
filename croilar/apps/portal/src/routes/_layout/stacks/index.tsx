@@ -1,13 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Activity,
-  Clock,
   ExternalLink,
   MoreVertical,
-  Play,
   RefreshCw,
   Server,
-  Square,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_layout/stacks/")({
@@ -210,7 +207,7 @@ function StackCard({
 
       {/* Uptime */}
       <div className="flex items-center gap-1 text-sm text-muted-foreground mb-4">
-        <Clock size={14} />
+        <Activity size={14} />
         <span>Uptime: {stack.uptime}</span>
       </div>
 

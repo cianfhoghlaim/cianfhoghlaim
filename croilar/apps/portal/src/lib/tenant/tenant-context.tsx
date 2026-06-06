@@ -7,7 +7,7 @@
 import { createContext, useContext, useEffect, type ReactNode } from "react";
 import { createServerFn } from "@tanstack/react-start";
 import type { TenantClientContext } from "@/types/tenant";
-import { toClientContext, hostnameToTenant } from "@/types/tenant";
+import { toClientContext } from "@/types/tenant";
 import { loadTenantConfig, getTenantFromRequest } from "./config-loader";
 
 // Default tenant context for SSR
@@ -71,8 +71,12 @@ const TenantContext = createContext<TenantClientContext>(defaultTenantContext);
  * Server function to load tenant config from request
  */
 export const fetchTenantConfig = createServerFn({ method: "GET" }).handler(
-  async ({ request }): Promise<TenantClientContext> => {
-    const tenantId = getTenantFromRequest(request);
+  async (): Promise<TenantClientContext> => {
+    // In TanStack Start 1.145, the request is accessed via the global
+    // context. We rely on the X-Tenant-ID header set by Traefik middleware
+    // or the hostname mapping in config-loader.
+    const request = (globalThis as { __request?: Request }).__request;
+    const tenantId = request ? getTenantFromRequest(request) : "cianfhoghlaim";
     const config = loadTenantConfig(tenantId);
     return toClientContext(config);
   }

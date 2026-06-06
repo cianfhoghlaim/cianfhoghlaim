@@ -6,7 +6,7 @@
 import { parse } from "yaml";
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
-import type { TenantConfig, TenantClientContext } from "@/types/tenant";
+import type { TenantConfig } from "@/types/tenant";
 import { hostnameToTenant } from "@/types/tenant";
 
 // Cache for loaded configs
