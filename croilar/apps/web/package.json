@@ -1,5 +1,5 @@
 {
-  "name": "croilar-portfolio",
+  "name": "@croilar/web",
   "version": "1.0.0",
   "description": "Croílár — personal portfolio + CV + data engineering",
   "private": true,
