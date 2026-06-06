@@ -59,9 +59,15 @@ app.use("/api-reference/*", async (c, next) => {
 // Health
 app.get("/", (c) => c.text("OK"));
 
+// CopilotKit AG-UI runtime (Cianfhoghlaim Oideachais)
+// Mounted at /api/copilotkit?stage=...&subject=...&language=...
+import { copilotkit } from "./copilotkit/runtime";
+app.route("/api/copilotkit", copilotkit);
+
 const port = Number(process.env.PORT) || 8787;
-console.log(`oRPC+Hono API server listening on http://localhost:${port}`);
+console.log(`oRPC+Hono+CopilotKit API server listening on http://localhost:${port}`);
 console.log(`  RPC: http://localhost:${port}/rpc`);
 console.log(`  API docs: http://localhost:${port}/api-reference`);
+console.log(`  CopilotKit AG-UI: http://localhost:${port}/api/copilotkit`);
 
 serve({ fetch: app.fetch, port });
