@@ -19,7 +19,12 @@ keywords = [
     "celtic",
 ]
 dependencies = [
+    "agno>=2.6.11",
+    "anthropic>=0.106.0",
     "baml-py>=0.222.0",
+    "google-genai>=1.73.1",
+    "groq>=1.4.0",
+    "openai>=2.32.0",
 ]
 
 # This root project deliberately has no [project.dependencies] and no
