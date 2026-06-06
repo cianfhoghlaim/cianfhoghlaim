@@ -83,7 +83,11 @@ volumes:
       o: uid=65532,gid=65532,mode=700
 ```
 
-**Important:** Do NOT include `--infisical-url`, `--infisical-default-environment`, or `--infisical-default-project-id` flags. Project and environment can be specified per-secret in `secrets.env` via query parameters.
+**Important for self-hosted Infisical:** You MUST include `--infisical-url`, `--infisical-default-environment`, and `--infisical-default-project-id` flags. Without these, Locket defaults to `https://app.infisical.com` (Infisical Cloud) which will fail against a self-hosted instance.
+
+**Template format**: Use `{{ infisical:///<key> }}` (triple-slash) for secrets stored at the root level, or `{{ infisical:///<key>?path=/folder }}` to specify a folder path. Environment and project ID should come from the CLI flags, not from individual template references.
+
+**Locket v0.17.3 caveat**: Template substitution for `?path=` query parameters may not resolve correctly. If Locket's `policy=passthrough` fallback copies raw templates to the output, use the `render-secrets.py` helper script at `scripts/render-secrets.py` to generate resolved `.env` files directly from the Infisical API. See `scripts/render-secrets.py` for usage.
 
 ## 3. secrets.env
 
