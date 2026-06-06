@@ -28,58 +28,58 @@ enum GameZoneType {
 }
 
 class Quest {
-  id string
-  title string @description("Quest title in English")
-  native_title string @description("Title in Celtic language")
+  id: string
+  title: string @description("Quest title in English")
+  native_title: string @description("Title in Celtic language")
 
   quest_type QuestType
   difficulty QuestDifficulty
-  level_requirement int
+  level_requirement: int
   target_language CelticLanguage
 
-  description string @description("Player-facing description")
-  backstory string @description("Lore context")
+  description: string @description("Player-facing description")
+  backstory: string @description("Lore context")
 
   objectives QuestObjective[]
   rewards QuestReward[]
-  learning_outcomes string[] @description("Educational goals")
+  learning_outcomes: string[] @description("Educational goals")
 
-  zone string @description("Game zone")
-  npcs_involved string[]
-  estimated_time_minutes int
+  zone: string @description("Game zone")
+  npcs_involved: string[]
+  estimated_time_minutes: int
 }
 
 class QuestObjective {
-  id string
-  description string
-  objective_type string @description("talk, collect, translate, explore, etc.")
+  id: string
+  description: string
+  objective_type: string @description("talk, collect, translate, explore, etc.")
 
   celtic_content CelticContent? @description("Language learning content")
   hints QuestHint[]
-  completion_criteria string
-  xp_value int
+  completion_criteria: string
+  xp_value: int
 }
 
 class CelticContent {
-  primary_text string @description("Celtic text to learn/use")
-  translation string
-  pronunciation string?
-  grammar_note string?
-  vocabulary string[] @description("New words introduced")
+  primary_text: string @description("Celtic text to learn/use")
+  translation: string
+  pronunciation: string?
+  grammar_note: string?
+  vocabulary: string[] @description("New words introduced")
 }
 
 class QuestHint {
-  level int @description("1=subtle, 4=explicit")
-  hint_text string
-  celtic_phrase string?
-  translation string?
+  level: int @description("1=subtle, 4=explicit")
+  hint_text: string
+  celtic_phrase: string?
+  translation: string?
 }
 
 class QuestReward {
-  reward_type string @description("xp, item, achievement, vocabulary")
-  value int?
-  item_name string?
-  celtic_name string?
+  reward_type: string @description("xp, item, achievement, vocabulary")
+  value: int?
+  item_name: string?
+  celtic_name: string?
 }
 
 // Generate quest from curriculum
@@ -148,34 +148,34 @@ function GenerateMythologyQuest(
 
 // NPC Generation
 class NPC {
-  id string
-  name string
-  native_name string @description("Name in Celtic language")
+  id: string
+  name: string
+  native_name: string @description("Name in Celtic language")
 
-  character_type string @description("villager, scholar, warrior, druid, etc.")
-  mythological_basis string? @description("If based on mythology")
+  character_type: string @description("villager, scholar, warrior, druid, etc.")
+  mythological_basis: string? @description("If based on mythology")
 
-  appearance string
-  personality string[]
-  voice_style string @description("How they speak")
+  appearance: string
+  personality: string[]
+  voice_style: string @description("How they speak")
 
-  home_zone string
-  languages string[] @description("Languages they speak")
-  fluency_level string @description("native, fluent, learning")
+  home_zone: string
+  languages: string[] @description("Languages they speak")
+  fluency_level: string @description("native, fluent, learning")
 
-  dialogue_topics string[]
-  quests_given string[]
-  teaching_specialty string? @description("What they can teach")
+  dialogue_topics: string[]
+  quests_given: string[]
+  teaching_specialty: string? @description("What they can teach")
 
   greetings NPCGreeting[]
-  idle_lines string[] @description("Ambient dialogue")
+  idle_lines: string[] @description("Ambient dialogue")
 }
 
 class NPCGreeting {
-  celtic_text string
-  english_translation string
-  context string @description("When to use")
-  tone string
+  celtic_text: string
+  english_translation: string
+  context: string @description("When to use")
+  tone: string
 }
 
 function GenerateNPC(
@@ -210,35 +210,35 @@ function GenerateNPC(
 
 // World Building
 class GameLocation {
-  id string
-  name string
-  native_name string
+  id: string
+  name: string
+  native_name: string
 
   zone_type GameZoneType
-  parent_zone string?
+  parent_zone: string?
 
-  description string @description("Atmospheric description")
-  history string @description("Lore background")
+  description: string @description("Atmospheric description")
+  history: string @description("Lore background")
 
   languages_spoken CelticLanguage[]
-  level_range int[] @description("[min, max] level")
+  level_range: int[] @description("[min, max] level")
 
   features LocationFeature[]
-  npcs string[] @description("NPC IDs in location")
-  quests_available string[]
+  npcs: string[] @description("NPC IDs in location")
+  quests_available: string[]
 
-  ambient_sounds string[]
-  weather_patterns string[]
-  time_of_day_effects string[]
+  ambient_sounds: string[]
+  weather_patterns: string[]
+  time_of_day_effects: string[]
 }
 
 class LocationFeature {
-  name string
-  native_name string
-  feature_type string @description("landmark, shop, shrine, etc.")
-  description string
-  interaction string? @description("What players can do")
-  educational_content string? @description("What players learn")
+  name: string
+  native_name: string
+  feature_type: string @description("landmark, shop, shrine, etc.")
+  description: string
+ : interaction: string? @description("What players can do")
+  educational_content: string? @description("What players learn")
 }
 
 function GenerateGameLocation(
@@ -273,23 +273,23 @@ function GenerateGameLocation(
 
 // Item Generation
 class GameItem {
-  id string
-  name string
-  native_name string
+  id: string
+  name: string
+  native_name: string
 
-  item_type string @description("weapon, armor, consumable, quest_item, etc.")
-  rarity string @description("common, uncommon, rare, legendary, mythic")
+  item_type: string @description("weapon, armor, consumable, quest_item, etc.")
+  rarity: string @description("common, uncommon, rare, legendary, mythic")
 
-  description string
-  lore string @description("Item backstory")
-  mythological_connection string?
+  description: string
+  lore: string @description("Item backstory")
+  mythological_connection: string?
 
-  celtic_inscription string? @description("Text on item")
-  inscription_translation string?
+  celtic_inscription: string? @description("Text on item")
+  inscription_translation: string?
 
   stats map<string, int>?
-  abilities string[]
-  quest_required string?
+  abilities: string[]
+  quest_required: string?
 }
 
 function GenerateGameItem(

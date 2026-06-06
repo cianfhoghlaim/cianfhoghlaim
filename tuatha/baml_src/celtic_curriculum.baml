@@ -27,60 +27,60 @@ enum SkillDomain {
 }
 
 class LearningOutcome {
-  id string @description("Unique identifier")
-  description string @description("What the learner will achieve")
+  id: string @description("Unique identifier")
+  description: string @description("What the learner will achieve")
   skill_domains SkillDomain[] @description("Skills developed")
-  prerequisites string[] @description("Prior knowledge required")
-  assessable bool @description("Can be formally assessed")
+  prerequisites: string[] @description("Prior knowledge required")
+  assessable: bool @description("Can be formally assessed")
 }
 
 class GrammarTopic {
-  name string @description("Grammar topic name")
-  native_term string? @description("Term in target language")
-  description string @description("Explanation of the concept")
+  name: string @description("Grammar topic name")
+  native_term: string? @description("Term in target language")
+  description: string @description("Explanation of the concept")
   examples CelticExample[] @description("Usage examples")
-  difficulty int @description("1-5 difficulty scale")
-  common_errors string[] @description("Mistakes learners often make")
+  difficulty: int @description("1-5 difficulty scale")
+  common_errors: string[] @description("Mistakes learners often make")
 }
 
 class CelticExample {
-  celtic_text string @description("Text in Celtic language")
-  english_translation string @description("English meaning")
-  pronunciation string? @description("IPA or guide")
-  grammatical_notes string? @description("Grammar explanation")
+  celtic_text: string @description("Text in Celtic language")
+  english_translation: string @description("English meaning")
+  pronunciation: string? @description("IPA or guide")
+  grammatical_notes: string? @description("Grammar explanation")
 }
 
 class VocabularySet {
-  theme string @description("Vocabulary theme")
+  theme: string @description("Vocabulary theme")
   words CelticWord[] @description("Words in the set")
-  cultural_context string? @description("Cultural background")
+  cultural_context: string? @description("Cultural background")
 }
 
 class CelticWord {
-  word string @description("Word in Celtic language")
-  pronunciation string? @description("How to pronounce")
-  translations string[] @description("English meanings")
-  part_of_speech string @description("noun, verb, adjective, etc.")
-  gender string? @description("Grammatical gender if applicable")
-  plural string? @description("Plural form")
-  mutations string[] @description("Initial mutations")
+  word: string @description("Word in Celtic language")
+  pronunciation: string? @description("How to pronounce")
+  translations: string[] @description("English meanings")
+  part_of_speech: string @description("noun, verb, adjective, etc.")
+  gender: string? @description("Grammatical gender if applicable")
+  plural: string? @description("Plural form")
+  mutations: string[] @description("Initial mutations")
   example_sentence CelticExample? @description("Example usage")
 }
 
 class CurriculumUnit {
-  title string @description("Unit title")
+  title: string @description("Unit title")
   language CelticLanguage @description("Target language")
   level EducationLevel @description("Education level")
-  grade_year string? @description("Specific grade/year")
-  nation string @description("Country of origin")
+  grade_year: string? @description("Specific grade/year")
+  nation: string @description("Country of origin")
 
   learning_outcomes LearningOutcome[] @description("Unit outcomes")
   grammar_topics GrammarTopic[] @description("Grammar covered")
   vocabulary VocabularySet[] @description("Vocabulary themes")
 
-  cultural_content string[] @description("Cultural elements")
-  assessment_criteria string[] @description("How to assess")
-  resources string[] @description("Suggested resources")
+  cultural_content: string[] @description("Cultural elements")
+  assessment_criteria: string[] @description("How to assess")
+  resources: string[] @description("Suggested resources")
 }
 
 // Extract curriculum unit from document
@@ -140,18 +140,18 @@ function ExtractVocabulary(text: string, language: CelticLanguage, theme: string
 // Generate learning outcome assessment
 class OutcomeAssessment {
   outcome LearningOutcome
-  assessment_type string @description("quiz, oral, written, project")
+  assessment_type: string @description("quiz, oral, written, project")
   questions AssessmentQuestion[]
-  rubric string[] @description("Grading criteria")
+  rubric: string[] @description("Grading criteria")
 }
 
 class AssessmentQuestion {
-  question_text string
-  celtic_content string? @description("Celtic language in question")
-  question_type string @description("multiple_choice, fill_blank, translation, oral")
-  correct_answer string
-  distractors string[]? @description("Wrong answers for MC")
-  points int
+  question_text: string
+  celtic_content: string? @description("Celtic language in question")
+  question_type: string @description("multiple_choice, fill_blank, translation, oral")
+  correct_answer: string
+  distractors: string[]? @description("Wrong answers for MC")
+  points: int
   skill_tested SkillDomain
 }
 
@@ -177,12 +177,12 @@ function GenerateAssessment(
 
 // Compare curriculum across Celtic nations
 class CurriculumComparison {
-  topic string
-  nations string[]
-  similarities string[]
-  differences string[]
-  linguistic_connections string[] @description("Shared Celtic features")
-  recommendations string[] @description("Cross-curriculum opportunities")
+  topic: string
+  nations: string[]
+  similarities: string[]
+  differences: string[]
+  linguistic_connections: string[] @description("Shared Celtic features")
+  recommendations: string[] @description("Cross-curriculum opportunities")
 }
 
 function CompareCurricula(

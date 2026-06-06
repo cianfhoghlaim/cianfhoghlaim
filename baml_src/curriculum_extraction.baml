@@ -836,7 +836,7 @@ enum AssessmentComponentType {
   PORTFOLIO
 }
 
-class AssessmentComponent {
+class ExamAssessmentComponent {
   type AssessmentComponentType
   weight_pct int
   duration_minutes int?
