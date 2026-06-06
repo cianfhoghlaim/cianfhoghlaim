@@ -1,0 +1,11 @@
+private-resources:
+  croilar-convex:
+    name: "Croílár Convex Backend"
+    mode: http
+    full-domain: "convex.croilar.cianfhoghlaim.ie"
+    destination-port: 3210
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

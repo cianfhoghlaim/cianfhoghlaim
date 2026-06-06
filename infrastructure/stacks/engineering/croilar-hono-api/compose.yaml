@@ -1,0 +1,38 @@
+services:
+  hono-api:
+    build:
+      context: ../../../../croilar/hono-api
+      dockerfile: Dockerfile
+    image: ghcr.io/cianfhoghlaim/croilar-hono-api:0.1.0
+    container_name: croilar-hono-api
+    restart: unless-stopped
+    ports:
+      - "${CROILAR_HONO_API_PORT:-4000}:4000"
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: "4000"
+      DATABASE_URL: ${DATABASE_URL:-postgres://croilar:devpassword@croilar-postgres:5432/croilar}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:4000}
+      PUBLIC_AUTH_URL: ${PUBLIC_AUTH_URL:-https://auth.croilar.cianfhoghlaim.ie}
+      PUBLIC_WEB_URL: ${PUBLIC_WEB_URL:-https://croilar.cianfhoghlaim.ie}
+      CONVEX_URL: ${CONVEX_URL:-http://convex-backend:3210}
+      CROILAR_HMAC_SECRET: ${CROILAR_HMAC_SECRET:-}
+      CROILAR_ENCRYPTION_KEY: ${CROILAR_ENCRYPTION_KEY:-}
+    depends_on:
+      croilar-postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - cianfhoghlaim
+      - croilar
+
+networks:
+  cianfhoghlaim:
+    external: true
+  croilar:
+    external: true

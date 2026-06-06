@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: croilar-postgres
+    restart: unless-stopped
+    ports:
+      - "${CROILAR_POSTGRES_PORT:-5434}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-croilar}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devpassword}
+      POSTGRES_DB: ${POSTGRES_DB:-croilar}
+    volumes:
+      - croilar-postgres-data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-croilar} -d ${POSTGRES_DB:-croilar}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cianfhoghlaim
+      - croilar
+
+networks:
+  cianfhoghlaim:
+    external: true
+  croilar:
+    driver: bridge
+
+volumes:
+  croilar-postgres-data:
