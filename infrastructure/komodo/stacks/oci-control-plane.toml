@@ -76,3 +76,24 @@ QDRANT_HTTP_PORT=6333
 QDRANT_GRPC_PORT=6334
 QDRANT_LOG_LEVEL=INFO
 """
+
+# -----------------------------------------------------------------------------
+# POCKET ID — Passkey-based OIDC identity provider
+# -----------------------------------------------------------------------------
+# auth.cianfhoghlaim.ie — SSO for all team-workflow services (vikunja, n8n,
+# cal-diy, glance, paperless, changedetection, croilar). Deployed as a
+# standalone stack with Locket sidecar for Infisical secret injection.
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "pocket-id"
+description = "Pocket ID — OIDC SSO provider (auth.cianfhoghlaim.ie, port 8080)"
+tags = ["host:arm1-oci","tier:infrastructure","type:identity","domain:auth.cianfhoghlaim.ie","team:sso"]
+
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/sruth/infrastructure/pocket-id"
+file_paths = ["compose.yaml","sidecar.yaml","pangolin.yaml","blueprint.yaml"]
+environment = """
+INFISICAL_URL=http://infisical-backend:8080
+LOCKET_MODE=watch
+"""
