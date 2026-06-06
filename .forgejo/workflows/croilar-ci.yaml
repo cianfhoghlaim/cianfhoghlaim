@@ -35,11 +35,11 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Typecheck (croilar web)
-        working-directory: croilar
+        working-directory: croilar/apps/web
         run: bun run typecheck
 
       - name: Build (croilar web)
-        working-directory: croilar
+        working-directory: croilar/apps/web
         run: bun run build
 
       - name: Typecheck (croilar portal)
