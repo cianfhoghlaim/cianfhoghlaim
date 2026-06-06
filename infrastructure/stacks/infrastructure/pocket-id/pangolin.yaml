@@ -1,8 +1,10 @@
 services:
-  main-service:
+  pocket-id:
     labels:
-      - "pangolin.public-resources.pocket-id.name=Pocket-id"
-      - "pangolin.public-resources.pocket-id.full-domain=pocket-id.cianfhoghlaim.ie"
-      - "pangolin.public-resources.pocket-id.protocol=http"
-      - "pangolin.public-resources.pocket-id.targets[0].method=http"
-      - "pangolin.public-resources.pocket-id.targets[0].port=8080"
+      - "pangolin.private-resources.pocket-id.name=Pocket ID OIDC Provider"
+      - "pangolin.private-resources.pocket-id.mode=http"
+      - "pangolin.private-resources.pocket-id.destination=pocket-id"
+      - "pangolin.private-resources.pocket-id.full-domain=auth.cianfhoghlaim.ie"
+      - "pangolin.private-resources.pocket-id.destination-port=8080"
+      - "pangolin.private-resources.pocket-id.protocol=https"
+      - "pangolin.private-resources.pocket-id.roles[0]=Member"

@@ -1,10 +1,12 @@
-public-resources:
+private-resources:
   pocket-id:
-    name: "Pocket-id"
-    full-domain: "pocket-id.cianfhoghlaim.ie"
-    protocol: "http"
+    name: "Pocket ID — Passkey-based OIDC Identity Provider"
+    full-domain: "auth.cianfhoghlaim.ie"
+    protocol: "https"
     targets:
       - site: "arm1-oci"
-        hostname: "pocket-id-main"
+        hostname: "pocket-id"
         method: "http"
         port: 8080
+    roles:
+      - "Member"

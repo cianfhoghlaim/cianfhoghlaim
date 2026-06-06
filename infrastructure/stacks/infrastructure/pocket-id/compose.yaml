@@ -1,15 +1,45 @@
+name: pocket-id
+
 services:
+  # ---------------------------------------------------------------------------
+  # POCKET ID — Passkey-based OIDC identity provider
+  # ---------------------------------------------------------------------------
+  # Routes traffic from auth.cianfhoghlaim.ie via Pangolin Traefik.
+  # ENCRYPTION_KEY is injected at deploy time (NOT committed).
+  # Locket sidecar addition tracked in sidecar.yaml for future migration.
+  # ---------------------------------------------------------------------------
   pocket-id:
-    image: ghcr.io/pocket-id/pocket-id
+    image: ghcr.io/pocket-id/pocket-id:latest
+    container_name: pocket-id
     restart: unless-stopped
-    ports:
-      - 1411:1411
+    environment:
+      APP_URL: https://auth.cianfhoghlaim.ie
+      TRUST_PROXY: "true"
+      PUID: "1000"
+      PGID: "1000"
+      PORT: "8080"
+      ENCRYPTION_KEY: ${POCKETID_ENCRYPTION_KEY}
     volumes:
-      - "./data:/app/data"
-    # Optional healthcheck
+      - pocket-id-data:/app/data
     healthcheck:
-      test: "curl -f http://localhost:1411/healthz"
-      interval: 1m30s
+      test: ["CMD", "/app/pocket-id", "healthcheck"]
+      interval: 30s
       timeout: 5s
-      retries: 2
+      retries: 3
       start_period: 10s
+    networks:
+      - stack
+      - infrastructure
+      - pangolin_pangolin
+
+volumes:
+  pocket-id-data:
+    name: pocket-id-data
+
+networks:
+  stack:
+    driver: bridge
+  infrastructure:
+    external: true
+  pangolin_pangolin:
+    external: true
