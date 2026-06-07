@@ -14,7 +14,7 @@ cloudflared = "latest"
 gcloud = "latest"
 oci = "latest"
 pulumi = "latest"
-op = "latest"
+infisical = "latest"
 
 # Data tools
 duckdb = "latest"
