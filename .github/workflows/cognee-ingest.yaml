@@ -1,0 +1,104 @@
+name: cognee-ingest
+
+on:
+  workflow_dispatch:
+    inputs:
+      domain:
+        description: "Cognee domain to ingest (e.g. standards, data-platform, agents, ai-ml, web, product, architecture). Leave blank for all."
+        required: false
+        type: string
+        default: ""
+      no_cognify:
+        description: "Skip cognify() phase (store data only, requires no LLM key)"
+        required: false
+        type: boolean
+        default: false
+  schedule:
+    # Weekly on Sunday at 04:00 UTC (after the ccc:index refresh)
+    - cron: "0 4 * * 0"
+
+jobs:
+  ingest:
+    name: Ingest canonical docs into Cognee
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "0.5.x"
+          enable-cache: true
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          version: "1.3.0"
+
+      - name: Set up Python
+        run: |
+          uv python install 3.12
+          uv venv --python 3.12
+
+      - name: Install Python dependencies
+        run: |
+          uv pip install requests pendulum python-dotenv
+
+      - name: Validate ingestion plan
+        run: |
+          uv run python infrastructure/scripts/cognee-ingest-docs.py \
+            --dry-run --all 2>&1 | head -40
+
+      - name: Print per-domain summary
+        run: |
+          uv run python infrastructure/scripts/cognee-ingest-docs.py \
+            --summary --all 2>&1 | head -100
+
+      - name: Run Cognee ingestion
+        env:
+          COGNEE_API_URL: ${{ secrets.COGNEE_API_URL }}
+          COGNEE_API_KEY: ${{ secrets.COGNEE_API_KEY }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+        run: |
+          ARGS=()
+          if [ -n "${{ inputs.domain }}" ]; then
+            ARGS+=(--domain "${{ inputs.domain }}")
+          else
+            ARGS+=(--all)
+          fi
+          if [ "${{ inputs.no_cognify }}" = "true" ]; then
+            ARGS+=(--no-cognify)
+          fi
+          uv run python infrastructure/scripts/cognee-ingest-docs.py "${ARGS[@]}" 2>&1 | tee cognee-ingest.log
+
+      - name: Upload ingestion log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cognee-ingest-log
+          path: cognee-ingest.log
+          retention-days: 14
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "## Cognee Ingestion Summary"
+            echo
+            echo "- **Run ID**: ${{ github.run_id }}"
+            echo "- **Domain**: ${{ inputs.domain || 'all' }}"
+            echo "- **No cognify**: ${{ inputs.no_cognify }}"
+            echo "- **Result**: ${{ job.status }}"
+            echo
+            if [ -f cognee-ingest.log ]; then
+              echo "### Log tail"
+              echo '```'
+              tail -30 cognee-ingest.log
+              echo '```'
+            fi
+          } >> $GITHUB_STEP_SUMMARY
