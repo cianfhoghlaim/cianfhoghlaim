@@ -1,0 +1,103 @@
+# Oideachais — Celtic Education Lakehouse Engine Stack
+# Deploys Dagster webserver + FastAPI gateway + TanStack Start frontend
+# to bunchloch (MacBook M4 Max). Depends on the lakehouse and LiteLLM stacks.
+
+services:
+  dagster:
+    image: ghcr.io/cianfhoghlaim/oideachais-dagster:0.2.0
+    container_name: cianfhoghlaim-oideachais-dagster
+    restart: unless-stopped
+    ports:
+      - "3335:3000"
+    env_file:
+      - /run/secrets/locket/secrets.env
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+      DAGSTER_DEPLOYMENT: production
+      USE_DUCKLAKE: "true"
+      MOTHERDUCK_ENABLED: "true"
+    volumes:
+      - dagster_home:/opt/dagster/dagster_home
+      - ../../../../../oideachais/data_platform:/opt/dagster/app/data_platform:ro
+      - ../../../../../oideachais/notebooks:/opt/dagster/app/notebooks:ro
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      locket:
+        condition: service_healthy
+    networks:
+      - cianfhoghlaim
+    deploy:
+      resources:
+        limits:
+          cpus: "4"
+          memory: 4G
+
+  api:
+    image: ghcr.io/cianfhoghlaim/oideachais-api:0.2.0
+    container_name: cianfhoghlaim-oideachais-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - /run/secrets/locket/secrets.env
+    environment:
+      DAGSTER_DEPLOYMENT: production
+      USE_DUCKLAKE: "true"
+      MOTHERDUCK_ENABLED: "true"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    depends_on:
+      locket:
+        condition: service_healthy
+    networks:
+      - cianfhoghlaim
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
+
+  frontend:
+    image: ghcr.io/cianfhoghlaim/oideachais-frontend:0.2.0
+    container_name: cianfhoghlaim-oideachais-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - /run/secrets/locket/secrets.env
+    environment:
+      VITE_API_URL: https://api.oideachais.cianfhoghlaim.ie
+      VITE_CONVEX_URL: https://convex.oideachais.cianfhoghlaim.ie
+      VITE_BETTER_AUTH_URL: https://auth.cianfhoghlaim.ie
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      locket:
+        condition: service_healthy
+    networks:
+      - cianfhoghlaim
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 1G
+
+volumes:
+  dagster_home:
+
+networks:
+  cianfhoghlaim:
+    external: true
