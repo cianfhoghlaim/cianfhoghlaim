@@ -270,12 +270,8 @@ for cfg in SUBJECT_CONFIGS:
 PER_SUBJECT_JOBS = [
     define_asset_job(
         name=f"leaving_cert_{cfg.name}",
-        selection=AssetSelection.groups("leaving_cert") & AssetSelection.keys(
-            key
-            for assets_list in [build_subject_assets(cfg)]
-            for a in (assets_list if isinstance(assets_list, list) else [assets_list])
-            if hasattr(a, "op") for key in [getattr(a.op, "name", None)]
-        ).union({f"{cfg.name}_*"}),
+        # Select this subject's 10 assets by asset name prefix
+        selection=AssetSelection.keys(*[f"{cfg.name}_*"]),
     )
     for cfg in SUBJECT_CONFIGS
 ]

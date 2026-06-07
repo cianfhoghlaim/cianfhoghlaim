@@ -74,6 +74,22 @@ from oideachais.data_platform.dagster_assets import model_conversion_assets
 from oideachais.data_platform.dagster_assets import asset_generation_assets
 
 # Phase 2 — BAML-driven extraction assets
+# Leaving Cert 2026 — 7 priority subjects × 10 assets = 70 assets
+# Try importing; fall back gracefully if the module tree is broken.
+try:
+    from data_platform.dagster_defs.assets.leaving_cert import (
+        LEAVING_CERT_ASSETS,
+        PER_SUBJECT_JOBS,
+        leaving_cert_full_job,
+    )
+except ImportError as e:
+    import structlog
+    _log = structlog.get_logger()
+    _log.warning(f"leaving_cert assets not loaded: {e}")
+    LEAVING_CERT_ASSETS = []
+    PER_SUBJECT_JOBS = []
+    leaving_cert_full_job = None
+
 from oideachais.data_platform.dagster_defs.assets.ui_suggestion import (
     ui_suggestion_asset,
     ui_suggestion_schedule,
@@ -217,6 +233,9 @@ all_jobs = [
     sec_examinations_jc_job,
     sec_examinations_lca_job,
     model_conversion_job,
+    # Leaving Cert 2026 — 7 priority subjects, 1 full job
+    *(PER_SUBJECT_JOBS if PER_SUBJECT_JOBS else []),
+    *([leaving_cert_full_job] if leaving_cert_full_job else []),
 ]
 
 
@@ -256,6 +275,8 @@ combined_assets = [
     senior_cycle_knowledge_graph,   # Senior Cycle knowledge graph (exam papers + marking schemes)
     lazy_extract_exam_paper,        # On-demand exam paper BAML extraction
     cross_stage_cognify,            # Cross-stage Cognee cognify (8 edges, 5 stages)
+    # Leaving Cert 2026 — 7 priority subjects × 10 assets = 70 assets
+    *LEAVING_CERT_ASSETS,
 ]
 
 defs = dg.Definitions(
