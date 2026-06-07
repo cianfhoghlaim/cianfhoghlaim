@@ -352,3 +352,39 @@ run = "uvx --from chunkhound chunkhound index --path ."
 [tasks."search:chunkhound"]
 description = "Search codebase with ChunkHound"
 run = "uvx --from chunkhound chunkhound search '${1}'"
+
+# =============================================================================
+# Oideachais dev & deploy
+# =============================================================================
+
+[tasks."dev:oideachais"]
+description = "One-command oideachais dev bring-up (Docker + Vite + Dagster)"
+run = "bash infrastructure/scripts/dev.sh"
+
+[tasks."dev:oideachais:web"]
+description = "Oideachais Vite dev server only (no Docker)"
+run = "bash infrastructure/scripts/dev.sh --web-only"
+
+[tasks."dev:oideachais:docker"]
+description = "Oideachais Docker Compose only (no Vite)"
+run = "bash infrastructure/scripts/dev.sh --docker-only"
+
+[tasks."dev:oideachais:status"]
+description = "Check what's running in the oideachais dev environment"
+run = "bash infrastructure/scripts/dev.sh --status"
+
+[tasks."deploy:cf"]
+description = "Deploy oideachais + croilar to Cloudflare Pages"
+run = "bash infrastructure/scripts/deploy-cf.sh --all"
+
+[tasks."deploy:cf:oideachais"]
+description = "Deploy oideachais to Cloudflare Pages"
+run = "bash infrastructure/scripts/deploy-cf.sh --oideachais"
+
+[tasks."deploy:cf:croilar"]
+description = "Deploy croilar to Cloudflare Pages"
+run = "bash infrastructure/scripts/deploy-cf.sh --croilar"
+
+[tasks."deploy:cf:preview"]
+description = "Deploy both to Cloudflare Pages preview (staging)"
+run = "bash infrastructure/scripts/deploy-cf.sh --all --preview"
