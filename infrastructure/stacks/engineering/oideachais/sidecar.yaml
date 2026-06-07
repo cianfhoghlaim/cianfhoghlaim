@@ -1,0 +1,36 @@
+# Locket sidecar for Infisical secret injection at runtime.
+# This container boots before the main oideachais services,
+# resolves Infisical references, and writes resolved values
+# to /run/secrets/locket/secrets.env (tmpfs, memory-only).
+
+services:
+  locket:
+    image: ghcr.io/cianfhoghlaim/locket:latest
+    container_name: cianfhoghlaim-oideachais-locket
+    restart: unless-stopped
+    env_file:
+      - ./secrets.env
+    environment:
+      INFISICAL_PROJECT_ID: ${INFISICAL_PROJECT_ID:-dev-baile}
+      TEMPLATE_PATH: /etc/locket/secrets.env
+      OUTPUT_PATH: /run/secrets/locket/secrets.env
+    volumes:
+      - ./secrets.env:/etc/locket/secrets.env:ro
+      - locket_secrets:/run/secrets/locket:rw
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /run/secrets/locket/secrets.env"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - cianfhoghlaim
+
+volumes:
+  locket_secrets:
+    external: true
+    name: cianfhoghlaim_locket_secrets
+
+networks:
+  cianfhoghlaim:
+    external: true

@@ -1,0 +1,40 @@
+# Oideachais — Pangolin Traefik routing
+
+http:
+  routers:
+    oideachais-web:
+      entryPoints: [https]
+      rule: "Host(`oideachais.cianfhoghlaim.ie`)"
+      service: oideachais-web
+      tls: { certResolver: letsencrypt }
+      middlewares: [tinyauth]
+
+    oideachais-api:
+      entryPoints: [https]
+      rule: "Host(`api.oideachais.cianfhoghlaim.ie`)"
+      service: oideachais-api
+      tls: { certResolver: letsencrypt }
+      middlewares: [api-ratelimit]
+
+    oideachais-dagster:
+      entryPoints: [https]
+      rule: "Host(`dagster.oideachais.cianfhoghlaim.ie`)"
+      service: oideachais-dagster
+      tls: { certResolver: letsencrypt }
+      middlewares: [tinyauth]
+
+  services:
+    oideachais-web:
+      loadBalancer:
+        servers:
+          - url: "http://cianchoghlaim-oideachais-frontend:3000"
+
+    oideachais-api:
+      loadBalancer:
+        servers:
+          - url: "http://cianchoghlaim-oideachais-api:8000"
+
+    oideachais-dagster:
+      loadBalancer:
+        servers:
+          - url: "http://cianchoghlaim-oideachais-dagster:3000"
