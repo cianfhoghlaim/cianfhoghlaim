@@ -116,8 +116,7 @@ search_daily_schedule = ScheduleDefinition(
 # ============================================================================
 
 all_schedules = [
-    # All schedules disabled for troubleshooting
-    # uk_daily_schedule,
-    # enriched_daily_schedule,
-    # search_daily_schedule,
+    uk_daily_schedule,
+    enriched_daily_schedule,
+    search_daily_schedule,
 ]
