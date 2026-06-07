@@ -136,6 +136,27 @@ function RootLayout() {
                     </Link>
                   );
                 })}
+                <a
+                  href="https://oideachais.cianfhoghlaim.ie/leaving-cert/mathematics"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+                >
+                  Leaving Cert 2026
+                </a>
+                {/* Leaving Cert 2026 — external link to oideachais */}
+                <a
+                  href="https://oideachais.cianfhoghlaim.ie/leaving-cert/mathematics"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 px-2.5 py-2 rounded-md text-sm text-emerald-400 hover:text-emerald-300 hover:bg-emerald-950/50 transition-colors border border-emerald-800/30"
+                >
+                  <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                    <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
+                  </svg>
+                  <span>Leaving Cert 2026</span>
+                </a>
               </div>
               <a
                 href="https://github.com/Yedya"
