@@ -136,17 +136,17 @@ to the canonical document(s) the skill should consult first.
 
 ### Requirement: Non-Destructive Consolidation
 
-When canonical documents are produced through heavy merge of overlapping
-source files, no content SHALL be lost.
+The system MUST preserve all original content without loss when canonical
+documents are produced through heavy merge of overlapping source files.
 
 #### Scenario: Source files are merged into a canonical
 
 - **GIVEN** source files `a.md`, `b.md`, `c.md` are being merged into
   `docs/<domain>/canonical.md`
 - **WHEN** the merge is complete
-- **THEN** the canonical contains the union of all unique content
+- **THEN** the canonical MUST contain the union of all unique content
   from the three source files
-- **AND** the original three files are preserved in
+- **AND** the original three files MUST be preserved in
   `docs/archive/YYYY-MM-DD-<subtree>/` with their content unchanged
-- **AND** the canonical's `supersedes:` field lists the three original
-  paths
+- **AND** the canonical's `supersedes:` field MUST list the three
+  original paths
