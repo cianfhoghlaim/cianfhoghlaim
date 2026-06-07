@@ -1,13 +1,12 @@
 gaeilge/found_in_downloads/abhar_breise_don_cheardlann.7z
 oideachas/lesson_plans/teaching_practice_2/1_administration_management/school_policies/school_rules.pdf
-/Users/cliste/dev/cianfhoghlaim/stacks
 # Node Modules
 node_modules/
 instagram_output/
 stedding/
 .dlt
-/Users/cianmacandeisigh/dev/kings_college_galway/infisical_secret
-/Users/cianmacandeisigh/dev/kings_college_galway/dlthub
+infisical_secret
+dlthub
 .gemini
 .DS_Store
 
@@ -235,3 +234,10 @@ hackathons/gsoc/beagle/docs.beagleboard.io/.git_disabled/objects/pack/*.pack
 university_of_galway/mata/modelling_2/exam_papers/Past/SinéadNotes (1).pdf
 # CocoIndex Code (ccc)
 /.cocoindex_code/
+
+# -----------------------------------------------------------------------------
+# VENDORED MCP SERVERS (use the PyPI package instead)
+# -----------------------------------------------------------------------------
+# mcpo is a vendored copy of the open-source mcpo project. Use
+# `uv tool install mcpo` or `uvx mcpo` rather than tracking a local copy.
+oideachais/mcp/mcpo/
