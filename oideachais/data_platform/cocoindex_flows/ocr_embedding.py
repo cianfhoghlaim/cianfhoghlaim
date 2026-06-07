@@ -620,7 +620,7 @@ def run_ocr_embedding_flow_sync(
 # =============================================================================
 
 if COCOINDEX_AVAILABLE:
-    @cocoindex.flow_def(name="OCRResultEmbedding")
+    @cocoindex.flow(name="OCRResultEmbedding")
     def ocr_result_embedding_flow(flow_builder, data_scope):
         """
         CocoIndex flow for OCR result embedding.

@@ -143,10 +143,10 @@ app.add_middleware(AuthMiddleware)
 # Route Registration
 # ============================================================================
 
-from .routes import agent, geospatial, search
-
+from .routes import agent, curriculum, geospatial, search
 app.include_router(search.router)
 app.include_router(geospatial.router)
+app.include_router(curriculum.router)
 app.include_router(agent.router)
 
 

@@ -122,7 +122,7 @@ def extract_course_code(file_path: str) -> str | None:
     return f"{match.group(1)}{match.group(2)}" if match else None
 
 
-@cocoindex.flow_def(name="BunchlochDocumentEmbedding")
+@cocoindex.flow(name="BunchlochDocumentEmbedding")
 def document_embedding_flow(
     flow_builder: cocoindex.FlowBuilder,
     data_scope: cocoindex.DataScope,

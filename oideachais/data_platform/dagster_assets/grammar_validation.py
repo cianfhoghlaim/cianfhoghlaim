@@ -332,7 +332,6 @@ try:
     )
     def grammar_validated_curriculum(
         context: AssetExecutionContext,
-        config: GrammarValidationConfig,
     ) -> dict[str, Any]:
         """
         Validate Irish curriculum content for grammar issues.
@@ -345,7 +344,7 @@ try:
         Returns:
             Dictionary with validation statistics and issues
         """
-        validator = GramadoirValidator(use_cli=config.use_cli)
+        validator = GramadoirValidator(use_cli=True)
 
         # For now, return a placeholder - integrate with curriculum asset
         context.log.info("Grammar validation asset initialized")
