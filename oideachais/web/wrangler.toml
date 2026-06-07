@@ -1,0 +1,53 @@
+# Cloudflare Pages + R2 + Workers config for oideachais web app
+# This file is used by cloudflare CLI (npx wrangler, cloudflare/wrangler-action)
+# and by the Dagger WebPipeline for automated deployment.
+#
+# Pages project: cianfhoghlaim-oideachais
+# R2 bucket: cianfhoghlaim-leaving-cert
+# Worker: oideachais-api-proxy (proxies API calls to the Hono backend)
+
+# ── Pages ──────────────────────────────────────────────────────────────────
+name = "cianfhoghlaim-oideachais"
+compatibility_date = "2026-06-06"
+
+# The Pages project serves the static TanStack Start build (vite build output)
+# from the dist directory. Server functions are handled by a separate Worker
+# that proxies to the Hono API backend at api.oideachais.cianfhoghlaim.ie.
+
+# ── R2 Bucket Binding ──────────────────────────────────────────────────────
+# The leaving-cert bucket holds the original PDFs (exam papers, marking
+# schemes, syllabus). The web app renders these via signed URLs from R2.
+[[r2_buckets]]
+binding = "LEAVING_CERT_BUCKET"
+bucket_name = "cianfhoghlaim-leaving-cert"
+
+# ── Environment Variables ──────────────────────────────────────────────────
+[env.production.vars]
+VITE_API_URL = "https://api.oideachais.cianfhoghlaim.ie"
+VITE_CONVEX_URL = "https://convex.oideachais.cianfhoghlaim.ie"
+VITE_BETTER_AUTH_URL = "https://auth.cianfhoghlaim.ie"
+MOTHERDUCK_TOKEN = "{{ secrets.MOTHERDUCK_TOKEN }}"
+R2_PUBLIC_URL = "https://r2.cianfhoghlaim.ie"
+
+[env.preview.vars]
+VITE_API_URL = "https://api-preview.oideachais.cianfhoghlaim.ie"
+VITE_CONVEX_URL = "https://convex-preview.oideachais.cianfhoghlaim.ie"
+VITE_BETTER_AUTH_URL = "https://auth-preview.cianfhoghlaim.ie"
+MOTHERDUCK_TOKEN = "{{ secrets.MOTHERDUCK_PREVIEW_TOKEN }}"
+
+# ── Routes ──────────────────────────────────────────────────────────────────
+# Per-subject leaving-cert pages are static-exported TanStack routes.
+# All other routes are handled by the Worker (server functions / SSR).
+
+# ── Build ───────────────────────────────────────────────────────────────────
+# The `vite build` command produces the static output in dist/.
+# TanStack Start routes that need SSR are served by the Worker.
+[build]
+command = "bun run build"
+output_directory = "dist"
+
+# ── Workers (API Proxy + SSR) ───────────────────────────────────────────────
+# [workers]
+# name = "oideachais-api-proxy"
+# main = "./workers/api-proxy.ts"
+# compatibility_date = "2026-06-06"

@@ -1,0 +1,23 @@
+# Cloudflare Pages + R2 + Workers config for croilar web app
+#
+# Pages project: cianfhoghlaim-croilar
+# R2 bucket: cianfhoghlaim-public (persona portfolios, CV data, etc.)
+
+name = "cianfhoghlaim-croilar"
+compatibility_date = "2026-06-06"
+
+[[r2_buckets]]
+binding = "CROILAR_PUBLIC_BUCKET"
+bucket_name = "cianfhoghlaim-public"
+
+[env.production.vars]
+VITE_API_URL = "https://api.croilar.cianfhoghlaim.ie"
+VITE_BETTER_AUTH_URL = "https://auth.croilar.cianfhoghlaim.ie"
+
+[env.preview.vars]
+VITE_API_URL = "https://api-preview.croilar.cianfhoghlaim.ie"
+VITE_BETTER_AUTH_URL = "https://auth-preview.croilar.cianfhoghlaim.ie"
+
+[build]
+command = "bun run build"
+output_directory = "dist"
