@@ -377,7 +377,7 @@ http:
     pocket-id-service:
       loadBalancer:
         servers:
-          - url: "http://pocket-id:1411"
+          - url: "http://pocket-id:8080"
 
     # TinyAuth (Forward Auth)
     tinyauth-service:
