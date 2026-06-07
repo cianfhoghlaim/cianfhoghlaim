@@ -15,6 +15,7 @@ import type { ConvexReactClient } from "convex/react";
 import { Sidebar } from "../components/Sidebar";
 import { Header } from "../components/Header";
 import { OideachasChat } from "../components/OideachasChat";
+import { LEAVING_CERT_ACTIONS } from "../server/leaving-cert-actions";
 import appCss from "../app.css?url";
 
 interface MyRouterContext {
@@ -56,25 +57,31 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootComponent() {
   return (
-    <html lang="en" className="dark">
-      <head>
-        <HeadContent />
-      </head>
-      <body className="bg-slate-900 text-slate-100 font-sans h-screen w-screen overflow-hidden flex flex-col">
-        <Header />
-        <div className="flex-1 flex overflow-hidden">
-          <Sidebar />
-          <main className="flex-1 flex flex-col min-w-0 bg-slate-900 relative">
-            <div className="flex-1 overflow-y-auto p-6">
-              <Outlet />
-            </div>
-          </main>
-        </div>
-        <Scripts />
-        {typeof window !== "undefined" && (
-          <TanStackRouterDevtools position="bottom-right" />
-        )}
-      </body>
-    </html>
+    <CopilotKit
+      runtimeUrl="/api/copilotkit"
+      actions={[...LEAVING_CERT_ACTIONS]}
+    >
+      <html lang="en" className="dark">
+        <head>
+          <HeadContent />
+        </head>
+        <body className="bg-slate-900 text-slate-100 font-sans h-screen w-screen overflow-hidden flex flex-col">
+          <Header />
+          <div className="flex-1 flex overflow-hidden">
+            <Sidebar />
+            <main className="flex-1 flex flex-col min-w-0 bg-slate-900 relative">
+              <div className="flex-1 overflow-y-auto p-6">
+                <Outlet />
+              </div>
+            </main>
+          </div>
+          <OideachasChat />
+          <Scripts />
+          {typeof window !== "undefined" && (
+            <TanStackRouterDevtools position="bottom-right" />
+          )}
+        </body>
+      </html>
+    </CopilotKit>
   );
 }
