@@ -171,3 +171,4 @@ All specs MUST respect constraints from `docs/context/00-core/CONSTRAINTS.md`:
 | `croilar-portfolio` | implemented (superseded by croilar-revitalisation) |
 | `croilar-revitalisation` | implemented |
 | `docs-restructuring` | implemented (canonical + Cognee script + opencode.json fix; per-domain cognify pending LLM key) |
+| `leaving-cert-2026` | scaffold (openspec valid; per-subject asset graph + web pages + BAML schemas + CI in place; pipeline populates on first run) |

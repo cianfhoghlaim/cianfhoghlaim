@@ -1,0 +1,53 @@
+name: leaving-cert-pipeline
+description: "Leaving Certificate 2026 — daily resource pipeline build"
+
+on:
+  workflow_dispatch:
+    inputs:
+      subject:
+        description: "Subject to build (mathematics, irish, biology, french, history, business, construction-studies). Leave blank for all."
+        type: string
+        default: ""
+  schedule:
+    # Daily at 06:00 UTC during the exam window (5-11 June 2026)
+    - cron: "0 6 5-11 6 *"
+
+jobs:
+  pipeline:
+    name: Leaving Cert pipeline
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "0.5.x"
+
+      - name: Set up Python
+        run: |
+          uv python install 3.12
+          uv venv --python 3.12
+
+      - name: Install with source (oideachais data platform)
+        run: uv pip install -e oideachais/
+
+      - name: Run per-subject pipeline
+        env:
+          R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
+          R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
+          MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
+          OPENCODE_GO_API_KEY: ${{ secrets.OPENCODE_GO_API_KEY }}
+          USE_DUCKLAKE: "false"
+        run: |
+          if [ -n "${{ inputs.subject }}" ]; then
+            DAGSTER_HOME=. uv run dagster job execute \
+              -m oideachais.data_platform.dagster_defs.definitions \
+              -j leaving_cert_${{ inputs.subject }}
+          else
+            DAGSTER_HOME=. uv run dagster job execute \
+              -m oideachais.data_platform.dagster_defs.definitions \
+              -j leaving_cert_full
+          fi
