@@ -1,0 +1,31 @@
+# Oideachais — local dev override.
+# Removes the Locket sidecar dependency for local development.
+# Mounts the local .env file instead of relying on Infisical + Locket.
+#
+# Usage:
+#   docker compose -f compose.yaml -f compose.dev.yaml up -d
+
+services:
+  dagster:
+    env_file:
+      - ../../../../../.env   # local .env (mise-hydrated)
+    environment:
+      DAGSTER_DEPLOYMENT: development
+      USE_DUCKLAKE: "false"
+      MOTHERDUCK_ENABLED: "false"
+
+  api:
+    env_file:
+      - ../../../../../.env
+    environment:
+      DAGSTER_DEPLOYMENT: development
+      USE_DUCKLAKE: "false"
+      MOTHERDUCK_ENABLED: "false"
+
+  frontend:
+    env_file:
+      - ../../../../../.env
+    environment:
+      VITE_API_URL: http://localhost:8000
+      VITE_CONVEX_URL: http://localhost:3210
+      VITE_BETTER_AUTH_URL: http://localhost:3002
