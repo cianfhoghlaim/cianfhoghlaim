@@ -65,6 +65,10 @@
       "cache": false,
       "outputs": []
     },
+    "validate:tenants": {
+      "cache": false,
+      "outputs": []
+    },
     "doctor": {
       "cache": false,
       "outputs": []
