@@ -1,0 +1,109 @@
+# Pangolin Traefik routing for the Frontend stack
+#
+# Each front-end app gets a public subdomain routed via Traefik with
+# Pocket ID OIDC authentication. Service is per-subdomain, not shared.
+http:
+  routers:
+    oideachais-web:
+      rule: "Host(`oideachais.cianfhoghlaim.ie`)"
+      service: oideachais-web
+      entryPoints:
+        - websecure
+      tls: {}
+      middlewares:
+        - oidc-auth
+
+    oideachais-api:
+      rule: "Host(`oideachais-api.cianfhoghlaim.ie`)"
+      service: oideachais-api
+      entryPoints:
+        - websecure
+      tls: {}
+      middlewares:
+        - cors-oideachais
+
+    tuatha-ui:
+      rule: "Host(`tuath.cianfhoghlaim.ie`)"
+      service: tuatha-ui
+      entryPoints:
+        - websecure
+      tls: {}
+      middlewares:
+        - cors-tuatha
+
+    croilar-web:
+      rule: "Host(`croilar.cianfhoghlaim.ie`)"
+      service: croilar-web
+      entryPoints:
+        - websecure
+      tls: {}
+
+    croilar-portal:
+      rule: "Host(`portal.cianfhoghlaim.ie`)"
+      service: croilar-portal
+      entryPoints:
+        - websecure
+      tls: {}
+      middlewares:
+        - oidc-auth
+
+  services:
+    oideachais-web:
+      loadBalancer:
+        servers:
+          - url: "http://oideachais-web:3001"
+    oideachais-api:
+      loadBalancer:
+        servers:
+          - url: "http://oideachais-api:8787"
+    tuatha-ui:
+      loadBalancer:
+        servers:
+          - url: "http://tuatha-ui:3004"
+    croilar-web:
+      loadBalancer:
+        servers:
+          - url: "http://croilar-web:3003"
+    croilar-portal:
+      loadBalancer:
+        servers:
+          - url: "http://croilar-portal:3000"
+
+  middlewares:
+    oidc-auth:
+      forwardAuth:
+        address: "http://pocket-id:1411"
+        trustForwardHeader: true
+        authResponseHeaders:
+          - "X-Forwarded-User"
+          - "X-Forwarded-Groups"
+          - "X-Forwarded-Email"
+    cors-oideachais:
+      headers:
+        accessControlAllowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - OPTIONS
+        accessControlAllowHeaders:
+          - "*"
+        accessControlAllowOriginList:
+          - "https://oideachais.cianfhoghlaim.ie"
+          - "https://oideachais-api.cianfhoghlaim.ie"
+    cors-tuatha:
+      headers:
+        accessControlAllowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - OPTIONS
+        accessControlAllowHeaders:
+          - "*"
+        accessControlAllowOriginList:
+          - "https://tuath.cianfhoghlaim.ie"
+
+tcp:
+  routers: {}
+  services: {}
