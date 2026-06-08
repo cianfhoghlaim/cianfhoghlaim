@@ -1,92 +1,170 @@
-# Oideachais — Celtic Education Lakehouse Engine Stack
-# Deploys Dagster webserver + FastAPI gateway + TanStack Start frontend
-# to bunchloch (MacBook M4 Max). Depends on the lakehouse and LiteLLM stacks.
+# =============================================================================
+# Oideachais — Celtic Education Lakehouse Engine (MERGED canonical)
+# =============================================================================
+# This is the canonical oideachais deployment stack.
+#
+# Merged from the prior:
+#   - /oideachais/compose.yaml         (source-of-truth app Dockerfiles)
+#   - /oideachais/sidecar.yaml         (upstream locket Infisical)
+#   - /oideachais/pangolin.yaml        (Pocket ID + API key + VPN-only)
+#   - /oideachais/blueprint.yaml       (stale Hetzner routing — DELETED)
+#   - /infrastructure/stacks/engineering/oideachais/compose.yaml (pinned 0.2.0)
+#
+# Architecture:
+#   bunchloch (MacBook M4 Max) hosts the three app containers:
+#     dagster   (Dagster webserver, :3335 host → :3000 container)
+#     api       (FastAPI AG-UI streaming, :8000)
+#     frontend  (TanStack Start dev server, :3000 host → :3000 container)
+#   Networks:
+#     cianfhoghlaim       — primary dev/control plane
+#     lakehouse_lakehouse — Garage S3, Postgres, Lakekeeper, Lance NS, LiteLLM
+#   Secrets:
+#     Locket sidecar reads ./secrets.env (Infisical URI refs) and writes
+#     resolved values to the shared tmpfs volume.
+#
+# Usage:
+#   Local dev:    docker compose -f compose.yaml -f compose.dev.yaml up -d
+#   Production:   docker compose -f compose.yaml -f sidecar.yaml up -d
+#   With Pangolin: docker compose -f compose.yaml -f sidecar.yaml \
+#                     -f pangolin.yaml up -d
+# =============================================================================
 
 services:
+  # ---------------------------------------------------------------------------
+  # DAGSTER - Pipeline Orchestration (webserver)
+  # ---------------------------------------------------------------------------
   dagster:
-    image: ghcr.io/cianfhoghlaim/oideachais-dagster:0.2.0
+    # image: pinned. The `build:` block is the canonical source of truth
+    # (build context is the repo root because the oideachais uv workspace
+    # depends on sibling members sruth-browser/codeolas declared at the root
+    # pyproject.toml). `pull_policy: never` forces compose to use the
+    # existing tag rather than rebuild on every `up`. To rebuild:
+    #   docker compose build dagster
+    image: oideachais-dev-dagster:latest
+    pull_policy: never
+    build:
+      context: ../../../..
+      dockerfile: oideachais/Dockerfile.dagster
     container_name: cianfhoghlaim-oideachais-dagster
     restart: unless-stopped
     ports:
-      - "3335:3000"
-    env_file:
-      - /run/secrets/locket/secrets.env
+      - "${DAGSTER_PORT:-3335}:3000"
     environment:
-      DAGSTER_HOME: /opt/dagster/dagster_home
-      DAGSTER_DEPLOYMENT: production
-      USE_DUCKLAKE: "true"
-      MOTHERDUCK_ENABLED: "true"
+      DAGSTER_HOME: /opt/dagster/home
+      DAGSTER_DEPLOYMENT: ${DAGSTER_DEPLOYMENT:-development}
+      USE_DUCKLAKE: "${USE_DUCKLAKE:-true}"
+      DUCKLAKE_POSTGRES_HOST: ${DUCKLAKE_POSTGRES_HOST:-lakehouse-postgres}
+      DUCKLAKE_POSTGRES_PORT: ${DUCKLAKE_POSTGRES_PORT:-5432}
+      DUCKLAKE_POSTGRES_USER: ${DUCKLAKE_POSTGRES_USER:-lakekeeper}
+      DUCKLAKE_POSTGRES_PASSWORD: ${DUCKLAKE_POSTGRES_PASSWORD:-}
+      AWS_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:-${R2_ACCESS_KEY:-}}
+      AWS_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:-${R2_SECRET_KEY:-}}
+      AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-http://lakehouse-garage:3900}
+      AWS_REGION: ${AWS_REGION:-garage}
+      FIRECRAWL_API_KEY: ${FIRECRAWL_API_KEY:-}
+      USE_LOCAL_SCRAPES: ${USE_LOCAL_SCRAPES:-true}
+      DAGSTER_PORT: "3000"
     volumes:
-      - dagster_home:/opt/dagster/dagster_home
-      - ../../../../../oideachais/data_platform:/opt/dagster/app/data_platform:ro
-      - ../../../../../oideachais/notebooks:/opt/dagster/app/notebooks:ro
+      - dagster_home:/opt/dagster/home
+      - dagster_storage:/opt/dagster/storage
+      - ../../../../oideachais/dagster.yaml:/opt/dagster/home/dagster.yaml:ro
+      - ../../../../stedding:/stedding:ro
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request, sys; sys.exit(0 if urllib.request.urlopen('http://localhost:3000/server_info', timeout=3).status == 200 else 1)\""]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
       start_period: 60s
-    depends_on:
-      locket:
-        condition: service_healthy
     networks:
       - cianfhoghlaim
+      - lakehouse
     deploy:
       resources:
         limits:
           cpus: "4"
-          memory: 4G
+          memory: 8G
 
+  # ---------------------------------------------------------------------------
+  # API - FastAPI AG-UI Streaming Backend
+  # ---------------------------------------------------------------------------
   api:
-    image: ghcr.io/cianfhoghlaim/oideachais-api:0.2.0
+    # image: pinned. See dagster block for build/use rationale.
+    image: oideachais-dev-api:latest
+    pull_policy: never
+    build:
+      context: ../../../..
+      dockerfile: oideachais/Dockerfile
     container_name: cianfhoghlaim-oideachais-api
     restart: unless-stopped
     ports:
-      - "8000:8000"
-    env_file:
-      - /run/secrets/locket/secrets.env
+      - "${API_PORT:-8000}:8000"
+    volumes:
+      - ../../../../oideachais/data_platform:/app/data_platform:ro
+      - api_data:/app/storage/data
     environment:
-      DAGSTER_DEPLOYMENT: production
-      USE_DUCKLAKE: "true"
-      MOTHERDUCK_ENABLED: "true"
+      HOST: "0.0.0.0"
+      PORT: "8000"
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      DAGSTER_DEPLOYMENT: ${DAGSTER_DEPLOYMENT:-development}
+      USE_DUCKLAKE: "${USE_DUCKLAKE:-true}"
+      MOTHERDUCK_ENABLED: "${MOTHERDUCK_ENABLED:-false}"
+      DUCKDB_PATH: ${DUCKDB_PATH:-/app/storage/data/celtic_education.duckdb}
+      LANCEDB_URI: ${LANCEDB_URI:-rest://lakehouse-lance-namespace:8182}
+      LANCEDB_API_KEY: ${LANCEDB_API_KEY:-}
+      LLM_API_KEY: ${LITELLM_MASTER_KEY:-${LLM_API_KEY:-}}
+      LLM_PROVIDER: ${LLM_PROVIDER:-litellm}
+      LLM_BASE_URL: ${LLM_BASE_URL:-http://litellm:4000}
+      LLM_MODEL: ${LLM_MODEL:-gemini/gemini-2.0-flash}
+      HF_HOME: /stedding/huggingface
+      HF_HUB_CACHE: /stedding/huggingface/hub
+      HF_TOKEN: ${HF_TOKEN:-${HUGGINGFACE_HUB_TOKEN:-}}
+      HUGGINGFACE_HUB_TOKEN: ${HUGGINGFACE_HUB_TOKEN:-${HF_TOKEN:-}}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/health"]
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request, sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health', timeout=3).status == 200 else 1)\""]
       interval: 15s
       timeout: 5s
-      retries: 3
-      start_period: 15s
-    depends_on:
-      locket:
-        condition: service_healthy
+      retries: 5
+      start_period: 20s
     networks:
       - cianfhoghlaim
+      - lakehouse
     deploy:
       resources:
         limits:
           cpus: "2"
-          memory: 2G
+          memory: 4G
 
+  # ---------------------------------------------------------------------------
+  # FRONTEND - TanStack Start Web Application
+  # ---------------------------------------------------------------------------
   frontend:
-    image: ghcr.io/cianfhoghlaim/oideachais-frontend:0.2.0
+    # image: pinned. Frontend is self-contained under oideachais/web/
+    # (no uv workspace deps), so its build context is the web subdir.
+    image: oideachais-dev-frontend:latest
+    pull_policy: never
+    build:
+      context: ../../../../oideachais/web
+      dockerfile: Dockerfile
     container_name: cianfhoghlaim-oideachais-frontend
     restart: unless-stopped
     ports:
-      - "3000:3000"
-    env_file:
-      - /run/secrets/locket/secrets.env
+      - "${FRONTEND_PORT:-3000}:3000"
     environment:
-      VITE_API_URL: https://api.oideachais.cianfhoghlaim.ie
-      VITE_CONVEX_URL: https://convex.oideachais.cianfhoghlaim.ie
-      VITE_BETTER_AUTH_URL: https://auth.cianfhoghlaim.ie
+      NODE_ENV: ${ENVIRONMENT:-development}
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+      VITE_API_PUBLIC_URL: ${VITE_API_PUBLIC_URL:-http://localhost:8000}
+      VITE_CONVEX_URL: ${VITE_CONVEX_URL:-http://localhost:3210}
+      VITE_BETTER_AUTH_URL: ${VITE_BETTER_AUTH_URL:-http://localhost:3002}
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:5173/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
       start_period: 30s
-    depends_on:
-      locket:
-        condition: service_healthy
     networks:
       - cianfhoghlaim
     deploy:
@@ -95,9 +173,24 @@ services:
           cpus: "2"
           memory: 1G
 
+# =============================================================================
+# VOLUMES
+# =============================================================================
 volumes:
   dagster_home:
+  dagster_storage:
+  api_data:
 
+# =============================================================================
+# NETWORKS
+# =============================================================================
+# cianfhoghlaim: dev/control plane (shared with other engineering stacks)
+# lakehouse_lakehouse: external bridge to Garage S3, Postgres, Lakekeeper,
+#                      Lance Namespace, and LiteLLM (when on lakehouse).
 networks:
   cianfhoghlaim:
     external: true
+    name: cianfhoghlaim
+  lakehouse:
+    external: true
+    name: lakehouse_lakehouse

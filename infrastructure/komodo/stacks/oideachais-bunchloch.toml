@@ -1,41 +1,61 @@
 # =============================================================================
 # OIDEACHAIS-BUNCHLOCH — Cianfhoghlaim Education Platform on MacBook M4
 # =============================================================================
-# Replaces the old oideachais/compose.yaml manual docker compose.
-# Deploys 3 services (dagster, api, frontend) with Locket secret injection
-# and Pangolin routing. Joins lakehouse_lakehouse for LiteLLM, Garage S3,
-# Lance Namespace, and LanceDB.
+# CANONICAL komodo stack for the oideachais deployment.
 #
-# Server: bunchloch (MacBook M4 Max, ~14 cores, 48 GB RAM)
-# Routes via: Pangolin on arm1-oci (oideachais.cianfhoghlaim.ie)
-# Secrets via: Locket + Infisical vault (dev-baile environment)
+# Replaces the prior /oideachais/compose.yaml + sidecar.yaml + pangolin.yaml
+# + blueprint.yaml quartet with a single, komodo-managed stack at
+# infrastructure/stacks/engineering/oideachais/.
+#
+# Architecture:
+#   bunchloch (MacBook M4 Max) hosts the three app containers:
+#     dagster   (Dagster webserver, :3335 host → :3000 container)
+#     api       (FastAPI AG-UI streaming, :8000 host → :8000 container)
+#     frontend  (TanStack Start dev server, :3000 host → :3000 container)
+#   Networks:
+#     cianfhoghlaim      — shared engineering dev/control plane
+#     lakehouse_lakehouse — Garage S3, Postgres, Lakekeeper, Lance NS, LiteLLM
+#   Secrets: Locket sidecar reads ./secrets.env (Infisical URI refs) and writes
+#     resolved values to the shared tmpfs volume.
+#   Routing: Pocket ID SSO on web/api/dagster, API-key auth on api,
+#     VPN-only on dagster — see ../pangolin.yaml.
+#
+# Procedure: deploy-oideachais-bunchloch (4 stages)
 # =============================================================================
 
 [[stack]]
 name = "oideachais-bunchloch"
-description = "Cianfhoghlaim Oideachais education platform — Dagster pipelines, FastAPI AG-UI streaming, TanStack Start SPA"
+description = "Cianfhoghlaim Oideachais education platform — Dagster pipelines, FastAPI AG-UI streaming, TanStack Start SPA. Merged canonical stack at infrastructure/stacks/engineering/oideachais/."
 tags = [
   "host:bunchloch",
   "tier:development",
   "type:education",
   "pipeline:sruth",
   "stack:oideachais",
+  "merged:canonical",
 ]
 
 [stack.config]
 server_id = "bunchloch"
 run_directory = "/etc/komodo/oideachais"
 file_paths = [
-  "oideachais/compose.yaml",
-  "oideachais/sidecar.yaml",
+  "infrastructure/stacks/engineering/oideachais/compose.yaml",
+  "infrastructure/stacks/engineering/oideachais/sidecar.yaml",
 ]
 environment = """
 DAGSTER_PORT=3335
 API_PORT=8000
 FRONTEND_PORT=3000
-ENVIRONMENT=development
-LOG_LEVEL=DEBUG
-LLM_BASE_URL=http://litellm:4000/v1
+ENVIRONMENT=production
+LOG_LEVEL=INFO
+LLM_BASE_URL=http://litellm:4000
+DAGSTER_DEPLOYMENT=production
+USE_DUCKLAKE=true
+MOTHERDUCK_ENABLED=false
+AWS_ENDPOINT_URL=http://lakehouse-garage:3900
+AWS_REGION=garage
+INFISICAL_PROJECT_ID=dev-baile
+LOCKET_MODE=watch
 --mount type=bind,source=/Users/cianmacandeisigh/dev/kings_college_galway/stedding,target=/stedding,readonly
 """
 
@@ -50,13 +70,4 @@ branch = "main"
 # -----------------------------------------------------------------------------
 # Dagster: 4 CPUs, 8 GB (pipeline orchestration + DuckLake + LanceDB)
 # API:     2 CPUs, 4 GB (FastAPI + BAML extraction + AG-UI streaming)
-# Frontend: 1 CPU, 1 GB (TanStack Start SPA dev server)
-
-# -----------------------------------------------------------------------------
-# Procedure: deploy-oideachais-bunchloch
-# -----------------------------------------------------------------------------
-# 1. Deploy oideachais-bunchloch stack (docker compose up -d via Komodo)
-# 2. Apply oideachais Pangolin blueprint (registers routes on arm1-oci)
-# 3. Verify health: dagster (:3335/health), api (:8000/health), frontend (:3000)
-#
-# Run via: km run procedure deploy-oideachais-bunchloch
+# Frontend: 2 CPUs, 1 GB (TanStack Start SPA dev server)
