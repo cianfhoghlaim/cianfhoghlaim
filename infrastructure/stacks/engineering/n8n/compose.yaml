@@ -22,6 +22,13 @@ services:
       EXECUTIONS_DATA_MAX_AGE: "336"   # 14 days
       GENERIC_TIMEZONE: ${GENERIC_TIMEZONE:-Europe/Dublin}
       N8N_DEFAULT_LOCALE: en
+      # OIDC / SSO (requires Enterprise license + n8n v2.18.0+)
+      # When Enterprise is ready, uncomment and set:
+      #   N8N_SSO_OIDC_ENABLED: "true"
+      #   N8N_SSO_OIDC_ISSUER_URL: "https://auth.cianfhoghlaim.ie"
+      #   N8N_SSO_OIDC_CLIENT_ID: "pocketid-team-workflow"
+      #   N8N_SSO_OIDC_CLIENT_SECRET: ${POCKETID_TEAM_WORKFLOW_CLIENT_SECRET}
+      #   N8N_SSO_OIDC_CALLBACK_URL: "https://n8n.cianfhoghlaim.ie/rest/sso/oidc/callback"
       # Auth / encryption
       N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
       N8N_USER_MANAGEMENT_JWT_SECRET: ${N8N_USER_MANAGEMENT_JWT_SECRET}

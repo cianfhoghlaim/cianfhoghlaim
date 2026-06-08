@@ -30,6 +30,12 @@ services:
       DATABASE_DIRECT_URL: ${CALCOM_DATABASE_URL}
       # Encryption
       CALENDSO_ENCRYPTION_KEY: ${CALCOM_ENCRYPTION_KEY}
+      # OIDC / SSO (configured via admin UI at /settings/organizations/sso)
+      # After logging in as admin, set:
+      #   Well-Known URL: https://auth.cianfhoghlaim.ie/.well-known/openid-configuration
+      #   Client ID: pocketid-team-workflow
+      #   Client Secret: ${POCKETID_TEAM_WORKFLOW_CLIENT_SECRET}
+      #   Callback URL: https://calcom.cianfhoghlaim.ie/api/auth/oidc
       # Webhook signing
       WEBHOOK_SECRET: ${CALCOM_WEBHOOK_SECRET}
       # Cron

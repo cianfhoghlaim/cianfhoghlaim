@@ -90,16 +90,16 @@ else
             \"name\": \"$OIDC_CLIENT_NAME\",
             \"callbackURLs\": [
                 \"https://vikunja.cianfhoghlaim.ie/auth/openid/pocketid\",
+                \"https://calcom.cianfhoghlaim.ie/api/auth/oidc\",
                 \"https://n8n.cianfhoghlaim.ie/*\",
-                \"https://calcom.cianfhoghlaim.ie/*\",
                 \"https://paperless.cianfhoghlaim.ie/*\",
                 \"https://glance.cianfhoghlaim.ie/*\",
                 \"https://changedetection.cianfhoghlaim.ie/*\"
             ],
             \"logoutCallbackURLs\": [
-                \"https://vikunja.cianfhoghlaim.ie/auth/openid/pocketid\",
+                \"https://vikunja.cianfhoghlaim.ie/*\",
+                \"https://calcom.cianfhoghlaim.ie/auth/login\",
                 \"https://n8n.cianfhoghlaim.ie/*\",
-                \"https://calcom.cianfhoghlaim.ie/*\",
                 \"https://paperless.cianfhoghlaim.ie/*\",
                 \"https://glance.cianfhoghlaim.ie/*\",
                 \"https://changedetection.cianfhoghlaim.ie/*\"
@@ -137,8 +137,12 @@ cat <<EOF
   Next steps:
   ─────────
   1. Update Infisical: paste client_secret into dev-baile/pocketid-team-workflow/client_secret
-  2. Update vikunja/n8n/cal-diy compose to use OIDC_SCOPE=openid profile email
-  3. Add passkey for user ciandeacy via https://auth.cianfhoghlaim.ie/settings/account
+  2. Add passkey for user cianfhoghlaim via https://auth.cianfhoghlaim.ie/settings/account
      (requires browser session + WebAuthn authenticator)
+  3. Configure Vikunja OIDC: go to vikunja.cianfhoghlaim.ie → OIDC login via Pocket ID
+  4. Configure cal-diy OIDC: log in as admin → /settings/organizations/sso
+     Well-Known URL: https://auth.cianfhoghlaim.ie/.well-known/openid-configuration
+     Client ID: pocketid-team-workflow
+  5. n8n OIDC requires Enterprise license (not available on community edition)
 
 EOF
