@@ -82,6 +82,12 @@ A bilingual (EN/GA) agentic educational platform covering 5 stages of the Irish 
 | `croilar-persona-registry` | Type-safe Zod-typed persona config schema + lookup table | Proposed |
 | `croilar-self-hosted-portal` | Self-hosted platform dashboard — stacks, pipelines, monitoring, MCP, registry | Proposed |
 
+### Hackathon Submission
+
+| Capability | Description | Status |
+|------------|-------------|--------|
+| `croilar-gradio-hf-demo` | 4-Space HuggingFace "Build Small 2026" submission — An Scrúdú (oideachais) / Meaisín Cliste (meaisínfhoghlaim, 3 themes) / Cianfhoghlaim (tuatha, Hades-style RPG on British Isles map) / Anam: Tuatha na nGaelscoil (croílár, 5-element connective tissue) | Active |
+
 ## AI Agent Toolchain & Conventions
 
 The project embraces an AI-first development workflow utilizing **OpenCode CLI** with multi-model subagents.
