@@ -1,21 +1,16 @@
 /**
- * Leaving Certificate — Irish (Gaeilge) (Paper 1 + Paper 2) resource page.
- *
- * Route: /leaving-cert/mathematics
- * Exam: Fri 5 Jun (P1) + Mon 8 Jun (P2) 2026
- *
- * The page is built using the shared LeavingCertLayout component
- * and loaded with the Irish (Gaeilge) subject payload from MotherDuck/DuckDB.
+ * Leaving Certificate — Irish resource page.
+ * Route: /ga/leaving-cert/irish
  */
-
 "use client";
 
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { LeavingCertLayout } from "../../../components/leaving-cert/LeavingCertLayout";
 import { getSubjectPayload } from "../../../server/leaving-cert";
 import type { LeavingCertSubjectPayload, Subject } from "../../../server/leaving-cert";
 
-export default function Irish (Gaeilge)Page() {
+function IrishPage() {
   const [payload, setPayload] = useState<LeavingCertSubjectPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const subject: Subject = "irish";
@@ -34,3 +29,7 @@ export default function Irish (Gaeilge)Page() {
 
   return <LeavingCertLayout subject={subject} payload={payload} isLoading={loading} />;
 }
+
+export const Route = createFileRoute("/ga/leaving-cert/irish")({
+  component: IrishPage,
+});

@@ -15,7 +15,6 @@ import type { ConvexReactClient } from "convex/react";
 import { Sidebar } from "../components/Sidebar";
 import { Header } from "../components/Header";
 import { OideachasChat } from "../components/OideachasChat";
-import { LEAVING_CERT_ACTIONS } from "../server/leaving-cert-actions";
 import appCss from "../app.css?url";
 
 interface MyRouterContext {
@@ -57,15 +56,12 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootComponent() {
   return (
-    <CopilotKit
-      runtimeUrl="/api/copilotkit"
-      actions={[...LEAVING_CERT_ACTIONS]}
-    >
-      <html lang="en" className="dark">
-        <head>
-          <HeadContent />
-        </head>
-        <body className="bg-slate-900 text-slate-100 font-sans h-screen w-screen overflow-hidden flex flex-col">
+    <html lang="en" className="dark">
+      <head>
+        <HeadContent />
+      </head>
+      <body className="bg-slate-900 text-slate-100 font-sans h-screen w-screen overflow-hidden flex flex-col">
+        <CopilotKit runtimeUrl="/api/copilotkit">
           <Header />
           <div className="flex-1 flex overflow-hidden">
             <Sidebar />
@@ -76,12 +72,12 @@ function RootComponent() {
             </main>
           </div>
           <OideachasChat />
-          <Scripts />
-          {typeof window !== "undefined" && (
-            <TanStackRouterDevtools position="bottom-right" />
-          )}
-        </body>
-      </html>
-    </CopilotKit>
+        </CopilotKit>
+        <Scripts />
+        {typeof window !== "undefined" && (
+          <TanStackRouterDevtools position="bottom-right" />
+        )}
+      </body>
+    </html>
   );
 }
