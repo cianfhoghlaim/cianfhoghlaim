@@ -89,7 +89,7 @@ else
             \"id\": \"$OIDC_CLIENT_ID\",
             \"name\": \"$OIDC_CLIENT_NAME\",
             \"callbackURLs\": [
-                \"https://vikunja.cianfhoghlaim.ie/*\",
+                \"https://vikunja.cianfhoghlaim.ie/auth/openid/pocketid\",
                 \"https://n8n.cianfhoghlaim.ie/*\",
                 \"https://calcom.cianfhoghlaim.ie/*\",
                 \"https://paperless.cianfhoghlaim.ie/*\",
@@ -97,7 +97,7 @@ else
                 \"https://changedetection.cianfhoghlaim.ie/*\"
             ],
             \"logoutCallbackURLs\": [
-                \"https://vikunja.cianfhoghlaim.ie/*\",
+                \"https://vikunja.cianfhoghlaim.ie/auth/openid/pocketid\",
                 \"https://n8n.cianfhoghlaim.ie/*\",
                 \"https://calcom.cianfhoghlaim.ie/*\",
                 \"https://paperless.cianfhoghlaim.ie/*\",
