@@ -1,0 +1,68 @@
+tenant:
+  id: croilar-collab
+  name: croilar-collab
+  displayName: Croílár Collab
+  domains:
+    - collab.cianfhoghlaim.ie
+    - localhost:9002
+  type: collaboration
+  description: Multi-user collaboration space for shared learning and research
+  tagline: Learn together, build together
+
+owner:
+  name: Collaboration Workspace
+  title: Shared Space
+  email: collab@cianfhoghlaim.ie
+
+theme:
+  primaryColor: "oklch(0.62 0.18 290)"
+  secondaryColor: "oklch(0.5 0.14 280)"
+  accentColor: "oklch(0.72 0.2 320)"
+  backgroundColor: "oklch(0.07 0.02 290)"
+  foregroundColor: "oklch(0.96 0 0)"
+  logo: /assets/collab/logo.svg
+  favicon: /assets/collab/favicon.svg
+  fontFamily: "Inter, system-ui, sans-serif"
+  fontHeading: "Inter, system-ui, sans-serif"
+  borderRadius: "0.75rem"
+  assets:
+    style: modern
+    patterns: []
+
+routes:
+  enabled:
+    - { path: "/", component: DashboardPage, title: "Collab Dashboard" }
+    - { path: "/agents", component: AgentsIndex, title: "Shared Agents" }
+    - { path: "/agents/chat", component: ChatPage, title: "Collab Chat" }
+    - { path: "/analytics", component: AnalyticsIndex, title: "Collab Analytics" }
+  disabled:
+    - "/monitoring/logs"
+    - "/monitoring/metrics"
+    - "/stacks"
+
+features:
+  curriculumBrowser: true
+  translationTool: true
+  aiChat: true
+  resourceLibrary: true
+  vocabularyTracker: false
+  examPrep: false
+  musicPlayer: false
+  portfolioMode: false
+  gameShowcase: false
+
+navigation:
+  primary: []
+  footer: []
+
+languages:
+  primary: en
+  supported:
+    - { code: en, name: "English", nativeName: "English" }
+    - { code: ga, name: "Irish",   nativeName: "Gaeilge" }
+
+seo:
+  title: "Croílár Collab"
+  description: "Shared learning and research space"
+  keywords: ["collaboration", "learning", "research"]
+  ogImage: "/assets/collab/og.png"
