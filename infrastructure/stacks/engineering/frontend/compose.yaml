@@ -1,0 +1,152 @@
+name: frontend
+
+services:
+  # ---------------------------------------------------------------------------
+  # OIDEACHAIS-WEB (TanStack Start + Convex)
+  # ---------------------------------------------------------------------------
+  oideachais-web:
+    build:
+      context: ../../../../oideachais/web/apps/web
+      dockerfile: Dockerfile
+    image: ghcr.io/cianfhoghlaim/oideachais-web:0.1.0
+    container_name: oideachais-web
+    restart: unless-stopped
+    ports:
+      - "${OIDEACHAIS_WEB_PORT:-3001}:3001"
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      VITE_CONVEX_URL: ${VITE_CONVEX_URL:-http://convex-backend:3210}
+      VITE_HONO_API_URL: ${VITE_HONO_API_URL:-http://hono-api:4000}
+    depends_on:
+      - hono-api
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - cianfhoghlaim
+      - croilar
+
+  # ---------------------------------------------------------------------------
+  # OIDEACHAIS-API (Hono + oRPC + Better Auth)
+  # ---------------------------------------------------------------------------
+  oideachais-api:
+    build:
+      context: ../../../../oideachais/web/apps/api
+      dockerfile: Dockerfile
+    image: ghcr.io/cianfhoghlaim/oideachais-api:0.1.0
+    container_name: oideachais-api
+    restart: unless-stopped
+    ports:
+      - "${OIDEACHAIS_API_PORT:-8787}:8787"
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: "8787"
+      CONVEX_HTTP_URL: ${CONVEX_HTTP_URL:-http://convex-backend:3210}
+      LITELLM_BASE_URL: ${LITELLM_BASE_URL:-http://litellm:4000}
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-}
+      MOTHERDUCK_ADMIN_TOKEN: ${MOTHERDUCK_ADMIN_TOKEN:-}
+      MOTHERDUCK_DIVE_ID: ${MOTHERDUCK_DIVE_ID:-}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:8787}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3001}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse-web:3000}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8787/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - cianfhoghlaim
+      - croilar
+
+  # ---------------------------------------------------------------------------
+  # TUATHA-UI (TanStack Start + Babylon.js + SIWE)
+  # ---------------------------------------------------------------------------
+  tuatha-ui:
+    build:
+      context: ../../../../tuatha/ui
+      dockerfile: Dockerfile
+    image: ghcr.io/cianfhoghlaim/tuatha-ui:0.1.0
+    container_name: tuatha-ui
+    restart: unless-stopped
+    ports:
+      - "${TUATHA_UI_PORT:-3004}:3004"
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      VITE_AUTH_URL: ${VITE_AUTH_URL:-http://hono-api:4000}
+      VITE_HONO_API_URL: ${VITE_HONO_API_URL:-http://hono-api:4000}
+      LITELLM_BASE_URL: ${LITELLM_BASE_URL:-http://litellm:4000}
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-}
+      GRAPHITI_MCP_URL: ${GRAPHITI_MCP_URL:-http://graphiti:8080}
+      LANCEDB_MCP_URL: ${LANCEDB_MCP_URL:-http://lancedb:8080}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3004/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - cianfhoghlaim
+      - croilar
+
+  # ---------------------------------------------------------------------------
+  # CROILAR-WEB (Vite SPA + Radix + i18n)
+  # ---------------------------------------------------------------------------
+  croilar-web:
+    build:
+      context: ../../../../croilar/apps/web
+      dockerfile: Dockerfile
+    image: ghcr.io/cianfhoghlaim/croilar-web:0.1.0
+    container_name: croilar-web
+    restart: unless-stopped
+    ports:
+      - "${CROILAR_WEB_PORT:-3003}:3003"
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      VITE_HONO_API_URL: ${VITE_HONO_API_URL:-http://hono-api:4000}
+    depends_on:
+      - hono-api
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3003/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - cianfhoghlaim
+      - croilar
+
+  # ---------------------------------------------------------------------------
+  # CROILAR-PORTAL (TanStack Start + AI SDK + MCP-UI)
+  # ---------------------------------------------------------------------------
+  croilar-portal:
+    build:
+      context: ../../../../croilar/apps/portal
+      dockerfile: Dockerfile
+    image: ghcr.io/cianfhoghlaim/croilar-portal:0.1.0
+    container_name: croilar-portal
+    restart: unless-stopped
+    ports:
+      - "${CROILAR_PORTAL_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      LITELLM_BASE_URL: ${LITELLM_BASE_URL:-http://litellm:4000}
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-}
+      PORTAL_AGENT_MODEL: ${PORTAL_AGENT_MODEL:-deepseek/deepseek-chat}
+      PROJECT_ROOT: /portal-src
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - cianfhoghlaim
+      - croilar
+
+networks:
+  cianfhoghlaim:
+    external: true
+  croilar:
+    external: true
