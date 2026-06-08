@@ -21,7 +21,7 @@
 set -euo pipefail
 
 POCKET_ID_URL="https://auth.cianfhoghlaim.ie"
-POCKET_ID_API_KEY="pidk_agent_bootstrap_a8f3c9d2e7b1f4h6j8k0m2n5q8r1t3v6w9x2y5z8b1c4d7e0f3g6h9i2j5k8l1m4n7"
+POCKET_ID_API_KEY="pidk_agent_bootstrap_a9f4d0e3f8c2g5h7i9k1m3n6q9r2t4v7w0x3y6z9c2d5e8f1g4h7i0j3k6l2m5n8"
 OIDC_CLIENT_ID="pocketid-team-workflow"
 OIDC_CLIENT_NAME="Team Workflow SSO"
 SSH_TARGET="oci.arm1"
@@ -52,9 +52,9 @@ ssh -i /Users/cianmacandeisigh/.oci/sessions/DEFAULT/oci_api_key.pem "$SSH_TARGE
     "sudo sqlite3 /var/lib/docker/volumes/pocket-id-data/_data/pocket-id.db <<'SQL'
 INSERT OR IGNORE INTO users
   (id, created_at, updated_at, username, email, first_name, last_name, display_name, is_admin)
-VALUES ('f1fc35e6-47ce-45cc-8e96-91be52b427b0', datetime('now'), datetime('now'),
-        'ciandeacy', 'cian.deacy@icloud.com', 'Cian', 'Deacy', 'Cian Deacy', 1);
-UPDATE users SET is_admin=1 WHERE username='ciandeacy';
+VALUES ('9bdfebf5-3ce7-4a44-89cd-22125e6accd3', datetime('now'), datetime('now'),
+        'cianfhoghlaim', 'cian.deacy@icloud.com', 'Cian', 'Deacy', 'Cian Deacy', 1);
+UPDATE users SET is_admin=1 WHERE username='cianfhoghlaim';
 SQL"
 
 # Bootstrap: ensure API key exists with SHA256 hash
@@ -67,7 +67,7 @@ INSERT OR REPLACE INTO api_keys
 VALUES ('11111111-1111-1111-1111-111111111111', 'agent-bootstrap',
         '$HASH', 'Agent API key for programmatic access to pocket-id',
         '2030-12-31 23:59:59', NULL, datetime('now'),
-        'f1fc35e6-47ce-45cc-8e96-91be52b427b0', 0);
+        '9bdfebf5-3ce7-4a44-89cd-22125e6accd3', 0);
 SQL"
 
 # Check OIDC client via API
