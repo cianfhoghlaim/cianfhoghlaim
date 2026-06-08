@@ -1,27 +1,53 @@
-# Oideachais — Pangolin Traefik routing
+# =============================================================================
+# Oideachais — Pangolin Traefik routing (MERGED canonical)
+# =============================================================================
+# Replaces both /oideachais/pangolin.yaml and the prior
+# /infrastructure/stacks/engineering/oideachais/pangolin.yaml.
+#
+# Routes:
+#   oideachais.cianfhoghlaim.ie     → frontend (Pocket ID SSO)
+#   api.oideachais.cianfhoghlaim.ie → api      (Pocket ID SSO, API key, CORS)
+#   dagster.oideachais.cianfhoghlaim.ie → dagster (Pocket ID SSO, VPN-only)
+#
+# This file is consumed by Traefik labels on the production compose. The
+# komodo deploy procedure (deploy-oideachais-bunchloch) applies the
+# rich Pocket ID + VPN-only resources via the Pangolin Integration API.
+# =============================================================================
 
 http:
   routers:
+    # -------------------------------------------------------------------------
+    # PUBLIC — TanStack Start SPA (Pocket ID SSO via TinyAuth)
+    # -------------------------------------------------------------------------
     oideachais-web:
       entryPoints: [https]
       rule: "Host(`oideachais.cianfhoghlaim.ie`)"
       service: oideachais-web
       tls: { certResolver: letsencrypt }
       middlewares: [tinyauth]
+      priority: 100
 
+    # -------------------------------------------------------------------------
+    # PUBLIC — FastAPI AG-UI Streaming Backend (Pocket ID + API key + CORS)
+    # -------------------------------------------------------------------------
     oideachais-api:
       entryPoints: [https]
       rule: "Host(`api.oideachais.cianfhoghlaim.ie`)"
       service: oideachais-api
       tls: { certResolver: letsencrypt }
-      middlewares: [api-ratelimit]
+      middlewares: [tinyauth, api-ratelimit, oideachais-cors]
+      priority: 100
 
+    # -------------------------------------------------------------------------
+    # INTERNAL — Dagster UI (Pocket ID SSO, VPN-only)
+    # -------------------------------------------------------------------------
     oideachais-dagster:
       entryPoints: [https]
       rule: "Host(`dagster.oideachais.cianfhoghlaim.ie`)"
       service: oideachais-dagster
       tls: { certResolver: letsencrypt }
-      middlewares: [tinyauth]
+      middlewares: [tinyauth, vpn-only]
+      priority: 100
 
   services:
     oideachais-web:
@@ -38,3 +64,27 @@ http:
       loadBalancer:
         servers:
           - url: "http://cianchoghlaim-oideachais-dagster:3000"
+
+  middlewares:
+    # CORS for the API — lets the frontend at oideachais.cianfhoghlaim.ie
+    # call api.oideachais.cianfhoghlaim.ie directly.
+    oideachais-cors:
+      headers:
+        accessControlAllowMethods:
+          - GET
+          - POST
+          - OPTIONS
+        accessControlAllowOriginList:
+          - "https://oideachais.cianfhoghlaim.ie"
+        accessControlAllowHeaders:
+          - Content-Type
+          - Authorization
+          - X-Oideachais-API-Key
+        accessControlMaxAge: 100
+        addVaryHeader: true
+
+    # VPN-only middleware is defined globally in the Pangolin stack at
+    # /infrastructure/stacks/infrastructure/pangolin/. This label is
+    # applied on top to gate dagster.* behind a Pangolin WireGuard peer.
+
+    # api-ratelimit and tinyauth are provided by the pangolin stack too.

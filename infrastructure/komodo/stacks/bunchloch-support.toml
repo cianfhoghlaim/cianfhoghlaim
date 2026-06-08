@@ -1,0 +1,100 @@
+# =============================================================================
+# BUNCHLOCH SUPPORT STACKS — litellm, lancedb, langfuse
+# =============================================================================
+# Deployed on bunchloch (MacBook M4 Max) per session decision.
+# These are prerequisites for the oideachais deploy procedure.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# LITELLM — LLM gateway (4000)
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "litellm-bunchloch"
+description = "LiteLLM gateway — OpenAI-compatible proxy to Gemini / Anthropic / OpenAI / OpenCode Go / Z.AI. Required for oideachais api/dagster/frontend LLM calls."
+tags = [
+  "host:bunchloch",
+  "tier:development",
+  "type:gateway",
+  "stack:litellm",
+]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/litellm"
+file_paths = [
+  "infrastructure/stacks/engineering/litellm/compose.yaml",
+  "infrastructure/stacks/engineering/litellm/sidecar.yaml",
+  "infrastructure/stacks/engineering/litellm/secrets.env",
+]
+environment = """
+LITELLM_PORT=4000
+LITELLM_MASTER_KEY=sk-1234
+"""
+
+[stack.config.repo]
+server_id = "arm1-oci"
+git_account = "cianfhoghlaim"
+repo = "kings_college_galway"
+branch = "main"
+
+# -----------------------------------------------------------------------------
+# LANCEDB — vector database viewer (8080)
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "lancedb-bunchloch"
+description = "LanceDB data viewer — browse LanceDB tables backed by the lakehouse_lakehouse network (Lance Namespace → Garage S3)."
+tags = [
+  "host:bunchloch",
+  "tier:development",
+  "type:vector-database",
+  "stack:lancedb",
+]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/lancedb"
+file_paths = [
+  "infrastructure/stacks/machine_learning/lancedb/compose.yaml",
+  "infrastructure/stacks/machine_learning/lancedb/sidecar.yaml",
+  "infrastructure/stacks/machine_learning/lancedb/secrets.env",
+]
+environment = """
+LANCEDB_PORT=8080
+"""
+
+[stack.config.repo]
+server_id = "arm1-oci"
+git_account = "cianfhoghlaim"
+repo = "kings_college_galway"
+branch = "main"
+
+# -----------------------------------------------------------------------------
+# LANGFUSE — LLM observability (3000)
+# -----------------------------------------------------------------------------
+[[stack]]
+name = "langfuse-bunchloch"
+description = "Langfuse v3 — LLM observability (traces, scores, prompts). Receives events from oideachais api/dagster/frontend."
+tags = [
+  "host:bunchloch",
+  "tier:development",
+  "type:observability",
+  "stack:langfuse",
+]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/langfuse"
+file_paths = [
+  "infrastructure/stacks/machine_learning/langfuse/compose.yaml",
+  "infrastructure/stacks/machine_learning/langfuse/sidecar.yaml",
+  "infrastructure/stacks/machine_learning/langfuse/secrets.env",
+]
+environment = """
+LANGFUSE_PORT=3000
+"""
+
+[stack.config.repo]
+server_id = "arm1-oci"
+git_account = "cianfhoghlaim"
+repo = "kings_college_galway"
+branch = "main"

@@ -76,6 +76,7 @@ Infrastructure contains deployment configurations, infrastructure-as-code, and s
 | `pydantic-gateway/` | Pydantic AI gateway (LLM routing) | Internal |
 | `mathesar/` | Postgres UI | Internal |
 | `agent-os/` | AgentOS (Letta) | Internal |
+| `oideachais/` | Celtic Education Lakehouse Engine (Dagster + FastAPI + TanStack Start). **Canonical** — replaces the legacy `/oideachais/compose.yaml` quartet. Build source of truth. | 3000, 8000, 3335 |
 
 ### Machine Learning (AI Services)
 
@@ -101,12 +102,32 @@ Each stack under `infrastructure/stacks/<category>/<name>/` SHALL follow this st
 ```
 stacks/<category>/<name>/
 ├── compose.yaml           # Docker service definitions
+├── compose.dev.yaml       # (optional) Dev override: no-op locket, env_file
 ├── pangolin.yaml          # Traefik routing + TinyAuth (if web-facing)
 ├── sidecar.yaml           # Locket container for Infisical injection
 ├── secrets.env            # Infisical URI references
+├── .env.example           # Dev-only placeholder env vars
+├── blueprint.yaml         # Komodo resource-sync metadata
 └── config/                # Configuration files
     └── *.yaml
 ```
+
+## Canonical Oideachais Stack
+
+**The oideachais platform is the only stack whose compose file lives outside
+`infrastructure/stacks/`.** It is a *consumer* of the engineering patterns
+(Locket, Pocket ID, Pangolin) rather than a single-purpose service.
+
+| Path | Role |
+|:--|:--|
+| `oideachais/` (root) | Application source. Contains `Dockerfile.dagster`, `Dockerfile`, `web/Dockerfile`, `dagster.yaml`, `workspace.yaml`, `pyproject.toml`. **No docker-compose, sidecar, pangolin, or blueprint files at this level** — they were moved into the engineering stack. |
+| `infrastructure/stacks/engineering/oideachais/` | Canonical deployment. Has `compose.yaml` (uses `build:` from the root sources), `compose.dev.yaml`, `sidecar.yaml`, `pangolin.yaml`, `secrets.env`, `.env.example`, `blueprint.yaml`. |
+| `infrastructure/komodo/stacks/oideachais-bunchloch.toml` | Komodo stack definition referencing the engineering stack files. |
+| `infrastructure/komodo/procedures/deploy-oideachais-bunchloch.toml` | 5-stage deploy procedure (prereqs → lakehouse/litellm/lancedb/langfuse → oideachais → pangolin routes → health checks). |
+
+**Do not reintroduce `oideachais/compose.yaml`, `oideachais/sidecar.yaml`,
+`oideachais/pangolin.yaml`, or `oideachais/blueprint.yaml`** — the engineering
+stack is the single source of truth.
 
 ## Critical Constraints
 
