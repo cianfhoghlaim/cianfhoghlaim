@@ -4,40 +4,58 @@
 # Push the 4 Spaces from this monorepo to the cianfhoghlaim personal
 # HF account as 4 separate Space repos. Run from the monorepo root.
 #
-# Prereqs (run these first; the script will check):
-#   1. Authenticated with HF:  huggingface-cli login
-#   2. The venv at .venv/ exists with huggingface_hub installed.
-#   3. The 4 Spaces exist as empty repos on HF (created via the Web UI
-#      OR the first `huggingface-cli repo create` call in this script
-#      will create them for you).
+# Uses the modern `hf` CLI (huggingface_hub >= 1.2). The old
+# `huggingface-cli` is deprecated; `hf` is the new entry point.
+#
+# Prereqs:
+#   1. Authenticated:  hf auth login
+#   2. The venv at .venv/ has huggingface_hub >= 1.13 installed
+#      with typer<0.16 (or hf upgraded to the version that matches
+#      the installed typer).
 #
 # Usage:
 #   bash scripts/push_spaces_to_hf.sh
 #
-# After it finishes, visit each Space on HF and set the HF_TOKEN secret.
+# After it finishes, visit each Space on HF and set the HF_TOKEN
+# secret at /spaces/<slug>/settings.
 
 set -euo pipefail
 
 # -- 0. Resolve the monorepo root (parent of this script's dir) ---------
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-HF="${ROOT}/.venv/bin/huggingface-cli"
+HF="${ROOT}/.venv/bin/hf"
 
 # -- 1. Preflight checks ------------------------------------------------
 if [[ ! -x "${HF}" ]]; then
-    echo "ERROR: huggingface-cli not found at ${HF}" >&2
-    echo "Run: uv pip install -p .venv huggingface_hub" >&2
+    echo "ERROR: hf CLI not found at ${HF}" >&2
+    echo "Run: uv pip install --python .venv/bin/python3 huggingface_hub" >&2
     exit 1
 fi
 
-if ! "${HF}" whoami &>/dev/null; then
-    echo "ERROR: not authenticated. Run: ${HF} login" >&2
-    echo "   Use a write-enabled token (Settings -> Access Tokens -> New)" >&2
+# Verify the CLI works (catches the typer<0.16 / typer>=0.16 mismatch
+# that silently breaks the deprecation-warning fix)
+if ! "${HF}" --help >/dev/null 2>&1; then
+    echo "ERROR: hf CLI is broken (likely a typer version mismatch)." >&2
+    echo "Fix: uv pip install --python .venv/bin/python3 'typer<0.16'" >&2
+    echo "  OR upgrade: uv pip install --python .venv/bin/python3 --upgrade huggingface_hub" >&2
+    "${HF}" --help 2>&1 | head -3
+    exit 1
+fi
+
+# Auth check
+if ! "${HF}" auth whoami >/dev/null 2>&1; then
+    echo "ERROR: not authenticated. Run: ${HF} auth login" >&2
+    echo "   Get a write-enabled token at https://huggingface.co/settings/tokens" >&2
     echo "   Grant scope: write" >&2
     exit 1
 fi
 
-HF_USER="$(${HF} whoami | head -1 | awk '{print $2}')"
+HF_USER="$(${HF} auth whoami 2>/dev/null | head -1 | awk '{print $2}')"
+if [[ -z "${HF_USER}" ]]; then
+    # Fallback: try the JSON output
+    HF_USER="$(${HF} auth whoami 2>/dev/null | grep -oE '"name": "[^"]+"' | head -1 | cut -d'"' -f4)"
+fi
 echo "Authenticated as: ${HF_USER}"
 echo
 
@@ -45,7 +63,10 @@ if [[ "${HF_USER}" != "cianfhoghlaim" ]]; then
     echo "WARNING: expected 'cianfhoghlaim', got '${HF_USER}'." >&2
     read -p "Continue anyway? (y/N) " -n 1 -r
     echo
-    [[ "${REPLY}" =~ ^[Yy]$ ]] || exit 1
+    case "${REPLY}" in
+        [Yy]|[Yy][Ee][Ss]) ;;
+        *) exit 1 ;;
+    esac
 fi
 
 # -- 2. The 4 Space definitions ----------------------------------------
@@ -61,10 +82,6 @@ SPACES=(
 STAGING="${ROOT}/.hf-spaces-staging"
 rm -rf "${STAGING}"
 mkdir -p "${STAGING}"
-
-# Pinned versions for reproducibility
-GRADIO_VERSION="4.44.0"
-HF_HUB_VERSION="0.24.0"
 
 # -- 4. Per-Space work loop --------------------------------------------
 for entry in "${SPACES[@]}"; do
@@ -92,62 +109,25 @@ for entry in "${SPACES[@]}"; do
         cp "${src}/social_card.png" "${stage}/"
     fi
 
-    # Add a top-level README if the Space doesn't have one with HF frontmatter
-    if ! head -3 "${stage}/README.md" 2>/dev/null | grep -q "^---"; then
-        cat > "${stage}/README.md.new" <<EOF
----
-title: ${slug}
-emoji: "\U0001F30D"
-colorFrom: blue
-colorTo: purple
-sdk: gradio
-sdk_version: ${GRADIO_VERSION}
-app_file: app.py
-pinned: false
-license: apache-2.0
-short_description: Build Small 2026 submission
----
-
-# ${slug}
-
-\`\`\`
-$(cat "${stage}/README.md" 2>/dev/null || echo "(see spaces/${local_dir}/README.md in the monorepo)")
-\`\`\`
-EOF
-        mv "${stage}/README.md.new" "${stage}/README.md"
-    fi
-
-    # Make sure the .py files are executable
-    find "${stage}" -name "*.py" -exec chmod +x {} \;
-
     # -- 4a. Create the empty HF Space repo (no error if exists) -----
     echo
     echo "Creating (or reusing) HF repo: ${full_slug}"
-    "${HF}" repo create "${full_slug}" \
+    "${HF}" repos create "${full_slug}" \
         --type space \
-        --space_sdk gradio \
+        --space-sdk gradio \
         --exist-ok 2>&1 | sed 's/^/  /'
 
-    # -- 4b. Init git in the staging dir and push -------------------
-    pushd "${stage}" >/dev/null
-    git init -q
-    git checkout -q -b main
-    git config user.name "cianfhoghlaim"
-    git config user.email "cianfhoghlaim@users.noreply.huggingface.co"
-    git add .
-    if git diff --cached --quiet; then
-        echo "  (no changes to commit)"
-    else
-        git commit -q -m "Initial Space push (Build Small 2026 submission)"
-    fi
-
-    # Add the HF remote + push
-    git remote remove origin 2>/dev/null || true
-    HF_URL="https://huggingface.co/spaces/${full_slug}"
-    git remote add origin "${HF_URL}"
-    echo "  pushing to ${HF_URL}"
-    git push -q -u origin main 2>&1 | sed 's/^/  /'
-    popd >/dev/null
+    # -- 4b. Upload the staging dir to the Space via hf upload ------
+    # This is the modern replacement for `git init && git push`.
+    # It handles the git LFS setup, .gitattributes, and the commit
+    # in one call.
+    echo
+    echo "Uploading ${stage}/ -> ${full_slug}"
+    "${HF}" upload "${full_slug}" "${stage}" "." \
+        --repo-type space \
+        --commit-message "Initial Space push (Build Small 2026 submission)" \
+        --commit-description "4 Celtic AI Spaces from cianfhoghlaim/kings_college_galway" \
+        2>&1 | sed 's/^/  /'
 
     echo "  -> DONE: ${full_slug}"
     echo

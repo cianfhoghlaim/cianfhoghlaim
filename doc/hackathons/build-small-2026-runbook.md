@@ -36,10 +36,14 @@ for `huggingface-cli login` works if it has `write` scope.
 
 ### 1b. Authenticate the CLI
 
+> **Note:** the old `huggingface-cli` is deprecated. Use the new `hf`
+> CLI (it's the same `huggingface_hub` package, just a different
+> entry point — `hf` was added in `huggingface_hub` 1.2+).
+
 From the monorepo root:
 
 ```bash
-.venv/bin/huggingface-cli login
+.venv/bin/hf auth login
 # Paste your token when prompted
 # Choose: 'add token as git credential' (y) - this lets you push without re-entering
 ```
@@ -52,10 +56,18 @@ Your token has been saved to /Users/.../huggingface/token
 Login successful.
 ```
 
+> **If `hf` errors with `Typer.__init__() got an unexpected keyword
+> argument 'suggest_commands'`:** the `huggingface_hub` in the venv
+> is too old for the installed `typer`. Fix it with:
+>
+> ```bash
+> uv pip install --python .venv/bin/python3 --upgrade huggingface_hub
+> ```
+
 ### 1c. Verify who you are
 
 ```bash
-.venv/bin/huggingface-cli whoami
+.venv/bin/hf auth whoami
 ```
 
 Expected output: `cianfhoghlaim` (your username).
@@ -86,37 +98,41 @@ If the script errors out partway through, it's safe to re-run — the
 `huggingface-cli repo create ... --exist-ok` flag makes Space
 creation idempotent.
 
-### 2b. (Alternative) Manual `git push` per Space
+### 2b. (Alternative) Manual `hf upload` per Space
 
 If you want finer control, do the 4 pushes by hand:
 
 ```bash
 # Create the 4 empty repos on HF
-.venv/bin/huggingface-cli repo create cianfhoghlaim/an-scrudu     --type space --space_sdk gradio
-.venv/bin/huggingface-cli repo create cianfhoghlaim/meaisin-cliste --type space --space_sdk gradio
-.venv/bin/huggingface-cli repo create cianfhoghlaim/cianfhoghlaim  --type space --space_sdk gradio
-.venv/bin/huggingface-cli repo create cianfhoghlaim/anam-tuatha   --type space --space_sdk gradio
+.venv/bin/hf repos create cianfhoghlaim/an-scrudu     --type space --space-sdk gradio --exist-ok
+.venv/bin/hf repos create cianfhoghlaim/meaisin-cliste --type space --space-sdk gradio --exist-ok
+.venv/bin/hf repos create cianfhoghlaim/cianfhoghlaim  --type space --space-sdk gradio --exist-ok
+.venv/bin/hf repos create cianfhoghlaim/anam-tuatha   --type space --space-sdk gradio --exist-ok
 
-# For each Space: clone, copy files, push
-for slug in an-scrudu meaisin-cliste cianfhoghlaim anam-tuatha; do
-    local_dir="spaces/${slug//-/_}"   # an-scrudu -> spaces/an_scrudu
-    if [[ "${slug}" == "an-scrudu" ]]; then local_dir="spaces/an_scrudu"; fi
-    if [[ "${slug}" == "meaisin-cliste" ]]; then local_dir="spaces/meaisin_cliste"; fi
-    if [[ "${slug}" == "cianfhoghlaim" ]]; then local_dir="spaces/cianfhoghlaim"; fi
-    if [[ "${slug}" == "anam-tuatha" ]]; then local_dir="spaces/anam_tuatha"; fi
+# Build 4 staging dirs and upload each via hf upload
+declare -A SLUG_TO_DIR=(
+    [an-scrudu]=spaces/an_scrudu
+    [meaisin-cliste]=spaces/meaisin_cliste
+    [cianfhoghlaim]=spaces/cianfhoghlaim
+    [anam-tuatha]=spaces/anam_tuatha
+)
 
-    workdir="/tmp/hf-${slug}"
-    rm -rf "${workdir}" && mkdir -p "${workdir}"
-    git clone "https://huggingface.co/spaces/cianfhoghlaim/${slug}" "${workdir}"
-    rsync -a --exclude='.git' "${local_dir}/" "${workdir}/"
-    rsync -a "spaces/_common/" "${workdir}/_common/"
-    [[ -f "${local_dir}/social_card.png" ]] && cp "${local_dir}/social_card.png" "${workdir}/"
-    cd "${workdir}"
-    git add . && git commit -m "Initial Space push (Build Small 2026)"
-    git push
-    cd -
+for slug in "${!SLUG_TO_DIR[@]}"; do
+    local_dir="${SLUG_TO_DIR[${slug}]}"
+    stage="/tmp/hf-${slug}"
+    rm -rf "${stage}" && mkdir -p "${stage}"
+    rsync -a --exclude='_common' "${local_dir}/" "${stage}/"
+    rsync -a "spaces/_common/" "${stage}/_common/"
+    [[ -f "${local_dir}/social_card.png" ]] && cp "${local_dir}/social_card.png" "${stage}/"
+    .venv/bin/hf upload "cianfhoghlaim/${slug}" "${stage}" "." \
+        --repo-type space \
+        --commit-message "Initial Space push (Build Small 2026 submission)"
 done
 ```
+
+`hf upload` is the modern replacement for the old `git init && git
+push` dance — it handles the git LFS setup, .gitattributes, and the
+commit in one call.
 
 ### 2c. Verify the pushes
 
@@ -287,8 +303,31 @@ Once the form is in:
 
 ### "huggingface-cli: command not found"
 
-Use the full path: `.venv/bin/huggingface-cli`. The monorepo's venv
-has it; the system Python may not.
+The old CLI is deprecated; use the new `hf` CLI instead:
+
+```bash
+.venv/bin/hf auth login
+.venv/bin/hf auth whoami
+.venv/bin/hf repos create ...
+.venv/bin/hf upload ...
+```
+
+The `huggingface-cli` shim may still be on your PATH but it'll print
+`Warning: 'huggingface-cli' is deprecated` on every invocation. Use
+`hf` for everything in this runbook.
+
+### "hf" errors with "Typer.__init__() got an unexpected keyword argument 'suggest_commands'"
+
+The `huggingface_hub` in the venv is too old for the installed
+`typer`. The fix:
+
+```bash
+uv pip install --python .venv/bin/python3 --upgrade huggingface_hub
+```
+
+This was the case as of `huggingface_hub==1.13.0` + `typer==0.16.1`
+in this monorepo. The upgrade pulls in a `typer` that matches the
+newer `huggingface_hub` API.
 
 ### "403 Forbidden" on push
 
