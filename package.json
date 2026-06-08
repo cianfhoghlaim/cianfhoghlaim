@@ -56,7 +56,9 @@
 
     "validate-stacks": "bash scripts/stack-doctor.sh",
     "doctor:stacks": "bash scripts/stack-doctor.sh --json | jq",
-    "mise:run": "mise run"
+    "mise:run": "mise run",
+
+    "smoke": "bash infrastructure/stacks/engineering/frontend/scripts/smoke.sh"
   },
   "devDependencies": {
     "@types/bun": "^1.3.0",
