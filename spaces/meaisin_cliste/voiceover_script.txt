@@ -1,0 +1,47 @@
+# Voiceover Script: Meaisin Cliste - Celtic AI Tools
+Element: aer
+Estimated duration: 21 seconds
+
+## Beat-by-beat
+
+[  0.0s] Step 1: tab_select
+           TONE: user opens Tab 1
+           SAY: Focloir na Se Naisiun
+           [PAUSE 0.5s]
+
+[  0.0s] Step 2: cognate_search
+           TONE: user searches for sea
+           SAY: sea
+           [PAUSE 0.5s]
+
+[  0.0s] Step 3: cognate_results
+           TONE: match found
+           SAY: *mori-
+           [PAUSE 0.5s]
+
+[  0.0s] Step 4: tab_select
+           TONE: user opens Tab 2
+           SAY: Scoil ar an Learscail
+           [PAUSE 0.5s]
+
+[  0.0s] Step 5: tab_select
+           TONE: user opens Tab 3
+           SAY: Curaclam Trasteorann
+           [PAUSE 0.5s]
+
+[  0.0s] Step 6: curaclam_query
+           TONE: user queries
+           SAY: atomic structure
+           [PAUSE 0.5s]
+
+[  0.0s] Step 7: curaclam_result
+           TONE: result
+           SAY: 5 nations (IE/NI/WLS/IM/SCT)
+           [PAUSE 0.5s]
+
+## Pre-written voiceover lines
+
+- Welcome to Meaisin Cliste, Space 2 of 4. The element is Aer, the language-carrier, with Uisce for the water theme.
+- Three themes. The first is Focloir na Se Naisiun - a 6-nation Celtic cognate dictionary. Thirty hand-picked cognates, all grounded in the same proto-Celtic roots.
+- The second theme is Scoil ar an Learscail - school on the map. Twenty-six counties, sixteen hundred and twenty-nine schools, coloured by the Pobal HP Deprivation Index 2022.
+- The third theme is Curaclam Trasteorann - cross-border curriculum. The BAML chain compares how a topic is taught across five Celtic-nation curricula.
