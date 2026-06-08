@@ -102,8 +102,8 @@ if ! $WEB_ONLY; then
     log "Docker is running. Starting oideachais Docker Compose stack…"
     cd "$REPO_ROOT/infrastructure/stacks/engineering/oideachais"
 
-    # Start the stack (main compose + Locket sidecar)
-    docker compose -f compose.yaml -f sidecar.yaml up -d 2>&1 | head -20
+    # Dev mode: use compose.dev.yaml (local .env, no Locket sidecar)
+    docker compose -f compose.yaml -f compose.dev.yaml up -d 2>&1 | tail -10
 
     log "Waiting for containers to be healthy…"
     sleep 5

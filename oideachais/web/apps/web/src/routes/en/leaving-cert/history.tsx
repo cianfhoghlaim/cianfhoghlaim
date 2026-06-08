@@ -1,21 +1,16 @@
 /**
- * Leaving Certificate — History (Paper 1 + Paper 2) resource page.
- *
- * Route: /leaving-cert/mathematics
- * Exam: Fri 5 Jun (P1) + Mon 8 Jun (P2) 2026
- *
- * The page is built using the shared LeavingCertLayout component
- * and loaded with the History subject payload from MotherDuck/DuckDB.
+ * Leaving Certificate — History resource page.
+ * Route: /en/leaving-cert/history
  */
-
 "use client";
 
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { LeavingCertLayout } from "../../../components/leaving-cert/LeavingCertLayout";
 import { getSubjectPayload } from "../../../server/leaving-cert";
 import type { LeavingCertSubjectPayload, Subject } from "../../../server/leaving-cert";
 
-export default function HistoryPage() {
+function HistoryPage() {
   const [payload, setPayload] = useState<LeavingCertSubjectPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const subject: Subject = "history";
@@ -34,3 +29,7 @@ export default function HistoryPage() {
 
   return <LeavingCertLayout subject={subject} payload={payload} isLoading={loading} />;
 }
+
+export const Route = createFileRoute("/en/leaving-cert/history")({
+  component: HistoryPage,
+});
