@@ -19,21 +19,29 @@
 healthCheckTimeout: 300   # 70B models can take 60-90s to load from cold disk
 startPort: 10000
 
-# Profiles group models that can co-reside. Each profile is mutually exclusive
-# (models within a profile evict each other). Cross-profile models can co-exist.
-profiles:
-  - name: text
-    models:
+# Groups (formerly called "profiles" in the old mmoehring/llama-swap schema).
+# Each group is mutually exclusive by default (`swap: true`): only one of its
+# member models runs at a time. Cross-group models can co-exist.
+#
+# Schema is the new mostlygeek/llama-swap v166+ form:
+#   groups:
+#     <name>:
+#       members: [model_id, ...]
+#       swap: true   # default; only one member runs at a time
+#       exclusive: true  # default; causes other groups to unload
+groups:
+  text:
+    members:
       - qwen2.5-math
       - uccix-13b
       - gemma-3-9b
-  - name: vision
-    models:
+  vision:
+    members:
       - qwen2.5-vl
       - gemma-3-vision
       - deepseek-ocr
-  - name: image
-    models:
+  image:
+    members:
       - z-image-turbo
       - qwen-image
       - qwen-image-edit

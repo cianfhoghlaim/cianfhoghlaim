@@ -5,7 +5,10 @@ services:
   # LLAMA-SWAP — dynamic GGUF model swapper
   # ---------------------------------------------------------------------------
   llama-swap:
-    image: ghcr.io/mmoehring/llama-swap:latest
+    # Image name updated to the maintained `ghcr.io/mostlygeek/llama-swap`
+    # (the prior `ghcr.io/mmoehring/llama-swap` registry was retired).
+    # `cpu` tag for Apple Silicon; `cuda`/`vulkan` for NVIDIA/AMD GPUs.
+    image: ghcr.io/mostlygeek/llama-swap:cpu
     container_name: llama-swap
     restart: unless-stopped
     # Mount the GGUF directory (converted from stedding/huggingface/hub/ via
@@ -26,7 +29,8 @@ services:
     ports:
       - "8080:8080"
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      # mostlygeek/llama-swap ships with curl; probe its /health endpoint.
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/health >/dev/null"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -34,8 +38,10 @@ services:
     deploy:
       resources:
         limits:
-          # One 17GB model (FLUX.2) or two 8GB models can fit
-          memory: 48G
+          # Apple Silicon unified memory: cap to 32 GB by default so we leave
+          # headroom for oideachais (~13 GB) + litellm/lancedb/langfuse.
+          # Bump to 48 GB by editing here when running alone.
+          memory: 32G
           cpus: '14'
     networks:
       - cianfhoghlaim
