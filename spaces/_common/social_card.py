@@ -19,7 +19,18 @@ from __future__ import annotations
 import io
 from typing import Final
 
-import gradio as gr
+# Lazy import: gr is only needed when render_social_card_html() is called
+# (it returns a gr.HTML component). The PNG renderer (render_social_card)
+# doesn't need Gradio, and is the one used in scripts/render_social_cards.py.
+_gr = None
+
+
+def _get_gr():
+    global _gr
+    if _gr is None:
+        import gradio as gr
+        _gr = gr
+    return _gr
 
 try:
     from PIL import Image, ImageDraw, ImageFont  # type: ignore[import-not-found]
@@ -181,6 +192,7 @@ def render_social_card_html(
     L4 CPU Space). The actual social_card.png is still committed to the
     Space repo at build time.
     """
+    gr = _get_gr()
     return f"""
     <div class="social-card-preview" style="
         background: {_BG};
