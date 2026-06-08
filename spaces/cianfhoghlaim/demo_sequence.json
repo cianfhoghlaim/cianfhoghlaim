@@ -1,0 +1,73 @@
+{
+  "title": "Cianfhoghlaim - Tuatha RPG",
+  "element": "anam",
+  "started_at": 1780943242.3563578,
+  "total_duration_s": 30.0,
+  "steps": [
+    {
+      "timestamp": 3.0994415283203125e-06,
+      "component_id": "map_render",
+      "value": "'1000x700 SVG, 6 zones, 6 NPC markers'",
+      "note": "intro"
+    },
+    {
+      "timestamp": 4.0531158447265625e-06,
+      "component_id": "npc_select",
+      "value": "'manannan_mac_lir'",
+      "note": "player picks Manannan"
+    },
+    {
+      "timestamp": 4.0531158447265625e-06,
+      "component_id": "player_input",
+      "value": "'What do the tides bring you this morning?'",
+      "note": "turn 1"
+    },
+    {
+      "timestamp": 5.245208740234375e-06,
+      "component_id": "npc_response",
+      "value": "'Hush, cian-fhoghlaim. The tide brings me a debt long owed.'",
+      "note": "npc"
+    },
+    {
+      "timestamp": 5.245208740234375e-06,
+      "component_id": "npc_select",
+      "value": "'rhiannon'",
+      "note": "player moves to Dyfed"
+    },
+    {
+      "timestamp": 5.245208740234375e-06,
+      "component_id": "player_input",
+      "value": "'Lady of the birds, will you ride with me?'",
+      "note": "turn 1"
+    },
+    {
+      "timestamp": 6.198883056640625e-06,
+      "component_id": "npc_response",
+      "value": "'I have not unsaddled since the Mabinogi. Why would I now?'",
+      "note": "npc"
+    },
+    {
+      "timestamp": 6.198883056640625e-06,
+      "component_id": "npc_select",
+      "value": "'cian'",
+      "note": "player moves to Cualann"
+    },
+    {
+      "timestamp": 6.198883056640625e-06,
+      "component_id": "player_input",
+      "value": "'Cian, do you know what became of Lugh?'",
+      "note": "turn 1"
+    },
+    {
+      "timestamp": 7.152557373046875e-06,
+      "component_id": "npc_response",
+      "value": "'I knew him only as a name in a song. The rest is his to answer.'",
+      "note": "npc"
+    }
+  ],
+  "voiceover_lines": [
+    "Welcome to Tuatha, the navigable British Isles. You are the wanderer, the cian-fhoghlaim. Six champions stand in the wind, each in their own corner.",
+    "Choose a champion. The first to greet you is Manannan mac Lir, the sea-god of the Otherworld, at Port Erin.",
+    "Manannan speaks. His answer is grounded in the cached Wikipedia article, his voice in the cultural memory of the Isle of Man."
+  ]
+}
