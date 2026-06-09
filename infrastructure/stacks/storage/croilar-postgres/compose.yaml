@@ -1,5 +1,5 @@
 services:
-  postgres:
+  croilar-postgres:
     image: postgres:16-alpine
     container_name: croilar-postgres
     restart: unless-stopped

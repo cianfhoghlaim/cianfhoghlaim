@@ -5,13 +5,10 @@ import viteTsConfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [
-    viteTsConfigPaths({ projects: ["./tsconfig.json"] }),
-    viteReact(),
-    // The TanStack Start plugin's types reference its own bundled Vite, which
-    // causes a structural type mismatch with our root Vite. We cast to any
-    // here because the runtime contract is correct; the type system just
-    // can't reconcile the two Vite copies.
+    // Order matters: TanStack Router plugin MUST come before React/JSX plugins
     tanstackStart() as unknown as ReturnType<typeof viteReact>,
+    viteReact(),
+    viteTsConfigPaths({ projects: ["./tsconfig.json"] }),
   ],
   server: {
     port: 3004,
