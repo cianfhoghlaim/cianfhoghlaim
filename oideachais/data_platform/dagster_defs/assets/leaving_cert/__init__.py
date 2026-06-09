@@ -1,16 +1,15 @@
 """Leaving Certificate 2026 — Per-Subject Asset Graph.
 
-Each subject has a `LeavingCertSubjectAssets` asset family that:
-  1. Ingests NCCA syllabus PDFs and SEC exam paper / marking-scheme PDFs
-     via the existing DLT sources.
-  2. Extracts structured data via BAML schemas.
-  3. Generates analysis via MiniMax M3 (syllabus summary, topic
-     prioritisation, exam layout tips).
-  4. Writes the portal page payload to MotherDuck (production) or
-     DuckDB (dev).
+The DLT-backed ingestion layer (one `@dlt_assets` per subject) lives in
+`.dlt_assets` and is imported here as `LEAVING_CERT_DLT_ASSETS`. The
+downstream 10-asset chain per subject (stub `@asset` decorators) is
+preserved for the BAML / MiniMax M3 / MotherDuck stages that follow.
 
-Partition keys: subject × year (Dagster limits MultiPartitionsDefinition
-to 2 dimensions; paper/language stored as metadata in BAML extraction).
+Asset inventory:
+  • LEAVING_CERT_DLT_ASSETS (7 × `@dlt_assets`) → ingests cached PDFs into DuckLake
+  • LEAVING_CERT_ASSETS     (70 × `@asset`)     → BAML + LLM + MotherDuck stages
+  • PER_SUBJECT_JOBS        (7 jobs)            → one per subject (math/irish/...)
+  • leaving_cert_full_job   (1 job)             → all 70 LC assets in parallel
 
 Subjects are built in exam-date order (hardest first):
   mathematics → irish → biology → french → history → business → construction-studies
@@ -32,6 +31,9 @@ from dagster import (
     define_asset_job,
     AssetSelection,
 )
+
+# Re-export the DLT-backed ingestion layer (7 subjects × @dlt_assets).
+from .dlt_assets import LEAVING_CERT_DLT_ASSETS, LEAVING_CERT_DLT_JOB
 
 # ── Partition definitions ──────────────────────────────────────────────────
 # Dagster limits MultiPartitionsDefinition to 2 dimensions. We partition

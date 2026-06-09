@@ -36,7 +36,22 @@ _GARAGE_SECRET_KEY = os.environ.get(
     os.environ.get("GARAGE_SECRET_ACCESS_KEY", ""),
 )
 _DUCKLAKE_DATA_PATH = os.environ.get(
-    "DUCKLAKE_DATA_PATH", "s3://ducklake/oideachais/leaving_cert"
+    "DUCKLAKE_DATA_PATH", "s3://ducklake/oideachais"
+)
+
+# Subject slugs for the per-subject DuckLake dataset split. The DLT
+# pipeline writes each subject's tables to its own dataset
+# (leaving_cert_{subject_slug}) to avoid concurrent transaction conflicts
+# when 7 subjects pipeline in parallel. The API reader unions all
+# subject datasets when reading.
+_LEAVING_CERT_SUBJECTS: tuple[str, ...] = (
+    "mathematics",
+    "irish",
+    "biology",
+    "french",
+    "history",
+    "business",
+    "construction_studies",
 )
 
 _LOCK = threading.Lock()
@@ -63,10 +78,10 @@ def _get_conn() -> Any:
     conn.execute("SET s3_use_ssl=false;")
     conn.execute("SET s3_region='garage';")
 
-    # Smoke-test the connection: glob the leaving_cert root.
+    # Smoke-test the connection: glob the first subject dataset.
     try:
         conn.execute(
-            f"SELECT count(*) FROM glob('{_DUCKLAKE_DATA_PATH}/syllabus/*.parquet')"
+            f"SELECT count(*) FROM glob('{_DUCKLAKE_DATA_PATH}/leaving_cert_mathematics/syllabus/*.parquet')"
         ).fetchone()
         logger.info(
             "ducklake_reader_initialized endpoint=%s path=%s",
@@ -85,24 +100,32 @@ def _get_conn() -> Any:
 
 
 def _read_table(table_suffix: str) -> list[dict[str, Any]]:
-    """Read all parquet files for a given table suffix and return rows."""
-    path = f"{_DUCKLAKE_DATA_PATH}/{table_suffix}/*.parquet"
+    """Read all parquet files for a given table suffix, unioning across
+    per-subject datasets (leaving_cert_{subject_slug}/{table_suffix}/*.parquet).
+
+    Each subject has its own DuckLake dataset to avoid concurrent
+    transaction conflicts during parallel DLT runs. The API reader is
+    subject-agnostic at the storage layer and applies per-subject filters
+    in the read_syllabus / read_past_papers etc. helpers below.
+    """
+    # Build a glob of per-subject paths. DuckDB's read_parquet accepts a
+    # list of globs in modern versions; for older versions we union.
+    glob_paths = [
+        f"{_DUCKLAKE_DATA_PATH}/leaving_cert_{subject}/{table_suffix}/*.parquet"
+        for subject in _LEAVING_CERT_SUBJECTS
+    ]
+    paths_csv = ", ".join(f"'{p}'" for p in glob_paths)
     try:
         with _LOCK:
             conn = _get_conn()
             result = conn.execute(
-                f"SELECT * FROM read_parquet('{path}') ORDER BY year DESC, level"
+                f"SELECT * FROM read_parquet([{paths_csv}]) ORDER BY year DESC, level"
             ).fetchdf()
         return result.to_dict(orient="records")
     except Exception as exc:
-        # The path may not exist (e.g. marking_schemes parquet glob is empty)
-        # or the parquet read may fail. Either way, return [] so the caller
-        # can fall back to seed data, and clear the cache so the next call
-        # gets a fresh connection.
         logger.warning(
-            "ducklake_read_failed table=%s path=%s err=%s",
+            "ducklake_read_failed table=%s err=%s",
             table_suffix,
-            path,
             exc,
         )
         _get_conn.cache_clear()
@@ -110,27 +133,67 @@ def _read_table(table_suffix: str) -> list[dict[str, Any]]:
 
 
 def read_syllabus(subject: str) -> list[dict[str, Any]]:
-    """Read syllabus rows for a subject from DuckLake."""
+    """Read syllabus rows for a subject from DuckLake, deduplicated by content_hash."""
     rows = _read_table("syllabus")
-    return [r for r in rows if r.get("subject") == subject]
+    out: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for r in rows:
+        if r.get("subject") != subject:
+            continue
+        h = r.get("content_hash") or f"{r.get('title','')}|{r.get('year','')}|{r.get('level','')}|{r.get('language','')}"
+        if h in seen:
+            continue
+        seen.add(h)
+        out.append(r)
+    return out
 
 
 def read_past_papers(subject: str) -> list[dict[str, Any]]:
-    """Read past_papers rows for a subject from DuckLake."""
+    """Read past_papers rows for a subject from DuckLake, deduplicated."""
     rows = _read_table("past_papers")
-    return [r for r in rows if r.get("subject") == subject]
+    out: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for r in rows:
+        if r.get("subject") != subject:
+            continue
+        h = r.get("content_hash") or f"{r.get('title','')}|{r.get('year','')}|{r.get('level','')}"
+        if h in seen:
+            continue
+        seen.add(h)
+        out.append(r)
+    return out
 
 
 def read_marking_schemes(subject: str) -> list[dict[str, Any]]:
-    """Read marking_schemes rows for a subject from DuckLake."""
+    """Read marking_schemes rows for a subject from DuckLake, deduplicated."""
     rows = _read_table("marking_schemes")
-    return [r for r in rows if r.get("subject") == subject]
+    out: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for r in rows:
+        if r.get("subject") != subject:
+            continue
+        h = r.get("content_hash") or f"{r.get('title','')}|{r.get('year','')}|{r.get('level','')}"
+        if h in seen:
+            continue
+        seen.add(h)
+        out.append(r)
+    return out
 
 
 def read_examiner_reports(subject: str) -> list[dict[str, Any]]:
-    """Read examiner_reports rows for a subject from DuckLake."""
+    """Read examiner_reports rows for a subject from DuckLake, deduplicated."""
     rows = _read_table("examiner_reports")
-    return [r for r in rows if r.get("subject") == subject]
+    out: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for r in rows:
+        if r.get("subject") != subject:
+            continue
+        h = r.get("content_hash") or f"{r.get('title','')}|{r.get('year','')}|{r.get('level','')}|{r.get('language','')}"
+        if h in seen:
+            continue
+        seen.add(h)
+        out.append(r)
+    return out
 
 
 def source_active() -> bool:

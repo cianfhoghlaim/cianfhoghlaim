@@ -17,12 +17,26 @@ import { Route as EnAboutRouteImport } from './routes/en/about'
 import { Route as En_layoutRouteImport } from './routes/en/__layout'
 import { Route as GaCChar233imeannaIndexRouteImport } from './routes/ga/céimeanna/index'
 import { Route as EnStagesIndexRouteImport } from './routes/en/stages/index'
+import { Route as GaLeavingCertMathematicsRouteImport } from './routes/ga/leaving-cert/mathematics'
+import { Route as GaLeavingCertIrishRouteImport } from './routes/ga/leaving-cert/irish'
+import { Route as GaLeavingCertHistoryRouteImport } from './routes/ga/leaving-cert/history'
+import { Route as GaLeavingCertFrenchRouteImport } from './routes/ga/leaving-cert/french'
+import { Route as GaLeavingCertConstructionStudiesRouteImport } from './routes/ga/leaving-cert/construction-studies'
+import { Route as GaLeavingCertBusinessRouteImport } from './routes/ga/leaving-cert/business'
+import { Route as GaLeavingCertBiologyRouteImport } from './routes/ga/leaving-cert/biology'
 import { Route as GaCChar233imeannaCChar233imRouteImport } from './routes/ga/céimeanna/$céim'
 import { Route as EnSubjectsSlugRouteImport } from './routes/en/subjects/$slug'
 import { Route as EnStagesStageRouteImport } from './routes/en/stages/$stage'
 import { Route as EnPracticeSubjectRouteImport } from './routes/en/practice/$subject'
 import { Route as EnPastPapersSubjectRouteImport } from './routes/en/past-papers/$subject'
 import { Route as EnMarkingSchemesSubjectRouteImport } from './routes/en/marking-schemes/$subject'
+import { Route as EnLeavingCertMathematicsRouteImport } from './routes/en/leaving-cert/mathematics'
+import { Route as EnLeavingCertIrishRouteImport } from './routes/en/leaving-cert/irish'
+import { Route as EnLeavingCertHistoryRouteImport } from './routes/en/leaving-cert/history'
+import { Route as EnLeavingCertFrenchRouteImport } from './routes/en/leaving-cert/french'
+import { Route as EnLeavingCertConstructionStudiesRouteImport } from './routes/en/leaving-cert/construction-studies'
+import { Route as EnLeavingCertBusinessRouteImport } from './routes/en/leaving-cert/business'
+import { Route as EnLeavingCertBiologyRouteImport } from './routes/en/leaving-cert/biology'
 import { Route as EnExaminerReportsSubjectRouteImport } from './routes/en/examiner-reports/$subject'
 import { Route as EnDashboardsStageRouteImport } from './routes/en/dashboards/$stage'
 import { Route as EnAdminComponentsRouteImport } from './routes/en/admin/components'
@@ -67,6 +81,43 @@ const EnStagesIndexRoute = EnStagesIndexRouteImport.update({
   path: '/en/stages/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GaLeavingCertMathematicsRoute =
+  GaLeavingCertMathematicsRouteImport.update({
+    id: '/ga/leaving-cert/mathematics',
+    path: '/ga/leaving-cert/mathematics',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const GaLeavingCertIrishRoute = GaLeavingCertIrishRouteImport.update({
+  id: '/ga/leaving-cert/irish',
+  path: '/ga/leaving-cert/irish',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GaLeavingCertHistoryRoute = GaLeavingCertHistoryRouteImport.update({
+  id: '/ga/leaving-cert/history',
+  path: '/ga/leaving-cert/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GaLeavingCertFrenchRoute = GaLeavingCertFrenchRouteImport.update({
+  id: '/ga/leaving-cert/french',
+  path: '/ga/leaving-cert/french',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GaLeavingCertConstructionStudiesRoute =
+  GaLeavingCertConstructionStudiesRouteImport.update({
+    id: '/ga/leaving-cert/construction-studies',
+    path: '/ga/leaving-cert/construction-studies',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const GaLeavingCertBusinessRoute = GaLeavingCertBusinessRouteImport.update({
+  id: '/ga/leaving-cert/business',
+  path: '/ga/leaving-cert/business',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GaLeavingCertBiologyRoute = GaLeavingCertBiologyRouteImport.update({
+  id: '/ga/leaving-cert/biology',
+  path: '/ga/leaving-cert/biology',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GaCChar233imeannaCChar233imRoute =
   GaCChar233imeannaCChar233imRouteImport.update({
     id: '/ga/céimeanna/$céim',
@@ -98,6 +149,43 @@ const EnMarkingSchemesSubjectRoute = EnMarkingSchemesSubjectRouteImport.update({
   path: '/en/marking-schemes/$subject',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EnLeavingCertMathematicsRoute =
+  EnLeavingCertMathematicsRouteImport.update({
+    id: '/en/leaving-cert/mathematics',
+    path: '/en/leaving-cert/mathematics',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const EnLeavingCertIrishRoute = EnLeavingCertIrishRouteImport.update({
+  id: '/en/leaving-cert/irish',
+  path: '/en/leaving-cert/irish',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnLeavingCertHistoryRoute = EnLeavingCertHistoryRouteImport.update({
+  id: '/en/leaving-cert/history',
+  path: '/en/leaving-cert/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnLeavingCertFrenchRoute = EnLeavingCertFrenchRouteImport.update({
+  id: '/en/leaving-cert/french',
+  path: '/en/leaving-cert/french',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnLeavingCertConstructionStudiesRoute =
+  EnLeavingCertConstructionStudiesRouteImport.update({
+    id: '/en/leaving-cert/construction-studies',
+    path: '/en/leaving-cert/construction-studies',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const EnLeavingCertBusinessRoute = EnLeavingCertBusinessRouteImport.update({
+  id: '/en/leaving-cert/business',
+  path: '/en/leaving-cert/business',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnLeavingCertBiologyRoute = EnLeavingCertBiologyRouteImport.update({
+  id: '/en/leaving-cert/biology',
+  path: '/en/leaving-cert/biology',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EnExaminerReportsSubjectRoute =
   EnExaminerReportsSubjectRouteImport.update({
     id: '/en/examiner-reports/$subject',
@@ -125,12 +213,26 @@ export interface FileRoutesByFullPath {
   '/en/admin/components': typeof EnAdminComponentsRoute
   '/en/dashboards/$stage': typeof EnDashboardsStageRoute
   '/en/examiner-reports/$subject': typeof EnExaminerReportsSubjectRoute
+  '/en/leaving-cert/biology': typeof EnLeavingCertBiologyRoute
+  '/en/leaving-cert/business': typeof EnLeavingCertBusinessRoute
+  '/en/leaving-cert/construction-studies': typeof EnLeavingCertConstructionStudiesRoute
+  '/en/leaving-cert/french': typeof EnLeavingCertFrenchRoute
+  '/en/leaving-cert/history': typeof EnLeavingCertHistoryRoute
+  '/en/leaving-cert/irish': typeof EnLeavingCertIrishRoute
+  '/en/leaving-cert/mathematics': typeof EnLeavingCertMathematicsRoute
   '/en/marking-schemes/$subject': typeof EnMarkingSchemesSubjectRoute
   '/en/past-papers/$subject': typeof EnPastPapersSubjectRoute
   '/en/practice/$subject': typeof EnPracticeSubjectRoute
   '/en/stages/$stage': typeof EnStagesStageRoute
   '/en/subjects/$slug': typeof EnSubjectsSlugRoute
   '/ga/céimeanna/$céim': typeof GaCChar233imeannaCChar233imRoute
+  '/ga/leaving-cert/biology': typeof GaLeavingCertBiologyRoute
+  '/ga/leaving-cert/business': typeof GaLeavingCertBusinessRoute
+  '/ga/leaving-cert/construction-studies': typeof GaLeavingCertConstructionStudiesRoute
+  '/ga/leaving-cert/french': typeof GaLeavingCertFrenchRoute
+  '/ga/leaving-cert/history': typeof GaLeavingCertHistoryRoute
+  '/ga/leaving-cert/irish': typeof GaLeavingCertIrishRoute
+  '/ga/leaving-cert/mathematics': typeof GaLeavingCertMathematicsRoute
   '/en/stages/': typeof EnStagesIndexRoute
   '/ga/céimeanna/': typeof GaCChar233imeannaIndexRoute
 }
@@ -144,12 +246,26 @@ export interface FileRoutesByTo {
   '/en/admin/components': typeof EnAdminComponentsRoute
   '/en/dashboards/$stage': typeof EnDashboardsStageRoute
   '/en/examiner-reports/$subject': typeof EnExaminerReportsSubjectRoute
+  '/en/leaving-cert/biology': typeof EnLeavingCertBiologyRoute
+  '/en/leaving-cert/business': typeof EnLeavingCertBusinessRoute
+  '/en/leaving-cert/construction-studies': typeof EnLeavingCertConstructionStudiesRoute
+  '/en/leaving-cert/french': typeof EnLeavingCertFrenchRoute
+  '/en/leaving-cert/history': typeof EnLeavingCertHistoryRoute
+  '/en/leaving-cert/irish': typeof EnLeavingCertIrishRoute
+  '/en/leaving-cert/mathematics': typeof EnLeavingCertMathematicsRoute
   '/en/marking-schemes/$subject': typeof EnMarkingSchemesSubjectRoute
   '/en/past-papers/$subject': typeof EnPastPapersSubjectRoute
   '/en/practice/$subject': typeof EnPracticeSubjectRoute
   '/en/stages/$stage': typeof EnStagesStageRoute
   '/en/subjects/$slug': typeof EnSubjectsSlugRoute
   '/ga/céimeanna/$céim': typeof GaCChar233imeannaCChar233imRoute
+  '/ga/leaving-cert/biology': typeof GaLeavingCertBiologyRoute
+  '/ga/leaving-cert/business': typeof GaLeavingCertBusinessRoute
+  '/ga/leaving-cert/construction-studies': typeof GaLeavingCertConstructionStudiesRoute
+  '/ga/leaving-cert/french': typeof GaLeavingCertFrenchRoute
+  '/ga/leaving-cert/history': typeof GaLeavingCertHistoryRoute
+  '/ga/leaving-cert/irish': typeof GaLeavingCertIrishRoute
+  '/ga/leaving-cert/mathematics': typeof GaLeavingCertMathematicsRoute
   '/en/stages': typeof EnStagesIndexRoute
   '/ga/céimeanna': typeof GaCChar233imeannaIndexRoute
 }
@@ -164,12 +280,26 @@ export interface FileRoutesById {
   '/en/admin/components': typeof EnAdminComponentsRoute
   '/en/dashboards/$stage': typeof EnDashboardsStageRoute
   '/en/examiner-reports/$subject': typeof EnExaminerReportsSubjectRoute
+  '/en/leaving-cert/biology': typeof EnLeavingCertBiologyRoute
+  '/en/leaving-cert/business': typeof EnLeavingCertBusinessRoute
+  '/en/leaving-cert/construction-studies': typeof EnLeavingCertConstructionStudiesRoute
+  '/en/leaving-cert/french': typeof EnLeavingCertFrenchRoute
+  '/en/leaving-cert/history': typeof EnLeavingCertHistoryRoute
+  '/en/leaving-cert/irish': typeof EnLeavingCertIrishRoute
+  '/en/leaving-cert/mathematics': typeof EnLeavingCertMathematicsRoute
   '/en/marking-schemes/$subject': typeof EnMarkingSchemesSubjectRoute
   '/en/past-papers/$subject': typeof EnPastPapersSubjectRoute
   '/en/practice/$subject': typeof EnPracticeSubjectRoute
   '/en/stages/$stage': typeof EnStagesStageRoute
   '/en/subjects/$slug': typeof EnSubjectsSlugRoute
   '/ga/céimeanna/$céim': typeof GaCChar233imeannaCChar233imRoute
+  '/ga/leaving-cert/biology': typeof GaLeavingCertBiologyRoute
+  '/ga/leaving-cert/business': typeof GaLeavingCertBusinessRoute
+  '/ga/leaving-cert/construction-studies': typeof GaLeavingCertConstructionStudiesRoute
+  '/ga/leaving-cert/french': typeof GaLeavingCertFrenchRoute
+  '/ga/leaving-cert/history': typeof GaLeavingCertHistoryRoute
+  '/ga/leaving-cert/irish': typeof GaLeavingCertIrishRoute
+  '/ga/leaving-cert/mathematics': typeof GaLeavingCertMathematicsRoute
   '/en/stages/': typeof EnStagesIndexRoute
   '/ga/céimeanna/': typeof GaCChar233imeannaIndexRoute
 }
@@ -185,12 +315,26 @@ export interface FileRouteTypes {
     | '/en/admin/components'
     | '/en/dashboards/$stage'
     | '/en/examiner-reports/$subject'
+    | '/en/leaving-cert/biology'
+    | '/en/leaving-cert/business'
+    | '/en/leaving-cert/construction-studies'
+    | '/en/leaving-cert/french'
+    | '/en/leaving-cert/history'
+    | '/en/leaving-cert/irish'
+    | '/en/leaving-cert/mathematics'
     | '/en/marking-schemes/$subject'
     | '/en/past-papers/$subject'
     | '/en/practice/$subject'
     | '/en/stages/$stage'
     | '/en/subjects/$slug'
     | '/ga/céimeanna/$céim'
+    | '/ga/leaving-cert/biology'
+    | '/ga/leaving-cert/business'
+    | '/ga/leaving-cert/construction-studies'
+    | '/ga/leaving-cert/french'
+    | '/ga/leaving-cert/history'
+    | '/ga/leaving-cert/irish'
+    | '/ga/leaving-cert/mathematics'
     | '/en/stages/'
     | '/ga/céimeanna/'
   fileRoutesByTo: FileRoutesByTo
@@ -204,12 +348,26 @@ export interface FileRouteTypes {
     | '/en/admin/components'
     | '/en/dashboards/$stage'
     | '/en/examiner-reports/$subject'
+    | '/en/leaving-cert/biology'
+    | '/en/leaving-cert/business'
+    | '/en/leaving-cert/construction-studies'
+    | '/en/leaving-cert/french'
+    | '/en/leaving-cert/history'
+    | '/en/leaving-cert/irish'
+    | '/en/leaving-cert/mathematics'
     | '/en/marking-schemes/$subject'
     | '/en/past-papers/$subject'
     | '/en/practice/$subject'
     | '/en/stages/$stage'
     | '/en/subjects/$slug'
     | '/ga/céimeanna/$céim'
+    | '/ga/leaving-cert/biology'
+    | '/ga/leaving-cert/business'
+    | '/ga/leaving-cert/construction-studies'
+    | '/ga/leaving-cert/french'
+    | '/ga/leaving-cert/history'
+    | '/ga/leaving-cert/irish'
+    | '/ga/leaving-cert/mathematics'
     | '/en/stages'
     | '/ga/céimeanna'
   id:
@@ -223,12 +381,26 @@ export interface FileRouteTypes {
     | '/en/admin/components'
     | '/en/dashboards/$stage'
     | '/en/examiner-reports/$subject'
+    | '/en/leaving-cert/biology'
+    | '/en/leaving-cert/business'
+    | '/en/leaving-cert/construction-studies'
+    | '/en/leaving-cert/french'
+    | '/en/leaving-cert/history'
+    | '/en/leaving-cert/irish'
+    | '/en/leaving-cert/mathematics'
     | '/en/marking-schemes/$subject'
     | '/en/past-papers/$subject'
     | '/en/practice/$subject'
     | '/en/stages/$stage'
     | '/en/subjects/$slug'
     | '/ga/céimeanna/$céim'
+    | '/ga/leaving-cert/biology'
+    | '/ga/leaving-cert/business'
+    | '/ga/leaving-cert/construction-studies'
+    | '/ga/leaving-cert/french'
+    | '/ga/leaving-cert/history'
+    | '/ga/leaving-cert/irish'
+    | '/ga/leaving-cert/mathematics'
     | '/en/stages/'
     | '/ga/céimeanna/'
   fileRoutesById: FileRoutesById
@@ -243,12 +415,26 @@ export interface RootRouteChildren {
   EnAdminComponentsRoute: typeof EnAdminComponentsRoute
   EnDashboardsStageRoute: typeof EnDashboardsStageRoute
   EnExaminerReportsSubjectRoute: typeof EnExaminerReportsSubjectRoute
+  EnLeavingCertBiologyRoute: typeof EnLeavingCertBiologyRoute
+  EnLeavingCertBusinessRoute: typeof EnLeavingCertBusinessRoute
+  EnLeavingCertConstructionStudiesRoute: typeof EnLeavingCertConstructionStudiesRoute
+  EnLeavingCertFrenchRoute: typeof EnLeavingCertFrenchRoute
+  EnLeavingCertHistoryRoute: typeof EnLeavingCertHistoryRoute
+  EnLeavingCertIrishRoute: typeof EnLeavingCertIrishRoute
+  EnLeavingCertMathematicsRoute: typeof EnLeavingCertMathematicsRoute
   EnMarkingSchemesSubjectRoute: typeof EnMarkingSchemesSubjectRoute
   EnPastPapersSubjectRoute: typeof EnPastPapersSubjectRoute
   EnPracticeSubjectRoute: typeof EnPracticeSubjectRoute
   EnStagesStageRoute: typeof EnStagesStageRoute
   EnSubjectsSlugRoute: typeof EnSubjectsSlugRoute
   GaCChar233imeannaCChar233imRoute: typeof GaCChar233imeannaCChar233imRoute
+  GaLeavingCertBiologyRoute: typeof GaLeavingCertBiologyRoute
+  GaLeavingCertBusinessRoute: typeof GaLeavingCertBusinessRoute
+  GaLeavingCertConstructionStudiesRoute: typeof GaLeavingCertConstructionStudiesRoute
+  GaLeavingCertFrenchRoute: typeof GaLeavingCertFrenchRoute
+  GaLeavingCertHistoryRoute: typeof GaLeavingCertHistoryRoute
+  GaLeavingCertIrishRoute: typeof GaLeavingCertIrishRoute
+  GaLeavingCertMathematicsRoute: typeof GaLeavingCertMathematicsRoute
   EnStagesIndexRoute: typeof EnStagesIndexRoute
   GaCChar233imeannaIndexRoute: typeof GaCChar233imeannaIndexRoute
 }
@@ -311,6 +497,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnStagesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ga/leaving-cert/mathematics': {
+      id: '/ga/leaving-cert/mathematics'
+      path: '/ga/leaving-cert/mathematics'
+      fullPath: '/ga/leaving-cert/mathematics'
+      preLoaderRoute: typeof GaLeavingCertMathematicsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ga/leaving-cert/irish': {
+      id: '/ga/leaving-cert/irish'
+      path: '/ga/leaving-cert/irish'
+      fullPath: '/ga/leaving-cert/irish'
+      preLoaderRoute: typeof GaLeavingCertIrishRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ga/leaving-cert/history': {
+      id: '/ga/leaving-cert/history'
+      path: '/ga/leaving-cert/history'
+      fullPath: '/ga/leaving-cert/history'
+      preLoaderRoute: typeof GaLeavingCertHistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ga/leaving-cert/french': {
+      id: '/ga/leaving-cert/french'
+      path: '/ga/leaving-cert/french'
+      fullPath: '/ga/leaving-cert/french'
+      preLoaderRoute: typeof GaLeavingCertFrenchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ga/leaving-cert/construction-studies': {
+      id: '/ga/leaving-cert/construction-studies'
+      path: '/ga/leaving-cert/construction-studies'
+      fullPath: '/ga/leaving-cert/construction-studies'
+      preLoaderRoute: typeof GaLeavingCertConstructionStudiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ga/leaving-cert/business': {
+      id: '/ga/leaving-cert/business'
+      path: '/ga/leaving-cert/business'
+      fullPath: '/ga/leaving-cert/business'
+      preLoaderRoute: typeof GaLeavingCertBusinessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ga/leaving-cert/biology': {
+      id: '/ga/leaving-cert/biology'
+      path: '/ga/leaving-cert/biology'
+      fullPath: '/ga/leaving-cert/biology'
+      preLoaderRoute: typeof GaLeavingCertBiologyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ga/céimeanna/$céim': {
       id: '/ga/céimeanna/$céim'
       path: '/ga/céimeanna/$céim'
@@ -353,6 +588,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnMarkingSchemesSubjectRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/en/leaving-cert/mathematics': {
+      id: '/en/leaving-cert/mathematics'
+      path: '/en/leaving-cert/mathematics'
+      fullPath: '/en/leaving-cert/mathematics'
+      preLoaderRoute: typeof EnLeavingCertMathematicsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/leaving-cert/irish': {
+      id: '/en/leaving-cert/irish'
+      path: '/en/leaving-cert/irish'
+      fullPath: '/en/leaving-cert/irish'
+      preLoaderRoute: typeof EnLeavingCertIrishRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/leaving-cert/history': {
+      id: '/en/leaving-cert/history'
+      path: '/en/leaving-cert/history'
+      fullPath: '/en/leaving-cert/history'
+      preLoaderRoute: typeof EnLeavingCertHistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/leaving-cert/french': {
+      id: '/en/leaving-cert/french'
+      path: '/en/leaving-cert/french'
+      fullPath: '/en/leaving-cert/french'
+      preLoaderRoute: typeof EnLeavingCertFrenchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/leaving-cert/construction-studies': {
+      id: '/en/leaving-cert/construction-studies'
+      path: '/en/leaving-cert/construction-studies'
+      fullPath: '/en/leaving-cert/construction-studies'
+      preLoaderRoute: typeof EnLeavingCertConstructionStudiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/leaving-cert/business': {
+      id: '/en/leaving-cert/business'
+      path: '/en/leaving-cert/business'
+      fullPath: '/en/leaving-cert/business'
+      preLoaderRoute: typeof EnLeavingCertBusinessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/leaving-cert/biology': {
+      id: '/en/leaving-cert/biology'
+      path: '/en/leaving-cert/biology'
+      fullPath: '/en/leaving-cert/biology'
+      preLoaderRoute: typeof EnLeavingCertBiologyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/en/examiner-reports/$subject': {
       id: '/en/examiner-reports/$subject'
       path: '/en/examiner-reports/$subject'
@@ -387,12 +671,26 @@ const rootRouteChildren: RootRouteChildren = {
   EnAdminComponentsRoute: EnAdminComponentsRoute,
   EnDashboardsStageRoute: EnDashboardsStageRoute,
   EnExaminerReportsSubjectRoute: EnExaminerReportsSubjectRoute,
+  EnLeavingCertBiologyRoute: EnLeavingCertBiologyRoute,
+  EnLeavingCertBusinessRoute: EnLeavingCertBusinessRoute,
+  EnLeavingCertConstructionStudiesRoute: EnLeavingCertConstructionStudiesRoute,
+  EnLeavingCertFrenchRoute: EnLeavingCertFrenchRoute,
+  EnLeavingCertHistoryRoute: EnLeavingCertHistoryRoute,
+  EnLeavingCertIrishRoute: EnLeavingCertIrishRoute,
+  EnLeavingCertMathematicsRoute: EnLeavingCertMathematicsRoute,
   EnMarkingSchemesSubjectRoute: EnMarkingSchemesSubjectRoute,
   EnPastPapersSubjectRoute: EnPastPapersSubjectRoute,
   EnPracticeSubjectRoute: EnPracticeSubjectRoute,
   EnStagesStageRoute: EnStagesStageRoute,
   EnSubjectsSlugRoute: EnSubjectsSlugRoute,
   GaCChar233imeannaCChar233imRoute: GaCChar233imeannaCChar233imRoute,
+  GaLeavingCertBiologyRoute: GaLeavingCertBiologyRoute,
+  GaLeavingCertBusinessRoute: GaLeavingCertBusinessRoute,
+  GaLeavingCertConstructionStudiesRoute: GaLeavingCertConstructionStudiesRoute,
+  GaLeavingCertFrenchRoute: GaLeavingCertFrenchRoute,
+  GaLeavingCertHistoryRoute: GaLeavingCertHistoryRoute,
+  GaLeavingCertIrishRoute: GaLeavingCertIrishRoute,
+  GaLeavingCertMathematicsRoute: GaLeavingCertMathematicsRoute,
   EnStagesIndexRoute: EnStagesIndexRoute,
   GaCChar233imeannaIndexRoute: GaCChar233imeannaIndexRoute,
 }

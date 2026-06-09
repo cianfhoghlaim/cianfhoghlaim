@@ -186,50 +186,130 @@ export function getPdfUrl(subject: Subject, type: "syllabus" | "exam-paper" | "m
 /**
  * Queries the DuckDB/MotherDuck instance for the given subject's data.
  *
- * In production (MOTHERDUCK_ENABLED=true), queries MotherDuck cloud.
- * In dev (local), queries a local DuckDB file.
+ * Data flow (in priority order):
+ *   1. FastAPI `/api/leaving-cert/{subject}` endpoint, which reads parquet
+ *      from `s3://ducklake/oideachais/leaving_cert/*` via DuckDB.
+ *   2. In-process seeded knowledge base (dev fallback).
  *
- * This is a server-side function — it runs in a TanStack Start server
- * function or a Cloudflare Worker, not in the browser.
- */
-/**
- * Queries the DuckDB/MotherDuck instance for the given subject's data.
- *
- * In production (MOTHERDUCK_ENABLED=true), queries MotherDuck cloud.
- * In dev (local), returns seeded data from the encoded knowledge base
- * + DuckDB query if the lakehouse is running.
- *
- * This is a server-side function — it runs in a TanStack Start server
- * function or a Cloudflare Worker, not in the browser.
+ * The FastAPI endpoint is reached via `VITE_API_URL` (or localhost:8000
+ * in dev). The endpoint returns `{source: "ducklake" | "seed", ...}` so
+ * callers can tell where the data came from.
  */
 export async function getSubjectPayload(subject: Subject): Promise<LeavingCertSubjectPayload> {
   const schedule = SCHEDULE[subject];
   const name = SUBJECT_NAMES[subject];
 
-  // Try DuckDB/MotherDuck first. Fall back to seeded data.
+  // Try the FastAPI endpoint first.
+  const apiBase =
+    (typeof process !== "undefined" && process.env?.VITE_API_URL) ||
+    (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_API_URL) ||
+    "http://localhost:8000";
+
   let topics: SyllabusTopic[] = [];
   let questions: PastExamQuestion[] = [];
   let patterns: MarkingSchemePattern[] = [];
   let priorities: TopicPrioritisation[] = [];
   let tips: ExamLayoutTip[] = [];
   let summary = `Syllabus analysis for ${name} — seed data (pipeline populates live data)`;
+  let dataSource: "ducklake" | "seed" = "seed";
 
   try {
-    // MotherDuck path: query the per-subject aggregate tables
-    // DuckDB path: query the local .duckdb file
-    // In dev mode, both fail gracefully and we use seeded data
-    // const result = await duckdbQuery(`SELECT * FROM ${tableName(subject, "topic_frequency")}`);
-    // topics = result.topics;
+    const url = `${apiBase}/api/leaving-cert/${subject}`;
+    const res = await fetch(url, { headers: { accept: "application/json" } });
+    if (res.ok) {
+      const data = (await res.json()) as {
+        source?: "ducklake" | "seed";
+        syllabusSummary?: string;
+        syllabusTopics?: Array<{
+          year?: number;
+          level?: string;
+          title?: string;
+          url?: string;
+          language?: string;
+          contentHash?: string;
+        }>;
+        pastExamQuestions?: Array<{
+          year?: number;
+          level?: string;
+          title?: string;
+          url?: string;
+          language?: string;
+          contentHash?: string;
+        }>;
+        markingSchemePatterns?: Array<{
+          year?: number;
+          level?: string;
+          title?: string;
+          url?: string;
+          contentHash?: string;
+        }>;
+        examinerReports?: Array<{
+          year?: number;
+          level?: string;
+          title?: string;
+          url?: string;
+          language?: string;
+          contentHash?: string;
+        }>;
+      };
+      dataSource = (data.source as "ducklake" | "seed") ?? "seed";
+      if (data.syllabusSummary) summary = data.syllabusSummary;
+
+      // Map DuckLake syllabus rows to typed SyllabusTopic[]
+      topics = (data.syllabusTopics ?? []).map((r, i) => ({
+        topicId: `${subject}-syllabus-${i}`,
+        name: r.title ?? "Untitled syllabus resource",
+        description: r.url ?? "",
+        learningOutcomes: [],
+        weightPct: 0,
+      }));
+
+      // Map DuckLake past papers to typed PastExamQuestion[] (year + level
+      // and title are surfaced; full question text would need a BAML pass).
+      questions = (data.pastExamQuestions ?? []).map((q, i) => ({
+        questionId: `${subject}-q-${i}`,
+        year: q.year ?? 0,
+        paper: "paper-1",
+        level: (q.level === "F" || q.level === "O" || q.level === "H" ? q.level : "H") as
+          | "F"
+          | "O"
+          | "H",
+        questionNumber: i + 1,
+        topic: q.title ?? "Untitled past paper",
+        marks: 0,
+        questionText: q.url ?? "",
+        markingNotes: "",
+      }));
+
+      // Map DuckLake marking-scheme rows to typed MarkingSchemePattern[]
+      patterns = (data.markingSchemePatterns ?? []).map((m, i) => ({
+        patternId: `${subject}-p-${i}`,
+        topic: m.title ?? "Untitled marking scheme",
+        description: m.url ?? "",
+        commonMistakes: [],
+        fullMarkExample: "",
+        frequencyPct: 0,
+      }));
+    } else {
+      // Non-OK: fall through to seed
+      dataSource = "seed";
+    }
   } catch {
-    // Fall back to seeded knowledge
-    const seeded = getSeededTopics(subject);
+    dataSource = "seed";
+  }
+
+  // Always augment with seeded data (the DuckLake raw rows don't carry
+  // weighted topics / PCLM patterns / exam tips; those are BAML-extracted
+  // from the PDF bodies in a future pipeline revision).
+  const seeded = getSeededTopics(subject);
+  if (topics.length === 0) {
     topics = seeded.topics;
     summary = seeded.summary;
-    questions = getSeededQuestions(subject);
-    patterns = getSeededPatterns(subject);
-    tips = getSeededTips(subject);
-    priorities = computePriorities(topics, questions, patterns);
   }
+  if (questions.length === 0) questions = getSeededQuestions(subject);
+  if (patterns.length === 0) patterns = getSeededPatterns(subject);
+  tips = getSeededTips(subject);
+  priorities = computePriorities(topics, questions, patterns);
 
   return {
     subject: name,

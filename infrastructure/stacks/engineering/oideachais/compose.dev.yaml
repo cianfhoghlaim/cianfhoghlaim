@@ -30,7 +30,7 @@ services:
       - ../../../../.env
     environment:
       DAGSTER_DEPLOYMENT: development
-      USE_DUCKLAKE: "false"
+      USE_DUCKLAKE: "true"
       MOTHERDUCK_ENABLED: "false"
 
   api:
@@ -41,7 +41,7 @@ services:
       - ../../../../.env
     environment:
       DAGSTER_DEPLOYMENT: development
-      USE_DUCKLAKE: "false"
+      USE_DUCKLAKE: "true"
       MOTHERDUCK_ENABLED: "false"
 
   frontend:

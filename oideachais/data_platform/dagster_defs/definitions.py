@@ -79,6 +79,8 @@ from oideachais.data_platform.dagster_assets import asset_generation_assets
 try:
     from .assets.leaving_cert import (
         LEAVING_CERT_ASSETS,
+        LEAVING_CERT_DLT_ASSETS,
+        LEAVING_CERT_DLT_JOB,
         PER_SUBJECT_JOBS,
         leaving_cert_full_job,
     )
@@ -87,6 +89,8 @@ except ImportError as e:
     _log = structlog.get_logger()
     _log.warning(f"leaving_cert assets not loaded: {e}")
     LEAVING_CERT_ASSETS = []
+    LEAVING_CERT_DLT_ASSETS = []
+    LEAVING_CERT_DLT_JOB = None
     PER_SUBJECT_JOBS = []
     leaving_cert_full_job = None
 
@@ -233,9 +237,10 @@ all_jobs = [
     sec_examinations_jc_job,
     sec_examinations_lca_job,
     model_conversion_job,
-    # Leaving Cert 2026 — 7 priority subjects, 1 full job
+    # Leaving Cert 2026 — 7 priority subjects, 1 full job, 1 DLT job
     *(PER_SUBJECT_JOBS if PER_SUBJECT_JOBS else []),
     *([leaving_cert_full_job] if leaving_cert_full_job else []),
+    *([LEAVING_CERT_DLT_JOB] if LEAVING_CERT_DLT_JOB else []),
 ]
 
 
@@ -277,6 +282,10 @@ combined_assets = [
     cross_stage_cognify,            # Cross-stage Cognee cognify (8 edges, 5 stages)
     # Leaving Cert 2026 — 7 priority subjects × 10 assets = 70 assets
     *LEAVING_CERT_ASSETS,
+    # Leaving Cert 2026 DLT ingestion layer (7 @dlt_assets, one per subject)
+    # Materialises the leaving_cert.syllabus / past_papers / marking_schemes /
+    # examiner_reports tables into DuckLake.
+    *LEAVING_CERT_DLT_ASSETS,
 ]
 
 defs = dg.Definitions(
