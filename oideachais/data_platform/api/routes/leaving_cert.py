@@ -2,10 +2,9 @@
 Leaving Certificate 2026 — per-subject API routes.
 
 Mirrors the per-subject page payload produced by the Dagster
-`leaving_cert_{subject}` assets. In dev (no MotherDuck / no live Dagster
-materialisations) returns the seed data shipped in
-`oideachais/data_platform/seed/leaving_cert.py`. In production the same
-endpoints query the MotherDuck `leaving_cert.{subject}_*` tables.
+`leaving_cert_{subject}` assets. Reads from DuckLake (Garage S3 +
+Lakekeeper Postgres catalog) when available, otherwise falls back to
+the seed data shipped in this file.
 
 Endpoints (all under /api/leaving-cert):
     GET /api/leaving-cert/{subject}                     -> full payload
@@ -22,6 +21,14 @@ import os
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Path
+
+from ..ducklake_reader import (
+    read_examiner_reports,
+    read_marking_schemes,
+    read_past_papers,
+    read_syllabus,
+    source_active,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -142,16 +149,82 @@ SEED_DATA: dict[str, dict[str, Any]] = {
 
 
 def _build_payload(subject: str) -> dict[str, Any]:
-    """Return the full per-subject payload for a given subject."""
+    """Return the full per-subject payload for a given subject.
+
+    Reads from DuckLake (Garage S3 parquet) when available; otherwise
+    returns the seed fallback. The seed preserves the syllabus summary,
+    exam papers, and aggregate table name; DuckLake supplies the actual
+    topic/question/pattern lists.
+    """
     seed = SEED_DATA.get(subject)
     if seed is None:
         raise HTTPException(status_code=404, detail=f"Unknown subject: {subject}")
+
+    source = "seed"
+    syllabus_topics: list[dict[str, Any]] = []
+    past_exams: list[dict[str, Any]] = []
+    marking_schemes: list[dict[str, Any]] = []
+    examiner_reports: list[dict[str, Any]] = []
+
+    if source_active():
+        source = "ducklake"
+        try:
+            syllabus_topics = [
+                {
+                    "year": r.get("year"),
+                    "level": r.get("level"),
+                    "title": r.get("title"),
+                    "url": r.get("url"),
+                    "language": r.get("language"),
+                    "source": r.get("source"),
+                    "contentHash": r.get("content_hash"),
+                }
+                for r in read_syllabus(subject)
+            ]
+            past_exams = [
+                {
+                    "year": r.get("year"),
+                    "level": r.get("level"),
+                    "title": r.get("title"),
+                    "url": r.get("url"),
+                    "language": r.get("language"),
+                    "contentHash": r.get("content_hash"),
+                }
+                for r in read_past_papers(subject)
+            ]
+            marking_schemes = [
+                {
+                    "year": r.get("year"),
+                    "level": r.get("level"),
+                    "title": r.get("title"),
+                    "url": r.get("url"),
+                    "contentHash": r.get("content_hash"),
+                }
+                for r in read_marking_schemes(subject)
+            ]
+            examiner_reports = [
+                {
+                    "year": r.get("year"),
+                    "level": r.get("level"),
+                    "title": r.get("title"),
+                    "url": r.get("url"),
+                    "language": r.get("language"),
+                    "contentHash": r.get("content_hash"),
+                }
+                for r in read_examiner_reports(subject)
+            ]
+        except Exception as exc:
+            logger.exception("ducklake_payload_assembly_failed: %s", subject, exc_info=exc)
+            source = "seed"
+
     return {
         **seed,
         "subjectSlug": subject,
-        "syllabusTopics": [],
-        "pastExamQuestions": [],
-        "markingSchemePatterns": [],
+        "source": source,
+        "syllabusTopics": syllabus_topics,
+        "pastExamQuestions": past_exams,
+        "markingSchemePatterns": marking_schemes,
+        "examinerReports": examiner_reports,
         "topicPrioritisations": [],
         "examLayoutTips": [],
     }
@@ -166,7 +239,7 @@ async def list_subjects() -> dict[str, Any]:
             for s in VALID_SUBJECTS
         ],
         "count": len(VALID_SUBJECTS),
-        "source": "seed" if os.getenv("MOTHERDUCK_ENABLED", "false").lower() != "true" else "motherduck",
+        "source": "ducklake" if source_active() else "seed",
     }
 
 
@@ -186,6 +259,7 @@ async def get_syllabus(subject: str) -> dict[str, Any]:
         "subject": payload["subject"],
         "summary": payload["syllabusSummary"],
         "topics": payload["syllabusTopics"],
+        "source": payload["source"],
     }
 
 
@@ -196,6 +270,7 @@ async def get_past_exams(subject: str) -> dict[str, Any]:
     return {
         "subject": payload["subject"],
         "questions": payload["pastExamQuestions"],
+        "source": payload["source"],
     }
 
 
@@ -206,6 +281,7 @@ async def get_marking_schemes(subject: str) -> dict[str, Any]:
     return {
         "subject": payload["subject"],
         "patterns": payload["markingSchemePatterns"],
+        "source": payload["source"],
     }
 
 
@@ -216,4 +292,5 @@ async def get_topic_frequency(subject: str) -> dict[str, Any]:
     return {
         "subject": payload["subject"],
         "aggregateTable": payload["aggregateTable"],
+        "source": payload["source"],
     }
