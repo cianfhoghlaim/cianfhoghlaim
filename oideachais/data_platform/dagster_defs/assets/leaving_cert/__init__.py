@@ -9,13 +9,12 @@ Each subject has a `LeavingCertSubjectAssets` asset family that:
   4. Writes the portal page payload to MotherDuck (production) or
      DuckDB (dev).
 
-Partition keys: subject × paper × year × language
+Partition keys: subject × year (Dagster limits MultiPartitionsDefinition
+to 2 dimensions; paper/language stored as metadata in BAML extraction).
 
 Subjects are built in exam-date order (hardest first):
   mathematics → irish → biology → french → history → business → construction-studies
 """
-
-from __future__ import annotations
 
 import json
 from dataclasses import dataclass
@@ -35,6 +34,9 @@ from dagster import (
 )
 
 # ── Partition definitions ──────────────────────────────────────────────────
+# Dagster limits MultiPartitionsDefinition to 2 dimensions. We partition
+# per (subject × year). The paper and language are stored in the asset's
+# metadata (set in BAML extraction), not as Dagster partition keys.
 
 SUBJECTS = [
     "mathematics",
@@ -51,16 +53,11 @@ LEVELS = ["H", "O", "F", "H&O"]
 LANGUAGES = ["en", "ga"]
 
 subject_static = StaticPartitionsDefinition(SUBJECTS)
-paper_static = StaticPartitionsDefinition(PAPERS)
-level_static = StaticPartitionsDefinition(LEVELS)
-language_static = StaticPartitionsDefinition(LANGUAGES)
 
 leaving_cert_partitions = MultiPartitionsDefinition(
     {
         "subject": subject_static,
-        "paper": paper_static,
         "year": DailyPartitionsDefinition(start_date="2017-01-01"),
-        "language": language_static,
     }
 )
 
@@ -269,9 +266,25 @@ for cfg in SUBJECT_CONFIGS:
 
 PER_SUBJECT_JOBS = [
     define_asset_job(
-        name=f"leaving_cert_{cfg.name}",
-        # Select this subject's 10 assets by asset name prefix
-        selection=AssetSelection.keys(*[f"{cfg.name}_*"]),
+        # Dagster job names must match ^[A-Za-z0-9_]+$, so we sanitise the
+        # subject slug by replacing hyphens with underscores. The asset
+        # names themselves keep their hyphenated form.
+        name=f"leaving_cert_{cfg.name.replace('-', '_')}",
+        # Select this subject's 10 assets by exact asset name. AssetSelection.keys
+        # doesn't support wildcard globs in the asset key path, so we list
+        # each asset explicitly.
+        selection=AssetSelection.keys(
+            f"{cfg.name}_syllabus_pdf",
+            f"{cfg.name}_syllabus_extracted",
+            f"{cfg.name}_past_papers",
+            f"{cfg.name}_past_papers_extracted",
+            f"{cfg.name}_marking_schemes",
+            f"{cfg.name}_marking_schemes_extracted",
+            f"{cfg.name}_topic_frequency",
+            f"{cfg.name}_study_prioritisation",
+            f"{cfg.name}_exam_layout_tips",
+            f"{cfg.name}_portal_page_payload",
+        ),
     )
     for cfg in SUBJECT_CONFIGS
 ]

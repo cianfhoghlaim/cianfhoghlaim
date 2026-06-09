@@ -66,8 +66,10 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
+        "http://localhost:3001",
         "http://localhost:5173",
         "http://127.0.0.1:3000",
+        "http://127.0.0.1:3001",
         "http://127.0.0.1:5173",
     ],
     allow_credentials=True,
@@ -79,8 +81,10 @@ app.add_middleware(
 from .routes.agent import agui_router
 from .routes.agent import router as agent_router
 from .routes.curriculum import router as curriculum_router
+from .routes.leaving_cert import router as leaving_cert_router
 
 app.include_router(curriculum_router)
+app.include_router(leaving_cert_router)
 app.include_router(agent_router)
 app.include_router(agui_router)  # AG-UI protocol endpoints
 

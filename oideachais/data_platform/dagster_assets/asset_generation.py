@@ -20,7 +20,6 @@ Reference:
   - infrastructure/stacks/engineering/litellm/config/config.yaml (image routes)
   - docs/meaisínfhoghlaim/FIBO/  (FIBO collection)
 """
-from __future__ import annotations
 
 import json
 import logging

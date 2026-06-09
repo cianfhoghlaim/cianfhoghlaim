@@ -8,7 +8,6 @@ Provides materialized assets for curriculum processing:
 - Syntactic parsing with UD treebanks
 - Model conversion (HuggingFace → GGUF) for llama-swap
 """
-from __future__ import annotations
 
 from .grammar_validation import (
     GramadoirValidator,

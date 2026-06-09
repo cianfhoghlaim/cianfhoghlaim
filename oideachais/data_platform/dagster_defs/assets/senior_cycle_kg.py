@@ -23,6 +23,7 @@ import os
 from pathlib import Path
 
 from dagster import (
+    AssetIn,
     DailyPartitionsDefinition,
     MultiPartitionsDefinition,
     StaticPartitionsDefinition,
@@ -55,10 +56,20 @@ DAILY_PARTITIONS = DailyPartitionsDefinition(start_date="2024-01-01")
     partitions_def=SENIOR_CYCLE_PARTITIONS,
     group_name="senior_cycle",
     description="Senior Cycle knowledge graph — ExamPaper, MarkingScheme, SubjectRubric, ExaminerReport per (subject, material_type).",
+    ins={
+        # The PDF text asset lives under the ireland.curriculum namespace in
+        # the modern asset graph. We accept it as an explicit Ins (no value
+        # required) so this asset can materialise standalone without a
+        # full ireland.curriculum.pdf_extracted_text backfill.
+        "pdf_extracted_text": AssetIn(
+            key_prefix=["ireland", "curriculum"],
+            metadata={"asset_name": "pdf_extracted_text"},
+        ),
+    },
 )
 def senior_cycle_knowledge_graph(
     context,
-    pdf_extracted_text,  # from pdf_assets.pdf_extracted_text_asset
+    pdf_extracted_text=None,  # optional: ireland.curriculum.pdf_extracted_text
 ) -> dict[str, int]:
     """Extract Senior Cycle exam + rubric structure from PDF text.
 
@@ -106,8 +117,13 @@ def senior_cycle_knowledge_graph(
     group_name="senior_cycle",
     description="Lazy on-demand BAML extraction cache for a (subject, year, level, paper) tuple. Respects per-session ExtractionBudget.",
     partitions_def=DAILY_PARTITIONS,
+    ins={
+        "senior_cycle_knowledge_graph": AssetIn(
+            key="senior_cycle_knowledge_graph",
+        ),
+    },
 )
-def lazy_extract_exam_paper(context, senior_cycle_knowledge_graph) -> int:
+def lazy_extract_exam_paper(context, senior_cycle_knowledge_graph=None) -> int:
     """Memoises LazyExtractExamPaper results in LanceDB exam_paper_extractions."""
     return 0
 

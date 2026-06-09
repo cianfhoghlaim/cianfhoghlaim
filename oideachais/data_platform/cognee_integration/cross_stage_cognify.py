@@ -75,18 +75,23 @@ EDGE_DEFINITIONS = [
 ]
 
 
+# Per-stage knowledge_graph assets (aistear, primary, junior_cycle,
+# senior_cycle, tertiary) are defined per-cycle in the ireland/curriculum_dlt
+# assets. Until those are wired up as knowledge_graph producers, this
+# cross-stage asset is standalone (no upstream assets) and records the
+# 8 cross-stage edge specs.
+#
+# To re-enable strict cross-stage ordering once the per-stage
+# knowledge_graph assets are defined, add them as Ins and accept them
+# as parameters.
+from dagster import asset
+
+
 @asset(
     group_name="knowledge_graph",
     description="Cross-stage Cognee cognify: creates 8 cross-stage edges spanning Aistear → Primary → JC → SC → Tertiary.",
 )
-def cross_stage_cognify(
-    context,
-    aistear_knowledge_graph,
-    primary_knowledge_graph,
-    junior_cycle_knowledge_graph,
-    senior_cycle_knowledge_graph,
-    tertiary_knowledge_graph,
-) -> int:
+def cross_stage_cognify(context) -> int:
     """Trigger the Cognee cognify pass on the cross-stage dataset.
 
     The real implementation calls cognee.cognify(dataset="oideachais.cross_stage")

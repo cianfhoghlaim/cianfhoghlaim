@@ -77,7 +77,7 @@ from oideachais.data_platform.dagster_assets import asset_generation_assets
 # Leaving Cert 2026 — 7 priority subjects × 10 assets = 70 assets
 # Try importing; fall back gracefully if the module tree is broken.
 try:
-    from data_platform.dagster_defs.assets.leaving_cert import (
+    from .assets.leaving_cert import (
         LEAVING_CERT_ASSETS,
         PER_SUBJECT_JOBS,
         leaving_cert_full_job,

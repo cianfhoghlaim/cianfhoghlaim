@@ -7,7 +7,6 @@ adding new pre-quantized GGUFs.
 
 Reference: docs/meaisínfhoghlaim/llamacpp.md (Task 2: Convert HF → GGUF)
 """
-from __future__ import annotations
 
 import os
 import subprocess
