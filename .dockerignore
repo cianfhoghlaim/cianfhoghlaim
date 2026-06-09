@@ -40,6 +40,10 @@ stedding/
 data/
 oideachais/storage/
 oideachais/data/
+oideachais/data_platform/datasets/
+oideachais/data_platform/curriculum_unified.duckdb
+oideachais/data_platform/.dlt/
+oideachais/data_platform/.dagster/
 oideachais/downloads/
 oideachais/curriculum_*.duckdb
 oideachais/curriculum_unified.duckdb
@@ -48,6 +52,10 @@ instagram_output/
 leabharlann/
 catharnacht/
 dlthub/
+oideachais/curriculum_unified_live.duckdb
+zotero/
+university_of_galway/
+spaces/
 
 # -----------------------------------------------------------------------------
 # IDE / OS

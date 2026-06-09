@@ -31,7 +31,7 @@
 
 services:
   # ---------------------------------------------------------------------------
-  # DAGSTER - Pipeline Orchestration (webserver)
+  # DAGSTER - Pipeline Orchestration (webserver + daemon)
   # ---------------------------------------------------------------------------
   dagster:
     # image: pinned. The `build:` block is the canonical source of truth
@@ -47,6 +47,11 @@ services:
       dockerfile: oideachais/Dockerfile.dagster
     container_name: cianfhoghlaim-oideachais-dagster
     restart: unless-stopped
+    # Override the image CMD: the pre-built image has the oideachais root
+    # at /app/ and the actual venv with dagster at /app/oideachais/.venv/.
+    # Run from there so `uv run` finds the venv.
+    working_dir: /app/oideachais
+    command: ["uv", "run", "dagster", "dev", "-h", "0.0.0.0", "-p", "3000", "-w", "workspace.yaml"]
     ports:
       - "${DAGSTER_PORT:-3335}:3000"
     environment:
@@ -67,8 +72,17 @@ services:
     volumes:
       - dagster_home:/opt/dagster/home
       - dagster_storage:/opt/dagster/storage
+      # Persistent venv so `uv sync` (downloading torch, lancedb, etc.)
+      # doesn't repeat on every container recreate.
+      - dagster_venv:/app/oideachais/.venv
       - ../../../../oideachais/dagster.yaml:/opt/dagster/home/dagster.yaml:ro
       - ../../../../stedding:/stedding:ro
+      # Live-bind the entire oideachais source tree so leaving_cert assets
+      # and any new code added to the host are picked up on Dagster restart.
+      # The container runs from /app/oideachais (uv workspace member).
+      # Read-write because Dagster writes session/state files into the
+      # source tree (e.g. storage/sessions) at startup.
+      - ../../../../oideachais:/app/oideachais:rw
     healthcheck:
       test: ["CMD-SHELL", "python3 -c \"import urllib.request, sys; sys.exit(0 if urllib.request.urlopen('http://localhost:3000/server_info', timeout=3).status == 200 else 1)\""]
       interval: 30s
@@ -99,8 +113,8 @@ services:
     ports:
       - "${API_PORT:-8000}:8000"
     volumes:
-      - ../../../../oideachais/data_platform:/app/data_platform:ro
-      - api_data:/app/storage/data
+      - ../../../../oideachais/data_platform:/app/oideachais/data_platform:ro
+      - api_data:/app/oideachais/storage/data
     environment:
       HOST: "0.0.0.0"
       PORT: "8000"
@@ -109,7 +123,7 @@ services:
       DAGSTER_DEPLOYMENT: ${DAGSTER_DEPLOYMENT:-development}
       USE_DUCKLAKE: "${USE_DUCKLAKE:-true}"
       MOTHERDUCK_ENABLED: "${MOTHERDUCK_ENABLED:-false}"
-      DUCKDB_PATH: ${DUCKDB_PATH:-/app/storage/data/celtic_education.duckdb}
+      DUCKDB_PATH: ${DUCKDB_PATH:-/app/oideachais/data_platform/.dlt/curriculum_unified/curriculum_unified.duckdb}
       LANCEDB_URI: ${LANCEDB_URI:-rest://lakehouse-lance-namespace:8182}
       LANCEDB_API_KEY: ${LANCEDB_API_KEY:-}
       LLM_API_KEY: ${LITELLM_MASTER_KEY:-${LLM_API_KEY:-}}
@@ -142,13 +156,14 @@ services:
   # FRONTEND - TanStack Start Web Application
   # ---------------------------------------------------------------------------
   frontend:
-    # image: pinned. Frontend is self-contained under oideachais/web/
-    # (no uv workspace deps), so its build context is the web subdir.
+    # image: pinned. Build context is the repo root because apps/web imports
+    # @croilar/ui from the sibling croilar monorepo. The Dockerfile lives
+    # at oideachais/web/Dockerfile.
     image: oideachais-dev-frontend:latest
     pull_policy: never
     build:
-      context: ../../../../oideachais/web
-      dockerfile: Dockerfile
+      context: ../../../..
+      dockerfile: oideachais/web/Dockerfile
     container_name: cianfhoghlaim-oideachais-frontend
     restart: unless-stopped
     ports:
@@ -160,7 +175,7 @@ services:
       VITE_CONVEX_URL: ${VITE_CONVEX_URL:-http://localhost:3210}
       VITE_BETTER_AUTH_URL: ${VITE_BETTER_AUTH_URL:-http://localhost:3002}
     healthcheck:
-      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:5173/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3000/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -179,6 +194,7 @@ services:
 volumes:
   dagster_home:
   dagster_storage:
+  dagster_venv:
   api_data:
 
 # =============================================================================

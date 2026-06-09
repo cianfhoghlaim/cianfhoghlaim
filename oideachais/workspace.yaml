@@ -1,4 +1,9 @@
 # Dagster workspace configuration for Oideachais
+#
+# working_directory is set to /app (the parent of the oideachais/ subdir)
+# so that absolute `from oideachais.X import Y` imports resolve correctly
+# (they look for /app/oideachais/X, not /app/oideachais/oideachais/X).
 load_from:
   - python_module:
       module_name: data_platform.dagster_defs.definitions
+      working_directory: /app
