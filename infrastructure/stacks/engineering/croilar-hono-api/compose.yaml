@@ -1,8 +1,8 @@
 services:
   hono-api:
     build:
-      context: ../../../../croilar/hono-api
-      dockerfile: Dockerfile
+      context: ${BUILD_CONTEXT:-../../../../..}
+      dockerfile: ${BUILD_DOCKERFILE:-croilar/hono-api/Dockerfile}
     image: ghcr.io/cianfhoghlaim/croilar-hono-api:0.1.0
     container_name: croilar-hono-api
     restart: unless-stopped
