@@ -1,4 +1,4 @@
-# Oideachais — Kings' College Galway
+# Oideachais — Kings' College Galway || Coláiste na Déisigh
 
 *A unified Celtic education platform, infrastructure mesh, and AI research laboratory by Cian Mac an Déisigh Uí Liatháin.*
 
