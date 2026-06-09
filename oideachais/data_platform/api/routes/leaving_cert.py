@@ -23,6 +23,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Path
 
 from ..ducklake_reader import (
+    compute_topic_frequency,
     read_examiner_reports,
     read_marking_schemes,
     read_past_papers,
@@ -287,10 +288,12 @@ async def get_marking_schemes(subject: str) -> dict[str, Any]:
 
 @router.get("/{subject}/topic-frequency")
 async def get_topic_frequency(subject: str) -> dict[str, Any]:
-    """Return the MotherDuck table name for the topic frequency aggregate."""
+    """Return topic frequency computed by cross-referencing examiner reports."""
     payload = _build_payload(subject)
+    frequencies = compute_topic_frequency(subject)
     return {
         "subject": payload["subject"],
         "aggregateTable": payload["aggregateTable"],
+        "frequencies": frequencies,
         "source": payload["source"],
     }

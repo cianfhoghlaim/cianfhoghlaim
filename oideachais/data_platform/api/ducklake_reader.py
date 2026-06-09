@@ -140,3 +140,75 @@ def source_active() -> bool:
         return len(rows) > 0
     except Exception:
         return False
+
+
+def compute_topic_frequency(subject: str) -> list[dict[str, Any]]:
+    """Cross-reference syllabus + examiner reports to surface the most-cited topics.
+
+    Heuristic: count occurrences of common Leaving Cert topic keywords
+    inside examiner report titles. Returns a list of {topic, count, examples}
+    sorted by count descending. When the bucket has no data, returns [].
+    """
+    reports = read_examiner_reports(subject)
+    if not reports:
+        return []
+
+    # Topic keywords for the 7 priority subjects. This is intentionally
+    # lightweight — a future revision will use BAML/GLiNER to extract
+    # topic mentions from the PDF markdown bodies.
+    KEYWORDS: dict[str, list[str]] = {
+        "mathematics": [
+            "algebra", "calculus", "trigonometry", "geometry", "statistics",
+            "probability", "functions", "sequences", "series", "logs",
+            "matrices", "complex", "integration", "differentiation",
+        ],
+        "irish": [
+            "gaeilge", "gramadach", "litríocht", "cluastuiscint",
+            "léamhthuiscint", "ceapadóireacht", "filíocht", "prós",
+        ],
+        "biology": [
+            "cell", "ecology", "genetics", "photosynthesis", "respiration",
+            "enzymes", "dna", "evolution", "microbiology", "plant",
+            "animal", "human", "reproduction",
+        ],
+        "french": [
+            "compréhension", "écriture", "grammaire", "vocabulaire",
+            "civilisation", "littérature", "aural", "oral",
+        ],
+        "history": [
+            "ireland", "europe", "world war", "revolution", "modern",
+            "early modern", "medieval", "famine", "independence", "union",
+        ],
+        "business": [
+            "management", "marketing", "finance", "enterprise", "people",
+            "environment", "global", "accounting", "strategy",
+        ],
+        "construction-studies": [
+            "timber", "concrete", "steel", "thermal", "insulation",
+            "foundations", "walls", "roof", "dpc", "cavity",
+        ],
+    }
+
+    subjects = KEYWORDS.get(subject, [])
+    if not subjects:
+        return []
+
+    counts: dict[str, list[str]] = {kw: [] for kw in subjects}
+    for report in reports:
+        title = (report.get("title") or "").lower()
+        for kw in subjects:
+            if kw in title:
+                counts[kw].append(report.get("title", ""))
+
+    out: list[dict[str, Any]] = []
+    for kw, examples in counts.items():
+        if examples:
+            out.append(
+                {
+                    "topic": kw,
+                    "count": len(examples),
+                    "examples": examples[:3],
+                }
+            )
+    out.sort(key=lambda x: x["count"], reverse=True)
+    return out
