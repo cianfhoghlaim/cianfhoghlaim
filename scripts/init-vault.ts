@@ -28,10 +28,45 @@ async function main() {
     });
 
     console.log("Authenticating...");
-    await client.auth().universalAuth.login({
-        clientId: CONFIG.infisicalClientId,
-        clientSecret: CONFIG.infisicalClientSecret
-    });
+    try {
+        await client.auth().universalAuth.login({
+            clientId: CONFIG.infisicalClientId,
+            clientSecret: CONFIG.infisicalClientSecret
+        });
+    } catch (e: any) {
+        const msg = String(e?.message || e);
+        console.error("\nInfisical authentication FAILED.\n");
+        if (msg.includes("401") || msg.includes("Unauthorized") || msg.includes("Invalid credentials")) {
+            console.error(
+                "The INFISICAL_CLIENT_ID / INFISICAL_CLIENT_SECRET in .env are\n" +
+                "stale or rotated. You need a new machine identity token from the\n" +
+                "Infisical UI:\n\n" +
+                "  1. Open " + CONFIG.infisicalUrl + "\n" +
+                "  2. Organization Settings -> Machine Identities -> + New\n" +
+                "  3. Grant: read+write on the dev-baile project\n" +
+                "  4. Copy the client_id + client_secret to .env as\n" +
+                "       INFISICAL_CLIENT_ID=<id>\n" +
+                "       INFISICAL_CLIENT_SECRET=<secret>\n" +
+                "  5. Re-run: mise run secrets:init\n"
+            );
+        } else if (msg.includes("405")) {
+            console.error(
+                "The Infisical SDK returned 405 (Method Not Allowed). This\n" +
+                "usually means INFISICAL_URL points to a host that doesn't expose\n" +
+                "/api/v1/auth/universal-auth/login. Set INFISICAL_URL in .env:\n\n" +
+                "  INFISICAL_URL=https://infisical.cianfhoghlaim.ie\n"
+            );
+        } else if (msg.includes("ENOTFOUND") || msg.includes("ECONNREFUSED")) {
+            console.error(
+                "Couldn't reach " + CONFIG.infisicalUrl + ". The Infisical\n" +
+                "service may be down, or INFISICAL_URL is wrong. Check:\n\n" +
+                "  curl -sI " + CONFIG.infisicalUrl + "\n"
+            );
+        } else {
+            console.error("Unknown error: " + msg);
+        }
+        process.exit(1);
+    }
 
     const envLocalPath = path.join(process.cwd(), ".env");
     const infisicalEnvPath = path.join(process.cwd(), ".infisical.env");
