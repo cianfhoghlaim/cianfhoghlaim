@@ -1,0 +1,198 @@
+# Crawl4AI Source Configuration for curriculumonline.ie
+# Irish National Curriculum Resources
+
+source:
+  name: curriculumonline_ie
+  display_name: "Curriculum Online Ireland"
+  description: "Official Irish curriculum resources for Early Childhood, Primary, Junior Cycle, and Senior Cycle"
+  base_url: "https://www.curriculumonline.ie"
+  language_variants:
+    - code: en
+      path_prefix: ""
+    - code: ga
+      path_prefix: "/ga-ie"
+
+crawler_config:
+  headless: true
+  user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+  wait_for: "networkidle"
+  word_count_threshold: 10
+  exclude_tags: ["nav", "footer", "aside"]
+
+# URL patterns to crawl
+url_patterns:
+
+  # Junior Cycle Subjects (Priority 1)
+  junior_cycle_subjects:
+    priority: 1
+    pattern: "/junior-cycle/junior-cycle-subjects/{subject}/**"
+    subjects:
+      - applied-technology
+      - business-studies
+      - classics
+      - engineering
+      - english
+      - gaeilge
+      - geography
+      - graphics
+      - history
+      - home-economics
+      - jewish-studies
+      - mathematics
+      - modern-foreign-languages
+      - music
+      - religious-education
+      - science
+      - visual-art
+      - wood-technology
+    subpages:
+      - overview-course
+      - rationale
+      - assessment-guidelines
+      - assessment-and-reporting
+      - examples-of-student-work
+      - key-skills
+      - expectations-for-students
+      - statements-of-learning
+      - continuity-and-progression
+
+  # Junior Cycle Short Courses (Priority 2)
+  junior_cycle_short_courses:
+    priority: 2
+    pattern: "/junior-cycle/short-courses/{course}/**"
+    courses:
+      - coding
+      - cspe
+      - digital-media-literacy
+      - philosophy
+      - physical-education
+      - sphe
+      - chinese-language-and-culture
+      - artistic-performance
+
+  # Senior Cycle Subjects (Priority 1)
+  senior_cycle_subjects:
+    priority: 1
+    pattern: "/senior-cycle/senior-cycle-subjects/{subject}/**"
+    subjects:
+      - accounting
+      - agricultural-science
+      - ancient-greek
+      - applied-mathematics
+      - arabic
+      - art
+      - biology
+      - business
+      - chemistry
+      - classical-studies
+      - climate-action-and-sustainable-development
+      - computer-science
+      - construction-studies
+      - design-and-communication-graphics
+      - drama-film-and-theatre-studies
+      - economics
+      - engineering
+      - english
+      - french
+      - gaeilge
+      - geography
+      - german
+      - hebrew-studies
+      - history
+      - home-economics
+      - italian
+      - japanese
+      - latin
+      - lithuanian
+      - mandarin-chinese
+      - mathematics
+      - music
+      - physical-education-framework
+      - physical-education-specification
+      - physics
+      - physics-and-chemistry
+      - polish
+      - politics-and-society
+      - portuguese
+      - religious-education
+      - russian
+      - spanish
+      - technology
+
+  # LCA Modules (Priority 2)
+  lca_modules:
+    priority: 2
+    pattern: "/senior-cycle/lca/{module}/**"
+
+  # Primary Curriculum (Priority 3)
+  primary_curriculum:
+    priority: 3
+    pattern: "/primary/**"
+    include:
+      - curriculum-areas
+      - primary-curriculum-toolkit
+      - the-primary-curriculum-framework
+
+  # Early Childhood (Priority 3)
+  early_childhood:
+    priority: 3
+    pattern: "/early-childhood/**"
+
+  # Level Learning Programmes (Priority 2)
+  level_programmes:
+    priority: 2
+    patterns:
+      - "/junior-cycle/level-1-learning-programmes-l1lps/**"
+      - "/junior-cycle/level-2-learning-programmes/**"
+      - "/senior-cycle/level-1-and-level-2-learning-programmes/**"
+
+# PDF download configuration
+pdf_extraction:
+  enabled: true
+  patterns:
+    - "/getmedia/**/*.pdf"
+    - "*.pdf"
+  save_to: "data/pdf/curriculumonline"
+  extract_metadata: true
+
+# Bilingual handling
+bilingual:
+  crawl_both_languages: true
+  english_base: ""
+  irish_prefix: "/ga-ie"
+  match_parallel_pages: true
+
+# Rate limiting
+rate_limit:
+  requests_per_second: 2
+  concurrent_requests: 5
+  retry_delay_seconds: 5
+  max_retries: 3
+
+# Output configuration
+output:
+  format: json
+  include_markdown: true
+  include_metadata: true
+  output_dir: "data/websites/curriculumonline.ie"
+  filename_from_url: true
+
+# Extraction schema reference
+extraction:
+  baml_schema: "web_content.baml"
+  primary_class: "JuniorCycleSubjectPage"
+
+# Sitemap configuration
+sitemap:
+  url: "https://www.curriculumonline.ie/sitemap.xml"
+  follow: true
+  filter_patterns:
+    include:
+      - "junior-cycle"
+      - "senior-cycle"
+      - "primary"
+      - "early-childhood"
+    exclude:
+      - "clipboard"
+      - "my-account"
+      - "editor-tips"

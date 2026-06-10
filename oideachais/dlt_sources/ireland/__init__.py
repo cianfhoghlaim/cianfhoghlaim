@@ -1,0 +1,96 @@
+"""
+DLT Sources for Irish Education Data.
+
+Sources:
+- NCCA curriculum documents
+- SEC examinations and reports
+- OIDE CPD resources
+- EdcoLearning exam audio
+- Local document processing
+"""
+from .curriculum_source import (
+    curriculum_source,
+)
+from .edcolearning import (
+    EdcoCredentials,
+    ExamLevel,
+    ExamSubject,
+    edcolearning_source,
+    french_lc_audio_source,
+    german_lc_audio_source,
+    irish_lc_audio_source,
+    languages_lc_audio_source,
+    spanish_lc_audio_source,
+)
+from .examinations import (
+    examinations_source,
+    junior_cycle_exams_source,
+    leaving_certificate_source,
+    mathematics_exams_source,
+    science_subjects_exams_source,
+    sec_examinations_browser_source,
+)
+from .leaving_cert import (
+    SUBJECTS,
+    leaving_cert_source,
+)
+from .local_documents import (
+    FileHashTracker,
+    local_documents_by_subject_source,
+    local_education_documents_source,
+)
+from .ncca import ncca_source
+from .oide import oide_all_subjects_source, oide_gaeilge_source, oide_source, oide_subject_source
+from .sec_aural_transcripts import (
+    AuralTranscript,
+    IrishDialect,
+    SpeakerSegment,
+    TranscriptType,
+    irish_lc_transcripts_source,
+    languages_lc_transcripts_source,
+    sec_aural_transcripts_source,
+)
+
+__all__ = [
+    # NCCA
+    "ncca_source",
+    # OIDE
+    "oide_source",
+    "oide_subject_source",
+    "oide_gaeilge_source",
+    "oide_all_subjects_source",
+    # SEC Examinations
+    "examinations_source",
+    "sec_examinations_browser_source",
+    "leaving_certificate_source",
+    "junior_cycle_exams_source",
+    "mathematics_exams_source",
+    "science_subjects_exams_source",
+    # EdcoLearning Audio
+    "edcolearning_source",
+    "irish_lc_audio_source",
+    "languages_lc_audio_source",
+    "french_lc_audio_source",
+    "german_lc_audio_source",
+    "spanish_lc_audio_source",
+    "EdcoCredentials",
+    "ExamLevel",
+    "ExamSubject",
+    # SEC Aural Transcripts
+    "sec_aural_transcripts_source",
+    "irish_lc_transcripts_source",
+    "languages_lc_transcripts_source",
+    "IrishDialect",
+    "TranscriptType",
+    "AuralTranscript",
+    "SpeakerSegment",
+    # Local Documents
+    "local_education_documents_source",
+    "local_documents_by_subject_source",
+    "FileHashTracker",
+    # Unified Curriculum
+    "curriculum_source",
+    # Leaving Certificate 2026 (7 priority subjects)
+    "leaving_cert_source",
+    "SUBJECTS",
+]
