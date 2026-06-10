@@ -63,11 +63,11 @@ services:
 # Resolution: assign a different public domain, port 3000 stays local
 # ============================================================================
 
-  # Private — portal.cianfhoghlaim.ie (OIDC, IP-restricted)
+  # Private — portal.croilar.cianfhoghlaim.ie (OIDC, IP-restricted)
   croilar-portal:
     labels:
       - "pangolin.resource.name=Croílár Portal"
-      - "pangolin.resource.domain=portal.cianfhoghlaim.ie"
+      - "pangolin.resource.domain=portal.croilar.cianfhoghlaim.ie"
       - "pangolin.resource.target=http://croilar-portal:3000"
       - "pangolin.resource.middlewares=oidc-portal,rate-limit"
       - "pangolin.resource.sso=Pocket ID"
@@ -78,11 +78,11 @@ services:
 # Resolution: NOT exposed publicly; only via internal network
 # ============================================================================
 
-  # Private — auth.cianfhoghlaim.ie (OIDC issuer)
+  # Private — auth.croilar.cianfhoghlaim.ie (OIDC issuer, matches existing blueprint)
   hono-api:
     labels:
       - "pangolin.resource.name=Croílár Hono API"
-      - "pangolin.resource.domain=auth.cianfhoghlaim.ie"
+      - "pangolin.resource.domain=auth.croilar.cianfhoghlaim.ie"
       - "pangolin.resource.target=http://hono-api:4000"
       - "pangolin.resource.middlewares=oidc-portal"
       - "pangolin.resource.sso=Pocket ID"
