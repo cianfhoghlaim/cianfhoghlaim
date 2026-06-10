@@ -34,7 +34,7 @@ model_list:
     model_info:
       description: "IBM Granite Docling 258M (MLX) — PDF→DocTags XML, table extraction"
       capabilities: ["document_layout", "table_extraction", "doc_tags"]
-      tier: mlx
+      tier: paid
 
   - model_name: local/ocr/olmocr-mlx
     litellm_params:
@@ -45,7 +45,7 @@ model_list:
     model_info:
       description: "olmOCR 2-7B (MLX 4-bit) — OCR specialist fine-tuned for SEC paper layouts"
       capabilities: ["ocr", "document_parsing", "text_extraction", "multi_column"]
-      tier: mlx
+      tier: paid
 
   - model_name: local/image/fibo
     litellm_params:
@@ -56,7 +56,7 @@ model_list:
     model_info:
       description: "Bria FIBO (MLX) — JSON-config-driven image generation. Free for non-profit use."
       capabilities: ["image_generation", "text_to_image", "structured_json_input", "deterministic"]
-      tier: mlx
+      tier: paid
       notes: "Self-hosted via briaai/FIBO collection. JSON config in → PNG out."
 
   # =========================================================================
@@ -72,7 +72,7 @@ model_list:
     model_info:
       description: "Qwen2.5-VL-7B-Instruct (GGUF Q4_K_M + mmproj f16) — multimodal VLM"
       capabilities: ["vision", "vlm", "image_understanding", "ocr_fallback"]
-      tier: gguf
+      tier: paid
 
   - model_name: local/vision/gemma3-vision
     litellm_params:
@@ -83,7 +83,7 @@ model_list:
     model_info:
       description: "Gemma 3 9B Vision (GGUF) — fallback VLM with sliding-window attention"
       capabilities: ["vision", "vlm"]
-      tier: gguf
+      tier: paid
 
   - model_name: local/ocr/deepseek-ocr
     litellm_params:
@@ -94,7 +94,7 @@ model_list:
     model_info:
       description: "DeepSeek-OCR (GGUF Q4_K_M + mmproj) — OCR specialist"
       capabilities: ["ocr", "document_parsing", "text_extraction"]
-      tier: gguf
+      tier: paid
 
   - model_name: local/math/qwen25-math
     litellm_params:
@@ -105,7 +105,7 @@ model_list:
     model_info:
       description: "Qwen2.5-Math-7B-Instruct (GGUF Q4_K_M) — bilingual math reasoning"
       capabilities: ["math", "reasoning", "bilingual"]
-      tier: gguf
+      tier: paid
 
   - model_name: local/irish/uccix
     litellm_params:
@@ -116,7 +116,7 @@ model_list:
     model_info:
       description: "ReliableAI/UCCIX-Llama2-13B-Instruct (GGUF) — Irish text generation"
       capabilities: ["irish", "ga", "instruction_following"]
-      tier: gguf
+      tier: paid
 
   - model_name: local/image/z-image-turbo
     litellm_params:
@@ -127,7 +127,7 @@ model_list:
     model_info:
       description: "vantagewithai/Z-Image-Turbo (GGUF) — fast image gen, FLUX quality at SDXL speed"
       capabilities: ["image_generation", "text_to_image", "fast_inference", "regional_guidance"]
-      tier: gguf
+      tier: paid
 
   - model_name: local/image/qwen-image
     litellm_params:
@@ -138,7 +138,7 @@ model_list:
     model_info:
       description: "unsloth/Qwen-Image (GGUF) — accurate bilingual image gen"
       capabilities: ["image_generation", "text_to_image", "bilingual"]
-      tier: gguf
+      tier: paid
 
   - model_name: local/image/qwen-image-edit
     litellm_params:
@@ -149,7 +149,7 @@ model_list:
     model_info:
       description: "unsloth/Qwen-Image-Edit-2511 (GGUF) — instruction-driven image editing"
       capabilities: ["image_editing", "instruction_following"]
-      tier: gguf
+      tier: paid
 
   - model_name: local/image/flux2
     litellm_params:
@@ -160,7 +160,7 @@ model_list:
     model_info:
       description: "unsloth/FLUX.2-dev (GGUF) — highest quality image gen, 17GB resident"
       capabilities: ["image_generation", "text_to_image", "high_quality"]
-      tier: gguf
+      tier: paid
 
   # =========================================================================
   # LOCAL INVOKEAI — image gen for SDXL base
@@ -174,7 +174,7 @@ model_list:
     model_info:
       description: "SDXL base 1.0 (InvokeAI) — high-quality, supports inpainting/outpainting"
       capabilities: ["image_generation", "text_to_image", "inpainting", "outpainting"]
-      tier: invokeai
+      tier: paid
 
   # =========================================================================
   # DOCLING-SERVE (exposed as LiteLLM proxy pass-through, not chat)
@@ -188,7 +188,7 @@ model_list:
     model_info:
       description: "docling-serve (tool endpoint) — invoked by BAML tool_use, not chat"
       capabilities: ["document_parsing", "pdf_to_markdown", "table_extraction"]
-      tier: tool
+      tier: paid
 
   # =========================================================================
   # CLOUD — Gemini (primary BAML extraction)
@@ -200,7 +200,7 @@ model_list:
     model_info:
       description: "Gemini 2.5 Pro — primary BAML extraction. Strong Irish + English + JSON schema adherence."
       capabilities: ["extraction", "baml", "long_context", "json_schema"]
-      tier: cloud
+      tier: paid
 
   - model_name: gemini/gemini-2.5-flash
     litellm_params:
@@ -209,7 +209,7 @@ model_list:
     model_info:
       description: "Gemini 2.5 Flash — high-throughput OCR + fallback extraction"
       capabilities: ["extraction", "vision", "ocr", "json_schema", "fast"]
-      tier: cloud
+      tier: paid
 
   - model_name: gemini/gemini-3.0-flash-preview
     litellm_params:
@@ -218,7 +218,7 @@ model_list:
     model_info:
       description: "Gemini 3.0 Flash Preview (opt-in via USE_GEMINI_3=true) — latest preview"
       capabilities: ["extraction", "vision", "json_schema", "preview"]
-      tier: cloud
+      tier: paid
       enabled_by_env: USE_GEMINI_3
 
   # =========================================================================
@@ -232,7 +232,7 @@ model_list:
     model_info:
       description: "GLM 4.6 — coding + general reasoning, cost-effective Z.ai route"
       capabilities: ["code", "general", "function_calling"]
-      tier: cloud
+      tier: paid
 
   - model_name: openai/glm-4.6v
     litellm_params:
@@ -242,7 +242,7 @@ model_list:
     model_info:
       description: "GLM 4.6V — Z.ai vision-language model"
       capabilities: ["vision", "vlm"]
-      tier: cloud
+      tier: paid
 
   # =========================================================================
   # CLOUD — Anthropic (via Pydantic AI Gateway)
@@ -254,7 +254,7 @@ model_list:
     model_info:
       description: "Claude Sonnet 4 — high-quality fallback (still used by some BAML functions)"
       capabilities: ["extraction", "code", "long_context", "tools"]
-      tier: cloud
+      tier: paid
 
   # =========================================================================
   # CLOUD — OpenAI
@@ -266,7 +266,7 @@ model_list:
     model_info:
       description: "GPT-4o — vision + general fallback"
       capabilities: ["vision", "general", "tools"]
-      tier: cloud
+      tier: paid
 
   - model_name: gpt-4o-mini
     litellm_params:
@@ -275,7 +275,7 @@ model_list:
     model_info:
       description: "GPT-4o mini — cheap fallback"
       capabilities: ["general", "fast"]
-      tier: cloud
+      tier: paid
 
   # =========================================================================
   # CLOUD — OpenCode Go subscription (per Go.md)
@@ -288,7 +288,7 @@ model_list:
     model_info:
       description: "GLM 5.1 (OpenCode Go) — high-quality coding model"
       capabilities: ["code", "reasoning"]
-      tier: opencode-go
+      tier: paid
       rpm: 880
 
   - model_name: opencode-go/kimi-k2.6
@@ -299,7 +299,7 @@ model_list:
     model_info:
       description: "Kimi K2.6 (OpenCode Go) — strong long-context generalist"
       capabilities: ["general", "long_context"]
-      tier: opencode-go
+      tier: paid
 
   - model_name: opencode-go/deepseek-v4-pro
     litellm_params:
@@ -309,7 +309,7 @@ model_list:
     model_info:
       description: "DeepSeek V4 Pro (OpenCode Go) — strong reasoning"
       capabilities: ["reasoning", "code"]
-      tier: opencode-go
+      tier: paid
 
   - model_name: opencode-go/deepseek-v4-flash
     litellm_params:
@@ -319,7 +319,7 @@ model_list:
     model_info:
       description: "DeepSeek V4 Flash (OpenCode Go) — fast + cheap"
       capabilities: ["fast", "general"]
-      tier: opencode-go
+      tier: paid
       rpm: 31650
 
   - model_name: opencode-go/qwen3.7-max
@@ -330,7 +330,7 @@ model_list:
     model_info:
       description: "Qwen 3.7 Max (OpenCode Go) — high-tier for complex tasks"
       capabilities: ["complex", "reasoning"]
-      tier: opencode-go
+      tier: paid
 
   - model_name: opencode-go/qwen3.6-plus
     litellm_params:
@@ -340,7 +340,7 @@ model_list:
     model_info:
       description: "Qwen 3.6 Plus (OpenCode Go) — balanced"
       capabilities: ["general"]
-      tier: opencode-go
+      tier: paid
 
   - model_name: opencode-go/mimo-v2.5
     litellm_params:
@@ -350,7 +350,7 @@ model_list:
     model_info:
       description: "MiMo V2.5 (OpenCode Go) — very cheap, very fast"
       capabilities: ["fast", "cheap"]
-      tier: opencode-go
+      tier: paid
       rpm: 30100
 
   - model_name: opencode-go/minimax-m3
@@ -361,7 +361,7 @@ model_list:
     model_info:
       description: "MiniMax M3 (OpenCode Go) — current opencode model"
       capabilities: ["general", "agentic"]
-      tier: opencode-go
+      tier: paid
 
   # =========================================================================
   # CELTIC LANGUAGE MODELS — HuggingFace passthrough
@@ -373,7 +373,7 @@ model_list:
     model_info:
       description: "GaBERT — Irish BERT for NER, POS, classification (PyTorch transformer)"
       capabilities: ["ner", "pos_tagging", "classification", "ga", "embeddings"]
-      tier: hf-passthrough
+      tier: paid
       dimensions: 768
 
   - model_name: celtic/irish/uccix-13b
@@ -383,7 +383,7 @@ model_list:
     model_info:
       description: "UCCIX Llama 2 13B — best Irish text generation (HF passthrough)"
       capabilities: ["irish", "ga", "instruction_following"]
-      tier: hf-passthrough
+      tier: paid
       notes: "Prefer local/irish/uccix (GGUF) for production. This entry is for HF TGI passthrough."
 
   - model_name: celtic/translation/nllb
@@ -393,7 +393,7 @@ model_list:
     model_info:
       description: "NLLB-200 — 200-language translation including all 6 Celtic languages"
       capabilities: ["translation", "ga", "gd", "cy", "gv", "kw", "br"]
-      tier: hf-passthrough
+      tier: paid
 
   - model_name: celtic/translation/opus-en-ga
     litellm_params:
@@ -402,7 +402,7 @@ model_list:
     model_info:
       description: "OPUS-MT English→Irish Helsinki translation"
       capabilities: ["translation", "en_ga"]
-      tier: hf-passthrough
+      tier: paid
 
   - model_name: celtic/translation/opus-ga-en
     litellm_params:
@@ -411,7 +411,7 @@ model_list:
     model_info:
       description: "OPUS-MT Irish→English Helsinki translation"
       capabilities: ["translation", "ga_en"]
-      tier: hf-passthrough
+      tier: paid
 
   - model_name: celtic/translation/opus-en-cy
     litellm_params:
@@ -420,7 +420,7 @@ model_list:
     model_info:
       description: "OPUS-MT English→Welsh Helsinki translation"
       capabilities: ["translation", "en_cy"]
-      tier: hf-passthrough
+      tier: paid
 
   - model_name: celtic/embedding/bge-m3
     litellm_params:
@@ -429,7 +429,7 @@ model_list:
     model_info:
       description: "BGE-M3 — 1024-dim multilingual embeddings, dense+sparse+multi-vector"
       capabilities: ["embeddings", "multilingual", "retrieval"]
-      tier: hf-passthrough
+      tier: paid
       dimensions: 1024
 
   - model_name: celtic/embedding/bge-large-en
@@ -439,7 +439,7 @@ model_list:
     model_info:
       description: "BGE large English v1.5 — 1024-dim English embeddings"
       capabilities: ["embeddings", "english"]
-      tier: hf-passthrough
+      tier: paid
       dimensions: 1024
 
   - model_name: celtic/embedding/minilm-multilingual
@@ -449,7 +449,7 @@ model_list:
     model_info:
       description: "Multilingual MiniLM L12 — 384-dim lightweight multilingual embeddings"
       capabilities: ["embeddings", "multilingual", "fast"]
-      tier: hf-passthrough
+      tier: paid
       dimensions: 384
 
   - model_name: celtic/asr/whisper-large
@@ -459,7 +459,7 @@ model_list:
     model_info:
       description: "Whisper large-v3 — multilingual ASR (use faster-whisper for production)"
       capabilities: ["asr", "transcription", "multilingual"]
-      tier: hf-passthrough
+      tier: paid
 
   - model_name: celtic/asr/wav2vec2-irish
     litellm_params:
@@ -468,7 +468,7 @@ model_list:
     model_info:
       description: "Wav2Vec2 XLSR Irish — Irish ASR fine-tune"
       capabilities: ["asr", "irish", "ga"]
-      tier: hf-passthrough
+      tier: paid
 
   - model_name: celtic/retrieval/colpali
     litellm_params:
@@ -477,7 +477,7 @@ model_list:
     model_info:
       description: "ColPali v1.3 — visual document retrieval (late-interaction multi-vector)"
       capabilities: ["visual_retrieval", "multi_vector"]
-      tier: hf-passthrough
+      tier: paid
       dimensions: 128
 
   - model_name: celtic/tts/chatterbox
@@ -487,7 +487,7 @@ model_list:
     model_info:
       description: "Chatterbox — TTS (multilingual voice cloning)"
       capabilities: ["tts", "voice_cloning"]
-      tier: hf-passthrough
+      tier: paid
 
   # =========================================================================
   # CLOUD — DeepSeek (native API)
@@ -500,7 +500,7 @@ model_list:
     model_info:
       description: "DeepSeek V4 Pro — strong reasoning, 64K context (native DeepSeek API, $0.14 input / $0.28 output per 1M tokens)"
       capabilities: ["reasoning", "code", "general", "long_context"]
-      tier: cloud
+      tier: paid
 
   # =========================================================================
   # ALIASES (preferred for client code)
@@ -516,7 +516,7 @@ model_list:
     model_info:
       description: "Alias: ocr → primary MLX, falls back to GGUF, then Gemini Flash"
       capabilities: ["ocr", "alias"]
-      tier: alias
+      tier: paid
       fallback_chain: ["local/ocr/olmocr-mlx", "local/ocr/deepseek-ocr", "gemini/gemini-2.5-flash"]
 
   # Vision — primary: Qwen2.5-VL GGUF, fallback: cloud
@@ -529,7 +529,7 @@ model_list:
     model_info:
       description: "Alias: vision → Qwen2.5-VL GGUF, falls back to Gemma 3 Vision, then Gemini Flash"
       capabilities: ["vision", "alias"]
-      tier: alias
+      tier: paid
       fallback_chain: ["local/vision/qwen25-vl", "local/vision/gemma3-vision", "gemini/gemini-2.5-flash"]
 
   # Document — primary: Granite Docling MLX
@@ -542,7 +542,7 @@ model_list:
     model_info:
       description: "Alias: document → Granite Docling (MLX) for DocTags XML structure"
       capabilities: ["document", "alias"]
-      tier: alias
+      tier: paid
       fallback_chain: ["local/document/granite-docling", "local/vision/qwen25-vl"]
 
   # Extract — primary: Gemini Pro, fallback: GLM 4.6
@@ -553,7 +553,7 @@ model_list:
     model_info:
       description: "Alias: extract → Gemini 2.5 Pro, falls back to GLM 4.6, then Gemini Flash"
       capabilities: ["extraction", "baml", "alias"]
-      tier: alias
+      tier: paid
       fallback_chain: ["gemini/gemini-2.5-pro", "openai/glm-4.6", "gemini/gemini-2.5-flash"]
 
   # Math — primary: Qwen2.5-Math GGUF
@@ -566,7 +566,7 @@ model_list:
     model_info:
       description: "Alias: math → Qwen2.5-Math 7B GGUF"
       capabilities: ["math", "alias"]
-      tier: alias
+      tier: paid
       fallback_chain: ["local/math/qwen25-math", "openai/glm-4.6"]
 
   # Irish — primary: UCCIX GGUF, fallback: Qwen2.5-Math
@@ -579,7 +579,7 @@ model_list:
     model_info:
       description: "Alias: irish → UCCIX Llama2 13B Irish, falls back to Qwen2.5-Math, Gemini"
       capabilities: ["irish", "alias"]
-      tier: alias
+      tier: paid
       fallback_chain: ["local/irish/uccix", "local/math/qwen25-math", "gemini/gemini-2.5-flash"]
 
   # Image — primary: Z-Image-Turbo (fast), fallback: Qwen-Image, FLUX.2
@@ -592,7 +592,7 @@ model_list:
     model_info:
       description: "Alias: image → Z-Image-Turbo (fast), falls back to Qwen-Image, FLUX.2, SDXL"
       capabilities: ["image", "alias"]
-      tier: alias
+      tier: paid
       fallback_chain: ["local/image/z-image-turbo", "local/image/qwen-image", "local/image/flux2", "local/image/sdxl"]
 
   # Image FIBO — JSON-config driven
@@ -605,7 +605,7 @@ model_list:
     model_info:
       description: "Alias: image-fibo → Bria FIBO (MLX), JSON-config driven, deterministic"
       capabilities: ["image", "json_config", "deterministic", "alias"]
-      tier: alias
+      tier: paid
       fallback_chain: ["local/image/fibo", "local/image/z-image-turbo"]
 
   # Embedding (curriculum, default)
@@ -616,7 +616,7 @@ model_list:
     model_info:
       description: "Alias: embedding → OpenAI text-embedding-3-small (default)"
       capabilities: ["embeddings", "alias"]
-      tier: alias
+      tier: paid
       fallback_chain: ["openai/text-embedding-3-small", "celtic/embedding/bge-m3"]
 
   # Embedding (curriculum, BGE-M3 — preferred for cross-language)
@@ -627,7 +627,7 @@ model_list:
     model_info:
       description: "Alias: embedding-curriculum → BGE-M3 1024d multilingual"
       capabilities: ["embeddings", "multilingual", "alias"]
-      tier: alias
+      tier: paid
       dimensions: 1024
 
   # Generic general-purpose (OpenCode Go primary)
@@ -639,7 +639,7 @@ model_list:
     model_info:
       description: "Alias: general → OpenCode Go DeepSeek V4 Flash (fast + cheap)"
       capabilities: ["general", "alias"]
-      tier: alias
+      tier: paid
       fallback_chain: ["opencode-go/deepseek-v4-flash", "openai/glm-4.6", "gpt-4o-mini"]
 
 

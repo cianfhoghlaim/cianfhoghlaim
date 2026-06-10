@@ -1,0 +1,38 @@
+# Croilar — local dev override
+# ----------------------------------------------------------------------------
+# Mirrors oideachais/litellm/lancedb/langfuse dev pattern: no-op locket sidecar
+# so the apps start without waiting on real Infisical-injection. Secrets come
+# from the mise-hydrated local .env via env_file.
+# ----------------------------------------------------------------------------
+
+services:
+  locket:
+    image: alpine:3.20
+    container_name: croilar-locket-dev
+    restart: "no"
+    command: ["sh", "-c", "echo '[dev] no-op locket — secrets come from local .env via env_file'; sleep infinity"]
+    networks:
+      - aleyum
+
+  dragonfly:
+    depends_on:
+      locket:
+        condition: service_started
+
+  dagster-webserver:
+    depends_on:
+      locket:
+        condition: service_started
+    env_file:
+      - ../.env
+    environment:
+      DAGSTER_DEPLOYMENT: development
+
+  dagster-daemon:
+    depends_on:
+      locket:
+        condition: service_started
+    env_file:
+      - ../.env
+    environment:
+      DAGSTER_DEPLOYMENT: development

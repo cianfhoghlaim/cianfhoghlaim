@@ -26,6 +26,12 @@ aqua = "latest"
 zoxide = "latest"
 opencode = "latest"
 
+# OpenSpec (spec-driven change management).
+# NOT installed via mise — install once with:
+#   bun add -g @fission-ai/openspec@latest
+#   bun pm trust --all  # to authorize the post-install script
+# Then `openspec --version` should print 1.4.x.
+
 [settings]
 experimental = true
 
