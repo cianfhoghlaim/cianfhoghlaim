@@ -1,0 +1,8 @@
+#!/bin/bash
+if [ $# -ne 1 ]
+then
+	echo "Úsáid: opp-py clar.opp"
+	echo "Má thugtar - mar clar.opp, léann sé an clár ó STDIN"
+	exit 1 
+fi
+cat "${1}" | python3 opp2py.py | python3

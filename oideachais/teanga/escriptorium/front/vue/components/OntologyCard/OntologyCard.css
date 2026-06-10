@@ -1,0 +1,37 @@
+.escr-ontology-card {
+    overflow: hidden;
+    display: flex;
+    flex-flow: column;
+    padding: 0;
+}
+.escr-ontology-card .escr-segmented-button-group {
+    margin-bottom: 1rem;
+}
+.escr-ontology-card .escr-ontology-table-container {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+}
+.escr-ontology-card--compact .escr-card-header,
+.escr-ontology-card--compact .escr-card-actions {
+    justify-content: stretch;
+    gap: 1rem;
+}
+.escr-card:not(.escr-card-padding).escr-ontology-card--compact .escr-card-header {
+    flex: 0 1 auto;
+    margin: 0.5rem 0;
+}
+.escr-ontology-card--compact .escr-card-header h2 {
+    margin: 0;
+}
+.escr-ontology-card--compact .escr-card-actions {
+    flex: 1 0 auto;
+}
+.escr-ontology-card--compact .escr-segmented-button-group {
+    flex: 1 0 auto;
+    margin-bottom: 0;
+}
+.escr-ontology-card--compact .escr-segmented-button-group label {
+    margin: 0;
+}

@@ -1,0 +1,26 @@
+[#pylaia]
+= PyLaia
+
+[#what-is-pylaia]
+== What is PyLaia?
+
+PyLaia is a toolkit for Automatic Text Recognition (ATR) and Keyword Spotting (KWS).
+
+PyLaia is flexible, open-source, device-agnostic, and can be used to express a wide variety of experiments, including (but not limited to) training and inference over Convolutional and Recurrent based deep Neural Network models.
+The software is extensible and easily configurable and provides a rich set of functional layers with a particular focus on ATR.
+
+[#history]
+== History
+
+PyLaia is the successor of https://github.com/jpuigcerver/Laia[Laia]. It was developed by 3 members (https://github.com/jpuigcerver[@jpuigcerver], https://github.com/mauvilsa[@mauvilsa], https://github.com/dmartinalbo[@dmartinalbo]) of the Pattern Recognition and Human Language Technology (PRHLT) research center in 2016.
+
+The toolkit was originally developed using Torch. When Torch's development was discontinued in 2017, it became clear that building PyLaia as a second-generation system using PyTorch as its foundation was a logical step. PyLaia was written in 2018 by https://github.com/jpuigcerver[@jpuigcerver] as a Ph.D. thesis experiment and by https://github.com/carmocca[@carmocca] as an undergraduate final project.
+
+Since 2022, three members of https://teklia.com/[TEKLIA] (https://gitlab.teklia.com/babadie[@babadie], https://gitlab.teklia.com/yschneider[@yschneider], https://gitlab.teklia.com/starride[@starride]) maintain and improve the toolkit.
+
+[#get-started]
+== Get started
+
+Click xref:./original_paper.adoc[here] to learn more about the original paper.
+
+xref:./get_started/index.adoc[Get started with PyLaia] now!

@@ -1,0 +1,41 @@
+
+In lecture we talked about several different algorithms
+for find the longest common substring in two strings.
+
+The first was a "brute force" algorithm, which is easy to implement 
+but runs in cubic time worst case.
+
+The second uses a suffix trie for one of the two strings,
+and then calls "longestPrefix" on each suffix of the
+second string.  That's quadratic time worst case.
+
+The third was dynamic programming ("table-filling") algorithm,
+also (obviously) quadratic time.
+
+The final algorithm is the generalized suffix tree approach
+which runs in linear time in the sum of the lengths of the
+strings.
+
+Your challenge in this lab is to implement one of these
+algorithms (or one of your own), and find the longest common
+substring contained in the two text files startrek.txt
+and mobydick.txt (which you'll find in this directory).
+
+You're welcome to use or modify the Trie class in this directory,
+or any of the Shaffer code, but you shouldn't use or look
+other sources.
+
+The first student from each lab to submit working code along with the 
+correct longest common substring will receive a fabulous prize!!!
+
+There's an interesting optimization problem here... should you implement
+an easier, slower algorithm, or a faster more complex algorithm?
+And how much time should you waste hand-wringing over which one
+to implement?!
+
+And for the record, in all the years I've given this lab, exactly one
+student was able to provide the correct answer without Googling,
+writing a line of code, or even looking at the text files.
+If you think you know the answer, let me know!
+
+Good luck!

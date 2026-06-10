@@ -1,0 +1,28 @@
+\documentclass[9pt]{extbook}
+\usepackage[a4paper, total={6.8in, 9in}]{geometry}
+%\usepackage{newcent}
+\usepackage{tipa}
+\usepackage{venturis}
+%\usepackage{tgschola}
+\usepackage{longtable}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[singlelinecheck=off]{caption}
+\usepackage[american,irish]{babel}
+\renewcommand{\arraystretch}{1.3}
+\begin{document}      
+\begin{frontmatter}
+\title{\Huge\bf Lioar Raaghyn / Frásleabhar / Phrase Book}
+%\title{\Huge\bf Lioar Raaghyn / Frásleabhar / Phrase Book\\Gaelg / \hspace{0.6ex}Manainnis\hspace{0.8ex} / Manx}
+\date{\today}
+\maketitle
+\selectlanguage{irish}
+\input brollach.tex
+%\tableofcontents
+\end{frontmatter}
+
+\begin{mainmatter}
+\input parsed.tex
+\end{mainmatter}
+
+\end{document}

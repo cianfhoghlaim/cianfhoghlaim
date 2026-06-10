@@ -1,0 +1,194 @@
+stages:
+  - test
+  - build
+  - deploy
+  - release
+
+test:
+  image: $IMAGE
+
+  stage: test
+  cache:
+    paths:
+      - .cache/pip
+
+  variables:
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+    # Limit number of threads for parallel regions
+    OMP_NUM_THREADS: 1
+
+  before_script:
+    - pip install .[test]
+
+  except:
+    - schedules
+
+  script:
+    - tox
+
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+
+  parallel:
+    matrix:
+      - IMAGE:
+        - python:3.9
+        - python:3.10
+
+lint:
+  image: python:3.10
+  stage: test
+
+  cache:
+    paths:
+      - .cache/pip
+      - .cache/pre-commit
+
+  variables:
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+    PRE_COMMIT_HOME: "$CI_PROJECT_DIR/.cache/pre-commit"
+
+  before_script:
+    - pip install pre-commit
+
+  except:
+    - schedules
+
+  script:
+    - pre-commit run -a
+
+
+deploy-pypi:
+  stage: release
+  image: python:3.10
+
+  only:
+    - tags
+
+  environment:
+    name: pypi
+    url: https://pypi.org/project/pylaia/
+
+  before_script:
+    - pip install twine build
+
+  script:
+    - python -m build
+    - twine upload dist/*
+
+release-notes:
+  stage: release
+  image: registry.gitlab.teklia.com/infra/devops:latest
+
+  only:
+    - tags
+
+  script:
+    - devops release-notes
+
+docker-build:
+  stage: build
+  image: docker:24.0.6
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://docker:2375/
+
+  except:
+    - schedules
+
+  script:
+    - ci/build.sh
+
+bump-python-deps:
+  stage: release
+  image: registry.gitlab.teklia.com/infra/devops:latest
+
+  only:
+    - schedules
+
+  script:
+    - devops python-deps pyproject.toml
+
+# Make sure docs still build correctly
+.docs:
+  image: node:20
+  artifacts:
+    paths:
+      - public
+
+  before_script:
+    - npm install
+
+  script:
+    - npx antora antora-playbook.yml --html-url-extension-style=indexify
+
+docs-build:
+  extends: .docs
+  stage: build
+
+  # Test job outside of tags to ensure the docs still can build before merging
+  # Does not use the `pages` name, therefore will be ignored by GitLab Pages
+  except:
+    - tags
+    - schedules
+
+pages:
+  image: registry.gitlab.teklia.com/doc/html-redirections:latest
+  script: teklia-redirections build
+  stage: deploy
+
+  only:
+    - master
+    - tags
+
+  except:
+    - schedules
+
+docs-deploy:
+  image: node:18
+  stage: deploy
+
+  dependencies:
+    - docs-build
+
+  before_script:
+    - npm install -g surge
+
+  except:
+    - master
+    - tags
+    - schedules
+
+  environment:
+    name: ${CI_COMMIT_REF_SLUG}
+    url: https://${CI_COMMIT_REF_SLUG}-teklia-atr-pylaia.surge.sh
+    on_stop: docs-stop-surge
+
+  script:
+    - surge public ${CI_ENVIRONMENT_URL}
+
+docs-stop-surge:
+  image: node:18
+  stage: deploy
+  when: manual
+
+  # Do not try to checkout the branch if it was deleted
+  variables:
+    GIT_STRATEGY: none
+
+  except:
+    - master
+    - tags
+    - schedules
+
+  environment:
+    name: ${CI_COMMIT_REF_SLUG}
+    url: https://${CI_COMMIT_REF_SLUG}-teklia-atr-pylaia.surge.sh
+    action: stop
+
+  before_script:
+    - npm install -g surge
+
+  script:
+    - surge teardown ${CI_ENVIRONMENT_URL}

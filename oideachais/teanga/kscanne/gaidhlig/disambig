@@ -1,0 +1,4 @@
+#!/bin/bash
+# for testing only; not part of ga2gd per se
+# takes plain text on standard input
+stemmer -l | perl disambig.pl

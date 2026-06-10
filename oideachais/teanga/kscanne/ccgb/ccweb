@@ -1,0 +1,5 @@
+#!/bin/bash
+#  Called as a shell command from the cc.cgi script
+QUOTED=`for term in "$@"; do echo -n "\"$term\" "; done`
+(date; echo "$QUOTED"; echo; echo;) >> /home/httpd/cc.log
+/usr/local/bin/qq "$@"

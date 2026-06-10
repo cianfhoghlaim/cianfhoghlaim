@@ -1,0 +1,6 @@
+{
+  "success": true,
+  "entries": [
+    {"id": 123, "content": "<somexml>I am a changed entry now.</somexml>"}
+  ]
+}

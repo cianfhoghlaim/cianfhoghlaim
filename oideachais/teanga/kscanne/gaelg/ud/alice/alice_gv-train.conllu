@@ -1,0 +1,607 @@
+# sent_id = alice_26
+# text = Atreih, cre'n boghtynid ta mee taggloo!
+# text_ga = Muise, nach í an tseafóid atá ar siúl agam!
+# text_gd = Obh obh, nach mi a tha a' bruidhinn amaideas!
+1	Atreih	atreih	INTJ	_	_	3	discourse	_	SpaceAfter=No
+2	,	,	PUNCT	_	_	1	punct	_	_
+3-4	cre'n	_	_	_	_	_	_	_	_
+3	cre	cre	PRON	_	_	0	root	_	_
+4	'n	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	5	det	_	_
+5	boghtynid	boghtynid	NOUN	_	_	3	nsubj	_	_
+6	ta	bee	VERB	_	Mood=Ind|Tense=Pres	5	acl	_	_
+7	mee	mee	PRON	_	Number=Sing|Person=1	6	nsubj	_	_
+8	taggloo	taggloo	NOUN	_	_	6	xcomp	_	SpaceAfter=No
+9	!	!	PUNCT	_	_	3	punct	_	_
+
+# sent_id = alice_15
+# text = “S'liooar shen mychione slooyn,” vrish y Gryphon stiagh er aght feer hickyr.
+# text_ga = “Is leor é sin faoi ranganna,” a dúirt an Ghríobh go daingean.
+# text_gd = “Nì sin an gnothach leis na leasanan,” ars an Grìbhean ann an guth a bha gu math cinnteach.
+1	“	“	PUNCT	_	_	3	punct	_	SpaceAfter=No
+2-3	S'liooar	_	_	_	_	_	_	_	_
+2	S'	she	AUX	_	_	3	cop	_	_
+3	liooar	liooar	ADJ	_	_	0	root	_	_
+4	shen	shen	PRON	_	PronType=Dem	3	nsubj	_	_
+5	mychione	mychione	ADP	_	_	6	case	_	_
+6	slooyn	sloo	NOUN	_	_	3	obl	_	SpaceAfter=No
+7	,	,	PUNCT	_	_	3	punct	_	SpaceAfter=No
+8	”	”	PUNCT	_	_	3	punct	_	_
+9	vrish	brish	VERB	_	Form=Len|Mood=Ind|Tense=Past	3	parataxis	_	_
+10	y	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	11	det	_	_
+11	Gryphon	Gryphon	PROPN	_	_	9	nsubj	_	_
+12	stiagh	stiagh	ADV	_	_	9	advmod	_	_
+13	er	er	ADP	_	_	14	case	_	_
+14	aght	aght	NOUN	_	_	9	obl	_	_
+15	feer	feer	ADV	_	_	16	advmod	_	_
+16	hickyr	shickyr	ADJ	_	Form=Len	14	amod	_	SpaceAfter=No
+17	.	.	PUNCT	_	_	3	punct	_	_
+
+# sent_id = alice_21
+# text = Choud's v'ee jeeaghyn er y voayl raad v'eh er ve, haink eh rish reesht dy doaltattym.
+# text_ga = Fad is a bhí sí ag breathnú ar an áit a raibh an Cat, tháinig sé ar ais go tobann arís.
+# text_gd = Fhad 's a bha i fhathast a' coimhead far an robh an Cat air a bhith, nochd e gu h-obann a-rithist.
+1-2	Choud's	_	_	_	_	_	_	_	_
+1	Choud	choud	SCONJ	_	_	3	mark	_	_
+2	as	as	SCONJ	_	_	1	fixed	_	_
+3-4	v'ee	_	_	_	_	_	_	_	_
+3	v'	bee	VERB	_	Form=Len|Mood=Ind|Tense=Past	15	advcl	_	_
+4	ee	ee	PRON	_	Gender=Fem|Number=Sing|Person=3	3	nsubj	_	_
+5	jeeaghyn	jeeaghyn	NOUN	_	_	3	xcomp	_	_
+6	er	er	ADP	_	_	8	case	_	_
+7	y	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	8	det	_	_
+8	voayl	boayl	NOUN	_	Form=Len	5	obl	_	_
+9	raad	raad	ADV	_	_	10	advmod	_	_
+10-11	v'eh	_	_	_	_	_	_	_	_
+10	v'	bee	VERB	_	Form=Len|Mood=Ind|Tense=Past	8	acl:relcl	_	_
+11	eh	eh	PRON	_	Gender=Masc|Number=Sing|Person=3	10	nsubj	_	_
+12	er	er	ADP	_	_	13	case	_	_
+13	ve	ve	NOUN	_	_	10	xcomp	_	SpaceAfter=No
+14	,	,	PUNCT	_	_	3	punct	_	_
+15	haink	tar	VERB	_	Form=Len|Mood=Ind|Tense=Past	0	root	_	_
+16	eh	eh	PRON	_	Gender=Masc|Number=Sing|Person=3	15	nsubj	_	_
+17-18	rish	_	_	_	_	_	_	_	_
+17	rish	rish	ADP	_	_	18	case	_	_
+18	eh	eh	PRON	_	Gender=Masc|Number=Sing|Person=3	15	obl	_	_
+19	reesht	reesht	ADV	_	_	15	advmod	_	_
+20	dy	dy	PART	_	_	21	mark	_	_
+21	doaltattym	doaltattym	ADV	_	_	15	advmod	_	SpaceAfter=No
+22	.	.	PUNCT	_	_	15	punct	_	_
+
+# sent_id = alice_38
+# text = Roie dy valley dy çhelleeragh as cur lhiat dou piyr dy laueanyn as feayragan!
+# text_ga = Rith abhaile láithreach agus tabhair chugam péire lámhainní agus fean!
+# text_gd = Ruith dhachaigh anns a' bhad, agus faigh dhomh paidhir mhiotagan agus gaotharan!
+1	Roie	roie	VERB	_	Mood=Imp|Number=Sing|Person=2	0	root	_	_
+2	dy	dy	ADP	_	_	3	case	_	_
+3	valley	balley	NOUN	_	Form=Len	1	obl	_	_
+4	dy	dy	PART	_	PartType=Ad	5	mark	_	_
+5	çhelleeragh	çhelleeragh	ADJ	_	_	1	advmod	_	_
+6	as	as	CCONJ	_	_	7	cc	_	_
+7	cur	cur	VERB	_	Mood=Imp|Number=Sing|Person=2	1	conj	_	_
+8-9	lhiat	_	_	_	_	_	_	_	_
+8	lesh	lesh	ADP	_	_	9	case	_	_
+9	oo	oo	PRON	_	Number=Sing|Person=2	7	obl	_	_
+10-11	dou	_	_	_	_	_	_	_	_
+10	da	da	ADP	_	_	11	case	_	_
+11	mee	mee	PRON	_	Number=Sing|Person=1	7	obl	_	_
+12	piyr	piyr	NOUN	_	_	7	obj	_	_
+13	dy	dy	ADP	_	_	14	case	_	_
+14	laueanyn	lauean	NOUN	_	_	12	nmod	_	_
+15	as	as	CCONJ	_	_	16	cc	_	_
+16	feayragan	feayragan	NOUN	_	_	12	conj	_	SpaceAfter=No
+17	!	!	PUNCT	_	_	1	punct	_	_
+
+# sent_id = alice_05
+# text = “S'treih lhiam dy mooar dy row uss boirit,” dooyrt Ealish, va goaill toshiaght dy hoiggal y bun jeh'n chooish.
+# text_ga = “Is bocht liom do chrá croí,” a dúirt Eilís, mar bhí sí ag tosú ag tuiscint an scéil.
+# text_gd = “Tha mi glè dhuilich gun deach dragh a chur ort,” arsa Ealasaid, a bha a-nis a' tighinn gu tuigse air de bha e a' ciallachadh.
+1	“	“	PUNCT	_	_	3	punct	_	SpaceAfter=No
+2-3	S'treih	_	_	_	_	_	_	_	_
+2	S'	she	AUX	_	_	3	cop	_	_
+3	treih	treih	ADJ	_	_	0	root	_	_
+4-5	lhiam	_	_	_	_	_	_	_	_
+4	lesh	lesh	ADP	_	_	5	case	_	_
+5	mee	mee	PRON	_	Number=Sing|Person=1	3	obl	_	_
+6	dy	dy	PART	_	PartType=Ad	7	mark	_	_
+7	mooar	mooar	ADJ	_	_	3	advmod	_	_
+8	dy	dy	PART	_	PartType=Cmpl	9	mark	_	_
+9	row	bee	VERB	_	Mood=Ind|Tense=Past	3	csubj:cop	_	_
+10	uss	oo	PRON	_	Number=Sing|Person=2|PronType=Emp	9	nsubj	_	_
+11	boirit	boirit	ADJ	_	_	9	xcomp:pred	_	SpaceAfter=No
+12	,	,	PUNCT	_	_	3	punct	_	SpaceAfter=No
+13	”	”	PUNCT	_	_	3	punct	_	_
+14	dooyrt	abbyr	VERB	_	Mood=Ind|Tense=Past	3	parataxis	_	_
+15	Ealish	Ealish	PROPN	_	_	14	nsubj	_	SpaceAfter=No
+16	,	,	PUNCT	_	_	17	punct	_	_
+17	va	bee	VERB	_	Form=Len|Mood=Ind|Tense=Past	15	acl:relcl	_	_
+18	goaill	goaill	NOUN	_	_	17	xcomp	_	_
+19	toshiaght	toshiaght	NOUN	_	_	18	obj	_	_
+20	dy	dy	ADP	_	_	21	case	_	_
+21	hoiggal	toiggal	NOUN	_	Form=Len	18	xcomp	_	_
+22	y	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	23	det	_	_
+23	bun	bun	NOUN	_	_	21	obj	_	_
+24-25	jeh'n	_	_	_	_	_	_	_	_
+24	jeh	jeh	ADP	_	_	26	case	_	_
+25	yn	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	26	det	_	_
+26	chooish	cooish	NOUN	_	Form=Len	23	nmod	_	SpaceAfter=No
+27	.	.	PUNCT	_	_	3	punct	_	_
+
+# sent_id = alice_03
+# text = As hraast ee ee hene ny sniessey da lhiattee Ealish myr v'ee loayrt.
+# text_ga = Agus d'fháisc sí í féin ní ba ghaire do thaobh Eilís le linn na cainte sin.
+# text_gd = Agus phàisg i i fhèin na b' fhaisg air cliathaich Ealasaid mar a bha i a' bruidhinn.
+1	As	as	CCONJ	_	_	2	cc	_	_
+2	hraast	traast	VERB	_	Form=Len|Mood=Ind|Tense=Past	0	root	_	_
+3	ee	ee	PRON	_	Gender=Fem|Number=Sing|Person=3	2	nsubj	_	_
+4	ee	ee	PRON	_	Gender=Fem|Number=Sing|Person=3	2	obj	_	_
+5	hene	hene	PRON	_	Reflex=Yes	4	nmod	_	_
+6	ny	ny	PART	_	PartType=Comp	7	mark	_	_
+7	sniessey	niessey	ADJ	_	Degree=Cmp,Sup	2	advmod	_	_
+8	da	da	ADP	_	_	9	case	_	_
+9	lhiattee	lhiattagh	NOUN	_	_	7	obl	_	_
+10	Ealish	Ealish	PROPN	_	_	9	nmod	_	_
+11	myr	myr	SCONJ	_	_	12	mark	_	_
+12-13	v'ee	_	_	_	_	_	_	_	_
+12	v'	bee	VERB	_	Form=Len|Mood=Ind|Tense=Past	2	advcl	_	_
+13	ee	ee	PRON	_	Gender=Fem|Number=Sing|Person=3	12	nsubj	_	_
+14	loayrt	loayrt	NOUN	_	_	12	xcomp:pred	_	SpaceAfter=No
+15	.	.	PUNCT	_	_	2	punct	_	_
+
+# sent_id = alice_14
+# text = Vel uss coontey mish dy ve my volvane?
+# text_ga = An dóigh leat gur amadán mé?
+# text_gd = A bheil thu gam mheas nam ghlaoic?
+1	Vel	bee	VERB	_	Form=Ecl|Mood=Ind|Tense=Pres	0	root	_	_
+2	uss	oo	PRON	_	Number=Sing|Person=2|PronType=Emp	1	nsubj	_	_
+3	coontey	coontey	NOUN	_	_	1	xcomp	_	_
+4	mish	mee	PRON	_	Number=Sing|Person=1|PronType=Emp	3	obj	_	_
+5	dy	dy	ADP	_	_	6	case	_	_
+6	ve	ve	NOUN	_	_	3	xcomp	_	_
+7	my	my	DET	_	Number=Sing|Person=1|Poss=Yes	8	nmod:poss	_	_
+8	volvane	volvane	NOUN	_	_	6	xcomp:pred	_	SpaceAfter=No
+9	?	?	PUNCT	_	_	1	punct	_	_
+
+# sent_id = alice_22
+# text = Agh v'eh jeeaghyn nagh beagh shen taghyrt noadyr; myr shen ghow ee toshiaght dy yeeaghyn er dy chooilley nhee mygeayrt y mooee dy cheau yn traa.
+# text_ga = Ach ba bheag an baol go dtarlódh sé sin; thosaigh sí mar sin ag féachaint ar gach rud thart uirthi chun an t-am a chur di.
+# text_gd = Ach on a bha e coltach nach robh seo gus tighinn gu bith, thòisich i a' coimhead air gach rud a bha mun cuairt oirre, airson an tìde a chur seachad.
+1	Agh	agh	CCONJ	_	_	2	cc	_	_
+2-3	v'eh	_	_	_	_	_	_	_	_
+2	v'	bee	VERB	_	Form=Len|Mood=Ind|Tense=Past	0	root	_	_
+3	eh	eh	PRON	_	Gender=Masc|Number=Sing|Person=3	2	nsubj	_	_
+4	jeeaghyn	jeeaghyn	NOUN	_	_	2	xcomp	_	_
+5	nagh	nagh	PART	_	PartType=Cmpl|Polarity=Neg	6	mark	_	_
+6	beagh	bee	VERB	_	Mood=Cnd	4	ccomp	_	_
+7	shen	shen	PRON	_	PronType=Dem	6	nsubj	_	_
+8	taghyrt	taghyrt	NOUN	_	_	6	xcomp	_	_
+9	noadyr	noadyr	ADV	_	_	8	advmod	_	SpaceAfter=No
+10	;	;	PUNCT	_	_	13	punct	_	_
+11	myr	myr	ADP	_	_	13	advmod	_	_
+12	shen	shen	PRON	_	PronType=Dem	11	fixed	_	_
+13	ghow	gow	VERB	_	Form=Len|Mood=Ind|Tense=Past	2	parataxis	_	_
+14	ee	ee	PRON	_	Gender=Fem|Number=Sing|Person=3	13	nsubj	_	_
+15	toshiaght	toshiaght	NOUN	_	_	13	obj	_	_
+16	dy	dy	ADP	_	_	17	case	_	_
+17	yeeaghyn	jeeaghyn	NOUN	_	Form=Len	13	xcomp	_	_
+18	er	er	ADP	_	_	21	case	_	_
+19	dy	dy	DET	_	_	21	det	_	_
+20	chooilley	chooilley	DET	_	_	19	fixed	_	_
+21	nhee	nhee	NOUN	_	_	17	obl	_	_
+22	mygeayrt	mygeayrt	ADP	_	_	25	case	_	_
+23	y	y	ADP	_	_	22	fixed	_	_
+24-25	mooee	_	_	_	_	_	_	_	_
+24	mysh	mysh	ADP	_	_	22	fixed	_	_
+25	ee	ee	PRON	_	Gender=Fem|Number=Sing|Person=3	21	nmod	_	_
+26	dy	dy	ADP	_	_	27	case	_	_
+27	cheau	ceau	NOUN	_	Form=Len	17	xcomp	_	_
+28	yn	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	29	det	_	_
+29	traa	traa	NOUN	_	_	27	obj	_	SpaceAfter=No
+30	.	.	PUNCT	_	_	2	punct	_	_
+
+# sent_id = alice_29
+# text = Doshil y Lugh Vagheragh e sooillyn dy moal.
+# text_ga = D'oscail an Luch Chodlamáin a dhá súil go mall.
+# text_gd = Dh'fhosgail Dallag-an-fheòir a sùilean gu slaodach.
+1	Doshil	foshil	VERB	_	Mood=Ind|Tense=Past	0	root	_	_
+2	y	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	3	det	_	_
+3	Lugh	lugh	NOUN	_	_	1	nsubj	_	_
+4	Vagheragh	magher	NOUN	_	Form=Len	3	nmod	_	_
+5	e	e	DET	_	Gender=Fem|Number=Sing|Person=3|Poss=Yes	6	nmod:poss	_	_
+6	sooillyn	sooill	NOUN	_	_	1	obj	_	_
+7	dy	dy	PART	_	PartType=Ad	8	mark	_	_
+8	moal	moal	ADJ	_	_	1	advmod	_	SpaceAfter=No
+9	.	.	PUNCT	_	_	1	punct	_	_
+
+# sent_id = alice_09
+# text = “She — she laa feer vraew t'ayn!” dooyrt coraa faitagh ec y lhiattee eck.
+# text_ga = “Is — is breá ar fad an lá é!” a dúirt glór faiteach taobh léi.
+# text_gd = “'S e — 's e latha fìor mhath a th' ann!” arsa guth meata ri a taobh.
+1	“	“	PUNCT	_	_	5	punct	_	SpaceAfter=No
+2	She	she	AUX	_	_	4	reparandum	_	_
+3	—	—	PUNCT	_	_	2	punct	_	_
+4	she	she	AUX	_	_	5	cop	_	_
+5	laa	laa	NOUN	_	_	0	root	_	_
+6	feer	feer	ADV	_	_	7	advmod	_	_
+7	vraew	braew	ADJ	_	Form=Len	5	amod	_	_
+8-10	t'ayn	_	_	_	_	_	_	_	SpaceAfter=No
+8	t'	bee	VERB	_	Mood=Ind|Tense=Pres	5	acl:relcl	_	_
+9	ayns	ayns	ADP	_	_	10	case	_	_
+10	eh	eh	PRON	_	Gender=Masc|Number=Sing|Person=3	8	xcomp:pred	_	_
+11	!	!	PUNCT	_	_	5	punct	_	SpaceAfter=No
+12	”	”	PUNCT	_	_	5	punct	_	_
+13	dooyrt	abbyr	VERB	_	Mood=Ind|Tense=Past	5	parataxis	_	_
+14	coraa	coraa	NOUN	_	_	13	nsubj	_	_
+15	faitagh	faitagh	ADJ	_	_	14	amod	_	_
+16	ec	ec	ADP	_	_	18	case	_	_
+17	y	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	18	det	_	_
+18	lhiattee	lhiattee	NOUN	_	_	14	nmod	_	_
+19-20	eck	_	_	_	_	_	_	_	SpaceAfter=No
+19	ec	ec	ADP	_	_	20	case	_	_
+20	ee	ee	PRON	_	Gender=Fem|Number=Sing|Person=3	18	nmod	_	_
+21	.	.	PUNCT	_	_	5	punct	_	_
+
+# sent_id = alice_16
+# text = “Saillym nagh row mee er nimraa Dinah!” dooyrt ee ree hene dy trimshagh.
+# text_ga = “Is trua gur luaigh mé Dineá!” a dúirt sí léi féin go brónach.
+# text_gd = “B' fheàrr leam nach robh mi air luaidh a thoirt air Dìnea!” ars ise rithe fhèin ann an guth tiamhaidh.
+1	“	“	PUNCT	_	_	2	punct	_	SpaceAfter=No
+2	Saillym	saillym	VERB	_	Mood=Ind|Tense=Pres	0	root	_	_
+3	nagh	nagh	PART	_	PartType=Cmpl|Polarity=Neg	4	mark	_	_
+4	row	bee	VERB	_	Mood=Ind|Tense=Past	2	ccomp	_	_
+5	mee	mee	PRON	_	Number=Sing|Person=1	4	nsubj	_	_
+6	er	er	ADP	_	_	7	case	_	_
+7	nimraa	imraa	NOUN	_	_	4	xcomp	_	_
+8	Dinah	Dinah	PROPN	_	_	7	obj	_	SpaceAfter=No
+9	!	!	PUNCT	_	_	2	punct	_	SpaceAfter=No
+10	”	”	PUNCT	_	_	2	punct	_	_
+11	dooyrt	abbyr	VERB	_	Mood=Ind|Tense=Past	2	parataxis	_	_
+12	ee	ee	PRON	_	Gender=Fem|Number=Sing|Person=3	11	nsubj	_	_
+13-14	ree	_	_	_	_	_	_	_	_
+13	rish	rish	ADP	_	_	14	case	_	_
+14	ee	ee	PRON	_	Gender=Fem|Number=Sing|Person=3	11	obl	_	_
+15	hene	hene	PRON	_	Reflex=Yes	14	nmod	_	_
+16	dy	dy	PART	_	PartType=Ad	17	mark	_	_
+17	trimshagh	trimshagh	ADJ	_	_	11	advmod	_	SpaceAfter=No
+18	.	.	PUNCT	_	_	2	punct	_	_
+
+# sent_id = alice_11
+# text = She coagyrey y Vendiuic va'n nah 'eanishagh.
+# text_ga = Ba í cócaire an Bhandiúic an chéad fhinné eile.
+# text_gd = B' e an ath neach-fianais còcaire na Ban-diùc.
+1	She	she	AUX	_	_	2	cop	_	_
+2	coagyrey	coagyrey	NOUN	_	_	0	root	_	_
+3	y	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	4	det	_	_
+4	Vendiuic	bendiuic	NOUN	_	Form=Len	2	nmod	_	_
+5-6	va'n	_	_	_	_	_	_	_	_
+5	va	bee	VERB	_	Form=Len|Mood=Ind|Tense=Past	2	acl:relcl	_	_
+6	'n	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	8	det	_	_
+7	nah	nah	ADJ	_	_	8	amod	_	_
+8	'eanishagh	feanishagh	NOUN	_	Form=Len	5	xcomp:pred	_	SpaceAfter=No
+9	.	.	PUNCT	_	_	2	punct	_	_
+
+# sent_id = alice_32
+# text = Deyrey hoshiaght — briwnys ny lurg.
+# text_ga = An phianbhreith ar dtús — an fíorasc ina dhiaidh sin.
+# text_gd = Binn an toiseach — an uair sin breith.
+1	Deyrey	deyrey	NOUN	_	_	0	root	_	_
+2	hoshiaght	toshiaght	NOUN	_	Form=Len	1	nmod	_	_
+3	—	—	PUNCT	_	_	4	punct	_	_
+4	briwnys	briwnys	NOUN	_	_	1	parataxis	_	_
+5	ny	ny	DET	_	Gender=Masc|Number=Sing|Person=3|Poss=Yes	6	nmod:poss	_	_
+6	lurg	lurg	NOUN	_	_	4	nmod	_	SpaceAfter=No
+7	.	.	PUNCT	_	_	1	punct	_	_
+
+# sent_id = alice_33
+# text = Jean gimman er oaie, ghooinney veen!
+# text_ga = Tiomáin leat, a mhic!
+# text_gd = Lean ort, a charaid!
+1	Jean	jean	VERB	_	Mood=Imp|Number=Sing|Person=2	0	root	_	_
+2	gimman	imman	NOUN	_	_	1	xcomp	_	_
+3	er	er	ADP	_	_	4	case	_	_
+4	oaie	oaie	NOUN	_	_	2	obl	_	SpaceAfter=No
+5	,	,	PUNCT	_	_	6	punct	_	_
+6	ghooinney	dooinney	NOUN	_	Form=Len	1	vocative	_	_
+7	veen	meen	ADJ	_	Form=Len	6	amod	_	SpaceAfter=No
+8	!	!	PUNCT	_	_	1	punct	_	_
+
+# sent_id = alice_37
+# text = “Vel ny king oc ersooyl?” dyll y Venrein.
+# text_ga = “Ar baineadh an cloigeann díobh?” a d'fhiafraigh an Bhanríon.
+# text_gd = “A bheil an cinn dhiubh?” dh'èigh a' Bhànrigh.
+1	“	“	PUNCT	_	_	2	punct	_	SpaceAfter=No
+2	Vel	bee	VERB	_	Form=Ecl|Mood=Ind|Tense=Pres	0	root	_	_
+3	ny	yn	DET	_	Definite=Def|Number=Plur|PronType=Art	4	det	_	_
+4	king	kione	NOUN	_	_	2	nsubj	_	_
+5-6	oc	_	_	_	_	_	_	_	_
+5	ec	ec	ADP	_	_	6	case	_	_
+6	ad	ad	PRON	_	Number=Plur|Person=3	4	nmod	_	_
+7	ersooyl	ersooyl	ADV	_	_	2	advmod	_	SpaceAfter=No
+8	?	?	PUNCT	_	_	2	punct	_	SpaceAfter=No
+9	”	”	PUNCT	_	_	2	punct	_	_
+10	dyll	yllee	VERB	_	Mood=Ind|Tense=Past	2	parataxis	_	_
+11	y	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	12	det	_	_
+12	Venrein	benrein	NOUN	_	Form=Len	10	nsubj	_	SpaceAfter=No
+13	.	.	PUNCT	_	_	2	punct	_	_
+
+# sent_id = alice_27
+# text = Gyn ourys, ta mee roshtyn boayl ennagh ta faggys da mean y teihill.
+# text_ga = Ní foláir nó táim cóngarach go maith do lár na cruinne.
+# text_gd = Feumaidh gu bheil mi a' dèanamh air meadhan na cruinne.
+1	Gyn	gyn	ADP	_	_	2	case	_	_
+2	ourys	ourys	NOUN	_	_	4	obl	_	SpaceAfter=No
+3	,	,	PUNCT	_	_	2	punct	_	_
+4	ta	bee	VERB	_	Mood=Ind|Tense=Pres	0	root	_	_
+5	mee	mee	PRON	_	Number=Sing|Person=1	4	nsubj	_	_
+6	roshtyn	roshtyn	NOUN	_	_	4	xcomp	_	_
+7	boayl	boayl	NOUN	_	_	6	obj	_	_
+8	ennagh	ennagh	ADJ	_	_	7	amod	_	_
+9	ta	bee	VERB	_	Mood=Ind|Tense=Pres	7	acl:relcl	_	_
+10	faggys	faggys	NOUN	_	_	12	case	_	_
+11	da	da	ADP	_	_	10	fixed	_	_
+12	mean	mean	NOUN	_	_	9	xcomp:pred	_	_
+13	y	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	14	det	_	_
+14	teihill	seihll	NOUN	_	_	12	nmod	_	SpaceAfter=No
+15	.	.	PUNCT	_	_	4	punct	_	_
+
+# sent_id = alice_01
+# text = “Boghtynid!” dooyrt Ealish feer niartal as lesh shickyrys mooar, as va'n Venrein ny tost.
+# text_ga = “Raiméis!” a dúirt Eilís an-ard agus an-daingean, agus d'éist an Bhanríon a béal.
+# text_gd = “Gòraiche!” arsa Ealasaid, gu math àrd is cinnteach, agus bha a' Bhànrigh sàmhach.
+1	“	“	PUNCT	_	_	2	punct	_	SpaceAfter=No
+2	Boghtynid	boghtynid	NOUN	_	_	0	root	_	SpaceAfter=No
+3	!	!	PUNCT	_	_	2	punct	_	SpaceAfter=No
+4	”	”	PUNCT	_	_	2	punct	_	_
+5	dooyrt	abbyr	VERB	_	Mood=Ind|Tense=Past	2	parataxis	_	_
+6	Ealish	Ealish	PROPN	_	_	5	nsubj	_	_
+7	feer	feer	ADV	_	_	8	advmod	_	_
+8	niartal	niartal	ADJ	_	_	5	advmod	_	_
+9	as	as	CCONJ	_	_	11	cc	_	_
+10	lesh	lesh	ADP	_	_	11	case	_	_
+11	shickyrys	shickyrys	NOUN	_	_	8	conj	_	_
+12	mooar	mooar	ADJ	_	_	11	amod	_	SpaceAfter=No
+13	,	,	PUNCT	_	_	15	punct	_	_
+14	as	as	CCONJ	_	_	15	cc	_	_
+15-16	va'n	_	_	_	_	_	_	_	_
+15	va	bee	VERB	_	Form=Len|Mood=Ind|Tense=Past	2	conj	_	_
+16	'n	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	17	det	_	_
+17	Venrein	benrein	NOUN	_	Form=Len	15	nsubj	_	_
+18	ny	ny	DET	_	Gender=Fem|Number=Sing|Person=3|Poss=Yes	19	nmod:poss	_	_
+19	tost	tost	NOUN	_	_	15	xcomp:pred	_	SpaceAfter=No
+20	.	.	PUNCT	_	_	2	punct	_	_
+
+# sent_id = alice_48
+# text = “Cha lhisagh oo loayrt eisht,” dooyrt yn Eddeyder.
+# text_ga = “Níor cheart duit a bheith ag caint mar sin,” arsa an Haitéir.
+# text_gd = “Mar sin, cha bu chòir dhut bruidhinn,” ars An t-Adair.
+1	“	“	PUNCT	_	_	3	punct	_	SpaceAfter=No
+2	Cha	cha	PART	_	PartType=Vb|Polarity=Neg	3	mark	_	_
+3	lhisagh	lhis	VERB	_	Mood=Cnd	0	root	_	_
+4	oo	oo	PRON	_	Number=Sing|Person=2	3	nsubj	_	_
+5	loayrt	loayrt	NOUN	_	_	3	xcomp	_	_
+6	eisht	eisht	ADV	_	_	3	advmod	_	SpaceAfter=No
+7	,	,	PUNCT	_	_	3	punct	_	SpaceAfter=No
+8	”	”	PUNCT	_	_	3	punct	_	_
+9	dooyrt	abbyr	VERB	_	Mood=Ind|Tense=Past	3	parataxis	_	_
+10	yn	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	11	det	_	_
+11	Eddeyder	eddeyder	NOUN	_	_	9	nsubj	_	SpaceAfter=No
+12	.	.	PUNCT	_	_	3	punct	_	_
+
+# sent_id = alice_02
+# text = Y Jiolgan Leaghyr beg boght, Illiam, v'eshyn sy vean, as eshyn cummit seose liorish daa vuc rangagh, va cur red ennagh da ass boteil.
+# text_ga = Bhí Liam, an t-earc luachra bocht, i lár báire, agus bhí dhá mhuc ghuine á choinneáil suas agus ag tabhairt rud éigin as buidéal dó.
+# text_gd = Bha an Laghairt beag bochd, Uilleam, anns an teis-meadhain, agus air a chumail an àirde le da ghearra-mhuc, a bha ga bhiadhadh à botal.
+1	Y	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	2	det	_	_
+2	Jiolgan	jiolgan	NOUN	_	_	9	parataxis	_	_
+3	Leaghyr	Leaghyr	NOUN	_	_	2	nmod	_	_
+4	beg	beg	ADJ	_	_	2	amod	_	_
+5	boght	boght	ADJ	_	_	2	amod	_	SpaceAfter=No
+6	,	,	PUNCT	_	_	7	punct	_	_
+7	Illiam	Illiam	PROPN	_	_	2	appos	_	SpaceAfter=No
+8	,	,	PUNCT	_	_	7	punct	_	_
+9-10	v'eshyn	_	_	_	_	_	_	_	_
+9	v'	bee	VERB	_	Form=Len|Mood=Ind|Tense=Past	0	root	_	_
+10	eshyn	eh	PRON	_	Gender=Masc|Number=Sing|Person=3|PronType=Emp	9	nsubj	_	_
+11-12	sy	_	_	_	_	_	_	_	_
+11	ayns	ayns	ADP	_	_	13	case	_	_
+12	yn	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	13	det	_	_
+13	vean	mean	NOUN	_	Form=Len	9	xcomp:pred	_	SpaceAfter=No
+14	,	,	PUNCT	_	_	16	punct	_	_
+15	as	as	SCONJ	_	_	16	mark	_	_
+16	eshyn	eh	PRON	_	Gender=Masc|Number=Sing|Person=3|PronType=Emp	9	advcl	_	_
+17	cummit	cummit	ADJ	_	_	16	xcomp:pred	_	_
+18	seose	seose	ADV	_	_	17	advmod	_	_
+19	liorish	liorish	ADP	_	_	21	case	_	_
+20	daa	daa	NUM	_	_	21	nummod	_	_
+21	vuc	muc	NOUN	_	Form=Len	17	obl	_	_
+22	rangagh	Frangagh	ADJ	_	Form=Len	21	amod	_	SpaceAfter=No
+23	,	,	PUNCT	_	_	24	punct	_	_
+24	va	bee	VERB	_	Form=Len|Mood=Ind|Tense=Past	21	acl:relcl	_	_
+25	cur	cur	NOUN	_	_	24	xcomp	_	_
+26	red	red	NOUN	_	_	25	obj	_	_
+27	ennagh	ennagh	ADJ	_	_	26	amod	_	_
+28-29	da	_	_	_	_	_	_	_	_
+28	da	da	ADP	_	_	29	case	_	_
+29	eh	eh	PRON	_	Gender=Masc|Number=Sing|Person=3	25	obl	_	_
+30	ass	ass	ADP	_	_	31	case	_	_
+31	boteil	boteil	NOUN	_	_	25	obl	_	SpaceAfter=No
+32	.	.	PUNCT	_	_	9	punct	_	_
+
+# sent_id = alice_35
+# text = “Nagh oaldey agglagh shen!” dooyrt Ealish.
+# text_ga = “Nach uafásach barbartha a bhí sí!” a ghlaoigh Eilís.
+# text_gd = “Abair borb!” arsa Ealasaid.
+1	“	“	PUNCT	_	_	3	punct	_	SpaceAfter=No
+2	Nagh	she	AUX	_	Polarity=Neg	3	cop	_	_
+3	oaldey	oaldey	ADJ	_	_	0	root	_	_
+4	agglagh	agglagh	ADV	_	_	3	advmod	_	_
+5	shen	shen	PRON	_	PronType=Dem	3	nsubj	_	SpaceAfter=No
+6	!	!	PUNCT	_	_	3	punct	_	SpaceAfter=No
+7	”	”	PUNCT	_	_	3	punct	_	_
+8	dooyrt	abbyr	VERB	_	Mood=Ind|Tense=Past	3	parataxis	_	_
+9	Ealish	Ealish	PROPN	_	_	8	nsubj	_	SpaceAfter=No
+10	.	.	PUNCT	_	_	3	punct	_	_
+
+# sent_id = alice_41
+# text = “Shegin dou goll as jannoo aarloo dy chloie croquet marish y Venrein,” as hiyree ish magh ass y çhamyr.
+# text_ga = “Ní mór dom imeacht agus mé féin a réiteach le haghaidh an chluiche cróice leis an mBanríon,” agus bhrostaigh sí amach as an seomra.
+# text_gd = “Feumaidh mise falbh is dèanamh deiseil airson crògaidh a chluich leis a' Bhànrigh,” agus ghreas i oirre a-mach às an t-seòmar.
+1	“	“	PUNCT	_	_	2	punct	_	SpaceAfter=No
+2	Shegin	shegin	ADJ	_	_	0	root	_	_
+3-4	dou	_	_	_	_	_	_	_	_
+3	da	da	ADP	_	_	4	case	_	_
+4	mee	mee	PRON	_	Number=Sing|Person=1	2	obl	_	_
+5	goll	goll	NOUN	_	_	2	xcomp	_	_
+6	as	as	CCONJ	_	_	7	cc	_	_
+7	jannoo	jannoo	NOUN	_	_	5	conj	_	_
+8	aarloo	aarloo	ADJ	_	_	7	xcomp	_	_
+9	dy	dy	ADP	_	_	10	case	_	_
+10	chloie	cloie	NOUN	_	Form=Len	8	obl	_	_
+11	croquet	croquet	NOUN	_	_	10	nmod	_	_
+12	marish	marish	ADP	_	_	14	case	_	_
+13	y	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	14	det	_	_
+14	Venrein	benrein	NOUN	_	Form=Len	10	nmod	_	SpaceAfter=No
+15	,	,	PUNCT	_	_	2	punct	_	SpaceAfter=No
+16	”	”	PUNCT	_	_	2	punct	_	_
+17	as	as	CCONJ	_	_	18	cc	_	_
+18	hiyree	siyree	VERB	_	Form=Len|Mood=Ind|Tense=Past	2	conj	_	_
+19	ish	ee	PRON	_	Gender=Fem|Number=Sing|Person=3|PronType=Emp	18	nsubj	_	_
+20	magh	magh	ADV	_	_	18	advmod	_	_
+21	ass	ass	ADP	_	_	23	case	_	_
+22	y	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	23	det	_	_
+23	çhamyr	shamyr	NOUN	_	_	18	obl	_	SpaceAfter=No
+24	.	.	PUNCT	_	_	2	punct	_	_
+
+# sent_id = alice_50
+# text = “Eisht lhisagh oo gra ny t'ou çheet er,” ren y Mwaagh Vart goll er.
+# text_ga = “Ba chóir duit an rud atá i gceist agat a rá mar sin,” a dúirt an Giorria Márta.
+# text_gd = “Uill bu chòir dhut a ràdh na tha thu a' ciallachadh,” chuir Geàrr a' Mhàirt ri sin.
+1	“	“	PUNCT	_	_	3	punct	_	SpaceAfter=No
+2	Eisht	Eisht	ADV	_	_	3	advmod	_	_
+3	lhisagh	lhis	VERB	_	Mood=Cnd	0	root	_	_
+4	oo	oo	PRON	_	Number=Sing|Person=2	3	nsubj	_	_
+5	gra	gra	NOUN	_	_	3	xcomp	_	_
+6	ny	ny	PRON	_	_	5	obj	_	_
+7-8	t'ou	_	_	_	_	_	_	_	_
+7	t'	bee	VERB	_	Mood=Ind|Tense=Pres	6	acl:relcl	_	_
+8	ou	ou	PRON	_	Number=Sing|Person=2	7	nsubj	_	_
+9	çheet	çheet	NOUN	_	_	7	xcomp	_	_
+10-11	er	_	_	_	_	_	_	_	SpaceAfter=No
+10	er	er	ADP	_	_	11	case	_	_
+11	eh	eh	PRON	_	Gender=Masc|Number=Sing|Person=3	9	obl	_	_
+12	,	,	PUNCT	_	_	3	punct	_	SpaceAfter=No
+13	”	”	PUNCT	_	_	3	punct	_	_
+14	ren	jean	VERB	_	Mood=Ind|Tense=Past	3	parataxis	_	_
+15	y	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	16	det	_	_
+16	Mwaagh	mwaagh	NOUN	_	_	14	nsubj	_	_
+17	Vart	Mart	PROPN	_	Form=Len	16	nmod	_	_
+18	goll	goll	NOUN	_	_	14	xcomp	_	_
+19-20	er	_	_	_	_	_	_	_	SpaceAfter=No
+19	er	er	ADP	_	_	20	case	_	_
+20	eh	eh	PRON	_	Gender=Masc|Number=Sing|Person=3	18	obl	_	_
+21	.	.	PUNCT	_	_	3	punct	_	_
+
+# sent_id = alice_17
+# text = “Aarnieu!” screeagh y Calmane.
+# text_ga = “Nathair nimhe!” a dúirt an Colúr de scread.
+# text_gd = “Nathair!” ghlaodh an Calman.
+1	“	“	PUNCT	_	_	2	punct	_	SpaceAfter=No
+2	Aarnieu	aarnieu	PROPN	_	_	0	root	_	SpaceAfter=No
+3	!	!	PUNCT	_	_	2	punct	_	SpaceAfter=No
+4	”	”	PUNCT	_	_	2	punct	_	_
+5	screeagh	screeagh	VERB	_	Mood=Ind|Tense=Past	2	parataxis	_	_
+6	y	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	7	det	_	_
+7	Calmane	calmane	NOUN	_	_	5	nsubj	_	SpaceAfter=No
+8	.	.	PUNCT	_	_	2	punct	_	_
+
+# sent_id = alice_49
+# text = “Cre hon lhisagh eh?” ren yn Eddeyder tallaghey.
+# text_ga = “Cén fáth a n-inseodh?” a dúirt an Haitéir de mhonabhar.
+# text_gd = “Carson a chanadh e sin?” ars An t-Adair.
+1	“	“	PUNCT	_	_	2	punct	_	SpaceAfter=No
+2	Cre	cre	PRON	_	_	0	root	_	_
+3	hon	hon	NOUN	_	_	2	nsubj	_	_
+4	lhisagh	lhis	VERB	_	Mood=Cnd	3	acl	_	_
+5	eh	eh	PRON	_	Gender=Masc|Number=Sing|Person=3	4	nsubj	_	SpaceAfter=No
+6	?	?	PUNCT	_	_	2	punct	_	SpaceAfter=No
+7	”	”	PUNCT	_	_	2	punct	_	_
+8	ren	jean	VERB	_	Mood=Ind|Tense=Past	2	parataxis	_	_
+9	yn	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	10	det	_	_
+10	Eddeyder	eddeyder	NOUN	_	_	8	nsubj	_	_
+11	tallaghey	tallaghey	NOUN	_	_	8	xcomp	_	SpaceAfter=No
+12	.	.	PUNCT	_	_	2	punct	_	_
+
+# sent_id = alice_06
+# text = Myr sampleyr, dy beagh uss çheu-sthie, oddagh oo crankal, as oddins lhiggey stiagh oo, ta fys ayd.
+# text_ga = Dá mbeifeása laistigh, cuir i gcás, d'fhéadfása bualadh agus ligfinnse amach thú, tá a fhios agat.
+# text_gd = Mar eisimpleir, nam biodh sibhse a-staigh, dh'fhaodadh sibh gnogadh, agus b' urrainn dhomh ur leigeil a-mach, tha fhios agaibh.
+1	Myr	myr	ADP	_	_	2	case	_	_
+2	sampleyr	sampleyr	NOUN	_	_	5	obl	_	SpaceAfter=No
+3	,	,	PUNCT	_	_	2	punct	_	_
+4	dy	dy	PART	_	PartType=Cmpl	5	mark	_	_
+5	beagh	bee	VERB	_	Mood=Cnd	9	advcl	_	_
+6	uss	oo	PRON	_	Number=Sing|Person=2|PronType=Emp	5	nsubj	_	_
+7	çheu-sthie	çheu-sthie	ADJ	_	_	5	xcomp:pred	_	SpaceAfter=No
+8	,	,	PUNCT	_	_	5	punct	_	_
+9	oddagh	fod	VERB	_	Form=Len|Mood=Cnd	0	root	_	_
+10	oo	oo	PRON	_	Number=Sing|Person=2	9	nsubj	_	_
+11	crankal	crankal	NOUN	_	_	9	xcomp	_	SpaceAfter=No
+12	,	,	PUNCT	_	_	14	punct	_	_
+13	as	as	CCONJ	_	_	14	cc	_	_
+14	oddins	fod	VERB	_	Form=Emp,Len|Mood=Cnd|Number=Sing|Person=1	9	conj	_	_
+15	lhiggey	lhiggey	NOUN	_	_	14	xcomp	_	_
+16	stiagh	stiagh	ADV	_	_	15	advmod	_	_
+17	oo	oo	PRON	_	Number=Sing|Person=2	15	obj	_	SpaceAfter=No
+18	,	,	PUNCT	_	_	19	punct	_	_
+19	ta	bee	VERB	_	Mood=Ind|Tense=Pres	17	parataxis	_	_
+20	fys	fys	NOUN	_	_	19	nsubj	_	_
+21-22	ayd	_	_	_	_	_	_	_	SpaceAfter=No
+21	ec	ec	ADP	_	_	22	case	_	_
+22	oo	oo	PRON	_	Number=Sing|Person=2	19	xcomp:pred	_	_
+23	.	.	PUNCT	_	_	9	punct	_	_
+
+# sent_id = alice_24
+# text = “Treagyl,” dooyrt y Lugh Vagheragh gyn smooinaght erbee y keayrt shoh.
+# text_ga = “Triacla,” a dúirt an Luch Chodlamáin, gan machnamh ar bith an babhta seo.
+# text_gd = “Trèicil,” arsa Dallag-an-fheòir, gun i smaoineachadh air idir an turas seo.
+1	“	“	PUNCT	_	_	2	punct	_	SpaceAfter=No
+2	Treagyl	treagyl	NOUN	_	_	0	root	_	SpaceAfter=No
+3	,	,	PUNCT	_	_	2	punct	_	SpaceAfter=No
+4	”	”	PUNCT	_	_	2	punct	_	_
+5	dooyrt	abbyr	VERB	_	Mood=Ind|Tense=Past	2	parataxis	_	_
+6	y	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	7	det	_	_
+7	Lugh	lugh	NOUN	_	_	5	nsubj	_	_
+8	Vagheragh	magher	NOUN	_	Form=Len	7	nmod	_	_
+9	gyn	gyn	ADP	_	_	10	case	_	_
+10	smooinaght	smooinaght	NOUN	_	_	5	obl	_	_
+11	erbee	erbee	ADJ	_	_	10	amod	_	_
+12	y	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	13	det	_	_
+13	keayrt	keayrt	NOUN	_	_	5	obl	_	_
+14	shoh	shoh	DET	_	_	13	det	_	SpaceAfter=No
+15	.	.	PUNCT	_	_	5	punct	_	_
+
+# sent_id = alice_51
+# text = “Lesh ynsagh-sheeyney, ta shen dy ghra, stoo brash?” vrie y Far-Ligganagh Marrey, beggan imneagh.
+# text_ga = “An ndéantá rudaí breise?” a d'fhiafraigh an Turtar Bréige, agus iarracht den imní air.
+# text_gd = “Le cùisean a bharrachd?” dh'fhaighnich an Turtair-mheallta, caran iomagaineach.
+1	“	“	PUNCT	_	_	3	punct	_	SpaceAfter=No
+2	Lesh	lesh	ADP	_	_	3	case	_	_
+3	ynsagh-sheeyney	ynsagh-sheeyney	NOUN	_	_	0	root	_	SpaceAfter=No
+4	,	,	PUNCT	_	_	5	punct	_	_
+5	ta	bee	VERB	_	Mood=Ind|Tense=Pres	3	parataxis	_	_
+6	shen	shen	PRON	_	PronType=Dem	5	nsubj	_	_
+7	dy	dy	ADP	_	_	8	case	_	_
+8	ghra	gra	NOUN	_	Form=Len	5	xcomp	_	SpaceAfter=No
+9	,	,	PUNCT	_	_	5	punct	_	_
+10	stoo	stoo	NOUN	_	_	3	appos	_	_
+11	brash	brash	ADJ	_	_	10	amod	_	SpaceAfter=No
+12	?	?	PUNCT	_	_	3	punct	_	SpaceAfter=No
+13	”	”	PUNCT	_	_	3	punct	_	_
+14	vrie	brie	VERB	_	Form=Len|Mood=Ind|Tense=Past	3	parataxis	_	_
+15	y	yn	DET	_	Definite=Def|Number=Sing|PronType=Art	16	det	_	_
+16	Far-Ligganagh	Far-Ligganagh	NOUN	_	_	14	nsubj	_	_
+17	Marrey	mooir	NOUN	_	_	16	nmod	_	SpaceAfter=No
+18	,	,	PUNCT	_	_	20	punct	_	_
+19	beggan	beggan	ADV	_	_	20	advmod	_	_
+20	imneagh	imneagh	ADJ	_	_	14	advmod	_	SpaceAfter=No
+21	.	.	PUNCT	_	_	3	punct	_	_
+

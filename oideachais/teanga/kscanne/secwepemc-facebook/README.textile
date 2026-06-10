@@ -1,0 +1,36 @@
+This package allows Facebook to be translated into any language.
+
+It is a fork of the secwepemc-facebook project which was created by
+"Neskie Manuel":https://github.com/neskie to translate Facebook into his language of Secwepemctsín.
+I've brought Neskie's script up-to-date so it works with Facebook's new design,
+and generalized it to work with any language.
+
+Here are "installation instructions":https://github.com/kscanne/secwepemc-facebook/blob/master/INSTALL.textile
+
+If your language is not yet available, it's very easy to do a translation.
+You just need to translate these "words and phrases":https://github.com/kscanne/secwepemc-facebook/blob/master/strings.txt
+
+If you've translated software before and you're familiar with PO files,
+I can provide you with an empty PO file into which you can place your
+translations.
+
+Once I have your translations, I'll build a "Greasemonkey script" that you can 
+install in your browser, and then you should see Facebook in your language.
+
+Excerpt from Neskie's original README:
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+A Greasemonkey Userscript to alter Facebook to display words
+in Secwepemctsin.
+
+Greasemonkey scripts allow you to alter web pages in many different ways.  We
+are altering the website so that words in Facebook are in Secwepemctsin.  How
+do you say "What are you planning?" in Secwepemctsín or how do you say "News
+Feed"?  I'm still looking for words to translate.  Some words will be hard like
+"Privacy" or "Contributor".  When we get all of the Facebook interface
+translated, Facebook will be another place we can be immersed in the language.
+
+It would be good to be able to use the official Facebook "Translations App":http://www.facebook.com/translations/, but Secwepemctsín isn't listed.  Until then, we can use this script.
+
+...
+
+Enjoy Facebook in Secwepemctsín.  Also check out "First Voices":http://www.firstvoices.ca and "Secwepemctsnem":http://language.secwepemcradio.ath.cx for more language resources.  There is also "Land of the Shuswap":http://www.landoftheshuswap.com/.

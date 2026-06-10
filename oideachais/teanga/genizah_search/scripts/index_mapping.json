@@ -1,0 +1,187 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 1,
+    "analysis": {
+      "analyzer": {
+        "multilingual_text": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": ["lowercase", "stop", "snowball"]
+        },
+        "exact_match": {
+          "type": "keyword"
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "keyword"
+      },
+      "doc_id": {
+        "type": "keyword"
+      },
+      "embedding": {
+        "type": "dense_vector",
+        "dims": 128,
+        "index": true,
+        "similarity": "cosine"
+      },
+      "indexed_at": {
+        "type": "date",
+        "format": "strict_date_time"
+      },
+      "content_type": {
+        "type": "keyword"
+      },
+      "language": {
+        "type": "keyword"
+      },
+      "image_urls": {
+        "type": "text",
+        "index": false
+      },
+      "has_images": {
+        "type": "boolean"
+      },
+      "image_count": {
+        "type": "integer"
+      },
+      "description": {
+        "type": "text",
+        "analyzer": "multilingual_text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "has_description": {
+        "type": "boolean"
+      },
+      "document_types": {
+        "type": "keyword"
+      },
+      "primary_document_type": {
+        "type": "keyword"
+      },
+      "transcriptions": {
+        "type": "text",
+        "analyzer": "multilingual_text"
+      },
+      "transcription_full_text": {
+        "type": "text",
+        "analyzer": "multilingual_text",
+        "fields": {
+          "raw": {
+            "type": "keyword",
+            "ignore_above": 10000
+          }
+        }
+      },
+      "has_transcriptions": {
+        "type": "boolean"
+      },
+      "transcription_count": {
+        "type": "integer"
+      },
+      "total_transcription_lines": {
+        "type": "integer"
+      },
+      "transcription_completeness": {
+        "type": "keyword"
+      },
+      "translations": {
+        "type": "text",
+        "analyzer": "multilingual_text"
+      },
+      "translation_full_text": {
+        "type": "text",
+        "analyzer": "multilingual_text"
+      },
+      "has_translations": {
+        "type": "boolean"
+      },
+      "translation_count": {
+        "type": "integer"
+      },
+      "date_info": {
+        "type": "object",
+        "properties": {
+          "hebrew_date": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword"
+              }
+            }
+          },
+          "standard_date": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword"
+              }
+            }
+          },
+          "datetime_attr": {
+            "type": "keyword"
+          }
+        }
+      },
+      "has_date": {
+        "type": "boolean"
+      },
+      "date_hebrew_date": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword"
+          }
+        }
+      },
+      "date_standard_date": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword"
+          }
+        }
+      },
+      "date_datetime_attr": {
+        "type": "keyword"
+      },
+      "has_source_url": {
+        "type": "boolean"
+      },
+      "has_misc_info": {
+        "type": "boolean"
+      },
+      "full_text_search": {
+        "type": "text",
+        "analyzer": "multilingual_text",
+        "fields": {
+          "english": {
+            "type": "text",
+            "analyzer": "english"
+          },
+          "exact": {
+            "type": "keyword",
+            "ignore_above": 10000
+          }
+        }
+      },
+      "created_at": {
+        "type": "date",
+        "format": "strict_date_time"
+      },
+      "updated_at": {
+        "type": "date",
+        "format": "strict_date_time"
+      }
+    }
+  }
+}

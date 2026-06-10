@@ -1,0 +1,5 @@
+name: pylaia
+version: ~
+title: PyLaia
+nav:
+- modules/ROOT/nav.adoc

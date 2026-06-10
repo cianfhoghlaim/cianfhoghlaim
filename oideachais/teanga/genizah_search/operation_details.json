@@ -1,0 +1,10 @@
+{
+  "metadata": {
+    "@type": "type.googleapis.com/google.cloud.aiplatform.v1.UpdateIndexOperationMetadata",
+    "genericMetadata": {
+      "createTime": "2025-06-17T18:07:30.563315Z",
+      "updateTime": "2025-06-17T18:07:45.788832Z"
+    }
+  },
+  "name": "projects/133237556095/locations/us-central1/indexes/5710812817133666304/operations/5581651914908499968"
+}

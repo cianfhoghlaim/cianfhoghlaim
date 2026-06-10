@@ -1,0 +1,41 @@
+# SearchSite: www.aimsigh.com
+#
+# Author: Kevin Scannell <scannell at slu dot edu>
+# Date: 18 Nov 2005
+#
+
+<search
+  version="7.1"
+  name="aimsigh.com"
+  description="aimsigh.com - Cuardach Lán-Ghaeilge"
+  action="http://borel.slu.edu/cgi-bin/aimsigh.cgi"
+  searchForm="http://www.aimsigh.com/"
+  method="GET"
+  queryCharset="utf-8"
+  queryEncoding="utf-8"
+>
+
+<input name="ionchur" user>
+# <input name="feicthe" value="0">
+<inputnext name="feicthe" factor="10">
+<inputprev name="feicthe" factor="10">
+<input name="claochlu" value="NN">
+<input name="sourceid" value="Mozilla-search">
+
+<interpret 
+    browserResultType="result" 
+    resultListStart="<!--a-->" 
+    resultListEnd="<!--z-->" 
+    resultItemStart="<!--m-->" 
+    resultItemEnd="<!--n-->"
+    charset="UTF-8"
+>
+
+</search>
+
+<browser
+ update="http://mycroft.mozdev.org/update.php/id0/aimsigh.src"
+ updateIcon="http://mycroft.mozdev.org/update.php/id0/aimsigh.png"
+ updateCheckDays="7"
+>
+ 

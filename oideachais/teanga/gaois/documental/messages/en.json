@@ -1,0 +1,57 @@
+{
+    "global": {
+        "contact": "Contact",
+        "dcu": "Dublin City University",
+        "description": "Technical documentation for open source software and open data resources developed by the Gaois research group, DCU",
+        "documentation": "Documentation",
+        "groupName": "Gaois research group",
+        "keywords": "Fiontar & Scoil na Gaeilge, Dublin City University, digital humanities, open data, software, technical documentation",
+        "menu": "Menu",
+        "menuClose": "Close menu",
+        "skip": "Skip to main content",
+        "tagline": "Gaois is a research group in Fiontar & Scoil na Gaeilge, DCU, that develops innovative resources to support the Irish language and its heritage"
+    },
+    "navigation": {
+        "api": "API",
+        "changelog": "Changelog",
+        "dataDictionary": "Data dictionary",
+        "gettingStarted": "Getting started",
+        "licence": "Licence",
+        "openData": "Open Data",
+        "software": "Software",
+        "surnames": "Surnames Index"
+    },
+    "home": {
+        "groupName": "Gaois research group",
+        "heading": "Gaois Documentation",
+        "moreInfo": "Learn about Gaois",
+        "openData": "Open Data",
+        "software": "Software",
+        "title": "Technical documentation",
+        "tagline": "docs.gaois.ie provides technical documentation for open data and software resources developed by the {link}, Fiontar & Scoil na Gaeilge, DCU.",
+        "sections": {
+            "gettingStarted": "Getting started",
+            "gettingStartedBlurb": "A general guide to using open data resources developed by Gaois",
+            "duchasBlurb": "Application Programming Interface for the National Folklore Collection of Ireland",
+            "logainmBlurb": "Application Programming Interface for the Placenames Database of Ireland",
+            "surnames": "Surnames Index",
+            "surnamesBlurb": "An index of Irish surname data in XML format",
+            "terminologueBlurb": "A cloud-based, open-source terminology management tool",
+            "geoNames2SqlBlurb": "A tool to build and maintain SQL databases derived from GeoNames Gazetteer data",
+            "localizerBlurb": "A toolkit for creating multilingual web applications on ASP.NET Core",
+            "queryLoggerBlurb": "A simple, configurable query logger for ASP.NET and ASP.NET Core applications",
+            "documentalBlurb": "A multilingual technical documentation platform"
+        }
+    },
+    "error": {
+        "contact": "Please contact us if you have any queries",
+        "networkError": "We were unable to fetch the resource. Please check that you have an active internet connection.",
+        "pageNotFound": "Page not found"
+    },
+    "document": {
+        "backToTop": "Back to top",
+        "contents": "Contents",
+        "inThisArticle": "In this article",
+        "monolingual": "This entry is available in Irish only at present"
+    }
+}

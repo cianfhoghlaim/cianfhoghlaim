@@ -1,0 +1,250 @@
+[#releases]
+= Releases
+
+[#1-1-1]
+== 1.1.1
+
+Released on *12 August 2024* &bull; View on https://gitlab.teklia.com/atr/pylaia/-/releases/1.1.1[Gitlab]
+
+[#breaking-changes-1-1-1]
+=== Breaking changes
+
+* The https://gitlab.teklia.com/atr/nnutils/[nnutils] library is no longer maintained and is only compatible with Python 3.6, 3.7, 3.8. As such its dependency has been removed. The `crnn.use_masks` parameter has been removed. It is still supported to keep the compatibility with older training configuration but will be ignored.
+
+[#features-1-1-1]
+=== Feature
+
+* The number of worker processes created in dataloaders is now exposed through the `data.num_workers`  parameter.
+* There is a new command to run basic checks and compute statistics on your training dataset. Learn more about it in https://atr.pages.teklia.com/pylaia/usage/datasets/[the documentation].
+* Pretraining is now available. Load the weights of a previous checkpoint using the `train.pretrain` parameter when fine-tuning a model on a new dataset. Learn more about it in https://atr.pages.teklia.com/pylaia/usage/training/#resume-training-from-a-checkpoint[the documentation].
+* When training on a small dataset, freezing some of the layers can help with model convergence. The `train.freeze_layers` parameter supports freezing:
+ ** convolutional layers,
+ ** recurrent layers,
+ ** linear layers.
+* Proper support for right-to-left (RTL) languages is now available. Enable it using the `data.reading_order` argument both during https://atr.pages.teklia.com/pylaia/usage/training/#train-on-right-to-left-reading-order[training] and https://atr.pages.teklia.com/pylaia/usage/prediction/#predict-on-right-to-left-data[decoding].
+
+[#dependencies-1-1-1]
+=== Dependencies
+
+* Bumped https://pypi.org/project/pytorch-lightning/[pytorch-lightning] to version `1.4.2`.
+* Bumped https://pypi.org/project/textdistance/[textdistance] to version `4.6.1`.
+
+[#misc]
+=== Misc
+
+* A deprecation warning from jsonargparse was fixed.
+* The package's metadata are now stored in `pyproject.toml` as per https://peps.python.org/pep-0621/[PEP-0621].
+* PyLaia now uses https://docs.astral.sh/ruff/[ruff] for linting and formatting.
+
+[#1-1-0]
+== 1.1.0
+
+Released on *22 December 2023* &bull; View on https://gitlab.teklia.com/atr/pylaia/-/releases/1.1.0[Gitlab]
+
+[#breaking-changes-1-1-0]
+=== Breaking changes
+
+* Official support for Python3.8 has been dropped. This doesn't mean that the current code doesn't run on python3.8, we simply do not test that compatibility anymore. This decision was made since active support of python 3.8 has stopped for a while now and many libraries in the ML world have stopped supporting it as well.
+
+[#feature-1-1-0]
+=== Feature
+
+* A Docker image with the needed code to use this library is now built on every tag.
+* The coverage of our tests suite is displayed again as a GitLab badge on the repository as well as in the README.md file.
+
+[#documentation-1-1-10]
+=== Documentation
+
+* Many sections were added to the documentation:
+ ** for the https://atr.pages.teklia.com/pylaia/usage/initialization/[pylaia-htr-create-model] command,
+ ** for https://atr.pages.teklia.com/pylaia/usage/datasets/[dataset formatting],
+ ** for the https://atr.pages.teklia.com/pylaia/usage/training/[pylaia-htr-train-ctc] command and https://atr.pages.teklia.com/pylaia/usage/training/#resume-training-from-a-checkpoint[fine-tuning],
+ ** for the https://atr.pages.teklia.com/pylaia/usage/prediction/[pylaia-htr-decode-ctc] command,
+ ** for the https://atr.pages.teklia.com/pylaia/usage/netout/[pylaia-htr-netout] command,
+ ** to https://atr.pages.teklia.com/pylaia/usage/language_models/[train] https://kheafield.com/code/kenlm/[KenLM] language models,
+ ** the full Python code reference.
+* A contribution guide and a code of conduct were added for new contributors.
+
+[#dependencies-1-1-0]
+=== Dependencies
+
+* Bumped https://pypi.org/project/pytorch-lightning/[pytorch-lightning] to version `1.3.0`
+* Some dependencies were pinned to a version to avoid breakage:
+ ** https://pypi.org/project/natsort/[natsort] was pinned to version `8.4.0`,
+ ** https://pypi.org/project/textdistance/[textdistance] was pinned to version `4.6.0`,
+ ** https://pypi.org/project/scipy/[scipy] was pinned to version `1.11.3`,
+ ** https://pypi.org/project/matplotlib/[matplotlib] was pinned to version `3.8.2`,
+ ** https://pypi.org/project/numpy/[numpy] direct dependency was removed since it's installed through `scipy` and `matplotlib`.
+* PyLaia dropped support for python 3.8 so the https://pypi.org/project/dataclasses/[dataclasses] dependency was dropped.
+
+[#misc-1-1-0]
+=== Misc
+
+* The `torch.testing.assert_allclose` has been replaced by `torch.testing.assert_close` since it became deprecated in https://github.com/pytorch/pytorch/issues/61844[PyTorch 1.12.0].
+
+[#1-0-7]
+== 1.0.7
+
+Released on *18 October 2023* &bull; View on https://gitlab.teklia.com/atr/pylaia/-/releases/1.0.7[Gitlab]
+
+[#feature-1-0-7]
+=== Feature
+
+* When using a language model, a confidence score is now returned based on the log-likelyhood of the hypothesis.
+
+[#documentation-1-0-7]
+=== Documentation
+
+A public documentation is now available on https://atr.pages.teklia.com/pylaia/. It's still under construction but next releases will add more and more content.
+
+[#dependencies-1-0-7]
+=== Dependencies
+
+* Bumped https://pypi.org/project/pytorch-lightning/[pytorch-lightning] to version `1.1.7`
+* Bumped GitHub action https://github.com/codecov/codecov-action[codecov/codecov-action] to version `3`
+* Bumped GitHub action https://github.com/actions/setup-python[actions/setup-python] to version `4`
+* Bumped GitHub action https://github.com/actions/checkout[actions/checkout] to version `4`
+
+[#development-1-0-7]
+=== Development
+
+* Releases are now built more easily through a Makefile.
+* The documentation is also redeployed after each push on `master` branch.
+* Fixed a test that behaved differently locally and during CI.
+
+[#1-0-6]
+== 1.0.6
+
+Released on *12 September 2023* &bull; View on https://github.com/jpuigcerver/PyLaia/releases/tag/1.0.6[Github]
+
+[#feature-1-0-6]
+=== Feature
+
+* During training, too small images are now padded to be able to pass the multiple convolution layers.
+
+[#documentation-1-0-6]
+=== Documentation
+
+* Fixed typos.
+
+[#dependencies-1-0-6]
+=== Dependencies
+
+* Replaced https://pillow.readthedocs.io/en/stable/releasenotes/2.7.0.html#antialias-renamed-to-lanczos[deprecated Pillow resampling method] `Image.ANTIALIAS` to `Image.Resample.Lanczos`.
+
+[#development-1-0-6]
+=== Development
+
+* Pre-commit hooks were updated.
+
+[#1-0-5]
+== 1.0.5
+
+Released on *29 March 2023* &bull; View on https://github.com/jpuigcerver/PyLaia/releases/tag/1.0.5[Github]
+
+[#dependencies-1-0-5]
+=== Dependencies
+
+* Requires `torch` version `1.13.0` or `1.13.1`.
+* Requires `torchvision` version `0.14.0` or `0.14.1` (depending on `torch` version).
+
+[#1-0-4]
+== 1.0.4
+
+Released on *4 January 2023* &bull; View on https://github.com/jpuigcerver/PyLaia/releases/tag/1.0.4[Github]
+
+[#dependencies-1-0-4]
+=== Dependencies
+
+* Requires `torch` version `1.13.0`.
+
+[#1-0-3]
+== 1.0.3
+
+Released on *12 December 2022* &bull; View on https://github.com/jpuigcerver/PyLaia/releases/tag/1.0.3[Github]
+
+[#feature-1-0-3]
+=== Feature
+
+* Now able to decode using a trained Language model through beam search decoding.
+* Exposes https://pytorch.org/docs/stable/data.html#multi-process-data-loading[torch Dataloaders's num_workers] parameter on the Python training function to limit resource usage when needed.
+
+[#dependencies-1-0-3]
+=== Dependencies
+
+* Added dependency to `torchaudio` version `0.13.0`.
+
+[#development-1-0-3]
+=== Development
+
+* Package version is now tracked through the `VERSION` file.
+
+[#1-0-2]
+== 1.0.2
+
+Released on *7 December 2022* &bull; View on https://github.com/jpuigcerver/PyLaia/releases/tag/1.0.2[Github]
+
+[#dependencies-1-0-2]
+=== Dependencies
+
+* Pinned dependency to `pytorch-lightning` to version `1.1.0`.
+
+[#1-0-1]
+== 1.0.1
+
+Released on *7 December 2022* &bull; View on https://github.com/jpuigcerver/PyLaia/releases/tag/1.0.1[Github]
+
+[#1-0-0]
+== 1.0.0
+
+Released on *2 December 2020* &bull; View on https://github.com/jpuigcerver/PyLaia/releases/tag/1.0.0[Github]
+
+[#added-1-0-0]
+=== Added
+
+* Support distributed training
+* Scripts can now be configured using yaml configuration files
+* Add support for the SGD and Adam optimizers
+* Support color images
+* Log the installed version of each module when scripts are called from shell
+* Add char/word segmentation to the decode script
+* Add several badges to the README
+* Support using a `ReduceLROnPlateau` scheduler during training
+* A CSV file (metrics.csv) is now created with the results obtained during training
+* Add CONTRIBUTING file
+* Training now can include GPU stats in the progress bar
+* Add isort to pre-commit to keep consistent imports throughout the codebase
+* Users can run the PyLaia scripts using Python now
+* Support half-precision training for fixed height models.
+* Add script to visualize the segmentation output
+* Use Codecov to produce test coverage reports
+* Code is now analyzed using CodeFactor
+
+[#changed-1-0-0]
+=== Changed
+
+* Make Python 3.6 the minimum supported version
+* Make PyTorch 1.4.0 the minimum supported version
+* Remove `ImageToTensor` in favor of vision transform `ToImageTensor`
+* Remove all of the internal logic (`engine`, `actions`, `hooks`, etc) in favor of pytorch-lightning's constructs
+* Change Travis CI for GitHub actions
+* Greatly improve the progress bar. It is used now in all scripts
+* The entire shell API has changed for the better (thanks to jsonargparse). Arguments are now separated into groups and help messages are clearer.
+* Drastically improve our test suite, we now have a 91% coverage
+
+[#removed-1-0-0]
+=== Removed
+
+* Remove egs directory. These live now at https://github.com/carmocca/PyLaia-examples
+* Remove Baidu's CTC loss in favor of PyTorch's
+* Remove PHOC code. Please open an issue if you were using it
+* Remove Dortmund code. Please open an issue if you were using it
+* Remove CTCLatticeGenerator. Please open an issue if you were using it
+* We no longer support saving checkpoints for more than one metric. Will be added back in a future version
+
+[#fixed-1-0-0]
+=== Fixed
+
+* Fix WER calculation when long delimiters are used
+* Exit training if a delimiter is not present in the vocabulary
+* Hundreds of other minor fixes and refactors to improve the code quality!

@@ -1,0 +1,84 @@
+# @configure_input@ 
+# Copyright (C) 2003, 2004, 2005 Kevin P. Scannell <kscanne@gmail.com>
+#
+# This is free software; see the file COPYING for copying conditions.  There is
+# NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+
+@SET_MAKE@
+
+SHELL = @SHELL@
+
+PACKAGE_NAME = @PACKAGE_NAME@
+TARBALL = @PACKAGE_TARNAME@
+INSTALL = @INSTALL@
+INSTALL_DATA = @INSTALL_DATA@
+CC = @CC@
+CFLAGS = @CFLAGS@
+DEFS = -DLOCALEDIR=\"po\" @DEFS@
+ECHO = echo
+EGREP = @EGREP@
+LEX = @LEX@
+LEXLIB = @LEXLIB@
+LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
+LN_S = @LN_S@
+PERL = @PERL@
+YACC = @YACC@
+
+###############################################################################
+#                     .IN FILE GRAMMAR/PARSER
+###############################################################################
+
+all : FORCE
+
+parsers : aparser rparser
+
+aonchiall.y : ponc.in.y
+	cat ponc.in.y | sed "s/_TAIL_MACRO_/result/; s/_RESULT_MACRO_/POSTAG/" > aonchiall.y
+
+rialacha.y : ponc.in.y
+	cat ponc.in.y | sed "s/_TAIL_MACRO_/result/; s/_RESULT_MACRO_/MESSAGE | MESSAGEPLUS MESSAGEARG/" > rialacha.y
+
+aparser : aonchiall.y ponc.in.l gettext.h
+	$(LEX) ponc.in.l
+	$(YACC) -d aonchiall.y
+	$(CC) -c $(CFLAGS) $(DEFS) $(LEX_OUTPUT_ROOT).c y.tab.c
+	$(CC) -o aparser $(CFLAGS) $(LEX_OUTPUT_ROOT).o y.tab.o $(LEXLIB)
+
+rparser : rialacha.y ponc.in.l gettext.h
+	$(LEX) ponc.in.l
+	$(YACC) -d rialacha.y
+	$(CC) -c $(CFLAGS) $(DEFS) $(LEX_OUTPUT_ROOT).c y.tab.c
+	$(CC) -o rparser $(CFLAGS) $(LEX_OUTPUT_ROOT).o y.tab.o $(LEXLIB)
+
+###############################################################################
+#                     AUTOCONF STUFF AND CLEANUP                              #
+###############################################################################
+
+configure: configure.ac
+	autoconf
+
+Makefile : Makefile.in config.status
+	./config.status
+	chmod 444 Makefile
+
+config.status: configure
+	./config.status --recheck
+
+distclean :
+	cd po && $(MAKE) distclean
+	$(MAKE) topclean
+	rm -f config.log config.status Makefile
+
+topclean :
+	$(MAKE) semiclean
+	rm -f aparser rparser *.c~ ChangeLog.bak messages.pl
+
+clean :
+	cd po && $(MAKE) clean
+	$(MAKE) topclean
+
+semiclean :
+	rm -f y.tab.* $(LEX_OUTPUT_ROOT).* aonchiall.y rialacha.y
+
+FORCE :

@@ -1,0 +1,98 @@
+{
+  "cli": {
+    "version": ">= 3.8.1",
+    "promptToConfigurePushNotifications": false,
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "base": {
+      "node": "18.18.2"
+    },
+    "development": {
+      "extends": "base",
+      "developmentClient": true,
+      "distribution": "internal",
+      "channel": "development",
+      "ios": {
+        "simulator": true,
+        "resourceClass": "large"
+      },
+      "env": {
+        "EXPO_PUBLIC_ENV": "production"
+      }
+    },
+    "preview": {
+      "extends": "base",
+      "distribution": "internal",
+      "channel": "production",
+      "ios": {
+        "resourceClass": "large"
+      },
+      "env": {
+        "EXPO_PUBLIC_ENV": "production"
+      }
+    },
+    "production": {
+      "extends": "base",
+      "ios": {
+        "resourceClass": "large",
+        "autoIncrement": true
+      },
+      "android": {
+        "autoIncrement": true
+      },
+      "channel": "production",
+      "env": {
+        "EXPO_PUBLIC_ENV": "production"
+      }
+    },
+    "production-apk": {
+      "extends": "base",
+      "distribution": "internal",
+      "ios": {
+        "autoIncrement": false
+      },
+      "android": {
+        "autoIncrement": false
+      },
+      "channel": "production",
+      "env": {
+        "EXPO_PUBLIC_ENV": "production"
+      }
+    },
+    "testflight": {
+      "extends": "base",
+      "ios": {
+        "autoIncrement": true
+      },
+      "android": {
+        "autoIncrement": true
+      },
+      "channel": "testflight",
+      "env": {
+        "EXPO_PUBLIC_ENV": "testflight"
+      }
+    },
+    "testflight-android": {
+      "extends": "base",
+      "distribution": "internal",
+      "ios": {
+        "autoIncrement": true
+      },
+      "android": {
+        "autoIncrement": true
+      },
+      "channel": "testflight",
+      "env": {
+        "EXPO_PUBLIC_ENV": "testflight"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "ascAppId": "6444370199"
+      }
+    }
+  }
+}

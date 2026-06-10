@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block head_title %}{% trans "Contributors" %}{% endblock %}
+{% block nav-contributors-class %}active{% endblock %}
+{% block bodyclass %}homepage{% endblock %}
+
+{% block body %}
+
+  <div class="jumbotron text-center bg-light">
+    <h1 class="jumbotron-heading">{% trans "Contributors" %}</h1>
+  </div>
+  <div class="container-fluid my-5 px-4">
+  {% if CUSTOM_CONTRIBUTORS %}
+    {% include "contributors_list.html" %}
+  {% else %}
+    <div class="text-center py-3">
+      <p class="fst-italic text-muted">
+        {% trans "The contributors list will be available here soon." %}
+      </p>
+    </div>
+  {% endif %}
+  </div>
+
+{% endblock %}

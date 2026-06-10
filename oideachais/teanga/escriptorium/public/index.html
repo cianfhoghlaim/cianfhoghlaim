@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>eScriptorium - Presentation.</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="main">
+      <div class="jumbotron">
+        <h1>eScriptorium</h1>
+        <p class="text-center">A Digital Text Production Pipeline for Print and Handwritten Texts using machine learning techniques.</p>
+
+        <div class="row">
+        <div class="col-lg-3 text-center">
+            <img class="rounded-circle" src="images/t5.png" alt="Generic placeholder image" width="140" height="140">
+            <h3 class="mb-3">Automatic<br>Transcription</h3>
+            <p class="text-muted">Apply OCR/HTR to images of printed and handwritten documents using shared open models.</p>
+        </div>
+
+        <div class="col-lg-3 text-center">
+            <img class="rounded-circle" src="images/t4.png" alt="Generic placeholder image" width="140" height="140">
+            <h3 class="mb-3">Manual<br>Transcription</h3>
+            <p class="text-muted">Make use of an ergonomic user interface leveraging modern browser technology to edit segmentations and transcriptions.</p>
+        </div>
+
+        <div class="col-lg-3 text-center">
+            <img class="rounded-circle" src="images/t2.png" alt="Generic placeholder image" width="140" height="140">
+            <h3 class="mb-3">Train<br>Models</h3>
+            <p class="text-muted">Create new models or finetune existing ones to improve automatic recognition.</p>
+        </div>
+
+        <div class="col-lg-3 text-center">
+            <img class="rounded-circle" src="images/t6.png" alt="" width="140" height="140">
+            <h3 class="mb-3">Import/<br>Export</h3>
+            <p class="text-muted">Import and export models and texts transcriptions in a variety of formats. Access data through a full REST API.</p>
+        </div>
+        </div>
+
+      </div>
+
+      <div class="jumbotron">
+        <h1>What can you do with it?</h1>
+        <p>The primary tasks of eScriptorium are
+          <ul>
+            <li>To automatically convert images of manuscripts, books or inscriptions in any script, language or writing direction into machine readable text, including the geometrical information about where on the image the texts are located.</li>
+            <li>Establish the reading order</li>
+            <li>Distinguish different types of text (e.g. the running headers, titles or interlinear glosses from the main text).</li>
+          </ul>
+          </p>
+          <p>Through automatic layout segmentation the computer establishes the locations and different types of text. Automatic text recognition (ATR) transcribes text lines into machine readable and searchable text you can use e.g. in a word processor like Microsoft word. However, the greatest advantage in the present method is the preservation of the link between the image zones for regions, lines, words or even letters and the transcription. They enable users to create new forms of digital editions or perform automatic paleographical analyses.</p>
+        <p>You can define your own ontology and train segmentation and recognition models to adapt the machine to your material - and to your conventions of how to segment or transcribe. These models can be shared, exported and imported. You can finetune existing models and considerably reduce the amount of training material to adapt to a new document type, script or language. This is called transfer learning. In addition to different scripts, languages and layouts, documents have different reading orders, e.g. between poetic and prose texts. In the near future eScriptorium will therefore also include trainable reading order detection. Some users also simply profit from the highly ergonomic interface of eScriptorium to transcribe texts manually without automatic means.</p>
+        <p>eScriptorium uses cutting edge machine learning to perform the automatic tasks. In supervised machine learning the computer learns by example. Unsupervised pretraining is used to reduce the amount of training material. Automatic text to text alignment can help you to create training material from existing e-texts in lightning speed up to self-supervised learning as in the ACDC pipeline.</p>
+      </div>
+
+      <div class="jumbotron">
+        <h1>What can’t you do with it?</h1>
+        <p>eScriptorium is a web based software, not a service. In order to run it you need access to an existing instance or if you have some technical knowledge you can install it locally. eScriptorium can be installed in Linux and Mac or on WSL on Microsoft Windows on individual computers up to multi-server multi-gpu clusters. For the training of segmentation models, a gpu with sufficient memory is indispensable. For the training of recognition models, a gpu is highly recommended.</p>
+      </div>
+
+      <div class="jumbotron">
+        <h1>philosophy</h1>
+        <p>Since the beginning, our philosophy has been to create an open source product for all parts of the UI and the AI, to enable the sharing of models and to promote the sharing of ground truth. Working at an institution famous for its philologist specialized in all kinds of script systems world wide, we planned it to be able to deal with as many scripts, languages and writing directions as possible, right-to-left, left-to-right, top-down.</p>
+      </div>
+
+      <div class="jumbotron">
+        <h1>History</h1>
+        <p>eScriptorium started in December 2019 in the frame of the Scripta-PSL project’s Digital Humanities axis codirected by Peter Stokes and Daniel Stökl Ben Ezra with the lead engineers Robin Tissot (UI and full stack) and Benjamin Kiessling (AI) under the leadership of the EPHE-PSL with important contributions of ALMAnaCH (Inria), and since 2020 also the Universities of Maryland and North-Eastern. </p>
+        <p>After its initial stage, eScriptorium and kraken were funded by the H2020 InfraDev Resilience, the DIM STCN, ANR EquipEx Biblissima+, and the ERC SyG MiDRASH on the EPHE side, LectauRep and ATRIUM on the Inria side and openITI, NEH “Automatic Collation for Diversifying Corpora: Improving Handwritten Text Recognition (HTR) for Arabic-script Manuscripts” and ERC Kitab on the UMaryland/North-Eastern side. Outside funding made it possible to engage the SMEs Teklia and Performant for a lot of code contributions. Additional contributions come from Princeton University. </p>
+      </div>
+
+      <div class="jumbotron">
+        <h1>list of instances</h1>
+        <p>eScriptorium is running on many small and big instances around the planet. Not all of them are known to us. Our main instance is manuscriptologIA (short msIA) at the mesoPSL cluster at the Observatory of Paris. Other big instances are Cremma at the INRIA, Paris, simorgh (U Maryland), the University Library of Mannheim and the National Library of Israel (Jerusalem). </p>
+      </div>
+
+      <div class="jumbotron text-center">
+        <h1>Useful links</h1>
+        <p><a href="https://gitlab.com/scripta/escriptorium" target="_blank">Main code repository</a></p>
+        <p><a href="https://github.com/mittagessen/kraken" target="_blank">Kraken repository</a></p>
+        <p><a href="https://escriptorium-tutorial.readthedocs.io/en/latest/" target="_blank">Documentation</a></p>
+        <p><a href="https://groupes.renater.fr/sympa/info/escriptorium-users" target="_blank">Mailing list</a></p>
+        <p>The best way to contact us or the community for any technical question, support or requesting access is through the <a href="https://matrix.to/#/#escripta_escriptorium:gitter.im" target="_blank">web chat gitter</a>.</p>
+      </div>
+
+      <div class="jumbotron text-center">
+        <p>
+        <a href="https://scripta.psl.eu/en/" class="pl-4" target="_blank"><img src="images/pslscripta.png" alt="Scripta PSL logo" height="50"></a>
+        <a href="https://biblissima.fr/" target="_blank"><img src="images/biblissima-logo.png" alt="Biblissima+ logo" height="100"></a>
+        <a href="https://www.resilience-ri.eu/" class="pl-4" target="_blank"><img src="images/resilience.png" alt="Resilience logo" height="60"></a>
+        <a href="https://erc.europa.eu/" class="pl-4 pb-2" target="_blank"><img src="images/European_Research_Council_logo.png" alt="ERC logo" height="100"></a>
+        <a href="https://lectaurep.hypotheses.org/" class="pl-4 pb-2" target="_blank"><img src="images/lectaurep.png" alt="Lectaurep logo" height="100"></a>
+        </p>
+
+        <p>
+          <a href="https://psl.eu" class="pl-4" target="_blank"><img src="images/psl.png" alt="PSL logo" height="60"></a>
+          <a href="https://ec.europa.eu/info/index_en" class="pl-4" target="_blank"><img src="images/eu-logo.png" alt="European commission logo" height="80"></a>
+          <a href="https://www.gouvernement.fr/le-programme-d-investissements-d-avenir" class="pl-4" target="_blank"><img src="images/pia.png" alt="PIA logo" height="80"></a>
+          <a href="https://mellon.org/" class="pl-4" target="_blank"><img src="images/mellon.svg" alt="MELLON logo" height="80"></a>
+          <a href="https://www.culture.gouv.fr/" class="pl-4" target="_blank"><img src="images/LogoMCHP.PNG" alt="MCC logo" height="120"></a>
+          <a href="https://www.dim-humanites-numeriques.fr/" class="pl-4" target="_blank"><img src="images/logo_DIMSTCN_regioncouleur_RVB.png" alt="DIM-STCN logo" height="100"></a>
+
+          <a href="https://www.ephe.psl.eu" class="pl-4" target="_blank"><img src="images/ephe.png" alt="EPHE logo" height="100"></a>
+        </p>
+        <p>
+          <a href="https://openiti.org/" class="pl-4" target="_blank"><img src="images/openiti.png" alt="DIM Region ile de france logo" height="80"></a>
+          <a href="https://teklia.com/" class="pl-4" target="_blank"><img src="images/teklia.png" alt="Teklia logo" height="40"></a>
+          <a href="https://inria.fr/fr" class="pl-4" target="_blank"><img src="images/inria.png" alt="Inria logo" height="60"></a>
+          <a href="http://www.archeo.ens.fr" class="pl-4" target="_blank"><img src="images/aoroc.jpg" alt="AOROC logo" height="60"></a>
+          <a href="http://almanach.inria.fr/index-en.html" class="pl-4" target="_blank"><img src="images/almanach_txt.png" alt="Almanach logo" height="100"></a>
+        </p>
+
+      </div>
+    </div>
+  </body>
+</html>

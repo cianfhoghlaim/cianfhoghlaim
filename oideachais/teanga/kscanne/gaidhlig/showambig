@@ -1,0 +1,10 @@
+#!/usr/bin/perl
+
+# used in makefile to create ambig.txt file which is part of ga2gd dist
+use Locale::PO;
+
+my $aref = Locale::PO->load_file_asarray('ga2gd.po');
+foreach my $msg (@$aref) {
+	my $str = $msg->msgstr();
+	print $msg->dump if ($str =~ /;[^ ]/);
+}

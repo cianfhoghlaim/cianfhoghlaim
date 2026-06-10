@@ -32,6 +32,23 @@ export default defineConfig({
     }),
     react(),
   ],
+  resolve: {
+    // Vite needs explicit dedupe for cross-workspace deps so that
+    // packages hoisted into the root node_modules can be resolved
+    // from sibling workspaces (e.g. croilar/packages/* imported by
+    // apps/web) without each croilar package needing its own
+    // node_modules. Without this, vite cannot resolve `clsx` or
+    // `tailwind-merge` from inside @croilar/ui's source files.
+    dedupe: [
+      "react",
+      "react-dom",
+      "@tanstack/react-router",
+      "@tanstack/react-query",
+      "clsx",
+      "tailwind-merge",
+      "tailwindcss",
+    ],
+  },
   server: {
     port: 3001,
     host: true,

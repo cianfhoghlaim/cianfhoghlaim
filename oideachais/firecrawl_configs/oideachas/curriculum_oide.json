@@ -1,0 +1,2834 @@
+{
+  "curriculumonline_ie": {
+    "url_patterns": [
+      {
+        "value": "/{language}/primary/ - Primary school curriculum pages with language versions (English: /primary/, Irish: /ga-ie/primary/)",
+        "value_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "value": "/junior-cycle/ - Junior cycle curriculum pages (ages 12-15)",
+        "value_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "value": "/senior-cycle/ - Senior cycle curriculum pages (ages 16-18)",
+        "value_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "value": "/early-childhood/ - Early childhood curriculum (Aistear, ages 1-6)",
+        "value_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "value": "/ga-ie/ - Irish language version prefix for all content",
+        "value_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "value": "/repository/ - Repository section for curriculum subjects",
+        "value_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "value": "/getmedia/{guid}/{filename}.pdf - Direct file download pattern using GUID",
+        "value_citation": "https://www.curriculumonline.ie/primary/"
+      }
+    ],
+    "site_structure": [
+      {
+        "value": "Bilingual structure: English and Irish (ga-ie) versions of most pages",
+        "value_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "value": "Educational stages hierarchy: Early Childhood (1-6) -> Primary (5-12) -> Junior Cycle (12-15) -> Senior Cycle (16-18)",
+        "value_citation": "https://www.curriculumonline.ie/"
+      },
+      {
+        "value": "Subject-based organization under each cycle (e.g., /junior-cycle/junior-cycle-subjects/)",
+        "value_citation": "https://www.curriculumonline.ie/junior-cycle/"
+      },
+      {
+        "value": "Repository section organized by educational level and subjects",
+        "value_citation": "https://www.curriculumonline.ie/repository/"
+      },
+      {
+        "value": "1892 total pages in sitemap (1013 English, 879 Irish)",
+        "value_citation": "https://curriculumonline.ie/sitemap.xml"
+      }
+    ],
+    "direct_file_endpoints": [
+      {
+        "value": "https://www.curriculumonline.ie/getmedia/279b8adc-49df-48bc-bd73-9eb2574d9368/GeneralPrimary_FAQ_Website.pdf",
+        "value_citation": "https://www.curriculumonline.ie/primary/"
+      },
+      {
+        "value": "https://www.curriculumonline.ie/getmedia/f3d10889-fedd-45a0-a15c-5232bb1f97c6/Circular_Primary_Curriculum_Specifications_EN.pdf",
+        "value_citation": "https://www.curriculumonline.ie/primary/"
+      },
+      {
+        "value": "https://www.curriculumonline.ie/getmedia/94e28030-bc09-46fa-9269-11557f1d8d9f/Primary-Overview-Poster-A2-ENG.pdf",
+        "value_citation": "https://www.curriculumonline.ie/primary/"
+      },
+      {
+        "value": "/getmedia/{guid}/{filename} pattern - Files are served through a media handler with GUID-based URLs",
+        "value_citation": "https://www.curriculumonline.ie/primary/"
+      }
+    ],
+    "educational_resources": [
+      {
+        "link": "https://www.curriculumonline.ie/primary/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/1999-primary-school-curriculum/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/updated-arts-education/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/updated-language-curriculum/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/algebra/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/algebra/expressions-and-equations/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/algebra/patterns-rules-and-relationships/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/data-and-chance/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/data-and-chance/chance/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/data-and-chance/data/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/measures/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/measures/measuring/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/measures/time/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/number/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/number/fractions/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/number/numeration-and-counting/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/number/place-value-and-base-ten/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/number/sets-and-operations/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/number/uses-of-number/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/shape-and-space/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/shape-and-space/shape/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/shape-and-space/spatial-awareness-and-location/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/shape-and-space/transformation/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/toolkit/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/leitheoireacht/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/leitheoireacht/cuspoir-seanra-agus-guth/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/leitheoireacht/feasacht-fhoineolaioch-agus-fhoineimeach/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/leitheoireacht/fonaic-aithint-focal-agus-staidear-ar-fhocail/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/leitheoireacht/freagairt-agus-intinn-an-udair/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/leitheoireacht/gnasanna-clo-agus-struchtur-abairte/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/leitheoireacht/inspreagadh-agus-rogha/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/leitheoireacht/liofacht-agus-feincheartu/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/leitheoireacht/rannphairtiocht/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/leitheoireacht/stor-focal/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/leitheoireacht/tuiscint/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/modern-foreign-languages/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/oral-language/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/oral-language/categorisation/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/oral-language/demonstration-of-understanding/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/oral-language/description-prediction-and-reflection/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/oral-language/engagement-listening-and-attention/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/oral-language/information-giving-explanation-and-justification/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/oral-language/motivation-and-choice/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/oral-language/playful-and-creative-use-of-language/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/oral-language/requests-questions-and-interactions/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/oral-language/retelling-and-elaboration/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/1999-primary-school-curriculum/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/updated-arts-education/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/updated-language-curriculum/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/algebra/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/algebra/expressions-and-equations/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/algebra/patterns-rules-and-relationships/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/data-and-chance/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/data-and-chance/chance/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/data-and-chance/data/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/measures/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/measures/measuring/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/measures/time/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/number/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/number/fractions/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/number/numeration-and-counting/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/number/place-value-and-base-ten/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/number/sets-and-operations/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/number/uses-of-number/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/shape-and-space/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/shape-and-space/shape/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/shape-and-space/spatial-awareness-and-location/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/shape-and-space/transformation/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/mathematics/toolkit/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/leitheoireacht/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/leitheoireacht/cuspoir-seanra-agus-guth/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/leitheoireacht/feasacht-fhoineolaioch-agus-fhoineimeach/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/leitheoireacht/fonaic-aithint-focal-agus-staidear-ar-fhocail/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/leitheoireacht/freagairt-agus-intinn-an-udair/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/leitheoireacht/gnasanna-clo-agus-struchtur-abairte/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/leitheoireacht/inspreagadh-agus-rogha/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/leitheoireacht/liofacht-agus-feincheartu/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/leitheoireacht/rannphairtiocht/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/leitheoireacht/stor-focal/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/leitheoireacht/tuiscint/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/modern-foreign-languages/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/oral-language/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/oral-language/categorisation/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/oral-language/demonstration-of-understanding/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/oral-language/description-prediction-and-reflection/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/oral-language/engagement-listening-and-attention/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/oral-language/information-giving-explanation-and-justification/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/oral-language/motivation-and-choice/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/oral-language/playful-and-creative-use-of-language/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/oral-language/requests-questions-and-interactions/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/primary/curriculum-areas/primary-language/oral-language/retelling-and-elaboration/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/assessment/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/curriculum/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-is-changing/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/applied-technology/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/applied-technology/applied-technology-and-key-skills/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/applied-technology/assessment-and-reporting/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/applied-technology/continuity-and-progression/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/applied-technology/examples-of-student-work/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/applied-technology/examples-of-student-work/examples-of-classroom-based-assessment-1/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/applied-technology/examples-of-student-work/examples-of-classroom-based-assessment-1-6e49558fcb4ea875d053cd794f9daa4f/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/applied-technology/expectations-for-students/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/applied-technology/overview-course/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/applied-technology/rationale/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/applied-technology/rationale/aim/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/applied-technology/statements-of-learning/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/business-studies/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-and-reporting/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-and-reporting/assessment for jcpa/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-and-reporting/assessment task/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-and-reporting/classroom-based-assessment-1-business-in-action/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-and-reporting/classroom-based-assessment-1-business-in-action/evidence-of-learning-business-in-action/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-and-reporting/classroom-based-assessment-2-presentation/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-and-reporting/classroom-based-assessment-2-presentation/evidence-of-learning-presentation/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-and-reporting/final assessment/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-and-reporting/reasonable accommodations/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-guidelines/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/business-studies/business-studies-and-key-skills/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/junior-cycle/junior-cycle-subjects/business-studies/examples-of-student-work/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/assessment/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/curriculum/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-is-changing/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/applied-technology/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/applied-technology/applied-technology-and-key-skills/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/applied-technology/assessment-and-reporting/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/applied-technology/continuity-and-progression/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/applied-technology/expectations-for-students/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/applied-technology/overview-course/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/applied-technology/rationale/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/applied-technology/rationale/aim/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/applied-technology/statements-of-learning/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/business-studies/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-and-reporting/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-and-reporting/assessment for jcpa/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-and-reporting/assessment task/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-and-reporting/classroom-based-assessment-1-business-in-action/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-and-reporting/classroom-based-assessment-1-business-in-action/evidence-of-learning-business-in-action/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-and-reporting/classroom-based-assessment-2-presentation/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-and-reporting/classroom-based-assessment-2-presentation/evidence-of-learning-presentation/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-and-reporting/final assessment/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-and-reporting/reasonable accommodations/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/business-studies/assessment-guidelines/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/business-studies/business-studies-and-key-skills/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/business-studies/examples-of-student-work/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/business-studies/examples-of-student-work/examples-of-cba1-business-in-action/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/business-studies/examples-of-student-work/examples-of-cba-2-presentation-tca/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/junior-cycle/junior-cycle-subjects/business-studies/examples-of-student-work/support-materials-for-cba-2-presentation-tca/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/assessment/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/curriculum/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/active-leisure-studies/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/agriculture-horticulture/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/childcare-community-care/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/craft-and-design/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/dance/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/drama/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/engineering/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/english-and-communication/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/gaeilge-chumarsaideach/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/graphics-and-construction-studies/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/hair-and-beauty/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/hotel-catering-and-tourism/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/information-and-communications-technology-(voc-specialism)/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/introduction-to-information-and-communications-technology/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/leisure-and-recreation/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/mathematical-applications/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/modern-languages/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/music/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/office-administration-and-customer-care/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/religious-education/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/science/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/sign-language/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/social-education/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/technology/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/visual-art/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/senior-cycle/lca/vocational-preparation-and-guidance/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "English",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/assessment/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/curriculum/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/active-leisure-studies/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/agriculture-horticulture/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/childcare-community-care/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/craft-and-design/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/dance/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/drama/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/engineering/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/english-and-communication/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/gaeilge-chumarsaideach/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/graphics-and-construction-studies/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/hair-and-beauty/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/hotel-catering-and-tourism/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/information-and-communications-technology-(voc-specialism)/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/introduction-to-information-and-communications-technology/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/leisure-and-recreation/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/mathematical-applications/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/modern-languages/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/music/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/office-administration-and-customer-care/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/religious-education/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/science/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/sign-language/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/social-education/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/technology/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/visual-art/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      },
+      {
+        "link": "https://www.curriculumonline.ie/ga-ie/senior-cycle/lca/vocational-preparation-and-guidance/",
+        "link_citation": "https://curriculumonline.ie/sitemap.xml",
+        "language": "Irish",
+        "language_citation": "https://curriculumonline.ie/sitemap.xml",
+        "stage": "Post-Primary",
+        "stage_citation": "https://curriculumonline.ie/sitemap.xml"
+      }
+    ]
+  },
+  "oide_ie": {
+    "url_patterns": [
+      {
+        "value": "/primary/home/ - Primary education professional learning resources",
+        "value_citation": "https://oide.ie/"
+      },
+      {
+        "value": "/post-primary/home/ - Post-primary education professional learning resources",
+        "value_citation": "https://oide.ie/"
+      },
+      {
+        "value": "/digital-technology/home/ - Digital technology in education",
+        "value_citation": "https://oide.ie/"
+      },
+      {
+        "value": "/droichead/home/ - Droichead teacher induction program",
+        "value_citation": "https://oide.ie/"
+      },
+      {
+        "value": "/droichead/home/primary/ - Droichead for primary teachers",
+        "value_citation": "https://oide.ie/droichead/home/"
+      },
+      {
+        "value": "/droichead/home/post-primary/ - Droichead for post-primary teachers",
+        "value_citation": "https://oide.ie/droichead/home/"
+      },
+      {
+        "value": "/irish-medium/baile/ - Irish-medium education resources",
+        "value_citation": "https://oide.ie/"
+      },
+      {
+        "value": "/leadership/home/ - Leadership programs and resources",
+        "value_citation": "https://oide.ie/"
+      }
+    ],
+    "site_structure": [
+      {
+        "value": "Four main sections: Digital Technology, Droichead Induction, Leadership, and subject-specific professional learning",
+        "value_citation": "https://oide.ie/"
+      },
+      {
+        "value": "Educational level organization: Primary and Post-Primary divisions",
+        "value_citation": "https://oide.ie/"
+      },
+      {
+        "value": "Irish-medium section (/irish-medium/) for resources in Irish language",
+        "value_citation": "https://oide.ie/irish-medium/baile/"
+      },
+      {
+        "value": "Subject-specific subsections under primary and post-primary (e.g., mathematics, science, languages)",
+        "value_citation": "https://oide.ie/primary/home/"
+      },
+      {
+        "value": "WordPress-based platform with dynamic content",
+        "value_citation": "https://oide.ie/sitemap.xml"
+      }
+    ],
+    "direct_file_endpoints": [
+      {
+        "value": "No direct PDF file links found in main navigation pages - resources appear to be primarily web-based content",
+        "value_citation": "https://oide.ie/primary/home/"
+      },
+      {
+        "value": "/wp-content/uploads/ - WordPress media upload directory pattern for images and potentially documents",
+        "value_citation": "https://oide.ie/"
+      }
+    ],
+    "educational_resources": [
+      {
+        "link": "https://oide.ie/primary/home/inclusive-education/small-schools-projects/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/primary/home/wellbeing/child-protection/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/primary/home/inclusive-education/maths-recovery/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/primary/home/wellbeing/staff-wellbeing/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/primary/home/languages-and-literacy/languages-literacy/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/primary/home/stem/mathematics/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/primary/home/wellbeing/bi-cinealta/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/primary/home/arts-education/arts-education/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/primary/home/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/droichead/home/primary/#html",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/primary/home/wellbeing/physical-education/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/primary/home/inclusive-education/inclusion-and-diversity/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/primary/home/wellbeing/sphe/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/primary/home/inclusive-education/team-teaching/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/primary/home/inclusive-education/eal/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/primary/home/wellbeing/wellbeing/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/primary/home/inclusive-education/reading-recovery/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/droichead/home/primary/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/droichead/home/primary/?s=",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/droichead/home/primary/professional-learning-materials/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/primary/home/inclusive-education/deis/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/primary/home/social-environmental-education/social-environmental-education/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/droichead/home/primary/#",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/primary/home/stem/ste/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/droichead/home/primary/induction-supports/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/music/music-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/classics/classical-languages-ancient-greek/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/short-courses/digital-media-literacy-short-course/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/science/ag-science-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/geography/geography-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/politics-and-society/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/droichead/home/post-primary/#html",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/guidance/general-guidance/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/history/history-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/programmes-support/senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/inclusive-education/team-teaching/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/droichead/home/post-primary/professional-learning-materials-pp/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/physical-education/physical-education-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/technologies/applied-technology-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/creativity/arts-in-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/technologies/dcg-senior-cycle-2/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/inclusive-education/senior-cycle-learning-programmes-level-1-level-2/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/inclusive-education/deis/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/mathematics/computer-science/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/science/chemistry-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/english/english-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/programmes-support/lca/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/science/biology-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/religious-education/religious-education-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/classics/classics-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/classics/classical-languages-ancient-latin/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/wellbeing/child-protection/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/gaeilge/gaeilge-na-sraithe-sinsearai/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/wellbeing/sphe-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/wellbeing/cspe-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/droichead/home/post-primary/#",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/guidance/guidance-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/mathematics/mathematics-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/music/music-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/home-economics/home-economics-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/inclusive-education/junior-certificate-school-programme/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/technologies/technology-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/technologies/construction-studies-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/inclusive-education/inclusion-diversity/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/science/physics-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/modern-foreign-languages/modern-foreign-languages-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/droichead/home/post-primary/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/history/history-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/technologies/wood-technology-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/technologies/engineering-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/droichead/home/post-primary/?s=",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/wellbeing/bi-cinealta/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/business/business-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/science/science-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/casd/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/english/literacy/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/programmes-support/ty/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/gaeilge/gaeilge-na-sraithe-soisearai-t1/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/wellbeing/sphe-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/programmes-support/junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/programmes-support/lcvp/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/mathematics/numeracy/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/science/physics-chemistry-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/english/english-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/modern-foreign-languages/modern-foreign-languages-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/visual-art-art/art-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/business/economics-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/short-courses/coding-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/mathematics/mathematics-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/inclusive-education/eal/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/religious-education/religious-education-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/short-courses/philosophy-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/dfts/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/mathematics/applied-maths/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/gaeilge/gaeilge-na-sraithe-soisearai-t2/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/visual-art-art/visual-art-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/short-courses/artistic-performance-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/inclusive-education/level-1-learning-programmes-level-2-learning-programmes/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/technologies/engineering-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/business/business-studies-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/classics/classical-studies-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/geography/geography-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/wellbeing/wellbeing/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/business/accounting-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/technologies/graphics-junior-cycle-2/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/home-economics/home-economics-junior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/droichead/home/post-primary/induction-supports/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/physical-education/physical-education-senior-cycle/",
+        "link_citation": "https://oide.ie/",
+        "language": "English",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/irish-medium/baile/primary/",
+        "link_citation": "https://oide.ie/",
+        "language": "Irish",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/irish-medium/baile/iar-bhunscoil/",
+        "link_citation": "https://oide.ie/",
+        "language": "Irish",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/irish-medium/baile/",
+        "link_citation": "https://oide.ie/",
+        "language": "Irish",
+        "language_citation": "https://oide.ie/",
+        "stage": "Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/irish-medium/baile/",
+        "link_citation": "https://oide.ie/",
+        "language": "Irish",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/gaeilge/gaeilge-na-sraithe-sinsearai/",
+        "link_citation": "https://oide.ie/",
+        "language": "Irish",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/gaeilge/gaeilge-na-sraithe-soisearai-t1/",
+        "link_citation": "https://oide.ie/",
+        "language": "Irish",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      },
+      {
+        "link": "https://oide.ie/post-primary/home/gaeilge/gaeilge-na-sraithe-soisearai-t2/",
+        "link_citation": "https://oide.ie/",
+        "language": "Irish",
+        "language_citation": "https://oide.ie/",
+        "stage": "Post-Primary",
+        "stage_citation": "https://oide.ie/"
+      }
+    ]
+  }
+}

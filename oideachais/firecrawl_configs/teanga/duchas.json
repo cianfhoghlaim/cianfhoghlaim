@@ -1,0 +1,608 @@
+{
+  "duchas_ie_collections": [
+    {
+      "collection_name": "The Main Manuscript Collection",
+      "collection_name_citation": "https://www.duchas.ie/en/cbe/volumes",
+      "collection_url_identifier": "cbe/volumes",
+      "collection_url_identifier_citation": "https://www.duchas.ie/en/cbe/volumes",
+      "api_endpoints": [
+        {
+          "value": "https://doras.gaois.ie/cbe/",
+          "value_citation": "https://www.duchas.ie/en/cbe/9000000"
+        },
+        {
+          "value": "https://www.duchas.ie/en/cbe/{itemID}",
+          "value_citation": "https://www.duchas.ie/en/cbe/9000000"
+        },
+        {
+          "value": "https://www.duchas.ie/en/cbe/volumes?Page={page}&PerPage={perPage}",
+          "value_citation": "https://www.duchas.ie/en/cbe/volumes"
+        }
+      ],
+      "data_formats": [
+        {
+          "value": "JPEG images (digitized manuscripts)",
+          "value_citation": "https://doras.gaois.ie/cbe/"
+        },
+        {
+          "value": "Digital transcriptions",
+          "value_citation": "https://www.duchas.ie/en/info/cbe"
+        }
+      ],
+      "structural_schemas": [
+        {
+          "schema_name": "Main Manuscript Item Schema",
+          "schema_name_citation": "https://www.duchas.ie/en/cbe/9000000",
+          "schema_fields": [
+            {
+              "field_name": "entryID",
+              "field_name_citation": "https://www.duchas.ie/en/cbe/9000000",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbe/9000000",
+              "field_description": "Unique identifier for the item (e.g., 9000000)",
+              "field_description_citation": "https://www.duchas.ie/en/cbe/9000000"
+            },
+            {
+              "field_name": "volumeNumber",
+              "field_name_citation": "https://www.duchas.ie/en/cbe/9000000",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbe/9000000",
+              "field_description": "Volume number (e.g., 0002)",
+              "field_description_citation": "https://www.duchas.ie/en/cbe/9000000"
+            },
+            {
+              "field_name": "pageNumber",
+              "field_name_citation": "https://www.duchas.ie/en/cbe/9000000",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbe/9000000",
+              "field_description": "Page number within volume (e.g., 001a)",
+              "field_description_citation": "https://www.duchas.ie/en/cbe/9000000"
+            },
+            {
+              "field_name": "referenceNumber",
+              "field_name_citation": "https://www.duchas.ie/en/cbe/9000000",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbe/9000000",
+              "field_description": "Archival reference number (e.g., CBE_0002_001a)",
+              "field_description_citation": "https://www.duchas.ie/en/cbe/9000000"
+            }
+          ]
+        }
+      ],
+      "page_structure": {
+        "pagination_method": "URL parameters",
+        "pagination_method_citation": "https://www.duchas.ie/en/cbe/volumes",
+        "pagination_details": "Uses Page and PerPage parameters. Format: ?Page={number}&PerPage={number}. Additional filters: Transcribed={true/false}, County, Person, Location",
+        "pagination_details_citation": "https://www.duchas.ie/en/cbe/volumes",
+        "item_extraction_method": "HTML parsing and image URLs from doras.gaois.ie",
+        "item_extraction_method_citation": "https://www.duchas.ie/en/cbe/9000000"
+      },
+      "metadata_fields": [
+        {
+          "value": "Archival Reference",
+          "value_citation": "https://www.duchas.ie/en/cbe/9000000"
+        },
+        {
+          "value": "Volume",
+          "value_citation": "https://www.duchas.ie/en/cbe/9000000"
+        },
+        {
+          "value": "Page",
+          "value_citation": "https://www.duchas.ie/en/cbe/9000000"
+        },
+        {
+          "value": "Person (Collector)",
+          "value_citation": "https://www.duchas.ie/en/cbe/volumes"
+        },
+        {
+          "value": "County",
+          "value_citation": "https://www.duchas.ie/en/cbe/volumes"
+        },
+        {
+          "value": "Location",
+          "value_citation": "https://www.duchas.ie/en/cbe/volumes"
+        },
+        {
+          "value": "Transcription status",
+          "value_citation": "https://www.duchas.ie/en/cbe/volumes"
+        }
+      ]
+    },
+    {
+      "collection_name": "The Schools' Collection",
+      "collection_name_citation": "https://www.duchas.ie/en/cbes/volumes",
+      "collection_url_identifier": "cbes/volumes",
+      "collection_url_identifier_citation": "https://www.duchas.ie/en/cbes/volumes",
+      "api_endpoints": [
+        {
+          "value": "https://www.duchas.ie/xml/cbes/{schoolID}",
+          "value_citation": "https://www.duchas.ie/en/cbes/4606380"
+        },
+        {
+          "value": "https://www.duchas.ie/xml/cbes/{schoolID}/{pageID}",
+          "value_citation": "https://www.duchas.ie/en/cbes/4606380"
+        },
+        {
+          "value": "https://doras.gaois.ie/cbes/",
+          "value_citation": "https://www.duchas.ie/en/cbes/4606380"
+        },
+        {
+          "value": "https://www.duchas.ie/en/cbes/{schoolID}",
+          "value_citation": "https://www.duchas.ie/en/cbes/4606380"
+        },
+        {
+          "value": "https://www.duchas.ie/en/cbes/volumes?Page={page}&PerPage={perPage}",
+          "value_citation": "https://www.duchas.ie/en/cbes/volumes"
+        }
+      ],
+      "data_formats": [
+        {
+          "value": "XML (structured metadata)",
+          "value_citation": "https://www.duchas.ie/en/cbes/4606380"
+        },
+        {
+          "value": "JPEG images (digitized school pages)",
+          "value_citation": "https://doras.gaois.ie/cbes/"
+        },
+        {
+          "value": "Digital transcriptions",
+          "value_citation": "https://www.duchas.ie/en/info/cbe"
+        }
+      ],
+      "structural_schemas": [
+        {
+          "schema_name": "Schools' Collection XML Schema",
+          "schema_name_citation": "https://www.duchas.ie/xml/cbes/4606380",
+          "schema_fields": [
+            {
+              "field_name": "entryID",
+              "field_name_citation": "https://www.duchas.ie/xml/cbes/4606380",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/xml/cbes/4606380",
+              "field_description": "School entry ID (e.g., 4606380)",
+              "field_description_citation": "https://www.duchas.ie/xml/cbes/4606380"
+            },
+            {
+              "field_name": "volumeNumber",
+              "field_name_citation": "https://www.duchas.ie/xml/cbes/4606380",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/xml/cbes/4606380",
+              "field_description": "Volume number (e.g., 0001)",
+              "field_description_citation": "https://www.duchas.ie/xml/cbes/4606380"
+            },
+            {
+              "field_name": "volumeStatus",
+              "field_name_citation": "https://www.duchas.ie/xml/cbes/4606380",
+              "field_type": "integer",
+              "field_type_citation": "https://www.duchas.ie/xml/cbes/4606380",
+              "field_description": "Status code for volume (e.g., 30)",
+              "field_description_citation": "https://www.duchas.ie/xml/cbes/4606380"
+            },
+            {
+              "field_name": "schoolLocation",
+              "field_name_citation": "https://www.duchas.ie/xml/cbes/4606380",
+              "field_type": "object",
+              "field_type_citation": "https://www.duchas.ie/xml/cbes/4606380",
+              "field_description": "Contains nameGA, nameEN, lat, lon, county attributes and logainm.ie URL reference",
+              "field_description_citation": "https://www.duchas.ie/xml/cbes/4606380"
+            },
+            {
+              "field_name": "schoolName",
+              "field_name_citation": "https://www.duchas.ie/xml/cbes/4606380",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/xml/cbes/4606380",
+              "field_description": "Name of the school",
+              "field_description_citation": "https://www.duchas.ie/xml/cbes/4606380"
+            },
+            {
+              "field_name": "teacherName",
+              "field_name_citation": "https://www.duchas.ie/xml/cbes/4606380",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/xml/cbes/4606380",
+              "field_description": "Name of the teacher with pretext and text attributes",
+              "field_description_citation": "https://www.duchas.ie/xml/cbes/4606380"
+            },
+            {
+              "field_name": "schoolRollNumber",
+              "field_name_citation": "https://www.duchas.ie/xml/cbes/4606380",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/xml/cbes/4606380",
+              "field_description": "School roll number (e.g., 12340)",
+              "field_description_citation": "https://www.duchas.ie/xml/cbes/4606380"
+            },
+            {
+              "field_name": "pageID",
+              "field_name_citation": "https://www.duchas.ie/xml/cbes/4606380",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/xml/cbes/4606380",
+              "field_description": "Page ID within the school (e.g., 4593630)",
+              "field_description_citation": "https://www.duchas.ie/xml/cbes/4606380"
+            }
+          ]
+        }
+      ],
+      "page_structure": {
+        "pagination_method": "URL parameters",
+        "pagination_method_citation": "https://www.duchas.ie/en/cbes/volumes",
+        "pagination_details": "Uses Page and PerPage parameters. Format: ?Page={number}&PerPage={number}. Additional filters: Transcribed={true/false}, County, Location",
+        "pagination_details_citation": "https://www.duchas.ie/en/cbes/volumes",
+        "item_extraction_method": "XML API endpoints and HTML parsing with image URLs from doras.gaois.ie",
+        "item_extraction_method_citation": "https://www.duchas.ie/en/cbes/4606380"
+      },
+      "metadata_fields": [
+        {
+          "value": "Archival Reference",
+          "value_citation": "https://www.duchas.ie/en/cbes/4606380"
+        },
+        {
+          "value": "School",
+          "value_citation": "https://www.duchas.ie/en/cbes/4606380"
+        },
+        {
+          "value": "Page",
+          "value_citation": "https://www.duchas.ie/en/cbes/4606380"
+        },
+        {
+          "value": "Open data",
+          "value_citation": "https://www.duchas.ie/en/cbes/4606380"
+        },
+        {
+          "value": "XML",
+          "value_citation": "https://www.duchas.ie/en/cbes/4606380"
+        },
+        {
+          "value": "County",
+          "value_citation": "https://www.duchas.ie/en/cbes/volumes"
+        },
+        {
+          "value": "Location (Ireland)",
+          "value_citation": "https://www.duchas.ie/en/cbes/volumes"
+        },
+        {
+          "value": "Transcription status",
+          "value_citation": "https://www.duchas.ie/en/cbes/volumes"
+        }
+      ]
+    },
+    {
+      "collection_name": "The Photographic Collection",
+      "collection_name_citation": "https://www.duchas.ie/en/cbeg",
+      "collection_url_identifier": "cbeg",
+      "collection_url_identifier_citation": "https://www.duchas.ie/en/cbeg",
+      "api_endpoints": [
+        {
+          "value": "https://www.duchas.ie/en/cbeg/{recordID}",
+          "value_citation": "https://www.duchas.ie/en/cbeg/797"
+        },
+        {
+          "value": "https://www.duchas.ie/en/cbeg?Page={page}&PerPage={perPage}",
+          "value_citation": "https://www.duchas.ie/en/cbeg"
+        },
+        {
+          "value": "https://www.duchas.ie/en/cbeg?HandbookTopicID={topicID}",
+          "value_citation": "https://www.duchas.ie/en/cbeg/797"
+        },
+        {
+          "value": "https://www.duchas.ie/en/cbeg?LogainmID={locationID}",
+          "value_citation": "https://www.duchas.ie/en/cbeg/797"
+        },
+        {
+          "value": "https://doras.gaois.ie/cbeg/",
+          "value_citation": "https://www.duchas.ie/en/cbeg/797"
+        }
+      ],
+      "data_formats": [
+        {
+          "value": "JPEG images (photographs)",
+          "value_citation": "https://doras.gaois.ie/cbeg/"
+        },
+        {
+          "value": "Film negatives and transparencies (digitized)",
+          "value_citation": "https://www.duchas.ie/en/info/cbe"
+        }
+      ],
+      "structural_schemas": [
+        {
+          "schema_name": "Photographic Collection Item Schema",
+          "schema_name_citation": "https://www.duchas.ie/en/cbeg/797",
+          "schema_fields": [
+            {
+              "field_name": "recordID",
+              "field_name_citation": "https://www.duchas.ie/en/cbeg/797",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbeg/797",
+              "field_description": "Unique record identifier (e.g., 797)",
+              "field_description_citation": "https://www.duchas.ie/en/cbeg/797"
+            },
+            {
+              "field_name": "archivalReference",
+              "field_name_citation": "https://www.duchas.ie/en/cbeg/797",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbeg/797",
+              "field_description": "Archival reference number (e.g., A001.01.00005)",
+              "field_description_citation": "https://www.duchas.ie/en/cbeg/797"
+            },
+            {
+              "field_name": "HandbookTopicID",
+              "field_name_citation": "https://www.duchas.ie/en/cbeg/797",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbeg/797",
+              "field_description": "Subject classification ID based on Handbook of Irish Folklore (e.g., A001)",
+              "field_description_citation": "https://www.duchas.ie/en/cbeg/797"
+            },
+            {
+              "field_name": "LogainmID",
+              "field_name_citation": "https://www.duchas.ie/en/cbeg/797",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbeg/797",
+              "field_description": "Location identifier from logainm.ie (e.g., 18395)",
+              "field_description_citation": "https://www.duchas.ie/en/cbeg/797"
+            },
+            {
+              "field_name": "subject",
+              "field_name_citation": "https://www.duchas.ie/en/cbeg/797",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbeg/797",
+              "field_description": "Subject or topic of the photograph",
+              "field_description_citation": "https://www.duchas.ie/en/cbeg/797"
+            },
+            {
+              "field_name": "date",
+              "field_name_citation": "https://www.duchas.ie/en/cbeg/797",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbeg/797",
+              "field_description": "Date of photograph",
+              "field_description_citation": "https://www.duchas.ie/en/cbeg/797"
+            },
+            {
+              "field_name": "location",
+              "field_name_citation": "https://www.duchas.ie/en/cbeg/797",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbeg/797",
+              "field_description": "Location where photograph was taken",
+              "field_description_citation": "https://www.duchas.ie/en/cbeg/797"
+            },
+            {
+              "field_name": "format",
+              "field_name_citation": "https://www.duchas.ie/en/cbeg/797",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbeg/797",
+              "field_description": "Physical format of original photograph",
+              "field_description_citation": "https://www.duchas.ie/en/cbeg/797"
+            }
+          ]
+        }
+      ],
+      "page_structure": {
+        "pagination_method": "URL parameters",
+        "pagination_method_citation": "https://www.duchas.ie/en/cbeg",
+        "pagination_details": "Uses Page and PerPage parameters. Format: ?Page={number}&PerPage={number}. Additional filters: SortMethod={ReferenceNumber|DateEarliest|DateLatest}, HandbookTopicID, Person, County, Location (Ireland), Country, Location (abroad)",
+        "pagination_details_citation": "https://www.duchas.ie/en/cbeg",
+        "item_extraction_method": "HTML parsing with image URLs from doras.gaois.ie and filter by HandbookTopicID or LogainmID",
+        "item_extraction_method_citation": "https://www.duchas.ie/en/cbeg/797"
+      },
+      "metadata_fields": [
+        {
+          "value": "Archival Reference",
+          "value_citation": "https://www.duchas.ie/en/cbeg/797"
+        },
+        {
+          "value": "Subject",
+          "value_citation": "https://www.duchas.ie/en/cbeg/797"
+        },
+        {
+          "value": "Date",
+          "value_citation": "https://www.duchas.ie/en/cbeg/797"
+        },
+        {
+          "value": "Location",
+          "value_citation": "https://www.duchas.ie/en/cbeg/797"
+        },
+        {
+          "value": "Format",
+          "value_citation": "https://www.duchas.ie/en/cbeg/797"
+        },
+        {
+          "value": "HandbookTopicID",
+          "value_citation": "https://www.duchas.ie/en/cbeg/797"
+        },
+        {
+          "value": "LogainmID",
+          "value_citation": "https://www.duchas.ie/en/cbeg/797"
+        },
+        {
+          "value": "Person",
+          "value_citation": "https://www.duchas.ie/en/cbeg"
+        },
+        {
+          "value": "County",
+          "value_citation": "https://www.duchas.ie/en/cbeg"
+        },
+        {
+          "value": "Country",
+          "value_citation": "https://www.duchas.ie/en/cbeg"
+        }
+      ]
+    },
+    {
+      "collection_name": "The Audio Collection",
+      "collection_name_citation": "https://www.duchas.ie/en/cbef/recordings",
+      "collection_url_identifier": "cbef/recordings",
+      "collection_url_identifier_citation": "https://www.duchas.ie/en/cbef/recordings",
+      "api_endpoints": [
+        {
+          "value": "https://www.duchas.ie/en/cbef/{recordingID}",
+          "value_citation": "https://www.duchas.ie/en/cbef/6100335"
+        },
+        {
+          "value": "https://www.duchas.ie/en/cbef/{recordingID}/{trackID}",
+          "value_citation": "https://www.duchas.ie/en/cbef/6100335"
+        },
+        {
+          "value": "https://www.duchas.ie/en/cbef/recordings?Page={page}&PerPage={perPage}",
+          "value_citation": "https://www.duchas.ie/en/cbef/recordings"
+        },
+        {
+          "value": "https://www.duchas.ie/en/cbef/tracks?TypeID={typeID}",
+          "value_citation": "https://www.duchas.ie/en/cbef/6100335"
+        },
+        {
+          "value": "https://www.duchas.ie/en/people/{personID}",
+          "value_citation": "https://www.duchas.ie/en/cbef/6100335"
+        }
+      ],
+      "data_formats": [
+        {
+          "value": "Audio recordings (streaming)",
+          "value_citation": "https://www.duchas.ie/en/info/cbe"
+        },
+        {
+          "value": "Digitized from wax cylinder, acetate disk, magnetic tape, and reel-to-reel",
+          "value_citation": "https://www.duchas.ie/en/info/cbe"
+        }
+      ],
+      "structural_schemas": [
+        {
+          "schema_name": "Audio Collection Recording Schema",
+          "schema_name_citation": "https://www.duchas.ie/en/cbef/6100335",
+          "schema_fields": [
+            {
+              "field_name": "recordingID",
+              "field_name_citation": "https://www.duchas.ie/en/cbef/6100335",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbef/6100335",
+              "field_description": "Main recording identifier (e.g., 6100335)",
+              "field_description_citation": "https://www.duchas.ie/en/cbef/6100335"
+            },
+            {
+              "field_name": "trackID",
+              "field_name_citation": "https://www.duchas.ie/en/cbef/6100335",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbef/6100335",
+              "field_description": "Individual track identifier within recording (e.g., 6253145)",
+              "field_description_citation": "https://www.duchas.ie/en/cbef/6100335"
+            },
+            {
+              "field_name": "carrierID",
+              "field_name_citation": "https://www.duchas.ie/en/cbef/6100335",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbef/6100335",
+              "field_description": "Physical carrier reference (e.g., SD0001AB)",
+              "field_description_citation": "https://www.duchas.ie/en/cbef/6100335"
+            },
+            {
+              "field_name": "TypeID",
+              "field_name_citation": "https://www.duchas.ie/en/cbef/6100335",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbef/6100335",
+              "field_description": "Track type identifier (e.g., AMH)",
+              "field_description_citation": "https://www.duchas.ie/en/cbef/6100335"
+            },
+            {
+              "field_name": "collectorID",
+              "field_name_citation": "https://www.duchas.ie/en/cbef/6100335",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbef/6100335",
+              "field_description": "Collector person identifier (e.g., 98331192)",
+              "field_description_citation": "https://www.duchas.ie/en/cbef/6100335"
+            },
+            {
+              "field_name": "informantID",
+              "field_name_citation": "https://www.duchas.ie/en/cbef/6100335",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbef/6100335",
+              "field_description": "Informant person identifier (e.g., 315676817)",
+              "field_description_citation": "https://www.duchas.ie/en/cbef/6100335"
+            },
+            {
+              "field_name": "LogainmID",
+              "field_name_citation": "https://www.duchas.ie/en/cbef/6100335",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbef/6100335",
+              "field_description": "Location identifier from logainm.ie",
+              "field_description_citation": "https://www.duchas.ie/en/cbef/6100335"
+            },
+            {
+              "field_name": "recordingDate",
+              "field_name_citation": "https://www.duchas.ie/en/cbef/6100335",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbef/6100335",
+              "field_description": "Date of recording",
+              "field_description_citation": "https://www.duchas.ie/en/cbef/6100335"
+            },
+            {
+              "field_name": "format",
+              "field_name_citation": "https://www.duchas.ie/en/cbef/6100335",
+              "field_type": "string",
+              "field_type_citation": "https://www.duchas.ie/en/cbef/6100335",
+              "field_description": "Physical format of original recording",
+              "field_description_citation": "https://www.duchas.ie/en/cbef/6100335"
+            }
+          ]
+        }
+      ],
+      "page_structure": {
+        "pagination_method": "URL parameters",
+        "pagination_method_citation": "https://www.duchas.ie/en/cbef/recordings",
+        "pagination_details": "Uses Page and PerPage parameters. Format: ?Page={number}&PerPage={number}. Additional filters: SortMethod={ReferenceNumber|DateEarliest|DateLatest}, TypeID, Person, County, Location (Ireland), Country, Location (abroad)",
+        "pagination_details_citation": "https://www.duchas.ie/en/cbef/recordings",
+        "item_extraction_method": "HTML parsing with nested track structure and filter by TypeID",
+        "item_extraction_method_citation": "https://www.duchas.ie/en/cbef/6100335"
+      },
+      "metadata_fields": [
+        {
+          "value": "Carrier",
+          "value_citation": "https://www.duchas.ie/en/cbef/6100335"
+        },
+        {
+          "value": "Format",
+          "value_citation": "https://www.duchas.ie/en/cbef/6100335"
+        },
+        {
+          "value": "Track type",
+          "value_citation": "https://www.duchas.ie/en/cbef/6100335"
+        },
+        {
+          "value": "Recording date",
+          "value_citation": "https://www.duchas.ie/en/cbef/6100335"
+        },
+        {
+          "value": "Collector",
+          "value_citation": "https://www.duchas.ie/en/cbef/6100335"
+        },
+        {
+          "value": "Informant",
+          "value_citation": "https://www.duchas.ie/en/cbef/6100335"
+        },
+        {
+          "value": "Birth place",
+          "value_citation": "https://www.duchas.ie/en/cbef/6100335"
+        },
+        {
+          "value": "Address",
+          "value_citation": "https://www.duchas.ie/en/cbef/6100335"
+        },
+        {
+          "value": "Person",
+          "value_citation": "https://www.duchas.ie/en/cbef/recordings"
+        },
+        {
+          "value": "County",
+          "value_citation": "https://www.duchas.ie/en/cbef/recordings"
+        },
+        {
+          "value": "Location (Ireland)",
+          "value_citation": "https://www.duchas.ie/en/cbef/recordings"
+        },
+        {
+          "value": "Country",
+          "value_citation": "https://www.duchas.ie/en/cbef/recordings"
+        },
+        {
+          "value": "Location (abroad)",
+          "value_citation": "https://www.duchas.ie/en/cbef/recordings"
+        }
+      ]
+    }
+  ]
+}

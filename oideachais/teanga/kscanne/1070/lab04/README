@@ -1,0 +1,180 @@
+
+In this lab we will use (a souped-up version of) the code
+from Chapter 13 of the book to create our first Bayesian
+classifier.
+
+The problem we'll be looking at is one I've mentioned in class
+a few times, namely, "sentiment analysis". For the purposes of
+this lab, we'll formulate the problem as a binary classifier in 
+which we try to label texts as being either "positive sentiment"
+or "negative sentiment".  (Some formulations allow gradations, or
+just a third class for "neutral sentiment", etc., but I prefer having
+only two classes for this first example.)
+
+The training data we'll use consists of tweets written in the
+Irish language, gathered as part of another research project.
+I very intentionally chose a language that (I suspect)
+no one in the course actually speaks! This will prevent you from
+introducing any bias in your experiments, or injecting any 
+intuition into how you model the problem.
+
+There are 10000 "positive sentiment" tweets in the file
+irish-happy.txt, and 10000 "negative sentiment" tweets in
+the file irish-sad.txt. I've stripped personally
+identifying information (usernames, etc.) Normally,
+assembling big sets of training data in machine learning is
+a huge challenge; very often the best way to achieve good
+results when building a classifier is to pay humans to label
+examples by hand to create a training set. In this
+case, I took a big shortcut, and just gathered tweets
+containing either a happy or sad emoticon or emoji
+character!  So, strictly speaking, we're not really doing
+sentiment analysis, we're building a classifier that
+predicts whether a given tweet will contain a happy or 
+frownie face, as a kind of "proxy" for sentiment analysis.
+As you'll see below, the results show this isn't completely
+unreasonable.
+
+(1) The code for the training and running the classifier
+is in the file naive_bayes.py.  Open that file and
+browse around, and see if you can make sense of the code.
+The code in the textbook is written as a spam vs. not-spam
+classifier, but I've changed that to "true" vs. "false" here
+so it's a bit more generic-looking.
+For this lab, "true" means "happy", and "false" means "sad".
+A few things to look for in the code:
+  
+  (a) Find the place where I open the two files containing
+      the training data and read them in.
+  (b) Recall that in our Naive Bayes model, we treat "words"
+      as a features.  Find the place in the code where we
+      break the texts into words; this relies on knowing
+      any characters special to the language in question.
+  (c) I discussed the importance of smoothing when computing
+      word probabilities; can you find the place in the code
+      where word probabilities are computed and "smoothed"?
+      Hint: instead of "adding 1" to all word counts, this code 
+      adds a parameter "k" with default value 0.5...
+  (d) Note that the code doesn't multiply probabilities for
+      the reasons discussed in class; find where it takes
+      log of the probabilities and adds those together.
+  (e) The code automatically splits the two files into 
+      subsets for training/testing.  Can you figure out 
+      the percentage it assigns to each?
+
+(2) Now, having studied the code, you're ready run the script
+from the command line:
+
+$ python naive_bayes.py
+
+This will output the results of training a classifier on
+the training subset, and applying it to the test subset. 
+The first line of output will look something like this:
+
+Counter({(True, True): 1992, (False, False): 1389, (False, True): 579, (True, False): 471})
+
+This is saying that 1992 happy tweets we labeled as happy by
+the classifier, 1389 sad tweets were labeled as sad, 579 sad 
+were labeled as happy, and 471 happy were labeled as sad.
+
+Use this to compute the percentage labeled correctly, as a
+simple measure of the accuracy of the classifier.
+
+Since the training set is chosen randomly, you'll get a different
+answer each time you run; you should run a few times and average
+these percentages.
+
+(3) Error analysis.  The next thing you'll see in the output is
+the five "truest false" tweets, and the five "falsest true" tweets. 
+The "truest false" tweets are the ones that are actually sad,
+but which "look" the happiest to the classifier. Similarly for "falsest true".
+
+For better or worse, Google Translate supports Irish-to-English
+translation; copy and paste these tweets into Google Translate
+and see if you can figure out why the classifier is particularly
+confused in these cases.
+
+(4) The next part of the output shows the ten words most
+characteristic of happy tweets and sad tweets, respectively.
+Again, copy and paste these into Google Translate and 
+see if they appear reasonable. Can you "explain away" any
+that don't appear reasonable?  Should we change the model
+in some way?
+
+(5) The code uses the pattern [a-záéíóú'-]+ to define a word to be
+    "a string of one or more letters, apostrophes, or hyphens".
+
+    (a) With this definition, the hashtag "#kevin" gets truncated
+        to just "kevin". Change the code to use the pattern
+        #[a-záéíóú'-]+ which will select *only* hashtags
+        as features. Rerun the classifier and compare the 
+        percentage accuracy and the list of "best" features
+        with the results from earlier.
+  
+    (b) Now change the pattern to #?[a-záéíóú'-]+.  The question mark
+        means that the # is optional; in other words, this will 
+        allow both regular words *and* hashtags as features.
+        Rerun and compare results.
+
+(6) Irish (like the other Celtic languages) has an interesting feature
+called "initial mutation" not found in English. In certain grammatical
+contexts, the pronunciation of the start of a word changes. For example,
+the word for "woman" is "bean" (pronounced sort of like English "ban"),
+but if you say "the woman", it's "an bhean" (pronounced "un van").
+
+What's important for us is that "bean" and "bhean" are really
+the "same word" in some sense, so we *might* do better by counting 
+them together when training the classifier.
+
+To do this, you'll need to modify the "tokenize" function slightly.
+Just replace the current final line of the function:
+
+    return set(all_words)
+
+with:
+
+    answer = set()
+    for w in all_words:
+      if len(w)>1 and w[1]=='h':
+        answer.add(w.replace("h","",1))
+      else:
+        answer.add(w)
+    return answer
+
+(Extra Credit: an automatic 100% on next quiz!) 
+There's another kind of mutation in Irish called "eclipsis", 
+described here: http://nualeargais.ie/gnag/eklipse.htm
+Modify the code to take this mutation into account also,
+and report results of the classifier.  
+
+The upshot of all of these exercises is that there are
+*many* choices you make when training a classifier, and
+often the best way to know the right choice to make is
+by trying it out and running the classifier on the test set.
+This philosophy will come in handy when we run our 
+"bakeoff" competition later in the semester.  Since we'll
+be doing a classifier of some kind for the bakeoff, you have
+the option of using this same piece of code, and making similar tweaks:
+
+* change the definition of a "word" (include hashtags, numbers, etc.?)
+* lump together upper/lowercase (or not)
+* lump together words in others ways (e.g. Irish initial mutation, or
+  "stemming" words like "jumped", "jumps", "jumping" -> "jump")
+* change the "smoothing constant" k
+* ignore words that appear just once in training ("thresholding")
+* use pairs or triples of words as features in place of single words
+* can you find additional training data somewhere and use that to 
+  improve the results?
+
+It would be a REALLY good idea to try some of these ideas and see how 
+high you can push the accuracy of this classifier as a warmup
+for the bakeoff.
+
+(7) If you have time, try changing the percentage of examples used
+for training vs. testing (the default is 75% training).  Try a few
+different values, and see if you can graph the accuracy of the
+classifier as a function of the amount of training data. A graph
+like this is called the "learning curve"; generally speaking we
+expect accuracy to increase the more training data we have.
+Does it appear to plateau?  What might you predict if we trained
+in the same way using 1 million happy/sad tweets?
