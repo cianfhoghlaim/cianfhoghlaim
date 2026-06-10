@@ -21,14 +21,14 @@ jobs:
         with:
           bun-version: "1.3.0"
       - name: Validate croilar-revitalisation change
-        run: bunx --yes openspec validate croilar-revitalisation --type change --strict
+        run: bunx --yes @fission-ai/openspec@latest validate croilar-revitalisation --type change --strict
       - name: Validate croilar-portfolio spec
-        run: bunx --yes openspec validate croilar-portfolio --type spec --strict
+        run: bunx --yes @fission-ai/openspec@latest validate croilar-portfolio --type spec --strict
       - name: Validate croilar-data-engineering spec
-        run: bunx --yes openspec validate croilar-data-engineering --type spec --strict
+        run: bunx --yes @fission-ai/openspec@latest validate croilar-data-engineering --type spec --strict
       - name: Validate croilar-cv-extraction spec
-        run: bunx --yes openspec validate croilar-cv-extraction --type spec --strict
+        run: bunx --yes @fission-ai/openspec@latest validate croilar-cv-extraction --type spec --strict
       - name: Validate croilar-persona-registry spec
-        run: bunx --yes openspec validate croilar-persona-registry --type spec --strict
+        run: bunx --yes @fission-ai/openspec@latest validate croilar-persona-registry --type spec --strict
       - name: Validate croilar-self-hosted-portal spec
-        run: bunx --yes openspec validate croilar-self-hosted-portal --type spec --strict
+        run: bunx --yes @fission-ai/openspec@latest validate croilar-self-hosted-portal --type spec --strict

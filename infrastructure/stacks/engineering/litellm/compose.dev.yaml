@@ -1,0 +1,48 @@
+# LiteLLM — local dev override
+# ----------------------------------------------------------------------------
+# Mirrors the oideachais dev override pattern:
+#   1. No-op locket sidecar (alpine) so `depends_on: locket: service_healthy`
+#      resolves without booting the real Infisical-injection sidecar.
+#   2. `env_file: ../../../../.env` (mise-hydrated local .env) is mounted
+#      so secrets reach the containers directly.
+#   3. Production-only env vars are overridden to dev values.
+#
+# Usage:
+#   docker compose -f compose.yaml -f sidecar.yaml -f compose.dev.yaml up -d
+# ----------------------------------------------------------------------------
+
+services:
+  locket:
+    image: alpine:3.20
+    container_name: litellm-locket-dev
+    restart: "no"
+    command: ["sh", "-c", "echo '[dev] no-op locket — secrets come from local .env via env_file'; sleep infinity"]
+    networks:
+      - cianfhoghlaim
+
+  litellm:
+    depends_on:
+      locket:
+        condition: service_started
+    env_file:
+      - ../../../../.env
+    environment:
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-1234}
+      LITELLM_LOG: INFO
+      # LiteLLM uses DATABASE_URL for Prisma (not LITELLM_DATABASE_URL).
+      # Point it at the bundled `db` service in dev.
+      DATABASE_URL: postgresql://llmproxy:devpassword@db:5432/litellm
+      STORE_MODEL_IN_DB: "True"
+      # Provide stub values for required-but-unused-in-dev vars
+      LITELLM_SALT_KEY: ${LITELLM_SALT_KEY:-dev-salt}
+      LITELLM_DATABASE_URL: postgresql://llmproxy:devpassword@db:5432/litellm
+
+  db:
+    env_file:
+      - ../../../../.env
+    environment:
+      POSTGRES_PASSWORD: ${LITELLM_POSTGRES_PASSWORD:-devpassword}
+
+  prometheus:
+    env_file:
+      - ../../../../.env
