@@ -1,0 +1,89 @@
+@import "../../global/normalize.css";
+
+.tag {
+  padding: var(--ic-space-xxs) var(--ic-space-sm);
+  font-size: 0.875rem;
+  border-radius: var(--ic-space-md);
+  display: inline-block;
+  min-width: 2.5rem;
+  text-align: center;
+
+  --ic-typography-color: var(--ic-status-tag-text);
+}
+
+.small {
+  padding: var(--ic-space-xxxs) var(--ic-space-sm);
+  border-radius: calc(var(--ic-space-md) - var(--ic-space-xxxs));
+}
+
+.large {
+  padding: var(--ic-space-xs) var(--ic-space-sm);
+  border-radius: calc(var(--ic-space-md) + var(--ic-space-xxs));
+}
+
+.filled-neutral {
+  background-color: var(--ic-status-tag-neutral);
+}
+
+.filled-success {
+  background-color: var(--ic-status-tag-success);
+}
+
+.filled-warning {
+  background-color: var(--ic-status-tag-warning);
+
+  --ic-typography-color: var(--ic-status-tag-filled-warning-text);
+}
+
+.filled-danger {
+  background-color: var(--ic-status-tag-error);
+}
+
+.outlined {
+  padding: calc(var(--ic-space-xxxs) + var(--ic-space-1px))
+    calc(var(--ic-space-sm) - var(--ic-space-1px));
+}
+
+.outlined.small {
+  padding: var(--ic-space-1px) calc(var(--ic-space-sm) - var(--ic-space-1px));
+}
+
+.outlined.large {
+  padding: calc(var(--ic-space-xs) - var(--ic-space-1px))
+    calc(var(--ic-space-sm) - var(--ic-space-1px));
+}
+
+.outlined-neutral {
+  background-color: var(--ic-status-tag-outlined-background-neutral);
+  border: var(--ic-border-width) solid var(--ic-status-tag-outlined-neutral);
+
+  --ic-typography-color: var(--ic-status-tag-text-inverted);
+}
+
+.outlined-success {
+  background-color: var(--ic-status-tag-outlined-background-success);
+  border: var(--ic-border-width) solid var(--ic-status-tag-outlined-success);
+
+  --ic-typography-color: var(--ic-status-tag-text-inverted);
+}
+
+.outlined-warning {
+  background-color: var(--ic-status-tag-outlined-background-warning);
+  border: var(--ic-border-width) solid var(--ic-status-tag-outlined-warning);
+
+  --ic-typography-color: var(--ic-status-tag-text-inverted);
+}
+
+.outlined-danger {
+  background-color: var(--ic-status-tag-outlined-background-error);
+  border: var(--ic-border-width) solid var(--ic-status-tag-outlined-error);
+
+  --ic-typography-color: var(--ic-status-tag-text-inverted);
+}
+
+@media (forced-colors: active) {
+  :host {
+    -ms-high-contrast-adjust: none;
+    forced-color-adjust: none;
+  }
+}

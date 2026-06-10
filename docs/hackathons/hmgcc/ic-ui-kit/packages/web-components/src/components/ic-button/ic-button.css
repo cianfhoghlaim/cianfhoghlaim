@@ -1,0 +1,1227 @@
+@import "../../global/normalize.css";
+
+/**
+* @prop --min-width: Minimum width of the button.
+* @prop --height: The height of the button.
+*/
+
+:host {
+  display: inline-block;
+  position: relative;
+
+  --icon-width: 100%;
+  --icon-height: 100%;
+}
+
+.button,
+::slotted(a) {
+  font-family: var(--ic-font-body-family);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: var(--ic-easing-transition-fast);
+  border-radius: var(--ic-border-radius);
+  min-width: var(--min-width, 6.25rem);
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  border: none;
+  box-sizing: border-box;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+:host(.with-badge) .button {
+  border-radius: 0.2188rem;
+}
+
+.button:hover,
+::slotted(a:hover) {
+  cursor: pointer;
+}
+
+.button:focus,
+::slotted(a:focus) {
+  box-shadow: var(--ic-border-focus);
+}
+
+.button:focus-visible,
+::slotted(a:focus-visible) {
+  outline: var(--ic-hc-focus-outline);
+}
+
+:host(.ic-button-disabled),
+:host(.ic-button-disabled) .button,
+:host(.ic-button-disabled) ::slotted(a),
+:host(.ic-button-loading),
+:host(.ic-button-loading) .button {
+  pointer-events: none;
+}
+
+:host(.top-icon) .button {
+  flex-direction: column;
+
+  --height: fit-content;
+}
+
+:host(.top-icon) .button .icon-container {
+  margin-right: 0;
+}
+
+/* Variants */
+
+/* Primary */
+
+:host(.ic-button-variant-primary) .button,
+:host(.ic-button-variant-icon-primary) .button {
+  color: var(--ic-button-primary-text);
+  background-color: var(--ic-button-primary-background);
+}
+
+:host(.ic-button-variant-primary:not(.ic-button-disabled)) ::slotted(svg) {
+  color: var(--ic-button-primary-icon);
+}
+
+:host(.ic-button-variant-primary) ::slotted(a),
+:host(.ic-button-variant-icon-primary) ::slotted(a) {
+  --ic-typography-color: var(--ic-button-primary-text);
+
+  color: var(--ic-button-primary-text);
+  background-color: var(--ic-button-primary-background) !important;
+}
+
+:host(.ic-button-variant-primary) .button:hover,
+:host(.ic-button-variant-icon-primary) .button:hover {
+  background-color: var(--ic-button-primary-background-hover);
+}
+
+:host(.ic-button-variant-primary) ::slotted(a:hover),
+:host(.ic-button-variant-icon-primary) ::slotted(a:hover) {
+  background-color: var(--ic-button-primary-background-hover) !important;
+}
+
+:host(.ic-button-variant-primary.ic-button-loading) .button,
+:host(.ic-button-variant-primary) .button:active,
+:host(.ic-button-variant-icon-primary.ic-button-loading) .button,
+:host(.ic-button-variant-icon-primary) .button:active {
+  background-color: var(--ic-button-primary-background-pressed);
+
+  --button-loading-inner-color: var(--ic-button-primary-text);
+  --button-loading-outer-color: var(--ic-button-primary-background-pressed);
+}
+
+:host(.ic-button-variant-primary) ::slotted(a:active),
+:host(.ic-button-variant-icon-primary) ::slotted(a:active) {
+  background-color: var(--ic-button-primary-background-pressed) !important;
+}
+
+:host(.ic-button-variant-primary.ic-button-disabled) .button,
+:host(.ic-button-variant-icon-primary.ic-button-disabled) .button {
+  background: var(--ic-button-primary-background-disabled);
+  color: var(--ic-button-primary-text-disabled);
+}
+
+:host(.ic-button-variant-primary.ic-button-disabled) ::slotted(a),
+:host(.ic-button-variant-icon-primary.ic-button-disabled) ::slotted(a) {
+  background: var(--ic-button-primary-background-disabled) !important;
+
+  --ic-typography-color: var(--ic-button-primary-text-disabled) !important;
+
+  color: var(--ic-button-primary-text-disabled) !important;
+}
+
+/* Primary - monochrome */
+
+:host(.ic-button-variant-primary.monochrome) .button,
+:host(.ic-button-variant-icon-primary.monochrome) .button {
+  color: var(--ic-button-primary-text-monochrome);
+  background-color: var(--ic-button-primary-background-monochrome);
+}
+
+:host(.ic-button-variant-primary.monochrome) ::slotted(a),
+:host(.ic-button-variant-icon-primary.monochrome) ::slotted(a) {
+  background-color: var(--ic-button-primary-background-monochrome) !important;
+}
+
+:host(.ic-button-variant-primary.monochrome) .button:hover,
+:host(.ic-button-variant-icon-primary.monochrome) .button:hover {
+  background-color: var(--ic-button-primary-background-hover-monochrome);
+}
+
+:host(.ic-button-variant-primary.monochrome) ::slotted(a:hover),
+:host(.ic-button-variant-icon-primary.monochrome) ::slotted(a:hover) {
+  background-color: var(
+    --ic-button-primary-background-hover-monochrome
+  ) !important;
+}
+
+:host(.ic-button-variant-primary.ic-button-loading.monochrome) .button,
+:host(.ic-button-variant-primary.monochrome) .button:active,
+:host(.ic-button-variant-icon-primary.ic-button-loading.monochrome) .button,
+:host(.ic-button-variant-icon-primary.monochrome) .button:active {
+  background-color: var(--ic-button-primary-background-pressed-monochrome);
+
+  --button-loading-inner-color: var(--ic-button-primary-text-monochrome);
+  --button-loading-outer-color: var(--ic-button-primary-background-monochrome);
+}
+
+:host(.ic-button-variant-primary.monochrome) ::slotted(a:active),
+:host(.ic-button-variant-icon-primary.monochrome) ::slotted(a:active) {
+  background-color: var(
+    --ic-button-primary-background-pressed-monochrome
+  ) !important;
+}
+
+:host(.ic-button-variant-primary.ic-button-disabled.monochrome) .button,
+:host(.ic-button-variant-icon-primary.ic-button-disabled.monochrome) .button {
+  background-color: var(--ic-button-primary-background-disabled-monochrome);
+  color: var(--ic-button-primary-text-disabled-monochrome);
+}
+
+:host(.ic-button-variant-primary.ic-button-disabled.monochrome) ::slotted(a),
+:host(.ic-button-variant-icon-primary.ic-button-disabled.monochrome)
+  ::slotted(a) {
+  background-color: var(
+    --ic-button-primary-background-disabled-monochrome
+  ) !important;
+}
+
+/* Secondary  */
+
+:host(.ic-button-variant-secondary) .button,
+:host(.ic-button-variant-icon-secondary) .button {
+  border: var(--ic-border-width) solid var(--ic-button-secondary-border);
+  color: var(--ic-button-secondary-text);
+}
+
+:host(.ic-button-variant-secondary) ::slotted(a),
+:host(.ic-button-variant-icon-secondary) ::slotted(a) {
+  border: var(--ic-border-width) solid var(--ic-button-secondary-border) !important;
+  color: var(--ic-button-secondary-text) !important;
+
+  --ic-typography-color: var(--ic-button-secondary-text) !important;
+}
+
+:host(.ic-button-variant-secondary) .button:hover,
+:host(.ic-button-variant-icon-secondary) .button:hover {
+  background-color: var(--ic-button-secondary-background-hover-active);
+  border-color: var(--ic-button-secondary-border-hover);
+  color: var(--ic-button-secondary-text-hover-active);
+}
+
+:host(.ic-button-variant-secondary) ::slotted(a:hover),
+:host(.ic-button-variant-icon-secondary) ::slotted(a:hover) {
+  background-color: var(
+    --ic-button-secondary-background-hover-active
+  ) !important;
+}
+
+:host(.ic-button-variant-secondary) .button:active,
+:host(.ic-button-variant-icon-secondary) .button:active {
+  border-color: var(--ic-button-secondary-border-pressed);
+  background-color: var(--ic-button-secondary-background-pressed-active);
+  color: var(--ic-button-secondary-text-pressed-active);
+}
+
+:host(.ic-button-variant-secondary) ::slotted(a:active),
+:host(.ic-button-variant-icon-secondary) ::slotted(a:active) {
+  background-color: var(
+    --ic-button-secondary-background-pressed-active
+  ) !important;
+}
+
+:host(.ic-button-variant-secondary.ic-button-loading) .button,
+:host(.ic-button-variant-icon-secondary.ic-button-loading) .button {
+  border-color: var(--ic-button-secondary-border-pressed);
+  background-color: var(
+    --loading-button-background,
+    var(--ic-button-secondary-background-pressed-active)
+  ) !important;
+  color: var(--ic-button-secondary-text-pressed-active);
+
+  --button-loading-inner-color: var(--ic-button-secondary-border-pressed);
+  --button-loading-outer-color: var(
+    --ic-button-secondary-background-pressed-active
+  );
+}
+
+:host(.ic-button-variant-secondary.ic-button-disabled) .button,
+:host(.ic-button-variant-icon-secondary.ic-button-disabled) .button {
+  border-color: var(--ic-button-secondary-border-disabled);
+  color: var(--ic-button-secondary-text-disabled);
+  background: none;
+}
+
+:host(.ic-button-variant-secondary.ic-button-disabled) ::slotted(a),
+:host(.ic-button-variant-icon-secondary.ic-button-disabled) ::slotted(a) {
+  background: none !important;
+}
+
+/* Secondary - non-transparent background */
+
+:host(.ic-button-variant-secondary.background) .button,
+:host(.ic-button-variant-icon-secondary.background) .button {
+  background-color: var(--ic-button-secondary-background);
+}
+
+:host(.ic-button-variant-secondary.background) ::slotted(a),
+:host(.ic-button-variant-icon-secondary.background) ::slotted(a) {
+  background-color: var(--ic-button-secondary-background) !important;
+}
+
+:host(.ic-button-variant-secondary.background) .button:hover,
+:host(.ic-button-variant-icon-secondary.background) .button:hover {
+  background-image: var(--ic-button-secondary-background-non-transparent-hover);
+}
+
+:host(.ic-button-variant-secondary.background) ::slotted(a:hover),
+:host(.ic-button-variant-icon-secondary.background) ::slotted(a:hover) {
+  background-image: var(
+    --ic-button-secondary-background-non-transparent-hover
+  ) !important;
+}
+
+:host(.ic-button-variant-secondary.background) .button:active,
+:host(.ic-button-variant-icon-secondary.background) .button:active {
+  background-image: var(
+    --ic-button-secondary-background-non-transparent-active
+  );
+}
+
+:host(.ic-button-variant-secondary.background) ::slotted(a:active),
+:host(.ic-button-variant-icon-secondary.background) ::slotted(a:active) {
+  background-image: var(
+    --ic-button-secondary-background-non-transparent-active
+  ) !important;
+}
+
+/* Secondary - monochrome */
+
+:host(.ic-button-variant-secondary.monochrome) .button,
+:host(.ic-button-variant-icon-secondary.monochrome) .button {
+  background-color: none;
+  border: var(--ic-border-width) solid
+    var(--ic-button-secondary-border-monochrome);
+  color: var(--ic-button-secondary-text-monochrome);
+}
+
+:host(.ic-button-variant-secondary.monochrome) ::slotted(a),
+:host(.ic-button-variant-icon-secondary.monochrome) ::slotted(a) {
+  background-color: none !important;
+}
+
+:host(.ic-button-variant-secondary.monochrome) .button:hover,
+:host(.ic-button-variant-icon-secondary.monochrome) .button:hover {
+  background-color: var(--ic-button-secondary-background-hover-monochrome);
+  border-color: var(--ic-button-secondary-border-hover-monochrome);
+  color: var(--ic-button-secondary-text-hover-monochrome);
+}
+
+:host(.ic-button-variant-secondary.monochrome) ::slotted(a:hover),
+:host(.ic-button-variant-icon-secondary.monochrome) ::slotted(a:hover) {
+  background-color: var(
+    --ic-button-secondary-background-hover-monochrome
+  ) !important;
+}
+
+:host(.ic-button-variant-secondary.monochrome) .button:active,
+:host(.ic-button-variant-icon-secondary.monochrome) .button:active {
+  background-color: var(--ic-button-secondary-background-pressed-monochrome);
+  border-color: var(--ic-button-secondary-border-pressed-monochrome);
+  color: var(--ic-button-secondary-text-pressed-monochrome);
+}
+
+:host(.ic-button-variant-secondary.monochrome) ::slotted(a:active),
+:host(.ic-button-variant-icon-secondary.monochrome) ::slotted(a:active) {
+  background-color: var(
+    --ic-button-secondary-background-pressed-monochrome
+  ) !important;
+}
+
+:host(.ic-button-variant-secondary.ic-button-loading.monochrome) .button,
+:host(.ic-button-variant-icon-secondary.ic-button-loading.monochrome) .button {
+  background-color: var(
+    --ic-button-secondary-background-pressed-monochrome
+  ) !important;
+  border-color: var(--ic-button-secondary-border-pressed-monochrome);
+  color: var(--ic-button-secondary-text-pressed-monochrome);
+
+  --button-loading-inner-color: var(
+    --ic-button-secondary-text-pressed-monochrome
+  );
+  --button-loading-outer-color: var(
+    --ic-button-secondary-background-pressed-monochrome
+  );
+}
+
+:host(.ic-button-variant-secondary.ic-button-disabled.monochrome) .button,
+:host(.ic-button-variant-icon-secondary.ic-button-disabled.monochrome) .button {
+  background: none;
+  border-color: var(--ic-button-secondary-border-disabled-monochrome);
+  color: var(--ic-button-secondary-text-disabled-monochrome);
+}
+
+:host(.ic-button-variant-secondary.ic-button-disabled.monochrome) ::slotted(a),
+:host(.ic-button-variant-icon-secondary.ic-button-disabled.monochrome)
+  ::slotted(a) {
+  background: none !important;
+}
+
+/* Secondary - non-transparent background - monochrome */
+
+:host(.ic-button-variant-secondary.background.monochrome) .button,
+:host(.ic-button-variant-icon-secondary.background.monochrome) .button {
+  background-color: var(--ic-button-secondary-background-monochrome);
+}
+
+:host(.ic-button-variant-secondary.background.monochrome) ::slotted(a),
+:host(.ic-button-variant-icon-secondary.background.monochrome) ::slotted(a) {
+  background-color: var(--ic-button-secondary-background-monochrome) !important;
+}
+
+:host(.ic-button-variant-secondary.background.monochrome) .button:hover,
+:host(.ic-button-variant-icon-secondary.background.monochrome) .button:hover {
+  background-image: var(
+    --ic-button-secondary-background-non-transparent-monochrome-hover
+  );
+}
+
+:host(.ic-button-variant-secondary.background.monochrome) ::slotted(a:hover),
+:host(.ic-button-variant-icon-secondary.background.monochrome)
+  ::slotted(a:hover) {
+  background-image: var(
+    --ic-button-secondary-background-non-transparent-monochrome-hover
+  ) !important;
+}
+
+:host(.ic-button-variant-secondary.background.monochrome) .button:active,
+:host(.ic-button-variant-icon-secondary.background.monochrome) .button:active {
+  background-image: var(
+    --ic-button-secondary-background-non-transparent-monochrome-active
+  );
+}
+
+:host(.ic-button-variant-secondary.background.monochrome) ::slotted(a:active),
+:host(.ic-button-variant-icon-secondary.background.monochrome)
+  ::slotted(a:active) {
+  background-image: var(
+    --ic-button-secondary-background-non-transparent-monochrome-active
+  ) !important;
+}
+
+/* Tertiary */
+
+:host(.ic-button-variant-tertiary) .button,
+:host(.ic-button-variant-icon-tertiary) .button,
+:host(.ic-button-variant-tertiary) ::slotted(a),
+:host(.ic-button-variant-icon-tertiary) ::slotted(a) {
+  color: var(--ic-button-tertiary-text-active);
+
+  --ic-typography-color: var(--ic-button-tertiary-text-active);
+}
+
+:host(.ic-button-variant-tertiary) .button:hover,
+:host(.ic-button-variant-icon-tertiary) .button:hover {
+  background-color: var(--ic-button-tertiary-background-hover-active);
+  color: var(--ic-button-tertiary-text-hover-active);
+}
+
+:host(.ic-button-variant-tertiary) ::slotted(a:hover),
+:host(.ic-button-variant-icon-tertiary) ::slotted(a:hover) {
+  background-color: var(
+    --ic-button-tertiary-background-hover-active
+  ) !important;
+}
+
+:host(.ic-button-variant-tertiary) .button:active,
+:host(.ic-button-variant-tertiary.ic-button-loading) .button,
+:host(.ic-button-variant-icon-tertiary) .button:active,
+:host(.ic-button-variant-icon-tertiary.ic-button-loading) .button {
+  background-color: var(--ic-button-tertiary-background-pressed-active);
+  color: var(--ic-button-tertiary-text-pressed-active);
+
+  --button-loading-inner-color: var(--ic-button-tertiary-text-pressed-active);
+  --button-loading-outer-color: var(--ic-button-tertiary-background-pressed);
+}
+
+:host(.ic-button-variant-tertiary) ::slotted(a:active),
+:host(.ic-button-variant-icon-tertiary) ::slotted(a:active) {
+  background-color: var(
+    --ic-button-tertiary-background-pressed-active
+  ) !important;
+}
+
+:host(.ic-button-variant-tertiary.ic-button-disabled) .button,
+:host(.ic-button-variant-icon-tertiary.ic-button-disabled) .button {
+  color: var(--ic-button-tertiary-text-disabled);
+  background: none;
+}
+
+:host(.ic-button-variant-tertiary.ic-button-disabled) ::slotted(a),
+:host(.ic-button-variant-icon-tertiary.ic-button-disabled) ::slotted(a) {
+  background: none !important;
+}
+
+/* Tertiary - non-transparent background */
+
+:host(.ic-button-variant-tertiary.background) .button,
+:host(.ic-button-variant-icon-tertiary.background) .button {
+  background-color: var(--ic-button-tertiary-background);
+}
+
+:host(.ic-button-variant-tertiary.background) ::slotted(a),
+:host(.ic-button-variant-icon-tertiary.background) ::slotted(a) {
+  background-color: var(--ic-button-tertiary-background) !important;
+}
+
+:host(.ic-button-variant-tertiary.background) .button:hover,
+:host(.ic-button-variant-icon-tertiary.background) .button:hover {
+  background-image: var(--ic-button-tertiary-background-non-transparent-hover);
+}
+
+:host(.ic-button-variant-tertiary.background) ::slotted(a:hover),
+:host(.ic-button-variant-icon-tertiary.background) ::slotted(a:hover) {
+  background-image: var(
+    --ic-button-tertiary-background-non-transparent-hover
+  ) !important;
+}
+
+:host(.ic-button-variant-tertiary.background) .button:active,
+:host(.ic-button-variant-icon-tertiary.background) .button:active {
+  background-image: var(--ic-button-tertiary-background-non-transparent-active);
+}
+
+:host(.ic-button-variant-tertiary.background) ::slotted(a:active),
+:host(.ic-button-variant-icon-tertiary.background) ::slotted(a:active) {
+  background-image: var(
+    --ic-button-tertiary-background-non-transparent-active
+  ) !important;
+}
+
+/* Tertiary - monochrome */
+
+:host(.ic-button-variant-tertiary.monochrome) .button,
+:host(.ic-button-variant-tertiary.monochrome) ::slotted(a),
+:host(.ic-button-variant-icon-tertiary.monochrome) .button,
+:host(.ic-button-variant-icon-tertiary.monochrome) ::slotted(a) {
+  color: var(--ic-button-tertiary-text-monochrome);
+
+  --ic-typography-color: var(--ic-button-tertiary-text-monochrome);
+}
+
+:host(.ic-button-variant-tertiary.monochrome) .button:hover,
+:host(.ic-button-variant-icon-tertiary.monochrome) .button:hover {
+  background-color: var(--ic-button-tertiary-background-hover-monochrome);
+  color: var(--ic-button-tertiary-text-hover-monochrome);
+}
+
+:host(.ic-button-variant-tertiary.monochrome) ::slotted(a:hover),
+:host(.ic-button-variant-icon-tertiary.monochrome) ::slotted(a:hover) {
+  background-color: var(
+    --ic-button-tertiary-background-hover-monochrome
+  ) !important;
+}
+
+:host(.ic-button-variant-tertiary.monochrome) .button:active,
+:host(.ic-button-variant-tertiary.ic-button-loading.monochrome) .button,
+:host(.ic-button-variant-icon-tertiary.monochrome) .button:active,
+:host(.ic-button-variant-icon-tertiary.ic-button-loading.monochrome) .button {
+  background-color: var(--ic-button-tertiary-background-pressed-monochrome);
+  color: var(--ic-button-tertiary-text-pressed-monochrome);
+
+  --button-loading-inner-color: var(
+    --ic-button-tertiary-text-pressed-monochrome
+  );
+  --button-loading-outer-color: var(
+    --ic-button-tertiary-background-pressed-monochrome
+  );
+}
+
+:host(.ic-button-variant-tertiary.monochrome) ::slotted(a:active),
+:host(.ic-button-variant-icon-tertiary.monochrome) ::slotted(a:active) {
+  background-color: var(
+    --ic-button-tertiary-background-pressed-monochrome
+  ) !important;
+}
+
+:host(.ic-button-variant-tertiary.ic-button-disabled.monochrome) .button,
+:host(.ic-button-variant-icon-tertiary.ic-button-disabled.monochrome) .button {
+  color: var(--ic-button-tertiary-text-disabled-monochrome);
+  background: none;
+}
+
+:host(.ic-button-variant-tertiary.ic-button-disabled.monochrome) ::slotted(a),
+:host(.ic-button-variant-icon-tertiary.ic-button-disabled.monochrome)
+  ::slotted(a) {
+  background: none !important;
+}
+
+/* Tertiary - non-transparent background - monochrome */
+
+:host(.ic-button-variant-tertiary.background.monochrome) .button,
+:host(.ic-button-variant-icon-tertiary.background.monochrome) .button {
+  background-color: var(--ic-button-tertiary-background-monochrome);
+}
+
+:host(.ic-button-variant-tertiary.background.monochrome) ::slotted(a),
+:host(.ic-button-variant-icon-tertiary.background.monochrome) ::slotted(a) {
+  background-color: var(--ic-button-tertiary-background-monochrome) !important;
+}
+
+:host(.ic-button-variant-tertiary.background.monochrome) .button:hover,
+:host(.ic-button-variant-icon-tertiary.background.monochrome) .button:hover {
+  background-image: var(
+    --ic-button-tertiary-background-non-transparent-monochrome-hover
+  );
+}
+
+:host(.ic-button-variant-tertiary.background.monochrome) ::slotted(a:hover),
+:host(.ic-button-variant-icon-tertiary.background.monochrome)
+  ::slotted(a:hover) {
+  background-image: var(
+    --ic-button-tertiary-background-non-transparent-monochrome-hover
+  ) !important;
+}
+
+:host(.ic-button-variant-tertiary.background.monochrome) .button:active,
+:host(.ic-button-variant-icon-tertiary.background.monochrome) .button:active {
+  background-image: var(
+    --ic-button-tertiary-background-non-transparent-monochrome-active
+  );
+}
+
+:host(.ic-button-variant-tertiary.background.monochrome) ::slotted(a:active),
+:host(.ic-button-variant-icon-tertiary.background.monochrome)
+  ::slotted(a:active) {
+  background-image: var(
+    --ic-button-tertiary-background-non-transparent-monochrome-active
+  ) !important;
+}
+
+/* Destructive */
+
+:host(.ic-button-variant-destructive) .button,
+:host(.ic-button-variant-icon-destructive) .button {
+  color: var(--ic-button-destructive-text);
+  background-color: var(--ic-button-destructive-background);
+  text-transform: uppercase;
+}
+
+:host(.ic-button-variant-destructive) ::slotted(a),
+:host(.ic-button-variant-icon-destructive) ::slotted(a) {
+  color: var(--ic-button-destructive-text) !important;
+
+  --ic-typography-color: var(--ic-button-destructive-text) !important;
+
+  background-color: var(--ic-button-destructive-background) !important;
+  text-transform: uppercase !important;
+}
+
+:host(.ic-button-variant-destructive) .button:hover,
+:host(.ic-button-variant-icon-destructive) .button:hover {
+  background-color: var(--ic-button-destructive-background-hover);
+}
+
+:host(.ic-button-variant-destructive) ::slotted(a:hover),
+:host(.ic-button-variant-icon-destructive) ::slotted(a:hover) {
+  background-color: var(--ic-button-destructive-background-hover) !important;
+}
+
+:host(.ic-button-variant-destructive) .button:active,
+:host(.ic-button-variant-destructive.ic-button-loading) .button,
+:host(.ic-button-variant-icon-destructive.ic-button-loading) .button {
+  color: var(--ic-button-primary-text);
+  background-color: var(--ic-button-destructive-background-pressed);
+
+  --button-loading-inner-color: var(--ic-button-primary-text);
+  --button-loading-outer-color: var(--ic-button-destructive-background-pressed);
+}
+
+:host(.ic-button-variant-destructive) ::slotted(a:active),
+:host(.ic-button-variant-icon-destructive) ::slotted(a:active) {
+  background-color: var(--ic-button-destructive-background-pressed) !important;
+}
+
+:host(.ic-button-variant-destructive.ic-button-disabled) .button,
+:host(.ic-button-variant-icon-destructive.ic-button-disabled) .button {
+  background-color: var(--ic-button-destructive-background-disabled);
+  color: var(--ic-button-destructive-text-disabled);
+}
+
+:host(.ic-button-variant-destructive.ic-button-disabled) ::slotted(a),
+:host(.ic-button-variant-icon-destructive.ic-button-disabled) ::slotted(a) {
+  background-color: var(--ic-button-destructive-background-disabled) !important;
+}
+
+/***********************
+     Icon Variants
+ ***********************/
+
+/* Icon */
+
+:host(.ic-button-variant-icon) .button {
+  color: var(--ic-button-icon-color);
+  background-color: var(--ic-button-icon-color-background);
+  min-width: 0;
+  gap: var(--ic-space-xs);
+}
+
+:host(.ic-button-variant-icon) ::slotted(a) {
+  color: var(--ic-button-icon-color);
+  background-color: var(--ic-button-icon-color-background) !important;
+  min-width: 0;
+  gap: var(--ic-space-xs);
+}
+
+:host(.ic-button-variant-icon) .icon-container {
+  width: var(--ic-space-lg) !important;
+  height: var(--ic-space-lg) !important;
+}
+
+:host(.ic-button-variant-icon) .button:hover {
+  color: var(--ic-button-icon-color-hover);
+  background-color: var(--ic-button-icon-color-background-hover);
+}
+
+:host(.ic-button-variant-icon) ::slotted(a:hover) {
+  color: var(--ic-button-icon-color-hover);
+  background-color: var(--ic-button-icon-color-background-hover) !important;
+}
+
+:host(.ic-button-variant-icon) .button:active:not(:focus),
+:host(.ic-button-variant-icon.ic-button-loading) .button {
+  color: var(--ic-button-icon-color-active);
+  background-color: var(--ic-button-icon-color-background-active);
+}
+
+:host(.ic-button-variant-icon) ::slotted(a:active:not(:focus)) {
+  color: var(--ic-button-icon-color-active);
+  background-color: var(--ic-button-icon-color-background-active) !important;
+}
+
+:host(.ic-button-variant-icon.ic-button-disabled) .button {
+  color: var(--ic-color-icon-disabled-mid);
+  background: none;
+}
+
+:host(.ic-button-variant-icon.ic-button-disabled) ::slotted(a) {
+  color: var(--ic-color-icon-disabled-mid);
+  background: none !important;
+}
+
+/* Icon-primary */
+
+:host(.ic-button-variant-icon-primary) .button,
+:host(.ic-button-variant-icon-primary) ::slotted(a) {
+  min-width: 0;
+  gap: var(--ic-space-xs);
+  color: var(--ic-button-primary-icon);
+}
+
+:host(.ic-button-variant-icon-primary.monochrome) .button,
+:host(.ic-button-variant-primary.monochrome:not(.ic-button-disabled))
+  ::slotted(svg) {
+  color: var(--ic-button-primary-icon-monochrome);
+}
+
+:host(.ic-button-variant-icon-primary) .icon-container {
+  width: var(--ic-space-lg) !important;
+  height: var(--ic-space-lg) !important;
+  margin: 0;
+  pointer-events: none;
+}
+
+:host(.ic-button-variant-icon.monochrome) ::slotted(a),
+:host(.ic-button-variant-icon.monochrome) ::slotted(svg) {
+  color: var(--ic-button-icon-monochrome);
+}
+
+/* Icon-secondary */
+
+:host(.ic-button-variant-icon-secondary) .button,
+:host(.ic-button-variant-icon-secondary) ::slotted(a) {
+  min-width: 0;
+  gap: var(--ic-space-xs);
+}
+
+:host(.ic-button-variant-icon-secondary) .icon-container {
+  width: var(--ic-space-lg) !important;
+  height: var(--ic-space-lg) !important;
+  margin: 0;
+  pointer-events: none;
+}
+
+/* Icon-tertiary */
+
+:host(.ic-button-variant-icon-tertiary) .button,
+:host(.ic-button-variant-icon-tertiary) ::slotted(a) {
+  min-width: 0;
+  gap: var(--ic-space-xs);
+}
+
+:host(.ic-button-variant-icon-tertiary) .icon-container {
+  width: var(--ic-space-lg) !important;
+  height: var(--ic-space-lg) !important;
+  margin: 0;
+  pointer-events: none;
+}
+
+/* Icon-destructive */
+
+:host(.ic-button-variant-icon-destructive) .button,
+:host(.ic-button-variant-icon-destructive) ::slotted(a) {
+  min-width: 0;
+  gap: var(--ic-space-xs);
+}
+
+:host(.ic-button-variant-icon-destructive) .icon-container {
+  width: var(--ic-space-lg) !important;
+  height: var(--ic-space-lg) !important;
+  margin: 0;
+  pointer-events: none;
+}
+
+/* Sizing */
+
+:host(.ic-button-size-medium) .button {
+  height: var(--height, 2.5rem);
+  padding: var(--ic-space-xs) var(--ic-space-md);
+}
+
+:host(.ic-button-size-medium) ::slotted(a) {
+  height: var(--height, 2.5rem) !important;
+  padding: var(--ic-space-xs) var(--ic-space-md) !important;
+}
+
+:host(.ic-button-size-small) .button {
+  height: var(--height, var(--ic-space-xl));
+  padding: var(--ic-space-xxs) var(--ic-space-md);
+}
+
+:host(.ic-button-size-small) ::slotted(a) {
+  height: var(--height, var(--ic-space-xl)) !important;
+  padding: var(--ic-space-xxs) var(--ic-space-md) !important;
+}
+
+:host(.ic-button-size-large) .button {
+  height: var(--height, var(--ic-space-xxl));
+  padding: var(--ic-space-sm) var(--ic-space-md);
+}
+
+:host(.ic-button-size-large) ::slotted(a) {
+  height: var(--height, var(--ic-space-xxl)) !important;
+  padding: var(--ic-space-sm) var(--ic-space-md) !important;
+}
+
+:host(.ic-button-size-medium.ic-button-variant-icon) .button,
+:host(.ic-button-size-medium.ic-button-variant-icon-primary) .button,
+:host(.ic-button-size-medium.ic-button-variant-icon-secondary) .button,
+:host(.ic-button-size-medium.ic-button-variant-icon-tertiary) .button,
+:host(.ic-button-size-medium.ic-button-variant-icon-destructive) .button {
+  height: var(--height, var(--ic-space-xl));
+  width: var(--ic-space-xl);
+  padding: 0.375rem;
+}
+
+:host(.ic-button-size-medium.ic-button-variant-icon-primary) ::slotted(a),
+:host(.ic-button-size-medium.ic-button-variant-icon-secondary) ::slotted(a),
+:host(.ic-button-size-medium.ic-button-variant-icon-tertiary) ::slotted(a),
+:host(.ic-button-size-medium.ic-button-variant-icon-destructive) ::slotted(a) {
+  height: var(--height, var(--ic-space-xl)) !important;
+  width: var(--ic-space-xl) !important;
+  padding: 0.375rem !important;
+}
+
+:host(.ic-button-size-small.ic-button-variant-icon) .button,
+:host(.ic-button-size-small.ic-button-variant-icon-primary) .button,
+:host(.ic-button-size-small.ic-button-variant-icon-secondary) .button,
+:host(.ic-button-size-small.ic-button-variant-icon-tertiary) .button,
+:host(.ic-button-size-small.ic-button-variant-icon-destructive) .button {
+  height: var(--height, var(--ic-space-lg));
+  width: var(--ic-space-lg);
+  padding: var(--ic-space-xxs);
+}
+
+:host(.ic-button-size-small.ic-button-variant-icon-primary) ::slotted(a),
+:host(.ic-button-size-small.ic-button-variant-icon-secondary) ::slotted(a),
+:host(.ic-button-size-small.ic-button-variant-icon-tertiary) ::slotted(a),
+:host(.ic-button-size-small.ic-button-variant-icon-destructive) ::slotted(a),
+:host(.ic-button-size-small.ic-button-variant-icon) ::slotted(a) {
+  height: var(--height, var(--ic-space-lg)) !important;
+  width: var(--ic-space-lg) !important;
+  padding: var(--ic-space-xxs) !important;
+}
+
+:host(.ic-button-size-large.ic-button-variant-icon) .button,
+:host(.ic-button-size-large.ic-button-variant-icon-primary) .button,
+:host(.ic-button-size-large.ic-button-variant-icon-secondary) .button,
+:host(.ic-button-size-large.ic-button-variant-icon-tertiary) .button,
+:host(.ic-button-size-large.ic-button-variant-icon-destructive) .button {
+  height: var(--height, 2.5rem);
+  width: 2.5rem;
+  padding: var(--ic-space-xs);
+}
+
+:host(.ic-button-size-large.ic-button-variant-icon-destructive) .button,
+:host(.ic-button-size-large.ic-button-variant-icon-primary) ::slotted(a),
+:host(.ic-button-size-large.ic-button-variant-icon-secondary) ::slotted(a),
+:host(.ic-button-size-large.ic-button-variant-icon-tertiary) ::slotted(a),
+:host(.ic-button-size-large.ic-button-variant-icon-destructive) ::slotted(a),
+:host(.ic-button-size-large.ic-button-variant-icon) ::slotted(a) {
+  height: var(--height, 2.5rem) !important;
+  width: 2.5rem !important;
+  padding: var(--ic-space-xs) !important;
+}
+
+/* Width */
+:host(.ic-button-full-width),
+:host(.ic-button-full-width) .button {
+  width: 100%;
+}
+
+:host(.ic-button-full-width) ::slotted(a) {
+  width: 100% !important;
+}
+
+/* Loading */
+
+div.loading-container {
+  position: relative;
+  align-items: center;
+  width: 100%;
+}
+
+.loading-indicator-icon-button {
+  --circular-diameter: var(--ic-space-md);
+}
+
+:host(.ic-button-size-small) .loading-indicator-icon-button {
+  --circular-diameter: calc(var(--ic-space-sm) + var(--ic-space-xxxs));
+}
+
+:host(.ic-button-size-large) .loading-indicator-icon-button {
+  --circular-diameter: calc(var(--ic-space-sm) + var(--ic-space-xs));
+}
+
+ic-loading-indicator {
+  --inner-color: var(--button-loading-inner-color);
+  --outer-color: var(--button-loading-outer-color), transparent;
+}
+
+@keyframes loading-animation {
+  0% {
+    width: 0%;
+    left: 0%;
+  }
+
+  25% {
+    width: 0%;
+    left: 0%;
+    opacity: 0;
+  }
+
+  50% {
+    width: 100%;
+    left: 0%;
+    opacity: 1;
+  }
+
+  75% {
+    width: 0%;
+    left: 100%;
+  }
+
+  100% {
+    width: 0%;
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+/* Icons */
+
+div.icon-container {
+  box-sizing: border-box;
+  width: var(--ic-space-lg);
+  height: var(--ic-space-lg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: var(--ic-space-xs);
+}
+
+div.right-icon {
+  margin-right: auto;
+  margin-left: var(--ic-space-xs);
+}
+
+:host(.ic-button-full-width) .right-icon {
+  margin-right: var(--ic-space-xs);
+}
+
+::slotted(:not(ic-badge)) {
+  width: var(--icon-width) !important;
+  height: var(--icon-height) !important;
+  fill: currentcolor !important;
+  pointer-events: none;
+}
+
+:host(.ic-button-variant-icon) .button .icon-container {
+  margin: 0;
+  pointer-events: none;
+}
+
+/** SEARCH **/
+
+:host(.search-submit-button) ::slotted(svg) {
+  --icon-height: 1.25rem;
+  --icon-width: 1.25rem;
+
+  color: var(--ic-atoms-input-search-button);
+}
+
+:host(.search-submit-button-small) ::slotted(svg) {
+  --icon-height: 1rem;
+  --icon-width: 1rem;
+
+  color: var(--ic-atoms-input-search-button);
+}
+
+:host(.search-submit-button) .button:focus {
+  box-shadow: none;
+}
+
+:host(.search-submit-button) .button:not(:active):focus {
+  box-shadow: none;
+  background-color: var(--ic-action-default-bg-hover);
+}
+
+:host(.search-submit-button) .button:not(:active):focus ::slotted(svg) {
+  color: var(--ic-button-primary-text);
+}
+
+:host(.search-submit-button) {
+  display: flex;
+  align-items: center;
+  margin: 0 var(--ic-space-xxs);
+}
+
+/** CLEAR & DISMISS **/
+
+:host(.ic-button-variant-icon) .button,
+:host(.ic-button-variant-icon) ::slotted(a) {
+  background-color: inherit;
+  min-width: 0;
+  gap: var(--ic-space-xs);
+}
+
+:host(.button-variant-icon) .button,
+:host(.button-variant-icon) ::slotted(a) {
+  color: var(--button-default);
+  min-width: 0;
+  gap: var(--ic-space-xs);
+}
+
+:host(.button-variant-icon) .icon-container {
+  width: var(--ic-space-lg) !important;
+  height: var(--ic-space-lg) !important;
+}
+
+:host(.button-variant-icon) .button:hover,
+:host(.button-variant-icon) ::slotted(a:hover) {
+  background-color: var(--button-default-background-hover);
+  color: var(--button-default-hover);
+}
+
+:host(.button-variant-icon) .button:active:not(:focus),
+:host(.button-variant-icon) ::slotted(a:active:not(:focus)),
+:host(.button-variant-icon.loading) .button {
+  background-color: var(--button-default-background-active);
+  color: var(--button-default-active);
+}
+
+:host(.button-variant-icon.disabled) .button,
+:host(.button-variant-icon.disabled) ::slotted(a) {
+  color: var(--ic-color-icon-disabled-mid);
+  background: none;
+}
+
+:host(.clear-button) {
+  color: var(--ic-atoms-input-clear-button);
+  margin: 0 var(--ic-space-xxs);
+}
+
+:host(.clear-button) .button:focus,
+:host(.calendar-button) .button:focus,
+:host(.clock-button) .button:focus {
+  box-shadow: none;
+}
+
+:host(.clear-button) .button,
+:host(.clear-button) ::slotted(a) {
+  background-color: inherit;
+  color: var(--ic-atoms-input-clear-button);
+}
+
+:host(.clear-button) .button:hover,
+:host(.clear-button) ::slotted(a:hover) {
+  color: var(--ic-atoms-input-clear-button);
+}
+
+:host(.clear-button) .button:not(:active):focus ::slotted(svg) {
+  background-color: var(--ic-atoms-input-clear-button-focus-inner);
+  color: var(--ic-button-primary-text);
+
+  /* border: var(--ic-atoms-input-clear-button-focus-outer); */
+}
+
+:host(.menu-close-button) ::slotted(svg) {
+  --icon-height: 0.875rem;
+  --icon-width: 0.875rem;
+
+  color: var(--ic-top-navigation-icon-active);
+}
+
+:host(.popout-menu-button) .button {
+  height: var(--height);
+  justify-content: left;
+  border-radius: 0;
+  white-space: pre-line;
+  text-align: start;
+}
+
+:host(.popout-menu-button) div.icon-container {
+  flex: none;
+}
+
+:host(.popout-menu-button) .button:focus {
+  box-shadow: var(--ic-border-focus-inset);
+  border-radius: var(--ic-border-radius-inset);
+}
+
+.ic-button-describedby {
+  display: none;
+}
+
+:host .ic-tooltip {
+  display: block;
+}
+
+/** Dropdown **/
+
+:host .arrow-dropdown {
+  margin-top: auto;
+}
+
+:host .dropdown-expanded {
+  transform: rotate(180deg);
+  margin-bottom: var(--ic-space-xxxs);
+}
+
+:host(.dropdown-no-icon) .button {
+  padding-right: var(--ic-space-xs);
+}
+
+/** Slotted router item **/
+
+slot[name="router-item"]::slotted(a) {
+  pointer-events: all;
+}
+
+::slotted(a) {
+  font-size: 0.875rem !important;
+  border: none !important;
+  vertical-align: middle !important;
+}
+
+/** menu button on top navigation\side navigation 
+  * uses secondary monochrome tokens which are duplicated here to avoid multiple copies in each component
+  */
+
+:host(#menu-button.ic-theme-dark) {
+  --ic-button-secondary-background-hover-monochrome: var(
+    --ic-action-dark-bg-hover
+  );
+  --ic-button-secondary-background-pressed-monochrome: var(
+    --ic-action-dark-bg-pressed
+  );
+  --ic-button-secondary-text-hover-monochrome: var(
+    --ic-action-monochrome-hover-dark
+  );
+  --ic-button-secondary-text-pressed-monochrome: var(
+    --ic-action-monochrome-pressed-dark
+  );
+  --ic-button-secondary-border-hover-monochrome: var(
+    --ic-color-border-neutral-hover-dark
+  );
+  --ic-button-secondary-border-pressed-monochrome: var(
+    --ic-color-border-neutral-pressed-dark
+  );
+}
+
+:host(#menu-button.ic-theme-light) {
+  --ic-button-secondary-background-hover-monochrome: var(
+    --ic-action-light-bg-hover
+  );
+  --ic-button-secondary-background-pressed-monochrome: var(
+    --ic-action-light-bg-pressed
+  );
+  --ic-button-secondary-text-hover-monochrome: var(
+    --ic-action-monochrome-hover
+  );
+  --ic-button-secondary-text-pressed-monochrome: var(
+    --ic-action-monochrome-pressed
+  );
+  --ic-button-secondary-border-hover-monochrome: var(
+    --ic-color-border-neutral-hover-light
+  );
+  --ic-button-secondary-border-pressed-monochrome: var(
+    --ic-color-border-neutral-default
+  );
+}
+
+/** High Contrast **/
+@media (forced-colors: active) {
+  .button,
+  ::slotted(a) {
+    border: 0.125rem solid transparent !important;
+  }
+
+  .search-submit-button ::slotted(a),
+  .ic-button-variant-icon ::slotted(a),
+  .clear-button ::slotted(a),
+  .search-submit-button ::slotted(svg),
+  .ic-button-variant-icon ::slotted(svg),
+  .clear-button ::slotted(svg) {
+    color: HighlightText;
+  }
+
+  :host(.ic-button-variant-icon.monochrome) ::slotted(a),
+  :host(.ic-button-variant-icon.monochrome) ::slotted(svg) {
+    color: white;
+  }
+
+  :host(.clear-button) .button:not(:active):focus ::slotted(svg) {
+    color: white !important;
+    background-color: inherit;
+  }
+
+  :host(.ic-button-variant-primary:not(.ic-button-disabled)) ::slotted(svg) {
+    color: currentcolor !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  ::slotted(a) {
+    transition: none;
+  }
+}
+
+/** Pagination **/
+
+:host(.flip) ::slotted(svg) {
+  transform: scaleX(-1);
+}

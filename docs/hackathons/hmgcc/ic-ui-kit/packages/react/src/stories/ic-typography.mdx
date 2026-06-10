@@ -1,0 +1,13 @@
+import {
+  Meta,
+  Stories,
+  Markdown
+} from "@storybook/addon-docs/blocks";
+import * as IcTypographyStories from './ic-typography.stories';
+import readme from "../../../web-components/src/components/ic-typography/readme.md";
+
+<Meta of={IcTypographyStories} />
+
+<Markdown>{readme}</Markdown>
+
+<Stories />

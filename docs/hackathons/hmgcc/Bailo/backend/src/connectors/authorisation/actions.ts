@@ -1,0 +1,117 @@
+import { TokenActions } from '../../models/Token.js'
+
+export const ModelAction = {
+  Create: 'model:create',
+  View: 'model:view',
+  Update: 'model:update',
+  Write: 'model:write',
+  Import: 'model:import',
+  Export: 'model:export',
+  Delete: 'model:delete',
+} as const
+export type ModelActionKeys = (typeof ModelAction)[keyof typeof ModelAction]
+
+export const ReleaseAction = {
+  Create: 'release:create',
+  View: 'release:view',
+  Delete: 'release:delete',
+  Update: 'release:update',
+  Import: 'release:import',
+  Export: 'release:export',
+} as const
+export type ReleaseActionKeys = (typeof ReleaseAction)[keyof typeof ReleaseAction]
+
+export const AccessRequestAction = {
+  Create: 'access_request:create',
+  View: 'access_request:view',
+  Update: 'access_request:update',
+  Delete: 'access_request:delete',
+} as const
+export type AccessRequestActionKeys = (typeof AccessRequestAction)[keyof typeof AccessRequestAction]
+
+export const SchemaAction = {
+  Create: 'schema:create',
+  Delete: 'schema:delete',
+  Update: 'schema:update',
+} as const
+export type SchemaActionKeys = (typeof SchemaAction)[keyof typeof SchemaAction]
+
+export const SchemaMigrationAction = {
+  Create: 'schema:create',
+  Update: 'schema:update',
+  View: 'schema:view',
+} as const
+export type SchemaMigrationActionKeys = (typeof SchemaMigrationAction)[keyof typeof SchemaMigrationAction]
+
+export const FileAction = {
+  Delete: 'file:delete',
+  Upload: 'file:upload',
+  // 'view' refers to the ability to see metadata about the file.  'download' lets the user view the file contents.
+  View: 'file:view',
+  Download: 'file:download',
+  Update: 'file:update',
+} as const
+export type FileActionKeys = (typeof FileAction)[keyof typeof FileAction]
+
+export const ImageAction = {
+  Pull: 'image:pull',
+  Push: 'image:push',
+  List: 'image:list',
+  Wildcard: 'image:wildcard',
+  Delete: 'image:delete',
+} as const
+export type ImageActionKeys = (typeof ImageAction)[keyof typeof ImageAction]
+
+export const ResponseAction = {
+  Create: 'response:create',
+  View: 'response:view',
+  Update: 'response:update',
+} as const
+export type ResponseActionKeys = (typeof ResponseAction)[keyof typeof ResponseAction]
+
+export const ReviewRoleAction = {
+  Create: 'reviewRole:create',
+  View: 'reviewRole:view',
+  Delete: 'reviewRole:delete',
+  Update: 'reviewRole:update',
+} as const
+export type ReviewRoleActionKeys = (typeof ReviewRoleAction)[keyof typeof ReviewRoleAction]
+
+export const ActionLookup = {
+  [ModelAction.Create]: TokenActions.ModelWrite.id,
+  [ModelAction.View]: TokenActions.ModelRead.id,
+  [ModelAction.Update]: TokenActions.ModelWrite.id,
+  [ModelAction.Write]: TokenActions.ModelWrite.id,
+  [ModelAction.Delete]: TokenActions.ModelWrite.id,
+
+  [ReleaseAction.Create]: TokenActions.ReleaseWrite.id,
+  [ReleaseAction.View]: TokenActions.ReleaseRead.id,
+  [ReleaseAction.Delete]: TokenActions.ReleaseWrite.id,
+  [ReleaseAction.Update]: TokenActions.ReleaseWrite.id,
+
+  [AccessRequestAction.Create]: TokenActions.AccessRequestWrite.id,
+  [AccessRequestAction.View]: TokenActions.AccessRequestRead.id,
+  [AccessRequestAction.Update]: TokenActions.AccessRequestWrite.id,
+  [AccessRequestAction.Delete]: TokenActions.AccessRequestWrite.id,
+
+  [SchemaAction.Create]: TokenActions.SchemaWrite.id,
+  [SchemaAction.Delete]: TokenActions.SchemaWrite.id,
+  [SchemaAction.Update]: TokenActions.SchemaWrite.id,
+
+  [FileAction.Delete]: TokenActions.FileWrite.id,
+  [FileAction.Upload]: TokenActions.FileWrite.id,
+  [FileAction.View]: TokenActions.FileRead.id,
+  [FileAction.Download]: TokenActions.FileRead.id,
+  [FileAction.Update]: TokenActions.FileWrite.id,
+
+  [ImageAction.Pull]: TokenActions.ImageRead.id,
+  [ImageAction.Push]: TokenActions.ImageWrite.id,
+  [ImageAction.List]: TokenActions.ImageRead.id,
+  [ImageAction.Wildcard]: TokenActions.ImageWrite.id,
+  [ImageAction.Delete]: TokenActions.ImageWrite.id,
+
+  [ReviewRoleAction.Create]: TokenActions.ReviewRoleWrite.id,
+  [ReviewRoleAction.View]: TokenActions.ReviewRoleWrite.id,
+  [ReviewRoleAction.Delete]: TokenActions.ReviewRoleWrite.id,
+} as const
+export type ActionLookupKeys = (typeof ActionLookup)[keyof typeof ActionLookup]

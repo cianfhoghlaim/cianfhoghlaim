@@ -1,0 +1,13 @@
+#!/bin/bash
+bash "$(dirname "$0")/email-check.sh"
+
+npm run lint:spelling
+
+cd packages/web-components
+npm i --package-lock-only
+cd ../react
+npm i --package-lock-only
+cd ../..
+npm run audit
+
+npx lint-staged

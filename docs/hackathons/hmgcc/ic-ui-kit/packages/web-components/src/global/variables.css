@@ -1,0 +1,70 @@
+@import "fonts.css";
+@import "colors.css";
+@import "borders.css";
+
+:root {
+  --ic-elevation-raised: 0 0 2px rgb(0 0 0 / 50%);
+  --ic-elevation-overlay: 0 2px 8px rgb(0 0 0 / 20%);
+  --ic-elevation-modal: 0 4px 16px rgb(0 0 0 / 25%);
+  --ic-elevation-inset: inset 0 4px 16px rgb(0 0 0 / 25%),
+    inset 0 -4px 16px rgb(0 0 0 / 25%);
+  --ic-easing-transition-fast: var(--ic-transition-duration-fast)
+    cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ic-easing-transition-slow: var(--ic-transition-duration-slow)
+    cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ic-transition-duration-fast: 100ms;
+  --ic-transition-duration-slow: 300ms;
+
+  /* breakpoints */
+
+  /* Note: ensure to update in ic-section-container media queries */
+  --ic-breakpoint-xs: 0;
+  --ic-breakpoint-sm: 576px;
+  --ic-breakpoint-md: 768px;
+  --ic-breakpoint-lg: 992px;
+  --ic-breakpoint-xl: 1200px;
+
+  /* spacing */
+  --ic-space-1px: 0.0625rem;
+  --ic-space-xxxs: 0.125rem;
+  --ic-space-xxs: 0.25rem;
+  --ic-space-xs: 0.5rem;
+  --ic-space-sm: 0.75rem;
+  --ic-space-md: 1rem;
+  --ic-space-lg: 1.5rem;
+  --ic-space-xl: 2rem;
+  --ic-space-xxl: 3rem;
+
+  /* z-index */
+  --ic-z-index-base-value: 0;
+  --ic-z-index-calendar: calc(var(--ic-z-index-base-value));
+  --ic-z-index-page-header: calc(var(--ic-z-index-base-value) + 10);
+  --ic-z-index-back-to-top: calc(var(--ic-z-index-base-value) + 20);
+  --ic-z-index-popover: calc(var(--ic-z-index-base-value) + 50);
+  --ic-z-index-sticky-page-header: calc(var(--ic-z-index-base-value) + 60);
+  --ic-z-index-date-picker: calc(var(--ic-z-index-base-value) + 70);
+  --ic-z-index-navigation-item: calc(var(--ic-z-index-base-value) + 70);
+  --ic-z-index-navigation-menu: calc(var(--ic-z-index-base-value) + 70);
+  --ic-z-index-menu: calc(var(--ic-z-index-base-value) + 70);
+  --ic-z-index-side-navigation: calc(var(--ic-z-index-base-value) + 70);
+  --ic-z-index-dialog: calc(var(--ic-z-index-base-value) + 100);
+  --ic-z-index-toast: calc(var(--ic-z-index-base-value) + 110);
+  --ic-z-index-tooltip: calc(var(--ic-z-index-base-value) + 110);
+  --ic-z-index-classification-banner: calc(var(--ic-z-index-base-value) + 200);
+  --ic-z-index-drawer: calc(var(--ic-z-index-base-value) + 210);
+  --ic-z-index-skip-link: calc(var(--ic-z-index-base-value) + 220);
+
+  /* table tokens */
+  --ic-table-cell-padding: var(--ic-space-xs);
+  --ic-table-cell-padding-dense: var(--ic-space-xxs) var(--ic-space-xs);
+  --ic-table-cell-padding-spacious: 0.625rem var(--ic-space-xs);
+  --ic-table-cell-border: var(--ic-space-1px) solid
+    var(--ic-data-table-cell-keyline);
+  --ic-table-embedded-border: var(--ic-space-1px) solid
+    var(--ic-data-table-border);
+  --ic-table-font-size-dense: var(--ic-font-size-label);
+  --ic-table-font-size-spacious: 1.125rem;
+  --ic-table-heading-border: var(--ic-space-1px) solid
+    var(--ic-data-table-header-keyline);
+  --ic-table-text-line-height: 1.5rem;
+}

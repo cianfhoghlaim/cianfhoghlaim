@@ -1,0 +1,237 @@
+{#
+#  ============================== NOTE ==============================
+#
+#  This file is templated with jinja2 syntax and is intended for use by
+#  stroom.proxy.dist.GenerateProxyDistributionConfig.
+#  Any instances of ${...} are not jinja2 and are intended to remain as is in the
+#  generated file and are for use by DropWizard with its variable substitution.
+#
+#  Stuff like
+#  "{{ 'my_value' | envVar('ENV_VAR') }}"
+#  will either render as
+#    ${ENV_VAR:-my_value}
+#  or
+#    my_value
+#  See stroom.proxy.dist.GenerateProxyDistributionConfig..EnvVarSubstitutionFilter
+#
+#  ============================== NOTE ==============================
+#
+#}
+{# Define all the jinja2 variable values #}
+{% if distribution == "docker" %}
+  {% set proxyHome = '/stroom-proxy' %}
+  {% set includeEnvVarSubstitution = true %}
+{% elif distribution == "zip" %}
+  {% set proxyHome = '${STROOM_PROXY_HOME:-}' %}
+  {% set includeEnvVarSubstitution = false %}
+{% endif %}
+# Stroom Proxy configuration file
+# ===============================
+#
+# For information on the structure of this configuration file see:
+# https://www.dropwizard.io/en/latest/manual/configuration.html
+# For information on the logback logFormat strings see:
+# http://logback.qos.ch/manual/layouts.html
+#
+# This configuration file was made for the {{ distribution }} distribution.
+#
+# This section is the DropWizard configuration for Stroom Proxy
+#
+server:
+  applicationContextPath: /
+  adminContextPath: /proxyAdmin
+  applicationConnectors:
+    - type: http
+      port: "8090"
+      useForwardedHeaders: true
+  adminConnectors:
+    - type: http
+      port: "8091"
+      useForwardedHeaders: true
+  detailedJsonProcessingExceptionMapper: true
+  requestLog:
+    appenders:
+      # Log appender for the web server request logging
+    - type: file
+      currentLogFilename: logs/access/access.log
+      discardingThreshold: 0
+      # Rolled and gzipped every minute
+      archivedLogFilenamePattern: logs/access/access-%d{yyyy-MM-dd'T'HH:mm}.log.gz
+      # One week using minute files
+      archivedFileCount: 10080
+      logFormat: '%h %l "%u" [%t] "%r" %s %b "%i{Referer}" "%i{User-Agent}" %D'
+#
+logging:
+  level: WARN
+  loggers:
+    # Logs useful information about stroom proxy. Only set DEBUG on specific 'stroom' classes or packages
+    # due to the large volume of logs that would be produced for all of 'stroom' in DEBUG.
+    stroom: INFO
+    # Logs useful information about dropwizard when booting stroom
+    io.dropwizard: INFO
+    # Logs useful information about the jetty server when booting stroom
+    # Set this to INFO if you want to log all REST request/responses with headers/payloads.
+    org.glassfish.jersey.logging.LoggingFeature: OFF
+    # Logger and appender for proxy receipt audit logs
+    "receive":
+      level: INFO
+      additive: false
+      appenders:
+      - type: file
+        currentLogFilename: logs/receive/receive.log
+        discardingThreshold: 0
+        # Rolled and gzipped every minute
+        archivedLogFilenamePattern: logs/receive/receive-%d{yyyy-MM-dd'T'HH:mm}.log.gz
+        # One week using minute files
+        archivedFileCount: 10080
+        logFormat: "%-6level [%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}] [%t] %logger - %X{code} %msg %n"
+#
+    # Logger and appender for proxy send audit logs
+    "send":
+      level: INFO
+      additive: false
+      appenders:
+      - type: file
+        currentLogFilename: logs/send/send.log
+        discardingThreshold: 0
+        # Rolled and gzipped every minute
+        archivedLogFilenamePattern: logs/send/send-%d{yyyy-MM-dd'T'HH:mm}.log.gz
+        # One week using minute files
+        archivedFileCount: 10080
+        logFormat: "%-6level [%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}] [%t] %logger - %X{code} %msg %n"
+
+  appenders:
+
+{% if distribution == "docker" %}
+#
+    # stdout for docker
+  - type: console
+    # Multi-coloured log format for console output
+    logFormat: "%highlight(%-6level) [%d{\"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\",UTC}] [%green(%t)] %cyan(%logger) - %X{code} %msg %n"
+    timeZone: UTC
+{% endif %}
+#
+    # Minute rolled files for stroom/datafeed, will be curl'd/deleted by stroom-log-sender
+  - type: file
+    currentLogFilename: logs/app/app.log
+    discardingThreshold: 0
+    archivedLogFilenamePattern: logs/app/app-%d{yyyy-MM-dd'T'HH:mm}.log.gz
+    # One week using minute files
+    archivedFileCount: 10080
+    logFormat: "%-6level [%d{\"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\",UTC}] [%t] %logger - %X{code} %msg %n"
+{% if distribution == "zip" %}
+#
+    # Size rolled logs for admins (10x100M), not curl'd to stroom
+    # Un-comment for non-dockered environments
+  - type: file
+    currentLogFilename: logs/app.log
+    discardingThreshold: 0
+    archivedLogFilenamePattern: logs/app-%i.log
+    archivedFileCount: 10
+    maxFileSize: "100MB"
+    logFormat: "%-6level [%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}] [%t] %logger - %X{code} %msg %n"
+{% endif %}
+#
+# This section contains the Stroom Proxy configuration properties
+# For more information see:
+# https://gchq.github.io/stroom-docs/user-guide/properties.html
+
+# jerseyClients are used for making feed status and content sync REST calls
+jerseyClients:
+  default:
+    tls:
+      {% if distribution == "docker" %}
+      verifyHostname: {{ true | envVar('REST_CLIENT_VERIFY_HOSTNAME') }}
+      {% endif %}
+      keyStorePath: "certs/client.jks"
+      keyStorePassword: "password"
+      trustStorePath: "certs/ca.jks"
+      trustStorePassword: "password"
+
+proxyConfig:
+  path:
+    # By default all files read or written to by stroom-proxy will be in directories relative to
+    # the home location. This must be set to an absolute path and also to one that differs
+    # the installed software as it has a different lifecycle.
+    home: "{{ proxyHome }}"
+
+  # This is the downstream (in datafeed flow terms) stroom/stroom-proxy used for
+  # feed status checks, supplying data receipt rules and verifying API keys.
+  downstreamHost:
+    scheme: "{{ 'http' | envVar('DOWNSTREAM_HOST_SCHEME') }}"
+    port: "{{ 8080 | envVar('DOWNSTREAM_HOST_PORT') }}"
+{% if distribution == "docker" %}
+    hostname: "{{ 'stroom' | envVar('DOWNSTREAM_HOST_HOSTNAME') }}"
+{% elif distribution == "zip" %}
+    hostname: "localhost"
+{% endif %}
+    apiKey: "{{ '' | envVar('DOWNSTREAM_API_KEY') }}"
+
+  # If we are storing data in a proxy repository we can aggregate it before forwarding.
+  aggregator:
+    maxItemsPerAggregate: 1000
+    maxUncompressedByteSize: "1G"
+    aggregationFrequency: 10m
+
+  # If you want multiple forward destinations then you will need to edit this file directly
+  # instead of using env var substitution
+  forwardHttpDestinations:
+    - enabled: {{ true | envVar('FORWARDING_ENABLED') }}
+      name: "downstream"
+      forwardUrl: "{{ '' | envVar('FORWARD_URL') }}"
+      httpClient:
+        tls:
+            keyStorePath: "certs/client.jks"
+            keyStorePassword: "password"
+            trustStorePath: "certs/ca.jks"
+            trustStorePassword: "password"
+            {% if distribution == "docker" %}
+            verifyHostname: {{ true | envVar('FORWARDING_HOST_VERIFICATION_ENABLED') }}
+            {% endif %}
+
+  logStream:
+    metaKeys:
+      - "guid"
+      - "receiptid"
+      - "feed"
+      - "system"
+      - "environment"
+      - "remotehost"
+      - "remoteaddress"
+      - "remotedn"
+      - "remotecertexpiry"
+
+  contentDir: "{{ 'content' | envVar('CONTENT_DIR') }}"
+  #  contentSync:
+  #    contentSyncEnabled: {{ false | envVar('CONTENT_SYNC_ENABLED') }}
+  #    upstreamUrl:
+  #      ReceiveDataRuleSet: "{{ 'http://stroom:8080/api/ruleset/v1' | envVar('UPSTREAM_RULE_URL') }}"
+  #      Dictionary: "{{ 'http://stroom:8080/api/dictionary/v1' | envVar('UPSTREAM_DICTIONARY_URL') }}"
+  #    syncFrequency: 30000
+  #    apiKey: ""
+
+  feedStatus:
+    # Only set this to the FULL url of the feed status endpoint if it differs
+    # from where the downstreamHost config points to. Under normal circumstances
+    # the url is derived using downstreamHost.
+    url: "{{ '' | envVar('FEED_STATUS_URL') }}"
+
+  # (FEED_STATUS|RECEIPT_POLICY|RECEIVE_ALL|DROP_ALL|REJECT_ALL)
+  receive:
+    receiptCheckMode: "{{ 'FEED_STATUS' | envVar('RECEIPT_CHECK_MODE') }}"
+    fallbackReceiveAction: "{{ '' | envVar('FALLBACK_RECEIVE_ACTION') }}"
+    # Whether authentication is required for requests sent to /datafeed
+    authenticationRequired: {{ true | envVar('RECEIVE_AUTH_REQUIRED') }}
+
+  {% if distribution == "docker" %}
+  security:
+    authentication:
+      openId:
+        # (NO_IDP|EXTERNAL_IDP|TEST_CREDENTIALS), Only use TEST for test/demo installs
+        # NO_IDP - No IDP is used. API keys are set in config for feed status checks.
+        # EXTERNAL_IDP - An external IDP such as KeyCloak/Cognito.
+        # TEST_CREDENTIALS - Use hard-coded authentication credentials for test/demo only.
+        identityProviderType: "{{ 'NO_IDP' | envVar('IDENTITY_PROVIDER_TYPE') }}"
+  {% endif %}
+
+# vim: set filetype=yaml tabstop=2 shiftwidth=2 expandtab:

@@ -1,0 +1,39 @@
+@import "../../global/normalize.css";
+
+@keyframes loading {
+  0% {
+    background-color: var(--ic-skeleton-background);
+  }
+
+  50% {
+    background-color: var(--ic-skeleton-background-secondary);
+  }
+
+  100% {
+    background-color: var(--ic-skeleton-background);
+  }
+}
+
+:host(.skeleton) {
+  background-color: var(--ic-skeleton-background);
+  border-radius: var(--ic-border-radius);
+  animation: loading 1200ms infinite;
+  display: inline-block;
+}
+
+:host(.skeleton) > * {
+  opacity: 0;
+  visibility: hidden;
+}
+
+:host(.ic-skeleton-circle) {
+  border-radius: 50%;
+}
+
+@media (forced-colors: active) {
+  :host(.skeleton) {
+    -ms-high-contrast-adjust: none;
+    forced-color-adjust: none;
+    background: currentcolor;
+  }
+}

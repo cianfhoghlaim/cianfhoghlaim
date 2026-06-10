@@ -1,0 +1,79 @@
+@import "../../global/normalize.css";
+
+:host {
+  display: block;
+
+  --ic-input-label-text-color: var(--ic-checkbox-group-label);
+  --ic-input-label-helper-text-color: var(--ic-checkbox-group-subtitle);
+  --ic-input-validation-error: var(--ic-checkbox-state-icon-error);
+  --ic-input-validation-status-text-color: var(--ic-checkbox-state-text);
+}
+
+:host(.ic-checkbox-group-disabled) {
+  --ic-input-label-text-color: var(--ic-checkbox-group-label-disabled);
+  --ic-input-label-helper-text-color: var(
+    --ic-checkbox-group-subtitle-disabled
+  );
+}
+
+ic-input-label.error {
+  color: var(--ic-checkbox-group-label-error);
+
+  --ic-typography-color: var(--ic-checkbox-group-label-error);
+  --ic-input-label-helper-text-color: var(--ic-checkbox-group-subtitle-error);
+}
+
+ic-input-label:not(.with-helper) .ic-typography-label,
+ic-input-label .helpertext {
+  margin-bottom: var(--ic-space-sm);
+}
+
+:host(.ic-checkbox-group-small)
+  ic-input-label:not(.with-helper)
+  .ic-typography-label,
+:host(.ic-checkbox-group-small) ic-input-label .helpertext {
+  margin-bottom: calc(var(--ic-space-sm) / 2);
+}
+
+:host(.ic-checkbox-group-large)
+  ic-input-label:not(.with-helper)
+  .ic-typography-label,
+:host(.ic-checkbox-group-large) ic-input-label .helpertext {
+  margin-bottom: calc(var(--ic-space-sm) * 1.5);
+}
+
+ic-input-label .helpertext {
+  display: block;
+}
+
+ic-input-validation.show-validation {
+  margin-top: var(--ic-space-sm);
+}
+
+:host(.ic-checkbox-group-small) ic-input-validation.show-validation {
+  margin-top: calc(var(--ic-space-sm) / 2);
+}
+
+:host(.ic-checkbox-group-large) ic-input-validation.show-validation {
+  margin-top: calc(var(--ic-space-sm) * 1.5);
+}
+
+.checkboxes-container {
+  margin-bottom: calc(-1 * var(--ic-space-xxs));
+}
+
+:host(.ic-checkbox-group-small) .checkboxes-container {
+  margin-bottom: calc(-1 * var(--ic-space-xxxs));
+}
+
+.screen-reader-only-text {
+  position: absolute;
+  left: -9999px;
+  background-color: #fff;
+  color: #000;
+  text-transform: none;
+}
+
+.screen-reader-only-text:dir(rtl) {
+  right: -9999px;
+}
