@@ -1,14 +1,14 @@
 import { defineConfig } from "vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
-import viteTsConfigPaths from "vite-tsconfig-paths";
+import { nitro } from "nitro/vite";
 
 export default defineConfig({
+  resolve: { tsconfigPaths: true },
   plugins: [
-    // Order matters: TanStack Router plugin MUST come before React/JSX plugins
-    tanstackStart() as unknown as ReturnType<typeof viteReact>,
+    nitro({ rollupConfig: { external: [] } }),
+    tanstackStart(),
     viteReact(),
-    viteTsConfigPaths({ projects: ["./tsconfig.json"] }),
   ],
   server: {
     port: 3004,
