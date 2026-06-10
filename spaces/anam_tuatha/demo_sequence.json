@@ -1,0 +1,64 @@
+{
+  "title": "Anam - Tuatha na nGaelscoil",
+  "element": "anam",
+  "started_at": 1780943242.532925,
+  "total_duration_s": 24.0,
+  "steps": [
+    {
+      "timestamp": 3.0994415283203125e-06,
+      "component_id": "tab_select",
+      "value": "'Talamh'",
+      "note": "user opens Talamh"
+    },
+    {
+      "timestamp": 5.245208740234375e-06,
+      "component_id": "tab_select",
+      "value": "'Uisce'",
+      "note": "user opens Uisce"
+    },
+    {
+      "timestamp": 5.245208740234375e-06,
+      "component_id": "tab_select",
+      "value": "'Tine'",
+      "note": "user opens Tine"
+    },
+    {
+      "timestamp": 5.245208740234375e-06,
+      "component_id": "tab_select",
+      "value": "'Anam'",
+      "note": "user opens Anam"
+    },
+    {
+      "timestamp": 6.198883056640625e-06,
+      "component_id": "feat_click",
+      "value": "'talamh'",
+      "note": "user clicks Talamh"
+    },
+    {
+      "timestamp": 6.198883056640625e-06,
+      "component_id": "feat_click",
+      "value": "'uisce'",
+      "note": "user clicks Uisce"
+    },
+    {
+      "timestamp": 7.152557373046875e-06,
+      "component_id": "feat_click",
+      "value": "'tine'",
+      "note": "user clicks Tine"
+    },
+    {
+      "timestamp": 7.152557373046875e-06,
+      "component_id": "stage_progression",
+      "value": "'setanta -> cuchulainn'",
+      "note": "stage up!"
+    }
+  ],
+  "voiceover_lines": [
+    "Welcome to Anam, Space 4 of 4. The integration Space. Five elements, seven features, one soulbound wallet.",
+    "Panel 1: Talamh, Earth - the curriculum map. Lifted from Space 1, summarised here for the integration demo.",
+    "Panel 2: Uisce, Water - the chemistry visual. Eight molecules, CPK colours, hand-drawn SVG.",
+    "Panel 3: Tine, Fire - the OCR forge. The Gaelscribhneoir checks fada, eclipsis, and punctum on a sample Irish text.",
+    "Panel 5: Anam, Spirit - the soulbound token. Three stages, five elements, one wallet. Click an element to record a feat.",
+    "Two feats and the Setanta stage advances to Cuchulainn. Five feats unlock the Riastrad, the warp spasm."
+  ]
+}
