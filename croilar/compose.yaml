@@ -58,7 +58,9 @@ services:
     volumes:
       - .:/opt/dagster/app:ro
       - aleyum-data:/data
-      - dagster-storage:/opt/dagster/dagster_home
+      # Bind-mount the dagster.yaml so the (in-image) legacy content is
+      # overridden by the current local file on every start.
+      - ./dagster.yaml:/opt/dagster/dagster_home/dagster.yaml:ro
     depends_on:
       - dagster-daemon
     networks:
@@ -88,7 +90,7 @@ services:
     volumes:
       - .:/opt/dagster/app:ro
       - aleyum-data:/data
-      - dagster-storage:/opt/dagster/dagster_home
+      - ./dagster.yaml:/opt/dagster/dagster_home/dagster.yaml:ro
     networks:
       - aleyum
 
@@ -97,8 +99,6 @@ services:
 # =============================================================================
 volumes:
   aleyum-data:
-    driver: local
-  dagster-storage:
     driver: local
   dragonfly-data:
     driver: local

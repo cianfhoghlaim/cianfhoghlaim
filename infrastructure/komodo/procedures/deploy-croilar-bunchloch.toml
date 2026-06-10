@@ -1,0 +1,39 @@
+# =============================================================================
+# DEPLOY CROILAR-BUNCHLOCH PROCEDURE
+# =============================================================================
+# Brings up the Croilar (aleyum) music intelligence pipeline on bunchloch.
+#
+# Architecture:
+#   bunchloch (MacBook M4 Max):
+#     dragonfly          (Redis-compatible cache, :6381)
+#     dagster-webserver  (with --profile dagster, :3106)
+#     dagster-daemon     (with --profile dagster, internal)
+#
+# Secrets injected via Locket + Infisical vault (dev-baile).
+#
+# Usage:
+#   km run procedure deploy-croilar-bunchloch
+# =============================================================================
+
+[[procedure]]
+name = "deploy-croilar-bunchloch"
+description = "Deploy Croilar (aleyum) music intelligence pipeline to bunchloch (MacBook M4)"
+
+[[procedure.config.stages]]
+name = "prerequisites"
+
+# Ensure the shared locket_secrets external volume exists.
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "croilar-ensure-locket-volume" } }
+
+[[procedure.config.stages]]
+name = "croilar"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "croilar-bunchloch" } }
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "croilar-health-check" } }
