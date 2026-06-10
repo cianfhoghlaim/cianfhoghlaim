@@ -1,0 +1,8 @@
+#!/bin/bash
+if [ $# -ne 1 ]
+then
+	echo "Usage: ugrep REGEXP"
+	exit
+fi
+cd /usr/local/share/crubadan/ga
+find sonrai -name '*.dat' | xargs egrep "^url.*$1"

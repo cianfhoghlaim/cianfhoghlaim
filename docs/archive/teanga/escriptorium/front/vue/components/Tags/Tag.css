@@ -1,0 +1,127 @@
+/* tags */
+.escr-tag {
+    display: inline-flex;
+    color: var(--tag-text);
+    font-weight: 600;
+    font-size: 12px;
+    border-radius: 16px;
+    padding: 4px 10px;
+    flex-flow: row nowrap;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    align-items: center;
+    max-width: 200px;
+    background-color: var(--tag-0);
+}
+/* tag color variants: light colors */
+.escr-tag--variant-0 {
+    background-color: var(--tag-0);
+}
+.escr-tag--variant-1 {
+    background-color: var(--tag-1);
+}
+.escr-tag--variant-2 {
+    background-color: var(--tag-2);
+}
+.escr-tag--variant-3 {
+    background-color: var(--tag-3);
+}
+.escr-tag--variant-4 {
+    background-color: var(--tag-4);
+}
+.escr-tag--variant-5 {
+    background-color: var(--tag-5);
+}
+.escr-tag--variant-6 {
+    background-color: var(--tag-6);
+}
+.escr-tag--variant-7 {
+    background-color: var(--tag-7);
+}
+.escr-tag--variant-8 {
+    background-color: var(--tag-8);
+}
+.escr-tag--variant-9 {
+    background-color: var(--tag-9);
+}
+.escr-tag--variant-10 {
+    background-color: var(--tag-10);
+}
+.escr-tag--variant-11 {
+    background-color: var(--tag-11);
+}
+.escr-tag--variant-12 {
+    background-color: var(--tag-12);
+}
+.escr-tag--variant-13 {
+    background-color: var(--tag-13);
+}
+.escr-tag--variant-14 {
+    background-color: var(--tag-14);
+}
+.escr-tag--variant-15 {
+    background-color: var(--tag-15);
+}
+
+/* darker colors */
+.escr-tag--variant-16 {
+    color: var(--tag-text-ondark);
+    background-color: var(--tag-16);
+}
+.escr-tag--variant-17 {
+    color: var(--tag-text-ondark);
+    background-color: var(--tag-17);
+}
+.escr-tag--variant-18 {
+    color: var(--tag-text-ondark);
+    background-color: var(--tag-18);
+}
+.escr-tag--variant-19 {
+    color: var(--tag-text-ondark);
+    background-color: var(--tag-19);
+}
+.escr-tag--variant-20 {
+    color: var(--tag-text-ondark);
+    background-color: var(--tag-20);
+}
+.escr-tag--variant-21 {
+    color: var(--tag-text-ondark);
+    background-color: var(--tag-21);
+}
+.escr-tag--variant-22 {
+    color: var(--tag-text-ondark);
+    background-color: var(--tag-22);
+}
+.escr-tag--variant-23 {
+    color: var(--tag-text-ondark);
+    background-color: var(--tag-23);
+}
+.escr-tag--variant-24 {
+    color: var(--tag-text-ondark);
+    background-color: var(--tag-24);
+}
+.escr-tag--variant-25 {
+    color: var(--tag-text-ondark);
+    background-color: var(--tag-25);
+}
+.escr-tag--variant-26 {
+    color: var(--tag-text-ondark);
+    background-color: var(--tag-26);
+}
+.escr-tag--variant-27 {
+    color: var(--tag-text-ondark);
+    background-color: var(--tag-27);
+}
+.escr-tag--variant-28 {
+    color: var(--tag-text-ondark);
+    background-color: var(--tag-28);
+}
+.escr-tag--variant-29 {
+    color: var(--tag-text-ondark);
+    background-color: var(--tag-29);
+}
+.escr-tag--variant-30 {
+    color: var(--tag-text-ondark);
+    background-color: var(--tag-30);
+}

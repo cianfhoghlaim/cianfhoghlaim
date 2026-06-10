@@ -1,0 +1,10 @@
+#!/bin/bash
+#   "surv" shows domain names in doc db, sorted by freq
+#   "surv -t" shows domain names in TOCRAWL list; useful for
+#   paring down scurf for PILLAGED, get_refs.pl
+FILE=/usr/local/share/crubadan/ga/MANIFEST
+if [ $# -eq 1 ]
+then
+	FILE=/usr/local/share/crubadan/ga/TOCRAWL
+fi
+cat "${FILE}" | sed 's/^\(ht[a-z]*:\/\/[^\/]*\/\).*/\1/' | sort | uniq -c | sort -r -n | more

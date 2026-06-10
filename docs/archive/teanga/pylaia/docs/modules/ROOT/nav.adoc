@@ -1,0 +1,15 @@
+* xref:original_paper.adoc[Original paper]
+* Get started
+** xref:get_started/index.adoc[]
+** xref:get_started/development.adoc[Development]
+* Usage
+** xref:usage/index.adoc[]
+** Dataset
+*** xref:usage/datasets/index.adoc[]
+*** xref:usage/datasets/format.adoc[Dataset formatting]
+** xref:usage/initialization/index.adoc[Model initialization]
+** xref:usage/training/index.adoc[Training]
+** xref:usage/prediction/index.adoc[Prediction]
+** xref:usage/netout/index.adoc[Netout]
+** xref:usage/language_models/index.adoc[Explicit language modeling]
+* xref:releases.adoc[Releases]

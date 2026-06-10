@@ -1,0 +1,28 @@
+.escr-text-field input,
+.escr-text-field textarea {
+    background-color: var(--background2);
+    color: var(--text1);
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    margin: 8px 0 0 1px;
+}
+.escr-text-field input:disabled,
+.escr-text-field textarea:disabled {
+    color: var(--text3);
+    background-color: var(--background);
+    pointer-events: none;
+}
+.escr-text-field input:invalid,
+.escr-text-field input[invalid],
+.escr-text-field textarea:invalid,
+.escr-text-field textarea[invalid] {
+    border: 1px solid var(--alert);
+}
+.escr-text-field input:invalid:focus-visible,
+.escr-text-field input[invalid]:focus-visible {
+    outline-color: var(--alert);
+    border-color: var(--alert);
+}

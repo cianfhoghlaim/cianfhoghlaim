@@ -1,0 +1,353 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="ga">
+<head>
+  <meta http-equiv="Content-Language" content="ga">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+</head>
+<body>
+<h2>Réamhrá</h2>
+<h3><a href="index-en.html">English</a></h3>
+<p>
+Tá nascanna le mo chuid thionscadal ar fáil ar an suíomh
+<a href="https://cadhan.com/">cadhan.com</a>.
+</p>
+<p>
+Is cuid thábhachtach de mo chuid oibre an <b>mheaisínfhoghlaim</b>,
+agus rinne mé iarracht buneolas ar an ábhar a thabhairt daoibh 
+sna gníomhaíochtaí thíos. Níl aon chúlra sa matamaitic ná sa
+ríomheolaíocht de dhíth, seachas beagán ailgéabair i nGníomhaíocht 2.
+</p>
+
+<h2>Saotharlann A: Líonraí Néaracha</h2>
+
+<p>
+Go minic sa ríomheolaíocht ba mhaith linn rudaí a chur i gceann de dhá
+chatagóir; mar shampla:
+</p>
+<ul>
+<li>ríomhphost a chur i do bhosca isteach nó san fhillteán turscar, nó</li>
+<li>téacs (m.sh. léirmheas ar Amazon) a mharcáil mar “sásta” nó “míshásta”, nó</li>
+<li>téacsanna a bhí scríofa ag údar ar leith a aithint (m.sh. Shakespeare vs. aon duine eile).</li>
+</ul>
+
+<p>
+Is féidir linn <b>meaisínfhoghlaim</b> a úsáid chun
+na rudaí seo a dhéanamh: Ar dtús, 
+bailímid go leor samplaí ón dá chatagóir
+(leis na catagóirí cearta marcáilte ag daoine); seo iad
+na <b>sonraí traenála</b>.
+Ansin, tugaimid na sonraí traenála don ríomhaire sa chaoi gur féidir
+leis foghlaim uathu, agus, le cúnamh Dé,
+samplaí nua a chur sna catagóirí cearta
+(.i. <b>ginearálú</b> a dhéanamh ó na sonraí traenála).
+</p>
+
+<p>
+Is éard atá i <b>líonra néarach</b> ná creatlach mhatamaiticiúil 
+a ligeann don ríomhaire foghlaim ó shonraí sa chaoi seo.
+Tá go leor bealaí eile ann chun foghlaim a dhéanamh,
+ach tá an lámh in uachtar (go mór) ag líonraí néaracha sa lá atá inniu ann.
+</p>
+
+<p>
+<b>Gníomhaíocht 1. Tensorflow Playground</b>.
+</p>
+<p>
+Caith 5-10 nóiméad ag imirt leis an
+<a target="_blank" href="https://playground.tensorflow.org/#activation=tanh&batchSize=10&dataset=gauss&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=15&networkShape=1&seed=0.84488&showTestData=false&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false&stepButton_hide=true&activation_hide=true&problem_hide=true&discretize_hide=true&batchSize_hide=true&percTrainData_hide=false&showTestData_hide=true">Tensorflow Playground</a>. Fillfimid air ar ball, ach ag an bpointe seo, tabhair na rudaí seo faoi deara:
+</p>
+<ul>
+<li>Is fadhb den sórt a luaigh mé thuas é seo: tá dhá chatagóir ann, ceann amháin <font color="#1D6DB4">gorm</font> agus an ceann eile <font color="#EE8A2E">oráiste</font>.</li>
+<li>Tógtar líonra néarach as <b>néaróin</b>; tá siad bunaithe go garbh ar néaróin san inchinn, ach is éard atá i néarón sa chomhthéacs seo ná
+<i>feidhm mhatamaiticiúil</i>, sin an méid:
+tagann dhá (nó níos mó) uimhir isteach sa néarón mar ionchur, agus
+cuireann sé uimhir amháin amach mar aschur.</li>
+<li>Ar dtús, níl ach néarón amháin sa líonra. Cuirfimid níos mó leis
+ar ball!</li>
+<li>Tá an fhadhb seo measartha éasca!
+Is scartha ó chéile na pointí gorma agus oráiste den chuid is mó.</li>
+<li>Brúigh an cnaipe mór ▶ ag an mbarr. Tosaíonn sé sin an próiseas foghlamtha.
+Sa chás seo, aimsíonn sé néarón atá in ann an dá chatagóir a aithint 
+measartha tapaidh. Feicfidh tú na torthaí sa phictiúr ar dheis.</li>
+<li>Insíonn an “Test loss” dúinn cé chomh maith atá an líonra ag cur 
+samplaí nua sa chatagóir cheart (níos lú = níos fearr).</li>
+<li>Is féidir leat sonraí traenála nua a fháil leis an gcnaipe “Regenerate”. Beidh na torthaí beagáinín difriúil gach uair — bain triail as!</li>
+</ul>
+
+<p>
+<b>Gníomhaíocht 2 (roghnach má tá faitíos ort roimh an mhata!).
+Cad is néarón ann agus cén chaoi a bhfuil sé ann foghlaim?</b>
+</p>
+<p>(Peann agus páipéar amháin). Tá néaróin an-simplí!
+Díreoimid ar an gcás nach bhfuil ach dhá uimhir mar ionchur sa néarón;
+tugaimis x<sub>1</sub> agus x<sub>2</sub> orthu.
+Sa chás sin, úsáidtear <b>trí</b> uimhir (na <b>meáchain</b>)
+chun an néarón a shainmhíniú; tugaimis w<sub>1</sub>,w<sub>2</sub>, agus w<sub>3</sub> orthusan.
+Cuireann an néarón na meáchain le chéile leis an ionchur
+(x<sub>1</sub>,x<sub>2</sub>) mar a leanas:
+</p>
+<p>
+A = x<sub>1</sub> w<sub>1</sub> + x<sub>2</sub> w<sub>2</sub> + w<sub>3</sub>
+</p>
+Ansin, an riail:
+<p>
+<b>Má tá A≥0, is é +1 an t-aschur, agus -1 má tá A&lt;0.</b>
+</p>
+<p>
+Sin an méid! Mar shampla, más iad (w<sub>1</sub>,w<sub>2</sub>,w<sub>3</sub>)=(2,2,-3) na meáchain,
+cuirfidh an néarón +1 amach nuair atá:
+</p>
+<p>
+2x<sub>1</sub> + 2x<sub>2</sub> - 3 ≥ 0.
+</p>
+<p>
+Sa phlána (x<sub>1</sub>,x<sub>2</sub>), is iad sin na pointí <i>os cionn</i> na líne seo:
+</p>
+<img alt="léaráid 1" src="desmos.png" style="width:300px;height:300px;"/>
+
+<p>
+Ach cén chaoi a bhfuil an néarón in ann <i>foghlaim</i>? 
+Abair go bhfuilimid ag iarraidh fadhb le dhá chatagóir
+(gorm agus oráiste) a réiteach agus go n-úsáidimid an dá uimhir
+x<sub>1</sub> agus x<sub>2</sub> chun cur síos a dhéanamh ar shampla traenála. 
+Ba mhaith linn meáchain a aimsiú chun +1 a fháil mar aschur do na pointí
+gorma agus -1 mar aschur do na pointí oráiste.
+Cuirimid sampla traenála amháin tríd an néarón, abair gur sampla 
+gorm (+1) é. Má fhaighimid +1 mar aschur, ní dhéanaimid faic.
+Má fhaighimid -1, athraímid na meáchain beagáinín, ag súil
+go dtiocfaidh feabhas ar an scéal.
+Níl an néarón “ag foghlaim” i ndáiríre; is éard atá i gceist ná
+<b>cuardach ar na meáchain is fearr</b>, na cinn a dhéanann
+an jab is fearr ag scaradh na pointí gorma ó na pointí oráiste.
+(An t-ainm teicniúil atá ar an gcuardach seo ná
+“stochastic gradient descent”).
+</p>
+
+<p>
+Ceisteanna:
+</p>
+<ol>
+<li>Cad iad na pointí (x<sub>1</sub>,x<sub>2</sub>) a thugann aschur +1 sa chás (w<sub>1</sub>,w<sub>2</sub>,w<sub>3</sub>) = (2,2,-1)?</li>
+<li>Cad iad na meáchain (w<sub>1</sub>,w<sub>2</sub>,w<sub>3</sub>) a roghnófá sa chaoi go mbeadh
++1 mar aschur os cionn na líne x<sub>2</sub> = x<sub>1</sub> + 1, agus -1
+ar an taobh eile?</li>
+<li>An féidir meáchain (w<sub>1</sub>,w<sub>2</sub>,w<sub>3</sub>) a roghnú ionas go mbeadh aschur +1
+ag (x<sub>1</sub>,x<sub>2</sub>) = (0,1) agus (1,0), ach aschur -1 ag (0,0) agus (1,1)?</li>
+</ol>
+
+<p>
+<b>Gníomhaíocht 3. Ar ais go dtí an áit imeartha!</b>
+</p>
+<p>
+Fill ar an <a target="_blank" href="https://playground.tensorflow.org/#activation=tanh&batchSize=10&dataset=gauss&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=15&networkShape=1&seed=0.84488&showTestData=false&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false&stepButton_hide=true&activation_hide=true&problem_hide=true&discretize_hide=true&batchSize_hide=true&percTrainData_hide=false&showTestData_hide=true">Tensorflow Playground</a>, ach anois roghnaigh
+an dara tacar sonraí (ar thaobh na láimhe clé,
+an ceann seo: <img style='width:20px;height:20px;vertical-align:middle;' src='xor.png'/>).
+</p>
+
+<p>
+Má bhrúnn tú an cnaipe ▶, ní bheidh sé go hiomlán éifeachtach
+ag scaradh na pointí
+gorma agus oráiste. Tarlaíonn sé seo toisc nach féidir le néarón amháin aon
+rud a dhéanamh ach sonraí a scaradh le líne dhíreach, mar a chonaic muid 
+i nGníomhaíocht 2. Agus tá na sonraí níos casta sa chás seo — ní féidir 
+gorm agus oráiste a scaradh le haon líne dhíreach (agus is é sin an
+freagra ar an tríú ceist i nGníomhaíocht 2, dála an scéil: ní féidir!).
+</p>
+
+<p>
+An réiteach ar an bhfadhb ná níos mó ná néarón amháin a úsáid.
+Cliceáil an cnaipe + go díreach os cionn an téacs “1 neuron”,
+ansin bain triail eile as an bpróiseas traenála.
+Le dhá néarón, is féidir linn +1 nó -1 a thabhairt ar an réigiún
+<i>idir</i>
+dhá líne dhíreacha. Sin dul chun cinn, ach níl sé foirfe fós.
+</p>
+<p>
+Chun torthaí níos fearr a fháil, caithfimid níos mó ná
+<b>sraith</b> amháin néarón a úsáid, leis an aschur ó
+shraith amháin úsáidte mar ionchur sa chéad sraith eile.
+(Seo é an fáth a dtugtar
+<b>domhainfhoghlaim</b> ar an ábhar seo, dála an scéil;
+domhain = níos mó ná sraith amháin sa líonra néarach).
+Cliceáil an cnaipe + ag an mbarr in aice le “1 HIDDEN LAYER”
+chun sraith eile a chur leis. Ansin cliceáil an + os cionn an chéad
+sraith sa chaoi go mbeidh 3 néarón sa chéad sraith agus 2 néarón sa 
+dara sraith, mar seo:
+</p>
+<img alt="léaráid 2" src="lionra.png" style="width:443px;height:333px;"/>
+<p>
+Sin 15 meáchan san iomlán (cén fáth?). Tugann sé sin i bhfad níos mó
+saoirse dúinn feidhm níos casta a aimsiú, trí na meáchain a athrú.
+Anois, cliceáil an cnaipe ▶ arís. Má tá an t-ádh ort, gheobhaidh tú
+pictiúr cosúil leis na sonraí traenála; gorm in dhá chearnóg agus
+oráiste sa dá chearnóg eile. Ba mhaith linn “Test loss” thart
+ar 0.070 (nó níos lú) a bhaint amach (cé go mbraitheann seo ar an
+tacar sonraí atá agatsa — beidh ceann difriúil ag gach grúpa).
+Cliceáil ↺ ansin ▶ chun an próiseas a thosú arís as an nua; is dócha
+go bhfaighidh tú torthaí difriúla gach uair (sin an “stochastic”
+in “stochastic gradient descent”).
+Más mian leat, cuir
+“Regularization” i bhfeidhm ag barr an scáileáin (m.sh. 
+L2 regularization agus ráta 0.003). Cabhraíonn sé sin “overfitting”
+a sheachaint; feicfidh tú an difríocht sna torthaí, go háirithe 
+nuair a bhíonn na sonraí níos torannaí.
+</p>
+<p>
+Anois bain triail as an dá thacar sonraí eile.  Is féidir 
+torthaí sásúla a fháil ar an chéad cheann (na ciorcail chomhlárnacha)
+leis an líonra céanna (dhá shraith, cúig néarón).
+Ach tá an ceann deireanach (“an bhís”)
+i bhfad níos deacra!
+<b>Dúshlán: Cad é an “Test loss” is lú is féidir leat a bhaint amach
+ar an mbís?</b>
+Ar dtús, bain triail as gan ach dhá shraith a úsáid, ansin 
+cuir tuilleadh sraitheanna agus/nó néarón leis. Tá Regularization
+i bhfad níos tábhachtaí sa chás seo; déan turgnamh leis
+an ráta sin freisin. Má thosaíonn an pictiúr nó an “Test loss”
+ag léim thart go fiáin, is dócha go gcabhróidh sé leat an ráta 
+Regularization a mhéadú, nó an ráta foghlamtha a laghdú.
+</p>
+
+<hr>
+<h2>Saotharlann B: Ríomhaistriúchán</h2>
+<p>
+Tá an t-aistriúchán uathoibríoch, nó an <b>ríomhaistriúchán</b>,
+ceann de na dúshláin
+is sine sa ríomheolaíocht, ag dul siar fiú go dtí na 1950idí agus
+an chéad ghlúin ríomhairí a bhí ann. Sna 
+seanlaethanta, rinneadh iarracht foclóirí agus rialacha gramadaí a 
+úsáid, ach bhí sé thar a bheith deacair rialacha cuimsitheacha a scríobh 
+a bhí in ann déileáil leis na heisceachtaí go léir.
+Le fiche bliain anuas nó mar sin, baintear úsáid as meaisínfhoghlaim
+in áit rialacha gramadaí i gcórais 
+aistriúcháin ar nós Google Translate. Ar ndóigh níl Google Translate 
+foirfe, ach tá sé i bhfad níos fearr ná na córais a bhí ann roimhe.
+</p>
+<p>
+An dúshlán sa tsaotharlann seo ná aistriúchán a dhéanamh idir
+dhá theanga gan aon eolas agat faoi na teangacha roimh ré seachas
+“sonraí traenála“, go díreach mar a dhéanann córas ríomhaistriúcháin.
+Tabharfaidh mé 12 abairt duit sa bhunteanga (“Arctúiris”),
+agus a n-aistriúchán sa sprioctheanga (“Ceantáiris”).
+Chomh maith leis sin, tá abairtí breise i gCeantáiris amháin ann,
+i gcás go mbeifeá in ann úsáid a bhaint astu.
+(Is é an tOllamh Kevin Knight a chruthaigh an ghníomhaíocht seo i dtús báire).
+</p>
+<p>
+Ar dtús, seo iad na habairtí dátheangacha (a = Arctúiris, b = Ceantáiris):
+</p>
+<p>
+1a. at-voon bichat dat.<br/>
+1b. ok-voon ororok sprok.<br/>
+2a. at-drubel at-voon pippat rrat dat.<br/>
+2b. ok-drubel ok-voon anok plok sprok.<br/>
+3a. totat dat arrat vat hilat.<br/>
+3b. erok sprok izok hihok ghirok.<br/>
+4a. at-voon krat pippat sat lat.<br/>
+4b. ok-voon anok drok brok jok.<br/>
+5a. totat jjat quat cat.<br/>
+5b. wiwok farok izok stok.<br/>
+6a. wat dat krat quat cat.<br/>
+6b. lalok sprok izok jok stok.<br/>
+7a. wat jjat bichat wat dat vat eneat.<br/>
+7b. lalok farok ororok lalok sprok izok enemok.<br/>
+8a. iat lat pippat rrat nnat.<br/>
+8b. lalok brok anok plok nok.<br/>
+9a. totat nnat quat oloat at-yurp.<br/>
+9b. wiwok nok izok kantok ok-yurp.<br/>
+10a. wat nnat gat mat bat hilat.<br/>
+10b. lalok mok nok yorok ghirok clok.<br/>
+11a. wat nnat arrat mat zanzanat.<br/>
+11b. lalok nok crrrok hihok yorok zanzanok.<br/>
+12a. wat nnat forat arrat vat gat.<br/>
+12b. lalok rarok nok izok hihok mok.<br/>
+</p>
+<p>
+Agus an téacs aonteangach i gCeantáiris:
+</p>
+<p>
+ok-drubel anok ghirok farok. wiwok rarok nok zerok ghirok enemok.
+ok-drubel ziplok stok vok erok enemok kantok ok-yurp zinok jok yorok clok.
+lalok clok izok vok ok-drubel. ok-voon ororok sprok. ok-drubel ok-voon
+anok plok sprok. erok sprok izok hihok ghirok. ok-voon anok drok brok
+jok. wiwok farok izok stok. lalok sprok izok jok stok. lalok brok
+anok plok nok. lalok farok ororok lalok sprok izok enemok. wiwok nok
+izok kantok ok-yurp. lalok mok nok yorok ghirok clok. lalok nok crrrok
+hihok yorok zanzanok. lalok rarok nok izok hihok mok.
+</p>
+<p>
+<b>An Dúshlán — aistrigh na habairtí seo ó Arctúiris go Ceantáiris:</b>
+</p>
+<ol>
+<li>iat lat pippat eneat hilat oloat at-yurp.</li>
+<li>totat nnat forat arrat mat bat.</li>
+<li>wat dat quat cat uskrat at-drubel.</li>
+</ol>
+<p>
+Ceisteanna:
+</p>
+<ol>
+<li>Ar éirigh leat foclóir dátheangach iomlán a fhoghlaim ó na sonraí?</li>
+<li>Cad iad na focail a bhfuil níos mó ná aistriúchán amháin acu?</li>
+<li>Cén chaoi arbh fhéidir úsáid a bhaint as an téacs sa sprioctheanga?</li>
+<li>An ndearna tú iarracht na focail sna habairtí a ailíniú/nascadh le chéile? (Seo é an rud go díreach a dhéanann an ríomhaire: úsáideann sé nascanna idir abairtí chun an foclóir a thógáil, <b>agus</b> úsáideann sé an foclóir chun nascanna a dhéanamh! Is cás “ubh an tsicín agus sicín na huibhe” é seo, agus is sampla simplí d'algartam tábhachtach darb ainm <b>Expectation Maximization (EM)</b> é seo.)</li>
+</ol>
+<p>
+Bhí an sampla seo <b>i bhfad</b> níos simplí ná fíorchorpas dátheangach. I dtús báire, bhí na habairtí go léir an-ghearr, agus ba mhór an cúnamh é sin le focail a nascadh le chéile. Chomh maith leis sin, ní raibh ach cúpla focal a bhí nasctha le níos mó ná focal amháin sa teanga eile. Tá cúrsaí níos casta sa bhfíorshaol! (Cad iad na focail i nGaeilge a aistríonn an focal Béarla “shot” mar shampla?) Agus bhí an líon céanna focal i ngach péire le heisceacht amháin (11a/b); is annamh a tharlaíonn sé seo i ngnáthchorpas dátheangach. Caithfear déileáil le focail nach bhfuil nasctha le rud ar bith sa teanga eile!
+</p>
+<hr>
+<h2>Gluais</h2>
+<table>
+<tr>
+ <th>Gaeilge</th> <th>Béarla</th>
+</tr>
+<tr>
+ <td>domhainfhoghlaim</td> <td>deep learning</td>
+</tr>
+<tr>
+ <td>ginearálú</td> <td>generalisation</td>
+</tr>
+<tr>
+ <td>líonra néarach</td> <td>neural network</td>
+</tr>
+<tr>
+ <td>meáchain</td> <td>weights</td>
+</tr>
+<tr>
+ <td>meaisínfhoghlaim</td> <td>machine learning</td>
+</tr>
+<tr>
+ <td>néarón</td> <td>neuron</td>
+</tr>
+<tr>
+ <td>ríomhaistriúchán</td> <td>machine translation</td>
+</tr>
+<tr>
+ <td>sonraí traenála</td> <td>training data</td>
+</tr>
+<tr>
+ <td>sraith</td> <td>layer</td>
+</tr>
+<tr>
+ <td>tacar sonraí</td> <td>dataset</td>
+</tr>
+</table>
+</body>
+</html>

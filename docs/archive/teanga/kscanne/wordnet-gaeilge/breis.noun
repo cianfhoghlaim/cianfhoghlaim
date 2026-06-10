@@ -1,0 +1,191 @@
+50000000 77 n 02 Gaelic_type 0 Gaelic_font 0 003 @ 06825399 n 0000 ;r 08859173 n 0000 ;c 06677302 n 0000 | family of typefaces used primarily for Irish language texts
+50000100 77 n 01 Irish_speaker 0 004 @ 10630188 n 0000 @ 09688233 n 0000 ~ 50018900 n 0000 ;r 08859173 n 0000 | one who speaks the Irish language
+50000200 77 n 02 Irish_language_school 0 Irish_medium_school 0 002 @ 08276720 n 0000 ;r 08859173 n 0000 | an school in Ireland in which the language of instruction is Irish
+50000300 77 n 02 hurley_ball 0 hurling_ball 0 003 @ 02778669 n 0000 ;r 08859173 n 0000 ;c 00470830 n 0000 | a ball used in the Irish sport of hurling
+50000400 77 n 01 camogie 0 003 @ 00467719 n 0000 ;r 08859173 n 0000 -c 50000800 n 0000 | a field sport very similar to hurling played by women primarily in Ireland
+50000500 77 n 01 Gaelic_football 0 002 @ 00468480 n 0000 ;r 08859173 n 0000 | a variety of football played primarily in Ireland between two teams of 15 players each
+50000600 77 n 01 sheela-na-gig 0 003 @ 02734423 n 0000 @ 02973558 n 0000 ;r 08859173 n 0000 | grotesque stone carving of a naked woman used as an architectural ornament on towers and churches in Ireland
+50000700 77 n 02 hurley 0 hurling_stick 0 003 @ 04318131 n 0000 ;r 08859173 n 0000 ;c 00470830 n 0000 | a stick used in the Irish sport of hurling
+50000800 77 n 01 camogie_stick 0 003 @ 04318131 n 0000 ;r 08859173 n 0000 ;c 50000400 n 0000 | a stick used in the Irish sport of camogie
+50000900 77 n 01 Irish_county 0 034 @ 08630039 n 0000 ;r 08859173 n 0000 ~i 50001000 n 0000 ~i 50001100 n 0000 ~i 50001200 n 0000 ~i 50001300 n 0000 ~i 50001400 n 0000 ~i 50001500 n 0000 ~i 50001600 n 0000 ~i 50001700 n 0000 ~i 50001800 n 0000 ~i 50001900 n 0000 ~i 50002000 n 0000 ~i 50002100 n 0000 ~i 50002200 n 0000 ~i 50002300 n 0000 ~i 50002400 n 0000 ~i 50002500 n 0000 ~i 50002600 n 0000 ~i 50002700 n 0000 ~i 50002800 n 0000 ~i 50002900 n 0000 ~i 50003000 n 0000 ~i 50003100 n 0000 ~i 50003200 n 0000 ~i 50003300 n 0000 ~i 50003400 n 0000 ~i 50003500 n 0000 ~i 50003600 n 0000 ~i 50003700 n 0000 ~i 50003800 n 0000 ~i 50003900 n 0000 ~i 50004000 n 0000 ~i 50004100 n 0000 | one of 32 traditional territorial divisions of the island of Ireland
+50001000 77 n 01 County_Antrim 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in northeastern Ireland, east of county Derry
+50001100 77 n 01 County_Derry 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in northern Ireland, west of country Antrim and north of county Tyrone
+50001200 77 n 01 County_Donegal 0 003 @i 50000900 n 0000 #p 08859173 n 0000 %m 50005700 n 0000 | a county in northwestern Ireland, west of counties Derry and Tyrone
+50001300 77 n 01 County_Tyrone 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in northern Ireland, south of county Derry
+50001400 77 n 01 County_Down 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in northeastern Ireland, south of county Antrim
+50001500 77 n 01 County_Armagh 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in northeastern Ireland, west of county Down
+50001600 77 n 01 County_Monaghan 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in northern Ireland, bordering counties Louth, Armagh, Tyrone, Fermanagh, and Cavan
+50001700 77 n 01 County_Fermanagh 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in northern Ireland, south of counties Donegal and Tyrone
+50001800 77 n 01 County_Louth 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in eastern Ireland, north of county Meath
+50001900 77 n 01 County_Cavan 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in north-central Ireland, south of counties Fermanagh and Monaghan
+50002000 77 n 01 County_Leitrim 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in northwestern Ireland, east of counties Sligo and Roscommon
+50002100 77 n 01 County_Sligo 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in the west of Ireland, bordering countries Leitrim, Roscommon, and Mayo
+50002200 77 n 01 County_Mayo 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in the west of Ireland, north of county Galway
+50002300 77 n 01 County_Dublin 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in eastern Ireland, containing the capital city of Dublin
+50002400 77 n 01 County_Meath 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in eastern Ireland, northwest of county Dublin
+50002500 77 n 01 County_Westmeath 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in central Ireland, north of county Offaly
+50002600 77 n 01 County_Longford 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in central Ireland, northwest of county Westmeath
+50002700 77 n 01 County_Roscommon 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in west-central Ireland, northeast of county Galway
+50002800 77 n 01 County_Galway 0 003 @i 50000900 n 0000 #p 08859173 n 0000 %m 50005900 n 0000 | a county in the west of Ireland, south of county Mayo and north of county Clare
+50002900 77 n 01 County_Wicklow 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in eastern Ireland, south of county Dublin
+50003000 77 n 01 County_Kildare 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in eastern Ireland, west of counties Dublin and Wicklow
+50003100 77 n 01 County_Offaly 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in central Ireland, north and west of county Laois
+50003200 77 n 01 County_Laois 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in central Ireland, north of county Kilkenny
+50003300 77 n 01 County_Clare 0 003 @i 50000900 n 0000 #p 08859173 n 0000 %m 50005600 n 0000 | a county in the west of Ireland, south of county Galway
+50003400 77 n 01 County_Wexford 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in southeastern Ireland, south of county Wicklow
+50003500 77 n 01 County_Carlow 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in southeastern Ireland, east of county Kilkenny
+50003600 77 n 01 County_Kilkenny 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in southern Ireland, west of county Carlow and east of county Tipperary
+50003700 77 n 01 County_Tipperary 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in southern Ireland, west of county Kilkenny
+50003800 77 n 01 County_Waterford 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in southern Ireland, east of county Cork
+50003900 77 n 01 County_Cork 0 003 @i 50000900 n 0000 #p 08859173 n 0000 %m 50005800 n 0000 | a county in southern Ireland, east of county Kerry
+50004000 77 n 01 County_Limerick 0 003 @i 50000900 n 0000 #p 08859173 n 0000 %m 50006000 n 0000 | a county in southwestern Ireland, north of county Cork
+50004100 77 n 01 County_Kerry 0 002 @i 50000900 n 0000 #p 08859173 n 0000 | a county in southwestern Ireland, west of counties Limerick and Cork
+50004200 77 n 01 Royal_Irish_Academy 0 002 @ 08280124 n 0000 ;r 08859173 n 0000 | the principal academic society in Ireland, based in Dublin
+50004300 77 n 01 The_Soldiers'_Song 0 002 @i 07049055 n 0000 ;r 08859173 n 0000 | the national anthem of the republic of Ireland
+50004400 77 n 01 River_Liffey 0 002 @i 09411430 n 0000 #p 08859173 n 0000 | a river that flows through the center of Dublin, Ireland
+50004500 77 n 01 Aosdana 0 002 @ 08280124 n 0000 ;r 08859173 n 0000 | an honorary society for the arts in Ireland
+50004600 77 n 01 boxty 0 002 @ 07641581 n 0000 ;r 08859173 n 0000 | a kind of potato pancake eaten in Ireland
+50004700 77 n 01 drink_to_seal_a_bargain 0 001 @ 07884567 n 0000 | a drink to seal a bargain
+50004800 77 n 01 poor_mouth 0 001 @ 07208708 n 0000 | persistent complaining about one's poverty
+50004900 77 n 01 flat_stone_with_cavity_underneath 0 001 @ 09416076 n 0000 | a flat stone with cavity underneath
+50005000 77 n 01 person_from_Belfast 0 002 @ 09714952 n 0000 #m 08888479 n 0000 | a native or inhabitant of Belfast
+50005100 77 n 01 feigned_deafness 0 001 @ 14550987 n 0000 | feigned deafness, as when one pretends not to hear something one doesn't want to hear
+50005200 77 n 01 middling_weather 0 001 @ 11524662 n 0000 | fair but unsettled weather conditions
+50005300 77 n 01 pampootie 0 002 @ 04199027 n 0000 ;r 08859173 n 0000 | raw leather shoes traditionally worn on the Aran Islands
+50005400 77 n 01 Mass_rock 0 002 @ 02699629 n 0000 ;r 08859173 n 0000 | a rock used as an altar for Catholic Mass in 17th-century Ireland
+50005500 77 n 01 morning_fast 0 001 @ 01069980 n 0000 | the habit of fasting in the morning
+50005600 77 n 01 native_of_Clare 0 002 @ 09714952 n 0000 #m 50003300 n 0000 | a native of County Clare in Ireland
+50005700 77 n 01 native_of_Donegal 0 002 @ 09714952 n 0000 #m 50001200 n 0000 | a native of County Donegal in Ireland
+50005800 77 n 03 native_of_Cork 0 Corkman 0 Corker 0 002 @ 09714952 n 0000 #m 50003900 n 0000 | a native of County Cork in Ireland
+50005900 77 n 02 native_of_Galway 0 Galwegian 0 002 @ 09714952 n 0000 #m 50002800 n 0000 | a native of County Galway in Ireland
+50006000 77 n 01 native_of_Limerick 0 002 @ 09714952 n 0000 #m 50004000 n 0000 | a native of County Limerick in Ireland
+50006100 77 n 01 salmon_of_knowledge 0 002 @ 09484664 n 0000 ;r 08859173 n 0000 | a mythical creature appearing in the Irish Fenian Cycle
+50006200 77 n 01 long_drawn-out_story 0 001 @ 07221094 n 0000 | a long, rambling or drawn-out story
+50006300 77 n 01 light_seaweed_on_foreshore 0 001 @ 01397497 n 0000 | light seaweed growing on the foreshore
+50006400 77 n 01 tail-eating_animal 0 001 @ 00015388 n 0000 | an animal that eats the tails of other animals
+50006500 77 n 01 Brehon_law 0 002 @ 08441203 n 0000 ;r 08859173 n 0000 | the system of laws governing daily life in medieval Ireland
+50006600 77 n 01 Fianna_Fail 0 002 @ 08256968 n 0000 ;r 08859173 n 0000 | a political party in Ireland founded in 1926
+50006700 77 n 01 Fine_Gael 0 002 @ 08256968 n 0000 ;r 08859173 n 0000 | a political party in Ireland founded in 1933
+50006800 77 n 01 Fenianism 0 002 @ 08472335 n 0000 ;r 08859173 n 0000 | a 19th-century militant movement with the aim of achieving an independent Ireland
+50006900 77 n 01 Fenian 0 002 @ 10315837 n 0000 #m 50006800 n 0000 | an adherent of Fenianism in Ireland
+50007000 77 n 01 decayed_mountain_grass 0 001 @ 12102133 n 0000 | decayed mountain grass
+50007100 77 n 01 place_of_confusion 0 001 @ 08664443 n 0000 | spot of ground on which one is supposed to be led astray
+50007200 77 n 01 sporadic_worker 0 001 @ 09767197 n 0000 | one who does things by fits and starts
+50007300 77 n 01 last_year's_turf 0 001 @ 14689493 n 0000 | peat cut during the previous season
+50007400 77 n 01 Gaeltacht 0 002 @ 08552138 n 0000 #p 08859173 n 0000 | a district in Ireland which is primarily Irish-speaking
+50007500 77 n 01 gillaroo 0 001 @ 02537085 n 0000 | a variety of trout believed to be unique to Lough Melvin in Ireland
+50007600 77 n 01 burial_place_for_unbaptized_infants 0 001 @ 08521623 n 0000 | a burial place for unbaptized infants
+50007700 77 n 01 vampless_stocking 0 001 @ 04323819 n 0000 | a vampless stocking usually worn without the shoe
+50007800 77 n 01 ogham 0 002 @ 06497459 n 0000 ;r 08859173 n 0000 | an ancient alphabet used to inscribe the early Irish language on stone monuments, with each letter assigned the name of a tree
+50007900 77 n 02 SDLP 0 Social_Democratic_and_Labour_Party 0 002 @ 08256968 n 0000 ;r 08887841 n 0000 | an Irish nationalist political party in Northern Ireland founded in 1970
+50008000 77 n 01 batch_of_potatoes_roasted_in_ashes 0 001 @ 07710616 n 0000 | a batch of potatoes roasted in ashes
+50008100 77 n 01 strange_feeling_of_fear_caused_by_unfamiliar_surroundings 0 001 @ 07523905 n 0000 | a strange feeling (of fear, loneliness) caused by unfamiliar surroundings
+50008200 77 n 01 spoiling_by_exposure_to_weather 0 001 @ 13560417 n 0000 | spoiling by exposure to weather
+50008300 77 n 01 froth_from_mouth_of_decaying_corpse 0 001 @ 05416198 n 0000 | froth from the mouth of a decaying corpse
+50008400 77 n 01 fine_spell_between_showers 0 001 @ 15246353 n 0000 | a spell of fine weather between showers
+50008500 77 n 01 ground_manured_previous_year 0 001 @ 09260907 n 0000 | ground that was manured the previous year
+50008600 77 n 01 tasty_food_with_bread_or_potatoes 0 001 @ 07555863 n 0000 | tasty food (e.g. butter, meat, fish) taken with bread or potatoes
+50008700 77 n 01 land_in_which_potatoes_were_grown_the_previous_year 0 001 @ 09260907 n 0000 | land in which potatoes were grown the previous year
+50008800 77 n 01 seaweed_growing_on_upper_part_of_beach 0 001 @ 01397497 n 0000 | seaweed growing on the upper part of a beach
+50008900 77 n 01 lament_for_a_departed_person 0 001 @ 07211950 n 0000 | a lament for a person who has gone away (but who has not died)
+50009000 77 n 01 eye_boogers 0 001 @ 14853647 n 0000 | discharge from the eyes during sleep
+50009100 77 n 01 bandage_on_dehorned_animal 0 001 @ 02785648 n 0000 | a bandage on an animal that has been dehorned
+50009200 77 n 01 milking_place_in_summer_pasturage 0 002 @ 08513718 n 0000 ;c 00917211 n 0000 | a place for milking cows in summer pasturage
+50009300 77 n 01 disused_milking_place 0 002 @ 08513718 n 0000 ;c 00917211 n 0000 | a old, disused place for milking cows
+50009400 77 n 01 guard_on_animal's_horn 0 002 @ 03464467 n 0000 ;c 00917211 n 0000 | a protective guard on the tip of an animal's horn
+50009500 77 n 01 person_leading_an_animal_by_the_head 0 002 @ 10079399 n 0000 ;c 00917211 n 0000 | a person leading an animal by the head
+50009600 77 n 01 chain-metre 0 001 @ 06377442 n 0000 | a kind of Irish metre in which the last word of a stanza is repeated at the beginning of the next
+50009700 77 n 01 animal_surefooted_on_boggy_ground 0 001 @ 00015388 n 0000 | an animal that is sure-footed on boggy ground
+50009800 77 n 01 deep_shelf_at_side_of_chimney-piece 0 001 @ 04190052 n 0000 | a deep shelf at the side of a chimney-piece
+50009900 77 n 01 red_sky 0 001 @ 09436708 n 0000 | a red glow in the sky
+50010000 77 n 01 great-great-grandchild 0 001 @ 10145340 n 0000 | a child of one's great-grandchild
+50010100 77 n 01 sea-level_cave 0 001 @ 09238926 n 0000 | a cave at sea level
+50010200 77 n 01 morning_grazing 0 001 @ 00841091 n 0000 | a spell of grazing in the morning
+50010300 77 n 01 cracked_surface_of_parched_bogland 0 001 @ 09335240 n 0000 | the cracked surface of parched bogland
+50010400 77 n 01 edge_grass 0 001 @ 12102133 n 0000 | grass growing along the edge of a field that is inaccessible to mowing
+50010500 77 n 01 boy_of_employable_age 0 001 @ 10285313 n 0000 | a boy of employable age
+50010600 77 n 01 bait_thread 0 002 @ 04426788 n 0000 ;c 00453935 n 0000 | thread used to secure fishing bait to a hook
+50010700 77 n 01 young_seal_after_shedding_coat 0 001 @ 02076196 n 0000 | a young seal after shedding its white baby-coat
+50010800 77 n 01 binding_stanza 0 001 @ 07052291 n 0000 | a concluding stanza that summarizes the main ideas of a poem
+50010900 77 n 01 place_with_danger_of_drowning 0 001 @ 09225146 n 0000 | a place where there is a danger of drowning
+50011000 77 n 02 kneepit 0 popliteal_space 0 001 @ 05303402 n 0000 | the hollow space behind the knee
+50011100 77 n 01 smooth_tract_of_water 0 001 @ 09225146 n 0000 | a smooth tract of water
+50011200 77 n 01 interdigital_space 0 001 @ 13910384 n 0000 | the space between fingers or toes
+50011300 77 n 01 heaped_load 0 001 @ 07955057 n 0000 | part of contents heaped above the rim of a container
+50011400 77 n 01 neck_of_headless_body 0 001 @ 05546540 n 0000 | the neck of a headless body
+50011500 77 n 01 chimney_marking_former_dwelling 0 001 @ 04118635 n 0000 | chimney stones marking the ruin of a former dwelling
+50011600 77 n 01 all-weather_worker 0 001 @ 09632518 n 0000 | a person who works in all weathers
+50011700 77 n 01 inability_to_grasp 0 001 @ 05207570 n 0000 | the inability to grasp due to numbness of the fingers
+50011800 77 n 01 dry_windy_weather 0 001 @ 11524662 n 0000 | dry windy weather that causes soil to dry
+50011900 77 n 01 oatmeal_water 0 001 @ 07881800 n 0000 | a drink of water in which oatmeal has been steeped
+50012000 77 n 01 strip_of_dead_person's_skin_used_in_witchcraft 0 001 @ 05238282 n 0000 | strip of skin taken from a dead person and used in witchcraft
+50012100 77 n 01 washing_the_dead 0 002 @ 00255710 n 0000 ;c 01120259 n 0000 | the washing of a dead body
+50012200 77 n 01 person_who_keeps_regular_hours 0 001 @ 00007846 n 0000 | a person who keeps regular hours
+50012300 77 n 01 ear_buyer 0 001 @ 09885145 n 0000 | a person at a fair who listens to and finally secures another's bargain for himself
+50012400 77 n 01 fish_guts_cast_overboard 0 002 @ 05298988 n 0000 #p 02512053 n 0000 | gutted matter cast overboard in fishing
+50012500 77 n 01 serpent's_knot 0 001 @ 03627232 n 0000 | a knot put on an animal's back as part of a charm to cure colic in cattle
+50012600 77 n 02 GAA 0 Gaelic_Athletic_Association 0 001 @ 08231184 n 0000 | an amateur sporting organization in Ireland devoted to the so-called "Gaelic games": hurling, camogie, Irish football, and handball
+50012700 77 n 01 Shinner 0 002 @ 10450303 n 0000 #m 08321218 n 0000 | a member of the Irish republican political party Sinn Fein
+50012800 77 n 01 General_Post_Office 0 002 @i 08145553 n 0000 #p 08889191 n 0000 | headquarters of the Irish Post Office located in Dublin which played an important role in the Easter Rising of 1916
+50012900 77 n 01 Flight_of_the_Earls 0 002 @i 00058743 n 0000 ;r 08859173 n 0000 | departure of Hugh O'Neill an Rory O'Donnell from Ireland to mainland Europe in 1607 marking the symbolic end of the old Gaelic order
+50013000 77 n 01 Anglo-Irish_person 0 001 @ 09714952 n 0000 | a member of a privileged social class in 19th and 20th century Ireland descended from members of the Protestant Ascendancy
+50013100 77 n 01 Teachta_Dala 0 002 @ 10253995 n 0000 #m 08319539 n 0000 | an elected member of the Irish Parliament
+50013200 77 n 01 An_Gum 0 002 @ 08062623 n 0000 #p 50013300 n 0000 | a publisher of Irish-language books, now part of Foras na Gaeilge
+50013300 77 n 01 Foras_na_Gaeilge 0 003 @ 08337324 n 0000 ;r 08859173 n 0000 %p 50013200 n 0000 | the cross-border agency in charge of promoting the Irish language
+50013400 77 n 01 Galltacht 0 002 @ 08552138 n 0000 #p 08859173 n 0000 | the English-speaking regions in Ireland, as opposed to the Gaeltacht
+50013500 77 n 01 Protestant_Ascendancy 0 002 @i 14441825 n 0000 ;r 08859173 n 0000 | the period of economic and political domination of Ireland by Protestants during the 17th, 18th, and 19th centuries
+50013600 77 n 01 balancing_out_of_weather 0 001 @ 13897996 n 0000 | the tendency of good and bad spells of weather to offset each other over a period
+50013700 77 n 01 sleith 0 001 @ 00773402 n 0000 | sexual intercourse with a woman without her consent or knowledge
+50013800 77 n 01 swollen_knees_in_sheep 0 001 @ 14253124 n 0000 | a disease in sheep marked by swelling in the knees
+50013900 77 n 01 swelling_of_gums_of_horses_fed_on_furze 0 001 @ 14253124 n 0000 | a swelling of the gums of horses fed on furze
+50014000 77 n 01 unfledged_great_black-backed_gull 0 001 @ 02041875 n 0000 | an unfledged great black-backed gull, Larus marinus
+50014100 77 n 01 derbfine 0 001 @ 07970721 n 0000 | a family group of four generations; all living male relatives descended from one's great-grandfather
+50014200 77 n 01 geilfine 0 001 @ 07970721 n 0000 | a family group of three generations; all living male relatives descended from one's grandfather
+50014300 77 n 01 iarfine 0 001 @ 07970721 n 0000 | a family group of five generations; all living male relatives descended from one's great-great-grandfather
+50014400 77 n 01 herenach 0 001 @ 09984298 n 0000 | a hereditary steward of church lands
+50014500 77 n 01 lazybed_tillage 0 001 @ 00918176 n 0000 | a method of growing potatoes used formerly in Scotland and Ireland
+50014600 77 n 01 lazy_bed 0 001 @ 02819474 n 0000 | a ridge of soil and seaweed in which potatoes were grown
+50014700 77 n 01 seaweed-covered_seabed 0 001 @ 09376526 n 0000 | a shallow, rocky seabed covered with seaweed
+50014800 77 n 01 shield-shaped_basket 0 001 @ 02801938 n 0000 | a shield-shaped basket made of plaited osiers or straw used for holding and drying potatoes
+50014900 77 n 04 fairy_mound 0 fairy_fort 0 ring_fort 0 rath 0 001 @ 03262717 n 0000 | ancient circular fortifications found throughout Northern Europe, but especially in Ireland
+50015000 77 n 01 fairy_palace 0 001 @ 02801938 n 0000 | a palace inhabited by fairies in Irish folklore
+50015100 77 n 01 corkir 0 001 @ 12987056 n 0000 | a lichen used to produce a kind of purple dye
+50015200 77 n 01 opening_in_lobster_pot 0 002 @ 02727016 n 0000 #p 03680858 n 0000 | cone-shaped opening in a lobster pot
+50015300 77 n 01 discarded_portion_of_seed_potato 0 001 @ 07710616 n 0000 | discarded portion of a seed potato
+50015400 77 n 01 tate 0 002 @ 13600404 n 0000 ;r 08859173 n 0000 | land measure of sixty Irish acres
+50015500 77 n 01 davach 0 002 @ 13600404 n 0000 ;r 08859173 n 0000 | land measure of four plowlands
+50015600 77 n 01 one-sixteenth_of_an_Irish_acre 0 002 @ 13600404 n 0000 ;r 08859173 n 0000 | one-sixteenth of an Irish acre
+50015700 77 n 01 twelfth_part_of_plowland 0 002 @ 13600404 n 0000 ;r 08859173 n 0000 | twelfth part of a plowland
+50015800 77 n 01 bardic_poet_of_second_order 0 002 @ 09839022 n 0000 ;r 08859173 n 0000 | an Irish bardic poet of the second order
+50015900 77 n 01 bardic_poet_of_third_order 0 002 @ 09839022 n 0000 ;r 08859173 n 0000 | an Irish bardic poet of the third order
+50016000 77 n 01 bardic_poet_of_fourth_order 0 002 @ 09839022 n 0000 ;r 08859173 n 0000 | an Irish bardic poet of the fourth order
+50016100 77 n 01 load_carried_at_chest 0 001 @ 03679986 n 0000 | a load carried between the arms and chest
+50016200 77 n 01 load_carried_under_arm 0 001 @ 03679986 n 0000 | a load carried under the arm
+50016300 77 n 01 load_carried_on_back 0 002 @ 03679986 n 0000 ~ 50016400 n 0000 | a load carried on the back
+50016400 77 n 01 load_carried_low_on_back 0 001 @ 50016300 n 0000 | a load carried low on the back
+50016500 77 n 01 porter_froth_mixed_with_liquor 0 001 @ 09282724 n 0000 | froth of porter collected in some pubs and mixed with fresh liquor
+50016600 77 n 01 food_for_the_poor 0 001 @ 01090117 n 0000 | a portion of food set aside for the poor
+50016700 77 n 01 sock_cuff 0 002 @ 08663354 n 0000 #p 04254777 n 0000 | ribbed stitching at the mouth of a stocking
+50016800 77 n 01 pair_of_threads 0 002 @ 13743605 n 0000 ;c 00909281 n 0000 | a pair of threads side by side in a loom
+50016900 77 n 01 Fianna_storyteller 0 002 @ 10345804 n 0000 ;r 08859173 n 0000 | one who tells stories of the Fianna, ancient warriors in Irish mythology
+50017000 77 n 01 stories_of_the_Fianna 0 002 @ 05985602 n 0000 ;r 08859173 n 0000 | stories of the Fianna, ancient warriors in Irish mythology
+50017100 77 n 01 winnowing_sheet 0 002 @ 03932670 n 0000 ;c 01254051 n 0000 | a sheet used in winnowing; the lighter chaff is carried away and the grain is caught by the sheet
+50017200 77 n 01 seaweed_pole 0 001 @ 03976657 n 0000 | a pole used to harvest seaweed
+50017300 77 n 01 dairy-farming_on_rented_land 0 001 @ 00918289 n 0000 | dairy-farming on rented land
+50017400 77 n 01 somersault_with_feet_crossed 0 001 @ 00439484 n 0000 | a somersault with the feet crossed
+50017500 77 n 01 image_of_St._Brigid 0 002 @ 03265874 n 0000 ;r 08859173 n 0000 | an image of St. Bridget used for domestic ceremonies on the eve of that Saint's festival
+50017600 77 n 01 summer_twilight 0 001 @ 04959672 n 0000 | the peculiar color of sunset during the summer
+50017700 77 n 01 aicill 0 001 @ 07096661 n 0000 | rime between final word of one line and a word in beginning or interior of next line
+50017800 77 n 01 deibidhe 0 001 @ 04991738 n 0000 | an Irish syllabic metre featuring an end-rhyme of a stressed with an unstressed syllable
+50017900 77 n 01 belly_skin_of_a_well-fed_goose 0 002 @ 05238282 n 0000 #p 01855672 n 0000 | the belly skin that falls down between the legs of a well-fed goose
+50018000 77 n 01 potato_sold_secretly_by_a_child 0 001 @ 07710616 n 0000 | a potato sold secretly by a child for pocket money
+50018100 77 n 01 lighted_coal_used_for_protection 0 001 @ 09273130 n 0000 | a lighted coal taken from a fire and given as a protection to children going out at night
+50018200 77 n 01 four_eggfuls_of_honey 0 001 @ 13614764 n 0000 | an ancient measure, a ration of four eggfuls of honey
+50018300 77 n 01 butter_floating_in_buttermilk 0 001 @ 07848338 n 0000 | bits of butter floating in buttermilk
+50018400 77 n 01 white_circle_in_a_potato 0 002 @ 13873917 n 0000 #p 07710616 n 0000 | the white circle in a slice of half-boiled potato
+50018500 77 n 01 strandline 0 001 @ 01397497 n 0000 | a line of seaweed marking high tide
+50018600 77 n 01 bog_prober 0 001 @ 00007846 n 0000 | one who probes for bog-wood by means of an iron bar or spike with a wooden handle
+50018700 77 n 01 migrant_labor 0 001 @ 00620752 n 0000 | working as a migrant laborer
+50018800 77 n 02 fawney 0 fainne 0 002 @ 03940713 n 0000 ;r 08859173 n 0000 | a circular pin worn to show willingness to speak Irish
+50018900 77 n 01 fainne-wearer 0 001 @ 50000100 n 0000 | one who wears a circular pin showing his or her willingness to speak Irish
+50019000 77 n 01 first_strip_in_plowing 0 001 @ 03406966 n 0000 | the first sod turned up in tilling lea

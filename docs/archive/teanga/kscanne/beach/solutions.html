@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ga">
+  <head>
+    <meta charset="utf-8">
+    <title>NAMEOFGAME</title>
+    <link rel="stylesheet" href = "../css/spelling_bee.css">
+    <link rel="shortcut icon" href="/pic/favicon.png" type="image/png"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Roboto+Slab:300,400,500,600,700&display=swap" rel="stylesheet">
+  </head>
+  <body onload="get_valid_words()">
+    <h1>NAMEOFGAME</h1>
+    <div class="container" style="height:400px; justify-content:normal;" id="scoreboard">
+      <div style="font-family: 'Open Sans', sans-serif; align-self:center; font-size: 15px; font-style:bold;  text-decoration: underline; margin-top:8px;margin-bottom:4px;">YESTERDAYS</div>
+      <div class="scoreText" style="margin-bottom:4px;">NUMFOUND <span id="numwords">0</span></div>
+      <div class="scoreText" style="margin-bottom:6px;">SCOREMSG <span id="maxscore">0</span></div>
+      <div id="discoveredText"></div>
+      <div class="scoreText" style="margin-top:4px;"><a style="text-decoration: none;" href="index.html">RETURNHOME</a></div>
+    </div>
+  </body>
+</html>
+
+<script type="text/javascript">
+
+//makes http request to an api endpoint that returns yesterday's letters/words
+function get_valid_words(){
+
+  const url='https://cadhan.com/api/beach/1.0';
+
+  var request = new XMLHttpRequest();
+  request.open('POST', url, true);
+  request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  request.onreadystatechange = function(event){
+      try {
+        if(request.readyState == 3 && request.status == 200){
+          var data = JSON.parse(event.target.responseText);
+          showValidWords(data['possible_words'], data['letters'].split(''));
+          var numWords = data['possible_words'].length;
+          document.getElementById("maxscore").innerHTML = String(data['maxscore']);
+          document.getElementById("numwords").innerHTML = String(numWords);
+        }
+      } 
+      catch (e){
+        console.log('error: '+e.message)
+      };
+  };
+  request.send('teanga=TEANGA&id=-1');
+}
+
+function addDictionaryLink(w) {
+  var teanga = 'TEANGA';
+  var uri = '';
+  if (teanga == 'ga') {
+    uri = 'https://www.teanglann.ie/ga/fgb/' + w;
+  }
+  else if (teanga == 'gd') {
+    uri = 'https://www.faclair.com/?txtSearch=' + w;
+  }
+  if (uri != '') {
+    return '<a target="_blank" href="'+uri+'">'+w+'</a>';
+  }
+  else {
+    return w;
+  }
+}
+
+function showValidWords(validWords, letters){
+  var discText = document.getElementById("discoveredText");
+  var numFound = validWords.length; 
+  var numCol = Math.ceil(numFound/6);
+  var w = 0; 
+  for(var c=0; c<numCol; c++){
+    var list = document.createElement("UL");
+    list.id= "discovered-words"+c;
+    list.style.cssText = "padding:5px 10px; font-weight:100; ";
+    discText.appendChild(list);
+    var n = 6; 
+    if(c == numCol-1){
+      if(numFound%6 ==0){
+        if(numFound==0){
+          n = 0
+        }
+        else{
+          n=6;
+        }
+      }else{
+      n = numFound%6;}
+    }
+    for(var i=0; i<n; i++){
+      var listword = document.createElement("LI");
+      var pword = document.createElement("P");
+      var thisword = validWords[w];
+      var toDisplay = addDictionaryLink(thisword);
+      if (checkPangram(thisword,letters)) {
+        toDisplay = '*'+toDisplay;
+      }
+      pword.innerHTML = toDisplay;
+      listword.appendChild(pword);
+      list.appendChild(listword);
+      w++;
+    }
+  }
+}
+
+function checkPangram(input, letters) {
+  var i;
+  var containsCount = 0;
+  var containsAllLetters = false;
+  for(i = 0; i < 7; i++) {
+    if(input.includes(letters[i])) {
+      containsCount++;
+    }
+  }
+  if(containsCount == 7) {
+    containsAllLetters = true;
+  }
+  return containsAllLetters;
+}
+</script>

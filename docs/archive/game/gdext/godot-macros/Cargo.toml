@@ -1,0 +1,46 @@
+[package]
+name = "godot-macros"
+version = "0.4.4"
+edition = "2021"
+rust-version = "1.87"
+license = "MPL-2.0"
+keywords = ["gamedev", "godot", "engine", "derive", "macro"]
+categories = ["game-engines", "graphics"]
+description = "Internal crate used by godot-rust"
+repository = "https://github.com/godot-rust/gdext"
+homepage = "https://godot-rust.github.io"
+
+[features]
+api-custom = ["godot-bindings/api-custom"]
+api-custom-json = ["godot-bindings/api-custom-json"]
+codegen-full = ["godot/__codegen-full"]
+experimental-wasm = []
+register-docs = ["dep:markdown", "dep:litrs"]
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro2 = { workspace = true }
+quote = { workspace = true }
+# Enabled by `docs`.
+markdown = { workspace = true, optional = true }
+litrs = { workspace = true, optional = true }
+venial = { workspace = true }
+
+[build-dependencies]
+godot-bindings = { path = "../godot-bindings", version = "=0.4.4" } # emit_godot_version_cfg
+
+# Reverse dev dependencies so doctests can use `godot::` prefix.
+[dev-dependencies]
+godot = { path = "../godot", default-features = false}
+
+# https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+features = ["experimental-godot-api"]
+rustdoc-args = ["--cfg", "published_docs"]
+rustc-args = ["--cfg", "published_docs"]
+
+# Currently causes "unused manifest key" warnings. Maybe re-enable in the future, to make `published_docs` known.
+#[lints.rust]
+#unexpected_cfgs = { level = "warn", check-cfg = ['cfg(published_docs)'] }

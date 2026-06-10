@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Language" content="en">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<h2>Some Unicode examples</h2>
+<ul>
+<li>Below you'll see three glyphs, encoded as these four characters: U+212B, U+00C5, U+0041, U+030A.</li>
+ÅÅÅ<br/><br/>
+<li>Doubly-encoded text, or UTF-8 text interpreted as ISO 8859-n, often looks like this:</li>
+Ins an am chÃ©adna, Ã¡fach, bhÃ­ sÃ© barÃºlach<br/><br/>
+<li>Incorrectly converted text sometimes uses the replacement character U+FFFD.  It's still valid UTF-8!</li>
+Ins an am ch�adna, �fach, bh� s� bar�lach<br/><br/>
+<li>Here's some text in Tagalog script; chances are you don't have this font. But it's also perfectly good UTF-8 text!</li>
+ᜀᜅ᜔ ᜈᜄ᜔ ᜊᜌ᜔ᜊᜌ᜔ ᜈᜒᜆᜓ ᜀᜌ᜔ ᜇᜒ ᜈ᜔ᜌ ᜀᜎ<br/><br/>
+<li>Here's some Laki text that uses U+200C, ZWNJ:</li>
+بويه دلم بزيوه نه‌وروز خه‌نده‌ي له ليوه خوش له‌و باخو كيوه خوشي له من و ئيوه جه‌ژني نه‌وروزمان پيروز هه‌ر خوش بن ولات و هوز نه‌وروز جه‌ژني گشتمانه جه‌ژني پشتاوپشتمانه له‌و روژه‌دا بوو كاوه روله‌ي چيني چه‌وساوه چه‌كوشي توله‌ي وه‌شاند ميشكي زوحاكي پژاند كوتايي هات شه‌وي تار هه‌لهات خوري پرشنگدار له‌م روژه‌دا گشت ساليك گشت دليك گشت ماليك يادي ئه‌و روژه ئه‌كات كه ديليه‌تي دوايي هات ... ‌ <br/><br/>
+<li>And the same text with the ZWNJ's stripped out:</li>
+بويه دلم بزيوه نهوروز خهندهي له ليوه خوش لهو باخو كيوه خوشي له من و ئيوه جهژني نهوروزمان پيروز ههر خوش بن ولات و هوز نهوروز جهژني گشتمانه جهژني پشتاوپشتمانه لهو روژهدا بوو كاوه رولهي چيني چهوساوه چهكوشي تولهي وهشاند ميشكي زوحاكي پژاند كوتايي هات شهوي تار ههلهات خوري پرشنگدار لهم روژهدا گشت ساليك گشت دليك گشت ماليك يادي ئهو روژه ئهكات كه ديليهتي دوايي هات ...  <br/><br/>
+</ul>
+<h2>Know your bytes!</h2>
+<p>
+Inspired by the Ken Church's great
+<a href="">Unix for Poets</a> tutorial (and The Clash).  INNET students should already have the file <tt>randomsample.txt</tt>; everyone else can get it <a href="https://raw.githubusercontent.com/kscanne/crubadan/master/sample/randomsample.txt">here</a> (right-click or Ctrl-click the link and save).
+</p>
+<ul>
+<li>List the files in the current directory.</li>
+<tt>$ ls</tt><br/><br/>
+<li>Where am I?</li>
+<tt>$ pwd</tt><br/><br/>
+<li>Return to home directory</li>
+<tt>$ cd</tt><br/><br/>
+<li>Dump the sample file to the screen.</li>
+<tt>$ cat randomsample.txt</tt><br/><br/>
+<li>To slow down the output (with any of these commands), add "less" (space bar to page down, 'q' to quit <tt>less</tt>):</li>
+<tt>$ cat randomsample.txt | less</tt><br/><br/>
+<li>Count the number of lines in the file.</li>
+<tt>$ cat randomsample.txt | wc -l</tt><br/><br/>
+<li>Show only lines that start with "pt-".</li>
+<tt>$ cat randomsample.txt | egrep '^pt-'</tt><br/><br/>
+<li>Show lines that contain Cyrillic 'а'</li>
+<tt>$ cat randomsample.txt | egrep 'а'</tt><br/><br/>
+<li>Dump the sample file, but remove the language codes.</li>
+<tt>$ cat randomsample.txt | sed 's/^[A-Za-z-]*.//'</tt><br/><br/>
+<li>Save this as a separate file.</li>
+<tt>$ cat randomsample.txt | sed 's/^[A-Za-z-]*.//' &gt; justtext.txt</tt><br/><br/>
+<li>Show lines not containing A-Za-z after the language code.</li>
+<tt>$ cat justtext.txt | egrep -v '[A-Za-z]'</tt><br/><br/>
+<li>Show lines containing four consecutive vowels a,e,i,o,u.</li>
+<tt>$ cat justtext.txt | egrep '[aeiou]{4}'</tt><br/><br/>
+<li>Show lines containing Unicode right apostrophe, but replace it with a saltillo.</li>
+<tt>$ cat justtext.txt | egrep '’' | sed 's/’/ꞌ/g'</tt><br/><br/>
+<li>Show all "words" (contiguous sequences of letter characters), one per line. May not work on a Mac, or with non-GNU grep.</li>
+<tt>$ cat justtext.txt | egrep -o '[[:alpha:]]+'</tt><br/><br/>
+<li>Save the words in a separate file.</li>
+<tt>$ cat justtext.txt | egrep -o '[[:alpha:]]+' &gt; words.txt</tt><br/><br/>
+<li>Count the number of words.</li>
+<tt>$ cat words.txt | wc -l</tt><br/><br/>
+<li>Show the 14 "letter" words.</li>
+<tt>$ cat words.txt | egrep '^.{14}$'</tt><br/><br/>
+<li>Show all words in sorted order.</li>
+<tt>$ cat words.txt | sort</tt><br/><br/>
+<li>Sort them by endings (for investigating inflectional morphology, say).</li>
+<tt>$ cat words.txt | rev | sort | rev</tt><br/><br/>
+<li>Create a word frequency list.</li>
+<tt>$ cat words.txt | sort | uniq -c | sort -r -n</tt><br/><br/>
+<li>Show all word bigrams.</li>
+<tt>$ cat words.txt | sed '1d' | paste words.txt -</tt><br/><br/>
+<li>Word bigram frequency list.</li>
+<tt>$ cat words.txt | sed '1d' | paste words.txt - | sort | uniq -c | sort -r -n</tt><br/><br/>
+<li>Find palindromes of length at least 4.</li>
+<tt>$ cat words.txt | rev | paste words.txt - | egrep '^(.{4,}).\1$'</tt><br/><br/>
+<li>Keep only the Irish sample sentence and put it in a file.</li>
+<tt>$ cat randomsample.txt | egrep '^ga[^a-z-]' | sed 's/^ga.//' &gt; irish.txt</tt><br/><br/>
+<li>Examine the bytes in the file.</li>
+<tt>$ cat irish.txt | xxd</tt><br/><br/>
+<li>Convert to ISO-8859-1.</li>
+<tt>$ cat irish.txt | iconv -f UTF-8 -t ISO-8859-1</tt><br/><br/>
+<li>Convert to ISO-8859-1 and look at the bytes.</li>
+<tt>$ cat irish.txt | iconv -f UTF-8 -t ISO-8859-1 | xxd</tt><br/><br/>
+<li>Show all encodings supported by iconv.</li>
+<tt>$ iconv -l</tt><br/><br/>
+<li>Convert to UTF-16 and examine the bytes.</li>
+<tt>$ cat irish.txt | iconv -f UTF-8 -t UTF-16BE | xxd</tt><br/><br/>
+<li>Incorrectly interpret our nice UTF-8 Irish as ISO-8859-1 and convert to UTF-8.</li>
+<tt>$ cat irish.txt | iconv -f ISO-8859-1 -t UTF-8</tt><br/><br/>
+<li>Same thing with Bribri sentence (U+A78C saltillo, U+0331 combining macron below)</li>
+<tt>$ cat randomsample.txt | egrep '^bzd' | sed 's/^bzd.//' | iconv -f UTF-8 -t UTF-16BE | xxd</tt><br/><br/>
+<li>Try converting Bribri to ISO-8859-1 (or anything other than a Unicode encoding!)</li>
+<tt>$ cat randomsample.txt | egrep '^bzd' | iconv -f UTF-8 -t ISO-8859-1</tt><br/><br/>
+</ul>
+</body>
+</html>

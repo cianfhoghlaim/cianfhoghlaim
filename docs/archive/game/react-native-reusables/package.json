@@ -1,0 +1,39 @@
+{
+  "name": "@rnr/monorepo",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev",
+    "dev:docs": "turbo dev --filter=docs",
+    "dev:showcase": "turbo dev --filter=showcase --concurrency 32",
+    "dev:showcase:android": "turbo dev:android --filter=showcase --concurrency 32",
+    "dev:showcase:web": "turbo dev:web --filter=showcase --concurrency 32",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "build": "turbo build",
+    "build:showcase": "turbo build --filter=showcase",
+    "build:docs": "turbo build --filter=docs",
+    "clean": "turbo clean && rm -rf .turbo node_modules"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "turbo": "^1.12.4",
+    "typescript": "^5.9.3"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@babel/*",
+        "expo-modules-*",
+        "typescript"
+      ]
+    }
+  },
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "packageManager": "pnpm@9.1.4",
+  "resolutions": {
+    "lightningcss": "1.27.0"
+  }
+}

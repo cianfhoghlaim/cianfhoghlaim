@@ -1,0 +1,51 @@
+<html>
+
+  <head>
+    <title>Downloads</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="/res/main.css"/>
+    <link rel="stylesheet" href="/res/front_pages.css"/>
+    <link rel="stylesheet" href="/res/writing_systems.css"/>
+  </head>
+
+  <body>
+
+    <ul class="navbar">
+      <li><a href="/index.html">An Crúbadán</a></li>
+      <li>::</li>
+      <li><a href="/writing_systems.html">Downloads</a></li>
+      <li>::</li>
+      <li><a href="/applications.html">Applications</a></li>
+      <li>::</li>
+      <li><a href="/acknowledgments.html">Acknowledgments</a></li>
+    </ul>
+
+    <div class="paper">
+      <div class="content">
+        <h1>Writing Systems</h1>
+
+	<!-- Will be culled as soon as the javascript executes -->
+	<div id="loadingdiv" class="loading">
+	  <img src="/res/busy.gif"></img>
+	  <span>Fetching Data...</span>
+	</div>
+
+	<div id="searchcontrolsdiv"></div>
+
+        <div id="searchtablediv"></div>
+
+	<div id="errordiv" class="error"></div>
+
+      </div>
+    </div>
+
+  </body>
+
+  <!-- This should make all the heavy javascript download last.. -->
+  <script language="javascript" src="/res/rts.js"></script>
+  <script language="javascript" src="/res/lib.js"></script>
+  <script language="javascript" src="/res/writing_systems.js"></script>
+
+  <script language="javascript" src="/res/runmain.js" defer></script>
+  
+</html>

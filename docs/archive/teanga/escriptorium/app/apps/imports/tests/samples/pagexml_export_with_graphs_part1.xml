@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PcGts xmlns="http://schema.primaresearch.org/PAGE/gts/pagecontent/2019-07-15" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schema.primaresearch.org/PAGE/gts/pagecontent/2019-07-15 http://schema.primaresearch.org/PAGE/gts/pagecontent/2019-07-15/pagecontent.xsd">
+  <Metadata>
+    <Creator>escriptorium</Creator>
+    <Created>2022-01-01T00:00:00+00:00</Created>
+    <LastChange>2022-01-01T00:00:00+00:00</LastChange>
+  </Metadata>
+  <Page imageFilename="default.png" imageWidth="864" imageHeight="206">
+    <TextRegion id="eSc_textblock_01" custom="structure {type:title;}">
+      <Coords points="190,25 510,65"/>
+      <TextLine id="eSc_line_01">
+        <Coords points="200,30 500,30 500,60 200,60"/>
+        <Baseline points="200,45 500,45"/>
+        <TextEquiv>
+          <Unicode>A simple test for eScriptorium</Unicode>
+        </TextEquiv>
+        <Word id="word_0">
+          <Coords points="200,45 200,60 500,45 500,60"/>
+          <Glyph id="char_0">
+            <Coords points="200,45 200,60 500,45 500,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>A</Unicode>
+            </TextEquiv>
+          </Glyph>
+        </Word>
+        <Word id="word_2">
+          <Coords points="220,45 220,60 520,45 520,60 230,45 230,60 530,45 530,60 240,45 240,60 540,45 540,60 250,45 250,60 550,45 550,60 260,45 260,60 560,45 560,60 270,45 270,60 570,45 570,60"/>
+          <Glyph id="char_0">
+            <Coords points="220,45 220,60 520,45 520,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>s</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_1">
+            <Coords points="230,45 230,60 530,45 530,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>i</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_2">
+            <Coords points="240,45 240,60 540,45 540,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>m</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_3">
+            <Coords points="250,45 250,60 550,45 550,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>p</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_4">
+            <Coords points="260,45 260,60 560,45 560,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>l</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_5">
+            <Coords points="270,45 270,60 570,45 570,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>e</Unicode>
+            </TextEquiv>
+          </Glyph>
+        </Word>
+        <Word id="word_4">
+          <Coords points="290,45 290,60 590,45 590,60 300,45 300,60 600,45 600,60 310,45 310,60 610,45 610,60 320,45 320,60 620,45 620,60"/>
+          <Glyph id="char_0">
+            <Coords points="290,45 290,60 590,45 590,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>t</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_1">
+            <Coords points="300,45 300,60 600,45 600,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>e</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_2">
+            <Coords points="310,45 310,60 610,45 610,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>s</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_3">
+            <Coords points="320,45 320,60 620,45 620,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>t</Unicode>
+            </TextEquiv>
+          </Glyph>
+        </Word>
+        <Word id="word_6">
+          <Coords points="340,45 340,60 640,45 640,60 350,45 350,60 650,45 650,60 360,45 360,60 660,45 660,60"/>
+          <Glyph id="char_0">
+            <Coords points="340,45 340,60 640,45 640,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>f</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_1">
+            <Coords points="350,45 350,60 650,45 650,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>o</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_2">
+            <Coords points="360,45 360,60 660,45 660,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>r</Unicode>
+            </TextEquiv>
+          </Glyph>
+        </Word>
+        <Word id="word_8">
+          <Coords points="380,45 380,60 680,45 680,60 390,45 390,60 690,45 690,60 400,45 400,60 700,45 700,60 410,45 410,60 710,45 710,60 420,45 420,60 720,45 720,60 430,45 430,60 730,45 730,60 440,45 440,60 740,45 740,60 450,45 450,60 750,45 750,60 460,45 460,60 760,45 760,60 470,45 470,60 770,45 770,60 480,45 480,60 780,45 780,60 490,45 490,60 790,45 790,60"/>
+          <Glyph id="char_0">
+            <Coords points="380,45 380,60 680,45 680,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>e</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_1">
+            <Coords points="390,45 390,60 690,45 690,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>S</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_2">
+            <Coords points="400,45 400,60 700,45 700,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>c</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_3">
+            <Coords points="410,45 410,60 710,45 710,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>r</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_4">
+            <Coords points="420,45 420,60 720,45 720,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>i</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_5">
+            <Coords points="430,45 430,60 730,45 730,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>p</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_6">
+            <Coords points="440,45 440,60 740,45 740,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>t</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_7">
+            <Coords points="450,45 450,60 750,45 750,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>o</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_8">
+            <Coords points="460,45 460,60 760,45 760,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>r</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_9">
+            <Coords points="470,45 470,60 770,45 770,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>i</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_10">
+            <Coords points="480,45 480,60 780,45 780,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>u</Unicode>
+            </TextEquiv>
+          </Glyph>
+          <Glyph id="char_11">
+            <Coords points="490,45 490,60 790,45 790,60"/>
+            <TextEquiv conf="1.0000">
+              <Unicode>m</Unicode>
+            </TextEquiv>
+          </Glyph>
+        </Word>
+      </TextLine>
+    </TextRegion>
+    <TextRegion id="eSc_textblock_02" custom="structure {type:body;}">
+      <Coords points="90,125 560,215"/>
+      <TextLine id="eSc_line_02">
+        <Coords points="100,130 550,130 550,150 100,150"/>
+        <Baseline points="100,140 550,140"/>
+        <TextEquiv>
+          <Unicode>Some text to be exported during a document_export Celery task.</Unicode>
+        </TextEquiv>
+      </TextLine>
+      <TextLine id="eSc_line_03">
+        <Coords points="100,160 550,160 550,180 100,180"/>
+        <Baseline points="100,170 550,170"/>
+        <TextEquiv>
+          <Unicode>Some text to be exported during a document_export Celery task.</Unicode>
+        </TextEquiv>
+      </TextLine>
+      <TextLine id="eSc_line_04">
+        <Coords points="100,190 550,190 550,210 100,210"/>
+        <Baseline points="100,200 550,200"/>
+        <TextEquiv>
+          <Unicode>Some text to be exported during a document_export Celery task.</Unicode>
+        </TextEquiv>
+      </TextLine>
+    </TextRegion>
+    <TextRegion id="eSc_textblock_03" custom="structure {type:signature;}">
+      <Coords points="390,245 610,275"/>
+      <TextLine id="eSc_line_05">
+        <Coords points="400,250 600,250 600,270 400,270"/>
+        <Baseline points="400,260 600,260"/>
+        <TextEquiv>
+          <Unicode>A beautiful signature</Unicode>
+        </TextEquiv>
+      </TextLine>
+    </TextRegion>
+  </Page>
+</PcGts>

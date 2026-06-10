@@ -1,0 +1,87 @@
+:root {
+	--text-color: #222;
+	--primary-color: #54c0db;
+	--secondary-color: #4f858d;
+	--tertiary-color: #53565a;
+	--highlight-color: #ec5338;
+	--link-color: #0366d6;
+}
+
+*, *::before, *::after {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html,
+body,
+#sapper {
+	height: 100%;
+	min-height: 100%;
+	width: 100%;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+	-moz-text-size-adjust: 100%;
+	-ms-text-size-adjust: 100%;
+}
+
+body {
+	color: #222;
+	color: var(--text-color);
+	font-family: -apple-system, BlinkMacSystemFont, San Francisco, Roboto, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+	font-size: 14px;
+	margin: 0;
+	line-height: 1.5;
+	overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	margin: 0 0 0.5em 0;
+	font-weight: 400;
+	line-height: 1.2;
+}
+
+h1 {
+	font-size: 2em;
+}
+
+a {
+	color: inherit;
+}
+
+code {
+	font-family: menlo, inconsolata, monospace;
+	font-size: calc(1em - 2px);
+	color: #555;
+	background-color: #f0f0f0;
+	padding: 0.2em 0.4em;
+	border-radius: 2px;
+}
+
+@media (min-width: 400px) {
+	body {
+		font-size: 16px;
+	}
+}
+
+/** Internet Explorer **/
+.no-smil .site-header,
+.no-smil .site-footer,
+.no-smil nav,
+.no-smil #main {
+	display: none !important;
+}
+
+@supports (-ms-ime-align: auto) {
+	.no-smil .site-footer,
+	.no-smil nav {
+		display: block !important;
+	}
+
+	.no-smil .site-header,
+	.no-smil #main {
+		display: flex !important;
+	}
+}

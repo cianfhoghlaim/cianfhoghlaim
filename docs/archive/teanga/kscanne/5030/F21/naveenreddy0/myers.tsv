@@ -1,0 +1,3 @@
+{"a" : 3, "b" : 4, "c" : 5}	scalene
+{"a" : 3, "b" : 3, "c" : 1}	isosceles
+{"a" : 3, "b" : 4, "c" : 100}	error

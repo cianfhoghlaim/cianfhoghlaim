@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load i18n bootstrap %}
+
+{% block body %}
+<h1>{% trans 'Profile Settings' %}</h1>
+<div class="container">
+    <div{% if request.user.legacy_mode %} class="row"{% endif %}>
+        <div class="nav {% if request.user.legacy_mode %}flex-column {% endif %}nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <a class="nav-link {% block infos-tab-active %}active{% endblock %}" id="nav-infos-tab" href="{% url 'profile' %}" role="tab">{% trans "Information" %}</a>
+            <a class="nav-link {% block key-tab-active %}{% endblock %}" id="nav-key-tab"  href="{% url 'profile-api-key' %}" role="tab">{% trans "API key" %}</a>
+            <a class="nav-link {% block files-tab-active %}{% endblock %}" id="nav-files-tab" href="{% url 'profile-files' %}" role="tab">{% trans "Files" %}</a>
+            <a class="nav-link {% block team-tab-active %}{% endblock %}" id="nav-team-tab" href="{% url 'profile-team-list' %}" role="tab">{% trans "Teams" %}</a>
+            <a class="nav-link {% block invites-tab-active %}{% endblock %}" id="nav-invites-tab" href="{% url 'profile-invites-list' %}" role="tab">{% trans "Invitations" %}</a>
+        </div>
+
+        <div class="col-md-8 tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="infos-tab" role="tabpanel">
+                {% block tab-content %}
+                <form method="post">
+                    {% csrf_token %}
+                    <fieldset>
+                        {% render_field form.email %}
+                        {% render_field form.first_name %}
+                        {% render_field form.last_name %}
+                        {% render_field form.legacy_mode %}
+
+                        <input type="submit" value="{% trans 'Save' %}" class="btn btn-lg btn-success btn-block">
+                    </fieldset>
+                </form>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script>
+ $(document).ready(function() {
+     $('#api-key-clipboard').click(function() {
+         navigator.clipboard.writeText($(this).data('key'))
+     });
+ }, false);
+
+</script>
+{% endblock %}

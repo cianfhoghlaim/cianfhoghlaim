@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alto xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/standards/alto/ns-v4#" xsi:schemaLocation="http://www.loc.gov/standards/alto/ns-v4# http://www.loc.gov/standards/alto/v4/alto-4-2.xsd">
+  <Description>
+    <MeasurementUnit>pixel</MeasurementUnit>
+    <sourceImageInformation>
+      <fileName>default.png</fileName>
+    </sourceImageInformation>
+  </Description>
+  <Layout>
+    <Page WIDTH="864" HEIGHT="206" PHYSICAL_IMG_NR="0" ID="eSc_dummypage_">
+      <PrintSpace HPOS="0" VPOS="0" WIDTH="864" HEIGHT="206">
+        <TextBlock HPOS="190" VPOS="25" WIDTH="320" HEIGHT="40" ID="eSc_textblock_01" TAGREFS="BT1">
+          <Shape>
+            <Polygon POINTS="190 25 510 65"/>
+          </Shape>
+          <TextLine ID="eSc_line_01" BASELINE="200 45 500 45" HPOS="200" VPOS="30" WIDTH="300" HEIGHT="30">
+            <Shape>
+              <Polygon POINTS="200 30 500 30 500 60 200 60"/>
+            </Shape>
+            <String ID="segment_0" CONTENT="A" HPOS="200" VPOS="45" WIDTH="300" HEIGHT="15" WC="1.0000">
+              <Glyph ID="char_0" CONTENT="A" HPOS="200" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="200 45 200 60 500 45 500 60"/>
+                </Shape>
+              </Glyph>
+            </String>
+            <SP ID="segment_1" HPOS="210" VPOS="45" WIDTH="300" HEIGHT="15"/>
+            <String ID="segment_2" CONTENT="simple" HPOS="220" VPOS="45" WIDTH="350" HEIGHT="15" WC="1.0000">
+              <Glyph ID="char_0" CONTENT="s" HPOS="220" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="220 45 220 60 520 45 520 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_1" CONTENT="i" HPOS="230" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="230 45 230 60 530 45 530 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_2" CONTENT="m" HPOS="240" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="240 45 240 60 540 45 540 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_3" CONTENT="p" HPOS="250" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="250 45 250 60 550 45 550 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_4" CONTENT="l" HPOS="260" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="260 45 260 60 560 45 560 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_5" CONTENT="e" HPOS="270" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="270 45 270 60 570 45 570 60"/>
+                </Shape>
+              </Glyph>
+            </String>
+            <SP ID="segment_3" HPOS="280" VPOS="45" WIDTH="300" HEIGHT="15"/>
+            <String ID="segment_4" CONTENT="test" HPOS="290" VPOS="45" WIDTH="330" HEIGHT="15" WC="1.0000">
+              <Glyph ID="char_0" CONTENT="t" HPOS="290" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="290 45 290 60 590 45 590 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_1" CONTENT="e" HPOS="300" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="300 45 300 60 600 45 600 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_2" CONTENT="s" HPOS="310" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="310 45 310 60 610 45 610 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_3" CONTENT="t" HPOS="320" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="320 45 320 60 620 45 620 60"/>
+                </Shape>
+              </Glyph>
+            </String>
+            <SP ID="segment_5" HPOS="330" VPOS="45" WIDTH="300" HEIGHT="15"/>
+            <String ID="segment_6" CONTENT="for" HPOS="340" VPOS="45" WIDTH="320" HEIGHT="15" WC="1.0000">
+              <Glyph ID="char_0" CONTENT="f" HPOS="340" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="340 45 340 60 640 45 640 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_1" CONTENT="o" HPOS="350" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="350 45 350 60 650 45 650 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_2" CONTENT="r" HPOS="360" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="360 45 360 60 660 45 660 60"/>
+                </Shape>
+              </Glyph>
+            </String>
+            <SP ID="segment_7" HPOS="370" VPOS="45" WIDTH="300" HEIGHT="15"/>
+            <String ID="segment_8" CONTENT="eScriptorium" HPOS="380" VPOS="45" WIDTH="410" HEIGHT="15" WC="1.0000">
+              <Glyph ID="char_0" CONTENT="e" HPOS="380" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="380 45 380 60 680 45 680 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_1" CONTENT="S" HPOS="390" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="390 45 390 60 690 45 690 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_2" CONTENT="c" HPOS="400" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="400 45 400 60 700 45 700 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_3" CONTENT="r" HPOS="410" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="410 45 410 60 710 45 710 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_4" CONTENT="i" HPOS="420" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="420 45 420 60 720 45 720 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_5" CONTENT="p" HPOS="430" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="430 45 430 60 730 45 730 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_6" CONTENT="t" HPOS="440" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="440 45 440 60 740 45 740 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_7" CONTENT="o" HPOS="450" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="450 45 450 60 750 45 750 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_8" CONTENT="r" HPOS="460" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="460 45 460 60 760 45 760 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_9" CONTENT="i" HPOS="470" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="470 45 470 60 770 45 770 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_10" CONTENT="u" HPOS="480" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="480 45 480 60 780 45 780 60"/>
+                </Shape>
+              </Glyph>
+              <Glyph ID="char_11" CONTENT="m" HPOS="490" VPOS="45" WIDTH="300" HEIGHT="15" GC="1.0000">
+                <Shape>
+                  <Polygon POINTS="490 45 490 60 790 45 790 60"/>
+                </Shape>
+              </Glyph>
+            </String>
+          </TextLine>
+        </TextBlock>
+        <TextBlock HPOS="90" VPOS="125" WIDTH="470" HEIGHT="90" ID="eSc_textblock_02" TAGREFS="BT2">
+          <Shape>
+            <Polygon POINTS="90 125 560 215"/>
+          </Shape>
+          <TextLine ID="eSc_line_02" BASELINE="100 140 550 140" HPOS="100" VPOS="130" WIDTH="450" HEIGHT="20">
+            <Shape>
+              <Polygon POINTS="100 130 550 130 550 150 100 150"/>
+            </Shape>
+            <String CONTENT="Some text to be exported during a document_export Celery task." HPOS="100" VPOS="130" WIDTH="450" HEIGHT="20"/>
+          </TextLine>
+          <TextLine ID="eSc_line_03" BASELINE="100 170 550 170" HPOS="100" VPOS="160" WIDTH="450" HEIGHT="20">
+            <Shape>
+              <Polygon POINTS="100 160 550 160 550 180 100 180"/>
+            </Shape>
+            <String CONTENT="Some text to be exported during a document_export Celery task." HPOS="100" VPOS="160" WIDTH="450" HEIGHT="20"/>
+          </TextLine>
+          <TextLine ID="eSc_line_04" BASELINE="100 200 550 200" HPOS="100" VPOS="190" WIDTH="450" HEIGHT="20">
+            <Shape>
+              <Polygon POINTS="100 190 550 190 550 210 100 210"/>
+            </Shape>
+            <String CONTENT="Some text to be exported during a document_export Celery task." HPOS="100" VPOS="190" WIDTH="450" HEIGHT="20"/>
+          </TextLine>
+        </TextBlock>
+        <TextBlock HPOS="390" VPOS="245" WIDTH="220" HEIGHT="30" ID="eSc_textblock_03" TAGREFS="BT3">
+          <Shape>
+            <Polygon POINTS="390 245 610 275"/>
+          </Shape>
+          <TextLine ID="eSc_line_05" BASELINE="400 260 600 260" HPOS="400" VPOS="250" WIDTH="200" HEIGHT="20">
+            <Shape>
+              <Polygon POINTS="400 250 600 250 600 270 400 270"/>
+            </Shape>
+            <String CONTENT="A beautiful signature" HPOS="400" VPOS="250" WIDTH="200" HEIGHT="20"/>
+          </TextLine>
+        </TextBlock>
+      </PrintSpace>
+    </Page>
+  </Layout>
+</alto>

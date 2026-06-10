@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block body %}
+{% if MODELS_VERSION_RETENTION %}
+<div class="jumbotron text-center bg-light">
+  <p class="lead">
+    Please be aware that the epoch versions of the models will only be available for {{ MODELS_VERSION_RETENTION }} days.
+  </p>
+</div>
+{% endif %}
+
+<a href="{% url 'model-upload' %}" class="btn btn-success float-sm-right">{% trans "Upload a model" %}</a>
+<h1>{% trans "Models" %}</h1>
+{% include 'core/models_list/table.html' %}
+{% endblock %}
+{% block scripts %}
+    {{ block.super }}
+    {% include 'core/models_list/scripts.html' %}
+{% endblock %}

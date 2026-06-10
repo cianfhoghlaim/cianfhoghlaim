@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./src/backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+      - 8.8.4.4
+    env_file:
+      - .env
+    environment:
+      - GCP_PROJECT_ID=${GCP_PROJECT_ID}
+      - ENVIRONMENT=development
+      - ALLOWED_ORIGINS=http://localhost:3000
+    depends_on:
+      - redis
+    volumes:
+      - ~/.config/gcloud:/root/.config/gcloud:ro
+      - ./src/backend:/app
+    command: uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"  # Map to nginx's port 80
+    environment:
+      - REACT_APP_API_URL=http://backend:8000
+    # Remove the volumes and command - let nginx serve the built files
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru

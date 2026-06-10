@@ -1,0 +1,15 @@
+;; Object sort2/
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "sort2/"
+  :tables (list 
+   (semanticdb-table "ComparatorTester.java"
+    :major-mode 'jde-mode
+    :tags '(("java.util.*" include nil nil [1 20]) ("ComparatorTester" type (:typemodifiers ("public") :members (("main" function (:typemodifiers ("public" "static") :arguments (("args" variable (:type "String[]") (reparse-symbol formal_parameters) [81 94])) :type "void") (reparse-symbol class_member_declaration) [57 585])) :type "class") nil [22 587]))
+    :file "ComparatorTester.java"
+    :pointmax 589
+    )
+   )
+  :file "semantic.cache"
+  :semantic-tag-version "2.0beta3"
+  :semanticdb-version "2.0beta3"
+  )

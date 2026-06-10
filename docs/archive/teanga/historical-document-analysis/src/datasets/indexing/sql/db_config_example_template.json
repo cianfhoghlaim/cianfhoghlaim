@@ -1,0 +1,8 @@
+{
+    "host": "0.0.0.0",
+    "port": 5432,
+    "database": "genizah",
+    "user": "genizah_user",
+    "password": "some_password"
+}
+

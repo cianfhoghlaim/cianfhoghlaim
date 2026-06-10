@@ -1,0 +1,970 @@
+# Translation of Facebook into unsupported languages
+# Copyright (C) 2012 Kevin P. Scannell
+# using same plural form as Tagalog from:
+# http://unicode.org/repos/cldr-tmp/trunk/diff/supplemental/language_plural_rules.html
+msgid ""
+msgstr ""
+"Project-Id-Version: gm-facebook\n"
+"Report-Msgid-Bugs-To: <kscanne@gmail.com>\n"
+"POT-Creation-Date: 2013-07-19 15:06:49-0500\n"
+"PO-Revision-Date: 2012-02-21 16:58:12-06:00\n"
+"Last-Translator: Francis Dimzon\n"
+"Language-Team: Hiligaynon\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+
+#. Lines like this one beginning with "#." are comments; no need to translate!
+#. The first six words to translate are used in a number of different messages,
+#. always as the final word of the message in English; for example:
+#. John Doe likes Jane Doe's X.
+#. John Doe shared Jane Doe's X.
+#. John Doe shared her/his own X.
+#. John Doe and Jane Doe shared Kevin Scannell's X.
+#. John Doe was tagged in Jane Doe's X.
+#. John Doe was tagged in a X.
+#. John Doe commented on a X.
+#. John Doe and Jane Doe commented on a X.
+#. John Doe commented on her/his own X.
+#. John Doe commented on your X.
+#. John Doe likes a X.
+#. If the translations of link, photo, etc. take different forms depending
+#. on the above contexts, this can be arranged, just ask Kevin for help
+#. Always a link. Used in longer sentences as above.
+#, fuzzy
+msgid "life event"
+msgstr "Hitabo sa Kabuhi"
+
+#. Always a link. Used in longer sentences as above.
+msgid "link"
+msgstr ""
+
+#. Always a link. Used in longer sentences as above.
+msgid "photo"
+msgstr "litrato"
+
+#. Always a link. Used in longer sentences as above.
+msgid "post"
+msgstr ""
+
+#. Always a link. Used in longer sentences as above.
+msgid "status"
+msgstr ""
+
+#. Always a link. Used in longer sentences as above.
+msgid "status update"
+msgstr ""
+
+#. %a stands for something like "4 others"
+msgid "You and %a like this."
+msgstr "Ikaw kag %a nanamian sini."
+
+#. %a1 is a person's name, %a2 stands for something like "4 others"
+msgid "You, %a1 and %a2 like this."
+msgstr "Ikaw, si %a1 kag %a2 nanamian sini."
+
+#. %a1 and %a2 are names, while %a3 is something like "5 others"
+msgid "%a1, %a2 and %a3 like this."
+msgstr "Si %a1, %a2 kag %a3 nanamian sini."
+
+#. %a is a person's name; %d stands for a number, no need to translate it
+msgid "%a added a new photo."
+msgid_plural "%a added %d new photos."
+msgstr[0] "Si %a nagdugang sang bag-o nga litrato."
+msgstr[1] "Si %a nagdugang sang %d ka mga bag-o nga litrato."
+
+#. %a1 is a person's name; %d stands for a number, no need to translate it
+msgid "%a1 added 1 new photo to the album %a2."
+msgid_plural "%a1 added %d new photos to the album %a2."
+msgstr[0] "Si %a1 nagdugang sang bag-o nga litrato sa album %a2."
+msgstr[1] "Si %a1 nagdugang sang %d ka mga bag-o nga litrato sa album %a2."
+
+#. %a1 is a person, %a2 is something like "4 other people"
+#. This is to let you know about birthdays in right-hand column on home page
+#, fuzzy
+msgid "%a1 and %a2"
+msgstr "Si %a1 nagpaambit sang %a2."
+
+#. Both %a1 and %a2 are names of people
+msgid "%a1 and %a2 are now friends."
+msgstr "Si %a1 kag %a2 mag-abyan na."
+
+#. %a1 and %a3 are names of people; %a2 is something like "5 other friends"
+msgid "%a1 and %a2 are now friends with %a3."
+msgstr "Si %a1 kag %a2 abyan na ni %a3."
+
+#. %a1 and %a2 are people, and %a3 is "link", "photo", "status", etc.
+#, fuzzy
+msgid "%a1 and %a2 commented on a %a3."
+msgstr "Si %a1 nagtugda sa isa ka %a2."
+
+#. %a1 is a name, %a2 is a name or else something like "6 others"
+#. %a3 is the name of a page like "Rage Against the Machine"
+msgid "%a1 and %a2 like %a3."
+msgstr "Si %a1 kag %a2 nanamian sang %a3."
+
+#. %a1 is a name, %a2 is a name or else something like "6 others"
+msgid "%a1 and %a2 like this."
+msgstr "Si %a1 kag %a2 nanamian sini."
+
+#. %a1 and %a2 as above, and %a3 is something like (always?) "a link"
+msgid "%a1 and %a2 shared %a3."
+msgstr "Si %a1 kag %a2 nagpaambit sang %a3."
+
+#. %a1 and %a2 as above, %a3 is a name, %a4 is "link", "photo", "status", etc.
+msgid "%a1 and %a2 shared %a3's %a4."
+msgstr "Si %a1 kag %a2 nagpaambit sang %a4 ni %a3."
+
+#. %a1, %a2, and %a3 are names of people
+#, fuzzy
+msgid "%a1 and %a2 were tagged in %a3's photos."
+msgstr "Si %a1 gintag sa %a3 ni %a2."
+
+#. Link at bottom of home page (under "More") to info about Facebook
+msgid "About"
+msgstr "Tuhoy sa Facebook"
+
+msgid "about an hour ago"
+msgstr "mga isa ka oras ang nakaligad"
+
+msgid "about a minute ago"
+msgstr "mga isa ka minuto ang nakaligad"
+
+msgid "Account Settings"
+msgstr "Mga Settings sang Account"
+
+#. %a is someone's name (female)
+msgid "%a changed her profile picture."
+msgstr "Si %a nagbaylo sang iya litrato sa profile."
+
+# same as above, pronouns in Hiligaynon are gender insensitive.
+#. %a is someone's name (male)
+msgid "%a changed his profile picture."
+msgstr "Si %a nagbaylo sang iya litrato sa profile."
+
+#. %a1 is a person's name, %a2 is "link", "post", "status", or "photo"
+msgid "%a1 commented on a %a2."
+msgstr "Si %a1 nagtugda sa isa ka %a2."
+
+#. %a1 is a person's name, %a2 is "link", "post", "status", or "photo"
+msgid "%a1 commented on her own %a2."
+msgstr "Si %a1 nagtugda sa iya kaugalingon nga %a2."
+
+# same as above, pronouns in Hiligaynon are gender insensitive.
+#. %a1 is a person's name, %a2 is "link", "post", "status", or "photo"
+msgid "%a1 commented on his own %a2."
+msgstr "Si %a1 nagtugda sa iya kaugalingon nga %a2."
+
+#. %a1 is a person's name, %a2 is "link", "post", "status", or "photo"
+msgid "%a1 commented on your %a2."
+msgstr "Si %a1 nagtugda sa imo %a2."
+
+msgid "Activity Log"
+msgstr "Lista sang Ginpanghimo"
+
+msgid "Add Friend"
+msgstr "Idugang nga Abyan"
+
+#. Under INTERESTS in left-hand navigation on home page
+msgid "Add Interests..."
+msgstr "Idugang ang mga Huyog..."
+
+#. Appears at top of home timeline, with "Update Status", "Ask Question"
+msgid "Add Photos/Video"
+msgstr "Magdugang sang Litrato/Video"
+
+#. Link at bottom of home page (under "More") to info about Facebook ads
+msgid "Advertising"
+msgstr "Pasayod"
+
+#. Time stamp on a post. You might also translate as "Just now"
+msgid "a few seconds ago"
+msgstr "mga pila ka gutlo ang nakaligad"
+
+#. %a1 is a person's name, %a2 is a place
+msgid "%a1 is at %a2."
+msgstr "Si %a1 ara sa %a2."
+
+#. %a1 and %a2 are names of people; %a3 is either another person or
+#. else something like "8 other people"
+msgid "%a1 is now friends with %a2 and %a3."
+msgstr "Si %a1 mag-abyan na kanday %a2 kag %a3."
+
+#. For example, "John Doe likes Linux."; often under Sponsored Ads
+msgid "%a1 likes %a2."
+msgstr "Si %a1 nanamian sang %a2."
+
+#. %a1 is a person's name, %a2 is "link", "photo", "post", or "status"
+msgid "%a1 likes a %a2."
+msgstr "Si %a1 nanamian sang isa ka %a2."
+
+#. %a1 and %a2 are people, %a3 is "link", "photo", "post", or "status"
+msgid "%a1 likes %a2's %a3."
+msgstr "Si %a1 nanamian sang %a3 ni %a2."
+
+#. %a1 is a person, %a2 is the name of a page, and %a3 is either the
+#. name of another page or something like "4 other pages"
+msgid "%a1 likes %a2 and %a3."
+msgstr "Si %a1 nanamian sang %a2 kag %a3."
+
+#. %a stands for a person's name
+msgid "%a likes this."
+msgstr "Si %a nanamian sini."
+
+#. %a stands for something like "3 people"
+msgid "%a like this."
+msgstr "May %a nga nanamian sini."
+
+#. Always a link. Used in longer sentences like "John Doe shared a link"
+msgid "a link"
+msgstr "isa ka link"
+
+#. Heading above the apps you use, in left-hand navigation on home page
+msgid "APPS"
+msgstr ""
+
+#. One of the entries in the APPS list for some users
+msgid "Apps and Games"
+msgstr "Apps kag mga Hampang"
+
+#. Format. %A = day of the week ("Saturday") and %s = the time ("3:15am")
+msgid "%A at %s"
+msgstr "%A alas %s"
+
+#. %a1 is a person's name, %a2 is something like (always?) "a link"
+msgid "%a1 shared %a2."
+msgstr "Si %a1 nagpaambit sang %a2."
+
+#. %a1 and %a2 are names of people, %a3 is "link", "photo", "post", or "status"
+msgid "%a1 shared %a2's %a3."
+msgstr "Si %a1 nagpaambit sang %a3 ni %a2."
+
+#. %a1 is a person, %a2 is "link", "photo", "post", or "status"
+#, fuzzy
+msgid "%a1 shared her own %a2."
+msgstr "Si %a1 nagpaambit sang %a2."
+
+#. %a1 is a person, %a2 is "link", "photo", "post", or "status"
+#, fuzzy
+msgid "%a1 shared his own %a2."
+msgstr "Si %a1 nagpaambit sang %a2."
+
+#. Appears at top of home timeline, with "Update Status", "Add Photos/Video"
+msgid "Ask Question"
+msgstr "Mamangkot"
+
+#. %a1 is a person, %a2 is always "Instagram" I think
+#, fuzzy
+msgid "%a1 took a photo with %a2."
+msgstr "Si %a1 ara sa %a2."
+
+#. %a1 is a person, %a2 is a place: "John Doe was tagged at Wilson Farm."
+#, fuzzy
+msgid "%a1 was tagged at %a2."
+msgstr "Si %a1 gintag sa %a3 ni %a2."
+
+#. %a1 and %a2 are names of people, %a3 is "link", "photo", "post", or "status"
+msgid "%a1 was tagged in %a2's %a3."
+msgstr "Si %a1 gintag sa %a3 ni %a2."
+
+#. %a1 is a person, %a2 is "photo" or "life event" (others?)
+#, fuzzy
+msgid "%a1 was tagged in a %a2."
+msgstr "Si %a1 gintag sa %a3 ni %a2."
+
+#. %a1 and %a2 are names of people
+#, fuzzy
+msgid "%a1 was tagged in %a2's photos."
+msgstr "Si %a1 gintag sa %a3 ni %a2."
+
+#. %a is someone's name (female)
+#, fuzzy
+msgid "%a updated her cover photo."
+msgstr "Si %a nagdugang sang bag-o nga litrato."
+
+#. %a is someone's name (male)
+#, fuzzy
+msgid "%a updated his cover photo."
+msgstr "Si %a nagdugang sang bag-o nga litrato."
+
+#. Format. %B = name of the month ("February"), and %d = day of the month ("20")
+msgid "%B %d"
+msgstr "%B %d"
+
+#. Format. %B and %d as above, %s = string representing the time ("3:15am")
+msgid "%B %d at %s"
+msgstr "%B %d alas %s"
+
+#. Format. %B and %d as above, %Y = four digit year ("2012")
+msgid "%B %d, %Y"
+msgstr "%B %d, %Y"
+
+#. Format. %B, %d, and %Y as above, %s = string representing the time ("3:15am")
+msgid "%B %d, %Y at %s"
+msgstr "%B %d, %Y alas %s"
+
+msgid "Born"
+msgstr "Natawo"
+
+#. Appears below shared items, indicating the original author/creator
+msgid "By:"
+msgstr "Ni:"
+
+#. Button label
+msgid "Cancel"
+msgstr "Kanselahon"
+
+#. Link at bottom of home page (under "More") to info about jobs at Facebook
+msgid "Careers"
+msgstr "Mga Trabaho"
+
+#. Link that allows you to change the big photo at the top of your timeline
+msgid "Change Cover"
+msgstr "Islan ang Tabon"
+
+#. Label on tab for chatting with friends
+#. "Off" means you're not currently logged into the chat system
+msgid "Chat (Off)"
+msgstr "Magsugilanon (Offline)"
+
+msgid "Close"
+msgstr "Siraduhan"
+
+#. A link that takes you to a list of your closest friends on Facebook
+msgid "Close Friends"
+msgstr "Mga Suod Nga Kaabyanan"
+
+#. Verb. A link under a post that allows you to comment on the post.
+msgid "Comment"
+msgstr "Magtugda"
+
+#. Link at the bottom of home page to a help page explaining what cookies are
+msgid "Cookies"
+msgstr ""
+
+#. Button label; confirm a friend request
+msgid "Confirm"
+msgstr "Batunon"
+
+msgid "Create an Ad"
+msgstr "Maghimo sang Pasayod"
+
+#. Link at bottom of home page (under "More")
+msgid "Create a Page"
+msgstr "Maghimo sang Pahina"
+
+#. Appears as last item under "GROUPS" in left-hand navigation
+msgid "Create Group..."
+msgstr "Maghimo sang Grupo..."
+
+#. Button label at top of Groups page (click "MORE" next to "GROUPS")
+msgid "Create Group"
+msgstr "Maghimo sang Grupo"
+
+#. Link at bottom of home page (under "More") to info for software developers
+msgid "Developers"
+msgstr ""
+
+#. %d stands for a number, no need to translate it
+#. The singular "1 hour ago" is never used as far as I can tell
+msgid "1 hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "1 ka oras ang nakaligad"
+msgstr[1] "%d ka mga oras ang nakaligad"
+
+#. %d stands for a number, no need to translate it
+#. The singular "1 minute ago" is never used as far as I can tell
+msgid "1 minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "1 ka minuto ang nakaligad"
+msgstr[1] "%d ka mga minutos ang nakaligad"
+
+#. %d stands for a number, no need to translate it
+msgid "1 mutual friend"
+msgid_plural "%d mutual friends"
+msgstr[0] "1 ka kaangay nga abyan"
+msgstr[1] "%d ka mga kaangay nga abyan"
+
+#. %d stands for a number, no need to translate it
+msgid "1 NEW STORY"
+msgid_plural "%d NEW STORIES"
+msgstr[0] "1 KA BAG-O NGA ISTORYA"
+msgstr[1] "%d KA MGA BAG-O NGA ISTORYA"
+
+#. %d stands for a number, no need to translate it; "%d other people"
+#. The singular "1 other" is never used as far as I can tell
+#. Always a link. Used in sentences like the following:
+#. "John Doe and 7 others like this."
+#. "John Doe, Jane Doe, and 7 others like this."
+#. "You and 7 others like this."
+#. "You, John Doe and 7 others like this."
+msgid "1 other"
+msgid_plural "%d others"
+msgstr[0] "1 ka iban pa"
+msgstr[1] "%d ka mga iban pa"
+
+#. Always a link. "John Doe and 7 other friends are now friends with Kevin."
+#. The singular "1 other friend" is never used as far as I can tell
+msgid "1 other friend"
+msgid_plural "%d other friends"
+msgstr[0] "1 ka kaangay nga abyan"
+msgstr[1] "%d ka mga kaangay nga abyan"
+
+#. Always a link. "John Doe likes GaelSpell and 3 other pages"
+#. The singular "1 other page" is never used as far as I can tell
+msgid "1 other page"
+msgid_plural "%d other pages"
+msgstr[0] "1 ka iban pa nga pahina"
+msgstr[1] "%d ka iban pa nga mga pahina"
+
+#. Always a link. "John Doe is now friends with Jane Doe and 3 other people."
+#. The singular "1 other person" is never used as far as I can tell
+msgid "1 other person"
+msgid_plural "%d other people"
+msgstr[0] "1 ka iban pa nga tawo"
+msgstr[1] "%d ka iban pa nga mga tawo"
+
+#. %d stands for a number; used in sentences like "%d people like this."
+#. The singular "1 person" is never used as far as I can tell
+msgid "1 person"
+msgid_plural "%d people"
+msgstr[0] "1 ka tawo"
+msgstr[1] "%d ka mga tawo"
+
+#. %d stands for a number, no need to translate it
+#. The singular "1 second ago" is never used as far as I can tell
+msgid "1 second ago"
+msgid_plural "%d seconds ago"
+msgstr[0] "1 ka gutlo ang nakaligad"
+msgstr[1] "%d ka mga ginutlo ang nakaligad"
+
+#. %d stands for a number, no need to translate it
+#. This means a post has been shared %d times
+msgid "1 share"
+msgid_plural "%d shares"
+msgstr[0] "1 ka paambit"
+msgstr[1] "%d ka mga paambit"
+
+#. Appears at the bottom of your home time line, opposite "More Stories"
+#. Allows you to hide certain stories from your home page
+msgid "Edit Options"
+msgstr "I-edit ang Options"
+
+#. Attached to each post on your personal timeline
+msgid "Edit or Remove"
+msgstr "I-edit ukon Kuhaon"
+
+#. Link that lets you change your language settings
+#. Please translate to the name of your language, written in the language itself
+msgid "English (US)"
+msgstr "Hiligaynon"
+
+#. In the "New Message" dialog
+msgid "Enter a friend's name or email address"
+msgstr "Ihatag ang ngalan ukon email address sang abyan"
+
+#. A link to a list of events that you've been invited to
+msgid "Events"
+msgstr "Mga Hitabo"
+
+#. A link that shows you a list of your relatives on Facebook
+msgid "Family"
+msgstr "Pamilya"
+
+#. In left-hand column on home page, above links to "News Feed", "Messages", etc
+msgid "FAVORITES"
+msgstr "MGA NAHAMUT-AN"
+
+#. Link to a page that allows you to search your address books for FB friends
+#. Appears in the "Friend Requests" dialog and when you click the "Friends" link
+msgid "Find Friends"
+msgstr "Mangita sang mga Kaabyanan"
+
+msgid "Find More Pages"
+msgstr "Mangita sang dugang pa nga mga Pahina"
+
+#. Appears next to "Like" and "Comment" on each post in a group
+msgid "Follow Post"
+msgstr ""
+
+#. In search box that lets you search for friends that are available to chat
+msgid "Friends on Chat"
+msgstr "Mga Kaabyanan nga Mahimo Sugilanonon"
+
+#. People who have asked to be your friend on Facebook; top left of screen
+msgid "Friend Requests"
+msgstr "Mga Pangabay Para Mangin Abyan"
+
+#. A link that takes you to a list of all your Facebook friends
+msgid "Friends"
+msgstr "Mga Kaabyanan"
+
+#. Heading above your lists of friends ("Work", "Family", etc.)
+msgid "FRIENDS"
+msgstr "MGA KAABYANAN"
+
+#. A couple places on user home page
+msgid "Groups"
+msgstr ""
+
+#. Heading above the groups you're in, left-hand navigation on home page
+msgid "GROUPS"
+msgstr "MGA GRUPO"
+
+#. Link at bottom of home page ("More"); also in dropdown menu next to "Home"
+msgid "Help"
+msgstr "BULIG"
+
+#. Link that takes you to your home timeline; always visible at top-right
+msgid "Home"
+msgstr ""
+
+#. Main prompt when you enter in a new status update
+msgid "How are you doing, %s?"
+msgstr ""
+
+#. Main prompt when you enter in a new status update
+msgid "How are you feeling, %s?"
+msgstr ""
+
+#. Main prompt when you enter in a new status update
+#, fuzzy
+msgid "How's it going, %s?"
+msgstr "Ano ang sa imo ginapaminsar?"
+
+#. In left-hand column on home page
+msgid "INTERESTS"
+msgstr "MGA HUYOG"
+
+msgid "Life Event"
+msgstr "Hitabo sa Kabuhi"
+
+#. Verb. A link that allows you to "like" a post or a comment; "I like this"
+msgid "Like"
+msgstr "Kanami"
+
+#. Plural noun. Link that shows you a list of music, books, etc. you like on FB
+#. Appears at the top of your profile, after Friends, Photos, Map, ...
+msgid "Likes"
+msgstr "Mga Nanamian"
+
+#. Appears as link to right of "RECENT POST" on home page
+msgid "Like Page"
+msgstr "Nanamian nga Pahina"
+
+msgid "Like This Page"
+msgstr "Nanamian ka sini nga Pahina"
+
+msgid "Links"
+msgstr ""
+
+#. Was the heading above your lists of friends ("Work", "Family", etc.)
+msgid "LISTS"
+msgstr "Mga Lista"
+
+msgid "Log Out"
+msgstr "Maguwa Na"
+
+#. Link to a map of the places someone has been
+msgid "Map"
+msgstr "Mapa"
+
+#. Button near top of a user's profile page (but not your own!)
+msgid "Message"
+msgstr "Mensahe"
+
+#. In the "New Message" dialog
+msgid "Message:"
+msgstr "Mensahe:"
+
+msgid "Messages"
+msgstr "Mga Mensahe"
+
+#. Photographs uploaded from someone's mobile device
+msgid "Mobile Uploads"
+msgstr ""
+
+#. Link in bottom navigation. Click it to see additional links: Careers, etc.
+msgid "More"
+msgstr "Dugang pa"
+
+#. In left-hand navigation to the right of GROUPS, APPS when you mouse over
+msgid "MORE"
+msgstr "DUGANG PA"
+
+#. Appears at the bottom of your home time line; click to load more posts
+msgid "More Stories"
+msgstr "Dugang pa nga mga Istorya"
+
+#. Under "Sort" on the home page, can sort by "Top Stories" or "Most Recent"
+msgid "Most Recent"
+msgstr "Pinakabag-o"
+
+#. Appears in left-hand navigation for some users
+msgid "Music"
+msgstr "Musika"
+
+#. Not sure now where this appears, a figment?
+msgid "New Group..."
+msgstr "Bag-o nga Grupo..."
+
+msgid "New Message"
+msgstr "Bag-o nga Mensahe"
+
+#. Appears in left-hand navigation of home page
+msgid "News Feed"
+msgstr "Mga Balita"
+
+#. In "Friend Requests" drop down
+#, fuzzy
+msgid "No new requests"
+msgstr "Mga Pangabay Para Mangin Abyan"
+
+msgid "Notes"
+msgstr ""
+
+msgid "Notifications"
+msgstr "Mga Pahibalo"
+
+#. Button label; postpone confirmation of a friend request
+msgid "Not Now"
+msgstr "Indi Lang Anay"
+
+#. A link that takes you to the latest posts on your timeline
+msgid "Now"
+msgstr "Subong"
+
+#. Heading above the list of your FB pages (now "PAGES AND ADS"?)
+msgid "PAGES"
+msgstr "MGA PAHIHA"
+
+#. Heading above the list of your FB pages; left-hand navigation on home page
+msgid "PAGES AND ADS"
+msgstr ""
+
+msgid "People who like this"
+msgstr "Mga tawo nga nanamian sini"
+
+msgid "People You May Know"
+msgstr "Mga Tawo nga Basi Kilala Mo"
+
+#. Appears on profile above the "What's on your mind?" prompt, after "Status"
+msgid "Photo"
+msgstr "Litrato"
+
+#. Link to a user's photos, at top of profile, between "Friends" and "Map"
+msgid "Photos"
+msgstr "Mga Litrato"
+
+#. Link that allows you to "check in" somewhere
+#. Appears on profile above "What's on your mind?", after "Status" and "Photo"
+msgid "Place"
+msgstr "Lugar"
+
+#. Appears, e.g., on your Timeline, showing places you visited during the year
+msgid "Places"
+msgstr "Mga Lugar"
+
+#. Appears in left-hand navigation for some users, under "APPS"
+msgid "Pokes"
+msgstr "Mga Pagdukol"
+
+#. Link at the bottom of home page to Facebook's privacy policy
+msgid "Privacy"
+msgstr "Husa"
+
+msgid "Privacy Settings"
+msgstr "Mga Settings sang Husa"
+
+#, fuzzy
+msgid "Privacy Shortcuts"
+msgstr "Mga Settings sang Husa"
+
+#. Appears when you mouse over your name in the top navigation
+msgid "Profile"
+msgstr ""
+
+#. Appears under APPS for some users in left-hand navigation
+msgid "Questions"
+msgstr "Mga Pamangkot"
+
+#. Box near the top of your personal timeline showing your recent actions on FB
+#. Now defunct, I think - replaced by "Activity" and "Recent" on a line below
+msgid "Recent Activity"
+msgstr "Bag-o nga Ginhimo"
+
+#. Appears next to some posts on home page
+msgid "RECENT POST"
+msgstr ""
+
+#. Appears in right-hand navigation (sometimes); pages that Facebook things you'll like
+msgid "Recommended Pages"
+msgstr "Ginarekomendar nga mga Pahina"
+
+#. When you share a link in a comment, use this to remove the preview image
+msgid "Remove Preview"
+msgstr "Kuhaon ang Preview"
+
+#. Option on every post on your personal timeline (now defunct? see "Highlight")
+msgid "Resize"
+msgstr "Lainon ang Kadakuon"
+
+#. Prompt when you comment on a post (was "Write a comment..."); %s = your name
+#, fuzzy
+msgid "%s, add a comment..."
+msgstr "Magsulat sang tugda..."
+
+#. Text that used to appear in the search box at the top of the page
+msgid "Search"
+msgstr "Mangita"
+
+#. Text that appears in the search box at the top of the page
+msgid "Search for people, places and things"
+msgstr "Mangita sang mga tawo, lugar kag bagay"
+
+#. Link in right-hand column near "Recommended Pages" and "People You May Know"
+#. Also under Friend Requests, Messages, Notifications drop downs
+msgid "See All"
+msgstr "Lantawon Tanan"
+
+#. Now just "See All"?
+msgid "See All Friend Requests"
+msgstr "Lantawon ang Tanan nga mga Pangabay Para Mangin Abyan"
+
+#. Now just "See All"?
+msgid "See All Messages"
+msgstr "Lantawon ang Tanan Nga Mga Mensahe"
+
+#. Now just "See All"?
+msgid "See All Notifications"
+msgstr "Lantawon ang Tanan Nga Mga Pahibalo"
+
+#. A link that shows interactions and photos involving two Facebook friends
+#. One place it appears is in the "gear" menu on a friend's profile
+msgid "See Friendship"
+msgstr "Lantawon Ang Pag-abyanay"
+
+#. See more of a post that was truncated because it was very long
+msgid "See More"
+msgstr "Lantawon ang dugang pa"
+
+#. Under "Privacy Shortcuts" menu
+#, fuzzy
+msgid "See More Settings"
+msgstr "Lantawon ang dugang pa"
+
+#. Link that appears under a post in another language; click it to translate
+msgid "See Translation"
+msgstr "Lantawon ang Paglubad"
+
+#. Label on button in "New Message" dialog to send the message
+msgid "Send"
+msgstr "Ipadala"
+
+#. Link that opens the "New Message" dialog
+msgid "Send a New Message"
+msgstr "Ipadala ang Bag-o nga Mensahe"
+
+#. Appears in "Friend Requests" and "Notifications" drop down menu
+#, fuzzy
+msgid "Settings"
+msgstr "Mga Settings sang Account"
+
+#. Verb. A link that allows you to share (usually someone else's) post with your friends
+msgid "Share"
+msgstr "Ipaambit"
+
+#. A link that allows you to sort posts by "most recent" or "top stories"
+msgid "SORT"
+msgstr "PASUNUDON"
+
+#. Appears above paid advertisements
+msgid "Sponsored"
+msgstr "Mga Binayaran Nga Pasayod"
+
+#. This is a Facebook "status update", not a relationship status
+#. Appears on profile above the "What's on your mind?" prompt
+msgid "Status"
+msgstr ""
+
+#. With "Like Page" and "Find More Pages" when someone likes a page
+msgid "Subscribe to Page"
+msgstr ""
+
+#. Top of profile, after Friends, Photos, Map, ...
+msgid "Subscriptions"
+msgstr ""
+
+#. Right-hand navigation, similar to "People you may know"
+#. Get it by clicking "GROUPS" in left-hand navigation on Home Page
+msgid "Suggested Groups"
+msgstr "Ginasuhestiyon nga Mga Grupo"
+
+msgid "Tag Friends"
+msgstr "I-tag ang mga kaabyanan"
+
+#. Link at the bottom of home page to Facebook's "Terms of Service"
+msgid "Terms"
+msgstr "Mga Kasugtanan"
+
+#. Real time news feed in the right-hand column
+#. "Nuacht Bheo" = "Live News" in Irish; "Instant Information" in Spanish
+msgid "Ticker"
+msgstr "Mga Preska nga Impormasyon"
+
+#. Appears as a link when you scroll down on your profile, next to "Now"
+msgid "Timeline"
+msgstr ""
+
+#. %T is a timestamp ("11 hours ago"), %a is a location ("Dublin, Ireland")
+msgid "%T near %a"
+msgstr "Mga %T malapit sa %a"
+
+#. Specifies recipient when you send a private message
+msgid "To:"
+msgstr "Para kay:"
+
+#. Under "Sort" on the home page, can sort by "Top Stories" or "Most Recent"
+msgid "Top Stories"
+msgstr "Nagapanguna nga mga Istorya"
+
+#. See "Follow Post"
+msgid "Unfollow Post"
+msgstr ""
+
+#. Verb. See "Like"
+msgid "Unlike"
+msgstr "Ay, indi gali manami"
+
+#. Label on a button that allows you to edit your personal information
+msgid "Update Info"
+msgstr "I-update ang Impormasyon"
+
+#. This is a Facebook "status update", not a relationship status
+#. Appears at top of home timeline, with "Ask Question", "Add Photo/Video"
+msgid "Update Status"
+msgstr "I-update ang Status"
+
+msgid "Use Facebook as:"
+msgstr "Gamiton ang Facebook bilang:"
+
+#. %d stands for a number, no need to translate it
+#. The singular "View 1 comment" is never used as far as I can tell
+msgid "View 1 comment"
+msgid_plural "View all %d comments"
+msgstr[0] "Lantawon ang 1 ka tugda"
+msgstr[1] "Lantawon ang %d ka mga tugda"
+
+msgid "Wall Photos"
+msgstr "Mga Litrato sa Wall"
+
+#. Appears in left-hand navigation for new users
+msgid "Welcome"
+msgstr "Pag-abiabi"
+
+#. Main prompt when you enter in a new status update
+#, fuzzy
+msgid "What's going on, %s?"
+msgstr "Ano ang sa imo ginapaminsar?"
+
+#. Main prompt when you enter in a new status update
+#, fuzzy
+msgid "What's happening, %s?"
+msgstr "Ano ang sa imo ginapaminsar?"
+
+#. Main prompt when you enter in a new status update
+msgid "What's on your mind?"
+msgstr "Ano ang sa imo ginapaminsar?"
+
+#. Prompt when you comment on a post (replaced by "X, add a comment..."?)
+msgid "Write a comment..."
+msgstr "Magsulat sang tugda..."
+
+#. Appears next to a post or comment as a timestamp
+msgid "Yesterday"
+msgstr "Kagapon"
+
+#. Appears next to a post or comment as a timestamp; %s is the time of day
+msgid "Yesterday at %s"
+msgstr "Kagapon alas %s"
+
+msgid "You like this."
+msgstr "Nanamian mo ini."
+
+#. Month Name
+msgid "January"
+msgstr "Enero"
+
+#. Month Name
+msgid "February"
+msgstr "Pebrero"
+
+#. Month Name
+msgid "March"
+msgstr "Marso"
+
+#. Month Name
+msgid "April"
+msgstr "Abril"
+
+#. Month Name
+msgid "May"
+msgstr "Mayo"
+
+#. Month Name
+msgid "June"
+msgstr "Hunyo"
+
+#. Month Name
+msgid "July"
+msgstr "Hulyo"
+
+#. Month Name
+msgid "August"
+msgstr "Agosto"
+
+#. Month Name
+msgid "September"
+msgstr "Septyembre"
+
+#. Month Name
+msgid "October"
+msgstr "Oktubre"
+
+#. Month Name
+msgid "November"
+msgstr "Nobyembre"
+
+#. Month Name
+msgid "December"
+msgstr "Disyembre"
+
+#. Day of the Week
+msgid "Monday"
+msgstr "Lunes"
+
+#. Day of the Week
+msgid "Tuesday"
+msgstr "Martes"
+
+#. Day of the Week
+msgid "Wednesday"
+msgstr "Miyerkules"
+
+#. Day of the Week
+msgid "Thursday"
+msgstr "Huwebes"
+
+#. Day of the Week
+msgid "Friday"
+msgstr "Biyernes"
+
+#. Day of the Week
+msgid "Saturday"
+msgstr "Sabado"
+
+#. Day of the Week
+msgid "Sunday"
+msgstr "Domingo"

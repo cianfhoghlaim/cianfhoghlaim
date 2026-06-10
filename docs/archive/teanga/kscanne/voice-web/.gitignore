@@ -1,0 +1,20 @@
+node_modules
+config.json
+web/dist/
+web/index.html
+server/js/
+server/upload/
+xcuserdata/
+.ignore
+.ignored_files/
+.DS_Store
+.vscode/
+ZZidea
+
+# Nubis
+nubis/librarian-puppet.tar.gz
+nubis/librarian-puppet
+nubis/Puppetfile.lock
+nubis/.tmp
+nubis/.librarian
+nubis/builder/artifacts/*

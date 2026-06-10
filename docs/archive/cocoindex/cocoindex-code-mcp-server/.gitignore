@@ -1,0 +1,60 @@
+__pycache__/
+/quickstart/
+/rust/target/
+/monkeytype.sqlite3
+/out/
+/test-results/
+!/test-results/search-hybrid/.keep
+/tmp/
+.dmypy.json
+/artifacts/
+/.env
+
+# Python (and python cache)
+*.pyc
+*.log
+*.pyo
+*.pywc
+*.pyd
+*.egg
+*.egg-info/
+*.whl
+*.dist-info/
+*.coverage
+*.cache
+*.pytest_cache/
+.venv/
+
+# Python test artifacts
+.pytest_cache/
+.coverage*
+htmlcov/
+
+# Claude
+/.claude/*.local.*
+
+# CocoIndex
+/eval_CodeEmbedding_*
+
+# Log files
+/log
+*.log*
+
+# Test output
+/tests/all_languages_baseline_results.json
+/tests/lang/haskell/haskell_baseline_results.json
+
+# Maturin build artifacts
+*.so
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# Other languages
+a.out
+*.hi
+*.o
+*.class
+rust_example_1
+META-INF

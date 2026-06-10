@@ -1,0 +1,9 @@
+{
+  "success": true,
+  "commentID": 456,
+  "when": "2018-01-01",
+  "body": "Oh look, a new comment!",
+  "bodyMarkdown": "<p>Oh look, a new comment!</p>",
+  "extranetID": 123,
+  "tagID": 456
+}

@@ -1,0 +1,93 @@
+body {
+  font-family: sans-serif;
+}
+
+h1 {
+  background-color: #1F3D99;
+  color: white;
+  border: 2px solid #0C183D;
+  padding: 5px;
+  text-align: center;
+}
+
+h2 {
+  padding: 0.1em;
+  padding-left: 0.2em;
+  /*font-style: italic;*/
+  margin-bottom: 0em;
+  margin-top: 1.4em;
+  border-width: 1px;
+  background-color: #F8F8F8;
+  
+  border-right-color: #1F3D99;
+  border-right-style: solid;
+  border-right-width: 0.3em;
+  border-top-color: #1F3D99;
+  border-top-style: solid;
+  border-top-width: 0.3em;
+}
+
+h1 span {
+  font-style: italic;
+  color: #FFFF4D;
+}
+
+div.content>p, div.content>ul, div.content>div.divp {
+  text-align: justify;
+  position: relative;
+  margin: 0.8em;
+  margin-top: 0.6em;
+  margin-bottom: 0.6em;
+  padding: 0.6em;
+  background-color: #F8F8F8;
+  border-radius: 3px;
+  color: black;
+}
+
+div.content>ul{
+  padding: unset;
+  padding-top: 0.1em;
+  padding-left: 0.8em;
+  padding-bottom: 0.7em;
+}
+
+div.divp {
+  padding-top: 0em;
+}
+
+div.divp>p{
+  margin-top: 0em;
+}
+
+div.divp>ul{
+  margin-left: 0em;
+  padding-left: 0.4em;
+  margin-bottom: 0em;
+}
+
+div.content li {
+  /*background-color: #F2F2F2;*/
+  border-radius: 3px;
+  color: black;
+  margin: 0.4em;
+  margin-left: 1em;
+  margin-right: 3em;
+  padding: 0.4em;
+  padding-bottom: 0.1em;
+  padding-top: 0.1em;
+  text-align: justify;
+}
+
+div.content a:link {
+  color: blue;
+}
+div.content a:visited {
+  color: purple;
+}
+
+div.content a:hover {
+  color: red;
+}
+div.content a:active {
+  color: red;
+}

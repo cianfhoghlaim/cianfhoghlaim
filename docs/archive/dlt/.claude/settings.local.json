@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/cliste/dev/bonneagar/hackathon/data/examples/cocoindex/code_embedding/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

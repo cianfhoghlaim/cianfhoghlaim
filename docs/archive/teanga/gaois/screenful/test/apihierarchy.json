@@ -1,0 +1,15 @@
+{
+  "success": true,
+  "total": 7,
+  "parentEntries": [
+    {"level": 0, "hasChildren": true, "id": 1, "content": "<somexml>I am an entry.</somexml>"},
+    {"level": 1, "hasChildren": true, "id": 2, "content": "<somexml>I am an entry too.</somexml>"},
+    {"level": 2, "hasChildren": true, "id": 3, "content": "<somexml>I am an entry too.</somexml>"}
+  ],
+  "entries": [
+    {"level": 3, "hasChildren": true, "id": 345, "content": "<somexml>I am an entry.</somexml>"},
+    {"level": 3, "hasChildren": false, "id": 123, "content": "<somexml>I am an entry too. I am an entry too. I am an entry too. I am an entry too. I am an entry too.</somexml>"},
+    {"level": 3, "hasChildren": false, "id": 567, "content": "<somexml>I am also an entry.</somexml>"},
+    {"level": 3, "hasChildren": true, "id": 678, "content": "<somexml>I, too, am an entry.</somexml>"}
+  ]
+}

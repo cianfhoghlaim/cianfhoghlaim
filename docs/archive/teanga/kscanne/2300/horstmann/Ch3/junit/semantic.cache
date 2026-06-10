@@ -1,0 +1,15 @@
+;; Object junit/
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "junit/"
+  :tables (list 
+   (semanticdb-table "DayTest.java"
+    :major-mode 'jde-mode
+    :tags '(("junit.framework.*" include nil nil [1 26]) ("DayTest" type (:typemodifiers ("public") :superclasses "TestCase" :members (("testAdd" function (:typemodifiers ("public") :type "void") (reparse-symbol class_member_declaration) [210 434]) ("testAddNegative" function (:typemodifiers ("public") :type "void") (reparse-symbol class_member_declaration) [526 759]) ("testDaysFrom" function (:typemodifiers ("public") :type "void") (reparse-symbol class_member_declaration) [820 1153]) ("testGregorianBoundary" function (:typemodifiers ("public") :type "void") (reparse-symbol class_member_declaration) [1248 1450]) ("MAX_DAYS" variable (:typemodifiers ("private" "static" "final") :type "int") (reparse-symbol class_member_declaration) [1455 1497]) ("INCREMENT" variable (:typemodifiers ("private" "static" "final") :type "int") (reparse-symbol class_member_declaration) [1501 1541])) :type "class") nil [80 1543]))
+    :file "DayTest.java"
+    :pointmax 1545
+    )
+   )
+  :file "semantic.cache"
+  :semantic-tag-version "2.0beta3"
+  :semanticdb-version "2.0beta3"
+  )

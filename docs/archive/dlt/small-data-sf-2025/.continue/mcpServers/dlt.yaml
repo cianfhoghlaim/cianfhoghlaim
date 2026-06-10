@@ -1,0 +1,11 @@
+name: dlt MCP server
+version: 0.0.1
+schema: v1
+mcpServers:
+  - command: uv
+    name: dlt
+    args:
+      - run
+      - python
+      - "-m"
+      - "dlt_mcp"

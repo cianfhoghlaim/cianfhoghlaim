@@ -1,0 +1,82 @@
+# Jackson's thesis, p.56... but versions with tone/length in Kimenyi p.15ff
+i+aa+cu	yacu
+ku^kó^a	gukwa
+ko+áza	kwaza
+ku^vu^a	kuva
+ku^pfu^a	gupfa
+ama+ínyo	amenyo
+aka+íibo	akebo
+gu^há^ir+a	guhera
+ku^tá^ir+a	gutera
+# next batch are in Kimenyi p.17 too
+ku^bón^ir+a	kubonera
+ku^bón^iish+a	kubonesha
+ku^bón^ik+a	kuboneka
+ku^tém^ir+a	gutemera
+ku^tém^iish+a	gutemesha
+ku^tém^ik+a	gutemeka
+ku^kór^a	gukora
+a+zaa+ki^som^a	azagisoma
+ku+tá^kin^a	kudakina
+in+bogó	imbogo
+in+da	inda
+in+gwe	ingwe
+in+papuro	imhapuro
+# in+taama	inhama (imhama like previous?)
+in+rimi	indimi
+in+rúurú	induru
+# these are (42) in Kimenyi p.18
+in+pfiizi	imfizi
+ku+n+tsíind+a	kunsinda
+in+tsuro	insuro
+ingay+yi	ingayi
+iranow+w+a	iranowa
+muragy+w+a	muragwa
+ya+now+ye	yanowe
+# JM p.62
+birakujij+ye	birakujije
+amumiish+ye	amumishe
+# umubeeshy+yi	umubeshyi (not umubeshi?, y+y=y, then h+ye=he)
+# yabimeny+ye	yabimenye (similarly, not "yabimene"?)
+barakurir+ir+ye	barakuririye
+abarwaar+yi	abarwayi
+kuragaragar+ye	kuragaragaye
+# Kimenyi p. 16
+ku+óog+a	koga
+# iki+íibo	ikibo
+umu+nsi	umunsi
+aba+ntu	abantu
+ba+ha+ye	bahaye
+ba+gi+ye	bagiye
+ku+n^mir^a	kumira
+# Kimenyi top p.7
+nti+ba+zaa+na+ki+ku+íi^éerek^ir+a+ho	ntibazanakikwiyerekeraho
+ba+ta+aa+na+bi+ha+n^shyir^ir+ye+mó	batanabihanshyiriyemo
+# Kimenyi p.17
+ku^íib^a	kwiba
+ku+n^iib^a	kunyiba
+# Kimenyi mutations bottom p.18
+ba+kop+ye	bakopke
+ba+rob+ye	barobge
+ba+som+ye	basomne
+ba+ras+ye	barase
+ba+dod+ye	badoze
+ba+root+ye	barose
+ba+men+ye	bamene
+ba+baaz+ye	babaze
+# Kimenyi top p.19, r-deletion
+ba+raar+ye	baraye
+ba+kor+ye	bakoze
+ba+saak+ye	basatse
+ba+haag+ye	bahaze
+ba+men+ye	bamene
+ba+ramn+ye	baramize
+ba+fas+ye	bafasize
+ba+baz+ye	babazize
+# Kimenyi chapter 3
+ba+ra^som^a	barasoma
+a^teets^e	atetse
+i+a^haa^ye	yahaye
+a+ra^kor^ir+a	arakorera
+a+ra^som^ir+a	arasomera
+a+ra^há^ir+a	arahera

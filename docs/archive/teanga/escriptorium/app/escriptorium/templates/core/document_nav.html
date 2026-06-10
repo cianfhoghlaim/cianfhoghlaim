@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load i18n bootstrap static %}
+{% block head_title %}{% if object %}{% trans "Update a Document" %}{% else %}{% trans "Create a new Document" %}{% endif %}{% endblock %}
+
+{% block body %}
+{% if request.user.legacy_mode %}
+<div id="part-edit">
+    <nav>
+      <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+        {% block nav %}
+
+        {% if object %}
+        <a class="mt-2 center px-3"
+             title="{% trans "Back to document list" %}"
+             href="{% url 'documents-list' slug=document.project.slug %}"
+           >
+            <i class="fas fa-arrow-left fa-lg"></i>
+        </a>
+        {% endif %}
+
+        <a href="{% if object %}{% url 'document-update' pk=document.pk %}{% endif %}" class="nav-item nav-link {% block nav-doc-active %}{% endblock %}" id="nav-doc-tab" role="tab" aria-controls="nav-doc" aria-selected="true">{% trans "Description" %}</a>
+
+        <a href="{% if object %}{% url 'document-ontology' pk=document.pk %}{% endif %}" class="nav-item nav-link {% block nav-onto-active %}{% endblock %}" id="nav-ontology-tab" role="tab" aria-controls="nav-doc" aria-selected="true">{% trans "Ontology" %}</a>
+
+        <a href="{% if object %}{% url 'document-images' pk=document.pk %}{% else %}#{% endif %}" class="nav-item nav-link {% if not object %}disabled{% endif %} {% block nav-images-active %}{% endblock %}" id="nav-img-tab" role="tab" aria-controls="nav-img" aria-selected="true">{% trans "Images" %}</a>
+
+        <a href="{% if document  %}{% url 'document-part-edit' pk=document.pk %}{% else %}#{% endif %}" class="nav-item nav-link {% block nav-edit-active %}{% endblock %}{% if not object or not document.parts.count %}disabled{% endif %}" id="nav-edit-tab" role="tab" aria-controls="nav-doc" aria-selected="true">{% trans "Edit" %}</a>
+
+        {% with models_count=document.ocr_models.count %}
+        <a href="{% if document and models_count %}{% url 'document-models' document_pk=document.pk %}{% else %}#{% endif %}" class="nav-item nav-link {% if not document or not models_count %}disabled{% endif %}" id="nav-models-tab" role="tab" aria-controls="nav-doc" aria-selected="true">{% trans "Models" %}</a>
+        {% endwith %}
+
+        <a href="{% if document  %}{% url 'document-report' pk=document.pk %}{% else %}#{% endif %}"
+           class="nav-item nav-link {% block nav-reports-active %}{% endblock %}"
+           id="nav-reports-tab"
+           role="tab"
+           aria-controls="nav-reports"
+           aria-selected="true">{% trans "Reports" %}</a>
+
+        {% endblock nav %}
+
+        {% block extra_nav %}
+        <div class="nav-div nav-item ml-5">{{document.name}}</div>
+        {% endblock %}
+      </div>
+    </nav>
+
+  {% block tab_content %}{% endblock %}
+</div>
+{% block modals %}{% endblock %}
+{% else %}
+  <div id="images-page">
+    <images-page
+        :id={{ document.pk }}
+        :search-disabled="{% if DISABLE_ELASTICSEARCH %}true{% else %}false{% endif %}"
+        :markdown-enabled="{% if EXPORT_OPENITI_MARKDOWN_ENABLED %}true{% else %}false{% endif %}"
+        :tei-enabled="{% if EXPORT_TEI_XML_ENABLED %}true{% else %}false{% endif %}"
+    ></images-page>
+  </div>
+{% endif %}
+{% endblock %}
+
+{% block extrascript %}
+    {% if not request.user.legacy_mode %}
+        <script src="{% static 'imagesPage.js' %}"></script>
+    {% endif %}
+{% endblock extrascript %}
+
+{% block extrastyle %}
+    {% if not request.user.legacy_mode %}
+        <link href="{% static 'imagesPage.css' %}" rel="stylesheet" type="text/css">
+    {% endif %}
+{% endblock extrastyle %}
+
+{% if not request.user.legacy_mode %}
+    {# hide legacy UI alerts #}
+    {% block legacy_alerts %}
+    {% endblock %}
+{% endif %}
+
+{% if request.user.legacy_mode and not DISABLE_ELASTICSEARCH %}
+  {% block searchbar_hidden_inputs %}
+  <input name="project" type="text" value="{{document.project.pk}}" hidden>
+  <input name="document" type="text" value="{{document.pk}}" hidden>
+  {% endblock %}
+
+  {% block searchbar_transcription_filter %}
+  <input id="hiddenSearchTrLevelInput" name="transcription" type="text" value="" hidden>
+
+  <div class="input-group-prepend">
+    <select
+      class="form-control form-control-sm not-rounded-left"
+      onchange="getElementById('hiddenSearchTrLevelInput').value = this.value;"
+      title="{% trans "Select a specific transcription to search in." %}"
+    >
+      <option value="">{% trans "All levels" %}</option>
+      {% for tr_lvl in document.transcriptions.all %}
+      <option value="{{ tr_lvl.id }}">{{ tr_lvl.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  {% endblock %}
+
+  {% block searchbar_placeholder %}{% blocktrans with name=document.name %}Search in {{ name }}{% endblocktrans %}{% endblock %}
+{% endif %}

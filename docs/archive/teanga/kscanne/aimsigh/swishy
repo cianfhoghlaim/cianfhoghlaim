@@ -1,0 +1,7 @@
+#!/bin/bash
+if [ $1 = "TEIDIL" ]
+then
+	find /usr/local/share/crubadan/ga/sonrai -name '*.dat' | sed "s/^.*\/\([0-9]*\)\.dat$/\1/" 
+else
+	find /snapshot/aimsigh/$1 -name '*.txt' | sed "s/^\/snapshot\/aimsigh\/$1\/\([0-9]*\)\.txt$/\1/" 
+fi | prsort.pl | swishy.pl $1

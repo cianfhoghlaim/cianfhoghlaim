@@ -1,0 +1,14 @@
+{
+  "success": true,
+  "comments": [
+    {
+      "commentID": 133,
+      "userID": "someone@example.com",
+      "when": "2018-12-31",
+      "body": "What is this?",
+      "bodyMarkdown": "<p>What is this?</p>",
+      "extranetID": 123,
+      "tagID": 123
+    }
+  ]
+}

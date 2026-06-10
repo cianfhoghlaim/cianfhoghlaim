@@ -1,0 +1,41 @@
+This is stuff to update the year articles on wikipedia.
+
+To update year pages with new births and deaths
+(good to do after substantial work on WD descriptions, e.g.)
+
+First make sure that current year is at bottom of years.txt (not added
+automatically!)
+
+$ make clean
+$ make
+(takes 2+ hours)
+
+Quality control:
+$ egrep '(Q[0-9]+)[[:space:]].*\1' *.tsv
+(finds any examples with a missing Irish label)
+
+$ egrep 'NONE' *.tsv
+(finds any examples with a missing Irish description — many!)
+
+(can fix what I want in Wikidata and then re-run,
+but note it's also OK to just leave these in *.tsv since
+the bliain.py script knows to ignore these).
+
+Then copy bas.tsv and breith.tsv over to laptop
+
+Note there is some weirdness with Gregorian vs. Julian dates, 
+e.g. dáta báis Robert Bruce which "appears" on Wikidata as 7 Meitheamh
+but comes through this scripts as 15 Meitheamh!
+
+Run on laptop as
+
+$ python dates.py blianta breith dryrun | more
+$ python dates.py laethanta breith dryrun | more
+$ python dates.py blianta bas dryrun | more
+$ python dates.py laethanta bas dryrun | more
+
+If there are problems in the dry run (usually dupes being added
+when a page has been renamed), easiest to fix those manually
+*before* running the bot live.
+
+And then with "live" in place of "dryrun" (no need for "more")

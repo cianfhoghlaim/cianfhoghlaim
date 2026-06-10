@@ -1,0 +1,148 @@
+stages:
+  - test
+  - build
+  - deploy
+
+lint:
+  image: python:3.8
+  stage: test
+
+  rules:
+    # skip when building gitlab pages
+    - if: '$LANDING == null'
+      when: on_success
+    - when: never
+
+  before_script:
+    - pip install pre-commit
+
+  script:
+    - pre-commit run -a
+
+tests:
+  stage: test
+  image: registry.gitlab.com/scripta/escriptorium/base:dj-solo
+
+  # Skip tests for base tags since the tests are likely to fail if any api
+  # of one of the modules changed
+  # and the tests will be run on the actual build anyway
+  rules:
+    - if: '$CI_COMMIT_TAG !~ /^base-.*/ && $LANDING == null'
+      when: on_success
+    - when: never
+  services:
+    - postgres:15
+    - redis:alpine
+
+  variables:
+    # Databases settings
+    REDIS_HOST: redis
+    REDIS_PORT: 6379
+    SQL_HOST: postgres
+    POSTGRES_DB: escriptorium
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+
+    # Pip cache
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+  cache:
+    paths:
+      - .cache/pip
+
+  # except:
+  #   - schedules
+
+  script:
+    - python app/manage.py test -v 2 users api versioning imports core
+
+build:
+  stage: build
+  image: node:12-alpine
+
+  rules:
+    # skip when building gitlab pages
+    - if: '$LANDING == null'
+      when: on_success
+    - when: never
+
+  artifacts:
+    paths:
+      - front/dist
+    expire_in: 2 weeks
+
+  before_script:
+    - cd front
+    - npm ci
+
+  script:
+    - npm run production
+
+.docker-build:
+  stage: build
+  image: docker:19.03.1
+  rules:
+    # skip when building gitlab pages
+    - if: '$LANDING == null'
+      when: on_success
+    - when: never
+
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://docker:2375/
+
+docker-build-app:
+  extends: .docker-build
+  rules:
+    # skip when building gitlab pages
+    - if: '$LANDING == null'
+      when: on_success
+    - when: never
+  script:
+    - ci/build.sh app
+
+docker-build-exim:
+  extends: .docker-build
+  rules:
+    # skip when building gitlab pages
+    - if: '$LANDING == null'
+      when: on_success
+    - when: never
+  script:
+    - ci/build.sh exim
+
+docker-build-nginx:
+  extends: .docker-build
+  rules:
+    # skip when building gitlab pages
+    - if: '$LANDING == null'
+      when: on_success
+    - when: never
+  script:
+    - ci/build.sh nginx
+
+docker-build-base:
+  extends: .docker-build
+  # Run this only on base tags
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^base-.*/'
+      when: on_success
+    - when: never
+
+  script:
+    - ci/build-base.sh
+
+pages:
+  stage: deploy
+  image: busybox
+  rules:
+    # run this job only on manual trigger in GitLab web ui
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+  script:
+    # install npm deps and build storybook
+    - echo "The site will be deployed to $CI_PAGES_URL"
+  artifacts:
+    paths:
+      - public

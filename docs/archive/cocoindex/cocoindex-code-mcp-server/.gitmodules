@@ -1,0 +1,12 @@
+[submodule "cocoindex"]
+	path = cocoindex
+	url = git@github.com:cocoindex-io/cocoindex.git
+[submodule "code-index-mcp"]
+	path = code-index-mcp
+	url = git@github.com:johnhuang316/code-index-mcp.git
+[submodule "ai-enhanced-app-dev"]
+	path = ai-enhanced-app-dev
+	url = git@github.com:aanno/ai-enhanced-app-dev.git
+[submodule "astchunk"]
+	path = astchunk
+	url = git@github.com:yilinjz/astchunk.git

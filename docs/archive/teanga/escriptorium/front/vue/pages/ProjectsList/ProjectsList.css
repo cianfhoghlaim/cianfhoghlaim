@@ -1,0 +1,32 @@
+/* new project modal */
+.escr-new-project .escr-modal,
+.escr-delete-project .escr-modal {
+    width: 400px;
+    position: absolute;
+    top: 25%;
+    left: calc(50% - 216px);
+}
+/* table height */
+.escr-projects-list .escr-card-table {
+    overflow: hidden;
+    display: flex;
+    flex-flow: column;
+    padding: 0;
+    max-height: calc(90vh - 32px);
+}
+.escr-projects-list .table-container {
+    overflow: auto;
+    margin: 0;
+    padding: 0;
+}
+/* constrain tags cells width */
+.escr-projects-list table td:nth-of-type(2) {
+    width: 300px;
+    max-width: 300px;
+}
+.escr-projects-list .escr-card-actions > button:last-of-type {
+    margin-left: 2rem;
+}
+.escr-projects-list .escr-loader-container {
+    margin: 1rem;
+}
