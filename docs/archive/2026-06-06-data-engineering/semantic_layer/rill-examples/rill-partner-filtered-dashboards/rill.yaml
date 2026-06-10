@@ -1,0 +1,11 @@
+compiler: rillv1
+
+display_name: Partner-Filtered Dashboards Demo
+
+olap_connector: duckdb
+
+mock_users:
+  - email: admin@rilldata.com
+    admin: true
+  - email: john.smith@gmail.com
+  - email: anon@unknown.com

@@ -1,0 +1,14 @@
+{
+  "version": "1.5.14",
+  "npmClient": "yarn",
+  "command": {
+    "bootstrap": {
+      "npmClient": "yarn",
+      "npmClientArgs": ["--frozen-lockfile"]
+    },
+    "version": {
+      "allowBranch": ["master", "lts/*"]
+    }
+  },
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
+}

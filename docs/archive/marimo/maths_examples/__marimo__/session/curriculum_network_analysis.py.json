@@ -1,0 +1,107 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.17.7"
+  },
+  "cells": [
+    {
+      "id": "MJUe",
+      "code_hash": "c55e13eb2c934e173f65d3d45f6dfcb1",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"curriculum-network-analysis\">Curriculum Network Analysis</h1>\n<span class=\"paragraph\">This notebook applies <strong>graph theory</strong> and <strong>network analysis</strong> concepts to explore\nthe Irish educational curriculum structure. We analyze:</span>\n<ol>\n<li><strong>Subject-Topic Networks</strong> - How subjects connect through shared concepts</li>\n<li><strong>Centrality Measures</strong> - Which topics/subjects are most interconnected</li>\n<li><strong>Community Detection</strong> - Natural clustering of subjects</li>\n<li><strong>Prerequisite Chains</strong> - Dependency relationships between topics</li>\n</ol>\n<h2 id=\"mathematical-foundations\">Mathematical Foundations</h2>\n<span class=\"paragraph\">From CS4423 Networks (Prof. Pfeiffer, NUI Galway):</span>\n<ul>\n<li><strong>Degree Centrality</strong>: <marimo-tex class=\"arithmatex\">||(c_i^D = k_i = \\sum_j a_{ij}||)</marimo-tex></li>\n<li><strong>Eigenvector Centrality</strong>: <marimo-tex class=\"arithmatex\">||(\\lambda c^E = A c^E||)</marimo-tex> (Perron-Frobenius)</li>\n<li><strong>Betweenness Centrality</strong>: Proportion of shortest paths through node</li>\n</ul></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "c003c90d2a44ce093c0cb97f8bbc2802",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"top-10-most-central-nodes-eigenvector-centrality\">Top 10 Most Central Nodes (Eigenvector Centrality)</h3>\n<span class=\"paragraph\">Eigenvector centrality identifies nodes connected to other important nodes.\nHigh values indicate topics/subjects that bridge multiple curriculum areas.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "5544a1e6bce2c7017e40b044f6d0a459",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"summary-and-next-steps\">Summary and Next Steps</h2>\n<span class=\"paragraph\">This analysis demonstrates how <strong>graph theory</strong> from CS4423 Networks applies to\ncurriculum analysis:</span>\n<h3 id=\"key-findings\">Key Findings</h3>\n<ol>\n<li><strong>Central Concepts</strong>: Topics that bridge multiple subjects (high betweenness)</li>\n<li><strong>Subject Clusters</strong>: Natural groupings based on shared concepts</li>\n<li><strong>Prerequisite Structure</strong>: How mathematical concepts build on each other</li>\n</ol>\n<h3 id=\"integration-with-gaeilge-project\">Integration with Gaeilge Project</h3>\n<ul>\n<li>Use these centrality measures to identify <strong>key curriculum topics</strong></li>\n<li>Build <strong>topic forecasting</strong> models using Markov chains (MP307)</li>\n<li>Connect to <strong>Neo4j knowledge graph</strong> for curriculum relationship queries</li>\n</ul>\n<h3 id=\"related-notebooks\">Related Notebooks</h3>\n<ul>\n<li><code>cross_subject_bridges.py</code> - Deep dive into subject projections</li>\n<li><code>topic_forecasting.py</code> - Markov chain analysis of exam topics</li>\n<li><code>neo4j_marimo_bridge.py</code> - Database connectivity utilities</li>\n</ul></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hbol",
+      "code_hash": "d3c5efc5eae288a60265a0b929d93673",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "099d27fb99ae69398de35b17dc2c8015",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "4073f34f392e48f03e9ad00f70156a42",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "75ad823a064962e5719d23a07da840dc",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "03e79fbdd57803621c86a811df429567",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "057248b161efcad14c1c31daa00f1743",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "2f0103ddd5d4bb0e333208dc8f7c6f37",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "693a4f48ff8ad2eb084f410585a09c4c",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "30aa23ec40e3d18e30989e3ef744a4f7",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "f8906b8ba9f641df3ce1f00f0deb4dda",
+      "outputs": [],
+      "console": []
+    }
+  ]
+}

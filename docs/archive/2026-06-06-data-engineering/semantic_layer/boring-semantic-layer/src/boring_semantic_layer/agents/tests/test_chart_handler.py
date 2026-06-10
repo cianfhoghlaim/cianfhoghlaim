@@ -1,0 +1,864 @@
+"""Tests for chart_handler utility functions."""
+
+import json
+from unittest.mock import Mock, patch
+
+import pandas as pd
+import pytest
+
+from boring_semantic_layer.agents.utils.chart_handler import generate_chart_with_data
+
+
+@pytest.fixture
+def mock_query_result():
+    """Create a mock query result with execute() method."""
+    mock_result = Mock()
+    df = pd.DataFrame({"origin": ["ATL", "ORD", "DFW"], "flight_count": [414513, 350380, 281281]})
+    mock_result.execute.return_value = df
+    mock_result.chart = Mock(return_value='{"spec": "chart_data"}')
+    return mock_result
+
+
+def test_get_chart_false_returns_only_data_json_mode(mock_query_result):
+    """Test that get_chart=false returns only data in JSON mode."""
+    result = generate_chart_with_data(
+        query_result=mock_query_result,
+        get_chart=False,
+        default_backend="plotext",
+        return_json=True,
+    )
+
+    # Should return JSON with records but no chart
+    result_dict = json.loads(result)
+    assert "records" in result_dict
+    assert "chart" not in result_dict
+    assert len(result_dict["records"]) == 3
+    assert result_dict["records"][0]["origin"] == "ATL"
+
+    # Chart method should not have been called
+    mock_query_result.chart.assert_not_called()
+
+
+def test_cli_mode_auto_shows_table_when_get_records_true(mock_query_result, capsys):
+    """Test that CLI mode auto-shows table when get_records=True (default)."""
+    result = generate_chart_with_data(
+        query_result=mock_query_result,
+        get_chart=False,  # No chart - just table
+        default_backend="plotext",
+        return_json=False,
+    )
+
+    # Should return JSON with insight for LLM
+    result_dict = json.loads(result)
+    assert result_dict["total_rows"] == 3
+    assert "origin" in result_dict["columns"]
+    assert "records" in result_dict
+
+    # Should have printed the table (auto-shown because get_records=True)
+    captured = capsys.readouterr()
+    assert "ATL" in captured.out
+    assert "414513" in captured.out
+
+    # Chart method should not have been called (get_chart=False)
+    mock_query_result.chart.assert_not_called()
+
+
+def test_cli_mode_hides_table_when_get_records_false(mock_query_result, capsys):
+    """Test that CLI mode hides table when get_records=False (display-only)."""
+    result = generate_chart_with_data(
+        query_result=mock_query_result,
+        get_records=False,
+        get_chart=False,
+        default_backend="plotext",
+        return_json=False,
+    )
+
+    # Should return JSON with metadata only (no records)
+    result_dict = json.loads(result)
+    assert result_dict["total_rows"] == 3
+    assert "origin" in result_dict["columns"]
+    assert "records" not in result_dict
+    assert "note" in result_dict
+
+    # Should NOT have printed the table (get_records=False)
+    captured = capsys.readouterr()
+    assert "ATL" not in captured.out
+
+    # Chart method should not have been called (get_chart=False)
+    mock_query_result.chart.assert_not_called()
+
+
+def test_get_chart_true_calls_chart_method(mock_query_result):
+    """Test that get_chart=true (default) calls chart method."""
+    with patch.object(mock_query_result, "chart", return_value='{"spec": "chart_data"}'):
+        result = generate_chart_with_data(
+            query_result=mock_query_result,
+            get_chart=True,
+            chart_backend="plotext",
+            chart_format="json",
+            default_backend="plotext",
+            return_json=True,
+        )
+
+        # Should return JSON with both records and chart
+        result_dict = json.loads(result)
+        assert "records" in result_dict
+        assert "chart" in result_dict
+        # New response format includes backend/format/data
+        assert result_dict["chart"]["backend"] == "plotext"
+        assert result_dict["chart"]["format"] == "json"
+
+        # Chart method should have been called
+        mock_query_result.chart.assert_called_once()
+
+
+def test_defaults_json_mode(mock_query_result):
+    """Test that defaults in JSON mode work correctly."""
+    result = generate_chart_with_data(
+        query_result=mock_query_result,
+        default_backend="plotext",
+        return_json=True,
+    )
+
+    # With defaults: get_records=True, get_chart=True (but chart is called with format=json)
+    result_dict = json.loads(result)
+    assert "records" in result_dict
+    # Chart should be generated (default get_chart=True)
+    assert "chart" in result_dict
+
+    # Chart method should have been called
+    mock_query_result.chart.assert_called_once()
+
+
+def test_records_limit_cli_mode(mock_query_result, capsys):
+    """Test that records_limit limits rows displayed in CLI mode."""
+    # Create a larger dataframe
+    df = pd.DataFrame(
+        {"origin": [f"AIRPORT_{i}" for i in range(20)], "flight_count": list(range(20))}
+    )
+    mock_query_result.execute.return_value = df
+
+    result = generate_chart_with_data(
+        query_result=mock_query_result,
+        get_chart=False,
+        records_limit=5,
+        default_backend="plotext",
+        return_json=False,
+    )
+
+    # Should return JSON with insight for LLM
+    result_dict = json.loads(result)
+    assert result_dict["total_rows"] == 20
+    assert "origin" in result_dict["columns"]
+    assert len(result_dict["records"]) == 5  # Limited to 5
+
+    # Table should only show 5 rows (same as records returned to LLM)
+    captured = capsys.readouterr()
+    assert "AIRPORT_0" in captured.out
+    assert "AIRPORT_4" in captured.out
+    # Row 5+ should not be in output (limited to 5)
+
+
+def test_single_row_result_hides_chart():
+    """Test that single-row results automatically hide the chart."""
+    # Create a mock with single-row result (e.g., aggregate total)
+    mock_result = Mock()
+    df = pd.DataFrame({"total_flights": [58635]})  # Single aggregate value
+    mock_result.execute.return_value = df
+    mock_result.chart = Mock(return_value='{"spec": "chart_data"}')
+
+    # Even with get_chart=True (default), chart should be hidden for single row
+    result = generate_chart_with_data(
+        query_result=mock_result,
+        get_chart=True,
+        chart_backend="plotext",
+        chart_format="json",
+        default_backend="plotext",
+        return_json=True,
+    )
+
+    # Should return JSON with records but NO chart (auto-hidden)
+    result_dict = json.loads(result)
+    assert "records" in result_dict
+    assert "chart" not in result_dict
+    assert len(result_dict["records"]) == 1
+    assert result_dict["records"][0]["total_flights"] == 58635
+
+    # Chart method should NOT have been called
+    mock_result.chart.assert_not_called()
+
+
+def test_two_row_result_shows_chart():
+    """Test that two-row results still show the chart."""
+    mock_result = Mock()
+    df = pd.DataFrame({"category": ["A", "B"], "count": [100, 200]})  # Two rows
+    mock_result.execute.return_value = df
+    mock_result.chart = Mock(return_value='{"spec": "chart_data"}')
+
+    result = generate_chart_with_data(
+        query_result=mock_result,
+        get_chart=True,
+        chart_backend="plotext",
+        chart_format="json",
+        default_backend="plotext",
+        return_json=True,
+    )
+
+    # Should return JSON with both records and chart
+    result_dict = json.loads(result)
+    assert "records" in result_dict
+    assert "chart" in result_dict
+    assert len(result_dict["records"]) == 2
+
+    # Chart method SHOULD have been called
+    mock_result.chart.assert_called_once()
+
+
+def test_get_records_false_cli_mode(mock_query_result, capsys):
+    """Test that get_records=false in CLI mode returns only metadata and hides table."""
+    result = generate_chart_with_data(
+        query_result=mock_query_result,
+        get_records=False,
+        get_chart=False,
+        default_backend="plotext",
+        return_json=False,
+    )
+
+    # Should return JSON with metadata but no records
+    result_dict = json.loads(result)
+    assert result_dict["total_rows"] == 3
+    assert "origin" in result_dict["columns"]
+    assert "records" not in result_dict
+    assert "note" in result_dict
+    assert "Records not returned" in result_dict["note"]
+
+    # Table should NOT have been displayed (get_records=False hides table)
+    captured = capsys.readouterr()
+    assert "ATL" not in captured.out
+
+
+def test_records_limit_truncation_message(mock_query_result):
+    """Test that records_limit shows truncation info when data is truncated."""
+    # Create a larger dataframe
+    df = pd.DataFrame(
+        {"origin": [f"AIRPORT_{i}" for i in range(20)], "flight_count": list(range(20))}
+    )
+    mock_query_result.execute.return_value = df
+
+    result = generate_chart_with_data(
+        query_result=mock_query_result,
+        get_chart=False,
+        records_limit=5,
+        default_backend="plotext",
+        return_json=True,
+    )
+
+    # Should return JSON with truncation info via returned_rows
+    result_dict = json.loads(result)
+    assert result_dict["total_rows"] == 20
+    assert result_dict["returned_rows"] == 5
+    assert len(result_dict["records"]) == 5
+    # The simplified response uses returned_rows to indicate truncation (no note)
+
+
+def test_no_truncation_message_when_all_returned(mock_query_result):
+    """Test that no truncation message when all records returned."""
+    result = generate_chart_with_data(
+        query_result=mock_query_result,
+        get_chart=False,
+        records_limit=10,  # More than 3 rows
+        default_backend="plotext",
+        return_json=True,
+    )
+
+    # Should return JSON without truncation note
+    result_dict = json.loads(result)
+    assert result_dict["total_rows"] == 3
+    assert "returned_rows" not in result_dict  # No truncation
+    assert "note" not in result_dict  # No note needed
+
+
+def test_columns_included_in_response(mock_query_result):
+    """Test that columns are always included in response."""
+    result = generate_chart_with_data(
+        query_result=mock_query_result,
+        get_chart=False,
+        default_backend="plotext",
+        return_json=True,
+    )
+
+    result_dict = json.loads(result)
+    assert "columns" in result_dict
+    assert result_dict["columns"] == ["origin", "flight_count"]
+
+
+def test_chart_response_includes_backend_and_format(mock_query_result):
+    """Test that chart response includes backend, format, and data fields."""
+    result = generate_chart_with_data(
+        query_result=mock_query_result,
+        get_chart=True,
+        chart_backend="plotext",
+        chart_format="json",
+        default_backend="altair",
+        return_json=True,
+    )
+
+    result_dict = json.loads(result)
+    assert "chart" in result_dict
+    assert result_dict["chart"]["backend"] == "plotext"
+    assert result_dict["chart"]["format"] == "json"
+    assert "data" in result_dict["chart"]
+
+
+def test_cli_mode_with_chart_includes_chart_info(mock_query_result, capsys):
+    """Test that CLI mode with chart includes chart info in response."""
+    result = generate_chart_with_data(
+        query_result=mock_query_result,
+        get_chart=True,
+        default_backend="plotext",
+        return_json=False,
+    )
+
+    result_dict = json.loads(result)
+    assert "chart" in result_dict
+    assert result_dict["chart"]["backend"] == "plotext"
+    assert result_dict["chart"]["displayed"] is True
+
+
+def test_chart_backend_override(mock_query_result):
+    """Test that chart_backend parameter overrides default_backend."""
+    result = generate_chart_with_data(
+        query_result=mock_query_result,
+        get_chart=True,
+        chart_backend="altair",
+        chart_format="json",
+        default_backend="plotext",
+        return_json=True,
+    )
+
+    result_dict = json.loads(result)
+    assert "chart" in result_dict
+    assert result_dict["chart"]["backend"] == "altair"
+
+    # Verify chart was called with altair backend
+    mock_query_result.chart.assert_called_with(spec=None, backend="altair", format="json")
+
+
+def test_static_format_message_in_api_mode():
+    """Test that static format with non-plotext backend returns message in API mode."""
+    mock_result = Mock()
+    df = pd.DataFrame({"a": [1, 2], "b": [3, 4]})
+    mock_result.execute.return_value = df
+
+    result = generate_chart_with_data(
+        query_result=mock_result,
+        get_chart=True,
+        chart_backend="altair",
+        chart_format="static",
+        return_json=True,
+    )
+
+    result_dict = json.loads(result)
+    assert "records" in result_dict
+    assert "chart" in result_dict
+    assert "message" in result_dict["chart"]
+    assert "Use format='json'" in result_dict["chart"]["message"]
+
+
+def test_chart_spec_passed_to_chart_method(mock_query_result):
+    """Test that chart_spec is correctly passed to chart method (legacy nested format)."""
+    custom_spec = {"chart_type": "bar", "theme": "dark"}
+
+    result = generate_chart_with_data(
+        query_result=mock_query_result,
+        get_chart=True,
+        chart_spec={"spec": custom_spec},
+        chart_backend="altair",
+        chart_format="json",
+        return_json=True,
+    )
+
+    result_dict = json.loads(result)
+    assert "chart" in result_dict
+
+    # Verify chart was called with the custom spec
+    mock_query_result.chart.assert_called_with(spec=custom_spec, backend="altair", format="json")
+
+
+def test_chart_spec_direct_format(mock_query_result):
+    """Test that chart_spec works with direct format (no nested 'spec' key).
+
+    LLMs typically send: {"chart_type": "bar"} not {"spec": {"chart_type": "bar"}}
+    """
+    direct_spec = {"chart_type": "bar"}
+
+    result = generate_chart_with_data(
+        query_result=mock_query_result,
+        get_chart=True,
+        chart_spec=direct_spec,  # Direct format, not nested
+        chart_backend="plotext",
+        chart_format="json",
+        return_json=True,
+    )
+
+    result_dict = json.loads(result)
+    assert "chart" in result_dict
+
+    # Verify chart was called with the direct spec (not None)
+    mock_query_result.chart.assert_called_with(spec=direct_spec, backend="plotext", format="json")
+
+
+def test_chart_spec_direct_vs_nested_equivalence(mock_query_result):
+    """Test that both direct and nested chart_spec formats work equivalently."""
+    spec_content = {"chart_type": "line", "title": "My Chart"}
+
+    # Reset mock between calls
+    mock_query_result.chart.reset_mock()
+
+    # Test direct format
+    generate_chart_with_data(
+        query_result=mock_query_result,
+        get_chart=True,
+        chart_spec=spec_content,  # Direct: {"chart_type": "line", ...}
+        chart_backend="plotext",
+        chart_format="json",
+        return_json=True,
+    )
+    direct_call = mock_query_result.chart.call_args
+
+    mock_query_result.chart.reset_mock()
+
+    # Test nested format
+    generate_chart_with_data(
+        query_result=mock_query_result,
+        get_chart=True,
+        chart_spec={"spec": spec_content},  # Nested: {"spec": {"chart_type": "line", ...}}
+        chart_backend="plotext",
+        chart_format="json",
+        return_json=True,
+    )
+    nested_call = mock_query_result.chart.call_args
+
+    # Both should result in the same spec being passed to chart()
+    assert direct_call == nested_call
+    assert direct_call.kwargs["spec"] == spec_content
+
+
+def test_error_callback_called_on_chart_error(capsys):
+    """Test that error_callback is called when chart generation fails."""
+    mock_result = Mock()
+    df = pd.DataFrame({"a": [1, 2], "b": [3, 4]})
+    mock_result.execute.return_value = df
+    mock_result.chart = Mock(side_effect=Exception("Chart generation failed"))
+
+    errors = []
+
+    def error_callback(msg):
+        errors.append(msg)
+
+    generate_chart_with_data(
+        query_result=mock_result,
+        get_chart=True,
+        default_backend="plotext",
+        return_json=False,
+        error_callback=error_callback,
+    )
+
+    # Error callback should have been called
+    assert len(errors) == 1
+    assert "Chart generation failed" in errors[0]
+
+
+def test_query_execution_error_json_mode():
+    """Test that query execution errors are handled in JSON mode."""
+    mock_result = Mock()
+    mock_result.execute = Mock(side_effect=Exception("Database connection failed"))
+
+    result = generate_chart_with_data(
+        query_result=mock_result,
+        return_json=True,
+    )
+
+    result_dict = json.loads(result)
+    assert "error" in result_dict
+    assert "Database connection failed" in result_dict["error"]
+
+
+def test_query_execution_error_cli_mode(capsys):
+    """Test that query execution errors are handled in CLI mode."""
+    mock_result = Mock()
+    mock_result.execute = Mock(side_effect=Exception("Database connection failed"))
+
+    errors = []
+
+    def error_callback(msg):
+        errors.append(msg)
+
+    generate_chart_with_data(
+        query_result=mock_result,
+        return_json=False,
+        error_callback=error_callback,
+    )
+
+    # Error callback should have been called
+    assert len(errors) == 1
+    assert "Database connection failed" in errors[0]
+
+
+def test_chart_error_returns_records_with_error(mock_query_result):
+    """Test that chart errors don't prevent records from being returned."""
+    mock_query_result.chart = Mock(side_effect=Exception("Chart rendering failed"))
+
+    result = generate_chart_with_data(
+        query_result=mock_query_result,
+        get_chart=True,
+        return_json=True,
+    )
+
+    result_dict = json.loads(result)
+    # Records should still be returned
+    assert "records" in result_dict
+    assert len(result_dict["records"]) == 3
+    # Chart error should be reported
+    assert "chart_error" in result_dict
+    assert "Chart rendering failed" in result_dict["chart_error"]
+
+
+def test_default_backend_used_when_chart_backend_none(mock_query_result):
+    """Test that default_backend is used when chart_backend is None."""
+    result = generate_chart_with_data(
+        query_result=mock_query_result,
+        get_chart=True,
+        chart_backend=None,
+        chart_format="json",
+        default_backend="altair",
+        return_json=True,
+    )
+
+    result_dict = json.loads(result)
+    assert result_dict["chart"]["backend"] == "altair"
+
+    # Verify chart was called with default backend
+    mock_query_result.chart.assert_called_with(spec=None, backend="altair", format="json")
+
+
+def test_cli_mode_opens_altair_in_browser(mock_query_result):
+    """Test that CLI mode opens altair charts in browser."""
+
+    generate_chart_with_data(
+        query_result=mock_query_result,
+        get_chart=True,
+        chart_backend="altair",
+        return_json=False,  # CLI mode
+    )
+
+    # Chart should be called with altair and format="static" to get chart object
+    mock_query_result.chart.assert_called_with(spec=None, backend="altair", format="static")
+
+
+def test_cli_mode_opens_plotly_in_browser(mock_query_result):
+    """Test that CLI mode opens plotly charts in browser."""
+    generate_chart_with_data(
+        query_result=mock_query_result,
+        get_chart=True,
+        chart_backend="plotly",
+        return_json=False,  # CLI mode
+    )
+
+    # Chart should be called with plotly and format="static" to get chart object
+    mock_query_result.chart.assert_called_with(spec=None, backend="plotly", format="static")
+
+
+def test_cli_mode_allows_plotext_backend(mock_query_result):
+    """Test that CLI mode works fine when plotext is explicitly requested."""
+    warnings = []
+
+    def capture_warning(msg):
+        warnings.append(msg)
+
+    generate_chart_with_data(
+        query_result=mock_query_result,
+        get_chart=True,
+        chart_backend="plotext",  # Should work fine
+        return_json=False,  # CLI mode
+        error_callback=capture_warning,
+    )
+
+    # No warnings should be issued
+    assert len(warnings) == 0
+
+    # Chart should be called with plotext
+    mock_query_result.chart.assert_called_with(spec=None, backend="plotext", format="static")
+
+
+def test_ibis_available_in_context():
+    """Test that ibis module is available in safe_eval context."""
+    from pathlib import Path
+
+    import ibis
+
+    from boring_semantic_layer import from_yaml
+    from boring_semantic_layer.utils import safe_eval
+
+    # Load models
+    models = from_yaml(
+        str(Path("examples/flights.yml")),
+        profile_path=str(Path("examples/profiles.yml")),
+    )
+
+    # Test query with ibis.desc()
+    query_str = 'flights.group_by("carrier").aggregate("flight_count").order_by(ibis.desc("flight_count")).limit(5)'
+
+    result = safe_eval(query_str, context={**models, "ibis": ibis})
+
+    # Should succeed (no AttributeError)
+    assert result is not None
+
+    # If it's a Result type, unwrap it
+    if hasattr(result, "unwrap"):
+        result = result.unwrap()
+
+    # Should be able to execute
+    df = result.execute()
+    assert len(df) == 5
+    # Should be sorted descending by flight_count
+    assert df["flight_count"].iloc[0] >= df["flight_count"].iloc[1]
+
+
+class TestRecordsDisplayedLimit:
+    """Tests for records_displayed_limit parameter."""
+
+    def test_records_displayed_limit_separate_from_records_limit_cli(self, capsys):
+        """Test that records_displayed_limit controls terminal display independently."""
+        mock_result = Mock()
+        df = pd.DataFrame(
+            {"origin": [f"AIRPORT_{i}" for i in range(20)], "flight_count": list(range(20))}
+        )
+        mock_result.execute.return_value = df
+        mock_result.chart = Mock(return_value='{"spec": "chart_data"}')
+
+        result = generate_chart_with_data(
+            query_result=mock_result,
+            get_chart=False,
+            records_limit=15,  # LLM gets 15 records
+            records_displayed_limit=5,  # Terminal shows only 5
+            default_backend="plotext",
+            return_json=False,  # CLI mode
+        )
+
+        result_dict = json.loads(result)
+        # LLM should receive 15 records
+        assert len(result_dict["records"]) == 15
+        assert result_dict["total_rows"] == 20
+        assert result_dict["returned_rows"] == 15
+
+        # Terminal should only display 5 rows
+        captured = capsys.readouterr()
+        assert "AIRPORT_0" in captured.out
+        assert "AIRPORT_4" in captured.out
+        # Row 5+ should not be displayed (but IS in the LLM records)
+
+    def test_records_displayed_limit_defaults_to_10(self, capsys):
+        """Test that records_displayed_limit defaults to 10 in CLI mode."""
+        mock_result = Mock()
+        df = pd.DataFrame(
+            {"origin": [f"AIRPORT_{i}" for i in range(25)], "flight_count": list(range(25))}
+        )
+        mock_result.execute.return_value = df
+        mock_result.chart = Mock(return_value='{"spec": "chart_data"}')
+
+        result = generate_chart_with_data(
+            query_result=mock_result,
+            get_chart=False,
+            records_limit=None,  # LLM gets all records
+            # records_displayed_limit not specified - should default to 10
+            default_backend="plotext",
+            return_json=False,  # CLI mode
+        )
+
+        result_dict = json.loads(result)
+        # LLM should receive all 25 records
+        assert len(result_dict["records"]) == 25
+        assert result_dict["total_rows"] == 25
+
+        # Terminal should only display 10 rows (default)
+        captured = capsys.readouterr()
+        assert "AIRPORT_0" in captured.out
+        assert "AIRPORT_9" in captured.out
+
+    def test_records_displayed_limit_can_show_more_than_default(self, capsys):
+        """Test that records_displayed_limit can override default to show more rows."""
+        mock_result = Mock()
+        df = pd.DataFrame(
+            {"origin": [f"AIRPORT_{i}" for i in range(15)], "flight_count": list(range(15))}
+        )
+        mock_result.execute.return_value = df
+        mock_result.chart = Mock(return_value='{"spec": "chart_data"}')
+
+        result = generate_chart_with_data(
+            query_result=mock_result,
+            get_chart=False,
+            records_limit=5,  # LLM gets only 5
+            records_displayed_limit=15,  # Show all 15 in terminal
+            default_backend="plotext",
+            return_json=False,  # CLI mode
+        )
+
+        result_dict = json.loads(result)
+        # LLM should receive only 5 records
+        assert len(result_dict["records"]) == 5
+
+        # Terminal should display all 15 rows
+        captured = capsys.readouterr()
+        assert "AIRPORT_0" in captured.out
+        assert "AIRPORT_14" in captured.out
+
+    def test_records_displayed_limit_ignored_in_json_mode(self):
+        """Test that records_displayed_limit is ignored in JSON/API mode."""
+        mock_result = Mock()
+        df = pd.DataFrame(
+            {"origin": [f"AIRPORT_{i}" for i in range(20)], "flight_count": list(range(20))}
+        )
+        mock_result.execute.return_value = df
+        mock_result.chart = Mock(return_value='{"spec": "chart_data"}')
+
+        result = generate_chart_with_data(
+            query_result=mock_result,
+            get_chart=False,
+            records_limit=10,  # LLM gets 10 records
+            records_displayed_limit=5,  # Should be ignored in JSON mode
+            default_backend="altair",
+            return_json=True,  # JSON/API mode
+        )
+
+        result_dict = json.loads(result)
+        # In JSON mode, only records_limit matters
+        assert len(result_dict["records"]) == 10
+        assert result_dict["total_rows"] == 20
+        assert result_dict["returned_rows"] == 10
+
+    def test_records_limit_none_returns_all_to_llm(self, capsys):
+        """Test that records_limit=None returns all records to LLM."""
+        mock_result = Mock()
+        df = pd.DataFrame(
+            {"origin": [f"AIRPORT_{i}" for i in range(50)], "flight_count": list(range(50))}
+        )
+        mock_result.execute.return_value = df
+        mock_result.chart = Mock(return_value='{"spec": "chart_data"}')
+
+        result = generate_chart_with_data(
+            query_result=mock_result,
+            get_chart=False,
+            records_limit=None,  # All records to LLM
+            records_displayed_limit=10,  # Display only 10
+            default_backend="plotext",
+            return_json=False,  # CLI mode
+        )
+
+        result_dict = json.loads(result)
+        # LLM should receive all 50 records
+        assert len(result_dict["records"]) == 50
+        assert result_dict["total_rows"] == 50
+
+    def test_returned_rows_shows_truncation(self, capsys):
+        """Test that returned_rows shows truncation when limits differ."""
+        mock_result = Mock()
+        df = pd.DataFrame(
+            {"origin": [f"AIRPORT_{i}" for i in range(20)], "flight_count": list(range(20))}
+        )
+        mock_result.execute.return_value = df
+        mock_result.chart = Mock(return_value='{"spec": "chart_data"}')
+
+        result = generate_chart_with_data(
+            query_result=mock_result,
+            get_chart=False,
+            records_limit=15,
+            records_displayed_limit=5,
+            default_backend="plotext",
+            return_json=False,  # CLI mode
+        )
+
+        result_dict = json.loads(result)
+        # Should show truncation via returned_rows
+        assert result_dict["returned_rows"] == 15
+        assert result_dict["total_rows"] == 20
+        assert len(result_dict["records"]) == 15
+
+
+class TestChartTypeOverride:
+    """Tests for explicit chart_type override in spec."""
+
+    def test_chart_type_override_line_to_bar(self):
+        """Test that explicit chart_type in spec overrides auto-detected type."""
+        from boring_semantic_layer.chart.utils import override_chart_type_from_spec
+
+        # Auto-detected "line" should be overridden to "bar"
+        result = override_chart_type_from_spec("line", {"chart_type": "bar"})
+        assert result == "bar"
+
+    def test_chart_type_override_bar_to_line(self):
+        """Test that explicit chart_type in spec overrides auto-detected type."""
+        from boring_semantic_layer.chart.utils import override_chart_type_from_spec
+
+        # Auto-detected "bar" should be overridden to "line"
+        result = override_chart_type_from_spec("bar", {"chart_type": "line"})
+        assert result == "line"
+
+    def test_chart_type_no_override_when_spec_none(self):
+        """Test that chart_type is preserved when spec is None."""
+        from boring_semantic_layer.chart.utils import override_chart_type_from_spec
+
+        result = override_chart_type_from_spec("bar", None)
+        assert result == "bar"
+
+    def test_chart_type_no_override_when_chart_type_missing(self):
+        """Test that chart_type is preserved when spec doesn't have chart_type."""
+        from boring_semantic_layer.chart.utils import override_chart_type_from_spec
+
+        result = override_chart_type_from_spec("bar", {"theme": "dark"})
+        assert result == "bar"
+
+    def test_plotext_backend_uses_override(self):
+        """Test that PlotextBackend.create_chart respects chart_type override."""
+        from boring_semantic_layer.chart.plotext_chart import PlotextBackend
+
+        backend = PlotextBackend()
+        df = pd.DataFrame({"month": [1, 2, 3], "count": [100, 150, 120]})
+        params = {"dimensions": ["month"], "measures": ["count"], "time_dimension": None}
+
+        # Create chart with auto-detected "bar" but override to "line"
+        # We can't easily verify the chart type from plotext, but we can verify
+        # that no exception is raised when a valid override is provided
+        chart_obj = backend.create_chart(df, params, "bar", spec={"chart_type": "line"})
+        assert chart_obj is not None
+
+    def test_chart_init_fast_path_with_explicit_type(self):
+        """Test that chart/__init__.py uses fast path when chart_type is explicit."""
+        from pathlib import Path
+
+        from boring_semantic_layer import from_yaml
+
+        # Load models
+        models = from_yaml(
+            str(Path("examples/flights.yml")),
+            profile_path=str(Path("examples/profiles.yml")),
+        )
+        flights = models["flights"]
+
+        # Create a query
+        query = (
+            flights.with_dimensions(month=lambda t: t.dep_time.month())
+            .group_by("month")
+            .aggregate("flight_count")
+            .order_by("month")
+        )
+
+        # Execute with explicit chart_type - should use fast path
+        from boring_semantic_layer.chart import chart as create_chart
+
+        # This should not raise an error and should use explicit type
+        result = create_chart(
+            query, spec={"chart_type": "line"}, backend="plotext", format="static"
+        )
+        # Result is None for plotext static format (renders to terminal)
+        assert result is None  # plotext static format returns None after rendering

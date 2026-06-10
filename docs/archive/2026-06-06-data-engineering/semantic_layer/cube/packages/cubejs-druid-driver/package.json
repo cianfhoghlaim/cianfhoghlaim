@@ -1,0 +1,50 @@
+{
+  "name": "@cubejs-backend/druid-driver",
+  "description": "Cube.js Druid database driver",
+  "author": "Cube Dev, Inc.",
+  "version": "1.5.14",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cube-js/cube.git",
+    "directory": "packages/cubejs-druid-driver"
+  },
+  "engines": {
+    "node": "^14.0.0 || ^16.0.0 || >=17.0.0"
+  },
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "rm -rf dist && npm run tsc",
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "integration": "jest dist/test/*.js",
+    "integration:druid": "jest dist/test/*.js",
+    "lint": "eslint src/* --ext .ts",
+    "lint:fix": "eslint --fix src/* --ext .ts"
+  },
+  "files": [
+    "README.md",
+    "dist/src/*"
+  ],
+  "dependencies": {
+    "@cubejs-backend/base-driver": "1.5.14",
+    "@cubejs-backend/schema-compiler": "1.5.14",
+    "@cubejs-backend/shared": "1.5.14",
+    "axios": "^1.8.3"
+  },
+  "devDependencies": {
+    "@cubejs-backend/linter": "1.5.14",
+    "@types/jest": "^29",
+    "@types/node": "^20",
+    "jest": "^29",
+    "testcontainers": "^10.28.0",
+    "typescript": "~5.2.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "eslintConfig": {
+    "extends": "../cubejs-linter"
+  }
+}

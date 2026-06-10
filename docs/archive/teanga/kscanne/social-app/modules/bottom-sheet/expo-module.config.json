@@ -1,9 +1,0 @@
-{
-  "platforms": ["ios", "android"],
-  "ios": {
-    "modules": ["BottomSheetModule"]
-  },
-  "android": {
-    "modules": ["expo.modules.bottomsheet.BottomSheetModule"]
-  }
-}

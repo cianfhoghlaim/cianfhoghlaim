@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(marimo run:*)",
+      "Bash(python:*)",
+      "Bash(marimo export html:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -1,6 +1,0 @@
-#!/bin/bash
-TEMPF=`mktemp`
-togail ga api 400
-cd /usr/local/share/crubadan/ga
-cat TOCRAWL | sed 's/.*/<a href="&">/' | get_refs.pl 'http://borel.slu.edu/' | keepif -n DEANTA | egrep -v -f PILLAGED > $TEMPF
-mv -f $TEMPF TOCRAWL

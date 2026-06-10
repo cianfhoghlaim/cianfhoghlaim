@@ -1,0 +1,90 @@
+# Metrics view YAML
+# Reference documentation: https://docs.rilldata.com/reference/project-files/dashboards
+# This file was generated using AI.
+
+version: 1
+type: metrics_view
+
+display_name: Mobile Events Model Metrics
+model: mobile_events_model
+timeseries: event_time
+
+smallest_time_grain: "hour"
+
+dimensions:
+  - name: new_existing
+    display_name: New vs Existing
+    column: new_existing
+    description: "New vs. Returning"
+  - name: referral_source
+    display_name: "Referral Source"
+    column: "referral_source"
+    description: "User Referral Source"
+  - name: country
+    display_name: "Country"
+    column: "country"
+    description: "Device Location"
+  - name: device_make
+    display_name: "Device Make"
+    column: "device_make"
+    description: "Device Make"
+  - name: network
+    display_name: "Network"
+    column: "network"
+    description: "Connection Type"
+  - name: app_version
+    display_name: "App Version"
+    column: "app_version"
+    description: "Internal App Version"
+  - name: advertiser_name
+    display_name: "Advertiser Name"
+    column: "advertiser_name"
+    description: "Advertiser Name"
+
+measures:
+  - display_name: Page Views
+    expression: sum(landing_page_view_cnt)
+    name: total_page_views
+    description: Total Page Visits
+    format_preset: humanize
+  - display_name: "Page Click"
+    expression: "sum(landing_page_click_cnt)"
+    name: page_click
+    description: "Total Page Clicks"
+    format_preset: humanize
+  - display_name: "Site Conversion Rate"
+    expression: "sum(landing_page_click_cnt)*1.0/sum(landing_page_view_cnt)*1.0"
+    name: site_conversion_rate
+    description: "Site Conversion"
+    format_preset: percentage
+  - display_name: "Download Count"
+    expression: "sum(download_cnt)"
+    name: total_downloads
+    description: "Total Downloads"
+    format_preset: humanize
+  - display_name: "Sign Up Count"
+    expression: "sum(sign_up_cnt)"
+    name: total_sign_up
+    description: "Total Sign-ups"
+    format_preset: humanize
+  - display_name: "Opt-in Rate"
+    expression: "sum(sign_up_cnt)*1.0/sum(download_cnt)*1.0"
+    name: opt_in_rate
+    description: "Opt-in Rate"
+    format_preset: percentage
+  - display_name: "Unique Visitors"
+    expression: "count (distinct landing_page_view_id)"
+    name: unique_visitors
+    description: "Unique Visitors"
+    format_preset: humanize
+  - display_name: "Unique Downloads"
+    expression: "count (distinct download_id)"
+    name: unique_downloads
+    description: "Unique Downloads"
+    format_preset: humanize
+  - display_name: "Completion Rate"
+    expression: "count (distinct download_id)*1.0/count (distinct
+      landing_page_view_id) *1.0"
+    name: completion_rate
+    description: "Completion Rate"
+    format_preset: percentage

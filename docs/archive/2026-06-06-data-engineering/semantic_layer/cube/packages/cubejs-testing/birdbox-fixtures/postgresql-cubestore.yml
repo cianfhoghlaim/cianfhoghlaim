@@ -1,0 +1,59 @@
+version: "2.2"
+
+services:
+  cube:
+    container_name: birdbox-cube
+    image: ${BIRDBOX_CUBEJS_REGISTRY_PATH}cubejs/cube:${BIRDBOX_CUBEJS_VERSION:-latest}
+    environment:
+      CUBEJS_DB_TYPE: postgres
+      CUBEJS_DB_HOST: db
+      CUBEJS_DB_NAME: test
+      CUBEJS_DB_USER: test
+      CUBEJS_DB_PASS: test
+      CUBEJS_DEV_MODE: ${CUBEJS_DEV_MODE:-true}
+      CUBEJS_WEB_SOCKETS: "true"
+      CUBEJS_API_SECRET: mysupersecret
+      CUBEJS_CUBESTORE_HOST: cubestore
+      CUBEJS_PLAYGROUND_AUTH_SECRET: mysupersecret
+      CUBEJS_CACHE_AND_QUEUE_DRIVER: memory
+      CUBEJS_SCHEMA_PATH: schema
+    depends_on:
+      - db
+      - cubestore
+    links:
+      - db
+      - cubestore
+    volumes:
+      - ./postgresql:/cube/conf
+      - ./postgresql/cubestore/cube.js:/cube/conf/cube.js
+    ports:
+      - "4000"
+    restart: always
+
+  db:
+    container_name: birdbox-db
+    image: hbontempo/postgres-hll:16-v2.18
+    environment:
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_USER=test
+      - POSTGRES_DB=test
+    restart: always
+    ports:
+      - "5432"
+    volumes:
+      - ./datasets:/data:ro
+      - ./postgresql/scripts:/scripts:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cubestore:
+    container_name: birdbox-cubestore
+    image: cubejs/cubestore:${BIRDBOX_CUBESTORE_VERSION:-latest}
+# Possible workaround for next version of testcontainers
+#    environment:
+#      # Workaround for Error during processing MySQL connection: peer terminated connection
+#      # Because testcontainers know about exposed 3306 from Dockerfile & EXPOSE
+#      CUBESTORE_PORT: "13306"

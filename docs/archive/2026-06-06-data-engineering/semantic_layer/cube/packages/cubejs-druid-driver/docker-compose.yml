@@ -1,0 +1,150 @@
+version: "3"
+
+volumes:
+  metadata_data: {}
+  middle_var: {}
+  historical_var: {}
+  broker_var: {}
+  coordinator_var: {}
+  router_var: {}
+
+services:
+  postgres:
+    image: postgres:${TEST_POSTGRES_VERSION:-13}
+    container_name: postgres
+    volumes:
+      - metadata_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=FoolishPassword
+      - POSTGRES_USER=druid
+      - POSTGRES_DB=druid
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U druid"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  zookeeper:
+    image: zookeeper:${TEST_ZOOKEEPER_VERSION:-3.5}
+    container_name: zookeeper
+    environment:
+      - ZOO_MY_ID=1
+    restart: always
+
+  coordinator:
+    image: apache/druid:${TEST_DRUID_VERSION:-27.0.0}
+    container_name: coordinator
+    volumes:
+      - ./storage:/opt/data
+      - coordinator_var:/opt/druid/var
+    depends_on:
+      - zookeeper
+      - postgres
+    ports:
+      - "8081:8081"
+    command:
+      - coordinator
+    env_file:
+      - environment
+    restart: always
+    healthcheck:
+      test: "wget --header 'Authorization: Basic YWRtaW46cGFzc3dvcmQx' --no-verbose --tries=1 --spider http://localhost:8081/status/health || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  broker:
+    image: apache/druid:${TEST_DRUID_VERSION:-27.0.0}
+    container_name: broker
+    volumes:
+      - broker_var:/opt/druid/var
+    depends_on:
+      - zookeeper
+      - postgres
+      - coordinator
+    ports:
+      - "8082:8082"
+    command:
+      - broker
+    env_file:
+      - environment
+    restart: always
+    healthcheck:
+      test: "wget --header 'Authorization: Basic YWRtaW46cGFzc3dvcmQx' --no-verbose --tries=1 --spider http://localhost:8082/status/health || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  historical:
+    image: apache/druid:${TEST_DRUID_VERSION:-27.0.0}
+    container_name: historical
+    volumes:
+      - ./storage:/opt/data
+      - historical_var:/opt/druid/var
+    depends_on:
+      - zookeeper
+      - postgres
+      - coordinator
+    ports:
+      - "8083:8083"
+    command:
+      - historical
+    env_file:
+      - environment
+    restart: always
+    healthcheck:
+      test: "wget --header 'Authorization: Basic YWRtaW46cGFzc3dvcmQx' --no-verbose --tries=1 --spider http://localhost:8083/druid/historical/v1/readiness || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  middlemanager:
+    image: apache/druid:${TEST_DRUID_VERSION:-27.0.0}
+    container_name: middlemanager
+    volumes:
+      - ./storage:/opt/data
+      - middle_var:/opt/druid/var
+    depends_on:
+      - zookeeper
+      - postgres
+      - coordinator
+    ports:
+      - "8091:8091"
+    command:
+      - middleManager
+    env_file:
+      - environment
+    restart: always
+    healthcheck:
+      test: "wget --header 'Authorization: Basic YWRtaW46cGFzc3dvcmQx' --no-verbose --tries=1 --spider http://localhost:8091/status/health || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  router:
+    image: apache/druid:${TEST_DRUID_VERSION:-27.0.0}
+    container_name: router
+    volumes:
+      - router_var:/opt/druid/var
+    depends_on:
+      - zookeeper
+      - postgres
+      - coordinator
+    ports:
+      - "8888:8888"
+    command:
+      - router
+    env_file:
+      - environment
+    restart: always
+    healthcheck:
+      test: "wget --header 'Authorization: Basic YWRtaW46cGFzc3dvcmQx' --no-verbose --tries=1 --spider http://localhost:8888/status/health || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
