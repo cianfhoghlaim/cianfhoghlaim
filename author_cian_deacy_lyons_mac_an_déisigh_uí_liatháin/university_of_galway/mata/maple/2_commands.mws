@@ -1,0 +1,210 @@
+{VERSION 6 0 "IBM INTEL NT" "6.0" }
+{USTYLETAB {CSTYLE "Maple Input" -1 0 "Courier" 0 1 255 0 0 1 0 1 0 0 
+1 0 0 0 0 1 }{CSTYLE "2D Math" -1 2 "Times" 0 1 0 0 0 0 0 0 2 0 0 0 0 
+0 0 1 }{CSTYLE "Hyperlink" -1 17 "" 0 1 0 128 128 1 0 0 1 0 0 0 0 0 0 
+1 }{CSTYLE "2D Output" 2 20 "" 0 1 0 0 255 1 0 0 0 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 256 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+257 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 258 "" 0 1 0 0 
+0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 259 "" 0 1 0 0 0 0 0 1 1 0 0 0 
+0 0 0 1 }{CSTYLE "" -1 260 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 261 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+262 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 263 "" 0 1 0 0 
+0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 264 "" 0 1 0 0 0 0 0 1 1 0 0 0 
+0 0 0 1 }{CSTYLE "" -1 265 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 266 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+267 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 268 "" 0 1 0 0 
+0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 269 "" 0 1 0 0 0 0 0 1 1 0 0 0 
+0 0 0 1 }{CSTYLE "" -1 270 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 0 }
+{CSTYLE "" -1 271 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }{PSTYLE "Normal
+" -1 0 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 
+1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Maple Output" 0 11 1 {CSTYLE "" 
+-1 -1 "" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }3 3 0 -1 -1 -1 0 0 0 0 0 0 
+-1 0 }{PSTYLE "R3 Font 0" -1 256 1 {CSTYLE "" -1 -1 "Helvetica" 1 16 
+0 0 0 1 2 1 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "R3 \+
+Font 2" -1 257 1 {CSTYLE "" -1 -1 "Courier" 1 14 0 0 0 1 2 1 2 2 2 2 
+1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 258 1 
+{CSTYLE "" -1 -1 "Times" 1 18 0 0 0 1 2 1 2 2 2 2 1 1 1 1 }3 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 259 1 {CSTYLE "" -1 -1 "Times" 
+1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }3 1 0 0 0 0 1 0 1 0 2 2 0 1 }}
+{SECT 0 {EXCHG {PARA 258 "" 0 "" {TEXT -1 0 "" }}{PARA 258 "" 0 "" 
+{TEXT -1 21 "MAPLE NOTES for MA321" }}{PARA 258 "" 0 "" {TEXT -1 56 " \+
+School of Mathematics, Statistics & Applied Mathematics" }}{PARA 0 "" 
+0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 160 "These notes are a r
+eview of basic features of Maple 13 and an introduction to some advanc
+ed aspects. Please proceed by entering return at each > prompt symbol.
+\n" }}}{EXCHG {PARA 259 "" 0 "" {TEXT 256 39 "\n2. Basic Maple Mathema
+tical Commands. " }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" 
+{TEXT -1 140 "Maple has many useful commands that allow manipulation a
+nd evaluation of mathematical expressions. Here we describe the follow
+ing commands: " }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" 
+{HYPERLNK 17 "solve" 1 "" "solve" }{TEXT -1 2 ", " }}{PARA 0 "" 0 "" 
+{HYPERLNK 17 "assign" 1 "" "assign" }{TEXT -1 2 ", " }{HYPERLNK 17 "un
+assign" 1 "" "unassign" }{TEXT -1 2 ", " }}{PARA 0 "" 0 "" {HYPERLNK 
+17 "subs" 1 "" "subs" }{TEXT -1 2 ", " }}{PARA 0 "" 0 "" {HYPERLNK 17 
+"fsolve" 1 "" "fsolve" }{TEXT -1 1 "," }}{PARA 0 "" 0 "" {HYPERLNK 17 
+"simplify,expand,combine,factor" 1 "" "algebra" }}{PARA 0 "" 0 "" 
+{HYPERLNK 17 "c" 1 "" "sort" }{HYPERLNK 17 "ollect,coeff,sort" 1 "" "p
+olynom" }}{PARA 0 "" 0 "" {HYPERLNK 17 "sum" 1 "" "sum" }{TEXT -1 2 ",
+ " }}{PARA 0 "" 0 "" {HYPERLNK 17 "series" 1 "" "series" }{TEXT -1 1 "
+," }}{PARA 0 "" 0 "" {TEXT -1 1 " " }{HYPERLNK 17 "prod\n" 1 "" "prod
+" }}}{EXCHG {PARA 0 "" 0 "solve" {TEXT 257 0 "" }}{PARA 0 "" 0 "" 
+{TEXT 271 38 "solve - Solving Equations for Unknowns" }{TEXT -1 75 ". \+
+ The simplest example is solving a single equation for a single variab
+le." }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 18 "> \+
+solve(equation);" }}{PARA 0 "" 0 "" {TEXT -1 28 "> solve(equation, var
+iable);" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" 
+{TEXT -1 67 "Similarly a set of equations can be solved for a set of v
+ariables :" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT 
+-1 44 "> solve(set of equations, set of variables);" }}{PARA 0 "" 0 "
+" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 61 "The notion of sets in M
+aple will be discussed fully later on." }}{PARA 0 "" 0 "" {TEXT -1 0 "
+" }}{PARA 0 "" 0 "" {TEXT -1 10 "Examples:\n" }}}{EXCHG {PARA 0 "> " 
+0 "" {MPLTEXT 1 0 15 "solve(4*x=1,x);" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 15 "solve(x^2-2,x);" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 
+49 "Note that more than one solution may be found ! \n" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 40 "SolutionSet:=solve(\{x+y=2,x-y=1\},
+\{x,y\});" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 158 "Note that here the \+
+input equations and variables and output solution are enclosed by \{ \+
+\} brackets denoting a set. Sets are discussed in more detail later on
+.\n" }}{PARA 0 "> " 0 "" {MPLTEXT 1 0 5 " x,y;" }}}{EXCHG {PARA 0 "" 
+0 "" {TEXT -1 77 "Note that x and y have not been assigned to the valu
+es of the solution found." }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "
+" 0 "assign" {TEXT 265 6 "assign" }{TEXT -1 106 " - To assign the foun
+d solution to the given variables use the assign command. In the last \+
+example above :" }}{PARA 0 "> " 0 "" {MPLTEXT 1 0 20 "assign(SolutionS
+et);" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 4 "x;y;" }}}{EXCHG 
+{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "unassign" {TEXT 266 8 "u
+nassign" }{TEXT -1 93 "- We can then unassign these values as before b
+y use of the ' symbol or the unassign command:" }}{PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 22 "unassign('x
+','y');x;y;" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "
+" {TEXT -1 153 "The solve command does not always find all solutions o
+r may present the solution as the root of some other equation which ca
+n then be solved numerically." }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}
+{PARA 0 "" 0 "" {TEXT -1 9 "Examples:" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 18 "solve(x = x+1,x); " }}}{EXCHG {PARA 0 "" 0 "" {TEXT 
+-1 27 " No solution is possible !\n" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 18 "solve(x=cos(x),x);" }}}{EXCHG {PARA 0 "" 0 "" {TEXT 
+-1 31 "No exact solution is possible !" }}{PARA 0 "" 0 "" {TEXT -1 0 "
+" }}{PARA 0 "> " 0 "" {MPLTEXT 1 0 17 "solve(sin(x)=0); " }}}{EXCHG 
+{PARA 0 "" 0 "" {TEXT -1 85 "\nOnly one solution is found whereas the \+
+general solution is x=n*Pi for any integer n." }}{PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 29 "solve(\{y^2
++1=x,y=x+2\},\{x,y\});" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}
+{PARA 0 "" 0 "subs" {TEXT 267 32 "subs - Substitution of variables" }
+{TEXT -1 144 ".  Rather than globally assigning variable(s) given valu
+e(s) we may also substitute variable(s) by replacement value(s) into a
+ given expression." }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" 
+{TEXT -1 41 "> subs(variable=replacement, expression);" }}{PARA 0 "" 
+0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 68 "> subs(variable1=rep
+lacement1,variable2=replacement2,...,expression)" }}{PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 9 "Examples:" }}}{EXCHG 
+{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "> " 0 "" {MPLTEXT 1 0 18 "exp
+r:=x^3-2*x*y-y;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 15 "subs(x=y
+,expr);" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 19 "subs(x=z,y=1,exp
+r);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#,(*$)%\"zG\"\"$\"\"\"F(*&\"\"#F
+(F&F(!\"\"F(F+" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 
+0 "" {TEXT -1 0 "" }{TEXT 268 26 "fsolve - Numerical Solving" }{TEXT 
+-1 89 ".  We may also use floating point arithmetic to solve sets of e
+quations by use of fsolve:" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 
+"" 0 "" {TEXT -1 21 "> fsolve(expression);" }}{PARA 0 "" 0 "" {TEXT 
+-1 47 "> fsolve(set of expressions, set of variables);" }}{PARA 0 "" 
+0 "" {TEXT -1 56 "> fsolve(set of expressions, set of variables, optio
+ns);" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT 
+-1 106 "The fsolve command is used in exactly the same way as solve bu
+t returns numerical floating point results. " }}{PARA 0 "" 0 "" {TEXT 
+-1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 168 "The optional third argument al
+lows fsolve to compute particular kinds of solutions e.g. complex root
+s, roots in a particular range,... See ?fsolve for more information." 
+}}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 9 "Examples
+:" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 17 "fsolve(x=cos(x));" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 20 "fsolve(x^2-x+1=0,x);" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 28 "fsolve(x^2-x+1=0,x,complex);" }}}{EXCHG {PARA 0 "" 0 
+"" {TEXT -1 39 "\nDemonstrates the complex root option.\n" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 18 "fsolve(x^3-x=0,x);" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 29 "fsolve(x^3-x=0,x,x=-2..-0.5);" }}}
+{EXCHG {PARA 0 "" 0 "" {TEXT -1 74 "\nDemonstrates the root range opti
+on : a root between -2 and -0.5 is found." }}{PARA 0 "" 0 "" {TEXT -1 
+0 "" }}}{EXCHG {PARA 0 "" 0 "algebra" {TEXT 258 69 "Simplify, expand, \+
+combine, factor - Algebraic  Manipulations in Maple" }{TEXT -1 1 "." }
+}{PARA 0 "" 0 "" {TEXT -1 128 "\nThere are a number of Maple commands \+
+that allow manipulation of expressions into different forms. Four impo
+rtant examples are :" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "
+" {TEXT -1 23 "> simplify(expression);" }}{PARA 0 "" 0 "" {TEXT -1 21 
+"> expand(expression);" }}{PARA 0 "" 0 "" {TEXT -1 22 "> combine(expre
+ssion);" }}{PARA 0 "" 0 "" {TEXT -1 21 "> factor(expression);" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 0 "" }}}{EXCHG {PARA 0 "" 0 "" 
+{TEXT -1 1 " " }{TEXT 259 8 "simplify" }{TEXT -1 202 " -  tries to re-
+express a given expression into its simplest form. It makes use of tri
+gonometric identities and properties, properties of other functions li
+ke log and exp and other simplifying features." }}}{EXCHG {PARA 0 "> \+
+" 0 "" {MPLTEXT 1 0 0 "" }}}{EXCHG {PARA 0 "" 0 "" {TEXT 260 6 "expand
+" }{TEXT -1 58 " - multiplies out any factors and trigonometric functi
+ons." }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 0 "" }}}{EXCHG {PARA 0 
+"" 0 "" {TEXT 261 7 "combine" }{TEXT -1 153 " - merges terms in expres
+sions. Performs in the opposite way to expand. Various options can be \+
+selected with combine - see ?combine for further details.\n" }}}
+{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }{TEXT 270 7 "factor " }{TEXT -1 
+34 "- looks for any algebraic factors." }}{PARA 0 "" 0 "" {TEXT -1 0 "
+" }}{PARA 0 "" 0 "" {TEXT -1 10 "Examples:\n" }}}{EXCHG {PARA 0 "> " 
+0 "" {MPLTEXT 1 0 18 "cos(x)^2+sin(x)^2;" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 12 "simplify(%);" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 
+0 23 "z:=x^2-y^2-(x-y)*(x+y);" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 
+0 12 "simplify(%);" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 15 "poly:
+=(x-1)^10;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 19 "expand(poly);
+      " }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 10 "factor(%);" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 17 "expand(cos(a+b));" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 16 "combine(%,trig);" }}}{EXCHG 
+{PARA 0 "" 0 "" {TEXT -1 76 "\nThis demonstrates the combine command i
+n conjunction with the trig option.\n" }}}{EXCHG {PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 0 "" 0 "polynom" {TEXT 262 20 "collect, coeff, s
+ort" }{TEXT -1 57 " - Algebraic manipulations with polynomial expressi
+ons.  " }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 77 
+"A number of specialised commands are available for manipulating polyn
+omials:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 37 "p:=6*x^4*y-2*x
+*y^2+x^2-y^3+2*x^2*y^2;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 26 "
+collect(p,x);collect(p,y);" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 72 "Thi
+s command collects together the coefficients for the given variable\n
+\n" }}{PARA 0 "> " 0 "" {MPLTEXT 1 0 13 "coeff(p,y^2);" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 13 "coeff(p,y,3);" }}}{EXCHG {PARA 0 "
+" 0 "" {TEXT -1 49 "\nThis command find the coeff for the given term.
+\n" }}{PARA 0 "> " 0 "" {MPLTEXT 1 0 10 "sort(p,x);" }}}{EXCHG {PARA 
+0 "" 0 "" {TEXT -1 82 "\nThis command sorts the polynomial into decrea
+sing powers of the given variable(s)" }}{PARA 0 "" 0 "" {TEXT -1 0 "" 
+}}}{EXCHG {PARA 0 "" 0 "" {TEXT 269 15 "Sums and Series" }{TEXT -1 70 
+".  Finite and infinite sums and power series can be defined in Maple.
+\n" }}}{EXCHG {PARA 0 "" 0 "sum" {TEXT 263 20 "sum - Computing Sums" }
+{TEXT -1 70 ". The definite sum over an index ranging from low to high
+ is given by:" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" 
+{TEXT -1 33 "> sum( summand, index=low..high);" }}{PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 32 "The sum can be infinite i
+n size." }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 
+10 "Examples:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 16 "sum(i,i=
+1..100);" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 14 "sum(i,i=1..n);
+" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 10 "expand(%);" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 10 "factor(%);" }}}{EXCHG {PARA 0 "> " 
+0 "" {MPLTEXT 1 0 26 "sum(1/j^2, j=1..infinity);" }}}{EXCHG {PARA 0 ">
+ " 0 "" {MPLTEXT 1 0 28 "sum(a[n]*x^n,n=1..infinity);" }}}{EXCHG 
+{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "series" {TEXT 264 21 "Se
+ries - Power Series" }{TEXT -1 130 ".  Taylor power series expansions \+
+about a given point can be defined for a given expression up to a spec
+ified order of truncation:" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}
+{PARA 0 "" 0 "" {TEXT -1 68 "> series(expression, variable=expansion p
+oint, order of truncation);" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 
+0 "" 0 "" {TEXT -1 140 "If no order of truncation is supplied, the ord
+er is given by the value of the global variable Order which is initial
+ly set to 6 by default. " }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "
+" 0 "" {TEXT -1 9 "Examples:" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 38 "Order:=4;logSeries:=series(l
+n(t),t=1);" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 32 "cosSeries:=se
+ries(cos(x),x=0,7);" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 22 "subs
+(x=0.5,cosSeries);" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 78 "\nTo evalua
+te a given power series it must first be converted to a polynomial:\n
+" }}{PARA 0 "> " 0 "" {MPLTEXT 1 0 35 "poly:=convert(cosSeries,'polyno
+m');" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 93 "\nThe convert command is \+
+described after the discussion on the commands op and nops later on.\n
+" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 18 "subs(x=0.5, poly);" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 9 "cos(0.5);" }}}{EXCHG {PARA 0 
+"> " 0 "" {MPLTEXT 1 0 0 "" }}}}{MARK "0 0 0" 0 }{VIEWOPTS 1 1 0 1 1 
+1803 1 1 1 1 }{PAGENUMBERS 0 1 2 33 1 1 }

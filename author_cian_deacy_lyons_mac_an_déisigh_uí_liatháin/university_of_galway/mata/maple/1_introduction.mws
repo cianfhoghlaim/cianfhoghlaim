@@ -1,0 +1,269 @@
+{VERSION 6 0 "IBM INTEL NT" "6.0" }
+{USTYLETAB {CSTYLE "Maple Input" -1 0 "Courier" 0 1 255 0 0 1 0 1 0 0 
+1 0 0 0 0 1 }{CSTYLE "2D Math" -1 2 "Times" 0 1 0 0 0 0 0 0 2 0 0 0 0 
+0 0 1 }{CSTYLE "Hyperlink" -1 17 "" 0 1 0 128 128 1 0 0 1 0 0 0 0 0 0 
+1 }{CSTYLE "2D Output" 2 20 "" 0 1 0 0 255 1 0 0 0 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 256 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+257 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 258 "" 1 16 0 0 
+0 0 0 0 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 259 "" 1 18 0 0 0 0 0 1 0 0 0 
+0 0 0 0 1 }{CSTYLE "" -1 260 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 261 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+262 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 263 "" 0 1 0 0 
+0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 264 "" 0 1 0 0 0 0 0 1 1 0 0 0 
+0 0 0 1 }{CSTYLE "" -1 265 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 266 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+267 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 268 "" 0 1 0 0 
+0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 269 "" 0 1 0 0 0 0 0 1 0 0 0 0 
+0 0 0 1 }{CSTYLE "" -1 270 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 271 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+272 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 273 "" 0 1 0 0 
+0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 274 "" 0 1 0 0 0 0 0 1 1 0 0 0 
+0 0 0 1 }{CSTYLE "" -1 275 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 276 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+277 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 278 "" 0 1 0 0 
+0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 279 "" 0 1 0 0 0 0 0 1 1 0 0 0 
+0 0 0 1 }{CSTYLE "" -1 280 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 281 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+282 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 283 "" 0 1 0 0 
+0 0 0 1 0 0 0 0 0 0 0 0 }{CSTYLE "" -1 284 "" 0 1 0 0 0 0 0 0 1 0 0 0 
+0 0 0 1 }{CSTYLE "" -1 285 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }
+{CSTYLE "" -1 286 "" 0 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1 }{CSTYLE "" -1 
+287 "" 1 10 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }{PSTYLE "Normal" -1 0 1 
+{CSTYLE "" -1 -1 "Times" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 
+0 1 0 1 0 2 2 0 1 }{PSTYLE "Maple Output" -1 11 1 {CSTYLE "" -1 -1 "Ti
+mes" 1 16 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }3 3 0 0 0 0 1 0 1 0 2 2 0 1 }
+{PSTYLE "R3 Font 0" -1 256 1 {CSTYLE "" -1 -1 "Helvetica" 1 16 0 0 0 
+1 2 1 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "R3 Font 2
+" -1 257 1 {CSTYLE "" -1 -1 "Courier" 1 16 0 0 0 1 2 1 2 2 2 2 1 1 1 
+1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" -1 258 1 {CSTYLE "" 
+-1 -1 "Times" 1 18 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }3 1 0 0 0 0 1 0 1 0 2 
+2 0 1 }{PSTYLE "Normal" -1 259 1 {CSTYLE "" -1 -1 "Times" 1 16 0 0 0 
+1 2 2 2 2 2 2 1 1 1 1 }3 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Normal" 
+-1 260 1 {CSTYLE "" -1 -1 "Times" 1 14 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 
+1 0 0 0 0 1 0 1 0 2 2 0 1 }}
+{SECT 0 {EXCHG {PARA 258 "" 0 "" {TEXT 256 23 "\nMAPLE NOTES for MA321
+ " }}{PARA 258 "" 0 "" {TEXT 257 55 "School of Mathematics, Statistics
+ & Applied Mathematics" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 
+0 "" {TEXT -1 101 "These notes are a review of basic features of Maple
+ 13 and an introduction to some advanced aspects. " }{TEXT 258 59 "Ple
+ase proceed by entering return at each > prompt symbol.\n" }}}{EXCHG 
+{PARA 259 "" 0 "" {TEXT 259 25 "\n1. Introduction to Maple" }{TEXT -1 
+0 "" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 59 "Th
+e main topics discussed in this worksheet are as follows:" }}{PARA 0 "
+" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {HYPERLNK 17 "Basic Grammar" 1 
+"" "Grammar" }}{PARA 0 "" 0 "" {HYPERLNK 17 "Arithmetic Precedence" 1 
+"" "arithmetic" }}{PARA 0 "" 0 "" {HYPERLNK 17 "Numbers in Maple" 1 "
+" "Numbers" }}{PARA 0 "" 0 "" {HYPERLNK 17 "Maple Variables, Assigning
+, unassign, restart" 1 "" "Variables" }}{PARA 0 "" 0 "" {HYPERLNK 17 "
+The Digits Variable" 1 "" "Digits" }}{PARA 0 "" 0 "" {HYPERLNK 17 "Err
+ors in Maple" 1 "" "Errors" }}{PARA 0 "" 0 "" {HYPERLNK 17 "Basic Math
+ematical Functions" 1 "" "Functions" }}{PARA 0 "" 0 "" {HYPERLNK 17 "e
+valf" 1 "" "evalf" }{TEXT -1 2 ", " }{HYPERLNK 17 "evalhf, evalc" 1 "
+" "evalhf,c" }}{PARA 0 "" 0 "" {HYPERLNK 17 "print, lprint" 1 "" "prin
+t" }}{PARA 0 "" 0 "" {TEXT -1 1 "\n" }}{PARA 0 "" 0 "Grammar" {TEXT 
+260 13 "Basic Grammar" }{TEXT -1 467 "  Maple prompts with a  > symbol
+. Every line of Maple code consists of mathematical expressions of som
+e kind i.e. formulas, assignments, equalities, functions etc. Each lin
+e of code to be executed usually concludes with a semicolon ; where th
+e result is displayed or a colon : where the result is not. The last c
+omputed result (whether displayed ot not) is given by the percentage s
+ymbol %. The second and third last results are then given by %% and %%
+% respectively." }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" 
+{TEXT -1 9 "Examples:" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 4 "1+2
+;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 4 "1*5;" }}}{EXCHG {PARA 
+0 "> " 0 "" {MPLTEXT 1 0 5 "%-%%;" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 1 "\n" }}}{EXCHG {PARA 0 "" 0 "" {TEXT 261 5 "\nhelp" }
+{TEXT -1 50 " Help on any topic can be obtained by the commands" }}
+{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 8 "> ?topic" 
+}}{PARA 0 "" 0 "" {TEXT -1 20 "> ?topic,subtopic   " }}{PARA 0 "" 0 "
+" {TEXT -1 18 "> ?topic[subtopic]" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}
+{PARA 0 "" 0 "" {TEXT -1 10 "Examples:\n" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 5 "?plot" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 15 "?p
+lots,animate\n" }}}{EXCHG {PARA 0 "" 0 "Arithmetic" {TEXT 262 22 "Arit
+hmetic Precedence " }{TEXT -1 72 "Arithmetic operations (and other ope
+rations) are prioritised as follows:" }}{PARA 0 "" 0 "" {TEXT -1 0 "" 
+}}{PARA 0 "" 0 "" {TEXT -1 16 "Parentheses   ()" }}{PARA 0 "" 0 "" 
+{TEXT -1 15 "Powers  ^ or **" }}{PARA 0 "" 0 "" {TEXT -1 31 "Products \+
+and Divisions  * and /" }}{PARA 0 "" 0 "" {TEXT -1 34 "Additions and S
+ubtractions + and -" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "
+" {TEXT -1 57 "The full operator precedence list is given by executing
+ :" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 23 "?operators[precedence]\n" }}}{EXCHG {PARA 0 "" 0 "" 
+{TEXT -1 9 "Examples:" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "> " 
+0 "" {MPLTEXT 1 0 6 "2+3*4;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+8 "(2+3)*4;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 8 "5^2/2-1;" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 10 "5^2/(2-1);" }}}{EXCHG {PARA 
+0 "> " 0 "" {MPLTEXT 1 0 10 "5^(2/2)-1;" }}}{EXCHG {PARA 259 "" 0 "Num
+bers" {TEXT 263 18 "\n\nNumbers in Maple" }{TEXT -1 1 " " }}{PARA 0 "
+" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT 264 30 "Integer and Ratio
+nal Constants" }{TEXT -1 195 ". Exact integer and rational arithmetic \+
+is possible up to a very large accuracy. On 32-bit systems the length \+
+is limited to 524,280 digits; on 64-bit systems, the limit is 38,654,7
+05,646 digits.\n" }}{PARA 0 "" 0 "" {TEXT -1 11 "Examples :\n" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 5 "2^25;" }}}{EXCHG {PARA 0 "> \+
+" 0 "" {MPLTEXT 1 0 8 "%/3^100;" }}{PARA 11 "" 1 "" {XPPMATH 20 "6##\"
+)KWbL\"Q,?_2@qs7il(H6YO5L6?t?vP:&" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 
+0 "" }}{PARA 0 "" 0 "" {TEXT 265 22 "Floating Point Numbers" }{TEXT 
+266 1 " " }{TEXT -1 148 "Real floating point constants are specified b
+y including a decimal point. The default number of digits is 10 set by
+ the variable Digits (see below)." }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}
+{PARA 0 "" 0 "" {TEXT -1 9 "Example :" }}}{EXCHG {PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 0 "> " 0 "" {MPLTEXT 1 0 8 "2.0^100;" }}}{EXCHG 
+{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT 267 48 "Converti
+ng an integer to a floating point number" }{TEXT -1 114 ". An integer,
+ rational or any other number expression can be converted in two ways \+
+into a floating point number by" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}
+{PARA 0 "" 0 "" {TEXT -1 23 "> evalf(integernumber);" }}{PARA 0 "" 0 "
+" {TEXT -1 33 "> convert(integernumber,'float');" }}{PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 51 "Both these commands are e
+xplained further later on." }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 
+"" 0 "" {TEXT -1 10 "Examples:\n" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 8 "5^(1/3);" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 9 "
+evalf(%);" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 19 "convert(%%, fl
+oat);" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" 
+{TEXT 268 22 "Mathematical Constants" }{TEXT 269 2 "  " }{TEXT -1 103 
+"A number of other mathematical constants are specified by special let
+ters. Some important examples are:" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}
+{PARA 0 "" 0 "" {TEXT -1 32 "Pi = the area of a unit circle !" }}
+{PARA 0 "" 0 "" {TEXT -1 42 "infinity = the positive infinite constant
+ " }}{PARA 0 "" 0 "" {TEXT -1 46 "true, false = logical true and false
+ constants" }}{PARA 0 "" 0 "" {TEXT -1 21 "I = square root of -1" }}
+{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 10 "Examples:
+\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 3 "Pi;" }}}{EXCHG {PARA 
+0 "> " 0 "" {MPLTEXT 1 0 10 "evalf(Pi);" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 4 "I^2;" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 
+0 "" 0 "" {TEXT 280 15 "Complex Numbers" }{TEXT 281 1 " " }{TEXT -1 
+54 "The square root of minus one is denoted by capital I. " }}{PARA 0 
+"" 0 "" {TEXT -1 10 "\nExample:\n" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 16 "(3-2*I)*(2*I+1);" }}}{EXCHG {PARA 0 "" 0 "Variables" 
+{TEXT 270 0 "" }}{PARA 0 "" 0 "" {TEXT 286 15 "Maple Variables" }
+{TEXT -1 440 " Maple variables can be mathematical variables with \"un
+known\" or unassigned numerical value or can be assigned a specific nu
+merical value. No declaration of variable type (as for example in C) i
+s required. Variable names are strings containing letters and numbers \+
+and some other characters such as underscores. Maple is also sensitive
+ to upper or lower case letters. The backquote ` can also be used to c
+reate variable names with \"blanks\".\n" }}}{EXCHG {PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT 282 14 "Reserved Names" }{TEXT 
+283 1 "." }{TEXT -1 209 " There are a number of reserved names in Mapl
+e which may not be used as variable names such as: quit, if, do,... An
+ error warning message will be issued if such reserved names are emplo
+yed as variable names. \n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 6 
+"if:=2:" }}}{EXCHG {PARA 0 "" 0 "" {TEXT 284 0 "" }}{PARA 0 "" 0 "" 
+{TEXT 285 21 "Assigning a Variable." }{TEXT -1 72 " A variable can be \+
+assigned a value by use of the  := symbol as follows:" }}{PARA 0 "" 0 
+"" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 25 "> variable := expressi
+on;" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 11 "Ex
+amples :\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 14 "Force := m*a:
+ " }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 7 "M := 3:" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 8 "a:=9.81:" }}}{EXCHG {PARA 0 "> " 0 "
+" {MPLTEXT 1 0 6 "Force:" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 64 "\nNot
+ice that Maple is case sensitive i.e. m and M are different." }}{PARA 
+0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "> " 0 "" {MPLTEXT 1 0 5 "m:=2;" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 21 "`Total Force`:=Force;" }}}
+{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 83 "Th
+is illustrates the use of  backquotes ` ` to create a variable name wi
+th blanks.\n" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "
+" {TEXT 271 23 "Unassigning a Variable." }{TEXT -1 74 " An assigned va
+riable can be unassigned as shown in the following example:" }}}
+{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "> " 0 "" {MPLTEXT 1 0 
+2 "x;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 5 "x:=4;" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 2 "x;" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 7 "x:='x';" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 56 "\nNote
+ the use of the apostrophe ' not the backquote ` !\n" }}}{EXCHG {PARA 
+0 "> " 0 "" {MPLTEXT 1 0 23 "a:='a': m:='m':M:='M': " }}}{EXCHG {PARA 
+0 "" 0 "" {TEXT -1 116 "\nThis unassigns variables of the previous exa
+mple. There is also an unassign function which performs the same role:
+\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 10 "a:=1;b:=2;" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 22 "unassign('a','b');a;b;" }}}
+{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT 279 36 "R
+estart - Unassigning all variables." }{TEXT -1 104 " All assigned quan
+tities defined in the current Maple session can be unassigned by the r
+estart command:\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 12 "x:=2;y
+:=3.5;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 12 "restart;x;y;" }}}
+{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "Digits" {TEXT 
+272 33 "Digits - Floating Point Accuracy." }{TEXT -1 99 " The number o
+f digits can be reset by the variable Digits which is initially set to
+ 10 by default.\n" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "
+" 0 "" {TEXT -1 9 "Example:\n" }}{PARA 0 "> " 0 "" {MPLTEXT 1 0 7 "Dig
+its;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 13 "Digits:= 100;" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 10 "evalf(Pi);" }}}{EXCHG {PARA 
+0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "Errors" {TEXT 273 16 "Errors i
+n MAPLE." }{TEXT -1 104 " A syntax error is indicated in the output by
+ a warning together with a (limited) diagnostic statement ." }}{PARA 
+0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 11 "Examples :\n" }
+}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 7 "4+5)/3;" }}}{EXCHG {PARA 0 
+"> " 0 "" {MPLTEXT 1 0 6 "do:=x;" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 
+55 "\nNote that if cannot be used as a valid variable name.\n" }}}
+{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "Functions" {TEXT 
+274 35 "Basic Maple Mathematical Functions." }{TEXT -1 132 "  Maple ha
+s a large set of mathematical functions that it can use both algebraic
+ally and numerically. The most common examples are:\n" }}}{EXCHG 
+{PARA 0 "" 0 "" {TEXT -1 29 "exp(x) = exponential function" }}{PARA 0 
+"" 0 "" {TEXT -1 30 "ln(x) or log(x) = natural log " }}{PARA 0 "" 0 "
+" {TEXT -1 22 "log10(x) = log base 10" }}{PARA 0 "" 0 "" {TEXT -1 21 "
+sqrt(x) = square root" }{TEXT 287 0 "" }}{PARA 0 "" 0 "" {TEXT -1 23 "
+abs(x) = absolute value" }}{PARA 0 "" 0 "" {TEXT -1 60 "sin(x), cos(x)
+,.. = sin, cos,.. and the other trig functions" }}{PARA 0 "" 0 "" 
+{TEXT -1 31 "arcsin(x),... = arcsin, ...etc." }}{PARA 0 "" 0 "" {TEXT 
+-1 17 "n! = n factorial " }}{PARA 0 "" 0 "" {TEXT -1 42 "gcd(m,n) = gr
+eatest common divisor of m, n" }}{PARA 0 "" 0 "" {TEXT -1 40 "lcm(m,n)
+ = least common multiple of m, n" }}{PARA 0 "" 0 "" {TEXT -1 51 "trunc
+(x) = greatest integer less than or equal to x" }}{PARA 0 "" 0 "" 
+{TEXT -1 25 "signum(x) = the sign of x" }}{PARA 0 "" 0 "" {TEXT -1 31 
+"Dirac(x) = Dirac delta function" }}{PARA 0 "" 0 "" {TEXT -1 52 "Heavi
+side(x) = Heaviside function (=0, x<0; =1, x>0)" }}{PARA 0 "" 0 "" 
+{TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 10 "Examples:\n" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 12 "Digits:= 10;" }}}{EXCHG {PARA 0 "> \+
+" 0 "" {MPLTEXT 1 0 9 "exp(1.0);" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 4 "15!;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 8 "sqrt
+(2);" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 13 "trunc(3.561);" }}}
+{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "evalf" {TEXT 275 
+5 "evalf" }{TEXT -1 207 " (Floating Point Evaluation) We may numerical
+ly evaluate an expression to a floating point number. The number of di
+gits can be supplied by the global value of Digits or locally for the \+
+given expression only." }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 
+0 "" {TEXT -1 20 "> evalf(expression);" }}{PARA 0 "" 0 "" {TEXT -1 35 
+"> evalf(expression, number_digits);" }}{PARA 0 "" 0 "" {TEXT -1 0 "" 
+}}{PARA 0 "" 0 "" {TEXT -1 10 "Examples:\n" }}}{EXCHG {PARA 0 "> " 0 "
+" {MPLTEXT 1 0 11 "x:= exp(2);" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 
+1 0 9 "evalf(x);" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 13 "evalf(x
+,50); " }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "evalhf
+,c" {TEXT 276 6 "evalhf" }{TEXT -1 263 " (Hardware Floating Point Eval
+uation). We may evaluate using hardware floating point arithmetic by t
+he evalhf command. This allows only 15 digit accuracy but has a much g
+reater time efficiency than evalf. It is very suitable for repetitive \+
+numerical evaluations.\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 10 
+"evalhf(x);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#$\"3S]1$*)4c!*Q(!#<" }}
+}{EXCHG {PARA 0 "" 0 "" {TEXT -1 43 "Example. Compare the time taken t
+o evaluate" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT 
+-1 43 " exp(1)+exp(1/2)+exp(1/3)+...+exp(1/10000)\n" }}{PARA 0 "" 0 "
+" {TEXT -1 94 "using evalf and evalhf. The code below uses the do loop
+ explained in the worksheet 6_if_do.mws" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 72 "\nans:=0:\nfor i from 1 to 100000 do\n  ans:=ans+eval
+f(exp(1/i));\nod:\nans;\n" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+73 "\nans:=0:\nfor i from 1 to 100000 do\n  ans:=ans+evalhf(exp(1/i));
+\nod:\nans;\n" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 
+"" {TEXT 277 5 "evalc" }{TEXT -1 95 " (Complex Evaluation). We may als
+o evaluate using complex numbers by use of the evalc command.\n" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 11 "exp(2+I*3);" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 9 "evalc(%);" }}}{EXCHG {PARA 0 "" 0 "
+" {TEXT -1 0 "" }}{PARA 0 "" 0 "print" {TEXT 278 13 "print, lprint" }
+{TEXT -1 192 " Printing Expressions.  The default output from Maple is
+ in \"prettyprint\" format which looks as close to everday mathematica
+l notation as possible. This can be explicitly evoked by the command" 
+}}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 37 "> print
+(expression1,expression2,...);" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}
+{PARA 0 "" 0 "" {TEXT -1 84 "A linear format can also be produced iden
+tical to MAPLE input format by the command " }}{PARA 0 "" 0 "" {TEXT 
+-1 0 "" }}{PARA 0 "" 0 "" {TEXT -1 38 "> lprint(expression1,expression
+2,...);" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 111 "\nCharacter string ou
+tput can also be produced by enclosing the characters in a pair backqu
+otes symbols: `.....`" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}{PARA 0 "" 0 
+"" {TEXT -1 9 "Examples:" }}{PARA 0 "" 0 "" {TEXT -1 0 "" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 19 "print(y=(x+y)^2/y);" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 20 "lprint(y=(x+y)^2/y);" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 29 "print(`The Answer is `, 3/2);" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 30 "lprint(`The Answer is `, 3/2
+);" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 0 "" }}}}{MARK "0 3 1" 
+59 }{VIEWOPTS 1 1 0 1 1 1803 1 1 1 1 }{PAGENUMBERS 0 1 2 33 1 1 }

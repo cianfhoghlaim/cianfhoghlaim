@@ -1,0 +1,492 @@
+We Raised $8M Series A to Continue Building Experiment Tracking and Model Registry That “Just Works”
+Read more
+
+    What is Neptune?
+
+How to Use Neptune ML Experiment Tracking ML Model Management MLOps ML Tools
+
+Blog » ML Model Management » How to Organize Deep Learning Projects – Examples of Best Practices
+
+Want to compare multiple runs in an automated way? 
+
+Log your metadata to Neptune and see all runs in a user-friendly comparison view.
+Learn more
+How to Organize Deep Learning Projects – Examples of Best Practices
+
+    14 mins read
+    Author Nilesh Barla
+    Updated January 18th, 2022
+
+For a successful deep learning project, you need a lot of iterations, a lot of time, and a lot of effort. To make this process less painful, you should try to use your resources to the max.
+
+A good step-by-step workflow will help you do that. With it, your projects become productive, reproducible, and understandable .
+
+In this article you’ll see how to structure work on deep learning projects — from the inception to deployment, monitoring the deployed model, and everything in between. 
+
+Along the way, we’ll use Neptune to run, monitor, and analyze your experiments. Neptune is a cool tool for increasing productivity in ML projects.
+
+In this article you will learn:
+
+    About the lifecycle of the project.
+    Importance of defining an objective or goal of the project.
+    Collecting data based on the requirements of the project.
+    Model training and results exploration including:
+        Establishing baselines for better results.
+        Adopting techniques and approaches from the existing open-source state-of-the-art models research papers and code repositories.
+        Experiment tracking and management management 
+    Model refinement techniques to avoid underfitting and overfitting like:
+        Controlling hyperparameters
+        Regularisation
+        Pruning
+    Testing and evaluating your project before deployment.
+    Model deployment
+    Project maintenance
+
+Lifecycle
+
+Because deep learning projects are so iterative, we have to be very careful to organize the project in a way that reduces any tension and complexity. 
+
+To do so, it helps to understand what the lifecycle of a DL project looks like. Here is a general idea:
+Lifecycle-of-DL-projects Lifecycle-of-DL-projects Source
+Define the task 
+
+When you start a project, you need to clearly define the objective of the task. An imperative understanding of how a machine learning system’s solution will ultimately be used for a targeted problem is important. 
+
+Even when your task is vague, it will trigger different ideas for evaluation criteria , optimization function, and loss function, data collection / data generation process, and so on. 
+
+This is a crucial step to properly plan your project. Without proper planning, when you hit a roadblock in later stages, it will be very difficult to recover. 
+Is the project even possible?
+
+You probably don’t have endless resources, so it’s important to validate if it makes sense to pursue your project considering your limitations. 
+
+Think about resources that you already own or open-source ones that you can easily access: datasets , published work , code repositories , and computing power . 
+
+    Data Acquisition
+        Can’t start a DL project without a reliable source of data. This usually takes up most of the project, because it’s a continuous process, and data will be continuously fed into your DL model even after deployment.  
+    Published Work
+        It’s always good to have a reference for what you’re doing. Most of the time, there will be literature available for you to learn and get inspired. It’s really helpful to use existing research to improve your approach.
+    Code Repositories
+        Code and algorithms that you can re-use in order to save time. Look for code and algorithms on Github and Stack Overflow .
+    Computing Power
+        This is where you can save the most money with good optimization. Depending on the data that your model is consuming, you can use any of the options below, or a hybrid that combines them: 
+            Google Colab 
+                Free, with GPU and TPU.
+            Kaggle  
+                Free up to 40 hours of GPU and TPU per week. To extend the time period, or get a higher processing speed, you can connect your project with Google Cloud and do a bit of configuring.
+            AWS  
+                No free option, you can get a lot of processing power, and use the facilities it provides especially for machine learning training.
+            Azure
+                Same as AWS.
+
+Structure your project properly
+
+Along the lines of defining your task, you should also structure your project properly. This will also help you avoid future problems. 
+
+Creating your directory and file structure is one of the easiest ways to start a project, and you have to do it for any DL project. 
+
+A clean, organized structure improves teamwork and makes it easier for different team members to focus on their individual tasks. When you’re working on a full-fledged application, you need to be more precise about the requirements of your project. 
+
+Some of the requirements will involve saving the version of parameters and models, documents, license, Jupyter notebooks, and so on. Here is an example of how you can structure your project or set up the project codebase to be more efficient:
+DL project directory DL project directory Source
+Discuss general model tradeoffs
+
+Tradeoffs are important decisions. You have to solve problems with logic, and possibly rework the goal of the project. 
+
+“ Decision Intelligence is the discipline of turning information into better actions at any scale ”. – Cassie Kozyrkov, Chief Decision Scientist at Google
+DL projects accuracy DL projects accuracy
+
+When it comes to deep learning, trade-offs between speed and accuracy should be taken into account. For instance, deep neural models that are used in Apple’s Siri, Amazon’s Alexa, Grammarly etc. for making predictions from massive amounts of data are designed to be fast and accurate. In these types of applications, it is critical to use architectures that display such properties. This means that, when designing such systems, we would like to tune different neural network parameters to jointly minimize two objectives: the prediction error on some validation data and the prediction speed.  
+
+In general, these types of problems involve solving multi-objective optimization problems. Problems having two or more objectives. Since the size of the model can increase with the complexity of the data fed in, you have to be careful enough to know and understand what you desire from the DL model. 
+
+It is always a good practice to thoroughly understand the problem from the user’s perspective so that you can re-iterate and revisit the defined goal and objective. Mock out your deep learning model and iterate (if required) on the user experience, keeping in mind the targeted audience and type of model shipped to them.
+ML project guide ML project guide Source
+
+Most certainly keep in mind that a faster model can make errors while predicting and an accurate model can be slow . Understanding the previous laid down points can help us achieve a model that displays a balance between speed and accuracy. 
+
+In the upcoming sections, we will see how we can optimize the model based on our needs.
+Data collection
+
+There are many ways to collect data. If you discuss this with your team before doing any work, it can save you a lot of time later on. 
+
+For example, if you’re thinking about buying data from a vendor, then the following questions should be answered: 
+
+    How much data do you need? 
+    How much can you spend on data? 
+    Is there any cheaper way to get data, or an open-source alternative? 
+
+A good source of your data can make following deep learning tasks easier. If your resources contain too much biased data, or mislabeled data, you’ll have to work around these issues. 
+
+Data is fuel for the deep learning process, it’s crucial to get data from a legit and trustworthy resource.
+
+Good examples of such resources with properly curated data are: 
+
+    NHS Data  
+    Coco Dataset .
+
+Define ground truth 
+
+Defining ground truth (labeling) is usually done for supervised learning. If the data source is not legit, there might be issues that lead to an inappropriate DL model later in the process, eventually causing a lot of financial stress. 
+
+“ AI cannot set the objective for you, that’s the human’s job ”. – Cassie Kozyrkov, Chief Decision Scientist at Google
+
+Ground truth, or labeling, means setting an objective for the machine, and it completely depends on the task that you defined — like our previous example, “ build a deep learning system to classify fungal images in a flower ”. 
+
+You need to decide whether the DL system should be sensitive to fungus images, or lenient. This is where we usually trade accuracy with precision or vice-versa. 
+
+It is always recommended to design an algorithm based on the defined task and targeted audience so that both the computational resources and financial resources aren’t overused. 
+
+Another method to label data is active learning . It’s usually used for large amounts of data that needs to be labeled.
+
+Labeling can be expensive, so you want to limit the time spent on this task. 
+Validate the quality of data
+
+When you’re done defining the ground truth, the next part is validating the quality of data. Depending on the project your preferences might change. If you’re building an image classifier, then the following questions should be tackled:
+
+    Do you need images with high resolution? 
+    What size images are required?
+    Should it be black and white, or color?
+    How old should the images be?
+
+Similarly, if you’re building an NLP model, the more important questions are:
+
+    How much corpus do you need?
+    Does your project require texts which are short, like tweets, surveys, feedback, or does it require paragraphs like essays, stories, or maybe a conversation for a chatbot?
+    Does it require slang or punctuations? 
+    Is it being targeted to a general audience or domain experts like fiction writers or researchers?
+
+When we analyze these questions, we can then remove unwanted parts or anomalies from the data. Validating the quality of data is about preparing data before we feed it into the machine learning model. 
+
+Data is clean if the noise is removed from your dataset. Apart from removing anomalies, it also refers to cropping and answering key questions like in the two examples above. 
+
+Once the quality of data is validated, you can move on to create an ingestion pipeline.
+Build data ingestion pipeline
+
+To achieve the result you want, you might need to start the whole process again and again. One good way to automate this is to build a continuous process called the pipeline . 
+
+A pipeline is a sequence of algorithms that perform a sequence of desired actions. When we’re working with data and pipelines, we tend to describe the same process as the data ingestion pipeline . 
+
+The data ingestion pipeline is a set of actions that extract data from various sources, and transform them with the objective parameters.
+Data pipeline Data pipeline Source
+
+Data ingestion pipelines can have various processes:
+
+    Collecting the data from various sources. It can be API, data center, cloud storage, or even a database management system.
+    Transformation of the data:
+        Filling the missing value using statistical methods
+        If it’s images, then resizing to square matrices, normalization, etc.
+    Data analytics or visualization
+    Creating batches to feed into the deep learning model
+
+With a data ingestion pipeline, the whole process of collecting, transforming, and loading the data becomes automatic. 
+
+The great thing about it is that you can transfer the same pipeline to other projects, and just change a few details here and there according to fit project requirements. This makes pipelines both scalable and reproductive . 
+Model training and exploration
+
+Now we can start exploring useful models. This is a highly iterative process. Model exploration involves building a model, training it, and assessing its performance on your test data to estimate its generalization capacity. 
+
+Once you’ve tried the same strategy with a handful of models with different configurations, you can then select the final model and move ahead. 
+Establish baselines for model performance
+
+Every problem that you’re working with must have two baselines: 
+
+    simple model baseline, 
+    human-level baseline. 
+
+The baseline describes our expectation of the model. Do we want the model to be complex and flexible to a variety of data, or to be rigid? In the second case, we might end up performing well on training, but not validation data with low accuracy. In the first case, the model can perform well on new and unseen data as well. 
+
+A simple model baseline might involve deep learning models with two hidden layers. If the model reaches a lower threshold (let’s say 70% accuracy), then we can definitely increase the complexity of the model by adding layers, regularisation, pooling layers, and so on, little by little to reach the human level baseline. 
+
+One good way to establish baselines is by studying your problem deeply. Find research literature to approximate your baselines for clarity. Never be in the dark of the deep learning world around you. Knowing different work in the same field can enhance your work significantly, and trigger new techniques of efficient and optimized models. 
+Start with a simple model using an initial data pipeline
+
+You can start with a simple model and gradually ramp up complexity. This typically involves using a simple model, but can also include starting with a simpler version of your task. For example, instead of using the entire dataset, use a single batch. 
+
+Try to understand the limits of the simple model. This way you’ll see the necessary steps for increasing the complexity. Your aim, in the beginning, should always be to avoid underfitting . 
+Overfit simple model to training data
+
+This may not sound good, but it’s important to know if the unconstrained model can learn from the data. If your neural network can’t overfit a single data point, something is seriously wrong with the architecture, but it may be subtle. 
+
+Overfitting tells you that the model is complex compared to the complexity of the data, which is a good thing. Once we know that model is overfitting, we can then start to constrain it accordingly, or in other words — regularise it. 
+Andrej Karpathy tweet Andrej Karpathy tweet Source
+Find State-of-the-Art (SotA) model for your problem domain (if available), apply it to your dataset as a second baseline
+
+One good way to regularize any deep learning model is to find literature on the model that you’re working with.
+
+There might be research papers available for the project that you’re currently working on, so survey the literature and try different approaches to improve your model. 
+
+Most research papers describe their state-of-the-art model, and it provides vital mathematical approaches to improve the model. It’s worth making an effort to find this.
+
+You can follow these steps to make sure that you find the correct research literature, as well as code repositories:
+
+    Visit paperwithcode.com . It has an archive of AI literature, where you’ll find almost all of the current AI research, along with code repositories on Github . All you need to do is find an appropriate paper that meets your needs and thoroughly examine the paper. (You can also visit arxiv.org to do the same). 
+    Search for the appropriate code or repository in Github . Again, go through the code carefully and modify your algorithm accordingly. There is no need to reinvent the wheel. All you need to do is to understand the code from the repository and find a way to apply it in your own code. 
+    Don’t stick to one research paper , get ideas from different sources, and work your way out. 
+    Apply changes to your model, train it on your own data until you get optimal performance. The key is to reproduce the results .
+
+Keep track of your model configuration and experiment metadata
+
+Neptune allows you to keep track of all experiments on the go. Every experiment can:
+
+    use different models configurations
+    use different training or evaluation data 
+    run different code based upon the various techniques implemented
+    run the same code in a different environment (not knowing which PyTorch or Tensorflow version was installed)
+
+With those changes going on in the project it becomes too easy to lose track of the experiments conducted with various configurations and environments. Neptune saves all the experiment-related information or metadata for each and every run. This means models with different configurations can be stored separately without any confusion and can be retrieved or downloaded to your local system. Each experiment will contain its own metadata like parameter configurations, model weights, visualization, environment configuration files, et cetera. This allows you to compare different experiments and choose the best one for the project. 
+
+For an in-depth understanding of experiment tracking with Neptune check out this article: ML Experiment Tracking: What It Is, Why It Matters, and How to Implement It . 
+Read also
+
+Switching From Spreadsheets to Neptune.ai and How It Pushed My Model Building Process to the Next Level
+Model refinement
+
+Once you have a general idea of successful model architectures and approaches for your problem, including data transformation, you should now focus on increasing model performance. 
+
+A couple of things to keep in mind when increasing model performance: increase the accuracy of the model, and reduce overfitting. 
+
+One good way to be productive is to train multiple models with different configurations and monitor them simultaneously as discussed earlier. This saves time, and it will be easier to compare, and make decisions.
+Controlling the model to avoid overfitting
+
+We mentioned overfitting earlier. A model is overfitting when it performs with great accuracy on the training data, but when evaluated against a test or unseen data, it performs poorly. 
+
+This happens because the model has overfitted the data. Training accuracy higher than testing accuracy is a clear indicator of this phenomenon. Thankfully, there are some techniques available to solve this.
+
+Here are a few things you can do to reduce overfitting or avoid it:
+
+    Regularisation
+        “ With four parameters I can fit an elephant and with five I can make him wiggle his trunk ” – John von Neumann, cited by Enrico Fermi in Nature. DL models have more than thousands of parameters, even millions. With so many parameters, we create a complex model that can fit any complex dataset, but with flexibility comes a curse of overfitting. Regularisation tries to control the model by constraining, adding a penalty to large weights. This ensures that the model removes a certain complexity and it can generalize well in unseen data.
+        There are two types of regularisation functions: L1 and L2. The key difference between them is that the former uses mean squared error , while the latter uses mean absolute error . 
+    Dropout
+        Dropout is another type of regularisation, very popular in deep learning. It was proposed by Geoffrey Hinton in 2012 and further improved by Nitish Srivastava in 2014 in this paper . 
+        The idea is very simple. At every training epoch, every neuron has a probability of being temporarily switched off or “dropped out”, but it may be active in the next training epoch. 
+    Early stop
+        As mentioned before, deep neural networks can be very complex, and often we don’t know what should be the training epochs. If the model is trained for too long, then the model will overfit, and if it’s not trained long enough, it will underfit. One way to overcome this problem is to stop the training process early, before the assigned number of epochs. This is achieved by observing the training and validation loss. If at any given number of epochs the performance of the model on the validation dataset starts to degrade (e.g. loss begins to increase or accuracy begins to decrease), then the training process is stopped.
+
+In addition to that we can also practice:
+
+    Pruning the model 
+        DL models can be unnecessarily huge, and some of the neurons make no sense, they just take up space. Pruning is a technique where we try to remove certain weights without sacrificing much of the functionality and accuracy. The idea here is that we remove only those neurons with a certain threshold value. 
+    Fine-tuning hyperparameters
+        The DL model is made up of a large number of layers, a large number of neurons in each layer, activations on top of it, then there is the weight initialization logic, learning rate, and much more — you have to be very careful as to what combination of these hyperparameters should be used in order to produce a good model. 
+        One option is to try different combinations of hyperparameters, and see which one works best on the validation set. 
+
+Organize models and keep track of training runs
+
+Neptune makes it easier to conduct model exploration and experiments. It works with Python, Jupyter notebooks, and all cloud-based notebooks as well, like Google Colab. 
+
+The best part of Neptune is that you can perform multiple experiments, and all the information during training will be tracked in the Neptune dashboard. This gives you a live and interactive visualization of what’s happening with the model during the training process.
+Neptune DL projects Neptune DL projects Source
+
+So far you have explored different techniques, and some ideas for configuration, like hyperparameter tuning, learning rate, number of epochs, and so on. 
+
+At some point, you should create quite a few models, and train them simultaneously or one at a time. With Neptune, all the information can be logged into your personal dashboard. 
+
+Remember that models with configurations can be stored with different version names, and each of the models will have its own information stored with respect to the model version. 
+Compare experiments Compare experiments The image above shows different models (ID) controlled by different owners. | Source
+Drill-down-to-experiment-details-whenever-you-want Drill-down-to-experiment-details-whenever-you-want Each model (ID) has its own saved output stored under the same ID. | Source
+
+Neptune lets you organize all the logistics, data, and codes for each version separately, so you can work independently without the risk of changing code for other versions. 
+
+You can compare all the versions in the dashboard, and move ahead with a model that suits your needs.
+organizations_and_projects organizations_and_projects
+
+For an in-depth understanding of experiment tracking with Neptune check out this article: ML Experiment Tracking: What It Is, Why It Matters, and How to Implement It . 
+Testing and evaluation
+
+At this point in your project lifecycle, you should start writing tests. Tests in deep learning make sure that the algorithm performs well on unseen data. 
+
+One thing to remember is that deep learning algorithms are data-driven, and it’s very difficult to test such models compared to traditional software models because DL is designed to provide an answer to a question for which no previous answer exists.
+
+While testing, we have to make sure that all the components (training, prediction, and deployment) perform well:
+
+    The training system processes raw data, runs experiments, manages results, stores weights .
+    Required tests:
+        Test the full training pipeline (from raw data to the trained model) to ensure that changes haven’t been made upstream with respect to how data from our application is stored. These tests should be run nightly/weekly.
+    The prediction system constructs the network, loads the stored weights, and makes predictions.
+    Required tests:
+        Run inference on the validation data (already processed), ensure the model score does not degrade with new model/weights. This should be triggered by every code push.
+        You should also have a quick functionality test that runs on a few important examples so that you can quickly (<5 minutes) ensure that you haven’t broken functionality during development. These tests are used as a sanity check as you’re writing new code.
+        Consider scenarios that your model might encounter, and develop tests to ensure new models still perform sufficiently. The “test case” is a scenario defined by the human and represented by a curated set of observations.
+            Example: For a self-driving car, you might have a test to ensure that the car doesn’t turn left at a yellow light. For this case, you may run your model on observations where the car is at a yellow light, and ensure that the prediction doesn’t tell the car to go forward.
+    Serving system exposed to accept “real world” input and perform inference on production data. This system must be able to scale to demand.
+        Required monitoring:
+            Alerts for downtime and errors,
+            Check for distribution shift in data.
+
+Model deployment
+
+When you deploy ML models, you need to keep new data coming in all the time. Models need to adjust in the real world because of adding new categories, new levels and so on. 
+
+Deploying your model is the start, models often need to be retrained and checked for performance. The DL model needs to be trained with new data, so it’s good to have a versioning system that will handle:
+
+    Model parameters,
+    Model configuration,
+    Feature pipeline,
+    Training dataset,
+    Validation dataset.
+
+ML lifecycle ML lifecycle Source
+Model checkpoints Model checkpoints Versioning system by Neptune | Source
+
+One of the most common practices for deploying a model is to wrap the whole system into a Docker container and expose a REST API for inference.
+
+Canarying : Serve new models to a small subset of users (ie. 5%) while still serving the existing model to the rest. This is where version control is useful. If everything is fine (the rollout is smooth), then deploy a new model to the rest of the users, while saving the new version as well.
+
+Shadow mode : Ship a new model alongside the existing model, still using the existing model for predictions, but storing the output for both models. Measuring the delta between the new and current model predictions will show you how drastically things will change when you switch to the new model.
+
+These are some of the common practices you can observe in the software you use. There is always a beta version given to developers before the public version is shipped. Good examples are iOS, macOS, Instagram, and other popular systems.
+Ongoing model maintenance
+
+Once you’re done with training, testing, and deployment, it’s time for monitoring and maintenance. 
+
+This is the most expensive process. You have to understand that the model should evolve over time so that it always meets the requirements of the present — not the past, nor the future. 
+Understand that changes can affect the system in unexpected ways
+
+DL models are sensitive to changes, even a small hyperparameter change can flip the performance of your model. Since your model needs to evolve, you need to provide a model with a new validation dataset. This way, the model will be performing well on unseen data, and be adaptive and flexible. 
+
+Observe and analyze the performance of your model with the new validation dataset. If the performance degrades, isolate the problem and solve it. 
+
+Keep in mind that problem-solving should not be done in the deployed model, rather on the same version as the deployed one. Once the problem is solved, then you can deploy the code.
+Periodically retrain the model to prevent model staleness
+
+When you notice a degradation in the model, you isolate the problem, work on it, and then deploy it. This is also true in general scenarios. 
+
+Since the model is continuously working, don’t forget to retrain the model even if you don’t notice any degradation in the performance. Sometimes it’s hard to see changes in the input data and how the neural nets are analyzing it. 
+
+To be on the safer side, the best practice is to retrain the model every now and then.
+If there is a transfer in model ownership, educate the new team
+
+Usually, once the model is ready and deployed, the engineering team hands it over to the monitoring team. 
+
+In that case, you need to educate the monitoring team thoroughly about the model. You can also use Neptune for this process. Since everyone shares the same dashboard, the monitoring team can easily learn all the processes that the engineering came up with and monitor them at their convenience. 
+Share your work and invite people to your projects Share your work and invite people to your projects Neptune offers sharing of your projects with your teammates | Source
+This concludes the deep learning project workflow
+
+I hope this article helped you see why it’s important to implement an organized, step-by-step workflow into your deep learning projects.
+
+This is still a new domain, so best practices for every stage of the workflow continue to evolve. The key is to stay updated and keep trying new things to optimize your projects.
+
+This way, you’ll avoid wasting your time, overspending, and using more resources than you actually need to achieve good performance.
+
+Good luck!
+Nilesh Barla
+Nilesh Barla
+
+I am the founder of a recent startup perceptronai.net which aims to provide solutions in medical and material science through our deep learning algorithms. I also read and think a lot. And sometimes I put them in a form of a painting or a piece of music. And when I need to catch a breath I go for a run.
+
+    Follow me on
+
+READ NEXT
+ML Metadata Store: What It Is, Why It Matters, and How to Implement It
+
+13 mins read | Author Jakub Czakon | Updated August 13th, 2021
+
+Most people who find this page want to improve their model-building process.
+
+But the problems they have with storing and managing ML model metadata are different.
+
+For some, it is messy experimentation that is the issue.
+
+Others have already deployed the first models to production, but they don’t know how those models were created or which data was used.
+
+Some people already have many models in production, but orchestrating model A/B testing, switching challengers and champions, or triggering, testing, and monitoring re-training pipelines is not great.
+
+If you see yourself in one of those groups, or somewhere in between, I can tell you that ML metadata store can help with all of those things and then some. 
+
+You may need to connect it to other MLOps tools or your CI/CD pipelines, but it will simplify managing models in most workflows. 
+
+…but so do experiment tracking , model registry, model store, model catalog, and other model-related animals.
+
+So what is an ML metadata store exactly, how is it different from those other model things, and how can it help you build and deploy models with more confidence?
+
+This is what this article is about.
+
+Also, if you are one of those people who would rather play around with things to see what they are, you can check out this example project in Neptune ML metadata store . 
+
+But first…
+Metadata management and what is ML metadata anyway? 
+
+Before we dive into the ML metadata store, I should probably tell you what I mean by “machine learning metadata”.
+
+When you do machine learning, there is always a model involved. It is just what machine learning is. 
+
+It could be a classic, supervised model like a lightGBM classifier, a reinforcement learning agent, a bayesian optimization algorithm, or anything else really.
+
+But it will take some data, run it through some numbers and output a decision. 
+
+… and it takes a lot of work to deliver it into production. 
+Continue reading ->
+How to Keep Track of Deep Learning Experiments in Notebooks
+How to Keep Track of Deep Learning Experiments in Notebooks
+
+by Vidushi Meel
+Read more
+How to Structure and Manage Natural Language Processing (NLP) Projects
+How to Structure and Manage Natural Language Processing (NLP) Projects
+
+by Dhruvil Karani
+Read more
+MLOps guide
+MLOps: What It Is, Why It Matters, and How to Implement It
+
+by Prince Canuma
+Read more
+Experiment tracking Experiment management
+15 Best Tools for ML Experiment Tracking and Management
+
+by Patrycja Jenkner
+Read more
+Top MLOps articles from our blog in your inbox every month.
+
+GDPR compliant. Privacy policy .
+
+Neptune is a metadata store for MLOps, built for research and production teams that run a lot of experiments.
+
+Product
+
+    Overview
+    Experiment Tracking
+    Model Registry
+    ML Metadata Store
+    Notebooks in Neptune
+    Get Started
+    Python API
+    R Support
+    Pricing
+    Roadmap
+    Service Status
+
+Legal
+
+    Terms of service
+    Privacy policy
+
+Resources
+
+    Neptune Blog
+    Neptune Docs
+    Neptune Integrations
+    ML Experiment Tracking
+    ML Model Management
+    MLOps
+    ML Project Management
+
+Competitor Comparison
+
+    Neptune vs Weights & Biases
+    Neptune vs MLflow
+    Neptune vs TensorBoard
+    Other Comparisons
+    ML Experiment Tracking Tools
+    Best MLflow Alternatives
+    Best TensorBoard Alternatives
+
+Company
+
+    About us
+    Careers
+
+Copyright © 2022 Neptune Labs. All rights reserved.
+Neptune.ai uses cookies to ensure you get the best experience on this website. By continuing you agree to our use of cookies. Learn more Got it!
+03AGdBq27rsLXt7kspKAZIxfUZkNtjIlD1UCMbabQuk68DpMjByW_lj50-T5sk5HQEscVeRk6hlokYuMFOS8Jeuh41wmwjuOlGX_Wk31DZymo7OpmhNIpKvUHFN2_0MS5ntF9H1H7EyCszj05ed966KhOt_x1XDByX57YY1fzmmvzIT2axch__yEm4cNpO89xjhHbNEyILMFT0-nM8adnI8BhKss2-qd7ngppAg8aNufyeIXXB95gEsxMHNbxPV-_BaLuUrRs2b7Wa03tP4PuX3sT59CBlDXL_iqhUQoUdn3BoYjy_zm67EQM4qt9MPMXRb2gNtorA6UH6nOCEV9bPqq6lpONky0LuiNhV9wukB_PR3Q8tUkZKPllZHEuJmTRnI3oJuByOpkQ_3JSAlFN9G14Gxl9ojWMewpDKiex_Gg9CsBMXXsU0GaJ_eeZu6SM5EvgceW2NgCwDfieGrx9xESmYW3pgGZvN0TFjdJqsC0RLcvBoN5iEa_cUwNPgXBOWCzVMmLeqBIup

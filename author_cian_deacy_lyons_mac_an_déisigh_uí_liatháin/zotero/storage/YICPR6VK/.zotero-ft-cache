@@ -1,0 +1,496 @@
+Research Article
+Sentential Cross-lingual Paraphrase Detection for English-Urdu Language Pair
+The European Journal on Artificial Intelligence 1–21 © The Author(s) 2025 Article reuse guidelines: sagepub.com/journals-permissions DOI: 10.1177/30504554251319446 journals.sagepub.com/home/eai
+Iqra Muneer1 , Nida Waheed2, Adnan Ashraf3 and Rao M Adeel Nawab2
+Abstract
+Due to vast digital data collections and paraphrasing tools, researchers have shown growing interest in Cross-lingual Paraphrase Detection (CLPD). Open-access data and tools make paraphrasing easier and detection more challenging. Translation tools further exacerbate the issue by enabling effortless text translation across languages, leading to increased cross-lingual paraphrasing. Most existing CLPD studies focus on European languages, particularly English, while the English-Urdu language pair remains underexplored due to limited standard approaches and benchmark corpora.This study addresses this gap by developing the CLPD Corpus for English-Urdu (CLPD-EU), a gold-standard benchmark corpus at the sentence level. The corpus includes 5,801 sentence pairs, comprising 3,900 paraphrased and 1,901 non-paraphrased instances. Additionally, the study implements classical machine learning methods based on bilingual dictionaries, cross-lingual word embeddings, and transfer learning using sentence transformers.The research further incorporates state-of-the-art Large Language Models (LLMs) such as Mistral and LLaMA, significantly improving detection accuracy. Our proposed Feature Fusion Approach, ‘Comb-ST+BD,’ demonstrates strong performance with an F1 score of 0.739 for the CLPD task. The CLPD-EU corpus will be publicly available to encourage further research in CLPD, especially for under-resourced languages like Urdu.
+Keywords
+cross-lingual paraphrase detection, cross-lingual sentence transformer, English-Urdu word pairs
+Received: 20 March 2024; accepted: 10 January 2025
+1 Introduction
+The term cross-lingual paraphrasing (CLP) refers to the process of paraphrasing text(s) in a source language (L1) to create new text(s) in a target language (L2) (Fernando & Stevenson, 2008). With the advent of various free-to-use and openaccess digital repositories, such as Wikipedia,1 and efficient machine translation methods, including Bing Translator2 and Google Translator,3 CLP has become a widely adopted norm for multilingual content generation. Cross-lingual paraphrase detection (CLPD) is the task of determining whether two texts—words, phrases, or sentences—are semantically equivalent while being expressed in different languages (Fernando & Stevenson, 2008). This is a core topic in natural language processing (NLP) with applications in information extraction (Shinyama & Sekine, 2003), CLPD, cross-lingual question answering, and cross-lingual information retrieval (Ferrero et al., 2017). In our study, we further categorize the CLPD task into two main types: Cross-lingual local paraphrase detection (CLLPD) and cross-lingual global paraphrase detection (CL-GPD) (Sameen et al., 2017). CL-LPD involves the generation of new text(s) in a target language (L2) from source text(s) in a language (L1), while CL-GPD refers to the creation of a new
+1Department of Computer Science and Engineering, University of Engineering and Technology Lahore, Lahore, Punjab, Pakistan 2Department of CS and IT, COMSATS University Islamabad, Lahore, Punjab, Pakistan 3Department of Software Engineering, ARA Institute of Canterbury, Christchurch, Canterbury, New Zealand
+Corresponding Author:
+Iqra Muneer, Department of Computer Science and Engineering, University of Engineering and Technology Lahore, Narowal Campus, Punjab, Pakistan. Email: iqramuneer@uet.edu.pk
+
+
+ 2 The European Journal on Artificial Intelligence 0(0)
+document(s) in language (L2) based on source document(s) in language (L1). A crucial distinction lies between crosslingual paraphrasing and translation. While translation focuses on conveying the original meaning as closely as possible, often preserving the structure and wording, cross-lingual paraphrasing entails rephrasing the content for clarity, cultural relevance, or stylistic appropriateness in the target language. This process is particularly relevant in journalistic contexts, where information is frequently restructured to suit the preferences and sensibilities of diverse audiences. Text can be paraphrased either manually or by automated techniques. This results in a further subdivision of the CLPD tasks as (1) artificial cases—where text rewriting tools and automatic translation tools are used to generate new text(s) in different languages, (2) simulated cases—where humans are involved in manually editing source text(s) to generate new text in a new language (L2), and (3) real cases—where journalists manually generate newspaper stories in a new language (L2) from the existing text(s) provided by any news agency in language (L1). This study is focused on developing and providing a benchmark CLPD corpus based on real cases of CLPD for the English-Urdu language pair. In our research, we address the nuances of CLP by examining real cases where journalists manually generate newspaper stories in a new language (L2) based on existing text(s) from news agencies in a source language (L1). Here, we consider direct (human-made) translations as a form of cross-lingual paraphrase; however, we emphasize that the goal of CLP is to adapt and reformulate content rather than provide a verbatim translation. This adaptability involves taking into account cultural, contextual, and linguistic differences, allowing for a more engaging and relevant presentation of information in the target language. To support our investigation into CLPD, we focus on developing a benchmark CLPD corpus based on real cases of CLPD for the English-Urdu language pair. This corpus serves as a valuable resource for training and evaluating models aimed at detecting paraphrasing across these two languages, particularly in the context of news reporting, where ethical considerations and the integrity of original content are paramount. In previous studies, the investigation of CLPD has been accomplished for multiple language pairs, including EnglishCzech (Víta, 2020), English-German (Pataki, 2012; Yang et al., 2019), English-Spanish (Yang et al., 2019), EnglishChinese (Yang et al., 2019), and English-Vietnamese (Nguyen & Dien, 2019). However, the problem of CLPD has not previously been investigated for the English-Urdu language pair, despite the fact that Urdu is an important language spoken widely. Ethnologue’s,4 statistics show that Urdu is the 10th most extensively spoken and popular language worldwide. It is also Pakistan’s national language, with approximately 175 million speakers, which makes Urdu an important language to study. Another reason for its popularity is the availability of a large amount of Urdu text, books, articles, etc., in digital format through online digital repositories. Urdu is a morphologically rich language with an abundance of disambiguating words (Saeed et al., 2019). The complexity and challenges of the Urdu language have resulted in notably less work on the English-Urdu language pair in CLPD.
+1.1 Importance of English-Urdu CLPD
+CLPD plays a crucial role in addressing semantic similarity and “idea theft” across languages, particularly between English and Urdu. As globalization and digital content sharing become increasingly prevalent, the need for robust mechanisms to monitor and manage content reuse in multilingual contexts has never been more critical.
+1.1.1 Ethical and Technical Challenges.
+• Global Communication and Content Reuse: With the proliferation of online content and translation tools, the transfer of ideas across languages has accelerated, increasing the risk of content reuse without appropriate attribution. This raises ethical concerns about intellectual property rights, especially in cases of paraphrasing where direct plagiarism detection systems may fall short (Alzahrani et al., 2012; Potthast et al., 2010). • Existing Gaps in Plagiarism Detection: Traditional plagiarism detection tools typically operate within monolingual contexts, making them ineffective for identifying cross-lingual similarities that involve paraphrasing. This limitation is particularly evident in academia, journalism, and digital media, where content is frequently adapted between languages (Franco-Salvador et al., 2016; Nawab et al., 2019). • Underrepresented Language Pair: The English-Urdu language pair remains underrepresented in CLPD research despite Urdu being a primary language for millions in South Asia. The unique syntactic and morphological features of Urdu complicate direct translations, necessitating advanced techniques to ensure accurate semantic similarity (Barrón-Cedeño et al., 2013). • Cultural Nuances: The complex nature of Urdu often results in words carrying multiple meanings or culturally specific connotations. This further emphasizes the need for sophisticated approaches that go beyond literal translations, enabling accurate paraphrase detection (Cer et al., 2018; Chitkara et al, 2018).
+
+
+ Muneer et al. 3
+1.1.2 Real-world Applications and Examples.
+• News Reporting: For instance, an English article about a political summit might be paraphrased by an Urdu outlet. The ability to detect such paraphrasing is essential to uphold journalistic integrity and protect original content from uncredited reuse. • Implications for Journalism: Effective CLPD tools can assist journalists in monitoring their work across languages, thus preventing unauthorized content reuse and fostering ethical standards within the industry. For example, if an Urdu publication paraphrases key points from an English article, CLPD can identify this and ensure proper attribution. • Impact on Academia: Researchers who publish findings in English and subsequently translate them into Urdu must safeguard their work from idea theft. CLPD systems can help academics track their research across languages, ensuring that proper credit is given to original contributions. • Social Media and Content Sharing: With the rise of social media, users often share content across languages. CLPD can help recognize instances of paraphrasing on these platforms, promoting respect for intellectual property and encouraging ethical sharing practices. • Legal and Ethical Considerations: As intellectual property laws evolve, CLPD can provide vital support in legal disputes involving content reuse across languages, establishing a case based on detected similarities and differences in phrasing.
+1.2 Objectives and Goals of Developing an English-Urdu CLPD Corpus
+• Benchmark Dataset: The creation of an English-Urdu CLPD corpus provides a foundational dataset for training and testing CLPD models specific to this language pair, enhancing detection accuracy for similar content (Clough et al., 2002; Franco-Salvador et al., 2016). • Improved Detection Techniques: Focusing on real-life news articles allows for the capture of authentic paraphrasing instances, enabling models to move beyond literal translations and account for context and nuance (Chitkara et al, 2018; Nawab et al., 2019). • Unique Contribution of Using a News Corpus: News articles serve as a rich resource for studying CLPD due to their inherent nature of reporting similar events across languages. This context-driven approach improves the evaluation of CLPD techniques, making them applicable in real-world scenarios (Barrón-Cedeño et al., 2013). • Practical Applications: The resulting CLPD models can be utilized in journalism, academia, and policy settings to monitor cross-lingual content usage, plagiarism, and idea misappropriation, ultimately protecting intellectual property across languages (Chitkara et al, 2018; Nawab et al., 2019).
+In order to overcome this research gap, our research mainly focuses on constructing a large benchmark corpus, containing 5,801 (Paraphrasing = 3,900, and Non Paraphrasing = 1,901) CLP pairs. The second contribution is the development and application of bilingual dictionary-based approaches. The third contribution includes developing and applying crosslingual word embedding-based approaches, state-of-the-art sentence transformers, and feature fusion approaches for CLPD at the sentence level for the English-Urdu language pair, with applications in cross-lingual plagiarism detection, cross-lingual information retrieval, etc. As a fourth and significant contribution, we incorporate advanced large language models (LLMs), Mistral and LLaMA. We believe this research will be significant both theoretically and practically. The proposed corpus will have implications in (1) promoting the Urdu language (an under-resourced language) in current research, (2) building a strong foundation of knowledge regarding different human edit operations in cross-lingual paraphrasing, (3) directly comparing approaches for CLPD tasks from existing literature relevant to the English-Urdu language pair, and (4) developing, comparing, and evaluating new methodologies that focus on CLPD for the English-Urdu language pair. Following is how the remaining sections of the paper are structured: Section 2 describes literature review, Section 3 depicts the complete process of corpus generation, Section 4 highlights the approaches for CLPD for English-Urdu Language pair, the experimental setup used in this study is represented in Section 5, Section 6 gives insights about detailed results and analysis, and at the end, the conclusion of the whole study is depicted in Section 7 beside some future directions that can be explored.
+2 Literature Review
+Some previously existing corpora and approaches related to CLPD are exhibited below in this section.
+
+
+ 4 The European Journal on Artificial Intelligence 0(0)
+Recently, in a study, three large gold-standard cross-lingual text reuse detection (CLTRD) corpora have been developed for the task of CLTRD along with cross-lingual methods for the English-Urdu language pair by Muneer and Nawab (2022). The proposed cross-lingual corpora include CLEU-Lex, CLEU-Syn, and CLEU-Phr at the lexical, syntactical, and phrasal levels for the English-Urdu Language Pair. The CLEU-Lex contains 66,485 pairs with the source text in English and reused text in Urdu based on simulated cases at the lexical level. The pairs were manually labeled into three classes (wholly derived—WD = 22,236, partially derived—PD = 20,315, non-derived—ND = 23,934) (Muneer & Nawab, 2022). Three different methods including baseline (Bi-lingual dictionary), and proposed (cross-lingual semantic tagger, CL-WE, and CL-ST). The best results were obtained with F1 score of (0.69, 0.80) for CLEU-Lex (Muneer & Nawab, 2022) for the ternary and binary classification tasks respectively. The other proposed gold standard bench-mark ’CLEU-Syn’ corpus contains 60,267 pairs with the source text in English and reused text in Urdu based on simulated cases at the syntactical level. The pairs were manually labeled into three classes (WD = 20,007, PD = 16,979, ND = 23,281) (Muneer & Nawab, 2022). Three different methods including baseline (Bilingual dictionary), and proposed (Cross-lingual Semantic Tagger, CL-WE, and CL-ST). The best results were obtained with F1 score of (0.82, 0.92) for CLEU-Syn (Muneer & Nawab, 2022) for the ternary and binary classification tasks respectively. The third gold standard bench-mark corpus named ‘CLEU-Phr’ contains 60,106 cross-lingual pairs with the source text in English and reused text in Urdu based on simulated cases at the phrasal level. The CLTR pairs were again manually labeled into three classes (WD = 23,862, PD = 15,878, ND = 20,366) (Muneer & Nawab, 2022). Three different methods including baseline (Bi-lingual dictionary), and proposed (Cross-lingual Semantic Tagger, CL-WE, and CL-ST). The best results were obtained with F1 score of (0.78, 0.94) for CLEU-Phr (Muneer & Nawab, 2022) for the ternary and binary classification tasks respectively. Muneer and Nawab (2022) introduced a corpus for CLTRD, consisting of 21,669 simulated sentence pairs in EnglishUrdu. This corpus is annotated into three categories: WD with 7,655 pairs, PD with 6,461 pairs, and ND with 7,553 pairs. The approaches tested include Translation + Monolingual Analysis (T+MA) and Cross-Lingual Sentence Transformers, achieving an F1 score of 0.94 for binary classification. The TREU corpus proposed by Sharjeel (2020) and Sharjeel et al. (2023) comprises real journalism examples with 2,257 document pairs, manually categorized into WD, PD, and ND, achieving the best F1 score of 0.78 using N-gram Overlap. Víta (2020) developed a metaphor paraphrase detection corpus for English-Czech, leveraging existing monolingual data to create 744 labeled pairs, with notable performance using MT + FastText. Muneer et al. (2019) provided a large corpus focused on English-Urdu, containing 3,235 pairs, achieving the highest F1 score of 0.732 using N-gram Overlap. Yang et al. (2019) introduced the PAWS-X dataset, featuring 23,259 pairs across six languages, with multilingual models, particularly Bidirectional Encoder Representations from Transformers (BERT), yielding high accuracy (83.1 to 90.8%). Haneef et al. (2019) created a document-level Cross-lingual plagiarism detection corpus with 2,395 pairs, categorizing examples into automatic, artificially paraphrased, manually paraphrased, and nonplagiarized. N-gram Overlap achieved the best performance across categories. Asghari et al. (2015) built a bilingual corpus for Persian-English with 19,973 English source documents and 7,142 suspicious documents through sentence stitching. Finally, Barrón-Cedeno et al. (2013) constructed the CLITR dataset for English-Hindi, focusing on artificial and simulated examples, achieving an F1 score of 0.79 in competitions. A study emphasizing Translation + Monolingual Analysis (T+ MA) approaches for the CLTRD problem was presented by Muneer and Nawab (2021). The reason behind their contribution was the lack of thorough and in-depth comparisons and explorations on CLTRD. The authors proposed various T+ MA approaches which were applied to a previously developed CLEU corpus. For CLTRD, the authors applied semantic similarity approaches, probabilistic approaches, monolingual word embedding approaches, monolingual sentence transformers approaches, and a combination of these approaches for both binary and ternary classification. The experiments claim that these proposed approaches outperform previously developed approaches for CLEU corpus which were F1 = 0.73 for binary and F1 = 0.55 for ternary classification. This study obtained the highest results using a combination of 26 approaches with F1 = 0.77 for binary and F1 = 0.61 for ternary classification. To sum up, there have been investigations and research done for CLPD and CLTRD for various language pairs having English it such as English-Hindi (Kothwal & Varma, 2013), English-Spanish (Li et al., 2018; Potthast et al., 2011), EnglishRussian (Bakhteev et al., 2019), English-Czech, (Ceska et al., 2008), English-German (Franco-Salvador et al., 2016) and English-Urdu (Muneer & Nawab, 2022; Muneer et al., 2019; Sharjeel, 2020). Currently available datasets include real, simulated, and artificial cases of CLTRD at sentence, passage, and document levels. From the literature analysis, it is clear that CLPD problem has been studied for different language pairs but it is yet to be investigated explicitly for English-Urdu Language pair. Undoubtedly, research has been done on English-Urdu pair in plagiarism detection and text reuse detection domains but not in the paraphrase detection domain. In the Cross-lingual plagiarism detection, CLUE (Hanif et al., 2015),
+
+
+ Muneer et al. 5
+CLPD-UE-19 (Haneef et al., 2019) are available. Alternatively, in the CLTRD domain, Cross-lingual text reuse corpus (Muneer & Nawab, 2022), CLEU (Muneer et al., 2019) and TREU (Sharjeel, 2020) are available. However, the literature shows that no adequate work is available for English-Urdu language pairs for CLPD task. Therefore, a dire need is to provide an efficient solution for English-Urdu Paraphrase Detection as well as to develop a benchmark corpus. To fulfill this research gap, our research focus is on CLPD for English-Urdu language pair. Considering the English-Urdu language pair, previous investigations have focused on CLTRD at the sentence, passage, and document levels. However, there has been no prior study supporting CLPD across different levels of rewrite using artificial, simulated, and real cases for the English-Urdu language pair on large benchmark datasets. This study aims to address these limitations by presenting a large sentential cross-lingual benchmark corpus for English-Urdu, comprising 5,801 sentence pairs with real cases of CLPD, including 3,900 paraphrased and 1,901 non-paraphrased pairs. The secondary contribution is the development and application of bilingual dictionary-based approaches. As a third contribution, we developed and applied cross-lingual word embedding-based methods, advanced sentence transformerbased approaches, and feature fusion techniques for CLPD at the sentence level, with potential applications in cross-lingual information retrieval, cross-lingual plagiarism detection, and more. As a fourth contribution, we integrate advanced LLMs, specifically Mistral and LLaMA, to further elevate detection accuracy, demonstrating the effectiveness of these models in addressing the challenges of English-Urdu CLPD. Table 1 provides a structured comparison of existing research on CLTRD and CLPD, focusing on corpus type, reuse type, obfuscation level, and applied methods. This format aids in identifying limitations across previous studies and situates our proposed work within these research gaps. Limitations in Existing Work: Previous datasets, such as CLEU-Lex, CLEU-Syn, and CLEU-Phr (Muneer & Nawab, 2022), are simulated and tailored for CLTRD, limiting their application to real-world CLPD, especially for challenging language pairs like English-Urdu. CLEU-Sen (Muneer & Nawab, 2022), while adaptable for paraphrase detection, is also based on simulated cases, lacking real-world complexity. CLEU (Muneer et al., 2019) remains the only real-case dataset but is limited by a small set of fewer than 1,000 sentence paraphrase pairs, insufficient for developing a comprehensive CLPD system. Additionally, its pair creation criteria do not align fully with CLPD needs, highlighting a significant gap in resources. Proposed Study Contribution: The proposed study addresses these gaps by introducing a real-world dataset with 3,900 paraphrased and 1,901 non-paraphrased sentence pairs, providing a robust foundation for CLPD. Our feature fusion approach—integrating bilingual dictionary, cross-lingual word embedding, and cross-lingual sentence transformers—enables effective detection of nuanced cross-lingual paraphrasing across sentence structures. Additionally, we leverage state-of-the-art LLMs, Mistral and LLaMA. This combined approach (feature fusion) not only enhances robustness but also specifically addresses limitations in previous studies, positioning our work as a critical advancement for English-Urdu CLPD. This table highlights the limitations in prior research while clearly delineating how the proposed study meets these needs, establishing a valuable and innovative resource in CLPD.
+3 Corpus Generation Process
+In this section, we discuss the corpus generation process which includes the data extraction, semi-automatic translation approach (automatic translation, and manual inspection and correction), corpus characteristics, and examples from the proposed CLPD-EU corpus. Below we describe the proposed corpus generation process in detail.
+3.1 Data Extraction
+To develop our proposed CLPD-EU, We selected Microsoft Research Paraphrase Corpus (MRPC) (Dolan & Brockett, 2005) as a base corpus. The reason behind the selection of MRPC is its popularity among researchers and the wide use of MRPC as a benchmark paraphrase corpus for the English language. In the literature, MRPC has been used as a base corpus in different research studies including (Dolan & Brockett, 2005; El Desouki et al., 2019; Lee & Cheah, 2016). MRPC is a widely used sentence-level paraphrase corpus that was harvested automatically from online news sources over a period of 2 years. It is a first of its kind benchmark paraphrase corpus published online with an option to download for free.5 The main purpose of MRPC development was to provide a broad domain corpus of paraphrase pairs at the sentence level and encourage research in areas related to paraphrasing and sentential synonymy. It consists of 5,801 pairs based on real examples at the sentence level. There are 3,900 paraphrased and 1,901 non-paraphrased pairs in it. The corpus has two classes; 0 shows Non-paraphrased pairs and 1 shows Paraphrased pairs. We have extracted Sentence-1 from the MRPC to generate our CLPD corpus for the English-Urdu language pair (hereafter called CLPD-EU).6
+
+
+ 6 The European Journal on Artificial Intelligence 0(0)
+Table 1. Summary of Literature Review with Limitations and Proposed Study.
+Corpus
+Reuse
+Type
+No. of
+Source
+Docu
+ments
+No. of
+Suspi
+cious
+Docu
+ments
+Obfuscation
+Level
+Granularity
+Level
+Language
+Pair
+Applied
+Methods
+Best
+Results Limitations
+CLEU-Sen
+Muneer and
+Nawab
+(2022)
+Simulated 21,699 21,699 Sentence level Sentence English-Urdu 1. Translation Plus
+Mono-lingual
+Analysis
+2. Cross-lingual
+Word
+Embedding
+3. Cross-lingual
+Sentence
+Transformer
+F1 = 0.94 (Binary),
+F1 = 0.84
+(Ternary)
+Simulated cases
+only; designed
+for Cross-lingual
+Text Reuse
+Detection
+(CLTRD), not
+optimized for
+real-world
+paraphrased
+detection, which
+is more
+challenging.
+CLEU-Lex
+Muneer and
+Nawab
+(2022)
+Simulated 66,485 66,485 Lexical Level Lexical English-Urdu 1. Bi-lingual
+dictionary
+2. Cross-Lingual
+Sentence
+Transformers
+3. Cross-lingual
+Word
+Embedding
+4. Cross-Lingual
+Semantic Tagger
+F1 = 0.80 (Binary),
+F1 = 0.69
+(Ternary)
+Simulated cases;
+designed for
+CLTRD; does
+not handle real
+cross-lingual
+paraphrased
+detection cases
+effectively due to
+lack of
+real-world data.
+CLEU-Syn
+Muneer and
+Nawab
+(2022)
+Simulated 60,267 60,267 Syntactical Level Syntax English-Urdu 1. Bi-lingual
+dictionary
+2. Cross-Lingual
+Sentence
+Transformers
+3. Cross-lingual
+Word
+Embedding
+4. Cross-Lingual
+Semantic Tagger
+F1 = 0.92 (Binary),
+F1 = 0.82
+(Ternary)
+Simulated cases;
+suitable for
+CLTRD but lacks
+real-world
+applicability in
+paraphrase
+detection;
+limited syntactic
+nuance.
+(Continued)
+
+
+ Muneer et al. 7
+Table 1. Continued
+Corpus
+Reuse
+Type
+No. of
+Source
+Docu
+ments
+No. of
+Suspi
+cious
+Docu
+ments
+Obfuscation
+Level
+Granularity
+Level
+Language
+Pair
+Applied
+Methods
+Best
+Results Limitations
+CLEU-Phr
+Muneer and
+Nawab
+(2022)
+Simulated 60,106 60,106 Phrasal Level Phrase English-Urdu 1. Bi-lingual
+dictionary
+2. Cross-Lingual
+Sentence
+Transformers
+3. Cross-lingual
+Word
+Embedding
+4. Cross-Lingual
+Semantic Tagger
+F1 = 0.94 (Binary),
+F1 = 0.78
+(Ternary)
+Simulated data;
+designed for
+CLTRD rather
+than paraphrase
+detection,
+lacking ability to
+address
+real-world
+phrasal
+complexities.
+CLEU Muneer
+et al. (2019)
+Real 3,235 3,235 Sentence/
+Passage Level
+Sentence/
+Passage
+English-Urdu Translation Plus
+Mono-lingual
+Analysis
+F1 = 0.77 (Binary),
+F1 = 0.61
+(Ternary)
+Real cases but
+dataset limited
+to fewer than
+1,000 paraphrase
+pairs; low data
+volume and
+criteria restrict
+robustness in
+cross-lingual
+paraphrased
+detection for
+English-Urdu.
+EU-CLPD
+Haneef et al.
+(2019)
+Artificial 2,395 2,395 Document Level Document English-Urdu Translation Plus
+Mono-lingual
+Analysis
+F1 = 1.00, 0.68,
+0.52, and 0.22
+(N-gram)
+Based on artificial
+data; lacks
+real-world
+applicability and
+relevance,
+impacting the
+robustness of
+results.
+(Continued)
+
+
+ 8 The European Journal on Artificial Intelligence 0(0)
+Table 1. Continued
+Corpus
+Reuse
+Type
+No. of
+Source
+Docu
+ments
+No. of
+Suspi
+cious
+Docu
+ments
+Obfuscation
+Level
+Granularity
+Level
+Language
+Pair
+Applied
+Methods
+Best
+Results Limitations
+TREU Sharjeel
+et al. (2023)
+Real 2,257 2,257 Document Level Sentence English-Urdu Feature Fusion
+Approach
+F1 = 0.66 and F1 =
+0.78 for the
+binary, and
+ternary
+classification all
+T+MA
+Addresses
+real-world
+challenges with
+sufficient dataset
+size and
+structure,
+enhancing
+CLTRD at
+document level
+for English-Urdu.
+The study
+corpus
+(Proposed
+Work)
+Real
+3,900
+Paraphrased
+1,901 Non
+paraphrased Sentence Level Sentence English-Urdu 1. Bi-lingual
+dictionary
+2. Cross-lingual
+Word
+Embedding
+3. Cross-lingual
+Sentence
+Transformer
+4. Feature Fusion
+Approach
+(proposed)
+5. LLMs
+F1 = 0.739
+(Proposed
+Feature Fusion)
+Addresses
+real-world
+challenges with
+sufficient dataset
+size and
+structure,
+enhancing
+cross-lingual
+paraphrased
+detection for
+English-Urdu.
+LLM = large language models; CLTRD = cross-lingual text reuse detection.
+
+
+ Muneer et al. 9
+Figure 1. Manual inspection and correction.
+3.2 Semi-automatic Translation Approach
+We have combined the strengths of automatic translation and manual translation called the “Semi-automatic Translation Approach” for CLPD-EU corpus generation. Google Translate was chosen as the initial translation tool due to its accessibility and baseline effectiveness, which is particularly valuable for under-resourced languages like Urdu (Nguyen & Cherry, 2019; Zhang & Baldridge, 2020). Similar semi-automatic approaches, where machine translation is followed by human post-editing, have been effectively employed in various language studies to create accurate and high-quality corpora, especially for languages with limited NLP resources (Guzmán et al., 2019; Vázquez et al., 2019). This method combines automated translation with manual editing by a native Urdu speaker fluent in English, addressing limitations in machine-translated syntax, semantics, and context. Studies on Spanish-English and Swahili-English have shown that using this combination approach allows for nuanced linguistic corrections, making the final dataset more reliable for research applications (Guzmán et al., 2019; Vázquez et al., 2019). In our study, a linguistically trained graduate student carefully reviewed and corrected each sentence in the translated text, which follows recommended practices in literature for balancing efficiency with translation quality (Koehn & Knowles, 2017; Toral & Way, 2018). This structured and human-guided correction process ensures that our English-Urdu corpus is of high quality and suitable for robust CLPD research.
+3.2.1 Automatic Translation. Originally both sentences of the base corpus are in English. To convert the base corpus according to the targeted problem we converted sentence 02 into the Urdu language which ultimately created EnglishUrdu sentence pairs. For automatic translation of sentence 02, Google Translator7 was used.8 The reason for selecting Google Translator for automatic translation is, Google Translate is one of the most common and widely used tools for translation purposes (Haneef et al., 2019; Pataki, 2012). The results of translation from the English language to the Urdu language were best obtained, closer to human translation, and had comparatively fewer mistakes using Google Translate as compared to other translation tools. Figure 1 shows instances after the translation of sentence 02 from English to Urdu using Google Translate.
+3.2.2 Manual Inspection and Correction. The automatically translated text can contain errors, mistakes and noisy texts such as some English words (which are not translated), wrong translation of text into Urdu, wrong context, and useless characters etc. To improve the quality of the corpus, after automatic translation, the translation (Urdu) of the proposed corpus was manually inspected and corrected by a linguistic expert. All the translations were manually inspected by a graduate-level research student who is a native Urdu speaker having good command and expertise in the English language as well. After this manual inspection, the errors/mistakes found in the Urdu translation were corrected manually by the
+
+
+ 10 The European Journal on Artificial Intelligence 0(0)
+Table 2. Corpus Statistics.
+Characteristics Statistics
+Total No. of sentence pairs 5,801 Total No. of tokens 259,688 Total No. of unique tokens 35,992 Total No. of English tokens 114,740 Total No. of unique English words 20,084 Total No. of Urdu tokens 144,948 Total No. of unique Urdu tokens 15,908
+Figure 2. Paraphrased sentence pair example.
+Figure 3. Non-paraphrased sentence pair example.
+same student to develop the CLPD-EU corpus.9 This whole process improved the translation and also ensured the quality of the corpus. Developing a benchmark corpora quality is an important factor as the approaches developed and results obtained are highly dependent on the excellence of the corpus. Figure 1 shows the instances with manual correction of sentence 02 translation.
+3.3 Corpus Standardization
+Our proposed corpus CLPD-EU is standardized in CSV file format. The CLPD-EU contains 5,801 sentence pairs for the English-Urdu language pair. The CLPD-EU contains in total 114,740 English and 261,924 Urdu tokens. This shows that the length of Urdu text is larger than English text. More detailed statistics can be found in Table 2. The corpus will be publicly accessible to download for research purposes under a Creative Commons CC-BY-NC-SA license.10 This proposed corpus can be accessed from the available link for the reviewers11
+3.4 Examples from Proposed Corpus
+The examples of paraphrased and non-paraphrased sentence pairs from CLPD-EU are given: Figure 2 shows an example of Paraphrased Sentence Pair and Figure 3 shows an example of Non-Paraphrased Sentence Pair12
+4 Approaches for CLPD for English-Urdu Language Pair
+In this section, we have explained our proposed approaches in detail which are applied to our proposed CLPD-EU corpus. To demonstrate how CLPD-EU corpus is utilized for the development of the comparison, analysis, and evaluation of Crosslingual Paraphrased Detection systems for the English-Urdu language pair, we have applied various approaches including (1) bilingual dictionary based approaches (baseline) (2) Cross-lingual Word Embedding Based Approaches (proposed), (3) Sentence Transformers Based Approaches (proposed), and (4) feature fusion approaches (proposed). We made a detailed
+
+
+ Muneer et al. 11
+comparison between baseline and proposed approaches. According to the information that we have these approaches have not been used earlier for Paraphrase Detection for English-Urdu language pair focusing on real cases. In the following section, we will explain these approaches thoroughly.
+4.1 Baseline Approaches
+4.1.1 Bilingual Dictionary Based Approaches. In a previous study, a bilingual dictionary was used for translating different search queries across languages for cross-language information retrieval (CLIR) (Grefenstette, 1998). The motivation behind using a bilingual dictionary is to translate texts across two languages easily in order to under the texts or language. It is advantageous for the development of cross-lingual translation systems. In addition, there are numerous functional applications of a bilingual dictionary in NLP such as CLPD, cross-lingual semantic text similarity, cross-lingual machine translation, CLTRD, cross-lingual duplicate content detection and cross-lingual questioning answering. To acquire quick and suitable translations, a bilingual dictionary can be very worthwhile. Considering CLPD, the derived text’s terms as well as phrases can be easily translated back to the source texts for better mapping across languages. In these conditions, it can be helpful for context analysis as well to check whether the translation and terms are contextually the same or not (Daille & Morin, 2008). We have used a bilingual dictionary presented by Muneer (2016) for our experiment related to bilingual dictionary approach. The dictionary is structured to have English translations of each Urdu term available in it. Taking into consideration sentence 01, and 02 from the proposed CLPD-EU corpus, the following steps were involved in our baseline bilingual dictionary approach. (1) Sentence 01 and sentence 02 both were tokenized. (2) Using a bilingual dictionary, each word in sentence 02 (Urdu) was translated to English in such a way that tokens of both sentences got translated into English. (3) Similarity between sentence 01 and sentence 02 was calculated with two different similarity coefficients: Overlap similarity coefficient13 (Equation (1)), and Jaccard similarity coefficient (Equation (2)). We selected the bilingual dictionary-based approach as our baseline for several reasons:
+• Benchmarking: It serves as a fundamental benchmark for cross-lingual tasks, facilitating comparisons with more advanced methods (Reimers & Gurevych, 2019). • Effectiveness for Under-Resourced Languages: This approach is particularly beneficial for languages like Urdu, where resources are limited, as it effectively utilizes available lexical alignments (Nguyen & Cherry, 2019). • Inapplicability of Other Methods: Other cross-lingual approaches, such as cross-lingual character n-grams and explicit semantic similarity, are not applicable to Urdu due to language-specific challenges (Zhang & Baldridge, 2020). • Historical Use: Previous studies have successfully employed bilingual dictionary methods as benchmarks, validating their relevance (Toral & Way, 2018).
+In addition, we applied Cross-Lingual Word Embedding, as utilized in prior English-Urdu studies, to enhance our approach (Haneef et al., 2019). This baseline enables us to effectively demonstrate the benefits of our novel feature fusion techniques.
+SOverlap = |(S1, n) ∩ (S2, n)|
+min(|(S1, n)|, |(S2, n)|) (1) SJaccard = |(S1, n) ∩ (S2, n)|
+(|(S1, n)| ∪ |(S2, n)|) (2)
+where S1 and S2 represent sentence 01 and sentence 02 (translation) texts respectively.
+4.2 Proposed Approaches
+4.2.1 Cross-lingual Word Embedding Based Approaches. A feature extraction approach used to generate feature vectors that are truly the representation of a particular word in numerical form is typically known as Word embedding. The major strengths of this approach lie in providing dense vectors, capturing semantic and syntactic similarity, capturing relation with other words, and expressing distinct aspects of a word. Word embedding is applied in countless tasks of NLP including plagiarism detection (Ferrero et al., 2017; Khorsi et al., 2018), short text similarity (Kenter & De Rijke, 2015), recommendation service (Ozsoy, 2016), word sense disambiguation (Pelevina et al., 2017) and analyzing survey responses and verbatim comments (Akella et al., 2017).
+
+
+ 12 The European Journal on Artificial Intelligence 0(0)
+In this approach, two different models were used (1) Google pre-trained word embedding model14 (Ghannay et al., 2016) for source sentence 01 in English and (2) a pre-trained Urdu word embedding model15 (Kanwal et al., 2019) for Urdu sentence 02 has been used. To implement the Cross-lingual Word Embedding approach, the following steps were undertaken. The initial step involved tokenizing both sentences (sentence 01 and sentence 02). The subsequent step involved extracting embedding vectors for each sentence. For sentence 01, we utilized the pre-trained Google Word2Vec model (Ghannay et al., 2016), which generates word vectors with a dimensionality of 300. Specifically, we retrieved the 300 nearest neighbors for each word in sentence 01 to enhance the lexicon before averaging the embeddings. Similarly, for sentence 02, we employed a pre-trained Urdu word embedding model (Kanwal et al., 2019), which also extracted 300 nearest neighbors for each word, facilitating the enrichment of the lexicon prior to embedding aggregation. In the third and last step, the generated word embedding vectors of both sentences were used for similarity computation between sentence 01 and sentence 02 using two methods: (1) Sum of the word embedding vectors method and (2) average of the word embedding vectors method. Sum of the word embedding vectors was applied to obtain a single source word embedding vector achieved by adding all word embedding vectors of the source words. Likewise, a single derived word embedding vector was obtained by adding all the derived words. Hereafter, we calculated the similarity between the (added) source and derived word embedding vectors with two measures which are Cosine similarity measure (Equation (3)) and the Euclidean distance measure (Equation (4)). The subsequent method (average of the word embedding vectors) was aimed to obtain a single word embedding vector for sentence 01 and sentence 02 by using average function. By taking average of all word embedding vectors present in sentence 01, a single averaged embedding vector was generated for sentence 01. Similarly, a single averaged embedding vector was generated for sentence 02 by averaging all word embedding vectors present in sentence 02. Eventually, the similarity scores were calculated between the averaged word embedding vectors for both sentences with two measures which are Cosine similarity measure (Equation (3)) (Lahitani et al., 2016) and Euclidean distance measure (Equation (4)) (Vijaymeena & Kavitha, 2016).
+Sim(S1, S2) = ⃗ ⃖⃖⃖S1⃗.⃖⃖⃖S2
+⃗|⃖⃖⃖S1| × ⃗|⃖⃖⃖S2|
+(3)
+where |⃗ ⃖S1| and |⃗ ⃖S2| express the length of sentence 01 and sentence 02 respectively. Partial matching can be done by Cosine similarity supporting adequate similarity estimation.
+Euclidean(S1, S2) =
+√
+⃗(⃖⃖⃖S1 −⃗ ⃖⃖⃖S2). ⃗(⃖⃖⃖S1 −⃗ ⃖⃖⃖S2) (4)
+where (⃗ ⃖S1) and (⃗ ⃖S2) represents the sentence 01 and sentence 02 respectively. The shortest distance between source text and derived text can be compared with Euclidean distance.
+4.2.2 Sentence Transformers Based Approaches. Another prime contribution of this study is the development of sentence transformers-based approaches. We have proposed, developed and applied Sentence Transformers Based Approaches on our proposed CLPD-EU corpus because the approaches based on contextual representations are fairly efficient for many tasks in NLP (Li et al., 2020). The success of the transformer models has resulted in the development of various pre-trained language representation models. These include Language-Agnostic SEntence Representations (LASER) (Feng et al., 2020), InferSent (Conneau et al., 2017), Universal Sentence Encoder (Cer et al., 2018), BERT (Devlin et al., 2019; Peters et al., 2018), and Roberta (Liu et al., 2019). Recently, another language representation model named Sentence-BERT (SBERT) is introduced by Reimers and Gurevych (2019). SBERT was developed as a variation of the BERT neural network (Devlin et al., 2019). SBERT uses the architecture of siamese neural network and triplet neural networks for generating sentence embeddings that are semantically meaningful. It has been demonstrated to be viable for a variety of problems in NLP domain including paraphrase identification (Fenogenova, 2021; Thakur et al., 2021), semantic textual similarity (Guo et al., 2020), text classification (Minaee et al., 2021), bitext mining (Feng et al., 2020), hierarchical clustering (Naumov et al., 2020), story completion by missing part generation (Mori et al., 2020), Document dating (Massidda, 2020), similar documents identification (Navrozidis & Jansson, 2020), sentimental analysis (Ke et al., 2020), text ranking (Yates et al., 2021), question answering (He et al., 2020), and machine translation (Rei et al., 2020) etc. In this study we have applied Sentence BERT (SBERT)16 (Reimers & Gurevych, 2019), which are primarily based on Transformer. The pre-trained Sentence Transformer models have the ability to generate meaningful sentence embedding vectors for more than 100 languages. Furthermore, sentence transformers can be separately trained for different general and specific problems. A few general purpose pre-trained sentence transformers are Bert-large, Roberta-large, Bert-base,
+
+
+ Muneer et al. 13
+Roberta-base, Bert-base-wekipedia-mean-token etc. The general purpose sentence transformers are pre-trained using a combination of two corpora including the Stanford Natural Language Inference (SNLI) corpus17 (Bowman et al., 2015), and the MultiGenre NLI (MultiNLI) Corpus18 (Williams et al., 2018). Likewise, a few special purpose pre-trained sentence transformers are paraphrase-distilroberta-base-v1 (for paraphrase detection), stsb-distilroberta-base-v2, stsb-roberta-basev2 (for semantic textual similarity), nq-distilbert-base-v1 (for information retrieval), quora-distilbert-base (for duplicate questions detection) and LaBSE (for bitext mining) (Reimers & Gurevych, 2020). The special purpose paraphrase detection sentence transformer is pre-trained using 50 Million English paraphrase pairs19 (Reimers & Gurevych, 2020). The sentence transformers for semantic textual similarity tasks are pre-trained on SNLI+MultiNLI datasets, and semantic textual similarity dataset20 was used for its fine-tuning. The duplicate questions detection sentence transformer is fined tuned using NLI + semantic textual similarity dataset, and then fine-tune for quora duplicate questions.21 The information retrieval sentence transformer is pre-trained using information retrieval Google’s Natural questions dataset,22 a dataset with 100k real queries from Google search, and translated pairs23 (Feng et al., 2020) datasets, respectively. For experiments of this study, we have used ten different sentence transformers for feature extraction which are listed below: LaBSE, paraphrase-mpnet-base-v2, paraphrase-multilingual-mpnet-base-v2, distiluse-base-multilingual-cased-v2, paraphrase-multilingual-MiniLM-L12-v2, all-mpnet-base-v2, all-MiniLM-L6-v2, xlm-r-distilroberta-base-paraphrase-v1, xlm-r-100langs-bert-base-nli-stsb-mean-tokens, xlm-r-100langs-bert-base-nli-mean-tokens The mentioned Sentence Transformers were preferred because of their more reasonable performance as compared to the other transformers on paraphrase detection (Reimers & Gurevych, 2020) and semantic textual similarity (Muneer & Nawab, 2021; Reimers & Gurevych, 2019, 2020) tasks. In the first step, both sentence 01 and sentence 02 were passed to Sentence Transformer models and to generate sentence embedding vectors. In the second step, we calculated the similarity between the sentence embedding vectors of sentence 01 and sentence 02 texts with cosine similarity measure (Equation (3)).
+4.2.3 Feature Fusion Approaches. We have also developed and applied feature fusion approaches on our proposed CLPDEU corpus for exploring and analyzing the combined result of the mentioned approaches as well as to know the best performing combination of approaches for CLPD. Feature fusion approaches include different combinations such as:
+Comb-ST+BD: For feature fusion approach one: We have proposed Comb-ST+BD Feature fusion approach for CLPD task, and evaluated it on proposed corpus. We have combined features from 10 Sentence Transformer based Approaches and 2 bilingual dictionary based approaches (12 features in total). Comb-WE+BD: For feature fusion approach two: We have proposed Comb-WE+BD Feature fusion approach for CLPD task, and evaluated it on proposed corpus. We have combined 2 features from bilingual dictionary based approaches and 4 cross-lingual word embedding based approaches (6 features in total). Comb-WE+ST: For feature fusion approach three, we have proposed Comb-WE+ST Feature fusion approach for CLPD task, and evaluated it on proposed corpus. We have combined 10 features from Sentence Transformers Based approaches and 4 features from cross-lingual word embedding based approaches (14 features in total). Comb-All (ST+WE+BD): For feature fusion approach four, we have proposed Comb-All feature fusion approach for the task of English-Urdu paraphrase detection and evaluated it on proposed CLPD-EU corpus. We have combined all features including combined features from 2 bilingual dictionary based approaches, 4 word embedding based approaches, and 10 sentence transformers based approaches (16 features in total).
+4.3 Large Language Models
+LLMs represent the current state-of-the-art in text generation and a wide array of downstream NLP tasks (Yadav et al., 2024). Through simple prompt engineering, LLMs can deliver enhanced performance without the need for resourceintensive fine-tuning (Sun et al., 2024). Although primarily developed for text generation, LLMs have also been effectively utilized for tasks involving semantic similarity and paraphrasing. For our experiments, we employed the pre-trained Llama-3 model (Dubey et al., 2024), available in two configurations: (1) An 18B parameter version and (2) a 70B parameter version, both provided as pre-trained and instruction-tuned models. Llama-3 operates using an auto-regressive approach based on an optimized transformer architecture. We utilized the quantized 4-bit version of Llama-3 (8B parameters) due to GPU constraints, leveraging the Unsloth AI and Google Colab platforms .24 For embedding generation, we used a straightforward prompt, “Generate the embeddings of the text input,” to obtain embeddings for Text 01 and Text 02. These embeddings were then employed to calculate the similarity scores between sentence pairs. Notably, we did not apply additional prompt engineering to maintain consistency with the similarity-based approach and k-fold cross-validation employed across all experiments.
+
+
+ 14 The European Journal on Artificial Intelligence 0(0)
+Table 3. Approaches Used for CLPD-EU Corpus.
+Experiments Approaches Experiments Approaches
+Base-line approaches BD based approaches Exp 1.2 Using Jaccard Exp 1.1 Using overlap Exp 1.3 Combine-BD Proposed Approaches Cross-lingual word embedding based Approaches Exp 2.1 Cosine distance with sum vector Exp 2.2 Euclidean distance with sum vector Exp 2.3 Cosine distance with average vector Exp 2.4 Euclidean distance with average vector Exp 2.5 Comb-CLWE Sentence transformers based approaches Exp 3.1 LaBSE Exp 3.2 paraphrase-mpnet-base-v2 Exp 3.3 paraphrase-multilingual-mpnet-base-v2 Exp 3.4 distiluse-base-multilingual-cased-v2 Exp 3.5 paraphrase-multilingual-MiniLM-L12-v2 Exp 3.6 all-mpnet-base-v2 Exp 3.7 all-MiniLM-L6-v2 Exp 3.8 xlm-r-distilroberta-base-paraphrase-v1 Exp 3.9 xlm-r-100langs-bert-base-nli-stsb-meantokens
+Exp 3.10 xlm-r-100langs-bert-base-nli-mean-tokens
+Exp 3.11 Combined effect of sentence transformers (Combine-ST) Feature fusion approaches Exp 4.1 Feature Fusion (Sentence Transformers + Bi-lingual Dictionary) Comb-ST+BD
+Exp 4.2 Feature Fusion (Word Embedding + Bi-lingual Dictionary) Comb-WE+BD Exp 4.3 Feature Fusion (Word Embedding + Sentence Transformers) Comb-WE+ST
+Exp 4.4 Feature Fusion (Combination of all) Comb-All (ST+WE+BD) Large language models Exp 5.1 Mistral Exp 5.2 Llama 3
+BD = bi-lingual dictionary; CLPD-EU = cross-lingual paraphrase detection corpus for English-Urdu.
+5 Experimental Setup
+5.1 Corpus
+The proposed CLPD-EU corpus is used for performing all the experiments. It contains 5,801 sentence pairs having 3,900 paraphrased and 1,901 non-paraphrased sentence pairs. Sentence 01 is in English language whereas sentence 02 is in Urdu language. Each sentence contains a label either 0 or 1 depicting non-paraphrased and paraphrased sentence pairs respectively.
+5.2 Approaches
+For the task of CLPD, we developed and evaluated several approaches. Our baseline approach employs bilingual dictionary-based techniques, against which we compare three additional methodologies: Cross-lingual word embeddingbased approaches, sentence transformer-based approaches, and feature fusion approaches. The methodologies applied to the proposed CLPD-EU corpus for CLPD are summarized in Table 3. Initially, the bilingual dictionary-based approach was used as a baseline. We then implemented and compared cross-lingual word embedding, sentence transformer, and feature fusion approaches to assess performance. In addition to these, we introduced experiments with two state-of-the-art LLMs, LLaMA-3 and Mistral. These models were evaluated for embedding generation to calculate sentence similarity scores, thereby extending the diversity and robustness of our approach. Each experiment is labeled with a unique identifier in Table 3 for clarity and reference.
+5.3 Evaluation Measures
+We used 3 evaluation measures: Precision (Equation 5), Recall (Equation 6), and F1-measure (Equation 7). These measures were the most common and typically used specifically for CLPD task. The proportion of correctly positive predicted cases is generally termed as Precision (P):
+P = TP∕(TP + FP) (5)
+
+
+ Muneer et al. 15
+Table 4. Summarized Results.
+Approach ML Algorithm F1-score
+Bilingual dictionary based approaches Exp 1.1 KNN classifier 0.6027 Exp 1.2 KNN classifier 0.5941 Exp 1.3 Gaussian Naive Bayes 0.6055 Cross-lingual word embedding based approaches Exp 2.1 KNN classifier 0.5792 Exp 2.2 KNN classifier 0.5923 Exp 2.3 KNN classifier 0.5792 Exp 2.4 KNN classifier 0.5762 Exp 2.5 KNN classifier 0.5996 Sentence transformers based approaches Exp 3.1 Multilayer perceptron classifier 0.7139 Exp 3.2 Random forest 0.5700 Exp 3.3 Ada Boost classifier 0.7085 Exp 3.4 Gaussian Naive Bayes 0.6824 Exp 3.5 Gaussian Naive Bayes 0.6661 Exp 3.6 KNN classifier 0.5732 Exp 3.7 KNN classifier 0.5748 Exp 3.8 Multi layer perceptron classifier 0.6943 Exp 3.9 Ada Boost classifier 0.7187 Exp 3.10 Gaussian Naive Bayes 0.6717 Exp 3.11 Logistic regression 0.7356 Feature fusion approaches Exp 4.1 Random forest 0.7386 Exp 4.2 Gaussian Naive Bayes 0.6377 Exp 4.3 Logistic regression 0.7354 Exp 4.4 Random forest 0.7372 Large language models Exp 5.1 KNN classifier 0.5730 Exp 5.2 KNN classifier 0.5780
+The proportion of correctly identified positive cases is known as Recall (R):
+R = TP∕(TP + FN) (6)
+The harmonic mean of precision (P) and recall (R) is called as F1 measure:
+F1 = (2 ∗ P ∗ R)∕(P + R) (7)
+5.4 Evaluation Methodology
+The CLPD problem for the English-Urdu language pair was tackled as a supervised text classification task. The binary classification strived to distinguish CLPD at two levels: (1) Paraphrased and (2) Non-Paraphrased. We used ten different machine learning which includes Gradient Boosting Classifier (GBC), k-NN, Decision Tree (DT), Ada Boost (AB), Support Vector Machine (SVM), Multi-Layer Perception (MLP), Logistic Regression (LG), Random Forest (RF), Gaussian Naive Bayes (GNB), and Bernoulli Naive Bayes (BNB).25 Furthermore, 10-fold cross-validation was used for better performance analysis of machine learning algorithms. The input that we provided to the machine learning algorithms was obtained from various approaches (Section 4.2) of similarity/distance scores calculation. We have reported Macro-averaged F1 scores for all the approaches for the binary classification task.
+6 Results and Analysis
+Table 4 summarizes the best results obtained from various approaches applied to the CLPD task26 are shown. Given the dataset’s majority baseline of approximately 67%, we focus our analysis on models and approaches that exceed this threshold, as results below this baseline indicate limited predictive utility for the task.
+
+
+ 16 The European Journal on Artificial Intelligence 0(0)
+Feature Fusion Approaches: The Comb-ST+BD approach achieved the highest performance, with an F1-score of 0.7386 using the Random Forest classifier. This result highlights that combining bilingual dictionary-based features with sentence transformer features creates a highly complementary feature set. Bilingual dictionaries provide lexical equivalences by mapping specific words across languages, ensuring a foundational layer of direct translation. Sentence transformers, on the other hand, capture deeper semantic relationships by encoding context-based meanings that are less straightforward but critical for nuanced understanding. The integration of these feature types allows the model to leverage both surface-level similarities (through dictionarybased mappings) and deeper context-based similarities (via transformer embeddings). This combination effectively captures subtle variations in paraphrasing and translation, which single-feature approaches often miss, making it especially useful for English-Urdu paraphrase detection, where linguistic and cultural nuances are prominent. The Comb-All (ST+WE+BD) fusion approach also performed strongly with an F1-score of 0.7372. By incorporating cross-lingual word embeddings in addition to bilingual dictionaries and sentence transformers, it further diversifies the information used in classification. Each feature type contributes unique insights: dictionary features for direct equivalences, sentence transformers for semantic embedding, and word embeddings for capturing related word-level contexts across languages. This diversity enables the model to understand paraphrasing at multiple linguistic levels, reinforcing the robustness and accuracy of cross-lingual understanding in the English-Urdu setting. Sentence Transformer-Based Approaches: Among sentence transformer approaches, the Comb-All-ST achieved an F1-score of 0.7355 with Logistic Regression. The effectiveness of this approach can be attributed to the powerful contextual representations generated by sentence transformers. These models, trained on multilingual datasets, are able to capture nuanced semantic relationships between English and Urdu, surpassing simpler methods. Additionally, the xlm-r-100langs-bert-base-nli-stsb-mean-tokens model alone achieved an F1-score of 0.7187, indicating the benefit of using sentence transformers pre-trained across numerous languages, which enhances the model’s adaptability to the English-Urdu language pair. Low Performance of Cross-Lingual Word Embedding Approaches: Results from cross-lingual word embedding approaches, such as Comb-WE, were below the 67% baseline (e.g., F1-score of 0.5996 with KNN). This result confirms that unaligned word embeddings lack the structural alignment needed for accurate similarity measurement across languages. Unlike sentence transformers, which incorporate multilingual training, these word embeddings do not capture cross-lingual semantic relationships effectively, thereby limiting their performance in this task. Additionally, word embeddings are primarily word-level and lack the contextual depth to represent nuanced cross-lingual paraphrasing. This is especially limiting in the English-Urdu context, where linguistic and cultural nuances require a more sophisticated understanding that word embeddings alone cannot provide. Low Performance of LLMs: The performance of LLMs, specifically LLaMA and Mistral, fell below the baseline in certain experiments (e.g., F1-score around 0.573 and 0.578 with KNN classifier). This is largely due to the highdimensional nature of embeddings generated by LLMs, which can sometimes lead to over-fitting or sparse representations in limited or highly specialized datasets. While these models excel in broad multilingual tasks, they may not effectively capture the domain-specific nuances required for cross-lingual paraphrasing, particularly in the English-Urdu context where subtle, culturally relevant semantics play a critical role. Additionally, LLMs require substantial fine-tuning to align closely with specific paraphrasing tasks, without which they may produce embeddings that do not fully represent the cross-lingual relationships needed for this dataset. Summary Approaches exceeding the baseline, including Comb-ST+BD, Comb-All, and transformer models like xlm-r-100langs-bert-base, underscore the importance of feature fusion and advanced multilingual embedding in CLPD. The superior performance of approaches like Comb-ST+BD and Comb-All reflects the effectiveness of integrating complementary features to capture both lexical and contextual similarities.
+7 Conclusion and Future Direction
+This study aims at providing corpus and approaches for CLPD for English-Urdu language pair. Urdu is an extensively spoken language worldwide but the work done for the Urdu language in CLPD is notably less. In literature, authors have proposed their studies on the Urdu language in Cross-lingual plagiarism detection and text reuse domains but the literature shows no adequate work on CLPD specifically for English-Urdu language pair. To get over this research gap, we have developed a large benchmark corpus containing 5,801 sentence pairs with 3,900 paraphrased and 1,901 non-paraphrased pairs. We have proposed, developed, applied, and evaluated different approaches including bilingual dictionary based approaches (baseline approach), cross-lingual word embedding based approaches, sentence transformers based approaches, and feature fusion approaches. We have also compared the results from the baseline and our proposed
+
+
+ Muneer et al. 17
+approaches. The results obtained show that Comb-ST+BD achieved the best results for CLPD task as compared to individual bilingual dictionary based approaches, cross-lingual word embedding based approaches, and sentence transformers based approaches. Considering future research, we plan to explore the proposed approaches for other languages at document level for CLPD task. Moreover, proposed approaches can be further improved with state-of-the-art transfer learning and deep learning approaches to build higher quality and latest paraphrase detection systems. We can also explore custom-trained models for the CLPD task for English-Urdu language pair.
+Acknowledgments
+Rao Muhammad Adeel Nawab is an Assistant Professor in the Department of Computer Science and IT at COMSATS University Islamabad, Lahore Campus, Punjab, Pakistan. His research interests focus on machine learning and NLP, with a particular emphasis on text processing. Iqra Muneer serves as an Assistant Professor at the University of Engineering and Technology, Lahore (Narowal Campus), Punjab, Pakistan. Her research expertise spans data mining, data modeling, NLP, and machine learning. Adnan Ashraf Saeed is an Assistant Professor in the Department of Computer Science and IT at COMSATS University Islamabad, Lahore Campus, Pakistan. His research interests include NLP and machine learning. Nida Waheed is a research scholar who completed her Master of Science in Computer Science (MSCS) from the Department of Computer Science and IT at COMSATS University Islamabad, Lahore Campus.
+ORCID iD
+Iqra Muneer https://orcid.org/0000-0002-3953-307X
+Statements and Declarations Author Contribution
+Conceptualization: Muhammad Adeel Nawab Methodology: Iqra Muneer Resources: Nida Waheed Writing—original draft preparation: Iqra Muneer Writing—review and editing: Adnan Asraf Visualization: Iqra Muneer, Adnan Ashraf Supervision: Rao Muhammad Adeel Nawab.
+Funding
+The authors received no financial support for the research, authorship, and/or publication of this article.
+Declaration of Conflicting Interests
+The authors declared no potential conflicts of interest with respect to the research, authorship, and/or publication of this article.
+Notes
+1. https://www.wikipedia.org Last Visited: 20-March-2023. 2. https://www.bing.com/translator Last Visited: 20-March-2023. 3. https://translate.google.com Last Visited: 20-March-2023. 4. https://www.ethnologue.com/guides/ethnologue200 Last visited: 20-01-2022. 5. https://www.microsoft.com/en-us/download/details.aspx?id=52398 Last visited: 01-03-2022. 6. Source text sentences (English) that were extracted are available to download from here: https://drive.google.com/file/d/ 1n5n47ailx774asnyzXj9dlMluxms1mhK/view?usp=sharing. 7. https://translate.google.com: Last visited: 10-3-2022). 8. The automatic translated Urdu sentences are available to download from here: https://drive.google.com/file/d/1LD782KSYEGbaoE CLfb8fFoqKf3pXq9AK/view?usp=sharing. 9. The manually inspected and corrected sentences (Urdu text) are available to download from here: https://drive.google.com/file/d/ 1XwUykUG-XX6id6F9kJuQplWhtyZOpR98/view?usp=sharing. 10. https://creativecommons.org/licenses/by-nc-sa/3.0/ Last Visited: 30-Feb-2022. 11. https://drive.google.com/file/d/1XB-68vX_EPuCrXxuWHnHCudls7rPkA9f/view?usp=sharing. 12. In both examples, translation of Urdu text is also provided for direct mapping to ensure the quality of corpus for review purposes. 13. These similarity scores can be found for reviewer at link https://drive.google.com/file/d/15iKajTrcC7Q1FsEoaJlkPAi3OGoOJeVR/ view?usp=drive_link. 14. Google pre-trained word embedding model has been efficiently trained on 100 billion words for the English language using Google News dataset. 15. Urdu pre-trained word embedding model has been efficiently trained with 28,006,880 tokens on MK-PUCIT corpus. 16. https://www.sbert.net/, Last visited: 9-5-2021. 17. https://nlp.stanford.edu/projects/snli, Last visited: 10-5-2021.
+
+
+ 18 The European Journal on Artificial Intelligence 0(0)
+18. https://cims.nyu.edu/∼sbowman/multinli/, Last visited: 10-5-2021. 19. https://github.com/jmrf/sentence-transformers/tree/master/sentence_transformers/datasets, Last visited: 10-5-2021. 20. https://deepai.org/dataset/sts-benchmark, Last visited: 10-5-2021. 21. https://ai.google.com/research/NaturalQuestions, Last visited: 10-5-2021. 22. https://deepai.org/dataset/sts-benchmark, Last visited: 10-5-2021. 23. corpus contain 17 Billion mono-lingual sentences and 6 Billion bilingual translation pairs. 24. The 4-bit quantized Llama-3-8B model was accessed via Unsloth AI; available at https://github.com/unslothai/unsloth, last accessed: 01-08-2024. 25. We used these machine learning algorithms’ Scikit-learn implementations. 26. Following link is available to see detailed results: https://drive.google.com/drive/folders/1lk1LQZhi1m6DwDnCS5bJJsefoJdSDHk U?usp=sharing.
+References
+Akella, K., Venkatachalam, N., Gokul, K., Choi, K., & Tyakal, R. (2017). Gain customer insights using NLP techniques. SAE International Journal of Materials and Manufacturing, 10(3), 333–337.
+Alzahrani, S. M., Salim, N. F., & Abraham, A. (2012). Understanding plagiarism linguistic patterns, textual features, and detection methods. IEEE Transactions on Systems, Man, and Cybernetics, Part C (Applications and Reviews), 42(2), 133–149.
+Asghari, H., Khoshnava, K., Fatemi, O., & Faili, H. (2015). Developing bilingual plagiarism detection corpus using sentence aligned parallel corpus. Notebook for PAN at CLEF, 1391, 1006–1012. Bakhteev, O., Ogaltsov, A., Khazov, A., Safin, K., & Kuznetsova, R. (2019). CrossLang: the system of cross-lingual plagiarism detection. In Workshop on Document Intelligence at NeurIPS 2019.
+Barrón-Cedeno, A., Rosso, P., Lalitha Devi, S., Clough, P., & Stevenson, M. (2013). Pan@ Fire: Overview of the Cross-language! Ndian Text Re-use Detection Competition. Multilingual information access in south asian languages, 59–70.
+Barrón-Cedeño, A., Vila, M., Martí, M., & Rosso, P. (2013). Plagiarism meets paraphrasing: Insights for the next generation in automatic plagiarism detection. Computational Linguistics, 39(4), 917–947. Bowman, S. R., Angeli, G., Potts, C., & Manning, C. D. (2015). A large annotated corpus for learning natural language inference. In Proceedings of the 2015 Conference on Empirical Methods in Natural Language Processing (pp. 632–642). Association for Computational Linguistics, Lisbon, Portugal. https://doi.org/10.18653/v1/D15-1075. https://www.aclweb.org/anthology/D15-1075. Cer, D., Yang, Y., Kong, S.-Y., Hua, N. et al. (2018). Universal sentence encoder for multilingual representations. In Proceedings of the Conference on Empirical Methods in Natural Language Processing.
+Ceska, Z., Toman, M., & Jezek, K. (2008). Multilingual plagiarism detection. In International Conference on Artificial Intelligence: Methodology, Systems, and Applications (pp. 83–92). Springer.
+Chitkara, N. et al. (2018). Cross-lingual plagiarism detection in low-resource language pairs using multilingual sentence embeddings. IGI Global (pp. 31–47). Clough, P., Gaizauskas, R., Piao, S., & Wilks, Y. (2002). Measuring text reuse in large document collections. In Proceedings of the Conference on Empirical Methods in Natural Language Processing.
+Conneau, A., Kiela, D., Schwenk, H., Barrault, L., & Bordes, A. (2017). Supervised learning of universal sentence representations from natural language inference data. In Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing, Association for Computational Linguistics (pp. 670–680). Copenhagen, Denmark. https://doi.org/10.18653/v1/D17-1070. https://www.aclweb.org/anthology/D17-1070. Daille, B., & Morin, E. (2008). Effective compositional model for lexical alignment. In IJCNLP 2008: Third International Joint Conference on Natural Language Processing (Vol. 1, pp. 95–102).
+Devlin, J., Chang, M.-W., Lee, K., & Toutanova, K. (2019). BERT: Pre-training of deep bidirectional transformers for language understanding. Dolan, B., & Brockett, C. (2005). Automatically constructing a corpus of sentential paraphrases. In Third International Workshop on Paraphrasing (IWP2005).
+Dubey, A., Jauhri, A., Pandey, A., Kadian, A., Al-Dahle, A., Letman, A., Mathur, A., Schelten, A., Yang, A., Fan, A., et al. (2024). The llama 3 herd of models. arXiv preprint arXiv:2407.21783.
+El Desouki, M. I., Gomaa, W. H., & Abdalhakim, H. (2019). A Hybrid Model for Paraphrase Detection Combines Pros of Text Similarity with Deep Learning. International journal of computer applications, 975, 8887.
+Feng, F., Yang, Y., Cer, D., Arivazhagan, N., & Wang, W. (2020). Language-agnostic BERT sentence embedding. Fenogenova, A. (2021). Russian Paraphrasers: Paraphrase with transformers. In Proceedings of the 8th Workshop on Balto-Slavic Natural Language Processing (pp. 11–19).
+Fernando, S., & Stevenson, M. (2008). A semantic similarity approach to paraphrase detection. In Proceedings of the 11th annual research colloquium of the UK special interest group for computational linguistics (pp. 45–52). Citeseer.
+
+
+ Muneer et al. 19
+Ferrero, J., Besacier, L., Schwab, D., & Agnes, F. (2017). Using word embedding for cross-language plagiarism detection. In Proceedings of the 15th Conference of the European Chapter of the Association for Computational Linguistics: Volume 2, Short Papers (pp. 415–421). Association for Computational Linguistics, Valencia, Spain. https://www.aclweb.org/anthology/E17-2066 Franco-Salvador, M., Gupta, P., Rosso, P., & Banchs, R. E. (2016). Cross-language Plagiarism Detection Over Continuous-space-and Knowledge Graph-based Representations of Language. Knowledge-based systems, 111, 87–99. Franco-Salvador, M., Gupta, P., Rosso, P., & Banchs, R. E. (2016). Cross-language Plagiarism Detection Over Continuous-space and Knowledge Graph Features. IEEE Transactions on Cybernetics, 48(6), 1890–1901. Ghannay, S., Favre, B., Esteve, Y., & Camelin, N. (2016). Word embedding evaluation and combination. In Proceedings of the Tenth International Conference on Language Resources and Evaluation (LREC’16) (pp. 300–305).
+Grefenstette, G. (1998). The problem of cross-language information retrieval. In Cross-language information retrieval (pp. 1–9). Springer. Guo, X., Mirzaalian, H., Sabir, E., Jaiswal, A., & Abd-Almageed, W. (2020). CORD19STS: COVID-19 semantic textual similarity dataset. Guzmán, F. et al. (2019). The FLORES evaluation datasets for low-resource machine translation: Nepali-English and Sinhala-English. In Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP) (pp. 6100–6113).
+Haneef, I., Adeel Nawab, R. M., Munir, E. U., & Bajwa, I. S. (2019). Design and development of a large cross-lingual plagiarism corpus for Urdu-English language pair. Scientific Programming, 2019, 1–11. Hanif, I., Nawab, R. M. A., Arbab, A., Jamshed, H., Riaz, S., & Munir, E. U. (2015). Cross-language Urdu-english (CLUE) text alignment corpus. Working notes papers of the CLEF.
+He, H., Ning, Q., & Roth, D. (2020). QuASE: Question-answer driven sentence encoding. Kanwal, S., Malik, K., Shahzad, K., Aslam, F., & Nawaz, Z. (2019). Urdu named entity recognition: Corpus generation and deep learning applications. ACM Transactions on Asian and Low-Resource Language Information Processing (TALLIP), 19(1), 1–13.
+Ke, P., Ji, H., Liu, S., Zhu, X., & Huang, M. (2020). Sentilare: Linguistic knowledge enhanced language representation for sentiment analysis. In Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP) (pp. 6975–6988). Kenter, T., & De Rijke, M. (2015). Short text similarity with word embeddings. In Proceedings of the 24th ACM International on Conference on Information and Knowledge Management (pp. 1411–1420).
+Khorsi, A., Cherroun, H., Schwab, D. (2018). 2L-APD: A two-level plagiarism detection system for Arabic documents. Cybernetics and Information Technologies, 18(1), 124–138.
+Koehn, P., & Knowles, R. (2017). Six challenges for neural machine translation. In Proceedings of the First Workshop on Neural Machine Translation (pp. 28–39).
+Kothwal, R., & Varma, V. (2013). Cross lingual text reuse detection based on keyphrase extraction and similarity measures. In Multilingual Information Access in South Asian Languages (pp. 71–78). Springer.
+Lahitani, A. R., Permanasari, A. E., & Setiawan, N. A. (2016). Cosine similarity to determine similarity measure: Study case in online essay assessment. In 2016 4th International Conference on Cyber and IT Service Management (pp. 1–6). IEEE.
+Lee, J. C., & Cheah, Y.-N. (2016). Paraphrase detection using semantic relatedness based on Synset Shortest Path in WordNet. In 2016 International Conference On Advanced Informatics: Concepts, Theory And Application (ICAICTA) (pp. 1–5). IEEE.
+Li, X., Chen, M., & Zeng, Z. (2018). Cross-Lingual Semantic Textual Similarity Modeling Using Neural Networks. In China Workshop on Machine Translation (pp. 52–62). Springer.
+Li, B., Zhou, H., He, J., Wang, M., Yang, Y., & Li, L. (2020). On the sentence embeddings from pre-trained language models. arXiv preprint arXiv:2011.05864.
+Liu, Y., Ott, M., Goyal, N., Du, J., Joshi, M., Chen, D., Levy, O., Lewis, M., Zettlemoyer, L., & Stoyanov, V. (2019). RoBERTa: A robustly optimized BERT pretraining approach. Massidda, R. (2020). rmassidda@ DaDoEval: Document dating using sentence embeddings at EVALITA 2020. In Proceedings of Seventh Evaluation Campaign of Natural Language Processing and Speech Tools for Italian. Final Workshop (EVALITA 2020), Online. CEUR. org. Minaee, S., Kalchbrenner, N., Cambria, E., Nikzad, N., Chenaghlu, M., & Gao, J. (2021). Deep learning based text classification: A comprehensive review. ACM Computing Surveys (CSUR), 54(3), 1–40. Mori, Y., Yamane, H., Mukuta, Y., & Harada, T. (2020). Finding and generating a missing part for story completion. In Proceedings of the The 4th Joint SIGHUM Workshop on Computational Linguistics for Cultural Heritage, Social Sciences, Humanities and Literature (pp. 156–166).
+Muneer, I. (2016). FA14-MSCS: Measuring Cross-lingual Text Reuse at Sentence/Passage Level [Master’s thesis].
+Muneer, I., & Nawab, R. M. A. (2021). Cross-Lingual text reuse detection using translation plus monolingual analysis for English-Urdu language pair. Computer Speech & Language, 21(2). https://doi.org/10.1145/3473331
+
+
+ 20 The European Journal on Artificial Intelligence 0(0)
+Muneer, I., & Nawab, R. M. A. (2022). Cross-Lingual Text Reuse Detection at sentence level for English-Urdu language pair. Computer Speech & Language101381. https://doi.org/10.1016/j.csl.2022.101381. https://www.sciencedirect.com/ science/article/pii/S0885230822000225 Muneer, I., & Nawab, R. M. A. (2022). Develop corpora and methods for cross-lingual text reuse detection for English Urdu language pair at lexical, syntactical, and phrasal levels. Language Resources and Evaluation, 1–28. Muneer, I., Sharjeel, M., Iqbal, M., Nawab, R. M. A., & Rayson, P. (2019). CLEU-A Cross-language English-Urdu corpus and benchmark for text reuse experiments. Journal of the Association for Information Science and Technology, 70(7), 729–741. Naumov, S., Yaroslavtsev, G., & Avdiukhin, D. (2020). Objective-Based hierarchical clustering of deep embedding vectors. Navrozidis, J., & Jansson, H. (2020). Using natural language processing to identify similar patent documents. LU-CS-EX, Student Paper. ISSN 1650–2884. Nawab, R. M. A., Stevenson, M., & Clough, P. (2019). Detecting paraphrases and plagiarism in Urdu-English cross-lingual text reuse. Natural Language Engineering, 25(1), 39–63.
+Nguyen, T. Q., & Cherry, C. (2019). Improving machine translation between English and low-resource polysynthetic languages. In Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers) (pp. 3053–3063). Nguyen, L. T., & Dien, D. (2019). Vietnamese- English Cross-Lingual Paraphrase Identification Using Siamese Recurrent Architectures. In 2019 19th International Symposium on Communications and Information Technologies (ISCIT) (pp. 70–75). https://doi.org/10.1109/ISCIT.2019.8905116 Ozsoy, M. G. (2016). From word embeddings to item recommendation. Pataki, M. (2012). A new approach for searching translated plagiarism. Pelevina, M., Arefyev, N., Biemann, C., & Panchenko, A. (2017). Making sense of word embeddings. Peters, M., Neumann, M., Iyyer, M., Gardner, M., Clark, C., Lee, K., & Zettlemoyer, L. (2018). Deep contextualized word representations. In Proceedings of the 2018 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long Papers) (pp. 2227–2237). Association for Computational Linguistics, New Orleans, Louisiana. https://doi.org/10.18653/v1/N18-1202. https://www.aclweb.org/anthology/N18-1202. Potthast, M., Barrón-Cedeño, A., Stein, B., & Rosso, P. (2010). Cross-language plagiarism detection. Language Resources and Evaluation, 45, 45–62.
+Potthast, M., Barrón-Cedeno, A., Stein, B., & Rosso, P. (2011). Cross-language plagiarism detection. Language Resources and Evaluation, 45(1), 45–62.
+Rei, R., Stewart, C., Farinha, A. C., & Lavie, A. (2020). COMET: A neural framework for MT evaluation. Reimers, N., & Gurevych, I. (2019). Sentence-BERT: Sentence embeddings using siamese BERT-networks. Reimers, N., & Gurevych, I. (2020). Making monolingual sentence embeddings multilingual using knowledge distillation. arXiv preprint arXiv:2004.09813.
+Saeed, A., Nawab, R. M. A., Stevenson, M., & Rayson, P. (2019). A sense annotated corpus for All-Words Urdu word sense disambiguation. ACM Transactions on Asian and Low-Resource Language Information Processing (TALLIP), 18(4), 40.
+Sameen, S., Sharjeel, M., Nawab, R. M. A., Rayson, P., & Muneer, I. (2017). Measuring short text reuse for the Urdu language. IEEE Access, 6, 7412–7421.
+Sharjeel, M. (2020). Mono-and cross-lingual paraphrased text reuse and extrinsic plagiarism detection. Lancaster University (United Kingdom). Sharjeel, M., Muneer, I., Nosheen, S., Nawab, R. M. A., & Rayson, P. (2023). Cross-lingual text reuse detection at document level for English-Urdu language pair. ACM Transactions on Asian and Low-Resource Language Information Processing, 22(6).https://doi.org/10.1145/3592761 Shinyama, Y., & Sekine, S. (2003). Paraphrase acquisition for information extraction. In Proceedings of the second international workshop on Paraphrasing-Volume 16 (pp. 65–71). Association for Computational Linguistics. Sun, J., Shaib, C., & Wallace, B. C. (2024). Evaluating the Zero-shot Robustness of Instruction-tuned Language Models. In The Twelfth International Conference on Learning Representations.
+Thakur, N., Reimers, N., Daxenberger, J., & Gurevych, I. (2021). Augmented SBERT: Data augmentation method for improving biencoders for pairwise sentence scoring tasks. Toral, A., & Way, A. (2018). What level of quality can neural machine translation attain on literary text?, Translation Quality Assessment. Machine Translation, and Language Resources and Evaluation, 28(1), 1–20.
+Vázquez, R. A., Liu, Y., Xiong, D., & Zhang, M. (2019). Automatic post-editing for statistical and neural machine translation: Multisource translations and paraphrased references. Machine Translation, 33(12), 179–204. Vijaymeena, M., & Kavitha, K. (2016). A survey on similarity measures in text mining. Machine Learning and Applications: An International Journal, 3(2), 19–28.
+
+
+ Muneer et al. 21
+Víta, M. (2020). Cross-lingual Metaphor Paraphrase Detection–Experimental Corpus and Baselines. In International Conference on Information and Software Technologies (pp. 345–356). Springer.
+Williams, A., Nangia, N., & Bowman, S. (2018). A broad-coverage challenge corpus for sentence understanding through inference. In Proceedings of the 2018 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long Papers) (pp. 1112–1122). Association for Computational Linguistics, New Orleans, Louisiana. https://doi.org/10.18653/v1/N18-1101. https://www.aclweb.org/anthology/N18-1101. Yadav, V., Tang, Z., & Srinivasan, V. (2024). PAG-LLM: Paraphrase and Aggregate with Large Language Models for Minimizing Intent Classification Errors. In Proceedings of the 47th International ACM SIGIR Conference on Research and Development in Information Retrieval (pp. 2569–2573). Yang, Y., Zhang, Y., Tar, C., & Baldridge, J. (2019). PAWS-X: A cross-lingual adversarial dataset for paraphrase identification, arXiv preprint arXiv:1908.11828.
+Yates, A., Nogueira, R., & Lin, J. (2021). Pretrained transformers for text ranking: BERT and beyond. In Proceedings of the 14th ACM International Conference on Web Search and Data Mining (pp. 1154–1156).
+Zhang, Y., Baldridge, J., & He, L. (2020). (PAWS: Paraphrase adversaries from word scrambling. In Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics (NAACL) (pp. 1298–1308).

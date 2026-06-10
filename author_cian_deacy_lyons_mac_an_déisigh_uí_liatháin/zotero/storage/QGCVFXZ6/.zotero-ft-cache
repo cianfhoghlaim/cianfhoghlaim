@@ -1,0 +1,127 @@
+25/09/2020, 22:03
+
+Réamhrá
+
+English
+Tá nascanna le mo chuid thionscadal ar fáil ar an suíomh cadhan.com.
+Is cuid thábhachtach de mo chuid oibre an mheaisínfhoghlaim, agus rinne mé iarracht buneolas ar an ábhar a thabhairt daoibh sna gníomhaíochtaí thíos. Níl aon chúlra sa matamaitic ná sa ríomheolaíocht de dhíth, seachas beagán ailgéabair i nGníomhaíocht 2.
+
+Saotharlann A: Líonraí Néaracha
+
+Go minic sa ríomheolaíocht ba mhaith linn rudaí a chur i gceann de dhá chatagóir; mar shampla:
+
+ríomhphost a chur i do bhosca isteach nó san fhillteán turscar, nó téacs (m.sh. léirmheas ar Amazon) a mharcáil mar “sásta” nó “míshásta”, nó téacsanna a bhí scríofa ag údar ar leith a aithint (m.sh. Shakespeare vs. aon duine eile).
+
+Is féidir linn meaisínfhoghlaim a úsáid chun na rudaí seo a dhéanamh: Ar dtús, bailímid go leor samplaí ón dá chatagóir (leis na catagóirí cearta marcáilte ag daoine); seo iad na sonraí traenála. Ansin, tugaimid na sonraí traenála don ríomhaire sa chaoi gur féidir leis foghlaim uathu, agus, le cúnamh Dé, samplaí nua a chur sna catagóirí cearta (.i. ginearálú a dhéanamh ó na sonraí traenála).
+
+Is éard atá i líonra néarach ná creatlach mhatamaiticiúil a ligeann don ríomhaire foghlaim ó shonraí sa chaoi seo. Tá go leor bealaí eile ann chun foghlaim a dhéanamh, ach tá an lámh in uachtar (go mór) ag líonraí néaracha sa lá atá inniu ann.
+
+Gníomhaíocht 1. Tensorﬂow Playground.
+
+Caith 5-10 nóiméad ag imirt leis an Tensorﬂow Playground. Fillﬁmid air ar ball, ach ag an bpointe seo, tabhair na rudaí seo faoi deara:
+
+Is fadhb den sórt a luaigh mé thuas é seo: tá dhá chatagóir ann, ceann amháin gorm agus an ceann eile oráiste. Tógtar líonra néarach as néaróin; tá siad bunaithe go garbh ar néaróin san inchinn, ach is éard atá i néarón sa chomhthéacs seo ná feidhm mhatamaiticiúil, sin an méid: tagann dhá (nó níos mó) uimhir isteach sa néarón mar ionchur, agus cuireann sé uimhir amháin amach mar aschur. Ar dtús, níl ach néarón amháin sa líonra. Cuirﬁmid níos mó leis ar ball! Tá an fhadhb seo measartha éasca! Is scartha ó chéile na pointí gorma agus oráiste den chuid is mó. Brúigh an cnaipe mór ▶ ag an mbarr. Tosaíonn sé sin an próiseas foghlamtha. Sa chás seo, aimsíonn sé néarón atá in ann an dá chatagóir a aithint measartha tapaidh. Feicﬁdh tú na torthaí sa phictiúr ar dheis. Insíonn an “Test loss” dúinn cé chomh maith atá an líonra ag cur samplaí nua sa chatagóir cheart (níos lú = níos fearr). Is féidir leat sonraí traenála nua a fháil leis an gcnaipe “Regenerate”. Beidh na torthaí beagáinín difriúil gach uair — bain triail as!
+
+Gníomhaíocht 2 (roghnach má tá faitíos ort roimh an mhata!). Cad is néarón ann agus cén chaoi a bhfuil sé ann foghlaim?
+
+https://cs.slu.edu/~scannell/pub/techspace/index.html
+
+Page 1 of 6
+
+25/09/2020, 22:03
+(Peann agus páipéar amháin). Tá néaróin an-simplí! Díreoimid ar an gcás nach bhfuil ach dhá uimhir mar ionchur sa néarón; tugaimis x1 agus x2 orthu. Sa chás sin, úsáidtear trí uimhir (na meáchain) chun an néarón a shainmhíniú; tugaimis w1,w2, agus w3 orthusan. Cuireann an néarón na meáchain le chéile leis an ionchur (x1,x2) mar a leanas:
+A = x1 w1 + x2 w2 + w3
+Ansin, an riail:
+Má tá A≥0, is é +1 an t-aschur, agus -1 má tá A<0.
+Sin an méid! Mar shampla, más iad (w1,w2,w3)=(2,2,-3) na meáchain, cuirﬁdh an néarón +1 amach nuair atá:
+2x1 + 2x2 - 3 ≥ 0.
+Sa phlána (x1,x2), is iad sin na pointí os cionn na líne seo:
+
+Ach cén chaoi a bhfuil an néarón in ann foghlaim? Abair go bhfuilimid ag iarraidh fadhb le dhá chatagóir (gorm agus oráiste) a réiteach agus go n-úsáidimid an dá uimhir x1 agus x2 chun cur síos a dhéanamh ar shampla traenála. Ba mhaith linn meáchain a aimsiú chun +1 a fháil mar aschur do na pointí gorma agus -1 mar aschur do na pointí oráiste. Cuirimid sampla traenála amháin tríd an néarón, abair gur sampla gorm (+1) é. Má fhaighimid +1 mar aschur, ní dhéanaimid faic. Má fhaighimid -1, athraímid na meáchain beagáinín, ag súil go dtiocfaidh feabhas ar an scéal. Níl an néarón “ag foghlaim” i ndáiríre; is éard atá i gceist ná cuardach ar na meáchain is fearr, na cinn a dhéanann an jab is fearr ag scaradh na pointí gorma ó na pointí oráiste. (An t-ainm teicniúil atá ar an gcuardach seo ná “stochastic gradient descent”).
+Ceisteanna:
+1. Cad iad na pointí (x1,x2) a thugann aschur +1 sa chás (w1,w2,w3) = (2,2,-1)? 2. Cad iad na meáchain (w1,w2,w3) a roghnófá sa chaoi go mbeadh +1 mar aschur os cionn na líne x2
+= x1 + 1, agus -1 ar an taobh eile?
+
+https://cs.slu.edu/~scannell/pub/techspace/index.html
+
+Page 2 of 6
+
+25/09/2020, 22:03
+3. An féidir meáchain (w1,w2,w3) a roghnú ionas go mbeadh aschur +1 ag (x1,x2) = (0,1) agus (1,0), ach aschur -1 ag (0,0) agus (1,1)?
+Gníomhaíocht 3. Ar ais go dtí an áit imeartha!
+Fill ar an Tensorﬂow Playground, ach anois roghnaigh an dara tacar sonraí (ar thaobh na láimhe clé, an ceann seo: ).
+Má bhrúnn tú an cnaipe ▶, ní bheidh sé go hiomlán éifeachtach ag scaradh na pointí gorma agus oráiste. Tarlaíonn sé seo toisc nach féidir le néarón amháin aon rud a dhéanamh ach sonraí a scaradh le líne dhíreach, mar a chonaic muid i nGníomhaíocht 2. Agus tá na sonraí níos casta sa chás seo — ní féidir gorm agus oráiste a scaradh le haon líne dhíreach (agus is é sin an freagra ar an tríú ceist i nGníomhaíocht 2, dála an scéil: ní féidir!).
+An réiteach ar an bhfadhb ná níos mó ná néarón amháin a úsáid. Cliceáil an cnaipe + go díreach os cionn an téacs “1 neuron”, ansin bain triail eile as an bpróiseas traenála. Le dhá néarón, is féidir linn +1 nó -1 a thabhairt ar an réigiún idir dhá líne dhíreacha. Sin dul chun cinn, ach níl sé foirfe fós.
+Chun torthaí níos fearr a fháil, caithﬁmid níos mó ná sraith amháin néarón a úsáid, leis an aschur ó shraith amháin úsáidte mar ionchur sa chéad sraith eile. (Seo é an fáth a dtugtar domhainfhoghlaim ar an ábhar seo, dála an scéil; domhain = níos mó ná sraith amháin sa líonra néarach). Cliceáil an cnaipe + ag an mbarr in aice le “1 HIDDEN LAYER” chun sraith eile a chur leis. Ansin cliceáil an + os cionn an chéad sraith sa chaoi go mbeidh 3 néarón sa chéad sraith agus 2 néarón sa dara sraith, mar seo:
+
+Sin 15 meáchan san iomlán (cén fáth?). Tugann sé sin i bhfad níos mó saoirse dúinn feidhm níos casta a aimsiú, trí na meáchain a athrú. Anois, cliceáil an cnaipe ▶ arís. Má tá an t-ádh ort, gheobhaidh tú pictiúr
+cosúil leis na sonraí traenála; gorm in dhá chearnóg agus oráiste sa dá chearnóg eile. Ba mhaith linn “Test
+loss” thart ar 0.070 (nó níos lú) a bhaint amach (cé go mbraitheann seo ar an tacar sonraí atá agatsa — beidh ceann difriúil ag gach grúpa). Cliceáil ↺ ansin ▶ chun an próiseas a thosú arís as an nua; is dócha
+go bhfaighidh tú torthaí difriúla gach uair (sin an “stochastic” in “stochastic gradient descent”). Más mian
+leat, cuir “Regularization” i bhfeidhm ag barr an scáileáin (m.sh. L2 regularization agus ráta 0.003).
+
+https://cs.slu.edu/~scannell/pub/techspace/index.html
+
+Page 3 of 6
+
+25/09/2020, 22:03
+Cabhraíonn sé sin “overﬁtting” a sheachaint; feicﬁdh tú an difríocht sna torthaí, go háirithe nuair a bhíonn na sonraí níos torannaí.
+Anois bain triail as an dá thacar sonraí eile. Is féidir torthaí sásúla a fháil ar an chéad cheann (na ciorcail chomhlárnacha) leis an líonra céanna (dhá shraith, cúig néarón). Ach tá an ceann deireanach (“an bhís”) i bhfad níos deacra! Dúshlán: Cad é an “Test loss” is lú is féidir leat a bhaint amach ar an mbís? Ar dtús, bain triail as gan ach dhá shraith a úsáid, ansin cuir tuilleadh sraitheanna agus/nó néarón leis. Tá Regularization i bhfad níos tábhachtaí sa chás seo; déan turgnamh leis an ráta sin freisin. Má thosaíonn an pictiúr nó an “Test loss” ag léim thart go ﬁáin, is dócha go gcabhróidh sé leat an ráta Regularization a mhéadú, nó an ráta foghlamtha a laghdú.
+
+Saotharlann B: Ríomhaistriúchán
+Tá an t-aistriúchán uathoibríoch, nó an ríomhaistriúchán, ceann de na dúshláin is sine sa ríomheolaíocht, ag dul siar ﬁú go dtí na 1950idí agus an chéad ghlúin ríomhairí a bhí ann. Sna seanlaethanta, rinneadh iarracht foclóirí agus rialacha gramadaí a úsáid, ach bhí sé thar a bheith deacair rialacha cuimsitheacha a scríobh a bhí in ann déileáil leis na heisceachtaí go léir. Le ﬁche bliain anuas nó mar sin, baintear úsáid as meaisínfhoghlaim in áit rialacha gramadaí i gcórais aistriúcháin ar nós Google Translate. Ar ndóigh níl Google Translate foirfe, ach tá sé i bhfad níos fearr ná na córais a bhí ann roimhe.
+An dúshlán sa tsaotharlann seo ná aistriúchán a dhéanamh idir dhá theanga gan aon eolas agat faoi na teangacha roimh ré seachas “sonraí traenála“, go díreach mar a dhéanann córas ríomhaistriúcháin. Tabharfaidh mé 12 abairt duit sa bhunteanga (“Arctúiris”), agus a n-aistriúchán sa sprioctheanga (“Ceantáiris”). Chomh maith leis sin, tá abairtí breise i gCeantáiris amháin ann, i gcás go mbeifeá in ann úsáid a bhaint astu. (Is é an tOllamh Kevin Knight a chruthaigh an ghníomhaíocht seo i dtús báire).
+Ar dtús, seo iad na habairtí dátheangacha (a = Arctúiris, b = Ceantáiris):
+1a. at-voon bichat dat. 1b. ok-voon ororok sprok. 2a. at-drubel at-voon pippat rrat dat. 2b. ok-drubel ok-voon anok plok sprok. 3a. totat dat arrat vat hilat. 3b. erok sprok izok hihok ghirok. 4a. at-voon krat pippat sat lat. 4b. ok-voon anok drok brok jok. 5a. totat jjat quat cat. 5b. wiwok farok izok stok. 6a. wat dat krat quat cat. 6b. lalok sprok izok jok stok. 7a. wat jjat bichat wat dat vat eneat. 7b. lalok farok ororok lalok sprok izok enemok. 8a. iat lat pippat rrat nnat. 8b. lalok brok anok plok nok. 9a. totat nnat quat oloat at-yurp. 9b. wiwok nok izok kantok ok-yurp. 10a. wat nnat gat mat bat hilat. 10b. lalok mok nok yorok ghirok clok. 11a. wat nnat arrat mat zanzanat.
+
+https://cs.slu.edu/~scannell/pub/techspace/index.html
+
+Page 4 of 6
+
+25/09/2020, 22:03
+11b. lalok nok crrrok hihok yorok zanzanok. 12a. wat nnat forat arrat vat gat. 12b. lalok rarok nok izok hihok mok.
+Agus an téacs aonteangach i gCeantáiris:
+ok-drubel anok ghirok farok. wiwok rarok nok zerok ghirok enemok. ok-drubel ziplok stok vok erok enemok kantok ok-yurp zinok jok yorok clok. lalok clok izok vok ok-drubel. ok-voon ororok sprok. okdrubel ok-voon anok plok sprok. erok sprok izok hihok ghirok. ok-voon anok drok brok jok. wiwok farok izok stok. lalok sprok izok jok stok. lalok brok anok plok nok. lalok farok ororok lalok sprok izok enemok. wiwok nok izok kantok ok-yurp. lalok mok nok yorok ghirok clok. lalok nok crrrok hihok yorok zanzanok. lalok rarok nok izok hihok mok.
+An Dúshlán — aistrigh na habairtí seo ó Arctúiris go Ceantáiris:
+1. iat lat pippat eneat hilat oloat at-yurp. 2. totat nnat forat arrat mat bat. 3. wat dat quat cat uskrat at-drubel.
+Ceisteanna:
+1. Ar éirigh leat foclóir dátheangach iomlán a fhoghlaim ó na sonraí? 2. Cad iad na focail a bhfuil níos mó ná aistriúchán amháin acu? 3. Cén chaoi arbh fhéidir úsáid a bhaint as an téacs sa sprioctheanga? 4. An ndearna tú iarracht na focail sna habairtí a ailíniú/nascadh le chéile? (Seo é an rud go díreach a
+dhéanann an ríomhaire: úsáideann sé nascanna idir abairtí chun an foclóir a thógáil, agus úsáideann sé an foclóir chun nascanna a dhéanamh! Is cás “ubh an tsicín agus sicín na huibhe” é seo, agus is sampla simplí d'algartam tábhachtach darb ainm Expectation Maximization (EM) é seo.)
+Bhí an sampla seo i bhfad níos simplí ná fíorchorpas dátheangach. I dtús báire, bhí na habairtí go léir anghearr, agus ba mhór an cúnamh é sin le focail a nascadh le chéile. Chomh maith leis sin, ní raibh ach cúpla focal a bhí nasctha le níos mó ná focal amháin sa teanga eile. Tá cúrsaí níos casta sa bhfíorshaol! (Cad iad na focail i nGaeilge a aistríonn an focal Béarla “shot” mar shampla?) Agus bhí an líon céanna focal i ngach péire le heisceacht amháin (11a/b); is annamh a tharlaíonn sé seo i ngnáthchorpas dátheangach. Caithfear déileáil le focail nach bhfuil nasctha le rud ar bith sa teanga eile!
+
+Gluais
+
+Gaeilge
+
+Béarla
+
+domhainfhoghlaim deep learning
+
+ginearálú
+
+generalisation
+
+líonra néarach
+
+neural network
+
+meáchain
+
+weights
+
+meaisínfhoghlaim machine learning
+
+https://cs.slu.edu/~scannell/pub/techspace/index.html
+
+Page 5 of 6
+
+néarón ríomhaistriúchán sonraí traenála sraith tacar sonraí
+
+neuron machine translation training data layer dataset
+
+25/09/2020, 22:03
+
+https://cs.slu.edu/~scannell/pub/techspace/index.html
+
+Page 6 of 6
+

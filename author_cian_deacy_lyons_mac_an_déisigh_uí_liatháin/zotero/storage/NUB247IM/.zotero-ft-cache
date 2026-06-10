@@ -1,0 +1,432 @@
+Multilingual Language Model Pretraining using Machine-translated Data
+Jiayi Wangα∗ Yao Luα∗ Maurice Weberβ Max Ryabininβ David Adelaniγ Yihong Chenα Raphael Tang Pontus Stenetorpα,δ
+αCentre for Artificial Intelligence, University College London βTogether AI γMila, McGill University, Canada CIFAR AI Chair δResearch and Development Center for Large Language Models, National Institute of Informatics {jiaywang,yao.lu,yihong.chen,p.stenetorp}@cs.ucl.ac.uk, {maurice,mryab}@together.ai, david.adelani@mila.quebec
+Abstract
+High-resource languages such as English, enables the pretraining of high-quality large language models (LLMs). The same can not be said for most other languages as LLMs still underperform for non-English languages, likely due to a gap in the quality and diversity of the available multilingual pretraining corpora. In this work, we find that machine-translated texts from a single high-quality source language can contribute significantly to the pretraining quality of multilingual LLMs. We translate FineWeb-Edu, a high-quality English web dataset, into nine languages, resulting in a 1.7-trillion-token dataset, which we call TransWebEdu and pretrain a 1.3B-parameter model, TransWebLLM, from scratch on this dataset. Across nine non-English reasoning tasks, we show that TransWebLLM matches or outperforms state-of-the-art multilingual models trained using closed data, such as Llama3.2, Qwen2.5, and Gemma, despite using an order of magnitude less data. We demonstrate that adding less than 5% of TransWebEdu as domain-specific pretraining data sets a new state-of-the-art in Arabic, Italian, Indonesian, Swahili, and Welsh understanding and commonsense reasoning tasks. To promote reproducibility, we release our corpus, models, and training pipeline under Open Source Initiativeapproved licenses.
+1 Introduction
+Multilingual language models have shown remarkable potential for natural language processing (Dubey et al., 2024; Yang et al., 2025; Team et al., 2024), yet their development faces a fundamental challenge: the scarcity of high-quality training data across diverse languages (Joshi et al., 2020; Kreutzer et al., 2022). While English benefits from extensive, diverse, and well-curated datasets, other
+∗ Both authors contribute equally to this work.
+languages—even widely spoken ones—struggle to match this standard. Current practices of collecting and filtering web data from the Internet lag behind English performance due to the Internet’s inherent English-centric nature (Bender et al., 2021; Imani et al., 2023).
+One direction to address the data quality issue is using pretrained language models to generate highquality synthetic data (Maini et al., 2024; Abdin et al., 2024). However, language model-based data generation is not suitable for multilingual research due to limited language coverage. For example, one of the current strongest models with multilingual support, Llama 3.2 (Dubey et al., 2024), officially supports fewer than 20 languages. For lowresource languages like Welsh, the near-absence of well-supported large language models makes data generation practically impossible. Furthermore, even with proprietary language models such as GPT-4, which might have better coverage, generation at the trillion-token scale is non-trivial.1
+To address the limited language coverage issue, machine translation (MT) offers a potential solution for creating multilingual datasets using taskspecific neural machine translation (NMT) models, with the goal of preserving contextual, idiomatic, and pragmatic nuances across languages. However, this line of research (Urbizu et al., 2023; Doshi et al., 2024) remains underexplored for pretraining.
+In this work, we introduce TransWebEdu, a large-scale multilingual corpus created by translating a subset of FineWeb-edu (Lozhkov et al., 2024), a high-quality English dataset, into nine diverse languages using NLLB-200-1.3B (Costajussà et al., 2022). The resulting corpus spans ten languages—Arabic, French, German, Indonesian, Italian, Russian, Spanish, Swahili, Welsh, and English—exceeding 100B tokens per language, with a total of 1.7 trillion tokens. We evaluate the ef
+1The cost would approximately exceed millions of dollars.
+1
+arXiv:2502.13252v1 [cs.CL] 18 Feb 2025
+
+
+ ficiency of TransWebEdu by pretraining a 1.3Bparameter language model. Contrary to common concerns about text quality when using “small” sentence-level NMT models, we demonstrate that it can yield substantial improvements on pretraining performance. For instance, TransWebEdu improves Swahili by 10% over the SOTA Gemma (Team et al., 2024) and enhances Arabic and Italian, surpassing it by 5% and 2.6%, respectively. In summary, our contributions are as follows:
+1. We translate a high-quality, pretraining-scale English corpus into nine diverse languages, including three medium- and low-resource languages, using a sentence-level NMT model, creating one of the largest machine-generated multilingual datasets to date, TransWebEdu, containing 1.7T tokens.
+2. We pretrain TransWebLLM, a 1.3B-parameter model, from scratch on our TransWebEdu dataset. The model establishes SOTA-level multilingual performance on a wide range of reasoning tasks across nine languages despite using significantly fewer tokens than leading models trained on closed-source data, including Gemma, Qwen2.5, and Llama3.2.
+3. We release our corpus, models, and training pipeline under open licenses to advance reproducibility in multilingual NLP.
+2 Pretraining with Machine-translated Multilingual Data
+This section outlines our pipeline for constructing a machine-translated corpus and pretraining a multilingual language model on it. Our process consists of the following steps: (i) We select a high-quality English pretraining dataset; (ii) We segment English documents into sentences, translate each sentence into target languages using a sentence-level neural machine translation model, and reconstruct the documents by concatenating the translated sentences; (iii) We train a language model from scratch on the resulting multilingual data mixture and validate the effectiveness of the pretraining corpus.
+2.1 Pretraining Data Curation
+LLMs are predominantly trained on documentlevel text data, as demonstrated by prominent model families such as Llama (Dubey et al., 2024) and Gemma (Team et al., 2024). In keeping with
+this established approach, we structure our translation pretraining data at the document level. Translation data typically comprises the following key components: source data, target languages, translation model, and a translation approach for composing document-level translations.
+Source data The quality of a pretraining dataset significantly influences the performance of LLMs. Among high-resource languages, English stands out for its vast linguistic diversity and extensive knowledge base (Joshi et al., 2020; Kreutzer et al., 2022). This makes it an excellent choice for sourcing high-quality web data for model training.
+The FineWeb-Edu dataset (Lozhkov et al., 2024), a subset of FineWeb (Penedo et al., 2024), has demonstrated its quality and efficacy in the development of LLMs. This dataset, constructed using scalable automated high-quality annotations for educational value, has been instrumental in training both English-centric models like GPT-2 (Karpathy, 2022, 2024) and multilingual models such as EuroLLM (Martins et al., 2024), and thus emerges as a suitable candidate for our source dataset. It originally consists 1.3 trillions tokens of educational contents, and our focus is on the sample-100BT subset2, which contains about 100 billion GPT-2 tokens randomly sampled from the whole dataset.
+Target Languages We focus on 9 target languages from diverse linguistic families, ensuring broad representation. From the Indo-European family, we include Germanic languages: English (en) and German (de); Romance languages: French (fr), Spanish (es), and Italian (it); a Celtic language: Welsh (cy); and a Slavic language: Russian (ru). Additionally, we include languages from distinct families: Afroasiatic (Arabic (ar)), Niger-Congo (Swahili (sw)), and Austronesian (Indonesian (id)). According to Joshi et al. (2020) and Ezeani et al. (2019), Indonesian is categorized as a mediumresource language, while Swahili and Welsh are classified as low-resource languages. The remaining languages are considered high-resource. We translate the 100BT FineWeb-Edu corpus from English into the target languages to bridge resource gaps and transfer the rich knowledge representations encoded in English data, ultimately enhancing the inclusion and representation of these target languages in multilingual LLMs.
+2hf.co/datasets/HuggingFaceFW/fineweb-edu
+2
+
+
+ Translation Model Although various models support translation tasks, including neural machine translation (NMT) models and LLMs (Stahlberg, 2020; Alves et al., 2024; Martins et al., 2024). However, exploration of LLMs’ translation performance for medium- and low-resource languages remains limited. For example, TowerLLM (Alves et al., 2024), an open multilingual LLM designed for translation-related tasks, supports only 10 languages. In contrast, NMT models are generally more accessible and widely adopted for translation, particularly for low-resource languages, due to more than a decade of dedicated development in this field (Stahlberg, 2020). A prominent example is NLLB-200 (Costa-jussà et al., 2022), an open-source suit of models capable of providing high-quality translations for 200 languages. These models are purpose-built to support linguistic diversity and are optimized for robust performance, even for resource-scarce languages.
+In our study, we assess whether constructing documents using sentence-level translations can still yield robust pretraining performance for LLMs. We hypothesize that essential linguistic patterns and semantic structures in high-quality source data can be preserved despite translation imperfectionsan attribute that could be particularly beneficial for cold-start pretraining in low-resource languages. If successful, this method could greatly expand access to multilingual pretraining data.
+Specifically, we begin by segmenting English documents into sentences with the NLTK sentence tokenizer (Bird et al., 2009) and then translate them into target languages using the NLLB-200 model (Costa-jussà et al., 2022). The translated sentences are reassembled into documents, with their original order and structural elements intact (e.g., newline characters)3. We employ NLLB-200-1.3B, the smallest non-distilled model in the NLLB-200 suite, trying to explore the lower bound of translation quality. While this model may not represent the absolute lower bound, it provides a practical reference point for assessing the impact of noisier translations on LLM pretraining.
+TransWebEdu Through the aforementioned approach, we obtain a machine-translated pretraining corpus covering 10 languages in total. We refer to this multiway parallel translated dataset as TransWebEdu. The NLLB translation is performed with
+3The translation pipeline is detailed in Appendix A.
+GPT2-style Training Sequence
+<random-fr-doc><eos><random-en-doc><eos>....<random-ru-doc>
+Table 1: An illustration of our pretraining sequence containing multiple non-parallel documents.
+a batch size of 4096 and a beam size of 14. Table 8 in Appendix B presents the statistics of the original English data alongside those of the translated components in TransWebEdu. To the best of our knowledge, TransWebEdu is the largest multiway parallel, document-level multilingual pretraining dataset currently available.
+2.2 Multilingual LM Pretraining
+In this section, we will describe the technical details of pretraining multilingual language models using TransWebEdu.
+Model Architecture and Hyper-parameters We pretrain a multilingual language model from scratch using TransWebEdu, naming it TransWebLLM. The architecture and hyperparameter selection of TransWebLLM (detailed in Appendix Section C) are informed by insights from the Llama family of models and other open-source efforts (Karpathy, 2024) to reproduce GPT-2. TransWebLLM consists of 1.3B parameters in total. Similar to GPT-2 reproduction efforts, we adopt a constant learning rate of 6 × 10−4, a sequence length of up to 2048 tokens, and a batch size of 2048 per iteration, resulting in approximately 4 million tokens processed per iteration.
+Tokenization Alves et al. (2024) extends the multilingual capabilities of Llama2 models (Touvron et al., 2023), demonstrating that the Llama2 tokenizer remains a practical choice for ensuring efficiency across diverse languages. Building on their findings, we use the Llama2 tokenizer in our experiments. For non-Latin languages, such as Arabic and Russian, it tokenizes the text while representing it using Unicode-based embeddings.
+Pretraining Data During pretraining, we use the same pretraining setup as GPT-family models, where documents are randomly sampled from the corpus. As a result, the likelihood of the same document appearing in different languages within a single batch is very low. For clarity, Table 1 presents an example of our pretraining data.
+4For each target language, the entire translation process is completed within 168 GPU hours using a single GH200 GPU.
+3
+
+
+ Framework and Training TransWebLLM is trained using the Megatron-LM framework (Shoeybi et al., 2019) from scratch with an accelerated attention implementation (Dao, 2023). The training is done on the NVIDIA GH200 cluster (McIntosh-Smith et al., 2024) for 8, 366 GPU hours. Our pretraining dataset TransWebEdu is created on a balanced basis, so we do not perform any up-sampling for specific languages. Our pretraining over TransWebEdu processes approximately 1.5T tokens, which is nearly one epoch of the pretraining data. Similar to the observation of Muennighoff et al. (2024), we observe no degradation in performance over the validation set during this process.
+3 Experiments
+This section presents our evaluation of model performance across various multilingual benchmarks.
+3.1 Evaluation Benchmark Datasets
+Our evaluation includes English benchmarks and assessments for the nine non-English languages, focusing on natural language understanding and common-sense reasoning. All benchmarks used are publicly available and open-source, ensuring the transparency and reproducibility of our results5. Specifically, our evaluation framework includes the following tasks: ARC (Clark et al., 2018; Lai et al., 2023; Bayes et al., 2024): gradeschool level multiple-choice science questions; Hellaswag (Zellers et al., 2019; Lai et al., 2023): common-sense reasoning benchmarks for contextually appropriate sentence endings prediction; PAWS-X (Yang et al., 2019): a cross-lingual adversarial dataset for paraphrase identification, sourced from English Wikipedia and Quora; PIQA (Bisk et al., 2020): physical commonsense reasoning benchmarks; SciQ (Johannes Welbl, 2017): an multiple-choice question-answering dataset in scientific topics; TruthfulQA (Lin et al., 2021a; Bayes et al., 2024): question-answering evaluation tasks for truthfulness and factual accuracy of model responses; XCOPA (Ponti et al., 2020): across-lingual adaptation of COPA (Roemmele et al., 2011) for transfer commonsense reasoning evaluation; XNLI (Conneau et al., 2018): an multilingual extension of Williams et al. (2018), assessing textual entailment prediction; XSto
+5All evaluations are conducted using https://github. com/EleutherAI/lm-evaluation-harness.
+ryCloze (Lin et al., 2021b): an multilingual adaptation of Mostafazadeh et al. (2016) for assessing cross-lingual narrative understanding by predicting story endings; XWinograd (Tikhonov and Ryabinin, 2021): a cross-lingual adaptation of the Winograd Schema challenge6 for coreference resolution evaluation. However, not all ten languages have all the above benchmarks publicly available. The specific evaluation datasets used for each language are detailed in Table 10 in Appendix D7. All benchmarks are evaluated using a standard 5-shot setting, with results reported in terms of accuracy.
+3.2 Baselines
+We benchmark our TransWebLLM, trained with TransWebEdu, in a 5-shot setting, against diverse open-source multilingual and monolingual LLMs with comparable parameter sizes, different multilingual pretraining mixtures and data sources.
+Our multilingual LLM baselines include: mGPT (1.3B) (Shliazhko et al., 2022), BLOOM (1.1B) (Workshop et al., 2022), Llama3.2 (1.3B) (Dubey et al., 2024), Qwen2 (1.5B) (Yang et al., 2024), Qwen2.5 (1.5B) (Yang et al., 2025), and Gemma (2.6B) (Team et al., 2024). Additionally, we compare against language-specific LLM baselines: Afriteva_v2_large (1B) (Oladipo et al., 2023) for Swahili, BritLLM (3B)8 for Welsh, CroissantLLM (1.3B) (Faysse et al., 2024) for French, EuroLLM (1.7B) (Martins et al., 2024) for Arabic, French, German, Italian, Russian, and Spanish, Jais-family-1p3b (1.3B) (Sengupta et al., 2023) for Arabic, Sailor (1.8B) (Dou et al., 2024a) and Sailor2 (1B) (Dou et al., 2024b) for Indonesian. Furthermore, we include two English-centric baselines in our evaluation: TinyLlama (1.1B) (Zhang et al., 2024), Pythia (1.4B) (Biderman et al., 2023). An overview of baseline models and our TransWebLLM has been shown in Table 11 in Appendix E.
+3.3 Main results of TransWebLLM
+Table 2 presents the average performance of TransWebLLM across benchmark datasets for each language, comparing it to baseline models across all 10 languages. The last three columns of Table 2 summarize the overall average performance for (i) All languages, (ii) Non-English languages, and
+6https://cs.nyu.edu/~davise/papers/ WinogradSchemas/WS.html
+7For Welsh evaluation, we use the BritEval benchmarks, https://llm.org.uk/. 8hf.co/britllm/britllm-3b-v0.1
+4
+
+
+ High Medium Low Average
+ar en fr de it ru es id sw cy All Non-eng High English LLMs
+Pythia (1.4B) 33.21 54.63 40.14 36.23 35.14 38.32 39.91 36.83 36.90 31.57 38.29 36.47 39.65 TinyLlama (1.1B) 32.86 57.18 44.13 37.06 36.79 40.97 42.38 36.13 36.69 31.53 39.57 37.62 41.62 Multilingual LLMs
+mGPT (1.3B) 32.90 45.38 40.27 34.54 34.89 40.53 38.88 39.47 38.98 31.14 37.70 36.84 38.20 BLOOM (1.1B) 34.97 50.94 41.80 34.62 33.69 37.56 42.69 43.23 37.09 31.57 38.82 37.47 39.47 Llama3.2 (1.3B) 34.78 58.16 44.10 39.73 40.93 45.38 44.15 44.67 38.30 31.84 42.20 40.43 43.89 Qwen2 (1.5B) 35.61 61.07 47.40 40.79 42.61 47.95 47.40 45.93 38.89 32.23 43.99 42.09 46.12 Qwen2.5 (1.5B) 37.35 62.93 48.69 40.49 43.10 47.01 48.41 46.17 37.98 31.78 44.39 42.33 46.85 Gemma (2.6B) 37.26 62.39 49.78 44.27 44.57 48.60 49.35 48.27 40.18 32.28 45.70 43.84 48.03 Language-Specific LLMs
+AfriTeVa (1B) 37.70 40.60 BritLLM (3B) 60.45 37.07 CroissantLLM (1.3B) 53.31 45.73 EuroLLM (1.7B) 38.88 57.98 47.85 42.07 47.56 46.71 47.07 46.87 Jais-family-1p3b (1.3B) 39.97 56.28 Sailor (1.8B) 55.40 48.45 Sailor2 (1B) 54.61 49.44 Ours
+TransWebLLM (1.3B) 39.30 56.30 46.11 41.01 45.75 46.38 45.27 47.54 44.44 38.69 45.08 43.83 45.73
+Table 2: LLM performance across ten languages, grouped by resource availability and measured in accuracy. Scores represent the average accuracy across benchmarks detailed in Section 3.1. The last three columns report mean results for all languages (All), non-English languages (Non-Eng), and high-resource languages (High). The top three models are underlined, and the best score for each language is highlighted.
+(iii) High-resource languages. Generally, TransWebLLM consistently ranks among the top three models in terms of average performance across all languages and non-English languages, with the accuracy scores of 45.08 and 43.83, respectively. It significantly outperforms multilingual LLMs such as mGPT, BLOOM, Llama3.2, Qwen2, and Qwen2.5 of similar model size, and achieves comparable results with Gemma, despite Gemma having twice the model size of TransWebLLM.
+For high-resource languages, TransWebLLM ranks among the top three models for Arabic, German, and Italian. Additionally, it outperforms Llama3.2 on average (45.73 vs. 43.89), despite the latter being trained on 9T tokens—an order of magnitude more than the data used for training TransWebLLM. A similar trend is observed in French evaluation when comparing TransWebLLM to CroissantLLM. TransWebLLM outperforms CroissantLLM (46.11 vs. 45.73), even though the latter is trained on 3T tokens, with half of them in French. In contrast, TransWebLLM is trained on 1.5T tokens, with less than 10% (150B) in French, primarily consisting of translated data.
+More remarkable results are observed in medium- and low-resource languages. For Indonesian, TransWebLLM outperforms both Qwen2 and Qwen2.5, despite the latter two being trained on 7T and 18T tokens. The most notable gains are seen in Swahili and Welsh, where TransWebLLM ranks first among all baselines, achieving accuracy
+scores of 44.44 and 38.69, outperforming Gemma (2.6B) and BritLLM (3B). These results suggest that training with translation data can be a viable cold-start strategy for pretraining LLMs in mediumand low-resource languages. For English, TransWebLLM performs slightly worse than TinyLlama but outperforms CroissantLLM. Despite being trained on significantly less English data—only 150B tokens compared to TinyLlama’s 3T and CroissantLLM’s 1.5T—TransWebLLM achieves competitive performance, underscoring the importance of the highquality English source.
+4 Discussion and Ablations
+In this section, we explore (1) the impact of LLMgenerated translation data on pretraining performance and (2) the effects of additional data sources, including general web data and specialized datasets such as rephrased synthetic text, code, and instruction data. We address these questions through a series of ablation experiments.
+4.1 Pretraining with Translation Data generated from an LLM
+Recent studies (Alves et al., 2024; Martins et al., 2024) show that LLMs can effectively support translation tasks, raising the question: How does pretraining performance differ when using a translation corpus generated by an LLM versus an NMT model like NLLB, used in TransWebLLM?
+5
+
+
+ Dubey et al. (2024) highlighted Mistral’s potential for multilingual NLP, while Moslem et al. (2023) and Kocmi et al. (2024) demonstrated its effectiveness in machine translation. Based on these insights, we use Mistral-7B-Instruct-v0.19 for translation, and we focus on English, French, German, and Spanish for this ablation. Details on data generation are provided in the Appendix F. A key difference between Mistral- and NLLB-generated translations lies in their approach to text segmentation. Mistral is prompted to translate chunked documents, better preserving contextual coherence, whereas NLLB translates at the sentence level, which may result in inconsistencies in documentlevel fluency and cohesion. Due to computational capacity, we translate 64B tokens from the sample-100BT subset of FineWebEdu. We then pretrain an LLM from scratch using the same training framework as TransWebLLM, naming it CuatroLLM. For a fair comparison, we extract the corresponding NLLB-translated data for French, German, and Spanish from TransWebEdu and retrain TransWebLLM using this subset, referring to the resulting model as TransWebLLM-4.
+Both CuatroLLM and TransWebLLM-4 are evaluated on benchmark datasets for English, French, German, and Spanish, as introduced in Section 3.1, with results presented in Table 13 in Appendix F. Across four languages, TransWebLLM and CuatroLLM perform similarly (46.65 vs. 47.16), both surpassing mGPT, BLOOM, and Llama3.2 on average. This suggests that the choice of translation method has a limited impact on these specific downstream evaluations. However, a key advantage of the NLLB-200 model—with support for 200 languages—is its scalability and efficiency, making it a more viable choice for expanding multilingual pretraining to a broader range of languages.
+4.2 Beyond Pretraining with Translation Data
+In this section, we assess whether adding specialized data provide benefits beyond pretraining with machine-translated data.
+4.2.1 Impact of General Web Data
+Given that TransWebEdu is largely based on educational contents, which is a highly specialized domain, we investigate whether multilingual reasoning capabilities can be further enhanced by incorporating general web data.
+9hf.co/mistralai/Mistral-7B-Instruct-v0.1
+We construct the general web dataset by sampling English, French, German, Italian, and Spanish data from RedPajama-v2 (RPv2) (Weber et al., 2024); Arabic, Russian, and Indonesian from mC4 (Xue et al., 2021); Swahili from Wura (Oladipo et al., 2023); and Welsh from CC100 (Wenzek et al., 2020). For RPv2, we filter each subset using its built-in quality signals10; for mC4, we apply random sampling. Given the limited availability of Swahili and Welsh data in Wura and CC100, we include their entire datasets. We balance the general web data by sampling an equal number of tokens per language, upsampling Indonesion, Swahili and Welsh as needed to match their proportions in TransWebEdu. We then merge it with TransWebEdu at an nearly 1 : 1 ratio for continued pretraining. Building on TransWebLLM, we extend training for an additional 20, 800 steps, processing approximately 90B tokens during this phase, with general web data accounting for only around 45B tokens (less than 3% of the total). We refer to this continued pretraining model as TransWebLLM-web, as detailed in Table 4.
+Understanding and Reasoning Evaluation The 5-shot evaluation results of TransWebLLM-web on multilingual understanding and commonsense reasoning benchmarks (as detailed in Section 3.1) are in Table 3. TransWebLLM-web demonstrates a significant improvement over TransWebLLM, achieving higher average performance in general. Across all languages and non-English languages, TransWebLLM-web ranks as the top-performing model among all LLMs (45.91 and 44.77). For high-resource languages, TransWebLLM-web achieves performance comparable to EuroLLM, despite the latter being trained on 4T tokens. Notably, for Indonesian, TransWebLLM-web emerges as the best-performing model (49.75), surpassing Southeast Asian-specific baselines such as Sailor and Sailor2. These results highlight the benefits of incorporating even a limited amount of general web data during continued pretraining for multilingual understanding and reasoning tasks.
+Linguistic Proficiency Evaluation Beyond understanding and reasoning tasks, we also evaluate the model’s linguistic proficiency, focusing on its ability to understand and generate coherent, grammatically accurate sentences. Faysse et al. (2024) introduced the fr-grammar and fr
+10Details are introduced in Appendix G.
+6
+
+
+ High Medium Low Average
+ar en fr de it ru es id sw cy All Non-eng High Multilingual LLMs
+Llama3.2 (1.3B) 34.78 58.16 44.10 39.73 40.93 45.38 44.15 44.67 38.30 31.84 42.20 40.43 43.89 Qwen2 (1.5B) 35.61 61.07 47.40 40.79 42.61 47.95 47.40 45.93 38.89 32.23 43.99 42.09 46.12 Qwen2.5 (1.5B) 37.35 62.93 48.69 40.49 43.10 47.01 48.41 46.17 37.98 31.78 44.39 42.33 46.85 Gemma (2.6B) 37.26 62.39 49.78 44.27 44.57 48.60 49.35 48.27 40.18 32.28 45.70 43.84 48.03 Language-Specific LLMs
+AfriTeVa (1B) 37.70 40.60 BritLLM (3B) 60.45 37.07 CroissantLLM (1.3B) 53.31 45.73 EuroLLM (1.7B) 38.88 57.98 47.85 42.07 47.56 46.71 47.07 46.87 Jais-family-1p3b (1.3B) 39.97 56.28 Sailor (1.8B) 55.40 48.45 Sailor2 (1B) 54.61 49.44 Ours
+TransWebLLM (1.3B) 39.30 56.30 46.11 41.01 45.75 46.38 45.27 47.54 44.44 38.69 45.08 43.83 45.73 TransWebLLM-web (1.3B) 39.82 56.18 46.83 41.92 47.01 46.22 46.92 49.75 44.40 40.09 45.91 44.77 46.41 ∆ Gain +0.52 -0.12 +0.72 +0.91 +1.26 -0.16 +1.65 +2.21 -0.04 +1.40 +0.83 +0.94 +0.68
+Table 3: Performance comparison between TransWebLLM and TransWebLLM-web across ten languages. The last row (∆ Gain) shows the performance difference, with positive values indicating improvements of TransWebLLMweb over TransWebLLM. The best score for each language is highlighted.
+Model # tokens Method Data
+TransWebLLM 1.5T Train from scratch TransWebEdu
+TransWebLLM-web +90B Continue train on
+TransWebLLM
+TransWebEdu + Real web data
+TransWebLLM-cool +60B Continue train on
+TransWebLLM-web
+TransWebEdu + Real web data + MC synthetic data + Cooldown Data
+Table 4: Models used in data impact ablations.
+Model fr-grammar fr-vocab Avg.
+Baselines
+mGPT 73.95 70.59 72.27 BLOOM 79.83 74.79 77.31 Llama3.2 76.47 75.63 76.05 EuroLLM∗ 79.83 78.99 79.41 Qwen2.5 71.43 73.95 72.69 Gemma 73.11 72.27 72.69 CroissantLLM∗ 79.83 78.15 78.99 Ours
+TransWebLLM 67.23 63.03 65.13 TransWebLLM-web 73.11 76.47 74.79
+Table 5: French grammar and vocabulary proficiency evaluation, measured in accuracy. Models with ∗ denote regional models trained with support for French.
+vocabulary test sets in French to assess models’ grammar and vocabulary capabilities through structured language evaluations. We test both TransWebLLM and TransWebLLM-web on these benchmarks in a 5-shot setting to measure their proficiency in French linguistic competence. As shown in Table 5, TransWebLLM-web outperforms TransWebLLM by nearly 10 accuracy points (74.79 vs. 65.13), demonstrating that even a small addition of general web data (45B) in continued pretraining can significantly enhance linguistic proficiency.
+Model colloquial standard Avg.
+Baselines
+mGPT 54.56 53.49 54.03 BLOOM 55.10 54.38 54.74 Llama3.2 52.42 52.59 52.51 Qwen2.5 52.59 54.03 53.31 Gemma 54.03 55.99 55.01 Sailor∗ 57.60 65.47 61.54 Sailor2∗ 58.86 66.37 62.62 Ours
+TransWebLLM 48.12 49.55 48.84 TransWebLLM-web 55.46 59.75 57.61
+Table 6: COPAL-ID evaluation, measured in accuracy. Models with ∗ denote regional models trained with support for Indonesian.
+Reasoning Evaluation for Local Culture Local culture reasoning provides a natural representation of causal reasoning within specific cultural contexts. COPAL-ID (Wibowo et al., 2023) is an Indonesian causal commonsense reasoning dataset, written by native speakers from scratch with standard Indonesian and Jakartan Indonesian, a widely spoken dialect in daily conversations. We evaluate both TransWebLLM and TransWebLLM-web on this benchmark in a 5-shot setting to assess their ability to reason within the Indonesian cultural sphere. As shown in Table 6, TransWebLLM-web improves Indonesian cultural reasoning by over an averaged 8 accuracy points (57.61 vs. 48.84) by incorporating a limited amount of general web data (45B) in continued pretraining on TransWebLLM. It surpasses all LLM baselines except Sailor and Sailor2, which have been specifically trained for Indonesian.
+7
+
+
+ High Medium Low Average ar en fr de it ru es id sw All High Multilingual LLMs
+mGPT (1.3B) 25.02 25.27 26.10 24.05 25.70 25.48 25.64 25.10 24.11 25.16 25.32 BLOOM (1.1B) 26.36 26.25 26.65 26.51 27.25 26.76 26.09 25.86 26.61 26.48 26.55 Llama3.2 (1.3B) 27.72 31.17 27.69 27.94 27.67 27.54 28.19 27.86 26.39 28.02 28.27 Qwen2.5 (1.5B) 42.24 59.37 50.43 48.23 49.17 46.38 51.89 47.16 30.62 47.28 49.67 Gemma (2.6B) 31.96 40.97 34.52 35.34 34.45 32.83 35.38 32.58 30.90 34.33 35.06 Language-Specific LLMs
+AfriTeVa (1B) 26.87 26.93 CroissantLLM (1.3B) 25.35 25.36 EuroLLM (1.7B) 26.23 27.13 26.79 26.47 26.25 27.61 26.37 26.69 Jais-family-1p3b (1.3B) 25.94 25.06 Sailor (1.8B) 28.62 26.39 Sailor2 (1B) 37.03 33.34 Ours
+TransWebLLM (1.3B) 26.63 24.66 25.69 25.46 25.32 26.42 26.21 25.28 25.35 25.67 25.77 TransWebLLM-web (1.3B) 26.49 26.41 26.84 26.11 26.16 26.56 26.58 26.68 26.48 26.48 26.45 TransWebLLM-cool (1.3B) 30.44 34.26 32.58 32.27 31.95 32.50 32.53 33.18 31.11 32.31 32.36
+Table 7: Evaluation on Global-MMLU full sets (Singh et al., 2024), measured in accuracy. The rightmost columns report the average scores across all languages (All) and high-resource languages (High). Top 3 models are underlined.
+4.2.2 Impact of Special Data
+Yang et al. (2023) shows that rephrasing MMLU (Hendrycks et al., 2021) samples enhances model reasoning performance across various domains. Motivated by these findings, we explore the impact of rephrased synthetic data on TransWebLLM. Instead of rephrasing MMLU test cases (Yang et al., 2023), we rephrase English web data into a multiple-choice (MC) style using an LLM, aligning with reasoning structure while maintaining its open-ended nature. We extract 10BT English data from SlimPajama (Soboleva et al., 2023), generate 8BT MC synthetic data using Mistral7B-Instruct-v0.111, and upsample and integrate it into TransWebEdu with general web data, ensuring MC data constitutes 5% of the corpus. Given the improved performance of TransWebLLM-web, we continue pretraining for 9,000 steps, processing 40B tokens, including 2B from MC data. Prior works (Faysse et al., 2024; Zhang et al., 2024; Martins et al., 2024) highlights the importance of a cooldown phase for enhancing model capabilities. While TransWebEdu emphasizes educational content, it lacks code and instruction data, such as question-answering (QA), compared to other LLMs. To address this, we introduce cooldown data during this phase: PythonEdu (Ben Allal et al., 2024), an educational Python dataset from The Stack (4B tokens), and WebInstruct (Yue et al., 2024), a curated QA dataset (0.8B tokens) from the web. They are up-sampled and
+11We use the prompt template as "Write multiple-choice questions and answers based on the document: [doc]".
+mixed with the previous-stage data (Table 4), forming 30% of the total. The model undergoes an additional 20B-token training phase using a reduced learning rate12. Notably, cooldown data constitutes less than 6B tokens, accounting for only 0.3% of total training tokens. We denote this final cooldowntrained model as TransWebLLM-cool.
+We evaluate TransWebLLM-cool on all benchmarks in Sections 3.1 and 4.2.1, as well as GlobalMMLU (Singh et al., 2024), covering nine languages (excluding Welsh), in a 5-shot setting. As shown in Table 7 for MMLU, TransWebLLMcool, trained with additional rephrased synthetic and cooldown data, ranks among the top three models overall and achieves the highest performance in Swahili. Furthermore, Table 14 in Appendix H shows that TransWebLLM-cool surpasses TransWebLLM-web across all languages for understanding and reasoning tasks, ranking as the top LLM on average. Remarkably, it is the bestperforming LLM for Arabic, Italian, Indonesian, Swahili, and Welsh. Additionally, Tables 15 and 16 in Appendix H show that TransWebLLM-cool, despite being trained with limited additional special data, improves both French linguistic proficiency and Indonesian cultural reasoning. These findings highlight the effectiveness of rephrased synthetic and cooldown data in enhancing multilingual pretraining based on NLLB-translated data.
+12We apply a constant learning rate schedule: 6 × 10−4 for earlier pretraining phases and 6 × 10−5 for cooldown.
+8
+
+
+ 5 Conclusion
+We introduce TransWebEdu, a multilingual dataset generated through machine translation of a highquality English source dataset. Our model, TransWebLLM, trained from scratch on this data, achieves competitive performance across nine nonEnglish understanding and reasoning benchmarks, matching or surpassing state-of-the-art multilingual LLMs trained on closed data, such as Llama3.2, Qwen2.5, and Gemma on average. Furthermore, we demonstrate that incorporating less than 5% of TransWebEdu as domain-specific pretraining data establishes new state-of-the-art results in Arabic, Italian, Indonesian, Swahili, and Welsh for understanding and commonsense reasoning tasks. These findings highlight that constructing multilingual pretraining corpora using sentence-level translations can yield robust performance in multilingual LLMs. Our approach provides a scalable and efficient solution for creating multilingual pretraining data, particularly for medium- and low-resource languages, contributing to advancements in multilingual NLP research.
+Limitations
+Our study yields promising results while also identifying areas for future exploration.
+TransWebLLM, trained on TransWebEdu, achieves significant performance gains across 10 multilingual benchmarks. Further improvements are observed with the addition of general web data, rephrased synthetic data, and code and web-instruct data. However, due to computational constraints, we did not conduct ablation studies to determine the optimal data mixing ratios beyond pretraining with TransWebEdu. Future work will extend the “Beyond Pretraining with Translation Data” experiments in Section 4.2 to explore optimal data integration strategies from diverse sources for TransWebEdu.
+In addition, our experiments focus on TransWebLLM, a 1.3B-parameter model that has shown promising results at this scale. However, it remains unclear whether the benefits of our translated pretraining data would persist or amplify in substantially larger models (e.g., 70B+ parameters). Scaling up could provide deeper insights into multilingual learning dynamics and data efficiency. Future research will explore these aspects to validate and enhance the scalability of our multilingual pretraining approach.
+References
+Marah Abdin, Jyoti Aneja, Hany Awadalla, Ahmed Awadallah, Ammar Ahmad Awan, Nguyen Bach, Amit Bahree, Arash Bakhtiari, Jianmin Bao, Harkirat Behl, et al. 2024. Phi-3 technical report: A highly capable language model locally on your phone. arXiv preprint arXiv:2404.14219.
+Duarte M Alves, José Pombal, Nuno M Guerreiro, Pedro H Martins, João Alves, Amin Farajian, Ben Peters, Ricardo Rei, Patrick Fernandes, Sweta Agrawal, et al. 2024. Tower: An open multilingual large language model for translation-related tasks. arXiv preprint arXiv:2402.17733.
+Edward Bayes, Israel Abebe Azime, Jesujoba O Alabi, Jonas Kgomo, Tyna Eloundou, Elizabeth Proehl, Kai Chen, Imaan Khadir, Naome A Etori, Shamsuddeen Hassan Muhammad, et al. 2024. Uhura: A benchmark for evaluating scientific question answering and truthfulness in low-resource african languages. arXiv preprint arXiv:2412.00948.
+Loubna Ben Allal, Anton Lozhkov, Guilherme Penedo, Thomas Wolf, and Leandro von Werra. 2024. Smollm-corpus.
+Emily M Bender, Timnit Gebru, Angelina McMillanMajor, and Shmargaret Shmitchell. 2021. On the dangers of stochastic parrots: Can language models be too big? In Proceedings of the 2021 ACM conference on fairness, accountability, and transparency, pages 610–623.
+Stella Biderman, Hailey Schoelkopf, Quentin Gregory Anthony, Herbie Bradley, Kyle O’Brien, Eric Hallahan, Mohammad Aflah Khan, Shivanshu Purohit, USVSN Sai Prashanth, Edward Raff, et al. 2023. Pythia: A suite for analyzing large language models across training and scaling. In International Conference on Machine Learning, pages 2397–2430. PMLR.
+Steven Bird, Ewan Klein, and Edward Loper. 2009. Natural language processing with Python: analyzing text with the natural language toolkit. " O’Reilly Media, Inc.".
+Yonatan Bisk, Rowan Zellers, Ronan Le Bras, Jianfeng Gao, and Yejin Choi. 2020. Piqa: Reasoning about physical commonsense in natural language. In ThirtyFourth AAAI Conference on Artificial Intelligence.
+Andrei Z Broder. 1997. On the resemblance and containment of documents. In Proceedings. Compression and Complexity of SEQUENCES 1997 (Cat. No. 97TB100171), pages 21–29. IEEE.
+Peter Clark, Isaac Cowhey, Oren Etzioni, Tushar Khot, Ashish Sabharwal, Carissa Schoenick, and Oyvind Tafjord. 2018. Think you have solved question answering? try arc, the ai2 reasoning challenge. arXiv preprint arXiv:1803.05457.
+9
+
+
+ Alexis Conneau, Ruty Rinott, Guillaume Lample, Adina Williams, Samuel R. Bowman, Holger Schwenk, and Veselin Stoyanov. 2018. Xnli: Evaluating crosslingual sentence representations. In Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing. Association for Computational Linguistics.
+Marta R Costa-jussà, James Cross, Onur Çelebi, Maha Elbayad, Kenneth Heafield, Kevin Heffernan, Elahe Kalbassi, Janice Lam, Daniel Licht, Jean Maillard, et al. 2022. No language left behind: Scaling human-centered machine translation. arXiv preprint arXiv:2207.04672.
+Tri Dao. 2023. Flashattention-2: Faster attention with better parallelism and work partitioning. arXiv preprint arXiv:2307.08691.
+Meet Doshi, Raj Dabre, and Pushpak Bhattacharyya. 2024. Pretraining language models using translationese. In Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing, pages 5843–5862.
+Longxu Dou, Qian Liu, Guangtao Zeng, Jia Guo, Jiahui Zhou, Wei Lu, and Min Lin. 2024a. Sailor: Open language models for south-east asia. arXiv preprint arXiv:2404.03608.
+Longxu Dou, Qian Liu, Fan Zhou, Changyu Chen, Zili Wang, Ziqi Jin, Zichen Liu, Tongyao Zhu, Cunxiao Du, Penghui Yang, Haonan Wang, Jiaheng Liu, Yongchi Zhao, Xiachong Feng, Xin Mao, Man Tsung Yeung, Kunat Pipatanakul, Fajri Koto, Min Si Thu, Hynek Kydlíˇcek, Zeyi Liu, Qunshu Lin, Sittipong Sripaisarnmongkol, Kridtaphad Sae-Khow, Nirattisai Thongchim, Taechawat Konkaew, Narong Borijindargoon, Anh Dao, Matichon Maneegard, Phakphum Artkaew, Zheng-Xin Yong, Quan Nguyen, Wannaphong Phatthiyaphaibun, Hoang H. Tran, Mike Zhang, Shiqi Chen, Tianyu Pang, Chao Du, Xinyi Wan, Wei Lu, and Min Lin. 2024b. Sailor2: Sailing in south-east asia with inclusive multilingual llm.
+Abhimanyu Dubey, Abhinav Jauhri, Abhinav Pandey, Abhishek Kadian, Ahmad Al-Dahle, Aiesha Letman, Akhil Mathur, Alan Schelten, Amy Yang, Angela Fan, et al. 2024. The llama 3 herd of models. arXiv preprint arXiv:2407.21783.
+Ignatius Ezeani, Scott Piao, Steven Neale, Paul Rayson, and Dawn Knight. 2019. Leveraging pre-trained embeddings for Welsh taggers. In Proceedings of the 4th Workshop on Representation Learning for NLP (RepL4NLP-2019), pages 270–280, Florence, Italy. Association for Computational Linguistics.
+Manuel Faysse, Patrick Fernandes, Nuno Guerreiro, António Loison, Duarte Alves, Caio Corro, Nicolas Boizard, João Alves, Ricardo Rei, Pedro Martins, et al. 2024. Croissantllm: A truly bilingual french-english language model. arXiv preprint arXiv:2402.00786.
+Leo Gao, Stella Biderman, Sid Black, Laurence Golding, Travis Hoppe, Charles Foster, Jason Phang, Horace He, Anish Thite, Noa Nabeshima, et al. 2020. The pile: An 800gb dataset of diverse text for language modeling. arXiv preprint arXiv:2101.00027.
+Dan Hendrycks, Collin Burns, Steven Basart, Andy Zou, Mantas Mazeika, Dawn Song, and Jacob Steinhardt. 2021. Measuring massive multitask language understanding. arXiv preprint arXiv:2009.03300.
+Ayyoob Imani, Peiqin Lin, Amir Hossein Kargaran, Silvia Severini, Masoud Jalili Sabet, Nora Kassner, Chunlan Ma, Helmut Schmid, André Martins, François Yvon, and Hinrich Schütze. 2023. Glot500: Scaling multilingual corpora and language models to 500 languages. In Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), pages 1082–1117, Toronto, Canada. Association for Computational Linguistics.
+Matt Gardner Johannes Welbl, Nelson F. Liu. 2017. Crowdsourcing multiple choice science questions.
+Pratik Joshi, Sebastin Santy, Amar Budhiraja, Kalika Bali, and Monojit Choudhury. 2020. The state and fate of linguistic diversity and inclusion in the nlp world. arXiv preprint arXiv:2004.09095.
+Andrej Karpathy. 2022. NanoGPT. https://github. com/karpathy/nanoGPT.
+Andrej Karpathy. 2024. llm.c. https://github.com/ karpathy/llm.c.
+Tom Kocmi, Eleftherios Avramidis, Rachel Bawden, Ondrej Bojar, Anton Dvorkovich, Christian Federmann, Mark Fishel, Markus Freitag, Thamme Gowda, Roman Grundkiewicz, et al. 2024. Preliminary wmt24 ranking of general mt systems and llms. arXiv preprint arXiv:2407.19884.
+Julia Kreutzer, Isaac Caswell, Lisa Wang, Ahsan Wahab, Daan van Esch, Nasanbayar Ulzii-Orshikh, Allahsera Tapo, Nishant Subramani, Artem Sokolov, Claytone Sikasote, et al. 2022. Quality at a glance: An audit of web-crawled multilingual datasets. Transactions of the Association for Computational Linguistics, 10:5072.
+Sneha Kudugunta, Isaac Caswell, Biao Zhang, Xavier Garcia, Derrick Xin, Aditya Kusupati, Romi Stella, Ankur Bapna, and Orhan Firat. 2024. Madlad-400: A multilingual and document-level large audited dataset. Advances in Neural Information Processing Systems, 36.
+Woosuk Kwon, Zhuohan Li, Siyuan Zhuang, Ying Sheng, Lianmin Zheng, Cody Hao Yu, Joseph E. Gonzalez, Hao Zhang, and Ion Stoica. 2023. Efficient memory management for large language model serving with pagedattention. In Proceedings of the ACM SIGOPS 29th Symposium on Operating Systems Principles.
+10
+
+
+ Viet Dac Lai, Chien Van Nguyen, Nghia Trung Ngo, Thuat Nguyen, Franck Dernoncourt, Ryan A Rossi, and Thien Huu Nguyen. 2023. Okapi: Instructiontuned large language models in multiple languages with reinforcement learning from human feedback. arXiv preprint arXiv:2307.16039.
+Katherine Lee, Daphne Ippolito, Andrew Nystrom, Chiyuan Zhang, Douglas Eck, Chris Callison-Burch, and Nicholas Carlini. 2021. Deduplicating training data makes language models better. arXiv preprint arXiv:2107.06499.
+Raymond Li, Loubna Ben Allal, Yangtian Zi, Niklas Muennighoff, Denis Kocetkov, Chenghao Mou, Marc Marone, Christopher Akiki, Jia Li, Jenny Chim, et al. 2023. Starcoder: may the source be with you! arXiv preprint arXiv:2305.06161.
+Stephanie Lin, Jacob Hilton, and Owain Evans. 2021a. Truthfulqa: Measuring how models mimic human falsehoods. arXiv preprint arXiv:2109.07958.
+Xi Victoria Lin, Todor Mihaylov, Mikel Artetxe, Tianlu Wang, Shuohui Chen, Daniel Simig, Myle Ott, Naman Goyal, Shruti Bhosale, Jingfei Du, et al. 2021b. Few-shot learning with multilingual language models. arXiv preprint arXiv:2112.10668.
+Anton Lozhkov, Loubna Ben Allal, Leandro von Werra, and Thomas Wolf. 2024. Fineweb-edu.
+Pratyush Maini, Skyler Seto, He Bai, David Grangier, Yizhe Zhang, and Navdeep Jaitly. 2024. Rephrasing the web: A recipe for compute and data-efficient language modeling. arXiv preprint arXiv:2401.16380.
+Pedro Henrique Martins, Patrick Fernandes, João Alves, Nuno M Guerreiro, Ricardo Rei, Duarte M Alves, José Pombal, Amin Farajian, Manuel Faysse, Mateusz Klimaszewski, et al. 2024. Eurollm: Multilingual language models for europe. arXiv preprint arXiv:2409.16235.
+Simon McIntosh-Smith, Sadaf R Alam, and Christopher Woods. 2024. Isambard-ai: a leadership class supercomputer optimised specifically for artificial intelligence. arXiv preprint arXiv:2410.11199.
+Yasmin Moslem, Rejwanul Haque, and Andy Way. 2023. Fine-tuning large language models for adaptive machine translation. arXiv preprint arXiv:2312.12740.
+Nasrin Mostafazadeh, Nathanael Chambers, Xiaodong He, Devi Parikh, Dhruv Batra, Lucy Vanderwende, Pushmeet Kohli, and James Allen. 2016. A corpus and evaluation framework for deeper understanding of commonsense stories. arXiv preprint arXiv:1604.01696.
+Niklas Muennighoff, Alexander Rush, Boaz Barak, Teven Le Scao, Nouamane Tazi, Aleksandra Piktus, Sampo Pyysalo, Thomas Wolf, and Colin A Raffel. 2024. Scaling data-constrained language models. Advances in Neural Information Processing Systems, 36.
+Akintunde Oladipo, Mofetoluwa Adeyemi, Orevaoghene Ahia, Abraham Owodunni, Odunayo Ogundepo, David Adelani, and Jimmy Lin. 2023. Better quality pre-training data and t5 models for african languages. In Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing, pages 158–168.
+Pedro Javier Ortiz Su’arez, Benoit Sagot, and Laurent Romary. 2019. Asynchronous pipelines for processing huge corpora on medium to low resource infrastructures. Proceedings of the Workshop on Challenges in the Management of Large Corpora (CMLC7) 2019. Cardiff, 22nd July 2019, pages 9 – 16, Mannheim. Leibniz-Institut f"ur Deutsche Sprache.
+Guilherme Penedo, Hynek Kydlíˇcek, Loubna Ben allal, Anton Lozhkov, Margaret Mitchell, Colin Raffel, Leandro Von Werra, and Thomas Wolf. 2024. The fineweb datasets: Decanting the web for the finest text data at scale. Preprint, arXiv:2406.17557.
+Edoardo Maria Ponti, Goran Glavaš, Olga Majewska, Qianchu Liu, Ivan Vulic ́, and Anna Korhonen. 2020. Xcopa: A multilingual dataset for causal commonsense reasoning. arXiv preprint arXiv:2005.00333.
+Jack W Rae, Sebastian Borgeaud, Trevor Cai, Katie Millican, Jordan Hoffmann, Francis Song, John Aslanides, Sarah Henderson, Roman Ring, Susannah Young, et al. 2021. Scaling language models: Methods, analysis & insights from training gopher. arXiv preprint arXiv:2112.11446.
+Melissa Roemmele, Cosmin Adrian Bejan, and Andrew S Gordon. 2011. Choice of plausible alternatives: An evaluation of commonsense causal reasoning. In 2011 AAAI spring symposium series.
+Neha Sengupta, Sunil Kumar Sahu, Bokang Jia, Satheesh Katipomu, Haonan Li, Fajri Koto, William Marshall, Gurpreet Gosal, Cynthia Liu, Zhiming Chen, Osama Mohammed Afzal, Samta Kamboj, Onkar Pandit, Rahul Pal, Lalit Pradhan, Zain Muhammad Mujahid, Massa Baali, Xudong Han, Sondos Mahmoud Bsharat, Alham Fikri Aji, Zhiqiang Shen, Zhengzhong Liu, Natalia Vassilieva, Joel Hestness, Andy Hock, Andrew Feldman, Jonathan Lee, Andrew Jackson, Hector Xuguang Ren, Preslav Nakov, Timothy Baldwin, and Eric Xing. 2023. Jais and jais-chat: Arabic-centric foundation and instruction-tuned open generative large language models. Preprint, arXiv:2308.16149.
+Oleh Shliazhko, Alena Fenogenova, Maria Tikhonova, Vladislav Mikhailov, Anastasia Kozlova, and Tatiana Shavrina. 2022. mgpt: Few-shot learners go multilingual. arXiv preprint arXiv:2204.07580.
+Mohammad Shoeybi, Mostofa Patwary, Raul Puri, Patrick LeGresley, Jared Casper, and Bryan Catanzaro. 2019. Megatron-lm: Training multi-billion parameter language models using model parallelism. arXiv preprint arXiv:1909.08053.
+11
+
+
+ Shivalika Singh, Angelika Romanou, Clémentine Fourrier, David I Adelani, Jian Gang Ngui, Daniel Vila-Suero, Peerat Limkonchotiwat, Kelly Marchisio, Wei Qi Leong, Yosephine Susanto, et al. 2024. Global mmlu: Understanding and addressing cultural and linguistic biases in multilingual evaluation. arXiv preprint arXiv:2412.03304.
+Daria Soboleva, Faisal Al-Khateeb, Robert Myers, Jacob R Steeves, Joel Hestness, and Nolan Dey. 2023. SlimPajama: A 627B token cleaned and deduplicated version of RedPajama.
+Felix Stahlberg. 2020. Neural machine translation: A review. Journal of Artificial Intelligence Research, 69:343–418.
+Gemma Team, Morgane Riviere, Shreya Pathak, Pier Giuseppe Sessa, Cassidy Hardin, Surya Bhupatiraju, Léonard Hussenot, Thomas Mesnard, Bobak Shahriari, Alexandre Ramé, et al. 2024. Gemma 2: Improving open language models at a practical size. arXiv preprint arXiv:2408.00118.
+Alexey Tikhonov and Max Ryabinin. 2021. It’s all in the heads: Using attention heads as a baseline for crosslingual transfer in commonsense reasoning. arXiv preprint arXiv:2106.12066.
+Hugo Touvron, Louis Martin, Kevin Stone, Peter Albert, Amjad Almahairi, Yasmine Babaei, Nikolay Bashlykov, Soumya Batra, Prajjwal Bhargava, Shruti Bhosale, et al. 2023. Llama 2: Open foundation and fine-tuned chat models. arXiv preprint arXiv:2307.09288.
+Gorka Urbizu, Iñaki San Vicente, Xabier Saralegi, and Ander Corral. 2023. Not enough data to pre-train your language model? mt to the rescue! In Findings of the Association for Computational Linguistics: ACL 2023, pages 3826–3836.
+Maurice Weber, Dan Fu, Quentin Anthony, Yonatan Oren, Shane Adams, Anton Alexandrov, Xiaozhong Lyu, Huu Nguyen, Xiaozhe Yao, Virginia Adams, Ben Athiwaratkun, Rahul Chalamala, Kezhen Chen, Max Ryabinin, Tri Dao, Percy S Liang, Christopher Ré, Irina Rish, and Ce Zhang. 2024. Redpajama: an open dataset for training large language models. In Advances in Neural Information Processing Systems, volume 37, pages 116462–116492. Curran Associates, Inc.
+Guillaume Wenzek, Marie-Anne Lachaux, Alexis Conneau, Vishrav Chaudhary, Francisco Guzmán, Armand Joulin, and Edouard Grave. 2020. CCNet: Extracting high quality monolingual datasets from web crawl data. In Proceedings of the Twelfth Language Resources and Evaluation Conference, pages 4003–4012, Marseille, France. European Language Resources Association.
+Haryo Akbarianto Wibowo, Erland Hilman Fuadi, Made Nindyatama Nityasya, Radityo Eko Prasojo, and Alham Fikri Aji. 2023. Copal-id: Indonesian language reasoning with local culture and nuances. arXiv preprint arXiv:2311.01012.
+Adina Williams, Nikita Nangia, and Samuel Bowman. 2018. A broad-coverage challenge corpus for sentence understanding through inference. In Proceedings of the 2018 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long Papers), pages 1112–1122, New Orleans, Louisiana. Association for Computational Linguistics.
+BigScience Workshop, Teven Le Scao, Angela Fan, Christopher Akiki, Ellie Pavlick, Suzana Ilic ́, Daniel Hesslow, Roman Castagné, Alexandra Sasha Luccioni, François Yvon, et al. 2022. Bloom: A 176bparameter open-access multilingual language model. arXiv preprint arXiv:2211.05100.
+Linting Xue, Noah Constant, Adam Roberts, Mihir Kale, Rami Al-Rfou, Aditya Siddhant, Anirudh Barua, and Colin Raffel. 2021. mT5: A massively multilingual pre-trained text-to-text transformer. arXiv preprint arXiv:2010.11934.
+An Yang, Baosong Yang, Binyuan Hui, Bo Zheng, Bowen Yu, Chang Zhou, Chengpeng Li, Chengyuan Li, Dayiheng Liu, Fei Huang, Guanting Dong, Haoran Wei, Huan Lin, Jialong Tang, Jialin Wang, Jian Yang, Jianhong Tu, Jianwei Zhang, Jianxin Ma, Jianxin Yang, Jin Xu, Jingren Zhou, Jinze Bai, Jinzheng He, Junyang Lin, Kai Dang, Keming Lu, Keqin Chen, Kexin Yang, Mei Li, Mingfeng Xue, Na Ni, Pei Zhang, Peng Wang, Ru Peng, Rui Men, Ruize Gao, Runji Lin, Shijie Wang, Shuai Bai, Sinan Tan, Tianhang Zhu, Tianhao Li, Tianyu Liu, Wenbin Ge, Xiaodong Deng, Xiaohuan Zhou, Xingzhang Ren, Xinyu Zhang, Xipin Wei, Xuancheng Ren, Xuejing Liu, Yang Fan, Yang Yao, Yichang Zhang, Yu Wan, Yunfei Chu, Yuqiong Liu, Zeyu Cui, Zhenru Zhang, Zhifang Guo, and Zhihao Fan. 2024. Qwen2 technical report. Preprint, arXiv:2407.10671.
+An Yang, Baosong Yang, Beichen Zhang, Binyuan Hui, Bo Zheng, Bowen Yu, Chengyuan Li, Dayiheng Liu, Fei Huang, Haoran Wei, Huan Lin, Jian Yang, Jianhong Tu, Jianwei Zhang, Jianxin Yang, Jiaxi Yang, Jingren Zhou, Junyang Lin, Kai Dang, Keming Lu, Keqin Bao, Kexin Yang, Le Yu, Mei Li, Mingfeng Xue, Pei Zhang, Qin Zhu, Rui Men, Runji Lin, Tianhao Li, Tianyi Tang, Tingyu Xia, Xingzhang Ren, Xuancheng Ren, Yang Fan, Yang Su, Yichang Zhang, Yu Wan, Yuqiong Liu, Zeyu Cui, Zhenru Zhang, and Zihan Qiu. 2025. Qwen2.5 technical report. Preprint, arXiv:2412.15115.
+Shuo Yang, Wei-Lin Chiang, Lianmin Zheng, Joseph E Gonzalez, and Ion Stoica. 2023. Rethinking benchmark and contamination for language models with rephrased samples. arXiv preprint arXiv:2311.04850.
+Yinfei Yang, Yuan Zhang, Chris Tar, and Jason Baldridge. 2019. PAWS-X: A cross-lingual adversarial dataset for paraphrase identification. In Proceedings of the 2019 Conference on Empirical Methods
+12
+
+
+ Language Tokens (B) Avg. Doc Length (tokens)
+Arabic 311.35 3201 English 114.95 1182 French 143.71 1479 German 140.70 1447 Indonesian 174.12 1792 Italian 140.32 1447 Russian 157.40 1618 Spanish 140.99 1449 Swahili 183.55 1887 Welsh 201.49 2071
+Total 1708.58 1757
+Table 8: Statistics of TransWebEduDataset, measured in Llama2 tokenizer.
+in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP), pages 3687–3692, Hong Kong, China. Association for Computational Linguistics.
+Xiang Yue, Tuney Zheng, Ge Zhang, and Wenhu Chen. 2024. Mammoth2: Scaling instructions from the web. arXiv preprint arXiv:2405.03548.
+Rowan Zellers, Ari Holtzman, Yonatan Bisk, Ali Farhadi, and Yejin Choi. 2019. Hellaswag: Can a machine really finish your sentence? In Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics.
+Peiyuan Zhang, Guangtao Zeng, Tianduo Wang, and Wei Lu. 2024. Tinyllama: An open-source small language model. arXiv preprint arXiv:2401.02385.
+Appendix
+This appendix provides additional technical details on our approach and supplementary evaluation results for the main paper.
+A Translation Pipeline
+The detailed translation pipeline to produce TransWebEdu is shown in Figure 1.
+B Data Statistics of TransWebEdu
+The statistics of TransWebEdu are shown in Table 8.
+C Hyperparameters Settings of Model Pretrainning
+Pretraining hyperparameter settings are shown in Table 9.
+Hyperparameter Value
+Sequence Length 2048 Number of Layers 24 Embedding Size 2048 FFN Hidden Size 5504 Number of Heads 16 Position Encodings RoPE Activation Function SwiGLU Layer Norm RMSNorm Learning Rate 6E-4 Batch Size 1024 Vocabulary Size 32000
+Embedding Parameters 0.13B Non-Embedding Parameters 1.21B Total Parameters 1.34B
+Table 9: Model and pretraining hyperparameters.
+D Specific Evaluation Benchmarks for Each Language
+Specific evaluation benchmarks for each of the 10 languages are shown in Table 10.
+E An Overview of Baseline Models
+An overview of baseline models are shown in Table 11.
+F Translation Data Generation from the Mistral-7B-Instruct LLM
+We employ Mistral-7B-Instruct-v0.113 as our translation model. However, its efficacy when prompted for document-level translation, particularly with long-context English source documents, has not yet been verified. A recent related work by Maini et al. (2024) has empirically demonstrated that prompting an LLM to rephrase more than 300 tokens could lead to information loss when rephrasing web data.
+Following their setup, we first segment the English source documents from the sample-100BT subset of FineWeb-Edu into shorter pieces, prompt Mistral to translate these segments sequentially, and subsequently reconstruct the whole translated document by concatenating the translated segments.The detailed translation pipeline is shown in Figure 2.
+Adhering to the instruction format specified14 for Mistral-7B-Instruct, the chat template employed to prompt Mistral model for translation (using English-French as an example) is illustrated in
+13hf.co/mistralai/Mistral-7B-Instruct-v0.1 14hf.co/mistralai/Mistral-7B-Instruct-v0.1
+13
+
+
+ Document X
+...
+NLLB-200-1.3B
+Translation of
+Sentence 1
+Translation of
+Sentence 2
+Translation of
+Sentence n
+Translation of
+Document X
+Sentence 1
+Sentence 2
+Sentence N
+...
+2. Inference the translation model to get the translation for each source sentence.
+1. Segment documents with sentence tokenizer.
+3. Reconstruct sentence translations by concatenating.
+Figure 1: Step-by-step illustration of the translation pipeline to obtain TransWebEdu.
+Language Evaluation Datasets
+Arabic ARC-C, Hellaswag (Lai et al., 2023), XNLI (Conneau et al., 2018), XStoryCloze (Lin et al., 2021b)
+English ARC-E, ARC-C (Clark et al., 2018), Hellaswag (Zellers et al., 2019), PAWS-X (Yang et al., 2019), PIQA (Bisk et al., 2020), SciQ (Johannes Welbl, 2017), TruthfulQA (Lin et al., 2021a), XNLI (Conneau et al., 2018), XStoryCloze (Lin et al., 2021b)
+French ARC-C, Hellaswag (Lai et al., 2023), PAWS-X (Yang et al., 2019), XNLI (Conneau et al., 2018), XWinograd (Tikhonov and Ryabinin, 2021) German ARC-C, Hellaswag (Lai et al., 2023), PAWS-X (Yang et al., 2019), XNLI (Conneau et al., 2018) Indonesian ARC-C, Hellaswag (Lai et al., 2023), XCOPA (Ponti et al., 2020), XStoryCloze (Lin et al., 2021b) Italian ARC-C, Hellaswag (Lai et al., 2023), XCOPA (Ponti et al., 2020)
+Russian ARC-C, Hellaswag (Lai et al., 2023), XNLI (Conneau et al., 2018), XStoryCloze (Lin et al., 2021b), XWinograd (Tikhonov and Ryabinin, 2021)
+Spanish ARC-C, Hellaswag (Lai et al., 2023), PAWS-X (Yang et al., 2019), XNLI (Conneau et al., 2018), XStoryCloze (Lin et al., 2021b)
+Swahili ARC-C, TruthfulQA (Bayes et al., 2024), XCOPA (Ponti et al., 2020), XNLI (Conneau et al., 2018), XStoryCloze (Lin et al., 2021b) Welsh ARC-E, ARC-C, PIQA, TruthfulQA, and XNLI from BritEval
+Table 10: Specific evaluation benchmarks for each language.
+Document X
+...
+Chunk1
+Chunk 2
+Chunk N
+Mistral-7B
+Instruct
+Translation of
+Chunk 1
+Translation of
+Chunk 2
+Translation of
+Chunk N
+Translation of
+Document X
+...
+1. Segment documents with sentence tokenizer.
+4. Reconstruct translations of chunks by concatenating.
+2. Group sentences into chunks. 3. Prompt the LLM to get the translation for
+each chunk.
+Sentence 1
+Sentence 2
+Sentence N
+...
+Figure 2: Step-by-step illustration of the translation pipeline with the Mistral-7B-Instruct model.
+Figure 315. To maintain translation integrity, any sentence not fully translated to a terminal punctuation is omitted, based on the NLTK sentence tokenizer (Bird et al., 2009).
+15The highlighted portions in the template are adjusted according to the target language.
+We translate English documents from FineWebEdu (Lozhkov et al., 2024) into three major European languages: French, German, and Spanish via prompting the Mistral-7B-Intruct model. To optimize memory efficiency and accelerate the inference process of Mistral-7B-Instruct-v0.1, we
+14
+
+
+ Model # Param. Corpus Corpus Training Data Languages
+Size Tokens Avail.
+Monolingual LLMs
+TinyLlama 1.1B SlimPajama (Soboleva et al., 2023) and
+StarCoder training data (Li et al., 2023) 1T 3T ✔ Primarily English Pythia 1.4B The Pile (Gao et al., 2020) 207B 300B ✔ Primarily English
+Multilingual LLMs
+mGPT 1.3B mC4,Wiki 488B 440B ✘ 61 languages BLOOM 1.1B BigScience Catalogue, Common Crawl, Github Code,
+and OSCAR (Ortiz Su’arez et al., 2019) 350B 366B ✘ 46 langauges Llama3.2 1.3B Web data, Code, and Math - 9T ✘ At least 8 languages Qwen2 1.5B - - 7T ✘ At least 30 languages Qwen2.5 1.5B - - 18T ✘ At least 30 languages Gemma 2.6B Web data, Code, and Science Articles - 2T ✘ 
+Language-specific LLMs
+afriteva_v2_large 1B Wura (Oladipo et al., 2023) 30 million 136B ✔ 20 African languages BritLLM 3B SlimPajama (Soboleva et al., 2023),
+QA and MC Synthetic Data, Wiki, NLLB 668B - ✘ 5 British languages CroissantLLM 1.3B Croissant (Faysse et al., 2024) 1T 3T ✔ English, French EuroLLM 1.7B mC4, Parallel Data, Code/Math, Wiki,
+ArXiv, Books, Apollo, Annealing Data - 4T ✘ 35 languages
+Jais-family-1p3b 1.3B Jais Model Family training data
+(Sengupta et al., 2023) 395B 1.6T ✘ Arabic, English
+Sailor 1.8B
+CC100 (Wenzek et al., 2020), MADLAD-400 (Kudugunta et al., 2024), OpenSubtitles, and Wiki
+395B 400B ✘ English, Chinese, and
+5 South-East Asian languages
+Sailor2 1B
+CC100 (Wenzek et al., 2020), MADLAD-400 (Kudugunta et al., 2024), OpenSubtitles, and Wiki
+- 500B ✘ 15 languages
+TransWebLLM (Ours) 1.3B TransWebEdu 1.7T 1.5T ✔ 10 languages
+Table 11: Overview of pretraining data among LLMs.
+Figure 3: Chat template used for prompting Mistral-7BInstruct-v0.1 for English-French translation.
+Language Tokens (B) Avg. Doc Length (tokens)
+English 63.41 1,171.48 French 76.25 1,408.74 German 73.91 1,365.41 Spanish 72.93 1,383.25
+Total 286.50 1,331.89
+Table 12: Statistics of Translation Data generated with the Mistral-7B-Model, measured in Llama2 tokenizer.
+employ vLLM (Kwon et al., 2023), a library specifically designed for efficient large language model inference and serving. Using this setup, we translate approximately 54 million English documents (a subset of sample-100B of FineWeb-Edu) into the three target languages by prompting Mistral-7BInstruct-v0.1. Table 12 presents the statistics of the original English data and the translated French, German, and Spanish. Leveraging vLLM’s efficiency, we estimate the total computational cost to be approximately 6.03 × 1022 FLOPs.
+Table 13 compares the performance of the
+en fr de es Avg. English LLMs
+Pythia (1.4B) 54.63 40.14 36.23 39.91 42.73 TinyLlama (1.1B) 57.18 44.13 37.06 42.38 45.19 Multilingual LLMs
+mGPT (1.3B) 45.38 40.27 34.54 38.88 39.77 BLOOM (1.1B) 50.94 41.80 34.62 42.69 42.51 Llama3.2 (1.3B) 58.16 44.10 39.73 44.15 46.54 Qwen2 (1.5B) 61.07 47.40 40.79 47.40 49.17 Qwen2.5 (1.5B) 62.93 48.69 40.49 48.41 50.13 Gemma (2.6B) 62.39 49.78 44.27 49.35 51.45 Language-Specific LLMs
+CroissantLLM (1.3B) 53.31 45.73 - - EuroLLM (1.7B) 57.98 47.85 42.07 47.07 48.74 Ours
+CuatroLLM (1.3B) 56.12 45.01 40.42 45.04 46.65 TransWebLLM-4 (1.3B) 55.32 46.67 41.45 45.19 47.16
+Table 13: Performance comparison between CuatroLLM trained on LLM-translated data and TransWebLLM-4 across four selected languages.
+model trained on Mistral-generated translation data (CuatroLLM) with the model trained on NLLBgenerated data (TransWebLLM-4) across English, German, French, and Spanish benchmarks.
+G Sampling General Web Data from RedPajama-v2
+We use the English, French, German, Italian, and Spanish subsets of the RedPajama-v2 (RPv2) (Weber et al., 2024) as web data. Given that web data is inherently noisy, we make further use of the quality signals provided for RPv2 and filter each subset down to a smaller, high-quality subset. Specifically, we use the six most recent dumps from 2022
+15
+
+
+ and 2023 and apply quality filtering using the Gopher rules (Rae et al., 2021). Additionally, web data often contains near duplicates, stemming from boilerplate text, ads, and other computer-generated text that only differs by a few words, and removing these has been shown to positively affect training efficiency and reduce the amount of memorization (Lee et al., 2021). We therefore adopt the MinHash algorithm with locality-sensitive hashing (Broder, 1997) to perform near-deduplication. We identify documents as near duplicates if their Jaccard similarity is greater than 0.8 and use 128 hash functions.
+H Evaluation for Impact of Special Data
+The evaluation results of TransWebLLM-cool on understanding and reasoning, French linguistic proficiency, and reasoning for Indonesian local culture are presented in Table 14, 15, and 16, respectively.
+I Detailed Results for Understanding and Reasoning Benchmarks
+Tables 17 to 26 present detailed benchmark results, as outlined in Section 3.1, for each language. The corresponding averaged scores are presented in Tables 2, 3, and 14, accordingly.
+16
+
+
+ High Medium Low Average
+ar en fr de it ru es id sw cy All Non-eng High English LLMs
+Pythia (1.4B) 33.21 54.63 40.14 36.23 35.14 38.32 39.91 36.83 36.90 31.57 38.29 36.47 39.65 TinyLlama (1.1B) 32.86 57.18 44.13 37.06 36.79 40.97 42.38 36.13 36.69 31.53 39.57 37.62 41.62 Multilingual LLMs
+mGPT (1.3B) 32.90 45.38 40.27 34.54 34.89 40.53 38.88 39.47 38.98 31.14 37.70 36.84 38.20 BLOOM (1.1B) 34.97 50.94 41.80 34.62 33.69 37.56 42.69 43.23 37.09 31.57 38.82 37.47 39.47 Llama3.2 (1.3B) 34.78 58.16 44.10 39.73 40.93 45.38 44.15 44.67 38.30 31.84 42.20 40.43 43.89 Qwen2 (1.5B) 35.61 61.07 47.40 40.79 42.61 47.95 47.40 45.93 38.89 32.23 43.99 42.09 46.12 Qwen2.5 (1.5B) 37.35 62.93 48.69 40.49 43.10 47.01 48.41 46.17 37.98 31.78 44.39 42.33 46.85 Gemma (2.6B) 37.26 62.39 49.78 44.27 44.57 48.60 49.35 48.27 40.18 32.28 45.70 43.84 48.03 Language-Specific LLMs
+AfriTeVa (1B) 37.70 40.60 BritLLM (3B) 60.45 37.07 CroissantLLM (1.3B) 53.31 45.73 EuroLLM (1.7B) 38.88 57.98 47.85 42.07 47.56 46.71 47.07 46.87 Jais-family-1p3b (1.3B) 39.97 56.28 Sailor (1.8B) 55.40 48.45 Sailor2 (1B) 54.61 49.44 Ours
+TransWebLLM (1.3B) 39.30 56.30 46.11 41.01 45.75 46.38 45.27 47.54 44.44 38.69 45.08 43.83 45.73 TransWebLLM-web (1.3B) 39.82 56.18 46.83 41.92 47.01 46.22 46.92 49.75 44.40 40.09 45.91 44.77 46.41 TransWebLLM-cool (1.3B) 40.22 57.76 48.38 43.04 48.64 46.72 47.13 50.67 44.48 40.41 46.75 45.52 47.41 ∆ (Cool - Base) +0.92 +1.46 +2.27 +2.03 +2.89 +0.34 +1.86 +3.13 +0.04 +1.72 +1.67 +1.69 +1.68 ∆ (Cool - Web) +0.40 +1.58 +1.55 +1.12 +1.63 +0.50 +0.21 +0.92 +0.08 +0.32 +0.84 +0.75 +1.00
+Table 14: LLM performance across ten languages, categorized by resource availability and measured in accuracy. The last three columns report average results for all languages (All), non-English languages (Non-Eng), and highresource languages (High). The top three models are underlined and the best score for each language is highlighted.
+Model fr-grammar fr-vocab Avg.
+Baselines
+mGPT 73.95 70.59 72.27 BLOOM 79.83 74.79 77.31 Llama3.2 76.47 75.63 76.05 EuroLLM∗ 79.83 78.99 79.41 Qwen2.5 71.43 73.95 72.69 Gemma 73.11 72.27 72.69 CroissantLLM∗ 79.83 78.15 78.99 Ours
+TransWebLLM 67.23 63.03 65.13 TransWebLLM-web 73.11 76.47 74.79 TransWebLLM-cool 78.15 73.95 76.05
+Table 15: French grammar and vocabulary proficiency evaluation for TransWebLLM-cool, measured in accuracy. The last column reports the task average score. Models with ∗ denote regional models trained with support for French.
+Model colloquial standard Avg.
+Baselines
+mGPT 54.56 53.49 54.03 BLOOM 55.10 54.38 54.74 Llama3.2 52.42 52.59 52.51 Qwen2.5 52.59 54.03 53.31 Gemma 54.03 55.99 55.01 Sailor∗ 57.60 65.47 61.54 Sailor2∗ 58.86 66.37 62.62 Ours
+TransWebLLM 48.12 49.55 48.84 TransWebLLM-web 55.46 59.75 57.61 TransWebLLM-cool 55.99 61.90 58.95
+Table 16: COPAL-ID evaluation for TransWebLLMcool, measured in accuracy. The last column reports task average score. Models with ∗ denote regional models trained with support for Indonesian.
+Model ARC-C Hellaswag XNLI XStoryCloze Avg.
+Pythia 21.04 27.16 36.31 48.31 33.21 TinyLlama 20.79 26.87 35.26 48.51 32.86 mGPT 20.44 26.02 35.02 50.10 32.90 BLOOM 21.81 29.69 35.90 52.48 34.97 Llama3.2 22.58 30.47 34.86 51.22 34.78 EuroLLM 25.58 33.93 37.63 58.37 38.88 Qwen2 23.95 31.26 34.22 53.01 35.61 Qwen2.5 27.29 32.14 34.82 55.13 37.35 Gemma 26.69 32.32 35.54 54.47 37.26 jais-family-1p3b 28.14 35.51 36.47 59.76 39.97
+TransWebLLM 29.43 34.26 36.39 57.11 39.30 TransWebLLM-web 28.57 35.95 36.51 58.24 39.82 TransWebLLM-cool 30.28 35.90 35.78 58.90 40.22
+Table 17: Detailed Arabic Benchmark Results.
+Model ARC-C ARC-E Hellaswag PAWS PIQA SciQ TruthfulQA XNLI XStoryCloze Avg.
+Pythia 27.99 64.23 40.49 56.55 71.06 91.80 22.77 48.59 68.17 54.63 TinyLlama 33.79 68.01 46.52 57.40 74.16 93.60 22.28 46.95 71.87 57.18 mGPT 21.93 48.99 30.65 53.90 64.53 63.10 23.26 41.81 60.23 45.38 BLOOM 24.91 54.59 34.69 52.05 67.85 89.30 25.58 47.39 62.14 50.94 EuroLLM 36.95 71.51 44.77 55.90 73.56 94.80 23.62 48.92 71.81 57.98 Llama3.2 34.81 69.11 48.29 55.90 75.57 95.20 23.38 48.55 72.67 58.16 Qwen2 40.02 72.81 49.17 63.30 75.84 96.00 29.01 48.47 75.05 61.07 Qwen2.5 48.55 80.47 49.98 58.30 77.04 96.80 29.25 51.20 74.78 62.93 Gemma 47.61 77.31 52.88 61.70 76.88 96.80 21.91 49.56 76.84 62.39 Afriteva-v2-large 20.99 30.93 26.47 50.90 55.88 43.70 25.21 36.14 49.11 37.70 BritLLM 38.05 72.81 51.15 60.65 75.84 96.10 24.36 49.40 75.71 60.45 CroissantLLM 26.37 62.58 40.88 52.05 72.69 92.70 23.62 42.89 66.05 53.31 Jais-family-1p3b 29.52 64.90 42.59 60.10 72.58 93.90 25.46 48.84 68.63 56.28 Sailor 29.52 64.02 42.79 56.70 72.96 92.80 22.03 47.95 69.82 55.40 Sailor2 30.03 64.18 40.00 56.55 70.67 94.50 22.89 45.74 66.91 54.61
+TransWebLLM 36.86 71.51 40.65 56.70 71.06 93.00 22.89 48.15 65.92 56.30 TransWebLLM-web 36.77 71.84 41.10 55.90 70.13 93.30 21.66 47.31 67.57 56.18 TransWebLLM-cool 38.65 72.98 42.13 59.50 71.71 93.80 25.58 47.83 67.64 57.76
+Table 18: Detailed English Benchmark Results.
+17
+
+
+ Model ARC-C Hellaswag PAWS XNLI XWinograd Avg.
+Pythia 20.62 29.60 52.45 43.82 54.22 40.14 TinyLlama 24.64 32.68 53.40 42.45 67.47 44.13 mGPT 20.87 27.13 53.75 40.56 59.04 40.27 BLOOM 23.18 33.73 52.10 45.78 54.22 41.80 Llama3.2 27.29 36.04 50.80 43.73 62.65 44.10 EuroLLM 32.25 40.25 53.05 45.02 68.67 47.85 Qwen2 29.34 38.76 56.95 44.50 67.47 47.40 Qwen2.5 33.45 38.05 57.55 44.54 69.88 48.69 Gemma 35.41 39.81 59.95 47.47 66.27 49.78 CroissantLLM 25.75 39.70 52.65 44.30 66.27 45.73
+TransWebLLM 35.16 38.98 53.45 45.14 57.83 46.11 TransWebLLM-web 36.27 40.37 53.20 44.06 60.24 46.83 TransWebLLM-cool 36.78 40.95 55.80 45.70 62.65 48.38
+Table 19: Detailed French Benchmark Results.
+Model ARC-C Hellaswag PAWS XNLI Avg.
+Pythia 19.59 28.53 55.20 41.61 36.23 TinyLlama 21.56 30.66 55.55 40.48 37.06 mGPT 19.42 27.69 50.50 40.56 34.54 BLOOM 20.19 27.18 53.30 37.79 34.62 Llama3.2 26.86 34.09 54.05 43.90 39.73 EuroLLM 29.34 37.51 55.25 46.18 42.07 Qwen2 26.60 34.72 59.20 42.65 40.79 Qwen2.5 28.23 34.81 56.00 42.93 40.49 Gemma 31.05 37.32 62.50 46.22 44.27
+TransWebLLM 32.59 36.07 51.60 43.78 41.01 TransWebLLM-web 31.65 37.60 54.50 43.94 41.92 TransWebLLM-cool 33.02 37.83 55.65 45.66 43.04
+Table 20: Detailed German Benchmark Results.
+Model ARC-C Hellaswag XCOPA Avg.
+Pythia 21.30 29.12 55.00 35.14 TinyLlama 23.01 31.17 56.20 36.79 mGPT 19.33 27.34 58.00 34.89 BLOOM 20.79 28.47 51.80 33.69 Llama3.2 27.46 34.94 60.40 40.93 EuroLLM 33.53 39.56 69.60 47.56 Qwen2 28.23 35.81 63.80 42.61 Qwen2.5 31.74 35.57 62.00 43.10 Gemma 31.82 37.49 64.40 44.57
+TransWebLLM 36.53 37.33 63.40 45.75 TransWebLLM-web 36.01 39.01 66.00 47.01 TransWebLLM-cool 37.13 39.38 69.40 48.64
+Table 21: Detailed Italian Benchmark Results.
+Model ARC-C Hellaswag XNLI XStoryCloze XWinograd Avg.
+Pythia 18.99 27.66 39.72 49.37 55.87 38.32 TinyLlama 22.93 30.60 39.32 53.61 58.41 40.97 mGPT 20.27 26.62 40.04 56.65 59.05 40.53 BLOOM 19.85 27.52 38.07 48.05 54.29 37.56 Llama3.2 25.92 34.17 42.57 60.09 64.13 45.38 EuroLLM 29.00 36.69 45.14 62.74 60.00 46.71 Qwen2 27.63 36.18 42.29 64.46 69.21 47.95 Qwen2.5 30.88 35.93 42.29 61.81 64.13 47.01 Gemma 33.11 36.79 45.50 62.54 65.08 48.60
+TransWebLLM 32.85 35.63 41.16 58.77 63.49 46.38 TransWebLLM-web 32.42 37.03 40.88 59.83 60.95 46.22 TransWebLLM-cool 33.28 37.10 40.60 61.35 61.27 46.72
+Table 22: Detailed Russian Benchmark Results.
+Model ARC-C HellaSwag PAWS XNLI XStoryCloze Avg.
+Pythia 22.22 30.28 52.00 41.45 53.61 39.91 TinyLlama 24.10 33.38 54.40 42.77 57.25 42.38 mGPT 20.51 28.43 50.40 39.88 55.20 38.88 BLOOM 24.87 34.48 51.55 43.90 58.64 42.69 Llama3.2 28.63 37.08 50.70 42.73 61.61 44.15 EuroLLM 33.08 41.08 52.50 44.38 64.33 47.07 Qwen2 30.43 39.03 59.35 43.13 65.06 47.40 Qwen2.5 35.56 39.56 59.25 43.49 64.20 48.41 Gemma 35.98 41.69 59.35 44.10 65.65 49.35
+TransWebLLM 34.79 39.17 50.80 43.29 58.31 45.27 TransWebLLM-web 36.07 40.72 54.00 43.25 60.56 46.92 TransWebLLM-cool 35.81 40.94 54.60 43.37 60.95 47.13
+Table 23: Detailed Spanish Benchmark Results.
+Model ARC-C HellaSwag XCOPA XStoryCloze Avg.
+Pythia 17.01 27.78 53.60 48.91 36.83 TinyLlama 15.90 27.44 52.20 48.97 36.13 mGPT 18.97 27.08 58.20 53.61 39.47 BLOOM 21.37 31.70 62.00 57.84 43.23 Llama3.2 23.93 34.13 61.40 59.23 44.67 Qwen2 26.07 34.34 62.60 60.69 45.93 Qwen2.5 27.26 34.66 62.80 59.96 46.17 Gemma 31.45 36.35 64.40 60.89 48.27 Sailor 26.84 36.26 68.40 62.28 48.45 Sailor2 27.61 36.82 69.60 63.73 49.44
+TransWebLLM 34.87 37.05 60.60 57.64 47.54 TransWebLLM-web 33.50 37.90 65.80 61.81 49.75 TransWebLLM-cool 34.36 37.84 68.40 62.08 50.67
+Table 24: Detailed Indonesian Benchmark Results
+Model ARC-C TruthfulQA XCOPA XNLI XStoryCloze Avg.
+Pythia 22.81 24.54 53.60 34.42 49.11 36.90 TinyLlama 22.00 24.78 52.60 34.30 49.77 36.69 mGPT 27.70 24.41 56.00 35.50 51.29 38.98 BLOOM 22.61 25.77 53.00 34.30 49.77 37.09 Llama3.2 28.31 24.16 52.60 34.46 51.95 38.30 Qwen2 26.88 29.49 53.60 34.70 49.77 38.89 Qwen2.5 25.05 27.39 53.40 34.58 49.50 37.98 Gemma 27.09 25.03 56.00 37.87 54.93 40.18 Afriteva_v2_large 27.70 35.32 55.40 34.94 49.64 40.60
+TransWebLLM 27.70 33.95 62.00 41.57 56.98 44.44 TransWebLLM-web 27.70 28.38 64.80 42.01 59.10 44.40 TransWebLLM-cool 33.81 22.06 64.80 42.81 58.90 44.48
+Table 25: Detailed Swahili Benchmark Results.
+Model ARC-C ARC-E PIQA TruthfulQA XNLI Avg.
+Pythia 17.68 25.87 51.88 27.60 34.84 31.57 TinyLlama 18.37 26.42 52.05 28.00 32.83 31.53 mGPT 17.51 25.83 53.40 24.80 34.14 31.14 BLOOM 18.37 26.98 52.50 24.93 35.05 31.57 Llama3.2 18.20 26.34 53.85 25.87 34.92 31.84 Qwen2 18.88 25.70 52.89 28.80 34.88 32.23 Qwen2.5 18.37 26.30 51.54 27.07 35.62 31.78 Gemma 18.54 27.91 53.00 27.07 34.88 32.28 BritLLM 21.97 40.36 58.56 24.13 40.35 37.07
+TransWebLLM 26.87 43.37 56.54 27.07 39.61 38.69 TransWebLLM-web 28.41 47.03 57.38 26.40 41.22 40.09 TransWebLLM-cool 28.41 47.79 57.78 26.80 41.26 40.41
+Table 26: Detailed Welsh Benchmark Results.
+18

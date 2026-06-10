@@ -1,0 +1,1398 @@
+S symmetry
+
+S
+
+Review
+Handwritten Recognition Techniques: A Comprehensive Review
+Husam Ahmad Alhamad 1,* , Mohammad Shehab 1,* , Mohd Khaled Y. Shambour 2 , Muhannad A. Abu-Hashem 3, Ala Abuthawabeh 1, Hussain Al-Aqrabi 4 , Mohammad Sh. Daoud 5 and Fatima B. Shannaq 1
+
+1 College of Computer Sciences and Informatics, Amman Arab University, Amman 11953, Jordan; a.abuthawabeh@aau.edu.jo (A.A.); f.alshannaq@aau.edu.jo (F.B.S.)
+2 The Custodian of the Two Holy Mosques Institute for Hajj and Umrah Research, Umm Al-Qura University, Makkah 24352, Saudi Arabia; myshambour@uqu.edu.sa
+3 Department of Geomatics, Architecture and Planning Faculty, King Abdulaziz University, Jeddah 80200, Saudi Arabia; mabohasm@kau.edu.sa
+4 Department of Computer Information Science, Higher Colleges of Technology, Sharjah P.O. Box 7947, United Arab Emirates; halaqrabi@hct.ac.ae
+5 College of Engineering, Al Ain University, Abu Dhabi 112612, United Arab Emirates; mohammad.daoud@aau.ac.ae
+* Correspondence: hhamad@aau.edu.jo (H.A.A.); m.shehab@aau.edu.jo or moh.shehab12@gmail.com (M.S.)
+
+Citation: Alhamad, H.A.; Shehab, M.; Shambour, M.K.Y.; Abu-Hashem, M.A.; Abuthawabeh, A.; Al-Aqrabi, H.; Daoud, M.S.; Shannaq, F.B. Handwritten Recognition Techniques: Review. Symmetry 2024, 16, 681. https://doi.org/10.3390/sym16060681
+
+Abstract: Given the prevalence of handwritten documents in human interactions, optical character recognition (OCR) for documents holds immense practical value. OCR is a field that empowers the translation of various document types and images into data that can be analyzed, edited, and searched. In handwritten recognition techniques, symmetry can be crucial to improving accuracy. It can be used as a preprocessing step to normalize the input data, making it easier for the recognition algorithm to identify and classify characters accurately. This review paper aims to summarize the research conducted on character recognition for handwritten documents and offer insights into future research directions. Within this review, the research articles focused on handwritten OCR were gathered, synthesized, and examined, along with closely related topics, published between 2019 and the first quarter of 2024. Well-established electronic databases and a predefined review protocol were utilized for article selection. The articles were identified through keyword, forward, and backward reference searches to comprehensively cover all relevant literature. Following a rigorous selection process, 116 articles were included in this systematic literature review. This review article presents cutting-edge achievements and techniques in OCR and underscores areas where further research is needed.
+Keywords: handwritten recognition; optical character recognition; classification; convolutional neural networks
+
+Academic Editor: Jie Yang
+
+Received: 25 April 2024 Revised: 28 May 2024 Accepted: 30 May 2024 Published: 2 June 2024
+Copyright: © 2024 by the authors. Licensee MDPI, Basel, Switzerland. This article is an open access article distributed under the terms and conditions of the Creative Commons Attribution (CC BY) license (https:// creativecommons.org/licenses/by/ 4.0/).
+
+1. Introduction
+Handwriting recognition stands out as a prominent field of study within artificial intelligence. In an era where nearly everything is digitized, this area of research has garnered significant attention for over three decades. Despite rapid advancements in recognition techniques, the challenge of handwriting analysis remains a key classification problem in AI. For instance, text identification is based on geometric properties like shape, position, and symmetry, such as horizontal, vertical, circular, or elliptical patterns. OCR, an integral part of computer vision, finds common use in tasks like recognizing text within images. Additionally, because textual elements in images often convey significant meaning, leveraging OCR for text extraction and analysis aids machines in comprehending images more effectively. Thus, it offers users a convenient means of preserving handwritten content without manual text input, ultimately saving time and effort in storing and retrieving
+
+Symmetry 2024, 16, 681. https://doi.org/10.3390/sym16060681
+
+https://www.mdpi.com/journal/symmetry
+
+Symmetry 2024, 16, 681
+
+2 of 25
+documents. Handwriting recognition serves as a crucial component in the broader field of image recognition [1,2].
+According to a study conducted by Singh et al. [3], artificial intelligence is the hottest topic that is used by researchers in handwriting recognition. Despite significant advancements in recognition techniques over the past three decades, handwritten materials have remained predominantly analogue. Handwriting analysis presents itself as a complex problem within artificial intelligence, drawing the interest of a diverse array of researchers, including computer scientists and experts in handwriting. This area of study holds significant promise, simplifying the process of storing textual information for users, eliminating the need for manual text input, and thereby conserving time and effort. Handwriting recognition plays an indispensable role in the domain of image recognition.
+A well-recognized and extensively employed technique within the realm of deep learning is the convolutional neural network (CNN) [4]. This neural network variant excels at automatically extracting features from complex multidimensional input data, addressing challenges across various computer vision tasks. This insight was elucidated in the research conducted in [5,6]. Furthermore, deep learning models, including CNNs, are renowned for their superior performance when compared to alternative learning algorithms, as demonstrated in [7]. Their widespread applicability extends beyond image processing to encompass fields like natural language processing (NLP) and sentiment analysis [8–10], where CNNs are leveraged with diverse parameter configurations.
+Character recognition can be categorized into two main types: online and offline. Online character recognition involves writing characters on an electronic surface, like a digital tablet, using a specialized pen or digitizer. It captures characters as a sequence of strokes, along with information about their speed and pen movements. These systems recognize characters in real time as they are written [11].
+On the other hand, offline character recognition is the process of converting handwritten characters on paper into a machine-readable format. This is typically done by optically or magnetically scanning the paper document. Offline character recognition can be further divided into OCR and magnetic character recognition (MCR) [12]. Offline character recognition presents greater challenges due to factors such as the diverse shapes of characters, the wide variety of character symbols, document quality, and the absence of stroke information [13]. As a result, offline character recognition is generally considered a more demanding task compared to its online counterpart.
+Over the past decade, the integration of artificial intelligence (AI) and machine learning (ML) technologies has significantly advanced optical character recognition (OCR), resulting in systems that are far more accurate, versatile, and capable than their predecessors [14]. These improvements have expanded the use of OCR across various industries, enabling the digitization of historical archives, enhancing business document workflows, and facilitating new consumer applications. Therefore, the scientists have explored various machine learning methods, such as support vector machines (SVM) [15], random forests (RF) [16], k nearest neighbors (kNN) [17], decision trees (DT) [18], neural networks [19], and others. They have integrated these machine learning techniques with image processing methods to enhance the accuracy of OCR systems [20]. Lately, the research focus has shifted towards developing approaches for digitizing handwritten documents, primarily utilizing deep learning. This transformation has been prompted by the widespread adoption of cluster computing, GPUs, and the superior performance offered by deep learning architectures, including CNNs [21], recurrent neural networks (RNN) [22], long short term memory (LSTM) networks [23], among others.
+This systematic literature review not only presents existing literature on OCR across various languages but also identifies research avenues for newcomers in the field by shedding light on the areas where current OCR systems require further exploration. Consequently, the main contributions of this review are shown below:
+1. To discuss the present research related to different techniques in various languages of OCR systems;
+
+Symmetry 2024, 16, 681
+
+3 of 25
+2. To focus on weaknesses of published work to avoid them in future work; 3. To determine new possible directions within the area of ORC systems.
+The subsequent parts of this article are structured in the following manner: Section 2 focuses on the process of gathering and categorizing published articles. Section 3 provides an overview of databases tailored to specific languages that serve research purposes. Section 4 explores various methods for classifying handwritten recognition, and Section 5 spotlights current research trends. Section 6 serves as a conclusion, summarizing our findings and underscoring areas in research that warrant the attention of the research community.
+2. Data Collection
+This review specifically focused on articles published between 2019 and 2024. The process of searching, collecting, and classifying articles is described below. First, the search begins using keywords such as “handwritten recognition”, “handwritten datasets”, and “handwritten classifiers” to find relevant articles on platforms such as Google Scholar, Elsevier, Springer, IEEE, and other publishers. A total of 160 articles were collected for this research. These articles were then filtered and classified based on various criteria, such as publication year, journals and conferences, types of classifiers used, number of citations, datasets used, and more. The following figures and tables summarize the articles’ classifications. It is worth mentioning that this section aims to guide interested researchers to take advantage of and avoid the weaknesses of previous researchers.
+Figure 1 shows the distribution of the publications in journals and conferences. It can be noticed that the percentage of published articles in journals outperformed that of conferences. Although the result was expected, it demonstrated the possibility of publishing this topic at conferences.
+
+Figure 1. Percentage of the number of published articles in journals and conferences.
+Based on the results in Figure 1, the published articles in journals are classified based on the publishers, as shown in Figure 2. This classification aims to highlight the interested journals that publish this topic (i.e., handwritten recognition). Thus, the authors will save time in the publishing process, as well as ensuring that the research is accepted at a higher rate.
+
+Figure 2. Number of published articles based on publishers.
+
+Symmetry 2024, 16, 681
+
+4 of 25
+Figure 3 illustrates the importance of this topic during the last five years (i.e., from 2019 to the first quarter of 2024). It can be noticed that the number of articles published is close to the highest number achieved in 2020.
+
+Figure 3. Number of published articles between 2019 and October 2023.
+3. Languages and Datasets
+This section illustrates the use of handwriting recognition in different fields using various datasets. These approaches encompass elements such as extensive training datasets, widely used algorithms, as well as techniques for feature scaling and extraction. The following subsection presents popular datasets used in this context based on the used language.
+3.1. English Language
+This section presents the most common datasets for English handwritten character recognition. For instance, the Kaggle dataset is likely used for English letters (A–Z) and MNIST is commonly used for recognizing numeric digits (0–9). It is worth mentioning that the Kaggle dataset may include images of handwritten English letters, typically labelled with their corresponding letters. On the other hand, the MNIST dataset is a well-known dataset in the field of computer vision and machine learning. It consists of 28 × 28 grayscale images of handwritten digits. Another dataset is called the IAM dataset, which comprises complete sentences in the English language. It contains 1066 forms generated by about 400 distinct authors. In total, there are 82,227 word occurrences within a lexicon of 10,841 words present in this compilation. Sampath and Gomathi [24] used MNIST to train neural networks for English handwritten recognition. RIMES, IAM, and READ were used in [25–27] to generate variable-length symbol sequences from the English handwritten text. More related work is shown in Table 1, which includes the datasets’ name, size, and the procedure used.
+
+Table 1. Summary of handwritten recognition on English datasets.
+
+Ref.
+
+Procedures
+
+[24]
+
+A hybrid Firefly–Levenberg–Marquardt-based neural network for English handwritten optical character identification that includes noise removal
+
+[25]
+
+Fully CNN architecture for sophisticated character recognition that can effectively anticipate arbitrary symbols and phrases
+
+[28]
+
+A CNN was utilized to evaluate its accuracy in character recognition using a NIST dataset
+
+[29]
+
+The study explores machine and deep learning algorithms for recognizing handwritten digits
+
+[30]
+
+Presents a specially designed CNN model for HCR using two different datasets
+
+Dataset Name Chars74K IAM and NIST NIST
+MNIST Kaggle MNIST
+
+Dataset Size 62 classes,
+7705 characters IAM: 115,320 words NIST: 810,000 character images
+810,000 digits and characters
+70,000 digits
+MNIST 60,000 sets. Kaggle 297,000 sets
+
+Symmetry 2024, 16, 681
+
+5 of 25
+
+Table 1. Cont.
+
+Ref.
+
+Procedures
+
+Dataset Name
+
+[21]
+
+Addresses the problem of detecting free-form handwritten text in paragraphs by adopting a vertical attention network
+
+RIMES, IAM, and READ
+
+[31]
+
+Addresses the difficulties in handwritten text identification by putting out a fresh strategy based on a YOLOv3 object recognition model
+
+IAM
+
+[32]
+
+Explores hand gesture recognition’s difficulties and developments for human–computer interaction
+
+[33]
+
+Constructing CNN model to recognize handwritten digits considering recognizing customized style digits
+
+[1]
+
+Presented their encoder–decoder configuration of DNN to recognize handwritten text
+
+[34] Presented an approach for segmenting lines and words in handwritten text
+
+[35]
+
+Addressed analyzing partially organized handwritten documents called First Information Report from the law application area
+
+MU HUST-ASL
+MNIST
+IAM IAM FIR
+
+Dataset Size RIMES 10,532 training lines
+IAM 6482 training lines READ 8349 training lines
+randomly selected 700 and 30,000 testing word images
+MU 36 ASL gesture poses, HUST-ASL 5440 hand gesture
+60,000 train digits
+1539 text line images
+13,353 handwritten images
+375 classes
+
+3.2. Arabic Language
+Datasets are crucial to the development and assessment of machine learning models. To create reliable handwriting recognition systems, it is essential to train them with extensive and varied datasets. Furthermore, utilizing established datasets is the preferred choice, as they offer an impartial basis for evaluating and contrasting various methodologies. Over the last twenty years, numerous online and offline datasets specific to Arabic script handwriting have been created. This section provides an in-depth overview of the datasets employed in systems designed for recognizing handwritten Arabic text. For instance, in Arabic textual document recommendation and rating prediction, the BRAD Arabic dataset was used by Meddeb et al. [36]. In [37], Hijja and Arabic handwritten character (AHC) datasets that contain handwritten Arabic letters from children aged 7–12 were used. Thangamariappan and Pamila [38] and Ahamed et al. [39] utilized MNIST and AHDB for recognition of handwritten Arabic. Table 2 shows more work using different Arabic datasets. It includes the dataset’s name, size, and the procedure used.
+
+Table 2. Summary of handwritten recognition on Arabic datasets.
+
+Ref.
+
+Procedures
+
+[38]
+
+Utilization of CNN for recognizing handwritten Arabic digits
+
+[39]
+
+Explored different CNN architectures for handwritten Arabic numeral recognition
+
+[37] Using CNN to recognize handwritten Arabic letters by children aged 7–12
+
+[40] Introduced a modified CNN architecture for Arabic handwriting recognition
+
+[36]
+
+A neural collaborative embedding and filtering-based method for Arabic textual document recommendation and rating prediction is presented
+
+[41]
+
+CNN and BLSTM were combined to enhance Arabic handwriting recognition
+
+[42]
+
+Developed deep learning and CNN to categorize t and i patterns for personality assessment
+
+Dataset Name MNIST
+HAND Hijja and AHCD AHCD
+BRAD
+KHATT
+MNIST
+
+Dataset Size 70,000 digits 72,000 images 47,434 characters 16,800 characters 510,600 reviews 4000 images
+-
+
+Symmetry 2024, 16, 681
+
+6 of 25
+
+Table 2. Cont.
+
+Ref.
+
+Procedures
+
+Dataset Name
+
+[17]
+
+Compares classification methods for recognizing handwritten digits using the MNIST dataset
+
+MNIST
+
+[43]
+
+Several ML approaches including SVM, ANN, and CNN were used to achieve high-accuracy recognition of colorful handwritten Arabic numerals
+
+USPS
+
+[44]
+
+Used machine learning for classification and deep learning for feature extraction to build a hybrid model
+
+MNIST
+
+Outlines a novel deep-learning architecture that effectively recognizes [45] Arabic handwritten characters while taking into account both single-font
+and multi-font kinds
+
+AHDB, AHCD, HACDB, IFN/ENIT
+
+An improved leaky ReLU for handwritten Arabic character recognition [46] employing CNNs to overcome the problem of imbalanced positive and
+negative vectors
+
+AHCD, MNIST, AIA9K, HIJJa, self-collected
+
+[47]
+
+Employed an adapted deep convolutional neural network to recognize handwritten digits written in Eastern Arabic numerals
+
+HODA
+
+Dataset Size
+70,000 digits
+9096 images
+60,000 images
+AHDB 13311 words, AHCD 16,800 characters,
+HACDB 6.600 shapes, IFN/ENIT 26.459 words MNIST 70,000 samples,
+self-collection 38,100, AIA9K 3400 samples, HIJJa 48 K of samples
+80,000 images
+
+3.3. Urdu Language
+Urdu, which ranks as the world’s fifth most widely spoken language and serves 4.7 percent of the global population, is commonly used as the national language in Pakistan and acknowledged as one of India’s 22 official languages [48]. Every Urdu ligature comprises two elements: the RASM, which is the primary stroke without any accompanying diacritic and is referred to as the main body (Figure 4a), and the IJAM, which serves as essential diacritics to distinguish between different consonantal behaviours within the same RASM, as illustrated in Figure 4b. Whether a RASM includes IJAM or not depends on the consonant’s behaviour. Ahmed et al. [49] proposed the Urdu–Nastaliq handwritten dataset (UNHD), a novel and extensive resource for Urdu handwriting analysis. In [50], the authors introduced the handwritten Urdu character dataset (HUCD), a dataset comprising 106,120 samples of isolated and positional Urdu characters and numbers from 750 individuals in the Kashmir valley. Table 3 shows more previous work using different Urdu datasets. It includes the dataset’s name, size, and the procedure used.
+
+Figure 4. Urdu character with (a) Rasm and (b) Ijam.
+
+Symmetry 2024, 16, 681
+
+7 of 25
+
+Table 3. Summary of handwritten recognition on Urdu datasets.
+
+Ref.
+
+Procedures
+
+Dataset Name
+
+Dataset Size
+
+[49]
+
+A dimensional BLSTM classifier was utilized to recognize handwritten Urdu characters
+
+UNHD
+
+700 unique text lines
+
+Used SVM to accommodate varied handwriting
+
+[15]
+
+recognition methods such as mobile touch
+
+input and image files
+
+UCOM
+
+62,000 words
+
+A CNN-based model is proposed to achieve [50] an impressive 98.82% recognition rate across
+133 classes
+
+HUCD
+
+106,120 words
+
+CRNN-based segmentation-free method to [22] tackle the difficult task of word recognition in Cursive-Text
+natural scene photos
+
+14,100 words
+
+3.4. Devanagari Dataset
+The Devanagari script draws influence from various languages such as Hindi, Marathi, Sanskrit, and others [4]. It comprises 10 numerals, 13 vowels, and 33 consonants. Figure 5 illustrates Devanagari vowels, numerals, and consonants. This section primarily focuses on presenting the datasets employed for the recognition of handwritten Devanagari numerals and vowels, as presented in Table 4.
+
+Figure 5. Example of Devanagari script: (A) consonants data, (B) vowels data, (C) numerals data.
+
+Table 4. Summary of handwritten recognition on Devanagari datasets.
+
+Ref.
+
+Procedures
+
+Dataset Name Dataset Size
+
+[49]
+
+Classification of handwritten Devanagari numbers using NN and CNN methods
+
+UNHD
+
+4282 digits
+
+[51]
+
+Combines small individually trainable CNNs for word-level handwritten Indic script identification
+
+PHDIndic_11
+
+11,000 words
+
+[52]
+
+Use of DCNN on Devanagari handwritten character recognition using a fine-tuned DCNN method
+
+UCI
+
+20,000 characters
+
+[53]
+
+Explains how to digitize the Devanagari script using automation instead of the human technique
+
+DHCD
+
+920,000 images
+
+[54]
+
+Develops modified Lenet and Alexnet convolution neural networks for handwritten HDCR
+
+Private
+
+38,750 images
+
+[55]
+
+Presented a R-CNN (faster region CNN) based method for segmenting lines of text
+
+Private
+
+19,889 images
+
+[56]
+
+Used deep learning architecture to address recognition of ancient handwritten characters
+
+ADC
+
+59,850 images
+
+Symmetry 2024, 16, 681
+
+8 of 25
+3.5. Bengali Dataset Bengali is one of the world’s most widely spoken languages, boasting over 200 million
+speakers. It holds the status of the official language in Bangladesh and ranks as India’s second most prevalent language [57]. Consequently, researchers from various nations are actively engaged in the computerization of the Bengali language. The current version of the language consists of 50 basic alphabets, among which there are 11 vowels and 39 consonants; Figure 6 shows a sample of Bangla characters. Despite being such a widely popular language, there has not been much research conducted on the handwriting recognition of this language compared to English. In [58], training and evaluation were carried out using the ISI handwritten character database Bhattacharya and Chaudhuri. Chowdhury et al. [59] introduced a method for handwritten character recognition aimed at identifying and converting images of individual Bangla handwritten characters into a digitally editable format using a BanglaLekha-Isolated-Isolated dataset. Table 5 shows more previous work that used different datasets of the Bangla language.
+
+Figure 6. Example of Bangla characters.
+
+Table 5. Summary of handwritten recognition on Bengali datasets.
+
+Ref.
+
+Procedures
+
+Dataset Name
+
+Dataset Size
+
+Uses a lightweight CNN model that was trained
+
+[58]
+
+and tested on numerous datasets of
+
+BanglaLekha-Isolated
+
+handwritten Bangla digits
+
+19,748 images
+
+Bangla handwritten character recognition using [59] CNN and data augmentation yields good accuracy BanglaLekha-Isolated
+on the test set
+
+168,000 samples
+
+Superimposing handwritten numerals onto
+
+[60]
+
+photographs of comparable printed
+
+numerals for HNR
+
+HNIs
+
+19,392 images
+
+BN-DRISHTI addressing the problem of
+
+[61]
+
+Bangla handwritten text segmentation into
+
+lines and words
+
+BN-HTRd
+
+786 full-page images
+
+3.6. East Asian Dataset
+This section collects common datasets related to handwriting recognition of East Asian scripts such as Japanese, Chinese, and Korean. Figure 7 shows samples of East Asian scripts. The Japanese language is considered one of the most widely spoken languages in the world, with over 125 million native speakers. It serves as the national language of Japan and holds significant cultural and economic influence globally. Consequently, researchers from various fields are dedicated to advancing the digitalization of the Japanese language. Japanese writing comprises three scripts: Hiragana, Katakana, and Kanji, with Kanji consisting of thousands of characters borrowed from Chinese. Despite its global prominence, research on Japanese handwriting recognition lags behind that of English. Notable efforts include the Kuzushiji–MNIST dataset, which focuses on cursive Japanese characters, and the ETL character database, widely used for machine learning and OCR applications. Table 6 provides an overview of previous studies utilizing different East Asian script datasets.
+
+Symmetry 2024, 16, 681
+
+9 of 25
+
+Figure 7. (a) Example of Japanese characters, (b) Example of Korean characters, (c) Example of Chinese characters.
+
+Table 6. Summary of handwritten recognition on East Asian datasets.
+
+Ref.
+
+Procedures
+
+Dataset Name
+
+Dataset Size
+
+Integrated the SCPR-based online handwritten Japanese
+
+[62]
+
+text recognizer with a compact offline recognizer
+
+utilizing quadratic discriminant capacities
+
+TUAT Nakagawa
+
+11,962 characters
+
+[63]
+
+Utilized RNN-Transducer model to recognize Japanese and Chinese offline handwritten text line images
+
+Kuzushiji SCUTEPT
+
+25,874 text lines
+
+Extended the local context for segmentation and [64] recognition to a range of online handwritten Japanese
+and English text
+
+TUAT-Kondate
+
+3511 text lines
+
+[65]
+
+Enhanced of the recognition rate for numbers and Korean characters
+
+KoCoNovel
+
+112 characters
+
+[66]
+
+Recognized Korean handwriting using the method for Bangla/Korean
+
+PE92
+
+2350 classes
+
+Integrated skeleton-based handcrafted features and
+
+[67]
+
+pixel-based resnet101 transfer learning features for
+
+KSL
+
+1100 samples
+
+Korean Sign Language
+
+4. Machine Learning-Based Handwritten Methods 4.1. CNN
+The Amharic language possesses its unique alphabet originating from Ge’ez, which currently serves as the liturgical language in Ethiopia. There is an absence of significant attention to handwritten character recognition leveraging cutting-edge techniques for nonLatin scripts like Amharic. Therefore, Gondere et al. [68] introduced a new model for recognizing handwritten Amharic characters employing CNNs. The dataset was curated from gathered samples of handwritten documents, and data augmentation techniques were utilized to facilitate machine learning. Furthermore, the model’s performance was improved through multi-task learning, focusing on character relationships. Encouraging outcomes were achieved with this refined model, suggesting its potential application in word prediction.
+In [59], the authors presented a strategy for written hand character recognition aimed at recognizing and changing pictures of manually written Bangla characters into a carefully editable and organized database. This approach opens up unused roads to encourage inquiry and offers different down-to-earth applications. The creators utilized the BanglaLekhaIsolated dataset and a CNN. The CNN demonstrated accomplished a precision rate of 91.81% on the base dataset, which included 50 character classes. Hence, by increasing the dataset to 200,000 pictures, the demonstration accomplished an amazing test set precision of 95.25%. In addition, manufactured neural systems (ANNs) and cutting-edge profound learning procedures have found broad applications in differing areas such as design recognition, sentence classification, discourse recognition, confront location, content
+
+Symmetry 2024, 16, 681
+
+10 of 25
+categorization, report investigation, scene understanding, and written-by-hand digit recognition. In this way, Siddique et al. [69] examined how the precision of convolutional neural systems (CNNs) in classifying manually written digit changes when distinctive numbers of covered-up layers and ages are utilized, and supplied a comparative analysis of this exactness. To assess CNN’s execution, the creators conducted tests utilizing the Altered National Organized of Measures and Innovation (MNIST) dataset. The organisation was prepared to utilize stochastic slope plummet and backpropagation calculation.
+Ptucha et al. [25] presented a completely convolutional neural arrangement design planned to produce variable-length image arrangements from transcribed content. It joins a preprocessing stage that standardizes input squares, disposing of the requirement for costly repetitive image arrangement adjustments. Furthermore, when a vocabulary is accessible, a probabilistic character mistake rate to amend erroneous word pieces is presented. The proposed convolutional approach accomplishes state-of-the-art execution on both vocabulary-based and unlimited symbol-based penmanship recognition benchmarks.
+Ukil et al. [51] proposed an unused approach to join CNNs into script recognizable proof. The proposed strategy included the combination of numerous little CNNs, each of which is freely trainable and highlights different engineering varieties. The creators connected differing gathering strategies, counting max voting and probabilistic voting, and nearby conventional strategies like concatenation. The outcomes illustrated a surprising victory, with a top precision of 95.04%. It is worth noting that the proposed approach outperformed the exactness of driving strategies like AlexNet by 2.9% and outflanks benchmark strategies for script recognizable proof on the dataset by an edge surpassing 4%.
+Chen et al. [70] introduced a novel learning method for segmenting and recognizing online handwritten Chinese text using a CNN as the core classifier. This prototype classifier is naturally robust against non-characters, allowing it to be trained with character and string samples without requiring data augmentation. The learning process involves two stages: initially, pre-training on character samples with a modified loss function to enhance noncharacter resistance, followed by weakly supervised learning on both character and string samples to improve recognition performance. Experiments on the CASIA-OLHWDB and ICDAR2013-Online datasets demonstrate that this method can achieve impressive recognition results without needing training data augmentation.
+Mariyathas et al. [71] highlighted the recognition of written-by-hand Sinhala characters through the application of CNN. The exploration was conducted utilizing the Google Colaboratory stage and was carried out utilizing the Python programming dialect. Roughly 110,000 picture information tests were utilized for the experimentation. The execution of the CNN was evaluated through iterative preparation and testing, with the number of character classes slowly expanding. Upon coming to 100 character classes, the CNN illustrated a commendable precision rate of 90.27%. The show experienced testing with five particular sets of 100-character classes. Eventually, a general precision of 82.33% was accomplished for the acknowledgment of 434 characters, outperforming the execution of comparable frameworks.
+Ahamed et al. [39] focused on CNN plans for recognizing written-by-hand Arabic numerals. Furthermore, they extended the dataset of transcribed Arabic numerals by applying assorted morphological operations to an existing dataset. This extension boosted the dataset estimate from 3000 to 72,000 pictures. By making adjustments to an already proposed CNN engineering, it accomplished a precision rate of 98.91%. In addition, the proposed design yielded an amazing 99.76% precision, putting it on par with the most recent headway in the field of transcribed Arabic numeral recognition.
+In [72], the authors presented a successful approach to recognizing Vietnamese transcribed characters through the utilization of CNNs, a sort of profound neural organization famous for exceeding expectations in challenging recognition errands. The CNN design concocted for the assignment comprises five concealed layers, with the beginning three being convolutional layers, and the last two being completely associated layers. To moderate overfitting, dropout procedures with a suitable drop rate were utilized. The experimen-
+
+Symmetry 2024, 16, 681
+
+11 of 25
+tal discoveries demonstrated that the proposed show accomplished an exactness rate of around 97%.
+Gonwirat and Surinta [73] conducted a comparison between profound CNNs connected to Thai penmanship recognition. The CNNs were assessed utilizing the THIC68 dataset. Furthermore, two training approaches, specifically, beginning from scratch and exchange learning, were evaluated utilizing VGGNet-19 and Inception-ResNet-v2 structures. The discoveries have shown that utilizing exchange learning with the VGGNet-19 design essentially abbreviated the learning preparation and progressed recognition proficiency, accomplishing an amazing precision of 99.20% amid 10-fold cross-validation.
+In [74], the authors utilized PSO to design a CNN for recognizing handwritten Chinese characters. This method helps in minimizing redundant computations within the network. In this approach, each particle represents a different network architecture, and the optimal architecture is found by iteratively updating these particles until the best one is identified. Experimental results showed that this method achieved a network accuracy of 97.24% with just 1.43 million parameters. Thus, the PSO method proved effective in quickly and accurately identifying the optimal network architecture.
+Prashanth et al. [75] highlighted the classification of manually written numerals inside the Devanagari script. The creators attempted to form a dataset containing manually written numerals, associated with the MNIST dataset, comprising 4282 tests obtained from people of various ages. After that, an examination of design acknowledgment instruments centered around CNN. The comprehensive examination included exactness, review, and F-measure calculations, with comparisons to other freely accessible datasets. Moreover, they created a fake neural organized (ANN) classifier utilizing PRTool and a profound learning arrangement for execution benchmarking against ANN. The results showed that the proposed approach accomplished an exactness surpassing 95%.
+In [37], an unused dataset comprising written hand Arabic letters from children aged 7–12, called Hijja, was presented. The creators displayed a programmed penmanship acknowledgment to demonstrate utilizing CNN. The proposed show consolidates completely associated, pooling, and convolutional layers inside grid-like engineering, empowering successful highlight acknowledgment and classification into unmistakable classes. The results illustrated exactnesses of 97% and 88% on the Hijja and Arabic manually written character (AHC) datasets, respectively. Moreover, Najadat et al. [40] talked about the application of an altered CNN engineering for recognizing Arabic penmanship. The creators proposed an altered CNN engineering and connected it to the AHC dataset comprised of 16,800 characters. It appears that the proposed approach yields a 94.9% exactness rate.
+Zin et al. [76] created an offline self-learning Android application with the objective of making a difference in youthful children learning composed English and essential math aptitudes. To guarantee exact character distinguishing proof, the proposed framework utilized character division and a CNN show that was prepared on capable equipment. Primary-level students in participating countries were given the training and testing dataset. The framework illustrated an acknowledgment exactness of 95.6% for arbitrarily chosen words and 98.7% for person characters, illustrating its potential as a vital apparatus for selflearning and a supplement to routine instructing methods. In addition, in [28], they tested the viability and accuracy of a CNN by using it to recognize characters from a test dataset. Utilizing the NIST dataset, an exceptional 92.91% exactness over 200 test photographs was found, with a training set of 1000 pictures.
+Mane et al. [77] displayed a stacked gathering meta-learning approach for personalized CNN in Marathi manually written numeral acknowledgment. The creators utilized a dataset comprising 81,500 checked written by hand numerals. Their proposed stacked gathering show illustrates surprising exactness, accomplishing 97.91%. Mushtaq et al. [50] presented the written by hand Urdu character dataset (HUCD), a dataset comprising 106,120 tests of confined and positional Urdu characters and numbers from 750 people within the Kashmir valley. The creators proposed a CNN-based show for offline manually written Urdu character acknowledgment, accomplishing a surprising 98.82% recognition
+
+Symmetry 2024, 16, 681
+
+12 of 25
+rate over 133 classes. The strategy showcased competitive execution compared to other existing Urdu recognition frameworks on diverse datasets.
+In [78], the researchers applied CNNs to display a framework for recognizing writtenby-hand compositions. The creator’s conversation contained issues such as misshaped character shapes, distinctive composing styles, and viable division strategies. They prepared a CNN for recognition utilizing profound learning strategies and a dataset of 65,000 transcribed character pictures. The proposed strategy accomplished amazing exactness and comprises line, word, and character division calculations. Related work in penmanship recognition is additionally addresses, covering strategies like analysis-bysynthesis, slope highlights, fluffy hypothesis, and diagonal-based highlight extraction. By and large, the investigation progresses the field of recognition frameworks and emphasizes how well CNNs recognize written-by-hand records. The recommended approach accomplished a division of character precision of up to 86%.
+Saqib et al. [30] presented an uncommonly outlined CNN show for written-by-hand character recognition (HCR) utilizing two diverse datasets. The article proposed ideal CNN models and surveyed their execution employing an assortment of criteria in an effort to extend the precision of HCR frameworks. The results showed that the suggested models outperformed current state-of-the-art models in terms of accuracy, with the maximum accuracy for digit and alphabet recognition being 99.642% and 99.563%, respectively.
+Kavitha and Srimathi [79] used CNNs to identify Tamil handwriting. The authors emphasized how important CNNs are for automatically extracting characteristics, as opposed to more conventional methods of handwritten Tamil character recognition (HTCR). They created a CNN model from scratch offline using a single dataset of handwritten Tamil characters. CNN recognized both training and test datasets. With a training accuracy of 95.16%, which is higher than conventional methods, the work seeks to provide a benchmark for offline HTCR utilizing deep learning techniques. In comparison to languages like Chinese and Japanese, Tamil character recognition lacks standard datasets and standards, as mentioned in the article.
+Xu et al. [80] utilized a CNN-based system to automatically evaluate penmanship in traditional Chinese handwriting. Drawing from a database of 39,207 meticulously written characters by 40 different individuals, three human evaluators rated each character’s penmanship on a scale from 1 to 10, and an average score was computed for each. The CNN was trained on 90% of these characters along with their average penmanship scores. When tested on the remaining 10% of the data, the CNN demonstrated impressive accuracy, achieving a normalized mean absolute percentage error of just 9.82% in predicting the human ratings. This highlights the system’s effectiveness in assessing penmanship. To increase usability, a mobile application was developed based on the CNN model, enabling users to easily assess their handwriting.
+Jain et al. [33] introduced an adaptive framework by constructing a CNN model to recognize printed/handwritten digits considering recognizing customized style digits and trying to improve the accuracy. The proposed model was trained on the MNIST dataset, whereas a mix of MNIST data and custom-style numeric data was used when compared with several models. The approach achieved comparable results concerning state-of-the-art approaches such as transformer-based approaches.
+In [81], the authors introduced a CNN based approach called Worddeepnet to identify words from handwritten Gurumukhi text focusing on word level. The approach holistically segments words. Training CNN takes into account centroid, regional, and diagonal properties that were derived from word images utilizing FPR, TPR, accuracy, AUC, as well as RMSE for evaluation. By thirty epochs, the approach achieved 95.11% and 94.96% accuracy outperforming other recent approaches results of Gurumukhi script. Table 7 shows a summary of the related work of handwritten recognition using CNN.
+
+Symmetry 2024, 16, 681
+
+13 of 25
+
+Table 7. Summary of handwritten recognition using CNN.
+
+Ref.
+
+Description
+
+Type
+
+Statistic
+
+Year Citation
+
+[68]
+
+CNN model for Amharic handwritten character recognition to improve recognition accuracy
+
+Characters
+
+87.48%
+
+2019
+
+14
+
+[59]
+
+Using CNN and data augmentation to achieve good accuracy in Bangla OCR
+
+Characters and digits
+
+95.25%
+
+2019
+
+75
+
+[69]
+
+Use CNN to categorize handwritten digits using a range of hidden layer and epoch numbers
+
+Digits
+
+99.21%
+
+2019
+
+82
+
+[25]
+
+Utilizing CNN architecture for sophisticated character recognition that can effectively anticipate arbitrary symbols
+
+Characters
+
+CER of 4.70% (8.22% WER) 2019
+
+146
+
+[51]
+
+Exploring CNN-based prediction of handwritten Telugu compound characters (Guninthalu)
+
+Characters
+
+96.13%
+
+2020
+
+41
+
+Using a novel learning method for segmenting and [70] recognizing online handwritten Chinese text using a CNN as
+the core classifier
+
+Character
+
+-
+
+2023
+
+3
+
+[71]
+
+Using CNNs for word-level handwritten Indic script identification
+
+Words
+
+95.04%
+
+2020
+
+10
+
+[39]
+
+Discussing the utilization of CNN for recognizing handwritten Arabic digits
+
+Digits
+
+93%
+
+2020
+
+28
+
+[72]
+
+Introducing a CNN model for Vietnamese handwritten character recognition
+
+Characters
+
+97.2%
+
+2020
+
+14
+
+[73]
+
+Applying CNN for recognizing Thai handwritten characters, including VGGNet and Inception-ResNet-v2
+
+Characters
+
+99.2%
+
+2020
+
+11
+
+[74]
+
+Utilizing PSO to design a CNN for recognizing handwritten Chinese characters
+
+Characters
+
+97.24%
+
+2023
+
+7
+
+[51]
+
+Presenting a new approach to incorporate CNNs into script identification
+
+Characters and digits
+
+95.04%
+
+2020
+
+41
+
+[37]
+
+Using CNN on a new dataset comprising handwritten Arabic letters by children aged 7–12
+
+Characters
+
+97%
+
+2021
+
+183
+
+[40]
+
+Introducing a modified CNN architecture for Arabic handwriting recognition
+
+Characters
+
+94.9%
+
+2021
+
+20
+
+[76]
+
+Proposing an offline Android handwriting app using CNN to help young students learn English and math basics
+
+Characters and digits
+
+98.7%
+
+2021
+
+16
+
+[28]
+
+Utilizing CNN to evaluate its accuracy in character recognition using NIST dataset
+
+Characters and digits
+
+92.91%
+
+2021
+
+35
+
+[50]
+
+Using CNN-based model on 106,120 samples of isolated and positional Urdu characters
+
+Characters and digits
+
+98.82%
+
+2021
+
+32
+
+[78]
+
+Using trained CNNs obtained through deep learning techniques to recognize handwritten writings
+
+Documents
+
+86%
+
+2022
+
+65
+
+[30]
+
+Presenting a specially designed CNN model for HCR using two different datasets
+
+Characters
+
+99.642%
+
+2022
+
+20
+
+[80]
+
+Utilizing a CNN-based system to automatically evaluate penmanship in traditional Chinese handwriting
+
+Characters
+
+9.82% nMAPE
+
+2024
+
+1
+
+[33]
+
+Constructing CNN model to recognize printed/handwritten digits considering recognizing
+
+Digits
+
+97.90%
+
+2023
+
+1
+
+[81]
+
+Introduced CNN based approach called Worddeepnet to identify words from handwritten Gurumukhi text
+
+Words
+
+95.11%
+
+2023
+
+-
+
+4.2. CNN and SVM
+Parseh et al. [82] introduced an automated approach leveraging machine learning techniques to extract advanced features from Persian digit images. In this way, they utilized a CNN for this reason. Hence, the ultimate layer’s fully associated component
+
+Symmetry 2024, 16, 681
+
+14 of 25
+within the CNN is supplanted with a non-linear multi-class back vector machine (SVM) classifier for information categorization. The method’s adequacy was illustrated through its application to the HODA dataset, accomplishing a noteworthy 99.56% recognition rate. The test results outlined that the execution was on a standard with earlier cutting-edge approaches. Ahlawat and Choudhary [83] presented an unused approach that combines CNN and SVM methods to recognize transcribed digits inside the MNIST dataset. In this strategy, CNN serves as a computerized highlight extractor, whereas SVM acts as a double classifier. The MNIST dataset, containing a wide run of misshaped written hand-digit pictures, is utilized for both training and testing the demonstration. Leveraging the CNN’s open field, the calculation consequently extricates the foremost unmistakable highlights from these written by-hand digits. The exploratory results affirmed the vigour of the proposed system, accomplishing an amazing recognition precision of 99.28% on the MNIST transcribed digits dataset.
+Maidana et al. [84] employed 18 models, featuring popular CNN architectures and their combinations with SVM, to classify 200 types of HCC in the ICDAR 2013 dataset. Among these, ZFNet, modified from AlexNet, attained the best recognition accuracy at 98.2%. Integrating these networks with SVM did not markedly enhance the performance of most individual networks, yet it offers valuable insights into fusion techniques that merge the capabilities of multiple networks.
+Pashine et al. [29] investigated machine and profound learning calculations for transcribed digit acknowledgment utilizing the MNIST dataset. The creators compared SVM, MLP, and CNN, noticing CNN’s remarkable 99.31% precision on the testing dataset and SVM’s driving 99.98% exactness on the training information. Moreover, Chychkarova et al. [17] utilized classification strategies SVM and CNN for manually written digit acknowledgment utilizing the MNIST dataset. The proposed strategy accomplished the most noteworthy precision at 97.6%. The study, moreover, evaluates picture preprocessing methods, making strides in recognition precision of 98–100% for manually written digits and 96–98% for mechanical pictures.
+In [43], the researchers utilized an assortment of procedures, including SVM, ANN, and CNN, to recognize transcribed colourful pictures with a high degree of exactness. The analysts accumulated and gathered a dataset that included 9096 colourful pictures of Arabic numerals that was utilized to prepare and test the calculations. In [15], the researchers displayed the advancement of a factual SVM-based recognition demonstration for transcribed character recognition. Their essential objective was to offer an arrangement for differing penmanship acknowledgment approaches, including touch input on versatile screens and picture records. The proposed approach was tried on different datasets, such as MNIST, CENPARMI, UCOM, IAM, and HCL2000, which include an assortment of written-by-hand characters including distinctive styles of letters and digits. The proposed strategy illustrated promising results, accomplishing an 88% precision.
+The zone of content acknowledgment in Arabic transcribed scripts was examined by Ali and Mallaiah [45] to viably recognize Arabic transcribed scripts. The creators recommended a modern deep-learning engineering that combines SVM and CNN classifiers. This plan took under consideration both single-font and multi-font sorts. The model achieved automatic classification and feature extraction and used the dropout technique to handle the overfitting problem. The authors also presented a ground-breaking depth neural network training rule for the smallest classification error over the largest interval. When compared to cutting-edge Arabic text recognition methods, experimental findings on multiple databases showed that the suggested model performs well. Using CNN-based-SVM with dropout on the HACDB dataset, the best accuracy obtained was 99.85%.
+Hebbi and Mamatha [20] generated a handwritten Kannada text dataset at the character level considering the K-means clustering algorithm in their process and utilizing different language aspects such as vowels and modifiers, etc. SVM with HOG features, CNN classifiers, and the ResNet18 model were used to investigate approach accuracy considering three levels of zones. For the upper zone, the proposed approach achieved
+
+Symmetry 2024, 16, 681
+
+15 of 25
+
+99.0%, 100%, and 99.9% using the aforementioned classifiers. Regarding the middle zone, the proposed approach achieved 88.6%, 96.15%, and 97.55%. The approach achieved 92.2%, 95.38%, and 98.92% for the lower zone. Table 8 shows a summary of the related work of handwritten recognition using CNN and SVM.
+
+Table 8. Summary of handwritten recognition using CNN and SVM.
+
+Ref.
+
+Description
+
+Type
+
+Statistic Year Citation
+
+[82]
+
+Using a combination of CNN and SVM methods: CNN used for feature extraction and SVM used for classification
+
+Digits
+
+99.56% 2020
+
+13
+
+[83]
+
+Combining CNN and SVM techniques to identify handwritten digits within the MNIST dataset
+
+Digits
+
+99.28% 2020
+
+140
+
+[29]
+
+Exploring machine and deep learning algorithms for recognizing handwritten digits using the MNIST dataset
+
+Digits
+
+98.85% 2021
+
+52
+
+[17]
+
+Utilizing classification methods SVM and CNN for handwritten digit recognition using the MNIST dataset
+
+Digits
+
+97.6% 2021
+
+11
+
+[51]
+
+Employing a variety of techniques including SVM, ANN, and CNN to recognize handwritten colourful images with a high degree of accuracy
+
+Digits
+
+88% 2021
+
+41
+
+[15]
+
+Presented the development of a statistical SVM-based recognition model for handwritten character recognition
+
+Characters and digits 97.23% 2021
+
+100
+
+[45] Combining SVM and CNN classifiers to recognize Arabic handwritten characters
+
+Text
+
+99.85% 2022
+
+34
+
+[20]
+
+Using SVM with HOG features and CNN classifiers model to investigate approach accuracy considering three levels of zones
+
+Characters
+
+96.15% 2023
+
+4
+
+4.3. Other Techniques
+Marques et al. [85] presented an approach for the identification of handwritten polynomials through the utilization of CNN combined with fractional order Darwinian particle swarm optimization (FODPSO). The FODPSO method was applied for segmenting the input image, leveraging fractional derivatives to regulate the particle convergence rate. Following segmentation, a sequence of three CNNs was employed in the character recognition process. The initial CNN classifies symbols as either numeric or non-numeric, whereas the second network identifies numerical digits, and the third CNN distinguishes non-numeric symbols. A heuristic algorithm was then employed to construct the polynomial, whose graphical representation is subsequently generated. The CNNs were trained, validated, and tested on a dataset comprising 264,780 images containing symbols and numbers, yielding an accuracy of approximately 99%.
+Min et al. [86] introduced a modified version of the GoogLeNet network that retains the original model’s depth but decreases the number of training parameters, addressing the challenge of HCC misidentification by re-recognizing similar character sets. In addition, Aleskerova et al. [87] developed a hierarchical convolutional neural network with two stages to improve the speed and accuracy of classifying large categories such as HCCR on systems like CPUs. The first stage differentiates between various data subsets, whereas the second stage focuses on classification within those subsets. However, the recognition accuracy was limited due to the simplicity of the network’s design.
+Deore and Pravin [52] highlighted the progress of the execution of a state-of-the-art profound convolutional neural network (DCNN) for classifying manually written Devanagari characters. The dataset comprised 5800 confined pictures belonging to 58 distinctive character categories, counting 12 vowels, 36 consonants, and 10 numerals. To upgrade the Devanagari transcribed character acknowledgment framework (DHCRS), a two-step profound learning approach was formulated. The beginning show accomplished an amazing 94.84% testing exactness, with a training mismatch of 18% when tried on the modern dataset. A fine-tuned demonstration was created with a negligible number of trainable parameters, requiring significantly less preparation time. Despite the utilization of a very
+
+Symmetry 2024, 16, 681
+
+16 of 25
+small dataset, this refined process demonstrates accomplished state-of-the-art execution, showing a testing precision of 96.55% and a training mismatch of 12%.
+Zhao and Liu [88] proposed a new framework that combines CNN-based feature extraction from the MNIST dataset with the fusion of multiple classifiers trained on distinct feature sets. These feature sets are derived from the original feature set, obtained through CNN, by employing feature selection techniques. The experimental outcomes showed that the classifier fusion approach attains a classification accuracy of 98%.
+Nurseitov et al. [89] studies the issue of hand-composing acknowledgment in Kazakh and Russian. The models considered are SimpleHTR, Profound CNN, Puigcerver, and Bluche. Standard execution measurements and character mistake rate (CER) and word blunder rate (WER) were the two strategies utilized to evaluate the models. Two datasets were utilized; the primary dataset incorporates 21,000 photographs of transcribed cites in Cyrillic words (HCCW), whereas the moment dataset, named manually written Kazakh and Russian (HKR), comprises 63,000 sentences composed in Kazakh and Russian dialects. The SimpleHTR show, utilizing the Wordbeam look interpreting strategy, showed the most noteworthy precision at 75.1% on the HCCW dataset. Moreover, the Puigcerver show showcased prevalent execution, accomplishing a CER of 73.43% and WER of 96.89% for the HCCW database, as well as a CER of 54.75% and WER of 82.91% for the HKR database.
+In [41], the researchers integrated CNN and BLSTM techniques for Arabic handwriting recognition. The KFUPM handwritten Arabic text (KHATT) database was used to test the combined approach, which produced better results than alternative methods, including BLSTM-CTC, MDLSTM-CTC, and MDLSTM-CTC. Extra white regions were eliminated during the preprocessing stage, and binarization was performed. CNNs were used to extract the features, and BLSTM and CTC were used for the sequence modelling. The results illustrated a considerable performance improvement when compared to alternative approaches with 8% CER and 20.1% WER performance measures.
+Durga and Deepu [42] applied this to gather profound learning to classify particular t and i designs in graphology for identity evaluation. The strategy includes picture preprocessing, feature extraction, and classification employing a CNN. The creators curated a dataset from web photographs containing six classes of t and five classes of i, accomplishing classification correctnesses of 98% and 88% for objects of sort t and i, respectively.
+Nayef et al. [46] used profound learning procedures for perusing manually written Arabic characters. To illuminate the uneven dissemination of positive and negative vectors in character recognition, the creators proposed an optimized cracked ReLU actuation work. The consideration emphasized how well CNNs work when combined with an upgraded defective ReLU actuation instrument to recognize Arabic characters reliably and precisely. The outcomes showed outstanding enhancement, coming to up to 99% exactness on a few datasets when compared to state-of-the-art strategies. In [90], the researchers integrated CNN and transfer learning for Kannada handwritten character recognition. The proposed approach was trained on a Chars74K dataset containing 74,000 Kannada characters and numerals. It achieved a good accuracy performance of 96.7% in recognizing handwritten Kannada numerals, showcasing competitive performance compared to traditional methods.
+Pande et al. [53] secured mechanizing the difficult method for digitizing the broadly utilized Devanagari script in India. The objective of the study was to extend the recognition rate of Devanagari’s transcribed composing utilizing exchange learning and CNN. The strategy delivered comes about in terms of precision and preparation time by utilizing an expansive dataset of Devanagari characters. Devanagari script has been carefully protected, permitting access, modification, and longer capacity of invaluable data counting proficient analysis from classical Vedic writing. This research addressed a niche within the formal digitization devices for Devanagari and progressed programmed content recognition innovation for superior client benefit.
+Dong et al. [91] introduced a comprehensible method for distance metric learning. Initially, they developed an algorithm called MetChar to optimize the weight distribution among fixed components. Subsequently, they presented another algorithm, HybridSelec-
+
+Symmetry 2024, 16, 681
+
+17 of 25
+tion, designed to choose components and feed them into MetChar, facilitating the learning of the distance metric for handwritten Chinese characters. Although their method does not match the recognition accuracy of neural network-based approaches, it offers clear interpretability and efficient learning.
+Singh et al. [92] proposed an online handwritten Gurmukhi word recognition system using a fine-tuned deep convolutional neural network (DCNN) based on offline features. The proposed approach achieved over 97% recognition accuracy using a CNN architecture and compared these deep learning techniques with baseline methods like SVM and LR, showing significant improvements by converting online data to offline. VGG16-DNN slightly outperformed InceptionV3-DNN, with 97.23% and 97.06% accuracy, respectively, indicating a potential for enhancing online handwriting recognition for major Indian scripts using the proposed approach.
+Ramteke et al. [93] proposed a system for the acknowledgment of transcribed Marathi characters, which may be a troublesome undertaking. The recommended strategy utilizes an unused sine cosine algorithm (SCA) for character distinguishing proof in conjunction with a weighted one-against-rest back vector machines (WOAR-SVM) classifier. Different degrees of preprocessing and division are connected to the report, and distinctive highlights are taken from the preprocessed pictures. The exploratory discoveries illustrated that the WOAR-SVM classifier and extricated highlights work well together to accomplish high precision, creating a recognition rate of 95.14%.
+Chandio et al. [22] used a profound convolutional repetitive neural network (CRNN) to form an approach without division. Within the model, features are extricated employing a profound CNN, decoded employing a repetitive neural network (RNN), and anticipated arrangements are mapped to target names employing a connectional transient classification (CTC). The creators furthermore examined more profound CNN designs. They made a sizable benchmark dataset of trimmed Urdu word pictures in open-air settings for testing the proposed strategy. The studies’ discoveries illustrated that the profound CRNN organized with easy route joins that have been proposed outperforms other arranged topologies, with precision coming to 95.75% for CRR, 87.1% for WRR, and 94.2% for WRR1F.
+In [31], the researchers presented an interesting strategy that utilized a YOLOv3 question acknowledgment of how to handle the challenges related to identifying writtenby-hand content. In differentiation to routine lexicon-based methods, which depend on huge datasets, this approach needs 1200-word pictures for preparation. On the IAM dataset without a foreordained lexicon, the show performed consecutive character location and recognition and accomplished a word blunder rate of 29.21% and a character mistake rate of 9.53%.
+Shuvo et al. [60] utilized neural network and convolutional neural network models for classification and auto-encoder and convolutional auto-encoder calculations to change manually written number pictures into printed numeral pictures. The superimposition strategy diminishes computing costs and does not need troublesome preprocessing and highlight extraction stages. The proposed strategy effectively completed HNR errands with great acknowledgment of exactness for Bengali, Devanagari, and English written by hand digits, getting 99.68%, 99.73%, and 99.62%, respectively.
+Prashanth et al. [54] enhanced Lenet and Alexnet convolution neural networks for handwritten HDCR. Traditional feature extraction and classification methods were restricted to datasets created in particular labs, whereas HDCR lacks a common benchmarking dataset. A dataset of 38,750 images of Devanagari numerals and vowels was created and made available to other researchers to improve the effectiveness of HDCR. Each character was extracted using a segmentation technique from the data, which is gathered from over 3000 people of all ages. The CNN, modified Lenet CNN (MLCNN), and Alexnet CNN (ACNN) architectures were designed and tested. Although ACNN attained a recognition rate of 99% and 98% on unseen data, MLCNN achieved accuracy of 99% and 94% at a lower computational cost.
+
+Symmetry 2024, 16, 681
+
+18 of 25
+An overview of deep learning-based intelligent handwritten character identification for Malayalam scripts was given in [94]. It explored various methods for feature extraction and categorization and drew attention to the paucity of research in this field. The usage of stacked LSTM models for Malayalam character recognition and CNN architectures for online handwritten Bangla character identification are just two examples of the existing research that the authors evaluate. High accuracy rates were attained by the techniques, highlighting the potential of deep learning to enhance recognition systems. Whereas online HCR used CNN architecture and achieved 99.4% accuracy on a 10,000-character dataset, stacked LSTM models have over 90% accuracy. Jindal and Ghosh [56] introduced an end-to-end mixed deep-learning architecture addressing the recognition of ancient handwritten characters. The scripts derived from two old Indian scripts, namely Maithili and Devanagari. The new architecture incorporates a combination of several convolution layers followed by LSTMS layers for feature extraction. At the end, a connected layer is utilized for classification results. The evaluation of the suggested approach revealed 95.83% accuracy for the Maithili script and 96.97% accuracy for the Devanagari script where the dataset used in the experiment was collected by authors. Pan et al. [23] collected the MOLHW dataset containing handwritten words representing the Mongolian language written by volunteers. The authors developed an application for writing handwritten words online by users where words were selected from a Mongolian corpus. The words were then collected and reviewed. As a reference model for evaluation, they build a neural network model consisting of encoder–decoder and deep bi-directional GRU. Additionally, an attention mechanism step was added to the model. The word error rate (WER) achieved was 24.281% using test data. Additional comparison was conducted using transform and LSTM-CTC models. The results of the transformer had 16.969% WER overcoming LSTM-CTC models.
+Jubaer et al. [61] proposed a new approach called BN-DRISHTI to address the problem of Bangla handwritten text segmentation into lines and words. BN-DRISHTI is a deep learning-based approach implemented using the YOLO framework. To fix line skewness, the approach integrates the Hough–Affine transformation. The approach was tested using the BN-HTRd dataset collected by the author and measured using an F-score. The approach achieved 98% word segmentation and 99.97% line segmentation. Three other Bangla datasets were also used to compare with other approaches. The performance results of the presented approach surpass other alternative approaches’ performance.
+Coquenet et al. [95] proposed an end-to-end approach to recognize handwritten documents labeling their parts using XML tags in a unified fashion by identifying document text and layout. Their document attention network architecture combines FCN encoder and transformer decoder layers intended for feature extraction and prediction, respectively. No labelling for segmentation was used to train the model. Promising evaluation results of the presented approach achieved on READ 2016 and RIMES 2009 datasets considering CER measured 3.43% and 3.70% CER obtained using READ 2016 considering one and two pages and 4.54% CER obtained using RIMES 2009 considering single pages. Table 9 shows a summary of the related work of handwritten recognition using different techniques.
+As shown in this section, various handwritten recognition algorithms, such as CNN, SVM, DT, kNN, RF, and other methods, have been discussed. Our analysis shows that the accuracy levels of these algorithms vary depending on several factors, including the datasets used, the size of the dataset, and the applications they are being used for. For example, CNN provides the most accurate results for handwritten digit recognition compared to SVM algorithms [29]. In contrast, CNN achieves better accuracy on Arabic datasets than SVM and other algorithms [45]. Additionally, the efficiency of a CNN method has been improved by increasing the size of the BanglaLekha-Isolated dataset, where the CNN was able to improve the accuracy by 3.44%, achieving an impressive test set precision of 95.25% [59]. However, further research is needed to determine the most accurate algorithm for different types of handwritten recognition tasks.
+
+Symmetry 2024, 16, 681
+
+19 of 25
+
+Table 9. Summary of handwritten recognition using different techniques.
+
+Ref.
+
+Technique
+
+Description
+
+Type
+
+Statistic Year Citation
+
+[85]
+
+FODPSO
+
+The FODPSO method was applied for
+
+segmenting the input image, leveraging fractional derivatives to regulate the particle
+
+Characters and digits
+
+99%
+
+2019
+
+13
+
+convergence rate
+
+[52]
+
+DCNN
+
+DCNN used for classifying handwritten Devanagari characters
+
+Characters
+
+96.55% 2020
+
+46
+
+[88] CNN-based feature extraction
+
+Combined CNN-based feature extraction from the MNIST dataset with the fusion of
+multiple classifiers trained on distinct feature sets
+
+Characters
+
+98% 2020
+
+99
+
+[89]
+
+Puigcerver
+
+Standard performance metrics and character error rate (CER) and word error rate (WER)
+were the two methods used to assess the models
+
+Characters
+
+96.89% 2021
+
+26
+
+[41]
+
+BLSTM
+
+Integrating CNN and BLSTM for Arabic handwriting recognition
+
+Characters
+
+98% 2021
+
+2
+
+The method encompasses image preprocessing,
+
+[42]
+
+Deep learning
+
+feature extraction, and classification
+
+Characters and digits 98% 2021
+
+3
+
+using a CNN
+
+[46]
+
+Deep learning
+
+Utilizing deep learning techniques for reading handwritten Arabic characters
+
+Characters
+
+99% 2022
+
+26
+
+[90]
+
+Transfer learning
+
+Using CNN and transfer learning for Kannada handwritten character recognition
+
+Digits
+
+96.7% 2021
+
+8
+
+Increasing the recognition rate of Devanagari
+
+[53]
+
+Transfer learning
+
+handwritten writing using transfer
+
+Characters
+
+learning and CNN
+
+-
+
+2022
+
+30
+
+[92]
+
+DCNN
+
+Using a fine-tuned DCNN based on offline features for online handwritten Gurmukhi
+word recognition system
+
+Characters
+
+97.06% 2021
+
+22
+
+[93]
+
+SCA
+
+Utilizing SCA for character identification together with a
+WOAR-SVM classifier
+
+Characters
+
+95.14% 2022
+
+14
+
+[22]
+
+CRNN
+
+Using CRNN to create an approach without segmentation
+
+Characters
+
+94.2% 2022
+
+19
+
+Utilizing a YOLOv3 object recognition model to
+
+[31]
+
+YOLOv3
+
+handle the difficulties associated with detecting
+
+Characters
+
+9.53% 2022
+
+19
+
+handwritten text
+
+Using neural network and convolutional neural
+
+[60]
+
+NN
+
+network models for classification and
+
+Characters
+
+99.62% 2022
+
+3
+
+auto-encoder
+
+Traditional feature extraction and classification
+
+[54]
+
+Lenet and Alexnet
+
+methods were restricted to datasets created in
+
+Characters
+
+particular labs
+
+99% 2022
+
+28
+
+Using LSTM models for Malayalam
+
+[94]
+
+LSTM
+
+character recognition and CNN architectures for online handwritten Bangla
+
+Characters
+
+90% 2021
+
+5
+
+character identification
+
+[56]
+
+LSTM
+
+A combination of several convolution layers followed by LSTMS layers for feature extraction
+
+Characters and digits
+
+96.97%
+
+2023
+
+9
+
+[23]
+
+LSTM
+
+Developing an application for writing handwritten words online by users where
+words selected from Mongolian corpus
+
+Characters
+
+-
+
+2023
+
+2
+
+[61]
+
+BN-DRISHTI
+
+Addressing problem of Bangla handwritten text segmentation into line and words
+
+Characters
+
+99.97% 2023
+
+-
+
+Combining FCN encoder and
+
+[95]
+
+FCN encoder
+
+transformer decoder layers intended for feature
+
+Characters
+
+98.5% 2023
+
+32
+
+extraction and prediction, respectively
+
+Symmetry 2024, 16, 681
+
+20 of 25
+5. Discussion
+In recent years, handwritten recognition (HR) in the field of AI has encountered several challenges. One major issue is the critical role of image quality in handwritten recognition. OCR systems must handle various image sizes with varying levels of image quality, introducing noise into the process [96]. Additionally, the time required for the recognition process can be quite high, especially for high-quality images with background noise elimination. These challenges often originate during the scanning of documents, which may have poor quality due to paper deterioration or the use of different alphabets, such as writing “u” as “v” or “d” as “a.” Furthermore, participants may write text and characters in areas on the document not designated for such information. Another significant obstacle is the recognition of connected handwriting, where letters are joined together. This can confound computers as they struggle to differentiate individual characters, as in the case of an “r” and an “n” potentially being misinterpreted as an “m”.
+A significant challenge in this field involves the difficulty people encounter when attempting to decipher others’ handwritten text. This issue poses a considerable hurdle for programs aiming to recognize these characters due to the vast variability in handwriting quality, spanning from legible to illegible. Consequently, the software faces a substantial task in accurately identifying handwritten characters. Moreover, the complexity intensifies when dealing with certain handwriting styles, such as cursive, where adjacent letters are interconnected. Additionally, the process of recognizing handwriting from photos can be arduous, especially when the images are taken from awkward angles. When a photo obscures the characters due to an unfavourable perspective, it becomes more challenging for a computer to provide accurate identification.
+Handwriting recognition faces significant challenges when dealing with datasets that lack diverse languages and comprehensive character sets. Additionally, achieving accurate analysis of uppercase and lowercase letters remains a common issue in this field. People often struggle to read others’ handwriting, contributing to the overall accuracy challenge. Moreover, the wide variation in handwriting quality poses a significant hurdle for developers seeking to gather representative character samples. Furthermore, the striking similarity in appearance between certain characters complicates accurate distinction by computer systems.
+Online handwriting recognition systems face a range of challenges, including writerspecific, machine-specific, and scripting language-specific variations. Moreover, there are common issues that span across various scripting languages, encompassing variations in handwriting styles, both constrained and unconstrained handwriting, as well as hardware and behavioural factors.
+Finally, the review discussed using various machine learning models, such as CNNs and SVMs, focusing on their effectiveness in feature extraction and classification tasks. The study collected findings from 116 research articles, examining significant achievements and identifying future research directions, particularly in enhancing recognition accuracy through preprocessing steps like symmetry normalization. Additionally, the review highlighted the recognition of handwritten text across different languages and scripts, including Arabic, Kannada, Urdu, Devanagari, and Bengali. Various datasets and methodologies, such as the combination of CNN and SVM, are analyzed for their effectiveness in improving recognition accuracy. For example, in recognizing Arabic scripts, a model combining SVM and CNN classifiers achieved a high accuracy of 99.85%. The review also noted significant performance in recognizing handwritten Kannada and Bengali texts using deep learning architectures. These findings proved the advancements in OCR technology while also pointing out the persistent challenges and areas where further improvements are necessary to enhance the accuracy and efficiency of handwritten text recognition.
+6. Conclusions and Future Direction
+This comprehensive review provides valuable insights into the various aspects of OCR, driving further advancements in this field. The accuracy of recognition is directly dependent
+
+Symmetry 2024, 16, 681
+
+21 of 25
+
+on the type and quality of the material being processed. Current research extends beyond individual characters to encompass words, phrases, and even entire documents. Existing studies have underscored the pivotal role that the selection of pertinent feature extraction and classification techniques plays in enhancing character recognition rates. This review examined and analyzed five widely spoken languages from research publications from 2019 until the first quarter of 2024. Furthermore, it presented a comprehensive system designed to convert scanned images of handwritten characters into text documents using different techniques. This resource serves as an informative guide and an up-to-date reference for professionals working in the realm of handwritten recognition.
+Future possible directions in handwritten recognition techniques can focus on improving the accuracy and efficiency of deep learning models by taking advantage of advanced neural network architectures, such as transformers and graph neural networks. Integrating multimodal data, such as combining handwriting with contextual metadata, can provide more features for improved recognition performance. Additionally, solving the challenges of recognizing handwriting in diverse languages and scripts, including cursive and stylized writing, remains crucial. Exploring federated learning approaches can help in training models on decentralized data sources, ensuring privacy while maintaining robust performance. Finally, developing more effective techniques for preprocessing and augmenting handwritten data and creating larger and more diverse datasets will be instrumental in pushing the boundaries of handwritten recognition systems.
+Author Contributions: Conceptualization, M.K.Y.S. and M.S.; methodology, M.S. and F.B.S.; software, H.A.A.; validation, M.S., A.A. and H.A.A.; formal analysis, F.B.S. and H.A.-A.; investigation, M.K.Y.S.; resources, M.S.; data curation, M.A.A.-H. and M.S.D.; writing—original draft preparation, M.S., A.A. and H.A.A.; writing—review and editing, M.S.D. and H.A.-A.; visualization, M.S. and M.K.Y.S.; supervision, A.A. and H.A-A.; project administration, M.S.; funding acquisition, M.A.A.-H. All authors have read and agreed to the published version of the manuscript.
+Funding: M. Shambour extends his appreciation to the Deputyship for Research & Innovation, Ministry of Education in Saudi Arabia for funding this research work through the project number: IFP22UQU4361183DSR060.
+Data Availability Statement: Data are available from the authors upon reasonable request.
+Conflicts of Interest: The authors declare no conflicts of interest.
+References
+1. Hamad, H.; Shehab, M. Integrated multi-layer perceptron neural network and novel feature extraction for handwritten Arabic recognition. Int. J. Data Net. Sci. 2024, 8, 1501–1516. [CrossRef]
+2. Hamad, H.; Zitar, R. A. Development of an efficient neural-based segmentation technique for Arabic handwriting recognition. Pattern Recognit. 2010, 43, 2773–2798. [CrossRef]
+3. Singh, S.; Garg, N.K.; Kumar, M. Feature extraction and classification techniques for handwritten Devanagari text recognition: A survey. Multimed. Tools Appl. 2023, 82, 747–775. [CrossRef]
+4. Krupa, K.; Kiran, Y.; Kavana, S.; Gaganakumari, M.; Meghana, R.; Varshana, R. Deep learning-based image extraction. In Proceedings of the Artificial Intelligence and Applications, Jaipur, India, 23–24 April 2022.
+5. Al Hamad, H.A.; Abualigah, L.; Shehab, M.; Al-Shqeerat, K.H.; Otair, M. Improved linear density technique for segmentation in Arabic handwritten text recognition. Multimed. Tools Appl. 2022, 81, 28531–28558.
+6. Tahir, A.; Pervaiz, A. Hand written character recognition using SVM. Pac. Int. J. 2020, 3, 59–62. [CrossRef] 7. Shamim, S.; Miah, M.B.A.; Sarker, A.; Rana, M.; Al Jobair, A. Handwritten digit recognition using machine learning algorithms.
+Glob. J. Comput. Sci. Technol. 2018, 18, 17–23. [CrossRef] 8. Shambour, M.K. Analyzing perceptions of a global event using CNN-LSTM deep learning approach: The case of Hajj 1442 (2021).
+Peerj Comput. Sci. 2022, 8, e1087. [CrossRef] 9. Aldhubaib, H.A. Impressions of the community of Makkah on the Hajj in the light of COVID-19 pandemic: Quantitative and
+AI-based sentiment analyses. J. King Abdulaziz Univ. Eng Sci 2020, 32, 41–57. 10. Gutub, A.; Shambour, M.K.; Abu-Hashem, M.A. Coronavirus impact on human feelings during 2021 Hajj season via deep
+learning critical Twitter analysis. J. Eng. Res. 2023, 11, 100001. [CrossRef] 11. Pagare, G.; Verma, K. Associative memory model for distorted on-line Devanagari character recognition. In Proceedings of the
+2015 Fifth International Conference on Advances in Computing and Communications (ICACC), Sanya, China, 14–15 November 2015; pp. 46–49.
+
+Symmetry 2024, 16, 681
+
+22 of 25
+
+12. Kumar, S. A study for handwritten Devanagari word recognition. In Proceedings of the 2016 International Conference on Communication and Signal Processing (ICCSP), Tamilnadu, India, 6–8 April 2016; pp. 1009–1014.
+13. Hassan, S.; Irfan, A.; Mirza, A.; Siddiqi, I. Cursive handwritten text recognition using bi-directional LSTMs: A case study on Urdu handwriting. In Proceedings of the 2019 International conference on deep learning and machine learning in emerging applications (Deep-ML), Istanbul, Turkey, 25–26 April 2019; pp. 67–72.
+14. Meng, F.; Wang, C. Artificial Intelligence and Machine Learning Approaches to Text Recognition: A Research Overview. J. Math. Tech. Comput. Math. 2024, 3, 1–5.
+15. Hamdan, Y.B.; Sathesh, A. Construction of statistical SVM based recognition model for handwritten character recognition. J. Inf. Technol. Digit. World 2021, 3, 92–107. [CrossRef]
+16. Ruiz-Parrado, V.; Heradio, R.; Aranda-Escolastico, E.; Sánchez, Á.; Vélez, J.F. A bibliometric analysis of off-line handwritten document analysis literature (1990–2020). Pattern Recognit. 2022, 125, 108513. [CrossRef]
+17. Chychkarov, Y.; Serhiienko, A.; Syrmamiikh, I.; Kargin, A. Handwritten Digits Recognition Using SVM, KNN, RF and Deep Learning Neural Networks. Content Manag. Interoperability Serv. 2021, 2864, 496–509. [CrossRef]
+18. Barati, R. Incorporating locally linear embedding and multi-layer perceptron in handwritten digit recognition. e-Prime-Adv. Electr. Eng. Electron. Energy 2022, 2, 100081. [CrossRef]
+19. Rajalakshmi, M.; Saranya, P.; Shanmugavadivu, P. Pattern recognition-recognition of handwritten document using convolutional neural networks. In Proceedings of the 2019 IEEE International Conference on Intelligent Techniques in Control, Optimization and Signal Processing (INCOS), Tamil Nadu, India, 23–25 March 2019; pp. 1–7.
+20. Hebbi, C.; Mamatha, H. Comprehensive dataset building and recognition of isolated handwritten kannada characters using machine learning models. Artif. Intell. Appl. 2023, 1, 179–190. [CrossRef]
+21. Coquenet, D.; Chatelain, C.; Paquet, T. End-to-end handwritten paragraph text recognition using a vertical attention network. IEEE Trans. Pattern Anal. Mach. Intell. 2022, 45, 508–524. [CrossRef]
+22. Chandio, A.A.; Asikuzzaman, M.; Pickering, M.R.; Leghari, M. Cursive text recognition in natural scene images using deep convolutional recurrent neural network. IEEE Access 2022, 10, 10062–10078. [CrossRef]
+23. Pan, Y.; Fan, D.; Wu, H.; Teng, D. A new dataset for mongolian online handwritten recognition. Sci. Rep. 2023, 13, 26. [CrossRef] 24. Sampath, A.; Gomathi, N. Handwritten optical character recognition by hybrid neural network training algorithm. Imaging Sci. J.
+2019, 67, 359–373. [CrossRef] 25. Ptucha, R.; Such, F.P.; Pillai, S.; Brockler, F.; Singh, V.; Hutkowski, P. Intelligent character recognition using fully convolutional
+neural networks. Pattern Recognit. 2019, 88, 604–613. [CrossRef] 26. Vinotheni, C.; Pandian, S.L. End-To-End Deep-Learning-Based Tamil Handwritten Document Recognition and Classification
+Model. IEEE Access 2023, 11, 43195–43204. [CrossRef] 27. Hamdan, M.; Chaudhary, H.; Bali, A.; Cheriet, M. Refocus attention span networks for handwriting line recognition. Int. J. Doc.
+Anal. Recognit. 2023, 26, 131–147. [CrossRef] 28. Khandokar, I.; Hasan, M.; Ernawan, F.; Islam, S.; Kabir, M. Handwritten character recognition using convolutional neural network.
+J. Phys. Conf. Ser. IOP Publ. 2021, 1918, 042152. [CrossRef] 29. Pashine, S.; Dixit, R.; Kushwah, R. Handwritten digit recognition using machine and deep learning algorithms. arXiv 2021,
+arXiv:2106.12614. 30. Saqib, N.; Haque, K.F.; Yanambaka, V.P.; Abdelgawad, A. Convolutional-neural-network-based handwritten character recognition:
+an approach with massive multisource data. Algorithms 2022, 15, 129. [CrossRef] 31. Mondal, R.; Malakar, S.; Barney Smith, E.H.; Sarkar, R. Handwritten English word recognition using a deep learning based object
+detection architecture. Multimed. Tools Appl. 2022, 81, 975–1000. [CrossRef] 32. Sahoo, J.P.; Prakash, A.J.; Pławiak, P.; Samantray, S. Real-time hand gesture recognition using fine-tuned convolutional neural
+network. Sensors 2022, 22, 706. [CrossRef] 33. Jain, P.H.; Kumar, V.; Samuel, J.; Singh, S.; Mannepalli, A.; Anderson, R. Artificially Intelligent Readers: An Adaptive Framework
+for Original Handwritten Numerical Digits Recognition with OCR Methods. Information 2023, 14, 305. [CrossRef] 34. Das, M.; Panda, M. Seam carving, horizontal projection profile and contour tracing for line and word segmentation of language
+independent handwritten documents. Results Eng. 2023, 18, 101110. [CrossRef] 35. Chakraborty, S.; Harit, G.; Ghosh, S. TransDocAnalyser: A framework for semi-structured offline handwritten documents analysis
+with an application to legal domain. In Document Analysis and Recognition—ICDAR 2023. ICDAR 2023; Fink, G.A., Jain, R., Kise, K., Zanibbi, R., Eds.; Springer: Cham, Switzerland, 2023; pp. 45–62. 36. Meddeb, O.; Maraoui, M.; Zrigui, M. Arabic text documents recommendation using joint deep representations learning. Procedia Comput. Sci. 2021, 192, 812–821. [CrossRef] 37. Altwaijry, N.; Al-Turaiki, I. Arabic handwriting recognition system using convolutional neural network. Neural Comput. Appl. 2021, 33, 2249–2261. [CrossRef] 38. Thangamariappan, P.; Pamila, J. Handwritten recognition by using machine learning approach. Int. J. Eng. Appl. Sci. Technol. 2020, 4, 564–567. [CrossRef] 39. Ahamed, P.; Kundu, S.; Khan, T.; Bhateja, V.; Sarkar, R.; Mollah, A.F. Handwritten Arabic numerals recognition using convolutional neural network. J. Ambient. Intell. Humaniz. Comput. 2020, 11, 5445–5457. [CrossRef]
+
+Symmetry 2024, 16, 681
+
+23 of 25
+
+40. Najadat, H.M.; Alshboul, A.A.; Alabed, A.F. Arabic handwritten characters recognition using convolutional neural network. In Proceedings of the 2019 10th International Conference on Information and Communication Systems (ICICS), Irbid, Jordan, 11–13 June 2019; pp. 147–151. [CrossRef]
+41. Noubigh, Z.; Mezghani, A.; Kherallah, M. Contribution on Arabic handwriting recognition using deep neural network. In Hybrid Intelligent Systems; Abraham, A., Shandilya, S.K., Garcia-Hernandez, L., Varela, M.L., Eds.; Springer: Cham, Switzerland, 2021; pp. 123–133.
+42. Durga, L.; Deepu, R. Ensemble deep learning to classify specific types of t and i patterns in graphology. Glob. Transitions Proc. 2021, 2, 287–293. [CrossRef]
+43. Raja, H.; Gupta, A.; Miri, R. Recognition of automated hand-written digits on document images making use of machine learning techniques. Eur. J. Eng. Technol. Res. 2021, 6, 37–44. [CrossRef]
+44. Albattah, W.; Albahli, S. Intelligent arabic handwriting recognition using different standalone and hybrid CNN architectures. Appl. Sci. 2022, 12, 10155. [CrossRef]
+45. Ali, A.A.A.; Mallaiah, S. Intelligent handwritten recognition using hybrid CNN architectures based-SVM classifier with dropout. J. King Saud-Univ. Comput. Inf. Sci. 2022, 34, 3294–3300. [CrossRef]
+46. Nayef, B.H.; Abdullah, S.N.H.S.; Sulaiman, R.; Alyasseri, Z.A.A. Optimized leaky ReLU for handwritten Arabic character recognition using convolution neural networks. Multimed. Tools Appl. 2022, 81, 1–30. [CrossRef]
+47. Ali, S.; Sahiba, S.; Azeem, M.; Shaukat, Z.; Mahmood, T.; Sakhawat, Z.; Aslam, M.S. A recognition model for handwritten Persian/Arabic numbers based on optimized deep convolutional neural network. Multimed. Tools Appl. 2023, 82, 14557–14580. [CrossRef]
+48. Jain, M.; Mathew, M.; Jawahar, C. Unconstrained OCR for Urdu using deep CNN-RNN hybrid networks. In Proceedings of the 2017 4th IAPR Asian Conference on Pattern Recognition (ACPR), Nanjing, China, 26–29 November 2017; pp. 747–752.
+49. Ahmed, S.B.; Naz, S.; Swati, S.; Razzak, M.I. Handwritten Urdu character recognition using one-dimensional BLSTM classifier. Neural Comput. Appl. 2019, 31, 1143–1151. [CrossRef]
+50. Mushtaq, F.; Misgar, M.M.; Kumar, M.; Khurana, S.S. UrduDeepNet: Offline handwritten Urdu character recognition using deep neural network. Neural Comput. Appl. 2021, 33, 15229–15252. [CrossRef]
+51. Ukil, S.; Ghosh, S.; Obaidullah, S.M.; Santosh, K.; Roy, K.; Das, N. Improved word-level handwritten indic script identification by integrating small convolutional neural networks. Neural Comput. Appl. 2020, 32, 2829–2844. [CrossRef]
+52. Deore, S.P.; Pravin, A. Devanagari handwritten character recognition using fine-tuned deep convolutional neural network on trivial dataset. Sa¯dhana¯ 2020, 45, 1–13. [CrossRef]
+53. Pande, S.D.; Jadhav, P.P.; Joshi, R.; Sawant, A.D.; Muddebihalkar, V.; Rathod, S.; Gurav, M.N.; Das, S. Digitization of handwritten Devanagari text using CNN transfer learning—A better customer service support. Neurosci. Inform. 2022, 2, 100016. [CrossRef]
+54. Prashanth, D.S.; Mehta, R.V.K.; Ramana, K.; Bhaskar, V. Handwritten devanagari character recognition using modified lenet and alexnet convolution neural networks. Wirel. Pers. Commun. 2022, 122, 349–378. [CrossRef]
+55. Shabir, M.; Jan, Z.; Islam, N.; Khan, I.; Ali, G.; ElAffendi, M. TILPDeep: A Lightweight Deep Learning Technique for Handwritten Transformed Invariant Pashto Text Recognition. IEEE Access 2023, 11, 23393–23406. [CrossRef]
+56. Jindal, A.; Ghosh, R. Text line segmentation in indian ancient handwritten documents using faster R-CNN. Multimed. Tools Appl. 2023, 82, 10703–10722. [CrossRef]
+57. Khan, H.A.; Al Helal, A.; Ahmed, K.I. Handwritten bangla digit recognition using sparse representation classifier. In Proceedings of the 2014 International Conference on Informatics, Electronics & Vision (ICIEV), Dhaka, Bangladesh, 23–24 May 2014; pp. 1–6.
+58. Rabby, A.S.A.; Abujar, S.; Haque, S.; Hossain, S.A. Bangla handwritten digit recognition using convolutional neural network. In Proceedings of the Emerging Technologies in Data Mining and Information Security: Proceedings of IEMIS 2018; Springer: Berlin/Heidelberg, Germany, 2019; Volume 1, pp. 111–122.
+59. Chowdhury, R.R.; Hossain, M.S.; ul Islam, R.; Andersson, K.; Hossain, S. Bangla handwritten character recognition using convolutional neural network with data augmentation. In Proceedings of the 2019 Joint 8th International Conference on Informatics, Electronics & Vision (ICIEV) and 2019 3rd International Conference on Imaging, Vision & Pattern Recognition (icIVPR), Spokane, WA, USA, 30 May–2 June 2019; pp. 318–323.
+60. Shuvo, M.; Akhand, M.; Siddique, N. Handwritten numeral recognition through superimposition onto printed form. J. King Saud-Univ. Comput. Inf. Sci. 2022, 34, 7751–7764. [CrossRef]
+61. Jubaer, S.M.; Tabassum, N.; Rahman, M.A.; Islam, M.K. BN-DRISHTI: Bangla document recognition through instance-level segmentation of handwritten text images. In Document Analysis and Recognition—ICDAR 2023 Workshops; Coustaty, M., Fornés, A., Eds.; Springer: Cham, Switzerland, 2023; pp. 195–212.
+62. Nakagawa, M.; Tokuno, J.; Zhu, B.; Onuma, M.; Oda, H.; Kitadai, A. Recent results of online Japanese handwriting recognition and its applications. In Summit on Arabic and Chinese Handwriting Recognition; Springer: Berlin/Heidelberg, Germany, 2006; pp. 170–195.
+63. Ngo, T.T.; Nguyen, H.T.; Ly, N.T.; Nakagawa, M. Recurrent neural network transducer for Japanese and Chinese offline handwritten text recognition. In Proceedings of the International Conference on Document Analysis and Recognition; Springer: Berlin/Heidelberg, Germany, 2021; pp. 364–376.
+64. Nguyen, C.T.; Indurkhya, B.; Nakagawa, M. A unified method for augmented incremental recognition of online handwritten Japanese and English text. Int. J. Doc. Anal. Recognit. 2020, 23, 53–72. [CrossRef]
+
+Symmetry 2024, 16, 681
+
+24 of 25
+
+65. Kim, Y.; Soh, W. A Study on Character Recognition of Korean Vehicle License Plates Based on Deep Learning. J. Syst. Manag. Sci. 2021, 11, 69–82.
+66. Kim, S.; Barney Smith, E.H.; Majid, N. Segmentation-Free Korean Handwriting Recognition Using Neural Network Training; Boise State University: Boise, ID, USA, 2020.
+67. Shin, J.; Miah, A.S.M.; Akiba, Y.; Hirooka, K.; Hassan, N.; Hwang, Y.S. Korean Sign Language Alphabet Recognition through the Integration of Handcrafted and Deep Learning-Based Two-Stream Feature Extraction Approach. IEEE Access 2024, 12, 68303–68318. [CrossRef]
+68. Gondere, M.S.; Schmidt-Thieme, L.; Boltena, A.S.; Jomaa, H.S. Handwritten Amharic character recognition using a convolutional neural network. arXiv 2019, arXiv:1909.12943.
+69. Siddique, F.; Sakib, S.; Siddique, M.A.B. Recognition of handwritten digit using convolutional neural network in python with tensorflow and comparison of performance for various hidden layers. In Proceedings of the 2019 5th International Conference on Advances in Electrical Engineering (ICAEE), Dhaka, Bangladesh, 26–28 September 2019; pp. 541–546.
+70. Chen, Y.; Zhang, H.; Liu, C.L. Improved learning for online handwritten Chinese text recognition with convolutional prototype network. In Proceedings of the International Conference on Document Analysis and Recognition; Springer: Berlin/Heidelberg, Germany, 2023; pp. 38–53.
+71. Mariyathas, J.; Shanmuganathan, V.; Kuhaneswaran, B. Sinhala handwritten character recognition using convolutional neural network. In Proceedings of the 2020 5th International Conference on Information Technology Research (ICITR), Moratuwa, Sri Lanka, 2–4 December 2020; pp. 1–6.
+72. Truong, Q.V.; Le, H.D.; Nhan, N.T. Vietnamese handwritten character recognition using convolutional neural network. IAES Int. J. Artif. Intell. 2020, 9, 276.
+73. Gonwirat, S.; Surinta, O. Improving recognition of Thai handwritten characters with deep convolutional neural networks. In Proceedings of the 3rd International Conference on Information Science and Systems, San Jose, CA, USA, 9–12 March 2020; pp. 82–87.
+74. Dan, Y.; Li, Z. Particle swarm optimization-based convolutional neural network for handwritten Chinese character recognition. J. Adv. Comput. Intell. Intell. Inform. 2023, 27, 165–172. [CrossRef]
+75. Prashanth, D.S.; Mehta, R.V.K.; Sharma, N. Classification of handwritten Devanagari number–an analysis of pattern recognition tool using neural network and CNN. Procedia Comput. Sci. 2020, 167, 2445–2457. [CrossRef]
+76. Zin, T.T.; Thant, S.; Pwint, M.Z.; Ogino, T. Handwritten character recognition on android for basic education using convolutional neural network. Electronics 2021, 10, 904. [CrossRef]
+77. Mane, D.T.; Tapdiya, R.; Shinde, S.V. Handwritten Marathi numeral recognition using stacked ensemble neural network. Int. J. Inf. Technol. 2021, 13, 1993–1999. [CrossRef]
+78. Abbas, S.; Alhwaiti, Y.; Fatima, A.; Khan, M.A.; Khan, M.A.; Ghazal, T.M.; Kanwal, A.; Ahmad, M.; Elmitwally, N.S. Convolutional neural network based intelligent handwritten document recognition. Comput. Mater. Contin. 2022, 70, 4563–4581. [CrossRef]
+79. Kavitha, B.R.; Srimathi, C.B. Benchmarking on offline Handwritten Tamil Character Recognition using convolutional neural networks. J. King Saud-Univ. Comput. Inf. Sci. 2022, 34, 1183–1190. [CrossRef]
+80. Xu, Z.; Mittal, P.S.; Ahmed, M.; Adak, C.; Cai, Z.G. Assessing penmanship of Chinese handwriting: A deep learning-based approach. Read. Writ. 2024, 1–21. [CrossRef]
+81. Kaur, H.; Bansal, S.; Kumar, M.; Mittal, A.; Kumar, K. Worddeepnet: Handwritten gurumukhi word recognition using convolutional neural network. Multimed. Tools Appl. 2023, 82, 46763–46788. [CrossRef]
+82. Parseh, M.; Rahmanimanesh, M.; Keshavarzi, P. Persian handwritten digit recognition using combination of convolutional neural network and support vector machine methods. Int. Arab. J. Inf. Technol. 2020, 17, 572–578. [CrossRef]
+83. Ahlawat, S.; Choudhary, A. Hybrid CNN-SVM classifier for handwritten digit recognition. Procedia Comput. Sci. 2020, 167, 2554–2560. [CrossRef]
+84. Maidana, R.G.; dos Santos, J.M.; Granada, R.L.; de Morais Amory, A.; Barros, R.C. Deep neural networks for handwritten Chinese character recognition. In Proceedings of the 2017 Brazilian Conference on Intelligent Systems (BRACIS), Belo Horizonte, Brazil, 25–29 September 2017; pp. 192–197.
+85. Marques, F.; De Araujo, T.P.; Nator, C.; Saraiva, A.; Sousa, J.; Pinto, A.M.; Melo, R. Recognition of simple handwritten polynomials using segmentation with fractional calculus and convolutional neural networks. In Proceedings of the 2019 8th Brazilian Conference on Intelligent Systems (BRACIS), Salvador, Brazil, 15–18 October 2019; pp. 245–250.
+86. Min, F.; Zhu, S.; Wang, Y. Offline handwritten Chinese character recognition based on improved GoogLeNet. In Proceedings of the 2020 3rd International Conference on Artificial Intelligence and Pattern Recognition, Chengdu, China, 28–30 August 2020; pp. 42–46.
+87. Aleskerova, N.; Zhuravlev, A. Handwritten Chinese characters recognition using two-stage hierarchical convolutional neural network. In Proceedings of the 2020 17th International Conference on Frontiers in Handwriting Recognition (ICFHR), Dortmund, Germany, 8–10 September 2020; pp. 343–348.
+88. Zhao, H.H.; Liu, H. Multiple classifiers fusion and CNN feature extraction for handwritten digits recognition. Granul. Comput. 2020, 5, 411–418. [CrossRef]
+
+Symmetry 2024, 16, 681
+
+25 of 25
+
+89. Nurseitov, D.; Bostanbekov, K.; Kanatov, M.; Alimova, A.; Abdallah, A.; Abdimanap, G. Classification of handwritten names of cities and handwritten text recognition using various deep learning models. Adv. Sci. Technol. Eng. Syst. J. 2021, 5, 934–943. [CrossRef]
+90. Parikshith, H.; Rajath, S.N.; Shwetha, D.; Sindhu, C.; Ravi, P. Handwritten character recognition of kannada language using convolutional neural networks and transfer learning. IOP Conf. Ser. Mater. Sci. Eng. IOP Publ. 2021, 1110, 012003. [CrossRef]
+91. Dong, B.; Varde, A.S.; Stevanovic, D.; Wang, J.; Zhao, L. Interpretable distance metric learning for handwritten chinese character recognition. arXiv 2021, arXiv:2103.09714.
+92. Singh, S.; Sharma, A.; Chauhan, V.K. Online handwritten Gurmukhi word recognition using fine-tuned Deep Convolutional Neural Network on offline features. Mach. Learn. Appl. 2021, 5, 100037. [CrossRef]
+93. Ramteke, S.P.; Gurjar, A.A.; Deshmukh, D.S. A novel weighted SVM classifier based on SCA for handwritten marathi character recognition. IETE J. Res. 2022, 68, 845–857. [CrossRef]
+94. Jose, B.; Pushpalatha, K. Intelligent handwritten character recognition for Malayalam scripts using deep learning approach. IOP Conf. Ser. Mater. Sci. Eng. IOP Publ. 2021, 1085, 012022. [CrossRef]
+95. Coquenet, D.; Chatelain, C.; Paquet, T. DAN: A Segmentation-Free Document Attention Network for Handwritten Document Recognition. IEEE Trans. Pattern Anal. Mach. Intell. 2023, 45, 8227–8243. [CrossRef]
+96. Pal, S.; Roy, A.; Shivakumara, P.; Pal, U. Adapting a Swin Transformer for License Plate Number and Text Detection in Drone Images. Proc. Artif. Intell. Appl. 2023, 1, 145–154. [CrossRef]
+Disclaimer/Publisher’s Note: The statements, opinions and data contained in all publications are solely those of the individual author(s) and contributor(s) and not of MDPI and/or the editor(s). MDPI and/or the editor(s) disclaim responsibility for any injury to people or property resulting from any ideas, methods, instructions or products referred to in the content.
+

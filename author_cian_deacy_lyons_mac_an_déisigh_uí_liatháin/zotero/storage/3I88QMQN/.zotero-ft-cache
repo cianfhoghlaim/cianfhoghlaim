@@ -1,0 +1,617 @@
+MINILM: Deep Self-Attention Distillation for Task-Agnostic Compression of Pre-Trained
+Transformers
+Wenhui Wang Furu Wei∗ Li Dong Hangbo Bao Nan Yang Ming Zhou Microsoft Research
+{wenwan,fuwei,lidong1,t-habao,nanya,mingzhou}@microsoft.com
+Abstract
+Pre-trained language models (e.g., BERT [12] and its variants) have achieved remarkable success in varieties of NLP tasks. However, these models usually consist of hundreds of millions of parameters which brings challenges for ﬁnetuning and online serving in real-life applications due to latency and capacity constraints. In this work, we present a simple and effective approach to compress large Transformer [42] based pre-trained models, termed as deep self-attention distillation. The small model (student) is trained by deeply mimicking the selfattention module, which plays a vital role in Transformer networks, of the large model (teacher). Speciﬁcally, we propose distilling the self-attention module of the last Transformer layer of the teacher, which is effective and ﬂexible for the student. Furthermore, we introduce the scaled dot-product between values in the self-attention module as the new deep self-attention knowledge, in addition to the attention distributions (i.e., the scaled dot-product of queries and keys) that have been used in existing works. Moreover, we show that introducing a teacher assistant [26] also helps the distillation of large pre-trained Transformer models. Experimental results demonstrate that our monolingual model2 outperforms stateof-the-art baselines in different parameter size of student models. In particular, it retains more than 99% accuracy on SQuAD 2.0 and several GLUE benchmark tasks using 50% of the Transformer parameters and computations of the teacher model. We also obtain competitive results in applying deep self-attention distillation to multilingual pre-trained models.
+1 Introduction
+Language model (LM) pre-training has achieved remarkable success for various natural language processing tasks [28, 18, 29, 12, 14, 48, 21, 25]. The pre-trained LMs, such as BERT [12] and its variants, learn contextualized representations by predicting words given their context using large scale text corpora, and can be ﬁne-tuned with additional task-speciﬁc layers to adapt to downstream tasks. However, these models usually contain hundreds of millions of parameters which brings challenges for ﬁne-tuning and online serving in real-life applications for latency and capacity constraints.
+Knowledge distillation [17, 32] (KD) has been proven to be a promising way to compress a large model (called the teacher model) into a small model (called the student model), which uses much fewer parameters and computations while achieving competitive results on downstream tasks. There have been some works that task-speciﬁcally distill pre-trained large LMs into small models [39, 41, 37, 1, 47, 27]. They ﬁrst ﬁne-tune the pre-trained LMs on speciﬁc tasks and then perform distillation.
+∗ Contact person. 2The code and models will be publicly available at https://aka.ms/minilm.
+34th Conference on Neural Information Processing Systems (NeurIPS 2020), Vancouver, Canada.
+
+Task-speciﬁc distillation is effective, but ﬁne-tuning large pre-trained models is still costly, especially for large datasets. Different from task-speciﬁc distillation, task-agnostic LM distillation mimics the behavior of the original pre-trained LMs and the student model can be directly ﬁne-tuned on downstream tasks [40, 35, 20, 38].
+Previous works use soft target probabilities for masked language modeling predictions or intermediate representations of the teacher LM to guide the training of the task-agnostic student. DistilBERT [35] employs a soft-label distillation loss and a cosine embedding loss, and initializes the student from the teacher by taking one layer out of two. But each Transformer layer of the student is required to have the same architecture as its teacher. TinyBERT [20] and MOBILEBERT [38] utilize more ﬁne-grained knowledge, including hidden states and self-attention distributions of Transformer networks, and transfer this knowledge to the student model layer-to-layer. To perform layer-to-layer distillation, TinyBERT adopts a uniform function to determine the mapping between the teacher and student layers, and uses an additional parameter matrix to linearly transform student hidden states into the same size as its teacher. MOBILEBERT assumes the teacher and student have the same number of layers and introduces the bottleneck module to keep their hidden size the same.
+In this work, we propose the deep self-attention distillation framework for task-agnostic Transformer based LM distillation. The key idea is to deeply mimic the self-attention modules which are the fundamentally important components in the Transformer based teacher and student models. Speciﬁcally, we propose distilling the self-attention module of the last Transformer layer of the teacher model. Compared with previous approaches, using knowledge of the last Transformer layer rather than performing layer-to-layer knowledge distillation alleviates the difﬁculties in layer mapping between the teacher and student models, and the layer number of our student model can be more ﬂexible. Furthermore, we introduce the scaled dot-product between values in the self-attention module as the new deep self-attention knowledge, in addition to the attention distributions (i.e., the scaled dotproduct of queries and keys) that have been used in existing works. Using scaled dot-product between self-attention values also converts teacher and student representations of different dimensions into relation matrices with the same dimensions without introducing additional parameters to transform student representations. It allows arbitrary hidden dimensions for the student model. Finally, we show that introducing a teacher assistant [26] helps the distillation of large pre-trained Transformer based models.
+We conduct extensive experiments on downstream NLP tasks. Experimental results demonstrate that our monolingual model distilled from BERTBASE outperforms state-of-the-art baselines in different parameter size of student models. Speciﬁcally, the 6-layer model of 768 hidden dimensions distilled from BERTBASE is 2.0× faster, while retaining more than 99% accuracy on SQuAD 2.0 and several GLUE benchmark tasks. Moreover, our multilingual model distilled from XLM-RBASE also achieves competitive performance with much fewer Transformer parameters.
+2 Preliminary
+Multi-layer Transformers [42] have been the most widely-used network structures in state-of-the-art pre-trained models. In this section, we present a brief introduction to the Transformer networks and the self-attention mechanism, which is the core component of the Transformer. We also present the existing approaches on knowledge distillation for Transformer networks, particularly in the context of distilling a large Transformer based pre-trained model into a small Transformer model.
+2.1 Backbone Network: Transformer
+Given a sequence of input tokens, the vector representations ({xi}|ix=|1) are computed via summing the corresponding token embedding, position and segment embedding. Transformer [42] is used to encode contextual information for input tokens. The input vectors {xi}|ix=|1 are packed together into H0 = [x1, · · · , x|x|]. Then stacked Transformer blocks compute the encoding vectors as:
+Hl = Transformerl(Hl−1), l ∈ [1, L] where L is the number of Transformer layers, and the ﬁnal output is HL = [hL1 , · · · , hL|x|]. The hidden vector hLi is used as the contextualized representation of xi. Each Transformer layer consists of a self-attention sub-layer and a fully connected feed-forward network. Residual connection [16] is employed around each of the two sub-layers, followed by layer normalization [2].
+2
+
+Transformer Block L
+…
+Transformer Block 4 Transformer Block 3 Transformer Block 2 Transformer Block 1 𝑥1 𝑥2 𝑥3 𝑥4 𝑥5
+Teacher
+
+…
+Queries
+(ℝ𝐴ℎ× 𝑥 ×𝑑𝑘)
+…
+Keys
+(ℝ𝐴ℎ× 𝑥 ×𝑑𝑘)
+
+Attention Transfer
+
+(KL-Divergence)
+
+Queries-Keys
+
+Queries-Keys
+
+Scaled Dot-Product
+(ℝ𝐴ℎ× 𝑥 ×|𝑥|)
+
+Scaled Dot-Product
+(ℝ𝐴ℎ× 𝑥 ×|𝑥|)
+
+…
+Queries
+(ℝ𝐴ℎ× 𝑥 ×𝑑𝑘′ )
+…
+Keys
+(ℝ𝐴ℎ× 𝑥 ×𝑑𝑘′ )
+
+…
+Values
+(ℝ𝐴ℎ× 𝑥 ×𝑑𝑘)
+
+Value-Relation Transfer
+
+(KL-Divergence)
+
+Values-Values
+
+Values-Values
+
+Scaled Dot-Product
+
+Scaled Dot-Product
+
+(ℝ𝐴ℎ× 𝑥 ×|𝑥|)
+
+(ℝ𝐴ℎ× 𝑥 ×|𝑥|)
+
+…
+Values
+(ℝ𝐴ℎ× 𝑥 ×𝑑𝑘′ )
+
+Last Layer Self-Attention Vectors
+
+Last Layer Self-Attention Vectors
+
+Transformer Block M
+…
+Transformer Block 3 Transformer Block 2 Transformer Block 1 𝑥1 𝑥2 𝑥3 𝑥4 𝑥5
+Student
+
+Figure 1: Overview of Deep Self-Attention Distillation. The student is trained by deeply mimicking the self-attention behavior of the last Transformer layer of the teacher. In addition to the self-attention distributions, we introduce the self-attention value-relation transfer to help the student achieve a deeper mimicry. Our student models are named as MINILM.
+
+Self-Attention In each layer, Transformer uses multiple self-attention heads to aggregate the output vectors of the previous layer. For the l-th Transformer layer, the output of a self-attention head Ol,a, a ∈ [1, Ah] is computed via:
+
+Ql,a = Hl−1WlQ,a, Kl,a = Hl−1WlK,a, Vl,a = Hl−1WlV,a
+
+Al,a
+
+=
+
+softmax(
+
+Ql√,aKl,a dk
+
+)
+
+Ol,a = Al,aVl,a
+
+where the previous layer’s output Hl−1 ∈ R|x|×dh is linearly projected to a triple of queries, keys and values using parameter matrices WlQ,a, WlK,a, WlV,a ∈ Rdh×dk , respectively. Al,a ∈ R|x|×|x| indicates the attention distributions, which is computed by the scaled dot-product of queries and keys.
+Ah represents the number of self-attention heads. dk × Ah is equal to dh in BERT.
+
+2.2 Transformer Distillation
+Knowledge distillation [17, 32] is to train the small student model S on a transfer feature set with soft labels and intermediate representations provided by the large teacher model T . Knowledge distillation is modeled as minimizing the differences between teacher and student features:
+LKD = L(f S(e), f T (e))
+e∈D
+Where D denotes the training data, f S(·) and f T (·) indicate the features of student and teacher models respectively, L(·) represents the loss function. The mean squared error (MSE) and KL-divergence are often used as loss functions.
+For task-agnostic Transformer based LM distillation, soft target probabilities for masked language modeling predictions, embedding layer outputs, self-attention distributions and outputs (hidden states) of each Transformer layer of the teacher model are used as features to help the training of the student. For the intermediate representations of each Transformer layer, previous works [20, 38] often map each student layer to its corresponding teacher layer and perform layer-to-layer distillation.
+
+3 Deep Self-Attention Distillation
+Figure 1 gives an overview of the deep self-attention distillation. The key idea is three-fold. First, we propose to train the student by deeply mimicking the self-attention module, which is the vital
+
+3
+
+Table 1: Comparison with previous task-agnostic Transformer based LM distillation approaches.
+
+Approach
+
+Teacher Model
+
+Distilled Knowledge
+
+Layer-to-Layer Distillation
+
+Requirements on the number of
+layers of students
+
+Requirements on the hidden
+size of students
+
+DistilBERT
+
+BERTBASE
+
+Soft target probabilities Embedding outputs
+
+TinyBERT
+
+BERTBASE
+
+Embedding outputs Hidden states
+Self-Attention distributions
+
+MOBILEBERT IB-BERTLARGE
+
+Soft target probabilities Hidden states
+Self-Attention distributions
+
+MINILM
+
+BERTBASE
+
+Self-Attention distributions Self-Attention value relation
+
+component in the Transformer, of the teacher’s last layer. Second, we introduce transferring the relation between values (i.e., the scaled dot-product between values) to achieve a deeper mimicry, in addition to performing attention distributions (i.e., the scaled dot-product of queries and keys) transfer in the self-attention module. Moreover, we show that introducing a teacher assistant [26] also helps the distillation of large pre-trained Transformer models when the size gap between the teacher model and student model is large.
+
+3.1 Self-Attention Distribution Transfer
+
+The attention mechanism [3] has been a highly successful neural network component for NLP tasks, which is also crucial for pre-trained LMs. Some works show that self-attention distributions of pre-trained LMs capture a rich hierarchy of linguistic information [19, 8]. Transferring self-attention distributions has been used in previous works for Transformer distillation [20, 38, 1]. We also utilize the self-attention distributions to help the training of the student. Speciﬁcally, we minimize the KL-divergence between the self-attention distributions of the teacher and student:
+
+LAT
+
+=
+
+1 Ah|x|
+
+Ah a=1
+
+|x| t=1
+
+DKL(ATL,a,t
+
+ASM,a,t)
+
+Where |x| and Ah represent the sequence length and the number of attention heads. L and M represent the number of layers for the teacher and student. ATL and ASM are the attention distributions of the last Transformer layer for the teacher and student, respectively. They are computed by the
+
+scaled dot-product of queries and keys.
+
+Different from previous works which transfer teacher’s knowledge layer-to-layer, we only use the attention maps of the teacher’s last layer. Jawahar et al. [19] show that top layers of BERT encode semantic features and capture long-distance dependency knowledge. These knowledge is more important for most downstream tasks. Besides, layer-to-layer transfer sets a tight restriction for each student layer. Ablation studies show that relaxing restrictions of layer mapping on student models improves performance. Distilling knowledge of the last Transformer layer also allows more ﬂexibility for the number of layers of our student models, avoids the effort of ﬁnding the best layer mapping.
+
+3.2 Self-Attention Value-Relation Transfer
+
+In self-attention module, queries, keys, and values are the most basic and important vectors. The knowledge of queries and keys is transferred via attention distributions. To achieve a deeper mimicry of the self-attention module, we introduce the values and transfer the value relation. The value relation is computed via the multi-head scaled dot-product between values. The KL-divergence between the value relation of the teacher and student is used as the training objective:
+
+VRTL,a
+
+=
+
+softmax( VLT√,aVLT,a ), dk
+
+VRSM,a
+
+=
+
+softmax( VM S ,aVM S ,a ) dk
+
+LVR
+
+=
+
+1 Ah Ah|x| a=1
+
+|x| t=1
+
+DKL(VRTL,a,t
+
+VRSM,a,t)
+
+4
+
+Table 2: Comparison between the publicly released 6-layer models with 768 hidden size distilled
+from BERTBASE. We compare task-agnostic distilled models without task-speciﬁc distillation and data augmentation. We report F1 for SQuAD 2.0, Matthews correlation coefﬁcient for CoLA, and
+accuracy for other datasets. The GLUE results of DistilBERT are taken from Sanh et al. [35]. We report the SQuAD 2.0 result by ﬁne-tuning their released model5. For TinyBERT, we ﬁne-tune the latest version of their public model6 for a fair comparison. We also report the ﬁne-tuning results
+of Truncated BERTBASE and the 6x768 BERT model (BERTSMALL) [41] trained using the MLM objective as baselines. Sajjad et al. [33] show that top-layer dropping consistently outperforms other
+strategies when dropping 6 layers, so we drop top 6 layers from BERTBASE for truncated BERTBASE. The ﬁne-tuning results are an average of 4 runs.
+
+Model
+BERTBASE [12] (teacher) BERTSMALL [41] Truncated BERTBASE [12]
+DistilBERT [35] TinyBERT [20] MINILM
+
+#Param
+109M 66M 66M
+66M 66M 66M
+
+SQuAD2
+76.8 73.2 69.9
+70.7 73.1 76.4
+
+MNLI-m
+84.5 81.8 81.2
+82.2 83.5 84.0
+
+SST-2
+93.2 91.2 90.8
+91.3 91.6 92.0
+
+QNLI
+91.7 89.8 87.9
+89.2 90.5 91.0
+
+CoLA
+58.9 53.5 41.4
+51.3 42.8 49.2
+
+RTE
+68.6 67.9 65.5
+59.9 72.2 71.5
+
+MRPC
+87.3 84.9 82.7
+87.5 88.4 88.4
+
+QQP
+91.3 90.6 90.4
+88.5 90.6 91.0
+
+Average
+81.5 79.1 76.2
+77.6 79.1 80.4
+
+Where VLT,a ∈ R|x|×dk and VM S ,a ∈ R|x|×dk are the values of an attention head in self-attention module for the teacher’s and student’s last layer. VRTL ∈ RAh×|x|×|x| and VRSM ∈ RAh×|x|×|x| are the value relation of the last Transformer layer for teacher and student, respectively. The ﬁnal training loss is computed via summing the attention distribution and value-relation transfer losses.
+Using value relation enables the student to deeply mimic the teacher’s self-attention behavior. Compared with directly transferring value vectors, using scaled dot-product converts teacher and student value vectors of different dimensions into relation matrices with the same size. It avoids introducing additional parameters (randomly initialized) to linearly transform student’s vectors into the same size as its teacher. The additional transformation transforms student vectors into another vector space and restricts teacher from directly transferring knowledge. Value relation also introduces more knowledge of word dependencies.
+
+3.3 Teacher Assistant
+
+Following Mirzadeh et al. [26], we introduce a teacher assistant (i.e., intermediate-size student model) to further improve the model performance of smaller students.
+
+Assuming the teacher model consists of L-layer Transformer with dh hidden size, the student model
+
+has
+
+M -layer
+
+Transformer
+
+with
+
+dh
+
+hidden
+
+size.
+
+For
+
+smaller
+
+students
+
+(M
+
+≤
+
+1 2
+
+L,
+
+dh
+
+≤
+
+1 2
+
+dh
+
+),
+
+we
+
+ﬁrst
+
+distill the teacher into a teacher assistant with L-layer Transformer and dh hidden size. The assistant
+
+model is then used as the teacher to guide the training of the ﬁnal student. The introduction of a teacher
+
+assistant bridges the size gap between teacher and smaller student models, helps the distillation of
+
+Transformer based pre-trained LMs. Moreover, combining deep self-attention distillation with a
+
+teacher assistant brings further improvements for smaller student models.
+
+3.4 Comparison with Previous Work
+Table 1 presents the comparison with previous approaches [35, 20, 38]. MOBILEBERT proposes using a specially designed inverted bottleneck model, which has the same model size as BERTLARGE, as the teacher. The other methods utilize BERTBASE to conduct experiments. For the knowledge used for distillation, our method introduces the scaled dot-product between values in the self-attention module as the new knowledge to deeply mimic teacher’s self-attention behavior. TinyBERT and MOBILEBERT transfer knowledge of the teacher to the student layer-to-layer. MOBILEBERT assumes the student has the same number of layers as its teacher. TinyBERT employs a uniform strategy to determine its layer mapping. DistilBERT initializes the student with teacher’s parameters, therefore selecting layers of the teacher model is still needed. MINILM distills the self-attention knowledge of the teacher’s last Transformer layer, which allows the ﬂexible number of layers for the students and alleviates the effort of ﬁnding the best layer mapping. Student hidden size of DistilBERT and MOBILEBERT is required to be the same as its teacher. Bottleneck and inverted bottleneck
+
+5
+
+Table 3: Comparison between student models of different architectures distilled from BERTBASE. M and dh indicate the number of layers and hidden dimension of the student model. TA indicates teacher assistant6. The ﬁne-tuning results are averaged over 4 runs.
+
+Architecture M =6;dh=384 M =4;dh=384 M =3;dh=384
+
+#Param 22M 19M 17M
+
+Model
+MLM-KD (Soft-Label Distillation) TinyBERT MINILM MINILM (w/ TA)
+MLM-KD (Soft-Label Distillation) TinyBERT MINILM MINILM (w/ TA)
+MLM-KD (Soft-Label Distillation) TinyBERT MINILM MINILM (w/ TA)
+
+SQuAD 2.0
+67.9 71.6 72.4 72.7
+65.3 66.7 69.4 69.7
+59.9 63.6 66.2 66.9
+
+MNLI-m
+79.6 81.4 82.2 82.4
+77.7 79.2 80.3 80.6
+75.2 77.4 78.8 79.1
+
+SST-2
+89.8 90.2 91.0 91.2
+88.8 88.5 90.2 90.6
+88.0 88.4 89.3 89.7
+
+Average
+79.1 81.1 81.9 82.1
+77.3 78.1 80.0 80.3
+74.4 76.5 78.1 78.6
+
+Table 4: The number of Embedding (Emd) and Table 5: Effectiveness of self-attention value-
+
+Transformer (Trm) parameters, and inference relation (Value-Rel) transfer. The ﬁne-tuning results
+
+time for different models.
+
+are averaged over 4 runs.
+
+#Layers
+12 6 12 6 4 3
+
+Hidden Size
+768 768 384 384 384 384
+
+#Param (Emd)
+23.4M 23.4M 11.7M 11.7M 11.7M 11.7M
+
+#Param (Trm)
+85.1M 42.5M 21.3M 10.6M 7.1M 5.3M
+
+Inference Time
+93.1s (1.0×) 46.9s (2.0×) 34.8s (2.7×) 17.7s (5.3×) 12.0s (7.8×) 9.2s (10.1×)
+
+Architecture M =6;dh=384 M =4;dh=384 M =3;dh=384
+
+Model
+MINILM -Value-Rel
+MINILM -Value-Rel
+MINILM -Value-Rel
+
+SQuAD2
+72.4 71.0
+69.4 67.5
+66.2 64.2
+
+MNLI-m
+82.2 80.9
+80.3 79.0
+78.8 77.8
+
+SST-2
+91.0 89.9
+90.2 89.2
+89.3 88.3
+
+modules are introduced in MOBILEBERT to keep the hidden size of the teacher and student are the same. TinyBERT uses an additional parameter matrix to transform student hidden states with smaller dimensions during distillation. Using value relation allows our students to use arbitrary hidden size without introducing additional transformation.
+4 Experiments
+We conduct monolingual and multilingual distillation experiments in different parameter size of student models.
+4.1 Distillation Setup
+We use the uncased version of BERTBASE as our teacher. BERTBASE [12] is a 12-layer Transformer with 768 hidden size, and 12 attention heads, which contains about 109M parameters. We use documents of English Wikipedia3 and BookCorpus [49] for the pre-training data, following the preprocess and the WordPiece tokenization of Devlin et al. [12]. For the training of multilingual MINILM, we use XLM-RBASE4 [10] as the teacher, which is also a 12-layer Transformer with 768 hidden size. We perform knowledge distillation using the same training corpora as XLM-RBASE.
+4.2 English MINILM
+4.2.1 Downstream Tasks
+Following previous language model pre-training [12, 25] and task-agnostic pre-trained LM distillation [35, 20, 38], we evaluate on the extractive question answering and GLUE benchmark.
+3Wikipedia version: enwiki-20181101. 4We use the v0 version of XLM-RBASE in our distillation and ﬁne-tuning experiments.
+6
+
+Table 6: Comparison between different loss func- Table 7: Comparison between distilling knowltions: KL-divergence over the value relation and edge of the teacher’s last Transformer layer and mean squared error (MSE) over value vectors. layer-to-layer (La-to-La) distillation. We adopt a An additional parameter matrix is introduced to uniform strategy as in Jiao et al. [20] to determine transform student value vectors to have the same the mapping between teacher and student layers. dimensions as the teacher values. The ﬁne-tuning The ﬁne-tuning results are an average of 4 runs results are an average of 4 runs for each task. for each task.
+
+Architecture M =6;dh=384 M =4;dh=384 M =3;dh=384
+
+Model
+MINILM Value-MSE
+MINILM Value-MSE
+MINILM Value-MSE
+
+SQuAD2
+72.4 71.4
+69.4 68.3
+66.2 65.5
+
+MNLI-m
+82.2 82.0
+80.3 80.1
+78.8 78.4
+
+SST-2
+91.0 90.8
+90.2 89.9
+89.3 89.3
+
+Architecture M =6;dh=384 M =4;dh=384 M =3;dh=384
+
+Model
+MINILM +La-to-La
+MINILM +La-to-La
+MINILM +La-to-La
+
+SQuAD2
+72.4 71.6
+69.4 67.6
+66.2 64.8
+
+MNLI-m
+82.2 81.8
+80.3 79.9
+78.8 77.7
+
+SST-2
+91.0 90.6
+90.2 89.6
+89.3 88.6
+
+Extractive Question Answering Given a passage P , the task is to select a contiguous span of text in the passage by predicting its start and end positions to answer the question Q. We evaluate on SQuAD 2.0 [31], which has served as a major question answering benchmark.
+GLUE The General Language Understanding Evaluation benchmark [44] consists of nine sentencelevel classiﬁcation tasks, including linguistic acceptability [45], sentiment analysis [36], text similarity [7], paraphrase detection [13], and natural language inference (NLI) [11, 5, 15, 6, 23, 46, 30].
+4.2.2 Main Results
+Previous works [35, 37, 20, 1] usually distill BERTBASE into a 6-layer model with 768 hidden size. We ﬁrst conduct distillation experiments using the same student architecture. Results on SQuAD 2.0 and GLUE dev sets are presented in Table 2. Since MOBILEBERT distills a specially designed teacher (in the BERTLARGE size) with inverted bottleneck modules into a 24-layer student using the bottleneck modules, we do not compare with MOBILEBERT. MINILM outperforms DistilBERT5, TinyBERT6 and two BERT baselines across most tasks. Our model exceeds the two state-of-the-art distilled models by 3.0+% F1 on SQuAD 2.0. We present the inference time for models in different parameter size in Table 4. Our 6-layer 768-dimensional student model is 2.0× faster than BERTBASE, while retaining more than 99% performance on a variety of tasks, such as SQuAD 2.0 and MNLI.
+We also conduct experiments for smaller student models. We compare MINILM with our implemented MLM-KD (knowledge distillation using soft target probabilities for masked language modeling predictions) and TinyBERT, which are trained using the same data and hyper-parameters. The results on SQuAD 2.0, MNLI and SST-2 dev sets are shown in Table 3. MINILM outperforms soft label distillation and our implemented TinyBERT on the three tasks. Deep self-attention distillation is also effective for smaller models. Moreover, we show that introducing a teacher assistant7 is also helpful in Transformer based pre-trained LM distillation, especially for smaller models. Combining deep self-attention distillation with a teacher assistant achieves further improvement for smaller students.
+We also conduct distillation experiments using an in-house pre-trained Transformer model following UNILM [14, 4] in the BERTBASE size. The distilled models achieve better performance on natural language understanding tasks. The models can also be applied for natural language generation tasks and achieve competitive performance. Please refer to the supplementary material.
+4.2.3 Ablation Studies
+We do ablation tests on several tasks to analyze the contribution of self-attention value-relation transfer. The dev results of SQuAD 2.0, MNLI and SST-2 are illustrated in Table 5, using self-attention valuerelation transfer positively contributes to the ﬁnal results for student models in different parameter size. Distilling the ﬁne-grained knowledge of value relation helps the student model deeply mimic the self-attention behavior of the teacher, which further improves model performance.
+5https://github.com/huggingface/transformers/tree/master/examples/distillation 6https://github.com/huawei-noah/Pretrained-Language-Model/tree/master/TinyBERT 7The teacher assistant is only introduced for the model MINILM (w/ TA).
+7
+
+Table 9: Cross-lingual question answering results Table 8: Cross-lingual classiﬁcation results of on MLQA. We report the average F1 and EM (exour 12-layera and 6-layerb multilingual models act match) scores. Results of mBERT and XLMwith 384 hidden size on XNLI. We report the 15 are taken from Lewis et al. [24]. † indicates average accuracy. Results of mBERT, XLM-100 results taken from Conneau et al. [10]. We also and XLM-RBASE are from Conneau et al. [10]. report our ﬁne-tuned results (‡) of XLM-RBASE.
+
+Model
+mBERT XLM-100 XLM-RBASE MINILMa MINILMb (w/ TA)
+
+#Layers
+12 16 12 12 6
+
+#Hidden
+768 1280 768 384 384
+
+Average
+66.3 70.7 74.5 71.1 68.0
+
+Model
+mBERT XLM-15 XLM-RBASE† XLM-RBASE‡ MINILMa MINILMb (w/ TA)
+
+#Layers
+12 12 12 12 12 6
+
+#Hidden
+768 1024 768 768 384 384
+
+Average
+57.7 / 41.6 61.6 / 43.5 62.9 / 45.7 64.9 / 46.9 63.2 / 44.7 53.7 / 36.6
+
+We compare our proposed value relation with directly transferring value vectors (using mean squared error (MSE)). An additional parameter matrix is introduced to transform student value vectors if the hidden dimension of the student is smaller than its teacher. The dev results on three tasks are presented in Table 6. Using value relation achieves better performance. Speciﬁcally, our method brings about 1.0% F1 improvement on the SQuAD benchmark. Compared with transferring value vectors using MSE function, our method does not need to introduce additional transformations, which restrict teacher from directly transferring knowledge. We also show that transferring value relation performs better than transferring hidden states. Please refer to the supplementary material.
+To show the effectiveness of distilling self-attention knowledge of the teacher’s last Transformer layer, we compare our method with layer-to-layer distillation. We transfer the same knowledge and adopt a uniform strategy as in Jiao et al. [20] to perform layer-to-layer distillation. The dev results on three tasks are presented in Table 7. Using the last layer achieves better results. It also alleviates the difﬁculties in layer mapping between the teacher and student. Besides, distilling the teacher’s last Transformer layer requires less computation than layer-to-layer distillation, results in faster training speed. To study why only using the last layer is more effective, we try more strategies to select layers and ﬁnd that reducing the guidance of teacher’s knowledge improves performance. Layer-to-layer transfer sets a tight restriction for each student layer. Transferring the last layer is more ﬂexible and effective. Please refer to the supplementary material.
+4.3 Multilingual MINILM
+We conduct experiments on multilingual pre-trained models and distill XLM-RBASE into 12-layer and 6-layer models with 384 hidden size. We evaluate the student models on cross-lingual natural language inference (XNLI) benchmark [9] and cross-lingual question answering (MLQA) benchmark [24].
+XNLI Table 8 presents XNLI results of MINILM and several pre-trained LMs. Following Conneau et al. [10], we select the best single model on the joint dev set of all the languages. MINILM achieves competitive performance on XNLI with much fewer Transformer parameters. The 12x384 MINILM compares favorably with mBERT [12] and XLM [22] trained on the MLM objective.
+MLQA Following Lewis et al. [24], we adopt SQuAD 1.1 [30] as training data and use MLQA English development data for early stopping. As shown in Table 9, the 12x384 MINILM performs competitively better than mBERT and XLM. 6-layer MINILM also achieves competitive performance.
+4.4 Discussion
+MINILM distills self-attention knowledge of the teacher’s last Transformer layer. Previous works [19] show that BERT encodes surface features or phrase-level information at the bottom layers, syntactic features in the middle and semantic features at the top layers. Can the small model learn surface features or phrase-level information by only distilling the last Transformer layer? Following Jawahar et al. [19], we extract span representations from different layers to analyze the phrase-level information captured by our student model. We randomly pick labeled chunks and unlabeled spans from the CoNLL 2000 chunking dataset [34], and extract span representations from each layer of the 6x384
+8
+
+Table 10: Clustering results of span representations from different layers of BERTBASE and 6x384 MINILM (distilled from BERTBASE). Results of BERTBASE are taken from Jawahar et al. [19]. Normalized mutual information is used to evaluate the clusters.
+
+Layer
+
+1 2 3 4 5 6 8 10 12
+
+BERTBASE 0.38 0.37 0.35 0.30 0.24 0.20 0.16 0.18 0.19
+
+MINILM 0.45 0.49 0.46 0.47 0.37 0.36 -
+
+-
+
+-
+
+model distilled from BERTBASE. k-means clustering is then performed on span representations. As shown in Table 10, MINILM distilled from teacher’s last Transformer layer also learns the phraselevel information well. Moreover, lower layers of MINILM also encode phrasal information better than higher layers. We visualize the attention distributions8 of the teacher (BERTBASE) and the 6x384 students trained using last layer and layer-wise distillation (Figure 1-3 in supplementary material). We ﬁnd that attention distributions for each layer of the layer-wise distilled student are very similar to its corresponding layers of the teacher. For the 6x384 student distilled from teacher’s last layer, attention distributions of the last layer mimic its teacher’s last layer very well, while the bottom layers are more similar to the teacher’s bottom layers. Last layer distillation also learns features of teacher’s lower layers.
+5 Conclusion
+In this work, we propose a simple and effective knowledge distillation method to compress large pre-trained Transformer based language models. The student is trained by deeply mimicking the teacher’s self-attention modules, which are the vital components of the Transformer networks. We propose using the self-attention distributions and value relation of the teacher’s last Transformer layer to guide the training of the student, which is effective and ﬂexible for the student models. Moreover, we show that introducing a teacher assistant also helps pre-trained Transformer based LM distillation. Our student model distilled from BERTBASE retains high accuracy on SQuAD 2.0 and the GLUE benchmark tasks, and outperforms state-of-the-art baselines. Multilingual MINILM distilled from XLM-RBASE also achieves competitive performance. The deep self-attention distillation can also be applied to compress pre-trained models in larger size. We leave it as our future work.
+Broader Impact
+Pre-trained language models have achieved remarkable success for various natural language processing tasks. However, these models consist of hundreds of millions of parameters and become bigger and bigger. It brings challenges for online serving in real-life applications due to latency and capacity constraints. Our work focuses on compressing large pre-trained models into small and fast pre-trained models, while achieving competitive performance. Our method and released models can be useful for a lot of real-life applications. Besides, ﬁne-tuning large pre-trained models has hard requirements of GPU resources and the computational cost is also very high. Fine-tuning and running inference using small models can save GPU hours, dollars, and carbon dioxide emissions. Our small and fast models can also help researchers with less computing resources.
+References
+[1] Gustavo Aguilar, Yuan Ling, Yu Zhang, Benjamin Yao, Xing Fan, and Edward Guo. Knowledge distillation from internal representations. CoRR, abs/1910.03723, 2019. URL http://arxiv. org/abs/1910.03723.
+[2] Lei Jimmy Ba, Jamie Ryan Kiros, and Geoffrey E. Hinton. Layer normalization. CoRR, abs/1607.06450, 2016. URL http://arxiv.org/abs/1607.06450.
+8We use the visualization tool from Vig [43] to analyze model’s attention distributions.
+9
+
+[3] Dzmitry Bahdanau, Kyunghyun Cho, and Yoshua Bengio. Neural machine translation by jointly learning to align and translate. In 3rd International Conference on Learning Representations, ICLR 2015, San Diego, CA, USA, May 7-9, 2015, Conference Track Proceedings, 2015.
+[4] Hangbo Bao, Li Dong, Furu Wei, Wenhui Wang, Nan Yang, Xiaodong Liu, Yu Wang, Songhao Piao, Jianfeng Gao, Ming Zhou, and Hsiao-Wuen Hon. Unilmv2: Pseudo-masked language models for uniﬁed language model pre-training. arXiv preprint arXiv:2002.12804, 2020.
+[5] Roy Bar-Haim, Ido Dagan, Bill Dolan, Lisa Ferro, and Danilo Giampiccolo. The second PASCAL recognising textual entailment challenge. In Proceedings of the Second PASCAL Challenges Workshop on Recognising Textual Entailment, 01 2006.
+[6] Luisa Bentivogli, Ido Dagan, Hoa Trang Dang, Danilo Giampiccolo, and Bernardo Magnini. The ﬁfth pascal recognizing textual entailment challenge. In In Proc Text Analysis Conference (TAC’09, 2009.
+[7] Daniel Cer, Mona Diab, Eneko Agirre, Inigo Lopez-Gazpio, and Lucia Specia. Semeval-2017 task 1: Semantic textual similarity-multilingual and cross-lingual focused evaluation. arXiv preprint arXiv:1708.00055, 2017.
+[8] Kevin Clark, Urvashi Khandelwal, Omer Levy, and Christopher D. Manning. What does BERT look at? an analysis of bert’s attention. CoRR, abs/1906.04341, 2019. URL http: //arxiv.org/abs/1906.04341.
+[9] Alexis Conneau, Guillaume Lample, Ruty Rinott, Adina Williams, Samuel R Bowman, Holger Schwenk, and Veselin Stoyanov. Xnli: Evaluating cross-lingual sentence representations. In Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing (EMNLP), 2018.
+[10] Alexis Conneau, Kartikay Khandelwal, Naman Goyal, Vishrav Chaudhary, Guillaume Wenzek, Francisco Guzmán, Edouard Grave, Myle Ott, Luke Zettlemoyer, and Veselin Stoyanov. Unsupervised cross-lingual representation learning at scale. CoRR, abs/1911.02116, 2019. URL http://arxiv.org/abs/1911.02116.
+[11] Ido Dagan, Oren Glickman, and Bernardo Magnini. The pascal recognising textual entailment challenge. In Proceedings of the First International Conference on Machine Learning Challenges: Evaluating Predictive Uncertainty Visual Object Classiﬁcation, and Recognizing Textual Entailment, MLCW’05, pages 177–190, Berlin, Heidelberg, 2006. SpringerVerlag. ISBN 3-540-33427-0, 978-3-540-33427-9. doi: 10.1007/11736790_9. URL http://dx.doi.org/10.1007/11736790_9.
+[12] Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. BERT: pre-training of deep bidirectional transformers for language understanding. CoRR, abs/1810.04805, 2018.
+[13] William B Dolan and Chris Brockett. Automatically constructing a corpus of sentential paraphrases. In Proceedings of the Third International Workshop on Paraphrasing (IWP2005), 2005.
+[14] Li Dong, Nan Yang, Wenhui Wang, Furu Wei, Xiaodong Liu, Yu Wang, Jianfeng Gao, Ming Zhou, and Hsiao-Wuen Hon. Uniﬁed language model pre-training for natural language understanding and generation. In 33rd Conference on Neural Information Processing Systems (NeurIPS 2019), 2019.
+[15] Danilo Giampiccolo, Bernardo Magnini, Ido Dagan, and Bill Dolan. The third PASCAL recognizing textual entailment challenge. In Proceedings of the ACL-PASCAL Workshop on Textual Entailment and Paraphrasing, pages 1–9, Prague, June 2007. Association for Computational Linguistics. URL https://www.aclweb.org/anthology/W07-1401.
+[16] Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. Deep residual learning for image recognition. In 2016 IEEE Conference on Computer Vision and Pattern Recognition, CVPR 2016, Las Vegas, NV, USA, June 27-30, 2016, pages 770–778, 2016.
+[17] Geoffrey E. Hinton, Oriol Vinyals, and Jeffrey Dean. Distilling the knowledge in a neural network. CoRR, abs/1503.02531, 2015. URL http://arxiv.org/abs/1503.02531.
+10
+
+[18] Jeremy Howard and Sebastian Ruder. Universal language model ﬁne-tuning for text classiﬁcation. In Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), pages 328–339, Melbourne, Australia, July 2018. Association for Computational Linguistics. URL https://www.aclweb.org/anthology/P18-1031.
+
+[19] Ganesh Jawahar, Benoît Sagot, and Djamé Seddah. What does BERT learn about the structure of language? In Proceedings of the 57th Conference of the Association for Computational Linguistics, ACL 2019, Florence, Italy, July 28- August 2, 2019, Volume 1: Long Papers, pages 3651–3657, 2019. URL https://www.aclweb.org/anthology/P19-1356/.
+
+[20] Xiaoqi Jiao, Yichun Yin, Lifeng Shang, Xin Jiang, Xiao Chen, Linlin Li, Fang Wang, and Qun Liu. Tinybert: Distilling BERT for natural language understanding. CoRR, abs/1909.10351, 2019. URL http://arxiv.org/abs/1909.10351.
+
+[21] Mandar Joshi, Danqi Chen, Yinhan Liu, Daniel S Weld, Luke Zettlemoyer, and Omer Levy. Spanbert: Improving pre-training by representing and predicting spans. arXiv preprint arXiv:1907.10529, 2019.
+
+[22] Guillaume Lample and Alexis Conneau. Cross-lingual language model pretraining. Advances in Neural Information Processing Systems (NeurIPS), 2019.
+
+[23] Hector Levesque, Ernest Davis, and Leora Morgenstern. The winograd schema challenge. In Thirteenth International Conference on the Principles of Knowledge Representation and Reasoning, 2012.
+
+[24] Patrick S. H. Lewis, Barlas Oguz, Ruty Rinott, Sebastian Riedel, and Holger Schwenk. MLQA: evaluating cross-lingual extractive question answering. CoRR, abs/1910.07475, 2019. URL http://arxiv.org/abs/1910.07475.
+
+[25] Yinhan Liu, Myle Ott, Naman Goyal, Jingfei Du, Mandar Joshi, Danqi Chen, Omer Levy, Mike Lewis, Luke Zettlemoyer, and Veselin Stoyanov. RoBERTa: A robustly optimized BERT pretraining approach. arXiv preprint arXiv:1907.11692, 2019.
+
+[26] Seyed-Iman Mirzadeh, Mehrdad Farajtabar, Ang Li, and Hassan Ghasemzadeh. Improved knowledge distillation via teacher assistant: Bridging the gap between student and teacher. CoRR, abs/1902.03393, 2019. URL http://arxiv.org/abs/1902.03393.
+
+[27] Subhabrata Mukherjee and Ahmed Hassan Awadallah. Xtremedistil: Multi-stage distillation for massive multilingual models. In Dan Jurafsky, Joyce Chai, Natalie Schluter, and Joel R. Tetreault, editors, Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics, ACL 2020, Online, July 5-10, 2020, pages 2221–2234. Association for Computational Linguistics, 2020.
+
+[28] Matthew Peters, Mark Neumann, Mohit Iyyer, Matt Gardner, Christopher Clark, Kenton Lee, and Luke Zettlemoyer. Deep contextualized word representations. In Proceedings of the 2018 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long Papers), pages 2227–2237, New Orleans, Louisiana, June 2018. Association for Computational Linguistics. URL http: //www.aclweb.org/anthology/N18-1202.
+
+[29] Alec Radford, Karthik Narasimhan, Tim Salimans, and Ilya Sutskever.
+
+proving language understanding by generative pre-training.
+
+2018.
+
+https://s3-us-west-2.amazonaws.com/openaiassets/research-covers/
+
+language-unsupervised/languageunderstandingpaper.pdf.
+
+ImURL
+
+[30] Pranav Rajpurkar, Jian Zhang, Konstantin Lopyrev, and Percy Liang. SQuAD: 100,000+ questions for machine comprehension of text. In Proceedings of the 2016 Conference on Empirical Methods in Natural Language Processing, pages 2383–2392, Austin, Texas, November 2016. Association for Computational Linguistics. doi: 10.18653/v1/D16-1264. URL https://www.aclweb.org/anthology/D16-1264.
+
+11
+
+[31] Pranav Rajpurkar, Robin Jia, and Percy Liang. Know what you don’t know: Unanswerable questions for SQuAD. In Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics, ACL 2018, Melbourne, Australia, July 15-20, 2018, Volume 2: Short Papers, pages 784–789, 2018.
+[32] Adriana Romero, Nicolas Ballas, Samira Ebrahimi Kahou, Antoine Chassang, Carlo Gatta, and Yoshua Bengio. Fitnets: Hints for thin deep nets. In 3rd International Conference on Learning Representations, ICLR 2015, San Diego, CA, USA, May 7-9, 2015, Conference Track Proceedings, 2015. URL http://arxiv.org/abs/1412.6550.
+[33] Hassan Sajjad, Fahim Dalvi, Nadir Durrani, and Preslav Nakov. Poor man’s BERT: smaller and faster transformer models. CoRR, abs/2004.03844, 2020.
+[34] Erik F. Tjong Kim Sang and Sabine Buchholz. Introduction to the conll-2000 shared task chunking. In Walter Daelemans and Rémi Zajac, editors, Fourth Conference on Computational Natural Language Learning, CoNLL 2000, and the Second Learning Language in Logic Workshop, LLL 2000, Held in cooperation with ICGI-2000, Lisbon, Portugal, September 13-14, 2000, pages 127–132. ACL, 2000.
+[35] Victor Sanh, Lysandre Debut, Julien Chaumond, and Thomas Wolf. Distilbert, a distilled version of BERT: smaller, faster, cheaper and lighter. CoRR, abs/1910.01108, 2019. URL http://arxiv.org/abs/1910.01108.
+[36] Richard Socher, Alex Perelygin, Jean Wu, Jason Chuang, Christopher D Manning, Andrew Ng, and Christopher Potts. Recursive deep models for semantic compositionality over a sentiment treebank. In Proceedings of the 2013 conference on empirical methods in natural language processing, pages 1631–1642, 2013.
+[37] Siqi Sun, Yu Cheng, Zhe Gan, and Jingjing Liu. Patient knowledge distillation for BERT model compression. In Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing, EMNLP-IJCNLP 2019, Hong Kong, China, November 3-7, 2019, pages 4322–4331, 2019.
+[38] Zhiqing Sun, Hongkun Yu, Xiaodan Song, Renjie Liu, Yiming Yang, and Denny Zhou. Mobilebert: Task-agnostic compression of bert by progressive knowledge transfer, 2019. URL https://openreview.net/pdf?id=SJxjVaNKwB.
+[39] Raphael Tang, Yao Lu, Linqing Liu, Lili Mou, Olga Vechtomova, and Jimmy Lin. Distilling task-speciﬁc knowledge from BERT into simple neural networks. CoRR, abs/1903.12136, 2019. URL http://arxiv.org/abs/1903.12136.
+[40] Henry Tsai, Jason Riesa, Melvin Johnson, Naveen Arivazhagan, Xin Li, and Amelia Archer. Small and practical BERT models for sequence labeling. In Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing, EMNLP-IJCNLP 2019, Hong Kong, China, November 3-7, 2019, pages 3630–3634, 2019.
+[41] Iulia Turc, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. Well-read students learn better: The impact of student initialization on knowledge distillation. CoRR, abs/1908.08962, 2019. URL http://arxiv.org/abs/1908.08962.
+[42] Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia Polosukhin. Attention is all you need. In Advances in Neural Information Processing Systems 30, pages 5998–6008. Curran Associates, Inc., 2017. URL http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf.
+[43] Jesse Vig. A multiscale visualization of attention in the transformer model. arXiv preprint arXiv:1906.05714, 2019. URL https://arxiv.org/abs/1906.05714.
+[44] Alex Wang, Amanpreet Singh, Julian Michael, Felix Hill, Omer Levy, and Samuel R. Bowman. GLUE: A multi-task benchmark and analysis platform for natural language understanding. In International Conference on Learning Representations, 2019. URL https://openreview. net/forum?id=rJ4km2R5t7.
+12
+
+[45] Alex Warstadt, Amanpreet Singh, and Samuel R Bowman. Neural network acceptability judgments. arXiv preprint arXiv:1805.12471, 2018.
+[46] Adina Williams, Nikita Nangia, and Samuel Bowman. A broad-coverage challenge corpus for sentence understanding through inference. In Proceedings of the 2018 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long Papers), pages 1112–1122, New Orleans, Louisiana, June 2018. Association for Computational Linguistics. doi: 10.18653/v1/N18-1101. URL https: //www.aclweb.org/anthology/N18-1101.
+[47] Canwen Xu, Wangchunshu Zhou, Tao Ge, Furu Wei, and Ming Zhou. Bert-of-theseus: Compressing BERT by progressive module replacing. CoRR, abs/2002.02925, 2020.
+[48] Zhilin Yang, Zihang Dai, Yiming Yang, Jaime Carbonell, Ruslan Salakhutdinov, and Quoc V Le. XLNet: Generalized autoregressive pretraining for language understanding. In 33rd Conference on Neural Information Processing Systems (NeurIPS 2019), 2019.
+[49] Yukun Zhu, Ryan Kiros, Rich Zemel, Ruslan Salakhutdinov, Raquel Urtasun, Antonio Torralba, and Sanja Fidler. Aligning books and movies: Towards story-like visual explanations by watching movies and reading books. In Proceedings of the IEEE international conference on computer vision, pages 19–27, 2015.
+13
+

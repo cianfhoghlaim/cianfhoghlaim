@@ -1,0 +1,2555 @@
+Using GenAI in Teaching, Learning and
+Assessment in Irish Universities
+
+
+ 
+
+ USING GENAI IN TEACHING, LEARNING
+AND ASSESSMENT IN IRISH UNIVERSITIES
+Examples from the Disciplines
+DR ANA ELENA SCHALK QUINTANAR (EDITOR) AND DR PAULINE ROONEY (EDITOR)
+Trinity College Dublin and University College Cork.
+Dublin
+
+
+ Using GenAI in Teaching, Learning and Assessment in Irish Universities Copyright © 2025 by Dr Ana Elena Schalk Quintanar (Editor) and Dr Pauline Rooney (Editor) is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License, except where otherwise noted.
+
+
+ CONTENTS
+Part I. Introduction
+Foreword 3
+Part II. GenAI in Higher Education: reflections on a rapidly
+changing landscape
+What is Intelligence Anyway? AI and Higher Education in the 21st Century 9
+GenAI in Higher Education: Key Considerations 17
+Part III. Arts, Humanities Social Sciences
+Generative AI and DCU Business School
+27
+27
+Navigating Paths of Resistance: Tight-roping GenAI’s role in Continuous
+Assessment Design
+32
+32
+Exploring AI in Entrepreneurship Education: A Case Study on Adapting
+Assessments for Digital Literacy
+36
+36
+Augmenting Digital Marketing Learning with GenAI
+41
+41
+41
+
+
+ Student Use of an LLM Incrementally Fine-tuned to behave like a Teaching
+Assistant in Business and Marketing
+46
+46
+Co-creating Assessment Rubrics with Students and ChatGPT in Film and TV
+49
+49
+Improving Visual Engagement Through Generative AI in Media Studies
+53
+53
+GenAI Dispositions and Literacies: Podcasting as praxis Writing in Media
+58
+58
+Testing the Turing Test with ChatGPT
+62
+62
+Using GenAI for creating Pedagogical Resources/Materials in Education
+66
+66
+Exploring the use of GenAI tools in Personalising Effective Second Language
+Acquisition
+72
+72
+Constructing in the Old English Classroom
+76
+76
+How should we revise our Assessment Methods considering the Impact of
+GenAI?
+79
+79
+GenAI can be ethically used as a Learning and Assessment Tool in Education
+83
+83
+
+
+ Is GenAI Reproducing or Helping to Solve Social Inequality?
+86
+86
+Part IV. Health Sciences
+Exploring Novel Assessment Approaches in Health Policy Management using
+GenAI
+93
+93
+GenAI for Assessment Preparation in Nursing
+96
+96
+Leveraging GenAI for Personalised Guidance in Learning a New Programming
+Language in Pharmacology
+102
+102
+Generative AI as a Professional Issue in Physiotherapy - "It ain’t what you
+prompt, it’s the way that you prompt it!”
+105
+105
+Part V. GenAI to support the Research Process
+Scientific Planning and Proposal Writing using GenAI in Research
+111
+111
+AI and the Information Searching Process
+114
+114
+
+
+ Part VI. Sciences, Technology & Engineering
+Code CompAIre in Computer Sciences
+121
+121
+Providing “hands-on” experience in assessing GenAI work to develop
+awareness in students
+125
+125
+From Essay to Poster: Exploring a New Format for an Energy Module
+Assignment
+129
+129
+Using Generative AI as a tool for Learning in a Python Programming
+Assignment
+134
+134
+Guarding Code Originality and Motivating Student Engagement in Robotics
+137
+137
+Part VII. Developing AI Literacy for Students and Staff across
+Campus
+AI on Campus: Students' Perspectives
+149
+149
+Using a chatbot to support teaching in large groups
+154
+154
+Digital Champions and Gen AI: Staff-Student joint Workshop
+160
+160
+
+
+ Let’s Talk GenAI Empowers University of Limerick Staff
+163
+163
+Using GenAI with teaching staff on a Special Certificate in Teaching, Learning
+and Assessment
+172
+172
+Back 177
+
+
+ 
+
+ PART I
+INTRODUCTION
+INTRODUCTION | 1
+
+
+ 2 | INTRODUCTION
+
+
+ FOREWORD
+FOREWORD | 3
+
+
+ 4 | FOREWORD
+
+
+ While Generative AI technologies have existed for many years, recent rapid advances in the field have
+pushed these technologies into mainstream use across society. As higher education institutions grappled
+with these new technologies, initial responses focused on potentially significant threats to academic
+integrity. However, as our understandings have evolved, there is an increasing awareness that these
+developing technologies also present opportunities for teaching, learning, assessment and research in higher
+education.
+Against this rapidly evolving backdrop, we in the Centre for Academic Practice (Trinity College Dublin)
+found ourselves faced with new challenges. How could we best support our educators to respond to the
+challenges of GenAI? How might we influence and support strategic initiatives and policy development
+regarding GenAI for teaching, learning and assessment at the institutional level? Conscious that our
+colleagues across the sector were facing similar challenges, we decided to initiate a cross-institutional
+collaboration with teaching and learning leaders from across the sector, where we could tackle this together!
+Teaching and learning networks across the Irish higher education sector are well established, thanks
+to the National Forum’s valuable work in seeding and nurturing communities of practice, and to the
+collegiality, support and good will of colleagues across the sector. Building on these networks, we
+approached teaching and learning leaders from across the seven universities in Ireland with the idea of
+collaborating to collate and share evidence-based practices in using GenAI to enhance teaching, learning
+and assessment. We are very grateful to these colleagues for their immediate acceptance of this invitation
+and for their enthusiasm, commitment and dedication to making our aspirations a reality.
+With this publication, we aim to promote AI Literacy, inspire new teaching, learning and assessment
+approaches and spark innovation across disciplines in higher education.
+The process began in January 2024, with 12 collaborating partners from the seven Irish universities, all
+of whom were teaching and learning leaders within their respective institutions. At this initial gathering, it
+was agreed that these partners would collaborate as co-editors of an open access publication which would
+comprise a collection of “use cases” showcasing how GenAI was being used by educators across the sector.
+Recognising that many staff were still at the “experimentation and exploration” stage of using GenAI, it was
+agreed that use cases would focus on identifying and sharing experiences, challenges and emerging practices
+with a view to expanding the knowledge base in this rapidly evolving area and informing future teaching
+and learning practices.
+By June 2024, over 30 use cases had been collated through this collaborative effort. These use cases
+provide a valuable insight into how educators are responding to the challenges, and taking advantage of the
+affordances, of GenAI across a wide range of disciplines.
+This publication opens with two reflective and insightful chapters from K.C. O’Rourke (TU Dublin)
+and Billy Kelly (National Academic Integrity Network): both chapters frame, and offer a contextual
+foundation, for the practitioner-focused use cases which follow. Each use case then captures how GenAI
+has been used within a particular academic context followed by authors’ critical reflections on their
+experiences. These reflections underline the value of each use case as a meaningful learning opportunity:
+both for the authors themselves and also for you the reader.
+We hope that these use cases inspire you to build upon the learning of others and harness the potential
+GenAI within your own practice.
+FOREWORD | 5
+
+
+ Ana Elena and Pauline.
+Co-Editors of this open-access book:
+Dr Martina Crehan. Dublin City University
+Dr Mary Fitzpatrick. University of Limerick
+Ms Leone Gately. University College Dublin
+Dr Loretta Goff. University College Cork
+Dr Iain Mac Labhrainn. University of Galway
+Dr Caitriona Ní Shé. Trinity College Dublin
+Ms Lisa O’Regan. Maynooth University
+Dr Sarah Thelen. University College Cork
+Dr Leigh Wolf. University College Dublin
+Cover Design : Ms Florentine Poissonnier Faur. Images at the top of each example were created with
+Copilot.
+We extend our heartfelt gratitude to Billy Kelly, Chair of the National Academic Integrity Network, and Kevin O’Rourke from Technological University Dublin, for their invaluable contributions to frame the teaching, learning and assessment practices of this publication.
+We greatly acknowledge Dr Caitríona Ní Shé, Dr Claire McAvinia and Kevin O’Connor for their
+invaluable contribution to the final editing process of this open resource.
+Note to readers:
+This is a live publication. If you are interested in contributing to this open resource and sharing your
+practice, please contact schalka@tcd.ie.
+6 | FOREWORD
+
+
+ PART II
+GENAI IN HIGHER EDUCATION:
+REFLECTIONS ON A RAPIDLY
+CHANGING LANDSCAPE
+GENAI IN HIGHER EDUCATION: REFLECTIONS ON A RAPIDLY CHANGING LANDSCAPE | 7
+
+
+ 8 | GENAI IN HIGHER EDUCATION: REFLECTIONS ON A RAPIDLY CHANGING LANDSCAPE
+
+
+ WHAT IS INTELLIGENCE ANYWAY? AI
+AND HIGHER EDUCATION IN THE 21ST
+CENTURY
+K. C. O’Rourke.
+Technological University Dublin.
+My younger son recently finished secondary school, where he enjoyed computer science and did very
+well in that subject in his Leaving Certificate. When it came to his choices for university study, he listed
+computer science courses as his top three options. He had wanted to study classics, but that subject was
+not available to him at his school, so he had opted for computer science instead. Earlier in the summer, my
+partner had a conversation with him and asked if he was happy with his stated choice of university courses.
+After some to-ing and fro-ing, he revised his application form and placed classics as his first choice. He was
+offered a place on a classics course which he accepted and has now started at university. Some of my friends
+have expressed disbelief at what he had done. Computer science is surely a far better option in the twenty
+first century than studying dead languages and ancient history, right? What are his job prospects going to
+be with a degree in classics? I am aware that this is a luxury afforded to him, not least because in Ireland our
+university fees are very low compared to other countries. Nonetheless, I think he made the correct choice.
+His future career is not exactly clear, but he is pursuing something that he really wants to do. Which brings
+me to the question I was trying to address in writing this piece throughout the time he was changing his
+mind: what is the value, if any, of higher education?
+Purpose of Higher Education
+In these days of perpetual-crisis news headlines – exacerbated by attention-hungry algorithms and profit
+hungry social media corporations – the purpose of a university education is not always clear. Conspicuous
+billionaires who abandoned their studies at private colleges in favour of entrepreneurial endeavours may
+suggest that university education is unnecessary, possibly even irrelevant, for success in the world of
+business. So why bother with university education at all? For most people, income and education levels are
+inextricably linked – medicine, engineering, computer science, among others, all attract high earnings 
+but does possession of a university degree signify anything beyond employability? Do humanities subjects
+and those with less practical application have any relevance to twentieth-first-century life? What is a degree
+worth anyway?
+From the US to the EU, many of the traditional assumptions about higher education are now regularly
+questioned, with much scrutiny of the internal functioning of our universities, not least with regards to
+our use of public funds. Inside the academy, rather than resisting this, we should take heed. We need to
+WHAT IS INTELLIGENCE ANYWAY? AI AND HIGHER EDUCATION IN THE 21ST CENTURY | 9
+
+
+ ask whether working in publicly-funded higher education is a privilege or a public good (or, indeed, both).
+What is the point of maintaining academic departments that teach subjects with low practical application,
+such as classics, philosophy, and the humanities more generally? Should our universities prioritise career
+skills for the economy over intellectual and personal development? This questioning extends beyond the
+scope and purpose of higher education to issues of academic freedom and the content of the university
+curriculum: should academics be sanctioned if their pronouncements extend to criticism of financial
+benefactors or of government policy, or if they wish to express support of (or indeed opposition to) foreign
+wars and regimes?
+The impact of GenAI
+Add to all this the arrival on the scene of ChatGPT and other Generative Artificial Intelligence (GenAI)
+tools. Just when academia got used to the idea that internet access is here to stay and may even be a
+good thing – thanks in part to continued connectivity achieved throughout the COVID-19 pandemic 
+GenAI landed as an even bigger bombshell. The breakneck speed at which all digital things are evolving
+has brought with it the integration of artificial intelligence (AI) into almost all human activity. This digital
+revolution has caused alarm, even outrage, at many levels. From questions of bias and surveillance to
+potential existential risks posed by superintelligent systems, the unknown implications of AI loom large
+in everyday discourse. Across the industry, there is a widespread fear that certain professions will soon be
+rendered redundant, while in higher education the debate has largely been one of suspicion, with fears
+of AI-generated student work diluting standards, prompting heightened vigilance in assessment and a
+tightening of academic integrity criteria.
+Clearly, we cannot simply ignore GenAI. And so, the big question has become how we respond. After
+the initial panic, discussion within the academy has moved on somewhat, and now centres on whether
+GenAI is a blessing or a curse, and how we might control and direct its use by students. But it is clear that if
+an algorithm can produce top-quality reports and read medical scans with greater precision and speed than
+a human can, many of the traditional approaches to teaching and learning will need to be revised in a way
+that actively facilitates the usage of such tools. And that could be painful. And relentless. As humans, we
+tend to stick with what we know, and as educators we tend to rely on the methods and techniques used
+when we ourselves were students. But as long as our internet connections hold, and while the underseas
+cables that connect the web remain intact and rogue programs are prevented from disabling our systems,
+GenAI is here to stay. As intelligent humans, we must learn to live with it. And we should help our students
+to use GenAI for the greater good, in a manner that helps rather than hurts the world, in turn bringing us
+back to the initial question regarding the value of higher education itself. To do that, we must understand
+what it is that we mean by artificial intelligence, and how it differs from what is achievable by humans.
+Intelligence
+So, what do we mean by intelligence? Britannica succinctly says that human intelligence is a “mental
+10 | WHAT IS INTELLIGENCE ANYWAY? AI AND HIGHER EDUCATION IN THE 21ST CENTURY
+
+
+ quality that consists of the abilities to learn from experience, adapt to new situations, understand and
+handle abstract concepts, and use knowledge to manipulate one’s environment.” Wikipedia, the bête
+noir of academia, helpfully adds that intelligence differs from learning, as the latter “refers to the act of
+retaining facts and information or abilities and being able to recall them for future use,” while intelligence
+“is the cognitive ability of someone to perform these and other processes.” Intelligence, in turn, is related
+to the possession of knowledge and truth. As humans, not only do we know things, but we know that
+we know things: this belief, although not unchallenged, has often been held up as the characteristic that
+distinguishes humans from other animals. Such metacognition can take us into the realms of philosophy
+and psychology, as well as the worlds of pedagogy and even computer science. And it may well be that
+these disciplines are not so different after all, a revelation long known to many but which may provide the
+foundation for a new way of thinking about the university and its disciplines.
+For most of the twentieth century, Anglo-American philosophy was dominated by what has been called
+the linguistic turn, an idea rooted (ironically enough) in mathematics and logic. Put simply, it is the idea
+that human language and its relationship to the world are all that we can use to constitute and represent
+(and thereby understand) all reality. In the words of Austrian philosopher Ludwig Wittgenstein’s Tractatus
+(1922), a work composed in part during his time as a soldier in World War 1, “The limits of my language
+means the limits of my world”. This was also the era of James Joyce’s Ulysses (also 1922 and composed
+during wartime) and of Finnegans Wake (1939), both dense texts which are either works of art and genius
+or utter nonsense, depending on your perspective. Joyce’s use of language, certainly in the latter work,
+breaks all the rules of logic and is therefore considered to be art: some have made the same claim for
+the Tractatus which ends: “Of that which we cannot speak, we must pass over in silence.” Wittgenstein’s
+Tractatus is dense, and some would say impenetrable, both in the original German and in its English
+translations. In fact, he later refuted some of his earlier work in his posthumous Philosophical Investigations,
+a work composed in part during his time in Ireland (a plaque commemorating him sits on the steps in
+the Glasshouse at Dublin’s Botanic Gardens). In a similar vein, discredited German philosopher Martin
+Heidegger, in his 1947 “Letter on Humanism” observed that language contains all of human reality:
+“Language is the house of Being. In its home man dwells” (i.e., that somehow all reality is contained
+in language). The twentieth century can indeed be characterised as the century of language (in Ireland
+characterised by attempts to reintroduce the Irish language as the vernacular). And so, it is not really
+surprising that language – specifically large language models – rest at the foundation of what has come to
+be known as artificial intelligence.
+The phrase Artificial Intelligence (abbreviated as AI) was first popularised by John McCarthy, an
+American mathematician, in 1955 in support of a funding application for a proposed summer workshop
+at Dartmouth College. The study, he proposed, was based on the idea that “a large part of human thought
+consists of manipulating words according to rules of reasoning and rules of conjecture”, and would
+“proceed on the basis of the conjecture that every aspect of learning or any other feature of intelligence
+can in principle be so precisely described that a machine can be made to simulate it”. Consequently, he
+proposed that “an attempt will be made to find how to make machines use language, form abstractions
+and concepts, solve kinds of problems now reserved for humans, and improve themselves.” Essentially,
+McCarthy was putting into practice what the philosophers had been saying during previous and
+WHAT IS INTELLIGENCE ANYWAY? AI AND HIGHER EDUCATION IN THE 21ST CENTURY | 11
+
+
+ subsequent decades that, in essence, language contains all human reality. Such an idea of reality, while
+attractive at one level, would appear quite limiting at another. To my mind, it seems a rather reduced way
+of looking at the world (to adopt academic language, it appears epistemically plausible but ontologically
+impoverished). Nonetheless, the essence of this idea has made its way into other disciplines, and by the late
+twentieth century, the linguistic turn had become very evident across the humanities and social sciences.
+But this “Artificial Intelligence” is not intelligence at all, or certainly not intelligence as we attribute to
+humans. In fact, in many circles AI is known as Machine Learning, a far better term for what at base is a
+pattern-matching function. AI software is designed to reprogram itself in the act of pattern-matching: as
+the program is exposed to more and more accurate data, the more likely it is to reflect patterns correctly, in a
+manner recognisable by humans. For example, as English-speaking, literate humans we instantly recognise
+the letter sequences “ABCDEFG” and “abcdefg” as the first seven letters of the alphabet in upper and
+lower cases. We also recognise that “Abacus” and “abacus” are correct versions of spellings, while “aBBacuS”
+is almost certainly incorrect except, perhaps, as an imagined brand name (apt, perhaps, for an emergent
+software development company). We have learned this as part of our education in primary school, and our
+ability to recognise these patterns as words that may mean something in the context of other words and
+sentences remains with us as long as that part of our brain continues to function. If we encounter sentences
+such as “The abacus looks like Gavagai” or “The gavagai penholders the Abacus”, we will be given pause for
+thought, because the sentences seem to make sense but ultimately do not (unless, perhaps, we are familiar
+with the philosophy of Ludwig Wittgenstein and/or W.V.O. Quine). This is clearly a part of (but not all of)
+human intelligence.
+Software can be programmed to recognise patterns by exposure to the billions of examples available
+to it on the internet, placed there by humans in the act of communication both in commercial and
+non-commercial contexts. Such programs can recognise that capital letters are used in certain places and
+lowercase in others, and that certain letters and words follow patterns, which allow it to predict the next
+letter or word. It “knows” this (or more accurately, it identifies this pattern) because of the billions of
+examples it has matched in the data that has been made available to it1. As anticipated by McCarthy, AI
+can go further, and correct errors based on probability via the number of pattern-matching examples it is
+presented with. It can go further still and create new patterns of letters and words in sentences that reflect
+the identified patterns and make sense to humans. And it can go yet even further and create meaningful
+sentences that are recognisable to humans as grammatically and syntactically correct, but which are either
+inaccurate or bear no relation to reality: asked to summarise the plot of Ulysses (March 2024), ChatGPT
+stated that “The novel culminates in a surreal episode at the seashore, where the two protagonists briefly
+converge before parting ways” which readers of Joyce’s masterpiece will recognise as incorrect. If challenged
+about such mistakes (or hallucinations), the software is programmed to reply with words such as “My
+responses are based on patterns and associations found in the data used to train me”. In a reversal of
+Wittgenstein’s claim, we can say that for AI at this stage, the limits of its world are indeed the limits of its
+language. But as the software is exposed to more and more materials, both in written and visual forms, the
+better it is becoming: already improved versions of these publicly available softwares are being used by all
+the major software companies, each attempting to outdo the other in their pursuit of market share and
+profits.
+12 | WHAT IS INTELLIGENCE ANYWAY? AI AND HIGHER EDUCATION IN THE 21ST CENTURY
+
+
+ However, software does not actually know anything. Unlike humans, issues concerning truth are not
+within their capability. It has no knowledge concerning what any of these words or patterns mean and has
+no ability to evaluate them (“I do not have the ability to evaluate the moral implications of a particular
+action or decision”). The software may appear to understand by issuing such responses but, unlike
+humans, it is not aware that it is performing any function at all. It is simply an advanced pattern-matching
+machine. Put very simply in the words of Kate Crawford (Atlas of AI), AI is neither artificial nor
+intelligent. However, by telling the software that it is incorrect, we are, in turn, helping it to build a more
+accurate reflection of reality, in essence helping to feed the monster that is AI. And the intriguing thing
+is that as the software is exposed to more and more data, it can then begin to program itself in ways that
+humans cannot understand. And this, of course, is where it can begin to get frightening. The idea that
+software might independently execute commands to jeopardise a competitor’s software program, or even
+more seriously to autonomously launch missiles in an attack on a physical location, is not implausible given
+the prevalence of AI software in all aspects of civil and military equipment2. And so now is certainly the
+time to take stock, to investigate what we are not able to foresee at present but which may be significantly
+possible for us to predict in the future.
+Artificial Intelligence: potential and challenges in Higher Education
+Artificial Intelligence is already being used to excellent effect in medical diagnostics, identifying illness
+and disease from images and scans to a much more accurate level than humans can. However, as noted,
+AI software does not itself know what the patterns actually signify: human intelligence determines their
+meaning. In this manner also, through programming and responding, as humans we imbue software
+with our own particular interpretations, values and biases, whether consciously or unconsciously. And as
+software programming and deployment is overwhelmingly a for-profit, male enterprise, AI reflects a for
+profit, male world unless there is a conscious effort to the contrary. And knowledge of this fact, equally, is
+where things can begin to get disturbing. AI systems, while designed to optimize efficiency and accuracy,
+can perpetuate biases, or produce unethical outcomes. For instance, biased algorithms used in hiring
+processes or loan approvals might discriminate against certain demographic groups, exacerbating societal
+inequalities. Our recognition of the prevalence of such biases underscores the importance of ensuring that
+AI systems are designed and rigorously tested to mitigate harmful consequences. Trust is essential for the
+ethical adoption and acceptance of AI technologies across various domains, from healthcare to finance and
+to criminal justice.
+It is clear that AI has the potential to revolutionise the workplace and higher education for the better,
+making learning more personalised, accessible and effective, while also improving administration and
+supporting research processes. However, in a democratic society, attempts to achieve this should be made
+in a manner that is fair and transparent. We must address ethical concerns, data privacy and equity issues
+to ensure that AI technologies are deployed responsibly and inclusively, and not just for the benefit of the
+billion-dollar tech industry. The 2024 introduction of AI legislation by the EU goes some way towards
+WHAT IS INTELLIGENCE ANYWAY? AI AND HIGHER EDUCATION IN THE 21ST CENTURY | 13
+
+
+ achieving this ambition, but enterprise and higher education both need to take it a step further and educate
+our academic community regarding both the threats and possibilities which AI holds. And it is here that
+the necessity for a broader approach to education becomes evident. Just because we can do certain things
+does not mean that we should do them. But how can we make such decisions? Re-enter the humanities,
+those disciplines that explore issues concerning the human condition, whether through the lens of Greek
+tragedy or the philosophy of Aristotle. According to one GenAI (drawing heavily on Britannica and
+Wikipedia, “The humanities encompass branches of knowledge that focus on human beings, their culture,
+and the methods of inquiry derived from an appreciation of human values. These disciplines include the
+study of languages, literature, arts, history, and philosophy. Essentially, the humanities explore the unique
+ability of the human spirit to express itself through various forms of expression and critical analysis.” This,
+I believe, is where we find the true value of higher education and its relevance to contemporary society.
+So, what does academia need to do in order to respond effectively to GenAI and its widespread use in
+education and in society more generally? In the first instance, we need to know what it is, and to what
+end it is being used. To date, such information has been the preserve of private enterprises, which have
+jealously guarded their algorithm secrets and sought to outperform each other and to bypass regulation for
+the sake of their own bottom line. But this lack of transparency holds us all hostage and is detrimental to the
+promotion of accountability, trust, ethical decision-making, and regulatory compliance in the deployment
+of AI. Stakeholders, especially universities, need to understand how AI systems make decisions and the
+factors influencing those decisions. Transparency fosters trust between AI developers and end-users: when
+we understand how AI systems work and the data they use, we are more likely to trust the outcomes
+produced by those systems. Furthermore, as AI technologies become increasingly autonomous and capable
+of making decisions without human intervention, questions of accountability and transparency come
+even more to the fore. Autonomous AI systems raise concerns about who bears responsibility for their
+actions and how to ensure accountability in cases of error or wrongdoing. Without clear guidelines and
+mechanisms for accountability, the deployment of AI in critical domains such as healthcare, criminal justice
+and transportation risks undermining public trust and confidence.
+Privacy and surveillance represent another ethical frontier in the age of AI. Technologies such as facial
+recognition and predictive analytics enable unprecedented levels of data collection and analysis, something
+which can be used to reduce crime, but which equally raises concerns about mass surveillance and privacy
+infringement. The proliferation of AI-powered surveillance systems can pose significant risks to civil
+liberties and individual freedoms, necessitating robust ethical frameworks to safeguard privacy rights and
+prevent abuse. (Again, the EU laws regulating AI go some way towards achieving this.) Moreover, the
+potential for job displacement and economic disruption stemming from AI automation fuels debates
+about societal fairness and equity. While AI promises to enhance productivity and efficiency, the
+widespread adoption of automation technologies may exacerbate income inequality and socioeconomic
+disparities. Considerations surrounding job displacement highlight the need for policies that prioritise
+retraining and reskilling initiatives to ensure a smooth transition to an AI-driven economy. Beyond these
+immediate concerns, there appear to be existential risks associated with the development of AI systems,
+raising questions about the future of humanity and our role in shaping the trajectory of technological
+advancement. Such existential risks, if real, underscore the imperative of adopting a precautionary
+14 | WHAT IS INTELLIGENCE ANYWAY? AI AND HIGHER EDUCATION IN THE 21ST CENTURY
+
+
+ approach to AI deployment and ensuring that ethical considerations are paramount in guiding research
+and innovation.
+But the question of ethics is more than a matter of compliance and box-ticking, of knowing which rules
+apply and where. Whose values are important? For example, does the belief that environmental concerns
+are more important than profit accumulation, or that individual liberty is more important than state
+control, have a basis beyond personal interests or religious belief? These are not questions of science but of
+the humanities. Which in turn brings us back to the question of higher education. If we merely train our
+students – our future workforce – to create and use AI, we are doing them a disservice. As citizens of the
+world, our students need to understand not just how AI works, but they also need to know how to make
+it work for the greater good. And just what that good is has always been somewhat moot, a grey area. And
+grey areas are not always looked upon favourably from a STEM perspective which, like some religious and
+state agencies, tends to favour black and white, right, and wrong answers.
+So, what does higher education need to do in order to make sense of our digital world of artificial
+intelligence? To begin, we must start from a position of helping students to think more broadly about their
+chosen fields. And to do that, as educators, we too must think more broadly about a world changed by
+all things digital. Existing boundaries between disciplines need to be questioned and breached if necessary:
+classicists need to have an understanding of computer science and scientists need to have a grasp of
+the humanities that is more than superficial. We must actively revisit our curriculum in almost every
+discipline in order to prepare our graduates for a world of uncertainty that is imbued with GenAI. We
+need to understand that education and training, while not mutually exclusive, are not the same, and that
+everything we do as humans is imbued with our particular values. We have to acknowledge that there
+may be a difference between the needs of our students as future contributors to the economy and their
+understanding of what it means to be human in the twenty-first century. And to achieve that we need
+a change in mindset among us academic staff. This will not be easy: insufficient time and inadequate
+levels of support have regularly been cited by academics in survey after survey regarding their low levels of
+engagement to date with digital technologies. This will need to change. To be successful we need to work
+together, from top down to bottom up across disciplines and departments to agree a way forward, and we
+need to do that now. The companion pieces in this volume demonstrate some of the ways in which we
+are already doing this. But we need more. More imagination. More creativity. Only in this manner can we
+help our students to find their meaning and values relevant to the contemporary world. Along the way, we
+might also begin to clarify the role and purpose of our universities in the twenty-first century. And thus, we
+can lay the foundations for a better society, indeed a better world, for future generations.
+(October 2024)
+Suggested further reading:
+Goodlad, M., Stone, M. (2024) “Beyond Chatbot-K: On Large Language Models, “Generative AI,” and
+Rise of Chatbots—An Introduction”, Critical AI. 2 (1).
+WHAT IS INTELLIGENCE ANYWAY? AI AND HIGHER EDUCATION IN THE 21ST CENTURY | 15
+
+
+ Footnotes:
+1 The legality and ethics of using such data in this manner, given that large parts of these are protected by
+copyright, is controversial. A recent revelation that Microsoft has paid large sums of money to academic
+publishers to train its OpenAI software on the publishers’ output has proven controversial, and has drawn
+outrage from authors who had not been informed of this move.
+2 One response from MIT is the AI Risk Repository. Launched in August 2024, this documents over
+700 potential risks advanced AI systems could pose and describes itself as “the most comprehensive source
+yet of information about previously identified issues that could arise from the creation and deployment of
+these models.”
+16 | WHAT IS INTELLIGENCE ANYWAY? AI AND HIGHER EDUCATION IN THE 21ST CENTURY
+
+
+ GENAI IN HIGHER EDUCATION: KEY
+CONSIDERATIONS
+Billy Kelly
+Chair, National Academic Integrity Network.
+Introduction
+Generative Artificial Intelligence (GenAI) has changed the landscape of higher education (HE)
+momentously, offering fundamentally new affordances in learning while at the same time dramatically
+moving the needle on assessment integrity; it is much more than an inflection point on the trajectory of
+technology in higher education.
+In many respects, GenAI has made manifest things that were already amiss in HE: higher education
+institutions (HEIs) generally have demonstrated sustained innovation, albeit at a slow pace with little
+fundamental change to teaching and learning methods and the assessment of learning that underpins their
+accreditation of learning. Those methods have not always changed to reflect technologies and their changed
+student bodies: more often than not, technological advances have been incorporated into a centuries-old
+operational model, perhaps with the limited exception of distance and online learning.
+HEIs must now grapple with the short-run and long-run implications of Generative Artificial
+Intelligence (GenAI) for learners and for accreditation while recognising that the capabilities and
+applications of GenAI and related technologies are growing at a relentless pace. We are entering what Sarah
+Eaton calls a “postplagiarism” era, where developments such as neurotechnologies will bring ethical and
+integrity considerations centre stage (Eaton, 2023).
+The discourse around GenAI is crucial: talking about GenAI as if it is a single entity doesn’t make sense;
+it covers and can encompass so many different levels and depths of use, raising differing concerns, among
+them, ethical and equity issues and inherent biases. Just as smartphones have changed the way we interact
+with society, so, too, will GenAI change the way that stakeholders of all types will engage with HE. The
+ubiquitous presence of GenAI, embedded in the everyday technologies that our teachers and learners use,
+will cast them as co-creators of knowledge and can be expected to impact on the behaviours of all within
+the HE ecosystem. Furthermore, the apparent expertise of GenAI and how GenAI is discussed in the media
+and the wider world threatens the social contract that HE has had with wider society: what is the rationale
+for HE if GenAI can substitute for it at a fraction of the cost?
+GENAI IN HIGHER EDUCATION: KEY CONSIDERATIONS | 17
+
+
+ Need to reimagine
+Already we have seen GenAI create a crisis of trust in our assessment methods: the authenticity and
+integrity of some of HE’s widely used assessment methods have been fundamentally undermined by
+widely available GenAI tools. This has implications for accreditation of learning and for the policies and
+procedures that assure that learning.
+GenAI technologies will challenge all levels of education to reshape the learning journey of students:
+what learning should or should not be outsourced to GenAI? To the extent that what happens in primary
+and post-primary education shapes those students’ patterns of engagement with learning, there are likely
+implications for student learning in higher education. While the impact of GenAI on earlier stages of
+learning may have consequences for higher education, what follows focuses just on the HE stage of the
+learner journey.
+Learning
+What does learning mean in the context of sophisticated GenAI and ubiquitous and embedded GenAI
+technologies? For example, if we just took the cognitive domain of Bloom’s taxonomy, what do the levels
+mean in the presence of ubiquitous GenAI with respect to what we expect as a learning outcome? In the
+presence of artificial intelligence, what do knowing, understanding, or applying knowledge mean in terms
+of the ambition that we have for the learner? What should the learning outcomes (LOs) look like? And
+what should the assessment of these LOs look like? The LOs must take account of artificial intelligence.
+Given GenAI, what are we looking for in our learners to demonstrate analysis, synthesis, and evaluation?
+The answers to these questions will reflect individual disciplines and there cannot be a ‘top-down’ solution;
+it must come from GenAI literate staff on the ground. Resourcing and leadership in GenAI literacy must
+come from the highest levels in the HEIs and the sector, but it is critical that those at the coalface of learning
+– where staff and students interact – have current and comprehensive understanding of the capabilities of
+GenAI and the ethical considerations in its use. This should be supported by professional development at
+national and institutional levels, e.g., .GenAI for Teaching and Learning: How to do it right? (The National
+Forum, HEA, 2024). What is key is that engaging with GenAI literacy is not a discretionary choice for
+those working and learning in HE: as educators, we need to ensure that we (and our learners) understand
+how, and when, to integrate GenAI into our learning practices and, at the same time, limit the outsourcing
+of required learning to GenAI and mitigate negative impacts on learning practices; learners need to be
+equipped with the evaluative skills to guide them in their use of GenAI tools. There is no ‘one size fits all’:
+what is appropriate will vary across disciplines and stages of learning.
+GenAI technologies offer transformational possibilities in addressing the challenges posed by increased
+participation in HE: personalised learning supported by a GenAI tutor, individualised curricula reflecting
+diverse student needs, automated grading and feedback, etc. Mollick & Mollick, 2023, point to a creative
+use of existing GenAI technologies in supporting the student learning journey, while, at the same time,
+identifying the attendant risks associated with their use. The potential impact of GenAI technologies on
+student creativity is mixed: its supportive capabilities must be balanced with concerns of negative impacts
+18 | GENAI IN HIGHER EDUCATION: KEY CONSIDERATIONS
+
+
+ and, in particular, with the impact of a learner’s ‘creative confidence’ on their effective engagement with
+GenAI in this area (Habib et al., 2024).
+The GenAI landscape in higher education is likely to be populated by bespoke GenAIs, where LLMs
+are trained and fine-tuned to reflect specific disciplines and stages of learning. This points to a need for
+professional development for staff in training of LLMs and in the deployment of GenAI technologies.
+Used appropriately, GenAI can be an enhancer of the aggregate of learning, raising those at the bottom
+of the distribution significantly more than those at the top. Mollick (2024) sees GenAI as a great leveller,
+raising the performance of those at the lowest initial levels, turning “poor performers into good
+performers” and boosting “the least creative the most”.
+Assessment and accreditation
+Accreditation of learning is arguably the core function of universities; if they cannot appropriately ensure
+that learning has taken place, then their authority, reputation, and raison d’être are fatally undermined.
+GenAI has been shown to be capable of successfully answering existing sophisticated tests of knowledge
+and evaluation framed as MCQs (Newton & Xiromeriti, 2024) and of passing professional and other
+examinations (Varanasi, 2023), (Gimpel, et al., 2024). While GenAI is likely to be integrated into
+assessment practices, it is its unauthorised use that is problematic, specifically, unauthorised content
+generation (Foltynek, et al., 2023).
+In the short to medium term, much of the focus is likely to be on setting out to secure current versions of
+assessments (or variants of these) against academic misconduct. This is an understandable response by the
+HE community but will not be a sustainable position for the longer term due to workload and resourcing
+issues. The challenge of ensuring the authenticity of students’ learning will, almost certainly, require a
+more engaged and personal interaction between learner and assessor, whether in proctored assessment or
+in interrogative interactions with learners such as interactive oral assessment (Ward, et al., 2023). It is worth
+noting that these approaches necessarily impact on practices related to anonymity of learners in assessment
+and feedback.
+More importantly, Lodge et al. (2023) note the resource intensity of assessment security and identify
+“a need to target ... [resource-intensive assessment methods] ... to where it will have the most impact 
+namely those moments of assessment that provide greater assurance that students who have been awarded
+the qualification have achieved the program outcomes”.
+As GenAI becomes embedded in the learning environment and learning itself is increasingly mediated
+by GenAI technologies, how concepts such as creativity, innovation, and originality are evaluated and
+rewarded will create new questions for educators. At the same time, it may confront learners with the need
+to navigate an uncertain line between what is allowed and what constitutes academic misconduct.
+GenAI and hallucination
+The apparent capabilities of Large Language Models (LLMs) are tempered by their tendency to
+‘hallucinate’ where the LLM may produce plausible but erroneous information and present it as fact.
+GENAI IN HIGHER EDUCATION: KEY CONSIDERATIONS | 19
+
+
+ While more recent LLMs hallucinate to a lesser extent, there remains a need to check the credibility and
+veracity of what has been produced. Detecting hallucinations is likely to present different challenges for
+learners depending on discipline and stage of learning: there will be disciplines where there are clearly
+established truths and others where interpretation is key; similarly, where learning is at the boundaries of
+knowledge, discerning fact from hallucination may be particularly demanding. The capability of learners
+to meet the challenge of verification may be an important consideration in deciding the stage of learning
+where learners are exposed to GenAI: for example, final-year undergraduates would be expected to be better
+placed to substantiate an LLM’s output than a first-year undergraduate.
+Disruption to the integrity of qualifications
+Without a doubt, the widespread use of GenAI has increased the risks to the integrity of qualifications:
+these integrity risks extend from pedagogy to assessment. Zero risk does not exist. It follows that
+institutions should adopt a risk-based approach to integrity, recognising the existence of risks, undertaking
+an assessment of those risks, and developing strategies to manage and mitigate those risks. The risks to
+pedagogy and curriculum may not yet be clearly identified but those to assessment are already evident.
+These include abilities to produce elements of assignments such as essays, reports, computer programming
+code, etc.
+The design of assessment and the learning culture nurtured by institutions will play an important part
+in abating academic integrity risks but cannot be expected to eliminate those risks. That and the adoption
+of lessons from situational crime prevention can further mitigate the integrity risks in assessment. In a
+parallel with opportunities to prevent crime before, during, and after the crime event, Birks & Clare (2023)
+identify corresponding examples of clear guidance and assessment design (before), monitoring assessment
+activity through submission of drafts (during), and random interviews based on markedly different scores
+as between supervised and unsupervised assessments (after). Nonetheless, the efforts of institutions in
+setting out to detect cases of ‘unauthorised content generation’ will continue to be an essential element in
+deterring academic misconduct.
+Assuring the integrity of qualifications
+The rapid growth of GenAI tools and technologies and their incorporation into everyday tools used by
+staff and students has created blurred lines as between what is seen as acceptable use of GenAI and what
+has strayed into areas of inappropriate use. From an institutional and learning perspective, identifying that
+“inappropriate use” is important: is this a misconception on the part of the learner or is it a deliberate
+attempt to deceive? Depending on the conclusion reached, the institutional response may range from
+education and additional guidance to the application of misconduct procedures.
+While the core of the institutional solution to assurance of integrity may be assessment design and
+guidance for learners, a necessary accompanying dimension must be the development of robust processes
+to detect inappropriate use.
+It is clear that technological solutions such as GenAI detectors do not, themselves, represent a credible
+20 | GENAI IN HIGHER EDUCATION: KEY CONSIDERATIONS
+
+
+ or equitable solution (Perkins, et al., 2024). But AI detectors are likely to be an essential element in
+institutional processes, “detectors are not all equal, but the best are better than faculty at identifying AI
+writing” (Bowen & Watson, 2024).
+The discourse on the use of AI detectors is almost universally flawed by erroneously treating the results
+of these detection tools as capable of yielding a binary decision as was the case with using text-matching
+software to detect cut and paste plagiarism, e.g., Weber et al. (2023). Where detection tools are improperly
+used to yield binary decisions, the consequences include false accusations of misconduct, and ‘false
+positives’, with attendant stress on learners.
+The development of robust processes to counter the unauthorised use of GenAi is a very real challenge
+for institutions, a challenge that is likely to involve both technological solutions and human interaction. At
+best, AI detectors and assignment metadata will raise suspicions which may prompt further investigation
+by professional staff. An additional problem for institutions is that where past technological solutions, such
+as text-matching software to detect plagiarism, allowed decision-making to be devolved to those grading
+assignments, this will not be the case where suspicions of the unauthorised use of GenAI are encountered.
+Need for strategic responses by HEIs
+Arguably, the disruptive technologies of the last 30 years – the PC, the World Wide Web, and other ICT
+technologies – have made little fundamental difference to the organisation and structure of learning in
+higher education. While universities have generally enhanced the reach and standards of higher education,
+for the most part, those disruptive technologies have been absorbed into the structures that predated
+them: libraries offer online access to resources and are transformed into learning spaces for students; VLEs
+allow delivery, management, and assessment of learning; remote learning has become less distinguishable
+from on-campus learning; and the learning experience of on-campus students is a more hybrid one. The
+responses of higher education to change have been operational, adapting its traditional model to reflect the
+affordances and challenges of the new disruptive technologies. A key factor has been the ability of higher
+education institutions to adapt to and manage the pace of diffusion of new technologies in their learning
+environments. So far, so good, for the established model of higher education.
+But what of Generative Artificial Intelligence? GenAI offers a new set of affordances and challenges.
+It has the potential to transform pedagogy and student supports while at the same time impugning the
+validity of widely used means of assessment. We can already see operational responses, most notably in the
+modification of assessment methods, where institutions seek to address the risks of students outsourcing
+assessment tasks to GenAI. At best, this puts higher education in the recovery position.
+Higher education needs a strategic response to artificial intelligence; operational responses will not be
+enough. The challenge for higher education is that GenAI is an evolving technology, so the effectiveness
+of any operational response is likely to be short-lived. Reliance on operational responses places higher
+education in a war of attrition with an evolving technology, an educational version of trench warfare. What
+is needed is a strategic response as a failure to do so will condemn higher education to a never-ending
+cycle of operational responses to this evolving technology, a path to enduring disorder. A strategic response
+demands a paradigm shift by universities if they are to avoid this perpetual cycle. In addition, the expected
+GENAI IN HIGHER EDUCATION: KEY CONSIDERATIONS | 21
+
+
+ evolution of GenAI tools and technologies implies a necessary long-term commitment to resources and to
+staff development.
+In planning for the future, HEIs cannot afford to wait until ethical issues around the use of GenAI are
+resolved to a universal consensus; the ethical concerns themselves are likely to evolve as GenAI evolves.
+As higher education engages with preparing its graduates for a GenAI future, the question is often asked:
+“What should we teach (and how)?”- a more salient question is, “How will learning happen”? That later
+question points to the need to factor in the likely behaviours of learners in a GenAI world.
+In designing the learning journey, higher education needs to ensure that GenAI enhances learning
+rather than providing shortcuts that undermine learning skills and the longer-term knowledge essential
+for foundational knowledge and the development of expertise. Institutions need to consider what parts of
+learning can be and should be outsourced to GenAI while preserving the goals of higher education and
+recognising that it is unlikely that one size fits all across disciplines.
+Ethical considerations
+For education, ethical considerations on the use of GenAI span micro, meso, and macro levels. At a
+macro level, concerns range from the resource and environmental costs of the development of GenAI
+technologies, human rights, equity of access, potential inherent biases, and intellectual property matters.
+At meso, institutional, level ethical considerations need to be central to universities’ engagement with
+GenAI irrespective of where GenAI is deployed, in curriculum design and delivery, in assessment, in
+support services, in data usage, etc. These considerations go beyond their use in higher education 
+HEIs must equip their students with the wherewithal to make ethical decisions in their graduate futures.
+Additionally, HEIs will also have important thought leadership roles in the appropriate use of GenAI in
+society. At the micro level, where faculty and learners interact and where GenAI is part of the learning
+process, the ethical use of GenAI should itself be a fundamental part of that learning process.
+References:
+Birks, D., & Clare, J. (2023). Linking artificial intelligence-facilitated academic misconduct to existing
+prevention frameworks. International Journal for Educational Integrity, 19 (1), 20.
+Bowen, J. A., & Watson, C. E. (2024). Is it time to turn off AI detectors? Times Higher Education.
+Retrieved November 7, 2024.
+Eaton, S. E. (2023). Postplagiarism: Transdisciplinary ethics and integrity in the age of artificial
+intelligence and neurotechnology. International Journal for Educational Integrity, 19 (1), 23.
+Foltynek, T., Bjelobaba, S., & Glendinning, I. (2023). ENAI recommendations on the ethical use of
+artificial intelligence in education. International Journal for Educational Integrity, 19(1), 12.
+Gimpel, H., Gutheil, N., Mayer, V., Bandtel, M., Büttgen, M., Decker, S., Eymann, T., Feulner, S.,
+Kaya, M. F., Kufner, M., Kühl, N., Lämmermann, L., Mädche, A., Ruiner, C., Schoop, M., & Urbach,
+22 | GENAI IN HIGHER EDUCATION: KEY CONSIDERATIONS
+
+
+ N. (2024). (Generative) AI competencies for future-proof graduates: Inspiration for higher education
+institutions. Hohenheim Discussion Papers in Business, Economics and Social Sciences.
+Habib, S., Vogel, T., Xiao, A., & Thorne, E. (2024). How does generative artificial intelligence impact
+student creativity? Journal of Creativity, 34 (1), 100072.
+Lodge, J. M., Howard, S., Bearman, M., Dawson, P., & Associates. (2023). Assessment reform for the
+age of artificial intelligence. Tertiary Education Quality and Standards Agency. Retrieved November 7,
+2024.
+Mollick, E. (2024). Co-intelligence: Living and working with AI. Portfolio/Penguin.
+Mollick, E. R., & Mollick, L. (2023). Assigning AI: Seven approaches for students, with prompts. The
+Wharton School Research Paper.
+Newton, P., & Xiromeriti, M. (2024). ChatGPT performance on multiple-choice question
+examinations in higher education: A pragmatic scoping review. Assessment & Evaluation in Higher
+Education, 1 (1), 1–18.
+Perkins, M., Roe, J., & Vu, B. H. (2024). Simple techniques to bypass GenAI text detectors:
+Implications for inclusive education. International Journal of Educational Technology in Higher Education,
+21 (1), 53.
+The National Forum (2024). OpenCourses.ie. (n.d.). GenAI for teaching and learning: How to do it
+right?.
+Varanasi, L. (2023). GPT-4 can ace the bar, but it only has a decent chance of passing the CFA exams.
+Here’s a list of difficult exams the ChatGPT and GPT-4 have passed. Business Insider. Retrieved November
+7, 2024.
+Ward, M., O’Riordan, F., Logan-Fleming, D., Cooke, D., Concannon-Gibney, T., Efthymiou, M.,
+& Watkins, N. (2023). Interactive oral assessment case studies: An innovative, academically rigorous,
+authentic assessment approach. Innovations in Education and Teaching International, 1 (1), 1–18.
+Weber-Wulff, D., Anohina-Naumeca, A., & Bjelobaba, S. (2023). Testing of detection tools for AI
+generated text. International Journal for Educational Integrity, 19 (1), 26.
+GENAI IN HIGHER EDUCATION: KEY CONSIDERATIONS | 23
+
+
+ 24 | GENAI IN HIGHER EDUCATION: KEY CONSIDERATIONS
+
+
+ PART III
+ARTS, HUMANITIES SOCIAL
+SCIENCES
+ARTS, HUMANITIES SOCIAL SCIENCES | 25
+
+
+ 26 | ARTS, HUMANITIES SOCIAL SCIENCES
+
+
+ GENERATIVE AI AND DCU BUSINESS
+SCHOOL
+Institution: Dublin City University
+Discipline: Business
+Authors: Robert Gillanders, Shadi Karazi, Silvia Rocchetta, Gary
+Sinclair, Suzanne Stone
+GenAI tool (s) used: ChatGPT
+Situation / Context
+DCU Business School constitutes a wide variety of disciplines including economics, management,
+marketing, finance, accounting, entrepreneurship, human resources, data analytics and more. We asked
+students from three different DCU Business School modules to develop a context-specific question for
+ChatGPT and to review the essay work it provided.
+Two modules were from the economics discipline with relatively small numbers of students (less than
+30), and one was a large marketing class with 80 students. The economics modules were final year advanced
+classes while the marketing module was a second-year course.
+Task / Goal
+The emerging literature argues that integrating Generative Artificial Intelligence (GenAI) into a business
+school curriculum has the potential to enhance learning by enabling students to pose questions, engage
+in reflective thinking, challenge existing knowledge, and foster discussions about answers. This integration
+can lead to increased student engagement and interaction with the subject matter.
+As we all know, Artificial Intelligence (AI) poses threats to the integrity of many commonly used forms
+of continuous assessment. Alternative assessments such as oral examinations and reflexive work that are
+frequently flagged as solutions are just not possible at the scale required for a large number of modules, with
+high staff-student ratios. Hence, we needed to think about how to use the technology in ways that suited
+disciplinary needs and large class sizes.
+We were trying to “build in” the new technology and design an authentic assessment that would engage
+students and meet the learning goals. DCU Business School has a strong commitment to developing critical
+GENERATIVE AI AND DCU BUSINESS SCHOOL | 27
+
+
+ thinking and creativity skills, and we also hoped that the assessment would build on and help develop these
+skills further by requiring students to think carefully about the course material and arrive at questions that
+pushed beyond the boundaries of the set curriculum.
+Actions / Implementation
+Students were tasked with posing questions to ChatGPT and evaluating the output from the artificial
+intelligence software. This varied somewhat by discipline. The economics students were told to set a
+question that ChatGPT would answer. Examples of the prompts were given such as “write a long essay
+on ___________. Include 10 in-text academic references. List the references at the end.” The question
+was submitted via our online learning platform with a 500-word explanation of why the question was
+important and worth asking. This explanation was to draw on their knowledge of economics in general and
+of the module in question in particular.
+Half of the grade for the assignment was for an interesting and well-motivated question. Examples
+were provided at the start of the module and throughout the lectures. The rest of the grade went for an
+assessment of the AI’s output. The output was generated by the professor taking the class and sent to
+students to ensure that there were no privacy concerns. Students were told to assess the output on grounds
+of accuracy, relevance, referencing, and depth of argument. Written comments were to be added to the
+Word file and submitted online. Examples of output were provided at the start of the course with annotated
+critiques of the output and an overall assessment and grade for the essay.
+Students in the second-year marketing module were instructed to use ChatGPT to develop an
+introductory understanding of the concept of social marketing. They were asked to write a one-page
+reflection on their use of ChatGPT. This assessment was set relatively quickly after ChatGPT was released.
+Consequently, it was the first experience for most students to use the tool. Following submission, students
+were asked to share their experiences in class. Emphasis was placed on weaknesses of the tool, when it was
+appropriate to use for assessment and how to best develop knowledge of a particular topic. Students were
+provided with guidance on how to use it in future assessments for the module.
+Outcomes
+We collected both quantitative and qualitative data from participants through an anonymous online survey
+designed using the Google Forms survey tool. Ethics approval was granted by DCU Research Ethics
+Committee. The survey questions comprised quantitative Likert questions and open questions designed
+to gather qualitative data. Survey participants were invited to complete the survey by email through a
+gatekeeper (Teaching Enhancement Unit) to avoid any pressure on students to participate, in line with
+research ethics guidelines. The survey was designed to minimise the time commitment for participants with
+an approximate time of 15 minutes to complete. 29 students completed the survey.
+Eighty-six percent of survey respondents agreed that it helped them understand how Chat GPT works
+28 | GENERATIVE AI AND DCU BUSINESS SCHOOL
+
+
+ but there was a mixed response of opinions on whether it deepened their understanding of course material
+(52%) and developed their critical thinking skills (59%). Other findings were that:
+• 86% liked that ChatGPT was integrated into the module;
+• 86% agreed it helped them understand how ChatGPT works;
+• 62% said that they were more inclined to use ChatGPT in other modules after this assessment;
+• 83% agreed it was an engaging mode of assessment;
+• 52% agreed it deepened their understanding of course material;
+• 45% agreed it developed essay writing skills;
+• 59% agreed it developed critical thinking skills.
+The qualitative responses were also mixed, reflecting a desire to learn more about the technology but also
+some anxiety about when and how GenAI could be used:
+• “It was helpful in that I developed a better understanding of what lecturers look for when marking
+assignments.”
+• “I think getting the opportunity to grade a paper may really improve our own essay writing skills as we
+learn what and what not to do.”
+• “It was fun for it to be integrated with the module, because it’s proactively moving with the technology
+era we are in, and I do believe it is important that all students know about the AI, so that nobody has an
+advantage.”
+• “Interesting to see where technology is but important to note that it isn’t perfect.”
+• “I liked that I could get help from an innovative AI tool to write my essay better and to gather useful
+articles that it suggested. What I don’t like is the morals behind using this service, in particular with
+students. Students will take advantage of using ChatGPT and this is unfair to other students who are
+not using it.”
+• “I disliked that [I didn’t know to] what degree I could use it, I didn’t want to overuse it in fear of being
+told I had used it too much and would be penalised.”
+Reflections
+These results are encouraging as it is important that students learn about the limitations of GenAI, even
+if more work is needed to ensure that the technology works to deepen understanding and critical thinking
+skills.
+What was clear in this research is that students need to develop better prompt engineering skills. Cotton
+et al., (2023) suggest that such questions need to be personalised, and Lim et al., (2023) place emphasis on
+ensuring students engage in fact-checking and verification for information produced by GenAI. We learned
+that toolkits need to be developed in which to guide students regarding the use of prompts and the follow
+up fact-checking processes that are required to use such tools appropriately and effectively.
+In terms of the quality of the work, in the economics modules, many of the questions were of an
+GENERATIVE AI AND DCU BUSINESS SCHOOL | 29
+
+
+ extremely poor quality. Many were very poorly written while others were not grounded in theory or the
+class material in any meaningful way. A small but appreciable number were simply questions that had been
+covered in class.
+The evaluation of the output, however, was generally very detailed and went beyond noting the false
+references. The conclusion was that students were good at evaluating the quality of an argument but
+needed additional guidance in formulating and motivating a novel question that pushed beyond what they
+had been taught.
+In subsequent years, the assessment was used again in economics modules but was rebalanced so that
+the weight for the question was two-thirds of the grade and the evaluation one-third. More time in class
+was given to discussing what constituted a good question and students were strongly encouraged to discuss
+their plans with professors during office hours. This led to a significant increase in the quality of the
+questions.
+Overall, guidance cannot be left to individual module coordinators. The approach to generative AI
+within the classroom has to be formalised at an institutional level to avoid confusion amongst students and
+faculty. Clear policies and toolkits need to be formulated.
+Further Reading
+Cotton, D. R., Cotton, P. A., & Shipway, J. R. (2024). Chatting and cheating: Ensuring academic integrity
+in the era of ChatGPT. Innovations in education and teaching international, 61 (2), 228-239.
+Lim, W. M., Gunasekara, A., Pallant, J. L., Pallant, J. I., & Pechenkina, E. (2023). Generative AI
+and the future of education: Ragnarök or reformation? A paradoxical perspective from management
+educators. The international journal of management education, 21 (2), 100790.
+Author Biographies
+Robert Gillanders is a Professor of Economics at Dublin City University Business School and Co
+Director of the DCU Anti-corruption Research Centre (DCU ARC). His main research focus is the causes
+and consequences of corruption. He is also interested in how institutions influence enterprises and the
+business environment. He holds a senior fellowship from Advance HE.
+Shadi Karazi is a Senior Learning Technologist at Dublin City University Business School, specializing
+in the strategic development and enhancement of technology-enabled learning (TEL) to advance the
+school’s mission. With a strong focus on emerging learning technologies, TEL innovation, and educational
+development, he brings a research-driven approach to transforming digital education. He holds a PhD in
+Engineering, an MSc in eLearning, and is a Fellow of Advance HE.
+Silvia Rocchetta is an Assistant Professor of Economics at DCU Business School. Her current projects
+30 | GENERATIVE AI AND DCU BUSINESS SCHOOL
+
+
+ mainly focus on the regional knowledge space evolution, adaptive resilience, technological change, industry
+lifecycle, innovation, and inequality.
+Gary Sinclair is an Associate Professor of Marketing and the Associate Dean of Internationalisation at
+Dublin City University Business School. His research mostly focuses on consumer behaviour, specifically
+online harms in sport and consumer culture.
+Dr Suzanne Stone is Universal Design for Learning Lead at the University of Limerick. Her research
+interests include: the scholarship of teaching and learning; universal design for learning; virtual learning
+environments; digital wellbeing; and digital assessment.
+GENERATIVE AI AND DCU BUSINESS SCHOOL | 31
+
+
+ NAVIGATING PATHS OF RESISTANCE:
+TIGHT-ROPING GENAI’S ROLE IN
+CONTINUOUS ASSESSMENT DESIGN
+Institution: Maynooth University
+Discipline: Business
+Authors: Shane McLoughlin
+GenAI tool(s) used: Microsoft Bing AI
+Situation / Context
+Artificial Intelligence (AI) has been a captivating topic of enquiry for many years within Management
+Information Systems (MIS), a discipline anchored within European business schools with a focus on
+developing, applying, and communicating knowledge at the intersection of digital technologies, people,
+and organisations.
+Across industries, AI has been applied some time now, from robotic process automation to decision
+support systems. However, AI’s role and potential in business and society is becoming increasingly overt
+and pervasive, due to advancements in a “Generative” branch of AI technology.
+GenAI creates “new” content by distilling patterns from training data, guided by user instructions.
+Advancements have been fast and compelling, with students and employees rushing to exploit its
+capabilities. For the “Introduction to MIS” module at Maynooth University’s Business School, over 700
+students learn how such digital technologies support organisations and enhance their competitiveness, as
+well as critically assessing opportunities and challenges that these emerging technologies pose.
+Task / Goal
+This year’s assignment goal was to support the school’s “living lab” approach to bridging education with
+practice, ensure academic integrity, while meeting key learning outcomes which include critically assessing
+how technologies impact organisations, along with ethical and social considerations.
+To achieve this, 736 students each conducted case studies exploring the impact of new digital
+technologies on Irish companies. To tackle head on the huge issue of AI use in academic work, students
+were required to complement their research with a GenAI tool and then critically appraise that tool’s
+32 | NAVIGATING PATHS OF RESISTANCE: TIGHT-ROPING GENAI’S ROLE IN CONTINUOUS ASSESSMENT DESIGN
+
+
+ effectiveness. They then worked in groups to discuss their experiences and derive shared learnings,
+submitted in both written form and orally. To ensure AI complemented, rather than replaced original
+research, students had to document and make transparent their research process as part fulfilment of their
+assignment. This involved cataloguing their “search and selection journey,” by highlighting and capturing
+screenshots of information and sources encountered, submitted as the case study appendices.
+Actions / Implementation
+To implement the assignment for such a large module, several considerations and steps were taken. The
+assignment had to align with the university’s policies regarding the privacy of students’ personal data. In
+the “current” absence of university-tailored and controlled GenAI tools, students were encouraged to use
+Microsoft Bing AI (Copilot) as it can be used without the student having to log in.
+Detailed instructions comprising four parts were designed to communicate the assignment’s objectives
+and requirements, accompanied by templates to fill in answers to submit for each part. Each student
+was randomly assigned an Irish company to case study, and 148 groups were assembled for the group
+component.
+Six tutorials were delivered to support the assignment objectives. These included exploring the concept
+of “Responsible GenAI” in terms of ethical and sustainable use of the technology, alongside such aspects as
+fairness, inclusivity, transparency, and accountability. Tutorial work also involved facilitating good practice
+(through exercises and examples) in crafting prompts and appraising responses, as well as facilitating group
+work and presentations.
+In terms of the assignment’s requirement for appraising GenAI’s effectiveness, instructions defined
+12 facets for appraising responses: completeness, relevance, comprehension, plausibility, accuracy,
+assumptions, bias, convenience, creativity, decision-making, learning, and anything else. For the group
+component of the assignment, students additionally appraised the tool’s overall ease of use and usefulness
+in terms of its features and functionality.
+Outcomes
+Students generally reported a positive experience with using GenAI tools as part of their assignment,
+particularly evident in their appraisals of the tools’ ease of use and overall convenience. However, many
+emphasised the added efforts needed to verify responses, particularly depending on the tool used and how
+well prompts were crafted.
+What struck many students was the speed and volume of relevant information received even to simple
+prompts, leading to periods of “information overload,” sometimes resulting in confusion and a sense of
+being overwhelmed. This could suggests a needed focus on understanding temporal factors in learning and
+assessment with GenAI, particularly in the context of scaffolded or incremental approaches to learning and
+its importance.
+Overall, there was a good effort made by students to document and make transparent their research
+NAVIGATING PATHS OF RESISTANCE: TIGHT-ROPING GENAI’S ROLE IN CONTINUOUS ASSESSMENT DESIGN | 33
+
+
+ process, thereby showing that a focus on documenting the process in continuous assessments can be useful,
+alongside the focus on outcomes.
+Reflections
+Overall, the intervention highlighted Zipf’s principle of least effort (1949), where convenience, in many
+cases trumps effort, with greater attention needed on accounting for and managing the path of least
+resistance in assessment design. It also suggested a keen focus on the relative importance of temporal
+factors in learning with GenAI, as well as the benefit of capturing “process” in their use. Here, both the
+development, tailoring and evidence gathering of education-specific GenAI tools would be welcomed.
+Finally, deep questions emerged about the potentially changing nature of learners’ self-efficacy, i.e.,
+beliefs in one’s abilities to successfully perform or accomplish specific tasks or outcomes. Importantly,
+self-efficacy has been linked to motivation, resilience, and learning strategies that, in turn, produce better
+outcomes.
+The intervention found some students perceived that GenAI augmented and extended their own
+abilities in producing outcomes of sufficiently high quality, leading to increased self-efficacy. For others,
+learning to think critically and research rigorously in the context of GenAI’s “seeming” superiority in
+producing “relevant” content, may lead to decreased self-efficacy where one feels there is little point in
+even trying to match or compete with a machine’s capabilities. Understanding the nature of how GenAI
+use factors in self-beliefs and empowerment versus learner disenchantment in one’s abilities and efforts at
+problem-solving, critical thinking, and creativity; could help inform their future design and use.
+Further Reading
+Bandura, A. (1997). Self-efficacy: The exercise of control. New York, NY: W. H. Freeman.
+Dwivedi, Y. K., Hughes, D. L., Ismagilova, E., Aarts, G., Coombs, C., Crick, T., Duan, Y., Dwivedi, R.,
+Edwards, J., Eirug, A., & Galanos, V. (2021). Artificial intelligence (AI): Multidisciplinary perspectives on
+emerging challenges, opportunities, and agenda for research, practice, and policy. International Journal of
+Information Management, 57, Article 101994.
+Komarraju, M., & Nadler, D. (2013). Self-efficacy and academic achievement: Why do implicit beliefs,
+goals, and effort regulation matter? Learning and Individual Differences, 25, 67–72.
+Schunk, D. H., & Pajares, F. (2009). Self-efficacy theory. In K. R. Wentzel & A. Wigfield (Eds.),
+Handbook of motivation at school (pp. 35–53). New York, NY: Routledge.
+Sein, M. K., Henfridsson, O., Purao, S., Rossi, M., & Lindgren, R. (2011). Action design research. MIS
+Quarterly, 35(1), 37–56.
+Sweller, J., Ayres, P., & Kalyuga, S. (2011). Cognitive load theory. New York, NY: Springer.
+Zipf, G. K. (1949). Human behavior and the principle of least effort: An introduction to human ecology.
+Cambridge, MA: Addison-Wesley Press.
+34 | NAVIGATING PATHS OF RESISTANCE: TIGHT-ROPING GENAI’S ROLE IN CONTINUOUS ASSESSMENT DESIGN
+
+
+ Author Biography
+Dr Shane McLoughlin is an Assistant Professor of Management Information Systems at the School of
+Business at Maynooth University and currently serves as co-director for an undergraduate work placement
+at the Business School. Shane is a Teaching & Learning fellow for 2024/2025 exploring the responsible use
+of GenAI for effective learning outcomes. Shane’s research interest is in socio-technical considerations and
+approaches in the design and diffusion of new digital technologies.
+NAVIGATING PATHS OF RESISTANCE: TIGHT-ROPING GENAI’S ROLE IN CONTINUOUS ASSESSMENT DESIGN | 35
+
+
+ EXPLORING AI IN ENTREPRENEURSHIP
+EDUCATION: A CASE STUDY ON
+ADAPTING ASSESSMENTS FOR DIGITAL
+LITERACY
+Institution: University College Cork
+Discipline: Business
+Authors: Gillian Barrett, Marie Ryan, Ciara Fitzgerald
+GenAI tool(s) used: ChatGPT
+Situation / Context
+This example focuses on a final-year entrepreneurship module offered by Cork University Business School
+(CUBS) at University College Cork. This module is designed to introduce students to the practice of
+entrepreneurship through experiential techniques, helping them develop entrepreneurial thinking and
+skills relevant to the digital era.
+The module covers topics such as business models, business model innovation, industry and market
+analysis, and strategic growth opportunities. It includes approximately 130 students from diverse business
+disciplines, including accounting, management, marketing, and international business.
+The module is assessed entirely through continuous assessment methods, consisting of an individual
+assignment, a group innovative project, and a “live” group pitch. The assessment focuses on
+entrepreneurship practice and action, aiming to foster communication, critical thinking, digital literacy,
+and problem-solving skills, preparing students to navigate the evolving business landscape and adapt to the
+challenges and opportunities of the digital era.
+Task / Goal
+In this entrepreneurship module, our goal was to explore how Generative AI (GenAI), particularly
+ChatGPT, could be integrated into teaching and assessment practices to enhance student learning and
+engagement. The primary objective was to adapt one assessment (the use of business models in Small and
+36 | EXPLORING AI IN ENTREPRENEURSHIP EDUCATION: A CASE STUDY ON ADAPTING ASSESSMENTS FOR DIGITAL LITERACY
+
+
+ Medium Enterprise (SME) organisation) to reflect AI’s growing influence on education and to advance
+students’ skills relevant to the digital era.
+According to Lim et al., (2023), integrating GenAI into the classroom offers an opportunity to elevate
+assessments to higher levels of critical analysis and rigor. This aligns with contemporary pedagogical shifts
+towards student-centric learning (Grubaugh et al., 2023). By incorporating AI tools into the assessment, we
+aimed to promote students’ critical engagement with AI-generated content and teach them how to navigate
+and leverage these technologies effectively (Dalalah and Dalalah, 2023). This also addressed concerns about
+academic integrity in the face of AI tools’ growing capabilities (Extance, 2023), encouraging responsible
+and ethical use of AI in academic settings.
+Actions / Implementation
+Our approach aimed to enhance student engagement, develop critical thinking skills, and advance digital
+literacy.
+We implemented an adapted assessment that incorporated both primary and secondary research, guiding
+students through a two-part analysis. Students selected a local SME and conducted interviews with the
+SME leader, assessing the company’s business model, industry, and market environment. This enabled
+students to develop a Lean Canvas (Maurya, 2012) for the SME and suggest complementary business
+models for future growth opportunities. The approach aimed to blend AI-generated insights with student
+analysis and creativity, fostering digital literacy and critical thinking skills (Mollick and Mollick, 2023;
+Grubaugh et al., 2023).
+To encourage students to critically engage with AI tools, they were required to prompt ChatGPT for
+information on their chosen SME’s business model and to critically analyse the output (providing evidence
+to support). Given the SME context, ChatGPT did not recognise 90+% of SMEs entered. Some students
+accepted this and did not engage further with ChatGPT, noting that the tool had no information on their
+SME, so they could not analyse it. For other students, they understood the importance of ‘prompts’ when
+using ChatGPT, i.e., the call to action for ChatGPT to generate text (Mollick & Mollick, 2023; Poola,
+2023), as outlined in the reflection that the more information on their SME that they provided the tool,
+the more complete the answer was. This assessment task demonstrated how students needed to learn how
+to use the tool – the importance of effective prompts, to navigate the benefits and downsides of AI tools,
+including the recognition of their limitations i.e. hallucinations and confabulations (Extance, 2023; Gill et
+al., 2024).
+Relevant learning outcomes included:
+• Developing critical analysis skills through engagement with ChatGPT outputs and its business
+model suggestions.
+• Building on theoretical knowledge through a deeper engagement with SMEs current use of business
+models and future business model opportunities.
+• Engaging with SME leaders and testing business insights.
+• Strengthening digital literacy skills by learning to navigate AI tools in a responsible manner.
+EXPLORING AI IN ENTREPRENEURSHIP EDUCATION: A CASE STUDY ON ADAPTING ASSESSMENTS FOR DIGITAL LITERACY | 37
+
+
+ Outcomes
+The main outcomes of integrating ChatGPT into this entrepreneurship module were threefold.
+• Deeper Understanding of Business Models. Students developed a more comprehensive
+understanding of business models by engaging with both primary and secondary research (Kolb,
+1984). The primary research through the SME leader interview brought the SME business model(s)
+to life for the students (Lave and Wenger, 1991). Through the critical analysis of the interview
+combined with critical evaluations of ChatGPT outputs, students now had a multifaceted view of
+business models and their evolution (Mollick and Mollick, 2023, Bloom, 1956).
+• Critical Engagement with AI. Students learned to critically engage with AI-generated content,
+recognising the importance of effective prompts (i.e. a set of instructions) (Vygotsky, 1978) and
+being wary of the limitations of ChatGPT’s output (i.e., hallucinations and confabulations) and
+engage in fact-checking (i.e. through primary data). This engagement fostered their digital literacy
+and critical thinking skills (Paul and Elder, 2019).
+• Digital Literacy Development. Students gained a better understanding of how to navigate and
+leverage digital tools (i.e., ChatGPT), fostering skills relevant to the digital era, such as evaluating AI
+generated content and its role in strategic decision-making (Lim et al., 2023). Integrating GenAI in
+such project-based assessments promotes digital literacy and encourages reflective practices amongst
+students (Schon, 2017).
+Evaluation of these outcomes was conducted through continuous assessment, including analysis of student
+performance on assignments, interviews, and critical reflections, revealing the varying degrees of student
+engagement and the need for further guidance on navigating GenAI tools.
+Reflections
+The integration of ChatGPT into this entrepreneurship module provided valuable insights. We learned
+that scaffolding the assignment (i.e., breaking down the assignment into smaller components) enabled
+students to build on their learning (Vygotsky, 1978). Plus, offering “how-to” guidance in class on AI
+prompts was crucial for fostering digital literacy and critical thinking skills (Mollick and Mollick, 2023),
+thus providing students with a sense of confidence in their learning path.
+One unexpected outcome was the varying degrees of student engagement with ChatGPT’s output,
+revealing the need for further guidance on navigating GenAI tools. This highlighted the importance of
+emphasising critical thinking and a healthy ‘scepticism’ when working with AI-generated content, given its
+potential for hallucinations and confabulations (Extance, 2023).
+For future iterations, a more comprehensive approach to guiding students in GenAI interactions is
+essential. Workshops or specialised modules focusing on digital literacy and critical engagement could help
+address these challenges.
+38 | EXPLORING AI IN ENTREPRENEURSHIP EDUCATION: A CASE STUDY ON ADAPTING ASSESSMENTS FOR DIGITAL LITERACY
+
+
+ Additionally, incorporating more real-world tasks and hybrid assessments can further support authentic
+learning experiences, aligning with contemporary pedagogical shifts (Grubaugh et al., 2023; Kolb, 1984).
+This would provide students with balanced assessments that blend GenAI tools with traditional methods,
+fostering an equitable and relevant learning environment.
+Further Reading
+Bloom, B. S. (1956). Taxonomy of educational objectives, handbook I: The cognitive domain. David McKay
+Co Inc.
+Dalalah, D., & Dalalah, O. M. (2023). The false positives and false negatives of generative AI detection
+tools in education and academic research: The case of ChatGPT. The International Journal of
+Management Education, 21 (2).
+Extance, A. (2023). ChatGPT has entered the classroom: How LLMs could transform education.
+Nature, 623 (7987), 474–477.
+Fatayer, M., & Wehr, D. (2023). Developing authentic assessment through open educational practices.
+ASCILITE Publications. [Preprint].
+Gill, S. S., Shahid, M., Das, T. K., & Kumar, A. (2024). Transformative effects of ChatGPT on modern
+education: Emerging era of AI chatbots. Internet of Things and Cyber-Physical Systems, 4, 19–23.
+Grubaugh, S., Levitt, G., & Deever, D. (2023). Harnessing AI to power constructivist learning: An
+evolution in educational methodologies. EIKI Journal of Effective Teaching Methods, 1 (3).
+Kolb, D. A. (1984). Experiential learning: Experience as the source of learning and development. Prentice
+Hall.
+Lave, J., & Wenger, E. (1991). Situated learning: Legitimate peripheral participation. Cambridge
+University Press.
+Lim, W. M., Long, A. T., & Lee, H. Y. (2023). Generative AI and the future of education: Ragnarök
+or reformation? A paradoxical perspective from management educators. The International Journal of
+Management Education, 21 (2).
+Maurya, A. (2012). Running lean: Iterate from plan A to a plan that works. O’Reilly Media.
+Mollick, E. R., & Mollick, L. (2023). Why all our classes suddenly became AI classes. Strategies for
+Teaching and Learning in a ChatGPT World. Harvard Business Publishing.
+Paul, R., & Elder, L. (2019). The miniature guide to critical thinking concepts and tools. Rowman &
+Littlefield.
+Schön, D. A. (2017). The reflective practitioner: How professionals think in action (2nd ed.). Routledge.
+Vygotsky, L. S. (1978). Mind in society: Development of higher psychological processes. Harvard University
+Press.
+Digital Resources
+Ash Maurya’s (2012) Lean Canvas framework Lean Canvas – 1-Page Business Model (leanfoundry.com)
+EXPLORING AI IN ENTREPRENEURSHIP EDUCATION: A CASE STUDY ON ADAPTING ASSESSMENTS FOR DIGITAL LITERACY | 39
+
+
+ Author Biographies
+Dr Gillian Barrett is a lecturer in the Department of Management and Marketing, Cork University
+Business School (CUBS), University College Cork (UCC). Gillian’s research interests lie at the intersection
+of innovation management, open innovation, and entrepreneurship in the context of global high-tech
+small and medium sized enterprises (SMEs). In 2019, Gillian was awarded the UCC President’s Award for
+her excellence in teaching. Gillian supports several entrepreneurship education initiatives throughout the
+university. She is also Programme Director for the Postgraduate Certificate in Project Management and
+the Certificate / Diploma in Management Practice. Prior to academia, Gillian worked for fifteen years in
+industry in a variety of senior management and leadership roles primarily in innovation and technology
+management.
+Dr Marie Ryan is the Program Director of the BCom International programme and an economics
+lecturer at Cork University Business School, UCC. In 2023, Marie received the UCC individual President’s
+Award for Excellence in Teaching and Learning. With 15 years of experience in lecturing economics,
+including five years of international experience, she has developed a pedagogical philosophy shaping her
+students into critical thinkers creating an environment that values inclusivity, integrity, and lifelong
+learning. Her leadership in teaching and learning is evident through her work in UDL, inclusive
+assessments, and academic integrity. She has been involved in three Digital Badge projects and video
+campaigns and has earned 3 teaching-focused awards and 11 Digital Badges. She is also a ’23/’24 Women in
+Leadership Aurora. As an applied economist, Marie’s research spans across health, tourism, and education.
+Dr Ciara Fitzgerald is a senior lecturer in Business Information Systems, at the Cork University
+Business School in UCC. Her research and teaching interests lie at the intersection of Technology
+Innovation, IS Entrepreneurship and Digital Strategy. Her research investigates (1) strategies used by
+universities and firms to manage intellectual property and the commercialisation process, (2) strategies to
+engage citizens and policymakers in responsible innovation and technology assessment, and (3) exploratory
+and applied research of innovative health information systems. Ciara has published widely in leading
+journals and influential volumes such as Research Policy, Journal of Technology Transfer, Information
+Systems Frontiers, and Communications of the Association for Information Systems. Ciara’s industry
+experience includes consulting experience at Accenture. During her time there she gained valuable
+experience working on a multitude of projects for clients in the financial services sector. She is the co
+programme director of the BSc Business Information Systems.
+40 | EXPLORING AI IN ENTREPRENEURSHIP EDUCATION: A CASE STUDY ON ADAPTING ASSESSMENTS FOR DIGITAL LITERACY
+
+
+ AUGMENTING DIGITAL MARKETING
+LEARNING WITH GENAI
+Institution: Trinity College Dublin
+Discipline: Marketing
+Author: Kisito F. Nzembayie
+GenAI tool(s) used: ChatGPT, Midjourney, and HeyGen
+Situation / Context
+I lecture across our MSc Entrepreneurship and Innovation, MSc Management, and Executive Education
+programmes. In this case, I describe the use of GenAI in a digital marketing module designed for students
+in our MSc in Management programme. The module was delivered from September to October 2023 to a
+cohort of over 51 students. This was my second year teaching the course at Trinity.
+Given the fast pace of technological change, digital marketing curricula must be regularly updated to
+remain relevant. As such, this module fully embraced GenAI in marketing. To reflect the evolving AI
+driven marketing landscape, I aimed to expose students to key digital marketing technologies, including
+ChatGPT, Midjourney, and HeyGen, as part of the content marketing lessons.
+Recognising the potential for AI to facilitate cheating and uncritical thinking, I redesigned the
+assessments to be more authentic, embedding four learning theories into a holistic experiential learning
+framework. These included social constructivism, demonstrated through collaborative learning;
+cognitivism, emphasising critical reflection; behaviourism, marked by knowledge transmission through
+lectures; and connectivism, which values the networked nature of digital learning. This extended pedagogy
+AUGMENTING DIGITAL MARKETING LEARNING WITH GENAI | 41
+
+
+ integrated the dimensions of experiential, presentational, propositional, and practical knowing (Heron &
+Reason, 2006) (Nzembayie et al., 2024).
+The new assessment design consisted of a 30% critical reflective essay (introduced this year), a 40%
+group project, and a 30% individual project based on the group project findings. In their groups, students
+analysed the digital marketing efforts of four lesser-known Irish companies, producing detailed reports,
+content, and video presentations. They developed digital marketing strategies and content marketing
+campaigns to address the weaknesses identified in the companies’ digital marketing activities. For the
+individual project, each student selected a specific area of weakness from the group project and developed
+and implemented digital marketing strategies. This individual assessment, worth 30%, was submitted
+as a report, accompanied by AI-generated SEO articles, promotional videos, images, and the prompts
+used, all included in the appendices. The final 30% reflective piece required students to highlight their
+experiences and insights gained from both projects and the course as a whole. This assessment aimed to
+foster authentic, collaborative, and reflective learning. The use of lesser-known companies and real-world
+scenarios encouraged genuine engagement and authentic assessments, promoting practice-based critical
+thinking.
+Task / Goal
+I set out to achieve three main things with GenAI as part of this module: a) to equip my learners with
+the most up-to-date awareness of how AI and GenAI tools were transforming marketing, b) to develop
+skills in the use of GenAI tools and best practices for content marketing, and c) to steer students toward
+self-discovery and critical thinking regarding the ethical issues involved with GenAI use, consistent with
+an education model geared toward first-person transformation (Nzembayie & Coghlan, 2024). Hence,
+students kept a reflective journal throughout the course that captured their thinking and learning journey
+in real-time.
+A final reflective piece involving critical incidents of learning was supposed to distil lessons from their
+reflective logs as part of a 30% assessment. This also gave me insights into their thinking as most of them
+engaged with multiple GenAI tools in a marketing context. For instance, although some students had
+an understanding of and exposure to GenAI, it was interesting to learn how they were yet to make the
+connection to marketing and the ethical challenges involved.
+Actions / Implementation
+I embedded GenAI content in my teaching resources to model best practices for GenAI use. For example,
+I used illustrative images generated with Midjourney in my slides and AI-generated videos featuring my
+avatar and cloned voice to spark curiosity and discussion (see figure below).
+42 | AUGMENTING DIGITAL MARKETING LEARNING WITH GENAI
+
+
+ Fig. 1 AI-generated video using HeyGen.
+These discussions explored ethical issues such as deepfakes and subtle reinforcement of biases as shown
+in a case where image generation AI consistently returned male only candidates for certain roles. Students
+were asked to reflect on some of the outputs, identifying subtle reinforcement of biases and ethical
+dilemmas.
+These videos created using HeyGen, an AI video creation tool, introduced the role of AI in content
+marketing and intrigued students about their creation process, prompting classroom discussions even
+among advanced users. As students developed content marketing strategies for four Irish companies as
+part of a group project, they used these AI tools and documented their prompts, prompt revisions and AI
+artefacts to include as appendices in a final report.
+I introduced techniques for prompting engineering in class using model prompts that generated various
+content types. For instance, I generated realistic photos with Midjourney for smart street bins to be
+included in a blog post or promotional campaign (see Fig. 2), which was one of the four cases the students
+were working on.
+Fig. 2 Photo realistic images of a smart bin on the Streets of London to go with a blog post – Midjourney.
+The students learned to write SEO (Search Engine Optimised) blog posts faster by strategically
+prompting ChatGPT and subsequently personalising the output with market research.
+AUGMENTING DIGITAL MARKETING LEARNING WITH GENAI | 43
+
+
+ Fig. 3 Student samples of AI-generated video using HeyGen.
+Outcomes
+Student engagement and reflection demonstrated real-time transformation, leading to more impactful
+learning outcomes than would have been possible without GenAI. While students were allowed to use
+GenAI to enhance the readability of reports, authentic learning was most evident in the student reflections
+and varied outputs.
+There were no credible instances of AI-aided plagiarism, as the high level of authenticity in the
+deliverables was self-evident. I recognise that GenAI can be used to produce reflective essays.
+However, I believe the solution to this challenge lies in the careful design of lessons and activities,
+with a focus on authenticity. For example, basing tasks on lesser-known Irish companies ensured students
+genuinely engaged with the project. If they had relied on GenAI, the outputs would have been too generic,
+prompting face-to-face interviews to verify the work’s authenticity—something I highlighted as part of a
+deterrence strategy at the start of the course.
+Additionally, the course design featured three different assessments with various artefacts. A final
+reflective piece that failed to integrate elements from those activities would have raised
+concerns—something that did not occur. The assessments included a range of artefacts, such as videos,
+screenshots, and graphs, showcasing true engagement with the tasks. Therefore, while GenAI was part of
+the project-based learning process, it was used to complete tasks and improve readability, not to plagiarise.
+Guidance on how to critically reflect was also key, and I provided this in the first lesson. I emphasised
+that reflection should be an ongoing practice, with students documenting their experiences in real time
+to ensure credibility. This was reinforced in every meeting. Consequently, the assessments clearly showed
+students engaging in both reflection-in-action and reflection-on-action.
+Reflections
+Firstly, not all students had access to cutting-edge GenAI tools or could afford them. Therefore, it is
+essential to have free versions available. Likewise, I would ask the college to sign up for paid versions of
+44 | AUGMENTING DIGITAL MARKETING LEARNING WITH GENAI
+
+
+ these tools for students to use next time. There is a danger of unequal access if some students can afford to
+subscribe to paid versions of these technologies while others can’t.
+Next time, we will deepen our exploration with technological advances in GenAI – e.g., have students
+develop custom GPTs to automate several marketing activities. This will certainly require subscriptions,
+which may not be available. Secondly, while an authentic model of learning based on varied assessment
+artefacts can help enhance student learning and protect the integrity of business school assessments,
+grading is extremely time-consuming, in addition to delivery being much more involved. However, seeing
+students make noticeable transformations in such a short space of time keeps me going.
+Further Reading
+Heron, J., & Reason, P. (2008). Extending epistemology within a co-operative inquiry. The Sage handbook
+of action research: Participative inquiry and practice, 2, 366-380.
+Nzembayie, K. F., & Coghlan, D. (2024). Entrepreneurship education as first-person transformation:
+Interiority as an operationalising mechanism. Journal of Business Venturing Insights, 21, e00471.
+Nzembayie, K. F., Buckley, A. P., & Talay, I. (2024). Experiential pedagogies for cultivating
+entrepreneurial mindsets: Action design learning as tailored framework. Entrepreneurship Education and
+Pedagogy, 25151274241292276.
+Digital Resources
+• Text generation: https://chatgpt.com/
+• Video generation: https://app.heygen.com/home
+• Image generation: https://www.midjourney.com/home
+Author Biography
+Dr Kisito F. Nzembayie is an Assistant Professor in Entrepreneurship and Director of the MSc in
+Entrepreneurship and Innovation at Trinity Business School, TCD. He holds a PhD in Digital
+Entrepreneurship and lectures at the nexus between entrepreneurship, digital technology, marketing, and
+business strategy.
+AUGMENTING DIGITAL MARKETING LEARNING WITH GENAI | 45
+
+
+ STUDENT USE OF AN LLM
+INCREMENTALLY FINE-TUNED TO
+BEHAVE LIKE A TEACHING ASSISTANT IN
+BUSINESS AND MARKETING
+Institution: Dublin City University
+Discipline: Data Analytics
+Authors: Alan Smeaton
+GenAI tool(s) used: Chatbot created for purpose
+Situation / Context
+One hundred and forty-three undergraduate students of business and marketing took a module on data
+analytics and visualisation in early 2024 which covered technical topics including linear regression,
+significance testing, correlation, p-values, etc. A conversational virtual teaching assistant TA, a chatbot, was
+created and made available to students anonymously, so there was no tracking of student identity, though
+the questions they asked, and the replies generated were logged. The virtual TA was hosted on a third-party
+platform, agenthiost.ai, which acted as an intermediary between students and an underlying large language
+model (LLM).
+Task / Goal
+The aim of this work was to provide an always-available virtual TA and to contribute to the constructivist
+rather than the instructivist approach to student learning. Students in this course are already able to
+form their own learning based on interacting with a knowledgeable, reliable, though not always available
+teaching assistant or lecturer. The virtual TA allows them to ask the questions they would not ask the TA
+or lecturer directly and to do so in confidence because of the anonymity of the interaction, and at a time
+that suits them.
+46 | STUDENT USE OF AN LLM INCREMENTALLY FINE-TUNED TO BEHAVE LIKE A TEACHING ASSISTANT IN BUSINESS AND MARKETING
+
+
+ Actions / Implementation
+The virtual TA was created using an off-the-shelf LLM (GPT 3.5), which was incrementally fine-tuned
+each week of the semester on that week’s new course materials, including slides, reading materials,
+transcripts from recommended YouTube videos, text from recommended web pages, assignments, and
+automatically generated transcripts of recordings of lectures. The audio recordings of lectures included all
+150,000 words spoken during 20 hours of face-to-face lectures. This meant that each week the virtual TA
+would improve its knowledge of the course but would not give answers to questions using materials which
+had not yet been covered in class.
+The virtual TA was prompt engineered to stay within the scope of the fine-tuned materials only and
+not to answer questions from outside the course. The temperature for the LLM temperature, which is
+a parameter in the range 0 to 1, which controls the amount of randomness or creativity in the model’s
+response, was set to 0, thus practically eliminating hallucinations. The environment in which the virtual
+TA was presented had many warnings for students about what it knows and does not know.
+Students were advised to always refer to the lecture and other course materials, and not to depend on the
+virtual TA.
+Outcomes
+During the semester and up to the day of the final written exam, 2,787 questions were asked by students
+and an analysis of a sample of 700 of these found that all were answered correctly from the course materials.
+In the 24 hours before the final exam, 730 questions were asked and answered.
+An analysis of usage indicated that the virtual TA was used for understanding concepts, preparing for
+the exam and for assignments and that it helped students to ask questions they would not ask the lecturer.
+Students did not experience any technical issues when using the virtual (bar some issues with response
+time).
+Reflections
+We know that the concept of using GenAI has many positives and negatives, but the challenge is using the
+right form, configured in an appropriate way, and presented as part of a constructivist way of learning.
+Some of the questions asked including requests for worked answers to exam questions which we did not
+anticipate. Students benefited from the initiative and the methodology can be scaled and replicated to other
+modules. However, the context of the module and its relevance and appropriateness for such an approach
+should always be considered. For future iterations of this, and we will be doing this for more than a half
+dozen modules in the first semester of 2024/2025, we will include a basic introduction and overview of
+prompt engineering so all students can maximise their benefits from using the virtual TA.
+STUDENT USE OF AN LLM INCREMENTALLY FINE-TUNED TO BEHAVE LIKE A TEACHING ASSISTANT IN BUSINESS AND MARKETING | 47
+
+
+ Author Biography
+Dr Alan Smeaton is a Professor of Computing at Dublin City University and a founding co-director of
+the Insight SFI Centre for Data Analytics. In 2021, he was awarded PFHEA status for his work on the
+development of pioneering and innovative uses of online resources for student learning over an extended
+period of time. In early 2024, he was appointed to the Government‘s Advisory Council on Artificial
+Intelligence.
+48 | STUDENT USE OF AN LLM INCREMENTALLY FINE-TUNED TO BEHAVE LIKE A TEACHING ASSISTANT IN BUSINESS AND MARKETING
+
+
+ CO-CREATING ASSESSMENT RUBRICS
+WITH STUDENTS AND CHATGPT IN FILM
+AND TV
+Institution: University College Dublin
+Discipline: Film and Television
+Authors: Naomi McAreavey
+GenAI tool(s) used: ChatGPT
+Situation / Context
+I first tested this approach in a new module on Shakespeare on Film and Television with 25-30
+undergraduate students studying English, Drama and/or Film as part of their BA.
+For the final assignment, students were asked to produce an idea for an adaptation of one of
+Shakespeare’s comedies for film or television and include a sample scene. This could be submitted in
+written form, as a video or as a storyboard. The assignment tested the students’ creative and critical
+engagement with one of Shakespeare’s plays, and their ability to address key questions about adapting
+Shakespeare for a contemporary screen audience.
+My (entirely human-created) assignment prompt and template had been available to students from the
+start of the semester. But I needed a rubric, since I know they can support diverse learners in understanding
+expectations and setting goals and are particularly important for new and unfamiliar assignment types like
+this one.
+Task / Goal
+Creating rubrics can be involved and time-consuming work. I wanted to see if ChatGPT could make the
+process quicker, easier, and more efficient. I suspected that this was the type of task that ChatGPT would
+excel at because, as a predictive model, it is good at organizing information in a structured, clear, and
+consistent way—probably better than me, in fact.
+I wanted to involve my students in the process so I allocated class time to the co-creation of assessment
+criteria that I would then input to ChatGPT. This exercise would give the students an opportunity to
+CO-CREATING ASSESSMENT RUBRICS WITH STUDENTS AND CHATGPT IN FILM AND TV | 49
+
+
+ review what they had learned in the module so far and begin to prepare for the final assignment. It would
+also have the secondary benefit of introducing them to GenAI. After we had agreed on a set of criteria
+through a combination of group work and class discussion, I told them I would use these criteria to create
+a draft rubric using ChatGPT and bring it for their approval in the following class.
+Actions / Implementation
+After class, I asked ChatGPT 3.5 to create a rubric using the six criteria the students had created and
+organised across five levels from excellent to unsatisfactory.
+As this was my first time using ChatGPT to create a rubric, there were several stages of refinement before
+I got a rubric that I was happy to bring back to the students. Along the way, I had to specify that I wanted
+the rubric in table form. I also made various clarifications to distinguish between different criteria, to refine
+what we meant by a particular criterion, to consolidate overlapping criteria, to add a criterion that I realised
+had been overlooked in our discussion, and finally, to simplify the now-bloated rubric.
+This was all done outside of class and without direct student involvement, although I did share the
+process with them in the following class. I explained that I had created the rubric with the help of ChatGPT
+and I showed how I did it using our criteria and what I already knew about creating rubrics. By showing the
+process of creating and refining the rubric, I was able to demonstrate the importance of precise prompting
+and the critical evaluation of outputs. The exercise, therefore, not only helped to create a rubric but also
+provided an opportunity to talk to the students about the benefits and challenges of using generative AI.
+Below the process of creation in ChatGPT:
+50 | CO-CREATING ASSESSMENT RUBRICS WITH STUDENTS AND CHATGPT IN FILM AND TV
+
+
+ Fig. 1 Instructions in ChatGPT to create the rubric.
+Outcomes
+The students found the rubric useful. I also found it helpful when grading and providing feedback on the
+assignments, and I have been able to reuse the rubric since. ChatGPT thus helped me create a useful and
+adaptable assessment resource quickly and easily.
+Using ChatGPT for this task also gave me an opportunity to explore the tool for an important but
+onerous task. Through the process, I learned how to use the tool more effectively and efficiently, knowledge
+that I could then share with my students.
+As a novice with no experience creating rubrics with ChatGPT, I did not want to confuse my students
+by demonstrating the process in real-time. I realise now that this was a missed learning opportunity. Now,
+I would bring the process into the classroom by creating the rubric “live,” with either me or the students
+leading the process. I learned by doing, so it would be good to give the students this same opportunity to
+engage with the tools collaboratively in a safe and supported environment.
+Reflections
+There is no doubt that I was able to create a rubric much quicker and more painlessly using ChatGPT than
+I could have done manually. I hope the speed and ease of creating rubrics with GenAI might encourage
+more lecturers to use rubrics as a tool to support and empower learners.
+CO-CREATING ASSESSMENT RUBRICS WITH STUDENTS AND CHATGPT IN FILM AND TV | 51
+
+
+ However, they should be aware that creating a rubric with ChatGPT is far from automatic and requires
+extensive refinement to improve its accuracy, clarity, and precision. Nevertheless, I still found it much easier
+to refine an unsatisfactory draft created with ChatGPT than to create a new rubric from scratch.
+I would advise others interested in creating rubrics with GenAI to:
+• Define the levels (e.g., five levels: excellent, very good, good, satisfactory, and unsatisfactory).
+• Decide whether to assign points to each level (e.g. from 4 to 0).
+• Ensure the criteria are as precise and concise as possible, as ChatGPT tends to use many categories
+and sub-categories.
+• Ask for the rubric to be set out in table form.
+I used ChatGPT, but now that we have institutional access to Gemini or Copilot through an educational
+licence that provides enhanced privacy settings for staff and students, I would use one of these tools instead
+in the future.
+Further Reading
+Bolton, C. F. (2006). Rubrics and adult learners: Andragogy and assessment. Assessment Update, 18(3),
+5–6.
+Panadero, E., Jonsson, A., Pinedo, L., & Fernandez-Castilla, B. (2023). Effects of rubrics on academic
+performance, self-regulated learning, and self-efficacy: A meta-analytic review. Educational Psychology
+Review, 35, 113.
+Reddy, Y., & Andrade, H. (2010). A review of rubric use in higher education. Assessment & Evaluation
+in Higher Education, 35(4), 435–448.
+Author Biography
+Dr Naomi McAreavey is a lecturer in Renaissance Literature in UCD School of English, Drama and
+Film. She is a University for All Faculty Partner who promotes Universal Design for Learning in UCD
+and a UCD Fellow in Teaching and Academic Development currently working on a project on students
+as partners. She is also leading a SATLE funded project on the impact of GenAI in Arts and Humanities
+teaching, learning and assessment.
+52 | CO-CREATING ASSESSMENT RUBRICS WITH STUDENTS AND CHATGPT IN FILM AND TV
+
+
+ IMPROVING VISUAL ENGAGEMENT
+THROUGH GENERATIVE AI IN MEDIA
+STUDIES
+Institution: Maynooth University
+Discipline: Media Studies
+Authors: Simon Hewitt
+GenAI tool(s) used: ChatGPT
+Situation / Context
+This showcase focuses on the use of Generative AI (GenAI) supported visual engagement strategies in the
+BA Media Studies programme, the Media & Cultural Studies pathway of the BA Arts programme, and the
+MA in Critical and Creative Media programme at Maynooth University. Specifically, I use this approach
+in our large first-year undergraduate introductory Media Studies module (188 students), for which student
+participation in lectures can be particularly difficult to generate.
+I also incorporate it in a postgraduate methods class for the MA and PhD students from the Department
+of Media Studies and the School of Modern Languages (15 students). Student participation can be easier to
+integrate here, but with such a variety of students, the need to provide unambiguous instructions to every
+student in every context becomes even greater. I have been teaching both modules since September 2023.
+Task / Goal
+In my experience, Media Studies students often have a natural inclination toward exploring new
+technologies like AI. But as per my modules policies, they are forbidden from using GenAI in their module
+assessments. Therefore, I want to offer concrete examples of ethical AI use to emphasise the benefits of this
+technology so they might explore it without undermining their capacity to develop their knowledge and
+critical thinking skills.
+I also adopt Fiorella’s strategy of ‘generative learning’ into my teaching practice, which “involves
+[students] ‘making sense’ of provided learning material by actively organizing and integrating it with [their]
+existing knowledge” (2023: 1).
+By creating visual engagement through visual puns for my in-class warm-up exercise (Catchphrase
+IMPROVING VISUAL ENGAGEMENT THROUGH GENERATIVE AI IN MEDIA STUDIES | 53
+
+
+ Media), I hoped to reflect the learner’s interests, which can be shown to increase generative learning
+motivation (Fiorella and Mayer, 2015: 719).
+I also want to support students who struggle with purely text-based instructions to more easily traverse
+my Moodle page. Therefore, I use GenAI to create customised section images for my Moodle pages to help
+guide students to their desired information.
+Actions / Implementation
+Generating class participation from 188 first-year undergraduate students can be especially challenging.
+To motivate engagement, I create visual puns that the students must guess in a fun warm-up game
+that I include in my slides at the start of class. It is essentially an adaptation of the TV game show,
+Catchphrase. This approach is underpinned by the understanding that learning is a generative process in
+that it “occurs when learners build connections between the presented material and their prior knowledge
+(Mayer, 2010: 46).”
+The following ChatGPT-generated images are based on examples of popular media, with which many of
+the students will be familiar, that also relate to that week’s topic of “Mediated Communication”. See figure
+below.
+Answers = Gossip Girl Zoom The Social
+Network
+Fig. 1: Examples of ChatGPT-generated images.
+To reinforce ethical GenAI use, I include a slide at the beginning of every lecture before the warm-up
+game that reads “I created the following images on [date of creation] using ChatGPT and the prompt 
+create an image (a visual pun) based on the name of popular [insert form of media] that I will use in a trivia
+round”. I also refer back to these images when relevant, e.g., a later lecture discusses gender biases in media,
+for which I reuse the Gossip Girl image.
+I also create section images for my Moodle pages using ChatGPT to help guide my students to their
+desired information. For example, figure below:
+54 | IMPROVING VISUAL ENGAGEMENT THROUGH GENERATIVE AI IN MEDIA STUDIES
+
+
+ Fig. 2 Example of section images for my Moodle pages using ChatGPT.
+This involves using the Grid course format on Moodle and then asking ChatGPT to create an abstract
+image based on the pre-planned title for each week’s classes, e.g., “Literature Review.” The image is
+abstracted because GenAI often returns text within the image, i.e., it will create an image that includes the
+text “Literature Review.”
+Since each section is already labelled on Moodle, I did not want it to be labelled twice. The added benefit
+from a UDL perspective is that ChatGPT auto-includes alt-text that can be read by visually impaired
+students using screen readers, e.g., “A visual representation of a Literature Review.” Some adaptation may
+be required. For example, the “Please click on the tile below...” text was added via PowerPoint. I also include
+the note on the ethical use of GenAI within my Module Information section that says, “Note on icon
+creation: The icons on this Moodle page were created using GPT-4o using the prompt ‘create an abstract
+image that represents [title of icon needed]’.”
+Outcomes
+As part of the module feedback processes, I use a mid-session informal, anonymous suggestion box, as well
+as formal end of semester Moodle feedback surveys. The feedback has been overwhelmingly positive. The
+students express great affection for the Catchphrase warm-up game and can see its value:
+IMPROVING VISUAL ENGAGEMENT THROUGH GENERATIVE AI IN MEDIA STUDIES | 55
+
+
+ • “The crowd involvement at the start of each lecture was quite enjoyable. It broke the silence of the
+start of a class and got people chatting.”
+• “I liked how Simon is able to bring a sense of enthusiasm to the lectures; the [warm-up game] at the
+start of each lecture was always a great aspect.”
+• “I really liked the [warm-up game] at the start.”
+Additionally, I have received comments that my Moodle page is well-organised and easy to navigate. I
+also received positive comments from fellow staff who have since adopted the same presentation for their
+Moodle pages.
+Overall, these steps have enabled me to reflect the learner’s interests by providing fun examples of media
+that help start that week’s discussion while also helping to guide students to their desired information on
+Moodle. However, more time will be needed to measure the impact of providing concrete examples of
+ethical AI use. I will, therefore, include a question about this in my upcoming end-of-semester Moodle
+feedback surveys.
+Reflections
+The most impactful feedback I received was about the warm-up game. Many students complained that I
+was initially too focused on filmic media. Instead, they wanted more examples that reflected their interests,
+e.g., video games, music, podcasting, and media specific to Ireland. My background as a filmmaker
+apparently influenced my incorrect assumption that anyone studying media would be interested in cinema
+to the same extent as I am. I have since adapted my strategy to include a wider variety of examples. I was
+also surprised that at least one student was hostile to GenAI use – “Do not use AI. It should not be used at
+all on campus.”
+My hope is to instil a sense of ethical GenAI use because, as students progress through Media Studies,
+AI is a transformative technology that they will need to understand.
+Further Reading
+Mayer, R. E. (2010). Merlin C. Wittrock’s enduring contributions to the science of learning. Educational
+Psychologist, 45 (1), 46–50.
+Fiorella, L. and Mayer, R. E. (2015). Eight Ways to Promote Generative Learning, Educational Psychology
+Review 28 pp. 717–741.
+Fiorella, L. (2023). Making sense of generative learning. Educational Psychology Review, 35, 50.
+56 | IMPROVING VISUAL ENGAGEMENT THROUGH GENERATIVE AI IN MEDIA STUDIES
+
+
+ Author Biography
+Dr Simon Hewitt is an Assistant Professor in the Department of Media Studies at Maynooth University.
+His research focuses on the interstices between media audiences and media industries and the means by
+which this gap is bridged. His recent works include a chapter for an edited collection from Edinburgh
+University Press that discusses intermediality in UK scare attractions and an article for Convergence on
+video game and cinematic convergence in the late 1990s.
+IMPROVING VISUAL ENGAGEMENT THROUGH GENERATIVE AI IN MEDIA STUDIES | 57
+
+
+ GENAI DISPOSITIONS AND LITERACIES:
+PODCASTING AS PRAXIS WRITING IN
+MEDIA
+Institution: Maynooth University
+Discipline: Writing in Media
+Authors: Adrian Kirwan
+GenAI tool(s) used: ChatGPT
+Situation / Context
+The activities discussed below took place during the 2023-24 academic year at Maynooth University in
+a second-year module—Intersections of Science Writing and Media—which seeks to develop transferable
+writing skills for science students (n=64). The final six weeks of the module are built around the
+completion of a group podcast assignment which articulates a scientific topic to a public audience.
+As the module is focused on writing as a rhetorical practice, students are well positioned to engage with
+the potential of GenAI focusing on Large Language Models (LLMs) as a writing technology. Initially,
+groups identified an appropriate topic and completed academic research.
+This showcase focuses on the activities following the completion of this research when students produce
+a draft script for their podcast. It was at this point, over a two-week period that GenAI was introduced and
+utilised.
+Task / Goal
+The purpose of these activities was to train students to critically evaluate the use of GenAI in their writing.
+This necessitated the acquisition of two core competencies. Firstly, GenAI literacies—ways of doing and
+knowing, e.g. understanding the affordances and limitations inherent in LLM architecture, successful
+prompting, etc. Secondly, dispositions—needed to think critically about the issues that create and shape
+these technologies, including the ethical and legal dimensions of GenAI use, what contexts they are useful
+in and when it is more appropriate not to use GenAI (this can centre on concerns such as plagiarism;
+58 | GENAI DISPOSITIONS AND LITERACIES: PODCASTING AS PRAXIS WRITING IN MEDIA
+
+
+ potential inaccuracies in output; impact on learning; environmental issues; or simply the fact that in many
+scenarios, using GenAI can be more time consuming than not). Drawing on Southworth et al., (2023), the
+learning outcomes were:
+• Discuss how GenAI technologies work.
+• Operate/prompt them effectively.
+• Analyse their affordances and limitations.
+• Integrate them into the writing process.
+• Debate the broader social and ethical considerations of their use.
+Actions / Implementation
+The final assessment for this module was a group podcast. As outlined above, GenAI was the focus of the
+middle two weeks of this part of the course. The core teaching and learning activities were thus:
+• Week one, lecture: Introduction to GenAI as a writing technology. This focused on three central
+learning outcomes: 1) describe the development and architecture of LLMs, 2) discuss the affordances
+and limitations of LLMs, 3) utilise LLMs. Following this lecture students took part in a tutorial
+session where they utilised GenAI to produce draft scripts.
+• Tutorial. Three key prompting tasks were used: 1) brainstorming and organising, 2) producing text,
+3) breaking down writing tasks to enhance GenAI output (see digital resources for worksheet).
+• Week two, lecture: The ethics of GenAI. This focused on various ethical concerns raised by these
+technologies, including ecological, privacy, and copyright concerns; bias; and an overview and
+critique of current ethical frameworks.
+• Tutorial. This consisted of critiquing GenAI output and editing this to produce their podcast script
+(see digital resources section).
+Outcomes
+The introduction of GenAI necessitated a multi-stage approach to the production of the podcast. While
+some elements remained the same, some changed. Preceding the use of GenAI, the module needed to
+introduce and discuss podcasting as a genre, and the role of science podcasting, to a public audience, in
+particular. Students needed to select an appropriate topic and research this, gathering academic sources
+which would allow them to critique, strengthen and correct potential misinformation from GenAI. Such
+fundamental knowledge is also a crucial factor in prompting LLMs. Following the production of a script
+with the assistance of GenAI (ChatGPT), students finally had to record and edit this for the assignment.
+The podcast script was assessed based on the following criteria: exigence (i.e. the pressing need), which was
+established, and resolution explored; audience was targeted; appropriate language, etc.; constraints, making
+use of the affordances of the genre while overcoming the limitations.
+GENAI DISPOSITIONS AND LITERACIES: PODCASTING AS PRAXIS WRITING IN MEDIA | 59
+
+
+ Reflections
+The module proved extremely useful in exploring GenAI’s potential as a writing technology. The lectures
+provided a good opportunity to introduce key concepts, affordances, and limitations and begin to
+introduce core skills/literacies, such as prompting. These blended well with the tutorials, where students
+gained experience with generating and critiquing GenAI output.
+One critical point of feedback from students was how time-consuming it was to produce usable text.
+Given the context—students had spent a lot of time up to this point thinking about writing and
+rhetoric—this not only signals the effectiveness of the module as a whole, but points to the need for strong
+writing instruction. Once students understand what proficient writing is, they are much more capable of
+critiquing and surpassing the textual output of GenAI.
+Future iterations of this course will further explore the use of GenAI for research (compared to other
+tools) and summarisation (compared to humans).
+Further Reading
+Association for Writing Across the Curriculum. (2023). Artificial intelligence writing tools in writing across
+the curriculum.
+Miao, F., Holmes, W., & United Nations Educational, Scientific and Cultural Organization. (2023).
+Guidance for generative AI in education and research. United Nations Educational, Scientific and Cultural
+Organization.
+MLA-CCC. (n.d.). MLA-CCC joint task force on writing and AI.
+Southworth, J., Migliaccio, K., Glover, J., Glover, J., Reed, D., McCarty, C., Brendemuhl, J., & Thomas,
+A. (2023). Developing a model for AI across the curriculum: Transforming the higher education landscape
+via innovation in AI literacy. Computers and Education: Artificial Intelligence, 4, 100127.
+Digital Resources
+Each of the two tutorials made use of a worksheet, these can be located here:
+Tutorial one: Introduction to prompting Worksheet
+Tutorial two: Editing GenAI workshop
+Author Biography
+Dr Adrian Kirwan (Critical Skills, Maynooth University) is an historian of science and technology. He
+has published in numerous national and international journals, as well as recently co-editing the eleventh
+volume of The Correspondence of John Tyndall (University of Pittsburgh Press, 2022). He also has a strong
+60 | GENAI DISPOSITIONS AND LITERACIES: PODCASTING AS PRAXIS WRITING IN MEDIA
+
+
+ interest in the Scholarship of Teaching and Learning, particularly in the use of (and discourse surrounding)
+technologies in higher education. His most recent publication on this subject is ‘ChatGPT and university
+teaching, learning and assessment: some initial reflections on teaching academic integrity in the age of Large
+Language Models,’ Irish Educational Studies.
+GENAI DISPOSITIONS AND LITERACIES: PODCASTING AS PRAXIS WRITING IN MEDIA | 61
+
+
+ TESTING THE TURING TEST WITH
+CHATGPT
+Institution: University College Cork
+Discipline: Philosophy
+Authors: Joel Walmsley
+GenAI tool(s) used: ChatGPT
+Situation / Context
+In 2023 and 2024, as part of a third-year undergraduate module in Philosophy (PH3035: “Philosophy
+of Artificial Intelligence”), I required that students use ChatGPT as part of their essay assignment. The
+module is typically taken by approximately 40 BA students from a number of disciplines (e.g., Philosophy,
+Digital Humanities), as well as a handful of postgraduate students (including the Higher Diploma in
+Philosophy). One of the requirements for the module is a 2500-word essay, and I have always given students
+a choice of essay questions, one of which concerns the “Turing Test.”
+We cover this topic in the lectures, having read Turing’s famous 1950 paper “Computing Machinery and
+Intelligence” together with a variety of secondary literature and in-class discussions. In the last two years, I
+decided to address the same topic but adjust the way in which students were required to approach it; the
+appearance of ChatGPT provided a unique opportunity for students to conduct a Turing Test rather than
+merely read and write about it.
+Task / Goal
+My objectives here were four-fold. First, since the module itself concerns (the Philosophy of) AI, the essay
+assignment seemed like a good opportunity to give students some “hands-on” experience interacting with
+a current GenAI system rather than simply reading about it.
+Second, the assignment provided an introduction to the technology itself by enabling students to
+learn and demonstrate best practices in using it (as well as exploring its strengths and weaknesses) in an
+environment where I could guide them in doing so responsibly.
+Third, I designed the assignment in such a way that completing it would still meet the learning objectives
+62 | TESTING THE TURING TEST WITH CHATGPT
+
+
+ for the module by requiring that students engage carefully with the texts, ideas, and debates that we had
+examined together in class.
+Finally, I hoped that this assignment would also be enjoyable. Here, I was inspired by a recent tweet from
+Andrew Ng (former head of Google Brain), in which he said, “I wish schools could make homework so
+joyful that students want to do it themselves, rather than let ChatGPT have all the fun.”
+Taken together, these four considerations, I surmised, would significantly reduce students’ ability – or
+even desire – to use GenAI in a way that would constitute academic dishonesty.
+Actions / Implementation
+The specific wording of this particular essay question was as follows:
+“Conduct a Turing Test (or, rather, play Turing’s ‘imitation game’) with ChatGPT. Given what Turing
+says in his 1950 paper do you think that ChatGPT passes or fails? How, and why? What kinds—or
+topics—of conversation would make it more likely to pass, or more likely to fail? What does this show
+about the Turing Test? What does this show about ChatGPT?”
+I designed questions in such a way as to allow students considerable creative freedom in their approach,
+whilst also ensuring that the essay topics required engagement with the material we had covered. In
+conjunction with the ordinary course material – which already gave students some familiarity with GenAI
+in general, and LLMs in particular – I spent a lecture specifically discussing how ChatGPT works, what its
+strengths and limitations are, and strategies for using it optimally (and honestly) in this kind of assignment.
+We went through the handout to discuss the ways that ChatGPT might be used productively, the
+appropriate ways for documenting that process, and my expectations and goals.
+Outcomes
+The resulting essays were a delight to read, and I was pleasantly surprised both by the enthusiasm that the
+students displayed, and the creative, insightful, and original ways that they had approached the assignment.
+Students had conducted Turing Tests by focusing on areas as diverse as humour, slang, gender,
+neurodiversity, morality, sport, cuisine, and perfumery, and demonstrated exactly the kind of
+understanding and engagement that I was hoping for.
+In their course evaluations—in which I asked specifically about the “unconventional”
+assignment—students were universally positive. One even commented that the thought of “cheating” had
+not even crossed their mind because the assignment was so much fun to work on.
+Reflections
+Having set the assignment this way for two years now, I have had the opportunity to make some changes
+in light of my experiences. First, I am now much clearer with students about my expectations, and the
+somewhat novel or unconventional nature of the assignment. I emphasise both that we are all still learning
+TESTING THE TURING TEST WITH CHATGPT | 63
+
+
+ how best to use this technology, and that, for that reason, I am very open-minded about how they can
+approach the assignment. An example of this includes confusion on students’ parts about how to cite or
+document their interactions with ChatGPT, so I now stipulate that they must include screenshots either
+in-text or as a clearly labelled appendix.
+The ability to document this kind of process is a valuable skill for them to learn and will surely become
+even more so in the future. Second, because ChatGPT’s model is continually changing (including the
+expansion of some of its safety features, and its prohibited responses), I found it useful to experiment with
+ChatGPT myself before setting the assignment: this is something that will need to be done every year, with
+tweaks to the assignment introduced. For example, if one asks ChatGPT for an opinion, a feeling, or to
+report its own mental state, it always gives a “canned” or deflationary response, which reminds the end-user
+that it is “merely” an AI.
+To avoid students getting “stuck” on such things, assignment questions can be tweaked to use this kind
+of response explicitly, in order to prompt further reflection (see, for example, question 2 in the assignment
+handout, appended).
+Naturally, it must be said that my module lends itself well to this kind of approach by its subject matter
+concerns the Philosophy of AI. One might worry about the extent to which this particular exercise could be
+applied in other modules and disciplines. However, I have found that the general approach can be adapted
+to other contexts and to different topics. ChatGPT is very good at coming up with lists and examples, or
+proposing hypothetical novel cases, or answering in a particular style or voice, and so could usefully inform
+a range of different subject matters. For example, in another module of mine, students used ChatGPT to
+develop (and critique) dialogues with characters from the novel Brave New World and thereby explore the
+concept of free will with some success.
+Several students also mentioned that brief interaction with ChatGPT could be used for brainstorming
+or for overcoming writer’s block. Care must be taken here, as such usage could limit students’ creativity and
+perhaps inhibit or bypass engagement with an issue; it may be more appropriate for students only to use
+ChatGPT after they have made an initial foray into the topic with their own brainstorming. Nonetheless,
+this is something that could be equally well explored and developed in similar assignments by adopting my
+approach of facilitating, rather than prohibiting, the use of GenAI.
+Digital Resources
+UCC Book of Modules Entry for PH3035:
+https://ucc-ie-public.courseleaf.com/modules/?details&srcdb=2023&code=PH3035
+PH3035 Essay Topics (Appendix): PH3035-essay-topics Joel W
+Author Biography
+Dr Joel Walmsley is a lecturer and Deputy head in the Department of Philosophy at University College
+64 | TESTING THE TURING TEST WITH CHATGPT
+
+
+ Cork. His research interests include philosophy of mind (especially cognitive science and AI) and
+philosophy of science. He is the author of Mind: A Historical and Philosophical Introduction (Hackett,
+2006), Mind and Machine (Palgrave, 2012) and editor of C.D. Broad: Key Unpublished Writings
+(Routledge, 2023).
+TESTING THE TURING TEST WITH CHATGPT | 65
+
+
+ USING GENAI FOR CREATING
+PEDAGOGICAL RESOURCES/MATERIALS
+IN EDUCATION
+Institution: University College Cork
+Discipline: Education
+Authors: João Costa, João Mota
+GenAI tool(s) used: ChatGPT (3.5) and Microsoft Copilot
+(using GPT 4.0)
+Situation / Context
+This case study, from an accredited professional degree in Teacher Education, encompasses the design of a
+set of teaching and assessment resources carefully created and curated to support the delivery of modules
+across the BEd Physical Education, Sports Studies and Arts (BEDPESSA) degree, namely Pedagogical
+Foundations (ED1324) and a suite of 4 modules centred on Curriculum-Based Physical Activities
+(ED1314, ED1323, ED2405, ED2406). The BEDPESSA programme caters to a cohort of 200 future
+PE and Arts teachers, 50 per year and per module. All modules rest in a new programme structure
+that was reconfigured during the last accreditation round completed in 2022 and are centred around the
+implementation of curriculum and pedagogical models for post-primary education classrooms.
+Task / Goal
+A challenge we faced while delivering our modules was providing the students with rich, detailed, and
+authentic accounts/problems of teaching contexts that could be used to guide and scaffold learning and
+assessment for the students to connect theory and practice in relation to curriculum and pedagogical
+models in post-primary education. This challenge stemmed mainly from the amount of time necessary
+to craft and curate these problems until they were ready for application while meeting key pedagogical
+features of ecological validity and alignment. The use of GenAI provided us with the ability to automatise
+and standardise most of the crafting process, securing enough time to allow us to centre our efforts on
+refining the problems and guaranteeing their validity and alignment with the modules’ learning outcomes.
+66 | USING GENAI FOR CREATING PEDAGOGICAL RESOURCES/MATERIALS IN EDUCATION
+
+
+ Actions / Implementation
+As hinted above, we used Gen AI to develop a set of problems describing realistic educational contexts and
+the challenges stemming from the implementation of specific curriculum and instructional models (e.g.,
+Flipped Classroom, Adventure Education).
+Their use was twofold: 1) in the case of the Curriculum-Based Physical Activities these cases were used
+as hooks to set class discussion and drive the remainder of the class; while, 2) in the case of ED1324 the
+cases produced were used as assessment prompts that students had to analyse and discuss showing an
+understanding of the links between theory and practice of pedagogical models in the classroom.
+We prompted ChatGPT (free version using GPT 3.5) and Microsoft Copilot (using GPT 4.0) to design
+a problem or case scenario that included challenges, common errors, and/or key elements/principles of
+said models’ implementation. Based on reviewing and dissecting the outputs obtained, the prompts were
+refined towards the least addressed features of the scenarios and then refined manually to align with the
+particular learning intentions/outcomes of each class/module.
+The rubrics were also refined to maximise alignment and validity of the learning and the assessment. The
+two relevant examples are further explained, considering the generated framework for creating resources
+using GenAI, presented here under Digital Resources.
+For the use of creating learning experiences through scenarios as hooks for class discussion, once it was
+established the desired output aligned with the Learning Outcomes under the principles of alignment and
+validity, the following steps were taken:
+• prompting ChatGPT to write a problem with a specific pedagogical approach (e.g., Adventure
+Education) “Write me a problem experienced by PE teachers when using Adventure Education” and
+assessing the overall quality in terms of validity and authenticity;
+• prompting ChatGPT to convert the problem to a case study format “Could you put into a case
+study format?” as it inherently adopts a clear structure with a Background section and a Problem
+section; and
+• “manually” extracting the most relevant features towards condensing the case study text to the
+lecturer’s personal approach within the session’s aims (see sample figure below).
+USING GENAI FOR CREATING PEDAGOGICAL RESOURCES/MATERIALS IN EDUCATION | 67
+
+
+ Fig 1. – Full output vs. condensed version of the resource for class discussion. Blue and red highlights
+identify the core elements used for condensing purposes.
+This process was then replicated for the remaining pedagogical models, allowing students to use time
+and resources efficiently and effectively. To generate case studies as assessment prompts to be analysed by
+the students, a sample pedagogical model was used to develop and refine a master prompt structure that
+would then be filled by the remaining pedagogical models (for a total of five).
+The first test prompt aimed at generating a case aligned to learning outcomes, namely a) outlining
+models of pedagogical practice and b) discussing examples of pedagogical practice: “Create a case scenario
+of teaching through case-based learning, making clear that it is a case-based teaching model, with one good
+feature and one negative feature”.
+When assessing the output, it was noted that the generated scenario focused on a third-level setting, thus
+immediately revealing that the prompt had to specify the secondary-level setting to ensure authenticity and
+validity: “Refine the case scenario to focus on secondary school and expand the scenario.”
+Lastly, the refined output still revealed an element in one of the features that was beyond the teacher’s
+control which didn’t suit the aim of the assessment relative to the Learning Outcomes, leading to a
+refinement prompt: “Refine the negative feature to focus on an element that Ms. Garcia could do better in
+the classroom when implementing the case-based teaching model”.
+The final output showed sufficient validity and alignment to the intended output and a master prompt
+was finally tested now with a different pedagogical model aiming to avoid ChatGPT’s simply adopting the
+previous outputs and pushing the test forward: “Create a scenario of teaching in secondary school through
+problem-based learning, describing the problem-based teaching model, and referring to one good feature
+and one negative feature in the scenario”. Each of the generated cases were “manually” refined for enhanced
+cultural responsiveness, for example, by changing names to more common Irish names and educational
+settings, which eventually could have also been incorporated into the master prompt.
+In less than one hour, all five cases were generated and condensed to the desired level that was consistent
+across all pedagogical models (e.g., between 100 and 150 words) and then incorporated into the assignment
+for students (see sample figure below).
+68 | USING GENAI FOR CREATING PEDAGOGICAL RESOURCES/MATERIALS IN EDUCATION
+
+
+ Fig. 2 – Full output vs. condensed version of the resource for assignment (before cultural adaptation).
+Green highlights identify the core elements used for condensing purposes.
+Outcomes
+The outcomes from this practice refer to different elements:
+• the actual problems and scenarios for each of the modules that hold ecological validity and alignment
+to the learning outcomes;
+• a conceptual and practical framework that derives from the educational best practice of instructional
+alignment, embedding principles of using GenAI; and
+• a set of pedagogical practices for learning and assessment that embeds the design of GenAI at its core,
+which can be used to continuously update and improve teaching, learning, and assessment.
+The resources were evaluated with peers who reviewed the content and the process, as well as through
+student feedback on the modular experience. The framework has been evaluated through presenting and
+piloting with the School of Education during a professional development day.
+Reflections
+Given that most of this endeavour was driven by our initial curiosity around the prospective use of GenAI
+to lighten the load of preparing teaching and assessment resources while ensuring proper validity and
+alignment of said resources, we were positively surprised by the authenticity of the outputs produced with
+minimal tinkering, once a pattern of effective prompts was developed that then we could translate to a
+USING GENAI FOR CREATING PEDAGOGICAL RESOURCES/MATERIALS IN EDUCATION | 69
+
+
+ conceptual framework. This fact further deepened our conviction that GenAI can be meaningfully used
+to support the use of problem-based teaching and assessment practices and minimise the upfront time
+required to prepare resources; all the while maximizing the energy and time available for lecturers to focus
+on in-class interaction and provision of quality feedback.
+For improvement next time, we are thinking of guiding students in adopting the framework as teachers
+during school placement. There, they can test the extent to which the assessment practices can be addressed
+through GenAI. As a result, they might identify how the experience can be improved and enhance its
+internal validity in assessing student learning.
+Digital Resources
+Fig. 3 Conceptual Framework for using GenAI to create assessment resources.
+Additional Resource: Mota and Costa_AI in Education
+Author Biographies
+Dr João Costa is a Physical Education Teacher Educator, holding a Doctorate in Teacher Education
+from the University of Lisbon in Portugal. His Doctorate was awarded the first prize in Research in
+Sport Psychology and Pedagogy by the Portuguese Olympic Committee / Millenium BCP Sports Sciences
+Research Awards in 2017. He currently serves as a Lecturer in Education (Sport Pedagogy) in the School
+of Education at UCC, for the B.Ed. (Hons) of Physical Education, Sports Studies, and Arts where he takes
+the roles of Deputy Director and Interim School Placement Coordinator. His research interest focuses on
+Quality Physical Education, having Co-Coordinated the development of the European Physical Education
+Observatory for the European Physical Education Association, where he served as Representative for the
+70 | USING GENAI FOR CREATING PEDAGOGICAL RESOURCES/MATERIALS IN EDUCATION
+
+
+ South Region of Europe between 2018 and 2023. João is also serving NCCA as Chair of the Leaving
+Certificate Physical Education Subject Development Group and collaborates in the independent research
+network of the Global Observatory of Physical Education as a member of the Coordination Team and
+Research Team.
+Dr João Mota is from Lisbon, Portugal. He has previously taught for five years at the Faculty of Human
+Kinetics, his alma mater. He has a Bachelor’s degree in Sports Science (minor in Exercise and Health), a
+Master’s degree in Physical Education and a PhD in Education. His research focuses on Physical Literacy,
+Pedagogy/Didactics of Physical Activities, Educational Assessment and Psychometrics. As part of his PhD,
+he led the creation and initial validation of the Portuguese Physical Literacy Assessment (PPLA). He has
+published several articles in international peer-reviewed journals and is an active peer reviewer. He has been
+involved in various international projects funded by the Erasmus+ program as a researcher-collaborator for
+the Centre for Education Studies and the UIDEF pole (FMH and IE-ULisboa). His sports background
+is in Dance, Swimming and Team Handball. When he is not working, he loves exploring the outdoors
+through mountaineering, hiking, and trail running. He has a strong passion for non-formal education,
+particularly Scouting—where he actively collaborates as a curriculum developer and adult educator.
+USING GENAI FOR CREATING PEDAGOGICAL RESOURCES/MATERIALS IN EDUCATION | 71
+
+
+ EXPLORING THE USE OF GENAI TOOLS IN
+PERSONALISING EFFECTIVE SECOND
+LANGUAGE ACQUISITION
+Institution: University of Limerick
+Discipline: Languages
+Author: Liam Murray
+GenAI tool(s) used: None specified
+Situation / Context
+This experience was implemented in the BA Applied Languages and B.Ed in Modern Languages. 88
+students (typically). All students are in semester three of the second year and are also preparing to leave
+UL for two semesters to go out on work placement in semester four and then on to the ERASMUS study
+abroad programme in semester five, returning to UL in Semester six. The student profile is mixed with
+student applied linguists studying with future Modern Language teachers.
+This is important to know because sections of our module are designed to help students become more
+autonomous and self-regulated in their learning. GenAI tools can help a lot in this regard. This module
+also majorly deals with the evaluation of Technology and Second Language Acquisition, so a range of
+GenAI tools are evaluated as a matter of course for this module. The overall aim of the module is to help
+students become optimal language learners with their use of varied apps and technologies, with a high
+personalisation of the learning experience in the use of Computer-Assisted Language Learning (CALL).
+Task / Goal
+Goals: To introduce students to the major pedagogical, professional and research applications of
+technology in modern languages and to enable students to integrate these into their studies. By the end of
+the Semester, students will have engaged in practices and reflections on their language learning methods
+and experiences with technologies, especially GenAI tools, in order to gain a better understanding of
+themselves as language learners.
+Over 12 weeks, the students are introduced to a major theme in CALL in the weekly lecture. Themes
+include evaluation of GenAI for language acquisition, gamification of learning, Critical Digital Literacies,
+72 | EXPLORING THE USE OF GENAI TOOLS IN PERSONALISING EFFECTIVE SECOND LANGUAGE ACQUISITION
+
+
+ and critical pedagogies. Each week in the 2-hour lab session, students are asked to write their reflections on
+the particular weekly theme in their own blog area contained in our VLE, which is visible to all students in
+the module. This is important because students are invited to comment on the reflections of other student
+blogs (minimum six comments) in an “intelligent, engaging and constructive way”. Feedback and further
+discussion are led by the Lab Tutor. This exercise takes up to 30 minutes.
+At the end of the semester, the students assess their previously written blog posts, reflect on them, and
+compile and submit what they believe to be their four best blog posts for evaluation and feedback. Also
+in the Labs, students are afforded the time and opportunity to assess relevant apps and websites for their
+language learning and also as prep for their study abroad. One session, for example, on Digital Games-Based
+Language Learning is always highly engaging and helps to dispel prejudices against gaming for learning and
+encourages students to open their minds to other opportunities for language and culture acquisition.
+The final assessment is a personalised reflective essay (worth 40%) of 2000 words on CALL, answering
+the current question of “Using AI Tools to Transform my Student Learning Experiences at UL”. Week
+12 is entirely devoted to class discussion on this topic, looking back over the whole semester whilst the
+lab sessions allow the prep, structure and part composition of the essay which must include a number of
+relevant research articles related to GenAI and student (language) learning.
+Actions / Implementation
+As part of the module (Technology and Language Learning), students had one face-to-face weekly lecture
+introducing the main theme of study for the week and one two-hour tutor-guided lab class in which to
+practise, reflect upon and compose a multimodal blog about the topic at hand.
+The primary and overarching theme throughout the module is: GenAI for language acquisition. The
+range of topics included: CALL (Computer-Assisted Language Learning) and GenAI Evaluation (two
+weeks at beginning, one final week at the end of the module); Critical Digital Literacies; Machine
+Translation/GenAI literacy; DGBLL (Digital Games-Based Language Learning.
+Due to the large numbers of students, and in the spirit of UDL, we have a range of assessments, ranging
+from multimodal blogging to MCQs. Most importantly and as is reflected in the weighting given to it, the
+final essay, for outside the teaching spaces, amounts to 40% of the final grade. For the last few years, we have
+been experimenting with various assessments titles and tasks for this reflective essay. Given the prevalence,
+opportunity and indeed temptation for students to use GenAI in composing the essay, we decided to try
+to personalise the topic as much as possible. The current title is: “Using AI Tools to Transform my Student
+Learning Experiences at UL.” There is no formal final written examination.
+Outcomes
+The outcomes were very revealing and quite rewarding for our students, as evidenced by the content from
+the student essays, blog postings, and final discussions in Week 12. Eighty-seven out of 88 of the essays
+discussed the issue of integrating GenAI in various ways in order to become better and more optimal
+EXPLORING THE USE OF GENAI TOOLS IN PERSONALISING EFFECTIVE SECOND LANGUAGE ACQUISITION | 73
+
+
+ language learners. Many of the students stated that they are much more informed about the potential of
+GenAI in their learning, but also the need for them to develop a “critical layer” of assessment for when,
+where, how and how much of the GenAI tools they could use to help them in their learning and not allow
+themselves to become lazy in casually using the tools.
+The students also revealed a fear of accusations of plagiarism and possible expulsion from the course,
+which was holding back a great use of GenAI tools. A typical student statement: “I can often forget how
+much I have used Copilot, but I know that I need to go back over my work both to check my own output
+and where the AI tool has helped me.” Another very typical example: “GenAI tools are very useful for
+brainstorming ideas at the start, and then I work on them myself with my own ideas” and also “you really
+need to learn and practise how to write and refine those prompts to take maximum advantage.”
+Reflections
+With their usual brutal honesty, student feedback was very informative. We learned that for many students
+last year, prior to the module, they feared using GenAI tools because they might be severely disciplined if
+they were suspected of plagiarism, had they made any use of GenAI tools in completing any assessments on
+their course.
+We learned that currently, we still need to complete techno-ethical audits regularly across all of our
+modules until we reach a point of balance with our students on how to integrate these tools effectively
+so as to become more rounded and better critical thinkers for sustainable learning with GenAI. Techno
+ethical audits can take several forms extending beyond the student declaration that this is “all my own
+work” when submitting a written or multimodal assessment. There can and perhaps should be open and
+frank discussions with students in class at the beginning, middle and end of the semester on the ethical uses
+of GenAI tools in their own learning. These can be reassuring and helpful for both students and lecturers.
+In this current semester, we have seen a definite change in student thinking and practices. ChatGPT has
+now become a verb, with certain students declaring that they intend “to ChatGPT a question/topic/issue”
+in preparing their assignments. So, the change continues, and Tutors need to upskill accordingly. Improve
+for next time? Full knowledge of AI policies from EU, Irish, University and School/Department/local unit
+levels and being open and direct with students on this – now central – issue in their learning.
+Digital Resources
+Typical resources as examples:
+https://feedbackfruits.com/ai-chatgpt-resources-hub#categories
+https://poe.com/ (for creating their own customised GenAI chatbot)
+https://paradoxlearning.com/resources/
+74 | EXPLORING THE USE OF GENAI TOOLS IN PERSONALISING EFFECTIVE SECOND LANGUAGE ACQUISITION
+
+
+ References:
+Hockly, N. (2024). Nicky Hockly’s 30 considerations for using AI. Cambridge University Press. (In press).
+Kew, T., Schottman, F., & Sennrich, R. (2023). Turning English-centric LLMs into polyglots: How
+much multilinguality is needed? ArXiv.
+Author Biographies
+Prof. Liam Murray is a Professor in French and Language Technologies in the School of Languages
+Literature, Culture and Communication at the University of Limerick, Ireland and teaches courses on
+CALL, digital games-based language learning, French civilisation, and media, GenAI in language learning,
+e-learning, and evaluation.
+EXPLORING THE USE OF GENAI TOOLS IN PERSONALISING EFFECTIVE SECOND LANGUAGE ACQUISITION | 75
+
+
+ CONSTRUCTING IN THE OLD ENGLISH
+CLASSROOM
+Institution: University of Galway
+Discipline: Old English Poetry
+Author: Frances McCormack
+GenAI tool(s) used: ChatGPT
+Situation / Context
+This is a final-year large-group Old English Poetry course in the Discipline of English. There are
+approximately 150 students (100 Home Students and 50 Visiting Students). The Home Students complete
+a midterm essay and final exam, and the Visiting Students write a midterm and final essay.
+My teaching philosophy recognises the importance of student investment in the object of study, and
+I attempt through teaching and assessment to make the learning something in which the students find
+intrinsic motivation and reward. By examining how knowledge is constructed and the real-world
+implications of that construction, I can engage the students emotionally; by asking them to critique the
+construction of knowledge, they can engage critically. It is my intent that this will provide them with some
+ownership over learning objects and allow them to acquire a deeper level of learning outcomes.
+Task / Goal
+This course aims to probe the construction of knowledge in the field of Old English Studies itself. I
+wanted the students to understand how learning is bounded and often culturally contingent. The GenAI
+assignment provided students with an opportunity to apply critical thinking to examine the ways in which
+scholarly shibboleths (such as the assumed veracity of Tacitus’ Germania) can be passed down, to use
+their learning to construct their own analysis, and above all to identify and name the skills that they have
+acquired in their studies. This learning offers students some insight into the fallibility of the scholarly
+method and the need for active and ethical research, but also the chance to engage with it on their own
+terms, not as something distal and unfamiliar, but as something through which they may find an entry
+point rooted in their own emotional engagement.
+76 | CONSTRUCTING IN THE OLD ENGLISH CLASSROOM
+
+
+ Actions / Implementation
+The Assessment Guidelines for the Visiting Students were as follows:
+1. Ask ChatGPT to write an essay on “The Heroic” in Old English Poetry and to cite three sources.
+2. Critique ChatGPT’s response (1000 words).
+3. Write your own essay on the concept of the heroic in Old English Poetry, making substantial reference
+to three poems on this module, and citing three scholarly sources (1000 words).
+Darvishi et al., (2022), in their review of the use of GenAI to develop peer assessment systems, examine
+the benefits of peer review activities, from improved comprehension to the development of evaluative
+judgement and writing skills, and beyond. I first explored these outcomes in a formatively assessed small
+group context in a class on The History of the English Language, in which I had asked the students to
+produce an answer to a question with the help of ChatGPT and to critique and fact-check the same. The
+results from this pilot experiment demonstrated that students were keenly aware of the skills that they
+possessed that were not demonstrated by ChatGPT and were able to articulate how those skills could be
+employed to provide a more cogent and persuasive response to the question.
+Outcomes
+In the Old English Visiting Students’ assignment, students readily identified inherited scholarly
+shibboleths. They questioned a priori assumptions; critiqued the evidence, and readings; and produced
+their own more thoughtful, more research-informed essays with incisive criticism and adept readings of
+primary and secondary sources. Their critiques of ChatGPT focussed largely on the superficiality of the
+responses, the uninspiring readings of the poems that resulted, and the lack of engagement with recent
+discussions in the field.
+By contrast, despite us having spent an entire semester addressing some of the untested assumptions
+and culturally biased readings in the scholarship, the Home Students’ exam responses to the question were
+often quite conservative and tended to repeat said shibboleths. Their exam question had read: ““Beowulf
+is frequently described as a “heroic poem”. Examine the concept of the “heroic” with reference to at least
+one other text studied in this course and assess how appropriate the term is to describe this text.”” In future
+years, both Visiting and Home Students will complete a final take-home essay similar to that taken by the
+Visiting Students this year.
+Reflections
+Because this was a pilot version of this assignment, I gave students free opportunities about what to critique
+ChatGPT’s responses and how. This worked well, because they often identified in their essay elements of
+style or argumentation that I could then build on in my own feedback to them. Again, there were broad
+CONSTRUCTING IN THE OLD ENGLISH CLASSROOM | 77
+
+
+ perspectives: while most critiqued the heroic as a construct, many developed their own research questions,
+examining women’s grief as a counterpoint, investigating the trajectory of the concept of the heroic in
+the scholarship, or analysing the construction of the monstrous. In several of the critiques of ChatGPT,
+students reflected on GenAI broadly and how its uncritical reproduction of scholarly shibboleths can
+further constrain knowledge. These are questions that are vast and not anything I can speak to in detail
+here; nor were they an intended purpose of the assignment, but rather a happy outcome.
+In future iterations, I will offer thematic essays (on, for example, monsters, the role of women, identity,
+etc.) to further deepen the level of scholarly and thematic engagement with the material.
+In line with the course’s learning outcomes, then, this GenAI assignment proved more fruitful than
+the traditional exam, offering the students the opportunity to critique the construction and reception of
+knowledge and develop original and informed critical analyses.
+Further Reading
+Bekker, C. I., et al. (2023). The happy learner: Effects of academic boredom, burnout, and engagement.
+Frontiers in Psychology, 13, Article 974486.
+Darvishi, A., et al. (2022). Incorporating AI and learning analytics to build trustworthy peer assessment
+systems. British Journal of Educational Technology, 53(3), 844–875. https://doi.org/10.1111/bjet.13194
+Kolb, D. A. (1984). Experiential learning: Experience as the source of learning and development. Prentice
+Hall.
+Author Biographies
+Dr Frances McCormack (she/her) is a lecturer in English at the University of Galway. She is a three
+time awardee of the University’s President’s Award for Teaching Excellence (2010, 2015, 2020) and College
+Award for Teaching Excellence (2020), and has received the National Award for Excellence in Teaching
+(2011) and the Teaching Hero Award from the National Forum for the Enhancement of Teaching and
+Learning in Higher Education (2021). A medievalist by training, she also publishes on modernist literature.
+She is currently researching emotions and the senses in James Joyce’s Finnegans Wake.
+78 | CONSTRUCTING IN THE OLD ENGLISH CLASSROOM
+
+
+ HOW SHOULD WE REVISE OUR
+ASSESSMENT METHODS CONSIDERING
+THE IMPACT OF GENAI?
+Institution: Dublin City University
+Discipline: Political Sciences
+Authors: Paola Rivetti, David O’Mullane, Rituparna Banerjee
+GenAI tool(s) used: ChatGPT
+Situation / Context
+The project targeted first-year students of International Relations enrolled in the module, Introduction
+to International Relations and Security, which comprised 203 students in 2023/2024. The students
+volunteered to participate in weekly laboratories (eight weeks, six sessions per week). An average of 10
+students attended each session, resulting in roughly 70 students participating each week, excluding the final
+week of the semester when attendance lowered.
+A team of three educators tutored students: the module coordinator, Paola Rivetti, and two assistants,
+David O’Mullane and Rituparna Banerjee. During the laboratory sessions, we conducted practical exercises
+using ChatGPT in a computer-equipped room.
+Students could work individually on a computer or collaborate in groups of two to three. They
+autonomously chose whether to work alone or in groups and selected their group members independently.
+We used the free version of ChatGPT.
+Pedagogically, the exercises were designed to foster a shared understanding between students and
+educators of how to use ChatGPT and its potential applications for learning about International
+Relations, building on the module’s contents discussed in class. Each exercise was followed by the students’
+feedback. We conducted an end-of-the-semester survey, receiving responses from 72 students. Ethics
+approval was granted by DCU Research Ethics Committee. For each session, the team had specific
+intended learning outcomes, including how to write a good prompt, interact with the machine, and cross
+verify information. In the lab, exercises were run with the students under the close supervision of the team
+members, who could interact with individual students or small groups of two.
+From the educators’ perspective, the workload involved preparing laboratories, which included
+identifying in-class exercises relevant to the intended learning outcomes. We also supervised students
+HOW SHOULD WE REVISE OUR ASSESSMENT METHODS CONSIDERING THE IMPACT OF GENAI? | 79
+
+
+ during the laboratories, led the sessions and interacted with them during the exercises. Additionally, we
+assessed the students’ performance and the feedback they offered after each laboratory.
+Task / Goal
+While significant attention has been devoted to online/blended teaching and related tools, open-access
+GenAI chatbots and writing programmes have received less attention as instruments that impact our
+teaching and assessment methods.
+The pedagogies of Political Science and International Relations somehow lag behind in understanding
+and addressing these tools. For those teaching these subjects, it is crucial to come to terms with GenAI and
+its impact on how we should assess students.
+This project aimed to revise the alignment of our understanding of the learning objectives, our teaching,
+and the most suitable assessment methods in an environment where GenAI is present and utilised regularly.
+We considered whether to ban it or instead teach students how to use it responsibly and ethically, as well as
+develop a shared understanding of its capabilities and limitations (if anything at all).
+Actions / Implementation
+Each session consisted of three parts: practical exercises with ChatGPT, class discussion about the results,
+and student feedback.
+In Exercise 1, as a starter, we asked students to identify the objectives of the laboratory and what they
+hoped to gain from it. Responses included learning how to use ChatGPT for IR-related content, which
+allowed us to both discuss how to discern good scholarship and reflect on the activities that we should
+prioritize to achieve our goals. After the brainstorming, as Exercise 2, we discussed how to write a prompt,
+building on the objectives we identified. The authors had prepared a list of characteristics that good
+prompts should have, and had the students employ them to write their prompt.
+During the feedback session, students said that ChatGPT offered high-quality information. To enhance
+their critical approach, the educators decided to conduct additional exercises focusing on the quality of the
+results.
+In Exercise 3, the students had to draft their own prompt autonomously. As ChatGPT started to
+generate text, the goal was to interact with and push the machine to generate better information by
+challenging it with requests for more details, fact-checking the information given, and requesting more
+examples. The students’ observations became increasingly critical: they noticed that the machine could
+confabulate, deviate from the command given, and fabricate facts and references.
+As the semester progressed, the team was able to assign increasingly elaborate exercises to students.
+In Exercise 4, the students worked with ChatGPT to identify a good research question for a series of
+given topics. This exercise offered the opportunity to discuss what constitutes a good research question and
+reflect on the applicability and practicality of using ChatGPT by examining the quality of the sources and
+case studies it supplied to answer them.
+80 | HOW SHOULD WE REVISE OUR ASSESSMENT METHODS CONSIDERING THE IMPACT OF GENAI?
+
+
+ In Exercise 5, students had to work with ChatGPT to structure an essay. This presented the opportunity
+to discuss essay writing and an essay’s structure with the students. The students identified that ChatGPT
+tended towards confabulation, fake facts, inaccurate references and reading suggestions, but it provided
+good general information on how to structure an essay and construct an argument. Both exercises
+contributed to enhancing the students’ critical approach to ChatGPT.
+Outcomes
+At the end of each laboratory, students were asked to provide feedback on the utility of the exercises
+and what they learnt about ChatGPT during the session. At the end of the semester, students were also
+asked to participate in a short survey reflecting on the strengths and weaknesses of ChatGPT for studying
+International Relations, and the likelihood of them using it in future as a study aid. Seventy-two students
+completed the survey.
+Generally, we have found that GenAI presents significant limitations, and students should learn how to
+use it effectively from the beginning of their university careers. Assessment methods should be calibrated
+not to prevent students from using ChatGPT (although this is a possibility), but to allow them to use
+ChatGPT only for what it is good for and to teach them how to use it appropriately.
+As such, involving students in these pedagogical approaches helps them foster a critical outlook towards
+AI tools rather than rejecting or embracing them unquestioningly. In the end-of-semester survey,
+respondents reported scepticism about the tools, which evolved into discovering their potential uses in
+structuring work and gaining broad insights, primarily in providing non-reflective assistance in research
+which did not need discernment and critical decision-making.
+Overall, while a shift occurred towards acknowledging its utility when employed effectively for academic
+purposes, many participants reported inaccuracy of information, unreliability, and limited usefulness for
+targeted and specific tasks; the more specific the task was, the less the GenAI chatbots’ reliability.
+Reflections
+Beyond the core benefits of student learning, the laboratory offered several secondary advantages. It
+partially addressed challenges associated with a shortened semester and a large class size, and effectively
+bridged a technology gap. Finally, the team learned that they, and educators in general, are indispensable
+because ChatGPT’s suggestions are based on probabilistic codes and words, and the machine lacks the
+nuance, contextual knowledge, and pedagogical consideration that a human educator brings.
+Concerns also remain about the risk of language uniformity and standardisation. However, as many
+survey answers suggest, students will likely continue using ChatGPT, even when aware of its limitations.
+We need to adapt our education system to incorporate these technologies. Furthermore, this should
+encourage institutions to invest money and resources into educating educators and students about GenAI
+chatbots – something that, unfortunately, is not happening at an appropriate level, raising concerns about
+the quality of education being provided.
+HOW SHOULD WE REVISE OUR ASSESSMENT METHODS CONSIDERING THE IMPACT OF GENAI? | 81
+
+
+ Further Reading
+Rivetti, P., Banerjee, R., & O’Mullane, D. (forthcoming). Testing ChatGPT in IR classrooms:
+Potentialities, limitations, and what’s next. PS: Political Science & Politics.
+Author Biographies:
+Dr Paola Rivetti is an Associate Professor in the School of Law and Government at Dublin City
+University.
+David O’Mullane is a PhD candidate in the School of Applied Language and Intercultural Studies
+(SALIS) at Dublin City University.
+Rituparna Banerjee is a PhD candidate in the School of Communications at Dublin City University.
+82 | HOW SHOULD WE REVISE OUR ASSESSMENT METHODS CONSIDERING THE IMPACT OF GENAI?
+
+
+ GENAI CAN BE ETHICALLY USED AS A
+LEARNING AND ASSESSMENT TOOL IN
+EDUCATION
+Institution: University of Limerick
+Discipline: Psychology
+Author: Tracey Keogh
+GenAI tool(s) used: ChatGPT
+Situation / Context
+GenAI was used as an assessment tool on co-taught modules, biological basis of human behaviour, and
+biological psychology taught to 2nd-year undergraduate and Master’ students. The total number of
+students was 141 (111 undergraduate students and 30 in the master’s programme).
+This was the first assessment of its kind within the Department of Psychology, and students voted during
+the first lecture if they wanted to use GenAI as part of their assessment or not. A great deal of discussion
+was had this first week on GenAI, previous years’ assessments on these modules and the opportunity the
+students had to inform the department and faculty of the pros/cons of using GenAI as an assessment
+method.
+Task / Goal
+I wanted to determine if GenAI could be used ethically and responsibly as a learning and assessment tool.
+I opted for this method of assessment after a departmental teaching planning meeting, where we discussed
+our approach to GenAI. No agreement was given, but what was obvious was a degree of apprehension and
+uncertainty on how to use GenAI ethically.
+From this, I designed an assessment entirely dependent on the students’ voting whether or not to
+use GenAI. This co-creative space for pedagogical design and assessment allowed students to decide on
+using GenAI as well as when it should be submitted and variations between the two groups, e.g., content
+included. The aim was that students with the right supports, could use GenAI ethically and responsibly
+and in doing so, inform staff and faculty members on its utility. This was a great opportunity for staff and
+students to learn together in real time.
+GENAI CAN BE ETHICALLY USED AS A LEARNING AND ASSESSMENT TOOL IN EDUCATION | 83
+
+
+ Actions / Implementation
+During the first lecture where the vote took place, time was given to discuss concerns students may have
+had. It was explained that this was not an assessment to catch anyone out, but an opportunity to inform
+staff on how GenAI could be used responsibly.
+Students were allocated to groups during week two and given a specific nervous system disorder. The
+brief included that they work in groups using ChatGPT, they decided as a group how much prompt was
+to be inputted on the groups nervous system disorder. This part of the assessment was not graded and
+uncontested. From this group meeting, each student then decided if they would use this generated report
+to help form their approach to writing their own individual report. If they chose to use the GenAI report as
+a springboard to their own report, it needed to be explicitly stated in the relevant parts of their own report,
+and the group ChatGPT report had to be included in the appendices. One lecture included a presentation
+from our technical support officer on how GenAI could be used ethically and another covered writing skills
+and plagiarism. Weekly support was provided in lectures, during office hours, and online.
+Outcomes
+Part of the graded report included a critical reflection. This gave students the opportunity to discuss pros/
+cons from their own perspective. I reached out to members of staff to see if they had any questions, they
+wanted to ask the students about their experience.
+The composed list was posted on the VLE, informing students they were welcome to provide feedback
+online, by email or in the final lecture. Students addressed staff questions during the final lecture and
+responses were noted to feedback to the department. Feedback was encouraged and provided through
+several means of communication: discussions in lectures, emails, the VLE and the Centre for
+Transformative Learning module evaluation form, as well as feedback from external examiners.
+Student opinions on efficacy varied; some said it made them better researchers, and some noted how
+flawed the generated content was. Student accountability and engagement were high throughout and
+evident in the critical reflections.
+Reflections
+I learned inviting students into a co-creative space on pedagogical design and assessment increased
+engagement and accountability for work submitted. I also learned that GenAI can be used ethically and
+responsibly. Through thorough and detailed communication, creativity was fostered, and students had the
+opportunity to learn about GenAI while also teaching staff about this particular assessment tool which was
+equally important.
+Surprisingly, much of the feedback from students centred on “time”, in terms of both benefits and
+barriers. For some, it bridged the gap between the initial brief and the dreaded blank page, for others, it
+provided rabbit holes of research due to inconsistencies in the generated content. Feedback was varied and
+84 | GENAI CAN BE ETHICALLY USED AS A LEARNING AND ASSESSMENT TOOL IN EDUCATION
+
+
+ extremely interesting and a valuable asset to determining the utility of GenAI in education as an assessment
+tool. I didn’t expect a high level of accountability, and I would include staff support from the library on
+future assessments.
+Digital Resources
+Guidance & Support offered to students: Because of the co-creative approach adopted, tangible support
+was provided within the framework of the lectures throughout the semester, as well as the VLE and student
+office hours. One of our technical officers came to give an ‘off-the-cuff’ presentation, which was more of a
+two-way conversation addressing student concerns or queries relating to GenAI and how best to approach
+the assessment. Brightspace forum was used and monitored to address any additional questions and with
+the last lecture and email, to garner student feedback on the utility of GenAI as a learning and assessment
+tool. Questions were generated from discussions with staff within the department of psychology, who were
+curious as to the efficacy of GenAI in this context. Findings were presented at the Learning, Teaching and
+Assessment Conference 2024. This has also helped inform the basis of an ongoing study on traditional vs
+innovative approaches to teaching, learning and assessment in higher level education. Assessment tools have
+been modified slightly this coming year to the use of Copilot, aligned with institutional policy, additional
+support documents on using AI e.g., Do’s and don’ts; declaration form; sample GenAI checklist for
+students etc. as well as useful links The Academic Integrity Unit | University of Limerick (ul.ie); Generative
+Artificial Intelligence | University of Limerick (ul.ie). And given GenAI will be used in some part for the
+assessment, the content for some of the weeks’ lectures will be generated in Copilot and made available to
+students on the VLE.
+Assignment Instructions: F-02 HEI Psychology – additional info – GenAI_Assessment_Brief.
+Author Biography
+Dr Tracey Keogh is an Associate Teacher in the Department of Psychology at the University of Limerick.
+I teach biological, clinical, cognitive, research-based, and introductory modules and supervise research
+projects at undergraduate and postgraduate levels. Her teaching interests involve extending traditional
+approaches to teaching, learning and assessment, with the inclusion of innovative and interactive methods
+such as GenAI and game-based learning. Her research interests include understanding the impact of stress
+on mental and physical well-being; investigating interactions between trauma, addiction processes, and
+stress-related factors; and assessing student engagement with different teaching, learning and assessment
+tools, comparing traditional and interactive models which would be beneficial to future curricula and
+content creation and delivery.
+GENAI CAN BE ETHICALLY USED AS A LEARNING AND ASSESSMENT TOOL IN EDUCATION | 85
+
+
+ IS GENAI REPRODUCING OR HELPING TO
+SOLVE SOCIAL INEQUALITY?
+Institution: Maynooth University
+Discipline: Sociology
+Author: Rebecca Chiyoko King-O’Riain
+GenAI tool(s) used: ChatGPT
+Situation / Context
+This GenAI teaching activity took place in a second-year Sociology module at Maynooth University in
+the Spring Term of 2024. In this 5-credit module, entitled SO 203: Structures of Inequality, Race, Class
+and Gender, 174 second-year sociology students were studying social inequality in many social spheres,
+including in terms of technology. The module had two lectures per week for four weeks (Weeks 1 and 2,
+and Weeks 11 and 12) and one lecture and one tutorial (small groups of 15-20 students) for eight weeks
+(Week 3 – Week 10).
+While the existing assessment structure for this module had been a standard essay writing 50% and a final
+examination 50%, I was motivated to pilot this integrated teaching activity in the face of declining student
+engagement and concerns about the increasing use of ChatGPT by students to write the “traditional” essay.
+Task / Goal
+This activity was a pilot test of an alternative teaching and assessment approach that integrates the use of
+GenAI. The activity begins by conceptualising AI not as a tool for cheating but as a social structure that
+shapes social interactions and embodies social identities and meanings.
+One summative aspect of the assessment activity, which was worth 25% of the overall mark, asks students
+to evaluate the social inequalities within GenAI. The primary objective of incorporating GenAI within this
+assessment is that students become more critically reflective regarding equality when using and consuming
+GenAI in their learning. This is achieved by working collaboratively with students to develop their insights
+into whether and how (i) structures of inequality (particularly race, class, and gender) are embedded in
+GenAI and/or (ii) GenAI offers a potential tool to address social inequality.
+86 | IS GENAI REPRODUCING OR HELPING TO SOLVE SOCIAL INEQUALITY?
+
+
+ Actions / Implementation
+• Stage 1: We created scenarios using ChatGPT. We did not ask students to engage with ChatGPT
+directly, which meant that we were GDPR compliant and did not “feed” ChatGPT more
+information.
+We asked ChatGPT: “What would be a good job for a young woman?” and “What would be a good
+job for a young man?”
+We asked ChatGPT to create an image and/or story using the words: Black or White, Knife,
+Crime.
+Fig. 1 Images created by ChatGPT.
+• Stage 2: Before we gave students the generated scenarios, we tested their existing uses and knowledge
+IS GENAI REPRODUCING OR HELPING TO SOLVE SOCIAL INEQUALITY? | 87
+
+
+ about AI, particularly their awareness of the bias implicit in ChatGPT through a pre-survey in Week
+4 (n=96) in–person tutorials (administered by the tutors) and with pen/paper. Participation was
+voluntary, and ethical approval/consent was sought.
+• Stage 3: In the assessment brief we asked students to do the following:
+◦ Define generative artificial intelligence; discuss how you use AI in your everyday life (10%).
+◦ Analyse the scenario you have chosen and discuss how you think it was generated (20%).
+◦ Discuss and analyse the following:
+Relevance – how relevant is the text produced?
+Validity – how valid is the information? How do you know how valid it is?
+Bias – are there any assumptions? Biases? How do you know? (30%)
+Discuss and analyse the advantages and disadvantages of how AI finds information,
+generates text, and produces ‘chats’ in terms of equality (30%).
+• Stage 4: We carried out a post-survey in Week 9 (n=80) again in tutorials, in–person, to see if attitudes
+had changed.
+• Stage 5: We asked students for their feedback on the assignment in a qualitative discussion within
+tutorials.
+• Stage 6: Data Analysis (still ongoing)
+Outcomes
+Preliminary Results:
+Students were “surprised” at how much GenAI is actually in their lives. Many have been using it without
+realising it, and if they used GenAI, they were more likely to think others did as well. Students were also
+unaware of how biased ChatGPT was in its answers to our questions
+Before the activity, they assumed that GenAI was neutral and could be trusted to produce answers to
+most questions that were valid. After the activity, many students were disappointed to discover how biased
+ChatGPT actually was and how easy it was to reveal that.
+One student wrote:
+“However, it consistently describes the jobs for women with softer language in terms of how, ‘fulfilling’
+and ‘creative’ they will be, in comparison to describing jobs for men as ‘lucrative’ and as ‘opportunities for
+advancement’. .... most of the occupations suggested by the AI puts young women into roles where they do the
+bulk of the emotional labour...”
+Reflections
+We were struck by how many students were not really aware of GenAI’s ubiquitous presence in their lives.
+88 | IS GENAI REPRODUCING OR HELPING TO SOLVE SOCIAL INEQUALITY?
+
+
+ We were also surprised and somewhat dismayed that some students, having gone through this exercise, still
+decided to use GenAI in a negative fashion to write their assignments.
+The technical elements of this activity were a bit tricky at times. For example, we had originally wanted
+to ask students to use ChatGPT themselves to generate scenarios. However, we learned that for reasons of
+GDPR, we could not ask students to do this.
+To get around this issue, we agreed that we (the lecturer and tutors) would generate the scenarios using
+ChatGPT ourselves and not ask students to do so.
+I would do this activity again, but next time, I might not have time for a paper and pen survey. Moving
+the survey to electronic polling would improve both response and the ease of analysing the data.
+Author Biography
+Dr Rebecca Chiyoko King-O’Riain is a Professor of Sociology and recipient of an Artificial Intelligence
+(AI) in Teaching, Learning and Assessment Fellowship at Maynooth University. Research interests are:
+Asian/Asian American popular culture (K-pop); Critical Mixed-Race Studies; race, beauty, and Japanese
+Americans; emotions, technology, and globalization. Publications appear in: New Media and Society,
+Global Networks, Ethnicities, Sociology Compass, Journal of Asian American Studies, Sociological Research
+Online and in many edited books. She is the lead author of Global Mixed Race (New York University
+Press) and sole author of Pure Beauty: Judging Race in Japanese American Beauty Pageants (University of
+Minnesota Press). Her current research explores global interactive forms of digital popular culture in Asia
+and Europe.
+IS GENAI REPRODUCING OR HELPING TO SOLVE SOCIAL INEQUALITY? | 89
+
+
+ 90 | IS GENAI REPRODUCING OR HELPING TO SOLVE SOCIAL INEQUALITY?

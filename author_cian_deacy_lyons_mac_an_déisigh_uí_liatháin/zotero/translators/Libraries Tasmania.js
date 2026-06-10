@@ -1,0 +1,769 @@
+{
+	"translatorID": "44699e59-a196-4716-ae33-141ec605e394",
+	"translatorType": 4,
+	"label": "Libraries Tasmania",
+	"creator": "Tim Sherratt (tim@timsherratt.org)",
+	"target": "^https?://librariestas\\.ent\\.sirsidynix\\.net\\.au/client/en_AU/",
+	"minVersion": "5.0",
+	"maxVersion": null,
+	"priority": 100,
+	"inRepository": true,
+	"browserSupport": "gcsibv",
+	"lastUpdated": "2026-04-01 05:25:00"
+}
+
+/*
+	***** BEGIN LICENSE BLOCK *****
+
+	Copyright © 2026 Tim Sherratt
+
+	This file is part of Zotero.
+
+	Zotero is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Affero General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	Zotero is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	GNU Affero General Public License for more details.
+
+	You should have received a copy of the GNU Affero General Public License
+	along with Zotero. If not, see <http://www.gnu.org/licenses/>.
+
+	***** END LICENSE BLOCK *****
+*/
+
+const formatMapping = {
+	"archived website": "webpage",
+	audio: "audioRecording",
+	"audiobook cd": "audioRecording",
+	cd: "audioRecording",
+	dvd: "videoRecording",
+	eaudiobook: "audioRecording",
+	emusic: "audioRecording",
+	film: "film",
+	"image (online)": "artwork",
+	manuscript: "manuscript",
+	map: "map",
+	"map/plan": "map",
+	newspaper: "newspaperArticle",
+	object: "artwork",
+	papers: "manuscript",
+	photograph: "artwork",
+	picture: "artwork",
+	print: "artwork",
+	postcard: "artwork",
+	video: "videoRecording",
+	volume: "book"
+};
+
+function getFormat(doc) {
+	const formats = doc.querySelectorAll(".displayElementText.LOCAL_FORMAT");
+	for (let format of formats) {
+		if (format.textContent.toLowerCase() in formatMapping) {
+			return formatMapping[format.textContent.toLowerCase()];
+		}
+	}
+	return null;
+}
+
+async function detectWeb(doc, url) {
+	const catType = url.match(/en_AU\/(library|tas|names)\/search/);
+	if (url.includes("results") && getSearchResults(doc, true)) {
+		return "multiple";
+	}
+	else if ((catType && catType[1] == "tas") || url.includes("ARCHIVES_")) {
+		return getFormat(doc) || "manuscript";
+	}
+	else if ((catType && catType[1] == "names") || url.includes("NAME_INDEXES")) {
+		return "manuscript";
+	}
+	else {
+		return getFormat(doc) || "book";
+	}
+}
+
+async function doWeb(doc, url) {
+	if (await detectWeb(doc, url) == 'multiple') {
+		let items = await Zotero.selectItems(getSearchResults(doc, false));
+		if (items) {
+			for (let url of Object.keys(items)) {
+				await scrape(await requestDocument(url));
+			}
+		}
+	}
+	else {
+		await scrape(doc, url);
+	}
+}
+
+function getSearchResults(doc, checkOnly) {
+	const items = {};
+	let found = false;
+	const rows = doc.querySelectorAll(".displayDetailLink a");
+	for (let row of rows) {
+		let href = row.href;
+		let title = ZU.trimInternal(row.textContent);
+		if (!href || !title) continue;
+		if (checkOnly) return true;
+		found = true;
+		items[href] = title;
+	}
+	return found ? items : false;
+}
+
+function getFieldText(doc, label) {
+	let fields = doc.querySelectorAll(".displayElementText." + label);
+	if (fields) {
+		let fieldTexts = [];
+		for (let i = 0; i < fields.length; ++i) {
+			fieldTexts.push(ZU.trimInternal(fields[i].textContent));
+		}
+		return fieldTexts.join(" | ");
+	}
+	return "";
+}
+
+function getLinkLists(doc, label) {
+	var values = [];
+	const links = doc.querySelectorAll("." + label + " a");
+	if (links) {
+		for (let i = 0; i < links.length; ++i) {
+			values.push(links[i].textContent);
+		}
+	}
+	return values;
+}
+
+function addPermalink(doc, item, idType) {
+	// The permalink is rendered via Javascript so not always available when you save mutiple items.
+	// The logic to create the permalinks is quite complicated for library items,
+	// so best to fallback to the system url for now.
+
+	// Try permalink first
+	let permalink = doc.querySelector("a[onclick^='return permalink']");
+	let archivesId = getFieldText(doc, "ARCHIVE_915");
+	let namesId = getFieldText(doc, "DOC_ID");
+	if (permalink) {
+		item.url = permalink.getAttribute("onclick").match(/(https.+)'\);$/)[1];
+	}
+	// Archives and Names indexes seem to have a consistent permalink pattern
+	else if (idType == "AI" && archivesId) {
+		item.url = "https://libraries.tas.gov.au/" + idType + "/" + archivesId.replace(/\//g, "-");
+	}
+	else if (idType == "NI" && namesId) {
+		namesId = ZU.trim(namesId.split(":")[1]);
+		item.url = "https://libraries.tas.gov.au/" + idType + "/" + namesId;
+	}
+	// Fall back to system url
+	else {
+		item.url = doc.location.href;
+	}
+	return item;
+}
+
+async function addDigitalFiles(doc, item) {
+	// Add snapshots
+	item.attachments.push({
+		title: "Snapshot",
+		mimeType: "text/html",
+		document: doc
+	});
+	// Some digital file details are in hidden cells, with the page links generated by JS.
+	// Scraping the generated links fails when processing multiple, presumably because
+	// the scrape completes before the links appear. So we'll get them from the hidden cells if we can.
+	const digitalFiles = {};
+	// Get the hidden cells
+	const embeddedLinks = doc.querySelectorAll('.NI_URL_value');
+	if (embeddedLinks.length > 0) {
+		for (let i = 0; i < embeddedLinks.length; ++i) {
+			// Get url (subfield_u)
+			let url = text(embeddedLinks[i], "subfield_u");
+			const labelParts = [];
+			// Get record type (subfield_x)
+			if (embeddedLinks[i].querySelector("subfield_x")) {
+				labelParts.push(embeddedLinks[i].querySelector("subfield_x").textContent);
+			}
+			// Get record title (subfield_z)
+			if (embeddedLinks[i].querySelector("subfield_z")) {
+				labelParts.push(embeddedLinks[i].querySelector("subfield_z").textContent);
+			}
+			// To get the direct links to some convict records you need to manipulate the url
+			if (url.includes("image_viewer.htm")) {
+				const urlParts = url.match(/image_viewer\.htm\?([A-Z0-9]+-\d+-\d+),\d+,(\d+)/);
+				url = `https://libraries.tas.gov.au/Digital/${urlParts[1]}/${urlParts[1]}p${urlParts[2]}`;
+				digitalFiles[url] = labelParts;
+			}
+			// Other records
+			// Not sure if this pattern is still used, but leave it in just in case
+			else if (url.includes("stors.tas.gov.au")) {
+				const initPath = url.match(/\$init=(.+)/);
+				if (initPath) {
+					url = "https://libraries.tas.gov.au/Digital/" + initPath[1];
+				}
+				digitalFiles[url] = labelParts;
+			}
+			else if (!url.includes("search.archives.tas.gov.au")) {
+				digitalFiles[url] = labelParts;
+			}
+		}
+	}
+	// If the values aren't in hidden cells we'll get the generated links instead.
+	// Links to digital versions have a range of labels in the catalogue
+	// so we'll look for any links that look right.
+	else {
+		const digitalLinks = doc.querySelectorAll("a[href^='https://libraries.tas.gov.au'][target='_new'], a[href^='https://libraries.tas.gov.au'][target='_blank']");
+		for (let i = 0; i < digitalLinks.length; ++i) {
+			let url = digitalLinks[i].href;
+			// If there's an init value we can use this to get the url for a specific page
+			const initPath = url.match(/\$init=(.+)/);
+			if (initPath) {
+				url = "https://libraries.tas.gov.au/" + initPath[1];
+			}
+			// Save the link's text to use in the attachment label
+			digitalFiles[url] = [digitalLinks[i].textContent];
+		}
+	}
+	// Process the digital file links
+	for (let url in digitalFiles) {
+		const digitalDoc = await requestDocument(url);
+		// There's mimeType info in different places, so we'll set here and update later
+		let mimeType;
+		// Find the download link
+		// First try to find a download button
+		const downloadButton = digitalDoc.querySelector("#btnDownload");
+		let downloadLink;
+		if (downloadButton) {
+			downloadLink = downloadButton.href;
+		}
+		// If that fails look for a list of items embedded in a JSON string
+		else {
+			var itemData = digitalDoc.head.innerHTML.match(/var items = JSON\.parse\(`(.+?)`\);/);
+			if (itemData) {
+				let activeItem;
+				// Loop through the items to find the current 'active' item
+				for (let item of JSON.parse(itemData[1])) {
+					if (item.active === true) {
+						activeItem = item;
+					}
+				}
+				// Get data from the active item
+				downloadLink = "https://tas.access.preservica.com/download/file/IO_" + activeItem.guid;
+				mimeType = activeItem.mimeType;
+			}
+		}
+		if (downloadLink) {
+			// Try to get the mimetype from the type of viewer used -- either PDF or jpeg
+			// All the digital files are actually delivered as octet-stream,
+			// but by setting this here we can exclude things that aren't PDFs or images.
+			if (typeof mimeType === "undefined") {
+				if (digitalDoc.querySelector("embed")) {
+					mimeType = "application/pdf";
+				}
+				else if (digitalDoc.querySelector("div#imageLoader")) {
+					mimeType = "image/jpeg";
+				}
+			}
+			// Exclude things like web archives and audio/video files that can be huge
+			if (mimeType && mimeType != "application/octet-stream") {
+				// Zotero will throw an error unless this is set to the actual mime type (octet-stream) for images
+				// PDFs are ok though
+				if (mimeType == "image/jpeg") {
+					mimeType = "application/octet-stream";
+				}
+				// Add file as attachment
+				item.attachments.push({
+					title: 'Libraries Tasmania digital item: ' + digitalFiles[url].join(", "),
+					mimeType: mimeType,
+					url: downloadLink
+				});
+			}
+		}
+	}
+}
+
+function cleanText(text) {
+	// Removes unnecessary stuff from catalogue strings
+	var replace = ["[", "]", "<", ">"];
+	text = ZU.trim(text);
+	for (let i = 0; i < replace.length; ++i) {
+		text = text.replace(replace[i], "");
+	}
+	text = text.replace(/\.$/, "");
+	return text;
+}
+
+async function scrape(doc, url = doc.location.href) {
+	// Catalogue search type
+	var catType = url.match(/en_AU\/(library|tas|names|all)\/search/)[1];
+	// The 'all' search type can include anything.
+	// In this case URL checks should identify archives and names.
+	// Including both checks to try and catch as much as possible.
+	if (catType == "tas" || url.includes("ARCHIVES_")) {
+		await scrapeArchives(doc);
+	}
+	else if (catType == "names" || url.includes("NAME_INDEXES")) {
+		await scrapeNames(doc, url);
+	}
+	else {
+		await scrapeLibrary(doc, url);
+	}
+}
+
+async function scrapeLibrary(doc) {
+	let item;
+	// Format of item
+	const format = getFormat(doc) || "book";
+	
+	// Basic item info
+	item = new Zotero.Item(format);
+	item.title = getFieldText(doc, "T245_DISPLAY").split("/")[0].trim();
+	item.callNumber = getFieldText(doc, "DOC_ID");
+	
+	// Creators
+	let authors = getLinkLists(doc, "AUTHOR_TALIS_FULL", "AUTHOR_INDEX");
+	for (let i = 0; i < authors.length; ++i) {
+		item.creators.push(ZU.cleanAuthor(authors[i], "author", true));
+	}
+	let contribs = getLinkLists(doc, "AUTHOR_OTHER_TALIS_FULL", "AUTHOR_INDEX");
+	for (let i = 0; i < contribs.length; ++i) {
+		item.creators.push(ZU.cleanAuthor(contribs[i], "contributor", true));
+	}
+	
+	// PUBLICATION DETAILS
+	var pubInfo = getFieldText(doc, "PUBLICATION_INFO");
+	
+	// Music can have a distributor
+	if (!pubInfo) {
+		pubInfo = getFieldText(doc, "DISTRIBUTION_264");
+	}
+	
+	// eBooks?
+	if (!pubInfo) {
+		pubInfo = getFieldText(doc, "PUBLICATION_264");
+	}
+	
+	// See if it matches standard format
+	var pubParts = pubInfo.match(/^(.+):(.+),(.+)$/);
+	if (pubParts) {
+		item.place = cleanText(pubParts[1]);
+		item.publisher = cleanText(pubParts[2]);
+		item.date = cleanText(pubParts[3]);
+	}
+	else {
+		item.publisher = pubInfo;
+	}
+	let contents = getFieldText(doc, "CONTENTS_TALIS");
+	let summary = getFieldText(doc, "SUMMARY_TALIS");
+	let notes = getFieldText(doc, "NOTES_TALIS");
+	let combined = [summary, contents, notes].join("\n\n");
+	item.abstractNote = combined ? combined : "";
+	
+	// Physical description
+	let physDesc = getFieldText(doc, "DESC_TALIS");
+	let physParts = physDesc.split(":");
+	if (physParts.length == 2 && format == "book") {
+		item.numPages = cleanText(physParts[0]);
+		item["physical description"] = cleanText(physParts[1]);
+	}
+	else {
+		item["physical description"] = cleanText(physDesc);
+	}
+	// Add permalink
+	item = addPermalink(doc, item, null);
+	// Add digitised files as attachments
+	await addDigitalFiles(doc, item);
+	item.complete();
+}
+
+async function scrapeArchives(doc) {
+	const format = getFormat(doc) || "manuscript";
+	var item = new Zotero.Item(format);
+
+	// Types should be Agency, Series, or Item
+	let typeLabel = ZU.trim(text(doc, ".T245_DISPLAY_label")).replace(/:$/, "").toLowerCase();
+	if (typeLabel == "description") {
+		item.manuscriptType = "item";
+	}
+	else {
+		item.manuscriptType = typeLabel;
+	}
+
+	item.title = getFieldText(doc, "T245_DISPLAY");
+	item.callNumber = getFieldText(doc, "ARCHIVE_915");
+	item.archiveLocation = getFieldText(doc, "ARCHIVES_ITEM_LOCN_BAY");
+	var description = getFieldText(doc, "ARCHIVES_ITEM_FURTHER_DESC");
+	
+	// Agencies and series have a different note field
+	if (!description) {
+		description = getFieldText(doc, "TAS_IDX_500");
+	}
+	item.abstractNote = description;
+
+	// If there are start and end dates (as for series) save as a range
+	let startDate = getFieldText(doc, "ARCHIVES_SERIES_START_DATE");
+	let endDate = getFieldText(doc, "ARCHIVES_SERIES_END_DATE");
+	if (startDate && endDate) {
+		item.date = ZU.strToISO(startDate) + "/" + ZU.strToISO(endDate);
+	}
+	else if (startDate) {
+		item.date = ZU.strToISO(startDate);
+	}
+
+	// Save linked agencies as contributors
+	let agencyLabel = doc.querySelector("div[class*='ARCHIVES_SERIES_CREATING_AGEN'");
+	if (agencyLabel) {
+		let agencies = agencyLabel.nextElementSibling.querySelectorAll("td.ASlink");
+		for (let i = 0; i < agencies.length; ++i) {
+			item.creators.push({ lastName: agencies[i].innerText, creatorType: "contributor" });
+		}
+	}
+
+	// Save additional information to Extra
+	// Series
+	item.series = text(doc, "a[href*='ARCHIVES_SERIES']");
+
+	// Functions
+	let functions = getLinkLists(doc, "ARCHIVES_FUN_DIX");
+	if (functions.length > 0) {
+		item.functions = functions.join(", ");
+	}
+	
+	// Descriptive fields -- add values to Extra
+	var tasFields = [
+		"ARCHIVES_ACCESS",
+		"ARCHIVES_AGENCY_SOURCES",
+		"ARCHIVES_AGENCIES_CREATING",
+		"ARCHIVES_SERIES_ARRANGEMENT"
+	];
+	for (let i = 0; i < tasFields.length; ++i) {
+		let label = doc.querySelector("." + tasFields[i] + "_label");
+		if (label) {
+			item[ZU.trim(label.textContent).replace(/:$/, "")] = getFieldText(doc, tasFields[i]);
+		}
+	}
+	
+	item = addPermalink(doc, item, "AI");
+	await addDigitalFiles(doc, item);
+	item.complete();
+}
+
+async function scrapeNames(doc) {
+	var item = new Zotero.Item("manuscript");
+	// There can be multiple entries for title -- eg in case of divorce there are two names.
+	// getFieldText() will join multiple values with | delimiters
+	item.title = getFieldText(doc, "NI_NAME_FULL_DISPLAY");
+	item.callNumber = getFieldText(doc, "DOC_ID");
+	item.manuscriptType = "item";
+	item.index = getFieldText(doc, "NI_INDEX");
+
+	// Dates have many different labels, loop through this list until one is found
+	// then save to item.date
+	// Dates will also be saved to Extra (see below) with their specific labels.
+	const dateLabels = [
+		"NI_YEAR_DISPLAY",
+		"NI_ADMISS_DATE",
+		"NI_TRIAL_DATE",
+		"NI_BIRTH_DATE",
+		"NI_DEATH_DATE",
+		"NI_MARRIAGE_DATE",
+		"NI_ARRIVAL_DATE",
+		"NI_DEPARTURE_DATE",
+		"NI_INQUEST_DATE",
+		"NI_LAND_DATE",
+		"NI_DOC_HEALTH_DATE",
+		"NI_EMPLOY_DATE",
+	];
+	for (let i = 0; i < dateLabels.length; ++i) {
+		let displayDate = getFieldText(doc, dateLabels[i]);
+		if (displayDate) {
+			item.date = displayDate;
+			break;
+		}
+	}
+
+	// Name index records have many possible fields.
+	// This list was made by scanning sample records, so labels could be missing.
+	// Loop through this list, and if values exist save them to Extra.
+	const fields = [
+		"NI_OCCUP",
+		"NI_YEAR_DISPLAY",
+		"NI_SHIP_NATIVE_PLACE",
+		"NI_REMARKS",
+		"NI_GENDER",
+		"NI_MOTHER",
+		"NI_P_OCCUP",
+		"NI_BIRTH_DATE",
+		"NI_BAPTISM_DATE",
+		"NI_REG_PLACE",
+		"NI_REG_YEAR",
+		"NI_AGE",
+		"NI_DEATH_DATE",
+		"NI_SPOUSE",
+		"NI_SPOUSE_GENDER",
+		"NI_SPOUSE_AGE",
+		"NI_MARRIAGE_DATE",
+		"NI_NAME_RANK",
+		"NI_DEPARTURE_DATE",
+		"NI_DEPARTURE_PORT",
+		"NI_SHIP",
+		"NI_BOUND",
+		"NI_WILL_NO",
+		"NI_PAGE",
+		"NI_NAME_TITLE",
+		"NI_ARRIVAL_DATE",
+		"NI_VOYAGE_NO",
+		"NI_CON_IDX",
+		"NI_SHIP_OR_FREE1",
+		"NI_NAME2",
+		"NI_SHIP_OR_FREE2",
+		"NI_MP_DATE",
+		"NI_CORONER",
+		"NI_DESC",
+		"NI_INQUEST_DATE",
+		"NI_VERDICT",
+		"NI_LAND_DATE",
+		"NI_LOCATION",
+		"NI_DOC_HEALTH_DATE",
+		"NI_UNDER14",
+		"NI_CENSUS_DISTRICT",
+		"NI_NAME_STATUS",
+		"NI_TRIAL_DATE",
+		"NI_OFFENSE",
+		"NI_VERDICT",
+		"NI_PP_ID",
+		"NI_EMPLOYER",
+		"NI_PROPERTY",
+		"NI_EMPLOY_DATE",
+		"NI_NOMINATOR",
+		"NI_DOC_DATE",
+		"NI_FATHER",
+		"NI_P_OCCUP",
+		"NI_PRE_SCHOOL",
+		"NI_ADMISS_DATE"
+	];
+	// Add field values to Extras
+	for (let i = 0; i < fields.length; ++i) {
+		let label = doc.querySelector("." + fields[i] + "_label");
+		if (label) {
+			item[ZU.trim(label.textContent).replace(/:$/, "")] = getFieldText(doc, fields[i]);
+		}
+	}
+	item = addPermalink(doc, item, "NI");
+	await addDigitalFiles(doc, item);
+	item.complete();
+}
+
+/** BEGIN TEST CASES **/
+var testCases = [
+	{
+		"type": "web",
+		"url": "https://librariestas.ent.sirsidynix.net.au/client/en_AU/tas/search/detailnonmodal/ent:$002f$002fARCHIVES_SERIES$002f0$002fARCHIVES_SER_DIX:AD940/one",
+		"defer": true,
+		"items": [
+			{
+				"itemType": "manuscript",
+				"title": "Minutes of Meetings of Council",
+				"creators": [
+					{
+						"lastName": "University of Tasmania (TA92)",
+						"creatorType": "contributor"
+					}
+				],
+				"date": "1890-01-19/1992-07-10",
+				"abstractNote": "Official minutes of meetings. | These records are part of the holdings of the Tasmanian Archives",
+				"callNumber": "AD940",
+				"libraryCatalog": "Libraries Tasmania",
+				"manuscriptType": "series",
+				"url": "https://libraries.tas.gov.au/Record/Archives/AD940",
+				"attachments": [
+					{
+						"title": "Snapshot",
+						"mimeType": "text/html"
+					}
+				],
+				"tags": [],
+				"notes": [],
+				"seeAlso": []
+			}
+		]
+	},
+	{
+		"type": "web",
+		"url": "https://librariestas.ent.sirsidynix.net.au/client/en_AU/tas/search/detailnonmodal/ent:$002f$002fARCHIVES_DIGITISED$002f0$002fARCHIVES_DIG_DIX:NS6985-1-1/one",
+		"defer": true,
+		"items": [
+			{
+				"itemType": "manuscript",
+				"title": "COVID-19 Story / Elizabeth Kelly (Beth)",
+				"creators": [
+					{
+						"lastName": "Covid-19 Stories Project (TA2205)",
+						"creatorType": "contributor"
+					}
+				],
+				"date": "2021-01-20/2021-01-20",
+				"archiveLocation": "Hobart X 1 1",
+				"callNumber": "NS6985/1/1",
+				"libraryCatalog": "Libraries Tasmania",
+				"manuscriptType": "item",
+				"url": "https://libraries.tas.gov.au/Record/Archives/NS6985-1-1",
+				"attachments": [
+					{
+						"title": "Snapshot",
+						"mimeType": "text/html"
+					},
+					{
+						"title": "Libraries Tasmania digital item: NS6985-1-1",
+						"mimeType": "application/pdf"
+					}
+				],
+				"tags": [],
+				"notes": [],
+				"seeAlso": []
+			}
+		]
+	},
+	{
+		"type": "web",
+		"url": "https://librariestas.ent.sirsidynix.net.au/client/en_AU/library/search/detailnonmodal/ent:$002f$002fSD_ILS$002f0$002fSD_ILS:491298/one",
+		"defer": true,
+		"items": [
+			{
+				"itemType": "book",
+				"title": "Lives of the most eminent English poets, with critical observations on their works : to which are added the \"Preface to Shakespeare\" and the review of \"The origin of evil\"",
+				"creators": [
+					{
+						"firstName": "Samuel",
+						"lastName": "Johnson",
+						"creatorType": "author"
+					}
+				],
+				"date": "187-",
+				"callNumber": "SD_ILS:491298",
+				"libraryCatalog": "Libraries Tasmania",
+				"place": "London",
+				"publisher": "Warne",
+				"shortTitle": "Lives of the most eminent English poets, with critical observations on their works",
+				"url": "https://libraries.tas.gov.au/Record/Library/SD_ILS-491298",
+				"attachments": [
+					{
+						"title": "Snapshot",
+						"mimeType": "text/html"
+					}
+				],
+				"tags": [],
+				"notes": [],
+				"seeAlso": []
+			}
+		]
+	},
+	{
+		"type": "web",
+		"url": "https://librariestas.ent.sirsidynix.net.au/client/en_AU/library/search/detailnonmodal/ent:$002f$002fLT_NAXOS_DIX$002f0$002fLT_NAXOS_DIX:TC871901/one",
+		"defer": true,
+		"items": [
+			{
+				"itemType": "audioRecording",
+				"title": "SCALERO, R.: Violin and Piano Works (M. Tortorelli, Meluso)",
+				"creators": [
+					{
+						"firstName": "Rosario",
+						"lastName": "Scalero",
+						"creatorType": "author"
+					},
+					{
+						"lastName": "Naxos Digital Services US",
+						"creatorType": "contributor"
+					}
+				],
+				"abstractNote": "I. Allegro (08 min. 26 sec.) / Scalero -- II. Adagio (06 min. 21 sec.) / Scalero -- III. Vivace, ma appassionato (08 min. 13 sec.) / Scalero -- No. 1. Lento, poi tempo di walzer (04 min. 31 sec.) / Scalero -- No. 2. Andante malinconico (03 min. 48 sec.) / Scalero -- No. 3. Allegro con brio (05 min. 39 sec.) / Scalero -- No. 1. Allegro (04 min. 50 sec.) / Scalero -- No. 2. Allegro, alla Scarlatti (03 min. 31 sec.) / Scalero -- No. 3. Allegro giusto (05 min. 30 sec.) / Scalero -- 12 Variazioni nach den Barucaba von Paganini, Op. 15 (16 min. 44 sec.) / Scalero",
+				"callNumber": "LT_NAXOS_DIX:TC871901",
+				"label": "Hong Kong : Naxos Digital Services US Inc. 3014",
+				"libraryCatalog": "Libraries Tasmania",
+				"shortTitle": "SCALERO, R.",
+				"url": "https://librariestas.ent.sirsidynix.net.au/client/en_AU/library/search/detailnonmodal/ent:$002f$002fLT_NAXOS_DIX$002f0$002fLT_NAXOS_DIX:TC871901/one",
+				"attachments": [
+					{
+						"title": "Snapshot",
+						"mimeType": "text/html"
+					}
+				],
+				"tags": [],
+				"notes": [],
+				"seeAlso": []
+			}
+		]
+	},
+	{
+		"type": "web",
+		"url": "https://librariestas.ent.sirsidynix.net.au/client/en_AU/names/search/detailnonmodal/ent:$002f$002fNAME_INDEXES$002f0$002fNAME_INDEXES:1384365/one",
+		"defer": true,
+		"items": [
+			{
+				"itemType": "manuscript",
+				"title": "Crimey, Mary",
+				"creators": [],
+				"date": "10 Apr 1842",
+				"callNumber": "NAME_INDEXES:1384365",
+				"libraryCatalog": "Libraries Tasmania",
+				"manuscriptType": "item",
+				"url": "https://libraries.tas.gov.au/Record/NamesIndex/1384365",
+				"attachments": [
+					{
+						"title": "Snapshot",
+						"mimeType": "text/html"
+					},
+					{
+						"title": "Libraries Tasmania digital item: Conduct Record, CON40/1/2",
+						"mimeType": "application/octet-stream"
+					},
+					{
+						"title": "Libraries Tasmania digital item: Description List, CON19/1/3",
+						"mimeType": "application/octet-stream"
+					},
+					{
+						"title": "Libraries Tasmania digital item: Indent, CON15/1/1 Pages 48-49",
+						"mimeType": "application/octet-stream"
+					}
+				],
+				"tags": [],
+				"notes": [],
+				"seeAlso": []
+			}
+		]
+	},
+	{
+		"type": "web",
+		"url": "https://librariestas.ent.sirsidynix.net.au/client/en_AU/names/search/detailnonmodal/ent:$002f$002fNAME_INDEXES$002f0$002fNAME_INDEXES:974802/one",
+		"defer": true,
+		"items": [
+			{
+				"itemType": "manuscript",
+				"title": "Crothers, Louisa",
+				"creators": [],
+				"date": "10 Sep 1872",
+				"callNumber": "NAME_INDEXES:974802",
+				"libraryCatalog": "Libraries Tasmania",
+				"manuscriptType": "item",
+				"url": "https://libraries.tas.gov.au/Record/NamesIndex/974802",
+				"attachments": [
+					{
+						"title": "Snapshot",
+						"mimeType": "text/html"
+					},
+					{
+						"title": "Libraries Tasmania digital item: RGD33/1/10/ no 2801",
+						"mimeType": "application/octet-stream"
+					}
+				],
+				"tags": [],
+				"notes": [],
+				"seeAlso": []
+			}
+		]
+	}
+]
+/** END TEST CASES **/

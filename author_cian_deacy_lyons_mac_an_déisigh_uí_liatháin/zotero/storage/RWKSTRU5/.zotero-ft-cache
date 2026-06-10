@@ -1,0 +1,161 @@
+Documentation Porting from argparse to hydra
+Porting from argparse to hydra
+
+This is a reminder of what I looked up when converting Python's argparse settings to hydra. Finally, I write a convenient function that is unique to hydra.
+Introduction
+
+When writing a machine learning experiment script in python, I used argparse as a setting method for hyperparameters. However, as the experiment became more complicated, there was a desire to have a considerable number of lines and to structure the settings only with the file that describes the argparse settings. .. .. So, read ymym's "Recommendation of hyperparameter management-Let's manage hyperparameters with Hydra + MLflow-" and read "This It was! ”, So I decided to use it. Then, I investigated various things when migrating the experimental settings written in argparse to hydra, so I summarized them.
+What is hydra?
+
+image.png
+
+"A framework for elegantly configuring complex applications" It seems to be "a framework for elegantly managing the settings of complex applications". Development is centered on facebook research.
+
+Github / OfficialDocument
+How to use hydra
+
+For detailed settings, please refer to the above article by ymym and Official Tutorial . The first feature is that if you want to structurally describe the settings in a yaml file and overwrite the contents, you can overwrite them on the command line at runtime.
+Various writing styles
+Defining and loading options
+
+--hydra describes the settings in a yaml file and gives it as a decorator to the function that executes it.
+
+argparse
+
+ # main.py def main(): parser = parser.ArgumentParser(...) parser.add_argument('--hoge', type=int, default=1) cfg = parser.parse_args() print(cfg.hoge) # 1  
+
+hydra
+
+ # config.yaml hoge: 1 # main.py @hydra.main(config_path='config.yaml') def main(cfg): print(cfg.hoge) # 1  
+
+Overwrite default
+
+--Specify with = --No space between key and value
+
+argparse
+
+ # shell python main.py --hoge 2  
+
+hydra
+
+ # shell python main.py hoge=1  
+
+nargs --It should be noted that the settings parsed from hydra are not just list because they are all described in omegaconf .
+
+argparse
+
+ # main.py parser.add_argument('--hoge', type=int, nargs=3, default=[1, 2, 3]) # shell python main.py --hoge 4 5 6  
+
+hydra
+
+ # config.yaml hoge: - 1 - 2 - 3 # shell python main.py hoge=[1,2,3]  
+
+required=True --Specify ??? for value --If you do not specify it, you will get the error ʻomegaconf.errors.MissingMandatoryValue of OmegaConf. --However, this is not evaluated at runtime, but is evaluated when the key is accessed, and an error occurs. Therefore, even if you execute it without specifying it, the code up to the line that accesses the key by specifying it with ???` will be executed. (Please let me know if there is a way to evaluate at runtime with the settings on the hydra side)
+
+argparse
+
+ # main.py parser.add_argument('--hoge', type=int, required=True)  
+
+hydra
+
+ # config.yaml hoge: ???  
+
+choices --There seems to be no function to specify a list of allowed values for a specific key so far. (I think it is doubtful whether functions will be added in the future.) --Similar functions can be achieved by structuring the config. --For details, it is better to refer to Here and there .
+
+argparse
+
+ # main.py parser.add_argument('--hoge', type=int, default=1, choices=[1, 2]) print(cfg.hoge) # shell python main.py --hoge 2 # 2  
+
+hydra
+
+ ├── config | ├── config.yaml │ └── choice │ ├── a.yaml │ └── b.yaml └── main.py # config.yaml choice: a # choice/a.yaml hoge: 1 # choice/b.yaml hoge: 2 # main.py print(cfg.hoge) # shell python main.py choice=b # 2  
+
+--help
+
+argparse
+
+ # shell python main.py --help  
+
+hydra
+
+ # shell python main.py --cfg job  
+
+Convenient function only in hydra
+
+Since it will be almost an introduction to the tutorial, embed a link to the target tutorial in the section name. Please refer to that for details.
+
+Multi-run Try to execute at the same time with multiple settings with the config set in the choices above.
+
+ # shell python main.py hoge=a,b  
+
+Tab Completion (https://hydra.cc/docs/tutorial/tab_completion)
+
+If you execute the following command once before executing the script, you can use tab completion when specifying options from the command line.
+
+ eval "$(python main.py -sc install=bash)"  
+
+Create Log Directory
+
+hydra automatically creates a structured log directory based on the date and time without any settings, and uses that as the working directory at runtime, and the files generated at runtime and saved. Save files etc.
+
+ import os @hydra.main() def main(_cfg): print("Working directory : {}".format(os.getcwd())) $ python main.py Working directory : /home/omry/dev/hydra/outputs/2019-09-25/15-16-17 $ python main.py Working directory : /home/omry/dev/hydra/outputs/2019-09-25/15-16-19  
+
+However, do not specify the working directory without permission! I think there are people who say that (myself), so let's do specify the directory for hydra yourself .
+Summary
+
+I have just started using it, so if there are any mistakes in the article or if you know a better way, I would appreciate it if you could teach me. If you use hydra, the code will be refreshed, so please try it! (Especially for large code)
+
+Finally, if you want to know more about how to use it, please contact Official document and ymym's blog . Please refer to / 09 034644).
+
+Recommended Posts
+Porting from argparse to hydra
+Sum from 1 to 10
+Porting and modifying doublet-solver from python2 to python3.
+Changes from Python 2 to Python 3.0
+Transition from WSL1 to WSL2
+Complement argparse from docstrings
+From editing to execution
+Cheating from PHP to Python
+Migrating from Chainer v1 to Chainer v2
+Anaconda updated from 4.2.0 to 4.3.0 (python3.5 updated to python3.6)
+Migrated from Flask-RESTPlus to Flask-RESTX
+How to use Python argparse
+Update python-social-auth from 0.1.x to 0.2.x
+Migrate from requirements.txt to pipenv
+Switch from python2.7 to python3.6 (centos7)
+Connect to sqlite from python
+Call Matlab from Python to optimize
+From Elasticsearch installation to data entry
+vtkXMLUnstructuredGridReader Summary (updated from time to time)
+vtkOpenFOAMReader Summary (Updated from time to time)
+How to use SWIG from waf
+Cannot migrate from direct_to_template to TemplateView
+Engineer vocabulary (updated from time to time)
+Create folders from '01' to '12' with python
+Conversion from pdf to txt 1 [pdfminer]
+Programming to learn from books May 10
+Post from python to facebook timeline
+[Lambda] [Python] Post to Twitter from Lambda!
+Output from Raspberry Pi to Line
+[Introduction] From installing kibana to starting
+Convert from pdf to txt 2 [pyocr]
+Connect to utf8mb4 database from python
+OpenMPI installation from download to pass-through
+Tensorflow memo [updated from time to time]
+Python (from first time to execution)
+Post images from Python to Tumblr
+Send commands from Atom to Maya
+How to launch Explorer from WSL
+Programming to learn from books May 7
+From Ubuntu 20.04 introduction to environment construction
+Include "%" in argparse help to die
+Ssh connect to GCP from Windows
+How to access wikipedia from python
+Python to switch from another language
+How to convert from .mgz to .nii.gz
+Migrate from VS Code to PyCharm
+pynq-z1 From purchase to operation check
+Review from git init to git push
+Did not change from Python 2 to 3
+Update Python on Mac from 2 to 3
+
