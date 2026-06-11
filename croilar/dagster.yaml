@@ -1,17 +1,20 @@
 # =============================================================================
 # Croilar — Dagster instance configuration
 # =============================================================================
-# dagster 1.9.13 supports `storage.custom` for non-builtin backends.
-# We use Postgres storage (via the existing `croilar-postgres` service) since
-# the SQLite CompositeStorage code path is broken in this version.
+# dagster 1.9.13 supports `storage.postgres` for the run/event/schedule
+# storage trio (single `storage:` entry, NOT the legacy
+# `run_storage:`/`event_log_storage:`/`schedule_storage:` triplet which
+# CompositeStorage.from_config_value mishandles in 1.9.13).
 #
-# For dev, fall back to in-memory run storage (lose persistence across
-# restarts but unblocks the komodo deploy chain).
+# We use the bundled `aleyum-postgres` service in the same compose project
+# so the connection is reliable. For prod, swap postgres_url to point at
+# a managed Postgres (e.g. the lakehouse-pg stack).
 # =============================================================================
 
 storage:
   postgres:
-    postgres_url: postgresql://postgres:postgres@croilar-postgres:5432/postgres
+    postgres_url: postgresql://postgres:postgres@aleyum-postgres:5432/postgres
+    should_autocreate_tables: true
 
 compute_logs:
   module: dagster.core.storage.local_compute_log_manager

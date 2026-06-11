@@ -492,6 +492,16 @@ model_list:
   # =========================================================================
   # CLOUD — DeepSeek (native API)
   # =========================================================================
+  - model_name: deepseek/deepseek-chat
+    litellm_params:
+      model: openai/deepseek-chat
+      api_base: https://api.deepseek.com/v1
+      api_key: os.environ/DEEPSEEK_API_KEY
+    model_info:
+      description: "DeepSeek V3 Chat (deepseek-chat) — direct API, used by BAML LitellmClient."
+      capabilities: ["general", "extraction", "json_schema", "irish"]
+      tier: paid
+
   - model_name: cloud/deepseek-v4-pro
     litellm_params:
       model: openai/deepseek-chat
