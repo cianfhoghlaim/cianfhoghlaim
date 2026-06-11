@@ -5,7 +5,7 @@ runs the DLT `leaving_cert_source` and materialises the four resource
 tables (syllabus, past_papers, marking_schemes, examiner_reports) into
 DuckLake (Garage S3 + Lakekeeper Postgres catalog).
 
-The DLT source lives in `oideachais.data_platform.dlt_sources.ireland.leaving_cert`
+The DLT source lives in `oideachais.dlt_sources.ireland.leaving_cert`
 and reads cached PDFs from `stedding/ingest_queue/`.
 
 This follows the pattern used by `ireland/curriculum_dlt_assets.py`:
@@ -22,12 +22,12 @@ from typing import Any
 
 from dagster import AssetSelection, MaterializeResult, define_asset_job, asset
 
-from oideachais.data_platform.dlt_sources.ireland.leaving_cert import (
+from oideachais.dlt_sources.ireland.leaving_cert import (
     SUBJECTS,
     leaving_cert_source,
 )
-from oideachais.data_platform.dlt_utils.destinations import get_dlt_destination
-from oideachais.data_platform.dlt_utils.safety import safe_dlt_run
+from oideachais.dlt_utils.destinations import get_dlt_destination
+from oideachais.dlt_utils.safety import safe_dlt_run
 
 
 def _dlt_pipeline_name(subject: str) -> str:
@@ -49,9 +49,11 @@ def _dlt_dataset_name(subject: str) -> str:
 def make_subject_assets(subject: str) -> list:
     """Build the asset for one subject. Returns a list of one asset.
 
-    Each asset runs the DLT source through the same dlt pipeline
-    (one per subject, named `leaving_cert_{subject_slug}`) and
-    materialises 4 resource tables into the `leaving_cert` dataset.
+    Each asset runs the DLT source through a per-subject dlt pipeline
+    (named `leaving_cert_{subject_slug}`) and materialises 4 resource
+    tables into the per-subject `leaving_cert_{subject_slug}` dataset.
+    The source is filtered by `subjects=[subject]` so the dataset
+    only contains rows for this subject.
     """
 
     @asset(
@@ -79,7 +81,9 @@ def make_subject_assets(subject: str) -> list:
             dataset_name=_dlt_dataset_name(subject),
             dev_mode=False,
         )
-        source = leaving_cert_source(use_local_scrapes=True)
+        # Filter the DLT source by this asset's subject so the
+        # `leaving_cert_{subject}` dataset only contains rows for this subject.
+        source = leaving_cert_source(use_local_scrapes=True, subjects=[subject])
         load_info = safe_dlt_run(pipeline, source)
 
         # Calculate rows loaded per resource. The DLT load_info structure is:
