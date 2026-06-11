@@ -1,3 +1,17 @@
+---
+title: 'Implementation Guide & Best Practices'
+domain: 'examples'
+status: 'stable'
+description: 'This document provides step-by-step implementation patterns, tutorials, and best practices for the data-unified platform.'
+read_when:
+  - looking for documentation on this topic
+updated: '2026-06-10'
+supersedes:
+  - docs/IMPLEMENTATION_GUIDE.md
+ccc_query_hints:
+  - implementation guide & best practices
+---
+
 # Implementation Guide & Best Practices
 
 ## Quick Navigation

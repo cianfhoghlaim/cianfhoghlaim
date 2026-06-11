@@ -1,3 +1,17 @@
+---
+title: 'Pattern: Data Pipeline (DLT → Dagster → CocoIndex)'
+domain: 'patterns'
+status: 'stable'
+description: '| Constraint | Description | Violation Consequence | |------------|-------------|----------------------| | **Incremental loading** | Track cursor/offset for resumable extraction | Re-processing entire dataset on each run | | **Schema validation** | Validate data before loading |'
+read_when:
+  - looking for documentation on this topic
+updated: '2026-06-10'
+supersedes:
+  - docs/DATA_PIPELINE.md
+ccc_query_hints:
+  - pattern: data pipeline (dlt → dagster → 
+---
+
 # Pattern: Data Pipeline (DLT → Dagster → CocoIndex)
 
 ## Critical Constraints

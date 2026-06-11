@@ -1,3 +1,17 @@
+---
+title: 'oideachais - Unified Celtic Education Platform'
+domain: 'architecture'
+status: 'stable'
+description: 'A unified data platform for Celtic language education, covering 6 nations and 6 Celtic languages with comprehensive observability and AI agent capabilities.'
+read_when:
+  - looking for documentation on this topic
+updated: '2026-06-10'
+supersedes:
+  - docs/OIDEACHAIS_PIPELINE.md
+ccc_query_hints:
+  - oideachais - unified celtic education pl
+---
+
 # oideachais - Unified Celtic Education Platform
 
 A unified data platform for Celtic language education, covering 6 nations and 6 Celtic languages with comprehensive observability and AI agent capabilities.

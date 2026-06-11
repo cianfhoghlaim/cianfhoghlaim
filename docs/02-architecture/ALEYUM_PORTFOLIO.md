@@ -1,3 +1,17 @@
+---
+title: 'Aleyum Portfolio'
+domain: 'architecture'
+status: 'stable'
+description: 'Music Producer & Software Developer portfolio project combining data engineering with modern web technologies.'
+read_when:
+  - looking for documentation on this topic
+updated: '2026-06-10'
+supersedes:
+  - docs/ALEYUM_PORTFOLIO.md
+ccc_query_hints:
+  - aleyum portfolio
+---
+
 # Aleyum Portfolio
 
 Music Producer & Software Developer portfolio project combining data engineering with modern web technologies.

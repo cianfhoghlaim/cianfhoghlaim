@@ -1,3 +1,17 @@
+---
+title: 'Pattern: Observability (Datadog, MLflow, Langfuse, Ragas)'
+domain: 'patterns'
+status: 'stable'
+description: '| Constraint | Description | Violation Consequence | |------------|-------------|----------------------| | **Trace all LLM calls** | Every LLM invocation must be traced | No cost visibility, debugging blind | | **Track embeddings** | Log embedding operations | Performance issues'
+read_when:
+  - looking for documentation on this topic
+updated: '2026-06-10'
+supersedes:
+  - docs/OBSERVABILITY.md
+ccc_query_hints:
+  - pattern: observability (datadog, mlflow,
+---
+
 # Pattern: Observability (Datadog, MLflow, Langfuse, Ragas)
 
 ## Critical Constraints

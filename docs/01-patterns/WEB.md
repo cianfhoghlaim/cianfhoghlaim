@@ -1,3 +1,17 @@
+---
+title: 'Pattern: Web Frameworks (TanStack, AG-UI, MCP-UI)'
+domain: 'patterns'
+status: 'stable'
+description: '| Constraint | Description | Violation Consequence | |------------|-------------|----------------------| | **AG-UI: Handle all 17 events** | Implement complete event protocol | Dropped agent state, broken UI | | **SSE for streaming** | Use Server-Sent Events for agent output | Bu'
+read_when:
+  - looking for documentation on this topic
+updated: '2026-06-10'
+supersedes:
+  - docs/WEB.md
+ccc_query_hints:
+  - pattern: web frameworks (tanstack, ag-ui
+---
+
 # Pattern: Web Frameworks (TanStack, AG-UI, MCP-UI)
 
 ## Critical Constraints

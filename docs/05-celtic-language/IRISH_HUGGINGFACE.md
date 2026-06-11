@@ -1,3 +1,17 @@
+---
+title: 'Irish (Gaeilge) Language AI Resources on HuggingFace'
+domain: 'celtic_language'
+status: 'stable'
+description: 'Comprehensive research conducted on 2025-11-17'
+read_when:
+  - looking for documentation on this topic
+updated: '2026-06-10'
+supersedes:
+  - docs/IRISH_HUGGINGFACE.md
+ccc_query_hints:
+  - irish (gaeilge) language ai resources on
+---
+
 # Irish (Gaeilge) Language AI Resources on HuggingFace
 
 Comprehensive research conducted on 2025-11-17

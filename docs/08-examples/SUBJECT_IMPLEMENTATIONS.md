@@ -1,3 +1,17 @@
+---
+title: 'Subject-Specific Implementations'
+domain: 'examples'
+status: 'stable'
+description: 'This document provides technical blueprints for implementing AI tutoring across all Leaving Certificate subjects, extending the core mathematics architecture to handle the diverse assessment models, data modalities, and pedagogical requirements of 30+ subjects.'
+read_when:
+  - looking for documentation on this topic
+updated: '2026-06-10'
+supersedes:
+  - docs/SUBJECT_IMPLEMENTATIONS.md
+ccc_query_hints:
+  - subject-specific implementations
+---
+
 # Subject-Specific Implementations
 
 ## Executive Summary

@@ -1,3 +1,17 @@
+---
+title: 'Model Context Protocol (MCP) - Comprehensive Research Report'
+domain: 'agents'
+status: 'stable'
+description: 'The Model Context Protocol (MCP) is an open-source standard developed by Anthropic for connecting AI applications to external systems. Released on November 18, 2024, MCP provides a universal interface for AI models to interact with data sources, tools, and services—functioning as'
+read_when:
+  - looking for documentation on this topic
+updated: '2026-06-10'
+supersedes:
+  - docs/MCP_RESEARCH.md
+ccc_query_hints:
+  - model context protocol (mcp) - comprehen
+---
+
 # Model Context Protocol (MCP) - Comprehensive Research Report
 
 ## Executive Summary

@@ -1,3 +1,17 @@
+---
+title: 'Sruth - Data Flows'
+domain: 'architecture'
+status: 'stable'
+description: 'Dagster-orchestrated data pipelines for Celtic language education, crypto research, and portfolio management.'
+read_when:
+  - looking for documentation on this topic
+updated: '2026-06-10'
+supersedes:
+  - docs/SRUTH_OVERVIEW.md
+ccc_query_hints:
+  - sruth - data flows
+---
+
 # Sruth - Data Flows
 
 Dagster-orchestrated data pipelines for Celtic language education, crypto research, and portfolio management.

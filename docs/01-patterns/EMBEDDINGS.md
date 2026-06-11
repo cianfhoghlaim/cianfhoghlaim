@@ -1,3 +1,17 @@
+---
+title: 'Pattern: Embeddings (Batching, Models, Indexes)'
+domain: 'patterns'
+status: 'stable'
+description: '| Constraint | Description | Violation Consequence | |------------|-------------|----------------------| | **BATCH MINIMUM 100** | Never embed fewer than 100 texts per API call | 100x performance degradation | | **HNSW DROP >50 rows** | Drop index before bulk insert, recreate aft'
+read_when:
+  - looking for documentation on this topic
+updated: '2026-06-10'
+supersedes:
+  - docs/EMBEDDINGS.md
+ccc_query_hints:
+  - pattern: embeddings (batching, models, i
+---
+
 # Pattern: Embeddings (Batching, Models, Indexes)
 
 ## Critical Constraints

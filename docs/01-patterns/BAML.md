@@ -1,570 +1,801 @@
-# Pattern: BAML (Type-Safe LLM Extraction)
-
-## Critical Constraints
-
-| Constraint | Description | Violation Consequence |
-|------------|-------------|----------------------|
-| **Schema before extraction** | Define BAML schema before LLM calls | Unstructured, unparseable outputs |
-| **Validate outputs** | Always validate extracted data | Runtime type errors |
-| **Model fallbacks** | Configure backup models | Single point of failure |
-| **Streaming for UX** | Use streaming for real-time feedback | Poor user experience |
-
+---
+name: baml
+description: Expert assistance for building type-safe LLM applications with BAML (Basically A Made-up Language). Use when users need structured LLM outputs, prompt engineering, schema definitions, or multi-model orchestration with automatic retries and validation.
 ---
 
-## BAML Architecture
+# BAML - Type-Safe LLM Development
 
-```
-Content (text/image/audio)
-        ↓
-BAML Schema Definition (.baml files)
-        ↓
-BAML Compiler (generates typed client)
-        ↓
-LLM Call (with structured output)
-        ↓
-Validated Typed Object
-```
+**Version:** 0.76.x | **Last Updated:** 2025-01
 
----
+## Overview
 
-## Schema Patterns
+BAML (Basically A Made-up Language) is a domain-specific language for building type-safe, production-ready LLM applications. It provides:
 
-### Pattern 1: Basic Entity Extraction
+- **Type-Safe Outputs**: Define structured schemas that LLMs must follow
+- **Multi-Provider Support**: Works with OpenAI, Anthropic, Google, Azure, Ollama, and more
+- **Automatic Retries**: Built-in retry logic with fallback models
+- **Code Generation**: Generates native Python/TypeScript clients from schemas
+- **Streaming Support**: Type-safe streaming with partial object parsing
+- **Testing/Validation**: Built-in playground for prompt iteration
 
-**When to use**: Extracting structured data from unstructured text.
+**Documentation**: https://docs.boundaryml.com
 
-**Schema Definition** (`baml_src/resume.baml`):
+## When to Use This Skill
+
+Activate when users need:
+
+- "Extract structured data from text using an LLM"
+- "Create type-safe prompts with validation"
+- "Build multi-model pipelines with fallbacks"
+- "Generate code from LLM responses"
+- "Stream partial LLM responses with types"
+- "Test and iterate on prompts"
+
+## Core Concepts
+
+### 1. BAML Files (.baml)
+
+BAML uses `.baml` files to define:
+- **Classes/Enums**: Output schemas
+- **Functions**: LLM operations
+- **Clients**: Model configurations
+- **Tests**: Validation cases
+
 ```baml
-// Define the output structure
-class Resume {
-    name string @description("Full name of the candidate")
-    email string? @description("Email address if present")
-    phone string? @description("Phone number if present")
-    experience Experience[] @description("Work experience entries")
-    skills string[] @description("Technical and soft skills")
-    education Education[] @description("Educational background")
+// schema.baml
+
+// Define output structure
+class ExtractedEntity {
+  name string
+  type EntityType
+  confidence float @description("0.0 to 1.0")
 }
 
-class Experience {
-    company string
-    title string
-    start_date string @description("Format: YYYY-MM or YYYY")
-    end_date string? @description("Format: YYYY-MM, YYYY, or 'Present'")
-    description string
+enum EntityType {
+  PERSON
+  ORGANIZATION
+  LOCATION
+  DATE
 }
 
-class Education {
-    institution string
-    degree string
-    field string?
-    year int?
+// Define LLM function
+function ExtractEntities(text: string) -> ExtractedEntity[] {
+  client GPT4oMini
+  prompt #"
+    Extract all named entities from the following text.
+
+    Text: {{ text }}
+
+    {{ ctx.output_format }}
+  "#
 }
 
-// Define the extraction function
-function ExtractResume(resume_text: string) -> Resume {
-    client "openai/gpt-4o-mini"
-    prompt #"
-        Extract structured resume information from the following text.
-        Be precise and extract only what is explicitly stated.
+// Configure model
+client<llm> GPT4oMini {
+  provider openai
+  options {
+    model "gpt-4o-mini"
+    temperature 0.1
+  }
+}
 
-        Resume:
-        {{ resume_text }}
-    "#
+// Test case
+test ExtractEntitiesTest {
+  functions [ExtractEntities]
+  args {
+    text "Apple Inc. was founded by Steve Jobs in Cupertino, California on April 1, 1976."
+  }
 }
 ```
 
-**Usage** (Python):
+### 2. Type System
+
+**Primitive Types:**
+- `string` - Text
+- `int` - Integer
+- `float` - Decimal number
+- `bool` - Boolean
+- `null` - Null value
+
+**Complex Types:**
+- `ClassName` - Custom class
+- `EnumName` - Enumeration
+- `Type[]` - Array
+- `Type?` - Optional (nullable)
+- `map<K, V>` - Key-value map
+- `Type | Type` - Union type
+
+**Type Annotations:**
+```baml
+class Product {
+  name string
+  price float
+  tags string[]
+  metadata map<string, string>
+  category Category?
+  status Active | Inactive | Pending
+}
+```
+
+### 3. Prompt Engineering
+
+**Template Syntax:**
+```baml
+prompt #"
+  {{ variable }}              // Insert variable
+  {{ ctx.output_format }}     // Insert expected output schema
+  {{ _.role("system") }}      // Set message role
+  {{ _.chat([...]) }}         // Multi-turn chat
+"#
+```
+
+**Multi-Turn Chat:**
+```baml
+function ChatWithHistory(messages: Message[], query: string) -> string {
+  client GPT4oMini
+  prompt #"
+    {{ _.role("system") }}
+    You are a helpful assistant.
+
+    {{ _.chat(messages) }}
+
+    {{ _.role("user") }}
+    {{ query }}
+  "#
+}
+
+class Message {
+  role "user" | "assistant"
+  content string
+}
+```
+
+**Output Format Injection:**
+```baml
+function Analyze(text: string) -> Analysis {
+  client Claude
+  prompt #"
+    Analyze the following text and provide structured output.
+
+    Text: {{ text }}
+
+    Respond in this exact format:
+    {{ ctx.output_format }}
+  "#
+}
+```
+
+### 4. Client Configuration
+
+**OpenAI:**
+```baml
+client<llm> GPT4 {
+  provider openai
+  options {
+    model "gpt-4o"
+    temperature 0.7
+    max_tokens 4096
+    api_key env.OPENAI_API_KEY
+  }
+}
+```
+
+**Anthropic:**
+```baml
+client<llm> Claude {
+  provider anthropic
+  options {
+    model "claude-sonnet-4-20250514"
+    max_tokens 4096
+    api_key env.ANTHROPIC_API_KEY
+  }
+}
+```
+
+**Google (Gemini):**
+```baml
+client<llm> Gemini {
+  provider google-ai
+  options {
+    model "gemini-1.5-pro"
+    api_key env.GOOGLE_API_KEY
+  }
+}
+```
+
+**Ollama (Local):**
+```baml
+client<llm> LocalLlama {
+  provider ollama
+  options {
+    model "llama3.2"
+    base_url "http://localhost:11434/v1"
+  }
+}
+```
+
+**Azure OpenAI:**
+```baml
+client<llm> AzureGPT {
+  provider azure-openai
+  options {
+    resource_name "my-resource"
+    deployment_id "gpt-4-deployment"
+    api_key env.AZURE_OPENAI_KEY
+  }
+}
+```
+
+### 5. Retry and Fallback Strategies
+
+**Simple Retry:**
+```baml
+client<llm> ReliableGPT {
+  provider openai
+  retry_policy Exponential
+  options {
+    model "gpt-4o-mini"
+  }
+}
+
+retry_policy Exponential {
+  max_retries 3
+  strategy {
+    type exponential_backoff
+    delay_ms 1000
+    multiplier 2
+  }
+}
+```
+
+**Fallback Chain:**
+```baml
+client<llm> ResilientLLM {
+  provider fallback
+  options {
+    strategy [GPT4, Claude, Gemini]
+  }
+}
+```
+
+**Round-Robin Load Balancing:**
+```baml
+client<llm> LoadBalanced {
+  provider round-robin
+  options {
+    strategy [GPT4Instance1, GPT4Instance2, GPT4Instance3]
+  }
+}
+```
+
+### 6. Streaming
+
+**Define Streamable Function:**
+```baml
+function GenerateStory(topic: string) -> Story {
+  client GPT4
+  prompt #"
+    Write a short story about {{ topic }}.
+    {{ ctx.output_format }}
+  "#
+}
+
+class Story {
+  title string
+  chapters Chapter[]
+}
+
+class Chapter {
+  title string
+  content string
+}
+```
+
+**Python Streaming Usage:**
 ```python
 from baml_client import b
-from baml_client.types import Resume
+from baml_client.types import Story
 
-async def extract_resume(text: str) -> Resume:
-    """Extract structured resume data with type safety."""
-    result = await b.ExtractResume(resume_text=text)
-    return result  # Fully typed Resume object
+async def stream_story():
+    async with b.stream.GenerateStory("space exploration") as stream:
+        async for partial in stream:
+            # partial is Partial[Story] with available fields
+            if partial.title:
+                print(f"Title: {partial.title}")
+            if partial.chapters:
+                for ch in partial.chapters:
+                    if ch.content:
+                        print(ch.content, end="", flush=True)
 
-# Example
-resume = await extract_resume(pdf_text)
-print(f"Name: {resume.name}")
-print(f"Skills: {', '.join(resume.skills)}")
-for exp in resume.experience:
-    print(f"  {exp.title} at {exp.company}")
+        # Get final complete result
+        final: Story = await stream.get_final_response()
 ```
 
-### Pattern 2: Multimodal Extraction (Images)
+## Project Setup
 
-**When to use**: Extracting data from images, PDFs, receipts.
+### Installation
 
-**Schema Definition** (`baml_src/receipt.baml`):
+```bash
+# Install BAML CLI
+pip install baml-py
+
+# Or with uv
+uv add baml-py
+
+# Initialize project
+baml init
+
+# Generate client code
+baml generate
+```
+
+### Project Structure
+
+```
+project/
+├── baml_src/           # BAML source files
+│   ├── main.baml       # Main definitions
+│   ├── clients.baml    # Client configurations
+│   └── generators.baml # Code generation config
+├── baml_client/        # Generated code (don't edit)
+│   ├── __init__.py
+│   ├── sync_client.py
+│   └── async_client.py
+└── main.py             # Your application
+```
+
+### Generator Configuration
+
 ```baml
-class ReceiptData {
-    merchant_name string
-    date string @description("Format: YYYY-MM-DD")
-    transactions Transaction[]
-    subtotal float?
-    tax float?
-    tip float?
-    total float
-    payment_method string?
+// baml_src/generators.baml
+
+generator python {
+  output_type python/pydantic
+  output_dir ../baml_client
+  version "0.76.0"
 }
 
-class Transaction {
-    item_name string
-    quantity int @description("Default 1 if not specified")
-    unit_price float
-    total_price float
-}
-
-// Multimodal function accepting image
-function ExtractReceipt(receipt_image: image) -> ReceiptData {
-    client Gemini25Flash  // Vision-capable model
-    prompt #"
-        Extract all transaction data from this receipt image.
-        Be precise with prices and quantities.
-        If a value is unclear, use your best judgment.
-
-        {{ receipt_image }}
-    "#
+generator typescript {
+  output_type typescript
+  output_dir ../baml_client_ts
+  version "0.76.0"
 }
 ```
 
-**Usage**:
+## Python Usage
+
+### Basic Usage
+
 ```python
 from baml_client import b
-from baml_client.types import Image
+from baml_client.types import ExtractedEntity
 
-async def process_receipt(image_path: str) -> dict:
-    """Process receipt image to structured data."""
-    image = Image.from_file(image_path)
-    result = await b.ExtractReceipt(receipt_image=image)
+# Synchronous call
+entities: list[ExtractedEntity] = b.ExtractEntities(
+    text="Apple Inc. was founded by Steve Jobs in Cupertino."
+)
 
-    return {
-        "merchant": result.merchant_name,
-        "date": result.date,
-        "total": result.total,
-        "items": [
-            {"name": t.item_name, "price": t.total_price}
-            for t in result.transactions
-        ],
-    }
+for entity in entities:
+    print(f"{entity.name} ({entity.type}): {entity.confidence}")
 ```
 
-### Pattern 3: Enum and Union Types
+### Async Usage
 
-**When to use**: Constraining outputs to specific values.
-
-**Schema Definition**:
-```baml
-// Enum for fixed categories
-enum Sentiment {
-    POSITIVE
-    NEGATIVE
-    NEUTRAL
-    MIXED
-}
-
-enum ContentType {
-    ARTICLE
-    BLOG_POST
-    NEWS
-    DOCUMENTATION
-    SOCIAL_MEDIA
-}
-
-// Union type for polymorphic responses
-class ClassificationResult {
-    sentiment Sentiment
-    content_type ContentType
-    confidence float @description("0.0 to 1.0")
-    reasoning string @description("Brief explanation")
-}
-
-function ClassifyContent(text: string) -> ClassificationResult {
-    client "anthropic/claude-3-5-sonnet"
-    prompt #"
-        Classify the following content:
-
-        {{ text }}
-
-        Provide sentiment, content type, confidence score, and reasoning.
-    "#
-}
-```
-
-### Pattern 4: Dynamic Schema Generation
-
-**When to use**: When schema structure varies by input type.
-
-**Schema Definition**:
-```baml
-// Meta-schema for dynamic extraction
-class FieldDefinition {
-    name string
-    type string @description("string, int, float, bool, array, object")
-    description string?
-    required bool
-}
-
-class DynamicSchema {
-    entity_type string
-    fields FieldDefinition[]
-}
-
-// Step 1: Generate schema from content
-function InferSchema(document_text: string) -> DynamicSchema {
-    client "anthropic/claude-3-5-sonnet"
-    prompt #"
-        Analyze this document and determine the optimal schema
-        for extracting structured data from it.
-
-        Document:
-        {{ document_text }}
-    "#
-}
-
-// Step 2: Extract using inferred schema (requires code)
-```
-
-**Usage** (two-step extraction):
 ```python
-async def dynamic_extract(document: str) -> dict:
-    # Step 1: Infer schema
-    schema = await b.InferSchema(document_text=document)
+import asyncio
+from baml_client import b
 
-    # Step 2: Build extraction prompt dynamically
-    fields_prompt = "\n".join([
-        f"- {f.name} ({f.type}): {f.description or 'N/A'}"
-        for f in schema.fields
-    ])
-
-    # Step 3: Extract using dynamic prompt
-    result = await llm_call(f"""
-        Extract the following fields from the document:
-        {fields_prompt}
-
-        Document:
-        {document}
-    """)
-
+async def main():
+    result = await b.ExtractEntities(
+        text="Microsoft was founded by Bill Gates in Albuquerque."
+    )
     return result
+
+entities = asyncio.run(main())
 ```
 
----
+### Context and Tracing
 
-## Client Configuration
-
-### Pattern 5: Multi-Provider Setup
-
-**When to use**: Production deployments with fallbacks.
-
-**Configuration** (`baml_src/clients.baml`):
-```baml
-// Primary: OpenAI
-client<llm> OpenAI4o {
-    provider "openai"
-    options {
-        model "gpt-4o"
-        temperature 0.1
-        max_tokens 4096
-    }
-}
-
-// Secondary: Anthropic
-client<llm> Claude35Sonnet {
-    provider "anthropic"
-    options {
-        model "claude-3-5-sonnet-20241022"
-        temperature 0.1
-        max_tokens 4096
-    }
-}
-
-// Tertiary: Google
-client<llm> Gemini25Flash {
-    provider "google-ai"
-    options {
-        model "gemini-2.5-flash-preview-05-20"
-        temperature 0.1
-    }
-}
-
-// Fallback chain
-client<llm> ProductionClient {
-    provider "fallback"
-    options {
-        strategy [OpenAI4o, Claude35Sonnet, Gemini25Flash]
-    }
-}
-
-// Cost-optimized for simple tasks
-client<llm> CheapClient {
-    provider "openai"
-    options {
-        model "gpt-4o-mini"
-        temperature 0
-    }
-}
-```
-
-### Pattern 6: Retry Configuration
-
-**When to use**: Handling transient failures.
-
-**Configuration**:
-```baml
-retry_policy DefaultRetry {
-    max_retries 3
-    strategy {
-        type "exponential_backoff"
-        delay_ms 1000
-        multiplier 2
-        max_delay_ms 10000
-    }
-}
-
-client<llm> RobustClient {
-    provider "openai"
-    retry_policy DefaultRetry
-    options {
-        model "gpt-4o"
-        timeout_ms 60000
-    }
-}
-```
-
----
-
-## Streaming Patterns
-
-### Pattern 7: Streaming Extraction
-
-**When to use**: Real-time feedback during extraction.
-
-**Schema Definition**:
-```baml
-class StreamingAnalysis {
-    summary string @stream(true)
-    key_points string[] @stream(true)
-    sentiment Sentiment
-}
-
-function AnalyzeDocument(doc: string) -> StreamingAnalysis {
-    client "openai/gpt-4o"
-    prompt #"
-        Analyze this document and provide:
-        1. A comprehensive summary
-        2. Key points as a list
-        3. Overall sentiment
-
-        Document:
-        {{ doc }}
-    "#
-}
-```
-
-**Usage**:
 ```python
-async def stream_analysis(document: str):
-    """Stream analysis results in real-time."""
-    stream = b.stream.AnalyzeDocument(doc=document)
+from baml_client import b
+from baml_client.tracing import trace, set_tags
 
-    async for partial in stream:
-        if partial.summary:
-            print(f"Summary (partial): {partial.summary}")
-        if partial.key_points:
-            print(f"Points so far: {partial.key_points}")
+@trace
+async def process_document(doc_id: str, content: str):
+    set_tags(document_id=doc_id)
 
-    # Get final complete result
-    final = await stream.get_final_response()
-    print(f"Sentiment: {final.sentiment}")
+    # All BAML calls within are traced
+    entities = await b.ExtractEntities(text=content)
+    summary = await b.Summarize(text=content)
+
+    return {"entities": entities, "summary": summary}
 ```
 
----
+### Dynamic Client Selection
 
-## Curriculum-Specific Schemas
+```python
+from baml_client import b
+from baml_client.types import ClientRegistry
 
-### Pattern 8: Irish Curriculum Extraction
+# Override client at runtime
+registry = ClientRegistry()
+registry.add_llm_client("GPT4oMini", "openai", {
+    "model": "gpt-4o-mini",
+    "api_key": custom_api_key
+})
 
-**When to use**: Processing NCCA curriculum documents.
+result = b.ExtractEntities(
+    text="...",
+    baml_options={"client_registry": registry}
+)
+```
 
-**Schema Definition** (`baml_src/curriculum.baml`):
+## TypeScript Usage
+
+```typescript
+import { b } from './baml_client';
+import type { ExtractedEntity } from './baml_client/types';
+
+// Synchronous
+const entities: ExtractedEntity[] = await b.ExtractEntities({
+  text: "Google was founded by Larry Page and Sergey Brin."
+});
+
+// Streaming
+const stream = b.stream.GenerateStory({ topic: "AI" });
+for await (const partial of stream) {
+  if (partial.title) {
+    console.log(`Title: ${partial.title}`);
+  }
+}
+const final = await stream.getFinalResponse();
+```
+
+## Common Patterns
+
+### 1. Entity Extraction
+
 ```baml
-enum Subject {
-    MATHEMATICS
-    IRISH
-    ENGLISH
-    SCIENCE
-    HISTORY
-    GEOGRAPHY
-    MUSIC
-    ART
-    PE
-    SPHE
-    OTHER
+class Person {
+  name string
+  role string?
+  organization string?
 }
 
-enum Level {
-    JUNIOR_INFANTS
-    SENIOR_INFANTS
-    FIRST_CLASS
-    SECOND_CLASS
-    THIRD_CLASS
-    FOURTH_CLASS
-    FIFTH_CLASS
-    SIXTH_CLASS
-    FIRST_YEAR
-    SECOND_YEAR
-    THIRD_YEAR
-    TRANSITION_YEAR
-    FIFTH_YEAR
-    SIXTH_YEAR
-}
+function ExtractPeople(text: string) -> Person[] {
+  client GPT4oMini
+  prompt #"
+    Extract all people mentioned in the text.
+    Include their role and organization if mentioned.
 
-class LearningOutcome {
-    code string @description("e.g., MA.1.1, EN.2.3")
-    description string
-    description_irish string? @description("Irish translation if available")
-    strand string
-    strand_unit string?
-    skills string[]
-}
+    Text: {{ text }}
 
-class CurriculumUnit {
-    subject Subject
-    level Level
-    title string
-    title_irish string?
-    learning_outcomes LearningOutcome[]
-    prerequisites string[] @description("Prior knowledge required")
-    cross_curricular_links string[]
-}
-
-function ExtractCurriculum(document: string) -> CurriculumUnit {
-    client Gemini25Flash
-    prompt #"
-        Extract curriculum information from this NCCA document.
-        Identify learning outcomes, prerequisites, and connections.
-
-        Document:
-        {{ document }}
-    "#
+    {{ ctx.output_format }}
+  "#
 }
 ```
 
-### Pattern 9: Exam Paper Analysis
+### 2. Classification
 
-**When to use**: Processing SEC examination papers.
-
-**Schema Definition**:
 ```baml
-enum ExamLevel {
-    HIGHER_LEVEL
-    ORDINARY_LEVEL
-    FOUNDATION_LEVEL
+enum Sentiment {
+  POSITIVE @alias("pos") @description("Happy, satisfied, enthusiastic")
+  NEGATIVE @alias("neg") @description("Angry, disappointed, frustrated")
+  NEUTRAL @alias("neu") @description("Factual, informational")
 }
 
-class ExamQuestion {
-    number string @description("e.g., Q1, Q2(a)")
-    marks int
-    topic string
-    difficulty string @description("easy, medium, hard")
-    requires_irish bool @description("True if question is in Irish")
-    learning_outcomes string[] @description("Related LO codes")
-}
+function ClassifySentiment(text: string) -> Sentiment {
+  client GPT4oMini
+  prompt #"
+    Classify the sentiment of this text.
 
-class ExamPaper {
-    subject Subject
-    year int
-    level ExamLevel
-    total_marks int
-    duration_minutes int
-    questions ExamQuestion[]
-    topic_distribution map<string, int> @description("Topic -> marks")
-}
+    Text: {{ text }}
 
-function AnalyzeExamPaper(paper_text: string) -> ExamPaper {
-    client "anthropic/claude-3-5-sonnet"
-    prompt #"
-        Analyze this SEC examination paper.
-        Extract all questions, their marks, topics, and difficulty.
-
-        Paper:
-        {{ paper_text }}
-    "#
+    {{ ctx.output_format }}
+  "#
 }
 ```
 
----
+### 3. Summarization
 
-## Integration Points
+```baml
+class Summary {
+  title string @description("A concise title")
+  key_points string[] @description("3-5 main points")
+  word_count int
+}
 
-| Component | Connects To | Pattern |
-|-----------|-------------|---------|
-| **CocoIndex** | BAMLExtract transform | Structured extraction in flows |
-| **Dagster** | Asset outputs | Validated structured data |
-| **FastAPI** | Response models | Type-safe API responses |
-| **Agents** | Tool outputs | Structured agent results |
+function Summarize(document: string, max_words: int) -> Summary {
+  client Claude
+  prompt #"
+    Summarize the following document in {{ max_words }} words or less.
 
----
+    Document:
+    {{ document }}
 
-## Common Mistakes
+    {{ ctx.output_format }}
+  "#
+}
+```
 
-| Mistake | Fix |
-|---------|-----|
-| No schema validation | Always use BAML client, not raw LLM |
-| Missing optional markers | Use `?` for truly optional fields |
-| Vague descriptions | Add `@description` for complex fields |
-| Single model dependency | Configure fallback chain |
-| No streaming for long outputs | Enable `@stream(true)` |
-| Missing retry policy | Configure exponential backoff |
-| Hardcoded model names | Use client aliases |
+### 4. Multi-Step Reasoning
 
----
+```baml
+class ReasoningStep {
+  step_number int
+  thought string
+  action string?
+}
 
-## Testing Patterns
+class ReasonedAnswer {
+  reasoning ReasoningStep[]
+  final_answer string
+  confidence float
+}
 
-### Pattern 10: Schema Testing
+function AnswerWithReasoning(question: string, context: string) -> ReasonedAnswer {
+  client GPT4
+  prompt #"
+    {{ _.role("system") }}
+    You are a careful reasoner. Think step by step before answering.
 
-**When to use**: Validating extraction accuracy.
+    {{ _.role("user") }}
+    Context: {{ context }}
 
-**Implementation**:
+    Question: {{ question }}
+
+    Think through this step by step, then provide your answer.
+    {{ ctx.output_format }}
+  "#
+}
+```
+
+### 5. Image Analysis
+
+```baml
+class ImageAnalysis {
+  description string
+  objects string[]
+  text_content string?
+  sentiment Sentiment?
+}
+
+function AnalyzeImage(image: image) -> ImageAnalysis {
+  client GPT4Vision
+  prompt #"
+    Analyze this image in detail.
+
+    {{ image }}
+
+    {{ ctx.output_format }}
+  "#
+}
+
+client<llm> GPT4Vision {
+  provider openai
+  options {
+    model "gpt-4o"
+  }
+}
+```
+
+### 6. Tool/Function Calling
+
+```baml
+class ToolCall {
+  tool_name "search" | "calculate" | "lookup"
+  arguments map<string, string>
+}
+
+class AgentResponse {
+  thought string
+  tool_calls ToolCall[]?
+  final_response string?
+}
+
+function AgentStep(query: string, context: string) -> AgentResponse {
+  client GPT4
+  prompt #"
+    You are an AI assistant with access to tools.
+
+    Available tools:
+    - search(query): Search the web
+    - calculate(expression): Evaluate math
+    - lookup(key): Look up information
+
+    Context from previous steps:
+    {{ context }}
+
+    User query: {{ query }}
+
+    Think about what to do, then either call tools or provide a final response.
+    {{ ctx.output_format }}
+  "#
+}
+```
+
+## Testing and Iteration
+
+### BAML Playground
+
+```bash
+# Start playground server
+baml test
+
+# Opens browser at http://localhost:3000
+```
+
+### Test Cases in BAML
+
+```baml
+test SentimentTest {
+  functions [ClassifySentiment]
+  args {
+    text "I love this product! It's amazing!"
+  }
+  @assert(result == POSITIVE)
+}
+
+test ExtractEntitiesTest {
+  functions [ExtractEntities]
+  args {
+    text "Elon Musk is the CEO of Tesla and SpaceX."
+  }
+  @assert(len(result) >= 3)
+}
+```
+
+### Python Testing
+
 ```python
 import pytest
 from baml_client import b
 
-@pytest.fixture
-def sample_resume():
-    return """
-    John Doe
-    Email: john@example.com
-    Experience:
-    - Software Engineer at Acme Inc (2020-Present)
-    Skills: Python, TypeScript, SQL
-    """
+@pytest.mark.asyncio
+async def test_extract_entities():
+    result = await b.ExtractEntities(
+        text="Amazon was founded by Jeff Bezos in Seattle."
+    )
 
-async def test_resume_extraction(sample_resume):
-    result = await b.ExtractResume(resume_text=sample_resume)
-
-    assert result.name == "John Doe"
-    assert result.email == "john@example.com"
-    assert len(result.experience) >= 1
-    assert "Python" in result.skills
-
-async def test_missing_optional_fields():
-    """Test handling of missing optional data."""
-    minimal = "Jane Smith - Software Developer"
-    result = await b.ExtractResume(resume_text=minimal)
-
-    assert result.name == "Jane Smith"
-    assert result.email is None  # Optional field
-    assert result.phone is None
+    assert len(result) >= 2
+    names = [e.name for e in result]
+    assert "Jeff Bezos" in names or "Bezos" in names
 ```
 
----
+## Best Practices
 
-## References
+### 1. Schema Design
 
-- Source: `taighde/baml/`, `baml_src/`
-- Skills: `.claude/skills/baml/`
-- Documentation: https://docs.boundaryml.com
-- Examples: `sruth/crypteolas/baml_src/`, `sruth/oideachais/baml_src/`
+**DO:**
+```baml
+class WellDesigned {
+  id string @description("Unique identifier")
+  name string
+  score float @description("Value between 0.0 and 1.0")
+  tags string[] @description("Relevant keywords")
+}
+```
+
+**DON'T:**
+```baml
+class PoorlyDesigned {
+  data map<string, string>  // Too generic
+  info string               // Vague naming
+}
+```
+
+### 2. Prompt Engineering
+
+**DO:**
+- Use `@description` annotations to guide the LLM
+- Include examples in prompts for complex outputs
+- Use `{{ ctx.output_format }}` for structured outputs
+- Set appropriate temperature (low for extraction, higher for generation)
+
+**DON'T:**
+- Leave ambiguous field names without descriptions
+- Rely solely on field names for LLM understanding
+- Use high temperature for structured extraction
+
+### 3. Error Handling
+
+```python
+from baml_client import b
+from baml_client.errors import BamlValidationError
+
+try:
+    result = b.ExtractEntities(text=user_input)
+except BamlValidationError as e:
+    # LLM output didn't match schema
+    logger.error(f"Validation failed: {e}")
+    # Use fallback or retry logic
+except Exception as e:
+    # API error, timeout, etc.
+    logger.error(f"BAML error: {e}")
+```
+
+### 4. Performance Optimization
+
+- Use `gpt-4o-mini` or `claude-3-haiku` for simple tasks
+- Reserve powerful models for complex reasoning
+- Implement caching for repeated queries
+- Use streaming for long-form generation
+- Batch similar requests when possible
+
+## Integration Patterns
+
+### With Dagster
+
+```python
+from dagster import asset, AssetExecutionContext
+from baml_client import b
+
+@asset
+def extracted_entities(context: AssetExecutionContext, documents: list[dict]):
+    results = []
+    for doc in documents:
+        entities = b.ExtractEntities(text=doc["content"])
+        results.append({
+            "doc_id": doc["id"],
+            "entities": [e.model_dump() for e in entities]
+        })
+    return results
+```
+
+### With FastAPI
+
+```python
+from fastapi import FastAPI
+from baml_client import b
+from baml_client.types import ExtractedEntity
+
+app = FastAPI()
+
+@app.post("/extract", response_model=list[ExtractedEntity])
+async def extract_entities(text: str):
+    return await b.ExtractEntities(text=text)
+```
+
+### With LangChain
+
+```python
+from langchain.tools import tool
+from baml_client import b
+
+@tool
+def extract_entities(text: str) -> str:
+    """Extract named entities from text."""
+    entities = b.ExtractEntities(text=text)
+    return "\n".join([f"{e.name} ({e.type})" for e in entities])
+```
+
+## Troubleshooting
+
+### "Schema validation failed"
+- Check that LLM output matches your class definitions
+- Add `@description` annotations to guide the LLM
+- Lower temperature for more consistent outputs
+- Review the raw LLM response in playground
+
+### "Client not found"
+- Run `baml generate` after adding new clients
+- Check client name matches exactly in function definition
+- Verify API key environment variables are set
+
+### "Streaming not working"
+- Ensure function returns a complex type (not primitive)
+- Use `b.stream.FunctionName()` syntax
+- Check model supports streaming
+
+### "Rate limiting"
+- Implement retry_policy with exponential backoff
+- Use fallback chain with multiple providers
+- Add delays between requests
+
+## Resources
+
+- **Documentation**: https://docs.boundaryml.com
+- **Playground**: https://www.boundaryml.com/playground
+- **GitHub**: https://github.com/BoundaryML/baml
+- **Examples**: https://github.com/BoundaryML/baml/tree/main/examples
+- **Discord**: https://discord.gg/boundaryml

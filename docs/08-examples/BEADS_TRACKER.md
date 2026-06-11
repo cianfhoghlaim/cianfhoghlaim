@@ -1,3 +1,17 @@
+---
+title: 'Beads - AI-Native Issue Tracking'
+domain: 'examples'
+status: 'stable'
+description: 'Welcome to Beads! This repository uses **Beads** for issue tracking - a modern, AI-native tool designed to live directly in your codebase alongside your code.'
+read_when:
+  - looking for documentation on this topic
+updated: '2026-06-10'
+supersedes:
+  - docs/BEADS_TRACKER.md
+ccc_query_hints:
+  - beads - ai-native issue tracking
+---
+
 # Beads - AI-Native Issue Tracking
 
 Welcome to Beads! This repository uses **Beads** for issue tracking - a modern, AI-native tool designed to live directly in your codebase alongside your code.

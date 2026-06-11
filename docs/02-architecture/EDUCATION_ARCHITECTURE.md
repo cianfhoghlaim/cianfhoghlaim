@@ -1,3 +1,17 @@
+---
+title: 'Data Stack Architecture Reference'
+domain: 'architecture'
+status: 'stable'
+description: 'This is the primary architecture reference for the data-unified platform. Consolidated from 19 source documents.'
+read_when:
+  - looking for documentation on this topic
+updated: '2026-06-10'
+supersedes:
+  - docs/EDUCATION_ARCHITECTURE.md
+ccc_query_hints:
+  - data stack architecture reference
+---
+
 # Data Stack Architecture Reference
 
 ## Quick Navigation

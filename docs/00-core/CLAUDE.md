@@ -1,3 +1,17 @@
+---
+title: 'Cianfhoghlaim - AI Agent Instructions'
+domain: 'agents'
+status: 'stable'
+description: 'Cianfhoghlaim (Irish: \\\\"deep learning\\\\"): Celtic language education platform with AI-powered tools for Irish curriculum. Bilingual focus on English/Irish with pan-Celtic language support (Welsh, Scottish Gaelic, Manx).'
+read_when:
+  - looking for documentation on this topic
+updated: '2026-06-10'
+supersedes:
+  - docs/CLAUDE.md
+ccc_query_hints:
+  - cianfhoghlaim - ai agent instructions
+---
+
 # Cianfhoghlaim - AI Agent Instructions
 
 ## PROJECT_IDENTITY

@@ -1,3 +1,17 @@
+---
+title: 'Building Production Multi-Agent Systems: Complete Implementation Guide'
+domain: 'architecture'
+status: 'stable'
+description: '**The modern AI agent stack now has standardized layers.** Agno provides high-performance agent orchestration (529× faster than LangGraph), Cognee with Memgraph enables hybrid knowledge graphs with vector+graph search, Model Context Protocol (MCP) standardizes tool integration ac'
+read_when:
+  - looking for documentation on this topic
+updated: '2026-06-10'
+supersedes:
+  - docs/MULTI_AGENT_PRODUCTION.md
+ccc_query_hints:
+  - building production multi-agent systems:
+---
+
 # Building Production Multi-Agent Systems: Complete Implementation Guide
 
 **The modern AI agent stack now has standardized layers.** Agno provides high-performance agent orchestration (529× faster than LangGraph), Cognee with Memgraph enables hybrid knowledge graphs with vector+graph search, Model Context Protocol (MCP) standardizes tool integration across providers, and LiteLLM routes requests to 100+ LLM providers with caching and rate limiting—all orchestrated through Docker Compose. As of November 2025, these components represent production-ready patterns adopted by Block, Apollo, OpenAI, and Google DeepMind, enabling teams to build context-aware agents that scale.

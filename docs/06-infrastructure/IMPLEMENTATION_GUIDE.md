@@ -1,399 +1,967 @@
-# Infrastructure Implementation Guide
+# Implementation Guide & Best Practices
 
-> Step-by-step CI/CD and deployment integration guide
+## Quick Navigation
 
-**Last Updated**: December 2025
-**Status**: Generated from existing documentation
+This document provides step-by-step implementation patterns, tutorials, and best practices for the data-unified platform.
+
+**Related Documents:**
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - Core architecture reference
+- [SCHEMAS_AND_TYPES.md](./SCHEMAS_AND_TYPES.md) - Type safety patterns
+- [AI_MEMORY.md](./AI_MEMORY.md) - Agent and knowledge systems
 
 ---
 
-## Quick Start
+## Table of Contents
+
+1. [Getting Started](#getting-started)
+2. [DuckDB + R2 Integration](#duckdb--r2-integration)
+3. [Lakehouse Setup](#lakehouse-setup)
+4. [Crawl4AI + DLT Pipeline](#crawl4ai--dlt-pipeline)
+5. [Modular Component Design](#modular-component-design)
+6. [Framework Adapter Patterns](#framework-adapter-patterns)
+7. [Dagster Integration](#dagster-integration)
+8. [CLI Development with Typer](#cli-development-with-typer)
+9. [Incremental Processing](#incremental-processing)
+10. [Production Deployment](#production-deployment)
+
+---
+
+## Getting Started
 
 ### Prerequisites
 
-Before implementing the infrastructure stack, ensure you have:
+```bash
+# Python 3.11+
+python --version
 
-1. **Docker** (24.0+) installed on all target servers
-2. **1Password** account with CLI access configured
-3. **Dagger CLI** (v0.14+) installed locally
-4. **Git repository** (Forgejo or GitHub) with Actions enabled
+# Install uv (fast package manager)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-### Initial Setup Checklist
+# Create virtual environment
+uv venv
+source .venv/bin/activate
 
-- [ ] Docker daemon running on target servers
-- [ ] 1Password Service Account token created
-- [ ] Dagger Cloud account (optional, for caching)
-- [ ] DNS records configured for Pangolin domains
-- [ ] SSH access to production servers
+# Install core dependencies
+uv pip install dlt duckdb dagster cocoindex pydantic typer rich
+```
+
+### Project Structure
+
+```
+data-unified/
+├── cli/                    # Typer CLI commands
+│   ├── __init__.py
+│   ├── main.py
+│   └── commands/
+├── core/                   # Pure Python business logic
+│   ├── __init__.py
+│   ├── models.py           # Pydantic schemas
+│   └── functions.py        # Core functions
+├── adapters/               # Framework-specific adapters
+│   ├── dagster.py
+│   ├── dlt.py
+│   └── marimo.py
+├── pipelines/              # DLT pipelines
+│   ├── github_to_r2/
+│   ├── docs_to_knowledge/
+│   └── shared/
+├── dagster_project/        # Dagster assets & jobs
+│   ├── __init__.py
+│   └── definitions.py
+├── cocoindex/              # CocoIndex flows
+│   ├── flows/
+│   └── config.py
+├── pyproject.toml
+└── .env
+```
 
 ---
 
-## 1. Secrets Management Setup (1Password)
+## DuckDB + R2 Integration
 
-### Option A: CLI for Local Development
+### Configure R2 Access
 
-```bash
-# Install 1Password CLI
-brew install --cask 1password/tap/1password-cli
+```python
+import duckdb
 
-# Sign in (interactive)
-op signin
+con = duckdb.connect()
+con.execute("INSTALL httpfs; LOAD httpfs;")
 
-# Read a secret
-op read "op://vault-name/item-name/field-name"
-
-# Run command with injected secrets
-op run -- my-command
+# Create R2 secret (store credentials securely!)
+con.execute("""
+    CREATE SECRET cloudflare_r2 (
+        TYPE S3,
+        KEY_ID 'YOUR_R2_ACCESS_KEY_ID',
+        SECRET 'YOUR_R2_SECRET_ACCESS_KEY',
+        ENDPOINT 'https://YOUR_ACCOUNT_ID.r2.cloudflarestorage.com',
+        REGION 'auto'
+    );
+""")
 ```
 
-### Option B: Service Account for CI/CD
+### Read Parquet from R2
 
-```bash
-# Create service account in 1Password console
-# Export the token
-export OP_SERVICE_ACCOUNT_TOKEN="ops_..."
-
-# Use in CI/CD (no interactive sign-in needed)
-op read "op://vault/database/url"
+```python
+# Query Parquet files directly from R2
+df = con.execute("""
+    SELECT *
+    FROM read_parquet('s3://my-bucket/data/*.parquet')
+    WHERE created_at > '2024-01-01'
+""").fetchdf()
 ```
 
-### Option C: Connect Server for Always-On Services
+### Write Parquet to R2
+
+```python
+# Write query results to R2
+con.execute("""
+    COPY (
+        SELECT * FROM my_table
+    ) TO 's3://my-bucket/output/data.parquet'
+    (FORMAT PARQUET, COMPRESSION 'ZSTD');
+""")
+```
+
+### Using DLT with R2
+
+```python
+# .dlt/secrets.toml
+# [destination.filesystem.credentials]
+# aws_access_key_id = "R2_ACCESS_KEY"
+# aws_secret_access_key = "R2_SECRET_KEY"
+# endpoint_url = "https://ACCOUNT_ID.r2.cloudflarestorage.com"
+
+import dlt
+
+pipeline = dlt.pipeline(
+    pipeline_name="data_lake",
+    destination="filesystem",
+    dataset_name="raw"
+)
+
+# Data automatically written as Parquet to R2
+pipeline.run(
+    data_source,
+    loader_file_format="parquet"
+)
+```
+
+---
+
+## Lakehouse Setup
+
+### DuckLake with PostgreSQL Catalog
+
+```python
+import duckdb
+
+con = duckdb.connect()
+
+# Attach DuckLake catalog
+con.execute("""
+    ATTACH 'ducklake:analytics.ducklake' AS analytics
+    (TYPE POSTGRES,
+     HOST 'postgres.example.com',
+     DATABASE 'catalog',
+     USER 'ducklake',
+     PASSWORD 'secret',
+     STORAGE_PATH 's3://my-bucket/warehouse');
+""")
+
+# Use DuckLake catalog
+con.execute("USE analytics;")
+
+# Create versioned table (data in R2, metadata in Postgres)
+con.execute("""
+    CREATE TABLE events AS
+    SELECT * FROM read_parquet('s3://bucket/raw/events/*.parquet');
+""")
+
+# Time travel query
+con.execute("""
+    SELECT * FROM events
+    AT TIMESTAMP '2024-01-01 00:00:00';
+""")
+```
+
+### Apache Iceberg with Lakekeeper
 
 ```yaml
-# docker-compose.yml for 1Password Connect
+# docker-compose.yml for Lakekeeper
 services:
-  op-connect-api:
-    image: 1password/connect-api:latest
+  lakekeeper:
+    image: lakekeeper/catalog:latest
     ports:
-      - "8080:8080"
-    volumes:
-      - ./1password-credentials.json:/home/opuser/.op/1password-credentials.json:ro
+      - "8181:8181"
     environment:
-      OP_SESSION: ${OP_CONNECT_TOKEN}
+      LAKEKEEPER__LISTEN_PORT: 8181
+      LAKEKEEPER__CATALOG_TYPE: postgres
+      LAKEKEEPER__PG_DATABASE_URL: postgres://user:pass@postgres:5432/iceberg
+      LAKEKEEPER__WAREHOUSE__DEFAULT__STORAGE_PROFILE__TYPE: s3
+      LAKEKEEPER__WAREHOUSE__DEFAULT__STORAGE_PROFILE__BUCKET: my-iceberg-bucket
+      LAKEKEEPER__WAREHOUSE__DEFAULT__STORAGE_PROFILE__ENDPOINT: https://account.r2.cloudflarestorage.com
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: iceberg
 ```
 
-**Reference**: See `/infrastructure/1password/` for detailed configuration.
+```python
+# Query Iceberg via DuckDB
+con.execute("INSTALL iceberg; LOAD iceberg;")
+
+con.execute("""
+    SELECT * FROM iceberg_scan(
+        's3://my-iceberg-bucket/warehouse/events',
+        catalog_type='rest',
+        catalog_uri='http://lakekeeper:8181/catalog'
+    );
+""")
+```
 
 ---
 
-## 2. Dagger Pipeline Setup
+## Crawl4AI + DLT Pipeline
 
-### Module Structure
+### Basic Web Scraping
 
+```python
+import asyncio
+from crawl4ai import AsyncWebCrawler
+
+async def scrape_docs():
+    async with AsyncWebCrawler() as crawler:
+        result = await crawler.arun(
+            url="https://docs.example.com",
+            word_count_threshold=10,
+            excluded_tags=["nav", "footer"]
+        )
+
+        if result.status.is_success():
+            return result.markdown  # Clean markdown output
+
+asyncio.run(scrape_docs())
 ```
-.dagger/
-├── src/
-│   ├── index.ts              # Main entry point
-│   ├── build.ts              # Build functions
-│   ├── test.ts               # Test functions
-│   └── deploy.ts             # Deploy functions
-├── dagger.json               # Module configuration
-├── package.json
-└── tsconfig.json
+
+### DLT Integration
+
+```python
+import dlt
+from crawl4ai import AsyncWebCrawler
+
+@dlt.resource(name="scraped_docs")
+async def scrape_documentation(urls: list[str]):
+    """Scrape documentation and yield for DLT processing"""
+    async with AsyncWebCrawler() as crawler:
+        for url in urls:
+            result = await crawler.arun(url=url)
+            if result.status.is_success():
+                yield {
+                    "url": url,
+                    "title": result.metadata.get("title", ""),
+                    "content": result.markdown,
+                    "scraped_at": datetime.now().isoformat()
+                }
+
+# Run pipeline
+pipeline = dlt.pipeline(
+    pipeline_name="docs_scraping",
+    destination="duckdb",
+    dataset_name="documentation"
+)
+
+urls = [
+    "https://docs.dlt.io",
+    "https://cocoindex.io/docs",
+    "https://dagster.io/docs"
+]
+
+asyncio.run(pipeline.run(scrape_documentation(urls)))
 ```
 
-### Basic Pipeline
+### LLM Extraction with Crawl4AI
 
-```typescript
-// .dagger/src/index.ts
-import { dag, Container, Directory, object, func } from "@dagger.io/dagger"
+```python
+from crawl4ai import AsyncWebCrawler
+from crawl4ai.extraction_strategy import LLMExtractionStrategy
 
-@object()
-export class Pipeline {
-  @func()
-  async build(src: Directory): Promise<Container> {
-    return dag
-      .container()
-      .from("node:20-alpine")
-      .withDirectory("/app", src)
-      .withWorkdir("/app")
-      .withExec(["npm", "install"])
-      .withExec(["npm", "run", "build"])
-  }
-
-  @func()
-  async test(src: Directory): Promise<string> {
-    const container = await this.build(src)
-    return container
-      .withExec(["npm", "test"])
-      .stdout()
-  }
-
-  @func()
-  async publish(src: Directory, registry: string): Promise<string> {
-    const container = await this.build(src)
-    const tag = `${registry}/my-app:${Date.now()}`
-    await container.publish(tag)
-    return tag
-  }
+# Define extraction schema
+schema = {
+    "name": "APIEndpoint",
+    "fields": [
+        {"name": "method", "type": "string", "description": "HTTP method"},
+        {"name": "path", "type": "string", "description": "API path"},
+        {"name": "description", "type": "string", "description": "What it does"},
+        {"name": "parameters", "type": "array", "description": "Query params"}
+    ]
 }
+
+async def extract_api_docs(url: str):
+    extraction = LLMExtractionStrategy(
+        provider="openai/gpt-4",
+        api_token="YOUR_API_KEY",
+        schema=schema,
+        instruction="Extract all API endpoints from this documentation page"
+    )
+
+    async with AsyncWebCrawler() as crawler:
+        result = await crawler.arun(
+            url=url,
+            extraction_strategy=extraction
+        )
+
+        return result.extracted_content  # Structured JSON
 ```
-
-### Running Locally
-
-```bash
-# Install Dagger CLI
-curl -fsSL https://dl.dagger.io/dagger/install.sh | sh
-
-# Initialize module
-dagger init --sdk=typescript
-
-# Run build
-dagger call build --src=.
-
-# Run tests
-dagger call test --src=.
-```
-
-**Reference**: See `/infrastructure/dagger/dagger-unified-pipeline-architecture.md` for complete patterns.
 
 ---
 
-## 3. Komodo Deployment Setup
+## Modular Component Design
 
-### Install Periphery Agent
+### Three-Layer Architecture
 
-On each target server:
-
-```bash
-# Using Docker
-docker run -d \
-  --name komodo-periphery \
-  --restart always \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -e KOMODO_HOST="https://komodo.example.com" \
-  -e PERIPHERY_PASSKEY="your-passkey" \
-  ghcr.io/mbecker20/periphery:latest
+```
+┌─────────────────────────────────────────────────────────────┐
+│          INTERFACE LAYER (Framework-Specific)               │
+│  Dagster assets, DLT resources, Marimo cells, Typer CLI    │
+├─────────────────────────────────────────────────────────────┤
+│          ADAPTER LAYER (Thin Wrappers, 5-20 lines)          │
+│  @dagster_asset, @dlt_resource, @marimo_cell, @typer_cmd   │
+├─────────────────────────────────────────────────────────────┤
+│          CORE LAYER (Pure Python + Pydantic)                │
+│  Business logic, models, validation - NO framework imports  │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### Stack Configuration
+### Core Layer (Pure Python)
+
+```python
+# core/models.py
+from pydantic import BaseModel
+from datetime import datetime
+
+class ProcessedData(BaseModel):
+    id: str
+    content: str
+    processed_at: datetime
+    metadata: dict = {}
+
+class ProcessingConfig(BaseModel):
+    chunk_size: int = 1000
+    overlap: int = 200
+    model: str = "all-MiniLM-L6-v2"
+```
+
+```python
+# core/functions.py
+from .models import ProcessedData, ProcessingConfig
+
+def process_data(raw_data: dict, config: ProcessingConfig) -> ProcessedData:
+    """Pure Python function - no framework dependencies"""
+    # Business logic here
+    return ProcessedData(
+        id=raw_data["id"],
+        content=raw_data["content"],
+        processed_at=datetime.now(),
+        metadata={"chunk_size": config.chunk_size}
+    )
+
+def validate_input(data: dict) -> bool:
+    """Validation logic - reusable across frameworks"""
+    return "id" in data and "content" in data
+```
+
+### Adapter Layer
+
+```python
+# adapters/dagster.py
+from dagster import asset, AssetExecutionContext
+from core.functions import process_data, validate_input
+from core.models import ProcessingConfig
+
+@asset(description="Process data using core logic")
+def processed_data_asset(context: AssetExecutionContext, raw_data: dict):
+    """Thin wrapper around core function"""
+    config = ProcessingConfig()
+    if validate_input(raw_data):
+        result = process_data(raw_data, config)
+        context.log.info(f"Processed: {result.id}")
+        return result.dict()
+    raise ValueError("Invalid input data")
+```
+
+```python
+# adapters/dlt.py
+import dlt
+from core.functions import process_data, validate_input
+from core.models import ProcessingConfig
+
+@dlt.resource(name="processed_data")
+def processed_data_resource(raw_items: list[dict]):
+    """Thin wrapper for DLT pipeline"""
+    config = ProcessingConfig()
+    for item in raw_items:
+        if validate_input(item):
+            result = process_data(item, config)
+            yield result.dict()
+```
+
+```python
+# adapters/typer.py
+import typer
+from rich import print
+from core.functions import process_data, validate_input
+from core.models import ProcessingConfig
+
+app = typer.Typer()
+
+@app.command()
+def process(input_file: str, chunk_size: int = 1000):
+    """CLI wrapper around core logic"""
+    config = ProcessingConfig(chunk_size=chunk_size)
+    # Load and process data
+    print(f"[green]Processing with chunk_size={chunk_size}[/green]")
+```
+
+### Benefits
+
+| Metric | Traditional | Modular |
+|--------|-------------|---------|
+| Code reuse | ~30% | ~100% |
+| Adapter duplication | 80%+ | <5% |
+| Test complexity | High | Low (test core only) |
+| Framework migration | Days | Hours |
+
+---
+
+## Framework Adapter Patterns
+
+### Dagster Adapter
+
+```python
+from dagster import asset, op, job, Definitions
+from core.functions import fetch_data, transform_data, load_data
+
+@asset(description="Fetch raw data from source")
+def raw_data():
+    return fetch_data()
+
+@asset(deps=[raw_data])
+def transformed_data(raw_data):
+    return transform_data(raw_data)
+
+@asset(deps=[transformed_data])
+def loaded_data(transformed_data):
+    return load_data(transformed_data)
+
+defs = Definitions(assets=[raw_data, transformed_data, loaded_data])
+```
+
+### DLT Adapter
+
+```python
+import dlt
+from core.functions import fetch_data, transform_data
+
+@dlt.source
+def my_source():
+    @dlt.resource(name="raw_data", write_disposition="replace")
+    def raw_data_resource():
+        yield from fetch_data()
+
+    @dlt.transformer(data_from=raw_data_resource)
+    def transformed_data(items):
+        for item in items:
+            yield transform_data(item)
+
+    return raw_data_resource, transformed_data
+
+pipeline = dlt.pipeline(
+    pipeline_name="my_pipeline",
+    destination="duckdb"
+)
+
+pipeline.run(my_source())
+```
+
+### Marimo Adapter
+
+```python
+import marimo as mo
+from core.functions import fetch_data, create_visualization
+
+@mo.cell
+def data_cell():
+    """Fetch and display data"""
+    data = fetch_data()
+    return mo.ui.table(data)
+
+@mo.cell
+def viz_cell(data_cell):
+    """Create visualization from data"""
+    fig = create_visualization(data_cell.value)
+    return mo.ui.plotly(fig)
+```
+
+### Typer CLI Adapter
+
+```python
+import typer
+from rich.console import Console
+from rich.table import Table
+from core.functions import fetch_data, search_data
+
+app = typer.Typer(help="Data CLI")
+console = Console()
+
+@app.command()
+def list_data(limit: int = 10):
+    """List data from source"""
+    data = fetch_data()[:limit]
+    table = Table(title="Data")
+    for col in data[0].keys():
+        table.add_column(col)
+    for row in data:
+        table.add_row(*[str(v) for v in row.values()])
+    console.print(table)
+
+@app.command()
+def search(query: str, top_k: int = 5):
+    """Search data"""
+    results = search_data(query, top_k)
+    for r in results:
+        console.print(f"[green]{r['title']}[/green]: {r['score']:.3f}")
+```
+
+---
+
+## Dagster Integration
+
+### Asset-Based Pipeline
+
+```python
+from dagster import asset, Definitions, ScheduleDefinition, define_asset_job
+
+@asset(description="Clone GitHub repository")
+def cloned_repo(context):
+    import subprocess
+    repo_url = context.op_config.get("repo_url", "https://github.com/org/repo")
+    subprocess.run(["git", "clone", "--depth", "1", repo_url, "/tmp/repo"])
+    return {"path": "/tmp/repo"}
+
+@asset(deps=[cloned_repo], description="Index repository with CocoIndex")
+def indexed_repo(context, cloned_repo):
+    import cocoindex
+    # Run CocoIndex flow
+    flow = cocoindex.get_flow("code_index")
+    flow.run(path=cloned_repo["path"])
+    return {"indexed": True}
+
+@asset(deps=[indexed_repo], description="Upload to R2")
+def uploaded_data(context, indexed_repo):
+    # Upload indexed data to R2
+    return {"bucket": "my-bucket", "key": "indexed/repo"}
+
+# Job and schedule
+index_job = define_asset_job("index_github_repo")
+daily_schedule = ScheduleDefinition(
+    job=index_job,
+    cron_schedule="0 2 * * *"  # 2 AM daily
+)
+
+defs = Definitions(
+    assets=[cloned_repo, indexed_repo, uploaded_data],
+    schedules=[daily_schedule]
+)
+```
+
+### DLT + Dagster Integration
+
+```python
+from dagster import asset
+import dlt
+
+@asset
+def github_data():
+    """Load GitHub data with DLT"""
+    pipeline = dlt.pipeline(
+        pipeline_name="github",
+        destination="duckdb",
+        dataset_name="github_data"
+    )
+
+    @dlt.resource(write_disposition="merge", primary_key="id")
+    def issues():
+        import requests
+        resp = requests.get("https://api.github.com/repos/org/repo/issues")
+        yield resp.json()
+
+    load_info = pipeline.run(issues())
+    return {"rows_loaded": load_info.loads[0].row_counts}
+```
+
+### Sensor for Change Detection
+
+```python
+from dagster import sensor, RunRequest, SkipReason
+import requests
+
+@sensor(job=index_job)
+def github_commit_sensor(context):
+    """Trigger reindex when new commits appear"""
+    resp = requests.get("https://api.github.com/repos/org/repo/branches/main")
+    latest_sha = resp.json()["commit"]["sha"]
+
+    if latest_sha != context.cursor:
+        context.update_cursor(latest_sha)
+        return RunRequest(
+            run_key=f"commit_{latest_sha}",
+            run_config={"ops": {"cloned_repo": {"config": {"sha": latest_sha}}}}
+        )
+
+    return SkipReason("No new commits")
+```
+
+---
+
+## CLI Development with Typer
+
+### Basic CLI Structure
+
+```python
+# cli/main.py
+import typer
+from rich.console import Console
+
+app = typer.Typer(help="Data Unified CLI")
+console = Console()
+
+# Import subcommands
+from cli.commands import github, docs, query
+
+app.add_typer(github.app, name="github", help="GitHub operations")
+app.add_typer(docs.app, name="docs", help="Documentation operations")
+app.add_typer(query.app, name="query", help="Query operations")
+
+@app.command()
+def status():
+    """Show system status"""
+    console.print("[green]System operational[/green]")
+
+if __name__ == "__main__":
+    app()
+```
+
+### Subcommand Module
+
+```python
+# cli/commands/github.py
+import typer
+from rich.console import Console
+from rich.table import Table
+from core.functions import clone_repo, index_repo, search_code
+
+app = typer.Typer()
+console = Console()
+
+@app.command()
+def clone(
+    repo_url: str = typer.Argument(..., help="GitHub repository URL"),
+    branch: str = typer.Option("main", help="Branch to clone")
+):
+    """Clone a GitHub repository"""
+    with console.status(f"Cloning {repo_url}..."):
+        result = clone_repo(repo_url, branch)
+    console.print(f"[green]Cloned to {result['path']}[/green]")
+
+@app.command()
+def index(
+    path: str = typer.Argument(..., help="Path to repository"),
+    force: bool = typer.Option(False, "--force", help="Force reindex")
+):
+    """Index repository for search"""
+    with console.status("Indexing..."):
+        result = index_repo(path, force)
+    console.print(f"[green]Indexed {result['files']} files[/green]")
+
+@app.command()
+def search(
+    query: str = typer.Argument(..., help="Search query"),
+    top_k: int = typer.Option(5, help="Number of results")
+):
+    """Search indexed code"""
+    results = search_code(query, top_k)
+
+    table = Table(title="Search Results")
+    table.add_column("File")
+    table.add_column("Score")
+    table.add_column("Snippet")
+
+    for r in results:
+        table.add_row(r["file"], f"{r['score']:.3f}", r["snippet"][:50])
+
+    console.print(table)
+```
+
+### Rich Output Formatting
+
+```python
+from rich.console import Console
+from rich.table import Table
+from rich.panel import Panel
+from rich.progress import track
+
+console = Console()
+
+def display_results(results: list):
+    """Display results in a formatted table"""
+    table = Table(title="Results", show_header=True)
+    table.add_column("ID", style="cyan")
+    table.add_column("Name", style="green")
+    table.add_column("Score", justify="right")
+
+    for r in results:
+        table.add_row(r["id"], r["name"], f"{r['score']:.4f}")
+
+    console.print(table)
+
+def display_summary(summary: dict):
+    """Display summary in a panel"""
+    content = "\n".join([f"[bold]{k}:[/bold] {v}" for k, v in summary.items()])
+    console.print(Panel(content, title="Summary", border_style="blue"))
+
+def process_with_progress(items: list):
+    """Process items with progress bar"""
+    results = []
+    for item in track(items, description="Processing..."):
+        results.append(process_item(item))
+    return results
+```
+
+---
+
+## Incremental Processing
+
+### DLT Incremental Loading
+
+```python
+import dlt
+from datetime import datetime
+
+@dlt.resource(write_disposition="append")
+def incremental_data(
+    updated_at=dlt.sources.incremental(
+        "updated_at",
+        initial_value=datetime(2024, 1, 1)
+    )
+):
+    """Only load records updated since last run"""
+    # Query uses last_value to filter
+    query = f"""
+        SELECT * FROM source_table
+        WHERE updated_at > '{updated_at.last_value}'
+        ORDER BY updated_at
+    """
+    for batch in fetch_batches(query):
+        yield batch
+
+pipeline = dlt.pipeline(
+    pipeline_name="incremental",
+    destination="duckdb"
+)
+
+# First run: loads all since 2024-01-01
+# Subsequent runs: only new records
+pipeline.run(incremental_data())
+```
+
+### CocoIndex Incremental Indexing
+
+```python
+import cocoindex
+
+@cocoindex.flow_def(name="incremental_code")
+def incremental_flow(flow_builder, data_scope):
+    """CocoIndex automatically tracks state in Postgres"""
+
+    data_scope["files"] = flow_builder.add_source(
+        cocoindex.sources.LocalFile(
+            path="/repo",
+            included_patterns=["*.py"]
+        )
+    )
+
+    # Only changed files are reprocessed on subsequent runs
+    with data_scope["files"].row() as file:
+        file["chunks"] = file["content"].transform(
+            cocoindex.functions.SplitRecursively()
+        )
+
+        with file["chunks"].row() as chunk:
+            chunk["embedding"] = chunk["text"].transform(
+                cocoindex.functions.SentenceTransformerEmbed()
+            )
+
+            data_scope.add_collector("index").collect(
+                filename=file["filename"],
+                text=chunk["text"],
+                embedding=chunk["embedding"]
+            )
+
+    # Export with primary key for upsert behavior
+    data_scope.get_collector("index").export(
+        "code_index",
+        cocoindex.storages.Postgres(),
+        primary_key_fields=["filename", "text"]
+    )
+
+# Run flow
+flow = incremental_flow()
+flow.run()  # Full index
+flow.run()  # Only changes
+```
+
+### Dagster Sensor-Based Updates
+
+```python
+from dagster import sensor, RunRequest
+import os
+from hashlib import md5
+
+@sensor(job=reindex_job, minimum_interval_seconds=60)
+def file_change_sensor(context):
+    """Detect file changes and trigger reindex"""
+    watch_dir = "/data/source"
+    current_hash = get_directory_hash(watch_dir)
+
+    if current_hash != context.cursor:
+        context.update_cursor(current_hash)
+        return RunRequest(run_key=f"change_{current_hash[:8]}")
+
+    return SkipReason("No changes detected")
+
+def get_directory_hash(path: str) -> str:
+    """Hash directory contents for change detection"""
+    hasher = md5()
+    for root, dirs, files in os.walk(path):
+        for f in sorted(files):
+            filepath = os.path.join(root, f)
+            hasher.update(f.encode())
+            hasher.update(str(os.path.getmtime(filepath)).encode())
+    return hasher.hexdigest()
+```
+
+---
+
+## Production Deployment
+
+### Docker Compose Stack
 
 ```yaml
 # docker-compose.yml
 version: "3.8"
 
 services:
-  app:
-    image: ${REGISTRY}/my-app:${TAG:-latest}
+  dagster-webserver:
+    image: dagster/dagster:latest
+    ports:
+      - "3000:3000"
     environment:
-      - DATABASE_URL=op://vault/database/url
-    labels:
-      - "pangolin.enable=true"
-      - "pangolin.domain=app.example.com"
-    restart: unless-stopped
-
-  database:
-    image: postgres:16
+      DAGSTER_HOME: /opt/dagster
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - ./dagster_project:/opt/dagster/app
+      - dagster-storage:/opt/dagster/storage
+
+  dagster-daemon:
+    image: dagster/dagster:latest
+    command: dagster-daemon run
     environment:
-      - POSTGRES_PASSWORD=op://vault/database/password
-    restart: unless-stopped
+      DAGSTER_HOME: /opt/dagster
+    volumes:
+      - ./dagster_project:/opt/dagster/app
+      - dagster-storage:/opt/dagster/storage
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: dagster
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: dagster
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  lancedb:
+    image: lancedb/lancedb:latest
+    volumes:
+      - lancedb-data:/data
+
+  memgraph:
+    image: memgraph/memgraph:latest
+    ports:
+      - "7687:7687"
+    volumes:
+      - memgraph-data:/var/lib/memgraph
 
 volumes:
-  db_data:
+  dagster-storage:
+  postgres-data:
+  lancedb-data:
+  memgraph-data:
 ```
 
-### Deploy via TypeScript SDK
+### Environment Configuration
 
-```typescript
-import { KomodoClient } from "@komodo/client"
+```bash
+# .env
+# R2 Storage
+R2_ACCESS_KEY_ID=your_access_key
+R2_SECRET_ACCESS_KEY=your_secret_key
+R2_ACCOUNT_ID=your_account_id
+R2_BUCKET_NAME=data-lake
 
-const client = new KomodoClient({
-  url: "https://komodo.example.com",
-  apiKey: process.env.KOMODO_API_KEY
-})
+# Database
+POSTGRES_HOST=postgres
+POSTGRES_USER=dagster
+POSTGRES_PASSWORD=secret
+POSTGRES_DB=dagster
 
-// Deploy stack
-await client.stacks.deploy({
-  name: "my-app",
-  server: "production-01",
-  composePath: "./docker-compose.yml",
-  env: {
-    TAG: imageTag,
-    REGISTRY: "registry.example.com"
-  }
-})
+# LLM
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Embedding
+VOYAGE_API_KEY=pa-...
+EMBEDDING_MODEL=voyage-code-3
 ```
 
-**Reference**: See `/infrastructure/komodo/` for API documentation.
+### Production Checklist
+
+- [ ] Use secrets manager (1Password, Vault) for credentials
+- [ ] Enable Dagster schedules and sensors
+- [ ] Set up monitoring (Grafana, Prometheus)
+- [ ] Configure log aggregation
+- [ ] Enable HTTPS for web interfaces
+- [ ] Set up backup for Postgres and vector DBs
+- [ ] Configure resource limits in Docker
+- [ ] Set up CI/CD for deployments
 
 ---
 
-## 4. Pangolin Zero-Trust Networking
+## References
 
-### Install Newt (Site Connector)
+**Sources:**
+- data-stack-tutorials-and-examples.md
+- unified-modular-component-design-dagster-dlt-marimo-typer.md
+- stage-1-incremental-update-pipeline.md
+- stage-2-technical-implementation-outline.md
 
-On each server that hosts services:
+**External:**
+- [DuckDB Documentation](https://duckdb.org/docs)
+- [DLT Documentation](https://dlthub.com/docs)
+- [Dagster Documentation](https://docs.dagster.io)
+- [CocoIndex Documentation](https://cocoindex.io/docs)
+- [Crawl4AI Documentation](https://crawl4ai.com)
 
-```bash
-# Docker installation
-docker run -d \
-  --name pangolin-newt \
-  --restart always \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -e PANGOLIN_ENDPOINT="wss://gerbil.example.com" \
-  -e PANGOLIN_ID="server-01" \
-  -e PANGOLIN_SECRET="your-secret" \
-  ghcr.io/pangolin/newt:latest
-```
-
-### Service Registration via Labels
-
-```yaml
-services:
-  my-service:
-    image: my-app:latest
-    labels:
-      - "pangolin.enable=true"
-      - "pangolin.domain=myservice.example.com"
-      - "pangolin.access=public"  # or "private" for VPN-only
-```
-
-### Configure Access Policies
-
-```yaml
-# pangolin-config.yaml
-resources:
-  - name: web-app
-    type: http
-    target: http://app:3000
-    access: public
-    domain: app.example.com
-
-  - name: admin-panel
-    type: http
-    target: http://admin:8080
-    access: private  # VPN-only
-```
-
-**Reference**: See `/infrastructure/pangolin/` for detailed configuration.
-
----
-
-## 5. CI/CD Integration (GitHub Actions / Forgejo)
-
-### Workflow File
-
-```yaml
-# .github/workflows/deploy.yml
-name: Build and Deploy
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Dagger
-        uses: dagger/dagger-for-github@v6
-
-      - name: Build, Test, Deploy
-        run: |
-          dagger call build --src=.
-          dagger call test --src=.
-          dagger call publish --src=. --registry=${{ vars.REGISTRY }}
-          dagger call deploy --tag=$TAG
-        env:
-          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_TOKEN }}
-          KOMODO_API_KEY: ${{ secrets.KOMODO_KEY }}
-```
-
----
-
-## 6. Deployment Workflows
-
-### Development (Local)
-
-```bash
-# Use Docker Compose directly
-docker compose up -d
-
-# Secrets via 1Password CLI
-op run -- docker compose up -d
-```
-
-### Staging
-
-```bash
-# Deploy to staging server via Komodo
-dagger call deploy --env=staging --tag=latest
-```
-
-### Production
-
-```bash
-# Deploy to production with specific tag
-dagger call deploy --env=production --tag=v1.2.3
-```
-
-### Rollback
-
-```bash
-# Rollback to previous version
-dagger call deploy --env=production --tag=v1.2.2
-```
-
----
-
-## 7. Troubleshooting
-
-### Common Issues
-
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| Periphery not connecting | Wrong passkey | Verify PERIPHERY_PASSKEY env var |
-| Secrets not loading | Missing token | Check OP_SERVICE_ACCOUNT_TOKEN |
-| Pangolin registration fails | DNS not configured | Add DNS records first |
-| Build cache misses | Different source | Use --cache-to for persistent caching |
-
-### Debug Commands
-
-```bash
-# Check Dagger version
-dagger version
-
-# Check Komodo Periphery logs
-docker logs komodo-periphery
-
-# Check Pangolin Newt logs
-docker logs pangolin-newt
-
-# Verify 1Password connection
-op whoami
-```
-
----
-
-## 8. Reference Checklist
-
-### Pre-Deployment
-
-- [ ] All secrets stored in 1Password vault
-- [ ] DNS records point to Pangolin domains
-- [ ] Periphery agent healthy on target servers
-- [ ] Docker images built and pushed to registry
-- [ ] Database migrations ready
-
-### Post-Deployment
-
-- [ ] Health checks passing
-- [ ] Logs accessible in Dozzle
-- [ ] Metrics visible in Beszel
-- [ ] SSL certificates valid
-- [ ] Rollback tested
-
----
-
-## Related Documentation
-
-- [ARCHITECTURE.md](./ARCHITECTURE.md) - Infrastructure architecture overview
-- [DECISION_MATRICES.md](./DECISION_MATRICES.md) - Technology decision guidance
-- [/infrastructure/dagger/](./dagger/) - Dagger pipeline details
-- [/infrastructure/komodo/](./komodo/) - Komodo deployment details
-- [/infrastructure/pangolin/](./pangolin/) - Pangolin networking details
-- [/infrastructure/1password/](./1password/) - Secrets management details
+**Last Updated:** November 29, 2024
