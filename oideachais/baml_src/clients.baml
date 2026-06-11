@@ -2,19 +2,24 @@
 //
 // All LLM calls go through the LiteLLM gateway at `http://litellm:4000/v1`.
 // The LiteLLM config (infrastructure/stacks/engineering/litellm/config/config.yaml)
-// maps model aliases to actual providers (Gemini, DeepSeek, MiniMax, etc.).
+// maps model aliases to actual providers (DeepSeek, OpenCode Go, etc.).
 //
 // Usage in BAML schemas:
 //   client "litellm"
 //
 // Re-gen after changes:  `cd oideachais && uv run baml-cli generate`
+//
+// NOTE: LitellmClient defaults to deepseek-chat via the litellm gateway,
+// NOT gemini — the local .env GEMINI_API_KEY belongs to a dead GCP project
+// and /gemini/api_key is not in the Infisical vault yet (issue #12).
+// When the vault has a working Gemini key, flip back to gemini-2.5-flash.
 
 client<llm> LitellmClient {
   provider openai
   options {
     api_key env.LLM_API_KEY
     base_url "http://litellm:4000/v1"
-    model "gemini/gemini-2.5-flash"
+    model "deepseek/deepseek-chat"
   }
 }
 
@@ -41,6 +46,6 @@ client<llm> LitellmLongContext {
   options {
     api_key env.LLM_API_KEY
     base_url "http://litellm:4000/v1"
-    model "gemini/gemini-2.5-pro"
+    model "deepseek/deepseek-chat"
   }
 }
