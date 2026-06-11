@@ -325,6 +325,7 @@ def _yield_exam_materials_records() -> Iterator[dict[str, Any]]:
 def leaving_cert_source(
     use_local_scrapes: bool | None = None,
     cache_only: bool = True,
+    subjects: list[str] | None = None,
 ):
     """DLT source for the 7 priority Leaving Cert subjects.
 
@@ -342,6 +343,12 @@ def leaving_cert_source(
         cache_only: if true, emit only records that hit the cache. If false,
             emit an empty seed (per-subject existence row) so every subject
             appears in DuckLake even without cached data.
+        subjects: optional list of subject slugs to filter by (e.g.
+            ["mathematics", "irish"]). When None, all 7 SUBJECTS are
+            included — this is the default for ad-hoc backfills. The
+            per-subject Dagster assets pass a single subject here so each
+            `leaving_cert_{subject_slug}` dataset only contains rows for
+            that subject.
     """
     if use_local_scrapes is None:
         use_local_scrapes = os.environ.get("USE_LOCAL_SCRAPES", "true").lower() == "true"
@@ -352,6 +359,11 @@ def leaving_cert_source(
             reason="live scrape path not implemented; falling back to local cache",
         )
 
+    # Default to all 7 priority subjects.
+    if subjects is None:
+        subjects = list(SUBJECTS)
+    subjects_set = set(subjects)
+
     # Group 1: syllabus
     @dlt.resource(
         name="syllabus",
@@ -359,12 +371,12 @@ def leaving_cert_source(
         primary_key=["subject", "year", "level", "language", "content_hash"],
     )
     def syllabus_resource() -> Iterator[dict[str, Any]]:
-        rows = list(_yield_syllabus_records())
-        logger.info("lc_syllabus_rows", count=len(rows))
+        rows = [r for r in _yield_syllabus_records() if r.get("subject") in subjects_set]
+        logger.info("lc_syllabus_rows", count=len(rows), subjects_filter=list(subjects_set))
         yield from rows
         if cache_only and not rows:
             # Always seed at least one row per subject so the table exists
-            for subject in SUBJECTS:
+            for subject in subjects:
                 yield {
                     "subject": subject,
                     "year": datetime.now(UTC).year,
@@ -384,8 +396,12 @@ def leaving_cert_source(
         primary_key=["subject", "year", "level", "content_hash"],
     )
     def past_papers_resource() -> Iterator[dict[str, Any]]:
-        rows = [r for r in _yield_exam_materials_records() if r["kind"] == "past_papers"]
-        logger.info("lc_past_papers_rows", count=len(rows))
+        rows = [
+            r
+            for r in _yield_exam_materials_records()
+            if r["kind"] == "past_papers" and r.get("subject") in subjects_set
+        ]
+        logger.info("lc_past_papers_rows", count=len(rows), subjects_filter=list(subjects_set))
         yield from rows
 
     # Group 3: marking_schemes
@@ -395,8 +411,12 @@ def leaving_cert_source(
         primary_key=["subject", "year", "level", "content_hash"],
     )
     def marking_schemes_resource() -> Iterator[dict[str, Any]]:
-        rows = [r for r in _yield_exam_materials_records() if r["kind"] == "marking_schemes"]
-        logger.info("lc_marking_schemes_rows", count=len(rows))
+        rows = [
+            r
+            for r in _yield_exam_materials_records()
+            if r["kind"] == "marking_schemes" and r.get("subject") in subjects_set
+        ]
+        logger.info("lc_marking_schemes_rows", count=len(rows), subjects_filter=list(subjects_set))
         yield from rows
 
     # Group 4: examiner_reports
@@ -406,8 +426,12 @@ def leaving_cert_source(
         primary_key=["subject", "year", "level", "content_hash"],
     )
     def examiner_reports_resource() -> Iterator[dict[str, Any]]:
-        rows = [r for r in _yield_exam_materials_records() if r["kind"] == "examiner_reports"]
-        logger.info("lc_examiner_reports_rows", count=len(rows))
+        rows = [
+            r
+            for r in _yield_exam_materials_records()
+            if r["kind"] == "examiner_reports" and r.get("subject") in subjects_set
+        ]
+        logger.info("lc_examiner_reports_rows", count=len(rows), subjects_filter=list(subjects_set))
         yield from rows
 
     return (
