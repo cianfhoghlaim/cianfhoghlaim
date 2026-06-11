@@ -13,6 +13,29 @@ name: aleyum
 
 services:
   # ---------------------------------------------------------------------------
+  # Postgres (bundled with croilar; used for dagster run_storage + event_log
+  # and shared with the oideachais lakehouse stack via the
+  # cianfhoghlaim-postgres_croilar external network)
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: aleyum-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+    volumes:
+      - aleyum-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aleyum
+
+  # ---------------------------------------------------------------------------
   # DragonflyDB (Redis-compatible cache for rate limiting)
   # ---------------------------------------------------------------------------
   dragonfly:
@@ -38,7 +61,7 @@ services:
       context: .
       dockerfile: Dockerfile.dagster
     container_name: aleyum-dagster-web
-    command: ["dagster-webserver", "-h", "0.0.0.0", "-p", "3000", "-w", "/opt/dagster/app"]
+    command: ["dagster-webserver", "-h", "0.0.0.0", "-p", "3000", "-w", "/opt/dagster/app/workspace.yaml"]
     ports:
       - "${DAGSTER_PORT:-3106}:3000"
     environment:
@@ -58,11 +81,11 @@ services:
     volumes:
       - .:/opt/dagster/app:ro
       - aleyum-data:/data
-      # Bind-mount the dagster.yaml so the (in-image) legacy content is
-      # overridden by the current local file on every start.
-      - ./dagster.yaml:/opt/dagster/dagster_home/dagster.yaml:ro
     depends_on:
-      - dagster-daemon
+      postgres:
+        condition: service_healthy
+      dagster-daemon:
+        condition: service_started
     networks:
       - aleyum
 
@@ -72,7 +95,7 @@ services:
       context: .
       dockerfile: Dockerfile.dagster
     container_name: aleyum-dagster-daemon
-    command: ["dagster-daemon", "run", "-w", "/opt/dagster/app"]
+    command: ["dagster-daemon", "run", "-w", "/opt/dagster/app/workspace.yaml"]
     environment:
       DAGSTER_HOME: /opt/dagster/dagster_home
       PYTHONPATH: /opt/dagster/app
@@ -90,7 +113,9 @@ services:
     volumes:
       - .:/opt/dagster/app:ro
       - aleyum-data:/data
-      - ./dagster.yaml:/opt/dagster/dagster_home/dagster.yaml:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - aleyum
 
@@ -99,6 +124,8 @@ services:
 # =============================================================================
 volumes:
   aleyum-data:
+    driver: local
+  aleyum-postgres-data:
     driver: local
   dragonfly-data:
     driver: local

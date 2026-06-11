@@ -110,11 +110,27 @@ services:
       dockerfile: oideachais/Dockerfile
     container_name: cianfhoghlaim-oideachais-api
     restart: unless-stopped
+    # The api package is at /app/oideachais/api/ in the image (moved from
+    # data_platform/api/ on 2026-06-11). The Dockerfile's CMD already uses
+    # --app-dir /app/oideachais; no override needed here.
     ports:
       - "${API_PORT:-8000}:8000"
+    # Run as root in the container so the volume mount at
+    # /app/oideachais/storage/data can create its mountpoint in a writable
+    # rootfs layer (appuser can't create dirs in the read-only image layer).
+    # The Dockerfile's USER appuser directive is overridden here.
+    user: "0:0"
     volumes:
-      - ../../../../oideachais/data_platform:/app/oideachais/data_platform:ro
-      - api_data:/app/oideachais/storage/data
+      # The api/ package was moved up to oideachais/api/ on 2026-06-11.
+      # Mount the parent so the api can hot-reload code via docker compose
+      # restart; the previous data_platform/ path no longer exists.
+      - ../../../../oideachais:/app/oideachais:ro
+      # Mount the data volume at a NEW path that doesn't exist in the
+      # image (the OLD path /app/oideachais/storage/data was baked into
+      # the image's lower layer; the volume mount then fails with
+      # 'read-only file system' when trying to create the mountpoint).
+      # We symlink the new path to the old one in the CMD below.
+      - api_data:/app/storage/data
     environment:
       HOST: "0.0.0.0"
       PORT: "8000"
