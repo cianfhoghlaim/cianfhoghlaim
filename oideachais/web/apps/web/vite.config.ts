@@ -93,6 +93,17 @@ export default defineConfig({
   server: {
     port: 3001,
     host: true,
+    // Disable the Vite HMR error overlay in dev. The TanStack
+    // router-plugin's code-splitter emits `Duplicate declaration
+    // "hot"` for parametric routes (examiner-reports, dashboards,
+    // past-papers, marking-schemes, practice) and the overlay
+    // floods the dev UI with stack traces that obscure the actual
+    // page content. The stripTsrIgnoredRouteExports plugin above
+    // handles the most common case; turning the overlay off is a
+    // belt-and-braces measure for the routes where the
+    // replacement regex misses. Errors are still logged to the
+    // browser console and the dev server stdout.
+    hmr: { overlay: false },
     proxy: {
       "/api": "http://localhost:8787",
       "/api-reference": "http://localhost:8787",
