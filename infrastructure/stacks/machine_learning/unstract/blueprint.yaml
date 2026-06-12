@@ -1,9 +1,13 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
   unstract:
-    name: "Unstract (LLM Doc Pipeline)"
-    mode: http
-    full-domain: "unstract.cianfhoghlaim.ie"
+    name: "Unstract"
+    mode: "http"
     destination-port: 8002
-    protocol: http
-    sites: [arm1-oci]
-    roles: [Member]
+    full-domain: "unstract.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "unstract"
+

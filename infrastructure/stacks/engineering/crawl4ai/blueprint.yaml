@@ -1,11 +1,13 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
   crawl4ai:
     name: "Crawl4ai"
-    mode: http
-    full-domain: "crawl4ai.cianfhoghlaim.ie"
+    mode: "http"
     destination-port: 8080
-    protocol: http
-    sites:
-      - arm1-oci
+    full-domain: "crawl4ai.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
+      - "Member"
+    destination: "crawl4ai"
+

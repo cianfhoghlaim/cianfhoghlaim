@@ -1,9 +1,0 @@
-services:
-  main-service:
-    labels:
-      - "pangolin.private-resources.Perplexica.name=Perplexica"
-      - "pangolin.private-resources.Perplexica.mode=http"
-      - "pangolin.private-resources.Perplexica.full-domain=Perplexica.cianfhoghlaim.ie"
-      - "pangolin.private-resources.Perplexica.destination-port=8080"
-      - "pangolin.private-resources.Perplexica.protocol=http"
-      - "pangolin.private-resources.Perplexica.roles[0]=Member"

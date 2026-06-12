@@ -1,9 +1,0 @@
-services:
-  pulumi:
-    labels:
-      - "pangolin.private-resources.pulumi.name=Pulumi IaC"
-      - "pangolin.private-resources.pulumi.mode=http"
-      - "pangolin.private-resources.pulumi.full-domain=pulumi.cianfhoghlaim.ie"
-      - "pangolin.private-resources.pulumi.destination-port=8080"
-      - "pangolin.private-resources.pulumi.protocol=http"
-      - "pangolin.private-resources.pulumi.roles[0]=Member"

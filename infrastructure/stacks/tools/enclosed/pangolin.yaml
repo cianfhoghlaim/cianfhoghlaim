@@ -1,9 +1,0 @@
-services:
-  main-service:
-    labels:
-      - "pangolin.private-resources.enclosed.name=Enclosed"
-      - "pangolin.private-resources.enclosed.mode=http"
-      - "pangolin.private-resources.enclosed.full-domain=enclosed.cianfhoghlaim.ie"
-      - "pangolin.private-resources.enclosed.destination-port=8080"
-      - "pangolin.private-resources.enclosed.protocol=http"
-      - "pangolin.private-resources.enclosed.roles[0]=Member"

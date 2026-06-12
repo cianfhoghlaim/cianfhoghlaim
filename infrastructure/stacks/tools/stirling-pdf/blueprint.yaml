@@ -1,11 +1,13 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
   stirling-pdf:
     name: "Stirling PDF"
-    mode: http
-    full-domain: "stirling-pdf.cianfhoghlaim.ie"
+    mode: "http"
     destination-port: 8080
-    protocol: http
-    sites:
-      - arm1-oci
+    full-domain: "stirling-pdf.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
+      - "Member"
+    destination: "stirling-pdf"
+

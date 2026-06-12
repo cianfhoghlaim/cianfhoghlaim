@@ -1,11 +1,13 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
   n8n:
     name: "n8n Workflow Automation"
-    mode: http
-    full-domain: "n8n.cianfhoghlaim.ie"
+    mode: "http"
+    destination: "n8n"
     destination-port: 5678
-    protocol: http
-    sites:
-      - arm1-oci
+    full-domain: "n8n.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
+      - "Member"
+

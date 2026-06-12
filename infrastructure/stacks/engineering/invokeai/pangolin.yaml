@@ -1,9 +1,0 @@
-services:
-  invokeai:
-    labels:
-      - "pangolin.private-resources.invokeai.name=InvokeAI"
-      - "pangolin.private-resources.invokeai.mode=http"
-      - "pangolin.private-resources.invokeai.full-domain=invokeai.cianfhoghlaim.ie"
-      - "pangolin.private-resources.invokeai.destination-port=9090"
-      - "pangolin.private-resources.invokeai.protocol=http"
-      - "pangolin.private-resources.invokeai.roles[0]=Member"

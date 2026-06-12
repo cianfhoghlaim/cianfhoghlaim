@@ -1,13 +1,13 @@
 # Pangolin private-resource blueprint (generated from pangolin.yaml label form)
 # See: https://docs.pangolin.net/manage/blueprints
 private-resources:
-  pipecat:
-    name: "Pipecat (Voice AI)"
+  komodo:
+    name: "Komodo"
     mode: "http"
-    destination-port: 8765
-    full-domain: "pipecat.cianfhoghlaim.ie"
+    destination-port: 9120
+    full-domain: "komodo.cianfhoghlaim.ie"
     protocol: "http"
     roles:
       - "Member"
-    destination: "pipecat"
+    destination: "komodo"
 

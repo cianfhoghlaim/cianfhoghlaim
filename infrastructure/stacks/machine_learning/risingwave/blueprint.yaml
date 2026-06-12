@@ -1,22 +1,23 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
   risingwave:
-    name: "RisingWave (PostgreSQL wire protocol :4566)"
-    mode: http
-    full-domain: "risingwave.cianfhoghlaim.ie"
+    name: "RisingWave"
+    mode: "http"
     destination-port: 4566
-    protocol: http
-    sites:
-      - arm1-oci
+    full-domain: "risingwave.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
+      - "Member"
+    destination: "risingwave"
 
   risingwavedb:
     name: "RisingWave Dashboard"
-    mode: http
-    full-domain: "risingwavedb.cianfhoghlaim.ie"
+    mode: "http"
     destination-port: 5691
-    protocol: http
-    sites:
-      - arm1-oci
+    full-domain: "risingwavedb.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
+      - "Member"
+    destination: "risingwavedb"
+
