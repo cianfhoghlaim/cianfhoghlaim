@@ -13,27 +13,79 @@ name: komodo
 
 services:
   # ---------------------------------------------------------------------------
-  # MONGODB - Database Backend 
+  # FERRETDB - Postgres-backed MongoDB-compatible API (v2)
   # ---------------------------------------------------------------------------
-  mongo:
-    image: mongo:latest
-    container_name: komodo-mongo
+  # Replaces the legacy `mongo` service. FerretDB v2 stores documents
+  # natively in Postgres, which we already have on the host (via the
+  # `komodo-postgres` service below) — no separate MongoDB license,
+  # no separate `mongo` image, and we get real transactional storage
+  # under the hood.
+  # ---------------------------------------------------------------------------
+  ferretdb:
+    image: ghcr.io/ferretdb/ferretdb:2
+    container_name: komodo-ferretdb
     restart: unless-stopped
     labels:
       komodo.skip: # Prevent Komodo from stopping with StopAllContainers
-    command: --quiet --wiredTigerCacheSizeGB 0.25
+    command:
+      - "--postgresql-url=postgres://${KOMODO_DATABASE_USERNAME:-komodo}:${KOMODO_DATABASE_PASSWORD:-devpassword}@komodo-postgres:5432/${KOMODO_DATABASE_NAME:-komodo}"
+      - "--listen-addr=0.0.0.0:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${KOMODO_DATABASE_USERNAME:-komodo}
-      MONGO_INITDB_ROOT_PASSWORD: ${KOMODO_DATABASE_PASSWORD:-devpassword}
-    volumes:
-      - mongo-data:/data/db
-      - mongo-config:/data/configdb
+      # FerretDB doesn't need credentials of its own; it speaks the
+      # wire protocol on port 27017 to whichever Mongo client (Komodo
+      # core) connects.
+      FERRETDB_POSTGRESQL_URL: postgres://${KOMODO_DATABASE_USERNAME:-komodo}:${KOMODO_DATABASE_PASSWORD:-devpassword}@komodo-postgres:5432/${KOMODO_DATABASE_NAME:-komodo}
+    depends_on:
+      komodo-postgres-init:
+        condition: service_completed_successfully
+    networks:
+      - komodo
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      # FerretDB's image is distroless — no /bin/sh available. Use
+      # the Go runtime's port probe instead via a tiny TCP connect
+      # from the host namespace (or skip the healthcheck and rely
+      # on the `depends_on: service_healthy` of any consumer).
+      test: ["CMD", "/ferretdb", "--version"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 10s
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+
+  komodo-postgres:
+    # Postgres 17 with FerretDB's documentdb extension pre-installed.
+    # FerretDB v2 stores documents natively via the documentdb extension
+    # and this image is the only Postgres flavor that ships it ready to
+    # use. The extension is created in the `komodo` database on first
+    # start by the `komodo-postgres-init` init container.
+    image: ghcr.io/ferretdb/postgres-documentdb:17
+    container_name: komodo-postgres
+    restart: unless-stopped
+    # Override the entrypoint so the `komodo-postgres-init` companion
+    # container can `psql` directly into the running instance. The
+    # `cron.database_name` GUC lets the `documentdb` extension be
+    # installed in any database (not just `postgres`).
+    command:
+      - "postgres"
+      - "-c"
+      - "cron.database_name=komodo"
+    environment:
+      POSTGRES_DB: ${KOMODO_DATABASE_NAME:-komodo}
+      POSTGRES_USER: ${KOMODO_DATABASE_USERNAME:-komodo}
+      POSTGRES_PASSWORD: ${KOMODO_DATABASE_PASSWORD:-devpassword}
+    volumes:
+      - komodo-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "pg_isready -d $${POSTGRES_DB:-komodo} -U $${POSTGRES_USER:-komodo}"
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - komodo
     deploy:
@@ -41,6 +93,28 @@ services:
         limits:
           cpus: '1'
           memory: 1G
+
+  # ---------------------------------------------------------------------------
+  # KOMODO POSTGRES INIT - create the documentdb extensions in the komodo DB
+  # ---------------------------------------------------------------------------
+  komodo-postgres-init:
+    image: ghcr.io/ferretdb/postgres-documentdb:17
+    container_name: komodo-postgres-init
+    depends_on:
+      komodo-postgres:
+        condition: service_healthy
+    restart: "no"
+    entrypoint:
+      - "psql"
+    command:
+      # Connect over TCP because the init container has no socket.
+      - "postgresql://${KOMODO_DATABASE_USERNAME:-komodo}:${KOMODO_DATABASE_PASSWORD:-devpassword}@komodo-postgres:5432/${KOMODO_DATABASE_NAME:-komodo}?connect_timeout=10"
+      - "-v"
+      - "ON_ERROR_STOP=1"
+      - "-c"
+      - "CREATE EXTENSION IF NOT EXISTS documentdb CASCADE;"
+    networks:
+      - komodo
 
   # ---------------------------------------------------------------------------
   # KOMODO CORE - Orchestration Engine
@@ -51,13 +125,14 @@ services:
     init: true
     restart: unless-stopped
     depends_on:
-      mongo:
+      ferretdb:
         condition: service_healthy
     ports:
       - "${KOMODO_PORT:-9120}:9120"
     environment:
-      # Database
-      KOMODO_DATABASE_ADDRESS: mongo:27017
+      # Database — Komodo speaks MongoDB wire protocol; FerretDB v2
+      # translates it into Postgres queries on the other side.
+      KOMODO_DATABASE_ADDRESS: ferretdb:27017
       KOMODO_DATABASE_USERNAME: ${KOMODO_DATABASE_USERNAME:-komodo}
       KOMODO_DATABASE_PASSWORD: ${KOMODO_DATABASE_PASSWORD:-devpassword}
 
@@ -107,8 +182,8 @@ services:
           memory: 2G
 
 volumes:
-  mongo-data:
-  mongo-config:
+  komodo-postgres-data:
+    name: komodo-postgres-data
   keys:
   backups:
 

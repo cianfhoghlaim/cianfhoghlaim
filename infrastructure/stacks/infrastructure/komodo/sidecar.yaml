@@ -13,10 +13,18 @@ services:
       - no-new-privileges:true
     cap_drop:
       - ALL
+    environment:
+      # Locket reads these env vars to talk to Infisical. The
+      # values are injected at compose time from the operator's
+      # environment (`.env` or shell). The `${...}` here is a
+      # single-dollar Compose substitution; not a `$$` escape.
+      INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
     command:
       - "--provider=infisical"
-      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-client-id=${INFISICAL_CLIENT_ID}"
       - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-default-environment=${INFISICAL_ENVIRONMENT:-dev}"
+      - "--infisical-default-project-id=${INFISICAL_PROJECT_ID:-}"
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:
@@ -48,7 +56,7 @@ services:
 
 secrets:
   infisical_secret:
-    file: ${INFISICAL_SECRET_FILE:-../../infisical_secret}
+    file: ${INFISICAL_SECRET_FILE:-../../../infisical_secret}
 
 volumes:
   komodo-secrets:
