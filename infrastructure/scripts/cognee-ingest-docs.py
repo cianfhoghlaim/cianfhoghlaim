@@ -219,21 +219,34 @@ def wait_for_cognify(pipeline_run_id: str, timeout_s: int = 600) -> dict:
 
 def ingest_doc(doc: CanonicalDoc, dataset_id: str) -> dict:
     text = f"# {doc.title}\n\n{''.join(doc.body)}"
-    # NOTE: Cognee v1 REST API uses camelCase: datasetId
-    # The /api/v1/add endpoint takes multipart form data, not JSON. For
-    # simplicity we use /api/v1/datasets/{id}/data which accepts JSON.
-    return post_json(
-        f"/api/v1/datasets/{dataset_id}/data",
-        {
-            "data": text,
-        },
+    # /api/v1/add takes multipart/form-data with:
+    #   data: <binary file(s)>
+    #   datasetId OR datasetName
+    import io
+    files = {"data": (f"{doc.path.stem}.md", io.BytesIO(text.encode("utf-8")), "text/markdown")}
+    form_data = {"datasetId": dataset_id}
+    return post_multipart("/api/v1/add", files, form_data)
+
+
+def post_multipart(path: str, files: dict, form_data: dict, timeout: int = 300) -> dict:
+    headers: dict = {}
+    if COGNEE_API_KEY:
+        headers["Authorization"] = f"Bearer {COGNEE_API_KEY}"
+    response = requests.post(
+        f"{COGNEE_API_URL}{path}",
+        files=files,
+        data=form_data,
+        headers=headers,
+        timeout=timeout,
     )
+    response.raise_for_status()
+    return response.json() if response.text else {}
 
 
 def cognify_dataset(dataset_name: str, dataset_id: str) -> dict:
     response = post_json(
         "/api/v1/cognify",
-        {"dataset_ids": [dataset_id]},
+        {"datasetIds": [dataset_id]},
         timeout=600,
     )
     run_id = response.get("pipeline_run_id") or response.get("id") or response.get("runId")
