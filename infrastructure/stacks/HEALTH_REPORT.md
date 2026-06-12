@@ -132,3 +132,58 @@
 | `http://localhost:9120/` (Komodo) | "KOMODO" login form, Username, Password, Sign Up, Log In | ✓ |
 | `http://localhost:4000/` (LiteLLM) | LiteLLM API 1.88.0 OAS 3.1 Swagger UI with full /v1/messages, /v1/models, /audio, /batches, /anthropic, /bedrock, /azure, /global/spend, /budget etc. | ✓ |
 | `https://cal.carlcashman.org.uk/` | "Private Placeholder Screen" — Pangolin private resource is registered but requires client VPN to actually serve cal-diy | ✓ (resource registered, upstream healthy) |
+
+---
+
+# Session 2 — 2026-06-12 (Pangolin + Frontend CSS audit)
+
+## Summary
+
+| Category | Action | Outcome |
+|----------|--------|---------|
+| Pangolin private-resource label migration | Replaced `destination-port: NNNN` with `destination: HOST:PORT` in 76 stacks | ✅ Server-side validation errors gone |
+| Komodo/cal-diy/infisical blueprint host names | Used actual `container_name` instead of service key | ✅ DNS resolves on the newt network |
+| Oideachais frontend CSS | Migrated `app.css` from Tailwind v3 to v4 syntax | ✅ Dark theme + full layout restored |
+| Oideachais frontend HMR overlay | Disabled in `vite.config.ts` | ✅ Real page content visible |
+
+## What was fixed in this session
+
+| # | Service | Issue | Fix |
+|---|---------|-------|-----|
+| 1 | All 76 stacks with `pangolin.private-resources.*.destination-port` labels | Newt 1.12.5's blueprint validator on Pangolin 1.18.4 rejected with `Validation error: Invalid input: expected string, received undefined at "private-resources.<svc>.destination"`. | Batch-rewrote 76 `pangolin.yaml` and 77 `blueprint.yaml` files: replaced the `destination-port: NNNN` line with `destination: <container_name>:NNNN`, deleted any prior `destination: <host>` line that lacked a port. |
+| 2 | `komodo`, `cal-diy`, `infisical` private resources | The host portion of `destination` was set to the resource-name (e.g. `komodo`) but the actual container_name is `komodo-core`, so the newt's DNS lookup of `komodo:9120` failed inside the `pangolin` external network. | Updated the three stacks' `pangolin.yaml` and `blueprint.yaml` to use the real `container_name`. Recreated the cal-diy and infisical containers on `arm1-oci` so the new labels are read by the newt. |
+| 3 | `newt-bunchloch` | Was on the default `bridge` Docker network, not on the `pangolin` external network. Even with correct labels the newt couldn't resolve `komodo-core` because the container wasn't on the same network. | Restarted the newt with the existing `infrastructure/stacks/infrastructure/pangolin/newt.yaml` compose file (which already declared `networks: [pangolin]`). Now `docker exec newt getent hosts komodo-core` returns the container's IP. |
+| 4 | Oideachais frontend `app.css` | Used Tailwind v3 syntax (`@tailwind base; @tailwind components; @tailwind utilities;`) and inline `@apply bg-emerald-700`. Tailwind v4 rejected with `Cannot apply unknown utility class 'bg-emerald-700'. Are you using CSS modules or similar and missing '@reference'?` Vite then returned 500 on `/src/app.css` and the browser fell back to un-styled HTML — every page rendered as black text on white with no layout. | Rewrote `app.css` in the Tailwind v4 CSS-first config: `@import "tailwindcss";` + `@theme` block with the design tokens (colors, fonts) + `.btn-tactile` defined inline using `var(--color-emerald-700)`. After rebuild, `/` and `/en/leaving-cert/biology` render with the full dark theme (slate-900 background, Cinzel serif heading, 5-stage card grid, sidebar with emerald-700 active state). |
+| 5 | Oideachais frontend Vite HMR overlay | `server.hmr.overlay` was on by default. Every navigation triggered a "Duplicate declaration hot" stack trace from `@tanstack/router-plugin`'s code-splitter that obscured the page content. | Set `server.hmr.overlay: false` in `vite.config.ts`. Errors are still logged to the browser console and the dev server stdout. |
+
+## What still needs the user's manual intervention
+
+| # | Service | Issue | Action needed |
+|---|---------|-------|---------------|
+| 1 | `komodo.cianfhoghlaim.ie` | User manually added a private resource in the Pangolin UI with scheme `https` and target `komodo:9120`. The blueprint can't overwrite it (server returns "Site resource already exists"). | Open the Pangolin UI → Sites → komodo → Resource → **delete the manually-created resource**. The blueprint (with `komodo-core:9120` and `protocol=http`) will be reapplied automatically on the next newt cycle. Alternatively edit the existing resource and change scheme to `http` and target to `komodo-core:9120`. |
+| 2 | `calcom.cianfhoghlaim.ie` | Same as above — user-created resource with scheme `https` and target `cal:3000`. The newt log shows `upstream error: dial tcp: lookup cal on 127.0.0.11:53: no such host` because the bare `cal` hostname doesn't resolve on the arm1-oci docker network. | Open the Pangolin UI → Sites → cal-diy → Resource → delete the manual entry. Blueprint will recreate with `calcom-web:3000`. |
+| 3 | `infisical.cianfhoghlaim.ie` | Newmanually-created resource with `infisical-backend:8080:8080` (target host has port embedded, then DB code appends `:8080` again). | Same as above. |
+
+## Visual verification (Chrome MCP)
+
+| URL | Snapshot |
+|-----|----------|
+| `http://localhost:3000/` | Full dark theme, header with Cinzel serif title, sidebar with emerald-700 active state, 5-stage card grid (Aistear/Primary/Junior/Senior/Tertiary) |
+| `http://localhost:3000/en/leaving-cert/biology` | "Biology" heading, "Leaving Certificate 2026", "Biology H&O: 14:00–17:00" — uses the shared `LeavingCertSubjectPage` component |
+| `http://localhost:3000/en/admin/components` | "Component Catalog" admin page, "Reads from the `ui_component_suggestions` LanceDB table" |
+| `http://localhost:6791/` (Convex) | Dark mode, Convex logo, Deployment URL + Admin Key form |
+| `http://localhost:9120/` (Komodo) | "KOMODO" login form, Username/Password, Sign Up, Log In buttons |
+| `https://cal.carlcashman.org.uk` | Pangolin "Private Placeholder" (correctly served as a private resource; client VPN required to view cal-diy content) |
+
+## Frontend route audit results
+
+| Route | Status | Notes |
+|-------|--------|-------|
+| `/` | ✅ 200 | Landing page with 5 stage cards |
+| `/en`, `/ga` | ✅ 200 | Locale switcher works |
+| `/en/stages/primary` | ✅ 200 | Stage detail |
+| `/en/leaving-cert/biology`, `/business`, etc. | ✅ 200 | Shared component renders correctly |
+| `/exams`, `/lakehouse`, `/runs` | ❌ 404 | Sidebar links to these but no route files exist — pre-existing dead links |
+| `/en/matriculation-auditor` | ❌ 500 | References missing `../utils/orpc` module — pre-existing code issue |
+| `/ga/céimeanna` | ✅ 200 | GA stages index |
+
