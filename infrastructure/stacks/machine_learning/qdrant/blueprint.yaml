@@ -7,7 +7,7 @@ private-resources:
     name: "Qdrant"
     full-domain: "qdrant.cianfhoghlaim.ie"
     mode: http
-    destination-port: 6333
+    destination: qdrant:6333
     protocol: http
     sites:
       - arm1-oci

@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.vaultwarden.name=Vaultwarden"
       - "pangolin.private-resources.vaultwarden.mode=http"
       - "pangolin.private-resources.vaultwarden.full-domain=vault.cianfhoghlaim.ie"
-      - "pangolin.private-resources.vaultwarden.destination-port=8080"
+      - "pangolin.private-resources.vaultwarden.destination=vaultwarden:8080"
       - "pangolin.private-resources.vaultwarden.protocol=http"
       - "pangolin.private-resources.vaultwarden.roles[0]=Member"

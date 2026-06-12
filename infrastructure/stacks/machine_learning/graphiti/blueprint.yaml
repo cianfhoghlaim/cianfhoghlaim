@@ -3,7 +3,7 @@ private-resources:
     name: "Graphiti"
     full-domain: "graphiti.cianfhoghlaim.ie"
     mode: http
-    destination-port: 8080
+    destination: graphiti:8080
     protocol: http
     sites:
       - arm1-oci

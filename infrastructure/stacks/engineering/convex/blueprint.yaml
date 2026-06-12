@@ -9,7 +9,7 @@ private-resources:
     name: "Convex Backend API"
     full-domain: "convex-api.cianfhoghlaim.ie"
     mode: http
-    destination-port: 3210
+    destination: convex-backend:3210
     protocol: http
     sites:
       - bunchloch
@@ -20,7 +20,7 @@ private-resources:
     name: "Convex Site"
     full-domain: "convex-site.cianfhoghlaim.ie"
     mode: http
-    destination-port: 3211
+    destination: convex-site:3211
     protocol: http
     sites:
       - bunchloch
@@ -31,7 +31,7 @@ private-resources:
     name: "Convex Dashboard"
     full-domain: "convex.cianfhoghlaim.ie"
     mode: http
-    destination-port: 6791
+    destination: convex-dashboard:6791
     protocol: http
     sites:
       - bunchloch

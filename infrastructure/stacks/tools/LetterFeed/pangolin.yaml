@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.LetterFeed.name=Letterfeed"
       - "pangolin.private-resources.LetterFeed.mode=http"
       - "pangolin.private-resources.LetterFeed.full-domain=LetterFeed.cianfhoghlaim.ie"
-      - "pangolin.private-resources.LetterFeed.destination-port=8080"
+      - "pangolin.private-resources.LetterFeed.destination=LetterFeed:8080"
       - "pangolin.private-resources.LetterFeed.protocol=http"
       - "pangolin.private-resources.LetterFeed.roles[0]=Member"

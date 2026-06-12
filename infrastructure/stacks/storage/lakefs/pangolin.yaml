@@ -5,7 +5,7 @@ services:
     labels:
       - "pangolin.private-resources.lakefs.name=LakeFS"
       - "pangolin.private-resources.lakefs.mode=http"
-      - "pangolin.private-resources.lakefs.destination-port=8000"
+      - "pangolin.private-resources.lakefs.destination=lakefs:8000"
       - "pangolin.private-resources.lakefs.protocol=http"
       - "pangolin.private-resources.lakefs.roles[0]=Member"
       - "pangolin.private-resources.lakefs.full-domain=lakefs.cianfhoghlaim.ie"

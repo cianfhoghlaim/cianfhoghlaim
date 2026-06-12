@@ -3,7 +3,7 @@ private-resources:
     name: "Kapowarr"
     mode: http
     full-domain: "Kapowarr.cianfhoghlaim.ie"
-    destination-port: 8080
+    destination: Kapowarr:8080
     protocol: http
     sites:
       - arm1-oci

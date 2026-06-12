@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.skyvern.name=Skyvern"
       - "pangolin.private-resources.skyvern.mode=http"
       - "pangolin.private-resources.skyvern.full-domain=skyvern.cianfhoghlaim.ie"
-      - "pangolin.private-resources.skyvern.destination-port=8080"
+      - "pangolin.private-resources.skyvern.destination=skyvern:8080"
       - "pangolin.private-resources.skyvern.protocol=http"
       - "pangolin.private-resources.skyvern.roles[0]=Member"

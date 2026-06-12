@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.stirling-pdf.name=Stirling PDF"
       - "pangolin.private-resources.stirling-pdf.mode=http"
       - "pangolin.private-resources.stirling-pdf.full-domain=stirling-pdf.cianfhoghlaim.ie"
-      - "pangolin.private-resources.stirling-pdf.destination-port=8080"
+      - "pangolin.private-resources.stirling-pdf.destination=stirling-pdf:8080"
       - "pangolin.private-resources.stirling-pdf.protocol=http"
       - "pangolin.private-resources.stirling-pdf.roles[0]=Member"

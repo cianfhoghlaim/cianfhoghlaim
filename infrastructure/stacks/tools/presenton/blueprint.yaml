@@ -3,7 +3,7 @@ private-resources:
     name: "Presenton"
     mode: http
     full-domain: "presenton.cianfhoghlaim.ie"
-    destination-port: 8080
+    destination: presenton:8080
     protocol: http
     sites:
       - arm1-oci
