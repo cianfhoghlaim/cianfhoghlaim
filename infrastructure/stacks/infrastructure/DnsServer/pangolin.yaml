@@ -3,7 +3,7 @@ services:
     labels:
       - "pangolin.private-resources.DnsServer.name=Dnsserver"
       - "pangolin.private-resources.DnsServer.mode=http"
-      - "pangolin.private-resources.DnsServer.destination=DnsServer:8080"
+      - "pangolin.private-resources.DnsServer.destination-port=8080"
       - "pangolin.private-resources.DnsServer.protocol=http"
       - "pangolin.private-resources.DnsServer.roles[0]=Member"
 

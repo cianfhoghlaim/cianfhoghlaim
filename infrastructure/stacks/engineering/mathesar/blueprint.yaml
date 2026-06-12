@@ -7,7 +7,7 @@ private-resources:
     name: "Mathesar"
     full-domain: "mathesar.cianfhoghlaim.ie"
     mode: http
-    destination: mathesar:8000
+    destination-port: 8000
     protocol: http
     sites:
       - arm1-oci

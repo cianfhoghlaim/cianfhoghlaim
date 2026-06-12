@@ -3,7 +3,7 @@ private-resources:
     name: "Windmill"
     mode: http
     full-domain: "windmill.cianfhoghlaim.ie"
-    destination: windmill:8080
+    destination-port: 8080
     protocol: http
     sites:
       - arm1-oci

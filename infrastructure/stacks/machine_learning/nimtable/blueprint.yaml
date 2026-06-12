@@ -7,7 +7,7 @@ private-resources:
     name: "Nimtable"
     full-domain: "nimtable.cianfhoghlaim.ie"
     mode: http
-    destination: nimtable:3000
+    destination-port: 3000
     protocol: http
     sites:
       - arm1-oci

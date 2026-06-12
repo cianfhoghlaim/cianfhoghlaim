@@ -3,7 +3,7 @@ private-resources:
     name: "MLX-Omni"
     mode: http
     full-domain: "mlxomni.cianfhoghlaim.ie"
-    destination: mlxomni:10240
+    destination-port: 10240
     protocol: http
     sites:
       - arm1-oci

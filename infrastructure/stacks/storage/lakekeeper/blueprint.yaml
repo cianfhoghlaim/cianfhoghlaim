@@ -7,7 +7,7 @@ private-resources:
     name: "Lakekeeper"
     full-domain: "lakekeeper.cianfhoghlaim.ie"
     mode: http
-    destination: lakekeeper:8181
+    destination-port: 8181
     protocol: http
     sites:
       - bunchloch

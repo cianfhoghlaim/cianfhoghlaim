@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.romm.name=Romm"
       - "pangolin.private-resources.romm.mode=http"
       - "pangolin.private-resources.romm.full-domain=romm.cianfhoghlaim.ie"
-      - "pangolin.private-resources.romm.destination=romm:8080"
+      - "pangolin.private-resources.romm.destination-port=8080"
       - "pangolin.private-resources.romm.protocol=http"
       - "pangolin.private-resources.romm.roles[0]=Member"

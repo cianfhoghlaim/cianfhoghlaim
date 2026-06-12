@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.backrest.name=Backrest (Restic UI)"
       - "pangolin.private-resources.backrest.mode=http"
       - "pangolin.private-resources.backrest.full-domain=backrest.cianfhoghlaim.ie"
-      - "pangolin.private-resources.backrest.destination=backrest:9898"
+      - "pangolin.private-resources.backrest.destination-port=9898"
       - "pangolin.private-resources.backrest.protocol=http"
       - "pangolin.private-resources.backrest.roles[0]=Member"

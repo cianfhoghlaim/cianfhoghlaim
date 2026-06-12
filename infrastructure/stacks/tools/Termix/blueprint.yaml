@@ -3,7 +3,7 @@ private-resources:
     name: "Termix"
     mode: http
     full-domain: "termix.cianfhoghlaim.ie"
-    destination: termix:3000
+    destination-port: 3000
     protocol: http
     sites: [arm1-oci]
     roles: [Member]

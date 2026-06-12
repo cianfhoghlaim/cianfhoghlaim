@@ -3,7 +3,7 @@ private-resources:
     name: "InvokeAI"
     mode: http
     full-domain: "invokeai.cianfhoghlaim.ie"
-    destination: invokeai:9090
+    destination-port: 9090
     protocol: http
     sites:
       - arm1-oci

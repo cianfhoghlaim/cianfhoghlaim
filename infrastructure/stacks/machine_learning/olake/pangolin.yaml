@@ -3,7 +3,7 @@ services:
     labels:
       - "pangolin.private-resources.olake.name=Olake"
       - "pangolin.private-resources.olake.mode=http"
-      - "pangolin.private-resources.olake.destination=olake:8080"
+      - "pangolin.private-resources.olake.destination-port=8080"
       - "pangolin.private-resources.olake.protocol=http"
       - "pangolin.private-resources.olake.roles[0]=Member"
 

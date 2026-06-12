@@ -3,7 +3,7 @@ private-resources:
     name: "croilar Web"
     mode: http
     full-domain: "web.croilar.cianfhoghlaim.ie"
-    destination: croilar-web:3000
+    destination-port: 3000
     protocol: http
     sites:
       - arm1-oci

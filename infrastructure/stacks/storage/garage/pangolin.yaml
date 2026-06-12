@@ -11,7 +11,7 @@ services:
 
       - "pangolin.private-resources.garage-web.name=Garage Web"
       - "pangolin.private-resources.garage-web.mode=http"
-      - "pangolin.private-resources.garage-web.destination=garage-web:3903"
+      - "pangolin.private-resources.garage-web.destination-port=3903"
       - "pangolin.private-resources.garage-web.protocol=http"
       - "pangolin.private-resources.garage-web.roles[0]=Member"
       - "pangolin.private-resources.garage-web.full-domain=garage.cianfhoghlaim.ie"

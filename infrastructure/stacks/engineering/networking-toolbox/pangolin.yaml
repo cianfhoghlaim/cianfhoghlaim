@@ -3,7 +3,7 @@ services:
     labels:
       - "pangolin.private-resources.networking-toolbox.name=Networking-toolbox"
       - "pangolin.private-resources.networking-toolbox.mode=http"
-      - "pangolin.private-resources.networking-toolbox.destination=networking-toolbox:8080"
+      - "pangolin.private-resources.networking-toolbox.destination-port=8080"
       - "pangolin.private-resources.networking-toolbox.protocol=http"
       - "pangolin.private-resources.networking-toolbox.roles[0]=Member"
 

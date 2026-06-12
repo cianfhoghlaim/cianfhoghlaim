@@ -3,7 +3,7 @@ private-resources:
     name: "SearXNG (Privacy Meta-Search)"
     mode: http
     full-domain: "search.cianfhoghlaim.ie"
-    destination: searxng:8888
+    destination-port: 8888
     protocol: http
     sites: [arm1-oci]
     roles: [Member]

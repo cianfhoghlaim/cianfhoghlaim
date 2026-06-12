@@ -3,7 +3,7 @@ private-resources:
     name: "Unstract (LLM Doc Pipeline)"
     mode: http
     full-domain: "unstract.cianfhoghlaim.ie"
-    destination: unstract:8002
+    destination-port: 8002
     protocol: http
     sites: [arm1-oci]
     roles: [Member]

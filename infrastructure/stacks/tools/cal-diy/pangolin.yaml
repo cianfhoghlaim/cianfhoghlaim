@@ -4,14 +4,6 @@ services:
       - "pangolin.private-resources.cal-diy.name=cal-diy Scheduling"
       - "pangolin.private-resources.cal-diy.mode=http"
       - "pangolin.private-resources.cal-diy.full-domain=calcom.cianfhoghlaim.ie"
-      # `destination` is the new label form (host:port). The
-      # legacy `destination-port` is rejected by the newt
-      # blueprint validator with "Invalid input: expected
-      # string, received undefined at
-      # private-resources.cal-diy.destination". Host is the
-      # `calcom-web` container_name (see compose.yaml) so the
-      # newt on arm1-oci can DNS-resolve it on the shared
-      # network.
-      - "pangolin.private-resources.cal-diy.destination=calcom-web:3000"
+      - "pangolin.private-resources.cal-diy.destination-port=3000"
       - "pangolin.private-resources.cal-diy.protocol=http"
       - "pangolin.private-resources.cal-diy.roles[0]=Member"
