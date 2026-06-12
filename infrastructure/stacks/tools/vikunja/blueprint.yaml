@@ -1,11 +1,13 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
   vikunja:
     name: "Vikunja Team Workspace"
-    mode: http
-    full-domain: "vikunja.cianfhoghlaim.ie"
+    mode: "http"
+    destination: "vikunja"
     destination-port: 3456
-    protocol: http
-    sites:
-      - arm1-oci
+    full-domain: "vikunja.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
+      - "Member"
+

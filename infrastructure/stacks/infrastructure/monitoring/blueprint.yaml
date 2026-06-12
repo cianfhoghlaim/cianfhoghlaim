@@ -1,31 +1,33 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
-  grafana:
-    name: "Grafana Monitoring"
-    mode: http
-    full-domain: "grafana.cianfhoghlaim.ie"
-    destination-port: 3000
-    protocol: http
-    sites:
-      - arm1-oci
-    roles:
-      - Member
-  prometheus:
-    name: "Prometheus"
-    mode: http
-    full-domain: "prometheus.cianfhoghlaim.ie"
-    destination-port: 9090
-    protocol: http
-    sites:
-      - arm1-oci
-    roles:
-      - Member
   alertmanager:
     name: "Alertmanager"
-    mode: http
-    full-domain: "alerts.cianfhoghlaim.ie"
+    mode: "http"
     destination-port: 9093
-    protocol: http
-    sites:
-      - arm1-oci
+    full-domain: "alerts.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
+      - "Member"
+    destination: "alertmanager"
+
+  grafana:
+    name: "Grafana Monitoring"
+    mode: "http"
+    destination-port: 3000
+    full-domain: "grafana.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "grafana"
+
+  prometheus:
+    name: "Prometheus"
+    mode: "http"
+    destination-port: 9090
+    full-domain: "prometheus.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "prometheus"
+

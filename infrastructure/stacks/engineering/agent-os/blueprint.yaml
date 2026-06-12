@@ -1,51 +1,53 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
-  oideachais-agentos:
-    name: "oideachais AgentOS"
-    mode: http
-    full-domain: "agents.oideachais.cianfhoghlaim.ie"
+  aleyum-agentos:
+    name: "aleyum AgentOS (legacy)"
+    mode: "http"
     destination-port: 7777
-    protocol: http
-    sites:
-      - arm1-oci
+    full-domain: "agents.aleyum.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
-  crypteolas-agentos:
-    name: "crypteolas AgentOS"
-    mode: http
-    full-domain: "agents.crypteolas.cianfhoghlaim.ie"
-    destination-port: 7777
-    protocol: http
-    sites:
-      - arm1-oci
-    roles:
-      - Member
+      - "Member"
+    destination: "aleyum-agentos"
+
   browser-agentos:
     name: "browser AgentOS"
-    mode: http
+    mode: "http"
+    destination-port: 7777
     full-domain: "agents.browser.cianfhoghlaim.ie"
-    destination-port: 7777
-    protocol: http
-    sites:
-      - arm1-oci
+    protocol: "http"
     roles:
-      - Member
-  aleyum-agentos:  # TODO: legacy alias, remove once croilar-agentos is provisioned
-    name: "aleyum AgentOS (legacy)"
-    mode: http
-    full-domain: "agents.aleyum.cianfhoghlaim.ie"
-    destination-port: 7777
-    protocol: http
-    sites:
-      - arm1-oci
-    roles:
-      - Member
+      - "Member"
+    destination: "browser-agentos"
+
   croilar-agentos:
     name: "croilar AgentOS"
-    mode: http
-    full-domain: "agents.croilar.cianfhoghlaim.ie"
+    mode: "http"
     destination-port: 7777
-    protocol: http
-    sites:
-      - arm1-oci
+    full-domain: "agents.croilar.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
+      - "Member"
+    destination: "croilar-agentos"
+
+  crypteolas-agentos:
+    name: "crypteolas AgentOS"
+    mode: "http"
+    destination-port: 7777
+    full-domain: "agents.crypteolas.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "crypteolas-agentos"
+
+  oideachais-agentos:
+    name: "oideachais AgentOS"
+    mode: "http"
+    destination-port: 7777
+    full-domain: "agents.oideachais.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "oideachais-agentos"
+

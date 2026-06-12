@@ -1,15 +1,13 @@
-# =============================================================================
-# LANCEDB - Pangolin Blueprint
-# =============================================================================
-
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
   lancedb:
     name: "LanceDB Viewer"
-    full-domain: "lancedb.cianfhoghlaim.ie"
-    mode: http
+    mode: "http"
     destination-port: 8080
-    protocol: http
-    sites:
-      - arm1-oci
+    full-domain: "lancedb.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
+      - "Member"
+    destination: "lancedb"
+

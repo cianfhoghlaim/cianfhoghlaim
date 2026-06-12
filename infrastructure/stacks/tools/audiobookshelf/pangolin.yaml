@@ -1,9 +1,0 @@
-services:
-  main-service:
-    labels:
-      - "pangolin.private-resources.audiobookshelf.name=Audiobookshelf"
-      - "pangolin.private-resources.audiobookshelf.mode=http"
-      - "pangolin.private-resources.audiobookshelf.full-domain=audiobookshelf.cianfhoghlaim.ie"
-      - "pangolin.private-resources.audiobookshelf.destination-port=8080"
-      - "pangolin.private-resources.audiobookshelf.protocol=http"
-      - "pangolin.private-resources.audiobookshelf.roles[0]=Member"

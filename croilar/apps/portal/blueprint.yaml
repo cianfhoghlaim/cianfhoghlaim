@@ -2,8 +2,9 @@ private-resources:
   croilar-portal:
     name: "croilar Portal"
     mode: http
-    full-domain: "portal.croilar.cianfhoghlaim.ie"
+    destination: "aleyum-portal"
     destination-port: 3000
+    full-domain: "portal.croilar.cianfhoghlaim.ie"
     protocol: http
     sites:
       - arm1-oci

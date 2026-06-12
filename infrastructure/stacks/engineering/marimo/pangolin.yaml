@@ -1,9 +1,0 @@
-services:
-  marimo:
-    labels:
-      - "pangolin.private-resources.marimo.name=Marimo"
-      - "pangolin.private-resources.marimo.mode=http"
-      - "pangolin.private-resources.marimo.full-domain=marimo.cianfhoghlaim.ie"
-      - "pangolin.private-resources.marimo.destination-port=2718"
-      - "pangolin.private-resources.marimo.protocol=http"
-      - "pangolin.private-resources.marimo.roles[0]=Member"

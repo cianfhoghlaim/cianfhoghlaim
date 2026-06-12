@@ -1,11 +1,13 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
   docling:
     name: "Docling Serve"
-    mode: http
-    full-domain: "docling.cianfhoghlaim.ie"
+    mode: "http"
     destination-port: 5001
-    protocol: http
-    sites:
-      - arm1-oci
+    full-domain: "docling.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
+      - "Member"
+    destination: "docling"
+

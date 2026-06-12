@@ -1,15 +1,13 @@
-# =============================================================================
-# NIMTABLE - Pangolin Blueprint
-# =============================================================================
-
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
   nimtable:
     name: "Nimtable"
-    full-domain: "nimtable.cianfhoghlaim.ie"
-    mode: http
+    mode: "http"
     destination-port: 3000
-    protocol: http
-    sites:
-      - arm1-oci
+    full-domain: "nimtable.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
+      - "Member"
+    destination: "nimtable"
+

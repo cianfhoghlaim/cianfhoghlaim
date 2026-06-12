@@ -1,11 +1,13 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
   croilar-web:
     name: "croilar Web"
-    mode: http
-    full-domain: "web.croilar.cianfhoghlaim.ie"
+    mode: "http"
     destination-port: 3000
-    protocol: http
-    sites:
-      - arm1-oci
+    full-domain: "web.croilar.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
+      - "Member"
+    destination: "croilar-web"
+

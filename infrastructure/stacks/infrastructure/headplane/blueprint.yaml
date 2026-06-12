@@ -1,9 +1,13 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
   headplane:
-    name: "Headplane (Web UI)"
-    mode: http
-    full-domain: "hp.cianfhoghlaim.ie"
+    name: "Headplane"
+    mode: "http"
     destination-port: 3000
-    protocol: http
-    sites: [arm1-oci]
-    roles: [Member]
+    full-domain: "hp.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "headplane"
+

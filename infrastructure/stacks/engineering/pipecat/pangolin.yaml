@@ -1,9 +1,0 @@
-services:
-  pipecat:
-    labels:
-      - "pangolin.private-resources.pipecat.name=Pipecat (Voice AI)"
-      - "pangolin.private-resources.pipecat.mode=http"
-      - "pangolin.private-resources.pipecat.full-domain=pipecat.cianfhoghlaim.ie"
-      - "pangolin.private-resources.pipecat.destination-port=8765"
-      - "pangolin.private-resources.pipecat.protocol=http"
-      - "pangolin.private-resources.pipecat.roles[0]=Member"

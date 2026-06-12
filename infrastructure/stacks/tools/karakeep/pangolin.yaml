@@ -1,9 +1,0 @@
-services:
-  karakeep:
-    labels:
-      - "pangolin.private-resources.karakeep.name=Karakeep (Bookmarks)"
-      - "pangolin.private-resources.karakeep.mode=http"
-      - "pangolin.private-resources.karakeep.full-domain=karakeep.cianfhoghlaim.ie"
-      - "pangolin.private-resources.karakeep.destination-port=3000"
-      - "pangolin.private-resources.karakeep.protocol=http"
-      - "pangolin.private-resources.karakeep.roles[0]=Member"

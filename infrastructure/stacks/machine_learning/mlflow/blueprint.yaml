@@ -1,17 +1,13 @@
-# =============================================================================
-# MLFLOW - Pangolin Blueprint
-# =============================================================================
-# Defines private routing for MLflow via Pangolin/Newt.
-# =============================================================================
-
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
   mlflow:
     name: "MLflow"
-    full-domain: "mlflow.cianfhoghlaim.ie"
-    mode: http
+    mode: "http"
     destination-port: 5000
-    protocol: http
-    sites:
-      - arm1-oci
+    full-domain: "mlflow.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
+      - "Member"
+    destination: "mlflow"
+

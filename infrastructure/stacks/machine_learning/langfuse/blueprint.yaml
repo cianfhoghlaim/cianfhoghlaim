@@ -1,11 +1,13 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
   langfuse:
     name: "Langfuse"
-    full-domain: "langfuse.cianfhoghlaim.ie"
-    mode: http
+    mode: "http"
     destination-port: 8080
-    protocol: http
-    sites:
-      - arm1-oci
+    full-domain: "langfuse.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
+      - "Member"
+    destination: "langfuse"
+

@@ -1,9 +1,13 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
   paddleocr:
     name: "PaddleOCR"
-    mode: http
-    full-domain: "paddleocr.cianfhoghlaim.ie"
+    mode: "http"
     destination-port: 8000
-    protocol: http
-    sites: [arm1-oci]
-    roles: [Member]
+    full-domain: "paddleocr.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "paddleocr"
+
