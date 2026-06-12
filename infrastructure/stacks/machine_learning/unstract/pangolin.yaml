@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.unstract.name=Unstract"
       - "pangolin.private-resources.unstract.mode=http"
       - "pangolin.private-resources.unstract.full-domain=unstract.cianfhoghlaim.ie"
-      - "pangolin.private-resources.unstract.destination=unstract:8002"
+      - "pangolin.private-resources.unstract.destination-port=8002"
       - "pangolin.private-resources.unstract.protocol=http"
       - "pangolin.private-resources.unstract.roles[0]=Member"

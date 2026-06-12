@@ -3,7 +3,7 @@ services:
     labels:
       - "pangolin.private-resources.DevDocs.name=Devdocs"
       - "pangolin.private-resources.DevDocs.mode=http"
-      - "pangolin.private-resources.DevDocs.destination=DevDocs:8080"
+      - "pangolin.private-resources.DevDocs.destination-port=8080"
       - "pangolin.private-resources.DevDocs.protocol=http"
       - "pangolin.private-resources.DevDocs.roles[0]=Member"
 

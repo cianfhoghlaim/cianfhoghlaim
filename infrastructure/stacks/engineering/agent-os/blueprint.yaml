@@ -3,7 +3,7 @@ private-resources:
     name: "oideachais AgentOS"
     mode: http
     full-domain: "agents.oideachais.cianfhoghlaim.ie"
-    destination: oideachais-agentos:7777
+    destination-port: 7777
     protocol: http
     sites:
       - arm1-oci
@@ -13,7 +13,7 @@ private-resources:
     name: "crypteolas AgentOS"
     mode: http
     full-domain: "agents.crypteolas.cianfhoghlaim.ie"
-    destination: crypteolas-agentos:7777
+    destination-port: 7777
     protocol: http
     sites:
       - arm1-oci
@@ -23,7 +23,7 @@ private-resources:
     name: "browser AgentOS"
     mode: http
     full-domain: "agents.browser.cianfhoghlaim.ie"
-    destination: browser-agentos:7777
+    destination-port: 7777
     protocol: http
     sites:
       - arm1-oci
@@ -33,7 +33,7 @@ private-resources:
     name: "aleyum AgentOS (legacy)"
     mode: http
     full-domain: "agents.aleyum.cianfhoghlaim.ie"
-    destination: browser-agentos:7777
+    destination-port: 7777
     protocol: http
     sites:
       - arm1-oci
@@ -43,7 +43,7 @@ private-resources:
     name: "croilar AgentOS"
     mode: http
     full-domain: "agents.croilar.cianfhoghlaim.ie"
-    destination: croilar-agentos:7777
+    destination-port: 7777
     protocol: http
     sites:
       - arm1-oci

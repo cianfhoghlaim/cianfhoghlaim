@@ -5,7 +5,7 @@ services:
     labels:
       - "pangolin.private-resources.lakekeeper.name=Lakekeeper"
       - "pangolin.private-resources.lakekeeper.mode=http"
-      - "pangolin.private-resources.lakekeeper.destination=lakekeeper:8181"
+      - "pangolin.private-resources.lakekeeper.destination-port=8181"
       - "pangolin.private-resources.lakekeeper.protocol=http"
       - "pangolin.private-resources.lakekeeper.roles[0]=Member"
       - "pangolin.private-resources.lakekeeper.full-domain=lakekeeper.cianfhoghlaim.ie"

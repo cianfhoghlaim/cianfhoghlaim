@@ -26,7 +26,7 @@ services:
 
       - "pangolin.private-resources.lakehouse-admin.name=Lakehouse Admin"
       - "pangolin.private-resources.lakehouse-admin.mode=http"
-      - "pangolin.private-resources.lakehouse-admin.destination=lakehouse-admin:3903"
+      - "pangolin.private-resources.lakehouse-admin.destination-port=3903"
       - "pangolin.private-resources.lakehouse-admin.protocol=http"
       - "pangolin.private-resources.lakehouse-admin.roles[0]=Member"
       - "pangolin.private-resources.lakehouse-admin.full-domain=lakehouse-admin.cianfhoghlaim.ie"
@@ -35,7 +35,7 @@ services:
     labels:
       - "pangolin.private-resources.lakekeeper.name=Lakekeeper REST Catalog"
       - "pangolin.private-resources.lakekeeper.mode=http"
-      - "pangolin.private-resources.lakekeeper.destination=lakekeeper:8181"
+      - "pangolin.private-resources.lakekeeper.destination-port=8181"
       - "pangolin.private-resources.lakekeeper.protocol=http"
       - "pangolin.private-resources.lakekeeper.roles[0]=Member"
       - "pangolin.private-resources.lakekeeper.full-domain=lakekeeper.cianfhoghlaim.ie"
@@ -44,7 +44,7 @@ services:
     labels:
       - "pangolin.private-resources.lance-api.name=Lance Namespace API"
       - "pangolin.private-resources.lance-api.mode=http"
-      - "pangolin.private-resources.lance-api.destination=lance-api:8182"
+      - "pangolin.private-resources.lance-api.destination-port=8182"
       - "pangolin.private-resources.lance-api.protocol=http"
       - "pangolin.private-resources.lance-api.roles[0]=Member"
       - "pangolin.private-resources.lance-api.full-domain=lance-api.cianfhoghlaim.ie"

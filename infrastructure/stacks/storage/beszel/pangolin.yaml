@@ -5,7 +5,7 @@ services:
     labels:
       - "pangolin.private-resources.beszel.name=Beszel"
       - "pangolin.private-resources.beszel.mode=http"
-      - "pangolin.private-resources.beszel.destination=beszel:8090"
+      - "pangolin.private-resources.beszel.destination-port=8090"
       - "pangolin.private-resources.beszel.protocol=http"
       - "pangolin.private-resources.beszel.roles[0]=Member"
       - "pangolin.private-resources.beszel.full-domain=beszel.cianfhoghlaim.ie"

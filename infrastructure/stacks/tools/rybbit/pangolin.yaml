@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.rybbit.name=Rybbit"
       - "pangolin.private-resources.rybbit.mode=http"
       - "pangolin.private-resources.rybbit.full-domain=rybbit.cianfhoghlaim.ie"
-      - "pangolin.private-resources.rybbit.destination=rybbit:8080"
+      - "pangolin.private-resources.rybbit.destination-port=8080"
       - "pangolin.private-resources.rybbit.protocol=http"
       - "pangolin.private-resources.rybbit.roles[0]=Member"

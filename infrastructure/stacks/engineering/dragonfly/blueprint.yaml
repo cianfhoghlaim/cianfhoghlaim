@@ -3,7 +3,7 @@ private-resources:
     name: "Dragonfly (Redis-compatible)"
     mode: tcp
     full-domain: "dragonfly.cianfhoghlaim.ie"
-    destination: dragonfly:6379
+    destination-port: 6379
     protocol: tcp
     sites: [arm1-oci]
     roles: [Member]

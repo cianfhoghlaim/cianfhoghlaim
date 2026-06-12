@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.litellm.name=LiteLLM Gateway"
       - "pangolin.private-resources.litellm.mode=http"
       - "pangolin.private-resources.litellm.full-domain=litellm.cianfhoghlaim.ie"
-      - "pangolin.private-resources.litellm.destination=litellm:4000"
+      - "pangolin.private-resources.litellm.destination-port=4000"
       - "pangolin.private-resources.litellm.protocol=http"
       - "pangolin.private-resources.litellm.roles[0]=Member"

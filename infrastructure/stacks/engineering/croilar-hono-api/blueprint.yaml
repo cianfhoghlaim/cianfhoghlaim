@@ -3,7 +3,7 @@ private-resources:
     name: "Croílár Auth API"
     mode: http
     full-domain: "auth.croilar.cianfhoghlaim.ie"
-    destination: croilar-hono-api:4000
+    destination-port: 4000
     protocol: http
     sites:
       - arm1-oci

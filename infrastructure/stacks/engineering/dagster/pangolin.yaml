@@ -4,7 +4,7 @@ services:
       - "pangolin.private-resources.dagster.name=Dagster Unified"
       - "pangolin.private-resources.dagster.mode=http"
       - "pangolin.private-resources.dagster.full-domain=dagster.cianfhoghlaim.ie"
-      - "pangolin.private-resources.dagster.destination=dagster:3000"
+      - "pangolin.private-resources.dagster.destination-port=3000"
       - "pangolin.private-resources.dagster.protocol=http"
       - "pangolin.private-resources.dagster.roles[0]=Member"
   dagster-daemon:
@@ -12,6 +12,6 @@ services:
       - "pangolin.private-resources.dagster-daemon.name=Dagster Daemon"
       - "pangolin.private-resources.dagster-daemon.mode=http"
       - "pangolin.private-resources.dagster-daemon.full-domain=dagster-daemon.cianfhoghlaim.ie"
-      - "pangolin.private-resources.dagster-daemon.destination=dagster-daemon:3000"
+      - "pangolin.private-resources.dagster-daemon.destination-port=3000"
       - "pangolin.private-resources.dagster-daemon.protocol=http"
       - "pangolin.private-resources.dagster-daemon.roles[0]=Member"

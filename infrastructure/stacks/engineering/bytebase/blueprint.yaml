@@ -3,7 +3,7 @@ private-resources:
     name: "Bytebase (DB CI/CD)"
     mode: http
     full-domain: "bytebase.cianfhoghlaim.ie"
-    destination: bytebase:5670
+    destination-port: 5670
     protocol: http
     sites:
       - arm1-oci

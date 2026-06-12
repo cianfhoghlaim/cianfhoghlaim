@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.MCPJungle.name=Mcpjungle"
       - "pangolin.private-resources.MCPJungle.mode=http"
       - "pangolin.private-resources.MCPJungle.full-domain=MCPJungle.cianfhoghlaim.ie"
-      - "pangolin.private-resources.MCPJungle.destination=MCPJungle:8080"
+      - "pangolin.private-resources.MCPJungle.destination-port=8080"
       - "pangolin.private-resources.MCPJungle.protocol=http"
       - "pangolin.private-resources.MCPJungle.roles[0]=Member"
