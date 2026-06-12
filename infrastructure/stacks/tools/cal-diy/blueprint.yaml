@@ -3,7 +3,11 @@ private-resources:
     name: "cal-diy Scheduling"
     mode: http
     full-domain: "calcom.cianfhoghlaim.ie"
-    destination-port: 3000
+    # destination is HOST:PORT. The host is the
+    # `calcom-web` container_name (see compose.yaml) so the
+    # newt on arm1-oci can DNS-resolve it on the shared
+    # network.
+    destination: calcom-web:3000
     protocol: http
     sites:
       - arm1-oci

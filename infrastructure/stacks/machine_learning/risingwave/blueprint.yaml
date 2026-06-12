@@ -3,7 +3,7 @@ private-resources:
     name: "RisingWave (PostgreSQL wire protocol :4566)"
     mode: http
     full-domain: "risingwave.cianfhoghlaim.ie"
-    destination-port: 4566
+    destination: risingwave:4566
     protocol: http
     sites:
       - arm1-oci
@@ -14,7 +14,7 @@ private-resources:
     name: "RisingWave Dashboard"
     mode: http
     full-domain: "risingwavedb.cianfhoghlaim.ie"
-    destination-port: 5691
+    destination: risingwavedb:5691
     protocol: http
     sites:
       - arm1-oci

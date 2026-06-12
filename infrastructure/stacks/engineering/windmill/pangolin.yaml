@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.windmill.name=Windmill"
       - "pangolin.private-resources.windmill.mode=http"
       - "pangolin.private-resources.windmill.full-domain=windmill.cianfhoghlaim.ie"
-      - "pangolin.private-resources.windmill.destination-port=8080"
+      - "pangolin.private-resources.windmill.destination=windmill:8080"
       - "pangolin.private-resources.windmill.protocol=http"
       - "pangolin.private-resources.windmill.roles[0]=Member"

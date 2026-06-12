@@ -3,8 +3,7 @@ services:
     labels:
       - "pangolin.private-resources.vikunja.name=Vikunja Team Workspace"
       - "pangolin.private-resources.vikunja.mode=http"
-      - "pangolin.private-resources.vikunja.destination=vikunja"
+      - "pangolin.private-resources.vikunja.destination=vikunja:3456"
       - "pangolin.private-resources.vikunja.full-domain=vikunja.cianfhoghlaim.ie"
-      - "pangolin.private-resources.vikunja.destination-port=3456"
       - "pangolin.private-resources.vikunja.protocol=http"
       - "pangolin.private-resources.vikunja.roles[0]=Member"

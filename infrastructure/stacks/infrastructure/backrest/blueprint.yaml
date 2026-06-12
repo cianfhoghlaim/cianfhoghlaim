@@ -3,7 +3,7 @@ private-resources:
     name: "Backrest (Restic UI)"
     mode: http
     full-domain: "backrest.cianfhoghlaim.ie"
-    destination-port: 9898
+    destination: backrest:9898
     protocol: http
     sites:
       - arm1-oci

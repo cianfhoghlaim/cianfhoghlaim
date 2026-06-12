@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.termix.name=Termix"
       - "pangolin.private-resources.termix.mode=http"
       - "pangolin.private-resources.termix.full-domain=termix.cianfhoghlaim.ie"
-      - "pangolin.private-resources.termix.destination-port=3000"
+      - "pangolin.private-resources.termix.destination=termix:3000"
       - "pangolin.private-resources.termix.protocol=http"
       - "pangolin.private-resources.termix.roles[0]=Member"

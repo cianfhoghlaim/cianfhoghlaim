@@ -3,7 +3,7 @@ private-resources:
     name: "Blinko"
     mode: http
     full-domain: "blinko.cianfhoghlaim.ie"
-    destination-port: 8080
+    destination: blinko:8080
     protocol: http
     sites:
       - arm1-oci

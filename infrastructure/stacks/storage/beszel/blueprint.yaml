@@ -7,7 +7,7 @@ private-resources:
     name: "Beszel"
     full-domain: "beszel.cianfhoghlaim.ie"
     mode: http
-    destination-port: 8090
+    destination: beszel:8090
     protocol: http
     sites:
       - arm1-oci

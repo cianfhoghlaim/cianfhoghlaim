@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.Kapowarr.name=Kapowarr"
       - "pangolin.private-resources.Kapowarr.mode=http"
       - "pangolin.private-resources.Kapowarr.full-domain=Kapowarr.cianfhoghlaim.ie"
-      - "pangolin.private-resources.Kapowarr.destination-port=8080"
+      - "pangolin.private-resources.Kapowarr.destination=Kapowarr:8080"
       - "pangolin.private-resources.Kapowarr.protocol=http"
       - "pangolin.private-resources.Kapowarr.roles[0]=Member"

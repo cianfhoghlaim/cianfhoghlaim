@@ -3,7 +3,7 @@ private-resources:
     name: "croilar Dagster"
     mode: http
     full-domain: "dagster.croilar.cianfhoghlaim.ie"
-    destination-port: 3000
+    destination: croilar-dagster:3000
     protocol: http
     sites:
       - arm1-oci

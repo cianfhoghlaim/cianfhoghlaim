@@ -5,7 +5,7 @@ services:
     labels:
       - "pangolin.private-resources.lancedb.name=LanceDB Viewer"
       - "pangolin.private-resources.lancedb.mode=http"
-      - "pangolin.private-resources.lancedb.destination-port=8080"
+      - "pangolin.private-resources.lancedb.destination=lancedb:8080"
       - "pangolin.private-resources.lancedb.protocol=http"
       - "pangolin.private-resources.lancedb.roles[0]=Member"
       - "pangolin.private-resources.lancedb.full-domain=lancedb.cianfhoghlaim.ie"

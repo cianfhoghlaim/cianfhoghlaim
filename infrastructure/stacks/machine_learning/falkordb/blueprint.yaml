@@ -7,7 +7,7 @@ private-resources:
     name: "FalkorDB Browser"
     full-domain: "falkordb.cianfhoghlaim.ie"
     mode: http
-    destination-port: 3000
+    destination: falkordb:3000
     protocol: http
     sites:
       - arm1-oci

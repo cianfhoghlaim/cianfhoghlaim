@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.blinko.name=Blinko"
       - "pangolin.private-resources.blinko.mode=http"
       - "pangolin.private-resources.blinko.full-domain=blinko.cianfhoghlaim.ie"
-      - "pangolin.private-resources.blinko.destination-port=8080"
+      - "pangolin.private-resources.blinko.destination=blinko:8080"
       - "pangolin.private-resources.blinko.protocol=http"
       - "pangolin.private-resources.blinko.roles[0]=Member"

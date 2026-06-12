@@ -3,7 +3,7 @@ private-resources:
     name: "Marimo Notebooks"
     mode: http
     full-domain: "marimo.cianfhoghlaim.ie"
-    destination-port: 2718
+    destination: marimo:2718
     protocol: http
     sites: [arm1-oci]
     roles: [Member]

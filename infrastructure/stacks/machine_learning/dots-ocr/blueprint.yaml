@@ -3,7 +3,7 @@ private-resources:
     name: "DotsOCR"
     mode: http
     full-domain: "dotsocr.cianfhoghlaim.ie"
-    destination-port: 8001
+    destination: dotsocr:8001
     protocol: http
     sites: [arm1-oci]
     roles: [Member]

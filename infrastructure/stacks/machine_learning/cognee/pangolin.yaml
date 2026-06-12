@@ -11,7 +11,6 @@ services:
       - "pangolin.private-resources.cognee.name=Cianfhoghlaim Cognee KG"
       - "pangolin.private-resources.cognee.mode=http"
       - "pangolin.private-resources.cognee.full-domain=cognee.cianfhoghlaim.ie"
-      - "pangolin.private-resources.cognee.destination=cognee"
-      - "pangolin.private-resources.cognee.destination-port=8000"
+      - "pangolin.private-resources.cognee.destination=cognee:8000"
       - "pangolin.private-resources.cognee.protocol=http"
       - "pangolin.private-resources.cognee.roles[0]=Member"

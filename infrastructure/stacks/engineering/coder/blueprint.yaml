@@ -3,7 +3,7 @@ private-resources:
     name: "Coder"
     mode: http
     full-domain: "coder.cianfhoghlaim.ie"
-    destination-port: 8080
+    destination: coder:8080
     protocol: http
     sites:
       - arm1-oci

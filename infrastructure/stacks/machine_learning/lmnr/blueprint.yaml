@@ -3,7 +3,7 @@ private-resources:
     name: "Lmnr"
     full-domain: "lmnr.cianfhoghlaim.ie"
     mode: http
-    destination-port: 8080
+    destination: lmnr:8080
     protocol: http
     sites:
       - arm1-oci

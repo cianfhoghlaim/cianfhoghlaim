@@ -3,7 +3,7 @@ private-resources:
     name: "LiteLLM Gateway"
     mode: http
     full-domain: "litellm.cianfhoghlaim.ie"
-    destination-port: 4000
+    destination: litellm:4000
     protocol: http
     sites:
       - arm1-oci

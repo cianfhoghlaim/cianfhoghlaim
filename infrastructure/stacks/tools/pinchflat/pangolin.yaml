@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.pinchflat.name=Pinchflat"
       - "pangolin.private-resources.pinchflat.mode=http"
       - "pangolin.private-resources.pinchflat.full-domain=pinchflat.cianfhoghlaim.ie"
-      - "pangolin.private-resources.pinchflat.destination-port=8080"
+      - "pangolin.private-resources.pinchflat.destination=pinchflat:8080"
       - "pangolin.private-resources.pinchflat.protocol=http"
       - "pangolin.private-resources.pinchflat.roles[0]=Member"

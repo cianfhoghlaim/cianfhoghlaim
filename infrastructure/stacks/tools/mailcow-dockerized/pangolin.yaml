@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.mailcow-dockerized.name=Mailcow-dockerized"
       - "pangolin.private-resources.mailcow-dockerized.mode=http"
       - "pangolin.private-resources.mailcow-dockerized.full-domain=mailcow-dockerized.cianfhoghlaim.ie"
-      - "pangolin.private-resources.mailcow-dockerized.destination-port=8080"
+      - "pangolin.private-resources.mailcow-dockerized.destination=mailcow-dockerized:8080"
       - "pangolin.private-resources.mailcow-dockerized.protocol=http"
       - "pangolin.private-resources.mailcow-dockerized.roles[0]=Member"
