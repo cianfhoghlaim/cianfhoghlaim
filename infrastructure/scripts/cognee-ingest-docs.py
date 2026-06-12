@@ -47,13 +47,34 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 DOCS_ROOT = REPO_ROOT / "docs"
 
 DOMAIN_TO_DIR = {
-    "architecture": "01-platform-architecture",
+    # 00 - Core + package ecosystem (cross-cutting foundations)
+    "core": "00-core",
+    "package-ecosystem": "00-package-ecosystem",
+    # 01 - Cognee + patterns + platform architecture
+    "cognee": "01-cognee",
+    "patterns": "01-patterns",
+    "platform-architecture": "01-platform-architecture",
+    # 02 - Architecture + audit + data platform
+    "architecture": "02-architecture",
+    "audit": "02-audit",
     "data-platform": "02-data-platform",
+    # 03 - Agents + pipelines
     "agents": "03-agents",
+    "pipelines": "03-pipelines",
+    # 04 - AI/ML
     "ai-ml": "04-ai-ml",
+    # 05 - Celtic language + web
+    "celtic-language": "05-celtic-language",
     "web": "05-web",
+    # 06 - Infrastructure + product
+    "infrastructure": "06-infrastructure",
     "product": "06-product",
+    # 07 - Skills + standards
+    "skills": "07-skills",
     "standards": "07-standards",
+    # 08 - Examples + screenshots
+    "examples": "08-examples",
+    "screenshots": "08-screenshots",
 }
 
 FRONTMATTER_RE = re.compile(r"^---\s*\n(.*?)\n---\s*\n", re.DOTALL)
@@ -108,8 +129,20 @@ def load_domain_docs(domain: str) -> list[CanonicalDoc]:
     if not domain_dir.is_dir():
         return []
     docs: list[CanonicalDoc] = []
-    for path in sorted(domain_dir.glob("*.md")):
-        text = path.read_text(encoding="utf-8")
+    # Recursive glob — some domains (01-cognee, 06-infrastructure) have
+    # nested subdirs with additional canonical docs.
+    for path in sorted(domain_dir.rglob("*.md")):
+        # Skip files inside node_modules, .venv, or hidden dirs
+        if any(part.startswith(".") for part in path.parts):
+            continue
+        if "node_modules" in path.parts or ".venv" in path.parts:
+            continue
+        # Robust read: try UTF-8 first, fall back to latin-1 (some Windows-saved
+        # .md files in 06-infrastructure/ have non-UTF-8 bytes)
+        try:
+            text = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            text = path.read_text(encoding="latin-1")
         fm, body = strip_frontmatter(text)
         docs.append(
             CanonicalDoc(
@@ -151,6 +184,24 @@ def get_json(path: str) -> dict:
     return response.json() if response.text else {}
 
 
+def ensure_dataset(dataset_name: str) -> str:
+    """Create the dataset if it doesn't exist; return its UUID.
+
+    Cognee v1 REST API uses POST /api/v1/datasets with {name, description}
+    and returns {id, name, ...}. Dataset names cannot contain dots or spaces.
+    """
+    response = get_json("/api/v1/datasets")
+    payload = response if isinstance(response, list) else response.get("data", response)
+    for d in payload:
+        if d.get("name") == dataset_name:
+            return d["id"]
+    created = post_json(
+        "/api/v1/datasets",
+        {"name": dataset_name, "description": f"Cianfhoghlaim docs - {dataset_name}"},
+    )
+    return created["id"]
+
+
 def wait_for_cognify(pipeline_run_id: str, timeout_s: int = 600) -> dict:
     start = time.time()
     while time.time() - start < timeout_s:
@@ -166,24 +217,26 @@ def wait_for_cognify(pipeline_run_id: str, timeout_s: int = 600) -> dict:
     return {"status": "timeout"}
 
 
-def ingest_doc(doc: CanonicalDoc) -> dict:
+def ingest_doc(doc: CanonicalDoc, dataset_id: str) -> dict:
     text = f"# {doc.title}\n\n{''.join(doc.body)}"
+    # NOTE: Cognee v1 REST API uses camelCase: datasetId
+    # The /api/v1/add endpoint takes multipart form data, not JSON. For
+    # simplicity we use /api/v1/datasets/{id}/data which accepts JSON.
     return post_json(
-        "/api/v1/add",
+        f"/api/v1/datasets/{dataset_id}/data",
         {
             "data": text,
-            "dataset_name": doc.dataset_name,
         },
     )
 
 
-def cognify_dataset(dataset_name: str) -> dict:
+def cognify_dataset(dataset_name: str, dataset_id: str) -> dict:
     response = post_json(
         "/api/v1/cognify",
-        {"dataset_name": dataset_name},
+        {"dataset_ids": [dataset_id]},
         timeout=600,
     )
-    run_id = response.get("pipeline_run_id") or response.get("id")
+    run_id = response.get("pipeline_run_id") or response.get("id") or response.get("runId")
     if run_id and isinstance(run_id, str):
         return wait_for_cognify(run_id)
     return response
@@ -194,7 +247,7 @@ def domain_summary(domain: str) -> dict:
     total_bytes = sum(len(d.body.encode("utf-8")) for d in docs)
     return {
         "domain": domain,
-        "dataset_name": f"docs-{domain}",
+        "datasetName": f"docs-{domain}",
         "doc_count": len(docs),
         "byte_count": total_bytes,
         "docs": [
@@ -211,7 +264,7 @@ def domain_summary(domain: str) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--domain", choices=list(DOMAIN_TO_DIR), help="Single domain to ingest")
-    parser.add_argument("--all", action="store_true", help="Ingest all 7 domains")
+    parser.add_argument("--all", action="store_true", help="Ingest all 19 domains")
     parser.add_argument("--no-cognify", action="store_true", help="Store data only; skip cognify")
     parser.add_argument("--dry-run", action="store_true", help="Show plan without executing")
     parser.add_argument("--summary", action="store_true", help="Print per-domain summary and exit")
@@ -261,12 +314,23 @@ def main() -> int:
         if not docs:
             print(f"[{domain}] no docs found", file=sys.stderr)
             continue
-        print(f"[{domain}] ingesting {len(docs)} canonical docs into {docs[0].dataset_name}")
+        dataset_name = docs[0].dataset_name
+        # Create the dataset (idempotent)
+        try:
+            dataset_id = ensure_dataset(dataset_name)
+            print(f"[{domain}] dataset {dataset_name} -> {dataset_id}")
+        except requests.HTTPError as exc:
+            print(
+                f"[{domain}] failed to create dataset: HTTP {exc.response.status_code if exc.response else '?'} - {exc}",
+                file=sys.stderr,
+            )
+            continue
+        print(f"[{domain}] ingesting {len(docs)} canonical docs into {dataset_name}")
         for doc in docs:
             try:
-                result = ingest_doc(doc)
+                result = ingest_doc(doc, dataset_id)
                 total_added += 1
-                print(f"  + {doc.path.name} -> {result.get('data_id', 'queued')}")
+                print(f"  + {doc.path.name} -> {result.get('data_id', result.get('id', 'queued'))}")
             except requests.HTTPError as exc:
                 print(
                     f"  ! {doc.path.name}: HTTP {exc.response.status_code if exc.response else '?'} - {exc}",
@@ -282,7 +346,7 @@ def main() -> int:
             )
             continue
         try:
-            result = cognify_dataset(docs[0].dataset_name)
+            result = cognify_dataset(dataset_name, dataset_id)
             print(f"  cognify status: {result.get('status', 'unknown')}")
         except requests.HTTPError as exc:
             print(
