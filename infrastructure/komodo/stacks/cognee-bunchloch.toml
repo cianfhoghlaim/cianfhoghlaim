@@ -1,0 +1,60 @@
+# =============================================================================
+# COGNEE-BUNCHLOCH — Cianfhoghlaim Oideachais Cognee Stack on MacBook M4
+# =============================================================================
+# Knowledge graph memory for the bilingual education platform.
+#
+# Architecture:
+#   bunchloch (MacBook M4) hosts the cognee + cognee-postgres containers.
+#   Networks:
+#     lakehouse_lakehouse   — shared with litellm (LLM gateway), lancedb (vector store)
+#     cianfhoghlaim         — shared with litellm (DNS resolution for `litellm:4000`)
+#   Secrets: Locket sidecar reads ./secrets.env (Infisical URI refs) and writes
+#     resolved values to the shared tmpfs volume.
+#   Routing: Pangolin routes `cognee.cianfhoghlaim.ie` → `bunchloch:8100` (Pocket ID SSO).
+#
+# Procedure: deploy-cognee-bunchloch (5 stages)
+# =============================================================================
+
+[[stack]]
+name = "cognee-bunchloch"
+description = "Cianfhoghlaim Cognee knowledge graph — 6-dataset curriculum memory (aistear / primary / junior_cycle / senior_cycle / tertiary / cross_stage) backed by Postgres+pgvector (USE_UNIFIED_PROVIDER=pghybrid). LLM via LiteLLM proxy (default: deepseek/deepseek-chat)."
+tags = [
+  "host:bunchloch",
+  "tier:development",
+  "type:ai",
+  "subtype:knowledge-graph",
+  "stack:cognee",
+  "depends-on:litellm",
+  "depends-on:lakehouse",
+]
+
+[stack.config]
+server_id = "bunchloch"
+run_directory = "/etc/komodo/cognee"
+file_paths = [
+  "infrastructure/stacks/machine_learning/cognee/compose.yaml",
+  "infrastructure/stacks/machine_learning/cognee/sidecar.yaml",
+]
+environment = """
+ENVIRONMENT=production
+LOG_LEVEL=INFO
+COGNEE_LLM_MODEL=deepseek/deepseek-chat
+COGNEE_EMBEDDING_MODEL=openai/text-embedding-3-small
+REQUIRE_AUTHENTICATION=true
+ENABLE_BACKEND_ACCESS_CONTROL=true
+INFISICAL_PROJECT_ID=dev-baile
+LOCKET_MODE=watch
+"""
+
+[stack.config.repo]
+server_id = "arm1-oci"
+git_account = "cianfhoghlaim"
+repo = "kings_college_galway"
+branch = "main"
+
+# -----------------------------------------------------------------------------
+# Resource limits (MacBook M4 Max — share with other stacks)
+# -----------------------------------------------------------------------------
+# cognee: 4 CPUs, 8 GB (entity extraction + graph queries)
+# cognee-postgres: 2 CPUs, 4 GB (pgvector graph + embedding store)
+# -----------------------------------------------------------------------------

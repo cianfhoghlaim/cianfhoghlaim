@@ -2,23 +2,42 @@
 # Serves 6 Cognee datasets (aistear, primary, junior_cycle, senior_cycle, tertiary, cross_stage)
 # via the REST API on port 8000. Joins the lakehouse_lakehouse external network.
 #
-# To start: docker compose -f compose.yaml -f sidecar.yaml up -d
+# LLM is provided by the LiteLLM proxy (infrastructure/stacks/engineering/litellm).
+# Default model: deepseek/deepseek-chat (works around the Gemini 403 block).
+# Override with LLM_MODEL=local/irish/uccix to use the local Irish GGUF.
+#
+# To start (prod):  docker compose -f compose.yaml -f sidecar.yaml up -d
+# To start (dev):   docker compose -f compose.yaml -f sidecar.yaml -f compose.dev.yaml up -d
+#
+# Note: The Locket sidecar service is defined in sidecar.yaml; both files must
+# be passed to `docker compose up` together (Docker Compose does not auto-merge
+# service definitions from sibling files).
 
 services:
   cognee:
-    image: cognee-ai/cognee:latest
+    image: cognee/cognee:latest
     container_name: cianfhoghlaim-cognee
     restart: unless-stopped
     ports:
-      - "8000:8000"
-    env_file:
-      - path: /run/secrets/locket/secrets.env
-        required: false
+      - "8100:8000"
     environment:
-      LLM_API_KEY: ${LITELLM_API_KEY:-sk-1234}
-      LLM_PROVIDER: litellm
+      # The cognee LLM client adds `Authorization: Bearer <LLM_API_KEY>` to
+      # every request. If LLM_API_KEY is the LiteLLM master key, litellm
+      # forwards it as the upstream DeepSeek key (which DeepSeek rejects).
+      # Solution: set LLM_API_KEY to a placeholder so litellm falls back to
+      # its own configured DEEPSEEK_API_KEY env var.
+      LLM_API_KEY: no-key-needed
+      LLM_PROVIDER: openai
       LLM_BASE_URL: http://litellm:4000/v1
-      LLM_MODEL: gemini-2.0-flash
+      LLM_MODEL: ${COGNEE_LLM_MODEL:-deepseek/deepseek-chat}
+      EMBEDDING_API_KEY: no-key-needed
+      EMBEDDING_PROVIDER: openai
+      EMBEDDING_BASE_URL: http://litellm:4000/v1
+      # Use the full litellm model path so tiktoken can auto-detect the
+      # tokenizer (cognee validates EMBEDDING_MODEL against tiktoken at
+      # startup; litellm alias names like "embedding" or "embedding-curriculum"
+      # are not tiktoken-recognizable).
+      EMBEDDING_MODEL: ${COGNEE_EMBEDDING_MODEL:-openai/text-embedding-3-small}
       COGNEE_DATABASES: oideachais.aistear,oideachais.primary,oideachais.junior_cycle,oideachais.senior_cycle,oideachais.tertiary,oideachais.cross_stage
       COGNEE_STORAGE: postgresql
       COGNEE_POSTGRES_HOST: cognee-postgres
@@ -27,10 +46,27 @@ services:
       COGNEE_POSTGRES_PASSWORD: ${COGNEE_POSTGRES_PASSWORD:-devpassword}
       COGNEE_POSTGRES_DB: cognee_oideachais
       VECTOR_DB_PROVIDER: pgvector
+      # Unified provider uses the same Postgres for both relational and graph
+      # (avoids the need for a separate Neo4j / FalkorDB instance).
+      USE_UNIFIED_PROVIDER: pghybrid
+      DB_PROVIDER: postgres
+      DB_HOST: cognee-postgres
+      DB_PORT: "5432"
+      DB_NAME: cognee_oideachais
+      DB_USERNAME: cognee
+      DB_PASSWORD: ${COGNEE_POSTGRES_PASSWORD:-devpassword}
       GRAPH_DATABASE_PROVIDER: postgres
       LANCEDB_URI: rest://lakehouse-lance-namespace:8182
       LANCEDB_API_KEY: ${LANCEDB_API_KEY:-devtoken}
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # Disable authentication in dev (set both to true in production
+      # behind Pocket ID SSO on the Pangolin route).
+      REQUIRE_AUTHENTICATION: ${REQUIRE_AUTHENTICATION:-false}
+      ENABLE_BACKEND_ACCESS_CONTROL: ${ENABLE_BACKEND_ACCESS_CONTROL:-false}
     healthcheck:
+      # Note: healthcheck runs INSIDE the container on port 8000 (not the
+      # host-mapped 8100).
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/health"]
       interval: 10s
       timeout: 5s
@@ -48,6 +84,7 @@ services:
         condition: service_healthy
     networks:
       - lakehouse
+      - cianfhoghlaim
 
   cognee-postgres:
     image: pgvector/pgvector:pg17
@@ -66,33 +103,6 @@ services:
       - cognee-postgres-data:/var/lib/postgresql/data
     networks:
       - lakehouse
-    env_file:
-      - path: /run/secrets/locket/secrets.env
-        required: false
-
-  locket:
-    image: ghcr.io/bpbradley/locket:infisical
-    container_name: cianfhoghlaim-cognee-locket
-    user: "65532"
-    cap_drop:
-      - ALL
-    security_opt:
-      - no-new-privileges:true
-    healthcheck:
-      test: ["CMD", "/locket", "healthcheck"]
-      interval: 10s
-      timeout: 3s
-      retries: 3
-      start_period: 15s
-    volumes:
-      - type: tmpfs
-        target: /run/secrets/locket
-        tmpfs:
-          mode: 0700
-    env_file:
-      - ./secrets.env
-    networks:
-      - lakehouse
 
 volumes:
   cognee-postgres-data:
@@ -100,4 +110,7 @@ volumes:
 networks:
   lakehouse:
     name: lakehouse_lakehouse
+    external: true
+  cianfhoghlaim:
+    name: cianfhoghlaim
     external: true

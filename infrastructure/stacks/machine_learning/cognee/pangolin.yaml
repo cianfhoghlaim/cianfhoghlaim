@@ -1,13 +1,17 @@
 # Cognee topology — Pangolin private resource for the Cognee REST API.
 # Reachable as cognee.cianfhoghlaim.ie (on the OCI control plane,
 # proxied through the Pangolin WireGuard mesh).
-pangea:
-  private_resources:
-    - name: cognee
-      label: Cianfhoghlaim Cognee KG
-      role: member
-      host: bunchloch
-      port: 8000
-      scheme: http
-      healthcheck: /health
-      description: "Cianfhoghlaim Oideachais multi-stage knowledge graph (Cognee REST API)"
+#
+# Uses the new `pangolin.private-resources.*` label schema (v1.0+) —
+# matches the format in infrastructure/infisical/pangolin.yaml and
+# infrastructure/stacks/tools/*/pangolin.yaml.
+services:
+  cognee:
+    labels:
+      - "pangolin.private-resources.cognee.name=Cianfhoghlaim Cognee KG"
+      - "pangolin.private-resources.cognee.mode=http"
+      - "pangolin.private-resources.cognee.full-domain=cognee.cianfhoghlaim.ie"
+      - "pangolin.private-resources.cognee.destination=cognee"
+      - "pangolin.private-resources.cognee.destination-port=8000"
+      - "pangolin.private-resources.cognee.protocol=http"
+      - "pangolin.private-resources.cognee.roles[0]=Member"
