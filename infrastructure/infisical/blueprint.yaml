@@ -3,7 +3,13 @@ private-resources:
     name: "Infisical Vault"
     mode: http
     full-domain: "infisical.cianfhoghlaim.ie"
-    destination-port: 8081
+    # destination is HOST:PORT. The host is the
+    # `infisical-backend` container_name (see
+    # docker-compose.yaml) so the newt on arm1-oci can
+    # DNS-resolve it on the shared network. The port is
+    # the in-container port (8080), not the host-mapped
+    # 8081 — the newt talks to the container directly.
+    destination: infisical-backend:8080
     protocol: http
     sites:
       - arm1-oci
