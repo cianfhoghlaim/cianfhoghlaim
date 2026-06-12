@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.changedetection.name=Changedetection"
       - "pangolin.private-resources.changedetection.mode=http"
       - "pangolin.private-resources.changedetection.full-domain=changedetection.cianfhoghlaim.ie"
-      - "pangolin.private-resources.changedetection.destination=changedetection:8080"
+      - "pangolin.private-resources.changedetection.destination-port=8080"
       - "pangolin.private-resources.changedetection.protocol=http"
       - "pangolin.private-resources.changedetection.roles[0]=Member"

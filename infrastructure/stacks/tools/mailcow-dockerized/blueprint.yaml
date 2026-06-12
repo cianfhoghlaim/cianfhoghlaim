@@ -3,7 +3,7 @@ private-resources:
     name: "Mailcow-dockerized"
     mode: http
     full-domain: "mailcow-dockerized.cianfhoghlaim.ie"
-    destination: mailcow-dockerized:8080
+    destination-port: 8080
     protocol: http
     sites:
       - arm1-oci

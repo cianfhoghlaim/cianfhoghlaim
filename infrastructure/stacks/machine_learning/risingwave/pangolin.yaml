@@ -4,7 +4,7 @@ services:
       - "pangolin.private-resources.risingwave.name=RisingWave"
       - "pangolin.private-resources.risingwave.mode=http"
       - "pangolin.private-resources.risingwave.full-domain=risingwave.cianfhoghlaim.ie"
-      - "pangolin.private-resources.risingwave.destination=risingwave:4566"
+      - "pangolin.private-resources.risingwave.destination-port=4566"
       - "pangolin.private-resources.risingwave.protocol=http"
       - "pangolin.private-resources.risingwave.roles[0]=Member"
 
@@ -13,6 +13,6 @@ services:
       - "pangolin.private-resources.risingwavedb.name=RisingWave Dashboard"
       - "pangolin.private-resources.risingwavedb.mode=http"
       - "pangolin.private-resources.risingwavedb.full-domain=risingwavedb.cianfhoghlaim.ie"
-      - "pangolin.private-resources.risingwavedb.destination=risingwavedb:5691"
+      - "pangolin.private-resources.risingwavedb.destination-port=5691"
       - "pangolin.private-resources.risingwavedb.protocol=http"
       - "pangolin.private-resources.risingwavedb.roles[0]=Member"

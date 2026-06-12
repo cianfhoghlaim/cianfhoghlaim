@@ -3,7 +3,7 @@ private-resources:
     name: "Devdocs"
     full-domain: "DevDocs.cianfhoghlaim.ie"
     mode: http
-    destination: DevDocs:8080
+    destination-port: 8080
     protocol: http
     sites:
       - arm1-oci

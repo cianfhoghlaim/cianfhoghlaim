@@ -7,7 +7,7 @@ private-resources:
     name: "LakeFS"
     full-domain: "lakefs.cianfhoghlaim.ie"
     mode: http
-    destination: lakefs:8000
+    destination-port: 8000
     protocol: http
     sites:
       - bunchloch

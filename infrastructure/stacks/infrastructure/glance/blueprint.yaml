@@ -3,7 +3,7 @@ private-resources:
     name: "Glance Dashboard"
     mode: http
     full-domain: "glance.cianfhoghlaim.ie"
-    destination: glance:8080
+    destination-port: 8080
     protocol: http
     sites:
       - arm1-oci

@@ -3,7 +3,7 @@ services:
     labels:
       - "pangolin.private-resources.lmnr.name=Lmnr"
       - "pangolin.private-resources.lmnr.mode=http"
-      - "pangolin.private-resources.lmnr.destination=lmnr:8080"
+      - "pangolin.private-resources.lmnr.destination-port=8080"
       - "pangolin.private-resources.lmnr.protocol=http"
       - "pangolin.private-resources.lmnr.roles[0]=Member"
 

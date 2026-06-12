@@ -3,7 +3,7 @@ private-resources:
     name: "Dagster Unified"
     mode: http
     full-domain: "dagster.cianfhoghlaim.ie"
-    destination: dagster:3000
+    destination-port: 3000
     protocol: http
     sites:
       - arm1-oci
@@ -13,7 +13,7 @@ private-resources:
     name: "Dagster Daemon"
     mode: http
     full-domain: "dagster-daemon.cianfhoghlaim.ie"
-    destination: dagster-daemon:3000
+    destination-port: 3000
     protocol: http
     sites:
       - arm1-oci

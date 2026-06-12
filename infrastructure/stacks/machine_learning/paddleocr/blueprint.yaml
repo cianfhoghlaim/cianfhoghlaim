@@ -3,7 +3,7 @@ private-resources:
     name: "PaddleOCR"
     mode: http
     full-domain: "paddleocr.cianfhoghlaim.ie"
-    destination: paddleocr:8000
+    destination-port: 8000
     protocol: http
     sites: [arm1-oci]
     roles: [Member]

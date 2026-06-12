@@ -3,7 +3,7 @@ private-resources:
     name: "Grafana Monitoring"
     mode: http
     full-domain: "grafana.cianfhoghlaim.ie"
-    destination: grafana:3000
+    destination-port: 3000
     protocol: http
     sites:
       - arm1-oci
@@ -13,7 +13,7 @@ private-resources:
     name: "Prometheus"
     mode: http
     full-domain: "prometheus.cianfhoghlaim.ie"
-    destination: prometheus:9090
+    destination-port: 9090
     protocol: http
     sites:
       - arm1-oci
@@ -23,7 +23,7 @@ private-resources:
     name: "Alertmanager"
     mode: http
     full-domain: "alerts.cianfhoghlaim.ie"
-    destination: alertmanager:9093
+    destination-port: 9093
     protocol: http
     sites:
       - arm1-oci

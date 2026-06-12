@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.paddleocr.name=PaddleOCR"
       - "pangolin.private-resources.paddleocr.mode=http"
       - "pangolin.private-resources.paddleocr.full-domain=paddleocr.cianfhoghlaim.ie"
-      - "pangolin.private-resources.paddleocr.destination=paddleocr:8000"
+      - "pangolin.private-resources.paddleocr.destination-port=8000"
       - "pangolin.private-resources.paddleocr.protocol=http"
       - "pangolin.private-resources.paddleocr.roles[0]=Member"

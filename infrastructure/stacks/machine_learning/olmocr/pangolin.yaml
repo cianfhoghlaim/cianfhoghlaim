@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.olmocr.name=OlmOCR"
       - "pangolin.private-resources.olmocr.mode=http"
       - "pangolin.private-resources.olmocr.full-domain=olmocr.cianfhoghlaim.ie"
-      - "pangolin.private-resources.olmocr.destination=olmocr:8003"
+      - "pangolin.private-resources.olmocr.destination-port=8003"
       - "pangolin.private-resources.olmocr.protocol=http"
       - "pangolin.private-resources.olmocr.roles[0]=Member"

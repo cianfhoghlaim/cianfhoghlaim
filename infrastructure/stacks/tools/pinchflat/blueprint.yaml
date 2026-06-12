@@ -3,7 +3,7 @@ private-resources:
     name: "Pinchflat"
     mode: http
     full-domain: "pinchflat.cianfhoghlaim.ie"
-    destination: pinchflat:8080
+    destination-port: 8080
     protocol: http
     sites:
       - arm1-oci

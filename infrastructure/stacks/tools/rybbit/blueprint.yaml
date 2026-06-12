@@ -3,7 +3,7 @@ private-resources:
     name: "Rybbit"
     mode: http
     full-domain: "rybbit.cianfhoghlaim.ie"
-    destination: rybbit:8080
+    destination-port: 8080
     protocol: http
     sites:
       - arm1-oci

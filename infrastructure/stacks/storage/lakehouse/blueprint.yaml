@@ -66,7 +66,7 @@ private-resources:
     name: "Lakekeeper REST Catalog"
     full-domain: "lakekeeper.cianfhoghlaim.ie"
     mode: http
-    destination: lakekeeper:8181
+    destination-port: 8181
     protocol: http
     sites:
       - bunchloch
@@ -80,7 +80,7 @@ private-resources:
     name: "Lance Namespace API"
     full-domain: "lance-api.cianfhoghlaim.ie"
     mode: http
-    destination: lance-api:8182
+    destination-port: 8182
     protocol: http
     sites:
       - bunchloch
@@ -94,7 +94,7 @@ private-resources:
     name: "Lakehouse Admin"
     full-domain: "lakehouse-admin.cianfhoghlaim.ie"
     mode: http
-    destination: lakehouse-admin:3903
+    destination-port: 3903
     protocol: http
     sites:
       - bunchloch
