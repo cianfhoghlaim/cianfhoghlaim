@@ -3,7 +3,7 @@ private-resources:
     name: "Skyvern"
     mode: http
     full-domain: "skyvern.cianfhoghlaim.ie"
-    destination-port: 8080
+    destination: skyvern:8080
     protocol: http
     sites:
       - arm1-oci

@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.linkwarden.name=Linkwarden"
       - "pangolin.private-resources.linkwarden.mode=http"
       - "pangolin.private-resources.linkwarden.full-domain=linkwarden.cianfhoghlaim.ie"
-      - "pangolin.private-resources.linkwarden.destination-port=8080"
+      - "pangolin.private-resources.linkwarden.destination=linkwarden:8080"
       - "pangolin.private-resources.linkwarden.protocol=http"
       - "pangolin.private-resources.linkwarden.roles[0]=Member"

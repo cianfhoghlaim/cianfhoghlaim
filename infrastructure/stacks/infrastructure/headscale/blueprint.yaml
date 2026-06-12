@@ -3,7 +3,7 @@ private-resources:
     name: "Headscale (Tailscale-compatible)"
     mode: http
     full-domain: "hs.cianfhoghlaim.ie"
-    destination-port: 8080
+    destination: headscale:8080
     protocol: http
     sites: [arm1-oci]
     roles: [Member]

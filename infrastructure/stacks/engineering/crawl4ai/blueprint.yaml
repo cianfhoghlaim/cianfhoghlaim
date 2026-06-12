@@ -3,7 +3,7 @@ private-resources:
     name: "Crawl4ai"
     mode: http
     full-domain: "crawl4ai.cianfhoghlaim.ie"
-    destination-port: 8080
+    destination: crawl4ai:8080
     protocol: http
     sites:
       - arm1-oci

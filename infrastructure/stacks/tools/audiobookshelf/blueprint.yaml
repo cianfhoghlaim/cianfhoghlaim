@@ -3,7 +3,7 @@ private-resources:
     name: "Audiobookshelf"
     mode: http
     full-domain: "audiobookshelf.cianfhoghlaim.ie"
-    destination-port: 8080
+    destination: audiobookshelf:8080
     protocol: http
     sites:
       - arm1-oci

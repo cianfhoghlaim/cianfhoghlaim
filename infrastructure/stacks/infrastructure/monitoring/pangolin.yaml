@@ -4,7 +4,7 @@ services:
       - "pangolin.private-resources.grafana.name=Grafana Monitoring"
       - "pangolin.private-resources.grafana.mode=http"
       - "pangolin.private-resources.grafana.full-domain=grafana.cianfhoghlaim.ie"
-      - "pangolin.private-resources.grafana.destination-port=3000"
+      - "pangolin.private-resources.grafana.destination=grafana:3000"
       - "pangolin.private-resources.grafana.protocol=http"
       - "pangolin.private-resources.grafana.roles[0]=Member"
   prometheus:
@@ -12,7 +12,7 @@ services:
       - "pangolin.private-resources.prometheus.name=Prometheus"
       - "pangolin.private-resources.prometheus.mode=http"
       - "pangolin.private-resources.prometheus.full-domain=prometheus.cianfhoghlaim.ie"
-      - "pangolin.private-resources.prometheus.destination-port=9090"
+      - "pangolin.private-resources.prometheus.destination=prometheus:9090"
       - "pangolin.private-resources.prometheus.protocol=http"
       - "pangolin.private-resources.prometheus.roles[0]=Member"
   alertmanager:
@@ -20,6 +20,6 @@ services:
       - "pangolin.private-resources.alertmanager.name=Alertmanager"
       - "pangolin.private-resources.alertmanager.mode=http"
       - "pangolin.private-resources.alertmanager.full-domain=alerts.cianfhoghlaim.ie"
-      - "pangolin.private-resources.alertmanager.destination-port=9093"
+      - "pangolin.private-resources.alertmanager.destination=alertmanager:9093"
       - "pangolin.private-resources.alertmanager.protocol=http"
       - "pangolin.private-resources.alertmanager.roles[0]=Member"

@@ -3,7 +3,7 @@ private-resources:
     name: "Networking-toolbox"
     full-domain: "networking-toolbox.cianfhoghlaim.ie"
     mode: http
-    destination-port: 8080
+    destination: networking-toolbox:8080
     protocol: http
     sites:
       - arm1-oci

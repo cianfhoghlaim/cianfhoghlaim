@@ -3,7 +3,7 @@ private-resources:
     name: "Enclosed"
     mode: http
     full-domain: "enclosed.cianfhoghlaim.ie"
-    destination-port: 8080
+    destination: enclosed:8080
     protocol: http
     sites:
       - arm1-oci

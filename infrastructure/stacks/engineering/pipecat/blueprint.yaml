@@ -3,7 +3,7 @@ private-resources:
     name: "Pipecat (Voice AI)"
     mode: http
     full-domain: "pipecat.cianfhoghlaim.ie"
-    destination-port: 8765
+    destination: pipecat:8765
     protocol: http
     sites: [arm1-oci]
     roles: [Member]

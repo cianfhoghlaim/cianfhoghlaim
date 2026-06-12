@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.dotsocr.name=DotsOCR"
       - "pangolin.private-resources.dotsocr.mode=http"
       - "pangolin.private-resources.dotsocr.full-domain=dotsocr.cianfhoghlaim.ie"
-      - "pangolin.private-resources.dotsocr.destination-port=8001"
+      - "pangolin.private-resources.dotsocr.destination=dotsocr:8001"
       - "pangolin.private-resources.dotsocr.protocol=http"
       - "pangolin.private-resources.dotsocr.roles[0]=Member"

@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.dragonfly.name=Dragonfly"
       - "pangolin.private-resources.dragonfly.mode=tcp"
       - "pangolin.private-resources.dragonfly.full-domain=dragonfly.cianfhoghlaim.ie"
-      - "pangolin.private-resources.dragonfly.destination-port=6379"
+      - "pangolin.private-resources.dragonfly.destination=dragonfly:6379"
       - "pangolin.private-resources.dragonfly.protocol=tcp"
       - "pangolin.private-resources.dragonfly.roles[0]=Member"

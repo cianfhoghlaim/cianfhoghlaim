@@ -5,7 +5,7 @@ services:
     labels:
       - "pangolin.private-resources.langfuse.name=Langfuse"
       - "pangolin.private-resources.langfuse.mode=http"
-      - "pangolin.private-resources.langfuse.destination-port=8080"
+      - "pangolin.private-resources.langfuse.destination=langfuse:8080"
       - "pangolin.private-resources.langfuse.protocol=http"
       - "pangolin.private-resources.langfuse.roles[0]=Member"
       - "pangolin.private-resources.langfuse.full-domain=langfuse.cianfhoghlaim.ie"

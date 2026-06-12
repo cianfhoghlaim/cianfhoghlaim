@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.presenton.name=Presenton"
       - "pangolin.private-resources.presenton.mode=http"
       - "pangolin.private-resources.presenton.full-domain=presenton.cianfhoghlaim.ie"
-      - "pangolin.private-resources.presenton.destination-port=8080"
+      - "pangolin.private-resources.presenton.destination=presenton:8080"
       - "pangolin.private-resources.presenton.protocol=http"
       - "pangolin.private-resources.presenton.roles[0]=Member"

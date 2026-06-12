@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.headscale.name=Headscale"
       - "pangolin.private-resources.headscale.mode=http"
       - "pangolin.private-resources.headscale.full-domain=hs.cianfhoghlaim.ie"
-      - "pangolin.private-resources.headscale.destination-port=8080"
+      - "pangolin.private-resources.headscale.destination=headscale:8080"
       - "pangolin.private-resources.headscale.protocol=http"
       - "pangolin.private-resources.headscale.roles[0]=Member"

@@ -4,6 +4,6 @@ services:
       - "pangolin.private-resources.pastemax.name=Pastemax"
       - "pangolin.private-resources.pastemax.mode=http"
       - "pangolin.private-resources.pastemax.full-domain=pastemax.cianfhoghlaim.ie"
-      - "pangolin.private-resources.pastemax.destination-port=8080"
+      - "pangolin.private-resources.pastemax.destination=pastemax:8080"
       - "pangolin.private-resources.pastemax.protocol=http"
       - "pangolin.private-resources.pastemax.roles[0]=Member"

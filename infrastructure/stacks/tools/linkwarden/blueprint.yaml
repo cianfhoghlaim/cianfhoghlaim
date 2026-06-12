@@ -3,7 +3,7 @@ private-resources:
     name: "Linkwarden"
     mode: http
     full-domain: "linkwarden.cianfhoghlaim.ie"
-    destination-port: 8080
+    destination: linkwarden:8080
     protocol: http
     sites:
       - arm1-oci

@@ -3,7 +3,7 @@ private-resources:
     name: "Letterfeed"
     mode: http
     full-domain: "LetterFeed.cianfhoghlaim.ie"
-    destination-port: 8080
+    destination: LetterFeed:8080
     protocol: http
     sites:
       - arm1-oci

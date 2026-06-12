@@ -21,7 +21,7 @@ private-resources:
     name: "Garage Web"
     full-domain: "garage.cianfhoghlaim.ie"
     mode: http
-    destination-port: 3903
+    destination: garage-web:3903
     protocol: http
     sites:
       - arm1-oci

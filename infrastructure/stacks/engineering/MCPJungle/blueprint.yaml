@@ -3,7 +3,7 @@ private-resources:
     name: "Mcpjungle"
     mode: http
     full-domain: "MCPJungle.cianfhoghlaim.ie"
-    destination-port: 8080
+    destination: MCPJungle:8080
     protocol: http
     sites:
       - arm1-oci

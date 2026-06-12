@@ -5,7 +5,7 @@ services:
     labels:
       - "pangolin.private-resources.mathesar.name=Mathesar"
       - "pangolin.private-resources.mathesar.mode=http"
-      - "pangolin.private-resources.mathesar.destination-port=8000"
+      - "pangolin.private-resources.mathesar.destination=mathesar:8000"
       - "pangolin.private-resources.mathesar.protocol=http"
       - "pangolin.private-resources.mathesar.roles[0]=Member"
       - "pangolin.private-resources.mathesar.full-domain=mathesar.cianfhoghlaim.ie"
