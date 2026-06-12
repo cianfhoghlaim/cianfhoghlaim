@@ -1,9 +1,0 @@
-services:
-  croilar-marimo:
-    labels:
-      - "pangolin.private-resources.croilar-marimo.name=croilar Marimo"
-      - "pangolin.private-resources.croilar-marimo.mode=http"
-      - "pangolin.private-resources.croilar-marimo.full-domain=marimo.croilar.cianfhoghlaim.ie"
-      - "pangolin.private-resources.croilar-marimo.destination-port=2718"
-      - "pangolin.private-resources.croilar-marimo.protocol=http"
-      - "pangolin.private-resources.croilar-marimo.roles[0]=Member"

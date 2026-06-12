@@ -1,25 +1,12 @@
-# Cognee stack — Cianfhoghlaim Oideachais
-# Multi-dataset knowledge graph for the 5-stage bilingual platform.
-# See: openspec/changes/cianfhoghlaim-oideachais-baml-first/
-
-name: cianfhoghlaim-cognee
-purpose: Knowledge graph memory for Aistear → Primary → Junior Cycle → Senior Cycle → Tertiary
-depends_on:
-  - infrastructure/stacks/engineering/litellm
-  - infrastructure/stacks/storage/lakehouse
-datasets:
-  - oideachais.aistear
-  - oideachais.primary
-  - oideachais.junior_cycle
-  - oideachais.senior_cycle
-  - oideachais.tertiary
-  - oideachais.cross_stage
-cross_stage_edges:
-  - BRIDGES_TO
-  - PREPARES_FOR
-  - PROGRESSES_TO
-  - ASSESSED_BY
-  - REQUIRED_FOR
-  - DELIVERS
-  - LADDERS_INTO
-  - ALTERNATIVE_TO
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
+private-resources:
+  cognee:
+    name: "Cianfhoghlaim Cognee KG"
+    mode: "http"
+    destination: "cognee"
+    destination-port: 8000
+    full-domain: "cognee.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"

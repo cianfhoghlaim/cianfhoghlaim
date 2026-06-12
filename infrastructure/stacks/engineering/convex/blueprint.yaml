@@ -1,39 +1,33 @@
-# =============================================================================
-# CONVEX - Pangolin Blueprint
-# =============================================================================
-# Note: All resources are private (zero-trust via Pangolin).
-# =============================================================================
-
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
   convex-backend:
     name: "Convex Backend API"
-    full-domain: "convex-api.cianfhoghlaim.ie"
-    mode: http
+    mode: "http"
     destination-port: 3210
-    protocol: http
-    sites:
-      - bunchloch
+    full-domain: "convex-api.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
-
-  convex-site:
-    name: "Convex Site"
-    full-domain: "convex-site.cianfhoghlaim.ie"
-    mode: http
-    destination-port: 3211
-    protocol: http
-    sites:
-      - bunchloch
-    roles:
-      - Member
+      - "Member"
+    destination: "convex-backend"
 
   convex-dashboard:
     name: "Convex Dashboard"
-    full-domain: "convex.cianfhoghlaim.ie"
-    mode: http
+    mode: "http"
     destination-port: 6791
-    protocol: http
-    sites:
-      - bunchloch
+    full-domain: "convex.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
+      - "Member"
+    destination: "convex-dashboard"
+
+  convex-site:
+    name: "Convex Site"
+    mode: "http"
+    destination-port: 3211
+    full-domain: "convex-site.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "convex-site"
+

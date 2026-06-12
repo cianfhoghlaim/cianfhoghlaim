@@ -1,9 +1,0 @@
-services:
-  it-tools:
-    labels:
-      - "pangolin.private-resources.it-tools.name=IT Tools"
-      - "pangolin.private-resources.it-tools.mode=http"
-      - "pangolin.private-resources.it-tools.full-domain=ittools.cianfhoghlaim.ie"
-      - "pangolin.private-resources.it-tools.destination-port=8080"
-      - "pangolin.private-resources.it-tools.protocol=http"
-      - "pangolin.private-resources.it-tools.roles[0]=Member"

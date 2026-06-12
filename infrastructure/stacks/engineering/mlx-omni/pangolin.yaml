@@ -1,9 +1,0 @@
-services:
-  mlx-omni:
-    labels:
-      - "pangolin.private-resources.mlxomni.name=MLX-Omni"
-      - "pangolin.private-resources.mlxomni.mode=http"
-      - "pangolin.private-resources.mlxomni.full-domain=mlxomni.cianfhoghlaim.ie"
-      - "pangolin.private-resources.mlxomni.destination-port=10240"
-      - "pangolin.private-resources.mlxomni.protocol=http"
-      - "pangolin.private-resources.mlxomni.roles[0]=Member"

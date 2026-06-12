@@ -1,9 +1,13 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
   headscale:
-    name: "Headscale (Tailscale-compatible)"
-    mode: http
-    full-domain: "hs.cianfhoghlaim.ie"
+    name: "Headscale"
+    mode: "http"
     destination-port: 8080
-    protocol: http
-    sites: [arm1-oci]
-    roles: [Member]
+    full-domain: "hs.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "headscale"
+

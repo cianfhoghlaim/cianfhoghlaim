@@ -1,9 +1,0 @@
-services:
-  main-service:
-    labels:
-      - "pangolin.private-resources.coder.name=Coder"
-      - "pangolin.private-resources.coder.mode=http"
-      - "pangolin.private-resources.coder.full-domain=coder.cianfhoghlaim.ie"
-      - "pangolin.private-resources.coder.destination-port=8080"
-      - "pangolin.private-resources.coder.protocol=http"
-      - "pangolin.private-resources.coder.roles[0]=Member"

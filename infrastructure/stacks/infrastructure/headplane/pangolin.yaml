@@ -1,9 +1,0 @@
-services:
-  headplane:
-    labels:
-      - "pangolin.private-resources.headplane.name=Headplane"
-      - "pangolin.private-resources.headplane.mode=http"
-      - "pangolin.private-resources.headplane.full-domain=hp.cianfhoghlaim.ie"
-      - "pangolin.private-resources.headplane.destination-port=3000"
-      - "pangolin.private-resources.headplane.protocol=http"
-      - "pangolin.private-resources.headplane.roles[0]=Member"

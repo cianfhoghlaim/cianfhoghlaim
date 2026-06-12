@@ -1,21 +1,23 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
   dagster:
     name: "Dagster Unified"
-    mode: http
-    full-domain: "dagster.cianfhoghlaim.ie"
+    mode: "http"
     destination-port: 3000
-    protocol: http
-    sites:
-      - arm1-oci
+    full-domain: "dagster.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
+      - "Member"
+    destination: "dagster"
+
   dagster-daemon:
     name: "Dagster Daemon"
-    mode: http
-    full-domain: "dagster-daemon.cianfhoghlaim.ie"
+    mode: "http"
     destination-port: 3000
-    protocol: http
-    sites:
-      - arm1-oci
+    full-domain: "dagster-daemon.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
+      - "Member"
+    destination: "dagster-daemon"
+

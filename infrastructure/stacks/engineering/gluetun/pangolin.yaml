@@ -1,9 +1,0 @@
-services:
-  gluetun:
-    labels:
-      - "pangolin.private-resources.gluetun.name=Gluetun (VPN sidecar)"
-      - "pangolin.private-resources.gluetun.mode=http"
-      - "pangolin.private-resources.gluetun.full-domain=gluetun.cianfhoghlaim.ie"
-      - "pangolin.private-resources.gluetun.destination-port=11235"
-      - "pangolin.private-resources.gluetun.protocol=http"
-      - "pangolin.private-resources.gluetun.roles[0]=Member"

@@ -187,3 +187,42 @@
 | `/en/matriculation-auditor` | ❌ 500 | References missing `../utils/orpc` module — pre-existing code issue |
 | `/ga/céimeanna` | ✅ 200 | GA stages index |
 
+---
+
+# Session 3 — 2026-06-12 (Pangolin schema correction + consolidation)
+
+## Summary
+
+| Category | Action | Outcome |
+|----------|--------|---------|
+| Revert bad schema | Reverted commits `22b69b063` + `531f85ad3` | ✅ Original repo state restored |
+| Schema correction | Split `destination: HOST:PORT` into two fields per official Pangolin docs | ✅ 153 files now schema-compliant |
+| File consolidation | Merged `pangolin.yaml` (label form) + `blueprint.yaml` into a single `blueprint.yaml` per stack | ✅ 79 stacks now have one canonical file |
+
+## What was fixed in this session
+
+| # | Service | Issue | Fix |
+|---|---------|-------|-----|
+| 1 | All 76 stacks with `destination: HOST:PORT` | The previous fix (commit `22b69b063`) collapsed two separate fields into a single non-conforming string. The official Pangolin schema (`https://docs.pangolin.net/manage/blueprints`) requires `destination: <host>` (string, no port) + `destination-port: <int>` (separate integer). The collapsed form was only working because the newt's HTTP handler stringifies the target URL with its own port — a runtime hack, not a schema-conforming config. | Reverted `22b69b063` and `531f85ad3`. Re-applied the fix as a script (`/tmp/consolidate_pangolin_blueprints.py`) that produces 153 schema-compliant `blueprint.yaml` files. |
+| 2 | File duplication | Every stack had both a `pangolin.yaml` (Compose Docker-label form) and a `blueprint.yaml` (YAML form) defining the same Pangolin resource. The label form was redundant once the schema was corrected. | Deleted all 79 `pangolin.yaml` label-form files. The single `blueprint.yaml` per stack is now the source of truth, consumed by `newt --blueprint-file`. |
+| 3 | `garage` Compose network declaration | The old `pangolin.yaml` overlay file also contained a `networks:` block (declaring the `pangolin` external network). Deleting the file would have removed the `garage` container from the `pangolin` Docker network, breaking newt DNS. | Extracted the `networks:` block into a new `infrastructure/stacks/storage/garage/compose.network.yaml` overlay. Use: `docker compose -f compose.yaml -f compose.network.yaml up -d`. |
+| 4 | `cognee` non-Pangolin `blueprint.yaml` | The stack's `blueprint.yaml` was a Cognee-specific stack config (`name`, `purpose`, `datasets`, `cross_stage_edges`), not a Pangolin blueprint. With consolidation, this would have been overwritten. | Renamed the Cognee config to `cognee-stack.yaml`. Created a new `blueprint.yaml` with the correct Pangolin private-resource schema. |
+| 5 | `meaisínfhoghlaim/llama-swap`, `croilar-portal` | These were missed by the bad commit 22b69b063 and still had the original bug (`destination-port=8080` only, no `destination=` field). | Added the missing `destination:` field to their blueprints (using the actual `container_name`). |
+
+## What was NOT changed (out of scope)
+
+- **Traefik static config `pangolin.yaml` files** (6 stacks: `frontend`, `oideachais`, `croilar-convex`, `croilar-hono-api`, `cognee/pangolin.yaml` (pre-rename), `forgejo`, `dozzle`) — these use the Traefik `http.routers` format, not the new container-label format. They are consumed by Traefik directly, not by newt.
+- **Public-resources label files** (forgejo, dozzle) — already schema-compliant (`targets[0].hostname` + `targets[0].port` in the label form, `targets: [{site, hostname, method, port}]` in the YAML form).
+- **5 control-plane `blueprint.yaml`-only stacks** (`pangolin`, `motherduck`, `planetscale`, `r2`, `forgejo-runner`) — no `pangolin.yaml` overlay, no changes needed.
+
+## Outstanding issues (blockers)
+
+| # | Issue | Cause | Fix |
+|---|-------|-------|-----|
+| 1 | **Newt/Pangolin version mismatch** | `newt` 1.12.5 + `pangolin` server 1.18.4 are incompatible. Newt logs: `CLIENTS WILL NOT WORK ON THIS VERSION OF NEWT WITH THIS PANGOLIN SERVER, PLEASE UPDATE THE SERVER TO 1.13 OR HIGHER OR DOWNGRADE NEWT`. | Update Pangolin server to ≥1.13.0 (recommended: match newt at 1.12.5+). The downgrade path is to pin newt to 1.11.x. **This is the root blocker for all "Bad Gateway" responses at the public Pangolin URLs.** |
+| 2 | **Manual Pangolin private resources** (komodo, cal-diy, infisical) | User manually created 3 private resources in the Pangolin UI with `scheme=https` and bare hostnames (`komodo`, `cal`). The blueprint can't overwrite them — newt log: `Blueprint application failed: Site resource already exists with domain: <X> in org cianfhoghlaim`. | Open the Pangolin UI → Sites → each resource → delete the manually-created entry. The blueprint will be reapplied automatically on the next newt cycle with the correct `protocol=http` and container hostname. |
+| 3 | **Pangolin API tokens expired** | Both `PANGOLIN_API_KEY` and `PANGOLIN_API_KEY_0` in `.env` return 401. Can't query resources via API. | Use the Pangolin UI to mint a fresh machine-identity token. Save to `.env` as `PANGOLIN_API_KEY`. |
+| 4 | **`komodo-locket` sidecar** | Universal-auth client (`INFISICAL_UNIVERSAL_AUTH_CLIENT_ID`) lacks project-scope. | Provision an Infisical machine identity with `/komodo` access. Save credentials to `.env` as `INFISICAL_CLIENT_ID` + `INFISICAL_CLIENT_SECRET`. |
+| 5 | **Dagster `dagster_defs` code-location load failure** | Container logs: `Error loading repository location data_platform.dagster_defs.definitions`. | Clear `dagster_home` volume or rebuild the image. Pre-existing module-import error from a bind-mount layout change. |
+| 6 | **Frontend dead links** | `/exams`, `/lakehouse`, `/runs` → 404; `/en/matriculation-auditor` → 500. | Pre-existing: missing route files, missing `../utils/orpc` module. Outside session scope. |
+

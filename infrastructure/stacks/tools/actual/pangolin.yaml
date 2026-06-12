@@ -1,9 +1,0 @@
-services:
-  main-service:
-    labels:
-      - "pangolin.private-resources.actual.name=Actual"
-      - "pangolin.private-resources.actual.mode=http"
-      - "pangolin.private-resources.actual.full-domain=actual.cianfhoghlaim.ie"
-      - "pangolin.private-resources.actual.destination-port=8080"
-      - "pangolin.private-resources.actual.protocol=http"
-      - "pangolin.private-resources.actual.roles[0]=Member"

@@ -1,9 +1,0 @@
-services:
-  main-service:
-    labels:
-      - "pangolin.private-resources.crawl4ai.name=Crawl4ai"
-      - "pangolin.private-resources.crawl4ai.mode=http"
-      - "pangolin.private-resources.crawl4ai.full-domain=crawl4ai.cianfhoghlaim.ie"
-      - "pangolin.private-resources.crawl4ai.destination-port=8080"
-      - "pangolin.private-resources.crawl4ai.protocol=http"
-      - "pangolin.private-resources.crawl4ai.roles[0]=Member"

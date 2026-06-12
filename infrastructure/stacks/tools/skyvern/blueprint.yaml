@@ -1,11 +1,13 @@
+# Pangolin private-resource blueprint (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
 private-resources:
   skyvern:
     name: "Skyvern"
-    mode: http
-    full-domain: "skyvern.cianfhoghlaim.ie"
+    mode: "http"
     destination-port: 8080
-    protocol: http
-    sites:
-      - arm1-oci
+    full-domain: "skyvern.cianfhoghlaim.ie"
+    protocol: "http"
     roles:
-      - Member
+      - "Member"
+    destination: "skyvern"
+
