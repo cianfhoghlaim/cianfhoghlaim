@@ -1,0 +1,494 @@
+{
+  "domain": "06-infrastructure",
+  "source_files": 235,
+  "target_files": 28,
+  "topics": {
+    "agents-frameworks": {
+      "files": [
+        "agents-frameworks.md"
+      ],
+      "size_bytes": 12579,
+      "source_count": 1,
+      "sources": [
+        "docs/06-infrastructure/pangolin/Enabling the Pangolin Integration API - and Building a Simple \u201cShadow-IT Detector\u201d Agent - Guides & Tutorials.md"
+      ]
+    },
+    "agents-llm": {
+      "files": [
+        "agents-llm.md"
+      ],
+      "size_bytes": 52126,
+      "source_count": 4,
+      "sources": [
+        "docs/06-infrastructure/DOCKER_COMPOSE_QUICKSTART.md",
+        "docs/06-infrastructure/SECRETS_MANAGEMENT_GUIDE.md",
+        "docs/06-infrastructure/apple-silicon-deployment.md",
+        "docs/06-infrastructure/apple-silicon-deployment_1.md"
+      ]
+    },
+    "baml-extraction": {
+      "files": [
+        "baml-extraction.md"
+      ],
+      "size_bytes": 879770,
+      "source_count": 20,
+      "sources": [
+        "docs/06-infrastructure/Backend Strategy For Educational Tutoring System.md",
+        "docs/06-infrastructure/Crawl4ai Scraping and Site Analysis.md",
+        "docs/06-infrastructure/DOCUMENT_PROCESSING.md",
+        "docs/06-infrastructure/INDEX.md",
+        "docs/06-infrastructure/Leaving Certificate Subject Analysis Plan.md",
+        "docs/06-infrastructure/Open-Source Crawl4ai Anti-Bot Stack.md",
+        "docs/06-infrastructure/Open-Source Web Scraping Architecture Analysis.md",
+        "docs/06-infrastructure/Unified Scraping Swarm Stack Optimization.md",
+        "docs/06-infrastructure/ai-ml-pipeline.md",
+        "docs/06-infrastructure/data-acquisition.md",
+        "docs/06-infrastructure/document-processing-pipeline.md",
+        "docs/06-infrastructure/education-kg.md",
+        "docs/06-infrastructure/firecrawl-openapi-research.md",
+        "docs/06-infrastructure/graphiti-crypto-adaptation.md",
+        "docs/06-infrastructure/irish-nlp-resources.md",
+        "docs/06-infrastructure/maplibre-visualization.md",
+        "docs/06-infrastructure/model-finetuning-strategy.md",
+        "docs/06-infrastructure/pan-celtic-scraping.md",
+        "docs/06-infrastructure/specialized-pipelines.md",
+        "docs/06-product/babylonjs.md"
+      ]
+    },
+    "browser-automation": {
+      "files": [
+        "browser-automation.md"
+      ],
+      "size_bytes": 28113,
+      "source_count": 2,
+      "sources": [
+        "docs/06-infrastructure/agentic-scraping-architecture.md",
+        "docs/06-infrastructure/web-scraping-automation.md"
+      ]
+    },
+    "ci-cd": {
+      "files": [
+        "ci-cd.md"
+      ],
+      "size_bytes": 281206,
+      "source_count": 14,
+      "sources": [
+        "docs/06-infrastructure/DAGGER_PATTERNS_ANALYSIS.md",
+        "docs/06-infrastructure/Monorepo Toolchain_ Mise, Dagger, Taskipy.md",
+        "docs/06-infrastructure/Resource Maximization and Project Planning(1).md",
+        "docs/06-infrastructure/Resource Maximization and Project Planning.md",
+        "docs/06-infrastructure/Rust Client.md",
+        "docs/06-infrastructure/Rust Full-Stack Gaming Environment.md",
+        "docs/06-infrastructure/cognee-entity-resolution.md",
+        "docs/06-infrastructure/gaelic-heritage-pipeline.md",
+        "docs/06-infrastructure/infisical.md",
+        "docs/06-infrastructure/monorepo-best-practices-2025.md",
+        "docs/06-infrastructure/pangolin/GitHub OAuth.md",
+        "docs/06-infrastructure/pangolin/Google OAuth.md",
+        "docs/06-infrastructure/update-specs.md",
+        "docs/06-product/game-development.md"
+      ]
+    },
+    "cloudflare-edge": {
+      "files": [
+        "cloudflare-edge.md"
+      ],
+      "size_bytes": 232093,
+      "source_count": 10,
+      "sources": [
+        "docs/06-infrastructure/TECH_STACK.md",
+        "docs/06-infrastructure/architecture-patterns.md",
+        "docs/06-infrastructure/cloudflare-backpine-summary.md",
+        "docs/06-infrastructure/cloudflare-containers-research.md",
+        "docs/06-infrastructure/cloudflare-d1-research.md",
+        "docs/06-infrastructure/cloudflare-openapi-specification-research.md",
+        "docs/06-infrastructure/cloudflare-workers-research.md",
+        "docs/06-infrastructure/cloudflare.md",
+        "docs/06-infrastructure/frontend-stack.md",
+        "docs/06-infrastructure/pulumi-typescript-guide-provisioning-cloudflare-d1-r2-1password-integration.md"
+      ]
+    },
+    "cocoindex-pipelines": {
+      "files": [
+        "cocoindex-pipelines.md"
+      ],
+      "size_bytes": 206301,
+      "source_count": 6,
+      "sources": [
+        "docs/06-infrastructure/Using MCP in Roo Code _ Roo Code Documentation.md",
+        "docs/06-infrastructure/bilingual-scraper-implementation.md",
+        "docs/06-infrastructure/knowledge-graph-infrastructure.md",
+        "docs/06-infrastructure/memgraph.md",
+        "docs/06-infrastructure/pangolin/fosrl_olm_ A tunneling client to Newt sites.md",
+        "docs/06-product/TUATH_MMO.md"
+      ]
+    },
+    "convex-realtime": {
+      "files": [
+        "convex-realtime.md"
+      ],
+      "size_bytes": 16716,
+      "source_count": 1,
+      "sources": [
+        "docs/06-infrastructure/api.md"
+      ]
+    },
+    "dagster-orchestration": {
+      "files": [
+        "dagster-orchestration.md"
+      ],
+      "size_bytes": 735636,
+      "source_count": 15,
+      "sources": [
+        "docs/06-infrastructure/DOCKER_COMPOSE_ARCHITECTURE.md",
+        "docs/06-infrastructure/Dagster Orchestration for Cocoindex, Graphiti.md",
+        "docs/06-infrastructure/From BI to AI_ A Modern Lakehouse Stack with Lance and Iceberg.md",
+        "docs/06-infrastructure/OPENSPEC_ANALYSIS.md",
+        "docs/06-infrastructure/metadata-control-plane.md",
+        "docs/06-infrastructure/technical-implementation.md",
+        "docs/archive/2026-06-06-data-engineering/ARCHITECTURE.md",
+        "docs/archive/2026-06-06-data-engineering/Managing Diverse Data Sources for Pipelines.md",
+        "docs/archive/2026-06-06-data-engineering/Run configuration _ Dagster Docs.md",
+        "docs/archive/2026-06-06-data-engineering/data-pipeline-architecture.md",
+        "docs/archive/2026-06-06-data-engineering/knowledge-systems.md",
+        "docs/archive/2026-06-06-data-engineering/olake-data-models-schemas-ontologies.md",
+        "docs/archive/2026-06-06-data-engineering/olake.md",
+        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-client-dx/CHANGELOG.md",
+        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-testing/CHANGELOG.md"
+      ]
+    },
+    "deployment": {
+      "files": [
+        "deployment.md"
+      ],
+      "size_bytes": 4161912,
+      "source_count": 55,
+      "sources": [
+        "docs/06-infrastructure/ARCHITECTURE.md",
+        "docs/06-infrastructure/BONNEAGAR_OVERVIEW.md",
+        "docs/06-infrastructure/Configuration File.md",
+        "docs/06-infrastructure/DECISION_MATRICES.md",
+        "docs/06-infrastructure/DOCKER_COMPOSE_REFERENCE.md",
+        "docs/06-infrastructure/Enhancing Monorepo Ansible Workflow.md",
+        "docs/06-infrastructure/High-Availability Kubernetes on Hetzner with Talos 1.11.md",
+        "docs/06-infrastructure/KOMODO_COMPLETE_GUIDE.md",
+        "docs/06-infrastructure/OPENAPI_SPECS_SUMMARY.md",
+        "docs/06-infrastructure/OPENSPEC_README.md",
+        "docs/06-infrastructure/PANGOLIN_COMPLETE_GUIDE.md",
+        "docs/06-infrastructure/Register a Hetzner Server.md",
+        "docs/06-infrastructure/SETUP.md",
+        "docs/06-infrastructure/Self-Hosted Stack Visualization & Management.md",
+        "docs/06-infrastructure/backend.md",
+        "docs/06-infrastructure/celtic-platform.md",
+        "docs/06-infrastructure/comparing-approaches-pangolin-registration-komodo-deployment.md",
+        "docs/06-infrastructure/dagger-docker-compose-workflow-komodo-periphery-pangolin-newt-olm.md",
+        "docs/06-infrastructure/dagger-implementation-checklist.md",
+        "docs/06-infrastructure/dagger-pipeline-orchestration-komodo-pangolin-fullstack-deployment.md",
+        "docs/06-infrastructure/dagger-unified-pipeline-architecture.md",
+        "docs/06-infrastructure/deploy.md",
+        "docs/06-infrastructure/development-tools.md",
+        "docs/06-infrastructure/docker-compose-patterns.md",
+        "docs/06-infrastructure/engineering.md",
+        "docs/06-infrastructure/extending-komodo-pr-deploy-pangolin-integration-komodo-actions.md",
+        "docs/06-infrastructure/hosting-litellm-pangolin-public-vs-private-access-models.md",
+        "docs/06-infrastructure/infrastructure-devops.md",
+        "docs/06-infrastructure/infrastructure-tools.md",
+        "docs/06-infrastructure/integrating-1password-cli-connect-komodo-ansible-deployment.md",
+        "docs/06-infrastructure/integrating-dagger-polyglot-monorepo-ci-cd-workflow.md",
+        "docs/06-infrastructure/komodo-deployment.md",
+        "docs/06-infrastructure/komodo.md",
+        "docs/06-infrastructure/komodo/Backup and Restore _ Komodo.md",
+        "docs/06-infrastructure/komodo/Configuring Webhooks _ Komodo.md",
+        "docs/06-infrastructure/komodo/Komodo Deployment Technical Outline.md",
+        "docs/06-infrastructure/komodo/Komodo Deployment and Workflow Integration.md",
+        "docs/06-infrastructure/komodo/Procedures and Actions _ Komodo.md",
+        "docs/06-infrastructure/komodo/Sync Resources _ Komodo.md",
+        "docs/06-infrastructure/komodo/komodo_client - Rust.md",
+        "docs/06-infrastructure/komodo/komodo_client__api - Rust.md",
+        "docs/06-infrastructure/overview.md",
+        "docs/06-infrastructure/pangolin-openapi-specification-research.md",
+        "docs/06-infrastructure/pangolin/Configuration File.md",
+        "docs/06-infrastructure/pangolin/Database Options.md",
+        "docs/06-infrastructure/pangolin/How to install and activate crowdsec in pangolin - Guides & Tutorials.md",
+        "docs/06-infrastructure/pangolin/Middleware Manager.md",
+        "docs/06-infrastructure/pangolin/Pocket ID.md",
+        "docs/06-infrastructure/pangolin/Telemetry.md",
+        "docs/06-infrastructure/pangolin/Visualizing Your Traefik Logs_ Deploying the Traefik Log Dashboard with the Pangolin Stack - Guides & Tutorials.md",
+        "docs/06-infrastructure/pulumi-infrastructure-as-code.md",
+        "docs/06-infrastructure/pulumi.md",
+        "docs/06-infrastructure/pulumi_1.md",
+        "docs/06-product/README.md",
+        "docs/06-product/educational-platform.md"
+      ]
+    },
+    "dlt-ingestion": {
+      "files": [
+        "dlt-ingestion.md"
+      ],
+      "size_bytes": 174653,
+      "source_count": 6,
+      "sources": [
+        "docs/06-infrastructure/IMPLEMENTATION_GUIDE.md",
+        "docs/06-infrastructure/Register a GCP Instance.md",
+        "docs/06-infrastructure/acquisition-pipeline.md",
+        "docs/06-infrastructure/ai-pipelines.md",
+        "docs/06-infrastructure/scottish-gaelic-resources.md",
+        "docs/06-infrastructure/welsh-resources.md"
+      ]
+    },
+    "evidence-bi": {
+      "files": [
+        "evidence-bi.md"
+      ],
+      "size_bytes": 13454,
+      "source_count": 3,
+      "sources": [
+        "docs/06-infrastructure/pangolin/Pocket ID OAuth.md",
+        "docs/06-infrastructure/pangolin/Traefik Dashboard_ A Vital Prerequisite for Debugging Pangolin and Middleware Manager - Guides & Tutorials(1).md",
+        "docs/06-infrastructure/pangolin/Traefik Dashboard_ A Vital Prerequisite for Debugging Pangolin and Middleware Manager - Guides & Tutorials.md"
+      ]
+    },
+    "graphiti-memory": {
+      "files": [
+        "graphiti-memory.md"
+      ],
+      "size_bytes": 32628,
+      "source_count": 3,
+      "sources": [
+        "docs/06-infrastructure/graph-visualization.md",
+        "docs/06-infrastructure/infrastructure-knowledge-graph.md",
+        "docs/archive/2026-06-06-data-engineering/graphiti-temporal-graphs.md"
+      ]
+    },
+    "hugging-face": {
+      "files": [
+        "hugging-face.md"
+      ],
+      "size_bytes": 753478,
+      "source_count": 25,
+      "sources": [
+        "docs/06-infrastructure/New in llama.cpp_ Model Management.md",
+        "docs/archive/2026-06-06-data-engineering/geoai/docs/hf.md",
+        "docs/archive/2026-06-06-data-engineering/geoai/docs/qgis_plugin.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/AGENTS.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/ANALYSIS_SUMMARY.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/Datasets Guide _ Unsloth Documentation.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/Fine-tuning LLMs Guide _ Unsloth Documentation.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/Fine-tuning VLMs for iOS HTR.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/Finetuning Qwen3-VL for Gaelic OCR.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/Ministral 3 - How to Run Guide _ Unsloth Documentation.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/New in llama.cpp_ Model Management.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/QUICK_REFERENCE.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/Quantization-Aware Training (QAT) _ Unsloth Documentation.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/README_ANALYSIS.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/Supercharge your OCR Pipelines with Open Models.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/Unsloth Model Catalog _ Unsloth Documentation(1).md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/Unsloth Model Catalog _ Unsloth Documentation.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/We Got Claude to Fine-Tune an Open Source LLM.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/fine-tuning-reference.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/gguf.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/huggingface-design-patterns-analysis.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/huggingface-ontologies-research.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/huggingface.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/mlflow-llm-guide.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/notebook-catalog.md"
+      ]
+    },
+    "irish-curriculum": {
+      "files": [
+        "irish-curriculum.md"
+      ],
+      "size_bytes": 125515,
+      "source_count": 11,
+      "sources": [
+        "docs/06-infrastructure/README.md",
+        "docs/06-infrastructure/education-subject-inventory.md",
+        "docs/06-infrastructure/gaois-api-reference.md",
+        "docs/06-infrastructure/irish-archives-workflow.md",
+        "docs/06-infrastructure/parallel-corpus-sources.md",
+        "docs/06-infrastructure/policy-frameworks.md",
+        "docs/06-infrastructure/subject-implementations.md",
+        "docs/06-infrastructure/teacher-supply.md",
+        "docs/06-infrastructure/vlm-ocr-comparison.md",
+        "docs/06-product/celtic-mmo.md",
+        "docs/06-product/crypteolas.md"
+      ]
+    },
+    "komodo-orchestration": {
+      "files": [
+        "komodo-orchestration.md"
+      ],
+      "size_bytes": 212255,
+      "source_count": 18,
+      "sources": [
+        "docs/06-infrastructure/INDEX1.md",
+        "docs/06-infrastructure/Release Komodo v2.0.0-dev-102 \u00b7 moghtech_komodo.md",
+        "docs/06-infrastructure/ansible-role-komodo_examples at komodo_v2 \u00b7 bpbradley_ansible-role-komodo.md",
+        "docs/06-infrastructure/automation_readme.md",
+        "docs/06-infrastructure/bunchloch.md",
+        "docs/06-infrastructure/cloudflare-r2.md",
+        "docs/06-infrastructure/deploying-komodo-periphery-pangolin-private-access-lancedb-stack.md",
+        "docs/06-infrastructure/integrating-1password-cli-komodo-ansible-deployment.md",
+        "docs/06-infrastructure/komodo-api-summary.md",
+        "docs/06-infrastructure/komodo-openapi-research.md",
+        "docs/06-infrastructure/komodo/Komodo FAQ, Tips, and Tricks.md",
+        "docs/06-infrastructure/komodo/komodo.md",
+        "docs/06-infrastructure/neo4j.md",
+        "docs/06-infrastructure/pangolin/Blueprints.md",
+        "docs/06-infrastructure/pangolin/Set up Pangolin Zero Trust VPN for private networks - Guides & Tutorials.md",
+        "docs/06-infrastructure/stealth-browser-stack.md",
+        "docs/06-infrastructure/termix.md",
+        "docs/06-infrastructure/where-to-install-1password-cli-op.md"
+      ]
+    },
+    "lancedb-vector": {
+      "files": [
+        "lancedb-vector.md"
+      ],
+      "size_bytes": 73003,
+      "source_count": 5,
+      "sources": [
+        "docs/06-infrastructure/Docker Compose Setup for Data Tools.md",
+        "docs/06-infrastructure/hosting-lancedb-docker-compose.md",
+        "docs/06-infrastructure/knowledge-graph-schema.md",
+        "docs/06-infrastructure/lancedb.md",
+        "docs/06-product/TUATH_QUICKSTART.md"
+      ]
+    },
+    "mcp-servers": {
+      "files": [
+        "mcp-servers.md"
+      ],
+      "size_bytes": 31986,
+      "source_count": 3,
+      "sources": [
+        "docs/06-infrastructure/MCP Server Transports_ STDIO, Streamable HTTP & SSE.md",
+        "docs/06-infrastructure/ML_STACK.md",
+        "docs/06-infrastructure/orchestration-infrastructure.md"
+      ]
+    },
+    "monitoring": {
+      "files": [
+        "monitoring.md"
+      ],
+      "size_bytes": 68154,
+      "source_count": 2,
+      "sources": [
+        "docs/06-infrastructure/Pigsty, Mathesar, Komodo Deployment Outline.md",
+        "docs/06-infrastructure/cloudflare-tunnel-research.md"
+      ]
+    },
+    "olake-replication": {
+      "files": [
+        "olake-replication.md"
+      ],
+      "size_bytes": 12452,
+      "source_count": 1,
+      "sources": [
+        "docs/06-infrastructure/lakehouse-architecture.md"
+      ]
+    },
+    "pangolin-routing": {
+      "files": [
+        "pangolin-routing.md"
+      ],
+      "size_bytes": 9648,
+      "source_count": 2,
+      "sources": [
+        "docs/06-infrastructure/pangolin/Docker Compose.md",
+        "docs/06-infrastructure/pangolin/pangolin.md"
+      ]
+    },
+    "pulumi-iac": {
+      "files": [
+        "pulumi-iac.md"
+      ],
+      "size_bytes": 15771,
+      "source_count": 1,
+      "sources": [
+        "docs/06-infrastructure/Provision Resources on Hetzner Cloud with Pulumi.md"
+      ]
+    },
+    "screenshots": {
+      "files": [
+        "screenshots.md"
+      ],
+      "size_bytes": 17765,
+      "source_count": 3,
+      "sources": [
+        "docs/06-infrastructure/pangolin/Implementing External Authentication in Pangolin Using Tinyauth and the Middleware Manager - Networking.md",
+        "docs/06-infrastructure/pangolin/Integration API.md",
+        "docs/06-infrastructure/pangolin/old_Implementing External Authentication in Pangolin Using Tinyauth and the Middleware Manager - Networking(1).md"
+      ]
+    },
+    "tanstack-router": {
+      "files": [
+        "tanstack-router.md"
+      ],
+      "size_bytes": 8460,
+      "source_count": 2,
+      "sources": [
+        "docs/06-infrastructure/pangolin/Enable Integration API.md",
+        "docs/06-infrastructure/pangolin/Guide to Securing Your Traefik Setup- part 2 - Guides & Tutorials.md"
+      ]
+    },
+    "tanstack-start": {
+      "files": [
+        "tanstack-start.md"
+      ],
+      "size_bytes": 97946,
+      "source_count": 3,
+      "sources": [
+        "docs/06-infrastructure/Portfolio Tech Stack & Cloudflare R2.md",
+        "docs/06-infrastructure/frontend-integration.md",
+        "docs/06-infrastructure/web-tech-tutorials-and-examples.md"
+      ]
+    },
+    "uk-curriculum": {
+      "files": [
+        "uk-curriculum.md"
+      ],
+      "size_bytes": 7333,
+      "source_count": 1,
+      "sources": [
+        "docs/06-infrastructure/enrollment-statistics.md"
+      ]
+    },
+    "vite-bun-build": {
+      "files": [
+        "vite-bun-build.md"
+      ],
+      "size_bytes": 158749,
+      "source_count": 13,
+      "sources": [
+        "docs/06-infrastructure/AI Partner Catalyst_ Accelerate Innovation(1).md",
+        "docs/06-infrastructure/Building preconfigured OS images with HashiCorp Packer.md",
+        "docs/06-infrastructure/DAGGER_GUIDE_INDEX.md",
+        "docs/06-infrastructure/DAGGER_QUICK_REFERENCE.md",
+        "docs/06-infrastructure/Deploying Dagster to Google Cloud Platform _ Dagster Docs.md",
+        "docs/06-infrastructure/Docker Provider.md",
+        "docs/06-infrastructure/Get started with a 1Password Connect server _ 1Password Developer.md",
+        "docs/06-infrastructure/alignment-tools.md",
+        "docs/06-infrastructure/debug.md",
+        "docs/06-infrastructure/generating-typescript-client-pangolin-api-openapi-spec.md",
+        "docs/06-infrastructure/pangolin-patterns.md",
+        "docs/06-infrastructure/pangolin.md",
+        "docs/06-infrastructure/tmx-processing.md"
+      ]
+    },
+    "welsh": {
+      "files": [
+        "welsh.md"
+      ],
+      "size_bytes": 41034,
+      "source_count": 5,
+      "sources": [
+        "docs/06-infrastructure/ML_MODELS_REGISTRY.md",
+        "docs/06-infrastructure/unified-model-comparison.md",
+        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/SECURITY.md",
+        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-pinot-driver/CHANGELOG.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/README.md"
+      ]
+    }
+  }
+}

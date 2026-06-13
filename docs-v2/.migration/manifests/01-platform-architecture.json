@@ -1,0 +1,130 @@
+{
+  "domain": "01-platform-architecture",
+  "source_files": 33,
+  "target_files": 10,
+  "topics": {
+    "agents-frameworks": {
+      "files": [
+        "agents-frameworks.md"
+      ],
+      "size_bytes": 45581,
+      "source_count": 2,
+      "sources": [
+        "docs/02-architecture/AGENT_IMPLEMENTATIONS.md",
+        "docs/02-audit/agent_skill_consumability.md"
+      ]
+    },
+    "baml-extraction": {
+      "files": [
+        "baml-extraction.md"
+      ],
+      "size_bytes": 136242,
+      "source_count": 4,
+      "sources": [
+        "docs/01-platform-architecture/IRISH_ENGLISH_EDUCATION.md",
+        "docs/02-architecture/DOCUMENT_PROCESSING.md",
+        "docs/02-architecture/ML_SYSTEMS.md",
+        "docs/02-architecture/MULTI_AGENT_PRODUCTION.md"
+      ]
+    },
+    "ci-cd": {
+      "files": [
+        "ci-cd.md"
+      ],
+      "size_bytes": 2830,
+      "source_count": 1,
+      "sources": [
+        "docs/01-platform-architecture/modal.md"
+      ]
+    },
+    "cocoindex-pipelines": {
+      "files": [
+        "cocoindex-pipelines.md"
+      ],
+      "size_bytes": 62889,
+      "source_count": 5,
+      "sources": [
+        "docs/02-architecture/IRISH_EDTECH.md",
+        "docs/02-architecture/OIDEACHAIS_PIPELINE.md",
+        "docs/02-architecture/OIDEACHAIS_SPEC.md",
+        "docs/02-architecture/SRUTH_OVERVIEW.md",
+        "docs/02-architecture/TUATH_MMO.md"
+      ]
+    },
+    "dagster-orchestration": {
+      "files": [
+        "dagster-orchestration.md"
+      ],
+      "size_bytes": 51110,
+      "source_count": 2,
+      "sources": [
+        "docs/02-architecture/EDUCATION_ARCHITECTURE.md",
+        "docs/02-audit/cocoindex_readiness_audit.md"
+      ]
+    },
+    "deployment": {
+      "files": [
+        "deployment.md"
+      ],
+      "size_bytes": 438007,
+      "source_count": 13,
+      "sources": [
+        "docs/01-platform-architecture/BONNEAGAR_OVERVIEW.md",
+        "docs/01-platform-architecture/DEPLOYMENT_STATUS.md",
+        "docs/01-platform-architecture/infrastructure-stacks.md",
+        "docs/01-platform-architecture/komodo-gitops.md",
+        "docs/01-platform-architecture/kubernetes-deployment.md",
+        "docs/01-platform-architecture/m2m-100.md",
+        "docs/01-platform-architecture/monorepo-strategy.md",
+        "docs/01-platform-architecture/pangolin-networking.md",
+        "docs/01-platform-architecture/platform-overview.md",
+        "docs/01-platform-architecture/secrets-management.md",
+        "docs/01-platform-architecture/services-roadmap.md",
+        "docs/02-audit/consolidation_plan.md",
+        "docs/02-audit/discovery_inventory.md"
+      ]
+    },
+    "dlt-ingestion": {
+      "files": [
+        "dlt-ingestion.md"
+      ],
+      "size_bytes": 40205,
+      "source_count": 2,
+      "sources": [
+        "docs/02-architecture/ALEYUM_PORTFOLIO.md",
+        "docs/02-audit/cognee_readiness_audit.md"
+      ]
+    },
+    "komodo-orchestration": {
+      "files": [
+        "komodo-orchestration.md"
+      ],
+      "size_bytes": 4903,
+      "source_count": 1,
+      "sources": [
+        "docs/01-platform-architecture/README.md"
+      ]
+    },
+    "tanstack-start": {
+      "files": [
+        "tanstack-start.md"
+      ],
+      "size_bytes": 26062,
+      "source_count": 1,
+      "sources": [
+        "docs/01-platform-architecture/TECH_STACK.md"
+      ]
+    },
+    "vite-bun-build": {
+      "files": [
+        "vite-bun-build.md"
+      ],
+      "size_bytes": 5172,
+      "source_count": 2,
+      "sources": [
+        "docs/01-platform-architecture/hono.md",
+        "docs/02-audit/TODO_AUDIT.md"
+      ]
+    }
+  }
+}
