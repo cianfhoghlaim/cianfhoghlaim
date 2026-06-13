@@ -70,7 +70,7 @@ def gaeltacht_boundaries(
     """
     context.log.info("Ingesting Gaeltacht boundaries")
 
-    from oideachais.data_platform.dlt_sources.geospatial.geohive import geohive_source
+    from oideachais.dlt_sources.geospatial.geohive import geohive_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="gaeltacht_boundaries",
@@ -224,7 +224,7 @@ def welsh_speaking_boundaries(
     """
     context.log.info("Ingesting Welsh-speaking boundaries")
 
-    from oideachais.data_platform.dlt_sources.geospatial.ons_lsoa import ons_lsoa_source
+    from oideachais.dlt_sources.geospatial.ons_lsoa import ons_lsoa_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="welsh_speaking",
@@ -275,7 +275,7 @@ def gaidhealtachd_boundaries(
     """
     context.log.info("Ingesting Gàidhealtachd boundaries")
 
-    from oideachais.data_platform.dlt_sources.geospatial.scotland_gov import scotland_datazones_source
+    from oideachais.dlt_sources.geospatial.scotland_gov import scotland_datazones_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="gaidhealtachd",
@@ -478,7 +478,7 @@ def celtic_medium_schools(
     """
     context.log.info("Ingesting Celtic-medium school locations")
 
-    from oideachais.data_platform.dlt_sources.geospatial.schools import celtic_schools_source
+    from oideachais.dlt_sources.geospatial.schools import celtic_schools_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="celtic_medium_schools",
@@ -642,7 +642,7 @@ def irish_small_areas(
     """
     context.log.info("Ingesting Irish Small Areas")
 
-    from oideachais.data_platform.dlt_sources.geospatial.cso_small_areas import cso_small_areas_source
+    from oideachais.dlt_sources.geospatial.cso_small_areas import cso_small_areas_source
 
     pipeline = dlt.build_dlt_pipeline(
         pipeline_name="irish_small_areas",

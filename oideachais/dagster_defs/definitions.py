@@ -68,10 +68,23 @@ from .assets.ireland import exam_materials_assets
 from .assets.pdf_assets import pdf_processing_assets
 
 # Model Conversion Assets (HF → GGUF for llama-swap)
-from oideachais.data_platform.dagster_assets import model_conversion_assets
+# Guarded: dagster_assets modules reference Path(__file__).parents[4] which
+# fails in the post-cleanup monorepo layout. The LC pipeline doesn't depend
+# on these; they're loaded best-effort.
+try:
+    from oideachais.dagster_assets import model_conversion_assets
+except (ImportError, IndexError) as e:
+    import structlog
+    structlog.get_logger().warning("dagster_assets_model_conversion_skipped: %s", e)
+    model_conversion_assets = []
 
 # Asset Generation Assets (BAML → image gen → Garage S3)
-from oideachais.data_platform.dagster_assets import asset_generation_assets
+try:
+    from oideachais.dagster_assets import asset_generation_assets
+except (ImportError, IndexError) as e:
+    import structlog
+    structlog.get_logger().warning("dagster_assets_generation_skipped: %s", e)
+    asset_generation_assets = []
 
 # Phase 2 — BAML-driven extraction assets
 # Leaving Cert 2026 — 7 priority subjects × 10 assets = 70 assets
@@ -94,15 +107,15 @@ except ImportError as e:
     PER_SUBJECT_JOBS = []
     leaving_cert_full_job = None
 
-from oideachais.data_platform.dagster_defs.assets.ui_suggestion import (
+from oideachais.dagster_defs.assets.ui_suggestion import (
     ui_suggestion_asset,
     ui_suggestion_schedule,
 )
-from oideachais.data_platform.dagster_defs.assets.senior_cycle_kg import (
+from oideachais.dagster_defs.assets.senior_cycle_kg import (
     senior_cycle_knowledge_graph,
     lazy_extract_exam_paper,
 )
-from oideachais.data_platform.cognee_integration.cross_stage_cognify import (
+from oideachais.cognee_integration.cross_stage_cognify import (
     cross_stage_cognify,
 )
 
