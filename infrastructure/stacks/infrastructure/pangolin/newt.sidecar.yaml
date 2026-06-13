@@ -22,7 +22,8 @@ services:
       - ALL
     command:
       - "--provider=infisical"
-      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-url=https://infisical.cianfhoghlaim.ie"
+      - "--infisical-client-id=${INFISICAL_CLIENT_ID}"
       - "--infisical-client-secret=file:/run/secrets/infisical_secret"
       - "--infisical-default-environment=${INFISICAL_ENVIRONMENT:-dev}"
       - "--infisical-default-project-id=${INFISICAL_PROJECT_ID:-}"
@@ -63,7 +64,7 @@ services:
 
 secrets:
   infisical_secret:
-    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret
 
 volumes:
   newt-secrets:
