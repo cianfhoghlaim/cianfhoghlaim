@@ -13,7 +13,7 @@ Includes:
 - Irish-medium (Gaeilge) resources
 
 Usage:
-    from oideachais.data_platform.dlt_sources.ireland.oide import (
+    from oideachais.dlt_sources.ireland.oide import (
         oide_source,
         oide_subject_source,
     )
@@ -31,8 +31,8 @@ from typing import Any
 
 import dlt
 
-from ..common.firecrawl_source import crawl_website, scrape_page
-from ..common.incremental import compute_content_hash
+from ...common.firecrawl_source import crawl_website, scrape_page
+from ...common.incremental import compute_content_hash
 
 # Oide.ie main URLs
 OIDE_URLS = {

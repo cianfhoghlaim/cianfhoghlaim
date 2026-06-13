@@ -10,7 +10,7 @@ from typing import Any
 
 import dlt
 
-from ..common.firecrawl_source import crawl_website
+from ...common.firecrawl_source import crawl_website
 
 
 def _crawl_eti_inspections(max_pages: int = 200) -> Iterator[dict[str, Any]]:
