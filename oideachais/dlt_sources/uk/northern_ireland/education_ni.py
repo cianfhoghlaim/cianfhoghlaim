@@ -10,7 +10,7 @@ from typing import Any
 
 import dlt
 
-from ..common.firecrawl_source import crawl_website
+from ...common.firecrawl_source import crawl_website
 
 EDUCATION_NI_URLS = {
     "main": "https://www.education-ni.gov.uk",

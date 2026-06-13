@@ -59,10 +59,10 @@ from .assets import all_assets
 # - curriculum_assets.py (replaced by @dlt_assets pattern)
 # - subject_assets.py (replaced by @dlt_assets pattern)
 # Ireland Curriculum Assets (@dlt_assets pattern - auto-parallelized)
-from .assets.ireland import curriculum_dlt_assets, scraped_curriculum_pages
+from .assets.ie.education import curriculum_dlt_assets, scraped_curriculum_pages
 
 # Ireland Exam Materials Assets (Stagehand browser -> DLT -> DuckLake)
-from .assets.ireland import exam_materials_assets
+from .assets.ie.education import exam_materials_assets
 
 # PDF Processing Assets
 from .assets.pdf_assets import pdf_processing_assets

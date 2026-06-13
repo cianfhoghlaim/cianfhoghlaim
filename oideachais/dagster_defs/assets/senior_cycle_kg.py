@@ -32,13 +32,13 @@ from dagster import (
     schedule,
 )
 
-from oideachais.data_platform.dagster_defs.assets.ireland.exam_materials_assets import (
+from oideachais.dagster_defs.assets.ie.education.exam_materials_assets import (
     EXAM_CYCLES,
     EXAM_SUBJECTS,
     MATERIAL_TYPES,
 )
-from oideachais.data_platform.dlt_utils.destinations import get_dlt_destination
-from oideachais.data_platform.dlt_utils.safety import safe_dlt_run
+from oideachais.dlt_utils.destinations import get_dlt_destination
+from oideachais.dlt_utils.safety import safe_dlt_run
 
 SENIOR_CYCLE_SUBJECTS = StaticPartitionsDefinition(EXAM_SUBJECTS["leaving_certificate"])
 SENIOR_CYCLE_MATERIAL_TYPES = StaticPartitionsDefinition(MATERIAL_TYPES)
