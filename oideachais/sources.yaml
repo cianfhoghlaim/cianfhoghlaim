@@ -1,0 +1,456 @@
+# sources.yaml — Canonical registry for every DLT source in oideachais.
+# Loaded by oideachais.dlt_utils.source_factory.SourceFactory.
+#
+# Contract (v2):
+#   - `id`, `name`, `domain`, `nation`           → asset key prefix
+#   - `kind`, `urls`, `crawl`                    → DLT source constructor kwargs
+#   - `pagination`, `incremental`                → dlt.sources.incremental knobs
+#   - `schema` (BAML/Pydantic)                   → typed payload contract
+#   - `lakehouse` (DUCKLAKE / ICEBERG / DUCKDB)  → destination config
+#   - `embedding` (LanceDB)                      → vector namespace + model
+#   - `kg` (Cognee/Graphiti)                      → dataset + edge types
+#   - `firecrawl` / `browserbase`                → paid backend override
+#   - `tests`                                    → pytest markers
+#   - `schedule`                                 → Dagster ScheduleDefinition
+#   - `sensors`                                  → change-detection triggers
+#   - `compliance`                               → robots.txt, licence, retention
+
+version: 2
+
+defaults:
+  destination: ducklake                  # ducklake | iceberg | duckdb
+  destination_database: oideachais
+  embedding_model: BAAI/bge-m3           # 1024-dim, multilingual
+  firecrawl:
+    only_main_content: true
+    formats: [markdown, links, html]
+    max_pages: 200
+    max_depth: 3
+    include_paths: []
+    exclude_paths: []
+  browserbase:
+    stagehand_model: deepseek/deepseek-chat
+    wait_for: networkidle
+  schedule:
+    cron: "0 4 * * *"
+    timezone: Europe/Dublin
+  compliance:
+    respect_robots_txt: true
+    licence: TBD                         # override per source
+    retain_raw_snapshots_days: 30
+  tests:
+    pytest_marker: integration
+    uses_local_scrape_cache: true
+  sensors:
+    sitemap_hash_check: true
+
+nations:
+  - { code: ie,  name: "Ireland",            jurisdiction: "euro_eu" }
+  - { code: ni,  name: "Northern Ireland",   jurisdiction: "uk" }
+  - { code: en,  name: "England",            jurisdiction: "uk" }
+  - { code: sct, name: "Scotland",           jurisdiction: "uk" }
+  - { code: wls, name: "Wales",              jurisdiction: "uk" }
+  - { code: iom, name: "Isle of Man",        jurisdiction: "crown_dependencies" }
+  - { code: jey, name: "Jersey",             jurisdiction: "crown_dependencies" }
+  - { code: ggy, name: "Guernsey",           jurisdiction: "crown_dependencies" }
+
+kinds:
+  - firecrawl_pages
+  - stagehand_papers
+  - browserbase_extract
+  - api_table
+  - api_xml
+  - filesystem_csv
+  - filesystem_parquet
+
+# Each entry below drives:
+#   1. A DLT @source (via SourceFactory)
+#   2. A Dagster @asset  (via SourceFactory.dagster_asset)
+#   3. A LanceDB table    (via SourceFactory.lance_table)
+#   4. A Cognee dataset   (via SourceFactory.cognee_dataset)
+#   5. A marimo notebook  (via SourceFactory.marimo_path)
+#   6. A pytest           (via SourceFactory.tests_path)
+#
+# `asset_key` is the canonical `{nation}.{domain}.{entity}` key tuple.
+sources:
+
+  # ═══════ EDUCATION — IRELAND (existing) ═══════════════════════════════════
+  - id: ie.education.ncca
+    name: "NCCA — National Council for Curriculum and Assessment"
+    domain: education
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.ncca.ie"]
+    crawl: { include_paths: ["/en/**", "/ga/**"], max_pages: 500 }
+    schedule: { cron: "0 3 * * 1" }
+    sensors: [sitemap_hash]
+    asset_key: [ie, education, ncca, pages]
+    embedding: { table: oideachais.education.ie.ncca_pages, kind: page_markdown }
+    kg:       { dataset: oideachais_education_ie, edges: [prerequisite, strand, level] }
+    compliance: { licence: open_government, contact: info@ncca.ie }
+
+  - id: ie.education.examinations
+    name: "State Examinations Commission"
+    domain: education
+    nation: ie
+    kind: stagehand_papers
+    urls: ["https://www.examinations.ie"]
+    crawl: { include_paths: ["/scripts/**/*.pdf", "/archive/**/*.pdf"] }
+    schedule: { cron: "0 2 * * *" }
+    asset_key: [ie, education, exam_materials, leaving_certificate]
+    embedding: { table: oideachais.education.ie.exam_papers, kind: paper_pdf_docling }
+    compliance: { licence: public_service }
+
+  - id: ie.education.oide
+    name: "Oide — Teacher CPD"
+    domain: education
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.oide.ie"]
+    asset_key: [ie, education, oide, pages]
+
+  - id: ie.education.scoilnet
+    name: "Scoilnet — Schools Resource Portal"
+    domain: education
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.scoilnet.ie"]
+    asset_key: [ie, education, scoilnet, pages]
+
+  # ═══════ EDUCATION — NORTHERN IRELAND ══════════════════════════════════════
+  - id: ni.education.ccea
+    name: "CCEA — NI Curriculum, Examinations and Assessment"
+    domain: education
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://ccea.org.uk"]
+    crawl: { include_paths: ["/curriculum/**", "/qualifications/**", "/irish-medium/**"] }
+    asset_key: [ni, education, ccea, pages]
+    embedding: { table: oideachais.education.ni.ccea_pages }
+    kg:       { dataset: oideachais_education_uk }
+
+  - id: ni.education.deni
+    name: "Department of Education Northern Ireland"
+    domain: education
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.education-ni.gov.uk"]
+    asset_key: [ni, education, deni, pages]
+
+  - id: ni.education.etini
+    name: "Education and Training Inspectorate NI"
+    domain: education
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.etini.gov.uk"]
+    asset_key: [ni, education, etini, inspections]
+
+  - id: ni.education.nisra
+    name: "NISRA Education Statistics"
+    domain: education
+    nation: ni
+    kind: api_table
+    urls: ["https://data.nisra.gov.uk"]
+    pagination: { kind: cursor, page_size: 1000 }
+    incremental: { cursor_path: "$.next", field: last_updated, initial: "2020-01-01" }
+    asset_key: [ni, education, nisra, statistics]
+
+  # ═══════ EDUCATION — ENGLAND ══════════════════════════════════════════════
+  - id: en.education.dfe
+    name: "Department for Education (England)"
+    domain: education
+    nation: en
+    kind: api_table
+    urls: ["https://explore-education-statistics.service.gov.uk/data-api"]
+    pagination: { kind: offset, page_size: 500 }
+    asset_key: [en, education, dfe, statistics]
+
+  - id: en.education.ofsted
+    name: "Ofsted Inspection Reports (England)"
+    domain: education
+    nation: en
+    kind: browserbase_extract
+    urls: ["https://reports.ofsted.gov.uk"]
+    asset_key: [en, education, ofsted, inspections]
+
+  - id: en.education.gias
+    name: "Get Information About Schools"
+    domain: education
+    nation: en
+    kind: filesystem_csv
+    urls: ["https://get-information-schools.service.gov.uk/Downloads"]
+    asset_key: [en, education, gias, schools]
+
+  - id: en.education.aqa
+    name: "AQA Specifications"
+    domain: education
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.aqa.org.uk"]
+    crawl: { include_paths: ["/subjects/gcse", "/subjects/a-level", "/find-past-papers-and-mark-schemes"] }
+    asset_key: [en, education, aqa, pages]
+
+  - id: en.education.edexcel
+    name: "Pearson Edexcel Specifications"
+    domain: education
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://qualifications.pearson.com"]
+    asset_key: [en, education, edexcel, pages]
+
+  - id: en.education.ocr
+    name: "OCR Specifications"
+    domain: education
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.ocr.org.uk"]
+    asset_key: [en, education, ocr, pages]
+
+  # ═══════ EDUCATION — SCOTLAND ════════════════════════════════════════════
+  - id: sct.education.cfe
+    name: "Curriculum for Excellence (Scotland)"
+    domain: education
+    nation: sct
+    kind: firecrawl_pages
+    urls: ["https://education.gov.scot"]
+    crawl: { include_paths: ["/curriculum-for-excellence/**", "/improvement/learning-resources/**"] }
+    asset_key: [sct, education, cfe, pages]
+
+  - id: sct.education.sqa
+    name: "Scottish Qualifications Authority"
+    domain: education
+    nation: sct
+    kind: firecrawl_pages
+    urls: ["https://www.sqa.org.uk"]
+    asset_key: [sct, education, sqa, pages]
+
+  - id: sct.education.simd
+    name: "Scottish Index of Multiple Deprivation"
+    domain: education
+    nation: sct
+    kind: firecrawl_pages
+    urls: ["https://www.gov.scot/collections/scottish-index-of-multiple-deprivation-2020/"]
+    asset_key: [sct, education, simd, statistics]
+
+  # ═══════ EDUCATION — WALES ════════════════════════════════════════════════
+  - id: wls.education.cfw
+    name: "Curriculum for Wales (Hwb)"
+    domain: education
+    nation: wls
+    kind: firecrawl_pages
+    urls: ["https://hwb.gov.wales/curriculum-for-wales/"]
+    crawl: { include_paths: ["/curriculum-for-wales/**", "/cwricwlwm-i-gymru/**"] }
+    asset_key: [wls, education, cfw, pages]
+
+  - id: wls.education.wjec
+    name: "WJEC / CBAC Qualifications"
+    domain: education
+    nation: wls
+    kind: firecrawl_pages
+    urls: ["https://www.wjec.co.uk", "https://www.cbac.co.uk"]
+    asset_key: [wls, education, wjec, pages]
+
+  - id: wls.education.estyn
+    name: "Estyn — Education and Training Inspectorate Wales"
+    domain: education
+    nation: wls
+    kind: firecrawl_pages
+    urls: ["https://www.estyn.gov.wales"]
+    asset_key: [wls, education, estyn, inspections]
+
+  - id: wls.education.statswales
+    name: "StatsWales — Education tables"
+    domain: education
+    nation: wls
+    kind: api_table
+    urls: ["https://statswales.gov.wales"]
+    asset_key: [wls, education, statswales, statistics]
+
+  # ═══════ EDUCATION — CROWN DEPENDENCIES ═══════════════════════════════════
+  - id: iom.education.desc
+    name: "Department of Education, Sport and Culture (IoM)"
+    domain: education
+    nation: iom
+    kind: firecrawl_pages
+    urls: ["https://www.gov.im/categories/education-training-and-careers/"]
+    asset_key: [iom, education, desc, pages]
+
+  - id: jey.education.govje
+    name: "Government of Jersey — Education"
+    domain: education
+    nation: jey
+    kind: firecrawl_pages
+    urls: ["https://www.gov.je/Government/Education/"]
+    asset_key: [jey, education, govje, pages]
+
+  - id: ggy.education.govgg
+    name: "Government of Guernsey — Education"
+    domain: education
+    nation: ggy
+    kind: firecrawl_pages
+    urls: ["https://gov.gg/education"]
+    asset_key: [ggy, education, govgg, pages]
+
+  # ═══════ MEDICINE — IRELAND ═══════════════════════════════════════════════
+  - id: ie.medicine.hse
+    name: "Health Service Executive (Ireland)"
+    domain: medicine
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.hse.ie"]
+    asset_key: [ie, medicine, hse, pages]
+    embedding: { table: oideachais.medicine.ie.hse_pages, kind: page_markdown }
+    compliance: { licence: public_service, contact: communications@hse.ie }
+
+  - id: ie.medicine.medicalcouncil
+    name: "Medical Council of Ireland — Register of Medical Practitioners"
+    domain: medicine
+    nation: ie
+    kind: api_table
+    urls: ["https://www.medicalcouncil.ie"]
+    pagination: { kind: offset, page_size: 100 }
+    asset_key: [ie, medicine, medicalcouncil, register]
+
+  - id: ie.medicine.doh
+    name: "Department of Health (Ireland)"
+    domain: medicine
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.gov.ie/en/organisation/department-of-health/"]
+    asset_key: [ie, medicine, doh, pages]
+
+  - id: ie.medicine.hpsc
+    name: "Health Protection Surveillance Centre"
+    domain: medicine
+    nation: ie
+    kind: api_table
+    urls: ["https://www.hpsc.ie"]
+    asset_key: [ie, medicine, hpsc, surveillance]
+
+  # ═══════ MEDICINE — NORTHERN IRELAND / ENGLAND / SCOTLAND / WALES ═════════
+  - id: ni.medicine.nidirect
+    name: "nidirect Health & Social Care (NI)"
+    domain: medicine
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.nidirect.gov.uk/articles/health-and-social-care"]
+    asset_key: [ni, medicine, nidirect, pages]
+
+  - id: en.medicine.nhs_england
+    name: "NHS England"
+    domain: medicine
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.england.nhs.uk"]
+    asset_key: [en, medicine, nhs_england, pages]
+
+  - id: en.medicine.gmc
+    name: "General Medical Council (UK register)"
+    domain: medicine
+    nation: en
+    kind: api_table
+    urls: ["https://www.gmc-uk.org"]
+    pagination: { kind: cursor, page_size: 200 }
+    asset_key: [en, medicine, gmc, register]
+
+  - id: en.medicine.nice
+    name: "NICE — Clinical Guidelines"
+    domain: medicine
+    nation: en
+    kind: api_table
+    urls: ["https://www.nice.org.uk"]
+    asset_key: [en, medicine, nice, guidelines]
+
+  - id: sct.medicine.nhs_scotland
+    name: "NHS Scotland"
+    domain: medicine
+    nation: sct
+    kind: firecrawl_pages
+    urls: ["https://www.scot.nhs.uk"]
+    asset_key: [sct, medicine, nhs_scotland, pages]
+
+  - id: wls.medicine.nhs_wales
+    name: "NHS Wales / Public Health Wales"
+    domain: medicine
+    nation: wls
+    kind: firecrawl_pages
+    urls: ["https://phw.nhs.wales"]
+    asset_key: [wls, medicine, nhs_wales, pages]
+
+  # ═══════ LAW — STATUTORY ONLY (Ireland) ═══════════════════════════════════
+  - id: ie.law.irish_statute_book
+    name: "Irish Statute Book"
+    domain: law
+    nation: ie
+    kind: api_xml
+    urls: ["https://www.irishstatutebook.ie/eli/{year}/act/{number}/enacted/en/xml"]
+    pagination: { kind: offset, page_size: 100 }
+    incremental: { cursor_path: "$.act_id", field: act_id, initial: "0" }
+    asset_key: [ie, law, irish_statute_book, acts]
+    embedding: { table: oideachais.law.ie.statutes }
+    kg:       { dataset: oideachais_law, edges: [amends, repealed_by, cites] }
+
+  - id: ie.law.doj
+    name: "Department of Justice (Ireland)"
+    domain: law
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.gov.ie/en/organisation/department-of-justice/"]
+    asset_key: [ie, law, doj, pages]
+
+  - id: ie.law.lawreform
+    name: "Law Reform Commission (Ireland)"
+    domain: law
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.lawreform.ie"]
+    asset_key: [ie, law, lawreform, pages]
+
+  # ═══════ LAW — STATUTORY ONLY (NI / EN / SCT / WLS) ═══════════════════════
+  - id: ni.law.legislation
+    name: "Northern Ireland Legislation"
+    domain: law
+    nation: ni
+    kind: api_xml
+    urls: ["https://www.legislation.gov.uk/nid"]
+    asset_key: [ni, law, legislation, nid]
+
+  - id: en.law.legislation
+    name: "UK Legislation (legislation.gov.uk)"
+    domain: law
+    nation: en
+    kind: api_xml
+    urls: ["https://www.legislation.gov.uk"]
+    asset_key: [en, law, legislation, uk]
+
+  - id: en.law.lawcommission
+    name: "Law Commission of England & Wales"
+    domain: law
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.lawcom.gov.uk"]
+    asset_key: [en, law, lawcommission, pages]
+
+  - id: sct.law.legislation
+    name: "Scottish Government — Legislation"
+    domain: law
+    nation: sct
+    kind: api_xml
+    urls: ["https://www.legislation.gov.uk"]
+    asset_key: [sct, law, legislation, sct]
+
+  - id: sct.law.scottishlawcommission
+    name: "Scottish Law Commission"
+    domain: law
+    nation: sct
+    kind: firecrawl_pages
+    urls: ["https://www.scotlawcom.gov.uk"]
+    asset_key: [sct, law, scottishlawcommission, pages]
+
+  - id: wls.law.legislation
+    name: "Welsh Government — Legislation"
+    domain: law
+    nation: wls
+    kind: api_xml
+    urls: ["https://www.legislation.gov.uk"]
+    asset_key: [wls, law, legislation, wls]

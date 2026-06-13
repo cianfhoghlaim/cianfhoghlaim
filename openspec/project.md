@@ -29,6 +29,8 @@ A bilingual (EN/GA) agentic educational platform covering 5 stages of the Irish 
 | `agentic-ui` | CopilotKit-powered AG-UI chat with per-stage Agno teams, lazy BAML extraction, and Convex persistence | Active |
 | `tertiary-pathways` | CAO courses, NUI/HEI matriculation, QQI FET awards, Apprenticeships, Application Timeline | Active |
 | `cognee-kg-memory` | Multi-modal knowledge graph memory — 6 datasets, 8 cross-stage edges, postgres + pgvector | Active |
+| `domain-source-registry` | Canonical `sources.yaml` + `SourceFactory` for every DLT source across education/medicine/law/statistics × 8 nations | Proposed |
+| `site-analysis-mcp` | Firecrawl + Browserbase MCP-driven `SiteAnalysis` (software + layout + description + screenshot) for every public source | Proposed |
 
 ### Dagger Modules
 
@@ -178,3 +180,4 @@ All specs MUST respect constraints from `docs/context/00-core/CONSTRAINTS.md`:
 | `croilar-revitalisation` | implemented |
 | `docs-restructuring` | implemented (canonical + Cognee script + opencode.json fix; per-domain cognify pending LLM key) |
 | `leaving-cert-2026` | scaffold (openspec valid; per-subject asset graph + web pages + BAML schemas + CI in place; pipeline populates on first run) |
+| `lateralise-british-isles-domains` | scaffold (openspec valid; awaiting Phase 1a toolchain bump before asset key rename) |
