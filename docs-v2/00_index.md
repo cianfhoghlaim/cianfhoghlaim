@@ -16,7 +16,7 @@ generated: 2026-06-13
 | 02-data-platform | `02-data-platform/` | 7 |
 | 03-agents | `03-agents/` | 2 |
 | 04-ai-ml | `04-ai-ml/` | 19 |
-| 05-web | `05-web/` | 12 |
+| 05-web | `05-web/` | 13 |
 | 06-infrastructure | `06-infrastructure/` | 14 |
 | 07-standards | `07-standards/` | 10 |
 | 08-misc | `08-misc/` | 138 |
