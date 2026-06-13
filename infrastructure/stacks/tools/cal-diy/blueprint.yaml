@@ -9,5 +9,5 @@ private-resources:
     protocol: "http"
     roles:
       - "Member"
-    destination: "cal-diy"
+    destination: "calcom-web"
 
