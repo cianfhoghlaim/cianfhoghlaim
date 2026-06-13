@@ -13,6 +13,26 @@ dlthub
 dlthub
 .local
 
+# docs-v2/ is a regenerated, consolidated mirror of docs/ — never tracked
+# The migration script + manifest + index that produce it ARE tracked
+docs-v2/01-platform-architecture/
+docs-v2/02-data-platform/
+docs-v2/03-agents/
+docs-v2/04-ai-ml/
+docs-v2/05-web/
+docs-v2/06-infrastructure/
+docs-v2/07-standards/
+docs-v2/08-misc/
+docs-v2/09-cognee/
+docs-v2/10-loose-files/
+docs-v2/11-scripts/
+docs-v2/12-configs/
+docs-v2/13-images/
+!docs-v2/.migration/
+!docs-v2/00_index.md
+!docs-v2/MIGRATION.md
+!docs-v2/changelog.md
+
 # =============================================================================
 # CIANFHOGHLAIM MONOREPO - GITIGNORE
 # =============================================================================
