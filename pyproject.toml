@@ -3,7 +3,7 @@ name = "cianfhoghlaim"
 version = "0.0.0"
 description = "Cianfhoghlaim polyglot monorepo shell — uv workspace orchestrator. Delegates all real work to workspace members."
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 license = { text = "BUSL-1.1" }
 authors = [
     { name = "Cianfhoghlaim Team" },
@@ -80,7 +80,7 @@ croilar = { workspace = true }
 
 [tool.ruff]
 line-length = 100
-target-version = "py312"
+target-version = "py313"
 extend-exclude = [
     ".venv",
     "node_modules",
@@ -110,7 +110,7 @@ ignore = [
 known-first-party = ["oideachais", "tuatha", "codeolas", "códeolas", "sruth_browser"]
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.13"
 warn_return_any = true
 warn_unused_configs = true
 ignore_missing_imports = true
