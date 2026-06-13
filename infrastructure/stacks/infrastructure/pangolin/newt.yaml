@@ -28,6 +28,10 @@ services:
       DOCKER_SOCKET: /var/run/docker.sock
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - SYS_MODULE
     labels:
       - "komodo.skip=true"
     extra_hosts:

@@ -9,5 +9,5 @@ private-resources:
     protocol: "http"
     roles:
       - "Member"
-    destination: "komodo"
+    destination: "komodo-core"
 
