@@ -115,11 +115,36 @@ def _read_table(table_suffix: str) -> list[dict[str, Any]]:
         for subject in _LEAVING_CERT_SUBJECTS
     ]
     paths_csv = ", ".join(f"'{p}'" for p in glob_paths)
+    # DLT's `replace` write_disposition writes a `<uuid>-delete.parquet`
+    # tombstone file alongside the new data. We exclude those by globbing
+    # only files containing 'ducklake-' (the data pattern) but not 'delete'.
+    glob_paths = []
+    for subject in _LEAVING_CERT_SUBJECTS:
+        # Use a 2-step glob: list all files, filter in Python
+        try:
+            with _LOCK:
+                conn = _get_conn()
+                subject_path = f"{_DUCKLAKE_DATA_PATH}/leaving_cert_{subject}/{table_suffix}"
+                # List files via glob
+                files = conn.execute(
+                    f"SELECT file FROM glob('{subject_path}/*.parquet')"
+                ).fetchall()
+                for (file_path,) in files:
+                    if "-delete.parquet" in file_path:
+                        continue
+                    glob_paths.append(file_path)
+        except Exception:
+            continue
+
+    if not glob_paths:
+        return []
+
+    paths_csv = ", ".join(f"'{p}'" for p in glob_paths)
     try:
         with _LOCK:
             conn = _get_conn()
             result = conn.execute(
-                f"SELECT * FROM read_parquet([{paths_csv}]) ORDER BY year DESC, level"
+                f"SELECT * FROM read_parquet([{paths_csv}], union_by_name=True) ORDER BY year DESC, level"
             ).fetchdf()
         return result.to_dict(orient="records")
     except Exception as exc:
