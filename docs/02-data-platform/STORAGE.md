@@ -1,22 +1,41 @@
 ---
-title: 'Storage Pattern (DuckDB, LanceDB, DuckLake)'
+title: 'Storage Architecture & Patterns (DuckDB, LanceDB, DuckLake, MotherDuck)'
 domain: 'data_platform'
 status: 'stable'
-description: 'Pattern reference for DuckDB (single-threaded) + LanceDB (MVCC) + DuckLake (write substrate). For the one-liner mental model see docs/02-data-platform/storage-mental-model.md.'
+description: 'Pattern reference for DuckDB (single-threaded) + LanceDB (MVCC) + DuckLake (write substrate) + MotherDuck (read substrate). The mental model is: writes go to DuckLake, reads go to MotherDuck, Iceberg is the long-tail catalogue. All KCG storage constraints, patterns, and runtime examples in one place.'
 read_when:
   - writing any storage code
   - debugging a database segfault
-updated: '2026-06-13'
-supersedes:
-  - docs/STORAGE.md
+  - deciding where a new asset reads from
+  - onboarding a new analyst
+updated: 2026-06-13
+merged_from:
+  - docs/02-data-platform/STORAGE.md
+  - docs/02-data-platform/storage-mental-model.md
+  - docs/02-data-platform/ducklake.md
 truth: sole
 ccc_query_hints:
   - storage pattern duckdb lancedb ducklake
+  - storage mental model ducklake motherduck iceberg
   - serial database executor
   - duckdb single threaded
+  - ducklake lakehouse garage s3
 ---
 
-# Pattern: Storage (DuckDB, LanceDB, DuckLake)
+# Storage Architecture & Patterns (DuckDB, LanceDB, DuckLake, MotherDuck)
+
+> **Merged from 3 sources**: `STORAGE.md` (pattern reference, 175 lines) + `storage-mental-model.md` (one-liner + three-layer overview, 119 lines) + `ducklake.md` (KCG-specific DuckLake brief, 52 lines). The originals are now `.superseded`.
+
+## One-line mental model
+
+> - **Writes** go to **DuckLake** (Parquet on Garage S3, Postgres catalog)
+> - **Reads** (marimo, SPA, public) go to **MotherDuck** (`md:oideachais`)
+> - **Long-tail catalogue** is **Apache Iceberg** via Lakekeeper (not written to today; exists for future parity)
+> - **Change watching** is **ChangeDetection.io** at `infrastructure/stacks/tools/changedetection` and on `arm1-oci`
+
+The full architecture is in [`data-architecture.md`](data-architecture.md). The constraint list is in [`../00-core/CONSTRAINTS.md`](../00-core/CONSTRAINTS.md).
+
+---
 
 ## Critical Constraints
 
@@ -28,11 +47,111 @@ ccc_query_hints:
 | **DuckLake: zero-copy registration** | Register Parquet files, do not copy data | Wasted storage, slow ingestion |
 | **Snapshots before mutations** | Always snapshot before data changes | No time-travel recovery |
 
-> **One-liner mental model:**
-> - **Writes** go to DuckLake (Parquet on Garage S3, Postgres catalog).
-> - **Reads** (marimo, SPA, public) go through MotherDuck (`md:oideachais`).
-> - **Long-tail catalogue** lives in Apache Iceberg via Lakekeeper (not written to today).
-> - See [`docs/02-data-platform/storage-mental-model.md`](storage-mental-model.md) for the full picture.
+---
+
+## Three layers
+
+### 1. DuckLake (write substrate)
+
+- **What**: SQL table format on Parquet files; ACID on object storage via a Postgres catalog.
+- **Where it lives in this monorepo**:
+  - `s3://ducklake/oideachais/{domain}/{nation}/{table}/*.parquet`
+  - Catalog: Postgres at `localhost:5433` (local) or PlanetScale (prod)
+  - Concrete code: `oideachais/dlt_utils/destinations.py:get_dlt_destination()`
+- **Who writes**:
+  - `oideachais/dagster_defs/assets/*` (the unified asset graph)
+  - `oideachais/dlt_sources/domains/*` (the 43 registered sources)
+  - `tuatha/dagster_assets/*` (tuath's curriculum-in-game assets)
+- **Schema convention**: `oideachais.{domain}.{nation}` — e.g. `oideachais.education.ie.ncca_pages`. Each DLT run auto-creates the schema on first write.
+
+#### Why DuckLake matters for KCG
+
+DuckLake is the analytical backbone of the curriculum data platform. Every DLT ingestion pipeline writes Parquet files to Garage S3, and DuckLake registers them as versioned tables with time-travel capability. This means curriculum researchers can query "what did the syllabus look like before the 2023 reform?" without maintaining separate database snapshots. The Lance Namespace sidecar bridges DuckLake's SQL tables with LanceDB's vector indexes, enabling hybrid SQL+semantic search across the same curriculum data.
+
+#### Key DuckLake features
+
+- **ACID on S3** — Snapshot isolation, time travel, schema evolution via Iceberg
+- **DuckDB-powered** — Same SQL engine, same extensions, same performance
+- **Zero-copy branching** — Create branches of data without duplicating storage
+- **Schema evolution** — Add/drop/rename columns without rewriting data
+- **Garage S3 native** — Designed for self-hosted S3-compatible storage
+
+#### Installation
+
+```bash
+uv add ducklake
+```
+
+#### Integration with the stack
+
+DuckLake sits between Garage S3 (storage) and Lakekeeper (Iceberg catalog). Dagster jobs write to DuckLake tables; marimo notebooks query them; the Lance Namespace registers them as Iceberg tables for unified catalog discovery.
+
+#### Upstream
+
+- **Documentation**: Project-specific — built on DuckDB + Iceberg + Garage S3 integration
+- **Latest**: Active development as part of the Kings' College Galway infrastructure
+- **Screenshot**: DuckLake is a programmatic library with no UI. Query results appear in Dagster materialization logs, marimo notebook cells, and DuckDB's SQL shell. The Lakekeeper catalog UI (Nimtable) provides graphical table discovery for DuckLake-managed tables.
+
+### 2. MotherDuck (read substrate)
+
+- **What**: Managed DuckDB-compatible service; attaches a remote catalog over HTTPS. Used for analyst-facing reads.
+- **Where it lives**:
+  - `md:oideachais` (the canonical public database)
+  - Concrete code: `oideachais/api/ducklake_reader.py` (the API reader)
+- **Who reads**:
+  - `oideachais/notebooks/dashboards/*` (marimo dashboards)
+  - `oideachais/api/` (the SPA backend)
+  - agents (ADK / AGNO via the motherduck MCP at `opencode.json`)
+- **Why a separate read path**:
+  - MotherDuck handles many concurrent readers (no single-threaded segfault risk on the read side).
+  - Public analyst queries don't touch the local Postgres catalog.
+
+### 3. Apache Iceberg via Lakekeeper (long-tail catalogue)
+
+- **What**: Open-source Iceberg REST catalog. Stays in the stack on port 8181 (Lakekeeper) + 8182 (Lance Namespace sidecar).
+- **Why we don't write to it today**:
+  - DuckLake is sufficient for the current data volume.
+  - Iceberg's value is cross-engine compatibility (Spark, Trino, Athena). We don't run those.
+- **When it gets used** (future):
+  - If we need a second query engine (e.g. Athena for public analytics).
+  - If we need cross-region replication at the catalog level.
+- **Concrete code**: `infrastructure/stacks/storage/lakehouse/` — the Lakekeeper + Lance Namespace sidecar running at 8181/8182.
+
+### 4. ChangeDetection.io (change-watching)
+
+- **What**: Stand-alone service that watches sitemaps and detects changes on public sources.
+- **Where**:
+  - Compose: `infrastructure/stacks/tools/changedetection/compose.yaml`
+  - Deployed on: `arm1-oci` (the control-plane host)
+  - Local checkout: `/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/tools/changedetection`
+- **Why we use it** (vs firecrawl's `changeTracking`):
+  - ChangeDetection.io is the canonical change-watcher for `oideachais/sources.yaml` — it has a UI, history, and webhooks.
+  - It is one of the 88 stacks; it's already paid for in our infrastructure budget.
+  - firecrawl's `changeTracking` is a single-shot endpoint; we don't get history without re-running.
+
+---
+
+## How the layers interact
+
+```
+                  ┌──────────────┐
+   DLT sources ───▶│   DuckLake   │──┐
+                  │  (writes)    │  │
+                  └──────────────┘  │  ┌────────────┐
+                                     ├─▶│ MotherDuck │
+                  ┌──────────────┐  │  │  (reads)   │
+   Sitemap sensors ┤ Lakehouse ┤──┘  └────────────┘
+   ───▶ 8181/8182  │  (Iceberg) │
+                  └──────────────┘
+                          ▲
+                          │ long-tail catalogue
+                          │ (future)
+
+   ChangeDetection.io ────▶ sitemap sensors
+       (deployed on arm1-oci)
+```
+
+---
 
 ## DuckDB Patterns
 
@@ -75,8 +194,9 @@ with duckdb.connect(db_path) as conn:
 # Connection closed automatically
 ```
 
-**Anti-pattern**: keeping a long-lived DuckDB connection across
-function boundaries in async code.
+**Anti-pattern**: keeping a long-lived DuckDB connection across function boundaries in async code.
+
+---
 
 ## LanceDB Patterns
 
@@ -104,12 +224,13 @@ if dropped:
     table.create_index(num_partitions=..., num_sub_vectors=...)
 ```
 
+---
+
 ## DuckLake Patterns
 
 ### Pattern 1: Destination factory (the only entry point)
 
-**Never** instantiate `dlt.destinations.ducklake` directly. Use the
-factory in `oideachais/dlt_utils/destinations.py`:
+**Never** instantiate `dlt.destinations.ducklake` directly. Use the factory in `oideachais/dlt_utils/destinations.py`:
 
 ```python
 from oideachais.dlt_utils import get_dlt_destination
@@ -141,10 +262,9 @@ credentials = DuckLakeCredentials(
 )
 ```
 
-> **Note:** the `DuckLakeCredentials` constructor kwargs changed in
-> dlt 1.x. If you're on a newer dlt release, re-run the
-> `oideachais/tests/dlt_utils/test_destinations.py` smoke test to
-> confirm the kwargs match.
+> **Note:** the `DuckLakeCredentials` constructor kwargs changed in dlt 1.x. If you're on a newer dlt release, re-run the `oideachais/tests/dlt_utils/test_destinations.py` smoke test to confirm the kwargs match.
+
+---
 
 ## MotherDuck Patterns
 
@@ -163,13 +283,16 @@ rows = con.execute(
 ).fetchall()
 ```
 
-In CI, the `MOTHERDUCK_TOKEN` env var (hydrated by mise + Infisical)
-authenticates the attach.
+In CI, the `MOTHERDUCK_TOKEN` env var (hydrated by mise + Infisical) authenticates the attach.
+
+---
 
 ## See also
 
-- [`docs/02-data-platform/storage-mental-model.md`](storage-mental-model.md) — one-liner
-- [`docs/02-data-platform/data-architecture.md`](data-architecture.md) — full lakehouse architecture
-- [`docs/02-data-platform/dagster-orchestration.md`](dagster-orchestration.md) — Dagster + storage
-- [`docs/02-data-platform/dlt-pipelines.md`](dlt-pipelines.md) — DLT patterns
-- [`docs/00-core/CONSTRAINTS.md`](../00-core/CONSTRAINTS.md) — the constraint checklist
+- [`data-architecture.md`](data-architecture.md) — full lakehouse architecture
+- [`dagster.md`](dagster.md) — Dagster + storage
+- [`dlt.md`](dlt.md) — DLT patterns
+- [`../00-core/CONSTRAINTS.md`](../00-core/CONSTRAINTS.md) — the constraint checklist
+- [`cross-domain-registry.md`](cross-domain-registry.md) — asset-key contract
+- [`../01-platform-architecture/infrastructure-stacks.md`](../01-platform-architecture/infrastructure-stacks.md) — stack index
+- [`../03-agents/change-detection.md`](../03-agents/change-detection.md) — sensor patterns
