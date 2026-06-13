@@ -1,0 +1,102 @@
+{
+  "domain": "05-web",
+  "source_files": 14,
+  "target_files": 9,
+  "topics": {
+    "baml-extraction": {
+      "files": [
+        "baml-extraction.md"
+      ],
+      "size_bytes": 21166,
+      "source_count": 2,
+      "sources": [
+        "docs/05-celtic-language/IRISH_ENGLISH_EDUCATION.md",
+        "docs/05-celtic-language/helsinki-opus-mt.md"
+      ]
+    },
+    "ci-cd": {
+      "files": [
+        "ci-cd.md"
+      ],
+      "size_bytes": 17109,
+      "source_count": 2,
+      "sources": [
+        "docs/05-celtic-language/MODEL_TRAINING.md",
+        "docs/05-web/ui-components.md"
+      ]
+    },
+    "cloudflare-edge": {
+      "files": [
+        "cloudflare-edge.md"
+      ],
+      "size_bytes": 23989,
+      "source_count": 2,
+      "sources": [
+        "docs/05-web/FRONTEND_STACK.md",
+        "docs/05-web/frontend-stack.md"
+      ]
+    },
+    "cocoindex-pipelines": {
+      "files": [
+        "cocoindex-pipelines.md"
+      ],
+      "size_bytes": 4159,
+      "source_count": 1,
+      "sources": [
+        "docs/05-celtic-language/IRISH_EDTECH.md"
+      ]
+    },
+    "deployment": {
+      "files": [
+        "deployment.md"
+      ],
+      "size_bytes": 12602,
+      "source_count": 1,
+      "sources": [
+        "docs/05-web/convex-hono-auth.md"
+      ]
+    },
+    "dlt-ingestion": {
+      "files": [
+        "dlt-ingestion.md"
+      ],
+      "size_bytes": 26775,
+      "source_count": 1,
+      "sources": [
+        "docs/05-celtic-language/LANGUAGE_ARCHITECTURE.md"
+      ]
+    },
+    "irish-curriculum": {
+      "files": [
+        "irish-curriculum.md"
+      ],
+      "size_bytes": 74413,
+      "source_count": 3,
+      "sources": [
+        "docs/05-celtic-language/BILINGUAL_EDTECH.md",
+        "docs/05-celtic-language/CELTIC_AI_RESOURCES.md",
+        "docs/05-celtic-language/IRISH_HUGGINGFACE.md"
+      ]
+    },
+    "tanstack-router": {
+      "files": [
+        "tanstack-router.md"
+      ],
+      "size_bytes": 11267,
+      "source_count": 1,
+      "sources": [
+        "docs/05-web/tanstack-start.md"
+      ]
+    },
+    "tanstack-start": {
+      "files": [
+        "tanstack-start.md"
+      ],
+      "size_bytes": 6882,
+      "source_count": 1,
+      "sources": [
+        "docs/05-web/README.md"
+      ]
+    }
+  }
+}

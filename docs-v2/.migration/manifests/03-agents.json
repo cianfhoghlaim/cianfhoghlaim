@@ -1,0 +1,287 @@
+{
+  "domain": "03-agents",
+  "source_files": 136,
+  "target_files": 16,
+  "topics": {
+    "agents-frameworks": {
+      "files": [
+        "agents-frameworks.md"
+      ],
+      "size_bytes": 441857,
+      "source_count": 12,
+      "sources": [
+        "docs/03-agents/AGENT_IMPLEMENTATIONS.md",
+        "docs/03-agents/AGENT_IMPLEMENTATIONS_SUMMARY.md",
+        "docs/03-agents/Agentic Education Platform Development.md",
+        "docs/03-agents/BROWSER_AUTOMATION_PLATFORM.md",
+        "docs/03-agents/INDEX.md",
+        "docs/03-agents/README.md",
+        "docs/03-agents/ag-ui.md",
+        "docs/03-agents/agent-frameworks.md",
+        "docs/03-agents/agno-architecture-guide.md",
+        "docs/03-agents/agno.md",
+        "docs/03-agents/agno_architecure_z_ai.md",
+        "docs/03-agents/google-adk.md"
+      ]
+    },
+    "baml-extraction": {
+      "files": [
+        "baml-extraction.md"
+      ],
+      "size_bytes": 1404,
+      "source_count": 32,
+      "sources": [
+        "docs/03-agents/BAML Schemas for Irish Education.md",
+        "docs/03-agents/BAML for Syllabus-Driven Data Extraction.md",
+        "docs/03-agents/BAML_COMPREHENSIVE_GUIDE.md",
+        "docs/03-agents/IRISH_EDUCATION_PLATFORM_BLUEPRINT.md",
+        "docs/03-agents/MCP_COMPREHENSIVE_RESEARCH.md",
+        "docs/03-agents/baml-extraction.md",
+        "docs/03-agents/baml-patterns-and-best-practices.md",
+        "docs/03-agents/mcp-servers.md",
+        "docs/03-agents/pydantic-ai.md",
+        "docs/03-pipelines/AI_ML_PIPELINE.md",
+        "docs/baml/2025-09-30-dyanmic-schemas/README.md",
+        "docs/baml/2025-09-30-dyanmic-schemas/baml_src/clients.baml",
+        "docs/baml/2025-09-30-dyanmic-schemas/baml_src/execute_baml.baml",
+        "docs/baml/2025-09-30-dyanmic-schemas/baml_src/generate_baml.baml",
+        "docs/baml/2025-09-30-dyanmic-schemas/baml_src/generators.baml",
+        "docs/baml/2025-09-30-dyanmic-schemas/email.md",
+        "docs/baml/2025-09-30-dyanmic-schemas/frontend/components/generated-baml-section.tsx",
+        "docs/baml/2025-09-30-dyanmic-schemas/meta.md",
+        "docs/baml/2025-12-02-multimodal-evals/.cursor/rules/baml.mdc",
+        "docs/baml/2025-12-02-multimodal-evals/README.md",
+        "docs/baml/2025-12-02-multimodal-evals/baml_src/clients.baml",
+        "docs/baml/2025-12-02-multimodal-evals/baml_src/generators.baml",
+        "docs/baml/2025-12-02-multimodal-evals/baml_src/receipts.baml",
+        "docs/baml/2025-12-02-multimodal-evals/baml_src/resume.baml",
+        "docs/baml/2025-12-02-multimodal-evals/meta.md",
+        "docs/baml/2025-12-02-multimodal-evals/src/README.md",
+        "docs/baml/extract-anything/README.md",
+        "docs/baml/extract-anything/baml_src/clients.baml",
+        "docs/baml/extract-anything/baml_src/execute_baml.baml",
+        "docs/baml/extract-anything/baml_src/generate_baml.baml",
+        "docs/baml/extract-anything/baml_src/generators.baml",
+        "docs/baml/extract-anything/frontend/components/generated-baml-section.tsx"
+      ]
+    },
+    "browser-automation": {
+      "files": [
+        "browser-automation.md"
+      ],
+      "size_bytes": 6962,
+      "source_count": 1,
+      "sources": [
+        "docs/03-agents/STAGEHAND_COMPREHENSIVE_REFERENCE.md"
+      ]
+    },
+    "ci-cd": {
+      "files": [
+        "ci-cd.md"
+      ],
+      "size_bytes": 12054,
+      "source_count": 5,
+      "sources": [
+        "docs/03-agents/Agentic Translation Workflow Technologies.md",
+        "docs/03-agents/Agentic Web Scraping Pipeline.md",
+        "docs/03-agents/DURABLE_EXECUTION_COMPREHENSIVE_REFERENCE.md",
+        "docs/03-agents/GOOGLE_ADK_COMPREHENSIVE_REFERENCE.md",
+        "docs/03-agents/agno-openapi-specification-research.md"
+      ]
+    },
+    "cocoindex-pipelines": {
+      "files": [
+        "cocoindex-pipelines.md"
+      ],
+      "size_bytes": 11353,
+      "source_count": 1,
+      "sources": [
+        "docs/03-agents/AGNO_COMPREHENSIVE_REFERENCE.md"
+      ]
+    },
+    "dlt-ingestion": {
+      "files": [
+        "dlt-ingestion.md"
+      ],
+      "size_bytes": 8283,
+      "source_count": 4,
+      "sources": [
+        "docs/03-agents/AI Agents for Irish Language Resources.md",
+        "docs/03-agents/crawl4ai-sdk.md",
+        "docs/03-agents/patchright.md",
+        "docs/03-agents/stagehand.md"
+      ]
+    },
+    "duckdb-lakehouse": {
+      "files": [
+        "duckdb-lakehouse.md"
+      ],
+      "size_bytes": 342309,
+      "source_count": 14,
+      "sources": [
+        "docs/03-agents/BAML_DUCKDB_DRAGONFLY_ANALYSIS.md",
+        "docs/archive/2026-06-06-data-engineering/Branch, Test, Deploy_ A Git-Inspired Approach for Data - MotherDuck Blog.md",
+        "docs/archive/2026-06-06-data-engineering/Data Lake Stack Integration Research.md",
+        "docs/archive/2026-06-06-data-engineering/DuckLake + SQLMesh Tutorial_ Build a Modern Data Lakehouse On Your Laptop.md",
+        "docs/archive/2026-06-06-data-engineering/Extensions_ pg_duckdb.md",
+        "docs/archive/2026-06-06-data-engineering/Iceberg in the Browser.md",
+        "docs/archive/2026-06-06-data-engineering/PlanetScale _ MotherDuck Docs.md",
+        "docs/archive/2026-06-06-data-engineering/README.md",
+        "docs/archive/2026-06-06-data-engineering/Using MotherDuck with PlanetScale \u2014 PlanetScale.md",
+        "docs/archive/2026-06-06-data-engineering/duckdb-comprehensive-research.md",
+        "docs/archive/2026-06-06-data-engineering/duckdb-reference.md",
+        "docs/archive/2026-06-06-data-engineering/ducklake/README.md",
+        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-duckdb-driver/CHANGELOG.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/RESEARCH_CONSOLIDATION_PLAN.md"
+      ]
+    },
+    "examples-patterns": {
+      "files": [
+        "examples-patterns.md"
+      ],
+      "size_bytes": 41,
+      "source_count": 1,
+      "sources": [
+        "docs/baml/2025-09-30-dyanmic-schemas/.env.example"
+      ]
+    },
+    "firecrawl-scraping": {
+      "files": [
+        "firecrawl-scraping.md"
+      ],
+      "size_bytes": 639,
+      "source_count": 1,
+      "sources": [
+        "docs/03-agents/Agent _ Firecrawl.md"
+      ]
+    },
+    "lancedb-vector": {
+      "files": [
+        "lancedb-vector.md"
+      ],
+      "size_bytes": 72834,
+      "source_count": 7,
+      "sources": [
+        "docs/03-agents/TUATH_QUICKSTART.md",
+        "docs/archive/2026-06-06-data-engineering/assistant_1.md",
+        "docs/archive/2026-06-06-data-engineering/cognee.md",
+        "docs/archive/2026-06-06-data-engineering/init.md",
+        "docs/archive/2026-06-06-data-engineering/quickref.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/Productionalize AI Workloads with Lance Namespace, LanceDB, and Ray.md",
+        "docs/archive/2026-06-06-meaisinfhoghlaim/mlflow_ragas.md"
+      ]
+    },
+    "langfuse-observability": {
+      "files": [
+        "langfuse-observability.md"
+      ],
+      "size_bytes": 47911,
+      "source_count": 1,
+      "sources": [
+        "docs/03-agents/ai-sdk-tools.md"
+      ]
+    },
+    "mcp-servers": {
+      "files": [
+        "mcp-servers.md"
+      ],
+      "size_bytes": 59889,
+      "source_count": 13,
+      "sources": [
+        "docs/03-agents/Agent UI Ecosystem - A2UI.md",
+        "docs/03-agents/CONVEX_AGENT_PLATFORM.md",
+        "docs/03-agents/MCP Server with x402.md",
+        "docs/03-agents/MCP Server.md",
+        "docs/03-agents/MCP Toolbox.md",
+        "docs/03-agents/MCP _ Better Auth.md",
+        "docs/03-agents/MCP-UI.md",
+        "docs/03-agents/MCP_RESEARCH.md",
+        "docs/03-agents/PYDIANTIC_AI_REFERENCE.md",
+        "docs/03-agents/Sign In With Ethereum (SIWE) _ Better Auth.md",
+        "docs/03-agents/mcp-research-report.md",
+        "docs/03-agents/mcp-ui-gradio-evidence-integration-analysis.md",
+        "docs/03-agents/x402_examples_typescript_servers_hono at main \u00b7 coinbase_x402.md"
+      ]
+    },
+    "misc": {
+      "files": [
+        "misc.md"
+      ],
+      "size_bytes": 5406,
+      "source_count": 37,
+      "sources": [
+        "docs/baml/.DS_Store",
+        "docs/baml/2025-09-30-dyanmic-schemas/frontend/.gitignore",
+        "docs/baml/2025-09-30-dyanmic-schemas/frontend/app/globals.css",
+        "docs/baml/2025-09-30-dyanmic-schemas/frontend/app/page.tsx",
+        "docs/baml/2025-09-30-dyanmic-schemas/frontend/components/ansii-string.tsx",
+        "docs/baml/2025-09-30-dyanmic-schemas/frontend/components/error-message.tsx",
+        "docs/baml/2025-09-30-dyanmic-schemas/frontend/components/execution-result-section.tsx",
+        "docs/baml/2025-09-30-dyanmic-schemas/frontend/components/input-section.tsx",
+        "docs/baml/2025-09-30-dyanmic-schemas/frontend/components/markdown/MarkdownRenderer.tsx",
+        "docs/baml/2025-09-30-dyanmic-schemas/frontend/components/markdown/shiki-grammars.ts",
+        "docs/baml/2025-09-30-dyanmic-schemas/frontend/components/ui/badge.tsx",
+        "docs/baml/2025-09-30-dyanmic-schemas/frontend/components/ui/button.tsx",
+        "docs/baml/2025-09-30-dyanmic-schemas/frontend/components/ui/card.tsx",
+        "docs/baml/2025-09-30-dyanmic-schemas/frontend/components/ui/input.tsx",
+        "docs/baml/2025-09-30-dyanmic-schemas/frontend/components/ui/separator.tsx",
+        "docs/baml/2025-09-30-dyanmic-schemas/frontend/components/ui/table.tsx",
+        "docs/baml/2025-09-30-dyanmic-schemas/frontend/components/ui/tabs.tsx",
+        "docs/baml/2025-09-30-dyanmic-schemas/frontend/components/ui/textarea.tsx",
+        "docs/baml/2025-12-02-multimodal-evals/.gitignore",
+        "docs/baml/extract-anything/.envrc",
+        "docs/baml/extract-anything/frontend/.gitignore",
+        "docs/baml/extract-anything/frontend/app/globals.css",
+        "docs/baml/extract-anything/frontend/app/page.tsx",
+        "docs/baml/extract-anything/frontend/components/ansii-string.tsx",
+        "docs/baml/extract-anything/frontend/components/error-message.tsx",
+        "docs/baml/extract-anything/frontend/components/execution-result-section.tsx",
+        "docs/baml/extract-anything/frontend/components/input-section.tsx",
+        "docs/baml/extract-anything/frontend/components/markdown/MarkdownRenderer.tsx",
+        "docs/baml/extract-anything/frontend/components/markdown/shiki-grammars.ts",
+        "docs/baml/extract-anything/frontend/components/ui/badge.tsx",
+        "docs/baml/extract-anything/frontend/components/ui/button.tsx",
+        "docs/baml/extract-anything/frontend/components/ui/card.tsx",
+        "docs/baml/extract-anything/frontend/components/ui/input.tsx",
+        "docs/baml/extract-anything/frontend/components/ui/separator.tsx",
+        "docs/baml/extract-anything/frontend/components/ui/table.tsx",
+        "docs/baml/extract-anything/frontend/components/ui/tabs.tsx",
+        "docs/baml/extract-anything/frontend/components/ui/textarea.tsx"
+      ]
+    },
+    "screenshots": {
+      "files": [
+        "screenshots.md"
+      ],
+      "size_bytes": 4772,
+      "source_count": 2,
+      "sources": [
+        "docs/03-agents/colpali.md",
+        "docs/baml/2025-12-09-git-worktrees/README.md"
+      ]
+    },
+    "tanstack-start": {
+      "files": [
+        "tanstack-start.md"
+      ],
+      "size_bytes": 25533,
+      "source_count": 1,
+      "sources": [
+        "docs/03-agents/TECH_STACK.md"
+      ]
+    },
+    "vite-bun-build": {
+      "files": [
+        "vite-bun-build.md"
+      ],
+      "size_bytes": 394548,
+      "source_count": 4,
+      "sources": [
+        "docs/03-agents/backend-platforms.md",
+        "docs/03-agents/browser-automation.md",
+        "docs/03-agents/copilotkit.md",
+        "docs/baml/2025-12-09-git-worktrees/meta.md"
+      ]
+    }
+  }
+}

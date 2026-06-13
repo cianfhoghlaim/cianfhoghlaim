@@ -1,0 +1,120 @@
+{
+  "domain": "07-standards",
+  "source_files": 14,
+  "target_files": 11,
+  "topics": {
+    "agents-frameworks": {
+      "files": [
+        "agents-frameworks.md"
+      ],
+      "size_bytes": 11646,
+      "source_count": 1,
+      "sources": [
+        "docs/07-skills/agno.md"
+      ]
+    },
+    "baml-extraction": {
+      "files": [
+        "baml-extraction.md"
+      ],
+      "size_bytes": 31229,
+      "source_count": 3,
+      "sources": [
+        "docs/07-skills/baml.md",
+        "docs/07-skills/oideachas-pipeline.md",
+        "docs/07-standards/project-conventions.md"
+      ]
+    },
+    "ci-cd": {
+      "files": [
+        "ci-cd.md"
+      ],
+      "size_bytes": 9094,
+      "source_count": 1,
+      "sources": [
+        "docs/07-skills/duckdb.md"
+      ]
+    },
+    "cocoindex-pipelines": {
+      "files": [
+        "cocoindex-pipelines.md"
+      ],
+      "size_bytes": 34922,
+      "source_count": 2,
+      "sources": [
+        "docs/07-skills/cocoindex.md",
+        "docs/07-skills/memgraph.md"
+      ]
+    },
+    "dagster-orchestration": {
+      "files": [
+        "dagster-orchestration.md"
+      ],
+      "size_bytes": 13689,
+      "source_count": 1,
+      "sources": [
+        "docs/07-skills/dagster.md"
+      ]
+    },
+    "dlt-ingestion": {
+      "files": [
+        "dlt-ingestion.md"
+      ],
+      "size_bytes": 11583,
+      "source_count": 1,
+      "sources": [
+        "docs/07-skills/dlt.md"
+      ]
+    },
+    "graphiti-memory": {
+      "files": [
+        "graphiti-memory.md"
+      ],
+      "size_bytes": 4956,
+      "source_count": 1,
+      "sources": [
+        "docs/07-skills/graphiti.md"
+      ]
+    },
+    "hugging-face": {
+      "files": [
+        "hugging-face.md"
+      ],
+      "size_bytes": 6887,
+      "source_count": 1,
+      "sources": [
+        "docs/07-skills/celtic-language-ai.md"
+      ]
+    },
+    "lancedb-vector": {
+      "files": [
+        "lancedb-vector.md"
+      ],
+      "size_bytes": 8903,
+      "source_count": 1,
+      "sources": [
+        "docs/07-skills/lancedb.md"
+      ]
+    },
+    "langfuse-observability": {
+      "files": [
+        "langfuse-observability.md"
+      ],
+      "size_bytes": 13958,
+      "source_count": 1,
+      "sources": [
+        "docs/07-standards/observability-patterns.md"
+      ]
+    },
+    "tanstack-router": {
+      "files": [
+        "tanstack-router.md"
+      ],
+      "size_bytes": 11279,
+      "source_count": 1,
+      "sources": [
+        "docs/07-skills/tanstack-start.md"
+      ]
+    }
+  }
+}
