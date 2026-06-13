@@ -1,7 +1,7 @@
 {
   "domain": "11-scripts",
-  "source_files": 2878,
-  "target_files": 1922,
+  "source_files": 2875,
+  "target_files": 1919,
   "topics": {
     "00_generate_data.py": {
       "files": [
@@ -3525,16 +3525,6 @@
       "source_count": 1,
       "sources": [
         "docs/marimo/outputs/conditional_output.py"
-      ]
-    },
-    "conf.py": {
-      "files": [
-        "conf.py"
-      ],
-      "size_bytes": 2251,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/backend/docs/conf.py"
       ]
     },
     "config-async.py": {
@@ -12242,16 +12232,6 @@
         "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/examples/sessionized_data.py"
       ]
     },
-    "set_schema.py": {
-      "files": [
-        "set_schema.py"
-      ],
-      "size_bytes": 2943,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/backend/docs/notebooks/set_schema.py"
-      ]
-    },
     "set_ui_element_request_manager.py": {
       "files": [
         "set_ui_element_request_manager.py"
@@ -19463,16 +19443,6 @@
       "source_count": 1,
       "sources": [
         "docs/marimo/marimo/marimo/_smoke_tests/third_party/pandas/transform_edgecases.py"
-      ]
-    },
-    "transform_user_extract.py": {
-      "files": [
-        "transform_user_extract.py"
-      ],
-      "size_bytes": 3176,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/stroom/stroom-security/stroom-security-identity-db-jooq/src/scripts/transform_user_extract.py"
       ]
     },
     "transformers.py": {

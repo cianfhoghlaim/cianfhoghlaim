@@ -1,7 +1,7 @@
 {
   "domain": "12-configs",
-  "source_files": 1871,
-  "target_files": 804,
+  "source_files": 1766,
+  "target_files": 715,
   "topics": {
     ".cta.json": {
       "files": [
@@ -28,24 +28,13 @@
         "docs/tuatha/x402/x402-solana-react/.eslintrc.json"
       ]
     },
-    ".gitlab-ci.yml": {
-      "files": [
-        ".gitlab-ci.yml"
-      ],
-      "size_bytes": 7200,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/.gitlab-ci.yml"
-      ]
-    },
     ".gitpod.yml": {
       "files": [
         ".gitpod.yml"
       ],
       "size_bytes": 404,
-      "source_count": 3,
+      "source_count": 2,
       "sources": [
-        "docs/hmgcc/Gaffer/.gitpod.yml",
         "docs/marimo/docs/marimo/.gitpod.yml",
         "docs/marimo/marimo/.gitpod.yml"
       ]
@@ -88,11 +77,10 @@
         ".pre-commit-config.yaml"
       ],
       "size_bytes": 1141,
-      "source_count": 6,
+      "source_count": 5,
       "sources": [
         "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/.pre-commit-config.yaml",
         "docs/cocoindex/cocoindex-code-mcp-server/.pre-commit-config.yaml",
-        "docs/hmgcc/Bailo/.pre-commit-config.yaml",
         "docs/marimo/docs/marimo/.pre-commit-config.yaml",
         "docs/marimo/marimo/.pre-commit-config.yaml",
         "docs/tuatha/react-native-godot/.pre-commit-config.yaml"
@@ -205,26 +193,6 @@
         "docs/tuatha/x402/MCPay/apps/mcp-data/drizzle/meta/0003_snapshot.json"
       ]
     },
-    "1.bug_report.yml": {
-      "files": [
-        "1.bug_report.yml"
-      ],
-      "size_bytes": 2948,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/.github/ISSUE_TEMPLATE/1.bug_report.yml"
-      ]
-    },
-    "2.feature_request.yml": {
-      "files": [
-        "2.feature_request.yml"
-      ],
-      "size_bytes": 1249,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/.github/ISSUE_TEMPLATE/2.feature_request.yml"
-      ]
-    },
     "2070-latex-slides.slides.json": {
       "files": [
         "2070-latex-slides.slides.json"
@@ -233,16 +201,6 @@
       "source_count": 1,
       "sources": [
         "docs/marimo/marimo/marimo/_smoke_tests/issues/layouts/2070-latex-slides.slides.json"
-      ]
-    },
-    "3.help.yml": {
-      "files": [
-        "3.help.yml"
-      ],
-      "size_bytes": 978,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/.github/ISSUE_TEMPLATE/3.help.yml"
       ]
     },
     "BurstAotSettings_StandaloneWindows.json": {
@@ -421,26 +379,6 @@
         "docs/tuatha/x402/x402-rs/crates/x402-reqwest/Cargo.toml",
         "docs/tuatha/x402/x402-rs/examples/x402-axum-example/Cargo.toml",
         "docs/tuatha/x402/x402-rs/examples/x402-reqwest-example/Cargo.toml"
-      ]
-    },
-    "Chart.lock": {
-      "files": [
-        "Chart.lock"
-      ],
-      "size_bytes": 304,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/Chart.lock"
-      ]
-    },
-    "Chart.yaml": {
-      "files": [
-        "Chart.yaml"
-      ],
-      "size_bytes": 1387,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/Chart.yaml"
       ]
     },
     "CommonBurstAotSettings.json": {
@@ -2151,26 +2089,6 @@
         "docs/tuatha/react-native-reusables/apps/cli/.github/actions/setup/action.yml"
       ]
     },
-    "add-issue-urgency.yml": {
-      "files": [
-        "add-issue-urgency.yml"
-      ],
-      "size_bytes": 1661,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/add-issue-urgency.yml"
-      ]
-    },
-    "add-qa-link-to-issues.yml": {
-      "files": [
-        "add-qa-link-to-issues.yml"
-      ],
-      "size_bytes": 2196,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/add-qa-link-to-issues.yml"
-      ]
-    },
     "advanced_commits___model_metrics_access_policy.yaml": {
       "files": [
         "advanced_commits___model_metrics_access_policy.yaml"
@@ -2283,66 +2201,6 @@
       "source_count": 1,
       "sources": [
         "docs/tuatha/react-native-godot/example/app.json"
-      ]
-    },
-    "application-propertiesIT.yml": {
-      "files": [
-        "application-propertiesIT.yml"
-      ],
-      "size_bytes": 1038,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Gaffer/rest-api/spring-rest/src/test/resources/application-propertiesIT.yml"
-      ]
-    },
-    "application-test.yml": {
-      "files": [
-        "application-test.yml"
-      ],
-      "size_bytes": 999,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Gaffer/rest-api/spring-rest/src/test/resources/application-test.yml"
-      ]
-    },
-    "application.yml": {
-      "files": [
-        "application.yml"
-      ],
-      "size_bytes": 1009,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Gaffer/rest-api/spring-rest/src/main/resources/application.yml"
-      ]
-    },
-    "artefactscan.deployment.yaml": {
-      "files": [
-        "artefactscan.deployment.yaml"
-      ],
-      "size_bytes": 2414,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/artefactscan/artefactscan.deployment.yaml"
-      ]
-    },
-    "artefactscan.service.yaml": {
-      "files": [
-        "artefactscan.service.yaml"
-      ],
-      "size_bytes": 417,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/artefactscan/artefactscan.service.yaml"
-      ]
-    },
-    "artefactscan.yml": {
-      "files": [
-        "artefactscan.yml"
-      ],
-      "size_bytes": 1177,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/.github/workflows/artefactscan.yml"
       ]
     },
     "aspect-ratio.json": {
@@ -2492,16 +2350,6 @@
         "docs/archive/2026-06-06-data-engineering/semantic_layer/rill-examples/rill-openrtb-prog-ads-clickhouse/metrics/auctions_metrics.yaml"
       ]
     },
-    "auto-add-new-issues-to-project.yml": {
-      "files": [
-        "auto-add-new-issues-to-project.yml"
-      ],
-      "size_bytes": 770,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/auto-add-new-issues-to-project.yml"
-      ]
-    },
     "auto-deploy-stacks.toml": {
       "files": [
         "auto-deploy-stacks.toml"
@@ -2554,56 +2402,6 @@
         "docs/tuatha/react-native-reusables/apps/docs/public/r/nativewind/badge.json",
         "docs/tuatha/react-native-reusables/apps/docs/public/r/new-york/badge.json",
         "docs/tuatha/react-native-reusables/apps/docs/public/r/uniwind/badge.json"
-      ]
-    },
-    "bailo.configmap.yaml": {
-      "files": [
-        "bailo.configmap.yaml"
-      ],
-      "size_bytes": 11324,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/bailo/bailo.configmap.yaml"
-      ]
-    },
-    "bailo.deployment.yaml": {
-      "files": [
-        "bailo.deployment.yaml"
-      ],
-      "size_bytes": 7542,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/bailo/bailo.deployment.yaml"
-      ]
-    },
-    "bailo.hpa.yaml": {
-      "files": [
-        "bailo.hpa.yaml"
-      ],
-      "size_bytes": 986,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/bailo/bailo.hpa.yaml"
-      ]
-    },
-    "bailo.secret.yaml": {
-      "files": [
-        "bailo.secret.yaml"
-      ],
-      "size_bytes": 3042,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/bailo/bailo.secret.yaml"
-      ]
-    },
-    "bailo.service.yaml": {
-      "files": [
-        "bailo.service.yaml"
-      ],
-      "size_bytes": 735,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/bailo/bailo.service.yaml"
       ]
     },
     "bamlJinjaTextmate.json": {
@@ -2795,26 +2593,6 @@
         "docs/marimo/marimo/.github/ISSUE_TEMPLATE/bug_report.yaml"
       ]
     },
-    "build.js.yml": {
-      "files": [
-        "build.js.yml"
-      ],
-      "size_bytes": 16406,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/.github/workflows/build.js.yml"
-      ]
-    },
-    "build_and_release.yml": {
-      "files": [
-        "build_and_release.yml"
-      ],
-      "size_bytes": 6202,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/stroom/.github/workflows/build_and_release.yml"
-      ]
-    },
     "builder-agent.json": {
       "files": [
         "builder-agent.json"
@@ -2965,16 +2743,6 @@
         "docs/marimo/marimo/marimo/_smoke_tests/slides_examples/layouts/centered_slides.slides.json"
       ]
     },
-    "certs.yaml": {
-      "files": [
-        "certs.yaml"
-      ],
-      "size_bytes": 235,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/certs.yaml"
-      ]
-    },
     "charting.json": {
       "files": [
         "charting.json"
@@ -3003,26 +2771,6 @@
       "source_count": 1,
       "sources": [
         "docs/tuatha/SpacetimeDB/.github/workflows/check-pr-base.yml"
-      ]
-    },
-    "check-pr-target.yml": {
-      "files": [
-        "check-pr-target.yml"
-      ],
-      "size_bytes": 731,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/check-pr-target.yml"
-      ]
-    },
-    "check-tasks-completed.yml": {
-      "files": [
-        "check-tasks-completed.yml"
-      ],
-      "size_bytes": 255,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/check-tasks-completed.yml"
       ]
     },
     "check.yml": {
@@ -3110,46 +2858,6 @@
       "sources": [
         "docs/marimo/docs/marimo/.github/workflows/cla.yml",
         "docs/marimo/marimo/.github/workflows/cla.yml"
-      ]
-    },
-    "clamav.configmap.yaml": {
-      "files": [
-        "clamav.configmap.yaml"
-      ],
-      "size_bytes": 31489,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/clamav/clamav.configmap.yaml"
-      ]
-    },
-    "clamav.deployment.yaml": {
-      "files": [
-        "clamav.deployment.yaml"
-      ],
-      "size_bytes": 2161,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/clamav/clamav.deployment.yaml"
-      ]
-    },
-    "clamav.pvc.yaml": {
-      "files": [
-        "clamav.pvc.yaml"
-      ],
-      "size_bytes": 382,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/clamav/clamav.pvc.yaml"
-      ]
-    },
-    "clamav.service.yaml": {
-      "files": [
-        "clamav.service.yaml"
-      ],
-      "size_bytes": 356,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/clamav/clamav.service.yaml"
       ]
     },
     "cli.json": {
@@ -3248,16 +2956,6 @@
         "docs/marimo/__marimo__/session/cloudflare_data_ops.py.json"
       ]
     },
-    "cluster.yaml": {
-      "files": [
-        "cluster.yaml"
-      ],
-      "size_bytes": 528,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/eks/cluster.yaml"
-      ]
-    },
     "cocoindex_flows.py.json": {
       "files": [
         "cocoindex_flows.py.json"
@@ -3283,31 +2981,10 @@
       "files": [
         "codeql-analysis.yml"
       ],
-      "size_bytes": 2613,
-      "source_count": 2,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/.github/workflows/codeql-analysis.yml",
-        "docs/hmgcc/stroom/.github/workflows/codeql-analysis.yml"
-      ]
-    },
-    "codeql.js.yml": {
-      "files": [
-        "codeql.js.yml"
-      ],
-      "size_bytes": 2061,
+      "size_bytes": 2338,
       "source_count": 1,
       "sources": [
-        "docs/hmgcc/Bailo/.github/workflows/codeql.js.yml"
-      ]
-    },
-    "codeql.yaml": {
-      "files": [
-        "codeql.yaml"
-      ],
-      "size_bytes": 1017,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Gaffer/.github/workflows/codeql.yaml"
+        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/.github/workflows/codeql-analysis.yml"
       ]
     },
     "coffee-sales.json": {
@@ -3330,16 +3007,6 @@
         "docs/tuatha/react-native-reusables/apps/docs/public/r/nativewind/collapsible.json",
         "docs/tuatha/react-native-reusables/apps/docs/public/r/new-york/collapsible.json",
         "docs/tuatha/react-native-reusables/apps/docs/public/r/uniwind/collapsible.json"
-      ]
-    },
-    "commitlint.yml": {
-      "files": [
-        "commitlint.yml"
-      ],
-      "size_bytes": 1197,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/commitlint.yml"
       ]
     },
     "commits__.yaml": {
@@ -3464,38 +3131,17 @@
         "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/web/public/bsl-data/compose.json"
       ]
     },
-    "compose.override.yaml": {
-      "files": [
-        "compose.override.yaml"
-      ],
-      "size_bytes": 925,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/compose.override.yaml"
-      ]
-    },
-    "compose.prod.yaml": {
-      "files": [
-        "compose.prod.yaml"
-      ],
-      "size_bytes": 17,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/compose.prod.yaml"
-      ]
-    },
     "compose.yaml": {
       "files": [
         "compose.yaml"
       ],
-      "size_bytes": 3936,
-      "source_count": 5,
+      "size_bytes": 2857,
+      "source_count": 4,
       "sources": [
         "docs/06-infrastructure/compose.yaml",
         "docs/cocoindex/fastapi_server_docker/compose.yaml",
         "docs/dagster/dagster-iceberg/kitchen-sink/compose.yaml",
-        "docs/dagster/dagster-iceberg/tests/docker/compose.yaml",
-        "docs/hmgcc/Bailo/compose.yaml"
+        "docs/dagster/dagster-iceberg/tests/docker/compose.yaml"
       ]
     },
     "compute_ai.py.json": {
@@ -3591,9 +3237,8 @@
         "config.yml"
       ],
       "size_bytes": 351,
-      "source_count": 5,
+      "source_count": 4,
       "sources": [
-        "docs/hmgcc/Bailo/.github/ISSUE_TEMPLATE/config.yml",
         "docs/marimo/docs/marimo/.github/ISSUE_TEMPLATE/config.yml",
         "docs/marimo/docs/marimo/tests/_smoke_tests/config.yml",
         "docs/marimo/marimo/.github/ISSUE_TEMPLATE/config.yml",
@@ -3611,16 +3256,6 @@
         "docs/marimo/marimo/tests/_server/session/snapshots/console_session.json"
       ]
     },
-    "content-packs.yml": {
-      "files": [
-        "content-packs.yml"
-      ],
-      "size_bytes": 3596,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/stroom/content-packs.yml"
-      ]
-    },
     "context-menu.json": {
       "files": [
         "context-menu.json"
@@ -3631,26 +3266,6 @@
         "docs/tuatha/react-native-reusables/apps/docs/public/r/nativewind/context-menu.json",
         "docs/tuatha/react-native-reusables/apps/docs/public/r/new-york/context-menu.json",
         "docs/tuatha/react-native-reusables/apps/docs/public/r/uniwind/context-menu.json"
-      ]
-    },
-    "continuous-integration-legacy.yaml": {
-      "files": [
-        "continuous-integration-legacy.yaml"
-      ],
-      "size_bytes": 2162,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Gaffer/.github/workflows/continuous-integration-legacy.yaml"
-      ]
-    },
-    "continuous-integration.yaml": {
-      "files": [
-        "continuous-integration.yaml"
-      ],
-      "size_bytes": 5865,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Gaffer/.github/workflows/continuous-integration.yaml"
       ]
     },
     "conventional-commits.yml": {
@@ -3701,26 +3316,6 @@
       "source_count": 1,
       "sources": [
         "docs/marimo/__marimo__/session/crawl4ai_extraction.py.json"
-      ]
-    },
-    "create-hotfix-branch.yaml": {
-      "files": [
-        "create-hotfix-branch.yaml"
-      ],
-      "size_bytes": 2370,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Gaffer/.github/workflows/create-hotfix-branch.yaml"
-      ]
-    },
-    "create-release-branch.yaml": {
-      "files": [
-        "create-release-branch.yaml"
-      ],
-      "size_bytes": 1589,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Gaffer/.github/workflows/create-release-branch.yaml"
       ]
     },
     "cross-images.yml": {
@@ -3866,16 +3461,6 @@
         "docs/dagster/dagster-dspy/dbt_project/dbt_project.yml"
       ]
     },
-    "delete-gh-pages-folder.yml": {
-      "files": [
-        "delete-gh-pages-folder.yml"
-      ],
-      "size_bytes": 1006,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/delete-gh-pages-folder.yml"
-      ]
-    },
     "deny.toml": {
       "files": [
         "deny.toml"
@@ -3890,24 +3475,10 @@
       "files": [
         "dependabot.yml"
       ],
-      "size_bytes": 8513,
-      "source_count": 5,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/.github/dependabot.yml",
-        "docs/hmgcc/Bailo/.github/dependabot.yml",
-        "docs/hmgcc/CyberChef/.github/dependabot.yml",
-        "docs/hmgcc/ic-ui-kit/.github/dependabot.yml",
-        "docs/hmgcc/stroom/.github/dependabot.yml"
-      ]
-    },
-    "deploy-storybook-only.yml": {
-      "files": [
-        "deploy-storybook-only.yml"
-      ],
-      "size_bytes": 4384,
+      "size_bytes": 268,
       "source_count": 1,
       "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/deploy-storybook-only.yml"
+        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/.github/dependabot.yml"
       ]
     },
     "deploy.yml": {
@@ -3957,16 +3528,6 @@
       "sources": [
         "docs/marimo/docs/marimo/.github/workflows/dev-release.yml",
         "docs/marimo/marimo/.github/workflows/dev-release.yml"
-      ]
-    },
-    "dev.yml": {
-      "files": [
-        "dev.yml"
-      ],
-      "size_bytes": 4012,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/stroom/stroom-app/dev.yml"
       ]
     },
     "dev_build.yaml": {
@@ -4413,16 +3974,6 @@
         "docs/archive/2026-06-06-data-engineering/semantic_layer/rill-examples/rill-openrtb-prog-ads/dashboards/executive_overview.yaml"
       ]
     },
-    "expected.yaml": {
-      "files": [
-        "expected.yaml"
-      ],
-      "size_bytes": 44238,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/stroom/stroom-config/stroom-config-app/src/test/resources/stroom/config/app/expected.yaml"
-      ]
-    },
     "extensions.json": {
       "files": [
         "extensions.json"
@@ -4774,66 +4325,6 @@
         "docs/marimo/marimo/tests/_plugins/ui/_impl/tables/snapshots/ibis.json"
       ]
     },
-    "ic-ui-kit-branches.yml": {
-      "files": [
-        "ic-ui-kit-branches.yml"
-      ],
-      "size_bytes": 10345,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/ic-ui-kit-branches.yml"
-      ]
-    },
-    "ic-ui-kit-develop.yml": {
-      "files": [
-        "ic-ui-kit-develop.yml"
-      ],
-      "size_bytes": 5849,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/ic-ui-kit-develop.yml"
-      ]
-    },
-    "ic-ui-kit-release-check.yml": {
-      "files": [
-        "ic-ui-kit-release-check.yml"
-      ],
-      "size_bytes": 3953,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/ic-ui-kit-release-check.yml"
-      ]
-    },
-    "ic-ui-kit-release-merged.yml": {
-      "files": [
-        "ic-ui-kit-release-merged.yml"
-      ],
-      "size_bytes": 6980,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/ic-ui-kit-release-merged.yml"
-      ]
-    },
-    "ic-ui-kit-release-v2-check.yml": {
-      "files": [
-        "ic-ui-kit-release-v2-check.yml"
-      ],
-      "size_bytes": 3599,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/ic-ui-kit-release-v2-check.yml"
-      ]
-    },
-    "ic-ui-kit-v2-release-merged.yml": {
-      "files": [
-        "ic-ui-kit-v2-release-merged.yml"
-      ],
-      "size_bytes": 6600,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/ic-ui-kit-v2-release-merged.yml"
-      ]
-    },
     "icon.json": {
       "files": [
         "icon.json"
@@ -4874,16 +4365,6 @@
       "source_count": 1,
       "sources": [
         "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/web/public/bsl-data/indexing.json"
-      ]
-    },
-    "ingress.yaml": {
-      "files": [
-        "ingress.yaml"
-      ],
-      "size_bytes": 580,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/ingress.yaml"
       ]
     },
     "input.json": {
@@ -4966,12 +4447,10 @@
         "labeler.yml"
       ],
       "size_bytes": 329,
-      "source_count": 8,
+      "source_count": 6,
       "sources": [
         "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/.github/labeler.yml",
         "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/.github/workflows/labeler.yml",
-        "docs/hmgcc/Bailo/.github/labeler.yml",
-        "docs/hmgcc/Bailo/.github/workflows/labeler.yml",
         "docs/marimo/docs/marimo/.github/labeler.yml",
         "docs/marimo/docs/marimo/.github/workflows/labeler.yml",
         "docs/marimo/marimo/.github/labeler.yml",
@@ -5043,9 +4522,8 @@
         "libs.versions.toml"
       ],
       "size_bytes": 5350,
-      "source_count": 7,
+      "source_count": 6,
       "sources": [
-        "docs/hmgcc/stroom/gradle/libs.versions.toml",
         "docs/tuatha/agui_kotlin/examples/chatapp-java/gradle/libs.versions.toml",
         "docs/tuatha/agui_kotlin/examples/chatapp-swiftui/gradle/libs.versions.toml",
         "docs/tuatha/agui_kotlin/examples/chatapp-wearos/gradle/libs.versions.toml",
@@ -5072,16 +4550,6 @@
       "source_count": 1,
       "sources": [
         "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-schema-compiler/test/unit/fixtures/line_items.yml"
-      ]
-    },
-    "link-issue.yml": {
-      "files": [
-        "link-issue.yml"
-      ],
-      "size_bytes": 309,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Gaffer/.github/workflows/link-issue.yml"
       ]
     },
     "litellm_config.yaml": {
@@ -5122,26 +4590,6 @@
       "source_count": 1,
       "sources": [
         "docs/dlt/small-data-sf-2025/.continue/agents/local-config.yaml"
-      ]
-    },
-    "mail.deployment.yaml": {
-      "files": [
-        "mail.deployment.yaml"
-      ],
-      "size_bytes": 646,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/mail/mail.deployment.yaml"
-      ]
-    },
-    "mail.service.yaml": {
-      "files": [
-        "mail.service.yaml"
-      ],
-      "size_bytes": 437,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/mail/mail.service.yaml"
       ]
     },
     "main.yml": {
@@ -5304,11 +4752,10 @@
       "files": [
         "master.yml"
       ],
-      "size_bytes": 1441,
-      "source_count": 2,
+      "size_bytes": 5671,
+      "source_count": 1,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/.github/workflows/master.yml",
-        "docs/hmgcc/CyberChef/.github/workflows/master.yml"
+        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/.github/workflows/master.yml"
       ]
     },
     "matching-non-additive.json": {
@@ -5698,16 +5145,6 @@
         "docs/tuatha/react-native-reusables/apps/docs/registry/nativewind.json"
       ]
     },
-    "needClientAuth.yml": {
-      "files": [
-        "needClientAuth.yml"
-      ],
-      "size_bytes": 439,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/stroom/stroom-ssl-test/needClientAuth.yml"
-      ]
-    },
     "nested-subtotals.json": {
       "files": [
         "nested-subtotals.json"
@@ -5746,56 +5183,6 @@
       "source_count": 1,
       "sources": [
         "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-client-ngx/ng-package.json"
-      ]
-    },
-    "nginx-template.configmap.yml": {
-      "files": [
-        "nginx-template.configmap.yml"
-      ],
-      "size_bytes": 4764,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/nginx/nginx-template.configmap.yml"
-      ]
-    },
-    "nginx.deployment.yaml": {
-      "files": [
-        "nginx.deployment.yaml"
-      ],
-      "size_bytes": 1106,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/nginx/nginx.deployment.yaml"
-      ]
-    },
-    "nginx.service.yaml": {
-      "files": [
-        "nginx.service.yaml"
-      ],
-      "size_bytes": 292,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/nginx/nginx.service.yaml"
-      ]
-    },
-    "noClientAuth.yml": {
-      "files": [
-        "noClientAuth.yml"
-      ],
-      "size_bytes": 412,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/stroom/stroom-ssl-test/noClientAuth.yml"
-      ]
-    },
-    "nodeport.yaml": {
-      "files": [
-        "nodeport.yaml"
-      ],
-      "size_bytes": 276,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/nodeport.yaml"
       ]
     },
     "non-matching-non-additive.json": {
@@ -5867,16 +5254,6 @@
       "source_count": 1,
       "sources": [
         "docs/archive/2026-06-06-data-engineering/semantic_layer/rill-examples/rill-sec-formd/metrics/offerings_issuers_metrics.yaml"
-      ]
-    },
-    "openapi.yaml": {
-      "files": [
-        "openapi.yaml"
-      ],
-      "size_bytes": 611,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/stroom/stroom-app/openapi.yaml"
       ]
     },
     "openspec.yml": {
@@ -6757,16 +6134,6 @@
         "docs/marimo/marimo/packages/llm-info/data/providers.yml"
       ]
     },
-    "proxy-dev.yml": {
-      "files": [
-        "proxy-dev.yml"
-      ],
-      "size_bytes": 6234,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/stroom/stroom-proxy/stroom-proxy-app/proxy-dev.yml"
-      ]
-    },
     "public_pypi_x402_a2a.yml": {
       "files": [
         "public_pypi_x402_a2a.yml"
@@ -6807,16 +6174,6 @@
       "source_count": 1,
       "sources": [
         "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/.github/workflows/pull-request.yml"
-      ]
-    },
-    "pull_requests.yml": {
-      "files": [
-        "pull_requests.yml"
-      ],
-      "size_bytes": 1256,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/CyberChef/.github/workflows/pull_requests.yml"
       ]
     },
     "push.yml": {
@@ -6904,26 +6261,6 @@
         "docs/tuatha/x402/a2a-x402/.github/workflows/python-examples-adk-demo.yml"
       ]
     },
-    "python-publish-test.yml": {
-      "files": [
-        "python-publish-test.yml"
-      ],
-      "size_bytes": 2069,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/.github/workflows/python-publish-test.yml"
-      ]
-    },
-    "python-publish.yml": {
-      "files": [
-        "python-publish.yml"
-      ],
-      "size_bytes": 1925,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/.github/workflows/python-publish.yml"
-      ]
-    },
     "python-x402-a2a.yml": {
       "files": [
         "python-x402-a2a.yml"
@@ -6938,11 +6275,10 @@
       "files": [
         "python.yml"
       ],
-      "size_bytes": 2294,
-      "source_count": 2,
+      "size_bytes": 270,
+      "source_count": 1,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-backend-native/test/templates/python.yml",
-        "docs/hmgcc/Bailo/.github/workflows/python.yml"
+        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-backend-native/test/templates/python.yml"
       ]
     },
     "qdrant.yaml": {
@@ -7101,46 +6437,6 @@
         "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/web/public/bsl-data/reference.json"
       ]
     },
-    "registry.configmap.yaml": {
-      "files": [
-        "registry.configmap.yaml"
-      ],
-      "size_bytes": 1548,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/registry/registry.configmap.yaml"
-      ]
-    },
-    "registry.deployment.yaml": {
-      "files": [
-        "registry.deployment.yaml"
-      ],
-      "size_bytes": 3254,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/registry/registry.deployment.yaml"
-      ]
-    },
-    "registry.secret.yaml": {
-      "files": [
-        "registry.secret.yaml"
-      ],
-      "size_bytes": 449,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/registry/registry.secret.yaml"
-      ]
-    },
-    "registry.service.yaml": {
-      "files": [
-        "registry.service.yaml"
-      ],
-      "size_bytes": 319,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/registry/registry.service.yaml"
-      ]
-    },
     "release-marimo-base.yml": {
       "files": [
         "release-marimo-base.yml"
@@ -7172,16 +6468,6 @@
         "docs/tuatha/x402/a2a-x402/.github/workflows/release-please.yml"
       ]
     },
-    "release-standalone.yaml": {
-      "files": [
-        "release-standalone.yaml"
-      ],
-      "size_bytes": 1045,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Gaffer/.github/workflows/release-standalone.yaml"
-      ]
-    },
     "release-version.yml": {
       "files": [
         "release-version.yml"
@@ -7192,41 +6478,19 @@
         "docs/tuatha/gdext/.github/workflows/release-version.yml"
       ]
     },
-    "release.yaml": {
-      "files": [
-        "release.yaml"
-      ],
-      "size_bytes": 5051,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Gaffer/.github/workflows/release.yaml"
-      ]
-    },
     "release.yml": {
       "files": [
         "release.yml"
       ],
       "size_bytes": 8139,
-      "source_count": 8,
+      "source_count": 6,
       "sources": [
         "docs/dagster/dagster-sqlmesh/.github/workflows/release.yml",
-        "docs/hmgcc/Bailo/.github/release.yml",
-        "docs/hmgcc/Gaffer/.github/release.yml",
         "docs/marimo/docs/marimo/.github/workflows/release.yml",
         "docs/marimo/marimo/.github/workflows/release.yml",
         "docs/tuatha/react-native-reusables/apps/cli/.github/workflows/release.yml",
         "docs/tuatha/spacetimedb-typescript-sdk/.github/workflows/release.yml",
         "docs/tuatha/x402/MCPay/.github/workflows/release.yml"
-      ]
-    },
-    "releases.yml": {
-      "files": [
-        "releases.yml"
-      ],
-      "size_bytes": 3194,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/CyberChef/.github/workflows/releases.yml"
       ]
     },
     "renovate.json": {
@@ -7398,16 +6662,6 @@
         "docs/archive/2026-06-06-data-engineering/semantic_layer/rill-examples/rill-github-analytics/sources/rill_modified_files.yaml"
       ]
     },
-    "route.yaml": {
-      "files": [
-        "route.yaml"
-      ],
-      "size_bytes": 549,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/route.yaml"
-      ]
-    },
     "ruff.toml": {
       "files": [
         "ruff.toml"
@@ -7427,36 +6681,6 @@
       "source_count": 1,
       "sources": [
         "docs/docs_examples_consolidated/web-unified/.ruler/ruler.toml"
-      ]
-    },
-    "run-cypress-tests.yml": {
-      "files": [
-        "run-cypress-tests.yml"
-      ],
-      "size_bytes": 3564,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/run-cypress-tests.yml"
-      ]
-    },
-    "run-performance-tests-manual.yml": {
-      "files": [
-        "run-performance-tests-manual.yml"
-      ],
-      "size_bytes": 1956,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/run-performance-tests-manual.yml"
-      ]
-    },
-    "run-performance-tests-scheduled.yml": {
-      "files": [
-        "run-performance-tests-scheduled.yml"
-      ],
-      "size_bytes": 1298,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/run-performance-tests-scheduled.yml"
       ]
     },
     "rust-cubesql.yml": {
@@ -7553,16 +6777,6 @@
         "docs/dagster/dagster-dspy/dbt_project/models/government/schema.yml",
         "docs/dagster/dagster-dspy/dbt_project/models/markets/schema.yml",
         "docs/dagster/dagster-dspy/dbt_project/models/staging/schema.yml"
-      ]
-    },
-    "scorecards.yml": {
-      "files": [
-        "scorecards.yml"
-      ],
-      "size_bytes": 1173,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/scorecards.yml"
       ]
     },
     "scores.jobspec.yml": {
@@ -7975,16 +7189,6 @@
         "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/examples/recipes/snapshots/queries/statuses.json"
       ]
     },
-    "storage.yaml": {
-      "files": [
-        "storage.yaml"
-      ],
-      "size_bytes": 414,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/storage.yaml"
-      ]
-    },
     "storage_d1.py.json": {
       "files": [
         "storage_d1.py.json"
@@ -8013,46 +7217,6 @@
       "source_count": 1,
       "sources": [
         "docs/docs_examples_consolidated/cloudflare-unified/marimo/__marimo__/session/storage_r2.py.json"
-      ]
-    },
-    "stroom-docker.yml": {
-      "files": [
-        "stroom-docker.yml"
-      ],
-      "size_bytes": 495,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/stroom/stroom-docker.yml"
-      ]
-    },
-    "stroom-nodocker.yml": {
-      "files": [
-        "stroom-nodocker.yml"
-      ],
-      "size_bytes": 214,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/stroom/stroom-nodocker.yml"
-      ]
-    },
-    "stroom.yaml": {
-      "files": [
-        "stroom.yaml"
-      ],
-      "size_bytes": 537445,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/stroom/stroom-app/src/main/resources/ui/noauth/swagger/stroom.yaml"
-      ]
-    },
-    "stroomTestDb.yml": {
-      "files": [
-        "stroomTestDb.yml"
-      ],
-      "size_bytes": 337,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/stroom/stroomTestDb.yml"
       ]
     },
     "students.jobspec.yml": {
@@ -8155,16 +7319,6 @@
       "source_count": 1,
       "sources": [
         "docs/tuatha/SpacetimeDB/crates/cli/templates/templates-list.json"
-      ]
-    },
-    "test-bailo.yaml": {
-      "files": [
-        "test-bailo.yaml"
-      ],
-      "size_bytes": 1554,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/templates/tests/test-bailo.yaml"
       ]
     },
     "test.yml": {
@@ -8731,26 +7885,6 @@
         "docs/tuatha/react-native-reusables/apps/docs/registry/uniwind.json"
       ]
     },
-    "update-cypress-visual-regression-tests.yml": {
-      "files": [
-        "update-cypress-visual-regression-tests.yml"
-      ],
-      "size_bytes": 2990,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/update-cypress-visual-regression-tests.yml"
-      ]
-    },
-    "update-design-system-roadmap.yml": {
-      "files": [
-        "update-design-system-roadmap.yml"
-      ],
-      "size_bytes": 781,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/update-design-system-roadmap.yml"
-      ]
-    },
     "update-docs.yml": {
       "files": [
         "update-docs.yml"
@@ -8759,16 +7893,6 @@
       "source_count": 1,
       "sources": [
         "docs/tuatha/gdext/.github/workflows/update-docs.yml"
-      ]
-    },
-    "update-koryphe-version.yaml": {
-      "files": [
-        "update-koryphe-version.yaml"
-      ],
-      "size_bytes": 1421,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Gaffer/.github/workflows/update-koryphe-version.yaml"
       ]
     },
     "upgrade-version-check.yml": {
@@ -8880,16 +8004,6 @@
       "source_count": 1,
       "sources": [
         "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-schema-compiler/test/unit/fixtures/validate_preaggs.yml"
-      ]
-    },
-    "values.yaml": {
-      "files": [
-        "values.yaml"
-      ],
-      "size_bytes": 9610,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/infrastructure/helm/bailo/values.yaml"
       ]
     },
     "vercel.json": {
@@ -9007,26 +8121,6 @@
       "source_count": 1,
       "sources": [
         "docs/marimo/marimo/marimo/_smoke_tests/anywidget_smoke_tests/weather.yaml"
-      ]
-    },
-    "web.yml": {
-      "files": [
-        "web.yml"
-      ],
-      "size_bytes": 3492,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/Bailo/.github/workflows/web.yml"
-      ]
-    },
-    "welcome-new-contributors.yml": {
-      "files": [
-        "welcome-new-contributors.yml"
-      ],
-      "size_bytes": 2326,
-      "source_count": 1,
-      "sources": [
-        "docs/hmgcc/ic-ui-kit/.github/workflows/welcome-new-contributors.yml"
       ]
     },
     "windowing.json": {
