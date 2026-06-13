@@ -326,6 +326,7 @@ def leaving_cert_source(
     use_local_scrapes: bool | None = None,
     cache_only: bool = True,
     subjects: list[str] | None = None,
+    write_disposition: str = "merge",
 ):
     """DLT source for the 7 priority Leaving Cert subjects.
 
@@ -349,6 +350,10 @@ def leaving_cert_source(
             per-subject Dagster assets pass a single subject here so each
             `leaving_cert_{subject_slug}` dataset only contains rows for
             that subject.
+        write_disposition: "merge" (default, idempotent UPSERT) or
+            "replace" (drop and recreate). Per-subject assets use
+            "replace" so each `leaving_cert_{subject}` dataset contains
+            only that subject's rows on every run.
     """
     if use_local_scrapes is None:
         use_local_scrapes = os.environ.get("USE_LOCAL_SCRAPES", "true").lower() == "true"
@@ -367,7 +372,7 @@ def leaving_cert_source(
     # Group 1: syllabus
     @dlt.resource(
         name="syllabus",
-        write_disposition="merge",
+        write_disposition=write_disposition,
         primary_key=["subject", "year", "level", "language", "content_hash"],
     )
     def syllabus_resource() -> Iterator[dict[str, Any]]:
@@ -392,7 +397,7 @@ def leaving_cert_source(
     # Group 2: past_papers
     @dlt.resource(
         name="past_papers",
-        write_disposition="merge",
+        write_disposition=write_disposition,
         primary_key=["subject", "year", "level", "content_hash"],
     )
     def past_papers_resource() -> Iterator[dict[str, Any]]:
@@ -407,7 +412,7 @@ def leaving_cert_source(
     # Group 3: marking_schemes
     @dlt.resource(
         name="marking_schemes",
-        write_disposition="merge",
+        write_disposition=write_disposition,
         primary_key=["subject", "year", "level", "content_hash"],
     )
     def marking_schemes_resource() -> Iterator[dict[str, Any]]:
@@ -422,7 +427,7 @@ def leaving_cert_source(
     # Group 4: examiner_reports
     @dlt.resource(
         name="examiner_reports",
-        write_disposition="merge",
+        write_disposition=write_disposition,
         primary_key=["subject", "year", "level", "content_hash"],
     )
     def examiner_reports_resource() -> Iterator[dict[str, Any]]:

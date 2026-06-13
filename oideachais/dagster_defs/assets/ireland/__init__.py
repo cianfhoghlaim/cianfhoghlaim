@@ -16,7 +16,7 @@ Exam Materials Assets:
     ireland/exam_materials/leaving_certificate_applied  <- MultiPartition(subject, material_type)
 
 Usage:
-    from oideachais.data_platform.dagster_defs.assets.ireland import curriculum_dlt_assets, exam_materials_assets
+    from oideachais.dagster_defs.assets.ireland import curriculum_dlt_assets, exam_materials_assets
 
     defs = Definitions(assets=[*curriculum_dlt_assets, *exam_materials_assets])
 """
