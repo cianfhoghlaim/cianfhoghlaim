@@ -10,7 +10,7 @@ from typing import Any
 
 import dlt
 
-from ..common.firecrawl_source import crawl_website
+from ...common.firecrawl_source import crawl_website
 
 IOM_URLS = {
     "education": "https://www.gov.im/categories/education-training-and-careers/",

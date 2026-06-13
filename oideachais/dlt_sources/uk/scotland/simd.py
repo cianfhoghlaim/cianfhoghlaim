@@ -11,7 +11,7 @@ from typing import Any
 
 import dlt
 
-from ..common.firecrawl_source import crawl_website, scrape_page
+from ...common.firecrawl_source import crawl_website, scrape_page
 
 SIMD_URLS = {
     "main": "https://www.gov.scot/collections/scottish-index-of-multiple-deprivation-2020/",

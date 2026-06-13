@@ -18,7 +18,7 @@ import dagster as dg
 import dlt
 import structlog
 
-from oideachais.data_platform.dlt_utils import (
+from oideachais.dlt_utils import (
     get_dlt_destination,
     get_duckdb_fallback_destination,
     safe_dlt_run,
@@ -78,7 +78,7 @@ def pdf_downloads_asset(context) -> dg.MaterializeResult:
     """
     os.environ.setdefault("DLT_DISABLE_PLUGINS", "true")
 
-    from oideachais.data_platform.dlt_sources.ireland.pdf_downloader import pdf_download_source
+    from oideachais.dlt_sources.ireland.pdf_downloader import pdf_download_source
 
     # DuckDB path for querying curriculum_pdfs
     duckdb_path = "/Users/cianmacandeisigh/dev/kings_college_galway/curriculum_unified.duckdb"
@@ -199,12 +199,12 @@ def pdf_extracted_text_asset(context) -> dg.MaterializeResult:
     """
     os.environ.setdefault("DLT_DISABLE_PLUGINS", "true")
 
-    from oideachais.data_platform.ocr.adapters import get_adapter
+    from oideachais.ocr.adapters import get_adapter
     import duckdb
-    from oideachais.data_platform.dlt_utils.destinations import get_duckdb_fallback_destination
+    from oideachais.dlt_utils.destinations import get_duckdb_fallback_destination
 
     # 1. Query DuckDB to find already processed PDFs to avoid infinite loop
-    from oideachais.data_platform.dagster_defs.assets.ireland.curriculum_dlt_assets import DLT_PIPELINES_DIR, DLT_PIPELINE_NAME, DLT_DATASET_NAME
+    from oideachais.dagster_defs.assets.ie.education.curriculum_dlt_assets import DLT_PIPELINES_DIR, DLT_PIPELINE_NAME, DLT_DATASET_NAME
     db_path = "/Users/cianmacandeisigh/dev/kings_college_galway/curriculum_unified.duckdb"
     if not os.path.exists(db_path):
         db_path = "/Users/cianmacandeisigh/dev/kings_college_galway/curriculum_unified.duckdb"

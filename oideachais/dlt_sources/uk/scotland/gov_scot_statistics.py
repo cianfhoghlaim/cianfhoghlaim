@@ -17,7 +17,7 @@ from typing import Any
 
 import dlt
 
-from ..common.firecrawl_source import crawl_website, scrape_page
+from ...common.firecrawl_source import crawl_website, scrape_page
 
 # Key statistics publications
 SCOT_STATISTICS = {

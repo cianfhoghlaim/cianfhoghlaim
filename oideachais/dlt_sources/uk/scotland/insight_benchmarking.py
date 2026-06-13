@@ -11,7 +11,7 @@ from typing import Any
 
 import dlt
 
-from ..common.firecrawl_source import crawl_website, scrape_page
+from ...common.firecrawl_source import crawl_website, scrape_page
 
 INSIGHT_URLS = {
     "main": "https://www.gov.scot/policies/schools/school-performance/",
