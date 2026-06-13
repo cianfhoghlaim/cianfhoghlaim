@@ -1,3 +1,0 @@
-if [ "$2" != "message" ];then 
-    exec < /dev/tty && npx cz --hook "$1" "$2" "$3" || true
-fi

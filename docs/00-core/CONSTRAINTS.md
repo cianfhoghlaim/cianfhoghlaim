@@ -1,14 +1,37 @@
+---
+title: 'Critical Constraints'
+domain: 'core'
+status: 'stable'
+description: 'Mandatory constraints every AI agent must follow. Violations cause data corruption, performance degradation, or system failures.'
+read_when:
+  - before writing any data-pipeline or storage code
+  - when in doubt about a database or embedding operation
+updated: '2026-06-13'
+supersedes: []
+ccc_query_hints:
+  - duckdb single threaded
+  - lancedb mvcc
+  - embedding batch size
+  - irish language model
+  - zero absolute namespaces
+---
+
 # Critical Constraints
 
-**MANDATORY:** All AI agents MUST follow these constraints. Violations cause data corruption, performance degradation, or system failures.
+**MANDATORY:** All AI agents MUST follow these constraints. Violations cause
+data corruption, performance degradation, or system failures.
 
-## Database Constraints
+For the full project identity, quadrant map, and routing rules, see
+[`docs/00-core/CLAUDE.md`](./CLAUDE.md). This file is the constraint list only.
 
-### DuckDB: SINGLE_THREADED_ONLY
+## 1. Database Constraints
 
-**Severity:** CRITICAL - Violation causes segfault/data corruption
+### 1.1 DuckDB: SINGLE_THREADED_ONLY
 
-**Rule:** All DuckDB operations must go through a single-threaded executor. Never attempt concurrent reads or writes.
+**Severity:** CRITICAL — Violation causes segfault / data corruption.
+
+**Rule:** All DuckDB operations must go through a single-threaded executor.
+Never attempt concurrent reads or writes.
 
 **Implementation:**
 ```python
@@ -25,7 +48,7 @@ class SerialDatabaseExecutor:
 
 # WRONG: Direct concurrent access
 # conn1.execute("SELECT * FROM table")  # Thread 1
-# conn2.execute("INSERT INTO table")    # Thread 2 - CRASH!
+# conn2.execute("INSERT INTO table")    # Thread 2 — CRASH!
 ```
 
 **Symptoms of Violation:**
@@ -34,232 +57,123 @@ class SerialDatabaseExecutor:
 - Corrupted `.duckdb` files
 - Inconsistent query results
 
-### LanceDB: MVCC with Serial Wrapper
+### 1.2 LanceDB: MVCC with Serial Wrapper
 
-**Severity:** HIGH - Violation causes data loss or duplicates
+**Severity:** HIGH — Violation causes data loss or duplicates.
 
-**Rule:** LanceDB handles multi-process via MVCC, but within each process use SerialDatabaseExecutor.
+**Rule:** LanceDB handles multi-process via MVCC; within each process use
+`SerialDatabaseExecutor`.
 
-**Architecture Layers:**
-1. **Python Layer:** SerialDatabaseExecutor (single-threaded queue)
+**Architecture layers:**
+1. **Python Layer:** `SerialDatabaseExecutor` (single-threaded queue)
 2. **Rust Layer:** MVCC coordination, automatic conflict resolution
 
 **Implementation:**
 ```python
-# CORRECT: Use merge_insert for idempotency
+# CORRECT: use merge_insert for idempotency
 table.merge_insert("id")  # Handles conflicts via MVCC
-
-# CORRECT: Deduplicate multi-result queries
-results = table.search().where(condition).to_list()
-results = _deduplicate_by_id(results)  # Required for correctness
-
-# WRONG: Assume query results are unique without deduplication
-results = table.search().where(condition).to_list()  # May have duplicates!
 ```
 
-**Fragmentation Behavior:**
-- Each `merge_insert` creates a new fragment
-- Compaction occurs at 100 operations
-- Queries may return duplicates before compaction
-- Always deduplicate multi-result queries
+### 1.3 HNSW Index Lifecycle
 
-## Embedding Constraints
+**Rule:** Drop HNSW indexes for any bulk insert >50 rows; rebuild after.
 
-### Batching: MANDATORY
-
-**Severity:** CRITICAL - Violation causes 100x performance degradation
-
-**Rule:** NEVER process embeddings one at a time. Always batch minimum 100 texts.
-
-**Performance Numbers:**
-| Operation | Unbatched | Batched | Constraint |
-|-----------|-----------|---------|------------|
-| 1000 texts | 100s | 1s | 100x speedup |
-| API calls | 1000 | 10 | Rate limit friendly |
-| Memory | High | Low | Efficient batching |
-
-**Implementation:**
 ```python
-# CORRECT: Batch embeddings
-def embed_texts(texts: list[str], batch_size: int = 100) -> list[list[float]]:
-    embeddings = []
-    for i in range(0, len(texts), batch_size):
-        batch = texts[i:i+batch_size]
-        batch_embeddings = client.embed(batch)
-        embeddings.extend(batch_embeddings)
-    return embeddings
-
-# WRONG: Single-text embedding in loop
-for text in texts:
-    embedding = client.embed([text])  # 100x slower!
+# CORRECT: drop → insert → rebuild
+table.drop_index("vector_idx")
+table.add(data)  # bulk insert
+table.create_index(num_partitions=...)
 ```
 
-### HNSW Index Management
+### 1.4 DuckLake + Iceberg + MotherDuck
 
-**Severity:** HIGH - Violation causes 20x slowdown for bulk operations
+- **Writes** go to DuckLake (Parquet on Garage S3, Postgres catalog).
+- **Reads** go to MotherDuck (`md:oideachais`).
+- **Long-tail catalogue** lives in Apache Iceberg via Lakekeeper (not written to today).
+- See `docs/02-data-platform/storage-mental-model.md`.
 
-**Rule:** DROP HNSW indexes before bulk inserts >50 rows, RECREATE after.
+### 1.5 Path / Namespace Rules
 
-**Implementation:**
-```python
-# CORRECT: Drop index for bulk insert
-if len(new_rows) > 50:
-    table.drop_index("vector_idx")  # Remove HNSW
-    table.add(new_rows)
-    table.create_index("vector_idx", index_type="IVF_HNSW")  # Recreate
+- **Zero absolute namespaces inside `oideachais/`** — never import
+  `oideachais.data_platform.*` or `oideachais.middleware.*` from
+  within `oideachais/`. Use relative imports.
+  - Enforced by `oideachais/tests/sources/test_cross_namespace.py`.
 
-# WRONG: Insert with index (slow for bulk)
-table.add(large_batch)  # 20x slower with index!
-```
+## 2. Embedding Performance Constraints
 
-**Thresholds:**
-| Rows | Strategy | Speedup |
-|------|----------|---------|
-| <50 | Keep index | 1x |
-| 50-1000 | Drop/recreate | 10x |
-| >1000 | Drop/recreate | 20x |
+### 2.1 Batching: MANDATORY (100× performance difference)
 
-## BAML Constraints
+| Scenario | Time |
+|---|---|
+| Unbatched 1,000 texts | ~100 s |
+| Batched 1,000 texts | ~1 s |
 
-### Schema Validation: REQUIRED
+**Minimum batch size:** 100 embeddings per API call.
 
-**Severity:** MEDIUM - Violation causes type errors and extraction failures
+### 2.2 HNSW Index Management
 
-**Rule:** All LLM extractions must use validated BAML schemas.
+- Drop indexes before bulk inserts >50 rows (20× speedup).
+- Recreate after batch complete.
+- Monitor memory usage; >4 GB per process is a yellow flag.
 
-**Implementation:**
-```baml
-// CORRECT: Defined schema with validation
-class MarkingPoint {
-  correct_answer: string
-  marks_awarded: int
-  valid_alternatives: string[]
-}
-
-function ExtractMarks(text: string) -> MarkingPoint[] {
-  client "anthropic/claude-sonnet-4-20250514"
-  prompt #"
-    Extract marking points from:
-    {{ text }}
-    {{ ctx.output_format }}
-  "#
-}
-
-// WRONG: Unstructured extraction
-# result = llm.complete("Extract the marks from: " + text)
-```
-
-**Validation Checklist:**
-- [ ] Schema defined in `baml_src/`
-- [ ] Types match expected output
-- [ ] Tested with sample documents
-- [ ] Error handling for validation failures
-
-## Irish Language Constraints
-
-### Model Selection: SPECIALIZED_REQUIRED
-
-**Severity:** HIGH - Violation causes 20% accuracy loss
-
-**Rule:** Use Irish-specialized models for Irish content.
-
-**Model Priority:**
-1. **UCCIX-Llama2-13B-Instruct**: +12% over LLaMA 2-70B on Irish
-2. **GaBERT**: Irish-specific BERT embeddings
-3. **Qwen2.5-Math-7B**: Native multilingual with Irish support
-
-**Implementation:**
-```python
-# CORRECT: Use specialized model
-irish_model = OpenAILike(
-    id="uccix-13b",
-    base_url="https://api.uccix.ie/v1/",
-)
-
-# WRONG: Use generic model for Irish
-# generic_model = "gpt-4"  # 20% accuracy loss on Irish
-```
-
-### Dialect Handling
-
-**Rule:** Normalize dialects or preserve based on use case.
-
-| Dialect | Region | Key Differences |
-|---------|--------|-----------------|
-| Connacht | West | Default standard |
-| Munster | South | Different verb forms |
-| Ulster | North | `Amharc` vs `Feach` |
-| Standard | Official | Curriculum default |
-
-## Performance Thresholds
-
-### Critical Numbers
+### 2.3 Performance Thresholds
 
 | Metric | Threshold | Action if Exceeded |
-|--------|-----------|-------------------|
-| Embedding batch | <100 | Increase batch size |
-| DB operations/sec | >10 | Check for concurrent access |
-| Index rebuild time | >60s | Pre-drop index |
-| OCR per page | >5s | Check model selection |
-| Memory per process | >4GB | Review batch sizes |
+|---|---|---|
+| Embedding batch | < 100 | Increase batch size |
+| DB operations/sec | > 10 | Check for concurrent access |
+| Index rebuild time | > 60 s | Pre-drop index |
+| OCR per page | > 5 s | Check model selection |
+| Memory per process | > 4 GB | Review batch sizes |
 
-### Optimization Triggers
+## 3. BAML Schema Validation
 
-Only add complexity when:
-- Batch size <100 causes rate limits
-- Single-thread bottleneck proven with profiling
-- Concurrent access required (use LanceDB, not DuckDB)
-- Irish accuracy <80% (switch to UCCIX)
+**MANDATORY:** schema validation before every LLM call. Use type-safe
+extraction for curriculum documents. Test schemas in `baml_src/` before
+production use.
 
-## Validation Commands
+The LLM stack hierarchy is: `BAML (structured extraction in DE) → litellm
+(routing) → ADK/AGNO (agent orchestration) → ccc cocoindex-code (semantic
+index over the codebase) → Cognee (knowledge graph)`. See
+[`docs/04-ai-ml/llm-stack-hierarchy.md`](../04-ai-ml/llm-stack-hierarchy.md).
 
-```bash
-# Check database health
-python -c "import duckdb; conn = duckdb.connect(':memory:'); print('DuckDB OK')"
+## 4. Irish Language Processing
 
-# Verify embedding batching
-uv run python -c "
-from chunkhound.providers.embeddings import embed_texts
-texts = ['test'] * 100
-embeddings = embed_texts(texts)
-print(f'Embedded {len(embeddings)} texts')
-"
+- Irish is <0.1% of web content (~20% model performance gap).
+- Use specialized models: **UCCIX-Llama2-13B-Instruct**, **GaBERT**,
+  **Qwen2.5-Math**.
+- Handle dialects: Connacht, Munster, Ulster, Standard.
 
-# Test BAML schema
-uv run baml test --filter curriculum
+## 5. Source Asset-Key Contract
 
-# Verify Irish model access
-curl -X POST https://api.uccix.ie/v1/completions \
-  -H "Authorization: Bearer $UCCIX_API_KEY" \
-  -d '{"prompt": "Dia duit", "max_tokens": 10}'
-```
+Every source in `oideachais/sources.yaml` has id `{nation}.{domain}.{entity}`
+and an `asset_key: [{nation}, {domain}, ...]`. The 43 sources span 8
+nations (ie, ni, en, sct, wls, iom, jey, ggy) × 4 domains (education,
+medicine, law, statistics) + the `site_analysis` sidecar domain. See
+[`docs/02-data-platform/cross-domain-registry.md`](../02-data-platform/cross-domain-registry.md).
 
-## Error Recovery
+## 6. Browser Automation Decision Tree
 
-### Database Corruption
-1. Stop all processes
-2. Restore from backup
-3. Verify single-threaded access
-4. Restart with SerialDatabaseExecutor
+| Need | First choice | Second | Third |
+|---|---|---|---|
+| Scrape (paid) | `firecrawl` MCP | `sruth-browser` selfhosted | `Firecrawl` API |
+| Scrape (free) | `sruth-browser` selfhosted | Crawl4AI | `firecrawl` MCP (with own key) |
+| Interact (form/login) | `browserbase` MCP | `Stagehand` selfhosted | `skyvern` selfhosted |
+| LLM-driven page description | `oideachais/site_analysis/` (BAML `SiteAnalysis` schema) | `firecrawl` MCP `extract` | manual agent loop |
 
-### Embedding Timeout
-1. Reduce batch size to 50
-2. Add retry with exponential backoff
-3. Check API rate limits
-4. Consider local model
+In test mode (`USE_LOCAL_SCRAPES=true`) every call routes through the
+`oideachais/site_analysis/_stubs/` fixture so the asset graph is
+exercisable without a live browser. See
+[`docs/03-agents/browser-automation.md`](../03-agents/browser-automation.md).
 
-### Index Rebuild Failure
-1. Drop all indexes
-2. Vacuum database
-3. Recreate indexes one at a time
-4. Monitor memory usage
-
-## Constraint Checklist
+## 7. Constraint Checklist
 
 Before any data operation:
-- [ ] Using SerialDatabaseExecutor for DuckDB?
-- [ ] Batch size ≥100 for embeddings?
-- [ ] HNSW indexes dropped for bulk >50 rows?
-- [ ] BAML schema validated?
-- [ ] Irish content using specialized models?
+- [ ] Using `SerialDatabaseExecutor` for DuckDB?
+- [ ] Batch size ≥ 100 for embeddings?
+- [ ] HNSW indexes dropped for bulk > 50 rows?
+- [ ] BAML schema validated for LLM extraction?
+- [ ] Irish content using specialized model (UCCIX / GaBERT)?
 - [ ] Deduplication applied to multi-result queries?
+- [ ] Cross-namespace check passes (`oideachais/tests/sources/test_cross_namespace.py`)?
+- [ ] Path stale-ref check passes (`bun run validate-docs`)?

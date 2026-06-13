@@ -15,9 +15,8 @@ generated: 2026-06-13
 | 02-data-platform | 1102 |
 | 03-agents | 208 |
 | 04-ai-ml | 1070 |
-| 05-web | 1229 |
+| 05-web | 1235 |
 | 06-infrastructure | 846 |
-| 06-platform-architecture | 6 |
 | 07-standards | 1431 |
 | 08-misc | 8544 |
 | 09-cognee | 2 |

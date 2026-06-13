@@ -1423,7 +1423,7 @@ TOPIC_HOME: dict[str, str] = {
     "locket-secrets": "06-infrastructure",
     "locket": "06-infrastructure",
     "infisical-vault": "06-infrastructure",
-    "konvex": "06-platform-architecture",
+    "konvex": "05-web",
     "pangolin": "06-infrastructure",
     "komodo": "06-infrastructure",
     "github-cli": "06-infrastructure",

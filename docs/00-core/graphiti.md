@@ -1,171 +1,58 @@
 ---
-name: graphiti
-description: Temporal knowledge graph with bi-temporal data model for tracking prerequisite relationships, learning progressions, and curriculum changes over time.
+title: 'graphiti (agent skill)'
+domain: 'core'
+status: 'stable'
+description: 'Agent skill description for the Graphiti temporal knowledge graph integration. Note: the platform uses Cognee as the primary knowledge graph; Graphiti is a skill that may be invoked for bi-temporal tracking use cases.'
+read_when: []
+updated: '2026-06-13'
+truth: sole
+ccc_query_hints:
+  - graphiti temporal knowledge graph
 ---
 
 # Graphiti
 
-**Version:** 1.0 | **Last Updated:** 2025-12
+**Version:** 1.0 | **Last Updated:** 2026-06-13
 
 ## Overview
 
-Graphiti provides temporal reasoning capabilities for the Cianfhoghlaim education platform, enabling tracking of curriculum changes and prerequisite relationships across time.
+Graphiti provides temporal reasoning capabilities, enabling tracking
+of curriculum changes and prerequisite relationships across time. The
+primary knowledge-graph layer for the Cianfhoghlaim platform is
+**Cognee** (see `oideachais/cognee_integration/` and
+`docs/01-cognee/`); Graphiti is a complementary bi-temporal graph
+store that may be invoked when bi-temporal data (valid time + transaction
+time) is required.
 
 | Feature | Description |
-|---------|-------------|
+|---|---|
 | Bi-Temporal Model | Valid time + transaction time |
 | Knowledge Graphs | Entity and relationship tracking |
 | Temporal Queries | Point-in-time and period queries |
 | Memory System | Episodic and semantic memory |
 
-## When to Use This Skill
+## When to use this skill
 
 Activate when users need:
 
-- "Track curriculum changes over time"
-- "Query historical prerequisite relationships"
-- "Build temporal knowledge graph"
+- "Track curriculum changes over time with bi-temporal accuracy"
+- "Query historical prerequisite relationships at a specific date"
+- "Build a temporal knowledge graph alongside Cognee"
 - "Implement AI memory with time awareness"
-- "Compare curriculum versions"
+- "Compare curriculum versions across years"
 
-## Project Integration
-
-### Infrastructure Location
+## Project integration (post-restructure)
 
 | Component | Path |
-|-----------|------|
-| Stack Config | `bonneagar/storage/graphiti/` |
-| Integration | `sruth/oideachais/knowledge_graph/graphiti/` |
+|---|---|
+| Stack config | `infrastructure/stacks/machine_learning/graphiti/` |
+| Integration code (Cognee primary) | `oideachais/cognee_integration/` |
+| Integration code (Graphiti skill, optional) | `meaisínfhoghlaim/agents/` (when adopted) |
 
-### Research References (taighde/)
+### Reference docs
 
-| Directory | Relevant Documents |
-|-----------|-------------------|
-| `taighde_scoil/` | Curriculum versioning patterns |
-| `taighde_bonneagar/` | Graphiti deployment guides |
+- [`docs/01-cognee/COGNEE_INTEGRATION.md`](../../01-cognee/COGNEE_INTEGRATION.md) — primary KG layer
+- [`docs/04-ai-ml/knowledge-graphs.md`](../../04-ai-ml/knowledge-graphs.md) — KG landscape
 
-## Core Concepts
-
-### 1. Bi-Temporal Data Model
-
-```python
-from graphiti_core import Graphiti
-from datetime import datetime
-
-# Valid time: when the fact is true in reality
-# Transaction time: when the fact was recorded
-
-client = Graphiti(
-    neo4j_url="bolt://graphiti.cianfhoghlaim.ie:7687",
-    neo4j_user="neo4j",
-    neo4j_password="password"
-)
-```
-
-### 2. Adding Episodic Memory
-
-```python
-from graphiti_core.nodes import EpisodeType
-
-# Add curriculum change as an episode
-episode = await client.add_episode(
-    name="Junior Cycle Math Update 2024",
-    episode_body="""
-    The Junior Cycle Mathematics specification was updated
-    to include new topics in Data Science and Probability.
-    """,
-    source_description="NCCA Circular 2024",
-    reference_time=datetime(2024, 9, 1),  # Valid time
-    episode_type=EpisodeType.curriculum_change
-)
-```
-
-### 3. Temporal Queries
-
-```python
-# Query prerequisites as of a specific date
-results = await client.search(
-    query="What are the prerequisites for Leaving Cert Physics?",
-    reference_time=datetime(2023, 9, 1)  # Point-in-time query
-)
-
-# Compare prerequisites between years
-historical = await client.search(
-    query="Prerequisites for LC Physics",
-    reference_time=datetime(2020, 9, 1)
-)
-current = await client.search(
-    query="Prerequisites for LC Physics",
-    reference_time=datetime(2024, 9, 1)
-)
-```
-
-### 4. Entity Extraction
-
-```python
-from graphiti_core.llm_client import OpenAIClient
-
-# Configure LLM for entity extraction
-llm_client = OpenAIClient(model="gpt-4o-mini")
-
-# Extract entities from curriculum document
-entities = await client.add_episode(
-    name="LC Biology Specification",
-    episode_body=curriculum_text,
-    source_description="NCCA",
-    reference_time=datetime.now()
-)
-```
-
-## Cianfhoghlaim-Specific Usage
-
-### Curriculum Version Tracking
-
-```python
-# Track specification versions
-await client.add_episode(
-    name="Junior Cycle Irish Updated",
-    episode_body="""
-    Specification L1 replaced by L2.
-    Focus shifted from grammar to communication.
-    """,
-    source_description="NCCA",
-    reference_time=datetime(2024, 9, 1),
-    episode_type=EpisodeType.curriculum_change
-)
-
-# Query what changed
-changes = await client.search(
-    query="What changed in Junior Cycle Irish?",
-    num_results=10
-)
-```
-
-### Integration with Knowledge Graph
-
-```python
-# Connect Graphiti entities to Memgraph prerequisite graph
-from memgraph import Memgraph
-
-mg = Memgraph()
-graphiti_entities = await client.get_nodes(limit=100)
-
-for entity in graphiti_entities:
-    mg.execute("""
-        MERGE (n:Topic {name: $name})
-        SET n.valid_from = $valid_from
-    """, {"name": entity.name, "valid_from": entity.valid_at})
-```
-
-## Best Practices
-
-1. **Always set reference_time** - Enables temporal queries
-2. **Use episode types** - Categorize changes for filtering
-3. **Include source_description** - Traceability for curriculum changes
-4. **Batch entity extraction** - Reduces API calls
-
-## Resources
-
-- **GitHub:** https://github.com/getzep/graphiti
-- **Documentation:** https://docs.getzep.com/graphiti
-- **Related Skills:** memgraph, cognee, lancedb
+For the project identity, see
+[`docs/00-core/CLAUDE.md`](../../00-core/CLAUDE.md).
