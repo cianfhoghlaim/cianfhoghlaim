@@ -1,9 +1,0 @@
-pandas
-pydantic
-google-genai
-tqdm
-openai
-fasttext-langdetect
-matplotlib
-numpy
-python-dotenv

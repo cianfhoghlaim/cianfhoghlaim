@@ -1,9 +1,0 @@
-{
-  "platforms": ["ios", "android"],
-  "ios": {
-    "modules": ["ExpoBackgroundNotificationHandlerModule"]
-  },
-  "android": {
-    "modules": ["expo.modules.backgroundnotificationhandler.ExpoBackgroundNotificationHandlerModule"]
-  }
-}

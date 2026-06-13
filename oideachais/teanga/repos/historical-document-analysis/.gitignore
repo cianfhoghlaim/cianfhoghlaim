@@ -1,8 +1,0 @@
-*.pyc
-*.log
-*.DS_STORE
-wandb/
-*.env
-src/datasets/raw_data
-.env
-.env
