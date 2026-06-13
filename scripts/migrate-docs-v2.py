@@ -2002,20 +2002,23 @@ def target_path_for(source: Path, topic: str) -> Path:
     # Loose file at root
     if len(parts) == 1:
         return DOCS_V2 / "10-loose-files" / parts[0]
-    # Non-md
-    if source.suffix.lower() in {".py"}:
+    # Source code files
+    if source.suffix.lower() in {".py", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".sh", ".bash", ".rb", ".go", ".rs", ".java", ".kt", ".swift", ".c", ".cpp", ".h", ".hpp", ".cs"}:
         return DOCS_V2 / "11-scripts" / source.name
-    if source.suffix.lower() in {".yaml", ".yml", ".toml", ".json", ".lock"}:
+    if source.suffix.lower() in {".yaml", ".yml", ".toml", ".json", ".lock", ".xml", ".ini", ".env", ".conf"}:
         return DOCS_V2 / "12-configs" / source.name
-    if source.suffix.lower() in {".png", ".jpg", ".jpeg", ".svg", ".gif", ".webp"}:
+    if source.suffix.lower() in {".png", ".jpg", ".jpeg", ".svg", ".gif", ".webp", ".bmp", ".ico", ".tiff"}:
         return DOCS_V2 / "13-images" / source.name
-    if source.suffix.lower() in {".pdf", ".docx", ".doc", ".xlsx", ".pptx"}:
+    if source.suffix.lower() in {".pdf", ".docx", ".doc", ".xlsx", ".pptx", ".odt", ".ods", ".odp"}:
         return DOCS_V2 / "10-loose-files" / source.name
-    # md → topic cluster. Use TOPIC_HOME for canonical placement.
-    canonical_domain = TOPIC_HOME.get(topic, "08-misc")
-    topic_dir = topic.replace("_", "-")
-    target = DOCS_V2 / canonical_domain / topic_dir
-    return target / f"{topic}.md"
+    # Markdown → topic cluster. Use TOPIC_HOME for canonical placement.
+    if source.suffix.lower() == ".md":
+        canonical_domain = TOPIC_HOME.get(topic, "08-misc")
+        topic_dir = topic.replace("_", "-")
+        target = DOCS_V2 / canonical_domain / topic_dir
+        return target / f"{topic}.md"
+    # Fallback: treat as config
+    return DOCS_V2 / "12-configs" / source.name
 
 
 # ---------------------------------------------------------------------------
@@ -2057,13 +2060,17 @@ def make_merged_file(
             section += f"_Source: {rel} (empty body)_\n\n"
         sections.append(section)
 
-    # Frontmatter
+    # Frontmatter (always written, even for single-source / no-FM files)
+    title = frontmatter_seen.get("title", topic.replace("-", " ").title())
+    description = frontmatter_seen.get(
+        "description", f"Topic file for {topic}; merged from {len(sources)} source file(s)"
+    )
     fm_lines = [
         "---",
-        f"title: {frontmatter_seen.get('title', topic)}",
+        f"title: {title}",
         f"domain: {domain}",
         "status: living-document",
-        f"description: {frontmatter_seen.get('description', f'Merged from {len(sources)} source files')}",
+        f"description: {description}",
         f"merged_on: {now_iso()}",
         f"merged_from_count: {len(sources)}",
         "supersedes:",
