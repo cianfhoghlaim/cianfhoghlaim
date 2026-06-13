@@ -83,7 +83,13 @@ def make_subject_assets(subject: str) -> list:
         )
         # Filter the DLT source by this asset's subject so the
         # `leaving_cert_{subject}` dataset only contains rows for this subject.
-        source = leaving_cert_source(use_local_scrapes=True, subjects=[subject])
+        # Use `replace` write disposition so each run drops the previous
+        # table contents and re-creates with only this subject's rows
+        # (the `merge` default would accumulate rows from any previous
+        # unfiltered runs that wrote 7 subjects into the same dataset).
+        source = leaving_cert_source(
+            use_local_scrapes=True, subjects=[subject], write_disposition="replace"
+        )
         load_info = safe_dlt_run(pipeline, source)
 
         # Calculate rows loaded per resource. The DLT load_info structure is:
