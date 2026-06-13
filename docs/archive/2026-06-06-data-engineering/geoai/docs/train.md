@@ -1,3 +1,0 @@
-# train module
-
-::: geoai.train

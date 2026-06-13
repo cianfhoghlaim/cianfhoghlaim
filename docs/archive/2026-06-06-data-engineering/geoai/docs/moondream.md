@@ -1,3 +1,0 @@
-# moondream module
-
-::: geoai.moondream

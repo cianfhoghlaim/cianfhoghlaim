@@ -1,6 +1,0 @@
-[build]
-  publish = "storybook-docs/"
-[[headers]]
-  for = "*.json"
-  [headers.values]
-    Access-Control-Allow-Origin = "*"

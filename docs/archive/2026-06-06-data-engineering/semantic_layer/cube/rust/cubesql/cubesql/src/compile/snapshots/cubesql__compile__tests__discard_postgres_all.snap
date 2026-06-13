@@ -1,5 +1,0 @@
----
-source: cubesql/src/compile/mod.rs
-expression: "execute_query(\"DISCARD ALL;\".to_string(), DatabaseProtocol::PostgreSQL).await?"
----
-
