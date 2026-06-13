@@ -1,7 +1,7 @@
 {
   "domain": "13-images",
-  "source_files": 642,
-  "target_files": 505,
+  "source_files": 462,
+  "target_files": 410,
   "topics": {
     "01-infisical-signup.png": {
       "files": [
@@ -153,26 +153,6 @@
         "docs/08-screenshots/team-workflow-stack/screenshots/15-pocketid-oidc-client-recreated.png"
       ]
     },
-    "App-Icon-1024x1024@1x.png": {
-      "files": [
-        "App-Icon-1024x1024@1x.png"
-      ],
-      "size_bytes": 5856,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/react-native-godot/example/ios/GodotTest/Images.xcassets/AppIcon.appiconset/App-Icon-1024x1024@1x.png"
-      ]
-    },
-    "Background.jpg": {
-      "files": [
-        "Background.jpg"
-      ],
-      "size_bytes": 46526,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/react-native-godot/example/Background.jpg"
-      ]
-    },
     "Carter_welcomes_Reagan.jpg": {
       "files": [
         "Carter_welcomes_Reagan.jpg"
@@ -242,16 +222,6 @@
       "source_count": 1,
       "sources": [
         "docs/tuatha/x402/MCPay/apps/app/public/logos/mcp-clients/Grok_Logomark_Light.svg"
-      ]
-    },
-    "Icon128.png": {
-      "files": [
-        "Icon128.png"
-      ],
-      "size_bytes": 1635,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/SpacetimeDB/sdks/unreal/src/SpacetimeDbSdk/Resources/Icon128.png"
       ]
     },
     "Image 27-05-2026 at 11.32.PNG": {
@@ -459,10 +429,8 @@
         "android-chrome-192x192.png"
       ],
       "size_bytes": 14436,
-      "source_count": 4,
+      "source_count": 2,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/public/android-chrome-192x192.png",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/public/android-chrome-192x192.png",
         "docs/marimo/marimo/frontend/public/android-chrome-192x192.png",
         "docs/tuatha/x402/MCPay/apps/app/public/android-chrome-192x192.png"
       ]
@@ -472,22 +440,10 @@
         "android-chrome-512x512.png"
       ],
       "size_bytes": 39067,
-      "source_count": 4,
+      "source_count": 2,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/public/android-chrome-512x512.png",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/public/android-chrome-512x512.png",
         "docs/marimo/marimo/frontend/public/android-chrome-512x512.png",
         "docs/tuatha/x402/MCPay/apps/app/public/android-chrome-512x512.png"
-      ]
-    },
-    "angular.svg": {
-      "files": [
-        "angular.svg"
-      ],
-      "size_bytes": 470,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/vizard/public/logos/angular.svg"
       ]
     },
     "anthropic.svg": {
@@ -505,13 +461,10 @@
         "apple-touch-icon.png"
       ],
       "size_bytes": 12918,
-      "source_count": 5,
+      "source_count": 2,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/public/apple-touch-icon.png",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/public/apple-touch-icon.png",
         "docs/marimo/marimo/frontend/public/apple-touch-icon.png",
-        "docs/tuatha/x402/MCPay/apps/app/public/apple-touch-icon.png",
-        "docs/tuatha/x402/typescript/legacy/fullstack/next/public/apple-touch-icon.png"
+        "docs/tuatha/x402/MCPay/apps/app/public/apple-touch-icon.png"
       ]
     },
     "array.png": {
@@ -523,16 +476,6 @@
       "sources": [
         "docs/marimo/marimo/docs/_static/array.png",
         "docs/marimo/marimo/docs/_static/example-thumbs/array.png"
-      ]
-    },
-    "athena.svg": {
-      "files": [
-        "athena.svg"
-      ],
-      "size_bytes": 6685,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/athena.svg"
       ]
     },
     "aws.svg": {
@@ -576,16 +519,6 @@
         "docs/tuatha/wgpu/docs/big-picture.png"
       ]
     },
-    "bigquery.svg": {
-      "files": [
-        "bigquery.svg"
-      ],
-      "size_bytes": 3290,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/bigquery.svg"
-      ]
-    },
     "bill.png": {
       "files": [
         "bill.png"
@@ -594,16 +527,6 @@
       "source_count": 1,
       "sources": [
         "docs/baml/extract-anything/bill.png"
-      ]
-    },
-    "bsl-chat-demo.png": {
-      "files": [
-        "bsl-chat-demo.png"
-      ],
-      "size_bytes": 248340,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/web/public/bsl-chat-demo.png"
       ]
     },
     "bun-logo.svg": {
@@ -666,6 +589,36 @@
         "docs/marimo/marimo/docs/_static/example-thumbs/checkbox.png"
       ]
     },
+    "circle-check.ico": {
+      "files": [
+        "circle-check.ico"
+      ],
+      "size_bytes": 3774,
+      "source_count": 1,
+      "sources": [
+        "docs/marimo/marimo/frontend/src/assets/circle-check.ico"
+      ]
+    },
+    "circle-play.ico": {
+      "files": [
+        "circle-play.ico"
+      ],
+      "size_bytes": 3774,
+      "source_count": 1,
+      "sources": [
+        "docs/marimo/marimo/frontend/src/assets/circle-play.ico"
+      ]
+    },
+    "circle-x.ico": {
+      "files": [
+        "circle-x.ico"
+      ],
+      "size_bytes": 3774,
+      "source_count": 1,
+      "sources": [
+        "docs/marimo/marimo/frontend/src/assets/circle-x.ico"
+      ]
+    },
     "circle.png": {
       "files": [
         "circle.png"
@@ -701,9 +654,8 @@
         "clickhouse.svg"
       ],
       "size_bytes": 246,
-      "source_count": 2,
+      "source_count": 1,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/clickhouse.svg",
         "docs/marimo/marimo/frontend/src/components/databases/icons/clickhouse.svg"
       ]
     },
@@ -727,16 +679,6 @@
         "docs/cocoindex/product_recommendation/img/cocoinsight.png"
       ]
     },
-    "code-brackets.svg": {
-      "files": [
-        "code-brackets.svg"
-      ],
-      "size_bytes": 1459,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/stories/assets/code-brackets.svg"
-      ]
-    },
     "code_editor.png": {
       "files": [
         "code_editor.png"
@@ -757,16 +699,6 @@
         "docs/tuatha/x402/MCPay/apps/app/public/logos/coinbase-logo.svg"
       ]
     },
-    "colors.svg": {
-      "files": [
-        "colors.svg"
-      ],
-      "size_bytes": 8508,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/stories/assets/colors.svg"
-      ]
-    },
     "colosseum-logo-white.svg": {
       "files": [
         "colosseum-logo-white.svg"
@@ -775,16 +707,6 @@
       "source_count": 1,
       "sources": [
         "docs/tuatha/x402/MCPay/apps/app/public/colosseum-logo-white.svg"
-      ]
-    },
-    "comments.svg": {
-      "files": [
-        "comments.svg"
-      ],
-      "size_bytes": 1529,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/stories/assets/comments.svg"
       ]
     },
     "continue_chatting_with_sage.png": {
@@ -807,16 +729,6 @@
         "docs/tuatha/x402/MCPay/apps/docs/public/cover.png"
       ]
     },
-    "crate.svg": {
-      "files": [
-        "crate.svg"
-      ],
-      "size_bytes": 529,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/crate.svg"
-      ]
-    },
     "csharp-logo.svg": {
       "files": [
         "csharp-logo.svg"
@@ -825,76 +737,6 @@
       "source_count": 1,
       "sources": [
         "docs/tuatha/SpacetimeDB/docs/static/images/logos/csharp-logo.svg"
-      ]
-    },
-    "cube-cloud-icon.svg": {
-      "files": [
-        "cube-cloud-icon.svg"
-      ],
-      "size_bytes": 2824,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/components/mdx/CloudPromoBlock/cube-cloud-icon.svg"
-      ]
-    },
-    "cube-cloud-logo.svg": {
-      "files": [
-        "cube-cloud-logo.svg"
-      ],
-      "size_bytes": 2802,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/images/cube-cloud-logo.svg"
-      ]
-    },
-    "cube-logo-with-bg.png": {
-      "files": [
-        "cube-logo-with-bg.png"
-      ],
-      "size_bytes": 6492,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/content/cube-logo-with-bg.png"
-      ]
-    },
-    "cube-logo.svg": {
-      "files": [
-        "cube-logo.svg"
-      ],
-      "size_bytes": 2699,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/public/cube-logo.svg"
-      ]
-    },
-    "cube-scheme-dark.png": {
-      "files": [
-        "cube-scheme-dark.png"
-      ],
-      "size_bytes": 598235,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/public/cube-scheme-dark.png"
-      ]
-    },
-    "cube.svg": {
-      "files": [
-        "cube.svg"
-      ],
-      "size_bytes": 292,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/images/cube.svg"
-      ]
-    },
-    "cubejs-logo.svg": {
-      "files": [
-        "cubejs-logo.svg"
-      ],
-      "size_bytes": 775,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/public/cubejs-logo.svg"
       ]
     },
     "cursor-ai-logo.svg": {
@@ -982,9 +824,8 @@
         "databricks.svg"
       ],
       "size_bytes": 422,
-      "source_count": 2,
+      "source_count": 1,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/databricks.svg",
         "docs/marimo/marimo/frontend/src/components/databases/icons/databricks.svg"
       ]
     },
@@ -1026,16 +867,6 @@
       "source_count": 1,
       "sources": [
         "docs/marimo/marimo/docs/_static/example-thumbs/date.png"
-      ]
-    },
-    "deepnote.svg": {
-      "files": [
-        "deepnote.svg"
-      ],
-      "size_bytes": 1050,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/bi/deepnote.svg"
       ]
     },
     "deepseek.svg": {
@@ -1088,16 +919,6 @@
         "docs/marimo/marimo/docs/_static/example-thumbs/dictionary.png"
       ]
     },
-    "direction.svg": {
-      "files": [
-        "direction.svg"
-      ],
-      "size_bytes": 1281,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/stories/assets/direction.svg"
-      ]
-    },
     "discord.svg": {
       "files": [
         "discord.svg"
@@ -1106,16 +927,6 @@
       "source_count": 1,
       "sources": [
         "docs/tuatha/SpacetimeDB/images/social/discord.svg"
-      ]
-    },
-    "dislike.inline.svg": {
-      "files": [
-        "dislike.inline.svg"
-      ],
-      "size_bytes": 1901,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/components/common/Button/dislike.inline.svg"
       ]
     },
     "docs-ai-completion-codeium-vscode-dark.png": {
@@ -1376,16 +1187,6 @@
       "source_count": 1,
       "sources": [
         "docs/marimo/marimo/docs/_static/docs-html-export.png"
-      ]
-    },
-    "docs-icon.svg": {
-      "files": [
-        "docs-icon.svg"
-      ],
-      "size_bytes": 460,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/public/docs-icon.svg"
       ]
     },
     "docs-intro-app.gif": {
@@ -1728,16 +1529,6 @@
         "docs/marimo/marimo/docs/_static/example-thumbs/dropdown.png"
       ]
     },
-    "druid.svg": {
-      "files": [
-        "druid.svg"
-      ],
-      "size_bytes": 3170,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/druid.svg"
-      ]
-    },
     "duckdb.svg": {
       "files": [
         "duckdb.svg"
@@ -1818,26 +1609,6 @@
         "docs/tuatha/x402/MCPay/apps/app/public/logos/ethglobal-logo.png"
       ]
     },
-    "example.png": {
-      "files": [
-        "example.png"
-      ],
-      "size_bytes": 81381,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/wgpu/examples/features/src/storage_texture/example.png"
-      ]
-    },
-    "excel.svg": {
-      "files": [
-        "excel.svg"
-      ],
-      "size_bytes": 1661,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/bi/excel.svg"
-      ]
-    },
     "faq-marimo-ui.gif": {
       "files": [
         "faq-marimo-ui.gif"
@@ -1853,10 +1624,8 @@
         "favicon-16x16.png"
       ],
       "size_bytes": 830,
-      "source_count": 4,
+      "source_count": 2,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/public/favicon-16x16.png",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/public/favicon-16x16.png",
         "docs/marimo/marimo/frontend/public/favicon-16x16.png",
         "docs/tuatha/x402/MCPay/apps/app/public/favicon-16x16.png"
       ]
@@ -1866,63 +1635,30 @@
         "favicon-32x32.png"
       ],
       "size_bytes": 1823,
-      "source_count": 5,
+      "source_count": 3,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/public/favicon-32x32.png",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/public/favicon-32x32.png",
         "docs/marimo/marimo/docs/_static/favicon-32x32.png",
         "docs/marimo/marimo/frontend/public/favicon-32x32.png",
         "docs/tuatha/x402/MCPay/apps/app/public/favicon-32x32.png"
       ]
     },
-    "favicon-96x96.png": {
+    "favicon.ico": {
       "files": [
-        "favicon-96x96.png"
+        "favicon.ico"
       ],
-      "size_bytes": 10945,
-      "source_count": 1,
+      "size_bytes": 15406,
+      "source_count": 10,
       "sources": [
-        "docs/tuatha/x402/typescript/legacy/fullstack/next/public/favicon-96x96.png"
-      ]
-    },
-    "favicon-docs-development.svg": {
-      "files": [
-        "favicon-docs-development.svg"
-      ],
-      "size_bytes": 501,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/public/favicon-docs-development.svg"
-      ]
-    },
-    "favicon-docs-production.svg": {
-      "files": [
-        "favicon-docs-production.svg"
-      ],
-      "size_bytes": 438,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/public/favicon-docs-production.svg"
-      ]
-    },
-    "favicon-stories-development.svg": {
-      "files": [
-        "favicon-stories-development.svg"
-      ],
-      "size_bytes": 2351,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/public/favicon-stories-development.svg"
-      ]
-    },
-    "favicon-stories-production.svg": {
-      "files": [
-        "favicon-stories-production.svg"
-      ],
-      "size_bytes": 2199,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/public/favicon-stories-production.svg"
+        "docs/marimo/marimo/frontend/public/favicon.ico",
+        "docs/tuatha/SpacetimeDB/docs/static/images/favicon.ico",
+        "docs/tuatha/x402/MCPay/apps/app/public/favicon.ico",
+        "docs/tuatha/x402/MCPay/examples/auth-example/app/favicon.ico",
+        "docs/tuatha/x402/MCPay/examples/chatgpt-apps-sdk-nextjs-starter/app/favicon.ico",
+        "docs/tuatha/x402/typescript/fullstack/next/public/favicon.ico",
+        "docs/tuatha/x402/x402-ai-inference/app/favicon.ico",
+        "docs/tuatha/x402/x402-echo-merchant/src/app/favicon.ico",
+        "docs/tuatha/x402/x402-gated-api/app/favicon.ico",
+        "docs/web/tanmaxx-17/apps/web/public/favicon.ico"
       ]
     },
     "favicon.png": {
@@ -1939,13 +1675,10 @@
       "files": [
         "favicon.svg"
       ],
-      "size_bytes": 2577,
-      "source_count": 4,
+      "size_bytes": 940,
+      "source_count": 1,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/web/public/favicon.svg",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/public/favicon.svg",
-        "docs/tuatha/react-native-reusables/apps/docs/public/favicon.svg",
-        "docs/tuatha/x402/typescript/legacy/fullstack/next/public/favicon.svg"
+        "docs/tuatha/react-native-reusables/apps/docs/public/favicon.svg"
       ]
     },
     "file.svg": {
@@ -1969,26 +1702,6 @@
       "source_count": 1,
       "sources": [
         "docs/marimo/marimo/docs/_static/example-thumbs/file_upload.png"
-      ]
-    },
-    "firebolt.svg": {
-      "files": [
-        "firebolt.svg"
-      ],
-      "size_bytes": 1752,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/firebolt.svg"
-      ]
-    },
-    "flow.svg": {
-      "files": [
-        "flow.svg"
-      ],
-      "size_bytes": 1394,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/stories/assets/flow.svg"
       ]
     },
     "flow_example.svg": {
@@ -2031,16 +1744,6 @@
         "docs/cocoindex/image_search/img/giraffe.jpg"
       ]
     },
-    "github-icon.svg": {
-      "files": [
-        "github-icon.svg"
-      ],
-      "size_bytes": 1532,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/public/images/github-icon.svg"
-      ]
-    },
     "github.svg": {
       "files": [
         "github.svg"
@@ -2075,16 +1778,6 @@
         "docs/tuatha/gdext/misc/assets/godot-rust-ferris.png"
       ]
     },
-    "google-data-studio.svg": {
-      "files": [
-        "google-data-studio.svg"
-      ],
-      "size_bytes": 1089,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/bi/google-data-studio.svg"
-      ]
-    },
     "google-play-badge.png": {
       "files": [
         "google-play-badge.png"
@@ -2093,16 +1786,6 @@
       "source_count": 1,
       "sources": [
         "docs/tuatha/react-native-reusables/apps/docs/public/google-play-badge.png"
-      ]
-    },
-    "google-sheets.svg": {
-      "files": [
-        "google-sheets.svg"
-      ],
-      "size_bytes": 3790,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/bi/google-sheets.svg"
       ]
     },
     "google.svg": {
@@ -2185,26 +1868,6 @@
         "docs/cocoindex/multi_format_indexing/source_files/healthcare_industry_test_p9.jpg"
       ]
     },
-    "hero.png": {
-      "files": [
-        "hero.png"
-      ],
-      "size_bytes": 11776,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/x402/typescript/legacy/fullstack/farcaster-miniapp/public/hero.png"
-      ]
-    },
-    "hex.svg": {
-      "files": [
-        "hex.svg"
-      ],
-      "size_bytes": 445,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/bi/hex.svg"
-      ]
-    },
     "hf-logo.svg": {
       "files": [
         "hf-logo.svg"
@@ -2213,26 +1876,6 @@
       "source_count": 1,
       "sources": [
         "docs/tuatha/x402/MCPay/apps/app/public/logos/mcp-clients/hf-logo.svg"
-      ]
-    },
-    "hightouch.svg": {
-      "files": [
-        "hightouch.svg"
-      ],
-      "size_bytes": 705,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/bi/hightouch.svg"
-      ]
-    },
-    "hive.svg": {
-      "files": [
-        "hive.svg"
-      ],
-      "size_bytes": 16472,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/hive.svg"
       ]
     },
     "hophacks.svg": {
@@ -2253,62 +1896,6 @@
       "source_count": 1,
       "sources": [
         "docs/tuatha/SpacetimeDB/docs/static/images/logos/html5-logo.svg"
-      ]
-    },
-    "ic_launcher.png": {
-      "files": [
-        "ic_launcher.png"
-      ],
-      "size_bytes": 4569,
-      "source_count": 5,
-      "sources": [
-        "docs/tuatha/react-native-godot/example/android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
-        "docs/tuatha/react-native-godot/example/android/app/src/main/res/mipmap-mdpi/ic_launcher.png",
-        "docs/tuatha/react-native-godot/example/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
-        "docs/tuatha/react-native-godot/example/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
-        "docs/tuatha/react-native-godot/example/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"
-      ]
-    },
-    "ic_launcher.webp": {
-      "files": [
-        "ic_launcher.webp"
-      ],
-      "size_bytes": 1900,
-      "source_count": 5,
-      "sources": [
-        "docs/tuatha/agui_kotlin/examples/chatapp/androidApp/src/main/res/mipmap-hdpi/ic_launcher.webp",
-        "docs/tuatha/agui_kotlin/examples/chatapp/androidApp/src/main/res/mipmap-mdpi/ic_launcher.webp",
-        "docs/tuatha/agui_kotlin/examples/chatapp/androidApp/src/main/res/mipmap-xhdpi/ic_launcher.webp",
-        "docs/tuatha/agui_kotlin/examples/chatapp/androidApp/src/main/res/mipmap-xxhdpi/ic_launcher.webp",
-        "docs/tuatha/agui_kotlin/examples/chatapp/androidApp/src/main/res/mipmap-xxxhdpi/ic_launcher.webp"
-      ]
-    },
-    "ic_launcher_round.png": {
-      "files": [
-        "ic_launcher_round.png"
-      ],
-      "size_bytes": 7098,
-      "source_count": 5,
-      "sources": [
-        "docs/tuatha/react-native-godot/example/android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png",
-        "docs/tuatha/react-native-godot/example/android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png",
-        "docs/tuatha/react-native-godot/example/android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png",
-        "docs/tuatha/react-native-godot/example/android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png",
-        "docs/tuatha/react-native-godot/example/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png"
-      ]
-    },
-    "ic_launcher_round.webp": {
-      "files": [
-        "ic_launcher_round.webp"
-      ],
-      "size_bytes": 3918,
-      "source_count": 5,
-      "sources": [
-        "docs/tuatha/agui_kotlin/examples/chatapp/androidApp/src/main/res/mipmap-hdpi/ic_launcher_round.webp",
-        "docs/tuatha/agui_kotlin/examples/chatapp/androidApp/src/main/res/mipmap-mdpi/ic_launcher_round.webp",
-        "docs/tuatha/agui_kotlin/examples/chatapp/androidApp/src/main/res/mipmap-xhdpi/ic_launcher_round.webp",
-        "docs/tuatha/agui_kotlin/examples/chatapp/androidApp/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp",
-        "docs/tuatha/agui_kotlin/examples/chatapp/androidApp/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp"
       ]
     },
     "iceberg.png": {
@@ -2345,73 +1932,10 @@
       "files": [
         "icon.png"
       ],
-      "size_bytes": 17815,
-      "source_count": 8,
+      "size_bytes": 32163,
+      "source_count": 1,
       "sources": [
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-hdpi/icon.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-mdpi/icon.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-xhdpi/icon.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-xxhdpi/icon.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-xxxhdpi/icon.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap/icon.png",
-        "docs/tuatha/react-native-reusables/apps/showcase/assets/images/icon.png",
-        "docs/tuatha/x402/typescript/legacy/fullstack/farcaster-miniapp/public/icon.png"
-      ]
-    },
-    "icon.svg": {
-      "files": [
-        "icon.svg"
-      ],
-      "size_bytes": 949,
-      "source_count": 2,
-      "sources": [
-        "docs/tuatha/react-native-godot/example/project/icon.svg",
-        "docs/tuatha/react-native-godot/example/project2/icon.svg"
-      ]
-    },
-    "icon_background.png": {
-      "files": [
-        "icon_background.png"
-      ],
-      "size_bytes": 517,
-      "source_count": 6,
-      "sources": [
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-hdpi/icon_background.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-mdpi/icon_background.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-xhdpi/icon_background.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-xxhdpi/icon_background.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-xxxhdpi/icon_background.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap/icon_background.png"
-      ]
-    },
-    "icon_foreground.png": {
-      "files": [
-        "icon_foreground.png"
-      ],
-      "size_bytes": 4490,
-      "source_count": 6,
-      "sources": [
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-hdpi/icon_foreground.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-mdpi/icon_foreground.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-xhdpi/icon_foreground.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-xxhdpi/icon_foreground.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-xxxhdpi/icon_foreground.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap/icon_foreground.png"
-      ]
-    },
-    "icon_monochrome.png": {
-      "files": [
-        "icon_monochrome.png"
-      ],
-      "size_bytes": 3615,
-      "source_count": 6,
-      "sources": [
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-hdpi/icon_monochrome.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-mdpi/icon_monochrome.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-xhdpi/icon_monochrome.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-xxhdpi/icon_monochrome.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap-xxxhdpi/icon_monochrome.png",
-        "docs/tuatha/react-native-godot/android/src/main/res/mipmap/icon_monochrome.png"
+        "docs/tuatha/react-native-reusables/apps/showcase/assets/images/icon.png"
       ]
     },
     "identity-providers.png": {
@@ -2515,26 +2039,6 @@
         "docs/tuatha/SpacetimeDB/docs/static/images/logos/javascript-logo.svg"
       ]
     },
-    "js.svg": {
-      "files": [
-        "js.svg"
-      ],
-      "size_bytes": 757,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/vizard/public/logos/js.svg"
-      ]
-    },
-    "jupyter.svg": {
-      "files": [
-        "jupyter.svg"
-      ],
-      "size_bytes": 2866,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/bi/jupyter.svg"
-      ]
-    },
     "jwtio.png": {
       "files": [
         "jwtio.png"
@@ -2545,16 +2049,6 @@
         "docs/tuatha/SpacetimeDB/docs/static/images/spacetimeauth/jwtio.png"
       ]
     },
-    "ksqldb.svg": {
-      "files": [
-        "ksqldb.svg"
-      ],
-      "size_bytes": 4092,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/ksqldb.svg"
-      ]
-    },
     "light.png": {
       "files": [
         "light.png"
@@ -2563,16 +2057,6 @@
       "source_count": 1,
       "sources": [
         "docs/tuatha/x402/x402-solana-react/example-images/light.png"
-      ]
-    },
-    "like.inline.svg": {
-      "files": [
-        "like.inline.svg"
-      ],
-      "size_bytes": 1783,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/components/common/Button/like.inline.svg"
       ]
     },
     "linkedin.svg": {
@@ -2601,14 +2085,10 @@
         "logo.png"
       ],
       "size_bytes": 65475,
-      "source_count": 6,
+      "source_count": 2,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/geoai/docs/assets/logo.png",
         "docs/marimo/marimo/frontend/public/logo.png",
-        "docs/tuatha/SpacetimeDB/crates/bindings-csharp/logo.png",
-        "docs/tuatha/SpacetimeDB/sdks/csharp/logo.png",
-        "docs/tuatha/wgpu/logo.png",
-        "docs/tuatha/x402/typescript/legacy/fullstack/farcaster-miniapp/public/logo.png"
+        "docs/tuatha/wgpu/logo.png"
       ]
     },
     "logo.svg": {
@@ -2616,9 +2096,8 @@
         "logo.svg"
       ],
       "size_bytes": 1824,
-      "source_count": 4,
+      "source_count": 3,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/web/public/logo.svg",
         "docs/tuatha/SpacetimeDB/docs/static/images/logo.svg",
         "docs/tuatha/SpacetimeDB/images/dark/logo.svg",
         "docs/tuatha/SpacetimeDB/images/light/logo.svg"
@@ -2642,16 +2121,6 @@
       "source_count": 1,
       "sources": [
         "docs/web/tanmaxx-17/apps/web/public/logo512.png"
-      ]
-    },
-    "logo_rect.png": {
-      "files": [
-        "logo_rect.png"
-      ],
-      "size_bytes": 31212,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/geoai/docs/assets/logo_rect.png"
       ]
     },
     "m-rainbow.png": {
@@ -2692,16 +2161,6 @@
       "source_count": 1,
       "sources": [
         "docs/marimo/misc/public/marimos.webp"
-      ]
-    },
-    "materialize.svg": {
-      "files": [
-        "materialize.svg"
-      ],
-      "size_bytes": 2780,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/materialize.svg"
       ]
     },
     "mcp-logo.png": {
@@ -2794,16 +2253,6 @@
         "docs/marimo/marimo/docs/_static/example-thumbs/mermaid.png"
       ]
     },
-    "metabase.svg": {
-      "files": [
-        "metabase.svg"
-      ],
-      "size_bytes": 3270,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/bi/metabase.svg"
-      ]
-    },
     "microphone.png": {
       "files": [
         "microphone.png"
@@ -2812,16 +2261,6 @@
       "source_count": 1,
       "sources": [
         "docs/marimo/marimo/docs/_static/example-thumbs/microphone.png"
-      ]
-    },
-    "mongodb.svg": {
-      "files": [
-        "mongodb.svg"
-      ],
-      "size_bytes": 1053,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/mongodb.svg"
       ]
     },
     "motherduck.svg": {
@@ -2884,27 +2323,6 @@
         "docs/08-screenshots/images/motherduck_ui.png"
       ]
     },
-    "mssql.svg": {
-      "files": [
-        "mssql.svg"
-      ],
-      "size_bytes": 17966,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/mssql.svg"
-      ]
-    },
-    "mstile-150x150.png": {
-      "files": [
-        "mstile-150x150.png"
-      ],
-      "size_bytes": 7301,
-      "source_count": 2,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/public/mstile-150x150.png",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/public/mstile-150x150.png"
-      ]
-    },
     "multiselect.png": {
       "files": [
         "multiselect.png"
@@ -2920,9 +2338,8 @@
         "mysql.svg"
       ],
       "size_bytes": 3625,
-      "source_count": 2,
+      "source_count": 1,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/mysql.svg",
         "docs/marimo/marimo/frontend/src/components/databases/icons/mysql.svg"
       ]
     },
@@ -3009,16 +2426,6 @@
         "docs/marimo/marimo/frontend/src/assets/noise.png"
       ]
     },
-    "now.svg": {
-      "files": [
-        "now.svg"
-      ],
-      "size_bytes": 1304,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/components/mdx/EventPromoBlock/now.svg"
-      ]
-    },
     "number.png": {
       "files": [
         "number.png"
@@ -3037,26 +2444,6 @@
       "source_count": 1,
       "sources": [
         "docs/marimo/marimo/docs/_static/numfocus_affiliated_project.png"
-      ]
-    },
-    "observable.svg": {
-      "files": [
-        "observable.svg"
-      ],
-      "size_bytes": 1025,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/bi/observable.svg"
-      ]
-    },
-    "og-image.svg": {
-      "files": [
-        "og-image.svg"
-      ],
-      "size_bytes": 2827,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/web/public/og-image.svg"
       ]
     },
     "og.png": {
@@ -3139,16 +2526,6 @@
       "source_count": 1,
       "sources": [
         "docs/marimo/marimo/packages/llm-info/icons/openrouter.svg"
-      ]
-    },
-    "oracle.svg": {
-      "files": [
-        "oracle.svg"
-      ],
-      "size_bytes": 741,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/oracle.svg"
       ]
     },
     "outputs.gif": {
@@ -3861,16 +3238,6 @@
         "docs/tuatha/x402/MCPay/apps/app/public/logos/mcp-clients/perplexity.svg"
       ]
     },
-    "placeholder.svg": {
-      "files": [
-        "placeholder.svg"
-      ],
-      "size_bytes": 3253,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/web/public/placeholder.svg"
-      ]
-    },
     "plotly.png": {
       "files": [
         "plotly.png"
@@ -3879,16 +3246,6 @@
       "source_count": 1,
       "sources": [
         "docs/marimo/marimo/docs/_static/example-thumbs/plotly.png"
-      ]
-    },
-    "plugin.svg": {
-      "files": [
-        "plugin.svg"
-      ],
-      "size_bytes": 2174,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/stories/assets/plugin.svg"
       ]
     },
     "polygon-logo.svg": {
@@ -3901,45 +3258,14 @@
         "docs/tuatha/x402/MCPay/apps/app/public/logos/polygon-logo.svg"
       ]
     },
-    "postgres.svg": {
-      "files": [
-        "postgres.svg"
-      ],
-      "size_bytes": 12724,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/postgres.svg"
-      ]
-    },
     "postgresql.svg": {
       "files": [
         "postgresql.svg"
       ],
       "size_bytes": 5205,
-      "source_count": 2,
+      "source_count": 1,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/bi/postgresql.svg",
         "docs/marimo/marimo/frontend/src/components/databases/icons/postgresql.svg"
-      ]
-    },
-    "power-bi.svg": {
-      "files": [
-        "power-bi.svg"
-      ],
-      "size_bytes": 1168,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/bi/power-bi.svg"
-      ]
-    },
-    "presto.svg": {
-      "files": [
-        "presto.svg"
-      ],
-      "size_bytes": 5011,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/presto.svg"
       ]
     },
     "progress_bar.png": {
@@ -3970,16 +3296,6 @@
       "source_count": 1,
       "sources": [
         "docs/tuatha/SpacetimeDB/docs/static/images/spacetimeauth/projects-list.png"
-      ]
-    },
-    "questdb.svg": {
-      "files": [
-        "questdb.svg"
-      ],
-      "size_bytes": 4023,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/questdb.svg"
       ]
     },
     "qwen.svg": {
@@ -4017,11 +3333,8 @@
         "react.svg"
       ],
       "size_bytes": 4126,
-      "source_count": 8,
+      "source_count": 5,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/vizard/public/logos/react.svg",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/vizard/src/assets/react.svg",
-        "docs/tuatha/SpacetimeDB/crates/bindings-typescript/examples/quickstart-chat/src/assets/react.svg",
         "docs/tuatha/hophacks-spacetimedb-workshop/src/assets/react.svg",
         "docs/tuatha/spacetimedb-cookbook/oidc-test/src/assets/react.svg",
         "docs/tuatha/spacetimedb-cookbook/voip-test/src/assets/react.svg",
@@ -4094,9 +3407,8 @@
         "redshift.svg"
       ],
       "size_bytes": 1380,
-      "source_count": 2,
+      "source_count": 1,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/redshift.svg",
         "docs/marimo/marimo/frontend/src/components/databases/icons/redshift.svg"
       ]
     },
@@ -4150,16 +3462,6 @@
         "docs/tuatha/x402/MCPay/apps/app/public/logos/mcp-clients/replicate.svg"
       ]
     },
-    "repo.svg": {
-      "files": [
-        "repo.svg"
-      ],
-      "size_bytes": 1638,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/stories/assets/repo.svg"
-      ]
-    },
     "restaurant_brands_international_2023.jpg": {
       "files": [
         "restaurant_brands_international_2023.jpg"
@@ -4200,157 +3502,6 @@
         "docs/tuatha/SpacetimeDB/docs/static/images/logos/rust-logo.svg"
       ]
     },
-    "screenshot-linear.png": {
-      "files": [
-        "screenshot-linear.png"
-      ],
-      "size_bytes": 915,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/wgpu/examples/features/src/srgb_blend/screenshot-linear.png"
-      ]
-    },
-    "screenshot-lines.png": {
-      "files": [
-        "screenshot-lines.png"
-      ],
-      "size_bytes": 59077,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/wgpu/examples/features/src/cube/screenshot-lines.png"
-      ]
-    },
-    "screenshot-query.png": {
-      "files": [
-        "screenshot-query.png"
-      ],
-      "size_bytes": 506179,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/wgpu/examples/features/src/mipmap/screenshot-query.png"
-      ]
-    },
-    "screenshot-srgb.png": {
-      "files": [
-        "screenshot-srgb.png"
-      ],
-      "size_bytes": 704,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/wgpu/examples/features/src/srgb_blend/screenshot-srgb.png"
-      ]
-    },
-    "screenshot-vulkan.png": {
-      "files": [
-        "screenshot-vulkan.png"
-      ],
-      "size_bytes": 383475,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/wgpu/examples/features/src/ray_scene/screenshot-vulkan.png"
-      ]
-    },
-    "screenshot.png": {
-      "files": [
-        "screenshot.png"
-      ],
-      "size_bytes": 31589,
-      "source_count": 22,
-      "sources": [
-        "docs/tuatha/wgpu/examples/features/src/boids/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/bunnymark/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/conservative_raster/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/cube/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/hello_triangle/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/hello_windows/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/mesh_shader/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/mipmap/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/msaa_line/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/multiple_render_targets/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/ray_cube_compute/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/ray_cube_fragment/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/ray_cube_normals/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/ray_scene/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/ray_shadows/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/ray_traced_triangle/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/shadow/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/skybox/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/stencil_triangles/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/texture_arrays/screenshot.png",
-        "docs/tuatha/wgpu/examples/features/src/water/screenshot.png",
-        "docs/tuatha/x402/typescript/legacy/fullstack/farcaster-miniapp/public/screenshot.png"
-      ]
-    },
-    "screenshot1.png": {
-      "files": [
-        "screenshot1.png"
-      ],
-      "size_bytes": 467379,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/wgpu/examples/features/src/uniform_values/screenshot1.png"
-      ]
-    },
-    "screenshot2.png": {
-      "files": [
-        "screenshot2.png"
-      ],
-      "size_bytes": 1862057,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/wgpu/examples/features/src/uniform_values/screenshot2.png"
-      ]
-    },
-    "screenshot3.png": {
-      "files": [
-        "screenshot3.png"
-      ],
-      "size_bytes": 1555000,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/wgpu/examples/features/src/uniform_values/screenshot3.png"
-      ]
-    },
-    "screenshot_astc.png": {
-      "files": [
-        "screenshot_astc.png"
-      ],
-      "size_bytes": 748113,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/wgpu/examples/features/src/skybox/screenshot_astc.png"
-      ]
-    },
-    "screenshot_bc7.png": {
-      "files": [
-        "screenshot_bc7.png"
-      ],
-      "size_bytes": 736526,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/wgpu/examples/features/src/skybox/screenshot_bc7.png"
-      ]
-    },
-    "screenshot_etc2.png": {
-      "files": [
-        "screenshot_etc2.png"
-      ],
-      "size_bytes": 693541,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/wgpu/examples/features/src/skybox/screenshot_etc2.png"
-      ]
-    },
-    "screenshot_query.png": {
-      "files": [
-        "screenshot_query.png"
-      ],
-      "size_bytes": 496309,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/wgpu/examples/features/src/mipmap/screenshot_query.png"
-      ]
-    },
     "seeker-2.png": {
       "files": [
         "seeker-2.png"
@@ -4381,16 +3532,6 @@
         "docs/tuatha/x402/x402-solana-react/example-images/seeker.png"
       ]
     },
-    "semantic-layer.svg": {
-      "files": [
-        "semantic-layer.svg"
-      ],
-      "size_bytes": 143982,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/semantic-layer.svg"
-      ]
-    },
     "share-wasm-link.gif": {
       "files": [
         "share-wasm-link.gif"
@@ -4399,16 +3540,6 @@
       "source_count": 1,
       "sources": [
         "docs/marimo/marimo/docs/_static/share-wasm-link.gif"
-      ]
-    },
-    "slack-icon.svg": {
-      "files": [
-        "slack-icon.svg"
-      ],
-      "size_bytes": 2063,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/public/slack-icon.svg"
       ]
     },
     "slider.png": {
@@ -4426,9 +3557,8 @@
         "snowflake.svg"
       ],
       "size_bytes": 2459,
-      "source_count": 2,
+      "source_count": 1,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/snowflake.svg",
         "docs/marimo/marimo/frontend/src/components/databases/icons/snowflake.svg"
       ]
     },
@@ -4506,11 +3636,10 @@
       "files": [
         "splash.png"
       ],
-      "size_bytes": 3928,
-      "source_count": 2,
+      "size_bytes": 21953,
+      "source_count": 1,
       "sources": [
-        "docs/tuatha/react-native-reusables/apps/showcase/assets/images/splash.png",
-        "docs/tuatha/x402/typescript/legacy/fullstack/farcaster-miniapp/public/splash.png"
+        "docs/tuatha/react-native-reusables/apps/showcase/assets/images/splash.png"
       ]
     },
     "sqlalchemy.svg": {
@@ -4533,16 +3662,6 @@
         "docs/marimo/marimo/frontend/src/components/databases/icons/sqlite.svg"
       ]
     },
-    "stackalt.svg": {
-      "files": [
-        "stackalt.svg"
-      ],
-      "size_bytes": 2546,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/stories/assets/stackalt.svg"
-      ]
-    },
     "stackoverflow.svg": {
       "files": [
         "stackoverflow.svg"
@@ -4563,16 +3682,6 @@
         "docs/marimo/marimo/docs/_static/example-thumbs/stacks.png"
       ]
     },
-    "streamlit.svg": {
-      "files": [
-        "streamlit.svg"
-      ],
-      "size_bytes": 936,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/bi/streamlit.svg"
-      ]
-    },
     "supabase.svg": {
       "files": [
         "supabase.svg"
@@ -4583,26 +3692,6 @@
         "docs/marimo/marimo/frontend/src/components/databases/icons/supabase.svg"
       ]
     },
-    "superset.svg": {
-      "files": [
-        "superset.svg"
-      ],
-      "size_bytes": 905,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/bi/superset.svg"
-      ]
-    },
-    "svelte.svg": {
-      "files": [
-        "svelte.svg"
-      ],
-      "size_bytes": 1495,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/vizard/public/logos/svelte.svg"
-      ]
-    },
     "sweetgreen_2023.jpg": {
       "files": [
         "sweetgreen_2023.jpg"
@@ -4611,16 +3700,6 @@
       "source_count": 1,
       "sources": [
         "docs/cocoindex/multi_format_indexing/source_files/sweetgreen_2023.jpg"
-      ]
-    },
-    "tableau.svg": {
-      "files": [
-        "tableau.svg"
-      ],
-      "size_bytes": 1279,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/bi/tableau.svg"
       ]
     },
     "tables.png": {
@@ -4723,16 +3802,6 @@
         "docs/tuatha/x402/x402-ai-inference/public/thirdweb.png"
       ]
     },
-    "thoughtspot.svg": {
-      "files": [
-        "thoughtspot.svg"
-      ],
-      "size_bytes": 357,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/bi/thoughtspot.svg"
-      ]
-    },
     "timeplus.svg": {
       "files": [
         "timeplus.svg"
@@ -4741,16 +3810,6 @@
       "source_count": 1,
       "sources": [
         "docs/marimo/marimo/frontend/src/components/databases/icons/timeplus.svg"
-      ]
-    },
-    "timestamp.svg": {
-      "files": [
-        "timestamp.svg"
-      ],
-      "size_bytes": 972,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/QueryBuilderV2/icons/timestamp.svg"
       ]
     },
     "trace-payment-provided-event.webp": {
@@ -4798,20 +3857,9 @@
         "trino.svg"
       ],
       "size_bytes": 4143,
-      "source_count": 2,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/img/db/trino.svg",
-        "docs/marimo/marimo/frontend/src/components/databases/icons/trino.svg"
-      ]
-    },
-    "ts.svg": {
-      "files": [
-        "ts.svg"
-      ],
-      "size_bytes": 1246,
       "source_count": 1,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/vizard/public/logos/ts.svg"
+        "docs/marimo/marimo/frontend/src/components/databases/icons/trino.svg"
       ]
     },
     "twitch.svg": {
@@ -4904,16 +3952,6 @@
         "docs/tuatha/SpacetimeDB/docs/static/images/logos/unreal-logo.svg"
       ]
     },
-    "upcoming.svg": {
-      "files": [
-        "upcoming.svg"
-      ],
-      "size_bytes": 439,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/components/mdx/EventPromoBlock/upcoming.svg"
-      ]
-    },
     "usdc.svg": {
       "files": [
         "usdc.svg"
@@ -4953,9 +3991,8 @@
         "vite.svg"
       ],
       "size_bytes": 1497,
-      "source_count": 5,
+      "source_count": 4,
       "sources": [
-        "docs/tuatha/SpacetimeDB/crates/bindings-typescript/examples/quickstart-chat/public/vite.svg",
         "docs/tuatha/spacetimedb-cookbook/oidc-test/public/vite.svg",
         "docs/tuatha/spacetimedb-cookbook/voip-test/public/vite.svg",
         "docs/tuatha/spacetimedb-cookbook/web-request-example/frontend/public/vite.svg",
@@ -4991,36 +4028,6 @@
       "source_count": 1,
       "sources": [
         "docs/marimo/marimo/docs/_static/vscode-marimo.png"
-      ]
-    },
-    "vue.svg": {
-      "files": [
-        "vue.svg"
-      ],
-      "size_bytes": 345,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/vizard/public/logos/vue.svg"
-      ]
-    },
-    "web-app-manifest-192x192.png": {
-      "files": [
-        "web-app-manifest-192x192.png"
-      ],
-      "size_bytes": 16849,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/x402/typescript/legacy/fullstack/next/public/web-app-manifest-192x192.png"
-      ]
-    },
-    "web-app-manifest-512x512.png": {
-      "files": [
-        "web-app-manifest-512x512.png"
-      ],
-      "size_bytes": 73787,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/x402/typescript/legacy/fullstack/next/public/web-app-manifest-512x512.png"
       ]
     },
     "weightsandbiases.svg": {
@@ -5112,11 +4119,10 @@
         "x402-icon-blue.png"
       ],
       "size_bytes": 1532,
-      "source_count": 3,
+      "source_count": 2,
       "sources": [
         "docs/tuatha/x402/MCPay/apps/app/public/logos/x402-icon-blue.png",
-        "docs/tuatha/x402/typescript/fullstack/next/public/x402-icon-blue.png",
-        "docs/tuatha/x402/typescript/legacy/fullstack/next/public/x402-icon-blue.png"
+        "docs/tuatha/x402/typescript/fullstack/next/public/x402-icon-blue.png"
       ]
     },
     "x402-logo-dark.png": {
@@ -5127,47 +4133,6 @@
       "source_count": 1,
       "sources": [
         "docs/tuatha/x402/typescript/fullstack/next/public/x402-logo-dark.png"
-      ]
-    },
-    "x402.png": {
-      "files": [
-        "x402.png"
-      ],
-      "size_bytes": 1532,
-      "source_count": 2,
-      "sources": [
-        "docs/tuatha/x402/python/legacy/fullstack/fastapi/static/x402.png",
-        "docs/tuatha/x402/python/legacy/fullstack/flask/static/x402.png"
-      ]
-    },
-    "x402_wordmark_dark.png": {
-      "files": [
-        "x402_wordmark_dark.png"
-      ],
-      "size_bytes": 2447,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/x402/typescript/legacy/fullstack/next/app/assets/x402_wordmark_dark.png"
-      ]
-    },
-    "x402_wordmark_dark.svg": {
-      "files": [
-        "x402_wordmark_dark.svg"
-      ],
-      "size_bytes": 1298,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/x402/typescript/legacy/fullstack/next/app/assets/x402_wordmark_dark.svg"
-      ]
-    },
-    "x402_wordmark_light.svg": {
-      "files": [
-        "x402_wordmark_light.svg"
-      ],
-      "size_bytes": 1116,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/x402/typescript/legacy/fullstack/next/app/assets/x402_wordmark_light.svg"
       ]
     },
     "youtube.svg": {

@@ -1,236 +1,50 @@
 {
   "domain": "01-platform-architecture",
-  "source_files": 272,
-  "target_files": 15,
+  "source_files": 54,
+  "target_files": 6,
   "topics": {
-    "agent-experience": {
-      "files": [
-        "agent-experience.md"
-      ],
-      "size_bytes": 562,
-      "source_count": 18,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/geoai/docs/examples/samgeo/maxar_open_data.ipynb",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/pages/product/apis-integrations/dax-api.mdx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/pages/product/data-modeling/syntax.mdx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-backend-native/test/templates/template_error_syntax.jinja",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/QueryBuilderV2/Pivot/Axes.tsx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/components/Pivot/Axes.tsx",
-        "docs/marimo/docs/marimo/tests/_lint/snapshots/syntax_errors.txt",
-        "docs/marimo/marimo/tests/_lint/snapshots/syntax_errors.txt",
-        "docs/tuatha/SpacetimeDB/crates/cli/tools/sublime/SpacetimeDBSQL.sublime-syntax",
-        "docs/tuatha/SpacetimeDB/demo/Blackholio/client-unity/Assets/Scripts/ParallaxBackground.cs",
-        "docs/tuatha/SpacetimeDB/demo/Blackholio/client-unity/Assets/Scripts/ParallaxBackground.cs.meta",
-        "docs/tuatha/SpacetimeDB/demo/Blackholio/client-unreal/Source/client_unreal/Private/Gameplay/ParallaxBackground.cpp",
-        "docs/tuatha/SpacetimeDB/demo/Blackholio/client-unreal/Source/client_unreal/Public/Gameplay/ParallaxBackground.h",
-        "docs/web/tanmaxx-17/apps/web/src/components/Maxx/MaxxSlider.tsx",
-        "docs/web/tanmaxx-17/apps/web/src/components/Maxx/maxx-tiers.ts",
-        "docs/web/tanmaxx-17/apps/web/src/hooks/use-maxx-style.ts",
-        "docs/web/tanmaxx-17/apps/web/src/state/maxx-store.ts",
-        "docs/web/tanmaxx-17/packages/shared/src/schemas/maxx.ts"
-      ]
-    },
-    "agent-skill": {
-      "files": [
-        "agent-skill.md"
-      ],
-      "size_bytes": 153,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/web/src/pages/QueryAgentSkill.tsx"
-      ]
-    },
     "browser-automation": {
       "files": [
         "browser-automation.md"
       ],
-      "size_bytes": 7068,
-      "source_count": 4,
+      "size_bytes": 18771,
+      "source_count": 3,
       "sources": [
         "docs/03-agents/STAGEHAND_COMPREHENSIVE_REFERENCE.md",
         "docs/06-infrastructure/agentic-scraping-architecture.md",
-        "docs/marimo/marimo/frontend/playwright.config.ts",
         "docs/web/chrome-devtools-mcp/SKILL_CONTEXT.md"
-      ]
-    },
-    "browser-trace": {
-      "files": [
-        "browser-trace.md"
-      ],
-      "size_bytes": 8625,
-      "source_count": 2,
-      "sources": [
-        "docs/tuatha/x402/MCPay/apps/mcp/src/lib/3rd-parties/payment-strategies/cdp-strategy.ts",
-        "docs/tuatha/x402/typescript/legacy/mcp-embedded-wallet/src/cdpConfig.ts"
       ]
     },
     "browserbase-cli": {
       "files": [
         "browserbase-cli.md"
       ],
-      "size_bytes": 13933,
-      "source_count": 12,
+      "size_bytes": 9795,
+      "source_count": 5,
       "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/public/browserconfig.xml",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-testing/DEVELOPMENT.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/rill-examples/README.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/rill-examples/connector-clickhouse/README.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/rill-examples/rill-kaggle-elec-consumption/README.md",
         "docs/marimo/marimo/docs/api/inputs/file_browser.md",
-        "docs/marimo/marimo/frontend/src/plugins/impl/FileBrowserPlugin.tsx",
-        "docs/tuatha/wgpu/examples/features/src/storage_texture/README.md",
         "docs/tuatha/x402/x402-echo-merchant/src/paywall/README.md",
         "docs/tuatha/x402/x402-gated-api/README.md",
         "docs/web/PDF.js - Examples.md",
         "docs/web/chrome-devtools-mcp/skills/debug-optimize-lcp/references/elements-and-size.md"
       ]
     },
-    "firecrawl-download": {
-      "files": [
-        "firecrawl-download.md"
-      ],
-      "size_bytes": 5645,
-      "source_count": 16,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/geoai/docs/examples/download_data.ipynb",
-        "docs/archive/2026-06-06-data-engineering/geoai/docs/examples/download_naip.ipynb",
-        "docs/archive/2026-06-06-data-engineering/geoai/docs/examples/download_sentinel2.ipynb",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/pages/product/administration/workspace/saved-reports.mdx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/vizard/src/utils/download-file.ts",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/rust/cubestore/js-wrapper/src/download.ts",
-        "docs/marimo/marimo/frontend/src/components/data-table/download-actions.tsx",
-        "docs/marimo/marimo/frontend/src/core/saving/save-component.tsx",
-        "docs/marimo/marimo/frontend/src/core/saving/useAutoSave.ts",
-        "docs/marimo/marimo/frontend/src/core/static/download-html.ts",
-        "docs/marimo/marimo/frontend/src/core/wasm/worker/save-worker.ts",
-        "docs/marimo/marimo/frontend/src/plugins/layout/DownloadPlugin.tsx",
-        "docs/marimo/marimo/frontend/src/utils/download.ts",
-        "docs/tuatha/gdext/godot-core/src/tools/save_load.rs",
-        "docs/tuatha/react-native-godot/android/src/main/res/layout/downloading_expansion.xml",
-        "docs/tuatha/react-native-reusables/apps/docs/components/download-app-banner.tsx"
-      ]
-    },
-    "firecrawl-interact": {
-      "files": [
-        "firecrawl-interact.md"
-      ],
-      "size_bytes": 603,
-      "source_count": 6,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/utils/react/interactions.ts",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/.github/actions/integration/clickhouse.sh",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/pages/product/configuration/data-sources/clickhouse.mdx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-clickhouse-driver/src/ClickHouseDriver.ts",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-schema-compiler/src/adapter/ClickHouseQuery.ts",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-testing-shared/src/db-container-runners/clickhouse.ts"
-      ]
-    },
-    "firecrawl-monitor": {
-      "files": [
-        "firecrawl-monitor.md"
-      ],
-      "size_bytes": 2073,
-      "source_count": 13,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/components/fields/Slider/SliderTrack.tsx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/providers/TrackingProvider.tsx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/pages/product/administration/workspace/monitoring/cloudwatch.mdx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-backend-shared/src/PerfTracker.ts",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-backend-shared/src/track.ts",
-        "docs/marimo/marimo/frontend/src/core/static/virtual-file-tracker.ts",
-        "docs/tuatha/SpacetimeDB/crates/bindings-csharp/Runtime/LogStopwatch.cs",
-        "docs/tuatha/SpacetimeDB/crates/bindings/src/log_stopwatch.rs",
-        "docs/tuatha/gdext/godot-bindings/src/watch.rs",
-        "docs/tuatha/react-native-godot/example/.watchmanconfig",
-        "docs/tuatha/x402/MCPay/apps/app/src/lib/commons/balance-tracker.ts",
-        "docs/tuatha/x402/MCPay/apps/mcp/src/lib/balance-tracker.ts",
-        "docs/tuatha/x402/typescript/legacy/mcp-embedded-wallet/src/components/SessionSpendingTracker/SessionSpendingTracker.tsx"
-      ]
-    },
-    "firecrawl-parse": {
-      "files": [
-        "firecrawl-parse.md"
-      ],
-      "size_bytes": 1167,
-      "source_count": 44,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/.cursor/rules/parser.mdc",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/components/fields/DatePicker/parseDate.ts",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/tasty/parser/parser.ts",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/utils/parseHref.ts",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-api-gateway/src/date-parser.js",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-api-gateway/src/request-parser.ts",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-schema-compiler/src/parser/GenericSqlParser.ts",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-schema-compiler/src/parser/Python3Parser.g4",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-schema-compiler/src/parser/Python3Parser.interp",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-schema-compiler/src/parser/Python3Parser.tokens",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-schema-compiler/src/parser/Python3Parser.ts",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-schema-compiler/src/parser/Python3ParserListener.ts",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-schema-compiler/src/parser/Python3ParserVisitor.ts",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-schema-compiler/src/parser/PythonParser.ts",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-schema-compiler/src/parser/SqlParser.ts",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/rust/cubeorchestrator/src/query_message_parser.rs",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/rust/cubesql/cubesql/src/compile/date_parser.rs",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/rust/cubesql/cubesql/src/compile/parser.rs",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/rust/cubestore/cubestore/src/sql/parser.rs",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/rust/cubestore/cubezetasketch/src/sparse.rs",
-        "docs/marimo/docs/marimo/tests/_plugins/ui/_impl/snapshots/parse_spec_geopandas.txt",
-        "docs/marimo/docs/marimo/tests/_plugins/ui/_impl/snapshots/parse_spec_narwhal.txt",
-        "docs/marimo/docs/marimo/tests/_plugins/ui/_impl/snapshots/parse_spec_pandas.txt",
-        "docs/marimo/docs/marimo/tests/_plugins/ui/_impl/snapshots/parse_spec_polars.txt",
-        "docs/marimo/docs/marimo/tests/_plugins/ui/_impl/snapshots/parse_spec_url.txt",
-        "docs/marimo/marimo/frontend/src/core/islands/parse.ts",
-        "docs/marimo/marimo/frontend/src/plugins/impl/plotly/parse-from-template.ts",
-        "docs/marimo/marimo/frontend/src/utils/json/json-parser.ts",
-        "docs/marimo/marimo/frontend/src/utils/url-parser.ts",
-        "docs/marimo/marimo/packages/smart-cells/src/parsers/python-parser.ts",
-        "docs/marimo/marimo/packages/smart-cells/src/parsers/sql-parser.ts",
-        "docs/marimo/marimo/packages/smart-cells/src/utils/quote-parser.ts",
-        "docs/marimo/marimo/tests/_plugins/ui/_impl/snapshots/parse_spec_geopandas.txt",
-        "docs/marimo/marimo/tests/_plugins/ui/_impl/snapshots/parse_spec_narwhal.txt",
-        "docs/marimo/marimo/tests/_plugins/ui/_impl/snapshots/parse_spec_pandas.txt",
-        "docs/marimo/marimo/tests/_plugins/ui/_impl/snapshots/parse_spec_polars.txt",
-        "docs/marimo/marimo/tests/_plugins/ui/_impl/snapshots/parse_spec_url.txt",
-        "docs/tuatha/SpacetimeDB/crates/core/src/sql/parser.rs",
-        "docs/tuatha/SpacetimeDB/crates/vm/src/ops/parse.rs",
-        "docs/tuatha/agui_kotlin/library/client/src/commonMain/kotlin/com/agui/client/sse/SseParser.kt",
-        "docs/tuatha/gdext/godot-macros/src/util/kv_parser.rs",
-        "docs/tuatha/gdext/godot-macros/src/util/list_parser.rs",
-        "docs/tuatha/x402/MCPay/apps/mcp/src/lib/3rd-parties/vlayer/webproof-parser.ts",
-        "docs/web/tanmaxx-17/apps/web/src/routes/api/parse-set.ts"
-      ]
-    },
     "firecrawl-suite": {
       "files": [
         "firecrawl-suite.md"
       ],
-      "size_bytes": 1531,
-      "source_count": 5,
+      "size_bytes": 18297,
+      "source_count": 2,
       "sources": [
         "docs/01-cognee/MCP_SERVERS.md",
-        "docs/06-infrastructure/firecrawl-openapi-research.md",
-        "docs/archive/2026-06-06-data-engineering/geoai/docs/extract.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/components/form/FieldWrapper/extract-field-wrapper-props.ts",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/rust/cubesql/cubesql/src/compile/rewrite/rules/wrapper/extract.rs"
-      ]
-    },
-    "functions": {
-      "files": [
-        "functions.md"
-      ],
-      "size_bytes": 399,
-      "source_count": 3,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/.github/actions/integration/mysql-aurora-serverless.sh",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-mysql-aurora-serverless-driver/driver/AuroraServerlessMySqlDriver.js",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-mysql-aurora-serverless-driver/test/AuroraServerlessMySqlDriver.integration.js"
+        "docs/06-infrastructure/firecrawl-openapi-research.md"
       ]
     },
     "mcp-platform": {
       "files": [
         "mcp-platform.md"
       ],
-      "size_bytes": 1362,
+      "size_bytes": 1393,
       "source_count": 3,
       "sources": [
         "docs/03-agents/MCP Server with x402.md",
@@ -242,8 +56,8 @@
       "files": [
         "mcp-servers.md"
       ],
-      "size_bytes": 2786477,
-      "source_count": 143,
+      "size_bytes": 271999,
+      "source_count": 40,
       "sources": [
         "docs/03-agents/Agent UI Ecosystem - A2UI.md",
         "docs/03-agents/CONVEX_AGENT_PLATFORM.md",
@@ -259,121 +73,20 @@
         "docs/06-infrastructure/MCP Server Transports_ STDIO, Streamable HTTP & SSE.md",
         "docs/06-infrastructure/ML_STACK.md",
         "docs/06-infrastructure/orchestration-infrastructure.md",
-        "docs/archive/2026-06-06-data-engineering/gemini-quick-reference.md",
-        "docs/archive/2026-06-06-data-engineering/geoai/docs/map_tools.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/md/doc/mcp.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/md/doc/query-agent-mcp.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/md/prompts/query/langchain/tool-list-models.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/md/prompts/query/mcp/system.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/md/prompts/query/mcp/tool-get-model-desc.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/md/prompts/query/mcp/tool-get-time-range-desc.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/md/prompts/query/mcp/tool-get-time-range.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/md/prompts/query/mcp/tool-list-models-desc.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/md/prompts/query/mcp/tool-query-desc.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/md/prompts/query/mcp/tool-query-param-chart_backend.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/md/prompts/query/mcp/tool-query-param-chart_format.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/md/prompts/query/mcp/tool-query-param-dimensions.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/md/prompts/query/mcp/tool-query-param-get_chart.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/md/prompts/query/mcp/tool-query-param-limit.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/md/prompts/query/mcp/tool-query-param-measures.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/md/prompts/query/mcp/tool-query-param-order_by.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/md/prompts/query/mcp/tool-query-param-time_grain.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/web/src/components/ui/tooltip.tsx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/web/src/pages/MCP.tsx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/web/src/pages/QueryAgentMCP.tsx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/boring-semantic-layer/docs/web/src/pages/QueryAgentTool.tsx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/components/content/Layout/LayoutToolbar.tsx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/components/content/use-auto-tooltip.tsx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/components/overlays/Tooltip/Tooltip.docs.mdx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/components/overlays/Tooltip/Tooltip.stories.tsx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/components/overlays/Tooltip/Tooltip.tsx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/components/overlays/Tooltip/TooltipProvider.tsx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube-ui-kit/src/components/overlays/Tooltip/TooltipTrigger.tsx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/.github/ISSUE_TEMPLATE/sql_api_query_issue.md",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/pages/product/apis-integrations/mcp-server.mdx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/pages/product/configuration/visualization-tools.mdx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/docs/pages/product/configuration/visualization-tools/retool.mdx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/QueryBuilder/MissingMemberTooltip.tsx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/QueryBuilderV2/components/InstanceTooltipProvider.tsx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/packages/cubejs-playground/src/QueryBuilderV2/components/TabPaneWithToolbar.tsx",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/rust/cubesqlplanner/cubesqlplanner/src/cube_bridge/base_tools.rs",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/rust/cubesqlplanner/cubesqlplanner/src/cube_bridge/driver_tools.rs",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/rust/cubesqlplanner/cubesqlplanner/src/planner/query_tools.rs",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/rust/cubesqlplanner/cubesqlplanner/src/test_fixtures/cube_bridge/mock_base_tools.rs",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/cube/rust/cubesqlplanner/cubesqlplanner/src/test_fixtures/cube_bridge/mock_driver_tools.rs",
-        "docs/archive/2026-06-06-data-engineering/semantic_layer/rill-examples/rill-github-analytics/models/mcp_servers_commits_model.sql",
-        "docs/archive/2026-06-06-meaisinfhoghlaim/Local macOS MLX_MPS LLM Workflow.md",
         "docs/cocoindex/cocoindex-code-mcp-server/docs/instructions/mcp-implementation.md",
-        "docs/cocoindex/cocoindex-code-mcp-server/scripts/mcp-claude-code.sh",
-        "docs/cocoindex/cocoindex-code-mcp-server/scripts/mcp-memory.sh",
-        "docs/cocoindex/cocoindex-code-mcp-server/scripts/mcp-server-with-coverage.sh",
-        "docs/cocoindex/cocoindex-code-mcp-server/scripts/mcp-server.sh",
         "docs/docs_examples_consolidated/api-unified/QUICKSTART.md",
-        "docs/marimo/marimo/docs/_static/docs-mcp-server.mp4",
-        "docs/marimo/marimo/frontend/src/components/app-config/mcp-config.tsx",
-        "docs/marimo/marimo/frontend/src/components/charts/tooltip.ts",
-        "docs/marimo/marimo/frontend/src/components/chat/tool-call-accordion.tsx",
-        "docs/marimo/marimo/frontend/src/components/data-table/charts/chart-spec/tooltips.ts",
-        "docs/marimo/marimo/frontend/src/components/editor/cell/toolbar.tsx",
-        "docs/marimo/marimo/frontend/src/components/editor/navigation/multi-cell-action-toolbar.tsx",
-        "docs/marimo/marimo/frontend/src/components/layout/toolbar.tsx",
-        "docs/marimo/marimo/frontend/src/components/ui/tooltip.tsx",
-        "docs/marimo/marimo/frontend/src/core/ai/tools/__tests__/run-cells-tool.test.ts",
-        "docs/marimo/marimo/frontend/src/core/ai/tools/run-cells-tool.ts",
-        "docs/marimo/marimo/frontend/src/core/ai/tools/sample-tool.ts",
-        "docs/marimo/marimo/frontend/src/css/md-tooltip.css",
-        "docs/marimo/marimo/frontend/src/stories/tooltip.mdx",
-        "docs/tuatha/AnyLanguageModel/Sources/AnyLanguageModel/Tool.swift",
-        "docs/tuatha/AnyLanguageModel/Tests/AnyLanguageModelTests/Shared/ToolSpy.swift",
-        "docs/tuatha/AnyLanguageModel/Tests/AnyLanguageModelTests/Shared/Tools.swift",
         "docs/tuatha/MCP-UI.md",
-        "docs/tuatha/SpacetimeDB/sdks/csharp/examples~/quickstart-chat/client/README.md",
-        "docs/tuatha/SpacetimeDB/sdks/csharp/examples~/regression-tests/procedure-client/README.md",
-        "docs/tuatha/SpacetimeDB/sdks/csharp/tests~/README.md",
-        "docs/tuatha/agui_kotlin/examples/chatapp-shared/src/commonMain/kotlin/com/agui/example/tools/ChangeBackgroundToolExecutor.kt",
-        "docs/tuatha/agui_kotlin/examples/tools/src/commonMain/kotlin/com/agui/example/tools/ChangeBackgroundToolExecutor.kt",
-        "docs/tuatha/agui_kotlin/examples/tools/src/commonTest/kotlin/com/agui/example/tools/ExampleToolsIntegrationTest.kt",
-        "docs/tuatha/agui_kotlin/library/client/src/commonMain/kotlin/com/agui/client/tools/ClientToolResponseHandler.kt",
-        "docs/tuatha/agui_kotlin/library/client/src/commonTest/kotlin/com/agui/client/AgUiAgentToolsTest.kt",
-        "docs/tuatha/agui_kotlin/library/client/src/commonTest/kotlin/com/agui/client/integration/AgentToolIntegrationTest.kt",
-        "docs/tuatha/agui_kotlin/library/client/src/commonTest/kotlin/com/agui/client/integration/SimpleAgentToolIntegrationTest.kt",
-        "docs/tuatha/agui_kotlin/library/core/src/commonTest/kotlin/com/agui/tests/ToolSerializationDebugTest.kt",
-        "docs/tuatha/agui_kotlin/library/tools/src/commonMain/kotlin/com/agui/tools/ToolErrorHandling.kt",
-        "docs/tuatha/agui_kotlin/library/tools/src/commonMain/kotlin/com/agui/tools/ToolExecutionManager.kt",
-        "docs/tuatha/agui_kotlin/library/tools/src/commonMain/kotlin/com/agui/tools/ToolExecutor.kt",
-        "docs/tuatha/agui_kotlin/library/tools/src/commonMain/kotlin/com/agui/tools/ToolRegistry.kt",
-        "docs/tuatha/agui_kotlin/library/tools/src/commonTest/kotlin/com/agui/tools/ToolErrorHandlerTest.kt",
-        "docs/tuatha/agui_kotlin/library/tools/src/commonTest/kotlin/com/agui/tools/ToolExecutionManagerTest.kt",
-        "docs/tuatha/agui_kotlin/library/tools/src/commonTest/kotlin/com/agui/tools/ToolsModuleTest.kt",
-        "docs/tuatha/gdext/godot-ffi/src/toolbox.rs",
-        "docs/tuatha/react-native-godot/.tool-versions",
-        "docs/tuatha/react-native-reusables/apps/docs/content/docs/components/tooltip.mdx",
-        "docs/tuatha/react-native-reusables/apps/showcase/app/components/tooltip.tsx",
-        "docs/tuatha/react-native-reusables/packages/registry/src/examples/tooltip.tsx",
-        "docs/tuatha/react-native-reusables/packages/registry/src/nativewind/components/ui/tooltip.tsx",
-        "docs/tuatha/react-native-reusables/packages/registry/src/new-york/components/ui/tooltip.tsx",
-        "docs/tuatha/react-native-reusables/packages/registry/src/uniwind/components/ui/tooltip.tsx",
         "docs/tuatha/x402/MCPay/.cursor/plans/expand-400f8f42.plan.md",
         "docs/tuatha/x402/MCPay/README.md",
         "docs/tuatha/x402/MCPay/apps/api2/CHANGELOG.md",
         "docs/tuatha/x402/MCPay/apps/api2/README.md",
         "docs/tuatha/x402/MCPay/apps/app/CHANGELOG.md",
-        "docs/tuatha/x402/MCPay/apps/app/src/components/custom-ui/mcp-example-card.tsx",
-        "docs/tuatha/x402/MCPay/apps/app/src/components/custom-ui/tool-execution-modal.tsx",
-        "docs/tuatha/x402/MCPay/apps/app/src/components/custom-ui/tools-accordion.tsx",
-        "docs/tuatha/x402/MCPay/apps/app/src/components/ui/tooltip.tsx",
-        "docs/tuatha/x402/MCPay/apps/app/src/lib/gateway/inspect-mcp.ts",
-        "docs/tuatha/x402/MCPay/apps/mcp-data/src/inspect/mcp.ts",
         "docs/tuatha/x402/MCPay/apps/mcp/src/lib/proxy/hooks/README.md",
         "docs/tuatha/x402/MCPay/apps/mcp2/CHANGELOG.md",
         "docs/tuatha/x402/MCPay/apps/mcp2/scripts/README.md",
         "docs/tuatha/x402/MCPay/context/chatgpt-apps-sdk.md",
         "docs/tuatha/x402/MCPay/packages/js-sdk/README.md",
-        "docs/tuatha/x402/MCPay/packages/js-sdk/src/server/stdio/start-stdio-server.ts",
         "docs/tuatha/x402/typescript/clients/mcp/README.md",
-        "docs/tuatha/x402/typescript/legacy/mcp-embedded-wallet/README.md",
-        "docs/tuatha/x402/typescript/legacy/mcp-embedded-wallet/mcp.ts",
-        "docs/tuatha/x402/typescript/legacy/mcp/README.md",
         "docs/web/chrome-devtools-mcp/AGENTS.md",
         "docs/web/chrome-devtools-mcp/README.md",
         "docs/web/chrome-devtools-mcp/SECURITY.md",
@@ -385,29 +98,17 @@
         "docs/web/chrome-devtools-mcp/skills/debug-optimize-lcp/references/lcp-snippets.md",
         "docs/web/chrome-devtools-mcp/skills/memory-leak-debugging/references/memlab.md",
         "docs/web/chrome-devtools-mcp/skills/troubleshooting/SKILL.md",
-        "docs/web/mcp-ui-integration.md",
-        "docs/web/tanmaxx-17/apps/web/src/components/devtools/CollectionsDevtoolsPanel.tsx",
-        "docs/web/tanmaxx-17/apps/web/src/server/ai/tools.ts"
+        "docs/web/mcp-ui-integration.md"
       ]
     },
     "skills-catalog": {
       "files": [
         "skills-catalog.md"
       ],
-      "size_bytes": 1199,
+      "size_bytes": 1232,
       "source_count": 1,
       "sources": [
         "docs/web/tanmaxx-17/AGENTS.md"
-      ]
-    },
-    "skills-creation": {
-      "files": [
-        "skills-creation.md"
-      ],
-      "size_bytes": 2894,
-      "source_count": 1,
-      "sources": [
-        "docs/web/tanmaxx-17/apps/web/scripts/generate-skill.ts"
       ]
     }
   }

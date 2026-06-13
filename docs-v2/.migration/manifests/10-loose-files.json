@@ -1,7 +1,7 @@
 {
   "domain": "10-loose-files",
-  "source_files": 47,
-  "target_files": 34,
+  "source_files": 44,
+  "target_files": 31,
   "topics": {
     ".DS_Store": {
       "files": [
@@ -39,16 +39,6 @@
         "docs/cocoindex/pdf_embedding/pdf_files/1810.04805v2.pdf"
       ]
     },
-    "21109422_universal-junior-cycle-short-course-scoping-document_ga.docx": {
-      "files": [
-        "21109422_universal-junior-cycle-short-course-scoping-document_ga.docx"
-      ],
-      "size_bytes": 39960,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/21109422_universal-junior-cycle-short-course-scoping-document_ga.docx"
-      ]
-    },
     "2502.06786v3.pdf": {
       "files": [
         "2502.06786v3.pdf"
@@ -68,16 +58,6 @@
       "source_count": 1,
       "sources": [
         "docs/cocoindex/paper_metadata/papers/2502.20346v1.pdf"
-      ]
-    },
-    "2510.17652v1.pdf": {
-      "files": [
-        "2510.17652v1.pdf"
-      ],
-      "size_bytes": 347744,
-      "source_count": 1,
-      "sources": [
-        "docs/tuatha/2510.17652v1.pdf"
       ]
     },
     "2602.15763v2.pdf": {
@@ -333,16 +313,6 @@
       "source_count": 1,
       "sources": [
         "docs/lance/lancedb-multimodal-lakehouse.pdf"
-      ]
-    },
-    "naty-clementi-ibis-duckdb-and-geoparquet-making-geospatial-analytics-fast-simple-and-pythonic.pdf": {
-      "files": [
-        "naty-clementi-ibis-duckdb-and-geoparquet-making-geospatial-analytics-fast-simple-and-pythonic.pdf"
-      ],
-      "size_bytes": 2529995,
-      "source_count": 1,
-      "sources": [
-        "docs/archive/2026-06-06-data-engineering/naty-clementi-ibis-duckdb-and-geoparquet-making-geospatial-analytics-fast-simple-and-pythonic.pdf"
       ]
     },
     "rfc8259.pdf": {

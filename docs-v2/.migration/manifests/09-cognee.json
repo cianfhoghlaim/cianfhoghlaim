@@ -1,18 +1,6 @@
 {
   "domain": "09-cognee",
-  "source_files": 2,
-  "target_files": 1,
-  "topics": {
-    "cognee-graphrag": {
-      "files": [
-        "cognee-graphrag.md"
-      ],
-      "size_bytes": 756582,
-      "source_count": 2,
-      "sources": [
-        "docs/lance/cognee-RAG/cognee_demo.ipynb",
-        "docs/notebooks/data_engineering_lance_cognee-RAG_cognee_demo.ipynb"
-      ]
-    }
-  }
+  "source_files": 0,
+  "target_files": 0,
+  "topics": {}
 }
