@@ -25,7 +25,7 @@ from typing import Any
 
 import dlt
 from dlt.sources import DltResource
-from oideachais.observability.logging import get_logger
+from observability.logging import get_logger
 
 logger = get_logger(__name__)
 

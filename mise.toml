@@ -129,6 +129,14 @@ run = "cd tuatha && uv run dagster dev -m dagster_assets.definitions"
 description = "Run Dagster for the crypteolas code-location"
 run = "cd tuatha && uv run dagster dev -m crypteolas.definitions"
 
+[tasks."dagster:croilar"]
+description = "Run Dagster for the Croílár portfolio code-location"
+run = "cd croilar && uv run dagster dev -m dagster_assets.definitions"
+
+[tasks."dagster:meaisin"]
+description = "Run Dagster for the meaisínfhoghlaim (AI/ML quadrant) heartbeat code-location"
+run = "cd meaisinfhoghlaim && uv run dagster dev -m dagster_defs.assets.healthchecks"
+
 [tasks."dagster:crypteolas_demo"]
 description = "Run Dagster for the crypteolas_demo code-location"
 run = "cd tuatha/apps/crypteolas_demo && uv run dagster dev -m definitions"

@@ -7,6 +7,6 @@ valid as re-export shims.
 """
 from __future__ import annotations
 
-from oideachais.dlt_sources.domains import education
+from dlt_sources.domains import education
 
 __all__ = ["education"]

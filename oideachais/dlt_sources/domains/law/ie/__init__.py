@@ -6,7 +6,7 @@ the user decision (case law is reserved for a future
 """
 from __future__ import annotations
 
-from oideachais.dlt_sources.domains.law.ie import (
+from dlt_sources.domains.law.ie import (
     doj,
     irish_statute_book,
     lawreform,

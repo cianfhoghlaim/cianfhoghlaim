@@ -18,7 +18,7 @@ Environment:
     USE_LOCAL_SCRAPES=true: Skip browser automation (testing/offline)
 
 Usage:
-    from oideachais.dagster_defs.assets.ireland import exam_materials_assets
+    from .import exam_materials_assets
 
     defs = Definitions(assets=exam_materials_assets)
 """
@@ -33,12 +33,12 @@ from dagster import (
     StaticPartitionsDefinition,
 )
 
-from oideachais.dlt_sources.ireland.examinations import (
+from dlt_sources.ireland.examinations import (
     ALL_JC_SUBJECTS,
     ALL_LC_SUBJECTS,
     ALL_LCA_SUBJECTS,
 )
-from oideachais.dlt_utils import (
+from dlt_utils import (
     get_dlt_destination,
     get_duckdb_fallback_destination,
     safe_dlt_run,
@@ -146,7 +146,7 @@ def create_exam_asset(cycle: str):
         if sys_path_insert not in sys.path:
             sys.path.insert(0, sys_path_insert)
 
-        from oideachais.dlt_sources.ireland.examinations import (
+        from dlt_sources.ireland.examinations import (
             sec_examinations_browser_source,
         )
 

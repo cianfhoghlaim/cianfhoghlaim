@@ -11,8 +11,8 @@ file for the contract.
 # so any DLT source that does `from shared.http import …` resolves.
 import sys as _sys
 import types as _types
-from oideachais.dlt_sources.common import _http_factories as _http_factories
-from oideachais.dlt_sources.common import _shared_utils_stub as _shared_utils_stub
+from dlt_sources.common import _http_factories as _http_factories
+from dlt_sources.common import _shared_utils_stub as _shared_utils_stub
 
 # shared package root
 if "shared" not in _sys.modules:
