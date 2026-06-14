@@ -1,9 +1,13 @@
 # `croilar-data-engineering` capability spec
 
+## Purpose
+
+`croilar-data-engineering` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
 The Dagster + DLT + CocoIndex + BAML data-engineering layer for the croilar subproject. Cross-links with the existing oideachais + meaisínfhoghlaim outputs via the DuckLake catalog (the lakehouse stack).
 
-## ADDED Requirements
-
+## Requirements
 ### Requirement: Dagster Asset Catalog
 The system SHALL define 12+ Dagster assets covering music ingestion, CV extraction, teaching record, identity verification, and cross-link with oideachais + meaisínfhoghlaim.
 

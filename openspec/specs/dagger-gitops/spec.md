@@ -1,7 +1,11 @@
 # GitOps Pipeline Capability
 
-## Overview
+## Purpose
 
+`dagger-gitops` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
+## Background
 8-step GitOps pipeline orchestration connecting Forgejo and Komodo for automated infrastructure deployment.
 
 | Feature | Description |

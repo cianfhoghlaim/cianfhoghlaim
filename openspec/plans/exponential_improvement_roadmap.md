@@ -1,3 +1,11 @@
+---
+title: 'Exponential Improvement Roadmap'
+status: research
+supersedes: []
+superseded_by: [openspec/specs/oideachais-pipeline/spec.md, openspec/specs/data-pipeline/spec.md, openspec/specs/agent-frameworks/spec.md, openspec/specs/assessment-extraction/spec.md]
+last_touched: 2026-06-13
+---
+
 # Exponential Improvement Roadmap: Oideachais Platform
 
 ## Executive Summary

@@ -1,3 +1,11 @@
+---
+title: 'Tangent 4 Immersive Content'
+status: deferred
+supersedes: []
+superseded_by: [docs/00-deploy-plans/04-immersive-content.md, archive: openspec/plans/archive/tangent_4_immersive_content.md]
+last_touched: 2026-06-13
+---
+
 # Strategic Plan: Tangent 4 - Immersive Multi-Modal Content Generation Engine
 
 ## 1. Executive Summary

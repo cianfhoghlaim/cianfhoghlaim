@@ -1,3 +1,11 @@
+---
+title: 'Gcp Ai Optimization Strategy'
+status: research
+supersedes: []
+superseded_by: []
+last_touched: 2026-06-13
+---
+
 # GCP AI Optimization Strategy for Oideachais
 
 ## 1. Executive Summary

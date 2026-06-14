@@ -1,7 +1,11 @@
 # Frontend Frameworks Capability
 
-## Overview
+## Purpose
 
+`frontend-frameworks` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
+## Background
 Full-stack React frameworks, AI agent UI components, and modern frontend development with server-side rendering, streaming, and multi-agent support.
 
 ## Requirements
