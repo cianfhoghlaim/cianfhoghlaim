@@ -1,52 +1,36 @@
-# Frontend
+# docs/web/ — Web Architecture Knowledge Base
 
-This directory contains research on UI/UX architecture.
+Tuath/Cianfhoghlaim web technology reference library. Consolidated from 194 files (98 .md + 2 nested subdirs + various config) into 10 topical subdirs.
 
-## Contents
+Last consolidated: 2026-06-14
 
-- `tanstack-start.md` - Full-stack React meta-framework
-- `mcp-ui-integration.md` - Interactive agent interfaces
-- `gradio-assessment.md` - Quiz and assessment UIs
-- `copilotkit-agents.md` - AI copilot integration
+---
 
-## Tech Stack
+## Subdirectory map
 
-- **Framework**: TanStack Start (React 19)
-- **Styling**: Tailwind CSS v4, shadcn/ui
-- **State**: TanStack Query, Convex (real-time)
-- **Auth**: SIWE (Sign-In with Ethereum), BetterAuth
-- **Agents**: CopilotKit, MCP-UI
+| Subdir | Topic | Files |
+|---|---|---|
+| [00-nav/](00-nav/) | Index, README, KMP-Swift bridge | 4 |
+| [01-tanstack/](01-tanstack/) | TanStack Start, AI, DB, Router, Query | 15 |
+| [02-betterauth/](02-betterauth/) | BetterAuth + adapter docs (Drizzle, Expo, Postgres, SIWE) | 6 |
+| [03-ag-ui/](03-ag-ui/) | AG-UI protocol (Pydantic, CopilotKit, Kotlin SDK) | 5 |
+| [04-alchemy/](04-alchemy/) | Alchemy IaC + Cloudflare examples | 4 |
+| [05-convex/](05-convex/) | Convex backend (auth, self-hosted, RAG) | 5 |
+| [06-effect/](06-effect/) | Effect-TS (incl. orpc integration research) | 4 |
+| [07-react-frontend/](07-react-frontend/) | React/Next.js/Microfrontends/MCP-UI patterns | 15 |
+| [08-repos/](08-repos/) | `repo-*.md` upstream summaries (ag-ui, convex, hono, orpc, restate, tanstack, cloudflare) | 8 |
+| [09-clippings/](09-clippings/) | External articles (chrome-devtools-mcp, wgpu release) | 2 |
+| [chrome-devtools-mcp/](chrome-devtools-mcp/) | Chrome DevTools MCP server docs (skeletonized upstream) | 14 |
+| [tanmaxx-17/](tanmaxx-17/) | tanmaxx-17 platform skeleton (apps, packages) | 8 |
 
-## Key Interfaces
+Total: 9 .md topical subdirs + 2 nested source-code subdirs = 11 dirs, ~90 .md.
 
-### Player Dashboard
-- Soul Level display
-- Tuath balance
-- Active Geasa (taboos)
-- Anam Cara bonds
+---
 
-### Map Interface
-- Real-world British Isles overlay
-- Zone unlocking based on proficiency
-- Live weather integration (Met Éireann, BBC)
+## How to navigate
 
-### Assessment Interface
-- MCP-UI embedded quizzes
-- Voice input (Oracy Mining)
-- Handwriting capture (Translation Mining)
-
-### NFT Gallery
-- Dynamic Cúchulainn avatar evolution
-- Artifact collection
-- Achievement badges
-
-## Agent Integration (MCP-UI)
-
-```typescript
-// Quiz delivery via MCP tool
-const quizTool = {
-  name: "get_node_challenge",
-  returns: UIResource<QuizComponent>,
-  render: "inline_html" | "external_url"
-}
-```
+- **Starting from scratch** → read [00-nav/README.md](00-nav/README.md), [01-tanstack/Overview _ TanStack Start.md](01-tanstack/Overview%20_%20TanStack%20DB%20Docs.md), [05-convex/Playground _ Convex Developer Hub.md](05-convex/Playground%20_%20Convex%20Developer%20Hub.md)
+- **Setting up auth** → [02-betterauth/](02-betterauth/) (6 files covering SIWE, Drizzle, Expo, Postgres, basic usage)
+- **Building an agent UI** → [03-ag-ui/](03-ag-ui/) (5 files) + [01-tanstack/Integrating TanStack AI with LiteLLM.md](01-tanstack/Integrating%20TanStack%20AI%20with%20LiteLLM.md)
+- **Comparing backends** → [05-convex/](05-convex/) + [01-tanstack/TanStack DB Integration and Comparison.md](01-tanstack/TanStack%20DB%20Integration%20and%20Comparison.md)
+- **Looking for upstream summary** → [08-repos/](08-repos/) (8 `repo-*.md` files)

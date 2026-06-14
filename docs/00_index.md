@@ -199,9 +199,21 @@ research fragment into a ~300-line deploy plan. See
 
 ## 6. What's NOT in the canonical tree (and where to find it)
 
-- `docs/cocoindex/`, `docs/dagster/`, `docs/dlt/`, `docs/lance/`, `docs/marimo/`, `docs/baml/` — **library** trees, copies of upstream docs. Search via `ccc` for canonical counterparts.
-- `docs/hackathons/`, `docs/hmgcc/`, `docs/docs_examples_consolidated/`, `docs/08-screenshots/`, `docs/web/`, `docs/notebooks/` — **example / archive** material. Not part of the canonical tree.
-- `docs/archive/2026-06-06-*` — **deleted this round** (480 files, 101M). All content is in the canonical 7-domain tree.
+These are **reference libraries** — research + scraped-upstream content. Not part of the canonical 7-domain tree, but useful for development context. Each has its own README pointing to the canonical counterpart.
+
+- `docs/lance/` — LanceDB reference (18M, 14 example apps in `examples/`, 4 strategic docs at root, 1 PDF). See [README](lance/README.md).
+- `docs/web/` — Web architecture library (3.1M, 98 .md reorganized into 10 topical subdirs). See [README](web/README.md).
+- `docs/dlt/` — dlt (Data Load Tool) library (10M, 25 .md + 3 example subdirs). See [README](dlt/README.md).
+- `docs/cocoindex/` — CocoIndex library (28M, 21 example subdirs + best-practices summary + cocoindex-code-mcp-server/ as reference). See [README](cocoindex/README.md) and [Best Practices](cocoindex/cocoindex-best-practices.md).
+- `docs/dagster/` — Dagster library (5.4M after dedup, 27 root .md + 7 integration subdirs). See [README](dagster/README.md).
+- `docs/baml/` — 4 date-coded BAML project snapshots (3.6M). Per "h skip baml" decision, not yet consolidated.
+- `docs/notebooks/` — 343 Jupyter notebooks organised by snakecase topic (95M). See [README](notebooks/README.md).
+- `docs/marimo/` — Marimo reference (2.6M after upstream mirror move). See [README](marimo/README.md).
+- `docs/08-mirrors/` — 2 upstream mirrors: `marimo/` (169MB, 3,641 files) + `marimo-docs/` (6.2MB).
+
+- `docs/tuatha/` — Celtic MMO + Cianfhoghlaim stack reference (consolidated 2026-06-13; 8 topical subdirs).
+- `docs/hackathons/`, `docs/hmgcc/`, `docs/docs_examples_consolidated/`, `docs/08-screenshots/` — **example / archive** material. Not part of the canonical tree.
+- `docs/archive/2026-06-06-*` — **deleted** (480 files, 101M). All content is in the canonical 7-domain tree.
 
 ## 7. Supersedes
 
