@@ -1,0 +1,61 @@
+// Croílár ResearchGate Profile Extraction Schema
+// Extracts structured profile + publication data from ResearchGate.
+//
+// Source: pipelines/researchgate/source.py → DuckDB → BAML extraction
+// Emits TypeScript + Python client code via `bun run baml-cli compile`.
+//
+// ResearchGate has no public REST API; the source uses sruth-browser
+// (Browserbase CDP) to scrape the public profile page, then routes the
+// HTML through this schema for structured extraction.
+
+class ResearchGatePublication {
+  title string
+  authors string[]
+  venue string | null @description("Journal / conference / preprint server")
+  year int | null
+  doi string | null
+  abstract string | null
+  citationCount int?
+  readCount int?
+  recommendationCount int?
+  url string
+}
+
+class ResearchGateProfile {
+  name string
+  headline string @description("Department / affiliation / role")
+  institution string | null
+  location string | null
+  about string | null
+  fieldsOfStudy string[] @description("Self-declared research interests")
+  skillsAndExpertise string[]
+  publications ResearchGatePublication[]
+  followers int?
+  following int?
+  hIndex int? @description("Hirsch index, if visible on the profile")
+  totalReads int?
+  totalCitations int?
+  profileUrl string
+  streamId string @description("The croilar Stream id this profile belongs to: music, teaching, cv, or research")
+  ownerDisplayName string @description("Canonical owner display name, e.g. 'Cian Mac an Déisigh Uí Liatháin'")
+  ownerSlug string? @description("Owner alias from Stream.owner, e.g. 'cianfhoghlaim'")
+}
+
+function ExtractResearchGateProfile(text: string) -> ResearchGateProfile {
+  // Extracts structured profile + publication data from a ResearchGate
+  // profile page (HTML or pre-extracted JSON).
+  //
+  // The function should extract:
+  //   - Name, headline, institution, location, about
+  //   - Fields of study and skills/expertise
+  //   - The full list of publications (with citation counts if visible)
+  //   - Aggregate stats (followers, following, h-index, total reads,
+  //     total citations) when displayed
+  //   - streamId and ownerDisplayName from the page metadata
+}
+
+function ExtractPublication(publication_text: string) -> ResearchGatePublication {
+  // Extracts a single publication record from a snippet of HTML or
+  // JSON describing one paper. Used to backfill missing publications
+  // discovered after the initial profile scrape.
+}

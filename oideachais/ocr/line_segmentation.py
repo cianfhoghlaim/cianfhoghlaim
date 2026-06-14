@@ -12,7 +12,7 @@ to create MNIST-style training samples.
 Based on PyLaia reference: taighde/teanga/pylaia/laia/callbacks/segmentation.py
 
 Usage:
-    from oideachais.data_platform.ocr.line_segmentation import LineSegmenter
+    from oideachais.ocr.line_segmentation import LineSegmenter
 
     segmenter = LineSegmenter()
     lines = segmenter.segment_page(image, transcription_lines)

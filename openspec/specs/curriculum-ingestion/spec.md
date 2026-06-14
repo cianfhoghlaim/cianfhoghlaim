@@ -1,7 +1,11 @@
 # Curriculum Ingestion Capability
 
-## Overview
+## Purpose
 
+`curriculum-ingestion` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
+## Background
 Processing and indexing Irish curriculum documents from NCCA, SEC, and Department of Education sources.
 
 ## Requirements

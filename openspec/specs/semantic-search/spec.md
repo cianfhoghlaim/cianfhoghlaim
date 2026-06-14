@@ -1,7 +1,11 @@
 # Semantic Search Capability
 
-## Overview
+## Purpose
 
+`semantic-search` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
+## Background
 Vector-based semantic search for curriculum content, exam questions, and learning materials.
 
 ## Requirements

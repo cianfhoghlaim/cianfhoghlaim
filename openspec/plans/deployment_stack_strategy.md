@@ -1,3 +1,11 @@
+---
+title: 'Deployment Stack Strategy'
+status: research
+supersedes: []
+superseded_by: [openspec/specs/infrastructure-stacks/spec.md]
+last_touched: 2026-06-13
+---
+
 # Oideachais Deployment Stack Strategy
 
 ## Core Strategy

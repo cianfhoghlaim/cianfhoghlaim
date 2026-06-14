@@ -1,3 +1,11 @@
+---
+title: 'Education Audit Plan'
+status: research
+supersedes: []
+superseded_by: []
+last_touched: 2026-06-13
+---
+
 # Education Directory Audit & Reintegration Plan
 
 ## Overview

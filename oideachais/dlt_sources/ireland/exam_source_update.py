@@ -1,2 +1,2 @@
 import dlthub
-from oideachais.data_platform.dlt_sources.dlthub_projects import apply_dlthub_wrappers
+from oideachais.dlt_sources.dlthub_projects import apply_dlthub_wrappers

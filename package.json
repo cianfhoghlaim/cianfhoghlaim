@@ -58,6 +58,10 @@
     "doctor:stacks": "bash scripts/stack-doctor.sh --json | jq",
     "mise:run": "mise run",
 
+    "validate-docs": "bun run scripts/validate-docs.ts",
+    "validate-openspec-stale": "bun run scripts/validate-openspec-stale.ts",
+    "validate-frontmatter": "bun run scripts/validate-frontmatter.ts",
+
     "smoke": "bash infrastructure/stacks/engineering/frontend/scripts/smoke.sh"
   },
   "devDependencies": {

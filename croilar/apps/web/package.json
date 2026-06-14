@@ -12,9 +12,9 @@
     "typecheck": "tsc --noEmit",
     "deploy": "wrangler pages deploy dist",
     "deploy:preview": "wrangler pages deploy dist --branch preview",
-    "notebook:wasm:aleyum": "mkdir -p public/wasm/aleyum-music && marimo export wasm ../../notebooks/aleyum/music_analytics.py -o public/wasm/aleyum-music",
-    "notebook:wasm:cianfhoghlaim": "mkdir -p public/wasm/cianfhoghlaim-teaching && marimo export wasm ../../notebooks/cianfhoghlaim/teaching_analytics.py -o public/wasm/cianfhoghlaim-teaching",
-    "notebook:wasm": "bun run notebook:wasm:aleyum && bun run notebook:wasm:cianfhoghlaim"
+    "notebook:wasm:music": "mkdir -p public/wasm/music && marimo export wasm ../../notebooks/streams/music/music_analytics.py -o public/wasm/music",
+    "notebook:wasm:teaching": "mkdir -p public/wasm/teaching && marimo export wasm ../../notebooks/streams/teaching/teaching_analytics.py -o public/wasm/teaching",
+    "notebook:wasm": "bun run notebook:wasm:music && bun run notebook:wasm:teaching"
   },
   "dependencies": {
     "@croilar/db": "workspace:*",

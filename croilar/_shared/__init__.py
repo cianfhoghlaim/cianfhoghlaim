@@ -47,6 +47,24 @@ except ImportError:  # pragma: no cover — sruth is an optional sister package
 # from .observability import AleyumTracer
 
 
+# Stream registry — domain-driven replacement for the legacy persona model.
+from .streams import (
+    DEFAULT_SOURCES_PATH,
+    Stream,
+    StreamModel,
+    StreamSource,
+    StreamSourceModel,
+    StreamSourceType,
+    StreamsFile,
+    get_stream,
+    iter_asset_keys,
+    list_streams,
+    load_streams_from_mapping,
+    load_streams_from_yaml,
+    reset_cache,
+)
+
+
 __all__ = [
     # Re-exported from sruth.shared when available
     "SerialDatabaseExecutor",
@@ -55,6 +73,20 @@ __all__ = [
     "CircuitBreaker",
     "RateLimiter",
     "retry_with_backoff",
+    # Stream registry
+    "Stream",
+    "StreamSource",
+    "StreamSourceType",
+    "StreamModel",
+    "StreamSourceModel",
+    "StreamsFile",
+    "DEFAULT_SOURCES_PATH",
+    "get_stream",
+    "list_streams",
+    "load_streams_from_mapping",
+    "load_streams_from_yaml",
+    "reset_cache",
+    "iter_asset_keys",
     # Capability flag
     "_SRUTH_AVAILABLE",
 ]

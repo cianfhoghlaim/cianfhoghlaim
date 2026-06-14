@@ -1,3 +1,11 @@
+---
+title: 'Machine Learning Deep Dive'
+status: research
+supersedes: []
+superseded_by: [openspec/specs/oideachais-pipeline/spec.md, openspec/specs/data-pipeline/spec.md]
+last_touched: 2026-06-13
+---
+
 # Machine Learning & Agent Layers Deep Dive
 
 This document details the Machine Learning and Agent Development Kit (ADK) pipelines within the `education` workspace, specifically focusing on how models are orchestrated, OCR capabilities, BAML standardization, and the ADK/MCP agent layer.

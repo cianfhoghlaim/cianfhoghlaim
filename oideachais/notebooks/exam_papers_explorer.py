@@ -170,7 +170,7 @@ def _(
                 if not pathlib.Path(DUCKDB_PATH).exists():
                     raise FileNotFoundError(
                         f"Local DuckDB not found at {DUCKDB_PATH}. "
-                        "Run `USE_DUCKLAKE=false uv run python -m oideachais.data_platform.dlt_sources.ireland.examinations` first."
+                        "Run `USE_DUCKLAKE=false uv run python -m oideachais.dlt_sources.ireland.examinations` first."
                     )
                 _con = duckdb.connect(DUCKDB_PATH, read_only=True)
             query_result = _con.execute(_sql).fetchdf()

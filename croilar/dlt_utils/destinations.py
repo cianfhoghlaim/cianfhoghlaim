@@ -77,6 +77,7 @@ def _get_production_config() -> DuckLakeConfig:
 
 def get_dlt_destination(
     use_ducklake: bool | None = None,
+    local_only: bool = False,
 ) -> Any:
     """
     Get DLT destination for croilar pipelines.
@@ -95,10 +96,16 @@ def get_dlt_destination(
 
     Args:
         use_ducklake: Override to force DuckLake or DuckDB fallback
+        local_only: If True, return a plain DuckDB destination under
+            `./data/local/`. Never writes to R2. Used for `StreamSource`
+            entries with `local_only=True` (e.g. the author CV folder).
 
     Returns:
         Configured destination for DLT pipeline
     """
+    if local_only:
+        return get_duckdb_fallback(base_path="./data/local", prefix="local")
+
     if use_ducklake is None:
         use_ducklake = os.environ.get("USE_DUCKLAKE", "true").lower() == "true"
 
@@ -117,6 +124,7 @@ def get_dlt_destination(
 
 def get_duckdb_fallback(
     base_path: str = "./data",
+    prefix: str = NAMESPACE,
 ) -> Any:
     """
     Get plain DuckDB destination as fallback.
@@ -125,11 +133,13 @@ def get_duckdb_fallback(
 
     Args:
         base_path: Directory for DuckDB files
+        prefix: Filename prefix for the DuckDB file (e.g. "local" for
+            local-only streams, "croilar" for the default).
 
     Returns:
         DuckDB destination for DLT pipeline
     """
-    db_path = os.path.join(base_path, f"{NAMESPACE}.duckdb")
+    db_path = os.path.join(base_path, f"{prefix}.duckdb")
     return dlt.destinations.duckdb(credentials=db_path)
 
 

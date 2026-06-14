@@ -1,6 +1,6 @@
 // Croílár LinkedIn Profile Extraction Schema
 // Extracts structured profile data from scraped LinkedIn pages.
-// Used by all three flows: aleyum, cianfhoghlaim, carlcashman.
+// Used by the Stream registry — see croilar/_shared/streams.py.
 //
 // Source: pipelines/linkedin/source.py → DuckDB → BAML extraction
 // Emits TypeScript + Python client code via `bun run baml-cli compile`.
@@ -33,7 +33,9 @@ class LinkedInProfile {
   skills string[]
   recommendations string[]
   profileUrl string
-  flowId string @description("The croilar flow ID this profile belongs to: aleyum, cianfhoghlaim, or carlcashman")
+  streamId string @description("The croilar Stream id this profile belongs to: music, teaching, cv, or research")
+  ownerDisplayName string @description("Canonical owner display name, e.g. 'Cian Mac an Déisigh Uí Liatháin'")
+  ownerSlug string? @description("Owner alias from Stream.owner, e.g. 'cianfhoghlaim'")
 }
 
 function ExtractLinkedInProfile(text: string) -> LinkedInProfile {
@@ -50,6 +52,8 @@ function ExtractLinkedInProfile(text: string) -> LinkedInProfile {
   //   - Education history
   //   - Skills and endorsements
   //   - Recommendations received
+  //   - streamId and ownerDisplayName from the page metadata (or default
+  //     to the calling Stream's values when present)
   //
   // For mock mode (pre-extracted JSON), the function should parse
   // the JSON and convert field names to the target schema.
