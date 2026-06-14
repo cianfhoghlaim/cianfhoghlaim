@@ -6,16 +6,14 @@ Phase 5 of the openspec change. Previously at
 domain-first path. The legacy address is preserved as a re-export
 shim in `oideachais.dagster_defs.assets.ireland.__init__`.
 """
-from __future__ import annotations
-
-from oideachais.dagster_defs.assets.ie.education.curriculum_dlt_assets import (
+from .curriculum_dlt_assets import (
     create_cycle_asset,
     curriculum_dlt_assets,
 )
-from oideachais.dagster_defs.assets.ie.education.exam_materials_assets import (
+from .exam_materials_assets import (
     exam_materials_assets,
 )
-from oideachais.dagster_defs.assets.ie.education.firecrawl_assets import (
+from .firecrawl_assets import (
     FirecrawlConfig,
     scraped_curriculum_pages,
 )

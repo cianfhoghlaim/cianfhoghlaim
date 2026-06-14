@@ -36,7 +36,7 @@ Members import each other via `[tool.uv.sources]` (e.g. `oideachais` imports `sr
 
 - `turbo.json` — cross-language task graph (`build`, `dev`, `typecheck`, `lint`, `format`, `test`, `clean`, `dagster`, `ccc:index`, `spec:validate`).
 - `mise.toml` — toolchain (`python 3.12`, `uv`, `bun`, `dagger`, `pulumi`, `duckdb`, `sops`, `opencode`) **and** the developer task aliases (`mise turbo dev`, `mise ccc:search …`, `mise secrets:init`, `mise dagster:oideachais`, etc.).
-- `dg.toml` — Dagster `dg` workspace that loads `oideachais` and `tuatha` code-locations into a single UI.
+- `dg.toml` — Dagster `dg` workspace that loads `oideachais`, `tuatha`, `croilar`, and `meaisínfhoghlaim` code-locations into a single UI. (Phase 0.1 of `lateralise-british-isles-domains` added croilar + meaisínfhoghlaim.)
 
 ### Developer onboarding (one command)
 

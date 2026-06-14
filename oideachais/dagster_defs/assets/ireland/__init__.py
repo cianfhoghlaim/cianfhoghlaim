@@ -7,7 +7,7 @@ This shim preserves the legacy import path for one release cycle.
 """
 from __future__ import annotations
 
-from oideachais.dagster_defs.assets.ie import education as _new
+from assets.ie import education as _new
 
 # Forward every name from the new package, with the legacy "ireland" alias.
 curriculum_dlt_assets = _new.curriculum_dlt_assets
