@@ -172,9 +172,17 @@ export function TenantProvider({ children, config }: TenantProviderProps) {
     // Update document title
     document.title = config.seo.title;
 
-    // Add tenant class to body for CSS targeting
-    document.body.classList.remove("tenant-cianfhoghlaim", "tenant-aleyum");
-    document.body.classList.add(`tenant-${config.id}`);
+    // Add tenant class to body for CSS targeting.
+    // The `owner` alias from the Stream registry is used as the tenant
+    // class (e.g. `tenant-cianfhoghlaim`, `tenant-aleyum`) for OG-image
+    // and favicon branding. The data layer no longer keys on these
+    // aliases — see `croilar/_shared/streams.py` for the Stream model.
+    const tenantClass = config.id;
+    document.body.classList.remove(
+      "tenant-cianfhoghlaim", "tenant-aleyum",
+      "tenant-carlcashman", "tenant-croilar-admin", "tenant-croilar-collab",
+    );
+    document.body.classList.add(`tenant-${tenantClass}`);
     document.body.classList.add(`tenant-type-${config.type}`);
   }, [config]);
 

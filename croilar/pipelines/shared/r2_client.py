@@ -2,14 +2,26 @@
 
 S3-compatible client for Cloudflare R2 object storage.
 Used for caching Spotify images and storing SoundCloud audio files.
+
+The default R2 bucket is now the shared `cianfhoghlaim-public` bucket
+(declared in `croilar/wrangler.toml`). The legacy `aleyum-assets` default
+is preserved as `ALEYUM_R2_BUCKET` for backwards compatibility.
+
+`local_only=True` causes all upload methods to become no-ops that
+return a sentinel URL. Use it for sensitive corpora (CV PDFs, identity
+documents) that must never leave the laptop.
 """
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, BinaryIO
 
 import boto3
 from botocore.config import Config
+
+
+DEFAULT_R2_BUCKET = "cianfhoghlaim-public"
+ALEYUM_R2_BUCKET = "aleyum-assets"
 
 
 @dataclass
@@ -19,7 +31,8 @@ class R2Config:
     account_id: str
     access_key_id: str
     secret_access_key: str
-    bucket_name: str = "aleyum-assets"
+    bucket_name: str = DEFAULT_R2_BUCKET
+    local_only: bool = False
 
     @classmethod
     def from_env(cls) -> "R2Config":
@@ -28,7 +41,8 @@ class R2Config:
             account_id=os.environ.get("CLOUDFLARE_ACCOUNT_ID", ""),
             access_key_id=os.environ.get("R2_ACCESS_KEY_ID", ""),
             secret_access_key=os.environ.get("R2_SECRET_ACCESS_KEY", ""),
-            bucket_name=os.environ.get("R2_BUCKET_NAME", "aleyum-assets"),
+            bucket_name=os.environ.get("R2_BUCKET_NAME", DEFAULT_R2_BUCKET),
+            local_only=os.environ.get("R2_LOCAL_ONLY", "false").lower() in ("1", "true", "yes"),
         )
 
     @property
@@ -43,7 +57,12 @@ class R2Config:
 
 
 class R2Client:
-    """Cloudflare R2 client for object storage operations."""
+    """Cloudflare R2 client for object storage operations.
+
+    When `config.local_only=True`, all upload methods are no-ops that
+    return a `local://` sentinel URL. This is the canonical way to
+    honour `StreamSource.local_only`.
+    """
 
     def __init__(self, config: R2Config | None = None):
         """Initialize R2 client.
@@ -52,7 +71,7 @@ class R2Client:
             config: R2 configuration (defaults to environment variables)
         """
         self.config = config or R2Config.from_env()
-        self._client = None
+        self._client: Any = None
 
     @property
     def client(self) -> Any:
@@ -67,6 +86,12 @@ class R2Client:
             )
         return self._client
 
+    def _maybe_skip(self, key: str) -> str | None:
+        """Return a `local://` sentinel URL if `local_only` is set; else None."""
+        if self.config.local_only:
+            return f"local://{self.config.bucket_name}/{key}"
+        return None
+
     def upload_bytes(
         self,
         key: str,
@@ -76,15 +101,12 @@ class R2Client:
     ) -> str:
         """Upload bytes to R2.
 
-        Args:
-            key: Object key (path in bucket)
-            data: Bytes to upload
-            content_type: MIME type
-            metadata: Optional metadata dict
-
-        Returns:
-            Public URL of uploaded object
+        No-op (returns `local://` URL) when `local_only=True`.
         """
+        skip = self._maybe_skip(key)
+        if skip is not None:
+            return skip
+
         extra_args = {"ContentType": content_type}
         if metadata:
             extra_args["Metadata"] = metadata
@@ -106,14 +128,12 @@ class R2Client:
     ) -> str:
         """Upload a file object to R2.
 
-        Args:
-            key: Object key (path in bucket)
-            file_obj: File-like object to upload
-            content_type: MIME type
-
-        Returns:
-            Public URL of uploaded object
+        No-op (returns `local://` URL) when `local_only=True`.
         """
+        skip = self._maybe_skip(key)
+        if skip is not None:
+            return skip
+
         self.client.upload_fileobj(
             file_obj,
             self.config.bucket_name,
@@ -124,14 +144,7 @@ class R2Client:
         return f"{self.config.public_url_base}/{key}"
 
     def download_bytes(self, key: str) -> bytes:
-        """Download object as bytes.
-
-        Args:
-            key: Object key
-
-        Returns:
-            Object content as bytes
-        """
+        """Download object as bytes."""
         response = self.client.get_object(
             Bucket=self.config.bucket_name,
             Key=key,
@@ -139,15 +152,7 @@ class R2Client:
         return response["Body"].read()
 
     def list_objects(self, prefix: str = "", max_keys: int = 1000) -> list[dict[str, Any]]:
-        """List objects in bucket with optional prefix.
-
-        Args:
-            prefix: Key prefix filter
-            max_keys: Maximum number of keys to return
-
-        Returns:
-            List of object metadata dicts
-        """
+        """List objects in bucket with optional prefix."""
         response = self.client.list_objects_v2(
             Bucket=self.config.bucket_name,
             Prefix=prefix,
@@ -159,26 +164,24 @@ class R2Client:
     def delete_object(self, key: str) -> None:
         """Delete an object from R2.
 
-        Args:
-            key: Object key to delete
+        No-op when `local_only=True`.
         """
+        if self.config.local_only:
+            return
         self.client.delete_object(
             Bucket=self.config.bucket_name,
             Key=key,
         )
 
     def get_presigned_url(self, key: str, expires_in: int = 3600) -> str:
-        """Generate a presigned URL for temporary access.
-
-        Args:
-            key: Object key
-            expires_in: URL expiration time in seconds (default 1 hour)
-
-        Returns:
-            Presigned URL string
-        """
+        """Generate a presigned URL for temporary access."""
+        if self.config.local_only:
+            return f"local://{self.config.bucket_name}/{key}"
         return self.client.generate_presigned_url(
             "get_object",
             Params={"Bucket": self.config.bucket_name, "Key": key},
             ExpiresIn=expires_in,
         )
+
+
+__all__ = ["R2Config", "R2Client", "DEFAULT_R2_BUCKET", "ALEYUM_R2_BUCKET"]
