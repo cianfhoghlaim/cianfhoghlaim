@@ -1,7 +1,11 @@
 # Observability Capability
 
-## Overview
+## Purpose
 
+`observability` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
+## Background
 LLM observability, tracing, prompt management, and evaluation frameworks for monitoring and optimizing AI systems.
 
 ## Requirements

@@ -1,7 +1,11 @@
 # Memory Systems Capability
 
-## Overview
+## Purpose
 
+`memory-systems` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
+## Background
 Knowledge graph memory systems, temporal tracking, episodic memory, and persistent agent memory with multi-backend support.
 
 ## Requirements

@@ -1,3 +1,11 @@
+---
+title: 'Data Engineering Deep Dive'
+status: research
+supersedes: []
+superseded_by: [openspec/specs/oideachais-pipeline/spec.md, openspec/specs/data-pipeline/spec.md, docs/02-data-platform/data-architecture.md]
+last_touched: 2026-06-13
+---
+
 # Data Engineering & Pipeline Deep Dive
 
 This document provides a deep dive into the Data Engineering and Pipeline layers of the `education` workspace, focusing specifically on the `education/data_engineering/dlt_sources` and `education/data_engineering/dagster_defs` directories. It covers the architecture for cross-border curriculum scraping, standardization across different educational systems, and the pivotal role of `dlt` (data load tool).

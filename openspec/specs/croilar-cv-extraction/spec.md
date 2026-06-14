@@ -1,9 +1,13 @@
 # `croilar-cv-extraction` capability spec
 
+## Purpose
+
+`croilar-cv-extraction` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
 BAML-based extraction of the author's CV / achievements / teaching / identity documents. The extraction converts scanned PDFs in `author_cian_deacy_lyons_mac_an_déisigh_uí_liatháin/` into structured markdown + searchable indexes.
 
-## ADDED Requirements
-
+## Requirements
 ### Requirement: PDF Ingestion
 The system SHALL ingest scanned PDFs from the `author_cian_deacy_lyons_mac_an_déisigh_uí_liatháin/` source directories.
 

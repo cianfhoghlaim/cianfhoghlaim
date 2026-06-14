@@ -1,7 +1,11 @@
 # Stack Audit Capability
 
-## Overview
+## Purpose
 
+`stack-audit` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
+## Background
 Every Docker Compose stack under `infrastructure/stacks/*/*/` MUST follow the 6-file GOLD_STANDARD pattern. A root-level auditor (`scripts/stack-doctor.sh`) reports per-stack compliance on every CI run, gated by a turbo task.
 
 ## Requirements

@@ -1,7 +1,11 @@
 # Scheduling Capability
 
-## Overview
+## Purpose
 
+`scheduling` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
+## Background
 Self-hosted team scheduling built on cal-diy (cal.com community build). Provides both a shared team booking page and per-member booking pages. Every booking event fires a webhook that the `workflow-automation` subsystem (n8n) consumes to populate the team's task management system (Vikunja) and the Gantt chart.
 
 ## Requirements
