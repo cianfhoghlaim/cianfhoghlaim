@@ -37,6 +37,18 @@ from ..constants.local_sources import (
     should_process_file,
 )
 
+# Re-export shim — the FileHashTracker was hoisted to the author_archive package.
+# Old import path `from oideachais.dlt_sources.ireland.local_documents import FileHashTracker`
+# still works for downstream code.
+try:
+    from ..author_archive._scanner import (  # noqa: F401
+        FileHashTracker as _AuthorArchiveFileHashTracker,
+    )
+
+    FileHashTracker = _AuthorArchiveFileHashTracker
+except ImportError:  # pragma: no cover — author_archive may not be on PYTHONPATH
+    pass
+
 
 def _compute_file_hash(path: Path, chunk_size: int = 8192) -> str:
     """Compute SHA-256 hash of file for change detection."""

@@ -131,3 +131,32 @@ client<llm> ImageGen {
     model "image-fibo"   // gateway alias → FIBO MLX → Z-Image-Turbo
   }
 }
+
+// =============================================================================
+// English-only extract clients (author-archive pipeline)
+// =============================================================================
+// `ExtractEn` is the default for `baml_src/author_archive.baml` functions.
+// Routes through the LiteLLM gateway alias `extract-en` which the gateway
+// resolves to gemini-2.5-flash → glm-4.6 → gemini-1.5-flash.
+client<llm> ExtractEn {
+  provider openai
+  options {
+    base_url env.LITELLM_BASE_URL
+    api_key env.LITELLM_MASTER_KEY
+    model "extract-en"
+  }
+  retry_policy Simple
+}
+
+// `ExtractEnStrong` is the fallback for difficult extractions (math / dense legal).
+// Routes through the gateway alias `extract-en-strong` which resolves to
+// anthropic/claude-sonnet-4 → gemini-2.5-pro → gemini-1.5-pro.
+client<llm> ExtractEnStrong {
+  provider openai
+  options {
+    base_url env.LITELLM_BASE_URL
+    api_key env.LITELLM_MASTER_KEY
+    model "extract-en-strong"
+  }
+  retry_policy Simple
+}
