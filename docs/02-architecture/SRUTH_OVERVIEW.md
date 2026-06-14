@@ -16,6 +16,8 @@ superseded_by:
 ccc_query_hints:
   - sruth history
   - data flows overview historical
+truth: partial
+
 ---
 
 # Sruth - Data Flows (Historical)

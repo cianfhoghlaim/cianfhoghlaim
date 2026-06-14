@@ -14,6 +14,8 @@ ccc_query_hints:
   - embedding batch size
   - irish language model
   - zero absolute namespaces
+truth: sole
+
 ---
 
 # Critical Constraints

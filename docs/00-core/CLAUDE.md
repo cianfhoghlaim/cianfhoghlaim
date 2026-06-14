@@ -13,6 +13,8 @@ supersedes:
 ccc_query_hints:
   - cianfhoghlaim project identity
   - monorepo quadrants routing
+truth: sole
+
 ---
 
 # Cianfhoghlaim - AI Agent Instructions
