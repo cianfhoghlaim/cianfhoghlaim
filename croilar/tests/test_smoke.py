@@ -29,12 +29,16 @@ PIPELINE_MODULES = [
     "pipelines.spotify",
     "pipelines.soundcloud",
     "pipelines.github",
+    "pipelines.researchgate",
+    "pipelines.fs_author",
     "pipelines.cv",
     "pipelines.artwork",
     "pipelines.labels",
     "pipelines.teaching",
     "pipelines.shared",
     "dlt_utils",
+    "_shared",
+    "_shared.streams",
     "_shared.config",
     "_shared.config.paths",
     "_shared.config.settings",
@@ -91,6 +95,20 @@ def test_pipelines_github_exports() -> None:
 
     assert hasattr(pipelines.github, "github_repos_source")
     assert hasattr(pipelines.github, "run_github_pipeline")
+
+
+def test_pipelines_researchgate_exports() -> None:
+    import pipelines.researchgate
+
+    assert hasattr(pipelines.researchgate, "researchgate_profile_resource")
+    assert hasattr(pipelines.researchgate, "run_researchgate_pipeline")
+
+
+def test_pipelines_fs_author_exports() -> None:
+    import pipelines.fs_author
+
+    assert hasattr(pipelines.fs_author, "fs_author_source")
+    assert hasattr(pipelines.fs_author, "run_fs_author_pipeline")
 
 
 def test_pipelines_artwork_exports() -> None:
@@ -210,10 +228,76 @@ def test_dlt_duckdb_fallback(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
 # ---------------------------------------------------------------------------
 
 def test_aleyum_settings_default_loads() -> None:
-    """The Pydantic settings must instantiate with defaults."""
+    """The Pydantic settings must instantiate with defaults.
+
+    `AleyumSettings` is preserved as a deprecated alias of `StreamSettings`.
+    """
     from _shared.config.settings import AleyumSettings
 
     settings = AleyumSettings()
     assert settings.lancedb_uri  # non-empty
-    assert settings.duckdb_path  # non-empty
+    assert settings.duckdb_root  # non-empty (was `duckdb_path` in the legacy AleyumSettings)
     assert settings.embedding_model  # non-empty
+
+
+def test_stream_settings_default_loads() -> None:
+    """`StreamSettings` (the new canonical class) must instantiate with defaults."""
+    from _shared.config.settings import StreamSettings
+
+    settings = StreamSettings()
+    assert settings.r2_bucket  # non-empty
+    assert settings.sources_yaml_path.exists()
+
+
+def test_stream_registry_resolves_all_streams() -> None:
+    """The Stream registry must return a list with the expected stream ids."""
+    from _shared.streams import list_streams, get_stream
+
+    streams = list_streams()
+    ids = {s.id for s in streams}
+    assert {"music", "teaching", "cv", "research"}.issubset(ids)
+
+    for s in streams:
+        resolved = get_stream(s.id)
+        assert resolved.id == s.id
+        assert resolved.owner_display_name
+
+
+def test_stream_registry_has_no_carlcashman() -> None:
+    """The legacy `carlcashman` persona is removed from the data layer."""
+    from _shared.streams import list_streams
+
+    for s in list_streams():
+        assert s.id != "carlcashman"
+        assert s.owner != "carlcashman"
+
+
+def test_fs_author_is_local_only() -> None:
+    """The filesystem source on the `cv` stream must be marked `local_only=True`."""
+    from _shared.streams import get_stream, StreamSourceType
+
+    cv = get_stream("cv")
+    fs = cv.get_source(StreamSourceType.FILESYSTEM)
+    assert fs.local_only is True
+
+
+def test_researchgate_source_attached_to_teaching() -> None:
+    """The ResearchGate source must be attached to the `teaching` stream."""
+    from _shared.streams import get_stream, StreamSourceType
+
+    teaching = get_stream("teaching")
+    assert teaching.has_source(StreamSourceType.RESEARCHGATE)
+    assert teaching.has_source(StreamSourceType.LINKEDIN)
+    assert teaching.has_source(StreamSourceType.GITHUB)
+
+
+def test_music_stream_preserved() -> None:
+    """The music stream keeps the legacy aleyum pipeline wiring."""
+    from _shared.streams import get_stream, StreamSourceType
+
+    music = get_stream("music")
+    assert music.owner == "aleyum"
+    assert music.has_source(StreamSourceType.SPOTIFY)
+    assert music.has_source(StreamSourceType.SOUNDCLOUD)
+    assert music.has_source(StreamSourceType.LABELS)
+    assert music.has_source(StreamSourceType.ARTWORK)
