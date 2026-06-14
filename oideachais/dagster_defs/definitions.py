@@ -119,6 +119,18 @@ from oideachais.cognee_integration.cross_stage_cognify import (
     cross_stage_cognify,
 )
 
+# Author Archive Assets (UoG + Gemini Deep Research + Google Takeout Phase 1)
+# Personal-archive ingestion: dlt sources under oideachais/dlt_sources/author_archive/
+# + BAML extraction (baml_src/author_archive.baml)
+# + CocoIndex embedding (oideachais/cocoindex_flows/author_archive_embedding.py)
+# + OCR chain (oideachais/ocr/author_archive_ocr.py)
+try:
+    from .assets.author_archive_assets import AUTHOR_ARCHIVE_ASSETS
+except ImportError as e:
+    import structlog as _sl
+    _sl.get_logger().warning("author_archive_assets_import_failed: %s", e)
+    AUTHOR_ARCHIVE_ASSETS = []
+
 # UK Education Assets
 # ============================================================================
 # Partition Imports
@@ -293,6 +305,8 @@ combined_assets = [
     senior_cycle_knowledge_graph,   # Senior Cycle knowledge graph (exam papers + marking schemes)
     lazy_extract_exam_paper,        # On-demand exam paper BAML extraction
     cross_stage_cognify,            # Cross-stage Cognee cognify (8 edges, 5 stages)
+    # Author Archive — UoG + Gemini Deep Research + Google Takeout (Phase 1)
+    *AUTHOR_ARCHIVE_ASSETS,
     # Leaving Cert 2026 — 7 priority subjects × 10 assets = 70 assets
     *LEAVING_CERT_ASSETS,
     # Leaving Cert 2026 DLT ingestion layer (7 @dlt_assets, one per subject)
