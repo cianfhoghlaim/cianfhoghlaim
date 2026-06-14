@@ -1,3 +1,11 @@
+---
+title: 'Tangent 1 Micro Credentials'
+status: deferred
+supersedes: []
+superseded_by: [docs/00-deploy-plans/01-micro-credentials.md, archive: openspec/plans/archive/tangent_1_micro_credentials.md]
+last_touched: 2026-06-13
+---
+
 # Strategic Plan: Tangent 1 - Decentralized Educational Credentials & Micro-Certification
 
 ## 1. Executive Summary

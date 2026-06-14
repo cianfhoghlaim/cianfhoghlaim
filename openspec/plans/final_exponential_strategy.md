@@ -1,3 +1,11 @@
+---
+title: 'Final Exponential Strategy'
+status: research
+supersedes: [exponential_improvement_roadmap.md]
+superseded_by: [docs/04-ai-ml/llm-stack-hierarchy.md]
+last_touched: 2026-06-13
+---
+
 # Final Exponential Strategy: The Cross-Border Educational Ecosystem
 
 ## 1. Executive Summary

@@ -1,3 +1,11 @@
+---
+title: 'Deployment And Ai Strategy'
+status: research
+supersedes: []
+superseded_by: [openspec/specs/infrastructure/spec.md, docs/01-platform-architecture/]
+last_touched: 2026-06-13
+---
+
 # Oideachais Deployment and AI Strategy
 
 ## 1. Executive Summary

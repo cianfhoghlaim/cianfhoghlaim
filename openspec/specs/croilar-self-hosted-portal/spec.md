@@ -1,5 +1,10 @@
 # `croilar-self-hosted-portal` capability spec
 
+## Purpose
+
+`croilar-self-hosted-portal` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
 The internal platform dashboard for the Croílár portfolio — stacks, data pipelines, monitoring, MCP gateway, and image registry — gated behind multi-tenant auth.
 
 ## Requirements

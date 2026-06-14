@@ -1,7 +1,11 @@
 # Agent Frameworks Capability
 
-## Overview
+## Purpose
 
+`agent-frameworks` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
+## Background
 Multi-agent orchestration and AI agent development frameworks for building intelligent systems with tool calling, memory systems, and knowledge graph integration.
 
 ## Requirements

@@ -3,21 +3,21 @@ import { initReactI18next } from "react-i18next";
 
 import commonEn from "./resources/common/en/common.json";
 import commonGa from "./resources/common/ga/common.json";
-import aleyumEn from "./resources/aleyum/en/persona.json";
-import aleyumGa from "./resources/aleyum/ga/persona.json";
-import cianfhoghlaimEn from "./resources/cianfhoghlaim/en/persona.json";
-import cianfhoghlaimGa from "./resources/cianfhoghlaim/ga/persona.json";
+import musicEn from "./resources/streams/music/en/persona.json";
+import musicGa from "./resources/streams/music/ga/persona.json";
+import teachingEn from "./resources/streams/teaching/en/persona.json";
+import teachingGa from "./resources/streams/teaching/ga/persona.json";
 
 const resources = {
   en: {
     common: commonEn,
-    aleyum: aleyumEn,
-    cianfhoghlaim: cianfhoghlaimEn,
+    music: musicEn,
+    teaching: teachingEn,
   },
   ga: {
     common: commonGa,
-    aleyum: aleyumGa,
-    cianfhoghlaim: cianfhoghlaimGa,
+    music: musicGa,
+    teaching: teachingGa,
   },
 };
 

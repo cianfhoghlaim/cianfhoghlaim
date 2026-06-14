@@ -1,3 +1,11 @@
+---
+title: 'Tangent 5 Policy Simulator'
+status: deferred
+supersedes: []
+superseded_by: [docs/00-deploy-plans/05-policy-simulator.md, archive: openspec/plans/archive/tangent_5_policy_simulator.md]
+last_touched: 2026-06-13
+---
+
 # Tangent 5: Real-time Educational Policy Impact Simulator
 
 ## 1. Executive Summary

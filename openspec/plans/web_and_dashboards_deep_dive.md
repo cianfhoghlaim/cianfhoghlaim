@@ -1,3 +1,11 @@
+---
+title: 'Web And Dashboards Deep Dive'
+status: research
+supersedes: []
+superseded_by: [openspec/specs/frontend-frameworks/spec.md, docs/05-web/frontend-topology.md]
+last_touched: 2026-06-13
+---
+
 # Web & Interactive Dashboards Deep Dive
 
 ## Executive Summary

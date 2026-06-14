@@ -1,5 +1,10 @@
 # `croilar-persona-registry` capability spec
 
+## Purpose
+
+`croilar-persona-registry` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
 The type-safe persona configuration system that defines each public identity in the Croílár platform.
 
 ## Requirements

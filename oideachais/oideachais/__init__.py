@@ -5,13 +5,17 @@ Per AGENTS.md rule "Zero Absolute Namespaces in Data Pipelines":
 > Never import `oideachais.data_platform...` from within the data platform itself.
 > Always use relative or local package imports.
 
-This package exists ONLY to satisfy the broken `from oideachais.data_platform.X`
-imports scattered through the codebase. New code MUST use relative imports.
+This package exists ONLY to provide a clear migration path for external
+consumers that still use the old `oideachais.data_platform.*` path. The
+data platform code now lives at the top level of the `oideachais/`
+package (`dlt_sources/`, `dlt_utils/`, `dagster_defs/`, `ocr/`, etc.) and
+all in-tree code has been migrated to relative imports.
 
-The shim is intentionally minimal — it does NOT eagerly import the
-data_platform tree. Instead, it registers a custom `__getattr__` at the
-package level (PEP 562) that resolves `oideachais.data_platform` on first
-access to the top-level `data_platform` module.
+This shim is intentionally minimal — it does NOT eagerly import any of
+the new top-level packages. It delegates to the inner
+`oideachais.oideachais.data_platform` shim (see
+`oideachais/oideachais/data_platform/__init__.py`) which emits a
+DeprecationWarning and a clear ImportError pointing at the new path.
 
 `oideachais.core` is a separate stub package — see `oideachais/core/__init__.py`.
 """
@@ -19,23 +23,15 @@ access to the top-level `data_platform` module.
 from __future__ import annotations
 
 import sys
-import types
 
 
 def __getattr__(name: str):
-    """PEP 562: resolve `oideachais.data_platform` lazily on first access."""
+    """PEP 562: resolve `oideachais.data_platform` lazily via the inner shim."""
     if name == "data_platform":
-        import data_platform  # noqa: F401
-        # Re-register so future `import oideachais.data_platform` works
-        sys.modules.setdefault("oideachais.data_platform", data_platform)
-        return data_platform
+        from oideachais.oideachais import data_platform as _shim
+        sys.modules.setdefault("oideachais.data_platform", _shim)
+        return _shim
     raise AttributeError(f"module 'oideachais' has no attribute {name!r}")
-
-
-# Re-export oideachais.core as a sub-attribute
-def _resolve_core():
-    import oideachais.core
-    return oideachais.core
 
 
 # Register oideachais.core in sys.modules so `from oideachais.core import X` works

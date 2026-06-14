@@ -3,10 +3,16 @@
 Adapted from github-intelligence pipeline for portfolio repository insights.
 Fetches repository metadata, languages, READMEs, and recent commits.
 
+The default GitHub username is `cianfhoghlaim` — the consolidated
+author identity. The legacy `Yedya` alias (the old `aleyum` persona's
+GitHub handle) is preserved as `ALEYUM_GITHUB_USERNAME` for any callers
+that still reference it; new code should pass an explicit `username=`
+or read from the Stream registry.
+
 Usage:
     from pipelines.github import run_github_pipeline
 
-    load_info = run_github_pipeline(username="Yedya")
+    load_info = run_github_pipeline(username="cianfhoghlaim")
 """
 
 import os
@@ -15,13 +21,17 @@ from typing import Any, Iterator
 import dlt
 from dlt.sources.rest_api import RESTAPIConfig, rest_api_resources
 
-# Aleyum GitHub username
-ALEYUM_GITHUB_USERNAME = "Yedya"
+# Consolidated author identity (was `Yedya` under the old `aleyum` persona).
+DEFAULT_GITHUB_USERNAME = "cianfhoghlaim"
+
+# Legacy alias — kept for any caller still referencing the old persona.
+# New code should use `DEFAULT_GITHUB_USERNAME` or pass an explicit value.
+ALEYUM_GITHUB_USERNAME = DEFAULT_GITHUB_USERNAME
 
 
 @dlt.source(name="github_repos")
 def github_repos_source(
-    username: str = ALEYUM_GITHUB_USERNAME,
+    username: str = DEFAULT_GITHUB_USERNAME,
     access_token: str = dlt.secrets.value,
     include_forks: bool = False,
 ) -> Iterator[Any]:
@@ -237,7 +247,7 @@ def get_recent_commits(
 
 
 def run_github_pipeline(
-    username: str = ALEYUM_GITHUB_USERNAME,
+    username: str = DEFAULT_GITHUB_USERNAME,
     destination: str = "duckdb",
     dataset_name: str = "github_data",
     fetch_languages: bool = True,
@@ -313,7 +323,7 @@ def run_github_pipeline(
 if __name__ == "__main__":
     # Example usage
     load_info = run_github_pipeline(
-        username=ALEYUM_GITHUB_USERNAME,
+        username=DEFAULT_GITHUB_USERNAME,
         fetch_languages=True,
         fetch_readmes=True,
         fetch_commits=True,

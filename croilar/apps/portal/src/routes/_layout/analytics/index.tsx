@@ -5,8 +5,10 @@ export const Route = createFileRoute("/_layout/analytics/")({
 });
 
 const DIVE_URLS = {
-  aleyum: "https://app.motherduck.com/dives/aleyum_md",
-  cianfhoghlaim: "https://app.motherduck.com/dives/cianfhoghlaim_md",
+  music: "https://app.motherduck.com/dives/music_md",
+  teaching: "https://app.motherduck.com/dives/teaching_md",
+  cv: "https://app.motherduck.com/dives/cv_md",
+  research: "https://app.motherduck.com/dives/research_md",
 };
 
 function AnalyticsIndex() {
@@ -15,11 +17,11 @@ function AnalyticsIndex() {
       <h1 className="text-2xl font-bold mb-6">Analytics & Notebooks</h1>
 
       <div className="grid md:grid-cols-2 gap-6 mb-8">
-        {Object.entries(DIVE_URLS).map(([persona, url]) => (
-          <div key={persona} className="rounded-xl bg-card border border-border p-6">
-            <h2 className="text-lg font-semibold mb-2 capitalize">{persona}</h2>
+        {Object.entries(DIVE_URLS).map(([streamId, url]) => (
+          <div key={streamId} className="rounded-xl bg-card border border-border p-6">
+            <h2 className="text-lg font-semibold mb-2 capitalize">{streamId}</h2>
             <p className="text-muted-foreground text-sm mb-4">
-              SQL-first analytics dashboard for {persona} data. Explore music catalogues,
+              SQL-first analytics dashboard for the {streamId} stream. Explore music catalogues,
               GitHub repos, CV entries, and pipeline metrics.
             </p>
             <a
@@ -40,13 +42,13 @@ function AnalyticsIndex() {
           Reactive Python notebooks for exploratory analysis. Run locally with:
         </p>
         <pre className="bg-muted p-3 rounded text-sm mb-4">
-          {`marimo run notebooks/aleyum/music_analytics.py
-marimo run notebooks/cianfhoghlaim/teaching_analytics.py`}
+          {`marimo run notebooks/streams/music/music_analytics.py
+marimo run notebooks/streams/teaching/teaching_analytics.py`}
         </pre>
         <p className="text-muted-foreground text-xs">
           The public{' '}
           <code className="bg-muted px-1 rounded">/data</code>{' '}
-          route per persona renders WASM-exported static versions
+          route per stream renders WASM-exported static versions
           (built via{' '}
           <code className="bg-muted px-1 rounded">bun run notebook:wasm</code>).
         </p>

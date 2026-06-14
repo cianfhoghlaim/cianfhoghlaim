@@ -75,9 +75,9 @@ with a YAML frontmatter block containing all of the following fields:
 
 ### Requirement: Archive of Merged Originals
 
-When a contributor merges multiple source files into a single canonical
-document, the originals SHALL be preserved in `docs/archive/` with
-a clear provenance trail.
+The system SHALL preserve the originals in `docs/archive/` with a
+clear provenance trail when a contributor merges multiple source files
+into a single canonical document.
 
 #### Scenario: Originals are merged into a canonical
 

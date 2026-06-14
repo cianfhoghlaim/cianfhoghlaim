@@ -1,7 +1,11 @@
 # Bilingual Content Capability
 
-## Overview
+## Purpose
 
+`bilingual-content` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
+## Background
 Managing and serving curriculum content in both English and Irish languages with proper alignment and translation support.
 
 ## Requirements

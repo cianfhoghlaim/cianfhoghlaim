@@ -1,3 +1,11 @@
+---
+title: 'Package-Updates'
+status: research
+supersedes: []
+superseded_by: []
+last_touched: 2026-06-13
+---
+
 # Package Updates Plan
 
 ## Overview
