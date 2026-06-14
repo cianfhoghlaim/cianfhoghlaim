@@ -26,6 +26,8 @@ ccc_query_hints:
   - "BAML schema Irish education"
   - "MCP server setup"
 last_reviewed: 2026-06-06
+truth: partial
+
 ---
 
 # Agent Documentation — Canonical Index

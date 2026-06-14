@@ -39,6 +39,8 @@ ccc_query_hints:
   - "MCP OAuth authentication best practices"
   - "how to build an MCP server"
 last_reviewed: 2026-06-06
+truth: partial
+
 ---
 
 # MCP Servers & Protocol Reference

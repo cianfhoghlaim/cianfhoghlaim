@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Browser Automation Platform Reference
 
 ## Merged From

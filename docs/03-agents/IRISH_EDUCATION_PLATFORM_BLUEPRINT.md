@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Irish Education Platform Blueprint: Agentic Systems for Celtic Education
 
 ## Merged From

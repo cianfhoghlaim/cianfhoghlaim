@@ -10,6 +10,8 @@ supersedes:
   - docs/colpali.md
 ccc_query_hints:
   - colpali — visual late-interaction docume
+truth: partial
+
 ---
 
 # ColPali — Visual Late-Interaction Document Retrieval

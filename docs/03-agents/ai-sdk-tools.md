@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # ai sdk tools
 
 > Auto-merged from subdirectory .md files on 2026-06-06

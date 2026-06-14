@@ -10,6 +10,8 @@ supersedes:
   - docs/ag-ui.md
 ccc_query_hints:
   - ag-ui — agent-user interaction protocol 
+truth: partial
+
 ---
 
 # AG-UI — Agent-User Interaction Protocol (SSE)

@@ -10,6 +10,8 @@ supersedes:
   - docs/copilotkit.md
 ccc_query_hints:
   - copilotkit — ai agent ui components
+truth: partial
+
 ---
 
 # CopilotKit — AI Agent UI Components

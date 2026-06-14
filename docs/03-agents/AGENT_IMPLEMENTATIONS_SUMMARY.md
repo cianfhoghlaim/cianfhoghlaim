@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Agent-Related Implementations Analysis
 ## Web/Agents Exploration Summary
 

@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Tuath Celtic Educational MMO - Quick Start
 
 Celtic language learning through mythology - a gamified educational platform.

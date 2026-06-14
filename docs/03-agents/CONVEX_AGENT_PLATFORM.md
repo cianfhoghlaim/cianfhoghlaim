@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Convex Agent Platform Reference
 
 ## Merged From

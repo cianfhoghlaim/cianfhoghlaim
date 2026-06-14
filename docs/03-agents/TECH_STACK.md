@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # **Technical Blueprint for a Next-Generation Leaving Certificate Education Platform: Architecture, Pedagogy, and Implementation**
 
 ## **1\. Executive Summary: The Convergence of WebAssembly and National Curricula**
