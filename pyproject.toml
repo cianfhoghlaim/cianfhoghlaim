@@ -61,6 +61,7 @@ members = [
     "croilar",
     "infrastructure/browser",
     "oideachais/mcp/mcpo",
+    "meaisinfhoghlaim",
 ]
 
 [tool.uv.sources]
@@ -73,6 +74,9 @@ sruth-browser = { workspace = true }
 oideachais = { workspace = true }
 tuath = { workspace = true }
 croilar = { workspace = true }
+# `meaisinfhoghlaim` is the project name (ASCII form; the fada is preserved
+# only in the directory branding and docs/READMEs).
+meaisinfhoghlaim = { workspace = true }
 
 # =============================================================================
 # Shared dev tooling — applied to every workspace member
@@ -144,6 +148,11 @@ dataset_name = "education"
 
 [tool.dlt.sources.celtic]
 dataset_name = "celtic"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]
 
 # =============================================================================
 # Coverage
