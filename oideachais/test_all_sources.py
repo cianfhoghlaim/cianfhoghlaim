@@ -1,7 +1,7 @@
 import dlt
-from oideachais.data_platform.dlt_sources.ireland.curriculum_source import curriculum_source
-from oideachais.data_platform.dlt_sources.ireland.examinations import sec_examinations_browser_source
-from oideachais.data_platform.dlt_sources.ireland.pdf_downloader import pdf_download_source
+from oideachais.dlt_sources.ireland.curriculum_source import curriculum_source
+from oideachais.dlt_sources.ireland.examinations import sec_examinations_browser_source
+from oideachais.dlt_sources.ireland.pdf_downloader import pdf_download_source
 import logging
 logging.basicConfig(level=logging.INFO)
 

@@ -265,7 +265,7 @@ Execute DLT ingestion or PDF processing pipelines locally.
 
     if generate_cmd_btn.value:
         years = list(range(int(year_start.value), int(year_end.value) + 1))
-        cmd = f"uv run dagster job execute -m oideachais.data_platform.dagster_defs.definitions -j {job_dropdown.value}"
+        cmd = f"uv run dagster job execute -m oideachais.dagster_defs.definitions -j {job_dropdown.value}"
         if has_part:
             cmd += f" --tags '{{\"dagster/partition\": \"{partition_dropdown.value}\"}}'"
         if "examination" in job_dropdown.value:
@@ -508,7 +508,7 @@ def _(mo, os):
     dlt_logs = []
 
     if dlt_run_btn.value:
-        from oideachais.data_platform.dlt_utils import create_pipeline, safe_dlt_run, get_dlt_destination, get_duckdb_fallback_destination
+        from oideachais.dlt_utils import create_pipeline, safe_dlt_run, get_dlt_destination, get_duckdb_fallback_destination
         from pathlib import Path
 
         os.environ["USE_DUCKLAKE"] = str(dlt_ducklake_toggle.value).lower()
@@ -518,7 +518,7 @@ def _(mo, os):
         try:
             with mo.status.spinner(f"Running {dlt_mode.value}..."):
                 if dlt_mode.value.startswith("exam_materials"):
-                    from oideachais.data_platform.dlt_sources.ireland.examinations import (
+                    from oideachais.dlt_sources.ireland.examinations import (
                         leaving_certificate_source, junior_cycle_exams_source,
                     )
                     level = "leaving_certificate" if "lc" in dlt_mode.value else "junior_cycle"
@@ -541,7 +541,7 @@ def _(mo, os):
                                 dlt_logs.append(mo.md(f"  📊 {job.job_id}: {rows} rows"))
 
                 elif dlt_mode.value == "curriculum_test":
-                    from oideachais.data_platform.dlt_sources.ireland.curriculum_source import curriculum_source
+                    from oideachais.dlt_sources.ireland.curriculum_source import curriculum_source
 
                     pipeline = create_pipeline("curriculum_unified", "curriculum")
                     source = curriculum_source(cycle="senior_cycle", subject="mathematics", language="en")
@@ -549,7 +549,7 @@ def _(mo, os):
                     dlt_logs.append(mo.md(f"✅ **curriculum_test** completed.\n\n**Load ID:** `{load_info.loads_ids[0] if load_info.loads_ids else 'unknown'}`"))
 
                 elif dlt_mode.value == "pdf_download":
-                    from oideachais.data_platform.dlt_sources.ireland.pdf_downloader import pdf_download_source
+                    from oideachais.dlt_sources.ireland.pdf_downloader import pdf_download_source
 
                     duckdb_path = str(Path(os.getcwd()) / "oideachais/data_platform/curriculum_unified.duckdb")
                     pipeline = create_pipeline("curriculum_unified", "curriculum")
