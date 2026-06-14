@@ -70,7 +70,7 @@ source_adapters = _lazy("source_adapters", "oideachais.dlt_sources.ireland.sourc
 tertiary = _lazy("tertiary", "oideachais.dlt_sources.ireland.tertiary")
 
 # Subjects re-exports.
-from oideachais.dlt_sources.ireland.subjects import (
+from dlt_sources.ireland.subjects import (
     base as subjects_base,
     junior_cycle,
     senior_cycle as subjects_senior_cycle,

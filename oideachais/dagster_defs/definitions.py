@@ -107,15 +107,15 @@ except ImportError as e:
     PER_SUBJECT_JOBS = []
     leaving_cert_full_job = None
 
-from oideachais.dagster_defs.assets.ui_suggestion import (
+from dagster_defs.assets.ui_suggestion import (
     ui_suggestion_asset,
     ui_suggestion_schedule,
 )
-from oideachais.dagster_defs.assets.senior_cycle_kg import (
+from .assets.senior_cycle_kg import (
     senior_cycle_knowledge_graph,
     lazy_extract_exam_paper,
 )
-from oideachais.cognee_integration.cross_stage_cognify import (
+from cognee_integration.cross_stage_cognify import (
     cross_stage_cognify,
 )
 
