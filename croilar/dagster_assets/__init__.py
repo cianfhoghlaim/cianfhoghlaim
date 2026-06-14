@@ -3,13 +3,9 @@
 Orchestrates DLT data ingestion, CocoIndex embedding,
 and artwork processing workflows.
 
-Assets:
-    - spotify_data: Ingest from Spotify API
-    - soundcloud_data: Scrape from SoundCloud
-    - label_releases: Scrape from record labels
-    - artwork_images: Download and cache artwork
-    - artwork_embeddings: CLIP embeddings in LanceDB
-    - artwork_analysis: Vision model analysis
+Assets are stream-driven: one (stream_id, source_type) asset per
+entry in the Stream registry. See `croilar/_shared/streams.py` and
+`croilar/dagster_assets/dlt_assets.py::build_stream_assets`.
 
 Usage:
     from dagster_assets import defs
@@ -32,10 +28,9 @@ from dagster_assets.cocoindex_assets import (
 )
 from dagster_assets.dlt_assets import (
     artwork_processing_asset,
-    label_ingestion_asset,
-    soundcloud_ingestion_asset,
-    # Manual DLT assets (avoiding dlt_assets decorator due to import-time issues)
-    spotify_ingestion_asset,
+    build_stream_assets,
+    make_dlt_asset,
+    motherduck_sync_asset,
 )
 from dagster_assets.schedules import (
     all_jobs,
@@ -47,12 +42,19 @@ from dagster_assets.schedules import (
     weekly_full_refresh_job,
 )
 
+# Re-export every stream-driven asset (e.g. `music__spotify`,
+# `teaching__linkedin`, `cv__filesystem`) at module scope so they can
+# be referenced directly by name. AssetDefinitions are not iterable as
+# `__all__` entries, so we expose them via the dunder pattern used by
+# dagster_assets.dlt_assets.
+
 __all__ = [
-    # DLT Assets (manual @asset definitions)
-    "spotify_ingestion_asset",
-    "soundcloud_ingestion_asset",
-    "label_ingestion_asset",
+    # Stream-driven asset factory
+    "make_dlt_asset",
+    "build_stream_assets",
+    # Composer assets
     "artwork_processing_asset",
+    "motherduck_sync_asset",
     # CocoIndex Assets
     "artwork_embedding_asset",
     "run_cocoindex_flow",
