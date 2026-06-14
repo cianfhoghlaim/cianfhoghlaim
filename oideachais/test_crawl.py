@@ -1,6 +1,6 @@
 import dlt
-from oideachais.data_platform.dlt_sources.ireland.ncca import ncca_source
-from oideachais.data_platform.dlt_sources.ireland.pdf_downloader import pdf_download_source
+from oideachais.dlt_sources.ireland.ncca import ncca_source
+from oideachais.dlt_sources.ireland.pdf_downloader import pdf_download_source
 import logging
 logging.basicConfig(level=logging.INFO)
 

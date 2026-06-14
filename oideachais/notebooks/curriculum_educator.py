@@ -253,7 +253,7 @@ def _(mo, os, run_query, sql_area):
     if str(project_root) not in sys.path:
         sys.path.insert(0, str(project_root))
 
-    from oideachais.data_platform.dlt_utils import get_duckdb_fallback_destination, get_dlt_destination
+    from oideachais.dlt_utils import get_duckdb_fallback_destination, get_dlt_destination
 
     mo.stop(not run_query.value, mo.md("*Click 'Execute' to run the SQL query against the active DuckLake environment.*"))
 

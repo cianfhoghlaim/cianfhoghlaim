@@ -6,7 +6,7 @@ This module provides DLT resources for each subject, yielding:
 - Subject PDFs (PDF URLs discovered from pages)
 
 Usage:
-    from oideachais.data_platform.dlt_sources.ireland.subjects import (
+    from oideachais.dlt_sources.ireland.subjects import (
         senior_cycle_source,
         junior_cycle_source,
         create_subject_source,
