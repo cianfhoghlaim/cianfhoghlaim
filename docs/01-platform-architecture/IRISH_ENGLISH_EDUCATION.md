@@ -10,6 +10,8 @@ supersedes:
   - docs/IRISH_ENGLISH_EDUCATION.md
 ccc_query_hints:
   - technical architecture for a bilingual i
+truth: partial
+
 ---
 
 # Technical Architecture for a Bilingual Irish/English Mathematics Education System

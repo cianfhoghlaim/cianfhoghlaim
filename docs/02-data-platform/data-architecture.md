@@ -18,6 +18,8 @@ ccc_query_hints:
   - risingwave streaming
   - olake cdc
   - storage patterns serial database executor
+truth: partial
+
 ---
 
 # Data Architecture

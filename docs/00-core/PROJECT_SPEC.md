@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Cianfhoghlaim Project Conventions
 
 ## Project Overview

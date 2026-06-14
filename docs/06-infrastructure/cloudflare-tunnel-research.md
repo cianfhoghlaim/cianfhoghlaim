@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Cloudflare Tunnel: Comprehensive Research Report
 
 ## Executive Summary

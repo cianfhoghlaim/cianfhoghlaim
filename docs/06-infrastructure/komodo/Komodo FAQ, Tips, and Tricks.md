@@ -8,6 +8,8 @@ created: 2025-12-05
 description: "Everything you wanted to know but were afraid to ask 🦎"
 tags:
   - "clippings"
+truth: partial
+
 ---
 A semi-organized list of FAQs, tips, and tricks for using Komodo. This is a follow-up to my [migration guide and Introduction for Komodo](https://blog.foxxmd.dev/posts/migrating-to-komodo)
 

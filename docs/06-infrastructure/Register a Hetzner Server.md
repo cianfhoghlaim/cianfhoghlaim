@@ -8,6 +8,8 @@ created: 2025-12-20
 description:
 tags:
   - "clippings"
+truth: partial
+
 ---
 [Skip to main content](https://docs.siderolabs.com/omni/omni-cluster-setup/registering-machines/#content-area)
 

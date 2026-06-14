@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Graph Visualization Tools and Patterns
 
 ## Executive Summary

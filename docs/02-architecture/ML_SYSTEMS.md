@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Comprehensive AI/ML Systems Architecture & Integration Guide
 
 **Document Version:** 1.0

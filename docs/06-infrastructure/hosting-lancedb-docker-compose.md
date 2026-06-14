@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 Hosting LanceDB with Docker Compose
 
 Setting up LanceDB in a Docker Compose stack is straightforward and similar to other services. The key

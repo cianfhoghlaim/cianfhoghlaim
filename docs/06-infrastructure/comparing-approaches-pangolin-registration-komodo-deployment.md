@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 Comparing Approaches for Pangolin
 
 Registration after Komodo Deployment

@@ -1,3 +1,0 @@
-# MERGED INTO AGNO_COMPREHENSIVE_REFERENCE.md
-
-This file's content has been merged into `AGNO_COMPREHENSIVE_REFERENCE.md`.

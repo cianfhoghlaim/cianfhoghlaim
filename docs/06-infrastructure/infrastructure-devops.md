@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Infrastructure & DevOps
 
 Comprehensive guide to container-first architecture using Dagger CI/CD, Komodo deployment orchestration, Pangolin zero-trust networking, and 1Password secrets management.

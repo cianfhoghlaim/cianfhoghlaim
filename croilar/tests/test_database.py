@@ -47,7 +47,7 @@ def test_query_returns_dicts(tmp_path: Path) -> None:
 
     with writer() as conn:
         conn.execute("CREATE TABLE t (id INTEGER, name VARCHAR)")
-        conn.execute("INSERT INTO t VALUES (1, 'aleyum'), (2, 'cianfhoghlaim')")
+        conn.execute("INSERT INTO t VALUES (1, 'music'), (2, 'teaching')")
 
     # Note: query() uses the singleton connection which doesn't see writes
     # from writer() because they're separate connections. So we test query
@@ -57,4 +57,4 @@ def test_query_returns_dicts(tmp_path: Path) -> None:
     fresh = duckdb.connect(str(db), read_only=True)
     rows = fresh.execute("SELECT * FROM t ORDER BY id").fetchall()
     assert len(rows) == 2
-    assert rows[0][1] == "aleyum"
+    assert rows[0][1] == "music"

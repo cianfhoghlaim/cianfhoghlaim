@@ -1,3 +1,7 @@
+---
+truth: superseded
+---
+
 # docs/ Agent Skill Consumability Audit
 
 > **Date:** 2026-06-06 | **Auditor:** Agent Skill Consolidation Project

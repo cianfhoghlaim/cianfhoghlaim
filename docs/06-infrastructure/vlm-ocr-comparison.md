@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Vision-Language Models & OCR Systems Comparison
 
 ## Executive Summary

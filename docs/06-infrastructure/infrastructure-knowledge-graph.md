@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Theme: Knowledge Graph Infrastructure & EdTech Backend
 
 ## Analysis of Similar Documents

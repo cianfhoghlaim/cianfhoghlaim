@@ -17,7 +17,7 @@ Key features:
 - Concurrent LanceDB Cloud + local lakehouse storage
 
 Usage:
-    from oideachais.data_platform.ocr.irish_htr_dataset import IrishHTRDatasetGenerator
+    from oideachais.ocr.irish_htr_dataset import IrishHTRDatasetGenerator
 
     generator = IrishHTRDatasetGenerator(
         output_dir="./irish_htr_dataset",

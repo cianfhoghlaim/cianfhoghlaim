@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Model Orchestration & Infrastructure
 
 ## Executive Summary

@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # **Architectural Convergence in Modern Self-Hosted Infrastructure: A Comprehensive Analysis of Visualization, Centralization, and Observability Strategies**
 
 ## **1\. Introduction: The Epistemology of the Modern Homelab**

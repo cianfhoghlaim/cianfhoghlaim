@@ -1,3 +1,7 @@
+---
+truth: superseded
+---
+
 # CocoIndex Code (ccc) Readiness Audit for docs/ Consolidation
 
 **Date**: 2026-06-06

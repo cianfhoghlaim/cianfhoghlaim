@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Specialized Pipelines
 
 ## Geospatial Linguistics & Web Automation/Archival

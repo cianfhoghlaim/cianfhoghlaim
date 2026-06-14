@@ -8,6 +8,8 @@ created: 2025-12-29
 description: "Guide to Securing Your Traefik SetupThis guide hardens your current Traefik configuration. Your setup uses one dynamic file: /etc/traefik/dynamic_config.yml. Make changes step by step. Restart Traefik after. Test on S…"
 tags:
   - "clippings"
+truth: partial
+
 ---
 [Guides & Tutorials](https://forum.hhf.technology/c/guides-tutorials/52)
 

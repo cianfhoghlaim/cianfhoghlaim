@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Text Alignment Tools for Irish-English
 
 ## Overview

@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Parallel Corpus Sources for Irish-English
 
 ## Overview

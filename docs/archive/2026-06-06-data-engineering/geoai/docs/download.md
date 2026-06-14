@@ -1,3 +1,0 @@
-# download module
-
-::: geoai.download

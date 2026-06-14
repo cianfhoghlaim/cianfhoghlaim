@@ -10,6 +10,8 @@ supersedes:
   - docs/TODO_AUDIT.md
 ccc_query_hints:
   - todo / fixme audit — 5 frontend workspac
+truth: superseded
+
 ---
 
 # TODO / FIXME Audit — 5 Frontend Workspaces

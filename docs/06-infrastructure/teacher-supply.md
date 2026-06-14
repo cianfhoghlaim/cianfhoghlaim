@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Celtic Language Teacher Supply Crisis
 
 ## Overview

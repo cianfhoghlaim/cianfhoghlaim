@@ -8,6 +8,8 @@ created: 2025-12-29
 description: "A2UI, a streaming protocol for Agent-Driven User Interfaces"
 tags:
   - "clippings"
+truth: partial
+
 ---
 [Skip to content](https://a2ui.org/introduction/agent-ui-ecosystem/#a2ui-in-the-agent-ecosystem)
 

@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Komodo
 
 Container orchestration and deployment management platform.

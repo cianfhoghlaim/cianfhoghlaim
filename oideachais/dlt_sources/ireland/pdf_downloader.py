@@ -8,7 +8,7 @@ This source:
 4. Tracks download status for incremental processing
 
 Usage:
-    from oideachais.data_platform.dlt_sources.ireland.pdf_downloader import pdf_download_source
+    from oideachais.dlt_sources.ireland.pdf_downloader import pdf_download_source
 
     pipeline = dlt.pipeline(...)
     pipeline.run(pdf_download_source(

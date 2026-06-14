@@ -8,6 +8,8 @@ created: 2025-12-05
 description: "Pangolin Blueprints are declarative configurations that allow you to define your resources and their settings in a structured format"
 tags:
   - "clippings"
+truth: partial
+
 ---
 Blueprints provide a way to define your Pangolin resources and their configurations in a structured, declarative format. This allows for easier management, version control, and automation of your resource setups.![](https://www.youtube.com/watch?v=lMauwwitSAE)
 

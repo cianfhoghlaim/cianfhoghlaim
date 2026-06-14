@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 [dev]
 mise
 uv

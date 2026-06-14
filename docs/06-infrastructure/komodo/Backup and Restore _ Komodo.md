@@ -7,6 +7,8 @@ created: 2025-12-15
 description: "Database backup and restore is actually a function of the Komodo CLI,"
 tags:
   - "clippings"
+truth: partial
+
 ---
 Starting from **v1.19.0**, new Komodo installs will automatically create the **Backup Core Database** [Procedure](https://komo.do/docs/resources/procedures#procedures), scheduled daily. If you don't have it, this is the Toml:
 

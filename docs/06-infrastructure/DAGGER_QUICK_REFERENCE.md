@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Dagger Patterns Quick Reference
 
 ## One-Page Cheat Sheet for Monorepo CI/CD

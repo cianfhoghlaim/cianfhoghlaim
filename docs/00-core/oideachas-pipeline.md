@@ -1,161 +1,62 @@
 ---
-name: oideachas-pipeline
-description: Celtic education curriculum pipeline for Irish, UK, and pan-Celtic content processing with DLT ingestion, CocoIndex embeddings, and Dagster orchestration.
+title: 'oideachas-pipeline (agent skill)'
+domain: 'core'
+status: 'stable'
+description: 'Agent skill description for the oideachas pipeline. Activation hints and project integration.'
+read_when: []
+updated: '2026-06-13'
+truth: sole
+ccc_query_hints:
+  - oideachas pipeline agent skill
 ---
 
-# Oideachas Pipeline
+# oideachas Pipeline
 
-**Version:** 1.0 | **Last Updated:** 2025-12
+**Version:** 1.0 | **Last Updated:** 2026-06-13
 
 ## Overview
 
-The oideachas (Irish: "education") pipeline processes Celtic education curriculum content from multiple sources (NCCA, SEC, UK DfE) and transforms it into searchable, AI-enhanced learning materials.
+The oideachas (Irish: "education") pipeline processes Celtic education
+curriculum content from multiple sources (NCCA, SEC, UK DfE, SQA, CCEA,
+WJEC, Estyn, SIMD) and transforms it into searchable, AI-enhanced
+learning materials. It lives in the `oideachais/` quadrant.
 
 | Feature | Description |
-|---------|-------------|
-| DLT Ingestion | Multi-source curriculum extraction |
-| CocoIndex Flows | Embedding generation for semantic search |
-| Dagster Assets | Orchestrated data transformation |
-| ADK Agents | Education-focused AI assistants |
+|---|---|
+| DLT ingestion | Multi-source curriculum extraction across 8 nations × 4 domains |
+| CocoIndex flows | Embedding generation for semantic search |
+| Dagster assets | Orchestrated data transformation; 30+ `@dlt_assets` |
+| BAML extraction | Type-safe LLM extraction for curriculum documents |
+| Cognee cognify | Knowledge graph memory for the unified dataset |
+| LanceDB | Vector search over the embedded curriculum |
 
-## When to Use This Skill
+## When to use this skill
 
 Activate when users need:
 
-- "Process curriculum documents from NCCA or SEC"
+- "Process curriculum documents from NCCA, SEC, DfE, CCEA, SQA, WJEC, Estyn, or SIMD"
 - "Generate embeddings for curriculum search"
-- "Build education knowledge graph"
-- "Create ADK agent for curriculum queries"
-- "Extract exam papers and marking schemes"
+- "Build the unified knowledge graph (Cognee + DuckLake)"
+- "Create a BAML extraction schema for a new source"
+- "Add a new country / domain to the unified lakehouse"
 
-## Project Integration
-
-### Data Flow Location
+## Project integration (post-restructure)
 
 | Component | Path |
-|-----------|------|
-| Main Pipeline | `sruth/oideachais/` |
-| DLT Sources | `sruth/oideachais/dlt_sources/` |
-| CocoIndex Flows | `sruth/oideachais/cocoindex_flows/` |
-| Dagster Definitions | `sruth/oideachais/dagster/` |
-| ADK Agents | `sruth/oideachais/agents/` |
+|---|---|
+| Main package | `oideachais/` |
+| DLT sources | `oideachais/dlt_sources/domains/{domain}/{nation}/` (canonical) + `oideachais/dlt_sources/{ireland,uk,crown_dependencies}/` (legacy shim) |
+| CocoIndex flows | `oideachais/cocoindex_flows/{domain}_embedding.py` |
+| Dagster definitions | `oideachais/dagster_defs/definitions.py` |
+| Dagster assets | `oideachais/dagster_defs/assets/{nation}/{domain}/` |
+| BAML client | `oideachais/baml_src/` (re-exported via `baml_client/`) |
+| Source registry | `oideachais/sources.yaml` |
+| SourceFactory | `oideachais/dlt_utils/source_factory.py` |
+| Storage layer | DuckLake (writes) + MotherDuck (reads); see `docs/02-data-platform/storage-mental-model.md` |
+| Cognee integration | `oideachais/cognee_integration/` |
+| API reader | `oideachais/api/ducklake_reader.py` |
 
-### Research References (taighde/)
-
-| Directory | Relevant Documents |
-|-----------|-------------------|
-| `taighde_scoil/` | Curriculum analysis, indexing strategies |
-| `taighde_teanga/` | Irish NLP resources, dialect handling |
-
-### ML Model Dependencies (meaisinfhoghlaim/)
-
-| Model | Usage |
-|-------|-------|
-| UCCIX-Llama2-13B | Irish text generation |
-| GaBERT | Irish embeddings |
-| Qwen2.5-Math-7B | Bilingual math reasoning |
-| ColPali | Visual document embeddings |
-
-## Core Concepts
-
-### 1. DLT Source Configuration
-
-```python
-from dlt import pipeline, source
-
-@dlt.source
-def ncca_curriculum():
-    """NCCA curriculum document source."""
-    yield dlt.resource(
-        fetch_specifications,
-        name="specifications",
-        write_disposition="merge",
-        primary_key="specification_id"
-    )
-```
-
-### 2. CocoIndex Embedding Flow
-
-```python
-import cocoindex as ci
-
-@ci.flow_def(name="curriculum_embeddings")
-def curriculum_embeddings(doc: ci.DataScope):
-    """Generate embeddings for curriculum documents."""
-    text = doc.content.text
-    embedding = ci.functions.embed(
-        text,
-        model="text-embedding-3-large",
-        batch_size=100  # REQUIRED: min batch size
-    )
-    return {"embedding": embedding}
-```
-
-### 3. Dagster Asset Definition
-
-```python
-from dagster import asset, AssetExecutionContext
-
-@asset(
-    group_name="curriculum",
-    compute_kind="dlt",
-)
-def curriculum_documents(context: AssetExecutionContext):
-    """Ingest NCCA curriculum documents."""
-    pipeline = dlt.pipeline(
-        pipeline_name="ncca_curriculum",
-        destination="duckdb",
-        dataset_name="curriculum"
-    )
-    # CRITICAL: Single-threaded DuckDB access
-    return pipeline.run(ncca_curriculum())
-```
-
-## Cianfhoghlaim-Specific Usage
-
-### Database Safety (from CLAUDE.md)
-
-**DuckDB:** SINGLE_THREADED_ONLY
-```python
-# Use SerialDatabaseExecutor for DuckDB access
-from sruth.storage import SerialDatabaseExecutor
-
-with SerialDatabaseExecutor() as db:
-    db.execute("SELECT * FROM curriculum")
-```
-
-**LanceDB:** MVCC-safe with automatic conflict resolution
-```python
-# LanceDB handles concurrent writes with retry/backoff
-import lancedb
-
-db = lancedb.connect("./embeddings")
-table = db.create_table("curriculum", data, mode="overwrite")
-```
-
-### Embedding Batching
-
-```python
-# REQUIRED: Batch minimum 100 texts per API call
-texts = [doc.content for doc in documents]
-embeddings = embed_batch(texts, batch_size=100)
-
-# For bulk inserts >50 rows, drop HNSW index first
-db.execute("ALTER TABLE curriculum DROP INDEX embedding_idx")
-# ... insert data ...
-db.execute("CREATE INDEX embedding_idx ON curriculum USING HNSW(embedding)")
-```
-
-## Best Practices
-
-1. **Always batch embeddings** - Minimum 100 texts per API call
-2. **Single-threaded DuckDB** - Use SerialDatabaseExecutor
-3. **Irish models** - Use UCCIX or GaBERT for Irish text
-4. **BAML validation** - Schema validation for LLM extraction
-
-## Resources
-
-- **OpenSpec:** `openspec/specs/oideachais-pipeline/spec.md`
-- **Dagster Docs:** https://docs.dagster.io
-- **CocoIndex Docs:** https://cocoindex.io/docs
-- **Related Skills:** dagster, cocoindex, dlt, lancedb, baml
+For the quadrant map and project identity, see
+[`docs/00-core/CLAUDE.md`](../../00-core/CLAUDE.md).
+For the canonical data-platform docs, see
+[`docs/02-data-platform/`](../../02-data-platform/).

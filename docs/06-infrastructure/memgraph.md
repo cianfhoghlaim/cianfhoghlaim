@@ -1,6 +1,8 @@
 ---
 name: memgraph
 description: Expert assistance for graph database development with Memgraph. Use when users need Cypher queries, graph data modeling, real-time analytics, streaming data processing, knowledge graphs, or GraphRAG applications.
+truth: partial
+
 ---
 
 # Memgraph - High-Performance Graph Database

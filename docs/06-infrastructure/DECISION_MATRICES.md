@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Infrastructure Decision Matrices
 
 > Technology comparison and selection guidance for the infrastructure stack

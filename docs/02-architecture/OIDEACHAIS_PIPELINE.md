@@ -2,536 +2,129 @@
 title: 'oideachais - Unified Celtic Education Platform'
 domain: 'architecture'
 status: 'stable'
-description: 'A unified data platform for Celtic language education, covering 6 nations and 6 Celtic languages with comprehensive observability and AI agent capabilities.'
+description: 'The post-restructure oideachais data lakehouse quadrant. DLT sources for Ireland, NI, EN, SCT, WLS, IOM, JEY, GGY across 4 domains (education, medicine, law, statistics).'
 read_when:
-  - looking for documentation on this topic
-updated: '2026-06-10'
+  - working in oideachais/
+  - adding a new DLT source or Dagster asset
+  - querying the unified lakehouse
+updated: '2026-06-13'
 supersedes:
   - docs/OIDEACHAIS_PIPELINE.md
+  - docs/02-architecture/OIDEACHAIS_PIPELINE.md (prior version)
+truth: sole
 ccc_query_hints:
-  - oideachais - unified celtic education pl
+  - oideachais data lakehouse
+  - dlt dagster education ireland uk
 ---
 
 # oideachais - Unified Celtic Education Platform
 
-A unified data platform for Celtic language education, covering 6 nations and 6 Celtic languages with comprehensive observability and AI agent capabilities.
+> For the project identity + quadrant map, see
+> [`docs/00-core/CLAUDE.md`](../../00-core/CLAUDE.md). This file is
+> the **authoritative architecture doc for `oideachais/`** — the data
+> lakehouse quadrant.
 
-## Overview
+## What this is
 
-This project merges three sruth pipelines into a single, observable platform:
-- **oideachas**: Irish education curriculum (NCCA, SEC, curriculumonline.ie)
-- **teanga**: Celtic language processing (Irish, Welsh, Scottish Gaelic, Manx, Cornish, Breton)
-- **oideachas_oileáin**: British Isles education statistics (England, Scotland, Wales, NI)
+A unified data platform for Celtic language education, covering **8 nations**
+(Ireland, Northern Ireland, England, Scotland, Wales, Isle of Man, Jersey,
+Guernsey) across **4 domains** (education, medicine, law, statistics) plus
+a `site_analysis` sidecar for firecrawl/browserbase MCP page fingerprinting.
 
-## Features
+| Feature | Detail |
+|---|---|
+| Data assets | 30+ Dagster `@dlt_assets` + 7 per-subject Leaving Cert assets |
+| DLT sources | 43 sources registered in `oideachais/sources.yaml` across 8 nations × 4 domains |
+| Asset key contract | `{nation}.{domain}.{entity}` (e.g. `ie.education.ncca`) |
+| Storage writes | DuckLake on Garage S3 (`oideachais.dlt_utils.destinations`) |
+| Storage reads | MotherDuck (`md:oideachais`) via marimo / SPA / agents |
+| Vector search | LanceDB (1024-dim BAAI/bge-m3 multilingual) |
+| Knowledge graph | Cognee (1 dataset per domain + `oideachais_cross_nation`) |
+| Embedding | CocoIndex (1 source.yaml-driven flow per domain) |
+| Cross-namespace | 0 absolute `oideachais.data_platform.*` imports (CI-enforced) |
 
-| Category | Features |
-|----------|----------|
-| **Data Assets** | 37+ Dagster assets across 4 domains (Ireland, UK, Celtic, Geospatial) |
-| **Data Sources** | 30+ DLT sources for curriculum, statistics, and language data |
-| **Geospatial** | DuckDB Spatial with 60k+ statistical area boundaries |
-| **Vector Search** | LanceDB semantic search across curriculum content |
-| **LLM Extraction** | BAML schemas for type-safe structured outputs |
-| **AI Agents** | ADK-based multi-agent system with domain routing |
-| **Observability** | Full Datadog, MLflow, Langfuse, Ragas, Kafka integration |
+## Topology (5 quadrants + 8 workspace members)
 
-## Architecture
-
-```
-                    ┌─────────────────────────────────────────────────────────────┐
-                    │                    Celtic Education Platform                  │
-                    └─────────────────────────────────────────────────────────────┘
-                                              │
-         ┌────────────────────────────────────┼────────────────────────────────────┐
-         │                                    │                                    │
-         ▼                                    ▼                                    ▼
-┌─────────────────┐              ┌─────────────────────┐              ┌─────────────────┐
-│   DLT Sources   │              │   Dagster Assets    │              │   ADK Agents    │
-│                 │              │                     │              │                 │
-│ • Ireland (8)   │──────────────│ • ireland_education │──────────────│ • RootAgent     │
-│ • UK (12)       │              │ • uk_education      │              │ • Curriculum    │
-│ • Celtic (6)    │              │ • celtic_language   │              │ • Geospatial    │
-│ • Geospatial(4) │              │ • geospatial        │              │ • Translation   │
-└─────────────────┘              │ • embeddings        │              │ • Corpus        │
-                                 │ • evaluation        │              │ • Statistics    │
-                                 └─────────────────────┘              └─────────────────┘
-                                              │
-         ┌────────────────────────────────────┼────────────────────────────────────┐
-         │                                    │                                    │
-         ▼                                    ▼                                    ▼
-┌─────────────────┐              ┌─────────────────────┐              ┌─────────────────┐
-│    Storage      │              │   CocoIndex Flows   │              │  Observability  │
-│                 │              │                     │              │                 │
-│ • DuckDB        │◄─────────────│ • curriculum_embed  │─────────────►│ • Datadog APM   │
-│ • LanceDB       │              │ • translation       │              │ • Datadog LLMObs│
-│ • Memgraph      │              │ • geospatial_index  │              │ • MLflow        │
-└─────────────────┘              └─────────────────────┘              │ • Langfuse      │
-                                                                      │ • Ragas         │
-                                                                      │ • Kafka         │
-                                                                      └─────────────────┘
-```
-
-## Directory Structure
+This is **one** of the 5 quadrants. For the full picture, see
+[`docs/00-core/CLAUDE.md`](../../00-core/CLAUDE.md).
 
 ```
-sruth/oideachais/
-├── api/                  # FastAPI application with Datadog APM
-│   ├── main.py           # App with observability lifespan
-│   └── routes/           # API endpoints
-├── agents/               # ADK-based AI agents
-│   ├── adk/
-│   │   ├── root_agent.py # Orchestrator with query routing
-│   │   ├── curriculum_agent.py
-│   │   ├── geospatial_agent.py
-│   │   ├── translation_agent.py
-│   │   ├── corpus_agent.py
-│   │   └── statistics_agent.py
-│   └── tools/            # Agent tools for search/retrieval
-├── cocoindex_flows/      # Vector embedding pipelines
-│   ├── curriculum_embedding.py  # Batch embedding (100+ min)
-│   ├── curriculum_translation.py
-│   └── geospatial_indexing.py
-├── dagster_defs/         # Dagster asset orchestration
+oideachais/                                   ← this quadrant
+├── dlt_sources/
+│   ├── domains/                              ← canonical (Phase 5+)
+│   │   ├── education/{ie,ni,en,sct,wls,iom,jey,ggy}/
+│   │   ├── medicine/{ie,ni,en,sct,wls}/
+│   │   ├── law/{ie,ni,en,sct,wls}/            ← statutory only
+│   │   ├── statistics/                         ← future
+│   │   └── site_analysis.py
+│   ├── ireland/, uk/, crown_dependencies/    ← legacy re-export shims
+│   ├── common/                                ← firecrawl_source, http_factories, shared.utils shim
+│   └── celtic/, geospatial/, teanga/         ← vendor-copied + extracted
+├── dagster_defs/
+│   ├── definitions.py
 │   ├── assets/
-│   │   ├── ie_education_assets.py
-│   │   ├── uk_education_assets.py
-│   │   ├── celtic_language_assets.py
-│   │   ├── geospatial_assets.py
-│   │   ├── embedding_assets.py
-│   │   └── search_assets.py
-│   ├── resources.py
-│   └── schedules.py
-├── dlt_sources/          # Data ingestion sources
-│   ├── ireland/          # NCCA, SEC, curriculumonline
-│   ├── uk/               # England, Scotland, Wales, NI
-│   ├── celtic/           # Language resources (Dúchas, Tearma)
-│   └── geospatial/       # Boundaries and locations
-├── kafka/                # Event streaming
-│   ├── producer.py       # Confluent Kafka producer
-│   ├── consumer.py       # Consumer with observability
-│   ├── topics.py         # 25+ topic configurations
-│   └── schema_registry.py # Avro schemas
-├── observability/        # Unified observability stack
-│   ├── __init__.py       # All exports
-│   ├── agent_tracing.py  # Datadog LLMObs decorators
-│   ├── mlflow_config.py  # MLflow experiments
-│   ├── langfuse_config.py # LLM cost tracking
-│   ├── ragas_evaluator.py # RAG quality evaluation
-│   └── fastapi_middleware.py # Datadog APM
-├── storage/              # Database configurations
-│   ├── duckdb.py         # Single-threaded executor
-│   └── lancedb.py        # Vector store
-└── alignment/            # Bilingual en/ga alignment
+│   │   ├── ie/education/                      ← domain-first path
+│   │   │   └── leaving_cert/
+│   │   ├── ni/, en/, sct/, wls/, iom/, jey/, ggy/
+│   │   └── site_analysis/                     ← Phase 8
+│   ├── sensors/, schedules/, resources.py
+│   ├── partitions_v2.py
+│   └── asset_checks.py
+├── dlt_utils/
+│   ├── source_factory.py                      ← 7-method SourceFactory
+│   ├── destinations.py                        ← DuckLake/R2 factory
+│   └── ...
+├── cocoindex_flows/                           ← BAAI/bge-m3 flows
+├── cognee_integration/                        ← cognify assets
+├── agents/                                    ← ADK + AGNO + BAML
+├── ocr/                                       ← 10 OCR/HTR models
+├── site_analysis/                             ← firecrawl + browserbase MCP
+│   ├── extractor.py
+│   ├── _stubs/                                ← USE_LOCAL_SCRAPES=true mode
+│   └── baml_src/site_analysis.baml            ← BAML schema
+├── baml_src/                                  ← type-safe LLM extraction
+├── sources.yaml                               ← canonical source registry
+└── tests/                                     ← 30 passing pytests
 ```
 
-## Quick Start
-
-### 1. Install Dependencies
-
-```bash
-# Clone and navigate
-cd sruth/oideachais
-
-# Install with uv
-uv sync
-
-# Install with observability extras
-uv sync --extra observability
-
-# Install with Kafka
-uv sync --extra kafka
-```
-
-### 2. Configure Environment
-
-```bash
-# Copy example environment
-cp .env.local.example .env.local
-
-# Edit with your credentials
-# Required: DATADOG, MLFLOW, LANGFUSE, KAFKA configs
-```
-
-### 3. Initialize Storage
-
-```bash
-# Create database schemas
-python -m storage.init_schemas
-
-# Initialize LanceDB tables
-python -m storage.init_lancedb
-```
-
-### 4. Start Services
-
-```bash
-# Start Dagster UI (asset orchestration)
-dagster dev -m dagster_defs.definitions
-
-# Start FastAPI (in another terminal)
-uvicorn api.main:app --reload
-
-# Start Kafka consumers (optional)
-python -m kafka.consumer
-```
-
-## Observability Stack
-
-### Datadog APM & LLMObs
-
-Full distributed tracing and LLM observability:
-
-```python
-from observability import (
-    setup_datadog_apm,
-    trace_adk_agent,
-    GeminiLLMSpan,
-    annotate_span,
-)
-
-# Instrument FastAPI
-app = FastAPI()
-setup_datadog_apm(app)
-
-# Trace agents
-@trace_adk_agent("curriculum_search")
-async def search_curriculum(query: str):
-    with GeminiLLMSpan("gemini-2.0-flash", query) as span:
-        response = await llm.generate(query)
-        span.set_response(response, input_tokens=100, output_tokens=200)
-        return response
-
-# Annotate spans with metadata
-annotate_span(
-    input_data=query,
-    output_data=response,
-    metadata={"domain": "curriculum"},
-    metrics={"latency_ms": 150.0}
-)
-```
-
-### MLflow Experiment Tracking
-
-Track model experiments and metrics:
-
-```python
-from observability import mlflow_run, log_agent_metrics
-
-with mlflow_run("curriculum_embedding", tags={"nation": "ireland"}):
-    # Run embedding pipeline
-    result = flow.run()
-
-    # Log metrics
-    log_agent_metrics(
-        agent_name="embedding",
-        query="ireland_curriculum",
-        response_length=result["chunks"],
-        latency_ms=1500,
-        token_count=50000,
-    )
-```
-
-### Langfuse LLM Cost Tracking
-
-Track LLM costs and traces:
-
-```python
-from observability import langfuse_trace, create_generation
-
-with langfuse_trace("agent_query", user_id="user123") as trace:
-    response = await agent.process(query)
-
-    create_generation(
-        trace,
-        name="curriculum_search",
-        model="gemini-2.0-flash",
-        input_messages=[{"role": "user", "content": query}],
-        output=response.content,
-        usage={"prompt_tokens": 100, "completion_tokens": 200},
-    )
-```
-
-### Ragas RAG Evaluation
-
-Evaluate RAG quality:
-
-```python
-from observability import RagasEvaluator, EvaluationSample
-
-evaluator = RagasEvaluator()
-
-samples = [
-    EvaluationSample(
-        question="What are Junior Cycle learning outcomes?",
-        answer=generated_answer,
-        contexts=retrieved_contexts,
-        ground_truth="Expected answer",
-    )
-]
-
-results = await evaluator.evaluate(samples)
-# Returns: faithfulness, answer_relevancy, context_precision
-```
-
-### Confluent Kafka Streaming
-
-Stream events to Kafka:
-
-```python
-from kafka import get_producer, AGENT_QUERIES, AGENT_RESPONSES
-
-producer = get_producer()
-
-# Publish query event
-producer.produce(
-    AGENT_QUERIES.name,
-    key=session_id,
-    value={
-        "query_id": query_id,
-        "query": user_query,
-        "agent_name": "root_agent",
-    }
-)
-
-# Publish response event
-producer.produce(
-    AGENT_RESPONSES.name,
-    key=session_id,
-    value={
-        "response_id": response_id,
-        "content": response.content[:2000],
-        "latency_ms": latency,
-    }
-)
-producer.flush()
-```
-
-## Critical Constraints
-
-### DuckDB Single-Threaded Access
-
-DuckDB MUST use single-threaded access to prevent segfaults:
-
-```python
-from storage import SerialDatabaseExecutor
-
-executor = SerialDatabaseExecutor()
-result = await executor.execute(query)
-```
-
-### Embedding Batch Minimum
-
-Embeddings MUST be batched with minimum 100 per call:
-
-```python
-from cocoindex_flows import MIN_EMBEDDING_BATCH_SIZE, HNSW_DROP_THRESHOLD
-
-# MANDATORY: Batch minimum 100 (100x performance difference)
-# Unbatched 1000 texts: ~100s
-# Batched 1000 texts: ~1s
-
-config = EmbeddingConfig(
-    batch_size=100,  # MANDATORY minimum
-)
-```
-
-### HNSW Index Management
-
-Drop indexes before bulk inserts >50 rows:
-
-```python
-from cocoindex_flows import HNSW_DROP_THRESHOLD
-
-if row_count > HNSW_DROP_THRESHOLD:
-    # Drop index before insert
-    table.drop_index("vector_idx")
-
-    # Bulk insert
-    table.add(embeddings)
-
-    # Recreate index
-    table.create_index("vector_idx", index_type="IVF_HNSW")
-```
-
-## Kafka Topics
-
-| Topic | Purpose | Key |
-|-------|---------|-----|
-| `edu.curriculum.pages` | Curriculum page events | document_id |
-| `edu.curriculum.updates` | Curriculum update notifications | source |
-| `edu.exams.papers` | Exam paper events | exam_id |
-| `celtic.language.translations` | Translation events | source_lang |
-| `celtic.folklore.documents` | Folklore document events | collection |
-| `celtic.terminology.updates` | Terminology updates | term_id |
-| `geo.boundaries.updates` | Boundary data updates | nation |
-| `geo.schools.locations` | School location events | school_id |
-| `ai.embeddings.created` | Embedding creation events | table_name |
-| `ai.agent.queries` | Agent query events | session_id |
-| `ai.agent.responses` | Agent response events | session_id |
-| `eval.rag.scores` | RAG evaluation scores | evaluation_id |
-| `eval.agent.metrics` | Agent performance metrics | agent_name |
-
-## Environment Variables
-
-See `.env.local.example` for complete reference. Key variables:
-
-### Datadog
-```bash
-DD_API_KEY=your-api-key
-DD_SITE=datadoghq.eu
-DD_SERVICE=oideachais
-DD_LLMOBS_ENABLED=1
-DD_LLMOBS_ML_APP=celtic-education
-```
-
-### MLflow
-```bash
-MLFLOW_TRACKING_URI=http://localhost:5000
-MLFLOW_EXPERIMENT_NAME=oideachais
-```
-
-### Langfuse
-```bash
-LANGFUSE_HOST=https://cloud.langfuse.com
-LANGFUSE_PUBLIC_KEY=pk-...
-LANGFUSE_SECRET_KEY=sk-...
-```
-
-### Kafka
-```bash
-CONFLUENT_BOOTSTRAP_SERVERS=pkc-xxx.region.cloud:9092
-CONFLUENT_API_KEY=your-api-key
-CONFLUENT_API_SECRET=your-api-secret
-CONFLUENT_SCHEMA_REGISTRY_URL=https://psrc-xxx.region.cloud
-```
-
-### Google Cloud (ADK)
-```bash
-GOOGLE_CLOUD_PROJECT=your-project-id
-GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
-```
-
-## ADK Agents
-
-### Root Agent
-
-The root agent orchestrates queries to specialized domain agents:
-
-```python
-from agents import create_root_agent, AgentContext
-
-agent = create_root_agent()
-
-context = AgentContext(
-    query="What are the learning outcomes for Junior Cycle Irish?",
-    language="en",
-    nation="ireland",
-)
-
-response = await agent.process(context)
-print(f"Domain: {response.domain}")  # curriculum
-print(f"Response: {response.content}")
-print(f"Sources: {len(response.sources)}")
-```
-
-### Domain Agents
-
-| Agent | Domain | Capabilities |
-|-------|--------|--------------|
-| CurriculumAgent | curriculum | Search learning outcomes, subjects, exams |
-| GeospatialAgent | geospatial | Map queries, school locations, boundaries |
-| TranslationAgent | translation | Celtic language translation |
-| CorpusAgent | corpus | Folklore, stories, cultural content |
-| StatisticsAgent | statistics | Education statistics, comparisons |
-
-### Query Routing
-
-Queries are routed based on keywords and LLM classification:
-
-```python
-# Keyword routing (fast)
-"curriculum" -> CurriculumAgent
-"map", "location" -> GeospatialAgent
-"translate" -> TranslationAgent
-"folklore", "story" -> CorpusAgent
-"statistics", "compare" -> StatisticsAgent
-
-# LLM routing (fallback for ambiguous queries)
-Gemini 2.0 Flash classifies intent
-```
-
-## Development
-
-### Running Tests
-
-```bash
-# Run all tests
-uv run pytest tests/
-
-# Run with coverage
-uv run pytest tests/ --cov=oideachais
-
-# Run specific test
-uv run pytest tests/test_agents.py -k "test_root_agent"
-```
-
-### Linting
-
-```bash
-# Run ruff
-uv run ruff check .
-
-# Auto-fix
-uv run ruff check --fix .
-```
-
-### Type Checking
-
-```bash
-uv run mypy oideachais/
-```
-
-## Deployment
-
-### Docker
-
-```bash
-# Build image
-docker build -t oideachais:latest .
-
-# Run with environment
-docker run -d \
-  --env-file .env.local \
-  -p 8000:8000 \
-  oideachais:latest
-```
-
-### Kubernetes
-
-See `bonneagar/oideachais/` for Kubernetes manifests.
-
-## Credits & Resources
-
-| Resource | Credits | Use For |
-|----------|---------|---------|
-| Modal | $280 | Serverless fine-tuning |
-| HuggingFace | Pro + $50 | Model hosting |
-| Google Cloud | £200 + $100 | Gemini API, compute |
-| Confluent | $400/mo | Kafka streaming |
-| Datadog | Trial | APM, LLMObs |
-
-## Related Documentation
-
-- [NCCA Curriculum](https://curriculumonline.ie)
-- [SEC Examinations](https://examinations.ie)
-- [Dúchas.ie Folklore](https://duchas.ie)
-- [Tearma.ie Terminology](https://tearma.ie)
-- [TanStack Start](https://tanstack.com/start)
-- [Google ADK](https://developers.google.com/agent-developer-kit)
-
-## Local Deployment UI Screenshots
-### Dagster Local Pipeline
-![Dagster UI](/docs/images/dagster_ui.png)
-
-### MotherDuck Integration
-![MotherDuck UI](/docs/images/motherduck_ui.png)
+## How the 4 layers compose
+
+For every source in `sources.yaml`:
+
+1. **DLT ingestion** (`oideachais/dlt_sources/domains/{domain}/{nation}/{entity}.py`)
+   — pulls from the public endpoint, yields page/record dicts, applies
+   `merge` write disposition on `{url|id}`.
+2. **DuckLake destination** (`oideachais/dlt_utils/destinations.py`)
+   — Parquet on Garage S3, Postgres catalog; one schema per
+   `oideachais.{domain}.{nation}`.
+3. **LanceDB embedding** (`oideachais/cocoindex_flows/`)
+   — `bge-m3` 1024-dim; ≥100-text batches; `bge-m3` 1024-dim per
+   `oideachais/cocoindex_flows/{domain}_embedding.py`.
+4. **Cognee cognify** (`oideachais/cognee_integration/`)
+   — 1 dataset per domain; cross-nation edges in
+   `oideachais_cross_nation`.
+
+## Where the canonical docs live
+
+- Data architecture: [`docs/02-data-platform/data-architecture.md`](../../02-data-platform/data-architecture.md)
+- DLT pipeline patterns: [`docs/02-data-platform/dlt-pipelines.md`](../../02-data-platform/dlt-pipelines.md)
+- Dagster orchestration: [`docs/02-data-platform/dagster-orchestration.md`](../../02-data-platform/dagster-orchestration.md)
+- Cross-domain asset-key contract: [`docs/02-data-platform/cross-domain-registry.md`](../../02-data-platform/cross-domain-registry.md)
+- Storage mental model: [`docs/02-data-platform/storage-mental-model.md`](../../02-data-platform/storage-mental-model.md)
+
+## OpenSpec change record
+
+| Change | Status |
+|---|---|
+| `lateralise-british-isles-domains` | scaffold (Phase 5+ shipped; pending archive) |
+| `leaving-cert-2026` | scaffold (per-subject assets + LC SPA live) |
+| `cianfhoghlaim-oideachais-baml-first` | scaffold (BAML pipeline integration) |
+| `consolidate-external-libs-into-tuatha` | implemented (post-monorepo-restructure-v2) |
+| `monorepo-restructure-v2` | implemented (the 5-quadrant topology you see now) |
+| `docs-restructuring` | implemented (the 7-domain canonical tree) |
+
+## See also
+
+- [`oideachais/README.md`](../../../oideachais/README.md) — runtime README
+- [`oideachais/PIPELINE_OPERATIONS.md`](../../../oideachais/PIPELINE_OPERATIONS.md) — operational runbook
+- [`oideachais/CHANGELOG.md`](../../../oideachais/CHANGELOG.md) — release notes

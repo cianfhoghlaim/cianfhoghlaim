@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Pangolin
 
 Identity-aware VPN with WireGuard and Traefik integration for secure infrastructure access.

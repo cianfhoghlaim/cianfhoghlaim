@@ -10,6 +10,8 @@ supersedes:
   - docs/cloudflare-r2.md
 ccc_query_hints:
   - cloudflare r2 — zero-egress object stora
+truth: partial
+
 ---
 
 # Cloudflare R2 — Zero-Egress Object Storage SDK

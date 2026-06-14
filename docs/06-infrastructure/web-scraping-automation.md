@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Web Scraping & Automation
 
 Comprehensive guide to agentic web scraping infrastructure for Celtic language data acquisition.

@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 Generating a TypeScript Client for the Pangolin
 
 API from its OpenAPI Spec

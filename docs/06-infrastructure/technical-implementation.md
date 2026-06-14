@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Technical Implementation
 
 ## Data Source Management & Anti-Bot Crawling Stack

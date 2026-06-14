@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Frontend Integration for Crypto Analytics Platform
 
 ## Overview

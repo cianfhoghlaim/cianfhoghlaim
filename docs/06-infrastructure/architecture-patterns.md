@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Pangolin Project: Architecture Patterns & Best Practices
 
 ## Architecture Overview

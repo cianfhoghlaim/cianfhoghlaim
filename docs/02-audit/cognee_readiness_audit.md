@@ -1,3 +1,7 @@
+---
+truth: superseded
+---
+
 # Cognee Knowledge Graph Readiness Audit
 
 **Date:** 2026-06-06  

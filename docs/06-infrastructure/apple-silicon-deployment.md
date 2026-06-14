@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Apple Silicon LLM Deployment
 
 ## Executive Summary

@@ -10,6 +10,8 @@ supersedes:
   - docs/DOCUMENT_PROCESSING.md
 ccc_query_hints:
   - document processing pipeline for cryptoc
+truth: partial
+
 ---
 
 # Document Processing Pipeline for Cryptocurrency Analytics

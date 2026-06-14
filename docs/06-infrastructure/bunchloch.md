@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Bunchloch Infrastructure Stack
 
 Bunchloch is the integrated self-hosted infrastructure platform for the hackathon project. It combines container orchestration, zero-trust networking, Git/package hosting, and secrets management into a cohesive stack.

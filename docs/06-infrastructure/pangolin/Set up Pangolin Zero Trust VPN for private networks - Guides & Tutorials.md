@@ -8,6 +8,8 @@ created: 2025-12-29
 description: "Pangolin Zero-Trust VPN GuideComplete setup guide for private resource access with real-world examples. What is Pangolin VPN?Pangolin 1.13+ introduces Zero-Trust Network Access (ZTNA). Access private resources like S…"
 tags:
   - "clippings"
+truth: partial
+
 ---
 [Guides & Tutorials](https://forum.hhf.technology/c/guides-tutorials/52)
 

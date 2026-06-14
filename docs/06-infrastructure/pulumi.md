@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Pulumi Infrastructure as Code
 
 Multi-cloud infrastructure provisioning with TypeScript.

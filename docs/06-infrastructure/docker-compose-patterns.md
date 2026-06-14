@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Docker Compose Patterns for AI Infrastructure
 
 ## Executive Summary

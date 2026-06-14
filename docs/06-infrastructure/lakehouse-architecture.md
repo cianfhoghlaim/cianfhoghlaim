@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Real-Time Open Data Lakehouse Architecture
 
 ## Executive Summary

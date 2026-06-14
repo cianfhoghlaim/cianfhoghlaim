@@ -1,7 +1,0 @@
-{
-  "measures": [
-    "Users.avgAge",
-    "Users.medianAge",
-    "Users.p95Age"
-  ]
-}

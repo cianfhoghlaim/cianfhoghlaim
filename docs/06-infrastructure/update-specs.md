@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Update Specs
 
 Trigger the research synthesis workflow for a specific file.

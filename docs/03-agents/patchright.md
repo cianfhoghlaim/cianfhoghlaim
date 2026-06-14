@@ -10,6 +10,8 @@ supersedes:
   - docs/patchright.md
 ccc_query_hints:
   - patchright — stealth browser automation
+truth: partial
+
 ---
 
 # Patchright — Stealth Browser Automation

@@ -10,6 +10,8 @@ supersedes:
   - docs/MULTI_AGENT_PRODUCTION.md
 ccc_query_hints:
   - building production multi-agent systems:
+truth: partial
+
 ---
 
 # Building Production Multi-Agent Systems: Complete Implementation Guide

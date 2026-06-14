@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # **Architecting the Polymath Studio: A Full-Stack Blueprint for Game Development and Audio Production Portfolios**
 
 ## **1\. Executive Overview: The Convergence of Interactive Disciplines**

@@ -8,6 +8,8 @@ created: 2025-12-20
 description: "🦎 a tool to build and deploy software on many servers 🦎 - Release Komodo v2.0.0-dev-102 · moghtech/komodo"
 tags:
   - "clippings"
+truth: partial
+
 ---
 [Skip to content](https://github.com/moghtech/komodo/releases/tag/#start-of-content)
 

@@ -2,122 +2,124 @@
 title: 'Oideachais Pipeline Capability'
 domain: 'architecture'
 status: 'stable'
-description: 'Celtic education curriculum pipeline processing Irish, UK, and pan-Celtic educational content with AI-enhanced learning experiences.'
+description: 'Capability spec for the oideachais data lakehouse. See docs/00-core/CLAUDE.md for the quadrant map and docs/02-data-platform/ for the canonical data-platform docs.'
 read_when:
-  - looking for documentation on this topic
-updated: '2026-06-10'
+  - working in oideachais/
+  - adding a new source or asset
+truth: sole
+updated: '2026-06-13'
 supersedes:
   - docs/OIDEACHAIS_SPEC.md
 ccc_query_hints:
-  - oideachais pipeline capability
+  - oideachais capability requirements
 ---
 
 # Oideachais Pipeline Capability
 
 ## Overview
 
-Celtic education curriculum pipeline processing Irish, UK, and pan-Celtic educational content with AI-enhanced learning experiences.
-
-| Feature | Description |
-|---------|-------------|
-| DLT Ingestion | NCCA, SEC, UK curriculum sources |
-| CocoIndex Transform | Embedding generation |
-| Knowledge Graph | Prerequisite mapping in Memgraph |
-| ADK Agents | Education-focused AI agents |
+The oideachais data lakehouse is one of the 5 quadrants in the
+Cianfhoghlaim monorepo. This file is the **capability spec** for it.
+For the architecture / topology / how-it-works, see
+[`docs/02-architecture/OIDEACHAIS_PIPELINE.md`](OIDEACHAIS_PIPELINE.md)
+and [`docs/02-data-platform/data-architecture.md`](../02-data-platform/data-architecture.md).
 
 ## Requirements
 
-### Requirement: Curriculum Ingestion
+### Requirement: Domain-First Asset-Key Convention
 
-The system SHALL ingest curriculum documents from multiple sources.
+The system SHALL identify every asset by a domain-first key tuple
+`["{nation_code}", "{domain}", "{entity_slug}", ...]`.
 
-#### Scenario: Irish Curriculum
-- **GIVEN** NCCA curriculum documents
-- **WHEN** DLT pipeline runs
-- **THEN** documents are extracted and stored in DuckDB
+- `nation_code` ∈ `ie | ni | en | sct | wls | iom | jey | ggy`
+- `domain` ∈ `education | medicine | law | statistics | site_analysis`
 
-#### Scenario: UK Curriculum
-- **GIVEN** UCAS, DfE, ONS datasets
-- **WHEN** DLT pipeline runs
-- **THEN** data is normalized and stored
+The source of truth for asset keys is `oideachais/sources.yaml`. The
+legacy `["ireland", …]` and `["uk", "education", "northern_ireland", …]`
+keys remain resolvable via a one-shot backwards-compat alias in
+`oideachais/dagster_defs/definitions.py`.
 
-#### Scenario: Exam Papers
-- **GIVEN** SEC exam papers and marking schemes
-- **WHEN** extraction pipeline runs
-- **THEN** questions and answers are aligned
+#### Scenario: Domain-first key for an Irish education asset
+- **GIVEN** `oideachais/dagster_defs/assets/ie/education/curriculum_dlt_assets.py::create_cycle_asset("senior_cycle")`
+- **WHEN** registered with the SourceFactory
+- **THEN** the new key is `["ie", "education", "senior_cycle"]`
+- **AND** the legacy `["ireland", "curriculum", "senior_cycle"]` is still resolvable
 
-### Requirement: Embedding Generation
+#### Scenario: Domain-first key for a Northern Ireland CCEA asset
+- **GIVEN** `oideachais/dlt_sources/uk/northern_ireland/ccea_curriculum.py::ni_curriculum_source`
+- **WHEN** the SourceFactory emits the corresponding Dagster asset
+- **THEN** the new key is `["ni", "education", "ccea", "pages"]`
+- **AND** the legacy `["uk", "education", "northern_ireland", "ccea_pages"]` is still resolvable
 
-The system SHALL generate embeddings via CocoIndex for semantic search.
+### Requirement: Single `oideachais` DB with per-domain schemas
 
-#### Scenario: Document Embeddings
-- **GIVEN** curriculum documents
-- **WHEN** CocoIndex flow runs
-- **THEN** embeddings are stored in LanceDB with HNSW index
+The system SHALL register a single `md:oideachais` (MotherDuck) database
+and a single `ducklake:oideachais` (Garage S3) catalog, with schemas of
+the form `oideachais.{domain}.{nation}`. DLT `dataset_name` MAY remain
+per-source for fine-grained state, but the underlying DuckLake schema
+SHALL be the dotted-triple.
 
-#### Scenario: Bilingual Embeddings
-- **GIVEN** English and Irish content
-- **WHEN** embedding flow runs
-- **THEN** both languages are indexed with language tags
+#### Scenario: One attach, one query
+- **GIVEN** the API reader at `oideachais/api/ducklake_reader.py`
+- **WHEN** the SPA requests a Leaving Cert subject
+- **THEN** the reader does a single `ATTACH 'oideachais'` (or `ducklake:oideachais`)
+- **AND** reads `oideachais.education.ie.leaving_cert WHERE subject = ?`
 
-### Requirement: Knowledge Graph
+#### Scenario: New domain schema is auto-created
+- **GIVEN** a new DLT run for `oideachais/dlt_sources/domains/medicine/ie/hse.py`
+- **WHEN** the pipeline runs
+- **THEN** DuckLake creates the schema `oideachais.medicine.ie` on first write
+- **AND** the table is discoverable by `marimo` against `md:oideachais`
 
-The system SHALL maintain curriculum knowledge graph for prerequisites.
+### Requirement: Test-Covered Pipeline Graph
 
-#### Scenario: Prerequisite Mapping
-- **GIVEN** curriculum topics
-- **WHEN** graph is built
-- **THEN** prerequisite relationships are captured in Memgraph
+The system SHALL have automated pytest coverage of the DLT/Dagster asset
+graph, runnable under `USE_LOCAL_SCRAPES=true` against a temporary
+DuckLake fixture (no live network, no production schema mutation).
 
-#### Scenario: Topic Hierarchy
-- **GIVEN** subject areas
-- **WHEN** hierarchy is built
-- **THEN** topics are organized by strand and level
+#### Scenario: All Phase 1b tests pass in CI
+- **GIVEN** `bun run test` (or `mise run test`)
+- **WHEN** the test runner executes
+- **THEN** all 16+ pytests in `oideachais/tests/`, `tuatha/tests/`,
+  `croilar/tests/`, `tests/sources/` are green
 
-### Requirement: Agent Integration
+#### Scenario: Cross-namespace guard
+- **GIVEN** a DLT source under `oideachais/dlt_sources/`
+- **WHEN** the cross-namespace test runs
+- **THEN** the test fails if any source imports `oideachais.data_platform.*`
 
-The system SHALL support ADK education agents.
+### Requirement: Source-Factory Single Source of Truth
 
-#### Scenario: Curriculum Query
-- **GIVEN** student query
-- **WHEN** agent processes
-- **THEN** curriculum-aware response is generated
+The system SHALL maintain `oideachais/sources.yaml` as the canonical
+source registry, and `oideachais/dlt_utils/source_factory.py` as the
+single 7-method factory that turns a YAML id into a runtime artefact.
 
-#### Scenario: Assessment Help
-- **GIVEN** exam question
-- **WHEN** agent analyzes
-- **THEN** marking scheme guidance is provided
+#### Scenario: Adding a new source requires only a YAML edit
+- **GIVEN** a new entry in `sources.yaml` for a new public endpoint
+- **WHEN** the operator runs `python -m oideachais.sources.sources_validation`
+- **THEN** the report shows: DLT source present, Dagster asset present,
+  LanceDB table wired, Cognee dataset wired, marimo notebook present,
+  pytest present (or "missing artefact" for the follow-on work)
 
-## Components
+#### Scenario: Bad YAML entry rejected at load time
+- **GIVEN** an entry with an unknown `kind` or unknown `nation_code`
+- **WHEN** `SourceFactory.from_yaml(...)` is called
+- **THEN** the factory raises `pydantic.ValidationError` with the offending field
 
-| Component | Path | Purpose |
-|-----------|------|---------|
-| `dlt_sources/` | `sruth/oideachais/dlt_sources/` | Ireland, UK, Celtic, geospatial |
-| `cocoindex_flows/` | `sruth/oideachais/cocoindex_flows/` | Embedding pipelines |
-| `dagster_defs/` | `sruth/oideachais/dagster/` | Asset orchestration |
-| `agents/` | `sruth/oideachais/agents/` | ADK education agents |
-| `storage/` | `sruth/oideachais/storage/` | DuckDB, LanceDB, Memgraph |
+### Requirement: Law Domain is Statutory Only (MVP)
 
-## Constraints
+The system SHALL provide a `law/` domain in `sources.yaml` containing
+**only statutory** law sources: `irish_statute_book` (IE),
+`legislation` (NI/EN/SCT/WLS), `doj` (IE), `lawreform` (IE). Case law
+(court judgments, tribunals, BAILII mirrors) SHALL NOT be ingested by
+this change.
 
-From `.claude/CONSTRAINTS.md`:
-- **DuckDB:** SINGLE_THREADED_ONLY (concurrent access = segfault/corruption)
-- **LanceDB:** MVCC safe with SerialDatabaseExecutor
-- **Embeddings:** Batch minimum 100 texts per API call
-- **HNSW:** Drop indexes before bulk inserts >50 rows
-- **Irish Language:** Use UCCIX or GaBERT models
+#### Scenario: Law domain in sources.yaml
+- **GIVEN** the `sources.yaml` file
+- **WHEN** the operator runs `python -m oideachais.sources.sources_validation --filter domain=law`
+- **THEN** only statutory entries appear
 
-## Implementation References
-
-| Component | Path |
-|-----------|------|
-| Main Pipeline | `sruth/oideachais/` |
-| Dagster Definitions | `sruth/oideachais/dagster/definitions.py` |
-
-## Related Specs
-
-- [curriculum-ingestion](../curriculum-ingestion/spec.md) - Document processing
-- [bilingual-content](../bilingual-content/spec.md) - English/Irish management
-- [knowledge-graph](../knowledge-graph/spec.md) - Prerequisite mapping
-- [semantic-search](../semantic-search/spec.md) - Vector search
-- [assessment-extraction](../assessment-extraction/spec.md) - Exam papers
+#### Scenario: Case law entry rejected
+- **GIVEN** a hypothetical `ie.law.courts` entry
+- **WHEN** the SourceFactory loads the YAML
+- **THEN** the factory raises a `pydantic.ValidationError` because `ie.law.courts` is not in the MVP law allowlist

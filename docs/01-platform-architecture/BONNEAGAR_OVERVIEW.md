@@ -10,6 +10,8 @@ supersedes:
   - docs/BONNEAGAR_OVERVIEW.md
 ccc_query_hints:
   - taisce - modular docker stacks
+truth: partial
+
 ---
 
 # Taisce - Modular Docker Stacks

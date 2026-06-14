@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Cloudflare Workers: Comprehensive Research Report
 
 ## Table of Contents

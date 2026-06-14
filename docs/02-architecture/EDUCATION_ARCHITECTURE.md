@@ -10,6 +10,8 @@ supersedes:
   - docs/EDUCATION_ARCHITECTURE.md
 ccc_query_hints:
   - data stack architecture reference
+truth: partial
+
 ---
 
 # Data Stack Architecture Reference

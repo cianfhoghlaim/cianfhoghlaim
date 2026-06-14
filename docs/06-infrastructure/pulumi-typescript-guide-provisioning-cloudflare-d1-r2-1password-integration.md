@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 Pulumi TypeScript Guide: Provisioning Cloudflare
 
 D1 & R2 with 1Password Integration

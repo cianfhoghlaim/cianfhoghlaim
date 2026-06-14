@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Meaisínfhoghlaim - ML Models
 
 Machine learning model registry, training notebooks, and inference backends.

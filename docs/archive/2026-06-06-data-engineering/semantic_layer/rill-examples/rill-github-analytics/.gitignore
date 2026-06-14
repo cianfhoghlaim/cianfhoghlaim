@@ -1,9 +1,0 @@
-.DS_Store
-.vscode/
-.env
-*service-account.json
-
-# Rill
-.env
-tmp
-.rillcloud

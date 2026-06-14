@@ -28,6 +28,8 @@ ccc_query_hints:
   - "service dependency graph"
   - "health check patterns"
 last_reviewed: 2026-06-06
+truth: partial
+
 ---
 
 # Infrastructure Stacks — Docker Compose Architecture

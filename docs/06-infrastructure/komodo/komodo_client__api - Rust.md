@@ -7,6 +7,8 @@ created: 2025-12-05
 description: "Komodo Core API"
 tags:
   - "clippings"
+truth: partial
+
 ---
 ## Module api
 

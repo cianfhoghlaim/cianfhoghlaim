@@ -1,7 +1,11 @@
 # Workflow Automation Capability
 
-## Overview
+## Purpose
 
+`workflow-automation` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
+## Background
 Self-hosted workflow automation built on n8n. Provides a visual pipeline builder for the team. Six seeded workflows demonstrate the canonical team patterns: daily briefing, email triage, booking-to-task sync, follow-up drafting, weekly summary, and stale-task nudging. All LLM-backed workflow steps use the OpenCode Go API (`https://opencode.ai/zen/go/v1`) as a unified OpenAI-compatible endpoint — one bill, one rate-limit pool, one model catalogue across the whole monorepo.
 
 ## Requirements

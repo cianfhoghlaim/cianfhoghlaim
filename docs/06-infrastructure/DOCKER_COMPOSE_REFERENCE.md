@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Docker Compose Stacks Analysis - Hackathon Project
 
 ## Executive Summary

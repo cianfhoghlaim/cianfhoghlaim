@@ -3,6 +3,8 @@ name: pulumi
 description: Expert assistance with Pulumi Infrastructure as Code - helps with resource definitions, stack management, testing, and best practices across all supported languages (TypeScript, Python, Go, .NET, Java, YAML).
 category: Infrastructure
 tags: [pulumi, iac, infrastructure, cloud, aws, azure, gcp, kubernetes]
+truth: partial
+
 ---
 
 # Pulumi Infrastructure as Code Expert Skill

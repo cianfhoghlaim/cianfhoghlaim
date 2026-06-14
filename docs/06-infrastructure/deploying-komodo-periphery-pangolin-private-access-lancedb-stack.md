@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 Deploying Komodo Periphery with Pangolin
 
 Private Access and LanceDB Stack

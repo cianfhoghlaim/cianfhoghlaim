@@ -8,6 +8,8 @@ created: 2025-12-29
 description: "Visualizing Your Traefik Traffic: Deploy the Enhanced Traefik Log Dashboard with OpenTelemetry Support  Usage Load for the containers   If you’re using the powerful Pangolin stack with Traefik as your reverse proxy,…"
 tags:
   - "clippings"
+truth: partial
+
 ---
 ## post by hhf.technoloy on Jul 30
 

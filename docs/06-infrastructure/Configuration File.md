@@ -8,6 +8,8 @@ created: 2025-12-11
 description: "Configure Pangolin using the config.yml file with detailed settings for all components"
 tags:
   - "clippings"
+truth: partial
+
 ---
 The `config.yml` file controls all aspects of your Pangolin deployment, including server settings, domain configuration, email setup, and security options. This file is mounted at `config/config.yml` in your Docker container.
 

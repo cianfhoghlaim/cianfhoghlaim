@@ -8,6 +8,8 @@ created: 2025-12-20
 description: "Accelerating innovation through the Google Cloud partner ecosystem"
 tags:
   - "clippings"
+truth: partial
+
 ---
 #### GOOGLE CLOUD
 

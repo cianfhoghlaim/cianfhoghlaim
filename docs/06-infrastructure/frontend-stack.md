@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Frontend Stack for Irish Education Platform
 
 ## Executive Summary

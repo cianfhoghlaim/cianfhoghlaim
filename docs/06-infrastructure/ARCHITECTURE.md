@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Infrastructure Architecture Reference
 
 ## Quick Navigation

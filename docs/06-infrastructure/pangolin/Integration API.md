@@ -8,6 +8,8 @@ created: 2025-12-05
 description: "Learn how to use Pangolin's REST API to automate and script operations with fine-grained permissions"
 tags:
   - "clippings"
+truth: partial
+
 ---
 [Skip to main content](https://docs.pangolin.net/manage/#content-area)
 

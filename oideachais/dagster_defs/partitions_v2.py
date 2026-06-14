@@ -10,7 +10,7 @@ Key Changes from partitions.py:
 - Language is secondary partition (optional) or config
 
 Usage:
-    from oideachais.data_platform.dagster_defs.partitions_v2 import (
+    from oideachais.dagster_defs.partitions_v2 import (
         ireland_curriculum_partitions,
         get_subjects_for_group,
         CURRICULUM_CONFIG_SCHEMA,
@@ -203,7 +203,7 @@ def validate_subjects(subjects: list[str] | None, cycle: str) -> list[str] | Non
 
     # Import registry to check subject availability
     try:
-        from oideachais.data_platform.dlt_sources.ireland.curriculum_registry import (
+        from oideachais.dlt_sources.ireland.curriculum_registry import (
             SubjectRegistry,
         )
 

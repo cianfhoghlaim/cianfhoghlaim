@@ -1,8 +1,8 @@
 ---
-title: "BAML Schema Design & LLM Extraction"
+title: "BAML Schema Design & LLM Extraction — Comprehensive Reference"
 domain: agents
 status: stable
-description: "Consolidated guide to BAML (Boundary AI Markup Language): schema design patterns, Irish education curriculum schemas, DuckDB/Dragonfly integration, dynamic TypeBuilder, and self-healing extraction pipelines."
+description: "Consolidated guide to BAML (Boundary AI Markup Language): schema design patterns, testing, retry, streaming, error handling, Irish education curriculum schemas, dynamic TypeBuilder, DuckDB/Dragonfly integration, self-healing extraction pipelines, agentic web scraping, and the Adaptive Classroom architecture."
 supersedes:
   - docs/agents/BAML_COMPREHENSIVE_GUIDE.md
   - docs/agents/BAML Schemas for Irish Education.md
@@ -22,21 +22,32 @@ related_skills:
   - .agents/skills/dignified-python/SKILL.md
   - .agents/skills/irish-edtech/SKILL.md
 ccc_query_hints:
-  - "BAML schema design patterns"
-  - "BAML Irish education extraction schemas"
-  - "BAML TypeBuilder dynamic schema generation"
-  - "baml-cli workflow generate test"
-  - "BAML retry policy fallback client pattern"
-last_reviewed: 2026-06-06
+  - BAML schema design patterns
+  - BAML Irish education extraction schemas
+  - BAML TypeBuilder dynamic schema generation
+  - baml-cli workflow generate test
+  - BAML retry policy fallback client pattern
+  - BAML DuckDB Dragonfly data layer
+  - BAML self-healing extraction
+last_reviewed: 2026-06-13
+truth: sole
 ---
 
-# BAML Schema Design & LLM Extraction
+# BAML Schema Design & LLM Extraction — Comprehensive Reference
+
+> **Merged from 2 canonical sources**:
+> - `baml-extraction.md` (746 lines, 10 parts) — practical patterns-first reference
+> - `BAML_COMPREHENSIVE_GUIDE.md` (1108 lines, 5 parts) — architectural deep-dive
+>
+> Plus 4 stub files (`baml-patterns-and-best-practices.md`, `BAML Schemas for Irish Education.md`, `BAML for Syllabus-Driven Data Extraction.md`, `BAML_DUCKDB_DRAGONFLY_ANALYSIS.md`) that had only "MERGED INTO" notices — all stubs deleted, no content lost.
+
+---
 
 ## Part I: BAML Fundamentals
 
 ### Overview
 
-BAML (Boundary AI Markup Language) is a domain-specific language by BoundaryML for building type-safe LLM applications. It transforms prompt engineering into schema engineering.
+BAML (Boundary AI Markup Language) is a domain-specific language developed by BoundaryML for building type-safe LLM applications. It transforms prompt engineering into schema engineering, enabling developers to define structured outputs, test prompts before deployment, and generate type-safe clients across multiple programming languages.
 
 **Key Value Propositions:**
 - Type-safe structured outputs that work on Day 1 of any model release
@@ -73,6 +84,8 @@ VSCode: Install `Boundary.baml-extension` for syntax highlighting, real-time pla
 
 ### Pattern 1: Structured Data Extraction
 
+BAML excels at extracting structured data from unstructured text. The pattern involves defining a schema and a function that returns that schema.
+
 ```baml
 class Resume {
   name string
@@ -94,7 +107,9 @@ function ExtractResume(resumeText: string) -> Resume {
   client "openai/gpt-4o"
   prompt #"
     Extract structured information from the following resume.
+
     {{ ctx.output_format }}
+
     {{ _.role("user") }}
     {{ resumeText }}
   "#
@@ -113,7 +128,7 @@ enum MessageType { SPAM, NOT_SPAM }
 
 function ClassifyMessage(input: string) -> MessageType {
   client "openai/gpt-4o-mini"
-  prompt #"Classify as spam or not spam. {{ ctx.output_format }} {{ input }}"#
+  prompt #"Classify the following message as spam or not spam. {{ ctx.output_format }} {{ _.role("user") }} {{ input }}"#
 }
 ```
 
@@ -127,13 +142,18 @@ class TicketClassification {
   priority int @description("Priority from 1 (low) to 5 (high)")
   summary string
 }
+
+function ClassifyTicket(ticket: string) -> TicketClassification {
+  client "openai/gpt-4o"
+  prompt #"Analyze this support ticket and classify it. {{ ctx.output_format }} {{ _.role("user") }} {{ ticket }}"#
+}
 ```
 
 ### Pattern 4: Literal Types (Union Types)
 
 ```baml
 class DealAnalysis {
-  dealType "merger" | "acquisition"
+  dealType "merger" | "acquisition" @description("Type of business deal")
   amount float
   currency string @description("Currency code (USD, EUR, etc.)")
   companies string[]
@@ -142,15 +162,23 @@ class DealAnalysis {
 
 ### Pattern 5: Multi-Step Workflows and Agents
 
+BAML treats prompts as composable functions, enabling multi-step workflows.
+
 ```baml
 // Step 1: Extract entities
-function ExtractEntities(text: string) -> Entity[] { ... }
+function ExtractEntities(text: string) -> Entity[] {
+  client "openai/gpt-4o"
+  prompt #"Extract all named entities from the text. {{ ctx.output_format }} {{ _.role("user") }} {{ text }}"#
+}
 
 // Step 2: Classify sentiment for each entity
-function AnalyzeSentiment(entity: string, context: string) -> SentimentResult { ... }
+function AnalyzeSentiment(entity: string, context: string) -> SentimentResult {
+  client "openai/gpt-4o-mini"
+  prompt #"Analyze sentiment. {{ ctx.output_format }} Entity: {{ entity }} Context: {{ context }}"#
+}
 ```
 
-Agent pattern (Python):
+**Agent Pattern (Python):**
 ```python
 from baml_client import b
 
@@ -164,11 +192,64 @@ def run_agent(initial_query: str):
         messages.append({"role": "tool", "content": tool_result})
 ```
 
+### Generative UI (Next.js)
+
+```baml
+function GenerateRecipe(recipe: string) -> Recipe {
+  client "openai/gpt-4o"
+  prompt #"Generate a recipe for: {{ recipe }}"#
+}
+
+class Recipe {
+  name string @stream.not_null
+  servings int @stream.not_null
+  ingredients (Ingredient @stream.done)[]
+  instructions string[]
+}
+```
+
+### Dynamic Schemas (Runtime BAML generation)
+
+```baml
+class Response {
+  @@dynamic  // Allows runtime-generated schema
+}
+
+function ExecuteBAML(content: string | image | audio | image[]) -> Response {
+  client "openai/gpt-4o"
+  prompt #"Extract data from content using generated schema"#
+}
+```
+
+Two-phase pipeline: Schema Generation → Data Extraction using SSE streaming.
+
 ---
 
 ## Part III: Testing
 
-### Assert vs Check
+### Basic Test Structure
+
+BAML makes testing a first-class citizen. Tests can be written in `.baml` files and run before any application code is written.
+
+```baml
+test SpamTest {
+  functions [ClassifyMessage]
+  args {
+    input "Buy cheap watches now! Limited time offer!!!"
+  }
+  @@assert({{ this == "SPAM" }})
+}
+
+test NotSpamTest {
+  functions [ClassifyMessage]
+  args {
+    input "Hey, are we still meeting for coffee tomorrow?"
+  }
+  @@assert({{ this == "NOT_SPAM" }})
+}
+```
+
+### Checks vs Asserts
 
 | Directive | Behavior |
 |---|---|
@@ -176,12 +257,6 @@ def run_agent(initial_query: str):
 | `@@check` | Soft validation — test continues, result recorded for inspection |
 
 ```baml
-test SpamTest {
-  functions [ClassifyMessage]
-  args { input "Buy cheap watches now! Limited time offer!!!" }
-  @@assert({{ this == "SPAM" }})
-}
-
 test ValidationExample {
   functions [ExtractData]
   args { text "sample text" }
@@ -202,18 +277,24 @@ test ValidationExample {
 
 ### Media Input Testing
 
+BAML supports testing with images, audio, PDFs, and videos:
+
 ```baml
 test ImageExtractionTest {
   functions [ExtractFromImage]
   args {
-    image { file "receipts/sample-receipt.png" }    // Relative to baml_src/
+    image {
+      file "receipts/sample-receipt.png"  // Relative to baml_src/
+    }
   }
 }
 
 test URLImageTest {
   functions [ExtractFromImage]
   args {
-    image { url "https://example.com/image.png" }
+    image {
+      url "https://example.com/image.png"
+    }
   }
 }
 ```
@@ -273,11 +354,38 @@ client<llm> LoadBalanced {
 
 **Important:** BAML retries are for API availability issues only. Application errors (malformed requests, validation failures) are NOT retried.
 
+### Complete Production Client Example
+
+```baml
+retry_policy Exponential {
+  max_retries 3
+  strategy { type exponential_backoff delay_ms 200 multiplier 2.0 max_delay_ms 5000 }
+}
+
+client<llm> GPT4o {
+  provider openai
+  retry_policy Exponential
+  options { model "gpt-4o" temperature 0 api_key env.OPENAI_API_KEY }
+}
+
+client<llm> ClaudeBackup {
+  provider anthropic
+  options { model "claude-3-5-sonnet-20241022" api_key env.ANTHROPIC_API_KEY }
+}
+
+client<llm> ResilientClient {
+  provider fallback
+  options { strategy [GPT4o, ClaudeBackup] }
+}
+```
+
 ---
 
 ## Part V: Streaming
 
 ### Type-Safe Streaming
+
+BAML provides type-safe streaming with semantically valid partial objects as tokens arrive.
 
 ```baml
 class Message {
@@ -303,6 +411,8 @@ def stream_extraction(receipt: str):
     stream = b.stream.ExtractReceiptInfo(receipt)
     for partial in stream:
         print(f"Parsed {len(partial.items or [])} items so far")
+        if partial.total:
+            print(f"Current total: {partial.total}")
     final = stream.get_final_response()
     return final
 
@@ -324,7 +434,7 @@ async def async_stream(receipt: str):
 
 BAML uses a Rust-based error-tolerant parser that can:
 - Parse malformed JSON (missing closing brackets, trailing commas)
-- Extract valid data from partially correct outputs
+- Extract valid data even from partially correct outputs
 - Coerce types automatically
 - Trim junk and whitespace
 
@@ -359,6 +469,33 @@ for check_name, check_result in result._checks.items():
 - Nested assertion failure → Item is removed from container
 - Multiple assertions → Evaluated left to right, first failure stops
 
+### Complete Production Example
+
+```baml
+// types.baml
+class Invoice {
+  vendor string @description("Company name of the vendor")
+  invoiceNumber string @check(format, {{ this matches "INV-\\d+" }})
+  date string @description("Date in YYYY-MM-DD format")
+  lineItems LineItem[]
+  subtotal float @check(positive, {{ this > 0 }})
+  tax float
+  total float @assert(matches_sum, {{ (this.subtotal + this.tax - this) | abs < 0.01 }})
+}
+
+class LineItem {
+  description string @check(not_empty, {{ this|length > 0 }})
+  quantity int @assert(positive, {{ this > 0 }})
+  unitPrice float
+  amount float @check(calculated, {{ (this.quantity * this.unitPrice - this) | abs < 0.01 }})
+}
+
+function ExtractInvoice(invoiceText: string) -> Invoice {
+  client ResilientClient
+  prompt #"Extract structured invoice information. {{ ctx.output_format }} {{ _.role("user") }} {{ invoiceText }}"#
+}
+```
+
 ---
 
 ## Part VII: Irish Education BAML Schemas
@@ -390,6 +527,11 @@ enum PrimaryStage {
   Stage2_FirstSecondClass
   Stage3_ThirdFourthClass
   Stage4_FifthSixthClass
+}
+
+class CompetencyLink {
+  competency_name: string @description("e.g., 'Being a Digital Learner'")
+  context: string @description("How this specific outcome supports the competency")
 }
 
 class PrimaryLearningOutcome {
@@ -424,9 +566,9 @@ function ExtractPrimaryFramework(text: string) -> PrimaryCurriculumArea {
 }
 ```
 
-### Junior Cycle Science — Non-Linear Pedagogy
+### Junior Cycle: Non-Linear Pedagogy
 
-The Junior Cycle Science specification features a "Unifying Strand" (Nature of Science) embedded within contextual strands.
+The Junior Cycle Science specification features a "Unifying Strand" (Nature of Science) embedded within contextual strands (Physical World, Biological World, Chemical World, Earth & Space).
 
 ```baml
 class ScienceOutcome {
@@ -439,8 +581,8 @@ class ScienceOutcome {
 }
 
 class TransverseLink {
-  source_outcome_id: string @description("The ID of the Contextual outcome")
-  target_nos_id: string @description("The ID of the Nature of Science outcome")
+  source_outcome_id: string
+  target_nos_id: string @description("Nature of Science outcome ID")
   strength: string @description("High/Medium/Low based on verb analysis")
 }
 
@@ -449,9 +591,23 @@ class JuniorCycleScienceSpec {
   contextual_strands: ScienceOutcome
   inferred_links: TransverseLink
 }
+
+function ExtractScienceSpec(text: string) -> JuniorCycleScienceSpec {
+  client "openai/gpt-4-turbo"
+  prompt #"
+    Extract the Junior Cycle Science Specification.
+    Step 1: Identify the 'Nature of Science' outcomes (Unifying Strand).
+    Step 2: Identify Contextual outcomes (Physical, Biological, Chemical, Earth/Space).
+    Step 3: For each Contextual outcome, analyze the Action Verb.
+    If the verb implies data analysis, link to relevant NoS outcome.
+    Text: {{ text }}
+  "#
+}
 ```
 
-### Senior Cycle — Logic-Gate Marking Schemes
+### Senior Cycle: Logic-Gate Marking Schemes
+
+Chemistry, Physics, Biology, and Maths marking schemes are algorithmic with precise penalty rules.
 
 ```baml
 class PenaltyRule {
@@ -486,11 +642,14 @@ function ExtractMarkingScheme(text: string) -> QuestionPartSchema {
 }
 ```
 
-### Qualitative Assessment — Rubric Descriptors
+### Qualitative Assessment (Arts & Humanities)
 
 ```baml
 enum AchievementLevel {
-  Exceptional, AboveExpectations, InLineWithExpectations, YetToMeetExpectations
+  Exceptional
+  AboveExpectations
+  InLineWithExpectations
+  YetToMeetExpectations
 }
 
 class RubricDescriptor {
@@ -499,11 +658,17 @@ class RubricDescriptor {
   key_qualities: string @description("Extracted phrases")
   negative_indicators: string @description("Phrases indicating what is missing")
 }
+
+class AssessmentTask {
+  name: string @description("e.g., 'CBA 1: The Past in My Place'")
+  timing: string
+  rubrics: RubricDescriptor
+}
 ```
 
-**Semantic Search Application:** Embed student essay → Cosine similarity against RubricDescriptor vectors → "Closest match: In Line with Expectations (Similarity 0.89). To reach 'Exceptional', add more 'critical evaluation of sources'."
+**Semantic Search Application:** Embed student essay → Cosine similarity against RubricDescriptor vectors → "Closest match: In Line with Expectations (Similarity 0.89). To move towards 'Exceptional', add more 'critical evaluation of sources'."
 
-### Policy Layer — Circular Letters
+### Policy Layer: Circular Letters
 
 ```baml
 enum CircularStatus { NewPolicy, Amendment, Repeal, Clarification }
@@ -522,11 +687,29 @@ class CircularMetadata {
   linked_circulars: LinkedCircular
   domains_affected: string @description("e.g., 'Leadership', 'Special Needs'")
 }
+
+function ExtractCircularMeta(text: string) -> CircularMetadata {
+  client "openai/gpt-4-turbo"
+  prompt #"
+    Analyze the Circular Letter. Extract the ID and Dates.
+    CRITICAL: Find the 'Supersedes' or 'Rescinds' text.
+    Identify the Domain. Is this about Staffing? Assessment?
+    Text: {{ text }}
+  "#
+}
 ```
 
 ---
 
-## Part VIII: Dynamic TypeBuilder — Adaptive Classroom
+## Part VIII: Dynamic TypeBuilder — The Adaptive Classroom
+
+### The Technological Trinity
+
+| Layer | Technology | Role | Key Capability |
+|---|---|---|---|
+| Cognitive | Agno | Agentic Logic & Memory | Agentic RAG/Chunking |
+| Orchestration | Restate.dev | Durable Execution | Awakeables & Virtual Objects |
+| Structural | BAML | Schema Enforcement | TypeBuilder for dynamic schemas |
 
 ### Two-Pass Generation Algorithm
 
@@ -556,7 +739,7 @@ function ExtractExamStructure(syllabus_text: string) -> ExamStructure {
 }
 ```
 
-**Phase 2: Runtime Type Construction:**
+**Phase 2: Runtime Type Construction** — Build dynamic Pydantic models:
 ```python
 from baml_client.type_builder import TypeBuilder
 from baml_client import b
@@ -580,17 +763,51 @@ async def create_dynamic_parser(structure: ExamStructure):
     return tb
 ```
 
-### Why BAML Over Pure Pydantic
+### Why BAML Beats Pure Pydantic
 
-1. **Token Efficiency:** 60-80% fewer tokens vs JSON Schema
-2. **Schema-Aligned Parsing (SAP):** Fault-tolerant Rust parser handles malformed JSON
+1. **Token Efficiency:** BAML's terse syntax reduces token overhead by 60-80% vs JSON Schema
+2. **Schema-Aligned Parsing (SAP):** Fault-tolerant Rust parser recovers malformed JSON
 3. **Dynamic TypeBuilder:** Creates precise schemas per syllabus, avoiding "bag of attributes"
+
+### System Integration: The EduFlow Architecture
+
+**Data Pipeline:**
+1. Teacher uploads syllabus → Agno calls `b.ExtractExamStructure` (BAML) → stores Meta-Schema
+2. Teacher uploads exam paper → Restate triggers `IndexExamSaga` → Agentic Chunking → BAML extraction → pgvector storage
+3. Student queries → Hybrid Search (keyword filter + vector similarity): `SELECT * FROM exam_questions WHERE metadata->>'topic' = 'Kinematics' AND (metadata->>'AO2')::int > 0 ORDER BY embedding <=> query_embedding`
+
+### Restate for Durable Grading Workflows
+
+```typescript
+const gradingService = restate.service({
+  name: "grading",
+  handlers: {
+    processExam: async (ctx, params) => {
+      const questions = await ctx.run("extract_questions", () =>
+        callBamlExtraction(params.text, params.syllabusId)
+      );
+      for (const question of questions) {
+        await ctx.run(`index_q_${question.id}`, () =>
+          agnoClient.index(question)
+        );
+      }
+      return { status: "indexed", count: questions.length };
+    }
+  }
+});
+```
+
+**Teacher Verification (Awakeables):**
+1. AI calculates provisional grade
+2. Workflow generates Approval ID
+3. `await ctx.awakeable()` — function suspends completely, zero compute consumed
+4. Teacher clicks "Approve" days later → Restate restores state, resumes at next line
 
 ---
 
-## Part IX: DuckDB & Dragonfly Integration
+## Part IX: DuckDB & Dragonfly Integration (Unified Data Layer)
 
-### Unified Data Layer Architecture
+### Architecture
 
 ```
 ┌─────────────────────────────────────────┐
@@ -618,25 +835,7 @@ async def create_dynamic_parser(structure: ExamStructure):
 | Latency | 100-500ms (LLM call) | 10-100ms (local) | <1ms (in-memory) |
 | Best For | Dynamic schemas, meta-programming | Large data analysis | Hot data, cache layer |
 
-### Read-Through Cache Pattern (Hono + Dragonfly)
-
-```typescript
-app.get("/:shortCode", async (c) => {
-  const originalUrl = await cache.get(id);
-  if (originalUrl) return c.redirect(originalUrl);  // Cache hit
-
-  const result = await db.query.shortLinksTable.findFirst({
-    where: and(eq(shortLinksTable.id, id), gt(shortLinksTable.expiresAt, new Date())),
-  });
-  if (!result) return c.notFound();
-  // Repopulate cache
-  const expiresAt = Math.trunc(result.expiresAt.getTime() / 1000);
-  await cache.set(result.id, result.originalUrl, "EXAT", expiresAt);
-  return c.redirect(result.originalUrl);
-});
-```
-
-### DuckDB WASM Singleton (Browser)
+### DuckDB WASM (Browser) — Singleton Pattern
 
 ```typescript
 class DuckDBManager {
@@ -650,23 +849,144 @@ class DuckDBManager {
     this.initPromise = this.doInitialize();
     return this.initPromise;
   }
+
+  async query(sql: string): Promise<QueryResult> {
+    await this.initialize();
+    const startTime = performance.now();
+    const result = await this.connection.query(sql);
+    // Convert Arrow to table format
+  }
 }
+```
+
+### Cloudflare DuckLake Deployment
+
+```typescript
+export class Container extends PkgContainer<EnvWithCustomVariables> {
+  constructor(ctx: any, env: EnvWithCustomVariables) {
+    super(ctx, env);
+    let envConfig: Record<string, string> = {};
+    if (env.R2_TOKEN && env.R2_ENDPOINT && env.R2_CATALOG) {
+      envConfig = { ...envConfig, R2_TOKEN, R2_ENDPOINT, R2_CATALOG };
+    }
+    if (env.R2_ACCESS_KEY_ID && env.POSTGRES_HOST) {
+      envConfig = { ...envConfig, POSTGRES_USER, ... };
+    }
+    this.envVars = envConfig;
+  }
+}
+```
+
+### Hono REST API with DuckDB
+
+```typescript
+api.post('/query', async (c) => {
+  const queryResult = await query(body.query);
+  return c.json(queryResult, 200);
+});
+
+api.post('/streaming-query', async (c) => {
+  c.header('Content-Type', 'application/vnd.apache.arrow.stream');
+  return stream(c, async (stream) => {
+    const arrowStream = await streamingQuery(body.query, true);
+    for await (const chunk of arrowStream) {
+      await stream.write(chunk);
+    }
+  });
+});
+```
+
+### Read-Through Cache with Hono + Dragonfly
+
+```typescript
+app.get("/:shortCode", async (c) => {
+  const originalUrl = await cache.get(id);
+  if (originalUrl) return c.redirect(originalUrl);  // Cache hit
+
+  const result = await db.query.shortLinksTable.findFirst({
+    where: and(eq(shortLinksTable.id, id), gt(shortLinksTable.expiresAt, new Date())),
+  });
+  if (!result) return c.notFound();
+  // Repopulate cache
+  await cache.set(result.id, result.originalUrl, "EXAT", expiresAt);
+  return c.redirect(originalUrl);
+});
+```
+
+### Write-Through Cache (Dragonfly)
+
+```typescript
+app.post("/short-links", zValidator("json", shortLinkInsertSchema), async (c) => {
+  const req: ShortLinkInsert = c.req.valid("json");
+  await db.insert(shortLinksTable).values(req).execute();
+  const expiresAt = Math.trunc(req.expiresAt.getTime() / 1000);
+  await cache.set(req.id, req.originalUrl, "EXAT", expiresAt);
+  return c.json(req);
+});
 ```
 
 ---
 
-## Part X: Self-Healing Extraction Pipeline
+## Part X: Self-Healing Extraction Pipeline (Agentic Web Scraping)
 
-### Neuro-Symbolic Web Intelligence Loop
+### Neuro-Symbolic Web Intelligence Pipeline
 
+The pipeline achieves a "closed-loop" intelligence cycle: Observation (Browserbase) → Perception (Z.ai GLM 4.6v) → Cognition (Cognee) → Systematization (BAML) → Creation (Ag-UI).
+
+### Infrastructure: Browserbase CDP
+
+```python
+@tool
+def capture_site_visuals(url: str, session_id: Optional[str] = None) -> str:
+    bb = Browserbase(api_key=os.environ["BROWSERBASE_API_KEY"])
+    session = bb.sessions.create(project_id=os.environ["BROWSERBASE_PROJECT_ID"])
+    
+    from playwright.sync_api import sync_playwright
+    with sync_playwright() as p:
+        browser = p.chromium.connect_over_cdp(bb.sessions.connect_url(session.id))
+        context = browser.contexts[0]
+        page = context.pages[0]
+        page.goto(url, timeout=60000)
+        page.wait_for_load_state("networkidle")
+        
+        client = context.new_cdp_session(page)
+        res = client.send("Page.captureScreenshot", {
+            "format": "png", "quality": 90, "fullpage": True, "captureBeyondViewport": True
+        })
+        image_data = base64.b64decode(res['data'])
+        with open(abs_path, "wb") as f:
+            f.write(image_data)
+    return abs_path
 ```
-Observation (Browserbase CDP) → Perception (Z.ai GLM 4.6v MCP)
-    → Cognition (Cognee Knowledge Graph)
-    → Systematization (BAML Template Generation)
-    → Creation (Ag-UI rendering)
+
+### Perception: Z.ai GLM 4.6v via MCP
+
+MCP tools exposed by the Z.ai Vision MCP Server:
+- **ui_to_artifact:** Reverse-engineers visual bitmaps into semantic descriptions
+- **extract_text_from_screenshot:** Advanced OCR for complex layouts
+- **Web Reader:** Fetches raw DOM text
+
+### Memory: Cognee Knowledge Graphs
+
+```python
+class UIComponent(DataPoint):
+    name: str
+    component_type: str
+    description: str
+
+class BrandStyle(DataPoint):
+    category: str  # Color, Font, Spacing
+    value: str
+    usage_context: str
+
+class WebPage(DataPoint):
+    url: str
+    title: str
 ```
 
-### Agentic Meta-Programming
+**Cognify Process:** Z.ai analysis → `cognee.add()` → `cognee.cognify()` → Graph construction
+
+### BAML Template Generation (Agentic Meta-Programming)
 
 The Agno agent acts as a "Meta-Programmer" that writes BAML dynamically:
 
@@ -683,7 +1003,7 @@ def generate_extraction_template(schema_description: str) -> str:
         cta_label string @description("Text on the primary button")
         colors string @description("List of primary brand hex codes")
     }}
-
+    
     function ExtractData(page_content: string) -> ExtractedSiteData {{
         client "openai/gpt-4o"
         prompt #"Extract the data from the following content: {{{{ page_content }}}} {{{{ ctx.output_format }}}}"#
@@ -698,7 +1018,7 @@ This creates a **Self-Healing Pipeline**: website layout changes → Z.ai vision
 
 ---
 
-## CocoIndex Flow Strategy for Irish Education
+## Part XI: CocoIndex Flow Strategy for Irish Education
 
 | Flow Name | Source Type | Frequency | BAML Strategy | Graphiti Action |
 |---|---|---|---|---|
@@ -706,14 +1026,12 @@ This creates a **Self-Healing Pipeline**: website layout changes → Z.ai vision
 | EvidenceFlow | examinations.ie | High (Annual bursts) | ExtractMarkingScheme, ExtractExamQuestion | Append Episodes (Cumulative) |
 | PolicyFlow | gov.ie | Ad-hoc (Weekly) | ExtractCircularMeta | Temporal Patching (State Change) |
 
-### Graphiti Edge Types
+### Graphiti Temporal Edge Schema
 
-| Edge | Description |
-|---|---|
-| `ASSESSES` | Connects AssessmentInstrument to LearningOutcome (weighted by Semantic Similarity) |
-| `DEFINES_QUALITY` | Connects EvidenceLogic to PedagogicalUnit |
-| `SUPERSEDES` | Temporal operator — Circular 0003/2018 supersedes Circular 29/02 |
-| `EVIDENCES_DIFFICULTY` | Connects ChiefExaminerComment to LearningOutcome |
+- **ASSESSES:** Connects AssessmentInstrument to LearningOutcome (weighted by Semantic Similarity)
+- **DEFINES_QUALITY:** Connects EvidenceLogic to PedagogicalUnit
+- **SUPERSEDES:** Temporal operator — Circular 0003/2018 supersedes Circular 29/02
+- **EVIDENCES_DIFFICULTY:** Connects ChiefExaminerComment to LearningOutcome
 
 **"Alignment Gap" Algorithm:**
 1. Select subject → retrieve all LearningOutcome nodes
@@ -726,7 +1044,7 @@ This creates a **Self-Healing Pipeline**: website layout changes → Z.ai vision
 ## Summary Matrix
 
 | Feature | Benefit |
-|---|---|
+|---------|---------|
 | Schema-first design | Type safety across all languages |
 | Built-in testing | Catch issues before deployment |
 | Retry/fallback strategies | Production resilience |
@@ -735,6 +1053,8 @@ This creates a **Self-Healing Pipeline**: website layout changes → Z.ai vision
 | Error-tolerant parsing | Handles malformed LLM output |
 | Dynamic TypeBuilder | Adapt schemas at runtime |
 | Agentic meta-programming | Self-healing extraction logic |
+
+---
 
 ## Resources
 

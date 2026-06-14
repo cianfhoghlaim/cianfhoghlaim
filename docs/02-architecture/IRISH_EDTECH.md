@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Irish EdTech Platform Architecture
 
 This directory consolidates research on building a comprehensive bilingual (Irish/English) educational technology platform for the Irish Leaving Certificate curriculum.

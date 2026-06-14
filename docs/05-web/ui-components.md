@@ -31,6 +31,8 @@ ccc_query_hints:
   - "accessible component Radix UI"
   - "educational UI design patterns"
 updated: 2026-06-06
+truth: partial
+
 ---
 
 # UI Components

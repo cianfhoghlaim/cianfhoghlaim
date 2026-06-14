@@ -10,6 +10,8 @@ supersedes:
   - docs/AGENT_IMPLEMENTATIONS.md
 ccc_query_hints:
   - agent-related implementations analysis
+truth: partial
+
 ---
 
 # Agent-Related Implementations Analysis

@@ -10,6 +10,8 @@ supersedes:
   - docs/modal.md
 ccc_query_hints:
   - modal — serverless gpu cloud
+truth: partial
+
 ---
 
 # Modal — Serverless GPU Cloud

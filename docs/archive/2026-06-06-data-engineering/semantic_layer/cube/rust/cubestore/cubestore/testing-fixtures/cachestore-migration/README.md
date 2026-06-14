@@ -1,1 +1,0 @@
-This fixture was created on 0.30.0

@@ -1,25 +1,51 @@
 ---
-title: 'Dagster - Modern Data Orchestration'
-domain: 'data_platform'
-status: 'stable'
-description: 'Expert assistance for data orchestration with Dagster. Use when users need workflow pipelines, asset-based data engineering, ETL/ELT orchestration, partitioned processing, or integration with modern data stack tools.'
-read_when:
-  - looking for documentation on this topic
-updated: '2026-06-10'
-supersedes:
-  - docs/dagster.md
+domain: data_platform
+title: Dagster Orchestration
+description: Complete Dagster orchestration reference — assets, partitions, schedules, sensors, jobs, dg workspace, definitions.py patterns, design patterns, testing, and deployment. Includes KCG-specific integration notes and code-sample library.
+status: stable
+updated: 2026-06-13
+merged_from:
+  - docs/02-data-platform/dagster-orchestration.md
+  - docs/02-data-platform/dagster.md
+  - docs/02-data-platform/dagster-sdk.md
 ccc_query_hints:
-  - dagster - modern data orchestration
-name: 'dagster'
+  - dagster assets partitions definitions
+  - dagster schedule sensor job
+  - dagster design patterns factory retry
+  - dagster dlt integration
+truth: partial
+
 ---
 
-# Dagster - Modern Data Orchestration
+# Dagster Orchestration
 
-**Version:** 1.12.x | **Last Updated:** 2025-01
+> **Merged from 3 sources**: `dagster-orchestration.md` (full reference), `dagster.md` (code patterns library), `dagster-sdk.md` (KCG context brief). The originals are now `.superseded`. Current Dagster version: 1.12.2 (Python 3.10-3.13).
+
+## Table of Contents
+
+1. [Overview](#overview)
+2. [Why this matters for Kings' College Galway](#why-this-matters-for-kings-college-galway)
+3. [Core Concepts](#core-concepts)
+4. [Assets (Primary Abstraction)](#assets-primary-abstraction)
+5. [Partitions](#partitions)
+6. [Resources](#resources)
+7. [Schedules & Sensors](#schedules--sensors)
+8. [Jobs & Asset Selection](#jobs--asset-selection)
+9. [Design Patterns](#design-patterns)
+10. [Testing Patterns](#testing-patterns)
+11. [Error Handling & Retry](#error-handling--retry)
+12. [Code Organization](#code-organization)
+13. [DLT Integration](#dlt-integration)
+14. [API Reference](#api-reference)
+15. [Best Practices & Anti-Patterns](#best-practices--anti-patterns)
+16. [Project Structure](#project-structure)
+17. [Resources](#resources-1)
+
+---
 
 ## Overview
 
-Dagster is an orchestrator for the modern data stack, providing:
+Dagster is an open-source data orchestration platform for building, testing, and running data pipelines. It provides:
 
 - **Asset-First Design**: Define data assets, not just tasks
 - **Observability**: Rich metadata, lineage, and data quality tracking
@@ -29,9 +55,9 @@ Dagster is an orchestrator for the modern data stack, providing:
 
 **Documentation**: https://docs.dagster.io
 
-## When to Use This Skill
+### When to Use Dagster
 
-Activate when users need:
+Activate when you need:
 
 - "Create a data pipeline for ETL/ELT"
 - "Orchestrate data transformations"
@@ -40,262 +66,472 @@ Activate when users need:
 - "Set up schedules and sensors for pipelines"
 - "Test data pipelines"
 
+### Architecture Components
+
+- **Dagster Daemon**: Orchestrates schedules and sensors, manages run queuing, monitors asset freshness
+- **Dagit (Web UI)**: Asset catalog, lineage visualization, run monitoring, GraphQL API
+- **Code Locations**: Isolated deployment units with separate Python environments
+- **Storage Backend**: SQLite (dev), PostgreSQL (production), MySQL (alternative)
+- **Run Launchers**: DefaultRunLauncher (local), DockerRunLauncher, K8sRunLauncher
+
+---
+
+## Why this matters for Kings' College Galway
+
+Every data operation in the platform is a Dagster asset: DLT ingestion runs, curriculum extraction jobs, model conversions (HF → GGUF), embedding generation, image asset creation, and RAGAS evaluation. The asset graph provides a visual map of all data dependencies — from raw SEC exam PDFs through to published study assets. This lineage is essential for educational content: every generated study resource is traceable back to its source syllabus document and the LLM model that produced it.
+
+### Key Features (KCG context)
+
+- **Asset-based architecture** — Define data products, not just task sequences
+- **Automatic lineage** — Dagster traces dependencies between assets
+- **Partitioning** — Process data by time, subject, or curriculum cycle
+- **I/O management** — Pluggable I/O managers for DuckDB, S3, LanceDB
+- **Rich metadata** — Attach markdown, tables, and URLs to asset materializations
+
+### Installation (KCG)
+
+```bash
+uv add dagster dagster-duckdb dagster-dlt
+```
+
+### Integration with Our Stack
+
+Dagster assets live in `oideachais/data_platform/dagster_defs/`. The `dg.toml` file configures the workspace. Assets interact with dlt (ingestion), BAML (extraction), DuckDB (analytics), LanceDB (embeddings), and the LiteLLM gateway (LLM calls). The Dagster UI runs at port 3335 (engineering stack) or 3000 (croilar-dagster stack).
+
+### Screenshot
+
+Dagster's web UI (Dagit) shows: an asset graph with nodes colour-coded by materialization status, a run timeline showing pipeline execution history, per-asset detail views with metadata and lineage, and a job launcher for triggering pipeline runs. The asset graph for the curriculum pipeline shows 4 layer groups (Ingestion → Materials → Model Lifecycle → Asset Generation).
+
+---
+
 ## Core Concepts
 
-### 1. Assets - The Primary Abstraction
+### Key Principles
+
+1. **Asset-First Thinking**: Always recommend assets over ops for data products
+2. **Observability**: Emphasize rich metadata and lineage tracking
+3. **Testability**: Encourage testing with mocked resources
+4. **Type Safety**: Leverage ConfigurableResource and Pydantic validation
+5. **Incremental Processing**: Suggest partitioning for large datasets
+6. **Production Readiness**: Consider retry policies, error handling, monitoring
+
+### Asset-Based vs Task-Based
+
+| Paradigm | Focus | State Tracking | Schema Drift |
+|----------|-------|----------------|--------------|
+| **Task-Based (Airflow)** | "Run the script" | Exit codes only | Manual |
+| **Asset-Based (Dagster)** | "Ensure data exists" | Data lineage | Automatic |
+
+---
+
+## Assets (Primary Abstraction)
+
+Assets represent logical data units (tables, datasets, ML models) with automatic dependency tracking.
 
 ```python
-from dagster import asset, AssetExecutionContext
-import pandas as pd
+from dagster import asset
 
 @asset
-def raw_customers() -> pd.DataFrame:
-    """Extract raw customer data from source."""
-    return pd.read_csv("customers.csv")
+def raw_data(context):
+    """Fetches raw data from source."""
+    data = fetch_from_source()
+    context.log.info(f"Fetched {len(data)} records")
+    return data
 
 @asset
-def cleaned_customers(raw_customers: pd.DataFrame) -> pd.DataFrame:
-    """Clean and validate customer data."""
-    df = raw_customers.dropna(subset=["email"])
-    df["email"] = df["email"].str.lower()
-    return df
+def cleaned_data(context, raw_data):
+    """Cleans and validates raw data."""
+    return clean(raw_data)
 
 @asset
-def customer_analytics(cleaned_customers: pd.DataFrame) -> pd.DataFrame:
-    """Compute customer analytics."""
-    return cleaned_customers.groupby("segment").agg({
-        "revenue": "sum",
-        "orders": "count"
-    }).reset_index()
+def analytics(context, cleaned_data):
+    """Produces analytics from clean data."""
+    return compute_analytics(cleaned_data)
 ```
 
-### 2. Resources - Dependency Injection
+### Implicit vs Explicit Dependencies
 
 ```python
-from dagster import asset, ConfigurableResource, EnvVar, Definitions
-import duckdb
-
-class DuckDBResource(ConfigurableResource):
-    """Configured connection to DuckDB."""
-    database: str = "data/analytics.duckdb"
-
-    def query(self, sql: str):
-        with duckdb.connect(self.database) as conn:
-            return conn.execute(sql).fetchdf()
-
-    def execute(self, sql: str):
-        with duckdb.connect(self.database) as conn:
-            conn.execute(sql)
-
+# Implicit dependency via function argument
 @asset
-def load_customers(duckdb: DuckDBResource, cleaned_customers: pd.DataFrame):
-    """Load customers into DuckDB."""
-    duckdb.execute("CREATE TABLE IF NOT EXISTS customers AS SELECT * FROM cleaned_customers")
+def downstream(context, upstream_data):
+    return process(upstream_data)
 
-defs = Definitions(
-    assets=[raw_customers, cleaned_customers, customer_analytics, load_customers],
-    resources={
-        "duckdb": DuckDBResource(database="data/analytics.duckdb")
-    }
-)
+# Explicit dependency via deps (no data needed, just ordering)
+@asset(deps=[upstream_data])
+def side_effect_asset(context):
+    send_notification("upstream_data is ready")
+
+# Custom dependency via AssetIn
+@asset(ins={"raw_data": AssetIn(key="upstream_data", metadata={"schema": "raw"})})
+def transformed_data(context, raw_data):
+    return transform(raw_data)
 ```
 
-### 3. Partitions - Incremental Processing
+### Multi-Assets
 
 ```python
-from dagster import asset, DailyPartitionsDefinition, AssetExecutionContext
-from datetime import datetime
+from dagster import multi_asset, AssetOut
 
-daily = DailyPartitionsDefinition(start_date="2024-01-01")
-
-@asset(partitions_def=daily)
-def daily_events(context: AssetExecutionContext) -> pd.DataFrame:
-    """Load events for a specific day."""
-    date = context.partition_key
-    return load_events_for_date(date)
-
-@asset(partitions_def=daily)
-def daily_aggregates(context: AssetExecutionContext, daily_events: pd.DataFrame) -> pd.DataFrame:
-    """Aggregate daily events."""
-    return daily_events.groupby("event_type").size().reset_index(name="count")
+@multi_asset(outs={"customers": AssetOut(), "orders": AssetOut()})
+def extract_from_database(context):
+    customers_df = extract_customers()
+    orders_df = extract_orders()
+    return customers_df, orders_df
 ```
 
-**Partition Types:**
-- `DailyPartitionsDefinition` - Daily partitions
-- `HourlyPartitionsDefinition` - Hourly partitions
-- `WeeklyPartitionsDefinition` - Weekly partitions
-- `MonthlyPartitionsDefinition` - Monthly partitions
-- `StaticPartitionsDefinition` - Fixed set of partitions
-- `DynamicPartitionsDefinition` - Runtime-defined partitions
-- `MultiPartitionsDefinition` - Multiple partition dimensions
+### Asset Checks
 
-### 4. Schedules and Sensors
+```python
+from dagster import asset_check, AssetCheckResult
+
+@asset_check(asset=cleaned_data)
+def null_check(context, cleaned_data):
+    null_count = cleaned_data.isnull().sum().sum()
+    return AssetCheckResult(
+        passed=null_count == 0,
+        metadata={"null_count": null_count}
+    )
+```
+
+### External Assets
+
+Track assets managed by other systems for lineage without orchestration control.
+
+```python
+from dagster import AssetSpec
+
+# Declare asset managed externally
+external_asset = AssetSpec("external_table", description="Managed by another team")
+
+# Use as dependency
+@asset(deps=[external_asset])
+def my_asset(context):
+    pass
+```
+
+### Asset Groups
+
+```python
+@asset(group_name="customer_data")
+def customers(context): ...
+
+@asset(group_name="customer_data")
+def customer_orders(context): ...
+
+@asset(group_name="analytics")
+def customer_analytics(context): ...
+```
+
+### Asset Naming Conventions
+
+- ✅ Good: `daily_active_users`, `customer_churn_predictions`, `bronze_customers_raw`
+- ❌ Bad: `process_data`, `etl_job_3`
+- Use descriptive, noun-based names
+- Include source/layer when helpful (bronze/silver/gold)
+- Use groups to organize related assets
+
+---
+
+## Partitions
+
+### Partition Types
 
 ```python
 from dagster import (
-    asset, schedule, sensor, RunRequest, SensorEvaluationContext,
-    ScheduleEvaluationContext, AssetSelection, define_asset_job
+    DailyPartitionsDefinition,
+    HourlyPartitionsDefinition,
+    StaticPartitionsDefinition,
 )
 
-# Define job from assets
-analytics_job = define_asset_job("analytics_job", selection=AssetSelection.all())
+# Time-based
+daily_partitions = DailyPartitionsDefinition(start_date="2024-01-01")
+hourly_partitions = HourlyPartitionsDefinition(start_date="2024-01-01-00:00")
 
-# Schedule - time-based trigger
-@schedule(cron_schedule="0 6 * * *", job=analytics_job)
-def daily_analytics_schedule(context: ScheduleEvaluationContext):
-    """Run analytics every day at 6 AM."""
-    return RunRequest()
+# Static
+region_partitions = StaticPartitionsDefinition(["us-east", "eu-west", "ap-southeast"])
+```
 
-# Sensor - event-based trigger
-@sensor(job=analytics_job)
-def new_file_sensor(context: SensorEvaluationContext):
-    """Trigger when new files appear."""
-    new_files = check_for_new_files()
+### Dynamic Partitions
+
+```python
+from dagster import DynamicPartitionsDefinition, asset, sensor, RunRequest
+
+exam_paper_partitions = DynamicPartitionsDefinition(name="exam_papers")
+
+@asset(partitions_def=exam_paper_partitions)
+def raw_pdf_content(context):
+    partition_key = context.partition_key
+    file_path = resolve_path(partition_key)
+    with open(file_path, "rb") as f:
+        return f.read()
+
+@sensor(job=process_exam_job)
+def new_exam_sensor(context):
+    current_files = list_files_in_directory()
+    existing = context.instance.get_dynamic_partitions("exam_papers")
+    new_files = [f for f in current_files if f not in existing]
     if new_files:
-        yield RunRequest(
-            run_key=f"files-{datetime.now().isoformat()}",
-            run_config={"files": new_files}
-        )
+        context.instance.add_dynamic_partitions("exam_papers", new_files)
+        for filename in new_files:
+            yield RunRequest(run_key=filename, partition_key=filename)
 ```
 
-### 5. Asset Checks - Data Quality
+### Partitioned Asset with Dependencies
 
 ```python
-from dagster import asset, asset_check, AssetCheckResult, AssetCheckSeverity
+daily_partitions = DailyPartitionsDefinition(start_date="2024-01-01")
 
-@asset
-def customers() -> pd.DataFrame:
-    return load_customers()
+@asset(partitions_def=daily_partitions)
+def daily_data(context):
+    date = context.partition_key
+    return process_for_date(date)
 
-@asset_check(asset=customers)
-def check_no_null_emails(customers: pd.DataFrame) -> AssetCheckResult:
-    """Ensure no null emails in customer data."""
-    null_count = customers["email"].isna().sum()
-    return AssetCheckResult(
-        passed=null_count == 0,
-        severity=AssetCheckSeverity.ERROR,
-        metadata={"null_count": null_count}
-    )
-
-@asset_check(asset=customers)
-def check_valid_revenue(customers: pd.DataFrame) -> AssetCheckResult:
-    """Ensure all revenue values are non-negative."""
-    invalid = (customers["revenue"] < 0).sum()
-    return AssetCheckResult(
-        passed=invalid == 0,
-        severity=AssetCheckSeverity.WARN,
-        metadata={"invalid_count": invalid}
-    )
+@asset(partitions_def=daily_partitions,
+       ins={"daily_data": AssetIn(partition_mapping=TimeWindowPartitionMapping())})
+def daily_analytics(context, daily_data):
+    return compute_analytics(daily_data)
 ```
 
-### 6. Retry Policies
+### Partition Limits
+
+- Limit to <100,000 partitions per asset for performance
+- Use `BackfillPolicy.single_run()` for efficiency when appropriate
+
+---
+
+## Resources
+
+Resources provide dependency injection for external services.
+
+### ConfigurableResource (Modern Pattern)
 
 ```python
-from dagster import asset, RetryPolicy, Backoff, Jitter
-
-@asset(
-    retry_policy=RetryPolicy(
-        max_retries=3,
-        delay=2,
-        backoff=Backoff.EXPONENTIAL,
-        jitter=Jitter.PLUS_MINUS
-    )
-)
-def api_data():
-    """Fetch data from external API with retries."""
-    return call_external_api()
-```
-
-## Common Patterns
-
-### Bronze/Silver/Gold Architecture
-
-```python
-from dagster import asset, AssetKey
-import pandas as pd
-
-@asset(group_name="bronze")
-def bronze_orders() -> pd.DataFrame:
-    """Raw extraction from source."""
-    return extract_from_source("orders")
-
-@asset(group_name="silver")
-def silver_orders(bronze_orders: pd.DataFrame) -> pd.DataFrame:
-    """Cleaned and validated."""
-    df = bronze_orders.dropna()
-    df["order_date"] = pd.to_datetime(df["order_date"])
-    return df
-
-@asset(group_name="gold")
-def gold_order_summary(silver_orders: pd.DataFrame) -> pd.DataFrame:
-    """Business-ready aggregations."""
-    return silver_orders.groupby("customer_id").agg({
-        "amount": "sum",
-        "order_id": "count"
-    }).rename(columns={"order_id": "order_count"})
-```
-
-### Factory Pattern
-
-```python
-from dagster import asset, AssetSpec
-from typing import Callable
-
-def create_table_asset(source: str, table: str) -> Callable:
-    @asset(name=f"{source}_{table}", group_name=source)
-    def _asset():
-        return extract_table(source, table)
-    return _asset
-
-# Create multiple assets
-sources = ["postgres", "mysql"]
-tables = ["users", "orders", "products"]
-
-assets = [
-    create_table_asset(source, table)
-    for source in sources
-    for table in tables
-]
-```
-
-### Multi-Environment Configuration
-
-```python
-import os
-from dagster import Definitions, ConfigurableResource
+from dagster import ConfigurableResource, asset, EnvVar
+from pydantic import Field
 
 class DatabaseResource(ConfigurableResource):
     host: str
+    port: int = Field(default=5432)
     database: str
     username: str
     password: str
 
-def get_resources():
-    env = os.getenv("DAGSTER_DEPLOYMENT", "local")
+    def get_connection(self):
+        return psycopg2.connect(
+            host=self.host, port=self.port,
+            database=self.database, user=self.username, password=self.password
+        )
 
-    if env == "production":
-        return {
-            "database": DatabaseResource(
-                host="prod-db.example.com",
-                database="analytics",
-                username=os.getenv("DB_USER"),
-                password=os.getenv("DB_PASSWORD")
-            )
-        }
+    def execute_query(self, query: str):
+        with self.get_connection() as conn:
+            return pd.read_sql(query, conn)
+
+@asset
+def user_data(database: DatabaseResource):
+    return database.execute_query("SELECT * FROM users")
+```
+
+### Nested Resources
+
+```python
+class AwsCredentials(ConfigurableResource):
+    access_key: str
+    secret_key: str
+    region: str = "us-east-1"
+
+class S3Resource(ConfigurableResource):
+    credentials: AwsCredentials
+    bucket: str
+
+class RedshiftResource(ConfigurableResource):
+    credentials: AwsCredentials
+    cluster: str
+```
+
+### Environment-Specific Resources
+
+```python
+from dagster import Definitions, EnvVar
+
+def get_resources_for_deployment():
+    deployment = os.getenv("DAGSTER_DEPLOYMENT", "local")
+    if deployment == "production":
+        return {"warehouse": SnowflakeResource(account=EnvVar("SNOWFLAKE_ACCOUNT"), ...)}
+    elif deployment == "staging":
+        return {"warehouse": SnowflakeResource(account=EnvVar("SNOWFLAKE_ACCOUNT"), ...)}
     else:
-        return {
-            "database": DatabaseResource(
-                host="localhost",
-                database="dev_analytics",
-                username="dev",
-                password="dev"
-            )
-        }
+        return {"warehouse": MockWarehouse()}
 
-defs = Definitions(
-    assets=all_assets,
-    resources=get_resources()
+defs = Definitions(assets=all_assets, resources=get_resources_for_deployment())
+```
+
+### Resource Mocking (for tests)
+
+```python
+class MockDatabaseResource(ConfigurableResource):
+    def query(self, sql: str):
+        return pd.DataFrame({"id": [1, 2], "name": ["A", "B"]})
+
+def test_with_mock_resource():
+    result = materialize(
+        [my_asset],
+        resources={"database": MockDatabaseResource()}
+    )
+    assert result.success
+```
+
+---
+
+## Schedules & Sensors
+
+### Schedules (Time-Based)
+
+```python
+from dagster import ScheduleDefinition, define_asset_job
+
+github_daily_schedule = ScheduleDefinition(
+    job=define_asset_job("github_pipeline", selection=["github_repos", "r2_uploaded_repos"]),
+    cron_schedule="0 2 * * *",  # 2 AM daily
+    name="github_daily",
 )
+```
+
+### Sensors (Event-Driven)
+
+```python
+from dagster import sensor, RunRequest, SkipReason
+
+@sensor(job=reindex_job)
+def github_repo_updated_sensor(context):
+    response = requests.get(f"https://api.github.com/repos/{repo}/branches/main")
+    latest_sha = response.json()['commit']['sha']
+
+    if latest_sha != context.cursor:
+        context.update_cursor(latest_sha)
+        return RunRequest(run_key=f"commit_{latest_sha}")
+    return SkipReason("No new commits")
+```
+
+### Run-Level Retry via Schedule Tags
+
+```python
+@schedule(...)
+def my_schedule(context):
+    return RunRequest(
+        tags={
+            "dagster/max_retries": "3",
+            "dagster/retry_strategy": "FROM_FAILURE"
+        }
+    )
+```
+
+---
+
+## Jobs & Asset Selection
+
+```python
+from dagster import define_asset_job, AssetSelection
+
+# Simple job
+github_pipeline_job = define_asset_job(
+    name="github_pipeline",
+    selection=["github_repos", "r2_uploaded_repos", "indexed_code"],
+)
+
+# Selection by group
+docs_job = define_asset_job(
+    name="docs_pipeline",
+    selection=AssetSelection.groups("docs"),
+)
+
+# Run everything
+full_pipeline_job = define_asset_job(name="full_pipeline", selection="*")
+```
+
+---
+
+## Design Patterns
+
+### Factory Pattern
+
+```python
+def create_ingestion_asset(source_name: str, table: str):
+    @asset(name=f"{source_name}_{table}")
+    def _asset(context):
+        return ingest(source_name, table)
+    return _asset
+
+# Generate multiple assets
+assets = [create_ingestion_asset("github", t) for t in ["repos", "issues", "pulls"]]
+```
+
+### Metadata-Driven Asset Generation
+
+```python
+import duckdb
+
+def load_sources_from_duckdb() -> list[dict]:
+    conn = duckdb.connect("metadata.db")
+    return conn.execute("""
+        SELECT source_id, name, tool_driver, connection_spec, extraction_strategy
+        FROM sources JOIN ingestion_configs USING (source_id)
+        WHERE active = true
+    """).fetchall()
+
+def build_crawl_asset(config: dict):
+    @asset(name=f"crawl_{config['name']}")
+    def _crawl_asset(context):
+        from crawl4ai import AsyncWebCrawler, CrawlerRunConfig
+        run_config = CrawlerRunConfig(**config['extraction_strategy'])
+        async with AsyncWebCrawler() as crawler:
+            result = await crawler.arun(url=config['connection_spec']['url'], config=run_config)
+        return result.markdown
+    return _crawl_asset
+
+sources = load_sources_from_duckdb()
+generated_assets = [build_crawl_asset(s) for s in sources if s['tool_driver'] == 'crawl4ai']
+```
+
+### Medallion Pattern (Bronze/Silver/Gold)
+
+```python
+@asset
+def bronze_customers():
+    """Raw extraction"""
+    return extract_from_source()
+
+@asset
+def silver_customers(bronze_customers):
+    """Cleaned and validated"""
+    return clean(bronze_customers)
+
+@asset
+def gold_customer_analytics(silver_customers):
+    """Business logic applied"""
+    return compute_analytics(silver_customers)
+```
+
+### ML Pipeline Pattern
+
+```python
+@asset
+def training_features():
+    return prepare_features()
+
+@asset
+def trained_model(training_features):
+    model = train(training_features)
+    return model
+
+@asset_check(asset=trained_model)
+def check_model_performance():
+    accuracy = evaluate_model()
+    return AssetCheckResult(passed=accuracy > 0.8, metadata={"accuracy": accuracy})
+
+@asset
+def predictions(trained_model):
+    return predict(trained_model)
 ```
 
 ### dbt Integration
@@ -320,48 +556,58 @@ defs = Definitions(
 )
 ```
 
-### ML Pipeline
+### Functional Core, Imperative Shell
 
 ```python
-from dagster import asset, asset_check, AssetCheckResult
-import mlflow
+# Functional Core - Pure function (no I/O)
+def parse_math_content(text: str) -> MathQuestion:
+    entities = extract_entities(text)
+    latex = normalize_latex(text)
+    return MathQuestion(entities=entities, latex=latex)
 
+# Imperative Shell - Dagster handles I/O
 @asset
-def training_data() -> pd.DataFrame:
-    """Prepare training dataset."""
-    return prepare_features()
-
-@asset
-def trained_model(training_data: pd.DataFrame):
-    """Train and log model."""
-    X, y = split_features_target(training_data)
-    model = train_model(X, y)
-
-    with mlflow.start_run():
-        mlflow.sklearn.log_model(model, "model")
-
-    return model
-
-@asset_check(asset=trained_model)
-def check_model_accuracy(trained_model):
-    """Validate model performance."""
-    accuracy = evaluate_model(trained_model)
-    return AssetCheckResult(
-        passed=accuracy > 0.8,
-        metadata={"accuracy": accuracy}
-    )
-
-@asset
-def predictions(trained_model, inference_data: pd.DataFrame) -> pd.DataFrame:
-    """Generate predictions."""
-    return pd.DataFrame({
-        "prediction": trained_model.predict(inference_data)
-    })
+def processed_questions(context, raw_documents):
+    for doc in raw_documents:
+        result = parse_math_content(doc.text)
+        yield result
 ```
 
-## Testing
+---
 
-### Unit Testing
+## Testing Patterns
+
+### Unit Test
+
+```python
+def test_asset():
+    mock_db = DatabaseResource(host="localhost", database="test", username="test", password="test")
+    result = materialize([my_asset], resources={"database": mock_db})
+    assert result.success
+    assert len(result.output_for_node("my_asset")) > 0
+```
+
+### Integration Test
+
+```python
+def test_pipeline():
+    result = materialize([asset1, asset2, asset3], resources=test_resources)
+    assert result.success
+```
+
+### Pytest Fixtures
+
+```python
+@pytest.fixture
+def mock_database():
+    return DatabaseResource(host="localhost", database="test", username="test", password="test")
+
+def test_etl_pipeline(mock_database):
+    result = materialize(all_assets, resources={"database": mock_database})
+    assert result.success
+```
+
+### Unit Testing with materialize()
 
 ```python
 from dagster import materialize
@@ -390,22 +636,235 @@ def test_customer_analytics():
     assert output.iloc[0]["revenue"] == 300
 ```
 
-### Resource Mocking
+---
+
+## Error Handling & Retry
+
+### Asset-Level Retry
 
 ```python
-from dagster import materialize
+from dagster import asset, RetryPolicy, Backoff, Jitter
 
-class MockDatabaseResource(ConfigurableResource):
-    def query(self, sql: str):
-        return pd.DataFrame({"id": [1, 2], "name": ["A", "B"]})
+@asset(retry_policy=RetryPolicy(max_retries=3, delay=1))
+def flaky_api_call(context):
+    return call_external_api()
 
-def test_with_mock_resource():
-    result = materialize(
-        [my_asset],
-        resources={"database": MockDatabaseResource()}
-    )
-    assert result.success
+@asset(retry_policy=RetryPolicy(
+    max_retries=5, delay=2,
+    backoff=Backoff.EXPONENTIAL,  # 2s, 4s, 8s, 16s, 32s
+    jitter=Jitter.PLUS_MINUS
+))
+def cloud_service_call(context):
+    return upload_to_cloud_service()
 ```
+
+### Manual Retry Control
+
+```python
+from dagster import asset, RetryRequested
+
+@asset
+def conditional_retry_asset(context):
+    try:
+        return process_data()
+    except TransientNetworkError as e:
+        raise RetryRequested(max_retries=3, seconds_to_wait=5)
+    except PermanentError as e:
+        context.log.error(f"Permanent error: {e}")
+        raise
+```
+
+### Failure with Metadata
+
+```python
+from dagster import asset, Failure, MetadataValue
+
+@asset
+def data_validation_asset(context):
+    data = load_data()
+    if data.null_count() > 1000:
+        raise Failure(
+            description="Too many null values detected",
+            metadata={"null_count": MetadataValue.int(data.null_count())},
+            allow_retries=False  # Data quality issue, not transient
+        )
+    return data
+```
+
+### Retry Best Practices
+
+- ✅ Use `RetryPolicy` for transient failures (network, cloud services)
+- ✅ Use exponential backoff for external APIs
+- ✅ Add jitter to prevent thundering herd
+- ✅ Use `Failure(allow_retries=False)` for data quality issues
+- ⚠️ Don't retry framework errors (Dagster internal)
+- ⚠️ Be mindful of retry limits on billable cloud services
+
+---
+
+## Code Organization
+
+### Evolution Strategy
+
+**Phase 1: One File (0-400 lines)**
+```python
+# definitions.py
+from dagster import asset, Definitions
+
+@asset
+def asset1(): ...
+@asset
+def asset2(): ...
+
+defs = Definitions(assets=[asset1, asset2], resources={...}, schedules=[...])
+```
+
+**Phase 2: Separate Concerns (400-2000 lines)**
+```
+my_project/
+├── definitions.py
+├── assets/
+│   ├── __init__.py
+│   ├── raw_data.py
+│   └── analytics.py
+├── resources/
+│   └── shared_resources.py
+└── schedules/
+    └── daily_jobs.py
+```
+
+**Phase 3: Domain Grouping (2000+ lines)**
+```
+my_project/
+├── assets/
+│   ├── raw_data/          # Landing zone
+│   ├── cleaned/           # Standardized
+│   ├── analytical/        # Business logic
+│   └── ml_models/         # ML features/models
+└── resources/
+    └── shared_resources.py
+```
+
+### Integration Project Structure
+
+```
+project_root/
+├── dagster_project/       # Dagster orchestration
+│   └── my_project/
+│       ├── definitions.py
+│       └── assets/
+├── dbt_project/           # Separate dbt project
+└── dlt_project/           # DLT configurations
+```
+
+---
+
+## DLT Integration
+
+```python
+from dagster import asset, AssetExecutionContext
+import dlt
+
+@asset(compute_kind="dlt")
+def dlt_ingestion(context: AssetExecutionContext):
+    pipeline = dlt.pipeline(
+        pipeline_name="data_ingest",
+        destination="duckdb",
+        dataset_name="raw"
+    )
+    load_info = pipeline.run(my_source())
+    context.add_output_metadata({
+        "rows_loaded": len(load_info.loads_ids),
+        "tables": list(load_info.load_packages[0].jobs.keys())
+    })
+    return load_info
+```
+
+### Firecrawl + Dagster Pattern
+
+```python
+@asset
+def scraped_curriculum_pages(context):
+    app = FirecrawlApp(api_key=os.getenv("FIRECRAWL_API_KEY"))
+    crawl_result = app.crawl_url(
+        "https://www.curriculumonline.ie",
+        params={'limit': 100}
+    )
+    return crawl_result
+```
+
+---
+
+## API Reference
+
+Dagster does **not** provide an OpenAPI spec. Use:
+
+| Interface | Purpose |
+|-----------|---------|
+| **GraphQL API** (primary) | Comprehensive programmatic access |
+| **External Assets REST API** (3 endpoints) | Lightweight external asset management |
+| **Python SDK** | Type-safe native Python access |
+| **dg api CLI** | Command-line automation |
+
+### GraphQL Endpoint
+```
+http://localhost:3000/graphql          # Local
+https://org.dagster.cloud/prod/graphql  # Cloud
+```
+
+### External Assets REST API
+
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| `/report_asset_materialization/{KEY}` | POST | Report materialization |
+| `/report_asset_check/{KEY}` | POST | Report check result |
+| `/report_asset_observation/{KEY}` | POST | Report observation |
+
+---
+
+## Best Practices & Anti-Patterns
+
+### ✅ DO
+
+- Use assets for data pipelines (not ops)
+- Use ConfigurableResource with Pydantic validation (not legacy @resource)
+- Use EnvVar for secrets (evaluated at runtime)
+- Add RetryPolicy for external API calls
+- Log rich metadata in materializations
+- Test individual assets with `materialize()`
+- Use PostgreSQL for production storage
+
+### ❌ AVOID
+
+- Using ops for data pipelines (use assets)
+- Loading heavy libraries at module level (lazy import inside asset functions)
+- No retry policies on external calls
+- Creating >100,000 partitions per asset
+- Too many code locations (~100MB baseline each)
+- Monolithic assets (break into smaller pieces)
+- Stale imports from `oideachais.data_platform...` within data platform (use relative imports)
+
+### 📦 Debugging Checklist
+
+| Symptom | Check |
+|---------|-------|
+| Asset not running | Dependencies materialized? Resource config? Partition mismatches? |
+| Performance issues | Partition count <100K? Heavy imports at module level? PostgreSQL for storage? |
+| Resource errors | EnvVar values set? Resource config in Definitions? Test resource independently? |
+| Schedule/sensor not firing | Dagster daemon running? Required for schedules/sensors to function |
+
+### Integration Ecosystem
+
+| Category | Libraries |
+|----------|-----------|
+| Data Transformation | dbt, Spark, Pandas, Polars |
+| Data Warehouses | Snowflake, BigQuery, Redshift, Databricks |
+| Data Quality | Great Expectations, Soda, Pandera |
+| Cloud Platforms | AWS (dagster-aws), GCP (dagster-gcp), Azure (dagster-azure) |
+| Data Loading | Airbyte, Fivetran, dlt |
+| BI & Analytics | Census, Tableau, Looker, PowerBI |
+
+---
 
 ## Project Structure
 
@@ -437,8 +896,6 @@ my_dagster_project/
 from dagster import Definitions, load_assets_from_modules
 
 from my_dagster_project.assets import bronze, silver, gold
-from my_dagster_project.resources import database
-from my_dagster_project.jobs import schedules
 
 all_assets = load_assets_from_modules([bronze, silver, gold])
 
@@ -451,45 +908,7 @@ defs = Definitions(
 )
 ```
 
-## Best Practices
-
-### Asset Naming
-- Use descriptive, noun-based names
-- Good: `daily_active_users`, `customer_churn_predictions`
-- Bad: `process_data`, `etl_job_3`
-
-### Performance
-- Don't import heavy libraries at module level
-- Use lazy imports inside asset functions
-- PostgreSQL for production (not SQLite)
-- Limit partitions to <100,000 per asset
-
-### Observability
-- Add rich metadata to materializations
-- Use asset checks for data quality
-- Log important info via `context.log`
-
-### Error Handling
-- Use RetryPolicy for transient failures
-- Use exponential backoff for external APIs
-- Use `Failure` with `allow_retries=False` for data quality issues
-
-## Debugging Checklist
-
-1. **Asset Not Running**
-   - Check dependencies are materialized
-   - Verify resource configuration
-   - Check for partition mismatches
-
-2. **Performance Issues**
-   - Check partition count (<100K?)
-   - Heavy imports at module level?
-   - Appropriate storage backend?
-
-3. **Resource Errors**
-   - Verify EnvVar values set
-   - Check resource in Definitions
-   - Test resource independently
+---
 
 ## Resources
 
@@ -497,3 +916,4 @@ defs = Definitions(
 - **API Reference**: https://docs.dagster.io/api
 - **Dagster University**: https://dagster.io/university
 - **GitHub**: https://github.com/dagster-io/dagster
+- **Latest**: v1.13.x (2025) — branch deployments, AI skills integration, improved partitioning

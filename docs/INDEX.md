@@ -173,6 +173,22 @@ From `00-core/CONSTRAINTS.md`:
 
 ---
 
+## Reference Libraries (consolidated 2026-06-14)
+
+These are *reference* libraries — research + scraped-upstream content, not part of the canonical 7-domain tree. Each has its own `README.md`.
+
+| Library | Subdir | Description |
+|---|---|---|
+| [lance/](lance/) | LanceDB reference | 18M. 14 example apps in `examples/`, 4 strategic docs at root, 1 PDF. |
+| [web/](web/) | Web architecture | 3.1M. 98 .md reorganised into 10 topical subdirs (00-nav, 01-tanstack, 02-betterauth, 03-ag-ui, 04-alchemy, 05-convex, 06-effect, 07-react-frontend, 08-repos, 09-clippings). |
+| [dlt/](dlt/) | dlt (Data Load Tool) | 10M. 25 .md + 3 example subdirs. 2 byte-dupes resolved. |
+| [cocoindex/](cocoindex/) | CocoIndex | 28M. 21 example subdirs + best-practices summary + `cocoindex-code-mcp-server/` as reference. See [best practices](cocoindex/cocoindex-best-practices.md). |
+| [dagster/](dagster/) | Dagster | 5.4M. 27 root .md + 7 integration subdirs in `integrations/`. `dagster-dspy/` deleted. |
+| [baml/](baml/) | 4 BAML snapshots | 3.6M. Per "h skip baml" decision, not yet consolidated. |
+| [notebooks/](notebooks/) | 343 Jupyter notebooks | 95M. Organised by snakecase topic: `data_engineering/{lakefs,geoai,lance,ducklake,dlt}/`, `meaisínfhoghlaim/`, `teanga/`, `agents_google-adk/`, `marimo_docs_marimo/`, `_misc/`, `_archives/`. |
+| [marimo/](marimo/) | Marimo reference | 2.6M (after upstream mirrors moved to `08-mirrors/`). 4 root .md + 16 root .py demos + 15 topic subdirs. |
+| [08-mirrors/](08-mirrors/) | Upstream source mirrors | 175M. `marimo/` (3,641 files, 169M) + `marimo-docs/` (462 .py, 6.2M). |
+
 ## Source Directories (Excluded)
 
 | Directory | Files | Reason Excluded |

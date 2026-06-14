@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Scottish Gaelic AI Resources
 
 ## Overview

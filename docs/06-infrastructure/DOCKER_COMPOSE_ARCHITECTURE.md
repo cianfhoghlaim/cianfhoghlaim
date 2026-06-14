@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Docker Compose Architecture Overview
 
 ## System Architecture Diagram

@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Subject-Specific Implementations
 
 ## Executive Summary

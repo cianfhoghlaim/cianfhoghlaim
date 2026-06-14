@@ -33,6 +33,8 @@ ccc_query_hints:
   - "oideachais web tech stack"
   - "Kings College Galway frontend"
 updated: 2026-06-06
+truth: partial
+
 ---
 
 # Web Architecture

@@ -10,6 +10,8 @@ supersedes:
   - docs/lower_socioeconomic_piracy.md
 ccc_query_hints:
   - lower socioeconomic piracy: a budget med
+truth: partial
+
 ---
 
 # Lower Socioeconomic Piracy: A Budget Media Stack

@@ -10,6 +10,8 @@ supersedes:
   - docs/ragas.md
 ccc_query_hints:
   - ragas — rag evaluation framework
+truth: partial
+
 ---
 
 # RAGAS — RAG Evaluation Framework

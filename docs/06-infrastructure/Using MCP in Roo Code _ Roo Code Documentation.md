@@ -7,6 +7,8 @@ created: 2026-04-11
 description: "Complete guide to using Model Context Protocol (MCP) in Roo Code. Learn how to configure MCP servers, manage tools, and extend Roo Code's capabilities."
 tags:
   - "clippings"
+truth: partial
+
 ---
 > [!-info] -info
 > Confused about MCP Servers?

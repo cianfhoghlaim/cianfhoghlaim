@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Agent Documentation Index
 
 ## Merged Comprehensive Documents

@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 Dagger Pipeline Orchestration for Komodo &
 
 Pangolin Full-Stack Deployment

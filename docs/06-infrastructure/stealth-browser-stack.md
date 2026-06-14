@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Stealth Browser Infrastructure
 
 ## Executive Summary

@@ -1,2 +1,0 @@
-#!/bin/bash
-cat ${HOME}/gaeilge/gramadoir/gr/ga/lexicon-ga.txt | sed 's/ .*//' | uniq -c | egrep ' 1 ' | sed 's/^ *1 //'

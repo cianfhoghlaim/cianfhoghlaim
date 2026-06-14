@@ -8,6 +8,8 @@ created: 2025-12-20
 description:
 tags:
   - "clippings"
+truth: partial
+
 ---
 Upon logging in you will be presented with the Omni dashboard.
 

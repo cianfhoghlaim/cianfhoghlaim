@@ -10,6 +10,8 @@ supersedes:
   - docs/MODEL_FINETUNING.md
 ccc_query_hints:
   - model fine-tuning strategy for cryptocur
+truth: partial
+
 ---
 
 # Model Fine-Tuning Strategy for Cryptocurrency Domain

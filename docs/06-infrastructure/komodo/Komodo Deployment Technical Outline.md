@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 
 
 # **Orchestrating Distributed Infrastructure: A Technical Analysis of Komodo v2 (Dev-90), Ansible Automation, and Identity-Aware Ingress**

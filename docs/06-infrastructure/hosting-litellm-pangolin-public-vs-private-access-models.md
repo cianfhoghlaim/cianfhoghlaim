@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 Hosting LiteLLM on Pangolin: Public vs. Private
 
 Access Models

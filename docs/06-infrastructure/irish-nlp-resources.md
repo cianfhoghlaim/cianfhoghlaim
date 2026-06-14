@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Irish (Gaeilge) Language AI Resources
 
 ## Overview

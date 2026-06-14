@@ -1,6 +1,8 @@
 ---
 name: tanstack-start
 description: Expert assistance for building full-stack React applications with TanStack Start. Use when users need file-based routing, server functions, SSR, streaming, or integration with TanStack Router and Query.
+truth: partial
+
 ---
 
 # TanStack Start - Full-Stack React Framework

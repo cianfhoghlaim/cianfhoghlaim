@@ -10,6 +10,8 @@ supersedes:
   - docs/nllb-200.md
 ccc_query_hints:
   - nllb-200 — 200-language neural machine t
+truth: partial
+
 ---
 
 # NLLB-200 — 200-Language Neural Machine Translation

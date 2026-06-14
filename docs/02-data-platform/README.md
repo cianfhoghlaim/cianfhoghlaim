@@ -9,6 +9,8 @@ ccc_query_hints:
   - dlt pipelines
   - lakehouse duckdb ducklake
   - motherduck
+truth: partial
+
 ---
 
 # Data Platform — Canonical Documentation

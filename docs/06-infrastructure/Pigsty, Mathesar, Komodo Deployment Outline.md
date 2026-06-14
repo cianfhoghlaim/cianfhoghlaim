@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 
 
 # **Architectural Blueprint for the Unified Deployment of Pigsty and Mathesar: A Simplified Komodo-Ansible Integration**

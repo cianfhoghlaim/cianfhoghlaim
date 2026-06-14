@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # OpenSpec Analysis Report: Comprehensive Structure and Guidelines
 
 ## Document Created

@@ -1,6 +1,8 @@
 ---
 name: duckdb
 description: Expert assistance for DuckDB analytical database. Use when users need fast OLAP queries, file-based analytics, Parquet processing, embedded SQL, or local-first data analysis.
+truth: partial
+
 ---
 
 # DuckDB - In-Process Analytical Database

@@ -10,6 +10,8 @@ supersedes:
   - docs/crawl4ai-sdk.md
 ccc_query_hints:
   - crawl4ai — ai-powered web crawling sdk
+truth: partial
+
 ---
 
 # Crawl4AI — AI-Powered Web Crawling SDK

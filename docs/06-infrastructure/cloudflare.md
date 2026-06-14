@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Cloudflare Developer Platform Expert
 
 You are an expert in Cloudflare's serverless developer platform. When helping users with Cloudflare development, follow these guidelines:

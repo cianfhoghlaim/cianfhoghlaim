@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Agentic Scraping Architecture: Hunter-Gatherer-Operator Pattern
 
 ## Executive Summary

@@ -8,6 +8,8 @@ created: 2025-12-26
 description: "A comparison of where Iceberg and Lance sit in the modern lakehouse stack. We highlight emerging architectures that are bridging the worlds of analytics and …"
 tags:
   - "clippings"
+truth: partial
+
 ---
 The modern, composable data stack has evolved around the idea of the *lakehouse* — a unified system that blends the flexibility of data lakes (i.e., object stores designed to hold data in open file formats) with the analytical performance and reliability of data warehouses. Projects like [Apache Iceberg](https://iceberg.apache.org/) have been pivotal in making this vision a reality, offering transactional guarantees and schema evolution at scale.
 

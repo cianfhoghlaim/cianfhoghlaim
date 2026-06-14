@@ -1,3 +1,7 @@
+---
+truth: superseded
+---
+
 # Docs/ Inventory Report — Consolidation Discovery Audit
 
 **Generated:** 2026-06-06

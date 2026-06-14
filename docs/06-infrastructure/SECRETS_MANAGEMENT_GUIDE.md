@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Secrets Management — Locket + Infisical Complete Guide
 
 > **Merged From:** `docs/bonneagar/locket/` (23 files) + `docs/bonneagar/infisical/` (7 files)

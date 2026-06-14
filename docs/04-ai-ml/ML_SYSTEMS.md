@@ -10,6 +10,8 @@ supersedes:
   - docs/ML_SYSTEMS.md
 ccc_query_hints:
   - comprehensive ai/ml systems architecture
+truth: partial
+
 ---
 
 # Comprehensive AI/ML Systems Architecture & Integration Guide

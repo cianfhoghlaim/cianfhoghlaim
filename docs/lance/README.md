@@ -1,47 +1,39 @@
-# lance-namespace
+# LanceDB Reference Library
 
-Lance Namespace interface and plugin registry.
+LanceDB is an open-source, embedded, multimodal vector database for production-scale AI applications. Built on the **Lance** columnar data format with Apache Arrow + DataFusion, it supports vector search, full-text search, and hybrid search at billion-scale.
 
-## Overview
+---
 
-This package provides:
-- `LanceNamespace` ABC interface for namespace implementations
-- `connect()` factory function for creating namespace instances
-- `register_namespace_impl()` for external implementation registration
-- Re-exported model types from `lance_namespace_urllib3_client`
+## Strategic Documents
 
-## Installation
+| Document | Description |
+|----------|-------------|
+| [Lancedb Research Report](lancedb-research-report.md) | Executive overview — serverless architecture, multimodal support, billion-scale benchmarks |
+| [Lancedb Reference](lancedb-reference.md) | 2,672-line API + integration reference (the canonical doc) |
+| [Ibis, LanceDB, and Data Stack Integration](Ibis,%20LanceDB,%20and%20Data%20Stack%20Integration.md) | Ibis + LanceDB composition for analytical/transactional workloads |
+| [Lancedb Multimodal Lakehouse](lancedb-multimodal-lakehouse.pdf) | PDF — multimodal architecture paper |
 
-```bash
-pip install lance-namespace
-```
+## Configuration (for local dev)
 
-## Usage
+- `pyproject.toml` — Python project manifest
+- `lancedb.compose.yaml` — Docker Compose for local LanceDB + dependencies
+- `iceberg.py` — Iceberg integration reference
 
-```python
-import lance_namespace
+## Examples
 
-# Connect using native implementations (requires lance package)
-ns = lance_namespace.connect("dir", {"root": "/path/to/data"})
-ns = lance_namespace.connect("rest", {"uri": "http://localhost:4099"})
+14 runnable example apps in [`examples/`](examples/) (each with its own `README.md`):
 
-# Register a custom implementation
-lance_namespace.register_namespace_impl("glue", "lance_glue.GlueNamespace")
-ns = lance_namespace.connect("glue", {"catalog": "my_catalog"})
-```
-
-## Creating Custom Implementations
-
-```python
-from lance_namespace import LanceNamespace
-
-class MyNamespace(LanceNamespace):
-    def namespace_id(self) -> str:
-        return "MyNamespace { ... }"
-
-    # Override other methods as needed
-```
-
-## License
-
-Apache-2.0
+- `Advance_RAG_LOTR/` — RAG over *Lord of the Rings* corpus
+- `Advanced_RAG_Context_Enrichment_Window/` — sliding-window context for long docs
+- `Chatbot_with_Parler_TTS/` — chatbot with Parler text-to-speech
+- `Chunking_Analysis/` — chunking-strategy comparison tool
+- `cognee-RAG/` — Cognee knowledge-graph RAG
+- `Geospatial-Recommendation-System/` — geo-vector recommendation
+- `hybrid-search/` — BM25 + vector hybrid retrieval
+- `js-transformers/` — JS/TS embedding client (incl. cloud subdir)
+- `multi-document-agentic-rag/` — agentic RAG across many docs
+- `Multilingual_RAG/` — multilingual embedding + retrieval
+- `multimodal-recipe-agent/` — multimodal (image + text) recipe agent
+- `multimodal-search/` — CLIP-style image+text search
+- `quickstart/` — minimal LanceDB getting-started
+- `time-travel-rag/` — versioned RAG over Lance table history

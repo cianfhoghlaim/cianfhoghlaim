@@ -51,6 +51,8 @@ ccc_query_hints:
   - "Effect Schema validation"
   - "Vite build plugin tanstackStart"
 updated: 2026-06-06
+truth: partial
+
 ---
 
 # Frontend Stack

@@ -8,6 +8,8 @@ created: 2025-12-08
 description: "Configure Pocket ID Single Sign-On using OpenID Connect"
 tags:
   - "clippings"
+truth: partial
+
 ---
 The following steps will integrate Pocket ID with Pangolin SSO using OpenID Connect (OIDC).
 

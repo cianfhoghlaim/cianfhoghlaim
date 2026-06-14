@@ -8,6 +8,8 @@ created: 2025-12-29
 description: "How to install and active crowdsec in pangolinPrerequisits: Succesful installation of pangolin + DNS entriesDomain and DNS entries:For beginners: You should own a fresh domain name with no other A records than these 2…"
 tags:
   - "clippings"
+truth: partial
+
 ---
 [Guides & Tutorials](https://forum.hhf.technology/c/guides-tutorials/52)
 

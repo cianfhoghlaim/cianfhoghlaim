@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Dagger CI/CD - Complete Guide Index
 
 > Consolidated navigation guide for Dagger CI/CD patterns in hybrid Python/TypeScript monorepos.

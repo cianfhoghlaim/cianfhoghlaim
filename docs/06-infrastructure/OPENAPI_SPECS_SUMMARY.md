@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # OpenAPI Specifications Research Summary
 
 **Research Date:** 2025-11-22

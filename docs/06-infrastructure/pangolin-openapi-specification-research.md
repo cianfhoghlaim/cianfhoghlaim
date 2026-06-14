@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Pangolin OpenAPI Specification Research Report
 
 ## Executive Summary

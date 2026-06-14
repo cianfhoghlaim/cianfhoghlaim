@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Cryptocurrency Knowledge Graph Schema
 
 ## Overview

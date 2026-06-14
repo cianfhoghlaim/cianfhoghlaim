@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # AI-Native Data Pipelines
 
 ## BAML-dlt Integration, Dagster Orchestration & Bilingual Dataset Creation

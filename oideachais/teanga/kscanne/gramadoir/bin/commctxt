@@ -1,9 +1,0 @@
-#!/bin/bash
-cat /usr/local/share/crubadan/ga/FREQ | sed '1d' | sed 's/^ *[0-9]* //' |
-while read word
-do
-	echo "Analyzing the word $word..."
-	context "$word"
-	echo
-	echo
-done

@@ -7,6 +7,8 @@ created: 2025-12-21
 description:
 tags:
   - "clippings"
+truth: partial
+
 ---
 In previous blog posts ([here](https://blog.rasc.ch/2021/11/pulumi.html), [here](https://blog.rasc.ch/2021/12/go-lambda.html), [here](https://blog.rasc.ch/2024/09/python_lambda.html),[here](https://blog.rasc.ch/2022/01/aws-backend-1.html), [here](https://blog.rasc.ch/2022/01/aws-backend-2.html), [here](https://blog.rasc.ch/2024/10/awsbatchgpu.html), [here](https://blog.rasc.ch/2022/01/sqs-protobuf.html)) I showed you how to provision resources on AWS with [Pulumi](https://www.pulumi.com/). But Pulumi and Terraform are not limited to just the big three cloud providers: AWS, Azure, and GCP. You can use both tools to provision resources on many different cloud providers. You can find a list of all Pulumi packages [here](https://www.pulumi.com/registry/).
 

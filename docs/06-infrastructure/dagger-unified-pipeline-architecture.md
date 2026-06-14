@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Comprehensive Dagger Pipeline Orchestration
 ## Unified Infrastructure, Web Development & Data Engineering Deployment
 

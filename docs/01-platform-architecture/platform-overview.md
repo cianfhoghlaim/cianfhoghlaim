@@ -36,6 +36,8 @@ ccc_query_hints:
   - "what is the Quadrant Model"
   - "how does the platform deploy end to end"
 last_reviewed: 2026-06-06
+truth: partial
+
 ---
 
 # Cianfhoghlaim Platform Overview

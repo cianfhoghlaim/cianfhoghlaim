@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Document Processing Pipeline for Cryptocurrency Analytics
 
 ## Overview

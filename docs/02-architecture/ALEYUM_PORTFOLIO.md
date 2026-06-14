@@ -10,6 +10,8 @@ supersedes:
   - docs/ALEYUM_PORTFOLIO.md
 ccc_query_hints:
   - aleyum portfolio
+truth: partial
+
 ---
 
 # Aleyum Portfolio

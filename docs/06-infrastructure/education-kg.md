@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Education Knowledge Graph
 
 ## Education Policy Context & Knowledge Graph Infrastructure

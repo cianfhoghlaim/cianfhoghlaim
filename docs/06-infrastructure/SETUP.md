@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Automation Setup Guide
 
 Complete checklist for running Ansible playbooks via Docker Compose with 1Password Connect for secrets management.

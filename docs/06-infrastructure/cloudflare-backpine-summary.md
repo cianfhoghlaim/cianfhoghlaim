@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Cloudflare Full-Stack Repository Summary
 
 ## Overview

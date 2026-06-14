@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Platform Engineering
 
 ## Document Processing Pipelines & Platform/Deployment Engineering

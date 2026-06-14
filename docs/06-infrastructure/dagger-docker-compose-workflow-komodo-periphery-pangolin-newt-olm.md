@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 Dagger + Docker Compose Workflow for Komodo
 
 Periphery, Pangolin Newt, and Olm

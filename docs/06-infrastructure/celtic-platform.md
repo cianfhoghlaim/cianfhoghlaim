@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Celtic Language Platform
 
 ## Irish EdTech, Celtic NLP Resources & Self-Hosting Infrastructure
