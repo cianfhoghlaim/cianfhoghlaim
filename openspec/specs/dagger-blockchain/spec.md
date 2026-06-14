@@ -1,7 +1,11 @@
 # Blockchain CI Capability
 
-## Overview
+## Purpose
 
+`dagger-blockchain` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
+## Background
 CI/CD functions for SpacetimeDB WASM modules, Solana programs (Anchor), and Ethereum contracts (Foundry/Alloy).
 
 | Feature | Description |

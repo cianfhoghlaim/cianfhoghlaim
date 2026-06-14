@@ -1,7 +1,11 @@
 # Infrastructure Capability
 
-## Overview
+## Purpose
 
+`infrastructure` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
+## Background
 Production infrastructure and deployment architecture implementing Pangolin Convergence Architecture (two-tier: OCI ARM1 control plane + MacBook M4 workload host), zero-egress lakehouse, and GitOps deployment via Komodo.
 
 | Feature | Description |

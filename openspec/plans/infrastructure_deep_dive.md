@@ -1,3 +1,11 @@
+---
+title: 'Infrastructure Deep Dive'
+status: research
+supersedes: []
+superseded_by: [openspec/specs/infrastructure/spec.md]
+last_touched: 2026-06-13
+---
+
 # Infrastructure Deep Dive: Education Workspace
 
 This document provides a deep analysis of the storage and infrastructure layers within the `sruth/bonneagar` directory, focusing on the converged architecture utilizing Oracle Cloud (OCI) and the local high-performance MacBook M4 Max.

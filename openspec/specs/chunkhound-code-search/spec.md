@@ -1,7 +1,11 @@
 # ChunkHound Code Search Capability
 
-## Overview
+## Purpose
 
+`chunkhound-code-search` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
+## Background
 Semantic code search with MVCC support, multi-language parsing, and MCP integration for AI-assisted development.
 
 | Feature | Description |

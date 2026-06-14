@@ -1,9 +1,13 @@
 # `croilar-portfolio` capability spec
 
+## Purpose
+
+`croilar-portfolio` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
 The personal-portfolio subproject for Cian. Public TanStack Start site with 9 subprojects (Home, CV, Music, Code, Research, Teaching, Data, Identity, Contact) — bilingual (English + Irish) — served from Cloudflare Pages + R2.
 
-## ADDED Requirements
-
+## Requirements
 ### Requirement: 9 Subproject Routes
 The system SHALL expose 9 subproject routes at the public root.
 

@@ -1,3 +1,11 @@
+---
+title: 'Tangent 3 Automated Assessment'
+status: deferred
+supersedes: []
+superseded_by: [docs/00-deploy-plans/03-automated-assessment.md, archive: openspec/plans/archive/tangent_3_automated_assessment.md]
+last_touched: 2026-06-13
+---
+
 # Tangent 3: Automated Assessment & Grade Forecasting Oracle
 
 ## Executive Summary

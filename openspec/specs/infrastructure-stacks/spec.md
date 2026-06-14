@@ -1,7 +1,11 @@
 # Infrastructure Stacks Capability
 
-## Overview
+## Purpose
 
+`infrastructure-stacks` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
+## Background
 65+ storage, utility, engineering, machine learning, and infrastructure Docker Compose stacks managed via Komodo for the Cianfhoghlaim platform. Organized into 5 categories with standardized Pangolin routing, Locket secret injection, and Infisical secret management.
 
 | Feature | Description |

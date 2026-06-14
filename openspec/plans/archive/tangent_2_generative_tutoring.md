@@ -1,3 +1,11 @@
+---
+title: 'Tangent 2 Generative Tutoring'
+status: deferred
+supersedes: []
+superseded_by: [docs/00-deploy-plans/02-generative-tutoring.md, archive: openspec/plans/archive/tangent_2_generative_tutoring.md]
+last_touched: 2026-06-13
+---
+
 # Strategic Plan: Tangent 2 - Hyper-Personalized, Cross-Lingual Generative Tutoring System
 
 ## 1. Executive Summary

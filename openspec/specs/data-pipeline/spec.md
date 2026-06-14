@@ -1,7 +1,11 @@
 # Data Pipeline Capability
 
-## Overview
+## Purpose
 
+`data-pipeline` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+
+
+## Background
 Modern data orchestration and ETL/ELT pipelines with asset-based design, incremental loading, schema inference, and integration with the modern data stack.
 
 ## Requirements
