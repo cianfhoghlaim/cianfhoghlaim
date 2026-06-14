@@ -3,6 +3,8 @@ name: Pangolin Debugging Assistant
 description: Debug Pangolin applications - network issues, auth problems, API errors, and more.
 category: Debugging
 tags: [pangolin, debug, troubleshooting, errors]
+truth: partial
+
 ---
 
 # Pangolin Debugging Assistant

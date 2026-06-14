@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Data Acquisition Pipeline Implementation
 
 ## Overview

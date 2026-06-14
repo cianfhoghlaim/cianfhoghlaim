@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Pangolin Project: Patterns and Ontologies Deep Dive
 
 ## Overview

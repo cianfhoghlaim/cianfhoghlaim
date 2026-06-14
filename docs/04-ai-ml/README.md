@@ -6,6 +6,8 @@ migration_source: docs/bunchloch/meaisínfhoghlaim + docs/bunchloch/teanga
 ccc_query_hints: ["ai/ml-documentation"]
 type: index
 description: "Canonical AI/ML documentation for the Cianfhoghlaim platform covering fine-tuning, OCR/HTR, RAG evaluation, knowledge graphs, vector embeddings, Celtic language AI, and ML pipelines."
+truth: partial
+
 ---
 # AI/ML Documentation
 

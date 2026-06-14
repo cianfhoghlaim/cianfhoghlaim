@@ -8,6 +8,8 @@ created: 2025-12-08
 description:
 tags:
   - "clippings"
+truth: partial
+
 ---
 This is a community guide and not officially supported. For issues, contributions, or bug reports, please use the [official GitHub repository](https://github.com/hhftechnology/middleware-manager).
 

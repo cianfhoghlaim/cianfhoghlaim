@@ -10,6 +10,8 @@ supersedes:
   - docs/sqlmesh.md
 ccc_query_hints:
   - sqlmesh — data transformation framework
+truth: partial
+
 ---
 
 # SQLMesh — Data Transformation Framework

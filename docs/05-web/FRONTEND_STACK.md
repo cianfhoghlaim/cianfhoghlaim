@@ -10,6 +10,8 @@ supersedes:
   - docs/FRONTEND_STACK.md
 ccc_query_hints:
   - frontend stack for irish education platf
+truth: partial
+
 ---
 
 # Frontend Stack for Irish Education Platform

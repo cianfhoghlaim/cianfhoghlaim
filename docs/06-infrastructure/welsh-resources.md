@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Welsh (Cymraeg) AI Resources
 
 ## Overview

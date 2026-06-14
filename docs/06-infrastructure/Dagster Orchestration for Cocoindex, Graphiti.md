@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # **Architectural Blueprint for Mathematical Knowledge Extraction: A Modular Orchestration Strategy Using Dagster, Cocoindex, and Graphiti**
 
 ## **1\. Introduction: The Imperative for Semantic Intelligence in Educational Assessment**

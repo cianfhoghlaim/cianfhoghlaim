@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # **Orchestrating the Polyglot Monorepo: A Comparative Architectural Analysis of Mise-en-place, Taskipy, and Dagger for Hybrid Python and TypeScript Environments**
 
 ## **Executive Summary**

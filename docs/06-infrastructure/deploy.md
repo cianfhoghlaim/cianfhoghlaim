@@ -3,6 +3,8 @@ name: Pangolin Deployment Helper
 description: Deploy Pangolin applications to various platforms (Cloudflare, Netlify, Docker).
 category: Deployment
 tags: [pangolin, deployment, cloudflare, netlify, docker]
+truth: partial
+
 ---
 
 # Pangolin Deployment Assistant

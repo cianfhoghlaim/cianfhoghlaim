@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 > [!IMPORTANT]
 > This example requires komodo core and periphery to be updated to  v2.0.0 or higher.
 > You should use the deployment role in a more conventional manner first to get updated

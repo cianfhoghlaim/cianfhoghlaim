@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Docker Compose Analysis - Complete Documentation Index
 
 ## Overview

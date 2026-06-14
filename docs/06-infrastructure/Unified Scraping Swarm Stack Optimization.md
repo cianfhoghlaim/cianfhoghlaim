@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # **Architectural Synthesis of a Unified Scraping Swarm: Optimizing Skyvern, Crawl4AI, and Stagehand via Model Context Protocol and Patchright**
 
 ## **Executive Summary**

@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Komodo (komo.do) OpenAPI Research Report
 
 **Date:** 2025-11-22

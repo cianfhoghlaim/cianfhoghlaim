@@ -3,6 +3,8 @@ name: Termix Development Assistant
 description: Expert assistant for Termix - helps with SSH server management, deployment, configuration, tunneling, and file editing.
 category: Infrastructure
 tags: [termix, ssh, server-management, terminal, deployment]
+truth: partial
+
 ---
 
 # Termix Development Assistant

@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Pan-Celtic Web Scraping Strategy
 
 ## Overview

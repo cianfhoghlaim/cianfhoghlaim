@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Apple Silicon Deployment for Document Intelligence
 
 ## Executive Summary

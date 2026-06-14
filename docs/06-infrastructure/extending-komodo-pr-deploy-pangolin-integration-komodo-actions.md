@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 Extending komodo-pr-deploy for Pangolin
 
 Integration via Komodo Actions

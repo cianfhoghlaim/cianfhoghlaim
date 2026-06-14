@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Firecrawl OpenAPI Specification Research Report
 
 **Date:** 2025-11-22

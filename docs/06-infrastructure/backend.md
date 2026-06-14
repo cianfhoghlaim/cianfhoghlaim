@@ -1,5 +1,7 @@
 ---
 description: Connect to Ibis backends and select the right one for your use case.
+truth: partial
+
 ---
 
 # Ibis Backend Selection Assistant

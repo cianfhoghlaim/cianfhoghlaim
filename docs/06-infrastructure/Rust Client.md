@@ -8,6 +8,8 @@ created: 2025-12-19
 description: "The latest stable version of the DuckDB Rust client is {{ site.current_duckdb_rust_version }}. Installation The DuckDB Rust client can be installed from crates.io. Please see the docs.rs for details. Basic API Usage duckdb-rs is an ergonomic wrapper based on the DuckDB C API, please refer to the README for details. Startup & Shutdown To use duckdb, you must first initialize a Connection handle using Connection::open(). Connection::open() takes as parameter the database file to read and write from. If the database file does not exist, it will be created (the file extension may be .db, .duckdb, or anything else). You can…"
 tags:
   - "clippings"
+truth: partial
+
 ---
 - [Sitemap](https://duckdb.org/docs/sitemap)
 - [Live Demo](https://shell.duckdb.org/)

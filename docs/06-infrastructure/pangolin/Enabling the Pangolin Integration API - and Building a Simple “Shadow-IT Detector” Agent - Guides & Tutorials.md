@@ -8,6 +8,8 @@ created: 2025-12-29
 description: "The Pangolin Integration API allows DevOps teams to script, automate, and integrate Pangolin functionality using a secure, permission-scoped REST interface. In this guide, we’ll walk through: How to enable the Pangolin…"
 tags:
   - "clippings"
+truth: partial
+
 ---
 [Guides & Tutorials](https://forum.hhf.technology/c/guides-tutorials/52)
 

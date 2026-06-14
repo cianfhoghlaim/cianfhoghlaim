@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Knowledge Graph Infrastructure: Unified Architecture Guide
 
 A comprehensive reference for building temporal knowledge graphs, entity resolution pipelines, and hybrid search systems for AI agents.

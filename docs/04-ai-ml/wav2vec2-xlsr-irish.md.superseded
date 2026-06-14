@@ -10,6 +10,8 @@ supersedes:
   - docs/wav2vec2-xlsr-irish.md
 ccc_query_hints:
   - wav2vec2-xlsr-irish — irish speech recog
+truth: partial
+
 ---
 
 # wav2vec2-XLSR-Irish — Irish Speech Recognition

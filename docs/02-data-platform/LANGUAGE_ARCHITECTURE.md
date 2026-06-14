@@ -10,6 +10,8 @@ supersedes:
   - docs/LANGUAGE_ARCHITECTURE.md
 ccc_query_hints:
   - ducklake unified platform - architecture
+truth: partial
+
 ---
 
 # DuckLake Unified Platform - Architecture Analysis

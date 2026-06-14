@@ -13,6 +13,8 @@ ccc_query_hints:
   - dagster schedule sensor job
   - dagster design patterns factory retry
   - dagster dlt integration
+truth: partial
+
 ---
 
 # Dagster Orchestration

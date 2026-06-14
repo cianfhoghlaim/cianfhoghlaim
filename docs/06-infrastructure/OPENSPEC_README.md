@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # OpenSpec Documentation Index
 
 This directory contains comprehensive analysis of the OpenSpec specification-driven development system used by the data-unified platform.

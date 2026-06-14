@@ -1,220 +1,170 @@
-# Túatha Documentation Index
+# Tuath Documentation Index
 
-**All 116 files at `docs/tuatha/*.md` — flat, no subdirectories.**
+All `docs/tuatha/*.md` (consolidated into 8 topical subdirectories).
 
-Last consolidated: 2026-06-06
+Last consolidated: 2026-06-13
 
 ---
 
-## Repo Summaries (`repo-*`) — 11 files
+## Quick links
 
-Upstream open-source project summaries relevant to the Túatha educational MMO.
+- [README.md](README.md) — project overview, mission, and architecture
+- [ANALYSIS.md](ANALYSIS.md) — cross-project analysis (Cianfhoghlaim stack: bonneagar / meaisínfhoghlaim / sruth / taighde)
+- [00-nav/Tuath API Reference.md](00-nav/Tuath%20API%20Reference.md) — canonical API doc
+- [00-nav/GRAPHICS_INDEX.md](00-nav/GRAPHICS_INDEX.md) — graphics & rendering doc catalog
+- [00-nav/PIPELINES.md](00-nav/PIPELINES.md) — data pipeline architecture
+- [08-mirrors/](08-mirrors/) — 11 skeletonized upstream mirrors (SpacetimeDB, wgpu, gdext, x402, etc.)
 
-| File | Upstream | Relevance |
+---
+
+## 01 — Game Design (`01-game-design/`)
+
+Celtic MMO concept, mythology, zones, asset generation, frontend.
+
+| File | Topic |
+|---|---|
+| [celtic_mmo.md](01-game-design/) *(removed; redundant)* | *(was a 197-line summary; subsumed by Ogham + Celtic Naming docs)* |
+| [mythology-framework.md](01-game-design/mythology-framework.md) | Pent-elemental cosmology (Spirit/Water/Fire/Earth/Air); Anam Cara |
+| [Celtic Naming for the MMO.md](01-game-design/Celtic%20Naming%20for%20the%20MMO.md) | Philological survey (*anam*, *kern*, *tír*, *aran*, *gaelg*, *cymr*, *yern*) + Web3 conflict analysis |
+| [CELTIC_LANGUAGES.md](01-game-design/CELTIC_LANGUAGES.md) | Tuath's language support matrix (Gaeilge/Cymraeg/Gàidhlig/Gaelg) |
+| [engine-selection.md](01-game-design/engine-selection.md) | "Anam" MMO ecosystem — agents, payments, runtimes |
+| [world-map.md](01-game-design/world-map.md) | "Celtic OS" Product OS spatial interface blueprint |
+| [MMO Geospatial Data & Visual RAG.md](01-game-design/MMO%20Geospatial%20Data%20%26%20Visual%20RAG.md) | WebGPU MMO + RAG for NPCs |
+| [GAME_CLIENT.md](01-game-design/GAME_CLIENT.md) | Babylon.js implementation (TuathGame, SceneManager, AG-UI streaming) |
+| [Asset Management for Full-Stack App.md](01-game-design/Asset%20Management%20for%20Full-Stack%20App.md) | Pixel art / RPG metaphor for Leaving Cert subjects |
+| [Educational Game Dev Pipeline.md](01-game-design/Educational%20Game%20Dev%20Pipeline.md) | DIAGE — scientifically accurate physics/chem sims |
+| [educational-game-development.md](01-game-design/educational-game-development.md) | Same topic, expanded engine comparison |
+
+## 02 — Agents (`02-agents/`)
+
+Tuath's multi-agent system, how to extend it.
+
+| File | Topic |
+|---|---|
+| [Tuath Agent System.md](02-agents/Tuath%20Agent%20System.md) | Architecture (Celtic Tutor, Mythology Narrator, Quest Guide, Research Assistant) + how-to for adding agents and tools (merged from AGENTS.md + ADDING_AGENTS.md + ADDING_TOOLS.md) |
+| [Agentic Education Platform Development.md](02-agents/Agentic%20Education%20Platform%20Development.md) | Framework context — CopilotKit v1.5 + AgUI protocol, MCP servers |
+
+## 03 — Data Pipelines (`03-data-pipelines/`)
+
+DLT, CocoIndex, Dagster, MLflow, knowledge graph, federated learning, geopolitics.
+
+| File | Topic |
+|---|---|
+| [ADDING_DATA_SOURCES.md](03-data-pipelines/ADDING_DATA_SOURCES.md) | How-to: add a DLT source to the Tuath pipeline |
+| [Data Platform Technical Integration Plan.md](03-data-pipelines/Data%20Platform%20Technical%20Integration%20Plan.md) | **Canonical** data platform design (DLT + CocoIndex + Feast + MLflow + Dagster + DuckDB + Dragonfly), with Crypto Analytics as a worked example |
+| [British Isles Education Map.md](03-data-pipelines/British%20Isles%20Education%20Map.md) | 2021/2022 census data + DuckDB+Convex+TanStack viz stack |
+| [British Isles Game Dev Data Pipeline.md](03-data-pipelines/British%20Isles%20Game%20Dev%20Data%20Pipeline.md) | OS MasterMap + GeoHive + LiDAR + Met Office → 2.5D game terrain |
+| [Celtic Language Data Aggregation & Analysis.md](03-data-pipelines/Celtic%20Language%20Data%20Aggregation%20%26%20Analysis.md) | Federated Linguistic Data Lakehouse for non-Ireland Celtic |
+| [Agentic Web Scraping Pipeline.md](03-data-pipelines/Agentic%20Web%20Scraping%20Pipeline.md) | Browserbase + Z.AI GLM 4.6V + Cognee + BAML + Ag-UI |
+| [Building an Educational Agent's Knowledge Base.md](03-data-pipelines/Building%20an%20Educational%20Agent%27s%20Knowledge%20Base.md) | Agno + dlt + Dagster + BAML + Cloudflare R2 + Cognee/Graphiti |
+| [Multimodal Video Knowledge Graph Pipeline.md](03-data-pipelines/Multimodal%20Video%20Knowledge%20Graph%20Pipeline.md) | yt-dlp + WhisperX + Qwen3-Omni → GraphRAG |
+| [Integrating Rust, DuckDB, TanStack, CopilotKit.md](03-data-pipelines/Integrating%20Rust%2C%20DuckDB%2C%20TanStack%2C%20CopilotKit.md) | SpacetimeDB + DuckDB WASM + TanStack Start + CopilotKit ("Thick Client, Smart Server") |
+| [TanStack DB Integration and Comparison.md](03-data-pipelines/TanStack%20DB%20Integration%20and%20Comparison.md) | TanStack DB + DuckDB + RisingWave + Marimo + Convex comparison |
+| [LLM Serving with MLflow & Langfuse.md](03-data-pipelines/LLM%20Serving%20with%20MLflow%20%26%20Langfuse.md) | Llama-swap + mlx-vlm + Z.AI gateway + observability |
+| [dlt_crawl4ai_lancedb.md](03-data-pipelines/dlt_crawl4ai_lancedb.md) | Crypto sentiment pipeline — dlt + crawl4ai + LanceDB + BAML + DuckDB |
+| [Crypteolas_ Federated Learning & Crypto Payments.md](03-data-pipelines/Crypteolas_%20Federated%20Learning%20%26%20Crypto%20Payments.md) | Project Crypteolas — SyftBox + Flower + x402 |
+| [CRYPTEOLAS_INTEGRATION_GUIDE.md](03-data-pipelines/CRYPTEOLAS_INTEGRATION_GUIDE.md) | Crypteolas agent integration (CopilotKit + Agent OS pattern) |
+| [CRYPTO_INTEGRATION_SUMMARY.md](03-data-pipelines/CRYPTO_INTEGRATION_SUMMARY.md) | x402 + MCPay + AP2 + Web3 UI components summary |
+
+## 04 — Game Tech (`04-game-tech/`)
+
+Game-engine research (essays) + operational reference.
+
+| Section | File | Topic |
 |---|---|---|
-| [repo-agui_kotlin.md](repo-agui_kotlin.md) | AG-UI Kotlin | Agent UI protocol for mobile |
-| [repo-AnyLanguageModel.md](repo-AnyLanguageModel.md) | AnyLanguageModel | iOS LLM inference |
-| [repo-hophacks-spacetimedb-workshop.md](repo-hophacks-spacetimedb-workshop.md) | SpacetimeDB workshop | Multiplayer game workshop |
-| [repo-ireland.md](repo-ireland.md) | ireland | Geospatial boundaries |
-| [repo-react-native-godot.md](repo-react-native-godot.md) | react-native-godot | RN ↔ Godot bridge |
-| [repo-react-native-reusables.md](repo-react-native-reusables.md) | react-native-reusables | UI components |
-| [repo-spacetimedb-cookbook.md](repo-spacetimedb-cookbook.md) | SpacetimeDB cookbook | Recipes & patterns |
-| [repo-spacetimedb-typescript-sdk.md](repo-spacetimedb-typescript-sdk.md) | SpacetimeDB TS SDK | Browser multiplayer |
-| [repo-SpacetimeDB.md](repo-SpacetimeDB.md) | SpacetimeDB core | Real-time game database (24.7k stars) |
-| [repo-wgpu.md](repo-wgpu.md) | wgpu (gfx-rs) | Cross-platform GPU API; v29.0.3 (May 2026), 17.3k stars |
-| [repo-x402.md](repo-x402.md) | x402 (Coinbase/x402-foundation) | HTTP 402 micropayment protocol; USDC on Base/Arbitrum |
+| (root) | [Game Dev Pipeline Research & Plan.md](04-game-tech/Game%20Dev%20Pipeline%20Research%20%26%20Plan.md) | Hades + BitCraft hybrid — LangGraph agentic research pipeline |
+| (root) | [Game Particle Effects Research(2).md](04-game-tech/Game%20Particle%20Effects%20Research(2).md) | "Anam Initiative" — meteorological particle sim (Unreal/Unity/Godot) |
+| (root) | [Geospatial Workflow & Particle Effects(1).md](04-game-tech/Geospatial%20Workflow%20%26%20Particle%20Effects(1).md) | DuckDB + MotherDuck + WebGPU particles, GeoArrow + Lonboard |
+| (root) | [SpacetimeDB Ogham Stone Game Integration.md](04-game-tech/SpacetimeDB%20Ogham%20Stone%20Game%20Integration.md) | **Merged** — Ogham archaeology + procedural generation + sovereignty/token economy |
+| (root) | [Spacetimedb Blockchain Integration Strategy.md](04-game-tech/Spacetimedb%20Blockchain%20Integration%20Strategy.md) | SpacetimeDB + Solana Token-2022 + Ethereum EIP-7702 |
+| (root) | [Rust Full-Stack Gaming Environment.md](04-game-tech/Rust%20Full-Stack%20Gaming%20Environment.md) | SpacetimeDB + Godot (gdext) + Alloy/Anchor |
+| (root) | [Game Reverse Engineering Workflow Design.md](04-game-tech/Game%20Reverse%20Engineering%20Workflow%20Design.md) | DIARE — Z.AI GLM-4.6V + Agno + Ghidra/Frida |
+| (root) | [Interactive AI Pipeline Development.md](04-game-tech/Interactive%20AI%20Pipeline%20Development.md) | Gradio + CopilotKit + MCP → Bria Fibo image gen |
+| (root) | [Generative AI Art Workflow Integration.md](04-game-tech/Generative%20AI%20Art%20Workflow%20Integration.md) | InvokeAI + MLX for pixel art (PostHog aesthetic) |
+| (reference/) | [ADDING_ZONES.md](04-game-tech/reference/ADDING_ZONES.md) | How-to: extend a zone in Babylon.js |
+| (reference/) | [DEPLOYMENT.md](04-game-tech/reference/DEPLOYMENT.md) | Production deployment (Python + Rust + SpacetimeDB) |
+| (reference/) | [FRONTEND.md](04-game-tech/reference/FRONTEND.md) | TanStack Start + Babylon.js frontend |
+| (reference/) | [PERFORMANCE_TUNING.md](04-game-tech/reference/PERFORMANCE_TUNING.md) | Embedding batching, HNSW, Cypher optimization |
+| (reference/guides/) | [WGPU_GUIDE.md](04-game-tech/reference/guides/WGPU_GUIDE.md) | WebGPU rendering, terrain, particle compute |
+| (reference/guides/) | [GODOT_RUST_GUIDE.md](04-game-tech/reference/guides/GODOT_RUST_GUIDE.md) | gdext integration, GodotClass macros |
+| (reference/guides/) | [SPACETIMEDB_GUIDE.md](04-game-tech/reference/guides/SPACETIMEDB_GUIDE.md) | Multiplayer backend |
+| (reference/guides/) | [CROSS_PLATFORM_GUIDE.md](04-game-tech/reference/guides/CROSS_PLATFORM_GUIDE.md) | Kotlin, Swift, React Native + Godot |
+| (reference/guides/) | [PAYMENT_GUIDE.md](04-game-tech/reference/guides/PAYMENT_GUIDE.md) | x402 payment integration |
 
-## Game Design — 8 files
+## 05 — iOS & ML (`05-ios-ml/`)
 
-| File | Topic |
-|---|---|
-| [game-design-README.md](game-design-README.md) | Game design bootstrap |
-| [game_CONTRIBUTING.md](game_CONTRIBUTING.md) | Contribution guide |
-| [game_DEVELOPMENT.md](game_DEVELOPMENT.md) | Developer setup & workflow |
-| [game_siwe-auth.md](game_siwe-auth.md) | SIWE auth integration |
-| [GAME_CLIENT.md](GAME_CLIENT.md) | Game client architecture |
-| [engine-selection.md](engine-selection.md) | Game engine comparison |
-| [mythology-framework.md](mythology-framework.md) | Mythology framework |
-| [world-map.md](world-map.md) | World map design |
-
-## Tokenomics & Web3 — 10 files
+Celtic OCR, on-device LLMs, Apple ecosystem.
 
 | File | Topic |
 |---|---|
-| [tokenomics-README.md](tokenomics-README.md) | Tokenomics documentation |
-| [learn-to-earn-model.md](learn-to-earn-model.md) | Learn-to-Earn model |
-| [Learn-to-Earn Blockchain and AI.md](Learn-to-Earn%20Blockchain%20and%20AI.md) | Learn-to-earn + blockchain |
-| [x402-payments.md](x402-payments.md) | x402 payment flows |
-| [PAYMENT_GUIDE.md](PAYMENT_GUIDE.md) | x402 payment integration |
-| [CRYPTEOLAS_INTEGRATION_GUIDE.md](CRYPTEOLAS_INTEGRATION_GUIDE.md) | Crypteolas module integration |
-| [CRYPTO_INTEGRATION_SUMMARY.md](CRYPTO_INTEGRATION_SUMMARY.md) | Crypto integration summary |
-| [Crypto Analysis AI Agent System Architecture.md](Crypto%20Analysis%20AI%20Agent%20System%20Architecture.md) | Crypto agent system |
-| [ERC-4361_ Sign-In with Ethereum.md](ERC-4361_%20Sign-In%20with%20Ethereum.md) | SIWE standard reference |
-| [Sign In With Ethereum (SIWE) _ Better Auth.md](Sign%20In%20With%20Ethereum%20(SIWE)%20_%20Better%20Auth.md) | SIWE auth guide |
+| [celtic-ocr.md](05-ios-ml/celtic-ocr.md) | Bilingual Irish-English HTR on iOS (ColPali, MLX, ml-fastvlm, Unsloth) |
+| [Irish Handwriting App Development.md](05-ios-ml/Irish%20Handwriting%20App%20Development.md) | iPad Air M2 + Apple Pencil + Qwen2.5-VL/Gemma 3 |
+| [Irish LLM for iPhone Development.md](05-ios-ml/Irish%20LLM%20for%20iPhone%20Development.md) | On-device Irish LLM via Unsloth 4-bit GGUF + AnyLanguageModel |
+| [Federated AI Marketplace on iPhone.md](05-ios-ml/Federated%20AI%20Marketplace%20on%20iPhone.md) | Crypteolas iOS — Apple MLX + Flower + x402 |
+| [iOS App Development Ecosystem Strategy.md](05-ios-ml/iOS%20App%20Development%20Ecosystem%20Strategy.md) | KMP + Swift + Rust sandwich architecture |
+| [apple_ml-fastvlm_…CVPR 2025.md](05-ios-ml/apple_ml-fastvlm_%20This%20repository%20contains%20the%20official%20implementation%20of%20_FastVLM_%20Efficient%20Vision%20Encoding%20for%20Vision%20Language%20Models_%20-%20CVPR%202025.md) | Apple CVPR 2025 paper clip |
 
-## Machine Learning & Models — 9 files
+## 06 — Tokenomics & Web3 (`06-tokenomics/`)
+
+x402, SIWE, learn-to-earn.
 
 | File | Topic |
 |---|---|
-| [unsloth-catalog.md](unsloth-catalog.md) | Unsloth model catalog |
-| [ml-models-README.md](ml-models-README.md) | ML models index |
-| [Unsloth Model Catalog _ Unsloth Documentation.md](Unsloth%20Model%20Catalog%20_%20Unsloth%20Documentation.md) | Unsloth docs (scraped) |
-| [Fine-tuning VLMs for iOS HTR.md](Fine-tuning%20VLMs%20for%20iOS%20HTR.md) | VLM fine-tuning for handwriting |
-| [LLM Serving with MLflow & Langfuse.md](LLM%20Serving%20with%20MLflow%20%26%20Langfuse.md) | LLM observability |
-| [apple_ml-fastvlm_ ... CVPR 2025.md](apple_ml-fastvlm_%20This%20repository%20contains%20the%20official%20implementation%20of%20_FastVLM_%20Efficient%20Vision%20Encoding%20for%20Vision%20Language%20Models_%20-%20CVPR%202025.md) | Apple CVPR 2025 paper |
-| [Introducing AnyLanguageModel_ ... Apple Platforms.md](Introducing%20AnyLanguageModel_%20One%20API%20for%20Local%20and%20Remote%20LLMs%20on%20Apple%20Platforms.md) | AnyLanguageModel blog |
-| [syft-flwr_notebooks_ ... OpenMined_syft-flwr.md](syft-flwr_notebooks_fedrag_README.md%20at%20main%20%C2%B7%20OpenMined_syft-flwr.md) | OpenMined blog |
-| [Swift Transformers Reaches 1.0 ... Future.md](Swift%20Transformers%20Reaches%201.0%20%E2%80%93%20and%20Looks%20to%20the%20Future.md) | Swift Transformers blog |
+| [x402-payments.md](06-tokenomics/x402-payments.md) | x402 protocol reference |
+| [Learn-to-Earn Blockchain and AI.md](06-tokenomics/Learn-to-Earn%20Blockchain%20and%20AI.md) | L2E model for Tuath |
+| [Sign In With Ethereum (SIWE) _ Better Auth.md](06-tokenomics/Sign%20In%20With%20Ethereum%20%28SIWE%29%20_%20Better%20Auth.md) | Better Auth SIWE plugin (implementation reference) |
 
-## Architecture & Strategy — 12 files
+## 07 — Clippings (`07-clippings/`)
 
-| File | Topic |
-|---|---|
-| [ANALYSIS.md](ANALYSIS.md) | Cross-document analysis |
-| [AGENTS.md](AGENTS.md) | Agent architecture |
-| [Agentic Education Platform Development.md](Agentic%20Education%20Platform%20Development.md) | Multi-agent tutoring system |
-| [Agentic Web Scraping Pipeline.md](Agentic%20Web%20Scraping%20Pipeline.md) | Stealth browser scraping |
-| [AI Chemistry Education Image Generation.md](AI%20Chemistry%20Education%20Image%20Generation.md) | Chemistry asset generation |
-| [Asset Management for Full-Stack App.md](Asset%20Management%20for%20Full-Stack%20App.md) | 3D asset pipeline |
-| [British Isles Education Map.md](British%20Isles%20Education%20Map.md) | Pan-Celtic geographic viz |
-| [British Isles Game Dev Data Pipeline.md](British%20Isles%20Game%20Dev%20Data%20Pipeline.md) | Game data flow |
-| [British Isles Mythology MMO Research.md](British%20Isles%20Mythology%20MMO%20Research.md) | Mythology integration |
-| [Building an Educational Agent's Knowledge Base.md](Building%20an%20Educational%20Agent's%20Knowledge%20Base.md) | Knowledge graph for agents |
-| [Celtic Etymology for Game Names.md](Celtic%20Etymology%20for%20Game%20Names.md) | Celtic naming conventions |
-| [Celtic Language Data Aggregation & Analysis.md](Celtic%20Language%20Data%20Aggregation%20%26%20Analysis.md) | Data aggregation strategy |
-
-## Technical Guides — 9 files
-
-| File | Topic |
-|---|---|
-| [DEPLOYMENT.md](DEPLOYMENT.md) | Deployment configuration |
-| [FRONTEND.md](FRONTEND.md) | Frontend architecture |
-| [GODOT_RUST_GUIDE.md](GODOT_RUST_GUIDE.md) | Godot + Rust GDExtension |
-| [GRAPHICS_INDEX.md](GRAPHICS_INDEX.md) | Graphics pipeline index |
-| [PERFORMANCE_TUNING.md](PERFORMANCE_TUNING.md) | Rendering & network performance |
-| [SPACETIMEDB_GUIDE.md](SPACETIMEDB_GUIDE.md) | SpacetimeDB usage guide |
-| [WGPU_GUIDE.md](WGPU_GUIDE.md) | wgpu usage guide |
-| [CROSS_PLATFORM_GUIDE.md](CROSS_PLATFORM_GUIDE.md) | iOS, Android, Web, Desktop |
-| [Crypteolas_ Federated Learning & Crypto Payments.md](Crypteolas_%20Federated%20Learning%20%26%20Crypto%20Payments.md) | Federated learning + crypto |
-
-## Integration & Technical Plans — 10 files
-
-| File | Topic |
-|---|---|
-| [Integrating Rust, DuckDB, TanStack, CopilotKit.md](Integrating%20Rust%2C%20DuckDB%2C%20TanStack%2C%20CopilotKit.md) | Stack integration |
-| [Interactive AI Pipeline Development.md](Interactive%20AI%20Pipeline%20Development.md) | AI pipeline architecture |
-| [Interactive Map & AI Agents.md](Interactive%20Map%20%26%20AI%20Agents.md) | Map + agent interaction |
-| [MMO Geospatial Data & Visual RAG.md](MMO%20Geospatial%20Data%20%26%20Visual%20RAG.md) | Geospatial RAG for MMO |
-| [Multimodal Video Knowledge Graph Pipeline.md](Multimodal%20Video%20Knowledge%20Graph%20Pipeline.md) | Video knowledge graph |
-| [Rust Client.md](Rust%20Client.md) | Rust game client design |
-| [Rust Full-Stack Gaming Environment.md](Rust%20Full-Stack%20Gaming%20Environment.md) | Full Rust stack |
-| [TanStack DB Integration and Comparison.md](TanStack%20DB%20Integration%20and%20Comparison.md) | Database integration |
-| [Technical Integration Plan_ Dagster + DLT + CocoIndex + Feast + MLflow.md](Technical%20Integration%20Plan_%20Dagster%20%2B%20DLT%20%2B%20CocoIndex%20%2B%20Feast%20%2B%20MLflow%20(with%20DuckDB%20%26%20Dragonfly).md) | Data platform integration |
-| [Celtic MMO Web3 Concept Integration.md](Celtic%20MMO%20Web3%20Concept%20Integration.md) | Web3 + education concept |
-
-## SpacetimeDB — 4 files
-
-| File | Topic |
-|---|---|
-| [SpacetimeDB.md](SpacetimeDB.md) | Overview & concepts |
-| [SPACETIMEDB_GUIDE.md](SPACETIMEDB_GUIDE.md) | Usage guide |
-| [Spacetimedb Blockchain Integration Strategy.md](Spacetimedb%20Blockchain%20Integration%20Strategy.md) | Blockchain + SpacetimeDB |
-| [SpacetimeDB Ogham Stone Game Integration.md](SpacetimeDB%20Ogham%20Stone%20Game%20Integration.md) | Ogham stone game mechanics |
-
-## Engine & Graphics — 5 files
-
-| File | Topic |
-|---|---|
-| [Game Particle Effects Research.md](Game%20Particle%20Effects%20Research.md) | Celtic magic particle effects |
-| [Game Particle Effects Research(2).md](Game%20Particle%20Effects%20Research(2).md) | "Anam" particle system (extended) |
-| [Geospatial Workflow & Particle Effects.md](Geospatial%20Workflow%20%26%20Particle%20Effects.md) | Combined geo + effects |
-| [Generative AI Art Workflow Integration.md](Generative%20AI%20Art%20Workflow%20Integration.md) | AI art pipeline |
-| [Release v28.0.0 - Mesh Shaders ... wgpu.md](Release%20v28.0.0%20-%20Mesh%20Shaders%2C%20Immediates%2C%20and%20More%21%20%C2%B7%20gfx-rs_wgpu.md) | wgpu v28 release notes |
-
-## Mobile & iOS — 4 files
-
-| File | Topic |
-|---|---|
-| [Federated AI Marketplace on iPhone.md](Federated%20AI%20Marketplace%20on%20iPhone.md) | Federated learning on iOS |
-| [iOS App Development Ecosystem Strategy.md](iOS%20App%20Development%20Ecosystem%20Strategy.md) | iOS development strategy |
-| [Irish Handwriting App Development.md](Irish%20Handwriting%20App%20Development.md) | Handwriting recognition app |
-| [Irish LLM for iPhone Development.md](Irish%20LLM%20for%20iPhone%20Development.md) | On-device Irish LLM |
-
-## Guides & HOWTOs — 6 files
-
-| File | Topic |
-|---|---|
-| [ADDING_AGENTS.md](ADDING_AGENTS.md) | Adding new agents |
-| [ADDING_DATA_SOURCES.md](ADDING_DATA_SOURCES.md) | Connecting data sources |
-| [ADDING_TOOLS.md](ADDING_TOOLS.md) | Creating custom tools |
-| [ADDING_ZONES.md](ADDING_ZONES.md) | Extending MMO zones |
-| [CELTIC_LANGUAGES.md](CELTIC_LANGUAGES.md) | Irish/Welsh/Scottish Gaelic |
-| [infrastructure-README.md](infrastructure-README.md) | Infrastructure docs |
-
-## Scraped/External Articles — 17 files
+External articles, archived for reference. No edits, no synthesis.
 
 | File | Source |
 |---|---|
-| [AG-UI and A2UI_ Understanding the Differences _ CopilotKit.md](AG-UI%20and%20A2UI_%20Understanding%20the%20Differences%20_%20CopilotKit.md) | CopilotKit blog |
-| [Comparing the Top 6 Agent-Native Rails...](Comparing%20the%20Top%206%20Agent-Native%20Rails%20for%20the%20Agentic%20Internet_%20MCP%2C%20A2A%2C%20AP2%2C%20ACP%2C%20x402%2C%20and%20Kite.md) | Agent comparison article |
-| [compass_artifact_wf-...text_markdown.md](compass_artifact_wf-918fd144-3e32-416f-b59b-15a043b18fc1_text_markdown.md) | Compass artifact |
-| [dlt_crawl4ai_lancedb.md](dlt_crawl4ai_lancedb.md) | dlt pipeline article |
-| [The Expulsion of the Déisi - Wikipedia.md](The%20Expulsion%20of%20the%20D%C3%A9isi%20-%20Wikipedia.md) | Wikipedia |
-| [Kotlin Multiplatform vs. React Native...](Kotlin%20Multiplatform%20vs.%20React%20Native_%20A%20cross-platform%20comparison%20_%20Kotlin%20Multiplatform.md) | Cross-platform comparison |
-| [Chemistry Education Asset Generation.md](Chemistry%20Education%20Asset%20Generation.md) | Chemistry visualization |
-| [Educational Game Dev Pipeline.md](Educational%20Game%20Dev%20Pipeline.md) | Game dev pipeline |
-| [educational-game-development.md](educational-game-development.md) | Educational game research |
-| [Game Development Research & AI Integration.md](Game%20Development%20Research%20%26%20AI%20Integration.md) | Game dev research |
-| [Game Dev Pipeline Research & Plan.md](Game%20Dev%20Pipeline%20Research%20%26%20Plan.md) | Pipeline research plan |
-| [Game Reverse Engineering Workflow Design.md](Game%20Reverse%20Engineering%20Workflow%20Design.md) | Reverse engineering |
-| [Frontend Idea Catalog Development.md](Frontend%20Idea%20Catalog%20Development.md) | Frontend catalog |
-| [Web3 Gamified Education & Asset Generation.md](Web3%20Gamified%20Education%20%26%20Asset%20Generation.md) | Web3 education |
-| [Web3 Classroom Response System Design.md](Web3%20Classroom%20Response%20System%20Design.md) | Classroom Web3 |
-| [useAgent Hook.md](useAgent%20Hook.md) | CopilotKit useAgent hook |
-| [GeoAI.md](GeoAI.md) | Geospatial AI |
+| [AG-UI and A2UI_…CopilotKit.md](07-clippings/AG-UI%20and%20A2UI_%20Understanding%20the%20Differences%20_%20CopilotKit.md) | CopilotKit blog |
+| [Comparing the Top 6 Agent-Native Rails….md](07-clippings/Comparing%20the%20Top%206%20Agent-Native%20Rails%20for%20the%20Agentic%20Internet_%20MCP%2C%20A2A%2C%20AP2%2C%20ACP%2C%20x402%2C%20and%20Kite.md) | Agent comparison article |
+| [Kotlin Multiplatform vs. React Native….md](07-clippings/Kotlin%20Multiplatform%20vs.%20React%20Native_%20A%20cross-platform%20comparison%20_%20Kotlin%20Multiplatform.md) | Cross-platform comparison |
+| [GeoAI.md](07-clippings/GeoAI.md) | Geospatial AI |
+| [useAgent Hook.md](07-clippings/useAgent%20Hook.md) | CopilotKit useAgent hook |
+| [MCP-UI.md](07-clippings/MCP-UI.md) | MCP UI integration |
+| [Introducing AnyLanguageModel_…Apple Platforms.md](07-clippings/Introducing%20AnyLanguageModel_%20One%20API%20for%20Local%20and%20Remote%20LLMs%20on%20Apple%20Platforms.md) | HuggingFace blog |
+| [Swift Transformers Reaches 1.0….md](07-clippings/Swift%20Transformers%20Reaches%201.0%20%E2%80%93%20and%20Looks%20to%20the%20Future.md) | HuggingFace blog |
+| [Unsloth Model Catalog _ Unsloth Documentation.md](07-clippings/Unsloth%20Model%20Catalog%20_%20Unsloth%20Documentation.md) | Unsloth docs |
+| [Release v28.0.0 - Mesh Shaders, Immediates, and More! · gfx-rs_wgpu.md](07-clippings/Release%20v28.0.0%20-%20Mesh%20Shaders%2C%20Immediates%2C%20and%20More!%20%C2%B7%20gfx-rs_wgpu.md) | wgpu v28 release notes |
+| [The Expulsion of the Déisi - Wikipedia.md](07-clippings/The%20Expulsion%20of%20the%20D%C3%A9isi%20-%20Wikipedia.md) | Wikipedia |
 
-## Reference & Index — 7 files
+## 08 — Mirrors (`08-mirrors/`)
 
-| File | Topic |
-|---|---|
-| [README.md](README.md) | Project overview |
-| [API.md](API.md) | API reference |
-| [api-README.md](api-README.md) | API documentation |
-| [PIPELINES.md](PIPELINES.md) | Pipeline configuration |
-| [MCP-UI.md](MCP-UI.md) | MCP UI integration |
-| [INDEX.md](INDEX.md) | This index |
-| [VERIFY.md](VERIFY.md) | Flatness verification record |
+11 skeletonized upstream repositories. See `08-mirrors/_summaries/` for one-page KCG summaries.
 
-## Monorepo Structure — 2 files
+| Directory | Size | Language |
+|---|---|---|
+| [SpacetimeDB/](08-mirrors/SpacetimeDB/) | 41M | Rust |
+| [wgpu/](08-mirrors/wgpu/) | 840K | Rust |
+| [gdext/](08-mirrors/gdext/) | 5.0M | Rust |
+| [x402/](08-mirrors/x402/) | 26M | TS/Go/Python/Rust |
+| [spacetimedb-typescript-sdk/](08-mirrors/spacetimedb-typescript-sdk/) | 944K | TypeScript |
+| [spacetimedb-cookbook/](08-mirrors/spacetimedb-cookbook/) | 9.6M | Rust/TypeScript |
+| [hophacks-spacetimedb-workshop/](08-mirrors/hophacks-spacetimedb-workshop/) | 328K | Rust/TypeScript |
+| [react-native-reusables/](08-mirrors/react-native-reusables/) | 7.9M | TypeScript |
+| [react-native-godot/](08-mirrors/react-native-godot/) | 76K | TypeScript/C++ |
+| [agui_kotlin/](08-mirrors/agui_kotlin/) | 80K | Kotlin |
+| [AnyLanguageModel/](08-mirrors/AnyLanguageModel/) | 48K | Swift |
 
-| File | Topic |
-|---|---|
-| [celtic_mmo.md](celtic_mmo.md) | MMO concept document |
-| [celtic-ocr.md](celtic-ocr.md) | OCR strategy |
+## 99 — Archive
 
-## Miscellaneous — 11 files
-
-| File | Topic |
-|---|---|
-| [federated-marketplace.md](federated-marketplace.md) | Federated marketplace design |
-| [gdext-ReadMe.md](gdext-ReadMe.md) | Godot extension docs |
-| [Ogham Crypto MMO Research.md](Ogham%20Crypto%20MMO%20Research.md) | Ogham + crypto |
-| [MLflow & Langfuse Integration.md](MLflow%20%26%20Langfuse%20Integration.md) | Additional ML observability |
-| [Irish Handwriting App Development.md](Irish%20Handwriting%20App%20Development.md) | Handwriting recognition (dim) |
-| [Federated AI Marketplace on iPhone.md](Federated%20AI%20Marketplace%20on%20iPhone.md) | Federated AI + iPhone |
+The `99-archive/` slot for misplaced files was retired in the 2026-06-13 consolidation (all content was either deleted as out-of-scope or moved to its proper topical home).
 
 ---
 
 ## Verification
 
-| Metric | Value |
-|---|---|
-| Subdirectories | 0 (flat) |
-| `.md` files at root | 116 |
-| Repo summaries | 11 |
-| Firecrawl-enhanced files | 3 (`repo-SpacetimeDB.md`, `repo-wgpu.md`, `repo-x402.md`) |
-| Skeletonized repos | 11 (source code removed, KCG_SUMMARY.md preserved) |
+| Metric | Before (2026-06-06) | After (2026-06-13) |
+|---|---|---|
+| Top-level subdirs | 0 (flat) | 8 (`00-nav`–`07-clippings`, plus `08-mirrors`) |
+| `.md` files at root | 116 | 3 (`README.md`, `INDEX.md`, `ANALYSIS.md`) |
+| Total `.md` files (excl. mirrors) | 116 | ~85 |
+| Repo summaries | 11 | 11 (now in `08-mirrors/_summaries/`) |
+| Skeletonized mirrors | 11 (~161 MB) | 11 (~95 MB; -41% from pruning) |
+| Byte-identical dupes | 5 pairs (~75 KB) | 0 |
 
----
-
-Last consolidated: 2026-06-06
+Last consolidated: 2026-06-13

@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # **Architectural Analysis and Implementation Strategy for a Rust-Based Full-Stack Gaming Ecosystem**
 
 ## **1\. Introduction: The Paradigm Shift to "Database as Server"**

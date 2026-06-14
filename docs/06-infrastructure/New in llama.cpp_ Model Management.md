@@ -7,6 +7,8 @@ created: 2025-12-13
 description: "A Blog post by ggml.ai on Hugging Face"
 tags:
   - "clippings"
+truth: partial
+
 ---
 [Back to Articles](https://huggingface.co/blog)
 

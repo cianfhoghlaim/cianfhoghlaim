@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Celtic Language Education Enrollment Statistics
 
 ## Overview

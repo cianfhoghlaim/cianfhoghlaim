@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Cloudflare API OpenAPI Specification Research
 
 **Research Date:** November 22, 2025

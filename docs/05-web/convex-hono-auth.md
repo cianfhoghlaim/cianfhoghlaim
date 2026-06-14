@@ -54,6 +54,8 @@ ccc_query_hints:
   - "SIWE Sign-In Ethereum BetterAuth"
   - "Convex vector search RAG"
 updated: 2026-06-06
+truth: partial
+
 ---
 
 # Convex, Hono & Authentication

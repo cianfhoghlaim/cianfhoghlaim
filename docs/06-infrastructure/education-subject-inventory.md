@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Irish Education Subject Data Inventory
 
 Comprehensive inventory of subject data availability across the three scraped education websites.

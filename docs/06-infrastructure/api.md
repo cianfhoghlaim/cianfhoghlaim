@@ -3,6 +3,8 @@ name: Pangolin API Development
 description: Create type-safe APIs with oRPC, Convex, and Better Auth in Pangolin apps.
 category: Development
 tags: [pangolin, api, orpc, convex, development]
+truth: partial
+
 ---
 
 # Pangolin API Development Assistant

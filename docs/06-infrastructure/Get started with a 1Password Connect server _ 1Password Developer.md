@@ -7,6 +7,8 @@ created: 2025-12-08
 description: "Learn how to set up and use 1Password Connect to secure, orchestrate, and manage your company's infrastructure secrets."
 tags:
   - "clippings"
+truth: partial
+
 ---
 1Password Connect servers are a type of [Secrets Automation workflow](https://developer.1password.com/docs/secrets-automation/) that allows you to securely access your 1Password items and vaults in your company's apps and cloud infrastructure.
 

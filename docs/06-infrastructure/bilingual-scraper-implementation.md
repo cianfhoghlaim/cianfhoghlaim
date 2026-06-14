@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Bilingual Irish Educational Resources Scraper
 ## Technical Outline & Implementation Guide
 

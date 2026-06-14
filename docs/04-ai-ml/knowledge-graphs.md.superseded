@@ -5,6 +5,8 @@ date: 2026-06-06
 migration_source: docs/bunchloch/meaisínfhoghlaim + docs/bunchloch/teanga
 ccc_query_hints: ["knowledge graphs graphiti cognee memgraph falkordb graph-based agent memory entity extraction"]
 source_files: "11 files from meaisínfhoghlaim and teanga"
+truth: partial
+
 ---
 # Knowledge Graphs & Graph Memory
 

@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 
 
 # **Architectural Paradigms for Self-Hosted Autonomous Web Scraping: A Deep Technical Analysis of Cloudflare Turnstile Evasion via Crawl4AI, Stagehand, and MCP**

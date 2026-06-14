@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Comprehensive Analysis of Dagger Examples
 
 This document provides detailed patterns extracted from three primary Dagger examples in the infrastructure directory, tailored for a monorepo managing both Python (uv) and TypeScript (bun/turborepo) workspaces.

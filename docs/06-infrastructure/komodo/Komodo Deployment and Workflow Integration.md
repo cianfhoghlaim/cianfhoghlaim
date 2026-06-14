@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # **Comprehensive Architectural Analysis and Implementation Strategy for Sovereign Infrastructure: Komodo, Pangolin, and Middleware Integration**
 
 ## **1\. Executive Summary and Strategic Context**

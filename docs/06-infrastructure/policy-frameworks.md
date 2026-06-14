@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Celtic Language Education Policy Frameworks
 
 ## Overview

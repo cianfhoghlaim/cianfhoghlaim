@@ -10,6 +10,8 @@ supersedes:
   - docs/DATA_ARCHITECTURE.md
 ccc_query_hints:
   - data architecture for irish education pl
+truth: partial
+
 ---
 
 # Data Architecture for Irish Education Platform

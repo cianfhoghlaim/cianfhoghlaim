@@ -8,6 +8,8 @@ created: 2025-12-05
 description: "Implementing External Authentication in Pangolin Using Tinyauth and the Middleware Manager  Pangolin now supports flexible authentication options through the Middleware-manager. While Authentik and Authelia are popular…"
 tags:
   - "clippings"
+truth: partial
+
 ---
 ## Implementing External Authentication in Pangolin Using Tinyauth and the Middleware Manager
 

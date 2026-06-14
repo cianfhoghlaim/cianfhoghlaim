@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Graphiti Adaptation for Cryptocurrency Analytics
 
 ## Overview

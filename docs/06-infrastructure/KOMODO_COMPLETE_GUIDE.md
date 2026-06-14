@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Komodo — Complete Deployment Orchestration Guide
 
 > **Merged From:** `docs/bonneagar/komodo/` (21 files)

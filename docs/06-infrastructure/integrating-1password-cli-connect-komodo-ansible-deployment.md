@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 Integrating 1Password CLI and Connect in a
 
 Komodo Ansible Deployment

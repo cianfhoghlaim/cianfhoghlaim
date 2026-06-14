@@ -10,6 +10,8 @@ supersedes:
   - docs/chatterbox.md
 ccc_query_hints:
   - chatterbox — text-to-speech (tts)
+truth: partial
+
 ---
 
 # Chatterbox — Text-to-Speech (TTS)

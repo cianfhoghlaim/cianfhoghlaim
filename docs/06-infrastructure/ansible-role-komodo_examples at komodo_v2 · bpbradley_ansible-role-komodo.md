@@ -8,6 +8,8 @@ created: 2025-12-05
 description: "Ansible role for simplified deployment of Komodo with systemd - ansible-role-komodo/examples at komodo_v2 · bpbradley/ansible-role-komodo"
 tags:
   - "clippings"
+truth: partial
+
 ---
 [Open in github.dev](https://github.dev/) [Open in a new github.dev tab](https://github.dev/) [Open in codespace](https://github.com/codespaces/new/bpbradley/ansible-role-komodo/tree/komodo_v2?resume=1)
 

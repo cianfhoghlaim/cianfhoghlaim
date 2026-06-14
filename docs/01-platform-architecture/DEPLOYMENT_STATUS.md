@@ -10,6 +10,8 @@ supersedes:
   - docs/DEPLOYMENT_STATUS.md
 ccc_query_hints:
   - deployment status — 5 frontend workspace
+truth: partial
+
 ---
 
 # Deployment Status — 5 Frontend Workspaces

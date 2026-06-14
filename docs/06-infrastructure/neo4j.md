@@ -10,6 +10,8 @@ supersedes:
   - docs/neo4j.md
 ccc_query_hints:
   - neo4j python driver — graph database sdk
+truth: partial
+
 ---
 
 # Neo4j Python Driver — Graph Database SDK

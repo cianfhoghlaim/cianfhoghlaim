@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Pulumi Infrastructure as Code: Comprehensive Guide for LLMs
 
 ## Table of Contents

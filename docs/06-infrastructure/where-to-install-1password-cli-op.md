@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 Where to Install the 1Password CLI ( op )
 
 Komodo’s deployment tasks (like build or pre-deploy scripts) run on the Periphery agent rather than in

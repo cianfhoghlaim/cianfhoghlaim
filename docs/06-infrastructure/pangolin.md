@@ -3,6 +3,8 @@ name: Pangolin Development Assistant
 description: Expert assistant for Fossorial Pangolin development - helps with architecture, patterns, deployment, and troubleshooting.
 category: Development
 tags: [pangolin, development, architecture, deployment]
+truth: partial
+
 ---
 
 # Pangolin Development Assistant

@@ -7,6 +7,8 @@ created: 2025-12-29
 description: "Use Google's OAuth screen to authenticate to Tinyauth."
 tags:
   - "clippings"
+truth: partial
+
 ---
 Guides
 

@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # **Backend Architecture Strategy for a Bilingual Temporal Knowledge Graph in Mathematics Education**
 
 ## **1\. Architectural Imperatives and Domain Analysis**

@@ -8,6 +8,8 @@ created: 2025-12-08
 description: "Configure SQLite or PostgreSQL database for Pangolin"
 tags:
   - "clippings"
+truth: partial
+
 ---
 Pangolin supports two database options: SQLite for simplicity and PostgreSQL for production deployments.
 

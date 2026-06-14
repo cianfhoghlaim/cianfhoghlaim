@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # **Comprehensive Architectural Strategy for the Pan-Curricular Expansion of the Irish Leaving Certificate AI Tutoring System**
 
 ## **1\. Architectural Imperatives and the Universal Application of the Backend Strategy**

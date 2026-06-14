@@ -7,6 +7,8 @@ created: 2025-12-29
 description: "Use GitHub OAuth for authenticating to Tinyauth."
 tags:
   - "clippings"
+truth: partial
+
 ---
 Guides
 

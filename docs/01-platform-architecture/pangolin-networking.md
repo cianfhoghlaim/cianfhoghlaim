@@ -37,6 +37,8 @@ ccc_query_hints:
   - "pangolin blueprint configuration"
   - "docker label pangolin auto registration"
 last_reviewed: 2026-06-06
+truth: partial
+
 ---
 
 # Pangolin Networking — Zero-Trust Reverse Proxy & Service Mesh

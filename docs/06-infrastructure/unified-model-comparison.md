@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Celtic Language AI - Unified Model Comparison
 
 ## Executive Summary

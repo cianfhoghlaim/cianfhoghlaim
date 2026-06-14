@@ -8,6 +8,8 @@ created: 2025-12-17
 description: "This tutorial explains how to create custom OS images for Hetzner Cloud VMs using HashiCorp Packer."
 tags:
   - "clippings"
+truth: partial
+
 ---
 ## Introduction
 

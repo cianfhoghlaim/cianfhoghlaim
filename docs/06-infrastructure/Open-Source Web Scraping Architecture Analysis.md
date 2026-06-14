@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # **Strategic Architecture for Autonomous Educational Data Acquisition: Integrating Skyvern, Crawl4AI, and Stagehand in the 2025 Open-Source Ecosystem**
 
 ## **1\. The 2025 Paradigm Shift in Automated Web Intelligence**

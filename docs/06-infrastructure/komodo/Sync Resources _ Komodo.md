@@ -7,6 +7,8 @@ created: 2025-12-15
 description: "Komodo is able to create, update, delete, and deploy resources declared in TOML files by diffing them against the existing resources,"
 tags:
   - "clippings"
+truth: partial
+
 ---
 Komodo is able to create, update, delete, and deploy resources declared in TOML files by diffing them against the existing resources, and apply updates based on the diffs. Similar to Stacks, the files can be configured in UI, in a local file, or in files pushed to a remote git repo. The Komodo Core backend will poll the files for for any updates, and alert about pending changes when diffs are detected.
 

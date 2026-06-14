@@ -8,6 +8,8 @@ created: 2025-12-29
 description: "A collection of user-written guides and step-by-step tutorials for everything from beginner setups to advanced configurations."
 tags:
   - "clippings"
+truth: partial
+
 ---
 ## Implementing External Authentication in Pangolin Using Tinyauth and the Middleware Manager
 

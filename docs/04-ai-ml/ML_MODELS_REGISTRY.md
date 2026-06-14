@@ -10,6 +10,8 @@ supersedes:
   - docs/ML_MODELS_REGISTRY.md
 ccc_query_hints:
   - meaisínfhoghlaim - ml models
+truth: partial
+
 ---
 
 # Meaisínfhoghlaim - ML Models

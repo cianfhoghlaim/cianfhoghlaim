@@ -7,6 +7,8 @@ created: 2025-12-15
 description: "Multiple Komodo resources can take advantage of webhooks from your git provider. Komodo supports incoming webhooks using either the Github or Gitlab webhook authentication type, which is also supported by other providers like Gitea."
 tags:
   - "clippings"
+truth: partial
+
 ---
 Multiple Komodo resources can take advantage of webhooks from your git provider. Komodo supports incoming webhooks using either the Github or Gitlab webhook authentication type, which is also supported by other providers like Gitea.
 

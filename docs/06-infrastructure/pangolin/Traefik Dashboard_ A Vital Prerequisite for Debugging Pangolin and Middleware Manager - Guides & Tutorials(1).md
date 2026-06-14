@@ -8,6 +8,8 @@ created: 2025-12-29
 description: ":globe_with_meridians: Enabling the Traefik Dashboard: A Vital Prerequisite for Debugging Pangolin and Middleware ManagerThe Traefik Dashboard is an essential UI tool for visualizing and debugging your reverse proxy set…"
 tags:
   - "clippings"
+truth: partial
+
 ---
 ## post by Mattercoder on May 25
 

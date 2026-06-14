@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Metadata Control Plane: DuckDB-Backed Dynamic Source Management
 
 ## Executive Summary

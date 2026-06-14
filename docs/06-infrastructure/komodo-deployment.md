@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Komodo Deployment and Orchestration
 
 ## Executive Summary

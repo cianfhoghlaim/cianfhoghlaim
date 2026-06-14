@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Bonneagar — Infrastructure Research Index
 
 Centralized hub for infrastructure, deployment, and platform engineering research for the Cianfhoghlaim platform.

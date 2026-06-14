@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Cloudflare D1 - Comprehensive Research Report
 
 **Research Date:** November 17, 2025

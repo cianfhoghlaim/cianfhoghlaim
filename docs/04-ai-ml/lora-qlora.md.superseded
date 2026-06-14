@@ -10,6 +10,8 @@ supersedes:
   - docs/lora-qlora.md
 ccc_query_hints:
   - lora / qlora — parameter-efficient fine-
+truth: partial
+
 ---
 
 # LoRA / QLoRA — Parameter-Efficient Fine-Tuning

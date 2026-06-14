@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # MapLibre Visualization for Celtic Language Data
 
 ## Overview

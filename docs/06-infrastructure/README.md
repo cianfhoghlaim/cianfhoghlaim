@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Celtic Education Scraping Agent
 
 Agentic web scraping pipeline for multilingual Celtic education resources across the British Isles.

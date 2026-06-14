@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # AI/ML Pipeline for Irish Education Platform
 
 ## Executive Summary

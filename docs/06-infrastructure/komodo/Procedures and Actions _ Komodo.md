@@ -7,6 +7,8 @@ created: 2025-12-15
 description: "For orchestrations involving multiple resources and executions,"
 tags:
   - "clippings"
+truth: partial
+
 ---
 For orchestrations involving multiple resources and executions, Komodo offers the `Procedure` and `Action` resource types.
 

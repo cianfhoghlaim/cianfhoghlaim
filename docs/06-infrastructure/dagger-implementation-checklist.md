@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Dagger Pipeline Implementation Checklist
 
 ## Quick Reference for Claude Code Implementation

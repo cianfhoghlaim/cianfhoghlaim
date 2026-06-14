@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Infrastructure Research - Consolidated Index
 
 This directory contains consolidated research for the infrastructure layer of the hackathon platform.

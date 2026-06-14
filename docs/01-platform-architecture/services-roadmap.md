@@ -2,6 +2,8 @@
 title: "Services Outline by Year"
 domain: platform-architecture
 status: living-document
+truth: partial
+
 ---
 
 # Cianfhoghlaim — Services Outline by Year

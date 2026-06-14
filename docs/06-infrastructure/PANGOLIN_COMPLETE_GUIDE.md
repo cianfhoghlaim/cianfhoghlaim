@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Pangolin — Complete Zero-Trust Networking Guide
 
 > **Merged From:** `docs/bonneagar/pangolin/` (27 files)

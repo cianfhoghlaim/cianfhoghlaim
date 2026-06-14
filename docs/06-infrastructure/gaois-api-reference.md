@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Gaois API Reference
 
 ## Overview

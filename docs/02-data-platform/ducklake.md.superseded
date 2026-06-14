@@ -10,6 +10,8 @@ supersedes:
   - docs/ducklake.md
 ccc_query_hints:
   - ducklake — lightweight data lakehouse on
+truth: partial
+
 ---
 
 # DuckLake — Lightweight Data Lakehouse on Object Storage

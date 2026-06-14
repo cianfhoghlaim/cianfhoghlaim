@@ -10,6 +10,8 @@ supersedes:
   - docs/TECH_STACK.md
 ccc_query_hints:
   - **technical blueprint for a next-generat
+truth: partial
+
 ---
 
 # **Technical Blueprint for a Next-Generation Leaving Certificate Education Platform: Architecture, Pedagogy, and Implementation**

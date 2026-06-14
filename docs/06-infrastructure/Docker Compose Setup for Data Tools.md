@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 
 
 # **Architecting the Composable Data Fabric: A Definitive Implementation Guide for Local-First Lakehouse Environments**

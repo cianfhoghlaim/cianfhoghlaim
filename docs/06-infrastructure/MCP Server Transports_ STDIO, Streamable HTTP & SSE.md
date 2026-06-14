@@ -7,6 +7,8 @@ created: 2026-04-11
 description: "Comprehensive guide to MCP transport mechanisms in Roo Code. Compare STDIO, Streamable HTTP, and SSE transports for local and remote server deployments."
 tags:
   - "clippings"
+truth: partial
+
 ---
 Model Context Protocol (MCP) supports three primary transport mechanisms for communication between Roo Code and MCP servers: Standard Input/Output (STDIO), Streamable HTTP (the modern standard), and Server-Sent Events (SSE) (for legacy use). Each has distinct characteristics, advantages, and use cases.
 

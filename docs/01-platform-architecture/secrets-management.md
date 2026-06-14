@@ -29,6 +29,8 @@ ccc_query_hints:
   - "how to add a new secret"
   - ".infisical.env template"
 last_reviewed: 2026-06-06
+truth: partial
+
 ---
 
 # Secrets Management — Infisical, Locket & Three-Way Contract

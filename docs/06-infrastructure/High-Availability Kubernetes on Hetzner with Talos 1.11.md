@@ -8,6 +8,8 @@ created: 2025-12-21
 description: "Stop Overpaying for Cloud: High-Availability Kubernetes on Hetzner with Talos 1.11 If you are running production workloads like Mastodon, Odoo, or a fleet of WordPress sites, you might think you need to stick with the major hyperscalers. However, you don’t need to burn money on AWS or Google Cloud just to get reliability. In fact,…"
 tags:
   - "clippings"
+truth: partial
+
 ---
 ## Stop Overpaying for Cloud: High-Availability Kubernetes on Hetzner with Talos 1.11
 

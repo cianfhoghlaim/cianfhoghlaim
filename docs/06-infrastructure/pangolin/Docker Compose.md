@@ -8,6 +8,8 @@ created: 2025-12-10
 description: "Deploy Pangolin manually using Docker Compose without the automated installer"
 tags:
   - "clippings"
+truth: partial
+
 ---
 This guide walks you through setting up Pangolin manually using Docker Compose without the automated installer. This approach gives you full control over the configuration and deployment process.This guide assumes you already have a Linux server with Docker and Docker Compose installed. If you don’t, please refer to the [official Docker documentation](https://docs.docker.com/get-docker/) for installation instructions. You must also have root access to the server.
 

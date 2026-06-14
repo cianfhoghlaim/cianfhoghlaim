@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 Integrating Dagger into a Polyglot Monorepo CI/
 
 CD Workflow

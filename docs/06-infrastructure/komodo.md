@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Komodo Infrastructure Management Skill
 
 ## Description

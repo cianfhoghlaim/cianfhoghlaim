@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Cloudflare Containers: Comprehensive Research Report
 
 ## Executive Summary

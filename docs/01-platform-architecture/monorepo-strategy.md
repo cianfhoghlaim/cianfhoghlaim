@@ -37,6 +37,8 @@ ccc_query_hints:
   - "how to run tasks across monorepo"
   - "polyglot build system"
 last_reviewed: 2026-06-06
+truth: partial
+
 ---
 
 # Monorepo Strategy — Polyglot Toolchain & Workspace Topology

@@ -33,6 +33,8 @@ ccc_query_hints:
   - "ansible server provisioning"
   - "opentofu infrastructure"
 last_reviewed: 2026-06-06
+truth: partial
+
 ---
 
 # Kubernetes Deployment & Infrastructure as Code

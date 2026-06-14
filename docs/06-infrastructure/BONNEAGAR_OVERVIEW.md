@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Taisce - Modular Docker Stacks
 
 Modular infrastructure stacks with separate compose, routing, and secrets configurations.

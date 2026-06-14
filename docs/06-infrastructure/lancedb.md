@@ -1,6 +1,8 @@
 ---
 name: lancedb
 description: Expert assistance for vector database development with LanceDB. Use when users need vector search, semantic search, RAG applications, hybrid search, multimodal embeddings, or production-scale vector storage.
+truth: partial
+
 ---
 
 # LanceDB - Embedded Vector Database

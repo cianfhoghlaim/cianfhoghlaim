@@ -10,6 +10,8 @@ supersedes:
   - docs/hono.md
 ccc_query_hints:
   - hono — lightweight web api framework
+truth: partial
+
 ---
 
 # Hono — Lightweight Web API Framework

@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Komodo (komo.do) API Summary
 
 **Quick Reference for Komodo Infrastructure Management Platform**

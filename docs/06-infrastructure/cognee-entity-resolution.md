@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Cognee: Entity Resolution and Knowledge Structuring
 
 ## Executive Summary

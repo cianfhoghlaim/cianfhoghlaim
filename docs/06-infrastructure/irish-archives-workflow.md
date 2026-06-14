@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Irish Educational Archives Workflow
 
 ## Executive Summary

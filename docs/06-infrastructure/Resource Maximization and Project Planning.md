@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # **Strategic Resource Maximization: Architecting the Celtic Heritage Intelligence Platform (CHIP)**
 
 ## **1\. Executive Strategy: The Resource Arbitrage Architecture**

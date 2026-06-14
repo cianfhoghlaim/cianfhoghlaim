@@ -4,6 +4,8 @@ domain: standards
 status: stable
 description: "Complete retrospective report of the 1,038 → 36 file documentation consolidation across the Cianfhoghlaim monorepo, covering methodology, domain map, migration paths, Cognee/ccc readiness, and agent skill integration."
 last_reviewed: 2026-06-06
+truth: superseded
+
 ---
 
 # Documentation Consolidation Plan — Retrospective Report

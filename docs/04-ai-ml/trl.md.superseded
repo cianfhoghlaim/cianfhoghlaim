@@ -10,6 +10,8 @@ supersedes:
   - docs/trl.md
 ccc_query_hints:
   - trl — transformer reinforcement learning
+truth: partial
+
 ---
 
 # TRL — Transformer Reinforcement Learning (HuggingFace)

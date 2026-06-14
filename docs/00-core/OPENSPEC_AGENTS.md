@@ -10,6 +10,8 @@ supersedes:
   - docs/OPENSPEC_AGENTS.md
 ccc_query_hints:
   - openspec instructions for cianfhoghlaim
+truth: partial
+
 ---
 
 # OpenSpec Instructions for Cianfhoghlaim

@@ -10,6 +10,8 @@ supersedes:
   - docs/MODEL_TRAINING.md
 ccc_query_hints:
   - model training
+truth: partial
+
 ---
 
 Here is a reproduction plan leveraging Unsloth’s efficiency to recreate and potentially outperform the state-of-the-art (SOTA) for Celtic languages, broken down by language cluster and estimated cost.

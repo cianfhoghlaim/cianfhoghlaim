@@ -19,6 +19,8 @@ ccc_query_hints:
   - "Cianfhoghlaim infrastructure docs"
   - "how is the platform deployed"
 last_reviewed: 2026-06-06
+truth: partial
+
 ---
 
 # Cianfhoghlaim Platform Architecture

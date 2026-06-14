@@ -8,6 +8,8 @@ created: 2025-12-08
 description: "Enable and configure the Integration API for external access"
 tags:
   - "clippings"
+truth: partial
+
 ---
 [Skip to main content](https://docs.pangolin.net/self-host/advanced/#content-area)
 

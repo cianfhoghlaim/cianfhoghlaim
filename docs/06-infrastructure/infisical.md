@@ -3,6 +3,8 @@ name: Infisical Development Assistant
 description: Expert assistant for Infisical secrets management - helps with CLI usage, SDK integration, Kubernetes operators, CI/CD pipelines, and security best practices.
 category: Development
 tags: [infisical, secrets, security, kubernetes, cicd, devops, encryption]
+truth: partial
+
 ---
 
 # Infisical Development Assistant

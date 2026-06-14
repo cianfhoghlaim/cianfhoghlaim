@@ -8,6 +8,8 @@ created: 2025-12-15
 description: "Provides an overview on how to configure the Pulumi Docker provider."
 tags:
   - "clippings"
+truth: partial
+
 ---
 Docker v4.10.0 published on Thursday, Nov 13, 2025 by Pulumi
 

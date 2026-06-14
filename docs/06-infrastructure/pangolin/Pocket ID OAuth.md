@@ -7,6 +7,8 @@ created: 2025-12-29
 description: "Use Pocket ID as an OAuth provider in Tinyauth."
 tags:
   - "clippings"
+truth: partial
+
 ---
 Guides
 

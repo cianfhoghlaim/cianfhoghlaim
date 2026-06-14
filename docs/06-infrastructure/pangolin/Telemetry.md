@@ -8,6 +8,8 @@ created: 2025-12-08
 description: "Understanding Pangolin's anonymous usage data collection"
 tags:
   - "clippings"
+truth: partial
+
 ---
 [Skip to main content](https://docs.pangolin.net/self-host/#content-area)
 

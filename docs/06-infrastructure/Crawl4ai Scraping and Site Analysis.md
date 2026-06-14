@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 
 
 # **Architectural Blueprint for Autonomous Web Reconnaissance and High-Value Asset Extraction: Integrating Stagehand and Crawl4AI**

@@ -1,3 +1,7 @@
+---
+truth: partial
+---
+
 # Gaelic Heritage Digitization Pipeline
 
 ## Executive Summary
