@@ -79,6 +79,23 @@ from .assets.ie.law import (
     law_ie_lawreform,
 )
 
+# UK Medicine Assets (Phase 3.3 of lateralise-british-isles-domains)
+# Lateralises IE → EN/NI/SCT/WLS for the medicine domain.
+from .assets.medicine.en import (
+    medicine_en_gmc,
+    medicine_en_nhs_england,
+    medicine_en_nice,
+)
+from .assets.medicine.ni import medicine_ni_nidirect
+from .assets.medicine.sct import medicine_sct_nhs_scotland
+from .assets.medicine.wls import medicine_wls_nhs_wales
+
+# UK Law Assets (Phase 3.3 of lateralise-british-isles-domains)
+from .assets.law.en import law_en_legislation
+from .assets.law.ni import law_ni_legislation
+from .assets.law.sct import law_sct_legislation
+from .assets.law.wls import law_wls_legislation
+
 # PDF Processing Assets
 from .assets.pdf_assets import pdf_processing_assets
 
@@ -337,6 +354,18 @@ combined_assets = [
     law_ie_irish_statute_book,
     law_ie_doj,
     law_ie_lawreform,
+    # UK medicine (Phase 3.3) — 6 assets
+    medicine_en_gmc,
+    medicine_en_nhs_england,
+    medicine_en_nice,
+    medicine_ni_nidirect,
+    medicine_sct_nhs_scotland,
+    medicine_wls_nhs_wales,
+    # UK law (Phase 3.3) — 4 assets
+    law_en_legislation,
+    law_ni_legislation,
+    law_sct_legislation,
+    law_wls_legislation,
 ]
 
 defs = dg.Definitions(
