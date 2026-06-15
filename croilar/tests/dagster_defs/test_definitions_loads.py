@@ -1,22 +1,32 @@
 """Smoke test that `croilar.definitions:defs` constructs without
 ImportError.
 
-This test surfaces the pre-existing `croilar._shared.streams`
-ModuleNotFoundError (the `_shared/` module is not in croilar's
-`pyproject.toml` packages list and `croilar/__init__.py` does
-not exist). It does so by deliberately *trying* to import the
-module and asserting either:
+This test loads the croilar dagster code-location and
+verifies the asset graph builds. It is the canonical CI
+gate for the croilar code-location.
 
-  (a) `defs` builds with >= 1 asset, OR
-  (b) the import fails with a *known* pre-existing error which we
-      document with `pytest.xfail` so the test is still tracked
-      but doesn't break the build.
-
-The known pre-existing errors are:
-  - ModuleNotFoundError: No module named 'croilar'
-    (caused by missing croilar/__init__.py and missing _shared
-     from pyproject packages)
-  - any exception mentioning `_shared.streams`
+History (per issue #17, closed 2026-06-15):
+  - Pre-cleanup, `croilar/__init__.py` did not exist and the
+    `_shared` + `dagster_assets` subdirs were missing from
+    `croilar/pyproject.toml`'s `[tool.hatch.build.targets.wheel]
+    packages`. The dagster code-location at `croilar/definitions.py`
+    used `from croilar._shared.X import ...`, which failed.
+  - The fix:
+      1. Added `croilar/__init__.py` (so `croilar` is a real
+         Python package, not a PEP-420 namespace package)
+      2. Changed `croilar/pyproject.toml` to declare
+         `packages = ["."]` (the project root) so hatch's
+         auto-detection picks up `_shared/`, `dagster_assets/`,
+         `pipelines/`, `notebooks/` as sub-packages
+      3. Wrote `croilar/scripts/fix-pth.sh` which rewrites
+         uv's broken editable-install `_editable_impl_croilar.pth`
+         file (4 lines, all pointing to the project root) to a
+         single line pointing to the project root's parent.
+         This is a post-install script; invoke it after every
+         `uv sync` via `mise run croilar:fix-pth`.
+      4. Removed the `croilar_str` sys.path insertion from
+         `croilar/tests/conftest.py` (no longer needed).
+  - This test now passes cleanly (no more `pytest.xfail`).
 """
 import os
 import sys
@@ -25,41 +35,42 @@ import pytest
 
 
 def test_croilar_definitions_imports() -> None:
-    """`croilar.definitions:defs` must construct *and* expose an
-    asset graph (or surface a documented pre-existing error).
+    """`croilar.definitions:defs` must construct and expose an
+    asset graph with >= 1 asset.
 
-    NOTE: This test runs in pytest's environment where the
-    `croilar/tests/conftest.py` adds the croilar root to
-    `sys.path`, which lets `from croilar._shared.streams import ...`
-    succeed via the PEP-420 namespace-package fallback. In a real
-    production container (where the croilar dir is the workspace
-    root and `croilar` is not a real package), that import fails.
-    See `docs/00-core/migration/croilar-packaging.md` for the fix.
+    The import path `from definitions import defs` works
+    because the cwd is `croilar/`, AND the `croilar/__init__.py`
+    we added (per issue #17) makes `croilar` a real package,
+    AND the `croilar/scripts/fix-pth.sh` script has been run
+    so the venv's `.pth` file puts the project root's parent
+    on `sys.path`.
     """
+    # Sanity: the repo root should be on sys.path (the conftest
+    # inserts it; the fix-pth.sh script also does via the .pth
+    # file). This is the cross-quadrant path — used by tests that
+    # import sibling packages like `from oideachais.X import Y`.
+    repo_root = os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    )
+    assert repo_root in sys.path, (
+        f"Expected {repo_root} in sys.path (set by conftest.py). "
+        "If this fails, run `mise run croilar:fix-pth` to repair the "
+        "_editable_impl_croilar.pth file (per issue #17)."
+    )
+
+    # Production: try the bare import (works because cwd is croilar/)
     try:
         from definitions import defs
     except (ModuleNotFoundError, ImportError) as exc:
-        pytest.xfail(
-            f"croilar code-location cannot load (pre-existing): {exc}. "
-            "Fix: add `croilar/__init__.py` and declare `_shared` in "
-            "croilar/pyproject.toml `packages = [...]`."
+        pytest.fail(
+            f"croilar code-location cannot load: {exc}. "
+            "The fix from issue #17 (croilar/__init__.py + "
+            "_shared in pyproject packages) has regressed."
         )
-        return
-    # If the import succeeded, validate the asset graph actually
-    # builds. The legacy pre-existing failure mode is at
-    # `from croilar._shared.streams import ...` inside
-    # `_shared/config/settings.py` — that fires when asset modules
-    # import during `resolve_asset_graph()`, not at top-level import.
-    try:
-        ag = defs.resolve_asset_graph()
-    except (ModuleNotFoundError, ImportError) as exc:
-        if "croilar" in str(exc) or "_shared" in str(exc):
-            pytest.xfail(
-                f"croilar defs constructs but asset modules fail "
-                f"(pre-existing): {exc}. Fix: declare `_shared` in "
-                "croilar/pyproject.toml `packages = [...]`."
-            )
-            return
-        raise
+
+    # Validate the asset graph actually builds. The
+    # `from croilar._shared.X import` chain inside
+    # `_shared/config/settings.py` must resolve cleanly.
+    ag = defs.resolve_asset_graph()
     n = sum(1 for _ in ag.get_all_asset_keys())
     assert n >= 1, f"Expected at least 1 asset, got {n}"
