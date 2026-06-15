@@ -4,7 +4,7 @@ Phase 7 of the openspec change.
 """
 from __future__ import annotations
 
-from oideachais.dlt_sources.domains.medicine.en import (
+from dlt_sources.domains.medicine.en import (
     gmc,
     nhs_england,
     nice,

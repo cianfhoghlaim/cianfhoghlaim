@@ -21,3 +21,13 @@ path = "tuatha/crypteolas"
 # Crypteolas Demo — the standalone TanStack + Agno demo app
 [[workspace.projects]]
 path = "tuatha/apps/crypteolas_demo"
+
+# Croílár — multi-persona portfolio + CV + data engineering (Stream-registry DLT)
+# Phase 0.1 of lateralise-british-isles-domains.
+[[workspace.projects]]
+path = "croilar"
+
+# meaisínfhoghlaim — AI/ML quadrant (12 agents, OCR/HTR, Celtic-language DLT).
+# Phase 0.1 of lateralise-british-isles-domains.
+[[workspace.projects]]
+path = "meaisinfhoghlaim"

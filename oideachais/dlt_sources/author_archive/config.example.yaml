@@ -1,0 +1,28 @@
+# Author Archive — Takeout account configuration
+# Copy this file to `./author_archive_accounts.yaml` at the repo root and edit.
+# If this file is absent, the takeout source becomes a no-op (no error).
+#
+# Per-account entry:
+#   account_label:    Short label used in DuckDB `account` column. Required.
+#   takeout_path:     Absolute or repo-relative path to the extracted
+#                     `Takeout/<account_label>/` directory. Required.
+#   default_domain:   One of drive|gmail|docs|gemini|keep|photos|other.
+#                     Used when the file's relative path doesn't already
+#                     encode a Takeout product area. Default: other.
+#   gpg_encrypt_paths: List of relative-path prefixes whose content SHALL be
+#                     GPG-encrypted before storage. Empty by default. See
+#                     `openspec/.../google-takeout-ingestion/spec.md`.
+
+accounts: []
+  # Example (commented out — uncomment + edit when you bring the zips):
+  #
+  # - account_label: cian_personal
+  #   takeout_path: ~/Downloads/Takeout/cian_personal
+  #   default_domain: gemini
+  #   gpg_encrypt_paths:
+  #     - "Drive/Personal/"
+  #     - "Gmail/All mail.mbox"
+  #
+  # - account_label: cian_academic
+  #   takeout_path: ~/Downloads/Takeout/cian_academic
+  #   default_domain: drive

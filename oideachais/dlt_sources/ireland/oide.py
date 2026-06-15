@@ -31,8 +31,8 @@ from typing import Any
 
 import dlt
 
-from ...common.firecrawl_source import crawl_website, scrape_page
-from ...common.incremental import compute_content_hash
+from common.firecrawl_source import crawl_website, scrape_page
+from common.incremental import compute_content_hash
 
 # Oide.ie main URLs
 OIDE_URLS = {

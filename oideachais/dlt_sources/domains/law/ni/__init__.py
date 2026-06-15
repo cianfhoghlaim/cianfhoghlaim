@@ -1,6 +1,6 @@
 """oideachais.dlt_sources.domains.law.ni — Northern Ireland statutory-law sub-package."""
 from __future__ import annotations
 
-from oideachais.dlt_sources.domains.law.ni import legislation
+from dlt_sources.domains.law.ni import legislation
 
 __all__ = ["legislation"]

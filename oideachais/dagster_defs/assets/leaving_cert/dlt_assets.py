@@ -22,12 +22,12 @@ from typing import Any
 
 from dagster import AssetSelection, MaterializeResult, define_asset_job, asset
 
-from oideachais.dlt_sources.ireland.leaving_cert import (
+from dlt_sources.ireland.leaving_cert import (
     SUBJECTS,
     leaving_cert_source,
 )
-from oideachais.dlt_utils.destinations import get_dlt_destination
-from oideachais.dlt_utils.safety import safe_dlt_run
+from dlt_utils.destinations import get_dlt_destination
+from dlt_utils.safety import safe_dlt_run
 
 
 def _dlt_pipeline_name(subject: str) -> str:

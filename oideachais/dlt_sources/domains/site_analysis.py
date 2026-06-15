@@ -17,8 +17,8 @@ from typing import Any
 import dlt
 import structlog
 
-from oideachais.dlt_utils.source_factory import get_default_factory
-from oideachais.site_analysis.extractor import extract_source
+from dlt_utils.source_factory import get_default_factory
+from site_analysis.extractor import extract_source
 
 logger = structlog.get_logger(__name__)
 
