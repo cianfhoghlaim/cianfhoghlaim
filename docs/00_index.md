@@ -43,6 +43,12 @@ For project identity, see [`docs/00-core/CLAUDE.md`](00-core/CLAUDE.md).
 | Set up a package workspace | [CLAUDE.md §Quadrant map](00-core/CLAUDE.md) | `core` |
 | Add or audit a Docker Compose stack | `infrastructure/AGENTS.md` + `infrastructure/stacks/*` | `infrastructure` |
 | Configure secrets (Infisical, Locket, mise) | `infrastructure/SECRETS-MANAGEMENT.md` | `infrastructure` |
+| Run the live container audit (bunchloch + arm1-oci) | `infrastructure/audit/README.md` + 4 scripts under `infrastructure/audit/scripts/` | `infrastructure` |
+| Read the 6-step deployment playbook | `infrastructure/DEPLOYMENT-STRATEGY.md` | `infrastructure` |
+| Map quadrants to stacks (1-page table) | `infrastructure/QUADRANT-TO-STACK-MAP.md` | `infrastructure` |
+| Read the current infrastructure health report | `infrastructure/stacks/HEALTH_REPORT.md` | `infrastructure` |
+| Read the historical 3-session health log (2026-06-12) | `infrastructure/archive/HEALTH_REPORT-2026-06-12.md` | `infrastructure` |
+| Deploy a user-named target (infisical, komodo, pangolin, ansible, cal-diy, vikunja, n8n, changedetection, bytebase) | `infrastructure/deploy-runbooks/<name>.md` | `infrastructure` |
 | Deploy via Komodo GitOps | `infrastructure/komodo/` + `docs/01-platform-architecture/komodo-gitops.md` | `architecture` |
 | Configure Pangolin networking / VPN / Traefik | `infrastructure/PANGOLIN-SETUP.md` | `architecture` |
 | Design the data lakehouse architecture | [Data Architecture](02-data-platform/data-architecture.md) | `data_platform` |

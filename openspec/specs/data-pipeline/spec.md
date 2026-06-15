@@ -4,12 +4,9 @@
 
 `data-pipeline` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
 
-
 ## Background
 Modern data orchestration and ETL/ELT pipelines with asset-based design, incremental loading, schema inference, and integration with the modern data stack.
-
 ## Requirements
-
 ### Requirement: Asset-Based Pipelines
 The system SHALL define data assets, not just tasks.
 
@@ -61,6 +58,23 @@ The system SHALL support efficient partitioned processing.
 - **GIVEN** an asset with multiple partition dimensions
 - **WHEN** querying data
 - **THEN** partitions can be filtered by any dimension
+
+### Requirement: Law Domain — Statutory Only (MVP)
+
+The system SHALL provide a `law/` domain in `sources.yaml` containing **only
+statutory** law sources: `irish_statute_book` (IE), `legislation` (NI/EN/SCT/WLS),
+`doj` (IE), `lawreform` (IE). Case law (court judgments, tribunals, BAILII
+mirrors) SHALL NOT be ingested by this change.
+
+#### Scenario: Law domain in sources.yaml
+- **GIVEN** the `sources.yaml` file
+- **WHEN** the operator runs `python -m oideachais.sources.sources_validation --filter domain=law`
+- **THEN** only statutory entries appear
+
+#### Scenario: Case law entry rejected
+- **GIVEN** a hypothetical `ie.law.courts` entry
+- **WHEN** the SourceFactory loads the YAML
+- **THEN** the factory raises a `pydantic.ValidationError` because `ie.law.courts` is not in the MVP law allowlist
 
 ## Supported Frameworks
 
