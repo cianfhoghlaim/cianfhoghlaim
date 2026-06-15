@@ -13,7 +13,7 @@ import os
 
 from dagster import asset, define_asset_job, schedule
 
-from oideachais.dlt_utils.safety import safe_dataset_query
+from dlt_utils.safety import safe_dataset_query
 
 UI_SUGGESTION_TABLE = "ui_component_suggestions"
 

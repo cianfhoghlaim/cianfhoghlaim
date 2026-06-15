@@ -17,7 +17,7 @@ Environment:
     DLT_ENVIRONMENT=production: Cloudflare R2 + PlanetScale
 
 Usage:
-    from oideachais.dagster_defs.assets.ireland import curriculum_dlt_assets
+    from .import curriculum_dlt_assets
 
     defs = Definitions(assets=curriculum_dlt_assets)
 """
@@ -32,7 +32,7 @@ from dagster import (
     StaticPartitionsDefinition,
 )
 
-from oideachais.dlt_utils import (
+from dlt_utils import (
     get_dlt_destination,
     get_duckdb_fallback_destination,
     safe_dlt_run,
@@ -209,8 +209,8 @@ def create_cycle_asset(cycle: str):
         sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent.parent))  # Add oideachais to path
         sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))  # Add data_platform to path
 
-        from oideachais.dlt_sources.ireland.curriculum_registry import SubjectRegistry
-        from oideachais.dlt_sources.ireland.curriculum_source import (
+        from dlt_sources.ireland.curriculum_registry import SubjectRegistry
+        from dlt_sources.ireland.curriculum_source import (
             build_subject_urls,
             parallel_scrape_subject,
         )
@@ -226,11 +226,11 @@ def create_cycle_asset(cycle: str):
         )
 
         
-        from oideachais.dlt_sources.ireland.curriculum_source import curriculum_source
+        from dlt_sources.ireland.curriculum_source import curriculum_source
         
         # Determine URLs and count (just for logging)
-        from oideachais.dlt_sources.ireland.curriculum_registry import SubjectRegistry
-        from oideachais.dlt_sources.ireland.curriculum_source import build_subject_urls
+        from dlt_sources.ireland.curriculum_registry import SubjectRegistry
+        from dlt_sources.ireland.curriculum_source import build_subject_urls
         registry = SubjectRegistry.from_default()
         urls = build_subject_urls(cycle, subject, registry, language=language)
         
@@ -330,7 +330,7 @@ def create_short_course_asset():
         """Ingest short course curriculum data."""
         os.environ.setdefault("DLT_DISABLE_PLUGINS", "true")
 
-        from oideachais.dlt_sources.ireland.curriculum_source import (
+        from dlt_sources.ireland.curriculum_source import (
             _scrape_single_url,
         )
 

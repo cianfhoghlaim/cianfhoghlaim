@@ -28,7 +28,7 @@ from typing import Any, Protocol
 from urllib.parse import parse_qs, urlparse
 
 import structlog
-from oideachais.dlt_sources.common.incremental import compute_content_hash
+from dlt_sources.common.incremental import compute_content_hash
 
 logger = structlog.get_logger(__name__)
 

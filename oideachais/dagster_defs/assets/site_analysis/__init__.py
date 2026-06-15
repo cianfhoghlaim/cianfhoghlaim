@@ -1,5 +1,5 @@
 """oideachais.dagster_defs.assets.site_analysis — Phase 8 site-analysis assets."""
-from oideachais.dagster_defs.assets.site_analysis.extract import (
+from assets.site_analysis.extract import (
     site_analysis_cognify,
     site_analysis_embed,
     site_analysis_extract,

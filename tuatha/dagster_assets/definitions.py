@@ -12,8 +12,8 @@ from dagster import (
 )
 
 from . import curriculum_assets, embedding_assets, mythology_assets, exam_analysis
-from ..fibo_generation import assets as fibo_assets
-from ..fibo_generation.resources import FiboResource, ValidationResource
+from fibo_generation import assets as fibo_assets
+from fibo_generation.resources import FiboResource, ValidationResource
 from .schedules import (
     daily_curriculum_schedule,
     daily_embedding_schedule,
