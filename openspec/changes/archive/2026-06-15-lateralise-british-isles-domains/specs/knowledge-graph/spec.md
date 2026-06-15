@@ -1,6 +1,6 @@
 # Knowledge Graph — Spec Delta (lateralise-british-isles-domains)
 
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: Cognee Dataset Naming (Domain‑Keyed)
 
