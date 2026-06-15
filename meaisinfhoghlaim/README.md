@@ -6,6 +6,27 @@
 > `croilar/apps/portal/`, and the public-facing Marimo notebooks in
 > `croilar/notebooks/`.
 
+## Status (2026-06-15)
+
+| Metric | Value |
+|:--|:--|
+| Workspace name | `meaisinfhoghlaim` (uv) — directory preserves the síneadh fada |
+| Dagster code-location | Registered in root `dg.toml` (Phase 0.1 of `lateralise-british-isles-domains`); 4 heartbeat assets in group `meaisin_heartbeat`. The 4 heartbeats import-test each meaisín sub-package and materialise a no-op `MaterializeResult` |
+| Test pass rate | 4 / 4 heartbeat tests pass locally (smoke test that `agents/curriculum_agent`, `pipelines/dialect_classifier`, `pipelines/transcript_aligner`, `pipelines/irish_document_scanner` import cleanly) |
+| 8 sub-packages | Declared in `pyproject.toml [tool.hatch.build.targets.wheel].packages`: `agents`, `ocr`, `language`, `pipelines`, `alignment`, `evaluation`, `quality`, `catalog`, `scripts`, `services` (10 in fact, including `services` and `scripts`) |
+| Celtic-language subdirs | 6: `brezhoneg/`, `cymraeg/`, `gaeilge/`, `gaelg/`, `gaidhlig/`, `kernowek/` — most are placeholders |
+| Frameworks | `litellm`, `baml-py`, `anthropic`, `openai`, `agno>=2.0.0`, `google-adk`, `dlt[duckdb,ducklake,s3]`, `duckdb`, `lancedb`, `langfuse`, `cognee`, `ragas`, `datasets`, `transformers`, `torch`, `sentence-transformers`, `accelerate`, `pytesseract`, `pillow`, `mlflow>=2.18.0` |
+| Container coupling | `infrastructure/komodo/stacks/meaisínfhoghlaim-bunchloch.toml` exists; no matching `infrastructure/stacks/engineering/meaisinfhoghlaim/`. The Komodo stack is the deployment target, not a per-service `stacks/engineering/` stack. |
+
+## Known issues (2026-06-15)
+
+| # | Issue | Tracked in | Severity |
+|--:|:--|:--|:--|
+| 1 | Most sub-packages are stubs. The 4 heartbeats added in commit `6afe63dac` (Phase 0.2 of `lateralise-british-isles-domains`) are the first real assets. The 8 components (agents / ocr / language / alignment / evaluation / quality / catalog / scripts) advertised in the README are NOT all implemented; the dir layout exists but most files are placeholders. | `meaisinfhoghlaim/{agents,ocr,language,alignment,evaluation,quality,catalog,scripts,services}/` | high — most of the quadrant is aspirational |
+| 2 | `pyproject.toml` has NO `[tool.uv.sources]` block — sibling workspace members (e.g. `oideachais`, `tuatha`, `croilar`) are not declared as local-path dependencies. Any cross-quadrant import (e.g. `from oideachais.dagster_defs import ...`) will fail with `ModuleNotFoundError` once the venv is installed outside the repo root. | `meaisinfhoghlaim/pyproject.toml` (no `[tool.uv.sources]`) | high — blocks the AI/ML quadrant from interoperating with the lakehouse |
+| 3 | The 6 Celtic-language subdirs (`brezhoneg/`, `cymraeg/`, `gaeilge/`, `gaelg/`, `gaidhlig/`, `kernowek/`) have the same stub problem — they exist for `pyproject` layout symmetry but the actual language resources, training data, and evaluation harnesses are not yet built. | the 6 subdirs themselves | medium — Phase 1 of meaisínfhoghlaim's roadmap |
+| 4 | No dagster code-location for production. The `dagster_defs/` dir has 4 heartbeat assets but no `@source_factory` integration (the `SourceFactory` runtime constructors are still `NotImplementedError` stubs — see oideachais Known issue #3). | `meaisinfhoghlaim/dagster_defs/assets/healthchecks.py` | medium — depends on oideachais issue |
+| 5 | The `BAML rename baml_src → scéimre` change promised in `meaisinfhoghlaim/AGENTS.md` was deferred per the `lateralise-british-isles-domains` decision. The `baml_src/` import path is still canonical. | the AGENTS.md + the deferral in the lateralise proposal | low — deferred explicitly |
 Meaisínfhoghlaim is the **AI services layer** of the monorepo. Where
 `oideachais/` is the lakehouse and `croilar/` is the multi-persona platform,
 Meaisínfhoghlaim is what populates the lakehouse with structured data and

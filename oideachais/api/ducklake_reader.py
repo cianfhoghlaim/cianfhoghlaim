@@ -230,6 +230,165 @@ def source_active() -> bool:
         return False
 
 
+# ── Domain × nation × table reader (Phase 3.5) ─────────────────────────────
+#
+# Phase 3.5 of the lateralise change consolidates the DuckLake layout
+# from per-subject datasets (`leaving_cert_{subject}/<table>/`) to a
+# single canonical schema:
+#
+#   s3://ducklake/oideachais/{domain}.{nation}.{entity}/<table>/*.parquet
+#
+# Where:
+#   * domain ∈ {education, medicine, law, site_analysis}
+#   * nation ∈ {ie, en, ni, sct, wls, iom, jey, ggy}
+#   * entity ∈ {ncca, examinations, gmc, isb, ...}  (any SourceSpec.id)
+#   * table  = the DLT @dlt.resource name within that source
+#
+# This lets the API uniformly read from any source registered in
+# `oideachais/sources.yaml` without per-source plumbing. The leaving-
+# cert API is one of many consumers; medicine + law + education
+# for every nation can use the same reader.
+#
+# The legacy `read_syllabus` / `read_past_papers` / etc. functions
+# (which read from `leaving_cert_{subject}/<table>/`) are retained
+# for backwards compatibility with the LC portal; new consumers
+# should use `read_domain_table`.
+
+
+def _read_domain_table(
+    domain: str,
+    nation: str,
+    entity: str,
+    table: str,
+    *,
+    where: str | None = None,
+    limit: int | None = None,
+) -> list[dict[str, Any]]:
+    """Read parquet files for a (domain, nation, entity, table) tuple.
+
+    Returns an empty list if the path doesn't exist (no S3 access,
+    table not yet materialised, etc.). Filters out DLT
+    `<uuid>-delete.parquet` tombstones.
+
+    Args:
+        domain: One of `education`, `medicine`, `law`, `site_analysis`.
+        nation: One of `ie`, `en`, `ni`, `sct`, `wls`, `iom`, `jey`, `ggy`.
+        entity: The SourceSpec entity (e.g. `ncca`, `gmc`, `isb`).
+        table: The DLT @dlt.resource name within that source
+            (e.g. `pages`, `acts`, `register_pages`).
+        where: Optional DuckDB SQL WHERE clause (without the WHERE
+            keyword). Used by callers to filter by subject / year
+            / language / etc.
+        limit: Optional row cap. Defaults to 10_000 to keep the
+            API response bounded.
+
+    Examples:
+        >>> _read_domain_table("education", "ie", "ncca", "pages")
+        >>> _read_domain_table("medicine", "en", "gmc", "register_pages",
+        ...                    where="year = 2025", limit=500)
+    """
+    base_path = (
+        f"{_DUCKLAKE_DATA_PATH}/{domain}.{nation}.{entity}/{table}"
+    )
+
+    # List files via glob, then filter out the `-delete.parquet`
+    # tombstones that DLT's `replace` write_disposition writes
+    # alongside the new data.
+    glob_paths: list[str] = []
+    try:
+        with _LOCK:
+            conn = _get_conn()
+            files = conn.execute(
+                f"SELECT file FROM glob('{base_path}/*.parquet')"
+            ).fetchall()
+        for (file_path,) in files:
+            if "-delete.parquet" in file_path:
+                continue
+            glob_paths.append(file_path)
+    except Exception as exc:
+        logger.warning(
+            "ducklake_domain_glob_failed path=%s err=%s",
+            base_path,
+            exc,
+        )
+        return []
+
+    if not glob_paths:
+        return []
+
+    paths_csv = ", ".join(f"'{p}'" for p in glob_paths)
+    limit_sql = f"LIMIT {int(limit)}" if limit is not None else "LIMIT 10000"
+    where_sql = f"WHERE {where}" if where else ""
+    try:
+        with _LOCK:
+            conn = _get_conn()
+            result = conn.execute(
+                f"SELECT * FROM read_parquet([{paths_csv}], union_by_name=True) "
+                f"{where_sql} {limit_sql}"
+            ).fetchdf()
+        return result.to_dict(orient="records")
+    except Exception as exc:
+        logger.warning(
+            "ducklake_domain_read_failed path=%s err=%s",
+            base_path,
+            exc,
+        )
+        _get_conn.cache_clear()
+        return []
+
+
+def read_source_pages(
+    domain: str,
+    nation: str,
+    entity: str,
+    table: str = "pages",
+    where: str | None = None,
+    limit: int | None = None,
+) -> list[dict[str, Any]]:
+    """Read the (typically markdown) pages of a given source.
+
+    The new schema layout means every nation's education / medicine /
+    law / site_analysis source has a `pages` (or `acts` / `register`)
+    table. This is the canonical read for the lateralise change's
+    downstream consumers (Cognee, LanceDB embedding, marimo
+    dashboards).
+
+    Args:
+        domain: e.g. `education`
+        nation: e.g. `en`
+        entity: e.g. `gmc`
+        table: defaults to `pages`; `acts` for law, `register_pages`
+            for medical registers.
+        where: optional DuckDB WHERE clause.
+        limit: optional row cap.
+
+    Returns:
+        A list of dicts, one per parquet row.
+    """
+    return _read_domain_table(
+        domain=domain,
+        nation=nation,
+        entity=entity,
+        table=table,
+        where=where,
+        limit=limit,
+    )
+
+
+def domain_table_active(
+    domain: str,
+    nation: str,
+    entity: str,
+    table: str = "pages",
+) -> bool:
+    """True if at least one parquet file exists for the given source table."""
+    return bool(
+        _read_domain_table(
+            domain=domain, nation=nation, entity=entity, table=table, limit=1
+        )
+    )
+
+
 def compute_topic_frequency(subject: str) -> list[dict[str, Any]]:
     """Cross-reference syllabus + examiner reports to surface the most-cited topics.
 

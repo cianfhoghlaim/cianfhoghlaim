@@ -59,6 +59,9 @@ analytics = [
 # [tool.uv.sources]
 # sruth-shared = { path = "../shared", editable = true }  # Disabled until package exists
 
+[tool.uv.sources]
+oideachais = { workspace = true }
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
