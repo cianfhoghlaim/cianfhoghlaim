@@ -1,6 +1,6 @@
 # Oideachais Pipeline — Spec Delta (lateralise-british-isles-domains)
 
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: Asset Key Convention (renamed)
 
