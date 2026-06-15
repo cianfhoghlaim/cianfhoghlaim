@@ -1,6 +1,6 @@
 # Data Pipeline — Spec Delta (lateralise-british-isles-domains)
 
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: Python 3.13 + Latest Stable Dependencies
 
