@@ -10,13 +10,14 @@ A polyglot monorepo (`bun + uv + turbo`) that ingests the curriculums and exam
 papers of the British Isles, then makes them interactive and bilingual through
 self-hosted AI. Five cooperating streams:
 
-| Stream | What it does | Stack |
-|:--|:--|:--|
-| `oideachais/` | Curriculum, exam, marking-scheme extraction; the VLM PDF pipeline; asset generation | Dagster + DLT + DuckLake + LanceDB + BAML + LiteLLM |
-| `meaisínfhoghlaim/` | Model lifecycle — HF cache, GGUF conversion, llama-swap dynamic model swapper | llama-swap + llama.cpp + MLX + Bria FIBO |
-| `infrastructure/` | Multi-cloud zero-trust mesh; the LLM gateway; ~50 stacks | Pulumi + Komodo + Pangolin + Locket + 1Password + LiteLLM + MLX-Omni + InvokeAI |
-| `tuatha/` | Educational MMO front-end (BAML + Dagster + Rust + TanStack) | Babylon.js + Dagster + BAML |
-| `docs/` | The reference corpus — `.agents/skills`, `data_engineering/`, `marimo/`, `meaisínfhoghlaim/`, `teanga/` | markdown + notebooks + skills |
+| Stream | What it does | Stack | Status (2026-06-15) |
+|:--|:--|:--|:--|
+| `oideachais/` | Curriculum, exam, marking-scheme extraction; the VLM PDF pipeline; asset generation | Dagster + DLT + DuckLake + LanceDB + BAML + LiteLLM | **228 / 228** Dagster assets, **81 / 81** tests pass — see `oideachais/README.md` §Status |
+| `meaisínfhoghlaim/` | Model lifecycle — HF cache, GGUF conversion, llama-swap dynamic model swapper | llama-swap + llama.cpp + MLX + Bria FIBO | **4 / 4** heartbeat assets; rest is stubs — see `meaisinfhoghlaim/README.md` §Status |
+| `infrastructure/` | Multi-cloud zero-trust mesh; the LLM gateway; ~50 stacks | Pulumi + Komodo + Pangolin + Locket + 1Password + LiteLLM + MLX-Omni + InvokeAI | **35** running containers on `bunchloch`, ~10 on `arm1-oci`; 4 known blockers per `infrastructure/stacks/HEALTH_REPORT.md` |
+| `tuatha/` | Educational MMO front-end (BAML + Dagster + Rust + TanStack) | Babylon.js + Dagster + BAML | Bundles, no live Dagster code-location (sruth missing) — see `tuatha/README.md` §Status |
+| `croilar/` | Multi-persona portfolio (Convex + Hono + TanStack + Dagster) | Convex + Hono + TanStack + BetterAuth | **5 / 5** user-named stacks built; packaging broken — see `croilar/README.md` §Status |
+| `docs/` | The reference corpus — `.agents/skills`, `data_engineering/`, `marimo/`, `meaisínfhoghlaim/`, `teanga/` | markdown + notebooks + skills | `docs/00_index.md` is the master routing table |
 
 The **3-way interaction** that makes this work:
 
