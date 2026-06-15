@@ -17,7 +17,8 @@ from typing import Any, Iterator
 
 import dlt
 
-from sruth.shared.http import stats_wales_client
+# Per https://github.com/cianfhoghlaim/kings_college_galway/issues/18
+from ._sruth_shim import stats_wales_client
 
 
 def _get_stats_wales_factory():
