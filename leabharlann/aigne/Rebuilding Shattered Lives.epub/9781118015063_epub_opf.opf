@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><package xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId" version="2.0">
+	<metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+		<dc:title>Rebuilding Shattered Lives</dc:title>
+		<dc:creator>Chu, James A.</dc:creator>
+		<dc:publisher>John Wiley &amp; Sons, Ltd.</dc:publisher>
+		<dc:format/>
+		<dc:date>2011-02-14</dc:date>
+		<dc:subject/>
+		<dc:description/>
+		<dc:rights/>
+		<dc:identifier id="BookId" opf:scheme="ISBN">9781118015063</dc:identifier>
+		<dc:language>en</dc:language>
+		<meta content="cover" name="cover"/>
+	</metadata>
+	<manifest>
+		<item href="9781118015063_epub_ncx.ncx" id="ncx" media-type="application/x-dtbncx+xml"/>
+		<item href="OEBPS/9781118015063_epub_cov.htm" id="cov" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_toc.htm" id="toc" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_fm_1.htm" id="fm1" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_fm_2.htm" id="fm2" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_fm_3.htm" id="fm3" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_fm_4.htm" id="fm4" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_fm_5.htm" id="fm5" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_p1.htm" id="p1" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_ch_1.htm" id="c01" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_ch_2.htm" id="c02" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_ch_3.htm" id="c03" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_ch_4.htm" id="c04" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_ch_5.htm" id="c05" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_p2.htm" id="p2" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_ch_6.htm" id="c06" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_ch_7.htm" id="c07" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_ch_8.htm" id="c08" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_ch_9.htm" id="c09" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_ch_10.htm" id="c10" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_ch_11.htm" id="c11" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_p3.htm" id="p3" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_ch_12.htm" id="c12" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_ch_13.htm" id="c13" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_ch_14.htm" id="c14" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_ch_15.htm" id="c15" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_bm_1.htm" id="bm1" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_bm_2.htm" id="bm2" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_bm_3.htm" id="bm3" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_bm_4.htm" id="bm4" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_bm_5.htm" id="bm5" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_bm_6.htm" id="bm6" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/9781118015063_epub_bm_7.htm" id="bm7" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/wileySD_template_v1.2.css" id="css" media-type="text/css"/>
+
+		<item href="OEBPS/images/9781118015063_epub_title.jpg" id="f1" media-type="image/jpeg"/>
+		<item href="OEBPS/images/bm3001.gif" id="f2" media-type="image/gif"/>
+		<item href="OEBPS/images/bm3002.gif" id="f3" media-type="image/gif"/>
+		<item href="OEBPS/images/bm3003.gif" id="f4" media-type="image/gif"/>
+		<item href="OEBPS/images/bm4001.gif" id="f5" media-type="image/gif"/>
+		<item href="OEBPS/images/bm4002.gif" id="f6" media-type="image/gif"/>
+		<item href="OEBPS/images/bm4003.gif" id="f7" media-type="image/gif"/>
+		<item href="OEBPS/images/bm4004.gif" id="f8" media-type="image/gif"/>
+		<item href="OEBPS/images/bm4005.gif" id="f9" media-type="image/gif"/>
+		<item href="OEBPS/images/bm4006.gif" id="f10" media-type="image/gif"/>
+		<item href="OEBPS/images/bm4007.gif" id="f11" media-type="image/gif"/>
+		<item href="OEBPS/images/bm4008.gif" id="f12" media-type="image/gif"/>
+		<item href="OEBPS/images/bm4009.gif" id="f13" media-type="image/gif"/>
+		<item href="OEBPS/images/bm4010.gif" id="f14" media-type="image/gif"/>
+		<item href="OEBPS/images/bm4011.gif" id="f15" media-type="image/gif"/>
+		<item href="OEBPS/images/c01f001_opt.jpg" id="f16" media-type="image/jpeg"/>
+		<item href="OEBPS/images/c01f002_opt.jpg" id="f17" media-type="image/jpeg"/>
+		<item href="OEBPS/images/c01f003_opt.jpg" id="f18" media-type="image/jpeg"/>
+		<item href="OEBPS/images/ch02f01_opt.jpg" id="f19" media-type="image/jpeg"/>
+		<item href="OEBPS/images/ch02f02_opt.jpg" id="f20" media-type="image/jpeg"/>
+		<item href="OEBPS/images/ch02f03_opt.jpg" id="f21" media-type="image/jpeg"/>
+		<item href="OEBPS/images/ch05f01_opt.jpg" id="f22" media-type="image/jpeg"/>
+		<item href="OEBPS/images/ch05f02_opt.jpg" id="f23" media-type="image/jpeg"/>
+		<item href="OEBPS/images/ch05f03_opt.jpg" id="f24" media-type="image/jpeg"/>
+		<item href="OEBPS/images/cupv.gif" id="f25" media-type="image/gif"/>
+		<item href="OEBPS/images/fm2.gif" id="f26" media-type="image/gif"/>
+		<item href="OEBPS/images/swithv.gif" id="f27" media-type="image/gif"/>
+		<item href="OEBPS/images/table05001.gif" id="f28" media-type="image/gif"/>
+		<item href="OEBPS/images/table14001.gif" id="f29" media-type="image/gif"/>
+		<item href="OEBPS/images/table14002.gif" id="f30" media-type="image/gif"/>
+		<item href="OEBPS/images/table14003.gif" id="f31" media-type="image/gif"/>
+		<item href="OEBPS/images/utable03001.gif" id="f32" media-type="image/gif"/>
+		<item href="OEBPS/images/utable03002.gif" id="f33" media-type="image/gif"/>
+        <item href="OEBPS/images/9781118015063_epub_cov.jpg" id="cover" media-type="image/jpeg"/>
+	</manifest>
+	<spine toc="ncx">
+		<itemref idref="cov" linear="yes"/>
+		<itemref idref="toc" linear="yes"/>
+		<itemref idref="fm1" linear="yes"/>
+		<itemref idref="fm2" linear="yes"/>
+		<itemref idref="fm3" linear="yes"/>
+		<itemref idref="fm4" linear="yes"/>
+		<itemref idref="fm5" linear="yes"/>
+		<itemref idref="p1" linear="yes"/>
+		<itemref idref="c01" linear="yes"/>
+		<itemref idref="c02" linear="yes"/>
+		<itemref idref="c03" linear="yes"/>
+		<itemref idref="c04" linear="yes"/>
+		<itemref idref="c05" linear="yes"/>
+		<itemref idref="p2" linear="yes"/>
+		<itemref idref="c06" linear="yes"/>
+		<itemref idref="c07" linear="yes"/>
+		<itemref idref="c08" linear="yes"/>
+		<itemref idref="c09" linear="yes"/>
+		<itemref idref="c10" linear="yes"/>
+		<itemref idref="c11" linear="yes"/>
+		<itemref idref="p3" linear="yes"/>
+		<itemref idref="c12" linear="yes"/>
+		<itemref idref="c13" linear="yes"/>
+		<itemref idref="c14" linear="yes"/>
+		<itemref idref="c15" linear="yes"/>
+		<itemref idref="bm1" linear="yes"/>
+		<itemref idref="bm2" linear="yes"/>
+		<itemref idref="bm3" linear="yes"/>
+		<itemref idref="bm4" linear="yes"/>
+		<itemref idref="bm5" linear="yes"/>
+		<itemref idref="bm6" linear="yes"/>
+		<itemref idref="bm7" linear="yes"/>
+	</spine>
+	<guide>
+		<reference href="OEBPS/images/9781118015063_epub_cov.jpg" title="Cover" type="cover"/>
+		<reference href="OEBPS/9781118015063_epub_toc.htm" title="Table of Contents" type="toc"/>
+	</guide>
+</package>
