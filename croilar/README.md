@@ -7,6 +7,26 @@
 Croílár (Irish: *core/heart*) is the canonical example inside this monorepo of
 how to combine:
 
+## Status (2026-06-15)
+
+| Metric | Value |
+|:--|:--|
+| Workspace name | `croilar` (uv) — directory preserves the síneadh fada |
+| Dagster code-location | `croilar/definitions.py` (root-level, NOT under `dagster_assets/`). Loads in pytest (Phase 0.1 of `lateralise-british-isles-domains` registered it in root `dg.toml` with `module_name = "definitions"`). Fails to load in production — see Known issues. |
+| Test pass rate | 1 / 1 pytest (`croilar/tests/dagster_defs/test_definitions_loads.py`) passes via the local-fallback shim. Real test count is hidden because the conftest's `sys.path` insertion masks the production bug. |
+| Pipelines | 12 DLT pipelines under `croilar/pipelines/` (artwork, cv, fs_author, github, labels, linkedin, researchgate, shared, soundcloud, spotify, teaching) |
+| 5 user-named stacks | Fully built and wired: `infrastructure/stacks/engineering/croilar-{convex, dagster, hono-api, marimo, web}/` |
+| Dagster helpers | `_shared/{agents,config,database,embeddings,mcp,observability}/` — broken packaging, see below |
+
+## Known issues (2026-06-15)
+
+| # | Issue | Tracked in | Severity |
+|--:|:--|:--|:--|
+| 1 | `croilar/__init__.py` does not exist, and `croilar/pyproject.toml` declares only `pipelines` and `notebooks` as packages under `[tool.hatch.build.targets.wheel]`. The `_shared/`, `dagster_assets/`, and other sub-packages are NOT installed. The line `from croilar._shared.streams import ...` in `croilar/_shared/config/settings.py:22` therefore fails. Production dagster code-location cannot load. | GitHub issue #17 | high — the dagster code-location is broken in production |
+| 2 | `croilar/tests/conftest.py:35-38` pre-inserts `croilar/` into `sys.path` to work around the missing `__init__.py` problem. This works in pytest via the PEP-420 namespace-package fallback, but production has no such fallback. The conftest's `sys.path` hack must be removed once #1 is fixed. | `croilar/tests/conftest.py` lines 35-38 | medium — works in tests, hides the production bug |
+| 3 | The Phase 1.6 test `croilar/tests/dagster_defs/test_definitions_loads.py` documents the broken packaging as `pytest.xfail` rather than `pytest.fail`. Once issue #1 is fixed, the xfail reason should be removed and the test should pass cleanly. | `croilar/tests/dagster_defs/test_definitions_loads.py:36-44` | low — tracking artifact |
+| 4 | `croilar/dlt_utils/destinations.py` is a defensive shim identical in pattern to `tuatha/dlt_utils/destinations.py` (re-exports oideachais' namespaced destinations, falls back to local if `oideachais` not on sys.path). The local-fallback code duplicates pre-Phase-2.3 logic and should be deleted once the oideachais workspace dep is wired. | `croilar/dlt_utils/destinations.py` (~85 lines, ~40 of which are the local fallback) | medium — same as tuatha #2 |
+
 - a **public-facing** persona-aware portfolio (multiple identities sharing one
   domain),
 - a **self-hosted developer platform** (auth, data plane, agent runtime, portal
