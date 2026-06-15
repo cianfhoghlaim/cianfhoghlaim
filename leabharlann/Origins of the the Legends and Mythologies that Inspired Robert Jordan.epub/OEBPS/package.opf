@@ -1,0 +1,175 @@
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uid" version="3.0" xml:lang="en" prefix="calibre: https://calibre-ebook.com">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <dc:title id="title">Origins of the the Legends and Mythologies that Inspired Robert Jordan</dc:title>
+    <dc:creator id="id-1">Michael Livingston</dc:creator>
+    <dc:identifier>calibre:12533</dc:identifier>
+    <dc:identifier>uuid:dc09959a-cd83-44a2-a260-9f22d3288060</dc:identifier>
+    <dc:identifier id="uid">9781250860545</dc:identifier>
+    <dc:source id="src-id">urn:isbn:9781250860521</dc:source>
+    <dc:rights>All rights reserved</dc:rights>
+    <dc:language>en-US</dc:language>
+    <dc:contributor id="id">calibre (4.23.0) [https://calibre-ebook.com]</dc:contributor>
+    <dc:description>&lt;p&gt;&lt;b&gt;"Jordan has come to dominate the world Tolkien began to reveal." &amp;#8212;&lt;i&gt;The New York Times &lt;/i&gt;on The Wheel of Time&amp;#174; series&lt;br&gt;&lt;/b&gt;&lt;br&gt;&lt;b&gt;Explore never-before-seen insights into the Wheel of Time, including:&lt;/b&gt;&lt;br&gt;&lt;b&gt;- A brand-new, redrawn world map by Ellisa Mitchell using change requests discovered in Robert Jordan's unpublished notes&lt;/b&gt;&lt;br&gt;&lt;b&gt;- An alternate scene from an early draft of &lt;i&gt;The Eye of the World&lt;/i&gt;&lt;br&gt;&lt;i&gt;- &lt;/i&gt;The long-awaited backstory of Nakomi&lt;br&gt;&lt;/b&gt;&lt;b&gt;- 8 page, full color photo insert&lt;/b&gt;&lt;br&gt;Take a deep dive into the real-world history and mythology that inspired the world of Robert Jordan's The Wheel of Time&amp;#174;. &lt;i&gt;Origins of The Wheel of Time&lt;/i&gt; is written by Michael Livingston, Secretary-General of the United States Commission on Military History and professor of medieval literature at The Citadel, with a Foreword by Harriet McDougal, Robert Jordan's editor, widow, and executor of his estate.&lt;br&gt;This companion to the internationally...</dc:description>
+    <dc:publisher>Tor Publishing Group</dc:publisher>
+    <meta refines="#title" property="title-type">main</meta>
+    <meta refines="#title" property="file-as">Origins of the the Legends and Mythologies that Inspired Robert Jordan</meta>
+    <meta property="identifier-type" refines="#uid" scheme="onix:codelist5">15</meta>
+    <meta property="source-of" refines="#src-id">pagination</meta>
+    <meta property="identifier-type" refines="#src-id" scheme="onix:codelist5">15</meta>
+    <meta property="dcterms:modified">2022-09-20T20:25:31Z</meta>
+    <meta id="auth" property="dcterms:creator">Michael Livingston</meta>
+    <meta property="dcterms:date">2022</meta>
+    <meta property="rendition:orientation">auto</meta>
+    <meta property="rendition:spread">auto</meta>
+    <meta content="cover-image" name="cover"/>
+    <meta property="schema:accessMode">textual</meta>
+    <meta property="schema:accessModeSufficient">textual,visual</meta>
+    <meta property="schema:accessibilityFeature">structuralNavigation</meta>
+    <meta property="schema:accessibilityFeature">alternativeText</meta>
+    <meta property="schema:accessibilitySummary">This publication conforms to the EPUB Accessibility specification at WCAG Level A.</meta>
+    <meta property="schema:accessibilityHazard">none</meta>
+    <meta property="schema:accessibilityFeature">ARIA</meta>
+    <meta property="schema:accessibilityFeature">displayTransformability</meta>
+    <meta property="schema:accessibilityFeature">printPageNumbers</meta>
+    <meta property="schema:accessibilityFeature">readingOrder</meta>
+    <meta property="schema:accessibilityFeature">tableOfContents</meta>
+    <meta property="schema:accessibilityFeature">index</meta>
+    <meta property="schema:accessMode">visual</meta>
+    <meta property="schema:accessModeSufficient">textual</meta>
+    <meta property="role" refines="#id" scheme="marc:relators">bkp</meta>
+    <meta property="role" refines="#id-1" scheme="marc:relators">aut</meta>
+    <meta property="file-as" refines="#id-1">Livingston, Michael</meta>
+    <meta property="calibre:author_link_map">{"Michael Livingston": ""}</meta>
+  </metadata>
+  <manifest>
+    <item href="xhtml/cover.xhtml" id="html-cover-page" media-type="application/xhtml+xml"/>
+    <item href="xhtml/title.xhtml" id="tit" media-type="application/xhtml+xml"/>
+    <item href="xhtml/mini_toc.xhtml" id="mini_toc" media-type="application/xhtml+xml"/>
+    <item href="xhtml/copyrightnotice.xhtml" id="copyrightnotice" media-type="application/xhtml+xml"/>
+    <item href="xhtml/dedication.xhtml" id="dedication" media-type="application/xhtml+xml"/>
+    <item href="xhtml/map.xhtml" id="map" media-type="application/xhtml+xml"/>
+    <item href="xhtml/foreword.xhtml" id="foreword" media-type="application/xhtml+xml"/>
+    <item href="xhtml/letter.xhtml" id="letter" media-type="application/xhtml+xml"/>
+    <item href="xhtml/introduction.xhtml" id="introduction" media-type="application/xhtml+xml"/>
+    <item href="xhtml/chapter1.xhtml" id="chapter1" media-type="application/xhtml+xml"/>
+    <item href="xhtml/chapter2.xhtml" id="chapter2" media-type="application/xhtml+xml"/>
+    <item href="xhtml/chapter3.xhtml" id="chapter3" media-type="application/xhtml+xml"/>
+    <item href="xhtml/chapter4.xhtml" id="chapter4" media-type="application/xhtml+xml"/>
+    <item href="xhtml/photo-1.xhtml" id="photo-1" media-type="application/xhtml+xml"/>
+    <item href="xhtml/photo-2.xhtml" id="photo-2" media-type="application/xhtml+xml"/>
+    <item href="xhtml/photo-3.xhtml" id="photo-3" media-type="application/xhtml+xml"/>
+    <item href="xhtml/photo-4.xhtml" id="photo-4" media-type="application/xhtml+xml"/>
+    <item href="xhtml/photo-5.xhtml" id="photo-5" media-type="application/xhtml+xml"/>
+    <item href="xhtml/photo-6.xhtml" id="photo-6" media-type="application/xhtml+xml"/>
+    <item href="xhtml/photo-7.xhtml" id="photo-7" media-type="application/xhtml+xml"/>
+    <item href="xhtml/photo-8.xhtml" id="photo-8" media-type="application/xhtml+xml"/>
+    <item href="xhtml/glossary.xhtml" id="glossary" media-type="application/xhtml+xml"/>
+    <item href="xhtml/acknowledgments.xhtml" id="acknowledgments" media-type="application/xhtml+xml"/>
+    <item href="xhtml/notes-fm8.xhtml" id="notes-fm8" media-type="application/xhtml+xml"/>
+    <item href="xhtml/notes-ch1.xhtml" id="notes-ch1" media-type="application/xhtml+xml"/>
+    <item href="xhtml/notes-ch2.xhtml" id="notes-ch2" media-type="application/xhtml+xml"/>
+    <item href="xhtml/notes-ch3.xhtml" id="notes-ch3" media-type="application/xhtml+xml"/>
+    <item href="xhtml/notes-ch4.xhtml" id="notes-ch4" media-type="application/xhtml+xml"/>
+    <item href="xhtml/notes-bm1.xhtml" id="notes-bm1" media-type="application/xhtml+xml"/>
+    <item href="xhtml/index.xhtml" id="index" media-type="application/xhtml+xml"/>
+    <item href="xhtml/backad.xhtml" id="backad" media-type="application/xhtml+xml"/>
+    <item href="xhtml/adcard.xhtml" id="adcard" media-type="application/xhtml+xml"/>
+    <item href="xhtml/abouttheauthor.xhtml" id="abouttheauthor" media-type="application/xhtml+xml"/>
+    <item href="xhtml/newsletter.xhtml" id="newsletter" media-type="application/xhtml+xml"/>
+    <item href="xhtml/torad.xhtml" id="torad" media-type="application/xhtml+xml"/>
+    <item href="xhtml/contents.xhtml" id="contents" media-type="application/xhtml+xml"/>
+    <item href="xhtml/copyright.xhtml" id="copyright" media-type="application/xhtml+xml"/>
+    <item href="nav.xhtml" id="nav" media-type="application/xhtml+xml" properties="nav"/>
+    <item href="toc.ncx" id="toc" media-type="application/x-dtbncx+xml"/>
+    <item href="styles/stylesheet.css" id="css" media-type="text/css"/>
+    <item href="images/9781250860545.jpg" id="cover-image" media-type="image/jpeg" properties="cover-image"/>
+    <item href="images/asterisks.jpg" id="asterik-hr" media-type="image/jpeg"/>
+    <item href="images/author.jpg" id="image-001" media-type="image/jpeg"/>
+    <item href="images/backad.jpg" id="image-002" media-type="image/jpeg"/>
+    <item href="images/map.jpg" id="image-003" media-type="image/jpeg"/>
+    <item href="images/NewsletterSignup.jpg" id="image-0041" media-type="image/jpeg"/>
+    <item href="images/Org2.jpg" id="image-005" media-type="image/jpeg"/>
+    <item href="images/Org3.jpg" id="image-006" media-type="image/jpeg"/>
+    <item href="images/pg1.jpg" id="image-007" media-type="image/jpeg"/>
+    <item href="images/pg102-103.jpg" id="image-008" media-type="image/jpeg"/>
+    <item href="images/pg114.jpg" id="image-009" media-type="image/jpeg"/>
+    <item href="images/pg117.jpg" id="image-0010" media-type="image/jpeg"/>
+    <item href="images/pg118.jpg" id="image-0011" media-type="image/jpeg"/>
+    <item href="images/pg125.jpg" id="image-0012" media-type="image/jpeg"/>
+    <item href="images/pg135.jpg" id="image-0013" media-type="image/jpeg"/>
+    <item href="images/pg139.jpg" id="image-0014" media-type="image/jpeg"/>
+    <item href="images/pg141.jpg" id="image-0015" media-type="image/jpeg"/>
+    <item href="images/pg144.jpg" id="image-0016" media-type="image/jpeg"/>
+    <item href="images/pg149.jpg" id="image-0017" media-type="image/jpeg"/>
+    <item href="images/pg157.jpg" id="image-0018" media-type="image/jpeg"/>
+    <item href="images/pg166.jpg" id="image-0019" media-type="image/jpeg"/>
+    <item href="images/pg167.jpg" id="image-0020" media-type="image/jpeg"/>
+    <item href="images/pg175.jpg" id="image-0021" media-type="image/jpeg"/>
+    <item href="images/pg190.jpg" id="image-004" media-type="image/jpeg"/>
+    <item href="images/pg194.jpg" id="image-0022" media-type="image/jpeg"/>
+    <item href="images/pg196.jpg" id="image-0023" media-type="image/jpeg"/>
+    <item href="images/pg201.jpg" id="image-0024" media-type="image/jpeg"/>
+    <item href="images/pg205.jpg" id="image-0025" media-type="image/jpeg"/>
+    <item href="images/pg211.jpg" id="image-0026" media-type="image/jpeg"/>
+    <item href="images/pg236.jpg" id="image-0027" media-type="image/jpeg"/>
+    <item href="images/pg42.jpg" id="image-0028" media-type="image/jpeg"/>
+    <item href="images/pg61.jpg" id="image-0029" media-type="image/jpeg"/>
+    <item href="images/pg7.jpg" id="image-0030" media-type="image/jpeg"/>
+    <item href="images/pgxi.jpg" id="image-0031" media-type="image/jpeg"/>
+    <item href="images/photo-1.jpg" id="image-0033" media-type="image/jpeg"/>
+    <item href="images/photo-2.jpg" id="image-0034" media-type="image/jpeg"/>
+    <item href="images/photo-3.jpg" id="image-0035" media-type="image/jpeg"/>
+    <item href="images/photo-4.jpg" id="image-0036" media-type="image/jpeg"/>
+    <item href="images/photo-5.jpg" id="image-0037" media-type="image/jpeg"/>
+    <item href="images/photo-6.jpg" id="image-0038" media-type="image/jpeg"/>
+    <item href="images/photo-7.jpg" id="image-0039" media-type="image/jpeg"/>
+    <item href="images/photo-8.jpg" id="image-0040" media-type="image/jpeg"/>
+    <item href="images/title.jpg" id="image-0032" media-type="image/jpeg"/>
+    <item href="images/twitter_logo.jpg" id="image-0042" media-type="image/png"/>
+    <item href="fonts/Times_New_Roman_Italic.ttf" id="myfont-01" media-type="application/vnd.ms-opentype"/>
+  </manifest>
+  <spine page-progression-direction="ltr" toc="toc">
+    <itemref idref="html-cover-page"/>
+    <itemref idref="tit"/>
+    <itemref idref="mini_toc"/>
+    <itemref idref="copyrightnotice"/>
+    <itemref idref="dedication"/>
+    <itemref idref="map"/>
+    <itemref idref="foreword"/>
+    <itemref idref="letter"/>
+    <itemref idref="introduction"/>
+    <itemref idref="chapter1"/>
+    <itemref idref="chapter2"/>
+    <itemref idref="chapter3"/>
+    <itemref idref="chapter4"/>
+    <itemref idref="photo-1"/>
+    <itemref idref="photo-2"/>
+    <itemref idref="photo-3"/>
+    <itemref idref="photo-4"/>
+    <itemref idref="photo-5"/>
+    <itemref idref="photo-6"/>
+    <itemref idref="photo-7"/>
+    <itemref idref="photo-8"/>
+    <itemref idref="glossary"/>
+    <itemref idref="acknowledgments"/>
+    <itemref idref="notes-fm8"/>
+    <itemref idref="notes-ch1"/>
+    <itemref idref="notes-ch2"/>
+    <itemref idref="notes-ch3"/>
+    <itemref idref="notes-ch4"/>
+    <itemref idref="notes-bm1"/>
+    <itemref idref="index"/>
+    <itemref idref="backad"/>
+    <itemref idref="adcard"/>
+    <itemref idref="abouttheauthor"/>
+    <itemref idref="newsletter"/>
+    <itemref idref="torad"/>
+    <itemref idref="contents" linear="no"/>
+    <itemref idref="copyright"/>
+  </spine>
+  <guide>
+    <reference href="xhtml/cover.xhtml" title="Begining" type="start"/>
+    <reference href="xhtml/cover.xhtml" title="Cover Image" type="cover"/>
+    <reference href="xhtml/contents.xhtml" title="Contents" type="toc"/>
+  </guide>
+</package>

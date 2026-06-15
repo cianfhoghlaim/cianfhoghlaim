@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ncx version="2005-1" xml:lang="en-US" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+	<head>
+		<meta name="dtb:uid" content="9781250108722"/>
+		<meta name="dtb:depth" content="2"/>
+		<meta name="dtb:totalPageCount" content="0"/>
+		<meta name="dtb:maxPageNumber" content="0"/>
+	</head>
+	<docTitle><text>Toxic Psychiatry</text></docTitle>
+	<docAuthor><text>Peter R. Breggin, M.D.</text></docAuthor>
+	<navMap>
+		<navPoint class="other" id="cvi" playOrder="1">
+			<navLabel><text>Cover</text></navLabel>
+			<content src="OEBPS/cvi.xhtml"/>
+		</navPoint>
+		<navPoint class="chapter" id="tp" playOrder="2">
+			<navLabel><text>Title Page</text></navLabel>
+			<content src="OEBPS/tp.xhtml"/>
+		</navPoint>
+		<navPoint class="chapter" id="notice" playOrder="3">
+			<navLabel><text>Copyright Notice</text></navLabel>
+			<content src="OEBPS/notice.xhtml"/>
+		</navPoint>
+		<navPoint class="chapter" id="ded" playOrder="4">
+			<navLabel><text>Dedication</text></navLabel>
+			<content src="OEBPS/ded.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="fm1" playOrder="5">
+			<navLabel><text>Warning</text></navLabel>
+			<content src="OEBPS/fm1.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="ack" playOrder="6">
+			<navLabel><text>Acknowledgments</text></navLabel>
+			<content src="OEBPS/ack.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="int" playOrder="7">
+			<navLabel><text>Introduction: What Is Psychiatry?</text></navLabel>
+			<content src="OEBPS/int.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="c01" playOrder="8">
+			<navLabel><text>Chapter 1: Psychiatry Out of Control</text></navLabel>
+			<content src="OEBPS/c01.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="p01" playOrder="9">
+			<navLabel><text>Part I: &#x201C;Schizophrenic&#x201D; Overwhelm and Neuroleptic Drugs</text></navLabel>
+			<content src="OEBPS/p01.xhtml"/>
+		<navPoint class="other" id="c02" playOrder="10">
+			<navLabel><text>Chapter 2: Understanding the Passion of &#x201C;Schizophrenic&#x201D; Overwhelm</text></navLabel>
+			<content src="OEBPS/c02.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="c03" playOrder="11">
+			<navLabel><text>Chapter 3: Suppressing &#x201C;Schizophrenic&#x201D; Overwhelm with Neuroleptic Drugs: Medical Miracle or Chemical Lobotomy? The Effects of Haldol, Prolixin, Thorazine, Mellaril, and Other &#x201C;Antipsychotic&#x201D; Drugs</text></navLabel>
+			<content src="OEBPS/c03.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="c04" playOrder="12">
+			<navLabel><text>Chapter 4: The &#x201C;Miracle Drugs&#x201D; Cause the Worst Plague of Brain Damage in Medical History</text></navLabel>
+			<content src="OEBPS/c04.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="c05" playOrder="13">
+			<navLabel><text>Chapter 5: The Biology and Genetics of &#x201C;Schizophrenic&#x201D; Overwhelm</text></navLabel>
+			<content src="OEBPS/c05.xhtml"/>
+		</navPoint>
+</navPoint>
+		<navPoint class="other" id="p02" playOrder="14">
+			<navLabel><text>Part II: &#x201C;Depressive&#x201D; and &#x201C;Manic-Depressive&#x201D; Overwhelm, Antidepressants, Lithium, and Electroshock</text></navLabel>
+			<content src="OEBPS/p02.xhtml"/>
+		<navPoint class="other" id="c06" playOrder="15">
+			<navLabel><text>Chapter 6: Understanding the Passion of &#x201C;Depressive&#x201D; and &#x201C;Manic-Depressive&#x201D; (Bipolar) Overwhelm</text></navLabel>
+			<content src="OEBPS/c06.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="c07" playOrder="16">
+			<navLabel><text>Chapter 7: The Biology of &#x201C;Depressive&#x201D; and &#x201C;Manic-Depressive&#x201D; Overwhelm</text></navLabel>
+			<content src="OEBPS/c07.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="c08" playOrder="17">
+			<navLabel><text>Chapter 8: Suppressing &#x201C;Depressive&#x201D; and &#x201C;Manic-Depressive&#x201D; Overwhelm with Lithium and Antidepressants, Including Elavil and Prozac</text></navLabel>
+			<content src="OEBPS/c08.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="c09" playOrder="18">
+			<navLabel><text>Chapter 9: &#x201C;Shock Treatment Is Not Good for Your Brain&#x201D;</text></navLabel>
+			<content src="OEBPS/c09.xhtml"/>
+		</navPoint>
+</navPoint>
+		<navPoint class="other" id="p03" playOrder="19">
+			<navLabel><text>Part III: &#x201C;Anxiety&#x201D; Overwhelm and the Minor Tranquilizers</text></navLabel>
+			<content src="OEBPS/p03.xhtml"/>
+		<navPoint class="other" id="c10" playOrder="20">
+			<navLabel><text>Chapter 10: Understanding the Passion of Anxiety Overwhelm: Panic Attacks, Depersonalization, Phobias, Obsessions and Compulsions, Addictions, and Eating Disorders</text></navLabel>
+			<content src="OEBPS/c10.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="c11" playOrder="21">
+			<navLabel><text>Chapter 11: Suppressing the Passion of Anxiety Overwhelm with Drugs: The Minor Tranquilizers, Including Xanax, Valium, BuSpar, Ativan, and Halcion, and the Antidepressant Anafranil</text></navLabel>
+			<content src="OEBPS/c11.xhtml"/>
+		</navPoint>
+</navPoint>
+		<navPoint class="other" id="p04" playOrder="22">
+			<navLabel><text>Part IV: Women, Children, the Homeless, and the Psycho-Pharmaceutical Complex</text></navLabel>
+			<content src="OEBPS/p04.xhtml"/>
+		<navPoint class="other" id="c12" playOrder="23">
+			<navLabel><text>Chapter 12: Abandoning Responsibility for Our Children: A Critique of Hyperactivity, Attention Deficit Disorder, Learning Disabilities, Dyslexia, Autism, and Other Diagnoses</text></navLabel>
+			<content src="OEBPS/c12.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="c13" playOrder="24">
+			<navLabel><text>Chapter 13: Suppressing the Passion of Children with Hospitalization and with Drugs, Such as Ritalin and Mellaril</text></navLabel>
+			<content src="OEBPS/c13.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="c14" playOrder="25">
+			<navLabel><text>Chapter 14: Suppressing the Passion of Women</text></navLabel>
+			<content src="OEBPS/c14.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="c15" playOrder="26">
+			<navLabel><text>Chapter 15: Psychiatry and the Psycho-Pharmaceutical Complex</text></navLabel>
+			<content src="OEBPS/c15.xhtml"/>
+		</navPoint>
+</navPoint>
+		<navPoint class="other" id="p05" playOrder="27">
+			<navLabel><text>Part V: Psychosocial Alternatives</text></navLabel>
+			<content src="OEBPS/p05.xhtml"/>
+		<navPoint class="other" id="c16" playOrder="28">
+			<navLabel><text>Chapter 16: Psychotherapy and Psychosocial Programs</text></navLabel>
+			<content src="OEBPS/c16.xhtml"/>
+		</navPoint>
+</navPoint>
+		<navPoint class="other" id="app1" playOrder="29">
+			<navLabel><text>Appendix A: Groups to Join, Periodicals to Subscribe to, Sources of Legal and Psychotherapeutic Help</text></navLabel>
+			<content src="OEBPS/app1.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="app2" playOrder="30">
+			<navLabel><text>Appendix B: Additional Reading</text></navLabel>
+			<content src="OEBPS/app2.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="note" playOrder="31">
+			<navLabel><text>Notes</text></navLabel>
+			<content src="OEBPS/note.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="ind" playOrder="32">
+			<navLabel><text>Index</text></navLabel>
+			<content src="OEBPS/ind.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="also" playOrder="33">
+			<navLabel><text>Other Books By Peter R. Breggin, M.D.</text></navLabel>
+			<content src="OEBPS/also.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="ata" playOrder="34">
+			<navLabel><text>About the Author</text></navLabel>
+			<content src="OEBPS/ata.xhtml"/>
+		</navPoint>
+		<navPoint class="chapter" id="newsletter" playOrder="35">
+			<navLabel><text>Newsletter Sign-up</text></navLabel>
+			<content src="OEBPS/newsletter.xhtml"/>
+		</navPoint>
+		<navPoint class="chapter" id="toc" playOrder="36">
+			<navLabel><text>Table of Content</text></navLabel>
+			<content src="OEBPS/toc.xhtml"/>
+		</navPoint>
+		<navPoint class="other" id="cop" playOrder="37">
+			<navLabel><text>Copyright</text></navLabel>
+			<content src="OEBPS/cop.xhtml"/>
+		</navPoint>
+	</navMap>
+</ncx>

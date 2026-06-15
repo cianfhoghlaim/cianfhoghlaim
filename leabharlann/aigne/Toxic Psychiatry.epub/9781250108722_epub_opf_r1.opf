@@ -1,0 +1,112 @@
+<package xmlns="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" unique-identifier="pub-id" version="3.0">
+	<metadata xmlns:opf="http://www.idpf.org/2007/opf">
+		<dc:title id="t1" xml:lang="en">Toxic Psychiatry</dc:title>
+		<meta property="title-type" refines="#t1">main</meta>
+		<meta property="display-seq" refines="#t1">1</meta>
+		<dc:identifier id="pub-id">9781250108722</dc:identifier>
+		<meta id="isbn" property="dcterms:identifer">urn:isbn:9781250108722</meta>
+		<dc:creator id="auth1">Peter R. Breggin, M.D.</dc:creator>
+		<meta property="role" refines="#auth1" scheme="marc:relators">aut</meta>
+		<meta property="display-seq" refines="#auth1">1</meta>
+		<meta property="file-as" refines="#auth1">Breggin, Peter R., M.D.</meta>
+		<dc:language>en</dc:language>
+		<meta property="dcterms:language">en</meta>
+		<dc:publisher>St. Martin's Press</dc:publisher>
+		<meta property="dcterms:publisher">St. Martin’s Press</meta>
+		<dc:rights>Copyright © 1991 by Peter R. Breggin</dc:rights>
+		<dc:date>2015-11-12</dc:date>
+		<meta property="dcterms:modified">2015-11-12T22:00:00Z</meta>
+		<meta content="my_cover_image" name="cover"/>
+	<description xmlns="http://purl.org/dc/elements/1.1/">&lt;p&gt;Prozac, Xanax, Halcion, Haldol, Lithium. These psychiatric drugs&amp;#8212;and dozens of other short-term "solutions"&amp;#8212;are being prescribed by doctors across the country as a quick antidote to depression, panic disorder, obsessive-compulsive disorder, and other psychiatric problems. But at what cost?&lt;/p&gt;&lt;p&gt;In this searing, myth-shattering exposé, psychiatrist Peter R. Breggin, M.D., breaks through the hype and false promises surrounding the "New Psychiatry" and shows how dangerous, even potentially brain-damaging, many of its drugs and treatments are. He asserts that: psychiatric drugs are spreading an epidemic of long-term brain damage; mental "illnesses" like schizophrenia, depression, and anxiety disorder have never been proven to be genetic or even physical in origin, but are under the jurisdiction of medical doctors; millions of schoolchildren, housewives, elderly people, and others are labeled with medical diagnoses and treated with authoritarian interventions, rather...</description>
+</metadata>
+	<manifest>
+		<item href="nav.xhtml" id="nav" media-type="application/xhtml+xml" properties="nav"/>
+		<item href="9781250108722_epub_ncx_r1.ncx" id="ncx" media-type="application/x-dtbncx+xml"/>
+		<item href="OEBPS/cvi.xhtml" id="cvi" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/tp.xhtml" id="tp" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/mini_toc.xhtml" id="mini_toc" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/notice.xhtml" id="notice" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/ded.xhtml" id="ded" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/fm1.xhtml" id="fm1" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/ack.xhtml" id="ack" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/int.xhtml" id="int" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/c01.xhtml" id="c01" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/p01.xhtml" id="p01" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/c02.xhtml" id="c02" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/c03.xhtml" id="c03" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/c04.xhtml" id="c04" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/c05.xhtml" id="c05" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/p02.xhtml" id="p02" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/c06.xhtml" id="c06" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/c07.xhtml" id="c07" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/c08.xhtml" id="c08" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/c09.xhtml" id="c09" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/p03.xhtml" id="p03" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/c10.xhtml" id="c10" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/c11.xhtml" id="c11" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/p04.xhtml" id="p04" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/c12.xhtml" id="c12" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/c13.xhtml" id="c13" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/c14.xhtml" id="c14" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/c15.xhtml" id="c15" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/p05.xhtml" id="p05" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/c16.xhtml" id="c16" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/app1.xhtml" id="app1" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/app2.xhtml" id="app2" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/note.xhtml" id="note" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/ind.xhtml" id="ind" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/also.xhtml" id="also" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/ata.xhtml" id="ata" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/newsletter.xhtml" id="newsletter" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/toc.xhtml" id="toc" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/cop.xhtml" id="cop" media-type="application/xhtml+xml"/>
+		<item href="OEBPS/style.css" id="css" media-type="text/css"/>
+		<item href="OEBPS/images/fb-logo.jpg" id="imgfb-logo.jpg" media-type="image/jpeg"/>
+		<item href="OEBPS/images/NewsletterSignup.jpg" id="imgNewsletterSignup.jpg" media-type="image/jpeg"/>
+		<item href="OEBPS/images/Cover.jpg" id="my_cover_image" media-type="image/jpeg"/>
+		<item href="OEBPS/fonts/CharisSILB.ttf" id="font1" media-type="application/vnd.ms-opentype"/>
+		<item href="OEBPS/fonts/CharisSILBI.ttf" id="font2" media-type="application/vnd.ms-opentype"/>
+		<item href="OEBPS/fonts/CharisSILI.ttf" id="font3" media-type="application/vnd.ms-opentype"/>
+		<item href="OEBPS/fonts/CharisSILR.ttf" id="font4" media-type="application/vnd.ms-opentype"/>
+	</manifest>
+	<spine toc="ncx">
+		<itemref idref="cvi"/>
+		<itemref idref="tp"/>
+		<itemref idref="mini_toc"/>
+		<itemref idref="notice"/>
+		<itemref idref="ded"/>
+		<itemref idref="fm1"/>
+		<itemref idref="ack"/>
+		<itemref idref="int"/>
+		<itemref idref="c01"/>
+		<itemref idref="p01"/>
+		<itemref idref="c02"/>
+		<itemref idref="c03"/>
+		<itemref idref="c04"/>
+		<itemref idref="c05"/>
+		<itemref idref="p02"/>
+		<itemref idref="c06"/>
+		<itemref idref="c07"/>
+		<itemref idref="c08"/>
+		<itemref idref="c09"/>
+		<itemref idref="p03"/>
+		<itemref idref="c10"/>
+		<itemref idref="c11"/>
+		<itemref idref="p04"/>
+		<itemref idref="c12"/>
+		<itemref idref="c13"/>
+		<itemref idref="c14"/>
+		<itemref idref="c15"/>
+		<itemref idref="p05"/>
+		<itemref idref="c16"/>
+		<itemref idref="app1"/>
+		<itemref idref="app2"/>
+		<itemref idref="note"/>
+		<itemref idref="ind"/>
+		<itemref idref="also"/>
+		<itemref idref="ata"/>
+		<itemref idref="newsletter"/>
+		<itemref idref="toc"/>
+		<itemref idref="cop"/>
+	</spine>
+</package>

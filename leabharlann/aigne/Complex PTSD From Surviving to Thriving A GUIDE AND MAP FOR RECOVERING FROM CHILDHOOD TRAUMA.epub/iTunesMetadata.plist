@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>artistName</key>
+	<string>Pete Walker</string>
+	<key>book-info</key>
+	<dict>
+		<key>cover-image-hash</key>
+		<string>A065DBEE44AF8D85BE0E6385233BCE96</string>
+		<key>cover-image-path</key>
+		<string>images/00049.jpeg</string>
+		<key>mime-type</key>
+		<string>application/epub+zip</string>
+		<key>package-file-hash</key>
+		<string>3731AE1E3C38CEB0BEE9BA12821484B6</string>
+		<key>publisher-unique-id</key>
+		<string>474d1090-ca27-4940-90a0-f494b4fb61bc</string>
+		<key>unique-id</key>
+		<integer>3400508969776135401</integer>
+		<key>update-level</key>
+		<integer>2</integer>
+	</dict>
+	<key>itemName</key>
+	<string>Complex PTSD: From Surviving to Thriving: A GUIDE AND MAP FOR RECOVERING FROM CHILDHOOD TRAUMA</string>
+	<key>playlistName</key>
+	<string>Complex PTSD: From Surviving to Thriving: A GUIDE AND MAP FOR RECOVERING FROM CHILDHOOD TRAUMA</string>
+	<key>releaseDate</key>
+	<string>2013-12-17T23:00:00+00:00</string>
+	<key>sort-artist</key>
+	<string>Walker, Pete</string>
+	<key>sort-artist-status</key>
+	<integer>3</integer>
+</dict>
+</plist>
