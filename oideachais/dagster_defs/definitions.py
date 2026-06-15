@@ -64,6 +64,38 @@ from .assets.ie.education import curriculum_dlt_assets, scraped_curriculum_pages
 # Ireland Exam Materials Assets (Stagehand browser -> DLT -> DuckLake)
 from .assets.ie.education import exam_materials_assets
 
+# Ireland Medicine Assets (Phase 3.1 of lateralise-british-isles-domains)
+from .assets.ie.medicine import (
+    medicine_ie_doh,
+    medicine_ie_hpsc,
+    medicine_ie_hse,
+    medicine_ie_medical_council,
+)
+
+# Ireland Law Assets (Phase 3.2 of lateralise-british-isles-domains)
+from .assets.ie.law import (
+    law_ie_doj,
+    law_ie_irish_statute_book,
+    law_ie_lawreform,
+)
+
+# UK Medicine Assets (Phase 3.3 of lateralise-british-isles-domains)
+# Lateralises IE → EN/NI/SCT/WLS for the medicine domain.
+from .assets.medicine.en import (
+    medicine_en_gmc,
+    medicine_en_nhs_england,
+    medicine_en_nice,
+)
+from .assets.medicine.ni import medicine_ni_nidirect
+from .assets.medicine.sct import medicine_sct_nhs_scotland
+from .assets.medicine.wls import medicine_wls_nhs_wales
+
+# UK Law Assets (Phase 3.3 of lateralise-british-isles-domains)
+from .assets.law.en import law_en_legislation
+from .assets.law.ni import law_ni_legislation
+from .assets.law.sct import law_sct_legislation
+from .assets.law.wls import law_wls_legislation
+
 # PDF Processing Assets
 from .assets.pdf_assets import pdf_processing_assets
 
@@ -313,6 +345,27 @@ combined_assets = [
     # Materialises the leaving_cert.syllabus / past_papers / marking_schemes /
     # examiner_reports tables into DuckLake.
     *LEAVING_CERT_DLT_ASSETS,
+    # Ireland medicine (Phase 3.1) — 4 assets
+    medicine_ie_hse,
+    medicine_ie_medical_council,
+    medicine_ie_doh,
+    medicine_ie_hpsc,
+    # Ireland law (Phase 3.2) — 3 assets
+    law_ie_irish_statute_book,
+    law_ie_doj,
+    law_ie_lawreform,
+    # UK medicine (Phase 3.3) — 6 assets
+    medicine_en_gmc,
+    medicine_en_nhs_england,
+    medicine_en_nice,
+    medicine_ni_nidirect,
+    medicine_sct_nhs_scotland,
+    medicine_wls_nhs_wales,
+    # UK law (Phase 3.3) — 4 assets
+    law_en_legislation,
+    law_ni_legislation,
+    law_sct_legislation,
+    law_wls_legislation,
 ]
 
 defs = dg.Definitions(

@@ -282,3 +282,41 @@ When in doubt, copy one of these and adapt.
 - `infrastructure/dagger/` — Dagger CI/CD modules
 - `infrastructure/PANGOLIN-SETUP.md` — Pangolin installation walkthrough
 - `infrastructure/SECRETS-MANAGEMENT.md` — Infisical + Locket deep-dive
+- `infrastructure/DEPLOYMENT-STRATEGY.md` — the canonical 6-step deploy playbook
+
+## CI gate — `stack-doctor`
+
+A follow-up change will add a `stack-doctor` turbo task that
+runs the 4 audit scripts under `infrastructure/audit/scripts/`
+and the 6-file compliance check, posting the output as a
+GitHub PR comment. The CI gate will be GREEN only when:
+
+1. Every directory under `infrastructure/stacks/**/` that has a
+   `compose.yaml` also has the other 5 GOLD_STANDARD files
+   (`sidecar.yaml`, `secrets.env`, `blueprint.yaml`,
+   `.env.example`, `README.md`).
+2. Every `container_name:` declared in any compose is either
+   present in the live `infrastructure/audit/inventory/<host>-<UTC>.json`
+   snapshot OR explicitly documented as a "stacked-only, not
+   running" service (e.g. the 3 control-plane stacks that
+   only run on `arm1-oci`).
+3. Every `secrets.env` line that contains an
+   `infisical://dev-baile/...` reference points to a secret
+   that exists in the vault.
+4. Every Pangolin private-resource `blueprint.yaml` parses
+   against the official `pangolin.cianfhoghlaim.io` schema.
+
+The check is GREEN = 0 stack failures, RED = 1+ failures. The
+exit code is bitwise-OR: 1 = missing files, 2 = orphaned
+container, 4 = missing secret, 8 = malformed blueprint.
+
+A future agent can invoke it as:
+
+```bash
+bun run validate-stacks
+# or
+bun run stack-doctor
+```
+
+For now, the audit scripts are run-on-demand only (see
+`infrastructure/audit/README.md`).

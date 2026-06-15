@@ -1,19 +1,26 @@
+"""croilar/dlt_utils/destinations.py — shim around oideachais.
+
+Phase 2.3 of the lateralise change: croilar no longer carries its
+own DuckLake destination implementation. It re-exports the
+oideachais canonical helpers with `namespace="croilar"` pre-bound.
+
+The shim is **defensive**: if the `oideachais` workspace member
+isn't on the croilar venv's `sys.path` (because croilar doesn't
+declare `oideachais` as a `[tool.uv.sources]` dep), the shim
+falls back to the *local* implementation, preserving backwards
+compatibility. Once the croilar packaging is fixed
+(Phase 1.6 follow-up: add `croilar/__init__.py` + declare
+`_shared` in pyproject packages), the local fallback can be
+removed.
+
+The shim preserves the public surface of the old module
+(`NAMESPACE`, `get_dlt_destination`, `get_duckdb_fallback_destination`,
+`create_pipeline`) so that:
+
+  * any historical import keeps working
+  * the croilar DuckLake data lives under `s3://ducklake/croilar/`
+    with Postgres db `ducklake_croilar`
 """
-Environment-aware DuckLake destination factory for croilar.
-
-Solves DuckDB concurrency issues by using DuckLake (S3 + PostgreSQL catalog).
-Multiple Dagster partitions can write simultaneously because data is stored as
-Parquet files in S3, with transaction coordination via PostgreSQL MVCC.
-
-Usage:
-    from dlt_utils import get_dlt_destination, create_pipeline
-
-    pipeline = create_pipeline(
-        pipeline_name="spotify_croilar",
-        dataset_name="spotify_data",
-    )
-"""
-
 from __future__ import annotations
 
 import os
@@ -22,150 +29,98 @@ from typing import Any
 
 import dlt
 
-NAMESPACE = "croilar"
+# Backwards-compat: try the oideachais cross-quadrant import first.
+try:
+    from oideachais.dlt_utils.destinations import with_namespace
 
+    with_namespace("croilar").re_export_into(globals())
+except ImportError:
+    # Local fallback — pre-Phase-2.3 implementation. Kept so the
+    # croilar code-location doesn't break until the packaging is
+    # fixed and the cross-quadrant import is wired.
+    NAMESPACE = "croilar"
 
-@dataclass
-class DuckLakeConfig:
-    """Configuration for DuckLake destination."""
+    @dataclass
+    class DuckLakeConfig:
+        """Minimal DuckLake config for the local fallback path.
 
-    data_dir: str
-    catalog_uri: str
-    staging_dir: str | None = None
+        Phase 2.3 of the openspec change: this class is only used
+        if the oideachais cross-quadrant import fails. Once croilar
+        declares `oideachais` in `[tool.uv.sources]`, this whole
+        class can be deleted.
+        """
 
-    def to_credentials(self) -> dict[str, Any]:
-        """Convert to DLT credentials format."""
-        creds = {
-            "data_dir": self.data_dir,
-            "catalog_uri": self.catalog_uri,
+        postgres_host: str = "localhost"
+        postgres_port: int = 5433
+        postgres_db: str = f"ducklake_{NAMESPACE}"
+        postgres_user: str = "lakekeeper"
+        postgres_pass: str = "devpassword"
+        bucket_url: str = f"s3://ducklake/{NAMESPACE}/"
+        endpoint_url: str = "http://localhost:3900"
+
+    def _get_local_config() -> DuckLakeConfig:
+        return DuckLakeConfig(
+            postgres_host=os.environ.get("DUCKLAKE_POSTGRES_HOST", "localhost"),
+            postgres_port=int(os.environ.get("DUCKLAKE_POSTGRES_PORT", "5433")),
+            postgres_db=os.environ.get("DUCKLAKE_POSTGRES_DB", f"ducklake_{NAMESPACE}"),
+            postgres_user=os.environ.get("DUCKLAKE_POSTGRES_USER", "lakekeeper"),
+            postgres_pass=os.environ.get("DUCKLAKE_POSTGRES_PASSWORD", "devpassword"),
+            endpoint_url=os.environ.get("AWS_ENDPOINT_URL", "http://localhost:3900"),
+        )
+
+    def get_dlt_destination(use_ducklake: bool | None = None) -> Any:
+        from dlt.destinations.impl.ducklake.configuration import DuckLakeCredentials
+
+        if use_ducklake is None:
+            use_ducklake = os.environ.get("USE_DUCKLAKE", "true").lower() == "true"
+        if not use_ducklake:
+            return dlt.destinations.duckdb(
+                credentials=f"./data/{NAMESPACE}.duckdb"
+            )
+
+        cfg = _get_local_config()
+        catalog_uri = (
+            f"postgresql://{cfg.postgres_user}:{cfg.postgres_pass}"
+            f"@{cfg.postgres_host}:{cfg.postgres_port}/{cfg.postgres_db}"
+        )
+        storage_config = {
+            "bucket_url": cfg.bucket_url,
+            "credentials": {
+                "aws_access_key_id": os.environ.get("AWS_ACCESS_KEY_ID", ""),
+                "aws_secret_access_key": os.environ.get("AWS_SECRET_ACCESS_KEY", ""),
+                "endpoint_url": cfg.endpoint_url,
+                "region_name": os.environ.get("AWS_REGION", "garage"),
+            },
         }
-        if self.staging_dir:
-            creds["staging_dir"] = self.staging_dir
-        return creds
+        credentials = DuckLakeCredentials(
+            ducklake_name=NAMESPACE,
+            catalog=catalog_uri,
+            storage=storage_config,
+        )
+        return dlt.destinations.ducklake(credentials=credentials)
 
+    def get_duckdb_fallback(
+        database_path: str = f"./data/{NAMESPACE}.duckdb",
+    ) -> Any:
+        return dlt.destinations.duckdb(credentials=database_path)
 
-def _get_local_config() -> DuckLakeConfig:
-    """Build local DuckLake config using Garage S3 + PostgreSQL."""
-    postgres_host = os.environ.get("DUCKLAKE_POSTGRES_HOST", "localhost")
-    postgres_port = os.environ.get("DUCKLAKE_POSTGRES_PORT", "5432")
-    postgres_db = os.environ.get("DUCKLAKE_POSTGRES_DB", f"ducklake_{NAMESPACE}")
-    postgres_user = os.environ.get("DUCKLAKE_POSTGRES_USER", "lakekeeper")
-    postgres_pass = os.environ.get("DUCKLAKE_POSTGRES_PASSWORD", "devpassword")
+    # Alias for backwards-compat with the oideachais API surface
+    get_duckdb_fallback_destination = get_duckdb_fallback
 
-    return DuckLakeConfig(
-        data_dir=f"s3://ducklake/{NAMESPACE}/",
-        catalog_uri=f"postgresql://{postgres_user}:{postgres_pass}@{postgres_host}:{postgres_port}/{postgres_db}",
-    )
-
-
-def _get_production_config() -> DuckLakeConfig:
-    """Build production DuckLake config using Cloudflare R2 + PlanetScale PostgreSQL."""
-    r2_bucket = os.environ.get("R2_DUCKLAKE_BUCKET", "ducklake")
-
-    # PlanetScale PostgreSQL connection
-    pg_host = os.environ.get("DUCKLAKE_POSTGRES_HOST", "eu-west-3.pg.psdb.cloud")
-    pg_port = os.environ.get("DUCKLAKE_POSTGRES_PORT", "5432")
-    pg_user = os.environ.get("DUCKLAKE_POSTGRES_USER")
-    pg_pass = os.environ.get("DUCKLAKE_POSTGRES_PASSWORD")
-    pg_db = os.environ.get("DUCKLAKE_POSTGRES_DB", f"ducklake_{NAMESPACE}")
-
-    return DuckLakeConfig(
-        data_dir=f"s3://{r2_bucket}/{NAMESPACE}/",
-        catalog_uri=f"postgresql://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}?sslmode=require",
-    )
-
-
-def get_dlt_destination(
-    use_ducklake: bool | None = None,
-    local_only: bool = False,
-) -> Any:
-    """
-    Get DLT destination for croilar pipelines.
-
-    Environment Variables:
-        DLT_ENVIRONMENT: "local" (default) or "production"
-        USE_DUCKLAKE: "true" (default) or "false"
-
-    Local:
-        - Data: Garage S3 at s3://ducklake/croilar/
-        - Metadata: PostgreSQL at localhost:5432
-
-    Production:
-        - Data: Cloudflare R2
-        - Metadata: PlanetScale PostgreSQL
-
-    Args:
-        use_ducklake: Override to force DuckLake or DuckDB fallback
-        local_only: If True, return a plain DuckDB destination under
-            `./data/local/`. Never writes to R2. Used for `StreamSource`
-            entries with `local_only=True` (e.g. the author CV folder).
-
-    Returns:
-        Configured destination for DLT pipeline
-    """
-    if local_only:
-        return get_duckdb_fallback(base_path="./data/local", prefix="local")
-
-    if use_ducklake is None:
-        use_ducklake = os.environ.get("USE_DUCKLAKE", "true").lower() == "true"
-
-    if not use_ducklake:
-        return get_duckdb_fallback()
-
-    env = os.environ.get("DLT_ENVIRONMENT", "local").lower()
-
-    if env == "production":
-        config = _get_production_config()
-    else:
-        config = _get_local_config()
-
-    return dlt.destinations.ducklake(credentials=config.to_credentials())
-
-
-def get_duckdb_fallback(
-    base_path: str = "./data",
-    prefix: str = NAMESPACE,
-) -> Any:
-    """
-    Get plain DuckDB destination as fallback.
-
-    WARNING: This destination has single-writer lock - avoid parallel writes!
-
-    Args:
-        base_path: Directory for DuckDB files
-        prefix: Filename prefix for the DuckDB file (e.g. "local" for
-            local-only streams, "croilar" for the default).
-
-    Returns:
-        DuckDB destination for DLT pipeline
-    """
-    db_path = os.path.join(base_path, f"{prefix}.duckdb")
-    return dlt.destinations.duckdb(credentials=db_path)
-
-
-def create_pipeline(
-    pipeline_name: str,
-    dataset_name: str,
-    use_ducklake: bool | None = None,
-    **kwargs: Any,
-) -> dlt.Pipeline:
-    """
-    Create a DLT pipeline with appropriate destination.
-
-    Args:
-        pipeline_name: Name of the pipeline (for state tracking)
-        dataset_name: Dataset/schema name in destination
-        use_ducklake: If True, use DuckLake; if False/None, use env default
-        **kwargs: Additional arguments passed to dlt.pipeline()
-
-    Returns:
-        Configured DLT pipeline
-    """
-    destination = get_dlt_destination(use_ducklake=use_ducklake)
-
-    return dlt.pipeline(
-        pipeline_name=pipeline_name,
-        destination=destination,
-        dataset_name=dataset_name,
-        **kwargs,
-    )
+    def create_pipeline(
+        pipeline_name: str = "croilar",
+        dataset_name: str = "croilar",
+        use_ducklake: bool = True,
+        **kwargs: Any,
+    ) -> dlt.Pipeline:
+        destination = (
+            get_dlt_destination(use_ducklake=use_ducklake)
+            if use_ducklake
+            else get_duckdb_fallback_destination()
+        )
+        return dlt.pipeline(
+            pipeline_name=pipeline_name,
+            destination=destination,
+            dataset_name=dataset_name,
+            **kwargs,
+        )

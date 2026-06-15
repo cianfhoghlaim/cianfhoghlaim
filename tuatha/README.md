@@ -6,6 +6,32 @@ game engine, and the crypteolas crypto data platform — all consolidated into t
 
 ---
 
+## Status (2026-06-15)
+
+| Metric | Value |
+|:--|:--|
+| Workspace name | `tuath` (uv) — directory preserves the fada for tooling compatibility |
+| Dagster code-location | Loads in pytest (Phase 0.1 of `lateralise-british-isles-domains` registered it in root `dg.toml`); fails to load in production — see Known issues |
+| DLT sources | `tuatha/dlt_sources/` has 7+ sources (geospatial gaeltacht_boundaries, leaving_cert, mythology, …) |
+| Frontend / MMO | `tuatha/game/` (Babylon.js client), `tuatha/ui/`, `tuatha/wow/` (legacy MMO reference), `tuatha/fibo_generation/`, `tuatha/asset_generation/` |
+| Crypto / SIWE | `siwe`, `eth-account`, `web3` declared in `pyproject.toml`; x402 micropayments referenced in `tuatha/crypteolas/` |
+| Rust crates | `tuatha/crates/{services, solana, stdb-modules, wgpu}` |
+| Container coupling | `tuatha/crypteolas/` + `tuatha/crypteolas_demo` + `tuatha/codeolas` registered in root `dg.toml`; Komodo stack at `infrastructure/komodo/stacks/croilar-bunchloch.toml` orchestrates the persona apps |
+
+Full audit artifacts (deferred):
+
+- `infrastructure/audit/scripts/inventory-bunchloch.sh` (live container state)
+- `infrastructure/deploy-runbooks/tuatha.md` (not yet run; out of scope for the user-named 9)
+
+## Known issues (2026-06-15)
+
+| # | Issue | Tracked in | Severity |
+|--:|:--|:--|:--|
+| 1 | `tuatha/dagster_assets/exam_analysis.py:22` (and downstream) imports `from dlt_sources.leaving_cert import leaving_cert_source`, which in turn imports `from sruth.shared.http import data_gov_ie_client, osi_client` (`tuatha/dlt_sources/geospatial/gaeltacht_boundaries.py:21`). The `sruth` package is not installed in the tuatha venv. The whole dagster code-location fails to load. | GitHub issue #18 | high — blocks the tuatha code-location |
+| 2 | `tuatha/dlt_utils/destinations.py` is a defensive shim that re-exports oideachais' namespaced destinations (Phase 2.3 of `lateralise-british-isles-domains`). It falls back to a local copy of the pre-Phase-2.3 implementation if `oideachais` is not on sys.path. Works in pytest (the oideachais workspace member is installed); behaviour in production is the local fallback. The local-fallback code is duplicated and should be deleted once oideachais is a declared workspace dep. | `tuatha/dlt_utils/destinations.py` (75 lines, ~30 of which are the local fallback) | medium — works, but adds maintenance |
+| 3 | The `tuath` workspace member's `pyproject.toml` declares a Dagster code-location at `tuatha/dagster_assets/definitions.py`, but the `dg.toml` `module_name` is `dagster_assets.definitions` (a *relative* path). The container's `working_directory` is `/app/tuatha`, so the relative import resolves correctly. The pytest-side test `tuatha/tests/test_definitions_loads.py` skips rather than fails when the import errors — the pre-existing sruth bug is masked. | `tuatha/dg.toml` + `tuatha/tests/test_definitions_loads.py` | high — production dagster code-location is broken (same root cause as #1) |
+| 4 | MMO / Babylon.js side (`tuatha/game/`, `tuatha/ui/`) is reference-quality — no live container or Komodo stack for the game client. Operates as a build target, not a deploy target. | `tuatha/game/` has no matching `infrastructure/stacks/engineering/tuatha-game/` | low — by design (out of the 9 user-named stacks) |
+
 ## What This Is
 
 The `tuatha/` sub-package is the Celtic Educational MMO half of the Cianfhoghlaim
