@@ -18,7 +18,12 @@ from typing import Any, Iterator
 
 import dlt
 
-from sruth.shared.http import data_gov_ie_client, osi_client
+# Per https://github.com/cianfhoghlaim/kings_college_galway/issues/18,
+# `sruth.shared.http` is shimmed locally so the dagster code-location
+# loads without the cross-quadrant `sruth` dep. The shim uses the
+# real sruth implementation if it's installed, else falls back to
+# a stub that returns empty responses.
+from ._sruth_shim import data_gov_ie_client, osi_client
 
 
 def _get_data_gov_factory():

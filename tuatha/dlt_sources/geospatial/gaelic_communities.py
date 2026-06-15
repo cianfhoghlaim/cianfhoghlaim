@@ -18,7 +18,8 @@ from typing import Any, Iterator
 
 import dlt
 
-from sruth.shared.http import scotland_stats_client
+# Per https://github.com/cianfhoghlaim/kings_college_galway/issues/18
+from ._sruth_shim import scotland_stats_client
 
 
 def _get_scotland_stats_factory():
