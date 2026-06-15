@@ -12,32 +12,45 @@ Usage:
         pipeline_name="curriculum",
         dataset_name="curriculum",
     )
+
+Phase 2.3 of the lateralise change: the namespace is now a
+*parameter* (default `"oideachais"`). Sibling quadrants
+(`tuatha`, `croilar`) re-export `with_namespace("tuatha")` etc.
+from a thin shim. This keeps a single DuckLake implementation
+in one place while letting each workspace member scope its
+S3 prefix + Postgres DB name to its own namespace.
 """
 
 from __future__ import annotations
 
 import os
-from typing import Any
+from typing import Any, Callable
 
 import dlt
 from dlt.destinations.impl.ducklake.configuration import DuckLakeCredentials
 
-NAMESPACE = "oideachais"
+DEFAULT_NAMESPACE = "oideachais"
 
 
-def _get_local_ducklake_destination() -> Any:
-    """Build local DuckLake destination using Garage S3 + PostgreSQL."""
+def _build_local_destination(namespace: str) -> Any:
+    """Build local DuckLake destination using Garage S3 + PostgreSQL.
+
+    `namespace` is used to derive:
+      * S3 prefix  : s3://ducklake/{namespace}/
+      * Postgres DB: ducklake_{namespace}
+      * DuckLake   : {namespace}
+    """
     # PostgreSQL catalog config
     postgres_host = os.environ.get("DUCKLAKE_POSTGRES_HOST", "localhost")
     postgres_port = os.environ.get("DUCKLAKE_POSTGRES_PORT", "5433")
-    postgres_db = os.environ.get("DUCKLAKE_POSTGRES_DB", f"ducklake_{NAMESPACE}")
+    postgres_db = os.environ.get("DUCKLAKE_POSTGRES_DB", f"ducklake_{namespace}")
     postgres_user = os.environ.get("DUCKLAKE_POSTGRES_USER", "lakekeeper")
     postgres_pass = os.environ.get("DUCKLAKE_POSTGRES_PASSWORD", "devpassword")
 
     catalog_uri = f"postgresql://{postgres_user}:{postgres_pass}@{postgres_host}:{postgres_port}/{postgres_db}"
 
     # S3/Garage storage config
-    bucket_url = f"s3://ducklake/{NAMESPACE}/"
+    bucket_url = f"s3://ducklake/{namespace}/"
     endpoint_url = os.environ.get("AWS_ENDPOINT_URL", "http://localhost:3900")
     aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID", "")
     aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY", "")
@@ -60,7 +73,7 @@ def _get_local_ducklake_destination() -> Any:
 
     # Use DuckLakeCredentials with proper catalog + storage config
     credentials = DuckLakeCredentials(
-        ducklake_name=NAMESPACE,
+        ducklake_name=namespace,
         catalog=catalog_uri,
         storage=storage_config,
     )
@@ -82,20 +95,20 @@ def _get_local_ducklake_destination() -> Any:
     return dlt.destinations.ducklake(credentials=credentials, global_config=global_config)
 
 
-def _get_production_ducklake_destination() -> Any:
+def _build_production_destination(namespace: str) -> Any:
     """Build production DuckLake destination using Cloudflare R2 + PostgreSQL."""
     # PostgreSQL catalog config
     pg_host = os.environ.get("DUCKLAKE_POSTGRES_HOST", "eu-west-3.pg.psdb.cloud")
     pg_port = os.environ.get("DUCKLAKE_POSTGRES_PORT", "5432")
     pg_user = os.environ.get("DUCKLAKE_POSTGRES_USER")
     pg_pass = os.environ.get("DUCKLAKE_POSTGRES_PASSWORD")
-    pg_db = os.environ.get("DUCKLAKE_POSTGRES_DB", f"ducklake_{NAMESPACE}")
+    pg_db = os.environ.get("DUCKLAKE_POSTGRES_DB", f"ducklake_{namespace}")
 
     catalog_uri = f"postgresql://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}?sslmode=require"
 
     # R2 storage config
     r2_bucket = os.environ.get("R2_DUCKLAKE_BUCKET", "ducklake")
-    bucket_url = f"s3://{r2_bucket}/{NAMESPACE}/"
+    bucket_url = f"s3://{r2_bucket}/{namespace}/"
 
     storage_config = {
         "bucket_url": bucket_url,
@@ -107,7 +120,7 @@ def _get_production_ducklake_destination() -> Any:
     }
 
     credentials = DuckLakeCredentials(
-        ducklake_name=NAMESPACE,
+        ducklake_name=namespace,
         catalog=catalog_uri,
         storage=storage_config,
     )
@@ -117,6 +130,7 @@ def _get_production_ducklake_destination() -> Any:
 
 def get_dlt_destination(
     use_ducklake: bool | None = None,
+    namespace: str = DEFAULT_NAMESPACE,
 ) -> Any:
     """
     Get DLT destination for oideachais pipelines.
@@ -126,8 +140,8 @@ def get_dlt_destination(
         USE_DUCKLAKE: "true" (default) or "false"
 
     Local:
-        - Data: Garage S3 at s3://ducklake/oideachais/
-        - Metadata: PostgreSQL at localhost:5433
+        - Data: Garage S3 at s3://ducklake/{namespace}/
+        - Metadata: PostgreSQL at localhost:5433, db ducklake_{namespace}
 
     Production:
         - Data: Cloudflare R2
@@ -135,6 +149,7 @@ def get_dlt_destination(
 
     Args:
         use_ducklake: Override to force DuckLake or DuckDB fallback
+        namespace: S3 prefix + Postgres DB name. Defaults to "oideachais".
 
     Returns:
         Configured destination for DLT pipeline
@@ -143,18 +158,19 @@ def get_dlt_destination(
         use_ducklake = os.environ.get("USE_DUCKLAKE", "true").lower() == "true"
 
     if not use_ducklake:
-        return get_duckdb_fallback_destination()
+        return get_duckdb_fallback_destination(namespace=namespace)
 
     env = os.environ.get("DLT_ENVIRONMENT", "local").lower()
 
     if env == "production":
-        return _get_production_ducklake_destination()
+        return _build_production_destination(namespace)
     else:
-        return _get_local_ducklake_destination()
+        return _build_local_destination(namespace)
 
 
 def get_duckdb_fallback_destination(
-    database_path: str = "./data/oideachais.duckdb",
+    database_path: str | None = None,
+    namespace: str = DEFAULT_NAMESPACE,
 ) -> Any:
     """
     Get plain DuckDB destination as fallback when DuckLake is not available.
@@ -162,11 +178,15 @@ def get_duckdb_fallback_destination(
     Use this for quick testing or when the lakehouse infrastructure isn't running.
 
     Args:
-        database_path: Path to local DuckDB file
+        database_path: Path to local DuckDB file. Defaults to
+            `./data/{namespace}.duckdb`.
+        namespace: Workspace-member name. Ignored if database_path is given.
 
     Returns:
         DuckDB destination for DLT pipeline
     """
+    if database_path is None:
+        database_path = f"./data/{namespace}.duckdb"
     return dlt.destinations.duckdb(credentials=database_path)
 
 
@@ -174,6 +194,7 @@ def create_pipeline(
     pipeline_name: str = "curriculum",
     dataset_name: str = "curriculum",
     use_ducklake: bool = True,
+    namespace: str = DEFAULT_NAMESPACE,
     **kwargs: Any,
 ) -> dlt.Pipeline:
     """
@@ -183,12 +204,17 @@ def create_pipeline(
         pipeline_name: Name of the pipeline (for state tracking)
         dataset_name: Dataset/schema name in destination
         use_ducklake: If True, use DuckLake; if False, use plain DuckDB
+        namespace: Workspace-member name (oideachais, tuath, croilar, ...).
         **kwargs: Additional arguments passed to dlt.pipeline()
 
     Returns:
         Configured DLT pipeline
     """
-    destination = get_dlt_destination() if use_ducklake else get_duckdb_fallback_destination()
+    destination = (
+        get_dlt_destination(namespace=namespace)
+        if use_ducklake
+        else get_duckdb_fallback_destination(namespace=namespace)
+    )
 
     return dlt.pipeline(
         pipeline_name=pipeline_name,
@@ -196,3 +222,83 @@ def create_pipeline(
         dataset_name=dataset_name,
         **kwargs,
     )
+
+
+# ── Sibling-quadrant re-export factory ──────────────────────────────────
+#
+# Phase 2.3 lets `tuatha/dlt_utils/destinations.py` and
+# `croilar/dlt_utils/destinations.py` collapse to a 5-line shim
+# that re-exports `with_namespace("tuath")` etc. See:
+#
+#   tuatha/dlt_utils/destinations.py:    from oideachais.dlt_utils.destinations import with_namespace
+#                                       with_namespace("tuath").re_export_into(globals())
+#   croilar/dlt_utils/destinations.py:   from oideachais.dlt_utils.destinations import with_namespace
+#                                       with_namespace("croilar").re_export_into(globals())
+
+
+def with_namespace(namespace: str) -> "_NamespacedDestinations":
+    """Return a namespaced view of the destination helpers.
+
+    Usage from a sibling quadrant's `destinations.py` shim:
+
+        from dlt_utils.destinations import with_namespace
+        ns = with_namespace("tuath")
+        get_dlt_destination = ns.get_dlt_destination
+        create_pipeline = ns.create_pipeline
+        get_duckdb_fallback_destination = ns.get_duckdb_fallback_destination
+        NAMESPACE = ns.NAMESPACE
+    """
+    return _NamespacedDestinations(namespace)
+
+
+class _NamespacedDestinations:
+    """Thin wrapper that pre-binds `namespace` for the 3 helpers."""
+
+    def __init__(self, namespace: str) -> None:
+        self.NAMESPACE = namespace
+
+    def get_dlt_destination(
+        self,
+        use_ducklake: bool | None = None,
+    ) -> Any:
+        return get_dlt_destination(use_ducklake=use_ducklake, namespace=self.NAMESPACE)
+
+    def get_duckdb_fallback_destination(
+        self,
+        database_path: str | None = None,
+    ) -> Any:
+        return get_duckdb_fallback_destination(
+            database_path=database_path, namespace=self.NAMESPACE
+        )
+
+    def create_pipeline(
+        self,
+        pipeline_name: str = "curriculum",
+        dataset_name: str = "curriculum",
+        use_ducklake: bool = True,
+        **kwargs: Any,
+    ) -> dlt.Pipeline:
+        return create_pipeline(
+            pipeline_name=pipeline_name,
+            dataset_name=dataset_name,
+            use_ducklake=use_ducklake,
+            namespace=self.NAMESPACE,
+            **kwargs,
+        )
+
+    def re_export_into(self, g: dict[str, Any]) -> None:
+        """Inject the namespaced helpers into a module's globals().
+
+        Lets `tuatha/dlt_utils/destinations.py` be a single line:
+
+            from oideachais.dlt_utils.destinations import with_namespace
+            with_namespace("tuath").re_export_into(globals())
+        """
+        g["NAMESPACE"] = self.NAMESPACE
+        g["get_dlt_destination"] = self.get_dlt_destination
+        g["get_duckdb_fallback_destination"] = self.get_duckdb_fallback_destination
+        g["create_pipeline"] = self.create_pipeline
+
+
+# Backwards-compat alias — the old constant `NAMESPACE` still resolves.
+NAMESPACE = DEFAULT_NAMESPACE
