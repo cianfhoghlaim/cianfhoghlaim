@@ -19,7 +19,7 @@ import json
 from pathlib import Path
 
 # Local imports
-from ..dlt_sources.leaving_cert import leaving_cert_source
+from dlt_sources.leaving_cert import leaving_cert_source
 
 class ExamAnalysisConfig(Config):
     years: List[int] = [2022, 2023, 2024, 2025]

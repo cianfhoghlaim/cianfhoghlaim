@@ -79,6 +79,30 @@ from .research_embedding import (
     search_java_code,
 )
 
+# Author-archive embedding (English-only, BGE-large-en-v1.5)
+try:
+    from .author_archive_embedding import (  # noqa: F401
+        COCOINDEX_AVAILABLE as AUTHOR_ARCHIVE_COCOINDEX_AVAILABLE,
+        EN_MODEL as AUTHOR_ARCHIVE_EN_MODEL,
+        EMBEDDING_BATCH_SIZE as AUTHOR_ARCHIVE_BATCH_SIZE,
+        GEMINI_TABLE as AUTHOR_ARCHIVE_GEMINI_TABLE,
+        UOG_CODE_TABLE as AUTHOR_ARCHIVE_UOG_CODE_TABLE,
+        UOG_EQN_TABLE as AUTHOR_ARCHIVE_UOG_EQN_TABLE,
+        UOG_TABLE as AUTHOR_ARCHIVE_UOG_TABLE,
+        embed_text_chunk as embed_author_archive_text_chunk,
+        equations_embedding_flow,
+        gemini_embedding_flow,
+        run_gemini_embedding,
+        search_author_archive,
+        uog_code_embedding_flow,
+        uog_embedding_flow,
+    )
+    _author_archive_imported = True
+except ImportError as e:  # pragma: no cover — CocoIndex missing
+    import structlog as _sl
+    _sl.get_logger().warning("author_archive_embedding_import_skipped: %s", e)
+    _author_archive_imported = False
+
 __all__ = [
     # Embedding
     "EmbeddingConfig",
@@ -133,3 +157,22 @@ __all__ = [
     "find_similar_code",
     "search_java_code",
 ]
+
+# Author-archive embedding (English-only, BGE-large-en-v1.5)
+if _author_archive_imported:
+    __all__ += [
+        "AUTHOR_ARCHIVE_COCOINDEX_AVAILABLE",
+        "AUTHOR_ARCHIVE_EN_MODEL",
+        "AUTHOR_ARCHIVE_BATCH_SIZE",
+        "AUTHOR_ARCHIVE_GEMINI_TABLE",
+        "AUTHOR_ARCHIVE_UOG_CODE_TABLE",
+        "AUTHOR_ARCHIVE_UOG_EQN_TABLE",
+        "AUTHOR_ARCHIVE_UOG_TABLE",
+        "embed_author_archive_text_chunk",
+        "equations_embedding_flow",
+        "gemini_embedding_flow",
+        "uog_code_embedding_flow",
+        "uog_embedding_flow",
+        "search_author_archive",
+        "run_gemini_embedding",
+    ]

@@ -5,6 +5,6 @@ endpoints; the per-island package is the new canonical split.
 """
 from __future__ import annotations
 
-from oideachais.dlt_sources.crown_dependencies import channel_islands
+from dlt_sources.crown_dependencies import channel_islands
 
 __all__ = ["channel_islands"]

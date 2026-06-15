@@ -30,7 +30,7 @@ from datetime import datetime
 from typing import Any
 
 import structlog
-from oideachais.dlt_sources.ireland.source_adapters import NormalizedPage
+from dlt_sources.ireland.source_adapters import NormalizedPage
 
 logger = structlog.get_logger(__name__)
 

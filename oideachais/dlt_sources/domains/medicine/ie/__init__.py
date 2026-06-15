@@ -7,7 +7,7 @@ the Phase 5 re-organisation is complete.
 """
 from __future__ import annotations
 
-from oideachais.dlt_sources.domains.medicine.ie import (
+from dlt_sources.domains.medicine.ie import (
     doh,
     hpsc,
     hse,

@@ -18,7 +18,7 @@ import sys
 from typing import Any
 
 import structlog
-from oideachais.settings import settings
+from settings import settings
 from structlog.types import Processor
 
 
