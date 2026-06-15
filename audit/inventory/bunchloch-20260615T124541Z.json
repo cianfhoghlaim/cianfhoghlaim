@@ -1,0 +1,1050 @@
+{
+  "host": {
+    "hostname": "Cians-MacBook-Pro.local",
+    "uname": "Darwin 25.5.0 arm64",
+    "docker": "29.4.0",
+    "captured_utc": "2026-06-15T12:45:42Z"
+  },
+  "containers": [
+    {
+      "name": "newt",
+      "image": "fosrl/newt:latest",
+      "state": "running",
+      "status": "Up 5 hours",
+      "ports": [
+        "2112/tcp"
+      ],
+      "mounts": [
+        "/var/run/docker.sock"
+      ],
+      "labels": "komodo.skip=true,org.opencontainers.image.authors=fosrl,org.opencontainers.image.created=2026-05-08T18:07:42Z,org.opencontainers.image.description=Pangolin tunneled site & network connector,org.opencontainers.image.documentation=https://github.com/fosrl/newt,org.opencontainers.image.licenses=AGPL-3.0,org.opencontainers.image.ref.name=1.12.5,org.opencontainers.image.revision=0da8a29a6162c97e9ed99d03d0c993a2049eeacb,org.opencontainers.image.source=https://github.com/fosrl/newt,org.opencontainers.image.title=newt,org.opencontainers.image.url=https://github.com/fosrl/newt,org.opencontainers.image.version=1.12.5",
+      "networks": "newt"
+    },
+    {
+      "name": "newt-locket",
+      "image": "ghcr.io/bpbradley/locket:infisical",
+      "state": "restarting",
+      "status": "Restarting (77) 7 seconds ago",
+      "ports": [],
+      "mounts": [
+        "/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/pangolin/infisical_secret",
+        "newt_newt-secrets",
+        "60a2b11303415fb5705f5b43469cb79bb303af99ef4ccdfea33e3032d4926aa4",
+        "/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/pangolin/newt.secrets.env"
+      ],
+      "labels": "com.docker.compose.config-hash=39adb39fe9a8f4ab9f6246555a3d84a001963ad533b42cc82dff4f5365d8c1cf,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:f2fe25adf6c3555ed37cc82d1d66d11dfbfe613070de1d16443092487d8512a4,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/pangolin/newt.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/pangolin/newt.sidecar.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/pangolin,com.docker.compose.project=newt,com.docker.compose.replace=newt-locket,com.docker.compose.service=locket,com.docker.compose.version=5.1.2,org.opencontainers.image.title=locket,org.opencontainers.image.version=0.17.3",
+      "networks": "newt-locket"
+    },
+    {
+      "name": "cianfhoghlaim-oideachais-frontend",
+      "image": "oideachais-dev-frontend:latest",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "80/tcp",
+        " 0.0.0.0:3000->3000/tcp",
+        " [::]:3000->3000/tcp"
+      ],
+      "mounts": [],
+      "labels": "com.docker.compose.config-hash=50934133ddee032a71e180407e55c294397c727361c7da7da4f163fca765f09e,com.docker.compose.container-number=1,com.docker.compose.depends_on=locket:service_started:false,com.docker.compose.image=sha256:9963ba148fd839a73274aa2d8f65d7a1a89c86b4cf293350b2e038344daeee1d,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/oideachais/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/oideachais/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/oideachais,com.docker.compose.project=oideachais,com.docker.compose.replace=cianfhoghlaim-oideachais-frontend,com.docker.compose.service=frontend,com.docker.compose.version=5.1.2,org.opencontainers.image.created=2026-05-13T03:50:34.645Z,org.opencontainers.image.description=Incredibly fast JavaScript runtime, bundler, test runner, and package manager – all in one,org.opencontainers.image.licenses=NOASSERTION,org.opencontainers.image.revision=0d9b296af33f2b851fcbf4df3e9ec89751734ba4,org.opencontainers.image.source=https://github.com/oven-sh/bun,org.opencontainers.image.title=bun,org.opencontainers.image.url=https://github.com/oven-sh/bun,org.opencontainers.image.version=1.3.14-alpine",
+      "networks": "cianfhoghlaim-oideachais-frontend"
+    },
+    {
+      "name": "komodo-core",
+      "image": "ghcr.io/moghtech/komodo-core:2",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "0.0.0.0:9120->9120/tcp",
+        " [::]:9120->9120/tcp"
+      ],
+      "mounts": [
+        "komodo_backups",
+        "komodo_keys"
+      ],
+      "labels": "com.docker.compose.config-hash=80d8d4ea767846377cfe7a2471d23a2c034285d0f33e54e783ee2d38d507ce1a,com.docker.compose.container-number=1,com.docker.compose.depends_on=ferretdb:service_healthy:false,com.docker.compose.image=sha256:7afbcfa99674bf3f51539ec3aa7235795e9b994af9b7099a6c4c654d5d8a5b6b,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo/compose.dev.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo/pangolin.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo,com.docker.compose.project=komodo,com.docker.compose.replace=komodo-core,com.docker.compose.service=core,com.docker.compose.version=5.1.2,komodo.skip=true,org.opencontainers.image.description=Komodo Core,org.opencontainers.image.licenses=GPL-3.0,org.opencontainers.image.source=https://github.com/moghtech/komodo,pangolin.private-resources.komodo.destination=komodo-core:9120,pangolin.private-resources.komodo.full-domain=komodo.cianfhoghlaim.ie,pangolin.private-resources.komodo.mode=http,pangolin.private-resources.komodo.name=Komodo,pangolin.private-resources.komodo.protocol=http,pangolin.private-resources.komodo.roles[0]=Member",
+      "networks": "komodo-core"
+    },
+    {
+      "name": "cianfhoghlaim-cognee",
+      "image": "cognee/cognee:latest",
+      "state": "running",
+      "status": "Up 2 days (unhealthy)",
+      "ports": [
+        "0.0.0.0:8100->8000/tcp",
+        " [::]:8100->8000/tcp"
+      ],
+      "mounts": [],
+      "labels": "com.docker.compose.config-hash=24d558836c03e826d3509ee5dd34429699bca45fa7ee5bf692120cd7fa3bccd6,com.docker.compose.container-number=1,com.docker.compose.depends_on=locket:service_started:false,cognee-postgres:service_healthy:false,com.docker.compose.image=sha256:988a8380c71f7af7b675f01ccfb2983ae2d0beb98da5c3a711432a4c1714a7c3,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/cognee/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/cognee/sidecar.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/cognee/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/cognee,com.docker.compose.project=cognee,com.docker.compose.replace=cianfhoghlaim-cognee,com.docker.compose.service=cognee,com.docker.compose.version=5.1.2,org.opencontainers.image.created=2026-06-08T04:59:32.366Z,org.opencontainers.image.description=Cognee is the open-source AI memory platform for agents. Give your AI agents persistent long-term memory across sessions with a self-hosted knowledge graph engine.,org.opencontainers.image.licenses=Apache-2.0,org.opencontainers.image.revision=a22320c9f6d3d5eecbd4aa59624bf4465656a1d8,org.opencontainers.image.source=https://github.com/topoteretes/cognee,org.opencontainers.image.title=cognee,org.opencontainers.image.url=https://github.com/topoteretes/cognee,org.opencontainers.image.version=main",
+      "networks": "cianfhoghlaim-cognee"
+    },
+    {
+      "name": "komodo-postgres-init",
+      "image": "ghcr.io/ferretdb/postgres-documentdb:17",
+      "state": "exited",
+      "status": "Exited (0) 2 days ago",
+      "ports": [],
+      "mounts": [
+        "9526b62a9432467e71230e1d27d34c263746b5970c2615ec195f57963e8f9f9a"
+      ],
+      "labels": "com.docker.compose.config-hash=99e867739ee4b327aed2065b0891a28296201766e28c008ee8bea35bdb8a4f01,com.docker.compose.container-number=1,com.docker.compose.depends_on=komodo-postgres:service_healthy:false,com.docker.compose.image=sha256:2386795ec2aa7ae559304361979f1dc5708d383ee9020ae63dadc2940dfe58f7,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo/compose.dev.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo/pangolin.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo,com.docker.compose.project=komodo,com.docker.compose.replace=komodo-postgres-init,com.docker.compose.service=komodo-postgres-init,com.docker.compose.version=5.1.2,org.opencontainers.image.description=PostgreSQL with DocumentDB extension,org.opencontainers.image.source=https://github.com/FerretDB/documentdb,org.opencontainers.image.title=PostgreSQL+DocumentDB,org.opencontainers.image.url=https://www.ferretdb.com/,org.opencontainers.image.vendor=FerretDB Inc.,org.opencontainers.image.version=0.107.0~ferretdb~2.7.0",
+      "networks": "komodo-postgres-init"
+    },
+    {
+      "name": "komodo-ferretdb",
+      "image": "ghcr.io/ferretdb/ferretdb:2",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "8088/tcp",
+        " 27017-27018/tcp"
+      ],
+      "mounts": [
+        "63fd162184ac9636c596e3db2777d51f20d2d2f54392737f73887a174de03a69"
+      ],
+      "labels": "com.docker.compose.config-hash=2440101a8704fc870d6fb29d02790cd25095d8f9b11ab0f0738ffe7f83274584,com.docker.compose.container-number=1,com.docker.compose.depends_on=komodo-postgres-init:service_completed_successfully:false,com.docker.compose.image=sha256:5706414241eb84f0515512c37b46db0f1b1eac9e5ceb7e4c2523211c184b1985,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo/compose.dev.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo/pangolin.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo,com.docker.compose.project=komodo,com.docker.compose.service=ferretdb,com.docker.compose.version=5.1.2,komodo.skip=,org.opencontainers.image.description=A truly Open Source MongoDB alternative,org.opencontainers.image.revision=0d5eb3343a50b800634cc08ace608bb6f3a3f74b,org.opencontainers.image.source=https://github.com/FerretDB/FerretDB,org.opencontainers.image.title=FerretDB,org.opencontainers.image.url=https://www.ferretdb.com/,org.opencontainers.image.vendor=FerretDB Inc.,org.opencontainers.image.version=v2.7.0",
+      "networks": "komodo-ferretdb"
+    },
+    {
+      "name": "komodo-postgres",
+      "image": "ghcr.io/ferretdb/postgres-documentdb:17",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "5432/tcp"
+      ],
+      "mounts": [
+        "komodo-postgres-data"
+      ],
+      "labels": "com.docker.compose.config-hash=33e23af3e8a57cc3f02fb6a0e9ef9da628fcd138e876f65ca5f7b9c03985b362,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:2386795ec2aa7ae559304361979f1dc5708d383ee9020ae63dadc2940dfe58f7,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo/compose.dev.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo/pangolin.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo,com.docker.compose.project=komodo,com.docker.compose.service=komodo-postgres,com.docker.compose.version=5.1.2,org.opencontainers.image.description=PostgreSQL with DocumentDB extension,org.opencontainers.image.source=https://github.com/FerretDB/documentdb,org.opencontainers.image.title=PostgreSQL+DocumentDB,org.opencontainers.image.url=https://www.ferretdb.com/,org.opencontainers.image.vendor=FerretDB Inc.,org.opencontainers.image.version=0.107.0~ferretdb~2.7.0",
+      "networks": "komodo-postgres"
+    },
+    {
+      "name": "komodo-locket",
+      "image": "ghcr.io/bpbradley/locket:infisical",
+      "state": "exited",
+      "status": "Exited (127) 2 days ago",
+      "ports": [],
+      "mounts": [
+        "/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/infisical_secret",
+        "komodo_komodo-secrets",
+        "ad8058a403770ac830795bd4692a8246d463d0901475e8382aec03ac57fd0196",
+        "/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo/secrets.env"
+      ],
+      "labels": "com.docker.compose.config-hash=bfff3c8c8b5684266740f0ce9016812a55b65311cb0d2df289f21ad50b38505a,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:f2fe25adf6c3555ed37cc82d1d66d11dfbfe613070de1d16443092487d8512a4,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo/sidecar.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo/pangolin.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo,com.docker.compose.project=komodo,com.docker.compose.replace=komodo-locket,com.docker.compose.service=locket,com.docker.compose.version=5.1.2,org.opencontainers.image.title=locket,org.opencontainers.image.version=0.17.3",
+      "networks": "komodo-locket"
+    },
+    {
+      "name": "cianfhoghlaim-oideachais-locket-dev",
+      "image": "alpine:3.20",
+      "state": "exited",
+      "status": "Exited (137) 2 days ago",
+      "ports": [],
+      "mounts": [],
+      "labels": "com.docker.compose.config-hash=a7d77bf12b016415f6165af2bda2d33387b1180554875fee8ff703c89a2459b8,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/oideachais/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/oideachais/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/oideachais,com.docker.compose.project=oideachais,com.docker.compose.service=locket,com.docker.compose.version=5.1.2",
+      "networks": "cianfhoghlaim-oideachais-locket-dev"
+    },
+    {
+      "name": "cianfhoghlaim-cognee-postgres",
+      "image": "pgvector/pgvector:pg17",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "5432/tcp"
+      ],
+      "mounts": [
+        "cognee_cognee-postgres-data"
+      ],
+      "labels": "com.docker.compose.config-hash=08a368020d5a543dd5ee97e35f206aa7742a9efe0705f7a69aee3dbe65dd4e82,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:feb68f4f15446397d8cac7f4fe48fe4586de83160d1fc48b46283312d1a33966,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/cognee/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/cognee/sidecar.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/cognee/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/cognee,com.docker.compose.project=cognee,com.docker.compose.replace=cianfhoghlaim-cognee-postgres,com.docker.compose.service=cognee-postgres,com.docker.compose.version=5.1.2",
+      "networks": "cianfhoghlaim-cognee-postgres"
+    },
+    {
+      "name": "cianfhoghlaim-cognee-locket-dev",
+      "image": "alpine:3.20",
+      "state": "exited",
+      "status": "Exited (137) 2 days ago",
+      "ports": [],
+      "mounts": [],
+      "labels": "com.docker.compose.config-hash=6a347d2e4947a01ff48175782b8b71c8225a37921e0e80b84df1ff1ad51b03fb,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/cognee/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/cognee/sidecar.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/cognee/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/cognee,com.docker.compose.project=cognee,com.docker.compose.replace=cianfhoghlaim-cognee-locket-dev,com.docker.compose.service=locket,com.docker.compose.version=5.1.2",
+      "networks": "cianfhoghlaim-cognee-locket-dev"
+    },
+    {
+      "name": "cianfhoghlaim-oideachais-api",
+      "image": "oideachais-dev-api:latest",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "0.0.0.0:8000->8000/tcp",
+        " [::]:8000->8000/tcp"
+      ],
+      "mounts": [
+        "oideachais_api_data",
+        "/Users/cianmacandeisigh/dev/kings_college_galway/oideachais"
+      ],
+      "labels": "com.docker.compose.config-hash=1abdcdbe83dff948d14cfbb76396c2dbadd055ff3608fe46cfed7f35fe8b491b,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:3bfede32f38568257e35784ef02732e0be4b2b8cb76f746cadfe426f900d9b26,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/oideachais/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/oideachais/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/oideachais,com.docker.compose.project=oideachais,com.docker.compose.replace=cianfhoghlaim-oideachais-api,com.docker.compose.service=api,com.docker.compose.version=5.1.2",
+      "networks": "cianfhoghlaim-oideachais-api"
+    },
+    {
+      "name": "cianfhoghlaim-oideachais-dagster",
+      "image": "oideachais-dev-dagster:latest",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "0.0.0.0:3335->3000/tcp",
+        " [::]:3335->3000/tcp"
+      ],
+      "mounts": [
+        "/Users/cianmacandeisigh/dev/kings_college_galway/oideachais",
+        "oideachais_dagster_venv",
+        "oideachais_dagster_home",
+        "/Users/cianmacandeisigh/dev/kings_college_galway/oideachais/dagster.yaml",
+        "oideachais_dagster_storage",
+        "/Users/cianmacandeisigh/dev/kings_college_galway/stedding"
+      ],
+      "labels": "com.docker.compose.config-hash=aa792ef3cb5e2406f5a7358edecb10a5142097afd5e662f8eaab92425621ec16,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:c500165ac1b393abc39b438f83349136cb5e7e1b7684b3febc55f13468798e54,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/oideachais/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/oideachais/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/oideachais,com.docker.compose.project=oideachais,com.docker.compose.service=dagster,com.docker.compose.version=5.1.2",
+      "networks": "cianfhoghlaim-oideachais-dagster"
+    },
+    {
+      "name": "litellm",
+      "image": "ghcr.io/berriai/litellm:main-stable",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "0.0.0.0:4000->4000/tcp",
+        " [::]:4000->4000/tcp"
+      ],
+      "mounts": [
+        "/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/litellm/config",
+        "/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/stedding/huggingface"
+      ],
+      "labels": "com.docker.compose.config-hash=29ffc6565db69834c9b77407d063f9cf2bb5185eaef4e6e064c03fcb48caccc4,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:979dd4e19ab559c1f4daeb06a16def89ee6cba088eb41a88647b2a45285885cc,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/litellm/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/litellm/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/litellm,com.docker.compose.project=litellm,com.docker.compose.replace=litellm,com.docker.compose.service=litellm,com.docker.compose.version=5.1.2,dev.chainguard.image.title=wolfi-base,dev.chainguard.package.main=,org.opencontainers.image.authors=Chainguard Team https://www.chainguard.dev/,org.opencontainers.image.created=2026-05-05T17:11:16Z,org.opencontainers.image.revision=bde16ff5b7d406da5a9a55cc880703a7e41c2479,org.opencontainers.image.source=https://github.com/BerriAI/litellm,org.opencontainers.image.title=wolfi-base,org.opencontainers.image.url=https://images.chainguard.dev/directory/image/wolfi-base/overview,org.opencontainers.image.vendor=Chainguard",
+      "networks": "litellm"
+    },
+    {
+      "name": "aleyum-dagster-web",
+      "image": "aleyum-dagster-webserver",
+      "state": "exited",
+      "status": "Exited (0) 4 days ago",
+      "ports": [],
+      "mounts": [
+        "aleyum_aleyum-data",
+        "/Users/cianmacandeisigh/dev/kings_college_galway/croilar"
+      ],
+      "labels": "com.docker.compose.config-hash=6c58f678dd2454955e63b6974c359a69daaa91352848237c9d386932e01591a1,com.docker.compose.container-number=1,com.docker.compose.depends_on=postgres:service_healthy:false,dagster-daemon:service_started:false,locket:service_started:false,com.docker.compose.image=sha256:f9fc4102e344b1f0230b7535f33368e42b600fa0d91fbc192a76a0247da39f42,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/croilar/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/croilar/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/croilar,com.docker.compose.project=aleyum,com.docker.compose.replace=aleyum-dagster-web,com.docker.compose.service=dagster-webserver,com.docker.compose.version=5.1.2",
+      "networks": "aleyum-dagster-web"
+    },
+    {
+      "name": "aleyum-dagster-daemon",
+      "image": "aleyum-dagster-daemon",
+      "state": "exited",
+      "status": "Exited (137) 4 days ago",
+      "ports": [],
+      "mounts": [
+        "aleyum_aleyum-data",
+        "/Users/cianmacandeisigh/dev/kings_college_galway/croilar"
+      ],
+      "labels": "com.docker.compose.config-hash=c340120dbea4d91ad3ef160bae9a80273208560abec64e28be544f6e7f7711c9,com.docker.compose.container-number=1,com.docker.compose.depends_on=locket:service_started:false,postgres:service_healthy:false,com.docker.compose.image=sha256:a3eaa30f5057c1131086479d245bce05b286a4a038bae791a811de0a0bdf70ba,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/croilar/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/croilar/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/croilar,com.docker.compose.project=aleyum,com.docker.compose.replace=aleyum-dagster-daemon,com.docker.compose.service=dagster-daemon,com.docker.compose.version=5.1.2",
+      "networks": "aleyum-dagster-daemon"
+    },
+    {
+      "name": "aleyum-dragonfly",
+      "image": "docker.dragonflydb.io/dragonflydb/dragonfly:latest",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "0.0.0.0:6381->6379/tcp",
+        " [::]:6381->6379/tcp"
+      ],
+      "mounts": [
+        "aleyum_dragonfly-data"
+      ],
+      "labels": "com.docker.compose.config-hash=953932e3516e20a4b8710b837feda37db9b2082505d013b2154c744bbd0a3a42,com.docker.compose.container-number=1,com.docker.compose.depends_on=locket:service_started:false,com.docker.compose.image=sha256:baf70ba7ad182a992b988497cfa31a488978c8fab7712079784c2401f447e402,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/croilar/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/croilar/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/croilar,com.docker.compose.project=aleyum,com.docker.compose.replace=aleyum-dragonfly,com.docker.compose.service=dragonfly,com.docker.compose.version=5.1.2,org.opencontainers.image.created=2026-04-28T08:02:20.141Z,org.opencontainers.image.description=The fastest in-memory store,org.opencontainers.image.licenses=NOASSERTION,org.opencontainers.image.revision=8dbbd4f0f5f6ebb0d5eca7587f6713f2c5b119e5,org.opencontainers.image.source=https://github.com/dragonflydb/dragonfly,org.opencontainers.image.title=Dragonfly Production Image,org.opencontainers.image.url=https://github.com/dragonflydb/dragonfly,org.opencontainers.image.vendor=DragonflyDB LTD,org.opencontainers.image.version=v1.38.1",
+      "networks": "aleyum-dragonfly"
+    },
+    {
+      "name": "aleyum-postgres",
+      "image": "postgres:16-alpine",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "5432/tcp"
+      ],
+      "mounts": [
+        "aleyum_aleyum-postgres-data"
+      ],
+      "labels": "com.docker.compose.config-hash=da5720f30972c9fcc8fdb3694f543499c115317177d5358d0bf20ced260aaa19,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:16bc17c64a573ef34162af9298258d1aec548232985b33ed7b1eac33ba35c229,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/croilar/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/croilar/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/croilar,com.docker.compose.project=aleyum,com.docker.compose.replace=aleyum-postgres,com.docker.compose.service=postgres,com.docker.compose.version=5.1.2",
+      "networks": "aleyum-postgres"
+    },
+    {
+      "name": "croilar-locket-dev",
+      "image": "alpine:3.20",
+      "state": "exited",
+      "status": "Exited (137) 4 days ago",
+      "ports": [],
+      "mounts": [],
+      "labels": "com.docker.compose.config-hash=c687d6c82a8e083021689567cd3d855aa3055ce0211d7e6faeea9ace3366c93d,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/croilar/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/croilar/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/croilar,com.docker.compose.project=aleyum,com.docker.compose.replace=croilar-locket-dev,com.docker.compose.service=locket,com.docker.compose.version=5.1.2",
+      "networks": "croilar-locket-dev"
+    },
+    {
+      "name": "litellm-db",
+      "image": "postgres:16",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "5432/tcp"
+      ],
+      "mounts": [
+        "litellm_postgres_data"
+      ],
+      "labels": "com.docker.compose.config-hash=e6ed8174b82aec75296aaf17cb7158b4281dd4674072e419ff9c9f74978e2318,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:4b7183ac05f8ef417db21fd72d71047a4238340c261d3cc3ddb6d579ab5071ae,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/litellm/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/litellm/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/litellm,com.docker.compose.project=litellm,com.docker.compose.service=db,com.docker.compose.version=5.1.2",
+      "networks": "litellm-db"
+    },
+    {
+      "name": "litellm-locket-dev",
+      "image": "alpine:3.20",
+      "state": "exited",
+      "status": "Exited (255) 4 days ago",
+      "ports": [],
+      "mounts": [],
+      "labels": "com.docker.compose.config-hash=949b5e3dcbc0758a1be967d3df1405b55a46207898102323a369843ce4d6919b,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/litellm/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/litellm/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/litellm,com.docker.compose.project=litellm,com.docker.compose.service=locket,com.docker.compose.version=5.1.2",
+      "networks": "litellm-locket-dev"
+    },
+    {
+      "name": "litellm-prometheus",
+      "image": "prom/prometheus",
+      "state": "running",
+      "status": "Up 2 days",
+      "ports": [
+        "0.0.0.0:9090->9090/tcp",
+        " [::]:9090->9090/tcp"
+      ],
+      "mounts": [
+        "/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/litellm/config/prometheus.yml",
+        "litellm_prometheus_data"
+      ],
+      "labels": "com.docker.compose.config-hash=6e0180b7af55985354c645c8326547084fd734fdfbc87ce9024895fa76616a50,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:69f5241418838263316593f7274a304b095c40bcf22e57272865da91bd60a8ac,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/litellm/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/litellm/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/litellm,com.docker.compose.project=litellm,com.docker.compose.service=prometheus,com.docker.compose.version=5.1.2,io.prometheus.image.variant=busybox,maintainer=The Prometheus Authors <prometheus-developers@googlegroups.com>,org.opencontainers.image.authors=The Prometheus Authors,org.opencontainers.image.description=The Prometheus monitoring system and time series database,org.opencontainers.image.documentation=https://prometheus.io/docs,org.opencontainers.image.licenses=Apache License 2.0,org.opencontainers.image.source=https://github.com/prometheus/prometheus,org.opencontainers.image.title=Prometheus,org.opencontainers.image.url=https://github.com/prometheus/prometheus,org.opencontainers.image.vendor=Prometheus",
+      "networks": "litellm-prometheus"
+    },
+    {
+      "name": "convex-dashboard",
+      "image": "ghcr.io/get-convex/convex-dashboard:latest",
+      "state": "running",
+      "status": "Up 2 days",
+      "ports": [
+        "0.0.0.0:6791->6791/tcp",
+        " [::]:6791->6791/tcp"
+      ],
+      "mounts": [],
+      "labels": "com.docker.compose.config-hash=489724e1fd66470d532d0216cc23662487da1082f882692da7ae6a0ef7a7a781,com.docker.compose.container-number=1,com.docker.compose.depends_on=backend:service_healthy:false,locket:service_started:false,com.docker.compose.image=sha256:bbc4d2c43d19fd6f2791dd6c5153a76e127f3eea489c1639e5acf66999c216bf,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/convex/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/convex/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/convex,com.docker.compose.project=convex,com.docker.compose.service=dashboard,com.docker.compose.version=5.1.2,org.opencontainers.image.version=24.04",
+      "networks": "convex-dashboard"
+    },
+    {
+      "name": "convex-backend",
+      "image": "ghcr.io/get-convex/convex-backend:latest",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "0.0.0.0:3210-3211->3210-3211/tcp",
+        " [::]:3210-3211->3210-3211/tcp"
+      ],
+      "mounts": [
+        "convex_convex-data"
+      ],
+      "labels": "com.docker.compose.config-hash=fe7047c8ca57cbbd4e6bf0a3624fba9a7f39e9d9598beb74c30906303f9b22bf,com.docker.compose.container-number=1,com.docker.compose.depends_on=locket:service_started:false,com.docker.compose.image=sha256:edd7959f3464ed661f6663f646db205d5d61bda606c969b074dfb3c69ed71463,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/convex/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/convex/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/convex,com.docker.compose.project=convex,com.docker.compose.service=backend,com.docker.compose.version=5.1.2,org.opencontainers.image.revision=9c73f185d0f698eaefce0ee82af6f245674bc6d1,org.opencontainers.image.version=24.04,org.opencontainers.repository=https://github.com/get-convex/convex-backend",
+      "networks": "convex-backend"
+    },
+    {
+      "name": "convex-locket-dev",
+      "image": "alpine:3.20",
+      "state": "exited",
+      "status": "Exited (255) 4 days ago",
+      "ports": [],
+      "mounts": [],
+      "labels": "com.docker.compose.config-hash=d5382d66c77ee14d87f1f2f9fee2f10d9fbe464d59928a357629abf25bc23e97,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/convex/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/convex/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/engineering/convex,com.docker.compose.project=convex,com.docker.compose.service=locket,com.docker.compose.version=5.1.2",
+      "networks": "convex-locket-dev"
+    },
+    {
+      "name": "lakehouse-garage",
+      "image": "dxflrs/garage:v1.0.1",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "0.0.0.0:3900-3904->3900-3904/tcp",
+        " [::]:3900-3904->3900-3904/tcp"
+      ],
+      "mounts": [
+        "/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/storage/lakehouse/garage.toml",
+        "lakehouse_lakehouse-garage-data",
+        "lakehouse_lakehouse-garage-meta"
+      ],
+      "labels": "com.docker.compose.config-hash=8b1bb4ed7701009dfb373e062e75ca63efa61ffdbc7ee1529af9cb1d8dead15b,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:a5706cf1f3d7b349ac5133ec59ad8181b709270b75e5f2fa7b3e1a5c07d67137,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/storage/lakehouse/compose.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/storage/lakehouse,com.docker.compose.project=lakehouse,com.docker.compose.service=garage,com.docker.compose.version=5.1.2",
+      "networks": "lakehouse-garage"
+    },
+    {
+      "name": "lakehouse-garage-init",
+      "image": "curlimages/curl:latest",
+      "state": "exited",
+      "status": "Exited (0) 5 days ago",
+      "ports": [],
+      "mounts": [],
+      "labels": "com.docker.compose.config-hash=6e54e4b1c93d8e91cc2137ddbb426e921cc5ea31d8d8fa955dd776afaaf58fce,com.docker.compose.container-number=1,com.docker.compose.depends_on=garage:service_healthy:false,com.docker.compose.image=sha256:b3f1fb2a51d923260350d21b8654bbc607164a987e2f7c84a0ac199a67df812a,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/storage/lakehouse/compose.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/storage/lakehouse,com.docker.compose.project=lakehouse,com.docker.compose.service=garage-init,com.docker.compose.version=5.1.2,docker.cmd=podman run -it quay.io/curl/curl-linux-arm64:8.20.0:8.20.0,io.buildah.version=1.33.7,maintainer=James Fuller <jim.fuller@webcomposite.com>,name=curl-linux-arm64:8.20.0,org.opencontainers.image.description=minimal image for curl,org.opencontainers.image.licenses=MIT,org.opencontainers.image.source=https://github.com/curl/curl-container,version=8.20.0",
+      "networks": "lakehouse-garage-init"
+    },
+    {
+      "name": "lakehouse-lance-namespace",
+      "image": "lakehouse-lance-namespace:latest",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "0.0.0.0:8182->8182/tcp",
+        " [::]:8182->8182/tcp"
+      ],
+      "mounts": [],
+      "labels": "com.docker.compose.config-hash=aa54fcb4593b03b28426bca6f8c43b8ca5d20d8c61e58e3c3cf8c157975d9edd,com.docker.compose.container-number=1,com.docker.compose.depends_on=lakekeeper:service_healthy:false,garage:service_healthy:false,com.docker.compose.image=sha256:e1bcfccb9f6957ff83aa9a80ce9bbb60b33613db48d9cb556c77f9a26649ea10,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/storage/lakehouse/compose.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/storage/lakehouse,com.docker.compose.project=lakehouse,com.docker.compose.service=lance-namespace,com.docker.compose.version=5.1.2",
+      "networks": "lakehouse-lance-namespace"
+    },
+    {
+      "name": "lakehouse-lakekeeper",
+      "image": "quay.io/lakekeeper/catalog:latest",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "0.0.0.0:8181->8181/tcp",
+        " [::]:8181->8181/tcp",
+        " 0.0.0.0:9100->9000/tcp",
+        " [::]:9100->9000/tcp"
+      ],
+      "mounts": [],
+      "labels": "com.docker.compose.config-hash=b9098750cf131e6d9065d088ec1fd60c8122ffff8ed41180d075a402909c621b,com.docker.compose.container-number=1,com.docker.compose.depends_on=postgres:service_healthy:false,garage:service_healthy:false,com.docker.compose.image=sha256:4d5b8ed160188061aa52d1b630504d5a28a39d95cf9addadf94d375019bb5e15,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/storage/lakehouse/compose.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/storage/lakehouse,com.docker.compose.project=lakehouse,com.docker.compose.service=lakekeeper,com.docker.compose.version=5.1.2,maintainer=moderation@vakamo.com,quay.expires-after=Never",
+      "networks": "lakehouse-lakekeeper"
+    },
+    {
+      "name": "lakehouse-lakekeeper-migrate",
+      "image": "quay.io/lakekeeper/catalog:latest",
+      "state": "exited",
+      "status": "Exited (0) 5 days ago",
+      "ports": [],
+      "mounts": [],
+      "labels": "com.docker.compose.config-hash=d49b3069dd0239778e63dd6919cd8ca1afc860bf47bd84d98affff8d6901d860,com.docker.compose.container-number=1,com.docker.compose.depends_on=garage:service_healthy:false,postgres:service_healthy:false,com.docker.compose.image=sha256:4d5b8ed160188061aa52d1b630504d5a28a39d95cf9addadf94d375019bb5e15,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/storage/lakehouse/compose.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/storage/lakehouse,com.docker.compose.project=lakehouse,com.docker.compose.service=lakekeeper-migrate,com.docker.compose.version=5.1.2,maintainer=moderation@vakamo.com,quay.expires-after=Never",
+      "networks": "lakehouse-lakekeeper-migrate"
+    },
+    {
+      "name": "lakehouse-postgres",
+      "image": "postgres:16-alpine",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "0.0.0.0:5433->5432/tcp",
+        " [::]:5433->5432/tcp"
+      ],
+      "mounts": [
+        "lakehouse_lakehouse-postgres"
+      ],
+      "labels": "com.docker.compose.config-hash=5b50298c938c149bd52184c1ecaa1993668a621879add286bf0d469a94c433b7,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:16bc17c64a573ef34162af9298258d1aec548232985b33ed7b1eac33ba35c229,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/storage/lakehouse/compose.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/storage/lakehouse,com.docker.compose.project=lakehouse,com.docker.compose.service=postgres,com.docker.compose.version=5.1.2",
+      "networks": "lakehouse-postgres"
+    },
+    {
+      "name": "croilar-postgres",
+      "image": "postgres:16-alpine",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "0.0.0.0:5434->5432/tcp",
+        " [::]:5434->5432/tcp"
+      ],
+      "mounts": [
+        "/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/storage/croilar-postgres/init-db.sql",
+        "cianfhoghlaim-postgres_croilar-postgres-data"
+      ],
+      "labels": "com.docker.compose.config-hash=3fda6bfdce816a5d45f053405ad558944be7d5c9191254ad29d737609e94a6b0,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:16bc17c64a573ef34162af9298258d1aec548232985b33ed7b1eac33ba35c229,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/storage/croilar-postgres/compose.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/storage/croilar-postgres,com.docker.compose.project=cianfhoghlaim-postgres,com.docker.compose.service=croilar-postgres,com.docker.compose.version=5.1.2",
+      "networks": "croilar-postgres"
+    },
+    {
+      "name": "langfuse-langfuse-web-1",
+      "image": "langfuse/langfuse:3",
+      "state": "running",
+      "status": "Up 2 days",
+      "ports": [
+        "0.0.0.0:3001->3000/tcp",
+        " [::]:3001->3000/tcp"
+      ],
+      "mounts": [],
+      "labels": "com.docker.compose.config-hash=ba438ed31b9f9fa58f6a778b903369917ad29743d2fcbfffce59c5438d8965c1,com.docker.compose.container-number=1,com.docker.compose.depends_on=redis:service_healthy:false,locket:service_started:false,clickhouse:service_healthy:false,postgres:service_healthy:false,minio:service_healthy:false,com.docker.compose.image=sha256:64722728a968dc9ad97b7f90cf9ecb69c6532ad634c98c174eb3dca9e077abcd,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse,com.docker.compose.project=langfuse,com.docker.compose.replace=langfuse-web-1,com.docker.compose.service=langfuse-web,com.docker.compose.version=5.1.2,org.opencontainers.image.created=2026-06-08T10:01:03.075Z,org.opencontainers.image.description=🪢 Open source LLM engineering platform: LLM Observability, metrics, evals, prompt management, playground, datasets. Integrates with OpenTelemetry, Langchain, OpenAI SDK, LiteLLM, and more. 🍊YC W23,org.opencontainers.image.licenses=NOASSERTION,org.opencontainers.image.revision=3cb6514396f788f06199794dbdc09d8925d2cf70,org.opencontainers.image.source=https://github.com/langfuse/langfuse,org.opencontainers.image.title=langfuse,org.opencontainers.image.url=https://github.com/langfuse/langfuse,org.opencontainers.image.version=3.179.1",
+      "networks": "langfuse-langfuse-web-1"
+    },
+    {
+      "name": "langfuse-langfuse-worker-1",
+      "image": "langfuse/langfuse-worker:3",
+      "state": "running",
+      "status": "Up 2 days",
+      "ports": [
+        "127.0.0.1:3031->3030/tcp"
+      ],
+      "mounts": [],
+      "labels": "com.docker.compose.config-hash=09f7b39b9b7c31b336f5c9831c798aea6494a5160bd659de7b0a53c923a7aeff,com.docker.compose.container-number=1,com.docker.compose.depends_on=minio:service_healthy:false,redis:service_healthy:false,clickhouse:service_healthy:false,locket:service_started:false,postgres:service_healthy:false,com.docker.compose.image=sha256:e507b5a187066a0babd9e7220787c8b3e48f068dbdb18dec72a649454ec530bc,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse,com.docker.compose.project=langfuse,com.docker.compose.replace=langfuse-worker-1,com.docker.compose.service=langfuse-worker,com.docker.compose.version=5.1.2,org.opencontainers.image.created=2026-06-08T10:01:02.910Z,org.opencontainers.image.description=🪢 Open source LLM engineering platform: LLM Observability, metrics, evals, prompt management, playground, datasets. Integrates with OpenTelemetry, Langchain, OpenAI SDK, LiteLLM, and more. 🍊YC W23,org.opencontainers.image.licenses=NOASSERTION,org.opencontainers.image.revision=3cb6514396f788f06199794dbdc09d8925d2cf70,org.opencontainers.image.source=https://github.com/langfuse/langfuse,org.opencontainers.image.title=langfuse,org.opencontainers.image.url=https://github.com/langfuse/langfuse,org.opencontainers.image.version=3.179.1",
+      "networks": "langfuse-langfuse-worker-1"
+    },
+    {
+      "name": "langfuse-clickhouse-1",
+      "image": "clickhouse/clickhouse-server",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "127.0.0.1:8123->8123/tcp",
+        " 127.0.0.1:9000->9000/tcp",
+        " 9009/tcp"
+      ],
+      "mounts": [
+        "langfuse_langfuse_clickhouse_data",
+        "langfuse_langfuse_clickhouse_logs"
+      ],
+      "labels": "com.clickhouse.build.version=26.5.1.882,com.docker.compose.config-hash=bb71f3f6579afd3bbeae0385e57284eab259c8b23f111b61979f181f75278b20,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:07afc18d8a9706eb9d85c5c5d2752e5270f91bbc2894caeaecb73e4d0f603bf5,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse,com.docker.compose.project=langfuse,com.docker.compose.replace=clickhouse-1,com.docker.compose.service=clickhouse,com.docker.compose.version=5.1.2,org.opencontainers.image.version=22.04",
+      "networks": "langfuse-clickhouse-1"
+    },
+    {
+      "name": "langfuse-postgres-1",
+      "image": "postgres:16",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "127.0.0.1:5432->5432/tcp"
+      ],
+      "mounts": [
+        "langfuse_langfuse_postgres_data"
+      ],
+      "labels": "com.docker.compose.config-hash=a6946bc51a2e26d5b04d948fd83ce3a25ff775ed4792dc2c3168772120666b9a,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:4b7183ac05f8ef417db21fd72d71047a4238340c261d3cc3ddb6d579ab5071ae,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse,com.docker.compose.project=langfuse,com.docker.compose.replace=postgres-1,com.docker.compose.service=postgres,com.docker.compose.version=5.1.2",
+      "networks": "langfuse-postgres-1"
+    },
+    {
+      "name": "langfuse-redis-1",
+      "image": "redis:7",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "127.0.0.1:6379->6379/tcp"
+      ],
+      "mounts": [
+        "6d6b7f23a48f713344f24de843b0da3ec82958f971b86ba9c3e134340d37a619"
+      ],
+      "labels": "com.docker.compose.config-hash=78c7f8b0ef7077356ba83eb4316629e69eeb673c9879380f0947d550bb44fc97,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:d3be87a1060455213a204d2b0a7f04d45d19a16a98e85b3c37b7c33b5f0c489e,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse,com.docker.compose.project=langfuse,com.docker.compose.replace=redis-1,com.docker.compose.service=redis,com.docker.compose.version=5.1.2",
+      "networks": "langfuse-redis-1"
+    },
+    {
+      "name": "langfuse-minio-1",
+      "image": "minio/minio",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "0.0.0.0:9091->9000/tcp",
+        " [::]:9091->9000/tcp",
+        " 127.0.0.1:9092->9001/tcp"
+      ],
+      "mounts": [
+        "langfuse_langfuse_minio_data"
+      ],
+      "labels": "architecture=aarch64,build-date=2025-08-06T08:17:03,com.docker.compose.config-hash=0de3f8ee2a5309b15fa8ef8fed1d9a80d287da291dc4dc3446d4f35aa3bcb9ea,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse,com.docker.compose.project=langfuse,com.docker.compose.replace=minio-1,com.docker.compose.service=minio,com.docker.compose.version=5.1.2,com.redhat.component=ubi9-micro-container,com.redhat.license_terms=https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI,description=MinIO object storage is fundamentally different. Designed for performance and the S3 API, it is 100% open-source. MinIO is ideal for large, private cloud environments with stringent security requirements and delivers mission-critical availability across a diverse range of workloads.,distribution-scope=public,io.buildah.version=1.40.1,io.k8s.description=Very small image which doesn't install the package manager.,io.k8s.display-name=Red Hat Universal Base Image 9 Micro,io.openshift.expose-services=,maintainer=MinIO Inc <dev@min.io>,name=MinIO,release=RELEASE.2025-09-07T16-13-09Z,summary=MinIO is a High Performance Object Storage, API compatible with Amazon S3 cloud storage service.,url=https://catalog.redhat.com/en/search?searchType=containers,vcs-ref=32d8e5209f029a1fb7235308ab32253bface1001,vcs-type=git,vendor=MinIO Inc <dev@min.io>,version=RELEASE.2025-09-07T16-13-09Z",
+      "networks": "langfuse-minio-1"
+    },
+    {
+      "name": "langfuse-locket-dev",
+      "image": "alpine:3.20",
+      "state": "exited",
+      "status": "Exited (255) 5 days ago",
+      "ports": [],
+      "mounts": [],
+      "labels": "com.docker.compose.config-hash=c202826d425767aa89e1605dbf91c4000601596697da97ec2d7755e8555d5e5e,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/langfuse,com.docker.compose.project=langfuse,com.docker.compose.replace=langfuse-locket-dev,com.docker.compose.service=locket,com.docker.compose.version=5.1.2",
+      "networks": "langfuse-locket-dev"
+    },
+    {
+      "name": "lancedb",
+      "image": "ghcr.io/gordonmurray/lance-data-viewer:lancedb-0.24.3",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "0.0.0.0:8081->8080/tcp",
+        " [::]:8081->8080/tcp"
+      ],
+      "mounts": [
+        "lancedb_lancedb-data"
+      ],
+      "labels": "com.docker.compose.config-hash=2e585b37be00a7e645cc6c8660dd18ac1d581d608ddc5b777b66b4dc163691df,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:e7881dbfae94fca5ca0f3d8fae99444b5fca797eabcfa876716b11d4c17528cb,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/lancedb/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/lancedb/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/lancedb,com.docker.compose.project=lancedb,com.docker.compose.replace=lancedb,com.docker.compose.service=lancedb,com.docker.compose.version=5.1.2,com.github.lancedb.version=0.24.3,org.opencontainers.image.created=2025-09-20T19:35:51.425Z,org.opencontainers.image.description=Browse Lance tables from your local machine in a simple web UI. No database to set up. Mount a folder and go.,org.opencontainers.image.licenses=MIT,org.opencontainers.image.revision=f5c1c0abff74df9ad9b8d720d6b6780e8f7d3254,org.opencontainers.image.source=https://github.com/gordonmurray/lance-data-viewer,org.opencontainers.image.title=lance-data-viewer,org.opencontainers.image.url=https://github.com/gordonmurray/lance-data-viewer,org.opencontainers.image.version=main-lancedb-0.24.3",
+      "networks": "lancedb"
+    },
+    {
+      "name": "lancedb-locket-dev",
+      "image": "alpine:3.20",
+      "state": "exited",
+      "status": "Exited (255) 5 days ago",
+      "ports": [],
+      "mounts": [],
+      "labels": "com.docker.compose.config-hash=cd4d1404726600e0815aaba60e030cbd0ee752e78cbf1a5b2e3ee983455c207d,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/lancedb/compose.yaml,/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/lancedb/compose.dev.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/machine_learning/lancedb,com.docker.compose.project=lancedb,com.docker.compose.service=locket,com.docker.compose.version=5.1.2",
+      "networks": "lancedb-locket-dev"
+    },
+    {
+      "name": "llama-swap",
+      "image": "ghcr.io/mostlygeek/llama-swap:cpu",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "0.0.0.0:8080->8080/tcp",
+        " [::]:8080->8080/tcp"
+      ],
+      "mounts": [
+        "/Users/cianmacandeisigh/dev/kings_college_galway/meaisínfhoghlaim/llama-swap-config.yaml",
+        "/Users/cianmacandeisigh/dev/stedding/huggingface/gguf"
+      ],
+      "labels": "com.docker.compose.config-hash=769454329c0ce22cc80c0eedb5541baca1611cbf4f48e076d84dcc5e5d8ea0de,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:853540089d9e3ca322e0677f20eb5741ca2fa5231c573977019a799590df24d1,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/meaisínfhoghlaim/compose.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/meaisínfhoghlaim,com.docker.compose.project=meaisnfhoghlaim,com.docker.compose.replace=llama-swap,com.docker.compose.service=llama-swap,com.docker.compose.version=5.1.2,org.opencontainers.image.created=2026-06-07T05:48:52Z,org.opencontainers.image.description=LLM inference in C/C++,org.opencontainers.image.revision=98d5e8ba8a2642710c9871d05ac1033a3328b884,org.opencontainers.image.source=https://github.com/ggml-org/llama.cpp,org.opencontainers.image.title=llama.cpp,org.opencontainers.image.url=https://github.com/ggml-org/llama.cpp,org.opencontainers.image.version=b9544",
+      "networks": "llama-swap"
+    },
+    {
+      "name": "dagger-engine-v0.20.8",
+      "image": "registry.dagger.io/engine:v0.20.8",
+      "state": "running",
+      "status": "Up 2 days",
+      "ports": [],
+      "mounts": [
+        "0c6b11cd9bd649c852b5d4ee2fbe2d6102668e2980960671d37b463c8678fe92"
+      ],
+      "labels": "",
+      "networks": "dagger-engine-v0.20.8"
+    },
+    {
+      "name": "browser-stagehand-proxy",
+      "image": "browser-stagehand-proxy",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "0.0.0.0:4005->4005/tcp",
+        " [::]:4005->4005/tcp"
+      ],
+      "mounts": [],
+      "labels": "com.docker.compose.config-hash=238ab713e76116e589f36038e42b554482bac134ae28840b8d815a499455d4c3,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:b4e1f03c9184d4af4d5ea0ad9fea4b16a2a6c82e2da0466dc58707ead09f73fb,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/browser/compose.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/browser,com.docker.compose.project=browser,com.docker.compose.replace=browser-stagehand-proxy,com.docker.compose.service=stagehand-proxy,com.docker.compose.version=5.1.2",
+      "networks": "browser-stagehand-proxy"
+    },
+    {
+      "name": "browser-litellm",
+      "image": "ghcr.io/berriai/litellm:main-latest",
+      "state": "running",
+      "status": "Up 2 days",
+      "ports": [
+        "0.0.0.0:4001->4000/tcp",
+        " [::]:4001->4000/tcp"
+      ],
+      "mounts": [
+        "/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/browser/litellm_config.yaml"
+      ],
+      "labels": "com.docker.compose.config-hash=da34031f6fb1e316c59a315f343414949fac8bbd8e31f22deb56f850b183b965,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:7c311546c25e7bb6e8cafede9fcd3d0d622ac636b5c9418befaa32e85dfb0186,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/browser/compose.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/browser,com.docker.compose.project=browser,com.docker.compose.replace=browser-litellm,com.docker.compose.service=litellm,com.docker.compose.version=5.1.2,dev.chainguard.image.title=wolfi-base,dev.chainguard.package.main=,org.opencontainers.image.authors=Chainguard Team https://www.chainguard.dev/,org.opencontainers.image.created=2026-03-22T06:36:26.734Z,org.opencontainers.image.description=Python SDK, Proxy Server (AI Gateway) to call 100+ LLM APIs in OpenAI (or native) format, with cost tracking, guardrails, loadbalancing and logging. [Bedrock, Azure, OpenAI, VertexAI, Cohere, Anthropic, Sagemaker, HuggingFace, VLLM, NVIDIA NIM],org.opencontainers.image.licenses=NOASSERTION,org.opencontainers.image.revision=f5194b5ce32a937a5bca7605e5085b80f69f4347,org.opencontainers.image.source=https://github.com/BerriAI/litellm,org.opencontainers.image.title=litellm,org.opencontainers.image.url=https://github.com/BerriAI/litellm,org.opencontainers.image.vendor=Chainguard,org.opencontainers.image.version=main",
+      "networks": "browser-litellm"
+    },
+    {
+      "name": "browser-grid",
+      "image": "browser-browser-grid",
+      "state": "running",
+      "status": "Up 2 days (healthy)",
+      "ports": [
+        "0.0.0.0:9222-9223->9222-9223/tcp",
+        " [::]:9222-9223->9222-9223/tcp"
+      ],
+      "mounts": [
+        "/dev/shm"
+      ],
+      "labels": "com.docker.compose.config-hash=896f22d21afdc039209a0c9364e66ae7f61595b7b1df903aec2b5befff1f541f,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:f5374702ae077766fa3c0d2a503f0a3e6bb9f36ab09a15ba7506111236e82050,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/browser/compose.yaml,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/browser,com.docker.compose.project=browser,com.docker.compose.service=browser-grid,com.docker.compose.version=5.1.2",
+      "networks": "browser-grid"
+    },
+    {
+      "name": "komodo-periphery",
+      "image": "ghcr.io/moghtech/komodo-periphery:2",
+      "state": "running",
+      "status": "Up 2 days",
+      "ports": [
+        "8120/tcp"
+      ],
+      "mounts": [
+        "komodo_keys",
+        "/proc",
+        "/var/run/docker.sock",
+        "/Users/cianmacandeisigh/dev/kings_college_galway/.local/komodo_periphery"
+      ],
+      "labels": "com.docker.compose.config-hash=2b1ec5067dff5733a420dbd53d2ced8d3743e1181a724f0b9f85cb0031f0646e,com.docker.compose.container-number=1,com.docker.compose.depends_on=core:service_started:false,com.docker.compose.image=sha256:7fb1a4807d125ce036a17d37c940b4001402afcaf342a2c720c98d096b1b54da,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/cianmacandeisigh/dev/kings_college_galway/.local/komodo/docker-compose.yaml,com.docker.compose.project.environment_file=/Users/cianmacandeisigh/dev/kings_college_galway/.local/komodo/secrets.env,com.docker.compose.project.working_dir=/Users/cianmacandeisigh/dev/kings_college_galway/.local/komodo,com.docker.compose.project=komodo,com.docker.compose.replace=komodo-periphery,com.docker.compose.service=periphery,com.docker.compose.version=5.1.2,komodo.skip=,org.opencontainers.image.description=Komodo Periphery,org.opencontainers.image.licenses=GPL-3.0,org.opencontainers.image.source=https://github.com/moghtech/komodo",
+      "networks": "komodo-periphery"
+    }
+  ],
+  "networks": [
+    {
+      "name": "aleyum_aleyum",
+      "driver": "bridge",
+      "scope": "local"
+    },
+    {
+      "name": "bridge",
+      "driver": "bridge",
+      "scope": "local"
+    },
+    {
+      "name": "browser_browser-net",
+      "driver": "bridge",
+      "scope": "local"
+    },
+    {
+      "name": "cianfhoghlaim",
+      "driver": "bridge",
+      "scope": "local"
+    },
+    {
+      "name": "cianfhoghlaim-postgres_croilar",
+      "driver": "bridge",
+      "scope": "local"
+    },
+    {
+      "name": "convex_convex",
+      "driver": "bridge",
+      "scope": "local"
+    },
+    {
+      "name": "host",
+      "driver": "host",
+      "scope": "local"
+    },
+    {
+      "name": "komodo_default",
+      "driver": "bridge",
+      "scope": "local"
+    },
+    {
+      "name": "komodo_komodo",
+      "driver": "bridge",
+      "scope": "local"
+    },
+    {
+      "name": "lakehouse_lakehouse",
+      "driver": "bridge",
+      "scope": "local"
+    },
+    {
+      "name": "lakehouse_pangolin",
+      "driver": "bridge",
+      "scope": "local"
+    },
+    {
+      "name": "lancedb_cianfhoghlaim",
+      "driver": "bridge",
+      "scope": "local"
+    },
+    {
+      "name": "langfuse_default",
+      "driver": "bridge",
+      "scope": "local"
+    },
+    {
+      "name": "litellm_cianfhoghlaim",
+      "driver": "bridge",
+      "scope": "local"
+    },
+    {
+      "name": "meaisnfhoghlaim_cianfhoghlaim",
+      "driver": "bridge",
+      "scope": "local"
+    },
+    {
+      "name": "none",
+      "driver": "null",
+      "scope": "local"
+    },
+    {
+      "name": "pangolin",
+      "driver": "bridge",
+      "scope": "local"
+    }
+  ],
+  "volumes": [
+    {
+      "name": "0c6b11cd9bd649c852b5d4ee2fbe2d6102668e2980960671d37b463c8678fe92",
+      "driver": "local"
+    },
+    {
+      "name": "6a217761369a1992feed22dfd0f4f555a90d0a3ee161b6a9147d73848f332839",
+      "driver": "local"
+    },
+    {
+      "name": "6b34fde4b92334565faa1d7a1968bdf31585f881703fc049dc4d5f5100c584cc",
+      "driver": "local"
+    },
+    {
+      "name": "6d6b7f23a48f713344f24de843b0da3ec82958f971b86ba9c3e134340d37a619",
+      "driver": "local"
+    },
+    {
+      "name": "60a2b11303415fb5705f5b43469cb79bb303af99ef4ccdfea33e3032d4926aa4",
+      "driver": "local"
+    },
+    {
+      "name": "63fd162184ac9636c596e3db2777d51f20d2d2f54392737f73887a174de03a69",
+      "driver": "local"
+    },
+    {
+      "name": "9526b62a9432467e71230e1d27d34c263746b5970c2615ec195f57963e8f9f9a",
+      "driver": "local"
+    },
+    {
+      "name": "ad8058a403770ac830795bd4692a8246d463d0901475e8382aec03ac57fd0196",
+      "driver": "local"
+    },
+    {
+      "name": "aleyum_aleyum-data",
+      "driver": "local"
+    },
+    {
+      "name": "aleyum_aleyum-postgres-data",
+      "driver": "local"
+    },
+    {
+      "name": "aleyum_dragonfly-data",
+      "driver": "local"
+    },
+    {
+      "name": "bunchloch-site_secrets-store",
+      "driver": "local"
+    },
+    {
+      "name": "bytebase_bytebase_data",
+      "driver": "local"
+    },
+    {
+      "name": "bytebase_bytebase_pg_data",
+      "driver": "local"
+    },
+    {
+      "name": "calcom_db_data",
+      "driver": "local"
+    },
+    {
+      "name": "calcom_redis_data",
+      "driver": "local"
+    },
+    {
+      "name": "changedetection_changedetection-data",
+      "driver": "local"
+    },
+    {
+      "name": "cianfhoghlaim-postgres_croilar-postgres-data",
+      "driver": "local"
+    },
+    {
+      "name": "cianfhoghlaim_locket_secrets",
+      "driver": "local"
+    },
+    {
+      "name": "cognee_cognee-postgres-data",
+      "driver": "local"
+    },
+    {
+      "name": "cognee_cognee_data",
+      "driver": "local"
+    },
+    {
+      "name": "convex_convex-data",
+      "driver": "local"
+    },
+    {
+      "name": "croilar_dagster-storage",
+      "driver": "local"
+    },
+    {
+      "name": "croilar_postgres_data",
+      "driver": "local"
+    },
+    {
+      "name": "e67fbe71f902debbfe6bde37b2736538910e687f96527a4c2bb2602bdad01a6e",
+      "driver": "local"
+    },
+    {
+      "name": "ff113d40f94c0ca117860e09451cadd89c13ea16e9d147189204306c45fa2c8a",
+      "driver": "local"
+    },
+    {
+      "name": "graphiti_neo4j_data",
+      "driver": "local"
+    },
+    {
+      "name": "infisical_infisical_keys",
+      "driver": "local"
+    },
+    {
+      "name": "infisical_pg_data",
+      "driver": "local"
+    },
+    {
+      "name": "infisical_redis_data",
+      "driver": "local"
+    },
+    {
+      "name": "komodo-postgres-data",
+      "driver": "local"
+    },
+    {
+      "name": "komodo_backups",
+      "driver": "local"
+    },
+    {
+      "name": "komodo_keys",
+      "driver": "local"
+    },
+    {
+      "name": "komodo_komodo-backups",
+      "driver": "local"
+    },
+    {
+      "name": "komodo_komodo-ferretdb-state",
+      "driver": "local"
+    },
+    {
+      "name": "komodo_komodo-keys",
+      "driver": "local"
+    },
+    {
+      "name": "komodo_komodo-mongo-config",
+      "driver": "local"
+    },
+    {
+      "name": "komodo_komodo-mongo-data",
+      "driver": "local"
+    },
+    {
+      "name": "komodo_komodo-postgres-data",
+      "driver": "local"
+    },
+    {
+      "name": "komodo_komodo-secrets",
+      "driver": "local"
+    },
+    {
+      "name": "lakehouse_lakehouse-garage-data",
+      "driver": "local"
+    },
+    {
+      "name": "lakehouse_lakehouse-garage-meta",
+      "driver": "local"
+    },
+    {
+      "name": "lakehouse_lakehouse-postgres",
+      "driver": "local"
+    },
+    {
+      "name": "lancedb_lancedb-data",
+      "driver": "local"
+    },
+    {
+      "name": "langfuse_langfuse_clickhouse_data",
+      "driver": "local"
+    },
+    {
+      "name": "langfuse_langfuse_clickhouse_logs",
+      "driver": "local"
+    },
+    {
+      "name": "langfuse_langfuse_minio_data",
+      "driver": "local"
+    },
+    {
+      "name": "langfuse_langfuse_postgres_data",
+      "driver": "local"
+    },
+    {
+      "name": "litellm_postgres_data",
+      "driver": "local"
+    },
+    {
+      "name": "litellm_prometheus_data",
+      "driver": "local"
+    },
+    {
+      "name": "n8n_data",
+      "driver": "local"
+    },
+    {
+      "name": "n8n_postgres_data",
+      "driver": "local"
+    },
+    {
+      "name": "n8n_redis_data",
+      "driver": "local"
+    },
+    {
+      "name": "newt_newt-secrets",
+      "driver": "local"
+    },
+    {
+      "name": "oideachais-dev_dagster-storage",
+      "driver": "local"
+    },
+    {
+      "name": "oideachais-dev_garage-data",
+      "driver": "local"
+    },
+    {
+      "name": "oideachais-dev_garage-meta",
+      "driver": "local"
+    },
+    {
+      "name": "oideachais-dev_oideachais-data",
+      "driver": "local"
+    },
+    {
+      "name": "oideachais-dev_oideachais-secrets",
+      "driver": "local"
+    },
+    {
+      "name": "oideachais-dev_postgres-data",
+      "driver": "local"
+    },
+    {
+      "name": "oideachais_api_data",
+      "driver": "local"
+    },
+    {
+      "name": "oideachais_dagster_home",
+      "driver": "local"
+    },
+    {
+      "name": "oideachais_dagster_storage",
+      "driver": "local"
+    },
+    {
+      "name": "oideachais_dagster_venv",
+      "driver": "local"
+    },
+    {
+      "name": "pangolin_crowdsec-config",
+      "driver": "local"
+    },
+    {
+      "name": "pangolin_crowdsec-data",
+      "driver": "local"
+    },
+    {
+      "name": "pangolin_pangolin-secrets",
+      "driver": "local"
+    },
+    {
+      "name": "pangolin_pocket-id-data",
+      "driver": "local"
+    },
+    {
+      "name": "pangolin_postgres-data",
+      "driver": "local"
+    },
+    {
+      "name": "pangolin_tinyauth-data",
+      "driver": "local"
+    },
+    {
+      "name": "vikunja_db_data",
+      "driver": "local"
+    },
+    {
+      "name": "vikunja_files",
+      "driver": "local"
+    }
+  ],
+  "compose_files_in_repo": 88
+}
