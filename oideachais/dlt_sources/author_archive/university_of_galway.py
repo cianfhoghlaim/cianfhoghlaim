@@ -40,16 +40,17 @@ from ._scanner import (
 logger = structlog.get_logger(__name__)
 
 # Default location of the UoG archive on the workstation.
-# `oideachais/dlt_sources/author_archive/university_of_galway.py` is 3 levels
-# deep from the repo root (`kings_college_galway/`). The author archive sits
-# at the same level as `oideachais/` (i.e. the repo root), so:
+# The author archive now lives under `leabharlann/ollscoil_na_gaillimhe/`
+# (the user reorganised directories). The old path under
+# `author_cian_deacy_lyons_mac_an_déisigh_uí_liatháin/` is no longer present
+# on the workstation.
 DEFAULT_UOG_PATH = Path(
     os.environ.get(
         "AUTHOR_ARCHIVE_UOG_PATH",
         str(
             Path(__file__).resolve().parents[3]
-            / "author_cian_deacy_lyons_mac_an_déisigh_uí_liatháin"
-            / "university_of_galway"
+            / "leabharlann"
+            / "ollscoil_na_gaillimhe"
         ),
     )
 )
