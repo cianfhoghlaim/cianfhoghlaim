@@ -1,5 +1,7 @@
 # Author Archive — Gemini Deep Research + University of Galway Ingestion
 
+> **Superseded by** [`leabharlann-cocoindex-v1`](../leabharlann-cocoindex-v1/proposal.md). This change is preserved as a historical record of the v0 attempt. The functionality is replaced by the new change's `leabharlann-ingestion` + `cocoindex-v1-migration` specs. The previous paths under `author_cian_deacy_lyons_mac_an_déisigh_uí_liatháin/{university_of_galway,gemini_deep_research}/` no longer exist; the new home is `leabharlann/`.
+
 ## Why
 
 Two rich personal archives sit on the workstation and are not yet wired into the existing `oideachais/` data platform:

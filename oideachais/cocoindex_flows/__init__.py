@@ -1,178 +1,73 @@
 """
-CocoIndex Flows for Celtic Education Pipeline.
+CocoIndex Flows for Oideachais (v1 + leabharlann).
 
-Provides:
-- Curriculum embedding with mandatory batching (100+ per call)
-- Translation to all Celtic languages
-- Geospatial indexing with spatial joins
-- HNSW index management for bulk inserts
+This package has been migrated from the deprecated CocoIndex v0 API to v1.
+The previous v0 code is preserved at `oideachais/cocoindex_flows/_v0_archive/`
+for historical reference (see `git log` for the migration commit).
 
-CRITICAL CONSTRAINTS:
-- Embedding batching: MANDATORY minimum 100 per call
-- HNSW indexes: DROP before bulk inserts >50 rows
-- DuckDB: Single-threaded only
+Public API (v1):
+- `oideachais.cocoindex_flows.leabharlann_embedding` — 3 v1 Apps
+  (`leabharlann_books_app`, `leabharlann_zotero_app`, `leabharlann_takeout_app`)
+  + their `search_leabharlann_*` query helpers.
+- `oideachais.cocoindex_flows.curriculum_embedding_v1` — migrated curriculum
+  embedding App (this change introduces the module).
+- `oideachais.cocoindex_flows.research_embedding_v1` — migrated research
+  embedding App (this change introduces the module).
 
-Flows:
-- curriculum_embedding: Chunk → Embed → LanceDB
-- curriculum_translation: Detect → Translate → Store
-- geospatial_indexing: Boundaries → Spatial Join → Index
+The legacy v0 modules remain on disk at their original paths for back-compat
+but are NOT re-exported here. Downstream code MUST migrate to the v1 Apps.
 """
 
-from .curriculum_embedding import (
-    HNSW_DROP_THRESHOLD,
-    MIN_EMBEDDING_BATCH_SIZE,
-    CurriculumEmbeddingFlow,
-    EmbeddingConfig,
-    EmbeddingEngine,
-    LanceDBEmbeddingSink,
-    TextChunker,
-    create_embedding_flow,
-)
-from .curriculum_translation import (
-    CELTIC_LANGUAGES,
-    TRANSLATION_MODELS,
-    CurriculumTranslationConfig,
-    CurriculumTranslationTransform,
-    create_translation_flow,
-    run_translation_batch,
-)
-from .geospatial_indexing import (
-    GeoParquetWriter,
-    GeospatialIndexConfig,
-    H3SpatialIndexer,
-    LocationIndexTransform,
-    create_geospatial_indexing_flow,
-    run_geospatial_indexing,
-)
-from .learning_outcome_graph import (
-    LearningOutcomeExtractor,
-    LearningOutcomeGraphBuilder,
-    LearningOutcomeRelation,
-    LearningPathFinder,
-    RelationshipType,
-    build_subject_graph,
-    find_learning_path,
-)
-from .ocr_embedding import (
-    BatchEmbedder,
-    LanceDBOCRSink,
-    OCREmbeddingConfig,
-    OCREmbeddingFlow,
-    OCREmbeddingResult,
-    OCRTextChunker,
-    run_ocr_embedding_flow,
-    run_ocr_embedding_flow_sync,
-)
+from __future__ import annotations
 
-# Research embedding (migrated from taighde)
-from .research_embedding import (
-    code_embedding_flow,
-    document_embedding_flow,
-    embed_code_chunk,
-    embed_document_chunk,
-    find_similar_code,
-    search_by_subject,
-    search_code,
-    search_cs_documents,
-    search_documents,
-    search_irish_documents,
-    search_java_code,
-)
+# Lazy import: the legacy v0 modules break at import time on cocoindex==1.0.9.
+# Each v1 module guards itself with `COCOINDEX_AVAILABLE` and degrades gracefully.
 
-# Author-archive embedding (English-only, BGE-large-en-v1.5)
 try:
-    from .author_archive_embedding import (  # noqa: F401
-        COCOINDEX_AVAILABLE as AUTHOR_ARCHIVE_COCOINDEX_AVAILABLE,
-        EN_MODEL as AUTHOR_ARCHIVE_EN_MODEL,
-        EMBEDDING_BATCH_SIZE as AUTHOR_ARCHIVE_BATCH_SIZE,
-        GEMINI_TABLE as AUTHOR_ARCHIVE_GEMINI_TABLE,
-        UOG_CODE_TABLE as AUTHOR_ARCHIVE_UOG_CODE_TABLE,
-        UOG_EQN_TABLE as AUTHOR_ARCHIVE_UOG_EQN_TABLE,
-        UOG_TABLE as AUTHOR_ARCHIVE_UOG_TABLE,
-        embed_text_chunk as embed_author_archive_text_chunk,
-        equations_embedding_flow,
-        gemini_embedding_flow,
-        run_gemini_embedding,
-        search_author_archive,
-        uog_code_embedding_flow,
-        uog_embedding_flow,
+    from .leabharlann_embedding import (  # noqa: F401
+        COCOINDEX_AVAILABLE as LEABHARLANN_COCOINDEX_AVAILABLE,
+        DEFAULT_LEABHARLANN_ROOT,
+        DEFAULT_TAKEOUT_ROOT,
+        DEFAULT_ZOTERO_ROOT,
+        EMBED_DIM as LEABHARLANN_EMBED_DIM,
+        EMBED_MODEL as LEABHARLANN_EMBED_MODEL,
+        LANCEDB_URI as LEABHARLANN_LANCEDB_URI,
+        LeabharlannBookChunk,
+        LeabharlannTakeoutChunk,
+        ZoteroPaperChunk,
+        extract_arxiv_id_from_filename,
+        leabharlann_books_app,
+        leabharlann_takeout_app,
+        leabharlann_zotero_app,
+        search_leabharlann_books,
+        search_leabharlann_takeout,
+        search_leabharlann_zotero,
     )
-    _author_archive_imported = True
-except ImportError as e:  # pragma: no cover — CocoIndex missing
+    _leabharlann_imported = True
+except ImportError as e:  # pragma: no cover
     import structlog as _sl
-    _sl.get_logger().warning("author_archive_embedding_import_skipped: %s", e)
-    _author_archive_imported = False
+
+    _sl.get_logger().warning("leabharlann_embedding_import_failed: %s", e)
+    _leabharlann_imported = False
+
 
 __all__ = [
-    # Embedding
-    "EmbeddingConfig",
-    "CurriculumEmbeddingFlow",
-    "TextChunker",
-    "EmbeddingEngine",
-    "LanceDBEmbeddingSink",
-    "create_embedding_flow",
-    "MIN_EMBEDDING_BATCH_SIZE",
-    "HNSW_DROP_THRESHOLD",
-    # Translation
-    "CurriculumTranslationConfig",
-    "CurriculumTranslationTransform",
-    "create_translation_flow",
-    "run_translation_batch",
-    "CELTIC_LANGUAGES",
-    "TRANSLATION_MODELS",
-    # Geospatial
-    "GeospatialIndexConfig",
-    "H3SpatialIndexer",
-    "LocationIndexTransform",
-    "GeoParquetWriter",
-    "create_geospatial_indexing_flow",
-    "run_geospatial_indexing",
-    # OCR Embedding
-    "OCREmbeddingConfig",
-    "OCRTextChunker",
-    "BatchEmbedder",
-    "LanceDBOCRSink",
-    "OCREmbeddingResult",
-    "OCREmbeddingFlow",
-    "run_ocr_embedding_flow",
-    "run_ocr_embedding_flow_sync",
-    # Learning Outcome Graph
-    "RelationshipType",
-    "LearningOutcomeRelation",
-    "LearningOutcomeExtractor",
-    "LearningOutcomeGraphBuilder",
-    "LearningPathFinder",
-    "build_subject_graph",
-    "find_learning_path",
-    # Research Embedding (migrated from taighde)
-    "document_embedding_flow",
-    "embed_document_chunk",
-    "search_documents",
-    "search_by_subject",
-    "search_irish_documents",
-    "search_cs_documents",
-    "code_embedding_flow",
-    "embed_code_chunk",
-    "search_code",
-    "find_similar_code",
-    "search_java_code",
+    # Leabharlann
+    "LEABHARLANN_COCOINDEX_AVAILABLE",
+    "LEABHARLANN_LANCEDB_URI",
+    "LEABHARLANN_EMBED_MODEL",
+    "LEABHARLANN_EMBED_DIM",
+    "DEFAULT_LEABHARLANN_ROOT",
+    "DEFAULT_ZOTERO_ROOT",
+    "DEFAULT_TAKEOUT_ROOT",
+    "LeabharlannBookChunk",
+    "LeabharlannTakeoutChunk",
+    "ZoteroPaperChunk",
+    "extract_arxiv_id_from_filename",
+    "leabharlann_books_app",
+    "leabharlann_takeout_app",
+    "leabharlann_zotero_app",
+    "search_leabharlann_books",
+    "search_leabharlann_takeout",
+    "search_leabharlann_zotero",
 ]
-
-# Author-archive embedding (English-only, BGE-large-en-v1.5)
-if _author_archive_imported:
-    __all__ += [
-        "AUTHOR_ARCHIVE_COCOINDEX_AVAILABLE",
-        "AUTHOR_ARCHIVE_EN_MODEL",
-        "AUTHOR_ARCHIVE_BATCH_SIZE",
-        "AUTHOR_ARCHIVE_GEMINI_TABLE",
-        "AUTHOR_ARCHIVE_UOG_CODE_TABLE",
-        "AUTHOR_ARCHIVE_UOG_EQN_TABLE",
-        "AUTHOR_ARCHIVE_UOG_TABLE",
-        "embed_author_archive_text_chunk",
-        "equations_embedding_flow",
-        "gemini_embedding_flow",
-        "uog_code_embedding_flow",
-        "uog_embedding_flow",
-        "search_author_archive",
-        "run_gemini_embedding",
-    ]

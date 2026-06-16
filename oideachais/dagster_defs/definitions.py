@@ -90,11 +90,29 @@ from .assets.medicine.ni import medicine_ni_nidirect
 from .assets.medicine.sct import medicine_sct_nhs_scotland
 from .assets.medicine.wls import medicine_wls_nhs_wales
 
+# Crown Dependencies Medicine Assets (Phase 3.6 of lateralise-british-isles-domains)
+# Lateralises IE → EN/NI/SCT/WLS → IOM/JEY/GGY for the medicine domain.
+from .assets.medicine.iom import medicine_iom_health_social_care
+from .assets.medicine.jey import medicine_jey_health_community_services
+from .assets.medicine.ggy import medicine_ggy_health_social_care
+
 # UK Law Assets (Phase 3.3 of lateralise-british-isles-domains)
 from .assets.law.en import law_en_legislation
 from .assets.law.ni import law_ni_legislation
 from .assets.law.sct import law_sct_legislation
 from .assets.law.wls import law_wls_legislation
+
+# Crown Dependencies Law Assets (Phase 3.6 of lateralise-british-isles-domains)
+# Lateralises IE → EN/NI/SCT/WLS → IOM/JEY/GGY for the law domain.
+from .assets.law.iom import law_iom_legislation
+from .assets.law.jey import law_jey_legislation
+from .assets.law.ggy import law_ggy_legislation
+
+# Crown Dependencies Law Assets (Phase 3.6 of lateralise-british-isles-domains)
+# Lateralises IE → EN/NI/SCT/WLS → IOM/JEY/GGY for the law domain.
+from .assets.law.iom import law_iom_legislation
+from .assets.law.jey import law_jey_legislation
+from .assets.law.ggy import law_ggy_legislation
 
 # PDF Processing Assets
 from .assets.pdf_assets import pdf_processing_assets
@@ -162,6 +180,15 @@ except ImportError as e:
     import structlog as _sl
     _sl.get_logger().warning("author_archive_assets_import_failed: %s", e)
     AUTHOR_ARCHIVE_ASSETS = []
+
+# Leabharlann Assets (books + zotero + takeout v1, all backed by CocoIndex v1 Apps)
+# Reference: openspec/changes/leabharlann-cocoindex-v1/
+try:
+    from .assets.leabharlann_assets import LEABHARLANN_ASSETS
+except ImportError as e:
+    import structlog as _sl
+    _sl.get_logger().warning("leabharlann_assets_import_failed: %s", e)
+    LEABHARLANN_ASSETS = []
 
 # UK Education Assets
 # ============================================================================
@@ -339,6 +366,8 @@ combined_assets = [
     cross_stage_cognify,            # Cross-stage Cognee cognify (8 edges, 5 stages)
     # Author Archive — UoG + Gemini Deep Research + Google Takeout (Phase 1)
     *AUTHOR_ARCHIVE_ASSETS,
+    # Leabharlann — books + zotero + takeout v1 (CocoIndex v1 Apps)
+    *LEABHARLANN_ASSETS,
     # Leaving Cert 2026 — 7 priority subjects × 10 assets = 70 assets
     *LEAVING_CERT_ASSETS,
     # Leaving Cert 2026 DLT ingestion layer (7 @dlt_assets, one per subject)
@@ -366,6 +395,14 @@ combined_assets = [
     law_ni_legislation,
     law_sct_legislation,
     law_wls_legislation,
+    # Crown Dependencies medicine (Phase 3.6) — 3 assets
+    medicine_iom_health_social_care,
+    medicine_jey_health_community_services,
+    medicine_ggy_health_social_care,
+    # Crown Dependencies law (Phase 3.6) — 3 assets
+    law_iom_legislation,
+    law_jey_legislation,
+    law_ggy_legislation,
 ]
 
 defs = dg.Definitions(
