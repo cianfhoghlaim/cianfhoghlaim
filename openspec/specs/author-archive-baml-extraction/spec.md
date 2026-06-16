@@ -73,6 +73,18 @@ The system SHALL extract structured fields from every Zotero PDF using the BAML 
 - **THEN** the TSV SHALL NOT be parsed as a metadata source
 - **AND** the metadata SHALL come from the BAML extractor (or the filename regex if BAML is not available)
 
+#### Scenario: Zotero dlt source invokes BAML
+- **GIVEN** a Zotero PDF in `leabharlann/zotero/` (e.g. `2504.02890v2.pdf`)
+- **WHEN** the `zotero_source()` factory is invoked with `include_extraction=True`
+- **THEN** the `arxiv_papers_baml` resource SHALL call `b.ExtractZoteroMetadata(pdf_text, file_name, arxiv_id)` for each arXiv paper
+- **AND** the returned `ZoteroPaper` SHALL be persisted as a row in DuckDB
+
+#### Scenario: Memoisation
+- **GIVEN** the same `file_hash` has been extracted before
+- **WHEN** the asset re-materialises
+- **THEN** the BAML call SHALL be skipped and the cached `ZoteroPaper` rows SHALL be reused
+- **AND** the cache key SHALL be `(file_hash, baml_function_name)`
+
 ### Requirement: BAML Client Alias
 The system SHALL use the canonical `ExtractEn` BAML client alias for all four functions.
 

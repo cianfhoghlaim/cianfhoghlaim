@@ -5,6 +5,17 @@ description: "This skill should be used when code search, file/directory summary
 
 # ccc - Semantic Code Search & Indexing
 
+> **Deprecation banner (2026-06-16, retires 2026-07-15):** The v1-native
+> replacement is `oideachais/cocoindex_flows/codebase_indexing.py` (a
+> CocoIndex v1 App + Dagster asset group). It uses the same embedding
+> model (`BAAI/bge-m3`) and the same LanceDB HNSW index that the rest of
+> the data lakehouse uses, and it is registered in the Dagster UI under
+> the `codebase` asset group. The `bun run ccc:index` alias now delegates
+> to the v1 App, and `bun run ccc:v1:search "<query>"` replaces
+> `ccc search "<query>"`. The original `ccc` CLI is kept on disk for the
+> 30-day deprecation window only. Reference:
+> `openspec/changes/docs-skills-consolidation-pipeline/`.
+
 `ccc` is the CLI for CocoIndex Code, providing semantic search over the current codebase and index management.
 
 ## Ownership
