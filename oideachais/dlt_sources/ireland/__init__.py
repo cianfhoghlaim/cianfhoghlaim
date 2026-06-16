@@ -47,6 +47,28 @@ from .leaving_cert import (
     SUBJECTS,
     leaving_cert_source,
 )
+from .primary import (
+    PRIMARY_AREAS,
+    PRIMARY_CACHE_DIR,
+    PRIMARY_SOURCE_URLS,
+    create_ireland_primary_pipeline,
+    ireland_primary_source,
+    primary_curriculum_areas,
+    primary_learning_outcomes,
+    primary_specifications,
+    primary_strands,
+)
+from .junior_cycle import (
+    JC_CACHE_DIR,
+    JC_SHORT_COURSES,
+    JC_SOURCE_URLS,
+    JC_SUBJECTS,
+    cba_tasks,
+    create_ireland_junior_cycle_pipeline,
+    ireland_junior_cycle_source,
+    jc_short_courses,
+    jc_specifications,
+)
 from .local_documents import (
     FileHashTracker,
     local_documents_by_subject_source,
@@ -88,6 +110,26 @@ __all__ = [
     # Leaving Certificate 2026 (7 priority subjects)
     "leaving_cert_source",
     "SUBJECTS",
+    # Primary curriculum (12 NCCA curriculum areas)
+    "PRIMARY_AREAS",
+    "PRIMARY_CACHE_DIR",
+    "PRIMARY_SOURCE_URLS",
+    "ireland_primary_source",
+    "create_ireland_primary_pipeline",
+    "primary_specifications",
+    "primary_curriculum_areas",
+    "primary_strands",
+    "primary_learning_outcomes",
+    # Junior Cycle curriculum (18 subjects + 16 short courses)
+    "JC_CACHE_DIR",
+    "JC_SUBJECTS",
+    "JC_SHORT_COURSES",
+    "JC_SOURCE_URLS",
+    "ireland_junior_cycle_source",
+    "create_ireland_junior_cycle_pipeline",
+    "jc_specifications",
+    "jc_short_courses",
+    "cba_tasks",
 ]
 
 # EdcoLearning is conditional on the import succeeding above.
