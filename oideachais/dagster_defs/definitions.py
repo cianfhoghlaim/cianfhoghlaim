@@ -190,6 +190,39 @@ except ImportError as e:
     _sl.get_logger().warning("leabharlann_assets_import_failed: %s", e)
     LEABHARLANN_ASSETS = []
 
+# Leabharlann Full-Stack Demo Asset
+# Reference: openspec/changes/primary-secondary-british-isles-and-full-stack-demo/
+try:
+    from .assets.leabharlann_full_stack_demo import (
+        leabharlann_full_stack_demo,
+        leabharlann_full_stack_demo_uog_extracted,
+        leabharlann_full_stack_demo_zotero_extracted,
+        leabharlann_full_stack_demo_baml_ok,
+        leabharlann_full_stack_demo_cocoindex_ok,
+    )
+    LEABHARLANN_FULL_STACK_DEMO_ASSETS = [
+        leabharlann_full_stack_demo,
+        leabharlann_full_stack_demo_uog_extracted,
+        leabharlann_full_stack_demo_zotero_extracted,
+        leabharlann_full_stack_demo_baml_ok,
+        leabharlann_full_stack_demo_cocoindex_ok,
+    ]
+except ImportError as e:
+    import structlog as _sl
+    _sl.get_logger().warning("leabharlann_full_stack_demo_assets_import_failed: %s", e)
+    LEABHARLANN_FULL_STACK_DEMO_ASSETS = []
+
+# Leabharlann Cognee + FalkorDB cross-archive assets — 4 placeholder
+# assets (3 cognify + 1 edge-population) that the daily cron sensor
+# fires after the leabharlann dlt sources materialise.
+# Reference: openspec/changes/leabharlann-cognify-and-cross-archive-edges/
+try:
+    from .assets.leabharlann_cognify_assets import LEABHARLANN_COGNIFY_ASSETS
+except ImportError as e:
+    import structlog as _sl
+    _sl.get_logger().warning("leabharlann_cognify_assets_import_failed: %s", e)
+    LEABHARLANN_COGNIFY_ASSETS = []
+
 # Docs-Skills Consolidation + Codebase Index (v1 CocoIndex Apps)
 # Reference: openspec/changes/docs-skills-consolidation-pipeline/
 try:
@@ -377,6 +410,13 @@ combined_assets = [
     *AUTHOR_ARCHIVE_ASSETS,
     # Leabharlann — books + zotero + takeout v1 (CocoIndex v1 Apps)
     *LEABHARLANN_ASSETS,
+    # Leabharlann full-stack demo — 1 asset + 4 checks exercising the
+    # entire Lakehouse + BAML + CocoIndex + Cognee + LanceDB stack
+    # on 2 sample PDFs (1 UoG Irish exam + 1 Zotero HTR paper).
+    *LEABHARLANN_FULL_STACK_DEMO_ASSETS,
+    # Leabharlann Cognee + FalkorDB cross-archive edges — 4 assets
+    # (3 cognify + 1 edge-population; runs after the leabharlann dlt assets).
+    *LEABHARLANN_COGNIFY_ASSETS,
     # Docs-Skills consolidation + codebase index (v1 CocoIndex Apps, BAML-driven
     # tag + triple extraction; v1-native replacement for the legacy `ccc` CLI)
     *DOCS_SKILLS_ASSETS,
