@@ -45,7 +45,7 @@ pipeline.
 
 ## Requirements
 
-### Requirement: 10 OCR models across 6 backends
+### Requirement: 10-model 6-backend OCR registry
 
 The system SHALL provide 10 OCR models across 6 backends in
 `meaisinfhoghlaim/ocr/adapters.py` and `meaisinfhoghlaim/ocr/model_registry.py`.
