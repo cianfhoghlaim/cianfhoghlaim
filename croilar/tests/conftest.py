@@ -5,6 +5,26 @@ Sets up:
   instead of live API/scraper calls (per AGENTS.md critical rule #2)
 - DLT_ENVIRONMENT=local so DuckLake factory picks Garage + local Postgres
 - A clean data/ directory under tmp_path for every test
+- The repo root on sys.path so cross-quadrant imports work
+
+Note (per issue #17): as of 2026-06-15, the croilar
+subproject is now a proper Python package:
+  - `croilar/__init__.py` exists
+  - `croilar/pyproject.toml` declares the project root
+    (`packages = ["."]`) so the hatch build picks up
+    `croilar/_shared/`, `croilar/dagster_assets/`, etc. as
+    sub-packages
+  - The `croilar/scripts/fix-pth.sh` post-install script
+    rewrites the (broken) `_editable_impl_croilar.pth` file to
+    contain the project root's parent (so `import croilar`
+    resolves through the `__init__.py` we added)
+
+This means the `croilar_str` sys.path insertion that was here
+in the previous version is NO LONGER NEEDED. The pre-2026-06-15
+test passed only because of the conftest's sys.path manipulation;
+the new packaging fix makes the test pass on its own merits.
+The `repo_str` insertion is still needed for cross-quadrant
+imports (e.g. `from oideachais.dlt_utils import ...`).
 """
 
 from __future__ import annotations
@@ -32,12 +52,10 @@ def pytest_configure(config: pytest.Config) -> None:
     # DLT destination default — point at a tmp dir we'll create
     os.environ.setdefault("DUCKDB_PATH", str(CROILAR_ROOT / "data" / "test.duckdb"))
 
-    # Make the croilar subproject importable as a package
-    croilar_str = str(CROILAR_ROOT)
-    if croilar_str not in sys.path:
-        sys.path.insert(0, croilar_str)
-
     # The repo root contains the author dir + sibling packages
+    # (oideachais, tuatha, meaisinfhoghlaim, etc.). The croilar root
+    # itself is NOT added — it's reachable via the project-relative
+    # `croilar/__init__.py` + the fix-pth.sh-installed pth file.
     repo_str = str(REPO_ROOT)
     if repo_str not in sys.path:
         sys.path.insert(0, repo_str)
@@ -63,3 +81,4 @@ def isolate_data_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     monkeypatch.setenv("DUCKDB_PATH", str(test_data / "test.duckdb"))
     monkeypatch.setenv("CROILAR_REPO_ROOT", str(REPO_ROOT))
     return test_data
+
