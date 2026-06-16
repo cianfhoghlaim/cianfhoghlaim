@@ -170,7 +170,7 @@ services:
       - ALL
     command:
       - "--provider=infisical"
-      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-client-id=${INFISICAL_CLIENT_ID}"
       - "--infisical-client-secret=file:/run/secrets/infisical_secret"
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
