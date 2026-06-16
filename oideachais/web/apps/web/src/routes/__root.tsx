@@ -71,7 +71,7 @@ function RootComponent() {
               </div>
             </main>
           </div>
-          <OideachasChat />
+          {typeof window !== "undefined" && <OideachasChat />}
         </CopilotKit>
         <Scripts />
         {typeof window !== "undefined" && (

@@ -6,6 +6,12 @@
 > `croilar/apps/portal/`, and the public-facing Marimo notebooks in
 > `croilar/notebooks/`.
 
+> See also: [`meaisinfhoghlaim/AGENTS.md`](AGENTS.md) — the developer-quick-reference.
+> The openspec specs are at:
+> - [`openspec/specs/meaisinfhoghlaim-platform/spec.md`](../openspec/specs/meaisinfhoghlaim-platform/spec.md)
+> - [`openspec/specs/meaisinfhoghlaim-agent-frameworks/spec.md`](../openspec/specs/meaisinfhoghlaim-agent-frameworks/spec.md)
+> - [`openspec/specs/meaisinfhoghlaim-ocr-htr/spec.md`](../openspec/specs/meaisinfhoghlaim-ocr-htr/spec.md)
+
 ## Status (2026-06-15)
 
 | Metric | Value |

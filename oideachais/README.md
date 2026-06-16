@@ -7,6 +7,17 @@
 > identically to local Garage S3 or to Cloudflare R2 + PlanetScale +
 > MotherDuck.
 
+> See also: [`oideachais/AGENTS.md`](AGENTS.md) — the developer-quick-reference
+> for the oideachais quadrant. The openspec specs that govern oideachais are
+> at:
+> - [`openspec/specs/oideachais-pipeline/spec.md`](../openspec/specs/oideachais-pipeline/spec.md)
+> - [`openspec/specs/oideachais-leabharlann/spec.md`](../openspec/specs/oideachais-leabharlann/spec.md)
+> - [`openspec/specs/oideachais-baml-schemas/spec.md`](../openspec/specs/oideachais-baml-schemas/spec.md)
+> - [`openspec/specs/oideachais-cognify-knowledge-graph/spec.md`](../openspec/specs/oideachais-cognify-knowledge-graph/spec.md)
+> - [`openspec/specs/oideachais-semantic-search/spec.md`](../openspec/specs/oideachais-semantic-search/spec.md)
+> - [`openspec/specs/oideachais-marimo-dashboards/spec.md`](../openspec/specs/oideachais-marimo-dashboards/spec.md)
+> - [`openspec/specs/ireland-primary-jc-dlt-baml/spec.md`](../openspec/specs/ireland-primary-jc-dlt-baml/spec.md)
+
 ## Status (2026-06-15)
 
 | Metric | Value |

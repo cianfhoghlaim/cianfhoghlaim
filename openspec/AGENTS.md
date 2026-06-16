@@ -47,70 +47,49 @@ The system SHALL provide...
 **Migration**: [How to handle]
 ```
 
-## Capability Specs
+## Capability Specs (25)
 
-### Education Platform
+The Cianfhoghlaim platform has **25 capability specs** organised into
+**8 groups** by quadrant. Each spec is a thin capability pointer; the
+**authoritative details** live in the corresponding
+`.agents/skills/<skill>/SKILL.md` and the source code.
 
-| Capability | Purpose |
-|------------|---------|
-| `curriculum-ingestion` | NCCA/SEC document processing |
-| `bilingual-content` | English/Irish content management |
-| `knowledge-graph` | Prerequisites and relationships |
-| `semantic-search` | Vector-based search |
-| `assessment-extraction` | Exam papers and marking schemes |
-| `oideachais-pipeline` | Celtic education curriculum pipeline |
+| Spec | Quadrant | One-liner |
+|:--|:--|:--|
+| `oideachais-pipeline` | oideachais | Celtic education curriculum pipeline (Dagster + DLT + DuckLake + LanceDB + BAML) |
+| `oideachais-leabharlann` | oideachais | 4 dlt sources + 3 v1 CocoIndex Apps for the leabharlann/ corpus |
+| `oideachais-baml-schemas` | oideachais | 9 BAML files + 3 extraction clients (ExtractEn, ExtractEnStrong, LocalVision) |
+| `oideachais-cognify-knowledge-graph` | oideachais | 5-stage cross-stage cognify + 3 leabharlann cognify + 3 cross-archive FalkorDB edges |
+| `oideachais-semantic-search` | oideachais | Cross-corpus LanceDB HNSW search (BGE-M3 + BGE-large-en-v1.5) |
+| `oideachais-marimo-dashboards` | oideachais | 11 Marimo notebooks for the 5 educational stages + leabharlann full-stack demo |
+| `ireland-primary-jc-dlt-baml` | oideachais | Ireland Primary + Junior Cycle dlt + BAML loop |
+| `meaisinfhoghlaim-platform` | meaisinfhoghlaim | 10 sub-packages + 4 heartbeat dagster assets + Dagster code-location |
+| `meaisinfhoghlaim-agent-frameworks` | meaisinfhoghlaim | 12 specialised agents (Root, Curriculum, Translation, Corpus, etc.) |
+| `meaisinfhoghlaim-ocr-htr` | meaisinfhoghlaim | 10 OCR models across 6 backends (Pylaia, TrOCR, PaddleOCR, Tesseract, dots.ocr, VLM) |
+| `tuatha-platform` | tuatha | Celtic MMO (Babylon.js + Rust + SpacetimeDB) + crypteolas crypto platform |
+| `croilar-portfolio` | croilar | Public TanStack Start site — multi-persona (aleyum, cianfhoghlaim, carlcashman) |
+| `croilar-data-engineering` | croilar | Dagster + DLT + CocoIndex + BAML pipelines for croilar personas |
+| `croilar-cv-extraction` | croilar | BAML extraction of the author's CV / achievements / teaching PDFs |
+| `agent-memory-systems` | shared | Cognee + Graphiti + LanceDB + FalkorDB + Memgraph agent memory |
+| `agent-observability` | shared | Langfuse + MLflow + RAGAS + Logfire + Datadog |
+| `agentic-frontend-frameworks` | shared | TanStack Start + CopilotKit + AG-UI + Hono + Convex |
+| `dagger-pipelines` | shared | Polyglot CI/CD via Dagger (Python + TS) — 8-step GitOps |
+| `infrastructure-stacks` | shared | 70+ Docker Compose stacks + stack-doctor.sh + Pangolin + Infisical + Locket |
+| `data-engineering-pipeline-documentation` | shared | oideachais/STATUS.md + oideachais/REFACTORING.md + per-area READMEs |
+| `workflow-automation` | team | n8n + LLM pipelines (OpenCode Go API) |
+| `task-management` | team | Vikunja kanban + Gantt + list + team sharing |
+| `scheduling` | team | cal-diy team + per-member booking pages |
+| `chunkhound-code-search` | tooling | Semantic code search with MVCC |
+| `documentation` | tooling | Canonical docs/ structure (8 numbered domains), frontmatter schema |
 
-### Dagger Modules
+### Quadrant map (4 top-level quadrants)
 
-| Capability | Purpose |
-|------------|---------|
-| `dagger-ci` | Polyglot CI orchestration (Python, TypeScript, Rust) |
-| `dagger-gitops` | 8-step GitOps pipeline (Forgejo + Komodo) |
-| `dagger-forgejo` | Forgejo API automation |
-| `dagger-komodo` | Komodo SDK wrapper |
-| `dagger-cloudflare` | Pages and Worker deployment |
-| `dagger-blockchain` | SpacetimeDB, Solana, Ethereum CI |
-
-### Team Workflow
-
-| Capability | Purpose |
-|------------|---------|
-| `workflow-automation` | n8n + LLM pipelines (OpenCode Go API) |
-| `task-management` | Vikunja kanban + Gantt + list + team sharing |
-| `scheduling` | cal-diy team + per-member booking pages |
-
-### Stack Operations
-
-| Capability | Purpose |
-|------------|---------|
-| `infrastructure-stacks` | 70+ Docker Compose stacks under `infrastructure/stacks/*/*/` |
-| `stack-audit` | `scripts/stack-doctor.sh` auditor + turbo validate-stacks task |
-
-### Monitoring & Observability
-
-| Capability | Purpose |
-|------------|---------|
-| `infrastructure/monitoring` | Prometheus + Grafana + Loki + Alertmanager + Promtail |
-
-### Developer Tooling
-
-| Capability | Purpose |
-|------------|---------|
-| `chunkhound-code-search` | Semantic code search with MVCC |
-
-### Personal Portfolio (croilar)
-
-| Capability | Purpose |
-|------------|---------|
-| `croilar-portfolio` | Public TanStack Start site — 9 subprojects |
-| `croilar-data-engineering` | Dagster + DLT + CocoIndex + BAML pipelines |
-| `croilar-cv-extraction` | BAML extraction of the author's CV/achievements/teaching PDFs |
-
-### Infrastructure
-
-| Capability | Purpose |
-|------------|---------|
-| `infrastructure` | Pangolin convergence, secrets, Komodo GitOps |
+| Quadrant | Path | Wheel name | README | AGENTS.md |
+|:--|:--|:--|:--|:--|
+| **Oideachais** | `oideachais/` | `oideachais` | `oideachais/README.md` | `oideachais/AGENTS.md` |
+| **Meaisínfhoghlaim** | `meaisinfhoghlaim/` | `meaisinfhoghlaim` | `meaisinfhoghlaim/README.md` | `meaisinfhoghlaim/AGENTS.md` |
+| **Tuatha** | `tuatha/` | `tuath` (uv) | `tuatha/README.md` | `tuatha/AGENTS.md` |
+| **Croílár** | `croilar/` | (TypeScript) | `croilar/README.md` | `croilar/AGENTS.md` |
 
 ## Adding a New Capability
 
@@ -129,7 +108,7 @@ When a change introduces a new capability (not a MODIFIED of an existing one), f
 3. Use `pangolin.private-resources.<name>.*` (6-label pattern) — see `.agents/skills/stack-ops/SKILL.md`
 4. Add a Komodo procedure: `infrastructure/komodo/procedures/<name>-*.toml`
 5. Add Infisical items: `bun run scripts/init-vault.ts` after appending to root `.infisical.env`
-6. Validate: `bun run validate-stacks` (the new `stack-doctor` turbo task)
+6. Validate: `bun run validate-stacks` (the `stack-doctor` turbo task)
 
 ## Critical Rules
 
@@ -144,5 +123,9 @@ When a change introduces a new capability (not a MODIFIED of an existing one), f
 - [`project.md`](./project.md) — project conventions, capability list
 - [`../docs/openspec/README.md`](../docs/openspec/README.md) — historical research material index
 - [`../.agents/skills/stack-ops/SKILL.md`](../.agents/skills/stack-ops/SKILL.md) — operational skill for adding/fixing stacks
-- [`../.agents/skills/ccc/SKILL.md`](../.agents/skills/ccc/SKILL.md) — semantic code search
+- [`../.agents/skills/chunkhound/SKILL.md`](../.agents/skills/chunkhound/SKILL.md) — semantic code search
 - [`../AGENTS.md`](../AGENTS.md) — root agent instructions
+- [`../oideachais/AGENTS.md`](../oideachais/AGENTS.md) — oideachais quadrant
+- [`../meaisinfhoghlaim/AGENTS.md`](../meaisinfhoghlaim/AGENTS.md) — meaisinfhoghlaim quadrant
+- [`../tuatha/AGENTS.md`](../tuatha/AGENTS.md) — tuatha quadrant
+- [`../croilar/AGENTS.md`](../croilar/AGENTS.md) — croilar quadrant

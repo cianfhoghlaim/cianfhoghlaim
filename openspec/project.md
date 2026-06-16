@@ -1,125 +1,86 @@
-# Cianfhoghlaim Oideachais Project Conventions
+# Cianfhoghlaim Project Conventions
 
 ## Project Overview
 
-A bilingual (EN/GA) agentic educational platform covering 5 stages of the Irish education system: Aistear, Primary, Junior Cycle, Senior Cycle, and Tertiary. Powered by BAML extraction, Cognee + LanceDB + DuckLake knowledge graph, Agno + Google ADK agents, and a TanStack Start / CopilotKit AG-UI front-end. The monorepo is a **bun + uv + turbo polyglot orchestration** of multiple subprojects and 70+ Docker Compose stacks.
+A bilingual (EN/GA) agentic educational platform covering 5 stages of the
+Irish education system: Aistear, Primary, Junior Cycle, Senior Cycle, and
+Tertiary. Powered by BAML extraction, Cognee + LanceDB + DuckLake
+knowledge graph, Agno + Google ADK agents, and a TanStack Start /
+CopilotKit AG-UI front-end. The monorepo is a **bun + uv + turbo polyglot
+orchestration** of multiple subprojects and 70+ Docker Compose stacks.
 
-## Subprojects
+## Subprojects (4 top-level quadrants)
 
-| Subproject | Path | Purpose |
+| Subproject | Path | Wheel / Workspace | Purpose | README | AGENTS.md |
+|:--|:--|:--|:--|:--|:--|
+| `oideachais` | `oideachais/` | `oideachais` (uv) | Celtic education data platform (Dagster, DLT, LanceDB) | [README](../oideachais/README.md) | [AGENTS](../oideachais/AGENTS.md) |
+| `meaisinfhoghlaim` | `meaisinfhoghlaim/` | `meaisinfhoghlaim` (uv) | AI/ML services (agents, OCR, Celtic-language, ML pipelines) | [README](../meaisinfhoghlaim/README.md) | [AGENTS](../meaisinfhoghlaim/AGENTS.md) |
+| `tuatha` | `tuatha/` | `tuath` (uv) | Educational MMO (Babylon.js + Rust + SpacetimeDB) + crypteolas crypto | [README](../tuatha/README.md) | [AGENTS](../tuatha/AGENTS.md) |
+| `croilar` | `croilar/` | (bun workspace) | Multi-persona portfolio + CV + data engineering subproject | [README](../croilar/README.md) | [AGENTS](../croilar/AGENTS.md) |
+
+## Capability Areas (25 specs, 8 groups)
+
+### Oideachais Quadrant (7 specs)
+
+| Capability | Description | Status |
 |:--|:--|:--|
-| `oideachais/` | top-level | Celtic education data platform (Dagster, DLT, LanceDB) |
-| `meaisínfhoghlaim/` | top-level | AI/ML (OCR, alignment, RAG, ASR/TTS) |
-| `tuatha/` | top-level | Educational MMO + crypto platform |
-| `croilar/` | top-level | Personal portfolio + CV + data engineering subproject (Cian's core) |
+| `oideachais-pipeline` | Celtic education curriculum pipeline (Dagster + DLT + DuckLake + LanceDB + BAML, 5 stages) | Active |
+| `oideachais-leabharlann` | 4 dlt sources (books, zotero, takeout, UoG) + 3 v1 CocoIndex Apps + 7 Dagster assets + full-stack demo | Active |
+| `oideachais-baml-schemas` | 9 BAML files + 3 extraction clients (ExtractEn, ExtractEnStrong, LocalVision) | Active |
+| `oideachais-cognify-knowledge-graph` | 5-stage cross-stage cognify + 3 leabharlann cognify datasets + 3 cross-archive FalkorDB edge types | Active |
+| `oideachais-semantic-search` | Cross-corpus LanceDB HNSW search (BGE-M3 multilingual + BGE-large-en-v1.5 English) | Active |
+| `oideachais-marimo-dashboards` | 11 Marimo notebooks (5 educational stages + cross-domain + ducklake + lakehouse + leabharlann full-stack demo) | Active |
+| `ireland-primary-jc-dlt-baml` | Ireland Primary + Junior Cycle dlt + BAML loop (the recent `ireland-primary-jc-dlt-baml-and-full-stack-demo` change) | Active |
 
-## Capability Areas
-
-### Education Platform
-
-| Capability | Description | Status |
-|------------|-------------|--------|
-| `curriculum-ingestion` | NCCA/SEC document processing (5 stages: Aistear → Primary → JC → SC → Tertiary) | Active |
-| `bilingual-content` | English/Irish parallel content management with URL-level `/en/` + `/ga/` routing | Active |
-| `knowledge-graph` | Prerequisite and topic relationships across 5 stages via Cognee (6 datasets + 8 cross-stage edge types) | Active |
-| `semantic-search` | Vector-based curriculum search via LanceDB HNSW (BAAI/bge-m3, 1024d) | Active |
-| `assessment-extraction` | Exam papers and marking schemes — BAML ExtractExamPaperStructure, ExtractMarkingScheme, ExtractSubjectRubric | Active |
-| `oideachais-pipeline` | Celtic education curriculum pipeline — Agno stage teams, CopilotKit AG-UI, TanStack Start | Active |
-| `multi-stage-platform` | 5-stage bilingual agentic platform (Aistear, Primary, Junior Cycle, Senior Cycle, Tertiary) with per-stage BAML schemas | Active |
-| `agentic-ui` | CopilotKit-powered AG-UI chat with per-stage Agno teams, lazy BAML extraction, and Convex persistence | Active |
-| `tertiary-pathways` | CAO courses, NUI/HEI matriculation, QQI FET awards, Apprenticeships, Application Timeline | Active |
-| `cognee-kg-memory` | Multi-modal knowledge graph memory — 6 datasets, 8 cross-stage edges, postgres + pgvector | Active |
-| `domain-source-registry` | Canonical `sources.yaml` + `SourceFactory` for every DLT source across education/medicine/law/statistics × 8 nations | Proposed |
-| `site-analysis-mcp` | Firecrawl + Browserbase MCP-driven `SiteAnalysis` (software + layout + description + screenshot) for every public source | Proposed |
-
-### Dagger Modules
+### Meaisínfhoghlaim Quadrant (3 specs)
 
 | Capability | Description | Status |
-|------------|-------------|--------|
-| `dagger-monorepo-integration` | Python root at `infrastructure/dagger/` with 3 pipelines (infra/web/data) × test/build/deploy/rollback + TS submodule + Locket secret model + 2 Forgejo Actions | Active |
-| `dagger-ci` | Polyglot CI orchestration (Python, TypeScript, Rust) | Active |
-| `dagger-gitops` | 8-step GitOps pipeline (Forgejo + Komodo) | Active |
-| `dagger-forgejo` | Forgejo API automation | Active |
-| `dagger-komodo` | Komodo SDK wrapper | Active |
-| `dagger-cloudflare` | Pages and Worker deployment | Active |
-| `dagger-blockchain` | SpacetimeDB, Solana, Ethereum CI | Deferred (requires Rust toolchain in Python root + GPU support) |
+|:--|:--|:--|
+| `meaisinfhoghlaim-platform` | 10 sub-packages + 4 heartbeat dagster assets + Dagster code-location | Active |
+| `meaisinfhoghlaim-agent-frameworks` | 12 specialised agents (Root, Curriculum, Translation, Corpus, Geospatial, Statistics, Research, etc.) | Active |
+| `meaisinfhoghlaim-ocr-htr` | 10 OCR models across 6 backends (Pylaia, TrOCR, PaddleOCR, Tesseract, dots.ocr, VLM) | Active |
 
-### Team Workflow
+### Tuatha Quadrant (1 spec)
 
 | Capability | Description | Status |
-|------------|-------------|--------|
+|:--|:--|:--|
+| `tuatha-platform` | Celtic educational MMO (Babylon.js + Rust + SpacetimeDB) + crypteolas crypto + BAML UI/image extraction | Active |
+
+### Croílár Quadrant (3 specs)
+
+| Capability | Description | Status |
+|:--|:--|:--|
+| `croilar-portfolio` | Public TanStack Start site — multi-persona (aleyum, cianfhoghlaim, carlcashman) | Active |
+| `croilar-data-engineering` | Dagster + DLT + CocoIndex + BAML pipelines for the croilar personas | Active |
+| `croilar-cv-extraction` | BAML extraction of the author's CV / achievements / teaching PDFs | Active |
+
+### Agent + Observability + Frontend (4 specs)
+
+| Capability | Description | Status |
+|:--|:--|:--|
+| `agent-memory-systems` | Cognee + Graphiti + LanceDB + FalkorDB + Memgraph agent memory (renamed from `memory-systems`) | Active |
+| `agent-observability` | Langfuse + MLflow + RAGAS + Logfire + Datadog (renamed from `observability`) | Active |
+| `agentic-frontend-frameworks` | TanStack Start + CopilotKit + AG-UI + Hono + Convex (renamed from `frontend-frameworks`, merged `agent-frameworks`) | Active |
+| `dagger-pipelines` | Polyglot CI/CD via Dagger (Python + TS) — 5 separate `dagger-*` specs merged into 1 (8-step GitOps) | Active |
+
+### Infrastructure + Tooling (4 specs)
+
+| Capability | Description | Status |
+|:--|:--|:--|
+| `infrastructure-stacks` | 70+ Docker Compose stacks + stack-doctor.sh + Pangolin + Infisical + Locket (absorbed `infrastructure` + `stack-audit`) | Active |
+| `data-engineering-pipeline-documentation` | `oideachais/STATUS.md` + `oideachais/REFACTORING.md` + per-area READMEs (the new doc surface from this change) | Active |
+| `chunkhound-code-search` | Semantic code search with MVCC | Active |
+| `documentation` | Canonical `docs/` structure (8 numbered domains), frontmatter schema, Cognee ingestion | Active |
+
+### Team Workflow (3 specs)
+
+| Capability | Description | Status |
+|:--|:--|:--|
 | `workflow-automation` | n8n + LLM pipelines (OpenCode Go API) | Active |
 | `task-management` | Vikunja kanban + Gantt + list + team sharing | Active |
 | `scheduling` | cal-diy team + per-member booking pages | Active |
 
-### Stack Operations
-
-| Capability | Description | Status |
-|------------|-------------|--------|
-| `infrastructure-stacks` | 70+ Docker Compose stacks under `infrastructure/stacks/*/*/` | Active |
-| `stack-audit` | `scripts/stack-doctor.sh` auditor + turbo validate-stacks task | Active |
-
-### Monitoring & Observability
-
-| Capability | Description | Status |
-|------------|-------------|--------|
-| `infrastructure/monitoring` | Prometheus + Grafana + Loki + Alertmanager + Promtail | Active |
-| `infrastructure` | Pangolin convergence, Infisical + Locket secrets, Komodo GitOps | Active |
-
-### Developer Tooling
-
-| Capability | Description | Status |
-|------------|-------------|--------|
-| `chunkhound-code-search` | Semantic code search with MVCC | Active |
-| `ai-agent-skills` | Portable instruction directories (`.agents/skills/`) | Active |
-| `documentation` | Canonical docs/ structure (7 numbered domains), frontmatter schema, Cognee ingestion, agent-skill routing | Active |
-
-### Personal Portfolio (croilar)
-
-| Capability | Description | Status |
-|------------|-------------|--------|
-| `croilar-portfolio` | Multi-persona TanStack Start platform — N personas with per-persona theme, i18n, and data | Active |
-| `croilar-data-engineering` | Dagster + DLT + CocoIndex + BAML pipelines with per-persona asset groups | Active |
-| `croilar-cv-extraction` | BAML extraction of the author's CV/achievements/teaching PDFs with persona field | Active |
-| `croilar-persona-registry` | Type-safe Zod-typed persona config schema + lookup table | Proposed |
-| `croilar-self-hosted-portal` | Self-hosted platform dashboard — stacks, pipelines, monitoring, MCP, registry | Proposed |
-
-### Hackathon Submission
-
-| Capability | Description | Status |
-|------------|-------------|--------|
-| `croilar-gradio-hf-demo` | 4-Space HuggingFace "Build Small 2026" submission — An Scrúdú (oideachais) / Meaisín Cliste (meaisínfhoghlaim, 3 themes) / Cianfhoghlaim (tuatha, Hades-style RPG on British Isles map) / Anam: Tuatha na nGaelscoil (croílár, 5-element connective tissue) | Active |
-
-## AI Agent Toolchain & Conventions
-
-The project embraces an AI-first development workflow utilizing **OpenCode CLI** with multi-model subagents.
-
-1. **Agent Skills (`.agents/skills/`)**: We utilize the [Agent Skills standard](https://agentskills.io/). Specialized capabilities, workflows, and prompts must be documented as skills within the `.agents/skills/` directory. This ensures portability across all AI agents.
-2. **Issue Tracking**: All AI agents should use standard GitHub/Forgejo issues. Follow the `AGENTS.md` handoff protocol upon session completion.
-3. **Model Context Protocol (MCP)**: Agents access local and remote capabilities (like `browserbase`, `firecrawl`, `motherduck`, `infisical`, `chrome`, `cocoindex-code`) via the MCP servers defined in `opencode.json`.
-4. **Subagent Architecture**: Specialized subagents (data-engineer, ai-engineer, frontend-dev, devops-architect, explorer) are defined in `opencode.json` with model-specific routing for cost optimization.
-
-## Infrastructure
-
-- **Toolchain**: mise (python 3.12, uv, bun, dagger, pulumi, duckdb, sops, opencode)
-- **Orchestration**: turbo.json (cross-language task graph)
-- **Secret management**: Infisical (source of truth) + Locket (runtime injection) + mise (auto-hydration)
-- **Deploy**: Komodo (GitOps) + Pangolin (private routing) + Pocket ID (OIDC) + Cloudflare (edge)
-- **Storage**: Garage S3 (object), DuckLake (lakehouse), LanceDB (vectors), FalkorDB (graph), Memgraph (graph)
-- **Observability**: Prometheus + Grafana + Loki + Alertmanager + Promtail + Langfuse (LLM) + Logfire (Pydantic) + MLflow (ML)
-
-## Naming Conventions
-
-### Capabilities
-- Use kebab-case: `curriculum-ingestion`, `bilingual-content`
-- Single purpose per capability
-- Use verb-noun pattern where applicable
-
-### Changes
-- Prefix with action: `add-`, `update-`, `remove-`, `refactor-`
-- Example: `add-prerequisite-mapping`, `update-marking-scheme-extraction`
-
-## Technology Constraints
+## Conventions
 
 All specs MUST respect constraints from `docs/context/00-core/CONSTRAINTS.md`:
 
@@ -148,7 +109,7 @@ All specs MUST respect constraints from `docs/context/00-core/CONSTRAINTS.md`:
 
 ## File Locations
 
-- Specs: `openspec/specs/<capability>/spec.md`
+- Specs: `openspec/specs/<capability>/spec.md` (25 canonical specs)
 - Changes: `openspec/changes/<change-id>/`
 - Archives: `openspec/changes/archive/YYYY-MM-DD-<change-id>/`
 - Historical research: `docs/openspec/` (point-in-time, do not edit)
@@ -168,16 +129,23 @@ All specs MUST respect constraints from `docs/context/00-core/CONSTRAINTS.md`:
 
 ## Current In-Flight Changes
 
-(Updated as changes move through the workflow.)
+(Updated as changes move through the workflow. The 4 stale changes
+`author-archive-gemini-and-uos-ingestion`, `cianfhoghlaim-oideachais-baml-first`,
+`state-of-art-5-workspaces`, `team-workflow-stack` were archived on
+2026-06-16 by the `openspec-consolidation-and-readme-refresh` change.)
 
 | Change | Status |
 |:--|:--|
-| `consolidate-external-libs-into-tuatha` | implemented |
-| `monorepo-restructure-v2` | implemented |
-| `team-workflow-stack` | implemented |
-| `fix-existing-stacks` | implemented |
-| `croilar-portfolio` | implemented (superseded by croilar-revitalisation) |
-| `croilar-revitalisation` | implemented |
-| `docs-restructuring` | implemented (canonical + Cognee script + opencode.json fix; per-domain cognify pending LLM key) |
-| `leaving-cert-2026` | scaffold (openspec valid; per-subject asset graph + web pages + BAML schemas + CI in place; pipeline populates on first run) |
-| `lateralise-british-isles-domains` | scaffold (openspec valid; awaiting Phase 1a toolchain bump before asset key rename) |
+| `consolidate-external-libs-into-tuatha` | in-flight (2/68 tasks) |
+| `croilar-devtools-hub` | in-flight (6/55 tasks) |
+| `croilar-personas-to-streams` | in-flight (6/45 tasks) |
+| `croilar-portfolio` | in-flight (18/34 tasks) |
+| `croilar-revitalisation` | in-flight (11/69 tasks) |
+| `dagger-monorepo-integration` | in-flight (0/22 tasks) |
+| `docs-restructuring` | in-flight (28/30 tasks) |
+| `docs-skills-consolidation-pipeline` | in-flight (0/26 tasks) |
+| `fix-existing-stacks` | in-flight (15/22 tasks) |
+| `ireland-primary-jc-dlt-baml-and-full-stack-demo` | in-flight (0/22 tasks) |
+| `leaving-cert-2026` | scaffold (0/28 tasks) |
+| `monorepo-restructure-v2` | in-flight (19/20 tasks) |
+| `openspec-consolidation-and-readme-refresh` | **this change** (Phase 1+2 done; Phase 3+4 in-flight) |
