@@ -66,6 +66,39 @@ class CitedUrl {
 }
 
 // =============================================================================
+// Zotero Paper (leabharlann/zotero/)
+// =============================================================================
+
+enum PaperKind {
+  ARXIV_PREPRINT     @description("Pre-print hosted on arXiv (or arXiv-only paper)")
+  JOURNAL_ARTICLE    @description("Peer-reviewed journal article")
+  CONFERENCE_PAPER   @description("Conference or workshop paper")
+  THESIS             @description("MSc, MPhil, or PhD thesis")
+  BOOK_CHAPTER       @description("A chapter within an edited book")
+  BOOK               @description("An entire book")
+  OTHER              @description("None of the above (blog post, technical report, etc.)")
+}
+
+class Author {
+  name string @description("Full author name, e.g. 'Cian Hughes'")
+  affiliation string? @description("Author affiliation, if discernible")
+}
+
+class ZoteroPaper {
+  paper_kind PaperKind @description("What kind of academic artefact this is")
+  arxiv_id string? @description("arXiv identifier, e.g. '2504.02890', or '2402' for pre-DOI arXiv IDs")
+  doi string? @description("Digital Object Identifier, if known")
+  title string @description("One-sentence paper title")
+  authors Author[] @description("Ordered list of paper authors")
+  year int? @description("Publication year, if discernible")
+  abstract string? @description("Paper abstract, if present in the first page")
+  venue string? @description("Journal name, conference name, or institution (for theses)")
+  irish_relevant bool @description("True if the paper is about the Irish language, Celtic NLP, or Irish HTR/OCR")
+  htr_relevant bool @description("True if the paper is about handwritten text recognition (HTR) or handwriting in general")
+  confidence float @description("Overall extraction confidence 0.0-1.0")
+}
+
+// =============================================================================
 // Gemini Deep Research Report
 // =============================================================================
 
@@ -190,6 +223,45 @@ function ExtractHandwrittenEquations(ocr_text: string, file_name: string) -> Han
   "#
 }
 
+function ExtractZoteroMetadata(pdf_text: string, file_name: string, arxiv_id: string?) -> ZoteroPaper {
+  client ExtractEn
+  prompt #"
+    You are an expert academic archivist. Extract structured metadata from a
+    research paper PDF.
+
+    File name: {{ file_name }}
+    Filename-derived arXiv ID (use only if confirmed by the text): {{ arxiv_id }}
+
+    Determine:
+      - `paper_kind`: one of arxiv_preprint, journal_article, conference_paper,
+        thesis, book_chapter, book, or other.
+      - `arxiv_id`: the bare identifier (e.g. "2504.02890"). Null if the paper
+        is not an arXiv paper.
+      - `doi`: the Digital Object Identifier, if visible on the first page.
+        Format as "10.xxxx/xxxx" without the "doi:" prefix.
+      - `title`: the paper title, cleaned of any newline artefacts.
+      - `authors`: ordered list of {name, affiliation}. Use null for missing
+        affiliations. Don't invent authors.
+      - `year`: 4-digit publication year, or null.
+      - `abstract`: the paper abstract, or null if not visible in the first
+        2 pages.
+      - `venue`: journal/conference name for journal_article and
+        conference_paper; institution for thesis; null otherwise.
+      - `irish_relevant`: true if the paper is about the Irish language,
+        Celtic NLP, or Irish-language HTR/OCR.
+      - `htr_relevant`: true if the paper is about handwritten text recognition
+        or handwriting recognition more broadly (any language).
+      - `confidence`: 0.0-1.0.
+
+    Paper text (first ~2 pages):
+    ---
+    {{ pdf_text }}
+    ---
+
+    {{ ctx.output_format }}
+  "#
+}
+
 // =============================================================================
 // Tests
 // =============================================================================
@@ -234,5 +306,27 @@ test ExtractHandwrittenEquationsTest {
       using the Fundamental Theorem of Calculus.
     "#
     file_name "measurements.pages"
+  }
+}
+
+test ExtractZoteroMetadataTest {
+  functions [ExtractZoteroMetadata]
+  args {
+    pdf_text #"
+      gaHealth: An English-Irish Bilingual Corpus of Health
+      Records for Irish NLP
+
+      Lankford, Mark and others
+
+      Abstract: We present gaHealth, a bilingual (English-Irish) corpus of
+      de-identified health records, designed to support downstream NLP tasks
+      including named-entity recognition, translation, and clinical text
+      summarisation in the Irish language.
+
+      1. Introduction
+      The Irish language is severely under-resourced in health NLP...
+    "#
+    file_name "Lankford et al. - 2024 - gaHealth An English-Irish Bilingual Corpus of Hea.pdf"
+    arxiv_id "2402.02890"
   }
 }
