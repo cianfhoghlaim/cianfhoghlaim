@@ -827,5 +827,26 @@ Load these references when users need:
 - Advanced usage scenarios
 - Troubleshooting guidance
 
+## See also: docs-skills-consolidation
+
+The Cianfhoghlaim monorepo runs a CocoIndex v1 App that tags, embeds, and
+graph-links every file in `docs/` and `.agents/skills/`. It is the
+upstream-of-this-skill — every Markdown doc and every skill file in this
+repo is the source of one or more `DocSkill` nodes in the
+`docs_skills_graph` FalkorDB graph and one or more `docs_skills_chunks`
+rows in LanceDB.
+
+- **App**: `oideachais/cocoindex_flows/docs_skills_consolidation.py`
+- **Dagster assets**: `oideachais/dagster_defs/assets/docs_skills_assets.py` (groups `docs_skills` + `codebase`)
+- **BAML schema**: `baml_src/docs_skills_consolidation.baml`
+- **OpenSpec change**: `openspec/changes/docs-skills-consolidation-pipeline/`
+- **Run catch-up**: `bun run docs:consolidate` (or `mise docs:consolidate`)
+- **Run live**:    `bun run docs:consolidate:live`
+- **Search**: `from oideachais.cocoindex_flows.docs_skills_consolidation import search_docs_skills; asyncio.run(search_docs_skills("<query>"))`
+
+The companion codebase-indexing v1 App (replacement for the legacy `ccc`
+CLI) lives at `oideachais/cocoindex_flows/codebase_indexing.py`; see the
+`ccc` skill's deprecation banner.
+
 **For comprehensive documentation:** <https://cocoindex.io/docs/>
 **Search specific topics:** <https://cocoindex.io/docs/search?q=url%20encoded%20keyword>
