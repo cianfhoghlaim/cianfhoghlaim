@@ -1,5 +1,5 @@
 """
-Cognee + FalkorDB cross-archive leabharlann assets.
+Leabharlann Cognee + FalkorDB cross-archive assets.
 
 After the leabharlann dlt sources materialise (books, zotero, takeout)
 and BAML extracts the structured rows, this asset group:
@@ -8,16 +8,20 @@ and BAML extracts the structured rows, this asset group:
   2. cognify_leabharlann_zotero — adds + cognifies Zotero papers
   3. cognify_leabharlann_takeout — adds + cognifies takeout docx/csv
   4. cross_archive_edges       — populates FalkorDB with cross-archive
-                                  relationships (e.g. GeminiReport -[:CITES]->
-                                  ZoteroPaper, UoGArtifact -[:TEACHES]->
-                                  ZoteroPaper, TakeoutDocument -[:CITES]->
-                                  GeminiReport)
+                                  relationships (GeminiReport-CITES->ZoteroPaper,
+                                  UoGArtifact-TEACHES->ZoteroPaper,
+                                  TakeoutDoc-CITES->GeminiReport)
+
+The cross-archive edges pass uses deterministic MERGE queries from
+`oideachais.cognify_rules.leabharlann_cross_archive`. The cognify pass
+is best-effort when Cognee is not installed (returns
+`status=skipped_no_cognee`).
 
 Reference: openspec/changes/leabharlann-cognify-and-cross-archive-edges/
 """
 
 import os
-import subprocess
+import asyncio
 from pathlib import Path
 from typing import Any
 
@@ -49,10 +53,48 @@ def _cognee_available() -> bool:
 
 def _falkordb_available() -> bool:
     try:
-        import falkordb  # type: ignore[import-not-found, import-untyped]
+        from oideachais.graph.falkordb_client import get_graph_cache  # noqa: F401
+
         return True
     except ImportError:
         return False
+
+
+async def _cognify_dataset(dataset: str, rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """Run the Cognee cognify pass for a single leabharlann dataset.
+
+    Graceful when Cognee is missing or `USE_LOCAL_SCRAPES=true`.
+    """
+    from oideachais.cognee_integration.leabharlann_cognify import (
+        cognify_leabharlann_rows,
+    )
+
+    return await cognify_leabharlann_rows(dataset, rows)
+
+
+def _read_ducklake_table(table: str, limit: int = 500) -> list[dict[str, Any]]:
+    """Best-effort DuckLake read for a leabharlann table.
+
+    Returns an empty list if DuckLake / DuckDB is not available or the
+    table does not exist.
+    """
+    try:
+        import duckdb
+    except ImportError:
+        return []
+    db_path = os.environ.get("DUCKDB_PATH", "/tmp/oideachais.duckdb")
+    if not Path(db_path).exists():
+        return []
+    try:
+        con = duckdb.connect(db_path, read_only=True)
+        try:
+            rows = con.execute(f"SELECT * FROM {table} LIMIT {limit}").fetchdf().to_dict("records")
+        except Exception:  # noqa: BLE001
+            rows = []
+        con.close()
+        return rows
+    except Exception:  # noqa: BLE001
+        return []
 
 
 @asset(
@@ -62,17 +104,26 @@ def _falkordb_available() -> bool:
 )
 def cognify_leabharlann_books(context: AssetExecutionContext) -> Output[dict[str, Any]]:
     if not _cognee_available():
+        context.log.info("cognify_leabharlann_books_skipped_no_cognee")
         return Output(
             value={"status": "skipped_no_cognee", "episodes": 0},
             metadata={"cognee_status": "skipped_no_cognee"},
         )
-    # TODO: in Phase 2, iterate over DuckLake leabharlann.books table and
-    # call cognee.add(text, dataset_name=COGNEE_DATASET_BOOKS) per row.
-    # For now, emit a placeholder asset so the Dagster UI shows the slot.
-    context.log.info("cognify_leabharlann_books_placeholder")
+    rows = _read_ducklake_table("leabharlann_books.all_documents")
+    if not rows:
+        context.log.info("cognify_leabharlann_books_no_rows")
+        return Output(
+            value={"status": "no_rows", "episodes": 0, "rows": 0},
+            metadata={"cognee_status": "no_rows", "dataset": COGNEE_DATASET_BOOKS},
+        )
+    result = asyncio.run(_cognify_dataset(COGNEE_DATASET_BOOKS, rows))
     return Output(
-        value={"status": "placeholder", "episodes": 0},
-        metadata={"cognee_status": "placeholder", "dataset": COGNEE_DATASET_BOOKS},
+        value=result,
+        metadata={
+            "cognee_status": result.get("status"),
+            "dataset": COGNEE_DATASET_BOOKS,
+            "rows": result.get("rows", 0),
+        },
     )
 
 
@@ -83,14 +134,26 @@ def cognify_leabharlann_books(context: AssetExecutionContext) -> Output[dict[str
 )
 def cognify_leabharlann_zotero(context: AssetExecutionContext) -> Output[dict[str, Any]]:
     if not _cognee_available():
+        context.log.info("cognify_leabharlann_zotero_skipped_no_cognee")
         return Output(
             value={"status": "skipped_no_cognee", "episodes": 0},
             metadata={"cognee_status": "skipped_no_cognee"},
         )
-    context.log.info("cognify_leabharlann_zotero_placeholder")
+    rows = _read_ducklake_table("leabharlann_zotero.all_documents")
+    if not rows:
+        context.log.info("cognify_leabharlann_zotero_no_rows")
+        return Output(
+            value={"status": "no_rows", "episodes": 0, "rows": 0},
+            metadata={"cognee_status": "no_rows", "dataset": COGNEE_DATASET_ZOTERO},
+        )
+    result = asyncio.run(_cognify_dataset(COGNEE_DATASET_ZOTERO, rows))
     return Output(
-        value={"status": "placeholder", "episodes": 0},
-        metadata={"cognee_status": "placeholder", "dataset": COGNEE_DATASET_ZOTERO},
+        value=result,
+        metadata={
+            "cognee_status": result.get("status"),
+            "dataset": COGNEE_DATASET_ZOTERO,
+            "rows": result.get("rows", 0),
+        },
     )
 
 
@@ -101,14 +164,26 @@ def cognify_leabharlann_zotero(context: AssetExecutionContext) -> Output[dict[st
 )
 def cognify_leabharlann_takeout(context: AssetExecutionContext) -> Output[dict[str, Any]]:
     if not _cognee_available():
+        context.log.info("cognify_leabharlann_takeout_skipped_no_cognee")
         return Output(
             value={"status": "skipped_no_cognee", "episodes": 0},
             metadata={"cognee_status": "skipped_no_cognee"},
         )
-    context.log.info("cognify_leabharlann_takeout_placeholder")
+    rows = _read_ducklake_table("leabharlann_takeout.all_documents")
+    if not rows:
+        context.log.info("cognify_leabharlann_takeout_no_rows")
+        return Output(
+            value={"status": "no_rows", "episodes": 0, "rows": 0},
+            metadata={"cognee_status": "no_rows", "dataset": COGNEE_DATASET_TAKEOUT},
+        )
+    result = asyncio.run(_cognify_dataset(COGNEE_DATASET_TAKEOUT, rows))
     return Output(
-        value={"status": "placeholder", "episodes": 0},
-        metadata={"cognee_status": "placeholder", "dataset": COGNEE_DATASET_TAKEOUT},
+        value=result,
+        metadata={
+            "cognee_status": result.get("status"),
+            "dataset": COGNEE_DATASET_TAKEOUT,
+            "rows": result.get("rows", 0),
+        },
     )
 
 
@@ -117,8 +192,9 @@ def cognify_leabharlann_takeout(context: AssetExecutionContext) -> Output[dict[s
     compute_kind="falkordb",
     description=(
         "Populate FalkorDB with cross-archive edges: "
-        "GeminiReport-[:CITES]->ZoteroPaper, UoGArtifact-[:TEACHES]->ZoteroPaper, "
-        "TakeoutDocument-[:CITES]->GeminiReport. Run AFTER the 3 cognify assets."
+        "GeminiReport-[:CITES]->ZoteroPaper (arxiv_id), "
+        "UoGArtifact-[:TEACHES]->ZoteroPaper (module title), "
+        "TakeoutDoc-[:CITES]->GeminiReport (URL)."
     ),
     deps=[
         "cognify_leabharlann_books",
@@ -127,18 +203,33 @@ def cognify_leabharlann_takeout(context: AssetExecutionContext) -> Output[dict[s
     ],
 )
 def cross_archive_edges(context: AssetExecutionContext) -> Output[dict[str, Any]]:
-    if not _falkordb_available():
-        return Output(
-            value={"status": "skipped_no_falkordb", "edges_created": 0},
-            metadata={"falkordb_status": "skipped_no_falkordb"},
-        )
-    # The real edge-population runs via `cognee cognify` with the
-    # FalkorDB graph_database_provider; this asset is a no-op slot
-    # that fires after the cognify assets complete.
-    context.log.info("cross_archive_edges_placeholder")
+    from oideachais.cognify_rules.leabharlann_cross_archive import (
+        populate_cross_archive_edges,
+    )
+
+    gemini_reports = _read_ducklake_table("leabharlann_gemini_deep_research.all_documents")
+    zotero_papers = _read_ducklake_table("leabharlann_zotero.all_documents")
+    uog_artifacts = _read_ducklake_table("leabharlann_university_of_galway.all_documents")
+    takeout_docs = _read_ducklake_table("leabharlann_takeout_v1.all_documents")
+
+    result = populate_cross_archive_edges(
+        gemini_reports=gemini_reports,
+        zotero_papers=zotero_papers,
+        uog_artifacts=uog_artifacts,
+        takeout_docs=takeout_docs,
+    )
+    context.log.info(
+        "cross_archive_edges_done",
+        queries=result.get("queries_executed"),
+        edges=result.get("total_edges"),
+    )
     return Output(
-        value={"status": "placeholder", "edges_created": 0},
-        metadata={"falkordb_status": "placeholder"},
+        value=result,
+        metadata={
+            "queries_executed": result.get("queries_executed", 0),
+            "total_edges": result.get("total_edges", 0),
+            "queries": str(result.get("queries", [])),
+        },
     )
 
 
