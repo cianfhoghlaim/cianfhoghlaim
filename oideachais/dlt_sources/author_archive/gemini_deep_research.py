@@ -34,7 +34,7 @@ DEFAULT_GEMINI_PATH = Path(
         "AUTHOR_ARCHIVE_GEMINI_PATH",
         str(
             Path(__file__).resolve().parents[3]
-            / "author_cian_deacy_lyons_mac_an_déisigh_uí_liatháin"
+            / "leabharlann"
             / "gemini_deep_research"
         ),
     )
