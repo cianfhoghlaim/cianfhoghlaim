@@ -306,12 +306,32 @@ description = "Initialise ccc (cocoindex-code) for this project"
 run = "ccc init || true"
 
 [tasks."ccc:index"]
-description = "Build the cocoindex-code semantic index"
-run = "ccc index"
+description = "Build the cocoindex-code semantic index (v1 app; legacy ccc kept as fallback until 2026-07-15)"
+run = "uv run cocoindex update oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex"
 
 [tasks."ccc:search"]
-description = "Semantic search the codebase with ccc"
+description = "Semantic search the codebase with the legacy ccc CLI (deprecated — use ccc:v1:search instead)"
 run = "ccc search ${@}"
+
+[tasks."ccc:v1:index"]
+description = "Build the codebase_chunks LanceDB index via the v1 CocoIndex App (replacement for the legacy ccc CLI)"
+run = "uv run cocoindex update oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex"
+
+[tasks."ccc:v1:search"]
+description = "Semantic search the codebase_chunks LanceDB table via the v1 app (Python helper)"
+run = "uv run python -c 'import asyncio, sys; from oideachais.cocoindex_flows.codebase_indexing import search_codebase; rows = asyncio.run(search_codebase(sys.argv[1])); [print(f\"{r.get(\\\"score\\\", 0):.3f}\t{r.get(\\\"path\\\")}:{r.get(\\\"chunk_start\\\")}-{r.get(\\\"chunk_end\\\")}\t{(r.get(\\\"chunk_text\\\") or \\\"\\\").splitlines()[0][:120]}\") for r in rows]' \"${1:-}\""
+
+[tasks."docs:consolidate"]
+description = "Run the docs_skills_consolidation CocoIndex v1 App (batch / catch-up mode)"
+run = "uv run cocoindex update oideachais.cocoindex_flows.docs_skills_consolidation:DocsSkillsConsolidation"
+
+[tasks."docs:consolidate:live"]
+description = "Run the docs_skills_consolidation CocoIndex v1 App in live mode (-L)"
+run = "uv run cocoindex update -L oideachais.cocoindex_flows.docs_skills_consolidation:DocsSkillsConsolidation"
+
+[tasks."baml:generate"]
+description = "Regenerate the baml_client/ Python module from baml_src/ (required after editing any *.baml file)"
+run = "uv run baml-cli generate"
 
 [tasks."docs:cognee"]
 description = "Ingest canonical docs/ into the Cognee knowledge graph (requires COGNEE_API_URL + LLM_API_KEY)"
