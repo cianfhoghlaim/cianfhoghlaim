@@ -190,6 +190,15 @@ except ImportError as e:
     _sl.get_logger().warning("leabharlann_assets_import_failed: %s", e)
     LEABHARLANN_ASSETS = []
 
+# Docs-Skills Consolidation + Codebase Index (v1 CocoIndex Apps)
+# Reference: openspec/changes/docs-skills-consolidation-pipeline/
+try:
+    from .assets.docs_skills_assets import DOCS_SKILLS_ASSETS
+except ImportError as e:
+    import structlog as _sl
+    _sl.get_logger().warning("docs_skills_assets_import_failed: %s", e)
+    DOCS_SKILLS_ASSETS = []
+
 # UK Education Assets
 # ============================================================================
 # Partition Imports
@@ -368,6 +377,9 @@ combined_assets = [
     *AUTHOR_ARCHIVE_ASSETS,
     # Leabharlann — books + zotero + takeout v1 (CocoIndex v1 Apps)
     *LEABHARLANN_ASSETS,
+    # Docs-Skills consolidation + codebase index (v1 CocoIndex Apps, BAML-driven
+    # tag + triple extraction; v1-native replacement for the legacy `ccc` CLI)
+    *DOCS_SKILLS_ASSETS,
     # Leaving Cert 2026 — 7 priority subjects × 10 assets = 70 assets
     *LEAVING_CERT_ASSETS,
     # Leaving Cert 2026 DLT ingestion layer (7 @dlt_assets, one per subject)

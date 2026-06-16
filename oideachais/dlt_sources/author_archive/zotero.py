@@ -165,6 +165,113 @@ def zotero_source(
     return all_documents, pdf_documents, arxiv_papers
 
 
+def _extract_text_from_pdf(path: Path, max_chars: int = 50_000) -> str:
+    """Best-effort text extraction via pymupdf (graceful if missing)."""
+    try:
+        import pymupdf  # type: ignore[import-not-found]
+
+        doc = pymupdf.open(str(path))
+        parts: list[str] = []
+        total = 0
+        for page in doc:
+            text = page.get_text() or ""
+            if not text:
+                continue
+            if total + len(text) > max_chars:
+                text = text[: max_chars - total]
+            parts.append(text)
+            total += len(text)
+            if total >= max_chars:
+                break
+        doc.close()
+        return "\n\n".join(parts)
+    except (ImportError, OSError, ValueError, RuntimeError) as e:
+        logger.debug("pymupdf_zotero_extract_failed", path=str(path), error=str(e))
+        return ""
+
+
+def _baml_extract_zotero(
+    pdf_text: str,
+    file_name: str,
+    arxiv_id: str | None,
+) -> dict[str, Any]:
+    """Invoke `b.ExtractZoteroMetadata` and serialise the result. Graceful if missing."""
+    try:
+        from baml_client import b  # type: ignore[import-not-found]
+    except ImportError:
+        return {"status": "skipped_no_client", "result": None}
+
+    try:
+        result = b.ExtractZoteroMetadata(
+            pdf_text=pdf_text[:30_000],
+            file_name=file_name,
+            arxiv_id=arxiv_id,
+        )
+        if hasattr(result, "model_dump"):
+            return {"status": "success", "result": result.model_dump()}
+        return {"status": "success", "result": result}
+    except Exception as e:  # noqa: BLE001
+        logger.warning(
+            "zotero_baml_extraction_failed",
+            file_name=file_name,
+            arxiv_id=arxiv_id,
+            error=str(e),
+        )
+        return {"status": "error", "error": str(e)}
+
+
+@dlt.resource(
+    name="arxiv_papers_baml",
+    write_disposition="merge",
+    primary_key=["file_hash", "baml_function"],
+)
+def arxiv_papers_baml() -> Any:
+    """BAML-extracted `ZoteroPaper` rows (one per arXiv paper)."""
+    if not DEFAULT_ZOTERO_ROOT.exists():
+        return
+    for row in all_documents():
+        arxiv_id = row.get("arxiv_id")
+        if not arxiv_id:
+            continue
+        file_path = Path(row["file_path"])
+        text = _extract_text_from_pdf(file_path)
+        if not text:
+            continue
+        result = _baml_extract_zotero(text, file_path.name, arxiv_id)
+        if result["status"] != "success" or not result["result"]:
+            continue
+        zotero_paper = result["result"]
+        if hasattr(zotero_paper, "model_dump"):
+            zotero_paper = zotero_paper.model_dump()
+        if not isinstance(zotero_paper, dict):
+            continue
+        # Extract author names as a flat list (BAML returns Author[]).
+        authors = zotero_paper.get("authors", [])
+        if not isinstance(authors, list):
+            authors = []
+        author_names = [
+            a.get("name", "") if isinstance(a, dict) else str(a)
+            for a in authors
+        ]
+        yield {
+            "file_hash": row["file_hash"],
+            "filename": row["file_name"],
+            "baml_function": "ExtractZoteroMetadata",
+            "paper_kind": zotero_paper.get("paper_kind", "OTHER"),
+            "arxiv_id": zotero_paper.get("arxiv_id", arxiv_id),
+            "doi": zotero_paper.get("doi"),
+            "title": zotero_paper.get("title", ""),
+            "authors": author_names,
+            "year": zotero_paper.get("year"),
+            "abstract": zotero_paper.get("abstract"),
+            "venue": zotero_paper.get("venue"),
+            "irish_relevant": zotero_paper.get("irish_relevant", False),
+            "htr_relevant": zotero_paper.get("htr_relevant", False),
+            "confidence": zotero_paper.get("confidence", 0.0),
+            "extracted_at": datetime.now(UTC).isoformat(),
+        }
+
+
 def create_zotero_pipeline(
     destination: str = "duckdb",
     dataset_name: str = "leabharlann_zotero",
@@ -180,6 +287,7 @@ __all__ = [
     "DEFAULT_ZOTERO_ROOT",
     "zotero_source",
     "create_zotero_pipeline",
+    "arxiv_papers_baml",
     "_extract_arxiv_id",
     "_extract_duplicate_marker",
     "_extract_title_guess",
