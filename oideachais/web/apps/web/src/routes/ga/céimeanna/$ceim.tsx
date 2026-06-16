@@ -1,7 +1,15 @@
-// /ga/céimeanna/$c\u00e9im — Stage overview page (Irish locale)
+// /ga/céimeanna/$ceim — Stage overview page (Irish locale)
+//
+// The route path uses ASCII-safe `$ceim` (not `$céim`) because TanStack
+// Router's file-based generator requires param names that are valid
+// JavaScript identifiers (see https://router.tanstack.com/framework/react/guide/file-based-routing#dynamic-segments).
+// `é` is a non-ASCII character and would trigger a "Invalid param name"
+// warning in @tanstack/router-cli generate, causing routeTree.gen.ts
+// to be regenerated on every build with a mangled identifier — the
+// "feedback loop" fixed by issue #7.
 import { createFileRoute, notFound } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/ga/céimeanna/$céim")({
+export const Route = createFileRoute("/ga/céimeanna/$ceim")({
   loader: ({ params }) => {
     const stageMap: Record<string, string> = {
       aistear: "aistear",
@@ -10,15 +18,15 @@ export const Route = createFileRoute("/ga/céimeanna/$céim")({
       "scoil-daraigh": "senior_cycle",
       ardteistiméireacht: "tertiary",
     };
-    const enSlug = stageMap[params.céim];
+    const enSlug = stageMap[params.ceim];
     if (!enSlug) throw notFound();
-    return { enSlug, irSlug: params.céim };
+    return { enSlug, irSlug: params.ceim };
   },
   component: StageComponent,
 });
 
 function StageComponent() {
-  const { céim } = Route.useParams();
+  const { ceim } = Route.useParams();
   const stageMap: Record<string, { title_ga: string; description_ga: string }> = {
     aistear: {
       title_ga: "Aistear (Luath-Óige)",
@@ -41,8 +49,8 @@ function StageComponent() {
       description_ga: "Cúrsaí CAO, matraitiúil NUI/HEI, gradaim QQI FET, printíseachtaí, amlíne iarratais.",
     },
   };
-  const s = stageMap[céim] ?? {
-    title_ga: céim,
+  const s = stageMap[ceim] ?? {
+    title_ga: ceim,
     description_ga: "—",
   };
   return (

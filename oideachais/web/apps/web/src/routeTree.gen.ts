@@ -24,7 +24,7 @@ import { Route as GaLeavingCertFrenchRouteImport } from './routes/ga/leaving-cer
 import { Route as GaLeavingCertConstructionStudiesRouteImport } from './routes/ga/leaving-cert/construction-studies'
 import { Route as GaLeavingCertBusinessRouteImport } from './routes/ga/leaving-cert/business'
 import { Route as GaLeavingCertBiologyRouteImport } from './routes/ga/leaving-cert/biology'
-import { Route as GaCChar233imeannaCChar233imRouteImport } from './routes/ga/céimeanna/$céim'
+import { Route as GaCChar233imeannaCeimRouteImport } from './routes/ga/céimeanna/$ceim'
 import { Route as EnSubjectsSlugRouteImport } from './routes/en/subjects/$slug'
 import { Route as EnStagesStageRouteImport } from './routes/en/stages/$stage'
 import { Route as EnPracticeSubjectRouteImport } from './routes/en/practice/$subject'
@@ -118,12 +118,11 @@ const GaLeavingCertBiologyRoute = GaLeavingCertBiologyRouteImport.update({
   path: '/ga/leaving-cert/biology',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GaCChar233imeannaCChar233imRoute =
-  GaCChar233imeannaCChar233imRouteImport.update({
-    id: '/ga/céimeanna/$céim',
-    path: '/ga/céimeanna/$céim',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+const GaCChar233imeannaCeimRoute = GaCChar233imeannaCeimRouteImport.update({
+  id: '/ga/céimeanna/$ceim',
+  path: '/ga/céimeanna/$ceim',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EnSubjectsSlugRoute = EnSubjectsSlugRouteImport.update({
   id: '/en/subjects/$slug',
   path: '/en/subjects/$slug',
@@ -225,7 +224,7 @@ export interface FileRoutesByFullPath {
   '/en/practice/$subject': typeof EnPracticeSubjectRoute
   '/en/stages/$stage': typeof EnStagesStageRoute
   '/en/subjects/$slug': typeof EnSubjectsSlugRoute
-  '/ga/céimeanna/$céim': typeof GaCChar233imeannaCChar233imRoute
+  '/ga/céimeanna/$ceim': typeof GaCChar233imeannaCeimRoute
   '/ga/leaving-cert/biology': typeof GaLeavingCertBiologyRoute
   '/ga/leaving-cert/business': typeof GaLeavingCertBusinessRoute
   '/ga/leaving-cert/construction-studies': typeof GaLeavingCertConstructionStudiesRoute
@@ -258,7 +257,7 @@ export interface FileRoutesByTo {
   '/en/practice/$subject': typeof EnPracticeSubjectRoute
   '/en/stages/$stage': typeof EnStagesStageRoute
   '/en/subjects/$slug': typeof EnSubjectsSlugRoute
-  '/ga/céimeanna/$céim': typeof GaCChar233imeannaCChar233imRoute
+  '/ga/céimeanna/$ceim': typeof GaCChar233imeannaCeimRoute
   '/ga/leaving-cert/biology': typeof GaLeavingCertBiologyRoute
   '/ga/leaving-cert/business': typeof GaLeavingCertBusinessRoute
   '/ga/leaving-cert/construction-studies': typeof GaLeavingCertConstructionStudiesRoute
@@ -292,7 +291,7 @@ export interface FileRoutesById {
   '/en/practice/$subject': typeof EnPracticeSubjectRoute
   '/en/stages/$stage': typeof EnStagesStageRoute
   '/en/subjects/$slug': typeof EnSubjectsSlugRoute
-  '/ga/céimeanna/$céim': typeof GaCChar233imeannaCChar233imRoute
+  '/ga/céimeanna/$ceim': typeof GaCChar233imeannaCeimRoute
   '/ga/leaving-cert/biology': typeof GaLeavingCertBiologyRoute
   '/ga/leaving-cert/business': typeof GaLeavingCertBusinessRoute
   '/ga/leaving-cert/construction-studies': typeof GaLeavingCertConstructionStudiesRoute
@@ -327,7 +326,7 @@ export interface FileRouteTypes {
     | '/en/practice/$subject'
     | '/en/stages/$stage'
     | '/en/subjects/$slug'
-    | '/ga/céimeanna/$céim'
+    | '/ga/céimeanna/$ceim'
     | '/ga/leaving-cert/biology'
     | '/ga/leaving-cert/business'
     | '/ga/leaving-cert/construction-studies'
@@ -360,7 +359,7 @@ export interface FileRouteTypes {
     | '/en/practice/$subject'
     | '/en/stages/$stage'
     | '/en/subjects/$slug'
-    | '/ga/céimeanna/$céim'
+    | '/ga/céimeanna/$ceim'
     | '/ga/leaving-cert/biology'
     | '/ga/leaving-cert/business'
     | '/ga/leaving-cert/construction-studies'
@@ -393,7 +392,7 @@ export interface FileRouteTypes {
     | '/en/practice/$subject'
     | '/en/stages/$stage'
     | '/en/subjects/$slug'
-    | '/ga/céimeanna/$céim'
+    | '/ga/céimeanna/$ceim'
     | '/ga/leaving-cert/biology'
     | '/ga/leaving-cert/business'
     | '/ga/leaving-cert/construction-studies'
@@ -427,7 +426,7 @@ export interface RootRouteChildren {
   EnPracticeSubjectRoute: typeof EnPracticeSubjectRoute
   EnStagesStageRoute: typeof EnStagesStageRoute
   EnSubjectsSlugRoute: typeof EnSubjectsSlugRoute
-  GaCChar233imeannaCChar233imRoute: typeof GaCChar233imeannaCChar233imRoute
+  GaCChar233imeannaCeimRoute: typeof GaCChar233imeannaCeimRoute
   GaLeavingCertBiologyRoute: typeof GaLeavingCertBiologyRoute
   GaLeavingCertBusinessRoute: typeof GaLeavingCertBusinessRoute
   GaLeavingCertConstructionStudiesRoute: typeof GaLeavingCertConstructionStudiesRoute
@@ -546,11 +545,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GaLeavingCertBiologyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/ga/céimeanna/$céim': {
-      id: '/ga/céimeanna/$céim'
-      path: '/ga/céimeanna/$céim'
-      fullPath: '/ga/céimeanna/$céim'
-      preLoaderRoute: typeof GaCChar233imeannaCChar233imRouteImport
+    '/ga/céimeanna/$ceim': {
+      id: '/ga/céimeanna/$ceim'
+      path: '/ga/céimeanna/$ceim'
+      fullPath: '/ga/céimeanna/$ceim'
+      preLoaderRoute: typeof GaCChar233imeannaCeimRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/en/subjects/$slug': {
@@ -683,7 +682,7 @@ const rootRouteChildren: RootRouteChildren = {
   EnPracticeSubjectRoute: EnPracticeSubjectRoute,
   EnStagesStageRoute: EnStagesStageRoute,
   EnSubjectsSlugRoute: EnSubjectsSlugRoute,
-  GaCChar233imeannaCChar233imRoute: GaCChar233imeannaCChar233imRoute,
+  GaCChar233imeannaCeimRoute: GaCChar233imeannaCeimRoute,
   GaLeavingCertBiologyRoute: GaLeavingCertBiologyRoute,
   GaLeavingCertBusinessRoute: GaLeavingCertBusinessRoute,
   GaLeavingCertConstructionStudiesRoute: GaLeavingCertConstructionStudiesRoute,
@@ -697,12 +696,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './app/router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
