@@ -50,6 +50,8 @@ DEFAULT_FILE_TYPE_EXTENSIONS: dict[str, set[str]] = {
     "spreadsheet": {".xls", ".xlsx", ".csv"},
     "text": {".txt", ".md", ".rst", ".log"},
     "data": {".json", ".xml", ".dat"},
+    "epub": {".epub"},
+    "tsv": {".tsv"},
 }
 
 DEFAULT_SKIP_PATTERNS: set[str] = {

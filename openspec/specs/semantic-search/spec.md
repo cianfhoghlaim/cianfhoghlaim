@@ -4,12 +4,9 @@
 
 `semantic-search` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
 
-
 ## Background
 Vector-based semantic search for curriculum content, exam questions, and learning materials.
-
 ## Requirements
-
 ### Requirement: Curriculum Content Search
 The system SHALL enable semantic search across curriculum content.
 
@@ -61,6 +58,28 @@ The system SHALL support filtering search results.
 - **GIVEN** a search query
 - **WHEN** filtered by level "Higher"
 - **THEN** only Higher Level content is returned
+
+### Requirement: Leabharlann Query Handlers
+The system SHALL expose three new query handlers for semantic search across the leabharlann archives.
+
+#### Scenario: Books search
+- **GIVEN** the user invokes `await search_leabharlann_books(query="Celtic placenames of Belfast", subject="gaeilge", limit=10)`
+- **WHEN** the handler runs
+- **THEN** the top 10 most similar chunks from `leabharlann_books` SHALL be returned
+- **AND** each result SHALL include `filename`, `subject`, `chunk_text`, and `score`
+
+#### Scenario: Zotero search with metadata filter
+- **GIVEN** the user invokes `await search_leabharlann_zotero(query="handwritten essay recognition", htr_relevant=True, limit=5)`
+- **WHEN** the handler runs
+- **THEN** the top 5 most similar `ZoteroPaper` rows SHALL be returned
+- **AND** only rows with `htr_relevant=true` SHALL be considered
+- **AND** each result SHALL include `title`, `authors`, `year`, `venue`, `chunk_text`, and `score`
+
+#### Scenario: Takeout search
+- **GIVEN** the user invokes `await search_leabharlann_takeout(query="disability allowance", account="stedding_takeout", limit=10)`
+- **WHEN** the handler runs
+- **THEN** the top 10 most similar chunks from `leabharlann_takeout` SHALL be returned
+- **AND** only rows with `account="stedding_takeout"` SHALL be considered
 
 ## Embedding Configuration
 
