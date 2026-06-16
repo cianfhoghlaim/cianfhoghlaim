@@ -1,17 +1,15 @@
-# Spec Delta — `data-engineering-pipeline-documentation` (new capability)
+# `data-engineering-pipeline-documentation` capability spec
 
 ## Purpose
 
-`data-engineering-pipeline-documentation` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives at `oideachais/STATUS.md`, `oideachais/REFACTORING.md`, the per-area READMEs in `oideachais/{dlt_sources,cocoindex_flows,dagster_defs}/`, `baml_src/README.md`, and the end-to-end stack overview at `docs/06-infrastructure/leabharlann-stack-overview.md`. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+`data-engineering-pipeline-documentation` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives at `oideachais/STATUS.md`, `oideachais/REFACTORING.md`, the per-area READMEs in `oideachais/{dlt_sources,cocoindex_flows,dagster_defs}/`, `baml_src/README.md`, the agent READMEs in `oideachais/agents/{adk,agno}/README.md`, and the end-to-end stack overview at `docs/06-infrastructure/leabharlann-stack-overview.md`. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
 
 Single source of truth for the British Isles education data-engineering pipeline state, plus per-area READMEs that demystify the Lakehouse + Infisical + Locket + Komodo + Dagster + BAML + CocoIndex + Cognee + FalkorDB + Graphiti + LanceDB stack.
-
-## ADDED Requirements
-
+## Requirements
 ### Requirement: STATUS.md is the single source of truth
 The system SHALL maintain `oideachais/STATUS.md` as a single source of truth for the British Isles data-engineering pipeline state.
 
-#### Scenario: BAML × dlt × Dagster × CocoIndex × Cognee matrix
+#### Scenario: BAML × dlt × Dagster × CocoIndex matrix
 - **GIVEN** a user reads `oideachais/STATUS.md`
 - **WHEN** they look up the row for `baml_src/primary.baml`
 - **THEN** the row SHALL list the matching dlt source file (e.g. `oideachais/dlt_sources/ireland/primary.py`), the matching Dagster asset, the matching CocoIndex flow (v0 or v1), and the matching Cognee cognify pass
@@ -38,7 +36,7 @@ The system SHALL maintain `oideachais/REFACTORING.md` as a refactor backlog with
 #### Scenario: BAML-without-dlt gap
 - **GIVEN** a user reads `oideachais/REFACTORING.md`
 - **WHEN** they look up the BAML-without-dlt gap
-- **THEN** the row SHALL list the 5 BAML functions defined in `baml_src/` but not invoked from any dlt `extraction_metadata` resource
+- **THEN** the row SHALL list the 4+ BAML functions defined in `baml_src/` but not invoked from any dlt `extraction_metadata` resource
 - **AND** the row SHALL link to the queued openspec change for Feature 1
 
 ### Requirement: Per-area READMEs
@@ -62,7 +60,20 @@ The system SHALL maintain READMEs in each pipeline area, mapping source code to 
 #### Scenario: BAML schema catalogue
 - **GIVEN** a user reads `baml_src/README.md`
 - **WHEN** they look up `baml_src/author_archive.baml`
-- **THEN** the row SHALL list the 4 classes (`GeminiDeepResearchReport`, `UniversityOfGalwayArtifact`, `HandwrittenEquation`, `ZoteroPaper`), the 4 extraction functions, the consumer pipelines, and the test coverage
+- **THEN** the row SHALL list the 12 classes, the 4 extraction functions, the consumer pipelines, and the test coverage
+
+### Requirement: Agent surface READMEs
+The system SHALL maintain READMEs for the two agent surfaces.
+
+#### Scenario: ADK agent surface
+- **GIVEN** a user reads `oideachais/agents/adk/README.md`
+- **WHEN** they look up a specific agent
+- **THEN** the row SHALL describe the agent's role + tools + integrations
+
+#### Scenario: Agno agent surface
+- **GIVEN** a user reads `oideachais/agents/agno/README.md`
+- **WHEN** they look up a specific sub-team
+- **THEN** the row SHALL describe the team's role + sub-agents + integrations
 
 ### Requirement: End-to-end stack overview
 The system SHALL maintain `docs/06-infrastructure/leabharlann-stack-overview.md` as the canonical end-to-end diagram and description.
@@ -77,10 +88,11 @@ The system SHALL maintain `docs/06-infrastructure/leabharlann-stack-overview.md`
 - **WHEN** they look at the stack diagram
 - **THEN** the diagram SHALL label the 4 layers (source trees, control plane, storage, machine learning) and the 5 integration points (dlt, BAML, CocoIndex, Cognee, LanceDB)
 
-## MODIFIED Requirements
+### Requirement: Canonical spec SHALL list 9 files
+The system SHALL maintain the 9 documentation files listed in the canonical `data-engineering-pipeline-documentation` spec: `oideachais/STATUS.md`, `oideachais/REFACTORING.md`, `oideachais/dlt_sources/uk/README.md`, `oideachais/dlt_sources/ireland/README.md`, `oideachais/cocoindex_flows/README.md`, `oideachais/dagster_defs/assets/README.md`, `baml_src/README.md`, `oideachais/agents/{adk,agno}/README.md`, and `docs/06-infrastructure/leabharlann-stack-overview.md`.
 
-*(None.)*
+#### Scenario: All 9 files exist
+- **GIVEN** a user checks the documentation surface
+- **WHEN** they list the 9 files
+- **THEN** each file SHALL exist and be non-empty
 
-## REMOVED Requirements
-
-*(None.)*
