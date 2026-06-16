@@ -4,6 +4,10 @@
 game engine, and the crypteolas crypto data platform — all consolidated into the
 `tuath` uv workspace member.*
 
+> See also: [`tuatha/AGENTS.md`](AGENTS.md) — the developer-quick-reference
+> for the tuatha quadrant. The openspec spec is at
+> [`openspec/specs/tuatha-platform/spec.md`](../openspec/specs/tuatha-platform/spec.md).
+
 ---
 
 ## Status (2026-06-15)
