@@ -1,13 +1,11 @@
-# Spec Delta — `leabharlann-ingestion` (new capability)
+# `leabharlann-ingestion` capability spec
 
 ## Purpose
 
 `leabharlann-ingestion` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives at `oideachais/dlt_sources/author_archive/`. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
 
 Ingest the `leabharlann/` personal-archive tree: `ollscoil_na_gaillimhe/` (renamed university archive), `gemini_deep_research/` (renamed Gemini archive), `zotero/` (117 PDFs in real Zotero storage format), `gaeilge/` (40 PDFs + MDs + `previews/`), `aigne/` (7 books), and `stedding/Takeout/` (sample googletakeout, 64 .docx + 1 .csv).
-
-## ADDED Requirements
-
+## Requirements
 ### Requirement: Leabharlann Books Source
 The system SHALL discover and ingest every supported file in `leabharlann/gaeilge/` and `leabharlann/aigne/` into the `leabharlann_books` DuckLake table.
 
@@ -97,17 +95,16 @@ The system SHALL run a v1 CocoIndex App per leabharlann source, embedding docume
 - **THEN** the `leabharlann_takeout_embedding` CocoIndex App SHALL run
 - **AND** a LanceDB table `leabharlann_takeout` SHALL be populated
 
-## MODIFIED Requirements
+### Requirement: Source default paths MUST point at `leabharlann/`
+The dlt source modules `oideachais/dlt_sources/author_archive/{university_of_galway,gemini_deep_research}.py` MUST define `DEFAULT_UOG_PATH` and `DEFAULT_GEMINI_PATH` pointing at `leabharlann/ollscoil_na_gaillimhe/` and `leabharlann/gemini_deep_research/` respectively. The source factories SHALL continue to accept any `base_path` argument so callers can pass the old `author_cian_deacy_lyons_mac_an_déisigh_uí_liatháin/` path explicitly for back-compat.
 
-### Requirement: `author-archive-filesystem` (MODIFIED — point at leabharlann/)
+#### Scenario: Default path under leabharlann
+- **GIVEN** the `university_of_galway_source()` factory is called without arguments
+- **WHEN** the path is inspected
+- **THEN** the path SHALL end with `leabharlann/ollscoil_na_gaillimhe`
 
-The `author-archive-filesystem` capability (from `openspec/changes/author-archive-gemini-and-uos-ingestion/`) SHALL have its `DEFAULT_UOG_PATH` and `DEFAULT_GEMINI_PATH` constants updated to point at `leabharlann/ollscoil_na_gaillimhe/` and `leabharlann/gemini_deep_research/` respectively. The `account` column SHALL be set to `"leabharlann_uog"` and `"leabharlann_gemini"` for these new paths.
-
-#### Scenario: Backwards-compatible path
+#### Scenario: Backwards-compatible explicit path
 - **GIVEN** an existing caller passes an explicit `base_path=...` to `university_of_galway_source(base_path=...)`
 - **WHEN** the source runs
-- **THEN** the `account` column SHALL be the value passed in `base_path` (i.e. `"university_of_galway"` if the old path is supplied, or `"leabharlann_uog"` if the new path is supplied)
+- **THEN** the `account` column SHALL be the value passed in `base_path`
 
-## REMOVED Requirements
-
-*(None.)*
