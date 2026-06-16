@@ -49,8 +49,8 @@ Status: ✅ working · ⚠️ partial · 🟡 planned · ❌ missing
 | Cycle | dlt source | BAML extract | Dagster asset | Cognee cognify | CocoIndex embed |
 |:--|:--|:--|:--|:--|:--|
 | **Aistear** (early childhood) | `ireland/aistear.py` ✅ | `ExtractAistearFramework` 🟡 (in `baml_src/aistear.baml`, not invoked) | (planned via `cross_stage_cognify.py`) | `cross_stage_cognify` ✅ | (none) |
-| **Primary** | ❌ missing | `ExtractPrimaryFramework` ✅ defined | ❌ | (none) | (none) |
-| **Junior Cycle** | ❌ missing | `ExtractJCSpec`, `ExtractCBADescriptor` ✅ defined | ❌ | (none) | (none) |
+| **Primary** | `ireland/primary.py` ✅ (4 resources: `primary_specifications`, `primary_curriculum_areas`, `primary_strands`, `primary_learning_outcomes`) | `ExtractPrimaryFramework`, `ExtractPrimaryLearningOutcomes` ✅ invoked | (none yet — see `REFACTORING.md`) | (planned via `cross_stage_cognify.py`) | (none yet) |
+| **Junior Cycle** | `ireland/junior_cycle.py` ✅ (3 resources: `jc_specifications`, `jc_short_courses`, `cba_tasks`) | `ExtractJCSpec`, `ExtractCBADescriptor` ✅ invoked | (none yet — see `REFACTORING.md`) | (planned via `cross_stage_cognify.py`) | (none yet) |
 | **Senior Cycle** | `ireland/senior_cycle.py`, `leaving_cert.py` ✅ | (TBD — BAML `curriculum_extraction.baml` covers) | `leabharlann/leaving_cert/dlt_assets.py` ✅ | ✅ | `curriculum_embedding.py` (v0 — broken) |
 | **Tertiary** (CAO / QQI-FET / Apprenticeship) | `ireland/tertiary.py` ✅ | ✅ defined (`baml_src/tertiary.baml`) | (planned) | (planned) | (none) |
 | **SEC examinations** | `ireland/examinations.py` ✅ | (TBD) | `ireland/education/exam_materials_assets.py` ✅ | ✅ | (none) |
