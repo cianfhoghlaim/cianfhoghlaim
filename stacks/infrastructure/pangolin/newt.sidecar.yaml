@@ -64,7 +64,7 @@ services:
 
 secrets:
   infisical_secret:
-    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret
+    file: ${INFISICAL_SECRET_FILE:-../../infisical_secret}
 
 volumes:
   newt-secrets:
