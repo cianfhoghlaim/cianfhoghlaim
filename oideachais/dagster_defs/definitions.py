@@ -108,6 +108,12 @@ from .assets.law.iom import law_iom_legislation
 from .assets.law.jey import law_jey_legislation
 from .assets.law.ggy import law_ggy_legislation
 
+# Crown Dependencies Law Assets (Phase 3.6 of lateralise-british-isles-domains)
+# Lateralises IE → EN/NI/SCT/WLS → IOM/JEY/GGY for the law domain.
+from .assets.law.iom import law_iom_legislation
+from .assets.law.jey import law_jey_legislation
+from .assets.law.ggy import law_ggy_legislation
+
 # PDF Processing Assets
 from .assets.pdf_assets import pdf_processing_assets
 
