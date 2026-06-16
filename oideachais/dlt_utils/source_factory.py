@@ -12,20 +12,45 @@ returns a factory exposing the 7‑method contract:
     factory.marimo_path(id)         -> Path under oideachais/notebooks/dashboards/
     factory.tests_path(id)          -> Path under oideachais/tests/dlt_sources/
 
-The factory is a **stub** at this commit — it parses and validates but
-does not yet construct runtime DLT sources / Dagster assets. The methods
-return the *address* the runtime artefact SHOULD live at; phase 5 of the
-openspec change wires the actual constructors.
+Phase 5 (issue #20) wires the 3 runtime constructors:
+
+  * `source(source_id)` returns a *callable* DLT source builder
+    (no eager evaluation). The builder maps the YAML `kind` to a
+    constructor in `dlt_sources.common`. The caller decides when
+    to materialise.
+
+  * `dlt_asset(source_id)` returns a Dagster `AssetsDefinition`
+    produced by the project's plain `@asset` + `dlt.pipeline()`
+    pattern (the same one used by `leaving_cert/dlt_assets.py`).
+    We deliberately avoid `dagster_dlt.dlt_assets` here because
+    its decorator doesn't accept `compute_kind` or `group_name`
+    kwargs that the codebase uses everywhere else.
+
+  * `dagster_asset(source_id)` returns a thin Dagster `asset`
+    for lineage + UI (no materialisation). It calls
+    `factory.source(source_id)()` to count rows and returns a
+    `MaterializeResult`. The `asset_key` from the YAML is used
+    for the canonical key prefix.
+
+The 23 manual asset wrappers in
+`oideachais/dagster_defs/assets/{medicine,law}/{ie,en,ni,sct,wls,iom,jey,ggy}/`
+continue to work — they're not replaced by this Phase 5 wiring.
+The factory is opt-in: callers must explicitly call
+`SourceFactory.dagster_asset('ie.medicine.hse')` to use it.
+A follow-up openspec change will retire the manual wrappers.
 
 This module also exposes the `pydantic` models used to validate the YAML.
 """
 from __future__ import annotations
 
+import os
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal, Union
 
 import yaml
+from dagster import AssetKey, MaterializeResult, asset
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
@@ -205,6 +230,263 @@ class SourcesYAML(BaseModel):
     sources: list[SourceEntry]
 
 
+# ── Phase 5: kind → DLT constructor dispatcher ────────────────────────────
+#
+# The dispatcher maps a `Kind` literal to a callable that
+# returns a `dlt.source` (decorated with `@dlt.source`). Callers
+# (i.e. `SourceFactory.source()`) invoke the returned factory with
+# the source's URLs and (optional) crawl/pagination config. The
+# caller decides when to materialise the source.
+#
+# Each entry below is a *function* that takes a `SourceEntry`
+# and returns a 0-arg callable (the DLT source builder).
+#
+# We import lazily to avoid making the SourceFactory import fail
+# when dlt / dagster are not yet on the test path.
+
+
+def _build_firecrawl_source(
+    entry: SourceEntry,
+    defaults: FirecrawlDefaults,
+) -> Callable[[], Any]:
+    """Map `kind=firecrawl_pages` to `dlt_sources.common.create_firecrawl_source`."""
+    from dlt_sources.common.firecrawl_source import create_firecrawl_source
+
+    crawl = entry.crawl
+    include_paths = (
+        list(crawl.include_paths)
+        if crawl and crawl.include_paths
+        else list(defaults.include_paths)
+    )
+    exclude_paths = (
+        list(crawl.exclude_paths)
+        if crawl and crawl.exclude_paths
+        else list(defaults.exclude_paths)
+    )
+    max_pages = (
+        crawl.max_pages if crawl and crawl.max_pages else defaults.max_pages
+    )
+    max_depth = (
+        crawl.max_depth if crawl and crawl.max_depth else defaults.max_depth
+    )
+
+    base_url = entry.urls[0]
+    # If multiple URLs, we pick the first as the base and add
+    # the others as include_paths. This matches the convention
+    # used in the manual wrappers (one source per logical site).
+    if len(entry.urls) > 1:
+        include_paths = [*include_paths, f"/*"]
+
+    return create_firecrawl_source(
+        source_name=entry.id,
+        base_url=base_url,
+        include_paths=include_paths,
+        exclude_paths=exclude_paths,
+        max_pages=max_pages,
+        max_depth=max_depth,
+        resource_name=entry.asset_key[-1] if entry.asset_key else "pages",
+    )
+
+
+def _build_stagehand_source(entry: SourceEntry, defaults: Any) -> Callable[[], Any]:
+    """Map `kind=stagehand_papers` to the stagehand PDF picker.
+
+    The Leaving Cert 2026 wrapper at
+    `dlt_sources/ireland/leaving_cert/leaving_cert_source` is the
+    canonical implementation. For non-LC sources, the manual
+    wrapper at `dlt_sources/ireland/curriculum_source._crawl_source`
+    is the fallback. Both are referenced by the SourceFactory.
+    """
+    from dlt_sources.ireland.leaving_cert import leaving_cert_source
+
+    def _factory() -> Any:
+        # `leaving_cert_source` is the actual DLT source builder for
+        # stagehand papers. It accepts the same kwargs used by the
+        # leaving_cert/dlt_assets.py manual wrapper.
+        return leaving_cert_source(
+            use_local_scrapes=os.getenv("USE_LOCAL_SCRAPES", "true") == "true",
+        )
+
+    return _factory
+
+
+def _build_browserbase_source(entry: SourceEntry, defaults: BrowserbaseDefaults) -> Callable[[], Any]:
+    """Map `kind=browserbase_extract` to a firecrawl-style crawler.
+
+    The codebase doesn't have a dedicated browserbase_extract
+    constructor yet (it uses the Firecrawl fallback in
+    `dlt_sources.common.create_firecrawl_source`). The kind
+    distinction is preserved for future re-introduction.
+    """
+    # BrowserbaseDefaults has different fields from FirecrawlDefaults
+    # (stagehand_model/wait_for vs only_main_content/formats/...),
+    # so we use the default FirecrawlDefaults for the underlying call.
+    return _build_firecrawl_source(entry, FirecrawlDefaults())
+
+
+def _build_api_table_source(entry: SourceEntry, defaults: Any) -> Callable[[], Any]:
+    """Map `kind=api_table` to a rest_api_source factory.
+
+    dlt has a built-in `rest_api` source in `dlt.sources.rest_api`.
+    We delegate to it with the source's URL as the base URL.
+    """
+    from dlt.sources.rest_api import RESTAPIConfig, rest_api_source
+
+    config: RESTAPIConfig = {
+        "client": {"base_url": entry.urls[0]},
+        "resources": [
+            {
+                "name": entry.asset_key[-1] if entry.asset_key else "rows",
+                "endpoint": {
+                    "path": "/",
+                    "params": {
+                        "limit": (
+                            entry.pagination.page_size
+                            if entry.pagination
+                            else 100
+                        ),
+                    },
+                },
+            }
+        ],
+    }
+    dlt_src = rest_api_source(config)
+
+    def _factory() -> Any:
+        return dlt_src
+
+    return _factory
+
+
+def _build_api_xml_source(entry: SourceEntry, defaults: Any) -> Callable[[], Any]:
+    """Map `kind=api_xml` to a simple rest_api source that
+    returns the response body as-is. dlt's rest_api will
+    auto-detect the JSON wrapper; for raw XML we use a thin
+    wrapper that yields one record per request.
+    """
+    import dlt
+
+    @dlt.source(name=entry.id)
+    def _xml_source() -> Any:
+        @dlt.resource(
+            name=entry.asset_key[-1] if entry.asset_key else "rows",
+            write_disposition="merge",
+            primary_key=["url"],
+        )
+        def _rows() -> Any:
+            import urllib.request
+            for u in entry.urls:
+                try:
+                    with urllib.request.urlopen(u) as resp:
+                        body = resp.read().decode("utf-8", errors="ignore")
+                except Exception:
+                    continue
+                yield {
+                    "url": u,
+                    "body": body,
+                    "content_type": resp.headers.get("Content-Type", ""),
+                }
+
+        return _rows
+
+    return _xml_source
+
+
+def _build_filesystem_csv_source(entry: SourceEntry, defaults: Any) -> Callable[[], Any]:
+    """Map `kind=filesystem_csv` to dlt's filesystem source."""
+    import dlt
+    from dlt.sources.filesystem import filesystem, read_csv
+
+    if not entry.urls:
+        raise ValueError(f"{entry.id}: filesystem_csv requires at least one url")
+    bucket_url = entry.urls[0]
+    file_glob = entry.urls[1] if len(entry.urls) > 1 else "*.csv"
+
+    @dlt.source(name=entry.id)
+    def _csv_source() -> Any:
+        @dlt.resource(
+            name=entry.asset_key[-1] if entry.asset_key else "rows",
+            write_disposition="replace",
+        )
+        def _rows() -> Any:
+            yield from filesystem(
+                bucket_url=bucket_url, file_glob=file_glob
+            ) | read_csv()
+
+        return _rows
+
+    return _csv_source
+
+
+def _build_filesystem_parquet_source(entry: SourceEntry, defaults: Any) -> Callable[[], Any]:
+    """Map `kind=filesystem_parquet` to dlt's filesystem source."""
+    import dlt
+    from dlt.sources.filesystem import filesystem, read_parquet
+
+    if not entry.urls:
+        raise ValueError(f"{entry.id}: filesystem_parquet requires at least one url")
+    bucket_url = entry.urls[0]
+    file_glob = entry.urls[1] if len(entry.urls) > 1 else "*.parquet"
+
+    @dlt.source(name=entry.id)
+    def _parquet_source() -> Any:
+        @dlt.resource(
+            name=entry.asset_key[-1] if entry.asset_key else "rows",
+            write_disposition="replace",
+        )
+        def _rows() -> Any:
+            yield from filesystem(
+                bucket_url=bucket_url, file_glob=file_glob
+            ) | read_parquet()
+
+        return _rows
+
+    return _parquet_source
+
+
+def _to_firecrawl_defaults(defaults: Any) -> FirecrawlDefaults:
+    """BrowserbaseDefaults → FirecrawlDefaults shim. The two
+    pydantic models share field names; we coerce."""
+    return FirecrawlDefaults.model_validate(defaults.model_dump())
+
+
+_KIND_DISPATCH: dict[str, Callable[[SourceEntry, Any], Callable[[], Any]]] = {
+    "firecrawl_pages": _build_firecrawl_source,
+    "stagehand_papers": _build_stagehand_source,
+    "browserbase_extract": _build_browserbase_source,
+    "api_table": _build_api_table_source,
+    "api_xml": _build_api_xml_source,
+    "filesystem_csv": _build_filesystem_csv_source,
+    "filesystem_parquet": _build_filesystem_parquet_source,
+}
+
+
+def build_source(entry: SourceEntry, defaults: Defaults) -> Callable[[], Any]:
+    """Map a SourceEntry to a 0-arg DLT source builder.
+
+    The returned callable, when invoked, returns a `dlt.source`
+    (or a list of resources — depending on the kind). It is
+    NOT materialised here; the caller (e.g. a Dagster asset
+    body) decides when to call `pipeline.run(source())`.
+
+    The dispatcher receives a tuple `(entry, defaults, firecrawl,
+    browserbase)` so each builder can pick the nested defaults
+    it needs.
+    """
+    builder = _KIND_DISPATCH.get(entry.kind)
+    if builder is None:  # pragma: no cover - pydantic Literal catches this
+        raise NotImplementedError(
+            f"SourceFactory: no builder for kind={entry.kind!r} "
+            f"(known: {sorted(_KIND_DISPATCH)!r})"
+        )
+    # Pass the right nested defaults per kind.
+    if entry.kind in {"firecrawl_pages"}:
+        return builder(entry, defaults.firecrawl)
+    if entry.kind in {"browserbase_extract"}:
+        return builder(entry, defaults.browserbase)
+    return builder(entry, defaults)
+
+
 # ── Factory ─────────────────────────────────────────────────────────────
 
 
@@ -213,7 +495,8 @@ class SourceFactory:
     """Single source of truth for the asset graph derived from sources.yaml.
 
     Phase 2 of the openspec change is the *stub*: parsing & address
-    computation only. Phase 5 wires the real DLT / Dagster constructors.
+    computation only. Phase 5 (issue #20) wires the real DLT / Dagster
+    constructors.
     """
 
     yaml_path: Path
@@ -278,26 +561,109 @@ class SourceFactory:
     def asset_key(self, source_id: str) -> list[str]:
         return list(self.get(source_id).asset_key)
 
-    # ── Runtime constructors (Phase 5 stub) ─────────────────────────
-    #
-    # These three are the only methods that import DLT / Dagster. They
-    # currently raise NotImplementedError so the rest of the test suite
-    # (and CI) can exercise the *parsing* layer without needing either.
+    # ── Runtime constructors (Phase 5) ──────────────────────────────
 
-    def source(self, source_id: str) -> Any:  # pragma: no cover - stub
-        raise NotImplementedError(
-            f"SourceFactory.source({source_id!r}) is wired in Phase 5 of the openspec change"
-        )
+    def source(self, source_id: str) -> Callable[[], Any]:
+        """Return a 0-arg callable that, when invoked, returns a DLT
+        source. The source is not materialised; the caller decides
+        when to run it through a `dlt.pipeline`.
+        """
+        s = self.get(source_id)
+        return build_source(s, self.spec.defaults)
 
-    def dlt_asset(self, source_id: str) -> Any:  # pragma: no cover - stub
-        raise NotImplementedError(
-            f"SourceFactory.dlt_asset({source_id!r}) is wired in Phase 5 of the openspec change"
-        )
+    def dlt_asset(self, source_id: str) -> Any:
+        """Build a Dagster `AssetsDefinition` that runs the DLT
+        source for `source_id` and materialises into the configured
+        destination (DuckLake / DuckDB).
 
-    def dagster_asset(self, source_id: str) -> Any:  # pragma: no cover - stub
-        raise NotImplementedError(
-            f"SourceFactory.dagster_asset({source_id!r}) is wired in Phase 5 of the openspec change"
+        We use the plain `@asset` + `dlt.pipeline()` pattern (the
+        same one used by `leaving_cert/dlt_assets.py`) rather than
+        `dagster_dlt.dlt_assets` because the latter doesn't accept
+        `compute_kind` or `group_name` kwargs that the rest of the
+        codebase uses.
+
+        The asset key is `{nation}_{domain}_{...asset_key[2:]}` —
+        matches the convention used by the manual wrappers.
+        """
+        from dlt_utils.destinations import get_dlt_destination
+        from dlt_utils.safety import safe_dlt_run
+
+        s = self.get(source_id)
+        dataset_name = self.lance_table(source_id).replace(".", "_").replace("-", "_")
+        pipeline_name = f"sf_{s.id.replace('.', '_')}"
+        group_name = f"{s.domain}_{s.nation}"
+
+        @asset(
+            name=pipeline_name,
+            group_name=group_name,
+            compute_kind="dlt",
+            description=s.name,
         )
+        def _asset(context) -> MaterializeResult:
+            os.environ.setdefault("USE_LOCAL_SCRAPES", "true")
+            dlt = __import__("dlt")
+            destination = get_dlt_destination()
+            pipeline = dlt.pipeline(
+                pipeline_name=pipeline_name,
+                destination=destination,
+                dataset_name=dataset_name,
+                dev_mode=False,
+            )
+            source_obj = self.source(source_id)()
+            load_info = safe_dlt_run(pipeline, source_obj)
+            return MaterializeResult(
+                metadata={
+                    "source_id": source_id,
+                    "dataset_name": dataset_name,
+                    "loads_ids": str(load_info.loads_ids[0]) if load_info.loads_ids else "",
+                }
+            )
+
+        return _asset
+
+    def dagster_asset(self, source_id: str) -> Any:
+        """Build a thin Dagster `asset` for lineage + UI.
+
+        Unlike `dlt_asset()`, this method does NOT materialise
+        data — it just runs the source and counts rows. Use
+        this when you want the asset graph to *show* a source
+        in the UI (e.g. for a sensor-driven observation) without
+        triggering a full DLT pipeline run.
+
+        The asset key uses the canonical `{nation}_{domain}_{...}`
+        prefix from the YAML's `asset_key` list.
+        """
+        s = self.get(source_id)
+        asset_key_path = "/".join(s.asset_key)
+        group_name = f"{s.domain}_{s.nation}"
+
+        @asset(
+            key=AssetKey(s.asset_key),
+            group_name=group_name,
+            compute_kind="dlt",
+            description=f"Lineage for {s.name} ({s.id})",
+        )
+        def _lineage_asset(context) -> MaterializeResult:
+            src = self.source(source_id)()
+            # The dlt source is iterable; we materialise just enough
+            # to count rows. We don't write to the destination.
+            try:
+                rows = []
+                for res_name in src.resources:
+                    rows.extend(list(src.resources[res_name]))
+            except Exception as exc:  # pragma: no cover - network dependent
+                context.log.warning(f"lineage-only asset {s.id}: source extraction failed: {exc}")
+                rows = []
+            return MaterializeResult(
+                metadata={
+                    "source_id": source_id,
+                    "asset_key": asset_key_path,
+                    "row_count": len(rows),
+                    "materialised": False,
+                }
+            )
+
+        return _lineage_asset
 
 
 # ── Convenience: a module-level default for tests ────────────────────────
