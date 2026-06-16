@@ -1,0 +1,73 @@
+# =============================================================================
+# LANCEDB LEABHARLANN BLOB - extension to lancedb compose for the leabharlann
+# blob target.
+# =============================================================================
+# Adds a `leabharlann` LanceDB blob volume + mount that the leabharlann v1
+# CocoIndex Apps can write to via LANCEDB_URI=/data/s3/leabharlann.ldb.
+#
+# USAGE:
+#   # From the leabharlann-cocoindex-v1 stack root:
+#   docker compose -f ../lancedb/compose.yaml --profile s3 up -d
+#   docker compose -f compose.yaml up -d
+#
+# Reference: openspec/changes/leabharlann-cocoindex-v1/
+#            openspec/changes/primary-secondary-british-isles-and-full-stack-demo/
+# =============================================================================
+
+name: lancedb-leabharlann
+
+services:
+  # ---------------------------------------------------------------------------
+  # LEABHARLANN BLOB - FUSE mount of the leabharlann.ldb directory.
+  # Reuses the lancedb-s3-mounter profile from the parent lancedb stack.
+  # ---------------------------------------------------------------------------
+  leabharlann-blob-mounter:
+    image: rclone/rclone:latest
+    container_name: leabharlann-blob-mounter
+    restart: unless-stopped
+    privileged: true
+    cap_add:
+      - SYS_ADMIN
+    devices:
+      - /dev/fuse
+    command: >
+      mount r2:${R2_BUCKET:-lance-leabharlann} /data/s3/leabharlann
+      --allow-other
+      --vfs-cache-mode full
+      --vfs-cache-max-size 10G
+      --daemon-wait 30s
+    environment:
+      RCLONE_CONFIG_R2_TYPE: s3
+      RCLONE_CONFIG_R2_PROVIDER: ${RCLONE_PROVIDER:-Cloudflare}
+      RCLONE_CONFIG_R2_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      RCLONE_CONFIG_R2_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      RCLONE_CONFIG_R2_ENDPOINT: ${AWS_ENDPOINT_URL:-}
+    volumes:
+      - type: bind
+        source: ${LEABHARLANN_MOUNT_POINT:-./leabharlann_mount_point}
+        target: /data/s3
+        bind:
+          propagation: rshared
+    networks:
+      - cianfhoghlaim
+
+  # ---------------------------------------------------------------------------
+  # LEABHARLANN LANCEDB VIEWER - web UI bound to the blob mount
+  # ---------------------------------------------------------------------------
+  leabharlann-lancedb-viewer:
+    image: ghcr.io/gordonmurray/lance-data-viewer:lancedb-0.24.3
+    container_name: leabharlann-lancedb-viewer
+    restart: unless-stopped
+    ports:
+      - "${LEABHARLANN_LANCEDB_PORT:-8082}:8080"
+    volumes:
+      - leabharlann-blob-data:/data
+    networks:
+      - cianfhoghlaim
+
+volumes:
+  leabharlann-blob-data:
+
+networks:
+  cianfhoghlaim:
+    driver: bridge

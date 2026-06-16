@@ -77,6 +77,155 @@ The first model conversion takes hours (124 GB HF safetensors + ~30 GB GGUF outp
 
 ---
 
+## Recommended Developer Environment
+
+The full stack that powers day-to-day development across this monorepo is opinionated and tightly integrated. Every choice is made to (a) minimise the cost of a context switch between TypeScript, Python, infrastructure-as-code, and AI-agentic work, (b) keep monthly spend under $25, and (c) keep the developer one `cd` away from a fully hydrated, fully indexed, fully reproducible working copy.
+
+### Pillar-by-pillar rationale
+
+| Pillar | Role | Why we chose it |
+|:--|:--|:--|
+| **Visual Studio Code** | Primary editor | First-class TS + Python, native `tasks.json` / `.vscode/launch.json`, integrates natively with `mise`, `bun`, `uv`, the OpenCode companion, and the LiteLLM gateway. Single UI for editing code, running Dagster assets in the integrated terminal, browsing marimo notebooks, and chatting with the OpenCode subagents. |
+| **bun** | TS runtime, package manager, script runner | One tool replaces `node` + `npm` + `yarn` + `pnpm` + `npx` + `tsx`. Powers workspace orchestration, secret sync, OpenSpec, the `ccc` index, the dagster / komodo / pangolin glue, and every BAML codegen step. `bun run setup` is the canonical onboarding entry point. |
+| **uv** | Python package manager + workspace manager | Replaces `pip` + `poetry` + `pyenv` + `virtualenv`. Native PEP 723, lockfile, and uv-workspace member resolution. Drives the five `members` of the `pyproject.toml` workspace (`oideachais`, `tuath`, `códeolas`, `sruth-browser`, `mcpo`) and every `uv run …` entry point. |
+| **mise** | Polyglot toolchain + task runner | Pins `python 3.13`, `uv`, `bun`, `dagger`, `pulumi`, `duckdb`, `sops`, `opencode`, and friends in a single `mise.toml`. Directory hooks auto-export `.env` and the workspace `PYTHONPATH` on every `cd`, so the shell is always the same shape as the editor. |
+| **HuggingFace GGUF** | Local model format | Q4_K_M quantised GGUFs are small (≈ 4-6 GB per 7 B model) and run on the M4 Max 48 GB via `llama-swap`. Cache lives at `stedding/huggingface/{hub,gguf,mlx}/`; 28 models, 124 GB safetensors + 30 GB GGUF + 15 GB MLX. |
+| **LiteLLM** | OpenAI-compatible LLM gateway | One URL (`http://litellm:4000/v1`) routes to local GGUF (`llama-swap`), local MLX (`mlx-omni`), local image (`invokeai`), and cloud providers (Gemini, GLM, OpenAI, OpenCode Go). Every BAML function, every Dagster asset, every marimo cell, every n8n workflow calls an *alias* — never a provider id. |
+| **OpenCode** | AI coding agent / IDE companion | Speaks the same OpenAI-compatible protocol as LiteLLM. Runs as a VS Code companion or a standalone CLI. Dispatches to five specialised subagents (`explorer`, `data-engineer`, `ai-engineer`, `frontend-dev`, `devops-architect`) defined in `opencode.json`. |
+| **OpenCode Go** | Cloud LLM backbone behind OpenCode | One flat-rate API exposes the full model lineup (`deepseek-v4-pro`, `deepseek-v4-flash`, `kimi-k2.6`, `glm-5.1`, `minimax-m2.5`, `qwen-3.7-max`) at a single base URL. The whole n8n LLM backbone uses it via `$OPENAI_BASE_URL/chat/completions`. |
+| **MiniMax M3 coding plan** | Subscription that unlocks frontier M3 reasoning | The newest member of the model lineup. Used for the hardest, multi-step, long-context coding tasks — 20-file refactors, dependency-graph reasoning over a Dagster code-location, full-repo PR review, anything where the planner needs a million-token window. |
+| **DeepSeek V4 Pro API key** | Direct provider access | Bypasses the OpenCode Go rate limit when a subagent needs sustained high throughput (e.g. BAML `extract` fanning out to 800+ SEC exam papers in a single run). The key is hydrated through Infisical and exposed as `DEEPSEEK_API_KEY` in the container env. |
+
+### How they fit together
+
+```
+┌────────────────────────────┐    ┌──────────────────────────────┐    ┌──────────────────────────────┐
+│  Visual Studio Code        │    │  OpenCode (agent)            │    │  OpenCode Go API             │
+│  ── editor + tasks         │───>│  ── sub-agent dispatcher     │───>│  ── 6-model lineup           │
+│  ── integrated terminal    │    │  ── explorer / data / ai /   │    │  ── minimax m3 coding plan   │
+│  ── debug + MCP clients    │    │     frontend / devops        │    │  ── deepseek-v4-pro direct   │
+└──────────────┬─────────────┘    └──────────────┬───────────────┘    └──────────────┬───────────────┘
+               │                                │                                 │
+               │ mise → bun / uv                │ chat/completions                │
+               ▼                                ▼                                 ▼
+┌────────────────────────────┐    ┌──────────────────────────────┐    ┌──────────────────────────────┐
+│  mise.toml toolchain       │    │  LiteLLM gateway :4000       │    │  HuggingFace GGUF cache      │
+│  python 3.13, bun, uv,     │    │  ── llama-swap :8080 (GGUF)  │◀───│  stedding/huggingface/       │
+│  dagger, pulumi, opencode  │    │  ── mlx-omni :10240 (MLX)    │    │  hub/  gguf/  mlx/           │
+│  ── dir hooks + tasks      │    │  ── OpenCode Go passthrough  │    │  28 models, ~124 GB safetensors│
+└────────────────────────────┘    └──────────────────────────────┘    └──────────────────────────────┘
+```
+
+### One-time setup
+
+```bash
+# 1. Install the toolchain (mise pins every version)
+mise install
+
+# 2. Install TS + Python dependencies
+bun install
+uv sync
+
+# 3. Hydrate secrets from Infisical
+#    (.env is written here; mise directory hooks keep it in sync on every cd)
+bun run secrets:env
+bun run secrets:init
+
+# 4. Start the local LLM gateway + HF GGUF swapper
+cd infrastructure/stacks/engineering/litellm    && docker compose -f compose.yaml -f sidecar.yaml up -d
+cd ../meaisinfhoghlaim                          && docker compose -f compose.yaml -f sidecar.yaml up -d
+
+# 5. Materialise model conversion (HF safetensors -> Q4_K_M GGUF) once
+cd oideachais && uv run dagster dev -m data_platform.dagster_defs.definitions
+# -> http://localhost:3000 -> Jobs -> model_conversion -> Materialize
+```
+
+### The VS Code experience
+
+- **`.vscode/`** holds `settings.json`, `tasks.json`, and `launch.json` that point at the *mise-managed* binaries (`bun`, `uv`, `python 3.13`, `opencode`) — the editor and the terminal therefore always resolve to the same interpreter and runtime, eliminating the "works in the editor, fails in CI" class of bugs.
+- **MCP clients** (Browserbase, Firecrawl, MotherDuck, Cocoindex-Code, Cognee, Graphiti, Langfuse) are wired through `opencode.json` and are equally usable inside VS Code via the OpenCode companion — so `mcp__motherduck__execute_query` works the same way whether you call it from a chat, a notebook, or a BAML prompt.
+- **Tasks** for `bun run setup`, `mise turbo dev`, `mise dagster:oideachais`, `mise ccc:index`, `mise spec:validate …` are exposed as one-click VS Code tasks. The Turborepo graph (`build`, `dev`, `typecheck`, `lint`, `format`, `test`) is reachable through `mise turbo <task>`.
+- **Debugging** uses Python `debugpy` for Dagster assets, Bun `--inspect` for root scripts, and `tsx` for the BAML client; all three are configured in `launch.json` with launch profiles per workspace.
+
+### Why a single gateway
+
+Every BAML function, every Dagster asset, every marimo cell, every n8n workflow, and every OpenCode subagent call the same URL: `http://litellm:4000/v1`. The gateway decides whether a request hits a local GGUF (free, private, low latency) or a cloud model (paid, frontier). The application code never knows — it just asks for an *alias* like `extract`, `vision`, `irish`, `general`, and LiteLLM resolves the `primary -> fallback` chain.
+
+This is what makes the **MiniMax M3 coding plan** and the **DeepSeek V4 Pro key** interchangeable from the application's point of view: both are exposed as aliases, both fail over gracefully, and both are rate-limit aware via Langfuse. If the M3 plan is exhausted, the alias falls through to DeepSeek V4 Pro; if DeepSeek is rate-limited, the alias falls through to GLM 5.1; if every cloud is down, it falls through to the local GGUF. The same code path serves all four cases.
+
+### Why bun + uv + mise
+
+The three tools each own a clean horizontal slice and they do not overlap:
+
+- **mise** owns *which versions* of every binary are on `PATH` (including binaries it does not manage, via `[env]` blocks). It also owns the *task* surface — `mise turbo dev`, `mise ccc:search …`, `mise dagster:oideachais`, `mise spec:validate …`, `mise secrets:init`, etc.
+- **bun** owns the *TypeScript graph* — the root orchestration scripts, the three `workspaces` (`oideachais-web`, `oideachais-mcp-filesystem`, `tuatha-ui`), secret sync, OpenSpec, `ccc`, the dagster / komodo / pangolin glue, and every `bunx` invocation of the MCP servers.
+- **uv** owns the *Python graph* — the five uv-workspace members, the lockfile, the venvs, the `uv run …` entry points, and PEP 723 inline scripts. A developer never has to activate a venv manually: `uv run` resolves to the workspace venv, and mise injects `PYTHONPATH` and `VIRTUAL_ENV` so that `python` in a terminal lands in the same interpreter VS Code uses.
+
+### Why HuggingFace GGUF specifically
+
+- **Privacy.** OCR, vision, Irish generation, and curriculum embeddings run locally; raw PDFs and student work never leave the laptop. The HF safetensors are checksum-pinned in `meaisínfhoghlaim/`, the GGUF conversions are reproducible Dagster assets, and the swap profiles are deterministic.
+- **Cost.** Once a Q4_K_M GGUF is in `stedding/huggingface/gguf/`, every subsequent request is free, and we can serve thousands of pages per day for under $0.001 in electricity. The only recurring AI spend is for the *cloud* aliases that GGUF cannot cover (frontier reasoning, the M3 coding plan, the DeepSeek V4 Pro key).
+- **Latency.** On M4 Max 48 GB the Qwen2.5-VL-7B vision model returns in ≈ 250 ms per page — faster than a network round-trip to any cloud VLM. The `text`, `vision`, and `image` profiles in `llama-swap` keep one model resident at a time and hot-swap when the alias changes.
+- **Quantisation flexibility.** Q4_K_M, Q5_K_M, Q8_0, and f16 variants sit side by side; `llama-swap` picks the right one for the alias and the request.
+- **No vendor lock-in.** GGUFs are an open format, the conversion code is open-source, and the entire HF -> GGUF pipeline is a Dagster asset (`hf_models_downloaded -> gguf_*`), so a fresh machine can reproduce the full cache in hours.
+
+### Why a coding plan matters
+
+A **coding plan** is a flat-rate subscription that gives the developer a guaranteed monthly token budget against a specific frontier model. We pair two:
+
+- **MiniMax M3 coding plan** — long-context (1 M+ tokens), deep multi-step reasoning, the model used when an OpenCode subagent has to plan a 20-file refactor, trace a graph-of-thought through a Dagster dependency graph, or hold an entire PR review in context. M3 is the planner-of-last-resort; when an alias asks for `general` and the chain is exhausted, M3 takes over.
+- **DeepSeek V4 Pro API key** — direct provider access, used when the subagent throughput spikes (BAML `extract` fanning out to 800+ SEC exam papers in a single run) and we need to bypass the OpenCode Go rate limit. The key is hydrated through Infisical and exposed as `DEEPSEEK_API_KEY` in the container env, so any container, any Dagster asset, any subagent can pick it up without code changes.
+
+Both are referenced from `opencode.json` and from the LiteLLM aliases so the same alias (`extract`, `general`, `ai-engineer`) can fall back from one to the other without code changes — and the LiteLLM gateway, the OpenCode dispatcher, and the BAML client all converge on the same URL.
+
+### Closed-source models — our position
+
+For workloads that require a *closed-source* provider — frontier reasoning, multimodal safety pipelines, regulated British Isles data flows, classroom and child-facing surfaces — our internal research in [`leabharlann/gemini_deep_research/technology/`](leabharlann/gemini_deep_research/technology/) concludes that the **British DeepMind** lineage and the associated **Gemini** family are **by far the most secure and feature-rich option in the closed-source ecosystem** — especially for developers, schools, public-sector teams, and families in the British Isles who care about **data privacy, child safety, and alignment with UK / EU regulatory frameworks**. The local HF GGUF stack is still the *first* line of defence (privacy by architecture, not by policy), but when a closed-source model is unavoidable, our policy is **Gemini-first**.
+
+The position is documented across six deep-research reports that the developer is expected to read before changing the closed-source default:
+
+| Report | What it underwrites |
+|:--|:--|
+| [`gemini_pro_for_public_safety.pdf`](leabharlann/gemini_deep_research/technology/gemini_pro_for_public_safety.pdf) | The Gemini Pro deployment profile we default to for **child-facing** and **public-safety** surfaces (schools, classroom tutors, junior-cycle, primary, KS1-KS4), including the content-filter and refusal-tuning posture. |
+| [`gemini_s_safety_privacy_and_origins.pdf`](leabharlann/gemini_deep_research/technology/gemini_s_safety_privacy_and_origins.pdf) | Safety and privacy architecture of Gemini, with explicit attention to **DeepMind's British provenance** and the safety-research lineage that pre-dates the Google acquisition. |
+| [`google_s_ai_regulation_and_competitors.pdf`](leabharlann/gemini_deep_research/technology/google_s_ai_regulation_and_competitors.pdf) | Comparative regulatory analysis: how Gemini's UK / EU regulatory engagement compares against US-only and PRC-origin closed-source competitors. |
+| [`ai_company_analysis_financial_technical_corporate.pdf`](leabharlann/gemini_deep_research/technology/ai_company_analysis_financial_technical_corporate.pdf) | Financial, technical, and corporate analysis of the major AI labs — the evidence base for the "by far the most secure and feature-rich" assessment. |
+| [`regulating_big_tech_in_british_isles.pdf`](leabharlann/gemini_deep_research/technology/regulating_big_tech_in_british_isles.pdf) | UK / Ireland regulatory landscape; explains why a British-origin lab with strong UK regulatory engagement is the lower-friction choice for British Isles deployments. |
+| [`us_tech_infiltration_and_uk_ireland_defense.pdf`](leabharlann/gemini_deep_research/technology/us_tech_infiltration_and_uk_ireland_defense.pdf) | Defensive posture: threat-modelling US-only and PRC-origin closed-source providers, and the case for routing regulated British Isles data through a British-origin lab wherever possible. |
+
+In practice this translates into four concrete dev-environment rules:
+
+1. **Default ordering.** When the LiteLLM aliases `extract`, `vision`, `document`, and `general` resolve to a closed-source model, the primary in the chain is a **Gemini** model (e.g. `gemini-2.5-pro`, `gemini-2.5-flash`). OpenCode Go and DeepSeek V4 Pro are fallbacks; MiniMax M3 / `minimax-m2.5` are fallbacks; the local Q4_K_M GGUF is the always-on last resort. Gemini-first is policy, not coincidence.
+2. **Child-facing surfaces.** Any deployment that touches a **child-facing** surface — school, classroom, junior-cycle, primary, KS1-KS4, tutor chatbots, formative-assessment flows, the CopilotKit tutor on `oideachais-web` — routes through the **Gemini Pro public-safety profile** documented in `gemini_pro_for_public_safety.pdf`, with the content filters and refusal-tuning that report specifies.
+3. **Regulated British Isles data.** Any deployment that touches **regulated British Isles data** — NHS, DEIS schools, Teaching Council of Ireland, courts, citizens information, primary-source exam papers from SEC / NCCA / CCEA / SQA / WJEC — prefers Gemini over US-only or PRC-origin competitors for the reasons outlined in `regulating_big_tech_in_british_isles.pdf` and `us_tech_infiltration_and_uk_ireland_defense.pdf`.
+4. **Local-first never goes away.** The local HF GGUF stack remains the *first* line of defence (privacy by architecture, not by policy). The OpenCode Go + MiniMax M3 coding plan + DeepSeek V4 Pro key is the *coding* backbone. **Gemini is the closed-source default, not a replacement** for either layer.
+
+This is the stack that ships: VS Code + `mise` + `bun` + `uv` + OpenCode + OpenCode Go + the MiniMax M3 coding plan + the DeepSeek V4 Pro API key + the local HF GGUF cache behind LiteLLM, **with Gemini as the closed-source default** for the workloads that the open-source local stack cannot cover and where British Isles privacy and child safety are non-negotiable.
+
+### Daily loop
+
+```bash
+# Pull the latest, run quality gates
+git pull --rebase
+mise turbo dev              # boots lakehouse + litellm + llama-swap + mlx-omni
+uv run pytest -q
+bun run lint
+
+# Pick a ticket
+gh issue view 142
+mise turbo task ai-engineer # or open the issue in VS Code and let OpenCode triage
+
+# Open a PR
+git checkout -b feat/issue-142
+# ... edit ...
+mise turbo test && mise turbo lint
+gh pr create --fill
+```
+
+The first time a developer runs this loop, the M4 Max fans up as `llama-swap` loads a Q4_K_M GGUF, the LiteLLM gateway warms its alias cache, the OpenCode Go API auths the M3 coding plan, and OpenCode is already talking to `deepseek-v4-pro` for the `explorer` subagent and to `minimax-m2.5` (or `m3` on the M3 coding plan) for the hardest planner. By the second run, everything is in cache and the cold-start is under five seconds.
+
+---
+
 ## Monorepo Topology (v2 — Polyglot)
 
 Two language graphs orchestrated by `turbo.json` and a single `mise.toml`.
