@@ -4,6 +4,12 @@
 > self-hosted, full-stack TypeScript + Python platform** that doubles as a
 > **reference implementation** for the rest of `kings_college_galway`.
 
+> See also: [`croilar/AGENTS.md`](AGENTS.md) — the developer-quick-reference
+> for the croilar quadrant. The openspec specs are at:
+> - [`openspec/specs/croilar-portfolio/spec.md`](../openspec/specs/croilar-portfolio/spec.md)
+> - [`openspec/specs/croilar-data-engineering/spec.md`](../openspec/specs/croilar-data-engineering/spec.md)
+> - [`openspec/specs/croilar-cv-extraction/spec.md`](../openspec/specs/croilar-cv-extraction/spec.md)
+
 Croílár (Irish: *core/heart*) is the canonical example inside this monorepo of
 how to combine:
 
