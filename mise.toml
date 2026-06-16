@@ -51,7 +51,23 @@ UV_PROJECT_ENVIRONMENT = ".venv"
 
 [tasks.sync]
 description = "Sync all Python workspace packages"
-run = "uv sync"
+# NB: `uv sync` from the croilar subdir regenerates a broken
+# `_editable_impl_croilar.pth` file (per issue #17). The fix-pth
+# task below rewrites it. We chain them so `mise run sync` is
+# unbroken end-to-end.
+run = """
+uv sync
+bash croilar/scripts/fix-pth.sh
+"""
+
+# Per https://github.com/cianfhoghlaim/kings_college_galway/issues/17,
+# `uv sync` regenerates a broken `_editable_impl_croilar.pth` file
+# (4 lines, all pointing to the project root, not its parent).
+# Run this task AFTER every `uv sync` to rewrite the pth to the
+# right path (1 line, the project's parent directory).
+[tasks."croilar:fix-pth"]
+description = "Rewrite the broken _editable_impl_croilar.pth file (per issue #17)"
+run = "bash croilar/scripts/fix-pth.sh"
 
 [tasks.test]
 description = "Run pytest on all Python packages"
