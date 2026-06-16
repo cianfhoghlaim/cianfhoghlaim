@@ -17,37 +17,32 @@ Celtic education curriculum pipeline processing Irish, UK, and pan-Celtic educat
 ## Requirements
 ### Requirement: Curriculum Ingestion
 
-The system SHALL ingest curriculum documents from multiple Irish and UK sources with caching fallback.
+The system SHALL ingest curriculum documents from multiple Irish and
+UK sources with caching fallback.
 
-#### Scenario: Irish Curriculum
-- **GIVEN** NCCA curriculum documents at `curriculumonline.ie`
-- **WHEN** DLT pipeline runs with `USE_LOCAL_SCRAPES=false`
-- **THEN** documents are scraped via Firecrawl and loaded to DuckLake
+#### Scenario: Integrates with the 4 quadrants
 
-#### Scenario: Local Cache Fallback
-- **GIVEN** `USE_LOCAL_SCRAPES=true` environment variable
-- **WHEN** DLT pipeline runs
-- **THEN** documents are read from `/stedding/ingest_queue/` cache instead of live scraping
+- **WHEN** a developer reads the `oideachais-pipeline` spec
+- **THEN** the spec references the 7 oideachais-* openspec specs
+  (oideachais-pipeline, oideachais-leabharlann, oideachais-baml-schemas,
+  oideachais-cognify-knowledge-graph, oideachais-semantic-search,
+  oideachais-marimo-dashboards, ireland-primary-jc-dlt-baml) AND
+  the 3 meaisinfhoghlaim-* specs (meaisinfhoghlaim-platform,
+  meaisinfhoghlaim-agent-frameworks, meaisinfhoghlaim-ocr-htr) AND
+  the 1 tuatha-platform spec AND the 3 croilar-* specs
+  (croilar-portfolio, croilar-data-engineering, croilar-cv-extraction)
+- **AND** the 4 quadrant AGENTS.md files (oideachais/AGENTS.md,
+  meaisinfhoghlaim/AGENTS.md, tuatha/AGENTS.md, croilar/AGENTS.md)
+  are linked from the spec's Cross-references section
 
-#### Scenario: Three-Source Unified Crawling
-- **GIVEN** curriculumonline.ie, ncca.ie, and examinations.ie sources
-- **WHEN** the unified curriculum DLT source runs
-- **THEN** content is deduplicated via content hashing with source provenance tracking
+#### Scenario: References the right AGENTS.md / README / STATUS
 
-#### Scenario: UK Curriculum
-- **GIVEN** England, Scotland, Wales, and Northern Ireland curriculum sources
-- **WHEN** respective nation-specific DLT pipelines run
-- **THEN** data is normalized and stored with per-nation partitions
-
-#### Scenario: Exam Papers
-- **GIVEN** SEC exam papers and marking schemes
-- **WHEN** extraction pipeline runs with BAML schemas
-- **THEN** questions and marking scheme answers are aligned
-
-#### Scenario: Curriculum Index Registry
-- **GIVEN** curriculum sources defined in `curriculum_index.json` registry
-- **WHEN** pipeline initializes
-- **THEN** URLs and subjects are resolved from the registry rather than hardcoded
+- **GIVEN** the openspec change `openspec-consolidation-and-readme-refresh`
+  is archived
+- **WHEN** a developer navigates to the pipeline
+- **THEN** the canonical `oideachais/AGENTS.md`,
+  `oideachais/STATUS.md`, `oideachais/REFACTORING.md`, and the 4
+  quadrant READMEs are linked from the spec
 
 ### Requirement: Partition Strategy (v2)
 

@@ -1,4 +1,5 @@
 import { useCopilotChat, useCopilotAction } from "@copilotkit/react-core";
+import { TextMessage, Role } from "@copilotkit/runtime-client-gql";
 import { useState } from "react";
 import { client } from "../utils/orpc";
 
@@ -71,7 +72,7 @@ export function OideachasChat() {
                   key={m.id ?? idx}
                   className={
                     "p-2 rounded-lg " +
-                    ((m as { role?: string }).role === "user"
+                    (((m as { role?: string }).role ?? "") === "user"
                       ? "bg-emerald-700/20 text-emerald-100"
                       : "bg-slate-800 text-slate-200")
                   }
@@ -89,7 +90,13 @@ export function OideachasChat() {
               const input = e.currentTarget.elements.namedItem("prompt") as HTMLInputElement;
               const text = input.value.trim();
               if (!text) return;
-              await appendMessage({ role: "user", content: text } as never);
+              await appendMessage(
+                new TextMessage({
+                  id: crypto.randomUUID(),
+                  role: Role.User,
+                  content: text,
+                }),
+              );
               input.value = "";
             }}
           >

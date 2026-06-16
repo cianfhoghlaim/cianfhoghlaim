@@ -25,6 +25,7 @@ The root `pyproject.toml` is a uv-workspace **shell** (no dependencies, no conso
 | Member | Path | Purpose |
 |:--|:--|:--|
 | `oideachais` | `oideachais/` | Celtic education data platform (Dagster, DLT, LanceDB) |
+| `meaisinfhoghlaim` | `meaisinfhoghlaim/` | AI/ML services (agents, OCR, Celtic-language, ML pipelines) |
 | `tuath` | `tuatha/` | Educational MMO + crypto platform (Babylon.js, siwe, x402) |
 | `códeolas` | `códeolas/` | Code intelligence library (publishable) |
 | `sruth-browser` | `infrastructure/browser/` | Browser automation client (Stagehand, MCP) |
@@ -89,6 +90,18 @@ bun run spec:archive my-change-id
 ```
 
 Full workflow in [`openspec/AGENTS.md`](openspec/AGENTS.md).
+
+## Quadrant AGENTS.md files
+
+Each top-level quadrant has its own `AGENTS.md` with developer-quick-reference routing tables:
+
+- [`oideachais/AGENTS.md`](oideachais/AGENTS.md) — Celtic education data platform
+- [`meaisinfhoghlaim/AGENTS.md`](meaisinfhoghlaim/AGENTS.md) — AI/ML services
+- [`tuatha/AGENTS.md`](tuatha/AGENTS.md) — Educational MMO + crypto
+- [`croilar/AGENTS.md`](croilar/AGENTS.md) — Multi-persona portfolio
+
+When the user asks "where do I add X?", route to the matching `AGENTS.md`'s
+"Quick routing" table.
 
 ---
 
