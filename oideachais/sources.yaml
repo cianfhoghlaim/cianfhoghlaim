@@ -454,3 +454,53 @@ sources:
     kind: api_xml
     urls: ["https://www.legislation.gov.uk"]
     asset_key: [wls, law, legislation, wls]
+
+  # Crown Dependencies medicine (Phase 3.6 of lateralise-british-isles-domains)
+  - id: iom.medicine.health_social_care
+    name: "Isle of Man Government — Health & Social Care"
+    domain: medicine
+    nation: iom
+    kind: firecrawl_pages
+    urls: ["https://www.gov.im/categories/health-and-social-care/"]
+    asset_key: [iom, medicine, health_social_care, pages]
+
+  - id: jey.medicine.health_community_services
+    name: "Government of Jersey — Health & Community Services"
+    domain: medicine
+    nation: jey
+    kind: firecrawl_pages
+    urls: ["https://www.gov.je/health/"]
+    asset_key: [jey, medicine, health_community_services, pages]
+
+  - id: ggy.medicine.health_social_care
+    name: "States of Guernsey — Health & Social Care"
+    domain: medicine
+    nation: ggy
+    kind: firecrawl_pages
+    urls: ["https://www.gov.gg/health-social-care"]
+    asset_key: [ggy, medicine, health_social_care, pages]
+
+  # Crown Dependencies law (Phase 3.6 of lateralise-british-isles-domains)
+  - id: iom.law.legislation
+    name: "Isle of Man Government — Legislation"
+    domain: law
+    nation: iom
+    kind: firecrawl_pages
+    urls: ["https://www.legislation.gov.im/cms/legislation/"]
+    asset_key: [iom, law, legislation, acts]
+
+  - id: jey.law.legislation
+    name: "Jersey Legal Information Board"
+    domain: law
+    nation: jey
+    kind: firecrawl_pages
+    urls: ["https://www.jerseylaw.je"]
+    asset_key: [jey, law, legislation, acts]
+
+  - id: ggy.law.legislation
+    name: "Laws of Guernsey"
+    domain: law
+    nation: ggy
+    kind: firecrawl_pages
+    urls: ["https://www.gov.gg/legislation"]
+    asset_key: [ggy, law, legislation, acts]
