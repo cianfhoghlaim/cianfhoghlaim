@@ -13,6 +13,7 @@ Sensor Groups:
 from __future__ import annotations
 
 from .author_archive_sensors import author_archive_sensors
+from .cognee_cron_sensor import cognee_cron_sensor
 from .curriculum_freshness import curriculum_freshness_sensors
 from .domain_sensors import domain_sensors
 from .leabharlann_sensors import leabharlann_sensors
@@ -23,6 +24,7 @@ all_sensors = (
     + list(curriculum_freshness_sensors)
     + list(author_archive_sensors)
     + list(leabharlann_sensors)
+    + [cognee_cron_sensor]
 )
 
 __all__ = [
@@ -31,4 +33,5 @@ __all__ = [
     "curriculum_freshness_sensors",
     "author_archive_sensors",
     "leabharlann_sensors",
+    "cognee_cron_sensor",
 ]
