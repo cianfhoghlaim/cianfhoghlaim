@@ -76,6 +76,7 @@ The Cianfhoghlaim platform has **25 capability specs** organised into
 | `dagger-pipelines` | shared | Polyglot CI/CD via Dagger (Python + TS) — 8-step GitOps |
 | `infrastructure-stacks` | shared | 70+ Docker Compose stacks + stack-doctor.sh + Pangolin + Infisical + Locket |
 | `data-engineering-pipeline-documentation` | shared | oideachais/STATUS.md + oideachais/REFACTORING.md + per-area READMEs |
+| `spaces-cicd-pipeline` | shared | Reusable GH Action at `infrastructure/ci/spaces-sync.yml` for publishing any `spaces/*/` dir to a HF Space (gradio / docker / static SDKs) |
 | `workflow-automation` | team | n8n + LLM pipelines (OpenCode Go API) |
 | `task-management` | team | Vikunja kanban + Gantt + list + team sharing |
 | `scheduling` | team | cal-diy team + per-member booking pages |
