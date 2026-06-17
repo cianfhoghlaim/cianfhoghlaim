@@ -1,0 +1,26 @@
+# =============================================================================
+# CROILAR-GLANCE-REGENERATE PROCEDURE
+# =============================================================================
+# Regenerates the Glance dashboard config from the croilar-devtools-hub
+# web stack snapshot. The regenerated config emits one page per project
+# (tuatha, oideachais, croilar, meaisinfhoghlaim) + the existing Home page.
+#
+# Refuses to clobber a manually-edited glance.yml unless
+# CROILAR_GLANCE_REGEN_FORCE=true is set in the environment.
+#
+# Usage:
+#   km run procedure croilar-glance-regenerate
+# =============================================================================
+
+[[procedure]]
+name = "croilar-glance-regenerate"
+description = "Regenerate Glance dashboard config from croilar-devtools-hub web stack snapshot"
+
+[[procedure.config.stages]]
+name = "regenerate-glance"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunCommand", params = {
+  command = "bash"
+  args = ["-c", "cd /etc/komodo/sruth/croilar && bun run croilar/scripts/regenerate-glance-config.ts && docker compose -f /etc/komodo/sruth/infrastructure/stacks/infrastructure/glance/compose.yaml restart glance"]
+} }
