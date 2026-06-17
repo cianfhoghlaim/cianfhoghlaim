@@ -4,6 +4,13 @@
 **Head:** `9b14c9fa0` on `main`
 **Branch state:** `up to date with origin/main`
 
+> **Spaces inherited from prior projects** (added 2026-06-17): `spaces/data-engineering/`
+> (Dagster+DLT+dbt+Evidence reference stack) and `spaces/anti-phish/` (6-stage ML +
+> Gradio ensemble reference). See [`spaces/README.md`](./README.md) §1 for the
+> full pattern catalogue and the adopt/adapt/defer/skip decision matrix. These
+> live as separate git repos inside `spaces/` for reference; they are NOT
+> tracked by the monorepo.
+
 ## Build Small 2026 — current state
 
 | Phase | Status | Notes |
