@@ -1,5 +1,9 @@
 gaeilge/found_in_downloads/abhar_breise_don_cheardlann.7z
 oideachas/lesson_plans/teaching_practice_2/1_administration_management/school_policies/school_rules.pdf
+/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/secrets
+
+
+
 # Node Modules
 node_modules/
 instagram_output/
@@ -241,3 +245,6 @@ university_of_galway/mata/modelling_2/exam_papers/Past/SinéadNotes (1).pdf
 # mcpo is a vendored copy of the open-source mcpo project. Use
 # `uv tool install mcpo` or `uvx mcpo` rather than tracking a local copy.
 oideachais/mcp/mcpo/
+infrastructure/secrets/lego-certs/_.cianfhoghlaim.ie.crt
+infrastructure/secrets/lego-certs/_.cianfhoghlaim.ie.issuer.crt
+infrastructure/secrets/lego-certs/.env-cert-renewal

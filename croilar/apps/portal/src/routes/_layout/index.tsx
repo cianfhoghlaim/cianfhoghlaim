@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Activity,
   AlertTriangle,
@@ -6,6 +6,8 @@ import {
   CheckCircle2,
   Clock,
   Database,
+  FileCode,
+  NotebookPen,
   Server,
   Workflow,
   XCircle,
@@ -128,6 +130,41 @@ function DashboardPage() {
             description="Infrastructure management & monitoring"
             agents={["stack_manager", "pipeline_runner"]}
           />
+        </div>
+      </div>
+
+      {/* DevTools quick access (croilar-devtools-hub) */}
+      <div className="mt-6 bg-card rounded-lg border p-4">
+        <h2 className="font-semibold mb-4 flex items-center gap-2">
+          <FileCode size={18} />
+          DevTools Hub
+        </h2>
+        <div className="grid grid-cols-2 gap-4">
+          <Link
+            to="/web"
+            className="bg-secondary/50 rounded-lg p-4 hover:bg-secondary transition-colors"
+          >
+            <div className="flex items-center gap-2 mb-1">
+              <FileCode size={16} />
+              <h3 className="font-medium">Web Stack</h3>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              TanStack routes, Convex functions, BAML schemas, Cloudflare
+              resources, and marimo notebooks across all four projects.
+            </p>
+          </Link>
+          <Link
+            to="/notebooks"
+            className="bg-secondary/50 rounded-lg p-4 hover:bg-secondary transition-colors"
+          >
+            <div className="flex items-center gap-2 mb-1">
+              <NotebookPen size={16} />
+              <h3 className="font-medium">Notebooks</h3>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              All marimo notebooks across the monorepo, grouped by project.
+            </p>
+          </Link>
         </div>
       </div>
     </div>
