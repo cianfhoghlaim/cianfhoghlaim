@@ -63,12 +63,15 @@ orchestration** of multiple subprojects and 70+ Docker Compose stacks.
 | `agentic-frontend-frameworks` | TanStack Start + CopilotKit + AG-UI + Hono + Convex (renamed from `frontend-frameworks`, merged `agent-frameworks`) | Active |
 | `dagger-pipelines` | Polyglot CI/CD via Dagger (Python + TS) — 5 separate `dagger-*` specs merged into 1 (8-step GitOps) | Active |
 
-### Infrastructure + Tooling (4 specs)
+### Infrastructure + Tooling (7 specs)
 
 | Capability | Description | Status |
 |:--|:--|:--|
 | `infrastructure-stacks` | 70+ Docker Compose stacks + stack-doctor.sh + Pangolin + Infisical + Locket (absorbed `infrastructure` + `stack-audit`) | Active |
 | `data-engineering-pipeline-documentation` | `oideachais/STATUS.md` + `oideachais/REFACTORING.md` + per-area READMEs (the new doc surface from this change) | Active |
+| `spaces-cicd-pipeline` | Reusable GH Action at `infrastructure/ci/spaces-sync.yml` for publishing any `spaces/*/` dir to a HF Space (gradio / docker / static SDKs; the new `spaces-cicd-reusable-pipeline` change) | Active |
+| `celtic-data-engineering-pipeline` | dbt-duckdb at `oideachais/dbt_project/` + marimo statistical-analysis notebooks at `meaisinfhoghlaim/marimo/` (the `celtic-data-engineering-patterns` change; absorbs patterns A1/A4/A5/A8 from `spaces/data-engineering/`) | Active |
+| `gradio-ensemble-pattern` | `meaisinfhoghlaim/pipelines/ensemble_gradio.py` (multi-model Gradio `Interface`) + `spaces/_common/hf_hub_push.py` (HF Hub upload); absorbs patterns B1/B4/B6 from `spaces/anti-phish/` (sister to `celtic-data-engineering-patterns`) | Active |
 | `chunkhound-code-search` | Semantic code search with MVCC | Active |
 | `documentation` | Canonical `docs/` structure (8 numbered domains), frontmatter schema, Cognee ingestion | Active |
 
