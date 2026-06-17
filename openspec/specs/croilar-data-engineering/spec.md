@@ -4,51 +4,25 @@
 
 `croilar-data-engineering` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
 
-
 The Dagster + DLT + CocoIndex + BAML data-engineering layer for the croilar subproject. Cross-links with the existing oideachais + meaisínfhoghlaim outputs via the DuckLake catalog (the lakehouse stack).
-
 ## Requirements
 ### Requirement: Dagster Asset Catalog
-The system SHALL define 12+ Dagster assets covering music ingestion, CV extraction, teaching record, identity verification, and cross-link with oideachais + meaisínfhoghlaim.
 
-#### Scenario: Music pipeline assets
-- **WHEN** the Dagster UI is opened
-- **THEN** the asset catalog SHALL include `spotify_ingestion`, `soundcloud_ingestion`, `youtube_ingestion`, and `track_metadata_embedded`
-- **AND** each asset SHALL be materializable independently
+The system SHALL continue to emit 9+ stream-driven Dagster assets (music, teaching, cv, research).
 
-#### Scenario: CV pipeline assets
-- **WHEN** the Dagster UI is opened
-- **THEN** the asset catalog SHALL include `cv_pdf_ingestion`, `cv_extraction`, and `cv_search_index`
-- **AND** `cv_pdf_ingestion` SHALL ingest from `author_cian_deacy_lyons_mac_an_déisigh_uí_liatháin/achievement/` and `teaching/`
-- **AND** `cv_extraction` SHALL use BAML `cv_extraction.baml` and `teaching_extraction.baml`
+#### Scenario: No regression
 
-#### Scenario: Identity pipeline assets
-- **WHEN** the Dagster UI is opened
-- **THEN** the asset catalog SHALL include `id_document_verification` which uses BAML `identity_verification.baml`
-
-#### Scenario: Cross-link assets
-- **WHEN** the Dagster UI is opened
-- **THEN** the asset catalog SHALL include `oideachais_assets_embedded` and `meaisinfhoghlaim_assets_embedded`
-- **AND** these assets SHALL read from the DuckLake catalog (the existing `storage/lakehouse` stack)
-- **AND** the read path SHALL be read-only (no writes back to oideachais / meaisínfhoghlaim DBs)
+- **WHEN** `mise turbo build dagster` runs
+- **THEN** the asset catalog SHALL still include `music__spotify`, `music__soundcloud`, `music__labels`, `music__artwork`, `teaching__github`, `teaching__linkedin`, `teaching__researchgate`, `cv__cv`, `cv__filesystem`
 
 ### Requirement: BAML Extraction Schemas
-The system SHALL define BAML schemas for the 3 new extraction tasks (CV, teaching, identity).
 
-#### Scenario: cv_extraction.baml compiles
-- **WHEN** `bun run baml-cli compile` is run
-- **THEN** the BAML compiler SHALL emit TypeScript + Python client code from `croilar/baml/cv_extraction.baml`
-- **AND** the client SHALL expose `ExtractCV`, `ExtractEducationEntry`, `ExtractAward`, `ExtractPublication`, `ExtractReference` functions
+The system SHALL continue to compile the 9 BAML schemas.
 
-#### Scenario: teaching_extraction.baml compiles
-- **WHEN** `bun run baml-cli compile` is run
-- **THEN** the compiler SHALL emit the same way from `teaching_extraction.baml`
-- **AND** the client SHALL expose `ExtractPlacement`, `ExtractStudentFeedback`, `ExtractCurriculumDesigned` functions
+#### Scenario: No regression
 
-#### Scenario: identity_verification.baml compiles
-- **WHEN** `bun run baml-cli compile` is run
-- **THEN** the compiler SHALL emit from `identity_verification.baml`
-- **AND** the client SHALL expose `ExtractDocumentType`, `ExtractIssuingAuthority`, `ExtractExpiryDate` functions
+- **WHEN** `bun run baml-cli compile` runs
+- **THEN** the compiler SHALL still emit TypeScript + Python client code from `croilar/baml/{artwork_analysis, cv_extraction, identity_verification, linkedin_profile_extraction, researchgate_extraction, style_transfer, teaching_extraction, generators, clients}.baml`
 
 ### Requirement: Dagster Schedules
 The system SHALL schedule the 12+ assets to run on appropriate cadences.
@@ -68,14 +42,35 @@ The system SHALL schedule the 12+ assets to run on appropriate cadences.
 - **AND** any expired identity documents SHALL be flagged in the Dagster UI
 
 ### Requirement: DuckLake Cross-DB Read
-The system SHALL use the existing DuckLake catalog (the `storage/lakehouse` stack) for cross-DB reads.
 
-#### Scenario: oideachais assets read via DuckLake
-- **WHEN** `oideachais_assets_embedded` materializes
-- **THEN** Dagster SHALL query the DuckLake catalog for the latest `oideachais.curriculum` table
-- **AND** the data SHALL be embedded via CocoIndex and stored in the `croilar_embeddings` table
+The system SHALL continue to read from the existing DuckLake catalog.
 
-#### Scenario: meaisínfhoghlaim assets read via DuckLake
-- **WHEN** `meaisinfhoghlaim_assets_embedded` materializes
-- **THEN** Dagster SHALL query the DuckLake catalog for the latest `meaisinfhoghlaim.ocr` and `meaisinfhoghlaim.asr` tables
-- **AND** the data SHALL be embedded and cross-linked to the CV / research subprojects
+#### Scenario: No regression
+
+- **WHEN** `oideachais_assets_embedded` or `meaisinfhoghlaim_assets_embedded` materializes
+- **THEN** Dagster SHALL continue to query the DuckLake catalog and embed the result
+
+### Requirement: Analyzer Bun Script
+
+The system SHALL ship `croilar/scripts/analyze-web-stack.ts` as a Bun script that walks the monorepo and posts aggregates to Convex.
+
+#### Scenario: Walk succeeds for the 3 present projects
+
+- **WHEN** `bun run croilar/scripts/analyze-web-stack.ts` is executed from the repo root
+- **THEN** the analyzer SHALL walk `tuatha/`, `oideachais/`, `croilar/`
+- **AND** it SHALL skip `meaisínfhoghlaim/` (no web app yet) with a warning
+- **AND** it SHALL POST the resulting 5 tables (tanstackRoutes, convexFunctions, cloudflareResources, bamlSchemas, marimoNotebooks) to the Convex HTTP endpoint
+- **AND** authentication SHALL use the `CROILAR_CONVEX_DEPLOY_KEY` from `.env` (loaded from Infisical)
+
+#### Scenario: Walk is idempotent
+
+- **WHEN** the analyzer is run twice in a row
+- **THEN** the second run SHALL produce the same set of rows (modulo `lastCommit` / `lastCompiled` / `lastExported` timestamps)
+- **AND** no duplicate rows SHALL appear
+
+#### Scenario: Project-scope flag
+
+- **WHEN** the analyzer is invoked with `--project tuatha` (or `oideachais` | `croilar` | `meaisinfhoghlaim`)
+- **THEN** it SHALL walk only that project
+- **AND** it SHALL exit 0 with a single-line summary
+
