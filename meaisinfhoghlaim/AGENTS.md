@@ -24,6 +24,7 @@ Eight integrated components live here, ~15,000+ lines of Python. See
 | Evaluate or improve RAG quality | `evaluation/` (RAGAS; baseline 65.2% → agentic 87.9%) |
 | Validate document quality / completeness | `quality/` (curriculum scoring, audio validation) |
 | Reference model or dataset metadata | `catalog/` (13 models, 16 sources, 3 training mixes) |
+| Add a marimo statistical-analysis notebook | `marimo/` (the `celtic-data-engineering-patterns` change; install with `uv pip install -e "meaisinfhoghlaim[marimo]"`) |
 
 ## Conventions
 
