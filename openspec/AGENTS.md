@@ -63,9 +63,11 @@ The Cianfhoghlaim platform has **25 capability specs** organised into
 | `oideachais-semantic-search` | oideachais | Cross-corpus LanceDB HNSW search (BGE-M3 + BGE-large-en-v1.5) |
 | `oideachais-marimo-dashboards` | oideachais | 11 Marimo notebooks for the 5 educational stages + leabharlann full-stack demo |
 | `ireland-primary-jc-dlt-baml` | oideachais | Ireland Primary + Junior Cycle dlt + BAML loop |
+| `celtic-data-engineering-pipeline` | oideachais | dbt-duckdb project at `oideachais/dbt_project/` + `CelticDagsterDbtTranslator` + 2 marimo notebooks under `meaisinfhoghlaim/marimo/` (the `celtic-data-engineering-patterns` change) |
 | `meaisinfhoghlaim-platform` | meaisinfhoghlaim | 10 sub-packages + 4 heartbeat dagster assets + Dagster code-location |
 | `meaisinfhoghlaim-agent-frameworks` | meaisinfhoghlaim | 12 specialised agents (Root, Curriculum, Translation, Corpus, etc.) |
 | `meaisinfhoghlaim-ocr-htr` | meaisinfhoghlaim | 10 OCR models across 6 backends (Pylaia, TrOCR, PaddleOCR, Tesseract, dots.ocr, VLM) |
+| `gradio-ensemble-pattern` | meaisinfhoghlaim | `build_ensemble_interface()` helper + `push_model_to_hub()` HF Hub push helper (the ensemble UI pattern from `spaces/anti-phish/6_Gradio_Front_End.ipynb`) |
 | `tuatha-platform` | tuatha | Celtic MMO (Babylon.js + Rust + SpacetimeDB) + crypteolas crypto platform |
 | `croilar-portfolio` | croilar | Public TanStack Start site — multi-persona (aleyum, cianfhoghlaim, carlcashman) |
 | `croilar-data-engineering` | croilar | Dagster + DLT + CocoIndex + BAML pipelines for croilar personas |
@@ -77,6 +79,8 @@ The Cianfhoghlaim platform has **25 capability specs** organised into
 | `infrastructure-stacks` | shared | 70+ Docker Compose stacks + stack-doctor.sh + Pangolin + Infisical + Locket |
 | `data-engineering-pipeline-documentation` | shared | oideachais/STATUS.md + oideachais/REFACTORING.md + per-area READMEs |
 | `spaces-cicd-pipeline` | shared | Reusable GH Action at `infrastructure/ci/spaces-sync.yml` for publishing any `spaces/*/` dir to a HF Space (gradio / docker / static SDKs) |
+| `celtic-data-engineering-pipeline` | shared | dbt-duckdb at `oideachais/dbt_project/` + marimo notebooks at `meaisinfhoghlaim/marimo/` (the `celtic-data-engineering-patterns` change) |
+| `gradio-ensemble-pattern` | shared | `meaisinfhoghlaim/pipelines/ensemble_gradio.py` + `spaces/_common/hf_hub_push.py` (sister to `celtic-data-engineering-patterns`) |
 | `workflow-automation` | team | n8n + LLM pipelines (OpenCode Go API) |
 | `task-management` | team | Vikunja kanban + Gantt + list + team sharing |
 | `scheduling` | team | cal-diy team + per-member booking pages |
