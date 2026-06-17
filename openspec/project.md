@@ -63,12 +63,13 @@ orchestration** of multiple subprojects and 70+ Docker Compose stacks.
 | `agentic-frontend-frameworks` | TanStack Start + CopilotKit + AG-UI + Hono + Convex (renamed from `frontend-frameworks`, merged `agent-frameworks`) | Active |
 | `dagger-pipelines` | Polyglot CI/CD via Dagger (Python + TS) — 5 separate `dagger-*` specs merged into 1 (8-step GitOps) | Active |
 
-### Infrastructure + Tooling (4 specs)
+### Infrastructure + Tooling (5 specs)
 
 | Capability | Description | Status |
 |:--|:--|:--|
 | `infrastructure-stacks` | 70+ Docker Compose stacks + stack-doctor.sh + Pangolin + Infisical + Locket (absorbed `infrastructure` + `stack-audit`) | Active |
 | `data-engineering-pipeline-documentation` | `oideachais/STATUS.md` + `oideachais/REFACTORING.md` + per-area READMEs (the new doc surface from this change) | Active |
+| `spaces-cicd-pipeline` | Reusable GH Action at `infrastructure/ci/spaces-sync.yml` for publishing any `spaces/*/` dir to a HF Space (gradio / docker / static SDKs; the new `spaces-cicd-reusable-pipeline` change) | Active |
 | `chunkhound-code-search` | Semantic code search with MVCC | Active |
 | `documentation` | Canonical `docs/` structure (8 numbered domains), frontmatter schema, Cognee ingestion | Active |
 
