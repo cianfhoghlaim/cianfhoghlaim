@@ -161,6 +161,43 @@ def check_geospatial_validity(context, duckdb: DuckDBResource) -> AssetCheckResu
 
 
 # ============================================================================
+# dbt-duckdb project (the celtic-data-engineering-patterns change)
+# ============================================================================
+# Validates the `celtic-data-engineering-pipeline` scenario: when the
+# weekly_downloads dbt model materializes, we expect at least 100 rows.
+# This is the smoke gate for the dbt → marimo notebook pipeline (the
+# marimo notebooks query this model).
+
+
+@asset_check(
+    asset=AssetKey(["weekly_downloads"]),
+    description="Validate that weekly_downloads has more than 100 rows after materialization (the dbt → marimo smoke gate)",
+)
+def check_weekly_downloads_row_count(context, duckdb: DuckDBResource) -> AssetCheckResult:
+    """Check that the `weekly_downloads` dbt model has at least 100 rows.
+
+    Mirrors the prior-art `spaces/data-engineering/dbt_project/` pattern
+    of using dbt-built models as the contract surface for downstream
+    consumers (marimo notebooks, Evidence dashboards, the lakehouse).
+    """
+    try:
+        conn = duckdb.get_connection()
+        row_count = conn.execute(
+            "SELECT count(*) FROM main.weekly_downloads"
+        ).fetchone()[0]
+        passed = row_count > 100
+        return AssetCheckResult(
+            passed=passed,
+            metadata={"row_count": row_count, "threshold": 100},
+        )
+    except Exception as e:
+        return AssetCheckResult(
+            passed=False,
+            metadata={"error": str(e), "note": "weekly_downloads not yet materialized"},
+        )
+
+
+# ============================================================================
 # Export All Checks
 # ============================================================================
 
@@ -171,4 +208,6 @@ all_asset_checks = [
     check_celtic_embeddings,
     # Geospatial
     check_geospatial_validity,
+    # dbt project
+    check_weekly_downloads_row_count,
 ]
