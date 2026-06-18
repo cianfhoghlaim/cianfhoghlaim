@@ -444,3 +444,56 @@ def test_opencode_registers_croilar_devtools() -> None:
     text = cfg.read_text(encoding="utf-8")
     assert '"croilar-devtools"' in text
     assert "croilar/mcp/devtools/index.ts" in text
+
+
+# ---------------------------------------------------------------------------
+# Marimo WASM export
+# ---------------------------------------------------------------------------
+
+WASM_EXPORTER = REPO_ROOT / "croilar" / "scripts" / "export-marimo-wasm.ts"
+
+
+def test_wasm_exporter_script_exists() -> None:
+    assert WASM_EXPORTER.exists()
+    text = WASM_EXPORTER.read_text(encoding="utf-8")
+    assert "marimo export html-wasm" in text
+    assert "manifest.json" in text
+
+
+def test_portal_wasm_dir_contains_manifest() -> None:
+    """After running the exporter, the portal's public/wasm/ must have a manifest."""
+    manifest = REPO_ROOT / "croilar" / "apps" / "portal" / "public" / "wasm" / "manifest.json"
+    if not manifest.exists():
+        pytest.skip("WASM bundles not yet exported — run bun run croilar/scripts/export-marimo-wasm.ts")
+    data = json.loads(manifest.read_text(encoding="utf-8"))
+    assert "notebooks" in data
+    assert isinstance(data["notebooks"], list)
+    assert len(data["notebooks"]) >= 1
+    for nb in data["notebooks"]:
+        assert "slug" in nb
+        assert "file" in nb
+        assert "ok" in nb
+
+
+def test_notebook_slug_page_renders_iframe() -> None:
+    """The /notebooks/$slug page must render an iframe to the WASM bundle when present."""
+    path = REPO_ROOT / "croilar" / "apps" / "portal" / "src" / "routes" / "_layout" / "notebooks" / "$slug.tsx"
+    text = path.read_text(encoding="utf-8")
+    assert "<iframe" in text
+    assert "/wasm/${slug}" in text
+    assert "manifest.json" in text
+
+
+def test_turbo_registers_wasm_task() -> None:
+    turbo = REPO_ROOT / "turbo.json"
+    text = turbo.read_text(encoding="utf-8")
+    assert "croilar:export:wasm" in text
+
+
+def test_root_package_registers_croilar_devtools_scripts() -> None:
+    pkg = REPO_ROOT / "package.json"
+    text = pkg.read_text(encoding="utf-8")
+    assert "croilar:export:wasm" in text
+    assert "croilar:analyze" in text
+    assert "croilar:glance:regen" in text
+    assert "croilar:devtools:hub" in text
