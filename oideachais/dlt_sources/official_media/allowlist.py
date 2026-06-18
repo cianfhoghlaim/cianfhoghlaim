@@ -92,7 +92,11 @@ class AllowlistFilter:
             files. Defaults to ``./fixtures`` relative to this module.
         baml_classifier: Optional callable ``(ig_username, bio, external_url)
             -> {is_official_media, confidence, category, reason}`` for
-            Stage-2 fallback. Defaults to ``None`` (Stage-1 only).
+            Stage-2 fallback. Defaults to the BAML-based classifier
+            (``dlt_sources.official_media.classifier.classify_with_baml``)
+            which is a no-op when the ``baml_client`` package is not
+            generated. Pass ``baml_classifier=None`` to force Stage-1
+            only.
         confidence_threshold: BAML confidence above which the fallback
             accepts the candidate. Default 0.7.
     """
@@ -112,6 +116,12 @@ class AllowlistFilter:
     )
 
     def __post_init__(self) -> None:
+        if self.baml_classifier is None:
+            # Default to the BAML classifier; it returns None when the
+            # baml_client is not generated, so Stage-1 is unaffected.
+            from dlt_sources.official_media.classifier import classify_with_baml
+
+            self.baml_classifier = classify_with_baml
         self._load()
 
     def _load(self) -> None:
