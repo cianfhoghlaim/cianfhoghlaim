@@ -249,3 +249,4 @@ infrastructure/secrets/lego-certs/_.cianfhoghlaim.ie.crt
 infrastructure/secrets/lego-certs/_.cianfhoghlaim.ie.issuer.crt
 infrastructure/secrets/lego-certs/.env-cert-renewal
 croilar/.cache/
+croilar/apps/portal/public/wasm/
