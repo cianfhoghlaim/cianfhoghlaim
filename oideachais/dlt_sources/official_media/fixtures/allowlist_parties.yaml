@@ -1,0 +1,113 @@
+# oideachais/dlt_sources/official_media/fixtures/allowlist_parties.yaml
+#
+# British Isles political parties — the main parties in the IE/NI/EN
+# jurisdictions (PR 1).
+#
+# Each entry is a public Instagram handle. Verified by visiting the
+# party's own home page and finding the Instagram link in the footer.
+
+version: 1
+category: party
+description: >-
+  British Isles political parties (PR 1: IE + NI + EN). PR 2 will add
+  the rest of the NI parties (PBP, IRSP) and the Welsh / Scottish
+  smaller parties.
+entries:
+  # --- Ireland (IE) ---
+  - ig_username: fiannafailparty
+    name: "Fianna Fáil"
+    wikipedia_title: "Fianna Fáil"
+    verified_at: "2026-06-18"
+    source_url: "https://www.fiannafail.ie/contact"
+
+  - ig_username: finegael
+    name: "Fine Gael"
+    wikipedia_title: "Fine Gael"
+    verified_at: "2026-06-18"
+    source_url: "https://www.finegael.ie/our-party/contact/"
+
+  - ig_username: sinnfeinireland
+    name: "Sinn Féin"
+    wikipedia_title: "Sinn Féin"
+    verified_at: "2026-06-18"
+    source_url: "https://www.sinnfein.ie/contact"
+
+  - ig_username: labourparty_ie
+    name: "Irish Labour Party"
+    wikipedia_title: "Labour Party (Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.labour.ie/contact/"
+
+  - ig_username: greenpartyie
+    name: "Green Party / Comhaontas Glas"
+    wikipedia_title: "Green Party (Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.greenparty.ie/contact/"
+
+  - ig_username: socialdemocrats
+    name: "Social Democrats"
+    wikipedia_title: "Social Democrats (Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.socialdemocrats.ie/contact/"
+
+  # --- Northern Ireland (NI) ---
+  - ig_username: dupofficial
+    name: "Democratic Unionist Party"
+    wikipedia_title: "Democratic Unionist Party"
+    verified_at: "2026-06-18"
+    source_url: "https://mydup.com/contact"
+
+  - ig_username: sinnfeinbelfast
+    name: "Sinn Féin (Belfast)"
+    wikipedia_title: "Sinn Féin"
+    verified_at: "2026-06-18"
+    source_url: "https://www.sinnfein.ie/contact"
+
+  - ig_username: allianceparty
+    name: "Alliance Party of Northern Ireland"
+    wikipedia_title: "Alliance Party of Northern Ireland"
+    verified_at: "2026-06-18"
+    source_url: "https://www.allianceparty.org/contact"
+
+  - ig_username: sdlp
+    name: "Social Democratic and Labour Party"
+    wikipedia_title: "Social Democratic and Labour Party"
+    verified_at: "2026-06-18"
+    source_url: "https://www.sdlp.ie/contact/"
+
+  - ig_username: uuponline
+    name: "Ulster Unionist Party"
+    wikipedia_title: "Ulster Unionist Party"
+    verified_at: "2026-06-18"
+    source_url: "https://uup.org/contact/"
+
+  # --- England (EN) ---
+  - ig_username: labourparty
+    name: "Labour Party"
+    wikipedia_title: "Labour Party (UK)"
+    verified_at: "2026-06-18"
+    source_url: "https://labour.org.uk/contact/"
+
+  - ig_username: ukconservative
+    name: "Conservative Party"
+    wikipedia_title: "Conservative Party (UK)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.conservatives.com/contact"
+
+  - ig_username: libdems
+    name: "Liberal Democrats"
+    wikipedia_title: "Liberal Democrats"
+    verified_at: "2026-06-18"
+    source_url: "https://www.libdems.org.uk/contact"
+
+  - ig_username: thegreenparty
+    name: "Green Party of England and Wales"
+    wikipedia_title: "Green Party of England and Wales"
+    verified_at: "2026-06-18"
+    source_url: "https://greenparty.org.uk/contact/"
+
+  - ig_username: reformpartyuk
+    name: "Reform UK"
+    wikipedia_title: "Reform UK"
+    verified_at: "2026-06-18"
+    source_url: "https://www.reformparty.uk/contact"
