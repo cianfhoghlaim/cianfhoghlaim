@@ -16,7 +16,6 @@ from dlt_sources.official_media.fediverse import (
     resolve_mastodon,
 )
 
-
 # ---------------------------------------------------------------------------
 # Fake httpx.AsyncClient
 # ---------------------------------------------------------------------------
@@ -51,7 +50,7 @@ def _make_fake_client(
         def __init__(self, *a: Any, **kw: Any) -> None:
             pass
 
-        async def __aenter__(self) -> "_FakeAsyncClient":
+        async def __aenter__(self) -> _FakeAsyncClient:
             return self
 
         async def __aexit__(self, *a: Any) -> bool:

@@ -504,3 +504,68 @@ sources:
     kind: firecrawl_pages
     urls: ["https://www.gov.gg/legislation"]
     asset_key: [ggy, law, legislation, acts]
+
+  # ═══════ OFFICIAL MEDIA — Intelligence (PR 1) ══════════════════════════════
+  # PR 1 of the official-media-pipeline change. The new ``official_media``
+  # domain combines British Isles government, political, public-service,
+  # university, and intelligence-agency accounts identified from the user's
+  # Instagram export. The first 4 entries are the 4 intelligence agencies
+  # the user explicitly named (MI5, MI6, GCHQ, HMGCC); the universities,
+  # parties, and jurisdictions live in
+  # ``oideachais/dlt_sources/official_media/fixtures/allowlist_*.yaml``
+  # (the runtime DLT parser reads them directly).
+  - id: uk.intelligence.mi5
+    name: "MI5 — Security Service"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.mi5.gov.uk"]
+    crawl: { include_paths: ["/careers/**", "/news/**", "/what-we-do/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }   # 1st of month, 05:00 Europe/Dublin
+    sensors: [sitemap_hash]
+    asset_key: [official_media, intelligence, mi5, pages]
+    embedding: { table: oideachais.official_media.intelligence.mi5_pages, kind: page_markdown }
+    kg:       { dataset: oideachais_official_media, edges: [ig_profile->official_website, official_website->wikipedia_article] }
+    compliance: { licence: open_government, contact: info@mi5.gov.uk }
+
+  - id: uk.intelligence.mi6
+    name: "MI6 — Secret Intelligence Service"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.sis.gov.uk"]
+    crawl: { include_paths: ["/careers/**", "/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    sensors: [sitemap_hash]
+    asset_key: [official_media, intelligence, mi6, pages]
+    embedding: { table: oideachais.official_media.intelligence.mi6_pages, kind: page_markdown }
+    kg:       { dataset: oideachais_official_media, edges: [ig_profile->official_website, official_website->wikipedia_article] }
+    compliance: { licence: open_government, contact: info@sis.gov.uk }
+
+  - id: uk.intelligence.gchq
+    name: "GCHQ — Government Communications Headquarters"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.gchq.gov.uk"]
+    crawl: { include_paths: ["/careers/**", "/news/**", "/section/this-is-gchq/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    sensors: [sitemap_hash]
+    asset_key: [official_media, intelligence, gchq, pages]
+    embedding: { table: oideachais.official_media.intelligence.gchq_pages, kind: page_markdown }
+    kg:       { dataset: oideachais_official_media, edges: [ig_profile->official_website, official_website->wikipedia_article] }
+    compliance: { licence: open_government, contact: info@gchq.gov.uk }
+
+  - id: uk.intelligence.hmgcc
+    name: "HMGCC — His Majesty's Government Communications Centre"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.hmgcc.gov.uk"]
+    crawl: { include_paths: ["/co-creation/**", "/news/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    sensors: [sitemap_hash]
+    asset_key: [official_media, intelligence, hmgcc, pages]
+    embedding: { table: oideachais.official_media.intelligence.hmgcc_pages, kind: page_markdown }
+    kg:       { dataset: oideachais_official_media, edges: [ig_profile->official_website, official_website->wikipedia_article, co_creation_window_12_weeks] }
+    compliance: { licence: open_government, contact: info@hmgcc.gov.uk }
