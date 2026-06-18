@@ -81,3 +81,69 @@ overrides:
       HMGCC Co-Creation runs 12-week funded projects; see
       /co-creation/ for the current call list. Marimo dashboard
       surfaces the last 12 weeks of co-creation project calls.
+
+  - ig_username: smouhi
+    category: college
+    official_website: "https://www.smo.uhi.ac.uk"
+    wikipedia_url: "https://en.wikipedia.org/wiki/Sabhal_M%C3%B2r_Ostaig"
+    wikipedia_extract: >-
+      Sabhal Mòr Ostaig is Scotland's only Gaelic-medium higher
+      education college, located on the Isle of Skye. The college is
+      the principal inter-Celtic pedagogical hub for Irish speakers
+      seeking Scottish Gaelic fluency.
+    resolver_notes: >-
+      Sabhal Mòr Ostaig is the only full-immersion Gaelic-medium HE
+      college in the world; the marimo dashboard surfaces its
+      annual Open Day (Latha Fosgailte) and the 7-week summer school
+      (An Cùrsa Drochaid).
+
+  - ig_username: lewscastleuhi
+    category: college
+    official_website: "https://www.nwh.uhi.ac.uk"
+    wikipedia_url: "https://en.wikipedia.org/wiki/Lews_Castle_College"
+    wikipedia_extract: >-
+      Lews Castle College is a campus of the University of the
+      Highlands and Islands (UHI) in Stornoway on the Isle of Lewis.
+      It offers further education and degree programmes in the
+      Outer Hebrides.
+    resolver_notes: >-
+      UHI Outer Hebrides — strategic for the Manx + Scottish
+      Gaelic pathway via the inter-Celtic ferry network.
+
+  - ig_username: truroandpenwith
+    category: college
+    official_website: "https://www.truro-penwith.ac.uk"
+    wikipedia_url: "https://en.wikipedia.org/wiki/Truro_and_Penwith_College"
+    wikipedia_extract: >-
+      Truro and Penwith College is a further education college in
+      Cornwall offering Beginners Cornish courses as part of the
+      Cornish language revival.
+    resolver_notes: >-
+      Cornwall's primary Cornish language provider — strategic
+      for the Brythonic branch of the Celtic language family.
+
+  - ig_username: bunscoillghaelgagh
+    category: school
+    official_website: "https://www.gov.im"
+    wikipedia_url: "https://en.wikipedia.org/wiki/Bunscoill_Ghaelgagh"
+    wikipedia_extract: >-
+      Bunscoill Ghaelgagh is the Manx-medium primary school in
+      St John's, Isle of Man, established in 2001 and operated
+      directly by the Isle of Man Department of Education, Sport
+      and Culture.
+    resolver_notes: >-
+      The only Manx-medium primary school — the keystone of
+      Manx Gaelic language revitalisation.
+
+  - ig_username: colaistefeirste
+    category: school
+    official_website: "https://www.colaistefeirste.net"
+    wikipedia_url: "https://en.wikipedia.org/wiki/Col%C3%A1iste_Feirste"
+    wikipedia_extract: >-
+      Coláiste Feirste is an Irish-medium post-primary school in
+      West Belfast, Northern Ireland. It is the preeminent
+      Irish-medium secondary school in the north of Ireland.
+    resolver_notes: >-
+      The preeminent Irish-medium post-primary school in
+      West Belfast — strategic for the East Belfast → West
+      Belfast Irish-medium pathway the user described.
