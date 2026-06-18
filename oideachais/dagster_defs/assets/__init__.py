@@ -72,6 +72,13 @@ from .modal_assets import (
     modal_irish_llm_finetune,
     modal_ocr_embeddings,
 )
+from .official_media import (
+    official_media_cognify,
+    official_media_embed,
+    official_media_extract,
+    official_media_hmgcc_co_creation,
+    official_media_resolve_sources,
+)
 from .multi_nation_curriculum_assets import (
     curriculum_comparison_report,
     curriculum_outcome_alignments,
@@ -145,6 +152,13 @@ all_assets = [
     *multi_nation_curriculum_assets,
     *canuint_alignment_assets,
     *unified_audio_assets,
+    # Official media pipeline (PR 1: 4 intelligence agencies + monthly refresh).
+    # See openspec/changes/official-media-pipeline/proposal.md.
+    official_media_extract,
+    official_media_resolve_sources,
+    official_media_embed,
+    official_media_cognify,
+    official_media_hmgcc_co_creation,
 ]
 
 __all__ = [

@@ -9,7 +9,6 @@ Asserts the 4-lookup fan-out + override short-circuit.
 """
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
 import pytest
@@ -17,10 +16,9 @@ import pytest
 from dlt_sources.official_media.source_resolver import (
     ResolvedSource,
     SourceResolver,
-    source_resolver,
     override_title_for,
+    source_resolver,
 )
-
 
 # ---------------------------------------------------------------------------
 # Override short-circuit
