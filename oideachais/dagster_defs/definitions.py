@@ -465,3 +465,80 @@ defs = dg.Definitions(
     schedules=all_schedules,
     resources=all_resources,
 )
+
+
+# ============================================================================
+# dbt-duckdb project (the celtic-data-engineering-patterns change)
+# ============================================================================
+# Wires the 3 dbt models in `oideachais/dbt_project/` (weekly_downloads,
+# language_distribution, ocr_confidence_by_model) into Dagster as @dbt_assets.
+# The asset keys + group_name are derived by CelticDagsterDbtTranslator
+# (single-segment keys, `prepared` group).
+#
+# Requires `dagster-dbt>=0.25.0` + `dbt-duckdb>=1.8.0` (added to
+# oideachais/pyproject.toml by the celtic-data-engineering-patterns change).
+#
+# To materialize: click "Materialize" on the 3 dbt assets in the
+# Dagster UI, or run `dagster asset materialize --asset-key weekly_downloads`.
+
+from pathlib import Path
+
+from dagster_dbt import DbtCliResource, dbt_assets
+
+from .dbt_translator import CelticDagsterDbtTranslator
+
+
+_DBT_PROJECT_DIR = Path(__file__).parent.parent / "dbt_project"
+
+
+def _parse_dbt_manifest() -> Path:
+    """Run `dbt parse` and return the manifest.json path.
+
+    Called lazily on first access so the manifest stays in sync with the
+    dbt models. The parsed manifest is cached at
+    `oideachais/dbt_project/target/manifest.json` (gitignored).
+    """
+    import os
+    import subprocess
+
+    subprocess.run(
+        [
+            "dbt",
+            "parse",
+            "--project-dir",
+            str(_DBT_PROJECT_DIR),
+            "--profiles-dir",
+            str(_DBT_PROJECT_DIR),
+        ],
+        check=True,
+        env={**os.environ, "DUCKDB_DATABASE": "oideachais_dbt.duckdb"},
+    )
+    return _DBT_PROJECT_DIR / "target" / "manifest.json"
+
+
+_dbt_resource = DbtCliResource(project_dir=str(_DBT_PROJECT_DIR))
+
+
+@dbt_assets(
+    manifest=_parse_dbt_manifest(),
+    dagster_dbt_translator=CelticDagsterDbtTranslator(),
+    exclude="resource_type:snapshot resource_type:test",
+)
+def oideachais_dbt_assets(context, dbt: DbtCliResource):
+    """Materialize the 3 dbt models in `oideachais/dbt_project/`.
+
+    - weekly_downloads (table / incremental on prod target)
+    - language_distribution (table / incremental on prod target)
+    - ocr_confidence_by_model (table / incremental on prod target)
+    """
+    yield from dbt.cli(["build"], context=context).stream()
+
+
+# Register the dbt assets + resource in the Definitions
+defs = defs.merge(
+    dg.Definitions(
+        assets=[*combined_assets, oideachais_dbt_assets],
+        asset_checks=list(all_asset_checks),
+        resources={"dbt": _dbt_resource},
+    )
+)
