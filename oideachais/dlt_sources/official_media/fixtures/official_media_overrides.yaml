@@ -1,0 +1,83 @@
+# oideachais/dlt_sources/official_media/fixtures/official_media_overrides.yaml
+#
+# Hard-coded authoritative URLs for the 4 seed intelligence agencies.
+# The SourceResolver short-circuits all 4 network lookups when the
+# candidate matches one of these — no Wikipedia, no Companies House,
+# no Mastodon, no Bluesky.
+#
+# These overrides exist because:
+#   1. The agencies' public-facing websites rarely link to the
+#      agencies' own social channels from a "Contact" page; Wikipedia
+#      footers and the "About" sidebar are the only reliable
+#      cross-references.
+#   2. HMGCC posts 12-week co-creation project calls under
+#      /co-creation/** — a path the firecrawl crawl in
+#      sources.yaml mirrors for the monthly marimo sentinel.
+
+version: 1
+description: >-
+  Hand-curated authoritative overrides for the 4 intelligence agencies
+  in PR 1. The MI5 / MI6 / GCHQ / HMGCC Instagram handles, their
+  official websites, and (where available) their fediverse presences.
+
+overrides:
+  - ig_username: mi5official
+    category: intelligence
+    official_website: "https://www.mi5.gov.uk"
+    wikipedia_url: "https://en.wikipedia.org/wiki/MI5"
+    wikipedia_extract: >-
+      The Security Service, commonly known as MI5, is the United
+      Kingdom's domestic counter-intelligence and security agency.
+    companies_house_id: null
+    cro_number: null
+    mastodon_handle: null
+    bluesky_handle: null
+    resolver_notes: "MI5 is a Crown body; not registered with Companies House."
+
+  - ig_username: mi6official
+    category: intelligence
+    official_website: "https://www.sis.gov.uk"
+    wikipedia_url: "https://en.wikipedia.org/wiki/Secret_Intelligence_Service"
+    wikipedia_extract: >-
+      The Secret Intelligence Service (SIS), commonly known as MI6,
+      is the foreign intelligence service of the United Kingdom.
+    companies_house_id: null
+    cro_number: null
+    mastodon_handle: null
+    bluesky_handle: null
+    resolver_notes: "SIS is a Crown body; not registered with Companies House."
+
+  - ig_username: gchq
+    category: intelligence
+    official_website: "https://www.gchq.gov.uk"
+    wikipedia_url: "https://en.wikipedia.org/wiki/GCHQ"
+    wikipedia_extract: >-
+      The Government Communications Headquarters (GCHQ) is an
+      intelligence and security organisation responsible for
+      providing signals intelligence (SIGINT) and information
+      assurance to the UK government and the armed forces.
+    companies_house_id: null
+    cro_number: null
+    mastodon_handle: null
+    bluesky_handle: null
+    resolver_notes: "GCHQ is a Crown body; not registered with Companies House."
+
+  - ig_username: hmgcc
+    category: intelligence
+    official_website: "https://www.hmgcc.gov.uk"
+    wikipedia_url: "https://en.wikipedia.org/wiki/HMGCC"
+    wikipedia_extract: >-
+      His Majesty's Government Communications Centre (HMGCC) is an
+      engineering organisation that designs and builds electronic
+      equipment and software for the UK government, particularly
+      GCHQ and the wider intelligence community. HMGCC runs
+      12-week co-creation projects through its Co-Creation programme.
+    companies_house_id: null
+    cro_number: null
+    mastodon_handle: null
+    bluesky_handle: null
+    co_creation_url: "https://www.hmgcc.gov.uk/co-creation/"
+    resolver_notes: >-
+      HMGCC Co-Creation runs 12-week funded projects; see
+      /co-creation/ for the current call list. Marimo dashboard
+      surfaces the last 12 weeks of co-creation project calls.
