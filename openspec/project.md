@@ -18,9 +18,9 @@ orchestration** of multiple subprojects and 70+ Docker Compose stacks.
 | `tuatha` | `tuatha/` | `tuath` (uv) | Educational MMO (Babylon.js + Rust + SpacetimeDB) + crypteolas crypto | [README](../tuatha/README.md) | [AGENTS](../tuatha/AGENTS.md) |
 | `croilar` | `croilar/` | (bun workspace) | Multi-persona portfolio + CV + data engineering subproject | [README](../croilar/README.md) | [AGENTS](../croilar/AGENTS.md) |
 
-## Capability Areas (25 specs, 8 groups)
+## Capability Areas (32 specs, 8 groups)
 
-### Oideachais Quadrant (7 specs)
+### Oideachais Quadrant (10 specs)
 
 | Capability | Description | Status |
 |:--|:--|:--|
@@ -49,7 +49,7 @@ orchestration** of multiple subprojects and 70+ Docker Compose stacks.
 |:--|:--|:--|
 | `tuatha-platform` | Celtic educational MMO (Babylon.js + Rust + SpacetimeDB) + crypteolas crypto + BAML UI/image extraction | Active |
 
-### Croílár Quadrant (3 specs)
+### Croílár Quadrant (4 specs)
 
 | Capability | Description | Status |
 |:--|:--|:--|
