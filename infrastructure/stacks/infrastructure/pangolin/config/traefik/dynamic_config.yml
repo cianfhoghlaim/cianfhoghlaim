@@ -22,7 +22,7 @@ http:
         - badger
 
     next-router:
-      rule: "Host(`pangolin.cianfhoghlaim.ie`) && !PathPrefix(`/api/v1`)"
+      rule: "Host(`pangolin.cianfhoghlaim.ie`) && !PathPrefix(`/api/v1`) && !PathPrefix(`/v1`)"
       service: next-service
       entryPoints:
         - websecure
@@ -68,7 +68,24 @@ http:
       middlewares:
         - redirect-to-https
 
+
+    # Pangolin Integration API (port 3003) — for IaC, scripts, automation
+    integration-api-router:
+      rule: "Host(`pangolin.cianfhoghlaim.ie`) && PathPrefix(`/v1`)"
+      priority: 100
+      service: integration-api-service
+      entryPoints:
+        - websecure
+      middlewares:
+        - badger
+      tls:
+        certResolver: letsencrypt
+
   services:
+    integration-api-service:
+      loadBalancer:
+        servers:
+          - url: "http://pangolin:3003"
     next-service:
       loadBalancer:
         servers:
