@@ -504,16 +504,22 @@ sources:
     kind: firecrawl_pages
     urls: ["https://www.gov.gg/legislation"]
     asset_key: [ggy, law, legislation, acts]
-
-  # ═══════ OFFICIAL MEDIA — Intelligence (PR 1) ══════════════════════════════
-  # PR 1 of the official-media-pipeline change. The new ``official_media``
-  # domain combines British Isles government, political, public-service,
-  # university, and intelligence-agency accounts identified from the user's
-  # Instagram export. The first 4 entries are the 4 intelligence agencies
-  # the user explicitly named (MI5, MI6, GCHQ, HMGCC); the universities,
-  # parties, and jurisdictions live in
-  # ``oideachais/dlt_sources/official_media/fixtures/allowlist_*.yaml``
-  # (the runtime DLT parser reads them directly).
+  # ═══════ OFFICIAL MEDIA — British Isles Government Source Watch ═══════
+  # The new ``official_media`` domain combines British Isles government,
+  # political, public-service, university, Celtic-language college, and
+  # intelligence-agency sources identified from the user's Instagram
+  # export. PR 1 covers IE + NI + EN + the strategic SCT/WLS/Liverpool
+  # locations the user named (Galway, Belfast, Dublin, Liverpool,
+  # London, Edinburgh) + the PDF-derived institutions the user
+  # referenced (Celtic-language colleges in Scotland, Wales, Cornwall,
+  # Isle of Man, and Belfast).
+  #
+  # Total: 4 intelligence + 22 universities + 5 Celtic-language colleges
+  # + 15 political parties + 39 government bodies = 85 sources.
+  #
+  # Schedule: ``0 5 1 * *`` (1st of month, 05:00 Europe/Dublin) — matches
+  # the canonical ``official_media_monthly_schedule`` in
+  # ``oideachais/dagster_defs/schedules.py``.
   - id: uk.intelligence.mi5
     name: "MI5 — Security Service"
     domain: official_media
@@ -521,12 +527,8 @@ sources:
     kind: firecrawl_pages
     urls: ["https://www.mi5.gov.uk"]
     crawl: { include_paths: ["/careers/**", "/news/**", "/what-we-do/**"], max_pages: 200 }
-    schedule: { cron: "0 5 1 * *" }   # 1st of month, 05:00 Europe/Dublin
-    sensors: [sitemap_hash]
-    asset_key: [official_media, intelligence, mi5, pages]
-    embedding: { table: oideachais.official_media.intelligence.mi5_pages, kind: page_markdown }
-    kg:       { dataset: oideachais_official_media, edges: [ig_profile->official_website, official_website->wikipedia_article] }
-    compliance: { licence: open_government, contact: info@mi5.gov.uk }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, intelligence, mi5, pages]
 
   - id: uk.intelligence.mi6
     name: "MI6 — Secret Intelligence Service"
@@ -536,11 +538,7 @@ sources:
     urls: ["https://www.sis.gov.uk"]
     crawl: { include_paths: ["/careers/**", "/news/**"], max_pages: 200 }
     schedule: { cron: "0 5 1 * *" }
-    sensors: [sitemap_hash]
-    asset_key: [official_media, intelligence, mi6, pages]
-    embedding: { table: oideachais.official_media.intelligence.mi6_pages, kind: page_markdown }
-    kg:       { dataset: oideachais_official_media, edges: [ig_profile->official_website, official_website->wikipedia_article] }
-    compliance: { licence: open_government, contact: info@sis.gov.uk }
+    asset_key: [en, official_media, intelligence, mi6, pages]
 
   - id: uk.intelligence.gchq
     name: "GCHQ — Government Communications Headquarters"
@@ -550,11 +548,7 @@ sources:
     urls: ["https://www.gchq.gov.uk"]
     crawl: { include_paths: ["/careers/**", "/news/**", "/section/this-is-gchq/**"], max_pages: 200 }
     schedule: { cron: "0 5 1 * *" }
-    sensors: [sitemap_hash]
-    asset_key: [official_media, intelligence, gchq, pages]
-    embedding: { table: oideachais.official_media.intelligence.gchq_pages, kind: page_markdown }
-    kg:       { dataset: oideachais_official_media, edges: [ig_profile->official_website, official_website->wikipedia_article] }
-    compliance: { licence: open_government, contact: info@gchq.gov.uk }
+    asset_key: [en, official_media, intelligence, gchq, pages]
 
   - id: uk.intelligence.hmgcc
     name: "HMGCC — His Majesty's Government Communications Centre"
@@ -564,8 +558,825 @@ sources:
     urls: ["https://www.hmgcc.gov.uk"]
     crawl: { include_paths: ["/co-creation/**", "/news/**", "/careers/**"], max_pages: 200 }
     schedule: { cron: "0 5 1 * *" }
-    sensors: [sitemap_hash]
-    asset_key: [official_media, intelligence, hmgcc, pages]
-    embedding: { table: oideachais.official_media.intelligence.hmgcc_pages, kind: page_markdown }
-    kg:       { dataset: oideachais_official_media, edges: [ig_profile->official_website, official_website->wikipedia_article, co_creation_window_12_weeks] }
-    compliance: { licence: open_government, contact: info@hmgcc.gov.uk }
+    asset_key: [en, official_media, intelligence, hmgcc, pages]
+
+  - id: ie.university.galway
+    name: "University of Galway"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.universityofgalway.ie"]
+    crawl: { include_paths: ["/about-us/**", "/news/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, university, galway, pages]
+
+  - id: ie.university.ucd
+    name: "University College Dublin"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.ucd.ie"]
+    crawl: { include_paths: ["/about/**", "/news/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, university, ucd, pages]
+
+  - id: ie.university.tcd
+    name: "Trinity College Dublin"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.tcd.ie"]
+    crawl: { include_paths: ["/about/**", "/news/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, university, tcd, pages]
+
+  - id: ie.university.maynooth
+    name: "Maynooth University"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.maynoothuniversity.ie"]
+    crawl: { include_paths: ["/about/**", "/news/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, university, maynooth, pages]
+
+  - id: ie.university.limerick
+    name: "University of Limerick"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.ul.ie"]
+    crawl: { include_paths: ["/about/**", "/news/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, university, limerick, pages]
+
+  - id: ni.university.qub
+    name: "Queen's University Belfast"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.qub.ac.uk"]
+    crawl: { include_paths: ["/about/**", "/news/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, university, qub, pages]
+
+  - id: ni.university.ulster
+    name: "Ulster University"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.ulster.ac.uk"]
+    crawl: { include_paths: ["/about/**", "/news/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, university, ulster, pages]
+
+  - id: en.university.ucl
+    name: "University College London"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.ucl.ac.uk"]
+    crawl: { include_paths: ["/about/**", "/news/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, university, ucl, pages]
+
+  - id: en.university.kcl
+    name: "King's College London"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.kcl.ac.uk"]
+    crawl: { include_paths: ["/about/**", "/news/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, university, kcl, pages]
+
+  - id: en.university.london_met
+    name: "London Metropolitan University"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.londonmet.ac.uk"]
+    crawl: { include_paths: ["/about/**", "/news/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, university, london_met, pages]
+
+  - id: en.university.imperial
+    name: "Imperial College London"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.imperial.ac.uk"]
+    crawl: { include_paths: ["/about/**", "/news/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, university, imperial, pages]
+
+  - id: en.university.cambridge
+    name: "University of Cambridge"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.cam.ac.uk"]
+    crawl: { include_paths: ["/about-the-university/**", "/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, university, cambridge, pages]
+
+  - id: en.university.oxford
+    name: "University of Oxford"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.ox.ac.uk"]
+    crawl: { include_paths: ["/about/**", "/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, university, oxford, pages]
+
+  - id: en.university.liverpool_hope
+    name: "Liverpool Hope University"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.hope.ac.uk"]
+    crawl: { include_paths: ["/studyathope/**", "/news/**", "/research/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, university, liverpool_hope, pages]
+
+  - id: en.university.ljmu
+    name: "Liverpool John Moores University"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.ljmu.ac.uk"]
+    crawl: { include_paths: ["/study/**", "/about-us/**", "/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, university, ljmu, pages]
+
+  - id: sct.university.edinburgh
+    name: "University of Edinburgh"
+    domain: official_media
+    nation: sct
+    kind: firecrawl_pages
+    urls: ["https://www.ed.ac.uk"]
+    crawl: { include_paths: ["/news/**", "/research/**", "/study/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [sct, official_media, university, edinburgh, pages]
+
+  - id: sct.university.strathclyde
+    name: "University of Strathclyde"
+    domain: official_media
+    nation: sct
+    kind: firecrawl_pages
+    urls: ["https://www.strath.ac.uk"]
+    crawl: { include_paths: ["/whystrathclyde/**", "/news/**", "/studywithus/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [sct, official_media, university, strathclyde, pages]
+
+  - id: wls.university.aberystwyth
+    name: "Aberystwyth University"
+    domain: official_media
+    nation: wls
+    kind: firecrawl_pages
+    urls: ["https://www.aber.ac.uk"]
+    crawl: { include_paths: ["/en/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [wls, official_media, university, aberystwyth, pages]
+
+  - id: wls.university.cardiff
+    name: "Cardiff University"
+    domain: official_media
+    nation: wls
+    kind: firecrawl_pages
+    urls: ["https://www.cardiff.ac.uk"]
+    crawl: { include_paths: ["/study/**", "/research/**", "/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [wls, official_media, university, cardiff, pages]
+
+  - id: wls.university.bangor
+    name: "Bangor University"
+    domain: official_media
+    nation: wls
+    kind: firecrawl_pages
+    urls: ["https://www.bangor.ac.uk"]
+    crawl: { include_paths: ["/courses/**", "/research/**", "/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [wls, official_media, university, bangor, pages]
+
+  - id: wls.university.cardiffmet
+    name: "Cardiff Metropolitan University"
+    domain: official_media
+    nation: wls
+    kind: firecrawl_pages
+    urls: ["https://www.cardiffmet.ac.uk"]
+    crawl: { include_paths: ["/study/**", "/news/**", "/research/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [wls, official_media, university, cardiffmet, pages]
+
+  - id: wls.university.southwales
+    name: "University of South Wales"
+    domain: official_media
+    nation: wls
+    kind: firecrawl_pages
+    urls: ["https://www.southwales.ac.uk"]
+    crawl: { include_paths: ["/courses/**", "/news/**", "/research/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [wls, official_media, university, southwales, pages]
+
+  - id: wls.university.uwtsd
+    name: "University of Wales Trinity Saint David"
+    domain: official_media
+    nation: wls
+    kind: firecrawl_pages
+    urls: ["https://www.uwtsd.ac.uk"]
+    crawl: { include_paths: ["/courses/**", "/news/**", "/research/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [wls, official_media, university, uwtsd, pages]
+
+  - id: en.university.exeter
+    name: "University of Exeter (Penryn Campus — Cornish Studies)"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.exeter.ac.uk"]
+    crawl: { include_paths: ["/news/**", "/research/**", "/study/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, university, exeter, pages]
+
+  - id: sct.college.sabhal_mor_ostaig
+    name: "Sabhal Mòr Ostaig (UHI — National Centre for Gaelic Language & Culture)"
+    domain: official_media
+    nation: sct
+    kind: firecrawl_pages
+    urls: ["https://www.smo.uhi.ac.uk"]
+    crawl: { include_paths: ["/cursaichean-**", "/naidheachdan/**", "/latha-fosgailte-2026/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [sct, official_media, college, sabhal_mor_ostaig, pages]
+
+  - id: sct.college.lews_castle
+    name: "Lews Castle College (UHI Outer Hebrides)"
+    domain: official_media
+    nation: sct
+    kind: firecrawl_pages
+    urls: ["https://www.nwh.uhi.ac.uk"]
+    crawl: { include_paths: ["/courses/**", "/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [sct, official_media, college, lews_castle, pages]
+
+  - id: iom.school.bunscoill_ghaelgagh
+    name: "Bunscoill Ghaelgagh (Manx-medium primary school, St John's)"
+    domain: official_media
+    nation: iom
+    kind: firecrawl_pages
+    urls: ["https://www.gov.im"]
+    crawl: { include_paths: ["/about-the-government/departments/education-sport-and-culture/**", "/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [iom, official_media, school, bunscoill_ghaelgagh, pages]
+
+  - id: ni.school.colaiste_feirste
+    name: "Coláiste Feirste (Irish-medium post-primary, Belfast)"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.colaistefeirste.org"]
+    crawl: { include_paths: ["/nuacht/**", "/eolas/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, school, colaiste_feirste, pages]
+
+  - id: en.college.truro_penwith
+    name: "Truro & Penwith College (Cornish language provider)"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.truro-penwith.ac.uk"]
+    crawl: { include_paths: ["/news/**", "/courses/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, college, truro_penwith, pages]
+
+  - id: ie.party.fiannafail
+    name: "Fianna Fáil"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.fiannafail.ie"]
+    crawl: { include_paths: ["/news/**", "/our-party/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, party, fiannafail, pages]
+
+  - id: ie.party.finegael
+    name: "Fine Gael"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.finegael.ie"]
+    crawl: { include_paths: ["/our-party/**", "/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, party, finegael, pages]
+
+  - id: ie.party.sinnfein
+    name: "Sinn Féin"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.sinnfein.ie"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, party, sinnfein, pages]
+
+  - id: ie.party.labour
+    name: "Irish Labour Party"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.labour.ie"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, party, labour, pages]
+
+  - id: ie.party.green_ie
+    name: "Green Party / Comhaontas Glas (Ireland)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.greenparty.ie"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, party, green_ie, pages]
+
+  - id: ie.party.socialdemocrats
+    name: "Social Democrats (Ireland)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.socialdemocrats.ie"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, party, socialdemocrats, pages]
+
+  - id: ni.party.dup
+    name: "Democratic Unionist Party"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://mydup.com"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, party, dup, pages]
+
+  - id: ni.party.alliance
+    name: "Alliance Party of Northern Ireland"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.allianceparty.org"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, party, alliance, pages]
+
+  - id: ni.party.sdlp
+    name: "Social Democratic and Labour Party"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.sdlp.ie"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, party, sdlp, pages]
+
+  - id: ni.party.uup
+    name: "Ulster Unionist Party"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://uup.org"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, party, uup, pages]
+
+  - id: en.party.labour_uk
+    name: "Labour Party (UK)"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://labour.org.uk"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, party, labour_uk, pages]
+
+  - id: en.party.conservative
+    name: "Conservative Party (UK)"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.conservatives.com"]
+    crawl: { include_paths: ["/news/**", "/our-party/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, party, conservative, pages]
+
+  - id: en.party.libdems
+    name: "Liberal Democrats"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.libdems.org.uk"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, party, libdems, pages]
+
+  - id: en.party.green_en
+    name: "Green Party of England and Wales"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://greenparty.org.uk"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, party, green_en, pages]
+
+  - id: en.party.reform
+    name: "Reform UK"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.reformparty.uk"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, party, reform, pages]
+
+  - id: ie.jurisdiction.govireland
+    name: "Government of Ireland"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.gov.ie"]
+    crawl: { include_paths: ["/en/news/**", "/en/organisation/**", "/ga/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, jurisdiction, govireland, pages]
+
+  - id: ie.jurisdiction.dfat
+    name: "Department of Foreign Affairs (Ireland)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.dfa.ie"]
+    crawl: { include_paths: ["/news-media/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, jurisdiction, dfat, pages]
+
+  - id: ie.jurisdiction.defence
+    name: "Department of Defence (Ireland)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.gov.ie/en/organisation/department-of-defence/"]
+    crawl: { include_paths: ["/en/news/**", "/en/organisation/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, jurisdiction, defence, pages]
+
+  - id: ie.jurisdiction.garda
+    name: "An Garda Síochána"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.garda.ie"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, jurisdiction, garda, pages]
+
+  - id: ie.jurisdiction.hse
+    name: "Health Service Executive (HSE)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.hse.ie"]
+    crawl: { include_paths: ["/eng/services/news/**", "/eng/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, jurisdiction, hse, pages]
+
+  - id: ie.jurisdiction.revenue
+    name: "Revenue Commissioners (Ireland)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.revenue.ie"]
+    crawl: { include_paths: ["/en/news/**", "/en/companies/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, jurisdiction, revenue, pages]
+
+  - id: ie.jurisdiction.education
+    name: "Department of Education (Ireland)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.gov.ie/en/organisation/department-of-education/"]
+    crawl: { include_paths: ["/en/news/**", "/en/organisation/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, jurisdiction, education, pages]
+
+  - id: ie.jurisdiction.health
+    name: "Department of Health (Ireland)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.gov.ie/en/organisation/department-of-health/"]
+    crawl: { include_paths: ["/en/news/**", "/en/organisation/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, jurisdiction, health, pages]
+
+  - id: ie.jurisdiction.justice
+    name: "Department of Justice (Ireland)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.gov.ie/en/organisation/department-of-justice-home-affairs-and-migration/"]
+    crawl: { include_paths: ["/en/news/**", "/en/organisation/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, jurisdiction, justice, pages]
+
+  - id: ie.jurisdiction.cso
+    name: "Central Statistics Office (CSO) Ireland"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.cso.ie"]
+    crawl: { include_paths: ["/en/releasesandpublications/**", "/en/aboutus/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, jurisdiction, cso, pages]
+
+  - id: ni.jurisdiction.nidirect
+    name: "NI Direct Government Services"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.nidirect.gov.uk"]
+    crawl: { include_paths: ["/articles/**", "/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, jurisdiction, nidirect, pages]
+
+  - id: ni.jurisdiction.psni
+    name: "Police Service of Northern Ireland (PSNI)"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.psni.police.uk"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, jurisdiction, psni, pages]
+
+  - id: ni.jurisdiction.nifrs
+    name: "Northern Ireland Fire & Rescue Service"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.nifrs.org"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, jurisdiction, nifrs, pages]
+
+  - id: ni.jurisdiction.nias
+    name: "Northern Ireland Ambulance Service"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.nias.hscni.net"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, jurisdiction, nias, pages]
+
+  - id: ni.jurisdiction.deni
+    name: "Department of Education (Northern Ireland)"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.education-ni.gov.uk"]
+    crawl: { include_paths: ["/news/**", "/topics/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, jurisdiction, deni, pages]
+
+  - id: ni.jurisdiction.health_ni
+    name: "Department of Health (Northern Ireland)"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.health-ni.gov.uk"]
+    crawl: { include_paths: ["/news/**", "/topics/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, jurisdiction, health_ni, pages]
+
+  - id: ni.jurisdiction.daera
+    name: "Department of Agriculture, Environment and Rural Affairs (NI)"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.daera-ni.gov.uk"]
+    crawl: { include_paths: ["/news/**", "/topics/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, jurisdiction, daera, pages]
+
+  - id: ni.jurisdiction.nisra
+    name: "Northern Ireland Statistics and Research Agency"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.nisra.gov.uk"]
+    crawl: { include_paths: ["/statistics/**", "/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, jurisdiction, nisra, pages]
+
+  - id: en.jurisdiction.home_office
+    name: "Home Office (UK)"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.gov.uk/government/organisations/home-office"]
+    crawl: { include_paths: ["/news/**", "/government/publications/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, home_office, pages]
+
+  - id: en.jurisdiction.mod
+    name: "Ministry of Defence (UK)"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.gov.uk/government/organisations/ministry-of-defence"]
+    crawl: { include_paths: ["/news/**", "/government/publications/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, mod, pages]
+
+  - id: en.jurisdiction.british_army
+    name: "British Army"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.army.mod.uk"]
+    crawl: { include_paths: ["/news-and-events/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, british_army, pages]
+
+  - id: en.jurisdiction.royal_navy
+    name: "Royal Navy"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.royalnavy.mod.uk"]
+    crawl: { include_paths: ["/news/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, royal_navy, pages]
+
+  - id: en.jurisdiction.raf
+    name: "Royal Air Force"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.raf.mod.uk"]
+    crawl: { include_paths: ["/news/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, raf, pages]
+
+  - id: en.jurisdiction.met_police
+    name: "Metropolitan Police Service"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.met.police.uk"]
+    crawl: { include_paths: ["/news/**", "/advice/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, met_police, pages]
+
+  - id: en.jurisdiction.london_fire
+    name: "London Fire Brigade"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.london-fire.gov.uk"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, london_fire, pages]
+
+  - id: en.jurisdiction.london_ambulance
+    name: "London Ambulance Service"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.londonambulance.nhs.uk"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, london_ambulance, pages]
+
+  - id: en.jurisdiction.nhs_england
+    name: "NHS England"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.england.nhs.uk"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, nhs_england, pages]
+
+  - id: en.jurisdiction.dhsc
+    name: "Department of Health and Social Care (UK)"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.gov.uk/government/organisations/department-of-health-and-social-care"]
+    crawl: { include_paths: ["/news/**", "/government/publications/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, dhsc, pages]
+
+  - id: en.jurisdiction.dfe
+    name: "Department for Education (UK)"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.gov.uk/government/organisations/department-for-education"]
+    crawl: { include_paths: ["/news/**", "/government/publications/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, dfe, pages]
+
+  - id: en.jurisdiction.hm_treasury
+    name: "HM Treasury (UK)"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.gov.uk/government/organisations/hm-treasury"]
+    crawl: { include_paths: ["/news/**", "/government/publications/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, hm_treasury, pages]
+
+  - id: en.jurisdiction.hmrc
+    name: "HM Revenue & Customs"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.gov.uk/government/organisations/hm-revenue-customs"]
+    crawl: { include_paths: ["/news/**", "/government/publications/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, hmrc, pages]
+
+  - id: en.jurisdiction.fcdo
+    name: "Foreign, Commonwealth & Development Office (FCDO)"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.gov.uk/government/organisations/foreign-commonwealth-development-office"]
+    crawl: { include_paths: ["/news/**", "/government/publications/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, fcdo, pages]
+
+  - id: en.jurisdiction.uk_parliament
+    name: "UK Parliament"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.parliament.uk"]
+    crawl: { include_paths: ["/business/**", "/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, uk_parliament, pages]
+
+  - id: en.jurisdiction.ons
+    name: "Office for National Statistics (ONS)"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.ons.gov.uk"]
+    crawl: { include_paths: ["/news/**", "/releases/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, ons, pages]
+
+  - id: wls.jurisdiction.senedd
+    name: "Senedd Cymru / Welsh Parliament"
+    domain: official_media
+    nation: wls
+    kind: firecrawl_pages
+    urls: ["https://senedd.wales"]
+    crawl: { include_paths: ["/home/**", "/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [wls, official_media, jurisdiction, senedd, pages]
+
+  - id: wls.jurisdiction.welsh_gov
+    name: "Welsh Government"
+    domain: official_media
+    nation: wls
+    kind: firecrawl_pages
+    urls: ["https://www.gov.wales"]
+    crawl: { include_paths: ["/news/**", "/topics/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [wls, official_media, jurisdiction, welsh_gov, pages]
+
+  - id: sct.jurisdiction.scottish_gov
+    name: "Scottish Government"
+    domain: official_media
+    nation: sct
+    kind: firecrawl_pages
+    urls: ["https://www.gov.scot"]
+    crawl: { include_paths: ["/news/**", "/policies/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [sct, official_media, jurisdiction, scottish_gov, pages]
+
+  - id: sct.jurisdiction.scottish_parliament
+    name: "Scottish Parliament"
+    domain: official_media
+    nation: sct
+    kind: firecrawl_pages
+    urls: ["https://www.parliament.scot"]
+    crawl: { include_paths: ["/news/**", "/bills/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [sct, official_media, jurisdiction, scottish_parliament, pages]
+
