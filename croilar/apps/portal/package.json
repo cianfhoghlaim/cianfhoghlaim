@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 3000",
+    "predev": "bun run ../../croilar/scripts/export-marimo-wasm.ts 2>/dev/null || true",
     "build": "vite build",
+    "prebuild": "bun run ../../croilar/scripts/export-marimo-wasm.ts 2>/dev/null || true",
     "serve": "vite preview",
     "start": "node .output/server/index.mjs",
     "typecheck": "tsc --noEmit",
