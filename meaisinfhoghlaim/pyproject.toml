@@ -89,8 +89,14 @@ marimo = [
     "altair>=5.0.0",
     "ibis-framework[duckdb,motherduck]>=9.0.0",
 ]
+gradio = [
+    "gradio>=4.44.0",
+]
+hub = [
+    "huggingface-hub>=0.24.0",
+]
 all = [
-    "meaisinfhoghlaim[dev,marimo]",
+    "meaisinfhoghlaim[dev,marimo,gradio,hub]",
 ]
 
 [project.urls]
