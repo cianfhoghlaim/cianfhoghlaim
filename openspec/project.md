@@ -31,6 +31,9 @@ orchestration** of multiple subprojects and 70+ Docker Compose stacks.
 | `oideachais-semantic-search` | Cross-corpus LanceDB HNSW search (BGE-M3 multilingual + BGE-large-en-v1.5 English) | Active |
 | `oideachais-marimo-dashboards` | 11 Marimo notebooks (5 educational stages + cross-domain + ducklake + lakehouse + leabharlann full-stack demo) | Active |
 | `ireland-primary-jc-dlt-baml` | Ireland Primary + Junior Cycle dlt + BAML loop (the recent `ireland-primary-jc-dlt-baml-and-full-stack-demo` change) | Active |
+| `official-media-pipeline` | Instagram-export → British-Isles government source enrichment (DLT + BAML `ClassifyOfficialMedia` + 4-lookup resolver + Dagster `group_name="official_media"`); 3 jurisdictions in PR 1 (IE/NI/EN), the `official-media-pipeline` change | Active |
+| `official-media-fediverse` | Pure Python library for Mastodon webfinger + Bluesky xrpc resolution + Wikipedia REST + Companies House / CRO lookup; reusable by the side-loadable-app phase (the `official-media-fediverse` change) | Active |
+| `official-media-marimo` | Marimo mission control + TanStack Start route + Cognee dataset `oideachais_official_media` with 4 edge types + strong-stance footer card; the `official-media-marimo` change | Active |
 
 ### Meaisínfhoghlaim Quadrant (3 specs)
 
@@ -151,4 +154,5 @@ All specs MUST respect constraints from `docs/context/00-core/CONSTRAINTS.md`:
 | `ireland-primary-jc-dlt-baml-and-full-stack-demo` | in-flight (0/22 tasks) |
 | `leaving-cert-2026` | scaffold (0/28 tasks) |
 | `monorepo-restructure-v2` | in-flight (19/20 tasks) |
+| `official-media-pipeline` | scaffold (0/45 tasks) |
 | `openspec-consolidation-and-readme-refresh` | **this change** (Phase 1+2 done; Phase 3+4 in-flight) |
