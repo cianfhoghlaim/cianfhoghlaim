@@ -67,7 +67,13 @@
     "validate-openspec-stale": "bun run scripts/validate-openspec-stale.ts",
     "validate-frontmatter": "bun run scripts/validate-frontmatter.ts",
 
-    "smoke": "bash infrastructure/stacks/engineering/frontend/scripts/smoke.sh"
+    "smoke": "bash infrastructure/stacks/engineering/frontend/scripts/smoke.sh",
+
+    "croilar:analyze": "bun run croilar/scripts/analyze-web-stack.ts",
+    "croilar:glance:regen": "bun run croilar/scripts/regenerate-glance-config.ts",
+    "croilar:export:wasm": "bun run croilar/scripts/export-marimo-wasm.ts",
+    "croilar:devtools:refresh": "bun run croilar/scripts/analyze-web-stack.ts --out croilar/.cache/webstack-snapshot.json",
+    "croilar:devtools:hub": "bun run croilar/scripts/regenerate-glance-config.ts && bun run croilar/scripts/export-marimo-wasm.ts"
   },
   "devDependencies": {
     "@types/bun": "^1.3.0",

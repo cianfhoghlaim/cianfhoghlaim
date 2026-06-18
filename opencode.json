@@ -110,6 +110,16 @@
         "LANGFUSE_HOST": "https://langfuse.cianfhoghlaim.ie"
       },
       "enabled": true
+    },
+    "croilar-devtools": {
+      "type": "local",
+      "command": [
+        "bun", "run", "croilar/mcp/devtools/index.ts"
+      ],
+      "env": {
+        "CROILAR_REPO_ROOT": "."
+      },
+      "enabled": true
     }
   },
   "agent": {

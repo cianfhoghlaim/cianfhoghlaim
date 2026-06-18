@@ -1,8 +1,8 @@
 # Spec Delta: `croilar-data-engineering`
 
-## MODIFIED Requirements
+## ADDED Requirements
 
-### Requirement: Convex Web-Stack Observability Tables (new)
+### Requirement: Convex Web-Stack Observability Tables
 
 The system SHALL maintain 9 new Convex tables that inventory the monorepo's web stack.
 
@@ -66,7 +66,7 @@ The system SHALL maintain 9 new Convex tables that inventory the monorepo's web 
 - **THEN** a new row SHALL be inserted with `{version: prev + 1, yaml, pageCount, widgetCount, generatedAt, generatedBy}`
 - **AND** `getCurrent` SHALL return the row with the highest `version`
 
-### Requirement: Action-Call Middleware (new)
+### Requirement: Action-Call Middleware
 
 The system SHALL provide a `loggedAction` helper in `croilar/convex/_middleware.ts` that wraps every Convex action invocation and records to `convexFunctionCalls`.
 
@@ -83,7 +83,7 @@ The system SHALL provide a `loggedAction` helper in `croilar/convex/_middleware.
 - **THEN** it SHALL still work correctly, but no `convexFunctionCalls` row SHALL be created for it
 - **AND** the existing `pipelines.refreshAll`, `stacks.refreshAll`, `mcp.refreshAll`, `registry.refreshAll` SHALL be migrated to use `loggedAction` in this change
 
-### Requirement: Cron Schedule (preserved + extended)
+### Requirement: Dagster Schedules
 
 The system SHALL schedule the analyzer and metric refresh on appropriate cadences.
 
@@ -104,7 +104,9 @@ The system SHALL schedule the analyzer and metric refresh on appropriate cadence
 - **WHEN** the existing 4 cron entries (syncStacks, syncPipelines, syncMcpServers, syncContainerImages) run
 - **THEN** they SHALL continue to function unchanged
 
-### Requirement: Analyzer Bun Script (new)
+## ADDED Requirements
+
+### Requirement: Analyzer Bun Script
 
 The system SHALL ship `croilar/scripts/analyze-web-stack.ts` as a Bun script that walks the monorepo and posts aggregates to Convex.
 
@@ -128,7 +130,9 @@ The system SHALL ship `croilar/scripts/analyze-web-stack.ts` as a Bun script tha
 - **THEN** it SHALL walk only that project
 - **AND** it SHALL exit 0 with a single-line summary
 
-### Requirement: Dagster Asset Catalog (preserved)
+## MODIFIED Requirements
+
+### Requirement: Dagster Asset Catalog
 
 The system SHALL continue to emit 9+ stream-driven Dagster assets (music, teaching, cv, research).
 
@@ -137,7 +141,7 @@ The system SHALL continue to emit 9+ stream-driven Dagster assets (music, teachi
 - **WHEN** `mise turbo build dagster` runs
 - **THEN** the asset catalog SHALL still include `music__spotify`, `music__soundcloud`, `music__labels`, `music__artwork`, `teaching__github`, `teaching__linkedin`, `teaching__researchgate`, `cv__cv`, `cv__filesystem`
 
-### Requirement: BAML Extraction Schemas (preserved)
+### Requirement: BAML Extraction Schemas
 
 The system SHALL continue to compile the 9 BAML schemas.
 
@@ -146,7 +150,7 @@ The system SHALL continue to compile the 9 BAML schemas.
 - **WHEN** `bun run baml-cli compile` runs
 - **THEN** the compiler SHALL still emit TypeScript + Python client code from `croilar/baml/{artwork_analysis, cv_extraction, identity_verification, linkedin_profile_extraction, researchgate_extraction, style_transfer, teaching_extraction, generators, clients}.baml`
 
-### Requirement: DuckLake Cross-DB Read (preserved)
+### Requirement: DuckLake Cross-DB Read
 
 The system SHALL continue to read from the existing DuckLake catalog.
 
