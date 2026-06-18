@@ -143,12 +143,21 @@ app.add_middleware(AuthMiddleware)
 # Route Registration
 # ============================================================================
 
-from .routes import agent, cross_archive_graph, curriculum, geospatial, search
+from .routes import (
+    agent,
+    cross_archive_graph,
+    curriculum,
+    geospatial,
+    official_media,
+    search,
+)
 app.include_router(search.router)
 app.include_router(geospatial.router)
 app.include_router(curriculum.router)
 app.include_router(agent.router)
 app.include_router(cross_archive_graph.router)
+# Official-media pipeline (Phase 6 of the official-media-pipeline change)
+app.include_router(official_media.router)
 
 
 # ============================================================================
