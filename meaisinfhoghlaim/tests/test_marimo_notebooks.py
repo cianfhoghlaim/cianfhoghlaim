@@ -42,13 +42,13 @@ def test_marimo_package_importable() -> None:
     [
         (
             "01_leabharlann_descriptive.py",
-            ["leabharlann_books"],
+            ["oideachais_dbt.weekly_downloads"],
         ),
         (
             "02_dpre_lag_analysis.py",
             [
                 "oideachais.ocr_materialization_lags",
-                "oideachais.ocr_confidence_by_model",
+                "oideachais_dbt.ocr_confidence_by_model",
             ],
         ),
     ],

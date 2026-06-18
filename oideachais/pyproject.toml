@@ -43,6 +43,7 @@ dependencies = [
     "dagster>=1.9.0",
     "dagster-webserver>=1.9.0",
     "dagster-dlt>=0.25.0",
+    "dagster-dbt>=0.25.0",
     "dlt[duckdb,ducklake,s3,filesystem,hub]>=1.5.0",
     # Database
     "duckdb>=1.1.0",
@@ -88,6 +89,10 @@ dependencies = [
     "browserbase>=1.11.0",
     "playwright>=1.60.0",
     "cognee>=1.0.1",
+    # dbt + ibis for the celtic-data-engineering-patterns dbt project
+    # (`oideachais/dbt_project/`); see openspec/changes/celtic-data-engineering-patterns/
+    "dbt-duckdb>=1.8.0",
+    "ibis-framework[duckdb,motherduck]>=9.0.0",
 ]
 
 [project.optional-dependencies]
@@ -129,6 +134,9 @@ ui = [
 ]
 all = [
     "oideachais[dev,ocr,training,memory,observability,ui]",
+]
+dbt = [
+    "dbt-duckdb>=1.8.0",
 ]
 
 [project.urls]
