@@ -120,3 +120,30 @@ all_schedules = [
     enriched_daily_schedule,
     search_daily_schedule,
 ]
+
+
+# ============================================================================
+# Official Media — monthly refresh (1st of month, 05:00 Europe/Dublin)
+# ============================================================================
+# Phase 5 of the official-media-pipeline change. The official-media
+# group refreshes monthly: the 4 intelligence agencies get crawled
+# (sources.yaml), the 4-lookup resolver fans out (Wikipedia + Companies
+# House / CRO + Mastodon + Bluesky), the embed + cognify assets re-run,
+# and the HMGCC co-creation sentinel records the trailing 12-week
+# project call count.
+official_media_refresh_job = define_asset_job(
+    name="official_media_refresh_job",
+    selection=AssetSelection.groups("official_media"),
+    description="Monthly refresh of the official-media pipeline (DLT extract + 4-lookup resolver + embed + cognify + HMGCC co-creation sentinel).",
+)
+
+official_media_monthly_schedule = ScheduleDefinition(
+    name="official_media_monthly_schedule",
+    job=official_media_refresh_job,
+    cron_schedule="0 5 1 * *",  # 1st of month, 05:00 UTC
+    default_status=DefaultScheduleStatus.STOPPED,
+    execution_timezone="Europe/Dublin",
+    description="Monthly refresh of the official-media pipeline.",
+)
+
+all_schedules.append(official_media_monthly_schedule)
