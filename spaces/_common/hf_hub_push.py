@@ -34,6 +34,19 @@ The 2 `gradio-ensemble-pattern` scenarios in
 `openspec/changes/celtic-data-engineering-patterns/specs/gradio-ensemble-pattern/spec.md`
 are validated by `meaisinfhoghlaim/tests/test_hf_hub_push.py`.
 
+## When to use which upload pattern
+
+| Pattern | API | Use case |
+|:--|:--|:--|
+| **Local dir → Hub** | `push_model_to_hub(local_dir, ...)` (this helper) | Model checkpoint already on disk (e.g. `save_pretrained()` was called, or OCR checkpoint directory, or sklearn pickle) |
+| **In-memory HF model → Hub** | `model.push_to_hub(repo_id, ...)` (the HF API) | Model is loaded in memory and you want to upload without first writing to disk. Used by `oideachais/modal_finetune/finetune_irish.py:289` and `oideachais/training/unsloth_trainer.py:471-488`. |
+| **HF pipeline → Hub** | `pipeline.push_to_hub(repo_id, ...)` (the HF API) | HuggingFace `pipeline(...)` object with `push_to_hub` method. Not in use in this monorepo currently. |
+
+The 2 in-memory call-sites in `oideachais/` are the **correct** API for
+their pattern — this helper is intentionally for the local-dir pattern
+because that's the missing shared helper (each Space would otherwise
+re-implement the `huggingface-cli upload` invocation).
+
 See also:
 - `meaisinfhoghlaim/pipelines/ensemble_gradio.py` (the Gradio ensemble companion)
 - `spaces/anti-phish/README.md:25` (the prior-art upload)

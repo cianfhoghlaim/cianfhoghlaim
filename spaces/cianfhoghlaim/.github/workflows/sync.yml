@@ -1,0 +1,19 @@
+name: Sync cianfhoghlaim to HF
+
+on:
+  push:
+    branches: [feat/celtic-data-engineering-artefacts, feat/spaces-patterns-and-marimo, main]
+    paths:
+      - 'spaces/cianfhoghlaim/**'
+      - 'spaces/_common/**'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    uses: ./.github/workflows/spaces-sync.yml
+    with:
+      space_dir: spaces/cianfhoghlaim
+      target_space: cianfhoghlaim/cianfhoghlaim
+      hf_token: ${{ secrets.HF_TOKEN }}
+      hf_username: ${{ vars.HF_USERNAME }}
+      sdk: gradio
