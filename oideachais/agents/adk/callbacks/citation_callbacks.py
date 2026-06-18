@@ -307,6 +307,19 @@ def enhance_education_source_title(url: str, title: str) -> str:
         if domain in url:
             return enhanced_title
 
+    # Official-media bucket — added by the official-media-pipeline change
+    # (Phase 6). Recognises the 4 intelligence agencies so the citation
+    # pipeline surfaces them with the canonical title.
+    official_media_sources = {
+        "mi5.gov.uk": "MI5 - Security Service",
+        "sis.gov.uk": "MI6 - Secret Intelligence Service",
+        "gchq.gov.uk": "GCHQ - Government Communications HQ",
+        "hmgcc.gov.uk": "HMGCC - His Majesty's Government Communications Centre",
+    }
+    for domain, enhanced_title in official_media_sources.items():
+        if domain in url:
+            return enhanced_title
+
     return title
 
 
