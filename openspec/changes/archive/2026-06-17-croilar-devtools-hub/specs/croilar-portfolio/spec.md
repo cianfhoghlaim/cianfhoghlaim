@@ -2,7 +2,7 @@
 
 ## MODIFIED Requirements
 
-### Requirement: 9 Subproject Routes (preserved)
+### Requirement: 9 Subproject Routes
 
 The system SHALL continue to expose 9 subproject routes at the public root.
 
@@ -11,7 +11,9 @@ The system SHALL continue to expose 9 subproject routes at the public root.
 - **WHEN** a visitor navigates to `/`, `/cv`, `/music`, `/code`, `/research`, `/teaching`, `/data`, `/identity`, or `/contact`
 - **THEN** the page SHALL render as before (no UI change from this change)
 
-### Requirement: Live Data Binding (new)
+## ADDED Requirements
+
+### Requirement: Live Data Binding
 
 The system SHALL replace the three hard-coded mock data sources in the portal with live Convex subscriptions.
 
@@ -36,7 +38,7 @@ The system SHALL replace the three hard-coded mock data sources in the portal wi
 - **AND** there SHALL be a per-project drill-down that switches `scope` to `project:<id>`
 - **AND** there SHALL be no `mockMetrics` array in the source
 
-### Requirement: Per-Project Web View (new)
+### Requirement: Per-Project Web View
 
 The system SHALL expose a `/web` portal page that shows the web-stack inventory for each project.
 
@@ -69,7 +71,7 @@ The system SHALL expose a `/web` portal page that shows the web-stack inventory 
 - **THEN** the page SHALL render an `AccessDenied` component
 - **AND** the underlying Convex queries SHALL also reject unauthorized callers (defense in depth)
 
-### Requirement: Notebooks View (new)
+### Requirement: Notebooks View
 
 The system SHALL expose a `/notebooks` portal page that lists marimo notebooks across the monorepo and renders them inline.
 
@@ -90,7 +92,9 @@ The system SHALL expose a `/notebooks` portal page that lists marimo notebooks a
 - **WHEN** a user without `croilar-admin` org owner|admin role opens `/notebooks`
 - **THEN** the page SHALL render an `AccessDenied` component
 
-### Requirement: Image Management (preserved)
+## MODIFIED Requirements
+
+### Requirement: Image Management
 
 The system SHALL process and serve all images via the croilar-assets R2 bucket + sharp pipeline.
 
@@ -99,7 +103,7 @@ The system SHALL process and serve all images via the croilar-assets R2 bucket +
 - **WHEN** an image is added to `croilar/web/public/images/`
 - **THEN** the build-time sharp pipeline SHALL still compress it and upload to R2
 
-### Requirement: Deployment (preserved)
+### Requirement: Deployment
 
 The system SHALL deploy `croilar/web` to Cloudflare Pages.
 
@@ -108,7 +112,7 @@ The system SHALL deploy `croilar/web` to Cloudflare Pages.
 - **WHEN** the build completes
 - **THEN** `wrangler pages deploy dist` SHALL still push the static site
 
-### Requirement: PII Handling (preserved)
+### Requirement: PII Handling
 
 The system SHALL encrypt PII (identity documents) at rest using SOPS.
 

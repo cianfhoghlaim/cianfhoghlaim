@@ -72,6 +72,10 @@
     "doctor": {
       "cache": false,
       "outputs": []
+    },
+    "croilar:export:wasm": {
+      "cache": false,
+      "outputs": ["croilar/apps/portal/public/wasm/**"]
     }
   },
   "ui": "tui"
