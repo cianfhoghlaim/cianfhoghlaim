@@ -506,20 +506,17 @@ sources:
     asset_key: [ggy, law, legislation, acts]
   # ═══════ OFFICIAL MEDIA — British Isles Government Source Watch ═══════
   # The new ``official_media`` domain combines British Isles government,
-  # political, public-service, university, Celtic-language college, and
-  # intelligence-agency sources identified from the user's Instagram
-  # export. PR 1 covers IE + NI + EN + the strategic SCT/WLS/Liverpool
-  # locations the user named (Galway, Belfast, Dublin, Liverpool,
-  # London, Edinburgh) + the PDF-derived institutions the user
-  # referenced (Celtic-language colleges in Scotland, Wales, Cornwall,
-  # Isle of Man, and Belfast).
+  # political, public-service, university, Celtic-language college,
+  # Irish-medium school, police, defence, and critical national info
+  # sources. PR 1 covers IE + NI + EN + SCT + WLS + IoM + the strategic
+  # locations the user named (Galway, Belfast, Dublin, Liverpool, London,
+  # Edinburgh). Includes the full active political-party lists (24
+  # parties), all 45 UK territorial police forces + 3 special police
+  # forces + NCA, 5 Irish defence branches + 8 UK defence branches,
+  # 24 universities, 3 Celtic colleges, 5 Irish-medium schools, 5
+  # critical national information sources, 39 government bodies.
   #
-  # Total: 4 intelligence + 22 universities + 5 Celtic-language colleges
-  # + 15 political parties + 39 government bodies = 85 sources.
-  #
-  # Schedule: ``0 5 1 * *`` (1st of month, 05:00 Europe/Dublin) — matches
-  # the canonical ``official_media_monthly_schedule`` in
-  # ``oideachais/dagster_defs/schedules.py``.
+  # Schedule: ``0 5 1 * *`` (1st of month, 05:00 Europe/Dublin).
   - id: uk.intelligence.mi5
     name: "MI5 — Security Service"
     domain: official_media
@@ -811,7 +808,7 @@ sources:
     asset_key: [sct, official_media, college, sabhal_mor_ostaig, pages]
 
   - id: sct.college.lews_castle
-    name: "Lews Castle College (UHI Outer Hebrides)"
+    name: "Lews Castle College (UHI North, West and Hebrides)"
     domain: official_media
     nation: sct
     kind: firecrawl_pages
@@ -819,6 +816,46 @@ sources:
     crawl: { include_paths: ["/courses/**", "/news/**"], max_pages: 200 }
     schedule: { cron: "0 5 1 * *" }
     asset_key: [sct, official_media, college, lews_castle, pages]
+
+  - id: en.college.truro_penwith
+    name: "Truro & Penwith College (Cornish language provider)"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.truro-penwith.ac.uk"]
+    crawl: { include_paths: ["/news/**", "/courses/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, college, truro_penwith, pages]
+
+  - id: ie.school.colaiste_na_coiribe
+    name: "Coláiste na Coiribe (Galway & Roscommon ETB — Irish-medium post-primary)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.gretb.ie"]
+    crawl: { include_paths: ["/news/**", "/schools/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, school, colaiste_na_coiribe, pages]
+
+  - id: ni.school.scoil_na_seolta
+    name: "Scoil na Seolta (Integrated Irish-medium primary, East Belfast)"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.scoilnaseolta.org"]
+    crawl: { include_paths: ["/about-us/**", "/integrated-ethos/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, school, scoil_na_seolta, pages]
+
+  - id: ni.school.colaiste_feirste
+    name: "Coláiste Feirste (Irish-medium post-primary, Belfast)"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.colaistefeirste.org"]
+    crawl: { include_paths: ["/reamheolaire-prospectus/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, school, colaiste_feirste, pages]
 
   - id: iom.school.bunscoill_ghaelgagh
     name: "Bunscoill Ghaelgagh (Manx-medium primary school, St John's)"
@@ -830,25 +867,65 @@ sources:
     schedule: { cron: "0 5 1 * *" }
     asset_key: [iom, official_media, school, bunscoill_ghaelgagh, pages]
 
-  - id: ni.school.colaiste_feirste
-    name: "Coláiste Feirste (Irish-medium post-primary, Belfast)"
+  - id: ni.language_project.turas
+    name: "Turas — East Belfast Mission Irish language project (Belfast)"
     domain: official_media
     nation: ni
     kind: firecrawl_pages
-    urls: ["https://www.colaistefeirste.org"]
-    crawl: { include_paths: ["/nuacht/**", "/eolas/**"], max_pages: 200 }
+    urls: ["https://turasbelfast.com"]
+    crawl: { include_paths: ["/classes/**", "/bus-and-walking-tours-of-belfast/**", "/shop/**"], max_pages: 200 }
     schedule: { cron: "0 5 1 * *" }
-    asset_key: [ni, official_media, school, colaiste_feirste, pages]
+    asset_key: [ni, official_media, language_project, turas, pages]
 
-  - id: en.college.truro_penwith
-    name: "Truro & Penwith College (Cornish language provider)"
+  - id: en.party.labour_uk
+    name: "Labour Party (UK)"
     domain: official_media
     nation: en
     kind: firecrawl_pages
-    urls: ["https://www.truro-penwith.ac.uk"]
-    crawl: { include_paths: ["/news/**", "/courses/**"], max_pages: 200 }
+    urls: ["https://labour.org.uk"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
     schedule: { cron: "0 5 1 * *" }
-    asset_key: [en, official_media, college, truro_penwith, pages]
+    asset_key: [en, official_media, party, labour_uk, pages]
+
+  - id: en.party.conservative
+    name: "Conservative and Unionist Party (UK)"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.conservatives.com"]
+    crawl: { include_paths: ["/news/**", "/our-party/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, party, conservative, pages]
+
+  - id: en.party.libdems
+    name: "Liberal Democrats"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.libdems.org.uk"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, party, libdems, pages]
+
+  - id: en.party.reform
+    name: "Reform UK"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.reformparty.uk"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, party, reform, pages]
+
+  - id: en.party.green_en
+    name: "Green Party of England and Wales"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://greenparty.org.uk"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, party, green_en, pages]
 
   - id: ie.party.fiannafail
     name: "Fianna Fáil"
@@ -910,6 +987,26 @@ sources:
     schedule: { cron: "0 5 1 * *" }
     asset_key: [ie, official_media, party, socialdemocrats, pages]
 
+  - id: ie.party.independent_ireland
+    name: "Independent Ireland"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.independentireland.ie"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, party, independent_ireland, pages]
+
+  - id: ie.party.100_redress
+    name: "100% Redress (Donegal)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.100redress.ie"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, party, 100_redress, pages]
+
   - id: ni.party.dup
     name: "Democratic Unionist Party"
     domain: official_media
@@ -950,55 +1047,785 @@ sources:
     schedule: { cron: "0 5 1 * *" }
     asset_key: [ni, official_media, party, uup, pages]
 
-  - id: en.party.labour_uk
-    name: "Labour Party (UK)"
+  - id: ni.party.tuv
+    name: "Traditional Unionist Voice"
     domain: official_media
-    nation: en
+    nation: ni
     kind: firecrawl_pages
-    urls: ["https://labour.org.uk"]
+    urls: ["https://www.tuv.org.uk"]
+    crawl: { include_paths: ["/news/**", "/policy/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, party, tuv, pages]
+
+  - id: sct.party.snp
+    name: "Scottish National Party"
+    domain: official_media
+    nation: sct
+    kind: firecrawl_pages
+    urls: ["https://www.snp.org"]
+    crawl: { include_paths: ["/news/**", "/policy/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [sct, official_media, party, snp, pages]
+
+  - id: sct.party.scottish_greens
+    name: "Scottish Greens"
+    domain: official_media
+    nation: sct
+    kind: firecrawl_pages
+    urls: ["https://greens.scot"]
+    crawl: { include_paths: ["/news/**", "/policy/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [sct, official_media, party, scottish_greens, pages]
+
+  - id: wls.party.plaid_cymru
+    name: "Plaid Cymru — Party of Wales"
+    domain: official_media
+    nation: wls
+    kind: firecrawl_pages
+    urls: ["https://www.partyof.wales"]
+    crawl: { include_paths: ["/news/**", "/policy/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [wls, official_media, party, plaid_cymru, pages]
+
+  - id: gb.party.aontu
+    name: "Aontú (all-island)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://aontu.ie"]
     crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
     schedule: { cron: "0 5 1 * *" }
-    asset_key: [en, official_media, party, labour_uk, pages]
+    asset_key: [ie, official_media, party, aontu, pages]
 
-  - id: en.party.conservative
-    name: "Conservative Party (UK)"
+  - id: gb.party.pbp
+    name: "People Before Profit–Solidarity (all-island)"
     domain: official_media
-    nation: en
+    nation: ie
     kind: firecrawl_pages
-    urls: ["https://www.conservatives.com"]
-    crawl: { include_paths: ["/news/**", "/our-party/**"], max_pages: 200 }
-    schedule: { cron: "0 5 1 * *" }
-    asset_key: [en, official_media, party, conservative, pages]
-
-  - id: en.party.libdems
-    name: "Liberal Democrats"
-    domain: official_media
-    nation: en
-    kind: firecrawl_pages
-    urls: ["https://www.libdems.org.uk"]
+    urls: ["https://www.pbp.ie"]
     crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
     schedule: { cron: "0 5 1 * *" }
-    asset_key: [en, official_media, party, libdems, pages]
+    asset_key: [ie, official_media, party, pbp, pages]
 
-  - id: en.party.green_en
-    name: "Green Party of England and Wales"
+  - id: ie.police.garda
+    name: "An Garda Síochána (Ireland national police)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.garda.ie"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, police, garda, pages]
+
+  - id: ie.police.garda_reserve
+    name: "Garda Reserve (Ireland)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.garda.ie"]
+    crawl: { include_paths: ["/reserve/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, police, garda_reserve, pages]
+
+  - id: ni.police.psni
+    name: "Police Service of Northern Ireland (PSNI)"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.psni.police.uk"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, police, psni, pages]
+
+  - id: ni.police.nifrs
+    name: "Northern Ireland Fire & Rescue Service"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.nifrs.org"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, police, nifrs, pages]
+
+  - id: ni.police.nias
+    name: "Northern Ireland Ambulance Service"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.nias.hscni.net"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, police, nias, pages]
+
+  - id: ni.police.police_ombudsman
+    name: "Police Ombudsman for Northern Ireland"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.policeombudsman.org"]
+    crawl: { include_paths: ["/news/**", "/publications/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, police, police_ombudsman, pages]
+
+  - id: ni.police.niprisons
+    name: "Northern Ireland Prison Service"
+    domain: official_media
+    nation: ni
+    kind: firecrawl_pages
+    urls: ["https://www.justice-ni.gov.uk/topics/prisons"]
+    crawl: { include_paths: ["/topics/prisons/**", "/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ni, official_media, police, niprisons, pages]
+
+  - id: en.police.met
+    name: "Metropolitan Police Service (London)"
     domain: official_media
     nation: en
     kind: firecrawl_pages
-    urls: ["https://greenparty.org.uk"]
-    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    urls: ["https://www.met.police.uk"]
+    crawl: { include_paths: ["/news/**", "/advice/**"], max_pages: 200 }
     schedule: { cron: "0 5 1 * *" }
-    asset_key: [en, official_media, party, green_en, pages]
+    asset_key: [en, official_media, police, met, pages]
 
-  - id: en.party.reform
-    name: "Reform UK"
+  - id: en.police.cityoflondon
+    name: "City of London Police"
     domain: official_media
     nation: en
     kind: firecrawl_pages
-    urls: ["https://www.reformparty.uk"]
-    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    urls: ["https://www.cityoflondon.police.uk"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
     schedule: { cron: "0 5 1 * *" }
-    asset_key: [en, official_media, party, reform, pages]
+    asset_key: [en, official_media, police, cityoflondon, pages]
+
+  - id: en.police.avonandsomerset
+    name: "Avon and Somerset Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.avonandsomerset.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, avonandsomerset, pages]
+
+  - id: en.police.bedfordshire
+    name: "Bedfordshire Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.bedfordshire.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, bedfordshire, pages]
+
+  - id: en.police.cambridgeshire
+    name: "Cambridgeshire Constabulary"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.cambridgeshire.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, cambridgeshire, pages]
+
+  - id: en.police.cheshire
+    name: "Cheshire Constabulary"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.cheshire.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, cheshire, pages]
+
+  - id: en.police.cleveland
+    name: "Cleveland Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.cleveland.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, cleveland, pages]
+
+  - id: en.police.cumbria
+    name: "Cumbria Constabulary"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.cumbria.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, cumbria, pages]
+
+  - id: en.police.derbyshire
+    name: "Derbyshire Constabulary"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.derbyshire.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, derbyshire, pages]
+
+  - id: en.police.devoncornwall
+    name: "Devon and Cornwall Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.devon-cornwall.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, devoncornwall, pages]
+
+  - id: en.police.dorset
+    name: "Dorset Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.dorset.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, dorset, pages]
+
+  - id: en.police.durham
+    name: "Durham Constabulary"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.durham.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, durham, pages]
+
+  - id: en.police.essex
+    name: "Essex Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.essex.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, essex, pages]
+
+  - id: en.police.gloucestershire
+    name: "Gloucestershire Constabulary"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.gloucestershire.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, gloucestershire, pages]
+
+  - id: en.police.gmp
+    name: "Greater Manchester Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.gmp.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, gmp, pages]
+
+  - id: en.police.hampshire
+    name: "Hampshire and Isle of Wight Constabulary"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.hampshire.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, hampshire, pages]
+
+  - id: en.police.herts
+    name: "Hertfordshire Constabulary"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.herts.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, herts, pages]
+
+  - id: en.police.humberside
+    name: "Humberside Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.humberside.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, humberside, pages]
+
+  - id: en.police.kent
+    name: "Kent Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.kent.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, kent, pages]
+
+  - id: en.police.lancashire
+    name: "Lancashire Constabulary"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.lancashire.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, lancashire, pages]
+
+  - id: en.police.leicestershire
+    name: "Leicestershire Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.leicestershire.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, leicestershire, pages]
+
+  - id: en.police.lincolnshire
+    name: "Lincolnshire Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.lincolnshire.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, lincolnshire, pages]
+
+  - id: en.police.merseyside
+    name: "Merseyside Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.merseyside.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, merseyside, pages]
+
+  - id: en.police.norfolk
+    name: "Norfolk Constabulary"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.norfolk.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, norfolk, pages]
+
+  - id: en.police.northamptonshire
+    name: "Northamptonshire Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.northants.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, northamptonshire, pages]
+
+  - id: en.police.northumbria
+    name: "Northumbria Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.northumbria.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, northumbria, pages]
+
+  - id: en.police.nottinghamshire
+    name: "Nottinghamshire Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.nottinghamshire.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, nottinghamshire, pages]
+
+  - id: en.police.staffordshire
+    name: "Staffordshire Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.staffordshire.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, staffordshire, pages]
+
+  - id: en.police.suffolk
+    name: "Suffolk Constabulary"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.suffolk.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, suffolk, pages]
+
+  - id: en.police.surrey
+    name: "Surrey Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.surrey.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, surrey, pages]
+
+  - id: en.police.sussex
+    name: "Sussex Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.sussex.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, sussex, pages]
+
+  - id: en.police.thamesvalley
+    name: "Thames Valley Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.thamesvalley.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, thamesvalley, pages]
+
+  - id: en.police.warwickshire
+    name: "Warwickshire Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.warwickshire.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, warwickshire, pages]
+
+  - id: en.police.westmercia
+    name: "West Mercia Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.westmercia.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, westmercia, pages]
+
+  - id: en.police.westmidlands
+    name: "West Midlands Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.west-midlands.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, westmidlands, pages]
+
+  - id: en.police.westyorkshire
+    name: "West Yorkshire Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.westyorkshire.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, westyorkshire, pages]
+
+  - id: en.police.wiltshire
+    name: "Wiltshire Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.wiltshire.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, wiltshire, pages]
+
+  - id: en.police.northyorkshire
+    name: "North Yorkshire Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.northyorkshire.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, northyorkshire, pages]
+
+  - id: wls.police.dyfedpowys
+    name: "Dyfed-Powys Police"
+    domain: official_media
+    nation: wls
+    kind: firecrawl_pages
+    urls: ["https://www.dyfed-powys.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [wls, official_media, police, dyfedpowys, pages]
+
+  - id: wls.police.gwent
+    name: "Gwent Police"
+    domain: official_media
+    nation: wls
+    kind: firecrawl_pages
+    urls: ["https://www.gwent.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [wls, official_media, police, gwent, pages]
+
+  - id: wls.police.northwales
+    name: "North Wales Police"
+    domain: official_media
+    nation: wls
+    kind: firecrawl_pages
+    urls: ["https://www.northwales.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [wls, official_media, police, northwales, pages]
+
+  - id: wls.police.southwales
+    name: "South Wales Police"
+    domain: official_media
+    nation: wls
+    kind: firecrawl_pages
+    urls: ["https://www.south-wales.police.uk/"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [wls, official_media, police, southwales, pages]
+
+  - id: sct.police.scotland
+    name: "Police Service of Scotland (Police Scotland)"
+    domain: official_media
+    nation: sct
+    kind: firecrawl_pages
+    urls: ["https://www.scotland.police.uk"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [sct, official_media, police, scotland, pages]
+
+  - id: gb.police.btp
+    name: "British Transport Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.btp.police.uk"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, btp, pages]
+
+  - id: gb.police.cnc
+    name: "Civil Nuclear Constabulary"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.cnc.police.uk"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, cnc, pages]
+
+  - id: gb.police.mod_police
+    name: "Ministry of Defence Police"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.mod.police.uk"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, mod_police, pages]
+
+  - id: gb.police.nca
+    name: "National Crime Agency (UK)"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.nationalcrimeagency.gov.uk"]
+    crawl: { include_paths: ["/news/**", "/publications/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, police, nca, pages]
+
+  - id: ie.defence.army
+    name: "Irish Army (Óglaigh na hÉireann — Army)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.military.ie"]
+    crawl: { include_paths: ["/en/the-army/**", "/en/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, defence, army, pages]
+
+  - id: ie.defence.air_corps
+    name: "Irish Air Corps"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.military.ie"]
+    crawl: { include_paths: ["/en/the-air-corps/**", "/en/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, defence, air_corps, pages]
+
+  - id: ie.defence.naval_service
+    name: "Irish Naval Service (Seirbhís Chabhlaigh)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.military.ie"]
+    crawl: { include_paths: ["/en/the-naval-service/**", "/en/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, defence, naval_service, pages]
+
+  - id: ie.defence.reserve
+    name: "Defence Forces Reserve (Ireland)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.military.ie"]
+    crawl: { include_paths: ["/en/the-reserve/**", "/en/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, defence, reserve, pages]
+
+  - id: ie.defence.civil_defence
+    name: "Civil Defence Ireland (An Cosaint Shibhialta)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.gov.ie/en/organisation/department-of-defence/"]
+    crawl: { include_paths: ["/en/organisation/department-of-defence/**", "/en/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, defence, civil_defence, pages]
+
+  - id: en.defence.british_army
+    name: "British Army"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.army.mod.uk"]
+    crawl: { include_paths: ["/news-and-events/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, defence, british_army, pages]
+
+  - id: en.defence.royal_navy
+    name: "Royal Navy"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.royalnavy.mod.uk"]
+    crawl: { include_paths: ["/news/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, defence, royal_navy, pages]
+
+  - id: en.defence.raf
+    name: "Royal Air Force"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.raf.mod.uk"]
+    crawl: { include_paths: ["/news/**", "/careers/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, defence, raf, pages]
+
+  - id: en.defence.strategic_command
+    name: "UK Strategic Command"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.gov.uk/government/organisations/strategic-command"]
+    crawl: { include_paths: ["/news/**", "/government/publications/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, defence, strategic_command, pages]
+
+  - id: en.defence.des
+    name: "Defence Equipment & Support (DE&S)"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.gov.uk/government/organisations/defence-equipment-and-support"]
+    crawl: { include_paths: ["/news/**", "/government/publications/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, defence, des, pages]
+
+  - id: en.defence.mod
+    name: "Ministry of Defence (UK)"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.gov.uk/government/organisations/ministry-of-defence"]
+    crawl: { include_paths: ["/news/**", "/government/publications/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, defence, mod, pages]
+
+  - id: en.defence.royal_marines
+    name: "Royal Marines"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.royalnavy.mod.uk"]
+    crawl: { include_paths: ["/news/**", "/the-royal-navy/operating-our-ships/royal-marines/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, defence, royal_marines, pages]
+
+  - id: en.defence.ukhoc
+    name: "UK Hydrographic Office"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.gov.uk/government/organisations/uk-hydrographic-office"]
+    crawl: { include_paths: ["/news/**", "/government/publications/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, defence, ukhoc, pages]
+
+  - id: gb.national.met_office
+    name: "Met Office (UK weather & climate service — met.gov.uk)"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.metoffice.gov.uk"]
+    crawl: { include_paths: ["/weather/**", "/about-us/news-and-media/**", "/research/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, national, met_office, pages]
+
+  - id: ie.national.met_eireann
+    name: "Met Éireann (Irish weather service — met.ie)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.met.ie"]
+    crawl: { include_paths: ["/forecasts/**", "/climate/**", "/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, national, met_eireann, pages]
+
+  - id: gb.national.bbc
+    name: "BBC — British Broadcasting Corporation"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.bbc.co.uk"]
+    crawl: { include_paths: ["/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, national, bbc, pages]
+
+  - id: ie.national.rte
+    name: "RTÉ — Raidió Teilifís Éireann (Irish national broadcaster)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.rte.ie"]
+    crawl: { include_paths: ["/news/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, national, rte, pages]
+
+  - id: ie.national.citizens_information
+    name: "Citizens Information (Ireland)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.citizensinformation.ie"]
+    crawl: { include_paths: ["/en/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, national, citizens_information, pages]
 
   - id: ie.jurisdiction.govireland
     name: "Government of Ireland"
@@ -1029,36 +1856,6 @@ sources:
     crawl: { include_paths: ["/en/news/**", "/en/organisation/**"], max_pages: 200 }
     schedule: { cron: "0 5 1 * *" }
     asset_key: [ie, official_media, jurisdiction, defence, pages]
-
-  - id: ie.jurisdiction.garda
-    name: "An Garda Síochána"
-    domain: official_media
-    nation: ie
-    kind: firecrawl_pages
-    urls: ["https://www.garda.ie"]
-    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
-    schedule: { cron: "0 5 1 * *" }
-    asset_key: [ie, official_media, jurisdiction, garda, pages]
-
-  - id: ie.jurisdiction.hse
-    name: "Health Service Executive (HSE)"
-    domain: official_media
-    nation: ie
-    kind: firecrawl_pages
-    urls: ["https://www.hse.ie"]
-    crawl: { include_paths: ["/eng/services/news/**", "/eng/about/**"], max_pages: 200 }
-    schedule: { cron: "0 5 1 * *" }
-    asset_key: [ie, official_media, jurisdiction, hse, pages]
-
-  - id: ie.jurisdiction.revenue
-    name: "Revenue Commissioners (Ireland)"
-    domain: official_media
-    nation: ie
-    kind: firecrawl_pages
-    urls: ["https://www.revenue.ie"]
-    crawl: { include_paths: ["/en/news/**", "/en/companies/**"], max_pages: 200 }
-    schedule: { cron: "0 5 1 * *" }
-    asset_key: [ie, official_media, jurisdiction, revenue, pages]
 
   - id: ie.jurisdiction.education
     name: "Department of Education (Ireland)"
@@ -1100,6 +1897,26 @@ sources:
     schedule: { cron: "0 5 1 * *" }
     asset_key: [ie, official_media, jurisdiction, cso, pages]
 
+  - id: ie.jurisdiction.hse
+    name: "Health Service Executive (HSE)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.hse.ie"]
+    crawl: { include_paths: ["/eng/services/news/**", "/eng/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, jurisdiction, hse, pages]
+
+  - id: ie.jurisdiction.revenue
+    name: "Revenue Commissioners (Ireland)"
+    domain: official_media
+    nation: ie
+    kind: firecrawl_pages
+    urls: ["https://www.revenue.ie"]
+    crawl: { include_paths: ["/en/news/**", "/en/companies/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [ie, official_media, jurisdiction, revenue, pages]
+
   - id: ni.jurisdiction.nidirect
     name: "NI Direct Government Services"
     domain: official_media
@@ -1109,36 +1926,6 @@ sources:
     crawl: { include_paths: ["/articles/**", "/news/**"], max_pages: 200 }
     schedule: { cron: "0 5 1 * *" }
     asset_key: [ni, official_media, jurisdiction, nidirect, pages]
-
-  - id: ni.jurisdiction.psni
-    name: "Police Service of Northern Ireland (PSNI)"
-    domain: official_media
-    nation: ni
-    kind: firecrawl_pages
-    urls: ["https://www.psni.police.uk"]
-    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
-    schedule: { cron: "0 5 1 * *" }
-    asset_key: [ni, official_media, jurisdiction, psni, pages]
-
-  - id: ni.jurisdiction.nifrs
-    name: "Northern Ireland Fire & Rescue Service"
-    domain: official_media
-    nation: ni
-    kind: firecrawl_pages
-    urls: ["https://www.nifrs.org"]
-    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
-    schedule: { cron: "0 5 1 * *" }
-    asset_key: [ni, official_media, jurisdiction, nifrs, pages]
-
-  - id: ni.jurisdiction.nias
-    name: "Northern Ireland Ambulance Service"
-    domain: official_media
-    nation: ni
-    kind: firecrawl_pages
-    urls: ["https://www.nias.hscni.net"]
-    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
-    schedule: { cron: "0 5 1 * *" }
-    asset_key: [ni, official_media, jurisdiction, nias, pages]
 
   - id: ni.jurisdiction.deni
     name: "Department of Education (Northern Ireland)"
@@ -1189,86 +1976,6 @@ sources:
     crawl: { include_paths: ["/news/**", "/government/publications/**"], max_pages: 200 }
     schedule: { cron: "0 5 1 * *" }
     asset_key: [en, official_media, jurisdiction, home_office, pages]
-
-  - id: en.jurisdiction.mod
-    name: "Ministry of Defence (UK)"
-    domain: official_media
-    nation: en
-    kind: firecrawl_pages
-    urls: ["https://www.gov.uk/government/organisations/ministry-of-defence"]
-    crawl: { include_paths: ["/news/**", "/government/publications/**"], max_pages: 200 }
-    schedule: { cron: "0 5 1 * *" }
-    asset_key: [en, official_media, jurisdiction, mod, pages]
-
-  - id: en.jurisdiction.british_army
-    name: "British Army"
-    domain: official_media
-    nation: en
-    kind: firecrawl_pages
-    urls: ["https://www.army.mod.uk"]
-    crawl: { include_paths: ["/news-and-events/**", "/careers/**"], max_pages: 200 }
-    schedule: { cron: "0 5 1 * *" }
-    asset_key: [en, official_media, jurisdiction, british_army, pages]
-
-  - id: en.jurisdiction.royal_navy
-    name: "Royal Navy"
-    domain: official_media
-    nation: en
-    kind: firecrawl_pages
-    urls: ["https://www.royalnavy.mod.uk"]
-    crawl: { include_paths: ["/news/**", "/careers/**"], max_pages: 200 }
-    schedule: { cron: "0 5 1 * *" }
-    asset_key: [en, official_media, jurisdiction, royal_navy, pages]
-
-  - id: en.jurisdiction.raf
-    name: "Royal Air Force"
-    domain: official_media
-    nation: en
-    kind: firecrawl_pages
-    urls: ["https://www.raf.mod.uk"]
-    crawl: { include_paths: ["/news/**", "/careers/**"], max_pages: 200 }
-    schedule: { cron: "0 5 1 * *" }
-    asset_key: [en, official_media, jurisdiction, raf, pages]
-
-  - id: en.jurisdiction.met_police
-    name: "Metropolitan Police Service"
-    domain: official_media
-    nation: en
-    kind: firecrawl_pages
-    urls: ["https://www.met.police.uk"]
-    crawl: { include_paths: ["/news/**", "/advice/**"], max_pages: 200 }
-    schedule: { cron: "0 5 1 * *" }
-    asset_key: [en, official_media, jurisdiction, met_police, pages]
-
-  - id: en.jurisdiction.london_fire
-    name: "London Fire Brigade"
-    domain: official_media
-    nation: en
-    kind: firecrawl_pages
-    urls: ["https://www.london-fire.gov.uk"]
-    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
-    schedule: { cron: "0 5 1 * *" }
-    asset_key: [en, official_media, jurisdiction, london_fire, pages]
-
-  - id: en.jurisdiction.london_ambulance
-    name: "London Ambulance Service"
-    domain: official_media
-    nation: en
-    kind: firecrawl_pages
-    urls: ["https://www.londonambulance.nhs.uk"]
-    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
-    schedule: { cron: "0 5 1 * *" }
-    asset_key: [en, official_media, jurisdiction, london_ambulance, pages]
-
-  - id: en.jurisdiction.nhs_england
-    name: "NHS England"
-    domain: official_media
-    nation: en
-    kind: firecrawl_pages
-    urls: ["https://www.england.nhs.uk"]
-    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
-    schedule: { cron: "0 5 1 * *" }
-    asset_key: [en, official_media, jurisdiction, nhs_england, pages]
 
   - id: en.jurisdiction.dhsc
     name: "Department of Health and Social Care (UK)"
@@ -1339,6 +2046,36 @@ sources:
     crawl: { include_paths: ["/news/**", "/releases/**"], max_pages: 200 }
     schedule: { cron: "0 5 1 * *" }
     asset_key: [en, official_media, jurisdiction, ons, pages]
+
+  - id: en.jurisdiction.nhs_england
+    name: "NHS England"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.england.nhs.uk"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, nhs_england, pages]
+
+  - id: en.jurisdiction.london_fire
+    name: "London Fire Brigade"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.london-fire.gov.uk"]
+    crawl: { include_paths: ["/news/**", "/about/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, london_fire, pages]
+
+  - id: en.jurisdiction.london_ambulance
+    name: "London Ambulance Service"
+    domain: official_media
+    nation: en
+    kind: firecrawl_pages
+    urls: ["https://www.londonambulance.nhs.uk"]
+    crawl: { include_paths: ["/news/**", "/about-us/**"], max_pages: 200 }
+    schedule: { cron: "0 5 1 * *" }
+    asset_key: [en, official_media, jurisdiction, london_ambulance, pages]
 
   - id: wls.jurisdiction.senedd
     name: "Senedd Cymru / Welsh Parliament"
