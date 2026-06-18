@@ -18,7 +18,6 @@ import pytest
 from dlt_sources.official_media import classifier as classifier_module
 from dlt_sources.official_media.classifier import classify_with_baml
 
-
 # ---------------------------------------------------------------------------
 # BAML missing
 # ---------------------------------------------------------------------------

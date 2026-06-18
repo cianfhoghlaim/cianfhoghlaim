@@ -17,7 +17,6 @@ from dlt_sources.official_media.allowlist import (
     allowlist_filter,
 )
 
-
 # ---------------------------------------------------------------------------
 # Stage 1: positive cases (in the allowlist)
 # ---------------------------------------------------------------------------
