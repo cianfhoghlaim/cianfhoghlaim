@@ -14,12 +14,12 @@ Pangolin doesn't auto-provision API keys (they require manual login). To bootstr
 1. `docker stop pangolin` on arm1-oci
 2. `docker cp pangolin:/app/config/db/db.sqlite` to copy the live DB out
 3. Generated an argon2id hash using bun + `@node-rs/argon2` (Python's `argon2-cffi` was producing a hash format the Node binding didn't recognize — `Invalid hashed password: password hash string missing field`)
-4. `INSERT INTO apiKeys (...) VALUES ('a9e88fc444769254', 'IaC Bootstrap', '$argon2id$...', '2026', ..., 1)`
+4. `INSERT INTO apiKeys (...) VALUES (..., '$argon2id$...', ..., 1)`
 5. Linked the key to the org via `INSERT INTO apiKeyOrg`
 6. Added all 136 permissions to `apiKeyActions` (Pangolin checks explicit actions, not just `isRoot`)
 7. Copied the modified DB back via `docker cp` and `docker compose start`
 
-**Key:** `a9e88fc444769254.hackathon-komodo-pangolin-2026` (root, all permissions, all orgs)
+The full key value lives in the **operator's local `.env`** (gitignored) under `PANGOLIN_API_KEY`. It's never committed.
 
 ### 3. Added Traefik route for the integration API
 The integration API runs on port 3003 inside the pangolin container, but the static `dynamic_config.yml` only routed:
@@ -45,7 +45,7 @@ integration-api-service:
 Also removed the false negative: `next-router` had `!PathPrefix('/api/v1')` — needed to add `!PathPrefix('/v1')` so it doesn't catch integration API requests.
 
 ### 4. Created sites + resources via the Integration API
-- `PUT /v1/org/cianfhoghlaim/site` × 2 → `bunchloch` (siteId=3, newtId=`m6cclvk0jcdijft`) + `arm1-oci` (siteId=4, newtId=`sjm18f9ffg2wczt`)
+- `PUT /v1/org/cianfhoghlaim/site` × 2 → `bunchloch` (siteId=3) + `arm1-oci` (siteId=4) — see local `.env` for the newt credentials
 - `PUT /v1/org/cianfhoghlaim/site-resource` × 3 → `komodo.cianfhoghlaim.ie` (siteId=3), `calcom.cianfhoghlaim.ie` (siteId=4), `infisical.cianfhoghlaim.ie` (siteId=4)
 
 Note: `POST /v1/site-resource/{id}` (update) does NOT accept `subdomain` field — to change the subdomain you have to delete + recreate.
@@ -83,7 +83,7 @@ Also the newt's `lastHolePunch` must be within 5 seconds of the `wg/get-config` 
 
 1. **Get the newt to send docker containers**: Investigate why newt 1.13.0 isn't sending the container list. Possibly the docker socket detection or the message handler on Pangolin 1.18.4 is incompatible. Try newt 1.12.5 again with the address/24 fix.
 2. **Periphery on arm1-oci**: SSH to arm1-oci and bring up `komodo-periphery.yaml` so arm1-oci registers as `online` in Komodo.
-3. **Pulumi cloudflare DNS-01 token**: Revive `infrastructure/pulumi/cloudflare/index.ts` to provision a Cloudflare API token for the wildcard cert renewal (currently we use a manual `cfut_` token).
+3. **Pulumi cloudflare DNS-01 token**: Revive `infrastructure/pulumi/cloudflare/index.ts` to provision a Cloudflare API token for the wildcard cert renewal (currently we use a manual token from the local .env).
 4. **Locket / Infisical KMS recovery**: The locket sidecar is unhealthy on every stack because Infisical KMS is broken. Options: (a) re-init KMS via DB wipe + re-seed, (b) use raw .env files bypassing locket, (c) keep locket disabled and document.
 5. **Test calcom/infisical resources**: They're configured but their docker containers (`calcom-web:3000`, `infisical-backend:8080`) aren't running on arm1-oci yet. Once the newt on arm1-oci is up, they should be routable.
 
@@ -99,7 +99,9 @@ Also the newt's `lastHolePunch` must be within 5 seconds of the `wg/get-config` 
 - **Setup script**: `infrastructure/scripts/setup-pangolin-komodo.sh`
 
 ## Environment variables in use (committed to root .env)
-- `INFISICAL_CLIENT_ID=c56cbe28-88a4-4793-95a1-835d5164d8ad`
-- `INFISICAL_PROJECT_ID=f3cff583-b74b-4804-b9d3-db8b68885236`
+- `INFISICAL_CLIENT_ID=<uuid>` (universal-auth machine identity)
+- `INFISICAL_PROJECT_ID=<uuid>` (workspace)
 - `INFISICAL_SECRET_FILE=./infisical_secret` (this file doesn't exist; locket is disabled)
-- `CLOUDFLARE_DNS_API_TOKEN=cfut_eNe5swJwARwynzPaY8s4r0POcWetbleJXXpUoBin1888881a` (for `*.cianfhoghl.ie` wildcard cert renewal)
+- `CLOUDFLARE_DNS_API_TOKEN=<cfut_ token>` (for `*.cianfhoghlaim.ie` wildcard cert renewal via lego DNS-01)
+- `PANGOLIN_API_KEY=<root-key-for-Integration-API>` (root, all 136 permissions, linked to cianfhoghlaim org)
+- `PANGOLIN_LICENCE=PER-...` (Pangolin Enterprise license)
