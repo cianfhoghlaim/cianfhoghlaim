@@ -16,6 +16,12 @@ Why this exists:
 - We also want every dbt model to land in the `prepared` group so the
   asset lineage in the Dagster UI shows the canonical "raw → prepared →
   reporting" flow.
+- Sources (dlt-ingested upstream tables) and seeds (CSV files) are
+  distinct from models. The default translator would assign them keys
+  that collide with models (e.g. seed `books` collides with source
+  `leabharlann.books` if both are keyed as `["books"]`). We prefix
+  sources with `["dbt_source", ...]` and skip seeds entirely (the
+  seeds are not user-managed assets).
 
 Usage:
 
@@ -29,7 +35,7 @@ Usage:
     def oideachais_dbt_assets(context, dbt): ...
 
 See also:
-- `oideachais/dbt_project/` (the 3 models)
+- `oideachais/dbt_project/` (the 3 models + 3 seeds + 3 sources)
 - `openspec/changes/celtic-data-engineering-patterns/specs/celtic-data-engineering-pipeline/spec.md`
 """
 
@@ -42,29 +48,44 @@ from dagster_dbt import DagsterDbtTranslator
 class CelticDagsterDbtTranslator(DagsterDbtTranslator):
     """Custom translator for the oideachais dbt project.
 
-    Two overrides vs. the default:
+    Three overrides vs. the default:
 
-    1. `get_asset_key` — flatten to a single-segment key (just the model
-       name), dropping the dbt project name from the asset key.
-    2. `get_group_name` — pin every dbt asset to the `prepared` group so
-       the asset graph shows raw → prepared → reporting.
+    1. `get_asset_key` — flatten MODELS to a single-segment key
+       (just the model name), dropping the dbt project name from
+       the asset key. Sources get a `dbt_source` prefix to avoid
+       collisions with models. Seeds are excluded.
+    2. `get_group_name` — pin every MODEL to the `prepared` group so
+       the asset graph shows raw → prepared → reporting. Sources
+       are pinned to `external` (they come from upstream dlt jobs).
+    3. Seeds are NOT exposed as Dagster assets (they're test fixtures
+       used by the dbt build smoke test, not production data flows).
     """
 
     @classmethod
     def get_asset_key(cls, dbt_resource_props: dict) -> AssetKey:
-        """Flatten `dbt_resource_props["name"]` to a single-segment AssetKey.
+        """Map dbt resources to AssetKeys.
 
-        The default returns `AssetKey([project_name, resource_type, name])`
-        (3 segments). We drop the project name and resource type to keep
-        the asset keys aligned with the rest of `oideachais/dagster_defs/`
-        which uses single-segment keys.
+        - MODELS: flat single-segment key (e.g. `AssetKey(["weekly_downloads"])`).
+        - SOURCES: prefixed with `dbt_source` to avoid collisions
+          (e.g. `AssetKey(["dbt_source", "books"])` for the source
+          `leabharlann.books`).
+        - SEEDS: excluded from the asset graph (we raise NotImplemented
+          to signal that the calling @dbt_assets should `exclude=`
+          them). Dagster handles this via the `exclude` parameter on
+          @dbt_assets, not the translator.
         """
+        resource_type = dbt_resource_props.get("resource_type", "")
+        if resource_type == "source":
+            # `name` for a source is e.g. `leabharlann.books`; we use
+            # the table name only to avoid leaking the source schema.
+            table_name = dbt_resource_props["name"].split(".")[-1]
+            return AssetKey(["dbt_source", table_name])
+        # models, seeds, snapshots, tests all use the flat name
         return AssetKey(dbt_resource_props["name"])
 
     def get_group_name(self, dbt_resource_props: dict) -> str:
-        """Pin every dbt asset to the `prepared` group.
-
-        This groups them with the dlt-prepared assets in the Dagster UI
-        (the `oideachais/dagster_defs/assets/*_prepared.py` modules).
-        """
+        """Pin models to `prepared`, sources to `external`."""
+        resource_type = dbt_resource_props.get("resource_type", "")
+        if resource_type == "source":
+            return "external"
         return "prepared"
