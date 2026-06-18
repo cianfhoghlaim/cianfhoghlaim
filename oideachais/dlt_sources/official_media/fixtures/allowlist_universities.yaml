@@ -1,0 +1,90 @@
+# oideachais/dlt_sources/official_media/fixtures/allowlist_universities.yaml
+#
+# British Isles universities — the main research + teaching institutions
+# in the IE/NI/EN jurisdictions (PR 1).
+#
+# Each entry is a public Instagram handle. Verified by visiting the
+# university's own home page and finding the Instagram link in the
+# footer. The list is intentionally short for PR 1; expand in PR 2.
+
+version: 1
+category: university
+description: >-
+  British Isles universities (PR 1: IE + NI + EN). Russell Group
+  representatives from each jurisdiction plus the comprehensive
+  national universities.
+entries:
+  # --- Ireland (IE) ---
+  - ig_username: universityofgalway
+    name: "University of Galway"
+    wikipedia_title: "University of Galway"
+    verified_at: "2026-06-18"
+    source_url: "https://www.universityofgalway.ie/about-us/"
+
+  - ig_username: ucddublin
+    name: "University College Dublin"
+    wikipedia_title: "University College Dublin"
+    verified_at: "2026-06-18"
+    source_url: "https://www.ucd.ie/about/"
+
+  - ig_username: trincolldublin
+    name: "Trinity College Dublin"
+    wikipedia_title: "Trinity College Dublin"
+    verified_at: "2026-06-18"
+    source_url: "https://www.tcd.ie/about/"
+
+  - ig_username: maynoothuni
+    name: "Maynooth University"
+    wikipedia_title: "Maynooth University"
+    verified_at: "2026-06-18"
+    source_url: "https://www.maynoothuniversity.ie/about"
+
+  - ig_username: universitylimerick
+    name: "University of Limerick"
+    wikipedia_title: "University of Limerick"
+    verified_at: "2026-06-18"
+    source_url: "https://www.ul.ie/about"
+
+  # --- Northern Ireland (NI) ---
+  - ig_username: queensuniversitybelfast
+    name: "Queen's University Belfast"
+    wikipedia_title: "Queen's University Belfast"
+    verified_at: "2026-06-18"
+    source_url: "https://www.qub.ac.uk/about/"
+
+  - ig_username: ulsteruni
+    name: "Ulster University"
+    wikipedia_title: "Ulster University"
+    verified_at: "2026-06-18"
+    source_url: "https://www.ulster.ac.uk/about"
+
+  # --- England (EN) ---
+  - ig_username: ucl
+    name: "University College London"
+    wikipedia_title: "University College London"
+    verified_at: "2026-06-18"
+    source_url: "https://www.ucl.ac.uk/about"
+
+  - ig_username: kingscollegelondon
+    name: "King's College London"
+    wikipedia_title: "King's College London"
+    verified_at: "2026-06-18"
+    source_url: "https://www.kcl.ac.uk/about"
+
+  - ig_username: imperialcollege
+    name: "Imperial College London"
+    wikipedia_title: "Imperial College London"
+    verified_at: "2026-06-18"
+    source_url: "https://www.imperial.ac.uk/about"
+
+  - ig_username: cambridgeuniversity
+    name: "University of Cambridge"
+    wikipedia_title: "University of Cambridge"
+    verified_at: "2026-06-18"
+    source_url: "https://www.cam.ac.uk/about-the-university"
+
+  - ig_username: oxford_uni
+    name: "University of Oxford"
+    wikipedia_title: "University of Oxford"
+    verified_at: "2026-06-18"
+    source_url: "https://www.ox.ac.uk/about"
