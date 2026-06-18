@@ -62,3 +62,29 @@ def test_translator_handles_all_three_oideachais_models() -> None:
         got = CelticDagsterDbtTranslator.get_asset_key(_make_props(name))
         assert got == want
         assert translator.get_group_name(_make_props(name)) == "prepared"
+
+
+def test_source_resources_get_dbt_source_prefix() -> None:
+    """Source resources (dlt-ingested upstream tables) get a `dbt_source` prefix.
+
+    Regression: when the source `leabharlann.books` and the seed
+    `books` had the same key (`['books']`), Dagster raised
+    `DagsterInvalidDefinitionError: The following dbt resources are
+    configured with identical Dagster asset keys`. The fix: prefix
+    sources with `dbt_source` so they don't collide with seeds/models.
+    """
+    props = _make_props("books")
+    props["resource_type"] = "source"
+    # The `name` for a source includes the schema: "leabharlann.books"
+    props["name"] = "leabharlann.books"
+    key = CelticDagsterDbtTranslator.get_asset_key(props)
+    assert key == AssetKey(["dbt_source", "books"])
+
+
+def test_source_resources_go_to_external_group() -> None:
+    """Source resources go to the `external` group, not `prepared`."""
+    translator = CelticDagsterDbtTranslator()
+    props = _make_props("books")
+    props["resource_type"] = "source"
+    props["name"] = "leabharlann.books"
+    assert translator.get_group_name(props) == "external"
