@@ -776,6 +776,6 @@ npx react-native run-android
 
 ## Related Documentation
 
-- [iOS Strategy](../iOS%20App%20Development%20Ecosystem%20Strategy.md)
-- [KMP vs RN Comparison](../Kotlin%20Multiplatform%20vs.%20React%20Native%20comparison.md)
+- [iOS Strategy](../../../05-ios-ml/iOS%20App%20Development%20Ecosystem%20Strategy.md)
+- [KMP vs RN Comparison](../../../07-clippings/Kotlin%20Multiplatform%20vs.%20React%20Native_%20A%20cross-platform%20comparison%20_%20Kotlin%20Multiplatform.md)
 - [SpacetimeDB Guide](./SPACETIMEDB_GUIDE.md)

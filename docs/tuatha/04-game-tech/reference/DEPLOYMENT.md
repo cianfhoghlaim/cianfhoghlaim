@@ -756,7 +756,7 @@ services:
 
 ## Related Documentation
 
-- [Architecture](./ARCHITECTURE.md) - System design overview
-- [API Reference](./api/README.md) - Endpoint documentation
-- [Performance Tuning](./guides/PERFORMANCE_TUNING.md) - Optimization guide
-- [Adding Data Sources](./guides/ADDING_DATA_SOURCES.md) - Pipeline setup
+- [Architecture(../../ANALYSIS.md) - System design overview
+- [API Reference(../../00-nav/Tuath%20API%20Reference.md) - Endpoint documentation
+- [Performance Tuning(./PERFORMANCE_TUNING.md) - Optimization guide
+- [Adding Data Sources(../../03-data-pipelines/ADDING_DATA_SOURCES.md) - Pipeline setup

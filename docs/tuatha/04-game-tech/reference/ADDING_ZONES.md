@@ -511,6 +511,6 @@ scene.registerBeforeRender(() => {
 
 ## Related Documentation
 
-- [Game Client](../GAME_CLIENT.md) - Full client documentation
-- [Architecture](../ARCHITECTURE.md) - System overview
-- [SpacetimeDB Guide](../../../taighde/game/docs/SPACETIMEDB_GUIDE.md) - Multiplayer integration
+- [Game Client](../../01-game-design/GAME_CLIENT.md) - Full client documentation
+- [Architecture](../../ANALYSIS.md) - System overview
+- [SpacetimeDB Guide](../../04-game-tech/reference/guides/SPACETIMEDB_GUIDE.md) - Multiplayer integration

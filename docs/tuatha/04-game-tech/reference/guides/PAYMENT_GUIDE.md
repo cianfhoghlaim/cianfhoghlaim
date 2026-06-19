@@ -806,6 +806,6 @@ async fn test_payment_flow() {
 
 ## Related Documentation
 
-- [Architecture](../../sruth/tuath/docs/ARCHITECTURE.md) - System overview
-- [API Reference](../../sruth/tuath/docs/api/README.md) - Payment endpoints
+- [Architecture](../../../ANALYSIS.md) - System overview
+- [API Reference](../../../00-nav/Tuath%20API%20Reference.md) - Payment endpoints
 - [x402 Library](../x402/) - Full x402 implementation
