@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "../_generated/server";
-import { requireOrgRole } from "./helpers";
+import { DEVTOOLS_READ_ROLES, DEVTOOLS_WRITE_ROLES, requireDevtoolsRead, requireOrgRole } from "./helpers";
 import { loggedAction } from "../_middleware";
 
 export const list = query({
@@ -18,6 +18,7 @@ export const list = query({
     ),
   },
   handler: async (ctx, args) => {
+    await requireDevtoolsRead(ctx);
     let q = ctx.db.query("cloudflareResources");
     if (args.project && args.kind) {
       q = q.withIndex("by_project_kind", (qq) =>
@@ -35,6 +36,7 @@ export const list = query({
 export const getByProject = query({
   args: { project: v.string() },
   handler: async (ctx, args) => {
+    await requireDevtoolsRead(ctx);
     return await ctx.db
       .query("cloudflareResources")
       .withIndex("by_project_kind", (q) => q.eq("project", args.project))
@@ -64,7 +66,7 @@ export const ingest = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    await requireOrgRole(ctx, "croilar-admin", ["owner", "admin"]);
+    await requireOrgRole(ctx, "croilar-admin", DEVTOOLS_WRITE_ROLES);
     const existing = await ctx.db
       .query("cloudflareResources")
       .withIndex("by_project_kind", (q) => q.eq("project", args.project))

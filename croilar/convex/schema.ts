@@ -21,7 +21,13 @@ export default defineSchema({
   memberships: defineTable({
     orgId: v.id("organizations"),
     userId: v.string(),
-    role: v.union(v.literal("owner"), v.literal("admin"), v.literal("member"), v.literal("viewer")),
+    role: v.union(
+      v.literal("owner"),
+      v.literal("admin"),
+      v.literal("developer"),
+      v.literal("member"),
+      v.literal("viewer"),
+    ),
     invitedAt: v.number(),
   })
     .index("by_org", ["orgId"])
