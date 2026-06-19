@@ -1,11 +1,12 @@
 import { v } from "convex/values";
 import { mutation, query } from "../_generated/server";
-import { requireOrgRole } from "./helpers";
+import { DEVTOOLS_READ_ROLES, DEVTOOLS_WRITE_ROLES, requireDevtoolsRead, requireOrgRole } from "./helpers";
 import { loggedAction } from "../_middleware";
 
 export const list = query({
   args: { project: v.optional(v.string()) },
   handler: async (ctx, args) => {
+    await requireDevtoolsRead(ctx);
     if (args.project !== undefined) {
       return await ctx.db
         .query("marimoNotebooks")
@@ -19,6 +20,7 @@ export const list = query({
 export const getBySlug = query({
   args: { slug: v.string() },
   handler: async (ctx, args) => {
+    await requireDevtoolsRead(ctx);
     return await ctx.db
       .query("marimoNotebooks")
       .withIndex("by_slug", (q) => q.eq("slug", args.slug))
@@ -42,7 +44,7 @@ export const ingest = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    await requireOrgRole(ctx, "croilar-admin", ["owner", "admin"]);
+    await requireOrgRole(ctx, "croilar-admin", DEVTOOLS_WRITE_ROLES);
     const existing = await ctx.db
       .query("marimoNotebooks")
       .withIndex("by_project", (q) => q.eq("project", args.project))

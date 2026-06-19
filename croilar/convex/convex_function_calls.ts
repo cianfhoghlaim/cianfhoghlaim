@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { query } from "../_generated/server";
+import { requireDevtoolsRead } from "./helpers";
 
 export const tail = query({
   args: {
@@ -9,6 +10,7 @@ export const tail = query({
     ok: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+    await requireDevtoolsRead(ctx);
     const lim = args.limit ?? 200;
     let rows;
     if (args.function) {
@@ -39,6 +41,7 @@ export const tail = query({
 export const getRecent = query({
   args: { limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
+    await requireDevtoolsRead(ctx);
     return await ctx.db
       .query("convexFunctionCalls")
       .withIndex("by_calledAt")
@@ -50,6 +53,7 @@ export const getRecent = query({
 export const getStats = query({
   args: { windowMs: v.optional(v.number()) },
   handler: async (ctx, args) => {
+    await requireDevtoolsRead(ctx);
     const windowMs = args.windowMs ?? 5 * 60 * 1000;
     const since = Date.now() - windowMs;
     const rows = await ctx.db
