@@ -680,7 +680,7 @@ game/client/
 
 ## Related Documentation
 
-- [Architecture](./ARCHITECTURE.md) - System overview
-- [Frontend](./FRONTEND.md) - TanStack Start integration
-- [SpacetimeDB Guide](../../taighde/game/docs/SPACETIMEDB_GUIDE.md) - Multiplayer backend
-- [API Reference](./API.md) - Backend endpoints
+- [Architecture(../ANALYSIS.md) - System overview
+- [Frontend(../04-game-tech/reference/FRONTEND.md) - TanStack Start integration
+- [SpacetimeDB Guide](../04-game-tech/reference/guides/SPACETIMEDB_GUIDE.md) - Multiplayer backend
+- [API Reference(../00-nav/Tuath%20API%20Reference.md) - Backend endpoints

@@ -708,6 +708,6 @@ pub fn update_position_minimal(
 
 ## Related Documentation
 
-- [Game Client](../../sruth/tuath/docs/GAME_CLIENT.md) - Babylon.js integration
-- [Architecture](../../sruth/tuath/docs/ARCHITECTURE.md) - System overview
+- [Game Client](../../../01-game-design/GAME_CLIENT.md) - Babylon.js integration
+- [Architecture](../../../ANALYSIS.md) - System overview
 - [Cookbook Examples](../spacetimedb-cookbook/) - More examples

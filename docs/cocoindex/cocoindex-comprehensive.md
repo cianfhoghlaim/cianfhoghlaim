@@ -577,7 +577,7 @@ If you want to build a end to end query flow that also searches the index, you c
 
 Next, you may want to:
 
-- Learn about [CocoIndex Basics](../core/basics.md).
+- Learn about [CocoIndex Basics](https://cocoindex.io/docs/core/basics).
 - Explore more of what you can build with CocoIndex in the [examples](https://cocoindex.io/docs/examples) directory.
 
 
@@ -980,7 +980,7 @@ In CocoIndex, a source is the data origin you import from (e.g., files, database
 | [Postgres](/docs/sources/postgres)       | Relational database (Postgres)           |
 
 Related:
-- [Life cycle of a indexing flow](/docs/core/basics#life-cycle-of-an-indexing-flow)
+- [Life cycle of a indexing flow](https://cocoindex.io/docs/core/basics#life-cycle-of-an-indexing-flow)
 - [Live Update Tutorial](/docs/tutorials/live_updates)
 for change capture mechanisms.
 
@@ -1967,7 +1967,7 @@ The spec takes the following fields:
 
 * `database` ([auth reference](/docs/core/flow_def#auth-registry) to `DatabaseConnectionSpec`, optional): The connection to the Postgres database.
     See [DatabaseConnectionSpec](/docs/core/settings#databaseconnectionspec) for its specific fields.
-    If not provided, will use the same database as the [internal storage](/docs/core/basics#internal-storage).
+    If not provided, will use the same database as the [internal storage](https://cocoindex.io/docs/core/basics#internal-storage).
 
 * `table_name` (`str`, optional): The name of the table to store to. If unspecified, will use the table name `[${AppNamespace}__]${FlowName}__${TargetName}`, e.g. `DemoFlow__doc_embeddings` or `Staging__DemoFlow__doc_embeddings`.
 
@@ -5678,8 +5678,8 @@ The smart embedding system is implemented as an external wrapper around CocoInde
 
 For more technical details, see:
 
-- [`docs/claude/Embedding-Selection.md`](docs/claude/Embedding-Selection.md)
-- [`docs/cocoindex/smart-embedding.md`](docs/cocoindex/smart-embedding.md)
+- [`docs/claude/Embedding-Selection.md`](cocoindex-code-mcp-server/docs/claude/Embedding-Selection.md)
+- [`docs/cocoindex/smart-embedding.md`](cocoindex-code-mcp-server/docs/cocoindex/smart-embedding.md)
 
 ## Development
 
@@ -6179,7 +6179,7 @@ There are many examples how to do this throughout our code.
 This repository contains an RAG retrieval and query application specialized on code based on CocoIndex,
 a high-performance data transformation framework for AI workloads.
 
-See [Code-Structure](docs/claude/Code-Structure.md) how the application code is structured.
+See [Code-Structure](cocoindex-code-mcp-server/docs/claude/Code-Structure.md) how the application code is structured.
 
 Additonal files here (but only for reference how things work, i.e. not as application code dependencies):
 
@@ -16217,7 +16217,7 @@ To submit your code:
 1. Fork the [CocoIndex repository](https://github.com/cocoindex-io/cocoindex)
 2. [Create a new branch](https://docs.github.com/en/desktop/making-changes-in-a-branch/managing-branches-in-github-desktop) on your fork
 3. Make your changes
-4. Run the pre-commit checks. It will be automatically triggered on `git commit` after you install the pre-commit hooks by `pre-commit install` (see [Setup Development Environment](setup_dev_environment.md)).
+4. Run the pre-commit checks. It will be automatically triggered on `git commit` after you install the pre-commit hooks by `pre-commit install` (see [Setup Development Environment](docs/contributing/setup_dev_environment.md)).
 
     :::tip
     To run them manually (same as CI):

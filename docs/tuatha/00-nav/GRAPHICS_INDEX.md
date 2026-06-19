@@ -30,18 +30,18 @@ This index catalogs all graphics, game development, rendering, and visual effect
 
 | File | Description |
 |------|-------------|
-| [Integrating Rust, DuckDB, TanStack, CopilotKit.md](Integrating%20Rust%2C%20DuckDB%2C%20TanStack%2C%20CopilotKit.md) | Full-stack integration strategy combining Rust backend, DuckDB analytics, TanStack frontend, and AI copilot |
-| [MMO Geospatial Data & Visual RAG.md](MMO%20Geospatial%20Data%20%26%20Visual%20RAG.md) | Integration of Retrieval Augmented Generation with geospatial MMO gameplay |
-| [Celtic MMO Web3 Concept Integration.md](Celtic%20MMO%20Web3%20Concept%20Integration.md) | Web3 economics and tokenomics for Celtic MMO |
+| [Integrating Rust, DuckDB, TanStack, CopilotKit.md](../03-data-pipelines/Integrating%20Rust%2C%20DuckDB%2C%20TanStack%2C%20CopilotKit.md) | Full-stack integration strategy combining Rust backend, DuckDB analytics, TanStack frontend, and AI copilot |
+| [MMO Geospatial Data & Visual RAG.md](../01-game-design/MMO%20Geospatial%20Data%20%26%20Visual%20RAG.md) | Integration of Retrieval Augmented Generation with geospatial MMO gameplay |
+| [Celtic MMO Web3 Concept Integration.md](../01-game-design/Celtic%20Naming%20for%20the%20MMO.md) | Web3 economics and tokenomics for Celtic MMO (merged into "Celtic Naming for the MMO") |
 
 ### Platform Strategy
 
 | File | Description |
 |------|-------------|
-| [Irish Handwriting App Development.md](Irish%20Handwriting%20App%20Development.md) | Strategy for Irish language handwriting recognition application |
-| [iOS App Development Ecosystem Strategy.md](iOS%20App%20Development%20Ecosystem%20Strategy.md) | Apple platform development strategy |
-| [Kotlin Multiplatform vs. React Native comparison.md](Kotlin%20Multiplatform%20vs.%20React%20Native%20comparison.md) | Cross-platform framework evaluation |
-| [Web3 Classroom Response System Design.md](Web3%20Classroom%20Response%20System%20Design.md) | Interactive education with crypto payments |
+| [Irish Handwriting App Development.md](../05-ios-ml/Irish%20Handwriting%20App%20Development.md) | Strategy for Irish language handwriting recognition application |
+| [iOS App Development Ecosystem Strategy.md](../05-ios-ml/iOS%20App%20Development%20Ecosystem%20Strategy.md) | Apple platform development strategy |
+| [Kotlin Multiplatform vs. React Native comparison.md](../07-clippings/Kotlin%20Multiplatform%20vs.%20React%20Native_%20A%20cross-platform%20comparison%20_%20Kotlin%20Multiplatform.md) | Cross-platform framework evaluation |
+| [Web3 Classroom Response System Design.md](../06-tokenomics/x402-payments.md) | Interactive education with crypto payments (consolidated into x402-payments.md) |
 
 ---
 

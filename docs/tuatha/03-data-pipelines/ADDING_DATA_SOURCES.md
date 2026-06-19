@@ -825,6 +825,6 @@ def notify_on_failure(context: HookContext):
 
 ## Related Documentation
 
-- [Architecture](../ARCHITECTURE.md) - System overview
-- [Performance Tuning](./PERFORMANCE_TUNING.md) - Embedding optimization
-- [Celtic Languages](./CELTIC_LANGUAGES.md) - Language-specific processing
+- [Architecture](../ANALYSIS.md) - System overview
+- [Performance Tuning(../04-game-tech/reference/PERFORMANCE_TUNING.md) - Embedding optimization
+- [Celtic Languages(../01-game-design/CELTIC_LANGUAGES.md) - Language-specific processing

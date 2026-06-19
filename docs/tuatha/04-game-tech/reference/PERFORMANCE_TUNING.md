@@ -878,6 +878,6 @@ def log_slow_queries(func):
 
 ## Related Documentation
 
-- [Architecture](../ARCHITECTURE.md) - System overview
-- [Adding Data Sources](./ADDING_DATA_SOURCES.md) - Pipeline configuration
-- [Celtic Languages](./CELTIC_LANGUAGES.md) - Embedding strategies
+- [Architecture](../../ANALYSIS.md) - System overview
+- [Adding Data Sources(../../03-data-pipelines/ADDING_DATA_SOURCES.md) - Pipeline configuration
+- [Celtic Languages(../../01-game-design/CELTIC_LANGUAGES.md) - Embedding strategies

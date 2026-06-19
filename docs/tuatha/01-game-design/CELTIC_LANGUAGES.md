@@ -770,6 +770,6 @@ class TestPronunciation:
 
 ## Related Documentation
 
-- [Adding Data Sources](./ADDING_DATA_SOURCES.md) - Curriculum ingestion
-- [Performance Tuning](./PERFORMANCE_TUNING.md) - Embedding optimization
-- [Architecture](../ARCHITECTURE.md) - System overview
+- [Adding Data Sources(../03-data-pipelines/ADDING_DATA_SOURCES.md) - Curriculum ingestion
+- [Performance Tuning(../04-game-tech/reference/PERFORMANCE_TUNING.md) - Embedding optimization
+- [Architecture](../ANALYSIS.md) - System overview

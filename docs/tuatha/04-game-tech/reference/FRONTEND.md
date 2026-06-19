@@ -730,7 +730,7 @@ const queryClient = new QueryClient({
 
 ## Related Documentation
 
-- [Architecture](./ARCHITECTURE.md) - System overview
-- [Game Client](./GAME_CLIENT.md) - Babylon.js integration
-- [API Reference](./API.md) - Backend endpoints
-- [Agents](./AGENTS.md) - CopilotKit/AG-UI agents
+- [Architecture(../../ANALYSIS.md) - System overview
+- [Game Client(../../01-game-design/GAME_CLIENT.md) - Babylon.js integration
+- [API Reference(../../00-nav/Tuath%20API%20Reference.md) - Backend endpoints
+- [Agents(../../02-agents/Tuath%20Agent%20System.md) - CopilotKit/AG-UI agents

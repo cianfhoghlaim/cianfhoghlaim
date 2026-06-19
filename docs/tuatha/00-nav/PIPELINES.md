@@ -471,8 +471,8 @@ Pipeline metrics exposed at `/metrics`:
 
 ## Related Documentation
 
-- [Adding Data Sources](./guides/ADDING_DATA_SOURCES.md) - Step-by-step source creation
-- [Performance Tuning](./guides/PERFORMANCE_TUNING.md) - Embedding optimization
-- [Celtic Languages](./guides/CELTIC_LANGUAGES.md) - Language processing patterns
-- [Architecture](./ARCHITECTURE.md) - System overview
-- [Deployment](./DEPLOYMENT.md) - Production pipeline setup
+- [Adding Data Sources(../../03-data-pipelines/ADDING_DATA_SOURCES.md) - Step-by-step source creation
+- [Performance Tuning(../../04-game-tech/reference/PERFORMANCE_TUNING.md) - Embedding optimization
+- [Celtic Languages(../../01-game-design/CELTIC_LANGUAGES.md) - Language processing patterns
+- [Architecture(../../ANALYSIS.md) - System overview
+- [Deployment(../../04-game-tech/reference/DEPLOYMENT.md) - Production pipeline setup
