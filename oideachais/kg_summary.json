@@ -1,0 +1,46 @@
+{
+  "dataset": "oideachais_author_archive",
+  "corpora": {
+    "official_media": {
+      "label": "OfficialMediaSource",
+      "count": 160
+    },
+    "uog_coursework": {
+      "label": "UoGArtifact",
+      "count": 1938
+    },
+    "personal_records": {
+      "label": "PersonalRecord",
+      "count": 29
+    },
+    "gemini_deep_research": {
+      "label": "GeminiReport",
+      "count": 226
+    },
+    "zotero": {
+      "label": "ZoteroPaper",
+      "count": "varies"
+    },
+    "takeout": {
+      "label": "TakeoutDoc",
+      "count": "varies"
+    }
+  },
+  "edge_types": [
+    "OfficialMediaSource-[:PUBLISHES]->ZoteroPaper",
+    "OfficialMediaSource-[:DISCUSSES]->UoGArtifact",
+    "UoGArtifact-[:TEACHES]->ZoteroPaper",
+    "PersonalRecord-[:AWARDED]->UoGArtifact",
+    "GeminiReport-[:CITES]->ZoteroPaper",
+    "TakeoutDoc-[:CITES]->GeminiReport",
+    "UoGArtifact-[:LOCATED_IN]->OfficialMediaSource",
+    "PersonalRecord-[:AFFILIATED_WITH]->OfficialMediaSource"
+  ],
+  "by_corpus_edges": {
+    "om_publishes_zotero": 0,
+    "om_discusses_uog": 0,
+    "personal_awarded_uog": 0,
+    "uog_located_in_om": 0,
+    "personal_affiliated_om": 0
+  }
+}
