@@ -1,0 +1,44 @@
+# oideachais/dlt_sources/official_media/fixtures/allowlist_schools.yaml
+#
+# Irish-medium and integrated schools in the British Isles. The PDF
+# research files in leabharlann/gemini_deep_research/culture/ identify
+# these as the strategic inter-Celtic pedagogical hubs for Irish
+# speakers seeking fluency in Manx, Welsh, Cornish, and Scottish
+# Gaelic. All handles verified via the school's own home page.
+
+version: 1
+category: school
+description: >-
+  Irish-medium and integrated schools in the British Isles — the
+  strategic pedagogical hubs called out in the user's PDFs. All
+  handles verified via the school's own home page.
+entries:
+  - ig_username: colaistenacoiribe
+    name: "Coláiste na Coiribe (Galway & Roscommon ETB — Irish-medium post-primary)"
+    wikipedia_title: "Coláiste na Coiribe"
+    verified_at: "2026-06-18"
+    source_url: "https://www.gretb.ie/schools/colaiste-na-coiribe/"
+
+  - ig_username: scoilnaseolta
+    name: "Scoil na Seolta (Integrated Irish-medium primary, East Belfast)"
+    wikipedia_title: "Scoil na Seolta"
+    verified_at: "2026-06-18"
+    source_url: "https://www.scoilnaseolta.org/about-us"
+
+  - ig_username: colaistefeirste
+    name: "Coláiste Feirste (Irish-medium post-primary, Belfast)"
+    wikipedia_title: "Coláiste Feirste"
+    verified_at: "2026-06-18"
+    source_url: "https://www.colaistefeirste.org/reamheolaire-prospectus"
+
+  - ig_username: bunscoillghaelgagh
+    name: "Bunscoill Ghaelgagh (Manx-medium primary, St John's)"
+    wikipedia_title: "Bunscoill Ghaelgagh"
+    verified_at: "2026-06-18"
+    source_url: "https://www.gov.im/about-the-government/departments/education-sport-and-culture/"
+
+  - ig_username: eastbelfastturas
+    name: "Turas — East Belfast Mission Irish language project"
+    wikipedia_title: "Turas (East Belfast)"
+    verified_at: "2026-06-18"
+    source_url: "https://ebm.org.uk/turas/"

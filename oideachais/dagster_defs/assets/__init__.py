@@ -77,6 +77,10 @@ from .official_media import (
     official_media_embed,
     official_media_extract,
     official_media_hmgcc_co_creation,
+    official_media_pre_research,
+    official_media_bulk_scrape,
+    official_media_condense,
+    official_media_identify_uis,
     official_media_resolve_sources,
 )
 from .multi_nation_curriculum_assets import (
@@ -159,6 +163,13 @@ all_assets = [
     official_media_embed,
     official_media_cognify,
     official_media_hmgcc_co_creation,
+    # Author-archive v1: pre-research + bulk scrape + condense + UI
+    # identification for the 160 official_media sources. See
+    # openspec/changes/author-archive-v1/proposal.md.
+    official_media_pre_research,
+    official_media_bulk_scrape,
+    official_media_condense,
+    official_media_identify_uis,
 ]
 
 __all__ = [
