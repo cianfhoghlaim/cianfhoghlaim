@@ -1,7 +1,4 @@
-"""Type definitions for browser agent stack.
-
-These types are shared across all flows that use browser capabilities.
-"""
+"""Type definitions for browser agent stack."""
 
 from datetime import datetime
 from enum import Enum
@@ -11,58 +8,47 @@ from pydantic import BaseModel, Field
 
 
 class BackendType(str, Enum):
-    """Available browser backends."""
-
-    # Self-hosted (priority order, $0 cost)
     CDP_LOCAL = "cdp_local"
     SKYVERN_LOCAL = "skyvern_local"
     CRAWL4AI_LOCAL = "crawl4ai_local"
     STAGEHAND_LOCAL = "stagehand_local"
-
-    # Paid fallback (cost-based order)
     FIRECRAWL_MCP = "firecrawl_mcp"
     BROWSERBASE_MCP = "browserbase_mcp"
     ZAI_VISION = "zai_vision"
 
 
 class BrowserOperation(str, Enum):
-    """Types of browser operations."""
-
-    SCRAPE = "scrape"  # Extract content from page
-    INTERACT = "interact"  # Click, type, scroll
-    NAVIGATE = "navigate"  # Go to URL, back, forward
-    RESEARCH = "research"  # Multi-page deep research
-    EXTRACT = "extract"  # Structured data extraction
-    EXTRACTION = "extraction"  # Alias for EXTRACT
-    SCREENSHOT = "screenshot"  # Capture visual snapshot
-    FORM = "form"  # Fill and submit forms
+    SCRAPE = "scrape"
+    INTERACT = "interact"
+    NAVIGATE = "navigate"
+    RESEARCH = "research"
+    EXTRACT = "extract"
+    EXTRACTION = "extraction"
+    SCREENSHOT = "screenshot"
+    FORM = "form"
+    MAP_SITE = "map_site"
+    VISUAL_GROUNDING = "visual_grounding"
 
 
 class ExtractionFormat(str, Enum):
-    """Output formats for extraction."""
-
     MARKDOWN = "markdown"
     HTML = "html"
     RAW_HTML = "rawHtml"
     TEXT = "text"
     JSON = "json"
-    STRUCTURED = "structured"  # Alias for JSON
+    STRUCTURED = "structured"
     SCREENSHOT = "screenshot"
     LINKS = "links"
     SUMMARY = "summary"
 
 
 class CircuitState(str, Enum):
-    """Circuit breaker states."""
-
-    CLOSED = "closed"  # Normal operation
-    OPEN = "open"  # Failing, rejecting requests
-    HALF_OPEN = "half_open"  # Testing if recovered
+    CLOSED = "closed"
+    OPEN = "open"
+    HALF_OPEN = "half_open"
 
 
 class BackendHealth(BaseModel):
-    """Health status of a backend."""
-
     backend: BackendType
     state: CircuitState = CircuitState.CLOSED
     failure_count: int = 0
@@ -74,13 +60,10 @@ class BackendHealth(BaseModel):
 
     @property
     def is_available(self) -> bool:
-        """Check if backend is available for requests."""
         return self.state != CircuitState.OPEN
 
 
 class SessionState(BaseModel):
-    """Browser session state for migration between backends."""
-
     session_id: str
     backend: BackendType
     url: str | None = None
@@ -94,8 +77,6 @@ class SessionState(BaseModel):
 
 
 class NavigationResult(BaseModel):
-    """Result of a navigation operation."""
-
     success: bool
     url: str
     title: str | None = None
@@ -106,8 +87,6 @@ class NavigationResult(BaseModel):
 
 
 class ExtractionResult(BaseModel):
-    """Result of an extraction operation."""
-
     success: bool
     url: str
     content: dict[str, Any]
@@ -117,12 +96,10 @@ class ExtractionResult(BaseModel):
     tokens_used: int | None = None
     error: str | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
-    data: dict[str, Any] | None = None  # Alias for content
+    data: dict[str, Any] | None = None
 
 
 class InteractionResult(BaseModel):
-    """Result of a browser interaction."""
-
     success: bool
     action: str
     selector: str | None = None
@@ -133,11 +110,9 @@ class InteractionResult(BaseModel):
 
 
 class ScreenshotResult(BaseModel):
-    """Result of a screenshot operation."""
-
     success: bool
     url: str
-    image_data: str  # Base64 encoded
+    image_data: str
     format: Literal["png", "jpeg", "webp"] = "png"
     width: int
     height: int
@@ -147,8 +122,6 @@ class ScreenshotResult(BaseModel):
 
 
 class ResearchResult(BaseModel):
-    """Result of a deep research operation."""
-
     success: bool
     query: str
     sources: list[dict[str, Any]]
@@ -158,28 +131,26 @@ class ResearchResult(BaseModel):
     urls_visited: int = 0
     tokens_used: int | None = None
     error: str | None = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class VisualGroundingResult(BaseModel):
-    """Result of a visual grounding operation (GLM-4.6v)."""
-
     success: bool
     prompt: str
-    coordinates: dict[str, float] | None = None  # {"x": float, "y": float}
-    bounding_box: list[float] | None = None  # [xmin, ymin, xmax, ymax]
+    coordinates: dict[str, float] | None = None
+    bounding_box: list[float] | None = None
     confidence: float | None = None
     backend_used: BackendType | None = None
     latency_ms: float = 0
     tokens_used: int | None = None
     error: str | None = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class VisionAnalysisResult(BaseModel):
-    """Result of a vision analysis operation."""
-
     success: bool
     image_source: str
-    analysis_type: str  # ui_to_artifact, ocr, error_diagnosis, diagram, chart, diff
+    analysis_type: str
     content: dict[str, Any]
     backend_used: BackendType | None = None
     latency_ms: float = 0
@@ -187,54 +158,25 @@ class VisionAnalysisResult(BaseModel):
     error: str | None = None
 
 
-# Backend priority mapping for each operation type
 BACKEND_PRIORITY: dict[BrowserOperation, list[BackendType]] = {
-    BrowserOperation.SCRAPE: [
-        BackendType.CRAWL4AI_LOCAL,
-        BackendType.FIRECRAWL_MCP,
-    ],
-    BrowserOperation.INTERACT: [
-        BackendType.CDP_LOCAL,
-        BackendType.STAGEHAND_LOCAL,
-        BackendType.BROWSERBASE_MCP,
-    ],
-    BrowserOperation.NAVIGATE: [
-        BackendType.CDP_LOCAL,
-        BackendType.SKYVERN_LOCAL,
-        BackendType.BROWSERBASE_MCP,
-    ],
-    BrowserOperation.RESEARCH: [
-        BackendType.FIRECRAWL_MCP,  # Firecrawl /agent is best for research
-        BackendType.SKYVERN_LOCAL,
-    ],
-    BrowserOperation.EXTRACT: [
-        BackendType.CRAWL4AI_LOCAL,
-        BackendType.FIRECRAWL_MCP,
-    ],
-    BrowserOperation.EXTRACTION: [
-        BackendType.STAGEHAND_LOCAL,
-        BackendType.CRAWL4AI_LOCAL,
-        BackendType.FIRECRAWL_MCP,
-    ],
-    BrowserOperation.SCREENSHOT: [
-        BackendType.CDP_LOCAL,
-        BackendType.BROWSERBASE_MCP,
-        BackendType.ZAI_VISION,
-    ],
-    BrowserOperation.FORM: [
-        BackendType.SKYVERN_LOCAL,  # Best for complex forms
-        BackendType.STAGEHAND_LOCAL,
-        BackendType.BROWSERBASE_MCP,
-    ],
+    BrowserOperation.SCRAPE: [BackendType.CRAWL4AI_LOCAL, BackendType.FIRECRAWL_MCP],
+    BrowserOperation.INTERACT: [BackendType.CDP_LOCAL, BackendType.STAGEHAND_LOCAL, BackendType.BROWSERBASE_MCP],
+    BrowserOperation.NAVIGATE: [BackendType.CDP_LOCAL, BackendType.SKYVERN_LOCAL, BackendType.BROWSERBASE_MCP],
+    BrowserOperation.RESEARCH: [BackendType.FIRECRAWL_MCP, BackendType.SKYVERN_LOCAL],
+    BrowserOperation.EXTRACT: [BackendType.CRAWL4AI_LOCAL, BackendType.FIRECRAWL_MCP],
+    BrowserOperation.EXTRACTION: [BackendType.STAGEHAND_LOCAL, BackendType.CRAWL4AI_LOCAL, BackendType.FIRECRAWL_MCP],
+    BrowserOperation.SCREENSHOT: [BackendType.STAGEHAND_LOCAL, BackendType.CDP_LOCAL, BackendType.BROWSERBASE_MCP, BackendType.ZAI_VISION],
+    BrowserOperation.FORM: [BackendType.SKYVERN_LOCAL, BackendType.STAGEHAND_LOCAL, BackendType.BROWSERBASE_MCP],
+    BrowserOperation.MAP_SITE: [BackendType.CRAWL4AI_LOCAL, BackendType.FIRECRAWL_MCP],
+    BrowserOperation.VISUAL_GROUNDING: [BackendType.STAGEHAND_LOCAL, BackendType.CDP_LOCAL, BackendType.BROWSERBASE_MCP, BackendType.ZAI_VISION],
 }
 
-# Cost per operation (relative units, 0 = free)
 BACKEND_COST: dict[BackendType, float] = {
     BackendType.CDP_LOCAL: 0.0,
     BackendType.SKYVERN_LOCAL: 0.0,
     BackendType.CRAWL4AI_LOCAL: 0.0,
     BackendType.STAGEHAND_LOCAL: 0.0,
-    BackendType.FIRECRAWL_MCP: 1.0,  # Per-page cost
-    BackendType.BROWSERBASE_MCP: 0.5,  # Session-based
-    BackendType.ZAI_VISION: 0.1,  # Per-image
+    BackendType.FIRECRAWL_MCP: 1.0,
+    BackendType.BROWSERBASE_MCP: 0.5,
+    BackendType.ZAI_VISION: 0.1,
 }
