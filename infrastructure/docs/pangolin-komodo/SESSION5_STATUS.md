@@ -14,7 +14,7 @@ Pangolin doesn't auto-provision API keys (they require manual login). To bootstr
 1. `docker stop pangolin` on arm1-oci
 2. `docker cp pangolin:/app/config/db/db.sqlite` to copy the live DB out
 3. Generated an argon2id hash using bun + `@node-rs/argon2` (Python's `argon2-cffi` was producing a hash format the Node binding didn't recognize — `Invalid hashed password: password hash string missing field`)
-4. `INSERT INTO apiKeys (...) VALUES ('a9e88fc444769254', 'IaC Bootstrap', '$argon2id$...', '2026', ..., 1)`
+4. `INSERT INTO apiKeys (..., 'IaC Bootstrap', '$argon2id$...', ...)` (id is a generated token, see .env)
 5. Linked the key to the org via `INSERT INTO apiKeyOrg`
 6. Added all 136 permissions to `apiKeyActions` (Pangolin checks explicit actions, not just `isRoot`)
 7. Copied the modified DB back via `docker cp` and `docker compose start`

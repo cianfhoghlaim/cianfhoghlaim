@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "../_generated/server";
-import { requireOrgRole } from "./helpers";
+import { DEVTOOLS_READ_ROLES, DEVTOOLS_WRITE_ROLES, requireDevtoolsRead, requireOrgRole } from "./helpers";
 import { loggedAction } from "../_middleware";
 
 export const list = query({
@@ -8,6 +8,7 @@ export const list = query({
     project: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    await requireDevtoolsRead(ctx);
     if (args.project !== undefined) {
       return await ctx.db
         .query("tanstackRoutes")
@@ -21,6 +22,7 @@ export const list = query({
 export const getByProject = query({
   args: { project: v.string() },
   handler: async (ctx, args) => {
+    await requireDevtoolsRead(ctx);
     return await ctx.db
       .query("tanstackRoutes")
       .withIndex("by_project", (q) => q.eq("project", args.project))
@@ -31,6 +33,7 @@ export const getByProject = query({
 export const getSummary = query({
   args: {},
   handler: async (ctx) => {
+    await requireDevtoolsRead(ctx);
     const routes = await ctx.db.query("tanstackRoutes").collect();
     const summary: Record<string, number> = {};
     for (const r of routes) {
@@ -58,7 +61,7 @@ export const ingest = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    await requireOrgRole(ctx, "croilar-admin", ["owner", "admin"]);
+    await requireOrgRole(ctx, "croilar-admin", DEVTOOLS_WRITE_ROLES);
     const existing = await ctx.db
       .query("tanstackRoutes")
       .withIndex("by_project", (q) => q.eq("project", args.project))

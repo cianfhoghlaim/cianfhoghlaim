@@ -108,10 +108,31 @@ function NotebookDetailPage() {
       ) : hasWasm ? (
         <div className="bg-card rounded-lg border overflow-hidden">
           <iframe
+            ref={(el) => {
+              if (el && !el.dataset.resizeBound) {
+                el.dataset.resizeBound = "1";
+                const ro = new ResizeObserver(() => {
+                  if (el.contentDocument?.documentElement) {
+                    const h = el.contentDocument.documentElement.scrollHeight;
+                    el.style.height = `${Math.max(480, h + 16)}px`;
+                  }
+                });
+                el.addEventListener("load", () => {
+                  try {
+                    ro.observe(el.contentDocument!.documentElement);
+                  } catch {
+                    // cross-origin or sandboxed — fall back to fixed height
+                  }
+                });
+              }
+            }}
             src={wasmPath}
             title={notebook.title}
             className="w-full"
             style={{ height: "calc(100vh - 240px)", minHeight: 480, border: 0 }}
+            sandbox="allow-scripts allow-same-origin allow-downloads allow-forms allow-popups"
+            referrerPolicy="no-referrer"
+            loading="lazy"
             allow="fullscreen"
           />
         </div>
