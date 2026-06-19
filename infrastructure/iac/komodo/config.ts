@@ -12,7 +12,9 @@ export const CONFIG = {
 
   // Pangolin
   pangolinUrl: envOr("PANGOLIN_URL", "https://pangolin.cianfhoghlaim.ie"),
+  pangolinApiBase: envOr("PANGOLIN_API_BASE", "https://pangolin.cianfhoghlaim.ie/v1"),
   pangolinApiKey: envOr("PANGOLIN_API_KEY", ""),
+  pangolinOrgId: envOr("PANGOLIN_ORG_ID", "cianfhoghlaim"),
 
   // Git provider for resource-syncs
   gitProvider: envOr("GIT_PROVIDER", "forgejo.cianfhoghlaim.ie"),
