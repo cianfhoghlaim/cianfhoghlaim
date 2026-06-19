@@ -1,11 +1,12 @@
 import { v } from "convex/values";
 import { mutation, query } from "../_generated/server";
-import { requireOrgRole } from "./helpers";
+import { DEVTOOLS_READ_ROLES, DEVTOOLS_WRITE_ROLES, requireDevtoolsRead, requireOrgRole } from "./helpers";
 import { loggedAction } from "../_middleware";
 
 export const getCurrent = query({
   args: {},
   handler: async (ctx) => {
+    await requireDevtoolsRead(ctx);
     return await ctx.db
       .query("glanceConfig")
       .withIndex("by_version")
@@ -17,6 +18,7 @@ export const getCurrent = query({
 export const getByVersion = query({
   args: { version: v.number() },
   handler: async (ctx, args) => {
+    await requireDevtoolsRead(ctx);
     return await ctx.db
       .query("glanceConfig")
       .withIndex("by_version", (q) => q.eq("version", args.version))
@@ -27,6 +29,7 @@ export const getByVersion = query({
 export const list = query({
   args: { limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
+    await requireDevtoolsRead(ctx);
     return await ctx.db
       .query("glanceConfig")
       .withIndex("by_version")
@@ -43,7 +46,7 @@ export const store = mutation({
     generatedBy: v.string(),
   },
   handler: async (ctx, args) => {
-    await requireOrgRole(ctx, "croilar-admin", ["owner", "admin"]);
+    await requireOrgRole(ctx, "croilar-admin", DEVTOOLS_WRITE_ROLES);
     const latest = await ctx.db
       .query("glanceConfig")
       .withIndex("by_version")

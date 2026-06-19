@@ -1,10 +1,10 @@
 import { query } from "../_generated/server";
-import { requireOrgRole } from "./helpers";
+import { DEVTOOLS_READ_ROLES, DEVTOOLS_WRITE_ROLES, requireDevtoolsRead, requireOrgRole } from "./helpers";
 
 export const getSummary = query({
   args: {},
   handler: async (ctx) => {
-    await requireOrgRole(ctx, "croilar-admin", ["owner", "admin"]);
+    await requireOrgRole(ctx, "croilar-admin", DEVTOOLS_READ_ROLES);
     const [
       routes,
       functions,
