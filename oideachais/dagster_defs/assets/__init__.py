@@ -82,7 +82,28 @@ from .official_media import (
     official_media_condense,
     official_media_identify_uis,
     official_media_resolve_sources,
+    author_archive_cognify,
+    author_archive_cross_edges,
+    author_archive_kg_summary,
 )
+# Stage 1 (UoG coursework) imports are optional — a branch that ships
+# only Stage 0.5 + Stage 2 (cross-corpus KG) may not have these files.
+try:
+    from .official_media import (  # type: ignore[no-redef]
+        author_archive_personal_records_extraction,
+        author_archive_personal_records_raw,
+        author_archive_uog_education_extraction,
+        author_archive_uog_education_raw,
+        author_archive_uog_irish_extraction,
+        author_archive_uog_irish_raw,
+        author_archive_uog_mata_extraction,
+        author_archive_uog_mata_raw,
+        author_archive_uog_software_extraction,
+        author_archive_uog_software_raw,
+    )
+    _UOG_ASSETS_AVAILABLE = True
+except ImportError:
+    _UOG_ASSETS_AVAILABLE = False
 from .multi_nation_curriculum_assets import (
     curriculum_comparison_report,
     curriculum_outcome_alignments,
@@ -170,7 +191,29 @@ all_assets = [
     official_media_bulk_scrape,
     official_media_condense,
     official_media_identify_uis,
+    # Author-archive uog-coursework: 5 module groups (mata, software,
+    # irish, education, personal_records) × 2 (raw + extraction) = 10
+    # assets. See openspec/changes/author-archive-uog-coursework/.
+    # Author-archive cross-corpus-kg: 3 assets (cognify, cross_edges,
+    # kg_summary) for the unified knowledge graph. See
+    # openspec/changes/author-archive-cross-corpus-kg/.
+    author_archive_cognify,
+    author_archive_cross_edges,
+    author_archive_kg_summary,
 ]
+if _UOG_ASSETS_AVAILABLE:
+    all_assets += [
+        author_archive_uog_mata_raw,
+        author_archive_uog_mata_extraction,
+        author_archive_uog_software_raw,
+        author_archive_uog_software_extraction,
+        author_archive_uog_irish_raw,
+        author_archive_uog_irish_extraction,
+        author_archive_uog_education_raw,
+        author_archive_uog_education_extraction,
+        author_archive_personal_records_raw,
+        author_archive_personal_records_extraction,
+    ]
 
 __all__ = [
     "all_assets",
