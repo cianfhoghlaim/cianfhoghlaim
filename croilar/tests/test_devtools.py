@@ -170,7 +170,8 @@ def test_convex_module_exports_expected_symbols(module_name: str) -> None:
     text = path.read_text(encoding="utf-8")
     if module_name == "devtools":
         assert "export const getSummary" in text
-        assert "import { requireOrgRole } from \"./helpers\"" in text
+        assert "requireOrgRole" in text
+        assert "DEVTOOLS_READ_ROLES" in text or "requireDevtoolsRead" in text
         return
     if module_name == "convex_function_calls":
         assert "export const tail" in text
@@ -178,12 +179,12 @@ def test_convex_module_exports_expected_symbols(module_name: str) -> None:
         return
     if module_name == "convex_metrics":
         assert "export const get " in text or "export const get(" in text or "export const getByScope" in text
-        assert "import { requireOrgRole } from \"./helpers\"" in text
+        assert "requireOrgRole" in text or "requireDevtoolsRead" in text
         assert "loggedAction" in text
         return
     assert "export const list" in text, f"{module_name} missing list query"
-    assert "import { requireOrgRole } from \"./helpers\"" in text, (
-        f"{module_name} must use requireOrgRole from helpers"
+    assert "requireOrgRole" in text or "requireDevtoolsRead" in text, (
+        f"{module_name} must use requireOrgRole or requireDevtoolsRead from helpers"
     )
     if module_name in {
         "tanstack_routes",
@@ -213,6 +214,88 @@ def test_logged_action_helper_exists() -> None:
     text = path.read_text(encoding="utf-8")
     assert "export function loggedAction" in text
     assert "convexFunctionCalls" in text
+
+
+# ---------------------------------------------------------------------------
+# Role system (croilar-devtools-hub Phase E)
+# ---------------------------------------------------------------------------
+
+DEVTABLES_MODULES = [
+    "tanstack_routes",
+    "convex_functions",
+    "cloudflare_resources",
+    "baml_schemas",
+    "test_runs",
+    "convex_function_calls",
+    "convex_metrics",
+    "marimo_notebooks",
+    "glance_config",
+    "devtools",
+]
+
+
+def test_helpers_exposes_developer_role() -> None:
+    """The role system must include a 'developer' role for devtools access."""
+    path = REPO_ROOT / "croilar" / "convex" / "helpers.ts"
+    text = path.read_text(encoding="utf-8")
+    assert "developer" in text, "developer role missing from helpers.ts"
+    assert "ORG_ROLES" in text
+    assert "DEVTOOLS_READ_ROLES" in text
+    assert "DEVTOOLS_WRITE_ROLES" in text
+    assert "requireDevtoolsRead" in text
+
+
+def test_memberships_schema_supports_developer_role() -> None:
+    """The memberships Convex table must accept 'developer' as a role."""
+    path = REPO_ROOT / "croilar" / "convex" / "schema.ts"
+    text = path.read_text(encoding="utf-8")
+    assert 'v.literal("developer")' in text
+
+
+@pytest.mark.parametrize("module_name", DEVTABLES_MODULES)
+def test_devtables_module_gates_reads(module_name: str) -> None:
+    """Every devtables module must use a read-side or write-side role gate."""
+    path = REPO_ROOT / "croilar" / "convex" / f"{module_name}.ts"
+    text = path.read_text(encoding="utf-8")
+    assert (
+        "DEVTOOLS_READ_ROLES" in text
+        or "DEVTOOLS_WRITE_ROLES" in text
+        or "requireDevtoolsRead" in text
+    ), f"{module_name} must use DEVTOOLS_READ_ROLES / DEVTOOLS_WRITE_ROLES / requireDevtoolsRead"
+
+
+@pytest.mark.parametrize("module_name", DEVTABLES_MODULES)
+def test_devtables_module_imports_helpers(module_name: str) -> None:
+    """Every devtables module must import from ./helpers."""
+    path = REPO_ROOT / "croilar" / "convex" / f"{module_name}.ts"
+    text = path.read_text(encoding="utf-8")
+    assert "from \"./helpers\"" in text
+
+
+def test_devtools_read_roles_includes_developer() -> None:
+    """The DEVTOOLS_READ_ROLES constant must allow developers to read."""
+    import re
+    path = REPO_ROOT / "croilar" / "convex" / "helpers.ts"
+    text = path.read_text(encoding="utf-8")
+    m = re.search(r"DEVTOOLS_READ_ROLES: OrgRole\[\] = \[([^\]]+)\]", text)
+    assert m, "DEVTOOLS_READ_ROLES not found"
+    roles = [r.strip().strip("\"") for r in m.group(1).split(",")]
+    assert "developer" in roles
+    assert "owner" in roles
+    assert "admin" in roles
+
+
+def test_devtools_write_roles_excludes_developer() -> None:
+    """The DEVTOOLS_WRITE_ROLES constant must NOT allow developers to write."""
+    import re
+    path = REPO_ROOT / "croilar" / "convex" / "helpers.ts"
+    text = path.read_text(encoding="utf-8")
+    m = re.search(r"DEVTOOLS_WRITE_ROLES: OrgRole\[\] = \[([^\]]+)\]", text)
+    assert m, "DEVTOOLS_WRITE_ROLES not found"
+    roles = [r.strip().strip("\"") for r in m.group(1).split(",")]
+    assert "developer" not in roles
+    assert "owner" in roles
+    assert "admin" in roles
 
 
 # ---------------------------------------------------------------------------
@@ -497,3 +580,51 @@ def test_root_package_registers_croilar_devtools_scripts() -> None:
     assert "croilar:analyze" in text
     assert "croilar:glance:regen" in text
     assert "croilar:devtools:hub" in text
+
+
+# ---------------------------------------------------------------------------
+# Phase F — marimo iframe sandbox + Glance deep-link
+# ---------------------------------------------------------------------------
+
+def test_marimo_iframe_is_sandboxed() -> None:
+    """The marimo iframe must be sandboxed to prevent top-level navigation."""
+    path = REPO_ROOT / "croilar" / "apps" / "portal" / "src" / "routes" / "_layout" / "notebooks" / "$slug.tsx"
+    text = path.read_text(encoding="utf-8")
+    assert 'sandbox=' in text
+    assert "allow-scripts" in text
+    assert "allow-same-origin" in text
+    # Must NOT allow top-level navigation
+    assert "allow-top-navigation" not in text
+    # Must have a referrerPolicy for additional isolation
+    assert "referrerPolicy" in text
+    assert "no-referrer" in text
+
+
+def test_marimo_iframe_has_auto_resize() -> None:
+    """The marimo iframe must auto-resize to fit the notebook's natural height."""
+    path = REPO_ROOT / "croilar" / "apps" / "portal" / "src" / "routes" / "_layout" / "notebooks" / "$slug.tsx"
+    text = path.read_text(encoding="utf-8")
+    assert "ResizeObserver" in text
+    assert "scrollHeight" in text
+    assert "resizeBound" in text
+
+
+def test_glance_regenerator_includes_portal_deep_link(tmp_path: Path) -> None:
+    """The Glance regenerator must add an 'Open in Portal' widget per project."""
+    out = tmp_path / "glance.yml"
+    env = os.environ.copy()
+    env["CROILAR_REPO_ROOT"] = str(REPO_ROOT)
+    env["CROILAR_GLANCE_REGEN_FORCE"] = "true"
+    proc = subprocess.run(
+        ["bun", "run", str(REGENERATOR), "--out", str(out)],
+        cwd=str(REPO_ROOT / "croilar"),
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert proc.returncode == 0, f"regenerator failed: {proc.stderr}"
+    text = out.read_text(encoding="utf-8")
+    assert "Open in Portal" in text, "Glance config must include 'Open in Portal' widget"
+    for project in ("tuatha", "oideachais", "croilar", "meaisinfhoghlaim"):
+        assert f"/web/{project}" in text, f"Glance must link to /web/{project}"
