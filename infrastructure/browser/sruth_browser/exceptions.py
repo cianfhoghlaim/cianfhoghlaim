@@ -96,3 +96,13 @@ class FallbackExhaustedError(BrowserAgentError):
         )
         self.operation = operation
         self.backends_tried = backends_tried
+
+
+class NoBackendError(BrowserAgentError):
+    """No backend is registered that supports the requested operation."""
+
+    def __init__(self, operation: str, message: str | None = None):
+        if message is None:
+            message = f"No backend registered that supports operation {operation}"
+        super().__init__(message)
+        self.operation = operation

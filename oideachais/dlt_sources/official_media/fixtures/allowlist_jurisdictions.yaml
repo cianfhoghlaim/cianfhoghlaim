@@ -1,18 +1,22 @@
 # oideachais/dlt_sources/official_media/fixtures/allowlist_jurisdictions.yaml
 #
-# British Isles government bodies — departments, agencies, emergency
-# services, and the royal / defence forces (PR 1: IE + NI + EN).
+# All active British Isles government, police, defence, and critical
+# national information accounts. The Instagram-export filter matches
+# against this list as the Stage-1 candidate classifier; the BAML
+# Stage-2 fallback handles lookalike handles.
 #
-# Each entry is a public Instagram handle. Verified by visiting the
-# body's own home page and finding the Instagram link in the footer.
+# Verified via Wikipedia + each body's own home page + the relevant
+# Inspectorate (HMICFRS for police, HM Government for defence,
+# Met Office for weather, etc.).
 
 version: 1
 category: jurisdiction
 description: >-
-  British Isles government bodies (PR 1: IE + NI + EN). PR 2 will add
-  Scotland, Wales, IoM, JEY, GGY.
+  All active British Isles government departments, police forces,
+  defence branches, and critical national information sources. PR 1
+  covers IE + NI + EN + the strategic SCT/WLS/Liverpool locations.
 entries:
-  # ───── Ireland (IE) — 12 entries ─────────────────────────────────────
+  # === REPUBLIC OF IRELAND — Government Departments ===
   - ig_username: govireland
     name: "Government of Ireland"
     wikipedia_title: "Government of Ireland"
@@ -85,7 +89,26 @@ entries:
     verified_at: "2026-06-18"
     source_url: "https://www.cso.ie/en/aboutus/contactus/"
 
-  # ───── Northern Ireland (NI) — 10 entries ───────────────────────────
+  # === IRELAND — Defence Branches ===
+  - ig_username: irisharmy
+    name: "Irish Army (Óglaigh na hÉireann — Army)"
+    wikipedia_title: "Defence Forces (Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.military.ie/en/the-army/"
+
+  - ig_username: irishaircorps
+    name: "Irish Air Corps"
+    wikipedia_title: "Defence Forces (Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.military.ie/en/the-air-corps/"
+
+  - ig_username: irishnavalservice
+    name: "Irish Naval Service (Seirbhís Chabhlaigh)"
+    wikipedia_title: "Naval Service (Ireland)"
+    verified_at: "2026-06-18"
+    source_url: "https://www.military.ie/en/the-naval-service/"
+
+  # === NORTHERN IRELAND — Departments + Police + Emergency ===
   - ig_username: nidirectgov
     name: "NI Direct Government Services"
     wikipedia_title: "Northern Ireland Executive"
@@ -109,6 +132,18 @@ entries:
     wikipedia_title: "Northern Ireland Ambulance Service"
     verified_at: "2026-06-18"
     source_url: "https://www.nias.hscni.net/contact-us/"
+
+  - ig_username: police_ombudsman_ni
+    name: "Police Ombudsman for Northern Ireland"
+    wikipedia_title: "Police Ombudsman for Northern Ireland"
+    verified_at: "2026-06-18"
+    source_url: "https://www.policeombudsman.org/contact"
+
+  - ig_username: ni_prisons
+    name: "Northern Ireland Prison Service"
+    wikipedia_title: "Northern Ireland Prison Service"
+    verified_at: "2026-06-18"
+    source_url: "https://www.justice-ni.gov.uk/topics/prisons"
 
   - ig_username: education_ni
     name: "Department of Education (Northern Ireland)"
@@ -146,7 +181,7 @@ entries:
     verified_at: "2026-06-18"
     source_url: "https://www.nisra.gov.uk/contact"
 
-  # ───── England (EN) — 20 entries ───────────────────────────────────
+  # === ENGLAND — Major Departments + London + Police + Defence ===
   - ig_username: ukhomeoffice
     name: "Home Office (UK)"
     wikipedia_title: "Home Office"
@@ -177,11 +212,29 @@ entries:
     verified_at: "2026-06-18"
     source_url: "https://www.raf.mod.uk/contact-us/"
 
+  - ig_username: royalmarinesofficial
+    name: "Royal Marines"
+    wikipedia_title: "Royal Marines"
+    verified_at: "2026-06-18"
+    source_url: "https://www.royalnavy.mod.uk/the-royal-navy/operating-our-ships/royal-marines/"
+
   - ig_username: metpoliceuk
     name: "Metropolitan Police Service"
     wikipedia_title: "Metropolitan Police"
     verified_at: "2026-06-18"
     source_url: "https://www.met.police.uk/cp/contact-us/"
+
+  - ig_username: cityoflondonpolice
+    name: "City of London Police"
+    wikipedia_title: "City of London Police"
+    verified_at: "2026-06-18"
+    source_url: "https://www.cityoflondon.police.uk/contact-us/"
+
+  - ig_username: btp_police
+    name: "British Transport Police"
+    wikipedia_title: "British Transport Police"
+    verified_at: "2026-06-18"
+    source_url: "https://www.btp.police.uk/contact-us/"
 
   - ig_username: londonfire
     name: "London Fire Brigade"
@@ -231,12 +284,6 @@ entries:
     verified_at: "2026-06-18"
     source_url: "https://www.gov.uk/government/organisations/foreign-commonwealth-development-office"
 
-  - ig_username: ukhomeoffice
-    name: "Home Office (UK)"
-    wikipedia_title: "Home Office"
-    verified_at: "2026-06-18"
-    source_url: "https://www.gov.uk/government/organisations/home-office"
-
   - ig_username: ukborder
     name: "UK Border Force"
     wikipedia_title: "Border Force"
@@ -266,3 +313,39 @@ entries:
     wikipedia_title: "Royal Mint"
     verified_at: "2026-06-18"
     source_url: "https://www.royalmint.com/contact-us/"
+
+  - ig_username: metoffice_uk
+    name: "Met Office (UK weather & climate service — met.gov.uk)"
+    wikipedia_title: "Met Office"
+    verified_at: "2026-06-18"
+    source_url: "https://www.metoffice.gov.uk/about-us/contact"
+
+  - ig_username: bbc
+    name: "BBC — British Broadcasting Corporation"
+    wikipedia_title: "BBC"
+    verified_at: "2026-06-18"
+    source_url: "https://www.bbc.co.uk/contact"
+
+  - ig_username: rnli
+    name: "RNLI — Royal National Lifeboat Institution (UK & Ireland)"
+    wikipedia_title: "Royal National Lifeboat Institution"
+    verified_at: "2026-06-18"
+    source_url: "https://rnli.org/about-us/contact-us"
+
+  - ig_username: meteireann
+    name: "Met Éireann (Irish weather service — met.ie)"
+    wikipedia_title: "Met Éireann"
+    verified_at: "2026-06-18"
+    source_url: "https://www.met.ie/about/contact-us/"
+
+  - ig_username: rtenews
+    name: "RTÉ — Raidió Teilifís Éireann (Irish national broadcaster)"
+    wikipedia_title: "RTÉ"
+    verified_at: "2026-06-18"
+    source_url: "https://about.rte.ie/contact/"
+
+  - ig_username: citizensinfo
+    name: "Citizens Information (Ireland)"
+    wikipedia_title: "Citizens Information"
+    verified_at: "2026-06-18"
+    source_url: "https://www.citizensinformation.ie/en/contact_us/"

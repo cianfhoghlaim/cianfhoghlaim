@@ -47,9 +47,9 @@ The system SHALL provide...
 **Migration**: [How to handle]
 ```
 
-## Capability Specs (25)
+## Capability Specs (32)
 
-The Cianfhoghlaim platform has **25 capability specs** organised into
+The Cianfhoghlaim platform has **32 capability specs** organised into
 **8 groups** by quadrant. Each spec is a thin capability pointer; the
 **authoritative details** live in the corresponding
 `.agents/skills/<skill>/SKILL.md` and the source code.
