@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "../_generated/server";
-import { requireOrgRole } from "./helpers";
+import { DEVTOOLS_READ_ROLES, DEVTOOLS_WRITE_ROLES, requireDevtoolsRead, requireOrgRole } from "./helpers";
 
 export const list = query({
   args: {
@@ -8,6 +8,7 @@ export const list = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    await requireDevtoolsRead(ctx);
     const lim = args.limit ?? 50;
     if (args.project !== undefined) {
       return await ctx.db
@@ -23,6 +24,7 @@ export const list = query({
 export const getLatest = query({
   args: { project: v.string(), branch: v.optional(v.string()) },
   handler: async (ctx, args) => {
+    await requireDevtoolsRead(ctx);
     if (args.branch) {
       return await ctx.db
         .query("testRuns")
@@ -43,6 +45,7 @@ export const getLatest = query({
 export const getByProject = query({
   args: { project: v.string(), limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
+    await requireDevtoolsRead(ctx);
     return await ctx.db
       .query("testRuns")
       .withIndex("by_project_started", (q) => q.eq("project", args.project))
@@ -66,7 +69,7 @@ export const ingest = mutation({
     failureDetails: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    await requireOrgRole(ctx, "croilar-admin", ["owner", "admin"]);
+    await requireOrgRole(ctx, "croilar-admin", DEVTOOLS_WRITE_ROLES);
     const id = await ctx.db.insert("testRuns", args);
     return id;
   },

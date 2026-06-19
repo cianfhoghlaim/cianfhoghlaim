@@ -43,6 +43,9 @@ interface Snapshot {
 const PROJECTS = ["tuatha", "oideachais", "croilar", "meaisinfhoghlaim"] as const;
 type Project = (typeof PROJECTS)[number];
 
+const PORTAL_BASE_URL =
+  process.env.CROILAR_PORTAL_BASE_URL ?? "https://portal.cianfhoghlaim.ie";
+
 const RSS_BY_PROJECT: Record<Project, { title: string; url: string }[]> = {
   tuatha: [
     { title: "HuggingFace Releases", url: "https://huggingface.co/blog/feed.xml" },
@@ -146,6 +149,14 @@ ${rss.map((r) => `              - url: ${r.url}
           - type: search
             autofocus: true
             search-engine: https://search.cianfhoghlaim.ie/search?q={QUERY}
+          - type: custom-api
+            title: "Open in Portal"
+            url: ${PORTAL_BASE_URL}/web/${p}
+            cache: 5m
+            body: |
+              <div style="padding:0.5rem 0">
+                <a href="${PORTAL_BASE_URL}/web/${p}" target="_blank" rel="noopener">View ${p} in the croilar devtools hub &rarr;</a>
+              </div>
 ${monitorWidget ? `      - size: full
         widgets:
 ${monitorWidget}` : ""}
