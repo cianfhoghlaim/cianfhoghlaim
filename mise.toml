@@ -438,3 +438,32 @@ run = "bash infrastructure/scripts/deploy-cf.sh --croilar"
 [tasks."deploy:cf:preview"]
 description = "Deploy both to Cloudflare Pages preview (staging)"
 run = "bash infrastructure/scripts/deploy-cf.sh --all --preview"
+
+# =============================================================================
+# Author-Archive v1 — multi-target deployment
+# =============================================================================
+# Stage 4 of author-archive-v1. The 3 deployment targets (dev / staging
+# / prod) are wrapped by the make_target.sh CLI helper. The mise tasks
+# forward to that helper with the right env vars pre-set.
+#
+# Usage:
+#   mise run author-archive:dev                     # default; local DuckDB
+#   mise run author-archive:dev "python my_pipeline.py"
+#   mise run author-archive:staging
+#   mise run author-archive:prod
+
+[tasks."author-archive:dev"]
+description = "Author-archive v1 pipeline against the local dev target (DuckDB)"
+run = "bash oideachais/scripts/make_target.sh dev ${@}"
+
+[tasks."author-archive:staging"]
+description = "Author-archive v1 pipeline against the MotherDuck staging target"
+run = "bash oideachais/scripts/make_target.sh staging ${@}"
+
+[tasks."author-archive:prod"]
+description = "Author-archive v1 pipeline against the Garage S3 + Lakekeeper prod target"
+run = "bash oideachais/scripts/make_target.sh prod ${@}"
+
+[tasks."author-archive:cps:hero"]
+description = "Run the CPS.gov.uk hero example (4-stage pipeline: pre-research + bulk_scrape + condense + UI identification)"
+run = "bash oideachais/scripts/make_target.sh dev python oideachais/scripts/pre_research_cps_gov_uk.py"
