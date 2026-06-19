@@ -1,17 +1,5 @@
-# =============================================================================
-# NEWT - Pangolin Tunnel Agent
-# =============================================================================
-# Connects local services to Pangolin via WireGuard tunnel.
-#
-# USAGE:
-#   Development:  docker compose -f newt.compose.yaml up -d
-#   Production:   docker compose -f newt.compose.yaml -f newt.sidecar.yaml up -d
-#
-# PREREQUISITES:
-#   - Pangolin running and accessible
-#   - Newt site created in Pangolin UI
-#   - Credentials stored in Infisical (vault: dev-baile)
-# =============================================================================
+# Local newt (bunchloch) — Pangolin tunnel agent
+# Locket disabled (Infisical KMS broken). Credentials from operator's local .env.
 
 name: newt
 
