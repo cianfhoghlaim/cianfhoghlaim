@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "../_generated/server";
 import { loggedAction } from "../_middleware";
-import { requireOrgRole } from "./helpers";
+import { DEVTOOLS_READ_ROLES, DEVTOOLS_WRITE_ROLES, requireDevtoolsRead, requireOrgRole } from "./helpers";
 
 export const get = query({
   args: {
@@ -9,6 +9,7 @@ export const get = query({
     window: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    await requireDevtoolsRead(ctx);
     const scope = args.scope ?? "global";
     const window = args.window ?? "5m";
     return await ctx.db
@@ -39,6 +40,7 @@ export const get = query({
 export const getByScope = query({
   args: { scope: v.string(), window: v.optional(v.string()) },
   handler: async (ctx, args) => {
+    await requireDevtoolsRead(ctx);
     const all = await ctx.db
       .query("convexMetrics")
       .withIndex("by_scope_metric", (q) => q.eq("scope", args.scope))
@@ -58,7 +60,7 @@ export const record = mutation({
     window: v.string(),
   },
   handler: async (ctx, args) => {
-    await requireOrgRole(ctx, "croilar-admin", ["owner", "admin"]);
+    await requireOrgRole(ctx, "croilar-admin", DEVTOOLS_WRITE_ROLES);
     await ctx.db.insert("convexMetrics", {
       ...args,
       sampledAt: Date.now(),
