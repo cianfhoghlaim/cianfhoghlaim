@@ -1,0 +1,19 @@
+file,bytes,mb,pages,pdf_version,image_count,image_bytes,image_pct,font_count,font_bytes,has_acroform,is_image_heavy,recommended_mode
+AIAMA.pdf,38525720,36.74,2145,1.3,437,15821167,41.1,5818,117919828,False,True,lossy
+Algorithm Design Manual.pdf,10403487,9.92,800,1.4,251,3388841,32.6,6145,51512189,False,False,lossless
+Applied Discrete Mathematics.pdf,15810561,15.08,568,1.4,232,11633836,73.6,6879,49798452,False,True,lossy
+Bishop Deep Learning.pdf,1129510964,1077.19,656,1.4,656,1063519241,94.2,0,0,False,True,lossy
+Designing Data-Intensive Applications.pdf,24482078,23.35,613,1.4,124,23785688,97.2,1862,234406899,False,True,lossy
+DuckDB In Action.pdf,13558482,12.93,315,1.7,52,9661913,71.3,1953,14165866,False,True,lossy
+"Epp, Susanna S - Discrete mathematics with applications (2020, Cengage Learning) - libgen.li.pdf",21908428,20.89,1057,1.6,89,1184385,5.4,18314,137329194,False,False,lossless
+Fluent Python.pdf,16456139,15.69,1011,1.6,347,12477242,75.8,4745,521512353,False,True,lossy
+ISLP.pdf,13627429,13.0,613,1.6,44,824833,6.1,7200,96651350,False,False,lossless
+Introduction to Linear Algebra 6th edition and A = CR_04.pdf,810161,0.77,14,1.6,0,0,0.0,148,4722342,False,False,lossless
+"Introduction to Probability (Bitzstein and Hwang, 2019).pdf",96640991,92.16,636,1.6,149,1948740,2.0,8177,277887734,False,False,lossless
+Linear Algebra Done Right (LADR).pdf,6852575,6.54,408,1.4,22,503370,7.3,3595,45033300,False,False,lossless
+Linear Algebra Done Wrong.pdf,3995876,3.81,286,1.3,0,0,0.0,4658,88833854,False,False,lossless
+Linear Algebra for Everyone.pdf,92954861,88.65,185,1.7,185,92798915,99.8,0,0,False,True,lossy
+Napkin.pdf,8918606,8.51,1036,1.5,87,3188792,35.8,13907,369009095,False,False,lossless
+Probabilistic Machine Learning.pdf,92177148,87.91,858,1.7,1065,40792196,44.3,12051,406731554,False,True,lossy
+"Thomas A. Garrity - All the Math You Missed_ But Need to Know for Graduate School (2021, Cambridge University Press) - libgen.li.pdf",2844312,2.71,417,1.6,24,68451,2.4,3106,11371961,False,False,lossless
+mml-book.pdf,17565898,16.75,417,1.5,86,16735286,95.3,5604,109063627,False,True,lossy
