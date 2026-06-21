@@ -147,3 +147,62 @@ official_media_monthly_schedule = ScheduleDefinition(
 )
 
 all_schedules.append(official_media_monthly_schedule)
+
+
+# ============================================================================
+# Author-Archive v1 — knowledge-graph refresh (1st of month, 06:00 Europe/Dublin)
+# ============================================================================
+# Stage 3 of author-archive-v1. The 3 KG assets (cognify, cross_edges,
+# kg_summary) live in the ``author_archive_kg`` group. This schedule
+# runs them monthly, after the official-media refresh (which runs at
+# 05:00) so the cross-corpus cognify pass has fresh
+# ``official_media`` data to link against.
+author_archive_kg_refresh_job = define_asset_job(
+    name="author_archive_kg_refresh_job",
+    selection=AssetSelection.groups("author_archive_kg"),
+    description=(
+        "Monthly refresh of the author-archive cross-corpus knowledge "
+        "graph (Cognee cognify + FalkorDB cross-corpus edges + kg_summary)."
+    ),
+)
+
+author_archive_kg_monthly_schedule = ScheduleDefinition(
+    name="author_archive_kg_monthly_schedule",
+    job=author_archive_kg_refresh_job,
+    cron_schedule="0 6 1 * *",  # 1st of month, 06:00 Europe/Dublin (1h after official_media)
+    default_status=DefaultScheduleStatus.STOPPED,
+    execution_timezone="Europe/Dublin",
+    description=(
+        "Monthly refresh of the author-archive cross-corpus knowledge "
+        "graph. Runs at 06:00 (1h after the official_media refresh at "
+        "05:00) so the cognify pass has fresh data."
+    ),
+)
+
+all_schedules.append(author_archive_kg_monthly_schedule)
+
+
+# ============================================================================
+# Author-Archive v1 — pre-research refresh (1st of month, 04:00 Europe/Dublin)
+# ============================================================================
+# Stage 1 of author-archive-v1. The 4 scraping assets (pre_research,
+# bulk_scrape, condense, identify_uis) live in the ``official_media``
+# group alongside the 5 original official-media assets. They are
+# already covered by the official_media_refresh_job above; this
+# schedule is an explicit alias for documentation / Dagster UI.
+author_archive_pre_research_monthly_schedule = ScheduleDefinition(
+    name="author_archive_pre_research_monthly_schedule",
+    job=official_media_refresh_job,  # same job — the 4 assets are in the official_media group
+    cron_schedule="0 4 1 * *",  # 1st of month, 04:00 Europe/Dublin
+    default_status=DefaultScheduleStatus.STOPPED,
+    execution_timezone="Europe/Dublin",
+    description=(
+        "Monthly pre-research + bulk scrape + condense + UI "
+        "identification for the 160 official_media sources. The 4 "
+        "new assets live in the official_media group; this schedule "
+        "is an explicit alias for the official_media_refresh_job. "
+        "Runs at 04:00 (1h before official_media refresh at 05:00)."
+    ),
+)
+
+all_schedules.append(author_archive_pre_research_monthly_schedule)
