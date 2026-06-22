@@ -904,3 +904,110 @@ When users invoke this skill:
 8. **Consider their stack**: Local dev, cloud deployment, multi-user scenarios
 
 Remember: You're not just answering questions, you're teaching modern lakehouse architecture and helping users build production-grade data pipelines with DuckLake's lightweight approach.
+
+## KCG-Specific Patterns
+
+The Cianfhoghlaim platform uses DuckDB + DuckLake in
+production. These KCG-specific patterns are not in the generic
+DuckDB/DuckLake upstream docs.
+
+### DuckLake `ATTACH` (production)
+
+```python
+import duckdb
+
+con = duckdb.connect()
+
+# Production: attach DuckLake (MotherDuck + Garage S3 + Postgres catalog)
+con.execute("INSTALL ducklake FROM core_nightly; LOAD ducklake;")
+con.execute("""
+    CREATE SECRET r2_secret (
+        TYPE R2,
+        KEY_ID '...',
+        SECRET '...',
+        ACCOUNT_ID '...'
+    )
+""")
+con.execute("""
+    ATTACH 'ducklake:md:oideachais' AS oideachais (
+        TYPE ducklake,
+        SECRET r2_secret,
+        CATALOG postgres_catalog
+    )
+""")
+```
+
+### MotherDuck connection string
+
+```python
+import duckdb
+con = duckdb.connect("md:oideachais")
+# `md:oideachais` is the MotherDuck database name;
+# the MOTHERDUCK_TOKEN env var authenticates.
+```
+
+### KCG-cocoindex chunked Parquet writes
+
+The `oideachais/cocoindex_flows/` Apps write to DuckLake in
+ZSTD-compressed Parquet, with row group size tuned for HNSW
+rebuild performance:
+
+```python
+# In a CocoIndex target mount
+await lancedb.mount_table_target(
+    LANCE_DB,
+    table_name="chunks",
+    table_schema=await lancedb.TableSchema.from_class(MyRecord, primary_key=["id"]),
+    # ... 1024-d vectors, 100 row groups per fragment
+)
+```
+
+### `stedding/ingest_queue/` reads
+
+The KCG offline-fallback cache is at `stedding/ingest_queue/`.
+Read partitioned Parquet via DuckDB's hive-partitioning
+support:
+
+```python
+import duckdb
+con = duckdb.connect()
+
+df = con.execute("""
+    SELECT * FROM read_parquet(
+        'stedding/ingest_queue/**/*.parquet',
+        hive_partitioning=true
+    )
+    WHERE source = 'ncca'
+""").df()
+```
+
+### KCG-specific QUALIFY/ROW_NUMBER pattern (latest version)
+
+The KCG `ireland/curriculum/` partitions are versioned
+(by academic year). To get the "latest" version of each
+curriculum area, use `QUALIFY`:
+
+```sql
+SELECT *
+FROM oideachais.education.ie.curriculum
+QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY subject, curriculum_area
+    ORDER BY academic_year DESC
+) = 1;
+```
+
+### marimo + Polars round-trip
+
+The marimo skill uses `duckdb.sql("...").pl()` to convert
+DuckDB query results to Polars for downstream visualisation:
+
+```python
+import polars as pl
+
+df: pl.DataFrame = mo.sql(
+    "SELECT subject, COUNT(*) AS n FROM curriculum GROUP BY subject",
+    engine=con,
+    output=False,
+)
+mo.ui.table(df)
+```
