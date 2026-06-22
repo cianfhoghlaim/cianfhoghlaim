@@ -117,3 +117,79 @@ Dagster skill with KCG production patterns:
   `raw_pdf → extracted_markdown → semantic_chunks → vector_embeddings → knowledge_graph_episodes`
   asset graph with `DynamicPartitionsDefinition` per file and
   sensor-driven `add_dynamic_partitions(...)`
+
+## KCG 4-layer asset graph (canonical)
+
+The Cianfhoghlaim platform organises its Dagster assets in
+4 layers. Each layer is a separate asset group with its own
+schedule and ownership.
+
+```
+┌────────────────────────────────────────────────────────┐
+│  Layer 1: Ingestion (DLT sources)                       │
+│  → fetch from NCCA / SEC / DES / UoG / leabharlann      │
+│  → 4-quadrant MultiPartitions by language + subject    │
+│  → writes to DuckLake (raw tables)                      │
+└────────────────────────────────────────────────────────┘
+                          ↓
+┌────────────────────────────────────────────────────────┐
+│  Layer 2: Materials (Docling, OCR, BAML extraction)     │
+│  → PDF → markdown → chunks → typed BAML class           │
+│  → runtime evals + auto-retry on extraction             │
+│  → writes to DuckLake (typed tables) + LanceDB          │
+└────────────────────────────────────────────────────────┘
+                          ↓
+┌────────────────────────────────────────────────────────┐
+│  Layer 3: Model Lifecycle (CocoIndex v1 Apps)           │
+│  → embed + index + graph-build                          │
+│  → live mode (`cocoindex update -L`)                    │
+│  → writes to LanceDB + FalkorDB + Cognee                │
+└────────────────────────────────────────────────────────┘
+                          ↓
+┌────────────────────────────────────────────────────────┐
+│  Layer 4: Asset Generation (Dagster re-materialization) │
+│  → marimo dashboards (5 educational stages)             │
+│  → FastAPI routes (`/dashboards/*`, `/api/*`)          │
+│  → TanStack Start front-end (`oideachais/web`)         │
+└────────────────────────────────────────────────────────┘
+```
+
+**Asset groups:**
+
+- `oideachais-pipeline` — Layer 1 (DLT ingestion, 33+ sources
+  for Ireland, UK, Celtic, geospatial)
+- `oideachais-cognify-knowledge-graph` — Layer 2 + 3
+  (cognify, 3 leabharlann cognify, 3 cross-archive edges)
+- `oideachais-leabharlann` — Layer 2 (3 v1 CocoIndex Apps
+  for the leabharlann corpus)
+- `oideachais-semantic-search` — Layer 3 (cross-corpus
+  LanceDB HNSW search)
+- `oideachais-marimo-dashboards` — Layer 4 (11 marimo
+  notebooks for the 5 educational stages)
+- `oideachais-baml-schemas` — Layer 2 (BAML extraction
+  schemas, 23+ files)
+- `docs-skills-consolidation` — Layer 4 (the
+  `docs_skills_consolidation` v1 App that indexes all
+  docs/ + .agents/skills/)
+
+## Dagster ports (KCG-specific)
+
+| Service | Port | Notes |
+|:--|:--|:--|
+| `engineering-dagster-webserver` | 3335 | Main engineering Dagster (the canonical one) |
+| `croilar-dagster-webserver` | 3000 | Croilar (the persona-specific Dagster) |
+| `dagster-user-code` (gRPC) | 4000 | Internal — between webserver and the user-code container |
+| `dagster-postgres` | 5432 | Internal — `PostgresRunStorage` etc. |
+
+When developing locally, use port 3335 for the main Dagster UI.
+Use port 3000 only for croilar-specific work.
+
+## KCG port list summary
+
+- Dagster: 3335 (engineering) / 3000 (croilar) / 4000 (gRPC)
+- Lakekeeper Iceberg: 8181
+- Lance Namespace sidecar: 9000
+- MotherDuck (managed)
+- Cognee: 8000 (Cognee web UI)
+- FalkorDB: 6379
+- LanceDB Cloud: db://<db-name>

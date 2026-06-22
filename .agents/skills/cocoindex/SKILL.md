@@ -520,3 +520,20 @@ skill's deprecation banner.
 
 **For comprehensive documentation:** <https://cocoindex.io/docs/>
 **Search specific topics:** <https://cocoindex.io/docs/search?q=url%20encoded%20keyword>
+
+## KCG ColPali cache location (project-specific)
+
+The KCG CocoIndex flows that use `ColPaliEmbedImage` cache the
+model weights at:
+
+```
+stedding/huggingface/hub/
+  models--vidore--colpali-v1.3/
+```
+
+The canonical model is **`vidore/colpali-v1.3`** (1024-d
+multi-vector, vision + text). For LlamaIndex aliasing via
+LiteLLM, use the alias `vision` (set in
+`oideachais/api/router.py`). The KCG marimo dashboard
+`/dashboards/curriculum-images` shows a live demo of the
+multimodal ColPali + Qdrant MaxSim search.

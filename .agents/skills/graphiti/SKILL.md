@@ -5,7 +5,20 @@ description: Temporal knowledge graph with bi-temporal data model for tracking p
 
 # Graphiti
 
-**Version:** >=0.5.0 | **Last Updated:** 2025-04
+**Version:** >=0.5.0 | **Last Updated:** 2026-06
+
+## Important: Cognee is the primary knowledge graph
+
+> **For the Cianfhoghlaim platform, Cognee is the primary
+> knowledge graph layer.** Graphiti is a complementary
+> bi-temporal graph store used only when the use case
+> explicitly requires valid-time + transaction-time tracking
+> (e.g. tracking when a curriculum was revised, not just
+> what it contains).
+>
+> **Don't write directly to Graphiti** unless you have a
+> strong reason. Use Cognee for the default knowledge
+> graph; use Graphiti for the bi-temporal overlay.
 
 ## Overview
 
@@ -32,19 +45,22 @@ Activate when users need:
 
 ## Project Integration
 
-### Infrastructure Location
+### Infrastructure Location (post-restructure, 2026-06)
 
 | Component | Path |
 |-----------|------|
-| Stack Config | `bonneagar/storage/graphiti/` |
-| Integration | `sruth/oideachais/knowledge_graph/graphiti/` |
+| Stack Config | `infrastructure/stacks/machine_learning/graphiti/` |
+| Agent integration | `meaisínfhoghlaim/agents/` |
+| CocoIndex flow | `oideachais/cocoindex_flows/learning_outcome_graph.py` |
+| Cognee (primary) | `oideachais/cognee_integration/` |
+| Dagster assets | `oideachais/dagster_defs/assets/cognify_assets.py` |
 
-### Research References (taighde/)
+### Research References
 
 | Directory | Relevant Documents |
 |-----------|-------------------|
-| `taighde_scoil/` | Curriculum versioning patterns |
-| `taighde_bonneagar/` | Graphiti deployment guides |
+| `docs/01-cognee/` | Cognee (primary KG) — patterns, queries, datasets |
+| `docs/00-patterns/02-temporal-kg.md` | Bi-temporal KG patterns |
 
 ## Core Concepts
 

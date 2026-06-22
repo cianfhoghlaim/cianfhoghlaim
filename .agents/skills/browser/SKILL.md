@@ -168,3 +168,67 @@ Mode flags are applied when a session starts. After `browse stop`, the next star
 
 For detailed examples, see [EXAMPLES.md](EXAMPLES.md).
 For API reference, see [REFERENCE.md](REFERENCE.md).
+
+## Anti-Bot Fallback (patchright)
+
+When the `browse` CLI is blocked by anti-bot detection
+(Cloudflare, DataDome, PerimeterX, etc.), the canonical
+fallback is **Patchright** — a stealth fork of Playwright that
+patches the Chromium binary to bypass common detection
+heuristics.
+
+### When to use patchright
+
+- The `browse` CLI returns a Cloudflare challenge or CAPTCHA
+- The site uses `navigator.webdriver` detection
+- Headless detection (e.g. via `navigator.plugins.length`)
+- Datadome / PerimeterX anti-bot
+
+### Pattern
+
+```python
+# patchright is a drop-in Playwright API replacement
+from patchright.sync_api import sync_playwright
+
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=True, channel="chromium")
+    context = browser.new_context(
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 ...",
+        viewport={"width": 1920, "height": 1080},
+    )
+    page = context.new_page()
+    page.goto("https://protected-site.com")
+    print(page.content())
+    browser.close()
+```
+
+### Escalation path
+
+```
+browse CLI
+   ↓ blocked by anti-bot
+patchright (local Chromium)
+   ↓ still blocked
+stagehand + browserbase (cloud, residential proxies)
+   ↓ still blocked
+cua (computer-use agent)
+```
+
+### KCG integration
+
+- `cookie-sync/package.json` pins `patchright-core@1.58.2`
+  via `@browserbasehq/stagehand`
+- The `infrastructure/stacks/engineering/stagehand/` stack
+  provides a Cloudflare-Workers + patchright + browserbase
+  fallback chain
+- For one-off Cloudflare challenges, prefer
+  `Browserbase.cloud` with the residential proxy pool
+
+### See also
+
+- `.agents/skills/stagehand/SKILL.md` — the full Stagehand
+  V3 reference (the canonical "next step up" from patchright)
+- `.agents/skills/crawl4ai/SKILL.md` — the primary scraper
+  (try first; falls back to patchright + stagehand)
+- `.agents/skills/firecrawl/SKILL.md` — the HTTP-first
+  scraper (no browser, no anti-bot issues for most sites)
