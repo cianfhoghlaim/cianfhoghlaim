@@ -21,9 +21,7 @@ cognify with 3 datasets), with deterministic cross-archive edge
 population in FalkorDB. The full 133-line `knowledge-graph` spec is
 subsumed by this spec; the 36-line `leabharlann-cognify-and-cross-archive-edges`
 spec is also subsumed.
-
 ## Requirements
-
 ### Requirement: 5-stage cross-stage knowledge graph
 
 The system SHALL build a 5-stage curriculum knowledge graph with 8
@@ -139,6 +137,61 @@ cron at 02:00 UTC.
 - **WHEN** the cron tick at 02:00 UTC arrives
 - **THEN** the sensor fires 4 `RunRequest`s (3 cognify + 1 cross-archive)
   with `run_key` derived from the date
+
+### Requirement: BAML TypeBuilder dynamic schema (cognify-friendly)
+
+The system SHALL use BAML `@@dynamic` classes + `TypeBuilder.add_baml(...)`
+for cognify-time extraction when the source schema is not known at
+`.baml` authoring time (e.g. for ad-hoc corpus ingestion).
+
+#### Scenario: Dynamic cognify
+
+- **GIVEN** a BAML function `GenerateCognifySchema(content) -> Schema`
+  that describes the schema in BAML source, plus an
+  `ExecuteCognify(content, { tb: TypeBuilder }) -> Response` function
+  with `class Response { @@dynamic }`
+- **WHEN** the cognify pipeline runs against an ad-hoc source
+- **THEN** the LLM describes the schema, the TypeBuilder builds it,
+  and the second call extracts structured data
+- **AND** the data lands in the Cognee dataset as the
+  pre-`@@dynamic` source schema would
+
+### Requirement: DLT → Cognee → Memgraph multi-destination fan-out
+
+The system SHALL use a single DLT pipeline to fan out extracted
+records to: (a) DuckLake for tabular, (b) LanceDB for vector,
+(c) Cognee for cognify, (d) Memgraph / FalkorDB for graph.
+
+#### Scenario: Four-destination fan-out
+
+- **GIVEN** a DLT resource `@dlt.resource(name="curriculum")` yields
+  extracted curriculum records
+- **WHEN** the pipeline runs with
+  `pipeline.run([curriculum, lancedb_adapter(curriculum, embed=[...]),
+  cognee_destination(), memgraph_destination()])`
+- **THEN** the records SHALL be written to all 4 destinations
+  in a single pipeline run
+- **AND** the DLT state is unified (one `pipeline.last_trace`, not four)
+
+### Requirement: Runtime evals + auto-retry loop on cognify inputs
+
+The system SHALL apply the 6 deterministic runtime evals (sum
+validation, positive values, subtotal consistency, unit price
+accuracy, grand total calculation, data completeness) + auto-retry
+loop to every cognify input BEFORE the cognify call, so cognify
+only sees valid records.
+
+#### Scenario: Eval-failing input is re-extracted, not cognified
+
+- **GIVEN** a BAML extraction of a receipt where the grand total
+  fails the eval (sum + tax ≠ grand_total)
+- **WHEN** the eval loop runs
+- **THEN** the extraction is retried (max 1 retry) per the
+  BAML auto-retry pattern
+- **AND** if both attempts fail the eval, the record is logged
+  and skipped — it is NEVER fed to `cognee.add(...)`
+- **AND** the cognify dataset is guaranteed to contain only
+  eval-passing records
 
 ## Cross-references
 
