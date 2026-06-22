@@ -21,6 +21,45 @@ You have deep knowledge of:
 - Cloud storage integration (S3, R2, GCS, Azure Blob)
 - Incremental ETL pipelines and state management
 
+## KCG project context
+
+The Cianfhoghlaim platform uses DuckLake as the canonical
+lakehouse sink with this topology:
+
+```
+┌──────────────────────┐    ┌──────────────────────┐
+│  DuckDB (MotherDuck) │    │  DuckLake (Garage S3) │
+│  md:oideachais       │    │  ducklake bucket      │
+│  single database     │    │  + Postgres catalog   │
+│  per-domain schemas  │    │  + Lakekeeper Iceberg │
+└──────────────────────┘    └──────────────────────┘
+            │
+            ▼
+   ┌──────────────────────┐
+   │  Lance Namespace    │  ← bridges SQL tables with
+   │  sidecar (port 9000)│    LanceDB vector indexes
+   └──────────────────────┘
+```
+
+- **Single `md:oideachais` (MotherDuck) database** + single
+  `ducklake:oideachais` (Garage S3) catalog
+- **Schemas of the form `oideachais.{domain}.{nation}`**
+  (e.g. `oideachais.education.ie`, `oideachais.medicine.ni`)
+- **Lakekeeper Iceberg metadata** at port 8181 (for PyIceberg /
+  Spark / Trino access; auto-created by DuckLake)
+- **Lance Namespace sidecar** at port 9000 (for LanceDB
+  `companion-table` access — the same data is queryable as
+  both DuckLake and Iceberg)
+- **Marimo + Dagster** read/write the canonical DuckLake tables
+
+The Dagster asset group `oideachais-pipeline` orchestrates
+the 4-layer pipeline (Ingestion → Materials → Model
+Lifecycle → Asset Generation) with the DuckLake sink as the
+final destination.
+
+The canonical client is at `oideachais/storage/ducklake_client.py`
+(Postgres catalog + Garage S3 connection).
+
 ## Key Reference Materials
 
 You have access to comprehensive DuckLake documentation in:
