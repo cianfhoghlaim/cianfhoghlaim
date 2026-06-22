@@ -82,3 +82,38 @@ For every question, identify which reference file(s) are relevant using the inde
 - [Integration libraries index for 40+ tools and technologies (dbt, Fivetran, Snowflake, AWS, etc.).](./references/integrations/INDEX.md) — integration, external tool, dagster-\*; dbt, fivetran, airbyte, snowflake, bigquery, sling, aws, gcp
 - [Migration Guides](./references/migration/INDEX.md) — sensor migration to declarative automation, sensor migration to automation condition
 <!-- END GENERATED INDEX -->
+
+## KCG-relevant references (added by `sync-skills-from-docs`)
+
+These are project-specific reference files that extend the core
+Dagster skill with KCG production patterns:
+
+### Integrations
+
+- [DuckLake integration (canonical KCG lakehouse sink)](./references/integrations/dagster-ducklake/INDEX.md) —
+  `DuckLakeResource` config (Postgres catalog + S3 + `dg.EnvVar` secrets)
+- [SQLMesh integration](./references/integrations/dagster-sqlmesh/INDEX.md) —
+  `@sqlmesh_assets` + `SQLMeshResource` + central `SQLMeshDagsterTranslator`
+- [DLT parallel-asset factory (GitHub reference)](./references/integrations/dagster-dlt/parallel-github.md) —
+  the closest analogue to KCG's `ireland/curriculum/` 33+ REST endpoints
+- [Evidence.dev BI dashboards](./references/integrations/dagster-evidence/INDEX.md) —
+  thin INDEX stub (KCG currently uses marimo; Evidence is a future option)
+- [Modal GPU compute](./references/integrations/dagster-modal/INDEX.md) —
+  thin INDEX stub (KCG uses Modal for HTR fine-tuning + OCR ensemble)
+- [Iceberg table integration](./references/integrations/dagster-iceberg/INDEX.md) —
+  thin INDEX stub (KCG uses DuckLake primarily; Iceberg via the
+  Lance + Iceberg companion-table pattern)
+
+### Deployment
+
+- [Self-hosted Docker Dagster deploy](./references/deployment/docker-self-hosted.md) —
+  the canonical 4-service topology (Postgres + gRPC user-code +
+  webserver + daemon) for KCG production (not Dagster+ Hybrid)
+
+### Orchestration
+
+- [KCG CocoIndex + Graphiti asset graph](./references/orchestration/kcg-cocoindex-graphiti.md) —
+  the canonical
+  `raw_pdf → extracted_markdown → semantic_chunks → vector_embeddings → knowledge_graph_episodes`
+  asset graph with `DynamicPartitionsDefinition` per file and
+  sensor-driven `add_dynamic_partitions(...)`
