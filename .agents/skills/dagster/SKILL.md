@@ -193,3 +193,100 @@ Use port 3000 only for croilar-specific work.
 - Cognee: 8000 (Cognee web UI)
 - FalkorDB: 6379
 - LanceDB Cloud: db://<db-name>
+
+## KCG install + integration (canonical)
+
+```bash
+# KCG engineering Dagster stack (the canonical one)
+cd oideachais
+uv add dagster dagster-duckdb dagster-dlt
+uv run dagster dev -m oideachais.data_platform.dagster_defs.definitions
+# UI at http://localhost:3335
+```
+
+The KCG Dagster integration lives at:
+
+- `oideachais/data_platform/dagster_defs/` — the Dagster
+  definitions module (assets, jobs, schedules, sensors, resources)
+- `oideachais/data_platform/dagster_defs/definitions.py` —
+  the entry point
+- `dg.toml` — the Dagster workspace config (registers
+  oideachais, tuatha, meaisínfhoghlaim, croilar as code-locations)
+
+### KCG asset groups (4-layer narrative)
+
+The Cianfhoghlaim asset graph is organised in 4 narrative
+layers. Each layer has its own asset group, schedule, and
+ownership:
+
+1. **Ingestion** — DLT sources (33+ for Ireland, UK, Celtic,
+   geospatial). Writes to DuckLake raw tables. Scheduled
+   hourly.
+2. **Materials** — Docling OCR + BAML extraction + runtime
+   evals. Writes to DuckLake typed tables + LanceDB. Scheduled
+   daily.
+3. **Model Lifecycle** — CocoIndex v1 Apps (embeddings,
+   knowledge graphs, FTS indexes). Live mode (`cocoindex update
+   -L`). Writes to LanceDB + FalkorDB + Cognee.
+4. **Asset Generation** — marimo dashboards, FastAPI routes,
+   TanStack Start pages. Triggered by changes in the upstream
+   layers.
+
+### DLT + Firecrawl integration patterns
+
+The KCG DLT sources use the `firecrawl-mcp` + `sruth-browser`
++ `Firecrawl API` fallback ladder (see
+`.agents/skills/dlt/SKILL.md` for the full pattern):
+
+```python
+# dlt REST API source with Firecrawl fallback
+@dlt.source
+def firecrawl_source():
+    config = {
+        "client": {"base_url": os.environ["FIRECRAWL_BASE_URL"]},
+        "resources": [{
+            "name": "scraped_pages",
+            "endpoint": {
+                "path": "scrape",
+                "params": {
+                    "url": {"type": "resolve", "resource": "urls"},
+                },
+            },
+        }],
+    }
+    return rest_api_source(config)
+```
+
+When a Dagster asset is materialised:
+
+1. The DLT source fires
+2. The dlt pipeline runs (writes to DuckLake)
+3. `dlt_run_resource.run(context=context)` is called
+4. The asset is marked materialised
+5. Downstream assets (e.g. CocoIndex v1 Apps) are auto-triggered
+
+### Multi-tenant DLT asset factory
+
+The KCG `oideachais/dagster_defs/assets/ireland/curriculum_dlt_assets.py`
+defines a factory pattern for the 33+ Ireland curriculum
+assets, each with the canonical
+`MultiPartitionsDefinition(language, subject)` partition:
+
+```python
+@dlt_assets(
+    dlt_source=ireland_curriculum_source(),
+    dlt_pipeline=dlt.pipeline(
+        pipeline_name="ireland_curriculum",
+        destination="ducklake",
+        dataset_name="oideachais.education.ie",
+    ),
+    partitions_def=MultiPartitionsDefinition({
+        "language": StaticPartitionsDefinition(["en", "ga"]),
+        "subject": StaticPartitionsDefinition([
+            "mathematics", "irish", "english", "history", ...
+        ]),
+    }),
+)
+def ireland_curriculum_assets(context, dlt_run_resource):
+    yield from dlt_run_resource.run(context=context)
+```
