@@ -4,7 +4,7 @@
 
 ## **Section 1: The Unified Full-Stack Dashboard Architecture**
 
-> **Architecture Pattern**: This document follows the **Monolithic TanStack Start** pattern (production default). TanStack Start handles both frontend and backend via server functions. For the project's framework decision rationale, see [web-tech-tutorials-and-examples.md](../web-tech-tutorials-and-examples.md).
+> **Architecture Pattern**: This document follows the **Monolithic TanStack Start** pattern (production default). TanStack Start handles both frontend and backend via server functions. For the project's framework decision rationale, see [web-tech-tutorials-and-examples.md](../../../06-infrastructure/web-tech-tutorials-and-examples.md).
 
 ### **1.1 Executive Overview and Architectural Philosophy**
 
