@@ -224,7 +224,69 @@ cua (computer-use agent)
 - For one-off Cloudflare challenges, prefer
   `Browserbase.cloud` with the residential proxy pool
 
-### See also
+### KCG: What is wired today (status table)
+
+The browser / scraping stack is **multi-backend by design**.
+The 6 backends available to KCG agents (in escalation
+order):
+
+| # | Backend | When to use | Anti-bot | Cost |
+|:--|:--|:--|:--|:--|
+| 1 | `firecrawl` (HTTP) | First try for any page | No | Credits |
+| 2 | `crawl4ai` (local browser) | No anti-bot + JS rendering | No | Free |
+| 3 | `browse` CLI (local Chrome) | Reuse local cookies | No | Free |
+| 4 | `browse` CLI (Browserbase) | Cloudflare / IP-blocked | Yes (residential proxy) | $$ |
+| 5 | `patchright` (stealth Chromium) | Bot-detection bypass | Yes (patched) | Free |
+| 6 | `stagehand` (Cloudflare Workers) | Cookie-gated / paywalled | Yes (residential) | $$$ |
+| 7 | `cua` (computer-use agent) | Last resort (login flows) | Yes (genuine browser) | $$$$ |
+
+The `BackendRacer` (below) fires #1-#3 in parallel and
+returns the first success.
+
+## BAML `SiteAnalysis` (the page-fingerprint pattern)
+
+For every URL the browser pipeline visits, KCG extracts a
+BAML `SiteAnalysis` record (the "fingerprint" of the page):
+
+```baml
+// oideachais/baml_src/site_analysis.baml
+class SiteAnalysis {
+  url: string
+  title: string
+  content_type: "article" | "documentation" | "api" | "form" | "search" | "other"
+  primary_language: "en" | "ga" | "cy" | "gd" | "br" | "fr" | "de" | "other"
+  has_anti_bot: bool
+  has_login_wall: bool
+  estimated_tokens: int
+  llm_relevance: "high" | "medium" | "low" | "none"
+  notes: string?
+}
+
+function FingerprintPage(html: string, url: string) -> SiteAnalysis {
+  client "anthropic/claude-sonnet-4-20250514"
+  prompt #"
+    Analyse the page at {{ url }}.
+
+    Identify:
+    - content_type (article / documentation / api / form / search / other)
+    - primary_language (ISO 639-1, with Celtic codes for ga/cy/gd/br)
+    - presence of anti-bot (Cloudflare, DataDome, reCAPTCHA, Turnstile)
+    - presence of a login wall
+    - estimated tokens to summarise
+    - LLM relevance (high = dense pedagogical content, none = ads / nav)
+
+    {{ html }}
+    {{ ctx.output_format }}
+  "#
+}
+```
+
+The fingerprint decides:
+- Whether to ingest the page at all (`llm_relevance: "none"` → skip)
+- Which backend to use next (`has_anti_bot: true` → escalate)
+- The asset key prefix (`primary_language: "ga"` → `oideachais.education.ie.curriculum.ga`)
+
+## See also
 
 - `.agents/skills/stagehand/SKILL.md` — the full Stagehand
   V3 reference (the canonical "next step up" from patchright)

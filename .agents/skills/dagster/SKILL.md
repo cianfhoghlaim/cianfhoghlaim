@@ -289,4 +289,42 @@ assets, each with the canonical
 )
 def ireland_curriculum_assets(context, dlt_run_resource):
     yield from dlt_run_resource.run(context=context)
+
+## KCG: 21-asset-module / 7-group inventory (canonical)
+
+Per `oideachais/dagster_defs/definitions.py` and the
+leabharlann stack overview, the KCG Dagster workspace has
+**21 asset modules** across **7 groups**:
+
+| Group | Asset modules | Notes |
+|:--|:--|:--|
+| `multi_nation_curriculum` | 8 | NCCA, SEC, DES, CCEA, SQA, WJEC, IoM, Jersey, Guernsey |
+| `uk_education` | 3 | DfE, Ofqual, UK Statistics |
+| `leabharlann_books` | 3 | books / zotero / takeout |
+| `author_archive_uog` | 4 | UoG / Gemini / Takeout / BAML |
+| `ireland_primary_jc` | 1 | Primary + Junior Cycle factory (33+ asset instances) |
+| `crown_dependencies` | 2 | Isle of Man + Channel Islands |
+| `leabharlann` | 0 (orchestrator) | The cross-stage orchestrator |
+
+**Total**: 56+ asset instances, all sharing the
+`oideachais.{domain}.{nation}.{entity}` asset-key contract
+(see `.agents/skills/cross-domain-registry/SKILL.md`).
+
+### The 5-stage leabharlann asset materialisation order
+
+The leabharlann pipeline (`.agents/skills/kcg-leabharlann-pipeline/SKILL.md`)
+is wired as 7 specific Dagster assets that fire in order:
+
+1. `leabharlann_books_raw` (Stage 2: DLT filesystem scan)
+2. `leabharlann_zotero_raw` (Stage 2)
+3. `leabharlann_takeout_v1_raw` (Stage 2)
+4. `leabharlann_paper_metadata` (Stage 3: BAML extraction)
+5. `leabharlann_cocoindex_zotero_update` (Stage 4:
+   CocoIndex v1)
+6. `cognee_cognify_zotero` (Stage 5: Cognee, **queued**)
+7. `cognee_cross_archive_edges` (Stage 5: edges, **queued**)
+
+The **first 5 are wired**; the last 2 are queued in
+`oideachais/REFACTORING.md` Feature 2.
+
 ```

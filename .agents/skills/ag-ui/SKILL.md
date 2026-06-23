@@ -213,11 +213,109 @@ the Tuatha MMO mobile use case.
 You can run A2UI *over* AG-UI / A2A as a transport, or
 directly via a JSON-RPC endpoint.
 
+## Kotlin mobile SDK (round-9 deep dive)
+
+The **AG-UI Kotlin SDK** (community-contributed by Mark
+Fogle, Nov 2025) brings the AG-UI protocol to Android, iOS,
+and JVM through a single Kotlin Multiplatform SDK. For the
+**Tuatha MMO mobile client** this is the canonical pattern —
+the agent backend is the same regardless of whether the
+client is web, native, or desktop.
+
+The SDK is modular:
+
+| Module | Purpose | Gradle dep |
+|:--|:--|:--|
+| `kotlin-client` | High-level agent clients + HTTP transport | `com.agui:kotlin-client:0.2.1` |
+| `kotlin-core` | Protocol types, events, kotlinx.serialization | `com.agui:kotlin-core:0.2.1` |
+| `kotlin-tools` | `ToolExecutor` + `ToolRegistry` + circuit-breaker | `com.agui:kotlin-tools:0.2.1` |
+
+Platform support: Android API 26+, iOS 13+, JVM 11+.
+
+**Quick start (stateful agent):**
+
+```kotlin
+val chatAgent = StatefulAgUiAgent("https://agent.tuatha.cianfhoghlaim.ie") {
+    bearerToken = tuathaSession.token
+    systemPrompt = "You are a Celtic mythology guide."
+}
+
+chatAgent.chat("Tell me about the Tuatha Dé Danann.").collect { state ->
+    // state.messages updates as the SSE stream emits events
+    // state.thinking surfaces THINKING_* events
+    // state.errors contains any parse / network failures
+}
+```
+
+**Client-side tools** (e.g. opening a quest log, showing
+inventory) execute **on the device, not the server** — this
+is the key privacy property:
+
+```kotlin
+val agent = agentWithTools(
+    url = "https://agent.tuatha.cianfhoghlaim.ie",
+    toolRegistry = toolRegistry {
+        addTool(QuestLogToolExecutor())   // runs locally
+        addTool(InventoryToolExecutor())  // runs locally
+    }
+) { bearerToken = tuathaSession.token }
+
+agent.sendMessage("What quests do I have?").collect { state ->
+    // Agent requested the local quest-log tool;
+    // it ran on the device, not the server
+}
+```
+
+**Authentication** is per-client: `bearerToken(...)`,
+`apiKey(...)`, or `basicAuth(...)`. For the KCG stack, the
+token is the SIWE session JWT from BetterAuth
+(`tuatha/auth/siwe.py`).
+
+**Streamed events** are auto-rewritten: chunked
+`TEXT_MESSAGE_CHUNK` / `TOOL_CALL_CHUNK` are expanded into
+start/content/end sequences, and `THINKING_*` events are
+surfaced alongside normal messages (so the UI can show a
+"reasoning" indicator before the response).
+
+## AG-UI vs A2UI vs MCP-UI vs Open-JSON-UI
+
+AG-UI is **not** a generative UI specification — it is the
+**bi-directional runtime connection** between an agent and
+any UI. The generative UI specs (A2UI, MCP-UI, Open-JSON-UI)
+sit on top of it:
+
+| Spec | Origin | Purpose | Transport |
+|:--|:--|:--|:--|
+| **AG-UI** | CopilotKit | Agent↔UI runtime connection | SSE / WebSocket |
+| **A2UI** | Google | JSON component blueprints (declarative) | JSONL streaming |
+| **MCP-UI / MCP Apps** | Microsoft + Shopify | iframe-based, sandboxed UI | over MCP |
+| **Open-JSON-UI** | OpenAI | OpenAI's internal declarative spec | JSON Schema |
+
+The flow:
+
+1. Agent generates a UI using a generative UI spec
+   (e.g. A2UI), describing the components it wants
+2. AG-UI transports that spec from the agent to the app
+   over the bi-directional runtime
+3. The app renders the components natively (no iframe, no
+   script injection — host styling is preserved)
+4. User interactions flow back through AG-UI to the agent
+
+For the **Tuatha MMO mobile client**, A2UI is the canonical
+choice when the UI must inherit the host's Celtic design
+language on Flutter / iOS / Android. For web frontends,
+CopilotKit's React renderer consumes AG-UI directly.
+
+See `references/kotlin-mobile-sdk.md` for the blog
+announcement and `references/kotlin-sdk-overview.md`
+for the 191-line official Kotlin SDK reference.
+
 ## Resources
 
 - AG-UI protocol spec: <https://ag-ui.com/spec>
-- AG-UI docs: <https://ag-ui.com/>
+- AG- docs: <https://ag-ui.com/>
 - A2UI: <https://a2ui.org/>
 - CopilotKit: <https://docs.copilotkit.ai/>
 - Pydantic AI AG-UI adapter: <https://ai.pydantic.dev/ui/ag-ui>
 - KCG AG-UI client: `oideachais/web/src/lib/ag-ui/`
+- AG-UI Kotlin SDK: <https://github.com/ag-ui-protocol/ag-ui/tree/main/sdks/community/kotlin>
