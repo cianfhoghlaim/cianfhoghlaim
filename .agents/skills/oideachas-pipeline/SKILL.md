@@ -111,6 +111,44 @@ def curriculum_documents(context: AssetExecutionContext):
     return pipeline.run(ncca_curriculum())
 ```
 
+## KCG Tripartite Data Landscape
+
+The Irish education data is governed by **three evidential
+sources** with distinct ownership and change cadence:
+
+| Source | Domain | Cadence | Schema | DLT source |
+|:--|:--|:--|:--|:--|
+| **NCCA** (curriculumonline.ie) | Pedagogical intent | ~Decade | Specifications, Learning Outcomes | `ncca_curriculum` |
+| **SEC** (examinations.ie) | Evidentiary truth | Annual | Exam Papers + Marking Schemes | `sec_examinations` |
+| **DES Circulars** | Temporal governance | Monthly | Policy, amendments, repeals | `des_circulars` |
+
+All three ingest into the lakehouse via the
+`oideachais/sources.yaml` registry; every Dagster asset
+follows the `{nation}.{domain}.{entity}` contract from
+`.agents/skills/cross-domain-registry/SKILL.md`.
+
+## BAML Schemas (the structured extraction layer)
+
+The oideachais pipeline uses BAML to convert raw
+extracted text (PDF, HTML) into typed records. The
+canonical schemas live at `oideachais/baml_src/`:
+
+| BAML class | Purpose | Source doc |
+|:--|:--|:--|
+| `PrimaryLearningOutcome` | NCCA primary LOs (en + ga) | NCCA specifications |
+| `ScienceOutcome` | Junior Cycle science experiments | NCCA JC science |
+| `MarkingPoint` | SEC marking point + 10C scale | SEC marking schemes |
+| `RubricDescriptor` | JC/LC rubric levels (4 bands) | SEC rubrics |
+| `CircularMetadata` | DES circular (issue, effective, status) | DES circulars |
+| `SiteAnalysis` | Browser page fingerprint (BAML) | Browser pipeline |
+
+The bilingual strategy uses a **unified concept node**:
+`name_en` and `name_ga` are sibling fields on the same
+record; dialect variations (Connacht, Munster, Ulster)
+attach via `HAS_FORM` edges in the knowledge graph. See
+`.agents/skills/irish-edtech/SKILL.md` for the canonical
+Irish-language model stack (GaBERT, UCCIX).
+
 ## Cianfhoghlaim-Specific Usage
 
 ### Database Safety (from CLAUDE.md)
