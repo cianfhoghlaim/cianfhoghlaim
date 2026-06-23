@@ -189,10 +189,35 @@ indicators, intermediate tool results, multimodal artifacts
 - **Langfuse** — every AG-UI event is traced (token, tool_call,
   state, done) for full observability
 
+## A2UI — sibling protocol (Google)
+
+[A2UI](https://a2ui.org/) is Google's "native-first" alternative
+to AG-UI for cross-platform generative UI. It's complementary
+to AG-UI, not a replacement.
+
+| Protocol | Transport | UI rendering | Best for |
+|:--|:--|:--|:--|
+| **AG-UI** | SSE | Host app renders component tree | React web (CopilotKit) |
+| **A2UI** | JSON-RPC | Host app renders JSON component blueprint | Flutter / native mobile (Google SDKs) |
+| **MCP-Apps** | JSON-RPC | Host app renders via MCP server | Desktop apps |
+
+A2UI sends **JSON component blueprints** (not opaque HTML),
+so the host app keeps its styling and accessibility. The host
+app renders the components natively (no iframe, no script
+injection).
+
+A2UI is the canonical choice when the UI must inherit the
+host app's styling on Flutter / iOS / Android — exactly
+the Tuatha MMO mobile use case.
+
+You can run A2UI *over* AG-UI / A2A as a transport, or
+directly via a JSON-RPC endpoint.
+
 ## Resources
 
 - AG-UI protocol spec: <https://ag-ui.com/spec>
 - AG-UI docs: <https://ag-ui.com/>
+- A2UI: <https://a2ui.org/>
 - CopilotKit: <https://docs.copilotkit.ai/>
 - Pydantic AI AG-UI adapter: <https://ai.pydantic.dev/ui/ag-ui>
 - KCG AG-UI client: `oideachais/web/src/lib/ag-ui/`

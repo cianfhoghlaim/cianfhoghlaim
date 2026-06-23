@@ -294,3 +294,53 @@ pip install "ragas[embeddings]"
 - [`langfuse`](.skills/langfuse/SKILL.md) - LLM observability and tracing
 - [`lancedb`](.skills/lancedb/SKILL.md) - Vector database for RAG
 - [`cognee`](.skills/cognee/SKILL.md) - Knowledge graph for RAG
+
+## KCG integration
+
+The Cianfhoghlaim curriculum pipeline uses RAGAS in two
+critical places:
+
+1. **Quality gate** — every study asset is scored by RAGAS
+   before publication. The faithfulness ≥ 0.8 gate is the
+   canonical publication bar.
+2. **DPO preference signal** — high-RAGAS-score extractions
+   become "chosen" examples; hallucinated prerequisites become
+   "rejected" examples. The faithfulness ≥ 0.8 gate is then
+   encoded directly into the model's preferences via
+   `DPOTrainer` (see `.agents/skills/trl/SKILL.md`).
+
+RAGAS scores are wired into MLflow and Langfuse via the
+Dagster asset `meaisinfhoghlaim/dagster_assets/ragas_eval.py`,
+which runs daily on a 100-sample held-out test set.
+
+The canonical RAGAS eval set lives in
+`meaisinfhoghlaim/evaluation/canonical_eval_set.json`
+(100 samples × 4 metrics = 400 scores per run).
+
+## RAGAS-as-DPO preference-signal example
+
+```python
+from ragas import evaluate
+from trl import DPOConfig, DPOTrainer
+
+
+def build_preference_dataset(baml_outputs: list[BAMLOutput]) -> list[dict]:
+    """RAGAS ≥ 0.8 → chosen; RAGAS < 0.5 → rejected."""
+    preferences = []
+    for out in baml_outputs:
+        ragas_scores = evaluate(
+            dataset=out.to_ragas_dataset(),
+            metrics=[faithfulness, answer_relevancy],
+        )
+        if ragas_scores["faithfulness"] >= 0.8 and ragas_scores.get("_rejected"):
+            preferences.append({
+                "prompt": out.prompt,
+                "chosen": out.extraction,
+                "rejected": ragas_scores["_rejected"],
+            })
+    return preferences
+
+
+# The DPOTrainer is invoked from a Dagster asset
+# (see `.agents/skills/trl/SKILL.md`)
+```

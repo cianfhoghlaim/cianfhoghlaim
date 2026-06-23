@@ -196,9 +196,24 @@ with mlflow.start_run():
 3. **More epochs for Irish** - Compensate for limited data
 4. **Export to GGUF** - Deploy with Ollama for inference
 
+## Related tools (KCG canonical)
+
+Unsloth is the KCG canonical wrapper for PEFT. The full
+fine-tuning stack is:
+
+- **`.agents/skills/peft/SKILL.md`** — LoRA / QLoRA / IA³
+  configuration (the base technology Unsloth wraps)
+- **`.agents/skills/trl/SKILL.md`** — SFTTrainer, DPOTrainer,
+  GRPOTrainer (the alignment layer; uses RAGAS scores as
+  preference signals)
+- **`.agents/skills/ragas/SKILL.md`** — RAGAS scoring (the
+  source of DPO preference signals)
+- **`.agents/skills/modal/SKILL.md`** — Modal H100 burst
+  training for 13B+ models
+
 ## Resources
 
 - **Documentation:** https://github.com/unslothai/unsloth
 - **HuggingFace Skills:** `hf-llm-trainer` for full training guide
 - **MLflow Tracking:** `mlflow` skill for experiment logging
-- **Related Skills:** huggingface, mlflow, litellm
+- **Related Skills:** peft, trl, ragas, modal, huggingface, mlflow, litellm

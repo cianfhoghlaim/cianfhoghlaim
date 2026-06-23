@@ -313,3 +313,49 @@ yarn add @copilotkit/react-core @copilotkit/react-ui
 - [`google-adk`](.skills/google-adk/SKILL.md) - Google's agent framework
 - [`tanstack-start`](.skills/tanstack-start/SKILL.md) - Full-stack React framework
 - [`vinxi`](.skills/vinxi/SKILL.md) - Alternative full-stack framework
+
+## Advanced context types (KCG)
+
+CopilotKit supports rich context types for advanced UIs:
+
+### Zustand state (client-side stores)
+
+```typescript
+import { useCoAgent } from "@copilotkit/react-core";
+
+const { state, setState } = useCoAgent({
+  name: "my_agent",
+  initialState: { count: 0, items: [] },
+});
+
+// Sync the agent's state with a Zustand store
+useEffect(() => {
+  store.setState({ count: state.count, items: state.items });
+}, [state.count, state.items]);
+```
+
+### Shared state between UI and agent
+
+```typescript
+const { state, setState } = useCoAgent({
+  name: "tuatha_guide",
+  initialState: {
+    playerPosition: { x: 0, y: 0, z: 0 },
+    inventory: [],
+  },
+});
+// The agent can read + write `state`; the UI re-renders on changes
+```
+
+### Agent OS (Agno) integration
+
+For the Tuatha MMO, the backend agent runs on Agno's AgentOS
+(see `.agents/skills/agno/SKILL.md`). CopilotKit connects via
+the `runtimeUrl` to the Agno AG-UI adapter:
+
+```typescript
+<CopilotChat runtimeUrl="https://agentos.cianfhoghlaim.ie/agui" />
+```
+
+The frontend is identical regardless of the backend agent
+framework (Pydantic AI, Agno, Google ADK, BAML).
