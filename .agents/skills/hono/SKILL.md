@@ -519,6 +519,70 @@ export default users
 - Ensure `await next()` is called in custom middleware
 - Verify route patterns match
 
+## KCG integration
+
+The Cianfhoghlaim platform's API layer — serving curriculum
+data to the TanStack Start front-end, exposing the MCP server
+for agent integration, and routing AG-UI SSE streams — is
+built on Hono. Its multi-runtime support means the same API
+code runs on Bun during development, on Cloudflare Workers
+for edge deployment, and on the ARM1-OCI server for production.
+
+The middleware composition enables:
+
+- **Pocket ID SSO** — `auth.pocketId()` middleware
+- **Langfuse tracing** — `tracing.langfuse()` middleware
+  (every request traced end-to-end)
+- **Rate limiting** — `rateLimit()` middleware
+- **AG-UI SSE** — `mount('/agui', AGUIAdapter(agent).as_starlette_app())`
+
+The KCG Hono apps are:
+
+- `oideachais/web/src/server/router.ts` — the public
+  lakehouse API
+- `oideachais/api/` — the FastAPI + Hono adapters for the
+  oideachais web app
+- `tuatha/ui/src/server/` — the Tuatha MMO + crypto API
+
+## Convex integration
+
+The Tuatha MMO front-end uses Convex for real-time state
+sync. Hono integrates with Convex via two patterns:
+
+### `HonoWithConvex` (run Hono inside Convex)
+
+```typescript
+import { Hono } from "hono";
+import { HonoWithConvex } from "convex-helpers";
+
+const app = new Hono();
+app.get("/api/me", (c) => c.json({ user: "..." }));
+
+// Deploy Hono as a Convex HTTP action
+export default HonoWithConvex(app, "/api");
+```
+
+### `HttpRouterWithHono` (call Convex from Hono)
+
+```typescript
+import { Hono } from "hono";
+import { HttpRouterWithHono } from "convex-helpers";
+
+const app = new Hono();
+app.get("/api/curriculum", async (c) => {
+  const convex = getConvexClient();
+  const data = await convex.query("curriculum:list");
+  return c.json(data);
+});
+
+// Bridge Hono routes into the Convex HTTP router
+export const http = HttpRouterWithHono(app);
+```
+
+The canonical KCG pattern is `HttpRouterWithHono` — Hono
+runs as the public API gateway; Convex handles the
+real-time subscriptions and mutations.
+
 ## Resources
 
 - **Documentation**: https://hono.dev
