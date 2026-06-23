@@ -280,6 +280,38 @@ case "$0" in
 esac
 ```
 
+## KCG: The 6 docker-compose categories (canonical map)
+
+The 70+ KCG Docker Compose stacks live in
+`infrastructure/stacks/` and are organised into 6
+categories by **purpose**, not by host. (Full per-category
+inventory in `.agents/skills/kcg-convergence/SKILL.md`.)
+
+| # | Category | Path |
+|:--|:--|:--|
+| 1 | **Control plane** | `infrastructure/` |
+| 2 | **Storage** | `infrastructure/stacks/storage/` |
+| 3 | **Engineering** | `infrastructure/stacks/engineering/` |
+| 4 | **Machine learning** | `infrastructure/stacks/machine_learning/` |
+| 5 | **Tools** | `infrastructure/stacks/tools/` |
+| 6 | **Browser** | `infrastructure/stacks/browser/` |
+
+### The 5 integration points (the leabharlann canonical flow)
+
+The leabharlann pipeline (`.agents/skills/kcg-leabharlann-pipeline/SKILL.md`)
+touches all 6 categories through 5 integration points:
+
+1. **Komodo + Infisical + Locket** (control plane) — secret
+   injection at runtime, no plaintext on disk
+2. **dlt + DuckLake** (engineering → storage) — append-only
+   ingestion with hash-based incremental
+3. **BAML + Cognee** (engineering → machine learning) —
+   typed extraction + knowledge graph
+4. **CocoIndex v1 + LanceDB** (engineering → machine
+   learning → storage) — incremental embedding
+5. **FalkorDB + Graphiti** (machine learning → storage) —
+   bi-temporal graph
+
 ### Related skills
 
 - `.agents/skills/komodo/SKILL.md` — deploys the stacks

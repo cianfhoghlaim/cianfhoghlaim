@@ -195,6 +195,29 @@ embedder = get_registry().get("huggingface").create(
   (`celtic_curriculum.py`, `mythology_content.py`,
   `*_embeddings.py`)
 
+## KCG: Production model fallback chains
+
+The KCG production rule: **never let a single model failure
+cascade**. Every category has a 2-3 step fallback chain
+(see `.agents/skills/kcg-ml-models/SKILL.md` for the full
+70+ model registry):
+
+```yaml
+vision:        glm-4.6v-flash → qwen3-vl → moondream2
+ocr:           olmocr-2 → granite-docling
+reasoning:     nemotron-3-nano → gemma-3n
+celtic_irish:  qomhra-mistral → uccix → britllm
+celtic_gaelic: britllm → qomhra-mistral  # BritLLM is stronger for Gàidhlig
+```
+
+**Implementation**: BAML `client` blocks chain the fallback
+models. If `qomhra-mistral` returns empty or errors, BAML
+auto-retries with `uccix`, then `britllm`. The fallback is
+**per-call** (not per-session). The 3 inference backends
+(llama-swap :8080 for GGUF, mlx-omni-server :10240 for MLX,
+invokeai :9090 for safetensors) all run on the same M4 Max
+workload host.
+
 ## Related skills
 
 - `.agents/skills/asr/SKILL.md` — speech recognition

@@ -512,6 +512,24 @@ The Periphery node is then reachable at
 `https://bunchloch-dev.cianfhoghlaim.ie` from the control
 plane.
 
+### 3-tier host convergence (the canonical KCG topology)
+
+KCG runs across **3 hosts**, not 1 or 2. Pangolin
+WireGuard tunnels wire them together:
+
+| Tier | Host | Role | Pangolin role |
+|:--|:--|:--|:--|
+| **Control plane** | `arm1-oci` (Oracle Cloud ARM free tier) | Komodo (GitOps) + Pocket ID (OIDC) + CrowdSec (WAF) | Pangolin Core :3001 + Gerbil :51820/udp |
+| **Storage** | `cax41-hetzner` (Hetzner cax41) | Garage S3 + Lakekeeper Iceberg REST + Postgres | Pangolin routing for `*.cianfhoghlaim.ie` |
+| **Workload** | `bunchloch` (MacBook M4 Max) | Dagster + LiteLLM + the 70+ model servers | Tunneled via Newt → Gerbil |
+
+The 3 hosts are wired by **Newt tunnel agents** (one per
+host) and **Pocket ID OIDC SSO** (the single auth provider
+for the whole cluster). See
+`.agents/skills/kcg-bunchloch/SKILL.md` for the full
+service map and `.agents/skills/kcg-convergence/SKILL.md`
+for the 6 docker-compose categories that run on these hosts.
+
 ### Related skills
 
 - `.agents/skills/stack-ops/SKILL.md` — the 6-file

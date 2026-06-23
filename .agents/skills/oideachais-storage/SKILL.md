@@ -295,7 +295,8 @@ The `md:oideachais` URL is the MotherDuck database name; the
 ## Cross-references
 
 - `docs/02-data-platform/data-architecture.md` — the full
-  lakehouse architecture (the source-of-truth doc)
+  lakehouse architecture (the source-of-truth doc; round 6
+  deleted this; content absorbed into this skill)
 - `.agents/skills/ducklake/SKILL.md` — upstream DuckLake
   reference (1013 lines; covers the upstream patterns)
 - `.agents/skills/lancedb/SKILL.md` — upstream LanceDB
