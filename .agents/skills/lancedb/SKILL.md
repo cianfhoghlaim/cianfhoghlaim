@@ -1,11 +1,11 @@
 ---
 name: lancedb
-description: Expert assistance for vector database development with LanceDB. Use when users need vector search, semantic search, RAG applications, hybrid search, multimodal embeddings, or production-scale vector storage.
+description: Expert assistance for vector database development with LanceDB. Use when users need vector search, semantic search, RAG applications, hybrid search, multimodal embeddings, time-travel / versioned RAG, LanceDB Cloud, Lance + Iceberg, Ibis + lance_scan, the embeddings registry, or production-scale vector storage.
 ---
 
 # LanceDB - Embedded Vector Database
 
-**Version:** >=0.15.0 | **Last Updated:** 2025-04
+**Version:** >=0.26.0 (pylance >= 0.26) | **Last Updated:** 2026-06
 
 ## Overview
 
@@ -13,11 +13,20 @@ LanceDB is an open-source, embedded vector database for AI applications:
 
 - **Embedded**: Runs in-process without a separate server
 - **Multimodal**: Store vectors, text, images, and audio together
+  ("fat table" pattern with BLOBs + vectors in the same row)
 - **Scalable**: Billion-scale vectors with disk-based indexes
 - **Cloud-Native**: S3-compatible storage with serverless option
+  (LanceDB Cloud, regions: us-east-1, us-west-2, eu-west-1, ap-south-1)
 - **HNSW Indexing**: High-performance approximate nearest neighbor search
-- **MVCC Safety**: Multi-version concurrency control for safe concurrent operations
-- **Hybrid Search**: Combine vector and full-text search
+- **MVCC Safety**: Multi-version concurrency control for safe concurrent
+  operations (use `lancedb.connect(...)` + `SerialDatabaseExecutor`)
+- **Hybrid Search**: Combine vector and full-text search with RRF reranking
+- **Time-travel**: `table.checkout(version)` for versioned RAG, A/B testing
+  of embedding models, knowledge-base audits
+- **Lance Namespace / Iceberg**: expose Lance tables as Iceberg to PyIceberg
+  consumers
+- **Lance + Ray**: distributed indexing for > 1M rows
+- **Ibis + DuckDB**: federated SQL over Lance via `lance_scan()`
 
 **Documentation**: https://lancedb.github.io/lancedb/
 
@@ -28,8 +37,19 @@ Activate when users need:
 - "Build a RAG application with vector search"
 - "Store and search embeddings"
 - "Implement semantic search"
-- "Combine vector and full-text search"
-- "Store multimodal data (images, text)"
+- "Combine vector and full-text search" (vector + BM25 with RRF reranking)
+- "Store multimodal data (images, text)" — use the multimodal "fat table"
+  pattern, not the "pointer strategy"
+- "Version my RAG index / A/B test embedding models" — use
+  `table.checkout(version)` and `table.version`
+- "Use OpenAI / Cohere / HuggingFace / Gemini / Bedrock / Ollama
+  embeddings" — use the `get_registry().get(...)` pattern
+- "Query Lance from DuckDB / marimo" — use Ibis + `lance_scan()`
+- "Expose Lance as Iceberg to PyIceberg" — use `lance.namespace`
+- "Deploy to LanceDB Cloud" — see the LanceDB Cloud regions +
+  auto-compaction + auto-reindexing section
+- "Run a TS / Next.js app against Lance" — use the modern TS API
+  (`search()` not `vectorSearch()`)
 
 ## Core Concepts
 
@@ -112,17 +132,51 @@ table.create_fts_index("text")
 
 # Perform full-text search
 results = table.search("machine learning", query_type="fts").limit(10).to_pandas()
+
+# Multilingual / Irish FTS — use the right tokenizer
+table.create_fts_index(
+    "text",
+    tokenizer="en_stem",  # or "default", "whitespace", "raw", "jieba" (zh),
+                          # "no", "fr", "de", "es", "it", "pt", "ru", …
+    with_stopwords=["the", "a", "an"],  # optional stopword list
+)
+
+# Lowercase + ASCII folding for multilingual corpora
+table.create_fts_index("text", language="English", stem=True, remove_stop_words=True)
 ```
+
+**For multilingual corpora (Irish, Scottish Gaelic, Welsh, Breton)**,
+use the `default` tokenizer (Unicode-aware) and pre-normalise the
+text via `unicodedata.normalize("NFKC", text)` before insert. For
+English-heavy corpora, use `en_stem` for Porter-stemmed matching.
 
 ### 5. Hybrid Search
 
 ```python
-# Combine vector and full-text search
+# Combine vector and full-text search with RRF (Reciprocal Rank Fusion)
 results = (table.search(query_type="hybrid")
           .vector(query_vector)
           .text("machine learning")
           .limit(10)
-          .rerank(method="rrf")  # Reciprocal Rank Fusion
+          .rerank(method="rrf")
+          .to_pandas())
+
+# Pre-filter vs post-filter
+results = (table.search(query_vector)
+          .where("category = 'tech'")     # pre-filter (faster, selective)
+          .limit(10)
+          .to_pandas())
+
+results = (table.search(query_vector)
+          .where("score > 0.8")
+          .prefilter(False)               # post-filter (slower, non-selective)
+          .limit(10)
+          .to_pandas())
+
+# refine_factor oversampling for higher accuracy
+results = (table.search(query_vector)
+          .refine_factor(10)              # oversample 10x then re-rank
+          .limit(10)
           .to_pandas())
 ```
 
@@ -252,31 +306,53 @@ tenant_a = get_tenant_table("tenant-a")
 tenant_b = get_tenant_table("tenant-b")
 ```
 
-## TypeScript Usage
+## TypeScript Usage (modern API)
+
+The **deprecated** `vectorSearch(...)` API has been replaced by
+`search(...)` with explicit `queryType`. Use the modern API:
 
 ```typescript
 import * as lancedb from "@lancedb/lancedb";
+import { embedding, rerankers } from "@lancedb/lancedb";
+import { Field, Float32, FixedSizeList, Schema, Utf8 } from "apache-arrow";
+import "dotenv/config";
 
 const db = await lancedb.connect("data/my-database");
 
-const table = await db.createTable("my_table", [
-  { id: 1, vector: [0.1, 1.0], text: "foo" },
-  { id: 2, vector: [3.9, 0.5], text: "bar" }
+// Declarative schema via the embeddings registry
+const openai = embedding.getRegistry().get("openai");
+const embedModel = openai.create({ model: "text-embedding-3-small" });
+
+const schema = new Schema([
+  new Field("id", new Utf8(), false),
+  new Field("text", new Utf8(), false),
+  new Field("vector", new FixedSizeList(1024, new Field("item", new Float32())), false),
 ]);
 
-// Search
+// Vector search (modern API — `search()`, not `vectorSearch()`)
+const table = await db.openTable("documents");
 const results = await table
-  .vectorSearch([0.1, 0.3])
+  .search(Array.from(embedModel.embed("machine learning")))
   .limit(10)
   .toArray();
 
-// With filter
-const filtered = await table
-  .vectorSearch([0.1, 0.3])
-  .where("id > 1")
+// Hybrid search with RRF reranking
+const hybrid = await table
+  .search(queryType: "hybrid", Array.from(embedModel.embed("machine learning")), "machine learning")
+  .rerank(rerankers.RRFReranker())
   .limit(10)
   .toArray();
+
+// LanceDB Cloud
+// .env: LANCEDB_URI=db://my-database, LANCEDB_API_KEY=...
+const cloud = await lancedb.connect(process.env.LANCEDB_URI!, {
+  apiKey: process.env.LANCEDB_API_KEY!,
+  region: "eu-west-1",
+});
 ```
+
+**For the full modern TS reference**, see
+[`references/typescript-modern-api.md`](references/typescript-modern-api.md).
 
 ## Distance Metrics
 
@@ -295,13 +371,222 @@ const filtered = await table
 | Accuracy critical | HNSW | m=20, ef_construction=150 |
 | Large scale | IVF_HNSW_PQ | Combine both |
 
+## Advanced Patterns
+
+### Time-travel / Versioned RAG
+
+```python
+# Get the current version
+current = table.version  # e.g. 7
+
+# Query a specific historical version (read-only)
+historical = table.checkout(current - 1)
+results = historical.search(query_vector).limit(10).to_pandas()
+
+# Restore a previous version (writes a new version with the old data)
+table.restore(4)  # creates version 8 with the data from version 4
+
+# A/B test two embedding models: index the same data twice
+# (once with model A, once with model B), then search both tables
+# and compare scores.
+```
+
+Use cases: model rollback, A/B testing, knowledge-base audits,
+reproducible experiments. See
+[`references/time-travel-rag.md`](references/time-travel-rag.md).
+
+### Embeddings Registry (10+ providers)
+
+```python
+from lancedb.embeddings import get_registry
+
+registry = get_registry()
+
+# OpenAI
+model = registry.get("openai").create(name="text-embedding-3-small")
+
+# Cohere
+model = registry.get("cohere").create(name="embed-english-v3.0")
+
+# HuggingFace (local)
+model = registry.get("huggingface").create(
+    name="sentence-transformers/all-MiniLM-L6-v2",
+    device="cuda",
+)
+
+# Sentence-Transformers
+model = registry.get("sentence-transformers").create(
+    name="BAAI/bge-large-en-v1.5",
+)
+
+# ColBERT (multi-vector)
+model = registry.get("colbert").create(name="colbert-ir/colbertv2.0")
+
+# Gemini
+model = registry.get("gemini").create(name="text-embedding-004")
+
+# Bedrock
+model = registry.get("bedrock").create(name="amazon.titan-embed-text-v1")
+
+# Ollama (local)
+model = registry.get("ollama").create(name="nomic-embed-text")
+
+# OpenCLIP (multimodal image+text)
+model = registry.get("open-clip").create(name="ViT-B-32")
+```
+
+Use `LanceModel` with `SourceField()` and `VectorField()` to bind the
+embedder to a column:
+
+```python
+from lancedb.pydantic import LanceModel, Vector
+
+class Document(LanceModel):
+    text: str = model.SourceField()
+    vector: Vector(model.ndims()) = model.VectorField()
+    filename: str
+```
+
+See [`references/embed-functions-registry.md`](references/embed-functions-registry.md).
+
+### Multimodal "fat table" pattern
+
+```python
+import pyarrow as pa
+
+# Store images / audio / PDFs as BLOBs in the same row as the embedding
+schema = pa.schema([
+    pa.field("id", pa.int64()),
+    pa.field("filename", pa.string()),
+    pa.field("image_blob", pa.large_list(pa.uint8())),  # BLOB
+    pa.field("image_embedding", pa.list_(pa.float32(), 768)),  # CLIP
+    pa.field("description", pa.string()),
+    pa.field("tags", pa.list_(pa.string())),
+])
+
+table = db.create_table("multimodal", schema=schema)
+
+# Insert
+table.add([{
+    "id": 1,
+    "filename": "recipe.png",
+    "image_blob": open("recipe.png", "rb").read(),  # bytes
+    "image_embedding": clip_embed("recipe.png"),
+    "description": "Beef stew with root vegetables",
+    "tags": ["main", "irish"],
+}])
+
+# Range-read the BLOB only for top-K results (avoid full-row reads)
+results = table.search(query_vec).limit(10).to_pandas()
+for r in results.itertuples():
+    img = pa.ipc.open_stream(r.image_blob).read()  # or just use the bytes
+```
+
+For very large BLOBs (> 1 MB), prefer the "pointer strategy" — store
+the BLOB in S3/R2 and put the URL in the row.
+
+### Lance Namespace / Iceberg
+
+Expose a Lance table to Iceberg consumers (PyIceberg, DuckDB
+`iceberg_attach`):
+
+```python
+import lance.namespace
+
+# Connect to an Iceberg REST catalog (e.g. Lakekeeper, Polaris)
+ns = lance.namespace.connect(
+    "iceberg",
+    REST_URL="http://lakekeeper:8181/catalog",
+    S3_ENDPOINT="http://minio:9000",
+    S3_ACCESS_KEY_ID="...",
+    S3_SECRET_ACCESS_KEY="...",
+)
+
+# Register an existing Lance table as an Iceberg table
+ns.create_namespace("oideachais")
+ns.create_table("oideachais.leabharlann_books", metadata={"lance_uri": "s3://lance/leabharlann_books"})
+
+# Query from PyIceberg
+from pyiceberg.catalog import load_catalog
+catalog = load_catalog("oideachais", type="rest", uri="http://lakekeeper:8181/catalog")
+tbl = catalog.load_table("oideachais.leabharlann_books")
+df = tbl.scan().to_pandas()
+```
+
+### Ibis + DuckDB `lance_scan()`
+
+```python
+import duckdb
+
+con = duckdb.connect()
+con.execute("INSTALL lance; LOAD lance;")
+con.execute(
+    "CREATE VIEW books AS SELECT * FROM lance_scan('s3://lance/leabharlann_books')"
+)
+# Now SQL-federated queries over Lance from marimo notebooks:
+df = con.execute(
+    "SELECT filename, text FROM books WHERE subject = 'irish' LIMIT 10"
+).df()
+```
+
+### Geospatial + FTS
+
+```python
+# Compute distance with the built-in geo operator
+results = table.search("best fish and chips", query_type="hybrid")
+    .where("distance(lat, lon, 53.2707, -9.0568) < 5")  # within 5 km of Galway
+    .prefilter(False)  # post-filter (geo is non-selective)
+    .limit(10)
+    .to_pandas()
+```
+
+### `explain_plan` / `analyze_plan` / `drop_index`
+
+```python
+# Diagnose slow queries
+plan = table.search(query_vector).limit(10).explain_plan(verbose=True)
+print(plan)
+
+# Run the query with metrics
+metrics = table.search(query_vector).limit(10).analyze_plan()
+
+# Drop an index (e.g. before a bulk insert, then re-create)
+table.drop_index("vector_idx")
+# … bulk insert …
+table.create_index(metric="cosine", index_type="HNSW", m=20, ef_construction=150)
+```
+
 ## Best Practices
 
-1. **Use Float16 for vectors** - 50% storage savings
-2. **Store metadata with vectors** - Avoid joins
-3. **Pre-filter when possible** - Narrow search space
-4. **Compact regularly** - Merge fragments for performance
-5. **Batch inserts** - 1000-10000 rows at a time
+1. **Use Float16 for vectors** — 50% storage savings
+2. **Store metadata with vectors** — avoid joins
+3. **Pre-filter when the filter is selective** (> 1% of rows);
+   **post-filter** when the filter is non-selective
+4. **Use `refine_factor`** for high-accuracy queries
+5. **Compact regularly** — merge fragments for performance
+6. **Batch inserts** — 1000-10000 rows at a time
+7. **Drop indexes before bulk inserts > 50K rows** (HNSW rebuild is slow)
+8. **Use the embeddings registry** — never roll your own embedder
+9. **Use the multimodal "fat table"** for small BLOBs (< 1 MB);
+   use the "pointer strategy" (S3 + URL) for larger
+10. **Use `time-travel`** for model rollback, A/B testing, and audits
+11. **FTS tokenizer matters for multilingual corpora** — use
+    `default` (Unicode) for Irish, Welsh, etc.; `en_stem` for English
+12. **TS: use `search()`, not the deprecated `vectorSearch()`**
+13. **The KCG canonical embedding model is `BAAI/bge-m3`**
+    (1024-d, multilingual, 100+ languages including all 6
+    Celtic languages, MIT-licensed). Use it for any
+    multilingual RAG corpus. Cache the model weights at
+    `stedding/huggingface/hub/models--BAAI--bge-m3/`.
+14. **Reconciled model selection** (resolves the
+    `EMBEDDINGS.md` conflict): the
+    `MultiModelEmbedder` in `.agents/skills/embedding-pipeline/SKILL.md`
+    routes Irish (`ga`) to `GaBERT`
+    (`DCU-NLP/bert-base-irish-cased-v1`, 768-d) for
+    linguistic accuracy (séimhiú, urú, dialectal variation),
+    and everything else to `BGE-M3` (1024-d, multilingual).
+    Both stored in the same LanceDB table with a `model_name`
+    column.
 
 ## SQL Queries
 
@@ -325,10 +610,29 @@ db = lancedb.connect("./data")  # Local
 db = lancedb.connect("s3://bucket/path")  # S3
 ```
 
-**LanceDB Cloud:**
+**LanceDB Cloud (4 regions):**
 ```python
-db = lancedb.connect("db://my-database", api_key="...", region="us-east-1")
+# .env
+# LANCEDB_URI=db://my-database
+# LANCEDB_API_KEY=...
+
+db = lancedb.connect(
+    "db://my-database",
+    api_key=os.environ["LANCEDB_API_KEY"],
+    region="us-east-1",  # us-east-1, us-west-2, eu-west-1, ap-south-1
+)
 ```
+
+LanceDB Cloud features:
+- **Auto-compaction** — runs every 5 minutes (no manual `compact()`)
+- **Auto-reindexing** — re-creates the HNSW index on every 1k writes
+- **Serverless** — no instance management
+- **Multi-region** — pick the region closest to your data
+
+**For self-hosted Cloudflare R2 + Lance** (the KCG production target),
+use the rclone-sidecar Compose pattern (see
+`references/hosting-lancedb-docker-compose.md` or the deleted
+`docs/lance/lancedb.compose.yaml` for the upstream example).
 
 ## Troubleshooting
 

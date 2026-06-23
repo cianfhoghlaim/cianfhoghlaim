@@ -269,3 +269,25 @@ pip install "sqlmesh[duckdb]"
 - [`dagster`](.skills/dagster/SKILL.md) - Orchestration for SQLMesh
 - [`dlt`](.skills/dlt/SKILL.md) - Data loading into DuckDB
 - [`duckdb`](.skills/duckdb/SKILL.md) - DuckDB database
+
+## KCG integration
+
+The Cianfhoghlaim curriculum data pipeline involves dozens
+of SQL transformations: normalising exam paper metadata,
+aggregating grade distributions by subject/year, creating
+study path tables from prerequisite graphs, and computing
+RAGAS evaluation statistics. SQLMesh ensures these
+transformations are version-controlled, tested, and
+reproducible.
+
+- The **DuckDB virtual warehouse** means developers can test
+  transformations locally before deploying to MotherDuck
+- The **column-level lineage** provides an audit trail from
+  raw syllabus data to the final study recommendation query
+- The **celtic-data-engineering-patterns** OpenSpec change
+  documents the canonical SQLMesh setup with the
+  `CelticDagsterDbtTranslator` (the dbt-flavored variant of
+  the SQLMesh translator)
+- The `sqlmesh init -t dlt --dlt-pipeline <name> dialect` is
+  the canonical hand-off from the dlt skill (see
+  `.agents/skills/dlt/references/sqlmesh-init.md`)
