@@ -2,7 +2,7 @@
 # CROILAR-RENOVATE-PR PROCEDURE
 # =============================================================================
 # Opens a Renovate-style PR that updates pinned image tags in:
-#   - infrastructure/stacks/engineering/croilar-*/*.yaml
+#   - infrastructure/stacks/croilar-*/*.yaml
 #   - mise.toml
 #   - .github/workflows/*.yaml
 # Triggers a code review and CI run.

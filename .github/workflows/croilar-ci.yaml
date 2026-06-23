@@ -62,6 +62,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Validate croilar-postgres stack
-        run: docker compose -f infrastructure/stacks/storage/croilar-postgres/compose.yaml -f infrastructure/stacks/storage/croilar-postgres/sidecar.yaml --env-file infrastructure/stacks/storage/croilar-postgres/.env.example config --quiet
+        run: docker compose -f infrastructure/stacks/croilar-postgres/compose.yaml -f infrastructure/stacks/croilar-postgres/sidecar.yaml --env-file infrastructure/stacks/croilar-postgres/.env.example config --quiet
       - name: Validate croilar-hono-api stack
-        run: docker compose -f infrastructure/stacks/engineering/croilar-hono-api/compose.yaml -f infrastructure/stacks/engineering/croilar-hono-api/sidecar.yaml --env-file infrastructure/stacks/engineering/croilar-hono-api/.env.example config --quiet
+        run: docker compose -f infrastructure/stacks/croilar-hono-api/compose.yaml -f infrastructure/stacks/croilar-hono-api/sidecar.yaml --env-file infrastructure/stacks/croilar-hono-api/.env.example config --quiet

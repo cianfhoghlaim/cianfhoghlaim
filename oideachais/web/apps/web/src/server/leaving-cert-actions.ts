@@ -2,7 +2,7 @@
  * CopilotKit M3 chat agent for Leaving Certificate per-subject pages.
  *
  * Powered by MiniMax M3 via the LiteLLM gateway (already wired at
- * infrastructure/stacks/engineering/litellm/config/config.yaml § opencode-go/minimax-m3).
+ * infrastructure/stacks/litellm/config/config.yaml § opencode-go/minimax-m3).
  *
  * The agent has 6 tools that map to the per-subject data hosted in
  * MotherDuck (production) or seeded data (dev/fallback).

@@ -251,4 +251,4 @@ infrastructure/secrets/lego-certs/.env-cert-renewal
 croilar/.cache/
 croilar/apps/portal/public/wasm/
 infrastructure/secrets/lego-certs/account.json
-infrastructure/stacks/infrastructure/pangolin/config
+infrastructure/stacks/pangolin/config

@@ -111,7 +111,7 @@ When a change introduces a new capability (not a MODIFIED of an existing one), f
 
 ## Adding a New Docker Compose Stack
 
-1. Create the directory: `infrastructure/stacks/<category>/<name>/`
+1. Create the directory: `infrastructure/stacks/<name>/`
 2. Add the 6 GOLD_STANDARD files: `compose.yaml`, `sidecar.yaml`, `secrets.env`, `pangolin.yaml`, `blueprint.yaml`, `.env.example`
 3. Use `pangolin.private-resources.<name>.*` (6-label pattern) — see `.agents/skills/stack-ops/SKILL.md`
 4. Add a Komodo procedure: `infrastructure/komodo/procedures/<name>-*.toml`

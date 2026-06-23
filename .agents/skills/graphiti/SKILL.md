@@ -49,7 +49,7 @@ Activate when users need:
 
 | Component | Path |
 |-----------|------|
-| Stack Config | `infrastructure/stacks/machine_learning/graphiti/` |
+| Stack Config | `infrastructure/stacks/graphiti/` |
 | Agent integration | `meaisínfhoghlaim/agents/` |
 | CocoIndex flow | `oideachais/cocoindex_flows/learning_outcome_graph.py` |
 | Cognee (primary) | `oideachais/cognee_integration/` |

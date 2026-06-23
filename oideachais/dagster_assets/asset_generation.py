@@ -17,7 +17,7 @@ Upstream:
 
 Reference:
   - baml_src/image_generation.baml
-  - infrastructure/stacks/engineering/litellm/config/config.yaml (image routes)
+  - infrastructure/stacks/litellm/config/config.yaml (image routes)
   - docs/meaisínfhoghlaim/FIBO/  (FIBO collection)
 """
 

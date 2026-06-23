@@ -22,7 +22,7 @@
 | 8 sub-packages | Declared in `pyproject.toml [tool.hatch.build.targets.wheel].packages`: `agents`, `ocr`, `language`, `pipelines`, `alignment`, `evaluation`, `quality`, `catalog`, `scripts`, `services` (10 in fact, including `services` and `scripts`) |
 | Celtic-language subdirs | 6: `brezhoneg/`, `cymraeg/`, `gaeilge/`, `gaelg/`, `gaidhlig/`, `kernowek/` — most are placeholders |
 | Frameworks | `litellm`, `baml-py`, `anthropic`, `openai`, `agno>=2.0.0`, `google-adk`, `dlt[duckdb,ducklake,s3]`, `duckdb`, `lancedb`, `langfuse`, `cognee`, `ragas`, `datasets`, `transformers`, `torch`, `sentence-transformers`, `accelerate`, `pytesseract`, `pillow`, `mlflow>=2.18.0` |
-| Container coupling | `infrastructure/komodo/stacks/meaisínfhoghlaim-bunchloch.toml` exists; no matching `infrastructure/stacks/engineering/meaisinfhoghlaim/`. The Komodo stack is the deployment target, not a per-service `stacks/engineering/` stack. |
+| Container coupling | `infrastructure/komodo/stacks/meaisínfhoghlaim-bunchloch.toml` exists; no matching `infrastructure/stacks/meaisinfhoghlaim/`. The Komodo stack is the deployment target, not a per-service `stacks/engineering/` stack. |
 
 ## Known issues (2026-06-15)
 

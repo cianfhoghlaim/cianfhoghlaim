@@ -20,7 +20,7 @@ The change is multi-pronged:
 
 - Move `stedding/dev/cianfhoghlaim copy/sruth/aleyum/*` → top-level `croilar/`
 - Delete the leftover backup copies in `stedding/dev/cianfhoghlaim_backup/stedding/flows/aleyum/`, `stedding/dev/flows/aleyum/`, `stedding/flows/aleyum/`
-- Repoint the `aleyum-agentos` build context in `infrastructure/stacks/storage/agent-os/compose.yaml` to the new `croilar/agent_os/`
+- Repoint the `aleyum-agentos` build context in `infrastructure/stacks/agent-os/compose.yaml` to the new `croilar/agent_os/`
 - Update all `.infisical.env` references from `aleyum/*` to `croilar/*`
 
 ### 2. New `croilar/` subproject (top-level)

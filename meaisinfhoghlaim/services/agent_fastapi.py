@@ -9,8 +9,8 @@ Agents: root_agent, curriculum_agent, translation_agent, geospatial_agent,
 Each agent is loaded lazily and exposes a /agent/{name}/chat SSE endpoint
 for AG-UI streaming.
 
-Requires: infrastructure/stacks/machine_learning/risingwave/ (port 4566)
-Requires: infrastructure/stacks/engineering/litellm (port 4000)
+Requires: infrastructure/stacks/risingwave/ (port 4566)
+Requires: infrastructure/stacks/litellm (port 4000)
 """
 from fastapi import FastAPI
 app = FastAPI(title="meaisínfhoghlaim agents", version="0.1.0")

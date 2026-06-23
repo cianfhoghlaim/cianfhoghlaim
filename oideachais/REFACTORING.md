@@ -51,10 +51,10 @@ This file is the canonical refactor backlog for the `oideachais/` data platform.
 **Status**: `backlog`
 **Tracks**: queued openspec change `lancedb-blob-storage-leabharlann` (to be opened)
 **Effort**: ~1 week
-**Why**: The `infrastructure/stacks/machine_learning/lancedb/compose.yaml:44-75` already has an `rclone` FUSE mount profile for S3-backed LanceDB blob storage. Nothing in `oideachais/` uses it. The 117 Zotero PDFs and 64 Takeout docx files are not stored in blob form anywhere.
+**Why**: The `infrastructure/stacks/lancedb/compose.yaml:44-75` already has an `rclone` FUSE mount profile for S3-backed LanceDB blob storage. Nothing in `oideachais/` uses it. The 117 Zotero PDFs and 64 Takeout docx files are not stored in blob form anywhere.
 
 **What it lands**:
-- New compose file `infrastructure/stacks/machine_learning/lancedb/compose.leabharlann.yaml` that extends the base `lancedb` stack with the `s3` profile enabled, mounting the RCLONE volume to `/data/s3` and pointing the LanceDB viewer at the local mount.
+- New compose file `infrastructure/stacks/lancedb/compose.leabharlann.yaml` that extends the base `lancedb` stack with the `s3` profile enabled, mounting the RCLONE volume to `/data/s3` and pointing the LanceDB viewer at the local mount.
 - New Komodo procedure `infrastructure/komodo/procedures/leabharlann-lancedb-blob-deploy.toml` that deploys the lakehouse + `lancedb-leabharlann` stack + Dagster `oideachais_cocoindex_leabharlann_blob_update` asset.
 - `oideachais/dlt_utils/destinations.py:118` updated to support `LANCE_DB_URI_BLOB` (pointing at the local FUSE mount) alongside the existing `LANCE_DB_URI_REST`.
 - A new Dagster asset `oideachais_cocoindex_leabharlann_blob_update` that uses `LANCEDB_URI=/data/s3/leabharlann.ldb` instead of the REST API.

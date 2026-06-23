@@ -22,5 +22,5 @@ name = "regenerate-glance"
 [[procedure.config.stages.executions]]
 execution = { type = "RunCommand", params = {
   command = "bash"
-  args = ["-c", "cd /etc/komodo/sruth/croilar && bun run croilar/scripts/regenerate-glance-config.ts && docker compose -f /etc/komodo/sruth/infrastructure/stacks/infrastructure/glance/compose.yaml restart glance"]
+  args = ["-c", "cd /etc/komodo/sruth/croilar && bun run croilar/scripts/regenerate-glance-config.ts && docker compose -f /etc/komodo/sruth/infrastructure/stacks/glance/compose.yaml restart glance"]
 } }

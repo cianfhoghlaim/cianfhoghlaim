@@ -15,7 +15,7 @@ Each pipeline integrates:
 - LanceDB Cloud + local lakehouse
 - **RisingWave** for streaming (sources, sinks, materialized views, Iceberg)
   — Replaces Confluent Kafka per the RisingWave refactor. See
-  `infrastructure/stacks/machine_learning/risingwave/` for the stack
+  `infrastructure/stacks/risingwave/` for the stack
   and `docs/data_engineering/risingwave-*.md` for the patterns.
 - MLflow for experiment tracking
 """

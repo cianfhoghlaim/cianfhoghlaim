@@ -218,7 +218,7 @@ cua (computer-use agent)
 
 - `cookie-sync/package.json` pins `patchright-core@1.58.2`
   via `@browserbasehq/stagehand`
-- The `infrastructure/stacks/engineering/stagehand/` stack
+- The `infrastructure/stacks/stagehand/` stack
   provides a Cloudflare-Workers + patchright + browserbase
   fallback chain
 - For one-off Cloudflare challenges, prefer

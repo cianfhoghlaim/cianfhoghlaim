@@ -1,13 +1,13 @@
 # Infrastructure GOLD STANDARD
 
 The 6-file template that every Docker Compose stack under
-`infrastructure/stacks/<category>/<name>/` SHALL follow. Use this as the
+`infrastructure/stacks/<name>/` SHALL follow. Use this as the
 checklist when adding a new stack, and the audit reference when running
 `bun run validate-stacks` (the `stack-doctor` turbo task).
 
 ## Why This Standard Exists
 
-The 74 stacks in this monorepo were built by multiple agents over
+The 94 stacks in this monorepo were built by multiple agents over
 ~2 years. Without a uniform pattern:
 
 - Komodo can't reliably sync them (different file layouts)
@@ -35,7 +35,7 @@ Plus a `README.md` (recommended but not required) for human readers.
 ## 1. `compose.yaml` — Service Definitions
 
 ```yaml
-# Exemplar: infrastructure/stacks/storage/garage/compose.yaml
+# Exemplar: infrastructure/stacks/garage/compose.yaml
 services:
   garage:
     image: dxflrs/garage:v1.0.1
@@ -86,7 +86,7 @@ networks:
 ## 2. `pangolin.yaml` — Traefik Routing
 
 ```yaml
-# Exemplar: infrastructure/stacks/engineering/litellm/pangolin.yaml
+# Exemplar: infrastructure/stacks/litellm/pangolin.yaml
 http:
   routers:
     litellm:
@@ -116,7 +116,7 @@ services) can omit this file or have an empty stub.
 ## 3. `sidecar.yaml` — Locket Secret Injection
 
 ```yaml
-# Exemplar: infrastructure/stacks/engineering/litellm/sidecar.yaml
+# Exemplar: infrastructure/stacks/litellm/sidecar.yaml
 services:
   locket:
     image: ghcr.io/cianfhoghlaim/locket:latest
@@ -151,7 +151,7 @@ networks:
 ## 4. `secrets.env` — Infisical References
 
 ```bash
-# Exemplar: infrastructure/stacks/engineering/litellm/secrets.env
+# Exemplar: infrastructure/stacks/litellm/secrets.env
 # COMMITTED: yes. PLAINTEXT: NEVER. Use Infisical URI references.
 
 LITELLM_MASTER_KEY=infisical://dev-baile/litellm/master_key
@@ -173,18 +173,17 @@ DATABASE_URL=infisical://dev-baile/litellm/postgres_url
 ## 5. `blueprint.yaml` — Komodo Resource Sync
 
 ```yaml
-# Exemplar: infrastructure/stacks/engineering/litellm/blueprint.yaml
+# Exemplar: infrastructure/stacks/litellm/blueprint.yaml
 name: litellm
 description: "LiteLLM gateway — LLM proxy with Postgres + Prometheus"
 type: stack
-run_directory: infrastructure/stacks/engineering/litellm
+run_directory: infrastructure/stacks/litellm
 files:
   - compose.yaml
   - sidecar.yaml
 schedule:
   enabled: false
 metadata:
-  category: engineering
   ports: [4000, 9090, 5432]
   depends_on: [postgres]
 ```
@@ -194,14 +193,13 @@ metadata:
 - `type: stack` (vs `type: procedure` or `type: action`)
 - `run_directory:` is the relative path from the repo root
 - `files:` lists the compose + sidecar YAML
-- `metadata.category:` matches the parent directory
 - `metadata.ports:` lists exposed ports for documentation
 - `metadata.depends_on:` lists other stacks (if any) for deployment ordering
 
 ## 6. `.env.example` — Local-Dev Placeholders
 
 ```bash
-# Exemplar: infrastructure/stacks/engineering/litellm/.env.example
+# Exemplar: infrastructure/stacks/litellm/.env.example
 # COMMITTED: yes. This file is for local development only.
 # For production, Locket resolves secrets via Infisical.
 
@@ -220,7 +218,7 @@ DATABASE_URL=postgresql://litellm:litellm@postgres:5432/litellm
 ```bash
 # 1. Use the stack-ops skill to scaffold the 6 files
 #    (See .agents/skills/stack-ops/SKILL.md)
-bun run stack:scaffold --category machine_learning --name my-new-service
+bun run stack:scaffold --name my-new-service
 
 # 2. Edit compose.yaml to define your service
 # 3. Edit pangolin.yaml to add the routing rule (if web-facing)
@@ -238,11 +236,11 @@ bun run validate-stacks
 ## Validation
 
 ```bash
-# Full audit (all 74 stacks)
+# Full audit (all 94 stacks)
 bun run validate-stacks
 
 # Single stack
-bun run stack-doctor.sh infrastructure/stacks/<category>/<name>/
+bun run stack-doctor.sh infrastructure/stacks/<name>/
 ```
 
 The `stack-doctor` checks:
@@ -265,10 +263,10 @@ completeness:
 
 | Stack | Why it's a good exemplar |
 |:--|:--|
-| `infrastructure/stacks/storage/garage/` | Simplest possible stack (one service, S3 API, no web UI) |
-| `infrastructure/stacks/engineering/litellm/` | 3-service stack (gateway + postgres + prometheus), web-facing |
-| `infrastructure/stacks/machine_learning/cognee/` | 2-service stack (cognee + postgres) with complex env |
-| `infrastructure/stacks/infrastructure/pangolin/` | The most complex stack — Traefik + WireGuard + Pocket ID + CrowdSec |
+| `infrastructure/stacks/garage/` | Simplest possible stack (one service, S3 API, no web UI) |
+| `infrastructure/stacks/litellm/` | 3-service stack (gateway + postgres + prometheus), web-facing |
+| `infrastructure/stacks/cognee/` | 2-service stack (cognee + postgres) with complex env |
+| `infrastructure/stacks/pangolin/` | The most complex stack — Traefik + WireGuard + Pocket ID + CrowdSec |
 
 When in doubt, copy one of these and adapt.
 
@@ -276,7 +274,7 @@ When in doubt, copy one of these and adapt.
 
 - `.agents/skills/stack-ops/SKILL.md` — operational skill for working with stacks
 - `infrastructure/AGENTS.md` — agent instructions for the infrastructure layer
-- `infrastructure/stacks/README.md` — the 74-stack categorised directory
+- `infrastructure/stacks/README.md` — the 94-stack flat directory
 - `infrastructure/README.md` — 10-step quickstart bring-up
 - `infrastructure/komodo/procedures/` — Komodo GitOps procedures
 - `infrastructure/dagger/` — Dagger CI/CD modules

@@ -231,7 +231,7 @@ Each SBT has:
 
 ## 9. LiteLLM gateway aliases (re-pointed for the hackathon)
 
-The existing `infrastructure/stacks/engineering/litellm/config/config.yaml` aliases are re-pointed for the hackathon to use HF Inference as the primary backend (no local LiteLLM gateway). The aliases are kept for documentation purposes.
+The existing `infrastructure/stacks/litellm/config/config.yaml` aliases are re-pointed for the hackathon to use HF Inference as the primary backend (no local LiteLLM gateway). The aliases are kept for documentation purposes.
 
 | Alias | Old primary (local) | New primary (HF Inference) | Use |
 |:--|:--|:--|:--|
@@ -248,7 +248,7 @@ The existing `infrastructure/stacks/engineering/litellm/config/config.yaml` alia
 | `whisper-irish` | `celtic/asr/wav2vec2-irish` | `openai/whisper-large-v3` (HF Inference) | Irish ASR (Space 2) |
 | `chatterbox` | `ResembleAI/chatterbox` | `ResembleAI/chatterbox` (HF Inference) | TTS (Space 2) |
 
-**Hackathon config file:** `infrastructure/stacks/engineering/litellm/config_hackathon.yaml` — frozen snapshot for documentation, not deployed.
+**Hackathon config file:** `infrastructure/stacks/litellm/config_hackathon.yaml` — frozen snapshot for documentation, not deployed.
 
 ---
 

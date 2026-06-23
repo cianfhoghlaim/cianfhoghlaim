@@ -252,7 +252,7 @@ pipeline = dlt.pipeline(
 | **Size limit** | None (local) | 10 TB / month (R2 free tier) |
 
 The dev Garage container is part of the
-`infrastructure/stacks/storage/garage/` Compose stack; runs
+`infrastructure/stacks/garage/` Compose stack; runs
 on port 3900.
 
 ### DuckLakeCredentials in dlt 1.x

@@ -448,10 +448,13 @@ pangolin.oidc:
 
 ### CrowdSec (anti-bruteforce)
 
-The KCG Pangolin instance fronts CrowdSec for anti-bruteforce:
+The KCG Pangolin instance fronts CrowdSec for anti-bruteforce.
+CrowdSec runs as a service **inside the Pangolin stack** at
+`infrastructure/stacks/pangolin/compose.yaml`, not as a
+standalone stack:
 
 ```yaml
-# infrastructure/stacks/infrastructure/crowdsec/compose.yaml
+# infrastructure/stacks/pangolin/compose.yaml  (the crowdsec service)
 services:
   crowdsec:
     image: crowdsecurity/crowdsec:latest
@@ -467,7 +470,7 @@ Every Compose stack that exposes a web route uses the
 canonical 6-label Pangolin resource:
 
 ```yaml
-# infrastructure/stacks/<surface>/<name>/pangolin.yaml
+# infrastructure/stacks/<name>/pangolin.yaml
 pangolin.private-resources.<name>:
   - name: <name>
     mode: http

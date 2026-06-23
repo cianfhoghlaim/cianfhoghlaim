@@ -1,0 +1,228 @@
+# =============================================================================
+# Oideachais — Celtic Education Lakehouse Engine (MERGED canonical)
+# =============================================================================
+# This is the canonical oideachais deployment stack.
+#
+# Merged from the prior:
+#   - /oideachais/compose.yaml         (source-of-truth app Dockerfiles)
+#   - /oideachais/sidecar.yaml         (upstream locket Infisical)
+#   - /oideachais/pangolin.yaml        (Pocket ID + API key + VPN-only)
+#   - /oideachais/blueprint.yaml       (stale Hetzner routing — DELETED)
+#   - /infrastructure/stacks/oideachais/compose.yaml (pinned 0.2.0)
+#
+# Architecture:
+#   bunchloch (MacBook M4 Max) hosts the three app containers:
+#     dagster   (Dagster webserver, :3335 host → :3000 container)
+#     api       (FastAPI AG-UI streaming, :8000)
+#     frontend  (TanStack Start dev server, :3000 host → :3000 container)
+#   Networks:
+#     cianfhoghlaim       — primary dev/control plane
+#     lakehouse_lakehouse — Garage S3, Postgres, Lakekeeper, Lance NS, LiteLLM
+#   Secrets:
+#     Locket sidecar reads ./secrets.env (Infisical URI refs) and writes
+#     resolved values to the shared tmpfs volume.
+#
+# Usage:
+#   Local dev:    docker compose -f compose.yaml -f compose.dev.yaml up -d
+#   Production:   docker compose -f compose.yaml -f sidecar.yaml up -d
+#   With Pangolin: docker compose -f compose.yaml -f sidecar.yaml \
+#                     -f pangolin.yaml up -d
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # DAGSTER - Pipeline Orchestration (webserver + daemon)
+  # ---------------------------------------------------------------------------
+  dagster:
+    # image: pinned. The `build:` block is the canonical source of truth
+    # (build context is the repo root because the oideachais uv workspace
+    # depends on sibling members sruth-browser/codeolas declared at the root
+    # pyproject.toml). `pull_policy: never` forces compose to use the
+    # existing tag rather than rebuild on every `up`. To rebuild:
+    #   docker compose build dagster
+    image: oideachais-dev-dagster:latest
+    pull_policy: never
+    build:
+      context: ../../../..
+      dockerfile: oideachais/Dockerfile.dagster
+    container_name: cianfhoghlaim-oideachais-dagster
+    restart: unless-stopped
+    # Override the image CMD: the pre-built image has the oideachais root
+    # at /app/ and the actual venv with dagster at /app/oideachais/.venv/.
+    # Run from there so `uv run` finds the venv.
+    working_dir: /app/oideachais
+    command: ["uv", "run", "dagster", "dev", "-h", "0.0.0.0", "-p", "3000", "-w", "workspace.yaml"]
+    ports:
+      - "${DAGSTER_PORT:-3335}:3000"
+    environment:
+      DAGSTER_HOME: /opt/dagster/home
+      DAGSTER_DEPLOYMENT: ${DAGSTER_DEPLOYMENT:-development}
+      USE_DUCKLAKE: "${USE_DUCKLAKE:-true}"
+      DUCKLAKE_POSTGRES_HOST: ${DUCKLAKE_POSTGRES_HOST:-lakehouse-postgres}
+      DUCKLAKE_POSTGRES_PORT: ${DUCKLAKE_POSTGRES_PORT:-5432}
+      DUCKLAKE_POSTGRES_USER: ${DUCKLAKE_POSTGRES_USER:-lakekeeper}
+      DUCKLAKE_POSTGRES_PASSWORD: ${DUCKLAKE_POSTGRES_PASSWORD:-devpassword}
+      AWS_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:-${R2_ACCESS_KEY:-}}
+      AWS_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:-${R2_SECRET_KEY:-}}
+      AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-http://lakehouse-garage:3900}
+      AWS_REGION: ${AWS_REGION:-garage}
+      FIRECRAWL_API_KEY: ${FIRECRAWL_API_KEY:-}
+      USE_LOCAL_SCRAPES: ${USE_LOCAL_SCRAPES:-true}
+      DAGSTER_PORT: "3000"
+    volumes:
+      - dagster_home:/opt/dagster/home
+      - dagster_storage:/opt/dagster/storage
+      # Persistent venv so `uv sync` (downloading torch, lancedb, etc.)
+      # doesn't repeat on every container recreate.
+      - dagster_venv:/app/oideachais/.venv
+      - ../../../../oideachais/dagster.yaml:/opt/dagster/home/dagster.yaml:ro
+      - ../../../../stedding:/stedding:ro
+      # Live-bind the entire oideachais source tree so leaving_cert assets
+      # and any new code added to the host are picked up on Dagster restart.
+      # The container runs from /app/oideachais (uv workspace member).
+      # Read-write because Dagster writes session/state files into the
+      # source tree (e.g. storage/sessions) at startup.
+      - ../../../../oideachais:/app/oideachais:rw
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request, sys; sys.exit(0 if urllib.request.urlopen('http://localhost:3000/server_info', timeout=3).status == 200 else 1)\""]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+    deploy:
+      resources:
+        limits:
+          cpus: "4"
+          memory: 8G
+
+  # ---------------------------------------------------------------------------
+  # API - FastAPI AG-UI Streaming Backend
+  # ---------------------------------------------------------------------------
+  api:
+    # image: pinned. See dagster block for build/use rationale.
+    image: oideachais-dev-api:latest
+    pull_policy: never
+    build:
+      context: ../../../..
+      dockerfile: oideachais/Dockerfile
+    container_name: cianfhoghlaim-oideachais-api
+    restart: unless-stopped
+    # The api package is at /app/oideachais/api/ in the image (moved from
+    # data_platform/api/ on 2026-06-11). The Dockerfile's CMD already uses
+    # --app-dir /app/oideachais; no override needed here.
+    ports:
+      - "${API_PORT:-8000}:8000"
+    # Run as root in the container so the volume mount at
+    # /app/oideachais/storage/data can create its mountpoint in a writable
+    # rootfs layer (appuser can't create dirs in the read-only image layer).
+    # The Dockerfile's USER appuser directive is overridden here.
+    user: "0:0"
+    volumes:
+      # The api/ package was moved up to oideachais/api/ on 2026-06-11.
+      # Mount the parent so the api can hot-reload code via docker compose
+      # restart; the previous data_platform/ path no longer exists.
+      - ../../../../oideachais:/app/oideachais:ro
+      # Mount the data volume at a NEW path that doesn't exist in the
+      # image (the OLD path /app/oideachais/storage/data was baked into
+      # the image's lower layer; the volume mount then fails with
+      # 'read-only file system' when trying to create the mountpoint).
+      # We symlink the new path to the old one in the CMD below.
+      - api_data:/app/storage/data
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "8000"
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      DAGSTER_DEPLOYMENT: ${DAGSTER_DEPLOYMENT:-development}
+      USE_DUCKLAKE: "${USE_DUCKLAKE:-true}"
+      MOTHERDUCK_ENABLED: "${MOTHERDUCK_ENABLED:-false}"
+      DUCKDB_PATH: ${DUCKDB_PATH:-/app/oideachais/data_platform/.dlt/curriculum_unified/curriculum_unified.duckdb}
+      LANCEDB_URI: ${LANCEDB_URI:-rest://lakehouse-lance-namespace:8182}
+      LANCEDB_API_KEY: ${LANCEDB_API_KEY:-}
+      LLM_API_KEY: ${LITELLM_MASTER_KEY:-${LLM_API_KEY:-}}
+      LLM_PROVIDER: ${LLM_PROVIDER:-litellm}
+      LLM_BASE_URL: ${LLM_BASE_URL:-http://litellm:4000}
+      LLM_MODEL: ${LLM_MODEL:-gemini/gemini-2.0-flash}
+      HF_HOME: /stedding/huggingface
+      HF_HUB_CACHE: /stedding/huggingface/hub
+      HF_TOKEN: ${HF_TOKEN:-${HUGGINGFACE_HUB_TOKEN:-}}
+      HUGGINGFACE_HUB_TOKEN: ${HUGGINGFACE_HUB_TOKEN:-${HF_TOKEN:-}}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request, sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health', timeout=3).status == 200 else 1)\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 4G
+
+  # ---------------------------------------------------------------------------
+  # FRONTEND - TanStack Start Web Application
+  # ---------------------------------------------------------------------------
+  frontend:
+    # image: pinned. Build context is the repo root because apps/web imports
+    # @croilar/ui from the sibling croilar monorepo. The Dockerfile lives
+    # at oideachais/web/Dockerfile.
+    image: oideachais-dev-frontend:latest
+    pull_policy: never
+    build:
+      context: ../../../..
+      dockerfile: oideachais/web/Dockerfile
+    container_name: cianfhoghlaim-oideachais-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: ${ENVIRONMENT:-development}
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+      VITE_API_PUBLIC_URL: ${VITE_API_PUBLIC_URL:-http://localhost:8000}
+      VITE_CONVEX_URL: ${VITE_CONVEX_URL:-http://localhost:3210}
+      VITE_BETTER_AUTH_URL: ${VITE_BETTER_AUTH_URL:-http://localhost:3002}
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3000/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - cianfhoghlaim
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 1G
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  dagster_home:
+  dagster_storage:
+  dagster_venv:
+  api_data:
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+# cianfhoghlaim: dev/control plane (shared with other engineering stacks)
+# lakehouse_lakehouse: external bridge to Garage S3, Postgres, Lakekeeper,
+#                      Lance Namespace, and LiteLLM (when on lakehouse).
+networks:
+  cianfhoghlaim:
+    external: true
+    name: cianfhoghlaim
+  lakehouse:
+    external: true
+    name: lakehouse_lakehouse

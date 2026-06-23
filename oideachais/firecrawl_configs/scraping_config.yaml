@@ -479,7 +479,7 @@ output:
 # LITELLM MODEL CONFIGURATION
 # =============================================================================
 # Models are accessed via LiteLLM gateway at llm.cianfhoghlaim.ie
-# See infrastructure/stacks/machine_learning/llama-stack/litellm/litellm_config.yaml
+# See infrastructure/stacks/llama-stack/litellm/litellm_config.yaml
 # =============================================================================
 
 litellm:

@@ -3,7 +3,7 @@
 ## Phase 1: Infrastructure & Configuration
 
 - [ ] Add MiniMax M3 model entry to `oideachais/data_platform/dlt_utils/foinse/litellm_config.yaml`
-- [ ] Create `cianfhoghlaim-leaving-cert` R2 bucket (provisioned via the existing R2 binding in `infrastructure/stacks/infrastructure/r2/`)
+- [ ] Create `cianfhoghlaim-leaving-cert` R2 bucket (provisioned via the existing R2 binding in `infrastructure/stacks/r2/`)
 - [ ] Create `cianfhoghlaim_leaving_cert` MotherDuck database for public-read aggregate tables
 - [ ] Add `leaving-cert-pipeline.yaml` GitHub Action workflow for daily build
 - [ ] Add `leaving-cert-pipeline.yaml` Forgejo workflow mirror

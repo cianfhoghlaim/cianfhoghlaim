@@ -21,7 +21,7 @@ how to combine:
 | Dagster code-location | `croilar/definitions.py` (root-level, NOT under `dagster_assets/`). Loads in **both** pytest and production as of 2026-06-15 (issue #17 closed). 25 assets wired. |
 | Test pass rate | 1 / 1 dagster_defs test passes; 3 pre-existing failures in `tests/test_smoke.py` and `tests/dlt_assets/test_spotify_soundcloud_labels.py` (see Known issues #3) |
 | Pipelines | 12 DLT pipelines under `croilar/pipelines/` (artwork, cv, fs_author, github, labels, linkedin, researchgate, shared, soundcloud, spotify, teaching) |
-| 5 user-named stacks | Fully built and wired: `infrastructure/stacks/engineering/croilar-{convex, dagster, hono-api, marimo, web}/` |
+| 5 user-named stacks | Fully built and wired: `infrastructure/stacks/croilar-{convex, dagster, hono-api, marimo, web}/` |
 | Dagster helpers | `_shared/{agents,config,database,embeddings,mcp,observability}/` — **packaging fixed** (issue #17 closed); all subdirs now importable as `croilar._shared.X` |
 
 ## Known issues (2026-06-15)
@@ -172,9 +172,9 @@ only re-skin the `personas/` registry.
 ### 2.5 Infrastructure
 
 - **3 new Docker Compose stacks** in the GOLD_STANDARD 6-file pattern:
-  - `infrastructure/stacks/storage/croilar-postgres/`
-  - `infrastructure/stacks/engineering/croilar-hono-api/`
-  - `infrastructure/stacks/engineering/croilar-convex/`
+  - `infrastructure/stacks/croilar-postgres/`
+  - `infrastructure/stacks/croilar-hono-api/`
+  - `infrastructure/stacks/croilar-convex/`
 - **8 Komodo procedures** under `infrastructure/komodo/procedures/`:
   `croilar-stack-up`, `-down`, `-health`, `-image-rebuild`,
   `-image-publish`, `-renovate-pr`, `-backup`, `-gitops-fullstack`.
@@ -737,13 +737,13 @@ cp croilar/hono-api/.env.example croilar/hono-api/.env
 bun run secrets:init   # infisical → .env hydration
 
 # bring up the local data services
-docker compose -f infrastructure/stacks/storage/croilar-postgres/compose.yaml \
-               -f infrastructure/stacks/storage/croilar-postgres/sidecar.yaml \
-               --env-file infrastructure/stacks/storage/croilar-postgres/.env.example \
+docker compose -f infrastructure/stacks/croilar-postgres/compose.yaml \
+               -f infrastructure/stacks/croilar-postgres/sidecar.yaml \
+               --env-file infrastructure/stacks/croilar-postgres/.env.example \
                up -d
-docker compose -f infrastructure/stacks/engineering/croilar-hono-api/compose.yaml \
-               -f infrastructure/stacks/engineering/croilar-hono-api/sidecar.yaml \
-               --env-file infrastructure/stacks/engineering/croilar-hono-api/.env.example \
+docker compose -f infrastructure/stacks/croilar-hono-api/compose.yaml \
+               -f infrastructure/stacks/croilar-hono-api/sidecar.yaml \
+               --env-file infrastructure/stacks/croilar-hono-api/.env.example \
                up -d
 
 # generate Drizzle migrations + apply

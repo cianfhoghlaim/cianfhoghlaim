@@ -2,7 +2,7 @@
 Oideachais · Lakehouse Inspector
 
 Cross-flow operator console for the unified lakehouse at
-`infrastructure/stacks/storage/lakehouse/`. Brings together the four services
+`infrastructure/stacks/lakehouse/`. Brings together the four services
 (Garage, Lakekeeper, Lance Namespace, DuckLake) and the cross-flow search
 client so you can verify stack health and run ad-hoc queries without leaving
 the notebook.
@@ -37,7 +37,7 @@ def _():
     import boto3
     import marimo as mo
 
-    _platform = os.path.abspath(os.path.join(os.getcwd(), "infrastructure/stacks/storage/lakehouse"))
+    _platform = os.path.abspath(os.path.join(os.getcwd(), "infrastructure/stacks/lakehouse"))
     if _platform not in sys.path:
         sys.path.insert(0, _platform)
 
@@ -45,7 +45,7 @@ def _():
         """
         # Lakehouse Inspector
 
-        Cross-flow operator console for the `infrastructure/stacks/storage/lakehouse/`
+        Cross-flow operator console for the `infrastructure/stacks/lakehouse/`
         stack: Garage S3, Lakekeeper Iceberg catalog, Lance Namespace sidecar,
         DuckLake tables.
 
@@ -278,7 +278,7 @@ def _(mo, sys):
         cross_ui = mo.callout(
             mo.md(
                 "**Cross-flow client not importable.** "
-                "Run from the repo root, or set `PYTHONPATH=infrastructure/stacks/storage/lakehouse`."
+                "Run from the repo root, or set `PYTHONPATH=infrastructure/stacks/lakehouse`."
             ),
             kind="warn",
         )

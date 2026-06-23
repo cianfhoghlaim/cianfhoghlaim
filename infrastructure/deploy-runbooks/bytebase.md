@@ -19,7 +19,7 @@ ssh -o ConnectTimeout=5 -o BatchMode=yes arm1-oci 'true' \
   || { echo "ERROR: cannot reach arm1-oci"; exit 2; }
 
 # 0.2 — Verify the bytebase-config is present
-[ -f infrastructure/stacks/engineering/bytebase/bytebase-config.yaml ] \
+[ -f infrastructure/stacks/bytebase/bytebase-config.yaml ] \
   || { echo "ERROR: bytebase-config.yaml missing; this file holds the workspace policies + approval rules"; exit 3; }
 
 # 0.3 — Verify the secrets are in the vault
@@ -40,7 +40,7 @@ ssh arm1-oci 'mkdir -p /etc/komodo/storage/bytebase'
 
 # 1.2 — rsync the 5 GOLD_STANDARD files (missing .env.example — see Phase C)
 rsync -avz --delete \
-  infrastructure/stacks/engineering/bytebase/{compose.yaml,sidecar.yaml,secrets.env,blueprint.yaml,bytebase-config.yaml,README.md} \
+  infrastructure/stacks/bytebase/{compose.yaml,sidecar.yaml,secrets.env,blueprint.yaml,bytebase-config.yaml,README.md} \
   arm1-oci:/etc/komodo/storage/bytebase/
 
 # 1.3 — Create the .env.example (Phase C left this as a known gap)

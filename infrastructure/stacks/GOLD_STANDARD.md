@@ -1,6 +1,6 @@
 # Locket / Pangolin / Komodo - Deployment Gold Standard
 
-When converting a repository to our standard deployment format, generate the following 5 files in `infrastructure/stacks/<category>/<repo_name>/`:
+When converting a repository to our standard deployment format, generate the following 5 files in `infrastructure/stacks/<repo_name>/`:
 
 ## 1. compose.yaml
 

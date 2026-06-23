@@ -87,7 +87,7 @@ export default {
 
 ## KCG examples
 
-- `infrastructure/stacks/engineering/marimo/` — the canonical
+- `infrastructure/stacks/marimo/` — the canonical
   KCG Cloudflare Workers + marimo stack
 - `oideachais/saoi/notebooks/` — example notebooks (curriculum,
   leabharlann, etc.) that follow this pattern
@@ -114,4 +114,4 @@ export default {
 
 - Cloudflare Workers + Containers: <https://developers.cloudflare.com/workers/runtime/apis/durable-objects/>
 - Marimo server docs: <https://docs.marimo.io/guides/deploying/>
-- KCG example: `infrastructure/stacks/engineering/marimo/`
+- KCG example: `infrastructure/stacks/marimo/`

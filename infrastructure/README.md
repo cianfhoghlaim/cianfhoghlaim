@@ -7,7 +7,7 @@
 This quadrant provisions and operates the underlying infrastructure for
 the entire `cianfhoghlaim` stack — spanning two physical hosts
 (`arm1-oci` Ampere A1 in Oracle Cloud, `bunchloch` MacBook M4) and
-88 pre-configured Docker Compose stacks under `infrastructure/stacks/`.
+94 pre-configured Docker Compose stacks under `infrastructure/stacks/`.
 
 It is the **only** part of the monorepo that:
 
@@ -38,7 +38,7 @@ step depends on the one above it.
 | 4 | **Infisical** | Secret vault with `dev-baile` environment hydrated | `infisical run -- printenv MOTHERDUCK_TOKEN` |
 | 5 | **Garage** | S3-compatible object storage (DuckLake + LanceDB + asset bucket) | `mc ls garage/croilar-assets/` |
 | 6 | **Lakehouse** | Iceberg catalog + LanceDB + DuckLake endpoints | `mc ls garage/lakekeeper/` |
-| 7 | **Komodo** | Fleet orchestrator with all 88 stack blueprints | `https://komodo.cianfhoghlaim.ie` |
+| 7 | **Komodo** | Fleet orchestrator with all 94 stack blueprints | `https://komodo.cianfhoghlaim.ie` |
 | 8 | **LiteLLM** | Unified LLM gateway (all agents + Dagster routes through this) | `https://litellm.cianfhoghlaim.ie` |
 | 9 | **Langfuse** | LLM observability (traces every call) | `https://langfuse.cianfhoghlaim.ie` |
 | 10 | **Croilár** | The personal portfolio platform (Dagster + Hono API + Convex + Web + Portal) | `https://croilar.cianfhoghlaim.ie` |
@@ -71,8 +71,8 @@ The control-plane pipeline that keeps the platform running:
        │                                                              │
        │  Komodo ◄──WSS── Periphery agents (outbound only)            │
        │    │                                                          │
-       │    ├── 88 Docker Compose stacks (infrastructure/stacks/)     │
-       │    │   └─ each: compose.yaml + sidecar.yaml + pangolin.yaml    │
+    │    ├── 94 Docker Compose stacks (infrastructure/stacks/)     │
+    │    │   └─ each: compose.yaml + sidecar.yaml + pangolin.yaml    │
        │    │      + secrets.env + blueprint.yaml + .env.example       │
        │    │                                                          │
        │    ├── Pocket ID (OIDC) ◄── Traefik forwardAuth ─── clients   │
@@ -114,22 +114,33 @@ Three trust boundaries:
 | **`scripts/`** | Utility scripts (Olm client creation, blueprint sync, stack helpers) | Bash |
 | **`templates/`** | Forgejo workflow templates (PR forwarding, etc.) | YAML |
 | **`docs/`** | Generic user guide | Markdown |
-| **`stacks/`** | **88 Docker Compose stacks** across 5 categories | Docker Compose |
+| **`stacks/`** | **94 Docker Compose stacks**, flat layout (one directory per stack) | Docker Compose |
 | **`.forgejo/workflows/`** | CI workflows (Renovate, etc.) | YAML |
 
 For the full stack-by-stack catalogue, see [`stacks/README.md`](stacks/README.md).
 
 ---
 
-## 4. The 88-stack categorised view
+## 4. The 94-stack flat view
 
-| Category | Count | Key stacks | Critical-path dependency |
+The 94 stacks under `infrastructure/stacks/` are organised in a **flat**
+layout — every stack is a direct child of `stacks/` (e.g. `stacks/garage/`,
+`stacks/litellm/`, `stacks/pangolin/`). The legacy 5-category
+subdirectory structure (`stacks/storage/`, `stacks/infrastructure/`,
+`stacks/engineering/`, `stacks/machine_learning/`, `stacks/tools/`) was
+removed on 2026-06-23; every category subdirectory was lifted one level.
+
+| Functional group | Count | Key stacks | Critical-path dependency |
 |:--|:-:|:--|:--|
-| **`stacks/storage/`** | 8 | Garage, Lakehouse, Lakekeeper, lakefs, beszel, forgejo-runner, **croilar-postgres** | After Infisical (step 4) |
-| **`stacks/infrastructure/`** | 15 | Pangolin, Komodo, Pocket ID, forgejo, Dozzle, headscale, monitoring, MotherDuck, PlanetScale, R2, Pulumi, vaultwarden, DnsServer, backrest, glance | After Pulumi + Ansible (steps 1-2) |
-| **`stacks/engineering/`** | 22 | LiteLLM, dagster, marimo, convex, **croilar-web/portal/dagster/marimo/hono-api/convex**, coder, windmill, MCPJungle, agent-os, mathesar, DevDocs, dragonfly, n8n, mlx-omni, invokeai, pipecat, pydantic-gateway, networking-toolbox, crawl4ai, bytebase | After storage (Garage + Lakehouse) |
-| **`stacks/machine_learning/`** | 17 | Cognee, Graphiti, Langfuse, MLflow, Memgraph, FalkorDB, LanceDB, Qdrant, RisingWave, docling-serve, dots-ocr, olake, olmocr, paddleocr, unstract, logfire, nimtable | After LiteLLM (step 8) |
-| **`stacks/tools/`** | 24 | Vikunja, cal-diy, n8n, Paperless-NGX, SearXNG, Stirling-PDF, Karakeep, Linkwarden, Romm, Audiobookshelf, Perplexica, Skyvern, Actual, Blinko, Kapowarr, Pinchflat, Pastemax, Presenton, Termix, it-tools, mailcow-dockerized, LetterFeed, RomM, rybbit, enclosed, audiobookshelf, changedetection | Self-contained |
+| **Foundational substrates** | 8 | Garage, Lakehouse, Lakekeeper, lakefs, beszel, forgejo-runner, **croilar-postgres**, lakehouse-oci | After Infisical (step 4) |
+| **Control plane** | 15 | Pangolin, Komodo, Pocket ID, forgejo, Dozzle, headscale, headplane, monitoring, MotherDuck, PlanetScale, R2, Pulumi, vaultwarden, DnsServer, backrest, glance | After Pulumi + Ansible (steps 1-2) |
+| **Dev tooling + gateways + services** | 22 | LiteLLM, dagster, marimo, convex, **croilar-web/portal/dagster/marimo/hono-api/convex**, coder, windmill, MCPJungle, agent-os, mathesar, DevDocs, dragonfly, n8n, mlx-omni, invokeai, pipecat, pydantic-gateway, networking-toolbox, crawl4ai, bytebase, gpt-researcher, pydantic-gateway, frontend | After storage (Garage + Lakehouse) |
+| **AI services** | 17 | Cognee, Graphiti, Langfuse, MLflow, Memgraph, FalkorDB, LanceDB, Qdrant, RisingWave, docling-serve, dots-ocr, olake, olmocr, paddleocr, unstract, logfire, nimtable, lmnr | After LiteLLM (step 8) |
+| **Productivity + media** | 24 | Vikunja, cal-diy, n8n, Paperless-NGX, SearXNG, Stirling-PDF, Karakeep, Linkwarden, Romm, Audiobookshelf, Perplexica, Skyvern, Actual, Blinko, Kapowarr, Pinchflat, Pastemax, Presenton, Termix, it-tools, mailcow-dockerized, LetterFeed, RomM, rybbit, enclosed, audiobookshelf, changedetection | Self-contained |
+
+The functional-group column is **informational only** — it does not
+impose a directory hierarchy. The full alphabetical inventory is in
+[`infrastructure/AGENTS.md`](AGENTS.md) § "Stack Inventory".
 
 **The critical path** (must exist before any croilar/ pipeline runs):
 
