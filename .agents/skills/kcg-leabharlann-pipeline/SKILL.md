@@ -419,5 +419,6 @@ Graphiti `add_episode` flow.
 For the full neuro-symbolic web scraping architecture
 (Browserbase + Agno + Z.AI + Cognee + BAML + Ag-UI)
 see [`celtic-asset-generation/references/agent-knowledge-base.md`](../celtic-asset-generation/references/agent-knowledge-base.md) and
-the source deep-dive in
-[`docs/tuatha/03-data-pipelines/Agentic Web Scraping Pipeline.md`](../../../docs/tuatha/03-data-pipelines/Agentic%20Web%20Scraping%20Pipeline.md).
+the source deep-dive (formerly at
+`docs/tuatha/03-data-pipelines/Agentic Web Scraping Pipeline.md`,
+superseded by the round-8 docs → skills migration).
