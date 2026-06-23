@@ -1,1 +1,0 @@
-export { withX402Client } from './client/with-x402-client';
