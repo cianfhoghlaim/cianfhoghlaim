@@ -573,6 +573,11 @@ table.create_index(metric="cosine", index_type="HNSW", m=20, ef_construction=150
 11. **FTS tokenizer matters for multilingual corpora** — use
     `default` (Unicode) for Irish, Welsh, etc.; `en_stem` for English
 12. **TS: use `search()`, not the deprecated `vectorSearch()`**
+13. **The KCG canonical embedding model is `BAAI/bge-m3`**
+    (1024-d, multilingual, 100+ languages including all 6
+    Celtic languages, MIT-licensed). Use it for any
+    multilingual RAG corpus. Cache the model weights at
+    `stedding/huggingface/hub/models--BAAI--bge-m3/`.
 
 ## SQL Queries
 

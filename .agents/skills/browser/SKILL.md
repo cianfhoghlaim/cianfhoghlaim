@@ -232,3 +232,87 @@ cua (computer-use agent)
   (try first; falls back to patchright + stagehand)
 - `.agents/skills/firecrawl/SKILL.md` — the HTTP-first
   scraper (no browser, no anti-bot issues for most sites)
+
+## Multi-agent patterns (BrowserPipeline = SequentialAgent + LoopAgent)
+
+The KCG production browser pipeline uses a 4-stage
+multi-agent pattern (Hunter → Operator → Gatherer → Loop):
+
+```python
+# The canonical KCG multi-agent browser pipeline
+# (see infrastructure/browser/sruth_browser/agents/orchestrator.py)
+
+from google.adk.agents import SequentialAgent, LoopAgent, TerminationStrategy
+
+# 1. Hunter — finds the page (crawl4ai, firecrawl, etc.)
+hunter = Agent(name="Hunter", model="gemini-2.5-flash", tools=[crawl4ai])
+
+# 2. Operator — runs the browser (stagehand + browserbase)
+operator = Agent(name="Operator", model="gpt-4o", tools=[stagehand])
+
+# 3. Gatherer — extracts the structured data (BAML)
+gatherer = Agent(name="Gatherer", model="gpt-4o", tools=[baml_extractor])
+
+# 4. Loop: Evaluator → Quality Checker → fallback Escalator
+loop = LoopAgent(
+    name="QualityLoop",
+    sub_agents=[evaluator, quality_checker, fallback_escalator],
+    termination=TerminationStrategy(
+        stop_on=lambda out: "approved" in out,
+        max_iterations=3,
+    ),
+)
+
+# Full pipeline
+pipeline = SequentialAgent(
+    name="KCG Browser Pipeline",
+    sub_agents=[hunter, operator, gatherer, loop],
+)
+```
+
+Each agent has a single responsibility; the SequentialAgent
+hands off state; the LoopAgent retries with a quality
+fallback if the Gatherer output fails the RAGAS eval gate.
+
+## Backend racing pattern (BackendRacer)
+
+When multiple scraping backends are available (crawl4ai,
+firecrawl, browserbase), the `BackendRacer` fires all in
+parallel and uses whichever succeeds first:
+
+```python
+# From infrastructure/browser/sruth_browser/agents/durable_orchestrator.py
+
+import asyncio
+
+
+async def race_backends(url: str) -> str:
+    """Fire all backends in parallel; return the first to succeed."""
+    tasks = [
+        asyncio.create_task(crawl4ai.scrape(url), name="crawl4ai"),
+        asyncio.create_task(firecrawl.scrape(url), name="firecrawl"),
+        asyncio.create_task(browserbase.scrape(url), name="browserbase"),
+    ]
+
+    done, pending = await asyncio.wait(
+        tasks, return_when=asyncio.FIRST_COMPLETED,
+    )
+
+    # Cancel the slower backends
+    for t in pending:
+        t.cancel()
+
+    # Return the first successful result
+    for t in done:
+        try:
+            return t.result()
+        except Exception:
+            continue
+
+    raise RuntimeError("All backends failed")
+```
+
+The BackendRacer is the canonical "fastest-backend-wins"
+pattern for KCG browser scraping. See
+`.agents/skills/pydantic-ai/SKILL.md` §"Restate + DBOS" for
+how to make this durable.
