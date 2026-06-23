@@ -377,3 +377,23 @@ Memory Bank or a custom backend).
   asset
 - KCG examples: `oideachais/saoi/` (the canonical KCG ADK
   project layout)
+
+## Framework comparison (when to use this vs Pydantic AI / Agno)
+
+| Use case | Google ADK | Pydantic AI | Agno |
+|:--|:--|:--|:--|
+| Gemini Live API / voice | ✅ first-class | ⚠️ via OpenAI | ⚠️ via OpenAI |
+| A2A Protocol | ✅ built-in | ⚠️ via adapter | ✅ built-in |
+| AgentOS / managed deploy | ✅ Agent Engine | ⚠️ self-host | ✅ AgentOS |
+| Neuro-symbolic OWL | ✅ Truth Anchoring | ❌ | ❌ |
+| MCP server | ✅ built-in | ✅ via adapter | ✅ via adapter |
+| Workflow primitives (Sequential/Loop/Parallel) | ✅ first-class | ⚠️ via DBOS | ✅ first-class |
+| Type-safe I/O (Pydantic) | ✅ | ✅ first-class | ✅ |
+| Multi-model support (OpenAI, Anthropic, Gemini) | ⚠️ Gemini-first | ✅ any | ✅ any |
+| AG-UI SSE integration | ⚠️ via adapter | ✅ first-class | ✅ first-class |
+
+**Rule of thumb**: use **Google ADK** for Gemini-heavy
+workflows (Live API, A2A, Agent Engine); use **Pydantic AI**
+for type-safe I/O with Pydantic models (the KCG standard);
+use **Agno** for multi-agent teams with Z.ai GLM-4.6
+(cost-effective).

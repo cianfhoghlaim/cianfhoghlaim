@@ -142,6 +142,7 @@ embedder = get_registry().get("huggingface").create(
 | `Helsinki-NLP/opus-mt-ga-en` | ga→en | Irish-English translation |
 | `Helsinki-NLP/opus-mt-cy-en` | cy→en | Welsh-English translation |
 | `facebook/nllb-200-distilled-600M` | 200+ langs | Low-resource fallback |
+| `facebook/m2m100_418M` | many-to-many | Direct Celtic↔Celtic (no English pivot) |
 
 ### Speech (ASR)
 
