@@ -373,3 +373,75 @@ journalctl -u komodo-periphery -f
 - **Documentation**: https://komo.do/docs
 - **GitHub**: https://github.com/mbecker20/komodo
 - **Discord**: discord.gg/DRqE8Fvg5c
+
+## KCG integration (canonical)
+
+The Cianfhoghlaim platform runs **88 stacks** across 5
+categories (storage, engineering, ML, infrastructure, tools),
+all managed via a single Komodo instance. The KCG patterns
+that differ from the upstream docs above:
+
+### 5-stage deploy procedure
+
+```bash
+# 1. Add the stack to mise.toml (optional — for mise-managed stacks)
+echo '[env._.path]' >> mise.toml
+echo '_.path = ["./infrastructure/stacks/<surface>/scripts"]' >> mise.toml
+
+# 2. Register the stack in komodo
+komodo resource sync --stack infrastructure/stacks/<surface>/<name>
+
+# 3. Deploy
+komodo deploy --stack <name> --env production
+
+# 4. Wire Locket sidecar (see secrets-management skill)
+komodo sidecar attach <name> --image ghcr.io/cianfhoghlaim/locket:latest
+
+# 5. Wire Pangolin private resource (see pangolin skill)
+komodo pangolin attach <name> --full-domain <name>.cianfhoghlaim.ie
+```
+
+### `mise run komodo:sync` integration
+
+```toml
+# mise.toml
+[env._.path]
+_.path = ["./scripts", "./infrastructure/stacks"]
+
+[tasks."komodo:sync"]
+run = "bun run scripts/komodo-sync.ts"
+```
+
+The `komodo:sync` task walks all 88 stacks, compares
+compose.yaml + sidecar.yaml + secrets.env + pangolin.yaml
+against the live Komodo state, and emits a diff.
+
+### Resource Sync paths
+
+| Stack | Live path | Resource Sync source |
+|:--|:--|:--|
+| `engineering/dagster` | `digraph-compose.cianfhoghlaim.ie` | `infrastructure/stacks/engineering/dagster` |
+| `storage/cognee` | `cognee.cianfhoghlaim.ie` | `infrastructure/stacks/storage/cognee` |
+| `tools/n8n` | `n8n.cianfhoghlaim.ie` | `infrastructure/stacks/tools/n8n` |
+
+### KCG custom actions
+
+- `stack:up <name>` — bring up a Compose stack
+- `stack:down <name>` — bring down a Compose stack
+- `stack:rebuild <name>` — rebuild and restart
+- `stack:logs <name> [service]` — tail logs
+- `stack:exec <name> <service> <cmd>` — exec into a service
+- `mise:install` — hydrate the polyglot toolchain
+- `infisical:export <name>` — export secrets to env
+
+### Related skills
+
+- `.agents/skills/stack-ops/SKILL.md` — the 6-file
+  GOLD_STANDARD stack pattern that Komodo deploys
+- `.agents/skills/secrets-management/SKILL.md` — the
+  Locket sidecar that Komodo wires
+- `.agents/skills/pangolin/SKILL.md` — the private
+  resource topology that Komodo configures
+- `.agents/skills/kubernetes/SKILL.md` — the scale-out
+  trigger (K8s for multi-host)
+- `.agents/skills/monorepo/SKILL.md` — bun + uv + turbo

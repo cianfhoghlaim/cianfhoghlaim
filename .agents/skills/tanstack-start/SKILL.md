@@ -350,6 +350,87 @@ function ContactForm() {
 }
 ```
 
+## Type-Safe Forms with TanStack Form + Zod (KCG canonical)
+
+For complex forms (multi-step, conditional fields, async
+validation), use `@tanstack/react-form` + `zodValidator`:
+
+```bash
+bun add @tanstack/react-form @tanstack/zod-form-adapter zod
+```
+
+```typescript
+import { useForm } from "@tanstack/react-form";
+import { zodValidator } from "@tanstack/zod-form-adapter";
+import { z } from "zod";
+
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+});
+
+function LoginForm() {
+  const form = useForm({
+    defaultValues: { email: "", password: "" },
+    validators: { onChange: zodValidator(loginSchema) },
+    onSubmit: async ({ value }) => {
+      await loginAction({ data: value });
+    },
+  });
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        form.handleSubmit();
+      }}
+    >
+      <form.Field
+        name="email"
+        children={(field) => (
+          <input
+            name={field.name}
+            value={field.state.value}
+            onChange={(e) => field.handleChange(e.target.value)}
+            onBlur={field.handleBlur}
+          />
+        )}
+      />
+      <form.Field
+        name="password"
+        children={(field) => (
+          <input
+            type="password"
+            name={field.name}
+            value={field.state.value}
+            onChange={(e) => field.handleChange(e.target.value)}
+            onBlur={field.handleBlur}
+          />
+        )}
+      />
+      <form.Subscribe
+        selector={(state) => ({
+          canSubmit: state.canSubmit,
+          isSubmitting: state.isSubmitting,
+        })}
+        children={({ canSubmit, isSubmitting }) => (
+          <button type="submit" disabled={!canSubmit}>
+            {isSubmitting ? "Logging in..." : "Log in"}
+          </button>
+        )}
+      />
+    </form>
+  );
+}
+```
+
+The `form.Field` render-prop pattern + `form.Subscribe` for
+state-derived UI is the canonical KCG form pattern. Pair with
+`zodValidator` for runtime type safety (the Zod schema
+mirrors the BAML Pydantic model — see
+`.agents/skills/baml/SKILL.md`).
+
 ## Best practices
 
 1. **Use file-based routing** — never define routes by hand

@@ -151,3 +151,143 @@ For services that depend on it, add `depends_on:` with `condition: service_healt
 - `.agents/skills/dagster/SKILL.md` — for the data platform orchestration layer
 - `.agents/skills/dlt/SKILL.md` — for the data ingestion layer
 - `.agents/skills/docker-compose/SKILL.md` — for compose syntax reference
+
+## KCG context (Section 0)
+
+### Quadrant model
+
+The Cianfhoghlaim platform is organised in **4 quadrants**,
+each a top-level uv workspace:
+
+| Quadrant | Path | Wheel name | Use case |
+|:--|:--|:--|:--|
+| **Oideachais** | `oideachais/` | `oideachais` | Celtic education data platform |
+| **Meaisínfhoghlaim** | `meaisínfhoghlaim/` | `meaisinfhoghlaim` | AI/ML services |
+| **Tuatha** | `tuatha/` | `tuath` | Celtic MMO + crypto platform |
+| **Croílár** | `croilar/` | (TS) | Public persona site |
+
+### Technology stack table
+
+| Layer | Technology | Where |
+|:--|:--|:--|
+| Polyglot toolchain | `mise` | root `mise.toml` |
+| TS package manager | `bun` | `package.json` workspaces |
+| Python package manager | `uv` | root `pyproject.toml` |
+| Task pipeline | `turbo` | `turbo.json` |
+| CI/CD | `dagger` | `dagger/src/main.py` |
+| IaC | `pulumi` | `infrastructure/pulumi/` |
+| Container orchestration | `komodo` | `infrastructure/komodo/` |
+| Networking | `pangolin` | `infrastructure/pangolin/` |
+| Secrets | `infisical` | `.infisical.env` |
+| Object storage | `garage` (S3-compatible) | `infrastructure/stacks/storage/garage/` |
+| Lakehouse | `ducklake` (DuckDB + S3) | `oideachais/storage/ducklake_client.py` |
+| Vector DB | `lancedb` | `oideachais/storage/lancedb.py` |
+| Knowledge graph | `falkordb` | `oideachais/graph/falkordb.py` |
+| Orchestration | `dagster` | `oideachais/dagster_defs/` |
+| Front-end | `tanstack-start` | `oideachais/web/`, `tuatha/ui/`, `croilar/apps/portal/` |
+| API | `hono` | `oideachais/web/src/server/`, `tuatha/ui/src/server/` |
+
+### Multi-network isolation
+
+KCG services are isolated in 4 networks:
+
+| Network | Purpose | Services |
+|:--|:--|:--|
+| `edge` | Public-facing (Pangolin) | Traefik, Pangolin, Pocket ID |
+| `data` | Data plane (private) | Postgres, FalkorDB, LanceDB, Cognee |
+| `control` | Control plane | Komodo, Komodo DB, Locket |
+| `cross` | Cross-network (edge ↔ data) | FastAPI, Dagster |
+
+### Port allocation map
+
+| Range | Use case |
+|:--|:--|
+| 3000-3499 | User-facing apps (oideachais/web, tuatha/ui, croilar) |
+| 3500-3999 | APIs (FastAPI, Hono) |
+| 4000-4499 | Dagster (webserver, daemon, gRPC) |
+| 5000-5499 | Data stores (Postgres, FalkorDB, LanceDB) |
+| 6000-6999 | AI/ML (Cognee, MLflow, Langfuse) |
+| 7000-7999 | Dev tooling (Jupyter, VS Code server) |
+| 8000-8999 | MMO (Babylon.js dev server, SpacetimeDB) |
+| 9000-9999 | Infrastructure (Pangolin, Komodo, Pocket ID) |
+
+### Service dependency graph
+
+| Tier | Services | Depends on |
+|:--|:--|:--|
+| Edge | Traefik, Pangolin, Pocket ID | (none) |
+| Control | Komodo, Komodo DB, Locket | Edge (for routing) |
+| Auth | BetterAuth, Pocket ID, Infisical | Edge, Control |
+| Data | Postgres, FalkorDB, LanceDB, Cognee, DuckLake | (none — direct disk) |
+| API | FastAPI, Hono, TanStack Start, Dagster | Data, Auth |
+| MMO | Babylon.js, SpacetimeDB, Rust | Data, Auth, API |
+| AI/ML | BAML, RAGAS, Unsloth, MLflow, Langfuse | Data, API |
+
+### Health check patterns
+
+```yaml
+# .env
+healthcheck:
+  test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+  interval: 10s
+  timeout: 5s
+  retries: 3
+  start_period: 30s
+```
+
+Always include `start_period` to allow long-startup services
+(Cognee, LanceDB, Dagster) to become healthy.
+
+### Storage architecture
+
+| Storage class | Use case | Provisioner |
+|:--|:--|:--|
+| `local` | Dev (single-host) | Docker local volume |
+| `tmpfs` | Secrets (Locket) | tmpfs (mode 0700) |
+| `nfs` | Shared files (Leabharlann) | NFS server (Hetzner) |
+| `s3` | Object storage (Datasets, model weights) | Garage (S3-compatible) |
+| `rook-ceph` | K8s scale-out | Rook-Ceph |
+
+### Deployment order (5 phases)
+
+1. **Foundation**: mise, bun, uv, dagger
+2. **Secrets**: Infisical org + project + Locket sidecar
+3. **Networking**: Pangolin + Pocket ID + CrowdSec
+4. **Data**: Postgres, FalkorDB, LanceDB, DuckLake (S3)
+5. **Apps**: FastAPI, Dagster, Hono, MMO
+
+Each phase has a `mise run ci:phase-<n>` task that runs the
+Dagger call for that phase.
+
+### scripts/stack.sh wrapper
+
+```bash
+#!/usr/bin/env bash
+# scripts/stack.sh — the canonical stack helper
+# Usage: mise run stack:up <category>/<name>
+#        mise run stack:down <category>/<name>
+#        mise run stack:rebuild <category>/<name>
+#        mise run stack:logs <category>/<name> [service]
+
+CATEGORY=${1%/*}
+NAME=${1#*/}
+
+case "$0" in
+    *up)      docker compose -f infrastructure/stacks/$CATEGORY/$NAME/compose.yaml up -d ;;
+    *down)    docker compose -f infrastructure/stacks/$CATEGORY/$NAME/compose.yaml down ;;
+    *rebuild) docker compose -f infrastructure/stacks/$CATEGORY/$NAME/compose.yaml build --no-cache ;;
+    *logs)    docker compose -f infrastructure/stacks/$CATEGORY/$NAME/compose.yaml logs -f "${@:2}" ;;
+esac
+```
+
+### Related skills
+
+- `.agents/skills/komodo/SKILL.md` — deploys the stacks
+- `.agents/skills/pangolin/SKILL.md` — wires the private
+  resources
+- `.agents/skills/secrets-management/SKILL.md` — the
+  3-way secret contract
+- `.agents/skills/monorepo/SKILL.md` — mise + dagger +
+  turbo
+- `.agents/skills/kubernetes/SKILL.md` — the scale-out
+  trigger

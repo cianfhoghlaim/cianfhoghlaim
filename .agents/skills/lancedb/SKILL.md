@@ -578,6 +578,15 @@ table.create_index(metric="cosine", index_type="HNSW", m=20, ef_construction=150
     Celtic languages, MIT-licensed). Use it for any
     multilingual RAG corpus. Cache the model weights at
     `stedding/huggingface/hub/models--BAAI--bge-m3/`.
+14. **Reconciled model selection** (resolves the
+    `EMBEDDINGS.md` conflict): the
+    `MultiModelEmbedder` in `.agents/skills/embedding-pipeline/SKILL.md`
+    routes Irish (`ga`) to `GaBERT`
+    (`DCU-NLP/bert-base-irish-cased-v1`, 768-d) for
+    linguistic accuracy (séimhiú, urú, dialectal variation),
+    and everything else to `BGE-M3` (1024-d, multilingual).
+    Both stored in the same LanceDB table with a `model_name`
+    column.
 
 ## SQL Queries
 

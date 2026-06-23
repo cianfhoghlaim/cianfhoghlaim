@@ -482,3 +482,26 @@ result = agent.run("https://github.com/agno-agi/agno")
   `.agents/skills/pydantic-ai/`, `.agents/skills/litellm/`,
   `.agents/skills/langfuse/`, `.agents/skills/cognee/`,
   `.agents/skills/falkordb/`
+
+## Framework comparison (when to use Agno vs Google ADK / Pydantic AI)
+
+| Use case | Agno | Google ADK | Pydantic AI |
+|:--|:--|:--|:--|
+| Multi-agent teams (route / coordinate / collaborate) | ✅ first-class | ✅ | ⚠️ via DBOS |
+| AgentOS production hosting | ✅ | ✅ Agent Engine | ⚠️ self-host |
+| Z.ai GLM-4.6 (cost-effective) | ✅ `OpenAILike` | ⚠️ | ✅ `OpenAICompatibleModel` |
+| A2A Protocol | ✅ built-in | ✅ built-in | ⚠️ via adapter |
+| AG-UI SSE | ✅ `AGUIInterface` | ⚠️ via adapter | ✅ first-class |
+| Tools (any Python function) | ✅ | ✅ | ✅ |
+| Knowledge bases (RAG) | ✅ | ⚠️ via Vertex AI | ✅ via `pydantic_ai_agents` |
+| Memory (Postgres) | ✅ | ✅ via Memory Bank | ✅ |
+| Knowledge graphs (FalkorDB) | ✅ | ⚠️ | ⚠️ |
+| Type-safe I/O (Pydantic) | ✅ | ✅ | ✅ first-class |
+| MCP server | ✅ via adapter | ✅ built-in | ✅ via adapter |
+| Modal H100 burst | ✅ | ✅ | ✅ |
+
+**Rule of thumb**: use **Agno** for multi-agent teams with
+Z.ai GLM-4.6 (cost-effective, the KCG default); use
+**Google ADK** for Gemini-heavy workflows (Live API, A2A,
+Agent Engine); use **Pydantic AI** for type-safe I/O with
+Pydantic models (the KCG standard).
