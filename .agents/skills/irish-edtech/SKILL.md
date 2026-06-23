@@ -334,6 +334,103 @@ Timestamped Error Feedback
 | Frontend | TanStack Start | Type-safe, edge-rendered |
 | WASM Compute | Marimo | Zero-cost browser Python |
 
+## Product Vision: Agentic Academy
+
+The longer-horizon product is an **Agentic Academy** that
+gamifies the Irish curriculum through a Celtic bardic
+metaphor, on-chain credentials, and AI tutor agents:
+
+### Bardic grade hierarchy (7 tiers)
+
+The agent progression mirrors the historical
+**Fili** (poet-historian) ranks of medieval Ireland:
+
+| Tier | Irish | English | Capability |
+|:--|:--|:--|:--|
+| 1 | **Foghlamaí** | Novice | Browse + read curriculum |
+| 2 | **Daltaí** | Pupil | Take quizzes, get feedback |
+| 3 | **Sceolmhac** | Scholar | Ask open-ended questions |
+| 4 | **Cliar** | Companion | Multi-turn tutoring, project-based |
+| 5 | **Reicc** | Lay-poet | Compose essays in Irish |
+| 6 | **Anruth** | Noble-poet | Lead peer sessions, mentor |
+| 7 | **Ollamh** | Master-poet | Author new curriculum, audit Ollaires |
+
+Advancement requires demonstrated mastery on the
+**cycle-based curriculum** (below) + community
+contribution (peer review, mentoring).
+
+### Cycle-based curriculum
+
+The Irish literary tradition is mapped to a 4-stage
+curriculum:
+
+| Cycle | Era | Topical focus |
+|:--|:--|:--|
+| **Mythological** | Pre-Christian | Cosmology, Tuatha Dé Danann, Fomorians |
+| **Ulster** | Iron Age | Cú Chulainn, Táin Bó Cúailnge, Fergus |
+| **Fenian** | Early Medieval | Fionn mac Cumhaill, Na Fianna, Oisín |
+| **Historical** | 5th-12th c. | Brian Boru, High Kings, monasteries |
+
+Each cycle unlocks corresponding Leaving Cert content
+(History, English, Irish) and unlocks the bardic grade
+progression.
+
+### Dual-token economy (Pinginn + Screpall)
+
+Two complementary on-chain credentials back the Academy:
+
+| Token | Standard | Use |
+|:--|:--|:--|
+| **Pinginn** (penny) | ERC-20 (USDC-backed) | Spend on tutoring hours, exam packs, premium content |
+| **Screpall** (shilling) | ERC-5114 SBT (soulbound) | Non-transferable reputation, badges, peer review |
+
+Pinginn flows freely; Screpall is **earned** and never
+transferred. The split mirrors the medieval Irish
+monetary system and the modern Web3 reputation economy.
+
+### Optimistic Oracle + EAS Merkle root
+
+Disputes about mastery claims (e.g., "did this student
+really write this essay?") are settled via:
+
+- **Optimistic Oracle (UMA)** — claims are accepted by
+  default; disputes go to vote
+- **EAS (Ethereum Attestation Service)** — every
+  mastery attestation is hashed + anchored to a Merkle
+  root on-chain
+
+The chain is the source of truth for **who earned what**;
+the AI tutor is the source of truth for **what to teach
+next**.
+
+### Gemini 3 "Critic Agent Flow" + System 2 reasoning
+
+The tutor agents use a **two-stage flow**:
+
+1. **System 1** (fast, instinctive) — Gemini 3 Flash
+   produces the first-draft response
+2. **System 2** (deliberate) — Gemini 3 Pro **critiques
+   the draft** for:
+   - Factual accuracy (vs. NCCA / SEC)
+   - Irish grammar (gaeilge ceart, tuiseal ginideach)
+   - Bilingual balance
+   - Cycle-appropriate register
+
+Only drafts that pass the critic reach the student.
+This is the **"Critic Agent Flow"** — the critic is a
+separate model instance with a separate system prompt
+and a separate context window.
+
+### T5Gemma-2: a candidate backbone
+
+T5Gemma-2 (the Google joint T5 + Gemma encoder-decoder
+architecture, 2024) is a candidate backbone for the
+**Irish-language encoder** + the **English-language
+decoder** in a single bilingual model. The T5 encoder
+takes Irish input; the Gemma decoder produces English
+output. This avoids the round-trip through NLLB and the
+BGE-M3 sparse-vector alignment step.
+
 ## Resources
 
 - **NCCA Curriculum:** https://curriculumonline.ie
@@ -342,3 +439,6 @@ Timestamped Error Feedback
 - **GaBERT:** https://huggingface.co/DCU-NLP/bert-base-irish-cased-v1
 - **TanStack Start:** https://tanstack.com/start
 - **Marimo:** https://marimo.io
+- **Optimistic Oracle (UMA):** https://uma.xyz
+- **EAS:** https://attest.sh
+- **T5Gemma-2:** https://ai.google.dev/gemma

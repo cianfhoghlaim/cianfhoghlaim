@@ -292,3 +292,86 @@ with open("encrypted.pdf", "wb") as output:
 - For JavaScript libraries (pdf-lib), see reference.md
 - If you need to fill out a PDF form, follow the instructions in forms.md
 - For troubleshooting guides, see reference.md
+
+## PDF.js examples (round-9 reference)
+
+The `references/clippings/pdfjs-examples.md` clipping
+preserves the Mozilla **PDF.js** examples for the
+browser-based PDF rendering path. PDF.js is the
+canonical choice when the PDF must be rendered **in the
+browser** (no server round-trip) — used in the
+`oideachais/web` curriculum viewer and the KCG
+`CopilotTextarea` for inline exam paper annotations.
+
+### The 3-step pattern
+
+```js
+import * as pdfjsLib from "pdfjs-dist";
+
+// 1. Load the document
+const loadingTask = pdfjsLib.getDocument("exam-paper.pdf");
+const pdf = await loadingTask.promise;
+
+// 2. Get a page
+const page = await pdf.getPage(1);
+
+// 3. Render to a canvas (HiDPI-aware)
+const scale = 1.5;
+const viewport = page.getViewport({ scale });
+const outputScale = window.devicePixelRatio || 1;
+
+const canvas = document.getElementById("the-canvas");
+const context = canvas.getContext("2d");
+canvas.width = Math.floor(viewport.width * outputScale);
+canvas.height = Math.floor(viewport.height * outputScale);
+canvas.style.width = Math.floor(viewport.width) + "px";
+canvas.style.height = Math.floor(viewport.height) + "px";
+
+const transform =
+  outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+
+await page.render({
+  canvasContext: context,
+  transform,
+  viewport,
+}).promise;
+```
+
+### Key gotchas
+
+- **One canvas per page render** — the same canvas cannot
+  draw two pages simultaneously. Wait for `page.render().promise`
+  to resolve before kicking off the next page
+- **HiDPI scaling** — always multiply `viewport.width /
+  height` by `window.devicePixelRatio` for the canvas
+  resolution, but use the unscaled values for the CSS
+  size
+- **Coordinate system** — PDF coordinates are
+  bottom-left origin; canvas is top-left. The viewport
+  transformation handles this
+- **Base64 input** — `getDocument` accepts a decoded
+  base64 `ArrayBuffer` if the PDF is fetched over a
+  data URL or stored in a database
+
+### When PDF.js vs the Python stack
+
+| Use case | Tool | Why |
+|:--|:--|:--|
+| **Browser-side render** (oideachais curriculum viewer) | PDF.js | No server round-trip, no upload, can render 100+ page exam papers |
+| **Server-side text extract** (Dagster asset for SEC exam papers) | `pdfplumber` | Better layout preservation, table extraction |
+| **Programmatic PDF generation** (marking scheme PDFs) | `reportlab` | Canvas + Platypus for arbitrary layout |
+| **Form filling** (interactive exam submission) | `pypdf` or `pdf-lib` | See `forms.md` |
+
+For the KCG `oideachais/leabharlann` pipeline, the
+canonical flow is:
+
+1. `pdfplumber` extracts structured text + tables for
+   BAML extraction (server-side, Dagster asset)
+2. PDF.js renders the same PDF in the browser for
+   verification (client-side, TanStack Start route)
+3. `pypdf` merges marking-scheme annexes into the
+   final LC paper PDF (CLI tool, run on demand)
+
+See `references/clippings/pdfjs-examples.md` for the
+full Mozilla examples with the base64 input and
+multi-page render code.
