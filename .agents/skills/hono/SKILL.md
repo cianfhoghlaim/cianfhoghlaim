@@ -544,6 +544,45 @@ The KCG Hono apps are:
   oideachais web app
 - `tuatha/ui/src/server/` — the Tuatha MMO + crypto API
 
+## Convex integration
+
+The Tuatha MMO front-end uses Convex for real-time state
+sync. Hono integrates with Convex via two patterns:
+
+### `HonoWithConvex` (run Hono inside Convex)
+
+```typescript
+import { Hono } from "hono";
+import { HonoWithConvex } from "convex-helpers";
+
+const app = new Hono();
+app.get("/api/me", (c) => c.json({ user: "..." }));
+
+// Deploy Hono as a Convex HTTP action
+export default HonoWithConvex(app, "/api");
+```
+
+### `HttpRouterWithHono` (call Convex from Hono)
+
+```typescript
+import { Hono } from "hono";
+import { HttpRouterWithHono } from "convex-helpers";
+
+const app = new Hono();
+app.get("/api/curriculum", async (c) => {
+  const convex = getConvexClient();
+  const data = await convex.query("curriculum:list");
+  return c.json(data);
+});
+
+// Bridge Hono routes into the Convex HTTP router
+export const http = HttpRouterWithHono(app);
+```
+
+The canonical KCG pattern is `HttpRouterWithHono` — Hono
+runs as the public API gateway; Convex handles the
+real-time subscriptions and mutations.
+
 ## Resources
 
 - **Documentation**: https://hono.dev
