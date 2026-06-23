@@ -543,6 +543,152 @@ type UserOutput = Outputs['users']['get']
 - Ensure `next()` returns context updates
 - Verify middleware order in procedure chain
 
+## oRPC integration patterns (round-9 deep dive)
+
+The 1,300-line `references/comprehensive-research.md`
+captures the full oRPC surface. The KCG-relevant patterns:
+
+### 1. Why oRPC over tRPC / gRPC
+
+| Feature | oRPC | tRPC | gRPC |
+|:--|:--|:--|:--|
+| TypeScript-first | ✅ | ✅ | ❌ (proto types) |
+| Contract-first | ✅ | ❌ (procedure-first) | ✅ (schema-first) |
+| OpenAPI generation | built-in | via plugins | via conversion |
+| Framework-agnostic | ✅ (Hono, Node, Bun) | ❌ (Node only) | ✅ (multi-lang) |
+| Streaming | EventIterator | limited | ✅ |
+| Real-time | pub/sub helpers | subscriptions | gRPC streaming |
+
+**The KCG pick:** oRPC, because it (a) generates OpenAPI
+for the public Tuatha / croilar APIs, (b) runs on Hono
+(the API gateway), (c) has native TanStack Query
+integration via `createTanstackQueryUtils`.
+
+### 2. Multi-service router aggregation
+
+For the API-unified example (MCP + oRPC + OpenAPI + AI
+streaming in one Hono app), aggregate multiple service
+routers under path prefixes:
+
+```typescript
+const authServiceRPCHandler = new RPCHandler(authRouter, {
+  plugins: [...],
+});
+const planetServiceRPCHandler = new RPCHandler(planetRouter, {
+  plugins: [...],
+});
+
+// Route by path prefix
+app.use("/rpc/auth/*", async (c) => {
+  const { response } = await authServiceRPCHandler.handle(c.req.raw, {
+    prefix: "/rpc/auth",
+    context: { authToken: c.get("authToken") },
+  });
+  return response ?? c.text("Not Found", 404);
+});
+```
+
+This is the **canonical pattern** for the KCG microservice
+style: one oRPC router per bounded context (auth,
+leabharlann, crypteolas, agent), all mounted under
+`/rpc/<service>`.
+
+### 3. Type inference
+
+`InferContractRouterInputs` and `InferContractRouterOutputs`
+let you derive types from the contract for downstream
+consumers (Dagster assets, Convex schemas, BAML helpers):
+
+```typescript
+import {
+  InferContractRouterInputs,
+  InferContractRouterOutputs,
+} from "@orpc/contract";
+
+type Inputs = InferContractRouterInputs<typeof contract>;
+type Outputs = InferContractRouterOutputs<typeof contract>;
+
+type SignupInput = Inputs["auth"]["signup"];   // { name: string; email: string }
+type UserOutput = Outputs["users"]["get"];     // { id: string; ... }
+```
+
+This is the **single source of truth** for the API shape
+across the KCG stack — the contract drives both the server
+implementation and the BAML extraction prompts.
+
+### 4. Streaming with EventIterator
+
+For SSE / agent streams (the KCG AG-UI bridge), use
+`eventIterator` in the contract:
+
+```typescript
+export const subscribe = oc
+  .route({ method: "GET", path: "/room/subscribe" })
+  .input(z.object({ room: z.string() }))
+  .output(eventIterator(z.object({
+    message: z.string(),
+    timestamp: z.number(),
+  })));
+
+// Server
+export const subscribe = authedProcedure.room.subscribe
+  .handler(async function* ({ input, context, signal }) {
+    const sub = pubsub.subscribe(input.room);
+    try {
+      for await (const msg of sub) {
+        if (signal.aborted) break;
+        yield { message: msg.text, timestamp: Date.now() };
+      }
+    } finally {
+      sub.unsubscribe();
+    }
+  });
+```
+
+Pairs with TanStack Query's `useSuspenseInfiniteQuery`
+on the client.
+
+### 5. OpenAPI generation (the public API surface)
+
+```typescript
+import { OpenAPIHandler } from "@orpc/openapi/fetch";
+import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
+
+const handler = new OpenAPIHandler(router, {
+  plugins: [new OpenAPIReferencePlugin({
+    specGenerateOptions: {
+      info: { title: "Tuatha API", version: "1.0.0" },
+      security: [{ bearerAuth: [] }],
+      components: { securitySchemes: { bearerAuth: { type: "http", scheme: "bearer" } } },
+    },
+  })],
+});
+```
+
+The OpenAPI doc is auto-served at `/api/reference` —
+the canonical machine-readable surface for the Crypteolas
+client and external Tuatha API consumers.
+
+### 6. tsup TS2742 workaround
+
+When bundling oRPC for a Tauri / desktop / Cloudflare
+Worker target, centralise `@orpc/*` in the root
+`package.json` and add to `tsup.config.ts`:
+
+```typescript
+export default defineConfig({
+  external: ["@orpc/contract", "@orpc/server", "zod"],
+});
+```
+
+Without this, the bundler re-bundles oRPC into every
+output and TS2742 (`cannot redeclare exported variable`)
+fires.
+
+See `references/comprehensive-research.md` for the full
+1,300-line deep-dive on the contract system, middleware,
+errors, and the EventIterator streaming protocol.
+
 ## Resources
 
 - **Documentation**: https://orpc.unnoq.com

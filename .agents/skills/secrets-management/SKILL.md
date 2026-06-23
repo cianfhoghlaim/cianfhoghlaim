@@ -1,6 +1,6 @@
 ---
 name: secrets-management
-description: Secrets management for the Cianfhoghlaim platform — Infisical + Locket + mise three-way contract. Add/rotate secrets, Locket sidecar pattern, provider reference (Infisical, 1Password, 1Password Connect, Bitwarden), security model (tmpfs, file modes, no-root). Use when adding a new secret, rotating a secret, debugging missing secrets, or wiring a new Locket-enabled stack.
+description: Secrets management for the Cianfhoghlaim platform — Infisical + Locket + mise three-way contract. Add/rotate secrets, Locket sidecar pattern, security model (tmpfs, file modes, no-root). Use when adding a new secret, rotating a secret, debugging missing secrets, or wiring a new Locket-enabled stack. **Infisical is the only canonical provider** (1Password migration completed 2026-06).
 ---
 
 # Secrets Management — Infisical + Locket + mise
@@ -140,17 +140,30 @@ services:
       ENV_FILE: /run/secrets/locket/secrets.env
 ```
 
-## Provider reference
+## Provider reference (Infisical-only)
 
-| Provider | Use case | Setup |
+**Infisical is the only canonical KCG provider** (as of
+2026-06-23, the 1Password + 1Password Connect + Bitwarden
+options have been removed; KCG has moved entirely to
+Infisical). The rationale:
+
+- **Infisical** = cloud + on-prem, OIDC SSO, free tier,
+  native Docker + Kubernetes + sidecar patterns
+- 1Password / Bitwarden = no native Locket sidecar
+  integration, no Infisical-style URI references, no OIDC
+  SSO across the cluster
+
+| Provider | Status | Setup |
 |:--|:--|:--|
-| **Infisical** (canonical) | All KCG projects | `bun run scripts/init-vault.ts` |
-| **1Password** | Personal accounts (not team-wide) | `op vault create kcg-personal` |
-| **1Password Connect** | Self-hosted, on-prem | Docker image + K8s operator |
-| **Bitwarden** | Self-hosted (cheaper than 1Password) | `bw serve --hostname 0.0.0.0` |
+| **Infisical** (canonical) | ✅ All KCG projects | `bun run scripts/init-vault.ts` |
 
-The canonical KCG choice is **Infisical** (cloud + on-prem
-support, free tier, OIDC SSO).
+**Migration history (one-time)**: in June 2026 KCG
+migrated from 1Password → Infisical. The
+`docs/06-infrastructure/integrating-1password-cli-*.md`
+and `where-to-install-1password-cli-op.md` files are
+archived; if you find a 1Password reference in any old doc
+or stack, treat it as stale and replace with
+`infisical://...` URI.
 
 ## Security model
 
@@ -228,6 +241,4 @@ infisical secrets delete OPENAI_API_KEY_OLD
 
 - Infisical: <https://infisical.com/docs>
 - Locket: <https://github.com/cianfhoghlaim/locket> (KCG)
-- 1Password Connect: <https://developer.1password.com/docs/connect/>
-- Bitwarden: <https://bitwarden.com/help/server-overview/>
 - mise: <https://mise.jdx.dev/

@@ -280,6 +280,97 @@ export const auth = betterAuth({
 - Want managed auth (pay-per-user)
 - Don't want to self-host
 
+## Self-hosted stack (BetterAuth OIDC + Convex + Hono + Supabase)
+
+The canonical KCG self-hosting pattern (from
+`references/self-hosted-stack.md`):
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  BetterAuth     OIDC IdP + user/session store           │
+│  + Postgres     (Supabase self-hosted, single container)│
+└────────────┬────────────────────────────────────────────┘
+             │ JWKS at /.well-known/jwks.json
+             ▼
+┌─────────────────────────────────────────────────────────┐
+│  Hono           mounts BetterAuth handler at /api/auth/*│
+│  (auth + API)   validates JWTs against JWKS             │
+└────────────┬────────────────────────────────────────────┘
+             │ Authorization: Bearer <token>
+             ▼
+┌─────────────────────────────────────────────────────────┐
+│  Convex         configured to trust BetterAuth issuer;  │
+│  (self-hosted)  uses auth domain + client ID for audience│
+└────────────┬────────────────────────────────────────────┘
+             │ token from BetterAuth login
+             ▼
+┌─────────────────────────────────────────────────────────┐
+│  TanStack Start calls /api/auth/* via BetterAuth client,│
+│  receives cookies + JWT, then attaches Bearer to every  │
+│  Hono + Convex request                                 │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Setup checklist:**
+
+1. **Database** — single Postgres container (Supabase or
+   plain); create the BetterAuth schema with
+   `bunx @better-auth/cli generate` (drizzle adapter)
+2. **BetterAuth** — `betterAuth({ database: drizzleAdapter(db,
+   { provider: "pg" }), emailAndPassword: { enabled: true,
+   requireEmailVerification: true }, socialProviders: {...} })`
+3. **Hono** — mount with `app.on(["GET", "POST"],
+   "/api/auth/*", (c) => auth.handler(c.req.raw))`; add
+   `authMiddleware` to protect API routes
+4. **Convex** — set `auth.config.ts` with BetterAuth's
+   `domain` + `applicationID`; Convex verifies the JWT
+   automatically on every query/mutation
+5. **Frontend** — `createAuthClient()` on TanStack Start;
+   tokens stored in HttpOnly cookies; use the
+   `tanstackStartCookies` plugin so `signInEmail` /
+   `signUpEmail` set cookies correctly
+
+The critical insight: **Convex and Hono do not manage
+passwords or sessions** — they defer to BetterAuth for all
+identity. The OIDC JWKS is the single source of truth for
+token verification. This means a single sign-on across
+`oideachais/web` (no auth), `croilar/apps/portal` (BetterAuth),
+and any Convex-powered surface.
+
+## KCG multi-layer auth (round-9 deep dive)
+
+The 4-layer model from `references/clippings/` is unchanged,
+but the round-9 synthesised **layer-to-technology mapping**:
+
+| Layer | KCG tech | KCG URL pattern | Threat model |
+|:--|:--|:--|:--|
+| 1. Customer-facing | BetterAuth + Convex | `*.cianfhoghlaim.ie` | OAuth / SIWE brute force |
+| 2. Admin (OIDC) | PocketID (WebAuthn passkeys) | `pocketid.cianfhoghlaim.ie` | No-password admin breach |
+| 3. Zero-trust proxy | TinyAuth / Pangolin | WireGuard mesh | mTLS / JWT forgery |
+| 4. Secret hydration | Infisical + mise + Locket | `dev-baile` env | Long-lived secret leak |
+
+**Clipping references (canonical deep-dives):**
+
+- `references/clippings/basic-usage.md` — full
+  email/password + social sign-up flow
+- `references/clippings/drizzle-adapter.md` — Drizzle
+  schema generation with `bunx @better-auth/cli generate`
+- `references/clippings/expo-integration.md` — BetterAuth
+  client for Expo (React Native) — used in the Tuatha
+  mobile app
+- `references/clippings/postgresql-adapter.md` — direct
+  Postgres adapter (alternative to Drizzle)
+- `references/clippings/siwe-plugin.md` — ERC-4361
+  Sign-In With Ethereum for the crypteolas platform
+  (also see `upstream-mirrors/references/clippings/better-auth-siwe.md`)
+- `references/clippings/tanstack-start-integration.md` —
+  canonical `/api/auth/$.ts` mount point + the
+  `tanstackStartCookies` plugin pattern
+
+See `references/self-hosted-stack.md` for the full
+1,264-line OIDC self-hosting implementation plan
+(BetterAuth + Convex + Supabase + Hono + TanStack Start).
+
 ## Resources
 
 - BetterAuth docs: <https://www.better-auth.com/docs>

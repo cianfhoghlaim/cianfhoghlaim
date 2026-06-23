@@ -273,3 +273,281 @@ LANGFUSE_SECRET_KEY=...
 - SIWE: <https://docs.login.xyz/
 - x402: <https://www.x402.org/>
 - KCG `tuatha/`: the Celtic MMO + crypto platform
+
+## Sovereign game state (SpacetimeDB + DuckDB-WASM + TanStack + CopilotKit)
+
+The tuatha architecture replaces the traditional 3-tier
+MMO stack (headless game server + database + REST API)
+with a **sovereign** model: the database *is* the
+server, the client carries a local analytical engine,
+and the AI agent has direct governed access to both.
+This is the "Database-as-Server" + "Thick Client"
+synthesis that the Tuath `Anam` and `Ogham` ledgers
+require.
+
+### The 4 components
+
+| Layer | Tech | Role |
+|:--|:--|:--|
+| **Authoritative state** | SpacetimeDB (Rust reducers) | ACID transactions, "Education Tax" calc, Anam state |
+| **Application shell** | TanStack Start (Vite, SSR-off for `/play`) | Server Functions proxy LLM API keys; routes; bundler |
+| **Analytical engine** | DuckDB WASM (in a Web Worker) | "Global learning velocity", tax-simulation, "what-if" |
+| **Agentic semantic binding** | CopilotKit (AG-UI / A2UI) | NL → structured queries against local DuckDB + reducer calls |
+
+### SpacetimeDB: Database-as-Server
+
+SpacetimeDB runs Rust logic **inside the database
+transaction loop**. The 4 core `tuatha` tables:
+
+| Entity | Rust struct | Purpose |
+|:--|:--|:--|
+| `Anam` | `AnamState` | `knowledge_level`, `particle_count`, `color_vector` |
+| `Ledger` | `OghamLedger` | `pending_balance`, `synced_balance`, txn history |
+| `Tasks` | `TaskLog` | `task_id`, `verification_status`, `timestamp` |
+| `Agents` | `MechRequest` | Queue for Olas Mech AI verification tasks |
+
+The **Education Tax** reducer runs in the database —
+not the client — so the tax rate is enforced by the
+authoritative store. The client only *requests* the
+transfer; the DB computes and applies the tax.
+
+The **data flow bifurcation** is critical: SpacetimeDB
+owns the *low-frequency state* (ledgers, levels) and
+the client handles *high-frequency state* (Anam particle
+vector changing 60 times a second) via transient
+interpolation. SpacetimeDB's WebSocket uses **SATS-JSON**
+(not BSATN) for the client protocol — slower but
+JSON-parseable, which feeds directly into DuckDB
+without a binary-decode hop.
+
+### DuckDB-WASM: the thick client
+
+The browser runs DuckDB inside a **Web Worker** so the
+UI thread stays at 60fps. The pipeline:
+
+1. **Ingestion**: SpacetimeDB `onInsert` event →
+   JavaScript object → micro-batch buffer (100ms
+   flush or 1000 items).
+2. **Insertion**: small batches use parameterised SQL
+   `INSERT`; large snapshots (initial table load)
+   use **Apache Arrow** via
+   `insertArrowFromIPCStream` for 10-100x faster
+   ingestion.
+3. **Persistence**: DuckDB persists to the **Origin
+   Private File System (OPFS)** so the player's
+   Anam/Ledger history survives across sessions —
+   this is the *Indigenous Data Sovereignty* layer.
+
+The client sends `last_synced_timestamp` to SpacetimeDB
+on reconnect and only receives the delta, so re-loads
+are O(changes), not O(total history).
+
+### TanStack Start: SSR-off for /play
+
+`/play` and `/dashboard` routes set `ssr: false` —
+the server returns a skeletal shell, the JS bundle
+loads, the WASM modules init, the WebSocket connects,
+*then* the UI renders. Public routes (`/`, `/about`)
+keep SSR for SEO.
+
+**Server Functions** (the security boundary):
+- `generateCopilotToken()` — runs only on the server,
+  signs an ephemeral OpenAI/Anthropic key for the
+  CopilotKit client. The browser never sees the
+  master `OPENAI_API_KEY`.
+- Olas Mech proxy for task verification when
+  browser-to-blockchain direct interaction is
+  undesirable.
+
+**Vite config** must enable: `vite-plugin-wasm`
+(`.wasm` ES imports), `vite-plugin-top-level-await`
+(module-level await in DuckDB-WASM init), and
+`build.target = "esnext"` to prevent the await
+transpilation from breaking WASM instantiation.
+
+### CopilotKit: the agentic semantic layer
+
+`useCopilotReadable` provides the Copilot with the
+**DuckDB table schemas** (not the data — that's too
+big for the context window). The Copilot then writes
+SQL via `useCopilotAction` against the local DuckDB
+worker, and the response hydrates the UI.
+
+Example: a player asks "How am I doing in my Irish
+lessons?" → the agent generates a SQL query
+`SELECT avg(score), count(*) FROM TaskLog WHERE
+task_kind = 'gaeilge' AND identity = $me` →
+DuckDB returns → CopilotKit renders a chart.
+
+The key insight: **the AI never queries the server**
+for analytical questions. The local DuckDB has the
+full snapshot; the server only provides deltas.
+This makes the AI agent massively cheaper and faster
+than a server-side analytics pipeline.
+
+### The "Indigenous Data Sovereignty" angle
+
+The OPFS-persisted DuckDB file is **the player's
+data**. They can export it, back it up, or migrate
+it to another server. This aligns with the
+**Tuath Proof-of-Learning (PoL)** model: the player
+*owns* their learning history, and the MMO's role is
+to host the synchronous multi-player layer on top.
+
+## Dagster assets for MMO (Hades + BitCraft agentic research)
+
+The tuatha/ Dagster code-location
+(`tuatha/dagster_assets/`) ships 4 core assets
+(`celtic_curriculum`, `mythology_content`,
+`celtic_embeddings`, `mythology_embeddings`). The
+2026 extension adds 2 new asset groups based on
+the **Hades + BitCraft** research-pattern:
+
+- **`hades_asset_pipeline`**: agentic research
+  pipeline that scrapes Supergiant Games GDC talks,
+  tech blogs, and the SpacetimeDB GitHub repo →
+  indexes in a LangGraph Plan-Execute-Verify loop
+  → emits per-frame asset specs (Hades hybrid
+  3D-to-2D normal-map pipeline).
+- **`bitcraft_spacetimedb_sync`**: SpacetimeDB
+  `clockworklabs/SpacetimeDB` change-detection +
+  Rust SDK release monitor + auto-update of the
+  tuatha `crates/` bindings when a breaking
+  change is detected.
+
+### The agentic research pipeline (LangGraph DCG)
+
+The Hades+BitCraft research agent runs a directed
+cyclic graph (DCG) with 4 nodes:
+
+1. **Planner Node** — decomposes the high-level query
+   into sub-tasks (e.g. "Hades 3D-to-2D normal maps"
+   → "search GDC Vault", "search r/gamedev", "analyse
+   Supergiant tech blog").
+2. **Search Node** — DuckDuckGo + Tavily + GDC Vault
+   scraper (BeautifulSoup + Selenium with session
+   auth for member-only content).
+3. **Filter Node** — LLM evaluates URLs, drops
+   marketing pages, keeps technical blogs.
+4. **Critique Node** — LLM reads scraped content; if
+   it lacks specific implementation details, it
+   modifies the search query and loops back.
+
+Output is a `ResearchState` TypedDict:
+
+```python
+class ResearchState(TypedDict):
+    query: str
+    sources_found: List[str]
+    raw_content: Annotated[List[str], operator.add]
+    final_report: str
+    iteration_count: int
+```
+
+The agent monitors breaking changes in
+`clockworklabs/SpacetimeDB` and `godot-rust/gdext` —
+if the `spacetimedb-sdk` C# or Rust bindings change
+in a way that breaks the tuatha netcode, the asset
+emits a `MaterializeResult` with a `breaking_changes`
+field that pings the technical director.
+
+### The Hades hybrid 3D→2D pipeline
+
+Supergiant's *Hades* visual identity is a "pre-rendered
+isometric projection" — a 3D model rendered once to
+2D sprite sheets with normal maps + material IDs +
+emissive, then played back as flat sprites. The KCG
+extension uses **Unreal Engine 5's Movie Render Queue
+(MRQ)** as the source engine, and the final game
+client (Godot 4 or Unity 6) as the runtime.
+
+Per-character pipeline:
+
+1. **Animation** in Maya/Blender → imported to UE5.
+2. **Staging** in a "Baking Level" with a Turntable
+   blueprint.
+3. **MRQ capture** with these render passes:
+   - **Final Image (RGB)** — the visual look
+   - **World Normal (RGB)** — for runtime re-lighting
+   - **Opacity (A)** — for masking
+   - **Emissive (RGB)** — for the neon *Hades* glow
+4. **Rotation loop** — 8-32 compass directions via
+   `unreal.MoviePipelineQueueSubsystem` + Python.
+5. **Output** — Multi-layer EXR preserving normals +
+   colour in sync.
+
+The Godot 4 alternative (lighter, indie-friendly) is
+the **SubViewport technique**: at runtime during a
+load screen, the game instantiates the 3D model in a
+`SubViewport`, plays the animation, captures frames
+into a `SpriteFrames` resource. This enables
+**character customisation** — re-bake in 2s when the
+player changes armour, no 10,000 PNG offline combos.
+
+### The BitCraft SpacetimeDB backend
+
+Clockwork Labs' *BitCraft Online* pioneered the
+SpacetimeDB MMO pattern. The KCG extension adopts
+this for the Tuath backend:
+
+- **Reducers** = game logic (e.g. `CraftItem`).
+  They are ACID transactions — when a client requests
+  a craft, the DB runs the reducer, updates state,
+  and persists instantly.
+- **Subscriptions** = client `SELECT * FROM MapObjects
+  WHERE distance(player, obj) < view_distance`. The
+  DB pushes WebSocket updates when the query result
+  changes (no polling).
+- **Scaling** = horizontal by sharding `MapObjects`
+  by region. No dedicated game server to crash;
+  no Postgres save race condition.
+
+### Dagster asset wiring (the 2 new groups)
+
+```python
+from dagster import asset, AssetExecutionContext, define_asset_job
+
+@asset(group_name="hades_research")
+def hades_3d_to_2d_pipeline(context: AssetExecutionContext):
+    """Run the agentic research DCG on the latest Supergiant GDC talks."""
+    state = run_langgraph_dcg(
+        query="Hades 3D-to-2D normal map baking pipeline",
+        max_iterations=3,
+    )
+    return MaterializeResult(
+        metadata={
+            "report": state["final_report"],
+            "sources": state["sources_found"],
+            "iteration_count": state["iteration_count"],
+        }
+    )
+
+@asset(group_name="bitcraft_spacetimedb")
+def bitcraft_spacetimedb_compat(context: AssetExecutionContext):
+    """Monitor SpacetimeDB Rust SDK breaking changes; emit alert asset."""
+    breaking = monitor_spacetimedb_breaking_changes(
+        repo="clockworklabs/SpacetimeDB",
+        crates_to_check=["spacetimedb", "spacetimedb-sdk"],
+    )
+    return MaterializeResult(
+        metadata={
+            "breaking_changes": breaking,
+            "tuatha_impact": assess_tuatha_impact(breaking),
+        }
+    )
+```
+
+The 2 new groups (`hades_research`, `bitcraft_spacetimedb`)
+sit alongside the existing 4 (`celtic_curriculum`,
+`mythology_content`, `celtic_embeddings`,
+`mythology_embeddings`) in the `tuatha/dg.toml`
+code-location.
+
+See [`tuatha-mmo/references/sovereign-mmo-state-stack.md`](../tuatha-mmo/references/sovereign-mmo-state-stack.md)
+for the full 327-line sovereign game-state deep dive
+(SpacetimeDB Rust reducers, TanStack Vite config,
+DuckDB-WASM OPFS persistence, CopilotKit schema-first
+context) and
+[`tuatha-mmo/references/hades-bitcraft-pipeline.md`](../tuatha-mmo/references/hades-bitcraft-pipeline.md)
+for the 329-line LangGraph DCG + UE5 MRQ baking
+pipeline + SpacetimeDB scaling patterns.
