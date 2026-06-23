@@ -523,3 +523,30 @@ print(f"Cookies: {result.cookies}")
 ```
 
 For more details on any topic, refer to `references/complete-sdk-reference.md` which contains comprehensive documentation of all features, parameters, and advanced usage patterns.
+
+## Examples
+
+The `scripts/examples/` directory contains 11 worked examples
+migrated from `docs/06-infrastructure/` (round 8). They are
+demos / benchmarks, not the canonical scripts in
+`scripts/`:
+
+| # | File | What it shows |
+|:--|:--|:--|
+| 01 | `01_vs_firecrawl_benchmark.py` | Side-by-side crawl4ai vs Firecrawl on `nbcnews.com` (markdown size + image count + timing) |
+| 02 | `02_lxml_scraping_strategy_performance.py` | Profile `LXMLWebScrapingStrategy` with a `timing_decorator` over a 5,000-element synthetic HTML doc |
+| 03 | `03_llm_extraction_with_pydantic_schema.py` | `LLMExtractionStrategy` with a Pydantic `PageSummary` schema (title + summary + brief + keywords) |
+| 04 | `04_crypto_market_table_extraction.py` | Smart table extraction from CoinMarketCap (hedge-fund-style metrics) |
+| 05 | `05_multi_config_url_matching.py` | URL-pattern matching with multiple `CrawlerRunConfig` in one batch |
+| 06 | `06_docker_hooks_system.py` | The 3 docker hook approaches (string, `hooks_to_string`, `Crawl4aiDockerClient` auto-conversion) |
+| 07 | `07_docker_python_sdk.py` | `Crawl4aiDockerClient` async context manager (with JWT auth pattern) |
+| 08 | `08_docker_webhook_callback.py` | Webhook callback pattern for `/crawl/job` + `/llm/job` (vs polling) |
+| 09 | `09_embedding_vs_statistical_adaptive_crawling.py` | Adaptive crawler: `EmbeddingStrategy` vs statistical relevance |
+| 10 | `10_llm_config_and_adaptive_crawler.py` | `AdaptiveConfig` + `LLMConfig` test harness |
+| 11 | `11_llm_extraction_openai_pricing.py` | `LLMExtractionStrategy` with Pydantic `OpenAIModelFee` schema (per-model pricing) |
+
+> **Note**: examples 02 and 03 use deprecated APIs
+> (`LXMLWebScrapingStrategy._scrap` and the sync `WebCrawler`).
+> For new code, use `AsyncWebCrawler` + `CrawlerRunConfig`
+> per the canonical `scripts/basic_crawler.py` /
+> `scripts/extraction_pipeline.py`.

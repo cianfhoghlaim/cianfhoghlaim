@@ -655,3 +655,148 @@ const app = new Hono();
 app.on(["GET", "POST"], "/api/auth/*", (c) => auth.handler(c.req.raw));
 export default app;
 ```
+
+## KCG Convex patterns (round-9 deep dive)
+
+The 3,400-line `references/auth-integration-guide.md` is the
+canonical Convex reference for KCG. The patterns that matter:
+
+### 1. Function-type discipline (Q/M/A)
+
+| Type | DB access | External API | Determinism | Use for |
+|:--|:--|:--|:--|:--|
+| `query` | read | no | required | live subscriptions |
+| `mutation` | read+write | no | required | ACID writes |
+| `action` | via Q/M only | yes | not required | LLM, payment, email |
+
+**The cardinal rule:** never put `await fetch(...)` or
+`Date.now()` (when it changes the result) inside a query or
+mutation. Move the side-effect into an action and **batch
+all the data the action needs before calling
+`ctx.runMutation` exactly once** (multiple mutation calls
+from an action = race conditions).
+
+**Mutation-first pattern** (preferred for background jobs):
+
+```typescript
+export const scheduleJob = mutation({
+  handler: async (ctx, args) => {
+    const jobId = await ctx.db.insert("jobs", { status: "pending", ...args });
+    await ctx.scheduler.runAfter(0, internal.jobs.runJob, { jobId });
+    return jobId;
+  },
+});
+```
+
+### 2. Auth integration (Convex Auth vs BetterAuth)
+
+Two viable paths in the KCG stack:
+
+- **Convex Auth** (`@convex-dev/auth`) — built on Auth.js;
+  ships GitHub / Google / Resend / Password providers
+  out of the box. Use when you want one stack and don't
+  need SIWE / passkeys.
+- **BetterAuth** (`better-auth/convex` adapter) — use when
+  you also need SIWE (crypteolas), passkeys, or 2FA, or
+  when you're already running BetterAuth for the rest of
+  the monorepo (e.g. Hono + TanStack Start). The BetterAuth
+  Convex integration is via OIDC: set
+  `auth.config.ts` with the BetterAuth issuer domain and
+  the client ID as the audience.
+
+**Authorization** is per-function (always check at the
+top of every public query/mutation):
+
+```typescript
+const identity = await ctx.auth.getUserIdentity();
+if (!identity) throw new Error("Not authenticated");
+const user = await ctx.db
+  .query("users").withIndex("by_token",
+    (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
+  .unique();
+if (!user?.isAdmin) throw new Error("Not authorized");
+```
+
+### 3. HTTP endpoints (webhooks)
+
+`convex/http.ts` exposes a webhook surface that's separate
+from the reactive query/mutation API:
+
+```typescript
+import { httpRouter } from "convex/server";
+import { httpAction } from "./_generated/server";
+
+const http = httpRouter();
+http.route({
+  path: "/webhook/stripe",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    const sig = request.headers.get("stripe-signature");
+    // verify signature ...
+    const payload = await request.json();
+    await ctx.runMutation(api.payments.processWebhook, payload);
+    return new Response(null, { status: 200 });
+  }),
+});
+```
+
+`httpAction` is the **only** place where you can do signature
+verification + `request.json()` + a side-effecting mutation
+in a single round-trip.
+
+### 4. Vector search (RAG)
+
+```typescript
+// convex/schema.ts
+documents: defineTable({
+  text: v.string(),
+  embedding: v.array(v.float64()),
+  metadata: v.object({ title: v.string(), author: v.string() }),
+}).vectorIndex("by_embedding", {
+  vectorField: "embedding",
+  dimensions: 1536,        // text-embedding-3-small
+  filterFields: ["metadata.author"],
+});
+
+// convex/search.ts
+export const vectorSearch = query({
+  args: { embedding: v.array(v.float64()), limit: v.number() },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("documents")
+      .withIndex("by_embedding", (q) => q.similar(args.embedding, args.limit))
+      .collect();
+  },
+});
+```
+
+Pair with a `search` **action** that calls OpenAI for the
+embedding, then `ctx.runQuery(api.documents.vectorSearch, ...)`.
+The `@convex-dev/agent` package builds on this primitive
+for the KCG agent RAG layer.
+
+### 5. Scheduled + cron + scheduler
+
+- **One-shot** (e.g. send an email in 1h):
+  `ctx.scheduler.runAfter(3600 * 1000, api.tasks.process, { id })`
+- **Cron** (e.g. daily 9am cleanup):
+  `convex/crons.ts` with `crons.daily("name", { hourUTC: 9, minuteUTC: 0 }, internal.tasks.cleanup)`
+
+### 6. Component architecture (modular Convex)
+
+Convex **components** are deployable sub-apps that own
+their own tables and functions but share the deployment.
+The KCG stack uses:
+
+- `@convex-dev/agent` — agent threads, RAG, workflows
+- `@convex-dev/rate-limiter` — per-player action quotas
+- `@convex-dev/prosemirror` — collaborative exam editor
+  (for the British exam builder)
+
+Components are imported with `import { Agent } from
+"@convex-dev/agent";` and configured in `convex.config.ts`.
+
+See `references/auth-integration-guide.md` for the full
+2000-line deep-dive on auth, actions, HTTP, vector,
+scheduler, components, env vars, testing, framework
+integration, file storage, and real-time subscriptions.

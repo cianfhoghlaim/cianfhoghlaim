@@ -339,6 +339,83 @@ headers.set("Access-Control-Allow-Origin", "*")
 return new Response(object.body, { headers })
 ```
 
+## Alchemy IaC (round-9 deep dive)
+
+The KCG primary deploy for `oideachais/web` and
+`tuath/ui/` uses **[Alchemy](https://alchemy.run/)** (an
+embeddable, pure-TypeScript IaC library) rather than
+Pulumi / Terraform / wrangler.toml. The key property:
+**resources are memoised async functions** — no second
+language, no extra toolchain, no service to host.
+
+```typescript
+import alchemy from "alchemy";
+import { Worker, D1, R2, DurableObject } from "alchemy/cloudflare";
+
+const app = await alchemy("oideachais-web");
+
+export const db = await D1("oideachais-db", {
+  name: "oideachais-db",
+  migrationsDir: "./drizzle",
+});
+
+export const assets = await R2("oideachais-assets", {
+  name: "oideachais-assets",
+});
+
+export const worker = await Worker("oideachais-web", {
+  name: "oideachais-web",
+  entrypoint: "./src/index.ts",
+  bindings: {
+    DB: db,
+    ASSETS: assets,
+    GITHUB_CLIENT_ID: alchemy.secret(process.env.GITHUB_CLIENT_ID),
+    GITHUB_CLIENT_SECRET: alchemy.secret(process.env.GITHUB_CLIENT_SECRET),
+  },
+});
+
+await app.finalize();   // triggers deletion of orphaned resources
+```
+
+**Why Alchemy over `wrangler.toml`:**
+
+- The IaC is a **TypeScript program** that you can import,
+  test, and extend (e.g. add a per-environment worker
+  variant, a custom resource for Infisical secrets)
+- The state lives in a local file you can inspect, diff,
+  and commit (no Pulumi Cloud / Terraform state backend)
+- It runs in **any JS runtime** — Bun, Node, Workers, the
+  browser (yes, IaC in the browser)
+- It's **AI-first** — the README explicitly encourages
+  using an LLM to create / copy / fork / modify resources
+  when the library doesn't ship a provider
+
+**KCG use:** `oideachais/web/alchemy.run.ts` declares the
+Worker + D1 + R2 + Hyperdrive + Queues. Run with
+`bun run alchemy/deploy`. The state file
+`.alchemy/state.json` is gitignored. The secret
+hydration layer is `.infisical.env` (see
+`secrets-management` skill).
+
+**Examples that ship with Alchemy:**
+
+- `cloudflare-worker` — Queue + R2 + Durable Objects +
+  Workflows + RPC
+- `cloudflare-tanstack-start` — TanStack Start app
+  deployment
+- `cloudflare-vite` — Vite + Durable Objects
+- `cloudflare-sveltekit`, `cloudflare-redwood`,
+  `cloudflare-react-router` — full framework deploys
+- `aws-app` — Lambda + DynamoDB + IAM (multi-cloud)
+
+The 236 releases and Apache-2.0 licence put Alchemy in
+the **production-ready** tier for the KCG stack. The
+canonical KCG surface is the
+`infrastructure/stacks/oideachais/web/` Alchemy run file.
+
+See `references/alchemy-iac.md` for the upstream README
+in full.
+
 ## Resources
 
 - **Documentation**: https://developers.cloudflare.com/workers/

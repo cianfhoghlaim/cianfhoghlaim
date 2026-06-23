@@ -208,6 +208,76 @@ imported by BAML, Pydantic AI, Dagster assets, and Convex
 schemas. **Never duplicate a model** — if you change it in
 BAML, `baml generate` propagates the change to all consumers.
 
+## AG-UI protocol (round-9 deep dive)
+
+Pydantic AI ships a first-class AG-UI integration. The
+`AGUIAdapter` was originally built by Rocket Science and
+contributed in collaboration with the Pydantic AI and
+CopilotKit teams. Install with:
+
+```bash
+uv add 'pydantic-ai-slim[ag-ui]'
+# pulls in: ag-ui-protocol, starlette, uvicorn
+```
+
+### 3 ways to expose an AG-UI agent
+
+1. **`AGUIAdapter.run_stream()`** — most flexible. Build
+   the `RunAgentInput` yourself, then stream AG-UI events.
+   Use for non-Starlette frameworks (Django, Flask) or to
+   pre/post-process the input/output.
+2. **`AGUIAdapter.dispatch_request()`** — class method
+   that takes a Starlette `Request` (e.g. from FastAPI)
+   and returns a `StreamingResponse` of AG-UI events.
+   Per-request `Agent.iter(...)` args (e.g. `deps`) so
+   you can vary by authenticated user.
+3. **`AGUIApp`** — full ASGI app, mounts under
+   `app.mount("/api/agent", app)`. Per-app `Agent.iter(...)`
+   args (same for every request, except for the AG-UI
+   `state` injection).
+
+```python
+from fastapi import FastAPI, Request
+from fastapi.responses import Response
+from pydantic_ai import Agent
+from pydantic_ai.ui import SSE_CONTENT_TYPE
+from pydantic_ai.ui.ag_ui import AGUIAdapter
+
+agent = Agent("gateway/openai:gpt-5", instructions="Be fun!")
+app = FastAPI()
+
+@app.post("/")
+async def run_agent(request: Request) -> Response:
+    accept = request.headers.get("accept", SSE_CONTENT_TYPE)
+    try:
+        run_input = AGUIAdapter.build_run_input(await request.body())
+    except ValidationError as e:
+        return Response(content=e.json(),
+                        media_type="application/json",
+                        status_code=422)
+    return await AGUIAdapter.dispatch_request(agent, request, deps=...)
+```
+
+### KCG use
+
+The KCG stack uses Pydantic AI as the **typed-agent
+backend** for CopilotKit frontends. The flow:
+
+1. **BAML** generates a typed Pydantic model (e.g.
+   `LeavingCertSubject`)
+2. **Pydantic AI** wraps the LLM call with
+   `output_type=LeavingCertSubject`
+3. **AG-UI** streams the events to the CopilotKit client
+4. **Logfire** traces every step (token, tool call, state)
+5. **DBOS** makes the workflow durable across restarts
+
+The shared Pydantic model lives in `oideachais/models/`
+and is imported by BAML, Pydantic AI, Dagster assets,
+and Convex schemas — never duplicate.
+
+See `references/clippings/ag-ui.md` for the full Pydantic
+AI AG-UI documentation clipping.
+
 ## Resources
 
 - Pydantic AI docs: <https://ai.pydantic.dev/>

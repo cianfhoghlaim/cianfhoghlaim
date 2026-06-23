@@ -359,3 +359,48 @@ the `runtimeUrl` to the Agno AG-UI adapter:
 
 The frontend is identical regardless of the backend agent
 framework (Pydantic AI, Agno, Google ADK, BAML).
+
+## AG-UI vs A2UI vs MCP-UI (round-9 deep dive)
+
+CopilotKit is the **runtime consumer** of AG-UI; the
+**generative UI** layer is a separate spec. The 4
+generative-UI specs in the KCG universe:
+
+| Spec | Origin | Transport | Renders in host as |
+|:--|:--|:--|:--|
+| **AG-UI** | CopilotKit | SSE / WebSocket | Bi-directional runtime |
+| **A2UI** | Google | JSONL streaming | JSON component blueprints |
+| **MCP-UI / MCP Apps** | Microsoft + Shopify | over MCP | iframe (sandboxed) |
+| **Open-JSON-UI** | OpenAI | JSON Schema | Declarative spec |
+
+**AG-UI is the connection layer, not a UI spec.** A2UI,
+MCP-UI, Open-JSON-UI are all generative UI specs that
+**travel over** AG-UI. The runtime flow:
+
+1. Agent emits a generative UI spec (A2UI JSON
+   describing the components)
+2. AG-UI transports the spec over SSE to the app
+3. The host app renders the components natively (no
+   iframe, no script injection — host styling preserved)
+4. User interactions flow back through AG-UI to the agent
+
+For the **Tuatha MMO mobile client** (Kotlin / Swift /
+native UI), A2UI is the canonical choice because the
+host app keeps its Celtic design language. For web
+frontends, the CopilotKit React renderer consumes AG-UI
+directly.
+
+**MCP-UI / MCP Apps** are iframe-based, sandboxed
+components that travel over the MCP protocol. They are
+the canonical "rich UI in a desktop agent host" spec
+(such as Claude Desktop). The iframe sandbox keeps the
+host safe even when the agent generates untrusted
+content. See `references/clippings/mcp-ui.md` for the
+upstream overview.
+
+For the KCG stack, the rule of thumb:
+
+- **Web React frontends** → CopilotKit consumes AG-UI
+  directly (no need for A2UI / MCP-UI)
+- **Mobile native (iOS / Android)** → A2UI over AG-UI
+- **Desktop / Claude Desktop** → MCP-UI / MCP Apps
