@@ -1,0 +1,316 @@
+---
+name: tuatha-mmo
+description: The Tuatha Celtic Educational MMO — Babylon.js 7 + WebGPU client, Rust + SpacetimeDB server, x402 micropayments, SIWE auth, and the Crypteolas crypto platform, all organised around the Pent-Elemental Cosmology (Spirit / Water / Fire / Earth / Air + Anam Cara). The 4 sub-modules (game / crates / crypteolas / ui) form one cohesive product: a Babylon.js front-end, a SpacetimeDB authoritative state engine, a TanStack Start web app, and a Python crypto data platform. Use when adding a 3D scene, wiring a Babylon.js zone, deploying the SpacetimeDB server, onboarding a new agent (Celtic Tutor / Mythology Narrator / Quest Guide / Research Assistant), or asking "how does the Celtic MMO fit together?".
+---
+
+# Tuatha Celtic Educational MMO
+
+## When to use this skill
+
+Use when you need to:
+
+- "Add a 3D scene or Babylon.js zone to the Tuatha MMO"
+- "Add a SpacetimeDB table or reducer"
+- "Wire x402 micropayments for a new game feature"
+- "Onboard a new Celtic AI agent (tutor / narrator / quest /
+  research)"
+- "Deploy the MMO to `bunchloch` or `arm1-oci`"
+- "Cross-compile the iOS / KMP / RN / Godot client"
+- "Configure the pent-elemental cosmology (Spirit / Water /
+  Fire / Earth / Air + Anam Cara)"
+- "Understand the relationship between `game/`, `crates/`,
+  `crypteolas/`, and `ui/`"
+- "Optimise the 60 FPS rendering budget or the embedding 100×
+  batch rule"
+
+## Overview
+
+Tuatha is a **Celtic Educational MMO** that fuses a Babylon.js
+3D game client, a Rust + SpacetimeDB authoritative state
+engine, a TanStack Start web front-end, and a Python crypto
+data platform (Crypteolas) into a single product. The game
+world is built around the **Pent-Elemental Cosmology**: five
+realms (Spirit / Water / Fire / Earth / Air) joined by the
+**Anam Cara** (soul friend) social mechanic. The educational
+backbone is a fleet of AI agents (Celtic Tutor, Mythology
+Narrator, Quest Guide, Research Assistant) that translate
+the NCCA / SEC / pan-Celtic curriculum into in-world content.
+
+Tuatha is one of 4 quadrants of the Cianfhoghlaim monorepo
+and is registered as a top-level uv workspace member
+(`tuath`).
+
+The 4 sub-modules, in the layout they ship in:
+
+| Path | Tech | Role |
+|:--|:--|:--|
+| `tuatha/game/` | Babylon.js 7 (TS) + WebGPU | 3D game client (the MMO front-end) |
+| `tuatha/crates/` | Rust + SpacetimeDB + Axum | Game engine (authoritative state) |
+| `tuatha/crypteolas/` | Python + Bitcoin / Ethereum / Solana | Crypto data platform + x402 settlement |
+| `tuatha/ui/` | TanStack Start | Web front-end for the educational game |
+
+The 4 dev servers run in parallel:
+
+| Server | Port | Tech |
+|:--|:--|:--|
+| Game server (HTTP) | 3000 | Rust + Axum |
+| Game server (WebSocket) | 3001 | SpacetimeDB |
+| Game client (dev) | 8080 | Babylon.js (Vite) |
+| Web front-end | 3002 | TanStack Start |
+
+## The Pent-Elemental Cosmology
+
+The game world is divided into **5 elemental realms**, each
+tied to a curriculum theme and a Celtic language:
+
+| Realm | Element | Curriculum theme | Celtic language | Sample agent |
+|:--|:--|:--|:--|:--|
+| **Anam** | Spirit | Bardic lore, mythology, history | Gaeilge | Mythology Narrator |
+| **Uisce** | Water | Geography, marine biology, climate | Gaeilge + Gàidhlig | Research Assistant |
+| **Tine** | Fire | Chemistry, physics, energy | Gaeilge | Celtic Tutor |
+| **Talamh** | Earth | Mathematics, geology, agriculture | Cymraeg | Quest Guide |
+| **Aer** | Air | Astronomy, weather, music | Gaeilge + Cymraeg | Celtic Tutor |
+
+Each realm is a **Babylon.js scene** + a **SpacetimeDB
+namespace** (own tables, own reducers, own auth scopes).
+Inter-realm travel happens through **Anam Cara** (soul
+friend) portals — when two players forge an Anam Cara bond,
+they share a private mini-realm that crosses elements.
+
+The cosmology is encoded as data, not as hard-coded scenes:
+the `RealmConfig` table holds the realm metadata, the
+`AnamCara` table holds the social bonds, and the
+`RealmEdge` table holds the portal graph. A realm can be
+added by writing a new row.
+
+## The 4-agent system
+
+The educational backbone is 4 specialised agents, each
+backed by a BAML client + a Celtic-language model:
+
+| Agent | Role | Primary model | Language |
+|:--|:--|:--|:--|
+| **Celtic Tutor** | In-world teaching NPC (assesses mastery, offers quests) | `ReliableAI/UCCIX-Llama3.1-70B` | en + ga |
+| **Mythology Narrator** | Stories / cycles (Tuatha Dé Danann, Táin Bó Cúailnge, Fionn mac Cumhaill) | `ReliableAI/UCCIX-Llama3.1-70B` | en + ga |
+| **Quest Guide** | Quest design + adaptive difficulty + mastery decay | `litellm/anthropic/claude-sonnet-4` | en |
+| **Research Assistant** | Long-form reasoning + Celtic-language queries | `litellm/gemini-2.5-flash` (fast) → `litellm/anthropic/claude-sonnet-4` (strong) | en + ga + cy |
+
+The agents are CopilotKit AG-UI components rendered in the
+TanStack Start UI; their state lives in SpacetimeDB (the
+agent's memory, the player's mastery) and in Cognee
+(long-term knowledge). A2UI streams UI events over
+`ws://localhost:3000/a2ui`.
+
+The full Tuath agent system (1586 lines) is in
+`references/tuath-agent-architecture.md`.
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                          TUATHA MMO STACK                           │
+└─────────────────────────────────────────────────────────────────────┘
+
+Browser (Babylon.js 7 + WebGPU)
+   │  ▲  WebSocket
+   │  │
+   ▼  │
+SpacetimeDB (Rust)
+   │  ▲
+   │  │
+   ▼  │
+Axum HTTP (Rust) ─── SIWE (Sign-In With Ethereum)
+   │                ─── x402 micropayments
+   │                ─── CopilotKit A2UI
+   │
+   ▼
+TanStack Start (TS) ─── Cloudflare Workers
+   │
+   ▼
+Crypteolas (Python) ─── Bitcoin / Ethereum / Solana
+   │                ─── EAS attestations
+   │                ─── Flower federated learning
+   ▼
+Dagster (Python) ─── Celtic curriculum assets
+   │             ─── Mythology embeddings
+   │             ─── Crypteolas trades
+   ▼
+FalkorDB + LanceDB + Memgraph + MotherDuck
+```
+
+The state engine is **sovereign** — SpacetimeDB holds
+authoritative game state; nothing else writes. The Axum
+HTTP layer is read-only + a webhook sink for off-game events
+(SIWE nonce, x402 settlement, EAS attestations).
+
+## Deployment
+
+The MMO deploys to the 3-tier KCG topology (see
+`kcg-bunchloch`):
+
+| Tier | Role for Tuatha |
+|:--|:--|
+| `arm1-oci` (control plane) | Pangolin / Traefik routes the `*.tuatha.cianfhoghlaim.ie` domain |
+| `cax41-hetzner` (storage) | S3 / Lance Namespace REST serves the Babylon.js asset CDN |
+| `bunchloch` (workload) | Runs the SpacetimeDB container + the Axum server + the TanStack Start SSR |
+
+The SpacetimeDB container is published from `tuatha/crates/`
+via the GitHub Action at `infrastructure/ci/spaces-sync.yml`
+and the Dagger CI/CD pipeline. The TanStack Start UI is
+deployed to Cloudflare Workers via the `tuatha/ui/`
+`bun run deploy` script.
+
+Secrets are injected by Locket sidecars from the `dev-baile`
+Infisical environment. The `secrets.env` template lives at
+the root of the repo; see `secrets-management` skill for the
+3-way contract.
+
+## Performance budgets
+
+| Surface | Budget | Notes |
+|:--|:--|:--|
+| Babylon.js client | 60 FPS at 1440p | WebGPU preferred, WebGL2 fallback |
+| SpacetimeDB reducer | < 5 ms p99 | hot path; no LLM calls inside reducers |
+| Axum endpoint | < 50 ms p99 | 1-shot LLM calls routed via A2UI streaming |
+| TanStack Start SSR | < 200 ms TTFB | Cloudflare Workers edge cache |
+| CocoIndex embedding | 100× batch minimum | 100+ chunks per `SentenceTransformerEmbedder` call |
+| LanceDB HNSW search | < 20 ms p99 | IVF_HNSW_PQ index, nprobes=8 |
+
+The full performance tuning guide (883 lines) is in
+`references/tuatha-performance-tuning.md`.
+
+## Quick routing (from `tuatha/AGENTS.md`)
+
+When working in `tuatha/`, route to the right sub-area:
+
+| Working on | Read | Skill |
+|:--|:--|:--|
+| 3D scenes, MMO client | `tuatha/game/` | `.agents/skills/babylonjs/`, this skill |
+| Rust + SpacetimeDB server | `tuatha/crates/` | this skill + `.agents/skills/upstream-mirrors/SKILL.md` (spacetimedb mirror) |
+| Crypto data platform | `tuatha/crypteolas/` | `.agents/skills/crypteolas/`, this skill |
+| Web front-end | `tuatha/ui/` | `.agents/skills/tanstack-start/`, this skill |
+| SIWE auth | `tuatha/auth/siwe.py` | `.agents/skills/better-auth/` + this skill |
+| x402 micropayments | `tuatha/crypteolas/x402.py` | `.agents/skills/upstream-mirrors/SKILL.md` (x402 mirror) |
+| Celtic-language models | `oideachais/baml_src/celtic_linguistics.baml` | `.agents/skills/celtic-language-ai/` |
+| Agent observability | Dagster + Langfuse | `.agents/skills/agent-observability/` |
+| Deploy the stack | `infrastructure/stacks/tuatha/` | `.agents/skills/stack-ops/` |
+
+## References (in this skill)
+
+- `references/tuath-api-reference.md` — full FastAPI + Axum
+  API spec for the Tuath backend.
+- `references/tuatha-pipelines.md` — canonical pipeline
+  diagram (DLT + CocoIndex + Dagster).
+- `references/tuath-agent-architecture.md` — the 1586-line
+  Tuath agent system (Celtic Tutor / Mythology Narrator /
+  Quest Guide / Research Assistant).
+- `references/babylonjs-game-client.md` — TuathGame +
+  SceneManager + SpacetimeDB Babylon 7 client.
+- `references/educational-game-development.md` — full
+  educational game dev pipeline (longer than the DIAGE copy).
+- `references/diage-educational-game-pipeline.md` — DIAGE
+  game-engine + Manim science viz (teanga copy).
+- `references/diage-physics-chem-game-pipeline.md` — same
+  content as the educational DIAGE copy.
+- `references/anam-engine-selection.md` — Anam MMO
+  ecosystem CopilotKit + x402 + KMP (tuatha copy).
+- `references/anam-mmo-engine-selection.md` — same as engine
+  selection (teanga copy).
+- `references/mythology-pent-elemental-cosmology.md` —
+  Spirit / Water / Fire / Earth / Air + Anam Cara MMO design.
+- `references/celtic-os-postmog-architecture.md` — window
+  manager Product-OS for the British Isles (tuatha copy).
+- `references/celtic-os-product-os.md` — same content
+  (teanga copy).
+- `references/celtic-languages-detection.md` — langdetect +
+  langcode + model gap mitigation for Tuatha.
+- `references/celtic-naming-lexicography.md` — anam / tír /
+  aran / gaelg / cymr / yern philology + Web3 conflicts.
+- `references/agentic-education-platform.md` — CopilotKit +
+  AgUI + MCP + x402 academy architecture.
+- `references/adding-dlt-data-sources.md` — how-to add a DLT
+  source to the Tuatha pipeline.
+- `references/data-platform-integration-plan.md` — the
+  2836-line data platform plan (Crypto Analytics worked
+  example).
+- `references/sovereign-mmo-state-stack.md` — SpacetimeDB +
+  DuckDB-WASM + TanStack MMO.
+- `references/crypteolas-copilotkit-integration.md` —
+  Crypteolas portfolio analysis + market monitoring + trade
+  execution.
+- `references/crypteolas-fl-crypto.md` — federated learning
+  + crypto payments on iPhone (SyftBox + Flower + x402).
+- `references/crypteolas-ios-marketplace.md` — Apple MLX +
+  x402 + Flower + PySyft iOS marketplace.
+- `references/cianfhoghlaim-scoilverse-l2e.md` — EBSI +
+  Hypercerts + Solana + Mythology + Vargas learn-to-earn.
+- `references/ios-sandwich-architecture.md` — Hybrid-Native
+  Sandwich KMP + Swift + Rust + UniFFI.
+- `references/british-isles-game-dev-pipeline.md` — 2.5D game
+  terrain from OS data + Met Office.
+- `references/hades-bitcraft-pipeline.md` — Supergiant +
+  SpacetimeDB + agentic research pipeline.
+- `references/anam-meteorological-particles.md` — Catmull-Rom
+  + Bicubic + GRIB2 + SpacetimeDB particle system.
+- `references/diare-game-reverse-engineering.md` — Ghidra +
+  Frida + FFmpeg + UnityPy + Storybook agentic SRE.
+- `references/rust-fullstack-gaming.md` — Rust workspace +
+  SpacetimeDB + Godot GDExtension + Alloy.
+- `references/spacetimedb-ogham-integration.md` — CISP /
+  Megalithic Portal Ogham ETL + Solana dNFT + Metaplex.
+- `references/spacetimedb-blockchain-strategy.md` —
+  Token-2022 + EIP-7702 + SpacetimeDB + Metaplex Core.
+- `references/mmo-geospatial-visual-rag.md` — DuckDB +
+  MotherDuck + RisingWave + SpacetimeDB WebGPU MMO.
+- `references/spacetimedb-tuatha-guide.md` — SpacetimeDB
+  tables + reducers + TS SDK.
+- `references/adding-babylonjs-zones.md` — how-to add
+  Celtic-language Babylon.js zones.
+- `references/tuatha-deployment-guide.md` — Cloudflare
+  Workers + R2 + SpacetimeDB production deploy.
+- `references/tuatha-tanstack-frontend.md` — routes +
+  components + SIWE + X402Paywall + TuathCopilot.
+- `references/tuatha-performance-tuning.md` — batch embedding
+  100×, HNSW, game client 60 FPS.
+- `references/cross-platform-guide.md` — KMP + Swift +
+  React Native + Godot Tuatha client.
+- `references/gdext-godot-rust-guide.md` — gdext setup +
+  SpacetimeDB SDK integration.
+- `references/clippings/copilotkit-ag-ui-a2ui.md` — AG-UI vs
+  A2UI.
+- `references/clippings/copilotkit-useagent-hook.md` —
+  useAgent hook (teanga copy).
+- `references/clippings/copilotkit-useagent-hook-2.md` —
+  useAgent hook (tuatha copy, dedup pair).
+- `references/clippings/kmp-vs-react-native.md` — KMP vs RN.
+- `references/clippings/deisi-wikipedia.md` — Déisi Wikipedia
+  (Irish mythology reference).
+- `references/clippings/mcp-ui.md` — MCP-UI protocol.
+
+## Cross-references
+
+- `.agents/skills/tuatha-platform/SKILL.md` — the existing
+  Tuatha quadrant router (this skill is the deeper dive into
+  the MMO + Crypteolas product).
+- `.agents/skills/babylonjs/SKILL.md` — the Babylon.js 3D
+  engine (used in `tuatha/game/`).
+- `.agents/skills/kcg-bunchloch/SKILL.md` — the 3-tier
+  topology where the MMO deploys.
+- `.agents/skills/stack-ops/SKILL.md` — the GOLD_STANDARD
+  6-file pattern (used to deploy the Tuatha stack).
+- `.agents/skills/secrets-management/SKILL.md` — the
+  Infisical + Locket secret injection.
+- `.agents/skills/better-auth/SKILL.md` — the SIWE auth
+  pattern (used for `tuatha/auth/siwe.py`).
+- `.agents/skills/celtic-language-ai/SKILL.md` — the Celtic
+  LLMs (Celtic Tutor / Mythology Narrator backends).
+- `.agents/skills/agent-observability/SKILL.md` — the
+  Langfuse + MLflow + RAGAS observability stack (the agent
+  agent-os for the 4 agents).
+- `.agents/skills/upstream-mirrors/SKILL.md` — the
+  SpacetimeDB / wgpu / x402 KCG mirror summaries.
+- `tuatha/AGENTS.md` — the existing entry point.
+- `tuatha/DEVELOPMENT.md` — 593-line developer guide.
+- `tuatha/README.md` — product spec.
+- `openspec/specs/tuatha-platform/spec.md` — the canonical
+  spec for the Tuatha quadrant.

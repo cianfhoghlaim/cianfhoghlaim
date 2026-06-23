@@ -359,6 +359,162 @@ baml fmt
 baml check
 ```
 
+## Polyglot IDL (BAML → Python+TS)
+
+When the BAML source has to feed both the **Python data
+layer** (Dagster + DLT + Pydantic) **and** the **TypeScript
+front-end** (TanStack + oRPC + Zod) from a single `.baml`
+file, treat BAML as the master Interface Definition
+Language (IDL). The compiler is the seam: one BAML class
+becomes a Pydantic model in Python and a TS interface
+in the browser.
+
+### Dual-target codegen (`generators.baml`)
+
+Configure two generators so a single `baml-cli generate`
+run produces both client libraries:
+
+```baml
+// baml_src/generators.baml
+
+// Generator 1: Python data layer (DLT + Dagster)
+generator python_client {
+  output_type "python/pydantic"
+  output_dir "../backend/baml_client"
+  version "0.76.2"
+  default_client_mode "async"
+}
+
+// Generator 2: TypeScript application layer (TanStack/oRPC)
+generator typescript_client {
+  output_type "typescript"
+  output_dir "../frontend/src/baml_client"
+  version "0.76.2"
+  default_client_mode "async"
+}
+```
+
+The BAML `@@description` annotations become Pydantic field
+descriptions (used by dlt for schema docs) **and** JSDoc
+comments on the TS side. One source of truth, two
+synced clients.
+
+### Python side: BAML → Pydantic → dlt Resource
+
+dlt introspects Pydantic models to infer the schema of a
+resource. Wire the BAML-generated Pydantic class as the
+`columns` contract:
+
+```python
+import dlt
+from backend.baml_client import b
+from backend.baml_client.types import ResearchInsight
+
+@dlt.source
+def research_source(texts: list[str]):
+    @dlt.resource(
+        name="research_insights",
+        write_disposition="merge",
+        primary_key="id",
+        columns=ResearchInsight,   # Pydantic from BAML
+    )
+    def extract_insights():
+        for text in texts:
+            yield b.ExtractInsight(text)   # BAML SAP validates JSON
+
+    return extract_insights
+```
+
+If the LLM produces malformed JSON, BAML's **Schema-Aligned
+Parsing (SAP)** raises *before* dlt ever sees the row —
+fail-fast prevents schema pollution downstream. For nested
+fields (`entities IdentifiedEntity[]`), dlt's
+normalization engine auto-creates a child table
+`research_insights__entities` with FK back to the parent.
+
+### Polyglot persistence (one class → 5 stores)
+
+The same BAML class can fan out to:
+
+| Store | dlt mechanism | KCG use |
+|:--|:--|:--|
+| **Postgres / DuckDB** | Native dlt destination | `secrets.toml` swap |
+| **LanceDB** | `dlt.destinations.adapters.lancedb_adapter(embed=[...])` | Vector search |
+| **FalkorDB** | Custom `@dlt.destination` + Cypher `MERGE` | Knowledge graph |
+| **Graphiti** | Custom `@dlt.destination` + `client.add_episode()` | Temporal memory |
+| **MotherDuck** | DuckDB native dest via `md:` URI | Read-only lakehouse |
+
+For graph stores without a native dlt destination, write
+a `@dlt.destination(batch_size=50)` that translates the
+BAML Pydantic dict into Cypher (FalkorDB) or JSON episodes
+(Graphiti). Use `MERGE` for idempotency aligned with
+dlt's retry behaviour.
+
+### TypeScript side: BAML → TS interface → Zod
+
+BAML does not emit Zod directly. Bridge the gap with
+`ts-to-zod` so the front-end runtime validator never
+drifts from the BAML definition:
+
+```jsonc
+// package.json scripts
+{
+  "generate:baml": "baml-cli generate",
+  "generate:zod": "ts-to-zod --input ./src/baml_client/types.ts --output ./src/gen/zod.ts --skipValidation",
+  "codegen": "npm run generate:baml && npm run generate:zod"
+}
+```
+
+The generated `researchInsightSchema` then drives:
+
+- **TanStack AI tools** — `toolDefinition({ inputSchema: researchInsightSchema, ... })`
+- **oRPC procedures** — `os.procedure.input(researchInsightSchema)`
+- **Drizzle** — store nested BAML objects as `jsonb` columns
+
+### Schema evolution in 4 steps
+
+Add a field once; propagate everywhere.
+
+1. `class ResearchInsight { ...; author string? @description("...") }`
+2. `npm run codegen` (regenerates Pydantic + TS + Zod).
+3. Next dlt run auto-`ALTER TABLE` on Postgres; the
+   `lancedb_adapter` picks up the new field.
+4. The TS compiler flags any strict callers; the Zod
+   schema gains `.optional()` for old data.
+
+### The 8-stage lifecycle
+
+| # | Stage | Component | Schema state |
+|:--|:--|:--|:--|
+| 1 | Definition | BAML `.baml` file | Source of truth |
+| 2 | Compilation | `baml-cli generate` | Pydantic + TS synced |
+| 3 | Bridge | `ts-to-zod` | Zod synced |
+| 4 | Ingestion | `b.ExtractInsight(text)` | Validated instance |
+| 5 | ETL | dlt → 5 destinations | Persisted |
+| 6 | Frontend | TanStack AI tool | — |
+| 7 | API | oRPC + Zod | Validated response |
+| 8 | UI | React + TS interface | Rendered |
+
+### KCG anti-patterns for polyglot BAML
+
+- **Don't write Zod by hand** — drift is inevitable.
+  Always `ts-to-zod` from the BAML-generated TS.
+- **Don't inline prompts in Python** — keep them in
+  `.baml` so they version-control with the schema.
+- **Don't normalise every nested list in Postgres** —
+  dlt's child tables are fine for SQL; store as
+  `jsonb` only when the query pattern is always
+  "load the whole record" (oRPC round-trip).
+- **Don't synchronously write to 5 stores from a UI
+  request** — push the BAML extraction to a background
+  worker (Celery, Temporal, or Dagster asset) and use
+  optimistic UI / polling.
+
+See [`celtic-asset-generation/references/baml-adaptive-syllabus.md`](../celtic-asset-generation/references/baml-adaptive-syllabus.md) and the full BAML+DLT+TanStack deep dive in
+[`celtic-asset-generation/references/baml-irish-education-kg.md`](../celtic-asset-generation/references/baml-irish-education-kg.md)
+for the canonical KCG pattern with Restate workflows
+and adaptive TypeBuilder schemas.
+
 ## Cross-references
 
 - [`baml_src/`](../../../baml_src/) — the 23+ BAML files
@@ -368,3 +524,7 @@ baml check
   to use BAML inside a CocoIndex v1 App
 - [`.agents/skills/dlt/SKILL.md`](../dlt/SKILL.md) — the type-safe
   BAML → dlt pipeline pattern
+- [`.agents/skills/tanstack-start/SKILL.md`](../tanstack-start/SKILL.md) —
+  the TanStack AI / oRPC / Zod consumer side
+- [`.agents/skills/celtic-asset-generation/SKILL.md`](../celtic-asset-generation/SKILL.md) —
+  canonical BAML usage for NCCA / SEC / Dept-of-Ed tripartite KG

@@ -221,3 +221,203 @@ ireland_primary_jc, crown_dependencies, leabharlann}`.
   of truth)
 - `oideachais/REFACTORING.md` — refactor backlog (Stage 5
   is queued)
+
+## Ingestion layer (Browserbase + Agno + GLM-4.6v + BAML + Cognee)
+
+The 5-stage leabharlann flow assumes **known PDFs at
+known paths**. The KCG extension (Q1 2026) adds a
+**Stage 0: agentic web scraping** layer for the case
+where the source is a live web property (e.g. an NCCA
+sub-site, a DCU Gaois PDF, a teanglann.ie page) and we
+need to **discover, fingerprint, and reconstruct** the
+extraction schema as the site evolves.
+
+This is the **neuro-symbolic web intelligence** pattern
+that complements the static BAML extraction in Stage 3.
+
+### The 5-component closed-loop
+
+```
+[Observation] Browserbase (CDP)
+       │
+       ▼
+[Perception]  Z.AI GLM-4.6v (VLM via MCP)
+       │
+       ▼
+[Cognition]   Cognee (knowledge graph)
+       │
+       ▼
+[Systematization] BAML (TypeBuilder, self-rewriting)
+       │
+       ▼
+[Creation]    Ag-UI (generative prototype)
+```
+
+Each stage is an **MCP tool** the Agno agent can invoke
+on demand; the BAML schema is the contract between them.
+
+### Stage 0a — Browserbase (Observation)
+
+Use Browserbase (managed CDP, not raw Selenium) to:
+- Navigate JS-heavy SPAs that the `dlt filesystem` source
+  cannot reach
+- Get **artifact-free full-page screenshots** via
+  `Page.captureScreenshot` (vs the stitched images
+  Selenium produces)
+- Bypass anti-bot detection via residential proxies +
+  human-like fingerprints (essential for protected
+  education sources)
+
+The Agno agent is a "transcoding bridge": it decodes the
+Base64 screenshot from Browserbase, persists it to R2
+(`s3://stedding/screenshots/{date}/{hash}.png`), and
+hands the local path to the next stage. The MCP file
+contract is what GLM-4.6v expects.
+
+### Stage 0b — GLM-4.6v via Z.AI MCP (Perception)
+
+Z.AI exposes 3 vision tools that the agent invokes in
+sequence:
+
+1. **`web_reader`** — fetches the raw DOM text + meta
+   (Title, Description) for "ground truth"
+2. **`extract_text_from_screenshot`** — OCRs the
+   screenshot, **rank-orders text by visual prominence**
+   (what the user actually sees first)
+3. **`ui_to_artifact`** — reverse-engineers the visual
+   bitmap into a semantic description (layout grid,
+   color palette, component tree)
+
+By cross-referencing the 3 outputs the agent answers
+"this text is the H1 not just because of the `<h1>` tag,
+but because OCR confirms it is the largest element in
+the viewport". This triple-anchor is what makes the
+downstream BAML schema stable.
+
+### Stage 0c — Cognee (Cognition: persistent memory)
+
+Cognee replaces the "stateless re-scrape every time"
+problem. After `cognify()`, the design ontology lives
+as a queryable graph:
+
+- **Nodes:** `Page`, `Section` (Hero, Footer),
+  `Component` (Button, Card), `Style` (Color, Font)
+- **Edges:** `CONTAINS`, `LINKS_TO`, `STYLED_WITH`
+
+Example triple from a CCEA page:
+`(Hero Section) -[:CONTAINS]-> (Button) -[:STYLED_WITH]-> (Color: #FF5733)`
+
+This is what the leabharlann Stage 5 (`cognee_cognify_*`
+asset) generalises to: instead of one Cognee call per
+file, the graph **persists across files** so a new
+CCEA sub-page can be cross-referenced against
+historical CCEA pages in a single Cognee query.
+
+### Stage 0d — BAML self-rewriting (Systematization)
+
+This is the **self-healing pipeline** pattern:
+
+1. The vision layer detects a layout shift on, say,
+   the NCCA primary curriculum site.
+2. Cognee's graph updates with the new component tree.
+3. The Agno agent queries the graph: *"Does this product
+   page have a `review_count`? A `discount_price`?"*
+4. Based on the graph shape, the agent **writes a new
+   `.baml` file** that adds `review_count int` (or
+   whatever) to the extraction class.
+5. `baml-cli generate` regenerates the Python + TS clients.
+6. Stage 3 of the leabharlann flow (`leabharlann_paper_metadata`)
+   now uses the new schema.
+
+The BAML `TypeBuilder` is the escape valve when the
+graph shows a field that **doesn't exist** in the static
+`.baml` file — it lets the agent extract anyway, log the
+deviation as a "Schema Patch" Dagster asset, and surface
+it for human review (the human-in-the-loop consolidation
+step).
+
+### Stage 0e — Ag-UI (Creation: generative prototype)
+
+The agent also reuses the Cognee graph + GLM-4.6v to
+**render a React/Tailwind clone** of the analysed site,
+streamed via the Ag-UI `gen_ui_event` protocol. This
+is useful for design QA ("does the scraped structure
+match the design system?") and for the
+`oideachais/visual_archive` demo in the marimo
+notebooks.
+
+### Medallion R2 architecture (the asset-key contract)
+
+The Cloudflare R2 bucket is split into 3 zones; this
+maps directly to the leabharlann Stages 2-4:
+
+| Zone | Path | Stage | Retention |
+|:--|:--|:--|:--|
+| **Raw (Bronze)** | `s3://stedding/raw/{nation}/{date}/{hash}.html` | Stage 0a | Permanent (re-extraction possible) |
+| **Extracted (Silver)** | `s3://stedding/extracted/{nation}/{schema_ver}/{id}.json` | Stage 0d | Versioned (per BAML schema_ver) |
+| **Knowledge (Gold)** | `s3://stedding/knowledge/{index_type}/{shard}.parquet` | Stage 4-5 | Current state (CocoIndex + DuckDB) |
+
+The Bronze zone is the **time-travel** layer: if a BAML
+schema improves (e.g. a new field for `dialect` is added),
+Stage 0d can re-process every raw HTML without re-scraping.
+The `{schema_ver}` in Silver captures the lineage.
+
+### Dagster asset wiring (the `@dlt_assets` projection)
+
+The whole Stage 0 is one Dagster asset group
+(`agentic_ingest`) that wraps dlt via `@dlt_assets`:
+
+```python
+from dagster import AssetExecutionContext
+from dagster_dlt import DagsterDltResource, dlt_assets
+from dlt_sources.ccea import ccea_source
+
+@dlt_assets(
+    dlt_source=ccea_source(),
+    dlt_pipeline=dlt.pipeline(
+        pipeline_name="ccea_agentic_ingest",
+        destination="filesystem",   # R2
+        dataset_name="ccea_education",
+        progress="log",
+    ),
+    name="ccea_agentic_raw",
+    group_name="agentic_ingest",
+)
+def ccea_assets(context: AssetExecutionContext, dlt: DagsterDltResource):
+    yield from dlt.run(context=context)
+```
+
+The dlt internal tables (`pages`, `screenshots`,
+`vision_artifacts`, `cognee_episodes`) all surface as
+**distinct assets** in the Dagster lineage graph — the
+data engineer sees exactly when `ccea_agentic_raw` was
+last materialised and which upstream failed.
+
+### KCG production rules (anti-patterns)
+
+- **Don't call GLM-4.6v on every URL** — the cost is
+  real. Use it only after the Browserbase `web_reader`
+  shows the page **isn't in our BAML coverage**.
+- **Don't write the new BAML file directly** — let
+  the Agno agent propose the diff, then a human
+  approves via the `Schema Patch` Dagster asset.
+- **Don't normalise the Cognee ontology per-page** —
+  use the **shared** `oideachais.education.{nation}.{entity}`
+  ontology from `cross-domain-registry`; Cognee adds
+  nodes/edges, never redefines classes.
+- **Don't bypass Dagster** — the whole point of the
+  closed-loop is **asset lineage**. Browserbase
+  screenshots must be an asset, not an ad-hoc fetch.
+
+See [`celtic-asset-generation/references/agent-knowledge-base.md`](../celtic-asset-generation/references/agent-knowledge-base.md)
+for the 631-line blueprint (4 domain case studies:
+Ethereum, Cloudflare, UK Education, Godot) including
+the complete BAML `EthereumProtocol` and
+`CorporateEntity` schemas and the
+Graphiti `add_episode` flow.
+
+For the full neuro-symbolic web scraping architecture
+(Browserbase + Agno + Z.AI + Cognee + BAML + Ag-UI)
+see [`celtic-asset-generation/references/agent-knowledge-base.md`](../celtic-asset-generation/references/agent-knowledge-base.md) and
+the source deep-dive in
+[`docs/tuatha/03-data-pipelines/Agentic Web Scraping Pipeline.md`](../../../docs/tuatha/03-data-pipelines/Agentic%20Web%20Scraping%20Pipeline.md).
