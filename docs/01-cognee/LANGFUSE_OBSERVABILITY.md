@@ -31,7 +31,7 @@ Every cognition operation involves LLM calls — entity extraction, relationship
 ### Docker Stack
 
 ```bash
-cd infrastructure/stacks/machine_learning/langfuse
+cd infrastructure/stacks/langfuse
 docker compose -f compose.yaml -f sidecar.yaml up -d
 # Services: langfuse-web (:3000), langfuse-worker, postgres, clickhouse, redis, minio
 ```

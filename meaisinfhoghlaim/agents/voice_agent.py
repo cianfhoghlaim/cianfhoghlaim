@@ -6,7 +6,7 @@ Bridges:
 - Agent: LiteLLM gateway (root_agent or curriculum_agent)
 - TTS:   ABAIR (Irish) / Chatterbox (English) / SAM-Audio (source separation)
 
-Requires: infrastructure/stacks/engineering/pipecat/ (port 8765)
+Requires: infrastructure/stacks/pipecat/ (port 8765)
 Reference: docs/meaisínfhoghlaim/README.md (audio model table)
 """
 from __future__ import annotations

@@ -84,9 +84,9 @@ bun run db:push
 
 ```bash
 # 1. Start the local Postgres stack
-docker compose -f infrastructure/stacks/storage/croilar-postgres/compose.yaml \
-               -f infrastructure/stacks/storage/croilar-postgres/sidecar.yaml \
-               --env-file infrastructure/stacks/storage/croilar-postgres/secrets.env \
+docker compose -f infrastructure/stacks/croilar-postgres/compose.yaml \
+               -f infrastructure/stacks/croilar-postgres/sidecar.yaml \
+               --env-file infrastructure/stacks/croilar-postgres/secrets.env \
                up -d
 
 # 2. Set up env

@@ -114,7 +114,7 @@ All new notebooks honour the `MOTHERDUCK_ENABLED` env var to toggle
 between a shared MotherDuck database and the local DuckDB / DuckLake
 fallback. They all pass `marimo check` cleanly.
 
-### 11.7 Lakehouse Stack — `infrastructure/stacks/storage/lakehouse/`
+### 11.7 Lakehouse Stack — `infrastructure/stacks/lakehouse/`
 
 The four-service stack is up and running (verified via `docker ps`):
 

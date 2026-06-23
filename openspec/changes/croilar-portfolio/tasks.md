@@ -4,10 +4,10 @@
 - [x] PR1. Move `stedding/dev/cianfhoghlaim copy/sruth/aleyum/*` → top-level `croilar/`
       (rsync — `stedding/` is gitignored, no git history to preserve)
 - [x] PR1. Delete leftover backup copies in `stedding/dev/cianfhoghlaim_backup/stedding/flows/aleyum/`, `stedding/dev/flows/aleyum/`, `stedding/flows/aleyum/` (8.8M freed)
-- [x] PR1. Update `infrastructure/stacks/engineering/agent-os/` 6-file pattern (compose + sidecar + secrets + pangolin + blueprint + .env.example) — aleyum-agentos → croilar-agentos (with legacy alias for safe transition)
+- [x] PR1. Update `infrastructure/stacks/agent-os/` 6-file pattern (compose + sidecar + secrets + pangolin + blueprint + .env.example) — aleyum-agentos → croilar-agentos (with legacy alias for safe transition)
 - [x] PR1. Update `oideachais/data_platform/agent_os/config.yaml` to add `croilar` to A2A `allowed_services`
-- [x] PR1. Update `infrastructure/stacks/infrastructure/motherduck/` (blueprint + README) — add `croilar_market` alongside legacy `aleyum_market`
-- [x] PR1. Update `infrastructure/stacks/storage/lakehouse/init-db.sql` — add `ducklake_croilar` alongside legacy `ducklake_aleyum`
+- [x] PR1. Update `infrastructure/stacks/motherduck/` (blueprint + README) — add `croilar_market` alongside legacy `aleyum_market`
+- [x] PR1. Update `infrastructure/stacks/lakehouse/init-db.sql` — add `ducklake_croilar` alongside legacy `ducklake_aleyum`
 - [x] PR1. Update `infrastructure/templates/github-pr-forward.yaml` — add `croilar` to FLOW_NAME list
 - [x] PR1. Update `infrastructure/pangolin/a2a-resources.blueprint.yaml` (TODO: follow-up — keep aleyum-agentos as legacy, add croilar-agentos)
 - [x] PR1. Update `.infisical.env` — R2/Cloudflare refs use `dev-baile/cloudflare/*` (was `aleyum/cloudflare/account_id`); add a 13-line CROILAR block with Spotify/GitHub/SoundCloud/YouTube/HMAC/encryption_key/db_url/portfolio_bucket

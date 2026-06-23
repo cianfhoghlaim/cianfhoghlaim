@@ -244,4 +244,4 @@ The sensor is registered in
 - `.agents/skills/cognee/SKILL.md`
 - `.agents/skills/baml/SKILL.md`
 - `.agents/skills/marimo/SKILL.md`
-- `infrastructure/stacks/tools/changedetection/` — sitemap sensor (deployed on `arm1-oci`)
+- `infrastructure/stacks/changedetection/` — sitemap sensor (deployed on `arm1-oci`)

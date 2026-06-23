@@ -420,9 +420,9 @@ against the live Komodo state, and emits a diff.
 
 | Stack | Live path | Resource Sync source |
 |:--|:--|:--|
-| `engineering/dagster` | `digraph-compose.cianfhoghlaim.ie` | `infrastructure/stacks/engineering/dagster` |
-| `storage/cognee` | `cognee.cianfhoghlaim.ie` | `infrastructure/stacks/storage/cognee` |
-| `tools/n8n` | `n8n.cianfhoghlaim.ie` | `infrastructure/stacks/tools/n8n` |
+| `dagster` | `digraph-compose.cianfhoghlaim.ie` | `infrastructure/stacks/dagster` |
+| `cognee` | `cognee.cianfhoghlaim.ie` | `infrastructure/stacks/cognee` |
+| `n8n` | `n8n.cianfhoghlaim.ie` | `infrastructure/stacks/n8n` |
 
 ### KCG custom actions
 

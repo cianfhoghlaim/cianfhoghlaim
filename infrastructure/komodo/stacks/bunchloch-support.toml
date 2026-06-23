@@ -22,9 +22,9 @@ tags = [
 server_id = "bunchloch"
 run_directory = "/etc/komodo/litellm"
 file_paths = [
-  "infrastructure/stacks/engineering/litellm/compose.yaml",
-  "infrastructure/stacks/engineering/litellm/sidecar.yaml",
-  "infrastructure/stacks/engineering/litellm/secrets.env",
+  "infrastructure/stacks/litellm/compose.yaml",
+  "infrastructure/stacks/litellm/sidecar.yaml",
+  "infrastructure/stacks/litellm/secrets.env",
 ]
 environment = """
 LITELLM_PORT=4000
@@ -54,9 +54,9 @@ tags = [
 server_id = "bunchloch"
 run_directory = "/etc/komodo/lancedb"
 file_paths = [
-  "infrastructure/stacks/machine_learning/lancedb/compose.yaml",
-  "infrastructure/stacks/machine_learning/lancedb/sidecar.yaml",
-  "infrastructure/stacks/machine_learning/lancedb/secrets.env",
+  "infrastructure/stacks/lancedb/compose.yaml",
+  "infrastructure/stacks/lancedb/sidecar.yaml",
+  "infrastructure/stacks/lancedb/secrets.env",
 ]
 environment = """
 LANCEDB_PORT=8080
@@ -85,9 +85,9 @@ tags = [
 server_id = "bunchloch"
 run_directory = "/etc/komodo/langfuse"
 file_paths = [
-  "infrastructure/stacks/machine_learning/langfuse/compose.yaml",
-  "infrastructure/stacks/machine_learning/langfuse/sidecar.yaml",
-  "infrastructure/stacks/machine_learning/langfuse/secrets.env",
+  "infrastructure/stacks/langfuse/compose.yaml",
+  "infrastructure/stacks/langfuse/sidecar.yaml",
+  "infrastructure/stacks/langfuse/secrets.env",
 ]
 environment = """
 LANGFUSE_PORT=3000

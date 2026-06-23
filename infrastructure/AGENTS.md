@@ -8,12 +8,7 @@ Infrastructure contains deployment configurations, infrastructure-as-code, and s
 
 | Directory | Purpose | Technology |
 |-----------|---------|------------|
-| `stacks/storage/` | Foundational substrates (S3, catalogs, version control) | Docker Compose |
-| `stacks/infrastructure/` | Control plane (Pangolin, Komodo, Pocket ID, Forgejo, Pulumi, R2, MotherDuck, PlanetScale) | Docker Compose |
-| `stacks/engineering/` | Dev tooling + gateways + services (LiteLLM, llama-swap, Coder, Dagster, Convex, Pipecat) | Docker Compose |
-| `stacks/machine_learning/` | AI services (Cognee, Graphiti, Langfuse, MLflow, LanceDB, Qdrant, Memgraph, FalkorDB, RisingWave) | Docker Compose |
-| `stacks/tools/` | Productivity and media utilities | Docker Compose |
-| `stacks/browser/` | Browser automation stacks | Docker Compose |
+| `stacks/` | **94 Docker Compose stacks, flat layout** (one directory per stack) | Docker Compose |
 | `komodo/` | Komodo configuration and profiles | Komodo |
 | `pangolin/` | Pangolin setup documentation | Markdown |
 | `infisical/` | Local Infisical dev server | Docker Compose |
@@ -21,86 +16,124 @@ Infrastructure contains deployment configurations, infrastructure-as-code, and s
 | `ansible/` | Server configuration | Ansible |
 | `scripts/` | Utility scripts | Shell/TypeScript |
 
-### Categorisation philosophy (after Phase 0 reorganisation)
+### Flattening note (2026-06-23)
 
-- **`stacks/infrastructure/`** — Control-plane services. Anything that other services depend on for routing/auth/identity/storage provisioning.
-- **`stacks/engineering/`** — Service mesh + dev tooling + AI gateways. Things humans and agents interact with daily.
-- **`stacks/machine_learning/`** — AI/ML-specific services: vector DBs, knowledge graphs, observability, streaming, training.
-- **`stacks/storage/`** — Foundational substrates only: S3 (Garage), Iceberg (Lakekeeper), git (Forgejo runner, LakeFS).
-- **`stacks/tools/`** — Productivity / media utilities (rarely tied to the platform's data flow).
+The five legacy category subdirectories (`storage/`, `infrastructure/`, `engineering/`, `machine_learning/`, `tools/`) have been **removed**. Every stack now lives at `infrastructure/stacks/<name>/` directly. Stacks that previously were grouped by category are still discoverable by purpose via the inventory table below and the per-stack README files. There is no top-level category folder any more — the category of a stack is informational, not structural. `openspec/specs/infrastructure-stacks/spec.md` has been updated to drop the "Six Docker-Compose Categories" requirement.
 
-## Stack Categories
+The `stacks/stedding/` subdirectory predates the flattening (it is a mount point for large data volumes, not a stack) and is kept.
 
-### Infrastructure (Control Plane)
+## Stack Inventory (alphabetical)
+
+Every stack under `infrastructure/stacks/` is listed below. Port numbers reflect internal container ports; web-facing services are routed through Pangolin and reach the user at `<stack>.cianfhoghlaim.ie` (private) or via the public domain if flagged in `pangolin.yaml`.
 
 | Stack | Purpose | Key Ports |
 |:--|:--|:--|
-| `pangolin/` | VPN + Traefik + Pocket ID + CrowdSec + TinyAuth | 51820/udp, 443, 80, 8443 |
-| `komodo/` | Container orchestration and deployment | 9120 |
-| `pocket-id/` | OIDC identity provider | 1411 |
-| `dozzle/` | Container log viewer | Internal |
-| `dnsserver/` | Local DNS resolution | Internal |
-| `forgejo/` | Self-hosted Git forge (control-plane) | 3000, 2222 |
-| `r2/` | Cloudflare R2 adapter | Internal |
-| `motherduck/` | Cloud query engine | Internal |
-| `planetscale/` | Postgres-compatible cloud DB | Internal |
-| `monitoring/` | Prometheus + Grafana + Loki | 9090, 3000 |
-
-### Storage (Foundational Substrates)
-
-| Stack | Purpose | Key Ports |
-|:--|:--|:--|
-| `garage/` | CRDT S3-compatible object storage | 3900-3904 |
-| `lakehouse/` | Lakekeeper catalog + Lance Namespace + Postgres + Garage | 3900-3904, 5433, 8181-8182 |
-| `lakekeeper/` | Iceberg REST catalog | 8181 |
-| `lakefs/` | Git-for-data on S3 (versioned lake) | 8000 |
-| `forgejo-runner/` | GitHub Actions runner for Forgejo | Internal |
-| `beszel/` | Server/Docker monitoring hub | 8090 |
-
-### Engineering (Dev Tooling + Gateways + Services)
-
-| Stack | Purpose | Key Ports |
-|-------|---------|-----------|
-| `litellm/` | LLM proxy gateway (Postgres + Prometheus) | 4000, 5432, 9090 |
-| `mlx-omni/` | Apple Silicon MLX-format OpenAI server | 10240 |
-| `invokeai/` | SDXL image generation | 9090 |
+| `actual/` | Self-hosted budgeting (Envelope Zero successor) | Internal |
+| `agent-os/` | AgentOS (Letta) long-running agent runtime | Internal |
+| `audiobookshelf/` | Self-hosted audiobook + podcast server | Internal |
+| `backrest/` | Restic-based backup orchestrator with Web UI | Internal |
+| `beszel/` | Server / Docker monitoring hub | 8090 |
+| `blinko/` | Personal knowledge base (note-taking) | Internal |
+| `bytebase/` | Database DevOps / CI for Postgres + MySQL | Internal |
+| `cal-diy/` | Cal.com community build (team scheduling) | Internal |
+| `changedetection/` | Website change monitor (Firecrawl-friendly) | Internal |
+| `coder/` | Cloud development environment (Coder OSS) | Internal |
+| `cognee/` | AI memory system (Neo4j, Memgraph, FalkorDB) | 8000 |
+| `convex/` | Real-time backend for web | Internal |
 | `crawl4ai/` | Web crawling API | 11235 |
-| `coder/` | Cloud development environment | Internal |
-| `windmill/` | Workflow automation | Internal |
-| `MCPJungle/` | MCP server manager | Internal |
+| `croilar-convex/` | Convex backend + dashboard for Croilár | 3210-3211, 6791 |
+| `croilar-dagster/` | Croilár-scoped Dagster code-location | per Komodo |
+| `croilar-hono-api/` | Croilár Hono + BAML API on Bun | per Komodo |
+| `croilar-marimo/` | Croilár-scoped Marimo notebooks | per Komodo |
+| `croilar-postgres/` | Croilár Postgres (primary store) | 5432-5434 |
+| `croilar-web/` | Croilár TanStack Start web + Convex auth | per Komodo |
+| `dagster/` | Pipeline orchestration (engineering entry) | 3335 |
 | `DevDocs/` | Developer documentation UI | Internal |
+| `DnsServer/` | Local DNS resolution (split-horizon) | Internal |
+| `docling-serve/` | Document AI / OCR (IBM Docling) | Internal |
+| `dots-ocr/` | Dots.OCR vision-language OCR | Internal |
+| `dozzle/` | Container log viewer (live tail) | Internal |
+| `dragonfly/` | In-memory cache (Redis-compatible) | Internal |
+| `enclosed/` | Encrypted file / paste sharing | Internal |
+| `falkordb/` | Vector + graph hybrid (Redis protocol) | 6379, 3000 |
+| `forgejo/` | Self-hosted Git forge (control-plane) | 3000, 2222 |
+| `forgejo-runner/` | Forgejo Actions runner | Internal |
+| `frontend/` | Multi-app frontend reverse proxy / shared infra | Internal |
+| `garage/` | CRDT S3-compatible object storage | 3900-3904 |
+| `glance/` | Personal dashboard (RSS, weather, links) | Internal |
+| `gluetun/` | VPN tunnel client (WireGuard, OpenVPN) | Internal |
+| `graphiti/` | Temporal knowledge graph (bi-temporal) | 8080 |
+| `headplane/` | Headscale web UI | Internal |
+| `headscale/` | Self-hosted Tailscale control server | Internal |
+| `invokeai/` | SDXL image generation | 9090 |
+| `it-tools/` | IT admin toolbox (encoders, formatters) | Internal |
+| `Kapowarr/` | Comic library manager | Internal |
+| `karakeep/` | Bookmark manager with AI tagging | Internal |
+| `komodo/` | Container orchestration and deployment | 9120 |
+| `lakefs/` | Git-for-data on S3 (versioned lake) | 8000 |
+| `lakehouse/` | Lakekeeper + Lance Namespace + Postgres + Garage | 3900-3904, 5433, 8181-8182 |
+| `lakehouse-oci/` | OCI-deployed lakehouse variant | per OCI |
+| `lakekeeper/` | Iceberg REST catalog | 8181 |
+| `lancedb/` | LanceDB data viewer | 8080 |
+| `langfuse/` | LLM observability (v3) | 3000 |
+| `LetterFeed/` | Newsletter aggregator | Internal |
+| `linkwarden/` | Bookmark + archive manager | Internal |
+| `litellm/` | LLM proxy gateway (Postgres + Prometheus) | 4000, 5432, 9090 |
+| `lmnr/` | LMNR observability | Internal |
+| `logfire/` | Pydantic Logfire (Python tracing) | Internal |
+| `mailcow-dockerized/` | Self-hosted mail server (Postfix + Dovecot) | 25, 143, 465, 587, 993, 4190 |
+| `marimo/` | Reactive Python notebooks (notebook server) | Internal |
+| `mathesar/` | Postgres UI / spreadsheet | Internal |
+| `MCPJungle/` | MCP server manager / proxy | Internal |
+| `memgraph/` | Graph database (MAGE + Lab UI) | 7687, 7444, 3000 |
+| `mlflow/` | ML experiment tracking | 5000 |
+| `mlx-omni/` | Apple Silicon MLX OpenAI-compatible server | 10240 |
+| `monitoring/` | Prometheus + Grafana + Loki | 9090, 3000 |
+| `motherduck/` | Cloud query engine (MotherDuck adapter) | Internal |
 | `n8n/` | Visual workflow automation | 5678 |
 | `networking-toolbox/` | Network diagnostic tools | Internal |
-| `dagster/` | Pipeline orchestration (engineering entry) | 3335 |
-| `convex/` | Realtime backend for web | Internal |
-| `pydantic-gateway/` | Pydantic AI gateway (LLM routing) | Internal |
-| `mathesar/` | Postgres UI | Internal |
-| `agent-os/` | AgentOS (Letta) | Internal |
-| `oideachais/` | Celtic Education Lakehouse Engine (Dagster + FastAPI + TanStack Start). **Canonical** — replaces the legacy `/oideachais/compose.yaml` quartet. Build source of truth. | 3000, 8000, 3335 |
-
-### Machine Learning (AI Services)
-
-| Stack | Purpose | Key Ports |
-|-------|---------|-----------|
-| `cognee/` | AI memory system (Neo4j, Memgraph, FalkorDB) | 8000 |
-| `graphiti/` | Temporal knowledge graph | 8080 |
-| `langfuse/` | LLM observability (v3) | 3000 |
-| `lmnr/` | LMNR observability | Internal |
-| `olake/` | ELT from MongoDB→warehouse | 8080 |
-| `qdrant/` | Vector search | 6333, 6334 |
-| `memgraph/` | Graph database (MAGE + Lab UI) | 7687, 7444, 3000 |
-| `falkordb/` | Vector+graph hybrid | 6379, 3000 |
-| `lancedb/` | LanceDB data viewer | 8080 |
-| `mlflow/` | ML experiment tracking | 5000 |
-| `logfire/` | Pydantic Logfire (Python tracing) | Internal |
 | `nimtable/` | Iceberg catalog UI | Internal |
+| `oideachais/` | Celtic Education Lakehouse Engine (Dagster + FastAPI + TanStack Start). **Canonical** — replaces the legacy `/oideachais/compose.yaml` quartet. Build source of truth. | 3000, 8000, 3335 |
+| `olake/` | ELT from MongoDB → Iceberg | 8080 |
+| `olmocr/` | OlmOCR (Allen AI) document OCR | Internal |
+| `paddleocr/` | PaddleOCR multilingual OCR | Internal |
+| `pangolin/` | VPN + Traefik + Pocket ID + CrowdSec + TinyAuth | 51820/udp, 443, 80, 8443 |
+| `paperless-ngx/` | Document scanning / archive | Internal |
+| `pastemax/` | Paste sharing (local-first) | Internal |
+| `Perplexica/` | Self-hosted Perplexity-style search | Internal |
+| `pinchflat/` | YouTube channel archival | Internal |
+| `pipecat/` | Real-time voice / multimodal pipeline | 8765 |
+| `planetscale/` | Postgres-compatible cloud DB adapter | Internal |
+| `pocket-id/` | OIDC identity provider | 1411 |
+| `presenton/` | Slide presentations from data | Internal |
+| `pulumi/` | Multi-cloud IaC runner | Internal |
+| `pydantic-gateway/` | Pydantic AI gateway (LLM routing) | Internal |
+| `qdrant/` | Vector search | 6333, 6334 |
+| `r2/` | Cloudflare R2 adapter | Internal |
+| `risingwave/` | Streaming SQL database | (Kafka) |
+| `romm/` | ROM / game library manager | Internal |
+| `rybbit/` | Web analytics (privacy-friendly) | Internal |
+| `searxng/` | Private meta-search engine | Internal |
+| `skyvern/` | Browser-agent automation (LLM-driven) | Internal |
+| `stirling-pdf/` | PDF manipulation toolkit | Internal |
+| `Termix/` | SSH / terminal in browser | Internal |
+| `unstract/` | Unstructured data extraction | Internal |
+| `vaultwarden/` | Bitwarden-compatible password manager | Internal |
+| `vikunja/` | Kanban + Gantt + tasks | Internal |
+| `windmill/` | Workflow automation (developer-first) | Internal |
+
+For quadrant-aware routing (which stack serves which workspace member, which
+ports, which `*.cianfhoghlaim.ie` domain, which Dagster code-location), see
+[`infrastructure/QUADRANT-TO-STACK-MAP.md`](QUADRANT-TO-STACK-MAP.md). For
+the live health snapshot of all 94 containers, see
+[`infrastructure/stacks/HEALTH_REPORT.md`](stacks/HEALTH_REPORT.md).
 
 ## Standard Stack Structure
 
-Each stack under `infrastructure/stacks/<category>/<name>/` SHALL follow this structure:
+Each stack under `infrastructure/stacks/<name>/` SHALL follow this structure:
 
 ```
-stacks/<category>/<name>/
+stacks/<name>/
 ├── compose.yaml           # Docker service definitions
 ├── compose.dev.yaml       # (optional) Dev override: no-op locket, env_file
 ├── pangolin.yaml          # Traefik routing + TinyAuth (if web-facing)
@@ -120,14 +153,14 @@ stacks/<category>/<name>/
 
 | Path | Role |
 |:--|:--|
-| `oideachais/` (root) | Application source. Contains `Dockerfile.dagster`, `Dockerfile`, `web/Dockerfile`, `dagster.yaml`, `workspace.yaml`, `pyproject.toml`. **No docker-compose, sidecar, pangolin, or blueprint files at this level** — they were moved into the engineering stack. |
-| `infrastructure/stacks/engineering/oideachais/` | Canonical deployment. Has `compose.yaml` (uses `build:` from the root sources), `compose.dev.yaml`, `sidecar.yaml`, `pangolin.yaml`, `secrets.env`, `.env.example`, `blueprint.yaml`. |
-| `infrastructure/komodo/stacks/oideachais-bunchloch.toml` | Komodo stack definition referencing the engineering stack files. |
+| `oideachais/` (root) | Application source. Contains `Dockerfile.dagster`, `Dockerfile`, `web/Dockerfile`, `dagster.yaml`, `workspace.yaml`, `pyproject.toml`. **No docker-compose, sidecar, pangolin, or blueprint files at this level** — they live in the `oideachais/` stack under `infrastructure/stacks/`. |
+| `infrastructure/stacks/oideachais/` | Canonical deployment. Has `compose.yaml` (uses `build:` from the root sources), `compose.dev.yaml`, `sidecar.yaml`, `pangolin.yaml`, `secrets.env`, `.env.example`, `blueprint.yaml`. |
+| `infrastructure/komodo/stacks/oideachais-bunchloch.toml` | Komodo stack definition referencing the `oideachais/` stack files. |
 | `infrastructure/komodo/procedures/deploy-oideachais-bunchloch.toml` | 5-stage deploy procedure (prereqs → lakehouse/litellm/lancedb/langfuse → oideachais → pangolin routes → health checks). |
 
 **Do not reintroduce `oideachais/compose.yaml`, `oideachais/sidecar.yaml`,
-`oideachais/pangolin.yaml`, or `oideachais/blueprint.yaml`** — the engineering
-stack is the single source of truth.
+`oideachais/pangolin.yaml`, or `oideachais/blueprint.yaml`** — the
+`infrastructure/stacks/oideachais/` stack is the single source of truth.
 
 ## Critical Constraints
 
@@ -189,7 +222,7 @@ networks:
 
 ```bash
 # Stacks use Komodo for management. For direct Docker Compose:
-cd infrastructure/stacks/storage/<stack>
+cd infrastructure/stacks/<stack>
 docker compose up -d
 docker compose logs -f
 docker compose down
@@ -245,8 +278,8 @@ pulumi up
 ```bash
 # Core control plane (Pangolin + Komodo + Pocket ID) managed via Komodo
 # Individual stacks can be started via:
-docker compose -f infrastructure/stacks/storage/garage/compose.yaml up -d
-docker compose -f infrastructure/stacks/storage/lakehouse/compose.yaml up -d
+docker compose -f infrastructure/stacks/garage/compose.yaml up -d
+docker compose -f infrastructure/stacks/lakehouse/compose.yaml up -d
 ```
 
 ### Health Checks
@@ -266,13 +299,13 @@ docker stats --no-stream
 
 1. Create directory structure:
    ```bash
-   mkdir -p infrastructure/stacks/<category>/<name>
+   mkdir -p infrastructure/stacks/<name>
    ```
 2. Create `compose.yaml` with health checks, restart policies, named volumes, and network config
 3. Create `pangolin.yaml` for web-facing services (Traefik + TinyAuth routing)
 4. Create `sidecar.yaml` for Locket secret injection
 5. Create `secrets.env` with Infisical URI references
-6. Add to this AGENTS.md with port and purpose
+6. Add a row to the **Stack Inventory** table above with port and purpose
 7. Commit and let Komodo sync deploy
 
 ## Resources

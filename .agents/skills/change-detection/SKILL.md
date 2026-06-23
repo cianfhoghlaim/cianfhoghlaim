@@ -136,11 +136,11 @@ def curriculum_sitemap_sensor(context: SensorEvaluationContext):
 For HTML pages without a sitemap (or when a visual diff matters),
 the project runs the [ChangeDetection.io](https://changedetection.io)
 container on `arm1-oci`. The Compose file is at
-`infrastructure/stacks/tools/changedetection/compose.yaml`.
+`infrastructure/stacks/changedetection/compose.yaml`.
 
 ### Configuration
 
-The `sources.yaml` file at `infrastructure/stacks/tools/changedetection/sources.yaml`
+The `sources.yaml` file at `infrastructure/stacks/changedetection/sources.yaml`
 pairs each watched URL with the Dagster job that runs when the
 URL changes:
 
@@ -215,7 +215,7 @@ webhook fans out the `RunRequest` to each.
   here)
 - `.agents/skills/dagster/SKILL.md` — the Dagster skill
   (Layer 2 sensors live here)
-- `infrastructure/stacks/tools/changedetection/` — the Layer 3
+- `infrastructure/stacks/changedetection/` — the Layer 3
   Compose stack + `sources.yaml`
 - `oideachais/dagster_defs/sensors/` — 5 canonical sensor
   implementations

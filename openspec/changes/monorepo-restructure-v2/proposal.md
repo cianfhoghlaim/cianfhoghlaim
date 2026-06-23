@@ -29,7 +29,7 @@ This change brings the root manifests and developer docs in line with the actual
 - **Patch** `mise.toml`: drop every `cd sruth/*` task, add `turbo`, `ccc:init/index/search`, `secrets:env/init/sync`, `locket:exec`, `komodo:sync`, `pangolin:check`, `openspec:list/validate/archive` aliases.
 - **Add** missing top-level sections to `AGENTS.md` (Monorepo Topology, Secrets Bootstrap, Codebase Indexing & Spec-Driven Development) and patch the existing "Strict Secret Hydration" reference from `scripts/infisical/init-vault.ts` to `scripts/init-vault.ts`.
 - **Add** Quickstart and Monorepo Topology sections to `README.md`.
-- **Migrate** `sruth/bonneagar/stacks/tools/stirling-pdf/` → `infrastructure/stacks/tools/stirling-pdf/` and delete the now-empty `sruth/` directory.
+- **Migrate** `sruth/bonneagar/stacks/tools/stirling-pdf/` → `infrastructure/stacks/stirling-pdf/` and delete the now-empty `sruth/` directory.
 - **Add** ASCII-named `[tool.uv.sources]` entries (`codeolas`, `sruth-browser`, `oideachais`, `tuath`) to all member `pyproject.toml` files (TOML forbids non-ASCII unquoted keys, so `códeolas` becomes `codeolas`).
 - **Add** a real `package.json` to `tuatha/ui/` (was missing — only a stale `bun.lock` remained) and add a `name` field to `oideachais/mcp/filesystem/package.json` (was missing — bun rejected it).
 

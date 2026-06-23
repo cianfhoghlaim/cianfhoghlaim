@@ -132,7 +132,7 @@ Successfully migrated the self-hosted Infisical vault from `bunchloch` (MacBook)
 
 ### Seeded Workflows (10 JSON files)
 
-These workflows are in the repo at `infrastructure/stacks/engineering/n8n/workflows/` and can be re-imported via `komodo procedure run team-workflow-reload`:
+These workflows are in the repo at `infrastructure/stacks/n8n/workflows/` and can be re-imported via `komodo procedure run team-workflow-reload`:
 
 | Workflow | Trigger | LLM Model | Sink |
 |----------|---------|-----------|------|
@@ -158,7 +158,7 @@ These workflows are in the repo at `infrastructure/stacks/engineering/n8n/workfl
 
 ### Status: **PENDING** (compose files ready, deploy after OIDC client setup)
 
-- The cal-diy compose (`infrastructure/stacks/tools/cal-diy/compose.yaml`) is configured and ready
+- The cal-diy compose (`infrastructure/stacks/cal-diy/compose.yaml`) is configured and ready
 - Requires the `pocketid-team-workflow` OIDC client to be created in Pocket ID before starting
 - Will be deployed at `calcom.cianfhoghlaim.ie` port 3000
 
@@ -210,11 +210,11 @@ curl http://localhost:8081/api/status    # → JSON with config status
 ### Deploy / restart (from arm1-oci)
 ```bash
 # Vikunja
-cd /tmp/pangolin-deploy/infrastructure/stacks/tools/vikunja
+cd /tmp/pangolin-deploy/infrastructure/stacks/vikunja
 docker compose -f compose.yaml -f pangolin.yaml up -d
 
 # n8n
-cd /tmp/pangolin-deploy/infrastructure/stacks/engineering/n8n
+cd /tmp/pangolin-deploy/infrastructure/stacks/n8n
 docker compose -f compose.yaml -f pangolin.yaml up -d
 ```
 

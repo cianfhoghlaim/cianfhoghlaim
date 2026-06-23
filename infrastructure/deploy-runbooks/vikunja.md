@@ -17,7 +17,7 @@ command -v ssh    || { echo "ERROR: ssh not installed";    exit 1; }
 command -v docker || { echo "ERROR: docker not installed"; exit 1; }
 
 # 0.2 — Verify the vikunja init scripts are present
-ls infrastructure/stacks/tools/vikunja/init/ 2>/dev/null \
+ls infrastructure/stacks/vikunja/init/ 2>/dev/null \
   || { echo "ERROR: vikunja init/ dir missing; the DB init is required on first boot"; exit 2; }
 
 # 0.3 — Verify the secrets are in the vault
@@ -38,11 +38,11 @@ mkdir -p /etc/komodo/storage/vikunja
 
 # 1.2 — rsync the 6 GOLD_STANDARD files
 rsync -avz --delete \
-  infrastructure/stacks/tools/vikunja/{compose.yaml,sidecar.yaml,secrets.env,blueprint.yaml,README.md} \
+  infrastructure/stacks/vikunja/{compose.yaml,sidecar.yaml,secrets.env,blueprint.yaml,README.md} \
   /etc/komodo/storage/vikunja/
 
 # 1.3 — rsync the init scripts (Vikunja's first-boot DB migration)
-rsync -avz --delete infrastructure/stacks/tools/vikunja/init/ \
+rsync -avz --delete infrastructure/stacks/vikunja/init/ \
   /etc/komodo/storage/vikunja/init/
 
 # 1.4 — Bring up the vikunja stack

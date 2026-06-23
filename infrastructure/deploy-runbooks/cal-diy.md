@@ -41,7 +41,7 @@ ssh arm1-oci 'mkdir -p /etc/komodo/storage/cal-diy'
 
 # 1.2 — rsync the 6 GOLD_STANDARD files (and clone the cal.diy source)
 rsync -avz --delete \
-  infrastructure/stacks/tools/cal-diy/{compose.yaml,sidecar.yaml,secrets.env,blueprint.yaml,README.md} \
+  infrastructure/stacks/cal-diy/{compose.yaml,sidecar.yaml,secrets.env,blueprint.yaml,README.md} \
   arm1-oci:/etc/komodo/storage/cal-diy/
 
 # 1.3 — rsync the cal.diy source so the build context is local

@@ -35,7 +35,7 @@ mkdir -p /etc/komodo/storage/changedetection
 
 # 1.2 — rsync the 5 GOLD_STANDARD files (missing .env.example — see Phase C)
 rsync -avz --delete \
-  infrastructure/stacks/tools/changedetection/{compose.yaml,sidecar.yaml,secrets.env,blueprint.yaml,README.md} \
+  infrastructure/stacks/changedetection/{compose.yaml,sidecar.yaml,secrets.env,blueprint.yaml,README.md} \
   /etc/komodo/storage/changedetection/
 
 # 1.3 — Create the .env.example (Phase C left this as a known gap)

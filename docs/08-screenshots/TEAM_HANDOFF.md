@@ -98,7 +98,7 @@ A two-tier zero-trust network for the **Cianfhoghlaim** stack:
 Every Docker service gets a `pangolin.yaml` overlay:
 
 ```yaml
-# infrastructure/stacks/engineering/n8n/pangolin.yaml
+# infrastructure/stacks/n8n/pangolin.yaml
 services:
   n8n:
     labels:

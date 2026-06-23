@@ -38,7 +38,7 @@ uv add cognee
 
 ## Integration with Our Stack
 
-Cognee SDK is used in Dagster assets for knowledge graph construction. The Docker stack at `infrastructure/stacks/machine_learning/cognee/` runs the Cognee server with Neo4j backend. Complements Graphiti for bi-temporal tracking and Memgraph for low-latency graph traversal.
+Cognee SDK is used in Dagster assets for knowledge graph construction. The Docker stack at `infrastructure/stacks/cognee/` runs the Cognee server with Neo4j backend. Complements Graphiti for bi-temporal tracking and Memgraph for low-latency graph traversal.
 
 ## Upstream
 

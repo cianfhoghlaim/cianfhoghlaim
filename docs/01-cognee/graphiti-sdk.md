@@ -38,7 +38,7 @@ uv add graphiti-core
 
 ## Integration with Our Stack
 
-Graphiti SDK is used within Dagster assets to build prerequisite chains from BAML extraction output. The Docker stack at `infrastructure/stacks/machine_learning/graphiti/` runs the Graphiti server. Cognee provides complementary GraphRAG capabilities on the same Neo4j graph.
+Graphiti SDK is used within Dagster assets to build prerequisite chains from BAML extraction output. The Docker stack at `infrastructure/stacks/graphiti/` runs the Graphiti server. Cognee provides complementary GraphRAG capabilities on the same Neo4j graph.
 
 ## Upstream
 

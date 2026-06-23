@@ -388,7 +388,7 @@ class ProgressTrackerResource(ConfigurableResource):
 class LiteLLMResource(ConfigurableResource):
     """OpenAI-compatible client wrapping the canonical LiteLLM gateway.
 
-    The gateway lives at infrastructure/stacks/engineering/litellm and exposes
+    The gateway lives at infrastructure/stacks/litellm and exposes
     a unified API for: local GGUF (llama-swap), local MLX (mlx-omni), local
     image gen (InvokeAI), plus all cloud providers (Gemini, GLM, OpenAI,
     Anthropic, OpenCode Go).

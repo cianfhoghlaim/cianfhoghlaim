@@ -8,7 +8,7 @@ tuatha/apps/crypteolas_demo/anam-contracts/src/CuchulainnNFT.sol:1-231
 client-side using the deterministic SVG from spaces/_common.
 
 For the hackathon demo, NO actual on-chain transaction happens.
-The Anvil sidecar is local-only (see infrastructure/stacks/engineering/
+The Anvil sidecar is local-only (see infrastructure/stacks/
 oideachais/sidecar.yaml in the archived stack), and the wallet is a
 fake address "0xHACKATHON..." that the player can copy as a souvenir.
 

@@ -4,7 +4,7 @@ How Lakehouse, LakeFS, Dozzle, and Beszel support the documentation cognition pi
 
 ## Lakehouse — Unified Data Storage
 
-**Stack**: `infrastructure/stacks/storage/lakehouse/`  
+**Stack**: `infrastructure/stacks/lakehouse/`  
 **Ports**: 3900-3904 (Garage S3), 8181 (Lakekeeper), 8182 (Lance Namespace)
 
 ### Role in the Cognition Pipeline
@@ -28,14 +28,14 @@ The lakehouse provides the storage backend for all cognition data:
 ### Deployment
 
 ```bash
-cd infrastructure/stacks/storage/lakehouse
+cd infrastructure/stacks/lakehouse
 docker compose up -d
 # Services: garage, lakekeeper, lance-namespace, postgres
 ```
 
 ## LakeFS — Data Versioning for Curriculum Datasets
 
-**Stack**: `infrastructure/stacks/storage/lakefs/`  
+**Stack**: `infrastructure/stacks/lakefs/`  
 **Port**: 8000
 
 ### Role in the Cognition Pipeline
@@ -78,7 +78,7 @@ lakectl log lakefs://curriculum/main
 
 ## Dozzle — Container Log Monitoring
 
-**Stack**: `infrastructure/stacks/infrastructure/dozzle/`  
+**Stack**: `infrastructure/stacks/dozzle/`  
 **Port**: varies (8080 in stack, Pangolin-routed)
 
 ### Role in the Cognition Pipeline
@@ -111,7 +111,7 @@ Dozzle provides real-time log visibility for all cognition containers:
 
 ## Beszel — Server Metrics Dashboard
 
-**Stack**: `infrastructure/stacks/storage/beszel/`  
+**Stack**: `infrastructure/stacks/beszel/`  
 **Port**: 8090
 
 ### Role in the Cognition Pipeline

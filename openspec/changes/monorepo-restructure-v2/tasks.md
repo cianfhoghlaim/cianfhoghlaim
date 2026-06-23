@@ -9,7 +9,7 @@
 - [x] 7. Patch `infrastructure/browser/pyproject.toml`: change `requires-python` to `>=3.12`, add `[tool.uv] package = true`, update ruff/mypy `target-version` to `py312`.
 - [x] 8. Rewrite `turbo.json`: full task graph (`postinstall`, `build`, `dev`, `typecheck`, `lint`, `format`, `test`, `clean`, `dagster`, `ccc:index`, `spec:validate`), `globalEnv` for Infisical/Browserbase/Firecrawl/MotherDuck/Vertex/Gemini/Dagster/Locket/Komodo/Pangolin env vars.
 - [x] 9. Patch `mise.toml`: drop every `cd sruth/*` task (replace with `cd oideachais && uv run dagster dev -m …` and `cd tuatha && uv run dagster dev -m …`), add `turbo`, `ccc:init/index/search`, `secrets:env/init/sync`, `locket:exec`, `komodo:sync`, `pangolin:check`, `openspec:list/validate/archive` aliases.
-- [x] 10. Migrate `sruth/bonneagar/stacks/tools/stirling-pdf/` → `infrastructure/stacks/tools/stirling-pdf/` and delete `sruth/`.
+- [x] 10. Migrate `sruth/bonneagar/stacks/tools/stirling-pdf/` → `infrastructure/stacks/stirling-pdf/` and delete `sruth/`.
 - [x] 11. Patch `AGENTS.md`: add top-level sections "Monorepo Topology (v2 — Polyglot)", "Secrets Bootstrap (do not skip)", "Codebase Indexing & Spec-Driven Development". Update the "Strict Secret Hydration" bullet to point at `bun run scripts/init-vault.ts` instead of `scripts/infisical/init-vault.ts`.
 - [x] 12. Patch `README.md`: add top-level "Quickstart" and "Monorepo Topology (v2 — Polyglot)" sections.
 - [x] 13. Add a real `package.json` to `tuatha/ui/` (Vinxi + React + Babylon.js UI dependencies), and a `name` field to `oideachais/mcp/filesystem/package.json`.

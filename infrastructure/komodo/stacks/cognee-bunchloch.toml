@@ -32,8 +32,8 @@ tags = [
 server_id = "bunchloch"
 run_directory = "/etc/komodo/cognee"
 file_paths = [
-  "infrastructure/stacks/machine_learning/cognee/compose.yaml",
-  "infrastructure/stacks/machine_learning/cognee/sidecar.yaml",
+  "infrastructure/stacks/cognee/compose.yaml",
+  "infrastructure/stacks/cognee/sidecar.yaml",
 ]
 environment = """
 ENVIRONMENT=production

@@ -1,7 +1,7 @@
 # =============================================================================
 # Convex Schema Deploy — Dev Path (VERIFIED 2026-06-11)
 # =============================================================================
-# Self-hosted Convex backend (infrastructure/stacks/engineering/convex) is
+# Self-hosted Convex backend (infrastructure/stacks/convex) is
 # now running on bunchloch. To deploy the oideachais schema:
 #
 # 1. Self-hosted backend on bunchloch (current setup):

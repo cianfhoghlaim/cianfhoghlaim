@@ -148,7 +148,7 @@ ENV DAGSTER_HOME=/app/dagster_home
 
 The KCG stack runs this same 4-service topology on `bunchloch` (M4
 Mac) + `arm1-oci` (ARM). The Docker Compose file is at
-`infrastructure/stacks/engineering/dagster/`, with:
+`infrastructure/stacks/dagster/`, with:
 
 - `compose.yaml` (the 4-service topology above)
 - `sidecar.yaml` (Locket sidecar for secret injection)

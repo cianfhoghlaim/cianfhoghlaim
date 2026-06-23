@@ -3,8 +3,8 @@
 # =============================================================================
 # Re-imports the 6 seeded n8n workflow JSONs and re-seeds Vikunja team/projects.
 # Run after editing anything in:
-#   infrastructure/stacks/engineering/n8n/workflows/team-*.json
-#   infrastructure/stacks/tools/vikunja/init/seed.ts
+#   infrastructure/stacks/n8n/workflows/team-*.json
+#   infrastructure/stacks/vikunja/init/seed.ts
 # =============================================================================
 
 [[action]]

@@ -25,7 +25,7 @@ operational steps for the **canonical-docs → Cognee** path.
    ```
    If not running, bring it up:
    ```bash
-   cd infrastructure/stacks/machine_learning/cognee
+   cd infrastructure/stacks/cognee
    docker compose -f compose.yaml -f sidecar.yaml up -d
    ```
 
@@ -183,7 +183,7 @@ The Cognee REST API isn't reachable. Check:
 ```bash
 docker ps --filter "name=cianchoghlaim-cognee" --format "{{.Names}}: {{.Status}}"
 # If not running:
-cd infrastructure/stacks/machine_learning/cognee
+cd infrastructure/stacks/cognee
 docker compose -f compose.yaml -f sidecar.yaml up -d
 docker compose logs -f cognee  # watch startup
 ```
@@ -208,7 +208,7 @@ key configured. Two places to check:
    `DEEPSEEK_API_KEY` is in `.env` (mise-hydrated) and that
    `echo $DEEPSEEK_API_KEY` shows the key.
 
-2. **The Cognee container** (in `infrastructure/stacks/machine_learning/cognee/compose.yaml`):
+2. **The Cognee container** (in `infrastructure/stacks/cognee/compose.yaml`):
    The container's env is hydrated by Locket sidecar from Infisical.
    Verify Locket is healthy:
    ```bash

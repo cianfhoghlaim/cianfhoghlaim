@@ -86,7 +86,7 @@ phase_vault() {
 # ----- Phase 3: Bring up Pangolin on arm1-oci -----
 phase_pangolin() {
   log "Phase 3: Pangolin stack on arm1-oci"
-  local local_stack="infrastructure/stacks/infrastructure/pangolin"
+  local local_stack="infrastructure/stacks/pangolin"
   [ -d "$local_stack" ] || err "local pangolin stack not found at $local_stack"
 
   log "  → syncing $local_stack → $OCI_HOST:$PANGOLIN_STACK_DIR"
@@ -110,7 +110,7 @@ phase_pangolin() {
 # ----- Phase 4: Komodo Core on mbp -----
 phase_komodo_core() {
   log "Phase 4: Komodo Core on mbp"
-  local local_stack="infrastructure/stacks/infrastructure/komodo"
+  local local_stack="infrastructure/stacks/komodo"
   mkdir -p "$KOMODO_STACK_DIR"
   rsync -avz --delete "$local_stack/" "$KOMODO_STACK_DIR/"
 
@@ -174,7 +174,7 @@ phase_komodo_periphery_oci() {
 # ----- Phase 7: Pangolin Newt (mbp) -----
 phase_newt_mbp() {
   log "Phase 7: Pangolin Newt (mbp)"
-  local local_dir="infrastructure/stacks/infrastructure/pangolin"
+  local local_dir="infrastructure/stacks/pangolin"
   mkdir -p "$NEWT_STACK_DIR"
   for f in newt.yaml newt.sidecar.yaml newt.secrets.env; do
     rsync -av "$local_dir/$f" "$NEWT_STACK_DIR/"

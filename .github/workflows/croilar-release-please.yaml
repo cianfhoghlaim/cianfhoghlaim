@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - "croilar/**"
-      - "infrastructure/stacks/**/croilar*/**"
+      - "infrastructure/stacks/croilar*/**"
 
 jobs:
   release-please:

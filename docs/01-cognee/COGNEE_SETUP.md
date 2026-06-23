@@ -12,7 +12,7 @@ Complete setup guide for running Cognee v1.1 as a Docker container with DeepSeek
 
 ```bash
 # 1. Ensure Neo4j is running
-cd infrastructure/stacks/machine_learning/graphiti
+cd infrastructure/stacks/graphiti
 docker compose up neo4j -d
 # Verify: curl -s http://localhost:7474 | head -5
 
@@ -29,7 +29,7 @@ curl -s http://localhost:8100/docs | head -5
 
 ## Docker Compose Configuration
 
-The compose.yaml at `infrastructure/stacks/machine_learning/cognee/compose.yaml`:
+The compose.yaml at `infrastructure/stacks/cognee/compose.yaml`:
 
 ```yaml
 services:

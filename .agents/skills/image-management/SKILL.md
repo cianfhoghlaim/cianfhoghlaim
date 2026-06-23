@@ -25,8 +25,8 @@ built for multi-arch (`linux/amd64,linux/arm64`).
 | `browser-grid` | `infrastructure/stacks/browser/` | - | PENDING multi-arch rebuild |
 | `cal-diy` | `stedding/repos/cal.diy/` | - | PENDING multi-arch rebuild |
 | `stagehand-local` | `infrastructure/stacks/browser/` | - | PENDING multi-arch rebuild |
-| `n8n-init` | `infrastructure/stacks/engineering/n8n/` | - | PENDING multi-arch rebuild |
-| `vikunja-seed` | `infrastructure/stacks/tools/vikunja/` | - | PENDING multi-arch rebuild |
+| `n8n-init` | `infrastructure/stacks/n8n/` | - | PENDING multi-arch rebuild |
+| `vikunja-seed` | `infrastructure/stacks/vikunja/` | - | PENDING multi-arch rebuild |
 
 ## Build Commands
 

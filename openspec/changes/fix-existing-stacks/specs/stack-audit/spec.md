@@ -65,4 +65,4 @@ The system SHALL be able to scrape `/health` (or equivalent) from every long-run
 #### Scenario: Healthcheck added
 - **WHEN** a stack's `compose.yaml` adds a `healthcheck:` block to a service
 - **AND** the service exposes `/health` on a known port
-- **THEN** the new `infrastructure/stacks/infrastructure/monitoring/config/prometheus.yml` SHALL include the service as a scrape target
+- **THEN** the new `infrastructure/stacks/monitoring/config/prometheus.yml` SHALL include the service as a scrape target

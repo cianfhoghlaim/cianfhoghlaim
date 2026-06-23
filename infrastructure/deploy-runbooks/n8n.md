@@ -18,7 +18,7 @@ command -v ssh    || { echo "ERROR: ssh not installed";    exit 1; }
 command -v docker || { echo "ERROR: docker not installed"; exit 1; }
 
 # 0.2 — Verify the 6 seeded workflows are present
-ls infrastructure/stacks/engineering/n8n/workflows/ 2>/dev/null \
+ls infrastructure/stacks/n8n/workflows/ 2>/dev/null \
   | grep -c "team-" \
   | { read count; [ "$count" -ge 6 ] || { echo "ERROR: only $count team-*.json workflows found (need >= 6)"; exit 2; }; }
 
@@ -33,7 +33,7 @@ for secret in N8N_ENCRYPTION_KEY N8N_USER_MANAGEMENT_JWT_SECRET \
 done
 
 # 0.4 — Verify the init/ scripts (the n8n-init one-shot container)
-ls infrastructure/stacks/engineering/n8n/init/ 2>/dev/null \
+ls infrastructure/stacks/n8n/init/ 2>/dev/null \
   || { echo "ERROR: n8n init/ dir missing"; exit 4; }
 ```
 
@@ -45,11 +45,11 @@ mkdir -p /etc/komodo/storage/n8n
 
 # 1.2 — rsync the 6 GOLD_STANDARD files + the 6 seeded workflows
 rsync -avz --delete \
-  infrastructure/stacks/engineering/n8n/{compose.yaml,sidecar.yaml,secrets.env,blueprint.yaml,README.md} \
+  infrastructure/stacks/n8n/{compose.yaml,sidecar.yaml,secrets.env,blueprint.yaml,README.md} \
   /etc/komodo/storage/n8n/
-rsync -avz --delete infrastructure/stacks/engineering/n8n/workflows/ \
+rsync -avz --delete infrastructure/stacks/n8n/workflows/ \
   /etc/komodo/storage/n8n/workflows/
-rsync -avz --delete infrastructure/stacks/engineering/n8n/init/ \
+rsync -avz --delete infrastructure/stacks/n8n/init/ \
   /etc/komodo/storage/n8n/init/
 
 # 1.3 — Bring up the n8n stack

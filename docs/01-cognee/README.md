@@ -38,7 +38,7 @@ Cognition pipeline for documentation processing, knowledge graph construction, a
 
 ```bash
 # 1. Start the cognition infrastructure
-cd infrastructure/stacks/machine_learning/cognee
+cd infrastructure/stacks/cognee
 docker compose -f compose.yaml up -d  # Cognee on :8100
 
 cd ../graphiti
