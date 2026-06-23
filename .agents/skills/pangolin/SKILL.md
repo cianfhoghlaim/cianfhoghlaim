@@ -410,3 +410,118 @@ mkdir -p config wireguard
 - **WireGuard Docs**: https://www.wireguard.com/
 - **Pangolin API**: http://localhost:3001/v1/docs
 - **Docker Networking**: https://docs.docker.com/network/
+
+## KCG integration (canonical)
+
+The Cianfhoghlaim platform uses Pangolin in a **convergence
+architecture**:
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  Control plane (arm1-oci)                                │
+│  → routing, identity (Pocket ID), orchestration (Komodo) │
+└──────────────────────────────────────────────────────────┘
+              ↓ WireGuard tunnel
+┌──────────────────────────────────────────────────────────┐
+│  Workload host (bunchloch MacBook M4)                    │
+│  → memory-intensive workloads (LanceDB, Cognee,        │
+│    LLM inference, local analytics)                        │
+└──────────────────────────────────────────────────────────┘
+```
+
+All inter-tier communication is via WireGuard tunnels; no
+inbound firewall ports.
+
+### Pocket ID OIDC (admin SSO)
+
+Pangolin uses **Pocket ID** for admin SSO. Admin users
+authenticate via WebAuthn passkeys (no passwords).
+
+```yaml
+# Pangolin resource config (in komodo)
+pangolin.oidc:
+  provider: pocketid
+  client_id: kcg-admin
+  client_secret: ${INFISICAL:POCKETID_CLIENT_SECRET}
+  issuer_url: https://pocketid.cianfhoghlaim.ie
+```
+
+### CrowdSec (anti-bruteforce)
+
+The KCG Pangolin instance fronts CrowdSec for anti-bruteforce:
+
+```yaml
+# infrastructure/stacks/infrastructure/crowdsec/compose.yaml
+services:
+  crowdsec:
+    image: crowdsecurity/crowdsec:latest
+    volumes:
+      - ./config:/etc/crowdsec
+    environment:
+      COLLECTIONS: crowdsecurity/linux crowdsecurity/cf-cf-connect crowdsecurity/http-cve crowdsecurity/wordpress crowdsecurity/dovecot
+```
+
+### 6-label Docker pattern
+
+Every Compose stack that exposes a web route uses the
+canonical 6-label Pangolin resource:
+
+```yaml
+# infrastructure/stacks/<surface>/<name>/pangolin.yaml
+pangolin.private-resources.<name>:
+  - name: <name>
+    mode: http
+    full-domain: <name>.cianfhoghlaim.ie
+    destination-port: 8080
+    protocol: http
+    roles:
+      - "<role-name>"
+```
+
+The 6 labels (in order): `name`, `mode`, `full-domain`,
+`destination-port`, `protocol`, `roles[0]`. No variation.
+
+### Multi-site HA
+
+For the canonical KCG production deploy:
+
+```yaml
+pangolin.sites:
+  - name: arm1-oci-prod
+    url: https://pangolin.cianfhoghlaim.ie
+    type: local
+  - name: bunchloch-mac
+    url: https://bunchloch.cianfhoghlaim.local
+    type: local
+```
+
+### Tunneled Periphery access
+
+For accessing a Periphery node behind NAT (e.g. a home
+workstation running a dev stack):
+
+```bash
+# On the Periphery node
+pangolin-cli tunnel-up \
+  --site arm1-oci-prod \
+  --port 8080 \
+  --name bunchloch-dev
+```
+
+The Periphery node is then reachable at
+`https://bunchloch-dev.cianfhoghlaim.ie` from the control
+plane.
+
+### Related skills
+
+- `.agents/skills/stack-ops/SKILL.md` — the 6-file
+  GOLD_STANDARD stack pattern (includes `pangolin.yaml`)
+- `.agents/skills/komodo/SKILL.md` — Komodo deploys the
+  Pangolin resources
+- `.agents/skills/secrets-management/SKILL.md` — the
+  3-way secret contract (Pocket ID uses Infisical)
+- `.agents/skills/better-auth/SKILL.md` — multi-layer
+  auth architecture (BetterAuth → PocketID → TinyAuth →
+  Infisical)
+- `.agents/skills/monorepo/SKILL.md` — mise + dagger
+  deploys the Pangolin control plane

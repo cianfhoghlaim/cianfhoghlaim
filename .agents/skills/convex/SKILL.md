@@ -605,3 +605,53 @@ npx convex codegen
 - **Dashboard**: https://dashboard.convex.dev
 - **GitHub**: https://github.com/get-convex
 - **Discord**: https://discord.gg/convex
+
+## AI Agents component (KCG)
+
+The Tuatha MMO uses Convex's `@convex-dev/agent` package for
+real-time agent state (NPC dialogue, player inventory, world
+state). The agent component provides:
+
+- **Threads** — persistent conversation state per player
+- **Streaming** — real-time SSE for the AG-UI protocol
+- **RAG** — vector search over the leabharlann corpus
+- **Workflows** — multi-step agent flows (NPC quest generation)
+- **Files** — uploaded audio / image storage
+- **Rate limiter** — per-player action quotas
+
+```bash
+# Install
+bun add @convex-dev/agent
+```
+
+```typescript
+// convex/agents/myAgent.ts
+import { Agent } from "@convex-dev/agent";
+import { components } from "./_generated/api";
+
+export const myAgent = new Agent(components.agent, {
+  name: "Tuatha Guide",
+  languageModel: openai.chat("gpt-4o-mini"),
+  instructions: "You are a Celtic mythology guide.",
+  tools: { /* ... */ },
+});
+```
+
+The Convex MCP server (`npx -y convex@latest mcp start`) is
+the canonical way to expose Convex queries / mutations to
+LLM agents (Pydantic AI, Agno, Google ADK).
+
+## BetterAuth + Hono integration
+
+The KCG auth layer (BetterAuth, see `.agents/skills/better-auth/SKILL.md`)
+runs behind a Hono API in the croilar/portal app:
+
+```typescript
+// croilar/apps/portal/src/server/auth.ts
+import { Hono } from "hono";
+import { auth } from "@/lib/auth";
+
+const app = new Hono();
+app.on(["GET", "POST"], "/api/auth/*", (c) => auth.handler(c.req.raw));
+export default app;
+```

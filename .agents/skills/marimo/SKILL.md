@@ -1,463 +1,392 @@
 ---
 name: marimo
-description: Expert assistant for marimo reactive Python notebooks. Use when users need reactive dataflow, UI components, data visualization, or Python notebook deployment.
+description: Expert assistant for marimo reactive Python notebooks. Use when building reactive dashboards with multi-column layout, PEP 723 inline dependency blocks, `@app.setup` + `@app.function` lifecycle modes, `mo.sql(engine=)` for federated SQL against DuckLake/MotherDuck, DLT + LanceDB + RRF hybrid search patterns, or marimo-on-Cloudflare Workers + Container deployment.
 ---
 
 # Marimo Notebook Assistant
 
-You are a specialized assistant for marimo, the reactive Python notebook framework. You have deep knowledge of marimo's reactive dataflow model, UI components, and best practices.
+Marimo is the reactive Python notebook framework that ships
+as the canonical lakehouse-dashboard surface for the
+Cianfhoghlaim platform. Every notebook is a **pure-Python
+file** (no JSON, no `.ipynb` format) with reactive cells
+(like Excel cells — changing one cell automatically updates
+all cells that depend on it).
 
-## Your Expertise
+## When to use this skill
 
-You understand:
-- **Reactive Dataflow Model** - DAG-based execution, automatic dependency tracking, deterministic order
-- **UI Components** - All mo.ui.* elements, reactivity patterns, forms, composite elements
-- **Layout & Output** - mo.hstack, mo.vstack, mo.md, mo.accordion, callouts, styling
-- **Control Flow** - mo.stop(), mo.state(), caching strategies, lazy evaluation
-- **Data Handling** - DataFrames, interactive tables, SQL support, chart integrations
-- **AI Integration** - mo.ui.chat, LLM providers, RAG patterns, generative UI
-- **Deployment** - Run as app, WASM export, script execution, ASGI integration
+Use when you need to:
 
-## Reference Materials
+- "Build a reactive dashboard for the lakehouse"
+- "Add PEP 723 inline dependency blocks to a notebook"
+- "Use `@app.setup` / `@app.function` / `mo.app_meta().mode`"
+- "Run `mo.sql(f"...", engine=conn)` against DuckLake or
+  MotherDuck"
+- "Build a multi-column layout with `@app.cell(column=N)`"
+- "Add `mo.status.spinner` or `mo.status.progress_bar` for
+  long-running operations"
+- "DLT → LanceDB pipeline in a notebook (with `RRFReranker`)"
+- "Deploy a marimo notebook to Cloudflare Workers + Container"
+- "Wire a marimo chat to Pydantic AI / Agno / OpenAI"
+- "Add a `mo.ui.chat` with `allow_attachments=[...]`"
 
-Always consult these files in the project root when needed:
-- `/home/user/hackathon/marimo-llms.txt` - Comprehensive marimo API and patterns reference
+## Mental model
 
-## Your Approach
+- **`@app.cell`** — a reactive cell. Re-runs when its
+  dependencies (referenced variables) change.
+- **`@app.function`** — a regular Python function (no
+  reactivity). Use for helpers.
+- **`@app.setup`** — a one-time init cell. Runs once at
+  notebook load. Use for `load_dotenv()`, opening DB
+  connections, registering MCP tools.
+- **`mo.app_meta().mode`** — `edit`, `run`, or `script`.
+  Branch on it for notebook-vs-CLI dual mode.
+- **`mo.running_in_notebook()`** — True when running in the
+  marimo editor, False when running as a script.
 
-1. **Understand the Use Case**
-   - Is this a data exploration notebook, an interactive app, or a script?
-   - What level of interactivity is needed?
-   - Are there performance considerations (large datasets, expensive computations)?
+## PEP 723 inline dependency blocks
 
-2. **Follow Marimo Conventions**
-   - Assign UI elements to global variables for reactivity
-   - Return outputs from cells as tuples
-   - Use `mo.stop()` to gate expensive computation
-   - Prefer standard UI reactivity over `mo.state()` (99% of cases)
+Every shareable marimo notebook in the repo uses PEP 723
+inline dependency headers, so `uv run <name>.py` works
+without a `pyproject.toml` in the working directory:
 
-3. **Provide Working Code**
-   - Include all necessary imports
-   - Show complete cell definitions
-   - Explain reactivity flow between cells
-   - Consider error handling and edge cases
+```python
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "marimo",
+#     "polars",
+#     "duckdb",
+#     "lancedb",
+#     "pyarrow",
+#     "dlt[lancedb]",
+# ]
+# ///
+```
 
-4. **Apply Best Practices**
-   - Use forms for user-submitted workflows
-   - Cache expensive pure functions with `@mo.cache`
-   - Use lazy loading for heavy components
-   - Validate inputs with form validators
+The `# /// script` block is **mandatory** for any notebook
+that is checked into `oideachais/notebooks/` (or any
+subdirectory). `uv` resolves the declared dependencies into
+an isolated cache.
 
-## Core Concepts Quick Reference
+## `@app.cell` basics
 
-### Reactivity Rule
+```python
+import marimo as mo
 
-> When a cell runs, marimo automatically runs all cells that reference its defined variables.
+app = marimo.App(width="full", layout_file="grid.json")
 
-This applies to:
-- Code edits
-- UI element interactions (when element is assigned to global variable)
-- Variable deletions
 
-### Cell Structure
+@app.cell
+def __():
+    import polars as pl
+    return pl
+
+
+@app.cell
+def __():
+    df = pl.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
+    mo.ui.table(df)
+    return (df,)
+
+
+if __name__ == "__main__":
+    app.run()
+```
+
+Every cell returns a tuple of the variables it defines
+(no return → no exposed variables).
+
+## Multi-column layout
+
+Use `@app.cell(column=N)` and `app = marimo.App(width="full")`
+to build side-by-side dashboards:
+
+```python
+app = marimo.App(width="full")
+
+
+@app.cell
+def header():
+    mo.md("# My Dashboard")
+    return
+
+
+@app.cell
+def left_panel():
+    selector = mo.ui.dropdown(options=[...])
+    selector
+    return (selector,)
+
+
+@app.cell
+def right_panel():
+    chart = mo.ui.altair_chart(...)
+    chart
+    return (chart,)
+
+
+@app.cell(column=1)  # ← column 1 (right side)
+def _():
+    mo.md("Right panel content")
+    return
+```
+
+`mo.sidebar([...], footer=[...])` provides a full sidebar
+chrome (with optional icons via `mo.icon("lucide:database")`).
+
+## Persistent layouts
+
+`layout_file=".../grid.json"` saves the user's custom layout
+(arranged via drag-and-drop in the editor) to disk:
+
+```python
+app = marimo.App(width="full", layout_file="grid.json")
+```
+
+Next time the notebook loads, the saved layout is restored.
+Use this for any dashboard that the user customises.
+
+## `mo.app_meta().mode` and `mo.running_in_notebook()`
+
+For notebooks that double as CLI tools:
+
+```python
+import sys
+
+@app.cell
+def _():
+    mode = mo.app_meta().mode
+    if mode == "script":
+        # Run as a script (e.g. `uv run notebook.py --query "..."`)
+        sys.argv  # parse CLI args here
+    return (mode,)
+
+
+@app.cell
+def _():
+    if not mo.running_in_notebook():
+        # Don't show UI components when running headless
+        print("Running as script")
+```
+
+The canonical example: `running_as_a_script/with_argparse.py`
+parses `argparse` arguments when the notebook is run as a
+script and shows the UI when it's edited in the browser.
+
+## `mo.status.spinner` and `mo.status.progress_bar`
+
+For long-running operations:
 
 ```python
 @app.cell
-def cell_name(mo, input_var):  # refs = inputs
-    result = process(input_var)
-    mo.md(f"Result: {result}")
-    return (result,)  # defs = outputs
+def _():
+    with mo.status.spinner(title="Loading 10k rows..."):
+        df = pl.scan_parquet("data.parquet").collect()
+    df
+    return (df,)
+
+
+@app.cell
+def _():
+    for i in mo.status.progress_bar(range(100), show_eta=True, show_rate=True):
+        do_slow_thing(i)
+    return
 ```
 
-### Key Constraints
+`spinner` is a context manager. `progress_bar` is an iterable
+wrapper. Both render real-time UI feedback in the notebook.
 
-1. **Single definition rule** - each variable defined by exactly one cell
-2. **No mutation tracking** - `list.append()`, `obj.attr = val` not tracked
-3. **Static analysis** - avoid `exec()`, `eval()` for predictable behavior
+## `mo.sql(f"...", engine=conn, output=False)`
 
-## Common Tasks You Can Help With
-
-- **Creating UI** - "How do I make a slider that filters data?"
-- **Layout** - "How do I create a dashboard with sidebar?"
-- **Forms** - "How do I validate user input before processing?"
-- **Charts** - "How do I make a chart where I can select data points?"
-- **State** - "How do I synchronize multiple UI elements?"
-- **Performance** - "How do I cache expensive computations?"
-- **Data** - "How do I create an interactive data explorer?"
-- **AI Integration** - "How do I add a chatbot to my notebook?"
-- **Deployment** - "How do I deploy this as a web app?"
-
-## UI Components Quick Reference
-
-### Input Elements
+For SQL queries against an explicit DuckDB / MotherDuck
+connection (the canonical way to read from DuckLake):
 
 ```python
-# Basic inputs
-slider = mo.ui.slider(1, 100, value=50)
-text = mo.ui.text(placeholder="Enter name")
-dropdown = mo.ui.dropdown(["A", "B", "C"])
-checkbox = mo.ui.checkbox(label="Enable")
-button = mo.ui.button(label="Click", on_click=lambda v: v + 1)
+@app.cell
+def _():
+    import duckdb
+    con = duckdb.connect("md:oideachais")
+    return (con,)
 
-# Numeric
-number = mo.ui.number(start=0, stop=100, step=1)
-range_slider = mo.ui.range_slider(0, 100)
 
-# Selection
-radio = mo.ui.radio(["Option 1", "Option 2"])
-multiselect = mo.ui.multiselect(["A", "B", "C"])
-
-# Date/Time
-date = mo.ui.date()
-datetime = mo.ui.datetime()
-
-# Files
-file = mo.ui.file(filetypes=[".csv", ".json"])
-
-# Advanced
-table = mo.ui.table(df, selection="multi")
-code_editor = mo.ui.code_editor(language="python")
-chat = mo.ui.chat(mo.ai.llm.openai("gpt-4o"))
+@app.cell
+def _():
+    con = _
+    df = mo.sql(
+        f"SELECT subject, COUNT(*) AS n FROM curriculum GROUP BY subject",
+        engine=con,
+        output=False,  # don't auto-display, we'll show it
+    )
+    mo.ui.table(df)
+    return
 ```
 
-### Composite Elements
+`engine=conn` passes an explicit connection (DuckDB, MotherDuck,
+or any DB-API 2.0). `output=False` prevents auto-display so you
+can wrap the result in a custom UI component.
+
+## DLT → LanceDB pipeline pattern
+
+The canonical "ETL into a vector store" pattern, demonstrated
+end-to-end:
 
 ```python
-# Array - dynamic list
-sliders = mo.ui.array([mo.ui.slider(0, 10) for _ in range(5)])
+import dlt
+from lancedb import lancedb_adapter
+from lancedb.rerankers import RRFReranker
 
-# Dictionary - named elements
-controls = mo.ui.dictionary({"x": slider, "y": text})
 
-# Batch - custom layout
-form_content = mo.md("""
-    Name: {name}
-    Email: {email}
-""").batch(name=mo.ui.text(), email=mo.ui.text(kind="email"))
+@dlt.resource
+def curriculum_pages():
+    for page in fetch_pages():
+        yield {"text": page["text"], "filename": page["filename"]}
 
-# Form - require submission
-form = form_content.form(
-    submit_button_label="Submit",
-    validate=lambda v: "Name required" if not v["name"] else None
-)
 
-# Tabs
-tabs = mo.ui.tabs({"Tab 1": content1, "Tab 2": content2})
+@app.cell
+def _():
+    pipeline = dlt.pipeline(
+        destination="duckdb",
+        dataset_name="curriculum",
+    )
+    load_info = pipeline.run(lancedb_adapter(curriculum_pages(), embed=["text"]))
+    load_info
+    return (load_info,)
+
+
+@app.cell
+def _():
+    import lancedb
+    db = lancedb.connect("./lancedb_data")
+    table = db.open_table("curriculum_pages")
+    results = (table
+        .search("handwriting recognition for Irish", query_type="hybrid")
+        .rerank(RRFReranker())
+        .limit(10)
+        .to_pandas())
+    mo.ui.table(results)
+    return
 ```
 
-### Layout
+`lancedb_adapter(source, embed=["text"])` automatically
+embeds the `text` column (using the configured model) and
+writes the vectors + metadata to a LanceDB table. The
+follow-up cell runs hybrid search with RRF reranking.
+
+## `@app.setup` — one-time init
 
 ```python
-# Horizontal/Vertical stacks
-mo.hstack([a, b, c], justify="space-between", gap=1.0)
-mo.vstack([a, b, c], align="stretch", gap=0.5)
+@app.setup
+def setup_dotenv():
+    from dotenv import load_dotenv
+    load_dotenv()
+    return  # no exposed variables
 
-# Collapsible sections
-mo.accordion({"Section 1": content1, "Section 2": content2})
 
-# Alerts
-mo.callout(mo.md("**Warning!**"), kind="warn")
-
-# Sidebar
-mo.sidebar([nav_links, settings])
-
-# Deferred rendering
-mo.lazy(expensive_component)
+@app.setup
+def register_mcp_tool():
+    from mcp.server.fastmcp import FastMCP
+    mcp = FastMCP("oideachais-curriculum")
+    # Register the tool globally so all cells can use it
+    return (mcp,)
 ```
 
-### Charts (Interactive)
+`@app.setup` runs once at notebook load. Use it for `load_dotenv()`,
+DB connection setup, MCP tool registration, etc.
+
+## `mo.ui.chat` with Pydantic AI / Agno
 
 ```python
-# Altair - returns selected data
-chart = mo.ui.altair_chart(alt_chart, chart_selection="interval")
-selected_df = chart.value
+@app.cell
+def _():
+    import os
+    api_key = os.environ.get("OPENAI_API_KEY")
+    if not api_key:
+        mo.stop(not api_key, mo.md("Set OPENAI_API_KEY to use the chat."))
+    return (api_key,)
 
-# Plotly - returns selection info
-plot = mo.ui.plotly(fig)
-selected_indices = plot.indices
 
-# Matplotlib - pan/zoom
-mo.mpl.interactive(plt.gcf())
+@app.cell
+def _():
+    chat = mo.ui.chat(
+        mo.ai.llm.openai(
+            model="gpt-4o-mini",
+            system_message="You are a curriculum assistant.",
+        ),
+        allow_attachments=["image/png", "image/jpeg", "application/pdf"],
+        max_messages=20,
+    )
+    chat
+    return (chat,)
+
+
+@app.cell
+def _():
+    chat = _
+    mo.md(f"**You:** {chat.value[-1].content if chat.value else ''}")
+    return
 ```
 
-## Common Patterns
+`mo.ui.chat` works with any OpenAI-compatible API (set
+`OPENAI_API_BASE` for vLLM / llama.cpp / Ollama).
 
-### Gated Computation
+## Cloudflare Workers + Container deployment
 
-```python
-# Cell 1: Run button
-button = mo.ui.run_button(label="Run Analysis")
+The KCG production pattern: a Cloudflare Worker proxies
+requests to a marimo Container via a Durable Object. See
+`references/deployment-cloudflare.md` for the full setup
+(Dockerfile + wrangler.jsonc + src/index.ts).
 
-# Cell 2: Gated by button
-mo.stop(not button.value, mo.md("Click button to run"))
-result = expensive_analysis()
-result
-```
+## KCG conventions
 
-### Form Workflow
+- Every shareable notebook in `oideachais/notebooks/` MUST
+  have a PEP 723 `# /// script` header
+- The FastAPI app serves notebooks at `/dashboards/<name>`
+- Each dashboard has an asset check in
+  `oideachais/dagster_defs/assets/marimo_dashboards.py` that
+  verifies the notebook renders without errors
+- Live mode (`marimo edit --watch`) is supported via the
+  `marimo-watch` Dagster sensor
 
-```python
-# Cell 1: Define form
-form = mo.md("""
-    **Configuration**
-    Model: {model}
-    Iterations: {iterations}
-""").batch(
-    model=mo.ui.dropdown(["gpt-4", "claude-3"]),
-    iterations=mo.ui.slider(1, 100, value=10)
-).form(
-    validate=lambda v: "Select a model" if not v["model"] else None
-)
+## When to use a marimo notebook vs. a marimo app
 
-# Cell 2: Use form values (only runs after submit)
-mo.stop(form.value is None, form)
-result = run_model(form.value["model"], form.value["iterations"])
-result
-```
+- **Notebook** — single-author, exploratory data analysis
+- **App** (`@app.cell` + `marimo.App` + FastAPI mount) —
+  multi-author, production dashboard, multi-cell reactive
+  layout, deployable to Cloudflare
 
-### Dynamic Filtering
+The KCG convention: start as a notebook, promote to an app
+once the analysis is stable.
 
-```python
-# Cell 1: Filter controls
-category = mo.ui.dropdown(df["category"].unique().tolist())
-min_value = mo.ui.slider(
-    df["value"].min(),
-    df["value"].max(),
-    label="Minimum Value"
-)
-mo.hstack([category, min_value])
+## Anti-patterns
 
-# Cell 2: Filtered data (auto-updates)
-filtered = df[
-    (df["category"] == category.value) &
-    (df["value"] >= min_value.value)
-]
-mo.ui.table(filtered)
-```
-
-### Synchronized Elements
-
-```python
-# Cell 1: Shared state
-get_val, set_val = mo.state(50)
-
-# Cell 2: Slider synced to state
-slider = mo.ui.slider(0, 100, value=get_val(), on_change=set_val)
-
-# Cell 3: Number input synced to same state
-number = mo.ui.number(start=0, stop=100, value=get_val(), on_change=set_val)
-
-# Both elements stay synchronized
-mo.hstack([slider, number])
-```
-
-### Dashboard Layout
-
-```python
-mo.vstack([
-    mo.md("# Dashboard"),
-    mo.hstack([
-        mo.vstack([
-            mo.md("### Controls"),
-            date_picker,
-            category_filter,
-            refresh_button
-        ]),
-        mo.vstack([
-            mo.md("### Main View"),
-            summary_stats,
-            main_chart
-        ])
-    ], widths=[1, 3]),
-    mo.accordion({
-        "Data Table": mo.ui.table(data),
-        "Export": mo.download(data.to_csv(), "data.csv")
-    })
-])
-```
-
-### Caching Expensive Computations
-
-```python
-@mo.cache
-def compute_embeddings(texts: list[str]) -> np.ndarray:
-    # Only computed once per unique input
-    return model.encode(texts)
-
-# Subsequent calls with same args return cached result
-embeddings = compute_embeddings(documents)
-```
-
-### AI Chatbot
-
-```python
-chat = mo.ui.chat(
-    mo.ai.llm.openai(
-        "gpt-4o",
-        system_message="You are a helpful data analyst.",
-    ),
-    prompts=["Analyze the data", "Create a visualization"],
-    show_configuration_controls=True
-)
-chat
-```
-
-### Table Selection Workflow
-
-```python
-# Cell 1: Interactive table
-table = mo.ui.table(df, selection="multi", page_size=20)
-table
-
-# Cell 2: React to selection
-selected = table.value
-if len(selected) > 0:
-    mo.vstack([
-        mo.md(f"**Selected {len(selected)} rows**"),
-        mo.ui.altair_chart(
-            alt.Chart(selected).mark_bar().encode(x="category", y="count()")
-        )
-    ])
-else:
-    mo.md("*Select rows to see analysis*")
-```
-
-## Control Flow Reference
-
-| Function | Purpose | Example |
-|----------|---------|---------|
-| `mo.stop(cond, out)` | Halt if condition true | `mo.stop(form.value is None, form)` |
-| `mo.state(val)` | Mutable reactive state | `get, set = mo.state(0)` |
-| `@mo.cache` | Cache function results | `@mo.cache def fn(x): ...` |
-| `@mo.persistent_cache` | Cache to disk | `@mo.persistent_cache def fn(x): ...` |
-| `mo.lazy(obj)` | Defer rendering | `mo.lazy(heavy_chart)` |
-
-## SQL Support
-
-```python
-# Query dataframes by variable name
-result = mo.sql(f"SELECT * FROM df WHERE value > {threshold.value}")
-
-# Query files directly
-result = mo.sql(f"SELECT * FROM read_csv('data.csv') LIMIT 100")
-
-# Dynamic queries
-selected_cols = mo.ui.multiselect(df.columns.tolist())
-result = mo.sql(f"SELECT {', '.join(selected_cols.value)} FROM df")
-```
-
-## CLI Commands Reference
-
-```bash
-# Edit notebook
-marimo edit notebook.py
-
-# Run as app
-marimo run notebook.py --port 8080
-
-# Create new notebook
-marimo new
-marimo new "Create a data dashboard"  # AI-generated
-
-# Export
-marimo export html notebook.py -o out.html
-marimo export html-wasm notebook.py -o dir/  # Browser-runnable
-
-# Convert from Jupyter
-marimo convert notebook.ipynb -o notebook.py
-
-# Check syntax
-marimo check notebook.py --fix
-```
-
-## Deployment Options
-
-### As Web App
-```bash
-marimo run notebook.py --host 0.0.0.0 --port 8080
-```
-
-### As WASM (Browser-Only)
-```bash
-marimo export html-wasm notebook.py -o output/ --mode run
-# Deploy output/ to any static host (GitHub Pages, Netlify, etc.)
-```
-
-### Embedded in FastAPI
-```python
-from fastapi import FastAPI
-from marimo import create_asgi_app
-
-app = FastAPI()
-marimo_app = create_asgi_app("notebook.py")
-app.mount("/dashboard", marimo_app)
-```
-
-## Troubleshooting Guide
-
-### Issue: UI element not reactive
-**Solution:**
-- Ensure element is assigned to a global variable
-- Check that the variable is referenced in dependent cells
-- Verify you're reading `.value`, not the element itself
-
-### Issue: Cell not re-running when expected
-**Solution:**
-- Check variable dependencies are correct
-- Ensure no circular dependencies
-- Variables must be defined in exactly one cell
-- Remember: mutations are not tracked
-
-### Issue: Form value is always None
-**Solution:**
-- Form value is None until submitted
-- Use `mo.stop()` to gate computation on form submission
-- Check validation function isn't blocking submission
-
-### Issue: Performance is slow
-**Solution:**
-- Use `@mo.cache` for expensive pure functions
-- Use `mo.lazy()` for heavy components
-- Enable lazy runtime mode in settings
-- Use pagination for large tables
-
-### Issue: Chart selections not working
-**Solution:**
-- Use `mo.ui.altair_chart()` or `mo.ui.plotly()`
-- Ensure chart has selection parameters enabled
-- Access selected data via `.value` property
-
-## Best Practices Checklist
-
-### Do
-- [ ] Assign UI elements to global variables
-- [ ] Use `mo.stop()` to gate expensive computation
-- [ ] Use `@mo.cache` for expensive pure functions
-- [ ] Use forms for user-submitted workflows
-- [ ] Use lazy loading for heavy components
-- [ ] Return cell outputs as tuples
-- [ ] Keep cells focused on single responsibilities
-
-### Don't
-- [ ] Use `mo.state()` when standard reactivity suffices
-- [ ] Mutate objects and expect tracking
-- [ ] Use dynamic code generation (`exec`, `eval`)
-- [ ] Define same variable in multiple cells
-- [ ] Store secrets in notebook code
-- [ ] Forget to handle loading/error states
-
-## Next Steps
-
-When you're ready, tell me:
-- What kind of notebook are you building? (data exploration, interactive app, report)
-- What specific feature or problem are you working on?
-- What data or APIs are you working with?
-
-I'll provide specific guidance following marimo's reactive patterns and best practices.
+- **Don't use marimo for batch / scheduled jobs** — use a
+  Dagster asset instead. Marimo is for interactive dashboards.
+- **Don't fetch data in `@app.cell` without memoisation** —
+  use `@app.setup` to load the data once, then reference it
+  from the cells.
+- **Don't use `print()` for output** — use `mo.md()`,
+  `mo.ui.table()`, `mo.ui.altair_chart()`, etc.
+- **Don't store secrets in cells** — use `@app.setup` +
+  `load_dotenv()`.
 
 ## Resources
 
-- **Documentation:** https://docs.marimo.io/
-- **GitHub:** https://github.com/marimo-team/marimo
-- **Tutorials:** `marimo tutorial intro|dataflow|ui|markdown|plots|sql|layout`
-- **Local Reference:** `/home/user/hackathon/marimo-llms.txt`
+- Marimo docs: <https://docs.marimo.io/>
+- PEP 723: <https://peps.python.org/pep-0723/>
+- KCG notebooks: `oideachais/notebooks/`
+- KCG dashboard assets:
+  `oideachais/dagster_defs/assets/marimo_dashboards.py`
+- Reference files in this skill:
+  - `references/deployment-cloudflare.md` — Cloudflare Workers
+    + Container deployment
+  - `references/data-pipelines.md` — DLT + LanceDB + Iceberg +
+    DuckLake patterns
+  - `references/vector-search.md` — LanceDB hybrid + RRF
+    rerankers
+  - `references/layouts.md` — multi-column + sidebar + grid
+  - `references/lifecycle-modes.md` — `edit` / `run` / `script`
+  - `references/ai-chat.md` — `mo.ui.chat` patterns
+  - `references/sql-cells.md` — `mo.sql(engine=conn)` patterns
+- Related skills: `.agents/skills/dlt/`, `.agents/skills/lancedb/`,
+  `.agents/skills/ducklake/`, `.agents/skills/motherduck-ducklake/`,
+  `.agents/skills/cocoindex/`
