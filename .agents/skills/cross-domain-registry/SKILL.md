@@ -296,6 +296,7 @@ exam boards, and deprivation indices is the 286-line
 parallel-data source map at
 [`celtic-asset-generation/references/british-isles-parallel-edu.md`](../celtic-asset-generation/references/british-isles-parallel-edu.md).
 See also the 305-line "State of Education and Celtic
-Language Revitalisation in the British Isles" report at
-[`docs/teanga/British Isles Celtic Language Education Data.md`](../../../docs/teanga/British%20Isles%20Celtic%20Language%20Education%20Data.md)
-for the full 2024-25 demographic + fiscal deep dive.
+Language Revitalisation in the British Isles" report (formerly at
+`docs/teanga/British Isles Celtic Language Education Data.md`,
+superseded by the round-8 docs → skills migration) for the
+full 2024-25 demographic + fiscal deep dive.
