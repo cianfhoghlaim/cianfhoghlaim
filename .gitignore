@@ -2,7 +2,10 @@ gaeilge/found_in_downloads/abhar_breise_don_cheardlann.7z
 oideachas/lesson_plans/teaching_practice_2/1_administration_management/school_policies/school_rules.pdf
 /Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/secrets
 
+infrastructure/stacks/stirling-pdf/stirling-data
+infrastructure/stacks/stirling-pdf/stirling-pdf/stirling-data
 
+storage/
 /Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/stirling-pdf/stirling-pdf
 /Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/stirling-pdf/stirling-pdf/stirling-data
 /Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/stirling-pdf/stirling-data
@@ -113,6 +116,10 @@ ducklake.files/
 # Source code paths like croilar/src/pages/data/ are NOT ignored.
 /data/
 !**/data/.gitkeep
+
+# Stale scratch directory deleted by openspec/changes/datasets-cleanup.
+# The canonical sample-data location is oideachais/samplaí/.
+oideachais/datasets/
 
 # -----------------------------------------------------------------------------
 # BAML

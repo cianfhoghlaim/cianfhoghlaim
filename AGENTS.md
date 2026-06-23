@@ -54,6 +54,16 @@ Secrets follow a strict three-way contract. **Never** hand-edit `.env`:
 2. **Template** — `.infisical.env` (committed) — every value is an `infisical://dev-baile/...` reference.
 3. **Hydrated runtime** — `.env` (gitignored) — written by `mise`/`locket`/`bun run secrets:init` from the template.
 
+> **Migration note (2026-06):** The earlier 1Password + SOPS + Komodo
+> secrets workflow from the predecessor `bonneagar` project
+> (documented in the now-deleted `oideachais/datasets/secrets_management_plan.md`)
+> is **superseded** by this Infisical + Locket + mise flow. 1Password
+> was migrated to Infisical in 2026-06; `sops` and `age` keys are
+> retained in `mise.toml` only for legacy compatibility and should
+> not be used for new secrets. Do not re-introduce the 1Password
+> `op run` / `op://` URI pattern in new code — use the Infisical
+> `infisical://dev-baile/...` URI pattern exclusively.
+
 The scripts live at the **root** of the repository (not in a nested package):
 
 | Script | Purpose | When to run |
