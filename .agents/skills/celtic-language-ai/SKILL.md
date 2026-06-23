@@ -195,6 +195,266 @@ embedder = get_registry().get("huggingface").create(
   (`celtic_curriculum.py`, `mythology_content.py`,
   `*_embeddings.py`)
 
+## KCG: Production model fallback chains
+
+The KCG production rule: **never let a single model failure
+cascade**. Every category has a 2-3 step fallback chain
+(see `.agents/skills/kcg-ml-models/SKILL.md` for the full
+70+ model registry):
+
+```yaml
+vision:        glm-4.6v-flash → qwen3-vl → moondream2
+ocr:           olmocr-2 → granite-docling
+reasoning:     nemotron-3-nano → gemma-3n
+celtic_irish:  qomhra-mistral → uccix → britllm
+celtic_gaelic: britllm → qomhra-mistral  # BritLLM is stronger for Gàidhlig
+```
+
+**Implementation**: BAML `client` blocks chain the fallback
+models. If `qomhra-mistral` returns empty or errors, BAML
+auto-retries with `uccix`, then `britllm`. The fallback is
+**per-call** (not per-session). The 3 inference backends
+(llama-swap :8080 for GGUF, mlx-omni-server :10240 for MLX,
+invokeai :9090 for safetensors) all run on the same M4 Max
+workload host.
+
+## KCG Celtic LLMs (BritLLM + EuroLLM + Qomhrá 2025)
+
+### BritLLM (Caernarfon 3B) — UCL NLP, 2025
+
+- **Repo:** `britllm/britllm-3b-v0.1` (Hugging Face)
+- **License:** ODC-By v1.0 (truly open)
+- **Pre-training:** 1.4T tokens, SlimPajama (627B English)
+  + ~1B unique British-language tokens + ~10B in-context
+  learning tokens
+- **British-language data:** full Wikipedia for
+  Irish / Welsh / Scots / Scottish Gaelic, plus NLLB
+  parallel data adapted to ICL format
+- **Languages:** English, Scots, Welsh, Irish, Scottish Gaelic
+- **Benchmarks:** beats OpenLLaMA-7B v2 and
+  TinyLLaMA-v1.1 on OpenLLM leaderboard; on BritEval
+  (Irish + Welsh + Scots + Scottish Gaelic) it beats
+  Mistral-7B, Phi-2, Bloom-7B
+- **BritEval benchmark:** AI2 ARC + PIQA + XNLI translated
+  to all 4 British languages
+
+KCG use: prefer `britllm-3b-v0.1` over `britllm` for
+Gàidhlig, Welsh, and Scots, where it out-performs
+`qomhra-mistral`. Quantise GGUF `Q4_K_M` for the
+llama-swap :8080 backend.
+
+### EuroLLM-22B-Instruct-2512 — utter-project, 2025-12
+
+- **Repo:** `utter-project/EuroLLM-22B-Instruct-2512`
+  (Apache 2.0, fully open)
+- **Developers:** Instituto Superior Técnico (Lisbon),
+  Instituto de Telecomunicações, University of Edinburgh,
+  Aveni, Unbabel, Paris-Saclay, Artefact, UvA, Naver Labs,
+  Sorbonne
+- **Funding:** European Union (EuroHPC extreme-scale)
+- **Languages:** all 24 official EU languages
+  **including Irish** + Arabic, Catalan, Chinese, Galician,
+  Hindi, Japanese, Korean, Norwegian, Russian, Turkish,
+  Ukrainian (35 total)
+- **Pre-training:** 4T tokens on MareNostrum 5
+  (400 × H100) in 3 phases: 3.6T web+parallel+wiki+arxiv,
+  400B annealing (CometKiwi-22 + EuroFilter quality
+  filtering), 100B annealing-to-zero with long-context
+  up-sampling to 32k
+- **Architecture:** dense Transformer, GQA (8 KV heads),
+  RoPE Θ=1M, RMSNorm, SwiGLU, 56 layers, 6144 emb,
+  16384 FFN, 22.6B params total (21B non-embedding)
+- **Post-training:** EuroBlocks instruction-tuning
+  dataset (general instruction + MT focus); best EU-made
+  fully open model on HellaSwag/MMLU/MMLU-Pro/ARC-C/
+  MGSM/FLORES/WMT24++ matching Gemma-3-27B and Qwen-3-32B
+  on translation
+- **Usage:**
+  ```python
+  from transformers import AutoModelForCausalLM, AutoTokenizer
+  m = "utter-project/EuroLLM-22B-Instruct-2512"
+  tok = AutoTokenizer.from_pretrained(m)
+  model = AutoModelForCausalLM.from_pretrained(m)
+  msgs = [
+      {"role": "system", "content": "You are EuroLLM ..."},
+      {"role": "user", "content": "Aistriú anseo go Gaeilge."},
+  ]
+  ids = tok.apply_chat_template(msgs, tokenize=True,
+                                add_generation_prompt=True,
+                                return_tensors="pt")
+  print(tok.decode(model.generate(ids, max_new_tokens=1024)[0],
+                   skip_special_tokens=True))
+  ```
+
+KCG use: the canonical **en→ga** and **ga→en** model
+when translation fidelity matters more than speed. ~21B
+non-embedding params, BF16 = ~42 GB; run GGUF `Q3_K_M`
+on the llama-swap :8080 backend (or GGUF `Q4_K_M` on
+arm1-oci with the GPU stack).
+
+### Qomhrá 2025
+
+- 8B bilingual Irish-English; fine-tuned from Mistral
+- Trained on Gaois + UCC corpora + Gemini-1.5-Pro
+  translations of Dolly V2 → Irish
+- Up to **+29%** on Irish benchmarks vs Mistral-7B base
+- KCG fallback: the `celtic_irish` chain's
+  `qomhra-mistral` primary step
+
+### BritEval benchmark (KCG use)
+
+BritEval is the KCG-preferred evaluation suite for any
+new British-language LLM fine-tune. It covers 4 languages
+(Scots, Irish, Welsh, Scottish Gaelic) with ARC-c
+(multiple-choice science), PIQA (physical commonsense),
+and XNLI (cross-lingual NLI). When adding a new Celtic
+LLM to the registry, **always** report BritEval numbers
+in `models/registry.yaml`.
+
+## Diffusion NMT for low-resource Irish
+
+The autoregressive (AR) Transformer is reaching an
+asymptotic limit for Irish-English translation. AR models
+**propagate errors left-to-right** — a single hallucinated
+preposition corrupts the subsequent mutation (eclipsis,
+lenition) in a VSO language. The KCG direction (Q1 2026)
+is **diffusion NMT**, specifically the **NeoDiff** and
+**Block Diffusion** architectures.
+
+### NeoDiff (SOTA 2025)
+
+NeoDiff disentangles **extrinsic time** (the global
+denoising step) from **intrinsic time** (the per-token
+progress) via a **Poisson process**. This gives the model
+a "curriculum" generation: easy tokens (determiners,
+conjunctions) resolve first and act as anchors for the
+harder ones.
+
+Why this matters for Irish: the noun *bád* must eclipsise
+to *mbád* after the preposition *ar*. An AR model has to
+predict *ar*, then *an*, then *mbád*; if it hallucinates
+*ag* instead, the mutation is wrong. NeoDiff generates
+the whole sequence iteratively and can **fix backwards**
+when the context-aware time predictor sees the
+morphosyntactic conflict.
+
+### Block Diffusion
+
+Block Diffusion hybridises AR + diffusion to get the
+**KV-cache benefit of AR** and the **bidirectional
+refinement of diffusion**. It generates chunks of K
+tokens (typically 4-16) at a time, with full
+bidirectional attention *within* the block and AR
+conditioning *across* blocks. This is the
+**practically deployable** diffusion NMT — it can be
+warm-started from Qwen3-VL weights (modify the attention
+mask + add a diffusion head) which is critical for the
+~50k-100k Irish sentence-pair data regime.
+
+### KCG diffusion NMT stack (Multimodal Data Foundry)
+
+For training data, KCG uses a 4-phase agentic pipeline:
+
+1. **Archivist Agent** (Browserbase + Qwen3-VL): navigates
+   Tipperary Studies, Dúchas.ie, Project Gutenberg; downloads
+   bilingual manuscripts; saves to ADK Artifacts.
+2. **Analyst Agent** (Qwen3-VL "Thinking" mode): reads
+   each page, identifies the layout (Irish left / English
+   right), transcribes with a "Thinking" prompt that asks
+   for spatial alignment; preserves the **punctum delens**
+   (ḃ → bh) via a forced substitution rule.
+3. **Translator Agent** (UCCIX or Qwen3-VL): generates
+   synthetic translations for monolingual Irish; runs a
+   back-translation cycle + BLEU/BERTScore filter
+   (drop pairs < 0.7).
+4. **Curator Agent** (LanceDB): stores validated
+   `(image, irish_text, english_text)` triplets in a
+   `LanceModel` schema; the column `irish_vector` is
+   auto-generated via the embedding function for
+   retrieval during training.
+
+The LanceDB schema uses **zero-copy `LanceDataset`** for
+PyTorch so the diffusion model streams batches directly
+from object storage — critical when training > 1M
+iterations on consumer hardware.
+
+See [`celtic-asset-generation/references/diffusion-irish-translation.md`](../celtic-asset-generation/references/diffusion-irish-translation.md) for the
+full 354-line technical deep dive (NeoDiff math, Block
+Diffusion gradients, multimodal data foundry code).
+
+## English-pivoted CoT translation (T5Gemma-2 + Gemini 3 + ADK)
+
+For **high-stakes** en↔ga translation (legal deeds,
+archival deeds, exam rubrics), KCG runs a neuro-symbolic
+**Draft-Critique-Refine** loop orchestrated by Google ADK.
+This is the "agentic translation" pattern that complements
+the diffusion NMT above (diffusion is good for high-volume,
+agentic CoT is good for low-volume high-stakes).
+
+### The 4 roles
+
+| Role | Model | Why |
+|:--|:--|:--|
+| **Drafter** | T5Gemma-2 (270M / 4B / 27B) | Encoder-decoder; reads full source before generating; tied embeddings save ~10.5% params; 140+ multilingual transfer |
+| **Critic** | Gemini 3 Pro | System-2 reasoning, multimodal OCR, "Thought Signatures" audit trail |
+| **Ingestor** | Gemini 3 Flash | Cheap OCR + layout analysis (€0.10/M input vs €0.50/M for Pro) |
+| **Compliance** | ADK ontology tool | Hard replacement of "mostly right" terms against `tearma.ie` glossary |
+
+### The 5-phase execution
+
+1. **Ingestion** — SigLIP encoder reads the scanned page,
+   preserves layout (`{"header": "...", "body": "..."}`),
+   extracts context vector (domain / dialect / register).
+2. **Drafting** — T5Gemma-2 reads the full source via
+   its encoder before decoding; respects the
+   `Dialect=Connacht` and `Register=Formal` hints.
+3. **Critique** — Gemini 3 Pro does System-2 checks:
+   *Does the translation reflect the legal meaning?
+   Are séimhiú/urú correct after ar/ag? Is the
+   terminology Connacht-consistent?* Returns a
+   structured **Critique Report** JSON.
+4. **Refinement** — Drafter produces `Draft v2` with
+   the Critique Report in context.
+5. **Compliance** — ADK Compliance Agent runs the
+   **Truth Anchoring Network** against `tearma.ie`:
+   if the model wrote "Ráiteas faoi mhionn" instead of
+   the mandated "Mionnscríbhinn", the symbolic layer
+   forces a hard replacement.
+
+### Why English-pivoted CoT?
+
+The Celtic-language CoT literature shows the best
+Irish reasoning is **via English** — the model thinks
+in English ("the legal subject is X, the Connacht
+dialect uses form Y"), then produces the Irish output.
+This is enforced at the prompt level: T5Gemma-2 is
+given a `ChainOfThought: en` slot that must be filled
+before the Irish output. The critic then scores both
+the CoT reasoning (in English) and the final Irish
+output separately.
+
+### Tiered compute (cost control)
+
+T5Gemma-2-4B (Drafter) + Gemini 3 Flash (Ingestor) do
+the heavy lifting at €0.10-0.30 / M tokens. Gemini 3
+Pro (Critic) is reserved for the high-value critique
+step at €0.50 / M tokens. Net: the "PhD-level
+reasoning" cost is paid only on the section being
+refined, not on the bulk.
+
+### Infrastructure (Transformers v5 + ADK)
+
+Run T5Gemma-2 locally via `transformers serve`
+(OpenAI-compatible API on `:8080`) to eliminate network
+latency in the loop. Use **continuous batching** (v5
+delivers up to +217% throughput) for the parallel
+sections and **paged attention** for the 128k
+contexts needed to keep the audit log.
+
+See [`celtic-asset-generation/references/neuro-symbolic-translation-engine.md`](../celtic-asset-generation/references/neuro-symbolic-translation-engine.md)
+for the full neuro-symbolic Gaeilge translation
+blueprint (Masked-CFM + InkSpire + the agent stack).
+
 ## Related skills
 
 - `.agents/skills/asr/SKILL.md` — speech recognition

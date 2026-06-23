@@ -510,6 +510,165 @@ const fiber = Effect.runFork(effect)
 - Ensure `Fiber.join` is called
 - Check for unhandled errors in fiber
 
+## KCG integration patterns (round-9 deep dive)
+
+The 3 long-form references document Effect's integration
+into the KCG stack. The synthesised patterns:
+
+### 1. Effect → TanStack Start (isomorphic server fns)
+
+The canonical pattern is `Effect.runPromise()` inside a
+`createServerFn` handler:
+
+```typescript
+import { createServerFn } from "@tanstack/react-start";
+import { Effect } from "effect";
+import { z } from "zod";
+import * as UserService from "./services/user";
+
+const getUserEffect = (id: string) =>
+  Effect.gen(function* (_) {
+    const userService = yield* _(UserService.UserService);
+    return yield* _(userService.getUser(id));
+  });
+
+export const getUser = createServerFn({ method: "GET" })
+  .validator(zodValidator(z.object({ id: z.string() })))
+  .handler(async ({ data }) =>
+    Effect.runPromise(
+      getUserEffect(data.id).pipe(
+        Effect.provide(UserService.UserServiceLive),
+      ),
+    ),
+  );
+```
+
+**Loader caveat:** TanStack Start **loaders** are
+isomorphic (run on server during SSR **and** on client
+during navigation). Either use `createServerFn` for
+server-only Effect code, or ensure your Effect services
+work in both environments.
+
+For validation, swap Zod for **Effect Schema** to keep the
+error type in the Effect channel:
+
+```typescript
+const effectMiddleware = createMiddleware().server(
+  async ({ next, data }) => {
+    const validated = await Effect.runPromise(
+      Schema.decodeUnknown(UserSchema)(data),
+    );
+    return next({ context: { validated } });
+  },
+);
+```
+
+### 2. Effect → Convex (Confect / @maple/convex-effect)
+
+Two mature community wrappers bridge Convex's Promise
+API to Effect:
+
+| Library | Approach | Best for |
+|:--|:--|:--|:--|
+| **Confect** (`@rjdellecese/confect`) | Deep integration with Effect Schema; replaces Convex validators | New projects fully on Effect |
+| **@maple/convex-effect** | Lightweight 1:1 API mapping | Existing Convex projects adding Effect services |
+
+**Critical tsconfig** for Confect: set
+`exactOptionalPropertyTypes: false` (a `convex-js`
+limitation, not Confect's). This conflicts with Effect
+Schema's recommended `true`, so document the trade-off in
+your `tsconfig.json`.
+
+**Where Effect shines in Convex** (in increasing order of
+value):
+
+1. **Actions** — full Effect.gen, can do I/O, scheduling,
+   external APIs. The action returns a Promise at the
+   Convex boundary; inside, you have full Effect
+   composition
+2. **Mutations** — Effect.gen works, but you must keep it
+   deterministic (no `Effect.tryPromise` against an
+   external API inside a mutation)
+3. **Queries** — same determinism constraint; Effect is
+   useful for type-safe data shaping but no I/O
+
+### 3. Effect 3.x quick reference (the essentials)
+
+The 2,400-line `comprehensive-research.md` covers the
+whole surface. The minimum to be productive in KCG:
+
+```typescript
+// Service definition
+class UserRepository extends Context.Tag("UserRepository")<
+  UserRepository,
+  { findById: (id: string) => Effect.Effect<User, NotFoundError> }
+>() {}
+
+// Layer (live impl)
+const UserRepositoryLive = Layer.effect(
+  UserRepository,
+  Effect.gen(function* () {
+    const db = yield* Database;
+    return {
+      findById: (id) =>
+        Effect.gen(function* () {
+          const row = yield* db.query("SELECT * FROM users WHERE id = $1", [id]);
+          if (!row) return yield* Effect.fail(new NotFoundError({ id }));
+          return row;
+        }),
+    };
+  }),
+);
+
+// Tagged error
+class NotFoundError extends Data.TaggedError("NotFoundError")<{
+  readonly id: string;
+}> {}
+
+// Compose
+const main = program.pipe(
+  Effect.provide(Layer.merge(DatabaseLive, UserRepositoryLive)),
+  Effect.catchTag("NotFoundError", (e) => Effect.succeed(null)),
+);
+
+Effect.runPromise(main);
+```
+
+**Combinators to memorise:** `Effect.gen` (generator
+syntax for sequential logic), `Effect.all([...], {
+concurrency: 5 })` (parallel with limit), `Effect.race(a,
+b)` (first wins), `Effect.catchTag("Foo", handler)`
+(type-safe error handling), `Effect.timeout("5s")`,
+`Effect.fork` (background fiber), `Effect.scoped` (auto
+cleanup).
+
+### 4. When to use Effect in KCG
+
+**Use Effect when:**
+
+- The handler has > 2 dependencies (services, repos,
+  caches) — Layer composition beats manual DI
+- You need type-safe error handling across the call chain
+- The function does I/O and you want retry / timeout /
+  circuit-breaker baked in
+- The team is comfortable with FP
+
+**Skip Effect when:**
+
+- The handler is a 5-line CRUD wrapper
+- The team has no FP experience (steep learning curve)
+- The bundle size matters (Effect is ~50 KB minzipped)
+
+In the KCG stack, Effect is the **canonical choice for
+oideachais/web server functions** (curriculum, leabharlann,
+agent handlers) and the **Convex Actions** that wrap
+external LLM calls.
+
+See `references/comprehensive-research.md` for the full
+2,400-line reference, and `references/tanstack-start-integration.md`
+/ `references/convex-integration.md` for the integration
+deep-dives.
+
 ## Resources
 
 - **Documentation**: https://effect.website
