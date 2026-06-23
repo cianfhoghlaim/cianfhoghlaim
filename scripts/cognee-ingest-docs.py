@@ -300,7 +300,7 @@ def main() -> int:
         print(
             f"ERROR: Cognee REST API is not reachable at {COGNEE_API_URL}.\n"
             f"       Start the Cognee stack first: "
-            f"`cd infrastructure/stacks/machine_learning/cognee && docker compose up -d`\n"
+            f"`cd infrastructure/stacks/cognee && docker compose up -d`\n"
             f"       Or use the embedded MCP tools (`cognee_remember`, `cognee_cognify`) directly.",
             file=sys.stderr,
         )

@@ -90,8 +90,8 @@ Also the newt's `lastHolePunch` must be within 5 seconds of the `wg/get-config` 
 ## Key file locations
 
 - **IaC scripts**: `infrastructure/iac/komodo/{config,komodo-rpc,deploy-stacks,read-state,create-resources}.ts`
-- **Pangolin stack (source)**: `infrastructure/stacks/infrastructure/pangolin/{compose,sidecar,newt,newt.sidecar}.yaml`
-- **Komodo stack (source)**: `infrastructure/stacks/infrastructure/komodo/{compose,periphery,sidecar,compose.dev}.yaml`
+- **Pangolin stack (source)**: `infrastructure/stacks/pangolin/{compose,sidecar,newt,newt.sidecar}.yaml`
+- **Komodo stack (source)**: `infrastructure/stacks/komodo/{compose,periphery,sidecar,compose.dev}.yaml`
 - **Pangolin server config (on arm1-oci)**: `/opt/pangolin/`
 - **Komodo runtime config (on mbp)**: `~/.config/komodo/`
 - **Newt runtime config (on mbp)**: `~/.config/pangolin-newt/`

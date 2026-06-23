@@ -1,85 +1,89 @@
 # Infrastructure Stacks
 
-Reorganised per Phase 0 (2026-06-04). See `infrastructure/AGENTS.md` for the
-categorisation philosophy and `infrastructure/GOLD_STANDARD.md` for the
+Reorganised per Phase 1 (2026-06-23): stacks are now **flat** — one
+directory per stack under `infrastructure/stacks/<name>/`, with no
+category subdirectory. See `infrastructure/AGENTS.md` for the canonical
+stack inventory and `infrastructure/GOLD_STANDARD.md` for the
 6-file template that every stack SHALL follow.
 
 ## At a Glance
 
-| Category | Stacks | Purpose |
-|:--|--:|:--|
-| `storage/` | 5 | Foundational substrates (Garage S3, Lakekeeper, LakeFS, Beszel, Forgejo Runner) |
-| `infrastructure/` | 12 | Control plane (Pangolin, Komodo, Pocket ID, Forgejo, Backrest, Vaultwarden, Glance, Pulumi, Headscale, Headplane, DNS, Monitoring) |
-| `engineering/` | 17 | Gateways + services (LiteLLM, llama-swap, MLX-Omni, InvokeAI, Dagster, Marimo, Bytebase, Gluetun, Pipecat, Dragonfly, Crawl4AI, Coder, Windmill, MCPJungle, DevDocs, N8n, Networking) |
-| `machine_learning/` | 16 | AI services (Cognee, Graphiti, Langfuse, LMNR, Olake, Qdrant, Memgraph, FalkorDB, LanceDB, MLflow, Logfire, Nimtable, RisingWave, Docling-Serve, OlmOCR, Unstract) |
-| `tools/` | 24 | Productivity + media (SearXNG, Karakeep, Termix, Paperless-NGX, IT-Tools, Audiobookshelf, Vikunja, etc.) |
+| Property | Value |
+|:--|:--|
+| Layout | Flat — every stack is a direct child of `infrastructure/stacks/` |
+| Total stacks | **94** (changes as new ones are added via the stack-ops skill) |
+| Standard file count | 6 (compose, sidecar, pangolin, secrets, blueprint, .env.example) |
+| Stack directory | `infrastructure/stacks/<name>/` |
 
-**Total:** 74 stacks (changes as new ones are added via the stack-ops skill).
+The 94 stacks are listed in full in `infrastructure/AGENTS.md` § "Stack
+Inventory" (alphabetical, with purpose and key ports). The
+[`infrastructure/QUADRANT-TO-STACK-MAP.md`](../QUADRANT-TO-STACK-MAP.md)
+file groups them by which workspace-member quadrant consumes them.
 
 ## Quick Navigation — "I need a..."
 
 | If you need to... | Look at... |
 |:--|:--|
-| S3-compatible object storage | `storage/garage/` (local, Hetzner) or Cloudflare R2 adapter |
-| Iceberg / DuckLake catalog | `storage/lakehouse/` (Lakekeeper + Lance Namespace + Postgres + Garage) |
-| Git-for-data | `storage/lakefs/` |
-| Git hosting (self-hosted Forge) | `infrastructure/forgejo/` |
-| VPN / reverse proxy / OIDC | `infrastructure/pangolin/` |
-| Container orchestration | `infrastructure/komodo/` |
-| OIDC identity provider | `infrastructure/pocket-id/` |
-| Backup / disaster recovery | `infrastructure/backrest/`, `infrastructure/vaultwarden/` |
-| IaC for cloud | `infrastructure/pulumi/` (multi-cloud) |
-| Monitoring (Prom + Graf + Loki) | `infrastructure/monitoring/` |
-| LLM gateway | `engineering/litellm/` (Postgres + Prometheus) |
-| MLX OpenAI-compatible server | `engineering/mlx-omni/` (Apple Silicon) |
-| Image generation (SDXL) | `engineering/invokeai/` |
-| Data pipeline orchestration | `engineering/dagster/` |
-| Reactive Python notebooks | `engineering/marimo/` |
-| Database UI | `engineering/bytebase/` |
-| VPN tunnel (Gluetun) | `engineering/gluetun/` |
-| Real-time voice pipeline | `engineering/pipecat/` |
-| In-memory cache (Redis-compatible) | `engineering/dragonfly/` |
-| Web crawling API | `engineering/crawl4ai/` |
-| Cloud dev environment | `engineering/coder/` |
-| Workflow automation | `engineering/windmill/`, `engineering/n8n/` |
-| MCP server manager | `engineering/MCPJungle/` |
-| Dev documentation UI | `engineering/DevDocs/` |
-| Network diagnostic toolbox | `engineering/networking-toolbox/` |
-| Knowledge graph (Cognee) | `machine_learning/cognee/` |
-| Temporal knowledge graph (Graphiti) | `machine_learning/graphiti/` |
-| LLM observability (Langfuse) | `machine_learning/langfuse/` |
-| Vector search | `machine_learning/qdrant/`, `machine_learning/lancedb/` |
-| Graph database | `machine_learning/memgraph/`, `machine_learning/falkordb/` |
-| ML experiment tracking | `machine_learning/mlflow/` |
-| Pydantic Python tracing | `machine_learning/logfire/` |
-| Streaming SQL | `machine_learning/risingwave/` |
-| Document AI / OCR | `machine_learning/docling-serve/`, `machine_learning/olmocr/` |
-| Iceberg catalog UI | `machine_learning/nimtable/` |
-| MongoDB → Iceberg CDC | `machine_learning/olake/` |
-| LLM eval/observability | `machine_learning/lmnr/` |
-| Unstructured data extraction | `machine_learning/unstract/` |
-| Private search engine | `tools/searxng/` |
-| Bookmark manager | `tools/karakeep/` |
-| SSH/Terminal in browser | `tools/termix/` |
-| Document scanning | `tools/paperless-ngx/` |
-| IT admin toolbox | `tools/IT-Tools/` |
-| Self-hosted audiobooks | `tools/audiobookshelf/` |
-| Kanban + Gantt | `tools/vikunja/` |
-| Web analytics | `tools/rybbit/` |
-| Comic library | `tools/Kapowarr/` |
-| Email server | `tools/mailcow-dockerized/` |
-| Budget tracker | `tools/actual/` |
-| Slide presentations | `tools/presenton/` |
-| Paste sharing | `tools/pastemax/` |
+| S3-compatible object storage | `infrastructure/stacks/garage/` (local, Hetzner) or Cloudflare R2 adapter |
+| Iceberg / DuckLake catalog | `infrastructure/stacks/lakehouse/` (Lakekeeper + Lance Namespace + Postgres + Garage) |
+| Git-for-data | `infrastructure/stacks/lakefs/` |
+| Git hosting (self-hosted Forge) | `infrastructure/stacks/forgejo/` |
+| VPN / reverse proxy / OIDC | `infrastructure/stacks/pangolin/` |
+| Container orchestration | `infrastructure/stacks/komodo/` |
+| OIDC identity provider | `infrastructure/stacks/pocket-id/` |
+| Backup / disaster recovery | `infrastructure/stacks/backrest/`, `infrastructure/stacks/vaultwarden/` |
+| IaC for cloud | `infrastructure/stacks/pulumi/` (multi-cloud) |
+| Monitoring (Prom + Graf + Loki) | `infrastructure/stacks/monitoring/` |
+| LLM gateway | `infrastructure/stacks/litellm/` (Postgres + Prometheus) |
+| MLX OpenAI-compatible server | `infrastructure/stacks/mlx-omni/` (Apple Silicon) |
+| Image generation (SDXL) | `infrastructure/stacks/invokeai/` |
+| Data pipeline orchestration | `infrastructure/stacks/dagster/` |
+| Reactive Python notebooks | `infrastructure/stacks/marimo/` |
+| Database UI | `infrastructure/stacks/bytebase/` |
+| VPN tunnel (Gluetun) | `infrastructure/stacks/gluetun/` |
+| Real-time voice pipeline | `infrastructure/stacks/pipecat/` |
+| In-memory cache (Redis-compatible) | `infrastructure/stacks/dragonfly/` |
+| Web crawling API | `infrastructure/stacks/crawl4ai/` |
+| Cloud dev environment | `infrastructure/stacks/coder/` |
+| Workflow automation | `infrastructure/stacks/windmill/`, `infrastructure/stacks/n8n/` |
+| MCP server manager | `infrastructure/stacks/MCPJungle/` |
+| Dev documentation UI | `infrastructure/stacks/DevDocs/` |
+| Network diagnostic toolbox | `infrastructure/stacks/networking-toolbox/` |
+| Knowledge graph (Cognee) | `infrastructure/stacks/cognee/` |
+| Temporal knowledge graph (Graphiti) | `infrastructure/stacks/graphiti/` |
+| LLM observability (Langfuse) | `infrastructure/stacks/langfuse/` |
+| Vector search | `infrastructure/stacks/qdrant/`, `infrastructure/stacks/lancedb/` |
+| Graph database | `infrastructure/stacks/memgraph/`, `infrastructure/stacks/falkordb/` |
+| ML experiment tracking | `infrastructure/stacks/mlflow/` |
+| Pydantic Python tracing | `infrastructure/stacks/logfire/` |
+| Streaming SQL | `infrastructure/stacks/risingwave/` |
+| Document AI / OCR | `infrastructure/stacks/docling-serve/`, `infrastructure/stacks/olmocr/` |
+| Iceberg catalog UI | `infrastructure/stacks/nimtable/` |
+| MongoDB → Iceberg CDC | `infrastructure/stacks/olake/` |
+| LLM eval/observability | `infrastructure/stacks/lmnr/` |
+| Unstructured data extraction | `infrastructure/stacks/unstract/` |
+| Private search engine | `infrastructure/stacks/searxng/` |
+| Bookmark manager | `infrastructure/stacks/karakeep/` |
+| SSH/Terminal in browser | `infrastructure/stacks/Termix/` |
+| Document scanning | `infrastructure/stacks/paperless-ngx/` |
+| IT admin toolbox | `infrastructure/stacks/it-tools/` |
+| Self-hosted audiobooks | `infrastructure/stacks/audiobookshelf/` |
+| Kanban + Gantt | `infrastructure/stacks/vikunja/` |
+| Web analytics | `infrastructure/stacks/rybbit/` |
+| Comic library | `infrastructure/stacks/Kapowarr/` |
+| Email server | `infrastructure/stacks/mailcow-dockerized/` |
+| Budget tracker | `infrastructure/stacks/actual/` |
+| Slide presentations | `infrastructure/stacks/presenton/` |
+| Paste sharing | `infrastructure/stacks/pastemax/` |
 
 ## Standard Stack Structure
 
-Every stack under `infrastructure/stacks/<category>/<name>/` SHALL follow
+Every stack under `infrastructure/stacks/<name>/` SHALL follow
 the 6-file GOLD_STANDARD pattern. See `infrastructure/GOLD_STANDARD.md`
 for the full template and exemplars.
 
 ```
-stacks/<category>/<name>/
+stacks/<name>/
 ├── compose.yaml           # Docker service definitions (health checks, restart, volumes, network)
 ├── pangolin.yaml          # Traefik routing + TinyAuth (if web-facing)
 ├── sidecar.yaml           # Locket container for Infisical injection
@@ -92,7 +96,7 @@ stacks/<category>/<name>/
 
 ```bash
 # Bring up a single stack
-cd infrastructure/stacks/<category>/<name>
+cd infrastructure/stacks/<name>
 docker compose -f compose.yaml -f sidecar.yaml up -d
 
 # Tail logs
@@ -101,7 +105,7 @@ docker compose logs -f
 # Tear down
 docker compose down
 
-# Validate all 74 stacks against the GOLD_STANDARD
+# Validate all 94 stacks against the GOLD_STANDARD
 bun run validate-stacks
 ```
 
@@ -112,13 +116,13 @@ each stack has the 6 GOLD_STANDARD files and follows the
 
 ## Critical Path
 
-Not all stacks are equal. The 88-stack critical path on the data
+Not all stacks are equal. The 6-stack critical path on the data
 platform side is:
 
 ```
-Infisical -> Garage (storage/garage) -> Lakehouse (storage/lakehouse)
-  -> LiteLLM (engineering/litellm) -> Langfuse (machine_learning/langfuse)
-  -> Cognee (machine_learning/cognee)
+Infisical -> Garage (garage) -> Lakehouse (lakehouse)
+  -> LiteLLM (litellm) -> Langfuse (langfuse)
+  -> Cognee (cognee)
 ```
 
 These six must exist (in that order) before any data pipeline can run.
@@ -126,9 +130,10 @@ See `infrastructure/README.md` § "Critical Path" for the full sequence.
 
 ## Related Documentation
 
-- `infrastructure/README.md` — 10-step bring-up, 88-stack categorised view, control plane pipeline
-- `infrastructure/AGENTS.md` — agent instructions for working with stacks
+- `infrastructure/README.md` — 10-step bring-up, 94-stack flat view, control plane pipeline
+- `infrastructure/AGENTS.md` — agent instructions for working with stacks (canonical inventory)
 - `infrastructure/GOLD_STANDARD.md` — 6-file template + exemplars
+- `infrastructure/QUADRANT-TO-STACK-MAP.md` — quadrant → stack routing
 - `.agents/skills/stack-ops/SKILL.md` — operational skill for adding/fixing stacks
 - `infrastructure/komodo/procedures/` — Komodo GitOps procedures (8 for croilar, 5+ for others)
 - `infrastructure/dagger/` — Dagger CI/CD modules
