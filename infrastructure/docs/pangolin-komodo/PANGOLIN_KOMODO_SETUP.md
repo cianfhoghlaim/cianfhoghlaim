@@ -164,7 +164,7 @@ curl -sS "https://infisical.cianfhoghlaim.ie/api/v1/secrets?env=dev-baile&path=/
 # 3.1 Sync stack from mbp → arm1-oci
 rsync -avz --delete \
   -e "ssh -i ~/.ssh/oci-arm1" \
-  infrastructure/stacks/infrastructure/pangolin/ \
+  infrastructure/stacks/pangolin/ \
   ubuntu@140.238.96.148:/opt/pangolin/
 
 # 3.2 SSH to arm1-oci, then:
@@ -212,7 +212,7 @@ docker run --rm \
 ```bash
 # 4.1 Sync stack
 rsync -avz --delete \
-  infrastructure/stacks/infrastructure/komodo/ \
+  infrastructure/stacks/komodo/ \
   ~/.config/komodo/
 
 # 4.2 Generate the JWT + passkey + DB password
@@ -273,7 +273,7 @@ mkdir -p /etc/komodo
 cd /etc/komodo
 
 # 6.2 Sync compose files
-rsync -avz mbp:/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/infrastructure/komodo/ .
+rsync -avz mbp:/Users/cianmacandeisigh/dev/kings_college_galway/infrastructure/stacks/komodo/ .
 
 # 6.3 Write .env (same passkey as Core, different DB pw if desired)
 # 6.4 Place infisical_secret at /opt/komodo/secrets/infisical_secret
@@ -307,7 +307,7 @@ docker compose -f periphery.yaml -f sidecar.yaml up -d
 # 7.3 Place the stack on mbp
 mkdir -p ~/.config/pangolin-newt
 cd ~/.config/pangolin-newt
-rsync -avz .../infrastructure/stacks/infrastructure/pangolin/{newt.yaml,newt.sidecar.yaml,newt.secrets.env} .
+rsync -avz .../infrastructure/stacks/pangolin/{newt.yaml,newt.sidecar.yaml,newt.secrets.env} .
 # Remove the misplaced sidecar (we don't want locket unless Infisical KMS is healthy)
 # Actually keep the locket pattern, it works.
 # If KMS is broken, fall back to: export NEWT_ID + NEWT_SECRET in .env, skip sidecar

@@ -1,6 +1,6 @@
 ---
 name: kcg-convergence
-description: KCG's 6 docker-compose categories (control plane / storage / engineering / machine_learning / tools / browser) + port allocation map (3000-3499 user apps, 3500-3999 APIs, 4000-4499 Dagster, 5000-5499 data, 6000-6999 AI/ML, 7000-7999 dev, 8000-8999 MMO, 9000-9999 infra). Use when adding a new stack, picking a port, understanding which category a new service belongs to, or asking "where in the 6 categories does X live?".
+description: KCG's flat docker-compose layout (94 stacks under infrastructure/stacks/, no category subdirectory) + port allocation map (3000-3499 user apps, 3500-3999 APIs, 4000-4499 Dagster, 5000-5499 data, 6000-6999 AI/ML, 7000-7999 dev, 8000-8999 MMO, 9000-9999 infra). Use when adding a new stack, picking a port, or asking "where in the stacks/ tree does X live?".
 ---
 
 # KCG Convergence
@@ -9,27 +9,31 @@ description: KCG's 6 docker-compose categories (control plane / storage / engine
 
 Use when you need to:
 
-- "Add a new stack — which category does it go in?"
+- "Add a new stack — where does the directory go?"
 - "Pick a port for a new service"
-- "Understand the 6 categories"
+- "Understand the flat layout"
 - "Onboard a new dev to the KCG monorepo's infra shape"
 - "Map a stack to the right host tier (control / storage /
   workload)"
 
-## The 6 docker-compose categories
+## The flat docker-compose layout
 
-The 70+ KCG Docker Compose stacks live in
-`infrastructure/stacks/` and are organised into 6
-categories by **purpose**, not by host:
+The 94 KCG Docker Compose stacks live in
+`infrastructure/stacks/` as a **flat** directory — one
+directory per stack, no category subdirectory. Functional
+purpose is recorded as information only in
+`infrastructure/AGENTS.md` § "Stack Inventory" and the
+cross-quadrant routing table at
+`infrastructure/QUADRANT-TO-STACK-MAP.md`.
 
-| # | Category | Path | Purpose |
-|:--|:--|:--|:--|
-| 1 | **Control plane** | `infrastructure/` | Pangolin (zero-trust), Komodo (GitOps), Pocket ID (OIDC), CrowdSec (WAF), PlanetScale (Postgres), MotherDuck, R2 bridge, Pulumi, Forgejo, Dozzle |
-| 2 | **Storage** | `infrastructure/stacks/storage/` | Garage (S3), Lakehouse (Lakekeeper + Lance Namespace + Postgres), LakeFS, Beszel |
-| 3 | **Engineering** | `infrastructure/stacks/engineering/` | LiteLLM, Dagster, oideachais, Convex, Windmill, n8n, Coder, DevDocs, MCPJungle, crawl4ai |
-| 4 | **Machine learning** | `infrastructure/stacks/machine_learning/` | Cognee, Graphiti, Langfuse, MLflow, Qdrant, Memgraph, FalkorDB, LanceDB, olake, lmnr, logfire, nimtable |
-| 5 | **Tools** | `infrastructure/stacks/tools/` | 17 productivity / media / dev utilities |
-| 6 | **Browser** | `infrastructure/stacks/browser/` | Browser automation (Skyvern, crawl4ai) |
+| Functional group | Examples | Notes |
+|:--|:--|:--|
+| **Control plane** | pangolin, komodo, pocket-id, dozzle, DnsServer, planetscale, motherduck, r2, pulumi, forgejo, forgejo-runner, monitoring, headscale, headplane, vaultwarden, backrest, glance | Pangea/identity/GitOps/observability. Lives in `infrastructure/stacks/<name>/` (flat). |
+| **Foundational substrates** | garage, lakehouse, lakehouse-oci, lakekeeper, lakefs, forgejo-runner, beszel, croilar-postgres | S3 / Iceberg / git / monitoring hub. Flat. |
+| **Dev tooling + gateways + services** | litellm, mlx-omni, invokeai, dagster, marimo, convex, coder, windmill, n8n, MCPJungle, DevDocs, dragonfly, crawl4ai, mathesar, agent-os, oideachais, gluetun, pipecat, pydantic-gateway, networking-toolbox, bytebase, frontend, **croilar-{web,portal,dagster,marimo,hono-api,convex}** | Where humans + agents spend their day. Flat. |
+| **AI services** | cognee, graphiti, langfuse, mlflow, qdrant, memgraph, falkordb, lancedb, risingwave, docling-serve, dots-ocr, olake, olmocr, paddleocr, unstract, logfire, nimtable, lmnr | Vector / graph / observability / streaming / training. Flat. |
+| **Productivity + media** | vikunja, cal-diy, n8n, paperless-ngx, searxng, stirling-pdf, karakeep, linkwarden, romm, audiobookshelf, Perplexica, skyvern, actual, blinko, Kapowarr, pinchflat, pastemax, presenton, Termix, it-tools, mailcow-dockerized, LetterFeed, rybbit, enclosed, changedetection | Self-contained utilities. Flat. |
+| **Browser automation** | crawl4ai, skyvern (and any new `stagehand` / `playwright` / `agent-browser` stacks) | No dedicated category folder. Flat. |
 
 ### Per-category inventory
 
@@ -160,36 +164,27 @@ Reserved system ports (do not use):
 ```
 New stack?
 │
-├── Is it the control plane (Pangolin/Komodo/Pocket ID/etc.)?
-│   └── infrastructure/ (no category subdir)
-│
-├── Is it data storage (S3 / Postgres / Iceberg)?
-│   └── infrastructure/stacks/storage/
-│
-├── Is it dev tooling / API gateway / orchestration?
-│   └── infrastructure/stacks/engineering/
-│
-├── Is it ML / AI / graph / vector?
-│   └── infrastructure/stacks/machine_learning/
-│
-├── Is it productivity / media / dev utility?
-│   └── infrastructure/stacks/tools/<subcategory>/
-│
-└── Is it a browser automation?
-    └── infrastructure/stacks/browser/
+└── Always: infrastructure/stacks/<name>/
+    (flat — no category subdirectory, no subcategory)
+    Then:
+      1. Add a row to the Stack Inventory in
+         infrastructure/AGENTS.md (purpose + ports)
+      2. Add a row to infrastructure/QUADRANT-TO-STACK-MAP.md
+         if a workspace quadrant consumes it
+      3. Run bun run validate-stacks
 ```
 
 ## Cross-references
 
 - `.agents/skills/kcg-bunchloch/SKILL.md` — the 3-tier
-  host convergence (where the categories run)
+  host convergence (where the stacks run)
 - `.agents/skills/stack-ops/SKILL.md` — the 6-file
   GOLD_STANDARD pattern (how each stack is structured)
 - `.agents/skills/oideachais-storage/SKILL.md` — the
   storage layer detail
 - `.agents/skills/kcg-leabharlann-pipeline/SKILL.md` — the
-  5-stage pipeline that touches all 6 categories
-- `infrastructure/AGENTS.md` — the canonical 6-category
-  reference
-- `infrastructure/stacks/GOLD_STANDARD.md` — the 6-file
-  pattern per stack
+  5-stage pipeline that touches many functional groups
+- `infrastructure/AGENTS.md` — the canonical stack inventory
+- `infrastructure/QUADRANT-TO-STACK-MAP.md` — quadrant → stack
+  routing
+- `infrastructure/GOLD_STANDARD.md` — the 6-file pattern per stack

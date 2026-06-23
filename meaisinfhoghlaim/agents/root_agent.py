@@ -26,7 +26,7 @@ Memory:
 Streaming migration: Replaced Confluent Kafka with RisingWave per the
 Q1 decision. RisingWave gives us SQL-native streaming (CREATE SOURCE,
 CREATE MATERIALIZED VIEW, CREATE SINK) plus Iceberg-on-Garage S3 as
-the durable event store. See `infrastructure/stacks/machine_learning/
+the durable event store. See `infrastructure/stacks/
 risingwave/` and `docs/data_engineering/risingwave-*.md`.
 """
 from __future__ import annotations
@@ -138,7 +138,7 @@ def _rw_ensure_tables() -> None:
     The full source/sink/MV topology is owned by RisingWave; this function
     just makes the tables idempotent for dev startup. Production should
     have these managed via SQL migrations in
-    `infrastructure/stacks/machine_learning/risingwave/init.sql`."""
+    `infrastructure/stacks/risingwave/init.sql`."""
     if not HAS_RISINGWAVE:
         return
     ddl = """

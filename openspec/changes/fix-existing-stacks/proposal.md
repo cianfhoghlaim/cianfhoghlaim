@@ -22,7 +22,7 @@ The cianfhoghlaim monorepo has 70+ Docker Compose stacks under `infrastructure/s
 
 | Stack | Path | Purpose |
 |:--|:--|:--|
-| `infrastructure/monitoring` | `infrastructure/stacks/infrastructure/monitoring/` | Prometheus + Grafana + Loki + Promtail + Alertmanager. Scrapes 15+ containers. Private Pangolin resources at `grafana.cianfhoghlaim.ie`, `prometheus.cianfhoghlaim.ie`, `alerts.cianfhoghlaim.ie`. |
+| `infrastructure/monitoring` | `infrastructure/stacks/monitoring/` | Prometheus + Grafana + Loki + Promtail + Alertmanager. Scrapes 15+ containers. Private Pangolin resources at `grafana.cianfhoghlaim.ie`, `prometheus.cianfhoghlaim.ie`, `alerts.cianfhoghlaim.ie`. |
 
 ### New tooling
 

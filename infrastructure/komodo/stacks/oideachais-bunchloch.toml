@@ -5,7 +5,7 @@
 #
 # Replaces the prior /oideachais/compose.yaml + sidecar.yaml + pangolin.yaml
 # + blueprint.yaml quartet with a single, komodo-managed stack at
-# infrastructure/stacks/engineering/oideachais/.
+# infrastructure/stacks/oideachais/.
 #
 # Architecture:
 #   bunchloch (MacBook M4 Max) hosts the three app containers:
@@ -25,7 +25,7 @@
 
 [[stack]]
 name = "oideachais-bunchloch"
-description = "Cianfhoghlaim Oideachais education platform — Dagster pipelines, FastAPI AG-UI streaming, TanStack Start SPA. Merged canonical stack at infrastructure/stacks/engineering/oideachais/."
+description = "Cianfhoghlaim Oideachais education platform — Dagster pipelines, FastAPI AG-UI streaming, TanStack Start SPA. Merged canonical stack at infrastructure/stacks/oideachais/."
 tags = [
   "host:bunchloch",
   "tier:development",
@@ -39,8 +39,8 @@ tags = [
 server_id = "bunchloch"
 run_directory = "/etc/komodo/oideachais"
 file_paths = [
-  "infrastructure/stacks/engineering/oideachais/compose.yaml",
-  "infrastructure/stacks/engineering/oideachais/sidecar.yaml",
+  "infrastructure/stacks/oideachais/compose.yaml",
+  "infrastructure/stacks/oideachais/sidecar.yaml",
 ]
 environment = """
 DAGSTER_PORT=3335

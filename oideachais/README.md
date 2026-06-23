@@ -70,7 +70,7 @@ This README documents the engine itself: data contracts, asset topology, DLT
 patterns, environment variables, and the conventions agents must follow when
 extending it. For the consumer-facing web app see `oideachais/web/`; for the
 operations notebooks see `oideachais/notebooks/`; for the storage stack
-implementation see `infrastructure/stacks/storage/lakehouse/`.
+implementation see `infrastructure/stacks/lakehouse/`.
 
 ---
 
@@ -292,7 +292,7 @@ bun run setup                     # mise install + bun install + uv sync + secre
 bun run secrets:init              # or rely on `mise` directory hooks
 
 # Start lakehouse stack
-cd infrastructure/stacks/storage/lakehouse
+cd infrastructure/stacks/lakehouse
 docker compose up -d
 
 # Start Dagster (from the oideachais subdir, not absolute path)
@@ -321,7 +321,7 @@ print(load)
 ## 8. Lakehouse Stack
 
 The complete storage stack implementation lives in
-`infrastructure/stacks/storage/lakehouse/`:
+`infrastructure/stacks/lakehouse/`:
 
 - `compose.yaml` — Garage, PostgreSQL, Lakekeeper, Lance Namespace sidecar
 - `blueprint.yaml` — Pangolin ingress (iceberg/lance/ducklake S3 endpoints, private
@@ -348,7 +348,7 @@ docker ps --format "table {{.Names}}\t{{.Status}}" | grep lakehouse
 
 The Oideachais data platform has **zero direct calls** to any LLM provider. Every
 text generation, embedding, OCR, and image generation call goes through a single
-gateway: the **LiteLLM proxy** at `infrastructure/stacks/engineering/litellm`.
+gateway: the **LiteLLM proxy** at `infrastructure/stacks/litellm`.
 
 ### 8.5.1 Why a gateway is non-negotiable here
 
@@ -380,7 +380,7 @@ you have to touch every consumer.
 
 ### 8.5.2 What the gateway gives us
 
-The LiteLLM proxy (`infrastructure/stacks/engineering/litellm/`) provides:
+The LiteLLM proxy (`infrastructure/stacks/litellm/`) provides:
 
 - **One OpenAI-compatible URL** for everything (`http://litellm:4000/v1`)
 - **Alias routes** that abstract model choice:
@@ -407,11 +407,11 @@ The LiteLLM proxy (`infrastructure/stacks/engineering/litellm/`) provides:
 
 ```bash
 # 1. Start the lakehouse (Garage, PostgreSQL, Lakekeeper)
-cd infrastructure/stacks/storage/lakehouse
+cd infrastructure/stacks/lakehouse
 docker compose up -d
 
 # 2. Start the LLM gateway + backends
-cd infrastructure/stacks/engineering/litellm
+cd infrastructure/stacks/litellm
 docker compose -f compose.yaml -f sidecar.yaml up -d   # gateway + Locket
 cd ../../engineering/mlx-omni
 docker compose -f compose.yaml -f sidecar.yaml up -d   # Apple Silicon MLX
@@ -464,7 +464,7 @@ Three reasons specific to this project:
    the gateway means we can swap entire model families in `config.yaml`
    without regenerating BAML.
 
-See `infrastructure/stacks/engineering/litellm/config/config.yaml` for the
+See `infrastructure/stacks/litellm/config/config.yaml` for the
 full route table, and `docs/meaisínfhoghlaim/Setting Up Local LLM Services on Mac.md`
 for the architectural rationale.
 
@@ -498,7 +498,7 @@ If you are extending these pipelines, **assume the `data-engineer` persona**.
 
 - `AGENTS.md` (repo root) — Global agent orchestration rules
 - `infrastructure/AGENTS.md` — Infrastructure stacks and Komodo/Pangolin
-- `infrastructure/stacks/storage/lakehouse/` — Lakehouse source of truth
+- `infrastructure/stacks/lakehouse/` — Lakehouse source of truth
 - `infrastructure/browser/` — Stagehand + Playwright + Browserbase
 - `oideachais/notebooks/mission_control.py` — Operational dashboard
 - `oideachais/web/` — TanStack Start + CopilotKit consumer app

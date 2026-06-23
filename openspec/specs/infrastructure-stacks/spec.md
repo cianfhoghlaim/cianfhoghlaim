@@ -5,22 +5,22 @@
 `infrastructure-stacks` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives in the appropriate quadrant. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
 
 ## Background
-65+ storage, utility, engineering, machine learning, and infrastructure Docker Compose stacks managed via Komodo for the Cianfhoghlaim platform. Organized into 5 categories with standardized Pangolin routing, Locket secret injection, and Infisical secret management.
+94 storage, utility, engineering, machine learning, and infrastructure Docker Compose stacks managed via Komodo for the Cianfhoghlaim platform. Organised in a **flat** directory layout (one directory per stack under `infrastructure/stacks/<name>/`) with standardized Pangolin routing, Locket secret injection, and Infisical secret management. The historical 5-category subdirectory split (`storage/`, `engineering/`, `infrastructure/`, `machine_learning/`, `tools/`) was removed on 2026-06-23; functional groups are now informational only and recorded in `infrastructure/AGENTS.md` and `infrastructure/QUADRANT-TO-STACK-MAP.md`.
 
 | Feature | Description |
 |---------|-------------|
-| Storage Stacks | Vector, graph, relational databases, lakehouse, AI memory |
-| Engineering Stacks | Dev tooling, API gateways, MCP servers |
-| ML Stacks | Training infrastructure, LLM serving |
-| Infrastructure Stacks | Pangolin control plane, Komodo, Pocket ID |
-| Tools Stacks | Productivity, media, development utilities |
+| Foundational substrates | Vector, graph, relational databases, lakehouse, AI memory |
+| Dev tooling + gateways + services | Dev tooling, API gateways, MCP servers |
+| AI services | Training infrastructure, LLM serving |
+| Control plane | Pangolin control plane, Komodo, Pocket ID |
+| Productivity + media | Productivity, media, development utilities |
 ## Requirements
 ### Requirement: Stack Standardization
 
 The system SHALL enforce that every web-facing stack includes four standard files.
 
 #### Scenario: Complete Stack
-- **GIVEN** a stack directory under `infrastructure/stacks/<category>/<name>/`
+- **GIVEN** a stack directory under `infrastructure/stacks/<name>/`
 - **WHEN** deploying via Komodo
 - **THEN** the stack SHALL have `compose.yaml`, `pangolin.yaml`, `sidecar.yaml`, and `secrets.env`
 
@@ -189,57 +189,53 @@ loop, Dagger = outer loop), documented in
 - **AND** `dagger call test` runs the new member's test suite
   hermetically
 
-### Requirement: Six Docker-Compose Categories
+### Requirement: Flat Stack Layout
 
-The system SHALL organize the 70+ Docker Compose stacks
-under `infrastructure/stacks/` into 6 categories by purpose:
+The system SHALL organise the 94 Docker Compose stacks under
+`infrastructure/stacks/` in a **flat** layout — every stack
+is a direct child of `infrastructure/stacks/`, with no
+category subdirectory. Functional purpose (control plane,
+storage, engineering, ML, tools, browser) is recorded as
+**information only** in `infrastructure/AGENTS.md` § "Stack
+Inventory" and the cross-quadrant routing table at
+`infrastructure/QUADRANT-TO-STACK-MAP.md`, and is not
+encoded in the directory hierarchy.
 
-1. **Control plane** (`infrastructure/`) — Pangolin, Komodo,
-   Pocket ID, CrowdSec, PlanetScale, MotherDuck, R2 bridge,
-   Pulumi, Forgejo, Dozzle
-2. **Storage** (`infrastructure/stacks/storage/`) — Garage
-   S3, Lakehouse (Lakekeeper + Lance Namespace + Postgres),
-   LakeFS, Beszel
-3. **Engineering** (`infrastructure/stacks/engineering/`) —
-   LiteLLM, Dagster, oideachais, Convex, Windmill, n8n,
-   Coder, DevDocs, MCPJungle, crawl4ai
-4. **Machine learning** (`infrastructure/stacks/machine_learning/`) —
-   Cognee, Graphiti, Langfuse, MLflow, Qdrant, Memgraph,
-   FalkorDB, LanceDB, olake, lmnr, logfire, nimtable
-5. **Tools** (`infrastructure/stacks/tools/`) — 17 stacks
-   spanning productivity (actual, blinko, linkwarden,
-   presenton, stirling-pdf), media (audiobookshelf,
-   kapowarr, pinchflat, rybbit), and development
-   (changedetection, enclosed, pastemax, perplexica,
-   skyvern, LetterFeed, romm, mailcow-dockerized)
-6. **Browser** (`infrastructure/stacks/browser/`) —
-   browser automation (Skyvern, crawl4ai)
+A new stack's directory is therefore `infrastructure/stacks/<name>/`
+and not `infrastructure/stacks/<category>/<name>/`.
 
-#### Scenario: A new stack fits the right category
+#### Scenario: A new stack is added
 
 - **GIVEN** a developer wants to add a new "Pocket ID
   bridge" stack
-- **WHEN** they look at `infrastructure/AGENTS.md` and the
-  kcg-convergence skill's category map
-- **THEN** the answer is unambiguously "control plane"
-  (because Pocket ID is the OIDC SSO for Pangolin) — not
-  "engineering" (which is for dev tools) or "tools"
+- **WHEN** they create `infrastructure/stacks/pocket-id-bridge/`
+  with the 6 GOLD_STANDARD files
+- **THEN** `bun run stack-doctor.sh` validates it under the
+  flat layout
+- **AND** the developer adds a row to the **Stack Inventory**
+  table in `infrastructure/AGENTS.md` (alphabetical, with
+  purpose and ports)
+- **AND** the row's purpose field ("control plane" for a
+  Pocket ID bridge) is informational only — it does not
+  imply a subdirectory
 
-#### Scenario: A leabharlann PDF flows through all 6 layers
+#### Scenario: A leabharlann PDF flows through the data plane
 
 - **GIVEN** a leabharlann PDF lands at
   `leabharlann/gaeilge/<file>.pdf`
 - **WHEN** the Dagster asset materialises
-- **THEN** the Locket sidecar (control plane) injects
-  Infisical secrets
-- **AND** the Garage S3 (storage) holds the Parquet
-- **AND** the Dagster + LiteLLM + BAML (engineering)
+- **THEN** the Locket sidecar (infrastructure/stacks/<name>)
+  injects Infisical secrets
+- **AND** the Garage S3 (infrastructure/stacks/garage) holds
+  the Parquet
+- **AND** the Dagster + LiteLLM + BAML
+  (infrastructure/stacks/dagster, litellm, oideachais)
   orchestrate + extract
-- **AND** the Cognee + FalkorDB + LanceDB (machine learning)
-  serve the graph + vector
-- **AND** the DevDocs (tools) hosts the analyst dashboard
-- **AND** the crawl4ai (browser) scrapes the next page in
-  Phase 2
+- **AND** the Cognee + FalkorDB + LanceDB
+  (infrastructure/stacks/cognee, falkordb, lancedb) serve
+  the graph + vector
+- **AND** the DevDocs (infrastructure/stacks/DevDocs) hosts
+  the analyst dashboard
 
 ### Requirement: Three-Tier Host Convergence
 

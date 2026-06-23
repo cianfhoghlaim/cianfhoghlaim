@@ -196,7 +196,7 @@ The compose file uses healthchecks, a named network, and
 
 #### Scenario: Self-hosted stack runs
 
-- **GIVEN** `docker compose -f infrastructure/stacks/engineering/dagster/compose.yaml up -d`
+- **GIVEN** `docker compose -f infrastructure/stacks/dagster/compose.yaml up -d`
 - **WHEN** all 4 services are healthy
 - **THEN** the Dagster UI SHALL be reachable at `http://localhost:3000`
 - **AND** the daemon SHALL poll the schedules/sensors

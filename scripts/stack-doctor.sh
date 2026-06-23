@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 # =============================================================================
-# stack-doctor.sh - Audit every infrastructure/stacks/*/* for GOLD_STANDARD
+# stack-doctor.sh - Audit every infrastructure/stacks/* for GOLD_STANDARD
 # =============================================================================
 # Bash 3.2 compatible (macOS default).
+#
+# The stacks/ directory uses a FLAT layout (one directory per stack, no
+# category subdirectory). This script iterates every immediate subdirectory
+# of infrastructure/stacks/ and validates the 6-file GOLD_STANDARD pattern.
 #
 # USAGE:
 #   mise turbo doctor             # via turbo task
@@ -28,9 +32,7 @@ trap 'rm -f "$CRITICALS_FILE" "$WARNINGS_FILE" "$INFOS_FILE"' EXIT
 
 audit_stack() {
   local stack_path="$1"
-  local category
   local name
-  category=$(basename "$(dirname "$stack_path")")
   name=$(basename "$stack_path")
   local issues=""
 
@@ -43,7 +45,7 @@ audit_stack() {
   [ -f "$stack_path/.env.example" ]   && has_env=1
 
   if [ "$has_compose" -eq 0 ] && [ "$has_blueprint" -eq 0 ]; then
-    echo "$category/$name: no-compose-or-blueprint" >> "$CRITICALS_FILE"
+    echo "$name: no-compose-or-blueprint" >> "$CRITICALS_FILE"
     return
   fi
 
@@ -53,7 +55,7 @@ audit_stack() {
 
   if [ "$has_compose" -eq 1 ] && [ "$has_sidecar" -eq 0 ]; then
     issues+="no-sidecar "
-    echo "$category/$name: $issues" >> "$WARNINGS_FILE"
+    echo "$name: $issues" >> "$WARNINGS_FILE"
     return
   fi
 
@@ -62,7 +64,7 @@ audit_stack() {
     refs=$(grep -c "{{ infisical://" "$stack_path/secrets.env" 2>/dev/null)
     refs=${refs:-0}
     if [ "$refs" = "0" ]; then
-      echo "$category/$name: secrets.env has no infisical:// refs" >> "$WARNINGS_FILE"
+      echo "$name: secrets.env has no infisical:// refs" >> "$WARNINGS_FILE"
       return
     fi
   fi
@@ -70,7 +72,7 @@ audit_stack() {
   if [ "$has_compose" -eq 1 ] && [ "$has_env" -eq 1 ]; then
     if command -v docker >/dev/null 2>&1; then
       if ! docker compose -f "$stack_path/compose.yaml" --env-file "$stack_path/.env.example" config --quiet 2>/dev/null; then
-        echo "$category/$name: docker compose config --quiet failed" >> "$CRITICALS_FILE"
+        echo "$name: docker compose config --quiet failed" >> "$CRITICALS_FILE"
         return
       fi
     fi
@@ -97,16 +99,14 @@ audit_stack() {
   fi
 
   if [ -n "$issues" ]; then
-    echo "$category/$name: $issues" >> "$INFOS_FILE"
+    echo "$name: $issues" >> "$INFOS_FILE"
   fi
 }
 
-while IFS= read -r stack_dir; do
-  for stack in "$stack_dir"/*/; do
-    [ -d "$stack" ] || continue
-    audit_stack "$stack"
-  done
-done < <(find "$REPO_ROOT/$STACKS_DIR" -mindepth 1 -maxdepth 1 -type d | sort)
+for stack in "$REPO_ROOT/$STACKS_DIR"/*/; do
+  [ -d "$stack" ] || continue
+  audit_stack "$stack"
+done
 
 critical_count=$(wc -l < "$CRITICALS_FILE" | tr -d ' ')
 warning_count=$(wc -l < "$WARNINGS_FILE"  | tr -d ' ')

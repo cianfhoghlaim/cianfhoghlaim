@@ -58,7 +58,7 @@ The V3 SDK is published as 4 separate npm packages (per
 | `@browserbasehq/stagehand-docs` | Source for `stagehand.dev` |
 
 For the KCG stack, the canonical install is via the
-`infrastructure/stacks/engineering/stagehand` Compose stack
+`infrastructure/stacks/stagehand` Compose stack
 (which pins `@browserbasehq/stagehand@^3.0.0`).
 
 ## Initialize
@@ -300,7 +300,7 @@ reference.
 - V3 API reference: <https://stagehand.dev/v3/api>
 - `@browserbasehq/stagehand` on npm
 - Browserbase cloud: <https://www.browserbase.com/>
-- KCG stack: `infrastructure/stacks/engineering/stagehand/`
+- KCG stack: `infrastructure/stacks/stagehand/`
 - Related skills: `.agents/skills/browser/`,
   `.agents/skills/crawl4ai/SKILL.md`, `.agents/skills/firecrawl/`,
   `.agents/skills/cookie-sync/`

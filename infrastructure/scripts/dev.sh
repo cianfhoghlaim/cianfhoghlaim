@@ -96,11 +96,11 @@ fi
 # ── Docker Compose ─────────────────────────────────────────────────────────
 
 if ! $WEB_ONLY; then
-  COMPOSE_FILE="$REPO_ROOT/infrastructure/stacks/engineering/oideachais/compose.yaml"
+  COMPOSE_FILE="$REPO_ROOT/infrastructure/stacks/oideachais/compose.yaml"
 
   if docker info &>/dev/null; then
     log "Docker is running. Starting oideachais Docker Compose stack…"
-    cd "$REPO_ROOT/infrastructure/stacks/engineering/oideachais"
+    cd "$REPO_ROOT/infrastructure/stacks/oideachais"
 
     # Dev mode: use compose.dev.yaml (local .env, no Locket sidecar)
     docker compose -f compose.yaml -f compose.dev.yaml up -d 2>&1 | tail -10

@@ -246,7 +246,7 @@ modal volume ls kcg-models
   layer; Modal is invoked from Dagster assets
 - `.agents/skills/dlt/SKILL.md` — Modal is the deployment
   target for the `deploy-modal` recipe
-- The KCG `infrastructure/stacks/engineering/modal/` stack
+- The KCG `infrastructure/stacks/modal/` stack
   (planned; not yet provisioned)
 
 ## Resources

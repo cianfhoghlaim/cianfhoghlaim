@@ -90,7 +90,7 @@ no_check_bucket = true
 ## KCG production usage
 
 The KCG stack uses this pattern in
-`infrastructure/stacks/engineering/lancedb-r2/` (a 6-file
+`infrastructure/stacks/lancedb-r2/` (a 6-file
 GOLD_STANDARD stack). The full Compose file is there; the snippet
 above is a minimal version for reference.
 

@@ -21,7 +21,7 @@ const REPO_ROOT = process.env.CROILAR_REPO_ROOT ?? resolve(import.meta.dir, "../
 const SNAPSHOT_PATH = resolve(REPO_ROOT, "croilar/.cache/webstack-snapshot.json");
 const GLANCE_PATH = resolve(
   REPO_ROOT,
-  "infrastructure/stacks/infrastructure/glance/config/glance.yml",
+  "infrastructure/stacks/glance/config/glance.yml",
 );
 
 const FORCE = process.env.CROILAR_GLANCE_REGEN_FORCE === "true";

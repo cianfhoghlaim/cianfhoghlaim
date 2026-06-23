@@ -5,7 +5,7 @@ description: "This skill should be used when adding, fixing, or auditing a Docke
 
 # stack-ops — Adding, fixing, and auditing Docker Compose stacks
 
-The cianfhoghlaim monorepo manages 70+ Docker Compose stacks under `infrastructure/stacks/{engineering,tools,storage,machine_learning,infrastructure}/<name>/`. Every stack must follow the **6-file GOLD_STANDARD** pattern. This skill teaches you how to add new stacks, fix incomplete ones, and audit them in bulk.
+The cianfhoghlaim monorepo manages 94 Docker Compose stacks under `infrastructure/stacks/<name>/` (flat layout — no category subdirectory). Every stack must follow the **6-file GOLD_STANDARD** pattern. This skill teaches you how to add new stacks, fix incomplete ones, and audit them in bulk.
 
 ## The 6-file GOLD_STANDARD
 
@@ -25,10 +25,10 @@ For non-web stacks (e.g. databases, message brokers) `pangolin.yaml` + `blueprin
 ## Adding a new stack
 
 ```bash
-mkdir -p infrastructure/stacks/<category>/<name>
+mkdir -p infrastructure/stacks/<name>
 
-# 1. Start from an existing stack in the same category
-cp -r infrastructure/stacks/tools/linkwarden/* infrastructure/stacks/<category>/<name>/
+# 1. Start from an existing stack (any stack — the layout is flat)
+cp -r infrastructure/stacks/linkwarden/* infrastructure/stacks/<name>/
 
 # 2. Edit compose.yaml
 #    - Remove `env_file: .env` lines
@@ -116,7 +116,7 @@ Severity:
 
 ```bash
 # 1. Copy the Locket sidecar template
-cp infrastructure/stacks/tools/linkwarden/sidecar.yaml infrastructure/stacks/<category>/<name>/sidecar.yaml
+cp infrastructure/stacks/linkwarden/sidecar.yaml infrastructure/stacks/<name>/sidecar.yaml
 
 # 2. Edit the `services:` block at the bottom to override your main service
 # 3. Add the secrets.env with infisical:// references
@@ -146,7 +146,7 @@ For services that depend on it, add `depends_on:` with `condition: service_healt
 - `infrastructure/stacks/GOLD_STANDARD.md` — full 5-file pattern with examples
 - `infrastructure/SECRETS-MANAGEMENT.md` — Locket + Infisical + mise bootstrap
 - `infrastructure/PANGOLIN-SETUP.md` — Pangolin private resource topology
-- `infrastructure/stacks/engineering/n8n/sidecar.yaml` — canonical sidecar reference
+- `infrastructure/stacks/n8n/sidecar.yaml` — canonical sidecar reference
 - `scripts/stack-doctor.sh` — the auditor this skill complements
 - `.agents/skills/dagster/SKILL.md` — for the data platform orchestration layer
 - `.agents/skills/dlt/SKILL.md` — for the data ingestion layer
@@ -179,7 +179,7 @@ each a top-level uv workspace:
 | Container orchestration | `komodo` | `infrastructure/komodo/` |
 | Networking | `pangolin` | `infrastructure/pangolin/` |
 | Secrets | `infisical` | `.infisical.env` |
-| Object storage | `garage` (S3-compatible) | `infrastructure/stacks/storage/garage/` |
+| Object storage | `garage` (S3-compatible) | `infrastructure/stacks/garage/` |
 | Lakehouse | `ducklake` (DuckDB + S3) | `oideachais/storage/ducklake_client.py` |
 | Vector DB | `lancedb` | `oideachais/storage/lancedb.py` |
 | Knowledge graph | `falkordb` | `oideachais/graph/falkordb.py` |
@@ -264,52 +264,51 @@ Dagger call for that phase.
 ```bash
 #!/usr/bin/env bash
 # scripts/stack.sh — the canonical stack helper
-# Usage: mise run stack:up <category>/<name>
-#        mise run stack:down <category>/<name>
-#        mise run stack:rebuild <category>/<name>
-#        mise run stack:logs <category>/<name> [service]
+# Usage: mise run stack:up <name>
+#        mise run stack:down <name>
+#        mise run stack:rebuild <name>
+#        mise run stack:logs <name> [service]
 
-CATEGORY=${1%/*}
-NAME=${1#*/}
+NAME=$1
 
 case "$0" in
-    *up)      docker compose -f infrastructure/stacks/$CATEGORY/$NAME/compose.yaml up -d ;;
-    *down)    docker compose -f infrastructure/stacks/$CATEGORY/$NAME/compose.yaml down ;;
-    *rebuild) docker compose -f infrastructure/stacks/$CATEGORY/$NAME/compose.yaml build --no-cache ;;
-    *logs)    docker compose -f infrastructure/stacks/$CATEGORY/$NAME/compose.yaml logs -f "${@:2}" ;;
+    *up)      docker compose -f infrastructure/stacks/$NAME/compose.yaml up -d ;;
+    *down)    docker compose -f infrastructure/stacks/$NAME/compose.yaml down ;;
+    *rebuild) docker compose -f infrastructure/stacks/$NAME/compose.yaml build --no-cache ;;
+    *logs)    docker compose -f infrastructure/stacks/$NAME/compose.yaml logs -f "${@:2}" ;;
 esac
 ```
 
-## KCG: The 6 docker-compose categories (canonical map)
+## KCG: The flat docker-compose layout
 
-The 70+ KCG Docker Compose stacks live in
-`infrastructure/stacks/` and are organised into 6
-categories by **purpose**, not by host. (Full per-category
-inventory in `.agents/skills/kcg-convergence/SKILL.md`.)
+The 94 KCG Docker Compose stacks live in
+`infrastructure/stacks/<name>/` as a **flat** directory —
+one directory per stack, no category subdirectory. Functional
+purpose (control plane / storage / engineering / ML / tools /
+browser) is recorded as information only in
+`infrastructure/AGENTS.md` § "Stack Inventory" and the
+cross-quadrant routing table at
+`infrastructure/QUADRANT-TO-STACK-MAP.md`. (See
+`.agents/skills/kcg-convergence/SKILL.md` for the full
+functional-group map.)
 
-| # | Category | Path |
-|:--|:--|:--|
-| 1 | **Control plane** | `infrastructure/` |
-| 2 | **Storage** | `infrastructure/stacks/storage/` |
-| 3 | **Engineering** | `infrastructure/stacks/engineering/` |
-| 4 | **Machine learning** | `infrastructure/stacks/machine_learning/` |
-| 5 | **Tools** | `infrastructure/stacks/tools/` |
-| 6 | **Browser** | `infrastructure/stacks/browser/` |
+The historical 5-category subdirectory split
+(`storage/`, `engineering/`, `infrastructure/`,
+`machine_learning/`, `tools/`) was removed on 2026-06-23.
 
 ### The 5 integration points (the leabharlann canonical flow)
 
 The leabharlann pipeline (`.agents/skills/kcg-leabharlann-pipeline/SKILL.md`)
-touches all 6 categories through 5 integration points:
+spans multiple functional groups through 5 integration points:
 
-1. **Komodo + Infisical + Locket** (control plane) — secret
+1. **Komodo + Infisical + Locket** (control plane + dev tooling) — secret
    injection at runtime, no plaintext on disk
-2. **dlt + DuckLake** (engineering → storage) — append-only
+2. **dlt + DuckLake** (dev tooling → storage) — append-only
    ingestion with hash-based incremental
-3. **BAML + Cognee** (engineering → machine learning) —
+3. **BAML + Cognee** (dev tooling → AI services) —
    typed extraction + knowledge graph
-4. **CocoIndex v1 + LanceDB** (engineering → machine
-   learning → storage) — incremental embedding
-5. **FalkorDB + Graphiti** (machine learning → storage) —
+4. **CocoIndex v1 + LanceDB** (dev tooling → AI services → storage) — incremental embedding
+5. **FalkorDB + Graphiti** (AI services → storage) —
    bi-temporal graph
 
 ### Related skills

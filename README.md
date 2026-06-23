@@ -51,7 +51,7 @@ The **3-way interaction** that makes the engine work:
 bun run setup         # mise + bun + uv + infisical bootstrap
 
 # 2. Bring up lakehouse + LLM gateway + backends
-cd infrastructure/stacks/storage/lakehouse && docker compose up -d
+cd infrastructure/stacks/lakehouse && docker compose up -d
 cd ../engineering/litellm    && docker compose -f compose.yaml -f sidecar.yaml up -d
 cd ../../meaisinfhoghlaim     && docker compose -f compose.yaml -f sidecar.yaml up -d
 cd ../../engineering/mlx-omni && docker compose -f compose.yaml -f sidecar.yaml up -d
@@ -133,7 +133,7 @@ bun run secrets:env
 bun run secrets:init
 
 # 4. Start the local LLM gateway + HF GGUF swapper
-cd infrastructure/stacks/engineering/litellm    && docker compose -f compose.yaml -f sidecar.yaml up -d
+cd infrastructure/stacks/litellm    && docker compose -f compose.yaml -f sidecar.yaml up -d
 cd ../meaisinfhoghlaim                          && docker compose -f compose.yaml -f sidecar.yaml up -d
 
 # 5. Materialise model conversion (HF safetensors -> Q4_K_M GGUF) once
@@ -278,7 +278,7 @@ Every LLM call flows through one URL: `http://litellm:4000/v1`. The gateway expo
 | `whisper-irish` | celtic whisper-large HF passthrough | ASR |
 | `translation` | celtic nllb HF passthrough | 200-language translation |
 
-Full registry: `infrastructure/stacks/engineering/litellm/config/config.yaml`.
+Full registry: `infrastructure/stacks/litellm/config/config.yaml`.
 
 ### Why a gateway
 
@@ -534,7 +534,7 @@ Total: **under $25/month** for 50+ stacks, 28 HF models, 5 subagents, 3 local AI
 
 Two config files control everything:
 - `opencode.json` — which model each subagent uses
-- `infrastructure/stacks/engineering/litellm/config/config.yaml` — which model each alias routes to
+- `infrastructure/stacks/litellm/config/config.yaml` — which model each alias routes to
 
 Every BAML function, Dagster asset, and marimo notebook calls aliases (e.g. `model="extract"`), not hardcoded provider IDs.
 
@@ -632,7 +632,7 @@ Pedagogical frameworks (constructivism, social identity, self-efficacy, differen
 
 ```bash
 bun run setup
-cd infrastructure/stacks/storage/lakehouse && docker compose up -d
+cd infrastructure/stacks/lakehouse && docker compose up -d
 cd ../machine_learning/langfuse && docker compose -f compose.yaml -f sidecar.yaml up -d
 cd ../../storage/mlflow && docker compose up -d
 cd ../machine_learning/cognee && docker compose -f compose.yaml -f sidecar.yaml up -d
