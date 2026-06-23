@@ -314,3 +314,141 @@ When working in `tuatha/`, route to the right sub-area:
 - `tuatha/README.md` — product spec.
 - `openspec/specs/tuatha-platform/spec.md` — the canonical
   spec for the Tuatha quadrant.
+
+## iOS sandwich architecture (round-9 deep dive)
+
+The Tuatha MMO ships a hybrid-native iOS client. The
+"iOS sandwich" is the canonical 3-layer pattern:
+**Kotlin (common business logic) → Swift bridge
+(iOS-only APIs) → Compose / SwiftUI (UI)**. The
+`references/swift-kmp-bridge.md` reference (390 lines)
+documents the bridge pattern.
+
+### The 3-layer iOS sandwich
+
+```
+┌──────────────────────────────────────────────────┐
+│  Compose / SwiftUI       ← UI (per-platform)    │
+│  (iOS / Android / Desktop)                       │
+├──────────────────────────────────────────────────┤
+│  Swift bridge            ← iOS-only APIs        │
+│  (StoreKit, ARKit, …)   (via swiftklib + cinterop)│
+├──────────────────────────────────────────────────┤
+│  Kotlin commonMain       ← shared business logic │
+│  (AG-UI client, SpacetimeDB, MMO state, …)       │
+└──────────────────────────────────────────────────┘
+```
+
+### The Swift bridge pattern (5 steps)
+
+1. **Swift bridge file** — `iosApp/iosApp/bridges/ReviewBridge.swift`:
+
+   ```swift
+   import StoreKit
+   import UIKit
+
+   @objc public class ReviewBridge: NSObject {
+     @objc public static func requestReview() {
+       if #available(iOS 14.0, *) {
+         if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+           SKStoreReviewController.requestReview(in: scene)
+         }
+       }
+     }
+   }
+   ```
+
+2. **Expect class in commonMain**:
+
+   ```kotlin
+   package core.presentation.utils
+   expect class FeedbackManager(context: Any = Unit) {
+     fun showFeedBackDialog()
+   }
+   ```
+
+3. **Gradle + swiftklib**:
+
+   ```kotlin
+   // libs.versions.toml
+   [plugins]
+   swiftklib = { id = "io.github.ttypic.swiftklib", version = "0.5.4" }
+
+   // shared module build.gradle.kts
+   plugins { alias(libs.plugins.swiftklib) }
+   swiftklib {
+     create("bridges") {
+       path = file("../iosApp/iosApp/bridges")
+       packageName("com.company.project.bridges")
+     }
+   }
+   kotlin { listOf(iosX64(), iosArm64(), iosSimulatorArm64())
+     .forEach { iosTarget ->
+       iosTarget.compilations {
+         val main by getting { cinterops { create("bridges") } }
+       }
+     }
+   }
+   ```
+
+4. **iosMain actual** — calls the bridge:
+
+   ```kotlin
+   actual class FeedbackManager actual constructor(context: Any) {
+     @OptIn(ExperimentalForeignApi::class)
+     actual fun showFeedBackDialog() { ReviewBridge.requestReview() }
+   }
+   ```
+
+5. **androidMain actual** — uses the Google Play Core
+   in-app review API (`ReviewManagerFactory.create(ctx)
+   .launchReviewFlow(activity, info)`).
+
+The same pattern is the canonical way to call
+`StoreKit` (iOS), `ARKit`, `GameKit`, `HealthKit`, or
+any other iOS-only API from shared Kotlin code — no
+Cocoapods required.
+
+### Why this matters for Tuatha
+
+- **AG-UI Kotlin SDK** (see `ag-ui` skill §"Kotlin
+  mobile SDK") runs in `commonMain` and talks to the
+  same agent backend as the web client
+- **SpacetimeDB TS SDK** runs in `commonMain` via
+  the Kotlin/JS interop; the Rust server is shared
+  with the web client
+- **Swift bridges** unlock iOS-only features
+  (StoreKit for IAP, ARKit for AR quests, GameKit
+  for leaderboards) without forking the codebase
+- **Crypteolas** uses the same sandwich for the
+  Apple MLX on-device inference (x402 + Flower + SyftBox)
+
+### British exam builder (companion reference)
+
+The `references/british-exam-builder.md` (374 lines)
+isn't about the MMO itself — it's the **KCG companion
+project** for building British-Isles exam papers
+(AQA / OCR / Edexcel / WJEC / CCEA) that the MMO's
+NPCs use to assess the player's mastery. Key patterns:
+
+- **dnd-kit** for drag-and-drop question reordering
+  (sidebar-to-canvas clone pattern, not move)
+- **JCQ-compliant JSON schema** for exam items:
+  `board`, `qualification`, `taxonomy`, `cognitiveLevel`,
+  `content` (polymorphic block), `marks`, `interactionType`
+- **CopilotKit `useCopilotReadable`** to feed the exam
+  metadata to the AI tutor agent
+- **Polymorphic content blocks** (LaTeX, tables,
+  vector graphics) — exam questions are not just text
+- **Tiering** (Foundation vs Higher) — drag metadata
+  warns the user if a Foundation question is dropped
+  on a Higher paper
+
+The exam builder lives in `oideachais/web/src/components/
+exam-builder/` and consumes the leaving-cert TanStack
+paper corpus that the MMO's NPCs cite in dialogue.
+
+See `references/swift-kmp-bridge.md` for the full
+390-line iOS bridge guide, and
+`references/british-exam-builder.md` for the full 374-line
+British exam builder architecture.

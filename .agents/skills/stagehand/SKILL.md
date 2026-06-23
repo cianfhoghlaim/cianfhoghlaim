@@ -259,6 +259,41 @@ sites (e.g. UoG student portal, SEC EDGAR), JS-heavy
 single-page apps (e.g. an internal admin tool), and sites
 with aggressive bot detection.
 
+## Chrome DevTools MCP (round-9 reference)
+
+The `chrome-devtools-mcp` server (459-line GitHub README
+preserved as a clipping) is a related-but-distinct
+browser-automation tool to Stagehand. The differences:
+
+| Tool | When to use |
+|:--|:--|
+| **chrome-devtools-mcp** | A coding agent (Claude, Aider, etc.) needs to debug a running app — take screenshots, read console logs, inspect DOM, profile performance. MCP server, lives in the agent's tool surface. |
+| **Stagehand** | The agent (or a human) needs to *navigate*, *act*, or *extract* from a third-party site autonomously. V3 SDK with `act` / `observe` / `extract` / `agent` primitives. |
+
+**KCG use of chrome-devtools-mcp:** the
+`sruth-browser` skill + the `sruth-browser` MCP server
+expose the same primitives for **debugging KCG frontends
+in dev**. An agent can `mcp.call("chrome-devtools",
+"take_screenshot", { url: "http://localhost:3000/curriculum" })`
+and read the resulting PNG to verify a UI change. This
+is the canonical "verify the agent's work" loop.
+
+**KCG use of Stagehand:** for the browser-automation
+fallback in the scraping ladder
+(`firecrawl → sruth-browser → stagehand → skyvern`).
+The Stagehand step kicks in for authenticated sites
+(UoG student portal, SEC EDGAR), JS-heavy SPAs, and
+aggressive bot detection — see §"KCG integration" for
+the full ladder.
+
+The two are **complementary, not competing**: Chrome
+DevTools MCP for "look at this app", Stagehand for
+"navigate that app".
+
+See `references/clippings/chrome-devtools-mcp.md` for
+the full upstream README and the complete slim-tool
+reference.
+
 ## Resources
 
 - Stagehand docs: <https://stagehand.dev/>
@@ -267,5 +302,5 @@ with aggressive bot detection.
 - Browserbase cloud: <https://www.browserbase.com/>
 - KCG stack: `infrastructure/stacks/engineering/stagehand/`
 - Related skills: `.agents/skills/browser/`,
-  `.agents/skills/crawl4ai/`, `.agents/skills/firecrawl/`,
+  `.agents/skills/crawl4ai/SKILL.md`, `.agents/skills/firecrawl/`,
   `.agents/skills/cookie-sync/`

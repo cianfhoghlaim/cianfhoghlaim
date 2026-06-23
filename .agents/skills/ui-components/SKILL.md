@@ -262,3 +262,92 @@ export default {
   cross-cutting map
 - `.agents/skills/irish-edtech/SKILL.md` — the Agentic
   Academy vision
+
+## Frontend idea catalog (round-9 deep dive)
+
+The `references/sruth-ui-inspiration.md` reference (363
+lines) maps UI/UX inspiration from best-in-class products
+and games to each `sruth/` frontend. The canonical
+mappings to use as design starting points:
+
+### Product UI inspirations
+
+| Inspiration | Pattern | Apply to |
+|:--|:--|:--|
+| **MotherDuck** | 3-panel layout (Object Explorer \| SQL Notebook \| Table Explorer), column-explorer sparklines | `crypteolas/` analytics, `aleyum/` monitoring |
+| **PostHog** | Lemon UI depth buttons (`border-b-4` active), Navigation 3000 multi-panel | `oideachais/` dashboards, `aleyum/` infra |
+| **Duolingo** | Streak (loss aversion), hearts, snake path, 3D tactile buttons | `tuath/` XP / quest progression, `oideachais/` learning path |
+| **Khan Academy** | Wonder Blocks design system, mastery levels (Attempted → Familiar → Proficient → Mastered), semantic pills | `oideachais/` curriculum progression, `tuath/` skill trees |
+
+### Game UI inspirations
+
+| Inspiration | Pattern | Apply to |
+|:--|:--|:--|
+| **Hades 1 & 2** | Diegetic UI integrated in the world, chiaroscuro portraits, three-choice boon selection | `tuath/` Celtic god boons, skill selection |
+| **Clair Obscur: Expedition 33** | Material library (obsidian, marble, gold), Belle Époque / Art Nouveau, reactive AP refund | `tuath/` combat UI, menu systems |
+| **World of Warcraft** | Edit Mode, semantic quest icons, raid frames, map legend filtering | `tuath/` quest tracking, party frames |
+| **BitCraft Online** | Recipe tree UI, empire panel hierarchy, hex-based claims | `tuath/` crafting, territory/clan systems |
+
+### Celtic adaptations table (Expedition 33 → Celtic RPG)
+
+| Expedition 33 | Celtic RPG |
+|:--|:--|
+| Belle Époque Ironwork | Insular Art Knotwork (Book of Kells) |
+| Oil Painting Textures | Ink-Wash & Gold Leaf |
+| Obsidian / Marble | Slate & Ogham Stone |
+| Cinzel Typography | Uncial / Insular Script |
+
+### Celtic design tokens (canonical)
+
+```css
+/* Primary nations */
+--celtic-irish:     emerald-600
+--celtic-scottish:  blue-600
+--celtic-welsh:     red-600
+--celtic-breton:    purple-600
+
+/* UI states */
+--celtic-success:   emerald-500
+--celtic-warning:   amber-500
+--celtic-error:     rose-500
+--celtic-info:      sky-500
+
+/* Surfaces (dark mode first) */
+--celtic-bg-primary:   slate-900
+--celtic-bg-secondary: slate-800
+--celtic-bg-tertiary:  slate-700
+--celtic-glass:        slate-800/90
+
+/* Typography */
+--font-display: "Cinzel", serif        /* Headers */
+--font-body:    "Inter", sans-serif    /* Content */
+--font-mono:    "JetBrains Mono"       /* Code */
+```
+
+### Component patterns to implement
+
+1. **Tactile Buttons** (Duolingo-style):
+   `border-b-4 active:border-b-2`
+2. **Material Frames** (Clair Obscur): Slate textures
+   with Ogham borders
+3. **Progress Rings** (Khan): Circular mastery
+   indicators
+4. **Shadow-First HUD** (Hades): Dark base with vibrant
+   accents
+5. **Panel Layout** (PostHog): Resizable multi-column
+   navigation
+
+The shadcn install for TanStack Start is now a one-liner
+(see `references/clippings/shadcn-tanstack-start.md`):
+
+```bash
+bun create @tanstack/start@latest --tailwind --add-ons shadcn
+bunx --bun shadcn@latest add button
+```
+
+This is the canonical KCG scaffold — used by every
+`sruth/` frontend.
+
+See `references/sruth-ui-inspiration.md` for the full
+363-line reference with the per-feature primary/secondary
+inspiration tables.

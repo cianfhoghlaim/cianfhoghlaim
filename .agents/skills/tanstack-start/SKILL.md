@@ -454,6 +454,151 @@ mirrors the BAML Pydantic model — see
 - **Build slow?** The route tree is generated on every build;
   cache the generator with `tanstackRouter: { generatedRouteTree: "src/routeTree.gen.ts" }`
 
+## KCG TanStack patterns (round-9 deep dive)
+
+The 6 long-form references under `references/` are KCG
+synthesised patterns. The canonical lines to take from each:
+
+### 1. Isomorphic server-fn + AI tool (`createServerFnTool`)
+
+The "schema-first, server-only, AI-callable" pattern. One
+function definition serves three consumers — the React
+component, the API layer, **and** the LLM tool schema.
+
+```typescript
+import { createServerFnTool } from "@tanstack/ai-react";
+import { z } from "zod";
+import { getTopicSummary } from "@/lib/graph_rag";
+
+export const fetchCommunitySummary = createServerFnTool({
+  name: "fetch_community_summary",
+  description:
+    "Retrieves the pre-computed community summary for a syllabus topic.",
+  inputSchema: z.object({
+    topicId: z.string().describe("Official topic ID, e.g. 'JC-SCI-1.4'"),
+    level: z.enum(["Higher", "Ordinary"]).default("Higher"),
+  }),
+  execute: async ({ topicId, level }) => {
+    return await getTopicSummary(topicId, level);
+  },
+});
+```
+
+`useServerFn(...)` in the component, `tools: [...]` in
+`useChat(...)` for the agent. Same Zod schema, same handler,
+same execution context. No OpenAPI spec to maintain.
+
+### 2. BAML → Zod schema bridge (the "Schema Gap")
+
+BAML generates **TypeScript interfaces** for outputs; TanStack
+AI requires **Zod schemas** for inputs. The KCG bridge pattern
+is the **"Interface-Implements" utility type**:
+
+```typescript
+import type { LeavingCertSubject } from "@/baml_client/types";
+import { z } from "zod";
+
+type Implements<Model, Schema> =
+  Schema extends z.ZodType<Model> ? Schema : never;
+
+export const LeavingCertSubjectSchema: Implements<
+  LeavingCertSubject,
+  typeof schema
+> = z.object({
+  subject: z.string(),
+  level: z.enum(["Higher", "Ordinary", "Foundation"]),
+  grade: z.string().optional(),
+  is_bonus_math: z.boolean(),
+});
+
+const schema = LeavingCertSubjectSchema;
+```
+
+If a BAML class field changes, the Implements guard raises
+a TS error in the Zod schema — single source of truth
+preserved. For large schemas, the round-9 reference shows
+a `baml-to-zod.ts` generator script that reads the `.baml`
+AST and emits `z.object({...})` definitions.
+
+### 3. TanStack DB + DuckDB-WASM (the "Zero-Backend Analytics" stack)
+
+The Oideachais data platform uses **TanStack DB** as the
+reactive client cache on top of **DuckDB-WASM** in the
+browser. The `QueryCollection` pattern bridges async
+DuckDB results to sync TanStack DB collections:
+
+1. User changes a filter → TanStack DB captures state
+2. `queryFn` builds a SQL string against the DuckDB
+   worker
+3. Worker returns an Arrow table; main thread normalises
+   by primary key
+4. Live queries re-render only the changed components
+
+For > 4 GB datasets, **MotherDuck** transparently routes
+the same SQL to cloud execution; the client sees the
+Arrow result either way. The KCG pattern uses
+`registerFileUrl` + `httpfs` so DuckDB streams Parquet
+column groups from R2 over HTTP Range requests — only
+the queried columns download.
+
+### 4. Better-T-Stack monorepo (the Cianfhoghlaim base)
+
+Every `sruth/` frontend (`oideachais/web`, `tuath/ui`,
+`aleyum`, `crypteolas`) is scaffolded from
+`cianfhoghlaim-base`, which is the **Better-T-Stack CLI**
+output with the KCG agent-instructions overlay
+(`.roo/rules/ultracite.md`, `.ruler/bts.md`,
+`.github/copilot-instructions.md`). The layout is fixed:
+
+```
+apps/web          TanStack Start
+apps/native       Expo (mobile)
+packages/api      oRPC (type-safe RPC)
+packages/auth     BetterAuth
+packages/db       Drizzle ORM
+```
+
+The agent-instruction files (AGENTS.md, CLAUDE.md,
+GEMINI.md) are the *source of truth* for AI-assisted
+dev. Never modify them per-app without bumping the
+`cianfhoghlaim-base` template.
+
+### 5. SSR / streaming mental model
+
+`loaders` are **isomorphic** — they run on server (SSR) and
+on client (navigation). The `beforeLoad` hook is the
+canonical place for auth gates + tenant resolution.
+`createServerFn()` is server-only; `useServerFn()` is the
+client hook that calls it like a local function. SSE
+streams use the `ReadableStream` controller in a route
+file's `server.handlers.POST` — see `tanstack-ai-litellm.md`
+for the full pattern (agent + RAG chunk streaming).
+
+## KCG file conventions (round-9 synthesis)
+
+From the `patterns-conventions.md` deep-dive:
+
+- Routes: `kebab-case.tsx` for static, `$param.tsx` for
+  dynamic (NOT `[param].tsx`), `$.tsx` for catch-all,
+  `api.rpc.$.ts` for oRPC catch-all
+- Components: `PascalCase.tsx`; colocate with the route
+  in `src/components/`
+- Server functions: `src/server/functions/`, one file
+  per domain (curriculum.ts, leabharlann.ts, etc.)
+- API routes: `src/routes/api/*` mirroring the URL path
+- **Never** edit `src/routeTree.gen.ts` — it's regenerated
+  on every `bun run build` from the file-based routes
+
+The `visual-patterns.md` reference has the full
+request/response cycle (HTTP → route match → loader → SSR
+→ hydrate → client navigation → server fn → SSE) as
+ASCII diagrams; see it for the canonical mental model.
+
+See `references/tanstack-examples-analysis.md` for the
+full 650-line 6-example canonical deep-dive, and
+`references/architecture-deep-dive.md` for the 911-line
+architecture reference.
+
 ## Resources
 
 - TanStack Start docs: <https://tanstack.com/start/latest>

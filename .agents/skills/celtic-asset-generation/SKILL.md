@@ -296,3 +296,92 @@ fallback is per-call, not per-session.
 - `oideachais/STATUS.md` — pipeline state (single source of
   truth).
 - `oideachais/REFACTORING.md` — refactor backlog.
+
+## Frontend idea catalog (design mining) (round-9 deep dive)
+
+The `references/frontend-design-mining.md` reference
+(457 lines) establishes the canonical pipeline for
+cataloging UI/UX patterns from best-in-class Celtic and
+educational products. It's the **input stage** to
+designing the Tuatha MMO, `oideachais/web` curriculum
+viewer, and the crypteolas dashboards.
+
+### The 3-stage mining pipeline
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│  Stage 1: Browserbase                                         │
+│  → serverless Chromium with stealth + rrweb DOM recording    │
+│  → 150+ geolocations, residential proxies, CAPTCHA solving   │
+│  → exports CDP screencasts for canvas-based maps / video     │
+└─────────────┬────────────────────────────────────────────────┘
+              │
+              ▼
+┌──────────────────────────────────────────────────────────────┐
+│  Stage 2: Stagehand (V3)                                      │
+│  → `act("Click 'minimize'")` semantic actions                 │
+│  → `observe()` returns all possible actions + selectors      │
+│  → `extract({ instruction, schema })` typed extraction        │
+│  → `agent()` autonomous multi-step workflows                  │
+│  → modes: dom (fast) | hybrid (mixed) | cua (slow)           │
+└─────────────┬────────────────────────────────────────────────┘
+              │
+              ▼
+┌──────────────────────────────────────────────────────────────┐
+│  Stage 3: BAML                                                │
+│  → typed schema for the extracted "frontend idea"            │
+│  → Schema-Aligned Parsing handles malformed LLM JSON          │
+│  → multimodal: pass video clips to VLM (Gemini 1.5 Pro)      │
+│  → output: queryable catalog of design patterns              │
+└──────────────────────────────────────────────────────────────┘
+```
+
+### The 3 target archetypes (the KCG use case)
+
+1. **PostHog.com** — the **Application OS / Windowing**
+   pattern. React Context holds window state (x, y, zIndex,
+   minimized). Framer Motion drives the spring physics.
+   Stagehand's `act` primitive is critical because the
+   window controls have non-standard class names (CSS
+   selector scraping breaks)
+2. **HiddenHeritages.ai** — the **Narrative Geospatial
+   Visualization** pattern. 5,500+ folktales, Leaflet
+   clustering, canvas rendering for high-density
+   points. **Canvas-based maps need visual analysis
+   (VLM), not DOM scraping** — the rrweb record alone
+   is insufficient
+3. **Canúint.ie** — the **Audio-Visual Synchronization**
+   pattern. Dialect map + audio samples + waveform
+   visualization. Stagehand's `observe` enumerates
+   the interactive regions (per-dialect play button)
+
+### Self-healing catalog
+
+Stagehand caches the successful action path for each
+prompt; if the UI changes (e.g. PostHog updates Tailwind
+classes), Stagehand **re-evaluates the page with the
+LLM and heals the action**. This makes the catalog
+robust over months of operation — the agent
+continuously re-monitors the target sites and updates
+the design catalog.
+
+### KCG integration
+
+The mined catalog drives the **Celtic design tokens** in
+the `ui-components` skill (see `references/sruth-ui-inspiration.md`):
+
+- MotherDuck → `crypteolas/` analytics, `aleyum/` monitoring
+- PostHog (Lemon UI) → `oideachais/` dashboards
+- Duolingo (streaks, snake path) → `tuath/` XP / quest progression
+- Khan Academy (mastery levels) → `oideachais/` curriculum
+- Hades (diegetic UI, chiaroscuro) → `tuath/` NPC dialogue
+- Clair Obscur (material library) → `tuath/` menu systems
+- World of Warcraft (semantic quest icons) → `tuath/` quest log
+
+The mining pipeline is what **feeds the KCG Celtic design
+language** — without it, every UI decision is rebuilt
+from scratch. The catalog is the single source of truth
+for "how do other products solve this UI problem?".
+
+See `references/frontend-design-mining.md` for the full
+457-line design-mining architecture.
