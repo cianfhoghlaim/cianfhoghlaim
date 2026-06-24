@@ -19,6 +19,9 @@ from dagster import (
     asset_check,
 )
 
+# Vendor-de-risking health check (see openspec/changes/litellm-minimax-vendor-derisking/)
+from oideachais.dagster_defs.assets.llm_gateway_assets import minimax_alias_health
+
 from .resources import DuckDBResource, LanceDBResource
 
 # Aistear (early childhood) asset check — ref: openspec/changes/wire-baml-with-known-consumers/
@@ -220,4 +223,6 @@ all_asset_checks = [
     check_geospatial_validity,
     # dbt project
     check_weekly_downloads_row_count,
+    # LLM gateway vendor-de-risking health check
+    minimax_alias_health,
 ]
