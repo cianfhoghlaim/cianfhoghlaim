@@ -21,9 +21,7 @@ test/build/deploy/rollback, with Locket secret injection, Forgejo +
 Komodo integration, and Cloudflare Pages / Workers deployment. The
 Dagger Python SDK provides the per-pipeline runtime; the TS submodule
 provides the Cloudflare-specific bindings.
-
 ## Requirements
-
 ### Requirement: Polyglot CI pipeline
 
 The system SHALL provide a polyglot CI pipeline (Python, TypeScript,
@@ -92,6 +90,16 @@ Cloudflare + Locket) on every merge to main.
   6. Deploy to Cloudflare Pages
   7. Run smoke tests
   8. Notify on success/failure
+
+### Requirement: Dagger pipelines router skill
+
+The Dagger CI/CD capability MUST be discoverable via a single router skill at `.agents/skills/dagger-pipelines/SKILL.md`. The router SHALL list the 8 callable functions, the 4 build pipelines, the Python root + TypeScript submodule locations, the BuildKit caching, and the LLM-secrets injection pattern.
+
+#### Scenario: Agent finds the Dagger router
+
+- **WHEN** an agent searches for "dagger call", "dagger module", "buildkite cache", or "gitops pipeline"
+- **THEN** the loader matches `.agents/skills/dagger-pipelines/SKILL.md`
+- **AND** the skill points at the underlying Dagger detail (the `dagger` skill) + the 8 functions + the 4 pipelines
 
 ## Cross-references
 
