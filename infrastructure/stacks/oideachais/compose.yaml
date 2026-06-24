@@ -83,6 +83,17 @@ services:
       # Read-write because Dagster writes session/state files into the
       # source tree (e.g. storage/sessions) at startup.
       - ../../../../oideachais:/app/oideachais:rw
+      # Locket secrets volume (injected at runtime by the sidecar).
+      - locket_secrets:/run/secrets/locket:ro
+    # Canonical depends_on for the locket sidecar (declared in
+    # sidecar.yaml). Each app service MUST wait for locket to be
+    # healthy before starting so the secrets volume is mounted
+    # and the env file is loaded.
+    depends_on:
+      locket:
+        condition: service_healthy
+    env_file:
+      - /run/secrets/locket/secrets.env
     healthcheck:
       test: ["CMD-SHELL", "python3 -c \"import urllib.request, sys; sys.exit(0 if urllib.request.urlopen('http://localhost:3000/server_info', timeout=3).status == 200 else 1)\""]
       interval: 30s
@@ -131,6 +142,8 @@ services:
       # 'read-only file system' when trying to create the mountpoint).
       # We symlink the new path to the old one in the CMD below.
       - api_data:/app/storage/data
+      # Locket secrets volume (injected at runtime by the sidecar).
+      - locket_secrets:/run/secrets/locket:ro
     environment:
       HOST: "0.0.0.0"
       PORT: "8000"
@@ -153,6 +166,15 @@ services:
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
       LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
+    # Canonical depends_on for the locket sidecar (declared in
+    # sidecar.yaml). Each app service MUST wait for locket to be
+    # healthy before starting so the secrets volume is mounted
+    # and the env file is loaded.
+    depends_on:
+      locket:
+        condition: service_healthy
+    env_file:
+      - /run/secrets/locket/secrets.env
     healthcheck:
       test: ["CMD-SHELL", "python3 -c \"import urllib.request, sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health', timeout=3).status == 200 else 1)\""]
       interval: 15s
@@ -182,14 +204,28 @@ services:
       dockerfile: oideachais/web/Dockerfile
     container_name: cianfhoghlaim-oideachais-frontend
     restart: unless-stopped
+    # Default host port is 3080 (not 3000) to avoid the reserved-port
+    # collision with Forgejo (3000) and langfuse (3000). Override via
+    # FRONTEND_PORT env var if needed.
     ports:
-      - "${FRONTEND_PORT:-3000}:3000"
+      - "${FRONTEND_PORT:-3080}:3000"
     environment:
       NODE_ENV: ${ENVIRONMENT:-development}
       VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
       VITE_API_PUBLIC_URL: ${VITE_API_PUBLIC_URL:-http://localhost:8000}
       VITE_CONVEX_URL: ${VITE_CONVEX_URL:-http://localhost:3210}
       VITE_BETTER_AUTH_URL: ${VITE_BETTER_AUTH_URL:-http://localhost:3002}
+    # Canonical depends_on for the locket sidecar (declared in
+    # sidecar.yaml). Each app service MUST wait for locket to be
+    # healthy before starting so the secrets volume is mounted
+    # and the env file is loaded.
+    depends_on:
+      locket:
+        condition: service_healthy
+    env_file:
+      - /run/secrets/locket/secrets.env
+    volumes:
+      - locket_secrets:/run/secrets/locket:ro
     healthcheck:
       test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3000/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
       interval: 30s
