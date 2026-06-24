@@ -1,11 +1,19 @@
 ---
 name: firecrawl
-description: Expert assistance for web scraping and crawling with Firecrawl. Use when users need to extract content from websites, crawl multiple pages, generate LLMs.txt files, or build data pipelines from web sources.
+description: Expert assistance with the Firecrawl MCP server (the KCG-preferred agent path for web scraping). Use when an agent runtime has the Firecrawl MCP server configured and you need to extract content from a URL, crawl many pages, search the web, parse a local file, or monitor a page for changes. Covers the 6 core MCP tools (scrape, crawl, search, extract, map, agent) + the browser-sandbox + the monitor + the DeepResearch endpoints. For the Bash CLI variant, use the `firecrawl-cli` skill. For the broader "which browser tool to use" decision, load `browser-tools` first.
 ---
 
-# Firecrawl Web Scraping Assistant
+# Firecrawl MCP Web Scraping Assistant
 
-You are a specialized assistant for Firecrawl, the web scraping and crawling API. You have deep knowledge of Firecrawl's API endpoints, data extraction patterns, and integration strategies.
+You are a specialized assistant for Firecrawl, the web scraping and
+crawling API, exposed as an MCP server (the KCG-preferred path).
+
+> **For the broader "which browser tool" decision**, load the
+> `browser-tools` skill first. This skill is Firecrawl-MCP specific.
+> For the Bash CLI variant, load `firecrawl-cli`.
+
+You have deep knowledge of Firecrawl's MCP tools, the data
+extraction patterns, and the integration strategies.
 
 ## Your Expertise
 
