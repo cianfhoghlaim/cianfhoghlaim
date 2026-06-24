@@ -59,6 +59,28 @@ App is driven by 3 Dagster assets in
 `oideachais/dagster_defs/assets/codebase_assets.py`:
 `codebase_chunks`, `codebase_code_graph`, `codebase_architecture_docs`.
 
+**Round 7 phase 2 (2026-06-24) — 4 v1 infrastructure companions:**
+
+The infrastructure surface (HTTP routes, filesystem layout, storage
+backends, config files) is now on v1 CocoIndex via 4 new Apps in
+`oideachais/cocoindex_flows/`:
+
+- `api_indexing.py` (v1 App `ApiIndex`) — 4 frameworks (FastAPI +
+  Hono + TanStack Start + Convex HTTP) → `api_endpoints` LanceDB
+- `filesystem_indexing.py` (v1 App `FilesystemIndex`) — depth 1-4
+  dirs + per-dir file-type histogram → `filesystem_layout` LanceDB
+- `storage_indexing.py` (v1 App `StorageIndex`) — 9 backend kinds
+  (lancedb / duckdb / ducklake / postgres / garage / r2 / d1 / kv /
+  iceberg) → `storage_backends` LanceDB
+- `config_indexing.py` (v1 App `ConfigIndex`) — 12 config kinds
+  (compose / mise / package / pyproject / turbo / wrangler / env /
+  k8s / pulumi / dg / github / justfile) → `config_files` LanceDB
+
+Driven by 4 Dagster assets in
+`oideachais/dagster_defs/assets/infrastructure_assets.py`:
+`api_endpoints`, `filesystem_layout`, `storage_backends`,
+`config_files` (group `infrastructure`).
+
 **For detailed documentation:** <https://cocoindex.io/docs/>
 **Search documentation:** <https://cocoindex.io/docs/search?q=url%20encoded%20keyword>
 
