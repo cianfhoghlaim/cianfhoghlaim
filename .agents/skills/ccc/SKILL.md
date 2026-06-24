@@ -45,6 +45,25 @@ description: "This skill should be used when code search, file/directory summary
 >   pyproject / turbo / wrangler / env / k8s / pulumi / dg / github /
 >   justfile) → `config_files` LanceDB. Query helper:
 >   `search_config(query, kind=None, limit=15)`.
+>
+> **Round 7 phase 3 (2026-06-24):** Two v1 embedding Apps in
+> `oideachais/dagster_defs/assets/unified_embedding_assets.py`
+> (group `embedding`):
+>
+> - `unified_embeddings` — v1 port of
+>   `crypteolas/cocoindex_flows/unified_embedding.py:unified_embedding_flow`.
+>   Reads any DuckDB connection (default:
+>   `crypteolas_catalog.docs.scraped_documents`), chunks with
+>   RecursiveSplitter (markdown) or paragraph+char fallback, embeds
+>   with BGE-M3, writes to the `unified_embeddings` LanceDB table.
+>   Query helper: `unified_search(query, source_types=None, protocol=None)`.
+> - `code_embeddings` — v1 port of the v0 `code_embedding_flow`.
+>   Walks `UNIFIED_CODE_ROOT` (default:
+>   `crypteolas/storage/data/code/`) for `*.py`/`*.ts`/`*.tsx`/
+>   `*.js`/`*.jsx`/`*.rs`/`*.go`/`*.sol`, chunks with
+>   `RecursiveSplitter(detect_code_language)`, embeds with BGE-M3,
+>   writes to the `code_embeddings` LanceDB table. Query helper:
+>   `code_search(query, language=None, chunk_type=None)`.
 
 `ccc` is the CLI for CocoIndex Code, providing semantic search over the current codebase and index management.
 

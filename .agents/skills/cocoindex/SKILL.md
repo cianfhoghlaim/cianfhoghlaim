@@ -81,6 +81,26 @@ Driven by 4 Dagster assets in
 `api_endpoints`, `filesystem_layout`, `storage_backends`,
 `config_files` (group `infrastructure`).
 
+**Round 7 phase 3 (2026-06-24) — 2 v1 embedding Apps:**
+
+The unified embedding pipeline from
+`crypteolas/cocoindex_flows/unified_embedding.py` is now on v1
+CocoIndex via 2 Apps in `oideachais/cocoindex_flows/unified_embedding.py`:
+
+- `unified_app` (v1 App `UnifiedEmbedding`) — reads from any DuckDB
+  connection (default: `crypteolas_catalog.docs.scraped_documents`),
+  chunks with `RecursiveSplitter` (markdown) or paragraph+char
+  fallback, embeds with BGE-M3, writes to the `unified_embeddings`
+  LanceDB table.
+- `code_app` (v1 App `CodeEmbedding`) — walks `UNIFIED_CODE_ROOT`
+  for `*.py`/`*.ts`/`*.tsx`/`*.js`/`*.jsx`/`*.rs`/`*.go`/`*.sol`,
+  chunks with `RecursiveSplitter(detect_code_language)`, embeds
+  with BGE-M3, writes to the `code_embeddings` LanceDB table.
+
+Driven by 2 Dagster assets in
+`oideachais/dagster_defs/assets/unified_embedding_assets.py`:
+`unified_embeddings`, `code_embeddings` (group `embedding`).
+
 **For detailed documentation:** <https://cocoindex.io/docs/>
 **Search documentation:** <https://cocoindex.io/docs/search?q=url%20encoded%20keyword>
 
