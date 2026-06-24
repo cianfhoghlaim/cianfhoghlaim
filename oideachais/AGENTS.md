@@ -40,15 +40,14 @@ The re-export shims to `meaisinfhoghlaim/`:
 
 | If you want to... | Look at... |
 |:--|:--|
-| Add a new Irish curriculum source | `oideachais/dlt_sources/ireland/` (22 files) |
-| Add a new UK nation source | `oideachais/dlt_sources/uk/{england,scotland,wales,northern_ireland}/` |
-| Add a Crown Dependencies source | `oideachais/dlt_sources/crown_dependencies/{channel_islands,isle_of_man}.py` |
+| Add a new education-domain dlt source for any nation (IE / EN / SCT / WLS / NI / IOM / JEY / GGY) | `oideachais/dlt_sources/domains/education/{nation}/{source}.py` (the canonical location, per `cross-domain-registry/SKILL.md`; replaces the legacy `dlt_sources/uk/`, `dlt_sources/ireland/`, and `dlt_sources/crown_dependencies/` paths) |
+| Add a new medicine or law domain dlt source | `oideachais/dlt_sources/domains/{medicine|law}/{nation}/{source}.py` |
 | Add a new leabharlann source | `oideachais/dlt_sources/author_archive/` (the 4 dlt sources) |
-| Add a new BAML extraction function | `baml_src/` (the 9 BAML files) + `baml_src/clients.baml` for the client |
-| Add a new Dagster asset | `oideachais/dagster_defs/assets/` (21 modules) |
-| Add a new CocoIndex v1 App | `oideachais/cocoindex_flows/leabharlann_embedding.py` (the 3 v1 Apps) |
-| Add a new Cognee cognify pass | `oideachais/cognee_integration/` (3 adapters) |
-| Add a new cross-archive edge rule | `oideachais/cognify_rules/leabharlann_cross_archive.py` |
+| Add a new BAML extraction function | `baml_src/` (the 27 BAML files, plus `_archive/` for deferred consumers) + `baml_src/clients.baml` for the canonical client registry |
+| Add a new Dagster asset | `oideachais/dagster_defs/assets/` (40+ modules) |
+| Add a new CocoIndex v1 App | `oideachais/cocoindex_flows/leabharlann_embedding.py` (the 3 v1 Apps) or `docs_skills_consolidation.py` |
+| Add a new Cognee cognify pass | `oideachais/cognee_integration/` (5 adapters) |
+| Add a new cross-archive edge rule | `oideachais/cognify_rules/leabharlann_cross_archive.py` (3 rules) or `author_archive_cross_corpus.py` (8 rules) |
 | Add a new Marimo dashboard | `oideachais/notebooks/` + `oideachais/notebooks/dashboards/` |
 | Add a new FastAPI route | `oideachais/api/routes/` (6 route modules) |
 | Add a new Dagster sensor | `oideachais/dagster_defs/sensors/` (5 sensor modules) |
