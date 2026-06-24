@@ -30,7 +30,7 @@ per-Space routing.
 | `spaces/_common/` | The cross-cutting foundation: Celtic 5-element palette, BAML client (now LiteLLM gateway), i18n, Anam Bonneagar footer |
 | `spaces/_common/baml_client.py` | LiteLLM gateway shim with HF Inference 3-tier fallback (the offline mode) |
 
-### Priority skills (5 of 108)
+### Priority skills (7 of 120)
 
 | Skill | When to load |
 |:--|:--|
@@ -39,6 +39,8 @@ per-Space routing.
 | [`motherduck-connections`](../.agents/skills/motherduck-connections/SKILL.md) | LiteLLM gateway wiring (the Spaces' primary LLM tier) |
 | [`agent-observability`](../.agents/skills/agent-observability/SKILL.md) | Langfuse auto-traces every LiteLLM call (cost + latency + model) |
 | [`oideachais-storage`](../.agents/skills/oideachais-storage/SKILL.md) | The KCG storage mental model (DuckLake 1.0 + Lance Namespace) |
+| [`hf-spaces-deploy`](../.agents/skills/hf-spaces-deploy/SKILL.md) | The 4 + 4 + 1 + 1 Spaces inventory + the 4-file Space structure + the reusable workflow + the LiteLLM gateway pattern |
+| [`gradio-ensemble-pattern`](../.agents/skills/gradio-ensemble-pattern/SKILL.md) | The `build_ensemble_interface()` helper + the `push_model_to_hub()` HF Hub push helper + the 3 canonical Space structures + the 4 component patterns |
 
 ### ccc + openspec commands
 
