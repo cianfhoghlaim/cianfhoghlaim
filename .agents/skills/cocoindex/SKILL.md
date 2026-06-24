@@ -592,3 +592,77 @@ LiteLLM, use the alias `vision` (set in
 `oideachais/api/router.py`). The KCG marimo dashboard
 `/dashboards/curriculum-images` shows a live demo of the
 multimodal ColPali + Qdrant MaxSim search.
+## 2026-06 update (CocoIndex v1.0.1–1.0.7)
+
+The 7 post-v1 releases add the following production-readiness features:
+
+### Per-argument memoization keys (`memo_key`)
+
+The `@coco.fn` decorator now accepts a `memo_key` mapping for fine-grained control over which arguments participate in the cache key:
+
+```python
+@coco.fn(memo=True, memo_key={
+    "entry": lambda e: (e.name, e.version),  # callable: transform before fingerprinting
+    "client": None,                          # None: exclude from the cache key
+})
+def transform(entry: SourceDataEntry, client: str) -> str:
+    ...
+```
+
+**Why it matters**: production functions often take clients, loggers, config objects, or debug flags alongside the meaningful input. Without `memo_key`, changing a client would invalidate the cache. With `memo_key`, the cache stays keyed to the semantic input.
+
+### Scheduled live refresh (`coco.auto_refresh`)
+
+Wraps any processor function as a live component that re-runs on an interval, with consistent error handling and target-state reconciliation:
+
+```python
+@coco.fn
+async def app_main(db, target) -> None:
+    await coco.mount(
+        coco.auto_refresh(sync_users, interval=datetime.timedelta(minutes=5)),
+        db, target,
+    )
+```
+
+If `sync_users` stops declaring a row, CocoIndex deletes the corresponding target automatically.
+
+### Per-slice stats (`coco.stats_group`)
+
+Breaks the default aggregate `adds / reprocesses / deletes` counts down by data slice (per tenant, per project, per folder):
+
+```python
+@coco.fn
+async def app_main(tenants, target):
+    for tenant in tenants:
+        with coco.stats_group(f"tenant:{tenant.id}", report_to_stdout=True):
+            files = localfs.walk_dir(tenant.docs_dir, ...)
+            await coco.mount_each(process_doc, files.items(), target)
+```
+
+Lets you see growth vs churn vs reprocess storms per slice, not just one aggregate per processor.
+
+### New connectors (2026-06 cycle)
+
+- **Source: OCI Object Storage** with live bucket watching (via OCI Streaming, Kafka protocol, 5s clock-skew tolerance)
+- **Source: Apache Iggy** — high-throughput persistent message streaming
+- **Target: Turbopuffer** — serverless object-storage-backed vector + full-text search
+- **Target: Neo4j** — native property graph target
+- **Target: FalkorDB** — Redis-based property graph (KCG uses this for the curriculum KG)
+- **Target: LanceDB** — v1 target now optimises (compacts) tables periodically AND adds columns in place for schema evolution
+
+### LiteLLM speech-to-text
+
+The new `LiteLLMTranscriber` wraps any LiteLLM-backed STT provider (e.g. `whisper-1`), extending CocoIndex's multimodal reach from images/PDFs into audio. The KCG `asr/SKILL.md` covers the Celtic-Irish ASR pattern that uses this.
+
+### Code splitter: 8 new languages
+
+`RecursiveSplitter` gained tree-sitter support for Svelte, Vue, Julia, Elm, Astro, Bash, CMake, and HCL. The 29-language matrix (in `celtic-asset-generation/SKILL.md` and the codebase graph v1 App) now includes these.
+
+### Bug fixes (correctness + security)
+
+- Postgres: `halfvec` op classes for half-precision vector indexes; `U+0000` (NUL) bytes stripped from text/jsonb; `pgvector` extension installs into the default schema
+- SQL identifier validation in Postgres + SQLite connectors (closes a class of SQL-injection vectors)
+- Ownership-transfer race fix under real Postgres I/O latency
+- Clean cancellation through task spawn boundaries
+
+For the full changelog, see <https://cocoindex.io/blogs/changelog-101-107/>.

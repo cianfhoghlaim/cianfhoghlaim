@@ -422,3 +422,28 @@ see [`celtic-asset-generation/references/agent-knowledge-base.md`](../celtic-ass
 the source deep-dive (formerly at
 `docs/tuatha/03-data-pipelines/Agentic Web Scraping Pipeline.md`,
 superseded by the round-8 docs → skills migration).
+
+## 2026-06 update: CocoIndex v1 + Cognee 0.1+ temporal
+
+The leabharlann pipeline now uses CocoIndex v1 (1.0.1–1.0.7) for embedding, replacing the v0 flows. The 5-stage flow:
+
+1. **Secret injection** (unchanged) — Locket sidecar reads Infisical `dev-baile/leabharlann/...`
+2. **DLT SHA-256 dedup** (unchanged) — `oideachais/dlt_sources/author_archive/`
+3. **BAML extraction** (unchanged) — `oideachais/baml_src/curriculum_extraction.baml`
+4. **CocoIndex v1 embedding** (UPDATED) — uses the 3 new v1 Apps:
+   - `oideachais/cocoindex_flows/leabharlann_embedding.py` — the main BGE-M3 embedder
+   - `oideachais/cocoindex_flows/codebase_indexing.py` — the code graph companion
+   - `oideachais/cocoindex_flows/unified_embedding.py` — the unified per-quadrant embedder
+5. **Cognee cognify** (UPDATED) — uses the 2026-06 features:
+   - `cognify(time_range=...)` for temporal cognify (the new feature)
+   - `improve()` to bridge session Q&A into the permanent graph
+   - `recall(session_id=...)` for session-first search with auto-fallback
+
+The 5 v1 Apps are wired into the Dagster code-location under the `leabharlann_embedding` asset group. The v1 Apps are registered in `oideachais/dagster_defs/assets/leabharlann_assets.py` (see the round 7 phase 1-3 commits for the implementation detail).
+
+### Why v1 (vs the v0 flows)
+
+- **Per-argument memoization** — the v1 `memo_key` parameter keeps the cache keyed to the semantic input (the document content), so changing the embedding model does not invalidate the cache of all computed embeddings
+- **Scheduled live refresh** — the v1 `coco.auto_refresh` re-runs the embedder on a schedule, picking up new leabharlann files without a manual Dagster sensor
+- **Per-slice stats** — the v1 `coco.stats_group` breaks the per-corpus (books / zotero / takeout / UoG) counts out separately, so you can see corpus-level growth vs churn
+- **LanceDB target upgrades** — the v1 LanceDB target optimises tables in the background + supports in-place column adds (no rebuild needed for schema evolution)
