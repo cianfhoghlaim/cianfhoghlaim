@@ -22,7 +22,7 @@ class CurriculumExtraction {
 }
 
 function ExtractCurriculumSyllabus(pdf_text: string) -> CurriculumExtraction {
-  client "litellm"
+  client LitellmClient
   prompt #"
     You are an Irish Leaving Certificate curriculum expert. Extract the
     full syllabus structure from the provided NCCA syllabus PDF text.

@@ -28,7 +28,7 @@ class PastPaper {
 }
 
 function ExtractPastPaper(pdf_text: string) -> PastPaper {
-  client "litellm"
+  client LitellmClient
   prompt #"
     You are an Irish Leaving Certificate exam paper analyst. Extract all
     questions from the following exam paper PDF text.

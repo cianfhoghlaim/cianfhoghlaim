@@ -37,7 +37,7 @@ class MarkingScheme {
 }
 
 function ExtractMarkingScheme(pdf_text: string) -> MarkingScheme {
-  client "litellm"
+  client LitellmClient
   prompt #"
     You are an Irish Leaving Certificate marking scheme analyst. Extract the
     marking point breakdown and common mistakes from the scheme PDF text.

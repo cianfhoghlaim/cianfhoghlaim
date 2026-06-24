@@ -49,3 +49,17 @@ client<llm> LitellmLongContext {
     model "deepseek/deepseek-chat"
   }
 }
+
+// Canonical "Extractor" client used by the BAML files in
+// oideachais/baml_src/{audio_extraction,ocr_extraction,ocr_validation,
+// gaois/duchas,gaois/folklore_extraction,gaois/logainm,gaois/tearma}.baml.
+// Kept here (not inline) so the model/provider config is canonical.
+client<llm> Extractor {
+  provider openai
+  options {
+    api_key env.LLM_API_KEY
+    base_url "http://litellm:4000/v1"
+    model "gpt-4o-mini"
+    temperature 0.1
+  }
+}
