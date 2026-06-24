@@ -1,6 +1,6 @@
 # Spec Delta: oideachais-pipeline
 
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: V1 codebase indexer (codebase_chunks + codebase_code_graph)
 
