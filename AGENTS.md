@@ -93,7 +93,7 @@ Every stack under `infrastructure/stacks/` is listed below. Port numbers reflect
 | `n8n/` | Visual workflow automation | 5678 |
 | `networking-toolbox/` | Network diagnostic tools | Internal |
 | `nimtable/` | Iceberg catalog UI | Internal |
-| `oideachais/` | Celtic Education Lakehouse Engine (Dagster + FastAPI + TanStack Start). **Canonical** — replaces the legacy `/oideachais/compose.yaml` quartet. Build source of truth. | 3000, 8000, 3335 |
+| `oideachais/` | Celtic Education Lakehouse Engine (Dagster + FastAPI + TanStack Start + Agno AgentOS + Google ADK). **Canonical** — replaces the legacy `/oideachais/compose.yaml` quartet. Build source of truth. | 3080, 3335, 7777, 7778, 8000 |
 | `olake/` | ELT from MongoDB → Iceberg | 8080 |
 | `olmocr/` | OlmOCR (Allen AI) document OCR | Internal |
 | `paddleocr/` | PaddleOCR multilingual OCR | Internal |

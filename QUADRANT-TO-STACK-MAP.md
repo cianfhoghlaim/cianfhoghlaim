@@ -25,8 +25,10 @@ counterpart is produced by the audit scripts under
 | LanceDB | `infrastructure/stacks/lancedb/` | 8081 | (none — vector store) | none |
 | browser (browser-grid + browser-litellm + browser-stagehand-proxy) | `infrastructure/stacks/browser/` | 9222-9223, 4001, 4005 | `oideachais.dlt_sources.{education,medicine,law}.*` (uses Stagehand for live scraping) | none |
 | oRPC server + FastAPI (oideachais-api) | runs in `cianfhoghlaim-oideachais-api` (bunchloch) | 8000 | (none — API layer) | `api.oideachais.cianfhoghlaim.ie` (Pangolin) |
-| TanStack Start (oideachais-frontend) | runs in `cianfhoghlaim-oideachais-frontend` (bunchloch) | 3000 | (none — SPA) | `oideachais.cianfhoghlaim.ie` (Pangolin) |
-| Dagster (oideachais-dagster) | runs in `cianfhoghlaim-oideachais-dagster` (bunchloch) | 3335 | `dagster_defs.definitions` (228 assets) | `dagster.oideachais.cianfhoghlaim.ie` (Pangolin, VPN-only) |
+| TanStack Start (oideachais-frontend) | runs in `cianfhoghlaim-oideachais-frontend` (bunchloch) | 3080 | (none — SPA) | `oideachais.cianfhoghlaim.ie` (Pangolin) |
+| Dagster (oideachais-dagster) | runs in `cianfhoghlaim-oideachais-dagster` (bunchloch) | 3335 | `dagster_defs.definitions` (280+ assets after C4.1) | `dagster.oideachais.cianfhoghlaim.ie` (Pangolin, VPN-only) |
+| Agno AgentOS (oideachais-agent-os) | runs in `cianfhoghlaim-oideachais-agent-os` (bunchloch) | 7777 | `oideachais/agent_os/` (Agno agents) | `agent.os.cianfhoghlaim.ie` (Pangolin, VPN-only) |
+| Google ADK (oideachais-adk-agents) | runs in `cianfhoghlaim-oideachais-adk-agents` (bunchloch) | 7778 | `oideachais/agents/adk/` (12 ADK agent files) | `adk.cianfhoghlaim.ie` (Pangolin, VPN-only) |
 
 ## 2. Tuatha → crypteolas + fibo_generation + asset_generation
 
