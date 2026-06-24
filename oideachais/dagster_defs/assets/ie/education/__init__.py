@@ -6,6 +6,13 @@ Phase 5 of the openspec change. Previously at
 domain-first path. The legacy address is preserved as a re-export
 shim in `oideachais.dagster_defs.assets.ireland.__init__`.
 """
+from .aistear_dlt_assets import (
+    AISTEAR_ASSETS,
+    AISTEAR_CHECKS,
+    AISTEAR_FULL_JOB,
+    aistear_documents_ducklake,
+    aistear_documents_row_count_check,
+)
 from .curriculum_dlt_assets import (
     create_cycle_asset,
     curriculum_dlt_assets,
@@ -24,4 +31,9 @@ __all__ = [
     "exam_materials_assets",
     "scraped_curriculum_pages",
     "FirecrawlConfig",
+    "aistear_documents_ducklake",
+    "aistear_documents_row_count_check",
+    "AISTEAR_ASSETS",
+    "AISTEAR_CHECKS",
+    "AISTEAR_FULL_JOB",
 ]

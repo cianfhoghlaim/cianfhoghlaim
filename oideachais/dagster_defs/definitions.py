@@ -64,6 +64,14 @@ from .assets.ie.education import curriculum_dlt_assets, scraped_curriculum_pages
 # Ireland Exam Materials Assets (Stagehand browser -> DLT -> DuckLake)
 from .assets.ie.education import exam_materials_assets
 
+# Ireland Aistear (Early Childhood) Assets (DLT + BAML ExtractAistearFramework)
+# Reference: openspec/changes/wire-baml-with-known-consumers/
+from .assets.ie.education import (
+    AISTEAR_CHECKS,
+    AISTEAR_ASSETS,
+    AISTEAR_FULL_JOB,
+)
+
 # Ireland Medicine Assets (Phase 3.1 of lateralise-british-isles-domains)
 from .assets.ie.medicine import (
     medicine_ie_doh,
@@ -367,6 +375,8 @@ all_jobs = [
     *(PER_SUBJECT_JOBS if PER_SUBJECT_JOBS else []),
     *([leaving_cert_full_job] if leaving_cert_full_job else []),
     *([LEAVING_CERT_DLT_JOB] if LEAVING_CERT_DLT_JOB else []),
+    # Aistear (early childhood) — 1 full job materialises the 3 aistear resources
+    AISTEAR_FULL_JOB,
 ]
 
 
@@ -399,6 +409,7 @@ combined_assets = [
     *curriculum_dlt_assets,
     scraped_curriculum_pages,
     *exam_materials_assets,
+    *AISTEAR_ASSETS,                 # Aistear (early childhood) DLT + BAML extraction
     *pdf_processing_assets,
     *model_conversion_assets,
     *asset_generation_assets,
