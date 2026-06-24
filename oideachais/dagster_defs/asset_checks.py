@@ -21,6 +21,9 @@ from dagster import (
 
 from .resources import DuckDBResource, LanceDBResource
 
+# Aistear (early childhood) asset check — ref: openspec/changes/wire-baml-with-known-consumers/
+from .assets.ie.education.aistear_dlt_assets import aistear_documents_row_count_check
+
 # ============================================================================
 # Ireland Education Asset Checks - DEPRECATED
 # ============================================================================
@@ -203,6 +206,8 @@ def check_weekly_downloads_row_count(context, duckdb: DuckDBResource) -> AssetCh
 
 all_asset_checks = [
     # Ireland Education - removed (legacy assets deleted)
+    # Aistear (early childhood) - check that at least 1 document was loaded
+    aistear_documents_row_count_check,
     # Celtic Language
     check_duchas_pages,
     check_celtic_embeddings,
