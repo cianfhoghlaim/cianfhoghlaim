@@ -2,6 +2,42 @@
 
 > Irish: *machine learning*. The AI/ML quadrant of the Cianfhoghlaim stack.
 
+## Priority quick reference
+
+The 8 priority skills, the 4 priority commands, and the 3
+priority openspec specs at a glance. **Read this first**; the
+rest of the file is the full 8-component matrix routing.
+
+### Priority skills (8 of 108)
+
+| Skill | When to load |
+|:--|:--|
+| [`agno`](../.agents/skills/agno/SKILL.md) | Multi-agent orchestration with tool calling (Agno AgentOS) |
+| [`google-adk`](../.agents/skills/google-adk/SKILL.md) | Google's Agent Development Kit (Multi-Agent Workflow Engine) |
+| [`baml`](../.agents/skills/baml/SKILL.md) | BAML extraction schemas (canonical client registry) |
+| [`cognee`](../.agents/skills/cognee/SKILL.md) | Knowledge graph memory + temporal cognify + `improve()` |
+| [`graphiti`](../.agents/skills/graphiti/SKILL.md) | Temporal knowledge graph (bi-temporal model) |
+| [`lancedb`](../.agents/skills/lancedb/SKILL.md) | Vector database for RAG (HNSW, MVCC) |
+| [`litellm`](../.agents/skills/litellm/SKILL.md) | Unified LLM gateway (all LLM calls route through here) |
+| [`langfuse`](../.agents/skills/langfuse/SKILL.md) | LLM observability (traces, prompts, A/B tests) |
+
+### ccc + openspec commands
+
+```bash
+bun run ccc:search "OCR model evaluation metric"      # semantic code search
+openspec list --specs                                 # 32 specs total
+openspec validate <change-id> --strict                # MUST pass before commit
+openspec archive <change-id> --yes                    # after deploy
+```
+
+### Priority openspec specs for meaisínfhoghlaim
+
+| Spec | One-liner |
+|:--|:--|
+| `meaisinfhoghlaim-platform` | 10 sub-packages + 4 heartbeat dagster assets + Dagster code-location |
+| `meaisinfhoghlaim-agent-frameworks` | 12 specialised agents (Root, Curriculum, Translation, Corpus, etc.) |
+| `meaisinfhoghlaim-ocr-htr` | 10 OCR models across 6 backends (Pylaia, TrOCR, PaddleOCR, Tesseract, dots.ocr, VLM) |
+
 ## Overview
 
 `meaisínfhoghlaim/` is the AI/ML services layer. It contains the agents,

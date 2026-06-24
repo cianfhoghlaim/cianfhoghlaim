@@ -1,5 +1,50 @@
 # OpenSpec Instructions for Cianfhoghlaim
 
+## Priority quick reference
+
+The 4 priority specs, the 4 priority commands, the 4 priority
+skills, and the 1 priority mise task at a glance. **Read this
+first**; the rest of the file is the full 32-spec catalogue.
+
+### Priority specs (4 of 32)
+
+| Spec | Quadrant | One-liner |
+|:--|:--|:--|
+| [`oideachais-pipeline`](specs/oideachais-pipeline/spec.md) | oideachais | Celtic education curriculum pipeline (Dagster + DLT + DuckLake + LanceDB + BAML) |
+| [`infrastructure-stacks`](specs/infrastructure-stacks/spec.md) | shared | 70+ Docker Compose stacks + stack-doctor + Pangolin + Infisical + Locket |
+| [`agent-memory-systems`](specs/agent-memory-systems/spec.md) | shared | Cognee + Graphiti + LanceDB + FalkorDB + Memgraph agent memory |
+| [`dagger-pipelines`](specs/dagger-pipelines/spec.md) | shared | Polyglot CI/CD via Dagger (Python + TS) — 8-step GitOps |
+
+### Priority commands
+
+```bash
+openspec list --specs              # list all 32 capability specs
+openspec list                      # list all pending changes
+openspec validate <change-id> --strict    # MUST pass before commit
+openspec archive <change-id> --yes        # after deploy
+```
+
+### Priority skills (4 of 108)
+
+| Skill | When to load |
+|:--|:--|
+| [`data-engineering-pipeline-documentation`](../.agents/skills/data-engineering-pipeline-documentation/SKILL.md) | Router for STATUS.md + REFACTORING.md + per-area READMEs |
+| [`dagger-pipelines`](../.agents/skills/dagger-pipelines/SKILL.md) | The 8 callable Dagger functions + the 4 build pipelines |
+| [`infrastructure-stacks`](../.agents/skills/infrastructure-stacks/SKILL.md) | The 6-file GOLD_STANDARD pattern for Docker Compose stacks |
+| [`agent-memory-systems`](../.agents/skills/agent-memory-systems/SKILL.md) | The 5 memory backends (Cognee + Graphiti + LanceDB + FalkorDB + Memgraph) |
+
+### Priority mise task
+
+```bash
+mise run lint:skills               # validate .agents/skills/ metadata (108/108 pass)
+```
+
+### ccc code search (for openspec work)
+
+```bash
+bun run ccc:search "spec delta format"      # find prior art in the openspec archive
+```
+
 ## Quick Reference
 
 ```bash

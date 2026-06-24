@@ -2,6 +2,63 @@
 
 This project uses standard GitHub/Forgejo issues for task tracking. Please use `gh` or standard `git` workflows.
 
+## Priority quick reference
+
+The 5 priority skills, the 4 priority commands, the 4 priority
+compose stacks, and the 4 priority openspec specs at a glance.
+**Read this first**; the rest of the file is detail.
+
+### Priority skills (5 of 108)
+
+| Skill | When to load |
+|:--|:--|
+| [`motherduck`](.agents/skills/motherduck/SKILL.md) | MotherDuck storage pattern (managed / BYOB / DuckLake / own-compute) + MCP server |
+| [`ccc`](.agents/skills/ccc/SKILL.md) | **Code search** — use `ccc search` before `grep` / `find` |
+| [`browser-tools`](.agents/skills/browser-tools/SKILL.md) | Pick the right browser tool (Stagehand / Firecrawl MCP / Firecrawl CLI / Playwright / safe-browser) |
+| [`agent-observability`](.agents/skills/agent-observability/SKILL.md) | Langfuse v3 + MLflow GenAI + RAGAS trace-based + Logfire |
+| [`openspec`](openspec/AGENTS.md) | Spec-driven change management (32 specs, 4 shared) |
+
+### ccc code search (always use before grep)
+
+```bash
+bun run ccc:init     # first time only (creates .cocoindex_code/target_sqlite.db)
+bun run ccc:index    # rebuild the index after any major file move
+bun run ccc:search "Dagster asset partition definition"   # semantic search
+```
+
+If the index is missing or stale, the agent **owns** running
+`ccc:index` — do not ask the user.
+
+### Priority openspec commands
+
+```bash
+openspec list --specs              # list all 32 capability specs
+openspec list                      # list all pending changes
+openspec validate <change-id> --strict    # MUST pass before commit
+openspec archive <change-id> --yes        # after deploy
+```
+
+### Priority mise tasks
+
+```bash
+mise run lint:skills               # validate .agents/skills/ metadata (108/108)
+mise run turbo dev                 # monorepo dev (bun + uv + turbo)
+mise run secrets:init              # sync .infisical.env → dev-baile vault
+mise run dagster:oideachais        # launch the lakehouse Dagster UI
+```
+
+### Priority compose stacks (4 of 94)
+
+| Stack | Port | Domain |
+|:--|--:|:--|
+| `oideachais` | 3080, 3335, 7777, 7778, 8000 | `oideachais.cianfhoghlaim.ie` |
+| `litellm` | 4000 | `litellm.cianfhoghlaim.ie` (LLM gateway) |
+| `langfuse` | 3000 | `langfuse.cianfhoghlaim.ie` (LLM observability) |
+| `lakehouse` | 3900-3904, 5433, 8181-8182 | internal (Garage S3 + Postgres + Lakekeeper) |
+
+The full inventory of 94 stacks is at
+[`infrastructure/AGENTS.md`](infrastructure/AGENTS.md).
+
 ## Monorepo Topology (v2 — Polyglot)
 
 Cianfhoghlaim is a **bun + uv + turbo polyglot monorepo**. Two language graphs live side by side, orchestrated by `turbo.json` and a single `mise.toml` toolchain.

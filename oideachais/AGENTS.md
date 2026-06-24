@@ -3,6 +3,54 @@
 > **The Celtic Education Lakehouse Engine.** The offline-first ELT
 > engine and lakehouse that powers the entire `cianfhoghlaim` stack.
 
+## Priority quick reference
+
+The 8 priority skills, the 4 priority commands, the 4 priority
+compose ports, and the 4 priority openspec specs at a glance.
+**Read this first**; the rest of the file is the full BAML ×
+DLT × Dagster × CocoIndex matrix routing.
+
+### Priority skills (8 of 108)
+
+| Skill | When to load |
+|:--|:--|
+| [`baml`](../.agents/skills/baml/SKILL.md) | BAML extraction schemas (`oideachais/baml_src/`) |
+| [`dagster`](../.agents/skills/dagster/SKILL.md) | Dagster asset patterns + `dg` CLI + the 5 KCG code-locations |
+| [`dlt`](../.agents/skills/dlt/SKILL.md) | DLT source patterns (filesystem / rest_api / cross-domain-registry) |
+| [`cognee`](../.agents/skills/cognee/SKILL.md) | Cognee cognify (5-stage curriculum KG + temporal + improve()) |
+| [`lancedb`](../.agents/skills/lancedb/SKILL.md) | HNSW vector search + the v1 App pattern |
+| [`motherduck`](../.agents/skills/motherduck/SKILL.md) | MotherDuck storage pattern (managed / BYOB / DuckLake / own-compute) + MCP |
+| [`oideachais-storage`](../.agents/skills/oideachais-storage/SKILL.md) | The KCG storage mental model (DuckLake 1.0 + Lance Namespace) |
+| [`oideachais-pipeline`](../.agents/skills/oideachais-pipeline/SKILL.md) | The canonical lakehouse pipeline (DLT + Dagster + CocoIndex + BAML) |
+
+### ccc + openspec commands
+
+```bash
+bun run ccc:search "Dagster asset partition definition"  # semantic code search
+openspec list --specs                                    # 32 specs total
+openspec validate <change-id> --strict                   # MUST pass before commit
+openspec archive <change-id> --yes                       # after deploy
+```
+
+### Priority compose ports (the oideachais stack)
+
+| Service | Port | Healthcheck |
+|:--|--:|:--|
+| `dagster` | 3335 | `/server_info` |
+| `api` | 8000 | `/health` |
+| `frontend` | 3080 | `/` |
+| `agent_os` | 7777 | `/health` |
+| `adk_agents` | 7778 | `/health` |
+
+### Priority openspec specs for oideachais
+
+| Spec | One-liner |
+|:--|:--|
+| `oideachais-pipeline` | Celtic education curriculum pipeline (Dagster + DLT + DuckLake + LanceDB + BAML) |
+| `oideachais-leabharlann` | 4 dlt sources + 3 v1 CocoIndex Apps |
+| `oideachais-baml-schemas` | 9 BAML files + 3 extraction clients |
+| `oideachais-cognify-knowledge-graph` | 5-stage cross-stage cognify + 3 leabharlann cognify + 3 cross-archive FalkorDB edges |
+
 ## Overview
 
 `oideachais/` is the **Celtic education data platform** quadrant of the
