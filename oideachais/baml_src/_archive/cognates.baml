@@ -1,3 +1,21 @@
+// === ARCHIVED 2026-06-24 ===
+// The 5 functions in this file (IdentifyCognates,
+// CompareCelticVocabulary, IdentifyFalseFriends, ExplainSoundChanges,
+// GenerateCognateVocabulary) have no current Python consumer in the
+// oideachais quadrant. They are intended for the meaisinfhoghlaim/
+// Celtic-linguistic agents and the croilar/ portfolio surface,
+// which are not yet built.
+//
+// To re-activate:
+// 1. Implement the consumer (e.g. meaisinfhoghlaim/agents/cognates.py)
+// 2. Move this file back to baml_src/ (git mv)
+// 3. Remove the ARCHIVED header from the top
+// 4. Update STATUS.md to mark the functions as wired
+// 5. Update REFACTORING.md to remove the archive entry
+//
+// Reference: openspec/changes/archive-celtic-baml-orphans/
+// =====================================================================
+
 // Cognates - Cross-Celtic Vocabulary Comparison
 // Extract cognate relationships across Celtic languages
 // December 2024

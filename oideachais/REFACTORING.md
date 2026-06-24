@@ -163,3 +163,31 @@ This file is the canonical refactor backlog for the `oideachais/` data platform.
 - `openspec/changes/data-engineering-documentation-and-refactor-roadmap/` — the openspec change that contains this backlog.
 - `docs/02-data-platform/DATA_ARCHITECTURE.md` — data architecture (Tripartite data landscape, BAML schema specs, Cognee ontology).
 - `docs/06-infrastructure/leabharlann-stack-overview.md` — end-to-end stack diagram.
+
+
+## Archive of orphan BAML functions
+
+**Status**: `done` (Q3-2026)
+**Tracks**: `openspec/changes/archive-celtic-baml-orphans/`
+**Effort**: 1 day
+
+29 BAML functions in 6 files have no current Python consumer in the oideachais quadrant. They are intended for the `meaisinfhoghlaim/` Celtic-linguistic agents and the `croilar/` portfolio surface, which are not yet built.
+
+The 6 files are now in `oideachais/baml_src/_archive/` with ARCHIVED headers:
+
+- `cognates.baml` (5 functions: IdentifyCognates, CompareCelticVocabulary, IdentifyFalseFriends, ExplainSoundChanges, GenerateCognateVocabulary)
+- `celtic_linguistics.baml` (3 functions: ExtractMorphology, AnalyzeSentence, IdentifyDialect)
+- `morphology.baml` (4 functions: ExtractVerbConjugation, ExtractNounDeclension, IdentifyMorphologicalClass, CompareAdjective)
+- `grammar_patterns.baml` (6 functions: ExtractGrammarPatterns, ExtractIrishCopula, AnalyzeVSOOrder, ExtractPossession, GeneratePrepositionalPronouns, DocumentMutationTriggers)
+- `named_entities.baml` (5 functions: ExtractCelticEntities, ExtractPersonEntities, ExtractPlaceEntities, ExtractSupernaturalEntities, ExtractFestivalEntities)
+- `portfolio_extraction.baml` (6 functions: ExtractProfileFromCV, ExtractProfileFromGitHubReadme, ExtractMusicProfile, ExtractGameProject, MergeProfiles, GenerateProfileSummary)
+
+**Re-activation procedure** (full steps in `oideachais/baml_src/_archive/README.md`):
+
+1. Build the consumer (e.g. `meaisinfhoghlaim/agents/celtic_linguistics.py`)
+2. `git mv oideachais/baml_src/_archive/<name>.baml oideachais/baml_src/<name>.baml`
+3. Remove the ARCHIVED header from the top
+4. Update `oideachais/STATUS.md` to mark the functions as wired
+5. Remove this entry from `oideachais/REFACTORING.md`
+
+**What is NOT in this archive**: the 5 `oideachas.baml` functions (`ExtractSyllabus`, `ExtractExamPaper`, `ExtractMarkingScheme`, `BuildCurriculumGraph`, `ExtractCelticLanguageContent`) are tracked separately by the `leaving-cert-2026` openspec change.
