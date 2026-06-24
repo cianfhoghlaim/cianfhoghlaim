@@ -93,13 +93,13 @@ The re-export shims to `meaisinfhoghlaim/`:
 | Add a new leabharlann source | `oideachais/dlt_sources/author_archive/` (the 4 dlt sources) |
 | Add a new BAML extraction function | `baml_src/` (the 27 BAML files, plus `_archive/` for deferred consumers) + `baml_src/clients.baml` for the canonical client registry |
 | Add a new Dagster asset | `oideachais/dagster_defs/assets/` (40+ modules) |
-| Add a new CocoIndex v1 App | `oideachais/cocoindex_flows/leabharlann_embedding.py` (the 3 v1 Apps) or `docs_skills_consolidation.py` |
-| Add a new Cognee cognify pass | `oideachais/cognee_integration/` (5 adapters) |
-| Add a new cross-archive edge rule | `oideachais/cognify_rules/leabharlann_cross_archive.py` (3 rules) or `author_archive_cross_corpus.py` (8 rules) |
+| Add a new CocoIndex v1 App | `oideachais/cocoindex_flows/leabharlann_embedding.py` (the 3 v1 Apps) or `docs_skills_consolidation.py`; see `.agents/skills/oideachais-cocoindex-v1/SKILL.md` for the canonical pattern |
+| Add a new Cognee cognify pass | `oideachais/cognee_integration/` (5 adapters); see `.agents/skills/oideachais-leabharlann/SKILL.md` for the 3 leabharlann cognify passes |
+| Add a new cross-archive edge rule | `oideachais/cognify_rules/leabharlann_cross_archive.py` (3 rules) or `author_archive_cross_corpus.py` (8 rules); see `.agents/skills/oideachais-leabharlann/SKILL.md` for the leabharlann 3-edge contract |
 | Add a new Marimo dashboard | `oideachais/notebooks/` + `oideachais/notebooks/dashboards/` |
 | Add a new FastAPI route | `oideachais/api/routes/` (6 route modules) |
 | Add a new Dagster sensor | `oideachais/dagster_defs/sensors/` (5 sensor modules) |
-| Migrate a v0 CocoIndex flow to v1 | `oideachais/cocoindex_flows/` — see the canonical pattern in `leabharlann_embedding.py` |
+| Migrate a v0 CocoIndex flow to v1 | `oideachais/cocoindex_flows/_v0_archive/` (the 10 deprecated v0 modules) — see `.agents/skills/oideachais-cocoindex-v1/SKILL.md` for the v0→v1 migration pattern (the 11 v1 Apps cover the equivalent use cases) |
 | Update the BAML × dlt × Dagster matrix | `oideachais/STATUS.md` (single source of truth) |
 | Add a new refactoring backlog item | `oideachais/REFACTORING.md` |
 | Add a new agent for the front-end | `oideachais/agents/{adk,agno}/` (shims) or `meaisinfhoghlaim/agents/` (model layer) |
