@@ -314,3 +314,25 @@ docker stats --no-stream
 - **Komodo Docs:** https://komo.do/docs
 - **Infisical Docs:** https://infisical.com/docs
 - **Pulumi Docs:** https://www.pulumi.com/docs
+
+## Feedback loop (project → openspec → skill)
+
+Per the `skills-as-project-docs` openspec change, the
+infrastructure layer participates in the formal feedback
+loop:
+
+1. **When a new stack is added** (via the `stack-ops` skill +
+   the 6-file GOLD_STANDARD pattern), the
+   `infrastructure-stacks/SKILL.md` gets a 1-line addition
+   in the "11 inventory categories" section.
+2. **When the Komodo procedure changes** (e.g. a new
+   `deploy-<stack>-<host>.toml`), the
+   `dagger-pipelines/SKILL.md` gets a 1-line addition
+   in the "8 callable functions" section.
+3. **When a stack is removed or renamed**, the
+   `infrastructure-stacks/SKILL.md` "11 inventory categories"
+   section is updated to reflect the new state.
+
+The lint script `mise run lint:skills` enforces the 4 metadata
+rules (frontmatter, name match, description length, line count)
+on every skill in `.agents/skills/`.
