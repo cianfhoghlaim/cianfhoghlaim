@@ -113,6 +113,8 @@ The venv has `cocoindex==1.0.9` (v1 API). The v0 DSL (`@cocoindex.flow_def`, `Fl
 | Flow | API | Status | Action |
 |:--|:--|:--|:--|
 | `leabharlann_embedding.py` | v1 | ✅ working | — |
+| `codebase_indexing.py` | v1 | ✅ working (round 7+8) | Dagster assets `codebase_chunks` + `codebase_code_graph` in `codebase_assets.py` (round 8 phase 1). 7-node / 7-edge code graph via `CodeNodeType` + `CodeEdgeType`. 29+ languages via `oideachais/cocoindex_flows/chunking/languages.py` (ported from `codeolas/chunking/languages.py`). |
+| `docs_skills_consolidation.py` | v1 | ✅ working (round 7+8) | — |
 | `author_archive_embedding.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
 | `curriculum_embedding.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
 | `curriculum_translation.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
@@ -165,6 +167,7 @@ Reference: `docs/cocoindex/AGENTS.md` and the 5 canonical examples (`pdf_embeddi
 | `search` | `search_assets.py` | python | Unified search indexes |
 | `knowledge_graph` | `senior_cycle_kg.py` | cognify | `senior_cycle_knowledge_graph`, `lazy_extract_exam_paper` |
 | `cross_stage_cognify` | (in `cognee_integration/cross_stage_cognify.py`) | cognify | `cross_stage_cognify` (8 cross-stage edges: Aistear→Primary→JC→SC→Tertiary) |
+| `codebase` | `codebase_assets.py` | cocoindex/lancedb | `codebase_chunks` (Tree-sitter chunking + BGE-M3 → LanceDB), `codebase_code_graph` (AST extraction → 7 node + 7 edge → LanceDB), `codebase_architecture_docs` (.arch.md generation, deferred) |
 | `ui_suggestion` | `ui_suggestion.py` | baml | `ui_suggestion_asset` (nightly BAML + Cognee) |
 | `unified_audio` | `unified_audio_dataset_assets.py` | dlt | Unified Celtic audio dataset |
 
