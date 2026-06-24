@@ -1,7 +1,7 @@
 # Oideachais — Komodo Resource Sync Blueprint
 
 name: oideachais
-description: "Celtic Education Lakehouse Engine — dagster webserver + FastAPI + TanStack Start frontend"
+description: "Celtic Education Lakehouse Engine — dagster webserver + FastAPI + TanStack Start frontend + Agno AgentOS + Google ADK agents"
 type: stack
 run_directory: infrastructure/stacks/oideachais
 files:
@@ -11,5 +11,5 @@ schedule:
   enabled: false
 metadata:
   category: engineering
-  ports: [3335, 8000, 3000]
-  depends_on: [lakehouse, litellm]
+  ports: [3335, 8000, 3080, 7777, 7778]
+  depends_on: [lakehouse, litellm, langfuse]

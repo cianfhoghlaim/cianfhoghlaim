@@ -240,6 +240,97 @@ services:
           cpus: "2"
           memory: 1G
 
+  # ---------------------------------------------------------------------------
+  # AGENT OS (Agno) - Celtic Education Agent runtime (port 7777)
+  # ---------------------------------------------------------------------------
+  agent_os:
+    # Local build artifact, `pull_policy: never` forces compose to
+    # use the existing tag rather than rebuild on every `up`.
+    # The Dockerfile at oideachais/agent_os/Dockerfile builds
+    # `oideachais-dev-agentos:latest` from the root pyproject.toml
+    # (the agent_os/ sub-package is part of the oideachais uv
+    # workspace).
+    image: oideachais-dev-agentos:latest
+    pull_policy: never
+    build:
+      context: ../../../..
+      dockerfile: oideachais/agent_os/Dockerfile
+    container_name: cianchoghlaim-oideachais-agent-os
+    restart: unless-stopped
+    ports:
+      - "${AGENT_OS_PORT:-7777}:7777"
+    environment:
+      LLM_API_KEY: ${LITELLM_MASTER_KEY:-${LLM_API_KEY:-}}
+      LLM_PROVIDER: ${LLM_PROVIDER:-litellm}
+      LLM_BASE_URL: ${LLM_BASE_URL:-http://litellm:4000}
+      LLM_MODEL: ${LLM_MODEL:-gemini/gemini-2.0-flash}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:7777/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    depends_on:
+      locket:
+        condition: service_healthy
+    env_file:
+      - /run/secrets/locket/secrets.env
+    volumes:
+      - locket_secrets:/run/secrets/locket:ro
+    networks:
+      - cianchoghlaim
+      - lakehouse
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 4G
+
+  # ---------------------------------------------------------------------------
+  # ADK AGENTS (Google ADK) - Multi-agent orchestrator (port 7778)
+  # ---------------------------------------------------------------------------
+  adk_agents:
+    # Local build artifact, `pull_policy: never` forces compose to
+    # use the existing tag rather than rebuild on every `up`.
+    # The Dockerfile at oideachais/Dockerfile.adk builds
+    # `oideachais-dev-adk-agents:latest` from the root pyproject.toml
+    # + the google-adk Python package.
+    image: oideachais-dev-adk-agents:latest
+    pull_policy: never
+    build:
+      context: ../../../..
+      dockerfile: oideachais/Dockerfile.adk
+    container_name: cianchoghlaim-oideachais-adk-agents
+    restart: unless-stopped
+    ports:
+      - "${ADK_PORT:-7778}:7778"
+    environment:
+      LLM_API_KEY: ${LITELLM_MASTER_KEY:-${LLM_API_KEY:-}}
+      LLM_PROVIDER: ${LLM_PROVIDER:-litellm}
+      LLM_BASE_URL: ${LLM_BASE_URL:-http://litellm:4000}
+      LLM_MODEL: ${LLM_MODEL:-gemini/gemini-2.0-flash}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:7778/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    depends_on:
+      locket:
+        condition: service_healthy
+    env_file:
+      - /run/secrets/locket/secrets.env
+    volumes:
+      - locket_secrets:/run/secrets/locket:ro
+    networks:
+      - cianchoghlaim
+      - lakehouse
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 4G
+
 # =============================================================================
 # VOLUMES
 # =============================================================================
