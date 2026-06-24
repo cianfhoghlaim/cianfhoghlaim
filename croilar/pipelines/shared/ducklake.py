@@ -2,6 +2,10 @@
 
 Provides catalog initialization and schema management for the DuckLake lakehouse
 backed by Cloudflare R2.
+
+The legacy `aleyum_catalog.duckdb` / `aleyum-data` defaults have been
+renamed to `croilar_catalog.duckdb` / `croilar-data` per round 11 of
+the multi-quadrant refactor plan.
 """
 
 import os
@@ -12,7 +16,7 @@ import duckdb
 
 
 class DuckLakeCatalog:
-    """Manages the DuckLake catalog for Aleyum portfolio data.
+    """Manages the DuckLake catalog for the croilar portfolio.
 
     DuckLake architecture:
     - DuckDB as the SQL catalog (local or remote)
@@ -22,8 +26,8 @@ class DuckLakeCatalog:
 
     def __init__(
         self,
-        catalog_path: str = "./data/aleyum_catalog.duckdb",
-        r2_bucket: str = "aleyum-data",
+        catalog_path: str = "./data/croilar_catalog.duckdb",
+        r2_bucket: str = "croilar-data",
     ):
         """Initialize the DuckLake catalog.
 
@@ -320,8 +324,8 @@ class DuckLakeCatalog:
 
 
 def initialize_catalog(
-    catalog_path: str = "./data/aleyum_catalog.duckdb",
-    r2_bucket: str = "aleyum-data",
+    catalog_path: str = "./data/croilar_catalog.duckdb",
+    r2_bucket: str = "croilar-data",
 ) -> DuckLakeCatalog:
     """Initialize and return a configured DuckLake catalog.
 
@@ -340,7 +344,7 @@ def initialize_catalog(
 if __name__ == "__main__":
     # Initialize catalog for local development
     catalog = initialize_catalog()
-    print("DuckLake catalog initialized!")
+    print("croilar DuckLake catalog initialized!")
 
     stats = catalog.get_catalog_stats()
     print(f"Catalog stats: {stats}")

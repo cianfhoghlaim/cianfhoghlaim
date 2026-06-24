@@ -12,7 +12,7 @@ compose stacks, and the 3 priority openspec specs at a glance.
 **Read this first**; the rest of the file is the full 3-persona
 routing.
 
-### Priority skills (8 of 108)
+### Priority skills (9 of 120)
 
 | Skill | When to load |
 |:--|:--|
@@ -24,6 +24,7 @@ routing.
 | [`baml`](../.agents/skills/baml/SKILL.md) | BAML extraction (the persona-specific schemas) |
 | [`dagster`](../.agents/skills/dagster/SKILL.md) | Dagster asset patterns (the croilar data engineering) |
 | [`dlt`](../.agents/skills/dlt/SKILL.md) | DLT source patterns (the 12 croilar DLT pipelines) |
+| [`croilar-stream-registry`](../.agents/skills/croilar-stream-registry/SKILL.md) | The Stream-registry pattern + the 5 aleyum→croilar alias collapses + the 12 stream-driven Dagster assets |
 
 ### ccc + openspec commands
 
@@ -135,6 +136,11 @@ And the related specs:
 - `baml/SKILL.md` — BAML schema patterns
 - `cocoindex/SKILL.md` — CocoIndex v1 patterns
 - `marimo/SKILL.md` — Marimo notebook patterns
+- `croilar-stream-registry/SKILL.md` — the Stream-registry
+  pattern (the 5 aleyum→croilar alias collapses + the
+  `StreamSettings` Pydantic BaseSettings + the 12
+  stream-driven Dagster assets + the 3 cron schedules) —
+  **NEW in round 11**
 
 ## Cross-references
 
