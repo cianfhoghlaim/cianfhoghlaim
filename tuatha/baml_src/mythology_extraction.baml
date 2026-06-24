@@ -242,3 +242,80 @@ function ExtractFolkloreElements(text: string) -> FolkloreElement[] {
     {{ ctx.output_format }}
   "#
 }
+
+// ============================================================================
+// NPC dialogue generation for the Cianfhoghlaim RPG
+// Promoted from spaces/_common/baml/hackathon_schemas.baml (2026-06-24).
+// Used by:
+//   - spaces/cianfhoghlaim/dialogue.py (the Cianfhoghlaim RPG Space)
+//   - tuatha/agents/agno/npc_dialogue_team.py (the 4-agent formative team)
+// ============================================================================
+
+class NpcDialogue {
+  speaker string
+  nation_code string  // "IE" | "NI" | "WLS" | "IM" | "SCT" | "universal"
+  era string  // e.g. "Iron Age", "Early Medieval", "Fictional"
+  utterance_en string
+  utterance_ga string
+  scholarly_footnote_en string
+  scholarly_footnote_ga string
+  emotional_tone string  // "wry" | "wounded" | "curious" | "defiant" | "gentle"
+  asks_player_about string  // prompt for the player's next turn
+}
+
+class NpcDialogueExchange {
+  npc_name string
+  npc_title string
+  turn_index int
+  dialogue NpcDialogue
+  quest_offered string?
+  artifact_granted string?
+}
+
+function GenerateNpcDialogue(
+  npc_name: string,
+  npc_title: string,
+  nation_code: string,
+  era: string,
+  player_utterance: string,
+  conversation_history: string,  // last 6 turns, formatted as "Speaker: text"
+  scholarly_source: string,  // the cached Wikipedia article for this NPC
+) -> NpcDialogueExchange {
+  client LitellmClient
+  prompt #"
+    You are roleplaying {{ npc_name }} ({{ npc_title }}) from {{ nation_code }}
+    in the {{ era }} era. You are one of 6 Celtic NPCs in a Hades-style
+    dialogue game set on a navigable British Isles map.
+
+    The player just said:
+      "{{ player_utterance }}"
+
+    Conversation so far:
+    ---
+    {{ conversation_history }}
+    ---
+
+    Your character's source material (Wikipedia excerpt, paraphrased):
+    ---
+    {{ scholarly_source }}
+    ---
+
+    Respond with:
+      - utterance_en, utterance_ga (Irish translation, can be a brief
+        poetic fragment)
+      - scholarly_footnote_en, scholarly_footnote_ga: a 1-sentence
+        citation pointing to the source material
+      - emotional_tone: one of "wry", "wounded", "curious", "defiant",
+        "gentle"
+      - asks_player_about: a 1-sentence prompt for the next turn
+      - quest_offered: (optional) a short quest hook
+      - artifact_granted: (optional) an artifact name if the player
+        earned something
+
+    Voice rules:
+      - Stay in character, never break the fourth wall
+      - Ground every claim in the source material
+      - Mix in 1 Irish-language phrase per 3 turns
+      - Don't be longer than 3 sentences per turn
+  "#
+}
