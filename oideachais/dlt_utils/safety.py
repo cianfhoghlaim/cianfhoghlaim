@@ -13,15 +13,33 @@ Usage:
 from __future__ import annotations
 
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any, TypeVar
 
 import dlt
 
-from oideachais.core import get_executor
-
 logger = logging.getLogger(__name__)
 
 T = TypeVar("T")
+
+
+def get_executor(name: str = "duckdb") -> ThreadPoolExecutor:
+    """Canonical single-thread DuckDB executor.
+
+    The oideachais.oideachais.core shim previously provided this; it
+    is now defined here as the canonical implementation. A backward-
+    compat re-export is preserved in oideachais.oideachais.core for
+    one release.
+
+    Args:
+        name: Logical executor name; used as the thread-name prefix
+              so log lines are grep-able (e.g. "duckdb_serial_*").
+
+    Returns:
+        A `ThreadPoolExecutor` with `max_workers=1` and
+        `thread_name_prefix=f"{name}_serial"`.
+    """
+    return ThreadPoolExecutor(max_workers=1, thread_name_prefix=f"{name}_serial")
 
 
 def safe_dlt_run(

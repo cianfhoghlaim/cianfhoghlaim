@@ -409,14 +409,6 @@ client<llm> IrishValidator {
   }
 }
 
-client<llm> Extractor {
-  provider openai
-  options {
-    model "gpt-4o-mini"
-    temperature 0.1
-  }
-}
-
 client<llm> Analyzer {
   provider openai
   options {

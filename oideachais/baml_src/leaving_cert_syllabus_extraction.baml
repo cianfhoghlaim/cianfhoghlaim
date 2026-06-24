@@ -26,7 +26,7 @@ class LeavingCertSyllabus {
 }
 
 function ExtractLeavingCertSyllabus(pdf_text: string) -> LeavingCertSyllabus {
-  client "litellm"
+  client LitellmClient
   prompt #"
     You are an Irish Leaving Certificate syllabus expert. Extract all topics
     and learning outcomes from the following syllabus PDF text.
