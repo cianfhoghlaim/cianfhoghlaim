@@ -669,6 +669,18 @@ Every AGENTS.md file under the `spaces/` tree (`spaces/AGENTS.md`, `spaces/_comm
 - **THEN** it lists the 4 active Spaces + the 1 archived Space + the 5 priority skills + the 4 priority openspec specs
 - **AND** it links to each per-Space AGENTS.md for the developer-quick-reference routing table
 
+### Requirement: data-engineering Space must use the KCG canonical stack
+
+The data-engineering Space MUST consume the KCG canonical stack: `stedding/ingest_queue/pypi/` as the source (not BigQuery), MotherDuck as the destination (not local DuckDB), dbt-duckdb as the adapter (not raw dbt), and Cognee + Graphiti for the knowledge graph.
+
+#### Scenario: Modernized data-engineering Space
+
+- **WHEN** the data-engineering Space runs
+- **THEN** it reads from `stedding/ingest_queue/pypi/`
+- **AND** it writes to MotherDuck
+- **AND** it uses dbt-duckdb
+- **AND** it has a Cognee + Graphiti cognify pass
+
 ## Infrastructure (Control Plane) Stacks
 
 | Stack | Image(s) | Key Ports |
