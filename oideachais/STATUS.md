@@ -118,6 +118,7 @@ The venv has `cocoindex==1.0.9` (v1 API). The v0 DSL (`@cocoindex.flow_def`, `Fl
 | `filesystem_indexing.py` | v1 | ✅ working (round 7 phase 2) | Dagster asset `filesystem_layout` in `infrastructure_assets.py`. Walks directories up to depth 4 with per-dir file-type histogram. |
 | `storage_indexing.py` | v1 | ✅ working (round 7 phase 2) | Dagster asset `storage_backends` in `infrastructure_assets.py`. Scans source files + wrangler manifests for 9 storage backend kinds (lancedb, duckdb, ducklake, postgres, garage, r2, d1, kv, iceberg). |
 | `config_indexing.py` | v1 | ✅ working (round 7 phase 2) | Dagster asset `config_files` in `infrastructure_assets.py`. Classifies 12 config kinds (compose, mise, package, pyproject, turbo, wrangler, env, k8s, pulumi, dg, github, justfile) with structured summaries. |
+| `unified_embedding.py` | v1 | ✅ working (round 7 phase 3) | Dagster assets `unified_embeddings` + `code_embeddings` in `unified_embedding_assets.py`. v1-native port of `crypteolas/cocoindex_flows/unified_embedding.py` (v0 DSL → v1 `@coco.fn` + `@coco.lifespan`). 2 v1 Apps: `UnifiedEmbedding` (DuckDB → `unified_embeddings` LanceDB) + `CodeEmbedding` (`UNIFIED_CODE_ROOT` → `code_embeddings` LanceDB). |
 | `docs_skills_consolidation.py` | v1 | ✅ working (round 7+8) | — |
 | `author_archive_embedding.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
 | `curriculum_embedding.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
@@ -173,6 +174,7 @@ Reference: `docs/cocoindex/AGENTS.md` and the 5 canonical examples (`pdf_embeddi
 | `cross_stage_cognify` | (in `cognee_integration/cross_stage_cognify.py`) | cognify | `cross_stage_cognify` (8 cross-stage edges: Aistear→Primary→JC→SC→Tertiary) |
 | `codebase` | `codebase_assets.py` | cocoindex/lancedb | `codebase_chunks` (Tree-sitter chunking + BGE-M3 → LanceDB), `codebase_code_graph` (AST extraction → 7 node + 7 edge → LanceDB), `codebase_architecture_docs` (.arch.md generation, deferred) |
 | `infrastructure` | `infrastructure_assets.py` | cocoindex/lancedb | `api_endpoints` (FastAPI/Hono/TanStack/Convex → `api_endpoints` LanceDB), `filesystem_layout` (depth 1-4 dirs → `filesystem_layout` LanceDB), `storage_backends` (9 backend kinds → `storage_backends` LanceDB), `config_files` (12 config kinds → `config_files` LanceDB) |
+| `embedding` | `unified_embedding_assets.py` | cocoindex/lancedb | `unified_embeddings` (DuckDB → `unified_embeddings` LanceDB), `code_embeddings` (`UNIFIED_CODE_ROOT` → `code_embeddings` LanceDB) |
 | `ui_suggestion` | `ui_suggestion.py` | baml | `ui_suggestion_asset` (nightly BAML + Cognee) |
 | `unified_audio` | `unified_audio_dataset_assets.py` | dlt | Unified Celtic audio dataset |
 
