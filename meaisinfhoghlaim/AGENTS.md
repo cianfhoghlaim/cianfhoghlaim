@@ -8,7 +8,7 @@ The 8 priority skills, the 4 priority commands, and the 3
 priority openspec specs at a glance. **Read this first**; the
 rest of the file is the full 8-component matrix routing.
 
-### Priority skills (8 of 108)
+### Priority skills (11 of 111)
 
 | Skill | When to load |
 |:--|:--|
@@ -20,6 +20,9 @@ rest of the file is the full 8-component matrix routing.
 | [`lancedb`](../.agents/skills/lancedb/SKILL.md) | Vector database for RAG (HNSW, MVCC) |
 | [`litellm`](../.agents/skills/litellm/SKILL.md) | Unified LLM gateway (all LLM calls route through here) |
 | [`langfuse`](../.agents/skills/langfuse/SKILL.md) | LLM observability (traces, prompts, A/B tests) |
+| [`celtic-ocr-evaluation`](../.agents/skills/celtic-ocr-evaluation/SKILL.md) | The 10-model × 6-backend OCR registry + the 5 Celtic-specific eval metrics (round 8) |
+| [`irish-speech-pipeline`](../.agents/skills/irish-speech-pipeline/SKILL.md) | The 4-stage ASR → agent → TTS loop + the 4 Irish dialects (round 8) |
+| [`agent-fleet-orchestration`](../.agents/skills/agent-fleet-orchestration/SKILL.md) | The 12-agent × 5-framework fleet + the LiteLLM routing + the Letta + RisingWave + Langfuse + MLflow stack (round 8) |
 
 ### ccc + openspec commands
 
