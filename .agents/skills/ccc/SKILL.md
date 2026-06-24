@@ -15,6 +15,17 @@ description: "This skill should be used when code search, file/directory summary
 > `ccc search "<query>"`. The original `ccc` CLI is kept on disk for the
 > 30-day deprecation window only. Reference:
 > `openspec/changes/docs-skills-consolidation-pipeline/`.
+>
+> **Round 8 phase 1 (2026-06-23):** The v1 App gained a **code-graph
+> companion** (`codebase_graph` v1 App + `codebase_code_graph` Dagster
+> asset). 7 node types (`File`, `Function`, `Class`, `Method`,
+> `Module`, `Interface`, `Variable`) + 7 edge types (`CONTAINS`,
+> `IMPORTS`, `CALLS`, `EXTENDS`, `IMPLEMENTS`, `USES`, `DEFINES`).
+> 29+ language detection via
+> `oideachais/cocoindex_flows/chunking/languages.py` (ported from
+> `codeolas/chunking/languages.py`). Use the v1 Python API
+> `search_code_graph(file_path=..., node_type=...)` to query the
+> graph table.
 
 `ccc` is the CLI for CocoIndex Code, providing semantic search over the current codebase and index management.
 

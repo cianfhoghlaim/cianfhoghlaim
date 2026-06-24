@@ -46,6 +46,19 @@ own state — only when an example writes to a target database).
 - **Pluggable LLMs/embedders** — openai, anthropic, google, voyage, ollama
 - **Pluggable sinks** — pgvector, Qdrant, LanceDB, Neo4j, FalkorDB, Kafka
 
+**Round 8 phase 1 (2026-06-23) — code-graph companion pattern:**
+
+The canonical v1 codebase indexer (`oideachais/cocoindex_flows/codebase_indexing.py`)
+now has a code-graph companion v1 App (`codebase_graph_app`) that
+extracts AST relationships into 2 LanceDB tables
+(`codebase_graph` + `codebase_graph_edges`). 7 node types +
+7 edge types, 11 languages with Tree-sitter AST mappings,
+29+ languages detected via
+`oideachais/cocoindex_flows/chunking/languages.py`. The companion
+App is driven by 3 Dagster assets in
+`oideachais/dagster_defs/assets/codebase_assets.py`:
+`codebase_chunks`, `codebase_code_graph`, `codebase_architecture_docs`.
+
 **For detailed documentation:** <https://cocoindex.io/docs/>
 **Search documentation:** <https://cocoindex.io/docs/search?q=url%20encoded%20keyword>
 

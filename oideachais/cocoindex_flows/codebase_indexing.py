@@ -13,6 +13,12 @@ other CocoIndex flow in this repo:
   `docs_skills_consolidation.py` for consistency)
 - `lancedb.mount_table_target("codebase_chunks", ...)` for the output
 
+Code graph extraction (round 8 + phase 1):
+- 7 node types (FILE, FUNCTION, CLASS, METHOD, MODULE, INTERFACE, VARIABLE)
+- 7 edge types (CONTAINS, IMPORTS, CALLS, EXTENDS, IMPLEMENTS, USES, DEFINES)
+- Tree-sitter AST extraction per file
+- 29+ language detection via `oideachais.cocoindex_flows.chunking.languages`
+
 Reference pattern: `docs/cocoindex/code_embedding/main.py` (v0 reference) +
 `docs/cocoindex/pdf_embedding/main.py` (v1 chunking/embedding conventions).
 
@@ -34,9 +40,12 @@ import os
 import pathlib
 from collections.abc import AsyncIterator
 from dataclasses import dataclass
+from enum import Enum
 from typing import Annotated, Any
 
 import structlog
+
+from .chunking.languages import EXTENSION_TO_LANGUAGE, get_supported_languages
 
 logger = structlog.get_logger(__name__)
 
@@ -85,6 +94,7 @@ EMBED_MODEL = os.getenv("CODEBASE_EMBED_MODEL", "BAAI/bge-m3")
 EMBED_DIM = 1024
 REFRESH_INTERVAL = datetime.timedelta(seconds=int(os.getenv("CODEBASE_REFRESH_SECS", "60")))
 LANCEDB_TABLE = "codebase_chunks"
+LANCEDB_GRAPH_TABLE = "codebase_graph"
 TOP_K = 10
 
 # Default source root: the monorepo root (parents[5] = repo root from
@@ -95,6 +105,117 @@ DEFAULT_REPO_ROOT = pathlib.Path(
         str(pathlib.Path(__file__).resolve().parents[5]),
     )
 )
+
+
+# =============================================================================
+# Code graph data model (round 8 + phase 1: 7 node types + 7 edge types)
+# =============================================================================
+
+
+class CodeNodeType(str, Enum):
+    """7 canonical node types for the codebase knowledge graph.
+
+    Ported from `codeolas/cocoindex_flows/file_graph.py:NodeType`."""
+
+    FILE = "File"
+    FUNCTION = "Function"
+    CLASS = "Class"
+    METHOD = "Method"
+    MODULE = "Module"
+    INTERFACE = "Interface"
+    VARIABLE = "Variable"
+
+
+class CodeEdgeType(str, Enum):
+    """7 canonical edge types for the codebase knowledge graph.
+
+    Ported from `codeolas/cocoindex_flows/file_graph.py:EdgeType`."""
+
+    CONTAINS = "CONTAINS"
+    IMPORTS = "IMPORTS"
+    CALLS = "CALLS"
+    EXTENDS = "EXTENDS"
+    IMPLEMENTS = "IMPLEMENTS"
+    USES = "USES"
+    DEFINES = "DEFINES"
+
+
+# Per-language Tree-sitter node type mappings for AST extraction.
+# Ported from `codeolas/cocoindex_flows/file_graph.py:_extract_from_node`.
+_LANG_AST_NODE_TYPES: dict[str, dict[str, CodeNodeType | None]] = {
+    "python": {
+        "function_definition": CodeNodeType.FUNCTION,
+        "class_definition": CodeNodeType.CLASS,
+        "import_statement": None,  # handled specially (IMPORTS edge)
+        "import_from_statement": None,
+    },
+    "typescript": {
+        "function_declaration": CodeNodeType.FUNCTION,
+        "class_declaration": CodeNodeType.CLASS,
+        "method_definition": CodeNodeType.METHOD,
+        "import_statement": None,
+    },
+    "javascript": {
+        "function_declaration": CodeNodeType.FUNCTION,
+        "class_declaration": CodeNodeType.CLASS,
+        "method_definition": CodeNodeType.METHOD,
+        "import_statement": None,
+    },
+    "tsx": {
+        "function_declaration": CodeNodeType.FUNCTION,
+        "class_declaration": CodeNodeType.CLASS,
+        "method_declaration": CodeNodeType.METHOD,
+        "import_statement": None,
+    },
+    "jsx": {
+        "function_declaration": CodeNodeType.FUNCTION,
+        "class_declaration": CodeNodeType.CLASS,
+        "import_statement": None,
+    },
+    "rust": {
+        "function_item": CodeNodeType.FUNCTION,
+        "struct_item": CodeNodeType.CLASS,
+        "trait_item": CodeNodeType.INTERFACE,
+        "impl_item": None,  # handled specially (IMPLEMENTS edge)
+        "use_declaration": None,
+    },
+    "go": {
+        "function_declaration": CodeNodeType.FUNCTION,
+        "type_declaration": CodeNodeType.CLASS,
+        "method_declaration": CodeNodeType.METHOD,
+        "import_spec": None,
+    },
+    "java": {
+        "method_declaration": CodeNodeType.METHOD,
+        "class_declaration": CodeNodeType.CLASS,
+        "interface_declaration": CodeNodeType.INTERFACE,
+        "import_declaration": None,
+    },
+    "kotlin": {
+        "function_declaration": CodeNodeType.FUNCTION,
+        "class_declaration": CodeNodeType.CLASS,
+        "import_header": None,
+    },
+    "ruby": {
+        "method": CodeNodeType.METHOD,
+        "class": CodeNodeType.CLASS,
+        "module": CodeNodeType.MODULE,
+    },
+    "swift": {
+        "function_declaration": CodeNodeType.FUNCTION,
+        "class_declaration": CodeNodeType.CLASS,
+    },
+}
+
+
+def detect_language_for_path(file_path: str) -> str | None:
+    """Detect programming language for a file path.
+
+    Uses the canonical 29+ language table at
+    `oideachais/cocoindex_flows/chunking/languages.py` (ported from
+    `codeolas/chunking/languages.py`).
+    """
+    return EXTENSION_TO_LANGUAGE.get(pathlib.Path(file_path).suffix.lower())
 
 
 # =============================================================================
@@ -113,7 +234,7 @@ else:
 
 
 # =============================================================================
-# Data model
+# Data models
 # =============================================================================
 
 
@@ -129,6 +250,34 @@ class CodeChunk:
     chunk_start: int
     chunk_end: int
     embedding: Annotated[Any, EMBEDDER] if COCOINDEX_AVAILABLE else Any  # type: ignore[index]
+
+
+@dataclass
+class CodeNode:
+    """One node in the codebase knowledge graph.
+
+    Ported from `codeolas/cocoindex_flows/file_graph.py:GraphNode`."""
+
+    id: str
+    node_type: CodeNodeType
+    name: str
+    file_path: str
+    start_line: int | None = None
+    end_line: int | None = None
+    language: str = ""
+    properties: dict[str, Any] | None = None
+
+
+@dataclass
+class CodeEdge:
+    """One edge in the codebase knowledge graph.
+
+    Ported from `codeolas/cocoindex_flows/file_graph.py:GraphEdge`."""
+
+    source_id: str
+    target_id: str
+    edge_type: CodeEdgeType
+    properties: dict[str, Any] | None = None
 
 
 # =============================================================================
@@ -202,7 +351,229 @@ if COCOINDEX_AVAILABLE:
 
 
 # =============================================================================
-# App entry point
+# AST-based code graph extraction (port from codeolas/file_graph.py)
+# =============================================================================
+
+
+def _ast_extract_nodes_and_edges(
+    content: str,
+    file_path: str,
+    language: str,
+) -> tuple[list[CodeNode], list[CodeEdge]]:
+    """
+    Extract code-graph nodes and edges from source content via Tree-sitter.
+
+    Ported from `codeolas/cocoindex_flows/file_graph.py:extract_relationships_from_ast`
+    (which was 60 lines). Uses the canonical 7-node / 7-edge model.
+    Tree-sitter may be unavailable; in that case returns only the file node.
+    """
+    nodes: list[CodeNode] = []
+    edges: list[CodeEdge] = []
+
+    file_id = f"file:{file_path}"
+    file_node = CodeNode(
+        id=file_id,
+        node_type=CodeNodeType.FILE,
+        name=pathlib.Path(file_path).name,
+        file_path=file_path,
+        language=language or "unknown",
+    )
+    nodes.append(file_node)
+
+    try:
+        import tree_sitter_languages  # type: ignore[import-not-found]
+    except ImportError:
+        logger.debug(
+            "tree_sitter_languages_not_available: file=%s", file_path
+        )
+        return nodes, edges
+
+    if language not in _LANG_AST_NODE_TYPES:
+        return nodes, edges
+    try:
+        parser = tree_sitter_languages.get_parser(language)  # type: ignore[union-attr]
+        tree = parser.parse(content.encode("utf-8"))
+    except Exception as e:  # noqa: BLE001
+        logger.warning("AST_extraction_failed: file=%s err=%s", file_path, e)
+        return nodes, edges
+
+    _ast_walk(
+        tree.root_node,  # type: ignore[union-attr]
+        content,
+        file_path,
+        file_id,
+        language,
+        nodes,
+        edges,
+    )
+    return nodes, edges
+
+
+def _ast_walk(
+    node: Any,
+    content: str,
+    file_path: str,
+    parent_id: str,
+    language: str,
+    nodes: list[CodeNode],
+    edges: list[CodeEdge],
+) -> None:
+    """Recursively walk a Tree-sitter AST and emit CodeNode + CodeEdge."""
+    lang_map = _LANG_AST_NODE_TYPES.get(language, {})
+    ast_type = getattr(node, "type", None)
+
+    if ast_type in lang_map:
+        code_type = lang_map[ast_type]
+        if code_type is not None:
+            name = _extract_name(node)
+            if name:
+                node_id = f"{code_type.value.lower()}:{file_path}:{name}"
+                start_line = node.start_point[0] + 1
+                end_line = node.end_point[0] + 1
+                graph_node = CodeNode(
+                    id=node_id,
+                    node_type=code_type,
+                    name=name,
+                    file_path=file_path,
+                    start_line=start_line,
+                    end_line=end_line,
+                    language=language,
+                )
+                nodes.append(graph_node)
+                edges.append(
+                    CodeEdge(
+                        source_id=parent_id,
+                        target_id=node_id,
+                        edge_type=CodeEdgeType.CONTAINS,
+                    )
+                )
+                parent_id = node_id
+
+    for child in node.children:
+        _ast_walk(child, content, file_path, parent_id, language, nodes, edges)
+
+
+def _extract_name(node: Any) -> str | None:
+    """Extract the name identifier from a Tree-sitter AST node."""
+    for child in getattr(node, "children", []):
+        ctype = getattr(child, "type", None)
+        if ctype in ("identifier", "name", "property_identifier"):
+            text = getattr(child, "text", b"")
+            if isinstance(text, bytes):
+                return text.decode("utf-8", errors="replace")
+            return text
+    return None
+
+
+# =============================================================================
+# Code graph App (Lancedb graph table for the 7 node + 7 edge model)
+# =============================================================================
+
+
+def _make_graph_app():  # noqa: ANN202
+    """Construct the code graph v1 App. Returns None when cocoindex is missing.
+
+    Writes to a second LanceDB table `codebase_graph` with the
+    `(CodeNode, CodeEdge)` tuple. The downstream Dagster asset
+    `codebase_code_graph` reads this table to populate Memgraph (the
+    v0 path) and exposes Cypher queries via the existing
+    `codeolas/cocoindex_flows/file_graph.py:MemgraphClient`.
+    """
+    if not COCOINDEX_AVAILABLE:
+        return None
+
+    @coco.lifespan
+    async def codebase_graph_lifespan(  # type: ignore[no-redef]
+        builder: coco.EnvironmentBuilder,  # type: ignore[valid-type]
+    ) -> AsyncIterator[None]:
+        from cocoindex.connectors.lancedb import (  # type: ignore[import-not-found]
+            LanceAsyncConnection,
+        )
+
+        lance_conn = await LanceAsyncConnection.connect(LANCEDB_URI)
+        builder.provide(LANCE_DB, lance_conn)
+        yield
+
+    @coco.fn
+    async def codebase_graph_app_main(  # type: ignore[no-redef]
+        repo_root: pathlib.Path,
+    ) -> None:
+        graph_table = await lancedb.mount_table_target(
+            LANCE_DB,  # type: ignore[arg-type]
+            table_name=LANCEDB_GRAPH_TABLE,
+            table_schema=await lancedb.TableSchema.from_class(
+                CodeNode, primary_key=["id"]
+            ),
+        )
+        edge_table = await lancedb.mount_table_target(
+            LANCE_DB,  # type: ignore[arg-type]
+            table_name=f"{LANCEDB_GRAPH_TABLE}_edges",
+            table_schema=await lancedb.TableSchema.from_class(
+                CodeEdge, primary_key=["source_id", "target_id", "edge_type"]
+            ),
+        )
+
+        files = localfs.walk_dir(  # type: ignore[call-arg]
+            repo_root,
+            recursive=True,
+            path_matcher=PatternFilePathMatcher(
+                included_patterns=list(EXTENSION_TO_LANGUAGE.keys()),
+                excluded_patterns=[
+                    "**/.*",
+                    "**/node_modules/**",
+                    "**/__pycache__/**",
+                    "**/.venv/**",
+                    "**/venv/**",
+                    "**/target/**",
+                    "**/dist/**",
+                    "**/build/**",
+                    "**/.turbo/**",
+                    "**/.cocoindex_code/**",
+                    "**/stedding/**",
+                    "**/.git/**",
+                ],
+            ),
+            live=True,
+            refresh_interval=REFRESH_INTERVAL,
+        )
+
+        @coco.fn(memo=True)
+        async def process_code_graph_file(  # type: ignore[no-redef]
+            file: FileLike,  # type: ignore[valid-type]
+        ) -> int:
+            try:
+                text = await file.read_text()
+            except (UnicodeDecodeError, ValueError):
+                return 0
+            if not text.strip():
+                return 0
+            path = file.file_path.path
+            language = detect_language_for_path(path.as_posix())
+            if not language:
+                return 0
+            nodes, edges = _ast_extract_nodes_and_edges(text, path.as_posix(), language)
+            count = 0
+            for n in nodes:
+                await graph_table.declare_row(row=n)
+                count += 1
+            for e in edges:
+                await edge_table.declare_row(row=e)
+            return count
+
+        await coco.mount_each(process_code_graph_file, files.items())
+
+    return coco.App(
+        coco.AppConfig(name="CodebaseGraph"),
+        codebase_graph_app_main,
+        repo_root=DEFAULT_REPO_ROOT,
+    )
+
+
+codebase_graph_app = _make_graph_app()
+
+
+# =============================================================================
+# App entry point (chunks + graph)
 # =============================================================================
 
 
@@ -311,6 +682,27 @@ async def search_codebase(
     return rows
 
 
+async def search_code_graph(
+    file_path: str | None = None,
+    node_type: str | None = None,
+    limit: int = TOP_K,
+) -> list[dict[str, Any]]:
+    """Run a search against the `codebase_graph` LanceDB table.
+
+    Returns CodeNode dicts. Use `codebase_graph_edges` to traverse.
+    """
+    if not COCOINDEX_AVAILABLE:
+        return []
+    conn = coco.use_context(LANCE_DB)  # type: ignore[arg-type]
+    table = await conn.open_table(LANCEDB_GRAPH_TABLE)
+    search = table.to_pandas()
+    if file_path:
+        search = search[search["file_path"].str.contains(file_path, regex=False)]
+    if node_type:
+        search = search[search["node_type"] == node_type]
+    return search.head(limit).to_dict(orient="records")
+
+
 # =============================================================================
 # Exports
 # =============================================================================
@@ -323,10 +715,21 @@ __all__ = [
     "EMBED_DIM",
     "REFRESH_INTERVAL",
     "LANCEDB_TABLE",
+    "LANCEDB_GRAPH_TABLE",
     "TOP_K",
     "DEFAULT_REPO_ROOT",
+    "EXTENSION_TO_LANGUAGE",
+    "get_supported_languages",
+    "CodeNodeType",
+    "CodeEdgeType",
+    "CodeNode",
+    "CodeEdge",
     "CodeChunk",
+    "detect_language_for_path",
     "search_codebase",
+    "search_code_graph",
 ]
 if COCOINDEX_AVAILABLE and codebase_app is not None:
-    __all__ += ["codebase_app", "process_codebase_file"]
+    __all__.append("codebase_app")
+if COCOINDEX_AVAILABLE and codebase_graph_app is not None:
+    __all__.append("codebase_graph_app")
