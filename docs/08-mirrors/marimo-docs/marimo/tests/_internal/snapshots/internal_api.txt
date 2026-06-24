@@ -1,3 +1,0 @@
-templates
-  render_notebook
-  render_static_notebook

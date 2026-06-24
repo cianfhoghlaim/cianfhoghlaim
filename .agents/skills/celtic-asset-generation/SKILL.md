@@ -385,3 +385,268 @@ for "how do other products solve this UI problem?".
 
 See `references/frontend-design-mining.md` for the full
 457-line design-mining architecture.
+
+## KCG AI/ML pipeline
+
+The 393-line reference for the **8,000+ pages of bilingual
+curriculum documents** processed by the Leaving Cert
+tutoring system, covering document understanding, model
+fine-tuning, and RAG.
+
+**5-tool OCR/VLM comparison** (the document processing
+backbone):
+
+| Tool | LaTeX | Diagrams | Tables | Irish | Size |
+|:--|:--|:--|:--|:--|:--|
+| DeepSeek-OCR | Excellent (95%) | Good | Very Good | Unconfirmed | 3B |
+| Qwen2.5-VL | Very Good | Excellent | Excellent | Likely (European) | 2B-235B |
+| Qwen3-VL | Very Good | Excellent | Excellent | Native (119 langs) | Various |
+| Granite-Docling | Good | Good | Excellent | Experimental | 258M |
+| ColPali | N/A (retrieval) | Excellent | Good (visual) | Visual-based | 3B |
+
+The **recommended pipeline** routes by content type:
+text/equations → DeepSeek-OCR → LaTeX extraction;
+diagrams → ColPali → visual embeddings; tables →
+Granite-Docling → structured extraction; then BAML
+structured extraction → metadata + JSON.
+
+**DeepSeek-OCR capabilities** (the workhorse): 95%
+formula recognition, vision-as-compression (600-1000+
+text tokens from 64-100 vision tokens), ~2,500 tokens/sec
+on A100 (~200,000 pages/day), MIT licensed (3B
+parameters).
+
+**ColPali** is the revolutionary visual retrieval
+approach: multi-vector embeddings directly from page
+images, PaliGemma-3B + ColBERT late-interaction, **0.81
+nDCG@5** vs 0.66 for traditional pipelines, ideal for
+geometry diagrams in exam papers.
+
+**Fine-tuning strategy** uses **Qwen2.5-Math-7B-Instruct**
+as the base (85.3% on MATH, 21/30 AIME, native Irish
+support), trained via **Unsloth** (2x faster, 70% less
+VRAM, 7-8B with QLoRA 4-bit = ~6-7GB VRAM, achievable on
+RTX 3060+). Critical hyperparameters: LoRA rank 64-128
+(math), 1e-5 to 5e-5 learning rate, 4096+ token sequences.
+
+**Irish language integration** addresses the 20%
+performance gap: **UCCIX-Llama2-13B-Instruct** (trained
+on ~520M Irish tokens, +12% over LLaMA 2-70B on Irish
+tasks), **UCCIX-Llama3.1-70B-Instruct** (Dec 2024, latest
+architecture), **GaBERT** (DCU-NLP, +3.7 LAS on dependency
+parsing from 7.9M Irish sentences). Recommended:
+Qwen2.5-Math-7B as base + UCCIX tokenizer additions +
+bilingual training examples + Irish-BLiMP validation
+(1,020 minimal pairs) + UCCIX fallback for Irish-only.
+
+**RAG architecture** uses **BGE-M3** as the primary
+embedding (3 retrieval modes, 100+ languages, 8,192 token
+context, outperforms BM25) with **LaBSE** as the Irish
+supplement (109 languages including Irish). **Hybrid
+retrieval** combines BGE-M3 dense + sparse, ColPali
+visual page embeddings, and payload filtering (year,
+topic, language). **ColQwen2.5-v0.2** (Qwen2.5-VL-3B) for
+29+ language visual retrieval, eliminating OCR errors
+for equation-heavy pages. **Qdrant** as the vector DB
+(advanced payload filtering, native multi-vector, highest
+RPS). **Semantic double-pass merging** for math
+chunking (1st pass standard, 2nd pass merges similar
+chunks around equations that differ).
+
+**BAML schema enforcement** is the type-safe extraction
+contract: `MathQuestion` class with `number`, `text`,
+`text_irish`, `marks`, `topic` (Algebra/Geometry/
+Calculus/Statistics), `marking_criteria`, `requires_diagram`.
+The `ExtractExamPaper` function uses `anthropic/claude-sonnet-4-20250514`
+with compile-time-verified schemas.
+
+**Deployment** uses **Modal serverless** (recommended)
+with T4 ($0.59/hr, dev/test), L4 ($0.80/hr, 7B quantized),
+A10 ($1.10/hr, 7B-13B prod), A100 40GB ($2.10/hr, 13B-70B).
+Cold start <1s, per-second billing, scale-to-zero,
+direct Unsloth export to GGUF/vLLM. **vLLM with
+PagedAttention** for 2-4x throughput, semantic cache for
+50-90% GPU cost reduction. Latency targets: TTFT <2s,
+20-50 t/s minimum, always streaming.
+
+**Evaluation** uses **IRLBench** (reveals 20% English-Irish
+gap, best models 55.8% Irish vs 76.2% English) and
+**Irish-BLiMP** (1,020 minimal pairs for grammaticality).
+MLflow + Ragas integration for experiment tracking.
+
+**Rapid prototyping roadmap**: Days 1-3 (BAML + PyMuPDF4LLM
++ ChromaDB + Streamlit single-paper demo), Week 1
+(LlamaIndex + topic-filtered retrieval), Week 2 (ColPali
++ Unsloth fine-tuning), Weeks 3-4 (Modal deploy + caching
++ IRLBench eval).
+
+**MVP cost**: $100-300/month on Modal (compute $100-200,
+Qdrant $25, storage $10-20, BAML API $50-100).
+
+See `references/ai-ml-pipeline/AI_ML_PIPELINE.md` for the
+full 393-line reference: the OCR tool comparison, the
+recommended pipeline architecture, the 3-section
+fine-tuning strategy (base model + Unsloth + training
+format), the Irish language integration, the RAG
+architecture (BGE-M3 + ColPali + Qdrant), the BAML
+schema enforcement, the Modal deployment architecture,
+the IRLBench + Irish-BLiMP evaluation, the complete
+architecture diagram, the 4-week rapid prototyping
+roadmap, and the cost analysis.
+
+## KCG critical constraints
+
+The 336-line consolidated project standards, constraints,
+and specifications, with 5 CRITICAL/HIGH-severity rules
+that all data platform code MUST respect.
+
+**Database Safety (CRITICAL/HIGH)**:
+
+| Constraint | Severity | Rule |
+|:--|:--|:--|
+| **DuckDB SINGLE_THREADED** | CRITICAL | All operations through `SerialDatabaseExecutor` |
+| **LanceDB MVCC safe** | HIGH | Within process: single-threaded; Between processes: MVCC + conflict resolution |
+| **NEVER concurrent DB ops** | CRITICAL | Parsing parallelized, storage single-threaded |
+
+**Violation causes**: Segfault, data corruption, "database
+is locked", inconsistent queries. The fix is
+`SerialDatabaseExecutor` (a `ThreadPoolExecutor` with
+`max_workers=1` that submits via `future.result()`).
+
+**Embedding Performance (CRITICAL/HIGH)**:
+
+| Constraint | Severity | Rule |
+|:--|:--|:--|
+| **Batching MANDATORY** | CRITICAL | Minimum 100 texts per API call (100x faster) |
+| **HNSW index management** | HIGH | Drop before bulk inserts >50 rows; Recreate after |
+| **Minimum batch size** | CRITICAL | 100 embeddings per API call |
+
+The batch-vs-unbatched numbers: 1,000 texts unbatched =
+100s, batched = 1s (100x gain), 10 API calls vs 1,000
+(rate-limit friendly).
+
+**BAML Schema Validation (MEDIUM)**: `SCHEMA_VALIDATION_REQUIRED`
+before all LLM extraction calls, type-safe extraction
+for all curriculum documents, test schemas first in
+`baml_src/` before production use.
+
+**Irish Language Processing (HIGH)**: `SPECIALIZED_REQUIRED`
+— use UCCIX or GaBERT (20% accuracy gap with generic
+models). Model priority: (1) UCCIX-Llama2-13B-Instruct
+(+12% over LLaMA 2-70B on Irish), (2) GaBERT (Irish
+embeddings), (3) Qwen2.5-Math-7B (native multilingual).
+
+**5 hard modification rules**: NEVER remove
+`SerialDatabaseProvider` wrapper, NEVER add concurrent DB
+ops, NEVER skip BAML schema validation, NEVER process
+embeddings without batching; ALWAYS check existing skills
+before implementing features, ALWAYS use uv for Python,
+ALWAYS batch embeddings (min 100), ALWAYS drop HNSW
+indexes for bulk >50 rows.
+
+**6-item constraint checklist** (before any data op):
+SerialDatabaseExecutor for DuckDB? Batch size >= 100?
+HNSW dropped for >50 rows? BAML validated? Irish content
+on specialized models? Deduplication on multi-result
+queries?
+
+**3 error-recovery procedures**: (1) Database corruption:
+stop, restore from backup, verify single-threaded, restart;
+(2) Embedding timeout: reduce batch to 50, exponential
+backoff, check rate limits, consider local model; (3)
+Index rebuild failure: drop all indexes, vacuum,
+recreate one at a time, monitor memory.
+
+**Performance thresholds**: embedding batch <100 → increase
+batch size; DB ops/sec >10 → check for concurrent access;
+index rebuild >60s → pre-drop; OCR per page >5s → check
+model; memory per process >4GB → review batch sizes.
+
+**Naming conventions**: capabilities kebab-case
+(`curriculum-ingestion`), changes prefixed with action
+(`add-`, `update-`, `remove-`, `refactor-`), Dagster
+assets lowercase with underscores and noun-based
+(`daily_active_users`), Irish names for core concepts
+(`sruth` = flow, `bonneagar` = infrastructure), bilingual
+support in all user-facing content.
+
+See `references/critical-constraints/project-conventions.md`
+for the full 336-line reference: the project identity +
+capability areas, the naming conventions + requirement
+language (SHALL/SHOULD/MAY), the 3 database safety rules
+with code, the 3 embedding performance rules with code
++ numbers, the BAML schema validation with `MarkingPoint`
+example, the Irish language processing model priority +
+dialect table (Connacht/Munster/Ulster/Standard), the 5
+performance thresholds, the directory map
+(`sruth/`/`bonneagar/`/`agents/`/`baml_src/`/`.agents/skills/`),
+the 6-item checklist, the 5 modification rules, the 3
+error-recovery procedures, and the Oideachais Pipeline
+Spec requirements.
+
+## KCG docs taxonomy
+
+The post-round-1 master routing index — **1,834 source
+files consolidated into 7 canonical domains + 1
+deploy-plans directory**, every canonical carrying
+Cognee-clean frontmatter (`entities`, `related_skills`,
+`ccc_query_hints`, `supersedes`).
+
+**5 quadrants × 8 workspace members**:
+
+| Path | Quadrant | Purpose | uv workspace |
+|:--|:--|:--|:--|
+| `oideachais/` | **Data lakehouse** | Dagster + DLT + DuckLake + LanceDB + Cognee + CocoIndex | member |
+| `tuatha/` | **Celtic MMO consumer** | FastAPI + Axum + Babylon.js + Crypteolas + x402 | member (+ 3 sub) |
+| `croilar/` | **Multi-persona portfolio** | TanStack + Hono + Convex + BetterAuth | member |
+| `meaisínfhoghlaim/` | **AI/ML quadrant** | agents, OCR, Celtic language data, ML pipelines | member (adopted 2026-06-13) |
+| `infrastructure/` | **Deploy** | Pangolin, Komodo, Forgejo, Infisical, Ansible, Pulumi | member (+ 1 sub) |
+
+**The "I want to…, where do I go?" routing table** spans
+~35 rows: project identity → `00-core/CLAUDE.md`;
+constraints → `00-core/CONSTRAINTS.md`; Docker stack →
+`infrastructure/AGENTS.md`; secrets → `infrastructure/SECRETS-MANAGEMENT.md`;
+container audit → `infrastructure/audit/`; 6-step deploy
+playbook → `infrastructure/DEPLOYMENT-STRATEGY.md`;
+quadrant-to-stack map → `infrastructure/QUADRANT-TO-STACK-MAP.md`;
+live health report → `infrastructure/stacks/HEALTH_REPORT.md`;
+Komodo GitOps → `infrastructure/komodo/`; Pangolin →
+`infrastructure/PANGOLIN-SETUP.md`; data lakehouse →
+`02-data-platform/data-architecture.md`; DuckLake mental
+model → `storage-mental-model.md`; cross-domain registry
+→ `cross-domain-registry.md`; Dagster →
+`dagster-orchestration.md`; DLT → `dlt-pipelines.md`;
+LLM stack → `04-ai-ml/llm-stack-hierarchy.md`; OCR →
+`oideachais/ocr/`; RAG eval → `04-ai-ml/rag-evaluation.md`;
+browser/agent → `03-agents/browser-automation.md`; MCP
+server → `03-agents/mcp-servers.md`; Celtic language AI
+→ `05-celtic-language/`; Convex+Hono → `05-web/convex-hono-auth.md`;
+UI components → `05-web/ui-components.md`; front-end
+topology → `05-web/frontend-topology.md`; Celtic MMO →
+`06-product/celtic-mmo.md`; crypto → `06-product/crypteolas.md`;
+game dev → `06-product/game-development.md`; educational
+platform → `06-product/educational-platform.md`;
+conventions → `07-standards/project-conventions.md`;
+observability → `07-standards/observability-patterns.md`;
+deferred roadmaps → `00-deploy-plans/STATUS.md`.
+
+**7 domains + 1 deploy-plans dir** (the post-2026-06-13
+canonical tree): `00-core/` (3 active), `01-platform-architecture/`,
+`02-data-platform/`, `03-agents/`, `04-ai-ml/`,
+`05-celtic-language/`, `05-web/`, `06-product/`,
+`07-standards/`, plus `00-deploy-plans/`.
+
+**2 reference flavours** of the master index:
+- `references/00-master-docs-index.md` (229 lines, the
+  HEAD `docs/00_index.md` content — the round-1
+  pre-cleanup version with the 8 subtrees + 9 manual
+  `INDEX.md` files + the 12 `supersedes` chains)
+- `references/docs-taxonomy/00_index.md` (250 lines, the
+  post-2026-06-13 post-cleanup version with the
+  7-domain taxonomy + the 5-quadrant map + the
+  per-domain counts)
+
+See `references/00-master-docs-index.md` for the 229-line
+HEAD version, and `references/docs-taxonomy/00_index.md`
+for the 250-line post-cleanup version. Both are
+`status: stable` with `domain: standards` frontmatter.

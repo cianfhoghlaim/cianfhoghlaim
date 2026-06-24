@@ -285,3 +285,171 @@ re-renders the right component.
 - `oideachais/web/`, `croilar/apps/web/`,
   `croilar/apps/portal/`, `tuatha/ui/` — the 4 canonical
   surfaces.
+
+## MCP protocol
+
+The **Model Context Protocol (MCP)** is the open-source
+standard (Anthropic, 2024-11-18) that connects AI
+applications to external systems — "USB-C for AI". Built on
+**JSON-RPC 2.0**, transport-agnostic (stdio, HTTP, SSE,
+WebSocket, in-memory), and supported by Anthropic, OpenAI,
+DeepMind, and Microsoft.
+
+**3-component architecture**:
+
+```
+┌─────────────┐   ┌─────────────┐   ┌─────────────┐
+│   MCP Host  │ ◄►│ MCP Client  │ ◄►│ MCP Server  │
+│  (Claude)   │   │             │   │  (Tools)    │
+└─────────────┘   └─────────────┘   └─────────────┘
+```
+
+**4 core primitives**: **Resources** (read-only data,
+URI-referenced like `@github:issue://123`), **Tools**
+(executable functions via `tools/call`), **Prompts**
+(discoverable instruction templates, executable as slash
+commands), **Sampling** (servers can request LLM completions
+— enables agentic + nested LLM calls).
+
+**6 protocol layers**: Base Protocol (JSON-RPC 2.0),
+Lifecycle Management, Authorization (OAuth 2.1 + PKCE for
+HTTP transports), Server Features, Client Features,
+Utilities. Connection lifecycle: Transport Connection →
+Capability Negotiation → Feature Discovery → Active Session
+→ Shutdown.
+
+**Transport recommendation**: **HTTP for production**
+(remote cloud services); stdio for local processes
+(desktop apps, CLI tools); SSE is deprecated; WebSocket
+for bidirectional real-time; in-memory for testing.
+
+**MCP + AG-UI relationship**: MCP is the **agent↔tool**
+protocol; AG-UI is the **agent↔UI** protocol. They
+complement — an agent reads tools via MCP and streams
+state to the UI via AG-UI events.
+
+The comprehensive 1,111-line research (compiled 2025-11-18
+against the 2025-06-18 spec) covers 10 parts: fundamentals,
+integration patterns, server implementations, MCP-UI,
+security, SIWE, ecosystem, Firecrawl, common patterns,
+real-world use cases, OWASP alignment, performance, SDKs
+(Python + TypeScript + FastMCP), future outlook, resources.
+
+See `references/mcp/MCP.md` for the full 1,111-line
+reference: 10 parts (Part I-X), the JSON-RPC 2.0 message
+framework, the 4-primitive + 6-layer model, the transport
+selection matrix, the Claude Code integration patterns,
+the FastMCP Python SDK, the TypeScript SDK, the MCP-UI
+protocol (the UI↔agent companion to MCP), the x402 MCP
+payment extension, the Better Auth + SIWE integration, the
+OWASP-aligned security checklist, and the Dagger MCP
+workflow.
+
+## MCP servers
+
+The **9 MCP servers** wired in `opencode.json` for the
+KCG agent layer (cognition, code search, tracing, web
+scraping, browser automation, SQL analytics, secret
+management):
+
+| Server | Port | MCP package | Agent tools |
+|:--|:--|:--|:--|
+| `cocoindex-code` | — | `ccc mcp` | `cocoindex-code_search(query, limit, languages, paths)` |
+| `cognee` | 8100 | `cognee-mcp` | `cognee_add`, `cognee_cognify`, `cognee_search` |
+| `graphiti` | 8000 | `graphiti_core.mcp` | `graphiti_search`, `graphiti_get_node`, `graphiti_get_edges` |
+| `langfuse` | — | `@langfuse/mcp` | `langfuse_get_trace`, `langfuse_get_traces`, `langfuse_get_prompt` |
+| `motherduck` | — | `mcp-server-motherduck` | `motherduck_execute_query`, `motherduck_list_tables` |
+| `firecrawl` | — | `firecrawl-mcp` | `firecrawl_scrape`, `firecrawl_search`, `firecrawl_crawl`, `firecrawl_map` |
+| `browserbase` | — | `@browserbasehq/mcp` | `browserbase_navigate`, `browserbase_act`, `browserbase_extract`, `browserbase_observe` |
+| `chrome` | — | `chrome-devtools-mcp` | `chrome_navigate_page`, `chrome_take_screenshot`, `chrome_take_snapshot` |
+| `infisical` | 8081 | `@infisical/mcp` | `infisical_get_secret`, `infisical_list_secrets`, `infisical_create_secret` |
+
+**MCP activation flow**: opencode starts → reads
+`opencode.json` → for each `"enabled": true` server →
+resolves `infisical://dev-baile/...` URI refs →
+auto-installs package (bunx/uvx) → starts subprocess →
+registers tools. All sensitive config uses the
+`infisical://dev-baile/...` pattern — never plain secrets
+on disk; mise directory hooks hydrate `INFISICAL_CLIENT_ID`,
+`INFISICAL_CLIENT_SECRET`, `INFISICAL_PROJECT_ID` from
+`.env`.
+
+**5-step procedure to add a new MCP server**:
+(1) add the block to `opencode.json` under `"mcp"`,
+(2) add secrets to Infisical vault,
+(3) add the Infisical reference to `.infisical.env`,
+(4) run `bun run secrets:init` to hydrate,
+(5) restart opencode to pick up the new server.
+
+The 670-line canonical reference (`mcp-servers.md`,
+cleaner version selected over the 1,111-line
+`MCP_COMPREHENSIVE_RESEARCH.md` per the round-10 merge
+map) consolidates 13 source files. It includes the
+Python FastMCP SDK, the TypeScript SDK, the Claude Code
+integration, OAuth 2.1 + x402 + SIWE authentication,
+MCP-UI/Gradio/Evidence integration, and security best
+practices.
+
+See `references/mcp-servers/mcp-servers.md` for the full
+670-line reference: the protocol fundamentals, the
+3-component architecture, the Python FastMCP server
+example, the TypeScript SDK usage, the Claude Code
+transport wiring, the OAuth 2.1 + x402 + SIWE
+authentication, the MCP-UI Gradio + Evidence integration,
+the 12 superseded sources, and the 9 entity types.
+
+## Agent framework index
+
+The canonical 4-file index for agent-related
+documentation in the Cianfhoghlaim monorepo, after
+rounds 1-9 consolidated 36 source files from the legacy
+`docs/agents/` subtree into 4 canonical files:
+
+| Canonical file | Covers |
+|:--|:--|
+| `agent-frameworks.md` | Agno (AgentOS, A2A, Teams), Google ADK (Sequential, Loop, Parallel, Coordinator), CopilotKit (useCopilotAction, useCoAgent, AG-UI), Convex (Agent component, MCP server), Pydantic AI (AG-UI, Gateway, Logfire), durable execution (Restate/DBOS), A2UI, Irish Education Platform blueprint |
+| `browser-automation.md` | Browserbase (CDP, stealth, proxies), Stagehand V3 (act, extract, observe, agent), Firecrawl (agent API, MCP tools), Smolagents + Firecrawl deep research, CDP screenshot capture, multi-agent scraping pipelines |
+| `baml-extraction.md` | BAML fundamentals, Irish education schemas (Primary/Junior/Senior Cycle), DuckDB/Dragonfly integration, dynamic TypeBuilder, self-healing pipelines (Cognee → BAML generation) |
+| `mcp-servers.md` | MCP protocol specification, Python/TypeScript SDKs, Claude Code integration, x402 payments, Better Auth, MCP-UI/Gradio/Evidence, security best practices |
+
+**Entity map** (4 top-level entities, 17 children):
+
+```
+AgentFramework ──┬── Agno (AgentOS, A2A, Teams)
+                 ├── Google ADK (Sequential, Loop, Parallel, Coordinator)
+                 ├── CopilotKit (useCopilotAction, useCoAgent, AG-UI)
+                 ├── Convex (Agent component, MCP server)
+                 ├── Pydantic AI (AG-UI, Gateway, Logfire)
+                 └── DurableExecution (Restate, DBOS)
+
+BrowserAutomation ──┬── Browserbase (CDP, stealth, proxies)
+                    ├── Stagehand V3 (act, extract, observe, agent)
+                    └── Firecrawl (agent API, MCP tools)
+
+BAMLSchema ──┬── IrishEducation (Primary, Junior Cycle, Senior Cycle)
+             ├── DynamicTypeBuilder (runtime schema generation)
+             └── SelfHealingPipeline (Cognee → BAML generation)
+
+MCPServer ──┬── Protocol (JSON-RPC 2.0, transports, auth)
+            ├── Integrations (Claude, Agno, Dagger, x402)
+            └── UI (MCP-UI, Gradio, Evidence, MCP Apps)
+```
+
+**8 related agent skills** (the routing layer for any
+"which skill should I load?" question): `agno` (Agno
+agent dev), `google-adk` (ADK agent dev), `copilotkit` (UI
+integration), `browser` (Browserbase interactive browsing),
+`firecrawl` (scraping + crawling), `mcp-builder` (MCP
+server creation), `dagster` (orchestration),
+`dignified-python` (Python engineering standards).
+
+The frontmatter declares `truth: partial` — this is the
+**consolidated canonical** but the per-tool deep dives
+still live in the skill bodies (this skill, mcp-builder,
+baml, etc.).
+
+See `references/agent-frameworks/README.md` for the full
+84-line canonical index: the 4-file table, the entity map
+(4 entities, 17 children), the 8 related-skills routing
+table, and the migration note that all 36 original files
+were archived to `docs/archive/2026-06-06-agents/`.

@@ -439,6 +439,191 @@ await cognee.prune.prune_data()
 - Use `await cognee.prune.prune_data()`
 - Process in batches
 
+## KCG Quick Start
+
+The Cianfhoghlaim deployment of Cognee is a **Docker container on port 8100**, using **DeepSeek V4 Pro** (via the OpenAI-compatible API), **Neo4j** for the graph backend, and **LanceDB** for vector storage:
+
+```bash
+# 1. Start the cognition infrastructure (Neo4j, Graphiti, FalkorDB)
+cd infrastructure/stacks/graphiti && docker compose up neo4j -d
+cd ../falkordb && docker compose up -d
+
+# 2. Start Cognee with DeepSeek API key (from Infisical)
+cd ../cognee
+DEEPSEEK_API_KEY="$DEEPSEEK_API_KEY" docker compose up -d
+sleep 10
+curl -s http://localhost:8100/docs | head -5  # Swagger HTML
+
+# 3. Index the codebase
+bun run ccc:index
+
+# 4. Cognify the docs (6 datasets, ~$6 total on DeepSeek V4 Pro)
+for ds in docs-agents docs-bonneagar docs-data-eng docs-ml docs-web docs-context; do
+  curl -X POST http://localhost:8100/api/v1/cognify \
+    -H "Content-Type: application/json" \
+    -d "{\"datasets\": [\"$ds\"]}"
+done
+```
+
+The **8 MCP servers** wired in `opencode.json` give every agent
+read access to the cognition stack: `cognee`, `cocoindex-code`,
+`graphiti`, `langfuse`, `firecrawl`, `browserbase`, `chrome`,
+`motherduck`, `infisical`.
+
+See `references/cognee-readme.md` (the 80-line
+`docs/01-cognee/README.md` index) for the full quick-start
+table, the per-file purpose list, and the MCP server inventory.
+
+## KCG Architecture Diagram
+
+The 8-stack cognition pipeline that turns `docs/` into a
+queryable knowledge graph, accessible to agents via MCP and
+applications via REST:
+
+```
+.md documentation  ──────▶  Cognee (port 8100, DeepSeek V4 Pro)
+docs/agents/                       │ ingest + KG
+docs/bonneagar/                    │
+docs/data_engineering/             ▼
+                              Neo4j (KG) + LanceDB (vectors)
+                                   │
+                       ┌───────────┼────────────┐
+                       ▼           ▼            ▼
+                  Graphiti    FalkorDB     Langfuse
+                (temporal KG)  (hybrid)    (traces @ :3000)
+                  @ :8000      @ :6379
+                       │           │            │
+                       └───────────┼────────────┘
+                                   ▼
+                    CCC ◀────  Lakehouse  ────▶  LakeFS
+                  (.cocoindex)  (Garage S3)      (versioning)
+                                Iceberg + Lance
+                                   │
+                                   ▼
+                           Dozzle + Beszel
+                          (logs + metrics)
+```
+
+Each component owns a clear surface: Cognee ingests + extracts
+entities; Graphiti adds bi-temporal metadata; FalkorDB does
+sub-millisecond hybrid (Cypher + HNSW); Langfuse captures cost
++ latency for every LLM call; CCC indexes the codebase;
+Lakehouse is the single Parquet/Lance/Iceberg namespace;
+LakeFS branches datasets for experiments; Dozzle + Beszel
+monitor.
+
+See `references/architecture/ARCHITECTURE.md` for the full
+component-role table, the end-to-end data flow, and the
+agent-access matrix.
+
+## KCG Docker Stack
+
+The KCG Cognee container runs `cognee/cognee:latest`
+(v1.1.2) on **port 8100** with the following
+`compose.yaml` shape:
+
+```yaml
+services:
+  cognee:
+    image: cognee/cognee:latest
+    ports: ["8100:8000"]
+    environment:
+      LLM_API_KEY: ${DEEPSEEK_API_KEY}      # hydrated from Infisical
+      LLM_PROVIDER: openai                  # DeepSeek is OpenAI-compatible
+      LLM_MODEL: deepseek-chat              # DeepSeek V4 Pro
+      LLM_ENDPOINT: https://api.deepseek.com/v1
+      EMBEDDING_PROVIDER: openai
+      EMBEDDING_MODEL: text-embedding-3-small
+      GRAPH_DATABASE_PROVIDER: neo4j
+      GRAPH_DATABASE_URL: bolt://host.docker.internal:7687
+      VECTOR_DATABASE_PROVIDER: lancedb
+```
+
+The 8 API endpoints (`/api/v1/{add,cognify,search,auth/...}`)
+accept multipart form uploads for batch ingestion. The MCP
+server is `cognee-mcp` in `opencode.json`, exposing
+`cognee_search` to every agent.
+
+Common failure modes: `LLMAPIKeyNotSetError` (check
+`DEEPSEEK_API_KEY`); `RateLimitError` (reduce concurrent
+cognify batches); search returns no results (re-run
+`cognify()` after `add()`).
+
+See `references/docker/COGNEE_SETUP.md` for the full 190-line
+setup guide, the Docker Compose configuration, the API
+endpoint reference, the ingestion patterns (HTTP + Python),
+and the troubleshooting matrix.
+
+## KCG Per-Cluster Cognify Model
+
+The `cognee_readiness_audit` (517 lines, the
+round-1 audit) recommended **per-cluster cognify** over a
+single flat graph, to avoid entity-namespace collisions
+(e.g. `Token` = crypto in `bonneagar/` vs LLM in
+`meaisínfhoghlaim/`) and to enable incremental updates.
+
+The **7 typed clusters** + their `graph_model_file` Python
+modules:
+
+| Cluster | Dataset | Graph model | Core entities |
+|:--|:--|:--|:--|
+| Data Platform | `docs-data-eng` | `data_platform_graph.py` | DagsterAsset, DltPipeline, LakehouseTable, CocoIndexFlow, LanceDBIndex, SqlMeshModel |
+| Infrastructure | `docs-bonneagar` | `infrastructure_graph.py` | KomodoStack, PangolinTunnel, DaggerPipeline, PulumiResource, AnsibleRole |
+| Agents & MCP | `docs-agents` | `agents_graph.py` | McpServer, AgentTool, LlmAgent, BamlSchema, BrowserSession |
+| ML & AI | `docs-ml` | `ml_graph.py` | FineTunedModel, TrainingDataset, MlflowExperiment, UnslothConfig, LanceDBCollection |
+| Celtic Language | `docs-teanga` | `celtic_language_graph.py` | LanguageDataset, HuggingFaceModel, GaeltachtBoundary, CensusTable |
+| Web & Frontend | `docs-web` | `web_graph.py` | TanStackRoute, ConvexQuery, BetterAuthProvider, EffectService |
+| Tuatha MMO | `docs-tuatha` | `tuatha_graph.py` | GameAsset, SpacetimeDBTable, X402Payment, NpcCharacter |
+
+A federated search layer queries all 7 datasets and re-ranks
+merged results by score. Total estimated cognify cost: **~$6
+for 2,242 documents on DeepSeek V4 Pro**.
+
+The **5 rules of cognify-clean docs** (entity density 15+ per
+100 words, relationship verbs, section boundaries, tables for
+entity catalogs, no redirect stubs) are the audit's scoring
+rubric; ~80% of `docs/` is A-grade on the rubric.
+
+See `references/cluster-model/cognee_readiness_audit.md` for
+the full 517-line audit: the per-subtree scoring (8 subtrees ×
+4 sample files), the entity-density rubric, the
+BEFORE/AFTER cognify-clean rewrite example, the
+`data_platform_graph.py` template with 7 entity classes + 12
+relationship types, and the single-vs-per-cluster
+recommendation rationale.
+
+## Supporting Infrastructure
+
+The 4 supporting stacks the cognition pipeline depends on
+(Lakehouse, LakeFS, Dozzle, Beszel), with their roles and
+KCG-specific ports:
+
+| Stack | Stack path | Port | Role in cognition pipeline |
+|:--|:--|:--|:--|
+| **Lakehouse** | `infrastructure/stacks/lakehouse/` | 3900-3904 (Garage S3), 8181 (Lakekeeper), 8182 (Lance Namespace) | Single Parquet + Lance + Iceberg namespace; ACID transactions between Dagster writes (cognify) and app reads (GraphRAG) |
+| **LakeFS** | `infrastructure/stacks/lakefs/` | 8000 | Git-like versioning of cognition data; `main` (production) + `experiment/cognee-v1.1` + `2023-reform` branches |
+| **Dozzle** | `infrastructure/stacks/dozzle/` | 8080 | Real-time container logs (cognee, graphiti-neo4j-1, falkordb, langfuse-*) |
+| **Beszel** | `infrastructure/stacks/beszel/` | 8090 | Host metrics across `cax41-hetzner` (32 GB), `arm1-oci` (24 GB), `bunchloch` (48 GB unified) |
+
+The **Iceberg time-travel** capability (via Lakekeeper) lets
+you query "what was in Cognee's KG after last month's cognify
+run?". The **LakeFS branch + merge** flow enables experiment
+isolation: test a new Cognee model on a branch, validate
+extraction quality, merge to production.
+
+A single combined health check (`cognee`, `Neo4j`, `FalkorDB`,
+`Garage`, `LakeFS`, `Dozzle`, `Beszel`, `CCC` index) lives in
+the reference; recommended alerts: `bunchloch_memory > 40 GB`
+(reduce concurrent cognify batches), `hetzner_disk > 80%`
+(LanceDB indexes growing), `arm1_cpu > 90% sustained 5min`
+(S3 writes saturating).
+
+See `references/infrastructure/INFRASTRUCTURE.md` for the
+full 176-line reference: per-stack deployment commands, the
+LakeFS branch/merge workflow, the Dozzle key log patterns
+(ingestion progress, cognify status, LLM API errors), the
+Beszel alert matrix, and the combined health-check script.
+
 ## Resources
 
 - **Documentation**: https://docs.cognee.ai
