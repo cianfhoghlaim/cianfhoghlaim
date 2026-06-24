@@ -1,27 +1,20 @@
-"""oideachais.core — stub for legacy imports.
+"""oideachais.core — DEPRECATED backward-compat re-export shim.
 
-The constants/functions in this module are actually defined in
-`data_platform.dlt_utils.batching` and `data_platform.dlt_utils.safety`.
-This stub provides inline definitions so the broken
-`from oideachais.core import X` imports scattered through the codebase
-still resolve.
+The constants and functions previously defined here have been moved to
+their canonical locations:
 
-Per AGENTS.md, new code MUST use relative imports
-(`from ...dlt_utils import batching`).
+- `HNSW_DROP_THRESHOLD` → `oideachais.dlt_utils.batching.HNSW_DROP_THRESHOLD`
+- `MIN_EMBEDDING_BATCH_SIZE` → `oideachais.dlt_utils.batching.MIN_EMBEDDING_BATCH_SIZE`
+- `get_executor()` → `oideachais.dlt_utils.safety.get_executor()`
 
-NOTE: This module is a migration shim. The real definitions live in
-`data_platform/dlt_utils/`.
+This shim re-exports them so any in-flight
+`from oideachais.core import X` imports continue to work for one
+release. New code MUST import directly from `oideachais.dlt_utils`.
+
+Reference: openspec/changes/fix-broken-imports-and-baml
 """
 
-# Inline values mirror `data_platform.dlt_utils.batching`.
-HNSW_DROP_THRESHOLD: int = 50
-MIN_EMBEDDING_BATCH_SIZE: int = 100
+from oideachais.dlt_utils.batching import HNSW_DROP_THRESHOLD, MIN_EMBEDDING_BATCH_SIZE
+from oideachais.dlt_utils.safety import get_executor
 
-
-def get_executor(name: str = "duckdb"):
-    """Stub — the real implementation lives in
-    `data_platform.dlt_utils.safety.get_executor()`.
-    """
-    from concurrent.futures import ThreadPoolExecutor
-
-    return ThreadPoolExecutor(max_workers=1, thread_name_prefix=f"{name}_serial")
+__all__ = ["HNSW_DROP_THRESHOLD", "MIN_EMBEDDING_BATCH_SIZE", "get_executor"]
