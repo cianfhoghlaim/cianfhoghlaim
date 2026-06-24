@@ -2,13 +2,18 @@
 spaces/anam_tuatha/mac_leinn.py
 Mac Leinn feature: Formative Assessment Exit Cards.
 
-Uses the BAML GenerateExitCardQuestions function (in
-spaces/_common/baml/hackathon_schemas.baml) via the 3-tier HF
-Inference fallback to generate a 3-minute end-of-lesson check.
+Modernized 2026-06-24 (C4 of the spaces alignment plan):
+- Routes through the canonical KCG LiteLLM gateway
+  (spaces/_common/baml_client.py) instead of raw HF Inference
+- Validates the response against the Pydantic schema
+  (mirrors the canonical tuatha/baml_src/player_assessment.baml)
+- Falls back to the hand-curated template bank if the LiteLLM
+  gateway is unreachable AND the HF Inference fallback chain
+  also fails
 
-Falls back to a hand-curated bank of template questions for the
-demo (8 subjects x 2 templates = 16 cards), so the Space works
-without network.
+For the canonical implementation, see:
+  tuatha/baml_src/player_assessment.baml
+  (the BAML schema that the Pydantic model mirrors)
 """
 
 from __future__ import annotations
@@ -19,6 +24,35 @@ from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 import sys as _sys
 from typing import Any
+
+try:
+    from pydantic import BaseModel, Field
+    _HAS_PYDANTIC = True
+except ImportError:
+    _HAS_PYDANTIC = False
+
+
+# Pydantic schema (mirrors tuatha/baml_src/player_assessment.baml).
+if _HAS_PYDANTIC:
+    class PExitCardQuestion(BaseModel):
+        question_id: str
+        prompt_en: str
+        prompt_ga: str
+        question_type: str
+        correct_answer: str
+        explanation_en: str
+        explanation_ga: str
+        bloom_level: str
+        marking_point_ref: str | None = None
+
+    class PExitCardSet(BaseModel):
+        lesson_topic: str
+        subject: str
+        level: str
+        questions: list[PExitCardQuestion]
+        total_questions: int
+        estimated_completion_min: int
+
 
 _log = logging.getLogger("anam_tuatha.mac_leinn")
 
@@ -239,7 +273,44 @@ def generate_exit_card(
 
 
 def _coerce(parsed: dict, model_used: str) -> ExitCardSet:
-    """Coerce a parsed dict into an ExitCardSet."""
+    """Coerce a parsed dict into an ExitCardSet.
+
+    If pydantic is installed, validate the response against
+    PExitCardSet first (the canonical schema, mirrored from
+    tuatha/baml_src/player_assessment.baml). On validation
+    failure, fall back to the flat dict with defaults.
+    """
+    # Optional Pydantic validation (the canonical schema check)
+    if _HAS_PYDANTIC and "questions" in parsed:
+        try:
+            pyd = PExitCardSet.model_validate(parsed)
+            questions = [
+                ExitCardQuestion(
+                    question_id=q.question_id,
+                    prompt_en=q.prompt_en,
+                    prompt_ga=q.prompt_ga,
+                    question_type=q.question_type,
+                    correct_answer=q.correct_answer,
+                    explanation_en=q.explanation_en,
+                    explanation_ga=q.explanation_ga,
+                    bloom_level=q.bloom_level,
+                    marking_point_ref=q.marking_point_ref or "",
+                )
+                for q in pyd.questions
+            ]
+            return ExitCardSet(
+                lesson_topic=pyd.lesson_topic,
+                subject=pyd.subject,
+                level=pyd.level,
+                questions=questions,
+                total_questions=pyd.total_questions or len(questions),
+                estimated_completion_min=pyd.estimated_completion_min,
+                source_model=model_used,
+            )
+        except Exception as e:
+            _log.warning("Pydantic validation failed: %s, using flat schema", e)
+
+    # Flat schema (legacy)
     questions = [
         ExitCardQuestion(
             question_id=str(q.get("question_id", "?")),
