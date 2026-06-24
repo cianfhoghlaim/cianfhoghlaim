@@ -586,7 +586,7 @@ class SourceFactory:
         matches the convention used by the manual wrappers.
         """
         from dlt_utils.destinations import get_dlt_destination
-        from dlt_utils.safety import safe_dlt_run
+        from dlt_utils.safety import safe_dlt_run, validate_source_kwargs
 
         s = self.get(source_id)
         dataset_name = self.lance_table(source_id).replace(".", "_").replace("-", "_")
@@ -610,12 +610,26 @@ class SourceFactory:
                 dev_mode=False,
             )
             source_obj = self.source(source_id)()
+            # Pre-flight dlt 1.0 validation (logs mistakes, doesn't block).
+            try:
+                mistakes = validate_source_kwargs(source_obj)
+                if mistakes and context is not None:
+                    context.log.warning(
+                        f"SourceFactory: dlt 1.0 source {source_id!r} has "
+                        f"mistakes: {mistakes}"
+                    )
+            except Exception as exc:  # pragma: no cover - defensive
+                if context is not None:
+                    context.log.debug(
+                        f"SourceFactory: validate_source_kwargs skipped: {exc}"
+                    )
             load_info = safe_dlt_run(pipeline, source_obj)
             return MaterializeResult(
                 metadata={
                     "source_id": source_id,
                     "dataset_name": dataset_name,
                     "loads_ids": str(load_info.loads_ids[0]) if load_info.loads_ids else "",
+                    "dlt_1_0_mistakes": ",".join(mistakes) if mistakes else "",
                 }
             )
 

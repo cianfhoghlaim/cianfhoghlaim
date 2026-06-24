@@ -16,10 +16,15 @@ All three Apps follow the canonical v1 patterns from
 
 - `@coco.fn` for processing functions
 - `@coco.lifespan` providing shared `EMBEDDER` + `LANCE_DB` context keys
+  (now imported from `oideachais/cocoindex_flows/_lifespan.py` — the
+  shared lifespan module, REFACTORING.md item 12).
 - `localfs.walk_dir(sourcedir, recursive=True, path_matcher=..., live=True)`
 - `lancedb.mount_table_target(...)` for output
 - `IdGenerator()` for stable IDs
 - `query_once` / `query` helpers for ad-hoc semantic search
+- `oideachais.lancedb.indexing.build_hnsw_index` for vector indexing
+  (added 2026-06 per the LanceDB 0.15+ upgrade; REFACTORING.md item
+  from `oideachais-semantic-search`).
 
 Reference: openspec/changes/leabharlann-cocoindex-v1/proposal.md
 """
@@ -69,14 +74,27 @@ except ImportError as e:
     IdGenerator = None  # type: ignore[assignment]
 
 
+# The shared CocoIndex v1 lifespan (REFACTORING.md item 12) —
+# imported from the canonical home so the 9 v1 Apps don't re-declare
+# the same `@coco.lifespan` 9 times.
+from ._lifespan import (  # noqa: E402
+    EMBEDDER,
+    EMBED_DIM,
+    EMBED_MODEL,
+    LANCEDB_URI,
+    LANCE_DB,
+    shared_lifespan,
+)
+
+
 # =============================================================================
 # Configuration
 # =============================================================================
 
 
-LANCEDB_URI = os.getenv("LANCEDB_URI", "rest://lance-api.cianfhoghlaim.ie")
-EMBED_MODEL = os.getenv("LEABHARLANN_EMBED_MODEL", "BAAI/bge-large-en-v1.5")
-EMBED_DIM = 1024
+# LANCEDB_URI, EMBED_MODEL, EMBED_DIM, LANCE_DB, EMBEDDER are
+# imported from `._lifespan` (the shared lifespan module).
+# See the imports block at the top of the file.
 
 # Default source directories.
 DEFAULT_LEABHARLANN_ROOT = pathlib.Path(
@@ -105,10 +123,6 @@ DEFAULT_ZOTERO_ROOT = pathlib.Path(
         str(DEFAULT_LEABHARLANN_ROOT / "zotero"),
     )
 )
-
-# Shared context keys (per the v1 best practice).
-LANCE_DB = coco.ContextKey[lancedb.LanceAsyncConnection]("leabharlann_lance_db") if COCOINDEX_AVAILABLE else None  # type: ignore[index]
-EMBEDDER = coco.ContextKey[SentenceTransformerEmbedder]("leabharlann_embedder", detect_change=True) if COCOINDEX_AVAILABLE else None  # type: ignore[index]
 
 
 # =============================================================================
@@ -233,20 +247,11 @@ if COCOINDEX_AVAILABLE:
 
 if COCOINDEX_AVAILABLE:
 
-    @coco.lifespan
-    async def leabharlann_lifespan(  # type: ignore[no-redef]
-        builder: coco.EnvironmentBuilder,
-    ) -> AsyncIterator[None]:
-        """Shared lifespan for all 3 leabharlann Apps (single LMDB state)."""
-        # LanceDB connection.
-        conn = await lancedb.connect_async(LANCEDB_URI)
-        builder.provide(LANCE_DB, conn)  # type: ignore[arg-type]
-        # Embedder (re-used; detect_change=True so a model swap auto-re-embeds).
-        builder.provide(
-            EMBEDDER,  # type: ignore[arg-type]
-            SentenceTransformerEmbedder(EMBED_MODEL),
-        )
-        yield
+    # The shared lifespan is now imported from `._lifespan` (above).
+    # This local `leabharlann_lifespan` was the original; it's kept
+    # as a back-compat alias so downstream code that imports it
+    # still works for one release cycle.
+    leabharlann_lifespan = shared_lifespan
 
     @coco.fn
     async def process_book_chunk(
@@ -603,7 +608,15 @@ async def _query_table(
     limit: int = 10,
     where: str | None = None,
 ) -> list[dict[str, Any]]:
-    """Run a vector search against one of the leabharlann tables."""
+    """Run a vector search against one of the leabharlann tables.
+
+    Per the 2026-06 LanceDB 0.15+ upgrade, the leabharlann tables
+    all have HNSW indexes built on the `embedding` column (the
+    `oideachais/lancedb/indexing.py:build_hnsw_index` function is
+    called at materialisation time). The HNSW index gives 10-100x
+    speedup at the cost of ~10% recall loss (per the LanceDB
+    10B-scale blog).
+    """
     if not COCOINDEX_AVAILABLE:
         return []
     embedder = coco.use_context(EMBEDDER)  # type: ignore[arg-type]
@@ -615,6 +628,34 @@ async def _query_table(
         search = search.where(where)
     rows = await search.limit(limit).to_list()
     return rows
+
+
+async def build_hnsw_indexes_for_leabharlann() -> dict[str, bool]:
+    """Build HNSW indexes on all 3 leabharlann tables.
+
+    Convenience helper called by the `leabharlann_cocoindex_*_update`
+    Dagster assets after the v1 Apps materialise.
+
+    Returns:
+        A dict ``{table_name: True}`` for each table that got an
+        HNSW index built.
+    """
+    if not COCOINDEX_AVAILABLE:
+        return {}
+    # Lazy import to avoid a hard lancedb dependency at module load.
+    from oideachais.lancedb.indexing import build_hnsw_index  # type: ignore[import-not-found]
+
+    results: dict[str, bool] = {}
+    conn = coco.use_context(LANCE_DB)  # type: ignore[arg-type]
+    for table_name in ("leabharlann_books", "leabharlann_zotero", "leabharlann_takeout"):
+        try:
+            table = await conn.open_table(table_name)
+            build_hnsw_index(table, column="embedding")
+            results[table_name] = True
+        except Exception as exc:  # pragma: no cover
+            logger.warning("hnsw_index_build_failed: table=%s err=%s", table_name, exc)
+            results[table_name] = False
+    return results
 
 
 async def search_leabharlann_books(
@@ -697,4 +738,5 @@ if COCOINDEX_AVAILABLE:
         "search_leabharlann_books",
         "search_leabharlann_zotero",
         "search_leabharlann_takeout",
+        "build_hnsw_indexes_for_leabharlann",
     ]
