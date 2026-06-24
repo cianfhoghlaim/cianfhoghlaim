@@ -77,6 +77,10 @@ run = "uv run pytest"
 description = "Lint all Python code with ruff"
 run = "uv run ruff check ."
 
+[tasks."lint:skills"]
+description = "Validate the .agents/skills/ metadata (frontmatter, name match, description length, line count) for every skill"
+run = "bash .agents/skills/lint-skills.sh"
+
 [tasks.format]
 description = "Format all Python code with ruff"
 run = "uv run ruff format ."
