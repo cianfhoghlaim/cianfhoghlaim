@@ -25,7 +25,7 @@ services:
       locket:
         condition: service_started
     env_file:
-      - ../../../../.env
+      - ../../../.env
     environment:
       LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-1234}
       LITELLM_LOG: INFO
@@ -39,7 +39,7 @@ services:
 
   db:
     env_file:
-      - ../../../../.env
+      - ../../../.env
     environment:
       POSTGRES_PASSWORD: ${LITELLM_POSTGRES_PASSWORD:-devpassword}
 

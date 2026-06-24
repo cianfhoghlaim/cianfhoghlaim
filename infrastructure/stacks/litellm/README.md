@@ -41,7 +41,10 @@ This stack is deployed via Komodo on arm1-oci. Komodo syncs from the Forgejo rep
 | `OPENAI_API_KEY` | No | OpenAI API key | — |
 | `Z_AI_API_KEY` | No | Z.AI API key | — |
 | `ZAI_API_KEY` | No | ZAI API key | — |
-| `OPENCODE_GO_API_KEY` | No | OpenCode Go API key | — |
+| `OPENCODE_GO_API_KEY` | No | OpenCode Go API key (canonical, single slot) | — |
+| `OPENCODE_GO_API_KEY_0` | No | OpenCode Go API key (parallel slot 0 — used by `opencode-go/minimax-m3-slot0` and the `minimax` alias fallback chain position 1) | — |
+| `OPENCODE_GO_API_KEY_1` | No | OpenCode Go API key (parallel slot 1 — fallback chain position 2) | — |
+| `OPENCODE_GO_API_KEY_2` | No | OpenCode Go API key (parallel slot 2 — fallback chain position 3) | — |
 | `OPENCODE_GO_BASE_URL` | No | OpenCode Go base URL | `https://opencode.ai/zen/go/v1` |
 | `HF_TOKEN` | No | HuggingFace token for gated models | — |
 | `HUGGINGFACE_HUB_TOKEN` | No | HuggingFace Hub token (alias) | — |
