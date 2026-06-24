@@ -2,7 +2,7 @@
 
 ## MODIFIED Requirements
 
-### Requirement: No sruth imports
+### Requirement: 10 sub-packages
 
 The system SHALL NOT import from the `sruth.*` namespace. The
 `sruth` package is the predecessor `bonneagar` project's Python
