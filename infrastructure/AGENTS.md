@@ -1,5 +1,49 @@
 # Infrastructure - AI Agent Instructions
 
+## Priority quick reference
+
+The 4 priority compose stacks, the 4 priority skills, and the
+3 priority commands at a glance. **Read this first**; the rest
+of the file is the full 94-stack inventory.
+
+### Priority compose stacks (4 of 94)
+
+| Stack | Port | Domain | Purpose |
+|:--|--:|:--|:--|
+| `oideachais` | 3080, 3335, 7777, 7778, 8000 | `oideachais.cianfhoghlaim.ie` | Celtic Education Lakehouse (Dagster + FastAPI + TanStack Start + Agno AgentOS + Google ADK) |
+| `litellm` | 4000 | `litellm.cianfhoghlaim.ie` | LLM gateway (OpenAI-compatible proxy for 70+ models) |
+| `langfuse` | 3000 | `langfuse.cianfhoghlaim.ie` | LLM observability (traces, prompts, A/B tests) |
+| `lakehouse` | 3900-3904, 5433, 8181-8182 | internal | Garage S3 + Postgres + Lakekeeper (data plane) |
+
+### Priority skills (4 of 108)
+
+| Skill | When to load |
+|:--|:--|
+| [`stack-ops`](.agents/skills/stack-ops/SKILL.md) | Add / fix / audit a Docker Compose stack (the 6-file GOLD_STANDARD pattern) |
+| [`infrastructure-stacks`](.agents/skills/infrastructure-stacks/SKILL.md) | The router for the 94 stacks + the 3-tier host convergence + the 5-stage deploy |
+| [`secrets-management`](.agents/skills/secrets-management/SKILL.md) | Infisical + Locket + mise 3-way contract (no manual `.env`) |
+| [`pangolin`](.agents/skills/pangolin/SKILL.md) | VPN + Traefik + Pocket ID SSO (Pangolin Convergence Architecture) |
+
+### Priority commands
+
+```bash
+bun run validate-stacks           # stack-doctor: lint all 94 compose.yaml files
+bun run stack-doctor               # alias for the above
+mise run lint:skills               # validate .agents/skills/ metadata (108/108 pass)
+```
+
+### Add a new stack (3 commands)
+
+```bash
+mkdir -p infrastructure/stacks/<name>
+# Create the 6 GOLD_STANDARD files (compose.yaml + sidecar.yaml
+# + pangolin.yaml + secrets.env + blueprint.yaml + .env.example)
+bun run validate-stacks           # MUST pass before commit
+```
+
+Full recipe: [`openspec/AGENTS.md`](../openspec/AGENTS.md) §"Adding
+a New Docker Compose Stack".
+
 ## Overview
 
 Infrastructure contains deployment configurations, infrastructure-as-code, and service orchestration for the Cianfhoghlaim platform implementing Pangolin Convergence Architecture (two-tier: OCI ARM1 control plane + MacBook M4 workload host).
