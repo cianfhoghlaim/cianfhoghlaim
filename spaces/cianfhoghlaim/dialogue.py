@@ -2,9 +2,17 @@
 spaces/cianfhoghlaim/dialogue.py
 Turn-by-turn dialogue handler for the 6 NPCs.
 
-Manages the conversation state for the current session (per-NPC) and
-calls the BAML chain via chat_complete_json. Falls back to a templated
-response if all 3 models fail (offline demo mode).
+Modernized 2026-06-24 (C3 of the spaces alignment plan):
+- Routes through the canonical KCG LiteLLM gateway
+  (spaces/_common/baml_client.py) instead of raw HF Inference
+- Validates the response against the Pydantic schema
+  (mirrors the canonical tuatha/baml_src/mythology_extraction.baml)
+- Falls back to a templated response if the LiteLLM gateway
+  is unreachable AND the HF Inference fallback chain also fails
+
+For the canonical implementation, see:
+  tuatha/baml_src/mythology_extraction.baml
+  (the BAML schema that the Pydantic model mirrors)
 """
 
 from __future__ import annotations
@@ -20,6 +28,34 @@ from spaces.cianfhoghlaim.npcs import (
     build_dialogue_messages,
     get_npc,
 )
+
+try:
+    from pydantic import BaseModel, Field
+    _HAS_PYDANTIC = True
+except ImportError:
+    _HAS_PYDANTIC = False
+
+
+# Pydantic schema (mirrors tuatha/baml_src/mythology_extraction.baml).
+if _HAS_PYDANTIC:
+    class PNpcDialogue(BaseModel):
+        speaker: str
+        nation_code: str
+        era: str
+        utterance_en: str
+        utterance_ga: str
+        scholarly_footnote_en: str
+        scholarly_footnote_ga: str
+        emotional_tone: str
+        asks_player_about: str
+
+    class PNpcDialogueExchange(BaseModel):
+        npc_name: str
+        npc_title: str
+        turn_index: int
+        dialogue: PNpcDialogue
+        quest_offered: str | None = None
+        artifact_granted: str | None = None
 
 
 _log = logging.getLogger("cianfhoghlaim")
@@ -59,18 +95,51 @@ def _offline_response(npc: Npc, player_utterance: str) -> dict[str, str]:
 
 
 def _validate_npc_response(parsed: dict[str, str], npc: Npc) -> dict[str, str]:
-    """Validate a parsed NPC response, filling in missing keys with defaults."""
+    """Validate a parsed NPC response, filling in missing keys with defaults.
+
+    If pydantic is installed, validate the response against PNpcDialogue
+    first (the canonical schema, mirrored from
+    tuatha/baml_src/mythology_extraction.baml). On validation failure,
+    fall back to the flat dict with defaults.
+    """
+    # The canonical BAML function returns the nested shape
+    # {dialogue: {utterance_en, ..., asks_player_about}, npc_name, ...}.
+    # The flat legacy shape was {utterance_en, ..., asks_player_about}.
+    nested_dialogue = parsed.get("dialogue", parsed)
+    if not isinstance(nested_dialogue, dict):
+        nested_dialogue = parsed
+
+    # Optional Pydantic validation (the canonical schema check)
+    if _HAS_PYDANTIC and "utterance_en" in nested_dialogue:
+        try:
+            pyd_dialogue = PNpcDialogue.model_validate(nested_dialogue)
+            return {
+                "utterance_en": pyd_dialogue.utterance_en,
+                "utterance_ga": pyd_dialogue.utterance_ga,
+                "scholarly_footnote_en": pyd_dialogue.scholarly_footnote_en,
+                "scholarly_footnote_ga": pyd_dialogue.scholarly_footnote_ga,
+                "emotional_tone": pyd_dialogue.emotional_tone,
+                "asks_player_about": pyd_dialogue.asks_player_about,
+                "quest_offered": str(parsed.get("quest_offered", ""))[:300] or None,
+                "artifact_granted": parsed.get("artifact_granted") or None,
+            }
+        except Exception as e:
+            _log.warning("Pydantic validation failed: %s, using flat schema", e)
+
+    # Flat schema (legacy)
     required = [
         "utterance_en", "utterance_ga",
         "scholarly_footnote_en", "scholarly_footnote_ga",
         "emotional_tone", "asks_player_about",
     ]
-    out = dict(parsed)
+    out = dict(nested_dialogue)
     for key in required:
         if key not in out or not out[key]:
             out[key] = _offline_response(npc, "")[key]
     if "quest_offered" in out and out["quest_offered"]:
         out["quest_offered"] = str(out["quest_offered"])[:300]
+    if "artifact_granted" in parsed and parsed["artifact_granted"]:
+        out["artifact_granted"] = parsed["artifact_granted"]
     return out
 
 
