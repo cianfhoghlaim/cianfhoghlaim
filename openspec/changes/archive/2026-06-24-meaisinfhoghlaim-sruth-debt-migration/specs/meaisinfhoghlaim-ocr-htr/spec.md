@@ -2,7 +2,7 @@
 
 ## MODIFIED Requirements
 
-### Requirement: OCR model registry
+### Requirement: 10-model 6-backend OCR registry
 
 The system SHALL provide an OCR model registry at
 `meaisinfhoghlaim/ocr/model_registry.py:OCR_MODELS` with

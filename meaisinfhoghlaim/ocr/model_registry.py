@@ -436,6 +436,18 @@ OCR_MODELS: dict[str, OCRModel] = {
         max_resolution=(1024, 1024),
         notes="Best Irish language model, needs multimodal wrapper",
     ),
+    "gemma-3-vision": OCRModel(
+        name="Gemma 3 Vision 9B",
+        model_id="google/gemma-3-vision-9b-it",
+        backend=ModelBackend.TRANSFORMERS,
+        capabilities=[
+            ModelCapability.DENSE_OCR,
+            ModelCapability.REASONING,
+            ModelCapability.MULTILINGUAL,
+        ],
+        max_resolution=(1280, 1280),
+        notes="Google's open multimodal vision model; good general-purpose OCR with 6 Celtic language support",
+    ),
 }
 
 
