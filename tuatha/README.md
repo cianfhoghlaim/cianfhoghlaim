@@ -1,8 +1,18 @@
-# Tuatha — The Celtic Educational MMO + Crypto Platform
+# Tuatha — The British Isles Formative Assessment MMO
 
-*Educational MMO front-end, BAML-driven Celtic content extraction, Rust + SpacetimeDB
-game engine, and the crypteolas crypto data platform — all consolidated into the
+*A British Isles educational MMO that delivers continuous formative feedback
+(not summative) during quests, mapped to the NCCA / CfE / CfW / CCEA / SQA
+curriculum frameworks. Babylon.js 3D game front-end, Rust + SpacetimeDB game
+engine, TanStack Start web app, and the Crypteolas educational-achievement
+ledger (skill-tree badges, not a financial token) — all consolidated into the
 `tuath` uv workspace member.*
+
+> **Phase 6 of the 6-phase refactor plan (2026-06-24):** the
+> tuatha focus is now **British Isles formative assessment** (not
+> "Celtic broadly"). The crypto is now **educational
+> achievements** (skill-tree badges, not a financial token). The
+> pedagogical framework is documented in
+> [`.agents/skills/british-isles-formative-assessment/`](../.agents/skills/british-isles-formative-assessment/SKILL.md).
 
 > See also: [`tuatha/AGENTS.md`](AGENTS.md) — the developer-quick-reference
 > for the tuatha quadrant. The openspec spec is at
