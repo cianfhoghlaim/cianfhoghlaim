@@ -1,5 +1,0 @@
-gradio
-requests
-pyyaml
-huggingface_hub
-

@@ -174,6 +174,23 @@ New stack?
       3. Run bun run validate-stacks
 ```
 
+## Image pinning policy (no `:latest`)
+
+Every image pushed to `ghcr.io/cianfhoghlaim/` MUST be pinned to a
+semver tag. **Never use `:latest` in production stacks.**
+
+All in-repo images SHALL be tagged as `<major>.<minor>.<patch>` and
+built for multi-arch (`linux/amd64,linux/arm64`).
+
+- **Registry:** `ghcr.io/cianfhoghlaim/`
+- **Auth:** GitHub Actions OIDC → `GITHUB_TOKEN` with `write:packages`
+- **Visibility:** Public
+- **Production stacks** SHALL reference the sidecar / upstream images
+  with a pinned tag (e.g. `ghcr.io/cianfhoghlaim/locket:1.2.3`), never
+  `:latest`. Local-build images (with `pull_policy: never`) may use
+  `latest` because the image is built and tagged locally, but the
+  compose file MUST include a comment explaining the deviation.
+
 ## Cross-references
 
 - `.agents/skills/kcg-bunchloch/SKILL.md` — the 3-tier
