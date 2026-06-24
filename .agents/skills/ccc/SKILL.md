@@ -26,6 +26,25 @@ description: "This skill should be used when code search, file/directory summary
 > `codeolas/chunking/languages.py`). Use the v1 Python API
 > `search_code_graph(file_path=..., node_type=...)` to query the
 > graph table.
+>
+> **Round 7 phase 2 (2026-06-24):** Four v1 companions for the
+> *infrastructure* surface, all in
+> `oideachais/dagster_defs/assets/infrastructure_assets.py`:
+>
+> - `api_endpoints` — FastAPI / Hono / TanStack Start / Convex HTTP
+>   routes → `api_endpoints` LanceDB. Query helper:
+>   `search_api_endpoints(query, framework=None, method=None, limit=20)`.
+> - `filesystem_layout` — every directory up to depth 4 with per-dir
+>   file-type histogram → `filesystem_layout` LanceDB. Query helper:
+>   `search_filesystem(query, min_depth=None, limit=10)`.
+> - `storage_backends` — 9 backend kinds (lancedb / duckdb / ducklake /
+>   postgres / garage / r2 / d1 / kv / iceberg) → `storage_backends`
+>   LanceDB. Query helper:
+>   `search_storage(query, kind=None, limit=20)`.
+> - `config_files` — 12 config kinds (compose / mise / package /
+>   pyproject / turbo / wrangler / env / k8s / pulumi / dg / github /
+>   justfile) → `config_files` LanceDB. Query helper:
+>   `search_config(query, kind=None, limit=15)`.
 
 `ccc` is the CLI for CocoIndex Code, providing semantic search over the current codebase and index management.
 
