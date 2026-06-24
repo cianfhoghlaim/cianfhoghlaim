@@ -453,3 +453,39 @@ See `references/agent-frameworks/README.md` for the full
 (4 entities, 17 children), the 8 related-skills routing
 table, and the migration note that all 36 original files
 were archived to `docs/archive/2026-06-06-agents/`.
+
+## 2026-06 update: AG-UI + Pydantic AI + DBOS
+
+The 4 agentic-frontend frameworks KCG uses (TanStack Start, CopilotKit, AG-UI, Hono, oRPC) are joined by 3 new ones in 2026.
+
+### AG-UI protocol (CopilotKit's agent↔UI protocol)
+
+The AG-UI protocol is the open SSE-based standard for agent↔UI streaming. The KCG surface uses it for the oideachais API (port 8000) and the croilar portal (port 3001). The protocol handles:
+
+- Streamed text tokens (the agent's response as it's generated)
+- Streamed tool calls (the agent's BAML extraction in flight)
+- Streamed state updates (the agent's working memory mid-conversation)
+- Custom events (per-framework: BAML validation errors, RAGAS scores, etc.)
+
+The `ag-ui` skill (in `.agents/skills/ag-ui/SKILL.md`) documents the full protocol. The oideachais API uses `ag-ui` events for the BAML extraction flow; the copilotkit React components consume them.
+
+### Pydantic AI + the Pydantic AI Gateway
+
+Pydantic AI is a Pydantic-native agent framework that pairs naturally with the AG-UI protocol. The Pydantic AI Gateway (BYOK/managed/cost-limits) routes the agent's LLM calls through a central gateway, with cost limits per agent per model.
+
+The KCG pattern: any new agent (e.g. the 12 in `meaisinfhoghlaim/agents/`) should use Pydantic AI for typed I/O. The `pydantic-ai` skill documents the framework.
+
+### DBOS durable execution
+
+DBOS is a durable execution layer for Python — the agent's state survives crashes and restarts. The KCG pattern is documented in the `pydantic-ai` skill, with a reference implementation in `meaisinfhoghlaim/agents/dbos_demo.py`.
+
+### Pair this skill with
+
+- `ag-ui/SKILL.md` — the AG-UI protocol detail
+- `pydantic-ai/SKILL.md` — the Pydantic AI + Gateway + DBOS detail
+- `tanstack-start/SKILL.md` — the TanStack Start front-end detail
+- `copilotkit/SKILL.md` — the CopilotKit React components
+- `hono/SKILL.md` — the Hono API
+- `orpc/SKILL.md` — the oRPC type-safe RPC
+- `conex/SKILL.md` — the Convex real-time backend
+- `cloudflare/SKILL.md` — the Cloudflare Workers / D1 / R2 deploy

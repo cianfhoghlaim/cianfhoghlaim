@@ -311,3 +311,41 @@ The `md:oideachais` URL is the MotherDuck database name; the
   pipeline (HNSW lifecycle)
 - `.agents/skills/stack-ops/SKILL.md` — Garage stack
   (the dev-mode object store)
+
+## 2026-06 update: DuckLake 1.0 GA + Lance Namespace
+
+### DuckLake 1.0 is GA (2026-06)
+
+DuckLake 1.0 is now the default open-table lakehouse format. The KCG `oideachais/ducklake/` layer is already on 1.0 (verify with `SELECT ducklake_version();`).
+
+Key 1.0 features that affect the KCG pipeline:
+
+- **ACID transactions on Parquet** — no more read-modify-write races on the `ie_education_primary` table
+- **Time-travel queries** — `SELECT * FROM ie_education_primary AT TIMESTAMP '2024-09-15T00:00:00Z';` returns the table as it was on that date
+- **Schema evolution** — `ALTER TABLE ie_education_primary ADD COLUMN ...` does not require a full re-materialisation
+- **Single-SQL catalog** — the metadata lives in the same Postgres database as the data files; one connection, one transaction, no S3-catalog round-trips
+
+### Lance Namespace sidecar (KCG pattern)
+
+The `lakehouse-lance-namespace` sidecar registers LanceDB tables as Iceberg tables. Pattern:
+
+1. The Dagster asset writes Parquet to `s3://ducklake/oideachais/...`
+2. The LanceDB writer ingests the Parquet into a LanceDB table
+3. The `lakehouse-lance-namespace` sidecar (in the `lakehouse` stack) sees the new table and registers it in the Lakekeeper Iceberg catalog
+4. Any tool that speaks the Iceberg REST protocol (MotherDuck, DuckDB, Trino) can now query the LanceDB data
+
+The sidecar runs at `http://lakehouse-lance-namespace:8182` and uses the Lakekeeper REST catalog at `http://lakehouse-lakekeeper:8181`.
+
+### The KCG storage mental model (2026-06 refresh)
+
+| Layer | What it stores | KCG pattern |
+|:--|:--|:--|
+| **Object storage** | Parquet files + LanceDB tables | Garage S3 (`s3://ducklake/oideachais/`, `s3://lance/oideachais/`) |
+| **Lakehouse catalog** | Schema + partition metadata | DuckLake 1.0 (Postgres `lakehouse-postgres:5432/oideachais_catalog`) |
+| **Iceberg REST** | Cross-tool catalogue (MotherDuck, Trino) | Lakekeeper (`http://lakehouse-lakekeeper:8181`) |
+| **Lance namespace** | LanceDB tables exposed as Iceberg | `lakehouse-lance-namespace:8182` (sidecar) |
+| **Vector search** | Embeddings + HNSW | LanceDB Cloud or local LanceDB |
+| **Query engine** | Cloud or local SQL | MotherDuck (cloud) or DuckDB (local `md:oideachais`) |
+
+Reads: any tool → MotherDuck (`md:oideachais`) → auto-routed to either the local DuckDB or the Iceberg/LanceDB layer.
+Writes: DLT sources → DuckLake destination (Parquet on S3 + Postgres catalog) → optional LanceDB ingest via the v1 App.

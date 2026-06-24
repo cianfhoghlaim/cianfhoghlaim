@@ -577,3 +577,69 @@ front-end topology note, the 3-plane data architecture
 list, and the "see also" runtime pointers
 (`tuatha/DEVELOPMENT.md`, `tuatha/README.md`,
 `tuatha/gaeilge.md`).
+
+## 2026-06 update: Babylon.js 7 + SpacetimeDB v2 + x402
+
+The Tuatha Celtic Educational MMO has 3 framework updates in 2026-06.
+
+### Babylon.js 7 + WebGPU (the default renderer)
+
+Babylon.js 7 (released 2026-05) is now the KCG-canonical Babylon.js version. The 7 release flips the default renderer from WebGL2 to WebGPU. The KCG pattern:
+
+```typescript
+// tuatha/game/scenes/init.ts
+import { Engine, Scene, WebGPUEngine } from "@babylonjs/core";
+
+const canvas = document.getElementById("renderCanvas");
+const engine = await WebGPUEngine.CreateAsync(canvas);  // WebGPU preferred
+// Falls back to WebGL2 if WebGPU is not available:
+const engine2 = new Engine(canvas, true, { ... });
+```
+
+WebGPU enables:
+
+- Compute shaders (for procedural Celtic knot generation)
+- Better performance on Apple M-series (M1/M2/M3/M4 unified memory)
+- Future Babylon.js 8 features (deferred rendering, mesh shaders)
+
+### SpacetimeDB v2 (the authoritative state engine)
+
+SpacetimeDB v2 is the Rust-based authoritative state engine. The 4 KCG MMO server modules (`tuatha/crates/{services,solana,stdb-modules,wgpu}/`) are pinned to v2.x.
+
+Key v2 features:
+
+- **Row-level access control** — the player can only see their own NPC dialogue
+- **Subscriptions** — the client subscribes to a query; the server pushes updates only when the result changes
+- **WebSocket compression** — 60% smaller payloads for the Celtic language graph updates
+- **WASM reducers** — the client can run reducers in WASM (offline-capable quest tracking)
+
+The KCG pattern: `tuatha/crates/stdb-modules/src/tables/` defines the 20+ tables (Player, NPC, Quest, Achievement, Soul, etc.).
+
+### x402 micropayments on Base L2 (gated game features only)
+
+x402 is the HTTP micropayments protocol on Base L2. The Tuatha MMO uses x402 ONLY for gated game features (premium Celtic content packs, the Crypteolas achievement-ledger cosmetic skins) — not for the core educational flow.
+
+The 4 KCG x402 endpoints are:
+
+- `POST /api/v1/mmo/cosmetic/skin` — gated skin purchase
+- `POST /api/v1/mmo/quest/premium` — premium Celtic quest pack
+- `POST /api/v1/mmo/ledger/badge-mint` — mint a skill-tree badge
+- `GET  /api/v1/mmo/leaderboard/cel-balance` — CELT balance lookup
+
+The educational flow (Aistear, Primary, JC, SC, Tertiary curriculum + formative assessment + Celtic language + mythology) is FREE and never gated. The x402 endpoints are non-curriculum, opt-in, paid features.
+
+The crypteolas achievement-ledger is a skill-tree badge system, NOT a financial token. The ledger records:
+
+- Curriculum framework (Aistear, Primary, JC, SC, Tertiary, or custom)
+- Skill level (Bronze, Silver, Gold, Celtic, Mythic)
+- Learning outcome code (per the 4 formative feedback channels)
+- Agent issuer (one of the 4 agents: Celtic Tutor, Mythology Narrator, Quest Guide, Research Assistant)
+- Evidence (the curriculum artefact the badge was earned from)
+
+### Pair this skill with
+
+- `babylonjs/SKILL.md` — the Babylon.js 7 + WebGPU detail
+- `dagster-pipelines/SKILL.md` — the Dagger pipeline that builds the MMO client
+- `dagster/SKILL.md` — the Dagster orchestration of the 23 MMO assets
+- `secrets-management/SKILL.md` — the Locket pattern for the MMO API keys
+- `upstream-mirrors/SKILL.md` — the KCG-mirrored upstream docs for SpacetimeDB, wgpu, x402
