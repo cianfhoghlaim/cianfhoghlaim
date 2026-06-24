@@ -9,6 +9,40 @@
 > not a financial token) — all consolidated into the `tuath` uv
 > workspace member.*
 
+## Priority quick reference
+
+The 8 priority skills, the 4 priority commands, and the 1
+priority openspec spec at a glance. **Read this first**; the
+rest of the file is the full 4-stream routing.
+
+### Priority skills (8 of 108)
+
+| Skill | When to load |
+|:--|:--|
+| [`babylonjs`](../.agents/skills/babylonjs/SKILL.md) | Babylon.js 7 + WebGPU (the MMO client renderer) |
+| [`tuatha-mmo`](../.agents/skills/tuatha-mmo/SKILL.md) | The Tuatha Celtic MMO + Crypteolas achievement-ledger (4 sub-modules) |
+| [`dagger`](../.agents/skills/dagger/SKILL.md) | Dagger CI/CD (the SpacetimeDB Rust build is in the Dagger pipeline) |
+| [`baml`](../.agents/skills/baml/SKILL.md) | BAML extraction for Celtic content (image_generation, ui_components) |
+| [`tanstack-start`](../.agents/skills/tanstack-start/SKILL.md) | TanStack Start (the educational game front-end) |
+| [`copilotkit`](../.agents/skills/copilotkit/SKILL.md) | CopilotKit + AG-UI (the agent UI for the MMO) |
+| [`hono`](../.agents/skills/hono/SKILL.md) | Hono API (the unified API surface) |
+| [`celtic-language-ai`](../.agents/skills/celtic-language-ai/SKILL.md) | Celtic-language model catalog (GaBERT, Helsinki OPUS-MT, NLLB-200) |
+
+### ccc + openspec commands
+
+```bash
+bun run ccc:search "SpacetimeDB table migration"      # semantic code search
+openspec list --specs                                 # 32 specs total
+openspec validate <change-id> --strict                # MUST pass before commit
+openspec archive <change-id> --yes                    # after deploy
+```
+
+### Priority openspec spec for tuatha
+
+| Spec | One-liner |
+|:--|:--|
+| `tuatha-platform` | The 4 sub-modules + the BAML Celtic content extraction + the croilar consumer integration |
+
 ## Overview
 
 `tuatha/` is the **British Isles Formative Assessment MMO** quadrant

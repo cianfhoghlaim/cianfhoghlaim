@@ -5,6 +5,53 @@
 > TypeScript + Python platform that doubles as a reference
 > implementation for the rest of `kings_college_galway`.*
 
+## Priority quick reference
+
+The 8 priority skills, the 4 priority commands, the 5 user-named
+compose stacks, and the 3 priority openspec specs at a glance.
+**Read this first**; the rest of the file is the full 3-persona
+routing.
+
+### Priority skills (8 of 108)
+
+| Skill | When to load |
+|:--|:--|
+| [`tanstack-start`](../.agents/skills/tanstack-start/SKILL.md) | TanStack Start (the public persona site + portal + storybook) |
+| [`copilotkit`](../.agents/skills/copilotkit/SKILL.md) | CopilotKit + AG-UI (the agent UI for the portal) |
+| [`hono`](../.agents/skills/hono/SKILL.md) | Hono API (the unified API surface for web + portal + storybook) |
+| [`convex`](../.agents/skills/convex/SKILL.md) | Convex real-time backend (the auth + portal surfaces) |
+| [`better-auth`](../.agents/skills/better-auth/SKILL.md) | BetterAuth OIDC + SIWE + 2FA (the auth layer) |
+| [`baml`](../.agents/skills/baml/SKILL.md) | BAML extraction (the persona-specific schemas) |
+| [`dagster`](../.agents/skills/dagster/SKILL.md) | Dagster asset patterns (the croilar data engineering) |
+| [`dlt`](../.agents/skills/dlt/SKILL.md) | DLT source patterns (the 12 croilar DLT pipelines) |
+
+### ccc + openspec commands
+
+```bash
+bun run ccc:search "persona routing table"             # semantic code search
+openspec list --specs                                 # 32 specs total
+openspec validate <change-id> --strict                # MUST pass before commit
+openspec archive <change-id> --yes                    # after deploy
+```
+
+### Priority compose stacks (5 user-named croilar stacks)
+
+| Stack | Port | Purpose |
+|:--|--:|:--|
+| `croilar-web` | per Komodo | The public persona site (TanStack Start) |
+| `croilar-portal` | per Komodo | The self-hosted platform dashboard (auth-gated) |
+| `croilar-dagster` | per Komodo | The croilar-scoped Dagster code-location |
+| `croilar-hono-api` | per Komodo | The Hono API (Bun) |
+| `croilar-marimo` | per Komodo | The croilar-scoped Marimo notebooks |
+
+### Priority openspec specs for croilar
+
+| Spec | One-liner |
+|:--|:--|
+| `croilar-portfolio` | Public TanStack Start site — multi-persona (aleyum, cianfhoghlaim, carlcashman) |
+| `croilar-data-engineering` | Dagster + DLT + CocoIndex + BAML pipelines for croilar personas |
+| `croilar-cv-extraction` | BAML extraction of the author's CV / achievements / teaching PDFs |
+
 ## Overview
 
 `croilar/` is the **multi-persona portfolio + CV + data engineering
