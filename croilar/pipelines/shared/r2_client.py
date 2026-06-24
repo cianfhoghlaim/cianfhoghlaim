@@ -5,7 +5,8 @@ Used for caching Spotify images and storing SoundCloud audio files.
 
 The default R2 bucket is now the shared `cianfhoghlaim-public` bucket
 (declared in `croilar/wrangler.toml`). The legacy `aleyum-assets` default
-is preserved as `ALEYUM_R2_BUCKET` for backwards compatibility.
+has been retired per round 11 of the multi-quadrant refactor plan
+(the `croilar-aleyum-to-streams-cleanup-v1` openspec change).
 
 `local_only=True` causes all upload methods to become no-ops that
 return a sentinel URL. Use it for sensitive corpora (CV PDFs, identity
@@ -21,7 +22,6 @@ from botocore.config import Config
 
 
 DEFAULT_R2_BUCKET = "cianfhoghlaim-public"
-ALEYUM_R2_BUCKET = "aleyum-assets"
 
 
 @dataclass
@@ -184,4 +184,4 @@ class R2Client:
         )
 
 
-__all__ = ["R2Config", "R2Client", "DEFAULT_R2_BUCKET", "ALEYUM_R2_BUCKET"]
+__all__ = ["R2Config", "R2Client", "DEFAULT_R2_BUCKET"]
