@@ -8,6 +8,8 @@
 #   oideachais.cianfhoghlaim.ie     → frontend (Pocket ID SSO)
 #   api.oideachais.cianfhoghlaim.ie → api      (Pocket ID SSO, API key, CORS)
 #   dagster.oideachais.cianfhoghlaim.ie → dagster (Pocket ID SSO, VPN-only)
+#   agent.os.cianfhoghlaim.ie      → agent_os (Agno AgentOS, Pocket ID SSO, VPN-only)
+#   adk.cianfhoghlaim.ie           → adk_agents (Google ADK, Pocket ID SSO, VPN-only)
 #
 # This file is consumed by Traefik labels on the production compose. The
 # komodo deploy procedure (deploy-oideachais-bunchloch) applies the
@@ -49,6 +51,28 @@ http:
       middlewares: [tinyauth, vpn-only]
       priority: 100
 
+    # -------------------------------------------------------------------------
+    # INTERNAL — Agno AgentOS (Celtic Education agents, VPN-only)
+    # -------------------------------------------------------------------------
+    oideachais-agent-os:
+      entryPoints: [https]
+      rule: "Host(`agent.os.cianfhoghlaim.ie`)"
+      service: oideachais-agent-os
+      tls: { certResolver: letsencrypt }
+      middlewares: [tinyauth, vpn-only]
+      priority: 100
+
+    # -------------------------------------------------------------------------
+    # INTERNAL — Google ADK agents (Celtic Education multi-agent orchestrator, VPN-only)
+    # -------------------------------------------------------------------------
+    oideachais-adk-agents:
+      entryPoints: [https]
+      rule: "Host(`adk.cianfhoghlaim.ie`)"
+      service: oideachais-adk-agents
+      tls: { certResolver: letsencrypt }
+      middlewares: [tinyauth, vpn-only]
+      priority: 100
+
   services:
     oideachais-web:
       loadBalancer:
@@ -64,6 +88,16 @@ http:
       loadBalancer:
         servers:
           - url: "http://cianchoghlaim-oideachais-dagster:3000"
+
+    oideachais-agent-os:
+      loadBalancer:
+        servers:
+          - url: "http://cianchoghlaim-oideachais-agent-os:7777"
+
+    oideachais-adk-agents:
+      loadBalancer:
+        servers:
+          - url: "http://cianchoghlaim-oideachais-adk-agents:7778"
 
   middlewares:
     # CORS for the API — lets the frontend at oideachais.cianfhoghlaim.ie

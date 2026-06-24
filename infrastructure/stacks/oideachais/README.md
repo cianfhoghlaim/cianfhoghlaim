@@ -2,10 +2,10 @@
 
 The Celtic Education Lakehouse Engine — the production deployment
 of the `oideachais/` uv workspace member. This stack wires the
-3 application services (Dagster, FastAPI, TanStack Start) to the
-shared LLM gateway (LiteLLM), the lakehouse (Garage S3 +
-Postgres + Lakekeeper + Lance Namespace), and the LLM observability
-sink (Langfuse).
+5 application services (Dagster, FastAPI, TanStack Start, Agno
+AgentOS, Google ADK) to the shared LLM gateway (LiteLLM), the
+lakehouse (Garage S3 + Postgres + Lakekeeper + Lance Namespace),
+and the LLM observability sink (Langfuse).
 
 ## Architecture
 
@@ -14,6 +14,8 @@ bunchloch (MacBook M4 Max)
 ├── dagster      :3335 → :3000   Dagster webserver + daemon
 ├── api          :8000            FastAPI AG-UI streaming backend
 ├── frontend     :3080 → :3000   TanStack Start dev server
+├── agent_os     :7777            Agno AgentOS (multi-agent runtime)
+├── adk_agents   :7778            Google ADK (ADK agents)
 └── locket       (sidecar)       Infisical → secrets.env injector
 ```
 
@@ -22,6 +24,8 @@ bunchloch (MacBook M4 Max)
 | `dagster` | `cianchoghlaim-oideachais-dagster` | 3335 | 3000 | `/server_info` |
 | `api` | `cianchoghlaim-oideachais-api` | 8000 | 8000 | `/health` |
 | `frontend` | `cianchoghlaim-oideachais-frontend` | **3080** | 3000 | `/` |
+| `agent_os` | `cianchoghlaim-oideachais-agent-os` | 7777 | 7777 | `/health` |
+| `adk_agents` | `cianchoghlaim-oideachais-adk-agents` | 7778 | 7778 | `/health` |
 | `locket` | `cianchoghlaim-oideachais-locket` | (no host port) | (no container port) | `/run/secrets/locket/secrets.env` |
 
 ## Networks
@@ -54,10 +58,10 @@ The 3 app services consume:
 
 | File | Purpose |
 |---|---|
-| `compose.yaml` | Canonical 3 app services + 1 locket sidecar + named volumes + external networks |
+| `compose.yaml` | Canonical 5 app services (dagster/api/frontend/agent_os/adk_agents) + 1 locket sidecar + named volumes + external networks |
 | `compose.dev.yaml` | Dev override: no-op `alpine:3.20 locket` shim, `env_file: ../../../../.env` |
 | `sidecar.yaml` | Production override: real `locket:1.2.3` sidecar with `infisical://dev-baile/...` secrets |
-| `pangolin.yaml` | Traefik routing for 3 web-facing services (`*.oideachais.cianfhoghlaim.ie`) |
+| `pangolin.yaml` | Traefik routing for 5 web-facing services (`*.oideachais.cianfhoghlaim.ie` + `agent.os.cianfhoghlaim.ie` + `adk.cianfhoghlaim.ie`) |
 | `secrets.env` | Infisical URI references (zero plaintext; mounted at `/etc/locket/secrets.env`) |
 | `.env.example` | Dev-only placeholder env vars (committed for onboarding) |
 | `blueprint.yaml` | Komodo stack metadata (name, ports, depends_on) |
@@ -103,6 +107,8 @@ curl -X POST https://komodo.cianfhoghlaim.ie/api/procedure/run \
 | 3000 | User apps | **YES** (Forgejo + langfuse) |
 | 3080 | User apps | NO — used by `frontend` |
 | 3335 | Dagster | NO — used by `dagster` |
+| 7777 | AI/ML | NO — used by `agent_os` (Agno AgentOS) |
+| 7778 | AI/ML | NO — used by `adk_agents` (Google ADK) |
 | 8000 | MMO | NO — used by `api` (drift; should be 3500 per kcg-convergence, but kept for backward compat) |
 
 ## Image Tags
@@ -125,6 +131,12 @@ curl -s http://localhost:8000/health | jq
 
 # Frontend (TanStack Start)
 curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3080
+
+# Agno AgentOS
+curl -s http://localhost:7777/health | jq
+
+# Google ADK agents
+curl -s http://localhost:7778/health | jq
 
 # Locket secrets file (inside the locket container)
 docker exec cianfhoghlaim-oideachais-locket \
