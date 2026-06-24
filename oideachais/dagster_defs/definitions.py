@@ -72,6 +72,14 @@ from .assets.ie.education import (
     AISTEAR_FULL_JOB,
 )
 
+# Unwired DLT sources — 12 @asset wrappers for sources that had no
+# Dagster materialisation layer. Reference:
+# openspec/changes/wire-unwired-dlt-sources/
+from .assets.wire_unwired_dlt_sources import (
+    WIRE_UNWIRED_DLT_ASSETS,
+    WIRE_UNWIRED_DLT_CHECKS,
+)
+
 # Ireland Medicine Assets (Phase 3.1 of lateralise-british-isles-domains)
 from .assets.ie.medicine import (
     medicine_ie_doh,
@@ -410,6 +418,7 @@ combined_assets = [
     scraped_curriculum_pages,
     *exam_materials_assets,
     *AISTEAR_ASSETS,                 # Aistear (early childhood) DLT + BAML extraction
+    *WIRE_UNWIRED_DLT_ASSETS,         # 12 previously-unwired dlt sources (UK + CD + IE)
     *pdf_processing_assets,
     *model_conversion_assets,
     *asset_generation_assets,

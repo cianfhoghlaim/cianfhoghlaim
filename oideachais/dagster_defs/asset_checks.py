@@ -24,6 +24,9 @@ from .resources import DuckDBResource, LanceDBResource
 # Aistear (early childhood) asset check — ref: openspec/changes/wire-baml-with-known-consumers/
 from .assets.ie.education.aistear_dlt_assets import aistear_documents_row_count_check
 
+# Unwired dlt sources asset checks — ref: openspec/changes/wire-unwired-dlt-sources/
+from .assets.wire_unwired_dlt_sources import WIRE_UNWIRED_DLT_CHECKS
+
 # ============================================================================
 # Ireland Education Asset Checks - DEPRECATED
 # ============================================================================
@@ -208,6 +211,8 @@ all_asset_checks = [
     # Ireland Education - removed (legacy assets deleted)
     # Aistear (early childhood) - check that at least 1 document was loaded
     aistear_documents_row_count_check,
+    # Unwired dlt sources (12 row_count checks for previously-unwired sources)
+    *WIRE_UNWIRED_DLT_CHECKS,
     # Celtic Language
     check_duchas_pages,
     check_celtic_embeddings,
