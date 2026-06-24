@@ -1,0 +1,4 @@
+# Thin re-export shim for the meaisinfoghlaim Pangolin blueprint (round 7).
+# Canonical location: infrastructure/stacks/meaisinfoghlaim/blueprint.yaml
+---
+# See compose.yaml in this directory for the re-export note.
