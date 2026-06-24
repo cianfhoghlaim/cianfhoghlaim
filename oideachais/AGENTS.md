@@ -93,12 +93,17 @@ The re-export shims to `meaisinfhoghlaim/`:
 | Add a new leabharlann source | `oideachais/dlt_sources/author_archive/` (the 4 dlt sources) |
 | Add a new BAML extraction function | `baml_src/` (the 27 BAML files, plus `_archive/` for deferred consumers) + `baml_src/clients.baml` for the canonical client registry |
 | Add a new Dagster asset | `oideachais/dagster_defs/assets/` (40+ modules) |
-| Add a new CocoIndex v1 App | `oideachais/cocoindex_flows/leabharlann_embedding.py` (the 3 v1 Apps) or `docs_skills_consolidation.py`; see `.agents/skills/oideachais-cocoindex-v1/SKILL.md` for the canonical pattern |
+| Add a new CocoIndex v1 App | `oideachais/cocoindex_flows/leabharlann_embedding.py` (the 3 v1 Apps) or `docs_skills_consolidation.py`; see `.agents/skills/oideachais-cocoindex-v1/SKILL.md` for the canonical pattern. The shared `@coco.lifespan` + 3 ContextKeys live in `oideachais/cocoindex_flows/_lifespan.py` — import from there instead of re-declaring (REFACTORING.md item 12). |
 | Add a new Cognee cognify pass | `oideachais/cognee_integration/` (5 adapters); see `.agents/skills/oideachais-leabharlann/SKILL.md` for the 3 leabharlann cognify passes |
 | Add a new cross-archive edge rule | `oideachais/cognify_rules/leabharlann_cross_archive.py` (3 rules) or `author_archive_cross_corpus.py` (8 rules); see `.agents/skills/oideachais-leabharlann/SKILL.md` for the leabharlann 3-edge contract |
 | Add a new Marimo dashboard | `oideachais/notebooks/` + `oideachais/notebooks/dashboards/` |
 | Add a new FastAPI route | `oideachais/api/routes/` (6 route modules) |
 | Add a new Dagster sensor | `oideachais/dagster_defs/sensors/` (5 sensor modules) |
+| Add a new Dagster `dg` Component | `oideachais/dagster_defs/components/` (3 KCG components: `celtic_dlt_source`, `celtic_lancedb_hnsw`, `celtic_cocoindex_v1`). Use `dg scaffold defs MyComponent my_component/`. |
+| Add a new LanceDB HNSW index | `oideachais/lancedb/indexing.py` (4 helpers: `build_hnsw_index`, `build_ivf_pq_index`, `build_scalar_index`, `optimize_index`) |
+| Add a new Graphiti episode | `oideachais/graph/graphiti_client.py` (the `graphiti_client` async context manager; falls back to FalkorDB Lite) |
+| Use a DuckLake 1.0 feature | `oideachais/dlt_utils/ducklake_options.py` (3 SQL helpers: `set_data_inlining_row_limit`, `set_sorted_by`, `set_bucket_partition`) |
+| Use a MotherDuck hosting option | `oideachais/dlt_utils/motherduck_options.py` (3 helpers: `fully_managed_destination`, `byob_destination`, `byoc_destination`) |
 | Migrate a v0 CocoIndex flow to v1 | `oideachais/cocoindex_flows/_v0_archive/` (the 10 deprecated v0 modules) — see `.agents/skills/oideachais-cocoindex-v1/SKILL.md` for the v0→v1 migration pattern (the 11 v1 Apps cover the equivalent use cases) |
 | Update the BAML × dlt × Dagster matrix | `oideachais/STATUS.md` (single source of truth) |
 | Add a new refactoring backlog item | `oideachais/REFACTORING.md` |

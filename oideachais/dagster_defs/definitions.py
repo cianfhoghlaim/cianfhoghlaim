@@ -16,6 +16,18 @@ Coverage:
 Usage:
     cd /path/to/oideachais
     DAGSTER_HOME=. dagster dev -m dagster.definitions
+
+The 2026-06 refactor (openspec/changes/refactor-dlt-dagster-2026-stack-align):
+- This file is the **bootstrap entrypoint**. It calls
+  `dg.load_from_defs_folder()` to mount the assets, sensors,
+  schedules, and the 3 KCG-specific Components from the
+  `defs.yaml` mount point.
+- The 3 KCG-specific Components are:
+  - `CelticDltSourceComponent` (`oideachais.dagster_defs.components.celtic_dlt_source`)
+  - `CelticLancedbHnswComponent` (`oideachais.dagster_defs.components.celtic_lancedb_hnsw`)
+  - `CelticCocoindexV1Component` (`oideachais.dagster_defs.components.celtic_cocoindex_v1`)
+- The new developer workflow is `dg list defs` → `dg list components` →
+  `dg scaffold defs MyComponent my_component/`.
 """
 from __future__ import annotations
 
@@ -30,11 +42,27 @@ _env_file = Path(__file__).parent.parent / ".env"
 
 if _locket_env.exists():
     load_dotenv(_locket_env)
-    
+
 if _env_file.exists():
     load_dotenv(_env_file, override=True)
 
 import dagster as dg
+
+# The Dagster 1.10 Components preview allows loading definitions
+# from a `defs/` folder via `dg.load_from_defs_folder()`. The
+# `defs.yaml` at the root of this folder mounts the assets/,
+# sensors/, schedules, and the 3 KCG-specific Components.
+try:
+    _DEFS_FOLDER = dg.load_from_defs_folder(project_root=Path(__file__).parent)
+    _DEFS_AVAILABLE = True
+except Exception as _exc:  # pragma: no cover - legacy fallback
+    import structlog
+
+    structlog.get_logger().warning(
+        f"dg_load_from_defs_folder_failed: {_exc}; falling back to legacy Definitions"
+    )
+    _DEFS_FOLDER = None
+    _DEFS_AVAILABLE = False
 
 # ============================================================================
 # Job Definitions
@@ -555,6 +583,11 @@ def oideachais_dbt_assets(context, dbt: DbtCliResource):
 
 
 # Register the dbt assets + resource in the Definitions
+#
+# The 2026-06 refactor: if `dg.load_from_defs_folder()` succeeded,
+# merge the new defs folder into the legacy `defs` so the
+# `CelticDltSourceComponent` / `CelticLancedbHnswComponent` /
+# `CelticCocoindexV1Component` assets appear in the same UI.
 defs = defs.merge(
     dg.Definitions(
         assets=[*combined_assets, oideachais_dbt_assets],
@@ -562,3 +595,5 @@ defs = defs.merge(
         resources={"dbt": _dbt_resource},
     )
 )
+if _DEFS_AVAILABLE and _DEFS_FOLDER is not None:
+    defs = defs.merge(_DEFS_FOLDER)

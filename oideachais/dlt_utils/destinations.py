@@ -14,11 +14,19 @@ Usage:
     )
 
 Phase 2.3 of the lateralise change: the namespace is now a
-*parameter* (default `"oideachais"`). Sibling quadrants
+*parameter* (default `"oideachois"`). Sibling quadrants
 (`tuatha`, `croilar`) re-export `with_namespace("tuatha")` etc.
 from a thin shim. This keeps a single DuckLake implementation
 in one place while letting each workspace member scope its
 S3 prefix + Postgres DB name to its own namespace.
+
+Phase 2026-06 DuckLake 1.0 alignment: ``get_dlt_destination``
+now supports 3 MotherDuck hosting options (managed / byob /
+byoc) via the ``MOTHERDUCK_MODE`` env var; default is
+``"byob"`` (the "sweet spot" per the 2026-04-13 MotherDuck
+launch post). The 1.0 features — data inlining, sorting, and
+bucket partitioning — are exposed via the
+``oideachais/dlt_utils/ducklake_options.py`` module.
 """
 
 from __future__ import annotations
@@ -28,6 +36,15 @@ from typing import Any, Callable
 
 import dlt
 from dlt.destinations.impl.ducklake.configuration import DuckLakeCredentials
+
+# DuckLake 1.0 helpers (the 2026-04-13 launch features).
+from .ducklake_options import (
+    DEFAULT_DATA_INLINING_ROW_LIMIT,
+    apply_ducklake_1_0_optimisations,
+    is_bucket_partitioned_table,
+    is_sorted_by_table,
+    set_data_inlining_row_limit,
+)
 
 DEFAULT_NAMESPACE = "oideachais"
 
@@ -166,6 +183,39 @@ def get_dlt_destination(
         return _build_production_destination(namespace)
     else:
         return _build_local_destination(namespace)
+
+
+def post_create_ducklake_1_0(
+    dataset_name: str,
+    table: str,
+) -> list[str]:
+    """Return the SQL statements to apply DuckLake 1.0 optimisations to a new table.
+
+    Called from a dlt `destination` callable (added in dlt 1.0) or
+    from a Dagster asset's `MaterializeResult` callback.
+
+    The SQL applies the 3 DuckLake 1.0 features in this order:
+    1. `data_inlining_row_limit=100` (the 1.0 default; applied to
+       every new table).
+    2. `SORTED BY (id)` (applied to the 8 high-volume tables
+       listed in `oideachais/dlt_utils/ducklake_options.py:SORTED_BY_TABLES`).
+    3. `PARTITIONED BY (bucket(1000, id))` (applied to the 3
+       largest fact tables listed in
+       `oideachais/dlt_utils/ducklake_options.py:BUCKET_PARTITIONED_TABLES`).
+
+    Args:
+        dataset_name: The dlt dataset name (e.g. "leabharlann_books").
+        table: The table name (e.g. "leabharlann_books").
+
+    Returns:
+        A list of SQL statements (may be empty).
+    """
+    qualified = f"{dataset_name}.{table}"
+    return apply_ducklake_1_0_optimisations(
+        qualified,
+        enable_sorting=is_sorted_by_table(qualified),
+        enable_bucketing=is_bucket_partitioned_table(qualified),
+    )
 
 
 def get_duckdb_fallback_destination(

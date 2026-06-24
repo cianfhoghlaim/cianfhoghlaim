@@ -1,6 +1,6 @@
 # Oideachais — Refactoring Backlog
 
-**Last updated:** 2026-06-16
+**Last updated:** 2026-06-24
 
 This file is the canonical refactor backlog for the `oideachais/` data platform. Each item has a `Status` field (`done` | `in_progress` | `backlog` | `superseded`) and links to a tracking openspec change (where applicable).
 
@@ -154,6 +154,16 @@ This file is the canonical refactor backlog for the `oideachais/` data platform.
 | 16 | `oideachais/dlt_sources/author_archive/_epub_extractor.py` written (ebooklib-based, graceful degradation) | `done` | `openspec/changes/leabharlann-cocoindex-v1` |
 | 17 | `oideachais/dlt_sources/author_archive/_citation_extractor.py` written (PyMuPDF link extraction) | `done` | `openspec/changes/author-archive-gemini-and-uos-ingestion` |
 | 18 | `oideachais/dagster_defs/assets/author_archive_assets.py` written (7 author-archive assets) | `done` | `openspec/changes/author-archive-gemini-and-uos-ingestion` |
+| 19 | `oideachais/dlt_utils/safety.py` extended with `validate_source_kwargs` + `safe_dlt_run_with_progress` (dlt 1.0 helpers) | `done` | `openspec/changes/refactor-dlt-dagster-2026-stack-align` |
+| 20 | `oideachais/dlt_utils/ducklake_options.py` written (DuckLake 1.0: inlining + clustering + bucket partitioning) | `done` | `openspec/changes/refactor-dlt-dagster-2026-stack-align` |
+| 21 | `oideachais/dlt_utils/schema.py` written (DuckDB + DuckLake GEOMETRY + VARIANT types) | `done` | `openspec/changes/refactor-dlt-dagster-2026-stack-align` |
+| 22 | `oideachais/dlt_utils/motherduck_options.py` written (managed / BYOB / BYOC hosting options) | `done` | `openspec/changes/refactor-dlt-dagster-2026-stack-align` |
+| 23 | `oideachais/lancedb/indexing.py` written (HNSW + IVF-PQ + scalar B-tree + optimize) | `done` | `openspec/changes/refactor-dlt-dagster-2026-stack-align` |
+| 24 | `oideachais/cocoindex_flows/_lifespan.py` written (shared `@coco.lifespan` + 3 ContextKeys) | `done` | `openspec/changes/refactor-dlt-dagster-2026-stack-align` |
+| 25 | `oideachais/dagster_defs/components/` written (3 KCG-specific Dagster Components) | `done` | `openspec/changes/refactor-dlt-dagster-2026-stack-align` |
+| 26 | `oideachais/dagster_defs/defs.yaml` written (DefsFolderComponent mount point) | `done` | `openspec/changes/refactor-dlt-dagster-2026-stack-align` |
+| 27 | `oideachais/dagster_defs/README.md` written (the `dg` CLI developer workflow) | `done` | `openspec/changes/refactor-dlt-dagster-2026-stack-align` |
+| 28 | `oideachais/graph/graphiti_client.py` written (real Graphiti 0.5 client + FalkorDB Lite fallback) | `done` | `openspec/changes/refactor-dlt-dagster-2026-stack-align` |
 
 ---
 
