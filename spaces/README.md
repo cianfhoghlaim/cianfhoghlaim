@@ -155,3 +155,46 @@ The full work breakdown is in the OpenSpec change
 | 2026-06-08 | Build Small 2026 hackathon: 4 Spaces + `_common` bundle | `croilar-hf-build-small-2026-demo` (archived 2026-06-08) |
 | 2026-06-17 | Reusable HF Spaces CI/CD workflow | `spaces-cicd-reusable-pipeline` (this branch) |
 | 2026-06-17 | Celtic data-engineering + Gradio ensemble patterns + 2 marimo notebooks | `celtic-data-engineering-patterns` (this branch) |
+| 2026-06-24 | 8 active + 1 archived + 1 canonical exception documented | `spaces-bundle-decomposition-v1` (round 12) |
+
+---
+
+## How to deploy
+
+The 4 active Spaces (an_scrudu / meaisin_cliste / cianfhoghlaim / anam_tuatha) deploy via GitHub Actions:
+
+```bash
+# Trigger the per-Space sync workflow (uses the canonical reusable workflow at
+# .github/workflows/spaces-sync.yml)
+gh workflow run "Sync <space> to HF" --repo cianfhoghlaim/kings_college_galway --ref main
+
+# Verify
+gh run list --workflow="Sync *_to HF" --limit=4
+# All 4 should show "completed" within 5 minutes
+```
+
+The 4 new demo Spaces (croilar_portfolio_demo / oideachais_mission_control /
+crypteolas_defi_monitor / tuatha_mmo_demo) deploy the same way.
+
+The 1 non-gradio Space (data-engineering) is built locally and pushed via
+`python -m build && twine upload dist/*` to PyPI.
+
+The full 8-phase playbook is in [`DEPLOY.md`](../DEPLOY.md).
+
+## How to debug
+
+| Symptom | Cause | Fix |
+|:--|:--|:--|
+| The Gradio app fails to import | The `_common/` bundle is missing | Add `from spaces._common import ...` |
+| The 5-element palette is missing | The `theme.py` import is missing | Use `gr.Blocks(theme=theme)` |
+| The LLM call returns 502 | The LiteLLM gateway is unreachable | The `chat_complete_json` helper auto-falls back |
+| The HF sync workflow times out | HF API rate limit | Add `retry: 3` to the reusable workflow |
+| The bilingual toggle doesn't work | The `i18n.t("key")` calls are missing | Use `i18n.t("key", lang=lang)` |
+
+## Common workflows
+
+1. **Add a new Space** — `mkdir -p spaces/<space>/` + create the 4 required files (app.py + requirements.txt + README.md + AGENTS.md) + add the per-Space sync.yml wrapper
+2. **Add a new Space theme** — extend the `tabs` list in `app.py` (see `.agents/skills/gradio-ensemble-pattern/`)
+3. **Add a new 5-element palette** — `spaces/_common/theme.py`
+4. **Add a new i18n string** — `spaces/_common/i18n.py` (the EN/GA bilingual toggle)
+5. **Push a model to HF Hub** — `spaces/_common/hf_hub_push.py`

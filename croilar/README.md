@@ -817,3 +817,43 @@ the platform gets to follow.
 ## 11. License
 
 MIT.
+
+---
+
+## How to deploy
+
+```bash
+# 1. Build the bun workspaces
+cd /Users/cianmacandeisigh/dev/kings_college_galway
+bun run turbo build --filter=croilar
+
+# 2. Deploy the croílár stack (5 sub-stacks)
+for stack in croilar-web croilar-portal croilar-dagster croilar-hono-api croilar-marimo; do
+  cd infrastructure/stacks/$stack && docker compose up -d
+done
+
+# 3. Verify
+curl -s http://croilar-web.cianfhoghlaim.ie/ | head -5
+curl -s http://croilar-portal.cianfhoghlaim.ie/ | head -5
+curl -s http://croilar-dagster.cianfhoghlaim.ie:3335/server_info | jq
+curl -s http://croilar-hono-api.cianfhoghlaim.ie/api/health | jq
+```
+
+The full 8-phase playbook is in [`DEPLOY.md`](../DEPLOY.md).
+
+## How to debug
+
+| Symptom | Cause | Fix |
+|:--|:--|:--|
+| `aleyum` references remain | The 5 aleyum→croilar collapses were not run | See `.agents/skills/croilar-stream-registry/` |
+| Convex returns 401 | The deploy key is stale | `bun run secrets:init` |
+| BetterAuth OIDC fails | Pocket ID is unreachable | Check `pocket-id.cianfhoghlaim.ie` |
+| A DLT pipeline fails on the CV | The PDF path is wrong | `get_author_dir()` returns the canonical path |
+
+## Common workflows
+
+1. **Add a new stream** — `croilar/config/sources.yaml` (see `.agents/skills/croilar-stream-registry/`)
+2. **Add a new persona** — `croilar/config/personas.yaml` + `croilar/apps/web/src/routes/`
+3. **Add a new BAML extraction** — `croilar/baml_src/<name>.baml` (the persona-specific schemas)
+4. **Add a new Dagster asset** — `croilar/dagster_assets/<area>/<asset>.py`
+5. **Add a new Convex function** — `croilar/convex/<area>/<function>.ts`

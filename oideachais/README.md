@@ -672,3 +672,44 @@ export default defineConfig({
 The TypeScript-clean code in `app/` is the actual Phase B deliverable; the
 Vinxi-config tweak is a 4-line patch that any follow-up session can apply
 once the team decides which Vinxi version to standardise on.
+
+---
+
+## How to deploy
+
+```bash
+# 1. Build the 4 docker images
+cd /Users/cianmacandeisigh/dev/kings_college_galway
+mise run turbo build --filter=oideachais
+
+# 2. Deploy the oideachais stack
+cd infrastructure/stacks/oideachais
+docker compose up -d
+sleep 30
+
+# 3. Verify the 5 services
+curl -s http://oideachais.cianfhoghlaim.ie:8000/health | jq
+curl -s http://oideachais.cianfhoghlaim.ie:3335/server_info | jq
+curl -s http://oideachais.cianfhoghlaim.ie:7777/health | jq
+curl -s http://oideachais.cianfhoghlaim.ie:7778/health | jq
+curl -s http://oideachais.cianfhoghlaim.ie:3080/ | head -5
+```
+
+The full 8-phase playbook is in [`DEPLOY.md`](../DEPLOY.md).
+
+## How to debug
+
+| Symptom | Cause | Fix |
+|:--|:--|:--|
+| Dagster UI shows 0 assets | The code-location failed to load | Check the Dagster logs at `/var/log/dagster/` |
+| BAML extraction returns the wrong shape | The schema is out of date | `bun run baml-cli compile` |
+| DLT pipeline hangs on Firecrawl | The rate limit was hit | Set `USE_LOCAL_SCRAPES=true` |
+| MotherDuck returns `403` | The token is stale | `bun run secrets:init` to refresh |
+
+## Common workflows
+
+1. **Add a new Dagster asset** — `oideachais/dagster_defs/assets/<area>/<asset>.py` + register in `oideachais/definitions.py`
+2. **Add a new DLT source** — `oideachais/dlt_sources/domains/<area>/<nation>/<source>.py`
+3. **Add a new BAML extraction** — `baml_src/<name>.baml` + `bun run baml-cli compile`
+4. **Add a new CocoIndex v1 App** — `oideachais/cocoindex_flows/<app>.py` (see `.agents/skills/oideachais-cocoindex-v1/`)
+5. **Add a new leabharlann source** — `oideachais/dlt_sources/author_archive/<source>.py`
