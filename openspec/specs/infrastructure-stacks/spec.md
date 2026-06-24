@@ -681,6 +681,41 @@ The data-engineering Space MUST consume the KCG canonical stack: `stedding/inges
 - **AND** it uses dbt-duckdb
 - **AND** it has a Cognee + Graphiti cognify pass
 
+### Requirement: crypteolas DeFi Monitor Space
+
+The crypteolas data platform MUST provide a DeFi Monitor HuggingFace Space at `spaces/crypteolas_defi_monitor/` that exposes the 4 streams (GitHub + DeFi + Knowledge Graph + Marimo) as a single Gradio app. The Space MUST be wired to the canonical Cognee + Graphiti knowledge graph and the Agno multi-agent team.
+
+#### Scenario: User opens the DeFi Monitor
+
+- **WHEN** a user navigates to the crypteolas_defi_monitor Space
+- **THEN** they see 4 tabs (GitHub + DeFi + Knowledge Graph + Marimo)
+- **AND** each tab shows the corresponding stream's data
+- **AND** the Knowledge Graph tab is wired to Cognee + Graphiti
+- **AND** the Marimo tab launches the 4 crypteolas notebooks
+
+### Requirement: Tuatha MMO Demo Space
+
+The tuatha quadrant MUST provide an MMO Demo HuggingFace Space at `spaces/tuatha_mmo_demo/` that demonstrates the Tuatha Celtic Educational MMO with 1 Babylon.js 7 + WebGPU quest + the 4 tuatha agents + the crypteolas achievement-ledger.
+
+#### Scenario: User opens the MMO Demo
+
+- **WHEN** a user navigates to the tuatha_mmo_demo Space
+- **THEN** they see 4 tabs (Map + Quest + Achievement Ledger + Knowledge Graph)
+- **AND** the Map tab shows a Babylon.js 7 + WebGPU British Isles scene
+- **AND** the Quest tab shows 1 quest with the 4-feedback-channel pattern
+- **AND** the Achievement Ledger tab shows the 5-feat progression
+
+### Requirement: Croílár Portfolio Demo Space
+
+The croilar quadrant MUST provide a Portfolio Demo HuggingFace Space at `spaces/croilar_portfolio_demo/` that demonstrates the Croílár multi-persona portfolio platform with the 3 personas (aleyum / cianfhoghlaim / carlcashman) + the bilingual EN/GA routing + the 12 DLT pipelines + the marimo notebooks.
+
+#### Scenario: User opens the Portfolio Demo
+
+- **WHEN** a user navigates to the croilar_portfolio_demo Space
+- **THEN** they see 4 tabs (Aleyum + Cianfhoghlaim + Carlcashman + Bilingual EN/GA)
+- **AND** each persona tab shows the 4 DLT pipelines + the 5 marimo notebooks
+- **AND** the Bilingual EN/GA tab provides the canonical Celtic language toggle
+
 ## Infrastructure (Control Plane) Stacks
 
 | Stack | Image(s) | Key Ports |
