@@ -66,9 +66,16 @@ inventory-bunchloch-20260615T120000Z.json` first.
 
 ## CI gate
 
-A follow-up change will add a `stack-doctor` turbo task that
-runs the 4 scripts and posts the diff/probe output as a GitHub
-PR comment. For now, the scripts are run-on-demand only.
+The 4-gate `bun run stack-doctor` CI check (file gate + container
+gate + secret gate + Pangolin gate) runs on every PR and posts
+the diff/probe output as a GitHub PR comment. See
+`infrastructure/GOLD_STANDARD.md` for the gate definitions and
+`openspec/specs/infrastructure-stacks/spec.md` (added in
+`infrastructure-stack-doctor-v1`, archived 2026-06-24) for the
+formal Requirement. The 4-gate script also runs on-demand via
+`./infrastructure/audit/scripts/inventory-bunchloch.sh` +
+`./infrastructure/audit/scripts/diff-against-composes.sh` +
+`./infrastructure/audit/scripts/probe-public-urls.sh`.
 
 ## Relation to the openspec change
 
