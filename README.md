@@ -653,3 +653,53 @@ Business Source License 1.1 — non-commercial, cultural preservation, and acade
 ---
 
 *Built by Cian Mac an Deisigh Ui Liathain — qualified Mathematics & Applied Mathematics teacher (TCI), NUI Galway graduate (Applied Statistics, Software Development, Irish Language Studies), dual Irish-British citizen.*
+
+---
+
+## 8-phase end-to-end deploy playbook
+
+The canonical deploy procedure for the entire Cianfhoghlaim
+monorepo is the 8-phase playbook in [`DEPLOY.md`](DEPLOY.md).
+The phases are:
+
+1. **Phase 0: Pre-flight** — verify the toolchain, the secrets, and the 2 hosts
+2. **Phase 1: Infrastructure** — bootstrap Infisical + Komodo + Pangolin + Locket + the 4 quadrant stacks
+3. **Phase 2: Oideachais** — deploy the lakehouse (Dagster + FastAPI + TanStack Start + AgentOS + ADK)
+4. **Phase 3: Meaisínfhoghlaim** — deploy the AI/ML services (llama-swap + mlx-omni + invokeai + 12 agents)
+5. **Phase 4: Tuatha** — deploy the MMO + the crypteolas achievement ledger
+6. **Phase 5: Croílár** — deploy the 3-persona portfolio + the DevTools Hub
+7. **Phase 6: Spaces** — deploy the 4 active HuggingFace Spaces (via the reusable workflow)
+8. **Phase 7: Verify** — run the 4 audit scripts + the `stack-doctor` CI gate
+9. **Phase 8: Rollback** — the canonical rollback procedure (Locket auto-rollback + Infisical version restore + Komodo stack disable)
+
+The 8 phases must be run in order. If any phase fails,
+**stop and run Phase 8** before continuing.
+
+## How to deploy (per quadrant)
+
+| Quadrant | Stack | Command |
+|:--|:--|:--|
+| infrastructure | `infrastructure/stacks/<name>/` | `docker compose up -d` |
+| oideachais | `infrastructure/stacks/oideachais/` | `docker compose up -d` |
+| meaisinfhoghlaim | `infrastructure/stacks/meaisinfhoghlaim/` | `docker compose up -d` |
+| tuatha | `infrastructure/stacks/tuatha/` | `docker compose up -d` |
+| croilar | `infrastructure/stacks/croilar-*` | `docker compose up -d` (5 sub-stacks) |
+| spaces | (HF Spaces — sync via GitHub Actions) | `gh workflow run "Sync <space> to HF"` |
+
+## How to debug (5 common failure modes)
+
+| Symptom | Cause | Fix |
+|:--|:--|:--|
+| The `mise install` fails on Python | The homebrew Python is not in PATH | `brew install python@3.12 && eval "$(mise activate bash)"` |
+| The `bun run secrets:init` fails | The Infisical token is expired | `infisical login && bun run secrets:init` |
+| The `mise run turbo build` fails on oideachais | The OCI Ampere A1 is unreachable | `ssh arm1-oci` and verify the Docker daemon |
+| The `docker compose up -d` hangs on litellm | The Locket sidecar is waiting for a secret | `docker logs <stack>-locket-1` and check the Infisical reference |
+| The 4 audit scripts return non-zero | A container is orphaned / missing | `bash infrastructure/audit/scripts/diff-against-composes.sh` to identify |
+
+## Common workflows (5 recipes)
+
+1. **Add a new stack** — `mkdir -p infrastructure/stacks/<name>/` + create the 6 GOLD_STANDARD files + `bun run validate-stacks`
+2. **Add a new Space** — `mkdir -p spaces/<space>/` + create the 4 required files + add the per-Space sync.yml wrapper
+3. **Add a new Dagster asset** — `oideachais/dagster_defs/assets/<area>/<asset>.py` + register in `oideachais/definitions.py`
+4. **Add a new BAML extraction** — `baml_src/<name>.baml` + `bun run baml-cli compile`
+5. **Add a new openspec change** — `mkdir -p openspec/changes/<change-id>/` + `proposal.md` + `tasks.md` + `specs/<spec>/spec.md` + `openspec validate <change-id> --strict`
