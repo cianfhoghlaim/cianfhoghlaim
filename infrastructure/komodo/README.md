@@ -30,6 +30,14 @@ Locket acts as a sidecar that mounts ephemeral memory (`tmpfs`) to provide runti
 *   `procedures/`: All procedure TOML files (56 files)
 *   `servers/`: Server definitions (2 hosts: arm1-oci + bunchloch)
 *   `sites/`: Per-host bootstrap (OCI + MacBook)
+
+**Note (2026-06-24):** The 5 legacy `.ts` scripts in
+`infrastructure/legacy/` (`ansible.ts`, `cloudflare-dns.ts`,
+`pangolin-setup.ts`, `servers.ts`, `taisce-deploy.ts`) have
+been **deleted** in round 7 of the multi-quadrant refactor
+plan. They were already replaced by `infrastructure/iac/komodo/*.ts`
++ the 56 procedures in `infrastructure/komodo/procedures/`. See
+`openspec/changes/archive/2026-06-24-infrastructure-stack-doctor-v1/`.
 *   `resource-syncs/`: GitOps resource sync from Forgejo to Komodo Core
 *   `../ansible/`: Main infrastructure provisioning automation
 
