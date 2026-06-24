@@ -82,6 +82,29 @@ client<llm> OpenCodeGo {
 }
 
 // =============================================================================
+// MiniMax-M3 via the gateway alias `minimax` — vendor-de-risked
+// =============================================================================
+// Routes through the LiteLLM gateway alias `minimax` (see
+// infrastructure/stacks/litellm/config/config.yaml). The alias chains
+// 3-key round-robin (OPENCODE_GO_API_KEY_0/1/2) → qwen3.7-max →
+// kimi-k2.6 → glm-4.6 (Z.ai direct) → local/math/qwen25-math
+// (llama-swap GGUF, fully offline on the MacBook M4).
+//
+// Use this client instead of `OpenCodeGo` whenever you need a model
+// that survives a single-channel outage (gateway, key cap, or
+// regional unavailability of opencode-go).
+// =============================================================================
+client<llm> MiniMax {
+  provider openai
+  options {
+    base_url env.LITELLM_BASE_URL
+    api_key env.LITELLM_MASTER_KEY
+    model "minimax"
+  }
+  retry_policy Simple
+}
+
+// =============================================================================
 // Local self-hosted via the gateway (Qwen2.5-VL, UCCIX, olmOCR, Granite Docling)
 // =============================================================================
 client<llm> LocalVision {
