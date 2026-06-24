@@ -328,3 +328,83 @@ The **first 5 are wired**; the last 2 are queued in
 `oideachais/REFACTORING.md` Feature 2.
 
 ```
+
+## 2026-06 update: dg CLI + Components
+
+Dagster's `dg` CLI is now the recommended way to scaffold and manage Dagster projects. It supersedes the older `dagster project scaffold` pattern.
+
+### The 5 high-value dg commands
+
+```bash
+# 1. Initialise a new Dagster project
+dg init my-project
+cd my-project
+
+# 2. Scaffold a new asset
+dg scaffold asset my_pipeline/my_asset
+
+# 3. Scaffold a Component (YAML-defined integration)
+dg scaffold component dagster.MyComponentType
+
+# 4. Local build (validate types + dependencies)
+dg build
+
+# 5. Local dev (run the webserver + daemon)
+dg dev
+```
+
+### The Components API
+
+Components are YAML-defined integration points that let you wire Dagster assets, jobs, resources, and schedules declaratively without writing Python:
+
+```yaml
+# my_project/components/curriculum_assets.yaml
+type: dagster.asset
+
+params:
+  group_name: ie_curriculum
+  key_prefix: ie_education
+  automation_condition: "{{ automation_condition.eager() }}"
+  spec: |
+    from dagster import AssetSpec
+    return AssetSpec(
+        key=["ie_education", "primary_curriculum"],
+        description="Primary curriculum data from NCCA",
+    )
+```
+
+Then in `definitions.py`:
+
+```python
+import dagster as dg
+from my_project.components import CurriculumComponent
+
+defs = dg.Definitions(
+    assets=[CurriculumComponent()],
+)
+```
+
+### The KCG code-location pattern
+
+The Cianfhoghlaim platform runs 5 code-locations from a single Dagster UI:
+
+| Code-location | Path | Workspace member |
+|:--|:--|:--|
+| `oideachais` | `oideachais/dagster_defs/` | The lakehouse (280+ assets) |
+| `tuath` | `tuatha/dagster_assets/` | The Celtic MMO |
+| `crypteolas` | `tuatha/crypteolas/dagster_assets/` | The crypto data platform |
+| `croilar` | `croilar/definitions.py` | The multi-persona portfolio |
+| `meaisin_heartbeat` | `meaisinfhoghlaim/dagster_defs/` | The AI/ML heartbeats |
+
+All 5 are registered in the root `dg.toml` workspace file:
+
+```toml
+# /Users/cianmacandeisigh/dev/kings_college_galway/dg.toml
+[workspace]
+name = "cianfhoghlaim"
+
+[[workspace.locations]]
+location = "oideachais"
+
+[[workspace.locations]]
+location = "tuath"

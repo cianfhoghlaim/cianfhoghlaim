@@ -582,3 +582,51 @@ the full 442-line reference: the 4 critical constraints
 table, the 11 patterns with full code, the 6 integration
 points, the 6 common mistakes + fixes, and the
 implementation checklist.
+
+## 2026-06 update: Langfuse v3 + MLflow GenAI + RAGAS trace-based
+
+The 4 observability tools that KCG agents use (Langfuse, MLflow, RAGAS, Logfire) all shipped major updates in 2026.
+
+### Langfuse v3 (released 2026-05)
+
+The v3 release is what KCG runs at `langfuse.cianfhoghlaim.ie`. Key features for KCG agents:
+
+- **Prompt management v2** — version + A/B test prompts from the Langfuse UI; the agent runtime picks up new prompts at the next request without a restart
+- **Cost tracking per model** — separate cost lines for `gpt-4o`, `claude-sonnet-4.5`, `gemini-2.0-flash`, `llama-swap` (the local M4 model)
+- **Session grouping** — group 5 agent turns into 1 user session, so the dashboard shows the cost + latency for the whole conversation
+- **Dataset + experiment tracking** — link every LLM call to a dataset version + an experiment run, so you can reproduce any past agent trace
+
+The KCG pattern: every agent call goes through LiteLLM with `langfuse_callback` enabled, so the Langfuse trace is populated automatically.
+
+### MLflow GenAI evaluation (the 2026-06 feature)
+
+MLflow added a GenAI evaluation mode in 2026 that complements Langfuse:
+
+- `mlflow.evaluate()` with the `genai` mode runs the agent against a labelled dataset
+- Tracks quality metrics (faithfulness, answer relevance, context precision) per model
+- Integrates with the MLflow model registry: a model can only be promoted to "Production" if it passes the eval gate
+
+The KCG pattern: nightly batch eval of the `meaisinfhoghlaim/agents/curriculum_agent` against the `oideachais_eval_v3` dataset, logged to MLflow. The Dagster asset `mlflow_eval_curriculum` (in `meaisinfhoghlaim/dagster_defs/`) is the entry point.
+
+### RAGAS trace-based metrics
+
+RAGAS now ships trace-based metrics that work on the Langfuse trace (not just the dataset):
+
+- **Faithfulness** — does the answer stay grounded in the retrieved context?
+- **Answer relevance** — does the answer address the question?
+- **Context precision** — is the retrieved context actually relevant?
+- **Context recall** — is the retrieved context complete?
+
+The KCG pattern: the RAGAS-as-Dagster-asset-check pattern runs these on every `cognee.remember` call. The asset check `ragas_faithfulness_check` in `oideachais/dagster_defs/asset_checks.py` fails the asset materialisation if faithfulness drops below 0.85.
+
+### Logfire MCP (2026-06)
+
+Pydantic Logfire now ships an MCP server that exposes traces to the agent runtime. KCG does not yet wire it, but the skill is in `.agents/skills/pydantic-ai/SKILL.md` for future use.
+
+### Pair this skill with
+
+- `pydantic-ai/SKILL.md` — the agent framework that wires Logfire
+- `langfuse/SKILL.md` — the Langfuse detail
+- `mlflow/SKILL.md` — the MLflow detail
+- `ragas/SKILL.md` — the RAGAS detail
+- `datadog/SKILL.md` — the Datadog APM detail (the umbrella over Langfuse + MLflow)

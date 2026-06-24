@@ -629,3 +629,61 @@ Beszel alert matrix, and the combined health-check script.
 - **Documentation**: https://docs.cognee.ai
 - **GitHub**: https://github.com/topoteretes/cognee
 - **Website**: https://www.cognee.ai
+
+## 2026-06 update: temporal cognify + session memory + auto-routing
+
+Cognee 0.1+ adds the 3 features below that the KCG curriculum pipeline uses.
+
+### Temporal cognify
+
+The new `cognify` accepts a `time_range` parameter to scope the knowledge graph to a specific time window. Use this for any "what did the curriculum look like in 2024?" question:
+
+```python
+import cognee
+
+await cognee.cognify(
+    time_range=("2024-01-01", "2024-12-31"),
+    dataset="oideachais_2024",
+)
+```
+
+The graph stores the temporal context as a first-class node, so a query about "the 2024 syllabus" returns only the 2024 facts (not the 2025 revision).
+
+### Session memory + `improve()`
+
+Sessions let you store Q&A without the full cognify pipeline, then later bridge the session into the permanent graph:
+
+```python
+# Phase 1: fast session storage
+await cognee.remember(session_id="agent_42", data="agent Q&A pair")
+
+# Phase 2 (later): bridge session to permanent graph
+await cognee.improve(
+    dataset_name="main_dataset",
+    session_ids=["agent_42", "agent_43", "agent_44"],
+)
+```
+
+The 4-stage `improve()` pipeline: (1) apply feedback weights to graph nodes/edges, (2) persist session Q&A into the permanent graph, (3) enrich graph with triplet embeddings (memify), (4) sync enriched graph back into session caches.
+
+### Auto-routing search (`recall()`)
+
+The new `recall()` function picks the best search strategy automatically. When a `session_id` is provided, it first searches the session cache, then falls through to the permanent graph:
+
+```python
+results = await cognee.recall(
+    query="What changed in the JC maths syllabus?",
+    session_id="agent_42",
+    top_k=10,
+)
+# -> First checks session cache by keyword match
+# -> Falls through to GRAPH_COMPLETION on the permanent graph
+```
+
+The available search types (per `SearchType` enum) are: `GRAPH_COMPLETION`, `GRAPH_COMPLETION_COT`, `RAG_COMPLETION`, `CHUNKS`, `SUMMARIES`, `TEMPORAL`, `FEELING_LUCKY`. Override with `search_type=...`.
+
+For the KCG curriculum pipeline specifically, the `oideachais/cognee_integration/cross_stage_cognify.py` uses these features to:
+
+- Store 5-stage cognify (Aistear → Primary → JC → SC → Tertiary)
+- Run `improve()` after each agent session
+- Use `recall(session_id=...)` to surface the 2024 vs 2025 syllabus facts
