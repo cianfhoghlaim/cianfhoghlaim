@@ -145,3 +145,142 @@ To view or edit embedding model configuration, include/exclude patterns, or lang
 ## Management & Troubleshooting
 
 For installation, initialization, daemon management, troubleshooting, and cleanup commands, see [management.md](references/management.md).
+
+## KCG integration
+
+CCC is the **primary code discovery tool** for every KCG
+agent — per the root `AGENTS.md` instruction, "always use
+ccc before grep/find". The polyglot monorepo is indexed
+continuously into `.cocoindex_code/target_sqlite.db`
+(~35 MB) via `bun run ccc:index` (incremental refresh,
+<10s on changed files; full rebuild ~2-5 min via
+`bun run ccc:init && bun run ccc:index`).
+
+The CCC MCP server is wired in `opencode.json` as
+`cocoindex-code` (`ccc mcp`), exposing
+`cocoindex-code_search(query, limit, languages, paths)` to
+every agent. The tool returns ranked
+`[file_path, line_range, score]` tuples — semantic,
+embedding-based, not keyword.
+
+**4 canonical CocoIndex flow examples** for the KCG
+workloads:
+
+```python
+# 1. Text embedding with LanceDB (curriculum corpus)
+flow = Flow("text_embedding")
+    .source(TextEmbedding.from_markdown("./docs/**/*.md"))
+    .transform(LanceDB("curriculum_embeddings"))
+
+# 2. Document knowledge graph (LLM-extracted → Neo4j)
+flow = Flow("docs_kg")
+    .source(DocumentSource("./docs/**/*.md"))
+    .transform(LLMExtraction(model="deepseek-v4-pro",
+                             schema=KnowledgeGraphSchema))
+    .sink(Neo4jSink("bolt://localhost:7687"))
+
+# 3. Code embedding (tree-sitter chunker → LanceDB)
+flow = Flow("code_index")
+    .source(CodeSource("./**/*.py", chunker="tree-sitter"))
+    .transform(TextEmbedding("code-embeddings"))
+    .sink(LanceDBSink("./.cocoindex_code"))
+
+# 4. Multi-format indexing with ColPali (PDF/PNG/JPG → Qdrant)
+flow = Flow("visual_docs")
+    .source(MultiFormatSource("./docs/**/*.{pdf,png,jpg}"))
+    .transform(ColPaliEmbedding())
+    .sink(QdrantSink("http://localhost:6333"))
+```
+
+**CCC + Cognee complementarity** is the key architectural
+insight: CCC searches code (returns implementation files);
+Cognee searches docs (returns architecture + patterns). An
+agent asking "find how BAML extraction is implemented" gets
+code from CCC and architecture from Cognee, then merges.
+
+**Performance**:
+
+| Operation | Scope | Time |
+|:--|:--|:--|
+| `ccc:index` (incremental) | Changed files only | <10s |
+| `ccc:index` (full rebuild) | Entire monorepo | ~2-5 min |
+| `ccc:search` | Semantic query | <1s |
+| `ccc mcp` server | Continuous | Background |
+
+See `references/kcg-integration/CCC_INTEGRATION.md` for
+the full 187-line reference: the current setup, the MCP
+config, the index update policy (incremental + full rebuild
++ scheduled via `bun run turbo ccc:index`), the search
+API, the per-agent indexing workflow, the 4 flow examples
+(text embedding, docs KG, code embedding, ColPali), the
+CCC + Cognee dual-search diagram, the index file structure
+(`.cocoindex_code/{cocoindex.db, settings.yml, target_sqlite.db}`),
+the performance table, and the cross-references.
+
+## KCG ccc-ready index health
+
+The round-1 `cocoindex_readiness_audit` (327 lines, dated
+2026-06-06) confirmed the CCC index is **already
+ccc-ready for the docs corpus** and the gap is frontmatter,
+not indexing. The index is **1.4 GB**, indexes **1,743
+`.md` files** (because `**/*.md` is in `include_patterns`),
+and was rebuilt on the audit day — no refresh needed.
+
+**7 sample queries** all returned `docs/` files with strong
+relevance (0.66-0.79 score range, frequently in the top
+position):
+
+| Query | Top hit | Score |
+|:--|:--|--:|
+| "BAML extraction patterns for Irish education" | `docs/meaisínfhoghlaim/model-ecosystem.md` | 0.774 |
+| "Dagster asset partition definition" | `docs/data_engineering/dagster-comprehensive.md` | 0.701 |
+| "Convex schema design" | `openspec/.../convex/schema/spec.md` (spec beats docs) | 0.721 |
+| "Firecrawl pipeline configuration" | `docs/old/...firecrawl-openapi-research.md` (dup w/ bonneagar, tuatha) | 0.688 |
+| "ADK agent routing" | `docs/context/.../google-adk.md` (docs outrank code) | 0.721 |
+| "Celtic educational MMO x402 micropayments" | `docs/tuatha/celtic_mmo.md` (4 dups across dirs) | 0.787 |
+| "Gaeltacht language planning areas geoJSON" | `docs/data_engineering/data-sources.md` (4 dups) | 0.741 |
+
+**3 pass / 2 gap findings**: pass on indexing, search
+returns docs/, docs outrank code for concepts,
+docs-exclusive content is searchable, index freshness;
+gap on YAML frontmatter (0 of 7 sampled files) and
+duplicate content (4+ copies of same content across
+`docs/`, `docs/old/`, `docs/bonneagar/`, `docs/tuatha/`,
+`docs/tuatha/tuatha/`).
+
+**The "ccc-clean" frontmatter convention** (the round-1
+recommendation that became the `agent-docs-patterns`
+skill's 12-field schema): `title` (anchor at position 0),
+`description` (dense one-sentence summary), `domain`
+(controlled vocabulary), `entities` (class/function
+names that match code identifiers), `ccc_query_hints` (the
+exact natural-language queries users would type — the
+highest-ROI field), `status` (active/draft/archived),
+`related_skills`, `related_code` (file paths create
+embedding adjacency with actual code chunks), `related_docs`.
+
+**The 9-point summary table** scored: docs/ indexed (Pass),
+semantic search returns docs/ (Pass), docs outrank code
+for concepts (Pass), docs-only content searchable (Pass),
+index freshness (Pass), YAML frontmatter (Gap — 0/7),
+duplicate content (Gap — 4+ copies), index size
+(Healthy — 1.4 GB), docs/ isolation filterable (Pass).
+
+**5 audit recommendations**: (1) no index refresh needed,
+(2) add frontmatter starting with `ccc_query_hints` for
+highest ROI, (3) deduplicate before consolidating (remove
+`docs/old/` + nested `docs/tuatha/tuatha/` first), (4) create
+a `guides.yml` for cross-cutting concept guides
+("BAML extraction end-to-end", "Tuath MMO x402 payment
+flow"), (5) standardize on `--path docs/` for agent
+queries that need documentation context, (6) run
+`ccc index` after each major consolidation batch.
+
+See `references/health/cocoindex_readiness_audit.md` for
+the full 327-line audit: the executive summary, the
+indexing + search internals, the 7-query test results
+(each with top-5 hits + scores + assessment), the index
+health check, the frontmatter audit (0/7 sampled files),
+the 6-point "ccc-clean" convention, the 9-point summary
+table, the 6 recommendations, and the appendix of test
+commands.

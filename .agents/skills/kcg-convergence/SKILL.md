@@ -187,4 +187,101 @@ New stack?
 - `infrastructure/AGENTS.md` — the canonical stack inventory
 - `infrastructure/QUADRANT-TO-STACK-MAP.md` — quadrant → stack
   routing
+
+## Team-workflow stack
+
+The 8 live private resources behind the Cianfhoghlaim
+two-tier zero-trust network (Pangolin + WireGuard mesh,
+PocketID passkey SSO, TinyAuth forward auth):
+
+| Resource | Domain | Port | Status |
+|:--|:--|:--|:--|
+| **Pangolin Admin** | `pangolin.cianfhoghlaim.ie` | 443 | Online |
+| **PocketID** (OIDC) | `auth.cianfhoghlaim.ie` | 443 | Online |
+| **TinyAuth** (forward auth) | `tinyauth.cianfhoghlaim.ie` | 443 | Online |
+| **Infisical Vault** | `infisical.cianfhoghlaim.ie` | 8080→443 | Online |
+| **n8n Workflow Automation** | `n8n.cianfhoghlaim.ie` | 5678 | Online |
+| **Vikunja Team Workspace** | `vikunja.cianfhoghlaim.ie` | 3456 | Online |
+| **ChangeDetection.io** | `changedetection.cianfhoghlaim.ie` | 5000 | Online |
+| **Glance Dashboard** | `glance.cianfhoghlaim.ie` | 8080 | Online |
+
+**3 onboarding steps for team members**: (1) install
+**Olm** (Pangolin client for macOS) from the admin →
+"Install Site Connector" — gives your Mac a routable IP
+in the Pangolin WireGuard mesh (e.g., `100.64.0.X`),
+(2) set up a **PocketID passkey** (Touch ID, YubiKey, etc.)
+at `https://auth.cianfhoghlaim.ie` — passkey-only, no
+passwords, (3) access private resources via
+`https://<service>.cianfhoghlaim.ie` directly — Pangolin's
+PocketID SSO layer handles auth.
+
+**5 architectural planes**:
+- **Identity** — PocketID OIDC provider, passkey-only;
+  TinyAuth forward auth proxy; Pangolin auth-aware reverse
+  proxy + WireGuard mesh coordinator
+- **Secrets** — Infisical vault of record; Locket sidecar
+  pattern; `.infisical.env` (committed template) + `.env`
+  (gitignored runtime)
+- **Routing** — Traefik v3.6 (TLS termination, host-based
+  routing); Gerbil (WireGuard peers + tunnels); Newt
+  (per-site tunnel agent, Docker blueprint enabled)
+- **Sites** — `arm1-oci` (Oracle Cloud ARM, 24GB RAM, 4 CPU,
+  194GB disk, primary control plane); `bunchloch` (MacBook
+  M4, workload host)
+- **Workflow automation** — n8n + Vikunja + cal-diy +
+  ChangeDetection.io + Glance
+
+**Resource declaration pattern** — every Docker service
+gets a `pangolin.yaml` overlay with 7 labels
+(`pangolin.private-resources.<svc>.{name,mode,destination,
+full-domain,destination-port,protocol,roles}`). Deploy
+with `docker compose -f compose.yaml -f pangolin.yaml up
+-d`; Newt's Docker socket picks up the labels and
+registers the resource with Pangolin within ~10s.
+
+**Secret hydration pipeline**: `.infisical.env` (committed
+template) → `bun run secrets:init` (pushes values to
+Infisical `dev-baile` vault) → Locket sidecar (resolves
+`infisical://...` refs at container boot) → container env
+at runtime.
+
+**5 architectural principles**: zero-trust by default (no
+public exposure), passkey-only auth (no passwords to phish),
+GitOps-friendly (`compose.yaml` + `pangolin.yaml` +
+`secrets.env` overlay per stack), self-hosted (no SaaS
+dependencies), open source (Pangolin + PocketID + TinyAuth
++ Infisical + n8n + Vikunja + Glance + ChangeDetection +
+Locket — all FOSS).
+
+**3 common troubleshooting issues**: (1) "Cannot access
+service" → check Olm, check Pangolin resource
+registration, check Newt Docker network; (2) "Service in
+restart loop" → usually missing Locket env var, check
+`docker logs` for "env file not found" or auth errors,
+verify secret in Infisical; (3) "Locket can't connect to
+Infisical" → Locket needs Docker gateway URL
+(`http://172.18.0.1:8081`), set `INFISICAL_URL` in stack's
+`.env`, confirm `infisical-machine-identity` exists.
+
+**4 "what's next" items** (status as of 2026-06-06): n8n
++ Vikunja OIDC login (clients in PocketID pending), n8n
+workflows connected to Infisical for credential
+provisioning, cal-diy + paperless-ngx stacks deployed
+(compose files ready, need `compose up`), Beszel monitoring
+agent on arm1-oci (currently restarting).
+
+The **migration report** at
+`references/team-workflow-migration-2026-06-06.md` (268
+lines) covers the Infisical v0.160.10 migration, the
+Locket URL fix, and the 22-folder audit. It is the
+canonical handoff for any new team member onboarding to
+the workflow stack.
+
+See `references/TEAM_HANDOFF.md` for the full 168-line
+team handoff: the network diagram, the 8 live private
+resources table, the 3-step onboarding flow, the 5
+architectural planes, the resource declaration pattern,
+the secret hydration pipeline, the 3 common
+troubleshooting issues, the 5 architectural principles,
+and the screenshot references.
 - `infrastructure/GOLD_STANDARD.md` — the 6-file pattern per stack

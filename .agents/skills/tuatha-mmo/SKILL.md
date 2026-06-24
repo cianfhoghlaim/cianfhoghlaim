@@ -452,3 +452,57 @@ See `references/swift-kmp-bridge.md` for the full
 390-line iOS bridge guide, and
 `references/british-exam-builder.md` for the full 374-line
 British exam builder architecture.
+
+## KCG quadrant reference
+
+The canonical 73-line reference for the `tuatha/` quadrant
+as a whole, viewed from the post-2026-06-06 docs
+restructure. Tuath is the gamified Celtic language learning
+platform — one of the 5 quadrants in the Cianfhoghlaim
+monorepo — that exposes a FastAPI backend, an Axum payment
+API (x402), Google ADK agents, a TanStack Start admin
+frontend, a Babylon.js 3D game client, a SpacetimeDB
+real-time state module, and the Crypteolas token.
+
+**Workspace structure** (a uv-workspace with 3 sub-members):
+
+| Sub-member | Purpose |
+|:--|:--|
+| `tuatha/codeolas/` | Code intelligence library (Tree-sitter + CocoIndex; ingest of code repos) |
+| `tuatha/crypteolas/` | Crypto / DeFi research (GitHub, protocols, analytics) |
+| `tuatha/apps/crypteolas_demo/` | Demo app |
+
+**Front-end topology**: `tuatha/ui/` uses **Babylon.js**
+(not TanStack) — the *only* front-end in the monorepo that
+doesn't use TanStack.
+
+**Data plane**:
+- **In-game state**: SpacetimeDB (real-time, low-latency)
+- **Premium content**: served from `oideachais/` (DuckLake)
+  — paid via x402 micro-transactions in Crypteolas token
+- **Dagster assets**: `tuatha/dagster_assets/` for the
+  MMO's curriculum-in-game asset graph (separate from
+  `oideachais/dagster_defs/`)
+
+The 6 canonical KCG docs for Tuath live in `docs/06-product/`:
+`babylonjs.md`, `crypteolas.md`, `game-development.md`,
+`educational-platform.md`, `celtic-mmo.md`; and
+`docs/05-web/frontend-topology.md` for the front-end
+taxonomy.
+
+The frontmatter of the source (`title: Tuath Celtic
+Educational MMO`, `domain: architecture`, `status: stable`,
+`truth: sole`) declares this the **sole** KCG canonical
+for the Tuath quadrant — superseding earlier
+`docs/tuatha/` subtree content (which has been consolidated
+in rounds 1-9).
+
+See `references/TUATH_MMO.md` for the full 73-line
+canonical reference: the quadrant intro, the 7 surfaces
+(FastAPI + Axum + ADK + TanStack Start + Babylon.js +
+SpacetimeDB + Crypteolas), the workspace member table, the
+front-end topology note, the 3-plane data architecture
+(SpacetimeDB + DuckLake + Dagster), the 6-doc cross-reference
+list, and the "see also" runtime pointers
+(`tuatha/DEVELOPMENT.md`, `tuatha/README.md`,
+`tuatha/gaeilge.md`).
