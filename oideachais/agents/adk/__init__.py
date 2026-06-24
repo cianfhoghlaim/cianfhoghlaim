@@ -128,6 +128,11 @@ from .translation_agent import (
     translate_text,
     validate_language_pair,
 )
+from .celtic_tutor_agent import celtic_tutor_agent
+from .mythology_narrator_agent import mythology_narrator_agent
+from .quest_guide_agent import quest_guide_agent
+from .research_assistant_agent import research_assistant_agent
+from .tuatha_root_agent import root_agent as tuatha_root_agent
 
 __all__ = [
     # Config
@@ -230,4 +235,12 @@ __all__ = [
     "ComparisonTableRow",
     "AGUITranslationRequest",
     "AGUIEventType",
+    # Tuatha MMO agents (round 7 phase 5; thin re-exports live in
+    # `tuatha.agents.adk.*`). Each module is the canonical
+    # implementation; the tuatha files are 10-30 line re-exports.
+    "celtic_tutor_agent",
+    "mythology_narrator_agent",
+    "quest_guide_agent",
+    "research_assistant_agent",
+    "tuatha_root_agent",
 ]
