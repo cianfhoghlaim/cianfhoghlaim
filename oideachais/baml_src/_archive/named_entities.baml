@@ -1,3 +1,24 @@
+// === ARCHIVED 2026-06-24 ===
+// The 5 functions in this file (ExtractCelticEntities,
+// ExtractPersonEntities, ExtractPlaceEntities,
+// ExtractSupernaturalEntities, ExtractFestivalEntities) have
+// no current Python consumer in the oideachais quadrant. They
+// are intended for the meaisinfhoghlaim/ Celtic-linguistic
+// agents (e.g. duchas_assets.py would benefit from these for
+// folklore entity extraction), which are not yet built.
+//
+// To re-activate:
+// 1. Implement the consumer (e.g.
+//    meaisinfhoghlaim/agents/celtic_ner.py OR wire into
+//    oideachais/dagster_defs/assets/duchas_assets.py)
+// 2. Move this file back to baml_src/ (git mv)
+// 3. Remove the ARCHIVED header from the top
+// 4. Update STATUS.md to mark the functions as wired
+// 5. Update REFACTORING.md to remove the archive entry
+//
+// Reference: openspec/changes/archive-celtic-baml-orphans/
+// =====================================================================
+
 // Named Entity Recognition - Celtic Folklore and Place Names
 // Extract people, places, supernatural beings from Celtic texts
 // December 2024
