@@ -10,3 +10,9 @@ The canonical BAML function `CompareCelticNations` (in `tuatha/baml_src/celtic_c
 - **THEN** `_coerce` validates it against `PCrossNationComparison`
 - **AND** on success, maps to the flat `CrossNationComparison` dataclass
 - **AND** on failure, falls back to the flat schema with defaults
+
+#### Scenario: Pydantic not installed
+
+- **WHEN** `pydantic` is not in the requirements
+- **THEN** the Space falls back to the flat legacy schema (no Pydantic validation)
+- **AND** a warning is logged
