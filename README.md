@@ -7,7 +7,7 @@
 This quadrant provisions and operates the underlying infrastructure for
 the entire `cianfhoghlaim` stack — spanning two physical hosts
 (`arm1-oci` Ampere A1 in Oracle Cloud, `bunchloch` MacBook M4) and
-94 pre-configured Docker Compose stacks under `infrastructure/stacks/`.
+94 pre-configured Docker Compose stacks under `infrastructure/stacks/` (the actual file count is 93 as of 2026-06-24; the 94th is the `oideachais/` quadrant stack which is also tracked under `infrastructure/stacks/oideachais/`).
 
 It is the **only** part of the monorepo that:
 
@@ -38,7 +38,7 @@ step depends on the one above it.
 | 4 | **Infisical** | Secret vault with `dev-baile` environment hydrated | `infisical run -- printenv MOTHERDUCK_TOKEN` |
 | 5 | **Garage** | S3-compatible object storage (DuckLake + LanceDB + asset bucket) | `mc ls garage/croilar-assets/` |
 | 6 | **Lakehouse** | Iceberg catalog + LanceDB + DuckLake endpoints | `mc ls garage/lakekeeper/` |
-| 7 | **Komodo** | Fleet orchestrator with all 94 stack blueprints | `https://komodo.cianfhoghlaim.ie` |
+| 7 | **Komodo** | Fleet orchestrator with all 93 stack blueprints | `https://komodo.cianfhoghlaim.ie` |
 | 8 | **LiteLLM** | Unified LLM gateway (all agents + Dagster routes through this) | `https://litellm.cianfhoghlaim.ie` |
 | 9 | **Langfuse** | LLM observability (traces every call) | `https://langfuse.cianfhoghlaim.ie` |
 | 10 | **Croilár** | The personal portfolio platform (Dagster + Hono API + Convex + Web + Portal) | `https://croilar.cianfhoghlaim.ie` |
@@ -71,7 +71,7 @@ The control-plane pipeline that keeps the platform running:
        │                                                              │
        │  Komodo ◄──WSS── Periphery agents (outbound only)            │
        │    │                                                          │
-    │    ├── 94 Docker Compose stacks (infrastructure/stacks/)     │
+     │    ├── 93 Docker Compose stacks (infrastructure/stacks/)     │
     │    │   └─ each: compose.yaml + sidecar.yaml + pangolin.yaml    │
        │    │      + secrets.env + blueprint.yaml + .env.example       │
        │    │                                                          │
@@ -114,16 +114,16 @@ Three trust boundaries:
 | **`scripts/`** | Utility scripts (Olm client creation, blueprint sync, stack helpers) | Bash |
 | **`templates/`** | Forgejo workflow templates (PR forwarding, etc.) | YAML |
 | **`docs/`** | Generic user guide | Markdown |
-| **`stacks/`** | **94 Docker Compose stacks**, flat layout (one directory per stack) | Docker Compose |
+| **`stacks/`** | **93 Docker Compose stacks**, flat layout (one directory per stack) | Docker Compose |
 | **`.forgejo/workflows/`** | CI workflows (Renovate, etc.) | YAML |
 
 For the full stack-by-stack catalogue, see [`stacks/README.md`](stacks/README.md).
 
 ---
 
-## 4. The 94-stack flat view
+## 4. The 93-stack flat view
 
-The 94 stacks under `infrastructure/stacks/` are organised in a **flat**
+The 93 stacks under `infrastructure/stacks/` are organised in a **flat**
 layout — every stack is a direct child of `stacks/` (e.g. `stacks/garage/`,
 `stacks/litellm/`, `stacks/pangolin/`). The legacy 5-category
 subdirectory structure (`stacks/storage/`, `stacks/infrastructure/`,

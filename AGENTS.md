@@ -178,16 +178,34 @@ Each stack under `infrastructure/stacks/<name>/` SHALL follow this structure:
 
 ```
 stacks/<name>/
-├── compose.yaml           # Docker service definitions
+├── compose.yaml           # Docker service definitions (image pinned to semver; no :latest)
 ├── compose.dev.yaml       # (optional) Dev override: no-op locket, env_file
-├── pangolin.yaml          # Traefik routing + TinyAuth (if web-facing)
-├── sidecar.yaml           # Locket container for Infisical injection
-├── secrets.env            # Infisical URI references
+├── pangolin.yaml          # Traefik routing + TinyAuth (if web-facing) — 6-label shape
+├── sidecar.yaml           # Locket container for Infisical injection (user: 65532:65532, no-new-privileges, cap_drop: [ALL], read_only: true, tmpfs /run/secrets/locket:size=1m,mode=0700)
+├── secrets.env            # Infisical URI references (infisical://dev-baile/<svc>/<key>)
 ├── .env.example           # Dev-only placeholder env vars
 ├── blueprint.yaml         # Komodo resource-sync metadata
 └── config/                # Configuration files
     └── *.yaml
 ```
+
+The `sidecar.yaml` SHALL declare one of 3 LOCKET_MODE values:
+`watch` (long-running services, the default), `exec` (batch jobs),
+or `oneshot` (CI/CD pipelines). The `pangolin.yaml` SHALL
+follow the 6-label shape (`name`, `mode`, `full-domain`,
+`destination-port`, `protocol`, `roles[0]`) documented in
+`.agents/skills/kcg-pangolin-stack/SKILL.md`. The Locket sidecar
+contract is documented in `.agents/skills/kcg-locket-sidecar/SKILL.md`.
+The 4 audit scripts (inventory-bunchloch.sh, inventory-arm1-oci.sh,
+diff-against-composes.sh, probe-public-urls.sh) are documented in
+`.agents/skills/kcg-infrastructure-audit/SKILL.md`.
+
+**Image pinning policy:** every `image:` line in `compose.yaml` SHALL
+be pinned to `<major>.<minor>.<patch>` (no `:latest`); local-build
+images with `pull_policy: never` are exempt and MUST include an
+inline YAML comment. The `bun run stack-doctor` CI gate (4 gates
+documented in `infrastructure/GOLD_STANDARD.md`) reports any
+unpinned image as a WARNING.
 
 ## Canonical Oideachais Stack
 

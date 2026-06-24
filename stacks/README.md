@@ -11,11 +11,11 @@ stack inventory and `infrastructure/GOLD_STANDARD.md` for the
 | Property | Value |
 |:--|:--|
 | Layout | Flat — every stack is a direct child of `infrastructure/stacks/` |
-| Total stacks | **94** (changes as new ones are added via the stack-ops skill) |
+| Total stacks | **93** (as of 2026-06-24; changes as new ones are added via the stack-ops skill) |
 | Standard file count | 6 (compose, sidecar, pangolin, secrets, blueprint, .env.example) |
 | Stack directory | `infrastructure/stacks/<name>/` |
 
-The 94 stacks are listed in full in `infrastructure/AGENTS.md` § "Stack
+The 93 stacks are listed in full in `infrastructure/AGENTS.md` § "Stack
 Inventory" (alphabetical, with purpose and key ports). The
 [`infrastructure/QUADRANT-TO-STACK-MAP.md`](../QUADRANT-TO-STACK-MAP.md)
 file groups them by which workspace-member quadrant consumes them.
