@@ -12,11 +12,17 @@
 #                     ├── mlx-omni    (:10240) [MLX-format on M-series]
 #                     ├── invokeai    (:9090)  [Z-Image-Turbo, SDXL]
 #                     ├── docling-serve(:5001)  [PDF → Markdown tool call]
-#                     └── Cloud        (Gemini, GLM, OpenAI, Anthropic)
+#                     └── Cloud        (Gemini, GLM, OpenAI, Anthropic, OpenCode Go)
 #
 # BAML clients (baml_src/clients.baml) target this URL via the "litellm" client.
 # Per-phase-1 vault additions: master_key, salt_key, database_url live under
 # dev-baile/litellm/* and are hydrated by Locket via sidecar.yaml.
+#
+# Vendor-de-risking for MiniMax-M3 (2026-06-24): the `minimax` alias is
+# 3-key round-robin (OPENCODE_GO_API_KEY_0/1/2) with a 4-tier paid fallback
+# (qwen3.7-max → kimi-k2.6 → glm-4.6) and a final local GGUF floor
+# (qwen2.5-math via llama-swap). See minimax alias block + 3 slot entries
+# below. Driven by openspec/changes/litellm-minimax-vendor-derisking/.
 # =============================================================================
 
 model_list:
@@ -364,6 +370,45 @@ model_list:
       tier: paid
 
   # =========================================================================
+  # MiniMax-M3 — 3 parallel slots (round-robin via fallback_chain)
+  # =========================================================================
+  # Same model, three independent OPENCODE_GO_API_KEY_{0,1,2} credentials.
+  # The `minimax` alias route below chains them in order; LiteLLM's
+  # `num_retries: 3` (router_settings) means a 429 from one slot
+  # auto-falls-through to the next within the same request.
+  # =========================================================================
+
+  - model_name: opencode-go/minimax-m3-slot0
+    litellm_params:
+      model: anthropic/minimax-m3
+      api_base: https://opencode.ai/zen/go/v1/messages
+      api_key: os.environ/OPENCODE_GO_API_KEY_0
+    model_info:
+      description: "MiniMax-M3 (parallel slot 0 — round-robin target)"
+      capabilities: ["general", "agentic"]
+      tier: paid
+
+  - model_name: opencode-go/minimax-m3-slot1
+    litellm_params:
+      model: anthropic/minimax-m3
+      api_base: https://opencode.ai/zen/go/v1/messages
+      api_key: os.environ/OPENCODE_GO_API_KEY_1
+    model_info:
+      description: "MiniMax-M3 (parallel slot 1 — round-robin target)"
+      capabilities: ["general", "agentic"]
+      tier: paid
+
+  - model_name: opencode-go/minimax-m3-slot2
+    litellm_params:
+      model: anthropic/minimax-m3
+      api_base: https://opencode.ai/zen/go/v1/messages
+      api_key: os.environ/OPENCODE_GO_API_KEY_2
+    model_info:
+      description: "MiniMax-M3 (parallel slot 2 — round-robin target)"
+      capabilities: ["general", "agentic"]
+      tier: paid
+
+  # =========================================================================
   # CELTIC LANGUAGE MODELS — HuggingFace passthrough
   # =========================================================================
   - model_name: celtic/irish/gabert
@@ -651,6 +696,38 @@ model_list:
       capabilities: ["general", "alias"]
       tier: paid
       fallback_chain: ["opencode-go/deepseek-v4-flash", "openai/glm-4.6", "gpt-4o-mini"]
+
+  # =========================================================================
+  # MiniMax-M3 ALIAS — vendor-de-risked with 4-tier paid + 1 local fallback
+  # =========================================================================
+  # Three OPENCODE_GO_API_KEY_{0,1,2} slots are 5-hour-window independent.
+  # The first 3 entries of the chain are the 3 M3 slots — LiteLLM's
+  # `num_retries: 3` (router_settings) cycles through them on 429/timeout.
+  # If the entire opencode-go gateway is unavailable, the chain falls
+  # through to qwen3.7-max + kimi-k2.6 (same gateway, different models),
+  # then glm-4.6 (Z.ai direct — fully independent provider), and finally
+  # to local qwen2.5-math (llama-swap GGUF, runs on the MacBook M4 even
+  # with no internet).
+  #
+  # BAML client: `client MiniMax` in baml_src/clients.baml points here.
+  # =========================================================================
+  - model_name: minimax
+    litellm_params:
+      model: anthropic/minimax-m3
+      api_base: https://opencode.ai/zen/go/v1/messages
+      api_key: os.environ/OPENCODE_GO_API_KEY
+    model_info:
+      description: "Alias: minimax → M3 (3-key round-robin), then qwen3.7-max, kimi-k2.6, glm-4.6, then local qwen-math GGUF"
+      capabilities: ["general", "agentic", "alias"]
+      tier: paid
+      fallback_chain:
+        - "opencode-go/minimax-m3-slot0"
+        - "opencode-go/minimax-m3-slot1"
+        - "opencode-go/minimax-m3-slot2"
+        - "opencode-go/qwen3.7-max"
+        - "opencode-go/kimi-k2.6"
+        - "openai/glm-4.6"
+        - "local/math/qwen25-math"
 
 
 # =============================================================================

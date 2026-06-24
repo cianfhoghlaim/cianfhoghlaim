@@ -32,8 +32,11 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       Z_AI_API_KEY: ${Z_AI_API_KEY}
       ZAI_API_KEY: ${ZAI_API_KEY}
-      # OpenCode Go (per Go.md)
+      # OpenCode Go (per Go.md) — 3 parallel keys for slot rotation
       OPENCODE_GO_API_KEY: ${OPENCODE_GO_API_KEY}
+      OPENCODE_GO_API_KEY_0: ${OPENCODE_GO_API_KEY_0:-}
+      OPENCODE_GO_API_KEY_1: ${OPENCODE_GO_API_KEY_1:-}
+      OPENCODE_GO_API_KEY_2: ${OPENCODE_GO_API_KEY_2:-}
       OPENCODE_GO_BASE_URL: ${OPENCODE_GO_BASE_URL:-https://opencode.ai/zen/go/v1}
       # HuggingFace
       HF_TOKEN: ${HF_TOKEN}
