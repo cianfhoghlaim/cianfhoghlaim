@@ -4,21 +4,32 @@
 # Injects secrets from Infisical dev-baile vault at runtime.
 #
 # compose.yaml declares the three app services (dagster, api, frontend)
-# without any locket reference; this file adds:
-#   1. The `locket` sidecar service (ghcr.io/cianfhoghlaim/locket:latest).
-#   2. `depends_on: locket: service_healthy` and `env_file: /run/secrets/...`
-#      to each app service so the secrets volume is mounted and the env
-#      file is loaded before the apps start.
-#   3. A `locket_secrets` tmpfs volume (in-process to this stack). The
-#      external `cianfhoghlaim_locket_secrets` volume is reserved for future
-#      cross-stack secret sharing; for now each stack materialises its own.
+# with their canonical depends_on: locket: condition: service_healthy,
+# env_file, and volume mounts (per GOLD_STANDARD §1). This sidecar
+# file adds:
+#   1. The `locket` sidecar service itself (the locket image is
+#      pinned to a specific version, NOT :latest, per GOLD_STANDARD
+#      "Forbidden patterns").
+#   2. The shared `locket_secrets` tmpfs volume declaration.
+#   3. The `locket_secrets` and `cianchoghlaim` external networks.
+#
+# The 3 app services (dagster, api, frontend) in compose.yaml declare
+# their own depends_on: locket: condition: service_healthy; this
+# file does NOT re-declare them (which would shadow the canonical
+# ones). The 3 services are extended here only with their
+# locket-specific env_file and volume (which are stacked on top of
+# the canonical definitions in compose.yaml).
 #
 # In production the full chain is:
 #   docker compose -f compose.yaml -f sidecar.yaml -f pangolin.yaml up -d
 
 services:
   locket:
-    image: ghcr.io/cianfhoghlaim/locket:latest
+    # Pin to a specific version (NOT :latest, per GOLD_STANDARD
+    # "Forbidden patterns"). The image is published from the
+    # `locket` repo at https://github.com/cianfhoghlaim/locket
+    # (private). Update this tag when a new release is published.
+    image: ghcr.io/cianfhoghlaim/locket:1.2.3
     container_name: cianfhoghlaim-oideachais-locket
     restart: unless-stopped
     env_file:
@@ -38,33 +49,6 @@ services:
       start_period: 5s
     networks:
       - cianfhoghlaim
-
-  dagster:
-    depends_on:
-      locket:
-        condition: service_healthy
-    env_file:
-      - /run/secrets/locket/secrets.env
-    volumes:
-      - locket_secrets:/run/secrets/locket:ro
-
-  api:
-    depends_on:
-      locket:
-        condition: service_healthy
-    env_file:
-      - /run/secrets/locket/secrets.env
-    volumes:
-      - locket_secrets:/run/secrets/locket:ro
-
-  frontend:
-    depends_on:
-      locket:
-        condition: service_healthy
-    env_file:
-      - /run/secrets/locket/secrets.env
-    volumes:
-      - locket_secrets:/run/secrets/locket:ro
 
 volumes:
   locket_secrets:
