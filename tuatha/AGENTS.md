@@ -15,12 +15,15 @@ The 8 priority skills, the 4 priority commands, and the 1
 priority openspec spec at a glance. **Read this first**; the
 rest of the file is the full 4-stream routing.
 
-### Priority skills (8 of 108)
+### Priority skills (11 of 120)
 
 | Skill | When to load |
 |:--|:--|
 | [`babylonjs`](../.agents/skills/babylonjs/SKILL.md) | Babylon.js 7 + WebGPU (the MMO client renderer) |
 | [`tuatha-mmo`](../.agents/skills/tuatha-mmo/SKILL.md) | The Tuatha Celtic MMO + Crypteolas achievement-ledger (4 sub-modules) |
+| [`pent-elemental-cosmology`](../.agents/skills/pent-elemental-cosmology/SKILL.md) | The 5 Pent-Elemental realms (Spirit / Water / Fire / Earth / Air) + Anam Cara + Geasa |
+| [`tuatha-achievement-ledger`](../.agents/skills/tuatha-achievement-ledger/SKILL.md) | The 8-field skill-tree badge schema + the 5 masteries + the cryptographic evidence chain |
+| [`tuatha-mcp-server-tools`](../.agents/skills/tuatha-mcp-server-tools/SKILL.md) | The 5 MCP tools + the canonical home + the broken-import bug + the shim pattern |
 | [`dagger`](../.agents/skills/dagger/SKILL.md) | Dagger CI/CD (the SpacetimeDB Rust build is in the Dagger pipeline) |
 | [`baml`](../.agents/skills/baml/SKILL.md) | BAML extraction for Celtic content (image_generation, ui_components) |
 | [`tanstack-start`](../.agents/skills/tanstack-start/SKILL.md) | TanStack Start (the educational game front-end) |
@@ -127,6 +130,18 @@ Plus the shared specs (4):
 
 - `tuatha-mmo/SKILL.md` — the MMO tech stack (Babylon.js,
   SpacetimeDB, x402, SIWE, Pent-Elemental Cosmology)
+- `pent-elemental-cosmology/SKILL.md` — the 5 Pent-Elemental
+  realms (Spirit / Water / Fire / Earth / Air) + Anam Cara +
+  Geasa + 5 SpacetimeDB tables + 5 quest tracks +
+  Babylon.js scene graph — **NEW in round 10**
+- `tuatha-achievement-ledger/SKILL.md` — the 8-field
+  skill-tree badge schema + the 5 Pent-Elemental realm
+  masteries + the cryptographic evidence chain +
+  the cross-quest retrieval — **NEW in round 10**
+- `tuatha-mcp-server-tools/SKILL.md` — the 5 MCP tools +
+  the canonical home in oideachais + the broken-import
+  bug + the shim pattern + the 4 transports —
+  **NEW in round 10**
 - `british-isles-formative-assessment/SKILL.md` — the
   pedagogical framework (5 curriculum frameworks, 4
   feedback channels, 3 quest types, 4 graduated hint
