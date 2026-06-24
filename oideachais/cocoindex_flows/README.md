@@ -9,16 +9,16 @@ CocoIndex flows that embed dlt-extracted documents into LanceDB for semantic sea
 | Flow | API | Status | Action |
 |:--|:--|:--|:--|
 | `leabharlann_embedding.py` | v1 | ✅ working | — |
-| `author_archive_embedding.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
-| `curriculum_embedding.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
-| `curriculum_translation.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
-| `curriculum_specification_extraction.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
-| `geospatial_indexing.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
-| `learning_outcome_graph.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
-| `ocr_embedding.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
-| `pdf_embedding.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
-| `research_embedding.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
-| `site_analysis_embedding.py` | v0 | ❌ broken on import | Migrate to v1 (deferred) |
+| `author_archive_embedding.py` | v0 | ❌ broken on import | DEPRECATED 2026-06-24, archived at `_v0_archive/` |
+| `curriculum_embedding.py` | v0 | ❌ broken on import | DEPRECATED 2026-06-24, archived at `_v0_archive/` |
+| `curriculum_translation.py` | v0 | ❌ broken on import | DEPRECATED 2026-06-24, archived at `_v0_archive/` |
+| `curriculum_specification_extraction.py` | v0 | ❌ broken on import | DEPRECATED 2026-06-24, archived at `_v0_archive/` |
+| `geospatial_indexing.py` | v0 | ❌ broken on import | DEPRECATED 2026-06-24, archived at `_v0_archive/` |
+| `learning_outcome_graph.py` | v0 | ❌ broken on import | DEPRECATED 2026-06-24, archived at `_v0_archive/` |
+| `ocr_embedding.py` | v0 | ❌ broken on import | DEPRECATED 2026-06-24, archived at `_v0_archive/` |
+| `pdf_embedding.py` | v0 | ❌ broken on import | DEPRECATED 2026-06-24, archived at `_v0_archive/` |
+| `research_embedding.py` | v0 | ❌ broken on import | DEPRECATED 2026-06-24, archived at `_v0_archive/` |
+| `site_analysis_embedding.py` | v0 | ❌ broken on import | DEPRECATED 2026-06-24, archived at `_v0_archive/` |
 
 **`oideachais/cocoindex_flows/__init__.py` uses a guarded `try/except` import so the package loads despite the broken v0 modules. The v0 modules are not re-exported; only the v1 `leabharlann_embedding` module is.**
 
