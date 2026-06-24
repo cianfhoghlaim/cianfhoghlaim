@@ -384,3 +384,41 @@ All `deploy` and `rollback` functions are gated by an
 ## 10. License
 
 MIT.
+
+---
+
+## How to deploy
+
+```bash
+# 1. The 4 infra-first stacks
+for stack in garage lakehouse litellm lancedb langfuse; do
+  cd infrastructure/stacks/$stack && docker compose up -d
+done
+
+# 2. The 4 quadrant stacks
+for stack in oideachais meaisinfhoghlaim tuatha croilar; do
+  cd infrastructure/stacks/$stack && docker compose up -d
+done
+
+# 3. The Pangolin mesh (Traefik + Pocket ID)
+cd infrastructure/stacks/pangolin && docker compose up -d
+```
+
+The full 8-phase playbook is in [`DEPLOY.md`](../DEPLOY.md).
+
+## How to debug
+
+| Symptom | Cause | Fix |
+|:--|:--|:--|
+| `docker compose up -d` hangs | Locket sidecar waiting for a secret | `docker logs <stack>-locket-1` |
+| `bun run validate-stacks` fails | A `compose.yaml` is missing a healthcheck | Add `healthcheck:` block to the offending service |
+| Pangolin route 404s | The Traefik label is wrong | Check the 6-label shape in `pangolin.yaml` |
+| Locket injects the wrong secret | The Infisical URI is stale | `bun run secrets:init` to refresh |
+
+## Common workflows
+
+1. **Add a new stack** — 6 GOLD_STANDARD files (compose.yaml + sidecar.yaml + pangolin.yaml + secrets.env + blueprint.yaml + .env.example)
+2. **Audit a host** — `bash infrastructure/audit/scripts/inventory-<host>.sh`
+3. **Diff compose vs running** — `bash infrastructure/audit/scripts/diff-against-composes.sh`
+4. **Probe a public URL** — `bash infrastructure/audit/scripts/probe-public-urls.sh`
+5. **Roll back a stack** — `docker exec <stack>-locket-1 locket rollback --service=<stack>`

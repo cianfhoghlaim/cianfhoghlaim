@@ -832,3 +832,47 @@ Business Source License 1.1 — non-commercial, cultural preservation, and
 academic research use permitted within Ireland, UK, EU, Commonwealth, and
 aligned jurisdictions. Transitions to AGPL v3.0 after 4 years.
 See [`LICENSE.md`](../../LICENSE.md).
+
+---
+
+## How to deploy
+
+```bash
+# 1. Build the docker images + the Rust crate
+cd /Users/cianmacandeisigh/dev/kings_college_galway
+mise run turbo build --filter=tuatha
+cd tuatha/crates/game_server
+cargo build --release
+
+# 2. Deploy the tuatha stack
+cd infrastructure/stacks/tuatha
+docker compose up -d
+sleep 15
+
+# 3. Start the SpacetimeDB server (the MMO server)
+cd tuatha/crates/game_server
+cargo run --release &
+
+# 4. Verify
+curl -s http://tuatha.cianfhoghlaim.ie:8000/health | jq
+curl -s http://localhost:3000/v1/identity | jq  # SpacetimeDB
+```
+
+The full 8-phase playbook is in [`DEPLOY.md`](../DEPLOY.md).
+
+## How to debug
+
+| Symptom | Cause | Fix |
+|:--|:--|:--|
+| SpacetimeDB refuses to start | The DB file is locked | `rm tuatha/crates/game_server/data/spacetimedb.db` |
+| The MCP server fails to import | The 3 shim files are missing | Restore `tuatha/agents/tools/{__init__,curriculum_search,mythology_query}.py` |
+| The crypteolas ledger returns empty | The LanceDB table is not initialised | `python -c "from tuatha.crypteolas.achievements.storage import AchievementStorage; AchievementStorage().init_storage()"` |
+| The 5 masteries are not issued | The player has 4 frameworks but not 5 | Issue at least 1 badge in the 5th framework |
+
+## Common workflows
+
+1. **Add a new MMO scene** — `tuatha/game/scenes/<scene>.ts` (Babylon.js)
+2. **Add a new SpacetimeDB table** — `tuatha/crates/game_server/src/tables/<table>.rs`
+3. **Add a new skill-tree badge** — `tuatha/crypteolas/achievements/ledger.py` (see `.agents/skills/tuatha-achievement-ledger/`)
+4. **Add a new Pent-Elemental quest** — see `.agents/skills/pent-elemental-cosmology/`
+5. **Add a new MCP tool** — `oideachais/agents/adk/tools/<tool>.py` + shim at `tuatha/agents/tools/`

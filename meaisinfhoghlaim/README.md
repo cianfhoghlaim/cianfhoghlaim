@@ -523,3 +523,43 @@ hardest part to swap out, so it's the part we own most carefully.
 ## 10. License
 
 MIT.
+
+---
+
+## How to deploy
+
+```bash
+# 1. Build the docker images
+cd /Users/cianmacandeisigh/dev/kings_college_galway
+mise run turbo build --filter=meaisinfhoghlaim
+
+# 2. Deploy the meaisínfhoghlaim stack
+cd infrastructure/stacks/meaisinfhoghlaim
+docker compose up -d
+sleep 15
+
+# 3. Verify the 4 inference backends
+curl -s http://llama-swap.cianfhoghlaim.ie:8080/health | jq
+curl -s http://mlx-omni.cianfhoghlaim.ie:10240/health | jq
+curl -s http://invokeai.cianfhoghlaim.ie:9090/health | jq
+curl -s http://litellm.cianfhoghlaim.ie:4000/health | jq
+```
+
+The full 8-phase playbook is in [`DEPLOY.md`](../DEPLOY.md).
+
+## How to debug
+
+| Symptom | Cause | Fix |
+|:--|:--|:--|
+| llama-swap returns 502 | The model is not loaded | `llama-swap --model <model-id>` |
+| MLX OOMs on a 7B model | The unified memory is full | Switch to a 3B model or use llama-swap |
+| OCR returns `low_confidence` | The model is not the right one | Use `meaisinfhoghlaim/ocr/model_registry.py` to pick |
+| LiteLLM falls back to a 3rd tier | The primary + secondary are down | Check the OpenCode Go API key |
+
+## Common workflows
+
+1. **Add a new model** — `meaisinfhoghlaim/registry/<model>.py` (see `.agents/skills/kcg-ml-models/`)
+2. **Add a new OCR model** — `meaisinfhoghlaim/ocr/model_registry.py` (10 models × 6 backends)
+3. **Add a new agent** — `meaisinfhoghlaim/agents/<agent>.py` (see `.agents/skills/agent-fleet-orchestration/`)
+4. **Add a new finetune** — `meaisinfhoghlaim/finetune/<task>.py` (Unsloth + TRL)
+5. **Convert a model to GGUF** — `meaisinfhoghlaim/gguf/convert.py`
