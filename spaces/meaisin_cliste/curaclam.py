@@ -2,15 +2,18 @@
 spaces/meaisin_cliste/curaclam.py
 Theme 3 of Space 2: Curaclam Trasteorann (Cross-Border Curriculum).
 
-Given a topic query (e.g. "atomic structure"), compares how it's taught
-across 5-7 Celtic-nation curricula. Uses the BAML CompareCelticNations
-function (in spaces/_common/baml/hackathon_schemas.baml) via the
-3-tier HF Inference fallback.
+Modernized 2026-06-24 (C2 of the spaces alignment plan):
+- Routes through the canonical KCG LiteLLM gateway
+  (spaces/_common/baml_client.py) instead of raw HF Inference
+- Validates the response against the Pydantic schema
+  (mirrors the canonical tuatha/baml_src/celtic_curriculum.baml)
+- Falls back to the hand-curated reference table if the
+  LiteLLM gateway is unreachable AND the HF Inference
+  fallback chain also fails
 
-Falls back to a static, hand-curated reference table if all 3 models
-fail. The reference table covers the 6 topics most commonly asked
-about in the hackathon demo: atomic structure, calculus, photosynthesis,
-the Irish language, the Norman invasion, and music composition.
+For the canonical implementation, see:
+  tuatha/baml_src/celtic_curriculum.baml
+  (the BAML schema that the Pydantic model mirrors)
 """
 
 from __future__ import annotations
@@ -20,6 +23,35 @@ from dataclasses import dataclass
 from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 import sys as _sys
+
+try:
+    from pydantic import BaseModel, Field
+    _HAS_PYDANTIC = True
+except ImportError:
+    _HAS_PYDANTIC = False
+
+
+# Pydantic schema (mirrors tuatha/baml_src/celtic_curriculum.baml).
+# The 2 classes + 1 function in the BAML file are mapped to 2
+# Pydantic models below.
+if _HAS_PYDANTIC:
+    class PCurriculumMapping(BaseModel):
+        nation_code: str = Field(..., description="IE | NI | WLS | IM | SCT | COR | BRT")
+        nation_name_en: str
+        nation_name_native: str
+        curriculum_body: str
+        topic_label_en: str
+        topic_label_native: str | None = None
+        year_level: str
+        topic_code: str | None = None
+        similar_topics: list[str] = []
+
+    class PCrossNationComparison(BaseModel):
+        topic_query: str
+        mappings: list[PCurriculumMapping]
+        shared_year_levels: list[str] = []
+        notes: str = ""
+
 
 _log = logging.getLogger("meaisin_cliste.curaclam")
 
@@ -176,14 +208,50 @@ def compare_curricula(
         )
         return _coerce(parsed, topic_query, model_used)
     except (ValueError, RuntimeError) as e:
-        _log.warning("BAML chain failed: %s, using offline fallback", e)
+        _log.warning("LiteLLM chain failed: %s, using offline fallback", e)
         return _offline_comparison(topic_query)
 
 
 def _coerce(
     parsed: dict, topic_query: str, model_used: str,
 ) -> CrossNationComparison:
-    """Coerce a parsed dict into a CrossNationComparison."""
+    """Coerce a parsed dict into a CrossNationComparison.
+
+    If pydantic is installed, validate the response against
+    PCrossNationComparison first (the canonical schema, mirrored
+    from tuatha/baml_src/celtic_curriculum.baml). On validation
+    failure, fall back to the flat dict with defaults.
+    """
+    # Optional Pydantic validation (the canonical schema check)
+    if _HAS_PYDANTIC and "mappings" in parsed:
+        try:
+            pyd = PCrossNationComparison.model_validate(
+                {**parsed, "topic_query": topic_query}
+            )
+            return CrossNationComparison(
+                topic_query=pyd.topic_query,
+                mappings=[
+                    CurriculumMapping(
+                        nation_code=m.nation_code,
+                        nation_name_en=m.nation_name_en,
+                        nation_name_native=m.nation_name_native,
+                        curriculum_body=m.curriculum_body,
+                        topic_label_en=m.topic_label_en,
+                        topic_label_native=m.topic_label_native or "",
+                        year_level=m.year_level,
+                        topic_code=m.topic_code or "",
+                        similar_topics=m.similar_topics,
+                    )
+                    for m in pyd.mappings
+                ],
+                shared_year_levels=pyd.shared_year_levels,
+                notes=pyd.notes,
+                source_model=model_used,
+            )
+        except Exception as e:
+            _log.warning("Pydantic validation failed: %s, using flat schema", e)
+
+    # Flat schema (legacy)
     mappings = [
         CurriculumMapping(
             nation_code=str(m.get("nation_code", "?")),
