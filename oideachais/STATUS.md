@@ -1,6 +1,6 @@
 # Oideachais — Pipeline STATUS
 
-**Last updated:** 2026-06-16
+**Last updated:** 2026-06-24
 **Single source of truth** for: which BAML schemas are wired to dlt sources, which Dagster assets materialise them, which CocoIndex flows embed them, and which Cognee cognify passes enrich them.
 
 > If you change any of: BAML schema files, dlt source files, Dagster assets, CocoIndex flows, or Cognee cognify assets — **update this file in the same commit.**
@@ -137,11 +137,17 @@ The canonical v1 pattern (in `leabharlann_embedding.py`):
 
 - `@coco.fn` for processing functions
 - `@coco.lifespan` providing shared `EMBEDDER` + `LANCE_DB` context keys
+  (now imported from `oideachais/cocoindex_flows/_lifespan.py` — the
+  shared lifespan module, REFACTORING.md item 12)
 - `localfs.walk_dir(sourcedir, recursive=True, path_matcher=PatternFilePathMatcher(...), live=True)`
 - `lancedb.mount_table_target(LANCE_DB, table_name=..., table_schema=lancedb.TableSchema.from_class(...))`
 - `IdGenerator()` + `await id_gen.next_id(chunk.text)` for stable IDs
 - `@coco.fn(memo=True)` for the file-level processor
 - `query_once` + `query` async helpers for ad-hoc semantic search
+- `oideachais.lancedb.indexing.build_hnsw_index` for vector indexing
+  (added 2026-06 per the LanceDB 0.15+ upgrade; HNSW with
+  `ef_construction=100, M=16` is the default for the 5 leabharlann
+  tables)
 
 Reference: `docs/cocoindex/AGENTS.md` and the 5 canonical examples (`pdf_embedding/`, `code_embedding_lancedb/`, `paper_metadata/`, `multi_format_indexing/`, `live_updates/`).
 
@@ -214,6 +220,31 @@ See `oideachais/REFACTORING.md` for the 5 queued features in priority order:
 3. **LanceDB blob storage via the `lancedb` compose stack + RCLONE FUSE mount** (leabharlann PDFs → blob store).
 4. **Leabharlann full-document processing pipeline (sample PDFs → BAML → Cognee → FalkorDB → LanceDB blob → Dagster UI)**.
 5. **Comprehensive `oideachais/STATUS.md` + per-area READMEs that demystify the stack** — *this is what Phase 1 of the `data-engineering-documentation-and-refactor-roadmap` change is implementing.*
+
+## 7. 2026-06 stack alignment
+
+The 2026-06 package updates added new features to the 8 packages
+the oideachais quadrant depends on. The
+`refactor-dlt-dagster-2026-stack-align` openspec change
+(`openspec/changes/refactor-dlt-dagster-2026-stack-align/`) brings
+the codebase up to date with each package. Status per package:
+
+| Package | 2026-06 feature | KCG adoption | Where |
+|:--|:--|:--|:--|
+| `dlt` 1.0 | `dlt.sources.rest_api` + `dlt.sources.filesystem` declarative | ✅ SourceFactory uses the canonical declarative API | `oideachais/dlt_utils/source_factory.py` |
+| `dlt` 1.0 | `safe_dlt_run_with_progress` + `validate_source_kwargs` | ✅ 2 new helpers in `safety.py` | `oideachais/dlt_utils/safety.py` |
+| `dagster` 1.10 | `dg` CLI + Components preview | ✅ 3 KCG-specific Components + `defs.yaml` | `oideachais/dagster_defs/components/` |
+| `ducklake` 1.0 | Data inlining + clustering + bucket partitioning + GEOMETRY + VARIANT | ✅ New `ducklake_options.py` + `schema.py` | `oideachais/dlt_utils/ducklake_options.py` |
+| `motherduck` 2026-04 | Managed / BYOB / BYOC hosting options | ✅ 3 helpers in `motherduck_options.py` | `oideachais/dlt_utils/motherduck_options.py` |
+| `lancedb` 0.15 | HNSW + IVF-PQ + scalar B-tree indexes | ✅ `build_hnsw_index` for the 5 leabharlann tables | `oideachais/lancedb/indexing.py` |
+| `graphiti-core` 0.5 | Real FalkorDB-backed client + FalkorDB Lite fallback | ✅ New `graphiti_client.py` | `oideachais/graph/graphiti_client.py` |
+| `falkordb` 1.0 | Cypher + vector + graph | ✅ `FalkorDBClient` (production) | `oideachais/graph/falkordb_client.py` |
+| `cocoindex` 1.0.9 | Shared lifespan + HNSW index build | ✅ `_lifespan.py` + `build_hnsw_indexes_for_leabharlann` | `oideachais/cocoindex_flows/_lifespan.py` |
+
+The `oideachais/dlt_utils/__init__.py` re-exports all 12 new
+helpers; the `oideachais/lancedb/__init__.py` re-exports the 4
+index helpers; the `oideachais/graph/__init__.py` re-exports the
+new `GraphitiClient`.
 
 ---
 
