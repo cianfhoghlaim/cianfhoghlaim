@@ -32,12 +32,22 @@ client<llm> DeepSeekClient {
   }
 }
 
+// MiniMax-M3 via the LiteLLM gateway alias `minimax` (vendor-de-risked).
+// See infrastructure/stacks/litellm/config/config.yaml for the full
+// fallback chain (3-key rotation → qwen3.7-max → kimi-k2.6 → glm-4.6
+// → local qwen-math). Driven by openspec/changes/
+// litellm-minimax-vendor-derisking/.
+//
+// The previous version of this client pointed directly at the opencode-go
+// gateway with a single key — that left a single point of failure
+// (gateway outage, key cap, regional unavailability) with no fallback.
+// Use this client instead whenever the old `MiniMaxClient` is referenced.
 client<llm> MiniMaxClient {
   provider openai
   options {
-    api_key env.OPENCODE_GO_API_KEY
-    base_url "https://opencode.ai/zen/go/v1/messages"
-    model "minimax-m3"
+    api_key env.LITELLM_MASTER_KEY
+    base_url "http://litellm:4000/v1"
+    model "minimax"
   }
 }
 
