@@ -212,3 +212,54 @@ function CompareCurricula(
     {{ ctx.output_format }}
   "#
 }
+
+// ============================================================================
+// Cross-nation curriculum comparison
+// Promoted from spaces/_common/baml/hackathon_schemas.baml (2026-06-24).
+// Used by:
+//   - spaces/meaisin_cliste/curaclam.py (the Curaclam Trasteorann panel)
+//   - tuatha/cognify_rules/author_archive_cross_corpus.py (the cross-corpus KG)
+// ============================================================================
+
+class CurriculumMapping {
+  nation_code string  // "IE" | "NI" | "WLS" | "IM" | "SCT" | "COR" | "BRT"
+  nation_name_en string
+  nation_name_native string
+  curriculum_body string  // e.g. "NCCA", "CCEA", "WJEC", "SQA"
+  topic_label_en string
+  topic_label_native string?
+  year_level string
+  topic_code string?  // official code if available
+  similar_topics string[]  // topic_codes in other nations
+}
+
+class CrossNationComparison {
+  topic_query string
+  mappings CurriculumMapping[]
+  shared_year_levels string[]
+  notes string
+}
+
+function CompareCelticNations(
+  topic_query: string,
+  scope: string[] = ["IE", "NI", "WLS", "IM", "SCT"],
+) -> CrossNationComparison {
+  client LitellmClient
+  prompt #"
+    The user wants to know how "{{ topic_query }}" is taught across
+    these Celtic-nation curricula: {{ scope }}.
+
+    For each nation, return:
+      - nation_code, nation_name_en, nation_name_native
+      - curriculum_body (e.g. "NCCA" for ROI, "CCEA" for NI, etc.)
+      - topic_label_en, topic_label_native (if not English)
+      - year_level (e.g. "Senior Cycle", "A-Level", "Higher")
+      - topic_code (the official code if known)
+      - similar_topics: topic_codes from other nations that map
+
+    Also produce:
+      - shared_year_levels: the union of year_levels across nations
+      - notes: a 1-2 sentence explanation of the cross-jurisdiction
+        mapping (note any equivalences or divergences)
+  "#
+}

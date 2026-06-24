@@ -312,3 +312,63 @@ function GenerateProgressReport(
     {{ ctx.output_format }}
   "#
 }
+
+// ============================================================================
+// Bilingual EN+GA exit cards for formative assessment
+// Promoted from spaces/_common/baml/hackathon_schemas.baml (2026-06-24).
+// Used by:
+//   - spaces/anam_tuatha/mac_leinn.py (the Mac Léinn panel)
+//   - tuatha/agents/agno/formative_assessment_team.py
+// ============================================================================
+
+class ExitCardQuestion {
+  question_id string
+  prompt_en string
+  prompt_ga string
+  question_type string  // "multiple_choice" | "short_answer" | "numeric"
+  correct_answer string
+  explanation_en string
+  explanation_ga string
+  bloom_level string  // "remember" | "understand" | "apply" | "analyze" | "evaluate" | "create"
+  marking_point_ref string?  // e.g. "CH1.T3" — links back to the circular
+}
+
+class ExitCardSet {
+  lesson_topic string
+  subject string
+  level string
+  questions ExitCardQuestion[]
+  total_questions int
+  estimated_completion_min int
+}
+
+function GenerateExitCardQuestions(
+  lesson_topic: string,
+  subject: string,
+  level: string,
+  num_questions: int,
+  curriculum_extract: CircularExtraction? = null,
+) -> ExitCardSet {
+  client LitellmClient
+  prompt #"
+    Generate a bilingual (EN + Gaeilge) "exit card" of {{ num_questions }}
+    formative assessment questions for the topic "{{ lesson_topic }}"
+    in {{ subject }} at {{ level }}.
+
+    The exit card is a 3-minute end-of-lesson check for understanding.
+    Mix question types: roughly half multiple_choice, a quarter
+    short_answer, a quarter numeric.
+
+    Each question must include:
+      - prompt_en, prompt_ga (Irish translation)
+      - question_type
+      - correct_answer
+      - explanation_en, explanation_ga
+      - bloom_level (one of: remember, understand, apply, analyze, evaluate, create)
+      - marking_point_ref: if curriculum_extract is provided, link
+        to a topic_code from the marking scheme
+
+    Aim for a balanced bloom distribution (don't put all 6 questions
+    at "remember" level).
+  "#
+}
