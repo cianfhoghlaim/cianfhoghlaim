@@ -1,9 +1,9 @@
 ---
 name: tuatha-mmo
-description: The Tuatha Celtic Educational MMO — Babylon.js 7 + WebGPU client, Rust + SpacetimeDB server, x402 micropayments, SIWE auth, and the Crypteolas crypto platform, all organised around the Pent-Elemental Cosmology (Spirit / Water / Fire / Earth / Air + Anam Cara). The 4 sub-modules (game / crates / crypteolas / ui) form one cohesive product: a Babylon.js front-end, a SpacetimeDB authoritative state engine, a TanStack Start web app, and a Python crypto data platform. Use when adding a 3D scene, wiring a Babylon.js zone, deploying the SpacetimeDB server, onboarding a new agent (Celtic Tutor / Mythology Narrator / Quest Guide / Research Assistant), or asking "how does the Celtic MMO fit together?".
+description: The Tuatha British Isles Formative Assessment MMO — Babylon.js 7 + WebGPU client, Rust + SpacetimeDB server, x402 micropayments (gated game features only), SIWE auth, and the Crypteolas educational-achievement ledger (skill tree badges, NOT a financial token), all organised around the Pent-Elemental Cosmology (Spirit / Water / Fire / Earth / Air + Anam Cara). The 4 sub-modules (game / crates / crypteolas / ui) form one cohesive product: a Babylon.js front-end, a SpacetimeDB authoritative state engine, a TanStack Start web app, and a Python achievement-ledger. Use when adding a 3D scene, wiring a Babylon.js zone, deploying the SpacetimeDB server, onboarding a new agent (Celtic Tutor / Mythology Narrator / Quest Guide / Research Assistant), designing a formative-assessment quest, or asking "how does the British Isles formative assessment MMO fit together?".
 ---
 
-# Tuatha Celtic Educational MMO
+# Tuatha British Isles Formative Assessment MMO
 
 ## When to use this skill
 
@@ -11,9 +11,16 @@ Use when you need to:
 
 - "Add a 3D scene or Babylon.js zone to the Tuatha MMO"
 - "Add a SpacetimeDB table or reducer"
-- "Wire x402 micropayments for a new game feature"
-- "Onboard a new Celtic AI agent (tutor / narrator / quest /
-  research)"
+- "Design a formative-assessment quest" — see the
+  `.agents/skills/british-isles-formative-assessment/` skill
+  for the pedagogical framework
+- "Add a skill-tree badge to the achievement ledger" — see
+  `tuatha/crypteolas/achievements/`
+- "Wire x402 micropayments for a gated game feature" — x402
+  is **only** for paid game features, not for educational
+  content
+- "Onboard a new formative feedback agent (tutor / narrator /
+  quest / research)" — see `oideachais/agents/adk/`
 - "Deploy the MMO to `bunchloch` or `arm1-oci`"
 - "Cross-compile the iOS / KMP / RN / Godot client"
 - "Configure the pent-elemental cosmology (Spirit / Water /
@@ -25,16 +32,40 @@ Use when you need to:
 
 ## Overview
 
-Tuatha is a **Celtic Educational MMO** that fuses a Babylon.js
-3D game client, a Rust + SpacetimeDB authoritative state
-engine, a TanStack Start web front-end, and a Python crypto
-data platform (Crypteolas) into a single product. The game
-world is built around the **Pent-Elemental Cosmology**: five
-realms (Spirit / Water / Fire / Earth / Air) joined by the
-**Anam Cara** (soul friend) social mechanic. The educational
-backbone is a fleet of AI agents (Celtic Tutor, Mythology
-Narrator, Quest Guide, Research Assistant) that translate
-the NCCA / SEC / pan-Celtic curriculum into in-world content.
+Tuatha is a **British Isles Formative Assessment MMO** that
+fuses a Babylon.js 3D game client, a Rust + SpacetimeDB
+authoritative state engine, a TanStack Start web front-end,
+and a Python educational-achievement ledger (Crypteolas) into
+a single product. The game world is built around the
+**Pent-Elemental Cosmology**: five realms (Spirit / Water /
+Fire / Earth / Air) joined by the **Anam Cara** (soul friend)
+social mechanic. The educational backbone is a fleet of 4 AI
+agents (Celtic Tutor, Mythology Narrator, Quest Guide,
+Research Assistant) that deliver **formative feedback** during
+quests, mapped to the NCCA / CfE / CfW / CCEA / SQA curriculum
+frameworks.
+
+The 4 agents live at `oideachais/agents/adk/` (Phase 5 of the
+6-phase refactor plan moved them from `tuatha/agents/adk/`;
+the tuatha files are now thin re-exports). The pedagogical
+framework they implement lives in
+`.agents/skills/british-isles-formative-assessment/`.
+
+**Important framing (Phase 6 of the 6-phase refactor plan):**
+
+- **Formative, not summative**: the MMO gives continuous
+  feedback during learning, not a final grade. The Leaving
+  Cert / GCSE / A-Level are out of scope.
+- **Educational crypto as achievements, not finance**: the
+  Crypteolas ledger holds skill-tree badges (per curriculum
+  framework × level), not CELT tokens. x402 micropayments
+  are reserved for gated game features (cosmetics, premium
+  quests, paid DLC), never for educational content.
+- **British Isles scope, not "Celtic" broadly**: the 5
+  frameworks are NCCA (IE) / CfE (SCT) / CfW (WLS) / CCEA
+  (NI) / SQA (SCT post-16). The "Celtic" framing in
+  agent names is preserved for continuity, but the curriculum
+  is the British Isles 5.
 
 Tuatha is one of 4 quadrants of the Cianfhoghlaim monorepo
 and is registered as a top-level uv workspace member
@@ -46,7 +77,7 @@ The 4 sub-modules, in the layout they ship in:
 |:--|:--|:--|
 | `tuatha/game/` | Babylon.js 7 (TS) + WebGPU | 3D game client (the MMO front-end) |
 | `tuatha/crates/` | Rust + SpacetimeDB + Axum | Game engine (authoritative state) |
-| `tuatha/crypteolas/` | Python + Bitcoin / Ethereum / Solana | Crypto data platform + x402 settlement |
+| `tuatha/crypteolas/` | Python + educational-achievement ledger | Skill-tree badges + x402 settlement for paid game features |
 | `tuatha/ui/` | TanStack Start | Web front-end for the educational game |
 
 The 4 dev servers run in parallel:
@@ -90,10 +121,10 @@ backed by a BAML client + a Celtic-language model:
 
 | Agent | Role | Primary model | Language |
 |:--|:--|:--|:--|
-| **Celtic Tutor** | In-world teaching NPC (assesses mastery, offers quests) | `ReliableAI/UCCIX-Llama3.1-70B` | en + ga |
-| **Mythology Narrator** | Stories / cycles (Tuatha Dé Danann, Táin Bó Cúailnge, Fionn mac Cumhaill) | `ReliableAI/UCCIX-Llama3.1-70B` | en + ga |
-| **Quest Guide** | Quest design + adaptive difficulty + mastery decay | `litellm/anthropic/claude-sonnet-4` | en |
-| **Research Assistant** | Long-form reasoning + Celtic-language queries | `litellm/gemini-2.5-flash` (fast) → `litellm/anthropic/claude-sonnet-4` (strong) | en + ga + cy |
+| **Celtic Tutor** | In-world teaching NPC (formative feedback on language quests) | `ReliableAI/UCCIX-Llama3.1-70B` | en + ga |
+| **Mythology Narrator** | Stories / cycles (Tuatha Dé Danann, Táin Bó Cúailnge, Fionn mac Cumhaill) — formative context for cultural quests | `ReliableAI/UCCIX-Llama3.1-70B` | en + ga |
+| **Quest Guide** | Quest design + graduated hints (Level 1: nudge → Level 4: step-by-step) | `litellm/anthropic/claude-sonnet-4` | en |
+| **Research Assistant** | Long-form reasoning + cross-nation comparative research | `litellm/gemini-2.5-flash` (fast) → `litellm/anthropic/claude-sonnet-4` (strong) | en + ga + cy |
 
 The agents are CopilotKit AG-UI components rendered in the
 TanStack Start UI; their state lives in SpacetimeDB (the
@@ -102,7 +133,47 @@ agent's memory, the player's mastery) and in Cognee
 `ws://localhost:3000/a2ui`.
 
 The full Tuath agent system (1586 lines) is in
-`references/tuath-agent-architecture.md`.
+`references/tuath-agent-architecture.md`. The canonical
+implementations live at `oideachais/agents/adk/` (Phase 5 of
+the 6-phase refactor plan moved them from
+`tuatha/agents/adk/`; the tuatha files are now thin
+re-exports). Each agent is one of the 4 formative feedback
+channels documented in
+`.agents/skills/british-isles-formative-assessment/`.
+
+## British Isles formative assessment (Phase 6)
+
+**The MMO is a formative-assessment product, not a summative
+one.** Per the user's plan (Phase 6 of the 6-phase refactor):
+"crypto = educational achievements (not finance)". The
+pedagogical framework — NCCA / CfE / CfW / CCEA / SQA
+mapping, the 4 formative feedback channels, the 3 quest
+types, the 4 graduated hint levels, the achievement-ledger
+schema — is captured in
+`.agents/skills/british-isles-formative-assessment/`.
+
+Key Phase 6 refactor outcomes:
+
+- **Formative vs. summative**: the MMO is the former. The
+  Leaving Cert / GCSE / A-Level are out of scope. The
+ 4 agents deliver per-quest, per-response, per-misconception
+  feedback; the player always leaves with progress + feedback,
+  never a binary right/wrong.
+- **Achievement ledger, not financial token**: the Crypteolas
+  crypto data platform holds skill-tree badges (per
+  curriculum framework × level) + cross-quest masteries
+  (1 per Pent-Elemental Cosmology realm). x402 micropayments
+  remain in the tech stack for **gated game features only**
+  (cosmetics, premium quests, paid DLC), never for
+  educational content.
+- **British Isles scope, not "Celtic" broadly**: the 5
+  frameworks are NCCA (IE) / CfE (SCT) / CfW (WLS) / CCEA
+  (NI) / SQA (SCT post-16). The "Celtic" framing in agent
+  names is preserved for continuity, but the curriculum
+  is the British Isles 5.
+- **OpenSpec change**: `tuatha-formative-assessment-v1`
+  (archived 2026-06-24) adds 1 MODIFIED + 1 ADDED Requirement
+  to the `tuatha-platform` spec.
 
 ## Architecture
 
