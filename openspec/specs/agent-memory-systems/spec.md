@@ -18,9 +18,7 @@ persistent agent memory with multi-backend support (Cognee, Graphiti,
 LanceDB, FalkorDB, Memgraph). The full 419-line description that was here
 in the old `memory-systems` spec is in the skill
 [`.agents/skills/{cognee,graphiti,graphiti-core,lancedb,falkordb,memgraph}/SKILL.md`](../../.agents/skills/).
-
 ## Requirements
-
 ### Requirement: Multi-backend agent memory
 
 The system SHALL provide persistent agent memory across sessions using
@@ -45,6 +43,16 @@ one of the supported backends.
 - **WHEN** a query is embedded with the BGE-M3 or BGE-large-en model
 - **THEN** the agent retrieves the top-10 closest chunks from the
   relevant corpus
+
+### Requirement: Agent memory router skill
+
+The agent memory capability MUST be discoverable via a single router skill at `.agents/skills/agent-memory-systems/SKILL.md`. The router SHALL list the 5 backends (Cognee, Graphiti, LanceDB, FalkorDB, Memgraph) with a decision tree and a "pair this skill with" cross-reference table.
+
+#### Scenario: Agent finds the memory router
+
+- **WHEN** an agent searches for "agent memory", "cognee", "graphiti", "long-term memory", or "knowledge graph for agents"
+- **THEN** the loader matches `.agents/skills/agent-memory-systems/SKILL.md`
+- **AND** the skill points at the underlying memory skills (cognee, graphiti, lancedb, falkordb, memgraph) without duplicating their content
 
 ## Cross-references
 
