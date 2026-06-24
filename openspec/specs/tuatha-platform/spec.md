@@ -375,6 +375,17 @@ The tuatha quadrant MUST provide a `GenerateNpcDialogue` BAML function (in `tuat
 - **THEN** the function returns an `NpcDialogueExchange` with `utterance_en`, `utterance_ga`, scholarly footnotes, an `emotional_tone`, an `asks_player_about` prompt, and (optionally) a `quest_offered` and `artifact_granted`
 - **AND** the response stays in character, is grounded in the source material, mixes in 1 Irish phrase per 3 turns, and is under 3 sentences per turn
 
+### Requirement: GenerateNpcDialogue Pydantic mirror
+
+The canonical BAML function `GenerateNpcDialogue` (in `tuatha/baml_src/mythology_extraction.baml`) MUST have a Pydantic v2 mirror in `spaces/cianfhoghlaim/dialogue.py`. The Pydantic classes (`PNpcDialogue`, `PNpcDialogueExchange`) MUST mirror the BAML class shapes exactly, and `_validate_npc_response` MUST validate the LLM response against the Pydantic schema before falling back to the flat legacy schema.
+
+#### Scenario: LLM returns valid NpcDialogueExchange
+
+- **WHEN** the LiteLLM gateway returns a JSON object with `{npc_name, npc_title, turn_index, dialogue: {utterance_en, ..., asks_player_about}}`
+- **THEN** `_validate_npc_response` validates it against `PNpcDialogue` (or `PNpcDialogueExchange` for the full shape)
+- **AND** on success, maps to the flat dict for the UI
+- **AND** on failure, falls back to the flat schema with defaults
+
 ## Cross-references
 
 - [`tuatha/`](../../tuatha/) (the MMO + crypto quadrant)
