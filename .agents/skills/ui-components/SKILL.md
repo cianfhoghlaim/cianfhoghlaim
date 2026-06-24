@@ -351,3 +351,46 @@ This is the canonical KCG scaffold — used by every
 See `references/sruth-ui-inspiration.md` for the full
 363-line reference with the per-feature primary/secondary
 inspiration tables.
+
+## KCG UI design language (round-10 deep dive)
+
+The KCG UI design language draws from 3 primary and
+5 secondary inspirations, codified in
+`references/celtic-design/UI_INSPIRATION_GUIDE.md`:
+
+**Primary inspirations:**
+
+1. **Celtic interlaced patterns** — the knot-work tradition
+   (Book of Kells, Lindisfarne) as a generative motif for
+   decorative dividers, panel borders, and the Anam Cara
+   NFT gallery
+
+2. **Celtic design tokens** (canonical CSS variables):
+   - `--celtic-green: #2D5016` (primary)
+   - `--celtic-amber: #B8860B` (accent)
+   - `--celtic-stone: #4A4A4A` (surface)
+   - `--celtic-mist:  #E8E4D8` (background)
+   - `--celtic-gold:  #C9A961` (highlight)
+
+3. **Druidic + Ogham minimalism** — clean typography, no
+   drop shadows, generous whitespace; the runes as
+   monospace icons
+
+**Secondary inspirations** (used sparingly):
+
+1. **Duolingo** (gamification patterns: streak counts, XP
+   bars, daily quests)
+2. **Hades** (dark base with vibrant accents)
+3. **PostHog** (panel layout: resizable multi-column
+   navigation)
+4. **Khan Academy** (mastery-based progression)
+5. **Brilliant** (visual problem-first onboarding)
+
+The 5 inspirations together inform the **Celtic
+component library** (Celtic button, Celtic card, Celtic
+modal, etc.) — see `references/celtic-design/` for the
+full 363-line reference.
+
+See `references/celtic-design/UI_INSPIRATION_GUIDE.md`
+for the full 363-line reference with the per-feature
+primary/secondary inspiration tables.
