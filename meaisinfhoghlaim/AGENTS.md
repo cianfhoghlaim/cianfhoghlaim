@@ -92,3 +92,24 @@ RAG evaluation is run separately as a manual harness — see
 - `oideachais/AGENTS.md` (if present) — DLT + Dagster conventions
 - `tuatha/README.md` — crypteolas/crypteolas_demo agent patterns
 - `openspec/AGENTS.md` — change-management workflow
+
+## Feedback loop (project → openspec → skill)
+
+Per the `skills-as-project-docs` openspec change, this quadrant
+participates in the formal feedback loop:
+
+1. **When an openspec change is archived**, the canonical skill
+   gets a "Post-archive update: YYYY-MM-DD-..." note in its
+   "Pair this skill with" section.
+2. **When this quadrant changes a BAML extraction / DLT source
+   / Dagster asset**, the corresponding skill (`baml/SKILL.md`,
+   `dlt/SKILL.md`, `dagster/SKILL.md`) gets a 1-line addition
+   to its "When to use this skill" section.
+3. **When this quadrant's `STATUS.md` / `REFACTORING.md` /
+   README.md changes**, the
+   `data-engineering-pipeline-documentation/SKILL.md` gets a
+   link to the new content.
+
+The lint script `mise run lint:skills` enforces the 4 metadata
+rules (frontmatter, name match, description length, line count)
+on every skill in `.agents/skills/`.
