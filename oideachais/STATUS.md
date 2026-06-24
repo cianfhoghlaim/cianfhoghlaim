@@ -217,3 +217,23 @@ See `oideachais/REFACTORING.md` for the 5 queued features in priority order:
 - `baml_src/README.md` — BAML schema catalogue.
 - `docs/06-infrastructure/leabharlann-stack-overview.md` — end-to-end stack diagram.
 - `openspec/changes/data-engineering-documentation-and-refactor-roadmap/` — this change.
+
+## Archived BAML functions
+
+The following 6 BAML files in `baml_src/_archive/` contain 29 functions
+that have no current Python consumer. See
+`oideachais/baml_src/_archive/README.md` and
+`openspec/changes/archive-celtic-baml-orphans/` for re-activation
+instructions.
+
+- `cognates.baml` (5 functions) — meaisinfhoghlaim Celtic cognate agent
+- `celtic_linguistics.baml` (3 functions) — meaisinfhoghlaim Celtic-linguistic agent
+- `morphology.baml` (4 functions) — meaisinfhoghlaim Celtic morphology agent
+- `grammar_patterns.baml` (6 functions) — meaisinfhoghlaim Celtic grammar agent
+- `named_entities.baml` (5 functions) — meaisinfhoghlaim Celtic NER agent (or wire into duchas_assets.py)
+- `portfolio_extraction.baml` (6 functions) — croilar persona profile extraction
+
+The 5 oideachas.baml functions (`ExtractSyllabus`, `ExtractExamPaper`,
+`ExtractMarkingScheme`, `BuildCurriculumGraph`,
+`ExtractCelticLanguageContent`) are tracked separately by the
+`leaving-cert-2026` openspec change.

@@ -1,3 +1,22 @@
+// === ARCHIVED 2026-06-24 ===
+// The 6 functions in this file (ExtractGrammarPatterns,
+// ExtractIrishCopula, AnalyzeVSOOrder, ExtractPossession,
+// GeneratePrepositionalPronouns, DocumentMutationTriggers) have
+// no current Python consumer in the oideachais quadrant. They
+// are intended for the meaisinfhoghlaim/ Celtic-linguistic
+// agents, which are not yet built.
+//
+// To re-activate:
+// 1. Implement the consumer (e.g.
+//    meaisinfhoghlaim/agents/celtic_grammar.py)
+// 2. Move this file back to baml_src/ (git mv)
+// 3. Remove the ARCHIVED header from the top
+// 4. Update STATUS.md to mark the functions as wired
+// 5. Update REFACTORING.md to remove the archive entry
+//
+// Reference: openspec/changes/archive-celtic-baml-orphans/
+// =====================================================================
+
 // Grammar Patterns - Celtic Syntactic Structures
 // Extract and analyze Celtic-specific grammatical patterns
 // December 2024

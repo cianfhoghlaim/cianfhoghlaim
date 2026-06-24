@@ -1,3 +1,22 @@
+// === ARCHIVED 2026-06-24 ===
+// The 3 functions in this file (ExtractMorphology, AnalyzeSentence,
+// IdentifyDialect) have no current Python consumer in the oideachais
+// quadrant. They are intended for the meaisinfhoghlaim/
+// Celtic-linguistic agents (e.g. canuint_alignment_assets.py would
+// benefit from IdentifyDialect), which are not yet built.
+//
+// To re-activate:
+// 1. Implement the consumer (e.g.
+//    meaisinfhoghlaim/agents/celtic_linguistics.py OR wire
+//    IdentifyDialect into oideachais/dagster_defs/assets/canuint_alignment_assets.py)
+// 2. Move this file back to baml_src/ (git mv)
+// 3. Remove the ARCHIVED header from the top
+// 4. Update STATUS.md to mark the functions as wired
+// 5. Update REFACTORING.md to remove the archive entry
+//
+// Reference: openspec/changes/archive-celtic-baml-orphans/
+// =====================================================================
+
 // Celtic Linguistics - Core Enums and Classes
 // Type-safe linguistic extraction for Celtic languages
 // December 2024
