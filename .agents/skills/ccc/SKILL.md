@@ -333,3 +333,68 @@ health check, the frontmatter audit (0/7 sampled files),
 the 6-point "ccc-clean" convention, the 9-point summary
 table, the 6 recommendations, and the appendix of test
 commands.
+
+---
+
+## Appendix A: Alternative engines
+
+The KCG-canonical code search is `ccc` (this skill). Two
+alternative engines are tracked:
+
+### ChunkHound (now removed from `.agents/skills/`)
+
+ChunkHound (2024-2025) is an open-source local-first code
+search engine. It used to ship as a separate skill
+(`.agents/skills/chunkhound/SKILL.md`) but was consolidated
+into this skill. Key ChunkHound capabilities the KCG team
+liked (and which `ccc` v1 does NOT replicate):
+
+- **Two-layer architecture**: base RAG layer (cAST chunking +
+  semantic + regex search) + orchestration layer (multi-hop
+  exploration).
+- **Multi-hop exploration**: BFS traversal discovering
+  architectural relationships across the codebase, with a
+  5-second convergence detection to prevent infinite loops.
+- **Adaptive token budgets**: 30k-150k token budgets based on
+  repository size, so small projects don't get buried in noise
+  and large monorepos still get sufficient context.
+- **29+ language support** (incl. PDF via PyMuPDF).
+- **Dual-store**: DuckDB primary + LanceDB experimental.
+- **Performance**: 4.3 point gain in Recall@5 on RepoEval,
+  2.67 point gain in Pass@1 on SWE-bench, ~5ms query latency
+  with HNSW, 10-100x faster indexing via native git bindings.
+
+**When to consider ChunkHound over ccc**:
+
+- The codebase is a fresh project (no Dagster + CocoIndex v1
+  pipeline yet) and you need a code search engine *now*.
+- You need the multi-hop exploration pattern (ccc v1 has
+  flat semantic search; ChunkHound has iterative BFS).
+- You need a self-contained, no-cloud-dependencies
+  installation. ChunkHound runs locally; ccc needs the
+  Dagster + CocoIndex v1 + LanceDB + (optionally) Lance
+  Cloud infrastructure.
+
+**How to install ChunkHound if needed** (KCG teams don't
+ship it as a skill anymore):
+
+```bash
+uv tool install chunkhound
+cd /path/to/project
+chunkhound index
+chunkhound search "def.*authenticate"
+```
+
+The ChunkHound `.chunkhound.json` configuration pattern
+(local-first, no cloud) is the right default for any
+air-gapped or compliance-constrained project.
+
+### Other engines (not in KCG)
+
+- **Sourcegraph** — enterprise code intelligence, paid.
+- **livegrep** — regex-only, no embeddings.
+- **Zoekt** — gitlab's regex engine.
+- **Code Search (Google internal)** — not available externally.
+
+The KCG stack uses `ccc` (canonical) or `ChunkHound`
+(per-project self-hosted) for all production code search.
