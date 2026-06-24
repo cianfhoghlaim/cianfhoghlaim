@@ -1,6 +1,6 @@
 ## MODIFIED Requirements
 
-### Requirement: Crypteolas educational-achievement ledger
+### Requirement: Crypteolas crypto data platform
 
 The system SHALL provide an **educational-achievement ledger**
 at `tuatha/crypteolas/achievements/` (rebranded from the v0
