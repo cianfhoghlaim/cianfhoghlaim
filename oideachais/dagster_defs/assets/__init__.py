@@ -150,6 +150,14 @@ from .unified_audio_dataset_assets import (
     unified_combined_dataset,
 )
 
+# LLM gateway health (vendor-de-risking for MiniMax-M3)
+# See openspec/changes/litellm-minimax-vendor-derisking/.
+from .llm_gateway_assets import (
+    GatewayHealthConfig,
+    minimax_alias_health,
+    minimax_alias_liveliness,
+)
+
 # OCR comparison assets
 ocr_comparison_assets = [
     ocr_source_documents,
@@ -200,6 +208,8 @@ all_assets = [
     author_archive_cognify,
     author_archive_cross_edges,
     author_archive_kg_summary,
+    # LLM gateway health (vendor-de-risking for MiniMax-M3)
+    minimax_alias_liveliness,
 ]
 if _UOG_ASSETS_AVAILABLE:
     all_assets += [
