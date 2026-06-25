@@ -9,7 +9,9 @@ services:
       DAGSTER_HOME: /opt/dagster/dagster_home
       DAGSTER_ENV: ${DAGSTER_ENV:-local}
       DUCKDB_PATH: ${DUCKDB_PATH:-./croilar.duckdb}
-      LANCEDB_URI: ${LANCEDB_URI:-./lancedb_data_cv}
+      # Default to the lakehouse Lance namespace (extend-lakehouse-with-nimtable-olake-lancedb);
+      # override with LANCEDB_URI=./lancedb_data_cv for legacy file-path deployments.
+      LANCEDB_URI: ${LANCEDB_URI:-rest://lakehouse-lance-namespace:8182}
       SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID:-}
       SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET:-}
       SOUNDCLOUD_CLIENT_ID: ${SOUNDCLOUD_CLIENT_ID:-}
@@ -24,10 +26,13 @@ services:
       retries: 5
     networks:
       - cianfhoghlaim
+      - lakehouse
 
 volumes:
   croilar-dagster-home:
 
 networks:
   cianfhoghlaim:
+    external: true
+  lakehouse:
     external: true

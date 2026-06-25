@@ -8,7 +8,9 @@ services:
     environment:
       MARIMO_RUNTIME: ${MARIMO_RUNTIME:-lazy}
       DUCKDB_PATH: ${DUCKDB_PATH:-./croilar.duckdb}
-      LANCEDB_URI: ${LANCEDB_URI:-./lancedb_data_cv}
+      # Default to the lakehouse Lance namespace (extend-lakehouse-with-nimtable-olake-lancedb);
+      # override with LANCEDB_URI=./lancedb_data_cv for legacy file-path deployments.
+      LANCEDB_URI: ${LANCEDB_URI:-rest://lakehouse-lance-namespace:8182}
     volumes:
       - notebook-data:/app/notebooks
     healthcheck:
@@ -18,10 +20,13 @@ services:
       retries: 3
     networks:
       - cianfhoghlaim
+      - lakehouse
 
 volumes:
   notebook-data:
 
 networks:
   cianfhoghlaim:
+    external: true
+  lakehouse:
     external: true
