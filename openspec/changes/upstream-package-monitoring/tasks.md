@@ -7,7 +7,7 @@
 ## 1. BAML schema additions
 
 - [ ] 1.1 Create
-  `sruth/oideachais/baml_src/upstream_monitoring.baml` with 3
+  `sruth/sruth/oideachais/baml_src/upstream_monitoring.baml` with 3
   extraction functions and their Pydantic-style classes:
   - [ ] 1.1.1 `ExtractBlogPostMetadata(content: string, url: string) -> BlogPostMetadata`
     with fields `(title, author, published_at: datetime, package: enum, blog_post_type: enum, summary: string, affected_capabilities: list[string], code_examples: list[string], api_changes: list[string])`
@@ -16,7 +16,7 @@
   - [ ] 1.1.3 `ExtractPackageRelease(content: string, url: string) -> PackageRelease`
     with fields `(package: enum, version: string, release_date: datetime, breaking_changes: list[string], new_features: list[string], deprecations: list[string])`
   - [ ] 1.1.4 All 3 route through the canonical `ExtractEn`
-    client from `sruth/oideachais/baml_src/clients.baml:243-251`
+    client from `sruth/sruth/oideachais/baml_src/clients.baml:243-251`
 - [ ] 1.2 Run `mise run baml:generate` (or `cd sruth/oideachais
   && uv run baml-cli generate`) and verify
   `baml_client/upstream_monitoring.py` is created.
@@ -27,7 +27,7 @@
 ## 2. CocoIndex v1 App: upstream blog monitor
 
 - [ ] 2.1 Create
-  `sruth/oideachais/cocoindex_flows/upstream_blog_monitor.py`
+  `sruth/sruth/oideachais/cocoindex_flows/upstream_blog_monitor.py`
   with:
   - [ ] 2.1.1 Imports `shared_lifespan`, `LANCE_DB`, `EMBEDDER`,
     `RESOLVED_FILE_REGISTRY`, `LANCEDB_URI`, `EMBED_MODEL`,
@@ -61,7 +61,7 @@
 ## 3. CocoIndex v1 App: cocoindex v1 conformance
 
 - [ ] 3.1 Create
-  `sruth/oideachais/cocoindex_flows/cocoindex_v1_conformance.py`
+  `sruth/sruth/oideachais/cocoindex_flows/cocoindex_v1_conformance.py`
   with:
   - [ ] 3.1.1 Imports `shared_lifespan` from
     `oideachais.cocoindex_flows._lifespan` (R1 conformance rule).
@@ -70,7 +70,7 @@
     violations: list[str], checked_at: datetime)`.
   - [ ] 3.1.3 A `run_conformance_check(repo_root: pathlib.Path)
     -> ConformanceReport` function that walks every
-    `sruth/oideachais/cocoindex_flows/*.py` file (except
+    `sruth/sruth/oideachais/cocoindex_flows/*.py` file (except
     `__init__.py`, `_lifespan.py`, `_v0_archive/`) and applies
     the 4 rules:
     - **R1**: AST contains `from ._lifespan import` AND
@@ -89,7 +89,7 @@
 ## 4. CocoIndex v1 App: upstream api surface
 
 - [ ] 4.1 Create
-  `sruth/oideachais/cocoindex_flows/upstream_api_surface.py`
+  `sruth/sruth/oideachais/cocoindex_flows/upstream_api_surface.py`
   with:
   - [ ] 4.1.1 Imports `shared_lifespan`, `LANCE_DB`, `EMBEDDER`,
     `RESOLVED_FILE_REGISTRY` from
@@ -117,7 +117,7 @@
 ## 5. Lifespan migrations (REFACTORING.md item 12 enforcement precondition)
 
 - [ ] 5.1 In
-  `sruth/oideachais/cocoindex_flows/codebase_indexing.py`:
+  `sruth/sruth/oideachais/cocoindex_flows/codebase_indexing.py`:
   - [ ] 5.1.1 Replace its own `@coco.lifespan` (the one at the
     top-level `codebase_app`) with a delegation to
     `shared_lifespan` from `_lifespan`.
@@ -125,7 +125,7 @@
     `RESOLVED_FILE_REGISTRY` ContextKey declarations; import
     them from `_lifespan` instead.
 - [ ] 5.2 In
-  `sruth/oideachais/cocoindex_flows/docs_skills_consolidation.py`:
+  `sruth/sruth/oideachais/cocoindex_flows/docs_skills_consolidation.py`:
   - [ ] 5.2.1 Replace its own `@coco.lifespan` (the one at the
     top-level `docs_skills_app`) with a delegation to
     `shared_lifespan`.
@@ -133,7 +133,7 @@
     → `oideachais_lance_db` (the canonical name from
     `_lifespan.py:53`). Update all references within the file.
 - [ ] 5.3 In
-  `sruth/oideachais/cocoindex_flows/culture_heritage_embedding.py`:
+  `sruth/sruth/oideachais/cocoindex_flows/culture_heritage_embedding.py`:
   - [ ] 5.3.1 Migrate from the non-canonical
     `@coco.flow(scope="global")` + `coco.index_flow(...)`
     wrapper (lines 130-155 per the prior read) to the canonical
@@ -145,14 +145,14 @@
     (`python -m oideachais.cocoindex_flows.culture_heritage_embedding update`)
     still works with the new module-level `app`.
 - [ ] 5.4 In
-  `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py`:
+  `sruth/sruth/oideachais/cocoindex_flows/leabharlann_embedding.py`:
   - [ ] 5.4.1 Audit confirmed it already delegates to
     `shared_lifespan`. No change required.
 
 ## 6. __init__.py export update
 
 - [ ] 6.1 In
-  `sruth/oideachais/cocoindex_flows/__init__.py`:
+  `sruth/sruth/oideachais/cocoindex_flows/__init__.py`:
   - [ ] 6.1.1 Fix the stale docstring at lines 1-26 (claims
     `curriculum_embedding_v1` + `research_embedding_v1` exist —
     they do not on disk).
@@ -168,7 +168,7 @@
     `cocoindex_v1_conformance`.
   - [ ] 6.1.4 Add the new exports to `__all__`.
 - [ ] 6.2 In
-  `sruth/oideachais/cocoindex_flows/_lifespan.py`:
+  `sruth/sruth/oideachais/cocoindex_flows/_lifespan.py`:
   - [ ] 6.2.1 Fix the stale "9 v1 Apps" docstring at lines 1-16.
     Replace with the canonical count = 12 (current) → 15
     (after this change lands).
@@ -176,7 +176,7 @@
 ## 7. Schema-mask + data-type standardisation (extension)
 
 - [ ] 7.1 In
-  `sruth/oideachais/core/types.py` (created by
+  `sruth/sruth/oideachais/core/types.py` (created by
   `four-directory-indexing-and-standards/` § 4):
   - [ ] 7.1.1 Add `Package` enum:
     `(MOTHERDUCK, DLTHUB, LANCEDB, COCOINDEX)`
@@ -191,13 +191,13 @@
 ## 8. DLT incremental source
 
 - [ ] 8.1 Create
-  `sruth/oideachais/dlt_sources/domains/cross/__init__.py`
+  `sruth/sruth/oideachais/dlt_sources/domains/cross/__init__.py`
   (empty marker file for the new `cross/` subdirectory).
 - [ ] 8.2 Create
-  `sruth/oideachais/dlt_sources/domains/cross/upstream/__init__.py`
+  `sruth/sruth/oideachais/dlt_sources/domains/cross/upstream/__init__.py`
   (empty marker file for the new `upstream/` subdirectory).
 - [ ] 8.3 Create
-  `sruth/oideachais/dlt_sources/domains/cross/upstream/blog_post.py`
+  `sruth/sruth/oideachais/dlt_sources/domains/cross/upstream/blog_post.py`
   with:
   - [ ] 8.3.1 A `blog_post_source(storage_root: pathlib.Path = ...)`
     factory that returns a DLT `@resource` iterator.
@@ -221,7 +221,7 @@
 ## 9. Dagster assets + sensor
 
 - [ ] 9.1 Create
-  `sruth/oideachais/dagster_defs/assets/upstream_monitoring_assets.py`
+  `sruth/sruth/oideachais/dagster_defs/assets/upstream_monitoring_assets.py`
   with 5 assets + 1 sensor:
   - [ ] 9.1.1 `upstream_blog_monitor_ingest` — runs the DLT
     source from § 8. Materialises `oideachais.upstream_blog_posts`
@@ -244,7 +244,7 @@
     `uv run cocoindex update
     oideachais.cocoindex_flows.upstream_api_surface`. Writes
     a per-package Markdown report to
-    `sruth/oideachais/docs/upstream/api-changes/{package}.md`.
+    `sruth/sruth/oideachais/docs/upstream/api-changes/{package}.md`.
   - [ ] 9.1.6 Sensor `upstream_breaking_change_sensor` —
     runs every 5 minutes. Queries the
     `upstream_packages_graph` FalkorDB graph for any
@@ -253,7 +253,7 @@
     `#upstream-breaking-changes` via the existing
     `infrastructure/scripts/slack_webhook.py` helper.
 - [ ] 9.2 Register all 6 in
-  `sruth/oideachais/dagster_defs/assets/__init__.py`
+  `sruth/sruth/oideachais/dagster_defs/assets/__init__.py`
   by appending to `all_assets` (line 173).
 
 ## 10. Task aliases
@@ -356,7 +356,7 @@
     reality of 12 existing Apps + 3 new).
   - [ ] 13.2.2 Add the 4-rule conformance contract with a
     cross-link to
-    `sruth/oideachais/cocoindex_flows/cocoindex_v1_conformance.py`.
+    `sruth/sruth/oideachais/cocoindex_flows/cocoindex_v1_conformance.py`.
   - [ ] 13.2.3 Fix the stale "11 v1 Apps" claim in any
     summary.
   - [ ] 13.2.4 Add a "Pair this skill with" entry for
@@ -386,7 +386,7 @@
   - [ ] 13.5.3 Add a note that the canonical KCG embedder
     `BAAI/bge-large-en-v1.5` (1024-dim) is set via the
     `OIDEACHAIS_EMBED_MODEL` env var at
-    `oideachais/cocoindex_flows/_lifespan.py:70`.
+    `sruth/oideachais/cocoindex_flows/_lifespan.py:70`.
 - [ ] 13.6 In
   `.agents/skills/motherduck/SKILL.md`:
   - [ ] 13.6.1 Add a section "DuckLake 1.0" launched
@@ -394,7 +394,7 @@
     partitioning + variant types.
   - [ ] 13.6.2 Re-affirm the 3 hosting options (managed /
     BYOB / DuckLake) with cross-links to
-    `oideachais/dlt_utils/motherduck_options.py`.
+    `sruth/oideachais/dlt_utils/motherduck_options.py`.
 - [ ] 13.7 In
   `.agents/skills/dlt/SKILL.md`:
   - [ ] 13.7.1 Add a section "dltHub Pro" launched 2026-04-14:
@@ -415,7 +415,7 @@
 ## 14. AGENTS.md updates
 
 - [ ] 14.1 In
-  `sruth/oideachais/AGENTS.md`:
+  `sruth/sruth/oideachais/AGENTS.md`:
   - [ ] 14.1.1 Add `oideachais-cocoindex-v1` to the
     priority 8-skills quick-reference table at the top of
     the file (currently missing — confirmed by re-read
@@ -435,14 +435,14 @@
   — all green.
 - [ ] 15.2 `mise run baml:generate` — exits 0.
 - [ ] 15.3
-  `uv run cocoindex update sruth/oideachais/cocoindex_flows/upstream_blog_monitor.py`
+  `uv run cocoindex update sruth/sruth/oideachais/cocoindex_flows/upstream_blog_monitor.py`
   — materialises ≥ 1 row on first run with a sample payload
   in `stedding/upstream_blog_payloads/`.
 - [ ] 15.4
-  `uv run cocoindex update sruth/oideachais/cocoindex_flows/upstream_api_surface.py`
+  `uv run cocoindex update sruth/sruth/oideachais/cocoindex_flows/upstream_api_surface.py`
   — materialises ≥ 1 `ApiChangeChunk` on first run.
 - [ ] 15.5
-  `uv run python -c "from sruth.oideachais.cocoindex_flows.cocoindex_v1_conformance import run_conformance_check; print(run_conformance_check(pathlib.Path('sruth/oideachais/cocoindex_flows')))"`
+  `uv run python -c "from sruth.oideachais.cocoindex_flows.cocoindex_v1_conformance import run_conformance_check; print(run_conformance_check(pathlib.Path('sruth/sruth/oideachais/cocoindex_flows')))"`
   — returns a `ConformanceReport` with `r1_pass=True,
   r2_pass=True, r3_pass=True, r4_pass=True` for all 15 Apps
   (after migrations in § 5).
@@ -488,12 +488,12 @@
 - Sister change (related):
   `openspec/changes/extend-lakehouse-with-nimtable-olake-lancedb/`
 - v1 reference patterns:
-  `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py:236-249`
+  `sruth/sruth/oideachais/cocoindex_flows/leabharlann_embedding.py:236-249`
   (canonical lifespan) +
-  `sruth/oideachais/cocoindex_flows/_lifespan.py`
+  `sruth/sruth/oideachais/cocoindex_flows/_lifespan.py`
   (shared lifespan home)
 - OpenSpec workflow: `openspec/AGENTS.md`
 - Dagster definitions:
-  `sruth/oideachais/dagster_defs/assets/__init__.py`
+  `sruth/sruth/oideachais/dagster_defs/assets/__init__.py`
 - CocoIndex v1 docs (canonical reference):
   `https://cocoindex.io/docs/skill.md`

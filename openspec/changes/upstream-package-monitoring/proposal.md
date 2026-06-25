@@ -93,7 +93,7 @@ Each app imports `shared_lifespan` + the 3 shared ContextKeys
 `oideachais.cocoindex_flows._lifespan` per REFACTORING.md item 12.
 No app re-declares a lifespan.
 
-- **`oideachais/cocoindex_flows/upstream_blog_monitor.py`** —
+- **`sruth/oideachais/cocoindex_flows/upstream_blog_monitor.py`** —
   consumes the DLT landing table produced by the n8n workflow.
   - `app = coco.App(coco.AppConfig(name="UpstreamBlogMonitor"), app_main)`
   - `@coco.lifespan` delegates to `shared_lifespan`
@@ -107,7 +107,7 @@ No app re-declares a lifespan.
     `embedding` (`BAAI/bge-large-en-v1.5` per
     `_lifespan.py:70`)
 
-- **`oideachais/cocoindex_flows/cocoindex_v1_conformance.py`** —
+- **`sruth/oideachais/cocoindex_flows/cocoindex_v1_conformance.py`** —
   static linter wrapped as a Dagster `asset_check`. Enforces 4
   rules on every v1 CocoIndex App:
   - **R1** imports `shared_lifespan` from
@@ -126,7 +126,7 @@ No app re-declares a lifespan.
     `run_conformance_check(repo_root: pathlib.Path) -> ConformanceReport`
     entrypoint. Dagster `asset_check` wraps the call.
 
-- **`oideachais/cocoindex_flows/upstream_api_surface.py`** —
+- **`sruth/oideachais/cocoindex_flows/upstream_api_surface.py`** —
   watches the 4 cocoindex docs URLs (same as
   `cocoindex_docs.yml` monitor, but the App is the canonical
   in-pipeline view). BAML `ExtractCocoIndexApiChange` → emits
@@ -137,7 +137,7 @@ No app re-declares a lifespan.
 
 ### 1 new DLT incremental source
 
-- **`oideachais/dlt_sources/domains/cross/upstream/blog_post.py`**
+- **`sruth/oideachais/dlt_sources/domains/cross/upstream/blog_post.py`**
   — reads n8n-webhook payloads from an S3-compatible Garage bucket
   `oideachais-upstream-webhooks/` (the n8n workflow drops raw
   payloads there). Incremental cursor on `payload["metadata"]["first_seen_at"]`.
@@ -152,7 +152,7 @@ No app re-declares a lifespan.
 
 ### 5 new Dagster assets + 1 sensor
 
-- **`oideachais/dagster_defs/assets/upstream_monitoring_assets.py`**:
+- **`sruth/oideachais/dagster_defs/assets/upstream_monitoring_assets.py`**:
   - `upstream_blog_monitor_ingest` — runs the DLT source on
     Garage bucket delta
   - `upstream_blog_chunk_and_tag` — runs `cocoindex update
@@ -180,7 +180,7 @@ In `mise.toml` and `package.json`:
 
 ### 1 new BAML file
 
-- **`oideachais/baml_src/upstream_monitoring.baml`** with 3
+- **`sruth/oideachais/baml_src/upstream_monitoring.baml`** with 3
   extraction functions, all routing through `ExtractEn` from
   `baml_src/clients.baml`:
   - `ExtractBlogPostMetadata(content, url) -> BlogPostMetadata`
@@ -196,7 +196,7 @@ In `mise.toml` and `package.json`:
 
 ### MODIFIED `schema-type-standardization` spec
 
-Adds 2 new enum types at `oideachais/core/types.py`:
+Adds 2 new enum types at `sruth/oideachais/core/types.py`:
 
 - `Package` enum: `MOTHERDUCK`, `DLTHUB`, `LANCEDB`, `COCOINDEX`
 - `BlogPostType` enum: `ANNOUNCEMENT`, `TUTORIAL`, `BENCHMARK`,
@@ -226,7 +226,7 @@ stay as-is.)
 
 ### `__init__.py` export update
 
-`oideachais/cocoindex_flows/__init__.py:33-145` currently exports
+`sruth/oideachais/cocoindex_flows/__init__.py:33-145` currently exports
 only 5 Apps (leabharlann_*, docs_skills_*, codebase_*). This change
 adds the 6 missing Apps (`api_indexing`, `filesystem_indexing`,
 `storage_indexing`, `config_indexing`, `unified_embedding`,
@@ -235,10 +235,10 @@ adds the 6 missing Apps (`api_indexing`, `filesystem_indexing`,
 `cocoindex_v1_conformance_app`) = 14 exports.
 
 Also: fix the stale docstring at
-`oideachais/cocoindex_flows/__init__.py:1-26` (claims
+`sruth/oideachais/cocoindex_flows/__init__.py:1-26` (claims
 `curriculum_embedding_v1` + `research_embedding_v1` exist — they
 do not on disk) and the docstring at
-`oideachais/cocoindex_flows/_lifespan.py:1-16` (claims "9 v1
+`sruth/oideachais/cocoindex_flows/_lifespan.py:1-16` (claims "9 v1
 Apps" — actual disk count is 10 .py files + leabharlann's 3
 sub-Apps = 12 Apps; with this change it becomes 15).
 
@@ -274,7 +274,7 @@ sub-Apps = 12 Apps; with this change it becomes 15).
 
 ### 2 AGENTS.md updates
 
-- `sruth/oideachais/AGENTS.md` — add `oideachais-cocoindex-v1` to
+- `sruth/sruth/oideachais/AGENTS.md` — add `oideachais-cocoindex-v1` to
   the priority 8-skills quick-reference (currently missing —
   confirmed by re-read 2026-06-25)
 - `openspec/AGENTS.md` — add `oideachais-cocoindex-v1` to the
@@ -293,26 +293,26 @@ sub-Apps = 12 Apps; with this change it becomes 15).
     adds a `### Note: conformance enforcement` paragraph pointing
     at the new `cocoindex_v1_conformance` App
 - **Affected code:**
-  - `oideachais/cocoindex_flows/{upstream_blog_monitor,
+  - `sruth/oideachais/cocoindex_flows/{upstream_blog_monitor,
     cocoindex_v1_conformance, upstream_api_surface}.py` — NEW
-  - `oideachais/cocoindex_flows/{codebase_indexing,
+  - `sruth/oideachais/cocoindex_flows/{codebase_indexing,
     docs_skills_consolidation, culture_heritage_embedding}.py` —
     MODIFIED to use `shared_lifespan` + canonical v1 pattern
-  - `oideachais/cocoindex_flows/__init__.py` — MODIFIED to
+  - `sruth/oideachais/cocoindex_flows/__init__.py` — MODIFIED to
     export 14 Apps (currently 5)
-  - `oideachais/cocoindex_flows/_lifespan.py` — MODIFIED to
+  - `sruth/oideachais/cocoindex_flows/_lifespan.py` — MODIFIED to
     fix stale "9 v1 Apps" docstring
-  - `oideachais/dagster_defs/assets/upstream_monitoring_assets.py`
+  - `sruth/oideachais/dagster_defs/assets/upstream_monitoring_assets.py`
     — NEW (5 assets + 1 sensor)
-  - `oideachais/dagster_defs/assets/__init__.py` — MODIFIED to
+  - `sruth/oideachais/dagster_defs/assets/__init__.py` — MODIFIED to
     register the new asset group
-  - `oideachais/dlt_sources/domains/cross/upstream/blog_post.py`
+  - `sruth/oideachais/dlt_sources/domains/cross/upstream/blog_post.py`
     — NEW
-  - `oideachais/dlt_sources/domains/cross/__init__.py` — NEW
+  - `sruth/oideachais/dlt_sources/domains/cross/__init__.py` — NEW
     (empty init for the new cross/ subdirectory)
-  - `oideachais/core/types.py` — MODIFIED to add `Package` +
+  - `sruth/oideachais/core/types.py` — MODIFIED to add `Package` +
     `BlogPostType` enums
-  - `oideachais/baml_src/upstream_monitoring.baml` — NEW
+  - `sruth/oideachais/baml_src/upstream_monitoring.baml` — NEW
   - `infrastructure/firecrawl/monitors/upstream_packages/
     {motherduck,dlthub,lancedb,cocoindex}.yml` — NEW (4 files)
   - `engineering/n8n/workflows/upstream-blog-monitor.json` — NEW
@@ -336,7 +336,7 @@ sub-Apps = 12 Apps; with this change it becomes 15).
   upstream blog post or doc page. It only ingests, extracts,
   embeds, and graph-links the existing material.
 - This change does **not** migrate the v0 CocoIndex modules in
-  `oideachais/cocoindex_flows/_v0_archive/` (those stay on disk).
+  `sruth/oideachais/cocoindex_flows/_v0_archive/` (those stay on disk).
 - This change does **not** cognify the new FalkorDB edges into
   Cognee. The graph is cognify-ready (entity-typed `BlogPostNode`
   + `PackageNode` + `ApiChangeNode` + `CapabilityNode`) and can
@@ -351,7 +351,7 @@ sub-Apps = 12 Apps; with this change it becomes 15).
 - This change does **not** delete the `culture_heritage_embedding.py`
   v0-style wrapper — it migrates it to the canonical v1 pattern.
 - This change does **not** touch `sruth/refactor-quadrants-to-sruth/`
-  (still in flight, 0/134 tasks). It uses the new `sruth/oideachais/...`
+  (still in flight, 0/134 tasks). It uses the new `sruth/sruth/oideachais/...`
   path conventions on the assumption that change will land first.
 
 ## Dependencies
@@ -360,10 +360,10 @@ sub-Apps = 12 Apps; with this change it becomes 15).
   first** — this change extends its `schema-type-standardization`
   spec. If that change is still in flight when this change is
   reviewed, the proposal.md reviewer should read both side by
-  side and confirm the merged `oideachais/core/types.py` exports
+  side and confirm the merged `sruth/oideachais/core/types.py` exports
   `Package` + `BlogPostType` enums without conflict.
 - **Recommends `refactor-quadrants-to-sruth/` to merge first** —
-  this change uses the new `sruth/oideachais/...` paths. If
+  this change uses the new `sruth/sruth/oideachais/...` paths. If
   that change is still in flight when this change is reviewed,
   paths in `tasks.md` should be interpreted as the post-move
   locations.

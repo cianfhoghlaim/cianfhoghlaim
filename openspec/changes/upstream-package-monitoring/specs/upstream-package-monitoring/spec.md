@@ -54,7 +54,7 @@ The system SHALL expose a CocoIndex v1 App at
 `oideachais.cocoindex_flows.cocoindex_v1_conformance` (named
 `CocoIndexV1Conformance`) that implements a static linter
 enforcing 4 conformance rules on every v1 CocoIndex App under
-`oideachais/cocoindex_flows/`, and SHALL expose a
+`sruth/oideachais/cocoindex_flows/`, and SHALL expose a
 `ConformanceReport` dataclass + a
 `run_conformance_check(repo_root)` entrypoint usable as a Dagster
 `asset_check`.
@@ -62,7 +62,7 @@ enforcing 4 conformance rules on every v1 CocoIndex App under
 #### Scenario: R1 — shared lifespan delegation
 
 - **GIVEN** a v1 CocoIndex App at
-  `oideachais/cocoindex_flows/<name>.py`
+  `sruth/oideachais/cocoindex_flows/<name>.py`
 - **WHEN** `run_conformance_check` is invoked
 - **THEN** the App SHALL be flagged as R1-FAILING if the AST
   does NOT contain `from ._lifespan import` AND a reference to
@@ -165,7 +165,7 @@ detected.
 - **GIVEN** the `upstream_api_surface_publish` Dagster asset
   has run for all 4 packages
 - **WHEN** the caller inspects
-  `sruth/oideachais/docs/upstream/api-changes/{package}.md`
+  `sruth/sruth/oideachais/docs/upstream/api-changes/{package}.md`
 - **THEN** the file SHALL contain a Markdown table with
   columns `(symbol, severity, old_signature, new_signature,
   changelog_url, migration_steps)` for the 30 most recent
