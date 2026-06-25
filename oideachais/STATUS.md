@@ -28,6 +28,7 @@
 | `ui_components.baml` | `UIComponentKind`, `UIComponentSuggestion` (2) | `SuggestUIComponents` | (called by `oideachais/dagster_defs/assets/ui_suggestion.py`) | `ui_suggestion_asset` (nightly) | (none — populates LanceDB directly) |
 | `author_archive.baml` | `GeminiDomain`, `UoGArtifactKind`, `UoGStage`, `UoGLanguage`, `EquationConfidence`, `CitedUrl`, `GeminiDeepResearchReport`, `UniversityOfGalwayArtifact`, `HandwrittenEquation`, `PaperKind`, `Author`, `ZoteroPaper` (12) | `ExtractGeminiReport`, `ExtractUoGArtifact`, `ExtractHandwrittenEquations`, `ExtractZoteroMetadata` | `oideachais/dlt_sources/author_archive/{gemini_deep_research,university_of_galway,leabharlann_books,zotero,takeout_v1}.py` (5 sources) | `oideachais/dagster_defs/assets/{author_archive,leabharlann}_assets.py` (14 assets) | `oideachais/cocoindex_flows/{author_archive,leabharlann}_embedding.py` (2 flows; 1 v1 + 1 v0) |
 | `image_generation.baml` | (image-generation helpers) | (FIBO + Z-Image-Turbo extraction) | (called by `oideachais/dagster_assets/asset_generation_assets.py`) | `asset_generation_assets` | (none — image gen) |
+| `culture_extraction.baml` | `EvidenceQuality`, `CultureHeritageClaim` (2) | `ExtractCultureClaims` | `oideachais/dlt_sources/domains/culture/ie/heritage_source.py` | `oideachais/dagster_defs/assets/culture_heritage_assets.py` (4 assets + 1 asset check) | `oideachais/cocoindex_flows/culture_heritage_embedding.py` (v1 — 12th App) |
 
 **Summary**: 8 BAML files, 44 classes, ~12 extraction functions. **8 of 12 functions are invoked from at least one dlt source / Dagster asset.** 4 are *defined but never invoked*:
 
@@ -208,6 +209,27 @@ Search handlers (`oideachais/cocoindex_flows/leabharlann_embedding.py`): 3 async
 - `search_leabharlann_books(query, subject=None, limit=10)` — top-10 chunks from `leabharlann_books`.
 - `search_leabharlann_zotero(query, htr_relevant=None, irish_relevant=None, arxiv_id=None, limit=10)` — top-10 chunks from `leabharlann_zotero`.
 - `search_leabharlann_takeout(query, account=None, domain=None, limit=10)` — top-10 chunks from `leabharlann_takeout`.
+
+### 5.1 Culture heritage pipeline status (added by `ingest-culture-heritage`)
+
+The 6th domain in the cross-domain-registry. 6 Gemini Deep Research PDFs at `leabharlann/gemini_deep_research/culture/`, plus 3 Wikipedia dual-write fixtures at `cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/`.
+
+| Source | BAML extract | dlt source | Dagster asset | CocoIndex App | LanceDB table |
+|:--|:--|:--|:--|:--|:--|
+| `claiming_r_na_gaillimhe_a_synthesis.pdf` | `ExtractCultureClaims` | `domains/culture/ie/heritage_source.py` | `culture_heritage_extract` | `culture_heritage_embedding` (v1) | `oideachais.culture_heritage_chunks` |
+| `claiming_irish_kingship_through_lineage.pdf` | `ExtractCultureClaims` | (same) | (same) | (same) | (same) |
+| `deacy_family_heritage_research.pdf` | `ExtractCultureClaims` | (same) | (same) | (same) | (same) |
+| `genealogy_and_conaire_s_activism.pdf` | `ExtractCultureClaims` | (same) | (same) | (same) | (same) |
+| `researching_neil_deacy_s_galway_heritage.pdf` | `ExtractCultureClaims` | (same) | (same) | (same) | (same) |
+| `the_socio_economic_athletic_and_genealogical_topography_of_the_deacy_family_in_galway_a_multi_dimensional_analysis.pdf` | `ExtractCultureClaims` | (same) | (same) | (same) | (same) |
+
+**Wikipedia dual-write fixtures** (the new `cross-domain-registry` convention): 3 clippings with Obsidian frontmatter under `cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/` (Uí Liatháin / Delbhna Tír Dhá Locha / Eamonn Deacy Park), each mirrored as a JSON fixture at `oideachais/dlt_sources/official_media/fixtures/identity_*.json` with `asset_key: [ie, culture, ...]`.
+
+**Cognee dataset**: `culture_heritage` — the 6th Cognee dataset (alongside `oideachais`, `leabharlann_books`, `leabharlann_zotero`, `leabharlann_takeout`, `site_analysis`, `official_media`, `author_archive`). Edge types: `Claim->Person`, `Claim->Place`, `Person->FamilyRelation`. Cross-dataset edges to `oideachais` and `leabharlann`: `CultureHeritageClaim-MATCHES->LeavingCertLearningOutcome`, `CultureHeritagePerson-COREFERS_WITH->LeabharlannAuthor`.
+
+**Asset check**: `low_confidence_review` — surfaces a Dagster WARN when any claim has `confidence < 0.6`, routing those claims out of the production `culture_heritage_chunks` table.
+
+**Reference**: `openspec/changes/ingest-culture-heritage/proposal.md`.
 
 ---
 

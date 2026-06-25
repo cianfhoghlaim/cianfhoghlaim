@@ -6,6 +6,6 @@ Phase 5 of the openspec change. Replaces the legacy flat layout
 """
 from __future__ import annotations
 
-from dlt_sources.domains import education
+from dlt_sources.domains import culture, education
 
-__all__ = ["education"]
+__all__ = ["culture", "education"]
