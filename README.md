@@ -1,6 +1,6 @@
 # Kings' College Galway || Coláiste na Déisigh
 
-> *A unified Celtic education platform, infrastructure mesh, and AI research laboratory by Cian Mac an Déisigh Uí Liatháin.*
+> *A unified Celtic education platform, infrastructure mesh, and AI research laboratory by Cian Mac an Déisigh Uí Liatháin (Deacy-Lyons) as the first part of cianfhoghlaim.ie*
 
 [![Polyglot](https://img.shields.io/badge/polyglot-bun_%2B_uv_%2B_turbo-blue)](#)
 [![Dagster](https://img.shields.io/badge/dagster-228_assets-4B8BBE)](oideachais/)
@@ -309,10 +309,288 @@ Langfuse, Infisical, GitHub).
 
 ---
 
-## Licensing
+## About the author, the name, and the lineage
 
-Business Source License 1.1 — non-commercial, cultural preservation, and academic research use permitted within Ireland, UK, EU, Commonwealth, and aligned jurisdictions. Transitions to AGPL v3.0 after 4 years. See [`LICENSE.md`](LICENSE.md).
+### On the username — *cianfhoghlaim*
+
+The repository name and the underlying platform are both
+**Cianfhoghlaim**. The Irish word *cianfhoghlaim* (pronounced
+roughly *kee-an-oh-guh-lem*) compounds two roots:
+
+- *cian* — long, enduring, distant
+- *foghlaim* — learning, study
+
+So *cianfhoghlaim* reads literally as **"long-distance,
+enduring learning"** — lifelong learning across geography and
+discipline, which is the whole point of this project.
+
+*Cian* also has a second life in the Irish mythological canon:
+in *Lebor Gabála Érenn* and the wider Tuatha Dé Danann cycle,
+**Cian** is the father of Lugh Lámhfhada (Lug of the Long Arm),
+the many-skilled god who walks into the Battle of Moytura and
+slays his grandfather Balor. The tuatha/ subtree — the British
+Isles formative-assessment MMO built on Babylon.js + SpacetimeDB
+— sits squarely inside that mythological lineage.
+
+The Irish word **sruth** (pronounced *sruh*) means *stream* or
+*flow*. In `opencode.json`, the four traditional top-level
+subprojects (oideachais, meaisinfhoghlaim, tuatha, croilar) plus
+infrastructure are referred to as the five **sruthanna** —
+flows — rather than "quadrants", because in a knowledge-graph
+platform the meaningful unit of work is the *flow of data and
+reasoning*, not a static slice of a 2D plane.
+
+### On the family — *Mac an Déisigh Uí Liatháin (Deacy-Lyons)*
+
+The author is **Cian Mac an Déisigh Uí Liatháin**; the family
+surname in its two anglicised forms is **Deacy-Lyons**. The
+author's verified genealogy and qualifications inform the
+project's design choices and are recorded under
+[`cian_mac_an_déisigh_uí_liatháin/`](cian_mac_an_déisigh_uí_liatháin/):
+
+- [`identity/`](cian_mac_an_déisigh_uí_liatháin/identity/) —
+  background, citizenship, vetting, and the Deacy family
+  record. The [`identity/lineage/`](cian_mac_an_déisigh_uí_liatháin/identity/lineage/)
+  subfolder holds the family-lineage documents: the late
+  uncle's memorial, the dual ROI/UK citizenship evidence, the
+  College des Irlandais (Paris) records, and the 5-culture-PDF
+  Wikipedia dual-write clippings (8 articles: Uí Liatháin,
+  Delbhna Tír Dhá Locha, Eamonn Deacy Park, Leath Cuinn,
+  Cian, Aos Sí, Tuatha Dé Danann, Déisi).
+- [`teaching/`](cian_mac_an_déisigh_uí_liatháin/teaching/) —
+  the Teaching Council of Ireland registration, the PGCE
+  (BCS Computing scholarship), school placement references,
+  and the Leaving Certificate / Junior Certificate results.
+- [`achievement/`](cian_mac_an_déisigh_uí_liatháin/achievement/) —
+  academic transcripts, parchments, the Apple Award, and the
+  Torthaí Gaeilge (Irish-language exam results).
+
+The author's lineage is the **triple-crown** union of four
+kindreds of Connacht and Munster:
+
+1. **Deacy** (paternal surname; Irish *Uí Dhéisigh*) — the
+   sept of the [Déisi Muman](https://en.wikipedia.org/wiki/D%C3%89isi)
+   resettled in south Connacht (Co. Galway) during the 12th
+   century; the family gave their name to the late
+   [Éamonn Deacy](https://en.wikipedia.org/wiki/Eamonn_Deacy_Park)
+   and the [Eamonn Deacy Park](https://en.wikipedia.org/wiki/Eamonn_Deacy_Park)
+   in Galway.
+2. **Lyons** (maternal grandmother's lineage; Irish *Ó
+   Laighin*) — the [Uí Anmchada](https://en.wikipedia.org/wiki/U%C3%AD_Liath%C3%A1in)
+   sept of the [Uí Liatháin](https://en.wikipedia.org/wiki/U%C3%AD_Liath%C3%A1in)
+   of Munster, who (per the *Historia Brittonum*) colonized
+   Wales and Cornwall alongside the proto-Déisi.
+3. **Morris** (maternal grandmother **Martina Morris**) —
+   of the [City of Tribes](https://en.wikipedia.org/wiki/Galway)
+   merchant families of Galway.
+4. **Conroy** (paternal great-grandmother **Polly Conroy**;
+   Irish *Mac Conraoi*) — the [Sea-Kings of
+   Connacht](https://en.wikipedia.org/wiki/Delbhna_T%C3%ADr_Dh%C3%A1_Locha)
+   who held the tuath of Delbhna Tír Dhá Locha (the barony of
+   Moycullen in Connemara). **Polly Conroy was a cousin of
+   Pádraic Ó Conaire**, the canonical modern Irish-language
+   writer from Galway, who was reared in Rosmuc by his uncle
+   of the same Mac Conraoi kindred.
+
+The author is the grandson and godson of the late **Neil
+Deacy**, the late brother of the late **Éamonn Deacy** — the
+Galwegian footballer who played for Galway United, Aston Villa
+FC, and the Republic of Ireland. Neil and Éamonn were the sons
+of **Martina Morris** and **Michael Deacy**, who was himself
+the son of **Polly Conroy** and **George Deacy**.
+
+The author was the primary palliative carer of the late Neil
+Deacy. That personal care work — and the cultural inheritance
+that goes with the Conroy / Deacy / Morris Galway lineage —
+is the reason this project treats Connemara, Connacht, and
+the Irish-language curriculum as first-class objects rather
+than as flavour-of-the-month features.
+
+### On the claim — *Rí na Gaillimhe, Rí Chonnachta*
+
+The Conroy (Ó Conaire / Mac Con Raoi) family were among the
+[**sea-kings of Connacht**](https://en.wikipedia.org/wiki/Delbhna_T%C3%ADr_Dh%C3%A1_Locha),
+holding the tuath of [Delbhna Tír Dhá Locha](https://en.wikipedia.org/wiki/Delbhna_T%C3%ADr_Dh%C3%A1_Locha)
+in what is now the barony of Moycullen in Connemara. *Galway
+is the capital of Connacht.* The
+[Uí Liatháin](https://en.wikipedia.org/wiki/U%C3%AD_Liath%C3%A1in)
+(of the Lyons / Ó Laighin sept) were a Munster kindred who
+colonized Wales and Cornwall alongside the
+[proto-Déisi](https://en.wikipedia.org/wiki/D%C3%A9isi); the
+[Uí Dhéisigh](https://en.wikipedia.org/wiki/D%C3%A9isi)
+(Deacy) are a sept of the same Déisi Muman, resettled in
+south Connacht in the 12th century.
+
+On the basis of this triple-crown lineage (Lyons / Deacy /
+Conroy), grounded in eight canonical Wikipedia articles and
+six Gemini Deep Research PDFs preserved in
+[`leabharlann/gemini_deep_research/culture/`](leabharlann/gemini_deep_research/culture/),
+the author makes the modern claim of inheritance in the
+[Leath Cuinn](https://en.wikipedia.org/wiki/Leath_Cuinn_and_Leath_Moga)
+framework (see § D below):
+
+> *Rí na Gaillimhe, Rí Chonnachta, Ard-Rí na hÉireann* —
+> King of Galway, King of Connacht, High King of Ireland.
+
+**Citations** (the eight Wikipedia articles are clipped at
+[`cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/`](cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/);
+the six Gemini PDFs are in
+[`leabharlann/gemini_deep_research/culture/`](leabharlann/gemini_deep_research/culture/)):
+
+- **Wikipedia**: [Uí Liatháin](https://en.wikipedia.org/wiki/U%C3%AD_Liath%C3%A1in) ·
+  [Delbhna Tír Dhá Locha](https://en.wikipedia.org/wiki/Delbhna_T%C3%ADr_Dh%C3%A1_Locha) ·
+  [Eamonn Deacy Park](https://en.wikipedia.org/wiki/Eamonn_Deacy_Park) ·
+  [Leath Cuinn and Leath Moga](https://en.wikipedia.org/wiki/Leath_Cuinn_and_Leath_Moga) ·
+  [Cian](https://en.wikipedia.org/wiki/Cian) ·
+  [Aos Sí](https://en.wikipedia.org/wiki/Aos_S%C3%AD) ·
+  [Tuatha Dé Danann](https://en.wikipedia.org/wiki/Tuatha_D%C3%A9_Danann) ·
+  [Déisi](https://en.wikipedia.org/wiki/D%C3%A9isi)
+- **Heritage PDFs**: [Claiming Rí na Gaillimhe — A Synthesis](leabharlann/gemini_deep_research/culture/claiming_r_na_gaillimhe_a_synthesis.pdf) ·
+  [Claiming Irish Kingship Through Lineage](leabharlann/gemini_deep_research/culture/claiming_irish_kingship_through_lineage.pdf) ·
+  [Deacy Family Heritage Research](leabharlann/gemini_deep_research/culture/deacy_family_heritage_research.pdf) ·
+  [Researching Neil Deacy's Galway Heritage](leabharlann/gemini_deep_research/culture/researching_neil_deacy_s_galway_heritage.pdf)
+- **Royal collaboration PDFs**: [Royal Collaboration for Commonwealth Future](leabharlann/gemini_deep_research/culture/royal_collaboration_for_commonwealth_future.pdf) ·
+  [Royal Titles, Celtic Heritage, and Claims](leabharlann/gemini_deep_research/culture/royal_titles_celtic_heritage_and_claims.pdf)
+
+**Note on 2 unreadable PDFs** (to be re-read by a follow-up
+agent with PDF input support; the current agent could not
+extract their text):
+`leabharlann/gemini_deep_research/culture/neil_deacy_cookes_corner-galway_advertiser.pdf`
+(the August 1986 *Galway Advertiser* article on the inaugural
+Streets of Galway 8 km road race) and
+`cian_mac_an_déisigh_uí_liatháin/identity/lineage/old_passports_dual_citizen_verification_roi_uk.pdf`
+(the dual ROI/UK citizenship scan). These will be
+incorporated into the
+[`culture_heritage`](oideachais/cognee_integration/culture_cognify.py)
+Cognee dataset on the next agent run.
+
+### On the joint claim — *Leath Cuinn and the dual-monarchy framework*
+
+The author makes the claim of *Rí Chonnachta* and *Rí na
+hÉireann* in a constitutional framework that does **not**
+compete with the existing United Kingdom sovereignty over
+Northern Ireland. The framework is the **Neo-Jacobite Dual
+Monarchy** model, modelled on the
+[Austria-Hungary](https://en.wikipedia.org/wiki/Austria-Hungary)
+constitutional theory proposed by [Arthur
+Griffith](https://en.wikipedia.org/wiki/Arthur_Griffith) in
+*The Resurrection of Hungary* (1904) and on the modern
+[Māori King Movement](https://en.wikipedia.org/wiki/K%C4%81ngi_Mahuta).
+
+Under this framework:
+
+- **Cian Mac an Déisigh Uí Liatháin** holds *Rí na Gaillimhe*
+  and *Rí Chonnachta* by virtue of the triple-crown lineage
+  (Uí Liatháin + Uí Dhéisigh + Mac Conraoi) and the verified
+  qualifications documented in § E below.
+- **King Charles III** holds *Rí Uladh* (Northern Ireland)
+  by virtue of his constitutional position as Sovereign of
+  the United Kingdom.
+- **Jointly**, they hold *Leath Cuinn* — Conn's Half, the
+  northern half of Ireland comprising Connacht + Ulster +
+  Meath, traditionally divided from Leath Moga by the
+  [Esker Riada](https://en.wikipedia.org/wiki/Esker_Riada)
+  (Dublin Bay to Galway Bay).
+- The claim is grounded in the genealogical fact that
+  [Conn Cétchathach](https://en.wikipedia.org/wiki/Conn_C%C3%A9tchathach)
+  ("Conn of the Hundred Battles") is the legendary common
+  ancestor of both the **Connachta** dynasty (the royal
+  kindreds of Connacht, including the Uí Briúin and Uí
+  Fiachrach) AND the **Uí Néill** dynasty (the royal
+  kindreds of Ulster and Meath, including the Northern Uí
+  Néill of Aileach and the Southern Uí Néill of Meath).
+
+The author is conscious that this framework rests on a
+parliamentary claim rather than on a hereditary
+peerage-roll claim, and that the *Ard-Rí na hÉireann* title
+is held in suspension pending the constitutional
+reunification of Ireland. **Born a British citizen and
+obliged by oath of allegiance to King Charles the Third**,
+the author regards the joint-claim framework as a
+constructive path toward constitutional dialogue rather
+than as a hostile or seditious claim.
+
+### On the verified qualifications
+
+The teaching, mathematics, and software-development
+qualifications that the project depends on are recorded under
+[`leabharlann/ollscoil_na_gaillimhe/`](leabharlann/ollscoil_na_gaillimhe/):
+
+- [`leabharlann/ollscoil_na_gaillimhe/mata/`](leabharlann/ollscoil_na_gaillimhe/mata/) —
+  Applied Statistics I & II, CS402 Cryptography, ISLP labs,
+  Maple, Modelling II, Networks, Non-Linear Systems,
+  Numerical Analysis II, and the Stokes Workshop Game Physics
+  project — the mathematics-and-cryptography foundation for
+  the Lakehouse work.
+- [`leabharlann/ollscoil_na_gaillimhe/education/`](leabharlann/ollscoil_na_gaillimhe/education/) —
+  the Educational Autobiography, the BME1 placement
+  portfolios, the action-research project, the educational
+  psychology and sociology assignments (psychology,
+  sociology, philosophy of education) — the humanistic
+  foundation for the British Isles Formative Assessment MMO
+  and for the Leaving Cert syllabi.
+- [`leabharlann/ollscoil_na_gaillimhe/irish/`](leabharlann/ollscoil_na_gaillimhe/irish/),
+  [`past/`](leabharlann/ollscoil_na_gaillimhe/past/) and
+  [`software_development/`](leabharlann/ollscoil_na_gaillimhe/software_development/) —
+  the Irish-language corpus, the historical archive, and the
+  software-development evidence base.
+
+These three evidence-bases (mathematics, education, and
+software development) are the *reason the project exists* —
+not the *right* to build it.
+
+### On the repository name — *Kings' College Galway*
+
+The repository name **Kings' College Galway** uses the
+**plural possessive Kings'** deliberately, for three reasons:
+
+1. **Queen's College Galway → University of Galway.** The
+   University of Galway was founded in 1845 as **Queen's
+   College Galway**, one of the three Queen's Colleges
+   established by Queen Victoria. (The other two were Cork
+   and Belfast.) The "Queen's" was renamed to "University"
+   under the Universities Act 1997. **Queen Victoria** is the
+   predecessor whose name appears on the original charter.
+2. **King Charles III's 2022 visit.** On the occasion of
+   King Charles III's visit to Galway in 2022, the author —
+   as a then-resident Galwegian and a graduate of NUI Galway
+   — observed that the Queen's-College-to-Kings'-College
+   gesture would be a graceful nod to the new monarch and to
+   the original name simultaneously. The plural **Kings'**
+   acknowledges every monarch whose predecessor established
+   the institution, not just Charles III himself.
+3. **The *Coláiste na Déisigh* subtitle.** The Irish subtitle
+   *Coláiste na Déisigh* (College of the Deacy / College of
+   the Déssi) carries a deliberate **double meaning**:
+   *Déisigh* is the genitive singular of *Deasy / Deacy*
+   (the author's paternal surname), AND *Déisigh* is also
+   the genitive plural of *Déssi* — the [ancient Irish
+   vassal class](https://en.wikipedia.org/wiki/D%C3%A9isi)
+   that was resettled as frontier warriors along the coasts
+   of Connacht, Munster, Leinster, Wales, Cornwall, and
+   Devon. The subtitle therefore says simultaneously:
+   "the college of the Deacy family" and "the college of
+   the Déssi vassal class". *Coláiste* in Irish means
+   college, and the suffix *-na-* is the genitive singular
+   article. Read together, *Kings' College Galway ||
+   Coláiste na Déisigh* says "the King's college (named
+   after the royal predecessor of Queen Victoria) and also
+   the college of the Deacy family and the Déssi class".
+
+The Irish-English bilingual title on line 1 of this README
+is the canonical form. **In memory of**: the late grandfather
+Neil Deacy, his late brother Éamonn Deacy, and the [Déssi
+class](https://en.wikipedia.org/wiki/D%C3%A9isi) of early
+medieval Ireland — the vassal peoples whose resettlement
+along the western seaboard made the Connacht lineage
+possible.
 
 ---
 
-*Built by Cian Mac an Déisigh Uí Liatháin — qualified Mathematics & Applied Mathematics teacher (Teaching Council of Ireland), NUI Galway graduate (Applied Statistics, Software Development, Irish Language Studies), dual Irish-British citizen.*
+## Licensing
+
+Business Source License 1.1 — non-commercial, cultural preservation, and academic research use permitted within Ireland, UK, EU, Commonwealth, and aligned jurisdictions. Subsets may transition to AGPL v3.0 after 4 years. See [`LICENSE.md`](LICENSE.md).
+
+---
+
+*Built by Cian Mac an Déisigh Uí Liatháin (Deacy-Lyons) of the Deacy-Morris-Conroy tribe of Galway — qualified Mathematics & Applied Mathematics teacher (Teaching Council of Ireland), NUI Galway graduate (Applied Statistics, Software Development, Irish Language Studies), dual Irish-British citizen, born a British citizen and obliged by oath of allegiance to King Charles the Third.*
