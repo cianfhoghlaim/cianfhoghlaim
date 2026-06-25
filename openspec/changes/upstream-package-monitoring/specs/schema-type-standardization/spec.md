@@ -33,7 +33,7 @@ The system SHALL expose a single canonical `EmbeddingModel` enum and a `BgeM3 = 
 - **THEN** it SHALL honour the override without code changes
 
 ### Requirement: Migration Sweep and Report
-The system SHALL provide a sweep script at `scripts/sweep_hardcoded_types.py` that walks `oideachais/`, `meaisinfhoghlaim/`, `tuatha/`, `codeolas/`, `baml_src/`, and `infrastructure/` and emits a Markdown report at `docs/refactor/schema-type-standardization-report.md` listing every file migrated, every file skipped, and the count of remaining hard-coded literals.
+The system SHALL provide a sweep script at `scripts/sweep_hardcoded_types.py` that walks `sruth/oideachais/`, `sruth/meaisinfhoghlaim/`, `sruth/tuatha/`, `codeolas/`, `baml_src/`, and `infrastructure/` and emits a Markdown report at `docs/refactor/schema-type-standardization-report.md` listing every file migrated, every file skipped, and the count of remaining hard-coded literals.
 
 #### Scenario: Sweep exit code
 - **GIVEN** the sweep script at `scripts/sweep_hardcoded_types.py`
