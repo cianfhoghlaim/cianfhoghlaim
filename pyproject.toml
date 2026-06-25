@@ -55,8 +55,7 @@ package = false
 members = [
     "oideachais",
     "tuatha",
-    "tuatha/codeolas",
-    "tuatha/crypteolas",
+    "sruth/codeolas",
     "tuatha/apps/crypteolas_demo",
     "croilar",
     "infrastructure/browser",
@@ -111,7 +110,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["oideachais", "tuatha", "codeolas", "códeolas", "sruth_browser"]
+known-first-party = ["sruth", "oideachais", "tuatha", "codeolas", "códeolas", "sruth_browser"]
 
 [tool.mypy]
 python_version = "3.13"
@@ -158,11 +157,11 @@ dev = [
 # Coverage
 # =============================================================================
 # This workspace unifies:
-#   oideachais/                  — Irish + British Isles education data platform
-#   tuatha/                      — Educational MMO + crypto platform
-#   códeolas/                    — Code intelligence library (publishable)
+#   sruth/oideachais/            — Irish + British Isles education data platform
+#   sruth/tuatha/                — Educational MMO + crypto platform
+#   sruth/codeolas/              — Code intelligence library (publishable)
 #   infrastructure/browser/      — sruth-browser web crawling utility
-#   oideachais/mcp/mcpo/         — MCPO bridge (optional member)
+#   sruth/oideachais/mcp/mcpo/   — MCPO bridge (optional member)
 #
 # 6 nations: England, Scotland, Wales, NI, Ireland, Crown Dependencies
 # 6 Celtic languages: ga, gd, cy, gv, kw, br

@@ -33,7 +33,7 @@ async def get_file_graph(
         language: Optional language filter
     """
     try:
-        from codeolas import chunk_code_file, detect_language
+        from sruth.codeolas import chunk_code_file, detect_language
         from pathlib import Path
         import os
 
@@ -141,7 +141,7 @@ async def get_function_callers(
         function_name: Name of the function to find callers for
         repo_path: Optional path to limit search
     """
-    from codeolas import chunk_code_file, detect_language
+    from sruth.codeolas import chunk_code_file, detect_language
     from pathlib import Path
     import os
     import re
