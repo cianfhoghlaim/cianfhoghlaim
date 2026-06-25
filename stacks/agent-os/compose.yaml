@@ -8,7 +8,7 @@
 #   - croilar-agentos:   Croílár (Personal Portfolio + CV + Data Eng) (port 7774)
 #
 # Build contexts (post v2 restructure):
-#   oideachais  -> oideachais/data_platform/agent_os/
+#   oideachais  -> sruth/oideachais/data_platform/agent_os/
 #   crypteolas  -> tuatha/crypteolas/agent_os/
 #   browser     -> infrastructure/browser/agent_os/
 #   croilar     -> croilar/agent_os/  (NEW — was sruth/aleyum/agent_os/)
@@ -23,11 +23,11 @@ name: agent-os
 services:
   # ---------------------------------------------------------------------------
   # OIDEACHAIS AGENTOS - Irish Education & Curriculum
-  # Source: oideachais/data_platform/agent_os/
+  # Source: sruth/oideachais/data_platform/agent_os/
   # ---------------------------------------------------------------------------
   oideachais-agentos:
     build:
-      context: ../../../oideachais
+      context: ../../../sruth/oideachais
       dockerfile: data_platform/agent_os/Dockerfile
     image: ghcr.io/cianfhoghlaim/agent-os-oideachais:local
     container_name: oideachais-agentos
