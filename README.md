@@ -377,16 +377,16 @@ kindreds of Connacht and Munster:
    [Éamonn Deacy](https://en.wikipedia.org/wiki/Eamonn_Deacy_Park)
    and the [Eamonn Deacy Park](https://en.wikipedia.org/wiki/Eamonn_Deacy_Park)
    in Galway.
-2. **Lyons** (maternal grandmother's lineage; Irish *Ó
-   Laighin*) — the [Uí Anmchada](https://en.wikipedia.org/wiki/U%C3%AD_Liath%C3%A1in)
+2. **Lyons** (paternal grandfather's lineage; Irish *Mac
+   Liatháin*) — the [Uí Anmchada](https://en.wikipedia.org/wiki/U%C3%AD_Liath%C3%A1in)
    sept of the [Uí Liatháin](https://en.wikipedia.org/wiki/U%C3%AD_Liath%C3%A1in)
    of Munster, who (per the *Historia Brittonum*) colonized
    Wales and Cornwall alongside the proto-Déisi.
-3. **Morris** (maternal grandmother **Martina Morris**) —
+3. **Morris** (maternal great-grandmother **Christina Morris**) —
    of the [City of Tribes](https://en.wikipedia.org/wiki/Galway)
    merchant families of Galway.
-4. **Conroy** (paternal great-grandmother **Polly Conroy**;
-   Irish *Mac Conraoi*) — the [Sea-Kings of
+4. **Conroy** (maternal great-great-grandmother **Polly Conroy**;
+   Irish *Mac Conraoi / Ó Conaire*) — the [Sea-Kings of
    Connacht](https://en.wikipedia.org/wiki/Delbhna_T%C3%ADr_Dh%C3%A1_Locha)
    who held the tuath of Delbhna Tír Dhá Locha (the barony of
    Moycullen in Connemara). **Polly Conroy was a cousin of
@@ -416,7 +416,7 @@ holding the tuath of [Delbhna Tír Dhá Locha](https://en.wikipedia.org/wiki/Del
 in what is now the barony of Moycullen in Connemara. *Galway
 is the capital of Connacht.* The
 [Uí Liatháin](https://en.wikipedia.org/wiki/U%C3%AD_Liath%C3%A1in)
-(of the Lyons / Ó Laighin sept) were a Munster kindred who
+(of the Lyons / Mac Liatháin sept) were a Munster kindred who
 colonized Wales and Cornwall alongside the
 [proto-Déisi](https://en.wikipedia.org/wiki/D%C3%A9isi); the
 [Uí Dhéisigh](https://en.wikipedia.org/wiki/D%C3%A9isi)
