@@ -11,7 +11,7 @@ oideachais quadrant is the authoritative source for Celtic
 curriculum + mythology content).
 """
 
-from oideachais.agents.adk.tools.tuatha_curriculum_search import (
+from sruth.oideachais.agents.adk.tools.tuatha_curriculum_search import (
     CurriculumResult,
     CurriculumSearchResults,
     LearningOutcome,
@@ -19,7 +19,7 @@ from oideachais.agents.adk.tools.tuatha_curriculum_search import (
     get_learning_outcomes,
     search_curriculum,
 )
-from oideachais.agents.adk.tools.tuatha_mythology_query import (
+from sruth.oideachais.agents.adk.tools.tuatha_mythology_query import (
     CharacterLore,
     LocationLore,
     MythologyResult,

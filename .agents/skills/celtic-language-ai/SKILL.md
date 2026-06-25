@@ -185,13 +185,13 @@ embedder = get_registry().get("huggingface").create(
   canonical BAML schema for Irish grammar extraction
 - `oideachais/baml_src/celtic_sources.baml` — the canonical
   BAML schema for source attribution
-- `meaisinfhoghlaim/language/` — the 6 Celtic-language
+- `sruth/meaisinfhoghlaim/language/` — the 6 Celtic-language
   subdirs (`brezhoneg/`, `cymraeg/`, `gaeilge/`, `gaelg/`,
   `gaidhlig/`, `kernowek/`) + the `cognates.yaml` cross-Celtic
   cognate database
-- `meaisinfhoghlaim/catalog/sources.yaml` — the Celtic data
+- `sruth/meaisinfhoghlaim/catalog/sources.yaml` — the Celtic data
   sources registry
-- Dagster assets: `meaisinfhoghlaim/dagster_assets/`
+- Dagster assets: `sruth/meaisinfhoghlaim/dagster_assets/`
   (`celtic_curriculum.py`, `mythology_content.py`,
   `*_embeddings.py`)
 

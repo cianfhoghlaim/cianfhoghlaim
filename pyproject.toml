@@ -52,16 +52,15 @@ package = false
 # Each member sets [tool.uv] package = true in its own pyproject.toml
 
 [tool.uv.workspace]
-members = [
-    "oideachais",
+ members = [
+    "sruth/oideachais",
+    "sruth/meaisinfhoghlaim",
     "tuatha",
     "sruth/codeolas",
     "tuatha/apps/crypteolas_demo",
     "croilar",
     "infrastructure/browser",
-    "oideachais/mcp/mcpo",
-    "meaisinfhoghlaim",
-]
+] 
 
 [tool.uv.sources]
 # Members can depend on each other; uv resolves them via the workspace lockfile.
@@ -161,7 +160,8 @@ dev = [
 #   sruth/tuatha/                — Educational MMO + crypto platform
 #   sruth/codeolas/              — Code intelligence library (publishable)
 #   infrastructure/browser/      — sruth-browser web crawling utility
-#   sruth/oideachais/mcp/mcpo/   — MCPO bridge (optional member)
+#
+# mcpo bridge is now part of sruth/oideachais/ (was oideachais/mcp/mcpo/ — stale)
 #
 # 6 nations: England, Scotland, Wales, NI, Ireland, Crown Dependencies
 # 6 Celtic languages: ga, gd, cy, gv, kw, br

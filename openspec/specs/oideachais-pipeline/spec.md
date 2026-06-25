@@ -31,8 +31,8 @@ UK sources with caching fallback.
   meaisinfhoghlaim-agent-frameworks, meaisinfhoghlaim-ocr-htr) AND
   the 1 tuatha-platform spec AND the 3 croilar-* specs
   (croilar-portfolio, croilar-data-engineering, croilar-cv-extraction)
-- **AND** the 4 quadrant AGENTS.md files (oideachais/AGENTS.md,
-  meaisinfhoghlaim/AGENTS.md, tuatha/AGENTS.md, croilar/AGENTS.md)
+- **AND** the 4 quadrant AGENTS.md files (sruth/oideachais/AGENTS.md,
+  sruth/meaisinfhoghlaim/AGENTS.md, tuatha/AGENTS.md, croilar/AGENTS.md)
   are linked from the spec's Cross-references section
 
 #### Scenario: References the right AGENTS.md / README / STATUS
@@ -40,8 +40,8 @@ UK sources with caching fallback.
 - **GIVEN** the openspec change `openspec-consolidation-and-readme-refresh`
   is archived
 - **WHEN** a developer navigates to the pipeline
-- **THEN** the canonical `oideachais/AGENTS.md`,
-  `oideachais/STATUS.md`, `oideachais/REFACTORING.md`, and the 4
+- **THEN** the canonical `sruth/oideachais/AGENTS.md`,
+  `sruth/oideachais/STATUS.md`, `sruth/oideachais/REFACTORING.md`, and the 4
   quadrant READMEs are linked from the spec
 
 ### Requirement: Partition Strategy (v2)
@@ -120,18 +120,18 @@ The system SHALL identify every asset by a domain‑first key tuple
 - `entity_slug` is the YAML `id` suffix (e.g. `ccea`, `irish_statute_book`).
 
 The system SHALL maintain a backwards‑compatibility alias table in
-`oideachais/dagster_defs/definitions.py` mapping legacy asset keys to the
+`sruth/oideachais/dagster_defs/definitions.py` mapping legacy asset keys to the
 new ones for one (1) release cycle, then the alias table SHALL be removed in
 a follow‑on `drop-asset-key-aliases` change.
 
 #### Scenario: Domain‑first key for an Irish education asset
-- **GIVEN** the existing `oideachais/dagster_defs/assets/ireland/curriculum_dlt_assets.py` `create_cycle_asset("senior_cycle")` whose legacy key is `["ireland", "curriculum", "senior_cycle"]`
+- **GIVEN** the existing `sruth/oideachais/dagster_defs/assets/ireland/curriculum_dlt_assets.py` `create_cycle_asset("senior_cycle")` whose legacy key is `["ireland", "curriculum", "senior_cycle"]`
 - **WHEN** the asset is registered with the SourceFactory
 - **THEN** the new key is `["ie", "education", "curriculum", "senior_cycle"]`
 - **AND** the legacy key is resolvable via the backwards‑compat alias
 
 #### Scenario: Domain‑first key for a Northern Ireland CCEA asset
-- **GIVEN** the existing `oideachais/dlt_sources/uk/northern_ireland/ccea_curriculum.py::ni_curriculum_source`
+- **GIVEN** the existing `sruth/oideachais/dlt_sources/uk/northern_ireland/ccea_curriculum.py::ni_curriculum_source`
 - **WHEN** the SourceFactory emits the corresponding Dagster asset
 - **THEN** the new key is `["ni", "education", "ccea", "pages"]`
 - **AND** the legacy key `["uk", "education", "northern_ireland", "ccea_pages"]` is resolvable
@@ -145,14 +145,14 @@ fine‑grained state, but the underlying DuckLake schema SHALL be the
 dotted‑triple.
 
 #### Scenario: One attach, one query
-- **GIVEN** the API reader at `oideachais/api/ducklake_reader.py`
+- **GIVEN** the API reader at `sruth/oideachais/api/ducklake_reader.py`
 - **WHEN** the SPA requests a Leaving Cert subject
 - **THEN** the reader does a single `ATTACH 'oideachais'` (or `ducklake:oideachais`)
 - **AND** reads `oideachais.education.ie.leaving_cert WHERE subject = ?`
 - **AND** no per‑subject glob() / per‑subject S3 prefix is used
 
 #### Scenario: New domain schema is auto‑created
-- **GIVEN** a new DLT run for `oideachais/dlt_sources/domains/medicine/ie/hse.py`
+- **GIVEN** a new DLT run for `sruth/oideachais/dlt_sources/domains/medicine/ie/hse.py`
 - **WHEN** the pipeline runs
 - **THEN** DuckLake creates the schema `oideachais.medicine.ie` on first write
 - **AND** the table is discoverable by `marimo` against `md:oideachais`
@@ -163,7 +163,7 @@ The system SHALL use the upstream `dagster-ducklake` integration
 (`DuckLakeResource` from `docs/dagster/integrations/dagster-ducklake/`)
 as the canonical KCG lakehouse sink, with the resource config:
 
-- **Postgres catalog** at `oideachais/storage/ducklake_client.py`
+- **Postgres catalog** at `sruth/oideachais/storage/ducklake_client.py`
 - **Garage S3 object store** at the `ducklake` bucket
 - **`dg.EnvVar`** for all secrets (no hardcoded values)
 
@@ -218,14 +218,14 @@ DLT → Dagster parallel-asset factories, with:
 
 #### Scenario: Ireland curriculum DLT asset factory
 
-- **GIVEN** the 4+ `oideachais/dlt_sources/ireland/curriculum/*` REST
+- **GIVEN** the 4+ `sruth/oideachais/dlt_sources/ireland/curriculum/*` REST
   endpoints
 - **WHEN** the SourceFactory emits the corresponding Dagster assets
 - **THEN** 4+ parallel `@asset`s SHALL be registered in the
   `ireland/curriculum/` group
 - **AND** each asset SHALL be independently re-materialisable
 - **AND** the partition key SHALL be `language + subject` (the
-  `MultiPartitionsDefinition` already in `oideachais/dagster_defs/`)
+  `MultiPartitionsDefinition` already in `sruth/oideachais/dagster_defs/`)
 
 ### Requirement: SQLMesh ↔ Dagster translator pattern
 
@@ -238,7 +238,7 @@ assets to prevent key drift.
 #### Scenario: SQLMesh assets register
 
 - **GIVEN** a `SQLMeshResource` configured with the project at
-  `oideachais/dbt_project/` (or its SQLMesh equivalent)
+  `sruth/oideachais/dbt_project/` (or its SQLMesh equivalent)
 - **WHEN** the `@sqlmesh_assets` decorator is applied with the
   shared translator
 - **THEN** the SQLMesh models SHALL appear as Dagster assets
@@ -314,14 +314,14 @@ producing both an embedded chunk table and a code-graph table. The
 App uses:
 
 - 29+ language detection (port from `codeolas/chunking/languages.py`
-  to `oideachais/cocoindex_flows/chunking/languages.py`)
+  to `sruth/oideachais/cocoindex_flows/chunking/languages.py`)
 - `localfs.walk_dir(repo_root, live=True, refresh_interval=60s)` for
   the source
 - `RecursiveSplitter` with `detect_code_language` for chunking
 - `SentenceTransformerEmbedder("BAAI/bge-m3")` for embedding
 - `lancedb.mount_table_target(...)` for the chunk + graph outputs
 
-The 3 Dagster assets in `oideachais/dagster_defs/assets/codebase_assets.py`
+The 3 Dagster assets in `sruth/oideachais/dagster_defs/assets/codebase_assets.py`
 (group_name="codebase"):
 
 1. `codebase_chunks` — chunked + embedded source files
@@ -351,7 +351,7 @@ JavaScript, TSX, JSX, Rust, Go, Java, Kotlin, Ruby, Swift.
 #### Scenario: A developer queries the code graph (Cypher-like)
 
 - **GIVEN** the `codebase_code_graph` Dagster asset has materialised
-- **WHEN** a developer runs `search_code_graph(file_path="oideachais/dagster_defs/")`
+- **WHEN** a developer runs `search_code_graph(file_path="sruth/oideachais/dagster_defs/")`
 - **THEN** the v1 App reads the `codebase_graph` LanceDB table and
   returns the 10 most relevant CodeNode dicts (file_path matches the
   glob, with optional `node_type` filter)
@@ -359,7 +359,7 @@ JavaScript, TSX, JSX, Rust, Go, Java, Kotlin, Ruby, Swift.
 #### Scenario: A new language is added to the language table
 
 - **GIVEN** a developer adds a new language (e.g. `dart` with `.dart`
-  extension) to `oideachais/cocoindex_flows/chunking/languages.py`
+  extension) to `sruth/oideachais/cocoindex_flows/chunking/languages.py`
 - **WHEN** the `codebase_chunks` Dagster asset re-materialises
 - **THEN** `.dart` files are now chunked using the recursive splitter
   with `language="dart"`
@@ -385,7 +385,7 @@ table. The App uses:
   `.git/`, `docs/cocoindex/`).
 
 The Dagster asset `api_endpoints` (group `infrastructure`) lives in
-`oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks the
+`sruth/oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks the
 v1 App via `cocoindex update oideachais.cocoindex_flows.api_indexing:api_app`.
 
 #### Scenario: A developer searches the HTTP surface for an agent-memory route
@@ -418,7 +418,7 @@ indexing, producing one row per directory (depth 1-4) in the
 - 100-row upsert batches.
 
 The Dagster asset `filesystem_layout` (group `infrastructure`) lives
-in `oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks
+in `sruth/oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks
 the v1 App via `cocoindex update oideachais.cocoindex_flows.filesystem_indexing:fs_app`.
 
 #### Scenario: A developer searches for a directory by description
@@ -432,9 +432,9 @@ the v1 App via `cocoindex update oideachais.cocoindex_flows.filesystem_indexing:
 
 - **GIVEN** the `filesystem_layout` Dagster asset has materialised
 - **WHEN** a developer reads the `largest_descendant` column for the
-  `oideachais/dagster_defs/` row
+  `sruth/oideachais/dagster_defs/` row
 - **THEN** the cell value is the relative path of the largest file in
-  the subtree (e.g. `oideachais/dagster_defs/assets/codebase_assets.py`)
+  the subtree (e.g. `sruth/oideachais/dagster_defs/assets/codebase_assets.py`)
 
 ### Requirement: V1 storage backend indexer (storage_backends asset)
 
@@ -452,7 +452,7 @@ indexing, producing one row per backend instance in the
 - 100-row upsert batches.
 
 The Dagster asset `storage_backends` (group `infrastructure`) lives in
-`oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks the
+`sruth/oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks the
 v1 App via `cocoindex update oideachais.cocoindex_flows.storage_indexing:storage_app`.
 
 #### Scenario: A developer finds where the Irish curriculum data is stored
@@ -491,7 +491,7 @@ The App uses:
 - 100-row upsert batches.
 
 The Dagster asset `config_files` (group `infrastructure`) lives in
-`oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks
+`sruth/oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks
 the v1 App via `cocoindex update oideachais.cocoindex_flows.config_indexing:config_app`.
 
 #### Scenario: A developer finds the wrangler manifest for a worker
@@ -526,7 +526,7 @@ the `unified_embeddings` LanceDB table. The App uses:
   `unified:<doc_id>:<chunk_index>:<content_hash>`.
 
 The Dagster asset `unified_embeddings` (group `embedding`) lives in
-`oideachais/dagster_defs/assets/unified_embedding_assets.py` and
+`sruth/oideachais/dagster_defs/assets/unified_embedding_assets.py` and
 kicks the v1 App via
 `cocoindex update oideachais.cocoindex_flows.unified_embedding:unified_app`.
 
@@ -563,7 +563,7 @@ embedding, walking a configurable directory and writing to the
   stable IDs of the form `code:<filename>:<chunk_index>`.
 
 The Dagster asset `code_embeddings` (group `embedding`) lives in
-`oideachais/dagster_defs/assets/unified_embedding_assets.py` and
+`sruth/oideachais/dagster_defs/assets/unified_embedding_assets.py` and
 kicks the v1 App via
 `cocoindex update oideachais.cocoindex_flows.unified_embedding:code_app`.
 
@@ -705,7 +705,7 @@ helper for backwards compatibility with
 
 ### Requirement: ExtractCircularMeta Pydantic mirror
 
-The canonical BAML function `ExtractCircularMeta` (in `oideachais/baml_src/circular_extraction.baml`) MUST have a Pydantic v2 mirror in `spaces/an_scrudu/extraction.py`. The Pydantic classes (`PCircularReference`, `PTopicDistribution`, `PMarkingSchemeSummary`, `PCircularExtraction`) MUST mirror the BAML class shapes exactly, and `_validate_and_coerce` MUST validate the LLM response against the Pydantic schema before falling back to the flat legacy schema.
+The canonical BAML function `ExtractCircularMeta` (in `sruth/oideachais/baml_src/circular_extraction.baml`) MUST have a Pydantic v2 mirror in `spaces/an_scrudu/extraction.py`. The Pydantic classes (`PCircularReference`, `PTopicDistribution`, `PMarkingSchemeSummary`, `PCircularExtraction`) MUST mirror the BAML class shapes exactly, and `_validate_and_coerce` MUST validate the LLM response against the Pydantic schema before falling back to the flat legacy schema.
 
 #### Scenario: LLM returns the nested BAML shape
 
@@ -735,15 +735,15 @@ The oideachais quadrant MUST provide a Mission Control HuggingFace Space at `spa
 
 | Component | Path | Purpose |
 |-----------|------|---------|
-| DLT Sources | `oideachais/data_platform/dlt_sources/` | Ireland, UK, Celtic, geospatial ingestion |
-| Dagster Definitions | `oideachais/data_platform/dagster_defs/` | Asset orchestration, jobs, schedules, sensors |
-| DLT Utils | `oideachais/data_platform/dlt_utils/` | DuckLake destination config, caching |
-| DuckLake Client | `oideachais/storage/ducklake_client.py` | Postgres catalog + Garage S3 connection |
-| LanceDB Cloud | `oideachais/storage/lancedb_cloud.py` | Local/Cloud/Iceberg vector store modes |
-| Embedding Service | `oideachais/embeddings/service.py` | Multi-provider batch embedding |
+| DLT Sources | `sruth/oideachais/data_platform/dlt_sources/` | Ireland, UK, Celtic, geospatial ingestion |
+| Dagster Definitions | `sruth/oideachais/data_platform/dagster_defs/` | Asset orchestration, jobs, schedules, sensors |
+| DLT Utils | `sruth/oideachais/data_platform/dlt_utils/` | DuckLake destination config, caching |
+| DuckLake Client | `sruth/oideachais/storage/ducklake_client.py` | Postgres catalog + Garage S3 connection |
+| LanceDB Cloud | `sruth/oideachais/storage/lancedb_cloud.py` | Local/Cloud/Iceberg vector store modes |
+| Embedding Service | `sruth/oideachais/embeddings/service.py` | Multi-provider batch embedding |
 | BAML Schemas | `baml_src/` | Type-safe LLM extraction schemas |
 | OCR Models | `meaisínfhoghlaim/ocr/` | Multi-model comparison (Docling, PaddleOCR, ColPali) |
-| ML Training | `oideachais/training/` | LLM, HTR, TTS training as Dagster assets |
+| ML Training | `sruth/oideachais/training/` | LLM, HTR, TTS training as Dagster assets |
 | Agents | `meaisínfhoghlaim/agents/` | Root Agent + 6 domain agents |
 
 ## Storage Architecture
@@ -779,11 +779,11 @@ Firecrawl/LocalScrape → DLT Pipeline → DuckLake (Parquet + Postgres catalog)
 
 | Component | Path |
 |-----------|------|
-| Dagster Definitions | `oideachais/data_platform/dagster_defs/definitions.py` |
-| DLT Utils | `oideachais/data_platform/dlt_utils/` |
-| Storage Config | `oideachais/storage/` |
-| Pipeline Ops Guide | `oideachais/PIPELINE_OPERATIONS.md` |
-| PyProject | `oideachais/pyproject.toml` |
+| Dagster Definitions | `sruth/oideachais/data_platform/dagster_defs/definitions.py` |
+| DLT Utils | `sruth/oideachais/data_platform/dlt_utils/` |
+| Storage Config | `sruth/oideachais/storage/` |
+| Pipeline Ops Guide | `sruth/oideachais/PIPELINE_OPERATIONS.md` |
+| PyProject | `sruth/oideachais/pyproject.toml` |
 
 ## Related Specs
 

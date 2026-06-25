@@ -73,7 +73,7 @@ class RepoSwarmGenerator:
         if self._llm_router is None:
             try:
                 try:
-                    from oideachais.http_utils.llm_router import get_llm_router
+                    from sruth.oideachais.http_utils.llm_router import get_llm_router
                 except ImportError:
                     from sruth_browser.llm_router import get_llm_router
                 self._llm_router = await get_llm_router()

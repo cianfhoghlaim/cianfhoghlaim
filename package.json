@@ -10,8 +10,8 @@
     "node": ">=20"
   },
   "workspaces": [
-    "oideachais/web",
-    "oideachais/mcp/filesystem",
+    "sruth/oideachais/web",
+    "sruth/oideachais/mcp/filesystem",
     "tuatha/ui",
     "tuatha/apps/crypteolas_demo",
     "croilar/apps/web",
@@ -39,7 +39,7 @@
     "secrets:init": "bun run scripts/init-vault.ts",
     "secrets:sync": "bun run scripts/init-vault.ts",
 
-    "dagster:oideachais": "cd oideachais && uv run dagster dev -m data_platform.dagster_defs.definitions",
+    "dagster:oideachais": "cd sruth/oideachais && uv run dagster dev -m data_platform.dagster_defs.definitions",
     "dagster:tuatha": "cd tuatha && uv run dagster dev -m dagster_assets.definitions",
 
     "komodo:sync": "mise run komodo:sync",
@@ -47,12 +47,12 @@
     "locket:exec": "mise run locket:exec",
 
     "ccc:init": "ccc init",
-    "ccc:index": "uv run cocoindex update oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex",
+    "ccc:index": "uv run cocoindex update sruth.oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex",
     "ccc:search": "ccc search",
-    "ccc:v1:index": "uv run cocoindex update oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex",
-    "ccc:v1:search": "uv run python -c 'import asyncio, sys; from oideachais.cocoindex_flows.codebase_indexing import search_codebase; rows = asyncio.run(search_codebase(sys.argv[1])); [print(f\"{r.get(\\\"score\\\", 0):.3f}\\t{r.get(\\\"path\\\")}:{r.get(\\\"chunk_start\\\")}-{r.get(\\\"chunk_end\\\")}\\t{(r.get(\\\"chunk_text\\\") or \\\"\\\").splitlines()[0][:120]}\") for r in rows]' \"${1:-}\"",
-    "docs:consolidate": "uv run cocoindex update oideachais.cocoindex_flows.docs_skills_consolidation:DocsSkillsConsolidation",
-    "docs:consolidate:live": "uv run cocoindex update -L oideachais.cocoindex_flows.docs_skills_consolidation:DocsSkillsConsolidation",
+    "ccc:v1:index": "uv run cocoindex update sruth.oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex",
+    "ccc:v1:search": "uv run python -c 'import asyncio, sys; from sruth.oideachais.cocoindex_flows.codebase_indexing import search_codebase; rows = asyncio.run(search_codebase(sys.argv[1])); [print(f\"{r.get(\\\"score\\\", 0):.3f}\\t{r.get(\\\"path\\\")}:{r.get(\\\"chunk_start\\\")}-{r.get(\\\"chunk_end\\\")}\\t{(r.get(\\\"chunk_text\\\") or \\\"\\\").splitlines()[0][:120]}\") for r in rows]' \"${1:-}\"",
+    "docs:consolidate": "uv run cocoindex update sruth.oideachais.cocoindex_flows.docs_skills_consolidation:DocsSkillsConsolidation",
+    "docs:consolidate:live": "uv run cocoindex update -L sruth.oideachais.cocoindex_flows.docs_skills_consolidation:DocsSkillsConsolidation",
     "baml:generate": "uv run baml-cli generate",
 
     "spec:list": "openspec list",

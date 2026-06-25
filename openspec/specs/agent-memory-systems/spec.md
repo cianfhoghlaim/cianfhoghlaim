@@ -3,8 +3,8 @@
 ## Purpose
 
 `agent-memory-systems` is a capability of the Cianfhoghlaim platform. The
-corresponding source code lives at `meaisinfhoghlaim/agents/` (12 specialised
-agents) and `oideachais/memory/` (application-layer Cognee + Graphiti wrappers).
+corresponding source code lives at `sruth/meaisinfhoghlaim/agents/` (12 specialised
+agents) and `sruth/oideachais/memory/` (application-layer Cognee + Graphiti wrappers).
 See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for
 the project identity.
 
@@ -62,5 +62,5 @@ The agent memory capability MUST be discoverable via a single router skill at `.
 - [`.agents/skills/lancedb/SKILL.md`](../../.agents/skills/lancedb/SKILL.md)
 - [`.agents/skills/falkordb/SKILL.md`](../../.agents/skills/falkordb/SKILL.md)
 - [`.agents/skills/memgraph/SKILL.md`](../../.agents/skills/memgraph/SKILL.md)
-- [`oideachais/memory/`](../../oideachais/memory/) (application-layer wrapper)
-- [`meaisinfhoghlaim/agents/`](../../meaisinfhoghlaim/agents/) (model-layer agents)
+- [`sruth/oideachais/memory/`](../../sruth/oideachais/memory/) (application-layer wrapper)
+- [`sruth/meaisinfhoghlaim/agents/`](../../sruth/meaisinfhoghlaim/agents/) (model-layer agents)

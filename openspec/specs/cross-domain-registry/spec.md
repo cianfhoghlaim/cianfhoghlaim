@@ -2,7 +2,7 @@
 
 ## Purpose
 
-`cross-domain-registry` is the canonical capability spec for the 8-nation × 7-domain asset-key contract that every DLT source and Dagster asset in the Cianfhoghlaim platform MUST honour. The contract enforces a single source-of-truth for asset keys (so the cross-domain collision detector in CI can catch conflicts) and a uniform shape for `oideachais/sources.yaml` entries.
+`cross-domain-registry` is the canonical capability spec for the 8-nation × 7-domain asset-key contract that every DLT source and Dagster asset in the Cianfhoghlaim platform MUST honour. The contract enforces a single source-of-truth for asset keys (so the cross-domain collision detector in CI can catch conflicts) and a uniform shape for `sruth/oideachais/sources.yaml` entries.
 
 This spec was created by archiving change `ingest-culture-heritage` (which also introduced the 6th domain `culture`). See `openspec/changes/ingest-culture-heritage/proposal.md` for the originating change.
 
@@ -47,7 +47,7 @@ The cross-domain-registry SHALL recognise `culture` as a valid domain under all 
 
 ### Requirement: Wikipedia fixture storage convention
 
-Every Wikipedia-derived source registered under the `culture` domain SHALL follow the dual-write pattern: a markdown clipping under `cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/` AND a JSON fixture under `oideachais/dlt_sources/official_media/fixtures/identity_<slug>.json`.
+Every Wikipedia-derived source registered under the `culture` domain SHALL follow the dual-write pattern: a markdown clipping under `cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/` AND a JSON fixture under `sruth/oideachais/dlt_sources/official_media/fixtures/identity_<slug>.json`.
 
 #### Scenario: When a culture wikipedia source is added
 

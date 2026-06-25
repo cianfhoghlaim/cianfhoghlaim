@@ -36,7 +36,7 @@ field to the matching `UoGSubject` enum value.
 ### Requirement: DLT source per UoG module
 
 The system MUST provide one DLT source per UoG module at
-`oideachais/dlt_sources/author_archive/olscoil_<module>.py`. Each
+`sruth/oideachais/dlt_sources/author_archive/olscoil_<module>.py`. Each
 source MUST expose a `_documents` resource (the filesystem scan)
 and an `_extraction` resource (the BAML extraction).
 

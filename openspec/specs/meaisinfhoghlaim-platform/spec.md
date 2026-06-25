@@ -3,7 +3,7 @@
 ## Purpose
 
 `meaisinfhoghlaim-platform` is a capability of the Cianfhoghlaim
-platform. The corresponding source code lives at `meaisinfhoghlaim/`
+platform. The corresponding source code lives at `sruth/meaisinfhoghlaim/`
 (the AI/ML quadrant, 15K+ LOC, 10 sub-packages, registered as a
 top-level uv workspace member with the ASCII wheel name
 `meaisinfhoghlaim`). See `docs/00_index.md` for the quadrant map and
@@ -14,7 +14,7 @@ This is the first openspec spec for the meaisinfhoghlaim quadrant.
 ## Background
 
 The meaisinfhoghlaim quadrant houses the AI/ML services that feed the
-curriculum knowledge graph consumed by `oideachais/` and the
+curriculum knowledge graph consumed by `sruth/oideachais/` and the
 dashboards in `croilar/apps/portal/`. The 10 sub-packages are:
 
 - `agents/` — 12 specialised agents (Root, Curriculum, Translation,
@@ -72,7 +72,7 @@ canonical observability logger is at
 #### Scenario: A developer runs the test suite
 
 - **GIVEN** the 13 source files have been migrated
-- **WHEN** `uv run pytest meaisinfhoghlaim/tests/` runs
+- **WHEN** `uv run pytest sruth/meaisinfhoghlaim/tests/` runs
 - **THEN** no `ModuleNotFoundError: No module named 'sruth'`
   exception is raised
 - **AND** all 22 tests pass (the 3 test files: test_ensemble_gradio,
@@ -122,12 +122,12 @@ The system SHALL ingest from the oideachais DuckLake catalog via the
 ### Requirement: Celtic-language model catalog
 
 The system SHALL maintain a Celtic-language model catalog at
-`meaisinfhoghlaim/catalog/models.yaml` (UCCIX-Llama2-13B-Instruct,
+`sruth/meaisinfhoghlaim/catalog/models.yaml` (UCCIX-Llama2-13B-Instruct,
 Llama-3.2-3B-Irish, gaBERT, gaHealth, etc.).
 
 #### Scenario: Model catalog is valid YAML
 
-- **GIVEN** the `meaisinfhoghlaim/catalog/models.yaml` file
+- **GIVEN** the `sruth/meaisinfhoghlaim/catalog/models.yaml` file
 - **WHEN** the file is loaded via `yaml.safe_load()`
 - **THEN** the file parses without errors
 - **AND** each model entry has `id`, `name`, `type`, `base`,
@@ -145,7 +145,7 @@ stored in Garage S3.
 
 - **GIVEN** a BAML-extracted curriculum passage (e.g. a
   NCCA Irish Leaving Cert grammar explanation)
-- **WHEN** the `meaisinfhoghlaim/tts/` service is invoked with
+- **WHEN** the `sruth/meaisinfhoghlaim/tts/` service is invoked with
   the passage + voice ID
 - **THEN** Chatterbox SHALL render the passage to a 16-bit
   PCM WAV file
@@ -167,7 +167,7 @@ languages.
 
 - **GIVEN** an audio recording of an Irish Leaving Cert oral
   exam (Irish + English mixed)
-- **WHEN** the `meaisinfhoghlaim/asr/` service is invoked
+- **WHEN** the `sruth/meaisinfhoghlaim/asr/` service is invoked
 - **THEN** the service SHALL route to
   `cpierse/wav2vec2-large-xlsr-53-irish` for the Irish
   segments (auto-detected by language ID)
@@ -221,10 +221,10 @@ for the base model.
 
 ### Requirement: Agent + OCR thin-shim canonicalisation
 
-The system SHALL canonicalise the `oideachais/agents/{adk,agno}/`
-and `oideachais/ocr/` directories as **thin re-exports** of the
-model-layer agents + OCR modules in `meaisinfhoghlaim/agents/` +
-`meaisinfhoghlaim/ocr/`. The 12 ADK agents (root_agent,
+The system SHALL canonicalise the `sruth/oideachais/agents/{adk,agno}/`
+and `sruth/oideachais/ocr/` directories as **thin re-exports** of the
+model-layer agents + OCR modules in `sruth/meaisinfhoghlaim/agents/` +
+`sruth/meaisinfhoghlaim/ocr/`. The 12 ADK agents (root_agent,
 curriculum_agent, translation_agent, corpus_agent,
 research_agent, education_research_agent,
 bunchloch_research_agent, geospatial_agent,
@@ -240,37 +240,37 @@ The system SHALL keep the 5 tuatha-specific agents
 (celtic_tutor_agent, mythology_narrator_agent,
 quest_guide_agent, research_assistant_agent, tuatha_root_agent)
 and the 1 leabharlann-specific OCR file
-(`oideachais/ocr/author_archive_ocr.py`) as real code (they
+(`sruth/oideachais/ocr/author_archive_ocr.py`) as real code (they
 are domain-specific, not duplicates).
 
 #### Scenario: A consumer imports the same agent via both paths
 
 - **GIVEN** the canonical agent lives at
-  `meaisinfhoghlaim/agents/curriculum_agent.py`
+  `sruth/meaisinfhoghlaim/agents/curriculum_agent.py`
 - **AND** the thin-shim re-exports it at
-  `oideachais/agents/adk/curriculum_agent.py`
+  `sruth/oideachais/agents/adk/curriculum_agent.py`
 - **WHEN** a consumer does
   `from oideachais.agents.adk.curriculum_agent import curriculum_agent`
 - **THEN** the imported `curriculum_agent` is the **same object**
   as `meaisinfhoghlaim.agents.curriculum_agent.curriculum_agent`
   (verified via `is` comparison)
 
-## Known issues (from `meaisinfhoghlaim/README.md`)
+## Known issues (from `sruth/meaisinfhoghlaim/README.md`)
 
 | # | Issue | Tracked in | Severity |
 |--:|:--|:--|:--|
 | 1 | Most sub-packages are stubs; the 4 heartbeats are the first real assets | the 10 sub-packages | high |
-| 2 | No `[tool.uv.sources]` block; sibling workspace members are not declared as local-path dependencies | `meaisinfhoghlaim/pyproject.toml` | high — blocks cross-quadrant imports |
+| 2 | No `[tool.uv.sources]` block; sibling workspace members are not declared as local-path dependencies | `sruth/meaisinfhoghlaim/pyproject.toml` | high — blocks cross-quadrant imports |
 | 3 | The 6 Celtic-language subdirs are stubs | the 6 subdirs | medium |
-| 4 | No production dagster code-location (only the 4 heartbeats) | `meaisinfhoghlaim/dagster_defs/assets/healthchecks.py` | medium |
+| 4 | No production dagster code-location (only the 4 heartbeats) | `sruth/meaisinfhoghlaim/dagster_defs/assets/healthchecks.py` | medium |
 | 5 | The `baml_src → scéimre` rename was deferred per `lateralise-british-isles-domains` | the AGENTS.md | low — deferred |
 
 ## Cross-references
 
-- [`meaisinfhoghlaim/`](../../meaisinfhoghlaim/) (the AI/ML quadrant)
-- [`meaisinfhoghlaim/README.md`](../../meaisinfhoghlaim/README.md) (the status table + known issues)
-- [`meaisinfhoghlaim/AGENTS.md`](../../meaisinfhoghlaim/AGENTS.md) (the developer-quick-reference)
-- [`meaisinfhoghlaim/pyproject.toml`](../../meaisinfhoghlaim/pyproject.toml) (the uv workspace member)
+- [`sruth/meaisinfhoghlaim/`](../../sruth/meaisinfhoghlaim/) (the AI/ML quadrant)
+- [`sruth/meaisinfhoghlaim/README.md`](../../sruth/meaisinfhoghlaim/README.md) (the status table + known issues)
+- [`sruth/meaisinfhoghlaim/AGENTS.md`](../../sruth/meaisinfhoghlaim/AGENTS.md) (the developer-quick-reference)
+- [`sruth/meaisinfhoghlaim/pyproject.toml`](../../sruth/meaisinfhoghlaim/pyproject.toml) (the uv workspace member)
 - [`dg.toml`](../../dg.toml) (the root Dagster code-location config)
 - [`openspec/specs/meaisinfhoghlaim-agent-frameworks/spec.md`](meaisinfhoghlaim-agent-frameworks/spec.md) (the 12 agents)
 - [`openspec/specs/meaisinfhoghlaim-ocr-htr/spec.md`](meaisinfhoghlaim-ocr-htr/spec.md) (the 10 OCR models)

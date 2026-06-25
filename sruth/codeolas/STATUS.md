@@ -47,9 +47,9 @@ been rewritten to point at the new `codeolas.*` paths.
 | `from sruth.códeolas.graph.X import Y` | `from codeolas.graph.X import Y` |
 | `from sruth.códeolas.generators.X import Y` | `from codeolas.generators.X import Y` |
 | `from sruth.códeolas.mcp.server import main` | `from codeolas.mcp_server.server import main` |
-| `from sruth.shared.storage import X` (in `storage/serial_executor.py`) | `from oideachais.core.storage.serial_executor import X` |
-| `from sruth.shared.browser.core.llm_router import X` (in `reposwarm/generator.py`) | `from oideachais.http_utils.llm_router import X` (with `sruth_browser.llm_router` fallback) |
-| `from sruth.shared.storage import get_executor` (in `reposwarm/cache.py`) | `from oideachais.core.storage.serial_executor import get_executor` |
+| `from sruth.shared.storage import X` (in `storage/serial_executor.py`) | `from sruth.oideachais.core.storage.serial_executor import X` |
+| `from sruth.shared.browser.core.llm_router import X` (in `reposwarm/generator.py`) | `from sruth.oideachais.http_utils.llm_router import X` (with `sruth_browser.llm_router` fallback) |
+| `from sruth.shared.storage import get_executor` (in `reposwarm/cache.py`) | `from sruth.oideachais.core.storage.serial_executor import get_executor` |
 
 ## Deprecation shims (still emit `DeprecationWarning`)
 

@@ -20,6 +20,6 @@ ensemble, and any GPU-bound work.
   upstream [dagster-modal](https://github.com/dagster-io/dagster/tree/master/python_modules/libraries/dagster-modal)
   package
 - The Modal docs: <https://modal.com/docs>
-- The KCG stack uses Modal for `meaisinfhoghlaim/ocr/` HTR
+- The KCG stack uses Modal for `sruth/meaisinfhoghlaim/ocr/` HTR
   fine-tuning and OCR ensemble inference
 - The `meaisinfhoghlaim-ocr-htr` openspec spec

@@ -24,7 +24,7 @@ in the previous version is NO LONGER NEEDED. The pre-2026-06-15
 test passed only because of the conftest's sys.path manipulation;
 the new packaging fix makes the test pass on its own merits.
 The `repo_str` insertion is still needed for cross-quadrant
-imports (e.g. `from oideachais.dlt_utils import ...`).
+imports (e.g. `from sruth.oideachais.dlt_utils import ...`).
 """
 
 from __future__ import annotations

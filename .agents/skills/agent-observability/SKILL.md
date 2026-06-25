@@ -219,8 +219,8 @@ For every new agent in the KCG stack, ensure:
 
 - `oideachais/observability/` — the integration module
   (Datadog + MLflow + Langfuse + Ragas)
-- `meaisinfhoghlaim/evaluation/` — the Ragas evaluation harness
-- `meaisinfhoghlaim/evaluation/canonical_eval_set.json` —
+- `sruth/meaisinfhoghlaim/evaluation/` — the Ragas evaluation harness
+- `sruth/meaisinfhoghlaim/evaluation/canonical_eval_set.json` —
   100 samples × 4 metrics
 - Dagster assets: `oideachais/dagster_defs/assets/quality_assets.py`
   (the Ragas asset_check group)
@@ -606,7 +606,7 @@ MLflow added a GenAI evaluation mode in 2026 that complements Langfuse:
 - Tracks quality metrics (faithfulness, answer relevance, context precision) per model
 - Integrates with the MLflow model registry: a model can only be promoted to "Production" if it passes the eval gate
 
-The KCG pattern: nightly batch eval of the `meaisinfhoghlaim/agents/curriculum_agent` against the `oideachais_eval_v3` dataset, logged to MLflow. The Dagster asset `mlflow_eval_curriculum` (in `meaisinfhoghlaim/dagster_defs/`) is the entry point.
+The KCG pattern: nightly batch eval of the `sruth/meaisinfhoghlaim/agents/curriculum_agent` against the `oideachais_eval_v3` dataset, logged to MLflow. The Dagster asset `mlflow_eval_curriculum` (in `sruth/meaisinfhoghlaim/dagster_defs/`) is the entry point.
 
 ### RAGAS trace-based metrics
 

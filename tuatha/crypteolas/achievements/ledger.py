@@ -84,7 +84,7 @@ def _verify_evidence(
 def _compute_embedding(text: str) -> list[float]:
     """Compute the 1024-dim BGE-M3 embedding via the canonical oideachais flow."""
     try:
-        from oideachais.cocoindex_flows.leabharlann_embedding import embed_text
+        from sruth.oideachais.cocoindex_flows.leabharlann_embedding import embed_text
 
         return embed_text(text)
     except Exception:

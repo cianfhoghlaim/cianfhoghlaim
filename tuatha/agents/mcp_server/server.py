@@ -346,7 +346,7 @@ async def get_learning_outcomes_impl(
     subject: Optional[str] = None,
     level: Optional[str] = None,
 ) -> str:
-    """Get learning outcomes from oideachais."""
+    """Get learning outcomes from sruth.oideachais."""
     try:
         outcomes = await _get_learning_outcomes(
             topic=strand,

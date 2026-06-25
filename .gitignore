@@ -261,3 +261,4 @@ croilar/.cache/
 croilar/apps/portal/public/wasm/
 infrastructure/secrets/lego-certs/account.json
 infrastructure/stacks/pangolin/config
+opencode.json

@@ -475,7 +475,7 @@ async def scrape_canuint_dialect(
     # Optionally produce to Kafka
     if produce_to_kafka and collection.recordings:
         try:
-            from oideachais.kafka.producer import produce_event
+            from sruth.oideachais.kafka.producer import produce_event
 
             for recording in collection.recordings:
                 await produce_event(

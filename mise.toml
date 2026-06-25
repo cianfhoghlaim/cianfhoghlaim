@@ -139,7 +139,7 @@ run = "cd infrastructure/locket && cargo clippy"
 
 [tasks."dagster:oideachais"]
 description = "Run Dagster for oideachais pipeline"
-run = "cd oideachais && uv run dagster dev -m data_platform.dagster_defs.definitions"
+run = "cd sruth/oideachais && uv run dagster dev -m data_platform.dagster_defs.definitions"
 
 [tasks."dagster:tuath"]
 description = "Run Dagster for the Celtic MMO (tuath) code-location"
@@ -155,7 +155,7 @@ run = "cd croilar && uv run dagster dev -m dagster_assets.definitions"
 
 [tasks."dagster:meaisin"]
 description = "Run Dagster for the meaisínfhoghlaim (AI/ML quadrant) heartbeat code-location"
-run = "cd meaisinfhoghlaim && uv run dagster dev -m dagster_defs.assets.healthchecks"
+run = "cd sruth/meaisinfhoghlaim && uv run dagster dev -m dagster_defs.assets.healthchecks"
 
 [tasks."dagster:crypteolas_demo"]
 description = "Run Dagster for the crypteolas_demo code-location"
@@ -311,7 +311,7 @@ run = "ccc init || true"
 
 [tasks."ccc:index"]
 description = "Build the cocoindex-code semantic index (v1 app; legacy ccc kept as fallback until 2026-07-15)"
-run = "uv run cocoindex update oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex"
+run = "uv run cocoindex update sruth.oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex"
 
 [tasks."ccc:search"]
 description = "Semantic search the codebase with the legacy ccc CLI (deprecated — use ccc:v1:search instead)"
@@ -319,19 +319,19 @@ run = "ccc search ${@}"
 
 [tasks."ccc:v1:index"]
 description = "Build the codebase_chunks LanceDB index via the v1 CocoIndex App (replacement for the legacy ccc CLI)"
-run = "uv run cocoindex update oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex"
+run = "uv run cocoindex update sruth.oideachais.cocoindex_flows.codebase_indexing:CodebaseIndex"
 
 [tasks."ccc:v1:search"]
 description = "Semantic search the codebase_chunks LanceDB table via the v1 app (Python helper)"
-run = "uv run python -c 'import asyncio, sys; from oideachais.cocoindex_flows.codebase_indexing import search_codebase; rows = asyncio.run(search_codebase(sys.argv[1])); [print(f\"{r.get(\\\"score\\\", 0):.3f}\t{r.get(\\\"path\\\")}:{r.get(\\\"chunk_start\\\")}-{r.get(\\\"chunk_end\\\")}\t{(r.get(\\\"chunk_text\\\") or \\\"\\\").splitlines()[0][:120]}\") for r in rows]' \"${1:-}\""
+run = "uv run python -c 'import asyncio, sys; from sruth.oideachais.cocoindex_flows.codebase_indexing import search_codebase; rows = asyncio.run(search_codebase(sys.argv[1])); [print(f\"{r.get(\\\"score\\\", 0):.3f}\t{r.get(\\\"path\\\")}:{r.get(\\\"chunk_start\\\")}-{r.get(\\\"chunk_end\\\")}\t{(r.get(\\\"chunk_text\\\") or \\\"\\\").splitlines()[0][:120]}\") for r in rows]' \"${1:-}\""
 
 [tasks."docs:consolidate"]
 description = "Run the docs_skills_consolidation CocoIndex v1 App (batch / catch-up mode)"
-run = "uv run cocoindex update oideachais.cocoindex_flows.docs_skills_consolidation:DocsSkillsConsolidation"
+run = "uv run cocoindex update sruth.oideachais.cocoindex_flows.docs_skills_consolidation:DocsSkillsConsolidation"
 
 [tasks."docs:consolidate:live"]
 description = "Run the docs_skills_consolidation CocoIndex v1 App in live mode (-L)"
-run = "uv run cocoindex update -L oideachais.cocoindex_flows.docs_skills_consolidation:DocsSkillsConsolidation"
+run = "uv run cocoindex update -L sruth.oideachais.cocoindex_flows.docs_skills_consolidation:DocsSkillsConsolidation"
 
 [tasks."baml:generate"]
 description = "Regenerate the baml_client/ Python module from baml_src/ (required after editing any *.baml file)"
@@ -458,16 +458,16 @@ run = "bash infrastructure/scripts/deploy-cf.sh --all --preview"
 
 [tasks."author-archive:dev"]
 description = "Author-archive v1 pipeline against the local dev target (DuckDB)"
-run = "bash oideachais/scripts/make_target.sh dev ${@}"
+run = "bash sruth/oideachais/scripts/make_target.sh dev ${@}"
 
 [tasks."author-archive:staging"]
 description = "Author-archive v1 pipeline against the MotherDuck staging target"
-run = "bash oideachais/scripts/make_target.sh staging ${@}"
+run = "bash sruth/oideachais/scripts/make_target.sh staging ${@}"
 
 [tasks."author-archive:prod"]
 description = "Author-archive v1 pipeline against the Garage S3 + Lakekeeper prod target"
-run = "bash oideachais/scripts/make_target.sh prod ${@}"
+run = "bash sruth/oideachais/scripts/make_target.sh prod ${@}"
 
 [tasks."author-archive:cps:hero"]
 description = "Run the CPS.gov.uk hero example (4-stage pipeline: pre-research + bulk_scrape + condense + UI identification)"
-run = "bash oideachais/scripts/make_target.sh dev python oideachais/scripts/pre_research_cps_gov_uk.py"
+run = "bash sruth/oideachais/scripts/make_target.sh dev python sruth/oideachais/scripts/pre_research_cps_gov_uk.py"

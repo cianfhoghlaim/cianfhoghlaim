@@ -318,7 +318,7 @@ framework has 4 components:
    framework is a "realm" in the Pent-Elemental Cosmology
    (Spirit / Water / Fire / Earth / Air + Anam Cara).
 2. **4 formative feedback channels** (the 4 tuatha ADK
-   agents at `oideachais/agents/adk/`: Celtic Tutor,
+   agents at `sruth/oideachais/agents/adk/`: Celtic Tutor,
    Mythology Narrator, Quest Guide, Research Assistant).
    Each agent delivers per-quest, per-response,
    per-misconception feedback. The player always leaves
@@ -517,7 +517,7 @@ re-export shim files at `tuatha/agents/tools/`:
 The 3 shim files SHALL preserve the historical
 `from ..tools.X import ...` import pattern used by the
 `tuatha/agents/mcp_server/server.py` lines 23-33, while
-delegating to the canonical home in `oideachais/` (the
+delegating to the canonical home in `sruth/oideachais/` (the
 oideachais quadrant is the authoritative source for Celtic
 curriculum + mythology content).
 

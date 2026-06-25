@@ -33,7 +33,7 @@ class ArchDocCache:
         """Get or create the serial database executor."""
         if self._executor is None:
             try:
-                from oideachais.core.storage.serial_executor import get_executor
+                from sruth.oideachais.core.storage.serial_executor import get_executor
                 self._executor = await get_executor()
             except ImportError:
                 # Fallback for standalone usage

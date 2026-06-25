@@ -46,7 +46,7 @@ Use when you need to:
   prod: Hetzner Object Storage)
 - **Catalog**: Postgres (`md:oideachais` as the metadata DB)
 - **Schema convention**: `oideachais.{domain}.{nation}`
-- **Writers**: Dagster assets in `oideachais/dagster_defs/assets/`
+- **Writers**: Dagster assets in `sruth/oideachais/dagster_defs/assets/`
   and `tuatha/dagster_assets/`
 - **Why DuckLake**: ACID transactions + time-travel queries +
   zero-copy Parquet + Iceberg metadata for downstream PyIceberg
@@ -124,7 +124,7 @@ df = table.scan().to_pandas()
 The KCG variant of `lancedb.connections.SerialDatabaseExecutor`:
 
 ```python
-# oideachais/storage/serial_executor.py
+# sruth/oideachais/storage/serial_executor.py
 import threading
 from contextlib import contextmanager
 
@@ -203,7 +203,7 @@ The HNSW rebuild above 50k rows is **slow** (> 1 hour for
 ### Destination factory (the single entry point)
 
 ```python
-# oideachais/dlt_utils/destinations.py
+# sruth/oideachais/dlt_utils/destinations.py
 import dlt
 import os
 
@@ -316,7 +316,7 @@ The `md:oideachais` URL is the MotherDuck database name; the
 
 ### DuckLake 1.0 is GA (2026-06)
 
-DuckLake 1.0 is now the default open-table lakehouse format. The KCG `oideachais/ducklake/` layer is already on 1.0 (verify with `SELECT ducklake_version();`).
+DuckLake 1.0 is now the default open-table lakehouse format. The KCG `sruth/oideachais/ducklake/` layer is already on 1.0 (verify with `SELECT ducklake_version();`).
 
 Key 1.0 features that affect the KCG pipeline:
 

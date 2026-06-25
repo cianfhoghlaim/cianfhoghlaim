@@ -394,7 +394,7 @@ The Cianfhoghlaim platform runs 5 code-locations from a single Dagster UI:
 | `tuath` | `tuatha/dagster_assets/` | The Celtic MMO |
 | `crypteolas` | `tuatha/crypteolas/dagster_assets/` | The crypto data platform |
 | `croilar` | `croilar/definitions.py` | The multi-persona portfolio |
-| `meaisin_heartbeat` | `meaisinfhoghlaim/dagster_defs/` | The AI/ML heartbeats |
+| `meaisin_heartbeat` | `sruth/meaisinfhoghlaim/dagster_defs/` | The AI/ML heartbeats |
 
 All 5 are registered in the root `dg.toml` workspace file:
 

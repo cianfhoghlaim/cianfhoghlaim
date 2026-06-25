@@ -3,9 +3,9 @@
 ## Purpose
 
 `agent-observability` is a capability of the Cianfhoghlaim platform. The
-corresponding source code lives at `oideachais/observability/` (the
+corresponding source code lives at `sruth/oideachais/observability/` (the
 Langfuse + MLflow + Logfire + Datadog integration) and
-`meaisinfhoghlaim/evaluation/ragas_pipeline.py` (the RAGAS evaluation
+`sruth/meaisinfhoghlaim/evaluation/ragas_pipeline.py` (the RAGAS evaluation
 harness). See `docs/00_index.md` for the quadrant map and
 `docs/00-core/CLAUDE.md` for the project identity.
 
@@ -45,7 +45,7 @@ The system SHALL evaluate RAG pipelines using RAGAS metrics
 
 #### Scenario: RAGAS evaluation
 
-- **GIVEN** a RAG pipeline (e.g. `oideachais/api/routes/search.py`)
+- **GIVEN** a RAG pipeline (e.g. `sruth/oideachais/api/routes/search.py`)
 - **WHEN** the pipeline produces a result for a query
 - **THEN** the RAGAS evaluator computes the 4 metrics and stores the
   scores in MLflow
@@ -139,5 +139,5 @@ inventory`.
 - [`.agents/skills/mlflow/SKILL.md`](../../.agents/skills/mlflow/SKILL.md)
 - [`.agents/skills/ragas/SKILL.md`](../../.agents/skills/ragas/SKILL.md)
 - [`.agents/skills/datadog/SKILL.md`](../../.agents/skills/datadog/SKILL.md)
-- [`oideachais/observability/`](../../oideachais/observability/) (the integration module)
-- [`meaisinfhoghlaim/evaluation/`](../../meaisinfhoghlaim/evaluation/) (RAGAS pipeline)
+- [`sruth/oideachais/observability/`](../../sruth/oideachais/observability/) (the integration module)
+- [`sruth/meaisinfhoghlaim/evaluation/`](../../sruth/meaisinfhoghlaim/evaluation/) (RAGAS pipeline)

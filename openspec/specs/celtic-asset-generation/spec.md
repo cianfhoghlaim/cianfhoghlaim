@@ -25,8 +25,8 @@ through the 5 stages:
    semantic search
 
 The pipeline runs in
-`oideachais/dagster_defs/assets/celtic_assets.py` and
-is exposed via the FastAPI `oideachais/api/` endpoints.
+`sruth/oideachais/dagster_defs/assets/celtic_assets.py` and
+is exposed via the FastAPI `sruth/oideachais/api/` endpoints.
 The skill body at
 `.agents/skills/celtic-asset-generation/SKILL.md`
 documents the canonical 5-stage flow; the deep-dive

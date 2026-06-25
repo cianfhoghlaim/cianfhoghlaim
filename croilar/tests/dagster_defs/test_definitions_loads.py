@@ -48,7 +48,7 @@ def test_croilar_definitions_imports() -> None:
     # Sanity: the repo root should be on sys.path (the conftest
     # inserts it; the fix-pth.sh script also does via the .pth
     # file). This is the cross-quadrant path — used by tests that
-    # import sibling packages like `from oideachais.X import Y`.
+    # import sibling packages like `from sruth.oideachais.X import Y`.
     repo_root = os.path.dirname(
         os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     )

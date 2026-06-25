@@ -394,7 +394,7 @@ The KCG 5-stage pipeline is a Dagster asset that orchestrates
 # oideachais/dagster_defs/assets/curriculum_assets.py
 from dagster import asset, AssetExecutionContext
 from agno.os import AgentOS
-from oideachais.agents.agno import (
+from sruth.oideachais.agents.agno import (
     ocr_agent, baml_extractor, embedder, graphiti_agent, ragas_evaluator
 )
 

@@ -158,7 +158,7 @@ for any future docs round.
 
 - `agent-docs-patterns/SKILL.md` — the frontmatter schema
   the round produced
-- `oideachais/AGENTS.md` + `meaisinfhoghlaim/AGENTS.md` +
+- `oideachais/AGENTS.md` + `sruth/meaisinfhoghlaim/AGENTS.md` +
   `tuatha/AGENTS.md` + `croilar/AGENTS.md` — the
   per-quadrant routing (the 4 quadrants the 7-domain
   taxonomy covers)

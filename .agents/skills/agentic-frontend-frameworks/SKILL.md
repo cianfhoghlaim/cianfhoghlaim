@@ -473,11 +473,11 @@ The `ag-ui` skill (in `.agents/skills/ag-ui/SKILL.md`) documents the full protoc
 
 Pydantic AI is a Pydantic-native agent framework that pairs naturally with the AG-UI protocol. The Pydantic AI Gateway (BYOK/managed/cost-limits) routes the agent's LLM calls through a central gateway, with cost limits per agent per model.
 
-The KCG pattern: any new agent (e.g. the 12 in `meaisinfhoghlaim/agents/`) should use Pydantic AI for typed I/O. The `pydantic-ai` skill documents the framework.
+The KCG pattern: any new agent (e.g. the 12 in `sruth/meaisinfhoghlaim/agents/`) should use Pydantic AI for typed I/O. The `pydantic-ai` skill documents the framework.
 
 ### DBOS durable execution
 
-DBOS is a durable execution layer for Python — the agent's state survives crashes and restarts. The KCG pattern is documented in the `pydantic-ai` skill, with a reference implementation in `meaisinfhoghlaim/agents/dbos_demo.py`.
+DBOS is a durable execution layer for Python — the agent's state survives crashes and restarts. The KCG pattern is documented in the `pydantic-ai` skill, with a reference implementation in `sruth/meaisinfhoghlaim/agents/dbos_demo.py`.
 
 ### Pair this skill with
 
