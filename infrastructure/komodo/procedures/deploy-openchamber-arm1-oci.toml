@@ -1,0 +1,82 @@
+# =============================================================================
+# DEPLOY OPENCHAMBER-ARM1-OCI PROCEDURE
+# =============================================================================
+# Deploys the Cianfhoghlaim openchamber OpenCode UI to arm1-oci.
+#
+# Architecture:
+#   arm1-oci — openchamber (:3000 host → :3000 container, UI + WebSocket terminal)
+#              openchamber-locket (Infisical secret injection)
+#   Routed through Pangolin on arm1-oci:
+#     openchamber.cianfhoghlaim.ie → arm1-oci:openchamber:3000 (Pocket ID SSO)
+#
+# Secrets injected via Locket + Infisical vault (dev-baile).
+#
+# Usage:
+#   km run procedure deploy-openchamber-arm1-oci
+# =============================================================================
+
+[[procedure]]
+name = "deploy-openchamber-arm1-oci"
+description = "Deploy OpenChamber OpenCode UI to arm1-oci — prereqs → pangolin → openchamber stack → pangolin routes → health checks"
+
+# =============================================================================
+# STAGE 0: Prerequisite docker resources
+# =============================================================================
+# The openchamber locket sidecar requires the openchamber_stack-secrets external
+# tmpfs volume. Created idempotently by a build (defined in the locket sidecar).
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "prerequisites"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "openchamber-ensure-locket-volume" } }
+
+# =============================================================================
+# STAGE 1: Dependency Services
+# =============================================================================
+# OpenChamber depends on:
+#   - pangolin (Traefik routing + Pocket ID SSO) → arm1-oci
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "dependency-services"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "pangolin-core-arm1" } }
+
+# =============================================================================
+# STAGE 2: OpenChamber (arm1-oci)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "openchamber-stack"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "openchamber" } }
+
+# =============================================================================
+# STAGE 3: Pangolin Routes (arm1-oci)
+# =============================================================================
+# Apply the openchamber routing blueprint via Pangolin Integration API.
+# Registers:
+#   - openchamber.cianfhoghlaim.ie → arm1-oci:openchamber:3000 (Pocket ID SSO)
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "pangolin-routes"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "apply-openchamber-routes" } }
+
+# =============================================================================
+# STAGE 4: Health Verification (arm1-oci)
+# =============================================================================
+# Verify openchamber is healthy and responding to /api/health.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "openchamber-health-check" } }

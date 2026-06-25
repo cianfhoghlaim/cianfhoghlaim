@@ -1,0 +1,35 @@
+# =============================================================================
+# OPENCHAMBER — Pangolin Traefik Routing
+# =============================================================================
+# Routes openchamber.cianfhoghlaim.ie to the openchamber container at UI
+# port 3000. TinyAuth enforces Pocket ID OIDC at the Traefik layer; the
+# bundled OPENCHAMBER_UI_PASSWORD (from secrets.env) is the 2nd factor.
+#
+# Middlewares (canonical Cianfhoghlaim):
+#   tinyauth        — Pocket ID OIDC SSO (from the pangolin stack)
+#   secure-headers  — HSTS + X-Frame-Options etc. (from the pangolin stack)
+# =============================================================================
+
+http:
+  routers:
+    openchamber-ui:
+      entryPoints:
+        - https
+      rule: "Host(`openchamber.cianfhoghlaim.ie`)"
+      service: openchamber
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - tinyauth
+        - secure-headers
+      priority: 100
+
+  services:
+    openchamber:
+      loadBalancer:
+        servers:
+          - url: "http://openchamber:3000"
+        healthCheck:
+          path: /api/health
+          interval: 30s
+          timeout: 3s

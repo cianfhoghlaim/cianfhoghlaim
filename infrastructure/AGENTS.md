@@ -140,6 +140,8 @@ Every stack under `infrastructure/stacks/` is listed below. Port numbers reflect
 | `sruth/oideachais/` | Celtic Education Lakehouse Engine (Dagster + FastAPI + TanStack Start + Agno AgentOS + Google ADK). **Canonical** — replaces the legacy `/sruth/oideachais/compose.yaml` quartet. Build source of truth. | 3080, 3335, 7777, 7778, 8000 |
 | `olake/` | ELT from MongoDB → Iceberg | 8080 |
 | `olmocr/` | OlmOCR (Allen AI) document OCR | Internal |
+| `openchamber/` | OpenChamber — OpenCode web/desktop UI with bundled opencode-ai runtime (Bun + React, 18+ themes) | 3000 |
+| `openclaw/` | OpenClaw — channel-fanout gateway for the meaisínfhoghlaim 12-agent fleet (WebChat + 4 messaging channels in v1; Node 24 + Bun 1.3.13 runtime) | 18789 |
 | `paddleocr/` | PaddleOCR multilingual OCR | Internal |
 | `pangolin/` | VPN + Traefik + Pocket ID + CrowdSec + TinyAuth | 51820/udp, 443, 80, 8443 |
 | `paperless-ngx/` | Document scanning / archive | Internal |
