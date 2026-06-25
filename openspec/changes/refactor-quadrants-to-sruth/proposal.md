@@ -179,7 +179,7 @@ Plus 2 follow-on commits:
 
 - `infrastructure/stacks/motherduck/blueprint.yaml` — already uses `pipeline: sruth/oideachais` and `pipeline: sruth/crypteolas` (forward-looking)
 - `opencode.json` — 5 sruth-specialist subagents + build + plan (the canonical subagent roster)
-- `.agents/skills/celtic-asset-generation/SKILL.md` — already references `sruth/oideachais/dlt_sources/`, `sruth/oideachais/cocoindex_flows/`, `sruth/oideachais/dagster/`, `sruth/oideachais/agents/`, `sruth/oideachais/storage/`
+- `.agents/skills/celtic-asset-generation/SKILL.md` — already references `sruth/oideachais/dlt_sources/`, `sruth/oideachais/cocoindex_flows/`, `sruth/oideachais/dagster/`, `sruth/oideachais/agents/`, `sruth/oideachais/core/storage/`
 - `.agents/skills/tuatha-mmo/SKILL.md` — already references `sruth/tuath/ui`, `sruth/tuath/docs/`
 - `.agents/skills/ui-components/SKILL.md` — already references `sruth/` frontends
 - `.agents/skills/monorepo/SKILL.md` — already says "Every `sruth/` frontend (`sruth/oideachais/web`)"
