@@ -390,3 +390,18 @@ once the analysis is stable.
 - Related skills: `.agents/skills/dlt/`, `.agents/skills/lancedb/`,
   `.agents/skills/ducklake/`, `.agents/skills/motherduck-ducklake/`,
   `.agents/skills/cocoindex/`
+
+## Examples
+
+See [`./examples/`](./examples/) for upstream `.ipynb` ↔ `.py`
+conversion test fixtures (9 total). These are marimo's own
+internal test cases for the `mo convert` CLI — useful when
+debugging an unexpected conversion result:
+
+- `marimo_docs_marimo_tests__convert_ipynb_data_*.ipynb` —
+  edge cases (duplicate definitions, syntax errors, hidden
+  markdown cells, pip commands, aug-assign semantics)
+- `marimo_docs_marimo_tests__convert_ipynb_data_cell_metadata.ipynb`
+  — cell metadata round-trip
+- `marimo_docs_marimo_tests__convert_ipynb_data_comments_preservation.ipynb`
+  — Python comment preservation across conversion

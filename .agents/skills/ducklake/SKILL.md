@@ -1011,3 +1011,15 @@ df: pl.DataFrame = mo.sql(
 )
 mo.ui.table(df)
 ```
+
+## Examples
+
+See [`./examples/`](./examples/) for upstream DuckLake reference
+notebooks (6 total). Highlights:
+
+- `data_engineering_ducklake_duckdb.ipynb` — minimal DuckLake + DuckDB
+- `data_engineering_ducklake_ibis.ipynb` — Ibis backend on DuckLake
+- `data_engineering_ducklake_plotly.ipynb` — Plotly visualisations
+- `data_engineering_ducklake_vega_altair.ipynb` — Vega-Altair charts
+- `data_engineering_ducklake_pointblank.ipynb` — data validation
+- `data_engineering_ducklake_mlflow_kafka_ducklake_notebooks_econ_comp.ipynb` — MLflow + Kafka streaming on DuckLake
