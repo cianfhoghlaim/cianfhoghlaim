@@ -53,6 +53,11 @@
     "ccc:v1:search": "uv run python -c 'import asyncio, sys; from sruth.oideachais.cocoindex_flows.codebase_indexing import search_codebase; rows = asyncio.run(search_codebase(sys.argv[1])); [print(f\"{r.get(\\\"score\\\", 0):.3f}\\t{r.get(\\\"path\\\")}:{r.get(\\\"chunk_start\\\")}-{r.get(\\\"chunk_end\\\")}\\t{(r.get(\\\"chunk_text\\\") or \\\"\\\").splitlines()[0][:120]}\") for r in rows]' \"${1:-}\"",
     "docs:consolidate": "uv run cocoindex update sruth.oideachais.cocoindex_flows.docs_skills_consolidation:DocsSkillsConsolidation",
     "docs:consolidate:live": "uv run cocoindex update -L sruth.oideachais.cocoindex_flows.docs_skills_consolidation:DocsSkillsConsolidation",
+
+    "upstream:blog": "uv run cocoindex update sruth.oideachais.cocoindex_flows.upstream_blog_monitor:UpstreamBlogMonitor",
+    "upstream:blog:live": "uv run cocoindex update -L sruth.oideachais.cocoindex_flows.upstream_blog_monitor:UpstreamBlogMonitor",
+    "upstream:conformance": "uv run python -c 'import asyncio; from sruth.oideachais.cocoindex_flows.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary()); import sys; sys.exit(0 if report.all_passed else 1)'",
+    "upstream:api-surface": "uv run cocoindex update sruth.oideachais.cocoindex_flows.upstream_api_surface:UpstreamApiSurface",
     "baml:generate": "uv run baml-cli generate",
 
     "spec:list": "openspec list",

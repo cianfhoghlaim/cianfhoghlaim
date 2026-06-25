@@ -81,7 +81,7 @@ sweep cleanly with curl.
   → `n8n.cianfhoghlaim.ie/webhook/upstream-blog`.
 
 - **1 n8n workflow** at
-  `engineering/n8n/workflows/upstream-blog-monitor.json` (alongside
+  `infrastructure/stacks/n8n/workflows/upstream-blog-monitor.json` (alongside
   the 6 seeded `team-*.json` workflows): webhook → parse Firecrawl
   `monitor.page` payload → POST to DLT incremental source →
   enqueue Dagster `upstream_blog_monitor_ingest` run via GraphQL.
@@ -315,7 +315,7 @@ sub-Apps = 12 Apps; with this change it becomes 15).
   - `sruth/oideachais/baml_src/upstream_monitoring.baml` — NEW
   - `infrastructure/firecrawl/monitors/upstream_packages/
     {motherduck,dlthub,lancedb,cocoindex}.yml` — NEW (4 files)
-  - `engineering/n8n/workflows/upstream-blog-monitor.json` — NEW
+  - `infrastructure/stacks/n8n/workflows/upstream-blog-monitor.json` — NEW
   - `mise.toml` + `package.json` — MODIFIED (4 task aliases)
 - **Affected agent skills:** 8 skills listed above
 - **Affected CI:**

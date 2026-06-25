@@ -1,20 +1,22 @@
 ---
 name: oideachais-cocoindex-v1
-description: The canonical CocoIndex v1 App pattern in `sruth/oideachais/cocoindex_flows/`. Covers the 11 v1 Apps (leabharlann_books_embedding, leabharlann_zotero_embedding, leabharlann_takeout_embedding, codebase_indexing, api_indexing, filesystem_indexing, storage_indexing, config_indexing, unified_embedding, code_embeddings, docs_skills_consolidation), the `@coco.fn` + `@coco.lifespan` + `lancedb.mount_table_target` pattern, the 100-batch minimum + the HNSW-DROP-THRESHOLD=50 rule, the `IdGenerator()` stable-id pattern, the `Annotated[NDArray, EMBEDDER]` typing, the 29-language Tree-sitter chunking (the canonical v1 chunking surface), the 4 v0-to-v1 migration patterns, and the canonical add-a-new-v1-App workflow. Use when adding a new v1 CocoIndex App, debugging a v0→v1 migration, or understanding the 100-row upsert contract.
+description: The canonical CocoIndex v1 App pattern in `sruth/oideachais/cocoindex_flows/`. Covers the 14 v1 Apps (leabharlann_books_embedding, leabharlann_zotero_embedding, leabharlann_takeout_embedding, codebase_indexing, api_indexing, filesystem_indexing, storage_indexing, config_indexing, unified_embedding, code_embeddings, docs_skills_consolidation, culture_heritage_embedding, upstream_blog_monitor, upstream_api_surface, cocoindex_v1_conformance), the `@coco.fn` + `@coco.lifespan` + `lancedb.mount_table_target` pattern, the 100-batch minimum + the HNSW-DROP-THRESHOLD=50 rule, the `IdGenerator()` stable-id pattern, the `Annotated[NDArray, EMBEDDER]` typing, the 4-rule v1 conformance contract (R1-R4) enforced by `cocoindex_v1_conformance`, the shared `_lifespan.py` (the canonical home for `LANCE_DB` + `EMBEDDER` + `RESOLVED_FILE_REGISTRY` per REFACTORING.md item 12), and the canonical add-a-new-v1-App workflow. Use when adding a new v1 CocoIndex App, debugging a v0→v1 migration, or running the conformance linter.
 ---
 
 # Oideachais CocoIndex v1
 
 ## Purpose
 
-The `sruth/oideachais/cocoindex_flows/` directory houses **11 v1
+The `sruth/oideachais/cocoindex_flows/` directory houses **14 v1
 CocoIndex Apps** + 10 v0 broken modules (slated for v0-to-v1
 migration in this round). This skill captures the canonical v1
 pattern (`@coco.fn` + `@coco.lifespan` +
 `lancedb.mount_table_target`), the 100-batch minimum, the
 HNSW-DROP-THRESHOLD=50 rule, the `IdGenerator()` stable-id
-pattern, the `Annotated[NDArray, EMBEDDER]` typing, and the
-add-a-new-v1-App workflow. The `cocoindex/` skill is generic;
+pattern, the `Annotated[NDArray, EMBEDDER]` typing, the 4-rule
+conformance contract enforced by `cocoindex_v1_conformance`, the
+shared `_lifespan.py` canonical home (REFACTORING.md item 12), and
+the add-a-new-v1-App workflow. The `cocoindex/` skill is generic;
 this one is oideachais-specific.
 
 ## When to use this skill
@@ -26,25 +28,40 @@ Use when you need to:
 - "Understand the 100-row upsert contract"
 - "Choose between `BAAI/bge-m3` and `BAAI/bge-large-en-v1.5` for embedding"
 - "Wire a new LanceDB table"
+- "Run the v1 conformance check on all 14 Apps"
+- "Fix an R1/R2/R3/R4 conformance failure"
+- "Import the shared lifespan from `_lifespan.py`"
 
-## The 11 v1 Apps (the registry)
+## The 14 v1 Apps (the registry)
 
-| App | Module | Output table | Embedding model |
-|:--|:--|:--|:--|
-| `leabharlann_books_embedding` | `leabharlann_embedding.py` | `leabharlann_books` | `BAAI/bge-large-en-v1.5` |
-| `leabharlann_zotero_embedding` | `leabharlann_embedding.py` | `leabharlann_zotero` | `BAAI/bge-large-en-v1.5` |
-| `leabharlann_takeout_embedding` | `leabharlann_embedding.py` | `leabharlann_takeout` | `BAAI/bge-large-en-v1.5` |
-| `codebase_indexing` | `codebase_indexing.py` | `codebase_chunks` (the 7-node/7-edge code graph) | `BAAI/bge-m3` |
-| `api_indexing` | `api_indexing.py` | `api_endpoints` (the 4-framework HTTP route surface) | `BAAI/bge-m3` |
-| `filesystem_indexing` | `filesystem_indexing.py` | `filesystem_layout` (depth 1-4 dirs) | `BAAI/bge-m3` |
-| `storage_indexing` | `storage_indexing.py` | `storage_backends` (9 backend kinds) | `BAAI/bge-m3` |
-| `config_indexing` | `config_indexing.py` | `config_files` (12 config kinds) | `BAAI/bge-m3` |
-| `unified_embedding` | `unified_embedding.py` | `unified_embeddings` (DuckDB source) | `BAAI/bge-m3` |
-| `code_embeddings` | `unified_embedding.py` | `code_embeddings` (LocalFile source) | `BAAI/bge-m3` |
-| `docs_skills_consolidation` | `docs_skills_consolidation.py` | `docs_skills` (BAML-driven extraction → LanceDB + FalkorDB) | `BAAI/bge-m3` |
+| # | App | Module | Output table | Embedding model |
+|:--|:--|:--|:--|:--|
+| 1 | `leabharlann_books_embedding` | `leabharlann_embedding.py` | `leabharlann_books` | `BAAI/bge-large-en-v1.5` |
+| 2 | `leabharlann_zotero_embedding` | `leabharlann_embedding.py` | `leabharlann_zotero` | `BAAI/bge-large-en-v1.5` |
+| 3 | `leabharlann_takeout_embedding` | `leabharlann_embedding.py` | `leabharlann_takeout` | `BAAI/bge-large-en-v1.5` |
+| 4 | `codebase_indexing` | `codebase_indexing.py` | `codebase_chunks` (the 7-node/7-edge code graph) | `BAAI/bge-large-en-v1.5` |
+| 5 | `api_indexing` | `api_indexing.py` | `api_endpoints` (the 4-framework HTTP route surface) | `BAAI/bge-large-en-v1.5` |
+| 6 | `filesystem_indexing` | `filesystem_indexing.py` | `filesystem_layout` (depth 1-4 dirs) | `BAAI/bge-large-en-v1.5` |
+| 7 | `storage_indexing` | `storage_indexing.py` | `storage_backends` (9 backend kinds) | `BAAI/bge-large-en-v1.5` |
+| 8 | `config_indexing` | `config_indexing.py` | `config_files` (12 config kinds) | `BAAI/bge-large-en-v1.5` |
+| 9 | `unified_embedding` | `unified_embedding.py` | `unified_embeddings` (DuckDB source) | `BAAI/bge-large-en-v1.5` |
+| 10 | `code_embeddings` | `unified_embedding.py` | `code_embeddings` (LocalFile source) | `BAAI/bge-large-en-v1.5` |
+| 11 | `docs_skills_consolidation` | `docs_skills_consolidation.py` | `docs_skills` (BAML-driven extraction → LanceDB + FalkorDB) | `BAAI/bge-large-en-v1.5` |
+| 12 | `culture_heritage_embedding` | `culture_heritage_embedding.py` | `culture_heritage_chunks` | `BAAI/bge-large-en-v1.5` |
+| 13 | `upstream_blog_monitor` | `upstream_blog_monitor.py` | `upstream_blog_chunks` (NEW 2026-06) | `BAAI/bge-large-en-v1.5` |
+| 14 | `upstream_api_surface` | `upstream_api_surface.py` | (FalkorDB-only graph publish) (NEW 2026-06) | `BAAI/bge-large-en-v1.5` |
+| - | `cocoindex_v1_conformance` | `cocoindex_v1_conformance.py` | `conformance_check_history` (NEW 2026-06) | n/a (linter) |
 
-The 11 Apps are all `coco.App` instances with `@coco.lifespan` +
+The 14 Apps are all `coco.App` instances with `@coco.lifespan` +
 `@coco.fn` decorators (per the canonical v1 pattern).
+
+**Embedder model note**: as of 2026-06, the value actually exported by
+`sruth/oideachais/cocoindex_flows/_lifespan.py:70` is
+`BAAI/bge-large-en-v1.5` (English-only, 1024-dim). Several docstrings
+claim `BAAI/bge-m3` (multilingual, 1024-dim). Both are 1024-dim so the
+discrepancy is latent, but `BAAI/bge-large-en-v1.5` is the canonical
+value. Apps whose docstring claim `bge-m3` will be updated in a
+follow-up openspec change.
 
 ## The canonical v1 pattern (the 6-field shape)
 
@@ -287,6 +304,86 @@ the oideachais-STATUS.md.
 | The App hangs on startup | The `@coco.lifespan` is missing the `yield` | Add `yield` at the end of the lifespan function |
 | The IDs are unstable across re-materialisations | The `IdGenerator` is not used | Use `await id_gen.next_id(chunk.text)` instead of `uuid.uuid4()` |
 | The HNSW index is slow on bulk inserts | The index is being created at insert time | Drop the index, insert, recreate the index (the canonical 50-row threshold) |
+| `cocoindex_v1_conformance` reports `R1 FAIL — no shared_lifespan import` | The App has its own `@coco.lifespan` instead of delegating | Import `shared_lifespan` from `._lifespan` and delegate (REFACTORING.md item 12) |
+| `cocoindex_v1_conformance` reports `R2 FAIL` | The App declared a non-canonical ContextKey without an `# R2-exempt:` comment | Add the `# R2-exempt: <reason>` comment OR remove the ContextKey declaration in favour of the canonical one |
+| `cocoindex_v1_conformance` reports `R3 FAIL` | The `coco.App(...)` is inside a function body | Move the `coco.App(...)` construction to module scope |
+| `cocoindex_v1_conformance` reports `R4 FAIL` | No `@coco.fn(` decorator | Add `@coco.fn(memo=True)` to the processing function |
+
+## The 4-rule conformance contract (NEW 2026-06)
+
+`cocoindex_v1_conformance.py` is the 14th v1 App. It's a static AST
+linter that checks every other v1 App against 4 rules:
+
+- **R1** — `from ._lifespan import shared_lifespan` (delegates to the
+  canonical shared lifespan).
+- **R2** — Either imports the canonical ContextKeys (`LANCE_DB`,
+  `EMBEDDER`, `RESOLVED_FILE_REGISTRY`) from `._lifespan`, OR
+  declares additional ones with a sibling `# R2-exempt: <reason>`
+  comment on the line above.
+- **R3** — `coco.App(...)` is at module scope (NOT inside a function
+  body or class definition).
+- **R4** — At least one `@coco.fn(` decorator (for processing
+  functions).
+
+Run it via:
+
+```bash
+mise run upstream:conformance
+# or equivalently:
+uv run python -c 'import asyncio; from sruth.oideachais.cocoindex_flows.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary())'
+```
+
+The Dagster asset `cocoindex_v1_conformance_check`
+(`sruth/oideachais/dagster_defs/assets/upstream_monitoring_assets.py`)
+runs this on every materialisation and writes a
+`conformance_check_history` row to LanceDB so we can detect regressions
+in CI.
+
+## The shared lifespan (REFACTORING.md item 12)
+
+Every v1 App MUST import `shared_lifespan` from
+`sruth/oideachais/cocoindex_flows/_lifespan.py` and delegate to it
+inside its own `@coco.lifespan` function:
+
+```python
+from ._lifespan import (
+    EMBEDDER,
+    LANCE_DB,
+    LANCEDB_URI,
+    EMBED_MODEL,
+    EMBED_DIM,
+    RESOLVED_FILE_REGISTRY,
+    shared_lifespan,
+)
+
+@coco.lifespan
+async def my_app_lifespan(builder: coco.EnvironmentBuilder) -> AsyncIterator[None]:
+    async with shared_lifespan(builder):
+        # Only add App-specific ContextKeys here. The shared lifespan
+        # provides LANCE_DB + EMBEDDER + RESOLVED_FILE_REGISTRY.
+        if COCOINDEX_AVAILABLE:
+            # R2-exempt: KG_DB is bound to the <my_app>_graph FalkorDB
+            # graph, which is App-specific (this App declares <MyNode>
+            # schemas that only this App uses). Sharing it across Apps
+            # would couple this surface to others.
+            builder.provide(KG_DB, falkordb.ConnectionFactory(...))
+        yield
+```
+
+**What `_lifespan.py` provides** (the canonical home for the 3
+ContextKeys):
+
+- `LANCE_DB` — `coco.ContextKey[lancedb.LanceAsyncConnection]`
+- `EMBEDDER` — `coco.ContextKey[SentenceTransformerEmbedder]`
+- `RESOLVED_FILE_REGISTRY` — the dict of `{source_path: sha256}`
+  keys used by the file-graph Apps
+
+Plus 3 module-level constants (`LANCEDB_URI`, `EMBED_MODEL`,
+`EMBED_DIM`) that every App reads via `from ._lifespan import ...`.
+
+The `cocoindex_v1_conformance` linter enforces that every App
+delegates to this shared lifespan (R1) and that additional
+ContextKeys are flagged as `# R2-exempt` (R2).
 
 ## Cross-references
 
