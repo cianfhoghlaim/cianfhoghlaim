@@ -16,8 +16,8 @@ UK sources with caching fallback.
   meaisinfhoghlaim-agent-frameworks, meaisinfhoghlaim-ocr-htr) AND
   the 1 tuatha-platform spec AND the 3 croilar-* specs
   (croilar-portfolio, croilar-data-engineering, croilar-cv-extraction)
-- **AND** the 4 quadrant AGENTS.md files (oideachais/AGENTS.md,
-  meaisinfhoghlaim/AGENTS.md, tuatha/AGENTS.md, croilar/AGENTS.md)
+- **AND** the 4 quadrant AGENTS.md files (sruth/oideachais/AGENTS.md,
+  sruth/meaisinfhoghlaim/AGENTS.md, sruth/tuatha/AGENTS.md, sruth/croilar/AGENTS.md)
   are linked from the spec's Cross-references section
 
 #### Scenario: References the right AGENTS.md / README / STATUS
@@ -25,6 +25,6 @@ UK sources with caching fallback.
 - **GIVEN** the openspec change `openspec-consolidation-and-readme-refresh`
   is archived
 - **WHEN** a developer navigates to the pipeline
-- **THEN** the canonical `oideachais/AGENTS.md`,
-  `oideachais/STATUS.md`, `oideachais/REFACTORING.md`, and the 4
+- **THEN** the canonical `sruth/oideachais/AGENTS.md`,
+  `sruth/oideachais/STATUS.md`, `sruth/oideachais/REFACTORING.md`, and the 4
   quadrant READMEs are linked from the spec

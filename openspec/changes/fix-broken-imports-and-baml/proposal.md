@@ -10,7 +10,7 @@ direct file inspection:
 The file imports `from oideachais.http_utils import HttpClientFactory`,
 but `oideachais.http_utils` was removed in commit `8484a6353`. The
 canonical client factory lives at
-`oideachais/dlt_sources/common/_http_factories.py:HttpClientFactory`.
+`sruth/oideachais/dlt_sources/common/_http_factories.py:HttpClientFactory`.
 The `ireland/__init__.py` import chain is wrapped in `try/except`, so
 the package-level import of `ireland.edcolearning` fails silently
 (see Dagster `ireland_edcolearning_import_skipped` warning at
@@ -37,7 +37,7 @@ The canonical clients in `baml_src/clients.baml` are:
 The `ExtractLeavingCertSyllabus` / `ExtractPastPaper` /
 `ExtractMarkingScheme` (LC) functions are the **canonical** extraction
 surface for the `leaving_cert_2026` openspec change (per
-`oideachais/AGENTS.md:60` and the `leaving-cert-2026` change proposal).
+`sruth/oideachais/AGENTS.md:60` and the `leaving-cert-2026` change proposal).
 They must work.
 
 ### 3. `baml_src/site_analysis.baml` is missing `ClassifyOfficialMedia`
@@ -48,19 +48,19 @@ file has 0 functions (4 classes only). The official-media classifier
 asset silently no-ops in production.
 
 ### 4. Three `from oideachais.core import X` imports remain
-Per the Phase-3.6 migration shim (`oideachais/oideachais/__init__.py:1-21`),
+Per the Phase-3.6 migration shim (`sruth/oideachais/sruth/oideachais/__init__.py:1-21`),
 the canonical locations for the 2 surviving constants are
 `dlt_utils/batching.py` and `dlt_utils/safety.py`. The shim is still
 imported by:
 
 | File | Line | Symbol |
 |---|--:|---|
-| `oideachais/dlt_utils/batching.py` | 34 | `HNSW_DROP_THRESHOLD` |
-| `oideachais/dlt_utils/safety.py` | 20 | `get_executor` |
+| `sruth/oideachais/dlt_utils/batching.py` | 34 | `HNSW_DROP_THRESHOLD` |
+| `sruth/oideachais/dlt_utils/safety.py` | 20 | `get_executor` |
 
 These 2 are the only `from oideachais.core import X` imports
 remaining in the quadrant (the third reference at
-`oideachais/oideachais/core/__init__.py:6` is the shim's own
+`sruth/oideachais/sruth/oideachais/core/__init__.py:6` is the shim's own
 docstring). Migrating them lets us delete the shim.
 
 ### 5. Missing `Extractor` client declarations in 5 BAML files
@@ -83,7 +83,7 @@ The fix is to add a single canonical `Extractor` client declaration
 to `baml_src/clients.baml` (the canonical client registry).
 
 ### 6. `agentic_discovery.py` — `AgenticCrawler` class is missing
-`oideachais/dagster_defs/resources.py:264` imports
+`sruth/oideachais/dagster_defs/resources.py:264` imports
 `from ..dlt_sources.ireland.agentic_discovery import AgenticCrawler`,
 but the class is not defined in `agentic_discovery.py` (only
 `agentic_discovery_source` and `deep_research_source` are). The
@@ -92,7 +92,7 @@ import will fail at materialisation time when the
 openspec change — the resource is not currently used by any asset.)
 
 ### 7. `leabharlann_full_stack_demo` — 4 missing asset_check functions
-`oideachais/dagster_defs/definitions.py:198-202` imports 5 names
+`sruth/oideachais/dagster_defs/definitions.py:198-202` imports 5 names
 from `assets.leabharlann_full_stack_demo` but the file only defines
 1 (`leabharlann_full_stack_demo`). The 4 missing are:
 - `leabharlann_full_stack_demo_uog_extracted`
@@ -138,7 +138,7 @@ deferred to a follow-up change.
   → `from oideachais.oideachais.core import get_executor`
   (or migrate the function to `dlt_utils/safety.py` directly)
 
-  The shim at `oideachais/oideachais/core/__init__.py` defines the
+  The shim at `sruth/oideachais/sruth/oideachais/core/__init__.py` defines the
   constants inline; the canonical values are `HNSW_DROP_THRESHOLD = 50`
   and `get_executor(name="duckdb")` returning `ThreadPoolExecutor(max_workers=1)`.
   We migrate the **canonical definitions** into `dlt_utils/batching.py`
@@ -164,16 +164,16 @@ deferred to a follow-up change.
 ## Impact
 
 ### Affected files
-- **Modified:** `oideachais/dlt_sources/ireland/edcolearning.py` (1 import line)
-- **Modified:** `oideachais/baml_src/leaving_cert_marking_scheme_extraction.baml` (1 line)
-- **Modified:** `oideachais/baml_src/leaving_cert_past_paper_extraction.baml` (1 line)
-- **Modified:** `oideachais/baml_src/leaving_cert_syllabus_extraction.baml` (1 line)
-- **Modified:** `oideachais/baml_src/curriculum_extraction.baml` (1 line)
-- **Modified:** `oideachais/baml_src/site_analysis.baml` (+ 1 function definition)
-- **Modified:** `oideachais/baml_src/clients.baml` (+ 1 `Extractor` client declaration)
-- **Modified:** `oideachais/baml_src/ocr_validation.baml` (- 1 redundant declaration)
-- **Modified:** `oideachais/dlt_utils/batching.py` (migrate 1 import, add 1 constant)
-- **Modified:** `oideachais/dlt_utils/safety.py` (migrate 1 import, add 1 function)
+- **Modified:** `sruth/oideachais/dlt_sources/ireland/edcolearning.py` (1 import line)
+- **Modified:** `sruth/oideachais/baml_src/leaving_cert_marking_scheme_extraction.baml` (1 line)
+- **Modified:** `sruth/oideachais/baml_src/leaving_cert_past_paper_extraction.baml` (1 line)
+- **Modified:** `sruth/oideachais/baml_src/leaving_cert_syllabus_extraction.baml` (1 line)
+- **Modified:** `sruth/oideachais/baml_src/curriculum_extraction.baml` (1 line)
+- **Modified:** `sruth/oideachais/baml_src/site_analysis.baml` (+ 1 function definition)
+- **Modified:** `sruth/oideachais/baml_src/clients.baml` (+ 1 `Extractor` client declaration)
+- **Modified:** `sruth/oideachais/baml_src/ocr_validation.baml` (- 1 redundant declaration)
+- **Modified:** `sruth/oideachais/dlt_utils/batching.py` (migrate 1 import, add 1 constant)
+- **Modified:** `sruth/oideachais/dlt_utils/safety.py` (migrate 1 import, add 1 function)
 
 ### Affected specs
 - MODIFIED `oideachais-pipeline` — the rule that the canonical
@@ -185,7 +185,7 @@ deferred to a follow-up change.
   registry.
 
 ### Backward compatibility
-- The `oideachais/oideachais/core/` shim is preserved as a
+- The `sruth/oideachais/sruth/oideachais/core/` shim is preserved as a
   backward-compat re-export for one release.
 - All 4 leaving_cert_*_extraction.baml function signatures are
   unchanged; only the `client` name is corrected.
@@ -222,7 +222,7 @@ deferred to a follow-up change.
 ## Validation
 
 1. `from oideachais.dlt_sources.ireland.edcolearning import edcolearning_source` succeeds (no `ImportError`)
-2. `baml-cli generate` succeeds for `oideachais/baml_src/` (no `client litellm` errors)
+2. `baml-cli generate` succeeds for `sruth/oideachais/baml_src/` (no `client litellm` errors)
 3. `from oideachais.baml_src.site_analysis import SiteAnalysis` (no missing `ClassifyOfficialMedia` error at import time)
 4. `uv run --package oideachais python -c "from oideachais.dlt_utils import EmbeddingBatcher"` still works
 5. `uv run --package oideachais python -c "import dagster_defs.definitions"` still loads (pre-existing `leabharlann_full_stack_demo` warning unchanged)

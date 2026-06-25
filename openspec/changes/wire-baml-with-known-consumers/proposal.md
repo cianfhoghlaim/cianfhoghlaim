@@ -2,7 +2,7 @@
 
 ## Why
 
-Of the 30+ BAML functions defined in `oideachais/baml_src/`, several
+Of the 30+ BAML functions defined in `sruth/oideachais/baml_src/`, several
 have known downstream consumers but are not currently invoked. The
 6 orphans that have known consumers per the explore agent's audit
 (`STATUS.md:35` and the codebase) are:
@@ -71,10 +71,10 @@ into a per-stage `ie.education.aistear` DuckLake dataset. Computes:
 ## Impact
 
 ### Affected files
-- **NEW:** `oideachais/baml_src/early_childhood.baml` (~80 lines)
-- **MODIFIED:** `oideachais/dlt_sources/ireland/aistear.py` (~50 lines added: BAML call + 2 new resources)
-- **NEW:** `oideachais/dagster_defs/assets/ie/education/aistear_dlt_assets.py` (~80 lines)
-- **MODIFIED:** `oideachais/dagster_defs/assets/__init__.py` (register the 3 new assets)
+- **NEW:** `sruth/oideachais/baml_src/early_childhood.baml` (~80 lines)
+- **MODIFIED:** `sruth/oideachais/dlt_sources/ireland/aistear.py` (~50 lines added: BAML call + 2 new resources)
+- **NEW:** `sruth/oideachais/dagster_defs/assets/ie/education/aistear_dlt_assets.py` (~80 lines)
+- **MODIFIED:** `sruth/oideachais/dagster_defs/assets/__init__.py` (register the 3 new assets)
 
 ### Affected specs
 - MODIFIED `oideachais-baml-schemas` — the rule that BAML functions

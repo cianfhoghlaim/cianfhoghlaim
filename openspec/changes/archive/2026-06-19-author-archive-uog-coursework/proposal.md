@@ -36,7 +36,7 @@ This change adds:
 
 - 5 new BAML functions in `baml_src/author_archive.baml` (one per
   module, all returning the new `UoGModuleExtraction` class)
-- 5 new DLT sources under `oideachais/dlt_sources/author_archive/`
+- 5 new DLT sources under `sruth/oideachais/dlt_sources/author_archive/`
   (`olscoil_mata.py`, `olscoil_software.py`, `olscoil_irish.py`,
   `olscoil_education.py`, `personal_records.py`)
 - 10 new Dagster assets (5 modules × 2 resources: `_raw` for
@@ -55,15 +55,15 @@ This change adds:
   `ExtractPersonalRecord`) + 4 new types (`UoGSubject`,
   `UoGDocumentKind`, `UoGModuleExtraction`).
 
-- `oideachais/dlt_sources/author_archive/olscoil_*.py` (5 new files):
+- `sruth/oideachais/dlt_sources/author_archive/olscoil_*.py` (5 new files):
   per-module DLT sources, each with a `_documents` and `_extraction`
   resource.
 
-- `oideachais/dagster_defs/assets/official_media/uog_coursework_assets.py`:
+- `sruth/oideachais/dagster_defs/assets/official_media/uog_coursework_assets.py`:
   10 new Dagster assets (5 modules × 2 resources).
 
-- `oideachais/dagster_defs/assets/official_media/__init__.py` +
-  `oideachais/dagster_defs/assets/__init__.py`: re-export the 10
+- `sruth/oideachais/dagster_defs/assets/official_media/__init__.py` +
+  `sruth/oideachais/dagster_defs/assets/__init__.py`: re-export the 10
   new assets and add them to `all_assets`.
 
 ### Spec deltas

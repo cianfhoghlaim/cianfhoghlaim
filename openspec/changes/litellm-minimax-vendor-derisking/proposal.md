@@ -12,7 +12,7 @@
 Before this change, every BAML function and opencode subagent that
 wanted MiniMax-M3 hit one of two paths:
 
-1. The **direct path** — `oideachais/baml_src/clients.baml::MiniMaxClient`
+1. The **direct path** — `sruth/oideachais/baml_src/clients.baml::MiniMaxClient`
    pointed straight at `https://opencode.ai/zen/go/v1/messages` with
    a single `OPENCODE_GO_API_KEY`. No fallback. If the gateway
    changes terms, the key expires, the cap model shifts, or the
@@ -76,7 +76,7 @@ points at the gateway alias `minimax` (via `LITELLM_BASE_URL` +
 `LITELLM_MASTER_KEY`). This is the recommended client for any BAML
 function that wants M3 with vendor-de-risking.
 
-**`oideachais/baml_src/clients.baml::MiniMaxClient`** is rewired
+**`sruth/oideachais/baml_src/clients.baml::MiniMaxClient`** is rewired
 from "direct to opencode-go gateway with single key" to "via
 gateway alias `minimax`" (same change). The single-key version is
 preserved in git history for rollback.
@@ -102,7 +102,7 @@ key with no fallback.
 
 ### 5. Dagster: `minimax_alias_liveliness` asset + `minimax_alias_health` check
 
-New file `oideachais/dagster_defs/assets/llm_gateway_assets.py`
+New file `sruth/oideachais/dagster_defs/assets/llm_gateway_assets.py`
 provides:
 
 - `@asset(group_name="llm_gateway", compute_kind="litellm")` —
@@ -113,7 +113,7 @@ provides:
 - `@asset_check(asset=...)` — `minimax_alias_health` — returns
   `AssetCheckResult(passed=...)` based on: gateway is live AND the
   `minimax` alias is registered AND its `fallback_chain` has ≥ 1
-  entry. Wired into `oideachais/dagster_defs/asset_checks.py` as
+  entry. Wired into `sruth/oideachais/dagster_defs/asset_checks.py` as
   part of `all_asset_checks`.
 
 ### 6. OpenSpec change artifacts
@@ -138,11 +138,11 @@ provides:
     references)
   - `infrastructure/stacks/litellm/README.md` (env-var table)
   - `baml_src/clients.baml` (1 new client)
-  - `oideachais/baml_src/clients.baml` (1 client re-wired)
+  - `sruth/oideachais/baml_src/clients.baml` (1 client re-wired)
   - `opencode.json` (1 new provider, 4 agents re-pointed)
-  - `oideachais/dagster_defs/assets/llm_gateway_assets.py` (new)
-  - `oideachais/dagster_defs/assets/__init__.py` (import + register)
-  - `oideachais/dagster_defs/asset_checks.py` (register the check)
+  - `sruth/oideachais/dagster_defs/assets/llm_gateway_assets.py` (new)
+  - `sruth/oideachais/dagster_defs/assets/__init__.py` (import + register)
+  - `sruth/oideachais/dagster_defs/asset_checks.py` (register the check)
   - `.infisical.env` (3 new vault entries)
 - **Affected agent skills:** `.agents/skills/litellm/SKILL.md` —
   add a "MiniMax-M3 vendor-de-risking" section.

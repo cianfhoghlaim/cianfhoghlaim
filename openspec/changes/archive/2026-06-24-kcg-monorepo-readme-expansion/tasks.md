@@ -6,13 +6,13 @@
   end-to-end deploy playbook (preserves the 655 lines)
 - [x] 1.2 `infrastructure/README.md` — add the 6 sections
   (preserves the 386 lines)
-- [x] 1.3 `oideachais/README.md` — add the 6 sections
+- [x] 1.3 `sruth/oideachais/README.md` — add the 6 sections
   (preserves the 674 lines)
-- [x] 1.4 `meaisinfhoghlaim/README.md` — add the 6 sections
+- [x] 1.4 `sruth/meaisinfhoghlaim/README.md` — add the 6 sections
   (preserves the 525 lines)
-- [x] 1.5 `tuatha/README.md` — add the 6 sections
+- [x] 1.5 `sruth/tuatha/README.md` — add the 6 sections
   (preserves the 834 lines)
-- [x] 1.6 `croilar/README.md` — add the 6 sections
+- [x] 1.6 `sruth/croilar/README.md` — add the 6 sections
   (preserves the 819 lines)
 - [x] 1.7 `spaces/README.md` — add the 6 sections
   (preserves the 157 lines)

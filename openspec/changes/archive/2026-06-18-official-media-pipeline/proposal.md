@@ -78,7 +78,7 @@ authority.
 ### 2. New openspec capability `official-media-fediverse`
 
 Independent of (1), a small library at
-`oideachais/dlt_sources/official_media/fediverse.py` that:
+`sruth/oideachais/dlt_sources/official_media/fediverse.py` that:
 
 - Resolves a Mastodon handle (`@user@host`) via webfinger
   (`https://host/.well-known/webfinger?resource=acct:user@host`).
@@ -93,8 +93,8 @@ side-loadable-app phase.
 ### 3. New openspec capability `official-media-marimo`
 
 A new marimo notebook at
-`oideachais/notebooks/dashboards/official_media.py` plus a TanStack Start
-route at `oideachais/web/src/routes/official-media/index.tsx` plus a
+`sruth/oideachais/notebooks/dashboards/official_media.py` plus a TanStack Start
+route at `sruth/oideachais/web/src/routes/official-media/index.tsx` plus a
 Cognee dataset `oideachais_official_media` with the edge types:
 
 - `ig_profile → official_website` (via Wikipedia or override)
@@ -142,7 +142,7 @@ Per `AGENTS.md` "Critical Agent Protocols":
 - **BAML must call `client LiteLLM`** — the new
   `ClassifyOfficialMedia` function uses the existing `extract` alias.
 - **All assets group-tagged `official_media`** — matches the convention
-  in `oideachais/dagster_defs/assets/site_analysis/extract.py`.
+  in `sruth/oideachais/dagster_defs/assets/site_analysis/extract.py`.
 - **Every DLT resource declares `write_disposition` and `primary_key`** —
   matches the `site_analysis_source()` pattern.
 
@@ -151,7 +151,7 @@ Per `AGENTS.md` "Critical Agent Protocols":
 1. `openspec validate official-media-pipeline --strict` — must pass
    before any code lands.
 2. `mise turbo lint && mise turbo typecheck` — must pass.
-3. `uv run pytest -q oideachais/tests/official_media/` — must pass with
+3. `uv run pytest -q sruth/oideachais/tests/official_media/` — must pass with
    `USE_LOCAL_SCRAPES=true` and `USE_LIVE_LOOKUPS=false`.
 4. `uv run dagster dev -m data_platform.dagster_defs.definitions` —
    confirm 5 new assets appear in the UI under group `official_media`.
@@ -161,18 +161,18 @@ Per `AGENTS.md` "Critical Agent Protocols":
 
 ## Cross-References
 
-- [`oideachais/AGENTS.md`](../../oideachais/AGENTS.md) — the quadrant
+- [`sruth/oideachais/AGENTS.md`](../../sruth/oideachais/AGENTS.md) — the quadrant
   routing for adding a new domain
 - [`openspec/AGENTS.md`](../AGENTS.md) — the openspec workflow
-- [`oideachais/sources.yaml`](../../oideachais/sources.yaml) — the
+- [`sruth/oideachais/sources.yaml`](../../sruth/oideachais/sources.yaml) — the
   canonical source registry we are extending
-- [`oideachais/dlt_sources/domains/site_analysis.py`](../../oideachais/dlt_sources/domains/site_analysis.py)
+- [`sruth/oideachais/dlt_sources/domains/site_analysis.py`](../../sruth/oideachais/dlt_sources/domains/site_analysis.py)
   — the closest-pattern existing source (iterates `sources.yaml` + emits
   DLT rows + groups as Dagster asset)
-- [`oideachais/site_analysis/extractor.py`](../../oideachais/site_analysis/extractor.py)
+- [`sruth/oideachais/site_analysis/extractor.py`](../../sruth/oideachais/site_analysis/extractor.py)
   — the firecrawl/browserbase JSON-RPC pattern we mirror for the
   source-resolver
-- [`oideachais/agents/adk/callbacks/citation_callbacks.py:287-332`](../../oideachais/agents/adk/callbacks/citation_callbacks.py)
+- [`sruth/oideachais/agents/adk/callbacks/citation_callbacks.py:287-332`](../../sruth/oideachais/agents/adk/callbacks/citation_callbacks.py)
   — the existing gov-domain classification we extend with the
   `official_media` bucket
 - [`.agents/skills/dlt/SKILL.md`](../../../.agents/skills/dlt/SKILL.md) —

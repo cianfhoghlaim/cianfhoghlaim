@@ -29,7 +29,7 @@ canonical observability logger is at
 #### Scenario: A developer runs the test suite
 
 - **GIVEN** the 13 source files have been migrated
-- **WHEN** `uv run pytest meaisinfhoghlaim/tests/` runs
+- **WHEN** `uv run pytest sruth/meaisinfhoghlaim/tests/` runs
 - **THEN** no `ModuleNotFoundError: No module named 'sruth'`
   exception is raised
 - **AND** all 22 tests pass (the 3 test files: test_ensemble_gradio,
@@ -39,10 +39,10 @@ canonical observability logger is at
 
 ### Requirement: Agent + OCR thin-shim canonicalisation
 
-The system SHALL canonicalise the `oideachais/agents/{adk,agno}/`
-and `oideachais/ocr/` directories as **thin re-exports** of the
-model-layer agents + OCR modules in `meaisinfhoghlaim/agents/` +
-`meaisinfhoghlaim/ocr/`. The 12 ADK agents (root_agent,
+The system SHALL canonicalise the `sruth/oideachais/agents/{adk,agno}/`
+and `sruth/oideachais/ocr/` directories as **thin re-exports** of the
+model-layer agents + OCR modules in `sruth/meaisinfhoghlaim/agents/` +
+`sruth/meaisinfhoghlaim/ocr/`. The 12 ADK agents (root_agent,
 curriculum_agent, translation_agent, corpus_agent,
 research_agent, education_research_agent,
 bunchloch_research_agent, geospatial_agent,
@@ -58,15 +58,15 @@ The system SHALL keep the 5 tuatha-specific agents
 (celtic_tutor_agent, mythology_narrator_agent,
 quest_guide_agent, research_assistant_agent, tuatha_root_agent)
 and the 1 leabharlann-specific OCR file
-(`oideachais/ocr/author_archive_ocr.py`) as real code (they
+(`sruth/oideachais/ocr/author_archive_ocr.py`) as real code (they
 are domain-specific, not duplicates).
 
 #### Scenario: A consumer imports the same agent via both paths
 
 - **GIVEN** the canonical agent lives at
-  `meaisinfhoghlaim/agents/curriculum_agent.py`
+  `sruth/meaisinfhoghlaim/agents/curriculum_agent.py`
 - **AND** the thin-shim re-exports it at
-  `oideachais/agents/adk/curriculum_agent.py`
+  `sruth/oideachais/agents/adk/curriculum_agent.py`
 - **WHEN** a consumer does
   `from oideachais.agents.adk.curriculum_agent import curriculum_agent`
 - **THEN** the imported `curriculum_agent` is the **same object**

@@ -4,11 +4,11 @@
 
 ### Requirement: CopilotKit Runtime (server-side)
 
-The system SHALL serve the CopilotKit AG-UI runtime from `oideachais/web/apps/api` at the `/api/copilotkit` path, streaming AG-UI events to the SPA via SSE.
+The system SHALL serve the CopilotKit AG-UI runtime from `sruth/oideachais/web/apps/api` at the `/api/copilotkit` path, streaming AG-UI events to the SPA via SSE.
 
 #### Scenario: Runtime Mounted
-- **GIVEN** `oideachais/web/apps/api/src/copilotkit/runtime.ts`
-- **WHEN** `oideachais/web/apps/api/src/index.ts` is read
+- **GIVEN** `sruth/oideachais/web/apps/api/src/copilotkit/runtime.ts`
+- **WHEN** `sruth/oideachais/web/apps/api/src/index.ts` is read
 - **THEN** the Hono app mounts the runtime at `/api/copilotkit/*`
 - **AND** the SPA's `<CopilotKit runtimeUrl="/api/copilotkit">` is now functional
 - **AND** the runtime forwards requests to the Agno stage team resolved by `?stage=...&subject=...&language=...` query params
@@ -17,7 +17,7 @@ The system SHALL serve the CopilotKit AG-UI runtime from `oideachais/web/apps/ap
 - **GIVEN** a user message from the SPA
 - **WHEN** the runtime processes it
 - **THEN** the Agno `team.run(stream=True, ...)` is invoked
-- **AND** the response is wrapped in the 5 AG-UI event types: `text`, `tool_call`, `tool_result`, `agent_handoff`, `done` (per `docs/tuatha/AGENTS.md`)
+- **AND** the response is wrapped in the 5 AG-UI event types: `text`, `tool_call`, `tool_result`, `agent_handoff`, `done` (per `docs/sruth/tuatha/AGENTS.md`)
 - **AND** the events are streamed back to the SPA via SSE with the right Content-Type headers
 
 #### Scenario: Stage Routing
@@ -29,7 +29,7 @@ The system SHALL serve the CopilotKit AG-UI runtime from `oideachais/web/apps/ap
 ## ADDED Requirements
 
 ### Requirement: Hono oRPC Endpoints per Stage
-The system SHALL provide 13 new oRPC procedures in `oideachais/web/apps/api/src/routers/`.
+The system SHALL provide 13 new oRPC procedures in `sruth/oideachais/web/apps/api/src/routers/`.
 
 #### Scenario: Per-Stage Routers
 - **GIVEN** the new `apps/api/src/routers/` directory

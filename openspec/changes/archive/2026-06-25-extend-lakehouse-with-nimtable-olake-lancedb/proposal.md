@@ -6,10 +6,10 @@ The Cianfhoghlaim dev lakehouse (`infrastructure/stacks/lakehouse/`)
 already provides 5 over-engineered services — Garage S3, Postgres,
 Lakekeeper REST catalog, Lance namespace FastAPI sidecar, and the
 Locket secret-injector — and is correctly wired into
-`oideachais/compose.yaml` (line 104: `lakehouse_lakehouse` external
+`sruth/oideachais/compose.yaml` (line 104: `lakehouse_lakehouse` external
 network; line 156: `LANCEDB_URI=rest://lakehouse-lance-namespace:8182`).
 The canonical DuckLake-with-namespace pattern lives at
-`oideachais/dlt_utils/destinations.py:289`
+`sruth/oideachais/dlt_utils/destinations.py:289`
 (`with_namespace()` factory), and 5 of 6 srutha databases
 (`ducklake_oideachais`, `ducklake_crypteolas`, `ducklake_aleyum`,
 `ducklake_croilar`, `ducklake_tuath`) already exist in
@@ -181,7 +181,7 @@ by automated tests that import from them).
   (now mandates that every active srutha uses
   `rest://lakehouse-lance-namespace:8182` for LanceDB and a
   `ducklake_{namespace}` DB for DuckLake, with
-  `oideachais/dlt_utils/destinations.py:with_namespace()` as the
+  `sruth/oideachais/dlt_utils/destinations.py:with_namespace()` as the
   canonical factory).
 - **ADDED** `infrastructure-stacks` — `Lakehouse Iceberg Catalog UI`
   requirement (Nimtable at `nimtable.cianfhoghlaim.ie:3018`).

@@ -135,7 +135,7 @@ Query (TanStack Start front-end at oideachais.cianfhoghlaim.ie)
 ```
 
 The 5 stages map to 3 Dagster asset groups (in
-`oideachais/dagster_defs/`):
+`sruth/oideachais/dagster_defs/`):
 
 | Stage | Dagster asset group | Example assets |
 |:--|:--|:--|
@@ -144,7 +144,7 @@ The 5 stages map to 3 Dagster asset groups (in
 | 3, 4, 5 | `cognify_graph_assets` | `cognee_cognify_ncca`, `graphiti_circular_temporal`, `lancedb_index_publish` |
 
 The exact asset names live in
-`oideachais/dagster_defs/assets/`. The grouping mirrors the
+`sruth/oideachais/dagster_defs/assets/`. The grouping mirrors the
 leabharlann pipeline (7 leabharlann + 7 author-archive + 18
 ireland + 16 UK + 8 crown_dependencies assets = 56 total
 across 7 groups).
@@ -174,7 +174,7 @@ fallback is per-call, not per-session.
 | FalkorDB | `https://falkordb.cianfhoghlaim.ie:6379` |
 | Memgraph | `https://memgraph.cianfhoghlaim.ie:7687` |
 | MotherDuck | `md:oideachais` (read-only) |
-| TanStack Start (oideachais/web) | `https://oideachais.cianfhoghlaim.ie` |
+| TanStack Start (sruth/oideachais/web) | `https://oideachais.cianfhoghlaim.ie` |
 
 ## References (in this skill)
 
@@ -293,9 +293,9 @@ fallback is per-call, not per-session.
   Scottish Gaelic / Welsh).
 - `.agents/skills/tts/SKILL.md` — the TTS stack
   (Chatterbox / MMS-TTS / Piper).
-- `oideachais/STATUS.md` — pipeline state (single source of
+- `sruth/oideachais/STATUS.md` — pipeline state (single source of
   truth).
-- `oideachais/REFACTORING.md` — refactor backlog.
+- `sruth/oideachais/REFACTORING.md` — refactor backlog.
 
 ## Frontend idea catalog (design mining) (round-9 deep dive)
 
@@ -303,7 +303,7 @@ The `references/frontend-design-mining.md` reference
 (457 lines) establishes the canonical pipeline for
 cataloging UI/UX patterns from best-in-class Celtic and
 educational products. It's the **input stage** to
-designing the Tuatha MMO, `oideachais/web` curriculum
+designing the Tuatha MMO, `sruth/oideachais/web` curriculum
 viewer, and the crypteolas dashboards.
 
 ### The 3-stage mining pipeline
@@ -370,10 +370,10 @@ the design catalog.
 The mined catalog drives the **Celtic design tokens** in
 the `ui-components` skill (see `references/sruth-ui-inspiration.md`):
 
-- MotherDuck → `crypteolas/` analytics, `aleyum/` monitoring
-- PostHog (Lemon UI) → `oideachais/` dashboards
+- MotherDuck → `sruth/crypteolas/` analytics, `aleyum/` monitoring
+- PostHog (Lemon UI) → `sruth/oideachais/` dashboards
 - Duolingo (streaks, snake path) → `tuath/` XP / quest progression
-- Khan Academy (mastery levels) → `oideachais/` curriculum
+- Khan Academy (mastery levels) → `sruth/oideachais/` curriculum
 - Hades (diegetic UI, chiaroscuro) → `tuath/` NPC dialogue
 - Clair Obscur (material library) → `tuath/` menu systems
 - World of Warcraft (semantic quest icons) → `tuath/` quest log
@@ -596,9 +596,9 @@ Cognee-clean frontmatter (`entities`, `related_skills`,
 
 | Path | Quadrant | Purpose | uv workspace |
 |:--|:--|:--|:--|
-| `oideachais/` | **Data lakehouse** | Dagster + DLT + DuckLake + LanceDB + Cognee + CocoIndex | member |
-| `tuatha/` | **Celtic MMO consumer** | FastAPI + Axum + Babylon.js + Crypteolas + x402 | member (+ 3 sub) |
-| `croilar/` | **Multi-persona portfolio** | TanStack + Hono + Convex + BetterAuth | member |
+| `sruth/oideachais/` | **Data lakehouse** | Dagster + DLT + DuckLake + LanceDB + Cognee + CocoIndex | member |
+| `sruth/tuatha/` | **Celtic MMO consumer** | FastAPI + Axum + Babylon.js + Crypteolas + x402 | member (+ 3 sub) |
+| `sruth/croilar/` | **Multi-persona portfolio** | TanStack + Hono + Convex + BetterAuth | member |
 | `meaisínfhoghlaim/` | **AI/ML quadrant** | agents, OCR, Celtic language data, ML pipelines | member (adopted 2026-06-13) |
 | `infrastructure/` | **Deploy** | Pangolin, Komodo, Forgejo, Infisical, Ansible, Pulumi | member (+ 1 sub) |
 
@@ -617,7 +617,7 @@ model → `storage-mental-model.md`; cross-domain registry
 → `cross-domain-registry.md`; Dagster →
 `dagster-orchestration.md`; DLT → `dlt-pipelines.md`;
 LLM stack → `04-ai-ml/llm-stack-hierarchy.md`; OCR →
-`oideachais/ocr/`; RAG eval → `04-ai-ml/rag-evaluation.md`;
+`sruth/oideachais/ocr/`; RAG eval → `04-ai-ml/rag-evaluation.md`;
 browser/agent → `03-agents/browser-automation.md`; MCP
 server → `03-agents/mcp-servers.md`; Celtic language AI
 → `05-celtic-language/`; Convex+Hono → `05-web/convex-hono-auth.md`;

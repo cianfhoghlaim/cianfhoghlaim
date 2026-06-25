@@ -8,7 +8,7 @@ The system SHALL use the upstream `dagster-ducklake` integration
 (`DuckLakeResource` from `docs/dagster/integrations/dagster-ducklake/`)
 as the canonical KCG lakehouse sink, with the resource config:
 
-- **Postgres catalog** at `oideachais/storage/ducklake_client.py`
+- **Postgres catalog** at `sruth/oideachais/storage/ducklake_client.py`
 - **Garage S3 object store** at the `ducklake` bucket
 - **`dg.EnvVar`** for all secrets (no hardcoded values)
 
@@ -63,14 +63,14 @@ DLT → Dagster parallel-asset factories, with:
 
 #### Scenario: Ireland curriculum DLT asset factory
 
-- **GIVEN** the 4+ `oideachais/dlt_sources/ireland/curriculum/*` REST
+- **GIVEN** the 4+ `sruth/oideachais/dlt_sources/ireland/curriculum/*` REST
   endpoints
 - **WHEN** the SourceFactory emits the corresponding Dagster assets
 - **THEN** 4+ parallel `@asset`s SHALL be registered in the
   `ireland/curriculum/` group
 - **AND** each asset SHALL be independently re-materialisable
 - **AND** the partition key SHALL be `language + subject` (the
-  `MultiPartitionsDefinition` already in `oideachais/dagster_defs/`)
+  `MultiPartitionsDefinition` already in `sruth/oideachais/dagster_defs/`)
 
 ### Requirement: SQLMesh ↔ Dagster translator pattern
 
@@ -83,7 +83,7 @@ assets to prevent key drift.
 #### Scenario: SQLMesh assets register
 
 - **GIVEN** a `SQLMeshResource` configured with the project at
-  `oideachais/dbt_project/` (or its SQLMesh equivalent)
+  `sruth/oideachais/dbt_project/` (or its SQLMesh equivalent)
 - **WHEN** the `@sqlmesh_assets` decorator is applied with the
   shared translator
 - **THEN** the SQLMesh models SHALL appear as Dagster assets

@@ -660,7 +660,7 @@ cleanup).
 - The bundle size matters (Effect is ~50 KB minzipped)
 
 In the KCG stack, Effect is the **canonical choice for
-oideachais/web server functions** (curriculum, leabharlann,
+sruth/oideachais/web server functions** (curriculum, leabharlann,
 agent handlers) and the **Convex Actions** that wrap
 external LLM calls.
 

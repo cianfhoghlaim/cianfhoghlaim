@@ -15,7 +15,7 @@ plan: "tuatha = British Isles formative assessment MMO" and
 
 Two concrete changes:
 
-1. **The crypto reframing**: the `tuatha/crypteolas/` data
+1. **The crypto reframing**: the `sruth/tuatha/sruth/crypteolas/` data
    platform moves from "Bitcoin / Ethereum / Solana
    settlement layer for in-game transactions" to
    "educational-achievement ledger" (skill-tree badges, per
@@ -41,13 +41,13 @@ cross-references the new skill.
 
 ## What Changes
 
-### 1. `tuatha/README.md` (MODIFIED)
+### 1. `sruth/tuatha/README.md` (MODIFIED)
 
 The header + the first paragraph are reframed from "Celtic
 Educational MMO + Crypto Platform" to "British Isles
 Formative Assessment MMO". Adds a Phase 6 callout.
 
-### 2. `tuatha/AGENTS.md` (MODIFIED)
+### 2. `sruth/tuatha/AGENTS.md` (MODIFIED)
 
 The overview is reframed. Adds a "Phase 6 of the 6-phase
 refactor plan" callout. The Quick routing table gains 2
@@ -101,10 +101,10 @@ reserved for gated game features only.
 - Affected skills: 1 new
   (`british-isles-formative-assessment`), 1 updated
   (`tuatha-mmo`)
-- Affected docs: 2 updated (`tuatha/README.md`,
-  `tuatha/AGENTS.md`)
+- Affected docs: 2 updated (`sruth/tuatha/README.md`,
+  `sruth/tuatha/AGENTS.md`)
 - No code refactor (Phase 6 is docs + skills + spec only;
-  no `tuatha/crypteolas/` code changes — the code is
+  no `sruth/tuatha/sruth/crypteolas/` code changes — the code is
   inherited from the v0 implementation, with the
   reframing documented in the spec)
 - The `Anam Cara NFT` and the `Crypteolas federated
@@ -119,8 +119,8 @@ reserved for gated game features only.
   exists, has valid frontmatter, and is 150-180 lines
 - `.agents/skills/tuatha-mmo/SKILL.md` has 4 cross-
   references to the new skill
-- `tuatha/README.md` header reflects the new focus
-- `tuatha/AGENTS.md` overview + routing table reflect the
+- `sruth/tuatha/README.md` header reflects the new focus
+- `sruth/tuatha/AGENTS.md` overview + routing table reflect the
   new focus
 - `openspec validate tuatha-formative-assessment-v1
   --strict` passes

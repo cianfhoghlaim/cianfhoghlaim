@@ -29,7 +29,7 @@ without a `pyproject.toml`).
 
 #### Scenario: Notebook runs with `uv run`
 
-- **GIVEN** a notebook `oideachais/notebooks/<name>.py` with a
+- **GIVEN** a notebook `sruth/oideachais/notebooks/<name>.py` with a
   PEP 723 header (`# /// script ... #`) declaring
   `requires-python = ">=3.12"` and `dependencies = ["marimo", ...]`
 - **WHEN** the user runs `uv run <name>.py`

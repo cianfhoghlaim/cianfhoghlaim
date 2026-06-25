@@ -154,7 +154,7 @@ The KCG quality bar is **≤ 8% WER** on Common Voice Irish
 For a BAML pipeline that ingests audio:
 
 ```baml
-// oideachais/baml_src/audio_extraction.baml
+// sruth/oideachais/baml_src/audio_extraction.baml
 function ExtractSpeechFromAudio(audio_base64: string) -> SpeechTranscript {
   client "openai/gpt-4o-audio-preview"  // or local Whisper via LiteLLM
   prompt #"Transcribe the following audio. Return the text and the detected language."#

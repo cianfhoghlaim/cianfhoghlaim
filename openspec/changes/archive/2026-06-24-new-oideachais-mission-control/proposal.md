@@ -8,7 +8,7 @@ notebooks over the canonical MotherDuck lakehouse.
 The Space is the **operational mission control** for the
 oideachais data platform: 5 tabs (Aistear / Primary / JC /
 SC / Tertiary), each backed by a marimo notebook from
-`oideachais/notebooks/`, plus Cognee cognify + BAML
+`sruth/oideachais/notebooks/`, plus Cognee cognify + BAML
 extraction buttons per stage.
 
 ## What changes

@@ -19,20 +19,20 @@ in-process inside the `api` image.
 
 #### Scenario: An agent is added to the ADK framework
 - **WHEN** a contributor adds a new agent file to
-  `oideachais/agents/adk/`
+  `sruth/oideachais/agents/adk/`
 - **THEN** the new agent is automatically picked up by the
   `adk_agents` compose service on next build
 - **AND** the `api` image does NOT need to be rebuilt
 
 #### Scenario: A new agent is added to the Agno framework
 - **WHEN** a contributor adds a new agent file to
-  `oideachais/agent_os/`
+  `sruth/oideachais/agent_os/`
 - **THEN** the new agent is automatically picked up by the
   `agent_os` compose service on next build
 - **AND** the `api` image does NOT need to be rebuilt
 
 ### Requirement: ADK and Agno services MUST have separate Traefik routes
-The `infrastructure/stacks/oideachais/pangolin.yaml` MUST define
+The `infrastructure/stacks/sruth/oideachais/pangolin.yaml` MUST define
 separate Traefik routers for the ADK and Agno services. The ADK
 service MUST be routed at `adk.<stack>.cianfhoghlaim.ie` and the
 Agno service at `agent.os.<stack>.cianfhoghlaim.ie`.

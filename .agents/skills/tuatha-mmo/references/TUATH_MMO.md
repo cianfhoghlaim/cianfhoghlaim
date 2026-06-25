@@ -2,9 +2,9 @@
 title: 'Tuath Celtic Educational MMO'
 domain: 'architecture'
 status: 'stable'
-description: 'The tuatha/ Celtic MMO quadrant. FastAPI + Axum + Babylon.js + Crypteolas + x402.'
+description: 'The sruth/tuatha/ Celtic MMO quadrant. FastAPI + Axum + Babylon.js + Crypteolas + x402.'
 read_when:
-  - working in tuatha/
+  - working in sruth/tuatha/
   - extending the MMO or the Crypteolas token
 updated: '2026-06-13'
 supersedes: []
@@ -17,7 +17,7 @@ ccc_query_hints:
 
 # Tuath Celtic Educational MMO
 
-> The `tuatha/` quadrant is one of the 5 in the Cianfhoghlaim monorepo.
+> The `sruth/tuatha/` quadrant is one of the 5 in the Cianfhoghlaim monorepo.
 > For the project identity + quadrant map, see
 > [`docs/00-core/CLAUDE.md`](../../00-core/CLAUDE.md).
 
@@ -34,17 +34,17 @@ MMO-style game world with AI-powered educational content. It exposes:
 
 ## Workspace members
 
-`tuatha/` is a uv-workspace **member** with **3 sub-members**:
+`sruth/tuatha/` is a uv-workspace **member** with **3 sub-members**:
 
 | Sub-member | Purpose |
 |---|---|
-| `tuatha/codeolas/` | Code intelligence library (Tree-sitter + CocoIndex; ingest of code repos) |
-| `tuatha/crypteolas/` | Crypto / DeFi research (GitHub, protocols, analytics) |
-| `tuatha/apps/crypteolas_demo/` | Demo app |
+| `sruth/tuatha/codeolas/` | Code intelligence library (Tree-sitter + CocoIndex; ingest of code repos) |
+| `sruth/tuatha/sruth/crypteolas/` | Crypto / DeFi research (GitHub, protocols, analytics) |
+| `sruth/crypteolas/apps/crypteolas_demo/` | Demo app |
 
 ## Front-end topology
 
-`tuatha/ui/` uses **Babylon.js** (not TanStack). It is the *only*
+`sruth/tuatha/ui/` uses **Babylon.js** (not TanStack). It is the *only*
 front-end in the monorepo that does not use TanStack. See
 [`docs/05-web/frontend-topology.md`](../../05-web/frontend-topology.md)
 for the full topology.
@@ -52,10 +52,10 @@ for the full topology.
 ## Data plane
 
 - **In-game state**: SpacetimeDB (real-time, low-latency).
-- **Premium content**: served from `oideachais/` (DuckLake) — paid
+- **Premium content**: served from `sruth/oideachais/` (DuckLake) — paid
   via x402 micro-transactions in Crypteolas token.
-- **Dagster assets**: `tuatha/dagster_assets/` for the MMO's
-  curriculum-in-game asset graph (separate from `oideachais/dagster_defs/`).
+- **Dagster assets**: `sruth/tuatha/dagster_assets/` for the MMO's
+  curriculum-in-game asset graph (separate from `sruth/oideachais/dagster_defs/`).
 
 ## Where the canonical docs live
 
@@ -68,6 +68,6 @@ for the full topology.
 
 ## See also
 
-- [`tuatha/DEVELOPMENT.md`](../../../tuatha/DEVELOPMENT.md) — runtime README
-- [`tuatha/README.md`](../../../tuatha/README.md) — project overview
-- [`tuatha/gaeilge.md`](../../../tuatha/gaeilge.md) — Irish-language notes
+- [`sruth/tuatha/DEVELOPMENT.md`](../../../sruth/tuatha/DEVELOPMENT.md) — runtime README
+- [`sruth/tuatha/README.md`](../../../sruth/tuatha/README.md) — project overview
+- [`sruth/tuatha/gaeilge.md`](../../../sruth/tuatha/gaeilge.md) — Irish-language notes

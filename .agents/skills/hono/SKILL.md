@@ -538,11 +538,11 @@ The middleware composition enables:
 
 The KCG Hono apps are:
 
-- `oideachais/web/src/server/router.ts` — the public
+- `sruth/oideachais/web/src/server/router.ts` — the public
   lakehouse API
-- `oideachais/api/` — the FastAPI + Hono adapters for the
+- `sruth/oideachais/api/` — the FastAPI + Hono adapters for the
   oideachais web app
-- `tuatha/ui/src/server/` — the Tuatha MMO + crypto API
+- `sruth/tuatha/ui/src/server/` — the Tuatha MMO + crypto API
 
 ## Convex integration
 

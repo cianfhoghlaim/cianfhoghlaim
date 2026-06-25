@@ -129,6 +129,6 @@ fail the whole asset run just because one backend is unavailable.
 - `baml_src/author_archive.baml` — `IdentifyUiPatterns`,
   `VisualGroundingFromScreenshot`, `UiIndicator`, `UiType`,
   `BoundingBox`, `GroundedElement`
-- `oideachais/dagster_defs/assets/official_media/scraping_assets.py` —
+- `sruth/oideachais/dagster_defs/assets/official_media/scraping_assets.py` —
   the `official_media_identify_uis` asset
-- `tuatha/` — the MMO quadrant that will consume this data (future)
+- `sruth/tuatha/` — the MMO quadrant that will consume this data (future)

@@ -17,27 +17,27 @@
 
 ## 3. Refactor: 10 v0 modules → `_v0_archive/`
 
-- [x] `mkdir oideachais/cocoindex_flows/_v0_archive/`
-- [x] `git mv oideachais/cocoindex_flows/author_archive_embedding.py oideachais/cocoindex_flows/_v0_archive/`
-- [x] `git mv oideachais/cocoindex_flows/curriculum_embedding.py oideachais/cocoindex_flows/_v0_archive/`
-- [x] `git mv oideachais/cocoindex_flows/curriculum_translation.py oideachais/cocoindex_flows/_v0_archive/`
-- [x] `git mv oideachais/cocoindex_flows/curriculum_specification_extraction.py oideachais/cocoindex_flows/_v0_archive/`
-- [x] `git mv oideachais/cocoindex_flows/geospatial_indexing.py oideachais/cocoindex_flows/_v0_archive/`
-- [x] `git mv oideachais/cocoindex_flows/learning_outcome_graph.py oideachais/cocoindex_flows/_v0_archive/`
-- [x] `git mv oideachais/cocoindex_flows/ocr_embedding.py oideachais/cocoindex_flows/_v0_archive/`
-- [x] `git mv oideachais/cocoindex_flows/pdf_embedding.py oideachais/cocoindex_flows/_v0_archive/`
-- [x] `git mv oideachais/cocoindex_flows/research_embedding.py oideachais/cocoindex_flows/_v0_archive/`
-- [x] `git mv oideachais/cocoindex_flows/site_analysis_embedding.py oideachais/cocoindex_flows/_v0_archive/`
-- [x] Create `oideachais/cocoindex_flows/_v0_archive/__init__.py` (the deprecation note)
+- [x] `mkdir sruth/oideachais/cocoindex_flows/_v0_archive/`
+- [x] `git mv sruth/oideachais/cocoindex_flows/author_archive_embedding.py sruth/oideachais/cocoindex_flows/_v0_archive/`
+- [x] `git mv sruth/oideachais/cocoindex_flows/curriculum_embedding.py sruth/oideachais/cocoindex_flows/_v0_archive/`
+- [x] `git mv sruth/oideachais/cocoindex_flows/curriculum_translation.py sruth/oideachais/cocoindex_flows/_v0_archive/`
+- [x] `git mv sruth/oideachais/cocoindex_flows/curriculum_specification_extraction.py sruth/oideachais/cocoindex_flows/_v0_archive/`
+- [x] `git mv sruth/oideachais/cocoindex_flows/geospatial_indexing.py sruth/oideachais/cocoindex_flows/_v0_archive/`
+- [x] `git mv sruth/oideachais/cocoindex_flows/learning_outcome_graph.py sruth/oideachais/cocoindex_flows/_v0_archive/`
+- [x] `git mv sruth/oideachais/cocoindex_flows/ocr_embedding.py sruth/oideachais/cocoindex_flows/_v0_archive/`
+- [x] `git mv sruth/oideachais/cocoindex_flows/pdf_embedding.py sruth/oideachais/cocoindex_flows/_v0_archive/`
+- [x] `git mv sruth/oideachais/cocoindex_flows/research_embedding.py sruth/oideachais/cocoindex_flows/_v0_archive/`
+- [x] `git mv sruth/oideachais/cocoindex_flows/site_analysis_embedding.py sruth/oideachais/cocoindex_flows/_v0_archive/`
+- [x] Create `sruth/oideachais/cocoindex_flows/_v0_archive/__init__.py` (the deprecation note)
 
 ## 4. Refactor: doc updates
 
-- [x] Update `oideachais/cocoindex_flows/README.md` v0/v1 status table
+- [x] Update `sruth/oideachais/cocoindex_flows/README.md` v0/v1 status table
   (10 rows change from "Migrate to v1 (deferred)" to "DEPRECATED 2026-06-24, archived at _v0_archive/")
-- [x] Update `oideachais/AGENTS.md` Quick routing table — add 3 new
+- [x] Update `sruth/oideachais/AGENTS.md` Quick routing table — add 3 new
   skill rows (oideachais-leabharlann, oideachais-baml-schemas,
   oideachais-cocoindex-v1)
-- [x] Update `oideachais/STATUS.md` §3 — change the v0/v1 status
+- [x] Update `sruth/oideachais/STATUS.md` §3 — change the v0/v1 status
   description
 
 ## 5. Commit + push + archive

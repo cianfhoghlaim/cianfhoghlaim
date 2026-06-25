@@ -1,9 +1,9 @@
 ## MODIFIED Requirements
 
 ### Requirement: All BAML functions are client-qualified
-Every BAML function in `oideachais/baml_src/*.baml` MUST be
+Every BAML function in `sruth/oideachais/baml_src/*.baml` MUST be
 associated with exactly one client from the canonical registry
-`oideachais/baml_src/clients.baml`. The client is specified via
+`sruth/oideachais/baml_src/clients.baml`. The client is specified via
 the `client <Name>` directive in the function signature.
 
 #### Scenario: A BAML function is invoked from Python
@@ -22,7 +22,7 @@ the `client <Name>` directive in the function signature.
 
 ### Requirement: Inline `client<llm>` declarations are forbidden in non-registry files
 Inline `client<llm> <Name> { ... }` blocks MUST NOT exist in
-`oideachais/baml_src/*.baml` files other than `clients.baml`,
+`sruth/oideachais/baml_src/*.baml` files other than `clients.baml`,
 `clients_0.baml` (legacy Gemini clients), and `generators.baml`
 (legacy). New canonical clients MUST be added to `clients.baml`.
 

@@ -11,7 +11,7 @@ monorepo**:
   `stedding/ingest_queue/`)
 - Uses local DuckDB (not MotherDuck)
 - Has its own dbt project name `pypi_analytics` (orthogonal
-  to oideachais/croilar/tuatha)
+  to sruth/oideachais/sruth/croilar/tuatha)
 - No 2026-06 features (no LanceDB, no CocoIndex, no Cognee,
   no Graphiti, no BAML extraction)
 - Has no openspec spec governing it (no `data-engineering-space`

@@ -143,15 +143,15 @@ run = "cd sruth/oideachais && uv run dagster dev -m data_platform.dagster_defs.d
 
 [tasks."dagster:tuath"]
 description = "Run Dagster for the Celtic MMO (tuath) code-location"
-run = "cd tuatha && uv run dagster dev -m dagster_assets.definitions"
+run = "cd sruth/tuatha && uv run dagster dev -m dagster_assets.definitions"
 
 [tasks."dagster:crypteolas"]
 description = "Run Dagster for the crypteolas code-location"
-run = "cd tuatha && uv run dagster dev -m crypteolas.definitions"
+run = "cd sruth/tuatha && uv run dagster dev -m crypteolas.definitions"
 
 [tasks."dagster:croilar"]
 description = "Run Dagster for the Croílár portfolio code-location"
-run = "cd croilar && uv run dagster dev -m dagster_assets.definitions"
+run = "cd sruth/croilar && uv run dagster dev -m dagster_assets.definitions"
 
 [tasks."dagster:meaisin"]
 description = "Run Dagster for the meaisínfhoghlaim (AI/ML quadrant) heartbeat code-location"
@@ -159,20 +159,20 @@ run = "cd sruth/meaisinfhoghlaim && uv run dagster dev -m dagster_defs.assets.he
 
 [tasks."dagster:crypteolas_demo"]
 description = "Run Dagster for the crypteolas_demo code-location"
-run = "cd tuatha/apps/crypteolas_demo && uv run dagster dev -m definitions"
+run = "cd sruth/crypteolas/apps/crypteolas_demo && uv run dagster dev -m definitions"
 
 # Per-package test runners
 [tasks."test:codeolas"]
 description = "Run pytest on the códeolas library"
-run = "cd tuatha && uv run pytest codeolas/tests/"
+run = "cd sruth/tuatha && uv run pytest codeolas/tests/"
 
 [tasks."test:crypteolas"]
 description = "Run pytest on the crypteolas platform"
-run = "cd tuatha && uv run pytest crypteolas/tests/"
+run = "cd sruth/tuatha && uv run pytest crypteolas/tests/"
 
 [tasks."test:crypteolas_demo"]
 description = "Run pytest on the crypteolas_demo app"
-run = "cd tuatha/apps/crypteolas_demo && uv run pytest"
+run = "cd sruth/crypteolas/apps/crypteolas_demo && uv run pytest"
 
 # =============================================================================
 # Dagger CI/CD Tasks

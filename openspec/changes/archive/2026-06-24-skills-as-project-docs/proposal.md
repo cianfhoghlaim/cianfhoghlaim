@@ -16,7 +16,7 @@ The result:
   updated.
 - A project status changes (e.g. a DLT source is now wired with
   a Dagster asset per C4.1); the corresponding
-  `oideachais/STATUS.md` is not updated.
+  `sruth/oideachais/STATUS.md` is not updated.
 
 The 3 new rules in this change close the loop:
 

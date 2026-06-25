@@ -34,26 +34,26 @@ The 5-element framework is the **connective tissue**:
 - NEW `croilar-gradio-hf-demo` — the 4-Space submission capability
 
 ### Existing assets to extend (no redevelopments, only reuses)
-- `oideachais/data_platform/baml_src/` (BAML extraction schemas)
-- `oideachais/data_platform/dlt_sources/` (DLT sources for all 7 nations)
-- `oideachais/data_platform/dagster_defs/assets/ireland/exam_materials_assets.py` (Dagster assets)
-- `oideachais/document_factory/curriculum_document.py` (PCLM emitter)
-- `oideachais/samplaí/` (6 Celtic language sample corpora + cognates)
+- `sruth/oideachais/data_platform/baml_src/` (BAML extraction schemas)
+- `sruth/oideachais/data_platform/dlt_sources/` (DLT sources for all 7 nations)
+- `sruth/oideachais/data_platform/dagster_defs/assets/ireland/exam_materials_assets.py` (Dagster assets)
+- `sruth/oideachais/document_factory/curriculum_document.py` (PCLM emitter)
+- `sruth/oideachais/samplaí/` (6 Celtic language sample corpora + cognates)
 - `meaisínfhoghlaim/agents/` (12 specialised agents)
 - `meaisínfhoghlaim/ocr/` (10 OCR models, gaelic_metrics, irish_processing)
 - `meaisínfhoghlaim/evaluation/ragas_pipeline.py` (RAGAS, 22.7pp headline)
 - `meaisínfhoghlaim/language/` (6 Celtic language DLT sources)
-- `tuatha/baml_src/` (player_assessment, mythology_extraction, game_content, celtic_curriculum)
-- `tuatha/asset_generation/` (CelticPromptGenerator)
-- `tuatha/fibo_generation/` (FIBO JSON configs)
-- `tuatha/crates/wgpu/celtic-shaders/src/lib.rs` (WGSL Celtic-knot shader)
-- `tuatha/apps/crypteolas_demo/anam-contracts/src/CuchulainnNFT.sol` (soulbound contract)
-- `croilar/apps/web/`, `croilar/packages/`, `croilar/hono-api/` (BAML + i18n patterns)
+- `sruth/tuatha/baml_src/` (player_assessment, mythology_extraction, game_content, celtic_curriculum)
+- `sruth/tuatha/asset_generation/` (CelticPromptGenerator)
+- `sruth/tuatha/fibo_generation/` (FIBO JSON configs)
+- `sruth/tuatha/crates/wgpu/celtic-shaders/src/lib.rs` (WGSL Celtic-knot shader)
+- `sruth/crypteolas/apps/crypteolas_demo/anam-contracts/src/CuchulainnNFT.sol` (soulbound contract)
+- `sruth/croilar/apps/web/`, `sruth/croilar/packages/`, `sruth/croilar/hono-api/` (BAML + i18n patterns)
 
 ### New code to write
 - 4 Gradio `app.py` files (one per Space)
 - 1 `spaces/_common/` shared bundle (Celtic theme tokens, Anam Bonneagar footer, soulbound SVG, social card, demo recorder)
-- 1 `tuatha/baml_src/clients_hackathon.baml` (fork of `tuatha_clients.baml`, re-pointed to HF Inference)
+- 1 `sruth/tuatha/baml_src/clients_hackathon.baml` (fork of `tuatha_clients.baml`, re-pointed to HF Inference)
 - ~10 new BAML schemas (40–60 lines each) per the catalogue's "to add" lists
 - 1 Anvil-sidecar Dockerfile for Space 4 (CuchulainnNFT.sol)
 

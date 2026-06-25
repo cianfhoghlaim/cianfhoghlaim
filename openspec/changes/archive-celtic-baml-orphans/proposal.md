@@ -3,8 +3,8 @@
 ## Why
 
 The oideachais quadrant has ~25 BAML functions defined in
-`oideachais/baml_src/` that are intended for the
-`meaisinfhoghlaim/` (Celtic-linguistic) and `croilar/` (portfolio)
+`sruth/oideachais/baml_src/` that are intended for the
+`sruth/meaisinfhoghlaim/` (Celtic-linguistic) and `sruth/croilar/` (portfolio)
 agents, but those agents do not exist yet. These functions:
 
 - Are well-formed BAML (no `client "litellm"` errors after the
@@ -43,12 +43,12 @@ For each of the 6 orphan BAML files:
    // === ARCHIVED 2026-06-24 ===
    // These functions have no current Python consumer in the
    // oideachais quadrant. They are intended for the
-   // meaisinfhoghlaim/ Celtic-linguistic agents and the croilar/
+   // sruth/meaisinfhoghlaim/ Celtic-linguistic agents and the sruth/croilar/
    // portfolio surface, which are not yet built.
    //
    // To re-activate:
    // 1. Implement the consumer (e.g.
-   //    meaisinfhoghlaim/agents/celtic_linguistics.py)
+   //    sruth/meaisinfhoghlaim/agents/celtic_linguistics.py)
    // 2. Add a # PLANNED marker back to the function docstring
    // 3. Update STATUS.md to mark the function as wired
    //
@@ -80,8 +80,8 @@ still need to be in the project) but are clearly marked.
   - `named_entities.baml` → `baml_src/_archive/named_entities.baml`
   - `portfolio_extraction.baml` → `baml_src/_archive/portfolio_extraction.baml`
 - **NEW:** `baml_src/_archive/README.md` (rationale + re-activation steps)
-- **MODIFIED:** `oideachais/STATUS.md` (reference the archive)
-- **MODIFIED:** `oideachais/REFACTORING.md` (add entry for the archive)
+- **MODIFIED:** `sruth/oideachais/STATUS.md` (reference the archive)
+- **MODIFIED:** `sruth/oideachais/REFACTORING.md` (add entry for the archive)
 
 ### Affected specs
 - MODIFIED `oideachais-baml-schemas` — the rule that BAML functions
@@ -102,8 +102,8 @@ still need to be in the project) but are clearly marked.
 
 - No deletion of the BAML functions. They are preserved in
   `_archive/` for future re-activation.
-- No wiring of the orphan functions. The `meaisinfhoghlaim/`
-  Celtic-linguistic and `croilar/` portfolio agents are out of
+- No wiring of the orphan functions. The `sruth/meaisinfhoghlaim/`
+  Celtic-linguistic and `sruth/croilar/` portfolio agents are out of
   scope for the oideachais quadrant.
 - No change to the 5 oideachas.baml orphan functions
   (`ExtractSyllabus`, `ExtractExamPaper`, `ExtractMarkingScheme`,
@@ -128,9 +128,9 @@ still need to be in the project) but are clearly marked.
 
 ## Validation
 
-1. `ls oideachais/baml_src/_archive/` shows 6 .baml files
-2. `ls oideachais/baml_src/_archive/README.md` shows 1 README
-3. `grep -r "ARCHIVED 2026-06-24" oideachais/baml_src/_archive/` shows 6 hits (one per file)
-4. `grep -r "b\.IdentifyCognates\|b\.ExtractMorphology\|b\.ExtractProfileFromCV" oideachais/` returns 0 hits (no callers)
+1. `ls sruth/oideachais/baml_src/_archive/` shows 6 .baml files
+2. `ls sruth/oideachais/baml_src/_archive/README.md` shows 1 README
+3. `grep -r "ARCHIVED 2026-06-24" sruth/oideachais/baml_src/_archive/` shows 6 hits (one per file)
+4. `grep -r "b\.IdentifyCognates\|b\.ExtractMorphology\|b\.ExtractProfileFromCV" sruth/oideachais/` returns 0 hits (no callers)
 5. `uv run --package oideachais python -c "import dagster_defs.definitions"` still loads
 6. `openspec validate archive-celtic-baml-orphans --strict` passes

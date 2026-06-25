@@ -26,7 +26,7 @@ llama-swap local serving.
 ### Requirement: Babylon.js game client (3D)
 
 The system SHALL provide a Babylon.js-based 3D game client
-at `tuatha/game/` for the Celtic Educational MMO, rendering
+at `sruth/tuatha/game/` for the Celtic Educational MMO, rendering
 interactive 3D learning environments (mathematical concepts
 spatially, Celtic language family tree, gamified study areas)
 via WebGL + WebGPU with Havok physics, particle systems, and
@@ -35,7 +35,7 @@ GLTF 2.0 asset loading.
 #### Scenario: 3D scene renders
 
 - **GIVEN** a student launches the Tuatha MMO client at
-  `tuatha/game/`
+  `sruth/tuatha/game/`
 - **WHEN** the Babylon.js Engine + Scene + ArcRotateCamera
   initialise and the GLTFLoader loads the scene assets
 - **THEN** the 3D classroom / mathematical-concept / Celtic-language

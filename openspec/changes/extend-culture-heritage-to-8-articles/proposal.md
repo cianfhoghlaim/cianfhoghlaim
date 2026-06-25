@@ -28,7 +28,7 @@ It also restructures the **README personal section** (`README.md` lines 312–47
 | 4 | Tuatha Dé Danann | `clippings/tuatha_de_danann-wikipedia.md` | `identity_tuatha_de_danann.json` | `aabf4cd6…` |
 | 5 | Déisi | `clippings/deisi-wikipedia.md` | `identity_deisi.json` | `3f670c56…` |
 
-The `oideachais/dlt_sources/domains/culture/ie/heritage_source.py:wikipedia_fixtures` resource auto-discovers all `identity_*.json` files in the fixtures directory, so no `sources.yaml` edit is required.
+The `sruth/oideachais/dlt_sources/domains/culture/ie/heritage_source.py:wikipedia_fixtures` resource auto-discovers all `identity_*.json` files in the fixtures directory, so no `sources.yaml` edit is required.
 
 The 3 existing fixtures (`identity_ui_liathain.json`, `identity_delbhna.json`, `identity_eamonn_deacy_park.json`) are updated to point to the canonical `lineage/` path (replacing the legacy `deacy/` path; the clippings themselves were moved from `deacy/` to `lineage/` by the user before this change).
 
@@ -73,21 +73,21 @@ A Forgejo/GitHub tracking issue is filed at `openspec/changes/extend-culture-her
 ### New (10)
 
 - `cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/{leath_cuinn_and_leath_moga,cian,aos_si,tuatha_de_danann,deisi}-wikipedia.md` (5 new clippings)
-- `oideachais/dlt_sources/official_media/fixtures/identity_{leath_cuinn_and_leath_moga,cian,aos_si,tuatha_de_danann,deisi}.json` (5 new DLT fixtures)
+- `sruth/oideachais/dlt_sources/official_media/fixtures/identity_{leath_cuinn_and_leath_moga,cian,aos_si,tuatha_de_danann,deisi}.json` (5 new DLT fixtures)
 - `openspec/changes/extend-culture-heritage-to-8-articles/tracking_issues/unread-pdfs.md` (1 tracking issue file)
 
 ### Modified (5)
 
-- `oideachais/dlt_sources/official_media/fixtures/identity_ui_liathain.json` (path fix: `deacy/` → `lineage/`)
-- `oideachais/dlt_sources/official_media/fixtures/identity_delbhna.json` (path fix)
-- `oideachais/dlt_sources/official_media/fixtures/identity_eamonn_deacy_park.json` (path fix)
+- `sruth/oideachais/dlt_sources/official_media/fixtures/identity_ui_liathain.json` (path fix: `deacy/` → `lineage/`)
+- `sruth/oideachais/dlt_sources/official_media/fixtures/identity_delbhna.json` (path fix)
+- `sruth/oideachais/dlt_sources/official_media/fixtures/identity_eamonn_deacy_park.json` (path fix)
 - `README.md` (restructure lines 312–474, update byline on line 596)
 - `openspec/specs/cross-domain-registry/spec.md` (1 MODIFIED Requirement — fixture count `3` → `8`)
 
 ## Acceptance
 
 - `openspec validate extend-culture-heritage-to-8-articles --strict` exits 0.
-- 8 `identity_*.json` fixtures in `oideachais/dlt_sources/official_media/fixtures/`; 3 path-corrected to `lineage/`; 5 new for the second batch.
+- 8 `identity_*.json` fixtures in `sruth/oideachais/dlt_sources/official_media/fixtures/`; 3 path-corrected to `lineage/`; 5 new for the second batch.
 - 8 Wikipedia clippings in `cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/` (3 first-batch + 5 second-batch).
 - `README.md` has 6 subsections under "About the author, the name, and the lineage"; no occurrence of "lighthearted", "tongue-in-cheek", "playful homage", or "Coláiste na Ríoga".
 - Tracking issue file `tracking_issues/unread-pdfs.md` lists both unread PDFs with paths and reasons.

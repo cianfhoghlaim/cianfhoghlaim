@@ -10,7 +10,7 @@ import re
 from collections import defaultdict
 from difflib import SequenceMatcher
 
-from codeolas.core.types import CodeChunk, Entity, NodeType
+from sruth.codeolas.core.types import CodeChunk, Entity, NodeType
 
 logger = logging.getLogger(__name__)
 

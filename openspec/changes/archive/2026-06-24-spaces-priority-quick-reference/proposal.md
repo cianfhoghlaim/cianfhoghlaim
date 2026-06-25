@@ -25,7 +25,7 @@ The 6 new files (per the agents-md-priority-quick-reference
 3. `spaces/an_scrudu/AGENTS.md` — the past-paper heatmap + `ExtractCircularMeta` BAML
 4. `spaces/meaisin_cliste/AGENTS.md` — the 3 Celtic AI tools + `CompareCelticNations` BAML
 5. `spaces/cianfhoghlaim/AGENTS.md` — the Hades-style RPG + `GenerateNpcDialogue` BAML
-6. `spaces/anam_tuatha/AGENTS.md` — the integration Space + `GenerateExitCardQuestions` BAML
+6. `spaces/anam_sruth/tuatha/AGENTS.md` — the integration Space + `GenerateExitCardQuestions` BAML
 7. `spaces/data-engineering/AGENTS.md` — the PyPI analytics dashboard (Dagster + dbt + Evidence)
 
 Plus an 8th file (1 parent + 1 shared + 5 per-Space = 7 actually; I had an off-by-one). The `spaces/AGENTS.md` is the parent.

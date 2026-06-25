@@ -217,12 +217,12 @@ For every new agent in the KCG stack, ensure:
 
 ## KCG integration
 
-- `oideachais/observability/` — the integration module
+- `sruth/oideachais/observability/` — the integration module
   (Datadog + MLflow + Langfuse + Ragas)
 - `sruth/meaisinfhoghlaim/evaluation/` — the Ragas evaluation harness
 - `sruth/meaisinfhoghlaim/evaluation/canonical_eval_set.json` —
   100 samples × 4 metrics
-- Dagster assets: `oideachais/dagster_defs/assets/quality_assets.py`
+- Dagster assets: `sruth/oideachais/dagster_defs/assets/quality_assets.py`
   (the Ragas asset_check group)
 
 ## Related skills
@@ -617,7 +617,7 @@ RAGAS now ships trace-based metrics that work on the Langfuse trace (not just th
 - **Context precision** — is the retrieved context actually relevant?
 - **Context recall** — is the retrieved context complete?
 
-The KCG pattern: the RAGAS-as-Dagster-asset-check pattern runs these on every `cognee.remember` call. The asset check `ragas_faithfulness_check` in `oideachais/dagster_defs/asset_checks.py` fails the asset materialisation if faithfulness drops below 0.85.
+The KCG pattern: the RAGAS-as-Dagster-asset-check pattern runs these on every `cognee.remember` call. The asset check `ragas_faithfulness_check` in `sruth/oideachais/dagster_defs/asset_checks.py` fails the asset materialisation if faithfulness drops below 0.85.
 
 ### Logfire MCP (2026-06)
 

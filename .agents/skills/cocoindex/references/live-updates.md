@@ -51,7 +51,7 @@ file_path, file_mtime)` to decide whether to re-run.
 
 A file that fails BAML extraction is logged and skipped. The
 flow continues. Check the asset check report for the count of
-skipped files (see `oideachais/dagster_defs/assets/docs_skills_assets.py`).
+skipped files (see `sruth/oideachais/dagster_defs/assets/docs_skills_assets.py`).
 
 ## Concurrency control
 
@@ -62,9 +62,9 @@ skipped files (see `oideachais/dagster_defs/assets/docs_skills_assets.py`).
 
 ## KCG live-update patterns
 
-- `oideachais/cocoindex_flows/docs_skills_consolidation.py` —
+- `sruth/oideachais/cocoindex_flows/docs_skills_consolidation.py` —
   live-walks `docs/` and `.agents/skills/`
-- `oideachais/cocoindex_flows/codebase_indexing.py` — live-walks
+- `sruth/oideachais/cocoindex_flows/codebase_indexing.py` — live-walks
   the repo (replacement for the legacy `ccc` CLI)
-- `oideachais/cocoindex_flows/leabharlann_embedding.py` —
+- `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py` —
   live-walks `leabharlann/`

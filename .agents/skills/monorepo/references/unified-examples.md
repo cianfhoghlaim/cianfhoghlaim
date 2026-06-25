@@ -38,7 +38,7 @@ These are the project's own reference implementations — not third-party exampl
 - **docs/web/docs_examples_consolidated/web-unified/.ruler/bts.md** — Ruler configuration
 
 ## Source Files
-These are the project's own examples (not third-party clones). Full source removed (2026-06-06) but architecture documents and agent instructions retained. Source available in the main repository under `oideachais/web/`.
+These are the project's own examples (not third-party clones). Full source removed (2026-06-06) but architecture documents and agent instructions retained. Source available in the main repository under `sruth/oideachais/web/`.
 
 ## What Was Removed
 - All TypeScript/JavaScript source files (.ts, .tsx, .js, .jsx)

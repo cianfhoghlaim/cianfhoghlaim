@@ -1,7 +1,7 @@
 ## MODIFIED Requirements
 
 ### Requirement: BAML functions are invoked by their consuming dlt sources
-Every BAML function in `oideachais/baml_src/*.baml` MUST be
+Every BAML function in `sruth/oideachais/baml_src/*.baml` MUST be
 invoked by at least one Python file in the quadrant. Orphan BAML
 functions (defined but never called) are forbidden in production
 BAML files.
@@ -16,7 +16,7 @@ BAML files.
 
 ### Requirement: early_childhood.baml provides Aistear extraction
 The oideachais quadrant SHALL provide an `early_childhood.baml`
-module in `oideachais/baml_src/` that defines the BAML types and
+module in `sruth/oideachais/baml_src/` that defines the BAML types and
 function for the Aistear (early childhood) curriculum framework.
 
 #### Scenario: The Aistear extraction is invoked

@@ -137,7 +137,7 @@ Without NFC, the CER is artificially inflated.
    ```
 
 2. Add the BAML extraction function (if needed) in
-   `oideachais/baml_src/ocr_validation.baml`.
+   `sruth/oideachais/baml_src/ocr_validation.baml`.
 
 3. Add a new test in `sruth/meaisinfhoghlaim/tests/test_ensemble_gradio.py`
    that runs the 3-method comparison with `gemma-3-vision` as one
@@ -171,4 +171,4 @@ Without NFC, the CER is artificially inflated.
 - `sruth/meaisinfhoghlaim/ocr/gaelic_metrics.py` — the 5 Celtic metrics
 - `sruth/meaisinfhoghlaim/ocr/comparison_runner.py` — the 3-method comparison runner
 - `sruth/meaisinfhoghlaim/llama-swap-config.yaml` — the 11 GGUF-quantised models for Apple Silicon
-- `oideachais/baml_src/ocr_validation.baml` — the OCR validation BAML schema
+- `sruth/oideachais/baml_src/ocr_validation.baml` — the OCR validation BAML schema

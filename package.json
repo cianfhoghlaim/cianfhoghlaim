@@ -12,12 +12,12 @@
   "workspaces": [
     "sruth/oideachais/web",
     "sruth/oideachais/mcp/filesystem",
-    "tuatha/ui",
-    "tuatha/apps/crypteolas_demo",
-    "croilar/apps/web",
-    "croilar/apps/portal",
-    "croilar/hono-api",
-    "croilar/packages/*"
+    "sruth/tuatha/ui",
+    "sruth/crypteolas/apps/crypteolas_demo",
+    "sruth/croilar/apps/web",
+    "sruth/croilar/apps/portal",
+    "sruth/croilar/hono-api",
+    "sruth/croilar/packages/*"
   ],
   "scripts": {
     "postinstall": "turbo run postinstall --filter=./scripts/* || true",
@@ -40,7 +40,7 @@
     "secrets:sync": "bun run scripts/init-vault.ts",
 
     "dagster:oideachais": "cd sruth/oideachais && uv run dagster dev -m data_platform.dagster_defs.definitions",
-    "dagster:tuatha": "cd tuatha && uv run dagster dev -m dagster_assets.definitions",
+    "dagster:tuatha": "cd sruth/tuatha && uv run dagster dev -m dagster_assets.definitions",
 
     "komodo:sync": "mise run komodo:sync",
     "pangolin:check": "mise run pangolin:check",
@@ -69,11 +69,11 @@
 
     "smoke": "bash infrastructure/stacks/frontend/scripts/smoke.sh",
 
-    "croilar:analyze": "bun run croilar/scripts/analyze-web-stack.ts",
-    "croilar:glance:regen": "bun run croilar/scripts/regenerate-glance-config.ts",
-    "croilar:export:wasm": "bun run croilar/scripts/export-marimo-wasm.ts",
-    "croilar:devtools:refresh": "bun run croilar/scripts/analyze-web-stack.ts --out croilar/.cache/webstack-snapshot.json",
-    "croilar:devtools:hub": "bun run croilar/scripts/regenerate-glance-config.ts && bun run croilar/scripts/export-marimo-wasm.ts"
+    "croilar:analyze": "bun run sruth/croilar/scripts/analyze-web-stack.ts",
+    "croilar:glance:regen": "bun run sruth/croilar/scripts/regenerate-glance-config.ts",
+    "croilar:export:wasm": "bun run sruth/croilar/scripts/export-marimo-wasm.ts",
+    "croilar:devtools:refresh": "bun run sruth/croilar/scripts/analyze-web-stack.ts --out sruth/croilar/.cache/webstack-snapshot.json",
+    "croilar:devtools:hub": "bun run sruth/croilar/scripts/regenerate-glance-config.ts && bun run sruth/croilar/scripts/export-marimo-wasm.ts"
   },
   "devDependencies": {
     "@types/bun": "^1.3.0",

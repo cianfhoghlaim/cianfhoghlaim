@@ -10,10 +10,10 @@ where `<flow>` ∈ {`codeolas`, `oideachais`, `meaisinfhoghlaim`, `tuatha`,
 
 - **GIVEN** the top-level directory listing
 - **WHEN** running `ls sruth/`
-- **THEN** the output contains exactly: `codeolas/`, `crypteolas/`,
-  `croilar/`, `meaisinfhoghlaim/`, `oideachais/`, `tuatha/`
+- **THEN** the output contains exactly: `codeolas/`, `sruth/crypteolas/`,
+  `sruth/croilar/`, `sruth/meaisinfhoghlaim/`, `sruth/oideachais/`, `sruth/tuatha/`
 - **AND** no top-level directory outside `sruth/` has the same name
-- **AND** no sruth directory exists at the repo root (e.g. no `oideachais/`
+- **AND** no sruth directory exists at the repo root (e.g. no `sruth/oideachais/`
   at root)
 
 #### Scenario: Cross-cutting dirs remain at root
@@ -74,7 +74,7 @@ in the final state.
   `sruth/oideachais/baml_src/curriculum_extraction.baml`,
   `sruth/oideachais/baml_src/official_media.baml`
 - **THEN** each file contains all `client` blocks from both the original
-  root copy and the original `oideachais/baml_src/` copy (no client
+  root copy and the original `sruth/oideachais/baml_src/` copy (no client
   blocks lost; duplicate client names deduplicated with `_v2` suffix)
 
 #### Scenario: gaois/ BAML files in sruth/meaisinfhoghlaim

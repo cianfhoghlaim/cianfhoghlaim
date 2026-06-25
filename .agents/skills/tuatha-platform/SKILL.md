@@ -9,7 +9,7 @@ description: Tuatha Celtic Educational MMO + crypteolas crypto platform quadrant
 
 Use when you need to:
 
-- "Route a change to the right tuatha/ sub-module"
+- "Route a change to the right sruth/tuatha/ sub-module"
 - "Add a new 3D scene to the Tuatha game client"
 - "Wire BAML Celtic content extraction for a new lesson"
 - "Add a Dagster asset for the tuatha content pipeline"
@@ -18,7 +18,7 @@ Use when you need to:
 
 ## Overview
 
-The `tuatha/` quadrant houses the **Celtic Educational MMO**
+The `sruth/tuatha/` quadrant houses the **Celtic Educational MMO**
 + **crypteolas crypto platform**. It is one of the 4 quadrants
 of the Cianfhoghlaim monorepo and is registered as a top-level
 uv workspace member.
@@ -27,44 +27,44 @@ The 4 sub-modules:
 
 | Path | Tech | Purpose |
 |:--|:--|:--|
-| `tuatha/game/` | Babylon.js (TS) | 3D game client (the MMO front-end) |
-| `tuatha/crates/` | Rust + SpacetimeDB | Game engine (the MMO server) |
-| `tuatha/crypteolas/` | Python + Bitcoin/Ethereum/Solana | Crypto data platform |
-| `tuatha/ui/` | TanStack Start | Web front-end for the educational game |
+| `sruth/tuatha/game/` | Babylon.js (TS) | 3D game client (the MMO front-end) |
+| `sruth/tuatha/crates/` | Rust + SpacetimeDB | Game engine (the MMO server) |
+| `sruth/tuatha/sruth/crypteolas/` | Python + Bitcoin/Ethereum/Solana | Crypto data platform |
+| `sruth/tuatha/ui/` | TanStack Start | Web front-end for the educational game |
 
 The tuatha quadrant has its own Dagster code-location at
-`tuatha/dg.toml` and contributes BAML schemas to
+`sruth/tuatha/dg.toml` and contributes BAML schemas to
 `baml_src/ui_components.baml` and `baml_src/image_generation.baml`.
 
 The BAML schemas for the tuatha UI components are in
 `baml_src/ui_components.baml` and `baml_src/image_generation.baml`.
 
-## Quick routing table (from `tuatha/AGENTS.md`)
+## Quick routing table (from `sruth/tuatha/AGENTS.md`)
 
-When working in `tuatha/`, route to the right sub-area:
+When working in `sruth/tuatha/`, route to the right sub-area:
 
 | Working on | Read | Skill |
 |:--|:--|:--|
-| 3D scenes, MMO client | `tuatha/game/` | `.agents/skills/babylonjs/` |
-| Rust + SpacetimeDB server | `tuatha/crates/` | (SpacetimeDB — TBD skill) |
-| Crypto data platform | `tuatha/crypteolas/` | (per-asset skills) |
-| Web front-end | `tuatha/ui/` | `.agents/skills/tanstack-start/` |
+| 3D scenes, MMO client | `sruth/tuatha/game/` | `.agents/skills/babylonjs/` |
+| Rust + SpacetimeDB server | `sruth/tuatha/crates/` | (SpacetimeDB — TBD skill) |
+| Crypto data platform | `sruth/tuatha/sruth/crypteolas/` | (per-asset skills) |
+| Web front-end | `sruth/tuatha/ui/` | `.agents/skills/tanstack-start/` |
 | BAML Celtic content | `baml_src/ui_components.baml` | `.agents/skills/baml/` |
-| Dagster assets | `tuatha/dg.toml` + `tuatha/dagster_assets/` | `.agents/skills/dagster/` |
-| Knowledge graph | `tuatha/knowledge_graph/` | `.agents/skills/falkordb/` |
-| SIWE auth | `tuatha/auth/siwe.py` | (SIWE — TBD skill) |
-| x402 micropayments | `tuatha/crypteolas/x402.py` | (x402 — TBD skill) |
-| Celtic-language models | `oideachais/baml_src/celtic_linguistics.baml` | `.agents/skills/celtic-language-ai/` |
-| Dagger CI/CD for the tuatha/ build | `.dagger/` | `.agents/skills/dagger/` |
+| Dagster assets | `sruth/tuatha/dg.toml` + `sruth/tuatha/dagster_assets/` | `.agents/skills/dagster/` |
+| Knowledge graph | `sruth/tuatha/knowledge_graph/` | `.agents/skills/falkordb/` |
+| SIWE auth | `sruth/tuatha/auth/siwe.py` | (SIWE — TBD skill) |
+| x402 micropayments | `sruth/tuatha/sruth/crypteolas/x402.py` | (x402 — TBD skill) |
+| Celtic-language models | `sruth/oideachais/baml_src/celtic_linguistics.baml` | `.agents/skills/celtic-language-ai/` |
+| Dagger CI/CD for the sruth/tuatha/ build | `.dagger/` | `.agents/skills/dagger/` |
 
 ## Quick Start
 
-The canonical tuatha/ quick start (corrected from
+The canonical sruth/tuatha/ quick start (corrected from
 `docs/06-product/TUATH_QUICKSTART.md`):
 
 ```bash
 # 1. Start the backend (Postgres + FalkorDB + LanceDB + MinIO)
-cd tuatha/
+cd sruth/tuatha/
 docker compose up -d
 
 # 2. Sync the Python deps (crypteolas + BAML + Dagster)
@@ -91,10 +91,10 @@ The 4 dev servers run in parallel on different ports:
 - Game client: 8080 (dev)
 - Web front-end: 3002
 
-## Project structure (KCG `tuatha/`)
+## Project structure (KCG `sruth/tuatha/`)
 
 ```
-tuatha/
+sruth/tuatha/
 ├── AGENTS.md                      ← entry point (this skill is the upgrade)
 ├── DEVELOPMENT.md                 ← 593-line developer guide
 ├── README.md                      ← 42k README (product spec)
@@ -122,7 +122,7 @@ tuatha/
 │   │   ├── reducers/               ← game logic
 │   │   └── api/                    ← HTTP API
 │   └── tests/
-├── crypteolas/                    ← Python crypto data platform
+├── sruth/crypteolas/                    ← Python crypto data platform
 │   ├── pyproject.toml
 │   ├── src/
 │   │   ├── bitcoin/                ← Bitcoin RPC
@@ -145,7 +145,7 @@ tuatha/
 ├── baml_src/                      ← BAML schemas (re-exports from /baml_src/)
 ├── knowledge_graph/                ← FalkorDB queries for Celtic mythology
 ├── auth/                           ← SIWE (Sign-In With Ethereum)
-├── crypteolas/                     ← crypto data platform
+├── sruth/crypteolas/                     ← crypto data platform
 ├── dg.toml                         ← Dagster code-location config
 └── pyproject.toml
 ```
@@ -167,7 +167,7 @@ tuatha/
 
 ## Dagster assets (KCG tuatha pipeline)
 
-The tuatha/ quadrant runs the following Dagster assets:
+The sruth/tuatha/ quadrant runs the following Dagster assets:
 
 - `celtic_curriculum` — BAML extraction of Celtic curriculum
   (Irish, Welsh, Scottish Gaelic, Breton) from NCCA + WJEC +
@@ -187,8 +187,8 @@ These assets write to:
   family tree
 - **LanceDB** (vector search) for the embedding indexes
 
-The Dagster code-location is registered at `tuatha/dg.toml`
-and the assets are in `tuatha/dagster_assets/`.
+The Dagster code-location is registered at `sruth/tuatha/dg.toml`
+and the assets are in `sruth/tuatha/dagster_assets/`.
 
 ## KCG-specific env vars
 
@@ -220,7 +220,7 @@ LANGFUSE_SECRET_KEY=...
 ## When to use this skill
 
 ✅ **Use when:**
-- You're working in `tuatha/`
+- You're working in `sruth/tuatha/`
 - You're adding a new 3D scene, Dagster asset, or Celtic
   content asset
 - You need to set up SIWE auth, x402 micropayments, or
@@ -229,34 +229,34 @@ LANGFUSE_SECRET_KEY=...
   `arm1-oci`
 
 ❌ **Don't use when:**
-- You're working in `oideachais/` (use
+- You're working in `sruth/oideachais/` (use
   `.agents/skills/oideachais-pipeline/SKILL.md`)
 - You're working in `sruth/meaisinfhoghlaim/` (use
   `.agents/skills/meaisinfhoghlaim-platform/SKILL.md`)
-- You're working in `croilar/` (use
+- You're working in `sruth/croilar/` (use
   `.agents/skills/croilar-portfolio/SKILL.md`)
 
 ## Cross-references
 
-- `tuatha/AGENTS.md` — the existing entry point (this skill
+- `sruth/tuatha/AGENTS.md` — the existing entry point (this skill
   is the expanded version)
-- `tuatha/DEVELOPMENT.md` — 593-line developer guide
-- `tuatha/README.md` — 42k product spec (read for product
+- `sruth/tuatha/DEVELOPMENT.md` — 593-line developer guide
+- `sruth/tuatha/README.md` — 42k product spec (read for product
   context)
 - `.agents/skills/babylonjs/SKILL.md` — the Babylon.js 3D
-  engine (used in `tuatha/game/`)
+  engine (used in `sruth/tuatha/game/`)
 - `.agents/skills/tanstack-start/SKILL.md` — the TanStack
-  Start front-end (used in `tuatha/ui/`)
+  Start front-end (used in `sruth/tuatha/ui/`)
 - `.agents/skills/baml/SKILL.md` — the BAML extraction
-  language (used in `tuatha/dagster_assets/`)
+  language (used in `sruth/tuatha/dagster_assets/`)
 - `.agents/skills/dagster/SKILL.md` — the Dagster orchestrator
   (used to schedule tuatha assets)
 - `.agents/skills/celtic-language-ai/SKILL.md` — the Celtic
   language models
 - `.agents/skills/dagger/SKILL.md` — the Dagger CI/CD (used
-  to build the tuatha/ stack)
+  to build the sruth/tuatha/ stack)
 - `.agents/skills/hono/SKILL.md` — the Hono API layer (used
-  in the tuatha/ backend)
+  in the sruth/tuatha/ backend)
 - `.agents/skills/copilotkit/SKILL.md` — the CopilotKit UI
   (the A2UI agent)
 
@@ -272,7 +272,7 @@ LANGFUSE_SECRET_KEY=...
 - TanStack Start: <https://tanstack.com/start>
 - SIWE: <https://docs.login.xyz/
 - x402: <https://www.x402.org/>
-- KCG `tuatha/`: the Celtic MMO + crypto platform
+- KCG `sruth/tuatha/`: the Celtic MMO + crypto platform
 
 ## Sovereign game state (SpacetimeDB + DuckDB-WASM + TanStack + CopilotKit)
 
@@ -396,8 +396,8 @@ to host the synchronous multi-player layer on top.
 
 ## Dagster assets for MMO (Hades + BitCraft agentic research)
 
-The tuatha/ Dagster code-location
-(`tuatha/dagster_assets/`) ships 4 core assets
+The sruth/tuatha/ Dagster code-location
+(`sruth/tuatha/dagster_assets/`) ships 4 core assets
 (`celtic_curriculum`, `mythology_content`,
 `celtic_embeddings`, `mythology_embeddings`). The
 2026 extension adds 2 new asset groups based on
@@ -540,7 +540,7 @@ def bitcraft_spacetimedb_compat(context: AssetExecutionContext):
 The 2 new groups (`hades_research`, `bitcraft_spacetimedb`)
 sit alongside the existing 4 (`celtic_curriculum`,
 `mythology_content`, `celtic_embeddings`,
-`mythology_embeddings`) in the `tuatha/dg.toml`
+`mythology_embeddings`) in the `sruth/tuatha/dg.toml`
 code-location.
 
 See [`tuatha-mmo/references/sovereign-mmo-state-stack.md`](../tuatha-mmo/references/sovereign-mmo-state-stack.md)

@@ -30,7 +30,7 @@ Three concrete problems result:
    App in `docs_skills_consolidation.py` only mounts `docs/` and
    `.agents/skills/`.
 3. **Schema masks and data types are duplicated across quadrants.**
-   `oideachais/`, `meaisinfhoghlaim/`, `tuatha/codeolas/`, and the
+   `sruth/oideachais/`, `sruth/meaisinfhoghlaim/`, `sruth/tuatha/codeolas/`, and the
    CocoIndex v1 Apps each define their own `Document`, `Chunk`,
    `Embedding`, `Language`, `Quadrant` types. The embedding model
    string `"BAAI/bge-m3"` is hard-coded in 6+ files. There is no
@@ -38,7 +38,7 @@ Three concrete problems result:
 
 ## What Changes
 
-- **New CocoIndex v1 App** `oideachais/cocoindex_flows/openspec_indexing.py`:
+- **New CocoIndex v1 App** `sruth/oideachais/cocoindex_flows/openspec_indexing.py`:
   - Mounts `localfs.walk_dir("openspec/", live=True, refresh_interval=60s)`
   - Phase 1 per-file: BAML `ExtractOpenSpecChange(content)` →
     `(change_id, status, quadrant, capability_specs, blocking_deps)`
@@ -50,7 +50,7 @@ Three concrete problems result:
   - LanceDB table `openspec_chunks` with HNSW on `embedding`
   - `app = coco.App(coco.AppConfig(name="OpenSpecIndex"), app_main)`
 
-- **New CocoIndex v1 App** `oideachais/cocoindex_flows/leabharlann_openspec_links.py`:
+- **New CocoIndex v1 App** `sruth/oideachais/cocoindex_flows/leabharlann_openspec_links.py`:
   - Joins the existing `leabharlann_chunks` LanceDB rows with the new
     `OpenSpecChange` FalkorDB nodes via a `MODIFIES_LEABHARLANN_DOC` /
     `CITED_BY_LEABHARLANN_DOC` edge
@@ -64,15 +64,15 @@ Three concrete problems result:
   - One canonical `EmbeddingModel` enum (`BAI_BGE_M3`, `BGE_LARGE_EN`,
     `OPENAI_TEXT_EMBED_3_LARGE`, …) at `codeolas/core/types.py`
   - One canonical `Quadrant` enum at
-    `oideachais/core/types.py` (`OIDEACHAIS`, `MEISINFHOGHLAIM`,
+    `sruth/oideachais/core/types.py` (`OIDEACHAIS`, `MEISINFHOGHLAIM`,
     `TUATHA`, `CROILAR`, `SHARED`)
-  - One canonical `DocumentType` enum at `oideachais/core/types.py`
+  - One canonical `DocumentType` enum at `sruth/oideachais/core/types.py`
     (the existing dlt sources all roll their own)
   - Replace the 6+ hard-coded `"BAAI/bge-m3"` strings with
     `os.environ["CODEOLAS_EMBED_MODEL"]` + the enum default
 
 - **New Dagster asset group** `four_directory_indexing` registered in
-  `oideachais/dagster_defs/definitions.py`:
+  `sruth/oideachais/dagster_defs/definitions.py`:
   - `openspec_chunk_and_tag`, `openspec_graph_publish`,
     `openspec_live` (3 assets, mirror of the docs_skills trio)
   - `leabharlann_openspec_links_build` (1 asset)
@@ -107,11 +107,11 @@ Three concrete problems result:
     canonical implementation
   - NEW `schema-type-standardization` — see above
 - **Affected code:**
-  - `oideachais/cocoindex_flows/__init__.py` — re-export 2 new apps
-  - `oideachais/dagster_defs/definitions.py` — register 4 new assets
-  - `oideachais/core/types.py` — add `Quadrant`, `DocumentType`,
+  - `sruth/oideachais/cocoindex_flows/__init__.py` — re-export 2 new apps
+  - `sruth/oideachais/dagster_defs/definitions.py` — register 4 new assets
+  - `sruth/oideachais/core/types.py` — add `Quadrant`, `DocumentType`,
     `EmbeddingModel` enums (NEW module)
-  - `meaisinfhoghlaim/agents/` + `oideachais/cocoindex_flows/*` —
+  - `sruth/meaisinfhoghlaim/agents/` + `sruth/oideachais/cocoindex_flows/*` —
     migrate 6+ hard-coded model strings to the enum
   - `baml_src/four_directory_indexing.baml` — new file
   - `codeolas/core/types.py` — re-export the new enums for the
@@ -138,7 +138,7 @@ Three concrete problems result:
   OpenSpec spec or change. It only indexes, tags, and graph-links
   the existing material.
 - This change does **not** remove the `_v0_archive/` legacy module
-  in `oideachais/cocoindex_flows/`. The v0 archive stays on disk.
+  in `sruth/oideachais/cocoindex_flows/`. The v0 archive stays on disk.
 - This change does **not** cognify the new FalkorDB edges into
   Cognee. The graph is cognify-ready (entity-typed) and can be
   picked up by `infrastructure/scripts/cognee-ingest-docs.py --all`

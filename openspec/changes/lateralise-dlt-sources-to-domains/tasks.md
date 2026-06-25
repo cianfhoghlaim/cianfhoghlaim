@@ -7,7 +7,7 @@
 - [ ] `git grep "from oideachais.dlt_sources.crown_dependencies\|import oideachais.dlt_sources.crown_dependencies"` returns all sites
 - [ ] `git grep "from dlt_sources.uk\|from dlt_sources.ireland\|from dlt_sources.crown_dependencies"` (relative imports)
 
-## Phase 2: Update oideachais/AGENTS.md
+## Phase 2: Update sruth/oideachais/AGENTS.md
 
 - [ ] Update the "Quick routing" table (line 42-58) to point to
   `dlt_sources/domains/education/{nation}/` instead of the
@@ -18,40 +18,40 @@
 
 ## Phase 3: Move the dlt source files (git mv)
 
-- [ ] `git mv oideachais/dlt_sources/uk/england/*.py oideachais/dlt_sources/domains/education/en/`
-- [ ] `git mv oideachais/dlt_sources/uk/scotland/*.py oideachais/dlt_sources/domains/education/sct/`
-- [ ] `git mv oideachais/dlt_sources/uk/wales/*.py oideachais/dlt_sources/domains/education/wls/`
-- [ ] `git mv oideachais/dlt_sources/uk/northern_ireland/*.py oideachais/dlt_sources/domains/education/ni/`
-- [ ] `git mv oideachais/dlt_sources/ireland/*.py oideachais/dlt_sources/domains/education/ie/`
-- [ ] `git mv oideachais/dlt_sources/crown_dependencies/channel_islands.py oideachais/dlt_sources/domains/education/jey/`
-- [ ] `git mv oideachais/dlt_sources/crown_dependencies/isle_of_man.py oideachais/dlt_sources/domains/education/iom/`
+- [ ] `git mv sruth/oideachais/dlt_sources/uk/england/*.py sruth/oideachais/dlt_sources/domains/education/en/`
+- [ ] `git mv sruth/oideachais/dlt_sources/uk/scotland/*.py sruth/oideachais/dlt_sources/domains/education/sct/`
+- [ ] `git mv sruth/oideachais/dlt_sources/uk/wales/*.py sruth/oideachais/dlt_sources/domains/education/wls/`
+- [ ] `git mv sruth/oideachais/dlt_sources/uk/northern_ireland/*.py sruth/oideachais/dlt_sources/domains/education/ni/`
+- [ ] `git mv sruth/oideachais/dlt_sources/ireland/*.py sruth/oideachais/dlt_sources/domains/education/ie/`
+- [ ] `git mv sruth/oideachais/dlt_sources/crown_dependencies/channel_islands.py sruth/oideachais/dlt_sources/domains/education/jey/`
+- [ ] `git mv sruth/oideachais/dlt_sources/crown_dependencies/isle_of_man.py sruth/oideachais/dlt_sources/domains/education/iom/`
 
 ## Phase 4: Add backward-compat re-exports
 
-- [ ] Update `oideachais/dlt_sources/uk/england/__init__.py` to re-export
-- [ ] Update `oideachais/dlt_sources/uk/scotland/__init__.py`
-- [ ] Update `oideachais/dlt_sources/uk/wales/__init__.py`
-- [ ] Update `oideachais/dlt_sources/uk/northern_ireland/__init__.py`
-- [ ] Update `oideachais/dlt_sources/ireland/__init__.py`
-- [ ] Update `oideachais/dlt_sources/crown_dependencies/__init__.py`
+- [ ] Update `sruth/oideachais/dlt_sources/uk/england/__init__.py` to re-export
+- [ ] Update `sruth/oideachais/dlt_sources/uk/scotland/__init__.py`
+- [ ] Update `sruth/oideachais/dlt_sources/uk/wales/__init__.py`
+- [ ] Update `sruth/oideachais/dlt_sources/uk/northern_ireland/__init__.py`
+- [ ] Update `sruth/oideachais/dlt_sources/ireland/__init__.py`
+- [ ] Update `sruth/oideachais/dlt_sources/crown_dependencies/__init__.py`
 
 ## Phase 5: Update import sites in dagster_defs/
 
-- [ ] `oideachais/dagster_defs/assets/uk_education_assets.py`
-- [ ] `oideachais/dagster_defs/assets/ie/education/*.py` (5 files)
-- [ ] `oideachais/dagster_defs/assets/wire_unwired_dlt_sources.py` (C4.1)
-- [ ] `oideachais/dagster_defs/assets/author_archive_assets.py` (if any)
-- [ ] `oideachais/dagster_defs/definitions.py`
-- [ ] `oideachais/dagster_defs/asset_checks.py`
-- [ ] `oideachais/dagster_defs/factories.py` (if any)
-- [ ] `oideachais/dagster_defs/resources.py` (if any)
-- [ ] `oideachais/cognee_integration/author_archive_cognify.py` (if any)
+- [ ] `sruth/oideachais/dagster_defs/assets/uk_education_assets.py`
+- [ ] `sruth/oideachais/dagster_defs/assets/ie/education/*.py` (5 files)
+- [ ] `sruth/oideachais/dagster_defs/assets/wire_unwired_dlt_sources.py` (C4.1)
+- [ ] `sruth/oideachais/dagster_defs/assets/author_archive_assets.py` (if any)
+- [ ] `sruth/oideachais/dagster_defs/definitions.py`
+- [ ] `sruth/oideachais/dagster_defs/asset_checks.py`
+- [ ] `sruth/oideachais/dagster_defs/factories.py` (if any)
+- [ ] `sruth/oideachais/dagster_defs/resources.py` (if any)
+- [ ] `sruth/oideachais/cognee_integration/author_archive_cognify.py` (if any)
 
 ## Phase 6: Update STATUS.md and REFACTORING.md
 
-- [ ] Add a "Layout migration" section to `oideachais/STATUS.md`
+- [ ] Add a "Layout migration" section to `sruth/oideachais/STATUS.md`
 - [ ] Add a "Legacy dlt source shim removal" entry to
-  `oideachais/REFACTORING.md` (1 release timeline)
+  `sruth/oideachais/REFACTORING.md` (1 release timeline)
 
 ## Phase 7: Validation
 

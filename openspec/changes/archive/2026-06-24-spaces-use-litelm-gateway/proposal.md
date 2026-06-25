@@ -13,7 +13,7 @@ canonical KCG LiteLLM gateway (`http://litellm:4000/v1`), losing:
   but does NOT see raw HF Inference calls
 - **Cost tracking** — per-model cost lines in Langfuse are
   unavailable
-- **The canonical fallback chain** — `oideachais/baml_src/clients.baml`
+- **The canonical fallback chain** — `sruth/oideachais/baml_src/clients.baml`
   has a 5-key rotation (minimax-m3 → kimi-k2.6 → glm-4.6 → ...
   → local qwen-math) that the Spaces cannot use
 
@@ -49,6 +49,6 @@ the same signatures). Only the internal implementation changes.
 - C1-C4: per-Space modernization (separate changes)
 - A2 does not require regenerating baml_client/ — the existing
   `_common/baml_client.py` stays as a thin shim, the new
-  `oideachais/baml_src/circular_extraction.baml` and the 3
+  `sruth/oideachais/baml_src/circular_extraction.baml` and the 3
   tuatha BAML files are used by the cross-quadrant agents
   directly, not by the Spaces

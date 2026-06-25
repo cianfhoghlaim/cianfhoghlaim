@@ -4,7 +4,7 @@
 The `@clockworklabs/spacetimedb-sdk` TypeScript SDK for SpacetimeDB — the official client library for connecting browser/Node.js applications to a SpacetimeDB server. Handles WebSocket connection management, table subscription, reducer invocation, and auto-generated type bindings from the SpacetimeDB module schema.
 
 ## Why This Matters for Kings' College Galway
-The `tuatha/` educational MMO uses this SDK to connect the Babylon.js frontend in `tuatha/ui` to the SpacetimeDB game server. Student positions, chat messages, quiz answers, and quest state all flow through this SDK's subscription/reducer model. The quickstart-chat example directly informs our multiplayer classroom text-chat implementation.
+The `sruth/tuatha/` educational MMO uses this SDK to connect the Babylon.js frontend in `sruth/tuatha/ui` to the SpacetimeDB game server. Student positions, chat messages, quiz answers, and quest state all flow through this SDK's subscription/reducer model. The quickstart-chat example directly informs our multiplayer classroom text-chat implementation.
 
 ## Key Patterns Preserved
 - **README.md** — SDK overview with GitHub source link

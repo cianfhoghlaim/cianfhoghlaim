@@ -1,18 +1,18 @@
 ## MODIFIED Requirements
 
-### Requirement: Sample data is stored in `oideachais/samplaí/` only
+### Requirement: Sample data is stored in `sruth/oideachais/samplaí/` only
 The oideachais quadrant SHALL store all Celtic-language and education
-sample data in the canonical `oideachais/samplaí/` directory only. The
-`oideachais/datasets/` directory SHALL NOT exist; if any process
+sample data in the canonical `sruth/oideachais/samplaí/` directory only. The
+`sruth/oideachais/datasets/` directory SHALL NOT exist; if any process
 re-creates it, the root `.gitignore` SHALL prevent it from being
 tracked.
 
 #### Scenario: New sample data is added
 - **WHEN** a contributor adds a new Celtic-language sample, exam
   paper, or curriculum snippet
-- **THEN** it MUST be placed under `oideachais/samplaí/{language}/`
+- **THEN** it MUST be placed under `sruth/oideachais/samplaí/{language}/`
   (e.g. `samplaí/gaeilge/`, `samplaí/cymraeg/`)
-- **AND** it MUST NOT be placed under `oideachais/datasets/` (which
+- **AND** it MUST NOT be placed under `sruth/oideachais/datasets/` (which
   does not exist and is gitignored)
 
 #### Scenario: Private data must never be checked in

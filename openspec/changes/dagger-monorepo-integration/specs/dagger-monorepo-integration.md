@@ -13,10 +13,10 @@ adds 1 new capability (`dagger-monorepo-integration`).
 ### Requirement: Polyglot CI orchestration
 The Dagger module SHALL orquestrate lint, typecheck, unit, integration, and
 E2E tests across the Python uv workspace (`oideachais`, `tuatha`,
-`tuatha/codeolas`, `tuatha/crypteolas`, `tuatha/apps/crypteolas demo`,
+`sruth/tuatha/codeolas`, `sruth/tuatha/crypteolas`, `sruth/tuatha/apps/crypteolas demo`,
 `infrastructure/browser`), the bun workspaces
-(`oideachais/web`, `oideachais/mcp/filesystem`, `tuatha/ui`,
-`tuatha/apps/crypteolas demo`), and the Rust workspace
+(`sruth/oideachais/web`, `sruth/oideachais/mcp/filesystem`, `sruth/tuatha/ui`,
+`sruth/tuatha/apps/crypteolas demo`), and the Rust workspace
 (`infrastructure/locket`).
 
 #### Scenario: `dagger call test-all` returns the combined polyglot test summary
@@ -155,7 +155,7 @@ Cloudflare API calls.
 
 ## DEFERRED Requirements
 
-The SpacetimeDB + Solana + Ethereum CI for the `tuatha/crates/` Rust
+The SpacetimeDB + Solana + Ethereum CI for the `sruth/tuatha/crates/` Rust
 workspace is **deferred** to a followup OpenSpec change. It requires a
 Rust toolchain in the Dagger Python root (currently only Python, bun, and
 Komodo), GPU support for the Ethereum test runner, and a verified

@@ -30,7 +30,7 @@ to a Hugging Face Space.
 
 #### Scenario: Workflow is path-filtered
 - **GIVEN** the workflow is configured for `spaces/an_scrudu/`
-- **WHEN** a commit touches only `spaces/anam_tuatha/`
+- **WHEN** a commit touches only `spaces/anam_sruth/tuatha/`
 - **THEN** the workflow SHALL NOT trigger for the an_scrudu Space
 
 #### Scenario: Failure surfaces a readable error
@@ -71,7 +71,7 @@ The `cianfhoghlaim` Space MUST validate every LLM response against the Pydantic 
 
 ### Requirement: anam_tuatha Pydantic schema validation
 
-The `anam_tuatha` Space MUST validate every LLM response against the Pydantic schema (PExitCardSet) before returning the exit card to the UI. The Space MUST add `pydantic>=2.5` to `spaces/anam_tuatha/requirements.txt`.
+The `anam_tuatha` Space MUST validate every LLM response against the Pydantic schema (PExitCardSet) before returning the exit card to the UI. The Space MUST add `pydantic>=2.5` to `spaces/anam_sruth/tuatha/requirements.txt`.
 
 #### Scenario: Pydantic validation fails
 
@@ -92,7 +92,7 @@ Celtic AI demo suite:
    meaisinfhoghlaim (Water + Air), 3 Celtic AI tools
 3. `cianfhoghlaim/` (RPG) — gradio 5.x, tuatha (Air + Spirit),
    Hades-style dialogue with 6 Celtic NPCs
-4. `anam_tuatha/` (Anam) — gradio 5.x, croilar (5 elements),
+4. `anam_sruth/tuatha/` (Anam) — gradio 5.x, croilar (5 elements),
    5 elements + 2 cross-cutting features = 7 panels
 
 The 4 new demo Spaces (the 2026-06-24 batch):

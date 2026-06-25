@@ -5,7 +5,7 @@
 ### 3.0 Cognee helper (DONE)
 
 - [x] Create
-      `oideachais/cognee_integration/author_archive_cognify.py`
+      `sruth/oideachais/cognee_integration/author_archive_cognify.py`
       with `cognify_author_archive_rows()` and `cognify_all_corpora()`
 - [x] Define `DATASET_NAME = "oideachais_author_archive"` and
       `EDGE_TYPES` (the 8 edge types)
@@ -14,7 +14,7 @@
 ### 3.1 Cross-corpus edge rules (DONE)
 
 - [x] Create
-      `oideachais/cognify_rules/author_archive_cross_corpus.py`
+      `sruth/oideachais/cognify_rules/author_archive_cross_corpus.py`
 - [x] 5 deterministic rules:
       1. OfficialMediaSource-[:PUBLISHES]->ZoteroPaper
       2. OfficialMediaSource-[:DISCUSSES]->UoGArtifact
@@ -27,21 +27,21 @@
 ### 3.2 Dagster assets (DONE)
 
 - [x] Create
-      `oideachais/dagster_defs/assets/official_media/author_archive_kg_assets.py`
+      `sruth/oideachais/dagster_defs/assets/official_media/author_archive_kg_assets.py`
       with 3 assets:
       - `author_archive_cognify` (compute_kind="cognee")
       - `author_archive_cross_edges` (compute_kind="falkordb")
       - `author_archive_kg_summary` (writes
-        `oideachais/official_media/kg_summary.json`)
+        `sruth/oideachais/official_media/kg_summary.json`)
 - [x] Register in
-      `oideachais/dagster_defs/assets/official_media/__init__.py`
+      `sruth/oideachais/dagster_defs/assets/official_media/__init__.py`
 - [x] Register in
-      `oideachais/dagster_defs/assets/__init__.py` `all_assets`
+      `sruth/oideachais/dagster_defs/assets/__init__.py` `all_assets`
 
 ### 3.3 Marimo unified dashboard (DONE)
 
 - [x] Create
-      `oideachais/notebooks/dashboards/author_archive/unified_dashboard.py`
+      `sruth/oideachais/notebooks/dashboards/author_archive/unified_dashboard.py`
       with 4 tabs:
       - Source provenance (Stage 1)
       - UoG coursework (Stage 2)
@@ -58,12 +58,12 @@
 
 ### 3.5 Tests (TODO)
 
-- [ ] `oideachais/tests/test_author_archive_cognify.py` covering the
+- [ ] `sruth/oideachais/tests/test_author_archive_cognify.py` covering the
       8 edge types, the 5 rules, and the asset registration
 
 ## Stage 4 — Multi-target deployment (deferred)
 
-`oideachais/dlt_utils/target_factory.py` + 3 targets (dev=DuckDB,
+`sruth/oideachais/dlt_utils/target_factory.py` + 3 targets (dev=DuckDB,
 staging=MotherDuck, prod=Garage S3 + Lakekeeper) + `make_target.sh`.
 
 ## Validation

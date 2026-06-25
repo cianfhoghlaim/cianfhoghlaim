@@ -24,7 +24,7 @@
 
 - [x] Rewrite `.agents/skills/tanstack-start/SKILL.md`
       (9-line stub → ~300 lines, KCG no-auth, `@tanstack/db`,
-      BetterAuth only in `croilar/apps/portal`).
+      BetterAuth only in `sruth/croilar/apps/portal`).
 - [x] Expand `.agents/skills/google-adk/SKILL.md`
       (workflow primitives, A2A, neuro-symbolic, deployment,
       Firecrawl integration).

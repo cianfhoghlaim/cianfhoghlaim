@@ -49,8 +49,8 @@ Three concrete patterns recur:
   architecture, Z.ai GLM-4.6 via `OpenAILike`, Browserbase MCP
 - `.agents/skills/tanstack-start/SKILL.md` — rewrite 9-line stub to
   absorb the 453-line generic reference, with KCG context
-  (no auth on `oideachais/web`, `@tanstack/db` for offline diff-sync,
-  BetterAuth only in `croilar/apps/portal`)
+  (no auth on `sruth/oideachais/web`, `@tanstack/db` for offline diff-sync,
+  BetterAuth only in `sruth/croilar/apps/portal`)
 - `.agents/skills/marimo/SKILL.md` + new `references/` — 32 new
   patterns from the 16 curated `.py` files, plus the marimo-on-Cloudflare
   Workers + Container deployment, PEP 723, `mo.sql(engine=)`, multi-column
@@ -98,12 +98,12 @@ directory:
 ### Project rules PRESERVED (not changed)
 
 - **Cognee is the primary KG** (now documented in `graphiti` skill)
-- **No auth on `oideachais/web` / `tuatha/ui`** (now documented in
+- **No auth on `sruth/oideachais/web` / `sruth/tuatha/ui`** (now documented in
   `tanstack-start` skill)
 - **CocoIndex v1 only** (the `cocoindex` skill is v1; the v0 doc
   in `docs/07-skills/cocoindex.md` is deleted)
-- **`oideachais/baml_src/` is the BAML home** (unchanged)
-- **`oideachais/dlt_sources/` is the dlt home** (unchanged)
+- **`sruth/oideachais/baml_src/` is the BAML home** (unchanged)
+- **`sruth/oideachais/dlt_sources/` is the dlt home** (unchanged)
 
 ## Impact
 

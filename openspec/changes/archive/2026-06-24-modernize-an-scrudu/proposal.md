@@ -4,7 +4,7 @@
 canonical Space 1 of the 2026-06 hackathon. Since then:
 
 - The BAML `ExtractCircularMeta` function has been promoted to
-  `oideachais/baml_src/circular_extraction.baml` (the canonical
+  `sruth/oideachais/baml_src/circular_extraction.baml` (the canonical
   location, with the canonical `LitellmClient`).
 - The 3-tier HF Inference fallback chain in
   `spaces/_common/baml_client.py` has been replaced with the
@@ -23,7 +23,7 @@ LLM returns the nested BAML shape).
 This change modernizes the Space:
 
 1. Add Pydantic v2 schemas that mirror the canonical
-   `oideachais/baml_src/circular_extraction.baml` (the
+   `sruth/oideachais/baml_src/circular_extraction.baml` (the
    CircularReference + TopicDistribution + MarkingSchemeSummary
    + CircularExtraction classes).
 2. Update `_validate_and_coerce` to validate the LLM response
@@ -56,7 +56,7 @@ fail.
 - Switching to the real BAML compiler (would require
   `baml-cli generate` in the Space; the Pydantic mirror gives
   80% of the benefits without the BAML toolchain dep)
-- The actual `oideachais/dlt_sources/domains/education/ie/leaving_cert.py`
+- The actual `sruth/oideachais/dlt_sources/domains/education/ie/leaving_cert.py`
   DLT source integration (a separate change)
 - The marimo heatmap replacement (covered in the
   `marimo/SKILL.md` skill; not in this change)

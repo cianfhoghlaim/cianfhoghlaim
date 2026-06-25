@@ -7,7 +7,7 @@ The canonical spec for `data-engineering-pipeline-documentation` lives at `opens
 ## MODIFIED Requirements
 
 ### Requirement: Canonical spec SHALL list 9 files
-The system SHALL maintain the 9 documentation files listed in the canonical `data-engineering-pipeline-documentation` spec: `oideachais/STATUS.md`, `oideachais/REFACTORING.md`, `oideachais/dlt_sources/uk/README.md`, `oideachais/dlt_sources/ireland/README.md`, `oideachais/cocoindex_flows/README.md`, `oideachais/dagster_defs/assets/README.md`, `baml_src/README.md`, `oideachais/agents/{adk,agno}/README.md`, and `docs/06-infrastructure/leabharlann-stack-overview.md`.
+The system SHALL maintain the 9 documentation files listed in the canonical `data-engineering-pipeline-documentation` spec: `sruth/oideachais/STATUS.md`, `sruth/oideachais/REFACTORING.md`, `sruth/oideachais/dlt_sources/uk/README.md`, `sruth/oideachais/dlt_sources/ireland/README.md`, `sruth/oideachais/cocoindex_flows/README.md`, `sruth/oideachais/dagster_defs/assets/README.md`, `baml_src/README.md`, `sruth/oideachais/agents/{adk,agno}/README.md`, and `docs/06-infrastructure/leabharlann-stack-overview.md`.
 
 #### Scenario: All 9 files exist
 - **GIVEN** a user checks the documentation surface

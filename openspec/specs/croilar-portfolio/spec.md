@@ -59,12 +59,12 @@ The system SHALL process and serve all images via the croilar-assets R2 bucket +
 
 #### Scenario: No regression
 
-- **WHEN** an image is added to `croilar/web/public/images/`
+- **WHEN** an image is added to `sruth/croilar/web/public/images/`
 - **THEN** the build-time sharp pipeline SHALL still compress it and upload to R2
 
 ### Requirement: Deployment
 
-The system SHALL deploy `croilar/web` to Cloudflare Pages.
+The system SHALL deploy `sruth/croilar/web` to Cloudflare Pages.
 
 #### Scenario: No regression
 
@@ -77,7 +77,7 @@ The system SHALL encrypt PII (identity documents) at rest using SOPS.
 
 #### Scenario: No regression
 
-- **WHEN** a PDF is added to `croilar/identity/raw/`
+- **WHEN** a PDF is added to `sruth/croilar/identity/raw/`
 - **THEN** it SHALL still be GPG-encrypted and only the metadata SHALL be committed
 
 ### Requirement: Live Data Binding
@@ -151,7 +151,7 @@ The system SHALL expose a `/notebooks` portal page that lists marimo notebooks a
 #### Scenario: Inline WASM render
 
 - **WHEN** a user opens `/notebooks/$slug`
-- **THEN** the page SHALL resolve the slug to a notebook in `croilar/notebooks/` (or the WASM export under `croilar/apps/web/public/wasm/`)
+- **THEN** the page SHALL resolve the slug to a notebook in `sruth/croilar/notebooks/` (or the WASM export under `sruth/croilar/apps/web/public/wasm/`)
 - **AND** the page SHALL render the marimo WASM export inline
 
 #### Scenario: Auth gate

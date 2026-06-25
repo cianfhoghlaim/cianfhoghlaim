@@ -22,7 +22,7 @@ explicitly are still supported.
   (the env var overrides the default)
 
 ### Requirement: The canonical compose.yaml SHALL declare depends_on: locket
-The canonical `infrastructure/stacks/oideachais/compose.yaml` MUST
+The canonical `infrastructure/stacks/sruth/oideachais/compose.yaml` MUST
 declare `depends_on: locket: condition: service_healthy` for each
 app service (`dagster`, `api`, `frontend`). The override
 `sidecar.yaml` MUST NOT re-declare the `depends_on` (which would

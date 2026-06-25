@@ -43,7 +43,7 @@ Out of scope (intentionally dropped): any Kneecap lyrics pipeline. The `leabharl
 
 ### Code
 
-#### `croilar/_shared/streams.py` (NEW)
+#### `sruth/croilar/_shared/streams.py` (NEW)
 - `StreamSourceType` enum: `GITHUB | LINKEDIN | RESEARCHGATE | SPOTIFY | SOUNDCLOUD | LABELS | CV | ARTWORK | FILESYSTEM | ZOTERO_SQL`
 - `StreamSource` frozen dataclass: `(type, config, local_only=False)`
 - `Stream` frozen dataclass: `(id, owner, owner_display_name, r2_prefix, duckdb_dataset, sources)`
@@ -51,29 +51,29 @@ Out of scope (intentionally dropped): any Kneecap lyrics pipeline. The `leabharl
 - `get_stream(stream_id) -> Stream` lookup (cached)
 - `list_streams() -> list[Stream]`
 
-#### `croilar/_shared/config/settings.py` (MODIFIED)
+#### `sruth/croilar/_shared/config/settings.py` (MODIFIED)
 - Rename `AleyumSettings` → `StreamSettings`
 - Env prefix `ALEYUM_` → `STREAMS_`
-- `streams: dict[str, Stream]` field loaded from `croilar/config/sources.yaml` (new format)
+- `streams: dict[str, Stream]` field loaded from `sruth/croilar/config/sources.yaml` (new format)
 
-#### `croilar/config/sources.yaml` (REPLACED)
+#### `sruth/croilar/config/sources.yaml` (REPLACED)
 - Old top-level keys (`spotify`, `soundcloud`, `github`, …) replaced with a `streams:` map
 - See `specs/croilar-data-engineering/spec.md` for the new shape
 
-#### `croilar/pipelines/linkedin/source.py` (MODIFIED)
+#### `sruth/croilar/pipelines/linkedin/source.py` (MODIFIED)
 - `flow_id` parameter → `stream_id`
 - Drop `carlcashman` default
 - Default `profile_url` = the Cian Mac an Déisigh Uí Liatháin LinkedIn URL (provided in task #5)
 
-#### `croilar/pipelines/github/source.py` (MODIFIED)
+#### `sruth/croilar/pipelines/github/source.py` (MODIFIED)
 - Default `username="cianfhoghlaim"`
 
-#### `croilar/pipelines/researchgate/` (NEW)
+#### `sruth/croilar/pipelines/researchgate/` (NEW)
 - DLT REST source for ResearchGate profile + publications
 - Mirrors the LinkedIn source structure: `sruth-browser` for scraping, BAML `researchgate_extraction.baml` schema for structured extraction
 - New `StreamSourceType.RESEARCHGATE`
 
-#### `croilar/pipelines/fs_author/` (NEW)
+#### `sruth/croilar/pipelines/fs_author/` (NEW)
 - DLT **filesystem** source
 - One resource per subdirectory: `achievement`, `catharnacht`, `deacy`, `disability`, `gemini_deep_research`, `identity`, `politics`, `teaching`, `university_of_galway`, `vetting`
 - **Excludes** `zotero/` (deferred to a future change; Zotero SQLite needs a separate `zotero_sql` source)
@@ -81,54 +81,54 @@ Out of scope (intentionally dropped): any Kneecap lyrics pipeline. The `leabharl
 - Writes only to `./data/local/fs_author.duckdb`
 - Records: `{path, subdir, filename, ext, mtime, sha256, size, ingested_at}`
 
-#### `croilar/baml/linkedin_profile_extraction.baml` (MODIFIED)
+#### `sruth/croilar/baml/linkedin_profile_extraction.baml` (MODIFIED)
 - `flowId` field renamed to `streamId`
 - Allowed values: `music | teaching | cv | research` (no more `carlcashman`)
 - New `ownerDisplayName: string` field
 
-#### `croilar/baml/researchgate_extraction.baml` (NEW)
+#### `sruth/croilar/baml/researchgate_extraction.baml` (NEW)
 - Mirrors the LinkedIn schema with `streamId`, `ownerDisplayName`, and ResearchGate-specific fields (publications, citations, h-index, co-authors)
 
-#### `croilar/dagster_assets/dlt_assets.py` (REPLACED)
+#### `sruth/croilar/dagster_assets/dlt_assets.py` (REPLACED)
 - Hard-coded `aleyummusic` / `aleyum` assets removed
 - New generic asset factory `make_dlt_asset(stream, source) -> AssetsDefinition`
 - One `AssetKey` per `(stream.id, source.type)` pair, e.g. `("music", "spotify")`, `("teaching", "linkedin")`, `("cv", "filesystem")`
 - Sync script enumerates the registry and emits a flat asset list
 
-#### `croilar/agent_os/main.py` (MODIFIED)
+#### `sruth/croilar/agent_os/main.py` (MODIFIED)
 - `init_config(service_name="aleyum", service_port=7774)` → `init_config(service_name=stream.id, service_port=stream.agent_port)`
 - The agent OS file becomes a generic template instantiated per stream
 - Per-stream ports: music=7774, teaching=7775, cv=7776, research=7777
 
-#### `croilar/pipelines/shared/destinations.py`, `r2_client.py`, `ducklake.py` (MODIFIED)
-- Generic R2 bucket `cianfhoghlaim-public` (already declared in `croilar/wrangler.toml`)
+#### `sruth/croilar/pipelines/shared/destinations.py`, `r2_client.py`, `ducklake.py` (MODIFIED)
+- Generic R2 bucket `cianfhoghlaim-public` (already declared in `sruth/croilar/wrangler.toml`)
 - Per-stream R2 prefix
 - **Local-only streams never call `r2.upload_*`** (gated by `StreamSource.local_only`)
 
-#### `croilar/packages/i18n/src/index.ts` (MODIFIED)
+#### `sruth/croilar/packages/i18n/src/index.ts` (MODIFIED)
 - `aleyum` / `cianfhoghlaim` persona JSON imports replaced by `streams` keyed by `id`
 - Migration: `resources/aleyum/{en,ga}/persona.json` → `resources/streams/music/{en,ga}/persona.json`
 - Migration: `resources/cianfhoghlaim/{en,ga}/persona.json` → `resources/streams/teaching/{en,ga}/persona.json`
 
-#### `croilar/notebooks/aleyum/music_analytics.py` → `croilar/notebooks/streams/music/music_analytics.py` (MOVED)
-#### `croilar/notebooks/cianfhoghlaim/teaching_analytics.py` → `croilar/notebooks/streams/teaching/teaching_analytics.py` (MOVED)
+#### `sruth/croilar/notebooks/aleyum/music_analytics.py` → `sruth/croilar/notebooks/streams/music/music_analytics.py` (MOVED)
+#### `sruth/croilar/notebooks/cianfhoghlaim/teaching_analytics.py` → `sruth/croilar/notebooks/streams/teaching/teaching_analytics.py` (MOVED)
 
-#### `croilar/apps/web/package.json` (MODIFIED)
+#### `sruth/croilar/apps/web/package.json` (MODIFIED)
 - `notebook:wasm:aleyum` → `notebook:wasm:music`
 - `notebook:wasm:cianfhoghlaim` → `notebook:wasm:teaching`
 
-#### `croilar/apps/portal/src/routes/_layout/analytics/index.tsx` (MODIFIED)
+#### `sruth/croilar/apps/portal/src/routes/_layout/analytics/index.tsx` (MODIFIED)
 - `aleyum` / `cianfhoghlaim` MotherDuck dive URLs rekeyed to `music` / `teaching`
 
-#### `croilar/apps/portal/src/lib/tenant/tenant-context.tsx` (MODIFIED)
+#### `sruth/croilar/apps/portal/src/lib/tenant/tenant-context.tsx` (MODIFIED)
 - Body class `tenant-aleyum` / `tenant-cianfhoghlaim` replaced with `tenant-<owner>` for the OG-image only (UI tenant aliases preserved)
 
-#### `croilar/tests/test_database.py`, `test_smoke.py` (MODIFIED)
+#### `sruth/croilar/tests/test_database.py`, `test_smoke.py` (MODIFIED)
 - `aleyum` / `cianfhoghlaim` test cases updated to use stream ids
 - `test_aleyum_settings_default_loads` → `test_stream_settings_default_loads`
 - New tests: `test_fs_author_local_only`, `test_researchgate_source_exports`, `test_stream_registry_resolves_all_streams`
 
-#### `croilar/scripts/migrate-personas-to-streams.ts` (NEW)
+#### `sruth/croilar/scripts/migrate-personas-to-streams.ts` (NEW)
 - One-shot migration: renames dirs, rewrites TS/Python imports, emits CSV diff
 - `bun run migrate:personas-to-streams`
 
@@ -138,16 +138,16 @@ Out of scope (intentionally dropped): any Kneecap lyrics pipeline. The `leabharl
 - They no longer drive the data layer — they are a UI concern only
 
 ### NOT changed
-- `croilar/compose.yaml` and `compose.dev.yaml` service names (Docker stack named `aleyum` stays; this is the container runtime, not the data model)
-- `croilar/dagster.yaml` `aleyum-postgres` (same reason)
+- `sruth/croilar/compose.yaml` and `compose.dev.yaml` service names (Docker stack named `aleyum` stays; this is the container runtime, not the data model)
+- `sruth/croilar/dagster.yaml` `aleyum-postgres` (same reason)
 - The kneecap-related files in `leabharlann/` and `author_.../zotero/` (out of scope)
 
 ## Impact
 
 - **Code** — ~25 files modified, ~4 new files
-- **Config** — `croilar/config/sources.yaml` rewritten
+- **Config** — `sruth/croilar/config/sources.yaml` rewritten
 - **Data** — no data loss; new filesystem ingest is additive; existing music/teaching data flows continue unchanged
-- **Tests** — `croilar/tests/test_database.py`, `test_smoke.py` updated; new tests added
+- **Tests** — `sruth/croilar/tests/test_database.py`, `test_smoke.py` updated; new tests added
 - **CI** — `bun run turbo typecheck lint test` must pass; `openspec validate --strict` must pass
 - **Auth** — BetterAuth orgs preserved; only the data layer is rekeyed
 - **Out-of-scope, deferred to follow-up issues:**

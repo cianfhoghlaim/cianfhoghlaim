@@ -65,8 +65,8 @@ Each reference carries:
 
 - **§0 Why this plan** — replaces the original "Tangent N"
   framing with a technology-first deploy narrative
-- **§1 Monorepo grounding** — table of `oideachais/`,
-  `tuatha/`, `infrastructure/`, and skill assets the plan
+- **§1 Monorepo grounding** — table of `sruth/oideachais/`,
+  `sruth/tuatha/`, `infrastructure/`, and skill assets the plan
   consumes
 - **§2-N domain body** — BAML schemas, source registries,
   storage shape, identity layer, phased action plan
@@ -110,9 +110,9 @@ content / policy).
 
 | Capability | Owner | Reason for deferral |
 |:--|:--|:--|
-| **On-chain anchoring** (Solana, Ethereum) | `tuatha/crypteolas/` | Adds cost + regulatory risk; not needed for v1 closed pilot |
-| **x402 micropayments** for paid verification | `tuatha/crypteolas/` | Phase 2 of the tuatha roadmap; v1 is free + web-wallet-only |
-| **Mobile wallet (iOS / Android)** | `tuatha/` (the KMP bridge) | Web wallet is the v1 surface; iOS KMP bridge arrives with the Anam MMO |
+| **On-chain anchoring** (Solana, Ethereum) | `sruth/tuatha/sruth/crypteolas/` | Adds cost + regulatory risk; not needed for v1 closed pilot |
+| **x402 micropayments** for paid verification | `sruth/tuatha/sruth/crypteolas/` | Phase 2 of the tuatha roadmap; v1 is free + web-wallet-only |
+| **Mobile wallet (iOS / Android)** | `sruth/tuatha/` (the KMP bridge) | Web wallet is the v1 surface; iOS KMP bridge arrives with the Anam MMO |
 
 These are **explicit** in every plan's "Out of scope"
 section — they are not omissions, they are deferred by
@@ -146,7 +146,7 @@ must respect:
 
 | Phase | Generic description | Example (plan 01) |
 |:--|:--|:--|
-| 0 | Source registry complete (8 nations × 5 kinds) | `oideachais/sources.yaml` populated; `openspec validate oideachais-pipeline` passes |
+| 0 | Source registry complete (8 nations × 5 kinds) | `sruth/oideachais/sources.yaml` populated; `openspec validate oideachais-pipeline` passes |
 | 1 | DLT pipelines ingest the source authorities | `sec_examinations`, `ccea_ni_curriculum`, `dfe_england_national_curriculum` materialise in DuckLake |
 | 2 | BAML extractor (v1, gold-set validated) | `EquivalenceAssertion` at 90% precision on a 50-paper gold set |
 | 3 | BAML extractor (v2, scale-up) | `SkillAssertion` extracts 10,000 skill tags from SEC corpus |
@@ -184,12 +184,12 @@ plan's reference.
   OIDC + DID layer for the identity surface
 - `.agents/skills/agent-observability/SKILL.md` —
   Langfuse + MLflow for plan-specific eval + cost gates
-- `oideachais/sources.yaml` — the 8-nation × 5-kind
+- `sruth/oideachais/sources.yaml` — the 8-nation × 5-kind
   source registry
-- `oideachais/baml_src/` — the BAML schemas the plans add
+- `sruth/oideachais/baml_src/` — the BAML schemas the plans add
 - `infrastructure/stacks/identity/` — the Pocket ID
   stack
-- `tuatha/crypteolas/` — the deferred x402 / on-chain
+- `sruth/tuatha/sruth/crypteolas/` — the deferred x402 / on-chain
   surface
 - `openspec/specs/{curriculum-ingestion,bilingual-content,knowledge-graph}/` — the
   capability specs each plan implements

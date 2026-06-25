@@ -40,7 +40,7 @@ No code in `crypteolas_demo/` SHALL import from `fibo.*`. All prior
 `fibo.X.Y` imports SHALL have been rewritten to flat `X.Y` imports.
 
 #### Scenario: grep finds no fibo imports
-- **WHEN** `grep -r "from fibo" tuatha/apps/crypteolas_demo/` is run
+- **WHEN** `grep -r "from fibo" sruth/crypteolas/apps/crypteolas_demo/` is run
 - **THEN** no matches are found.
 
 ### Requirement: agno service dropped
@@ -49,18 +49,18 @@ The `docker-compose.yaml` SHALL NOT include an `agno` service. The prior
 referenced a non-existent Dockerfile and has been removed.
 
 #### Scenario: compose has no agno service
-- **WHEN** `tuatha/apps/crypteolas_demo/docker-compose.yaml` is read
+- **WHEN** `sruth/crypteolas/apps/crypteolas_demo/docker-compose.yaml` is read
 - **THEN** no service named `agno` is present.
 
 ### Requirement: TypeScript buildable skeleton
-The `tuatha/apps/crypteolas_demo/` directory SHALL contain a `package.json`
+The `sruth/crypteolas/apps/crypteolas_demo/` directory SHALL contain a `package.json`
 and a `tsconfig.json` such that `bun install` and `bun run typecheck`
 succeed. All `.tsx` files in `src/` SHALL resolve their imports (with
 stubs permitted for the `src/lib/*` modules).
 
 #### Scenario: bun install + typecheck
 - **WHEN** `bun install && bun run typecheck` is run from
-  `tuatha/apps/crypteolas_demo/`
+  `sruth/crypteolas/apps/crypteolas_demo/`
 - **THEN** the install succeeds and typecheck passes (or exits with only
   expected stub-related warnings documented in `STATUS.md`).
 
@@ -69,13 +69,13 @@ The 12 missing `src/lib/*` modules SHALL exist as stubs, each with a
 minimal type signature and a `// TODO: implement` comment.
 
 #### Scenario: src/lib/ exists
-- **WHEN** `ls tuatha/apps/crypteolas_demo/src/lib/` is run
+- **WHEN** `ls sruth/crypteolas/apps/crypteolas_demo/src/lib/` is run
 - **THEN** the 12 stub files are present:
   `auth/{client,server}.ts`, `x402/{middleware,payment-service,pricing,networks,provider}.ts`,
   `copilot/runtime.ts`, `query/{client,hooks}.ts`, `web3.ts`, `mcp/copilot-actions.ts`.
 
 ### Requirement: Stubbed models/ package
-The `tuatha/apps/crypteolas_demo/models/` directory SHALL exist with stub
+The `sruth/crypteolas/apps/crypteolas_demo/models/` directory SHALL exist with stub
 implementations of `colpali`, `qwen_vlm`, and `fibo_mlx` that raise
 `NotImplementedError` at runtime.
 
@@ -96,9 +96,9 @@ tuatha workspace.
 ### Requirement: BAML isolation
 The `crypteolas_demo/scéimre/generators.baml` `output_dir` SHALL be set to
 `./baml_client` so the demo's BAML generation is isolated from the main
-`tuatha/baml_client/`.
+`sruth/tuatha/baml_client/`.
 
 #### Scenario: baml_client isolation
-- **WHEN** `baml-cli generate` is run from `tuatha/apps/crypteolas_demo/scéimre/`
+- **WHEN** `baml-cli generate` is run from `sruth/crypteolas/apps/crypteolas_demo/scéimre/`
 - **THEN** the generated `baml_client/` appears at
-  `tuatha/apps/crypteolas_demo/baml_client/`, not at `tuatha/baml_client/`.
+  `sruth/crypteolas/apps/crypteolas_demo/baml_client/`, not at `sruth/tuatha/baml_client/`.

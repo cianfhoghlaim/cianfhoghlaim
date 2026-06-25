@@ -1,0 +1,1825 @@
+{
+  "generatedAt": 1781646411023,
+  "schemaVersion": 1,
+  "tanstackRoutes": [
+    {
+      "project": "tuatha",
+      "route": "/game",
+      "file": "tuatha/ui/src/routes/game.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 126,
+      "lastCommit": "cf824ddadba1a912695a7f967a69f3f913f883c5",
+      "lastCommitAt": 1780776571000
+    },
+    {
+      "project": "tuatha",
+      "route": "/",
+      "file": "tuatha/ui/src/routes/index.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 170,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082",
+      "lastCommitAt": 1779475125000
+    },
+    {
+      "project": "tuatha",
+      "route": "/learn/irish",
+      "file": "tuatha/ui/src/routes/learn/irish.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 267,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082",
+      "lastCommitAt": 1779475125000
+    },
+    {
+      "project": "tuatha",
+      "route": "/map",
+      "file": "tuatha/ui/src/routes/map.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 264,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082",
+      "lastCommitAt": 1779475125000
+    },
+    {
+      "project": "tuatha",
+      "route": "/mythology",
+      "file": "tuatha/ui/src/routes/mythology.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 468,
+      "lastCommit": "cf824ddadba1a912695a7f967a69f3f913f883c5",
+      "lastCommitAt": 1780776571000
+    },
+    {
+      "project": "oideachais",
+      "route": "/",
+      "file": "oideachais/apps/web/src/routes/index.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 193,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082",
+      "lastCommitAt": 1779475125000
+    },
+    {
+      "project": "oideachais",
+      "route": "/translation",
+      "file": "oideachais/apps/web/src/routes/translation.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 335,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082",
+      "lastCommitAt": 1779475125000
+    },
+    {
+      "project": "oideachais",
+      "route": "/curriculum/compare",
+      "file": "oideachais/apps/web/src/routes/curriculum/compare.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 309,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082",
+      "lastCommitAt": 1779475125000
+    },
+    {
+      "project": "oideachais",
+      "route": "/chat",
+      "file": "oideachais/apps/web/src/routes/chat.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 509,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082",
+      "lastCommitAt": 1779475125000
+    },
+    {
+      "project": "oideachais",
+      "route": "/",
+      "file": "oideachais/dashboard/src/routes/index.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 172,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082",
+      "lastCommitAt": 1779475125000
+    },
+    {
+      "project": "oideachais",
+      "route": "/history",
+      "file": "oideachais/dashboard/src/routes/history/index.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 165,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082",
+      "lastCommitAt": 1779475125000
+    },
+    {
+      "project": "oideachais",
+      "route": "/compare",
+      "file": "oideachais/dashboard/src/routes/compare/index.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 165,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082",
+      "lastCommitAt": 1779475125000
+    },
+    {
+      "project": "oideachais",
+      "route": "/compare/:taskId",
+      "file": "oideachais/dashboard/src/routes/compare/$taskId.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 249,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082",
+      "lastCommitAt": 1779475125000
+    },
+    {
+      "project": "oideachais",
+      "route": "/api/copilotkit",
+      "file": "oideachais/dashboard/src/routes/api/copilotkit.ts",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 354,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082",
+      "lastCommitAt": 1779475125000
+    },
+    {
+      "project": "croilar",
+      "route": "/",
+      "file": "croilar/apps/web/src/routes/index.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 27,
+      "lastCommit": "5a70ccdc6e9ebb80c8a7c68ef9bb54f1be229e4f",
+      "lastCommitAt": 1780706349000
+    },
+    {
+      "project": "croilar",
+      "route": "/404",
+      "file": "croilar/apps/web/src/routes/404.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 32,
+      "lastCommit": "978f2d2b3e24a5ff9032b85c53e1da7341ad07e5",
+      "lastCommitAt": 1780724865000
+    },
+    {
+      "project": "croilar",
+      "route": "/code",
+      "file": "croilar/apps/web/src/routes/code.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 95,
+      "lastCommit": "6e2ec6924192d6029b9c25fe2056fcfb715d3002",
+      "lastCommitAt": 1780722241000
+    },
+    {
+      "project": "croilar",
+      "route": "/contact",
+      "file": "croilar/apps/web/src/routes/contact.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 25,
+      "lastCommit": "5a70ccdc6e9ebb80c8a7c68ef9bb54f1be229e4f",
+      "lastCommitAt": 1780706349000
+    },
+    {
+      "project": "croilar",
+      "route": "/music",
+      "file": "croilar/apps/web/src/routes/music.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 100,
+      "lastCommit": "6e2ec6924192d6029b9c25fe2056fcfb715d3002",
+      "lastCommitAt": 1780722241000
+    },
+    {
+      "project": "croilar",
+      "route": "/teaching",
+      "file": "croilar/apps/web/src/routes/teaching.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 62,
+      "lastCommit": "5a70ccdc6e9ebb80c8a7c68ef9bb54f1be229e4f",
+      "lastCommitAt": 1780706349000
+    },
+    {
+      "project": "croilar",
+      "route": "/research",
+      "file": "croilar/apps/web/src/routes/research.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 66,
+      "lastCommit": "5a70ccdc6e9ebb80c8a7c68ef9bb54f1be229e4f",
+      "lastCommitAt": 1780706349000
+    },
+    {
+      "project": "croilar",
+      "route": "/data",
+      "file": "croilar/apps/web/src/routes/data.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 100,
+      "lastCommit": "5a70ccdc6e9ebb80c8a7c68ef9bb54f1be229e4f",
+      "lastCommitAt": 1780706349000
+    },
+    {
+      "project": "croilar",
+      "route": "/identity",
+      "file": "croilar/apps/web/src/routes/identity.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 59,
+      "lastCommit": "5a70ccdc6e9ebb80c8a7c68ef9bb54f1be229e4f",
+      "lastCommitAt": 1780706349000
+    },
+    {
+      "project": "croilar",
+      "route": "/cv",
+      "file": "croilar/apps/web/src/routes/cv.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 72,
+      "lastCommit": "5a70ccdc6e9ebb80c8a7c68ef9bb54f1be229e4f",
+      "lastCommitAt": 1780706349000
+    },
+    {
+      "project": "croilar",
+      "route": "/login",
+      "file": "croilar/apps/portal/src/routes/login.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 156,
+      "lastCommit": "5a70ccdc6e9ebb80c8a7c68ef9bb54f1be229e4f",
+      "lastCommitAt": 1780706349000
+    },
+    {
+      "project": "croilar",
+      "route": "/_layout",
+      "file": "croilar/apps/portal/src/routes/_layout/index.tsx",
+      "isPublic": true,
+      "isServer": false,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 266,
+      "lastCommit": "5a70ccdc6e9ebb80c8a7c68ef9bb54f1be229e4f",
+      "lastCommitAt": 1780706349000
+    },
+    {
+      "project": "croilar",
+      "route": "/_layout",
+      "file": "croilar/apps/portal/src/routes/_layout.tsx",
+      "isPublic": true,
+      "isServer": true,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 181,
+      "lastCommit": "5a70ccdc6e9ebb80c8a7c68ef9bb54f1be229e4f",
+      "lastCommitAt": 1780706349000
+    },
+    {
+      "project": "croilar",
+      "route": "/api/mcp.gateway",
+      "file": "croilar/apps/portal/src/routes/api/mcp.gateway.ts",
+      "isPublic": true,
+      "isServer": true,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 143,
+      "lastCommit": "5a70ccdc6e9ebb80c8a7c68ef9bb54f1be229e4f",
+      "lastCommitAt": 1780706349000
+    },
+    {
+      "project": "croilar",
+      "route": "/api/auth/:",
+      "file": "croilar/apps/portal/src/routes/api/auth/$.ts",
+      "isPublic": true,
+      "isServer": true,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 16,
+      "lastCommit": "5a70ccdc6e9ebb80c8a7c68ef9bb54f1be229e4f",
+      "lastCommitAt": 1780706349000
+    },
+    {
+      "project": "croilar",
+      "route": "/api/agent",
+      "file": "croilar/apps/portal/src/routes/api/agent.ts",
+      "isPublic": true,
+      "isServer": true,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 231,
+      "lastCommit": "5a70ccdc6e9ebb80c8a7c68ef9bb54f1be229e4f",
+      "lastCommitAt": 1780706349000
+    },
+    {
+      "project": "croilar",
+      "route": "/api/mcp",
+      "file": "croilar/apps/portal/src/routes/api/mcp.ts",
+      "isPublic": true,
+      "isServer": true,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 479,
+      "lastCommit": "5a70ccdc6e9ebb80c8a7c68ef9bb54f1be229e4f",
+      "lastCommitAt": 1780706349000
+    },
+    {
+      "project": "croilar",
+      "route": "/api/codeolas",
+      "file": "croilar/apps/portal/src/routes/api/codeolas.ts",
+      "isPublic": true,
+      "isServer": true,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 204,
+      "lastCommit": "cf824ddadba1a912695a7f967a69f3f913f883c5",
+      "lastCommitAt": 1780776571000
+    },
+    {
+      "project": "croilar",
+      "route": "/api/browser",
+      "file": "croilar/apps/portal/src/routes/api/browser.ts",
+      "isPublic": true,
+      "isServer": true,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 254,
+      "lastCommit": "cf824ddadba1a912695a7f967a69f3f913f883c5",
+      "lastCommitAt": 1780776571000
+    },
+    {
+      "project": "croilar",
+      "route": "/api/webstack/snapshot",
+      "file": "croilar/apps/portal/src/routes/api/webstack/snapshot.ts",
+      "isPublic": true,
+      "isServer": true,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 60,
+      "lastCommit": "",
+      "lastCommitAt": 0
+    },
+    {
+      "project": "croilar",
+      "route": "/api/health",
+      "file": "croilar/apps/portal/src/routes/api/health.ts",
+      "isPublic": true,
+      "isServer": true,
+      "hasLoader": false,
+      "hasAuth": false,
+      "lines": 17,
+      "lastCommit": "5a70ccdc6e9ebb80c8a7c68ef9bb54f1be229e4f",
+      "lastCommitAt": 1780706349000
+    }
+  ],
+  "convexFunctions": [
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/threads.ts",
+      "name": "get",
+      "kind": "query",
+      "lines": 321,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/threads.ts",
+      "name": "listByUser",
+      "kind": "query",
+      "lines": 321,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/threads.ts",
+      "name": "listBySession",
+      "kind": "query",
+      "lines": 321,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/threads.ts",
+      "name": "getPendingApprovals",
+      "kind": "query",
+      "lines": 321,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/threads.ts",
+      "name": "create",
+      "kind": "mutation",
+      "lines": 321,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/threads.ts",
+      "name": "updateStatus",
+      "kind": "mutation",
+      "lines": 321,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/threads.ts",
+      "name": "updateMetadata",
+      "kind": "mutation",
+      "lines": 321,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/threads.ts",
+      "name": "deleteThread",
+      "kind": "mutation",
+      "lines": 321,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/threads.ts",
+      "name": "addMessage",
+      "kind": "mutation",
+      "lines": 321,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/threads.ts",
+      "name": "addToolResults",
+      "kind": "mutation",
+      "lines": 321,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/threads.ts",
+      "name": "createApproval",
+      "kind": "mutation",
+      "lines": 321,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/threads.ts",
+      "name": "handleApproval",
+      "kind": "mutation",
+      "lines": 321,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/events.ts",
+      "name": "subscribe",
+      "kind": "query",
+      "lines": 192,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/events.ts",
+      "name": "getLatest",
+      "kind": "query",
+      "lines": 192,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/events.ts",
+      "name": "getByType",
+      "kind": "query",
+      "lines": 192,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/events.ts",
+      "name": "publish",
+      "kind": "mutation",
+      "lines": 192,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/events.ts",
+      "name": "publishBatch",
+      "kind": "mutation",
+      "lines": 192,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/events.ts",
+      "name": "markConsumed",
+      "kind": "mutation",
+      "lines": 192,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "tuatha",
+      "file": "infrastructure/browser/sruth_browser/frontend/convex/events.ts",
+      "name": "cleanup",
+      "kind": "mutation",
+      "lines": 192,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/dashboard/convex/comparisons.ts",
+      "name": "byTask",
+      "kind": "query",
+      "lines": 86,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/dashboard/convex/comparisons.ts",
+      "name": "get",
+      "kind": "query",
+      "lines": 86,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/dashboard/convex/comparisons.ts",
+      "name": "updateStatus",
+      "kind": "mutation",
+      "lines": 86,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/dashboard/convex/comparisons.ts",
+      "name": "saveResult",
+      "kind": "mutation",
+      "lines": 86,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/dashboard/convex/comparisons.ts",
+      "name": "getResult",
+      "kind": "query",
+      "lines": 86,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/dashboard/convex/models.ts",
+      "name": "list",
+      "kind": "query",
+      "lines": 241,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/dashboard/convex/models.ts",
+      "name": "available",
+      "kind": "query",
+      "lines": 241,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/dashboard/convex/models.ts",
+      "name": "get",
+      "kind": "query",
+      "lines": 241,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/dashboard/convex/models.ts",
+      "name": "upsert",
+      "kind": "mutation",
+      "lines": 241,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/dashboard/convex/models.ts",
+      "name": "updateAvailability",
+      "kind": "mutation",
+      "lines": 241,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/dashboard/convex/models.ts",
+      "name": "seed",
+      "kind": "mutation",
+      "lines": 241,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/dashboard/convex/tasks.ts",
+      "name": "create",
+      "kind": "mutation",
+      "lines": 138,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/dashboard/convex/tasks.ts",
+      "name": "updateStatus",
+      "kind": "mutation",
+      "lines": 138,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/dashboard/convex/tasks.ts",
+      "name": "get",
+      "kind": "query",
+      "lines": 138,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/dashboard/convex/tasks.ts",
+      "name": "getWithComparisons",
+      "kind": "query",
+      "lines": 138,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/dashboard/convex/tasks.ts",
+      "name": "recent",
+      "kind": "query",
+      "lines": 138,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/dashboard/convex/tasks.ts",
+      "name": "deleteTask",
+      "kind": "mutation",
+      "lines": 138,
+      "lastCommit": "442ade24ba4f22f6717017ce20998e4531daf082"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/web/convex/annotations.ts",
+      "name": "addAnnotation",
+      "kind": "mutation",
+      "lines": 33,
+      "lastCommit": "b3bf1f5a2b17bbf6e23853c20f6caa7c0016c208"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/web/convex/annotations.ts",
+      "name": "listAnnotations",
+      "kind": "query",
+      "lines": 33,
+      "lastCommit": "b3bf1f5a2b17bbf6e23853c20f6caa7c0016c208"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/web/convex/practice_attempts.ts",
+      "name": "recordPracticeAttempt",
+      "kind": "mutation",
+      "lines": 36,
+      "lastCommit": "b3bf1f5a2b17bbf6e23853c20f6caa7c0016c208"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/web/convex/practice_attempts.ts",
+      "name": "listPracticeAttempts",
+      "kind": "query",
+      "lines": 36,
+      "lastCommit": "b3bf1f5a2b17bbf6e23853c20f6caa7c0016c208"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/web/convex/subject_sessions.ts",
+      "name": "createSubjectSession",
+      "kind": "mutation",
+      "lines": 55,
+      "lastCommit": "b3bf1f5a2b17bbf6e23853c20f6caa7c0016c208"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/web/convex/subject_sessions.ts",
+      "name": "updateSubjectSession",
+      "kind": "mutation",
+      "lines": 55,
+      "lastCommit": "b3bf1f5a2b17bbf6e23853c20f6caa7c0016c208"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/web/convex/subject_sessions.ts",
+      "name": "getSubjectSession",
+      "kind": "query",
+      "lines": 55,
+      "lastCommit": "b3bf1f5a2b17bbf6e23853c20f6caa7c0016c208"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/web/convex/classmate_shares.ts",
+      "name": "shareClassmateSession",
+      "kind": "mutation",
+      "lines": 32,
+      "lastCommit": "b3bf1f5a2b17bbf6e23853c20f6caa7c0016c208"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/web/convex/classmate_shares.ts",
+      "name": "getClassmateShare",
+      "kind": "query",
+      "lines": 32,
+      "lastCommit": "b3bf1f5a2b17bbf6e23853c20f6caa7c0016c208"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/web/convex/extraction_budget.ts",
+      "name": "incrementExtractionBudget",
+      "kind": "mutation",
+      "lines": 46,
+      "lastCommit": "b3bf1f5a2b17bbf6e23853c20f6caa7c0016c208"
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/web/convex/extraction_budget.ts",
+      "name": "getExtractionBudget",
+      "kind": "query",
+      "lines": 46,
+      "lastCommit": "b3bf1f5a2b17bbf6e23853c20f6caa7c0016c208"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/contact.ts",
+      "name": "submit",
+      "kind": "mutation",
+      "lines": 54,
+      "lastCommit": "ee3cb194b31ab888f31529e222fb586b0413c2ee"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/contact.ts",
+      "name": "list",
+      "kind": "mutation",
+      "lines": 54,
+      "lastCommit": "ee3cb194b31ab888f31529e222fb586b0413c2ee"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/contact.ts",
+      "name": "markRead",
+      "kind": "mutation",
+      "lines": 54,
+      "lastCommit": "ee3cb194b31ab888f31529e222fb586b0413c2ee"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/stacks.ts",
+      "name": "list",
+      "kind": "query",
+      "lines": 99,
+      "lastCommit": "ee3cb194b31ab888f31529e222fb586b0413c2ee"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/stacks.ts",
+      "name": "getByName",
+      "kind": "query",
+      "lines": 99,
+      "lastCommit": "ee3cb194b31ab888f31529e222fb586b0413c2ee"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/stacks.ts",
+      "name": "refreshAll",
+      "kind": "action",
+      "lines": 99,
+      "lastCommit": "ee3cb194b31ab888f31529e222fb586b0413c2ee"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/stacks.ts",
+      "name": "restartStack",
+      "kind": "mutation",
+      "lines": 99,
+      "lastCommit": "ee3cb194b31ab888f31529e222fb586b0413c2ee"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/pipelines.ts",
+      "name": "list",
+      "kind": "query",
+      "lines": 65,
+      "lastCommit": "fc5f364996bee02eea551ad01e76633023cb9ad2"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/pipelines.ts",
+      "name": "refreshAll",
+      "kind": "action",
+      "lines": 65,
+      "lastCommit": "fc5f364996bee02eea551ad01e76633023cb9ad2"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/test_runs.ts",
+      "name": "list",
+      "kind": "query",
+      "lines": 74,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/test_runs.ts",
+      "name": "getLatest",
+      "kind": "query",
+      "lines": 74,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/test_runs.ts",
+      "name": "getByProject",
+      "kind": "query",
+      "lines": 74,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/test_runs.ts",
+      "name": "ingest",
+      "kind": "mutation",
+      "lines": 74,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/portfolio.ts",
+      "name": "getPage",
+      "kind": "query",
+      "lines": 28,
+      "lastCommit": "ee3cb194b31ab888f31529e222fb586b0413c2ee"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/portfolio.ts",
+      "name": "listPages",
+      "kind": "query",
+      "lines": 28,
+      "lastCommit": "ee3cb194b31ab888f31529e222fb586b0413c2ee"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/cloudflare_resources.ts",
+      "name": "list",
+      "kind": "query",
+      "lines": 106,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/cloudflare_resources.ts",
+      "name": "getByProject",
+      "kind": "query",
+      "lines": 106,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/cloudflare_resources.ts",
+      "name": "ingest",
+      "kind": "mutation",
+      "lines": 106,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/convex_metrics.ts",
+      "name": "get",
+      "kind": "query",
+      "lines": 120,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/convex_metrics.ts",
+      "name": "getByScope",
+      "kind": "query",
+      "lines": 120,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/convex_metrics.ts",
+      "name": "record",
+      "kind": "mutation",
+      "lines": 120,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/cv.ts",
+      "name": "list",
+      "kind": "query",
+      "lines": 34,
+      "lastCommit": "ee3cb194b31ab888f31529e222fb586b0413c2ee"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/tanstack_routes.ts",
+      "name": "list",
+      "kind": "query",
+      "lines": 105,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/tanstack_routes.ts",
+      "name": "getByProject",
+      "kind": "query",
+      "lines": 105,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/tanstack_routes.ts",
+      "name": "getSummary",
+      "kind": "query",
+      "lines": 105,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/tanstack_routes.ts",
+      "name": "ingest",
+      "kind": "mutation",
+      "lines": 105,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/marimo_notebooks.ts",
+      "name": "list",
+      "kind": "query",
+      "lines": 84,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/marimo_notebooks.ts",
+      "name": "getBySlug",
+      "kind": "query",
+      "lines": 84,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/marimo_notebooks.ts",
+      "name": "ingest",
+      "kind": "mutation",
+      "lines": 84,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/mcp.ts",
+      "name": "list",
+      "kind": "query",
+      "lines": 40,
+      "lastCommit": "fc5f364996bee02eea551ad01e76633023cb9ad2"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/mcp.ts",
+      "name": "refreshAll",
+      "kind": "action",
+      "lines": 40,
+      "lastCommit": "fc5f364996bee02eea551ad01e76633023cb9ad2"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/devtools.ts",
+      "name": "getSummary",
+      "kind": "query",
+      "lines": 52,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/convex_function_calls.ts",
+      "name": "tail",
+      "kind": "query",
+      "lines": 88,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/convex_function_calls.ts",
+      "name": "getRecent",
+      "kind": "query",
+      "lines": 88,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/convex_function_calls.ts",
+      "name": "getStats",
+      "kind": "query",
+      "lines": 88,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/convex_functions.ts",
+      "name": "list",
+      "kind": "query",
+      "lines": 103,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/convex_functions.ts",
+      "name": "getByProject",
+      "kind": "query",
+      "lines": 103,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/convex_functions.ts",
+      "name": "getByName",
+      "kind": "query",
+      "lines": 103,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/convex_functions.ts",
+      "name": "ingest",
+      "kind": "mutation",
+      "lines": 103,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/registry.ts",
+      "name": "list",
+      "kind": "query",
+      "lines": 52,
+      "lastCommit": "fc5f364996bee02eea551ad01e76633023cb9ad2"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/registry.ts",
+      "name": "refreshAll",
+      "kind": "action",
+      "lines": 52,
+      "lastCommit": "fc5f364996bee02eea551ad01e76633023cb9ad2"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/baml_schemas.ts",
+      "name": "list",
+      "kind": "query",
+      "lines": 83,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/baml_schemas.ts",
+      "name": "getByProject",
+      "kind": "query",
+      "lines": 83,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/baml_schemas.ts",
+      "name": "ingest",
+      "kind": "mutation",
+      "lines": 83,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/invites.ts",
+      "name": "create",
+      "kind": "mutation",
+      "lines": 81,
+      "lastCommit": "ee3cb194b31ab888f31529e222fb586b0413c2ee"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/invites.ts",
+      "name": "accept",
+      "kind": "mutation",
+      "lines": 81,
+      "lastCommit": "ee3cb194b31ab888f31529e222fb586b0413c2ee"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/glance_config.ts",
+      "name": "getCurrent",
+      "kind": "query",
+      "lines": 102,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/glance_config.ts",
+      "name": "getByVersion",
+      "kind": "query",
+      "lines": 102,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/glance_config.ts",
+      "name": "list",
+      "kind": "query",
+      "lines": 102,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/glance_config.ts",
+      "name": "store",
+      "kind": "mutation",
+      "lines": 102,
+      "lastCommit": ""
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/personas.ts",
+      "name": "list",
+      "kind": "query",
+      "lines": 44,
+      "lastCommit": "ee3cb194b31ab888f31529e222fb586b0413c2ee"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/personas.ts",
+      "name": "listSeeds",
+      "kind": "query",
+      "lines": 44,
+      "lastCommit": "ee3cb194b31ab888f31529e222fb586b0413c2ee"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/personas.ts",
+      "name": "getBySlug",
+      "kind": "query",
+      "lines": 44,
+      "lastCommit": "ee3cb194b31ab888f31529e222fb586b0413c2ee"
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/convex/personas.ts",
+      "name": "getDataSources",
+      "kind": "query",
+      "lines": 44,
+      "lastCommit": "ee3cb194b31ab888f31529e222fb586b0413c2ee"
+    }
+  ],
+  "cloudflareResources": [
+    {
+      "project": "tuatha",
+      "kind": "worker",
+      "name": "crypteolas-api",
+      "wranglerConfig": "tuatha/crypteolas/wrangler.toml"
+    },
+    {
+      "project": "tuatha",
+      "kind": "r2",
+      "name": "crypto-data",
+      "wranglerConfig": "tuatha/crypteolas/wrangler.toml"
+    },
+    {
+      "project": "tuatha",
+      "kind": "r2",
+      "name": "lance-embeddings",
+      "wranglerConfig": "tuatha/crypteolas/wrangler.toml"
+    },
+    {
+      "project": "tuatha",
+      "kind": "r2",
+      "name": "raw-documents",
+      "wranglerConfig": "tuatha/crypteolas/wrangler.toml"
+    },
+    {
+      "project": "tuatha",
+      "kind": "d1",
+      "name": "crypteolas-db",
+      "wranglerConfig": "tuatha/crypteolas/wrangler.toml"
+    },
+    {
+      "project": "oideachais",
+      "kind": "pages",
+      "name": "cianfhoghlaim-oideachais",
+      "wranglerConfig": "oideachais/web/wrangler.toml"
+    },
+    {
+      "project": "oideachais",
+      "kind": "r2",
+      "name": "cianfhoghlaim-leaving-cert",
+      "wranglerConfig": "oideachais/web/wrangler.toml"
+    },
+    {
+      "project": "croilar",
+      "kind": "pages",
+      "name": "cianfhoghlaim-croilar",
+      "wranglerConfig": "croilar/wrangler.toml"
+    },
+    {
+      "project": "croilar",
+      "kind": "r2",
+      "name": "cianfhoghlaim-public",
+      "wranglerConfig": "croilar/wrangler.toml"
+    },
+    {
+      "project": "croilar",
+      "kind": "pages",
+      "name": "aleyum",
+      "wranglerConfig": "croilar/apps/web/wrangler.toml"
+    },
+    {
+      "project": "croilar",
+      "kind": "r2",
+      "name": "aleyum-assets",
+      "wranglerConfig": "croilar/apps/web/wrangler.toml"
+    },
+    {
+      "project": "croilar",
+      "kind": "r2",
+      "name": "aleyum-data",
+      "wranglerConfig": "croilar/apps/web/wrangler.toml"
+    }
+  ],
+  "bamlSchemas": [
+    {
+      "project": "tuatha",
+      "file": "tuatha/crypteolas/baml_src/vulnerability_assessment.baml",
+      "classCount": 4,
+      "functionCount": 4,
+      "enumCount": 2
+    },
+    {
+      "project": "tuatha",
+      "file": "tuatha/crypteolas/baml_src/code_analysis.baml",
+      "classCount": 20,
+      "functionCount": 6,
+      "enumCount": 4
+    },
+    {
+      "project": "tuatha",
+      "file": "tuatha/crypteolas/baml_src/clients.baml",
+      "classCount": 0,
+      "functionCount": 0,
+      "enumCount": 0
+    },
+    {
+      "project": "tuatha",
+      "file": "tuatha/crypteolas/baml_src/crypto_extraction.baml",
+      "classCount": 17,
+      "functionCount": 6,
+      "enumCount": 5
+    },
+    {
+      "project": "tuatha",
+      "file": "tuatha/crypteolas/baml_src/code_pattern_detection.baml",
+      "classCount": 3,
+      "functionCount": 5,
+      "enumCount": 3
+    },
+    {
+      "project": "tuatha",
+      "file": "tuatha/crypteolas/baml_src/protocol_analysis.baml",
+      "classCount": 31,
+      "functionCount": 7,
+      "enumCount": 4
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/portfolio_extraction.baml",
+      "classCount": 14,
+      "functionCount": 6,
+      "enumCount": 5
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/celtic_sources.baml",
+      "classCount": 5,
+      "functionCount": 0,
+      "enumCount": 8
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/curriculum_extraction_0.baml",
+      "classCount": 22,
+      "functionCount": 9,
+      "enumCount": 6
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/cognates.baml",
+      "classCount": 4,
+      "functionCount": 5,
+      "enumCount": 1
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/leaving_cert_syllabus_extraction.baml",
+      "classCount": 2,
+      "functionCount": 1,
+      "enumCount": 0
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/celtic_linguistics.baml",
+      "classCount": 3,
+      "functionCount": 3,
+      "enumCount": 10
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/clients.baml",
+      "classCount": 0,
+      "functionCount": 0,
+      "enumCount": 0
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/morphology.baml",
+      "classCount": 4,
+      "functionCount": 4,
+      "enumCount": 2
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/site_analysis.baml",
+      "classCount": 4,
+      "functionCount": 0,
+      "enumCount": 0
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/oideachas.baml",
+      "classCount": 14,
+      "functionCount": 5,
+      "enumCount": 2
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/isles_education.baml",
+      "classCount": 10,
+      "functionCount": 6,
+      "enumCount": 4
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/ocr_extraction.baml",
+      "classCount": 14,
+      "functionCount": 2,
+      "enumCount": 0
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/clients_0.baml",
+      "classCount": 0,
+      "functionCount": 0,
+      "enumCount": 0
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/grammar_patterns.baml",
+      "classCount": 6,
+      "functionCount": 6,
+      "enumCount": 2
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/curriculum_extraction.baml",
+      "classCount": 2,
+      "functionCount": 1,
+      "enumCount": 0
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/education_statistics.baml",
+      "classCount": 10,
+      "functionCount": 5,
+      "enumCount": 4
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/leaving_cert_past_paper_extraction.baml",
+      "classCount": 2,
+      "functionCount": 1,
+      "enumCount": 0
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/multi_nation_curriculum.baml",
+      "classCount": 13,
+      "functionCount": 6,
+      "enumCount": 6
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/leaving_cert_marking_scheme_extraction.baml",
+      "classCount": 4,
+      "functionCount": 1,
+      "enumCount": 0
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/named_entities.baml",
+      "classCount": 5,
+      "functionCount": 5,
+      "enumCount": 3
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/gaois/duchas.baml",
+      "classCount": 11,
+      "functionCount": 5,
+      "enumCount": 4
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/gaois/logainm.baml",
+      "classCount": 8,
+      "functionCount": 5,
+      "enumCount": 3
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/gaois/folklore_extraction.baml",
+      "classCount": 6,
+      "functionCount": 3,
+      "enumCount": 0
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/gaois/tearma.baml",
+      "classCount": 17,
+      "functionCount": 10,
+      "enumCount": 6
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/ocr_validation.baml",
+      "classCount": 13,
+      "functionCount": 4,
+      "enumCount": 7
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/audio_extraction.baml",
+      "classCount": 10,
+      "functionCount": 3,
+      "enumCount": 0
+    },
+    {
+      "project": "oideachais",
+      "file": "oideachais/baml_src/generators.baml",
+      "classCount": 0,
+      "functionCount": 0,
+      "enumCount": 0
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/baml_src/cv_extraction.baml",
+      "classCount": 6,
+      "functionCount": 6,
+      "enumCount": 0
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/baml_src/clients.baml",
+      "classCount": 0,
+      "functionCount": 0,
+      "enumCount": 0
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/baml_src/identity_verification.baml",
+      "classCount": 4,
+      "functionCount": 4,
+      "enumCount": 0
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/baml_src/researchgate_extraction.baml",
+      "classCount": 2,
+      "functionCount": 2,
+      "enumCount": 0
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/baml_src/style_transfer.baml",
+      "classCount": 4,
+      "functionCount": 7,
+      "enumCount": 0
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/baml_src/linkedin_profile_extraction.baml",
+      "classCount": 3,
+      "functionCount": 2,
+      "enumCount": 0
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/baml_src/artwork_analysis.baml",
+      "classCount": 6,
+      "functionCount": 6,
+      "enumCount": 5
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/baml_src/teaching_extraction.baml",
+      "classCount": 4,
+      "functionCount": 4,
+      "enumCount": 0
+    },
+    {
+      "project": "croilar",
+      "file": "croilar/baml_src/generators.baml",
+      "classCount": 0,
+      "functionCount": 0,
+      "enumCount": 0
+    }
+  ],
+  "marimoNotebooks": [
+    {
+      "project": "oideachais",
+      "slug": "ocr_comparison_enhanced",
+      "file": "oideachais/marimo/ocr_comparison_enhanced.py",
+      "title": "ocr_comparison_enhanced",
+      "cellCount": 13
+    },
+    {
+      "project": "oideachais",
+      "slug": "pdf_download_dashboard",
+      "file": "oideachais/notebooks/pdf_download_dashboard.py",
+      "title": "pdf_download_dashboard",
+      "cellCount": 9
+    },
+    {
+      "project": "oideachais",
+      "slug": "ducklake_explorer",
+      "file": "oideachais/notebooks/ducklake_explorer.py",
+      "title": "ducklake_explorer",
+      "cellCount": 10
+    },
+    {
+      "project": "oideachais",
+      "slug": "mission_control",
+      "file": "oideachais/notebooks/mission_control.py",
+      "title": "mission_control",
+      "cellCount": 13
+    },
+    {
+      "project": "oideachais",
+      "slug": "pipeline_e2e_test",
+      "file": "oideachais/notebooks/pipeline_e2e_test.py",
+      "title": "pipeline_e2e_test",
+      "cellCount": 13
+    },
+    {
+      "project": "oideachais",
+      "slug": "syllabus_visualizer",
+      "file": "oideachais/notebooks/syllabus_visualizer.py",
+      "title": "syllabus_visualizer",
+      "cellCount": 11
+    },
+    {
+      "project": "oideachais",
+      "slug": "curriculum_educator",
+      "file": "oideachais/notebooks/curriculum_educator.py",
+      "title": "curriculum_educator",
+      "cellCount": 12
+    },
+    {
+      "project": "oideachais",
+      "slug": "dashboards/cross_domain",
+      "file": "oideachais/notebooks/dashboards/cross_domain.py",
+      "title": "cross_domain",
+      "cellCount": 5
+    },
+    {
+      "project": "oideachais",
+      "slug": "dashboards/leabharlann_full_stack_demo",
+      "file": "oideachais/notebooks/dashboards/leabharlann_full_stack_demo.py",
+      "title": "leabharlann_full_stack_demo",
+      "cellCount": 10
+    },
+    {
+      "project": "oideachais",
+      "slug": "dashboards/aistear",
+      "file": "oideachais/notebooks/dashboards/aistear.py",
+      "title": "aistear",
+      "cellCount": 7
+    },
+    {
+      "project": "oideachais",
+      "slug": "dashboards/law/statute_book",
+      "file": "oideachais/notebooks/dashboards/law/statute_book.py",
+      "title": "statute_book",
+      "cellCount": 4
+    },
+    {
+      "project": "oideachais",
+      "slug": "dashboards/law/all_nations",
+      "file": "oideachais/notebooks/dashboards/law/all_nations.py",
+      "title": "all_nations",
+      "cellCount": 5
+    },
+    {
+      "project": "oideachais",
+      "slug": "dashboards/education/all_nations",
+      "file": "oideachais/notebooks/dashboards/education/all_nations.py",
+      "title": "all_nations",
+      "cellCount": 5
+    },
+    {
+      "project": "oideachais",
+      "slug": "dashboards/site_analysis/dashboard",
+      "file": "oideachais/notebooks/dashboards/site_analysis/dashboard.py",
+      "title": "dashboard",
+      "cellCount": 4
+    },
+    {
+      "project": "oideachais",
+      "slug": "dashboards/junior_cycle",
+      "file": "oideachais/notebooks/dashboards/junior_cycle.py",
+      "title": "junior_cycle",
+      "cellCount": 5
+    },
+    {
+      "project": "oideachais",
+      "slug": "dashboards/medicine/registers",
+      "file": "oideachais/notebooks/dashboards/medicine/registers.py",
+      "title": "registers",
+      "cellCount": 4
+    },
+    {
+      "project": "oideachais",
+      "slug": "dashboards/medicine/all_nations",
+      "file": "oideachais/notebooks/dashboards/medicine/all_nations.py",
+      "title": "all_nations",
+      "cellCount": 5
+    },
+    {
+      "project": "oideachais",
+      "slug": "dashboards/senior_cycle",
+      "file": "oideachais/notebooks/dashboards/senior_cycle.py",
+      "title": "senior_cycle",
+      "cellCount": 7
+    },
+    {
+      "project": "oideachais",
+      "slug": "dashboards/tertiary",
+      "file": "oideachais/notebooks/dashboards/tertiary.py",
+      "title": "tertiary",
+      "cellCount": 7
+    },
+    {
+      "project": "oideachais",
+      "slug": "dashboards/primary",
+      "file": "oideachais/notebooks/dashboards/primary.py",
+      "title": "primary",
+      "cellCount": 5
+    },
+    {
+      "project": "oideachais",
+      "slug": "marking_scheme_analyzer",
+      "file": "oideachais/notebooks/marking_scheme_analyzer.py",
+      "title": "marking_scheme_analyzer",
+      "cellCount": 10
+    },
+    {
+      "project": "oideachais",
+      "slug": "exam_papers_explorer",
+      "file": "oideachais/notebooks/exam_papers_explorer.py",
+      "title": "exam_papers_explorer",
+      "cellCount": 13
+    },
+    {
+      "project": "oideachais",
+      "slug": "lakehouse_inspector",
+      "file": "oideachais/notebooks/lakehouse_inspector.py",
+      "title": "lakehouse_inspector",
+      "cellCount": 11
+    },
+    {
+      "project": "croilar",
+      "slug": "cv_dashboard",
+      "file": "croilar/notebooks/cv_dashboard.py",
+      "title": "cv_dashboard",
+      "cellCount": 8
+    },
+    {
+      "project": "croilar",
+      "slug": "streams/music/music_analytics",
+      "file": "croilar/notebooks/streams/music/music_analytics.py",
+      "title": "music_analytics",
+      "cellCount": 5
+    },
+    {
+      "project": "croilar",
+      "slug": "streams/teaching/teaching_analytics",
+      "file": "croilar/notebooks/streams/teaching/teaching_analytics.py",
+      "title": "teaching_analytics",
+      "cellCount": 5
+    },
+    {
+      "project": "croilar",
+      "slug": "streams/teaching/web_route_health",
+      "file": "croilar/notebooks/streams/teaching/web_route_health.py",
+      "title": "web_route_health",
+      "cellCount": 5
+    },
+    {
+      "project": "croilar",
+      "slug": "streams/teaching/convex_function_latency",
+      "file": "croilar/notebooks/streams/teaching/convex_function_latency.py",
+      "title": "convex_function_latency",
+      "cellCount": 4
+    },
+    {
+      "project": "croilar",
+      "slug": "streams/teaching/baml_extraction_quality",
+      "file": "croilar/notebooks/streams/teaching/baml_extraction_quality.py",
+      "title": "baml_extraction_quality",
+      "cellCount": 4
+    },
+    {
+      "project": "croilar",
+      "slug": "github_insights",
+      "file": "croilar/notebooks/github_insights.py",
+      "title": "github_insights",
+      "cellCount": 12
+    },
+    {
+      "project": "croilar",
+      "slug": "music_analytics",
+      "file": "croilar/notebooks/music_analytics.py",
+      "title": "music_analytics",
+      "cellCount": 14
+    }
+  ]
+}

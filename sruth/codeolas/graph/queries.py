@@ -7,7 +7,7 @@ Provides Cypher query interface for code knowledge graphs.
 import logging
 from typing import Any
 
-from codeolas.core.config import get_config
+from sruth.codeolas.core.config import get_config
 
 logger = logging.getLogger(__name__)
 

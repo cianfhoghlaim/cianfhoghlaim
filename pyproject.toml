@@ -55,10 +55,10 @@ package = false
  members = [
     "sruth/oideachais",
     "sruth/meaisinfhoghlaim",
-    "tuatha",
+    "sruth/tuatha",
     "sruth/codeolas",
-    "tuatha/apps/crypteolas_demo",
-    "croilar",
+    "sruth/crypteolas/apps/crypteolas_demo",
+    "sruth/croilar",
     "infrastructure/browser",
 ] 
 
@@ -109,7 +109,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["sruth", "oideachais", "tuatha", "codeolas", "códeolas", "sruth_browser"]
+known-first-party = ["sruth", "oideachais", "sruth/tuatha", "codeolas", "códeolas", "sruth_browser"]
 
 [tool.mypy]
 python_version = "3.13"

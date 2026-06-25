@@ -7,7 +7,7 @@
 This quadrant provisions and operates the underlying infrastructure for
 the entire `cianfhoghlaim` stack — spanning two physical hosts
 (`arm1-oci` Ampere A1 in Oracle Cloud, `bunchloch` MacBook M4) and
-94 pre-configured Docker Compose stacks under `infrastructure/stacks/` (the actual file count is 93 as of 2026-06-24; the 94th is the `oideachais/` quadrant stack which is also tracked under `infrastructure/stacks/oideachais/`).
+94 pre-configured Docker Compose stacks under `infrastructure/stacks/` (the actual file count is 93 as of 2026-06-24; the 94th is the `sruth/oideachais/` quadrant stack which is also tracked under `infrastructure/stacks/sruth/oideachais/`).
 
 It is the **only** part of the monorepo that:
 
@@ -142,7 +142,7 @@ The functional-group column is **informational only** — it does not
 impose a directory hierarchy. The full alphabetical inventory is in
 [`infrastructure/AGENTS.md`](AGENTS.md) § "Stack Inventory".
 
-**The critical path** (must exist before any croilar/ pipeline runs):
+**The critical path** (must exist before any sruth/croilar/ pipeline runs):
 
 ```
 Infisical → Garage → Lakehouse → LiteLLM → Langfuse

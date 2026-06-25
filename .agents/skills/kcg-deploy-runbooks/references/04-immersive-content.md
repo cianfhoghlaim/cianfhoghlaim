@@ -14,10 +14,10 @@ related_specs:
   - curriculum-ingestion
   - knowledge-graph
 related_apps:
-  - oideachais/dagster_defs
-  - oideachais/baml_src
+  - sruth/oideachais/dagster_defs
+  - sruth/oideachais/baml_src
   - sruth/meaisinfhoghlaim/agents/content_synth
-  - oideachais/notebooks
+  - sruth/oideachais/notebooks
 related_llm_stack:
   - 'BAML (curriculum concept extraction)'
   - 'litellm (multi-modal: text + image + code)'
@@ -48,7 +48,7 @@ outcomes the learner is enrolled in.
 
 | Asset | Path | Use |
 |:--|:--|:--|
-| Quadrant | `oideachais/` | Dagster orchestration, BAML extraction, DLT sources |
+| Quadrant | `sruth/oideachais/` | Dagster orchestration, BAML extraction, DLT sources |
 | Quadrant | `sruth/meaisinfhoghlaim/` | LLM stack, OCR, content synth agents |
 | Skill | `.agents/skills/dagster/SKILL.md` | SDA patterns, partitions, sensors |
 | Skill | `.agents/skills/baml/SKILL.md` | Concept extraction |
@@ -116,7 +116,7 @@ class GapAssetSpec {
 ```
 
 The BAML extractor lives at
-`oideachais/baml_src/cross_border_concept.baml` and runs as a Dagster
+`sruth/oideachais/baml_src/cross_border_concept.baml` and runs as a Dagster
 asset: `cross_border_concepts.extracted`.
 
 ## 4. Dagster asset lineage
@@ -146,7 +146,7 @@ cross_border_concept_node            (this plan — NEW asset)
 ```
 
 The full SDA definitions live in
-`oideachais/dagster_defs/assets/content_generation_assets.py` (new file).
+`sruth/oideachais/dagster_defs/assets/content_generation_assets.py` (new file).
 
 ## 5. Flashcard generator (BAML + litellm)
 
@@ -170,7 +170,7 @@ Per `GapAssetSpec { asset_kind: "flashcard" }`:
    - Output formats: Anki `.apkg`, JSON (for the web wallet from Deploy Plan 01)
    - Stored in `motherduck.oideachais_content.flashcard_pack`
 
-The Marimo notebook `oideachais/notebooks/flashcard_factory.py`
+The Marimo notebook `sruth/oideachais/notebooks/flashcard_factory.py`
 provides a teacher-facing UI to review and approve packs.
 
 ## 6. Marimo notebook generator (BAML + litellm)
@@ -209,7 +209,7 @@ Per `GapAssetSpec { asset_kind: "marimo" }`:
 
 ## 8. Front-end delivery
 
-The web app at `oideachais/web/routes/curriculum.$conceptId.tsx`
+The web app at `sruth/oideachais/web/routes/curriculum.$conceptId.tsx`
 renders:
 
 - Flashcard deck (Anki-compatible)

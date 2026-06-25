@@ -113,9 +113,9 @@ or have a DSPy-specific requirement.
 
 ## In-repo examples
 
-- `oideachais/cocoindex_flows/docs_skills_consolidation.py` —
+- `sruth/oideachais/cocoindex_flows/docs_skills_consolidation.py` —
   BAML-driven extraction per file
-- `oideachais/cocoindex_flows/curriculum_extraction.py` —
+- `sruth/oideachais/cocoindex_flows/curriculum_extraction.py` —
   BAML curriculum extraction
 - The external `docs/cocoindex/patient_intake_extraction_baml/`
   example (now in upstream cocoindex repo) is the canonical

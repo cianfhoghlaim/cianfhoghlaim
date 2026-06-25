@@ -4,8 +4,8 @@
 
 ### Requirement: `sources.yaml` Schema
 
-`oideachais/sources.yaml` SHALL be the single source of truth for every DLT
-source in the platform, and `oideachais/dlt_utils/source_factory.py` SHALL
+`sruth/oideachais/sources.yaml` SHALL be the single source of truth for every DLT
+source in the platform, and `sruth/oideachais/dlt_utils/source_factory.py` SHALL
 be the single point that turns a YAML entry into runtime artefacts.
 
 The YAML file SHALL have the following top‑level keys:
@@ -37,7 +37,7 @@ Each `sources[]` entry SHALL have:
 | `compliance` | no | object | `licence`, `contact`, `robots_txt` |
 
 #### Scenario: A valid entry parses
-- **GIVEN** the canonical entry in `oideachais/sources.yaml` for `ni.education.ccea`
+- **GIVEN** the canonical entry in `sruth/oideachais/sources.yaml` for `ni.education.ccea`
 - **WHEN** `SourceFactory.from_yaml(...)` is called
 - **THEN** the entry is parsed and `factory.source("ni.education.ccea")` returns a callable DLT source
 

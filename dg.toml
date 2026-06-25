@@ -6,28 +6,26 @@ directory_type = "workspace"
 
 [workspace]
 
-# Celtic Education Platform - Irish curriculum, Celtic languages, British Isles education
-[[workspace.projects]]
-path = "oideachais"
+# Celtic Education Platform — Irish curriculum, Celtic languages, British Isles education
+[[workspace.locations]]
+path = "sruth/oideachais"
 
-# Celtic Educational MMO + Crypto Platform
-[[workspace.projects]]
-path = "tuatha"
+# AI/ML quadrant — 12 agents, OCR/HTR, Celtic-language DLT
+[[workspace.locations]]
+path = "sruth/meaisinfhoghlaim"
 
-# Crypteolas — crypto data intelligence (added in consolidate-external-libs-into-tuatha)
-[[workspace.projects]]
-path = "tuatha/crypteolas"
+# Celtic Educational MMO + Crypto Platform (Babylon.js + SpacetimeDB + crypteolas MMO-crypto)
+[[workspace.locations]]
+path = "sruth/tuatha"
+
+# Crypteolas — crypto data intelligence (the standalone DeFi/crypto platform)
+[[workspace.locations]]
+path = "sruth/crypteolas"
 
 # Crypteolas Demo — the standalone TanStack + Agno demo app
-[[workspace.projects]]
-path = "tuatha/apps/crypteolas_demo"
+[[workspace.locations]]
+path = "sruth/crypteolas/apps/crypteolas_demo"
 
 # Croílár — multi-persona portfolio + CV + data engineering (Stream-registry DLT)
-# Phase 0.1 of lateralise-british-isles-domains.
-[[workspace.projects]]
-path = "croilar"
-
-# meaisínfhoghlaim — AI/ML quadrant (12 agents, OCR/HTR, Celtic-language DLT).
-# Phase 0.1 of lateralise-british-isles-domains.
-[[workspace.projects]]
-path = "meaisinfhoghlaim"
+[[workspace.locations]]
+path = "sruth/croilar"

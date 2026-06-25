@@ -17,7 +17,7 @@
 - [x] `openspec validate spaces-use-litelm-gateway --strict`
 - [x] Verify the 4 callers (`an_scrudu/extraction.py`,
       `meaisin_cliste/curaclam.py`, `cianfhoghlaim/app.py`,
-      `anam_tuatha/mac_leinn.py`) work without changes (signatures
+      `anam_sruth/tuatha/mac_leinn.py`) work without changes (signatures
       preserved)
 
 ## 3. Commit + push + archive

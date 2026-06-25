@@ -2,21 +2,21 @@
 
 ## 1. Add 4 canonical BAML functions
 
-- [x] Create `oideachais/baml_src/circular_extraction.baml` (the
+- [x] Create `sruth/oideachais/baml_src/circular_extraction.baml` (the
       CircularReference + TopicDistribution + MarkingSchemeSummary
       + CircularExtraction + ExtractCircularMeta)
 - [x] Append `CompareCelticNations` (+ CurriculumMapping +
-      CrossNationComparison) to `tuatha/baml_src/celtic_curriculum.baml`
+      CrossNationComparison) to `sruth/tuatha/baml_src/celtic_curriculum.baml`
 - [x] Append `GenerateExitCardQuestions` (+ ExitCardQuestion +
-      ExitCardSet) to `tuatha/baml_src/player_assessment.baml`
+      ExitCardSet) to `sruth/tuatha/baml_src/player_assessment.baml`
 - [x] Append `GenerateNpcDialogue` (+ NpcDialogue +
-      NpcDialogueExchange) to `tuatha/baml_src/mythology_extraction.baml`
+      NpcDialogueExchange) to `sruth/tuatha/baml_src/mythology_extraction.baml`
 
 ## 2. Replace BAML_HACKATHON_CHAINED with LitellmClient
 
 - [x] In all 4 new function bodies, replace
       `client BAML_HACKATHON_CHAINED` with `client LitellmClient`
-      (the canonical client from oideachais/baml_src/clients.baml)
+      (the canonical client from sruth/oideachais/baml_src/clients.baml)
 
 ## 3. Delete the hackathon BAML
 

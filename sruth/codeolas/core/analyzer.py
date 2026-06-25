@@ -12,8 +12,8 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from codeolas.core.config import Config, get_config
-from codeolas.core.types import CodeChunk, SearchResult
+from sruth.codeolas.core.config import Config, get_config
+from sruth.codeolas.core.types import CodeChunk, SearchResult
 
 logger = logging.getLogger(__name__)
 

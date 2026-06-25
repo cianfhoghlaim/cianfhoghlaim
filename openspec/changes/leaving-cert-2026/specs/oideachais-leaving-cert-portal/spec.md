@@ -13,7 +13,7 @@ rendered via MotherDuck/DuckDB queries and original PDFs served from Cloudflare 
 - **GIVEN** the Mathematics pipeline has been run and the portal page payload exists
 - **WHEN** a student navigates to `oideachais.cianfhoghlaim.ie/leaving-cert/mathematics`
 - **THEN** the page SHALL render these sections in order: Hero (subject + exam countdown), Syllabus analysis, Past exam analysis (year-by-year table), Marking scheme patterns, Topic prioritisation (sorted by marks-per-study-hour), Exam layout tips, CopilotKit chat panel, Original PDFs tab
-- **AND** the page SHALL use the `@croilar/ui` component library (Card, Tabs, Table, Accordion, Badge, Progress, Separator, Skeleton)
+- **AND** the page SHALL use the `@sruth/croilar/ui` component library (Card, Tabs, Table, Accordion, Badge, Progress, Separator, Skeleton)
 - **AND** the page SHALL load from MotherDuck for public reads and from R2 signed URLs for the PDF viewer
 
 #### Scenario: Student views the Irish page

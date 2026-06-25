@@ -2,7 +2,7 @@
 
 ## Why
 
-Of the ~60 `@dlt.source` functions in `oideachais/dlt_sources/`,
+Of the ~60 `@dlt.source` functions in `sruth/oideachais/dlt_sources/`,
 **11 sources have no Dagster asset wrapper** and therefore never
 materialise into DuckLake:
 
@@ -42,7 +42,7 @@ materialise into DuckLake:
 ## What
 
 Add 11 simple `@asset` wrappers in a single new file
-`oideachais/dagster_defs/assets/wire_unwired_dlt_sources.py`,
+`sruth/oideachais/dagster_defs/assets/wire_unwired_dlt_sources.py`,
 following the same `leaving_cert/dlt_assets.py` pattern (plain
 `@asset` + `dlt.pipeline(...)` + `safe_dlt_run(pipeline, source)`).
 
@@ -90,9 +90,9 @@ def ireland_parallel_corpus_dlt(context) -> MaterializeResult: ...
 ## Impact
 
 ### Affected files
-- **NEW:** `oideachais/dagster_defs/assets/wire_unwired_dlt_sources.py` (~250 lines)
-- **MODIFIED:** `oideachais/dagster_defs/definitions.py` (register the 11 new assets)
-- **MODIFIED:** `oideachais/dagster_defs/asset_checks.py` (add 11 row_count checks)
+- **NEW:** `sruth/oideachais/dagster_defs/assets/wire_unwired_dlt_sources.py` (~250 lines)
+- **MODIFIED:** `sruth/oideachais/dagster_defs/definitions.py` (register the 11 new assets)
+- **MODIFIED:** `sruth/oideachais/dagster_defs/asset_checks.py` (add 11 row_count checks)
 
 ### Affected specs
 - MODIFIED `oideachais-pipeline` — the rule that every dlt

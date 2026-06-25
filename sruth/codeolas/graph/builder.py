@@ -9,8 +9,8 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from codeolas.core.config import get_config
-from codeolas.core.types import (
+from sruth.codeolas.core.config import get_config
+from sruth.codeolas.core.types import (
     CodeChunk,
     EdgeType,
     GraphEdge,

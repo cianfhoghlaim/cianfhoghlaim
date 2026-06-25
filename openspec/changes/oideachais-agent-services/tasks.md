@@ -2,10 +2,10 @@
 
 ## Phase 1: Create the ADK Dockerfile
 
-- [ ] Create `oideachais/Dockerfile.adk`:
+- [ ] Create `sruth/oideachais/Dockerfile.adk`:
   - Base: `python:3.12-slim`
   - Install `google-adk` + the oideachais deps
-  - Copy `oideachais/agents/adk/` source
+  - Copy `sruth/oideachais/agents/adk/` source
   - Run `uvicorn` on port 7778
 
 ## Phase 2: Add the 2 new services to compose.yaml
@@ -40,7 +40,7 @@
 ## Phase 7: Validation
 
 - [ ] `docker compose -f compose.yaml config` parses (2 new services appear)
-- [ ] `infrastructure/stacks/oideachais/README.md` documents the 2 new services
+- [ ] `infrastructure/stacks/sruth/oideachais/README.md` documents the 2 new services
 - [ ] `infrastructure/QUADRANT-TO-STACK-MAP.md` includes the 2 new services
 - [ ] `openspec validate oideachais-agent-services --strict` passes
 

@@ -47,7 +47,7 @@ Use when you need to:
 - **Catalog**: Postgres (`md:oideachais` as the metadata DB)
 - **Schema convention**: `oideachais.{domain}.{nation}`
 - **Writers**: Dagster assets in `sruth/oideachais/dagster_defs/assets/`
-  and `tuatha/dagster_assets/`
+  and `sruth/tuatha/dagster_assets/`
 - **Why DuckLake**: ACID transactions + time-travel queries +
   zero-copy Parquet + Iceberg metadata for downstream PyIceberg
   / Spark / Trino consumers
@@ -264,7 +264,7 @@ pipeline = dlt.pipeline(
     pipeline_name="ireland_curriculum",
     destination=dlt.destinations.ducklake(
         catalog="postgres://...",
-        storage="s3://oideachais/",
+        storage="s3://sruth/oideachais/",
     ),
     dataset_name="oideachais.education.ie",
 )
@@ -329,7 +329,7 @@ Key 1.0 features that affect the KCG pipeline:
 
 The `lakehouse-lance-namespace` sidecar registers LanceDB tables as Iceberg tables. Pattern:
 
-1. The Dagster asset writes Parquet to `s3://ducklake/oideachais/...`
+1. The Dagster asset writes Parquet to `s3://ducklake/sruth/oideachais/...`
 2. The LanceDB writer ingests the Parquet into a LanceDB table
 3. The `lakehouse-lance-namespace` sidecar (in the `lakehouse` stack) sees the new table and registers it in the Lakekeeper Iceberg catalog
 4. Any tool that speaks the Iceberg REST protocol (MotherDuck, DuckDB, Trino) can now query the LanceDB data
@@ -340,7 +340,7 @@ The sidecar runs at `http://lakehouse-lance-namespace:8182` and uses the Lakekee
 
 | Layer | What it stores | KCG pattern |
 |:--|:--|:--|
-| **Object storage** | Parquet files + LanceDB tables | Garage S3 (`s3://ducklake/oideachais/`, `s3://lance/oideachais/`) |
+| **Object storage** | Parquet files + LanceDB tables | Garage S3 (`s3://ducklake/sruth/oideachais/`, `s3://lance/sruth/oideachais/`) |
 | **Lakehouse catalog** | Schema + partition metadata | DuckLake 1.0 (Postgres `lakehouse-postgres:5432/oideachais_catalog`) |
 | **Iceberg REST** | Cross-tool catalogue (MotherDuck, Trino) | Lakekeeper (`http://lakehouse-lakekeeper:8181`) |
 | **Lance namespace** | LanceDB tables exposed as Iceberg | `lakehouse-lance-namespace:8182` (sidecar) |

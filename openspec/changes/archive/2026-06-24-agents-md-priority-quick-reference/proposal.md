@@ -49,10 +49,10 @@ openspec commands, and priority tools for that file's audience."
 
 - 6 new sections appended at the TOP of:
   - `/AGENTS.md` (root) — 1 section
-  - `/oideachais/AGENTS.md` — 1 section
-  - `/meaisinfhoghlaim/AGENTS.md` — 1 section
-  - `/tuatha/AGENTS.md` — 1 section
-  - `/croilar/AGENTS.md` — 1 section
+  - `/sruth/oideachais/AGENTS.md` — 1 section
+  - `/sruth/meaisinfhoghlaim/AGENTS.md` — 1 section
+  - `/sruth/tuatha/AGENTS.md` — 1 section
+  - `/sruth/croilar/AGENTS.md` — 1 section
   - `/infrastructure/AGENTS.md` — 1 section
   - `/openspec/AGENTS.md` — 1 section
 

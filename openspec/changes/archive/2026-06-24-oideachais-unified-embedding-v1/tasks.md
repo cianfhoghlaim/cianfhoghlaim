@@ -1,6 +1,6 @@
 # Tasks: oideachais-unified-embedding-v1
 
-## 1. `oideachais/cocoindex_flows/unified_embedding.py`
+## 1. `sruth/oideachais/cocoindex_flows/unified_embedding.py`
 
 - [x] Create the v1 port file (unified_embedding.py)
 - [x] `UnifiedDocumentRow` + `CodeChunkRow` dataclasses with BGE-M3 embedding
@@ -17,7 +17,7 @@
 - [x] 26 `__all__` exports
 - [x] Functional test: imports cleanly, both Apps construct (COCOINDEX_AVAILABLE=True)
 
-## 2. `oideachais/dagster_defs/assets/unified_embedding_assets.py`
+## 2. `sruth/oideachais/dagster_defs/assets/unified_embedding_assets.py`
 
 - [x] Create the asset file
 - [x] 2 @asset(group_name="embedding") declarations
@@ -33,9 +33,9 @@ which broke dagster's `is_context_provided` check
 (`Cannot annotate \`context\` parameter with type AssetExecutionContext`).
 The 3 new asset files (Phases 1, 2, 3) all omit the future import.
 
-- [x] `oideachais/dagster_defs/assets/codebase_assets.py` — removed
-- [x] `oideachais/dagster_defs/assets/infrastructure_assets.py` — removed
-- [x] `oideachais/dagster_defs/assets/unified_embedding_assets.py` — never added
+- [x] `sruth/oideachais/dagster_defs/assets/codebase_assets.py` — removed
+- [x] `sruth/oideachais/dagster_defs/assets/infrastructure_assets.py` — removed
+- [x] `sruth/oideachais/dagster_defs/assets/unified_embedding_assets.py` — never added
 
 ## 4. Verify imports
 
@@ -45,7 +45,7 @@ The 3 new asset files (Phases 1, 2, 3) all omit the future import.
 - [x] `oideachais.dagster_defs.assets.unified_embedding_assets` imports cleanly
 - [x] 9 new Dagster assets registered: 3 codebase + 4 infrastructure + 2 unified_embedding
 
-## 5. `oideachais/STATUS.md`
+## 5. `sruth/oideachais/STATUS.md`
 
 - [x] §3 — add 1 new v1 row
 - [x] §4 — add `embedding` group row

@@ -2,8 +2,8 @@
 
 import pytest
 
-from codeolas.chunking import chunk_code_file, detect_language
-from codeolas.core.types import ChunkType
+from sruth.codeolas.chunking import chunk_code_file, detect_language
+from sruth.codeolas.core.types import ChunkType
 
 
 def test_detect_language_python():

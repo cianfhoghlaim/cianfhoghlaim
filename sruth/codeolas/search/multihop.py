@@ -8,7 +8,7 @@ Iteratively searches and refines queries until information convergence.
 import logging
 from typing import TYPE_CHECKING, Any
 
-from codeolas.core.types import SearchResult
+from sruth.codeolas.core.types import SearchResult
 
 if TYPE_CHECKING:
     from codeolas.core.analyzer import CodebaseAnalyzer

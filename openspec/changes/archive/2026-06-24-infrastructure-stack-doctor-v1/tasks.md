@@ -17,9 +17,9 @@
 
 ## 3. Refactor: 4 quadrant deploy quartets → `infrastructure/stacks/<quadrant>/`
 
-- [x] Move `meaisinfhogmlaim/{compose.yaml, sidecar.yaml, blueprint.yaml, secrets.env}` → `infrastructure/stacks/meaisinfhoghlaim/`
-- [x] Move `tuatha/{pangolin.yaml, docker-compose.yaml, compose.dev.yaml}` → `infrastructure/stacks/tuatha/`
-- [x] Move `croilar/{compose.yaml, compose.dev.yaml, sidecar.yaml, secrets.env, Dockerfile.dagster}` → `infrastructure/stacks/croilar/`
+- [x] Move `meaisinfhogmlaim/{compose.yaml, sidecar.yaml, blueprint.yaml, secrets.env}` → `infrastructure/stacks/sruth/meaisinfhoghlaim/`
+- [x] Move `sruth/tuatha/{pangolin.yaml, docker-compose.yaml, compose.dev.yaml}` → `infrastructure/stacks/sruth/tuatha/`
+- [x] Move `sruth/croilar/{compose.yaml, compose.dev.yaml, sidecar.yaml, secrets.env, Dockerfile.dagster}` → `infrastructure/stacks/sruth/croilar/`
 - [x] Add thin re-export shims at the source locations for backward compat
 
 ## 4. Refactor: delete 5 legacy `.ts` files

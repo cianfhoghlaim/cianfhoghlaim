@@ -12,5 +12,5 @@ name = "oideachais"
 uv_managed = true
 
 [project.code_location]
-module_name = "oideachais.data_platform.dagster_defs.definitions"
+module_name = "oideachais.dagster_defs.definitions"
 location_name = "oideachais"

@@ -35,7 +35,7 @@ Use when you need to:
 | **Earth** | `Talamh na bhFocal` | The language + the land | NCCA Primary + CfE First/Second | `quest-pack-earth/` (the default for new players) |
 | **Air** | `Gaoth na nEala` | The wind + the voice | CfW Foundation + CfE Early | `quest-pack-air/` |
 
-The 5 realms are configured in `tuatha/crates/services/src/cosmos.rs:RealmConfig`
+The 5 realms are configured in `sruth/tuatha/crates/services/src/cosmos.rs:RealmConfig`
 (the canonical SpacetimeDB table home).
 
 ## The 5 SpacetimeDB tables (the state)
@@ -48,7 +48,7 @@ The 5 realms are configured in `tuatha/crates/services/src/cosmos.rs:RealmConfig
 | `AnamCara` | The soul-friend bond (one per player) | `player_id: u64`, `companion_id: u64`, `bonded_at: i64`, `bond_strength: f32` |
 | `RealmEdge` | The inter-realm connection (10 edges total) | `from_realm: Realm`, `to_realm: Realm`, `edge_type: EdgeType`, `unlock_condition: UnlockCondition` |
 
-The 5 tables are defined in `tuatha/crates/services/src/schema.rs` (the
+The 5 tables are defined in `sruth/tuatha/crates/services/src/schema.rs` (the
 canonical SpacetimeDB schema home).
 
 ## The Anam Cara (the soul-friend bond)
@@ -66,7 +66,7 @@ different realm). The bond mechanic:
   "Anam Cara NFT" memento)
 
 The Anam Cara is implemented in
-`tuatha/crates/services/src/anam.rs:AnamCaraService`.
+`sruth/tuatha/crates/services/src/anam.rs:AnamCaraService`.
 
 ## The Geasa system (the binding + status)
 
@@ -81,7 +81,7 @@ NPC. The Geasa system has 4 statuses:
 | `FULFILLED` | The vow has been completed; the reward is granted |
 
 The Geasa is implemented in
-`tuatha/crates/services/src/geasa.rs:GeasaService`.
+`sruth/tuatha/crates/services/src/geasa.rs:GeasaService`.
 
 ## The 5 quest tracks (one per element)
 
@@ -93,15 +93,15 @@ The Geasa is implemented in
 | `Earth` | The language + the land | Primary | NCCA Primary + CfE First/Second (the default) |
 | `Air` | The wind + the voice | Foundation | CfW Foundation + CfE Early |
 
-The 5 tracks are configured in `tuatha/crates/services/src/quests.rs:QuestTrack`.
+The 5 tracks are configured in `sruth/tuatha/crates/services/src/quests.rs:QuestTrack`.
 
 ## The Babylon.js scene graph integration
 
 Each of the 5 realms is a **Babylon.js scene** loaded from
-`tuatha/game/scenes/<realm>/`:
+`sruth/tuatha/game/scenes/<realm>/`:
 
 ```
-tuatha/game/
+sruth/tuatha/game/
 ├── scenes/
 │   ├── spirit/
 │   │   ├── scene.babylon     # the Babylon.js scene file
@@ -120,16 +120,16 @@ tuatha/game/
 ```
 
 The 5 scene files are loaded by the Babylon.js client at
-`tuatha/game/client/scene_loader.ts:loadScene(realm)`.
+`sruth/tuatha/game/client/scene_loader.ts:loadScene(realm)`.
 
 ## Worked example: add a new quest pack
 
 1. Choose the realm (e.g. `fire` for the "Tine na Laoch" track).
 
-2. Create the quest pack at `tuatha/crates/services/src/quests/fire.rs`:
+2. Create the quest pack at `sruth/tuatha/crates/services/src/quests/fire.rs`:
 
    ```rust
-   // tuatha/crates/services/src/quests/fire.rs
+   // sruth/tuatha/crates/services/src/quests/fire.rs
    pub fn fire_quests() -> Vec<Quest> {
        vec![
            Quest {
@@ -146,7 +146,7 @@ The 5 scene files are loaded by the Babylon.js client at
    ```
 
 3. Add the BAML extraction at
-   `tuatha/baml_src/fire_quest_extraction.baml`:
+   `sruth/tuatha/baml_src/fire_quest_extraction.baml`:
 
    ```baml
    class FireQuest {
@@ -164,15 +164,15 @@ The 5 scene files are loaded by the Babylon.js client at
    }
    ```
 
-4. Add the Babylon.js scene at `tuatha/game/scenes/fire/scene.babylon`.
+4. Add the Babylon.js scene at `sruth/tuatha/game/scenes/fire/scene.babylon`.
 
-5. Add the asset to `tuatha/crates/services/src/quests/mod.rs:QuestRegistry`.
+5. Add the asset to `sruth/tuatha/crates/services/src/quests/mod.rs:QuestRegistry`.
 
-6. Update `tuatha/knowledge_graph/` with the new NPC + dialogue
+6. Update `sruth/tuatha/knowledge_graph/` with the new NPC + dialogue
    (the BAML extraction feeds the knowledge graph).
 
 7. Add the new achievements to the
-   `tuatha/crypteolas/achievements/` ledger (per
+   `sruth/tuatha/sruth/crypteolas/achievements/` ledger (per
    `.agents/skills/tuatha-achievement-ledger/SKILL.md`).
 
 ## Common failure modes
@@ -192,10 +192,10 @@ The 5 scene files are loaded by the Babylon.js client at
 - `.agents/skills/celtic-asset-generation/SKILL.md` — how curriculum content becomes in-game assets
 - `.agents/skills/tuatha-achievement-ledger/SKILL.md` — the skill-tree badge ledger (round 6 Phase 6)
 - `.agents/skills/tuatha-mcp-server-tools/SKILL.md` — the 5 MCP tools + the shim pattern
-- `tuatha/crates/services/src/schema.rs` — the 5 SpacetimeDB tables
-- `tuatha/crates/services/src/cosmos.rs` — the RealmConfig home
-- `tuatha/crates/services/src/anam.rs` — the AnamCaraService
-- `tuatha/crates/services/src/geasa.rs` — the GeasaService
-- `tuatha/game/scenes/` — the 5 Babylon.js scenes
-- `tuatha/baml_src/` — the 5 BAML files
+- `sruth/tuatha/crates/services/src/schema.rs` — the 5 SpacetimeDB tables
+- `sruth/tuatha/crates/services/src/cosmos.rs` — the RealmConfig home
+- `sruth/tuatha/crates/services/src/anam.rs` — the AnamCaraService
+- `sruth/tuatha/crates/services/src/geasa.rs` — the GeasaService
+- `sruth/tuatha/game/scenes/` — the 5 Babylon.js scenes
+- `sruth/tuatha/baml_src/` — the 5 BAML files
 - `openspec/specs/tuatha-platform/spec.md` — the canonical spec

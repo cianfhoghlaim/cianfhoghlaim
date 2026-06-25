@@ -26,9 +26,9 @@ ccc_query_hints:
 
 | Path | Quadrant | Purpose | uv workspace |
 |---|---|---|---|
-| `oideachais/` | **Data lakehouse** | Dagster + DLT + DuckLake + LanceDB + Cognee + CocoIndex | member |
-| `tuatha/` | **Celtic MMO consumer** | FastAPI + Axum + Babylon.js + Crypteolas + x402 | member (+ 3 sub: codeolas, crypteolas, apps/crypteolas_demo) |
-| `croilar/` | **Multi-persona portfolio** | TanStack + Hono + Convex + BetterAuth | member |
+| `sruth/oideachais/` | **Data lakehouse** | Dagster + DLT + DuckLake + LanceDB + Cognee + CocoIndex | member |
+| `sruth/tuatha/` | **Celtic MMO consumer** | FastAPI + Axum + Babylon.js + Crypteolas + x402 | member (+ 3 sub: codeolas, crypteolas, apps/crypteolas_demo) |
+| `sruth/croilar/` | **Multi-persona portfolio** | TanStack + Hono + Convex + BetterAuth | member |
 | `meaisínfhoghlaim/` | **AI/ML quadrant** | agents, OCR, Celtic language data, ML pipelines, evaluation, quality, catalog | member (adopted 2026-06-13) |
 | `infrastructure/` | **Deploy** | Pangolin, Komodo, Forgejo, Infisical, Ansible, Pulumi, browser stack | member (+ 1 sub: browser) |
 
@@ -57,7 +57,7 @@ For project identity, see [`docs/00-core/CLAUDE.md`](00-core/CLAUDE.md).
 | Write Dagster assets, sensors, schedules | [Dagster Orchestration](02-data-platform/dagster-orchestration.md) | `data_platform` |
 | Write DLT pipelines (filesystem or REST API) | [DLT Pipelines](02-data-platform/dlt-pipelines.md) | `data_platform` |
 | Use BAML / CocoIndex / Cognee / ccc | [LLM Stack Hierarchy](04-ai-ml/llm-stack-hierarchy.md) | `ai_ml` |
-| Set up OCR / HTR for documents | `oideachais/ocr/README.md` | `ai_ml` |
+| Set up OCR / HTR for documents | `sruth/oideachais/ocr/README.md` | `ai_ml` |
 | Evaluate or improve RAG quality | `docs/04-ai-ml/rag-evaluation.md` | `ai_ml` |
 | Build or consume an agent framework | [Browser Automation](03-agents/browser-automation.md) | `agents` |
 | Set up browser automation / scraping | [Browser Automation](03-agents/browser-automation.md) | `agents` |
@@ -217,7 +217,7 @@ These are **reference libraries** — research + scraped-upstream content. Not p
 - `docs/marimo/` — Marimo reference (2.6M after upstream mirror move). See [README](marimo/README.md).
 - `docs/08-mirrors/` — 2 upstream mirrors: `marimo/` (169MB, 3,641 files) + `marimo-docs/` (6.2MB).
 
-- `docs/tuatha/` — Celtic MMO + Cianfhoghlaim stack reference (consolidated 2026-06-13; 8 topical subdirs).
+- `docs/sruth/tuatha/` — Celtic MMO + Cianfhoghlaim stack reference (consolidated 2026-06-13; 8 topical subdirs).
 - `docs/hackathons/`, `docs/hmgcc/`, `docs/docs_examples_consolidated/`, `docs/08-screenshots/` — **example / archive** material. Not part of the canonical tree.
 - `docs/archive/2026-06-06-*` — **deleted** (480 files, 101M). All content is in the canonical 7-domain tree.
 

@@ -9,14 +9,14 @@ producing both an embedded chunk table and a code-graph table. The
 App uses:
 
 - 29+ language detection (port from `codeolas/chunking/languages.py`
-  to `oideachais/cocoindex_flows/chunking/languages.py`)
+  to `sruth/oideachais/cocoindex_flows/chunking/languages.py`)
 - `localfs.walk_dir(repo_root, live=True, refresh_interval=60s)` for
   the source
 - `RecursiveSplitter` with `detect_code_language` for chunking
 - `SentenceTransformerEmbedder("BAAI/bge-m3")` for embedding
 - `lancedb.mount_table_target(...)` for the chunk + graph outputs
 
-The 3 Dagster assets in `oideachais/dagster_defs/assets/codebase_assets.py`
+The 3 Dagster assets in `sruth/oideachais/dagster_defs/assets/codebase_assets.py`
 (group_name="codebase"):
 
 1. `codebase_chunks` — chunked + embedded source files
@@ -46,7 +46,7 @@ JavaScript, TSX, JSX, Rust, Go, Java, Kotlin, Ruby, Swift.
 #### Scenario: A developer queries the code graph (Cypher-like)
 
 - **GIVEN** the `codebase_code_graph` Dagster asset has materialised
-- **WHEN** a developer runs `search_code_graph(file_path="oideachais/dagster_defs/")`
+- **WHEN** a developer runs `search_code_graph(file_path="sruth/oideachais/dagster_defs/")`
 - **THEN** the v1 App reads the `codebase_graph` LanceDB table and
   returns the 10 most relevant CodeNode dicts (file_path matches the
   glob, with optional `node_type` filter)
@@ -54,7 +54,7 @@ JavaScript, TSX, JSX, Rust, Go, Java, Kotlin, Ruby, Swift.
 #### Scenario: A new language is added to the language table
 
 - **GIVEN** a developer adds a new language (e.g. `dart` with `.dart`
-  extension) to `oideachais/cocoindex_flows/chunking/languages.py`
+  extension) to `sruth/oideachais/cocoindex_flows/chunking/languages.py`
 - **WHEN** the `codebase_chunks` Dagster asset re-materialises
 - **THEN** `.dart` files are now chunked using the recursive splitter
   with `language="dart"`

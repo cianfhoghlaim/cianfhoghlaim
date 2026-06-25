@@ -44,7 +44,7 @@ implements all 5 via the same quest + agent + achievement pattern.
 - **Senior Cycle (Leaving Certificate)** — Established + LCVP
   + LCA. The MMO covers the formative phase; the summative
   exam is out of scope.
-- **Source**: `oideachais/dlt_sources/domains/education/ie/`
+- **Source**: `sruth/oideachais/dlt_sources/domains/education/ie/`
   + `baml_src/curriculum_*.baml`
 
 ### 2. Scotland (CfE Early → Senior Phase)
@@ -55,7 +55,7 @@ implements all 5 via the same quest + agent + achievement pattern.
 - **Experiences and Outcomes (EsOs)** — each CfE subject has
   EsOs at each level. The MMO quest system maps EsOs to
   formative quests.
-- **Source**: `oideachais/dlt_sources/domains/education/uk/scotland/`
+- **Source**: `sruth/oideachais/dlt_sources/domains/education/uk/scotland/`
 
 ### 3. Wales (Curriculum for Wales Foundation → KS5)
 
@@ -66,24 +66,24 @@ implements all 5 via the same quest + agent + achievement pattern.
   citizens; healthy, confident individuals.
 - **Progression Steps** — each Area maps to Progression Steps
   at the 4 phases.
-- **Source**: `oideachais/dlt_sources/domains/education/uk/wales/`
+- **Source**: `sruth/oideachais/dlt_sources/domains/education/uk/wales/`
 
 ### 4. Northern Ireland (CCEA Foundation → KS5)
 
 - **CCEA Foundation Stage** (P1-P3)
 - **CCEA Key Stage 1-4** (P4-Y12)
 - **CCEA Post-16** (A-Levels, BTEC, Occupational Studies)
-- **Source**: `oideachais/dlt_sources/domains/education/uk/northern_ireland/`
+- **Source**: `sruth/oideachais/dlt_sources/domains/education/uk/northern_ireland/`
 
 ### 5. SQA (National 3 → Advanced Higher)
 
 - **National 3, 4, 5** (broad general education)
 - **Higher + Advanced Higher** (post-16)
-- **Source**: `oideachais/dlt_sources/domains/education/uk/scotland/gov_scot_statistics.py`
+- **Source**: `sruth/oideachais/dlt_sources/domains/education/uk/scotland/gov_scot_statistics.py`
 
 ## The 4 formative feedback channels
 
-The 4 tuatha ADK agents (now at `oideachais/agents/adk/`)
+The 4 tuatha ADK agents (now at `sruth/oideachais/agents/adk/`)
 each deliver one channel of formative feedback:
 
 | Agent | Formative role | When it fires |
@@ -103,7 +103,7 @@ each deliver one channel of formative feedback:
 
 ## The 4 graduated hint levels
 
-Per `oideachais/agents/adk/quest_guide_agent:quest_guide_agent`:
+Per `sruth/oideachais/agents/adk/quest_guide_agent:quest_guide_agent`:
 
 - **Level 1**: Subtle nudge in the right direction
 - **Level 2**: More specific guidance
@@ -120,7 +120,7 @@ right/wrong.
 Per the user's plan: "crypto = educational achievements (not
 finance)". The MMO's crypto is a **badging system**, not a
 cryptocurrency. The implementation lives in
-`tuatha/crypteolas/achievements/`:
+`sruth/tuatha/sruth/crypteolas/achievements/`:
 
 - **Skill tree badges** — 1 per curriculum framework × level
   (e.g. "NCCA Junior Cycle — Gaeilge — Vocabulary Level 3")
@@ -149,7 +149,7 @@ The badge metadata includes:
   `{nation}.{domain}.{entity}` asset-key contract
 - `.agents/skills/irish-edtech/SKILL.md` — Irish-language
   AI patterns (UCCIX, GaBERT, BGE-M3)
-- `oideachais/agents/adk/{celtic_tutor_agent,mythology_narrator_agent,quest_guide_agent,research_assistant_agent,tuatha_root_agent}.py`
+- `sruth/oideachais/agents/adk/{celtic_tutor_agent,mythology_narrator_agent,quest_guide_agent,research_assistant_agent,tuatha_root_agent}.py`
   — the 4 agents + the root orchestrator
 - `openspec/specs/tuatha-platform/spec.md` — the canonical
   spec

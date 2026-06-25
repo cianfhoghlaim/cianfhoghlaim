@@ -12,16 +12,16 @@ the entire data engineering layer is consistent with the
 
 The 5 aleyum aliases are scattered across 3 files:
 
-- `croilar/_shared/config/settings.py` — the `ALEYUM_` env
+- `sruth/croilar/_shared/config/settings.py` — the `ALEYUM_` env
   prefix (already partially retired) + the deprecated
   `AleyumSettings` alias
-- `croilar/pipelines/shared/destinations.py` — 8 aleyum
+- `sruth/croilar/pipelines/shared/destinations.py` — 8 aleyum
   references (database path, R2 bucket, catalog path,
   4 pipeline names, env var)
-- `croilar/pipelines/shared/ducklake.py` — 3 aleyum
+- `sruth/croilar/pipelines/shared/ducklake.py` — 3 aleyum
   references (default catalog path, default R2 bucket,
   `initialize_catalog` defaults)
-- `croilar/pipelines/shared/r2_client.py` — 1 aleyum
+- `sruth/croilar/pipelines/shared/r2_client.py` — 1 aleyum
   reference (`ALEYUM_R2_BUCKET = "aleyum-assets"` constant)
 
 The change delivers 4 sub-tasks:
@@ -33,11 +33,11 @@ The change delivers 4 sub-tasks:
    `croilar_catalog.duckdb`
 2. **Deprecated `AleyumSettings` alias removal** — the
    `AleyumSettings = StreamSettings` line in
-   `croilar/_shared/config/settings.py` is removed
+   `sruth/croilar/_shared/config/settings.py` is removed
 3. **1 new skill** — `.agents/skills/croilar-stream-registry/SKILL.md`
    to document the 5 collapses + the `StreamSettings` Pydantic
    BaseSettings + the 12 stream-driven Dagster assets + the
-   `Stream` model + the `croilar/config/sources.yaml` registry
+   `Stream` model + the `sruth/croilar/config/sources.yaml` registry
 4. **OpenSpec spec delta** — 2 ADDED Requirements on
    `croilar-data-engineering` (Aleyum-to-croilar cleanup
    mandate, Stream-registry canonical config surface)
@@ -48,14 +48,14 @@ plan (rounds 7-13). Rounds 7-10 have already landed
 
 ## What changes
 
-- `croilar/pipelines/shared/destinations.py` (8 aleyum renames)
-- `croilar/pipelines/shared/ducklake.py` (3 aleyum renames)
-- `croilar/pipelines/shared/r2_client.py` (1 aleyum constant
+- `sruth/croilar/pipelines/shared/destinations.py` (8 aleyum renames)
+- `sruth/croilar/pipelines/shared/ducklake.py` (3 aleyum renames)
+- `sruth/croilar/pipelines/shared/r2_client.py` (1 aleyum constant
   removal)
-- `croilar/_shared/config/settings.py` (deprecated
+- `sruth/croilar/_shared/config/settings.py` (deprecated
   `AleyumSettings` alias removed)
 - `.agents/skills/croilar-stream-registry/SKILL.md` (new)
-- `croilar/AGENTS.md` (priority skills 8 of 108 → 9 of 120
+- `sruth/croilar/AGENTS.md` (priority skills 8 of 108 → 9 of 120
   + 1 new skill row in the related skills section)
 - `openspec/specs/croilar-data-engineering/spec.md` (2 ADDED
   requirements)

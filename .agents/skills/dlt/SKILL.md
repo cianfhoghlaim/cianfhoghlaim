@@ -18,8 +18,8 @@ When assuming the `data-engineer` persona, use these rules:
   local dev. Set `USE_DUCKLAKE=true` to switch to MotherDuck.
 - **Tests**: disable plugins during testing by setting
   `DLT_DISABLE_PLUGINS=true`.
-- **Source location**: `dlt_sources` lives at `oideachais/dlt_sources/`
-  (NOT `oideachais/data_platform/dlt_sources/`, which is a deprecated
+- **Source location**: `dlt_sources` lives at `sruth/oideachais/dlt_sources/`
+  (NOT `sruth/oideachais/data_platform/dlt_sources/`, which is a deprecated
   path mentioned in the old skill).
 - **Imports**: All `oideachais.data_platform...` absolute imports have
   been removed; use relative or local `dlt_sources` imports
@@ -39,7 +39,7 @@ When assuming the `data-engineer` persona, use these rules:
 When tasked with dlt operations or data exploration, use this
 guide to invoke the most appropriate resource:
 
-### Data exploration & notebooks (oideachais/notebooks)
+### Data exploration & notebooks (sruth/oideachais/notebooks)
 
 - **`explore-data`**: Use to analyze datasets and create an
   `analysis_plan.md` artifact
@@ -225,7 +225,7 @@ multiprocess_executor, parallel assets, and incremental loading.
 - Use `write_disposition="merge"` without a `primary_key` (silently
   appends duplicates)
 - Import `oideachais.data_platform.dlt_sources` from within
-  `oideachais/` (use relative imports)
+  `sruth/oideachais/` (use relative imports)
 - Hand-write DDL for the destination (let dlt infer the schema from
   the resource yield)
 - Run live web scraping without `USE_LOCAL_SCRAPES=true` first

@@ -6,7 +6,7 @@ canonical way to manage LLM clients in BAML.
 
 ## The 3 KCG production clients
 
-The `oideachais/baml_src/clients.baml` defines:
+The `sruth/oideachais/baml_src/clients.baml` defines:
 
 ```baml
 client<llm> ExtractEn {
@@ -180,7 +180,7 @@ pattern), `default_client_mode async` is required.
 
 ## Reference
 
-- The full `oideachais/baml_src/clients.baml` (and `clients_0.baml`
+- The full `sruth/oideachais/baml_src/clients.baml` (and `clients_0.baml`
   in the repo) define the KCG production clients
 - BAML clients docs: <https://docs.boundaryml.com/docs/snippets/clients>
 - BAML retry docs: <https://docs.boundaryml.com/docs/configuration/retries>

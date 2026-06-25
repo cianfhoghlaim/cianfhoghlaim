@@ -76,8 +76,8 @@ multi-quadrant refactor plan.
 
 ```bash
 # infrastructure/stacks/<name>/secrets.env
-INFI_DATABASE_URL=infisical://dev-baile/oideachais/database_url
-INFI_LANCEDB_URI=infisical://dev-baile/oideachais/lancedb_uri
+INFI_DATABASE_URL=infisical://dev-baile/sruth/oideachais/database_url
+INFI_LANCEDB_URI=infisical://dev-baile/sruth/oideachais/lancedb_uri
 INFI_HF_TOKEN=infisical://dev-baile/cross-cutting/hf_token
 INFI_PANGOLIN_API_KEY=infisical://dev-baile/control-plane/pangolin_api_key
 ```
@@ -135,8 +135,8 @@ volume across all 86+ stacks without exhausting memory.
 1. Add `infrastructure/stacks/oideachais-dagster/secrets.env`:
 
    ```bash
-   INFI_DAGSTER_HOME=infisical://dev-baile/oideachais/dagster_home
-   INFI_DAGSTER_DB=infisical://dev-baile/oideachais/dagster_db_url
+   INFI_DAGSTER_HOME=infisical://dev-baile/sruth/oideachais/dagster_home
+   INFI_DAGSTER_DB=infisical://dev-baile/sruth/oideachais/dagster_db_url
    ```
 
 2. Add `infrastructure/stacks/oideachais-dagster/sidecar.yaml`:
@@ -188,7 +188,7 @@ volume across all 86+ stacks without exhausting memory.
 | Symptom | Cause | Fix |
 |:--|:--|:--|
 | `env_file: /run/secrets/locket/secrets.env: No such file or directory` | Locket didn't run | Check `docker compose ps locket`; the Locket container must be `Up` |
-| `Locket: infisical URI not found: infisical://dev-baile/oideachais/foo` | The URI path doesn't match the vault | Run `bun run scripts/init-vault.ts` to create the secret |
+| `Locket: infisical URI not found: infisical://dev-baile/sruth/oideachais/foo` | The URI path doesn't match the vault | Run `bun run scripts/init-vault.ts` to create the secret |
 | `Locket: 401 Unauthorized` | The machine identity token expired | Re-run `mise run locket:init` |
 | `Locket: tmpfs volume not mounted` | The `cianchoghlaim_locket_secrets` external volume is missing | Run `docker compose -f infrastructure/locket/compose.yaml up -d` |
 

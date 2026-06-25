@@ -3,46 +3,46 @@
 ## ADDED Requirements
 
 ### Requirement: 5 Stage-Specific Notebooks
-The system SHALL provide 5 new marimo notebooks in `oideachais/notebooks/dashboards/`, one per educational stage, generated from `analysis_plan.md` files via the `explore-data` + `build-notebook` skill flow.
+The system SHALL provide 5 new marimo notebooks in `sruth/oideachais/notebooks/dashboards/`, one per educational stage, generated from `analysis_plan.md` files via the `explore-data` + `build-notebook` skill flow.
 
 #### Scenario: Aistear Notebook
-- **GIVEN** `oideachais/notebooks/analysis_plan/aistear.md`
+- **GIVEN** `sruth/oideachais/notebooks/analysis_plan/aistear.md`
 - **WHEN** the `build-notebook` skill is invoked against the plan
-- **THEN** the notebook `oideachais/notebooks/dashboards/aistear.py` is generated
+- **THEN** the notebook `sruth/oideachais/notebooks/dashboards/aistear.py` is generated
 - **AND** it answers questions like:
   - "What is the distribution of Aistear learning goals across the 4 themes?"
   - "How many naíonra exist per county?"
   - "What percentage of Aistear learning goals have been bridged to Primary Stage 1 outcomes?"
 
 #### Scenario: Primary Notebook
-- **GIVEN** `oideachais/notebooks/analysis_plan/primary.md`
+- **GIVEN** `sruth/oideachais/notebooks/analysis_plan/primary.md`
 - **WHEN** the `build-notebook` skill is invoked
-- **THEN** the notebook `oideachais/notebooks/dashboards/primary.py` is generated
+- **THEN** the notebook `sruth/oideachais/notebooks/dashboards/primary.py` is generated
 - **AND** it answers questions about Primary strand distribution, Stage 1→4 progression, language-medium uptake, etc.
 
 #### Scenario: Junior Cycle Notebook
-- **GIVEN** `oideachais/notebooks/analysis_plan/junior_cycle.md`
+- **GIVEN** `sruth/oideachais/notebooks/analysis_plan/junior_cycle.md`
 - **WHEN** the `build-notebook` skill is invoked
-- **THEN** the notebook `oideachais/notebooks/dashboards/junior_cycle.py` is generated
+- **THEN** the notebook `sruth/oideachais/notebooks/dashboards/junior_cycle.py` is generated
 - **AND** it answers questions about JC grade distribution, CBA completion, short course uptake
 
 #### Scenario: Senior Cycle Notebook
-- **GIVEN** `oideachais/notebooks/analysis_plan/senior_cycle.md`
+- **GIVEN** `sruth/oideachais/notebooks/analysis_plan/senior_cycle.md`
 - **WHEN** the `build-notebook` skill is invoked
-- **THEN** the notebook `oideachais/notebooks/dashboards/senior_cycle.py` is generated
+- **THEN** the notebook `sruth/oideachais/notebooks/dashboards/senior_cycle.py` is generated
 - **AND** it answers questions about LC grade distribution, marking scheme drift, subject difficulty trends
 
 #### Scenario: Tertiary Notebook
-- **GIVEN** `oideachais/notebooks/analysis_plan/tertiary.md`
+- **GIVEN** `sruth/oideachais/notebooks/analysis_plan/tertiary.md`
 - **WHEN** the `build-notebook` skill is invoked
-- **THEN** the notebook `oideachais/notebooks/dashboards/tertiary.py` is generated
+- **THEN** the notebook `sruth/oideachais/notebooks/dashboards/tertiary.py` is generated
 - **AND** it answers questions about CAO points trends, NUI matriculation, QQI laddering, Apprenticeship uptake
 
 ### Requirement: Existing Notebooks Preserved
 The system SHALL preserve all 9 existing marimo notebooks.
 
 #### Scenario: 9 Existing Notebooks Unchanged
-- **GIVEN** the existing 9 marimo notebooks in `oideachais/notebooks/`
+- **GIVEN** the existing 9 marimo notebooks in `sruth/oideachais/notebooks/`
 - **WHEN** the implementation of this change is complete
 - **THEN** the 9 notebooks continue to work:
   - `mission_control.py`

@@ -16,7 +16,7 @@ The game route SHALL connect to a SpacetimeDB subscription:
 
 ### Requirement: SIWE Authentication via Better Auth
 The auth system SHALL support Sign-In With Ethereum:
-- `useSiweAuth()` hook SHALL call Better Auth's `siwe` plugin on the `croilar/hono-api` oIDC issuer
+- `useSiweAuth()` hook SHALL call Better Auth's `siwe` plugin on the `sruth/croilar/hono-api` oIDC issuer
 - `SIWEConnect.tsx` SHALL render the wallet connect flow (MetaMask, WalletConnect, Coinbase)
 - Auth state SHALL persist across page reloads via JWT cookie
 
@@ -69,7 +69,7 @@ The map route SHALL render an interactive MapLibre map displaying the 6 Celtic n
 - **AND** hovering a region shows speaker count and language name (Gaeilge, Gàidhlig, Gaelg, Cymraeg, Kernewek, Brezhoneg)
 
 ### Requirement: Crypteolas Federated Learning Demo
-The learn/irish route SHALL integrate the crypteolas federated learning demo module, displaying training progress and model accuracy metrics from the `tuatha/apps/crypteolas_demo` module via a TanStack Start server function.
+The learn/irish route SHALL integrate the crypteolas federated learning demo module, displaying training progress and model accuracy metrics from the `sruth/crypteolas/apps/crypteolas_demo` module via a TanStack Start server function.
 
 #### Scenario: Federated training session
 - **WHEN** user opens the learn/irish page
@@ -80,7 +80,7 @@ The learn/irish route SHALL integrate the crypteolas federated learning demo mod
 ## MODIFIED Requirements
 
 ### Requirement: game.tsx Import (fix broken module path)
-The `routes/game.tsx` file SHALL import the Babylon.js game client from the correct workspace reference path (`@tuath/game-client` or inline initialization) instead of the broken relative path `../../game/client/src` which is unreachable from the `tuatha/ui` workspace.
+The `routes/game.tsx` file SHALL import the Babylon.js game client from the correct workspace reference path (`@tuath/game-client` or inline initialization) instead of the broken relative path `../../game/client/src` which is unreachable from the `sruth/tuatha/ui` workspace.
 
 #### Scenario: Game route renders Babylon.js canvas
 - **WHEN** user navigates to `/game`
@@ -89,10 +89,10 @@ The `routes/game.tsx` file SHALL import the Babylon.js game client from the corr
 - **AND** the TypeScript compiler does not report module-not-found errors
 
 ### Requirement: root Config (remove Vinxi dual-config)
-The `tuatha/ui` package SHALL use a single TanStack Start native `vite.config.ts` as its sole build configuration, with the `app.config.ts` file deleted and `package.json` scripts updated from `vinxi dev/build/start` to TanStack Start CLI commands.
+The `sruth/tuatha/ui` package SHALL use a single TanStack Start native `vite.config.ts` as its sole build configuration, with the `app.config.ts` file deleted and `package.json` scripts updated from `vinxi dev/build/start` to TanStack Start CLI commands.
 
 #### Scenario: Dev server starts with TanStack Start
-- **WHEN** developer runs `bun run dev` in tuatha/ui
+- **WHEN** developer runs `bun run dev` in sruth/tuatha/ui
 - **THEN** TanStack Start dev server starts on the configured port
 - **AND** file-based routes under `src/routes/` are discovered and served
 - **AND** no Vinxi-related errors appear in the console

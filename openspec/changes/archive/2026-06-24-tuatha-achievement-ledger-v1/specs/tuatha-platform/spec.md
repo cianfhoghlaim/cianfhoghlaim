@@ -3,11 +3,11 @@
 ### Requirement: Crypteolas crypto data platform
 
 The system SHALL provide an **educational-achievement ledger**
-at `tuatha/crypteolas/achievements/` (rebranded from the v0
+at `sruth/tuatha/sruth/crypteolas/achievements/` (rebranded from the v0
 "Crypteolas crypto data platform" per Phase 6 of the 6-phase
 refactor plan). The ledger holds **skill-tree badges**, NOT
 a financial token. The canonical home is
-`tuatha/crypteolas/achievements/ledger.py`; the public
+`sruth/tuatha/sruth/crypteolas/achievements/ledger.py`; the public
 surface is the `AchievementLedger` class with the 4 methods:
 `issue(badge)`, `list_badges(player_id, framework=...)`,
 `verify_signature(badge_id)`,
@@ -65,7 +65,7 @@ SQA → Spirit).
 
 The system SHALL provide the canonical implementation of the
 Crypteolas educational-achievement ledger at
-`tuatha/crypteolas/achievements/` (6 files):
+`sruth/tuatha/sruth/crypteolas/achievements/` (6 files):
 
 - `__init__.py` — the package marker + the 4 public surfaces
 - `schema.py` — the 8-field `SkillTreeBadge` dataclass + the
@@ -79,7 +79,7 @@ Crypteolas educational-achievement ledger at
   public methods + the `_sign_evidence` + `_verify_evidence`
   helpers (the cryptographic evidence chain)
 - `cli.py` — the 4 CLI commands (issue, list, verify, mastery)
-- `tuatha/crypteolas/__init__.py` — the package marker
+- `sruth/tuatha/sruth/crypteolas/__init__.py` — the package marker
 
 The 4 public methods of `AchievementLedger`:
 
@@ -141,11 +141,11 @@ triggered the mastery).
 
 ### Requirement: MCP server tool shim
 
-The `tuatha/agents/mcp_server/server.py` SHALL import the 5
+The `sruth/tuatha/agents/mcp_server/server.py` SHALL import the 5
 canonical MCP tools (`search_curriculum`,
 `get_learning_outcomes`, `search_mythology`,
 `get_character_lore`, `get_location_lore`) via 3 thin
-re-export shim files at `tuatha/agents/tools/`:
+re-export shim files at `sruth/tuatha/agents/tools/`:
 
 - `__init__.py` — the package marker
 - `curriculum_search.py` — re-exports the canonical
@@ -159,8 +159,8 @@ re-export shim files at `tuatha/agents/tools/`:
 
 The 3 shim files SHALL preserve the historical
 `from ..tools.X import ...` import pattern used by the
-`tuatha/agents/mcp_server/server.py` lines 23-33, while
-delegating to the canonical home in `oideachais/` (the
+`sruth/tuatha/agents/mcp_server/server.py` lines 23-33, while
+delegating to the canonical home in `sruth/oideachais/` (the
 oideachais quadrant is the authoritative source for Celtic
 curriculum + mythology content).
 

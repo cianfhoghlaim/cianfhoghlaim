@@ -30,7 +30,7 @@ Use when you need to:
 | `an_scrudu/` (An Scrúdú) | gradio 5.x | oideachais (Talamh) | Earth | Past-paper heatmap + PCLM-XML/PDF download |
 | `meaisin_cliste/` (Meaisín Cliste) | gradio 5.x | meaisinfhoghlaim (Uisce + Aer) | Water + Air | 3 Celtic AI tools: cognate dictionary, school-density map, cross-nation curriculum |
 | `cianfhoghlaim/` (RPG) | gradio 5.x | tuatha (Aer + Anam) | Air + Spirit | Hades-style dialogue with 6 Celtic NPCs on a British Isles map |
-| `anam_tuatha/` (Anam) | gradio 5.x | croilar (5 elements) | All 5 | Integration Space: 5 elements + 2 cross-cutting features = 7 panels |
+| `anam_sruth/tuatha/` (Anam) | gradio 5.x | croilar (5 elements) | All 5 | Integration Space: 5 elements + 2 cross-cutting features = 7 panels |
 
 ## The 4 new demo Spaces (the 2026-06-24 batch)
 
@@ -55,8 +55,8 @@ Use when you need to:
 
 The `data-engineering/` Space is the only non-gradio Space.
 It lives in `spaces/` for historical reasons but is the
-canonical exception (it consumes `oideachais/agents/adk/`
-+ `oideachais/baml_src/` directly, not the LiteLLM gateway).
+canonical exception (it consumes `sruth/oideachais/agents/adk/`
++ `sruth/oideachais/baml_src/` directly, not the LiteLLM gateway).
 
 ## The 4-file Space structure (the canonical layout)
 

@@ -4,7 +4,7 @@
 wgpu is a Rust-implemented, safe and portable graphics API that maps to Vulkan, Metal, DX12, WebGPU, and OpenGL. Maintained by the gfx-rs working group, it provides both a native runtime and a browser-native WebGPU implementation. The repo includes the core `wgpu` crate, the `naga` shader translator, HAL backends, and a WebGPU CTS runner.
 
 ## Why This Matters for Kings' College Galway
-The `tuatha/` educational MMO uses Babylon.js for the 3D frontend, but mesh-shader-heavy scenes (Celtic particle effects, Ogham-stone rendering, procedural terrain) benefit from wgpu's modern GPU features. wgpu is a reference implementation of the WebGPU spec — anything we ship in the browser via `tuatha/ui` Babylon.js backend can be prototyped against wgpu's API surface. The `naga` shader translator is also relevant: it lets us author WGSL/SPIR-V/GLSL once and target every backend, which matters for cross-platform MMO distribution (Mac M-series + Windows + Linux + Web).
+The `sruth/tuatha/` educational MMO uses Babylon.js for the 3D frontend, but mesh-shader-heavy scenes (Celtic particle effects, Ogham-stone rendering, procedural terrain) benefit from wgpu's modern GPU features. wgpu is a reference implementation of the WebGPU spec — anything we ship in the browser via `sruth/tuatha/ui` Babylon.js backend can be prototyped against wgpu's API surface. The `naga` shader translator is also relevant: it lets us author WGSL/SPIR-V/GLSL once and target every backend, which matters for cross-platform MMO distribution (Mac M-series + Windows + Linux + Web).
 
 ## Key Patterns Preserved
 - **README.md** — Overview of wgpu, supported backends, quick-start

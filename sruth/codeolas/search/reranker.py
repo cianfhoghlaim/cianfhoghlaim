@@ -21,7 +21,7 @@ from tenacity import (
     wait_exponential,
 )
 
-from codeolas.core.types import SearchResult
+from sruth.codeolas.core.types import SearchResult
 
 logger = logging.getLogger(__name__)
 

@@ -9,13 +9,13 @@ quadrant READMEs) currently have inconsistent structures:
   + the 3-way interaction diagram + a quickstart
 - `infrastructure/README.md` (386 lines) — has a "Quick
   start" + the 94-stack inventory
-- `oideachais/README.md` (674 lines) — has the lakehouse
+- `sruth/oideachais/README.md` (674 lines) — has the lakehouse
   overview + the dlt × Dagster × CocoIndex matrix
-- `meaisinfhoghlaim/README.md` (525 lines) — has the
+- `sruth/meaisinfhoghlaim/README.md` (525 lines) — has the
   AI/ML overview + the 4 inference backends
-- `tuatha/README.md` (834 lines) — has the MMO overview
+- `sruth/tuatha/README.md` (834 lines) — has the MMO overview
   + the crypteolas achievement ledger
-- `croilar/README.md` (819 lines) — has the 3-persona
+- `sruth/croilar/README.md` (819 lines) — has the 3-persona
   portfolio + the DevTools Hub
 - `spaces/README.md` (157 lines) — has the 4-Space suite
   + the prior-art pattern catalogue
@@ -54,13 +54,13 @@ oideachais, tuatha, croilar, spaces).
   655 lines of content)
 - `infrastructure/README.md` — adds the 6 sections
   (preserves the existing 386 lines of content)
-- `oideachais/README.md` — adds the 6 sections
+- `sruth/oideachais/README.md` — adds the 6 sections
   (preserves the existing 674 lines of content)
-- `meaisinfhoghlaim/README.md` — adds the 6 sections
+- `sruth/meaisinfhoghlaim/README.md` — adds the 6 sections
   (preserves the existing 525 lines of content)
-- `tuatha/README.md` — adds the 6 sections
+- `sruth/tuatha/README.md` — adds the 6 sections
   (preserves the existing 834 lines of content)
-- `croilar/README.md` — adds the 6 sections
+- `sruth/croilar/README.md` — adds the 6 sections
   (preserves the existing 819 lines of content)
 - `spaces/README.md` — adds the 6 sections
   (preserves the existing 157 lines of content)

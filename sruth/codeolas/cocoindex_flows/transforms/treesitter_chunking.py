@@ -13,7 +13,7 @@ warnings.warn(
     stacklevel=2,
 )
 
-from codeolas.chunking import (
+from sruth.codeolas.chunking import (
     ChunkType,
     CodeChunk,
     EXTENSION_TO_LANGUAGE,

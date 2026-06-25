@@ -203,7 +203,7 @@ The Pydantic AI skill sits at the centre of the KCG LLM stack:
             (zod mirror)
 ```
 
-The KCG shared models live in `oideachais/models/` and are
+The KCG shared models live in `sruth/oideachais/models/` and are
 imported by BAML, Pydantic AI, Dagster assets, and Convex
 schemas. **Never duplicate a model** — if you change it in
 BAML, `baml generate` propagates the change to all consumers.
@@ -271,7 +271,7 @@ backend** for CopilotKit frontends. The flow:
 4. **Logfire** traces every step (token, tool call, state)
 5. **DBOS** makes the workflow durable across restarts
 
-The shared Pydantic model lives in `oideachais/models/`
+The shared Pydantic model lives in `sruth/oideachais/models/`
 and is imported by BAML, Pydantic AI, Dagster assets,
 and Convex schemas — never duplicate.
 
@@ -285,4 +285,4 @@ AI AG-UI documentation clipping.
 - AG-UI protocol: <https://ag-ui.com/>
 - Logfire: <https://logfire.pydantic.dev/>
 - DBOS: <https://www.dbos.dev/>
-- KCG shared models: `oideachais/models/`
+- KCG shared models: `sruth/oideachais/models/`

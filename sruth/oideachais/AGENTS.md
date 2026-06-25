@@ -10,7 +10,7 @@ compose ports, and the 4 priority openspec specs at a glance.
 **Read this first**; the rest of the file is the full BAML ×
 DLT × Dagster × CocoIndex matrix routing.
 
-### Priority skills (8 of 108)
+### Priority skills (9 of 108)
 
 | Skill | When to load |
 |:--|:--|
@@ -22,6 +22,7 @@ DLT × Dagster × CocoIndex matrix routing.
 | [`motherduck`](../.agents/skills/motherduck/SKILL.md) | MotherDuck storage pattern (managed / BYOB / DuckLake / own-compute) + MCP |
 | [`oideachais-storage`](../.agents/skills/oideachais-storage/SKILL.md) | The KCG storage mental model (DuckLake 1.0 + Lance Namespace) |
 | [`oideachais-pipeline`](../.agents/skills/oideachais-pipeline/SKILL.md) | The canonical lakehouse pipeline (DLT + Dagster + CocoIndex + BAML) |
+| [`oideachais-cocoindex-v1`](../.agents/skills/oideachais-cocoindex-v1/SKILL.md) | CocoIndex v1 App canonical pattern + 4-rule conformance contract + `_lifespan.py` shared home (REFACTORING.md item 12 enforcement precondition) |
 
 ### ccc + openspec commands
 

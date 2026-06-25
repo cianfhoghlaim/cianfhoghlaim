@@ -7,7 +7,7 @@ problem in the directory and pollutes the agent's discovery surface.
 The 18 sub-skills are the upstream MotherDuck skill tree (sourced from
 the official `motherduck` skill at `https://github.com/motherduckdb`).
 KCG only ever needs 4 of them in practice (verified against
-`oideachais/`, `croilar/`, `tuatha/`, and `infrastructure/`):
+`sruth/oideachais/`, `sruth/croilar/`, `sruth/tuatha/`, and `infrastructure/`):
 
 - `motherduck-connect` (MCP wiring, Postgres endpoint)
 - `motherduck-load-data` (CTAS, INSERT...SELECT)

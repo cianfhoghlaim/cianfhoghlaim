@@ -8,7 +8,7 @@ This delta adds 2 new requirements to the existing `oideachais-leabharlann` spec
 
 The leabharlann full-stack infrastructure SHALL expose a sixth Cognee dataset named `culture_heritage` with cross-dataset edge rules enabled to the existing `oideachais` and `leabharlann` datasets.
 
-The dataset name is registered in `oideachais/cognee_integration/culture_cognify.py` as a module-level constant `DATASET_CULTURE_HERITAGE = "culture_heritage"`, mirroring the existing `DATASET_BOOKS = "leabharlann_books"`, `DATASET_ZOTERO = "leabharlann_zotero"`, `DATASET_TAKEOUT = "leabharlann_takeout"` constants.
+The dataset name is registered in `sruth/oideachais/cognee_integration/culture_cognify.py` as a module-level constant `DATASET_CULTURE_HERITAGE = "culture_heritage"`, mirroring the existing `DATASET_BOOKS = "leabharlann_books"`, `DATASET_ZOTERO = "leabharlann_zotero"`, `DATASET_TAKEOUT = "leabharlann_takeout"` constants.
 
 #### Scenario: When culture_heritage claims are cognified
 
@@ -29,11 +29,11 @@ The dataset name is registered in `oideachais/cognee_integration/culture_cognify
 
 ### Requirement: Culture heritage sources under domain `culture`
 
-`oideachais/sources.yaml` SHALL register exactly 6 new entries under `domain: culture, nation: ie`, one per PDF in `leabharlann/gemini_deep_research/culture/` that is a personal-heritage document.
+`sruth/oideachais/sources.yaml` SHALL register exactly 6 new entries under `domain: culture, nation: ie`, one per PDF in `leabharlann/gemini_deep_research/culture/` that is a personal-heritage document.
 
 #### Scenario: When sources.yaml is parsed
 
-- **WHEN** `SourceFactory` loads `oideachais/sources.yaml`
+- **WHEN** `SourceFactory` loads `sruth/oideachais/sources.yaml`
 - **THEN** exactly 6 entries are present under `domain: culture, nation: ie`
 - **AND** each entry's `id` matches the pattern `ie.culture.<slug>` where `<slug>` is the kebab-case PDF basename with `.pdf` stripped
 - **AND** each entry's `kind` is `filesystem_pdf`
@@ -41,6 +41,6 @@ The dataset name is registered in `oideachais/cognee_integration/culture_cognify
 
 #### Scenario: When a culture source entry has a key collision
 
-- **WHEN** two entries in `oideachais/sources.yaml` share the same `id`
+- **WHEN** two entries in `sruth/oideachais/sources.yaml` share the same `id`
 - **THEN** `SourceFactory` MUST raise `DuplicateSourceError` at load time
 - **AND** the cross-domain-registry spec SHALL report both entries in its validation output

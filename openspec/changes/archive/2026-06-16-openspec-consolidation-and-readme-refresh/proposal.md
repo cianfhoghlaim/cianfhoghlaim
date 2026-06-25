@@ -7,8 +7,8 @@ The Cianfhoghlaim monorepo has grown to **44 capability specs** (5,337 lines) co
 1. **11 spec pairs are pure duplication** (e.g. `infrastructure/` vs `infrastructure-stacks/`; 6 separate `dagger-*` specs each describe a single sub-module; 3 separate `croilar-*` tiny specs that should be sections of bigger ones).
 2. **5 specs are generic-tooling theory** (393-441 lines each, duplicating the corresponding `.agents/skills/{dagster,dlt,memory,observability}/SKILL.md` content). The skills are the source of truth; the specs should be 1-paragraph capability pointers.
 3. **2 specs describe capabilities that were never built** (`site-analysis-mcp`, `domain-source-registry`, both from the archived `lateralise-british-isles-domains` change; will be re-proposed as `data-platform-source-registry` when there's bandwidth).
-4. **1 quadrant is undocumented in openspec** — `meaisinfhoghlaim/` is a real, mature top-level uv-workspace member (15K+ LOC, 10 sub-packages, 4 heartbeat dagster assets, registered in root `dg.toml`) but has **zero openspec specs** describing it.
-5. **3 quadrants have no `AGENTS.md`** — `oideachais/`, `tuatha/`, `croilar/` all have `README.md` but lack the developer-quick-reference files that `meaisinfhoghlaim/AGENTS.md` already has. Only the root `AGENTS.md` and the meaisín `AGENTS.md` exist.
+4. **1 quadrant is undocumented in openspec** — `sruth/meaisinfhoghlaim/` is a real, mature top-level uv-workspace member (15K+ LOC, 10 sub-packages, 4 heartbeat dagster assets, registered in root `dg.toml`) but has **zero openspec specs** describing it.
+5. **3 quadrants have no `AGENTS.md`** — `sruth/oideachais/`, `sruth/tuatha/`, `sruth/croilar/` all have `README.md` but lack the developer-quick-reference files that `sruth/meaisinfhoghlaim/AGENTS.md` already has. Only the root `AGENTS.md` and the meaisín `AGENTS.md` exist.
 6. **14 in-flight changes** with **0/N tasks** for >4h (some >12d); 4 are clearly superseded by other changes that already landed.
 
 This change **consolidates** the 44 specs into **26** (41% smaller), **adds the missing meaisinfhoghlaim** group, **adds the 3 missing `AGENTS.md`** files, **refreshes** the 4 quadrant READMEs and the root `openspec/AGENTS.md` / `project.md`, and **archives** the 4 stale in-flight changes.
@@ -90,28 +90,28 @@ Archive (work has landed elsewhere or was never started):
 |:--|:--|
 | `openspec/AGENTS.md` | **rewrite** — flat 26-row capability table; 4-quadrant workflow recipe; new "in-flight changes" table |
 | `openspec/project.md` | **rewrite** — new 26-capability table; 4 quadrants section; updated in-flight changes table |
-| `oideachais/AGENTS.md` | **create** — lakehouse + dlt + BAML + dagster surface; AI/ML services live in `meaisinfhoghlaim/`, the `oideachais/{agents,ocr,memory,graph,knowledge_graph}/` dirs are re-export shims |
-| `tuatha/AGENTS.md` | **create** — MMO + crypto scope, SpacetimeDB stack, BAML `ui_components.baml`, the consumer relationship to croilar |
-| `croilar/AGENTS.md` | **create** — multi-persona model, 5 subprojects, the 4 openspec specs that govern croilar |
-| `oideachais/README.md` | minor refresh — add link to new `oideachais/AGENTS.md` and the 7 oideachais-* openspec specs |
-| `tuatha/README.md` | minor refresh — add link to new `tuatha/AGENTS.md` and the `tuatha-platform` spec |
-| `croilar/README.md` | minor refresh — add link to new `croilar/AGENTS.md` and the 3 croilar-* specs |
-| `meaisinfhoghlaim/README.md` | light refresh — add links to the 3 new meaisinfhoghlaim-* openspec specs |
-| `meaisinfhoghlaim/AGENTS.md` | light refresh — add links to the 3 new specs (existing content is excellent) |
-| `AGENTS.md` (root) | light refresh — add `meaisinfhoghlaim/` to the workspace table; add `tuatha/AGENTS.md` and `croilar/AGENTS.md` references |
+| `sruth/oideachais/AGENTS.md` | **create** — lakehouse + dlt + BAML + dagster surface; AI/ML services live in `sruth/meaisinfhoghlaim/`, the `sruth/oideachais/{agents,ocr,memory,graph,knowledge_graph}/` dirs are re-export shims |
+| `sruth/tuatha/AGENTS.md` | **create** — MMO + crypto scope, SpacetimeDB stack, BAML `ui_components.baml`, the consumer relationship to croilar |
+| `sruth/croilar/AGENTS.md` | **create** — multi-persona model, 5 subprojects, the 4 openspec specs that govern croilar |
+| `sruth/oideachais/README.md` | minor refresh — add link to new `sruth/oideachais/AGENTS.md` and the 7 oideachais-* openspec specs |
+| `sruth/tuatha/README.md` | minor refresh — add link to new `sruth/tuatha/AGENTS.md` and the `tuatha-platform` spec |
+| `sruth/croilar/README.md` | minor refresh — add link to new `sruth/croilar/AGENTS.md` and the 3 croilar-* specs |
+| `sruth/meaisinfhoghlaim/README.md` | light refresh — add links to the 3 new meaisinfhoghlaim-* openspec specs |
+| `sruth/meaisinfhoghlaim/AGENTS.md` | light refresh — add links to the 3 new specs (existing content is excellent) |
+| `AGENTS.md` (root) | light refresh — add `sruth/meaisinfhoghlaim/` to the workspace table; add `sruth/tuatha/AGENTS.md` and `sruth/croilar/AGENTS.md` references |
 | `docs/00_index.md` | minor refresh — update openspec links to reflect new spec names |
 
-### 4. Re-export shim clarification (in `oideachais/AGENTS.md`)
+### 4. Re-export shim clarification (in `sruth/oideachais/AGENTS.md`)
 
-The `oideachais/AGENTS.md` (new) will document the re-export shim relationship:
+The `sruth/oideachais/AGENTS.md` (new) will document the re-export shim relationship:
 
-- `oideachais/agents/{adk,agno}/` — application-layer agent surfaces (front-end CopilotKit / AG-UI)
-- `oideachais/ocr/` — application-layer OCR (handwriting OCR for the leabharlann handwritten_pages resource)
-- `oideachais/memory/` — application-layer Cognee + Graphiti wrappers
-- `oideachais/graph/` — application-layer FalkorDB / Memgraph clients
-- `oideachais/knowledge_graph/` — application-layer `cross_stage_cognify` (the 5-stage curriculum knowledge graph)
+- `sruth/oideachais/agents/{adk,agno}/` — application-layer agent surfaces (front-end CopilotKit / AG-UI)
+- `sruth/oideachais/ocr/` — application-layer OCR (handwriting OCR for the leabharlann handwritten_pages resource)
+- `sruth/oideachais/memory/` — application-layer Cognee + Graphiti wrappers
+- `sruth/oideachais/graph/` — application-layer FalkorDB / Memgraph clients
+- `sruth/oideachais/knowledge_graph/` — application-layer `cross_stage_cognify` (the 5-stage curriculum knowledge graph)
 
-These are *not* duplicates of `meaisinfhoghlaim/{agents,ocr,language,alignment,evaluation,quality}/` — they're the application-facing facades that the oideachais dlt + dagster assets import. The actual model layer lives in `meaisinfhoghlaim/`.
+These are *not* duplicates of `sruth/meaisinfhoghlaim/{agents,ocr,language,alignment,evaluation,quality}/` — they're the application-facing facades that the oideachais dlt + dagster assets import. The actual model layer lives in `sruth/meaisinfhoghlaim/`.
 
 ## Impact
 
@@ -122,9 +122,9 @@ These are *not* duplicates of `meaisinfhoghlaim/{agents,ocr,language,alignment,e
 | Specs (preserved) | 13 spec.md files | kept as-is (oideachais-pipeline, ireland-primary-jc-dlt-baml, the 3 croilar, infrastructure-stacks, data-engineering-pipeline-documentation, workflow-automation, task-management, scheduling, chunkhound-code-search, documentation) |
 | Changes (archived) | 4 in-flight change dirs | see §2 above |
 | Docs | `openspec/AGENTS.md` (rewrite), `openspec/project.md` (rewrite) | new content |
-| AGENTS.md (new) | `oideachais/AGENTS.md`, `tuatha/AGENTS.md`, `croilar/AGENTS.md` | 3 new files |
-| AGENTS.md (refreshed) | `meaisinfhoghlaim/AGENTS.md`, `AGENTS.md` (root) | light refresh |
-| README.md (refreshed) | `oideachais/README.md`, `tuatha/README.md`, `croilar/README.md`, `meaisinfhoghlaim/README.md` | light refresh |
+| AGENTS.md (new) | `sruth/oideachais/AGENTS.md`, `sruth/tuatha/AGENTS.md`, `sruth/croilar/AGENTS.md` | 3 new files |
+| AGENTS.md (refreshed) | `sruth/meaisinfhoghlaim/AGENTS.md`, `AGENTS.md` (root) | light refresh |
+| README.md (refreshed) | `sruth/oideachais/README.md`, `sruth/tuatha/README.md`, `sruth/croilar/README.md`, `sruth/meaisinfhoghlaim/README.md` | light refresh |
 | Docs | `docs/00_index.md` | minor refresh |
 
 ## Out of scope (deferred)

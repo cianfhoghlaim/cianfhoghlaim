@@ -2,7 +2,7 @@
 
 ## Phase 1: Infrastructure & Configuration
 
-- [ ] Add MiniMax M3 model entry to `oideachais/data_platform/dlt_utils/foinse/litellm_config.yaml`
+- [ ] Add MiniMax M3 model entry to `sruth/oideachais/data_platform/dlt_utils/foinse/litellm_config.yaml`
 - [ ] Create `cianfhoghlaim-leaving-cert` R2 bucket (provisioned via the existing R2 binding in `infrastructure/stacks/r2/`)
 - [ ] Create `cianfhoghlaim_leaving_cert` MotherDuck database for public-read aggregate tables
 - [ ] Add `leaving-cert-pipeline.yaml` GitHub Action workflow for daily build
@@ -12,10 +12,10 @@
 
 For each subject (Maths → Irish → Biology → French → History → Business → Construction):
 
-- [ ] Create `oideachais/data_platform/dagster_defs/assets/leaving_cert/{subject}_assets.py`
+- [ ] Create `sruth/oideachais/data_platform/dagster_defs/assets/leaving_cert/{subject}_assets.py`
   - Partition keys: `subject × paper × year × language`
   - Assets: `{subject}_syllabus_pdf`, `{subject}_syllabus_extracted`, `{subject}_past_papers`, `{subject}_past_papers_extracted`, `{subject}_marking_schemes`, `{subject}_marking_schemes_extracted`, `{subject}_topic_frequency`, `{subject}_study_prioritisation`, `{subject}_exam_layout_tips`, `{subject}_portal_page_payload`
-- [ ] Create `oideachais/data_platform/dagster_defs/sensors/leaving_cert_annual.py` — watching R2 for new syllabi + SEC for new exam papers
+- [ ] Create `sruth/oideachais/data_platform/dagster_defs/sensors/leaving_cert_annual.py` — watching R2 for new syllabi + SEC for new exam papers
 - [ ] Add jobs to `definitions.py` for `leaving_cert_maths`, `leaving_cert_irish`, etc.
 
 ## Phase 3: Pipeline — BAML Schemas
@@ -27,18 +27,18 @@ For each subject (Maths → Irish → Biology → French → History → Busines
 
 ## Phase 4: Per-Subject Portal Pages
 
-- [ ] Create shared leaving-cert layout component at `oideachais/web/apps/web/src/routes/leaving-cert/layout.tsx`
-  - Reuse: Card, Tabs, Table, Accordion, Badge, Progress, Separator, Skeleton from `@croilar/ui`
-- [ ] Create shared leaving-cert data layer at `oideachais/web/apps/web/src/server/leaving-cert.ts`
+- [ ] Create shared leaving-cert layout component at `sruth/oideachais/web/apps/web/src/routes/leaving-cert/layout.tsx`
+  - Reuse: Card, Tabs, Table, Accordion, Badge, Progress, Separator, Skeleton from `@sruth/croilar/ui`
+- [ ] Create shared leaving-cert data layer at `sruth/oideachais/web/apps/web/src/server/leaving-cert.ts`
   - MotherDuck Dives, R2 signed URLs, DuckDB/MotherDuck tables
 - [ ] Create per-subject route files:
-  - `oideachais/web/apps/web/src/routes/leaving-cert/mathematics.tsx`
-  - `oideachais/web/apps/web/src/routes/leaving-cert/irish.tsx`
-  - `oideachais/web/apps/web/src/routes/leaving-cert/biology.tsx`
-  - `oideachais/web/apps/web/src/routes/leaving-cert/french.tsx`
-  - `oideachais/web/apps/web/src/routes/leaving-cert/history.tsx`
-  - `oideachais/web/apps/web/src/routes/leaving-cert/business.tsx`
-  - `oideachais/web/apps/web/src/routes/leaving-cert/construction-studies.tsx`
+  - `sruth/oideachais/web/apps/web/src/routes/leaving-cert/mathematics.tsx`
+  - `sruth/oideachais/web/apps/web/src/routes/leaving-cert/irish.tsx`
+  - `sruth/oideachais/web/apps/web/src/routes/leaving-cert/biology.tsx`
+  - `sruth/oideachais/web/apps/web/src/routes/leaving-cert/french.tsx`
+  - `sruth/oideachais/web/apps/web/src/routes/leaving-cert/history.tsx`
+  - `sruth/oideachais/web/apps/web/src/routes/leaving-cert/business.tsx`
+  - `sruth/oideachais/web/apps/web/src/routes/leaving-cert/construction-studies.tsx`
   - Each page: Hero + SyllabusAnalysis + PastExamTable + MarkingSchemePatterns + TopicPrioritisation + ExamLayoutTips + CopilotKit chat + PDF viewer tab
 
 ## Phase 5: R2 PDF Seeding

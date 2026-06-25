@@ -2,9 +2,9 @@
 
 ## Purpose
 
-`ireland-primary-jc-dlt-baml` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives at `oideachais/dlt_sources/ireland/primary.py`, `oideachais/dlt_sources/ireland/junior_cycle.py`, and `oideachais/dagster_defs/assets/ie/education/curriculum_dlt_assets.py` (or the new `leabharlann_demo_assets.py`). See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+`ireland-primary-jc-dlt-baml` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives at `sruth/oideachais/dlt_sources/ireland/primary.py`, `sruth/oideachais/dlt_sources/ireland/junior_cycle.py`, and `sruth/oideachais/dagster_defs/assets/ie/education/curriculum_dlt_assets.py` (or the new `leabharlann_demo_assets.py`). See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
 
-dlt sources + BAML extraction + Dagster assets for the Ireland primary curriculum and the Junior Cycle curriculum. Closes the BAML-without-dlt gap identified in `oideachais/REFACTORING.md` Feature 1.
+dlt sources + BAML extraction + Dagster assets for the Ireland primary curriculum and the Junior Cycle curriculum. Closes the BAML-without-dlt gap identified in `sruth/oideachais/REFACTORING.md` Feature 1.
 
 ## ADDED Requirements
 

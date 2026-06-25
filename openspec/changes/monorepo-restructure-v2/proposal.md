@@ -4,9 +4,9 @@
 
 The root `package.json` and `pyproject.toml` have drifted into broken states that block developer onboarding and CI:
 
-1. **Root `package.json` referenced six `sruth/*` paths that no longer exist** (the repo was restructured into `oideachais/`, `tuatha/`, `códeolas_codebase_indexing/`, etc. but the root scripts were not updated).
+1. **Root `package.json` referenced six `sruth/*` paths that no longer exist** (the repo was restructured into `sruth/oideachais/`, `sruth/tuatha/`, `códeolas_codebase_indexing/`, etc. but the root scripts were not updated).
 2. **24 root dependencies are unused** — TanStack, Convex, Hono, Pulumi, Vite, etc. are properly declared in nested packages but pollute the root lockfile.
-3. **Root `pyproject.toml` was a 251-line verbatim duplicate of `oideachais/pyproject.toml`** — no uv workspace, no shared tooling.
+3. **Root `pyproject.toml` was a 251-line verbatim duplicate of `sruth/oideachais/pyproject.toml`** — no uv workspace, no shared tooling.
 4. **Secret-bootstrap scripts were hidden in `scripts/infisical/`** with their own `package.json` and `bun.lock` — they belong at the root.
 5. **`turbo.json` was minimal** (4 tasks, no `test`, no `dagster`, no `ccc:index`, no `spec:validate`) and referenced a Next.js output cache that we never use.
 6. **`mise.toml` still pointed at the old `sruth/oideachas/`, `sruth/tuath/`, `sruth/teanga/` dagster code-locations**.
@@ -16,8 +16,8 @@ This change brings the root manifests and developer docs in line with the actual
 
 ## What Changes
 
-- **Add** bun workspaces to the root `package.json` (`oideachais/web`, `oideachais/mcp/filesystem`, `tuatha/ui`).
-- **Add** uv workspace to the root `pyproject.toml` (members: `oideachais`, `tuatha`, `códeolas_codebase_indexing`, `infrastructure/browser`, `oideachais/mcp/mcpo`).
+- **Add** bun workspaces to the root `package.json` (`sruth/oideachais/web`, `sruth/oideachais/mcp/filesystem`, `sruth/tuatha/ui`).
+- **Add** uv workspace to the root `pyproject.toml` (members: `oideachais`, `tuatha`, `códeolas_codebase_indexing`, `infrastructure/browser`, `sruth/oideachais/mcp/mcpo`).
 - **Add** root-level scripts: `setup`, `secrets:env`, `secrets:init`, `secrets:sync`, `komodo:sync`, `pangolin:check`, `locket:exec`, `ccc:init`, `ccc:index`, `ccc:search`, `spec:list`, `spec:validate`, `spec:archive`.
 - **Move** `scripts/infisical/{init-vault.ts, create-env.ts}` → `scripts/` and patch their `process.cwd()`-relative paths (was `../../`, now `./`).
 - **Delete** `scripts/infisical/` directory entirely.
@@ -31,7 +31,7 @@ This change brings the root manifests and developer docs in line with the actual
 - **Add** Quickstart and Monorepo Topology sections to `README.md`.
 - **Migrate** `sruth/bonneagar/stacks/tools/stirling-pdf/` → `infrastructure/stacks/stirling-pdf/` and delete the now-empty `sruth/` directory.
 - **Add** ASCII-named `[tool.uv.sources]` entries (`codeolas`, `sruth-browser`, `oideachais`, `tuath`) to all member `pyproject.toml` files (TOML forbids non-ASCII unquoted keys, so `códeolas` becomes `codeolas`).
-- **Add** a real `package.json` to `tuatha/ui/` (was missing — only a stale `bun.lock` remained) and add a `name` field to `oideachais/mcp/filesystem/package.json` (was missing — bun rejected it).
+- **Add** a real `package.json` to `sruth/tuatha/ui/` (was missing — only a stale `bun.lock` remained) and add a `name` field to `sruth/oideachais/mcp/filesystem/package.json` (was missing — bun rejected it).
 
 ## Impact
 
@@ -50,7 +50,7 @@ This change brings the root manifests and developer docs in line with the actual
 
 ## Out of scope
 
-- Pinning `'latest'` versions in `oideachais/web/package.json` and `tuatha/ui/package.json` — deferred to a follow-up change.
+- Pinning `'latest'` versions in `sruth/oideachais/web/package.json` and `sruth/tuatha/ui/package.json` — deferred to a follow-up change.
 - Renaming `códeolas_codebase_indexing/` back to `códeolas/` — directory name is the user's choice; only the workspace `members` path was updated to match.
 - Cleaning the pre-existing `.infisical.env` entries that point at the non-existent `aleyum` environment — that is a data-quality issue for the secrets template, not a manifest issue.
 - Modifying the 60+ Komodo stacks in `infrastructure/stacks/`.

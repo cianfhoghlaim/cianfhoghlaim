@@ -14,7 +14,7 @@
 ### Requirement: InstagramExportIngest
 
 The system SHALL provide a DLT source at
-`oideachais/dlt_sources/official_media/instagram_export.py` that parses
+`sruth/oideachais/dlt_sources/official_media/instagram_export.py` that parses
 the JSON bundle Instagram ships in the standard export format
 (`connections/followers_and_following/*.json`,
 `logged_information/recent_searches/*.json`,

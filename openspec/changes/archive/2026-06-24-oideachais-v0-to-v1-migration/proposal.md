@@ -3,10 +3,10 @@
 ## Why
 
 Round 9 of the multi-quadrant refactor plan. The
-`oideachais/` subagent's deep-dive report (2026-06-24) identified:
+`sruth/oideachais/` subagent's deep-dive report (2026-06-24) identified:
 
 - **10 v0 broken CocoIndex modules** in
-  `oideachais/cocoindex_flows/`:
+  `sruth/oideachais/cocoindex_flows/`:
   `author_archive_embedding.py`, `curriculum_embedding.py`,
   `curriculum_translation.py`, `curriculum_specification_extraction.py`,
   `geospatial_indexing.py`, `learning_outcome_graph.py`,
@@ -15,11 +15,11 @@ Round 9 of the multi-quadrant refactor plan. The
 - The 10 v0 modules are guarded by `try/except` in
   `__init__.py` but live on disk unguarded; any direct import
   raises `ImportError` on `cocoindex==1.0.9`
-- The `oideachais/cocoindex_flows/README.md` says "Migrate to v1
+- The `sruth/oideachais/cocoindex_flows/README.md` says "Migrate to v1
   (deferred)" for the 10 v0 modules — the deferral is now 6 weeks
   overdue
 - The migration backlog was supposed to be completed by Q3-2026
-  per `oideachais/REFACTORING.md` #6 — it's now Q3-2026
+  per `sruth/oideachais/REFACTORING.md` #6 — it's now Q3-2026
 - 3 new skills are landing:
   `oideachais-leabharlann`, `oideachais-baml-schemas`,
   `oideachais-cocoindex-v1` (708 lines combined)
@@ -29,7 +29,7 @@ modules to `_v0_archive/` (deprecation rather than migration;
 the migration is too big to do in one commit), update the
 `__init__.py` to remove the now-stale docstring reference to
 `__init__.py`-level guard, and add the 3 new skills to the
-`oideachais/AGENTS.md`.
+`sruth/oideachais/AGENTS.md`.
 
 ## What Changes
 
@@ -42,11 +42,11 @@ deprecation of the 10 v0 modules.
 ### 2. Refactor: 10 v0 modules → `_v0_archive/`
 
 The 10 v0 broken modules move to
-`oideachais/cocoindex_flows/_v0_archive/`. The directory is
+`sruth/oideachais/cocoindex_flows/_v0_archive/`. The directory is
 created with a `__init__.py` documenting the deprecation:
 
 ```python
-# oideachais/cocoindex_flows/_v0_archive/__init__.py
+# sruth/oideachais/cocoindex_flows/_v0_archive/__init__.py
 """
 v0 CocoIndex modules (DEPRECATED 2026-06-24).
 
@@ -70,9 +70,9 @@ The 10 v0 files (`author_archive_embedding.py`,
 
 ### 3. Refactor: `__init__.py` cleanup
 
-`oideachais/cocoindex_flows/__init__.py` currently says:
+`sruth/oideachais/cocoindex_flows/__init__.py` currently says:
 
-> The previous v0 code is preserved at `oideachais/cocoindex_flows/_v0_archive/`
+> The previous v0 code is preserved at `sruth/oideachais/cocoindex_flows/_v0_archive/`
 
 This is misleading — `_v0_archive/` doesn't exist. The
 deprecation directory is created in this change, so the
@@ -92,9 +92,9 @@ The v0/v1 status table in the README updates the 10 "Migrate to v1
 
 ### 6. 2 doc updates (1-line diffs each)
 
-- `oideachais/AGENTS.md` — add 3 new skill entries to the Quick
+- `sruth/oideachais/AGENTS.md` — add 3 new skill entries to the Quick
   routing table
-- `oideachais/STATUS.md` §3 — change "11 modules (11 v1 working
+- `sruth/oideachais/STATUS.md` §3 — change "11 modules (11 v1 working
   + 11 v0 broken — only 5 of 11 v1 re-exported via try/except)" to
   "11 v1 Apps + 10 v0 DEPRECATED modules (archived at _v0_archive/)"
 
@@ -114,9 +114,9 @@ The v0/v1 status table in the README updates the 10 "Migrate to v1
   longer importable; the v1 `research_embedding_v1` (or equivalent)
   is the canonical home
 - 3 new skills exist with valid frontmatter
-- `oideachais/cocoindex_flows/_v0_archive/__init__.py` documents the
+- `sruth/oideachais/cocoindex_flows/_v0_archive/__init__.py` documents the
   deprecation
-- `oideachais/cocoindex_flows/README.md` v0/v1 status table is
+- `sruth/oideachais/cocoindex_flows/README.md` v0/v1 status table is
   accurate
 - `openspec validate oideachais-v0-to-v1-migration --strict` passes
 - 1 commit + 1 archive commit land on `q3-2026-oideachais-consolidation`

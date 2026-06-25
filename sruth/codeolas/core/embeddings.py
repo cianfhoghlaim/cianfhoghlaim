@@ -8,7 +8,7 @@ CRITICAL: Embeddings must be batched (minimum 100) for 100x performance.
 import logging
 from typing import Any
 
-from codeolas.core.config import get_config
+from sruth.codeolas.core.config import get_config
 
 logger = logging.getLogger(__name__)
 
