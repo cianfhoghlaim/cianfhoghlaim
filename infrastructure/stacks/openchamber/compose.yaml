@@ -1,0 +1,73 @@
+# =============================================================================
+# OPENCHAMBER — OpenCode Web/Desktop UI (arm1-oci)
+# =============================================================================
+# Single-service stack running the upstream openchamber/openchamber image
+# (Bun + React, 18+ themes, bundled opencode-ai runtime).
+#
+# USAGE:
+#   Development:  docker compose --env-file ../../.env.local up -d
+#   Production:   docker compose -f compose.yaml -f sidecar.yaml up -d
+#
+# Runtime model: BUNDLED mode — opencode-ai ships inside the openchamber
+# image; OPENCODE_HOST is intentionally NOT set. If you want to point at an
+# external OpenCode daemon, see README.md "External OpenCode mode".
+#
+# Network model: no Cloudflare tunnel in v1 — Pangolin handles routing
+# (Pocket ID OIDC + TinyAuth at the Traefik layer).
+#
+# Image pinning: ghcr.io/openchamber/openchamber:<semver>@sha256:<digest>
+# (no :latest). Update on the monthly renovate cycle.
+# =============================================================================
+
+name: openchamber
+
+services:
+  # ---------------------------------------------------------------------------
+  # OPENCHAMBER UI (with bundled opencode-ai runtime)
+  # ---------------------------------------------------------------------------
+  openchamber:
+    image: ghcr.io/openchamber/openchamber:1.0.0@sha256:0000000000000000000000000000000000000000000000000000000000000000
+    container_name: openchamber
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    ports:
+      # UI + WebSocket terminal — exposed to Pangolin (Traefik routes 3000)
+      - "127.0.0.1:3000:3000"
+    environment:
+      OPENCHAMBER_PORT: "3000"
+      OPENCHAMBER_THEME: ${OPENCHAMBER_THEME:-cianchoghlaim-dark}
+      OPENCHAMBER_LOG_LEVEL: ${OPENCHAMBER_LOG_LEVEL:-info}
+      # NOTE: OPENCODE_HOST intentionally NOT set (bundled mode)
+      # NOTE: OPENCHAMBER_TUNNEL_TOKEN intentionally NOT set (no Cloudflare tunnel in v1)
+      # OPENAI_API_KEY / ANTHROPIC_API_KEY / MINIMAX_API_KEY injected by Locket
+    volumes:
+      - openchamber-state:/home/bun/.openchamber
+    # depends_on locket is declared in sidecar.yaml (canonical pattern)
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+    networks:
+      - cianfhoghlaim
+
+volumes:
+  openchamber-state:
+    driver: local
+
+networks:
+  cianfhoghlaim:
+    external: true
+    name: cianchoghlaim

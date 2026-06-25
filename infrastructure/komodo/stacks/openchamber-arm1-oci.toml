@@ -1,0 +1,35 @@
+# =============================================================================
+# OPENCHAMBER — Komodo-Orchestrated Stack (arm1-oci, private Pangolin)
+# =============================================================================
+# Single-service stack running the upstream openchamber/openchamber image
+# (Bun + React, bundled opencode-ai runtime, 18+ themes).
+#
+# Architecture:
+#   arm1-oci — openchamber (:3000 host → :3000 container, UI + WebSocket terminal)
+#              openchamber-locket (Locket sidecar, Infisical injection)
+#   Routed through Pangolin:
+#     openchamber.cianfhoghlaim.ie → arm1-oci:openchamber:3000 (Pocket ID SSO)
+#
+# Secrets injected via Locket + Infisical vault (dev-baile).
+#
+# Usage:
+#   km deploy stack openchamber
+# =============================================================================
+
+[[stack]]
+name = "openchamber"
+description = "OpenChamber — OpenCode web/desktop UI with bundled opencode-ai runtime (arm1-oci, port 3000, openchamber.cianfhoghlaim.ie)"
+tags = ["host:arm1-oci","tier:control-plane","type:agent-ui","domain:openchamber.cianfhoghlaim.ie"]
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/sruth/infrastructure/stacks/openchamber"
+file_paths = ["compose.yaml","sidecar.yaml","pangolin.yaml","blueprint.yaml"]
+environment = """
+LOCKET_MODE=watch
+INFISICAL_CLIENT_ID=infisical-machine-identity-openchamber
+INFISICAL_SECRET_FILE=/etc/komodo/secrets/infisical_secret
+OPENCHAMBER_PORT=3000
+OPENCHAMBER_THEME=cianchoghlaim-dark
+OPENCHAMBER_LOG_LEVEL=info
+PANGOLIN_DOMAIN=openchamber.cianfhoghlaim.ie
+"""

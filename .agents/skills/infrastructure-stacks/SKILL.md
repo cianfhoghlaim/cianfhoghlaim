@@ -1,11 +1,11 @@
 ---
 name: infrastructure-stacks
-description: Router for the infrastructure stacks capability. The Cianfhoghlaim platform has 94+ Docker Compose stacks under `infrastructure/stacks/` (the flat layout, no category subdirectory). Use when adding a new stack, fixing a broken stack, auditing the inventory, or wiring the 6-file GOLD_STANDARD pattern (compose.yaml + sidecar.yaml + pangolin.yaml + secrets.env + blueprint.yaml + .env.example). Covers the stack-doctor lint script, the Komodo GitOps deploy, the Pangolin Traefik routing, the Locket + Infisical secret injection, the 5-stage deploy procedure, and the 3-tier host convergence (arm1-oci / bunchloch / cax41-hetzner). Triggers: 'add a stack', 'fix stack', 'stack-doctor', 'GOLD_STANDARD', 'compose.yaml', 'sidecar.yaml', 'pangolin.yaml', 'blueprint.yaml', 'Locket sidecar', 'Infisical secret', '94 stacks', 'stacks inventory'.
+description: Router for the infrastructure stacks capability. The Cianfhoghlaim platform has 96+ Docker Compose stacks under `infrastructure/stacks/` (the flat layout, no category subdirectory). Use when adding a new stack, fixing a broken stack, auditing the inventory, or wiring the 6-file GOLD_STANDARD pattern (compose.yaml + sidecar.yaml + pangolin.yaml + secrets.env + blueprint.yaml + .env.example). Covers the stack-doctor lint script, the Komodo GitOps deploy, the Pangolin Traefik routing, the Locket + Infisical secret injection, the 5-stage deploy procedure, and the 3-tier host convergence (arm1-oci / bunchloch / cax41-hetzner). Triggers: 'add a stack', 'fix stack', 'stack-doctor', 'GOLD_STANDARD', 'compose.yaml', 'sidecar.yaml', 'pangolin.yaml', 'blueprint.yaml', 'Locket sidecar', 'Infisical secret', '96 stacks', 'stacks inventory'.
 ---
 
 # Infrastructure Stacks — Router
 
-The Cianfhoghlaim platform runs 94+ Docker Compose stacks under
+The Cianfhoghlaim platform runs 96+ Docker Compose stacks under
 `infrastructure/stacks/`. This skill is the router — pick the
 right skill for the task.
 
@@ -64,8 +64,8 @@ current categories (informational, not structural):
 5. Tools (17 stacks)
 6. Browser (1 stack)
 7. Workflow + scheduling (5 stacks)
-8. Web + frontend (3 stacks)
-9. Knowledge + agents (6 stacks)
+8. Web + frontend (4 stacks) — includes openchamber (3000)
+9. Knowledge + agents (7 stacks) — includes openclaw (18789, channel-fanout for the 12-agent meaisínfhoghlaim fleet)
 10. Data + DBs (8 stacks)
 11. Observability + monitoring (5 stacks)
 
@@ -86,7 +86,7 @@ Inventory" table.
 
 | Range | Reserved for | KCG stacks |
 |:--|:--|:--|
-| 3000-3499 | User apps | langfuse, forgejo, the web frontends |
+| 3000-3499 | User apps | langfuse, forgejo, the web frontends, openchamber (3000) |
 | 3500-3999 | APIs | oideachais-api (8000, drift), croilar-hono-api |
 | 4000-4499 | Dagster | dagster, oideachais-dagster |
 | 5000-5499 | Data | lancedb, motherduck, duckdb, dbgate |
@@ -94,6 +94,7 @@ Inventory" table.
 | 7000-7999 | Dev tools | marimo, oideachais-agent-os (7777), oideachais-adk-agents (7778) |
 | 8000-8999 | MMO + high-port APIs | tuatha-mmo, the oRPC servers |
 | 9000-9999 | Infra | komodo, monitor, k8s panels |
+| 18000-18999 | Agent runtime (outside LLM gateway range) | openclaw (18789 — channel-fanout gateway, deliberately off the LLM gateway 4000-4499 range to avoid routing collisions) |
 
 For the full port map, see `kcg-convergence/SKILL.md`.
 
@@ -114,4 +115,4 @@ For the full port map, see `kcg-convergence/SKILL.md`.
 - [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) — the
   canonical stack inventory
 - [infrastructure/QUADRANT-TO-STACK-MAP.md](../infrastructure/QUADRANT-TO-STACK-MAP.md) — quadrant → stack routing
-- [infrastructure/stacks/HEALTH_REPORT.md](../infrastructure/stacks/HEALTH_REPORT.md) — live health of all 94 containers
+- [infrastructure/stacks/HEALTH_REPORT.md](../infrastructure/stacks/HEALTH_REPORT.md) — live health of all 96 containers

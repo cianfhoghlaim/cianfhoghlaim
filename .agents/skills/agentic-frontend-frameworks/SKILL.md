@@ -1,6 +1,6 @@
 ---
 name: agentic-frontend-frameworks
-description: The umbrella skill for building **agentic web frontends** in the Cianfhoghlaim stack — stitches TanStack Start + CopilotKit + AG-UI + Convex + Hono + oRPC + Cloudflare + BAML / Pydantic AI / Agno / Google ADK into a coherent agent-driven web app. Use when designing a new agentic web surface (a tutor, a research UI, a knowledge-graph explorer, a portfolio analyser), wiring the AG-UI protocol between an agent runtime and a CopilotKit React UI, picking the right backend (BAML for typed structured outputs, Pydantic AI for Pydantic-native agent graphs, Agno for multi-agent orchestration, Google ADK for Google-AI-native workflows), or asking "how do I add an agent to a sruth/ app?", "which CopilotKit component streams AG-UI events?", "what is the canonical 4-surface layout?". The 4 canonical surfaces are `sruth/oideachais/web/`, `sruth/croilar/apps/web/`, `sruth/croilar/apps/portal/`, and `sruth/tuatha/ui/` — the same architecture diagram maps onto each.
+description: The umbrella skill for building **agentic web frontends** in the Cianfhoghlaim stack — stitches TanStack Start + CopilotKit + AG-UI + Convex + Hono + oRPC + Cloudflare + BAML / Pydantic AI / Agno / Google ADK into a coherent agent-driven web app. Use when designing a new agentic web surface (a tutor, a research UI, a knowledge-graph explorer, a portfolio analyser), wiring the AG-UI protocol between an agent runtime and a CopilotKit React UI, picking the right backend (BAML for typed structured outputs, Pydantic AI for Pydantic-native agent graphs, Agno for multi-agent orchestration, Google ADK for Google-AI-native workflows), or asking "how do I add an agent to a sruth/ app?", "which CopilotKit component streams AG-UI events?", "what is the canonical 4-surface layout?". The 4 canonical surfaces are `sruth/oideachais/web/`, `sruth/croilar/apps/web/`, `sruth/croilar/apps/portal/`, and `sruth/tuatha/ui/` — the same architecture diagram maps onto each. Plus a 5th cross-cutting **agent-IDE** surface: OpenChamber (`infrastructure/stacks/openchamber/`, OpenCode web/desktop UI with bundled `opencode-ai`, port 3000, deployed to `openchamber.cianfhoghlaim.ie` on `arm1-oci`).
 ---
 
 # Agentic Frontend Frameworks (umbrella skill)
@@ -205,6 +205,39 @@ re-renders the right component.
 - **Deployment:** Cloudflare Workers (TanStack Start SSR)
   + SpacetimeDB (the game state)
 
+### 5. OpenChamber (`infrastructure/stacks/openchamber/`)
+
+OpenChamber is the cross-cutting **agent-IDE surface** —
+a web/desktop UI that gives humans direct hands-on access to
+the `opencode-ai` runtime (the canonical KCG agent harness).
+It is NOT a replacement for the 4 TanStack + CopilotKit +
+AG-UI surfaces above; it sits orthogonal to them as the
+**developer-facing workbench** for the 12-agent fleet.
+
+- **Stack:** Bun + React (built by the `openchamber`
+  upstream; 18+ themes; bundled `opencode-ai` runtime)
+- **Agent runtime:** `opencode-ai` bundled inside the
+  container (no `OPENCODE_HOST` override in v1)
+- **Backend:** `infrastructure/stacks/openclaw/` (the
+  channel-fanout gateway for messaging channels) +
+  `infrastructure/stacks/langfuse/` (the LLM
+  observability dashboard)
+- **Primary use cases:** hands-on agent debugging,
+  prompt engineering, single-pane-of-glass for the
+  12-agent meaisínfhoghlaim fleet, MCP server
+  configuration, skills curation
+- **Provider parity:** OpenAI + Anthropic + minimax
+  (graceful degradation if any are missing)
+- **Deployment:** Docker Compose on `arm1-oci`,
+  routed via Pangolin to `openchamber.cianfhoghlaim.ie`
+  (port 3000); 6-file GOLD_STANDARD pattern
+- **Auth:** Pangolin `tinyauth` + `secure-headers`
+  middlewares (Pocket ID OIDC) + the
+  `OPENCHAMBER_UI_PASSWORD` Locket-injected env var
+
+The full contract is in
+`openspec/changes/add-openchamber-stack-and-opencode-ui/specs/agentic-frontend-frameworks/spec.md`.
+
 ## The 3 backend options (under the AG-UI server)
 
 | Backend | When to use it | KCG exemplar |
@@ -285,6 +318,21 @@ re-renders the right component.
 - `sruth/oideachais/web/`, `sruth/croilar/apps/web/`,
   `sruth/croilar/apps/portal/`, `sruth/tuatha/ui/` — the 4 canonical
   surfaces.
+- `infrastructure/stacks/openchamber/` — the 5th
+  cross-cutting agent-IDE surface (OpenCode web/desktop UI
+  with bundled `opencode-ai`, deployed on `arm1-oci`).
+- `infrastructure/stacks/openclaw/` — the inbound
+  channel-fanout gateway (the messaging-channel sibling
+  to OpenChamber; both share the `arm1-oci` control-plane
+  host tier and the Langfuse observability backplane).
+- `.agents/skills/infrastructure-stacks/SKILL.md` — the
+  6-file GOLD_STANDARD pattern that OpenChamber + OpenClaw
+  follow.
+- `.agents/skills/agent-fleet-orchestration/SKILL.md` —
+  the canonical skill for the 12-agent meaisínfhoghlaim
+  fleet that OpenChamber exposes as a workbench.
+- `infrastructure/komodo/procedures/deploy-openchamber-arm1-oci.toml`
+  — the 5-stage arm1-oci deploy procedure.
 
 ## MCP protocol
 
