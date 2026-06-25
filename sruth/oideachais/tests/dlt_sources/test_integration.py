@@ -279,7 +279,7 @@ class TestLanceDBClient:
     @pytest.fixture
     def lancedb_client(self, temp_dir: Path) -> Any:
         """Create a test LanceDB client with local storage."""
-        from oideachais.storage.lancedb_cloud import (
+        from oideachais.core.storage.clients.lancedb_cloud import (
             LanceDBCloudClient,
             LanceDBCloudConfig,
             LanceDBEnvironment,
@@ -314,7 +314,7 @@ class TestLanceDBClient:
     @pytest.mark.asyncio
     async def test_add_and_search_embeddings(self, lancedb_client: Any) -> None:
         """Test adding and searching embeddings."""
-        from oideachais.storage.lancedb_cloud import EmbeddingBatch
+        from oideachais.core.storage.clients.lancedb_cloud import EmbeddingBatch
 
         # Create batch with 3 embeddings
         batch = EmbeddingBatch(

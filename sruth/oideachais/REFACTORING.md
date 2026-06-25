@@ -29,6 +29,60 @@ Deleted items (12 total):
 | `sruth/oideachais/sensors/` (2 .py + __init__ + README, 994 LOC) | 100% byte-identical (curriculum_freshness + domain_sensors) | Canonical: `dagster_defs/sensors/`; stale `__init__.py` missing 3 of 5 sensor groups; 0 importers |
 | `sruth/oideachais/middleware/` (6 files + README, 1,668 LOC) | 100% byte-identical | Canonical: `api/middleware/`; 0 importers |
 | `sruth/oideachais/storage/serial_executor.py` (29 LOC) | Deprecated stub (untracked) | Canonical: `core/storage/serial_executor.py`; 1 importer (tests/conftest.py, updated) |
+
+### Phase 2B — Legacy Migration to Canonical Homes (`oideachais-audit-phase-2b-migrate-legacy-storage-and-dagster-assets`)
+
+**Status**: `done` (archived 2026-06-25)
+**Risk**: MEDIUM (non-trivial file moves + multi-file spec ref updates + Dagster asset import path changes; broken `sruth.shared.utils` import fixed in `lancedb_cloud.py`)
+**Impact**: -1,544 LOC deleted (3 dead dagster modules), 5,646 LOC migrated to canonical homes
+
+#### Migrated dagster_assets files
+
+| Source | Destination | LOC |
+|:--|:--|--:|
+| `dagster_assets/model_conversion.py` | `dagster_defs/assets/model_conversion.py` | 374 |
+| `dagster_assets/asset_generation.py` | `dagster_defs/assets/asset_generation.py` | 281 |
+
+#### Deleted (3 dead modules, 0 importers)
+
+| File | LOC | Why dead |
+|:--|--:|:--|
+| `dagster_assets/grammar_validation.py` | 415 | Gramadóir integration, never wired |
+| `dagster_assets/pdf_benchmark.py` | 483 | PDFStract benchmark, never wired |
+| `dagster_assets/syntactic_parsing.py` | 535 | UD treebank parser, never wired |
+
+#### Migrated storage files (9 unique, ~5,557 LOC)
+
+| Source | Destination | LOC |
+|:--|:--|--:|
+| `storage/config.py` | `core/storage/config.py` | 359 |
+| `storage/connections.py` | `core/storage/connections.py` | 691 |
+| `storage/ducklake.py` | `core/storage/ducklake.py` (legacy Garage+PlanetScale variant, retained for direct import) | 780 |
+| `storage/ducklake_client.py` | `core/storage/clients/ducklake.py` (canonical, SQLite/Postgres variant) | 882 |
+| `storage/ducklake_filesystem.py` | `core/storage/clients/ducklake_filesystem.py` | 623 |
+| `storage/init_schemas.py` | `core/storage/init_schemas.py` | 418 |
+| `storage/lance_iceberg.py` | `core/storage/lance_iceberg.py` | 603 |
+| `storage/lancedb_cloud.py` | `core/storage/clients/lancedb_cloud.py` | 664 |
+| `storage/curriculum_vectors.py` | `core/storage/curriculum_vectors.py` | 427 |
+
+Note: `core/storage/ducklake.py` and `core/storage/clients/ducklake.py` both define `DuckLakeClient` / `DuckLakeSnapshot` / `CELTIC_MANUSCRIPT_SCHEMAS` / `DuckLakeBackend` / `get_ducklake_backend` (different implementations). The `clients/` variant is re-exported as canonical via `core/storage/__init__.py`; the legacy `ducklake.py` remains importable explicitly.
+
+#### Test imports updated (3 files, 11 imports)
+
+- `tests/conftest.py:258` → `core.storage.clients.lancedb_cloud.CircuitBreaker`
+- `tests/dlt_sources/test_integration.py:282,317` → `core.storage.clients.lancedb_cloud`
+- `tests/storage/test_lancedb_cloud.py` (9 sites) → `core.storage.clients.lancedb_cloud` + fixed `sruth.shared.utils` import to `core.utils.circuit_breaker`
+
+#### openspec spec references updated (5 lines)
+
+- `openspec/specs/oideachais-pipeline/spec.md:166,869,870,912`
+- `openspec/changes/refactor-quadrants-to-sruth/proposal.md:182`
+
+#### Broken imports fixed
+
+- `core/storage/clients/lancedb_cloud.py:38` — `from sruth.shared.utils import CircuitBreaker, ...` → split into `from oideachais.core.utils.circuit_breaker import CircuitBreaker, CircuitBreakerOpen` + `from oideachais.core.utils.retry import retry_with_backoff`
+- `core/storage/clients/lancedb_cloud.py:41` — `from .serial_executor import SerialDatabaseExecutor` → `from ..serial_executor import SerialDatabaseExecutor` (path resolution after migration)
+- `tests/storage/test_lancedb_cloud.py:227` — same `sruth.shared.utils` fix as above
 | `sruth/oideachais/leaving_cert_timetable.pdf` | 270 KB | Orphaned binary |
 | `sruth/oideachais/PIPELINE_OPERATIONS.md` | 3.7 KB | Orphaned doc; superseded by `STATUS.md` |
 | 5× `sruth/oideachais/test_*.py` | 5.7 KB | Orphaned root-level tests; not in canonical `tests/` |

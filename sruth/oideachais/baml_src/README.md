@@ -128,7 +128,7 @@
 
 ### `image_generation.baml` — Image Generation
 
-Image-generation helpers (FIBO + Z-Image-Turbo fallback). Backed by `sruth/oideachais/dagster_assets/asset_generation_assets.py`.
+Image-generation helpers (FIBO + Z-Image-Turbo fallback). Backed by `sruth/oideachais/dagster_defs/assets/asset_generation.py`.
 
 ## How to regenerate the BAML client
 

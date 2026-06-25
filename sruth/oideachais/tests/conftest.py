@@ -255,7 +255,7 @@ def serial_executor() -> Generator[Any, None, None]:
 @pytest.fixture
 def circuit_breaker() -> Generator[Any, None, None]:
     """Provide a circuit breaker for testing."""
-    from oideachais.storage.lancedb_cloud import CircuitBreaker
+    from oideachais.core.storage.clients.lancedb_cloud import CircuitBreaker
 
     breaker = CircuitBreaker(
         failure_threshold=2,

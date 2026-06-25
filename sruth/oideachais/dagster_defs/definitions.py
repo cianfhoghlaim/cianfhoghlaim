@@ -162,23 +162,11 @@ from .assets.law.ggy import law_ggy_legislation
 from .assets.pdf_assets import pdf_processing_assets
 
 # Model Conversion Assets (HF → GGUF for llama-swap)
-# Guarded: dagster_assets modules reference Path(__file__).parents[4] which
-# fails in the post-cleanup monorepo layout. The LC pipeline doesn't depend
-# on these; they're loaded best-effort.
-try:
-    from oideachais.dagster_assets import model_conversion_assets
-except (ImportError, IndexError) as e:
-    import structlog
-    structlog.get_logger().warning("dagster_assets_model_conversion_skipped: %s", e)
-    model_conversion_assets = []
+from .assets.model_conversion import model_conversion_assets
 
 # Asset Generation Assets (BAML → image gen → Garage S3)
-try:
-    from oideachais.dagster_assets import asset_generation_assets
-except (ImportError, IndexError) as e:
-    import structlog
-    structlog.get_logger().warning("dagster_assets_generation_skipped: %s", e)
-    asset_generation_assets = []
+from .assets.asset_generation import asset_generation_assets
+
 
 # Phase 2 — BAML-driven extraction assets
 # Leaving Cert 2026 — 7 priority subjects × 10 assets = 70 assets
