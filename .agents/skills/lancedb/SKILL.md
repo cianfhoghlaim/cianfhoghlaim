@@ -656,3 +656,25 @@ use the rclone-sidecar Compose pattern (see
 - **GitHub**: https://github.com/lancedb/lancedb
 - **Examples**: https://github.com/lancedb/vectordb-recipes
 - **Blog**: https://blog.lancedb.com/
+
+## Examples
+
+See [`./examples/`](./examples/) for upstream LanceDB reference
+notebooks (8 total, ~17 MB). Highlights:
+
+- `data_engineering_lance_Advance_RAG_LOTR_main.ipynb` — Lord of
+  the Rings multi-document RAG baseline
+- `data_engineering_lance_Advanced_RAG_Context_Enrichment_Window_*.ipynb`
+  — context-enrichment window RAG pattern
+- `data_engineering_lance_Chunking_Analysis_*.ipynb` — chunking
+  strategy comparison
+- `data_engineering_lance_cognee-RAG_cognee_demo.ipynb` — Cognee
+  + LanceDB hybrid
+- `data_engineering_lance_ColPali-vision-retriever_colpali.ipynb`
+  — ColPali vision retriever on LanceDB
+- `data_engineering_lance_Geospatial-Recommendation-System_*.ipynb`
+  — geospatial point recommender
+- `data_engineering_lance_multi-document-agentic-rag_main.ipynb`
+  — multi-document agentic RAG
+- `data_engineering_lance_multimodal-recipe-agent_*.ipynb` —
+  multimodal (image + text) recipe agent
