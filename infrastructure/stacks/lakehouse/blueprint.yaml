@@ -73,3 +73,42 @@ private-resources:
       - "Member"
     destination: "lance-api"
 
+  # ---------------------------------------------------------------------------
+  # Nimtable Iceberg Catalog UI (extend-lakehouse-with-nimtable-olake-lancedb)
+  # ---------------------------------------------------------------------------
+  nimtable:
+    name: "Nimtable Iceberg Catalog UI"
+    mode: "http"
+    destination-port: 3018
+    full-domain: "nimtable.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "nimtable"
+
+  # ---------------------------------------------------------------------------
+  # Olake CDC Engine (extend-lakehouse-with-nimtable-olake-lancedb)
+  # ---------------------------------------------------------------------------
+  olake:
+    name: "Olake CDC Engine Admin"
+    mode: "http"
+    destination-port: 8080
+    full-domain: "olake.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "olake"
+
+  # ---------------------------------------------------------------------------
+  # LanceDB Table Viewer (extend-lakehouse-with-nimtable-olake-lancedb)
+  # ---------------------------------------------------------------------------
+  lancedb-viewer:
+    name: "LanceDB Table Viewer"
+    mode: "http"
+    destination-port: 8081
+    full-domain: "lance-viewer.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "lancedb-viewer"
+
