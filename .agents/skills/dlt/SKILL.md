@@ -277,3 +277,13 @@ New references (added by the `sync-skills-from-docs` change):
   (MotherDuck destination)
 - The `dlt` skill feeds into: `explore-data` (analysis_plan.md) and
   `build-notebook` (marimo notebooks) for downstream visualisation
+
+## 7. Examples
+
+See [`./examples/`](./examples/) for upstream dlt reference
+notebooks:
+
+- `data_engineering_dlt_small-data-sf-2025_elvis.ipynb` — Dremio
+  "small data" workshop (SF 2025): dlt pipelines for small
+  files, REST API ingestion patterns, and DuckDB destination
+  examples.

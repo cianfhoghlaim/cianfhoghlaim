@@ -468,3 +468,26 @@ blueprint (Masked-CFM + InkSpire + the agent stack).
   comprehensive reference (344 lines)
 - `.agents/skills/celtic-language-ai/SKILL.md` — this skill
   (covers all 6 Celtic languages)
+
+## Examples
+
+See [`./examples/`](./examples/) for upstream Teanga Celtic NLP
+reference notebooks (19 total, ~1 MB). Highlights:
+
+- `teanga_kscanne_5755_lm_Logainm.ipynb` — Logainm (Irish
+  place-name) language model
+- `teanga_kscanne_5755_lm_BabyNameDense.ipynb` /
+  `teanga_kscanne_5755_lm_BabyNameGenerator.ipynb` — Irish baby-name
+  language models
+- `teanga_kscanne_5755_lm_BantuLM.ipynb` — Bantu language model
+  (cross-lingual comparison)
+- `teanga_kscanne_5755_mt_IrishStandardization.ipynb` — Irish
+  orthographic standardisation (machine translation)
+- `teanga_kscanne_5755_mutations_HMM.ipynb` /
+  `teanga_kscanne_5755_mutations_IrishMutations.ipynb` /
+  `teanga_kscanne_5755_mutations_RNN.ipynb` — initial-mutation
+  models (HMM, dictionary, RNN)
+- `teanga_historical-document-analysis_src_finetuning_*` —
+  Donut / Gemma fine-tuning for historical manuscript OCR
+- `teanga_kscanne_5755_lm_*.ipynb` (other) — additional Teanga
+  corpus language models
