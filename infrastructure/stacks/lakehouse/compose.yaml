@@ -15,6 +15,9 @@
 #   - lakekeeper-migrate: PlanetScale database migrations
 #   - lakekeeper:        Iceberg REST Catalog (port 8181)
 #   - lance-namespace:   Lance table registration sidecar (port 8182)
+#   - nimtable:          Iceberg catalog UI (port 3018) [extend-lakehouse-with-nimtable-olake-lancedb]
+#   - olake:             CDC engine (ephemeral admin) [extend-lakehouse-with-nimtable-olake-lancedb]
+#   - lancedb-viewer:    LanceDB table viewer (port 8081) [extend-lakehouse-with-nimtable-olake-lancedb]
 # =============================================================================
 
 name: lakehouse
@@ -288,6 +291,146 @@ services:
     networks:
       - lakehouse
       - pangolin
+  # ---------------------------------------------------------------------------
+  # NIMTABLE - Iceberg Catalog UI (Spring Boot + JDBC)
+  # ---------------------------------------------------------------------------
+  # Surfaces all Iceberg tables registered in Lakekeeper via a web UI.
+  # Persists dashboard state + user preferences in the `nimtable` Postgres DB.
+  # ---------------------------------------------------------------------------
+  nimtable:
+    image: nimtable/nimtable:0.1.6
+    container_name: lakehouse-nimtable
+    restart: unless-stopped
+    ports:
+      - "${NIMTABLE_PORT:-3018}:3000"
+    environment:
+      # Spring Boot JDBC connection to shared Postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/nimtable
+      SPRING_DATASOURCE_USERNAME: lakekeeper
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-devpassword}
+      # Lakekeeper catalog endpoint (internal Docker network)
+      NIMTABLE_CATALOG_URI: http://lakekeeper:8181
+      NIMTABLE_CATALOG_WAREHOUSE: ${ICEBERG_WAREHOUSE:-lakehouse}
+      # S3 endpoint (Garage)
+      NIMTABLE_S3_ENDPOINT: http://garage:3900
+      NIMTABLE_S3_REGION: garage
+      NIMTABLE_S3_ACCESS_KEY: ${GARAGE_ACCESS_KEY_ID:-lakehouse}
+      NIMTABLE_S3_SECRET_KEY: ${GARAGE_SECRET_ACCESS_KEY:-devpassword}
+      # Server
+      SERVER_PORT: "3000"
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      - nimtable_data:/var/lib/nimtable
+    depends_on:
+      postgres:
+        condition: service_healthy
+      lakekeeper:
+        condition: service_healthy
+      garage:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/v1/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 45s
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+    networks:
+      - lakehouse
+      - pangolin
+  # ---------------------------------------------------------------------------
+  # OLAKE - CDC Engine (MongoDB / Postgres / MySQL → Iceberg)
+  # ---------------------------------------------------------------------------
+  # Open-source CDC engine from olake-io. Persists checkpoint state to the
+  # `olake_state` Postgres DB + named volume. Admin via `docker exec`.
+  # ---------------------------------------------------------------------------
+  olake:
+    image: ghcr.io/olake-io/olake:0.1.5
+    container_name: lakehouse-olake
+    restart: unless-stopped
+    environment:
+      # Source connector config (Postgres sample)
+      OLAKE_CONFIG_PATH: /mnt/config
+      JDBC_URL: jdbc:postgresql://postgres:5432/olake_state
+      JDBC_USERNAME: lakekeeper
+      JDBC_PASSWORD: ${POSTGRES_PASSWORD:-devpassword}
+      # Source Postgres (for the source connector — separate from state DB)
+      SOURCE_DB_HOST: ${OLAKE_SOURCE_HOST:-postgres}
+      SOURCE_DB_PORT: ${OLAKE_SOURCE_PORT:-5432}
+      SOURCE_DB_NAME: ${OLAKE_SOURCE_DB:-staging_pg}
+      SOURCE_DB_USER: ${OLAKE_SOURCE_USER:-lakekeeper}
+      SOURCE_DB_PASSWORD: ${OLAKE_SOURCE_PASSWORD:-devpassword}
+      SOURCE_DB_SSLMODE: ${OLAKE_SOURCE_SSLMODE:-prefer}
+      # Iceberg writer S3 credentials
+      WRITER_S3_ACCESS_KEY: ${GARAGE_ACCESS_KEY_ID:-lakehouse}
+      WRITER_S3_SECRET_KEY: ${GARAGE_SECRET_ACCESS_KEY:-devpassword}
+      WRITER_S3_ENDPOINT: http://garage:3900
+      WRITER_S3_REGION: garage
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      - ./olake/config.json:/mnt/config/config.json:ro
+      - ./olake/catalog.json:/mnt/config/catalog.json:ro
+      - ./olake/writer.json:/mnt/config/writer.json:ro
+      - olake_state:/var/lib/olake
+    depends_on:
+      postgres:
+        condition: service_healthy
+      lakekeeper:
+        condition: service_healthy
+      garage:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /var/lib/olake/.health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+    networks:
+      - lakehouse
+  # ---------------------------------------------------------------------------
+  # LANCEDB-VIEWER - LanceDB Table Viewer
+  # ---------------------------------------------------------------------------
+  # Web UI for browsing LanceDB tables. Connects to the Lance namespace
+  # sidecar at :8182 (the canonical rest:// endpoint). No published port
+  # mapping required for internal use; the host port :8081 is for debugging.
+  # ---------------------------------------------------------------------------
+  lancedb-viewer:
+    image: ghcr.io/gordonmurray/lance-data-viewer:lancedb-0.24.3
+    container_name: lakehouse-lancedb-viewer
+    restart: unless-stopped
+    ports:
+      - "${LANCEDB_VIEWER_PORT:-8081}:8080"
+    environment:
+      LANCEDB_URI: rest://lakehouse-lance-namespace:8182
+      ADMIN_TOKEN: ${LANCEDB_VIEWER_ADMIN_TOKEN:-devtoken}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    depends_on:
+      lance-namespace:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+    networks:
+      - lakehouse
+      - pangolin
 # =============================================================================
 # VOLUMES
 # =============================================================================
@@ -295,6 +438,8 @@ volumes:
   lakehouse-garage-meta:
   lakehouse-garage-data:
   lakehouse-postgres:
+  olake_state:
+  nimtable_data:
 
 # =============================================================================
 # NETWORKS

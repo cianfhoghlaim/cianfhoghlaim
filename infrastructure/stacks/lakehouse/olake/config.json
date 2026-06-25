@@ -1,0 +1,27 @@
+{
+  "source": {
+    "type": "postgres",
+    "host": "${OLAKE_SOURCE_HOST:-postgres}",
+    "port": "${OLAKE_SOURCE_PORT:-5432}",
+    "database": "${OLAKE_SOURCE_DB:-staging_pg}",
+    "username": "${OLAKE_SOURCE_USER:-lakekeeper}",
+    "password": "${OLAKE_SOURCE_PASSWORD:-devpassword}",
+    "sslmode": "${OLAKE_SOURCE_SSLMODE:-prefer}",
+    "replication_slot": "${OLAKE_REPLICATION_SLOT:-olake_slot}",
+    "publication": "${OLAKE_PUBLICATION:-olake_pub}"
+  },
+  "streams": {
+    "selection": {
+      "mode": "table_list",
+      "table_list": [
+        "public.users",
+        "public.orders",
+        "public.events"
+      ]
+    },
+    "normalization": {
+      "enabled": true,
+      "format": "iceberg"
+    }
+  }
+}
