@@ -1,0 +1,63 @@
+# MotherDuck blog monitor — Firecrawl v2 monitor config.
+#
+# Phase 1 of the `upstream-package-monitoring` openspec change.
+# Triggered webhook fires to n8n workflow
+# `engineering/n8n/workflows/upstream-blog-monitor.json` which writes
+# the payload to `s3://oideachais-upstream-webhooks/motherduck/...` and
+# triggers the Dagster asset `upstream_blog_monitor_ingest`.
+#
+# Apply: `firecrawl monitor apply <this file>` (CLI) or
+# `firecrawl_monitor_create` MCP tool.
+#
+# Goal text uses the Firecrawl LLM-judge to filter meaningful
+# product/architecture changes (DuckLake releases, BYOB updates, new
+# hosting options, Cortex Code updates) from marketing noise (customer
+# stories, G2 badges, generic event announcements).
+
+name: "motherduck_blog"
+schedule:
+  text: "every 30 minutes"
+  timezone: "UTC"
+
+# The 4-page crawl targets the canonical surfaces of motherduck.com
+# that announce product changes. Static marketing pages (pricing,
+# about) are excluded — only the technical surfaces are watched.
+targets:
+  - type: scrape
+    urls:
+      - "https://motherduck.com/blog/"
+      - "https://motherduck.com/docs/"
+      - "https://motherduck.com/changelog/"
+      - "https://motherduck.com/blog/category/engineering/"
+
+# The goal is fed to Firecrawl's LLM judge. Each meaningful change
+# triggers a `monitor.page.changed` webhook; noise (whitespace,
+# generic metadata, marketing copy) is auto-filtered.
+goal: |
+  Alert on product, architecture, or capability changes to MotherDuck
+  — DuckLake releases, new MotherDuck hosting options (managed / BYOB
+  / BYOC), new SQL syntax or functions, new integrations (Snowflake,
+  Postgres, BigQuery), or Cortex Code AI-assistant feature updates.
+  Ignore customer testimonials, G2 badges, generic event
+  announcements, marketing-copy-only edits, and price-page tweaks
+  unless the pricing tier or billing limit itself changes.
+
+judgeEnabled: true
+notification:
+  webhook:
+    url: "https://n8n.cianfhoghlaim.ie/webhook/upstream-blog"
+    headers:
+      X-Package: "motherduck"
+      X-Upstream-Monitor: "true"
+    payload:
+      package: "motherduck"
+      blog_post_type: "release_notes"
+
+# Retention: 90 days — long enough to surface multi-month trends but
+# not so long that we accumulate unbounded webhook history.
+retentionDays: 90
+
+tags:
+  - "kcg-upstream-monitor"
+  - "package:motherduck"
+  - "kcg-priority-skill:motherduck"
