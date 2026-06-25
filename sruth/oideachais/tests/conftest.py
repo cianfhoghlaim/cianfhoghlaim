@@ -241,7 +241,7 @@ def mock_modal_function() -> Generator[MagicMock, None, None]:
 @pytest.fixture
 def serial_executor() -> Generator[Any, None, None]:
     """Provide a serial executor for database operations."""
-    from oideachais.storage.serial_executor import SerialDatabaseExecutor
+    from oideachais.core.storage.serial_executor import SerialDatabaseExecutor
 
     executor = SerialDatabaseExecutor()
     yield executor

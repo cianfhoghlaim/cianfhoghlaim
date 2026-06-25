@@ -25,6 +25,10 @@ Deleted items (12 total):
 | `sruth/oideachais/marimo/` | 15 KB | Dead 1-file stub; superseded by `sruth/meaisinfhoghlaim/marimo/` |
 | `sruth/oideachais/exam_scraper/` | 8 KB | Dead 2-script; superseded by `dlt_sources/ireland/examinations.py` |
 | `sruth/oideachais/downloads/curriculum_pdfs/` | 0 B | Empty mount |
+| `sruth/oideachais/routes/` (5 .py + README, 2,836 LOC) | 100% byte-identical | Canonical: `api/routes/`; 0 importers |
+| `sruth/oideachais/sensors/` (2 .py + __init__ + README, 994 LOC) | 100% byte-identical (curriculum_freshness + domain_sensors) | Canonical: `dagster_defs/sensors/`; stale `__init__.py` missing 3 of 5 sensor groups; 0 importers |
+| `sruth/oideachais/middleware/` (6 files + README, 1,668 LOC) | 100% byte-identical | Canonical: `api/middleware/`; 0 importers |
+| `sruth/oideachais/storage/serial_executor.py` (29 LOC) | Deprecated stub (untracked) | Canonical: `core/storage/serial_executor.py`; 1 importer (tests/conftest.py, updated) |
 | `sruth/oideachais/leaving_cert_timetable.pdf` | 270 KB | Orphaned binary |
 | `sruth/oideachais/PIPELINE_OPERATIONS.md` | 3.7 KB | Orphaned doc; superseded by `STATUS.md` |
 | 5× `sruth/oideachais/test_*.py` | 5.7 KB | Orphaned root-level tests; not in canonical `tests/` |
@@ -43,12 +47,6 @@ Deleted items (12 total):
 **Tracks**: queued openspec change `primary-secondary-british-isles-dlt-baml` (to be opened)
 **Effort**: ~2 weeks
 **Why**: `baml_src/primary.baml` and `baml_src/junior_cycle.baml` define 4 BAML functions (`ExtractPrimaryFramework`, `ExtractPrimaryLearningOutcomes`, `ExtractJCSpec`, `ExtractCBADescriptor`) but **no matching dlt source backs them in `oideachais/dlt_sources/ireland/`** (only `aistear.py` and `senior_cycle.py` exist). The BAML extraction is unreachable. UK nations primary/secondary sources are also missing.
-
-**What it lands**:
-- `oideachais/dlt_sources/ireland/primary.py` + `junior_cycle.py` (4 new dlt sources, 6 resources each).
-- `oideachais/dlt_sources/uk/{england,scotland,wales,northern_ireland}/primary.py` + `secondary.py` (8 new dlt sources for Key Stage 1-2 / 3-4 / CfE Early-First-Second Level / KS3-4).
-- 12 new Dagster assets under `oideachais/dagster_defs/assets/curriculum_cycle_assets.py` (12 nation × cycle partitions).
-- 4 BAML extraction functions now invoked from the dlt `extraction_metadata` resource.
 - Crown Dependencies primary/secondary coverage (`ggy`, `jey`, `iom`).
 
 **Stack usage**: full Lakehouse + BAML + CocoIndex v1 + Cognee pipeline becomes a *reusable pattern*.
