@@ -61,7 +61,7 @@ class TestLangfuseIntegration:
     def test_codeolas_observability(self):
         """Test códeolas observability module."""
         try:
-            from codeolas.core.observability import get_observability
+            from sruth.codeolas.core.observability import get_observability
 
             obs = get_observability()
             with obs.trace_embedding("test-model", 1, 100):
