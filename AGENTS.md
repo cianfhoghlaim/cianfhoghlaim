@@ -137,7 +137,7 @@ Every stack under `infrastructure/stacks/` is listed below. Port numbers reflect
 | `n8n/` | Visual workflow automation | 5678 |
 | `networking-toolbox/` | Network diagnostic tools | Internal |
 | `nimtable/` | Iceberg catalog UI | Internal |
-| `oideachais/` | Celtic Education Lakehouse Engine (Dagster + FastAPI + TanStack Start + Agno AgentOS + Google ADK). **Canonical** — replaces the legacy `/oideachais/compose.yaml` quartet. Build source of truth. | 3080, 3335, 7777, 7778, 8000 |
+| `sruth/oideachais/` | Celtic Education Lakehouse Engine (Dagster + FastAPI + TanStack Start + Agno AgentOS + Google ADK). **Canonical** — replaces the legacy `/sruth/oideachais/compose.yaml` quartet. Build source of truth. | 3080, 3335, 7777, 7778, 8000 |
 | `olake/` | ELT from MongoDB → Iceberg | 8080 |
 | `olmocr/` | OlmOCR (Allen AI) document OCR | Internal |
 | `paddleocr/` | PaddleOCR multilingual OCR | Internal |
@@ -215,14 +215,14 @@ unpinned image as a WARNING.
 
 | Path | Role |
 |:--|:--|
-| `oideachais/` (root) | Application source. Contains `Dockerfile.dagster`, `Dockerfile`, `web/Dockerfile`, `dagster.yaml`, `workspace.yaml`, `pyproject.toml`. **No docker-compose, sidecar, pangolin, or blueprint files at this level** — they live in the `oideachais/` stack under `infrastructure/stacks/`. |
-| `infrastructure/stacks/oideachais/` | Canonical deployment. Has `compose.yaml` (uses `build:` from the root sources), `compose.dev.yaml`, `sidecar.yaml`, `pangolin.yaml`, `secrets.env`, `.env.example`, `blueprint.yaml`. |
-| `infrastructure/komodo/stacks/oideachais-bunchloch.toml` | Komodo stack definition referencing the `oideachais/` stack files. |
+| `sruth/oideachais/` (root) | Application source. Contains `Dockerfile.dagster`, `Dockerfile`, `web/Dockerfile`, `dagster.yaml`, `workspace.yaml`, `pyproject.toml`. **No docker-compose, sidecar, pangolin, or blueprint files at this level** — they live in the `sruth/oideachais/` stack under `infrastructure/stacks/`. |
+| `infrastructure/stacks/sruth/oideachais/` | Canonical deployment. Has `compose.yaml` (uses `build:` from the root sources), `compose.dev.yaml`, `sidecar.yaml`, `pangolin.yaml`, `secrets.env`, `.env.example`, `blueprint.yaml`. |
+| `infrastructure/komodo/stacks/oideachais-bunchloch.toml` | Komodo stack definition referencing the `sruth/oideachais/` stack files. |
 | `infrastructure/komodo/procedures/deploy-oideachais-bunchloch.toml` | 5-stage deploy procedure (prereqs → lakehouse/litellm/lancedb/langfuse → oideachais → pangolin routes → health checks). |
 
-**Do not reintroduce `oideachais/compose.yaml`, `oideachais/sidecar.yaml`,
-`oideachais/pangolin.yaml`, or `oideachais/blueprint.yaml`** — the
-`infrastructure/stacks/oideachais/` stack is the single source of truth.
+**Do not reintroduce `sruth/oideachais/compose.yaml`, `sruth/oideachais/sidecar.yaml`,
+`sruth/oideachais/pangolin.yaml`, or `sruth/oideachais/blueprint.yaml`** — the
+`infrastructure/stacks/sruth/oideachais/` stack is the single source of truth.
 
 ## Critical Constraints
 
