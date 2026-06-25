@@ -30,7 +30,7 @@ The KCG secrets stack has **3 layers**:
 ┌─────────────────────────────────────────────────────────────┐
 │  Layer 2: Template (committed to git)                        │
 │  → .infisical.env (URI refs only, e.g.                        │
-│    infisical://dev-baile/oideachais/OPENAI_API_KEY)          │
+│    infisical://dev-baile/sruth/oideachais/OPENAI_API_KEY)          │
 └─────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
@@ -197,7 +197,7 @@ read all secrets (no Infisical RBAC by default).
 infisical secrets set OPENAI_API_KEY=sk-...
 
 # 2. Add the URI ref to .infisical.env
-echo 'OPENAI_API_KEY=infisical://dev-baile/oideachais/OPENAI_API_KEY' \
+echo 'OPENAI_API_KEY=infisical://dev-baile/sruth/oideachais/OPENAI_API_KEY' \
   >> .infisical.env
 
 # 3. Re-hydrate locally

@@ -5,7 +5,7 @@ The canonical spec for `leabharlann-ingestion` lives at `openspec/specs/leabharl
 ## MODIFIED Requirements
 
 ### Requirement: Source default paths MUST point at `leabharlann/`
-The dlt source modules `oideachais/dlt_sources/author_archive/{university_of_galway,gemini_deep_research}.py` MUST define `DEFAULT_UOG_PATH` and `DEFAULT_GEMINI_PATH` pointing at `leabharlann/ollscoil_na_gaillimhe/` and `leabharlann/gemini_deep_research/` respectively. The source factories SHALL continue to accept any `base_path` argument so callers can pass the old `author_cian_deacy_lyons_mac_an_déisigh_uí_liatháin/` path explicitly for back-compat.
+The dlt source modules `sruth/oideachais/dlt_sources/author_archive/{university_of_galway,gemini_deep_research}.py` MUST define `DEFAULT_UOG_PATH` and `DEFAULT_GEMINI_PATH` pointing at `leabharlann/ollscoil_na_gaillimhe/` and `leabharlann/gemini_deep_research/` respectively. The source factories SHALL continue to accept any `base_path` argument so callers can pass the old `author_cian_deacy_lyons_mac_an_déisigh_uí_liatháin/` path explicitly for back-compat.
 
 #### Scenario: Default path under leabharlann
 - **GIVEN** the `university_of_galway_source()` factory is called without arguments

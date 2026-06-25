@@ -2,7 +2,7 @@
 
 ### Requirement: Wikipedia fixture storage convention
 
-Every Wikipedia-derived source registered under the `culture` domain SHALL follow the dual-write pattern: a markdown clipping under `cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/` AND a JSON fixture under `oideachais/dlt_sources/official_media/fixtures/identity_<slug>.json`.
+Every Wikipedia-derived source registered under the `culture` domain SHALL follow the dual-write pattern: a markdown clipping under `cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/` AND a JSON fixture under `sruth/oideachais/dlt_sources/official_media/fixtures/identity_<slug>.json`.
 
 The fixture corpus SHALL grow to **8 identity fixtures** (3 first-batch + 5 second-batch) by the close of `extend-culture-heritage-to-8-articles`. New fixtures beyond the 8 SHALL continue to follow the same dual-write convention.
 
@@ -22,7 +22,7 @@ The fixture corpus SHALL grow to **8 identity fixtures** (3 first-batch + 5 seco
 #### Scenario: When the second batch of 5 Wikipedia fixtures is added
 
 - **WHEN** the `extend-culture-heritage-to-8-articles` change adds 5 new fixtures for Leath Cuinn, Cian, Aos Sí, Tuatha Dé Danann, and Déisi
-- **THEN** all 8 fixtures SHALL resolve via the DLT `wikipedia_fixtures` path-glob (`identity_*.json` in `oideachais/dlt_sources/official_media/fixtures/`)
+- **THEN** all 8 fixtures SHALL resolve via the DLT `wikipedia_fixtures` path-glob (`identity_*.json` in `sruth/oideachais/dlt_sources/official_media/fixtures/`)
 - **AND** all 8 fixtures SHALL carry the canonical `lineage/` path in their `clipping_path` field (the legacy `deacy/` path is removed)
 - **AND** the `culture_heritage` Cognee dataset SHALL ingest the 8 articles on the next `cognee.cognify()` run
 

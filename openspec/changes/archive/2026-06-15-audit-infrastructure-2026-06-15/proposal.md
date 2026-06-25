@@ -3,7 +3,7 @@
 ## Why
 
 The Cianfhoghlaim monorepo has 4 workspace-member quadrants
-(`oideachais/`, `tuatha/`, `croilar/`, `meaisinfhoghlaim/`) and 74
+(`sruth/oideachais/`, `sruth/tuatha/`, `sruth/croilar/`, `sruth/meaisinfhoghlaim/`) and 74
 Docker Compose stacks under `infrastructure/stacks/`. As of
 2026-06-15, the most recent infrastructure health report
 (`infrastructure/stacks/HEALTH_REPORT.md`) is 3 days old and
@@ -48,10 +48,10 @@ Plus `infrastructure/audit/inventory/.gitkeep` and
 
 Add a **Status** section near the top and a **Known issues**
 section near the bottom of each quadrant README:
-- `oideachais/README.md` (637 lines existing)
-- `tuatha/README.md` (794 lines existing)
-- `croilar/README.md` (794 lines existing)
-- `meaisinfhoghlaim/README.md` (497 lines existing)
+- `sruth/oideachais/README.md` (637 lines existing)
+- `sruth/tuatha/README.md` (794 lines existing)
+- `sruth/croilar/README.md` (794 lines existing)
+- `sruth/meaisinfhoghlaim/README.md` (497 lines existing)
 - Root `README.md` — Status column added to the Quadrant table
 
 ### Phase C — Infrastructure docs

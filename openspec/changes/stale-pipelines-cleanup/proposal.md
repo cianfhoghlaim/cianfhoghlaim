@@ -1,8 +1,8 @@
-# stale-pipelines-cleanup — Delete dead `oideachais/pipelines/` package
+# stale-pipelines-cleanup — Delete dead `sruth/oideachais/pipelines/` package
 
 ## Why
 
-The `oideachais/pipelines/` package (6 files, 94 KB) is dead code that
+The `sruth/oideachais/pipelines/` package (6 files, 94 KB) is dead code that
 predates the dagster/dlt migration. Its `__init__.py` (line 1-17)
 claims *"Each pipeline integrates DLT, Dagster, Modal, LanceDB Cloud,
 Kafka, MLflow"* but no `@dlt.source`, `@asset`, or `@op` decorator
@@ -33,22 +33,22 @@ The 4 surviving classes are:
   `dagster_defs/assets/htr_training_assets.py` (6 assets, working)
 - `pipelines/transcript_aligner.py` (21 KB) — `TranscriptAligner`,
   `WhisperXAligner`, `CTCAligner`, `DTWAligner` — prototype that
-  duplicates `meaisinfhoghlaim/audio/` + `dagster_defs/assets/unified_audio_dataset_assets.py`
+  duplicates `sruth/meaisinfhoghlaim/audio/` + `dagster_defs/assets/unified_audio_dataset_assets.py`
   (5 assets, working)
 - `pipelines/canuint_audio_slicer.py` (14 KB) — audio-slicing logic that
   is simpler than what `canuint_alignment_assets.py` produces
 - `pipelines/llm_router.py` (9 KB) — `LLMRouter` that **duplicates**
-  `meaisinfhoghlaim/pipelines/llm_router.py` (which is the canonical
-  location per the quadrant layout in `oideachais/AGENTS.md:28-36`)
+  `sruth/meaisinfhoghlaim/pipelines/llm_router.py` (which is the canonical
+  location per the quadrant layout in `sruth/oideachais/AGENTS.md:28-36`)
 
 **Risk of keeping it:** new contributors will be confused — the
-`oideachais/pipelines/` package appears to be a primary entry point
+`sruth/oideachais/pipelines/` package appears to be a primary entry point
 but has no actual integration. The class names conflict with the
 real assets in `dagster_defs/assets/`.
 
 ## What
 
-Delete the entire `oideachais/pipelines/` directory tree:
+Delete the entire `sruth/oideachais/pipelines/` directory tree:
 - `__init__.py` (1.9 KB, 30+ re-exports)
 - `dialect_classifier.py` (24 KB)
 - `irish_document_scanner.py` (23 KB)
@@ -67,25 +67,25 @@ The 4 surviving files have **no logic worth porting**:
   `dagster_defs/assets/unified_audio_dataset_assets.py` (which are
   working and being called).
 - The `llm_router.py` has 0 imports anywhere in the repo;
-  `meaisinfhoghlaim/pipelines/llm_router.py` is the canonical
+  `sruth/meaisinfhoghlaim/pipelines/llm_router.py` is the canonical
   location per the quadrant layout.
 
 **If any logic is needed later**, the canonical patterns are:
 - Dialect classification → `dagster_defs/assets/canuint_alignment_assets.py:canuint_dialect_summary`
 - Irish HTR / document scanning → `dagster_defs/assets/htr_training_assets.py:htr_*
 - Audio alignment / transcript alignment → `dagster_defs/assets/canuint_alignment_assets.py:canuint_phoneme_alignments`
-- LLM routing → `meaisinfhoghlaim/pipelines/llm_router.py`
+- LLM routing → `sruth/meaisinfhoghlaim/pipelines/llm_router.py`
 
 ## Impact
 
 ### Affected files
-- **Deleted:** `oideachais/pipelines/` (entire tree, ~94 KB, 6 files + 1 README + `__pycache__/`)
+- **Deleted:** `sruth/oideachais/pipelines/` (entire tree, ~94 KB, 6 files + 1 README + `__pycache__/`)
 
 ### Affected specs
 - MODIFIED `oideachais-pipeline` — the rule that pipeline-level
   Python classes live in `dagster_defs/assets/` (the canonical
-  Dagster entry point) or in `meaisinfhoghlaim/` (the model-layer
-  quadrant), not in a top-level `oideachais/pipelines/` package.
+  Dagster entry point) or in `sruth/meaisinfhoghlaim/` (the model-layer
+  quadrant), not in a top-level `sruth/oideachais/pipelines/` package.
 
 ### Backward compatibility
 - Zero code references to `oideachais.pipelines` exist (verified
@@ -116,6 +116,6 @@ The 4 surviving files have **no logic worth porting**:
 
 1. `grep -r "oideachais.pipelines" --include="*.py"` returns 0 hits
 2. `grep -r "IrishDocumentScanner\|AcousticDialectClassifier\|..." --include="*.py"` returns 0 hits
-3. `ls oideachais/pipelines/` returns "No such file or directory"
+3. `ls sruth/oideachais/pipelines/` returns "No such file or directory"
 4. `uv run --package oideachais python -c "import dagster_defs.definitions"` still loads
 5. `openspec validate stale-pipelines-cleanup --strict` passes

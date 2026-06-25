@@ -13,7 +13,7 @@ The pivot is from "9 routes, one person" → "platform with N personas, shared i
 The subproject restructures from a flat 9-route TanStack Start app to a bun-workspace tree:
 
 ```
-croilar/
+sruth/croilar/
 ├── apps/
 │   ├── web/          ← TanStack Start (public persona router)
 │   ├── portal/       ← Self-hosted platform dashboard (auth-gated)
@@ -57,7 +57,7 @@ New personas are addable by creating one new file + registering in `_registry.ts
 
 ### 5. Self-hosted developer portal (5 of 12 modules)
 
-The existing `croilar/portal/` grows into the Croílár platform dashboard:
+The existing `sruth/croilar/portal/` grows into the Croílár platform dashboard:
 1. **Stacks** — Komodo API → 4+ croilar stacks health
 2. **Data Pipelines** — Dagster GraphQL → 15 assets per persona
 3. **Monitoring** — Prometheus + Grafana + Loki iframes
@@ -71,7 +71,7 @@ The existing `croilar/portal/` grows into the Croílár platform dashboard:
 - 5 new multi-arch images (croilar-web, -portal, -dagster, -marimo, -image-pipeline)
 - 5 existing image multi-arch rebuilds
 - SOPS encryption setup
-- 20 new Infisical items in `dev-baile/croilar/`
+- 20 new Infisical items in `dev-baile/sruth/croilar/`
 - Dagger module with 6 functions
 
 ### 7. Games deferred to v2

@@ -2,9 +2,9 @@
 
 ## Purpose
 
-`cocoindex-v1-migration` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives at `oideachais/cocoindex_flows/`. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+`cocoindex-v1-migration` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives at `sruth/oideachais/cocoindex_flows/`. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
 
-Migrate all CocoIndex flows in `oideachais/cocoindex_flows/` from the deprecated v0 API (`@cocoindex.flow_def`, `FlowBuilder`, `DataScope`, `cocoindex.sources.DuckDB`, `cocoindex.targets.lancedb`, `cocoindex.functions.SplitRecursively`, `cocoindex.functions.SentenceTransformerEmbed`) to the canonical v1 API (`@coco.fn`, `@coco.lifespan`, `coco.App`, `localfs.walk_dir`, `RecursiveSplitter`, `lancedb.mount_table_target`, `SentenceTransformerEmbedder`).
+Migrate all CocoIndex flows in `sruth/oideachais/cocoindex_flows/` from the deprecated v0 API (`@cocoindex.flow_def`, `FlowBuilder`, `DataScope`, `cocoindex.sources.DuckDB`, `cocoindex.targets.lancedb`, `cocoindex.functions.SplitRecursively`, `cocoindex.functions.SentenceTransformerEmbed`) to the canonical v1 API (`@coco.fn`, `@coco.lifespan`, `coco.App`, `localfs.walk_dir`, `RecursiveSplitter`, `lancedb.mount_table_target`, `SentenceTransformerEmbedder`).
 
 ## ADDED Requirements
 
@@ -12,7 +12,7 @@ Migrate all CocoIndex flows in `oideachais/cocoindex_flows/` from the deprecated
 The system SHALL expose every CocoIndex flow as a v1 `coco.App` instance with a `@coco.fn` `app_main` function and stable identity.
 
 #### Scenario: App registration
-- **GIVEN** an `oideachais/cocoindex_flows/<flow>.py` module
+- **GIVEN** an `sruth/oideachais/cocoindex_flows/<flow>.py` module
 - **WHEN** the module is loaded
 - **THEN** it SHALL declare `app = coco.App(coco.AppConfig(name="<UniqueName>"), app_main, ...)` at module level
 - **AND** the `app_main` function SHALL be decorated with `@coco.fn`
@@ -97,5 +97,5 @@ The system SHALL write every CocoIndex flow's output to a LanceDB table declared
 **Reason**: The venv has `cocoindex==1.0.9`. The v0 DSL is no longer importable. Migration is mandatory.
 
 **Migration**:
-- `oideachais/cocoindex_flows/*.py` (8 files) → v1 `coco.App` + `@coco.fn`
-- `croilar/cocoindex_flows/cv_embedding.py` and `artwork_embedding.py` → v1 (deferred to a follow-up change)
+- `sruth/oideachais/cocoindex_flows/*.py` (8 files) → v1 `coco.App` + `@coco.fn`
+- `sruth/croilar/cocoindex_flows/cv_embedding.py` and `artwork_embedding.py` → v1 (deferred to a follow-up change)

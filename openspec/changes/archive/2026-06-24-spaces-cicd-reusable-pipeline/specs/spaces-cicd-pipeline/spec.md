@@ -33,7 +33,7 @@ to a Hugging Face Space.
 
 #### Scenario: Workflow is path-filtered
 - **GIVEN** the workflow is configured for `spaces/an_scrudu/`
-- **WHEN** a commit touches only `spaces/anam_tuatha/`
+- **WHEN** a commit touches only `spaces/anam_sruth/tuatha/`
 - **THEN** the workflow SHALL NOT trigger for the an_scrudu Space
 
 #### Scenario: Failure surfaces a readable error

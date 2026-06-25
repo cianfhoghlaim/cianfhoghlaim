@@ -9,7 +9,7 @@ truth: superseded
 
 ## Executive Summary
 
-This inventory covers 1036 files across 8 directories totalling 49.7 MiB. The largest subtrees by file count are **docs/teanga** (295 files) and **docs/tuatha** (232 files). **docs/tuatha** has a nested `tuatha/tuatha/` directory containing 116 near-exact duplicates of its parent. There are 203 files with YAML frontmatter (none use `domain:` or `status:` fields), and 82 files flagged as predominantly Irish/Gaelic content.
+This inventory covers 1036 files across 8 directories totalling 49.7 MiB. The largest subtrees by file count are **docs/teanga** (295 files) and **docs/tuatha** (232 files). **docs/tuatha** has a nested `sruth/tuatha/sruth/tuatha/` directory containing 116 near-exact duplicates of its parent. There are 203 files with YAML frontmatter (none use `domain:` or `status:` fields), and 82 files flagged as predominantly Irish/Gaelic content.
 
 ## 1. Global Statistics
 
@@ -108,25 +108,25 @@ Found **152** filenames appearing in multiple locations.
 
 | Filename | Locations |
 |---|---|
-| `2510.17652v1.pdf` | docs/tuatha/2510.17652v1.pdf<br>docs/tuatha/tuatha/2510.17652v1.pdf |
-| `adding_agents.md` | docs/tuatha/ADDING_AGENTS.md<br>docs/tuatha/tuatha/ADDING_AGENTS.md |
-| `adding_data_sources.md` | docs/tuatha/ADDING_DATA_SOURCES.md<br>docs/tuatha/tuatha/ADDING_DATA_SOURCES.md |
-| `adding_tools.md` | docs/tuatha/ADDING_TOOLS.md<br>docs/tuatha/tuatha/ADDING_TOOLS.md |
-| `adding_zones.md` | docs/tuatha/ADDING_ZONES.md<br>docs/tuatha/tuatha/ADDING_ZONES.md |
-| `ag-ui and a2ui_ understanding the differences _ copilotkit.md` | docs/web/AG-UI and A2UI_ Understanding the Differences _ CopilotKit.md<br>docs/tuatha/AG-UI and A2UI_ Understanding the Differences _ CopilotKit.md<br>docs/tuatha/tuatha/AG-UI and A2UI_ Understanding the Differences _ CopilotKit.md |
-| `agentic education platform development.md` | docs/agents/Agentic Education Platform Development.md<br>docs/teanga/Agentic Education Platform Development.md<br>docs/tuatha/Agentic Education Platform Development.md<br>docs/tuatha/tuatha/Agentic Education Platform Development.md |
+| `2510.17652v1.pdf` | docs/sruth/tuatha/2510.17652v1.pdf<br>docs/sruth/tuatha/sruth/tuatha/2510.17652v1.pdf |
+| `adding_agents.md` | docs/sruth/tuatha/ADDING_AGENTS.md<br>docs/sruth/tuatha/sruth/tuatha/ADDING_AGENTS.md |
+| `adding_data_sources.md` | docs/sruth/tuatha/ADDING_DATA_SOURCES.md<br>docs/sruth/tuatha/sruth/tuatha/ADDING_DATA_SOURCES.md |
+| `adding_tools.md` | docs/sruth/tuatha/ADDING_TOOLS.md<br>docs/sruth/tuatha/sruth/tuatha/ADDING_TOOLS.md |
+| `adding_zones.md` | docs/sruth/tuatha/ADDING_ZONES.md<br>docs/sruth/tuatha/sruth/tuatha/ADDING_ZONES.md |
+| `ag-ui and a2ui_ understanding the differences _ copilotkit.md` | docs/web/AG-UI and A2UI_ Understanding the Differences _ CopilotKit.md<br>docs/sruth/tuatha/AG-UI and A2UI_ Understanding the Differences _ CopilotKit.md<br>docs/sruth/tuatha/sruth/tuatha/AG-UI and A2UI_ Understanding the Differences _ CopilotKit.md |
+| `agentic education platform development.md` | docs/agents/Agentic Education Platform Development.md<br>docs/teanga/Agentic Education Platform Development.md<br>docs/sruth/tuatha/Agentic Education Platform Development.md<br>docs/sruth/tuatha/sruth/tuatha/Agentic Education Platform Development.md |
 | `agentic translation workflow technologies.md` | docs/agents/Agentic Translation Workflow Technologies.md<br>docs/teanga/Agentic Translation Workflow Technologies.md |
-| `agentic web scraping pipeline.md` | docs/agents/Agentic Web Scraping Pipeline.md<br>docs/teanga/Agentic Web Scraping Pipeline.md<br>docs/tuatha/Agentic Web Scraping Pipeline.md<br>docs/tuatha/tuatha/Agentic Web Scraping Pipeline.md |
-| `agents.md` | docs/context/01-patterns/AGENTS.md<br>docs/meaisínfhoghlaim/AGENTS.md<br>docs/tuatha/AGENTS.md<br>docs/tuatha/tuatha/AGENTS.md |
+| `agentic web scraping pipeline.md` | docs/agents/Agentic Web Scraping Pipeline.md<br>docs/teanga/Agentic Web Scraping Pipeline.md<br>docs/sruth/tuatha/Agentic Web Scraping Pipeline.md<br>docs/sruth/tuatha/sruth/tuatha/Agentic Web Scraping Pipeline.md |
+| `agents.md` | docs/context/01-patterns/AGENTS.md<br>docs/meaisínfhoghlaim/AGENTS.md<br>docs/sruth/tuatha/AGENTS.md<br>docs/sruth/tuatha/sruth/tuatha/AGENTS.md |
 | `agno.md` | docs/context/package-ecosystem/ai-frameworks/agno.md<br>docs/context/07-skills/agno.md |
 | `ai agents for irish language resources.md` | docs/agents/AI Agents for Irish Language Resources.md<br>docs/teanga/AI Agents for Irish Language Resources.md |
-| `ai chemistry education image generation.md` | docs/meaisínfhoghlaim/AI Chemistry Education Image Generation.md<br>docs/teanga/AI Chemistry Education Image Generation.md<br>docs/tuatha/AI Chemistry Education Image Generation.md<br>docs/tuatha/tuatha/AI Chemistry Education Image Generation.md |
-| `analysis.md` | docs/tuatha/ANALYSIS.md<br>docs/tuatha/tuatha/ANALYSIS.md |
-| `api-readme.md` | docs/tuatha/api-README.md<br>docs/tuatha/tuatha/api-README.md |
-| `api.md` | docs/bonneagar/api.md<br>docs/tuatha/API.md<br>docs/tuatha/tuatha/API.md |
-| `apple_ml-fastvlm_ this repository contains the official implementation of _fastvlm_ efficient vision encoding for vision language models_ - cvpr 2025.md` | docs/meaisínfhoghlaim/apple_ml-fastvlm_ This repository contains the official implementation of _FastVLM_ Efficient Vision Encoding for Vision Language Models_ - CVPR 2025.md<br>docs/tuatha/apple_ml-fastvlm_ This repository contains the official implementation of _FastVLM_ Efficient Vision Encoding for Vision Language Models_ - CVPR 2025.md<br>docs/tuatha/tuatha/apple_ml-fastvlm_ This repository contains the official implementation of _FastVLM_ Efficient Vision Encoding for Vision Language Models_ - CVPR 2025.md |
+| `ai chemistry education image generation.md` | docs/meaisínfhoghlaim/AI Chemistry Education Image Generation.md<br>docs/teanga/AI Chemistry Education Image Generation.md<br>docs/sruth/tuatha/AI Chemistry Education Image Generation.md<br>docs/sruth/tuatha/sruth/tuatha/AI Chemistry Education Image Generation.md |
+| `analysis.md` | docs/sruth/tuatha/ANALYSIS.md<br>docs/sruth/tuatha/sruth/tuatha/ANALYSIS.md |
+| `api-readme.md` | docs/sruth/tuatha/api-README.md<br>docs/sruth/tuatha/sruth/tuatha/api-README.md |
+| `api.md` | docs/bonneagar/api.md<br>docs/sruth/tuatha/API.md<br>docs/sruth/tuatha/sruth/tuatha/API.md |
+| `apple_ml-fastvlm_ this repository contains the official implementation of _fastvlm_ efficient vision encoding for vision language models_ - cvpr 2025.md` | docs/meaisínfhoghlaim/apple_ml-fastvlm_ This repository contains the official implementation of _FastVLM_ Efficient Vision Encoding for Vision Language Models_ - CVPR 2025.md<br>docs/sruth/tuatha/apple_ml-fastvlm_ This repository contains the official implementation of _FastVLM_ Efficient Vision Encoding for Vision Language Models_ - CVPR 2025.md<br>docs/sruth/tuatha/sruth/tuatha/apple_ml-fastvlm_ This repository contains the official implementation of _FastVLM_ Efficient Vision Encoding for Vision Language Models_ - CVPR 2025.md |
 | `architecture.md` | docs/bonneagar/ARCHITECTURE.md<br>docs/data_engineering/ARCHITECTURE.md |
-| `asset management for full-stack app.md` | docs/teanga/Asset Management for Full-Stack App.md<br>docs/web/Asset Management for Full-Stack App.md<br>docs/tuatha/Asset Management for Full-Stack App.md<br>docs/tuatha/tuatha/Asset Management for Full-Stack App.md |
+| `asset management for full-stack app.md` | docs/teanga/Asset Management for Full-Stack App.md<br>docs/web/Asset Management for Full-Stack App.md<br>docs/sruth/tuatha/Asset Management for Full-Stack App.md<br>docs/sruth/tuatha/sruth/tuatha/Asset Management for Full-Stack App.md |
 | `auto-optimize pydantic models for structured information extraction_ a complete guide to dspydantic.md` | docs/meaisínfhoghlaim/Auto-Optimize Pydantic Models for Structured Information Extraction_ A Complete Guide to DSPydantic.md<br>docs/teanga/Auto-Optimize Pydantic Models for Structured Information Extraction_ A Complete Guide to DSPydantic.md |
 | `backend strategy for educational tutoring system.md` | docs/bonneagar/Backend Strategy For Educational Tutoring System.md<br>docs/teanga/Backend Strategy For Educational Tutoring System.md |
 | `baml for syllabus-driven data extraction.md` | docs/agents/BAML for Syllabus-Driven Data Extraction.md<br>docs/teanga/BAML for Syllabus-Driven Data Extraction.md |
@@ -134,132 +134,132 @@ Found **152** filenames appearing in multiple locations.
 | `baml, dlt, and ai workflow integration.md` | docs/meaisínfhoghlaim/BAML, DLT, and AI Workflow Integration.md<br>docs/teanga/BAML, DLT, and AI Workflow Integration.md |
 | `baml, graphiti, tanstack ai pipeline.md` | docs/teanga/BAML, Graphiti, Tanstack AI Pipeline.md<br>docs/web/BAML, Graphiti, Tanstack AI Pipeline.md |
 | `baml.md` | docs/context/01-patterns/BAML.md<br>docs/context/package-ecosystem/ai-frameworks/baml.md<br>docs/context/07-skills/baml.md |
-| `british isles education map.md` | docs/teanga/British Isles Education Map.md<br>docs/tuatha/British Isles Education Map.md<br>docs/tuatha/tuatha/British Isles Education Map.md |
-| `british isles game dev data pipeline.md` | docs/tuatha/British Isles Game Dev Data Pipeline.md<br>docs/tuatha/tuatha/British Isles Game Dev Data Pipeline.md |
-| `british isles mythology mmo research.md` | docs/tuatha/British Isles Mythology MMO Research.md<br>docs/tuatha/tuatha/British Isles Mythology MMO Research.md |
-| `building an educational agent's knowledge base.md` | docs/tuatha/Building an Educational Agent's Knowledge Base.md<br>docs/tuatha/tuatha/Building an Educational Agent's Knowledge Base.md |
-| `celtic etymology for game names.md` | docs/tuatha/Celtic Etymology for Game Names.md<br>docs/tuatha/tuatha/Celtic Etymology for Game Names.md |
-| `celtic language data aggregation & analysis.md` | docs/teanga/Celtic Language Data Aggregation & Analysis.md<br>docs/tuatha/Celtic Language Data Aggregation & Analysis.md<br>docs/tuatha/tuatha/Celtic Language Data Aggregation & Analysis.md |
-| `celtic mmo web3 concept integration.md` | docs/tuatha/Celtic MMO Web3 Concept Integration.md<br>docs/tuatha/tuatha/Celtic MMO Web3 Concept Integration.md |
+| `british isles education map.md` | docs/teanga/British Isles Education Map.md<br>docs/sruth/tuatha/British Isles Education Map.md<br>docs/sruth/tuatha/sruth/tuatha/British Isles Education Map.md |
+| `british isles game dev data pipeline.md` | docs/sruth/tuatha/British Isles Game Dev Data Pipeline.md<br>docs/sruth/tuatha/sruth/tuatha/British Isles Game Dev Data Pipeline.md |
+| `british isles mythology mmo research.md` | docs/sruth/tuatha/British Isles Mythology MMO Research.md<br>docs/sruth/tuatha/sruth/tuatha/British Isles Mythology MMO Research.md |
+| `building an educational agent's knowledge base.md` | docs/sruth/tuatha/Building an Educational Agent's Knowledge Base.md<br>docs/sruth/tuatha/sruth/tuatha/Building an Educational Agent's Knowledge Base.md |
+| `celtic etymology for game names.md` | docs/sruth/tuatha/Celtic Etymology for Game Names.md<br>docs/sruth/tuatha/sruth/tuatha/Celtic Etymology for Game Names.md |
+| `celtic language data aggregation & analysis.md` | docs/teanga/Celtic Language Data Aggregation & Analysis.md<br>docs/sruth/tuatha/Celtic Language Data Aggregation & Analysis.md<br>docs/sruth/tuatha/sruth/tuatha/Celtic Language Data Aggregation & Analysis.md |
+| `celtic mmo web3 concept integration.md` | docs/sruth/tuatha/Celtic MMO Web3 Concept Integration.md<br>docs/sruth/tuatha/sruth/tuatha/Celtic MMO Web3 Concept Integration.md |
 | `celtic-language-ai.md` | docs/context/07-skills/celtic-language-ai.md<br>docs/meaisínfhoghlaim/celtic-language-ai.md |
-| `celtic-ocr.md` | docs/tuatha/celtic-ocr.md<br>docs/tuatha/tuatha/celtic-ocr.md |
-| `celtic_languages.md` | docs/tuatha/CELTIC_LANGUAGES.md<br>docs/tuatha/tuatha/CELTIC_LANGUAGES.md |
-| `celtic_mmo.md` | docs/tuatha/celtic_mmo.md<br>docs/tuatha/tuatha/celtic_mmo.md |
-| `chemistry education asset generation.md` | docs/meaisínfhoghlaim/Chemistry Education Asset Generation.md<br>docs/teanga/Chemistry Education Asset Generation.md<br>docs/tuatha/Chemistry Education Asset Generation.md<br>docs/tuatha/tuatha/Chemistry Education Asset Generation.md |
+| `celtic-ocr.md` | docs/sruth/tuatha/celtic-ocr.md<br>docs/sruth/tuatha/sruth/tuatha/celtic-ocr.md |
+| `celtic_languages.md` | docs/sruth/tuatha/CELTIC_LANGUAGES.md<br>docs/sruth/tuatha/sruth/tuatha/CELTIC_LANGUAGES.md |
+| `celtic_mmo.md` | docs/sruth/tuatha/celtic_mmo.md<br>docs/sruth/tuatha/sruth/tuatha/celtic_mmo.md |
+| `chemistry education asset generation.md` | docs/meaisínfhoghlaim/Chemistry Education Asset Generation.md<br>docs/teanga/Chemistry Education Asset Generation.md<br>docs/sruth/tuatha/Chemistry Education Asset Generation.md<br>docs/sruth/tuatha/sruth/tuatha/Chemistry Education Asset Generation.md |
 | `chromedevtools_chrome-devtools-mcp_ chrome devtools for coding agents.md` | docs/teanga/ChromeDevTools_chrome-devtools-mcp_ Chrome DevTools for coding agents.md<br>docs/web/ChromeDevTools_chrome-devtools-mcp_ Chrome DevTools for coding agents.md |
 | `cocoindex.md` | docs/context/package-ecosystem/orchestration/cocoindex.md<br>docs/context/07-skills/cocoindex.md |
-| `comparing the top 6 agent-native rails for the agentic internet_ mcp, a2a, ap2, acp, x402, and kite.md` | docs/tuatha/Comparing the Top 6 Agent-Native Rails for the Agentic Internet_ MCP, A2A, AP2, ACP, x402, and Kite.md<br>docs/tuatha/tuatha/Comparing the Top 6 Agent-Native Rails for the Agentic Internet_ MCP, A2A, AP2, ACP, x402, and Kite.md |
-| `compass_artifact_wf-918fd144-3e32-416f-b59b-15a043b18fc1_text_markdown.md` | docs/tuatha/compass_artifact_wf-918fd144-3e32-416f-b59b-15a043b18fc1_text_markdown.md<br>docs/tuatha/tuatha/compass_artifact_wf-918fd144-3e32-416f-b59b-15a043b18fc1_text_markdown.md |
-| `cross_platform_guide.md` | docs/tuatha/CROSS_PLATFORM_GUIDE.md<br>docs/tuatha/tuatha/CROSS_PLATFORM_GUIDE.md |
-| `crypteolas_ federated learning & crypto payments.md` | docs/tuatha/Crypteolas_ Federated Learning & Crypto Payments.md<br>docs/tuatha/tuatha/Crypteolas_ Federated Learning & Crypto Payments.md |
-| `crypteolas_integration_guide.md` | docs/tuatha/CRYPTEOLAS_INTEGRATION_GUIDE.md<br>docs/tuatha/tuatha/CRYPTEOLAS_INTEGRATION_GUIDE.md |
-| `crypto analysis ai agent system architecture.md` | docs/tuatha/Crypto Analysis AI Agent System Architecture.md<br>docs/tuatha/tuatha/Crypto Analysis AI Agent System Architecture.md |
-| `crypto_integration_summary.md` | docs/tuatha/CRYPTO_INTEGRATION_SUMMARY.md<br>docs/tuatha/tuatha/CRYPTO_INTEGRATION_SUMMARY.md |
-| `deployment.md` | docs/tuatha/DEPLOYMENT.md<br>docs/tuatha/tuatha/DEPLOYMENT.md |
+| `comparing the top 6 agent-native rails for the agentic internet_ mcp, a2a, ap2, acp, x402, and kite.md` | docs/sruth/tuatha/Comparing the Top 6 Agent-Native Rails for the Agentic Internet_ MCP, A2A, AP2, ACP, x402, and Kite.md<br>docs/sruth/tuatha/sruth/tuatha/Comparing the Top 6 Agent-Native Rails for the Agentic Internet_ MCP, A2A, AP2, ACP, x402, and Kite.md |
+| `compass_artifact_wf-918fd144-3e32-416f-b59b-15a043b18fc1_text_markdown.md` | docs/sruth/tuatha/compass_artifact_wf-918fd144-3e32-416f-b59b-15a043b18fc1_text_markdown.md<br>docs/sruth/tuatha/sruth/tuatha/compass_artifact_wf-918fd144-3e32-416f-b59b-15a043b18fc1_text_markdown.md |
+| `cross_platform_guide.md` | docs/sruth/tuatha/CROSS_PLATFORM_GUIDE.md<br>docs/sruth/tuatha/sruth/tuatha/CROSS_PLATFORM_GUIDE.md |
+| `crypteolas_ federated learning & crypto payments.md` | docs/sruth/tuatha/Crypteolas_ Federated Learning & Crypto Payments.md<br>docs/sruth/tuatha/sruth/tuatha/Crypteolas_ Federated Learning & Crypto Payments.md |
+| `crypteolas_integration_guide.md` | docs/sruth/tuatha/CRYPTEOLAS_INTEGRATION_GUIDE.md<br>docs/sruth/tuatha/sruth/tuatha/CRYPTEOLAS_INTEGRATION_GUIDE.md |
+| `crypto analysis ai agent system architecture.md` | docs/sruth/tuatha/Crypto Analysis AI Agent System Architecture.md<br>docs/sruth/tuatha/sruth/tuatha/Crypto Analysis AI Agent System Architecture.md |
+| `crypto_integration_summary.md` | docs/sruth/tuatha/CRYPTO_INTEGRATION_SUMMARY.md<br>docs/sruth/tuatha/sruth/tuatha/CRYPTO_INTEGRATION_SUMMARY.md |
+| `deployment.md` | docs/sruth/tuatha/DEPLOYMENT.md<br>docs/sruth/tuatha/sruth/tuatha/DEPLOYMENT.md |
 | `dlt.md` | docs/context/package-ecosystem/orchestration/dlt.md<br>docs/context/07-skills/dlt.md |
-| `dlt_crawl4ai_lancedb.md` | docs/tuatha/dlt_crawl4ai_lancedb.md<br>docs/tuatha/tuatha/dlt_crawl4ai_lancedb.md |
+| `dlt_crawl4ai_lancedb.md` | docs/sruth/tuatha/dlt_crawl4ai_lancedb.md<br>docs/sruth/tuatha/sruth/tuatha/dlt_crawl4ai_lancedb.md |
 | `duckdb.md` | docs/context/package-ecosystem/storage/duckdb.md<br>docs/context/07-skills/duckdb.md |
-| `educational game dev pipeline.md` | docs/teanga/Educational Game Dev Pipeline.md<br>docs/tuatha/Educational Game Dev Pipeline.md<br>docs/tuatha/tuatha/Educational Game Dev Pipeline.md |
+| `educational game dev pipeline.md` | docs/teanga/Educational Game Dev Pipeline.md<br>docs/sruth/tuatha/Educational Game Dev Pipeline.md<br>docs/sruth/tuatha/sruth/tuatha/Educational Game Dev Pipeline.md |
 | `educational website tech stack.md` | docs/teanga/Educational Website Tech Stack.md<br>docs/web/Educational Website Tech Stack.md |
-| `educational-game-development.md` | docs/tuatha/educational-game-development.md<br>docs/tuatha/tuatha/educational-game-development.md |
-| `engine-selection.md` | docs/tuatha/engine-selection.md<br>docs/tuatha/tuatha/engine-selection.md |
-| `erc-4361_ sign-in with ethereum.md` | docs/tuatha/ERC-4361_ Sign-In with Ethereum.md<br>docs/tuatha/tuatha/ERC-4361_ Sign-In with Ethereum.md |
-| `federated ai marketplace on iphone.md` | docs/meaisínfhoghlaim/Federated AI Marketplace on iPhone.md<br>docs/tuatha/Federated AI Marketplace on iPhone.md<br>docs/tuatha/tuatha/Federated AI Marketplace on iPhone.md |
-| `federated-marketplace.md` | docs/tuatha/federated-marketplace.md<br>docs/tuatha/tuatha/federated-marketplace.md |
-| `fine-tuning vlms for ios htr.md` | docs/meaisínfhoghlaim/Fine-tuning VLMs for iOS HTR.md<br>docs/teanga/Fine-tuning VLMs for iOS HTR.md<br>docs/tuatha/Fine-tuning VLMs for iOS HTR.md<br>docs/tuatha/tuatha/Fine-tuning VLMs for iOS HTR.md |
+| `educational-game-development.md` | docs/sruth/tuatha/educational-game-development.md<br>docs/sruth/tuatha/sruth/tuatha/educational-game-development.md |
+| `engine-selection.md` | docs/sruth/tuatha/engine-selection.md<br>docs/sruth/tuatha/sruth/tuatha/engine-selection.md |
+| `erc-4361_ sign-in with ethereum.md` | docs/sruth/tuatha/ERC-4361_ Sign-In with Ethereum.md<br>docs/sruth/tuatha/sruth/tuatha/ERC-4361_ Sign-In with Ethereum.md |
+| `federated ai marketplace on iphone.md` | docs/meaisínfhoghlaim/Federated AI Marketplace on iPhone.md<br>docs/sruth/tuatha/Federated AI Marketplace on iPhone.md<br>docs/sruth/tuatha/sruth/tuatha/Federated AI Marketplace on iPhone.md |
+| `federated-marketplace.md` | docs/sruth/tuatha/federated-marketplace.md<br>docs/sruth/tuatha/sruth/tuatha/federated-marketplace.md |
+| `fine-tuning vlms for ios htr.md` | docs/meaisínfhoghlaim/Fine-tuning VLMs for iOS HTR.md<br>docs/teanga/Fine-tuning VLMs for iOS HTR.md<br>docs/sruth/tuatha/Fine-tuning VLMs for iOS HTR.md<br>docs/sruth/tuatha/sruth/tuatha/Fine-tuning VLMs for iOS HTR.md |
 | `finetuning qwen3-vl for gaelic ocr.md` | docs/meaisínfhoghlaim/Finetuning Qwen3-VL for Gaelic OCR.md<br>docs/teanga/Finetuning Qwen3-VL for Gaelic OCR.md |
 | `from bi to ai_ a modern lakehouse stack with lance and iceberg.md` | docs/bonneagar/From BI to AI_ A Modern Lakehouse Stack with Lance and Iceberg.md<br>docs/teanga/From BI to AI_ A Modern Lakehouse Stack with Lance and Iceberg.md |
-| `frontend idea catalog development.md` | docs/teanga/Frontend Idea Catalog Development.md<br>docs/web/Frontend Idea Catalog Development.md<br>docs/tuatha/Frontend Idea Catalog Development.md<br>docs/tuatha/tuatha/Frontend Idea Catalog Development.md |
-| `frontend.md` | docs/tuatha/FRONTEND.md<br>docs/tuatha/tuatha/FRONTEND.md |
+| `frontend idea catalog development.md` | docs/teanga/Frontend Idea Catalog Development.md<br>docs/web/Frontend Idea Catalog Development.md<br>docs/sruth/tuatha/Frontend Idea Catalog Development.md<br>docs/sruth/tuatha/sruth/tuatha/Frontend Idea Catalog Development.md |
+| `frontend.md` | docs/sruth/tuatha/FRONTEND.md<br>docs/sruth/tuatha/sruth/tuatha/FRONTEND.md |
 | `gaelic in the digital age_ inside the èist project – gaelic algorithmic research group.md` | docs/meaisínfhoghlaim/Gaelic in the Digital Age_ Inside the ÈIST Project – Gaelic Algorithmic Research Group.md<br>docs/teanga/Gaelic in the Digital Age_ Inside the ÈIST Project – Gaelic Algorithmic Research Group.md |
-| `game dev pipeline research & plan.md` | docs/teanga/Game Dev Pipeline Research & Plan.md<br>docs/tuatha/Game Dev Pipeline Research & Plan.md<br>docs/tuatha/tuatha/Game Dev Pipeline Research & Plan.md |
-| `game development research & ai integration.md` | docs/teanga/Game Development Research & AI Integration.md<br>docs/tuatha/Game Development Research & AI Integration.md<br>docs/tuatha/tuatha/Game Development Research & AI Integration.md |
-| `game particle effects research(2).md` | docs/tuatha/Game Particle Effects Research(2).md<br>docs/tuatha/tuatha/Game Particle Effects Research(2).md |
-| `game particle effects research.md` | docs/tuatha/Game Particle Effects Research.md<br>docs/tuatha/tuatha/Game Particle Effects Research.md |
-| `game reverse engineering workflow design.md` | docs/tuatha/Game Reverse Engineering Workflow Design.md<br>docs/tuatha/tuatha/Game Reverse Engineering Workflow Design.md |
-| `game-design-readme.md` | docs/tuatha/game-design-README.md<br>docs/tuatha/tuatha/game-design-README.md |
-| `game_client.md` | docs/tuatha/GAME_CLIENT.md<br>docs/tuatha/tuatha/GAME_CLIENT.md |
-| `game_contributing.md` | docs/tuatha/game_CONTRIBUTING.md<br>docs/tuatha/tuatha/game_CONTRIBUTING.md |
-| `game_development.md` | docs/tuatha/game_DEVELOPMENT.md<br>docs/tuatha/tuatha/game_DEVELOPMENT.md |
-| `game_siwe-auth.md` | docs/tuatha/game_siwe-auth.md<br>docs/tuatha/tuatha/game_siwe-auth.md |
-| `gdext-readme.md` | docs/tuatha/gdext-ReadMe.md<br>docs/tuatha/tuatha/gdext-ReadMe.md |
-| `generative ai art workflow integration.md` | docs/data_engineering/Generative AI Art Workflow Integration.md<br>docs/tuatha/Generative AI Art Workflow Integration.md<br>docs/tuatha/tuatha/Generative AI Art Workflow Integration.md |
-| `geoai.md` | docs/tuatha/GeoAI.md<br>docs/tuatha/tuatha/GeoAI.md |
-| `geospatial workflow & particle effects.md` | docs/tuatha/Geospatial Workflow & Particle Effects.md<br>docs/tuatha/tuatha/Geospatial Workflow & Particle Effects.md |
-| `godot_rust_guide.md` | docs/tuatha/GODOT_RUST_GUIDE.md<br>docs/tuatha/tuatha/GODOT_RUST_GUIDE.md |
+| `game dev pipeline research & plan.md` | docs/teanga/Game Dev Pipeline Research & Plan.md<br>docs/sruth/tuatha/Game Dev Pipeline Research & Plan.md<br>docs/sruth/tuatha/sruth/tuatha/Game Dev Pipeline Research & Plan.md |
+| `game development research & ai integration.md` | docs/teanga/Game Development Research & AI Integration.md<br>docs/sruth/tuatha/Game Development Research & AI Integration.md<br>docs/sruth/tuatha/sruth/tuatha/Game Development Research & AI Integration.md |
+| `game particle effects research(2).md` | docs/sruth/tuatha/Game Particle Effects Research(2).md<br>docs/sruth/tuatha/sruth/tuatha/Game Particle Effects Research(2).md |
+| `game particle effects research.md` | docs/sruth/tuatha/Game Particle Effects Research.md<br>docs/sruth/tuatha/sruth/tuatha/Game Particle Effects Research.md |
+| `game reverse engineering workflow design.md` | docs/sruth/tuatha/Game Reverse Engineering Workflow Design.md<br>docs/sruth/tuatha/sruth/tuatha/Game Reverse Engineering Workflow Design.md |
+| `game-design-readme.md` | docs/sruth/tuatha/game-design-README.md<br>docs/sruth/tuatha/sruth/tuatha/game-design-README.md |
+| `game_client.md` | docs/sruth/tuatha/GAME_CLIENT.md<br>docs/sruth/tuatha/sruth/tuatha/GAME_CLIENT.md |
+| `game_contributing.md` | docs/sruth/tuatha/game_CONTRIBUTING.md<br>docs/sruth/tuatha/sruth/tuatha/game_CONTRIBUTING.md |
+| `game_development.md` | docs/sruth/tuatha/game_DEVELOPMENT.md<br>docs/sruth/tuatha/sruth/tuatha/game_DEVELOPMENT.md |
+| `game_siwe-auth.md` | docs/sruth/tuatha/game_siwe-auth.md<br>docs/sruth/tuatha/sruth/tuatha/game_siwe-auth.md |
+| `gdext-readme.md` | docs/sruth/tuatha/gdext-ReadMe.md<br>docs/sruth/tuatha/sruth/tuatha/gdext-ReadMe.md |
+| `generative ai art workflow integration.md` | docs/data_engineering/Generative AI Art Workflow Integration.md<br>docs/sruth/tuatha/Generative AI Art Workflow Integration.md<br>docs/sruth/tuatha/sruth/tuatha/Generative AI Art Workflow Integration.md |
+| `geoai.md` | docs/sruth/tuatha/GeoAI.md<br>docs/sruth/tuatha/sruth/tuatha/GeoAI.md |
+| `geospatial workflow & particle effects.md` | docs/sruth/tuatha/Geospatial Workflow & Particle Effects.md<br>docs/sruth/tuatha/sruth/tuatha/Geospatial Workflow & Particle Effects.md |
+| `godot_rust_guide.md` | docs/sruth/tuatha/GODOT_RUST_GUIDE.md<br>docs/sruth/tuatha/sruth/tuatha/GODOT_RUST_GUIDE.md |
 | `google adk with litellm _ litellm.md` | docs/meaisínfhoghlaim/Google ADK with LiteLLM _ liteLLM.md<br>docs/teanga/Google ADK with LiteLLM _ liteLLM.md |
-| `graphics_index.md` | docs/tuatha/GRAPHICS_INDEX.md<br>docs/tuatha/tuatha/GRAPHICS_INDEX.md |
+| `graphics_index.md` | docs/sruth/tuatha/GRAPHICS_INDEX.md<br>docs/sruth/tuatha/sruth/tuatha/GRAPHICS_INDEX.md |
 | `implementation_guide.md` | docs/bonneagar/IMPLEMENTATION_GUIDE.md<br>docs/context/08-examples/IMPLEMENTATION_GUIDE.md<br>docs/meaisínfhoghlaim/IMPLEMENTATION_GUIDE.md |
 | `index.md` | 9 copies across subtrees |
-| `infrastructure-readme.md` | docs/tuatha/infrastructure-README.md<br>docs/tuatha/tuatha/infrastructure-README.md |
-| `integrating rust, duckdb, tanstack, copilotkit.md` | docs/teanga/Integrating Rust, DuckDB, TanStack, CopilotKit.md<br>docs/tuatha/Integrating Rust, DuckDB, TanStack, CopilotKit.md<br>docs/tuatha/tuatha/Integrating Rust, DuckDB, TanStack, CopilotKit.md |
+| `infrastructure-readme.md` | docs/sruth/tuatha/infrastructure-README.md<br>docs/sruth/tuatha/sruth/tuatha/infrastructure-README.md |
+| `integrating rust, duckdb, tanstack, copilotkit.md` | docs/teanga/Integrating Rust, DuckDB, TanStack, CopilotKit.md<br>docs/sruth/tuatha/Integrating Rust, DuckDB, TanStack, CopilotKit.md<br>docs/sruth/tuatha/sruth/tuatha/Integrating Rust, DuckDB, TanStack, CopilotKit.md |
 | `integrating tanstack ai with litellm.md` | docs/teanga/Integrating TanStack AI with LiteLLM.md<br>docs/web/Integrating TanStack AI with LiteLLM.md |
-| `interactive ai pipeline development.md` | docs/meaisínfhoghlaim/Interactive AI Pipeline Development.md<br>docs/tuatha/Interactive AI Pipeline Development.md<br>docs/tuatha/tuatha/Interactive AI Pipeline Development.md |
-| `interactive map & ai agents.md` | docs/teanga/Interactive Map & AI Agents.md<br>docs/tuatha/Interactive Map & AI Agents.md<br>docs/tuatha/tuatha/Interactive Map & AI Agents.md |
-| `introducing anylanguagemodel_ one api for local and remote llms on apple platforms.md` | docs/meaisínfhoghlaim/Introducing AnyLanguageModel_ One API for Local and Remote LLMs on Apple Platforms.md<br>docs/tuatha/Introducing AnyLanguageModel_ One API for Local and Remote LLMs on Apple Platforms.md<br>docs/tuatha/tuatha/Introducing AnyLanguageModel_ One API for Local and Remote LLMs on Apple Platforms.md |
-| `ios app development ecosystem strategy.md` | docs/meaisínfhoghlaim/iOS App Development Ecosystem Strategy.md<br>docs/tuatha/iOS App Development Ecosystem Strategy.md<br>docs/tuatha/tuatha/iOS App Development Ecosystem Strategy.md |
-| `irish handwriting app development.md` | docs/teanga/Irish Handwriting App Development.md<br>docs/tuatha/Irish Handwriting App Development.md<br>docs/tuatha/tuatha/Irish Handwriting App Development.md |
-| `irish llm for iphone development.md` | docs/meaisínfhoghlaim/Irish LLM for iPhone Development.md<br>docs/teanga/Irish LLM for iPhone Development.md<br>docs/tuatha/Irish LLM for iPhone Development.md<br>docs/tuatha/tuatha/Irish LLM for iPhone Development.md |
-| `kotlin multiplatform vs. react native_ a cross-platform comparison _ kotlin multiplatform.md` | docs/tuatha/Kotlin Multiplatform vs. React Native_ A cross-platform comparison _ Kotlin Multiplatform.md<br>docs/tuatha/tuatha/Kotlin Multiplatform vs. React Native_ A cross-platform comparison _ Kotlin Multiplatform.md |
-| `learn-to-earn blockchain and ai.md` | docs/tuatha/Learn-to-Earn Blockchain and AI.md<br>docs/tuatha/tuatha/Learn-to-Earn Blockchain and AI.md |
-| `learn-to-earn-model.md` | docs/tuatha/learn-to-earn-model.md<br>docs/tuatha/tuatha/learn-to-earn-model.md |
-| `llm serving with mlflow & langfuse.md` | docs/tuatha/LLM Serving with MLflow & Langfuse.md<br>docs/tuatha/tuatha/LLM Serving with MLflow & Langfuse.md |
-| `mcp-ui.md` | docs/agents/MCP-UI.md<br>docs/tuatha/MCP-UI.md<br>docs/tuatha/tuatha/MCP-UI.md |
+| `interactive ai pipeline development.md` | docs/meaisínfhoghlaim/Interactive AI Pipeline Development.md<br>docs/sruth/tuatha/Interactive AI Pipeline Development.md<br>docs/sruth/tuatha/sruth/tuatha/Interactive AI Pipeline Development.md |
+| `interactive map & ai agents.md` | docs/teanga/Interactive Map & AI Agents.md<br>docs/sruth/tuatha/Interactive Map & AI Agents.md<br>docs/sruth/tuatha/sruth/tuatha/Interactive Map & AI Agents.md |
+| `introducing anylanguagemodel_ one api for local and remote llms on apple platforms.md` | docs/meaisínfhoghlaim/Introducing AnyLanguageModel_ One API for Local and Remote LLMs on Apple Platforms.md<br>docs/sruth/tuatha/Introducing AnyLanguageModel_ One API for Local and Remote LLMs on Apple Platforms.md<br>docs/sruth/tuatha/sruth/tuatha/Introducing AnyLanguageModel_ One API for Local and Remote LLMs on Apple Platforms.md |
+| `ios app development ecosystem strategy.md` | docs/meaisínfhoghlaim/iOS App Development Ecosystem Strategy.md<br>docs/sruth/tuatha/iOS App Development Ecosystem Strategy.md<br>docs/sruth/tuatha/sruth/tuatha/iOS App Development Ecosystem Strategy.md |
+| `irish handwriting app development.md` | docs/teanga/Irish Handwriting App Development.md<br>docs/sruth/tuatha/Irish Handwriting App Development.md<br>docs/sruth/tuatha/sruth/tuatha/Irish Handwriting App Development.md |
+| `irish llm for iphone development.md` | docs/meaisínfhoghlaim/Irish LLM for iPhone Development.md<br>docs/teanga/Irish LLM for iPhone Development.md<br>docs/sruth/tuatha/Irish LLM for iPhone Development.md<br>docs/sruth/tuatha/sruth/tuatha/Irish LLM for iPhone Development.md |
+| `kotlin multiplatform vs. react native_ a cross-platform comparison _ kotlin multiplatform.md` | docs/sruth/tuatha/Kotlin Multiplatform vs. React Native_ A cross-platform comparison _ Kotlin Multiplatform.md<br>docs/sruth/tuatha/sruth/tuatha/Kotlin Multiplatform vs. React Native_ A cross-platform comparison _ Kotlin Multiplatform.md |
+| `learn-to-earn blockchain and ai.md` | docs/sruth/tuatha/Learn-to-Earn Blockchain and AI.md<br>docs/sruth/tuatha/sruth/tuatha/Learn-to-Earn Blockchain and AI.md |
+| `learn-to-earn-model.md` | docs/sruth/tuatha/learn-to-earn-model.md<br>docs/sruth/tuatha/sruth/tuatha/learn-to-earn-model.md |
+| `llm serving with mlflow & langfuse.md` | docs/sruth/tuatha/LLM Serving with MLflow & Langfuse.md<br>docs/sruth/tuatha/sruth/tuatha/LLM Serving with MLflow & Langfuse.md |
+| `mcp-ui.md` | docs/agents/MCP-UI.md<br>docs/sruth/tuatha/MCP-UI.md<br>docs/sruth/tuatha/sruth/tuatha/MCP-UI.md |
 | `mcp_research.md` | docs/agents/MCP_RESEARCH.md<br>docs/context/04-agents/MCP_RESEARCH.md |
-| `ml-models-readme.md` | docs/tuatha/ml-models-README.md<br>docs/tuatha/tuatha/ml-models-README.md |
-| `mmo geospatial data & visual rag.md` | docs/tuatha/MMO Geospatial Data & Visual RAG.md<br>docs/tuatha/tuatha/MMO Geospatial Data & Visual RAG.md |
+| `ml-models-readme.md` | docs/sruth/tuatha/ml-models-README.md<br>docs/sruth/tuatha/sruth/tuatha/ml-models-README.md |
+| `mmo geospatial data & visual rag.md` | docs/sruth/tuatha/MMO Geospatial Data & Visual RAG.md<br>docs/sruth/tuatha/sruth/tuatha/MMO Geospatial Data & Visual RAG.md |
 | `model_training.md` | docs/context/05-celtic-language/MODEL_TRAINING.md<br>docs/teanga/model_training.md |
 | `motherduck_mcp.md` | docs/meaisínfhoghlaim/motherduck_mcp.md<br>docs/teanga/motherduck_mcp.md |
 | `multimodal irish handwriting generation model.md` | docs/meaisínfhoghlaim/Multimodal Irish Handwriting Generation Model.md<br>docs/teanga/Multimodal Irish Handwriting Generation Model.md |
-| `multimodal video knowledge graph pipeline.md` | docs/tuatha/Multimodal Video Knowledge Graph Pipeline.md<br>docs/tuatha/tuatha/Multimodal Video Knowledge Graph Pipeline.md |
-| `mythology-framework.md` | docs/tuatha/mythology-framework.md<br>docs/tuatha/tuatha/mythology-framework.md |
+| `multimodal video knowledge graph pipeline.md` | docs/sruth/tuatha/Multimodal Video Knowledge Graph Pipeline.md<br>docs/sruth/tuatha/sruth/tuatha/Multimodal Video Knowledge Graph Pipeline.md |
+| `mythology-framework.md` | docs/sruth/tuatha/mythology-framework.md<br>docs/sruth/tuatha/sruth/tuatha/mythology-framework.md |
 | `neuro-symbolic translation model training.md` | docs/meaisínfhoghlaim/Neuro-Symbolic Translation Model Training.md<br>docs/teanga/Neuro-Symbolic Translation Model Training.md |
 | `new in llama.cpp_ model management.md` | docs/bonneagar/New in llama.cpp_ Model Management.md<br>docs/meaisínfhoghlaim/New in llama.cpp_ Model Management.md |
 | `notebooklm_1.md` | docs/meaisínfhoghlaim/notebooklm_1.md<br>docs/teanga/notebooklm_1.md |
-| `ogham crypto mmo research.md` | docs/tuatha/Ogham Crypto MMO Research.md<br>docs/tuatha/tuatha/Ogham Crypto MMO Research.md |
-| `payment_guide.md` | docs/tuatha/PAYMENT_GUIDE.md<br>docs/tuatha/tuatha/PAYMENT_GUIDE.md |
-| `performance_tuning.md` | docs/tuatha/PERFORMANCE_TUNING.md<br>docs/tuatha/tuatha/PERFORMANCE_TUNING.md |
-| `pipelines.md` | docs/tuatha/PIPELINES.md<br>docs/tuatha/tuatha/PIPELINES.md |
+| `ogham crypto mmo research.md` | docs/sruth/tuatha/Ogham Crypto MMO Research.md<br>docs/sruth/tuatha/sruth/tuatha/Ogham Crypto MMO Research.md |
+| `payment_guide.md` | docs/sruth/tuatha/PAYMENT_GUIDE.md<br>docs/sruth/tuatha/sruth/tuatha/PAYMENT_GUIDE.md |
+| `performance_tuning.md` | docs/sruth/tuatha/PERFORMANCE_TUNING.md<br>docs/sruth/tuatha/sruth/tuatha/PERFORMANCE_TUNING.md |
+| `pipelines.md` | docs/sruth/tuatha/PIPELINES.md<br>docs/sruth/tuatha/sruth/tuatha/PIPELINES.md |
 | `productionalize ai workloads with lance namespace, lancedb, and ray.md` | docs/meaisínfhoghlaim/Productionalize AI Workloads with Lance Namespace, LanceDB, and Ray.md<br>docs/teanga/Productionalize AI Workloads with Lance Namespace, LanceDB, and Ray.md |
 | `react drag-and-drop for exam builder.md` | docs/meaisínfhoghlaim/React Drag-and-Drop for Exam Builder.md<br>docs/web/React Drag-and-Drop for Exam Builder.md |
-| `readme.md` | docs/bonneagar/README.md<br>docs/meaisínfhoghlaim/README.md<br>docs/web/README.md<br>docs/tuatha/README.md<br>docs/tuatha/tuatha/README.md |
-| `release v28.0.0 - mesh shaders, immediates, and more! · gfx-rs_wgpu.md` | docs/web/Release v28.0.0 - Mesh Shaders, Immediates, and More! · gfx-rs_wgpu.md<br>docs/tuatha/Release v28.0.0 - Mesh Shaders, Immediates, and More! · gfx-rs_wgpu.md<br>docs/tuatha/tuatha/Release v28.0.0 - Mesh Shaders, Immediates, and More! · gfx-rs_wgpu.md |
-| `repo-agui_kotlin.md` | docs/tuatha/repo-agui_kotlin.md<br>docs/tuatha/tuatha/repo-agui_kotlin.md |
-| `repo-anylanguagemodel.md` | docs/tuatha/repo-AnyLanguageModel.md<br>docs/tuatha/tuatha/repo-AnyLanguageModel.md |
-| `repo-hophacks-spacetimedb-workshop.md` | docs/tuatha/repo-hophacks-spacetimedb-workshop.md<br>docs/tuatha/tuatha/repo-hophacks-spacetimedb-workshop.md |
-| `repo-ireland.md` | docs/tuatha/repo-ireland.md<br>docs/tuatha/tuatha/repo-ireland.md |
-| `repo-react-native-godot.md` | docs/tuatha/repo-react-native-godot.md<br>docs/tuatha/tuatha/repo-react-native-godot.md |
-| `repo-react-native-reusables.md` | docs/tuatha/repo-react-native-reusables.md<br>docs/tuatha/tuatha/repo-react-native-reusables.md |
-| `repo-spacetimedb-cookbook.md` | docs/tuatha/repo-spacetimedb-cookbook.md<br>docs/tuatha/tuatha/repo-spacetimedb-cookbook.md |
-| `repo-spacetimedb-typescript-sdk.md` | docs/tuatha/repo-spacetimedb-typescript-sdk.md<br>docs/tuatha/tuatha/repo-spacetimedb-typescript-sdk.md |
-| `repo-spacetimedb.md` | docs/tuatha/repo-SpacetimeDB.md<br>docs/tuatha/tuatha/repo-SpacetimeDB.md |
-| `repo-wgpu.md` | docs/tuatha/repo-wgpu.md<br>docs/tuatha/tuatha/repo-wgpu.md |
-| `repo-x402.md` | docs/tuatha/repo-x402.md<br>docs/tuatha/tuatha/repo-x402.md |
+| `readme.md` | docs/bonneagar/README.md<br>docs/meaisínfhoghlaim/README.md<br>docs/web/README.md<br>docs/sruth/tuatha/README.md<br>docs/sruth/tuatha/sruth/tuatha/README.md |
+| `release v28.0.0 - mesh shaders, immediates, and more! · gfx-rs_wgpu.md` | docs/web/Release v28.0.0 - Mesh Shaders, Immediates, and More! · gfx-rs_wgpu.md<br>docs/sruth/tuatha/Release v28.0.0 - Mesh Shaders, Immediates, and More! · gfx-rs_wgpu.md<br>docs/sruth/tuatha/sruth/tuatha/Release v28.0.0 - Mesh Shaders, Immediates, and More! · gfx-rs_wgpu.md |
+| `repo-agui_kotlin.md` | docs/sruth/tuatha/repo-agui_kotlin.md<br>docs/sruth/tuatha/sruth/tuatha/repo-agui_kotlin.md |
+| `repo-anylanguagemodel.md` | docs/sruth/tuatha/repo-AnyLanguageModel.md<br>docs/sruth/tuatha/sruth/tuatha/repo-AnyLanguageModel.md |
+| `repo-hophacks-spacetimedb-workshop.md` | docs/sruth/tuatha/repo-hophacks-spacetimedb-workshop.md<br>docs/sruth/tuatha/sruth/tuatha/repo-hophacks-spacetimedb-workshop.md |
+| `repo-ireland.md` | docs/sruth/tuatha/repo-ireland.md<br>docs/sruth/tuatha/sruth/tuatha/repo-ireland.md |
+| `repo-react-native-godot.md` | docs/sruth/tuatha/repo-react-native-godot.md<br>docs/sruth/tuatha/sruth/tuatha/repo-react-native-godot.md |
+| `repo-react-native-reusables.md` | docs/sruth/tuatha/repo-react-native-reusables.md<br>docs/sruth/tuatha/sruth/tuatha/repo-react-native-reusables.md |
+| `repo-spacetimedb-cookbook.md` | docs/sruth/tuatha/repo-spacetimedb-cookbook.md<br>docs/sruth/tuatha/sruth/tuatha/repo-spacetimedb-cookbook.md |
+| `repo-spacetimedb-typescript-sdk.md` | docs/sruth/tuatha/repo-spacetimedb-typescript-sdk.md<br>docs/sruth/tuatha/sruth/tuatha/repo-spacetimedb-typescript-sdk.md |
+| `repo-spacetimedb.md` | docs/sruth/tuatha/repo-SpacetimeDB.md<br>docs/sruth/tuatha/sruth/tuatha/repo-SpacetimeDB.md |
+| `repo-wgpu.md` | docs/sruth/tuatha/repo-wgpu.md<br>docs/sruth/tuatha/sruth/tuatha/repo-wgpu.md |
+| `repo-x402.md` | docs/sruth/tuatha/repo-x402.md<br>docs/sruth/tuatha/sruth/tuatha/repo-x402.md |
 | `resource maximization and project planning.md` | docs/bonneagar/Resource Maximization and Project Planning.md<br>docs/meaisínfhoghlaim/Resource Maximization and Project Planning.md |
-| `rust client.md` | docs/bonneagar/Rust Client.md<br>docs/tuatha/Rust Client.md<br>docs/tuatha/tuatha/Rust Client.md |
-| `rust full-stack gaming environment.md` | docs/bonneagar/Rust Full-Stack Gaming Environment.md<br>docs/tuatha/Rust Full-Stack Gaming Environment.md<br>docs/tuatha/tuatha/Rust Full-Stack Gaming Environment.md |
-| `sign in with ethereum (siwe) _ better auth.md` | docs/agents/Sign In With Ethereum (SIWE) _ Better Auth.md<br>docs/web/Sign In With Ethereum (SIWE) _ Better Auth.md<br>docs/tuatha/Sign In With Ethereum (SIWE) _ Better Auth.md<br>docs/tuatha/tuatha/Sign In With Ethereum (SIWE) _ Better Auth.md |
-| `spacetimedb blockchain integration strategy.md` | docs/tuatha/Spacetimedb Blockchain Integration Strategy.md<br>docs/tuatha/tuatha/Spacetimedb Blockchain Integration Strategy.md |
-| `spacetimedb ogham stone game integration.md` | docs/tuatha/SpacetimeDB Ogham Stone Game Integration.md<br>docs/tuatha/tuatha/SpacetimeDB Ogham Stone Game Integration.md |
-| `spacetimedb.md` | docs/tuatha/SpacetimeDB.md<br>docs/tuatha/tuatha/SpacetimeDB.md |
-| `spacetimedb_guide.md` | docs/tuatha/SPACETIMEDB_GUIDE.md<br>docs/tuatha/tuatha/SPACETIMEDB_GUIDE.md |
-| `swift transformers reaches 1.0 – and looks to the future.md` | docs/meaisínfhoghlaim/Swift Transformers Reaches 1.0 – and Looks to the Future.md<br>docs/tuatha/Swift Transformers Reaches 1.0 – and Looks to the Future.md<br>docs/tuatha/tuatha/Swift Transformers Reaches 1.0 – and Looks to the Future.md |
-| `syft-flwr_notebooks_fedrag_readme.md at main · openmined_syft-flwr.md` | docs/meaisínfhoghlaim/syft-flwr_notebooks_fedrag_README.md at main · OpenMined_syft-flwr.md<br>docs/tuatha/syft-flwr_notebooks_fedrag_README.md at main · OpenMined_syft-flwr.md<br>docs/tuatha/tuatha/syft-flwr_notebooks_fedrag_README.md at main · OpenMined_syft-flwr.md |
-| `tanstack db integration and comparison.md` | docs/web/TanStack DB Integration and Comparison.md<br>docs/tuatha/TanStack DB Integration and Comparison.md<br>docs/tuatha/tuatha/TanStack DB Integration and Comparison.md |
+| `rust client.md` | docs/bonneagar/Rust Client.md<br>docs/sruth/tuatha/Rust Client.md<br>docs/sruth/tuatha/sruth/tuatha/Rust Client.md |
+| `rust full-stack gaming environment.md` | docs/bonneagar/Rust Full-Stack Gaming Environment.md<br>docs/sruth/tuatha/Rust Full-Stack Gaming Environment.md<br>docs/sruth/tuatha/sruth/tuatha/Rust Full-Stack Gaming Environment.md |
+| `sign in with ethereum (siwe) _ better auth.md` | docs/agents/Sign In With Ethereum (SIWE) _ Better Auth.md<br>docs/web/Sign In With Ethereum (SIWE) _ Better Auth.md<br>docs/sruth/tuatha/Sign In With Ethereum (SIWE) _ Better Auth.md<br>docs/sruth/tuatha/sruth/tuatha/Sign In With Ethereum (SIWE) _ Better Auth.md |
+| `spacetimedb blockchain integration strategy.md` | docs/sruth/tuatha/Spacetimedb Blockchain Integration Strategy.md<br>docs/sruth/tuatha/sruth/tuatha/Spacetimedb Blockchain Integration Strategy.md |
+| `spacetimedb ogham stone game integration.md` | docs/sruth/tuatha/SpacetimeDB Ogham Stone Game Integration.md<br>docs/sruth/tuatha/sruth/tuatha/SpacetimeDB Ogham Stone Game Integration.md |
+| `spacetimedb.md` | docs/sruth/tuatha/SpacetimeDB.md<br>docs/sruth/tuatha/sruth/tuatha/SpacetimeDB.md |
+| `spacetimedb_guide.md` | docs/sruth/tuatha/SPACETIMEDB_GUIDE.md<br>docs/sruth/tuatha/sruth/tuatha/SPACETIMEDB_GUIDE.md |
+| `swift transformers reaches 1.0 – and looks to the future.md` | docs/meaisínfhoghlaim/Swift Transformers Reaches 1.0 – and Looks to the Future.md<br>docs/sruth/tuatha/Swift Transformers Reaches 1.0 – and Looks to the Future.md<br>docs/sruth/tuatha/sruth/tuatha/Swift Transformers Reaches 1.0 – and Looks to the Future.md |
+| `syft-flwr_notebooks_fedrag_readme.md at main · openmined_syft-flwr.md` | docs/meaisínfhoghlaim/syft-flwr_notebooks_fedrag_README.md at main · OpenMined_syft-flwr.md<br>docs/sruth/tuatha/syft-flwr_notebooks_fedrag_README.md at main · OpenMined_syft-flwr.md<br>docs/sruth/tuatha/sruth/tuatha/syft-flwr_notebooks_fedrag_README.md at main · OpenMined_syft-flwr.md |
+| `tanstack db integration and comparison.md` | docs/web/TanStack DB Integration and Comparison.md<br>docs/sruth/tuatha/TanStack DB Integration and Comparison.md<br>docs/sruth/tuatha/sruth/tuatha/TanStack DB Integration and Comparison.md |
 | `tanstack-start.md` | docs/context/package-ecosystem/frontend/tanstack-start.md<br>docs/context/07-skills/tanstack-start.md |
 | `tech_stack.md` | docs/bonneagar/TECH_STACK.md<br>docs/context/04-agents/TECH_STACK.md |
-| `technical integration plan_ dagster + dlt + cocoindex + feast + mlflow (with duckdb & dragonfly).md` | docs/tuatha/Technical Integration Plan_ Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly).md<br>docs/tuatha/tuatha/Technical Integration Plan_ Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly).md |
-| `the expulsion of the déisi - wikipedia.md` | docs/tuatha/The Expulsion of the Déisi - Wikipedia.md<br>docs/tuatha/tuatha/The Expulsion of the Déisi - Wikipedia.md |
-| `tokenomics-readme.md` | docs/tuatha/tokenomics-README.md<br>docs/tuatha/tuatha/tokenomics-README.md |
+| `technical integration plan_ dagster + dlt + cocoindex + feast + mlflow (with duckdb & dragonfly).md` | docs/sruth/tuatha/Technical Integration Plan_ Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly).md<br>docs/sruth/tuatha/sruth/tuatha/Technical Integration Plan_ Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly).md |
+| `the expulsion of the déisi - wikipedia.md` | docs/sruth/tuatha/The Expulsion of the Déisi - Wikipedia.md<br>docs/sruth/tuatha/sruth/tuatha/The Expulsion of the Déisi - Wikipedia.md |
+| `tokenomics-readme.md` | docs/sruth/tuatha/tokenomics-README.md<br>docs/sruth/tuatha/sruth/tuatha/tokenomics-README.md |
 | `transformers.md` | docs/data_engineering/transformers.md<br>docs/meaisínfhoghlaim/transformers.md |
-| `unsloth model catalog _ unsloth documentation.md` | docs/meaisínfhoghlaim/Unsloth Model Catalog _ Unsloth Documentation.md<br>docs/tuatha/Unsloth Model Catalog _ Unsloth Documentation.md<br>docs/tuatha/tuatha/Unsloth Model Catalog _ Unsloth Documentation.md |
-| `unsloth-catalog.md` | docs/tuatha/unsloth-catalog.md<br>docs/tuatha/tuatha/unsloth-catalog.md |
-| `useagent hook.md` | docs/teanga/useAgent Hook.md<br>docs/tuatha/useAgent Hook.md<br>docs/tuatha/tuatha/useAgent Hook.md |
-| `web3 classroom response system design.md` | docs/tuatha/Web3 Classroom Response System Design.md<br>docs/tuatha/tuatha/Web3 Classroom Response System Design.md |
-| `web3 gamified education & asset generation.md` | docs/tuatha/Web3 Gamified Education & Asset Generation.md<br>docs/tuatha/tuatha/Web3 Gamified Education & Asset Generation.md |
-| `wgpu_guide.md` | docs/tuatha/WGPU_GUIDE.md<br>docs/tuatha/tuatha/WGPU_GUIDE.md |
-| `world-map.md` | docs/tuatha/world-map.md<br>docs/tuatha/tuatha/world-map.md |
-| `x402-payments.md` | docs/tuatha/x402-payments.md<br>docs/tuatha/tuatha/x402-payments.md |
+| `unsloth model catalog _ unsloth documentation.md` | docs/meaisínfhoghlaim/Unsloth Model Catalog _ Unsloth Documentation.md<br>docs/sruth/tuatha/Unsloth Model Catalog _ Unsloth Documentation.md<br>docs/sruth/tuatha/sruth/tuatha/Unsloth Model Catalog _ Unsloth Documentation.md |
+| `unsloth-catalog.md` | docs/sruth/tuatha/unsloth-catalog.md<br>docs/sruth/tuatha/sruth/tuatha/unsloth-catalog.md |
+| `useagent hook.md` | docs/teanga/useAgent Hook.md<br>docs/sruth/tuatha/useAgent Hook.md<br>docs/sruth/tuatha/sruth/tuatha/useAgent Hook.md |
+| `web3 classroom response system design.md` | docs/sruth/tuatha/Web3 Classroom Response System Design.md<br>docs/sruth/tuatha/sruth/tuatha/Web3 Classroom Response System Design.md |
+| `web3 gamified education & asset generation.md` | docs/sruth/tuatha/Web3 Gamified Education & Asset Generation.md<br>docs/sruth/tuatha/sruth/tuatha/Web3 Gamified Education & Asset Generation.md |
+| `wgpu_guide.md` | docs/sruth/tuatha/WGPU_GUIDE.md<br>docs/sruth/tuatha/sruth/tuatha/WGPU_GUIDE.md |
+| `world-map.md` | docs/sruth/tuatha/world-map.md<br>docs/sruth/tuatha/sruth/tuatha/world-map.md |
+| `x402-payments.md` | docs/sruth/tuatha/x402-payments.md<br>docs/sruth/tuatha/sruth/tuatha/x402-payments.md |
 
 ### 4.2 Topical Overlaps (same topics across subtrees)
 
@@ -294,12 +294,12 @@ The following table lists the number of files in each topic cluster per subtree:
 
 ### 4.3 Key Duplicate/Overlap Findings
 
-1. **docs/tuatha/tuatha/ is a near-exact mirror of docs/tuatha/** (116 files) — immediate pruning target.
+1. **docs/sruth/tuatha/sruth/tuatha/ is a near-exact mirror of docs/sruth/tuatha/** (116 files) — immediate pruning target.
 2. **`Prompt Optimization (Beta).md`** appears 3× identically in `docs/meaisínfhoghlaim/` — exact byte-for-byte copies.
 3. **Celtic/Education** topics span 6 of 8 subtrees — the most cross-cutting concern.
 4. **Agents/MCP** topics span 5 subtrees (agents, bonneagar, context, meaisínfhoghlaim, teanga).
 5. **KCG_SUMMARY.md** exists in both `docs/teanga/gaois-KCG_SUMMARY.md` and `docs/teanga/kscanne-KCG_SUMMARY.md`.
-6. **Same research articles** (`Resource Maximization`, `Productionalize AI`, `British Isles Education Map`, etc.) duplicated between `docs/teanga/` and `docs/tuatha/`.
+6. **Same research articles** (`Resource Maximization`, `Productionalize AI`, `British Isles Education Map`, etc.) duplicated between `docs/teanga/` and `docs/sruth/tuatha/`.
 7. **Same research articles** duplicated between `docs/meaisínfhoghlaim/` and `docs/teanga/` (e.g., `Notebooklm`, `Neuro-Symbolic Translation`, `Google ADK with LiteLLM`).
 
 ## 5. Per-File Inventory
@@ -1149,238 +1149,238 @@ Each file listed with: size, extension, frontmatter flag, Irish score, and 1-lin
 
 | Size | Ext | FM? | IR? | Summary | File |
 |---|---|---|---:|---|
-| 347.7 KiB | .pdf |  |  | 2510.17652v1 | docs/tuatha/2510.17652v1.pdf |
-| 10.0 KiB | .md |  |  | Adding New Agents | docs/tuatha/ADDING_AGENTS.md |
-| 20.4 KiB | .md |  |  | Adding Data Sources | docs/tuatha/ADDING_DATA_SOURCES.md |
-| 18.0 KiB | .md |  |  | Adding Agent Tools | docs/tuatha/ADDING_TOOLS.md |
-| 12.0 KiB | .md |  |  | Adding New Game Zones | docs/tuatha/ADDING_ZONES.md |
-| 3.7 KiB | .md | Y |  | AG UI and A2UI  Understanding the Differences   CopilotKit | docs/tuatha/AG-UI and A2UI_ Understanding the Differences _ CopilotKit.md |
-| 10.5 KiB | .md |  |  | Tuath Agent Architecture | docs/tuatha/AGENTS.md |
-| 28.6 KiB | .md |  |  | **Advanced Computational Workflows for Bilingual Educational Asset Generation: Integrating BAML Structured Extraction wi | docs/tuatha/AI Chemistry Education Image Generation.md |
-| 15.5 KiB | .md |  |  | Cianfhoghlaim Project Analysis | docs/tuatha/ANALYSIS.md |
-| 9.5 KiB | .md |  |  | Tuath API Reference | docs/tuatha/API.md |
-| 32.6 KiB | .md |  |  | **Architecting the Agentic Academy: A Technical and Cultural Blueprint for a Decentralized Celtic Educational Hub** | docs/tuatha/Agentic Education Platform Development.md |
-| 31.9 KiB | .md |  |  | **Autonomous Web Intelligence Architecture: A Comprehensive Implementation Framework for Agentic Scraping and Reconstruc | docs/tuatha/Agentic Web Scraping Pipeline.md |
-| 37.4 KiB | .md |  |  | **Strategic Asset Management and Visual Architecture for Full-Stack Educational Platforms** | docs/tuatha/Asset Management for Full-Stack App.md |
-| 33.2 KiB | .md |  |  | **The British Isles Demographic Atlas: A Comprehensive Technical and Statistical Report** | docs/tuatha/British Isles Education Map.md |
-| 31.4 KiB | .md |  |  | **Architectural Framework for Data-Driven 2.5D Geospatial Synthesis: Integrating Authoritative British Isles Data into R | docs/tuatha/British Isles Game Dev Data Pipeline.md |
-| 38.8 KiB | .md |  |  | **Project Anam: A Foundation for a Pan-Celtic Linguistic Metaverse** | docs/tuatha/British Isles Mythology MMO Research.md |
-| 34.7 KiB | .md |  |  | **Architecting the Autonomous Epistemologist: A Technical Blueprint for Agentic Knowledge Acquisition and Dynamic Domain | docs/tuatha/Building an Educational Agent's Knowledge Base.md |
-| 18.7 KiB | .md |  |  | Celtic Languages Integration | docs/tuatha/CELTIC_LANGUAGES.md |
-| 19.3 KiB | .md |  |  | Cross-Platform Development Guide | docs/tuatha/CROSS_PLATFORM_GUIDE.md |
-| 26.0 KiB | .md |  |  | Crypteolas Agent Integration Guide | docs/tuatha/CRYPTEOLAS_INTEGRATION_GUIDE.md |
-| 30.3 KiB | .md |  |  | Comprehensive Crypto & Payment Integration Summary for Crypteolas | docs/tuatha/CRYPTO_INTEGRATION_SUMMARY.md |
-| 40.4 KiB | .md |  |  | **Compendium of Celtic Lexicography for Digital World-Building: A Comparative Analysis of Goidelic and Brythonic Heritag | docs/tuatha/Celtic Etymology for Game Names.md |
-| 41.0 KiB | .md |  |  | **Unified Computational Infrastructure for Celtic Languages: Data Integration, Educational Analytics, and Strategic Mode | docs/tuatha/Celtic Language Data Aggregation & Analysis.md |
-| 33.3 KiB | .md |  |  | **Philological and Ludological Feasibility Study: Celtic Nomenclature in Web3 Massively Multiplayer Online Environments* | docs/tuatha/Celtic MMO Web3 Concept Integration.md |
-| 37.8 KiB | .md |  |  | **Digital Transformation of the Irish Chemistry Specification: A Comprehensive Technical Architecture for Next-Generatio | docs/tuatha/Chemistry Education Asset Generation.md |
-| 25.5 KiB | .md | Y |  | Comparing the Top 6 Agent Native Rails for the Agentic Internet  MCP, A2A, AP2, ACP, x402, and Kite | docs/tuatha/Comparing the Top 6 Agent-Native Rails for the Agentic Internet_ MCP, A2A, AP2, ACP, x402, and Kite.md |
-| 39.2 KiB | .md |  |  | **Project Crypteolas: A Decentralized Architecture for Financial Knowledge Graph Federated Learning and Agentic Markets* | docs/tuatha/Crypteolas_ Federated Learning & Crypto Payments.md |
-| 35.2 KiB | .md |  |  | Crypto Analysis AI Agent System Architecture | docs/tuatha/Crypto Analysis AI Agent System Architecture.md |
-| 17.0 KiB | .md |  |  | Deployment Guide | docs/tuatha/DEPLOYMENT.md |
-| 27.2 KiB | .md | Y |  | ERC 4361  Sign In with Ethereum | docs/tuatha/ERC-4361_ Sign-In with Ethereum.md |
-| 37.9 KiB | .md |  |  | **High-Fidelity Pedagogical Simulation: A Comprehensive Framework for Automating Scientifically Accurate Educational Vis | docs/tuatha/Educational Game Dev Pipeline.md |
-| 17.9 KiB | .md |  |  | TanStack Start Frontend | docs/tuatha/FRONTEND.md |
-| 33.1 KiB | .md |  |  | **Decentralized Autonomous Knowledge Markets: Integrating Crypteolas Architectures, Agentic x402 Payments, and On-Device | docs/tuatha/Federated AI Marketplace on iPhone.md |
-| 32.2 KiB | .md |  |  | **Comprehensive Architectural Analysis for Bilingual Irish-English Handwritten Text Recognition on iOS: From Weakly-Supe | docs/tuatha/Fine-tuning VLMs for iOS HTR.md |
-| 34.3 KiB | .md |  |  | **Automated Frontend Intelligence: A Multi-Modal Framework for Design Pattern Extraction** | docs/tuatha/Frontend Idea Catalog Development.md |
-| 18.0 KiB | .md |  |  | Babylon.js Game Client | docs/tuatha/GAME_CLIENT.md |
-| 15.8 KiB | .md |  |  | Godot + Rust Guide | docs/tuatha/GODOT_RUST_GUIDE.md |
-| 9.8 KiB | .md |  |  | Graphics, Game Development & Rendering Documentation Index | docs/tuatha/GRAPHICS_INDEX.md |
-| 33.1 KiB | .md |  |  | **Converging High-Fidelity Pre-Rendering and Database-Driven State: A Comprehensive Technical Blueprint for Next-Generat | docs/tuatha/Game Dev Pipeline Research & Plan.md |
-| 38.5 KiB | .md |  |  | **Architectural Convergence in the Digital Heritage Economy: The 'Anam' MMO Ecosystem** | docs/tuatha/Game Development Research & AI Integration.md |
-| 30.8 KiB | .md |  |  | **The Anam Initiative: Architectural Blueprints for High-Fidelity Meteorological Particle Simulation in Real-Time Enviro | docs/tuatha/Game Particle Effects Research(2).md |
-| 30.8 KiB | .md |  |  | **The Anam Initiative: Architectural Blueprints for High-Fidelity Meteorological Particle Simulation in Real-Time Enviro | docs/tuatha/Game Particle Effects Research.md |
-| 44.3 KiB | .md |  |  | **Architectural Blueprint for Autonomous Reverse Engineering and Asset Reconstruction Systems: A Deep Research Report** | docs/tuatha/Game Reverse Engineering Workflow Design.md |
-| 26.8 KiB | .md |  |  | **Architecting Agentic Creative Workflows: Deep Research into Generative AI Integration for React Ecosystems** | docs/tuatha/Generative AI Art Workflow Integration.md |
-| 9.0 KiB | .md | Y |  | GeoAI | docs/tuatha/GeoAI.md |
-| 29.8 KiB | .md |  |  | **Architectural Synthesis of High-Performance Geospatial Workflows: Integrating Cloud-Native OLAP and WebGPU Rendering f | docs/tuatha/Geospatial Workflow & Particle Effects.md |
-| 13.8 KiB | .md |  | G (5) | Túatha Documentation Index | docs/tuatha/INDEX.md |
-| 33.1 KiB | .md |  |  | **Architectural Synthesis of Sovereign Game State: Integrating SpacetimeDB, DuckDB WASM, TanStack Start, and CopilotKit* | docs/tuatha/Integrating Rust, DuckDB, TanStack, CopilotKit.md |
-| 30.7 KiB | .md |  |  | **Architectural Convergence: The Agentic Pipeline for Structured Generative AI** | docs/tuatha/Interactive AI Pipeline Development.md |
-| 35.5 KiB | .md |  |  | **Architectural Blueprint for "Celtic OS": A Spatial-Interactive Learning Environment for the British Isles** | docs/tuatha/Interactive Map & AI Agents.md |
-| 10.3 KiB | .md | Y |  | Introducing AnyLanguageModel  One API for Local and Remote LLMs on Apple Platforms | docs/tuatha/Introducing AnyLanguageModel_ One API for Local and Remote LLMs on Apple Platforms.md |
-| 32.9 KiB | .md |  |  | **Operationalizing Irish Handwriting Recognition on Apple Silicon: An Exhaustive Architectural Analysis of MLX, Llama.cp | docs/tuatha/Irish Handwriting App Development.md |
-| 33.2 KiB | .md |  |  | **Strategic Architecture for Indigenous Language Intelligence on the Edge: A Comprehensive Framework for Deploying Irish | docs/tuatha/Irish LLM for iPhone Development.md |
-| 14.6 KiB | .md | Y |  | Kotlin Multiplatform vs. React Native  A cross platform comparison   Kotlin Multiplatform | docs/tuatha/Kotlin Multiplatform vs. React Native_ A cross-platform comparison _ Kotlin Multiplatform.md |
-| 31.1 KiB | .md |  |  | **Architecting Unified Hybrid-Inference Gateways: A Comprehensive Analysis of Local-Cloud Interoperability for Multimoda | docs/tuatha/LLM Serving with MLflow & Langfuse.md |
-| 40.9 KiB | .md |  |  | **Cianfhoghlaim: A Strategic Framework for Agentic Educational Ecosystems in the Celtic Nations** | docs/tuatha/Learn-to-Earn Blockchain and AI.md |
-| 1.5 KiB | .md | Y |  | MCP UI | docs/tuatha/MCP-UI.md |
-| 32.1 KiB | .md |  |  | **Technical Blueprint for a Browser-Based WebGPU MMO: The Geospatial Spirit World** | docs/tuatha/MMO Geospatial Data & Visual RAG.md |
-| 35.5 KiB | .md |  |  | **Architectural Blueprint for a Native Multimodal Knowledge Graph Pipeline: Integrating Video, Audio, and Text Intellige | docs/tuatha/Multimodal Video Knowledge Graph Pipeline.md |
-| 34.8 KiB | .md |  |  | **Architecting Tuath: A Comprehensive Technical and Cultural Analysis of Decentralized MMO Infrastructure, Agentic Econo | docs/tuatha/Ogham Crypto MMO Research.md |
-| 21.5 KiB | .md |  |  | Payment Integration Guide | docs/tuatha/PAYMENT_GUIDE.md |
-| 20.2 KiB | .md |  |  | Performance Tuning Guide | docs/tuatha/PERFORMANCE_TUNING.md |
-| 12.8 KiB | .md |  |  | Tuath Data Pipelines | docs/tuatha/PIPELINES.md |
-| 12.1 KiB | .md |  |  | Game Development Reference Library | docs/tuatha/README.md |
-| 22.7 KiB | .md | Y |  | Release v28.0.0   Mesh Shaders, Immediates, and More! · gfx rs wgpu | docs/tuatha/Release v28.0.0 - Mesh Shaders, Immediates, and More! · gfx-rs_wgpu.md |
-| 3.5 KiB | .md | Y |  | Rust Client | docs/tuatha/Rust Client.md |
-| 39.2 KiB | .md |  |  | **Architectural Analysis and Implementation Strategy for a Rust-Based Full-Stack Gaming Ecosystem** | docs/tuatha/Rust Full-Stack Gaming Environment.md |
-| 16.5 KiB | .md |  |  | SpacetimeDB Guide | docs/tuatha/SPACETIMEDB_GUIDE.md |
-| 8.5 KiB | .md | Y |  | Sign In With Ethereum (SIWE)   Better Auth | docs/tuatha/Sign In With Ethereum (SIWE) _ Better Auth.md |
-| 34.8 KiB | .md |  |  | **Architectural Specification: Decentralized Geospatial Procedural Generation Systems for the 'Anam' Project** | docs/tuatha/SpacetimeDB Ogham Stone Game Integration.md |
-| 1.0 KiB | .md | Y |  | SpacetimeDB | docs/tuatha/SpacetimeDB.md |
-| 29.6 KiB | .md |  |  | **Architectural Convergence: Implementing a Massively Multiplayer Celtic Odyssey via SpacetimeDB, Solana, and Ethereum ( | docs/tuatha/Spacetimedb Blockchain Integration Strategy.md |
-| 10.4 KiB | .md | Y |  | Swift Transformers Reaches 1.0 – and Looks to the Future | docs/tuatha/Swift Transformers Reaches 1.0 – and Looks to the Future.md |
-| 35.1 KiB | .md |  |  | **The Convergent Stack: Architecting Reactive Data Systems with TanStack DB, DuckDB, RisingWave, and Marimo** | docs/tuatha/TanStack DB Integration and Comparison.md |
-| 50.3 KiB | .md |  |  | Technical Integration Plan  Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly) | docs/tuatha/Technical Integration Plan_ Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly).md |
-| 21.5 KiB | .md | Y | G (4) | The Expulsion of the Déisi   Wikipedia | docs/tuatha/The Expulsion of the Déisi - Wikipedia.md |
-| 7.1 KiB | .md | Y |  | Unsloth Model Catalog   Unsloth Documentation | docs/tuatha/Unsloth Model Catalog _ Unsloth Documentation.md |
-| 20.1 KiB | .md |  |  | WGPU Guide | docs/tuatha/WGPU_GUIDE.md |
-| 29.3 KiB | .md |  |  | **Architectural Blueprint for "Cianfhoghlaim": A Decentralized, Physical-Digital Educational Ecosystem** | docs/tuatha/Web3 Classroom Response System Design.md |
-| 40.9 KiB | .md |  |  | **Architectural Blueprint for the "Celtic Knowledge Grid": A Decentralized, Agentic, and Gamified Educational Ecosystem* | docs/tuatha/Web3 Gamified Education & Asset Generation.md |
-| 12.1 KiB | .md |  |  | API Reference Index | docs/tuatha/api-README.md |
-| 6.9 KiB | .md | Y |  | apple ml fastvlm  This repository contains the official implementation of  FastVLM  Efficient Vision Encoding for Vision | docs/tuatha/apple_ml-fastvlm_ This repository contains the official implementation of _FastVLM_ Efficient Vision Encoding for Vision Language Models_ - CVPR 2025.md |
-| 32.2 KiB | .md |  |  | **Comprehensive Architectural Analysis for Bilingual Irish-English Handwritten Text Recognition on iOS: From Weakly-Supe | docs/tuatha/celtic-ocr.md |
-| 16.3 KiB | .md |  |  | Building an "Anam" Celtic educational MMO: technical foundations | docs/tuatha/celtic_mmo.md |
-| 28.2 KiB | .md |  |  | Agentic UI learning pipeline: a multi-agent architecture for automated web scraping and design system extraction | docs/tuatha/compass_artifact_wf-918fd144-3e32-416f-b59b-15a043b18fc1_text_markdown.md |
-| 38.4 KiB | .md |  |  | Define the source using dlt's declarative REST API configuration | docs/tuatha/dlt_crawl4ai_lancedb.md |
-| 18.9 KiB | .md |  |  | Educational Game Development | docs/tuatha/educational-game-development.md |
-| 38.5 KiB | .md |  |  | **Architectural Convergence in the Digital Heritage Economy: The 'Anam' MMO Ecosystem** | docs/tuatha/engine-selection.md |
-| 33.1 KiB | .md |  |  | **Decentralized Autonomous Knowledge Markets: Integrating Crypteolas Architectures, Agentic x402 Payments, and On-Device | docs/tuatha/federated-marketplace.md |
-| 1.6 KiB | .md |  |  | Game Design | docs/tuatha/game-design-README.md |
-| 1.3 KiB | .md |  |  | Contributing | docs/tuatha/game_CONTRIBUTING.md |
-| 5.3 KiB | .md |  |  | Development | docs/tuatha/game_DEVELOPMENT.md |
-| 27.2 KiB | .md | Y |  | game siwe auth | docs/tuatha/game_siwe-auth.md |
-| 6.0 KiB | .md |  |  | Rust bindings for Godot 4 | docs/tuatha/gdext-ReadMe.md |
-| 32.0 KiB | .md |  |  | **Strategic Architecture for Converged Agentic Ecosystems: Integrating iOS Vision Intelligence with Cross-Platform Devel | docs/tuatha/iOS App Development Ecosystem Strategy.md |
-| 2.2 KiB | .md |  |  | Infrastructure | docs/tuatha/infrastructure-README.md |
-| 40.9 KiB | .md |  |  | **Cianfhoghlaim: A Strategic Framework for Agentic Educational Ecosystems in the Celtic Nations** | docs/tuatha/learn-to-earn-model.md |
-| 1.4 KiB | .md |  |  | ML Models | docs/tuatha/ml-models-README.md |
-| 38.8 KiB | .md |  |  | **Project Anam: A Foundation for a Pan-Celtic Linguistic Metaverse** | docs/tuatha/mythology-framework.md |
-| 1.7 KiB | .md |  |  | AnyLanguageModel — KCG Summary | docs/tuatha/repo-AnyLanguageModel.md |
-| 1.7 KiB | .md |  |  | SpacetimeDB — KCG Summary | docs/tuatha/repo-SpacetimeDB.md |
-| 2.2 KiB | .md |  |  | agui_kotlin — KCG Summary | docs/tuatha/repo-agui_kotlin.md |
-| 1.8 KiB | .md |  |  | hophacks-spacetimedb-workshop — KCG Summary | docs/tuatha/repo-hophacks-spacetimedb-workshop.md |
-| 1.4 KiB | .md |  |  | ireland — KCG Summary | docs/tuatha/repo-ireland.md |
-| 1.5 KiB | .md |  |  | react-native-godot — KCG Summary | docs/tuatha/repo-react-native-godot.md |
-| 1.3 KiB | .md |  |  | react-native-reusables — KCG Summary | docs/tuatha/repo-react-native-reusables.md |
-| 2.5 KiB | .md |  |  | SpacetimeDB Cookbook — KCG Summary | docs/tuatha/repo-spacetimedb-cookbook.md |
-| 2.1 KiB | .md |  |  | spacetimedb-typescript-sdk — KCG Summary | docs/tuatha/repo-spacetimedb-typescript-sdk.md |
-| 3.0 KiB | .md |  |  | wgpu — KCG Summary | docs/tuatha/repo-wgpu.md |
-| 1.5 KiB | .md |  |  | x402 — KCG Summary | docs/tuatha/repo-x402.md |
-| 3.4 KiB | .md | Y |  | syft flwr notebooks fedrag README.md at main · OpenMined syft flwr | docs/tuatha/syft-flwr_notebooks_fedrag_README.md at main · OpenMined_syft-flwr.md |
-| 1.2 KiB | .md |  |  | Tokenomics | docs/tuatha/tokenomics-README.md |
-| 7.1 KiB | .md | Y |  | unsloth catalog | docs/tuatha/unsloth-catalog.md |
-| 9.8 KiB | .md | Y |  | useAgent Hook | docs/tuatha/useAgent Hook.md |
-| 35.5 KiB | .md |  |  | **Architectural Blueprint for "Celtic OS": A Spatial-Interactive Learning Environment for the British Isles** | docs/tuatha/world-map.md |
-| 40.9 KiB | .md |  |  | **Architectural Blueprint for the "Celtic Knowledge Grid": A Decentralized, Agentic, and Gamified Educational Ecosystem* | docs/tuatha/x402-payments.md |
-| 347.7 KiB | .pdf |  |  | 2510.17652v1 | docs/tuatha/tuatha/2510.17652v1.pdf |
-| 10.0 KiB | .md |  |  | Adding New Agents | docs/tuatha/tuatha/ADDING_AGENTS.md |
-| 20.4 KiB | .md |  |  | Adding Data Sources | docs/tuatha/tuatha/ADDING_DATA_SOURCES.md |
-| 18.0 KiB | .md |  |  | Adding Agent Tools | docs/tuatha/tuatha/ADDING_TOOLS.md |
-| 12.0 KiB | .md |  |  | Adding New Game Zones | docs/tuatha/tuatha/ADDING_ZONES.md |
-| 3.7 KiB | .md | Y |  | AG UI and A2UI  Understanding the Differences   CopilotKit | docs/tuatha/tuatha/AG-UI and A2UI_ Understanding the Differences _ CopilotKit.md |
-| 10.5 KiB | .md |  |  | Tuath Agent Architecture | docs/tuatha/tuatha/AGENTS.md |
-| 28.6 KiB | .md |  |  | **Advanced Computational Workflows for Bilingual Educational Asset Generation: Integrating BAML Structured Extraction wi | docs/tuatha/tuatha/AI Chemistry Education Image Generation.md |
-| 15.5 KiB | .md |  |  | Cianfhoghlaim Project Analysis | docs/tuatha/tuatha/ANALYSIS.md |
-| 9.5 KiB | .md |  |  | Tuath API Reference | docs/tuatha/tuatha/API.md |
-| 32.6 KiB | .md |  |  | **Architecting the Agentic Academy: A Technical and Cultural Blueprint for a Decentralized Celtic Educational Hub** | docs/tuatha/tuatha/Agentic Education Platform Development.md |
-| 31.9 KiB | .md |  |  | **Autonomous Web Intelligence Architecture: A Comprehensive Implementation Framework for Agentic Scraping and Reconstruc | docs/tuatha/tuatha/Agentic Web Scraping Pipeline.md |
-| 37.4 KiB | .md |  |  | **Strategic Asset Management and Visual Architecture for Full-Stack Educational Platforms** | docs/tuatha/tuatha/Asset Management for Full-Stack App.md |
-| 33.2 KiB | .md |  |  | **The British Isles Demographic Atlas: A Comprehensive Technical and Statistical Report** | docs/tuatha/tuatha/British Isles Education Map.md |
-| 31.4 KiB | .md |  |  | **Architectural Framework for Data-Driven 2.5D Geospatial Synthesis: Integrating Authoritative British Isles Data into R | docs/tuatha/tuatha/British Isles Game Dev Data Pipeline.md |
-| 38.8 KiB | .md |  |  | **Project Anam: A Foundation for a Pan-Celtic Linguistic Metaverse** | docs/tuatha/tuatha/British Isles Mythology MMO Research.md |
-| 34.7 KiB | .md |  |  | **Architecting the Autonomous Epistemologist: A Technical Blueprint for Agentic Knowledge Acquisition and Dynamic Domain | docs/tuatha/tuatha/Building an Educational Agent's Knowledge Base.md |
-| 18.7 KiB | .md |  |  | Celtic Languages Integration | docs/tuatha/tuatha/CELTIC_LANGUAGES.md |
-| 19.3 KiB | .md |  |  | Cross-Platform Development Guide | docs/tuatha/tuatha/CROSS_PLATFORM_GUIDE.md |
-| 26.0 KiB | .md |  |  | Crypteolas Agent Integration Guide | docs/tuatha/tuatha/CRYPTEOLAS_INTEGRATION_GUIDE.md |
-| 30.3 KiB | .md |  |  | Comprehensive Crypto & Payment Integration Summary for Crypteolas | docs/tuatha/tuatha/CRYPTO_INTEGRATION_SUMMARY.md |
-| 40.4 KiB | .md |  |  | **Compendium of Celtic Lexicography for Digital World-Building: A Comparative Analysis of Goidelic and Brythonic Heritag | docs/tuatha/tuatha/Celtic Etymology for Game Names.md |
-| 41.0 KiB | .md |  |  | **Unified Computational Infrastructure for Celtic Languages: Data Integration, Educational Analytics, and Strategic Mode | docs/tuatha/tuatha/Celtic Language Data Aggregation & Analysis.md |
-| 33.3 KiB | .md |  |  | **Philological and Ludological Feasibility Study: Celtic Nomenclature in Web3 Massively Multiplayer Online Environments* | docs/tuatha/tuatha/Celtic MMO Web3 Concept Integration.md |
-| 37.8 KiB | .md |  |  | **Digital Transformation of the Irish Chemistry Specification: A Comprehensive Technical Architecture for Next-Generatio | docs/tuatha/tuatha/Chemistry Education Asset Generation.md |
-| 25.5 KiB | .md | Y |  | Comparing the Top 6 Agent Native Rails for the Agentic Internet  MCP, A2A, AP2, ACP, x402, and Kite | docs/tuatha/tuatha/Comparing the Top 6 Agent-Native Rails for the Agentic Internet_ MCP, A2A, AP2, ACP, x402, and Kite.md |
-| 39.2 KiB | .md |  |  | **Project Crypteolas: A Decentralized Architecture for Financial Knowledge Graph Federated Learning and Agentic Markets* | docs/tuatha/tuatha/Crypteolas_ Federated Learning & Crypto Payments.md |
-| 35.2 KiB | .md |  |  | Crypto Analysis AI Agent System Architecture | docs/tuatha/tuatha/Crypto Analysis AI Agent System Architecture.md |
-| 17.0 KiB | .md |  |  | Deployment Guide | docs/tuatha/tuatha/DEPLOYMENT.md |
-| 27.2 KiB | .md | Y |  | ERC 4361  Sign In with Ethereum | docs/tuatha/tuatha/ERC-4361_ Sign-In with Ethereum.md |
-| 37.9 KiB | .md |  |  | **High-Fidelity Pedagogical Simulation: A Comprehensive Framework for Automating Scientifically Accurate Educational Vis | docs/tuatha/tuatha/Educational Game Dev Pipeline.md |
-| 17.9 KiB | .md |  |  | TanStack Start Frontend | docs/tuatha/tuatha/FRONTEND.md |
-| 33.1 KiB | .md |  |  | **Decentralized Autonomous Knowledge Markets: Integrating Crypteolas Architectures, Agentic x402 Payments, and On-Device | docs/tuatha/tuatha/Federated AI Marketplace on iPhone.md |
-| 32.2 KiB | .md |  |  | **Comprehensive Architectural Analysis for Bilingual Irish-English Handwritten Text Recognition on iOS: From Weakly-Supe | docs/tuatha/tuatha/Fine-tuning VLMs for iOS HTR.md |
-| 34.3 KiB | .md |  |  | **Automated Frontend Intelligence: A Multi-Modal Framework for Design Pattern Extraction** | docs/tuatha/tuatha/Frontend Idea Catalog Development.md |
-| 18.0 KiB | .md |  |  | Babylon.js Game Client | docs/tuatha/tuatha/GAME_CLIENT.md |
-| 15.8 KiB | .md |  |  | Godot + Rust Guide | docs/tuatha/tuatha/GODOT_RUST_GUIDE.md |
-| 9.8 KiB | .md |  |  | Graphics, Game Development & Rendering Documentation Index | docs/tuatha/tuatha/GRAPHICS_INDEX.md |
-| 33.1 KiB | .md |  |  | **Converging High-Fidelity Pre-Rendering and Database-Driven State: A Comprehensive Technical Blueprint for Next-Generat | docs/tuatha/tuatha/Game Dev Pipeline Research & Plan.md |
-| 38.5 KiB | .md |  |  | **Architectural Convergence in the Digital Heritage Economy: The 'Anam' MMO Ecosystem** | docs/tuatha/tuatha/Game Development Research & AI Integration.md |
-| 30.8 KiB | .md |  |  | **The Anam Initiative: Architectural Blueprints for High-Fidelity Meteorological Particle Simulation in Real-Time Enviro | docs/tuatha/tuatha/Game Particle Effects Research(2).md |
-| 30.8 KiB | .md |  |  | **The Anam Initiative: Architectural Blueprints for High-Fidelity Meteorological Particle Simulation in Real-Time Enviro | docs/tuatha/tuatha/Game Particle Effects Research.md |
-| 44.3 KiB | .md |  |  | **Architectural Blueprint for Autonomous Reverse Engineering and Asset Reconstruction Systems: A Deep Research Report** | docs/tuatha/tuatha/Game Reverse Engineering Workflow Design.md |
-| 26.8 KiB | .md |  |  | **Architecting Agentic Creative Workflows: Deep Research into Generative AI Integration for React Ecosystems** | docs/tuatha/tuatha/Generative AI Art Workflow Integration.md |
-| 9.0 KiB | .md | Y |  | GeoAI | docs/tuatha/tuatha/GeoAI.md |
-| 29.8 KiB | .md |  |  | **Architectural Synthesis of High-Performance Geospatial Workflows: Integrating Cloud-Native OLAP and WebGPU Rendering f | docs/tuatha/tuatha/Geospatial Workflow & Particle Effects.md |
-| 13.8 KiB | .md |  | G (5) | Túatha Documentation Index | docs/tuatha/tuatha/INDEX.md |
-| 33.1 KiB | .md |  |  | **Architectural Synthesis of Sovereign Game State: Integrating SpacetimeDB, DuckDB WASM, TanStack Start, and CopilotKit* | docs/tuatha/tuatha/Integrating Rust, DuckDB, TanStack, CopilotKit.md |
-| 30.7 KiB | .md |  |  | **Architectural Convergence: The Agentic Pipeline for Structured Generative AI** | docs/tuatha/tuatha/Interactive AI Pipeline Development.md |
-| 35.5 KiB | .md |  |  | **Architectural Blueprint for "Celtic OS": A Spatial-Interactive Learning Environment for the British Isles** | docs/tuatha/tuatha/Interactive Map & AI Agents.md |
-| 10.3 KiB | .md | Y |  | Introducing AnyLanguageModel  One API for Local and Remote LLMs on Apple Platforms | docs/tuatha/tuatha/Introducing AnyLanguageModel_ One API for Local and Remote LLMs on Apple Platforms.md |
-| 32.9 KiB | .md |  |  | **Operationalizing Irish Handwriting Recognition on Apple Silicon: An Exhaustive Architectural Analysis of MLX, Llama.cp | docs/tuatha/tuatha/Irish Handwriting App Development.md |
-| 33.2 KiB | .md |  |  | **Strategic Architecture for Indigenous Language Intelligence on the Edge: A Comprehensive Framework for Deploying Irish | docs/tuatha/tuatha/Irish LLM for iPhone Development.md |
-| 14.6 KiB | .md | Y |  | Kotlin Multiplatform vs. React Native  A cross platform comparison   Kotlin Multiplatform | docs/tuatha/tuatha/Kotlin Multiplatform vs. React Native_ A cross-platform comparison _ Kotlin Multiplatform.md |
-| 31.1 KiB | .md |  |  | **Architecting Unified Hybrid-Inference Gateways: A Comprehensive Analysis of Local-Cloud Interoperability for Multimoda | docs/tuatha/tuatha/LLM Serving with MLflow & Langfuse.md |
-| 40.9 KiB | .md |  |  | **Cianfhoghlaim: A Strategic Framework for Agentic Educational Ecosystems in the Celtic Nations** | docs/tuatha/tuatha/Learn-to-Earn Blockchain and AI.md |
-| 1.5 KiB | .md | Y |  | MCP UI | docs/tuatha/tuatha/MCP-UI.md |
-| 32.1 KiB | .md |  |  | **Technical Blueprint for a Browser-Based WebGPU MMO: The Geospatial Spirit World** | docs/tuatha/tuatha/MMO Geospatial Data & Visual RAG.md |
-| 35.5 KiB | .md |  |  | **Architectural Blueprint for a Native Multimodal Knowledge Graph Pipeline: Integrating Video, Audio, and Text Intellige | docs/tuatha/tuatha/Multimodal Video Knowledge Graph Pipeline.md |
-| 34.8 KiB | .md |  |  | **Architecting Tuath: A Comprehensive Technical and Cultural Analysis of Decentralized MMO Infrastructure, Agentic Econo | docs/tuatha/tuatha/Ogham Crypto MMO Research.md |
-| 21.5 KiB | .md |  |  | Payment Integration Guide | docs/tuatha/tuatha/PAYMENT_GUIDE.md |
-| 20.2 KiB | .md |  |  | Performance Tuning Guide | docs/tuatha/tuatha/PERFORMANCE_TUNING.md |
-| 12.8 KiB | .md |  |  | Tuath Data Pipelines | docs/tuatha/tuatha/PIPELINES.md |
-| 12.1 KiB | .md |  |  | Game Development Reference Library | docs/tuatha/tuatha/README.md |
-| 22.7 KiB | .md | Y |  | Release v28.0.0   Mesh Shaders, Immediates, and More! · gfx rs wgpu | docs/tuatha/tuatha/Release v28.0.0 - Mesh Shaders, Immediates, and More! · gfx-rs_wgpu.md |
-| 3.5 KiB | .md | Y |  | Rust Client | docs/tuatha/tuatha/Rust Client.md |
-| 39.2 KiB | .md |  |  | **Architectural Analysis and Implementation Strategy for a Rust-Based Full-Stack Gaming Ecosystem** | docs/tuatha/tuatha/Rust Full-Stack Gaming Environment.md |
-| 16.5 KiB | .md |  |  | SpacetimeDB Guide | docs/tuatha/tuatha/SPACETIMEDB_GUIDE.md |
-| 8.5 KiB | .md | Y |  | Sign In With Ethereum (SIWE)   Better Auth | docs/tuatha/tuatha/Sign In With Ethereum (SIWE) _ Better Auth.md |
-| 34.8 KiB | .md |  |  | **Architectural Specification: Decentralized Geospatial Procedural Generation Systems for the 'Anam' Project** | docs/tuatha/tuatha/SpacetimeDB Ogham Stone Game Integration.md |
-| 1.0 KiB | .md | Y |  | SpacetimeDB | docs/tuatha/tuatha/SpacetimeDB.md |
-| 29.6 KiB | .md |  |  | **Architectural Convergence: Implementing a Massively Multiplayer Celtic Odyssey via SpacetimeDB, Solana, and Ethereum ( | docs/tuatha/tuatha/Spacetimedb Blockchain Integration Strategy.md |
-| 10.4 KiB | .md | Y |  | Swift Transformers Reaches 1.0 – and Looks to the Future | docs/tuatha/tuatha/Swift Transformers Reaches 1.0 – and Looks to the Future.md |
-| 35.1 KiB | .md |  |  | **The Convergent Stack: Architecting Reactive Data Systems with TanStack DB, DuckDB, RisingWave, and Marimo** | docs/tuatha/tuatha/TanStack DB Integration and Comparison.md |
-| 50.3 KiB | .md |  |  | Technical Integration Plan  Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly) | docs/tuatha/tuatha/Technical Integration Plan_ Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly).md |
-| 21.5 KiB | .md | Y | G (4) | The Expulsion of the Déisi   Wikipedia | docs/tuatha/tuatha/The Expulsion of the Déisi - Wikipedia.md |
-| 7.1 KiB | .md | Y |  | Unsloth Model Catalog   Unsloth Documentation | docs/tuatha/tuatha/Unsloth Model Catalog _ Unsloth Documentation.md |
-| 20.1 KiB | .md |  |  | WGPU Guide | docs/tuatha/tuatha/WGPU_GUIDE.md |
-| 29.3 KiB | .md |  |  | **Architectural Blueprint for "Cianfhoghlaim": A Decentralized, Physical-Digital Educational Ecosystem** | docs/tuatha/tuatha/Web3 Classroom Response System Design.md |
-| 40.9 KiB | .md |  |  | **Architectural Blueprint for the "Celtic Knowledge Grid": A Decentralized, Agentic, and Gamified Educational Ecosystem* | docs/tuatha/tuatha/Web3 Gamified Education & Asset Generation.md |
-| 12.1 KiB | .md |  |  | API Reference Index | docs/tuatha/tuatha/api-README.md |
-| 6.9 KiB | .md | Y |  | apple ml fastvlm  This repository contains the official implementation of  FastVLM  Efficient Vision Encoding for Vision | docs/tuatha/tuatha/apple_ml-fastvlm_ This repository contains the official implementation of _FastVLM_ Efficient Vision Encoding for Vision Language Models_ - CVPR 2025.md |
-| 32.2 KiB | .md |  |  | **Comprehensive Architectural Analysis for Bilingual Irish-English Handwritten Text Recognition on iOS: From Weakly-Supe | docs/tuatha/tuatha/celtic-ocr.md |
-| 16.3 KiB | .md |  |  | Building an "Anam" Celtic educational MMO: technical foundations | docs/tuatha/tuatha/celtic_mmo.md |
-| 28.2 KiB | .md |  |  | Agentic UI learning pipeline: a multi-agent architecture for automated web scraping and design system extraction | docs/tuatha/tuatha/compass_artifact_wf-918fd144-3e32-416f-b59b-15a043b18fc1_text_markdown.md |
-| 38.4 KiB | .md |  |  | Define the source using dlt's declarative REST API configuration | docs/tuatha/tuatha/dlt_crawl4ai_lancedb.md |
-| 18.9 KiB | .md |  |  | Educational Game Development | docs/tuatha/tuatha/educational-game-development.md |
-| 38.5 KiB | .md |  |  | **Architectural Convergence in the Digital Heritage Economy: The 'Anam' MMO Ecosystem** | docs/tuatha/tuatha/engine-selection.md |
-| 33.1 KiB | .md |  |  | **Decentralized Autonomous Knowledge Markets: Integrating Crypteolas Architectures, Agentic x402 Payments, and On-Device | docs/tuatha/tuatha/federated-marketplace.md |
-| 1.6 KiB | .md |  |  | Game Design | docs/tuatha/tuatha/game-design-README.md |
-| 1.3 KiB | .md |  |  | Contributing | docs/tuatha/tuatha/game_CONTRIBUTING.md |
-| 5.3 KiB | .md |  |  | Development | docs/tuatha/tuatha/game_DEVELOPMENT.md |
-| 27.2 KiB | .md | Y |  | game siwe auth | docs/tuatha/tuatha/game_siwe-auth.md |
-| 6.0 KiB | .md |  |  | Rust bindings for Godot 4 | docs/tuatha/tuatha/gdext-ReadMe.md |
-| 32.0 KiB | .md |  |  | **Strategic Architecture for Converged Agentic Ecosystems: Integrating iOS Vision Intelligence with Cross-Platform Devel | docs/tuatha/tuatha/iOS App Development Ecosystem Strategy.md |
-| 2.2 KiB | .md |  |  | Infrastructure | docs/tuatha/tuatha/infrastructure-README.md |
-| 40.9 KiB | .md |  |  | **Cianfhoghlaim: A Strategic Framework for Agentic Educational Ecosystems in the Celtic Nations** | docs/tuatha/tuatha/learn-to-earn-model.md |
-| 1.4 KiB | .md |  |  | ML Models | docs/tuatha/tuatha/ml-models-README.md |
-| 38.8 KiB | .md |  |  | **Project Anam: A Foundation for a Pan-Celtic Linguistic Metaverse** | docs/tuatha/tuatha/mythology-framework.md |
-| 1.7 KiB | .md |  |  | AnyLanguageModel — KCG Summary | docs/tuatha/tuatha/repo-AnyLanguageModel.md |
-| 1.7 KiB | .md |  |  | SpacetimeDB — KCG Summary | docs/tuatha/tuatha/repo-SpacetimeDB.md |
-| 2.2 KiB | .md |  |  | agui_kotlin — KCG Summary | docs/tuatha/tuatha/repo-agui_kotlin.md |
-| 1.8 KiB | .md |  |  | hophacks-spacetimedb-workshop — KCG Summary | docs/tuatha/tuatha/repo-hophacks-spacetimedb-workshop.md |
-| 1.4 KiB | .md |  |  | ireland — KCG Summary | docs/tuatha/tuatha/repo-ireland.md |
-| 1.5 KiB | .md |  |  | react-native-godot — KCG Summary | docs/tuatha/tuatha/repo-react-native-godot.md |
-| 1.3 KiB | .md |  |  | react-native-reusables — KCG Summary | docs/tuatha/tuatha/repo-react-native-reusables.md |
-| 2.5 KiB | .md |  |  | SpacetimeDB Cookbook — KCG Summary | docs/tuatha/tuatha/repo-spacetimedb-cookbook.md |
-| 2.1 KiB | .md |  |  | spacetimedb-typescript-sdk — KCG Summary | docs/tuatha/tuatha/repo-spacetimedb-typescript-sdk.md |
-| 3.0 KiB | .md |  |  | wgpu — KCG Summary | docs/tuatha/tuatha/repo-wgpu.md |
-| 1.5 KiB | .md |  |  | x402 — KCG Summary | docs/tuatha/tuatha/repo-x402.md |
-| 3.4 KiB | .md | Y |  | syft flwr notebooks fedrag README.md at main · OpenMined syft flwr | docs/tuatha/tuatha/syft-flwr_notebooks_fedrag_README.md at main · OpenMined_syft-flwr.md |
-| 1.2 KiB | .md |  |  | Tokenomics | docs/tuatha/tuatha/tokenomics-README.md |
-| 7.1 KiB | .md | Y |  | unsloth catalog | docs/tuatha/tuatha/unsloth-catalog.md |
-| 9.8 KiB | .md | Y |  | useAgent Hook | docs/tuatha/tuatha/useAgent Hook.md |
-| 35.5 KiB | .md |  |  | **Architectural Blueprint for "Celtic OS": A Spatial-Interactive Learning Environment for the British Isles** | docs/tuatha/tuatha/world-map.md |
-| 40.9 KiB | .md |  |  | **Architectural Blueprint for the "Celtic Knowledge Grid": A Decentralized, Agentic, and Gamified Educational Ecosystem* | docs/tuatha/tuatha/x402-payments.md |
+| 347.7 KiB | .pdf |  |  | 2510.17652v1 | docs/sruth/tuatha/2510.17652v1.pdf |
+| 10.0 KiB | .md |  |  | Adding New Agents | docs/sruth/tuatha/ADDING_AGENTS.md |
+| 20.4 KiB | .md |  |  | Adding Data Sources | docs/sruth/tuatha/ADDING_DATA_SOURCES.md |
+| 18.0 KiB | .md |  |  | Adding Agent Tools | docs/sruth/tuatha/ADDING_TOOLS.md |
+| 12.0 KiB | .md |  |  | Adding New Game Zones | docs/sruth/tuatha/ADDING_ZONES.md |
+| 3.7 KiB | .md | Y |  | AG UI and A2UI  Understanding the Differences   CopilotKit | docs/sruth/tuatha/AG-UI and A2UI_ Understanding the Differences _ CopilotKit.md |
+| 10.5 KiB | .md |  |  | Tuath Agent Architecture | docs/sruth/tuatha/AGENTS.md |
+| 28.6 KiB | .md |  |  | **Advanced Computational Workflows for Bilingual Educational Asset Generation: Integrating BAML Structured Extraction wi | docs/sruth/tuatha/AI Chemistry Education Image Generation.md |
+| 15.5 KiB | .md |  |  | Cianfhoghlaim Project Analysis | docs/sruth/tuatha/ANALYSIS.md |
+| 9.5 KiB | .md |  |  | Tuath API Reference | docs/sruth/tuatha/API.md |
+| 32.6 KiB | .md |  |  | **Architecting the Agentic Academy: A Technical and Cultural Blueprint for a Decentralized Celtic Educational Hub** | docs/sruth/tuatha/Agentic Education Platform Development.md |
+| 31.9 KiB | .md |  |  | **Autonomous Web Intelligence Architecture: A Comprehensive Implementation Framework for Agentic Scraping and Reconstruc | docs/sruth/tuatha/Agentic Web Scraping Pipeline.md |
+| 37.4 KiB | .md |  |  | **Strategic Asset Management and Visual Architecture for Full-Stack Educational Platforms** | docs/sruth/tuatha/Asset Management for Full-Stack App.md |
+| 33.2 KiB | .md |  |  | **The British Isles Demographic Atlas: A Comprehensive Technical and Statistical Report** | docs/sruth/tuatha/British Isles Education Map.md |
+| 31.4 KiB | .md |  |  | **Architectural Framework for Data-Driven 2.5D Geospatial Synthesis: Integrating Authoritative British Isles Data into R | docs/sruth/tuatha/British Isles Game Dev Data Pipeline.md |
+| 38.8 KiB | .md |  |  | **Project Anam: A Foundation for a Pan-Celtic Linguistic Metaverse** | docs/sruth/tuatha/British Isles Mythology MMO Research.md |
+| 34.7 KiB | .md |  |  | **Architecting the Autonomous Epistemologist: A Technical Blueprint for Agentic Knowledge Acquisition and Dynamic Domain | docs/sruth/tuatha/Building an Educational Agent's Knowledge Base.md |
+| 18.7 KiB | .md |  |  | Celtic Languages Integration | docs/sruth/tuatha/CELTIC_LANGUAGES.md |
+| 19.3 KiB | .md |  |  | Cross-Platform Development Guide | docs/sruth/tuatha/CROSS_PLATFORM_GUIDE.md |
+| 26.0 KiB | .md |  |  | Crypteolas Agent Integration Guide | docs/sruth/tuatha/CRYPTEOLAS_INTEGRATION_GUIDE.md |
+| 30.3 KiB | .md |  |  | Comprehensive Crypto & Payment Integration Summary for Crypteolas | docs/sruth/tuatha/CRYPTO_INTEGRATION_SUMMARY.md |
+| 40.4 KiB | .md |  |  | **Compendium of Celtic Lexicography for Digital World-Building: A Comparative Analysis of Goidelic and Brythonic Heritag | docs/sruth/tuatha/Celtic Etymology for Game Names.md |
+| 41.0 KiB | .md |  |  | **Unified Computational Infrastructure for Celtic Languages: Data Integration, Educational Analytics, and Strategic Mode | docs/sruth/tuatha/Celtic Language Data Aggregation & Analysis.md |
+| 33.3 KiB | .md |  |  | **Philological and Ludological Feasibility Study: Celtic Nomenclature in Web3 Massively Multiplayer Online Environments* | docs/sruth/tuatha/Celtic MMO Web3 Concept Integration.md |
+| 37.8 KiB | .md |  |  | **Digital Transformation of the Irish Chemistry Specification: A Comprehensive Technical Architecture for Next-Generatio | docs/sruth/tuatha/Chemistry Education Asset Generation.md |
+| 25.5 KiB | .md | Y |  | Comparing the Top 6 Agent Native Rails for the Agentic Internet  MCP, A2A, AP2, ACP, x402, and Kite | docs/sruth/tuatha/Comparing the Top 6 Agent-Native Rails for the Agentic Internet_ MCP, A2A, AP2, ACP, x402, and Kite.md |
+| 39.2 KiB | .md |  |  | **Project Crypteolas: A Decentralized Architecture for Financial Knowledge Graph Federated Learning and Agentic Markets* | docs/sruth/tuatha/Crypteolas_ Federated Learning & Crypto Payments.md |
+| 35.2 KiB | .md |  |  | Crypto Analysis AI Agent System Architecture | docs/sruth/tuatha/Crypto Analysis AI Agent System Architecture.md |
+| 17.0 KiB | .md |  |  | Deployment Guide | docs/sruth/tuatha/DEPLOYMENT.md |
+| 27.2 KiB | .md | Y |  | ERC 4361  Sign In with Ethereum | docs/sruth/tuatha/ERC-4361_ Sign-In with Ethereum.md |
+| 37.9 KiB | .md |  |  | **High-Fidelity Pedagogical Simulation: A Comprehensive Framework for Automating Scientifically Accurate Educational Vis | docs/sruth/tuatha/Educational Game Dev Pipeline.md |
+| 17.9 KiB | .md |  |  | TanStack Start Frontend | docs/sruth/tuatha/FRONTEND.md |
+| 33.1 KiB | .md |  |  | **Decentralized Autonomous Knowledge Markets: Integrating Crypteolas Architectures, Agentic x402 Payments, and On-Device | docs/sruth/tuatha/Federated AI Marketplace on iPhone.md |
+| 32.2 KiB | .md |  |  | **Comprehensive Architectural Analysis for Bilingual Irish-English Handwritten Text Recognition on iOS: From Weakly-Supe | docs/sruth/tuatha/Fine-tuning VLMs for iOS HTR.md |
+| 34.3 KiB | .md |  |  | **Automated Frontend Intelligence: A Multi-Modal Framework for Design Pattern Extraction** | docs/sruth/tuatha/Frontend Idea Catalog Development.md |
+| 18.0 KiB | .md |  |  | Babylon.js Game Client | docs/sruth/tuatha/GAME_CLIENT.md |
+| 15.8 KiB | .md |  |  | Godot + Rust Guide | docs/sruth/tuatha/GODOT_RUST_GUIDE.md |
+| 9.8 KiB | .md |  |  | Graphics, Game Development & Rendering Documentation Index | docs/sruth/tuatha/GRAPHICS_INDEX.md |
+| 33.1 KiB | .md |  |  | **Converging High-Fidelity Pre-Rendering and Database-Driven State: A Comprehensive Technical Blueprint for Next-Generat | docs/sruth/tuatha/Game Dev Pipeline Research & Plan.md |
+| 38.5 KiB | .md |  |  | **Architectural Convergence in the Digital Heritage Economy: The 'Anam' MMO Ecosystem** | docs/sruth/tuatha/Game Development Research & AI Integration.md |
+| 30.8 KiB | .md |  |  | **The Anam Initiative: Architectural Blueprints for High-Fidelity Meteorological Particle Simulation in Real-Time Enviro | docs/sruth/tuatha/Game Particle Effects Research(2).md |
+| 30.8 KiB | .md |  |  | **The Anam Initiative: Architectural Blueprints for High-Fidelity Meteorological Particle Simulation in Real-Time Enviro | docs/sruth/tuatha/Game Particle Effects Research.md |
+| 44.3 KiB | .md |  |  | **Architectural Blueprint for Autonomous Reverse Engineering and Asset Reconstruction Systems: A Deep Research Report** | docs/sruth/tuatha/Game Reverse Engineering Workflow Design.md |
+| 26.8 KiB | .md |  |  | **Architecting Agentic Creative Workflows: Deep Research into Generative AI Integration for React Ecosystems** | docs/sruth/tuatha/Generative AI Art Workflow Integration.md |
+| 9.0 KiB | .md | Y |  | GeoAI | docs/sruth/tuatha/GeoAI.md |
+| 29.8 KiB | .md |  |  | **Architectural Synthesis of High-Performance Geospatial Workflows: Integrating Cloud-Native OLAP and WebGPU Rendering f | docs/sruth/tuatha/Geospatial Workflow & Particle Effects.md |
+| 13.8 KiB | .md |  | G (5) | Túatha Documentation Index | docs/sruth/tuatha/INDEX.md |
+| 33.1 KiB | .md |  |  | **Architectural Synthesis of Sovereign Game State: Integrating SpacetimeDB, DuckDB WASM, TanStack Start, and CopilotKit* | docs/sruth/tuatha/Integrating Rust, DuckDB, TanStack, CopilotKit.md |
+| 30.7 KiB | .md |  |  | **Architectural Convergence: The Agentic Pipeline for Structured Generative AI** | docs/sruth/tuatha/Interactive AI Pipeline Development.md |
+| 35.5 KiB | .md |  |  | **Architectural Blueprint for "Celtic OS": A Spatial-Interactive Learning Environment for the British Isles** | docs/sruth/tuatha/Interactive Map & AI Agents.md |
+| 10.3 KiB | .md | Y |  | Introducing AnyLanguageModel  One API for Local and Remote LLMs on Apple Platforms | docs/sruth/tuatha/Introducing AnyLanguageModel_ One API for Local and Remote LLMs on Apple Platforms.md |
+| 32.9 KiB | .md |  |  | **Operationalizing Irish Handwriting Recognition on Apple Silicon: An Exhaustive Architectural Analysis of MLX, Llama.cp | docs/sruth/tuatha/Irish Handwriting App Development.md |
+| 33.2 KiB | .md |  |  | **Strategic Architecture for Indigenous Language Intelligence on the Edge: A Comprehensive Framework for Deploying Irish | docs/sruth/tuatha/Irish LLM for iPhone Development.md |
+| 14.6 KiB | .md | Y |  | Kotlin Multiplatform vs. React Native  A cross platform comparison   Kotlin Multiplatform | docs/sruth/tuatha/Kotlin Multiplatform vs. React Native_ A cross-platform comparison _ Kotlin Multiplatform.md |
+| 31.1 KiB | .md |  |  | **Architecting Unified Hybrid-Inference Gateways: A Comprehensive Analysis of Local-Cloud Interoperability for Multimoda | docs/sruth/tuatha/LLM Serving with MLflow & Langfuse.md |
+| 40.9 KiB | .md |  |  | **Cianfhoghlaim: A Strategic Framework for Agentic Educational Ecosystems in the Celtic Nations** | docs/sruth/tuatha/Learn-to-Earn Blockchain and AI.md |
+| 1.5 KiB | .md | Y |  | MCP UI | docs/sruth/tuatha/MCP-UI.md |
+| 32.1 KiB | .md |  |  | **Technical Blueprint for a Browser-Based WebGPU MMO: The Geospatial Spirit World** | docs/sruth/tuatha/MMO Geospatial Data & Visual RAG.md |
+| 35.5 KiB | .md |  |  | **Architectural Blueprint for a Native Multimodal Knowledge Graph Pipeline: Integrating Video, Audio, and Text Intellige | docs/sruth/tuatha/Multimodal Video Knowledge Graph Pipeline.md |
+| 34.8 KiB | .md |  |  | **Architecting Tuath: A Comprehensive Technical and Cultural Analysis of Decentralized MMO Infrastructure, Agentic Econo | docs/sruth/tuatha/Ogham Crypto MMO Research.md |
+| 21.5 KiB | .md |  |  | Payment Integration Guide | docs/sruth/tuatha/PAYMENT_GUIDE.md |
+| 20.2 KiB | .md |  |  | Performance Tuning Guide | docs/sruth/tuatha/PERFORMANCE_TUNING.md |
+| 12.8 KiB | .md |  |  | Tuath Data Pipelines | docs/sruth/tuatha/PIPELINES.md |
+| 12.1 KiB | .md |  |  | Game Development Reference Library | docs/sruth/tuatha/README.md |
+| 22.7 KiB | .md | Y |  | Release v28.0.0   Mesh Shaders, Immediates, and More! · gfx rs wgpu | docs/sruth/tuatha/Release v28.0.0 - Mesh Shaders, Immediates, and More! · gfx-rs_wgpu.md |
+| 3.5 KiB | .md | Y |  | Rust Client | docs/sruth/tuatha/Rust Client.md |
+| 39.2 KiB | .md |  |  | **Architectural Analysis and Implementation Strategy for a Rust-Based Full-Stack Gaming Ecosystem** | docs/sruth/tuatha/Rust Full-Stack Gaming Environment.md |
+| 16.5 KiB | .md |  |  | SpacetimeDB Guide | docs/sruth/tuatha/SPACETIMEDB_GUIDE.md |
+| 8.5 KiB | .md | Y |  | Sign In With Ethereum (SIWE)   Better Auth | docs/sruth/tuatha/Sign In With Ethereum (SIWE) _ Better Auth.md |
+| 34.8 KiB | .md |  |  | **Architectural Specification: Decentralized Geospatial Procedural Generation Systems for the 'Anam' Project** | docs/sruth/tuatha/SpacetimeDB Ogham Stone Game Integration.md |
+| 1.0 KiB | .md | Y |  | SpacetimeDB | docs/sruth/tuatha/SpacetimeDB.md |
+| 29.6 KiB | .md |  |  | **Architectural Convergence: Implementing a Massively Multiplayer Celtic Odyssey via SpacetimeDB, Solana, and Ethereum ( | docs/sruth/tuatha/Spacetimedb Blockchain Integration Strategy.md |
+| 10.4 KiB | .md | Y |  | Swift Transformers Reaches 1.0 – and Looks to the Future | docs/sruth/tuatha/Swift Transformers Reaches 1.0 – and Looks to the Future.md |
+| 35.1 KiB | .md |  |  | **The Convergent Stack: Architecting Reactive Data Systems with TanStack DB, DuckDB, RisingWave, and Marimo** | docs/sruth/tuatha/TanStack DB Integration and Comparison.md |
+| 50.3 KiB | .md |  |  | Technical Integration Plan  Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly) | docs/sruth/tuatha/Technical Integration Plan_ Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly).md |
+| 21.5 KiB | .md | Y | G (4) | The Expulsion of the Déisi   Wikipedia | docs/sruth/tuatha/The Expulsion of the Déisi - Wikipedia.md |
+| 7.1 KiB | .md | Y |  | Unsloth Model Catalog   Unsloth Documentation | docs/sruth/tuatha/Unsloth Model Catalog _ Unsloth Documentation.md |
+| 20.1 KiB | .md |  |  | WGPU Guide | docs/sruth/tuatha/WGPU_GUIDE.md |
+| 29.3 KiB | .md |  |  | **Architectural Blueprint for "Cianfhoghlaim": A Decentralized, Physical-Digital Educational Ecosystem** | docs/sruth/tuatha/Web3 Classroom Response System Design.md |
+| 40.9 KiB | .md |  |  | **Architectural Blueprint for the "Celtic Knowledge Grid": A Decentralized, Agentic, and Gamified Educational Ecosystem* | docs/sruth/tuatha/Web3 Gamified Education & Asset Generation.md |
+| 12.1 KiB | .md |  |  | API Reference Index | docs/sruth/tuatha/api-README.md |
+| 6.9 KiB | .md | Y |  | apple ml fastvlm  This repository contains the official implementation of  FastVLM  Efficient Vision Encoding for Vision | docs/sruth/tuatha/apple_ml-fastvlm_ This repository contains the official implementation of _FastVLM_ Efficient Vision Encoding for Vision Language Models_ - CVPR 2025.md |
+| 32.2 KiB | .md |  |  | **Comprehensive Architectural Analysis for Bilingual Irish-English Handwritten Text Recognition on iOS: From Weakly-Supe | docs/sruth/tuatha/celtic-ocr.md |
+| 16.3 KiB | .md |  |  | Building an "Anam" Celtic educational MMO: technical foundations | docs/sruth/tuatha/celtic_mmo.md |
+| 28.2 KiB | .md |  |  | Agentic UI learning pipeline: a multi-agent architecture for automated web scraping and design system extraction | docs/sruth/tuatha/compass_artifact_wf-918fd144-3e32-416f-b59b-15a043b18fc1_text_markdown.md |
+| 38.4 KiB | .md |  |  | Define the source using dlt's declarative REST API configuration | docs/sruth/tuatha/dlt_crawl4ai_lancedb.md |
+| 18.9 KiB | .md |  |  | Educational Game Development | docs/sruth/tuatha/educational-game-development.md |
+| 38.5 KiB | .md |  |  | **Architectural Convergence in the Digital Heritage Economy: The 'Anam' MMO Ecosystem** | docs/sruth/tuatha/engine-selection.md |
+| 33.1 KiB | .md |  |  | **Decentralized Autonomous Knowledge Markets: Integrating Crypteolas Architectures, Agentic x402 Payments, and On-Device | docs/sruth/tuatha/federated-marketplace.md |
+| 1.6 KiB | .md |  |  | Game Design | docs/sruth/tuatha/game-design-README.md |
+| 1.3 KiB | .md |  |  | Contributing | docs/sruth/tuatha/game_CONTRIBUTING.md |
+| 5.3 KiB | .md |  |  | Development | docs/sruth/tuatha/game_DEVELOPMENT.md |
+| 27.2 KiB | .md | Y |  | game siwe auth | docs/sruth/tuatha/game_siwe-auth.md |
+| 6.0 KiB | .md |  |  | Rust bindings for Godot 4 | docs/sruth/tuatha/gdext-ReadMe.md |
+| 32.0 KiB | .md |  |  | **Strategic Architecture for Converged Agentic Ecosystems: Integrating iOS Vision Intelligence with Cross-Platform Devel | docs/sruth/tuatha/iOS App Development Ecosystem Strategy.md |
+| 2.2 KiB | .md |  |  | Infrastructure | docs/sruth/tuatha/infrastructure-README.md |
+| 40.9 KiB | .md |  |  | **Cianfhoghlaim: A Strategic Framework for Agentic Educational Ecosystems in the Celtic Nations** | docs/sruth/tuatha/learn-to-earn-model.md |
+| 1.4 KiB | .md |  |  | ML Models | docs/sruth/tuatha/ml-models-README.md |
+| 38.8 KiB | .md |  |  | **Project Anam: A Foundation for a Pan-Celtic Linguistic Metaverse** | docs/sruth/tuatha/mythology-framework.md |
+| 1.7 KiB | .md |  |  | AnyLanguageModel — KCG Summary | docs/sruth/tuatha/repo-AnyLanguageModel.md |
+| 1.7 KiB | .md |  |  | SpacetimeDB — KCG Summary | docs/sruth/tuatha/repo-SpacetimeDB.md |
+| 2.2 KiB | .md |  |  | agui_kotlin — KCG Summary | docs/sruth/tuatha/repo-agui_kotlin.md |
+| 1.8 KiB | .md |  |  | hophacks-spacetimedb-workshop — KCG Summary | docs/sruth/tuatha/repo-hophacks-spacetimedb-workshop.md |
+| 1.4 KiB | .md |  |  | ireland — KCG Summary | docs/sruth/tuatha/repo-ireland.md |
+| 1.5 KiB | .md |  |  | react-native-godot — KCG Summary | docs/sruth/tuatha/repo-react-native-godot.md |
+| 1.3 KiB | .md |  |  | react-native-reusables — KCG Summary | docs/sruth/tuatha/repo-react-native-reusables.md |
+| 2.5 KiB | .md |  |  | SpacetimeDB Cookbook — KCG Summary | docs/sruth/tuatha/repo-spacetimedb-cookbook.md |
+| 2.1 KiB | .md |  |  | spacetimedb-typescript-sdk — KCG Summary | docs/sruth/tuatha/repo-spacetimedb-typescript-sdk.md |
+| 3.0 KiB | .md |  |  | wgpu — KCG Summary | docs/sruth/tuatha/repo-wgpu.md |
+| 1.5 KiB | .md |  |  | x402 — KCG Summary | docs/sruth/tuatha/repo-x402.md |
+| 3.4 KiB | .md | Y |  | syft flwr notebooks fedrag README.md at main · OpenMined syft flwr | docs/sruth/tuatha/syft-flwr_notebooks_fedrag_README.md at main · OpenMined_syft-flwr.md |
+| 1.2 KiB | .md |  |  | Tokenomics | docs/sruth/tuatha/tokenomics-README.md |
+| 7.1 KiB | .md | Y |  | unsloth catalog | docs/sruth/tuatha/unsloth-catalog.md |
+| 9.8 KiB | .md | Y |  | useAgent Hook | docs/sruth/tuatha/useAgent Hook.md |
+| 35.5 KiB | .md |  |  | **Architectural Blueprint for "Celtic OS": A Spatial-Interactive Learning Environment for the British Isles** | docs/sruth/tuatha/world-map.md |
+| 40.9 KiB | .md |  |  | **Architectural Blueprint for the "Celtic Knowledge Grid": A Decentralized, Agentic, and Gamified Educational Ecosystem* | docs/sruth/tuatha/x402-payments.md |
+| 347.7 KiB | .pdf |  |  | 2510.17652v1 | docs/sruth/tuatha/sruth/tuatha/2510.17652v1.pdf |
+| 10.0 KiB | .md |  |  | Adding New Agents | docs/sruth/tuatha/sruth/tuatha/ADDING_AGENTS.md |
+| 20.4 KiB | .md |  |  | Adding Data Sources | docs/sruth/tuatha/sruth/tuatha/ADDING_DATA_SOURCES.md |
+| 18.0 KiB | .md |  |  | Adding Agent Tools | docs/sruth/tuatha/sruth/tuatha/ADDING_TOOLS.md |
+| 12.0 KiB | .md |  |  | Adding New Game Zones | docs/sruth/tuatha/sruth/tuatha/ADDING_ZONES.md |
+| 3.7 KiB | .md | Y |  | AG UI and A2UI  Understanding the Differences   CopilotKit | docs/sruth/tuatha/sruth/tuatha/AG-UI and A2UI_ Understanding the Differences _ CopilotKit.md |
+| 10.5 KiB | .md |  |  | Tuath Agent Architecture | docs/sruth/tuatha/sruth/tuatha/AGENTS.md |
+| 28.6 KiB | .md |  |  | **Advanced Computational Workflows for Bilingual Educational Asset Generation: Integrating BAML Structured Extraction wi | docs/sruth/tuatha/sruth/tuatha/AI Chemistry Education Image Generation.md |
+| 15.5 KiB | .md |  |  | Cianfhoghlaim Project Analysis | docs/sruth/tuatha/sruth/tuatha/ANALYSIS.md |
+| 9.5 KiB | .md |  |  | Tuath API Reference | docs/sruth/tuatha/sruth/tuatha/API.md |
+| 32.6 KiB | .md |  |  | **Architecting the Agentic Academy: A Technical and Cultural Blueprint for a Decentralized Celtic Educational Hub** | docs/sruth/tuatha/sruth/tuatha/Agentic Education Platform Development.md |
+| 31.9 KiB | .md |  |  | **Autonomous Web Intelligence Architecture: A Comprehensive Implementation Framework for Agentic Scraping and Reconstruc | docs/sruth/tuatha/sruth/tuatha/Agentic Web Scraping Pipeline.md |
+| 37.4 KiB | .md |  |  | **Strategic Asset Management and Visual Architecture for Full-Stack Educational Platforms** | docs/sruth/tuatha/sruth/tuatha/Asset Management for Full-Stack App.md |
+| 33.2 KiB | .md |  |  | **The British Isles Demographic Atlas: A Comprehensive Technical and Statistical Report** | docs/sruth/tuatha/sruth/tuatha/British Isles Education Map.md |
+| 31.4 KiB | .md |  |  | **Architectural Framework for Data-Driven 2.5D Geospatial Synthesis: Integrating Authoritative British Isles Data into R | docs/sruth/tuatha/sruth/tuatha/British Isles Game Dev Data Pipeline.md |
+| 38.8 KiB | .md |  |  | **Project Anam: A Foundation for a Pan-Celtic Linguistic Metaverse** | docs/sruth/tuatha/sruth/tuatha/British Isles Mythology MMO Research.md |
+| 34.7 KiB | .md |  |  | **Architecting the Autonomous Epistemologist: A Technical Blueprint for Agentic Knowledge Acquisition and Dynamic Domain | docs/sruth/tuatha/sruth/tuatha/Building an Educational Agent's Knowledge Base.md |
+| 18.7 KiB | .md |  |  | Celtic Languages Integration | docs/sruth/tuatha/sruth/tuatha/CELTIC_LANGUAGES.md |
+| 19.3 KiB | .md |  |  | Cross-Platform Development Guide | docs/sruth/tuatha/sruth/tuatha/CROSS_PLATFORM_GUIDE.md |
+| 26.0 KiB | .md |  |  | Crypteolas Agent Integration Guide | docs/sruth/tuatha/sruth/tuatha/CRYPTEOLAS_INTEGRATION_GUIDE.md |
+| 30.3 KiB | .md |  |  | Comprehensive Crypto & Payment Integration Summary for Crypteolas | docs/sruth/tuatha/sruth/tuatha/CRYPTO_INTEGRATION_SUMMARY.md |
+| 40.4 KiB | .md |  |  | **Compendium of Celtic Lexicography for Digital World-Building: A Comparative Analysis of Goidelic and Brythonic Heritag | docs/sruth/tuatha/sruth/tuatha/Celtic Etymology for Game Names.md |
+| 41.0 KiB | .md |  |  | **Unified Computational Infrastructure for Celtic Languages: Data Integration, Educational Analytics, and Strategic Mode | docs/sruth/tuatha/sruth/tuatha/Celtic Language Data Aggregation & Analysis.md |
+| 33.3 KiB | .md |  |  | **Philological and Ludological Feasibility Study: Celtic Nomenclature in Web3 Massively Multiplayer Online Environments* | docs/sruth/tuatha/sruth/tuatha/Celtic MMO Web3 Concept Integration.md |
+| 37.8 KiB | .md |  |  | **Digital Transformation of the Irish Chemistry Specification: A Comprehensive Technical Architecture for Next-Generatio | docs/sruth/tuatha/sruth/tuatha/Chemistry Education Asset Generation.md |
+| 25.5 KiB | .md | Y |  | Comparing the Top 6 Agent Native Rails for the Agentic Internet  MCP, A2A, AP2, ACP, x402, and Kite | docs/sruth/tuatha/sruth/tuatha/Comparing the Top 6 Agent-Native Rails for the Agentic Internet_ MCP, A2A, AP2, ACP, x402, and Kite.md |
+| 39.2 KiB | .md |  |  | **Project Crypteolas: A Decentralized Architecture for Financial Knowledge Graph Federated Learning and Agentic Markets* | docs/sruth/tuatha/sruth/tuatha/Crypteolas_ Federated Learning & Crypto Payments.md |
+| 35.2 KiB | .md |  |  | Crypto Analysis AI Agent System Architecture | docs/sruth/tuatha/sruth/tuatha/Crypto Analysis AI Agent System Architecture.md |
+| 17.0 KiB | .md |  |  | Deployment Guide | docs/sruth/tuatha/sruth/tuatha/DEPLOYMENT.md |
+| 27.2 KiB | .md | Y |  | ERC 4361  Sign In with Ethereum | docs/sruth/tuatha/sruth/tuatha/ERC-4361_ Sign-In with Ethereum.md |
+| 37.9 KiB | .md |  |  | **High-Fidelity Pedagogical Simulation: A Comprehensive Framework for Automating Scientifically Accurate Educational Vis | docs/sruth/tuatha/sruth/tuatha/Educational Game Dev Pipeline.md |
+| 17.9 KiB | .md |  |  | TanStack Start Frontend | docs/sruth/tuatha/sruth/tuatha/FRONTEND.md |
+| 33.1 KiB | .md |  |  | **Decentralized Autonomous Knowledge Markets: Integrating Crypteolas Architectures, Agentic x402 Payments, and On-Device | docs/sruth/tuatha/sruth/tuatha/Federated AI Marketplace on iPhone.md |
+| 32.2 KiB | .md |  |  | **Comprehensive Architectural Analysis for Bilingual Irish-English Handwritten Text Recognition on iOS: From Weakly-Supe | docs/sruth/tuatha/sruth/tuatha/Fine-tuning VLMs for iOS HTR.md |
+| 34.3 KiB | .md |  |  | **Automated Frontend Intelligence: A Multi-Modal Framework for Design Pattern Extraction** | docs/sruth/tuatha/sruth/tuatha/Frontend Idea Catalog Development.md |
+| 18.0 KiB | .md |  |  | Babylon.js Game Client | docs/sruth/tuatha/sruth/tuatha/GAME_CLIENT.md |
+| 15.8 KiB | .md |  |  | Godot + Rust Guide | docs/sruth/tuatha/sruth/tuatha/GODOT_RUST_GUIDE.md |
+| 9.8 KiB | .md |  |  | Graphics, Game Development & Rendering Documentation Index | docs/sruth/tuatha/sruth/tuatha/GRAPHICS_INDEX.md |
+| 33.1 KiB | .md |  |  | **Converging High-Fidelity Pre-Rendering and Database-Driven State: A Comprehensive Technical Blueprint for Next-Generat | docs/sruth/tuatha/sruth/tuatha/Game Dev Pipeline Research & Plan.md |
+| 38.5 KiB | .md |  |  | **Architectural Convergence in the Digital Heritage Economy: The 'Anam' MMO Ecosystem** | docs/sruth/tuatha/sruth/tuatha/Game Development Research & AI Integration.md |
+| 30.8 KiB | .md |  |  | **The Anam Initiative: Architectural Blueprints for High-Fidelity Meteorological Particle Simulation in Real-Time Enviro | docs/sruth/tuatha/sruth/tuatha/Game Particle Effects Research(2).md |
+| 30.8 KiB | .md |  |  | **The Anam Initiative: Architectural Blueprints for High-Fidelity Meteorological Particle Simulation in Real-Time Enviro | docs/sruth/tuatha/sruth/tuatha/Game Particle Effects Research.md |
+| 44.3 KiB | .md |  |  | **Architectural Blueprint for Autonomous Reverse Engineering and Asset Reconstruction Systems: A Deep Research Report** | docs/sruth/tuatha/sruth/tuatha/Game Reverse Engineering Workflow Design.md |
+| 26.8 KiB | .md |  |  | **Architecting Agentic Creative Workflows: Deep Research into Generative AI Integration for React Ecosystems** | docs/sruth/tuatha/sruth/tuatha/Generative AI Art Workflow Integration.md |
+| 9.0 KiB | .md | Y |  | GeoAI | docs/sruth/tuatha/sruth/tuatha/GeoAI.md |
+| 29.8 KiB | .md |  |  | **Architectural Synthesis of High-Performance Geospatial Workflows: Integrating Cloud-Native OLAP and WebGPU Rendering f | docs/sruth/tuatha/sruth/tuatha/Geospatial Workflow & Particle Effects.md |
+| 13.8 KiB | .md |  | G (5) | Túatha Documentation Index | docs/sruth/tuatha/sruth/tuatha/INDEX.md |
+| 33.1 KiB | .md |  |  | **Architectural Synthesis of Sovereign Game State: Integrating SpacetimeDB, DuckDB WASM, TanStack Start, and CopilotKit* | docs/sruth/tuatha/sruth/tuatha/Integrating Rust, DuckDB, TanStack, CopilotKit.md |
+| 30.7 KiB | .md |  |  | **Architectural Convergence: The Agentic Pipeline for Structured Generative AI** | docs/sruth/tuatha/sruth/tuatha/Interactive AI Pipeline Development.md |
+| 35.5 KiB | .md |  |  | **Architectural Blueprint for "Celtic OS": A Spatial-Interactive Learning Environment for the British Isles** | docs/sruth/tuatha/sruth/tuatha/Interactive Map & AI Agents.md |
+| 10.3 KiB | .md | Y |  | Introducing AnyLanguageModel  One API for Local and Remote LLMs on Apple Platforms | docs/sruth/tuatha/sruth/tuatha/Introducing AnyLanguageModel_ One API for Local and Remote LLMs on Apple Platforms.md |
+| 32.9 KiB | .md |  |  | **Operationalizing Irish Handwriting Recognition on Apple Silicon: An Exhaustive Architectural Analysis of MLX, Llama.cp | docs/sruth/tuatha/sruth/tuatha/Irish Handwriting App Development.md |
+| 33.2 KiB | .md |  |  | **Strategic Architecture for Indigenous Language Intelligence on the Edge: A Comprehensive Framework for Deploying Irish | docs/sruth/tuatha/sruth/tuatha/Irish LLM for iPhone Development.md |
+| 14.6 KiB | .md | Y |  | Kotlin Multiplatform vs. React Native  A cross platform comparison   Kotlin Multiplatform | docs/sruth/tuatha/sruth/tuatha/Kotlin Multiplatform vs. React Native_ A cross-platform comparison _ Kotlin Multiplatform.md |
+| 31.1 KiB | .md |  |  | **Architecting Unified Hybrid-Inference Gateways: A Comprehensive Analysis of Local-Cloud Interoperability for Multimoda | docs/sruth/tuatha/sruth/tuatha/LLM Serving with MLflow & Langfuse.md |
+| 40.9 KiB | .md |  |  | **Cianfhoghlaim: A Strategic Framework for Agentic Educational Ecosystems in the Celtic Nations** | docs/sruth/tuatha/sruth/tuatha/Learn-to-Earn Blockchain and AI.md |
+| 1.5 KiB | .md | Y |  | MCP UI | docs/sruth/tuatha/sruth/tuatha/MCP-UI.md |
+| 32.1 KiB | .md |  |  | **Technical Blueprint for a Browser-Based WebGPU MMO: The Geospatial Spirit World** | docs/sruth/tuatha/sruth/tuatha/MMO Geospatial Data & Visual RAG.md |
+| 35.5 KiB | .md |  |  | **Architectural Blueprint for a Native Multimodal Knowledge Graph Pipeline: Integrating Video, Audio, and Text Intellige | docs/sruth/tuatha/sruth/tuatha/Multimodal Video Knowledge Graph Pipeline.md |
+| 34.8 KiB | .md |  |  | **Architecting Tuath: A Comprehensive Technical and Cultural Analysis of Decentralized MMO Infrastructure, Agentic Econo | docs/sruth/tuatha/sruth/tuatha/Ogham Crypto MMO Research.md |
+| 21.5 KiB | .md |  |  | Payment Integration Guide | docs/sruth/tuatha/sruth/tuatha/PAYMENT_GUIDE.md |
+| 20.2 KiB | .md |  |  | Performance Tuning Guide | docs/sruth/tuatha/sruth/tuatha/PERFORMANCE_TUNING.md |
+| 12.8 KiB | .md |  |  | Tuath Data Pipelines | docs/sruth/tuatha/sruth/tuatha/PIPELINES.md |
+| 12.1 KiB | .md |  |  | Game Development Reference Library | docs/sruth/tuatha/sruth/tuatha/README.md |
+| 22.7 KiB | .md | Y |  | Release v28.0.0   Mesh Shaders, Immediates, and More! · gfx rs wgpu | docs/sruth/tuatha/sruth/tuatha/Release v28.0.0 - Mesh Shaders, Immediates, and More! · gfx-rs_wgpu.md |
+| 3.5 KiB | .md | Y |  | Rust Client | docs/sruth/tuatha/sruth/tuatha/Rust Client.md |
+| 39.2 KiB | .md |  |  | **Architectural Analysis and Implementation Strategy for a Rust-Based Full-Stack Gaming Ecosystem** | docs/sruth/tuatha/sruth/tuatha/Rust Full-Stack Gaming Environment.md |
+| 16.5 KiB | .md |  |  | SpacetimeDB Guide | docs/sruth/tuatha/sruth/tuatha/SPACETIMEDB_GUIDE.md |
+| 8.5 KiB | .md | Y |  | Sign In With Ethereum (SIWE)   Better Auth | docs/sruth/tuatha/sruth/tuatha/Sign In With Ethereum (SIWE) _ Better Auth.md |
+| 34.8 KiB | .md |  |  | **Architectural Specification: Decentralized Geospatial Procedural Generation Systems for the 'Anam' Project** | docs/sruth/tuatha/sruth/tuatha/SpacetimeDB Ogham Stone Game Integration.md |
+| 1.0 KiB | .md | Y |  | SpacetimeDB | docs/sruth/tuatha/sruth/tuatha/SpacetimeDB.md |
+| 29.6 KiB | .md |  |  | **Architectural Convergence: Implementing a Massively Multiplayer Celtic Odyssey via SpacetimeDB, Solana, and Ethereum ( | docs/sruth/tuatha/sruth/tuatha/Spacetimedb Blockchain Integration Strategy.md |
+| 10.4 KiB | .md | Y |  | Swift Transformers Reaches 1.0 – and Looks to the Future | docs/sruth/tuatha/sruth/tuatha/Swift Transformers Reaches 1.0 – and Looks to the Future.md |
+| 35.1 KiB | .md |  |  | **The Convergent Stack: Architecting Reactive Data Systems with TanStack DB, DuckDB, RisingWave, and Marimo** | docs/sruth/tuatha/sruth/tuatha/TanStack DB Integration and Comparison.md |
+| 50.3 KiB | .md |  |  | Technical Integration Plan  Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly) | docs/sruth/tuatha/sruth/tuatha/Technical Integration Plan_ Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly).md |
+| 21.5 KiB | .md | Y | G (4) | The Expulsion of the Déisi   Wikipedia | docs/sruth/tuatha/sruth/tuatha/The Expulsion of the Déisi - Wikipedia.md |
+| 7.1 KiB | .md | Y |  | Unsloth Model Catalog   Unsloth Documentation | docs/sruth/tuatha/sruth/tuatha/Unsloth Model Catalog _ Unsloth Documentation.md |
+| 20.1 KiB | .md |  |  | WGPU Guide | docs/sruth/tuatha/sruth/tuatha/WGPU_GUIDE.md |
+| 29.3 KiB | .md |  |  | **Architectural Blueprint for "Cianfhoghlaim": A Decentralized, Physical-Digital Educational Ecosystem** | docs/sruth/tuatha/sruth/tuatha/Web3 Classroom Response System Design.md |
+| 40.9 KiB | .md |  |  | **Architectural Blueprint for the "Celtic Knowledge Grid": A Decentralized, Agentic, and Gamified Educational Ecosystem* | docs/sruth/tuatha/sruth/tuatha/Web3 Gamified Education & Asset Generation.md |
+| 12.1 KiB | .md |  |  | API Reference Index | docs/sruth/tuatha/sruth/tuatha/api-README.md |
+| 6.9 KiB | .md | Y |  | apple ml fastvlm  This repository contains the official implementation of  FastVLM  Efficient Vision Encoding for Vision | docs/sruth/tuatha/sruth/tuatha/apple_ml-fastvlm_ This repository contains the official implementation of _FastVLM_ Efficient Vision Encoding for Vision Language Models_ - CVPR 2025.md |
+| 32.2 KiB | .md |  |  | **Comprehensive Architectural Analysis for Bilingual Irish-English Handwritten Text Recognition on iOS: From Weakly-Supe | docs/sruth/tuatha/sruth/tuatha/celtic-ocr.md |
+| 16.3 KiB | .md |  |  | Building an "Anam" Celtic educational MMO: technical foundations | docs/sruth/tuatha/sruth/tuatha/celtic_mmo.md |
+| 28.2 KiB | .md |  |  | Agentic UI learning pipeline: a multi-agent architecture for automated web scraping and design system extraction | docs/sruth/tuatha/sruth/tuatha/compass_artifact_wf-918fd144-3e32-416f-b59b-15a043b18fc1_text_markdown.md |
+| 38.4 KiB | .md |  |  | Define the source using dlt's declarative REST API configuration | docs/sruth/tuatha/sruth/tuatha/dlt_crawl4ai_lancedb.md |
+| 18.9 KiB | .md |  |  | Educational Game Development | docs/sruth/tuatha/sruth/tuatha/educational-game-development.md |
+| 38.5 KiB | .md |  |  | **Architectural Convergence in the Digital Heritage Economy: The 'Anam' MMO Ecosystem** | docs/sruth/tuatha/sruth/tuatha/engine-selection.md |
+| 33.1 KiB | .md |  |  | **Decentralized Autonomous Knowledge Markets: Integrating Crypteolas Architectures, Agentic x402 Payments, and On-Device | docs/sruth/tuatha/sruth/tuatha/federated-marketplace.md |
+| 1.6 KiB | .md |  |  | Game Design | docs/sruth/tuatha/sruth/tuatha/game-design-README.md |
+| 1.3 KiB | .md |  |  | Contributing | docs/sruth/tuatha/sruth/tuatha/game_CONTRIBUTING.md |
+| 5.3 KiB | .md |  |  | Development | docs/sruth/tuatha/sruth/tuatha/game_DEVELOPMENT.md |
+| 27.2 KiB | .md | Y |  | game siwe auth | docs/sruth/tuatha/sruth/tuatha/game_siwe-auth.md |
+| 6.0 KiB | .md |  |  | Rust bindings for Godot 4 | docs/sruth/tuatha/sruth/tuatha/gdext-ReadMe.md |
+| 32.0 KiB | .md |  |  | **Strategic Architecture for Converged Agentic Ecosystems: Integrating iOS Vision Intelligence with Cross-Platform Devel | docs/sruth/tuatha/sruth/tuatha/iOS App Development Ecosystem Strategy.md |
+| 2.2 KiB | .md |  |  | Infrastructure | docs/sruth/tuatha/sruth/tuatha/infrastructure-README.md |
+| 40.9 KiB | .md |  |  | **Cianfhoghlaim: A Strategic Framework for Agentic Educational Ecosystems in the Celtic Nations** | docs/sruth/tuatha/sruth/tuatha/learn-to-earn-model.md |
+| 1.4 KiB | .md |  |  | ML Models | docs/sruth/tuatha/sruth/tuatha/ml-models-README.md |
+| 38.8 KiB | .md |  |  | **Project Anam: A Foundation for a Pan-Celtic Linguistic Metaverse** | docs/sruth/tuatha/sruth/tuatha/mythology-framework.md |
+| 1.7 KiB | .md |  |  | AnyLanguageModel — KCG Summary | docs/sruth/tuatha/sruth/tuatha/repo-AnyLanguageModel.md |
+| 1.7 KiB | .md |  |  | SpacetimeDB — KCG Summary | docs/sruth/tuatha/sruth/tuatha/repo-SpacetimeDB.md |
+| 2.2 KiB | .md |  |  | agui_kotlin — KCG Summary | docs/sruth/tuatha/sruth/tuatha/repo-agui_kotlin.md |
+| 1.8 KiB | .md |  |  | hophacks-spacetimedb-workshop — KCG Summary | docs/sruth/tuatha/sruth/tuatha/repo-hophacks-spacetimedb-workshop.md |
+| 1.4 KiB | .md |  |  | ireland — KCG Summary | docs/sruth/tuatha/sruth/tuatha/repo-ireland.md |
+| 1.5 KiB | .md |  |  | react-native-godot — KCG Summary | docs/sruth/tuatha/sruth/tuatha/repo-react-native-godot.md |
+| 1.3 KiB | .md |  |  | react-native-reusables — KCG Summary | docs/sruth/tuatha/sruth/tuatha/repo-react-native-reusables.md |
+| 2.5 KiB | .md |  |  | SpacetimeDB Cookbook — KCG Summary | docs/sruth/tuatha/sruth/tuatha/repo-spacetimedb-cookbook.md |
+| 2.1 KiB | .md |  |  | spacetimedb-typescript-sdk — KCG Summary | docs/sruth/tuatha/sruth/tuatha/repo-spacetimedb-typescript-sdk.md |
+| 3.0 KiB | .md |  |  | wgpu — KCG Summary | docs/sruth/tuatha/sruth/tuatha/repo-wgpu.md |
+| 1.5 KiB | .md |  |  | x402 — KCG Summary | docs/sruth/tuatha/sruth/tuatha/repo-x402.md |
+| 3.4 KiB | .md | Y |  | syft flwr notebooks fedrag README.md at main · OpenMined syft flwr | docs/sruth/tuatha/sruth/tuatha/syft-flwr_notebooks_fedrag_README.md at main · OpenMined_syft-flwr.md |
+| 1.2 KiB | .md |  |  | Tokenomics | docs/sruth/tuatha/sruth/tuatha/tokenomics-README.md |
+| 7.1 KiB | .md | Y |  | unsloth catalog | docs/sruth/tuatha/sruth/tuatha/unsloth-catalog.md |
+| 9.8 KiB | .md | Y |  | useAgent Hook | docs/sruth/tuatha/sruth/tuatha/useAgent Hook.md |
+| 35.5 KiB | .md |  |  | **Architectural Blueprint for "Celtic OS": A Spatial-Interactive Learning Environment for the British Isles** | docs/sruth/tuatha/sruth/tuatha/world-map.md |
+| 40.9 KiB | .md |  |  | **Architectural Blueprint for the "Celtic Knowledge Grid": A Decentralized, Agentic, and Gamified Educational Ecosystem* | docs/sruth/tuatha/sruth/tuatha/x402-payments.md |
 
 ## 6. Super-Cluster Candidates (Consolidation Target Structure)
 
@@ -1498,60 +1498,60 @@ Proposed 12-cluster regrouping of all docs content:
   - `docs/teanga/motherduck_mcp.md` — MotherDuck's DuckDB MCP Server
   - `docs/teanga/useAgent Hook.md` — useAgent Hook
 - **docs/tuatha** (54 files):
-  - `docs/tuatha/ADDING_AGENTS.md` — Adding New Agents
-  - `docs/tuatha/ADDING_TOOLS.md` — Adding Agent Tools
-  - `docs/tuatha/AGENTS.md` — Tuath Agent Architecture
-  - `docs/tuatha/Agentic Education Platform Development.md` — **Architecting the Agentic Academy: A Technical and Cultural Blueprint for a Decentralized Celtic Ed
-  - `docs/tuatha/Agentic Web Scraping Pipeline.md` — **Autonomous Web Intelligence Architecture: A Comprehensive Implementation Framework for Agentic Scr
-  - `docs/tuatha/Building an Educational Agent's Knowledge Base.md` — **Architecting the Autonomous Epistemologist: A Technical Blueprint for Agentic Knowledge Acquisitio
-  - `docs/tuatha/CRYPTEOLAS_INTEGRATION_GUIDE.md` — Crypteolas Agent Integration Guide
-  - `docs/tuatha/Comparing the Top 6 Agent-Native Rails for the Agentic Internet_ MCP, A2A, AP2, ACP, x402, and Kite.md` — Comparing the Top 6 Agent Native Rails for the Agentic Internet  MCP, A2A, AP2, ACP, x402, and Kite
-  - `docs/tuatha/Crypteolas_ Federated Learning & Crypto Payments.md` — **Project Crypteolas: A Decentralized Architecture for Financial Knowledge Graph Federated Learning 
-  - `docs/tuatha/Crypto Analysis AI Agent System Architecture.md` — Crypto Analysis AI Agent System Architecture
-  - `docs/tuatha/Federated AI Marketplace on iPhone.md` — **Decentralized Autonomous Knowledge Markets: Integrating Crypteolas Architectures, Agentic x402 Pay
-  - `docs/tuatha/Game Development Research & AI Integration.md` — **Architectural Convergence in the Digital Heritage Economy: The 'Anam' MMO Ecosystem**
-  - `docs/tuatha/Game Reverse Engineering Workflow Design.md` — **Architectural Blueprint for Autonomous Reverse Engineering and Asset Reconstruction Systems: A Dee
-  - `docs/tuatha/Generative AI Art Workflow Integration.md` — **Architecting Agentic Creative Workflows: Deep Research into Generative AI Integration for React Ec
-  - `docs/tuatha/Interactive AI Pipeline Development.md` — **Architectural Convergence: The Agentic Pipeline for Structured Generative AI**
-  - `docs/tuatha/Interactive Map & AI Agents.md` — **Architectural Blueprint for "Celtic OS": A Spatial-Interactive Learning Environment for the Britis
-  - `docs/tuatha/Learn-to-Earn Blockchain and AI.md` — **Cianfhoghlaim: A Strategic Framework for Agentic Educational Ecosystems in the Celtic Nations**
-  - `docs/tuatha/MCP-UI.md` — MCP UI
-  - `docs/tuatha/Ogham Crypto MMO Research.md` — **Architecting Tuath: A Comprehensive Technical and Cultural Analysis of Decentralized MMO Infrastru
-  - `docs/tuatha/Web3 Gamified Education & Asset Generation.md` — **Architectural Blueprint for the "Celtic Knowledge Grid": A Decentralized, Agentic, and Gamified Ed
-  - `docs/tuatha/compass_artifact_wf-918fd144-3e32-416f-b59b-15a043b18fc1_text_markdown.md` — Agentic UI learning pipeline: a multi-agent architecture for automated web scraping and design syste
-  - `docs/tuatha/engine-selection.md` — **Architectural Convergence in the Digital Heritage Economy: The 'Anam' MMO Ecosystem**
-  - `docs/tuatha/federated-marketplace.md` — **Decentralized Autonomous Knowledge Markets: Integrating Crypteolas Architectures, Agentic x402 Pay
-  - `docs/tuatha/iOS App Development Ecosystem Strategy.md` — **Strategic Architecture for Converged Agentic Ecosystems: Integrating iOS Vision Intelligence with 
-  - `docs/tuatha/learn-to-earn-model.md` — **Cianfhoghlaim: A Strategic Framework for Agentic Educational Ecosystems in the Celtic Nations**
-  - `docs/tuatha/tuatha/ADDING_AGENTS.md` — Adding New Agents
-  - `docs/tuatha/tuatha/ADDING_TOOLS.md` — Adding Agent Tools
-  - `docs/tuatha/tuatha/AGENTS.md` — Tuath Agent Architecture
-  - `docs/tuatha/tuatha/Agentic Education Platform Development.md` — **Architecting the Agentic Academy: A Technical and Cultural Blueprint for a Decentralized Celtic Ed
-  - `docs/tuatha/tuatha/Agentic Web Scraping Pipeline.md` — **Autonomous Web Intelligence Architecture: A Comprehensive Implementation Framework for Agentic Scr
-  - `docs/tuatha/tuatha/Building an Educational Agent's Knowledge Base.md` — **Architecting the Autonomous Epistemologist: A Technical Blueprint for Agentic Knowledge Acquisitio
-  - `docs/tuatha/tuatha/CRYPTEOLAS_INTEGRATION_GUIDE.md` — Crypteolas Agent Integration Guide
-  - `docs/tuatha/tuatha/Comparing the Top 6 Agent-Native Rails for the Agentic Internet_ MCP, A2A, AP2, ACP, x402, and Kite.md` — Comparing the Top 6 Agent Native Rails for the Agentic Internet  MCP, A2A, AP2, ACP, x402, and Kite
-  - `docs/tuatha/tuatha/Crypteolas_ Federated Learning & Crypto Payments.md` — **Project Crypteolas: A Decentralized Architecture for Financial Knowledge Graph Federated Learning 
-  - `docs/tuatha/tuatha/Crypto Analysis AI Agent System Architecture.md` — Crypto Analysis AI Agent System Architecture
-  - `docs/tuatha/tuatha/Federated AI Marketplace on iPhone.md` — **Decentralized Autonomous Knowledge Markets: Integrating Crypteolas Architectures, Agentic x402 Pay
-  - `docs/tuatha/tuatha/Game Development Research & AI Integration.md` — **Architectural Convergence in the Digital Heritage Economy: The 'Anam' MMO Ecosystem**
-  - `docs/tuatha/tuatha/Game Reverse Engineering Workflow Design.md` — **Architectural Blueprint for Autonomous Reverse Engineering and Asset Reconstruction Systems: A Dee
-  - `docs/tuatha/tuatha/Generative AI Art Workflow Integration.md` — **Architecting Agentic Creative Workflows: Deep Research into Generative AI Integration for React Ec
-  - `docs/tuatha/tuatha/Interactive AI Pipeline Development.md` — **Architectural Convergence: The Agentic Pipeline for Structured Generative AI**
-  - `docs/tuatha/tuatha/Interactive Map & AI Agents.md` — **Architectural Blueprint for "Celtic OS": A Spatial-Interactive Learning Environment for the Britis
-  - `docs/tuatha/tuatha/Learn-to-Earn Blockchain and AI.md` — **Cianfhoghlaim: A Strategic Framework for Agentic Educational Ecosystems in the Celtic Nations**
-  - `docs/tuatha/tuatha/MCP-UI.md` — MCP UI
-  - `docs/tuatha/tuatha/Ogham Crypto MMO Research.md` — **Architecting Tuath: A Comprehensive Technical and Cultural Analysis of Decentralized MMO Infrastru
-  - `docs/tuatha/tuatha/Web3 Gamified Education & Asset Generation.md` — **Architectural Blueprint for the "Celtic Knowledge Grid": A Decentralized, Agentic, and Gamified Ed
-  - `docs/tuatha/tuatha/compass_artifact_wf-918fd144-3e32-416f-b59b-15a043b18fc1_text_markdown.md` — Agentic UI learning pipeline: a multi-agent architecture for automated web scraping and design syste
-  - `docs/tuatha/tuatha/engine-selection.md` — **Architectural Convergence in the Digital Heritage Economy: The 'Anam' MMO Ecosystem**
-  - `docs/tuatha/tuatha/federated-marketplace.md` — **Decentralized Autonomous Knowledge Markets: Integrating Crypteolas Architectures, Agentic x402 Pay
-  - `docs/tuatha/tuatha/iOS App Development Ecosystem Strategy.md` — **Strategic Architecture for Converged Agentic Ecosystems: Integrating iOS Vision Intelligence with 
-  - `docs/tuatha/tuatha/learn-to-earn-model.md` — **Cianfhoghlaim: A Strategic Framework for Agentic Educational Ecosystems in the Celtic Nations**
-  - `docs/tuatha/tuatha/useAgent Hook.md` — useAgent Hook
-  - `docs/tuatha/tuatha/x402-payments.md` — **Architectural Blueprint for the "Celtic Knowledge Grid": A Decentralized, Agentic, and Gamified Ed
-  - `docs/tuatha/useAgent Hook.md` — useAgent Hook
-  - `docs/tuatha/x402-payments.md` — **Architectural Blueprint for the "Celtic Knowledge Grid": A Decentralized, Agentic, and Gamified Ed
+  - `docs/sruth/tuatha/ADDING_AGENTS.md` — Adding New Agents
+  - `docs/sruth/tuatha/ADDING_TOOLS.md` — Adding Agent Tools
+  - `docs/sruth/tuatha/AGENTS.md` — Tuath Agent Architecture
+  - `docs/sruth/tuatha/Agentic Education Platform Development.md` — **Architecting the Agentic Academy: A Technical and Cultural Blueprint for a Decentralized Celtic Ed
+  - `docs/sruth/tuatha/Agentic Web Scraping Pipeline.md` — **Autonomous Web Intelligence Architecture: A Comprehensive Implementation Framework for Agentic Scr
+  - `docs/sruth/tuatha/Building an Educational Agent's Knowledge Base.md` — **Architecting the Autonomous Epistemologist: A Technical Blueprint for Agentic Knowledge Acquisitio
+  - `docs/sruth/tuatha/CRYPTEOLAS_INTEGRATION_GUIDE.md` — Crypteolas Agent Integration Guide
+  - `docs/sruth/tuatha/Comparing the Top 6 Agent-Native Rails for the Agentic Internet_ MCP, A2A, AP2, ACP, x402, and Kite.md` — Comparing the Top 6 Agent Native Rails for the Agentic Internet  MCP, A2A, AP2, ACP, x402, and Kite
+  - `docs/sruth/tuatha/Crypteolas_ Federated Learning & Crypto Payments.md` — **Project Crypteolas: A Decentralized Architecture for Financial Knowledge Graph Federated Learning 
+  - `docs/sruth/tuatha/Crypto Analysis AI Agent System Architecture.md` — Crypto Analysis AI Agent System Architecture
+  - `docs/sruth/tuatha/Federated AI Marketplace on iPhone.md` — **Decentralized Autonomous Knowledge Markets: Integrating Crypteolas Architectures, Agentic x402 Pay
+  - `docs/sruth/tuatha/Game Development Research & AI Integration.md` — **Architectural Convergence in the Digital Heritage Economy: The 'Anam' MMO Ecosystem**
+  - `docs/sruth/tuatha/Game Reverse Engineering Workflow Design.md` — **Architectural Blueprint for Autonomous Reverse Engineering and Asset Reconstruction Systems: A Dee
+  - `docs/sruth/tuatha/Generative AI Art Workflow Integration.md` — **Architecting Agentic Creative Workflows: Deep Research into Generative AI Integration for React Ec
+  - `docs/sruth/tuatha/Interactive AI Pipeline Development.md` — **Architectural Convergence: The Agentic Pipeline for Structured Generative AI**
+  - `docs/sruth/tuatha/Interactive Map & AI Agents.md` — **Architectural Blueprint for "Celtic OS": A Spatial-Interactive Learning Environment for the Britis
+  - `docs/sruth/tuatha/Learn-to-Earn Blockchain and AI.md` — **Cianfhoghlaim: A Strategic Framework for Agentic Educational Ecosystems in the Celtic Nations**
+  - `docs/sruth/tuatha/MCP-UI.md` — MCP UI
+  - `docs/sruth/tuatha/Ogham Crypto MMO Research.md` — **Architecting Tuath: A Comprehensive Technical and Cultural Analysis of Decentralized MMO Infrastru
+  - `docs/sruth/tuatha/Web3 Gamified Education & Asset Generation.md` — **Architectural Blueprint for the "Celtic Knowledge Grid": A Decentralized, Agentic, and Gamified Ed
+  - `docs/sruth/tuatha/compass_artifact_wf-918fd144-3e32-416f-b59b-15a043b18fc1_text_markdown.md` — Agentic UI learning pipeline: a multi-agent architecture for automated web scraping and design syste
+  - `docs/sruth/tuatha/engine-selection.md` — **Architectural Convergence in the Digital Heritage Economy: The 'Anam' MMO Ecosystem**
+  - `docs/sruth/tuatha/federated-marketplace.md` — **Decentralized Autonomous Knowledge Markets: Integrating Crypteolas Architectures, Agentic x402 Pay
+  - `docs/sruth/tuatha/iOS App Development Ecosystem Strategy.md` — **Strategic Architecture for Converged Agentic Ecosystems: Integrating iOS Vision Intelligence with 
+  - `docs/sruth/tuatha/learn-to-earn-model.md` — **Cianfhoghlaim: A Strategic Framework for Agentic Educational Ecosystems in the Celtic Nations**
+  - `docs/sruth/tuatha/sruth/tuatha/ADDING_AGENTS.md` — Adding New Agents
+  - `docs/sruth/tuatha/sruth/tuatha/ADDING_TOOLS.md` — Adding Agent Tools
+  - `docs/sruth/tuatha/sruth/tuatha/AGENTS.md` — Tuath Agent Architecture
+  - `docs/sruth/tuatha/sruth/tuatha/Agentic Education Platform Development.md` — **Architecting the Agentic Academy: A Technical and Cultural Blueprint for a Decentralized Celtic Ed
+  - `docs/sruth/tuatha/sruth/tuatha/Agentic Web Scraping Pipeline.md` — **Autonomous Web Intelligence Architecture: A Comprehensive Implementation Framework for Agentic Scr
+  - `docs/sruth/tuatha/sruth/tuatha/Building an Educational Agent's Knowledge Base.md` — **Architecting the Autonomous Epistemologist: A Technical Blueprint for Agentic Knowledge Acquisitio
+  - `docs/sruth/tuatha/sruth/tuatha/CRYPTEOLAS_INTEGRATION_GUIDE.md` — Crypteolas Agent Integration Guide
+  - `docs/sruth/tuatha/sruth/tuatha/Comparing the Top 6 Agent-Native Rails for the Agentic Internet_ MCP, A2A, AP2, ACP, x402, and Kite.md` — Comparing the Top 6 Agent Native Rails for the Agentic Internet  MCP, A2A, AP2, ACP, x402, and Kite
+  - `docs/sruth/tuatha/sruth/tuatha/Crypteolas_ Federated Learning & Crypto Payments.md` — **Project Crypteolas: A Decentralized Architecture for Financial Knowledge Graph Federated Learning 
+  - `docs/sruth/tuatha/sruth/tuatha/Crypto Analysis AI Agent System Architecture.md` — Crypto Analysis AI Agent System Architecture
+  - `docs/sruth/tuatha/sruth/tuatha/Federated AI Marketplace on iPhone.md` — **Decentralized Autonomous Knowledge Markets: Integrating Crypteolas Architectures, Agentic x402 Pay
+  - `docs/sruth/tuatha/sruth/tuatha/Game Development Research & AI Integration.md` — **Architectural Convergence in the Digital Heritage Economy: The 'Anam' MMO Ecosystem**
+  - `docs/sruth/tuatha/sruth/tuatha/Game Reverse Engineering Workflow Design.md` — **Architectural Blueprint for Autonomous Reverse Engineering and Asset Reconstruction Systems: A Dee
+  - `docs/sruth/tuatha/sruth/tuatha/Generative AI Art Workflow Integration.md` — **Architecting Agentic Creative Workflows: Deep Research into Generative AI Integration for React Ec
+  - `docs/sruth/tuatha/sruth/tuatha/Interactive AI Pipeline Development.md` — **Architectural Convergence: The Agentic Pipeline for Structured Generative AI**
+  - `docs/sruth/tuatha/sruth/tuatha/Interactive Map & AI Agents.md` — **Architectural Blueprint for "Celtic OS": A Spatial-Interactive Learning Environment for the Britis
+  - `docs/sruth/tuatha/sruth/tuatha/Learn-to-Earn Blockchain and AI.md` — **Cianfhoghlaim: A Strategic Framework for Agentic Educational Ecosystems in the Celtic Nations**
+  - `docs/sruth/tuatha/sruth/tuatha/MCP-UI.md` — MCP UI
+  - `docs/sruth/tuatha/sruth/tuatha/Ogham Crypto MMO Research.md` — **Architecting Tuath: A Comprehensive Technical and Cultural Analysis of Decentralized MMO Infrastru
+  - `docs/sruth/tuatha/sruth/tuatha/Web3 Gamified Education & Asset Generation.md` — **Architectural Blueprint for the "Celtic Knowledge Grid": A Decentralized, Agentic, and Gamified Ed
+  - `docs/sruth/tuatha/sruth/tuatha/compass_artifact_wf-918fd144-3e32-416f-b59b-15a043b18fc1_text_markdown.md` — Agentic UI learning pipeline: a multi-agent architecture for automated web scraping and design syste
+  - `docs/sruth/tuatha/sruth/tuatha/engine-selection.md` — **Architectural Convergence in the Digital Heritage Economy: The 'Anam' MMO Ecosystem**
+  - `docs/sruth/tuatha/sruth/tuatha/federated-marketplace.md` — **Decentralized Autonomous Knowledge Markets: Integrating Crypteolas Architectures, Agentic x402 Pay
+  - `docs/sruth/tuatha/sruth/tuatha/iOS App Development Ecosystem Strategy.md` — **Strategic Architecture for Converged Agentic Ecosystems: Integrating iOS Vision Intelligence with 
+  - `docs/sruth/tuatha/sruth/tuatha/learn-to-earn-model.md` — **Cianfhoghlaim: A Strategic Framework for Agentic Educational Ecosystems in the Celtic Nations**
+  - `docs/sruth/tuatha/sruth/tuatha/useAgent Hook.md` — useAgent Hook
+  - `docs/sruth/tuatha/sruth/tuatha/x402-payments.md` — **Architectural Blueprint for the "Celtic Knowledge Grid": A Decentralized, Agentic, and Gamified Ed
+  - `docs/sruth/tuatha/useAgent Hook.md` — useAgent Hook
+  - `docs/sruth/tuatha/x402-payments.md` — **Architectural Blueprint for the "Celtic Knowledge Grid": A Decentralized, Agentic, and Gamified Ed
 - **docs/web** (8 files):
   - `docs/web/AG-UI Goes Mobile_ The Kotlin SDK Unlocks Full Agent Connectivity Across Android, iOS, and JVM.md` — AG UI Goes Mobile  The Kotlin SDK Unlocks Full Agent Connectivity Across Android, iOS, and JVM
   - `docs/web/BAML, Graphiti, Tanstack AI Pipeline.md` — **ARCHITECTURAL CONVERGENCE FOR DETERMINISTIC AGENTIC SYSTEMS: INTEGRATING BAML, GRAPHITI, AND TANST
@@ -1595,10 +1595,10 @@ Proposed 12-cluster regrouping of all docs content:
   - `docs/teanga/Integrating TanStack AI with LiteLLM.md` — **Architecting the Isomorphic AI Tutor: A Comprehensive Research Report on Integrating TanStack AI, 
   - `docs/teanga/irish-english-education.md` — Technical Architecture for a Bilingual Irish/English Mathematics Education System
 - **docs/tuatha** (4 files):
-  - `docs/tuatha/AI Chemistry Education Image Generation.md` — **Advanced Computational Workflows for Bilingual Educational Asset Generation: Integrating BAML Stru
-  - `docs/tuatha/dlt_crawl4ai_lancedb.md` — Define the source using dlt's declarative REST API configuration
-  - `docs/tuatha/tuatha/AI Chemistry Education Image Generation.md` — **Advanced Computational Workflows for Bilingual Educational Asset Generation: Integrating BAML Stru
-  - `docs/tuatha/tuatha/dlt_crawl4ai_lancedb.md` — Define the source using dlt's declarative REST API configuration
+  - `docs/sruth/tuatha/AI Chemistry Education Image Generation.md` — **Advanced Computational Workflows for Bilingual Educational Asset Generation: Integrating BAML Stru
+  - `docs/sruth/tuatha/dlt_crawl4ai_lancedb.md` — Define the source using dlt's declarative REST API configuration
+  - `docs/sruth/tuatha/sruth/tuatha/AI Chemistry Education Image Generation.md` — **Advanced Computational Workflows for Bilingual Educational Asset Generation: Integrating BAML Stru
+  - `docs/sruth/tuatha/sruth/tuatha/dlt_crawl4ai_lancedb.md` — Define the source using dlt's declarative REST API configuration
 - **docs/web** (1 files):
   - `docs/web/Integrating TanStack AI with LiteLLM.md` — **Architecting the Isomorphic AI Tutor: A Comprehensive Research Report on Integrating TanStack AI, 
 
@@ -1647,12 +1647,12 @@ Proposed 12-cluster regrouping of all docs content:
   - `docs/teanga/repo-escriptorium.md` — KCG_SUMMARY: eScriptorium — Historical Document Transcription Platform
   - `docs/teanga/repo-pylaia.md` — KCG_SUMMARY: PyLaia — Deep Learning Handwritten Text Recognition
 - **docs/tuatha** (6 files):
-  - `docs/tuatha/Irish Handwriting App Development.md` — **Operationalizing Irish Handwriting Recognition on Apple Silicon: An Exhaustive Architectural Analy
-  - `docs/tuatha/apple_ml-fastvlm_ This repository contains the official implementation of _FastVLM_ Efficient Vision Encoding for Vision Language Models_ - CVPR 2025.md` — apple ml fastvlm  This repository contains the official implementation of  FastVLM  Efficient Vision
-  - `docs/tuatha/celtic-ocr.md` — **Comprehensive Architectural Analysis for Bilingual Irish-English Handwritten Text Recognition on i
-  - `docs/tuatha/tuatha/Irish Handwriting App Development.md` — **Operationalizing Irish Handwriting Recognition on Apple Silicon: An Exhaustive Architectural Analy
-  - `docs/tuatha/tuatha/apple_ml-fastvlm_ This repository contains the official implementation of _FastVLM_ Efficient Vision Encoding for Vision Language Models_ - CVPR 2025.md` — apple ml fastvlm  This repository contains the official implementation of  FastVLM  Efficient Vision
-  - `docs/tuatha/tuatha/celtic-ocr.md` — **Comprehensive Architectural Analysis for Bilingual Irish-English Handwritten Text Recognition on i
+  - `docs/sruth/tuatha/Irish Handwriting App Development.md` — **Operationalizing Irish Handwriting Recognition on Apple Silicon: An Exhaustive Architectural Analy
+  - `docs/sruth/tuatha/apple_ml-fastvlm_ This repository contains the official implementation of _FastVLM_ Efficient Vision Encoding for Vision Language Models_ - CVPR 2025.md` — apple ml fastvlm  This repository contains the official implementation of  FastVLM  Efficient Vision
+  - `docs/sruth/tuatha/celtic-ocr.md` — **Comprehensive Architectural Analysis for Bilingual Irish-English Handwritten Text Recognition on i
+  - `docs/sruth/tuatha/sruth/tuatha/Irish Handwriting App Development.md` — **Operationalizing Irish Handwriting Recognition on Apple Silicon: An Exhaustive Architectural Analy
+  - `docs/sruth/tuatha/sruth/tuatha/apple_ml-fastvlm_ This repository contains the official implementation of _FastVLM_ Efficient Vision Encoding for Vision Language Models_ - CVPR 2025.md` — apple ml fastvlm  This repository contains the official implementation of  FastVLM  Efficient Vision
+  - `docs/sruth/tuatha/sruth/tuatha/celtic-ocr.md` — **Comprehensive Architectural Analysis for Bilingual Irish-English Handwritten Text Recognition on i
 
 ### 04-Data Pipelines & Orchestration
 
@@ -1705,16 +1705,16 @@ Proposed 12-cluster regrouping of all docs content:
   - `docs/teanga/gaeilge.md` — gaeilge
   - `docs/teanga/irish-gaeilge.md` — irish gaeilge
 - **docs/tuatha** (10 files):
-  - `docs/tuatha/ADDING_DATA_SOURCES.md` — Adding Data Sources
-  - `docs/tuatha/British Isles Game Dev Data Pipeline.md` — **Architectural Framework for Data-Driven 2.5D Geospatial Synthesis: Integrating Authoritative Briti
-  - `docs/tuatha/Irish LLM for iPhone Development.md` — **Strategic Architecture for Indigenous Language Intelligence on the Edge: A Comprehensive Framework
-  - `docs/tuatha/PIPELINES.md` — Tuath Data Pipelines
-  - `docs/tuatha/Technical Integration Plan_ Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly).md` — Technical Integration Plan  Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly)
-  - `docs/tuatha/tuatha/ADDING_DATA_SOURCES.md` — Adding Data Sources
-  - `docs/tuatha/tuatha/British Isles Game Dev Data Pipeline.md` — **Architectural Framework for Data-Driven 2.5D Geospatial Synthesis: Integrating Authoritative Briti
-  - `docs/tuatha/tuatha/Irish LLM for iPhone Development.md` — **Strategic Architecture for Indigenous Language Intelligence on the Edge: A Comprehensive Framework
-  - `docs/tuatha/tuatha/PIPELINES.md` — Tuath Data Pipelines
-  - `docs/tuatha/tuatha/Technical Integration Plan_ Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly).md` — Technical Integration Plan  Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly)
+  - `docs/sruth/tuatha/ADDING_DATA_SOURCES.md` — Adding Data Sources
+  - `docs/sruth/tuatha/British Isles Game Dev Data Pipeline.md` — **Architectural Framework for Data-Driven 2.5D Geospatial Synthesis: Integrating Authoritative Briti
+  - `docs/sruth/tuatha/Irish LLM for iPhone Development.md` — **Strategic Architecture for Indigenous Language Intelligence on the Edge: A Comprehensive Framework
+  - `docs/sruth/tuatha/PIPELINES.md` — Tuath Data Pipelines
+  - `docs/sruth/tuatha/Technical Integration Plan_ Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly).md` — Technical Integration Plan  Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly)
+  - `docs/sruth/tuatha/sruth/tuatha/ADDING_DATA_SOURCES.md` — Adding Data Sources
+  - `docs/sruth/tuatha/sruth/tuatha/British Isles Game Dev Data Pipeline.md` — **Architectural Framework for Data-Driven 2.5D Geospatial Synthesis: Integrating Authoritative Briti
+  - `docs/sruth/tuatha/sruth/tuatha/Irish LLM for iPhone Development.md` — **Strategic Architecture for Indigenous Language Intelligence on the Edge: A Comprehensive Framework
+  - `docs/sruth/tuatha/sruth/tuatha/PIPELINES.md` — Tuath Data Pipelines
+  - `docs/sruth/tuatha/sruth/tuatha/Technical Integration Plan_ Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly).md` — Technical Integration Plan  Dagster + DLT + CocoIndex + Feast + MLflow (with DuckDB & Dragonfly)
 
 ### 05-Knowledge Graphs & AI Memory
 
@@ -1736,8 +1736,8 @@ Proposed 12-cluster regrouping of all docs content:
 - **docs/teanga** (1 files):
   - `docs/teanga/Backend Strategy For Educational Tutoring System.md` — **Backend Architecture Strategy for a Bilingual Temporal Knowledge Graph in Mathematics Education**
 - **docs/tuatha** (2 files):
-  - `docs/tuatha/Multimodal Video Knowledge Graph Pipeline.md` — **Architectural Blueprint for a Native Multimodal Knowledge Graph Pipeline: Integrating Video, Audio
-  - `docs/tuatha/tuatha/Multimodal Video Knowledge Graph Pipeline.md` — **Architectural Blueprint for a Native Multimodal Knowledge Graph Pipeline: Integrating Video, Audio
+  - `docs/sruth/tuatha/Multimodal Video Knowledge Graph Pipeline.md` — **Architectural Blueprint for a Native Multimodal Knowledge Graph Pipeline: Integrating Video, Audio
+  - `docs/sruth/tuatha/sruth/tuatha/Multimodal Video Knowledge Graph Pipeline.md` — **Architectural Blueprint for a Native Multimodal Knowledge Graph Pipeline: Integrating Video, Audio
 
 ### 06-Vector Storage & Lakehouse
 
@@ -1792,12 +1792,12 @@ Proposed 12-cluster regrouping of all docs content:
   - `docs/teanga/geoai-Geospatial Data Analysis and DuckDB.md` — **Convergence of Spatial Analytics and Digital Folkloristics: A Technical and Theoretical Examinatio
   - `docs/teanga/geoai-Geospatial Data Visualization with Ibis.md` — **Modernizing Educational Geospatial Intelligence: A Comprehensive Architectural Analysis of Ibis, D
 - **docs/tuatha** (6 files):
-  - `docs/tuatha/Integrating Rust, DuckDB, TanStack, CopilotKit.md` — **Architectural Synthesis of Sovereign Game State: Integrating SpacetimeDB, DuckDB WASM, TanStack St
-  - `docs/tuatha/Rust Client.md` — Rust Client
-  - `docs/tuatha/TanStack DB Integration and Comparison.md` — **The Convergent Stack: Architecting Reactive Data Systems with TanStack DB, DuckDB, RisingWave, and
-  - `docs/tuatha/tuatha/Integrating Rust, DuckDB, TanStack, CopilotKit.md` — **Architectural Synthesis of Sovereign Game State: Integrating SpacetimeDB, DuckDB WASM, TanStack St
-  - `docs/tuatha/tuatha/Rust Client.md` — Rust Client
-  - `docs/tuatha/tuatha/TanStack DB Integration and Comparison.md` — **The Convergent Stack: Architecting Reactive Data Systems with TanStack DB, DuckDB, RisingWave, and
+  - `docs/sruth/tuatha/Integrating Rust, DuckDB, TanStack, CopilotKit.md` — **Architectural Synthesis of Sovereign Game State: Integrating SpacetimeDB, DuckDB WASM, TanStack St
+  - `docs/sruth/tuatha/Rust Client.md` — Rust Client
+  - `docs/sruth/tuatha/TanStack DB Integration and Comparison.md` — **The Convergent Stack: Architecting Reactive Data Systems with TanStack DB, DuckDB, RisingWave, and
+  - `docs/sruth/tuatha/sruth/tuatha/Integrating Rust, DuckDB, TanStack, CopilotKit.md` — **Architectural Synthesis of Sovereign Game State: Integrating SpacetimeDB, DuckDB WASM, TanStack St
+  - `docs/sruth/tuatha/sruth/tuatha/Rust Client.md` — Rust Client
+  - `docs/sruth/tuatha/sruth/tuatha/TanStack DB Integration and Comparison.md` — **The Convergent Stack: Architecting Reactive Data Systems with TanStack DB, DuckDB, RisingWave, and
 - **docs/web** (1 files):
   - `docs/web/TanStack DB Integration and Comparison.md` — **The Convergent Stack: Architecting Reactive Data Systems with TanStack DB, DuckDB, RisingWave, and
 
@@ -1866,18 +1866,18 @@ Proposed 12-cluster regrouping of all docs content:
   - `docs/teanga/welsh-huggingface-resources.md` — Welsh (Cymraeg) Language AI Resources on HuggingFace
   - `docs/teanga/welsh-welsh-huggingface-resources.md` — Welsh (Cymraeg) Language AI Resources on HuggingFace
 - **docs/tuatha** (12 files):
-  - `docs/tuatha/Frontend Idea Catalog Development.md` — **Automated Frontend Intelligence: A Multi-Modal Framework for Design Pattern Extraction**
-  - `docs/tuatha/Introducing AnyLanguageModel_ One API for Local and Remote LLMs on Apple Platforms.md` — Introducing AnyLanguageModel  One API for Local and Remote LLMs on Apple Platforms
-  - `docs/tuatha/LLM Serving with MLflow & Langfuse.md` — **Architecting Unified Hybrid-Inference Gateways: A Comprehensive Analysis of Local-Cloud Interopera
-  - `docs/tuatha/Swift Transformers Reaches 1.0 – and Looks to the Future.md` — Swift Transformers Reaches 1.0 – and Looks to the Future
-  - `docs/tuatha/Unsloth Model Catalog _ Unsloth Documentation.md` — Unsloth Model Catalog   Unsloth Documentation
-  - `docs/tuatha/tuatha/Frontend Idea Catalog Development.md` — **Automated Frontend Intelligence: A Multi-Modal Framework for Design Pattern Extraction**
-  - `docs/tuatha/tuatha/Introducing AnyLanguageModel_ One API for Local and Remote LLMs on Apple Platforms.md` — Introducing AnyLanguageModel  One API for Local and Remote LLMs on Apple Platforms
-  - `docs/tuatha/tuatha/LLM Serving with MLflow & Langfuse.md` — **Architecting Unified Hybrid-Inference Gateways: A Comprehensive Analysis of Local-Cloud Interopera
-  - `docs/tuatha/tuatha/Swift Transformers Reaches 1.0 – and Looks to the Future.md` — Swift Transformers Reaches 1.0 – and Looks to the Future
-  - `docs/tuatha/tuatha/Unsloth Model Catalog _ Unsloth Documentation.md` — Unsloth Model Catalog   Unsloth Documentation
-  - `docs/tuatha/tuatha/unsloth-catalog.md` — unsloth catalog
-  - `docs/tuatha/unsloth-catalog.md` — unsloth catalog
+  - `docs/sruth/tuatha/Frontend Idea Catalog Development.md` — **Automated Frontend Intelligence: A Multi-Modal Framework for Design Pattern Extraction**
+  - `docs/sruth/tuatha/Introducing AnyLanguageModel_ One API for Local and Remote LLMs on Apple Platforms.md` — Introducing AnyLanguageModel  One API for Local and Remote LLMs on Apple Platforms
+  - `docs/sruth/tuatha/LLM Serving with MLflow & Langfuse.md` — **Architecting Unified Hybrid-Inference Gateways: A Comprehensive Analysis of Local-Cloud Interopera
+  - `docs/sruth/tuatha/Swift Transformers Reaches 1.0 – and Looks to the Future.md` — Swift Transformers Reaches 1.0 – and Looks to the Future
+  - `docs/sruth/tuatha/Unsloth Model Catalog _ Unsloth Documentation.md` — Unsloth Model Catalog   Unsloth Documentation
+  - `docs/sruth/tuatha/sruth/tuatha/Frontend Idea Catalog Development.md` — **Automated Frontend Intelligence: A Multi-Modal Framework for Design Pattern Extraction**
+  - `docs/sruth/tuatha/sruth/tuatha/Introducing AnyLanguageModel_ One API for Local and Remote LLMs on Apple Platforms.md` — Introducing AnyLanguageModel  One API for Local and Remote LLMs on Apple Platforms
+  - `docs/sruth/tuatha/sruth/tuatha/LLM Serving with MLflow & Langfuse.md` — **Architecting Unified Hybrid-Inference Gateways: A Comprehensive Analysis of Local-Cloud Interopera
+  - `docs/sruth/tuatha/sruth/tuatha/Swift Transformers Reaches 1.0 – and Looks to the Future.md` — Swift Transformers Reaches 1.0 – and Looks to the Future
+  - `docs/sruth/tuatha/sruth/tuatha/Unsloth Model Catalog _ Unsloth Documentation.md` — Unsloth Model Catalog   Unsloth Documentation
+  - `docs/sruth/tuatha/sruth/tuatha/unsloth-catalog.md` — unsloth catalog
+  - `docs/sruth/tuatha/unsloth-catalog.md` — unsloth catalog
 - **docs/web** (1 files):
   - `docs/web/Frontend Idea Catalog Development.md` — **Automated Frontend Intelligence: A Multi-Modal Framework for Design Pattern Extraction**
 
@@ -1965,16 +1965,16 @@ Proposed 12-cluster regrouping of all docs content:
   - `docs/teanga/gaois-documental-docs-software-documental-deployment.en.md` — gaois documental docs software documental deployment.en
   - `docs/teanga/gaois-documental-docs-software-documental-deployment.ga.md` — gaois documental docs software documental deployment.ga
 - **docs/tuatha** (10 files):
-  - `docs/tuatha/Celtic Language Data Aggregation & Analysis.md` — **Unified Computational Infrastructure for Celtic Languages: Data Integration, Educational Analytics
-  - `docs/tuatha/DEPLOYMENT.md` — Deployment Guide
-  - `docs/tuatha/README.md` — Game Development Reference Library
-  - `docs/tuatha/celtic_mmo.md` — Building an "Anam" Celtic educational MMO: technical foundations
-  - `docs/tuatha/infrastructure-README.md` — Infrastructure
-  - `docs/tuatha/tuatha/Celtic Language Data Aggregation & Analysis.md` — **Unified Computational Infrastructure for Celtic Languages: Data Integration, Educational Analytics
-  - `docs/tuatha/tuatha/DEPLOYMENT.md` — Deployment Guide
-  - `docs/tuatha/tuatha/README.md` — Game Development Reference Library
-  - `docs/tuatha/tuatha/celtic_mmo.md` — Building an "Anam" Celtic educational MMO: technical foundations
-  - `docs/tuatha/tuatha/infrastructure-README.md` — Infrastructure
+  - `docs/sruth/tuatha/Celtic Language Data Aggregation & Analysis.md` — **Unified Computational Infrastructure for Celtic Languages: Data Integration, Educational Analytics
+  - `docs/sruth/tuatha/DEPLOYMENT.md` — Deployment Guide
+  - `docs/sruth/tuatha/README.md` — Game Development Reference Library
+  - `docs/sruth/tuatha/celtic_mmo.md` — Building an "Anam" Celtic educational MMO: technical foundations
+  - `docs/sruth/tuatha/infrastructure-README.md` — Infrastructure
+  - `docs/sruth/tuatha/sruth/tuatha/Celtic Language Data Aggregation & Analysis.md` — **Unified Computational Infrastructure for Celtic Languages: Data Integration, Educational Analytics
+  - `docs/sruth/tuatha/sruth/tuatha/DEPLOYMENT.md` — Deployment Guide
+  - `docs/sruth/tuatha/sruth/tuatha/README.md` — Game Development Reference Library
+  - `docs/sruth/tuatha/sruth/tuatha/celtic_mmo.md` — Building an "Anam" Celtic educational MMO: technical foundations
+  - `docs/sruth/tuatha/sruth/tuatha/infrastructure-README.md` — Infrastructure
 - **docs/web** (1 files):
   - `docs/web/alchemy-run_alchemy_ Infrastructure as TypeScript.md` — alchemy run alchemy  Infrastructure as TypeScript
 
@@ -2020,28 +2020,28 @@ Proposed 12-cluster regrouping of all docs content:
   - `docs/teanga/kscanne-crubadan-transliterate-README.md` — kscanne crubadan transliterate README
   - `docs/teanga/kscanne-gbb-classification-author-README.md` — kscanne gbb classification author README
 - **docs/tuatha** (22 files):
-  - `docs/tuatha/AG-UI and A2UI_ Understanding the Differences _ CopilotKit.md` — AG UI and A2UI  Understanding the Differences   CopilotKit
-  - `docs/tuatha/Asset Management for Full-Stack App.md` — **Strategic Asset Management and Visual Architecture for Full-Stack Educational Platforms**
-  - `docs/tuatha/FRONTEND.md` — TanStack Start Frontend
-  - `docs/tuatha/GRAPHICS_INDEX.md` — Graphics, Game Development & Rendering Documentation Index
-  - `docs/tuatha/Game Particle Effects Research(2).md` — **The Anam Initiative: Architectural Blueprints for High-Fidelity Meteorological Particle Simulation
-  - `docs/tuatha/Game Particle Effects Research.md` — **The Anam Initiative: Architectural Blueprints for High-Fidelity Meteorological Particle Simulation
-  - `docs/tuatha/Geospatial Workflow & Particle Effects.md` — **Architectural Synthesis of High-Performance Geospatial Workflows: Integrating Cloud-Native OLAP an
-  - `docs/tuatha/Rust Full-Stack Gaming Environment.md` — **Architectural Analysis and Implementation Strategy for a Rust-Based Full-Stack Gaming Ecosystem**
-  - `docs/tuatha/Sign In With Ethereum (SIWE) _ Better Auth.md` — Sign In With Ethereum (SIWE)   Better Auth
-  - `docs/tuatha/game_DEVELOPMENT.md` — Development
-  - `docs/tuatha/game_siwe-auth.md` — game siwe auth
-  - `docs/tuatha/tuatha/AG-UI and A2UI_ Understanding the Differences _ CopilotKit.md` — AG UI and A2UI  Understanding the Differences   CopilotKit
-  - `docs/tuatha/tuatha/Asset Management for Full-Stack App.md` — **Strategic Asset Management and Visual Architecture for Full-Stack Educational Platforms**
-  - `docs/tuatha/tuatha/FRONTEND.md` — TanStack Start Frontend
-  - `docs/tuatha/tuatha/GRAPHICS_INDEX.md` — Graphics, Game Development & Rendering Documentation Index
-  - `docs/tuatha/tuatha/Game Particle Effects Research(2).md` — **The Anam Initiative: Architectural Blueprints for High-Fidelity Meteorological Particle Simulation
-  - `docs/tuatha/tuatha/Game Particle Effects Research.md` — **The Anam Initiative: Architectural Blueprints for High-Fidelity Meteorological Particle Simulation
-  - `docs/tuatha/tuatha/Geospatial Workflow & Particle Effects.md` — **Architectural Synthesis of High-Performance Geospatial Workflows: Integrating Cloud-Native OLAP an
-  - `docs/tuatha/tuatha/Rust Full-Stack Gaming Environment.md` — **Architectural Analysis and Implementation Strategy for a Rust-Based Full-Stack Gaming Ecosystem**
-  - `docs/tuatha/tuatha/Sign In With Ethereum (SIWE) _ Better Auth.md` — Sign In With Ethereum (SIWE)   Better Auth
-  - `docs/tuatha/tuatha/game_DEVELOPMENT.md` — Development
-  - `docs/tuatha/tuatha/game_siwe-auth.md` — game siwe auth
+  - `docs/sruth/tuatha/AG-UI and A2UI_ Understanding the Differences _ CopilotKit.md` — AG UI and A2UI  Understanding the Differences   CopilotKit
+  - `docs/sruth/tuatha/Asset Management for Full-Stack App.md` — **Strategic Asset Management and Visual Architecture for Full-Stack Educational Platforms**
+  - `docs/sruth/tuatha/FRONTEND.md` — TanStack Start Frontend
+  - `docs/sruth/tuatha/GRAPHICS_INDEX.md` — Graphics, Game Development & Rendering Documentation Index
+  - `docs/sruth/tuatha/Game Particle Effects Research(2).md` — **The Anam Initiative: Architectural Blueprints for High-Fidelity Meteorological Particle Simulation
+  - `docs/sruth/tuatha/Game Particle Effects Research.md` — **The Anam Initiative: Architectural Blueprints for High-Fidelity Meteorological Particle Simulation
+  - `docs/sruth/tuatha/Geospatial Workflow & Particle Effects.md` — **Architectural Synthesis of High-Performance Geospatial Workflows: Integrating Cloud-Native OLAP an
+  - `docs/sruth/tuatha/Rust Full-Stack Gaming Environment.md` — **Architectural Analysis and Implementation Strategy for a Rust-Based Full-Stack Gaming Ecosystem**
+  - `docs/sruth/tuatha/Sign In With Ethereum (SIWE) _ Better Auth.md` — Sign In With Ethereum (SIWE)   Better Auth
+  - `docs/sruth/tuatha/game_DEVELOPMENT.md` — Development
+  - `docs/sruth/tuatha/game_siwe-auth.md` — game siwe auth
+  - `docs/sruth/tuatha/sruth/tuatha/AG-UI and A2UI_ Understanding the Differences _ CopilotKit.md` — AG UI and A2UI  Understanding the Differences   CopilotKit
+  - `docs/sruth/tuatha/sruth/tuatha/Asset Management for Full-Stack App.md` — **Strategic Asset Management and Visual Architecture for Full-Stack Educational Platforms**
+  - `docs/sruth/tuatha/sruth/tuatha/FRONTEND.md` — TanStack Start Frontend
+  - `docs/sruth/tuatha/sruth/tuatha/GRAPHICS_INDEX.md` — Graphics, Game Development & Rendering Documentation Index
+  - `docs/sruth/tuatha/sruth/tuatha/Game Particle Effects Research(2).md` — **The Anam Initiative: Architectural Blueprints for High-Fidelity Meteorological Particle Simulation
+  - `docs/sruth/tuatha/sruth/tuatha/Game Particle Effects Research.md` — **The Anam Initiative: Architectural Blueprints for High-Fidelity Meteorological Particle Simulation
+  - `docs/sruth/tuatha/sruth/tuatha/Geospatial Workflow & Particle Effects.md` — **Architectural Synthesis of High-Performance Geospatial Workflows: Integrating Cloud-Native OLAP an
+  - `docs/sruth/tuatha/sruth/tuatha/Rust Full-Stack Gaming Environment.md` — **Architectural Analysis and Implementation Strategy for a Rust-Based Full-Stack Gaming Ecosystem**
+  - `docs/sruth/tuatha/sruth/tuatha/Sign In With Ethereum (SIWE) _ Better Auth.md` — Sign In With Ethereum (SIWE)   Better Auth
+  - `docs/sruth/tuatha/sruth/tuatha/game_DEVELOPMENT.md` — Development
+  - `docs/sruth/tuatha/sruth/tuatha/game_siwe-auth.md` — game siwe auth
 - **docs/web** (37 files):
   - `docs/web/AG-UI and A2UI_ Understanding the Differences _ CopilotKit.md` — AG UI and A2UI  Understanding the Differences   CopilotKit
   - `docs/web/Asset Management for Full-Stack App.md` — **Strategic Asset Management and Visual Architecture for Full-Stack Educational Platforms**
@@ -2339,50 +2339,50 @@ Proposed 12-cluster regrouping of all docs content:
   - `docs/teanga/repo-IRLBench.md` — KCG_SUMMARY: IRLBench — Irish-English Bilingual LLM Benchmark
   - `docs/teanga/repo-tts-dataset-generator.md` — KCG_SUMMARY: TTS Dataset Generator — Automated Speech Dataset Creation
 - **docs/tuatha** (44 files):
-  - `docs/tuatha/ADDING_ZONES.md` — Adding New Game Zones
-  - `docs/tuatha/API.md` — Tuath API Reference
-  - `docs/tuatha/British Isles Education Map.md` — **The British Isles Demographic Atlas: A Comprehensive Technical and Statistical Report**
-  - `docs/tuatha/British Isles Mythology MMO Research.md` — **Project Anam: A Foundation for a Pan-Celtic Linguistic Metaverse**
-  - `docs/tuatha/CELTIC_LANGUAGES.md` — Celtic Languages Integration
-  - `docs/tuatha/CROSS_PLATFORM_GUIDE.md` — Cross-Platform Development Guide
-  - `docs/tuatha/Celtic Etymology for Game Names.md` — **Compendium of Celtic Lexicography for Digital World-Building: A Comparative Analysis of Goidelic a
-  - `docs/tuatha/Celtic MMO Web3 Concept Integration.md` — **Philological and Ludological Feasibility Study: Celtic Nomenclature in Web3 Massively Multiplayer 
-  - `docs/tuatha/Chemistry Education Asset Generation.md` — **Digital Transformation of the Irish Chemistry Specification: A Comprehensive Technical Architectur
-  - `docs/tuatha/Educational Game Dev Pipeline.md` — **High-Fidelity Pedagogical Simulation: A Comprehensive Framework for Automating Scientifically Accu
-  - `docs/tuatha/Fine-tuning VLMs for iOS HTR.md` — **Comprehensive Architectural Analysis for Bilingual Irish-English Handwritten Text Recognition on i
-  - `docs/tuatha/GAME_CLIENT.md` — Babylon.js Game Client
-  - `docs/tuatha/PAYMENT_GUIDE.md` — Payment Integration Guide
-  - `docs/tuatha/PERFORMANCE_TUNING.md` — Performance Tuning Guide
-  - `docs/tuatha/SPACETIMEDB_GUIDE.md` — SpacetimeDB Guide
-  - `docs/tuatha/Spacetimedb Blockchain Integration Strategy.md` — **Architectural Convergence: Implementing a Massively Multiplayer Celtic Odyssey via SpacetimeDB, So
-  - `docs/tuatha/WGPU_GUIDE.md` — WGPU Guide
-  - `docs/tuatha/Web3 Classroom Response System Design.md` — **Architectural Blueprint for "Cianfhoghlaim": A Decentralized, Physical-Digital Educational Ecosyst
-  - `docs/tuatha/api-README.md` — API Reference Index
-  - `docs/tuatha/educational-game-development.md` — Educational Game Development
-  - `docs/tuatha/mythology-framework.md` — **Project Anam: A Foundation for a Pan-Celtic Linguistic Metaverse**
-  - `docs/tuatha/tuatha/ADDING_ZONES.md` — Adding New Game Zones
-  - `docs/tuatha/tuatha/API.md` — Tuath API Reference
-  - `docs/tuatha/tuatha/British Isles Education Map.md` — **The British Isles Demographic Atlas: A Comprehensive Technical and Statistical Report**
-  - `docs/tuatha/tuatha/British Isles Mythology MMO Research.md` — **Project Anam: A Foundation for a Pan-Celtic Linguistic Metaverse**
-  - `docs/tuatha/tuatha/CELTIC_LANGUAGES.md` — Celtic Languages Integration
-  - `docs/tuatha/tuatha/CROSS_PLATFORM_GUIDE.md` — Cross-Platform Development Guide
-  - `docs/tuatha/tuatha/Celtic Etymology for Game Names.md` — **Compendium of Celtic Lexicography for Digital World-Building: A Comparative Analysis of Goidelic a
-  - `docs/tuatha/tuatha/Celtic MMO Web3 Concept Integration.md` — **Philological and Ludological Feasibility Study: Celtic Nomenclature in Web3 Massively Multiplayer 
-  - `docs/tuatha/tuatha/Chemistry Education Asset Generation.md` — **Digital Transformation of the Irish Chemistry Specification: A Comprehensive Technical Architectur
-  - `docs/tuatha/tuatha/Educational Game Dev Pipeline.md` — **High-Fidelity Pedagogical Simulation: A Comprehensive Framework for Automating Scientifically Accu
-  - `docs/tuatha/tuatha/Fine-tuning VLMs for iOS HTR.md` — **Comprehensive Architectural Analysis for Bilingual Irish-English Handwritten Text Recognition on i
-  - `docs/tuatha/tuatha/GAME_CLIENT.md` — Babylon.js Game Client
-  - `docs/tuatha/tuatha/PAYMENT_GUIDE.md` — Payment Integration Guide
-  - `docs/tuatha/tuatha/PERFORMANCE_TUNING.md` — Performance Tuning Guide
-  - `docs/tuatha/tuatha/SPACETIMEDB_GUIDE.md` — SpacetimeDB Guide
-  - `docs/tuatha/tuatha/Spacetimedb Blockchain Integration Strategy.md` — **Architectural Convergence: Implementing a Massively Multiplayer Celtic Odyssey via SpacetimeDB, So
-  - `docs/tuatha/tuatha/WGPU_GUIDE.md` — WGPU Guide
-  - `docs/tuatha/tuatha/Web3 Classroom Response System Design.md` — **Architectural Blueprint for "Cianfhoghlaim": A Decentralized, Physical-Digital Educational Ecosyst
-  - `docs/tuatha/tuatha/api-README.md` — API Reference Index
-  - `docs/tuatha/tuatha/educational-game-development.md` — Educational Game Development
-  - `docs/tuatha/tuatha/mythology-framework.md` — **Project Anam: A Foundation for a Pan-Celtic Linguistic Metaverse**
-  - `docs/tuatha/tuatha/world-map.md` — **Architectural Blueprint for "Celtic OS": A Spatial-Interactive Learning Environment for the Britis
-  - `docs/tuatha/world-map.md` — **Architectural Blueprint for "Celtic OS": A Spatial-Interactive Learning Environment for the Britis
+  - `docs/sruth/tuatha/ADDING_ZONES.md` — Adding New Game Zones
+  - `docs/sruth/tuatha/API.md` — Tuath API Reference
+  - `docs/sruth/tuatha/British Isles Education Map.md` — **The British Isles Demographic Atlas: A Comprehensive Technical and Statistical Report**
+  - `docs/sruth/tuatha/British Isles Mythology MMO Research.md` — **Project Anam: A Foundation for a Pan-Celtic Linguistic Metaverse**
+  - `docs/sruth/tuatha/CELTIC_LANGUAGES.md` — Celtic Languages Integration
+  - `docs/sruth/tuatha/CROSS_PLATFORM_GUIDE.md` — Cross-Platform Development Guide
+  - `docs/sruth/tuatha/Celtic Etymology for Game Names.md` — **Compendium of Celtic Lexicography for Digital World-Building: A Comparative Analysis of Goidelic a
+  - `docs/sruth/tuatha/Celtic MMO Web3 Concept Integration.md` — **Philological and Ludological Feasibility Study: Celtic Nomenclature in Web3 Massively Multiplayer 
+  - `docs/sruth/tuatha/Chemistry Education Asset Generation.md` — **Digital Transformation of the Irish Chemistry Specification: A Comprehensive Technical Architectur
+  - `docs/sruth/tuatha/Educational Game Dev Pipeline.md` — **High-Fidelity Pedagogical Simulation: A Comprehensive Framework for Automating Scientifically Accu
+  - `docs/sruth/tuatha/Fine-tuning VLMs for iOS HTR.md` — **Comprehensive Architectural Analysis for Bilingual Irish-English Handwritten Text Recognition on i
+  - `docs/sruth/tuatha/GAME_CLIENT.md` — Babylon.js Game Client
+  - `docs/sruth/tuatha/PAYMENT_GUIDE.md` — Payment Integration Guide
+  - `docs/sruth/tuatha/PERFORMANCE_TUNING.md` — Performance Tuning Guide
+  - `docs/sruth/tuatha/SPACETIMEDB_GUIDE.md` — SpacetimeDB Guide
+  - `docs/sruth/tuatha/Spacetimedb Blockchain Integration Strategy.md` — **Architectural Convergence: Implementing a Massively Multiplayer Celtic Odyssey via SpacetimeDB, So
+  - `docs/sruth/tuatha/WGPU_GUIDE.md` — WGPU Guide
+  - `docs/sruth/tuatha/Web3 Classroom Response System Design.md` — **Architectural Blueprint for "Cianfhoghlaim": A Decentralized, Physical-Digital Educational Ecosyst
+  - `docs/sruth/tuatha/api-README.md` — API Reference Index
+  - `docs/sruth/tuatha/educational-game-development.md` — Educational Game Development
+  - `docs/sruth/tuatha/mythology-framework.md` — **Project Anam: A Foundation for a Pan-Celtic Linguistic Metaverse**
+  - `docs/sruth/tuatha/sruth/tuatha/ADDING_ZONES.md` — Adding New Game Zones
+  - `docs/sruth/tuatha/sruth/tuatha/API.md` — Tuath API Reference
+  - `docs/sruth/tuatha/sruth/tuatha/British Isles Education Map.md` — **The British Isles Demographic Atlas: A Comprehensive Technical and Statistical Report**
+  - `docs/sruth/tuatha/sruth/tuatha/British Isles Mythology MMO Research.md` — **Project Anam: A Foundation for a Pan-Celtic Linguistic Metaverse**
+  - `docs/sruth/tuatha/sruth/tuatha/CELTIC_LANGUAGES.md` — Celtic Languages Integration
+  - `docs/sruth/tuatha/sruth/tuatha/CROSS_PLATFORM_GUIDE.md` — Cross-Platform Development Guide
+  - `docs/sruth/tuatha/sruth/tuatha/Celtic Etymology for Game Names.md` — **Compendium of Celtic Lexicography for Digital World-Building: A Comparative Analysis of Goidelic a
+  - `docs/sruth/tuatha/sruth/tuatha/Celtic MMO Web3 Concept Integration.md` — **Philological and Ludological Feasibility Study: Celtic Nomenclature in Web3 Massively Multiplayer 
+  - `docs/sruth/tuatha/sruth/tuatha/Chemistry Education Asset Generation.md` — **Digital Transformation of the Irish Chemistry Specification: A Comprehensive Technical Architectur
+  - `docs/sruth/tuatha/sruth/tuatha/Educational Game Dev Pipeline.md` — **High-Fidelity Pedagogical Simulation: A Comprehensive Framework for Automating Scientifically Accu
+  - `docs/sruth/tuatha/sruth/tuatha/Fine-tuning VLMs for iOS HTR.md` — **Comprehensive Architectural Analysis for Bilingual Irish-English Handwritten Text Recognition on i
+  - `docs/sruth/tuatha/sruth/tuatha/GAME_CLIENT.md` — Babylon.js Game Client
+  - `docs/sruth/tuatha/sruth/tuatha/PAYMENT_GUIDE.md` — Payment Integration Guide
+  - `docs/sruth/tuatha/sruth/tuatha/PERFORMANCE_TUNING.md` — Performance Tuning Guide
+  - `docs/sruth/tuatha/sruth/tuatha/SPACETIMEDB_GUIDE.md` — SpacetimeDB Guide
+  - `docs/sruth/tuatha/sruth/tuatha/Spacetimedb Blockchain Integration Strategy.md` — **Architectural Convergence: Implementing a Massively Multiplayer Celtic Odyssey via SpacetimeDB, So
+  - `docs/sruth/tuatha/sruth/tuatha/WGPU_GUIDE.md` — WGPU Guide
+  - `docs/sruth/tuatha/sruth/tuatha/Web3 Classroom Response System Design.md` — **Architectural Blueprint for "Cianfhoghlaim": A Decentralized, Physical-Digital Educational Ecosyst
+  - `docs/sruth/tuatha/sruth/tuatha/api-README.md` — API Reference Index
+  - `docs/sruth/tuatha/sruth/tuatha/educational-game-development.md` — Educational Game Development
+  - `docs/sruth/tuatha/sruth/tuatha/mythology-framework.md` — **Project Anam: A Foundation for a Pan-Celtic Linguistic Metaverse**
+  - `docs/sruth/tuatha/sruth/tuatha/world-map.md` — **Architectural Blueprint for "Celtic OS": A Spatial-Interactive Learning Environment for the Britis
+  - `docs/sruth/tuatha/world-map.md` — **Architectural Blueprint for "Celtic OS": A Spatial-Interactive Learning Environment for the Britis
 - **docs/web** (2 files):
   - `docs/web/Educational Website Tech Stack.md` — **Technical Blueprint for a Next-Generation Leaving Certificate Education Platform: Architecture, Pe
   - `docs/web/React Drag-and-Drop for Exam Builder.md` — **Architectural Blueprint for an Intelligent, British Curriculum-Aligned Interactive Exam Builder**
@@ -2399,42 +2399,42 @@ Proposed 12-cluster regrouping of all docs content:
 - **docs/teanga** (1 files):
   - `docs/teanga/Game Dev Pipeline Research & Plan.md` — **Converging High-Fidelity Pre-Rendering and Database-Driven State: A Comprehensive Technical Bluepr
 - **docs/tuatha** (36 files):
-  - `docs/tuatha/CRYPTO_INTEGRATION_SUMMARY.md` — Comprehensive Crypto & Payment Integration Summary for Crypteolas
-  - `docs/tuatha/GODOT_RUST_GUIDE.md` — Godot + Rust Guide
-  - `docs/tuatha/Game Dev Pipeline Research & Plan.md` — **Converging High-Fidelity Pre-Rendering and Database-Driven State: A Comprehensive Technical Bluepr
-  - `docs/tuatha/MMO Geospatial Data & Visual RAG.md` — **Technical Blueprint for a Browser-Based WebGPU MMO: The Geospatial Spirit World**
-  - `docs/tuatha/Release v28.0.0 - Mesh Shaders, Immediates, and More! · gfx-rs_wgpu.md` — Release v28.0.0   Mesh Shaders, Immediates, and More! · gfx rs wgpu
-  - `docs/tuatha/SpacetimeDB Ogham Stone Game Integration.md` — **Architectural Specification: Decentralized Geospatial Procedural Generation Systems for the 'Anam'
-  - `docs/tuatha/SpacetimeDB.md` — SpacetimeDB
-  - `docs/tuatha/game-design-README.md` — Game Design
-  - `docs/tuatha/game_CONTRIBUTING.md` — Contributing
-  - `docs/tuatha/gdext-ReadMe.md` — Rust bindings for Godot 4
-  - `docs/tuatha/repo-SpacetimeDB.md` — SpacetimeDB — KCG Summary
-  - `docs/tuatha/repo-hophacks-spacetimedb-workshop.md` — hophacks-spacetimedb-workshop — KCG Summary
-  - `docs/tuatha/repo-react-native-godot.md` — react-native-godot — KCG Summary
-  - `docs/tuatha/repo-spacetimedb-cookbook.md` — SpacetimeDB Cookbook — KCG Summary
-  - `docs/tuatha/repo-spacetimedb-typescript-sdk.md` — spacetimedb-typescript-sdk — KCG Summary
-  - `docs/tuatha/repo-wgpu.md` — wgpu — KCG Summary
-  - `docs/tuatha/repo-x402.md` — x402 — KCG Summary
-  - `docs/tuatha/tokenomics-README.md` — Tokenomics
-  - `docs/tuatha/tuatha/CRYPTO_INTEGRATION_SUMMARY.md` — Comprehensive Crypto & Payment Integration Summary for Crypteolas
-  - `docs/tuatha/tuatha/GODOT_RUST_GUIDE.md` — Godot + Rust Guide
-  - `docs/tuatha/tuatha/Game Dev Pipeline Research & Plan.md` — **Converging High-Fidelity Pre-Rendering and Database-Driven State: A Comprehensive Technical Bluepr
-  - `docs/tuatha/tuatha/MMO Geospatial Data & Visual RAG.md` — **Technical Blueprint for a Browser-Based WebGPU MMO: The Geospatial Spirit World**
-  - `docs/tuatha/tuatha/Release v28.0.0 - Mesh Shaders, Immediates, and More! · gfx-rs_wgpu.md` — Release v28.0.0   Mesh Shaders, Immediates, and More! · gfx rs wgpu
-  - `docs/tuatha/tuatha/SpacetimeDB Ogham Stone Game Integration.md` — **Architectural Specification: Decentralized Geospatial Procedural Generation Systems for the 'Anam'
-  - `docs/tuatha/tuatha/SpacetimeDB.md` — SpacetimeDB
-  - `docs/tuatha/tuatha/game-design-README.md` — Game Design
-  - `docs/tuatha/tuatha/game_CONTRIBUTING.md` — Contributing
-  - `docs/tuatha/tuatha/gdext-ReadMe.md` — Rust bindings for Godot 4
-  - `docs/tuatha/tuatha/repo-SpacetimeDB.md` — SpacetimeDB — KCG Summary
-  - `docs/tuatha/tuatha/repo-hophacks-spacetimedb-workshop.md` — hophacks-spacetimedb-workshop — KCG Summary
-  - `docs/tuatha/tuatha/repo-react-native-godot.md` — react-native-godot — KCG Summary
-  - `docs/tuatha/tuatha/repo-spacetimedb-cookbook.md` — SpacetimeDB Cookbook — KCG Summary
-  - `docs/tuatha/tuatha/repo-spacetimedb-typescript-sdk.md` — spacetimedb-typescript-sdk — KCG Summary
-  - `docs/tuatha/tuatha/repo-wgpu.md` — wgpu — KCG Summary
-  - `docs/tuatha/tuatha/repo-x402.md` — x402 — KCG Summary
-  - `docs/tuatha/tuatha/tokenomics-README.md` — Tokenomics
+  - `docs/sruth/tuatha/CRYPTO_INTEGRATION_SUMMARY.md` — Comprehensive Crypto & Payment Integration Summary for Crypteolas
+  - `docs/sruth/tuatha/GODOT_RUST_GUIDE.md` — Godot + Rust Guide
+  - `docs/sruth/tuatha/Game Dev Pipeline Research & Plan.md` — **Converging High-Fidelity Pre-Rendering and Database-Driven State: A Comprehensive Technical Bluepr
+  - `docs/sruth/tuatha/MMO Geospatial Data & Visual RAG.md` — **Technical Blueprint for a Browser-Based WebGPU MMO: The Geospatial Spirit World**
+  - `docs/sruth/tuatha/Release v28.0.0 - Mesh Shaders, Immediates, and More! · gfx-rs_wgpu.md` — Release v28.0.0   Mesh Shaders, Immediates, and More! · gfx rs wgpu
+  - `docs/sruth/tuatha/SpacetimeDB Ogham Stone Game Integration.md` — **Architectural Specification: Decentralized Geospatial Procedural Generation Systems for the 'Anam'
+  - `docs/sruth/tuatha/SpacetimeDB.md` — SpacetimeDB
+  - `docs/sruth/tuatha/game-design-README.md` — Game Design
+  - `docs/sruth/tuatha/game_CONTRIBUTING.md` — Contributing
+  - `docs/sruth/tuatha/gdext-ReadMe.md` — Rust bindings for Godot 4
+  - `docs/sruth/tuatha/repo-SpacetimeDB.md` — SpacetimeDB — KCG Summary
+  - `docs/sruth/tuatha/repo-hophacks-spacetimedb-workshop.md` — hophacks-spacetimedb-workshop — KCG Summary
+  - `docs/sruth/tuatha/repo-react-native-godot.md` — react-native-godot — KCG Summary
+  - `docs/sruth/tuatha/repo-spacetimedb-cookbook.md` — SpacetimeDB Cookbook — KCG Summary
+  - `docs/sruth/tuatha/repo-spacetimedb-typescript-sdk.md` — spacetimedb-typescript-sdk — KCG Summary
+  - `docs/sruth/tuatha/repo-wgpu.md` — wgpu — KCG Summary
+  - `docs/sruth/tuatha/repo-x402.md` — x402 — KCG Summary
+  - `docs/sruth/tuatha/tokenomics-README.md` — Tokenomics
+  - `docs/sruth/tuatha/sruth/tuatha/CRYPTO_INTEGRATION_SUMMARY.md` — Comprehensive Crypto & Payment Integration Summary for Crypteolas
+  - `docs/sruth/tuatha/sruth/tuatha/GODOT_RUST_GUIDE.md` — Godot + Rust Guide
+  - `docs/sruth/tuatha/sruth/tuatha/Game Dev Pipeline Research & Plan.md` — **Converging High-Fidelity Pre-Rendering and Database-Driven State: A Comprehensive Technical Bluepr
+  - `docs/sruth/tuatha/sruth/tuatha/MMO Geospatial Data & Visual RAG.md` — **Technical Blueprint for a Browser-Based WebGPU MMO: The Geospatial Spirit World**
+  - `docs/sruth/tuatha/sruth/tuatha/Release v28.0.0 - Mesh Shaders, Immediates, and More! · gfx-rs_wgpu.md` — Release v28.0.0   Mesh Shaders, Immediates, and More! · gfx rs wgpu
+  - `docs/sruth/tuatha/sruth/tuatha/SpacetimeDB Ogham Stone Game Integration.md` — **Architectural Specification: Decentralized Geospatial Procedural Generation Systems for the 'Anam'
+  - `docs/sruth/tuatha/sruth/tuatha/SpacetimeDB.md` — SpacetimeDB
+  - `docs/sruth/tuatha/sruth/tuatha/game-design-README.md` — Game Design
+  - `docs/sruth/tuatha/sruth/tuatha/game_CONTRIBUTING.md` — Contributing
+  - `docs/sruth/tuatha/sruth/tuatha/gdext-ReadMe.md` — Rust bindings for Godot 4
+  - `docs/sruth/tuatha/sruth/tuatha/repo-SpacetimeDB.md` — SpacetimeDB — KCG Summary
+  - `docs/sruth/tuatha/sruth/tuatha/repo-hophacks-spacetimedb-workshop.md` — hophacks-spacetimedb-workshop — KCG Summary
+  - `docs/sruth/tuatha/sruth/tuatha/repo-react-native-godot.md` — react-native-godot — KCG Summary
+  - `docs/sruth/tuatha/sruth/tuatha/repo-spacetimedb-cookbook.md` — SpacetimeDB Cookbook — KCG Summary
+  - `docs/sruth/tuatha/sruth/tuatha/repo-spacetimedb-typescript-sdk.md` — spacetimedb-typescript-sdk — KCG Summary
+  - `docs/sruth/tuatha/sruth/tuatha/repo-wgpu.md` — wgpu — KCG Summary
+  - `docs/sruth/tuatha/sruth/tuatha/repo-x402.md` — x402 — KCG Summary
+  - `docs/sruth/tuatha/sruth/tuatha/tokenomics-README.md` — Tokenomics
 - **docs/web** (1 files):
   - `docs/web/Release v28.0.0 - Mesh Shaders, Immediates, and More! · gfx-rs_wgpu.md` — Release v28.0.0   Mesh Shaders, Immediates, and More! · gfx rs wgpu
 
@@ -2529,32 +2529,32 @@ Proposed 12-cluster regrouping of all docs content:
 - `docs/teanga/Google ADK with LiteLLM _ liteLLM.md` — Google ADK with LiteLLM   liteLLM
 - `docs/teanga/datasets-BritLLM.md` — datasets BritLLM
 - `docs/teanga/repo-genizah_search.md` — KCG_SUMMARY: Genizah Search — Cairo Genizah AI Semantic Search Application
-- `docs/tuatha/2510.17652v1.pdf` — 2510.17652v1
-- `docs/tuatha/ANALYSIS.md` — Cianfhoghlaim Project Analysis
-- `docs/tuatha/ERC-4361_ Sign-In with Ethereum.md` — ERC 4361  Sign In with Ethereum
-- `docs/tuatha/GeoAI.md` — GeoAI
-- `docs/tuatha/INDEX.md` — Túatha Documentation Index
-- `docs/tuatha/Kotlin Multiplatform vs. React Native_ A cross-platform comparison _ Kotlin Multiplatform.md` — Kotlin Multiplatform vs. React Native  A cross platform comparison   Kotlin Multiplatform
-- `docs/tuatha/The Expulsion of the Déisi - Wikipedia.md` — The Expulsion of the Déisi   Wikipedia
-- `docs/tuatha/ml-models-README.md` — ML Models
-- `docs/tuatha/repo-AnyLanguageModel.md` — AnyLanguageModel — KCG Summary
-- `docs/tuatha/repo-agui_kotlin.md` — agui_kotlin — KCG Summary
-- `docs/tuatha/repo-ireland.md` — ireland — KCG Summary
-- `docs/tuatha/repo-react-native-reusables.md` — react-native-reusables — KCG Summary
-- `docs/tuatha/syft-flwr_notebooks_fedrag_README.md at main · OpenMined_syft-flwr.md` — syft flwr notebooks fedrag README.md at main · OpenMined syft flwr
-- `docs/tuatha/tuatha/2510.17652v1.pdf` — 2510.17652v1
-- `docs/tuatha/tuatha/ANALYSIS.md` — Cianfhoghlaim Project Analysis
-- `docs/tuatha/tuatha/ERC-4361_ Sign-In with Ethereum.md` — ERC 4361  Sign In with Ethereum
-- `docs/tuatha/tuatha/GeoAI.md` — GeoAI
-- `docs/tuatha/tuatha/INDEX.md` — Túatha Documentation Index
-- `docs/tuatha/tuatha/Kotlin Multiplatform vs. React Native_ A cross-platform comparison _ Kotlin Multiplatform.md` — Kotlin Multiplatform vs. React Native  A cross platform comparison   Kotlin Multiplatform
-- `docs/tuatha/tuatha/The Expulsion of the Déisi - Wikipedia.md` — The Expulsion of the Déisi   Wikipedia
-- `docs/tuatha/tuatha/ml-models-README.md` — ML Models
-- `docs/tuatha/tuatha/repo-AnyLanguageModel.md` — AnyLanguageModel — KCG Summary
-- `docs/tuatha/tuatha/repo-agui_kotlin.md` — agui_kotlin — KCG Summary
-- `docs/tuatha/tuatha/repo-ireland.md` — ireland — KCG Summary
-- `docs/tuatha/tuatha/repo-react-native-reusables.md` — react-native-reusables — KCG Summary
-- `docs/tuatha/tuatha/syft-flwr_notebooks_fedrag_README.md at main · OpenMined_syft-flwr.md` — syft flwr notebooks fedrag README.md at main · OpenMined syft flwr
+- `docs/sruth/tuatha/2510.17652v1.pdf` — 2510.17652v1
+- `docs/sruth/tuatha/ANALYSIS.md` — Cianfhoghlaim Project Analysis
+- `docs/sruth/tuatha/ERC-4361_ Sign-In with Ethereum.md` — ERC 4361  Sign In with Ethereum
+- `docs/sruth/tuatha/GeoAI.md` — GeoAI
+- `docs/sruth/tuatha/INDEX.md` — Túatha Documentation Index
+- `docs/sruth/tuatha/Kotlin Multiplatform vs. React Native_ A cross-platform comparison _ Kotlin Multiplatform.md` — Kotlin Multiplatform vs. React Native  A cross platform comparison   Kotlin Multiplatform
+- `docs/sruth/tuatha/The Expulsion of the Déisi - Wikipedia.md` — The Expulsion of the Déisi   Wikipedia
+- `docs/sruth/tuatha/ml-models-README.md` — ML Models
+- `docs/sruth/tuatha/repo-AnyLanguageModel.md` — AnyLanguageModel — KCG Summary
+- `docs/sruth/tuatha/repo-agui_kotlin.md` — agui_kotlin — KCG Summary
+- `docs/sruth/tuatha/repo-ireland.md` — ireland — KCG Summary
+- `docs/sruth/tuatha/repo-react-native-reusables.md` — react-native-reusables — KCG Summary
+- `docs/sruth/tuatha/syft-flwr_notebooks_fedrag_README.md at main · OpenMined_syft-flwr.md` — syft flwr notebooks fedrag README.md at main · OpenMined syft flwr
+- `docs/sruth/tuatha/sruth/tuatha/2510.17652v1.pdf` — 2510.17652v1
+- `docs/sruth/tuatha/sruth/tuatha/ANALYSIS.md` — Cianfhoghlaim Project Analysis
+- `docs/sruth/tuatha/sruth/tuatha/ERC-4361_ Sign-In with Ethereum.md` — ERC 4361  Sign In with Ethereum
+- `docs/sruth/tuatha/sruth/tuatha/GeoAI.md` — GeoAI
+- `docs/sruth/tuatha/sruth/tuatha/INDEX.md` — Túatha Documentation Index
+- `docs/sruth/tuatha/sruth/tuatha/Kotlin Multiplatform vs. React Native_ A cross-platform comparison _ Kotlin Multiplatform.md` — Kotlin Multiplatform vs. React Native  A cross platform comparison   Kotlin Multiplatform
+- `docs/sruth/tuatha/sruth/tuatha/The Expulsion of the Déisi - Wikipedia.md` — The Expulsion of the Déisi   Wikipedia
+- `docs/sruth/tuatha/sruth/tuatha/ml-models-README.md` — ML Models
+- `docs/sruth/tuatha/sruth/tuatha/repo-AnyLanguageModel.md` — AnyLanguageModel — KCG Summary
+- `docs/sruth/tuatha/sruth/tuatha/repo-agui_kotlin.md` — agui_kotlin — KCG Summary
+- `docs/sruth/tuatha/sruth/tuatha/repo-ireland.md` — ireland — KCG Summary
+- `docs/sruth/tuatha/sruth/tuatha/repo-react-native-reusables.md` — react-native-reusables — KCG Summary
+- `docs/sruth/tuatha/sruth/tuatha/syft-flwr_notebooks_fedrag_README.md at main · OpenMined_syft-flwr.md` — syft flwr notebooks fedrag README.md at main · OpenMined syft flwr
 - `docs/web/AG-UI - Pydantic AI.md` — AG UI   Pydantic AI
 - `docs/web/AG-UI Overview.md` — AG UI Overview
 - `docs/web/INDEX-from-bonneagar-web-research.md` — Web Research - Consolidated Index
@@ -2571,12 +2571,12 @@ Proposed 12-cluster regrouping of all docs content:
 ## 7. Consolidation Recommendations
 
 ### Immediate Actions (Zero-Risk)
-1. **Delete `docs/tuatha/tuatha/`** — 116 exact duplicates of parent directory files.
+1. **Delete `docs/sruth/tuatha/sruth/tuatha/`** — 116 exact duplicates of parent directory files.
 2. **Deduplicate the 3 identical `Prompt Optimization (Beta)` copies** in `docs/meaisínfhoghlaim/`.
 3. **Remove `.DS_Store` files** from all subtrees.
 
 ### Structural Consolidation
-4. **Merge duplicate research articles** across subtrees — many articles appear in both `docs/teanga/` and `docs/tuatha/`, and between `docs/meaisínfhoghlaim/` and `docs/teanga/`.
+4. **Merge duplicate research articles** across subtrees — many articles appear in both `docs/teanga/` and `docs/sruth/tuatha/`, and between `docs/meaisínfhoghlaim/` and `docs/teanga/`.
 5. **Adopt the 12-cluster structure** above as the new canonical docs layout.
 6. **Standardize frontmatter** with required fields: `title:`, `domain:`, `status:`, `cluster:`.
 7. **Split bilingual files** — `.ga.md` and `.en.md` pairs should be kept together in locale subdirectories or merged with lang tabs.
@@ -2600,8 +2600,8 @@ Proposed 12-cluster regrouping of all docs content:
 | 363.3 KiB | docs/agents/agent-frameworks.md | agent frameworks |
 | 359.3 KiB | docs/meaisínfhoghlaim/training-pipeline.md | training pipeline |
 | 351.5 KiB | docs/context/Apple Education and AI Goals.pdf | Apple Education and AI Goals |
-| 347.7 KiB | docs/tuatha/2510.17652v1.pdf | 2510.17652v1 |
-| 347.7 KiB | docs/tuatha/tuatha/2510.17652v1.pdf | 2510.17652v1 |
+| 347.7 KiB | docs/sruth/tuatha/2510.17652v1.pdf | 2510.17652v1 |
+| 347.7 KiB | docs/sruth/tuatha/sruth/tuatha/2510.17652v1.pdf | 2510.17652v1 |
 | 331.2 KiB | docs/bonneagar/overview.md | Cianfhoghlaim Platform Overview |
 | 310.0 KiB | docs/meaisínfhoghlaim/notebook-catalog.md | noteuook catalog |
 | 289.9 KiB | docs/context/Irish Language Copyright and Education.pdf | Irish Language Copyright and Education |

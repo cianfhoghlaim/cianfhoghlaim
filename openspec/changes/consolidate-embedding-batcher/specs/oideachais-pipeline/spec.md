@@ -5,9 +5,9 @@ The oideachais quadrant SHALL provide a single canonical `EmbeddingBatcher`
 class. The class MUST live at `oideachais.dlt_utils.batching.EmbeddingBatcher`
 and MUST be re-exported via `oideachais.dlt_utils.__init__.EmbeddingBatcher`.
 
-The oideachais quadrant SHALL NOT contain a top-level `oideachais/embeddings/`
-package. Any historical `oideachais/embeddings/batcher.py` /
-`oideachais/embeddings/service.py` / `oideachais/embeddings/__init__.py`
+The oideachais quadrant SHALL NOT contain a top-level `sruth/oideachais/embeddings/`
+package. Any historical `sruth/oideachais/embeddings/batcher.py` /
+`sruth/oideachais/embeddings/service.py` / `sruth/oideachais/embeddings/__init__.py`
 files are forbidden and MUST NOT be re-introduced.
 
 The `oideachais.dlt_utils.batching` module MUST export:

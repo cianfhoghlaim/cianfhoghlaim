@@ -1,13 +1,13 @@
 ---
 name: tuatha-mcp-server-tools
-description: The KCG Tuatha MCP server tools in `tuatha/agents/mcp_server/`. Covers the 5 tools (search_curriculum, get_learning_outcomes, search_mythology, get_character_lore, get_location_lore), the `oideachais/agents/adk/tools/tuatha_*` shim pattern (the canonical home for the 5 tools), the broken-import bug at `tuatha/agents/mcp_server/server.py:23-33` (the `from ..tools.X` imports fail because `tuatha/agents/tools/` does not exist), the MCP server name (`tuatha-education`), the 4 MCP transports (stdio / SSE / WebSocket / HTTP), and the canonical add-a-new-tool workflow. Use when adding a new MCP tool, debugging the broken-import bug, wiring a new MCP transport, or onboarding a new CopilotKit AG-UI client that needs the Celtic domain tools.
+description: The KCG Tuatha MCP server tools in `sruth/tuatha/agents/mcp_server/`. Covers the 5 tools (search_curriculum, get_learning_outcomes, search_mythology, get_character_lore, get_location_lore), the `sruth/oideachais/agents/adk/tools/tuatha_*` shim pattern (the canonical home for the 5 tools), the broken-import bug at `sruth/tuatha/agents/mcp_server/server.py:23-33` (the `from ..tools.X` imports fail because `sruth/tuatha/agents/tools/` does not exist), the MCP server name (`tuatha-education`), the 4 MCP transports (stdio / SSE / WebSocket / HTTP), and the canonical add-a-new-tool workflow. Use when adding a new MCP tool, debugging the broken-import bug, wiring a new MCP transport, or onboarding a new CopilotKit AG-UI client that needs the Celtic domain tools.
 ---
 
 # Tuatha MCP Server Tools
 
 ## Purpose
 
-The `tuatha/agents/mcp_server/` directory houses the **MCP
+The `sruth/tuatha/agents/mcp_server/` directory houses the **MCP
 (Model Context Protocol) server** that exposes the 5 Celtic
 domain tools to external clients (the TanStack Start CopilotKit
 AG-UI consumer, the MEOBots orchestrator, the OpenCode Go
@@ -20,7 +20,7 @@ add-a-new-tool workflow.
 Use when you need to:
 
 - "Add a new MCP tool"
-- "Debug the broken-import bug in `tuatha/agents/mcp_server/server.py`"
+- "Debug the broken-import bug in `sruth/tuatha/agents/mcp_server/server.py`"
 - "Wire a new MCP transport (stdio / SSE / WebSocket / HTTP)"
 - "Onboard a new CopilotKit AG-UI client that needs the Celtic domain tools"
 - "Understand the 5 tools + the canonical home"
@@ -29,27 +29,27 @@ Use when you need to:
 
 | Tool | Signature | Returns | Source |
 |:--|:--|:--|:--|
-| `search_curriculum` | `(query: str, nation: str \| None = None, level: str \| None = None) -> List[dict]` | The top-5 curriculum results from the LanceDB `leabharlann_*` tables | `oideachais/agents/adk/tools/tuatha_curriculum_search.py:search_curriculum` |
-| `get_learning_outcomes` | `(topic: str, nation: str \| None = None, level: str \| None = None) -> List[dict]` | The learning outcomes for the topic across the 5 frameworks | `oideachais/agents/adk/tools/tuatha_curriculum_search.py:get_learning_outcomes` |
-| `search_mythology` | `(query: str, tradition: str \| None = None, cycle: str \| None = None) -> List[dict]` | The top-5 mythology results from the `tuatha_mythology` LanceDB table | `oideachais/agents/adk/tools/tuatha_mythology_query.py:search_mythology` |
-| `get_character_lore` | `(character_name: str) -> List[dict]` | The lore for the character across the Pent-Elemental Cosmology | `oideachais/agents/adk/tools/tuatha_mythology_query.py:get_character_lore` |
-| `get_location_lore` | `(location_name: str, tradition: str \| None = None) -> List[dict]` | The lore for the location | `oideachais/agents/adk/tools/tuatha_mythology_query.py:get_location_lore` |
+| `search_curriculum` | `(query: str, nation: str \| None = None, level: str \| None = None) -> List[dict]` | The top-5 curriculum results from the LanceDB `leabharlann_*` tables | `sruth/oideachais/agents/adk/tools/tuatha_curriculum_search.py:search_curriculum` |
+| `get_learning_outcomes` | `(topic: str, nation: str \| None = None, level: str \| None = None) -> List[dict]` | The learning outcomes for the topic across the 5 frameworks | `sruth/oideachais/agents/adk/tools/tuatha_curriculum_search.py:get_learning_outcomes` |
+| `search_mythology` | `(query: str, tradition: str \| None = None, cycle: str \| None = None) -> List[dict]` | The top-5 mythology results from the `tuatha_mythology` LanceDB table | `sruth/oideachais/agents/adk/tools/tuatha_mythology_query.py:search_mythology` |
+| `get_character_lore` | `(character_name: str) -> List[dict]` | The lore for the character across the Pent-Elemental Cosmology | `sruth/oideachais/agents/adk/tools/tuatha_mythology_query.py:get_character_lore` |
+| `get_location_lore` | `(location_name: str, tradition: str \| None = None) -> List[dict]` | The lore for the location | `sruth/oideachais/agents/adk/tools/tuatha_mythology_query.py:get_location_lore` |
 
 The 5 tools are exposed by the MCP server at
-`tuatha/agents/mcp_server/server.py:server = Server("tuatha-education")`.
+`sruth/tuatha/agents/mcp_server/server.py:server = Server("tuatha-education")`.
 
 ## The canonical tool home (the shim pattern)
 
 The 5 tool implementations live at
-**`oideachais/agents/adk/tools/tuatha_*.py`** (the canonical home,
-per the 6-phase refactor pattern). The `tuatha/agents/tools/`
+**`sruth/oideachais/agents/adk/tools/tuatha_*.py`** (the canonical home,
+per the 6-phase refactor pattern). The `sruth/tuatha/agents/tools/`
 directory was historically the home but has been deprecated (per
 Phase 5 of the refactor plan).
 
 The canonical shim pattern:
 
 ```python
-# oideachais/agents/adk/tools/tuatha_curriculum_search.py
+# sruth/oideachais/agents/adk/tools/tuatha_curriculum_search.py
 from sruth.oideachais.cocoindex_flows.leabharlann_embedding import (
     search_leabharlann_books,
     search_leabharlann_zotero,
@@ -58,12 +58,12 @@ from sruth.oideachais.cocoindex_flows.leabharlann_embedding import (
 # ... the canonical implementation
 ```
 
-The `tuatha/agents/mcp_server/server.py` does:
+The `sruth/tuatha/agents/mcp_server/server.py` does:
 
 ```python
 # WRONG (broken):
 from ..tools.curriculum_search import search_curriculum
-# (this fails because tuatha/agents/tools/ doesn't exist)
+# (this fails because sruth/tuatha/agents/tools/ doesn't exist)
 
 # RIGHT (canonical shim):
 from sruth.oideachais.agents.adk.tools.tuatha_curriculum_search import (
@@ -73,16 +73,16 @@ from sruth.oideachais.agents.adk.tools.tuatha_curriculum_search import (
 ```
 
 The wrong import is the **broken-import bug** at lines 23-33 of
-`tuatha/agents/mcp_server/server.py` (per the
-`tuatha/agents/mcp_server/server.py:23-33` docstring in the
+`sruth/tuatha/agents/mcp_server/server.py` (per the
+`sruth/tuatha/agents/mcp_server/server.py:23-33` docstring in the
 subagent's report).
 
 ## The fix (the 3 shim files)
 
-The fix is to create 3 shim files in `tuatha/agents/tools/`:
+The fix is to create 3 shim files in `sruth/tuatha/agents/tools/`:
 
 ```python
-# tuatha/agents/tools/__init__.py
+# sruth/tuatha/agents/tools/__init__.py
 # Thin re-export shim (round 7 phase 5 of the 6-phase refactor).
 # Canonical home: oideachais.agents.adk.tools.tuatha_*
 from sruth.oideachais.agents.adk.tools.tuatha_curriculum_search import (
@@ -99,7 +99,7 @@ __all__ = [
 ```
 
 ```python
-# tuatha/agents/tools/curriculum_search.py
+# sruth/tuatha/agents/tools/curriculum_search.py
 # Re-export shim. See __init__.py for the canonical home.
 from sruth.oideachais.agents.adk.tools.tuatha_curriculum_search import (
     search_curriculum, get_learning_outcomes, CurriculumSearchResults,
@@ -109,7 +109,7 @@ __all__ = ["search_curriculum", "get_learning_outcomes", "CurriculumSearchResult
 ```
 
 ```python
-# tuatha/agents/tools/mythology_query.py
+# sruth/tuatha/agents/tools/mythology_query.py
 # Re-export shim. See __init__.py for the canonical home.
 from sruth.oideachais.agents.adk.tools.tuatha_mythology_query import (
     search_mythology, get_character_lore, get_location_lore,
@@ -148,7 +148,7 @@ identifier in the MCP protocol). The 5 tools are namespaced under
 ## Worked example: add a new MCP tool
 
 1. Add the tool implementation at
-   `oideachais/agents/adk/tools/tuatha_achievement_query.py`:
+   `sruth/oideachais/agents/adk/tools/tuatha_achievement_query.py`:
 
    ```python
    async def get_player_badges(
@@ -165,7 +165,7 @@ identifier in the MCP protocol). The 5 tools are namespaced under
        )
    ```
 
-2. Add the shim at `tuatha/agents/tools/achievement_query.py`:
+2. Add the shim at `sruth/tuatha/agents/tools/achievement_query.py`:
 
    ```python
    from sruth.oideachais.agents.adk.tools.tuatha_achievement_query import (
@@ -175,7 +175,7 @@ identifier in the MCP protocol). The 5 tools are namespaced under
    ```
 
 3. Add the tool to the MCP server at
-   `tuatha/agents/mcp_server/server.py`:
+   `sruth/tuatha/agents/mcp_server/server.py`:
 
    ```python
    from ..tools.achievement_query import get_player_badges
@@ -214,7 +214,7 @@ identifier in the MCP protocol). The 5 tools are namespaced under
 
 | Symptom | Cause | Fix |
 |:--|:--|:--|
-| `ModuleNotFoundError: No module named 'tuatha.agents.tools'` | The 3 shim files are missing | Create the 3 shim files at `tuatha/agents/tools/{__init__,curriculum_search,mythology_query}.py` |
+| `ModuleNotFoundError: No module named 'tuatha.agents.tools'` | The 3 shim files are missing | Create the 3 shim files at `sruth/tuatha/agents/tools/{__init__,curriculum_search,mythology_query}.py` |
 | The MCP server hangs at startup | The transport is not set | Pass `--transport=stdio` (or one of the 4) |
 | The tool returns an empty list | The LanceDB table is empty | Run `mise run locket:exec -- uv run oideachais cocoindex update oideachais.cocoindex_flows.leabharlann_embedding:LeabharlannBooksApp` |
 | The tool signature is wrong | The MCP client sends the wrong types | Add a `validate_arguments` call at the start of the tool function |
@@ -226,10 +226,10 @@ identifier in the MCP protocol). The 5 tools are namespaced under
 - `.agents/skills/mcp-builder/SKILL.md` — the general MCP patterns
 - `.agents/skills/british-isles-formative-assessment/SKILL.md` — the 5 frameworks
 - `.agents/skills/tuatha-achievement-ledger/SKILL.md` — the achievement ledger (the 6th tool's home)
-- `oideachais/agents/adk/tools/tuatha_curriculum_search.py` — the canonical home for the 2 curriculum tools
-- `oideachais/agents/adk/tools/tuatha_mythology_query.py` — the canonical home for the 3 mythology tools
-- `oideachais/agents/adk/tools/tuatha_achievement_query.py` — the canonical home for the 6th tool (achievement query)
-- `tuatha/agents/tools/{__init__,curriculum_search,mythology_query}.py` — the 3 shim files
-- `tuatha/agents/mcp_server/server.py` — the MCP server (line 23-33 is the broken-import bug)
-- `tuatha/agents/mcp_server/__init__.py` — the server module home
+- `sruth/oideachais/agents/adk/tools/tuatha_curriculum_search.py` — the canonical home for the 2 curriculum tools
+- `sruth/oideachais/agents/adk/tools/tuatha_mythology_query.py` — the canonical home for the 3 mythology tools
+- `sruth/oideachais/agents/adk/tools/tuatha_achievement_query.py` — the canonical home for the 6th tool (achievement query)
+- `sruth/tuatha/agents/tools/{__init__,curriculum_search,mythology_query}.py` — the 3 shim files
+- `sruth/tuatha/agents/mcp_server/server.py` — the MCP server (line 23-33 is the broken-import bug)
+- `sruth/tuatha/agents/mcp_server/__init__.py` — the server module home
 - `openspec/specs/tuatha-platform/spec.md` — the canonical spec

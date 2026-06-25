@@ -50,7 +50,7 @@ The system SHALL bind BAML extraction results to the active locale.
 The system SHALL provide a slug mapping between the English and Irish URL paths for each of the 5 stages.
 
 #### Scenario: Slug Map
-- **GIVEN** the slug map in `oideachais/web/apps/web/src/i18n/stage_slugs.ts`
+- **GIVEN** the slug map in `sruth/oideachais/web/apps/web/src/i18n/stage_slugs.ts`
 - **WHEN** the file is read
 - **THEN** the map contains:
   - `aistear` → `aistear` (same in both)

@@ -22,7 +22,7 @@ The system SHALL continue to compile the 9 BAML schemas.
 #### Scenario: No regression
 
 - **WHEN** `bun run baml-cli compile` runs
-- **THEN** the compiler SHALL still emit TypeScript + Python client code from `croilar/baml/{artwork_analysis, cv_extraction, identity_verification, linkedin_profile_extraction, researchgate_extraction, style_transfer, teaching_extraction, generators, clients}.baml`
+- **THEN** the compiler SHALL still emit TypeScript + Python client code from `sruth/croilar/baml/{artwork_analysis, cv_extraction, identity_verification, linkedin_profile_extraction, researchgate_extraction, style_transfer, teaching_extraction, generators, clients}.baml`
 
 ### Requirement: Dagster Schedules
 The system SHALL schedule the 12+ assets to run on appropriate cadences.
@@ -52,12 +52,12 @@ The system SHALL continue to read from the existing DuckLake catalog.
 
 ### Requirement: Analyzer Bun Script
 
-The system SHALL ship `croilar/scripts/analyze-web-stack.ts` as a Bun script that walks the monorepo and posts aggregates to Convex.
+The system SHALL ship `sruth/croilar/scripts/analyze-web-stack.ts` as a Bun script that walks the monorepo and posts aggregates to Convex.
 
 #### Scenario: Walk succeeds for the 3 present projects
 
-- **WHEN** `bun run croilar/scripts/analyze-web-stack.ts` is executed from the repo root
-- **THEN** the analyzer SHALL walk `tuatha/`, `sruth/oideachais/`, `croilar/`
+- **WHEN** `bun run sruth/croilar/scripts/analyze-web-stack.ts` is executed from the repo root
+- **THEN** the analyzer SHALL walk `sruth/tuatha/`, `sruth/oideachais/`, `sruth/croilar/`
 - **AND** it SHALL skip `meaisínfhoghlaim/` (no web app yet) with a warning
 - **AND** it SHALL POST the resulting 5 tables (tanstackRoutes, convexFunctions, cloudflareResources, bamlSchemas, marimoNotebooks) to the Convex HTTP endpoint
 - **AND** authentication SHALL use the `CROILAR_CONVEX_DEPLOY_KEY` from `.env` (loaded from Infisical)
@@ -79,19 +79,19 @@ The system SHALL ship `croilar/scripts/analyze-web-stack.ts` as a Bun script tha
 The Croílár data-engineering layer SHALL NOT reference the
 legacy `aleyum` name in code, env vars, config defaults, or
 documentation (with the exception of the `aleyum` persona
-identifier in `croilar/config/personas.yaml` + the persona
+identifier in `sruth/croilar/config/personas.yaml` + the persona
 site routes, which are 1-persona identifiers, not 5-alias
 registry entries). The 5 collapsed aliases are:
 
 1. **Env prefix** — `ALEYUM_*` env vars SHALL be renamed to
    `STREAMS_*` (already partially retired in
-   `croilar/_shared/config/settings.py`)
+   `sruth/croilar/_shared/config/settings.py`)
 2. **DuckDB file** — the `./data/aleyum.duckdb` default SHALL
    be renamed to `./data/croilar.duckdb`
 3. **R2 bucket** — the `aleyum-data` R2 bucket default SHALL
    be renamed to `croilar-data` (plus the legacy
    `aleyum-assets` R2 bucket constant in
-   `croilar/pipelines/shared/r2_client.py` SHALL be removed)
+   `sruth/croilar/pipelines/shared/r2_client.py` SHALL be removed)
 4. **DLT pipeline names** — the 4 `aleyum_local` /
    `aleyum_ducklake` / `aleyum_vectors` pipeline names SHALL
    be renamed to `croilar_local` / `croilar_ducklake` /
@@ -100,7 +100,7 @@ registry entries). The 5 collapsed aliases are:
    default SHALL be renamed to `./data/croilar_catalog.duckdb`
 
 Plus: the deprecated `AleyumSettings` alias in
-`croilar/_shared/config/settings.py` SHALL be removed (the
+`sruth/croilar/_shared/config/settings.py` SHALL be removed (the
 `StreamSettings` Pydantic BaseSettings is the only API).
 Plus: the `ALEYUM_ENV` env var SHALL be renamed to
 `CROILAR_ENV`.
@@ -111,23 +111,23 @@ Plus: the `ALEYUM_ENV` env var SHALL be renamed to
   layer for `aleyum` (case-insensitive)
 - **THEN** no matches SHALL be found in code, env vars, or
   config defaults (only the `aleyum` persona identifier in
-  `croilar/config/personas.yaml` + the persona site routes
+  `sruth/croilar/config/personas.yaml` + the persona site routes
   SHALL match)
 
 ### Requirement: Stream-registry canonical config surface
 
 The Croílár data-engineering layer SHALL expose a canonical
 config surface via the `StreamSettings` Pydantic BaseSettings
-class at `croilar/_shared/config/settings.py`. The
+class at `sruth/croilar/_shared/config/settings.py`. The
 `StreamSettings` class:
 
-- Loads stream definitions from `croilar/config/sources.yaml`
+- Loads stream definitions from `sruth/croilar/config/sources.yaml`
 - Exposes a typed `streams()` accessor + a `stream(id)` lookup
 - Uses a `STREAMS_` env prefix (the canonical env var namespace)
 - Caches the result via `@lru_cache` (the `get_settings()`
   factory)
 
-The `Stream` Pydantic model at `croilar/_shared/streams.py`
+The `Stream` Pydantic model at `sruth/croilar/_shared/streams.py`
 defines the per-stream contract:
 
 - `id: str` — the stream id (e.g. "music__spotify")
@@ -143,7 +143,7 @@ defines the per-stream contract:
 - `embedding_required: bool` — True for semantic-search streams
 
 The 12 default streams SHALL be declared in
-`croilar/config/sources.yaml`:
+`sruth/croilar/config/sources.yaml`:
 
 - 4 music: `music__spotify`, `music__soundcloud`,
   `music__labels`, `music__artwork`
@@ -155,7 +155,7 @@ The 12 default streams SHALL be declared in
 #### Scenario: A developer adds a new stream via the YAML
 
 - **WHEN** a developer adds a new stream id to
-  `croilar/config/sources.yaml`
+  `sruth/croilar/config/sources.yaml`
 - **THEN** `StreamSettings.streams()` returns the new stream
   in the list
 - **AND** `StreamSettings.stream("<new-id>")` returns the

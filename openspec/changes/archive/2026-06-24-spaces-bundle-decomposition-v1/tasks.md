@@ -25,7 +25,7 @@
   Space + 1 canonical exception" (the full inventory)
 - [x] 3.2 ADDED Requirement "data-engineering quarantine"
   (the canonical exception — the only non-gradio Space;
-  it consumes oideachais/agents/adk/ + oideachais/baml_src/
+  it consumes sruth/oideachais/agents/adk/ + sruth/oideachais/baml_src/
   directly, not the LiteLLM gateway)
 
 ## 4. Validation + commit + push + archive

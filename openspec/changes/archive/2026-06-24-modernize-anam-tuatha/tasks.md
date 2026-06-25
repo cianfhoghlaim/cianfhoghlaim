@@ -12,7 +12,7 @@
 
 ## 3. Add pydantic to requirements
 
-- [x] Add `pydantic>=2.5` to `spaces/anam_tuatha/requirements.txt`
+- [x] Add `pydantic>=2.5` to `spaces/anam_sruth/tuatha/requirements.txt`
 
 ## 4. Spec deltas
 

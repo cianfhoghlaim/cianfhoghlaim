@@ -2,14 +2,14 @@
 
 ## Why
 
-The cianfhoghlaim monorepo currently has 3 subprojects at the top level (`oideachais/`, `meaisínfhoghlaim/`, `tuatha/`), but **no personal-portfolio site for the project's author** (Cian). The legacy `sruth/aleyum/` (a music-producer pseudonym for a subset of the same content) is being renamed and expanded to become the canonical portfolio + CV + data-engineering showcase subproject.
+The cianfhoghlaim monorepo currently has 3 subprojects at the top level (`sruth/oideachais/`, `meaisínfhoghlaim/`, `sruth/tuatha/`), but **no personal-portfolio site for the project's author** (Cian). The legacy `sruth/aleyum/` (a music-producer pseudonym for a subset of the same content) is being renamed and expanded to become the canonical portfolio + CV + data-engineering showcase subproject.
 
 The new subproject is called **croílár** (Irish: "core/heart") — reflecting the fact that this is the personal *core* of the cianfhoghlaim platform: the author's CV, achievements, teaching record, identity, music catalogue, and code projects, all unified under one bilingual (English + Irish) public site.
 
 The change is multi-pronged:
 
-1. **Rename** the legacy `aleyum/` to `croilar/` (preserving git history via `git mv`)
-2. **Build a new TanStack Start web app** with 9 subprojects (Home, CV, Music, Code, Research, Teaching, Data, Identity, Contact) — reusing the proven patterns from `oideachais/web/` + the `cianfhoghlaim-base` Better-T-Stack template
+1. **Rename** the legacy `aleyum/` to `sruth/croilar/` (preserving git history via `git mv`)
+2. **Build a new TanStack Start web app** with 9 subprojects (Home, CV, Music, Code, Research, Teaching, Data, Identity, Contact) — reusing the proven patterns from `sruth/oideachais/web/` + the `cianfhoghlaim-base` Better-T-Stack template
 3. **Stand up the data engineering layer** — Dagster + DLT + CocoIndex + BAML pipelines that ingest the author's CV PDFs, teaching records, identity documents, music catalogues, and code repos; cross-link with existing `oideachais` + `meaisínfhoghlaim` outputs via the DuckLake catalog
 4. **Wire up full GitOps automation** — multi-arch image management (ghcr.io), Komodo stack procedures, Dagger pipeline orchestration, Forgejo + GitHub Actions workflows
 5. **Establish the personal-portfolio capability tree** as 3 first-class OpenSpec capabilities (`croilar-portfolio`, `croilar-data-engineering`, `croilar-cv-extraction`)
@@ -18,23 +18,23 @@ The change is multi-pronged:
 
 ### 1. Rename + restructure
 
-- Move `stedding/dev/cianfhoghlaim copy/sruth/aleyum/*` → top-level `croilar/`
+- Move `stedding/dev/cianfhoghlaim copy/sruth/aleyum/*` → top-level `sruth/croilar/`
 - Delete the leftover backup copies in `stedding/dev/cianfhoghlaim_backup/stedding/flows/aleyum/`, `stedding/dev/flows/aleyum/`, `stedding/flows/aleyum/`
-- Repoint the `aleyum-agentos` build context in `infrastructure/stacks/agent-os/compose.yaml` to the new `croilar/agent_os/`
-- Update all `.infisical.env` references from `aleyum/*` to `croilar/*`
+- Repoint the `aleyum-agentos` build context in `infrastructure/stacks/agent-os/compose.yaml` to the new `sruth/croilar/agent_os/`
+- Update all `.infisical.env` references from `aleyum/*` to `sruth/croilar/*`
 
-### 2. New `croilar/` subproject (top-level)
+### 2. New `sruth/croilar/` subproject (top-level)
 
 The subproject adopts the proven patterns from:
-- `oideachais/web/` (TanStack Start + React 19 + Tailwind 4)
-- `oideachais/data_platform/dagster_assets/` (Dagster pattern)
-- `oideachais/data_platform/dlt_sources/` (DLT pattern)
-- `oideachais/data_platform/cocoindex_flows/` (CocoIndex flow pattern)
-- `oideachais/data_platform/baml_src/` (BAML schemas)
+- `sruth/oideachais/web/` (TanStack Start + React 19 + Tailwind 4)
+- `sruth/oideachais/data_platform/dagster_assets/` (Dagster pattern)
+- `sruth/oideachais/data_platform/dlt_sources/` (DLT pattern)
+- `sruth/oideachais/data_platform/cocoindex_flows/` (CocoIndex flow pattern)
+- `sruth/oideachais/data_platform/baml_src/` (BAML schemas)
 - `meaisínfhoghlaim/agents/` (Agent + Langfuse pattern)
 - `stedding/dev/cianfhoghlaim copy/taighde/web/cianfhoghlaim-base/` (Better-T-Stack starter)
 
-Layout: `croilar/{web, portal, cv, teaching, identity, research, music, pipelines, dagster_assets, baml, cocoindex_flows, notebooks, services, api, definitions.py, config/, sources.md, compose.yaml, Dockerfile.dagster, mise.toml}`
+Layout: `sruth/croilar/{web, portal, cv, teaching, identity, research, music, pipelines, dagster_assets, baml, cocoindex_flows, notebooks, services, api, definitions.py, config/, sources.md, compose.yaml, Dockerfile.dagster, mise.toml}`
 
 ### 3. 9 web subprojects (all in the initial release)
 
@@ -44,7 +44,7 @@ Layout: `croilar/{web, portal, cv, teaching, identity, research, music, pipeline
 | `/cv` | Full academic + professional + teaching record | BAML extraction of `author_cian_deacy_lyons.../achievement/` + `teaching/` PDFs |
 | `/music` | Spotify/SoundCloud/YouTube/Lemongrass catalogue | BAML extraction from DLT pipelines |
 | `/code` | GitHub repos for `@Yedya` | GitHub API |
-| `/research` | Cross-linked to `oideachais/` + `meaisínfhoghlaim/` outputs | DuckLake catalog |
+| `/research` | Cross-linked to `sruth/oideachais/` + `meaisínfhoghlaim/` outputs | DuckLake catalog |
 | `/teaching` | BCS PGC scholarship, placements, student feedback | BAML extraction from teaching PDFs |
 | `/data` | Dagster pipeline status (12+ assets) | Dagster GraphQL API |
 | `/identity` | Verification materials (encrypted at rest via SOPS) | PII-handled |
@@ -88,7 +88,7 @@ Layout: `croilar/{web, portal, cv, teaching, identity, research, music, pipeline
 - `.forgejo/workflows/`: 7 workflows (primary)
 - `.github/workflows/`: 7 mirror workflows (for community / external PRs)
 
-**Infisical** (~20 new items in `dev-baile/croilar/`)
+**Infisical** (~20 new items in `dev-baile/sruth/croilar/`)
 **Locket** sidecar in all 4 new croilar stacks
 **SOPS** for long-lived credentials (GitHub App keys, signing keys, disaster-recovery passphrases)
 

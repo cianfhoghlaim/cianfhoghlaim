@@ -12,7 +12,7 @@ The system SHALL place DLT source modules under
 - **GIVEN** the culture DLT source for Ireland
 - **WHEN** locating the source file
 - **THEN** the path is `sruth/oideachais/dlt_sources/domains/culture/ie/heritage_source.py`
-  (the legacy root-level `oideachais/dlt_sources/culture/ie/heritage_source.py`
+  (the legacy root-level `sruth/oideachais/dlt_sources/culture/ie/heritage_source.py`
   is gone)
 - **AND** the source declares `resources = [...]` with the 8 culture
   resource names (`royal_connections`, `leath_cuinn`, `english_invasion`,

@@ -3,7 +3,7 @@
 ## Why
 
 Round 8 of the multi-quadrant refactor plan. Per the
-`meaisinfhoghlaim/` subagent's deep-dive report (2026-06-24):
+`sruth/meaisinfhoghlaim/` subagent's deep-dive report (2026-06-24):
 
 - **13 source files** import from the `sruth.*` namespace (the
   predecessor `bonneagar` project's Python package, deleted from
@@ -18,14 +18,14 @@ Round 8 of the multi-quadrant refactor plan. Per the
 - `ocr/config/base.py` (381 lines) is an **entire-file copy-paste
   of `sruth`'s `FlowSettings` base**; the docstring even says
   "Base Configuration for sruth data pipelines"
-- `oideachais/agents/{adk,agno}/` near-duplicate the model-layer
-  agents in `meaisinfhoghlaim/agents/` (25 files vs. 17; the
+- `sruth/oideachais/agents/{adk,agno}/` near-duplicate the model-layer
+  agents in `sruth/meaisinfhoghlaim/agents/` (25 files vs. 17; the
   post-Phase-5 thin-shim treatment was only applied to the 4
   tuatha agents)
-- `oideachais/ocr/` (13 files) near-duplicates `meaisinfhoghlaim/ocr/`
+- `sruth/oideachais/ocr/` (13 files) near-duplicates `sruth/meaisinfhoghlaim/ocr/`
   (12 files; identical filenames)
 - `meaisinfhoghlaim-ocr-htr/spec.md` says **10 models** but the
-  code (`meaisinfhoghlaim/ocr/model_registry.py:OCR_MODELS`) has
+  code (`sruth/meaisinfhoghlaim/ocr/model_registry.py:OCR_MODELS`) has
   **9**. The spec also says the backends are "Pylaia, TrOCR,
   PaddleOCR, Tesseract, dots.ocr, VLM" but the `ModelBackend` enum
   has "LITELLM, MLX, TRANSFORMERS, OLLAMA, OPENAI, ANTHROPIC" —
@@ -34,7 +34,7 @@ Round 8 of the multi-quadrant refactor plan. Per the
   `irish-speech-pipeline`, `agent-fleet-orchestration`
 
 The change codifies the v0→v1 migration of the 13 sruth imports
-+ the 2 thin-shim reductions (oideachais/agents/ + oideachais/ocr/)
++ the 2 thin-shim reductions (sruth/oideachais/agents/ + sruth/oideachais/ocr/)
 + the OCR spec count reconciliation.
 
 ## What Changes
@@ -59,7 +59,7 @@ the canonical home:
 
 - `from sruth.oideachais.observability.logging import get_logger`
   → `from oideachais.observability.logging import get_logger`
-  (the new home in `oideachais/observability/logging.py`, to be
+  (the new home in `sruth/oideachais/observability/logging.py`, to be
   created in this round)
 - `from sruth.oideachais.evaluation.ragas_pipeline import ...`
   → `from meaisinfhoghlaim.evaluation.ragas_pipeline import ...`
@@ -72,28 +72,28 @@ the canonical home:
 - `from sruth.shared.graph import ...` →
   `from oideachais.graph.client import ...`
 - `ocr/config/base.py` (entire file, 381 lines) → DELETE; the
-  re-imports come from `meaisinfhoghlaim/observability/config.py`
+  re-imports come from `sruth/meaisinfhoghlaim/observability/config.py`
   (a 50-line shim)
 
-### 4. Refactor: `oideachais/agents/{adk,agno}/` → thin re-exports
+### 4. Refactor: `sruth/oideachais/agents/{adk,agno}/` → thin re-exports
 
-The 25-file `oideachais/agents/adk/` directory reduces to:
+The 25-file `sruth/oideachais/agents/adk/` directory reduces to:
 - `__init__.py` (50 lines) that re-exports the 12 model-layer
-  agents from `meaisinfhoghlaim/agents/`
+  agents from `sruth/meaisinfhoghlaim/agents/`
 - 5 tuatha-specific agents (the 4 from Phase 5 + the 1 tuatha_root_agent)
   stay as real code
 - The 19 other ADK files (root_agent, curriculum_agent,
   translation_agent, etc.) become 12-line shims
 
-The 1-file `oideachais/agents/agno/` directory stays as a re-export
+The 1-file `sruth/oideachais/agents/agno/` directory stays as a re-export
 shim (or gets removed if the Agno team lives entirely in
-`meaisinfhoghlaim/agents/agno/`).
+`sruth/meaisinfhoghlaim/agents/agno/`).
 
-### 5. Refactor: `oideachais/ocr/` → thin re-exports
+### 5. Refactor: `sruth/oideachais/ocr/` → thin re-exports
 
-The 13-file `oideachais/ocr/` directory reduces to:
+The 13-file `sruth/oideachais/ocr/` directory reduces to:
 - `__init__.py` that re-exports the 12 model-layer modules from
-  `meaisinfhoghlaim/ocr/`
+  `sruth/meaisinfhoghlaim/ocr/`
 - 1 leabharlann-specific file (`author_archive_ocr.py`) stays as
   real code (because the leabharlann pipeline lives in oideachais)
 
@@ -121,9 +121,9 @@ spec to use the correct 6: `litellm`, `mlx`, `transformers`,
 
 ### 8. 3 doc updates (1-line diffs each)
 
-- `meaisinfhoghlaim/AGENTS.md` — add `marimo/` row + `sruth migration` row
-- `meaisinfhoghlaim/README.md` — drop Known-Issues #2; add `sruth.*` import debt as the new highest priority; add §11 "v0→v1 migration backlog"
-- `meaisinfhoghlaim/pyproject.toml` — add `[tool.uv.sources]` block for `oideachais` + `codeolas`
+- `sruth/meaisinfhoghlaim/AGENTS.md` — add `marimo/` row + `sruth migration` row
+- `sruth/meaisinfhoghlaim/README.md` — drop Known-Issues #2; add `sruth.*` import debt as the new highest priority; add §11 "v0→v1 migration backlog"
+- `sruth/meaisinfhoghlaim/pyproject.toml` — add `[tool.uv.sources]` block for `oideachais` + `codeolas`
 
 ## Impact
 
@@ -132,7 +132,7 @@ spec to use the correct 6: `litellm`, `mlx`, `transformers`,
 - Affected code:
   - 13 sruth.* imports migrated
   - 1 file (`ocr/config/base.py`) deleted
-  - 1 new file (`oideachais/observability/logging.py`) added
+  - 1 new file (`sruth/oideachais/observability/logging.py`) added
   - 25 ADK files reduced to 12-line shims
   - 13 OCR files reduced to 12-line shims
 - 1 commit + 1 archive commit per the established pattern
@@ -140,11 +140,11 @@ spec to use the correct 6: `litellm`, `mlx`, `transformers`,
 ## Success criteria
 
 - `from sruth.X` raises no `ModuleNotFoundError` in the test suite
-- `oideachais/agents/adk/curriculum_agent` is the same object as
-  `meaisinfhoghlaim/agents/curriculum_agent` (the thin-shim re-export)
-- `oideachais/ocr/adapters` is the same module as
-  `meaisinfhoghlaim/ocr/adapters` (the thin-shim re-export)
-- `meaisinfhoghlaim/ocr/model_registry.py:OCR_MODELS` has 10 entries
+- `sruth/oideachais/agents/adk/curriculum_agent` is the same object as
+  `sruth/meaisinfhoghlaim/agents/curriculum_agent` (the thin-shim re-export)
+- `sruth/oideachais/ocr/adapters` is the same module as
+  `sruth/meaisinfhoghlaim/ocr/adapters` (the thin-shim re-export)
+- `sruth/meaisinfhoghlaim/ocr/model_registry.py:OCR_MODELS` has 10 entries
 - `meaisinfhoghlaim-ocr-htr/spec.md` documents 10 models + 6
   backends (litellm, mlx, transformers, ollama, openai, anthropic)
 - 3 new skills exist with valid frontmatter

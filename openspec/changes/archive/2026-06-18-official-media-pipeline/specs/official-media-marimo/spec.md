@@ -10,13 +10,13 @@
 ### Requirement: OfficialMediaMissionControl
 
 The system SHALL provide a marimo notebook at
-`oideachais/notebooks/dashboards/official_media.py` that renders the
+`sruth/oideachais/notebooks/dashboards/official_media.py` that renders the
 resolved official-media records as a single-page mission control.
 
 #### Scenario: Dashboard renders
 
 - **GIVEN** `oideachais.official_media.candidates` has at least 1 row
-- **WHEN** `marimo edit oideachais/notebooks/dashboards/official_media.py`
+- **WHEN** `marimo edit sruth/oideachais/notebooks/dashboards/official_media.py`
   is run
 - **THEN** the notebook SHALL render with:
   - a top metric strip (total candidates, total resolved, freshness
@@ -42,7 +42,7 @@ resolved official-media records as a single-page mission control.
 ### Requirement: OfficialMediaTanStackRoute
 
 The system SHALL provide a TanStack Start route at
-`oideachais/web/src/routes/official-media/index.tsx` that exposes the
+`sruth/oideachais/web/src/routes/official-media/index.tsx` that exposes the
 same data with a card-grid layout grouped by `category`.
 
 #### Scenario: Card grid renders

@@ -69,9 +69,9 @@ The root `package.json` declares these `workspaces` and is the only manifest bun
 
 | Workspace | Path | Purpose |
 |:--|:--|:--|
-| `oideachais-web` | `oideachais/web/` | TanStack Start + React front-end (the public web app) |
-| `oideachais-mcp-filesystem` | `oideachais/mcp/filesystem/` | Filesystem MCP server for the data platform |
-| `tuatha-ui` | `tuatha/ui/` | Túatha educational MMO front-end |
+| `oideachais-web` | `sruth/oideachais/web/` | TanStack Start + React front-end (the public web app) |
+| `oideachais-mcp-filesystem` | `sruth/oideachais/mcp/filesystem/` | Filesystem MCP server for the data platform |
+| `tuatha-ui` | `sruth/tuatha/ui/` | Túatha educational MMO front-end |
 
 There is **no** runtime business logic at the root. The root `package.json` only orchestrates: setup, turbo passthroughs, secret management, dagster, komodo/pangolin/locket glue, ccc indexing, and OpenSpec.
 
@@ -81,12 +81,12 @@ The root `pyproject.toml` is a uv-workspace **shell** (no dependencies, no conso
 
 | Member | Path | Purpose |
 |:--|:--|:--|
-| `oideachais` | `oideachais/` | Celtic education data platform (Dagster, DLT, LanceDB) |
-| `meaisinfhoghlaim` | `meaisinfhoghlaim/` | AI/ML services (agents, OCR, Celtic-language, ML pipelines) |
-| `tuath` | `tuatha/` | Educational MMO + crypto platform (Babylon.js, siwe, x402) |
+| `oideachais` | `sruth/oideachais/` | Celtic education data platform (Dagster, DLT, LanceDB) |
+| `meaisinfhoghlaim` | `sruth/meaisinfhoghlaim/` | AI/ML services (agents, OCR, Celtic-language, ML pipelines) |
+| `tuath` | `sruth/tuatha/` | Educational MMO + crypto platform (Babylon.js, siwe, x402) |
 | `códeolas` | `códeolas/` | Code intelligence library (publishable) |
 | `sruth-browser` | `infrastructure/browser/` | Browser automation client (Stagehand, MCP) |
-| `mcpo` | `oideachais/mcp/mcpo/` | MCPO bridge (optional) |
+| `mcpo` | `sruth/oideachais/mcp/mcpo/` | MCPO bridge (optional) |
 
 Members import each other via `[tool.uv.sources]` (e.g. `oideachais` imports `sruth-browser`, `códeolas`).
 
@@ -113,7 +113,7 @@ Secrets follow a strict three-way contract. **Never** hand-edit `.env`:
 
 > **Migration note (2026-06):** The earlier 1Password + SOPS + Komodo
 > secrets workflow from the predecessor `bonneagar` project
-> (documented in the now-deleted `oideachais/datasets/secrets_management_plan.md`)
+> (documented in the now-deleted `sruth/oideachais/datasets/secrets_management_plan.md`)
 > is **superseded** by this Infisical + Locket + mise flow. 1Password
 > was migrated to Infisical in 2026-06; `sops` and `age` keys are
 > retained in `mise.toml` only for legacy compatibility and should
@@ -162,10 +162,10 @@ Full workflow in [`openspec/AGENTS.md`](openspec/AGENTS.md).
 
 Each top-level quadrant has its own `AGENTS.md` with developer-quick-reference routing tables:
 
-- [`oideachais/AGENTS.md`](oideachais/AGENTS.md) — Celtic education data platform
-- [`meaisinfhoghlaim/AGENTS.md`](meaisinfhoghlaim/AGENTS.md) — AI/ML services
-- [`tuatha/AGENTS.md`](tuatha/AGENTS.md) — Educational MMO + crypto
-- [`croilar/AGENTS.md`](croilar/AGENTS.md) — Multi-persona portfolio
+- [`sruth/oideachais/AGENTS.md`](sruth/oideachais/AGENTS.md) — Celtic education data platform
+- [`sruth/meaisinfhoghlaim/AGENTS.md`](sruth/meaisinfhoghlaim/AGENTS.md) — AI/ML services
+- [`sruth/tuatha/AGENTS.md`](sruth/tuatha/AGENTS.md) — Educational MMO + crypto
+- [`sruth/croilar/AGENTS.md`](sruth/croilar/AGENTS.md) — Multi-persona portfolio
 
 When the user asks "where do I add X?", route to the matching `AGENTS.md`'s
 "Quick routing" table.
@@ -238,7 +238,7 @@ To ensure you use the appropriate skills for the different aspects of the projec
 - **Code Search**: Use [`ccc`](.agents/skills/ccc/SKILL.md) (CocoIndex Code) for semantic search over the codebase. Prefer `ccc search` over raw `grep`/`find` to get context-aware, relevant files instantly.
 - **Python Quality**: Use [`dignified-python`](.agents/skills/dignified-python/SKILL.md) for LBYL exception handling patterns, ABC interfaces, and explicit module boundaries.
 
-### Core Data Platform (`oideachais/data_platform`)
+### Core Data Platform (`sruth/oideachais/data_platform`)
 - **Orchestration**: Load [`dagster`](.agents/skills/dagster/SKILL.md) (specifically the expert routing rules inside it). This ensures you know how to build `MultiPartitionsDefinition` and avoid absolute namespace errors.
 - **Extraction**: Load [`dlt`](.agents/skills/dlt/SKILL.md). This skill router will point you to `create-filesystem-pipeline` (crucial for our `USE_LOCAL_SCRAPES` strategy) or `create-rest-api-pipeline`.
 - **Storage & Lakehouse**: Load [`motherduck`](.agents/skills/motherduck/SKILL.md). This serves as the master router to help you pick between `motherduck-ducklake` (our Garage S3 architecture), `motherduck-duckdb-sql`, or `motherduck-connect`.
@@ -249,7 +249,7 @@ To ensure you use the appropriate skills for the different aspects of the projec
 - **Scheduling**: cal-diy (cal.com community build) at `calcom.cianfhoghlaim.ie`. Team booking page at `/team`, per-member pages at `/<member-slug>`. Outbound webhooks → n8n.
 - **LLM backbone**: All workflow LLM steps use the OpenCode Go API (`$OPENAI_BASE_URL/chat/completions`) as a unified OpenAI-compatible endpoint. Models: `kimi-k2.6`, `glm-5.1`, `minimax-m2.5`, `mimo-v2.5`, `deepseek-v4-flash`.
 
-### Analytics & Notebooks (`oideachais/notebooks`)
+### Analytics & Notebooks (`sruth/oideachais/notebooks`)
 - **Data Exploration**: Load [`explore-data`](.agents/skills/explore-data/SKILL.md) to query endpoints or databases and generate an `analysis_plan.md` artifact.
 - **Notebook Assembly**: Load [`build-notebook`](.agents/skills/build-notebook/SKILL.md) to translate the `analysis_plan.md` into a fully functional, highly reactive `marimo` Python notebook.
 

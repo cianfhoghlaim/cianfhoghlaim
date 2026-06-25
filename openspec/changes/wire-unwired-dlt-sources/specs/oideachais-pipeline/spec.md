@@ -2,7 +2,7 @@
 
 ### Requirement: Every dlt source SHALL have a Dagster asset wrapper
 The oideachais quadrant SHALL provide a Dagster asset wrapper for
-every `@dlt.source` function in `oideachais/dlt_sources/`. The
+every `@dlt.source` function in `sruth/oideachais/dlt_sources/`. The
 wrapper MUST be a plain `@asset` (or `@dlt_assets` / `@multi_asset`)
 that:
 1. Imports the dlt source function
@@ -14,7 +14,7 @@ that:
 
 #### Scenario: A new dlt source is added
 - **WHEN** a contributor adds a new `@dlt.source` to
-  `oideachais/dlt_sources/`
+  `sruth/oideachais/dlt_sources/`
 - **THEN** they MUST add a corresponding Dagster asset wrapper
   in the same PR, following the `leaving_cert/dlt_assets.py`
   pattern (plain `@asset` + `dlt.pipeline(...)` + `safe_dlt_run`)

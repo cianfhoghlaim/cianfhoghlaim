@@ -87,7 +87,7 @@ def github_daily(context: ScheduleEvaluationContext):
 
 - The `ireland/curriculum/` assets (33+ sources) use this exact
   pattern
-- The `oideachais/dagster_defs/assets/ireland/curriculum_dlt_assets.py`
+- The `sruth/oideachais/dagster_defs/assets/ireland/curriculum_dlt_assets.py`
   module defines the `MultiPartitionsDefinition` by
   `language + subject`
 - The `oideachais-pipeline` spec mandates this MultiPartitions

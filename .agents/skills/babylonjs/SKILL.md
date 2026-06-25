@@ -1,6 +1,6 @@
 ---
 name: babylonjs
-description: Babylon.js 3D rendering engine for WebGL + WebGPU. Use for the tuatha/game/ MMO client (interactive 3D learning environments, mathematical visualisations, Celtic language family tree, gamified study areas), physics simulations, particle VFX, and VR/AR experiences.
+description: Babylon.js 3D rendering engine for WebGL + WebGPU. Use for the sruth/tuatha/game/ MMO client (interactive 3D learning environments, mathematical visualisations, Celtic language family tree, gamified study areas), physics simulations, particle VFX, and VR/AR experiences.
 ---
 
 # Babylon.js — 3D Web Rendering Engine
@@ -50,7 +50,7 @@ experiences in the browser:
 
 ## KCG integration
 
-The `tuatha/game/` MMO client uses Babylon.js to render
+The `sruth/tuatha/game/` MMO client uses Babylon.js to render
 interactive 3D learning environments:
 
 - **Virtual classroom** — students explore mathematical concepts
@@ -217,7 +217,7 @@ For loading 3D models into the Tuatha game:
    smaller payloads
 3. **Optimization** — Draco mesh compression (built into
    GLTF 2.0)
-4. **Storage** — `tuatha/game/assets/models/` (committed) or
+4. **Storage** — `sruth/tuatha/game/assets/models/` (committed) or
    S3 (for large assets)
 5. **Loading** — `SceneLoader.ImportMeshAsync` in the client
 6. **Metadata** — BAML extraction of pedagogical content
@@ -235,10 +235,10 @@ For loading 3D models into the Tuatha game:
 - **glTF Viewer** — <https://gltf-viewer.donmccurdy.com/> (test
   your GLTF assets in isolation)
 
-## Project structure (KCG `tuatha/game/`)
+## Project structure (KCG `sruth/tuatha/game/`)
 
 ```
-tuatha/game/
+sruth/tuatha/game/
 ├── src/
 │   ├── main.ts              # entry point; bootstraps the Engine
 │   ├── scenes/              # one file per scene (classroom, etc.)
@@ -311,4 +311,4 @@ tuatha/game/
 - Babylon.js Playground: <https://playground.babylonjs.com/>
 - GLTF spec: <https://github.com/KhronosGroup/glTF>
 - Havok: <https://www.havok.com/>
-- KCG `tuatha/game/`: the canonical Babylon.js client
+- KCG `sruth/tuatha/game/`: the canonical Babylon.js client

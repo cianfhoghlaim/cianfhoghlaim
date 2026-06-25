@@ -23,7 +23,7 @@ The Hono API SHALL serve as the OIDC issuer for Convex:
 - Audience SHALL be `convex_backend`
 
 #### Scenario: Convex validates JWT from Hono
-- **WHEN** oideachais/web makes a Convex query with a JWT from this Hono
+- **WHEN** sruth/oideachais/web makes a Convex query with a JWT from this Hono
 - **THEN** Convex calls `/.well-known/jwks.json` to get the public key
 - **AND** Convex verifies the JWT signature
 - **AND** `ctx.auth.getUserIdentity()` returns the user
@@ -36,7 +36,7 @@ The data layer SHALL use a real DuckDB connection:
 - `data/spotify.ts`, `data/github.ts`, `data/cv.ts` SHALL use real query helpers
 
 #### Scenario: Query GitHub stars
-- **WHEN** croilar/apps/web calls `GET /api/v1/github/stars`
+- **WHEN** sruth/croilar/apps/web calls `GET /api/v1/github/stars`
 - **THEN** DuckDB queries the ingested GitHub data table
 - **AND** returns an array of repo objects with star counts
 

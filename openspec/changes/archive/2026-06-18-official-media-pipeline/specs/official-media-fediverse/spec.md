@@ -10,7 +10,7 @@
 ### Requirement: FediverseHandleResolution
 
 The system SHALL provide a module at
-`oideachais/dlt_sources/official_media/fediverse.py` that resolves
+`sruth/oideachais/dlt_sources/official_media/fediverse.py` that resolves
 Mastodon and Bluesky handles to their canonical URL via the standard
 public protocols.
 
@@ -55,7 +55,7 @@ public protocols.
 ### Requirement: WikipediaAndCompaniesHouseLookup
 
 The system SHALL provide a module at
-`oideachais/dlt_sources/official_media/source_resolver.py` that resolves
+`sruth/oideachais/dlt_sources/official_media/source_resolver.py` that resolves
 the canonical Wikipedia article and Companies House / CRO entity for
 each candidate.
 

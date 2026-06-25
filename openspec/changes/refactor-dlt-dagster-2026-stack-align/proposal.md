@@ -14,7 +14,7 @@ considered canonical and are already on the venv:
 | `duckdb` + `ducklake` | 1.0 (data inlining, clustering, bucket partitioning, geometry, variant) | We use the *beta* DuckLake 0.9 API; no inlining, no clustering |
 | `motherduck` | preview DuckLake 1.0 (managed / BYOB / BYOC) | We use neither managed DuckLake nor the three hosting options |
 | `lancedb` | 0.15+ (multi-vector index, IVF, HNSW, scalar) | We use no vector indexes (`index=None` default) |
-| `graphiti-core` | 0.5+ (FalkorDB Lite embedded support) | We have a hand-rolled `oideachais/graph/temporal.py` that does NOT use FalkorDB |
+| `graphiti-core` | 0.5+ (FalkorDB Lite embedded support) | We have a hand-rolled `sruth/oideachais/graph/temporal.py` that does NOT use FalkorDB |
 | `falkordb` | 1.0 (Cypher + vector + graph) | We have a `falkordb_client.py` that is unused |
 | `cocoindex` | 1.0.9 (stable `@coco.fn` + `@coco.lifespan` + `mount_table_target`) | 8 v0 flows are still broken on import |
 
@@ -25,7 +25,7 @@ considered canonical and are already on the venv:
   capability (no vector indexes in LanceDB, no DuckLake inlining,
   no Components, no FalkorDB-backed Graphiti, no CocoIndex v1
   for 8/11 flows).
-- The `oideachais/REFACTORING.md` backlog has 21 items in
+- The `sruth/oideachais/REFACTORING.md` backlog has 21 items in
   `backlog` and `in_progress`; many of them are blocked on this
   foundational alignment.
 
@@ -55,7 +55,7 @@ they share the openspec spec deltas and the validation harness.
   the source manually; switch to `dlt.sources.filesystem` with
   a `readers` argument.
 - Add the **dlt best-practice guard** to
-  `oideachais/dlt_utils/safety.py`:
+  `sruth/oideachais/dlt_utils/safety.py`:
   - `safe_dlt_run()` already exists; add `safe_dlt_run_with_progress()`
     that streams package progress (mimicking the dlt-progress-bar
     pattern from the dlthub.com blog).
@@ -74,7 +74,7 @@ they share the openspec spec deltas and the validation harness.
     registers an `dg.asset` that builds an HNSW index.
   - `CelticCocoindexV1Component` — wraps a CocoIndex v1 App
     and registers an `dg.asset` that calls `app.update()`.
-- Add a `oideachais/dagster_defs/defs.yaml` that uses
+- Add a `sruth/oideachais/dagster_defs/defs.yaml` that uses
   `type: dagster.DefsFolderComponent` to mount the existing
   `assets/`, `sensors/`, `schedules.py`, and the 3 new
   Components, replacing the hand-written
@@ -140,14 +140,14 @@ they share the openspec spec deltas and the validation harness.
   aigne) so each materialises with an HNSW index.
 
 ### Phase 6 — `Graphiti` 0.5 + `FalkorDB` 1.0 alignment
-- Delete `oideachais/graph/temporal.py` (the hand-rolled
+- Delete `sruth/oideachais/graph/temporal.py` (the hand-rolled
   Graphiti-in-pure-Python implementation; REFACTORING.md item 7).
 - Wire the real `graphiti_core` 0.5 client backed by the
   FalkorDB compose stack:
-  - `oideachais/graph/graphiti_client.py` — wraps
+  - `sruth/oideachais/graph/graphiti_client.py` — wraps
     `graphiti_core.Graphiti(uri="falkordb://falkordb:6379")` and
     exposes `add_episode()`, `search()`, `add_triplet()`.
-  - Replace `oideachais/graph/temporal.py` imports in
+  - Replace `sruth/oideachais/graph/temporal.py` imports in
     `cognee_integration/cross_stage_cognify.py` with the new
     `graphiti_client`.
 - Add a `falkordb_lite` fallback for local dev:
@@ -171,22 +171,22 @@ they share the openspec spec deltas and the validation harness.
   - `lancedb.mount_table_target()` for vector sinks
   - `IdGenerator()` for stable IDs
   - `@coco.fn(memo=True)` for file-level processors
-- Add a `oideachais/cocoindex_flows/_lifespan.py` module that
+- Add a `sruth/oideachais/cocoindex_flows/_lifespan.py` module that
   exports the shared `@coco.lifespan` and the 3 ContextKeys
   (RESOLVED_FILE_REGISTRY, EMBEDDER, LANCE_DB) so the 12
   flows don't re-declare the same lifespan 12 times
   (REFACTORING.md item 12).
 
 ### Phase 8 — Cross-cutting documentation + validation
-- Update `oideachais/AGENTS.md` "Quick routing" table to point
+- Update `sruth/oideachais/AGENTS.md` "Quick routing" table to point
   to the new `components/` and the consolidated
   `dagster_defs/defs.yaml` layout.
-- Update `oideachais/STATUS.md` with the 8 package-alignment
+- Update `sruth/oideachais/STATUS.md` with the 8 package-alignment
   deltas.
-- Update `oideachais/REFACTORING.md` to mark items 6, 7, 12
+- Update `sruth/oideachais/REFACTORING.md` to mark items 6, 7, 12
   (and the items in items 9, 10, 11, 17, 18 that are blocked
   on this) as `done`.
-- Add a new top-level `oideachais/dagster_defs/README.md`
+- Add a new top-level `sruth/oideachais/dagster_defs/README.md`
   with the `dg` CLI developer workflow
   (`dg list defs` → `dg list components` →
   `dg scaffold defs MyComponent`).
@@ -196,56 +196,56 @@ they share the openspec spec deltas and the validation harness.
 ### Affected files (all 8 phases)
 
 **Phase 1 (dlt 1.0):**
-- **MODIFIED:** `oideachais/dlt_utils/source_factory.py`
+- **MODIFIED:** `sruth/oideachais/dlt_utils/source_factory.py`
   (canonical `dlt.sources.rest_api` + `dlt.sources.filesystem`)
-- **MODIFIED:** `oideachais/dlt_utils/safety.py`
+- **MODIFIED:** `sruth/oideachais/dlt_utils/safety.py`
   (add `safe_dlt_run_with_progress` + `validate_source_kwargs`)
 
 **Phase 2 (Dagster 1.10 + dg):**
-- **NEW:** `oideachais/dagster_defs/components/__init__.py`
-- **NEW:** `oideachais/dagster_defs/components/celtic_dlt_source.py`
-- **NEW:** `oideachais/dagster_defs/components/celtic_lancedb_hnsw.py`
-- **NEW:** `oideachais/dagster_defs/components/celtic_cocoindex_v1.py`
-- **NEW:** `oideachais/dagster_defs/defs.yaml`
-- **MODIFIED:** `oideachais/dagster_defs/definitions.py`
+- **NEW:** `sruth/oideachais/dagster_defs/components/__init__.py`
+- **NEW:** `sruth/oideachais/dagster_defs/components/celtic_dlt_source.py`
+- **NEW:** `sruth/oideachais/dagster_defs/components/celtic_lancedb_hnsw.py`
+- **NEW:** `sruth/oideachais/dagster_defs/components/celtic_cocoindex_v1.py`
+- **NEW:** `sruth/oideachais/dagster_defs/defs.yaml`
+- **MODIFIED:** `sruth/oideachais/dagster_defs/definitions.py`
   (bootstrap calls `dg.load_from_defs_folder()`)
-- **NEW:** `oideachais/dagster_defs/README.md`
+- **NEW:** `sruth/oideachais/dagster_defs/README.md`
 
 **Phase 3 (DuckLake 1.0):**
-- **MODIFIED:** `oideachais/dlt_utils/destinations.py`
+- **MODIFIED:** `sruth/oideachais/dlt_utils/destinations.py`
   (data inlining + clustering + bucket partitioning)
-- **NEW:** `oideachais/dlt_utils/schema.py`
+- **NEW:** `sruth/oideachais/dlt_utils/schema.py`
   (geometry + variant type helpers)
 
 **Phase 4 (MotherDuck managed / BYOB / BYOC):**
-- **NEW:** `oideachais/dlt_utils/motherduck_options.py`
-- **MODIFIED:** `oideachais/dlt_utils/destinations.py`
+- **NEW:** `sruth/oideachais/dlt_utils/motherduck_options.py`
+- **MODIFIED:** `sruth/oideachais/dlt_utils/destinations.py`
   (route on `MOTHERDUCK_MODE` env var)
-- **NEW:** `oideachais/motherduck_databases.py`
+- **NEW:** `sruth/oideachais/motherduck_databases.py`
 
 **Phase 5 (LanceDB 0.15 HNSW):**
-- **NEW:** `oideachais/lancedb/__init__.py`
-- **NEW:** `oideachais/lancedb/indexing.py`
-- **MODIFIED:** `oideachais/cocoindex_flows/leabharlann_embedding.py`
+- **NEW:** `sruth/oideachais/lancedb/__init__.py`
+- **NEW:** `sruth/oideachais/lancedb/indexing.py`
+- **MODIFIED:** `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py`
   (call `build_hnsw_index` on each table)
 
 **Phase 6 (Graphiti 0.5 + FalkorDB 1.0):**
-- **DELETED:** `oideachais/graph/temporal.py`
-- **NEW:** `oideachais/graph/graphiti_client.py`
-- **MODIFIED:** `oideachais/graph/falkordb_client.py`
+- **DELETED:** `sruth/oideachais/graph/temporal.py`
+- **NEW:** `sruth/oideachais/graph/graphiti_client.py`
+- **MODIFIED:** `sruth/oideachais/graph/falkordb_client.py`
   (add `FalkorDBLite` fallback)
-- **MODIFIED:** `oideachais/cognee_integration/cross_stage_cognify.py`
+- **MODIFIED:** `sruth/oideachais/cognee_integration/cross_stage_cognify.py`
   (use the new `graphiti_client`)
 
 **Phase 7 (CocoIndex v1 migration):**
-- **NEW:** `oideachais/cocoindex_flows/_lifespan.py`
+- **NEW:** `sruth/oideachais/cocoindex_flows/_lifespan.py`
 - **MIGRATED:** 9 v0 flows → v1
 
 **Phase 8 (documentation):**
-- **MODIFIED:** `oideachais/AGENTS.md`
-- **MODIFIED:** `oideachais/STATUS.md`
-- **MODIFIED:** `oideachais/REFACTORING.md`
-- **NEW:** `oideachais/dagster_defs/README.md`
+- **MODIFIED:** `sruth/oideachais/AGENTS.md`
+- **MODIFIED:** `sruth/oideachais/STATUS.md`
+- **MODIFIED:** `sruth/oideachais/REFACTORING.md`
+- **NEW:** `sruth/oideachais/dagster_defs/README.md`
 
 ### Affected specs
 
@@ -261,7 +261,7 @@ they share the openspec spec deltas and the validation harness.
   4 highest-volume tables, and `bucket(1000, id)` for the 3
   largest fact tables.
 - **MODIFIED `oideachais-pipeline`** — the rule that every
-  CocoIndex flow in `oideachais/cocoindex_flows/` MUST be a v1
+  CocoIndex flow in `sruth/oideachais/cocoindex_flows/` MUST be a v1
   App using `@coco.fn` + `@coco.lifespan` +
   `lancedb.mount_table_target` (the canonical v1 pattern).
 - **MODIFIED `oideachais-semantic-search`** — the rule that
@@ -278,12 +278,12 @@ they share the openspec spec deltas and the validation harness.
 - No change to the 30+ dlt sources themselves (only the
   underlying factory + the destination).
 - No change to the BAML schemas (`baml_src/*.baml`).
-- No change to the FastAPI endpoints (`oideachais/api/`).
-- No change to the Marimo notebooks (`oideachais/notebooks/`).
-- No change to the front-end (`oideachais/web/`).
+- No change to the FastAPI endpoints (`sruth/oideachais/api/`).
+- No change to the Marimo notebooks (`sruth/oideachais/notebooks/`).
+- No change to the front-end (`sruth/oideachais/web/`).
 - No new dlt sources added.
 - No new Dagster assets added.
-- No change to the `oideachais/sources.yaml` schema (only the
+- No change to the `sruth/oideachais/sources.yaml` schema (only the
   factory underneath is upgraded).
 
 ## Risk Assessment
@@ -319,7 +319,7 @@ they share the openspec spec deltas and the validation harness.
 3. `uv run --package oideachais dg list defs` shows all 120+ assets
 4. `uv run --package oideachais dg list components` shows the 3 KCG components
 5. `uv run --package oideachais dg scaffold defs MyTest my_test` scaffolds
-6. `uv run --package oideachais python -c "from dlt_utils.source_factory import SourceFactory; f = SourceFactory.from_yaml('oideachais/sources.yaml'); print(len(f.all_ids()))"` prints 100+ (all 100+ sources resolvable through the new factory)
+6. `uv run --package oideachais python -c "from dlt_utils.source_factory import SourceFactory; f = SourceFactory.from_yaml('sruth/oideachais/sources.yaml'); print(len(f.all_ids()))"` prints 100+ (all 100+ sources resolvable through the new factory)
 7. `uv run --package oideachais python -c "from cocoindex_flows import _lifespan; print(_lifespan.LANCE_DB.name)"` succeeds (the shared v1 lifespan is importable)
 8. `mise run lint:skills` still passes 108/108
 9. `bun run ccc:search "CelticDltSourceComponent"` finds the new component

@@ -33,7 +33,7 @@ The system SHALL define BAML schemas for the 3 new extraction tasks (CV, teachin
 
 #### Scenario: cv_extraction.baml compiles
 - **WHEN** `bun run baml-cli compile` is run
-- **THEN** the BAML compiler SHALL emit TypeScript + Python client code from `croilar/baml/cv_extraction.baml`
+- **THEN** the BAML compiler SHALL emit TypeScript + Python client code from `sruth/croilar/baml/cv_extraction.baml`
 - **AND** the client SHALL expose `ExtractCV`, `ExtractEducationEntry`, `ExtractAward`, `ExtractPublication`, `ExtractReference` functions
 
 #### Scenario: teaching_extraction.baml compiles

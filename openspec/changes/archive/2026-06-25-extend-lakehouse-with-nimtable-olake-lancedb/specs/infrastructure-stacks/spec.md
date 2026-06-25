@@ -51,7 +51,7 @@ The system SHALL deploy database and data infrastructure for the lakehouse archi
 
 ### Requirement: Cross-Sruth Lakehouse Wiring Contract
 
-Every active srutha in the Cianfhoghlaim monorepo MUST wire into the canonical dev lakehouse via two contracts: (1) `LANCEDB_URI=rest://lakehouse-lance-namespace:8182` for LanceDB vector RAG (set via `.env` or compose.yaml default), and (2) a dedicated `ducklake_{namespace}` PostgreSQL database created in `infrastructure/stacks/lakehouse/init-db.sql` for DuckLake write-ahead-log storage. The canonical factory for both contracts is `oideachais/dlt_utils/destinations.py:with_namespace()` (the `with_namespace()` method at line 289 of the file). The 6 active srutha DBs are: `ducklake_oideachais`, `ducklake_crypteolas`, `ducklake_croilar`, `ducklake_tuath`, `ducklake_meaisinfhoghlaim`, `ducklake_aleyum` (legacy — superseded by croilar).
+Every active srutha in the Cianfhoghlaim monorepo MUST wire into the canonical dev lakehouse via two contracts: (1) `LANCEDB_URI=rest://lakehouse-lance-namespace:8182` for LanceDB vector RAG (set via `.env` or compose.yaml default), and (2) a dedicated `ducklake_{namespace}` PostgreSQL database created in `infrastructure/stacks/lakehouse/init-db.sql` for DuckLake write-ahead-log storage. The canonical factory for both contracts is `sruth/oideachais/dlt_utils/destinations.py:with_namespace()` (the `with_namespace()` method at line 289 of the file). The 6 active srutha DBs are: `ducklake_oideachais`, `ducklake_crypteolas`, `ducklake_croilar`, `ducklake_tuath`, `ducklake_meaisinfhoghlaim`, `ducklake_aleyum` (legacy — superseded by croilar).
 
 #### Scenario: An active srutha needs LanceDB vector RAG
 

@@ -54,7 +54,7 @@
 - [ ] Add a "Cross-Sruth Wiring" section documenting:
   - The `LANCEDB_URI=rest://lakehouse-lance-namespace:8182` contract for every active srutha
   - The per-sruth `ducklake_{namespace}` DB contract (the 6 active DBs)
-  - The canonical factory: `oideachais/dlt_utils/destinations.py:with_namespace()` (line 289)
+  - The canonical factory: `sruth/oideachais/dlt_utils/destinations.py:with_namespace()` (line 289)
   - A 4-row table mapping each srutha → DB name + LANCEDB_URI value
 - [ ] Add a "Bringup" subsection showing the `docker compose up` order and the 4 URLs to verify
 

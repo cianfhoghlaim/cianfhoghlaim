@@ -2,7 +2,7 @@
 
 ### Requirement: Spaces route through the canonical LiteLLM gateway
 
-The Cianfhoghlaim HuggingFace Spaces (`an_scrudu`, `meaisin_cliste`, `cianfhoghlaim`, `anam_tuatha`, `data-engineering`) MUST route every LLM call through the canonical LiteLLM gateway (`http://litellm:4000/v1`) as the primary tier, with the hand-rolled HF Inference 3-tier chain kept as the offline fallback. The gateway is configured in `oideachais/baml_src/clients.baml` (the `LitellmClient`) and `oideachais/foinse/litellm_config.yaml` (the 5-key rotation).
+The Cianfhoghlaim HuggingFace Spaces (`an_scrudu`, `meaisin_cliste`, `cianfhoghlaim`, `anam_tuatha`, `data-engineering`) MUST route every LLM call through the canonical LiteLLM gateway (`http://litellm:4000/v1`) as the primary tier, with the hand-rolled HF Inference 3-tier chain kept as the offline fallback. The gateway is configured in `sruth/oideachais/baml_src/clients.baml` (the `LitellmClient`) and `sruth/oideachais/foinse/litellm_config.yaml` (the 5-key rotation).
 
 #### Scenario: Space calls LLM via the gateway
 

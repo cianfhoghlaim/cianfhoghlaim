@@ -2,19 +2,19 @@
 
 ## 1. Achievement-ledger implementation
 
-- [x] 1.1 Create `tuatha/crypteolas/__init__.py` (the package marker)
-- [x] 1.2 Create `tuatha/crypteolas/achievements/__init__.py` (the 4 public surfaces)
-- [x] 1.3 Create `tuatha/crypteolas/achievements/schema.py` (the 8-field badge + the 5 realm types + the mastery dataclass)
-- [x] 1.4 Create `tuatha/crypteolas/achievements/storage.py` (the LanceDB-backed storage with `crypteolas_achievements` + `crypteolas_masteries` tables)
-- [x] 1.5 Create `tuatha/crypteolas/achievements/ledger.py` (the 4 public methods: issue, list_badges, verify_signature, cross_quest_relevance)
-- [x] 1.6 Create `tuatha/crypteolas/achievements/cli.py` (the 4 CLI commands: issue, list, verify, mastery)
+- [x] 1.1 Create `sruth/tuatha/sruth/crypteolas/__init__.py` (the package marker)
+- [x] 1.2 Create `sruth/tuatha/sruth/crypteolas/achievements/__init__.py` (the 4 public surfaces)
+- [x] 1.3 Create `sruth/tuatha/sruth/crypteolas/achievements/schema.py` (the 8-field badge + the 5 realm types + the mastery dataclass)
+- [x] 1.4 Create `sruth/tuatha/sruth/crypteolas/achievements/storage.py` (the LanceDB-backed storage with `crypteolas_achievements` + `crypteolas_masteries` tables)
+- [x] 1.5 Create `sruth/tuatha/sruth/crypteolas/achievements/ledger.py` (the 4 public methods: issue, list_badges, verify_signature, cross_quest_relevance)
+- [x] 1.6 Create `sruth/tuatha/sruth/crypteolas/achievements/cli.py` (the 4 CLI commands: issue, list, verify, mastery)
 
 ## 2. MCP server shim fix
 
-- [x] 2.1 Create `tuatha/agents/tools/__init__.py` (the thin re-export shim)
-- [x] 2.2 Create `tuatha/agents/tools/curriculum_search.py` (re-exports the canonical `search_curriculum` + `get_learning_outcomes`)
-- [x] 2.3 Create `tuatha/agents/tools/mythology_query.py` (re-exports the canonical `search_mythology` + `get_character_lore` + `get_location_lore`)
-- [x] 2.4 Verify `tuatha/agents/mcp_server/server.py` lines 23-33 import correctly via the shim
+- [x] 2.1 Create `sruth/tuatha/agents/tools/__init__.py` (the thin re-export shim)
+- [x] 2.2 Create `sruth/tuatha/agents/tools/curriculum_search.py` (re-exports the canonical `search_curriculum` + `get_learning_outcomes`)
+- [x] 2.3 Create `sruth/tuatha/agents/tools/mythology_query.py` (re-exports the canonical `search_mythology` + `get_character_lore` + `get_location_lore`)
+- [x] 2.4 Verify `sruth/tuatha/agents/mcp_server/server.py` lines 23-33 import correctly via the shim
 
 ## 3. Three new skills
 
@@ -31,8 +31,8 @@
 
 ## 5. Documentation
 
-- [x] 5.1 Update `tuatha/AGENTS.md` (add 3 new skill rows to the priority quick reference)
-- [x] 5.2 Update `tuatha/README.md` (new achievement-ledger section + the Phase 6 reference)
+- [x] 5.1 Update `sruth/tuatha/AGENTS.md` (add 3 new skill rows to the priority quick reference)
+- [x] 5.2 Update `sruth/tuatha/README.md` (new achievement-ledger section + the Phase 6 reference)
 
 ## 6. Validation + commit + push + archive
 

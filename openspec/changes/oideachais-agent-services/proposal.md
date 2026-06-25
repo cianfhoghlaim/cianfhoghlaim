@@ -6,7 +6,7 @@ The oideachais quadrant has **two agent frameworks** currently
 running **in-process inside the `api` image**:
 
 1. **Google ADK** — 12 active agent files in
-   `oideachais/agents/adk/` that import `google.adk.agents`,
+   `sruth/oideachais/agents/adk/` that import `google.adk.agents`,
    `google.adk.planners`, `google.adk.tools`, `google.adk.events`,
    etc. (verified by `grep` on the 12 files; matches in
    `agui_curriculum_agent.py:19-20`, `research_agent.py:18-20`,
@@ -21,7 +21,7 @@ running **in-process inside the `api` image**:
    `agents/tools/spatial_query.py:12`)
 
 2. **Agno (AgentOS)** — full source at
-   `oideachais/agent_os/` with `Dockerfile`, `config.yaml`,
+   `sruth/oideachais/agent_os/` with `Dockerfile`, `config.yaml`,
    `main.py`, `README.md`. The Dockerfile uses
    `uvicorn agent_os.main:app --host 0.0.0.0 --port 7777`
    and exposes port 7777. The Dockerfile is **complete and
@@ -49,7 +49,7 @@ limits.
 ## What
 
 ### 1. Add the 2 new services to compose.yaml
-In `infrastructure/stacks/oideachais/compose.yaml`, add 2 new
+In `infrastructure/stacks/sruth/oideachais/compose.yaml`, add 2 new
 service definitions after the `frontend` service:
 
 ```yaml
@@ -61,7 +61,7 @@ agent_os:
   pull_policy: never
   build:
     context: ../../../..
-    dockerfile: oideachais/agent_os/Dockerfile
+    dockerfile: sruth/oideachais/agent_os/Dockerfile
   container_name: cianchoghlaim-oideachais-agent-os
   restart: unless-stopped
   ports:
@@ -102,7 +102,7 @@ adk_agents:
   pull_policy: never
   build:
     context: ../../../..
-    dockerfile: oideachais/Dockerfile.adk
+    dockerfile: sruth/oideachais/Dockerfile.adk
   container_name: cianchoghlaim-oideachais-adk-agents
   restart: unless-stopped
   ports:
@@ -137,14 +137,14 @@ adk_agents:
 ```
 
 ### 2. Create the ADK Dockerfile
-Create `oideachais/Dockerfile.adk` that:
+Create `sruth/oideachais/Dockerfile.adk` that:
 - Uses `python:3.12-slim` as the base
 - Installs `google-adk` + the oideachais deps
-- Copies the `oideachais/agents/adk/` source
+- Copies the `sruth/oideachais/agents/adk/` source
 - Runs `uvicorn` on port 7778
 
 ### 3. Add Traefik routers to pangolin.yaml
-In `infrastructure/stacks/oideachais/pangolin.yaml`, add 2
+In `infrastructure/stacks/sruth/oideachais/pangolin.yaml`, add 2
 new routers for the agent endpoints:
 
 ```yaml
@@ -175,16 +175,16 @@ Add the 2 new services to the oideachais quadrant row.
 ## Impact
 
 ### Affected files
-- **MODIFIED:** `infrastructure/stacks/oideachais/compose.yaml`
+- **MODIFIED:** `infrastructure/stacks/sruth/oideachais/compose.yaml`
   (+ 2 new service definitions)
-- **NEW:** `oideachais/Dockerfile.adk` (ADK runtime image)
-- **MODIFIED:** `infrastructure/stacks/oideachais/pangolin.yaml`
+- **NEW:** `sruth/oideachais/Dockerfile.adk` (ADK runtime image)
+- **MODIFIED:** `infrastructure/stacks/sruth/oideachais/pangolin.yaml`
   (+ 2 new Traefik routers)
-- **MODIFIED:** `infrastructure/stacks/oideachais/blueprint.yaml`
+- **MODIFIED:** `infrastructure/stacks/sruth/oideachais/blueprint.yaml`
   (+ 2 new ports)
 - **MODIFIED:** `infrastructure/QUADRANT-TO-STACK-MAP.md`
   (+ 2 new services)
-- **MODIFIED:** `infrastructure/stacks/oideachais/README.md`
+- **MODIFIED:** `infrastructure/stacks/sruth/oideachais/README.md`
   (update architecture table)
 
 ### Affected specs
@@ -203,8 +203,8 @@ Add the 2 new services to the oideachais quadrant row.
 
 ## Non-Goals
 
-- No changes to the agent source code in `oideachais/agents/adk/`
-  or `oideachais/agent_os/`
+- No changes to the agent source code in `sruth/oideachais/agents/adk/`
+  or `sruth/oideachais/agent_os/`
 - No BAML or Cognee changes
 - No changes to the existing 3 services
 - No change to the Komodo deployment procedure
@@ -233,6 +233,6 @@ Add the 2 new services to the oideachais quadrant row.
 
 1. `docker compose -f compose.yaml config` parses
 2. The 2 new services appear in `docker compose -f compose.yaml config` output
-3. `infrastructure/stacks/oideachais/README.md` documents the 2 new services
+3. `infrastructure/stacks/sruth/oideachais/README.md` documents the 2 new services
 4. `infrastructure/QUADRANT-TO-STACK-MAP.md` includes the 2 new services
 5. `openspec validate oideachais-agent-services --strict` passes

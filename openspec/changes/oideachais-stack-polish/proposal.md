@@ -2,7 +2,7 @@
 
 ## Why
 
-The `infrastructure/stacks/oideachais/` Compose stack has 4 minor
+The `infrastructure/stacks/sruth/oideachais/` Compose stack has 4 minor
 GOLD_STANDARD / port-allocation / observability gaps that were
 flagged in the initial C0.1 investigation:
 
@@ -43,27 +43,27 @@ dedicated README is missing.
 ## What
 
 ### 1. Bump FRONTEND_PORT default 3000 → 3080
-In `infrastructure/stacks/oideachais/compose.yaml`:
+In `infrastructure/stacks/sruth/oideachais/compose.yaml`:
 - Change `"${FRONTEND_PORT:-3000}:3000"` to `"${FRONTEND_PORT:-3080}:3000"`
 
 ### 2. Move depends_on: locket into compose.yaml
-In `infrastructure/stacks/oideachais/compose.yaml`:
+In `infrastructure/stacks/sruth/oideachais/compose.yaml`:
 - Add `depends_on: locket: condition: service_healthy` to the
   `dagster`, `api`, and `frontend` services
 
-In `infrastructure/stacks/oideachais/sidecar.yaml`:
+In `infrastructure/stacks/sruth/oideachais/sidecar.yaml`:
 - The `depends_on` is now defined per-service in the canonical
   compose.yaml; the sidecar.yaml only defines the `locket` service
 
 ### 3. Pin locket image to a specific SHA
-In `infrastructure/stacks/oideachais/sidecar.yaml`:
+In `infrastructure/stacks/sruth/oideachais/sidecar.yaml`:
 - Replace `image: ghcr.io/cianfhoghlaim/locket:latest` with
   `image: ghcr.io/cianfhoghlaim/locket:1.2.3` (or a specific SHA
   if known)
 - Add a comment explaining the pin rationale
 
 ### 4. Add stack README.md
-Create `infrastructure/stacks/oideachais/README.md` with:
+Create `infrastructure/stacks/sruth/oideachais/README.md` with:
 - Purpose: 1-paragraph summary
 - Architecture: 3 services (dagster, api, frontend) + 1 sidecar (locket)
 - Ports: 3335 (dagster), 8000 (api), 3080 (frontend)
@@ -77,11 +77,11 @@ Create `infrastructure/stacks/oideachais/README.md` with:
 ## Impact
 
 ### Affected files
-- **MODIFIED:** `infrastructure/stacks/oideachais/compose.yaml`
+- **MODIFIED:** `infrastructure/stacks/sruth/oideachais/compose.yaml`
   (port bump + depends_on)
-- **MODIFIED:** `infrastructure/stacks/oideachais/sidecar.yaml`
+- **MODIFIED:** `infrastructure/stacks/sruth/oideachais/sidecar.yaml`
   (locket image pin)
-- **NEW:** `infrastructure/stacks/oideachais/README.md` (stack docs)
+- **NEW:** `infrastructure/stacks/sruth/oideachais/README.md` (stack docs)
 
 ### Affected specs
 - MODIFIED `oideachais-pipeline` — the rule that the oideachais

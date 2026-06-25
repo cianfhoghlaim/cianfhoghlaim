@@ -2,7 +2,7 @@
 
 ## Purpose
 
-`author-archive-filesystem` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives at `oideachais/dlt_sources/author_archive/`. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+`author-archive-filesystem` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives at `sruth/oideachais/dlt_sources/author_archive/`. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
 
 End-to-end filesystem ingestion of the personal archive directories `author_cian_deacy_lyons_mac_an_déisigh_uí_liatháin/gemini_deep_research/` and `author_cian_deacy_lyons_mac_an_déisigh_uí_liatháin/university_of_galway/`, with hash-based incremental discovery, content extraction (pymupdf for PDF, python-docx for DOCX), and DuckLake partitioning by `account` and `domain`.
 
@@ -28,7 +28,7 @@ The system SHALL discover and ingest every PDF in `author_cian_deacy_lyons_mac_a
 - **GIVEN** the `author_archive_gemini_deep_research_raw` asset has been materialised at least once
 - **WHEN** the asset is re-materialised
 - **THEN** only files whose SHA-256 has changed (or are newly added) SHALL be re-loaded
-- **AND** the `FileHashTracker` (`oideachais/dlt_sources/author_archive/_scanner.py`) SHALL be the source of truth for the file-hash ledger
+- **AND** the `FileHashTracker` (`sruth/oideachais/dlt_sources/author_archive/_scanner.py`) SHALL be the source of truth for the file-hash ledger
 
 ### Requirement: University of Galway Filesystem Ingestion
 The system SHALL discover and ingest every supported file in `author_cian_deacy_lyons_mac_an_déisigh_uí_liatháin/university_of_galway/` into the `author_archive_uog_documents` DuckLake table.
@@ -53,12 +53,12 @@ The system SHALL discover and ingest every supported file in `author_cian_deacy_
 - **AND** the `detected_language` column SHALL be set to `"en"` (English-only) by the `_scanner.detect_language` heuristic
 
 ### Requirement: DuckLake Destination and Partitioning
-The system SHALL write all three filesystem sources to the shared DuckLake destination configured by `oideachais/dlt_utils/destinations.py:118`.
+The system SHALL write all three filesystem sources to the shared DuckLake destination configured by `sruth/oideachais/dlt_utils/destinations.py:118`.
 
 #### Scenario: Local DuckLake
 - **GIVEN** `DLT_ENVIRONMENT=local` (default) and `USE_DUCKLAKE=true`
 - **WHEN** any `author_archive_*_raw` asset materialises
-- **THEN** the destination SHALL be the local DuckLake on Garage S3 (`s3://ducklake/oideachais/`) with the PostgreSQL catalog at `localhost:5433`
+- **THEN** the destination SHALL be the local DuckLake on Garage S3 (`s3://ducklake/sruth/oideachais/`) with the PostgreSQL catalog at `localhost:5433`
 
 #### Scenario: DuckDB fallback for tests
 - **GIVEN** `USE_DUCKLAKE=false`

@@ -5,7 +5,7 @@
 ### Requirement: Crypteolas crypto data platform
 
 The system SHALL provide an **educational-achievement ledger**
-at `tuatha/crypteolas/achievements/` (rebranded from the v0
+at `sruth/tuatha/sruth/crypteolas/achievements/` (rebranded from the v0
 "Crypteolas crypto data platform" per Phase 6 of the 6-phase
 refactor plan). The ledger holds **skill-tree badges**, NOT
 a financial token.
@@ -54,7 +54,7 @@ framework has 4 components:
    framework is a "realm" in the Pent-Elemental Cosmology
    (Spirit / Water / Fire / Earth / Air + Anam Cara).
 2. **4 formative feedback channels** (the 4 tuatha ADK
-   agents at `oideachais/agents/adk/`: Celtic Tutor,
+   agents at `sruth/oideachais/agents/adk/`: Celtic Tutor,
    Mythology Narrator, Quest Guide, Research Assistant).
    Each agent delivers per-quest, per-response,
    per-misconception feedback. The player always leaves

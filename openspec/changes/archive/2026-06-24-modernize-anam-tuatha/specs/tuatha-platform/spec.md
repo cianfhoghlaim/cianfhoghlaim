@@ -2,7 +2,7 @@
 
 ### Requirement: GenerateExitCardQuestions Pydantic mirror
 
-The canonical BAML function `GenerateExitCardQuestions` (in `tuatha/baml_src/player_assessment.baml`) MUST have a Pydantic v2 mirror in `spaces/anam_tuatha/mac_leinn.py`. The Pydantic classes (`PExitCardQuestion`, `PExitCardSet`) MUST mirror the BAML class shapes exactly, and `_coerce` MUST validate the LLM response against the Pydantic schema before falling back to the flat legacy schema.
+The canonical BAML function `GenerateExitCardQuestions` (in `sruth/tuatha/baml_src/player_assessment.baml`) MUST have a Pydantic v2 mirror in `spaces/anam_sruth/tuatha/mac_leinn.py`. The Pydantic classes (`PExitCardQuestion`, `PExitCardSet`) MUST mirror the BAML class shapes exactly, and `_coerce` MUST validate the LLM response against the Pydantic schema before falling back to the flat legacy schema.
 
 #### Scenario: LLM returns valid ExitCardSet
 

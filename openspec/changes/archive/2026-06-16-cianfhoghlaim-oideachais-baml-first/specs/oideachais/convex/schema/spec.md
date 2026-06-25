@@ -3,7 +3,7 @@
 ## ADDED Requirements
 
 ### Requirement: Convex Schema
-The system SHALL provide 5 Convex tables in `oideachais/web/convex/schema.ts` for chat persistence, practice attempts, PDF annotations, classmate shares, and extraction budget tracking.
+The system SHALL provide 5 Convex tables in `sruth/oideachais/web/convex/schema.ts` for chat persistence, practice attempts, PDF annotations, classmate shares, and extraction budget tracking.
 
 #### Scenario: subject_sessions Table
 - **GIVEN** the `subject_sessions` Convex table
@@ -36,7 +36,7 @@ The system SHALL provide 5 Convex tables in `oideachais/web/convex/schema.ts` fo
 - **AND** if `papers_extracted > 5`, the request is rejected with a "come back tomorrow" message
 
 ### Requirement: Convex Functions
-The system SHALL provide 4 Convex function files in `oideachais/web/convex/`.
+The system SHALL provide 4 Convex function files in `sruth/oideachais/web/convex/`.
 
 #### Scenario: Convex Query Functions
 - **GIVEN** the Convex functions

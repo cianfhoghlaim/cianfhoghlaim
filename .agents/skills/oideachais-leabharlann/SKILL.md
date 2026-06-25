@@ -1,6 +1,6 @@
 ---
 name: oideachais-leabharlann
-description: The KCG leabharlann (personal archive) pipeline pattern in `oideachais/`. Covers the 4 dlt sources (books, zotero, takeout_v1, uog_coursework), the 3 v1 CocoIndex Apps (leabharlann_books_embedding, leabharlann_zotero_embedding, leabharlann_takeout_embedding), the 7 Dagster assets in `oideachais/dagster_defs/assets/leabharlann_assets.py`, the 1 directory-watch sensor, the 3 cognify passes (leabharlann_cognify), the 3 cross-archive edge rules (leabharlann_cross_archive), and the canonical home for the leabharlann subtree at `leabharlann/`. Use when adding a new corpus, wiring a v1 CocoIndex App, registering a sensor, running a cognify pass, populating the cross-archive graph, or implementing the BAML extraction for Zotero papers.
+description: The KCG leabharlann (personal archive) pipeline pattern in `sruth/oideachais/`. Covers the 4 dlt sources (books, zotero, takeout_v1, uog_coursework), the 3 v1 CocoIndex Apps (leabharlann_books_embedding, leabharlann_zotero_embedding, leabharlann_takeout_embedding), the 7 Dagster assets in `sruth/oideachais/dagster_defs/assets/leabharlann_assets.py`, the 1 directory-watch sensor, the 3 cognify passes (leabharlann_cognify), the 3 cross-archive edge rules (leabharlann_cross_archive), and the canonical home for the leabharlann subtree at `leabharlann/`. Use when adding a new corpus, wiring a v1 CocoIndex App, registering a sensor, running a cognify pass, populating the cross-archive graph, or implementing the BAML extraction for Zotero papers.
 ---
 
 # Oideachais Leabharlann

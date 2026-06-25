@@ -16,7 +16,7 @@ related_specs:
 related_apps:
   - sruth/meaisinfhoghlaim/agents/tutor
   - sruth/meaisinfhoghlaim/llm_stack
-  - oideachais/web
+  - sruth/oideachais/web
 related_llm_stack:
   - 'BAML (typed curriculum grounding)'
   - 'litellm (model routing: kimi-k2.6, glm-5.1, ollama local)'
@@ -47,8 +47,8 @@ engine that:
 | Asset | Path | Use |
 |:--|:--|:--|
 | Quadrant | `sruth/meaisinfhoghlaim/` | AI/ML — agents, OCR, language, pipelines |
-| Quadrant | `oideachais/` | Data platform — curriculum, BAML extraction, knowledge graph |
-| Quadrant | `tuatha/ui/` | Front-end (Babylon.js) — *only if 3D tutor avatar desired* |
+| Quadrant | `sruth/oideachais/` | Data platform — curriculum, BAML extraction, knowledge graph |
+| Quadrant | `sruth/tuatha/ui/` | Front-end (Babylon.js) — *only if 3D tutor avatar desired* |
 | Skill | `.agents/skills/llm-stack-hierarchy/` | BAML→litellm→Cognee→LanceDB ordering |
 | Skill | `.agents/skills/cognee/SKILL.md` | Long-term memory |
 | Skill | `.agents/skills/lancedb/SKILL.md` | Cross-lingual outcome embeddings |
@@ -69,7 +69,7 @@ that picks the right model for the task:
 | Local-only mode (offline) | `ollama:qwen2.5-14b-gguf` | `ollama:llama3.1-8b-gguf` |
 
 The router is configured in `sruth/meaisinfhoghlaim/llm_stack/router.py` and
-reads from Infisical (`/oideachais/llm_keys/*`).
+reads from Infisical (`/sruth/oideachais/llm_keys/*`).
 
 ## 3. Grounded curriculum: BAML extraction
 
@@ -104,10 +104,10 @@ outcomes. The pipeline:
 
 | Language pair | Glossary source | DLT source |
 |:--|:--|:--|
-| en↔ga (Irish) | `téarma.ie`, `gaois.ie` | `oideachais/dlt_sources/ireland/gaois.py` (existing) |
-| en↔cy (Welsh) | `PrysmaGeiriadur`, `geiriadur.ac.uk` | `oideachais/dlt_sources/uk/wales/terminology.py` (new) |
-| en↔gd (Scottish Gaelic) | `Am Faclair Beag`, `faclair.com` | `oideachais/dlt_sources/uk/scotland/terminology.py` (new) |
-| en↔gv (Manx) | `Fockley Rheast, Manx-English Dictionary` | `oideachais/dlt_sources/crown_dependencies/iom/terminology.py` (new) |
+| en↔ga (Irish) | `téarma.ie`, `gaois.ie` | `sruth/oideachais/dlt_sources/ireland/gaois.py` (existing) |
+| en↔cy (Welsh) | `PrysmaGeiriadur`, `geiriadur.ac.uk` | `sruth/oideachais/dlt_sources/uk/wales/terminology.py` (new) |
+| en↔gd (Scottish Gaelic) | `Am Faclair Beag`, `faclair.com` | `sruth/oideachais/dlt_sources/uk/scotland/terminology.py` (new) |
+| en↔gv (Manx) | `Fockley Rheast, Manx-English Dictionary` | `sruth/oideachais/dlt_sources/crown_dependencies/iom/terminology.py` (new) |
 
 The BAML prompt for bilingual terms is in
 `sruth/meaisinfhoghlaim/llm_stack/baml/term_extraction.baml`.
@@ -163,7 +163,7 @@ loaded via `cognee.improve(dataset_name="learner_<id>")`.
 | **Marimo** | Generate a runnable notebook demonstrating the concept | litellm (code) + Marimo template |
 
 The `sruth/meaisinfhoghlaim/agents/tutor/` agent orchestrates these modes.
-The TanStack Start route at `oideachais/web/routes/tutor.$lessonId.tsx`
+The TanStack Start route at `sruth/oideachais/web/routes/tutor.$lessonId.tsx`
 is the user surface.
 
 ## 7. Real-time streaming
@@ -197,7 +197,7 @@ Latency target: **first token < 1.5s** for tutoring chat
 
 ## 10. Out of scope (deferred)
 
-- 3D Babylon.js tutor avatar — `tuatha/ui/` integration is a v2 feature
+- 3D Babylon.js tutor avatar — `sruth/tuatha/ui/` integration is a v2 feature
 - Voice input/output (Whisper / ElevenLabs) — v2
 - Real-time classroom mode (multi-student) — v3
 

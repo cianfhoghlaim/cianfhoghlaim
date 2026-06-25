@@ -34,17 +34,17 @@ The `crypteolas` package SHALL NOT contain a `dspy/` sub-package. The
 prior vendored copy of the DSPy library was never imported and is dropped.
 
 #### Scenario: No dspy dir
-- **WHEN** the `crypteolas/` directory is listed
-- **THEN** there is no `crypteolas/dspy/` directory.
+- **WHEN** the `sruth/crypteolas/` directory is listed
+- **THEN** there is no `sruth/crypteolas/dspy/` directory.
 
 ### Requirement: Dedup notebooks
-The `crypteolas/notebooks/` directory SHALL contain at most one of each
+The `sruth/crypteolas/notebooks/` directory SHALL contain at most one of each
 canonical notebook. Specifically, exactly one of
 `01_github_api_explorer.py` / `01_github_explorer.py` SHALL exist, and
 exactly one of `04_unified_dashboard.py` / `04_defi_dashboard.py` SHALL exist.
 
 #### Scenario: 4 notebooks total
-- **WHEN** the `crypteolas/notebooks/` directory is listed
+- **WHEN** the `sruth/crypteolas/notebooks/` directory is listed
 - **THEN** there are exactly 4 marimo notebooks:
   `01_github_api_explorer.py`, `02_code_search.py`, `03_knowledge_graph.py`,
   `04_unified_dashboard.py`.
@@ -52,7 +52,7 @@ exactly one of `04_unified_dashboard.py` / `04_defi_dashboard.py` SHALL exist.
 ### Requirement: No sruth.* dead imports
 All `from sruth.crypteolas.*` and `from sruth.shared.*` imports SHALL either
 be resolved to a real module path or replaced with a thin local shim that
-re-exports the equivalent symbols. No code in `crypteolas/` SHALL import from
+re-exports the equivalent symbols. No code in `sruth/crypteolas/` SHALL import from
 a non-existent `sruth.*` namespace.
 
 #### Scenario: agent_os imports resolve
@@ -68,9 +68,9 @@ workspace.
 - **THEN** the `crypteolas` code-location is listed in the UI alongside `tuath`.
 
 ### Requirement: wrangler.toml with TODO
-The `crypteolas/wrangler.toml` SHALL be preserved with a `# TODO` comment
+The `sruth/crypteolas/wrangler.toml` SHALL be preserved with a `# TODO` comment
 explaining that the `workers/index.ts` is not yet implemented.
 
 #### Scenario: wrangler.toml readable
-- **WHEN** `tuatha/crypteolas/wrangler.toml` is read
+- **WHEN** `sruth/tuatha/sruth/crypteolas/wrangler.toml` is read
 - **THEN** a TODO comment is present on or near the `main` line.

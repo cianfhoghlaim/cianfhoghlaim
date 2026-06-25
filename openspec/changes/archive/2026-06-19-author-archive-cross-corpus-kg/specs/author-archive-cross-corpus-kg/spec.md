@@ -108,7 +108,7 @@ The system MUST provide 3 Dagster assets in the
   - ``author_archive_cross_edges`` - runs the 5-rule edge
     population
   - ``author_archive_kg_summary`` - emits a JSON summary of the
-    graph state to ``oideachais/official_media/kg_summary.json``
+    graph state to ``sruth/oideachais/official_media/kg_summary.json``
 
 #### Scenario: Cognify asset materialises
 
@@ -120,7 +120,7 @@ The system MUST provide 3 Dagster assets in the
 #### Scenario: KG summary asset materialises
 
 - **WHEN** the ``author_archive_kg_summary`` asset runs
-- **THEN** the file ``oideachais/official_media/kg_summary.json`` is
+- **THEN** the file ``sruth/oideachais/official_media/kg_summary.json`` is
   written
 - **AND** it contains the keys ``dataset``, ``corpora``, ``edge_types``,
   ``by_corpus_edges``
@@ -128,7 +128,7 @@ The system MUST provide 3 Dagster assets in the
 ### Requirement: Unified marimo dashboard
 
 The system MUST provide a marimo notebook at
-``oideachais/notebooks/dashboards/author_archive/unified_dashboard.py``
+``sruth/oideachais/notebooks/dashboards/author_archive/unified_dashboard.py``
 with 4 tabs:
 
   1. Source provenance (Stage 1) - per-source pre-research + bulk
@@ -150,7 +150,7 @@ per the project convention).
 
 ## Cross-references
 
-- `oideachais/cognee_integration/author_archive_cognify.py` — the Cognee helper
-- `oideachais/cognify_rules/author_archive_cross_corpus.py` — the 5 rules
-- `oideachais/dagster_defs/assets/official_media/author_archive_kg_assets.py` — 3 Dagster assets
-- `oideachais/notebooks/dashboards/author_archive/unified_dashboard.py` — the unified marimo
+- `sruth/oideachais/cognee_integration/author_archive_cognify.py` — the Cognee helper
+- `sruth/oideachais/cognify_rules/author_archive_cross_corpus.py` — the 5 rules
+- `sruth/oideachais/dagster_defs/assets/official_media/author_archive_kg_assets.py` — 3 Dagster assets
+- `sruth/oideachais/notebooks/dashboards/author_archive/unified_dashboard.py` — the unified marimo

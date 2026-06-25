@@ -38,7 +38,7 @@ to scrape all 160 sources directly with Firecrawl). The 95% cost saving
 comes from preferring Crawl4AI for the bulk scrape.
 
 The hero example is CPS.gov.uk (Crown Prosecution Service) — the user's
-explicit ask. The script `oideachais/scripts/pre_research_cps_gov_uk.py`
+explicit ask. The script `sruth/oideachais/scripts/pre_research_cps_gov_uk.py`
 runs the full 4-stage pipeline on a single source and writes
 `/tmp/author_archive_cps_gov_uk.json` for the marimo dashboard to ingest.
 
@@ -53,13 +53,13 @@ runs the full 4-stage pipeline on a single source and writes
   `CondensedPage`, `UiType`, `UiIndicator`, `BoundingBox`,
   `GroundedElement`, `AuthorArchiveCivicCategory`).
 
-- `oideachais/dagster_defs/assets/official_media/scraping_assets.py`:
+- `sruth/oideachais/dagster_defs/assets/official_media/scraping_assets.py`:
   new module with 4 Dagster assets (`pre_research`, `bulk_scrape`,
   `condense`, `identify_uis`). Wired into
-  `oideachais/dagster_defs/assets/official_media/__init__.py` and
-  `oideachais/dagster_defs/assets/__init__.py` `all_assets`.
+  `sruth/oideachais/dagster_defs/assets/official_media/__init__.py` and
+  `sruth/oideachais/dagster_defs/assets/__init__.py` `all_assets`.
 
-- `oideachais/scripts/pre_research_cps_gov_uk.py`: hero example script
+- `sruth/oideachais/scripts/pre_research_cps_gov_uk.py`: hero example script
   that runs the full 4-stage pipeline on CPS.gov.uk.
 
 ### Infrastructure (the refactor prerequisite — `feat/sruth-browser-refactor`)

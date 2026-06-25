@@ -5,7 +5,7 @@ SpacetimeDB is a real-time, multiplayer database engine that combines a relation
 
 ## Why This Matters for Kings' College Galway
 
-The `tuatha/` educational MMO uses SpacetimeDB for real-time multiplayer state management — student positions in the virtual classroom, collaborative problem-solving sessions, and shared educational game state. Its SQL-based API means curriculum data from DuckDB/Iceberg tables can be queried directly from game logic. The TypeScript SDK integrates with Babylon.js for 3D rendering in the browser.
+The `sruth/tuatha/` educational MMO uses SpacetimeDB for real-time multiplayer state management — student positions in the virtual classroom, collaborative problem-solving sessions, and shared educational game state. Its SQL-based API means curriculum data from DuckDB/Iceberg tables can be queried directly from game logic. The TypeScript SDK integrates with Babylon.js for 3D rendering in the browser.
 
 ## Key Patterns
 
@@ -18,7 +18,7 @@ The `tuatha/` educational MMO uses SpacetimeDB for real-time multiplayer state m
 
 - Connects to the curriculum knowledge graph (Cognee/Graphiti) for quest prerequisite data
 - Uses the LiteLLM gateway for AI-driven NPC dialogue
-- Serves the `tuatha/ui` Babylon.js frontend via WebSocket
+- Serves the `sruth/tuatha/ui` Babylon.js frontend via WebSocket
 
 ## Current Stats (Firecrawl-verified 2026-06-06)
 - **Stars:** 24.7k

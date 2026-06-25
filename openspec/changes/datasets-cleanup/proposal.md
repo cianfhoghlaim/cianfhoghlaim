@@ -2,7 +2,7 @@
 
 ## Why
 
-The `oideachais/datasets/` directory (3.0 MB, 12 top-level entries) is a
+The `sruth/oideachais/datasets/` directory (3.0 MB, 12 top-level entries) is a
 stale, hand-curated scratch directory of sample exam papers, planning
 notes, and per-year download statistics that pre-dates the lakehouse
 migration to DuckLake + Garage S3. Three problems:
@@ -24,42 +24,42 @@ migration to DuckLake + Garage S3. Three problems:
    documented in the root `AGENTS.md`.
 
 The canonical home for Celtic sample data already exists at
-`oideachais/samplaí/` (with `gaeilge/irish_samples.yaml`, `cymraeg/`,
+`sruth/oideachais/samplaí/` (with `gaeilge/irish_samples.yaml`, `cymraeg/`,
 `brezhoneg/`, `gaidhlig/`, `gaelg/`, `kernowek/`,
 `cognates.yaml`). The 7 Celtic-language buckets and the YAML schema
-format are documented in `oideachais/samplaí/README.md`.
+format are documented in `sruth/oideachais/samplaí/README.md`.
 
 ## What
 
 1. **Delete the privacy-sensitive file immediately.**
    `datasets/emily_rachel_2022_2026_gaeilge_ard.pdf` and its
    byte-identical twin `datasets/gaeilge.pdf` (same MD5).
-2. **Delete the entire `oideachais/datasets/` directory.** All 12
+2. **Delete the entire `sruth/oideachais/datasets/` directory.** All 12
    top-level entries and their sub-trees (`ardteist_leaving_certification_v0.5/`,
    `downloaded_stats/2014..2024/`, `leaving_certificate/`,
    `uk/{dfe,gcse_alevels,gis,ons,raw,ucas}/`, plus 7 stale planning
    files). The canonical home for any useful sample data is already
-   `oideachais/samplaí/`.
+   `sruth/oideachais/samplaí/`.
 3. **Migrate the secrets-management-plan content into the root
    `AGENTS.md` "Secrets Management" section** as a 2-paragraph summary
    pointing readers at the canonical Infisical + Locket + mise flow
    (which is already documented at root `AGENTS.md:32-58`). The
    `bonneagar`-specific Komodo details are deleted (the project no
    longer exists under that name).
-4. **Add `oideachais/datasets/` to the root `.gitignore`** so any
+4. **Add `sruth/oideachais/datasets/` to the root `.gitignore`** so any
    future re-creation of the directory is ignored by default.
 
 ## Impact
 
 ### Affected files
-- **Deleted:** `oideachais/datasets/` (entire tree, ~3 MB, 12 top-level entries)
+- **Deleted:** `sruth/oideachais/datasets/` (entire tree, ~3 MB, 12 top-level entries)
 - **Modified:** root `AGENTS.md` (add a "Secrets migration note" paragraph)
-- **Modified:** root `.gitignore` (add `oideachais/datasets/`)
+- **Modified:** root `.gitignore` (add `sruth/oideachais/datasets/`)
 
 ### Affected specs
 - MODIFIED `oideachais-pipeline` — the rule that the canonical
-  sample-data location is `oideachais/samplaí/`, not
-  `oideachais/datasets/`. The new rule explicitly forbids private
+  sample-data location is `sruth/oideachais/samplaí/`, not
+  `sruth/oideachais/datasets/`. The new rule explicitly forbids private
   data (PDFs with real names) being checked into the quadrant.
 
 ### Backward compatibility
@@ -70,7 +70,7 @@ format are documented in `oideachais/samplaí/README.md`.
 
 ## Non-Goals
 
-- No new sample data is added. `oideachais/samplaí/` already covers
+- No new sample data is added. `sruth/oideachais/samplaí/` already covers
   all 7 Celtic languages and 6 corpora.
 - No Git history rewrite. The deleted PDFs remain in the git
   history (un-removable without a `git filter-branch` rewrite, which
@@ -90,13 +90,13 @@ format are documented in `oideachais/samplaí/README.md`.
   removed from HEAD; a follow-up issue should be filed to consider
   `git filter-repo` for thorough removal if required by policy.
 - **Risk: someone wanted to keep a maths sample paper.** Mitigation:
-  `oideachais/samplaí/` is the canonical location for any
+  `sruth/oideachais/samplaí/` is the canonical location for any
   educational sample; new sample data goes there.
 
 ## Validation
 
 1. `grep -r "oideachais\.datasets" --include="*.py"` returns 0 hits
-2. `ls oideachais/datasets/` returns "No such file or directory"
+2. `ls sruth/oideachais/datasets/` returns "No such file or directory"
 3. `git status` shows only the deletion + AGENTS.md + .gitignore
 4. `openspec validate datasets-cleanup --strict` passes
 5. `mise turbo test` (or equivalent) passes

@@ -26,13 +26,13 @@ This document maps UI/UX inspiration from best-in-class products and games to ea
 **Current State**: Dark Celtic theme (emerald/slate), 3D game client, AG-UI streaming components
 **Needs**: Enhanced HUD design, quest tracking, skill trees, immersive menu systems
 
-### 2. oideachais/ - Irish Education Platform
+### 2. sruth/oideachais/ - Irish Education Platform
 
 **Stack**: TanStack Start + Vite + Convex + CopilotKit
 **Current State**: Three apps (UI, Web Portal, Dashboard), Generative UI pattern, Irish TTS
 **Needs**: Mobile responsiveness, consolidated components, gamification elements
 
-### 3. crypteolas/ - DeFi Research Platform
+### 3. sruth/crypteolas/ - DeFi Research Platform
 
 **Stack**: React 19 + TanStack + Radix UI + SIWE Auth
 **Current State**: DeFi dashboards, TVL charts, AI copilot interface
@@ -66,9 +66,9 @@ This document maps UI/UX inspiration from best-in-class products and games to ea
 
 **Apply to**:
 
-- `crypteolas/` - TVL charts, protocol analytics
+- `sruth/crypteolas/` - TVL charts, protocol analytics
 - `aleyum/` - Portal monitoring dashboards
-- `oideachais/` - Curriculum data exploration
+- `sruth/oideachais/` - Curriculum data exploration
 
 **Design Tokens**:
 
@@ -91,7 +91,7 @@ This document maps UI/UX inspiration from best-in-class products and games to ea
 
 **Apply to**:
 
-- `oideachais/` - Student progress dashboards
+- `sruth/oideachais/` - Student progress dashboards
 - `aleyum/` - Infrastructure monitoring
 - All projects - Button depth styling (`border-b-4` active states)
 
@@ -118,7 +118,7 @@ This document maps UI/UX inspiration from best-in-class products and games to ea
 **Apply to**:
 
 - `tuath/` - XP system, quest progression, Celtic mascot (Púca?)
-- `oideachais/` - Irish learning path, streak mechanics
+- `sruth/oideachais/` - Irish learning path, streak mechanics
 - All educational - Bite-sized lessons, immediate feedback
 
 **Design Tokens**:
@@ -143,7 +143,7 @@ This document maps UI/UX inspiration from best-in-class products and games to ea
 
 **Apply to**:
 
-- `oideachais/` - Curriculum progression, mastery tracking
+- `sruth/oideachais/` - Curriculum progression, mastery tracking
 - `tuath/` - Skill unlock visualization
 - All educational - Content cards, progress visualization
 
@@ -266,7 +266,7 @@ This document maps UI/UX inspiration from best-in-class products and games to ea
 | XP/Progression  | Duolingo (streaks, XP)       | Khan (mastery levels)          |
 | Menu Aesthetics | Clair Obscur (material lib)  | Hades (diegetic)               |
 
-### oideachais/ (Education Platform)
+### sruth/oideachais/ (Education Platform)
 
 | Feature       | Primary Inspiration        | Secondary            |
 | ------------- | -------------------------- | -------------------- |
@@ -276,7 +276,7 @@ This document maps UI/UX inspiration from best-in-class products and games to ea
 | Dashboards    | PostHog (navigation 3000)  | MotherDuck (3-panel) |
 | Content Cards | Khan (detail cells)        | -                    |
 
-### crypteolas/ (DeFi Platform)
+### sruth/crypteolas/ (DeFi Platform)
 
 | Feature          | Primary Inspiration          | Secondary            |
 | ---------------- | ---------------------------- | -------------------- |

@@ -12,7 +12,7 @@
       priority skills + `CompareCelticNations` BAML)
 - [x] `spaces/cianfhoghlaim/AGENTS.md` — Hades-style RPG (3 priority
       skills + `GenerateNpcDialogue` BAML)
-- [x] `spaces/anam_tuatha/AGENTS.md` — integration Space (3 priority
+- [x] `spaces/anam_sruth/tuatha/AGENTS.md` — integration Space (3 priority
       skills + `GenerateExitCardQuestions` BAML)
 - [x] `spaces/data-engineering/AGENTS.md` — PyPI analytics dashboard
       (3 priority skills + Dagster patterns)

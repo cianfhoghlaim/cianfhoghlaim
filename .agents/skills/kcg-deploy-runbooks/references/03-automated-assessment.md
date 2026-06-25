@@ -15,8 +15,8 @@ related_specs:
 related_apps:
   - sruth/meaisinfhoghlaim/ocr
   - sruth/meaisinfhoghlaim/agents/assessor
-  - oideachais/dlt_sources/ireland/sec.py
-  - oideachais/dagster_defs
+  - sruth/oideachais/dlt_sources/ireland/sec.py
+  - sruth/oideachais/dagster_defs
 related_llm_stack:
   - 'BAML (typed rubric alignment)'
   - 'litellm (model routing for vision OCR fallback)'
@@ -44,7 +44,7 @@ and the **BAML extraction** discipline. The goal is an oracle that:
 | Asset | Path | Use |
 |:--|:--|:--|
 | Quadrant | `sruth/meaisinfhoghlaim/ocr/` | OCR/HTR models, Irish metrics, dataset generators |
-| Quadrant | `oideachais/` | DLT historical data, BAML extraction, Dagster orchestration |
+| Quadrant | `sruth/oideachais/` | DLT historical data, BAML extraction, Dagster orchestration |
 | Skill | `.agents/skills/document-intelligence/SKILL.md` | OCR + layout analysis |
 | Skill | `.agents/skills/baml/SKILL.md` | Typed rubric extraction |
 | Skill | `.agents/skills/dagster/SKILL.md` | SDA patterns for the assessment pipeline |
@@ -114,7 +114,7 @@ class GradeBoundary {
 ```
 
 The extraction prompt is in
-`oideachais/baml_src/marking_scheme.baml` and runs as a Dagster
+`sruth/oideachais/baml_src/marking_scheme.baml` and runs as a Dagster
 asset: `marking_schemes.rubric_extracted`.
 
 ## 4. Assessment engine
@@ -189,7 +189,7 @@ is logged to **mlflow** for traceability.
 
 ## 6. Student/teacher dashboard
 
-A Marimo notebook at `oideachais/notebooks/assessor_dashboard.py`
+A Marimo notebook at `sruth/oideachais/notebooks/assessor_dashboard.py`
 renders:
 
 - Upload form (image / PDF)
@@ -231,7 +231,7 @@ The notebook is published to MotherDuck as a Dive (per
 
 - `docs/00-core/CLAUDE.md` — 5-quadrant topology
 - `docs/02-data-platform/storage-mental-model.md` — storage layering
-- `docs/02-data-platform/cross-domain-registry.md` — `oideachais/sources.yaml`
+- `docs/02-data-platform/cross-domain-registry.md` — `sruth/oideachais/sources.yaml`
 - `docs/04-ai-ml/llm-stack-hierarchy.md` — BAML + litellm ordering
 - `openspec/specs/assessment-extraction/spec.md` — exam-paper ingestion
 - `openspec/specs/oideachais-pipeline/spec.md` — end-to-end pipeline

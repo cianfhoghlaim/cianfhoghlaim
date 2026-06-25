@@ -106,9 +106,9 @@ The 5 parallel endpoints will run on 5 workers.
 
 ## KCG usage
 
-- `oideachais/dagster_defs/assets/ireland/curriculum_dlt_assets.py` —
+- `sruth/oideachais/dagster_defs/assets/ireland/curriculum_dlt_assets.py` —
   the 33+ Ireland curriculum assets, each wrapping a dlt source
-- `oideachais/dagster_defs/assets/leabharlann_assets.py` — 7
+- `sruth/oideachais/dagster_defs/assets/leabharlann_assets.py` — 7
   leabharlann assets (4 dlt sources + 3 CocoIndex v1 embedding
   updates)
 - The 4-quadrant MultiPartitions by `language + subject` for

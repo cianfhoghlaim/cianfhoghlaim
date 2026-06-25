@@ -14,9 +14,9 @@ related_specs:
   - knowledge-graph
   - workflow-automation
 related_apps:
-  - oideachais/dagster_defs
+  - sruth/oideachais/dagster_defs
   - sruth/meaisinfhoghlaim/agents/simulator
-  - oideachais/notebooks
+  - sruth/oideachais/notebooks
 related_llm_stack:
   - 'BAML (diff extraction + ripple annotation)'
   - 'litellm (BAML→model routing)'
@@ -52,7 +52,7 @@ endorsement.
 
 | Asset | Path | Use |
 |:--|:--|:--|
-| Quadrant | `oideachais/` | DLT sources, Dagster pipeline, DuckLake versioning |
+| Quadrant | `sruth/oideachais/` | DLT sources, Dagster pipeline, DuckLake versioning |
 | Quadrant | `sruth/meaisinfhoghlaim/` | LLM stack, simulator agent |
 | Skill | `.agents/skills/dlt/SKILL.md` | Incremental loading, cursor-based |
 | Skill | `.agents/skills/dagster/SKILL.md` | SDA + partitions + sensors |
@@ -164,7 +164,7 @@ The result is a `RippleSimulation` row in
 
 ## 5. What-if playground (Marimo dashboard)
 
-The dashboard at `oideachais/notebooks/policy_simulator.py` exposes:
+The dashboard at `sruth/oideachais/notebooks/policy_simulator.py` exposes:
 
 | Section | Controls | Output |
 |:--|:--|:--|
@@ -176,7 +176,7 @@ The dashboard at `oideachais/notebooks/policy_simulator.py` exposes:
 
 The dashboard is published as a MotherDuck Dive per
 `docs/05-web/frontend-topology.md` §5 and embedded in the policy team
-workspace at `oideachais/web/routes/policy/index.tsx`.
+workspace at `sruth/oideachais/web/routes/policy/index.tsx`.
 
 ## 6. Sensor + schedule wiring (Dagster)
 
@@ -200,7 +200,7 @@ def monthly_volatility_schedule():
 ```
 
 The sensor is registered in
-`oideachais/dagster_defs/sensors/policy_diff_sensor.py` (new file).
+`sruth/oideachais/dagster_defs/sensors/policy_diff_sensor.py` (new file).
 
 ## 7. Phased action plan
 
@@ -232,7 +232,7 @@ The sensor is registered in
 
 - `docs/00-core/CLAUDE.md` — 5-quadrant topology
 - `docs/02-data-platform/storage-mental-model.md` — DuckLake + Iceberg
-- `docs/02-data-platform/cross-domain-registry.md` — `oideachais/sources.yaml`
+- `docs/02-data-platform/cross-domain-registry.md` — `sruth/oideachais/sources.yaml`
 - `docs/03-agents/change-detection.md` — DLT incremental + ChangeDetection.io
 - `docs/04-ai-ml/llm-stack-hierarchy.md` — BAML + litellm + Cognee
 - `docs/05-web/frontend-topology.md` — Marimo Dive delivery

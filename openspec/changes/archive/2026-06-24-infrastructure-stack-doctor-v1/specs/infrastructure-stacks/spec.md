@@ -86,10 +86,10 @@ Komodo stack definition; reference stacks MAY have no tag.
 #### Scenario: A secret URI in `secrets.env` doesn't resolve in the vault
 
 - **GIVEN** a developer adds
-  `INFI_FOO=infisical://dev-baile/oideachais/foo` to
+  `INFI_FOO=infisical://dev-baile/sruth/oideachais/foo` to
   `infrastructure/stacks/<stack>/secrets.env`
 - **AND** the `dev-baile` Infisical environment does NOT have a
-  secret at path `oideachais/foo`
+  secret at path `sruth/oideachais/foo`
 - **WHEN** the Secret gate runs
 - **THEN** the gate SHALL fail with exit code 4
 - **AND** the developer MUST either create the secret in

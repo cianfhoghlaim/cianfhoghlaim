@@ -5,7 +5,7 @@
 ### Requirement: 10-model 6-backend OCR registry
 
 The system SHALL provide an OCR model registry at
-`meaisinfhoghlaim/ocr/model_registry.py:OCR_MODELS` with
+`sruth/meaisinfhoghlaim/ocr/model_registry.py:OCR_MODELS` with
 **10 models** (not 9). The 10 models are:
 
 1. `olmocr-7b` (transformers, Apache 2.0)
@@ -28,7 +28,7 @@ backends).
 #### Scenario: A developer adds the 11th OCR model
 
 - **GIVEN** a developer adds `pixtral-12b` to
-  `meaisinfhoghlaim/ocr/model_registry.py:OCR_MODELS`
+  `sruth/meaisinfhoghlaim/ocr/model_registry.py:OCR_MODELS`
 - **WHEN** the registry is imported
 - **THEN** the registry SHALL have 11 entries
 - **AND** the openspec change `meaisinfhoghlaim-ocr-spec-clarify`
@@ -61,7 +61,7 @@ live in the application layer.
 #### Scenario: A developer adds a new backend
 
 - **GIVEN** a developer adds `vllm` to
-  `meaisinfhoghlaim/ocr/model_registry.py:ModelBackend`
+  `sruth/meaisinfhoghlaim/ocr/model_registry.py:ModelBackend`
 - **WHEN** the enum is imported
 - **THEN** the enum SHALL have 7 entries
 - **AND** the new `vllm` backend SHALL be available for the 10

@@ -16,21 +16,21 @@ This change introduces a single CocoIndex v1 App (BAML-driven extraction, LanceD
   - `ExtractDocSkillTag(content)` → `(category, quadrant, confidence)`
   - `ExtractTriples(content)` → `list[(subject, predicate, object)]`
   - `ProposeConsolidation(file_a, file_b)` → `ConsolidationGroup` (canonical path, member paths, reason)
-- **New CocoIndex v1 App** `oideachais/cocoindex_flows/docs_skills_consolidation.py`:
+- **New CocoIndex v1 App** `sruth/oideachais/cocoindex_flows/docs_skills_consolidation.py`:
   - Two sources: `localfs.walk_dir("docs/")` and `localfs.walk_dir(".agents/skills/")` with `live=True`
   - Phase 1 per-file: BAML tag + BAML triples, declares `DocSkill` nodes in FalkorDB
   - Phase 2 graph build: `Concept` nodes + `RELATES_TO` / `TAGGED` / `CONSOLIDATED_INTO` edges
   - Three targets: LanceDB `docs_skills_chunks` (vector index on `embedding`), FalkorDB graph `docs_skills_graph`, evidence sink in `infrastructure/scripts/ingest_evidence/`
-- **New Dagster assets** `oideachais/dagster_defs/assets/docs_skills_assets.py`:
+- **New Dagster assets** `sruth/oideachais/dagster_defs/assets/docs_skills_assets.py`:
   - `docs_skills_manifest`, `docs_skills_chunk_and_tag`, `docs_skills_graph_publish`, `docs_skills_live` (sensor-launched)
   - `codebase_chunk_and_embed`, `codebase_live` for the ccc replacement
-- **New CocoIndex v1 App** `oideachais/cocoindex_flows/codebase_indexing.py`:
+- **New CocoIndex v1 App** `sruth/oideachais/cocoindex_flows/codebase_indexing.py`:
   - Tree-sitter chunks for `.py`/`.rs`/`.ts`/`.tsx`/`.go`/`.md`/`.mdx`/`.toml`
   - Embeds with `BAAI/bge-m3` via `ContextKey(detect_change=True)`
   - LanceDB table `codebase_chunks`
   - Replaces `bun run ccc:index` (alias kept for 30 days)
 - **Task alias updates** in `mise.toml` and `package.json`:
-  - `bun run ccc:index` → `uv run cocoindex update oideachais/cocoindex_flows/codebase_indexing.py:CodebaseIndex`
+  - `bun run ccc:index` → `uv run cocoindex update sruth/oideachais/cocoindex_flows/codebase_indexing.py:CodebaseIndex`
   - `bun run docs:consolidate` → batch (catch-up) run of the new app
   - `bun run ccc:v1:search <q>` → new Python helper that queries `codebase_chunks`
 - **Skill updates**:
@@ -44,9 +44,9 @@ This change introduces a single CocoIndex v1 App (BAML-driven extraction, LanceD
   - `knowledge-graph` — adds `docs_skills_graph` schema
   - `cocoindex-v1-migration` — adds 2 new Apps to the inventory
 - **Affected code:**
-  - `oideachais/cocoindex_flows/__init__.py` — re-exports 2 new apps
-  - `oideachais/dagster_defs/definitions.py` — registers 6 new assets
-  - `oideachais/pyproject.toml` — adds `pyfalkordb` to dependencies
+  - `sruth/oideachais/cocoindex_flows/__init__.py` — re-exports 2 new apps
+  - `sruth/oideachais/dagster_defs/definitions.py` — registers 6 new assets
+  - `sruth/oideachais/pyproject.toml` — adds `pyfalkordb` to dependencies
   - `mise.toml` + `package.json` — 4 new / updated tasks
   - `.agents/skills/ccc/SKILL.md`, `.agents/skills/cocoindex/SKILL.md` — banner + cross-link
   - `baml_src/docs_skills_consolidation.baml` — new schema (regenerates `baml_client/`)
@@ -56,7 +56,7 @@ This change introduces a single CocoIndex v1 App (BAML-driven extraction, LanceD
 
 ## Non-Goals
 
-- This change does **not** retire the `_v0_archive/` legacy module in `oideachais/cocoindex_flows/`. The v0 archive stays on disk; the v1 migration is complete for the actively-used modules and that's the existing boundary.
+- This change does **not** retire the `_v0_archive/` legacy module in `sruth/oideachais/cocoindex_flows/`. The v0 archive stays on disk; the v1 migration is complete for the actively-used modules and that's the existing boundary.
 - This change does **not** cognify the new FalkorDB graph into Cognee. The new graph is cognify-ready (entity-typed) and can be picked up by `infrastructure/scripts/cognee-ingest-docs.py --all` in a follow-up change.
 - This change does **not** move or delete `docs/cocoindex/` (the upstream-example mirror). The user has indicated that directory will be removed in a separate housekeeping step.
 - This change does **not** rewrite the canonical content of any doc or skill. It only reads, tags, embeds, and graph-links the existing material.

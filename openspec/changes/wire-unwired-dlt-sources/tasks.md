@@ -7,7 +7,7 @@
 
 ## Phase 2: Create the new asset module
 
-- [ ] Create `oideachais/dagster_defs/assets/wire_unwired_dlt_sources.py`:
+- [ ] Create `sruth/oideachais/dagster_defs/assets/wire_unwired_dlt_sources.py`:
   - 12 `@asset` wrappers: `england_gias`, `scotland_insight`, `scotland_simd`, `wales_estyn`, `jersey_education`, `guernsey_education`, `ireland_primary_dlt`, `ireland_junior_cycle_dlt`, `ireland_tertiary_dlt`, `ireland_local_documents_dlt`, `ireland_parallel_corpus_dlt`
   - 12 `@asset_check` row_count checks
   - Module-level `WIRE_UNWIRED_DLT_ASSETS` and `WIRE_UNWIRED_DLT_CHECKS` lists
@@ -15,10 +15,10 @@
 
 ## Phase 3: Register the new assets in definitions.py
 
-- [ ] In `oideachais/dagster_defs/definitions.py`:
+- [ ] In `sruth/oideachais/dagster_defs/definitions.py`:
   - Add `from .assets.wire_unwired_dlt_sources import WIRE_UNWIRED_DLT_ASSETS`
   - Append `*WIRE_UNWIRED_DLT_ASSETS` to `combined_assets`
-- [ ] In `oideachais/dagster_defs/asset_checks.py`:
+- [ ] In `sruth/oideachais/dagster_defs/asset_checks.py`:
   - Add the import of `WIRE_UNWIRED_DLT_CHECKS`
   - Append `*WIRE_UNWIRED_DLT_CHECKS` to `all_asset_checks`
 - [ ] Verify: `python -c "import dagster_defs.definitions"` still loads

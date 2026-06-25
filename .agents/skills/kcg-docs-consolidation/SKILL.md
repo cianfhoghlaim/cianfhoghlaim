@@ -31,7 +31,7 @@ consolidation executed on **2026-06-06**. Before the
 round, the `docs/` subtree held **1,038 files** (998
 `.md`, 24 `.py`, 7 `.pdf`, 5 `.yaml`, 1 `.toml`, 1 `.docx`)
 spread across 8 unorganised subtrees + a 116-file nested
-mirror at `docs/tuatha/tuatha/`. Total on-disk footprint
+mirror at `docs/sruth/tuatha/sruth/tuatha/`. Total on-disk footprint
 was **49.7 MiB**.
 
 After the round, the canonical tree held **36 .md files
@@ -67,8 +67,8 @@ subdirs that round 1 did not touch.
 | 8 | `07-standards/` | Project conventions, observability patterns | `dignified-python`, `agent-observability` |
 
 The 8 domains cover the 4 quadrants of the Cianfhoghlaim
-monorepo (`oideachais/` data, `meaisínfhoghlaim/` AI/ML,
-`tuatha/` MMO, `croilar/` portfolio) + the shared
+monorepo (`sruth/oideachais/` data, `meaisínfhoghlaim/` AI/ML,
+`sruth/tuatha/` MMO, `sruth/croilar/` portfolio) + the shared
 `infrastructure/` runtime. The `00-core/` domain holds
 the project identity doc that the rest of the tree
 links back to.
@@ -105,7 +105,7 @@ lines) catalogued 1,036 files across 8 subtrees. The
 |:--|--:|:--|
 | Exact-duplicate filenames across subtrees | **152** | Pick the canonical (usually the more recent or the more specific) and `supersedes:` the rest |
 | Predominantly Irish / Gaelic content | **82** | Preserve under `04-ai-ml/celtic-language/` or `05-celtic-language/`; never delete |
-| Nested mirror at `docs/tuatha/tuatha/` | **116** | Archive to `docs/archive/tuatha-mirror/`; the canonical KCG content lives at `docs/06-product/celtic-mmo.md` |
+| Nested mirror at `docs/sruth/tuatha/sruth/tuatha/` | **116** | Archive to `docs/archive/tuatha-mirror/`; the canonical KCG content lives at `docs/06-product/celtic-mmo.md` |
 | Files with frontmatter but no `domain` / `status` | **201** | Re-emit frontmatter with the canonical 12-field schema |
 | 0 master index | 1 | Generate `docs/00_index.md` from frontmatter |
 | 0 auto-generated indexes | 9 manual `INDEX.md` files | Replace with `docs:sync` script output |
@@ -158,8 +158,8 @@ for any future docs round.
 
 - `agent-docs-patterns/SKILL.md` — the frontmatter schema
   the round produced
-- `oideachais/AGENTS.md` + `sruth/meaisinfhoghlaim/AGENTS.md` +
-  `tuatha/AGENTS.md` + `croilar/AGENTS.md` — the
+- `sruth/oideachais/AGENTS.md` + `sruth/meaisinfhoghlaim/AGENTS.md` +
+  `sruth/tuatha/AGENTS.md` + `sruth/croilar/AGENTS.md` — the
   per-quadrant routing (the 4 quadrants the 7-domain
   taxonomy covers)
 - `openspec/AGENTS.md` — the OpenSpec workflow
@@ -169,6 +169,6 @@ for any future docs round.
   round-1 schema is synthesised from)
 - `docs/00_index.md` — the master routing index (the
   round-1 output)
-- `oideachais/STATUS.md`, `oideachais/REFACTORING.md` —
+- `sruth/oideachais/STATUS.md`, `sruth/oideachais/REFACTORING.md` —
   the data platform state files (the 7-domain
   taxonomy's day-to-day consumers)

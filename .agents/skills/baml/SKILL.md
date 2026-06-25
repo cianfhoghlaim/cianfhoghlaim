@@ -1,7 +1,7 @@
 ---
 name: baml
 description:
-  BAML (Basically, A Made-up Language) — the schema-validation LLM extraction framework used across the oideachais lakehouse. Use when designing extraction schemas, defining `@function` and `@class` blocks in `.baml` files under `oideachais/baml_src/`, wiring BAML into dlt sources or Dagster assets, or evaluating a BAML schema with `baml-cli test`. Covers static + dynamic (TypeBuilder) + multimodal + streaming patterns, named clients + retry policies, polyglot codegen (Python Pydantic + TS Zod), and the 8-stage BAML lifecycle. Triggers: 'BAML schema', 'extract from PDF', 'LLM structured output', 'Pydantic from BAML', 'TypeBuilder', 'dynamic schema', '@function', 'baml_src'.
+  BAML (Basically, A Made-up Language) — the schema-validation LLM extraction framework used across the oideachais lakehouse. Use when designing extraction schemas, defining `@function` and `@class` blocks in `.baml` files under `sruth/oideachais/baml_src/`, wiring BAML into dlt sources or Dagster assets, or evaluating a BAML schema with `baml-cli test`. Covers static + dynamic (TypeBuilder) + multimodal + streaming patterns, named clients + retry policies, polyglot codegen (Python Pydantic + TS Zod), and the 8-stage BAML lifecycle. Triggers: 'BAML schema', 'extract from PDF', 'LLM structured output', 'Pydantic from BAML', 'TypeBuilder', 'dynamic schema', '@function', 'baml_src'.
 ---
 
 # BAML Skill
@@ -15,7 +15,7 @@ LLM extraction framework used across the oideachais lakehouse.
 ## Project rules (PRESERVED from the original 9-line skill)
 
 1. **Location rule** — define all prompt engineering and extraction
-   boundaries in `.baml` files within `oideachais/baml_src/`. The
+   boundaries in `.baml` files within `sruth/oideachais/baml_src/`. The
    directory contains 23+ BAML files (audio_extraction,
    celtic_linguistics, celtic_sources, cognates, curriculum_extraction,
    education_statistics, grammar_patterns, isles_education,
@@ -27,7 +27,7 @@ LLM extraction framework used across the oideachais lakehouse.
    the LLM output, preventing parser crashes downstream in the
    Dagster / DLT pipelines.
 3. **Mapping rule** — ensure the extraction schemas map directly to
-   the `DuckLake` tables defined in `oideachais/dlt_sources/ireland/`.
+   the `DuckLake` tables defined in `sruth/oideachais/dlt_sources/ireland/`.
 
 ## When to use this skill
 
@@ -46,7 +46,7 @@ Use when you need to:
 ## Pattern 1: Static extraction (the existing pattern)
 
 ```baml
-// oideachais/baml_src/curriculum_extraction.baml
+// sruth/oideachais/baml_src/curriculum_extraction.baml
 class PrimaryLearningOutcome {
   stage string
   curriculum_area string
@@ -174,7 +174,7 @@ result = b.ExtractDocumentStructure(document=pdf)
 
 See [`references/multimodal-vision.md`](references/multimodal-vision.md)
 for PIL preprocessing, client config, and the OCR pattern (the
-in-repo `oideachais/baml_src/ocr_extraction.baml` uses this).
+in-repo `sruth/oideachais/baml_src/ocr_extraction.baml` uses this).
 
 ## Pattern 4: Streaming extraction
 

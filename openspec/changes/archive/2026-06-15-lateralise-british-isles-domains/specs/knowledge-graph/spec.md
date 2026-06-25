@@ -15,7 +15,7 @@ The existing `cross_stage_cognify` Dagster asset SHALL be renamed to
 `oideachais_cross_nation` dataset.
 
 #### Scenario: Cognify on a new domain
-- **GIVEN** `oideachais/dlt_sources/domains/medicine/ie/hse.py` has been materialised into `oideachais.medicine.ie.hse_pages`
+- **GIVEN** `sruth/oideachais/dlt_sources/domains/medicine/ie/hse.py` has been materialised into `oideachais.medicine.ie.hse_pages`
 - **WHEN** the cognify asset for `oideachais_medicine` runs
 - **THEN** entities and edges are stored in the `oideachais_medicine` Cognee dataset
 

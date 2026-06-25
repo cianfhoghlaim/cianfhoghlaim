@@ -8,7 +8,7 @@
 ## ADDED Requirements
 
 ### Requirement: Ensemble Gradio helper
-The system SHALL provide `meaisinfhoghlaim/pipelines/ensemble_gradio.py`
+The system SHALL provide `sruth/meaisinfhoghlaim/pipelines/ensemble_gradio.py`
 exposing `build_ensemble_interface(models, examples, title)` that returns a
 `gradio.Interface` with one output Textbox per model.
 

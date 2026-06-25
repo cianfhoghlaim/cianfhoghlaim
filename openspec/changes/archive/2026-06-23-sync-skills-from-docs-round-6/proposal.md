@@ -23,8 +23,8 @@ files (3,941 lines total) covering the `02-data-platform/`,
      Critical Constraints (write to DuckLake, read from
      MotherDuck, catalogue via Lakekeeper)
    - `frontend-topology` — the 5-surface cross-cutting map
-     (oideachais/web, croilar/apps/web, croilar/apps/portal,
-     tuatha/ui, marimo)
+     (sruth/oideachais/web, sruth/croilar/apps/web, sruth/croilar/apps/portal,
+     sruth/tuatha/ui, marimo)
    - `ui-components` — the KCG component-library reference
      (shadcn/ui + Radix, dnd-kit exam builder, AG-UI protocol,
      Celtic MMO game UI, 3D asset pipeline, Celtic design
@@ -48,7 +48,7 @@ files (3,941 lines total) covering the `02-data-platform/`,
 - `.agents/skills/cross-domain-registry/SKILL.md` — the
   `{nation}.{domain}.{entity}` contract for every DLT source
   and Dagster asset. 8 nations × 5 domains × 7 kinds.
-  Sole truth: `oideachais/sources.yaml`. Includes the
+  Sole truth: `sruth/oideachais/sources.yaml`. Includes the
   `SourceFactory` pydantic validator, DuckLake / LanceDB /
   Cognee naming conventions, and the backwards-compat alias
   table.
@@ -88,7 +88,7 @@ files (3,941 lines total) covering the `02-data-platform/`,
 - `.agents/skills/browser/SKILL.md` (existing) — add a "KCG
   decision tree" section: 7-row "What is wired today" status
   table, BAML `SiteAnalysis` flow (the fingerprint mode at
-  `oideachais/baml_src/site_analysis.baml`), 6-backend
+  `sruth/oideachais/baml_src/site_analysis.baml`), 6-backend
   `sruth-browser` client enumeration, the 5-backend
   browser ladder.
 

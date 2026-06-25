@@ -3,21 +3,23 @@
 > *A unified Celtic education platform, infrastructure mesh, and AI research laboratory by Cian Mac an Déisigh Uí Liatháin (Deacy-Lyons) as the first part of cianfhoghlaim.ie*
 
 [![Polyglot](https://img.shields.io/badge/polyglot-bun_%2B_uv_%2B_turbo-blue)](#)
-[![Dagster](https://img.shields.io/badge/dagster-228_assets-4B8BBE)](oideachais/)
+[![Dagster](https://img.shields.io/badge/dagster-228_assets-4B8BBE)](sruth/oideachais/)
 [![License](https://img.shields.io/badge/license-BSL_1.1-green)](LICENSE.md)
 
 ---
 
 ## What this is
 
-A polyglot monorepo (`bun + uv + turbo`) that ingests the curriculums and exam papers of the British Isles, makes them interactive and bilingual through self-hosted AI, and serves as the personal research-and-deployment platform of Cian Mac an Déisigh Uí Liatháin. Six cooperating quadrants + an infrastructure mesh:
+A polyglot monorepo (`bun + uv + turbo`) that ingests the curriculums and exam papers of the British Isles, makes them interactive and bilingual through self-hosted AI, and serves as the personal research-and-deployment platform of Cian Mac an Déisigh Uí Liatháin. Six cooperating **sruthanna** (flows) under `sruth/` + four cross-cutting directories:
 
-| Quadrant | Path | One-liner | Core stack |
+| sruth | Path | One-liner | Core stack |
 |:--|:--|:--|:--|
-| [`oideachais/`](oideachais/) | Curriculum, exam, marking-scheme extraction; BAML × DLT × Dagster × CocoIndex × Cognee | Dagster + DLT + DuckLake + LanceDB + BAML + LiteLLM |
-| [`meaisinfhoghlaim/`](meaisinfhoghlaim/) | Model lifecycle + 12 specialised agents + 10 OCR models + 6 Celtic languages | llama-swap + llama.cpp + MLX + Bria FIBO |
-| [`croilar/`](croilar/) | Multi-persona portfolio & DevTools Hub | Convex + Hono + TanStack + BetterAuth + Dagster + DLT |
-| [`tuatha/`](tuatha/) | Celtic Educational MMO + crypteolas crypto platform | Babylon.js + Dagster + BAML + SpacetimeDB + x402 |
+| **oideachais** | [`sruth/oideachais/`](sruth/oideachais/) | Curriculum, exam, marking-scheme extraction; BAML × DLT × Dagster × CocoIndex × Cognee | Dagster + DLT + DuckLake + LanceDB + BAML + LiteLLM |
+| **meaisinfhoghlaim** | [`sruth/meaisinfhoghlaim/`](sruth/meaisinfhoghlaim/) | Model lifecycle + 12 specialised agents + 10 OCR models + 6 Celtic languages | llama-swap + llama.cpp + MLX + Bria FIBO |
+| **tuatha** | [`sruth/tuatha/`](sruth/tuatha/) | Celtic Educational MMO + crypteolas crypto platform | Babylon.js + Dagster + BAML + SpacetimeDB + x402 |
+| **croilar** | [`sruth/croilar/`](sruth/croilar/) | Multi-persona portfolio & DevTools Hub | Convex + Hono + TanStack + BetterAuth + Dagster + DLT |
+| **crypteolas** | [`sruth/crypteolas/`](sruth/crypteolas/) | Crypto data intelligence + AgentOS + 5 Anam Cara realms | Dagster + DLT + BAML + Foundry + Anvil |
+| **codeolas** | [`sruth/codeolas/`](sruth/codeolas/) | C++ code-analysis library: semantic search + AST KG + MCP server | C++ + WASM + MCP + DuckDB |
 | [`leabharlann/`](leabharlann/) | Digital library: Zotero, Takeout, BAML metadata, CocoIndex v1 embedding | CocoIndex v1 + Zotero + BAML |
 | [`infrastructure/`](infrastructure/) | Multi-cloud zero-trust mesh; LLM gateway; team-workflow (n8n+Vikunja+cal-diy) | Pulumi + Komodo + Pangolin + Locket + Infisical + LiteLLM |
 | [`spaces/`](spaces/) | HuggingFace Spaces (gradio / docker / static SDKs) | HF Spaces + GitHub Actions |
@@ -27,7 +29,7 @@ The **3-way interaction** that makes the engine work:
 
 ```
 ┌─────────────────────┐    ┌──────────────────────┐    ┌──────────────────────┐
-│  oideachais/        │    │  meaisinfhoghlaim/    │    │  infrastructure/     │
+│  sruth/oideachais/        │    │  sruth/meaisinfhoghlaim/    │    │  infrastructure/     │
 │  Dagster assets     │───>│  llama-swap :8080     │<───│  LiteLLM gateway     │
 │  BAML extraction    │    │  mlx-omni :10240      │    │   :4000              │
 │  CocoIndex v1       │    │  invokeai :9090       │    │  Locket sidecar      │
@@ -35,9 +37,9 @@ The **3-way interaction** that makes the engine work:
 └─────────────────────┘    └──────────────────────┘    └──────────────────────┘
 ```
 
-- `oideachais/` **calls** the LiteLLM gateway at `http://litellm:4000/v1` through `LiteLLMResource` (Dagster) and `client LiteLLM` (BAML).
+- `sruth/oideachais/` **calls** the LiteLLM gateway at `http://litellm:4000/v1` through `LiteLLMResource` (Dagster) and `client LiteLLM` (BAML).
 - The gateway **routes** to `llama-swap` (GGUF), `mlx-omni` (MLX), `invokeai` (image), or cloud providers.
-- `meaisinfhoghlaim/` **feeds** backends with converted GGUF models and runs `llama-swap` on M4 Max 48GB.
+- `sruth/meaisinfhoghlaim/` **feeds** backends with converted GGUF models and runs `llama-swap` on M4 Max 48GB.
 - `infrastructure/` **secures** connections with PocketID SSO + Pangolin; **observes** with Langfuse + MLflow; **injects** secrets via Locket.
 
 ---
@@ -52,7 +54,7 @@ The full stack that powers day-to-day development is opinionated and tightly int
 | **bun** | TS runtime, package manager, script runner | One tool replaces `node + npm + yarn + pnpm + npx + tsx`. Powers workspace orchestration, secret sync, OpenSpec, the `ccc` index, the dagster / komodo / pangolin glue. |
 | **uv** | Python package manager + workspace manager | Replaces `pip + poetry + pyenv + virtualenv`. Native PEP 723, lockfile, uv-workspace member resolution. Drives the four `members` of the `pyproject.toml` workspace. |
 | **turbo** | Cross-language task graph | Orchestrates `build`, `dev`, `typecheck`, `lint`, `format`, `test` across the bun and uv graphs. Reachable through `mise turbo <task>`. |
-| **OpenCode** | AI coding agent / IDE companion | Speaks the same OpenAI-compatible protocol as LiteLLM. Dispatches to the 5 specialised subagents (`explorer`, `data-engineer`, `ai-engineer`, `frontend-dev`, `devops-architect`) defined in `opencode.json`. |
+| **OpenCode** | AI coding agent / IDE companion | Speaks the same OpenAI-compatible protocol as LiteLLM. Dispatches to the 5 specialised subagents (`explore`, `data-engineer`, `ai-engineer`, `frontend-dev`, `devops-architect`) defined in `opencode.json`. |
 | **OpenChamber** | GUI / web / PWA front-end for OpenCode | Optional VS Code extension / desktop app / self-hostable web UI wrapping the OpenCode CLI with branchable chat timelines, smart tool UIs, multi-agent parallel runs in isolated worktrees, GitHub-native flows. Install: `code --install-extension FedaykinDev.openchamber`. |
 | **LiteLLM** | OpenAI-compatible LLM gateway | One URL (`http://litellm:4000/v1`) routes to local GGUF, local MLX, local image, and cloud providers. Every BAML function, every Dagster asset, every marimo cell, every n8n workflow calls an *alias* — never a provider id. |
 | **HuggingFace GGUF** | Local model format | Q4_K_M quantised GGUFs are small (~4-6 GB per 7 B model) and run on the M4 Max 48 GB via `llama-swap`. Cache at `stedding/huggingface/{hub,gguf,mlx}/`. |
@@ -148,26 +150,26 @@ gh pr create --fill
 
 ## Core patterns and software
 
-### [`oideachais/`](oideachais/) — the Lakehouse Engine
+### [`sruth/oideachais/`](sruth/oideachais/) — the Lakehouse Engine
 
 The Celtic education data platform. Ingests 100+ British Isles curriculum sources (IE, EN, SCT, WLS, NI, IOM, JEY, GGY) into a unified DuckLake 1.0 lakehouse, extracts structured data via BAML, embeds with CocoIndex v1, cognifies with Cognee + Graphiti + FalkorDB.
 
 | Pattern | Implementation | Use |
 |:--|:--|:--|
-| **DLT ingestion** | `oideachais/dlt_sources/domains/{education,law,medicine}/{nation}/` (the canonical `{nation}/{domain}` layout per `cross-domain-registry`) | Add a new curriculum source |
-| **BAML extraction** | `oideachais/baml_src/*.baml` (9 BAML files, 3 clients: `ExtractEn`, `ExtractEnStrong`, `LocalVision`) | Define a structured extraction schema |
-| **Dagster orchestration** | `oideachais/dagster_defs/assets/` (40+ modules, 228 assets, 21 groups) | Materialise lakehouse tables |
-| **Dagster `dg` Components** | `oideachais/dagster_defs/components/{celtic_dlt_source,celtic_lancedb_hnsw,celtic_cocoindex_v1}.py` (Dagster 1.10 Components preview) | Wire a DLT source / LanceDB index / CocoIndex App as a typed Component |
-| **CocoIndex v1 embedding** | `oideachais/cocoindex_flows/{leabharlann_embedding,codebase_indexing,docs_skills_consolidation,unified_embedding}.py` (4 v1 Apps) | Embed documents into LanceDB |
-| **LanceDB HNSW index** | `oideachais/lancedb/indexing.py` (the 4 helpers: `build_hnsw_index`, `build_ivf_pq_index`, `build_scalar_index`, `optimize_index`) | Add vector index to a LanceDB table |
-| **DuckLake 1.0 features** | `oideachais/dlt_utils/ducklake_options.py` (data inlining + sorting + bucket partitioning) | Optimise a high-volume DuckLake table |
-| **MotherDuck hosting** | `oideachais/dlt_utils/motherduck_options.py` (`fully_managed_destination` / `byob_destination` / `byoc_destination`) | Switch to MotherDuck |
-| **Cognee cognify** | `oideachais/cognee_integration/cross_stage_cognify.py` (5-stage education cognify) | Persist knowledge graph |
-| **Graphiti 0.5 client** | `oideachais/graph/graphiti_client.py` (real client + FalkorDB Lite fallback) | Add a temporal knowledge graph episode |
-| **Marimo dashboards** | `oideachais/notebooks/dashboards/` (11 reactive notebooks) | Interactive exploration |
-| **Status / refactor matrix** | `oideachais/STATUS.md` (single source of truth) + `oideachais/REFACTORING.md` (backlog) | Track BAML × DLT × Dagster × CocoIndex matrix |
+| **DLT ingestion** | `sruth/oideachais/dlt_sources/domains/{education,law,medicine}/{nation}/` (the canonical `{nation}/{domain}` layout per `cross-domain-registry`) | Add a new curriculum source |
+| **BAML extraction** | `sruth/oideachais/baml_src/*.baml` (9 BAML files, 3 clients: `ExtractEn`, `ExtractEnStrong`, `LocalVision`) | Define a structured extraction schema |
+| **Dagster orchestration** | `sruth/oideachais/dagster_defs/assets/` (40+ modules, 228 assets, 21 groups) | Materialise lakehouse tables |
+| **Dagster `dg` Components** | `sruth/oideachais/dagster_defs/components/{celtic_dlt_source,celtic_lancedb_hnsw,celtic_cocoindex_v1}.py` (Dagster 1.10 Components preview) | Wire a DLT source / LanceDB index / CocoIndex App as a typed Component |
+| **CocoIndex v1 embedding** | `sruth/oideachais/cocoindex_flows/{leabharlann_embedding,codebase_indexing,docs_skills_consolidation,unified_embedding}.py` (4 v1 Apps) | Embed documents into LanceDB |
+| **LanceDB HNSW index** | `sruth/oideachais/lancedb/indexing.py` (the 4 helpers: `build_hnsw_index`, `build_ivf_pq_index`, `build_scalar_index`, `optimize_index`) | Add vector index to a LanceDB table |
+| **DuckLake 1.0 features** | `sruth/oideachais/dlt_utils/ducklake_options.py` (data inlining + sorting + bucket partitioning) | Optimise a high-volume DuckLake table |
+| **MotherDuck hosting** | `sruth/oideachais/dlt_utils/motherduck_options.py` (`fully_managed_destination` / `byob_destination` / `byoc_destination`) | Switch to MotherDuck |
+| **Cognee cognify** | `sruth/oideachais/cognee_integration/cross_stage_cognify.py` (5-stage education cognify) | Persist knowledge graph |
+| **Graphiti 0.5 client** | `sruth/oideachais/graph/graphiti_client.py` (real client + FalkorDB Lite fallback) | Add a temporal knowledge graph episode |
+| **Marimo dashboards** | `sruth/oideachais/notebooks/dashboards/` (11 reactive notebooks) | Interactive exploration |
+| **Status / refactor matrix** | `sruth/oideachais/STATUS.md` (single source of truth) + `sruth/oideachais/REFACTORING.md` (backlog) | Track BAML × DLT × Dagster × CocoIndex matrix |
 
-### [`meaisinfhoghlaim/`](meaisinfhoghlaim/) — the AI/ML Quadrant
+### [`sruth/meaisinfhoghlaim/`](sruth/meaisinfhoghlaim/) — the AI/ML Quadrant
 
 The model + agent + OCR + Celtic-language quadrant. 8 integrated components feeding models and agents into the lakehouse.
 
@@ -183,7 +185,7 @@ The model + agent + OCR + Celtic-language quadrant. 8 integrated components feed
 
 **Local model lifecycle** — `stedding/huggingface/{hub,gguf,mlx}/`. 28 models, ~124 GB safetensors + 30 GB GGUF + 15 GB MLX. Three swap profiles: `text` (Qwen2.5-Math-7B, UCCIX, Gemma-2-9B), `vision` (Qwen2.5-VL-7B, Gemma-3-Vision, DeepSeek-OCR), `image` (Z-Image-Turbo, Qwen-Image, FLUX.2-dev).
 
-### [`croilar/`](croilar/) — Multi-Persona Portfolio & DevTools Hub
+### [`sruth/croilar/`](sruth/croilar/) — Multi-Persona Portfolio & DevTools Hub
 
 The canonical reference implementation. Combines public-facing persona-aware portfolio with self-hosted developer platform and typed end-to-end pipelines.
 
@@ -194,9 +196,9 @@ The canonical reference implementation. Combines public-facing persona-aware por
 | Admin portal | TanStack + Marimo + MotherDuck | Live dashboards + agent runtime |
 | DevTools Hub | Convex + Hono + TanStack | Reference implementation |
 
-25 assets wired, 5 user-named stacks. Full details: [`croilar/README.md`](croilar/README.md).
+25 assets wired, 5 user-named stacks. Full details: [`sruth/croilar/README.md`](sruth/croilar/README.md).
 
-### [`tuatha/`](tuatha/) — Celtic Educational MMO + Crypto Platform
+### [`sruth/tuatha/`](sruth/tuatha/) — Celtic Educational MMO + Crypto Platform
 
 Four cooperating streams under `tuath` uv workspace:
 
@@ -207,7 +209,7 @@ Four cooperating streams under `tuath` uv workspace:
 | **crypteolas** | GitHub ingestion, DeFi research, KG construction, AgentOS | Research GitHub |
 | **crypteolas_demo** | TanStack Start frontend, Agno agents, Gradio FIBO, Foundry | Run a demo |
 
-23 assets wired, 7+ DLT sources. Full details: [`tuatha/README.md`](tuatha/README.md).
+23 assets wired, 7+ DLT sources. Full details: [`sruth/tuatha/README.md`](sruth/tuatha/README.md).
 
 ### [`leabharlann/`](leabharlann/) — Digital Library
 
@@ -266,12 +268,12 @@ historical research files. All per-package and per-domain
 documentation lives in:
 
 - `.agents/skills/<name>/SKILL.md` — the canonical skill
-- `oideachais/AGENTS.md` — the oideachais quadrant developer-quick-reference
-- `oideachais/STATUS.md` — the BAML × DLT × Dagster × CocoIndex matrix
-- `oideachais/REFACTORING.md` — the refactor backlog
-- `meaisinfhoghlaim/AGENTS.md` — the AI/ML quadrant
-- `tuatha/AGENTS.md` — the MMO quadrant
-- `croilar/AGENTS.md` — the portfolio quadrant
+- `sruth/oideachais/AGENTS.md` — the oideachais quadrant developer-quick-reference
+- `sruth/oideachais/STATUS.md` — the BAML × DLT × Dagster × CocoIndex matrix
+- `sruth/oideachais/REFACTORING.md` — the refactor backlog
+- `sruth/meaisinfhoghlaim/AGENTS.md` — the AI/ML quadrant
+- `sruth/tuatha/AGENTS.md` — the MMO quadrant
+- `sruth/croilar/AGENTS.md` — the portfolio quadrant
 - `openspec/specs/<capability>/spec.md` — the 32 capability specs
 - `openspec/AGENTS.md` — the openspec workflow
 
@@ -328,7 +330,7 @@ discipline, which is the whole point of this project.
 in *Lebor Gabála Érenn* and the wider Tuatha Dé Danann cycle,
 **Cian** is the father of Lugh Lámhfhada (Lug of the Long Arm),
 the many-skilled god who walks into the Battle of Moytura and
-slays his grandfather Balor. The tuatha/ subtree — the British
+slays his grandfather Balor. The sruth/tuatha/ subtree — the British
 Isles formative-assessment MMO built on Babylon.js + SpacetimeDB
 — sits squarely inside that mythological lineage.
 
@@ -461,7 +463,7 @@ Streets of Galway 8 km road race) and
 `cian_mac_an_déisigh_uí_liatháin/identity/lineage/old_passports_dual_citizen_verification_roi_uk.pdf`
 (the dual ROI/UK citizenship scan). These will be
 incorporated into the
-[`culture_heritage`](oideachais/cognee_integration/culture_cognify.py)
+[`culture_heritage`](sruth/oideachais/cognee_integration/culture_cognify.py)
 Cognee dataset on the next agent run.
 
 ### On the joint claim — *Leath Cuinn and the dual-monarchy framework*

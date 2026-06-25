@@ -77,13 +77,13 @@ The system SHALL require that every BAML class that represents a human-readable 
 The system SHALL provide 5 per-stage BAML context files that pre-load the BAML `client` with stage-specific system prompts and exam-board conventions.
 
 #### Scenario: Senior Cycle Context
-- **GIVEN** `oideachais/data_platform/subjects/baml_context/senior_cycle.baml`
+- **GIVEN** `sruth/oideachais/data_platform/subjects/baml_context/senior_cycle.baml`
 - **WHEN** the file is loaded
 - **THEN** the system prompt references the SEC (State Examinations Commission), Chief Examiner reports, and the 50+ LC subjects
 - **AND** the BAML client default is `litellm/gemini-2.0-flash`
 
 #### Scenario: Tertiary Context
-- **GIVEN** `oideachais/data_platform/subjects/baml_context/tertiary.baml`
+- **GIVEN** `sruth/oideachais/data_platform/subjects/baml_context/tertiary.baml`
 - **WHEN** the file is loaded
 - **THEN** the system prompt references CAO points, NUI matriculation, QQI FET awards, and Apprenticeship pathways
 - **AND** the BAML client default for `ScoreEssayAgainstRubric` is `litellm/anthropic/claude-sonnet-4-20250514`

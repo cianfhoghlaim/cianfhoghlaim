@@ -10,7 +10,7 @@ fingerprint, page description, screenshot path) and persist it as a DLT
 source under `oideachais.site_analysis`. The record SHALL then be embedded
 in LanceDB and cognified in Cognee, and exposed via a marimo dashboard.
 
-The system SHALL provide `oideachais/baml_src/site_analysis.baml` defining:
+The system SHALL provide `sruth/oideachais/baml_src/site_analysis.baml` defining:
 
 - `class SiteAnalysis { source_id, captured_at, software, layout, pages_sampled, screenshot_path }`
 - `class SoftwareFingerprint { cms, waf, captcha, analytics, framework_headers, fonts[] }`
@@ -33,7 +33,7 @@ The system SHALL call the **firecrawl** and **browserbase** MCP servers
 - `browserbase_screenshot` produces a full‑page screenshot written to `s3://lakehouse-site-analysis/{source_id}/screenshots/{date}.png`.
 
 In test mode, the MCP clients SHALL be replaced by stub objects returning
-fixed payloads from `oideachais/site_analysis/_stubs/`.
+fixed payloads from `sruth/oideachais/site_analysis/_stubs/`.
 
 #### Scenario: MCP call succeeds
 - **GIVEN** a live firecrawl + browserbase MCP server

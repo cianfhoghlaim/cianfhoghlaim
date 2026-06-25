@@ -7,8 +7,8 @@
   files and current state. Reports at `docs/audit/discovery_inventory.md`,
   `cognee_readiness_audit.md`, `cocoindex_readiness_audit.md`,
   `agent_skill_consumability.md`.
-- [x] Identify the 116-file nested `docs/tuatha/tuatha/` mirror as a true
-  byte-for-byte copy of `docs/tuatha/` (no unique content).
+- [x] Identify the 116-file nested `docs/sruth/tuatha/sruth/tuatha/` mirror as a true
+  byte-for-byte copy of `docs/sruth/tuatha/` (no unique content).
 
 ## Phase 1: Design
 
@@ -22,7 +22,7 @@
 
 ## Phase 2: Migration
 
-- [x] Move `docs/tuatha/tuatha/` mirror to `docs/archive/tuatha-mirror/`.
+- [x] Move `docs/sruth/tuatha/sruth/tuatha/` mirror to `docs/archive/tuatha-mirror/`.
 - [x] Create the 7 target directories + 8 archive subdirectories.
 - [x] Migrate `docs/agents/` (39 files → 5 canonical) into
   `docs/03-agents/`. Archive originals in
@@ -37,13 +37,13 @@
   `docs/archive/2026-06-06-context/`.
 - [x] Migrate `docs/meaisínfhoghlaim/` + `docs/teanga/` (394 files →
   8 canonical) into `docs/04-ai-ml/`. Archive originals in
-  `docs/archive/2026-06-06-meaisinfhoghlaim/` and
+  `docs/archive/2026-06-06-sruth/meaisinfhoghlaim/` and
   `docs/archive/2026-06-06-teanga/`.
 - [x] Migrate `docs/web/` (68 files → 4 canonical) into `docs/05-web/`.
   Archive originals in `docs/archive/2026-06-06-web/`.
-- [x] Migrate `docs/tuatha/` (116 files → 5 canonical) into
+- [x] Migrate `docs/sruth/tuatha/` (116 files → 5 canonical) into
   `docs/06-product/`. Archive originals in
-  `docs/archive/2026-06-06-tuatha/`.
+  `docs/archive/2026-06-06-sruth/tuatha/`.
 - [x] Remove the 8 empty old subtree directories.
 
 ## Phase 3: Indexes & Scripts

@@ -262,14 +262,14 @@ for the full table.
 ## KCG integration
 
 - The `BatchedEmbeddingService` is wired into the
-  `oideachais/cocoindex_flows/leabharlann_embedding.py` CocoIndex
+  `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py` CocoIndex
   v1 App (batches the 33+ Ireland curriculum embeddings)
 - The `MultiModelEmbedder` routes Irish to GaBERT, everything
   else to BGE-M3 (the KCG canonical)
 - The `managed_bulk_insert` context manager is wrapped by the
   `oideachais-cocoindex-bulk-index` Dagster asset
 - The `EmbeddingAccumulator` is used in the streaming Firecrawl
-  pipeline (`oideachais/dlt_sources/official_media/firecrawl_streaming.py`)
+  pipeline (`sruth/oideachais/dlt_sources/official_media/firecrawl_streaming.py`)
 
 ## Related skills
 

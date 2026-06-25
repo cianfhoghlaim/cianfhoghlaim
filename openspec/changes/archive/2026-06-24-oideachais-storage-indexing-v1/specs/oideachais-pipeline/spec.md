@@ -22,7 +22,7 @@ table. The App uses:
   `.git/`, `docs/cocoindex/`).
 
 The Dagster asset `api_endpoints` (group `infrastructure`) lives in
-`oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks the
+`sruth/oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks the
 v1 App via `cocoindex update oideachais.cocoindex_flows.api_indexing:api_app`.
 
 #### Scenario: A developer searches the HTTP surface for an agent-memory route
@@ -55,7 +55,7 @@ indexing, producing one row per directory (depth 1-4) in the
 - 100-row upsert batches.
 
 The Dagster asset `filesystem_layout` (group `infrastructure`) lives
-in `oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks
+in `sruth/oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks
 the v1 App via `cocoindex update oideachais.cocoindex_flows.filesystem_indexing:fs_app`.
 
 #### Scenario: A developer searches for a directory by description
@@ -69,9 +69,9 @@ the v1 App via `cocoindex update oideachais.cocoindex_flows.filesystem_indexing:
 
 - **GIVEN** the `filesystem_layout` Dagster asset has materialised
 - **WHEN** a developer reads the `largest_descendant` column for the
-  `oideachais/dagster_defs/` row
+  `sruth/oideachais/dagster_defs/` row
 - **THEN** the cell value is the relative path of the largest file in
-  the subtree (e.g. `oideachais/dagster_defs/assets/codebase_assets.py`)
+  the subtree (e.g. `sruth/oideachais/dagster_defs/assets/codebase_assets.py`)
 
 ### Requirement: V1 storage backend indexer (storage_backends asset)
 
@@ -89,7 +89,7 @@ indexing, producing one row per backend instance in the
 - 100-row upsert batches.
 
 The Dagster asset `storage_backends` (group `infrastructure`) lives in
-`oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks the
+`sruth/oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks the
 v1 App via `cocoindex update oideachais.cocoindex_flows.storage_indexing:storage_app`.
 
 #### Scenario: A developer finds where the Irish curriculum data is stored
@@ -128,7 +128,7 @@ The App uses:
 - 100-row upsert batches.
 
 The Dagster asset `config_files` (group `infrastructure`) lives in
-`oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks
+`sruth/oideachais/dagster_defs/assets/infrastructure_assets.py` and kicks
 the v1 App via `cocoindex update oideachais.cocoindex_flows.config_indexing:config_app`.
 
 #### Scenario: A developer finds the wrangler manifest for a worker

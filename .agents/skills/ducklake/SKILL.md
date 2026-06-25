@@ -57,7 +57,7 @@ the 4-layer pipeline (Ingestion → Materials → Model
 Lifecycle → Asset Generation) with the DuckLake sink as the
 final destination.
 
-The canonical client is at `oideachais/storage/ducklake_client.py`
+The canonical client is at `sruth/oideachais/storage/ducklake_client.py`
 (Postgres catalog + Garage S3 connection).
 
 ## Key Reference Materials
@@ -948,7 +948,7 @@ con = duckdb.connect("md:oideachais")
 
 ### KCG-cocoindex chunked Parquet writes
 
-The `oideachais/cocoindex_flows/` Apps write to DuckLake in
+The `sruth/oideachais/cocoindex_flows/` Apps write to DuckLake in
 ZSTD-compressed Parquet, with row group size tuned for HNSW
 rebuild performance:
 

@@ -1,6 +1,6 @@
 ---
 name: change-detection
-description: How the Cianfhoghlaim platform detects upstream changes for oideachais/sources.yaml. Use when writing a DLT source that needs to re-run on upstream change, wiring a Dagster sensor, or configuring ChangeDetection.io on `arm1-oci`. Covers the 3-layer pattern: DLT incremental cursor + Dagster sitemap-hash sensor + ChangeDetection.io.
+description: How the Cianfhoghlaim platform detects upstream changes for sruth/oideachais/sources.yaml. Use when writing a DLT source that needs to re-run on upstream change, wiring a Dagster sensor, or configuring ChangeDetection.io on `arm1-oci`. Covers the 3-layer pattern: DLT incremental cursor + Dagster sitemap-hash sensor + ChangeDetection.io.
 ---
 
 # Change Detection
@@ -91,7 +91,7 @@ def ireland_curriculum_source(
 For sources that publish a `sitemap.xml`, the canonical pattern
 is a Dagster sensor that SHA-256-hashes the sitemap and emits a
 `RunRequest` only when the hash changes. The project ships 5 such
-sensors in `oideachais/dagster_defs/sensors/`:
+sensors in `sruth/oideachais/dagster_defs/sensors/`:
 
 - `curriculum_freshness_sensor.py`
 - `domain_sensors.py`
@@ -217,7 +217,7 @@ webhook fans out the `RunRequest` to each.
   (Layer 2 sensors live here)
 - `infrastructure/stacks/changedetection/` — the Layer 3
   Compose stack + `sources.yaml`
-- `oideachais/dagster_defs/sensors/` — 5 canonical sensor
+- `sruth/oideachais/dagster_defs/sensors/` — 5 canonical sensor
   implementations
-- `oideachais/dlt_sources/ireland/` — 33+ DLT sources (all
+- `sruth/oideachais/dlt_sources/ireland/` — 33+ DLT sources (all
   with incremental cursors)

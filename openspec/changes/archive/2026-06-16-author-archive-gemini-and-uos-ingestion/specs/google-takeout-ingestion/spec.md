@@ -2,14 +2,14 @@
 
 ## Purpose
 
-`google-takeout-ingestion` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives at `oideachais/dlt_sources/author_archive/google_takeout.py`. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+`google-takeout-ingestion` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives at `sruth/oideachais/dlt_sources/author_archive/google_takeout.py`. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
 
 Filesystem ingestion of Google Takeout archives (Phase 1) and, when the user provides OAuth credentials, OAuth-driven downloading + extraction (Phase 2) for one or more Google/Gemini accounts. Phase 2 is documented but not implemented in this change.
 
 ## ADDED Requirements
 
 ### Requirement: Takeout Directory Indexing (Phase 1)
-The system SHALL index a Google Takeout directory (already extracted from a `.zip`) on the workstation, applying the standard `oideachais/dlt_sources/author_archive/_scanner.py` extraction pipeline.
+The system SHALL index a Google Takeout directory (already extracted from a `.zip`) on the workstation, applying the standard `sruth/oideachais/dlt_sources/author_archive/_scanner.py` extraction pipeline.
 
 #### Scenario: Takeout directory provided
 - **GIVEN** the user has placed an extracted `Takeout/<account_label>/` directory on the workstation
@@ -77,6 +77,6 @@ The system SHALL support an opt-in `gpg_encrypt_paths` knob on the Takeout sourc
 - OAuth 2.0 flow with `GOOGLE_OAUTH_CLIENT_ID` and `GOOGLE_OAUTH_CLIENT_SECRET` (from the Infisical `google/oauth` vault path).
 - Google Drive API v3 `files.list` for the `application/vnd.google-apps.document` and `application/pdf` MIME types in a configured folder.
 - Gmail API export of `from:gemini.google.com` threads.
-- Per-account refresh-token rotation; the OAuth helper at `oideachais/dlt_sources/author_archive/_oauth.py` (stub) will be the entry point.
+- Per-account refresh-token rotation; the OAuth helper at `sruth/oideachais/dlt_sources/author_archive/_oauth.py` (stub) will be the entry point.
 
 These are explicitly deferred to a follow-up change once the user has provided the Takeout zips and confirmed the OAuth flow.

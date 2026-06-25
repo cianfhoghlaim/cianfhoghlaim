@@ -10,7 +10,7 @@ a single-source-of-truth configuration.
 
 #### Scenario: App registration
 
-- **GIVEN** an `oideachais/cocoindex_flows/<flow>.py` module
+- **GIVEN** an `sruth/oideachais/cocoindex_flows/<flow>.py` module
 - **WHEN** the module is loaded
 - **THEN** it SHALL declare
   `app = coco.App(coco.AppConfig(name="<UniqueName>"), app_main, ...)`

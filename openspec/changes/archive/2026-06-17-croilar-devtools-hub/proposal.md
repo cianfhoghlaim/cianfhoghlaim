@@ -38,7 +38,7 @@ Out of scope (deferred to follow-up issues):
 
 ### Code
 
-#### `croilar/convex/schema.ts` (MODIFIED — append 9 tables)
+#### `sruth/croilar/convex/schema.ts` (MODIFIED — append 9 tables)
 1. `tanstackRoutes` — TanStack route inventory per project
 2. `convexFunctions` — Convex query/mutation/action inventory
 3. `cloudflareResources` — Workers / Pages / R2 / KV / D1 / DO inventory
@@ -49,44 +49,44 @@ Out of scope (deferred to follow-up issues):
 8. `marimoNotebooks` — notebook inventory
 9. `glanceConfig` — Glance YAML version history
 
-#### New Convex modules (9 files, all in `croilar/convex/`)
+#### New Convex modules (9 files, all in `sruth/croilar/convex/`)
 `tanstack_routes.ts`, `convex_functions.ts`, `cloudflare_resources.ts`, `baml_schemas.ts`, `test_runs.ts`, `convex_function_calls.ts`, `convex_metrics.ts`, `marimo_notebooks.ts`, `glance_config.ts`. Each follows the canonical `list` + `getByProject` + `refreshAll` (action) shape used by the existing `pipelines.ts` and `stacks.ts`.
 
-#### `croilar/convex/_middleware.ts` (NEW)
+#### `sruth/croilar/convex/_middleware.ts` (NEW)
 `loggedAction(fn, {function, project})` helper that wraps every action invocation and records to `convexFunctionCalls`. Opt-in per file (one-line wrap).
 
-#### `croilar/convex/crons.ts` (MODIFIED — append 6 entries)
+#### `sruth/croilar/convex/crons.ts` (MODIFIED — append 6 entries)
 `syncTanstackRoutes (6h)`, `syncConvexFunctions (12h)`, `syncCloudflareResources (6h)`, `syncBamlSchemas (daily)`, `syncMarimoNotebooks (12h)`, `refreshConvexMetrics (5m)`.
 
-#### `croilar/scripts/analyze-web-stack.ts` (NEW — Bun)
+#### `sruth/croilar/scripts/analyze-web-stack.ts` (NEW — Bun)
 Canonical monorepo walker. Walks tuatha, oideachais, croilar, meaisínfhoghlaim routes/convex/wrangler/baml/notebook trees. HTTP-POSTs aggregates to Convex using the Infisical-loaded service token.
 
-#### `croilar/scripts/regenerate-glance-config.ts` (NEW — Bun)
+#### `sruth/croilar/scripts/regenerate-glance-config.ts` (NEW — Bun)
 Reads from the 9 new Convex tables + the existing `stacks`/`pipelines`/`registry` tables. Emits a 5-page `glance.yml`. Refuses to clobber a manually-edited file unless `CROILAR_GLANCE_REGEN_FORCE=true`.
 
-#### `croilar/apps/portal/src/routes/_layout/data/pipelines.tsx` (REPLACED)
+#### `sruth/croilar/apps/portal/src/routes/_layout/data/pipelines.tsx` (REPLACED)
 Live data via `useQuery(api.pipelines.list, {})`. Group by `assetGroupName`. Reactive Convex subscription.
 
-#### `croilar/apps/portal/src/routes/_layout/monitoring/logs.tsx` (REPLACED)
+#### `sruth/croilar/apps/portal/src/routes/_layout/monitoring/logs.tsx` (REPLACED)
 Live data via `useQuery(api.convexFunctionCalls.tail, { limit: 200 })`. Project/function/ok filters.
 
-#### `croilar/apps/portal/src/routes/_layout/monitoring/metrics.tsx` (REPLACED)
+#### `sruth/croilar/apps/portal/src/routes/_layout/monitoring/metrics.tsx` (REPLACED)
 Live data via `useQuery(api.convexMetrics.get, { scope: "global" })`. p50/p95/qps/error_rate per scope.
 
-#### `croilar/apps/portal/src/routes/_layout/web/` (NEW)
+#### `sruth/croilar/apps/portal/src/routes/_layout/web/` (NEW)
 `index.tsx` — project picker. `$project.tsx` — per-project view (routes, Convex fns, BAML, tests, Cloudflare, marimo). **Troubleshoot drawer** with cross-references.
 
-#### `croilar/apps/portal/src/routes/_layout/notebooks/` (NEW)
+#### `sruth/croilar/apps/portal/src/routes/_layout/notebooks/` (NEW)
 `index.tsx` — grid of marimo notebook cards. `$slug.tsx` — inline WASM render.
 
-#### `croilar/mcp/devtools/` (NEW — TypeScript Bun server)
+#### `sruth/croilar/mcp/devtools/` (NEW — TypeScript Bun server)
 Tools: `list_convex_functions`, `list_tanstack_routes`, `get_test_results`, `get_glance_config`, `tail_logs`, `get_summary`, `regenerate_glance`. Backed by Convex HTTP.
 
 #### `opencode.json` (MODIFIED)
 Register `mcp.croilar-devtools`.
 
 #### `.infisical.env` (MODIFIED)
-Add `CROILAR_CONVEX_DEPLOY_KEY=infisical://dev-baile/croilar/convex/deploy_key`.
+Add `CROILAR_CONVEX_DEPLOY_KEY=infisical://dev-baile/sruth/croilar/convex/deploy_key`.
 
 #### `infrastructure/stacks/infrastructure/glance/{pangolin.yaml,blueprint.yaml}` (MODIFIED)
 Add 4 sub-paths under the existing private Glance resource: `/tuatha`, `/oideachais`, `/croilar`, `/meaisinfhoghlaim`.
@@ -94,7 +94,7 @@ Add 4 sub-paths under the existing private Glance resource: `/tuatha`, `/oideach
 #### `infrastructure/komodo/procedures/croilar-glance-regenerate.toml` (NEW)
 Runs the regenerator on a schedule + on-demand.
 
-#### New marimo notebooks (3 files in `croilar/notebooks/streams/teaching/`)
+#### New marimo notebooks (3 files in `sruth/croilar/notebooks/streams/teaching/`)
 - `web_route_health.py` — `tanstackRoutes` + `testRuns` → pass/fail per route per project
 - `convex_function_latency.py` — `convexFunctionCalls` → p50/p95 per function
 - `baml_extraction_quality.py` — BAML `langfuse` traces → confidence histograms
@@ -113,7 +113,7 @@ The new `/web` and `/notebooks` pages are gated behind `croilar-admin` org owner
 - **Code** — ~25 files modified, ~15 new files
 - **Config** — `.infisical.env`, `opencode.json`, two Glance YAML files, one Komodo TOML
 - **Data** — additive; existing music/teaching/cv data flows continue unchanged
-- **Tests** — 3 new test files in `croilar/tests/`; existing tests stay green
+- **Tests** — 3 new test files in `sruth/croilar/tests/`; existing tests stay green
 - **CI** — `bun run turbo typecheck` must pass; `openspec validate --strict` must pass
 - **Auth** — two new portal pages gated behind `croilar-admin`
 - **Out-of-scope, deferred to follow-up issues:**

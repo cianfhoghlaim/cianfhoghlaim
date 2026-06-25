@@ -19,32 +19,32 @@
 
 ## 3. Refactor: 13 sruth.* imports → canonical homes
 
-- [x] Create `oideachais/observability/__init__.py` + `oideachais/observability/logging.py`
+- [x] Create `sruth/oideachais/observability/__init__.py` + `sruth/oideachais/observability/logging.py`
   (the canonical home for `get_logger`)
-- [x] Migrate `meaisinfhoghlaim/evaluation/run_evaluation.py:68`:
+- [x] Migrate `sruth/meaisinfhoghlaim/evaluation/run_evaluation.py:68`:
   `from sruth.oideachais.evaluation.ragas_pipeline import ...`
   → `from meaisinfhoghlaim.evaluation.ragas_pipeline import ...`
-- [x] Migrate `meaisinfhoghlaim/pipelines/llm_router.py:21-23`:
+- [x] Migrate `sruth/meaisinfhoghlaim/pipelines/llm_router.py:21-23`:
   `from sruth.oideachais.settings import settings` + `from ..core.utils import CircuitBreaker`
   → `from oideachais.settings import settings` + `from oideachais.core.utils import CircuitBreaker`
-- [x] Migrate `meaisinfhoghlaim/alignment/{irish_g2p,canuint_exporter,character_interpolator}.py`:
+- [x] Migrate `sruth/meaisinfhoghlaim/alignment/{irish_g2p,canuint_exporter,character_interpolator}.py`:
   `from sruth.oideachais.observability.logging import get_logger`
   → `from oideachais.observability.logging import get_logger`
-- [x] Migrate `meaisinfhoghlaim/pipelines/canuint_audio_slicer.py:21`
-- [x] Migrate `meaisinfhoghlaim/quality/canuint_validator.py:22`
-- [x] Migrate `meaisinfhoghlaim/language/gaeilge/{duchas,tearma,gaois,duchas_images,canuint}.py`
+- [x] Migrate `sruth/meaisinfhoghlaim/pipelines/canuint_audio_slicer.py:21`
+- [x] Migrate `sruth/meaisinfhoghlaim/quality/canuint_validator.py:22`
+- [x] Migrate `sruth/meaisinfhoghlaim/language/gaeilge/{duchas,tearma,gaois,duchas_images,canuint}.py`
   (5 files): swap `sruth.oideachais.observability.logging` + `sruth.shared.http`
   → `oideachais.observability.logging` + `oideachais.http`
-- [x] Migrate `meaisinfhoghlaim/agents/bunchloch_research_agent.py:94,201`:
+- [x] Migrate `sruth/meaisinfhoghlaim/agents/bunchloch_research_agent.py:94,201`:
   `from sruth.shared.{embeddings,graph} import ...`
   → `from oideachais.embeddings.batch import ...` + `from oideachais.graph.client import ...`
-- [x] Migrate `meaisinfhoghlaim/agents/api/main_simple.py:20`:
+- [x] Migrate `sruth/meaisinfhoghlaim/agents/api/main_simple.py:20`:
   remove the `sruth.shared.storage` import
-- [x] Delete `meaisinfhoghlaim/ocr/config/base.py` (381 lines, the sruth copy)
+- [x] Delete `sruth/meaisinfhoghlaim/ocr/config/base.py` (381 lines, the sruth copy)
 
-## 4. Refactor: `oideachais/agents/{adk,agno}/` → thin re-exports
+## 4. Refactor: `sruth/oideachais/agents/{adk,agno}/` → thin re-exports
 
-- [x] Update `oideachais/agents/adk/__init__.py` to re-export the 12
+- [x] Update `sruth/oideachais/agents/adk/__init__.py` to re-export the 12
   model-layer agents from `meaisinfhoghlaim.agents.*`
 - [x] Reduce 19 ADK files (root_agent, curriculum_agent,
   translation_agent, corpus_agent, research_agent, education_research_agent,
@@ -55,19 +55,19 @@
   mythology_narrator_agent, quest_guide_agent,
   research_assistant_agent, tuatha_root_agent) as real code
 
-## 5. Refactor: `oideachais/ocr/` → thin re-exports
+## 5. Refactor: `sruth/oideachais/ocr/` → thin re-exports
 
-- [x] Update `oideachais/ocr/__init__.py` to re-export the 12
+- [x] Update `sruth/oideachais/ocr/__init__.py` to re-export the 12
   model-layer modules from `meaisinfhoghlaim.ocr.*`
 - [x] Reduce 12 OCR files to 12-line shims
-- [x] Keep `oideachais/ocr/author_archive_ocr.py` (leabharlann-specific)
+- [x] Keep `sruth/oideachais/ocr/author_archive_ocr.py` (leabharlann-specific)
 
 ## 6. Refactor: OCR spec ↔ registry reconciliation
 
 - [x] Add `gemma-3-vision` to
-  `meaisinfhoghlaim/ocr/model_registry.py:OCR_MODELS`
+  `sruth/meaisinfhoghlaim/ocr/model_registry.py:OCR_MODELS`
   (the 10th model)
-- [x] Update `meaisinfhoghlaim/llama-swap-config.yaml` to add
+- [x] Update `sruth/meaisinfhoghlaim/llama-swap-config.yaml` to add
   the GGUF-quantised variant
 - [x] Update `meaisinfhoghlaim-ocr-htr/spec.md` to document 10
   models (not 9) and the correct 6 backends (litellm, mlx,
@@ -75,11 +75,11 @@
 
 ## 7. 3 doc updates (1-line diffs each)
 
-- [x] `meaisinfhoghlaim/AGENTS.md` — add `marimo/` row + `sruth migration` row
-- [x] `meaisinfhoghlaim/README.md` — drop Known-Issues #2; add
+- [x] `sruth/meaisinfhoghlaim/AGENTS.md` — add `marimo/` row + `sruth migration` row
+- [x] `sruth/meaisinfhoghlaim/README.md` — drop Known-Issues #2; add
   `sruth.*` import debt as the new highest priority; add §11
   "v0→v1 migration backlog"
-- [x] `meaisinfhoghlaim/pyproject.toml` — add `[tool.uv.sources]`
+- [x] `sruth/meaisinfhoghlaim/pyproject.toml` — add `[tool.uv.sources]`
   block for `oideachais` + `codeolas`
 
 ## 8. Commit + push + archive

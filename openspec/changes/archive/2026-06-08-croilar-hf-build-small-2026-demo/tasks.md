@@ -16,40 +16,40 @@
 - [ ] Create `spaces/_common/` directory at repo root
 - [ ] `spaces/_common/theme.py` — Celtic theme tokens (deep green + amber + stone gray + Celtic teal + 5-element colours), Hades Shadow-First palette
 - [ ] `spaces/_common/anam_bonneagar_footer.py` — small per-Space footer showing Pobal HP decile + 32B model alias + linter score
-- [ ] `spaces/_common/soulbound_svg.py` — deterministic Celtic-knot SVG generator (from `tuatha/apps/crypteolas_demo/anam-contracts/src/CuchulainnNFT.sol:173-203`)
+- [ ] `spaces/_common/soulbound_svg.py` — deterministic Celtic-knot SVG generator (from `sruth/crypteolas/apps/crypteolas_demo/anam-contracts/src/CuchulainnNFT.sol:173-203`)
 - [ ] `spaces/_common/social_card.py` — 4 social card generator (Hugging Face logo + project name + tagline + HF Space URL)
 - [ ] `spaces/_common/demo_recorder.py` — 30-second screen recorder (Gradio + moviepy or ffmpeg)
-- [ ] `spaces/_common/i18n.py` — bilingual EN/GA toggle (using `croilar/packages/i18n/` pattern)
+- [ ] `spaces/_common/i18n.py` — bilingual EN/GA toggle (using `sruth/croilar/packages/i18n/` pattern)
 - [ ] `spaces/_common/README.md` — usage docs for the bundle
 
 ## Phase 2: BAML re-pointing to HF Inference (Day 1)
 
-- [ ] Fork `tuatha/baml_src/tuatha_clients.baml` → `tuatha/baml_src/clients_hackathon.baml`
+- [ ] Fork `sruth/tuatha/baml_src/tuatha_clients.baml` → `sruth/tuatha/baml_src/clients_hackathon.baml`
 - [ ] Re-point to HF Inference per `doc/hackathons/build-small-2026-model-fallback.md`:
   - `BAML_HACKATHON_PRIMARY` → `Qwen/Qwen2.5-7B-Instruct` on `https://api-inference.huggingface.co/v1`
   - `BAML_HACKATHON_FALLBACK_1` → `meta-llama/Llama-3.1-8B-Instruct`
   - `BAML_HACKATHON_FALLBACK_2` → `google/gemma-2-9b-it`
 - [ ] Add `HF_TOKEN` to HF Space secrets
-- [ ] Run `baml-cli generate` from `tuatha/baml_src/` to rebuild the BAML client
+- [ ] Run `baml-cli generate` from `sruth/tuatha/baml_src/` to rebuild the BAML client
 - [ ] Smoke test: invoke `ExtractCurriculumSyllabus` against the new client
 
 ## Phase 3: New BAML schemas (Day 1–2)
 
 ### For Space 1
-- [ ] `oideachais/data_platform/baml_src/extract_circular_meta.baml` — `ExtractCircularMeta()` (~30 lines) — from `docs/03-agents/baml-extraction.md:508-524`
-- [ ] `oideachais/data_platform/baml_src/exit_card.baml` — `GenerateExitCardQuestions()` + `ScoreExitCardResponse()` (~60 lines)
-- [ ] `oideachais/data_platform/baml_src/marking_scheme_diff.baml` — `ComposeMarkingSchemeDiff()` (~40 lines)
-- [ ] `oideachais/data_platform/baml_src/primary_framework.baml` — `ExtractPrimaryFramework()` for Junior Infants → 6th Class (~50 lines)
+- [ ] `sruth/oideachais/data_platform/baml_src/extract_circular_meta.baml` — `ExtractCircularMeta()` (~30 lines) — from `docs/03-agents/baml-extraction.md:508-524`
+- [ ] `sruth/oideachais/data_platform/baml_src/exit_card.baml` — `GenerateExitCardQuestions()` + `ScoreExitCardResponse()` (~60 lines)
+- [ ] `sruth/oideachais/data_platform/baml_src/marking_scheme_diff.baml` — `ComposeMarkingSchemeDiff()` (~40 lines)
+- [ ] `sruth/oideachais/data_platform/baml_src/primary_framework.baml` — `ExtractPrimaryFramework()` for Junior Infants → 6th Class (~50 lines)
 
 ### For Space 2
 - [ ] `meaisínfhoghlaim/baml_src/terminologue.baml` — `ExtractTerminologueEntry()` (~30 lines)
 - [ ] `meaisínfhoghlaim/baml_src/bardic_grade.baml` — `MapToBardicGrade()` (~40 lines)
-- [ ] `tuatha/baml_src/cross_border_alignment.baml` — `CrossBorderAlignment` class + `AlignCrossBorder()` (~50 lines)
+- [ ] `sruth/tuatha/baml_src/cross_border_alignment.baml` — `CrossBorderAlignment` class + `AlignCrossBorder()` (~50 lines)
 - [ ] `meaisínfhoghlaim/baml_src/school_geography.baml` — `SchoolGeography` class (~30 lines)
 
 ### For Space 3
-- [ ] `tuatha/baml_src/extract_wikipedia_article.baml` — `ExtractWikipediaArticle()` (~60 lines, extended from `MythologicalCharacter`)
-- [ ] `tuatha/baml_src/evaluate_riddle_response.baml` — `EvaluateRiddleResponse()` (~50 lines, modelled on `MarkingPoint`)
+- [ ] `sruth/tuatha/baml_src/extract_wikipedia_article.baml` — `ExtractWikipediaArticle()` (~60 lines, extended from `MythologicalCharacter`)
+- [ ] `sruth/tuatha/baml_src/evaluate_riddle_response.baml` — `EvaluateRiddleResponse()` (~50 lines, modelled on `MarkingPoint`)
 
 ### For Space 4
 - [ ] `meaisínfhoghlaim/baml_src/formative_question.baml` — `FormativeQuestion` class (~40 lines)
@@ -70,7 +70,7 @@
   6. Policy Circular Timeline (NEW, CircularStatus)
   7. DPRE Live "New Papers Detected" Feed (NEW, dynamic partitions sensor)
   8. Cross-Strand Prerequisite Heatmap + Pobal HP Context Overlay (NEW)
-- [ ] `spaces/an-scrudai/data.py` — DuckDB queries against `oideachais/data_platform/` (or static CSVs for the demo)
+- [ ] `spaces/an-scrudai/data.py` — DuckDB queries against `sruth/oideachais/data_platform/` (or static CSVs for the demo)
 - [ ] `requirements.txt` — `gradio`, `baml`, `pandas`, `plotly`
 - [ ] `README.md` — Space metadata, how to run locally
 - [ ] HF Space config: `app.py` + `requirements.txt` + `README.md` + small Yaml frontmatter

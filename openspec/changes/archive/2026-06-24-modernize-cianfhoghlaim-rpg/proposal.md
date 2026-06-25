@@ -3,7 +3,7 @@
 `spaces/cianfhoghlaim/dialogue.py` (the Hades-style RPG) has the
 same pattern as an_scrudu (C1) + meaisin_cliste (C2): the
 BAML `GenerateNpcDialogue` function has been promoted to
-`tuatha/baml_src/mythology_extraction.baml` (A1) and the
+`sruth/tuatha/baml_src/mythology_extraction.baml` (A1) and the
 LiteLLM gateway is the primary LLM tier (A2), but the Space's
 `_validate_npc_response` still uses the flat legacy schema.
 

@@ -10,7 +10,7 @@ Three concrete problems result:
 1. **CocoIndex v0 skill, v1 code.** The `cocoindex` skill documents the
    v0 flow-builder DSL (`@cocoindex.flow_def`, `data_scope`, `.row()`,
    `cocoindex.sources.X`, `cocoindex.targets.X`). The project's own
-   `oideachais/cocoindex_flows/*.py` and every rewritten example in
+   `sruth/oideachais/cocoindex_flows/*.py` and every rewritten example in
    `docs/cocoindex/` use the v1 API (`@coco.fn`, `coco.App`,
    `ContextKey`, `mount_table_target`, `mount_each`,
    `Annotated[NDArray, EMBEDDER]`). Agents reading the skill hallucinate
@@ -45,7 +45,7 @@ Three concrete problems result:
   orphan references (`dlthub.md`, `dlthub-codebase-analysis.md`,
   `dlt-baml-orpc-mcp-typesafe-pipeline-analysis.md`) so they are no
   longer orphans. Fix the path bug: `dlt_sources` lives at
-  `oideachais/dlt_sources/`, not `oideachais/data_platform/dlt_sources/`.
+  `sruth/oideachais/dlt_sources/`, not `sruth/oideachais/data_platform/dlt_sources/`.
 - **Expand** `.agents/skills/lancedb/SKILL.md` (bump version `>=0.26.0`)
   with 30+ advanced patterns + 10 new reference files
   (time-travel-rag, embed-functions-registry, advanced-rag-patterns,
@@ -69,9 +69,9 @@ Three concrete problems result:
 
 ## Project rules PRESERVED (not changed)
 
-- **BAML**: `.baml` files in `oideachais/baml_src/`; Zod-like
+- **BAML**: `.baml` files in `sruth/oideachais/baml_src/`; Zod-like
   constraints; schemas map to DuckLake tables in
-  `oideachais/dlt_sources/ireland/`.
+  `sruth/oideachais/dlt_sources/ireland/`.
 - **DLT**: DuckLake/DuckDB destination; `DLT_DISABLE_PLUGINS=true`
   during tests; relative imports (no `oideachais.data_platform...`);
   `USE_LOCAL_SCRAPES=true` offline fallback.
@@ -124,9 +124,9 @@ Three concrete problems result:
   SKILL.md or any reference file.
 - The new `baml` skill documents the 4 new patterns (dynamic
   schemas, runtime evals, auto-retry, multimodal) and links
-  `oideachais/baml_src/ocr_extraction.baml` as the in-repo OCR
+  `sruth/oideachais/baml_src/ocr_extraction.baml` as the in-repo OCR
   example for multimodal.
-- The new `dlt` skill correctly cites `oideachais/dlt_sources/`
+- The new `dlt` skill correctly cites `sruth/oideachais/dlt_sources/`
   (not `data_platform/dlt_sources/`) and links all 3 orphan
   reference files.
 - The new `lancedb` skill uses the modern TypeScript API

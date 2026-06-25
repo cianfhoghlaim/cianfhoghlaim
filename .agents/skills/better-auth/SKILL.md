@@ -12,7 +12,7 @@ Use when you need to:
 - "Add Google OAuth to the Tuatha game front-end"
 - "Implement Sign-In With Ethereum (SIWE) for the crypteolas
   crypto platform"
-- "Set up email + password + magic-link auth in croilar/portal"
+- "Set up email + password + magic-link auth in sruth/croilar/portal"
 - "Add passkeys (WebAuthn) to the oideachais web app"
 - "Wire BetterAuth into a Hono API"
 - "Add 2FA (TOTP) to the admin dashboard"
@@ -80,11 +80,11 @@ model and is breached independently.
 
 ```bash
 # Tuatha game front-end (TanStack Start)
-cd tuatha/ui
+cd sruth/tuatha/ui
 bun add better-auth
 
-# oideachais web (no auth; BetterAuth only for croilar/portal)
-cd croilar/apps/portal
+# oideachais web (no auth; BetterAuth only for sruth/croilar/portal)
+cd sruth/croilar/apps/portal
 bun add better-auth @better-auth/cli
 ```
 
@@ -252,11 +252,11 @@ export const auth = betterAuth({
 
 ## KCG integration
 
-- **Tuatha game front-end** (`tuatha/ui/`): BetterAuth + Convex
+- **Tuatha game front-end** (`sruth/tuatha/ui/`): BetterAuth + Convex
   adapter; users sign in with SIWE (crypto) or Google OAuth
-- **croilar/portal** (`croilar/apps/portal/`): BetterAuth +
+- **sruth/croilar/portal** (`sruth/croilar/apps/portal/`): BetterAuth +
   Drizzle adapter; users sign in with email + 2FA
-- **oideachais/web**: NO auth (public lakehouse)
+- **sruth/oideachais/web**: NO auth (public lakehouse)
 - **PocketID** (`pocketid.cianfhoghlaim.ie`): admin OIDC
   provider for the engineering team
 - **TinyAuth / Pangolin**: zero-trust proxy for
@@ -334,7 +334,7 @@ The critical insight: **Convex and Hono do not manage
 passwords or sessions** — they defer to BetterAuth for all
 identity. The OIDC JWKS is the single source of truth for
 token verification. This means a single sign-on across
-`oideachais/web` (no auth), `croilar/apps/portal` (BetterAuth),
+`sruth/oideachais/web` (no auth), `sruth/croilar/apps/portal` (BetterAuth),
 and any Convex-powered surface.
 
 ## KCG multi-layer auth (round-9 deep dive)

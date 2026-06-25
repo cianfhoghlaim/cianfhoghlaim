@@ -1,7 +1,7 @@
 # ireland — KCG Summary
 
 ## What It Is
-A curated collection of historical and geographical map images of Ireland and Britain, gathered for the `tuatha/` educational MMO's Celtic-themed game world. Includes pre-Anglo-Norman school maps, early peoples and politics maps, provincial maps, and satellite imagery.
+A curated collection of historical and geographical map images of Ireland and Britain, gathered for the `sruth/tuatha/` educational MMO's Celtic-themed game world. Includes pre-Anglo-Norman school maps, early peoples and politics maps, provincial maps, and satellite imagery.
 
 ## Why This Matters for Kings' College Galway
 These maps directly inform the MMO's spatial data layer — the game world geography, province boundaries, ancient school locations, and historical territorial divisions used for quest narratives. The satellite imagery of Great Britain and Ireland serves as reference for procedural terrain generation in the Babylon.js 3D environment.

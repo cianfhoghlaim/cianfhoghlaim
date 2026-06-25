@@ -4,7 +4,7 @@
 The oideachais cognify pipeline SHALL use the real
 `graphiti_core` 0.5 client (with the `falkordb_lite` fallback
 for local dev) backed by the FalkorDB compose stack. The
-hand-rolled `oideachais/graph/temporal.py` implementation
+hand-rolled `sruth/oideachais/graph/temporal.py` implementation
 SHALL be deleted.
 
 #### Scenario: The cross_stage_cognify pipeline runs
@@ -40,6 +40,6 @@ unreachable.
 ### Requirement: Hand-Rolled Temporal Knowledge Graph
 **Reason**: Replaced by the real `graphiti_core` 0.5 client
 backed by the FalkorDB compose stack.
-**Migration**: Delete `oideachais/graph/temporal.py`. Update
-`oideachais/cognee_integration/cross_stage_cognify.py` to use
+**Migration**: Delete `sruth/oideachais/graph/temporal.py`. Update
+`sruth/oideachais/cognee_integration/cross_stage_cognify.py` to use
 `oideachais.graph.graphiti_client`.

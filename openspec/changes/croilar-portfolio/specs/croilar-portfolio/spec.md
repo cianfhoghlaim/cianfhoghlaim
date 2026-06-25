@@ -28,7 +28,7 @@ The system SHALL expose 9 subproject routes at the public root.
 
 #### Scenario: Research route renders
 - **WHEN** a visitor navigates to `/research`
-- **THEN** the research page SHALL render outputs cross-linked from `oideachais/` and `meaisínfhoghlaim/`, filtered by author "Cian de Búrca"
+- **THEN** the research page SHALL render outputs cross-linked from `sruth/oideachais/` and `meaisínfhoghlaim/`, filtered by author "Cian de Búrca"
 - **AND** the page SHALL link back to the originating monorepo subproject
 
 #### Scenario: Teaching route renders
@@ -55,7 +55,7 @@ The system SHALL expose 9 subproject routes at the public root.
 The system SHALL process and serve all images via the croilar-assets R2 bucket + sharp pipeline.
 
 #### Scenario: Image upload processed
-- **WHEN** an image is added to `croilar/web/public/images/`
+- **WHEN** an image is added to `sruth/croilar/web/public/images/`
 - **THEN** the build-time sharp pipeline SHALL compress it to 3 sizes (thumbnail 200px, card 800px, full 1920px) and convert to WebP
 - **AND** upload the 3 sizes to `croilar-assets/{category}/{slug}/{size}.webp`
 - **AND** the site SHALL reference the CDN URL `https://assets.iomha.cianfhoghlaim.ie/{category}/{slug}/{size}.webp`
@@ -65,7 +65,7 @@ The system SHALL process and serve all images via the croilar-assets R2 bucket +
 - **THEN** the `croilar-assets` R2 bucket SHALL be created (idempotent)
 
 ### Requirement: Deployment
-The system SHALL deploy `croilar/web` to Cloudflare Pages.
+The system SHALL deploy `sruth/croilar/web` to Cloudflare Pages.
 
 #### Scenario: Cloudflare Pages deploy
 - **WHEN** the build completes
@@ -76,7 +76,7 @@ The system SHALL deploy `croilar/web` to Cloudflare Pages.
 The system SHALL encrypt PII (identity documents) at rest using SOPS.
 
 #### Scenario: Identity documents encrypted
-- **WHEN** a PDF is added to `croilar/identity/raw/`
+- **WHEN** a PDF is added to `sruth/croilar/identity/raw/`
 - **THEN** the file SHALL be GPG-encrypted with the croilar-encryption key from Infisical
 - **AND** only the `verification_metadata.json` (non-PII summary) SHALL be committed to git
 - **AND** runtime decryption SHALL require Pocket ID OIDC authentication via the Pangolin private resource

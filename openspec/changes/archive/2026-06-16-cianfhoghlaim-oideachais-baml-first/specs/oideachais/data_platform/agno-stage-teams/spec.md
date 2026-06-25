@@ -7,7 +7,7 @@
 The system SHALL provide **5 Agno `Team` instances** keyed on the 5 educational stages, each with stage-specific sub-agents, plus 4 shared sub-agents.
 
 #### Scenario: Aistear Team
-- **GIVEN** `oideachais/data_platform/agents/agno/stage_teams/aistear_team.py`
+- **GIVEN** `sruth/oideachais/data_platform/agents/agno/stage_teams/aistear_team.py`
 - **WHEN** `ask_aistear_team(query, language="ga")` is invoked
 - **THEN** the team routes to `ThemeNavigator` for theme-discovery queries
 - **AND** to `PrincipleMapper` for parent-facing principle questions
@@ -16,7 +16,7 @@ The system SHALL provide **5 Agno `Team` instances** keyed on the 5 educational 
 - **AND** the response is bilingual (EN/GA) when language="ga"
 
 #### Scenario: Senior Cycle Team
-- **GIVEN** `oideachais/data_platform/agents/agno/stage_teams/senior_cycle_team.py`
+- **GIVEN** `sruth/oideachais/data_platform/agents/agno/stage_teams/senior_cycle_team.py`
 - **WHEN** `ask_senior_cycle_team(query, subject="mathematics", year=2024)` is invoked
 - **THEN** the team routes to `PaperAnalyst` for "show me the structure of 2024 Higher Maths Paper 1"
 - **AND** to `MarkingSchemeDecoder` for "what are the marking criteria for Q3?"
@@ -28,7 +28,7 @@ The system SHALL provide **5 Agno `Team` instances** keyed on the 5 educational 
 - **AND** to `MatriculationAuditor` for "do my grades meet UCD medicine matriculation?"
 
 #### Scenario: Tertiary Team
-- **GIVEN** `oideachais/data_platform/agents/agno/stage_teams/tertiary_team.py`
+- **GIVEN** `sruth/oideachais/data_platform/agents/agno/stage_teams/tertiary_team.py`
 - **WHEN** `ask_tertiary_team(query, pathway="cao")` is invoked
 - **THEN** the team routes to `CAOCourseFinder` for "what courses can I do with my LC subjects?"
 - **AND** to `QQIFETLadder` for "what PLC award ladders into Level 8?"
@@ -38,7 +38,7 @@ The system SHALL provide **5 Agno `Team` instances** keyed on the 5 educational 
 - **AND** to `HEIComparer` for "compare UCD vs UCC Medicine"
 
 #### Scenario: Shared Sub-Agents
-- **GIVEN** `oideachais/data_platform/agents/agno/stage_teams/_shared/`
+- **GIVEN** `sruth/oideachais/data_platform/agents/agno/stage_teams/_shared/`
 - **WHEN** the 4 shared sub-agents are imported
 - **THEN** `CurriculumScout` queries the 5 stage LanceDB tables and Cognee datasets
 - **AND** `TranslationAgent` calls `litellm:4000/v1/chat/completions` with `model=irish` for EN↔GA translation
@@ -50,7 +50,7 @@ The system SHALL provide **5 Agno `Team` instances** keyed on the 5 educational 
 - **WHEN** the new stage teams are introduced
 - **THEN** the existing `education_team` is replaced by a thin compatibility shim that dispatches to the 5 stage teams based on the query's detected stage
 - **AND** the public API `ask_education_team(query)` still works
-- **AND** `oideachais/data_platform/agent_os/config.yaml` is updated to register the 5 stage teams under the `agents:` block
+- **AND** `sruth/oideachais/data_platform/agent_os/config.yaml` is updated to register the 5 stage teams under the `agents:` block
 
 ## REMOVED Requirements
 

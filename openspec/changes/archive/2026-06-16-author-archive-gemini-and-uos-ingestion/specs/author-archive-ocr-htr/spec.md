@@ -2,7 +2,7 @@
 
 ## Purpose
 
-`author-archive-ocr-htr` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives at `oideachais/ocr/author_archive_ocr.py`. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
+`author-archive-ocr-htr` is a capability of the Cianfhoghlaim platform. This document is the canonical capability spec; the corresponding source code lives at `sruth/oideachais/ocr/author_archive_ocr.py`. See `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the project identity.
 
 OCR and HTR (handwritten text recognition) for the personal-archive scanned pages and Apple `.pages` files. Routes pages to the right back-end (Pylaia for Irish HTR, TrOCR for printed Latin, VLM for equations) and emits structured `HandwrittenEquation` rows for the equations table.
 
@@ -14,7 +14,7 @@ The system SHALL dispatch each scanned page to the correct OCR back-end based on
 #### Scenario: Pylaia for Irish
 - **GIVEN** a page from a UoG `irish/` document (`.pages` or scanned PDF)
 - **WHEN** the page is dispatched
-- **THEN** the Pylaia HTR model (`oideachais/ocr/pylaia_comparison.py`) SHALL be invoked
+- **THEN** the Pylaia HTR model (`sruth/oideachais/ocr/pylaia_comparison.py`) SHALL be invoked
 - **AND** the returned text SHALL be stored in the `author_archive.handwritten_ocr` DuckDB table with `backend="pylaia"`
 
 #### Scenario: TrOCR for English
@@ -26,7 +26,7 @@ The system SHALL dispatch each scanned page to the correct OCR back-end based on
 #### Scenario: VLM for equations
 - **GIVEN** a page whose `equation_density` (count of `=`, `∫`, `∑`, `∂` symbols) is above a threshold (default 5)
 - **WHEN** the page is dispatched
-- **THEN** the VLM back-end (Gemini Vision via LiteLLM, see `oideachais/agents/baml_integration.py`) SHALL be invoked
+- **THEN** the VLM back-end (Gemini Vision via LiteLLM, see `sruth/oideachais/agents/baml_integration.py`) SHALL be invoked
 - **AND** the returned LaTeX + Verbatim pair SHALL populate the `HandwrittenEquation` row for the equations index
 
 ### Requirement: Handwritten Equation Index

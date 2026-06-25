@@ -46,10 +46,10 @@
       chrome-devtools-mcp, 3 tanmaxx-17, 4 misc)
 - [x] 2 cloned subdirs: `docs/web/chrome-devtools-mcp/`,
       `docs/web/tanmaxx-17/`
-- [x] 11 cloned upstream repos: `docs/tuatha/08-mirrors/<name>/`
+- [x] 11 cloned upstream repos: `docs/sruth/tuatha/08-mirrors/<name>/`
       × 11 (93 MB)
 - [x] `rm -rf docs/web/`
-- [x] `rm -rf docs/tuatha/` (after the 08-mirrors subdir
+- [x] `rm -rf docs/sruth/tuatha/` (after the 08-mirrors subdir
       is gone)
 
 ## 6. Verify

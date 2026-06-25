@@ -8,11 +8,11 @@ oideachais web app and the croilar apps.
 #### Scenario: Routes are auto-generated under sruth/
 
 - **GIVEN** a file `sruth/oideachais/web/apps/web/src/routes/curriculum.tsx`
-  (was `oideachais/web/apps/web/src/routes/curriculum.tsx` pre-refactor)
+  (was `sruth/oideachais/web/apps/web/src/routes/curriculum.tsx` pre-refactor)
 - **WHEN** the app is built
 - **THEN** the route `/curriculum` is auto-generated and accessible
 - **AND** the path uses the `sruth/oideachais/` prefix (not the legacy
-  `oideachais/` prefix at the repo root)
+  `sruth/oideachais/` prefix at the repo root)
 
 ### Requirement: Subagent roster matches opencode.json
 
@@ -56,7 +56,7 @@ and agent calls.
 - **THEN** the function executes on the server with type safety
 - **AND** the result is typed end-to-end
 - **AND** the file lives under `sruth/oideachais/` (not under the
-  legacy root `oideachais/`)
+  legacy root `sruth/oideachais/`)
 
 ### Requirement: Croilar surfaces under sruth/croilar/
 
@@ -70,7 +70,7 @@ The system SHALL host the 2 Croilar front-end surfaces under
 - **WHEN** locating their filesystem paths
 - **THEN** they live at `sruth/croilar/apps/web/` and
   `sruth/croilar/apps/portal/` respectively
-- **AND** no top-level `croilar/apps/` directory exists at the repo root
+- **AND** no top-level `sruth/croilar/apps/` directory exists at the repo root
 
 ### Requirement: Tuatha MMO front-end under sruth/tuatha/
 
@@ -82,4 +82,4 @@ The system SHALL host the Tuatha educational MMO front-end under
 - **GIVEN** the Tuatha MMO Babylon.js client
 - **WHEN** locating its filesystem path
 - **THEN** it lives at `sruth/tuatha/ui/`
-- **AND** no top-level `tuatha/ui/` directory exists at the repo root
+- **AND** no top-level `sruth/tuatha/ui/` directory exists at the repo root

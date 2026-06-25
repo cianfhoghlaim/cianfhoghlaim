@@ -14,7 +14,7 @@ stored in Garage S3.
 
 - **GIVEN** a BAML-extracted curriculum passage (e.g. a
   NCCA Irish Leaving Cert grammar explanation)
-- **WHEN** the `meaisinfhoghlaim/tts/` service is invoked with
+- **WHEN** the `sruth/meaisinfhoghlaim/tts/` service is invoked with
   the passage + voice ID
 - **THEN** Chatterbox SHALL render the passage to a 16-bit
   PCM WAV file
@@ -36,7 +36,7 @@ languages.
 
 - **GIVEN** an audio recording of an Irish Leaving Cert oral
   exam (Irish + English mixed)
-- **WHEN** the `meaisinfhoghlaim/asr/` service is invoked
+- **WHEN** the `sruth/meaisinfhoghlaim/asr/` service is invoked
 - **THEN** the service SHALL route to
   `cpierse/wav2vec2-large-xlsr-53-irish` for the Irish
   segments (auto-detected by language ID)

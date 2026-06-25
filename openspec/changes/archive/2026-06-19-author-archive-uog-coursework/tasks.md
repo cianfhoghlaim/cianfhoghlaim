@@ -16,25 +16,25 @@
 
 ### 2.1 DLT sources (DONE)
 
-- [x] `oideachais/dlt_sources/author_archive/olscoil_mata.py` —
+- [x] `sruth/oideachais/dlt_sources/author_archive/olscoil_mata.py` —
       mata/ (Mathematics / Statistics / Cryptography)
-- [x] `oideachais/dlt_sources/author_archive/olscoil_software.py` —
+- [x] `sruth/oideachais/dlt_sources/author_archive/olscoil_software.py` —
       software_development/ (CT511/CT545/CT853/CT861/CT870)
-- [x] `oideachais/dlt_sources/author_archive/olscoil_irish.py` —
+- [x] `sruth/oideachais/dlt_sources/author_archive/olscoil_irish.py` —
       irish/ (Gaeilge essays, translations, reviews)
-- [x] `oideachais/dlt_sources/author_archive/olscoil_education.py` —
+- [x] `sruth/oideachais/dlt_sources/author_archive/olscoil_education.py` —
       education/ (B.Ed / PGCE / BME)
-- [x] `oideachais/dlt_sources/author_archive/personal_records.py` —
+- [x] `sruth/oideachais/dlt_sources/author_archive/personal_records.py` —
       `cian_mac_an_déisigh_uí_liatháin/{achievement,teaching}/`
       with `identity/` excluded by default
 
 ### 2.2 Dagster assets (DONE)
 
 - [x] Create
-      `oideachais/dagster_defs/assets/official_media/uog_coursework_assets.py`
+      `sruth/oideachais/dagster_defs/assets/official_media/uog_coursework_assets.py`
       with 10 new assets (5 modules × 2 resources each)
-- [x] Register in `oideachais/dagster_defs/assets/official_media/__init__.py`
-- [x] Register in `oideachais/dagster_defs/assets/__init__.py` `all_assets`
+- [x] Register in `sruth/oideachais/dagster_defs/assets/official_media/__init__.py`
+- [x] Register in `sruth/oideachais/dagster_defs/assets/__init__.py` `all_assets`
 
 ### 2.3 OpenSpec change (DONE — this commit)
 
@@ -45,7 +45,7 @@
 
 ### 2.4 Tests (TODO)
 
-- [ ] `oideachais/tests/test_uog_coursework_assets.py` covering
+- [ ] `sruth/oideachais/tests/test_uog_coursework_assets.py` covering
       asset registration, sample sources, and the personal_records
       identity exclusion guard
 
@@ -56,7 +56,7 @@ Independent of the coursework layer. Will land in
 
 ## Stage 4 — Multi-target deployment (deferred)
 
-`oideachais/dlt_utils/target_factory.py` + 3 targets (dev=DuckDB,
+`sruth/oideachais/dlt_utils/target_factory.py` + 3 targets (dev=DuckDB,
 staging=MotherDuck, prod=Garage S3 + Lakekeeper) + `make_target.sh`.
 
 ## Validation

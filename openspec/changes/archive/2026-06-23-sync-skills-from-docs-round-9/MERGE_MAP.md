@@ -1,6 +1,6 @@
-# Round 9 — docs/web/ + docs/tuatha/08-mirrors/ → skills merge map
+# Round 9 — docs/web/ + docs/sruth/tuatha/08-mirrors/ → skills merge map
 
-This file maps every `.md` under `docs/web/` (98 .md files + 2 cloned subdirs) and the 11 cloned upstream repos under `docs/tuatha/08-mirrors/` to either the **2 new skills** (`web-mirrors`, `agentic-frontend-frameworks`) or one of the **9 existing skills** that need expansion, or marks it for deletion or as a clipping. The `08-mirrors/_summaries/` content was already absorbed into the existing `upstream-mirrors` skill in round 8 — this round only does `git rm -rf` of the 11 mirror source trees (93 MB) and the empty `docs/tuatha/08-mirrors/` and `docs/tuatha/` directories. The 2 cloned subdirs inside `docs/web/` (`chrome-devtools-mcp/`, `tanmaxx-17/`) are also `git rm -rf` — they are external source-code clones whose only KCG value is already captured in `upstream-mirrors/references/anylanguagemodel.md` (the AnyLanguageModel clip is adjacent) and the `stagehand` / `sruth-browser` skills (chrome-devtools-mcp coverage is upstream-only, no KCG-specific patches).
+This file maps every `.md` under `docs/web/` (98 .md files + 2 cloned subdirs) and the 11 cloned upstream repos under `docs/sruth/tuatha/08-mirrors/` to either the **2 new skills** (`web-mirrors`, `agentic-frontend-frameworks`) or one of the **9 existing skills** that need expansion, or marks it for deletion or as a clipping. The `08-mirrors/_summaries/` content was already absorbed into the existing `upstream-mirrors` skill in round 8 — this round only does `git rm -rf` of the 11 mirror source trees (93 MB) and the empty `docs/sruth/tuatha/08-mirrors/` and `docs/sruth/tuatha/` directories. The 2 cloned subdirs inside `docs/web/` (`chrome-devtools-mcp/`, `tanmaxx-17/`) are also `git rm -rf` — they are external source-code clones whose only KCG value is already captured in `upstream-mirrors/references/anylanguagemodel.md` (the AnyLanguageModel clip is adjacent) and the `stagehand` / `sruth-browser` skills (chrome-devtools-mcp coverage is upstream-only, no KCG-specific patches).
 
 **Conventions used below**
 - `KEEP-NEW: <new_skill>/references/<slug>.md` — long-form KCG-authored reference inside a new skill.
@@ -12,31 +12,31 @@ This file maps every `.md` under `docs/web/` (98 .md files + 2 cloned subdirs) a
 
 ---
 
-## 1. `docs/tuatha/08-mirrors/` cleanup (11 subdirs to git rm -rf)
+## 1. `docs/sruth/tuatha/08-mirrors/` cleanup (11 subdirs to git rm -rf)
 
-The 11 mirror source trees at `docs/tuatha/08-mirrors/<name>/` are full `git clone`s of upstream repos. The KCG-authored summaries (originally under `08-mirrors/_summaries/`) were moved to the existing `upstream-mirrors` skill in round 8. Per the user's "delete `08-mirrors/`" instruction in this round, do:
+The 11 mirror source trees at `docs/sruth/tuatha/08-mirrors/<name>/` are full `git clone`s of upstream repos. The KCG-authored summaries (originally under `08-mirrors/_summaries/`) were moved to the existing `upstream-mirrors` skill in round 8. Per the user's "delete `08-mirrors/`" instruction in this round, do:
 
 ```bash
-git rm -rf docs/tuatha/08-mirrors/AnyLanguageModel/
-git rm -rf docs/tuatha/08-mirrors/SpacetimeDB/
-git rm -rf docs/tuatha/08-mirrors/agui_kotlin/
-git rm -rf docs/tuatha/08-mirrors/gdext/
-git rm -rf docs/tuatha/08-mirrors/hophacks-spacetimedb-workshop/
-git rm -rf docs/tuatha/08-mirrors/react-native-godot/
-git rm -rf docs/tuatha/08-mirrors/react-native-reusables/
-git rm -rf docs/tuatha/08-mirrors/spacetimedb-cookbook/
-git rm -rf docs/tuatha/08-mirrors/spacetimedb-typescript-sdk/
-git rm -rf docs/tuatha/08-mirrors/wgpu/
-git rm -rf docs/tuatha/08-mirrors/x402/
+git rm -rf docs/sruth/tuatha/08-mirrors/AnyLanguageModel/
+git rm -rf docs/sruth/tuatha/08-mirrors/SpacetimeDB/
+git rm -rf docs/sruth/tuatha/08-mirrors/agui_kotlin/
+git rm -rf docs/sruth/tuatha/08-mirrors/gdext/
+git rm -rf docs/sruth/tuatha/08-mirrors/hophacks-spacetimedb-workshop/
+git rm -rf docs/sruth/tuatha/08-mirrors/react-native-godot/
+git rm -rf docs/sruth/tuatha/08-mirrors/react-native-reusables/
+git rm -rf docs/sruth/tuatha/08-mirrors/spacetimedb-cookbook/
+git rm -rf docs/sruth/tuatha/08-mirrors/spacetimedb-typescript-sdk/
+git rm -rf docs/sruth/tuatha/08-mirrors/wgpu/
+git rm -rf docs/sruth/tuatha/08-mirrors/x402/
 # 11 mirror dirs gone; _summaries/ is already empty (round 8 moved everything)
-rmdir docs/tuatha/08-mirrors/_summaries/ 2>/dev/null || true
-rmdir docs/tuatha/08-mirrors/ 2>/dev/null || true
-rmdir docs/tuatha/ 2>/dev/null || true   # if no other content remains
+rmdir docs/sruth/tuatha/08-mirrors/_summaries/ 2>/dev/null || true
+rmdir docs/sruth/tuatha/08-mirrors/ 2>/dev/null || true
+rmdir docs/sruth/tuatha/ 2>/dev/null || true   # if no other content remains
 ```
 
 **Total disk recovered:** ~93 MB (SpacetimeDB 41M + x402 26M + spacetimedb-cookbook 9.6M + react-native-reusables 7.9M + gdext 5.0M + wgpu 840K + spacetimedb-typescript-sdk 944K + hophacks 328K + react-native-godot 76K + agui_kotlin 80K + AnyLanguageModel 48K).
 
-**Check before `rmdir docs/tuatha/`**: verify the directory has no other content first. If it does (e.g. a leftover `.gitkeep`), keep the empty dir deletion in a separate commit.
+**Check before `rmdir docs/sruth/tuatha/`**: verify the directory has no other content first. If it does (e.g. a leftover `.gitkeep`), keep the empty dir deletion in a separate commit.
 
 ---
 
@@ -120,7 +120,7 @@ All 3 .md files in this subdir are marked `DELETE` in the per-file table below.
 | `docs/web/07-react-frontend/implementation-plan-self-hosting-betterauth-convex-supabase-hono-tanstack-start.md` | Self-hosted stack plan | 1264 | KEEP-NEW: better-auth/references/self-hosted-stack.md | BetterAuth+Convex+Supabase+Hono+TanStack Start OIDC self-hosting |
 | `docs/web/07-react-frontend/mcp-ui-integration.md` | MCP-UI overview clipping | 41 | CLIPPING: copilotkit/references/clippings/mcp-ui.md | external mcpui.dev docs clipping |
 | `docs/web/07-react-frontend/ref-cianfhoghlaim-base-template.md` | Cianfhoghlaim base template | 30 | KEEP-NEW: monorepo/references/cianfhoghlaim-base-template.md | KCG-specific: Better-T-Stack monorepo pattern (every sruth/ derives from this) |
-| `docs/web/07-react-frontend/ref-ui-inspiration.md` | sruth/ UI inspiration | 363 | KEEP-NEW: ui-components/references/sruth-ui-inspiration.md | KCG-specific: tuath/oideachais/aleyum/crypteolas UI inspiration |
+| `docs/web/07-react-frontend/ref-ui-inspiration.md` | sruth/ UI inspiration | 363 | KEEP-NEW: ui-components/references/sruth-ui-inspiration.md | KCG-specific: tuath/sruth/oideachais/aleyum/crypteolas UI inspiration |
 | `docs/web/07-react-frontend/ref-unified-examples.md` | KCG unified examples index | 51 | KEEP-NEW: monorepo/references/unified-examples.md | KCG-specific: api-unified + web-unified + cloudflare-unified + data-unified + tanstack-unified |
 | `docs/web/07-react-frontend/routing-and-layout.md` | TanStack Start routing guide | 913 | EXPAND: tanstack-start §File-based routing | TanStack Start routing/layout for full-stack dashboards |
 | `docs/web/08-repos/repo-ag-ui-protocol.md` | AG-UI Protocol KCG summary | 30 | WEB-MIRROR: ag-ui-protocol.md | KCG-authored upstream summary → web-mirrors skill (web-stack repo) |
@@ -193,7 +193,7 @@ The 8 mirrors are the `repo-*.md` files in `docs/web/08-repos/`:
 | # | Mirror | KCG summary | Use case |
 |:--|:--|:--|:--|
 | 1 | `ag-ui-protocol` | `references/ag-ui-protocol.md` | AG-UI protocol (CopilotKit) for agent↔UI streaming across all sruth/ frontends |
-| 2 | `cloudflare-workers` | `references/cloudflare-workers.md` | Cloudflare Workers (D1, R2, KV, Hyperdrive) — primary deploy for `oideachais/web/` |
+| 2 | `cloudflare-workers` | `references/cloudflare-workers.md` | Cloudflare Workers (D1, R2, KV, Hyperdrive) — primary deploy for `sruth/oideachais/web/` |
 | 3 | `convex` | `references/convex.md` | Convex real-time backend (BetterAuth integration examples) for all sruth/ backends |
 | 4 | `hono` | `references/hono.md` | Hono edge web framework (auth workers, DuckDB API) — the API gateway pattern |
 | 5 | `orpc` | `references/orpc.md` | oRPC type-safe RPC (monorepo, OpenAPI auto-gen) — the API layer across the monorepo |
@@ -369,7 +369,7 @@ The 4 references:
 
 | Reference | Source file | Content |
 |:--|:--|:--|
-| `references/sruth-ui-inspiration.md` | `docs/web/07-react-frontend/ref-ui-inspiration.md` | UI inspiration for tuath/oideachais/aleyum/crypteolas (363 lines) |
+| `references/sruth-ui-inspiration.md` | `docs/web/07-react-frontend/ref-ui-inspiration.md` | UI inspiration for tuath/sruth/oideachais/aleyum/crypteolas (363 lines) |
 
 **Clipping (1):**
 
@@ -441,7 +441,7 @@ The 4 references:
 | Pair | Why duplicate | Resolution |
 |:--|:--|:--|
 | `docs/web/01-tanstack/TANSTACK_INDEX.md` ↔ `TANSTACK_SUMMARY.md` ↔ `TANSTACK_QUICK_REFERENCE.md` ↔ `README_TANSTACK_ANALYSIS.md` | All 4 are indexes/summaries of the same `TANSTACK_ANALYSIS.md` (650 lines) | DELETE all 4 indexes; KEEP the 650-line canonical → `tanstack-start/references/tanstack-examples-analysis.md` |
-| `docs/web/07-react-frontend/Asset Management for Full-Stack App.md` ↔ `docs/tuatha/01-game-design/Asset Management for Full-Stack App.md` (round 8) | Same content; 355 vs 354 lines (both copies are essentially identical) | DELETE the 07 copy; round-8 already has it in `celtic-asset-generation/references/asset-management-pixelart.md` |
+| `docs/web/07-react-frontend/Asset Management for Full-Stack App.md` ↔ `docs/sruth/tuatha/01-game-design/Asset Management for Full-Stack App.md` (round 8) | Same content; 355 vs 354 lines (both copies are essentially identical) | DELETE the 07 copy; round-8 already has it in `celtic-asset-generation/references/asset-management-pixelart.md` |
 | `docs/web/09-clippings/Release v28.0.0 ...md` ↔ `.agents/skills/upstream-mirrors/references/clippings/wgpu-v28-release.md` | Same wgpu v28 release notes | DELETE the 09-clippings copy; round-8 already preserved it under upstream-mirrors |
 | `docs/web/08-repos/repo-restate-ui-readme.md` (5 lines) ↔ `docs/web/08-repos/repo-restate-coding-agent.md` (59 lines) | The 5-line README is a trivial pointer to the restate demo UI; the 59-line file is the actual KCG summary | DELETE the 5-line; KEEP the 59-line → `web-mirrors/references/restate-coding-agent.md` |
 | `docs/web/03-ag-ui/AG-UI Goes Mobile_...md` (72 lines, blog) ↔ `ag-ui_docs_sdk_kotlin_overview.mdx...md` (191 lines, official docs) | Both cover the AG-UI Kotlin SDK | KEEP BOTH as separate references (`ag-ui/references/kotlin-mobile-sdk.md` and `ag-ui/references/kotlin-sdk-overview.md`) — they have non-overlapping framing (blog vs reference) |
@@ -461,7 +461,7 @@ The 4 references:
 | `WEB-MIRROR: <slug>.md` (into `web-mirrors` skill) | 7 | 8 `repo-*.md` files in `docs/web/08-repos/` minus 1 DELETE (`repo-restate-ui-readme.md`) |
 | `CLIPPING: <skill>/references/clippings/<slug>.md` | 20 | distributed across better-auth (6), ag-ui (1), convex (3), copilotkit (1), stagehand (1), monorepo (1), ui-components (1), pdf (1), pydantic-ai (1), tanstack-start (2), and the 1 in stagehand |
 | `DELETE` | 38 | 3 nav + 4 tanstack indexes + 3 alchemy empty + 1 07-asset dedup + 1 09-clippings wgpu dedup + 1 08-repos restate-ui + 1 README + 16 chrome-devtools-mcp (subdir git rm) + 3 tanmaxx-17 (subdir git rm) + 1 misc — see per-file table for exact list |
-| `git rm -rf` of subdirs | 13 | 1 `docs/web/chrome-devtools-mcp/`, 1 `docs/web/tanmaxx-17/`, 11 `docs/tuatha/08-mirrors/<name>/` |
+| `git rm -rf` of subdirs | 13 | 1 `docs/web/chrome-devtools-mcp/`, 1 `docs/web/tanmaxx-17/`, 11 `docs/sruth/tuatha/08-mirrors/<name>/` |
 
 ### Tally by destination skill
 

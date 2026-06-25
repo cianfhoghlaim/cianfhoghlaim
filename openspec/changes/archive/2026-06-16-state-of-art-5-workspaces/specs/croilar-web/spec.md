@@ -60,7 +60,7 @@ The contact form SHALL submit through the MCP gateway via a `createServerFn`, wi
 - **AND** the form resets to its initial state
 
 ### Requirement: Bilingual i18n
-The croilar/web app SHALL support Irish language via `@croilar/i18n`, which SHALL include a `ga.json` translations bundle with all user-facing strings, with language toggling via `i18next.useTranslation()` while keeping route paths language-agnostic.
+The sruth/croilar/web app SHALL support Irish language via `@sruth/croilar/i18n`, which SHALL include a `ga.json` translations bundle with all user-facing strings, with language toggling via `i18next.useTranslation()` while keeping route paths language-agnostic.
 
 #### Scenario: Switch to Irish
 - **WHEN** user clicks the language toggle from EN to GA

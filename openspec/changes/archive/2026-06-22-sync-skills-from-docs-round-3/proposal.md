@@ -23,9 +23,9 @@ Four concrete patterns emerge:
    marketing.
 3. **No skills exist for `modal` or `babylonjs`.** Both are
    first-class project dependencies (Modal for burst GPU, Babylon.js
-   for the `tuatha/game/` 3D client) but have no canonical doc.
+   for the `sruth/tuatha/game/` 3D client) but have no canonical doc.
 4. **No `tuatha-platform` skill exists** despite the MMO being a
-   full quadrant of the monorepo. `tuatha/AGENTS.md` is the
+   full quadrant of the monorepo. `sruth/tuatha/AGENTS.md` is the
    existing entry point, but `TUATH_QUICKSTART.md` has unique
    quick-start + endpoints + Dagster-assets content that should
    be a router-style skill.
@@ -39,13 +39,13 @@ Four concrete patterns emerge:
   MacBook M4 daily baseline + Modal burst for 13B+ training +
   Garage S3 sync + llama-swap serving.
 - `.agents/skills/babylonjs/SKILL.md` — 3D rendering engine
-  (WebGL + WebGPU). KCG-specific: the `tuatha/game/` Babylon.js
+  (WebGL + WebGPU). KCG-specific: the `sruth/tuatha/game/` Babylon.js
   client, Convex real-time state, Havok physics, particle
   systems, WebGPU enablement.
 - `.agents/skills/tuatha-platform/SKILL.md` — Celtic MMO + crypto
   platform quadrant router. Quick-start, endpoints, project
   structure, Dagster assets, KCG-specific env vars. Inherits the
-  "Quick routing" table from `tuatha/AGENTS.md`. Cross-references
+  "Quick routing" table from `sruth/tuatha/AGENTS.md`. Cross-references
   to `baml`, `hono`, `tanstack-start`, `copilotkit`,
   `celtic-language-ai`, `dagger`.
 
@@ -90,8 +90,8 @@ Four concrete patterns emerge:
 
 - The tuatha quadrant is the Celtic MMO + crypto platform —
   now documented in the new `tuatha-platform` skill
-- The `tuatha/` workspace paths (`tuatha/game/`, `tuatha/crates/`,
-  `tuatha/crypteolas/`, `tuatha/ui/`) — preserved
+- The `sruth/tuatha/` workspace paths (`sruth/tuatha/game/`, `sruth/tuatha/crates/`,
+  `sruth/tuatha/sruth/crypteolas/`, `sruth/tuatha/ui/`) — preserved
 - The 4 sub-modules — preserved
 
 ## Impact

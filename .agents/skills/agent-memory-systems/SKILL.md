@@ -71,11 +71,11 @@ For KCG agents, the canonical pattern is:
    provider directly. This is for cost tracking + Langfuse
    observability.
 2. **All Cognee + Graphiti calls are wrapped in the
-   `oideachais/memory/` shim**. The actual model-layer lives
+   `sruth/oideachais/memory/` shim**. The actual model-layer lives
    in `sruth/meaisinfhoghlaim/memory/`.
 3. **All FalkorDB + Memgraph calls go through
-   `oideachais/graph/`** (the application-layer client).
-4. **LanceDB schemas** follow the `oideachais/cocoindex_flows/`
+   `sruth/oideachais/graph/`** (the application-layer client).
+4. **LanceDB schemas** follow the `sruth/oideachais/cocoindex_flows/`
    v1 App pattern. Do NOT create ad-hoc LanceDB tables.
 
 ## Pair this skill with

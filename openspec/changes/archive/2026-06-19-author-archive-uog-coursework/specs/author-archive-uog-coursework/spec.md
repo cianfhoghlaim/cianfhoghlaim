@@ -51,7 +51,7 @@ field to the matching `UoGSubject` enum value.
 ### Requirement: DLT source per UoG module
 
 The system MUST provide one DLT source per UoG module at
-`oideachais/dlt_sources/author_archive/olscoil_<module>.py`. Each
+`sruth/oideachais/dlt_sources/author_archive/olscoil_<module>.py`. Each
 source MUST expose a `_documents` resource (the filesystem scan)
 and an `_extraction` resource (the BAML extraction).
 
@@ -162,9 +162,9 @@ The `UoGModuleExtraction` BAML class MUST have the following fields:
   `ExtractUoGSoftwareModule`, `ExtractUoGIrishModule`,
   `ExtractUoGEducationModule`, `ExtractPersonalRecord`,
   `UoGSubject`, `UoGDocumentKind`, `UoGModuleExtraction`
-- `oideachais/dlt_sources/author_archive/olscoil_mata.py` — mata DLT
-- `oideachais/dlt_sources/author_archive/olscoil_software.py` — software DLT
-- `oideachais/dlt_sources/author_archive/olscoil_irish.py` — irish DLT
-- `oideachais/dlt_sources/author_archive/olscoil_education.py` — education DLT
-- `oideachais/dlt_sources/author_archive/personal_records.py` — personal DLT
-- `oideachais/dagster_defs/assets/official_media/uog_coursework_assets.py` — 10 Dagster assets
+- `sruth/oideachais/dlt_sources/author_archive/olscoil_mata.py` — mata DLT
+- `sruth/oideachais/dlt_sources/author_archive/olscoil_software.py` — software DLT
+- `sruth/oideachais/dlt_sources/author_archive/olscoil_irish.py` — irish DLT
+- `sruth/oideachais/dlt_sources/author_archive/olscoil_education.py` — education DLT
+- `sruth/oideachais/dlt_sources/author_archive/personal_records.py` — personal DLT
+- `sruth/oideachais/dagster_defs/assets/official_media/uog_coursework_assets.py` — 10 Dagster assets

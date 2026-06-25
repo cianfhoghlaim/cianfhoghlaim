@@ -65,9 +65,9 @@ openspec change)
 
 ### 3. Refactor: 4 quadrant deploy quartets → `infrastructure/stacks/<quadrant>/`
 
-- Move `meaisinfhoghlaim/{compose.yaml, sidecar.yaml, blueprint.yaml, secrets.env}` → `infrastructure/stacks/meaisinfoghlaim/` (4 files, ~120 LOC)
-- Move `tuatha/{pangolin.yaml, docker-compose.yaml, compose.dev.yaml}` → `infrastructure/stacks/tuatha/` (3 files, ~250 LOC)
-- Move `croilar/{compose.yaml, compose.dev.yaml, sidecar.yaml, secrets.env, Dockerfile.dagster}` → `infrastructure/stacks/croilar/` (5 files, ~250 LOC)
+- Move `sruth/meaisinfhoghlaim/{compose.yaml, sidecar.yaml, blueprint.yaml, secrets.env}` → `infrastructure/stacks/meaisinfoghlaim/` (4 files, ~120 LOC)
+- Move `sruth/tuatha/{pangolin.yaml, docker-compose.yaml, compose.dev.yaml}` → `infrastructure/stacks/sruth/tuatha/` (3 files, ~250 LOC)
+- Move `sruth/croilar/{compose.yaml, compose.dev.yaml, sidecar.yaml, secrets.env, Dockerfile.dagster}` → `infrastructure/stacks/sruth/croilar/` (5 files, ~250 LOC)
 - All moves preserve the originals as thin re-export shims (per the established 6-phase refactor pattern)
 
 ### 4. Refactor: delete 5 legacy `.ts` files

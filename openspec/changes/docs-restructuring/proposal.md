@@ -4,7 +4,7 @@
 
 The `docs/` tree grew organically across 8 subtrees (`agents/`, `bonneagar/`,
 `context/`, `data_engineering/`, `meaisínfhoghlaim/`, `teanga/`, `web/`,
-`tuatha/`) with 1,038 files totalling 49.7 MiB. This created three concrete
+`sruth/tuatha/`) with 1,038 files totalling 49.7 MiB. This created three concrete
 problems:
 
 1. **Discoverability** — agents and humans could not route a question like
@@ -42,7 +42,7 @@ problems:
   so the mise-hydrated key is picked up at subprocess launch.
 - **Remove** the 8 old subtree directories (`agents/`, `bonneagar/`,
   `context/`, `data_engineering/`, `meaisínfhoghlaim/`, `teanga/`, `web/`,
-  `tuatha/`) and the 116-file nested `tuatha/tuatha/` mirror.
+  `sruth/tuatha/`) and the 116-file nested `sruth/tuatha/sruth/tuatha/` mirror.
 
 ## Impact
 
