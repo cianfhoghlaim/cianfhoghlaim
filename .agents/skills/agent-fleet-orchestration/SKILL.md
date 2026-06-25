@@ -1,6 +1,6 @@
 ---
 name: agent-fleet-orchestration
-description: The KCG 12-agent fleet orchestration pattern in `sruth/meaisinfhoghlaim/agents/`. Covers the 5 frameworks (Custom/ADK/Agno/Pipecat/CopilotKit), the 12 specialist agents (root, curriculum, translation, corpus, research, education_research, bunchloch_research, geospatial, statistics, curriculum_comparison, agui_curriculum, mcp_curriculum), the LiteLLM routing keyword map, the Letta memory layer, the RisingWave event streaming layer, the Langfuse + MLflow observability stack, the cross-quadrant observability contract, and the canonical add-a-new-agent workflow. Use when adding a new agent to the fleet, debugging a routing keyword misclassification, wiring Langfuse traces, integrating with the Letta memory layer, or understanding the cross-quadrant observability contract.
+description: The KCG 12-agent fleet orchestration pattern in `sruth/meaisinfhoghlaim/agents/`. Covers the 5 frameworks (Custom/ADK/Agno/Pipecat/CopilotKit), the 12 specialist agents (root, curriculum, translation, corpus, research, education_research, bunchloch_research, geospatial, statistics, curriculum_comparison, agui_curriculum, mcp_curriculum), the LiteLLM routing keyword map, the Letta memory layer, the RisingWave event streaming layer, the Langfuse + MLflow observability stack, the cross-quadrant observability contract, the OpenClaw channel-fanout gateway (the inbound surface from WebChat + Telegram + Slack + Discord + WhatsApp + Teams), and the canonical add-a-new-agent workflow. Use when adding a new agent to the fleet, debugging a routing keyword misclassification, wiring Langfuse traces, integrating with the Letta memory layer, or understanding the cross-quadrant observability contract.
 ---
 
 # Agent Fleet Orchestration
@@ -82,6 +82,53 @@ user query and routes to one of the 12 agents. The keyword map:
 | `default` | (no keyword match) → `root_agent` itself |
 
 The 12-bucket map is in `sruth/meaisinfhoghlaim/agents/root_agent.py:ROUTING_KEYWORDS`.
+
+## The OpenClaw channel-fanout gateway (the inbound surface)
+
+OpenClaw (the `infrastructure/stacks/openclaw/` stack at
+`openclaw.cianfhoghlaim.ie:18789`) sits **inbound** to the fleet —
+it is the channel-fanout gateway that delivers user messages from
+6 external channels into the 12-agent fleet:
+
+| Channel | Protocol | Default routing (configurable in `openclaw.json`) |
+|:--|:--|:--|
+| WebChat | HTTP POST `/api/messages` | `curriculum_agent` (the canonical default) |
+| Telegram | Bot API long-poll | `curriculum_agent` |
+| Slack | Events API + Socket Mode | `research_agent` |
+| Discord | Discord Gateway | `mythology_narrator` (Tuatha-side) |
+| WhatsApp | WhatsApp Business Cloud API webhook | `curriculum_agent` |
+| Microsoft Teams | Bot Framework (port 3978) | `research_agent` |
+
+OpenClaw's 3-layer auth:
+
+1. **Pangolin Traefik middleware** (`tinyauth` + `secure-headers`)
+   on `openclaw.cianfhoghlaim.ie` — Pocket ID OIDC
+2. **Per-channel `allow_from` ACLs** in `openclaw.json`
+   (empty by default → all senders must pair)
+3. **DM policy `pairing`** — each new sender must be approved via
+   `POST /api/pairing/approve` with the `OPENCLAW_GATEWAY_TOKEN`
+
+OpenClaw v1 uses the **OpenCode Go single-key** LLM provider
+chain (not LiteLLM); LiteLLM is a documented future-path triggered
+by an env-flag swap. The v1 LLM chain is:
+
+```
+primary:  OpenCode Go gateway (https://opencode.ai/zen/go/v1) — single OPENCODE_GO_API_KEY
+fallback: minimax-coding-plan/minimax-m3 — MINIMAX_API_KEY
+```
+
+OpenClaw's trace contract:
+
+- **Langfuse** at `langfuse.cianfhoghlaim.ie:3000` via
+  OTLP/HTTP (`OTEL_EXPORTER_OTLP_ENDPOINT`), with
+  `service.name=openclaw-gateway` and a `channel=<name>` span attribute
+- **LiteLLM** is NOT yet wired (in-flight openspec change
+  `litellm-minimax-vendor-derisking`); once that lands, swap
+  OpenClaw's provider to `litellm.cianfhoghlaim.ie:4000` via an
+  env-var override
+
+The full contract is in
+`openspec/changes/add-openclaw-stack-and-channel-fanout/specs/meaisinfhoghlaim-agent-frameworks/spec.md`.
 
 ## The Letta memory layer (the cross-agent state)
 
@@ -192,8 +239,11 @@ The contract is documented in
 - `.agents/skills/agentic-frontend-frameworks/SKILL.md` — the AG-UI + CopilotKit consumer
 - `.agents/skills/agent-observability/SKILL.md` — the Langfuse + MLflow + RAGAS + Logfire + Datadog stack
 - `.agents/skills/agent-memory-systems/SKILL.md` — the Letta + Graphiti + Cognee + LanceDB + FalkorDB memory stack
+- `.agents/skills/infrastructure-stacks/SKILL.md` — the openclaw stack (6-file GOLD_STANDARD + arm1-oci deploy)
 - `sruth/meaisinfhoghlaim/agents/__init__.py` — the 12-agent registry
 - `sruth/meaisinfhoghlaim/agents/root_agent.py` — the query router + LiteLLM
 - `sruth/meaisinfhoghlaim/agents/letta_client.py` — the Letta memory layer
 - `sruth/meaisinfhoghlaim/agents/risingwave_publisher.py` — the RisingWave event stream
 - `sruth/meaisinfhoghlaim/agents/_shared/observability/tracing.py` — the Langfuse + MLflow traces
+- `infrastructure/stacks/openclaw/config/openclaw.json` — the channel + routing config
+- `infrastructure/komodo/procedures/deploy-openclaw-arm1-oci.toml` — the 5-stage arm1-oci deploy
