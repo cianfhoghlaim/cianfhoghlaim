@@ -370,7 +370,7 @@ project's design choices and are recorded under
 The author's lineage is the **triple-crown** union of four
 kindreds of Connacht and Munster:
 
-1. **Deacy** (paternal surname; Irish *Uí Dhéisigh*) — the
+1. **Deacy** (maternal surname; Irish *Uí Dhéisigh*) — the
    sept of the [Déisi Muman](https://en.wikipedia.org/wiki/D%C3%89isi)
    resettled in south Connacht (Co. Galway) during the 12th
    century; the family gave their name to the late
@@ -398,7 +398,7 @@ The author is the grandson and godson of the late **Neil
 Deacy**, the late brother of the late **Éamonn Deacy** — the
 Galwegian footballer who played for Galway United, Aston Villa
 FC, and the Republic of Ireland. Neil and Éamonn were the sons
-of **Martina Morris** and **Michael Deacy**, who was himself
+of **Christina Morris** and **Michael Deacy**, who was himself
 the son of **Polly Conroy** and **George Deacy**.
 
 The author was the primary palliative carer of the late Neil
