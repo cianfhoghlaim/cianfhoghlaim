@@ -666,3 +666,35 @@ The new `LiteLLMTranscriber` wraps any LiteLLM-backed STT provider (e.g. `whispe
 - Clean cancellation through task spawn boundaries
 
 For the full changelog, see <https://cocoindex.io/blogs/changelog-101-107/>.
+
+### 2026-06-25 update (CocoIndex v1.0.7 + the `upstream-package-monitoring` skill)
+
+- **`cocoindex_v1_conformance` App** — the 14th v1 App in the KCG
+  oideachais tree (`sruth/oideachais/cocoindex_flows/cocoindex_v1_conformance.py`).
+  It's a static AST linter that checks every other v1 App against
+  the 4-rule conformance contract:
+  - **R1** — `from ._lifespan import shared_lifespan` (delegates to
+    the canonical shared lifespan).
+  - **R2** — Either imports the canonical ContextKeys from `._lifespan`,
+    OR declares additional ones with a sibling `# R2-exempt: <reason>`
+    comment.
+  - **R3** — `coco.App(...)` is at module scope (NOT inside a function
+    body).
+  - **R4** — At least one `@coco.fn(` decorator.
+  Run via `mise run upstream:conformance`. See the
+  `oideachais-cocoindex-v1` skill for the full 14-App registry.
+- **`upstream_api_surface` App** — the 15th v1 App
+  (`sruth/oideachais/cocoindex_flows/upstream_api_surface.py`). Watches
+  the 5 canonical cocoindex docs URLs + `llms-full.txt` and BAML-extracts
+  `ApiChange` records via `ExtractCocoIndexApiChange`. See
+  `openspec/changes/upstream-package-monitoring/proposal.md`.
+- **`upstream_blog_monitor` App** — the 16th v1 App
+  (`sruth/oideachais/cocoindex_flows/upstream_blog_monitor.py`).
+  Reads Firecrawl-monitor payloads from
+  `s3://oideachais-upstream-webhooks/<package>/...`, BAML-extracts
+  `BlogPostMetadata` via `ExtractBlogPostMetadata`, embeds chunks, and
+  writes `BlogPostNode` + `PackageNode` + `PUBLISHED_BY` edges to the
+  `upstream_packages_graph` FalkorDB graph.
+- **FalkorDB connector** — used by both new Apps above. Connect via
+  `falkordb.mount_table_target(KG_DB, "<NodeName>", ...)` where
+  `KG_DB` is `coco.ContextKey[falkordb.ConnectionFactory]`.

@@ -281,6 +281,29 @@ New references (added by the `sync-skills-from-docs` change):
 ## 7. Examples
 
 See [`./examples/`](./examples/) for upstream dlt reference
+
+## 2026-06 updates (from the `upstream-package-monitoring` openspec change)
+
+- **dltHub Pro** launched 2026-04-14. The Pro tier adds 9,700+ known
+  source contexts that DLT can pull from in one call. The KCG dev
+  plan is tracked by `openspec/changes/dlt-pro-source-registry/`.
+- **Cortex Code** (Snowflake's AI assistant, launched ~9 weeks before
+  dltHub Pro) integrates directly with the dlt Pro source registry.
+- **ADE-Bench** (the AI data-engineer benchmark) reported 65% task
+  success on Snowflake via Cortex Code vs 58% for Claude Code. The
+  paper's key finding: **"without the workbench, the agent leaked
+  credentials"** — directly validates KCG's strict-secret-hydration
+  mandate (see `docs/secrets/secrets_management_plan.md` for the
+  Infisical + Locket + mise three-way contract).
+- **dlthub upstream monitor** — `dlthub_blog.yml` in
+  `infrastructure/firecrawl/monitors/upstream_packages/` is the
+  Firecrawl monitor that detects new source-context additions,
+  ADE-Bench results, and Cortex Code integration updates via the
+  LLM-judge `--goal` filter. The n8n workflow
+  `infrastructure/stacks/n8n/workflows/upstream-blog-monitor.json`
+  writes the payload to
+  `s3://oideachais-upstream-webhooks/dlthub/...jsonl` and triggers
+  the Dagster asset `upstream_blog_monitor_ingest`.
 notebooks:
 
 - `data_engineering_dlt_small-data-sf-2025_elvis.ipynb` — Dremio

@@ -161,3 +161,32 @@ See [`docs/teanga/motherduck_mcp.md`](../../../docs/teanga/motherduck_mcp.md)
 for the full 457-line reference including all transport
 modes, the SaaS-mode security model, and the
 data-sharing semantics.
+
+## 2026-06 updates (from the `upstream-package-monitoring` openspec change)
+
+- **DuckLake 1.0** launched 2026-04-16 on MotherDuck. The KCG
+  production lakehouse (`sruth/oideachais/`) uses DuckLake 1.0. New
+  features in 1.0:
+  - **Data inlining** — also applies to updates and deletes (not
+    just inserts), so small DuckLake tables can live entirely on the
+    catalog.
+  - **Data clustering** — 10× faster reads on clustered tables via
+    the new `set_sorted_by` helper in
+    `sruth/oideachais/dlt_utils/ducklake_options.py`.
+  - **Bucket partitioning** — new `set_bucket_partition` helper for
+    multi-tenant workloads where row counts vary by 10× across
+    partitions.
+  - **Geometry + variant types** — DuckLake 1.0 adds first-class
+    support for the `GEOMETRY` and `VARIANT` types, useful for the
+    geospatial assets in
+    `sruth/oideachais/dagster_defs/assets/geospatial_assets.py`.
+- **3 hosting options** — fully managed (MotherDuck SaaS, default
+  for KCG dev), BYOB (your own Garage S3 bucket, default for KCG
+  production per `sruth/oideachais/dlt_utils/motherduck_options.py:byob_destination`),
+  and BYOC (your own compute + your own bucket — for regulated
+  workloads).
+- **MotherDuck upstream monitor** — `motherduck_blog.yml` in
+  `infrastructure/firecrawl/monitors/upstream_packages/` is the
+  Firecrawl monitor that detects DuckLake / BYOB / Cortex Code
+  releases via the LLM-judge `--goal` filter. See the
+  `change-detection` skill (Layer 4) for the architecture.

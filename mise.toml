@@ -333,6 +333,29 @@ run = "uv run cocoindex update sruth.oideachais.cocoindex_flows.docs_skills_cons
 description = "Run the docs_skills_consolidation CocoIndex v1 App in live mode (-L)"
 run = "uv run cocoindex update -L sruth.oideachais.cocoindex_flows.docs_skills_consolidation:DocsSkillsConsolidation"
 
+# ---------------------------------------------------------------------------
+# Upstream package monitoring (Firecrawl monitors for motherduck / dlthub /
+# lancedb / cocoindex blogs → DLT incremental source → 3 v1 CocoIndex Apps +
+# 4-rule conformance linter). See
+# openspec/changes/upstream-package-monitoring/proposal.md.
+# ---------------------------------------------------------------------------
+
+[tasks."upstream:blog"]
+description = "Run the upstream_blog_monitor v1 CocoIndex App (reprocess all n8n-written Firecrawl payloads)"
+run = "uv run cocoindex update sruth.oideachais.cocoindex_flows.upstream_blog_monitor:UpstreamBlogMonitor"
+
+[tasks."upstream:blog:live"]
+description = "Run the upstream_blog_monitor v1 CocoIndex App in live mode (-L) — picks up new payloads as they arrive in S3"
+run = "uv run cocoindex update -L sruth.oideachais.cocoindex_flows.upstream_blog_monitor:UpstreamBlogMonitor"
+
+[tasks."upstream:conformance"]
+description = "Run the cocoindex_v1_conformance App to lint all 14 v1 Apps against the 4-rule conformance contract"
+run = "uv run python -c 'import asyncio; from sruth.oideachais.cocoindex_flows.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary()); import sys; sys.exit(0 if report.all_passed else 1)'"
+
+[tasks."upstream:api-surface"]
+description = "Run the upstream_api_surface v1 CocoIndex App (walks 5 cocoindex docs URLs + llms-full.txt)"
+run = "uv run cocoindex update sruth.oideachais.cocoindex_flows.upstream_api_surface:UpstreamApiSurface"
+
 [tasks."baml:generate"]
 description = "Regenerate the baml_client/ Python module from baml_src/ (required after editing any *.baml file)"
 run = "uv run baml-cli generate"

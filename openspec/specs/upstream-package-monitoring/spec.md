@@ -25,7 +25,7 @@ platform. The corresponding source code lives at:
 - `infrastructure/firecrawl/monitors/upstream_packages/*.yml` —
   4 Firecrawl monitor configs (motherduck / dlthub / lancedb /
   cocoindex)
-- `engineering/n8n/workflows/upstream-blog-monitor.json` — n8n
+- `infrastructure/stacks/n8n/workflows/upstream-blog-monitor.json` — n8n
   workflow that bridges Firecrawl webhook → DLT → Dagster
 
 See `docs/00_index.md` for the quadrant map and

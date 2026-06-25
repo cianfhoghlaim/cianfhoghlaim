@@ -137,6 +137,11 @@ tree is the verbatim upstream.
   6-file pattern (the way the mirrors are dockerised).
 - `.agents/skills/better-auth/SKILL.md` — the SIWE auth
   pattern (covered by the `better-auth-siwe` clipping).
+- `.agents/skills/change-detection/SKILL.md` — Layer 4 (the
+  Firecrawl monitor layer, added 2026-06) is the upstream-drift
+  detection mechanism for 4 of the KCG-mirrored packages
+  (motherduck, dlthub, lancedb, cocoindex). The 4 monitors live
+  in `infrastructure/firecrawl/monitors/upstream_packages/`.
 - `.agents/skills/celtic-language-ai/SKILL.md` — the
   AnyLanguageModel mirror's role in the Celtic LLM stack.
 - `.agents/skills/tuatha-mmo/SKILL.md` — the consumer of the

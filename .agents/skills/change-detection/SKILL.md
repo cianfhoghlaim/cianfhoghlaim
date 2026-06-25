@@ -1,6 +1,6 @@
 ---
 name: change-detection
-description: How the Cianfhoghlaim platform detects upstream changes for sruth/oideachais/sources.yaml. Use when writing a DLT source that needs to re-run on upstream change, wiring a Dagster sensor, or configuring ChangeDetection.io on `arm1-oci`. Covers the 3-layer pattern: DLT incremental cursor + Dagster sitemap-hash sensor + ChangeDetection.io.
+description: How the Cianfhoghlaim platform detects upstream changes for sruth/oideachais/sources.yaml. Use when writing a DLT source that needs to re-run on upstream change, wiring a Dagster sensor, or configuring ChangeDetection.io on `arm1-oci`. Covers the 4-layer pattern: DLT incremental cursor + Dagster sitemap-hash sensor + ChangeDetection.io + Firecrawl monitor (the 4th layer, added 2026-06 for blog/changelog-without-sitemap surfaces via openspec/changes/upstream-package-monitoring).
 ---
 
 # Change Detection
@@ -13,12 +13,13 @@ Use when you need to:
 - "Wire a DLT source to re-run only when content changes"
 - "Add a Dagster sensor that polls a sitemap"
 - "Configure ChangeDetection.io on `arm1-oci`"
+- "Detect when motherduck / dlthub / lancedb / cocoindex publish a new blog post"
 - "Avoid the anti-pattern of polling every source every minute"
 
-## The 3-layer pattern
+## The 4-layer pattern
 
-The Cianfhoghlaim platform detects upstream changes in 3
-complementary layers. **All three are running simultaneously**;
+The Cianfhoghlaim platform detects upstream changes in 4
+complementary layers. **All four are running simultaneously**;
 each one is appropriate for a different class of source.
 
 ```
@@ -36,7 +37,70 @@ each one is appropriate for a different class of source.
 │  Layer 3: ChangeDetection.io (on arm1-oci, self-hosted)      │
 │  → for HTML pages without a sitemap; visual diff             │
 └─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│  Layer 4: Firecrawl monitor (NEW 2026-06)                     │
+│  → for blog / changelog / docs surfaces without sitemaps,     │
+│    using the Firecrawl LLM-judge to filter meaningful change  │
+│    → powers sruth/oideachais/dlt_sources/domains/cross/       │
+│      upstream/blog_post.py + the 3 v1 CocoIndex Apps          │
+│      (upstream_blog_monitor, upstream_api_surface,            │
+│       cocoindex_v1_conformance). See                          │
+│      openspec/changes/upstream-package-monitoring.             │
+└─────────────────────────────────────────────────────────────┘
 ```
+
+## Layer 4 — Firecrawl monitor (NEW 2026-06)
+
+Added by `openspec/changes/upstream-package-monitoring` for blog /
+changelog / docs surfaces that don't publish a `sitemap.xml` and
+where ChangeDetection.io's HTML diff is too noisy (lots of marketing
+copy edits that don't matter). The Firecrawl monitor uses an LLM
+judge (`--goal`) to filter meaningful change from noise.
+
+### Canonical recipe
+
+```bash
+# Apply a monitor (one-time):
+firecrawl monitor apply \
+  --page https://motherduck.com/blog/ \
+  --goal "Alert on DuckLake / BYOB / Cortex Code changes; ignore marketing noise" \
+  --schedule "every 30 minutes" \
+  --webhook-url "https://n8n.cianfhoghlaim.ie/webhook/upstream-blog?package=motherduck" \
+  --retention-days 90
+```
+
+The 4 active monitors (canonical YAML in
+`infrastructure/firecrawl/monitors/upstream_packages/`):
+
+| File | Package | Goal focus |
+|:--|:--|:--|
+| `motherduck_blog.yml` | motherduck | DuckLake releases, BYOB / BYOC hosting, Cortex Code updates |
+| `dlthub_blog.yml` | dlthub | Source-context additions, ADE-Bench, Cortex Code integration |
+| `lancedb_blog.yml` | lancedb | Lance Format v2.x, Lance Blob V2, multimodal, Namespace |
+| `cocoindex_docs.yml` | cocoindex | API-surface changes (coco.App, @coco.fn, FalkorDB connector) |
+
+Each monitor's webhook → n8n workflow
+`infrastructure/stacks/n8n/workflows/upstream-blog-monitor.json`
+(which validates the payload + writes to
+`s3://oideachais-upstream-webhooks/<package>/<YYYY-MM-DD>/...jsonl`)
+→ DLT incremental source `dlt_sources.domains.cross.upstream.blog_post`
+→ CocoIndex v1 App `upstream_blog_monitor` (BAML `ExtractBlogPostMetadata` +
+FalkorDB `BlogPostNode` + `PackageNode` + `PUBLISHED_BY` edges) →
+Dagster asset `upstream_blog_monitor_ingest`.
+
+For cocoindex docs (not a blog — a docs surface), the dedicated
+`upstream_api_surface` CocoIndex v1 App watches 5 URLs + `llms-full.txt`,
+BAML-extracts `ApiChange` records via `ExtractCocoIndexApiChange`, and
+writes `ApiChangeNode` + `AFFECTS_APP` edges to the
+`upstream_packages_graph` FalkorDB graph. The
+`upstream_breaking_change_sensor` (5-min poll) fires Slack alerts to
+`#upstream-breaking-changes` when a `change_severity=high` +
+`is_breaking=true` change goes unacknowledged.
+
+**Pair this skill with**: the `firecrawl-cli` skill (for the `firecrawl
+monitor` CLI recipe) and the `oideachais-cocoindex-v1` skill (for the
+3 v1 Apps that consume the payloads).
 
 ## Layer 1 — DLT `incremental` cursor
 
