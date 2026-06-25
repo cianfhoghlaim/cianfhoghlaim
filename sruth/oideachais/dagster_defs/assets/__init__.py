@@ -158,6 +158,21 @@ from .llm_gateway_assets import (
     minimax_alias_liveliness,
 )
 
+# Upstream package monitoring (Firecrawl monitors for motherduck /
+# dlthub / lancedb / cocoindex blogs → DLT incremental source → 3 v1
+# CocoIndex Apps + 4-rule conformance linter). See
+# openspec/changes/upstream-package-monitoring/proposal.md.
+from .upstream_monitoring_assets import (
+    cocoindex_v1_conformance_check,
+    upstream_api_surface_publish,
+    upstream_blog_chunk_and_tag,
+    upstream_blog_graph_publish,
+    upstream_blog_monitor_ingest,
+    upstream_breaking_change_sensor,
+    upstream_monitoring_assets,
+    upstream_monitoring_job,
+)
+
 # OCR comparison assets
 ocr_comparison_assets = [
     ocr_source_documents,
@@ -210,6 +225,15 @@ all_assets = [
     author_archive_kg_summary,
     # LLM gateway health (vendor-de-risking for MiniMax-M3)
     minimax_alias_liveliness,
+    # Upstream package monitoring (Firecrawl monitors for motherduck /
+    # dlthub / lancedb / cocoindex blogs → DLT incremental source →
+    # CocoIndex v1 Apps + 4-rule conformance linter). See
+    # openspec/changes/upstream-package-monitoring/proposal.md.
+    upstream_blog_monitor_ingest,
+    upstream_blog_chunk_and_tag,
+    upstream_blog_graph_publish,
+    cocoindex_v1_conformance_check,
+    upstream_api_surface_publish,
 ]
 if _UOG_ASSETS_AVAILABLE:
     all_assets += [
@@ -315,4 +339,13 @@ __all__ = [
     "UnifiedAudioConfig",
     "EdcoLearningExtractionConfig",
     "SECTranscriptConfig",
+    # Upstream package monitoring exports
+    "upstream_monitoring_assets",
+    "upstream_monitoring_job",
+    "upstream_blog_monitor_ingest",
+    "upstream_blog_chunk_and_tag",
+    "upstream_blog_graph_publish",
+    "upstream_api_surface_publish",
+    "cocoindex_v1_conformance_check",
+    "upstream_breaking_change_sensor",
 ]

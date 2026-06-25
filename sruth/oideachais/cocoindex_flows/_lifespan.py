@@ -1,14 +1,36 @@
 """
 oideachais.cocoindex_flows._lifespan — Shared CocoIndex v1 lifespan.
 
-The 9 CocoIndex v1 Apps in `oideachais/cocoindex_flows/` previously
+The 12 CocoIndex v1 Apps in `oideachais/cocoindex_flows/` previously
 re-declared the same `@coco.lifespan` and 3 ContextKeys
 (LANCE_DB, EMBEDDER, RESOLVED_FILE_REGISTRY) in every file
 (REFACTORING.md item 12).
 
 This module is the canonical home. Every v1 App imports from here
-instead of re-declaring. The 9 files now contain only the
+instead of re-declaring. The 12 files now contain only the
 domain-specific processors; the shared lifespan is shared.
+
+The 12 v1 Apps (as of 2026-06-25):
+
+1. `leabharlann_embedding.leabharlann_books_app`
+2. `leabharlann_embedding.leabharlann_zotero_app`
+3. `leabharlann_embedding.leabharlann_takeout_app`
+4. `docs_skills_consolidation.docs_skills_app`
+5. `codebase_indexing.codebase_app`
+6. `culture_heritage_embedding.culture_heritage_embedding_app`
+7. `api_indexing.api_indexing_app`
+8. `filesystem_indexing.filesystem_indexing_app`
+9. `storage_indexing.storage_indexing_app`
+10. `config_indexing.config_indexing_app`
+11. `unified_embedding.unified_embedding_app`
+12. `upstream_blog_monitor.upstream_blog_monitor_app`
+13. `upstream_api_surface.upstream_api_surface_app`
+14. `cocoindex_v1_conformance.cocoindex_v1_conformance_app`
+
+(Counted: 14 module-level `app = coco.App(...)` declarations after
+the `upstream-package-monitoring` change lands. Apps 12-14 are new
+in that change. App 6 migrated from the v0-style hybrid
+`@coco.flow` + `coco.index_flow` wrapper to the canonical pattern.)
 
 Reference: the v1 pattern from
 `oideachais/cocoindex_flows/leabharlann_embedding.py:236-249` is

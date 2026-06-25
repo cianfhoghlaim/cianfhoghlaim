@@ -657,6 +657,28 @@ use the rclone-sidecar Compose pattern (see
 - **Examples**: https://github.com/lancedb/vectordb-recipes
 - **Blog**: https://blog.lancedb.com/
 
+## 2026-06 updates (from the `upstream-package-monitoring` openspec change)
+
+- **Lance Format v2.2** — 50%+ storage reduction vs Parquet; 68× faster
+  blob reads. The KCG migration to format v2.2 is tracked by
+  `openspec/changes/lancedb-format-v22-migration/`.
+- **Lance Blob V2** — 4 storage modes: Inline / Packed / Dedicated /
+  External. KCG recommends **Packed** for leabharlann assets (where
+  blobs are <1 MB) and **Dedicated** for upstream blog payloads
+  (where blobs can be >10 MB).
+- **LanceDB embedder model note** — the value actually exported by
+  `sruth/oideachais/cocoindex_flows/_lifespan.py:70` is
+  `BAAI/bge-large-en-v1.5` (English-only, 1024-dim), NOT `BAAI/bge-m3`
+  as some CocoIndex v1 App docstrings claim. Both are 1024-dim so the
+  discrepancy is latent. Apps whose docstrings claim `bge-m3` will be
+  corrected in a follow-up openspec change.
+- **LanceDB upstream monitor** — `lancedb_blog.yml` in
+  `infrastructure/firecrawl/monitors/upstream_packages/` is the
+  Firecrawl monitor that detects Lance Format / Lance Blob / multimodal
+  / Lance Namespace releases via the LLM-judge `--goal` filter.
+  See the `oideachais-cocoindex-v1` skill for the 14 v1 CocoIndex Apps
+  that consume these updates.
+
 ## Examples
 
 See [`./examples/`](./examples/) for upstream LanceDB reference

@@ -102,20 +102,42 @@ DEFAULT_SKILLS_ROOT = pathlib.Path(
 
 
 # =============================================================================
-# Context keys (per the v1 best practice)
+# Context keys — imported from the canonical shared lifespan
+# (`oideachais/cocoindex_flows/_lifespan.py`). Per REFACTORING.md
+# item 12, every v1 App delegates to `shared_lifespan` rather than
+# re-declaring `LANCE_DB` / `EMBEDDER` / `RESOLVED_FILE_REGISTRY`.
+# The previous `docs_skills_lance_db` + `docs_skills_embedder`
+# ContextKeys were renamed to the canonical names for the v1
+# conformance check (R2).
+#
+# `KG_DB` is App-specific (this App uses the `docs_skills_graph`
+# FalkorDB graph) and is declared below with an exemption comment.
 # =============================================================================
 
 
+from ._lifespan import (  # noqa: E402
+    EMBEDDER,  # noqa: F401 — re-exported for back-compat
+    LANCE_DB,  # noqa: F401 — re-exported for back-compat
+    LANCEDB_URI as _SHARED_LANCEDB_URI,
+    EMBED_MODEL as _SHARED_EMBED_MODEL,
+    EMBED_DIM as _SHARED_EMBED_DIM,
+    RESOLVED_FILE_REGISTRY,  # noqa: F401 — re-exported for back-compat
+    shared_lifespan,
+)
+
+
 if COCOINDEX_AVAILABLE:
-    LANCE_DB: Any = coco.ContextKey[lancedb.LanceAsyncConnection]("docs_skills_lance_db")
-    KG_DB: Any = coco.ContextKey[falkordb.ConnectionFactory]("docs_skills_kg_db")
-    EMBEDDER: Any = coco.ContextKey[SentenceTransformerEmbedder](
-        "docs_skills_embedder", detect_change=True
+    # R2-exempt: KG_DB is bound to the `docs_skills_graph` FalkorDB
+    # graph, which is App-specific (this App declares
+    # `DocSkillNode` + `ConceptNode` + `ConsolidationGroupNode`
+    # schemas that only this App uses). Sharing it across Apps
+    # would couple the docs-skills surface to the upstream-monitor
+    # surface; keeping it scoped here preserves the modularity.
+    KG_DB: Any = coco.ContextKey[falkordb.ConnectionFactory](  # type: ignore[valid-type]
+        "docs_skills_kg_db"
     )
 else:
-    LANCE_DB = None  # type: ignore[assignment]
     KG_DB = None  # type: ignore[assignment]
-    EMBEDDER = None  # type: ignore[assignment]
 
 
 # =============================================================================
@@ -136,7 +158,7 @@ class DocSkillChunk:
     chunk_text: str
     chunk_start: int
     chunk_end: int
-    embedding: Annotated[Any, EMBEDDER] if COCOINDEX_AVAILABLE else Any  # type: ignore[index]
+    embedding: Annotated[Any, EMBEDDER] if COCOINDEX_AVAILABLE else Any  # type: ignore[valid-type]
 
 
 @dataclass
@@ -385,24 +407,19 @@ def _make_app():
     async def docs_skills_lifespan(  # type: ignore[no-redef]
         builder: coco.EnvironmentBuilder,  # type: ignore[valid-type]
     ) -> AsyncIterator[None]:
-        from cocoindex.connectors.lancedb import (
-            LanceAsyncConnection,  # type: ignore[import-not-found]
-        )
-
-        lance_conn = await LanceAsyncConnection.connect(LANCEDB_URI)
-        builder.provide(LANCE_DB, lance_conn)
-        builder.provide(
-            KG_DB,
-            falkordb.ConnectionFactory(  # type: ignore[call-arg]
-                uri=FALKORDB_URI,
-                graph=FALKORDB_GRAPH,
-            ),
-        )
-        builder.provide(
-            EMBEDDER,
-            SentenceTransformerEmbedder(EMBED_MODEL),
-        )
-        yield
+        # Delegate to the shared lifespan (REFACTORING.md item 12).
+        # The shared lifespan provides LANCE_DB + EMBEDDER +
+        # RESOLVED_FILE_REGISTRY; this App only adds the App-specific
+        # KG_DB (the `docs_skills_graph` FalkorDB graph).
+        async with shared_lifespan(builder):  # type: ignore[arg-type]
+            builder.provide(
+                KG_DB,
+                falkordb.ConnectionFactory(  # type: ignore[call-arg]
+                    uri=FALKORDB_URI,
+                    graph=FALKORDB_GRAPH,
+                ),
+            )
+            yield
 
     @coco.fn
     async def docs_skills_app_main(  # type: ignore[no-redef]

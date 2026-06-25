@@ -300,7 +300,7 @@
 ## 12. n8n workflow
 
 - [ ] 12.1 Create
-  `engineering/n8n/workflows/upstream-blog-monitor.json` with:
+  `infrastructure/stacks/n8n/workflows/upstream-blog-monitor.json` with:
   - [ ] 12.1.1 A `Webhook` node bound to
     `/webhook/upstream-blog` (path),
     `POST` (method), with query-param `package` filter
@@ -319,7 +319,7 @@
     `upstream_blog_monitor_ingest` asset, partitioned by
     `published_at` (daily).
 - [ ] 12.2 Import the workflow via
-  `n8n import:workflow --input=engineering/n8n/workflows/upstream-blog-monitor.json`
+  `n8n import:workflow --input=infrastructure/stacks/n8n/workflows/upstream-blog-monitor.json`
   on the `n8n-init` one-shot container per
   `infrastructure/AGENTS.md`.
 

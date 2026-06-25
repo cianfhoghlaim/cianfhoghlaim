@@ -134,6 +134,42 @@ firecrawl monitor delete <monitorId>
 
 Schedules accept cron (`--cron "*/5 * * * *"`) or natural language (`--schedule "every 5 minutes"`). Minimum interval is 5 minutes. Targets are `--page <url>` for one page, `--scrape-urls a,b,c` for multiple scrape URLs, or `--crawl-url <url>` for a whole-site crawl each check. Use `--goal` for flag-based monitor creation, or include `"goal": "..."` in JSON payloads. Note: `--state` (not `--status`) sets active/paused; `--page-status` (not `--status`) filters page results on `check` — avoids collision with the global `--status` flag. Monitoring is not available for zero-data-retention teams.
 
+## KCG upstream-package-monitoring use case (NEW 2026-06)
+
+The `openspec/changes/upstream-package-monitoring` change uses 4
+Firecrawl monitors (canonical YAML in
+`infrastructure/firecrawl/monitors/upstream_packages/`) to detect
+product changes at motherduck / dlthub / lancedb / cocoindex. The
+canonical pattern is:
+
+1. **YAML config in `infrastructure/firecrawl/monitors/upstream_packages/`** —
+   one YAML per package, with `schedule.text: "every 30 minutes"`,
+   `judgeEnabled: true`, `retentionDays: 90`, and a `notification.webhook`
+   pointing at `https://n8n.cianfhoghlaim.ie/webhook/upstream-blog?package=<name>`.
+
+2. **`--goal` text** that filters meaningful change (DuckLake
+   releases, BYOB hosting, Cortex Code updates, Lance Format v2.x,
+   cocoindex API-surface changes) from marketing noise (customer
+   stories, G2 badges, generic event announcements).
+
+3. **Webhook → n8n workflow** at
+   `infrastructure/stacks/n8n/workflows/upstream-blog-monitor.json`
+   which validates the payload, writes JSONL to
+   `s3://oideachais-upstream-webhooks/<package>/<YYYY-MM-DD>/...jsonl`,
+   and triggers the Dagster asset `upstream_blog_monitor_ingest`.
+
+Apply a monitor via:
+
+```bash
+firecrawl monitor apply infrastructure/firecrawl/monitors/upstream_packages/motherduck_blog.yml
+```
+
+Or via the MCP `firecrawl_monitor_create` tool with the same payload.
+
+Pair this skill with the `change-detection` skill (Layer 4 is the
+Firecrawl-monitor layer) and the `oideachais-cocoindex-v1` skill (the
+3 v1 Apps that consume the payloads).
+
 **JSON-mode change tracking:** By default monitors diff each page's markdown and you get a unified text diff back. When you care about **specific structured fields** (price, headline, in-stock flag, items in a list) instead of the whole page, add a `changeTracking` format with `modes: ["json"]` and a JSON schema to the target's `scrapeOptions.formats`. The flag-based form doesn't cover this — pass a JSON body via file or stdin:
 
 ```bash

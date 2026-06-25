@@ -219,18 +219,25 @@ def detect_language_for_path(file_path: str) -> str | None:
 
 
 # =============================================================================
-# Context keys
+# Context keys — imported from the canonical shared lifespan
+# (`oideachais/cocoindex_flows/_lifespan.py`). Per REFACTORING.md
+# item 12, every v1 App delegates to `shared_lifespan` rather than
+# re-declaring `LANCE_DB` / `EMBEDDER` / `RESOLVED_FILE_REGISTRY`.
+# The previous `codebase_lance_db` + `codebase_embedder` ContextKeys
+# are aliased to the canonical names for back-compat with downstream
+# imports.
 # =============================================================================
 
 
-if COCOINDEX_AVAILABLE:
-    LANCE_DB: Any = coco.ContextKey[lancedb.LanceAsyncConnection]("codebase_lance_db")
-    EMBEDDER: Any = coco.ContextKey[SentenceTransformerEmbedder](
-        "codebase_embedder", detect_change=True
-    )
-else:
-    LANCE_DB = None  # type: ignore[assignment]
-    EMBEDDER = None  # type: ignore[assignment]
+from ._lifespan import (  # noqa: E402
+    EMBEDDER,  # noqa: F401 — re-exported for back-compat
+    LANCE_DB,  # noqa: F401 — re-exported for back-compat
+    LANCEDB_URI as _SHARED_LANCEDB_URI,
+    EMBED_MODEL as _SHARED_EMBED_MODEL,
+    EMBED_DIM as _SHARED_EMBED_DIM,
+    RESOLVED_FILE_REGISTRY,  # noqa: F401 — re-exported for back-compat
+    shared_lifespan,
+)
 
 
 # =============================================================================
@@ -249,7 +256,7 @@ class CodeChunk:
     chunk_text: str
     chunk_start: int
     chunk_end: int
-    embedding: Annotated[Any, EMBEDDER] if COCOINDEX_AVAILABLE else Any  # type: ignore[index]
+    embedding: Annotated[Any, EMBEDDER] if COCOINDEX_AVAILABLE else Any  # type: ignore[valid-type]
 
 
 @dataclass
@@ -486,13 +493,12 @@ def _make_graph_app():  # noqa: ANN202
     async def codebase_graph_lifespan(  # type: ignore[no-redef]
         builder: coco.EnvironmentBuilder,  # type: ignore[valid-type]
     ) -> AsyncIterator[None]:
-        from cocoindex.connectors.lancedb import (  # type: ignore[import-not-found]
-            LanceAsyncConnection,
-        )
-
-        lance_conn = await LanceAsyncConnection.connect(LANCEDB_URI)
-        builder.provide(LANCE_DB, lance_conn)
-        yield
+        # Delegate to the shared lifespan (REFACTORING.md item 12).
+        # The shared lifespan provides LANCE_DB + EMBEDDER +
+        # RESOLVED_FILE_REGISTRY; this App only adds the graph table
+        # (in `codebase_graph_app_main` below).
+        async with shared_lifespan(builder):  # type: ignore[arg-type]
+            yield
 
     @coco.fn
     async def codebase_graph_app_main(  # type: ignore[no-redef]
@@ -586,17 +592,9 @@ def _make_app():
     async def codebase_lifespan(  # type: ignore[no-redef]
         builder: coco.EnvironmentBuilder,  # type: ignore[valid-type]
     ) -> AsyncIterator[None]:
-        from cocoindex.connectors.lancedb import (
-            LanceAsyncConnection,  # type: ignore[import-not-found]
-        )
-
-        lance_conn = await LanceAsyncConnection.connect(LANCEDB_URI)
-        builder.provide(LANCE_DB, lance_conn)
-        builder.provide(
-            EMBEDDER,
-            SentenceTransformerEmbedder(EMBED_MODEL),
-        )
-        yield
+        # Delegate to the shared lifespan (REFACTORING.md item 12).
+        async with shared_lifespan(builder):  # type: ignore[arg-type]
+            yield
 
     @coco.fn
     async def codebase_app_main(repo_root: pathlib.Path) -> None:  # type: ignore[no-redef]
