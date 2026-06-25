@@ -3,7 +3,7 @@ Re-export shim. See __init__.py for the canonical home
 (`oideachais.agents.adk.tools.tuatha_curriculum_search`).
 """
 
-from oideachais.agents.adk.tools.tuatha_curriculum_search import (
+from sruth.oideachais.agents.adk.tools.tuatha_curriculum_search import (
     CurriculumResult,
     CurriculumSearchResults,
     LearningOutcome,

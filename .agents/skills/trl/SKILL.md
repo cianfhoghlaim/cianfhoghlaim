@@ -46,7 +46,7 @@ The KCG curriculum pipeline uses TRL in two places:
    aligns the model to prefer the high-scoring outputs.
 
 The RAGAS-as-DPO pattern is wired via a Dagster asset:
-`meaisinfhoghlaim/dagster_assets/trl_dpo_training.py`.
+`sruth/meaisinfhoghlaim/dagster_assets/trl_dpo_training.py`.
 
 ## SFTTrainer (supised fine-tuning)
 

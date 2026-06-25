@@ -6,7 +6,7 @@ TBD - created by archiving change oideachais-v0-to-v1-migration. Update Purpose 
 ### Requirement: V1 CocoIndex Apps
 
 The system SHALL provide **11 v1 CocoIndex Apps** in
-`oideachais/cocoindex_flows/`. The 11 Apps are:
+`sruth/oideachais/cocoindex_flows/`. The 11 Apps are:
 
 1. `leabharlann_books_embedding` → `leabharlann_books` (BGE-large)
 2. `leabharlann_zotero_embedding` → `leabharlann_zotero` (BGE-large)
@@ -39,7 +39,7 @@ The 11 Apps use the canonical v1 pattern documented in
 ### Requirement: V0 Archive
 
 The system SHALL archive the **10 v0 broken CocoIndex modules**
-at `oideachais/cocoindex_flows/_v0_archive/` (the canonical home
+at `sruth/oideachais/cocoindex_flows/_v0_archive/` (the canonical home
 for deprecated v0 code). The 10 modules are:
 
 1. `author_archive_embedding.py`
@@ -57,17 +57,17 @@ The 10 modules SHALL raise `ImportError` when imported
 (cocoindex==1.0.9 has no `flow_def` DSL). The
 `_v0_archive/__init__.py` SHALL document the deprecation and
 point to the canonical v1 Apps in
-`oideachais/cocoindex_flows/`.
+`sruth/oideachais/cocoindex_flows/`.
 
 The system SHALL NOT migrate the 10 v0 modules to v1 in this
 change (the migration is a 6-week project per
-`oideachais/REFACTORING.md` #6). The 11 v1 Apps cover the
+`sruth/oideachais/REFACTORING.md` #6). The 11 v1 Apps cover the
 equivalent use cases.
 
 #### Scenario: A developer tries to import a v0 module
 
 - **GIVEN** the v0 module is archived at
-  `oideachais/cocoindex_flows/_v0_archive/research_embedding.py`
+  `sruth/oideachais/cocoindex_flows/_v0_archive/research_embedding.py`
 - **WHEN** a developer does
   `from oideachais.cocoindex_flows.research_embedding import ...`
 - **THEN** Python SHALL raise `ModuleNotFoundError` (or

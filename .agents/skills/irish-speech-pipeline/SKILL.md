@@ -62,7 +62,7 @@ Use when you need to:
 ## The 4 Irish dialects (the TTS taxonomy)
 
 The KCG TTS supports 4 Irish dialects (the `IrishDialect` enum in
-`meaisinfhoghlaim/agents/voice_agent.py`):
+`sruth/meaisinfhoghlaim/agents/voice_agent.py`):
 
 | Dialect | Region | Population | Notes |
 |:--|:--|--:|:--|
@@ -72,16 +72,16 @@ The KCG TTS supports 4 Irish dialects (the `IrishDialect` enum in
 | `STANDARD` | The official "An Caighdeán Oifigiúil" | n/a | The standard Irish used in schools + government |
 
 The 4 dialects are exposed via the `/tts/synthesize?dialect=<one-of-4>`
-endpoint in `meaisinfhoghlaim/agents/api/routes/tts.py`.
+endpoint in `sruth/meaisinfhoghlaim/agents/api/routes/tts.py`.
 
 ## The ASR backend (wav2vec2-XLSR-Irish)
 
 The canonical ASR model is `wav2vec2-large-xlsr-53-irish` (the
 Common Voice Irish fine-tune). The model is registered in
-`meaisinfhoghlaim/asr/model_registry.py:ASR_MODELS`.
+`sruth/meaisinfhoghlaim/asr/model_registry.py:ASR_MODELS`.
 
 ```python
-# meaisinfhoghlaim/asr/model_registry.py
+# sruth/meaisinfhoghlaim/asr/model_registry.py
 ASR_MODELS["wav2vec2-xlsr-irish"] = Wav2Vec2XLSRIrishASR(
     name="wav2vec2-xlsr-irish",
     backend=ASRBackend.TRANSFORMERS,
@@ -91,7 +91,7 @@ ASR_MODELS["wav2vec2-xlsr-irish"] = Wav2Vec2XLSRIrishASR(
 )
 ```
 
-The ASR is wrapped in `meaisinfhoghlaim/agents/voice_agent.py:ASRPipeline`
+The ASR is wrapped in `sruth/meaisinfhoghlaim/agents/voice_agent.py:ASRPipeline`
 which exposes the `transcribe(audio_bytes) -> str` method.
 
 ## The BAML extraction schema (`audio_extraction.baml`)
@@ -120,7 +120,7 @@ function ExtractAudioSegments(audio_url: string) -> AudioSegment[] {
 }
 ```
 
-The BAML function is invoked from `meaisinfhoghlaim/pipelines/transcript_aligner.py:align_transcript(audio_url)`.
+The BAML function is invoked from `sruth/meaisinfhoghlaim/pipelines/transcript_aligner.py:align_transcript(audio_url)`.
 
 ## The TTS backend (ABAIR + Chatterbox)
 
@@ -141,7 +141,7 @@ class TTSSynthesizer:
 ```
 
 The TTS is exposed via the `/tts/synthesize` + `/tts/pronounce` +
-`/tts/dialects` endpoints in `meaisinfhoghlaim/agents/api/routes/tts.py`.
+`/tts/dialects` endpoints in `sruth/meaisinfhoghlaim/agents/api/routes/tts.py`.
 
 ## The Pipecat transport contract
 
@@ -154,11 +154,11 @@ The `pipecat` service is exposed at `pipecat.cianfhoghlaim.ie:8765`
   WebSocket binary frames (raw PCM, 24kHz mono)
 
 The Pipecat transport is wired in
-`meaisinfhoghlaim/agents/voice_agent.py:PipecatTransport`.
+`sruth/meaisinfhoghlaim/agents/voice_agent.py:PipecatTransport`.
 
 ## Worked example: add a new TTS model (mms-tts-ga)
 
-1. Add the model to `meaisinfhoghlaim/tts/model_registry.py:TTS_MODELS`:
+1. Add the model to `sruth/meaisinfhoghlaim/tts/model_registry.py:TTS_MODELS`:
 
    ```python
    TTS_MODELS["mms-tts-ga"] = MMSTtsGaTTS(
@@ -170,7 +170,7 @@ The Pipecat transport is wired in
    )
    ```
 
-2. Update `meaisinfhoghlaim/agents/api/services/chatterbox.py` to
+2. Update `sruth/meaisinfhoghlaim/agents/api/services/chatterbox.py` to
    add the new model to the fallback chain:
 
    ```python
@@ -178,11 +178,11 @@ The Pipecat transport is wired in
        return TTS_MODELS["mms-tts-ga"].synthesize(text, dialect)
    ```
 
-3. Add a new test in `meaisinfhoghlaim/tests/test_tts.py` that
+3. Add a new test in `sruth/meaisinfhoghlaim/tests/test_tts.py` that
    synthesises a sample Irish sentence with `mms-tts-ga` and
    verifies the 4-dialect output.
 
-4. Update `meaisinfhoghlaim/llama-swap-config.yaml` to add the
+4. Update `sruth/meaisinfhoghlaim/llama-swap-config.yaml` to add the
    GGUF-quantised variant.
 
 5. Add a BAML extraction function in
@@ -205,9 +205,9 @@ The Pipecat transport is wired in
 - `.agents/skills/irish-llm-on-device/SKILL.md` — the Apple Silicon MLX stack
 - `.agents/skills/asr/SKILL.md` — the ASR stack (wav2vec2 + Whisper)
 - `.agents/skills/tts/SKILL.md` — the general TTS patterns
-- `meaisinfhoghlaim/agents/voice_agent.py` — the canonical ASR + TTS + Pipecat glue
-- `meaisinfhoghlaim/asr/model_registry.py` — the ASR model registry
-- `meaisinfhoghlaim/tts/model_registry.py` — the TTS model registry
-- `meaisinfhoghlaim/agents/api/services/chatterbox.py` — the TTS synthesizer
+- `sruth/meaisinfhoghlaim/agents/voice_agent.py` — the canonical ASR + TTS + Pipecat glue
+- `sruth/meaisinfhoghlaim/asr/model_registry.py` — the ASR model registry
+- `sruth/meaisinfhoghlaim/tts/model_registry.py` — the TTS model registry
+- `sruth/meaisinfhoghlaim/agents/api/services/chatterbox.py` — the TTS synthesizer
 - `oideachais/baml_src/audio_extraction.baml` — the audio extraction BAML schema
-- `meaisinfhoghlaim/llama-swap-config.yaml` — the 11 GGUF models for Apple Silicon
+- `sruth/meaisinfhoghlaim/llama-swap-config.yaml` — the 11 GGUF models for Apple Silicon

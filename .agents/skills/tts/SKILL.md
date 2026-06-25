@@ -175,6 +175,6 @@ For production, use Modal H100 (see
 - Chatterbox models: <https://huggingface.co/ResembleAI/chatterbox>
 - MMS-TTS: <https://huggingface.co/facebook/mms-tts>
 - Piper: <https://github.com/rhasspy/piper>
-- KCG TTS service: `meaisinfhoghlaim/tts/` (planned)
-- BAML→TTS pipeline example: `meaisinfhoghlaim/pipelines/`
+- KCG TTS service: `sruth/meaisinfhoghlaim/tts/` (planned)
+- BAML→TTS pipeline example: `sruth/meaisinfhoghlaim/pipelines/`
 - Related: `.agents/skills/baml/`, `.agents/skills/modal/`

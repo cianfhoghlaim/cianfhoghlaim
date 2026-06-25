@@ -231,7 +231,7 @@ LANGFUSE_SECRET_KEY=...
 ❌ **Don't use when:**
 - You're working in `oideachais/` (use
   `.agents/skills/oideachais-pipeline/SKILL.md`)
-- You're working in `meaisinfhoghlaim/` (use
+- You're working in `sruth/meaisinfhoghlaim/` (use
   `.agents/skills/meaisinfhoghlaim-platform/SKILL.md`)
 - You're working in `croilar/` (use
   `.agents/skills/croilar-portfolio/SKILL.md`)

@@ -5,7 +5,7 @@ The canonical LlmAgent construction lives in
 `oideachais.agents.adk.research_assistant_agent` per the 6-phase
 refactor plan. This file is a backwards-compatible re-export.
 """
-from oideachais.agents.adk.research_assistant_agent import (
+from sruth.oideachais.agents.adk.research_assistant_agent import (
     research_assistant_agent,
 )
 

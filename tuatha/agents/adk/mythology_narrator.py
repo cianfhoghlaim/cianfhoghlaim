@@ -5,7 +5,7 @@ The canonical LlmAgent construction lives in
 `oideachais.agents.adk.mythology_narrator_agent` per the 6-phase
 refactor plan. This file is a backwards-compatible re-export.
 """
-from oideachais.agents.adk.mythology_narrator_agent import (
+from sruth.oideachais.agents.adk.mythology_narrator_agent import (
     mythology_narrator_agent,
 )
 

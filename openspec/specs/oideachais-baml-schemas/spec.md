@@ -185,7 +185,7 @@ authoring time.
   function with a union-typed parameter
 - **WHEN** the user passes a `baml_py.Pdf.from_base64(pdf_bytes)` to step 2
 - **THEN** the dynamic extraction completes against the multimodal content
-- **AND** the in-repo reference is `oideachais/baml_src/ocr_extraction.baml`
+- **AND** the in-repo reference is `sruth/oideachais/baml_src/ocr_extraction.baml`
   (9,368 bytes) for the OCR multimodal pattern
 
 ### Requirement: Runtime deterministic evals
@@ -313,7 +313,7 @@ strategies and `Constant` / `Exponential` retry policies
 
 ### Requirement: Circular extraction BAML
 
-The oideachais quadrant MUST provide an `ExtractCircularMeta` BAML function at `oideachais/baml_src/circular_extraction.baml`. The function MUST extract a `CircularExtraction` (composed of `CircularReference`, `MarkingSchemeSummary`, and `TopicDistribution` classes) from a Department of Education circular PDF. The function MUST use the canonical `LitellmClient` (routes through the LiteLLM gateway).
+The oideachais quadrant MUST provide an `ExtractCircularMeta` BAML function at `sruth/oideachais/baml_src/circular_extraction.baml`. The function MUST extract a `CircularExtraction` (composed of `CircularReference`, `MarkingSchemeSummary`, and `TopicDistribution` classes) from a Department of Education circular PDF. The function MUST use the canonical `LitellmClient` (routes through the LiteLLM gateway).
 
 #### Scenario: Agent extracts circular metadata
 

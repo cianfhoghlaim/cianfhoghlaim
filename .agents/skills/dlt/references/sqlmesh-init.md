@@ -36,7 +36,7 @@ virtual data warehouse) are covered by the **`sqlmesh` skill**.
 
 - The `celtic-data-engineering-pipeline` spec — the dbt-duckdb
   project at `oideachais/dbt_project/` + `CelticDagsterDbtTranslator`
-  + 2 marimo notebooks under `meaisinfhoghlaim/marimo/`
+  + 2 marimo notebooks under `sruth/meaisinfhoghlaim/marimo/`
 - The `celtic-data-engineering-patterns` change (in openspec) for
   the full setup
 

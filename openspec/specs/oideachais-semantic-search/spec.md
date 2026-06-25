@@ -3,8 +3,8 @@
 ## Purpose
 
 `oideachais-semantic-search` is a capability of the Cianfhoghlaim platform. The
-corresponding source code lives at `oideachais/cocoindex_flows/` (8 v0 flows +
-the new v1 leabharlann flows) and `oideachais/api/routes/search.py`. See
+corresponding source code lives at `sruth/oideachais/cocoindex_flows/` (8 v0 flows +
+the new v1 leabharlann flows) and `sruth/oideachais/api/routes/search.py`. See
 `docs/00_index.md` for the quadrant map and `docs/00-core/CLAUDE.md` for the
 project identity.
 
@@ -14,7 +14,7 @@ Vector-based curriculum and corpus search via LanceDB HNSW (BAAI/bge-m3 or
 BAAI/bge-large-en-v1.5 for English-only, 1024-d) with a FastAPI route at
 `/search/*`. The full leabharlann corpus (books, zotero, takeout) is
 indexed via the v1 CocoIndex Apps in
-`oideachais/cocoindex_flows/leabharlann_embedding.py`.
+`sruth/oideachais/cocoindex_flows/leabharlann_embedding.py`.
 
 This spec was renamed from `semantic-search` to disambiguate it from any
 future non-oideachais semantic-search surfaces (e.g. a `tuatha` or `croilar`
@@ -73,7 +73,7 @@ of embedding models and version-anchored retrieval.
 
 #### Scenario: Query a historical version
 
-- **GIVEN** a LanceDB table at `oideachais/lancedb_data/leabharlann_books`
+- **GIVEN** a LanceDB table at `sruth/oideachais/lancedb_data/leabharlann_books`
   with N versions (one per re-index)
 - **WHEN** the user calls `table.checkout(version=2).search(...)`
 - **THEN** the search returns rows from version 2 only

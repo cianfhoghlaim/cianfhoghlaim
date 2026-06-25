@@ -72,7 +72,7 @@ For KCG agents, the canonical pattern is:
    observability.
 2. **All Cognee + Graphiti calls are wrapped in the
    `oideachais/memory/` shim**. The actual model-layer lives
-   in `meaisinfhoghlaim/memory/`.
+   in `sruth/meaisinfhoghlaim/memory/`.
 3. **All FalkorDB + Memgraph calls go through
    `oideachais/graph/`** (the application-layer client).
 4. **LanceDB schemas** follow the `oideachais/cocoindex_flows/`

@@ -21,7 +21,7 @@ Spaces still work in offline / dev mode). The 3-tier chain is
 preserved verbatim in `_HF_FALLBACK_CHAIN`.
 
 For the canonical BAML extractions, use the 4 promoted functions
-from oideachais + tuatha directly:
+from sruth.oideachais + tuatha directly:
   - ExtractCircularMeta (oideachais/baml_src/circular_extraction.baml)
   - CompareCelticNations (tuatha/baml_src/celtic_curriculum.baml)
   - GenerateExitCardQuestions (tuatha/baml_src/player_assessment.baml)

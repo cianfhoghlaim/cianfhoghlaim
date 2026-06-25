@@ -4,10 +4,10 @@
 # This is the canonical oideachais deployment stack.
 #
 # Merged from the prior:
-#   - /oideachais/compose.yaml         (source-of-truth app Dockerfiles)
-#   - /oideachais/sidecar.yaml         (upstream locket Infisical)
-#   - /oideachais/pangolin.yaml        (Pocket ID + API key + VPN-only)
-#   - /oideachais/blueprint.yaml       (stale Hetzner routing — DELETED)
+#   - /sruth/oideachais/compose.yaml    (source-of-truth app Dockerfiles)
+#   - /sruth/oideachais/sidecar.yaml    (upstream locket Infisical)
+#   - /sruth/oideachais/pangolin.yaml   (Pocket ID + API key + VPN-only)
+#   - /sruth/oideachais/blueprint.yaml  (stale Hetzner routing — DELETED)
 #   - /infrastructure/stacks/oideachais/compose.yaml (pinned 0.2.0)
 #
 # Architecture:
@@ -44,7 +44,7 @@ services:
     pull_policy: never
     build:
       context: ../../../..
-      dockerfile: oideachais/Dockerfile.dagster
+      dockerfile: sruth/oideachais/Dockerfile.dagster
     container_name: cianfhoghlaim-oideachais-dagster
     restart: unless-stopped
     # Override the image CMD: the pre-built image has the oideachais root
@@ -75,14 +75,14 @@ services:
       # Persistent venv so `uv sync` (downloading torch, lancedb, etc.)
       # doesn't repeat on every container recreate.
       - dagster_venv:/app/oideachais/.venv
-      - ../../../../oideachais/dagster.yaml:/opt/dagster/home/dagster.yaml:ro
+      - ../../../../sruth/oideachais/dagster.yaml:/opt/dagster/home/dagster.yaml:ro
       - ../../../../stedding:/stedding:ro
       # Live-bind the entire oideachais source tree so leaving_cert assets
       # and any new code added to the host are picked up on Dagster restart.
       # The container runs from /app/oideachais (uv workspace member).
       # Read-write because Dagster writes session/state files into the
       # source tree (e.g. storage/sessions) at startup.
-      - ../../../../oideachais:/app/oideachais:rw
+      - ../../../../sruth/oideachais:/app/oideachais:rw
       # Locket secrets volume (injected at runtime by the sidecar).
       - locket_secrets:/run/secrets/locket:ro
     # Canonical depends_on for the locket sidecar (declared in
@@ -118,7 +118,7 @@ services:
     pull_policy: never
     build:
       context: ../../../..
-      dockerfile: oideachais/Dockerfile
+      dockerfile: sruth/oideachais/Dockerfile
     container_name: cianfhoghlaim-oideachais-api
     restart: unless-stopped
     # The api package is at /app/oideachais/api/ in the image (moved from
@@ -135,7 +135,7 @@ services:
       # The api/ package was moved up to oideachais/api/ on 2026-06-11.
       # Mount the parent so the api can hot-reload code via docker compose
       # restart; the previous data_platform/ path no longer exists.
-      - ../../../../oideachais:/app/oideachais:ro
+      - ../../../../sruth/oideachais:/app/oideachais:ro
       # Mount the data volume at a NEW path that doesn't exist in the
       # image (the OLD path /app/oideachais/storage/data was baked into
       # the image's lower layer; the volume mount then fails with
@@ -196,12 +196,12 @@ services:
   frontend:
     # image: pinned. Build context is the repo root because apps/web imports
     # @croilar/ui from the sibling croilar monorepo. The Dockerfile lives
-    # at oideachais/web/Dockerfile.
+    # at sruth/oideachais/web/Dockerfile.
     image: oideachais-dev-frontend:latest
     pull_policy: never
     build:
       context: ../../../..
-      dockerfile: oideachais/web/Dockerfile
+      dockerfile: sruth/oideachais/web/Dockerfile
     container_name: cianfhoghlaim-oideachais-frontend
     restart: unless-stopped
     # Default host port is 3080 (not 3000) to avoid the reserved-port
@@ -246,7 +246,7 @@ services:
   agent_os:
     # Local build artifact, `pull_policy: never` forces compose to
     # use the existing tag rather than rebuild on every `up`.
-    # The Dockerfile at oideachais/agent_os/Dockerfile builds
+    # The Dockerfile at sruth/oideachais/agent_os/Dockerfile builds
     # `oideachais-dev-agentos:latest` from the root pyproject.toml
     # (the agent_os/ sub-package is part of the oideachais uv
     # workspace).
@@ -254,7 +254,7 @@ services:
     pull_policy: never
     build:
       context: ../../../..
-      dockerfile: oideachais/agent_os/Dockerfile
+      dockerfile: sruth/oideachais/agent_os/Dockerfile
     container_name: cianchoghlaim-oideachais-agent-os
     restart: unless-stopped
     ports:
@@ -292,14 +292,14 @@ services:
   adk_agents:
     # Local build artifact, `pull_policy: never` forces compose to
     # use the existing tag rather than rebuild on every `up`.
-    # The Dockerfile at oideachais/Dockerfile.adk builds
+    # The Dockerfile at sruth/oideachais/Dockerfile.adk builds
     # `oideachais-dev-adk-agents:latest` from the root pyproject.toml
     # + the google-adk Python package.
     image: oideachais-dev-adk-agents:latest
     pull_policy: never
     build:
       context: ../../../..
-      dockerfile: oideachais/Dockerfile.adk
+      dockerfile: sruth/oideachais/Dockerfile.adk
     container_name: cianchoghlaim-oideachais-adk-agents
     restart: unless-stopped
     ports:

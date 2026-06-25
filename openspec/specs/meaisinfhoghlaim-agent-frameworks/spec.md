@@ -4,8 +4,8 @@
 
 `meaisinfhoghlaim-agent-frameworks` is a capability of the Cianfhoghlaim
 platform. The corresponding source code lives at
-`meaisinfhoghlaim/agents/` (12 specialised agents) and
-`oideachais/agents/{adk,agno}/` (the application-layer CopilotKit / AG-UI
+`sruth/meaisinfhoghlaim/agents/` (12 specialised agents) and
+`sruth/oideachais/agents/{adk,agno}/` (the application-layer CopilotKit / AG-UI
 facades). See `docs/00_index.md` for the quadrant map and
 `docs/00-core/CLAUDE.md` for the project identity.
 
@@ -17,7 +17,7 @@ the Agno + Google ADK + LiteLLM framework, 253 lines).
 
 The meaisinfhoghlaim agent framework is the model layer for the
 Cianfhoghlaim platform. The 12 specialised agents in
-`meaisinfhoghlaim/agents/` cover the full Irish + UK + pan-Celtic
+`sruth/meaisinfhoghlaim/agents/` cover the full Irish + UK + pan-Celtic
 education surface:
 
 - **Root Agent** — orchestrator that routes to the 6+ specialised agents
@@ -44,7 +44,7 @@ education surface:
 - **Site Analysis Agent** — firecrawl + browserbase MCP-driven site
   audits
 
-The 2 application-layer facades (`oideachais/agents/{adk,agno}/`) wrap
+The 2 application-layer facades (`sruth/oideachais/agents/{adk,agno}/`) wrap
 these specialised agents for the front-end CopilotKit / AG-UI.
 
 ## Requirements
@@ -52,7 +52,7 @@ these specialised agents for the front-end CopilotKit / AG-UI.
 ### Requirement: 12 specialised agents
 
 The system SHALL provide 12 specialised agents in
-`meaisinfhoghlaim/agents/` covering the Irish + UK + pan-Celtic
+`sruth/meaisinfhoghlaim/agents/` covering the Irish + UK + pan-Celtic
 education surface.
 
 #### Scenario: Root agent routes to specialists
@@ -115,7 +115,7 @@ The system SHALL trace every agent call with Langfuse + MLflow + RAGAS
 ### Requirement: Application-layer facades
 
 The system SHALL provide 2 application-layer agent facades in
-`oideachais/agents/{adk,agno}/` for the oideachais web app.
+`sruth/oideachais/agents/{adk,agno}/` for the oideachais web app.
 
 #### Scenario: CopilotKit AG-UI streaming
 
@@ -126,9 +126,9 @@ The system SHALL provide 2 application-layer agent facades in
 
 ## Cross-references
 
-- [`meaisinfhoghlaim/agents/`](../../meaisinfhoghlaim/agents/) (the 12 specialised agents)
-- [`oideachais/agents/adk/`](../../oideachais/agents/adk/) (the Google ADK facade)
-- [`oideachais/agents/agno/`](../../oideachais/agents/agno/) (the Agno facade)
+- [`sruth/meaisinfhoghlaim/agents/`](../../sruth/meaisinfhoghlaim/agents/) (the 12 specialised agents)
+- [`sruth/oideachais/agents/adk/`](../../sruth/oideachais/agents/adk/) (the Google ADK facade)
+- [`sruth/oideachais/agents/agno/`](../../sruth/oideachais/agents/agno/) (the Agno facade)
 - [`.agents/skills/agno/SKILL.md`](../../.agents/skills/agno/SKILL.md)
 - [`.agents/skills/google-adk/SKILL.md`](../../.agents/skills/google-adk/SKILL.md)
 - [`.agents/skills/ai-engineer/SKILL.md`](../../.agents/skills/ai-engineer/SKILL.md)

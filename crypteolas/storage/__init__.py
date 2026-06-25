@@ -26,7 +26,7 @@ from .lance_catalog import LanceCatalog, get_lance_catalog
 # See the followup issue: "simplify sruth.shared.* abstraction in
 # tuatha/dlt_sources/geospatial/ and tuatha/storage/". For now, the
 # canonical implementation lives at:
-#   from oideachais.core.storage.serial_executor import (
+#   from sruth.oideachais.core.storage.serial_executor import (
 #       SerialDatabaseExecutor, get_executor, run_serial,
 #   )
 

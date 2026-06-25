@@ -30,7 +30,7 @@ The system SHALL expose 9 subproject routes at the public root.
 
 #### Scenario: Research route renders
 - **WHEN** a visitor navigates to `/research`
-- **THEN** the research page SHALL render outputs cross-linked from `oideachais/` and `meaisínfhoghlaim/`, filtered by author "Cian de Búrca"
+- **THEN** the research page SHALL render outputs cross-linked from `sruth/oideachais/` and `meaisínfhoghlaim/`, filtered by author "Cian de Búrca"
 - **AND** the page SHALL link back to the originating monorepo subproject
 
 #### Scenario: Teaching route renders

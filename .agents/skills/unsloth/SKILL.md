@@ -36,10 +36,10 @@ Activate when users need:
 
 | Directory | Relevant Documents |
 |-----------|-------------------|
-| `taighde_meaisinfhoghlaim/` | Training guides, LoRA configs |
+| `taighde_sruth/meaisinfhoghlaim/` | Training guides, LoRA configs |
 | `taighde_teanga/` | Irish NLP datasets |
 
-### ML Model Dependencies (meaisinfhoghlaim/)
+### ML Model Dependencies (sruth/meaisinfhoghlaim/)
 
 | Model | Usage |
 |-------|-------|

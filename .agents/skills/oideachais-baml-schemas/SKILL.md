@@ -7,7 +7,7 @@ description: The KCG oideachais BAML extraction schemas in `oideachais/baml_src/
 
 ## Purpose
 
-The `oideachais/baml_src/` directory houses **9 active + 4 gaois +
+The `sruth/oideachais/baml_src/` directory houses **9 active + 4 gaois +
 6 archived = 19 BAML files** that extract structured data from
 the British Isles curriculum sources. This skill captures the
 canonical schema patterns, the client registry, the 4 Aistear
@@ -40,7 +40,7 @@ Use when you need to:
 | `official_media.baml` | The official-media extraction (government + educational sources) | `ExtractOfficialMedia` |
 | `ocr_validation.baml` | The OCR validation extraction (5 Celtic metrics) | `ValidateOcr` |
 
-The 9 active files are compiled to `oideachais/baml_client/` (the
+The 9 active files are compiled to `sruth/oideachais/baml_client/` (the
 canonical Python client home).
 
 ## The 4 gaois BAML files
@@ -62,9 +62,9 @@ The 6 files in `_archive/` were Q3-2026 archived per the
 `archive-celtic-baml-orphans` openspec change. They define 29
 functions total and have a re-activation procedure:
 
-1. Move the file back to `oideachais/baml_src/` (the canonical home)
+1. Move the file back to `sruth/oideachais/baml_src/` (the canonical home)
 2. Update the `clients.baml` registry to include the new function
-3. Add a Dagster asset at `oideachais/dagster_defs/assets/`
+3. Add a Dagster asset at `sruth/oideachais/dagster_defs/assets/`
 4. Update the BAML extraction wire-up in the dlt source
 
 The 6 archived files are:
@@ -75,7 +75,7 @@ The 6 archived files are:
 ## The 3 extraction clients (the registry)
 
 ```baml
-// oideachais/baml_src/clients.baml
+// sruth/oideachais/baml_src/clients.baml
 client<llm> ExtractEn {
   provider "openai"
   api_key env.OPENAI_API_KEY
@@ -106,7 +106,7 @@ hit.
 ## The 4 Aistear themes (the early-childhood framework)
 
 ```baml
-// oideachais/baml_src/early_childhood.baml
+// sruth/oideachais/baml_src/early_childhood.baml
 enum AistearTheme {
     WELL_BEING
     IDENTITY_AND_BELONGING
@@ -130,7 +130,7 @@ per (theme, age_range) combination.
 ## The 7 British Isles nations (the canonical enum)
 
 ```baml
-// oideachais/baml_src/isles_education.baml
+// sruth/oideachais/baml_src/isles_education.baml
 enum BritishIslesNation {
     IE  // Ireland
     SCT // Scotland
@@ -154,7 +154,7 @@ enum CelticLanguage {
 The 7 nations are the canonical home for the cross-domain
 asset keys (per `.agents/skills/cross-domain-registry/SKILL.md`).
 The 6 Celtic languages are the 6 active in the
-`meaisinfhoghlaim/language/` sub-package.
+`sruth/meaisinfhoghlaim/language/` sub-package.
 
 ## Worked example: add a new BAML function
 
@@ -191,9 +191,9 @@ The 6 Celtic languages are the 6 active in the
 4. Compile the BAML files: `uv run baml-cli generate`.
 
 5. Add a Dagster asset at
-   `oideachais/dagster_defs/assets/early_childhood_assets.py:ExtractAistearTheme_5_NEW_THEME_asset`.
+   `sruth/oideachais/dagster_defs/assets/early_childhood_assets.py:ExtractAistearTheme_5_NEW_THEME_asset`.
 
-6. Wire the asset to a dlt source (e.g. `oideachais/dlt_sources/domains/education/ie/aistear.py:ExtractAistearTheme_5_NEW_THEME`).
+6. Wire the asset to a dlt source (e.g. `sruth/oideachais/dlt_sources/domains/education/ie/aistear.py:ExtractAistearTheme_5_NEW_THEME`).
 
 ## Common failure modes
 
@@ -212,7 +212,7 @@ The 6 Celtic languages are the 6 active in the
 - `.agents/skills/cross-domain-registry/SKILL.md` — the `{nation}.{domain}.{entity}` contract
 - `.agents/skills/oideachais-leabharlann/SKILL.md` — the leabharlann pipeline (the primary consumer of these BAML functions)
 - `.agents/skills/oideachais-cocoindex-v1/SKILL.md` — the v1 CocoIndex Apps that consume the BAML output
-- `oideachais/baml_src/clients.baml` — the canonical 3-client registry
-- `oideachais/baml_client/` — the compiled Python client
-- `oideachais/STATUS.md` §1 — the BAML × dlt × Dagster × CocoIndex matrix
+- `sruth/oideachais/baml_src/clients.baml` — the canonical 3-client registry
+- `sruth/oideachais/baml_client/` — the compiled Python client
+- `sruth/oideachais/STATUS.md` §1 — the BAML × dlt × Dagster × CocoIndex matrix
 - `openspec/specs/oideachais-baml-schemas/spec.md` — the canonical spec

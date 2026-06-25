@@ -113,7 +113,7 @@ generated with v0") was trivial and is DELETEd.
 ## Why two mirror skills?
 
 The Cianfhoghlaim monorepo has 4 quadrants
-(`oideachais/`, `meaisinfhoghlaim/`, `tuatha/`, `croilar/`)
+(`oideachais/`, `sruth/meaisinfhoghlaim/`, `tuatha/`, `croilar/`)
 plus a shared web stack that runs across all of them. The
 shared web stack pulls on a different set of upstream
 projects than the game / infra stack, so the KCG mirror

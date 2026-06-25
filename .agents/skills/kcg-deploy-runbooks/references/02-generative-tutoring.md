@@ -14,8 +14,8 @@ related_specs:
   - semantic-search
   - oideachais-pipeline
 related_apps:
-  - meaisinfhoghlaim/agents/tutor
-  - meaisinfhoghlaim/llm_stack
+  - sruth/meaisinfhoghlaim/agents/tutor
+  - sruth/meaisinfhoghlaim/llm_stack
   - oideachais/web
 related_llm_stack:
   - 'BAML (typed curriculum grounding)'
@@ -33,7 +33,7 @@ last_touched: 2026-06-13
 Replace the original Tangent 2 framing (which named `UCCIX-Llama2-13B-Instruct`
 as a single model) with a deploy plan grounded in the
 **BAML → litellm → Cognee → LanceDB** stack that already exists in
-`meaisinfhoghlaim/llm_stack/`. The goal is a cross-lingual tutoring
+`sruth/meaisinfhoghlaim/llm_stack/`. The goal is a cross-lingual tutoring
 engine that:
 
 1. Teaches in **any pair** of {en, ga, cy, gd, gv} (and extensible to
@@ -46,7 +46,7 @@ engine that:
 
 | Asset | Path | Use |
 |:--|:--|:--|
-| Quadrant | `meaisinfhoghlaim/` | AI/ML — agents, OCR, language, pipelines |
+| Quadrant | `sruth/meaisinfhoghlaim/` | AI/ML — agents, OCR, language, pipelines |
 | Quadrant | `oideachais/` | Data platform — curriculum, BAML extraction, knowledge graph |
 | Quadrant | `tuatha/ui/` | Front-end (Babylon.js) — *only if 3D tutor avatar desired* |
 | Skill | `.agents/skills/llm-stack-hierarchy/` | BAML→litellm→Cognee→LanceDB ordering |
@@ -68,7 +68,7 @@ that picks the right model for the task:
 | Code generation (Marimo) | `litellm:claude-sonnet` | `litellm:openai-gpt-4o` |
 | Local-only mode (offline) | `ollama:qwen2.5-14b-gguf` | `ollama:llama3.1-8b-gguf` |
 
-The router is configured in `meaisinfhoghlaim/llm_stack/router.py` and
+The router is configured in `sruth/meaisinfhoghlaim/llm_stack/router.py` and
 reads from Infisical (`/oideachais/llm_keys/*`).
 
 ## 3. Grounded curriculum: BAML extraction
@@ -110,7 +110,7 @@ outcomes. The pipeline:
 | en↔gv (Manx) | `Fockley Rheast, Manx-English Dictionary` | `oideachais/dlt_sources/crown_dependencies/iom/terminology.py` (new) |
 
 The BAML prompt for bilingual terms is in
-`meaisinfhoghlaim/llm_stack/baml/term_extraction.baml`.
+`sruth/meaisinfhoghlaim/llm_stack/baml/term_extraction.baml`.
 
 ## 4. Cross-lingual outcome retrieval (LanceDB)
 
@@ -162,7 +162,7 @@ loaded via `cognee.improve(dataset_name="learner_<id>")`.
 | **Scaffold** | Break a hard outcome into 3-5 prerequisites with simpler language | Cognee graph traversal |
 | **Marimo** | Generate a runnable notebook demonstrating the concept | litellm (code) + Marimo template |
 
-The `meaisinfhoghlaim/agents/tutor/` agent orchestrates these modes.
+The `sruth/meaisinfhoghlaim/agents/tutor/` agent orchestrates these modes.
 The TanStack Start route at `oideachais/web/routes/tutor.$lessonId.tsx`
 is the user surface.
 
@@ -180,7 +180,7 @@ Latency target: **first token < 1.5s** for tutoring chat
 | Phase | Scope | Exit criteria |
 |:--|:--|:--|
 | 0 | Bilingual term DLT sources for 4 language pairs (en↔ga, en↔cy, en↔gd, en↔gv) | 10,000 terms ingested into `motherduck.oideachais_terminology.*` |
-| 1 | `meaisinfhoghlaim/agents/tutor/` orchestrator | Explain + Quiz modes work end-to-end on 1 subject (e.g. Junior Cycle Science) |
+| 1 | `sruth/meaisinfhoghlaim/agents/tutor/` orchestrator | Explain + Quiz modes work end-to-end on 1 subject (e.g. Junior Cycle Science) |
 | 2 | Multilingual LanceDB index (paraphrase-multilingual-MiniLM-L12-v2) | Cross-lingual recall@10 ≥ 0.7 on a 100-query gold set |
 | 3 | Cognee learner state | Concept mastery + error history persist across sessions |
 | 4 | Marimo notebook generator | 10 runnable notebooks generated from real outcomes |

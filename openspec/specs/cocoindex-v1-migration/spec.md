@@ -7,7 +7,7 @@ TBD - created by archiving change leabharlann-cocoindex-v1. Update Purpose after
 The system SHALL expose every CocoIndex flow as a v1 `coco.App` instance with a `@coco.fn` `app_main` function and stable identity.
 
 #### Scenario: App registration
-- **GIVEN** an `oideachais/cocoindex_flows/<flow>.py` module
+- **GIVEN** an `sruth/oideachais/cocoindex_flows/<flow>.py` module
 - **WHEN** the module is loaded
 - **THEN** it SHALL declare `app = coco.App(coco.AppConfig(name="<UniqueName>"), app_main, ...)` at module level
 - **AND** the `app_main` function SHALL be decorated with `@coco.fn`

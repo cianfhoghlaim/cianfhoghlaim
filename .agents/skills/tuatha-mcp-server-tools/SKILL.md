@@ -50,7 +50,7 @@ The canonical shim pattern:
 
 ```python
 # oideachais/agents/adk/tools/tuatha_curriculum_search.py
-from oideachais.cocoindex_flows.leabharlann_embedding import (
+from sruth.oideachais.cocoindex_flows.leabharlann_embedding import (
     search_leabharlann_books,
     search_leabharlann_zotero,
     search_leabharlann_takeout,
@@ -66,7 +66,7 @@ from ..tools.curriculum_search import search_curriculum
 # (this fails because tuatha/agents/tools/ doesn't exist)
 
 # RIGHT (canonical shim):
-from oideachais.agents.adk.tools.tuatha_curriculum_search import (
+from sruth.oideachais.agents.adk.tools.tuatha_curriculum_search import (
     search_curriculum,
     get_learning_outcomes,
 )
@@ -85,11 +85,11 @@ The fix is to create 3 shim files in `tuatha/agents/tools/`:
 # tuatha/agents/tools/__init__.py
 # Thin re-export shim (round 7 phase 5 of the 6-phase refactor).
 # Canonical home: oideachais.agents.adk.tools.tuatha_*
-from oideachais.agents.adk.tools.tuatha_curriculum_search import (
+from sruth.oideachais.agents.adk.tools.tuatha_curriculum_search import (
     search_curriculum, get_learning_outcomes, CurriculumSearchResults,
     OIDEACHAIS_LANCEDB_PATH,
 )
-from oideachais.agents.adk.tools.tuatha_mythology_query import (
+from sruth.oideachais.agents.adk.tools.tuatha_mythology_query import (
     search_mythology, get_character_lore, get_location_lore,
 )
 __all__ = [
@@ -101,7 +101,7 @@ __all__ = [
 ```python
 # tuatha/agents/tools/curriculum_search.py
 # Re-export shim. See __init__.py for the canonical home.
-from oideachais.agents.adk.tools.tuatha_curriculum_search import (
+from sruth.oideachais.agents.adk.tools.tuatha_curriculum_search import (
     search_curriculum, get_learning_outcomes, CurriculumSearchResults,
     OIDEACHAIS_LANCEDB_PATH,
 )
@@ -111,7 +111,7 @@ __all__ = ["search_curriculum", "get_learning_outcomes", "CurriculumSearchResult
 ```python
 # tuatha/agents/tools/mythology_query.py
 # Re-export shim. See __init__.py for the canonical home.
-from oideachais.agents.adk.tools.tuatha_mythology_query import (
+from sruth.oideachais.agents.adk.tools.tuatha_mythology_query import (
     search_mythology, get_character_lore, get_location_lore,
 )
 __all__ = ["search_mythology", "get_character_lore", "get_location_lore"]
@@ -168,7 +168,7 @@ identifier in the MCP protocol). The 5 tools are namespaced under
 2. Add the shim at `tuatha/agents/tools/achievement_query.py`:
 
    ```python
-   from oideachais.agents.adk.tools.tuatha_achievement_query import (
+   from sruth.oideachais.agents.adk.tools.tuatha_achievement_query import (
        get_player_badges,
    )
    __all__ = ["get_player_badges"]

@@ -1,6 +1,0 @@
-nation_id,nation_code,nation_name,nation_name_native,iso_3166,primary_language,education_authority,exam_authority
-1,ireland,Ireland,Éire,IE,en,NCCA,SEC
-2,england,England,England,GB-ENG,en,DfE,AQA/Edexcel/OCR
-3,scotland,Scotland,Alba,GB-SCT,en,Education Scotland,SQA
-4,wales,Wales,Cymru,GB-WLS,en,Welsh Government,WJEC/CBAC
-5,northern_ireland,Northern Ireland,Tuaisceart Éireann,GB-NIR,en,Dept of Education NI,CCEA

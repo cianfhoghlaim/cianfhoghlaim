@@ -7,7 +7,7 @@ description: The canonical CocoIndex v1 App pattern in `oideachais/cocoindex_flo
 
 ## Purpose
 
-The `oideachais/cocoindex_flows/` directory houses **11 v1
+The `sruth/oideachais/cocoindex_flows/` directory houses **11 v1
 CocoIndex Apps** + 10 v0 broken modules (slated for v0-to-v1
 migration in this round). This skill captures the canonical v1
 pattern (`@coco.fn` + `@coco.lifespan` +
@@ -49,7 +49,7 @@ The 11 Apps are all `coco.App` instances with `@coco.lifespan` +
 ## The canonical v1 pattern (the 6-field shape)
 
 ```python
-# Canonical oideachais/cocoindex_flows/leabharlann_embedding.py
+# Canonical sruth/oideachais/cocoindex_flows/leabharlann_embedding.py
 @coco.lifespan
 async def leabharlann_lifespan(builder):
     from cocoindex.connectors.lancedb import LanceAsyncConnection
@@ -119,7 +119,7 @@ The 6-field shape is:
 
 ## The 100-batch minimum + the HNSW-DROP-THRESHOLD=50 rule
 
-Per `oideachais/AGENTS.md` + the embedding-pipeline skill:
+Per `sruth/oideachais/AGENTS.md` + the embedding-pipeline skill:
 
 - **Embeddings batched at minimum 100 per call** (100× performance difference vs unbatched)
 - **HNSW indexes dropped before bulk inserts > 50 rows and recreated after** (the 20× speedup rule)
@@ -165,7 +165,7 @@ embedding is auto-filled by the v1 runtime (no manual
 
 ## The 29-language Tree-sitter chunking
 
-`oideachais/cocoindex_flows/chunking/languages.py` defines the
+`sruth/oideachais/cocoindex_flows/chunking/languages.py` defines the
 29-language detection table. The 29 languages are:
 python, typescript, javascript, tsx, jsx, rust, go, java, kotlin,
 ruby, swift, c, cpp, csharp, php, scala, haskell, ocaml, lua,
@@ -210,7 +210,7 @@ the oideachais-STATUS.md.
 
 ## Worked example: add a new v1 App
 
-1. Create the new file at `oideachais/cocoindex_flows/xxx_embedding.py`:
+1. Create the new file at `sruth/oideachais/cocoindex_flows/xxx_embedding.py`:
 
 2. Define the dataclass:
 
@@ -262,7 +262,7 @@ the oideachais-STATUS.md.
    )
    ```
 
-4. Add the App to `oideachais/cocoindex_flows/__init__.py`:
+4. Add the App to `sruth/oideachais/cocoindex_flows/__init__.py`:
 
    ```python
    try:
@@ -272,7 +272,7 @@ the oideachais-STATUS.md.
        pass  # CocoIndex not available
    ```
 
-5. Add a Dagster asset at `oideachais/dagster_defs/assets/xxx_assets.py:xxx_chunks`.
+5. Add a Dagster asset at `sruth/oideachais/dagster_defs/assets/xxx_assets.py:xxx_chunks`.
 
 6. Update `openspec/specs/oideachais-pipeline/spec.md` to add the
    new V1 App requirement.
@@ -296,9 +296,9 @@ the oideachais-STATUS.md.
 - `.agents/skills/oideachais-leabharlann/SKILL.md` — the 3 v1 Apps for the leabharlann pipeline
 - `.agents/skills/oideachais-baml-schemas/SKILL.md` — the 9 + 4 + 6 BAML files
 - `.agents/skills/embedding-pipeline/SKILL.md` — the 100-batch minimum + the HNSW-DROP-THRESHOLD=50 rule
-- `oideachais/cocoindex_flows/leabharlann_embedding.py` — the canonical v1 home (the 3 leabharlann Apps)
-- `oideachais/cocoindex_flows/codebase_indexing.py` — the canonical v1 home (the codebase 7-node/7-edge graph)
-- `oideachais/cocoindex_flows/__init__.py` — the v0-vs-v1 guard
-- `oideachais/cocoindex_flows/README.md` — the v0 vs v1 status table
-- `oideachais/cocoindex_flows/chunking/languages.py` — the 29-language detection table
+- `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py` — the canonical v1 home (the 3 leabharlann Apps)
+- `sruth/oideachais/cocoindex_flows/codebase_indexing.py` — the canonical v1 home (the codebase 7-node/7-edge graph)
+- `sruth/oideachais/cocoindex_flows/__init__.py` — the v0-vs-v1 guard
+- `sruth/oideachais/cocoindex_flows/README.md` — the v0 vs v1 status table
+- `sruth/oideachais/cocoindex_flows/chunking/languages.py` — the 29-language detection table
 - `openspec/specs/oideachais-cocoindex-v1-migration/spec.md` — the canonical spec

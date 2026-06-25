@@ -6,7 +6,7 @@ services:
   # ---------------------------------------------------------------------------
   oideachais-web:
     build:
-      context: ../../../../oideachais/web/apps/web
+      context: ../../../../sruth/oideachais/web/apps/web
       dockerfile: Dockerfile
     image: ghcr.io/cianfhoghlaim/oideachais-web:0.1.0
     container_name: oideachais-web
@@ -33,7 +33,7 @@ services:
   # ---------------------------------------------------------------------------
   oideachais-api:
     build:
-      context: ../../../../oideachais/web/apps/api
+      context: ../../../../sruth/oideachais/web/apps/api
       dockerfile: Dockerfile
     image: ghcr.io/cianfhoghlaim/oideachais-api:0.1.0
     container_name: oideachais-api

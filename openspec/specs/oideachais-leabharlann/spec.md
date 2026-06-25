@@ -4,8 +4,8 @@
 
 `oideachais-leabharlann` is a capability of the Cianfhoghlaim platform.
 The corresponding source code lives at
-`oideachais/dlt_sources/author_archive/` (the 4 dlt sources: books,
-zotero, takeout, UoG) and `oideachais/cocoindex_flows/leabharlann_embedding.py`
+`sruth/oideachais/dlt_sources/author_archive/` (the 4 dlt sources: books,
+zotero, takeout, UoG) and `sruth/oideachais/cocoindex_flows/leabharlann_embedding.py`
 (the 3 v1 CocoIndex Apps). See `docs/00_index.md` for the quadrant map
 and `docs/00-core/CLAUDE.md` for the project identity.
 
@@ -176,7 +176,7 @@ a single-source-of-truth configuration.
 
 #### Scenario: App registration
 
-- **GIVEN** an `oideachais/cocoindex_flows/<flow>.py` module
+- **GIVEN** an `sruth/oideachais/cocoindex_flows/<flow>.py` module
 - **WHEN** the module is loaded
 - **THEN** it SHALL declare
   `app = coco.App(coco.AppConfig(name="<UniqueName>"), app_main, ...)`
@@ -357,11 +357,11 @@ source.
 
 ## Cross-references
 
-- [`oideachais/dlt_sources/author_archive/`](../../oideachais/dlt_sources/author_archive/) (the 4 dlt sources)
-- [`oideachais/cocoindex_flows/leabharlann_embedding.py`](../../oideachais/cocoindex_flows/leabharlann_embedding.py) (the 3 v1 Apps)
-- [`oideachais/dagster_defs/assets/leabharlann_assets.py`](../../oideachais/dagster_defs/assets/leabharlann_assets.py) (the 7 Dagster assets)
-- [`oideachais/dagster_defs/assets/leabharlann_full_stack_demo.py`](../../oideachais/dagster_defs/assets/leabharlann_full_stack_demo.py) (the demo asset)
-- [`oideachais/dagster_defs/sensors/leabharlann_sensors.py`](../../oideachais/dagster_defs/sensors/leabharlann_sensors.py) (the sensor)
+- [`sruth/oideachais/dlt_sources/author_archive/`](../../sruth/oideachais/dlt_sources/author_archive/) (the 4 dlt sources)
+- [`sruth/oideachais/cocoindex_flows/leabharlann_embedding.py`](../../sruth/oideachais/cocoindex_flows/leabharlann_embedding.py) (the 3 v1 Apps)
+- [`sruth/oideachais/dagster_defs/assets/leabharlann_assets.py`](../../sruth/oideachais/dagster_defs/assets/leabharlann_assets.py) (the 7 Dagster assets)
+- [`sruth/oideachais/dagster_defs/assets/leabharlann_full_stack_demo.py`](../../sruth/oideachais/dagster_defs/assets/leabharlann_full_stack_demo.py) (the demo asset)
+- [`sruth/oideachais/dagster_defs/sensors/leabharlann_sensors.py`](../../sruth/oideachais/dagster_defs/sensors/leabharlann_sensors.py) (the sensor)
 - [`openspec/specs/oideachais-baml-schemas/spec.md`](oideachais-baml-schemas/spec.md) (the upstream BAML extraction)
 - [`openspec/specs/oideachais-cognify-knowledge-graph/spec.md`](oideachais-cognify-knowledge-graph/spec.md) (the downstream cognify + edges)
 - [`openspec/specs/oideachais-marimo-dashboards/spec.md`](oideachais-marimo-dashboards/spec.md) (the full-stack demo dashboard)

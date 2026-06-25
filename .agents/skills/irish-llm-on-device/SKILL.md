@@ -183,9 +183,9 @@ unifies the 3 backends behind a single Swift API.
   the fine-tuned model).
 - `oideachais/baml_src/celtic_sources.baml` — the
   BAML schema for source attribution.
-- `meaisinfhoghlaim/language/gaeilge/` — the Irish-language
+- `sruth/meaisinfhoghlaim/language/gaeilge/` — the Irish-language
   subdir (corpus, lexicons, cognates).
-- `meaisinfhoghlaim/dagster_assets/ocr_htr.py` — the
+- `sruth/meaisinfhoghlaim/dagster_assets/ocr_htr.py` — the
   Dagster assets for OCR / HTR.
 - `infrastructure/bunchloch/llama-swap/` — the llama-swap
   service that serves GGUF on the M4.

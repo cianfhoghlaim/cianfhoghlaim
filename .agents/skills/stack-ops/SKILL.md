@@ -162,7 +162,7 @@ each a top-level uv workspace:
 | Quadrant | Path | Wheel name | Use case |
 |:--|:--|:--|:--|
 | **Oideachais** | `oideachais/` | `oideachais` | Celtic education data platform |
-| **Meaisínfhoghlaim** | `meaisínfhoghlaim/` | `meaisinfhoghlaim` | AI/ML services |
+| **Meaisínfhoghlaim** | `sruth/meaisínfhoghlaim/` | `sruth/meaisinfhoghlaim` | AI/ML services |
 | **Tuatha** | `tuatha/` | `tuath` | Celtic MMO + crypto platform |
 | **Croílár** | `croilar/` | (TS) | Public persona site |
 
